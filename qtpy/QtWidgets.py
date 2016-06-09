@@ -23,18 +23,23 @@ from qtpy import PythonQtError
 
 
 def patch_qcombobox():
+    """
+    In PySide, using Python objects as userData in QComboBox causes
+    Segmentation faults under certain conditions. Even in cases where it
+    doesn't, findData does not work correctly. Likewise, findData also does not
+    work correctly with Python objects when using PyQt4. On the other hand,
+    PyQt5 deals with this case correctly. We therefore patch QComboBox when
+    using PyQt4 and PySide to avoid issues.
+    """
 
     from qtpy.QtGui import QIcon
     from qtpy.QtCore import Qt, QObject
 
-    # In PySide, using Python objects as userData in QComboBox causes
-    # Segmentation faults under certain conditions. Even in cases where it
-    # doesn't, findData does not work correctly. Likewise, findData also
-    # does not work correctly with Python objects when using PyQt4. On the
-    # other hand, PyQt5 deals with this case correctly. We therefore patch
-    # QComboBox when using PyQt4 and PySide to avoid issues.
-
     class userDataWrapper(QObject):
+        """
+        This class is used to wrap any userData object inside a QObject which
+        is then supported by all Python Qt wrappers.
+        """
         def __init__(self, data, parent=None):
             super(userDataWrapper, self).__init__(parent)
             self.data = data
