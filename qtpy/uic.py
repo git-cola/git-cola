@@ -191,8 +191,8 @@ elif os.environ[QT_API] in PYSIDE_API:
         return widget
 
 
-# The following class is private and only for testing purposes (it is needed by
-# test_ui.py)
-
 class _QComboBoxSubclass(QComboBox):
+    """
+    This is a private class that is used only for testing purposes.
+    """
     pass
