@@ -1,7 +1,11 @@
 import os
 
-from qtpy import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
+from distutils import LooseVersion
 
+from qtpy import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
+from qtpy.QtCore import Qt
+
+QT_LT_56 = LooseVersion(Qt.PYQT_VERSION_STR) < LooseVersion('5.6')
 
 def assert_pyside():
     """
@@ -33,7 +37,11 @@ def assert_pyqt5():
     assert QtCore.QEvent is PyQt5.QtCore.QEvent
     assert QtGui.QPainter is PyQt5.QtGui.QPainter
     assert QtWidgets.QWidget is PyQt5.QtWidgets.QWidget
-    assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebKitWidgets.QWebPage
+    if QT_LT_56:
+        assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebKitWidgets.QWebPage
+    else:
+        assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebEngineWidgets.QWebEnginePage
+
 
 
 def test_qt_api():
