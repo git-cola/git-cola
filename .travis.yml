@@ -29,12 +29,12 @@ matrix:
 before_install:
   # Test environments for different Qt bindings
   - if [[ "$USE_QT_API" == "PyQt5" ]]; then
-      export CONDA_DEPENDENCIES='qt5 pyqt5'$CONDA_DEPENDENCIES
-      export CONDA_CHANNELS='spyder-ide'
+      export CONDA_DEPENDENCIES='qt5 pyqt5'$CONDA_DEPENDENCIES;
+      export CONDA_CHANNELS='spyder-ide';
     elif [[ "$USE_QT_API" == "PyQt4" ]]; then
-      export CONDA_DEPENDENCIES='qt pyqt'$CONDA_DEPENDENCIES
+      export CONDA_DEPENDENCIES='qt pyqt'$CONDA_DEPENDENCIES;
     elif [[ "$USE_QT_API" == "PySide" ]]; then
-      export CONDA_DEPENDENCIES='qt pyside'$CONDA_DEPENDENCIES
+      export CONDA_DEPENDENCIES='qt pyside'$CONDA_DEPENDENCIES;
     fi
 
 install:
