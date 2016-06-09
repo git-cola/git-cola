@@ -41,6 +41,8 @@ def test_qt_api():
     elif QT_API == 'pyqt5':
         assert_pyqt5()
     else:
+        # If the tests are run locally, USE_QT_API and QT_API may not be
+        # defined, but we still want to make sure qtpy is behaving sensibly.
         # We should then be loading, in order of decreasing preference, PyQt5,
         # PyQt4, and PySide.
         try:
