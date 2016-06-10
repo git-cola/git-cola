@@ -11,7 +11,7 @@ from __future__ import print_function
 import sys
 import collections
 
-from qtpy import API, PYQT4_API
+from qtpy import PYQT4
 from qtpy.QtWidgets import QFileDialog
 from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
 
@@ -20,7 +20,7 @@ from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
 # QVariant conversion utilities
 # =============================================================================
 PYQT_API_1 = False
-if API in PYQT4_API:
+if PYQT4:
     import sip
     try:
         PYQT_API_1 = sip.getapi('QVariant') == 1  # PyQt API #1

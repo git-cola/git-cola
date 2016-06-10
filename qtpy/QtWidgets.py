@@ -13,17 +13,16 @@ Provides widget classes and functions.
     were the ``PyQt5.QtWidgets`` module.
 """
 
-from qtpy import API
-from qtpy import PYQT5_API
-from qtpy import PYQT4_API
-from qtpy import PYSIDE_API
+from qtpy import PYQT5
+from qtpy import PYQT4
+from qtpy import PYSIDE
 from qtpy import PythonQtError
 from qtpy._patch.qcombobox import patch_qcombobox
 
 
-if API in PYQT5_API:
+if PYQT5:
     from PyQt5.QtWidgets import *
-elif API in PYQT4_API:
+elif PYQT4:
     from PyQt4.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
 
@@ -68,7 +67,7 @@ elif API in PYQT4_API:
     # Patch QComboBox to allow Python objects to be passed to userData
     patch_qcombobox(QComboBox)
 
-elif API in PYSIDE_API:
+elif PYSIDE:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
 

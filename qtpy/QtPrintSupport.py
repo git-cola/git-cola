@@ -9,20 +9,19 @@
 Provides QtPrintSupport classes and functions.
 """
 
-from qtpy import API
-from qtpy import PYQT5_API
-from qtpy import PYQT4_API
-from qtpy import PYSIDE_API
+from qtpy import PYQT5
+from qtpy import PYQT4
+from qtpy import PYSIDE
 from qtpy import PythonQtError
 
 
-if API in PYQT5_API:
+if PYQT5:
     from PyQt5.QtPrintSupport import *
-elif API in PYQT4_API:
+elif PYQT4:
     from PyQt4.QtGui import (QAbstractPrintDialog, QPageSetupDialog,
                              QPrintDialog, QPrintEngine, QPrintPreviewDialog,
                              QPrintPreviewWidget, QPrinter, QPrinterInfo)
-elif API in PYSIDE_API:
+elif PYSIDE:
     from PySide.QtGui import (QAbstractPrintDialog, QPageSetupDialog,
                               QPrintDialog, QPrintEngine, QPrintPreviewDialog,
                               QPrintPreviewWidget, QPrinter, QPrinterInfo)
