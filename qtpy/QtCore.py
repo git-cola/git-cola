@@ -32,13 +32,13 @@ elif os.environ[QT_API] in PYQT4_API:
     from PyQt4.QtCore import pyqtSignal as Signal
     from PyQt4.QtCore import pyqtSlot as Slot
     from PyQt4.QtCore import pyqtProperty as Property
-    from PyQt4.QtGui import (QItemSelection, QItemSelectionRange,
-                             QSortFilterProxyModel)
+    from PyQt4.QtGui import (QItemSelection, QItemSelectionModel,
+                             QItemSelectionRange, QSortFilterProxyModel)
     from PyQt4.QtCore import QT_VERSION_STR as __version__
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtCore import *
-    from PySide.QtGui import (QItemSelection, QItemSelectionRange,
-                              QSortFilterProxyModel)
+    from PySide.QtGui import (QItemSelection, QItemSelectionModel,
+                              QItemSelectionRange, QSortFilterProxyModel)
     import PySide.QtCore
     __version__ = PySide.QtCore.__version__
 else:
