@@ -1,7 +1,5 @@
 import os
 
-from distutils.version import LooseVersion
-
 from qtpy import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 
 def assert_pyside():
@@ -34,11 +32,10 @@ def assert_pyqt5():
     assert QtCore.QEvent is PyQt5.QtCore.QEvent
     assert QtGui.QPainter is PyQt5.QtGui.QPainter
     assert QtWidgets.QWidget is PyQt5.QtWidgets.QWidget
-    from PyQt5 import Qt
-    if LooseVersion(Qt.PYQT_VERSION_STR) < LooseVersion('5.6'):
-        assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebKitWidgets.QWebPage
-    else:
+    if QtWebEngineWidgets.WEBENGINE:
         assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebEngineWidgets.QWebEnginePage
+    else:
+        assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebKitWidgets.QWebPage
 
 
 
