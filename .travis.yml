@@ -1,72 +1,44 @@
-language: python
+# We set the language to c because python isn't supported on the MacOS X nodes
+# on Travis. However, the language ends up being irrelevant anyway, since we
+# install Python ourselves using conda.
+language: c
+
 sudo: false
+
+os:
+  - linux
+  - osx
 
 env:
   global:
-    - MINCONDA_VERSION="latest"
-    - MINCONDA_LINUX="Linux-x86_64"
-    - MINCONDA_OSX="MacOSX-x86_64"
-matrix:
-  include:
-    # Linux
-    - python: "2.7"
-      env: USE_QT_API=PyQt5
-      os: linux
-    - python: "2.7"
-      env: USE_QT_API=PyQt4
-      os: linux
-    - python: "2.7"
-      env: USE_QT_API=PySide
-      os: linux
-    - python: "3.4"
-      env: USE_QT_API=PyQt4
-      os: linux
-    - python: "3.5"
-      env: USE_QT_API=PyQt5
-      os: linux
-    - python: "3.5"
-      env: USE_QT_API=PyQt4
-      os: linux
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-install:
-  # Define the value to download
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      MINCONDA_OS=$MINCONDA_LINUX;
-    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      MINCONDA_OS=$MINCONDA_OSX;
-    fi
-  # You may want to periodically update this, although the conda update
-  # conda line below will keep everything up-to-date. We do this
-  # conditionally because it saves us some downloading if the version is
-  # the same.
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget "http://repo.continuum.io/miniconda/Miniconda-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
-    else
-      wget "http://repo.continuum.io/miniconda/Miniconda3-$MINCONDA_VERSION-$MINCONDA_OS.sh" -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
+    - SETUP_XVFB=True
+    - CONDA_DEPENDENCIES='pytest'
+  matrix:
+    - PYTHON_VERSION=2.7 USE_QT_API=PyQt5
+    - PYTHON_VERSION=2.7 USE_QT_API=PyQt4
+    - PYTHON_VERSION=2.7 USE_QT_API=PySide
+    - PYTHON_VERSION=3.4 USE_QT_API=PyQt4
+    - PYTHON_VERSION=3.5 USE_QT_API=PyQt4
+    - PYTHON_VERSION=3.5 USE_QT_API=PyQt5
 
+before_install:
   # Test environments for different Qt bindings
   - if [[ "$USE_QT_API" == "PyQt5" ]]; then
-      conda config --add channels spyder-ide;
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt5 pyqt5;
+      export CONDA_DEPENDENCIES='qt5 pyqt5 '$CONDA_DEPENDENCIES;
+      export CONDA_CHANNELS='spyder-ide';
     elif [[ "$USE_QT_API" == "PyQt4" ]]; then
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt pyqt;
+      export CONDA_DEPENDENCIES='qt pyqt '$CONDA_DEPENDENCIES;
     elif [[ "$USE_QT_API" == "PySide" ]]; then
-      conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION qt pyside;
+      export CONDA_DEPENDENCIES='qt pyside '$CONDA_DEPENDENCIES;
     fi
-  - source activate test-environment
-  - conda install -q pytest
+
+install:
+  - git clone git://github.com/astropy/ci-helpers.git
+  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
   - python setup.py install
+
 before_script:
   - cd tests
+
 script:
   - py.test
