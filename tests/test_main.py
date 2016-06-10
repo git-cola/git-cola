@@ -2,6 +2,7 @@ import os
 
 from qtpy import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 
+
 def assert_pyside():
     """
     Make sure that we are using PySide
@@ -38,13 +39,12 @@ def assert_pyqt5():
         assert QtWebEngineWidgets.QWebEnginePage is PyQt5.QtWebKitWidgets.QWebPage
 
 
-
 def test_qt_api():
     """
     If QT_API is specified, we check that the correct Qt wrapper was used
     """
 
-    QT_API = os.environ.get('QT_API')
+    QT_API = os.environ.get('QT_API', '').lower()
 
     if QT_API == 'pyside':
         assert_pyside()

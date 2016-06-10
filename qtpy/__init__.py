@@ -64,12 +64,8 @@ PYQT4_API = [
 #: names of the expected PySide api
 PYSIDE_API = ['pyside']
 
-os.environ.setdefault(QT_API, 'pyqt5')
-assert os.environ[QT_API] in (PYQT5_API + PYQT4_API + PYSIDE_API)
-
-API = os.environ[QT_API]
-API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
-            'pyside': 'PySide'}[API]
+API = os.environ.get(QT_API, 'pyqt5').lower()
+assert API in (PYQT5_API + PYQT4_API + PYSIDE_API)
 
 is_old_pyqt = is_pyqt46 = False
 PYQT5 = True
@@ -86,8 +82,7 @@ if API in PYQT5_API:
         from PyQt5.QtCore import PYQT_VERSION_STR as __version__
         from PyQt5 import uic                                     # analysis:ignore
     except ImportError:
-        API = os.environ['QT_API'] = 'pyqt'
-        API_NAME = 'PyQt4'
+        API = 'pyqt'
 
 if API in PYQT4_API:
     try:
@@ -109,16 +104,10 @@ if API in PYQT4_API:
         PYQT5 = False
         PYQT4 = True
     except ImportError:
-        API = os.environ['QT_API'] = 'pyside'
-        API_NAME = 'PySide'
+        API = 'pyside'
     else:
         is_old_pyqt = __version__.startswith(('4.4', '4.5', '4.6', '4.7'))
         is_pyqt46 = __version__.startswith('4.6')
-        import sip
-        try:
-            API_NAME += (" (API v{0})".format(sip.getapi('QString')))
-        except AttributeError:
-            pass
 
 if API in PYSIDE_API:
     try:
@@ -127,3 +116,12 @@ if API in PYSIDE_API:
         PYSIDE = True
     except ImportError:
         raise PythonQtError('No Qt bindings could be found')
+
+API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
+            'pyside': 'PySide'}[API]
+if API in PYQT4_API:
+        import sip
+        try:
+            API_NAME += (" (API v{0})".format(sip.getapi('QString')))
+        except AttributeError:
+            pass
