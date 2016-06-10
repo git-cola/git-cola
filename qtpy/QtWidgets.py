@@ -63,7 +63,8 @@ elif os.environ[QT_API] in PYQT4_API:
          QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
 
     # These objects belong to QtCore
-    del (QItemSelection, QItemSelectionRange, QSortFilterProxyModel)
+    del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
+         QSortFilterProxyModel)
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
@@ -103,6 +104,7 @@ elif os.environ[QT_API] in PYSIDE_API:
          QPrintPreviewDialog, QPrintPreviewWidget, QPrinter, QPrinterInfo)
 
     # These objects belong to QtCore
-    del (QItemSelection, QItemSelectionRange, QSortFilterProxyModel)
+    del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
+         QSortFilterProxyModel)
 else:
     raise PythonQtError('No Qt bindings could be found')
