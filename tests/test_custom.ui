@@ -24,12 +24,19 @@
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QComboBox" name="comboBox"/>
+      <widget class="_QComboBoxSubclass" name="comboBox"/>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>_QComboBoxSubclass</class>
+   <extends>QComboBox</extends>
+   <header>qtpy.uic</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

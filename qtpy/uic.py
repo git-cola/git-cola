@@ -1,22 +1,19 @@
 import os
 
-from qtpy import QT_API
-from qtpy import PYQT5_API
-from qtpy import PYQT4_API
-from qtpy import PYSIDE_API
+from qtpy import PYSIDE, PYQT4, PYQT5
 from qtpy.QtWidgets import QComboBox
 
 __all__ = ['loadUi']
 
-if os.environ[QT_API] in PYQT5_API:
+if PYQT5:
 
     from PyQt5.uic import loadUi
 
-elif os.environ[QT_API] in PYQT4_API:
+elif PYQT4:
 
     from PyQt4.uic import loadUi
 
-elif os.environ[QT_API] in PYSIDE_API:
+elif PYSIDE:
 
     # In PySide, loadUi does not exist, so we define it using QUiLoader, and
     # then make sure we expose that function. This is adapted from qt-helpers
@@ -112,8 +109,13 @@ elif os.environ[QT_API] in PYSIDE_API:
             """
 
             QUiLoader.__init__(self, baseinstance)
+
             self.baseinstance = baseinstance
-            self.customWidgets = customWidgets
+
+            if customWidgets is None:
+                self.customWidgets = {}
+            else:
+                self.customWidgets = customWidgets
 
         def createWidget(self, class_name, parent=None, name=''):
             """
@@ -135,13 +137,13 @@ elif os.environ[QT_API] in PYSIDE_API:
                     widget = QUiLoader.createWidget(self, class_name, parent, name)
 
                 else:
-                    # if not in the list of availableWidgets, must be a custom
-                    # widget this will raise KeyError if the user has not
-                    # supplied the relevant class_name in the dictionary, or
-                    # TypeError, if customWidgets is None
+                    # If not in the list of availableWidgets, must be a custom
+                    # widget. This will raise KeyError if the user has not
+                    # supplied the relevant class_name in the dictionary or if
+                    # customWidgets is empty.
                     try:
                         widget = self.customWidgets[class_name](parent)
-                    except (TypeError, KeyError):
+                    except KeyError:
                         raise Exception('No custom widget ' + class_name + ' '
                                         'found in customWidgets')
 
