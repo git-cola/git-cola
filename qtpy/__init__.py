@@ -119,7 +119,7 @@ if API in PYSIDE_API:
 
 API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
             'pyside': 'PySide'}[API]
-if API in PYQT4_API:
+if PYQT4:
         import sip
         try:
             API_NAME += (" (API v{0})".format(sip.getapi('QString')))
