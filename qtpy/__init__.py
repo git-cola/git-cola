@@ -84,7 +84,6 @@ class PythonQtError(Exception):
 if API in PYQT5_API:
     try:
         from PyQt5.QtCore import PYQT_VERSION_STR as __version__
-        from PyQt5 import uic                                     # analysis:ignore
     except ImportError:
         API = os.environ['QT_API'] = 'pyqt'
         API_NAME = 'PyQt4'
@@ -105,7 +104,6 @@ if API in PYQT4_API:
             pass
 
         from PyQt4.QtCore import PYQT_VERSION_STR as __version__  # analysis:ignore
-        from PyQt4 import uic                                     # analysis:ignore
         PYQT5 = False
         PYQT4 = True
     except ImportError:
