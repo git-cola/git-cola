@@ -8,10 +8,10 @@ Compatibility functions
 """
 
 from __future__ import print_function
-import os
 import sys
 import collections
 
+from qtpy import PYQT4
 from qtpy.QtWidgets import QFileDialog
 from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
 
@@ -20,7 +20,7 @@ from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
 # QVariant conversion utilities
 # =============================================================================
 PYQT_API_1 = False
-if os.environ['QT_API'] == 'pyqt':
+if PYQT4:
     import sip
     try:
         PYQT_API_1 = sip.getapi('QVariant') == 1  # PyQt API #1

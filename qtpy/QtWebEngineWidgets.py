@@ -10,20 +10,14 @@
 Provides QtWebEngineWidgets classes and functions.
 """
 
-import os
-
-from qtpy import QT_API
-from qtpy import PYQT5_API
-from qtpy import PYQT4_API
-from qtpy import PYSIDE_API
-from qtpy import PythonQtError
+from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 # To test if we are using WebEngine or WebKit
 WEBENGINE = True
 
 
-if os.environ[QT_API] in PYQT5_API:
+if PYQT5:
     try:
         from PyQt5.QtWebEngineWidgets import QWebEnginePage
         from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -33,12 +27,12 @@ if os.environ[QT_API] in PYQT5_API:
         from PyQt5.QtWebKitWidgets import QWebView as QWebEngineView
         from PyQt5.QtWebKit import QWebSettings as QWebEngineSettings
         WEBENGINE = False
-elif os.environ[QT_API] in PYQT4_API:
+elif PYQT4:
     from PyQt4.QtWebKit import QWebPage as QWebEnginePage
     from PyQt4.QtWebKit import QWebView as QWebEngineView
     from PyQt4.QtWebKit import QWebSettings as QWebEngineSettings
     WEBENGINE = False
-elif os.environ[QT_API] in PYSIDE_API:
+elif PYSIDE:
     from PySide.QtWebKit import QWebPage as QWebEnginePage
     from PySide.QtWebKit import QWebView as QWebEngineView
     from PySide.QtWebKit import QWebSettings as QWebEngineSettings

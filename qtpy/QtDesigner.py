@@ -9,17 +9,12 @@
 Provides QtDesigner classes and functions.
 """
 
-import os
-
-from qtpy import QT_API
-from qtpy import PYQT5_API
-from qtpy import PYQT4_API
-from qtpy import PythonQtError
+from qtpy import PYQT5, PYQT4, PythonQtError
 
 
-if os.environ[QT_API] in PYQT5_API:
+if PYQT5:
     from PyQt5.QtDesigner import *
-elif os.environ[QT_API] in PYQT4_API:
+elif PYQT4:
     from PyQt4.QtDesigner import *
 else:
     raise PythonQtError('No Qt bindings could be found')
