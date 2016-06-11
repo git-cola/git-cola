@@ -43,7 +43,9 @@ def test_load_ui_custom():
     assert isinstance(ui.comboBox, _QComboBoxSubclass)
 
 
-@pytest.mark.xfailif("PYSIDE")
+@pytest.mark.xfail(PYSIDE, reason='The PySide loadUi wrapper does not yet '
+                                  'support determining custom widgets '
+                                  'automatically')
 def test_load_ui_custom_auto():
     """
     Test that we can load a .ui file with custom widgets without having to
