@@ -20,7 +20,7 @@ from qtpy import PYQT5_API
 from qtpy import PYQT4_API
 from qtpy import PYSIDE_API
 from qtpy import PythonQtError
-
+from qtpy._patch.qcombobox import patch_qcombobox
 
 if os.environ[QT_API] in PYQT5_API:
     from PyQt5.QtWidgets import *
@@ -65,6 +65,10 @@ elif os.environ[QT_API] in PYQT4_API:
     # These objects belong to QtCore
     del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
          QSortFilterProxyModel)
+
+    # Patch QComboBox to allow Python objects to be passed to userData
+    patch_qcombobox(QComboBox)
+
 elif os.environ[QT_API] in PYSIDE_API:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
@@ -106,5 +110,9 @@ elif os.environ[QT_API] in PYSIDE_API:
     # These objects belong to QtCore
     del (QItemSelection, QItemSelectionModel, QItemSelectionRange,
          QSortFilterProxyModel)
+
+    # Patch QComboBox to allow Python objects to be passed to userData
+    patch_qcombobox(QComboBox)
+
 else:
     raise PythonQtError('No Qt bindings could be found')
