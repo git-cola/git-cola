@@ -8,10 +8,7 @@
 Provides QtSvg classes and functions.
 """
 
-from qtpy import PYQT5
-from qtpy import PYQT4
-from qtpy import PYSIDE
-from qtpy import PythonQtError
+from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:

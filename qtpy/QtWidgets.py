@@ -13,10 +13,7 @@ Provides widget classes and functions.
     were the ``PyQt5.QtWidgets`` module.
 """
 
-from qtpy import PYQT5
-from qtpy import PYQT4
-from qtpy import PYSIDE
-from qtpy import PythonQtError
+from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
 from qtpy._patch.qcombobox import patch_qcombobox
 
 
