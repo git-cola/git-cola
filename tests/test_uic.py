@@ -2,9 +2,7 @@ import os
 import sys
 import contextlib
 
-import pytest
-
-from qtpy import QtWidgets, PYSIDE
+from qtpy import QtWidgets
 from qtpy.QtWidgets import QComboBox
 from qtpy.uic import loadUi
 
@@ -53,29 +51,6 @@ def test_load_ui():
     assert isinstance(ui.comboBox, QComboBox)
 
 
-def test_load_ui_custom(tmpdir):
-    """
-    Test that we can load a .ui file with custom widgets
-    """
-
-    app = get_qapp()
-
-    with enabled_qcombobox_subclass(tmpdir):
-        from qcombobox_subclass import _QComboBoxSubclass
-        if PYSIDE:
-            customWidgets = {'_QComboBoxSubclass': _QComboBoxSubclass}
-            ui = loadUi(os.path.join(os.path.dirname(__file__), 'test_custom.ui'),
-                        customWidgets=customWidgets)
-        else:
-            ui = loadUi(os.path.join(os.path.dirname(__file__), 'test_custom.ui'))
-
-    assert isinstance(ui.pushButton, QtWidgets.QPushButton)
-    assert isinstance(ui.comboBox, _QComboBoxSubclass)
-
-
-@pytest.mark.xfail(PYSIDE, reason='The PySide loadUi wrapper does not yet '
-                                  'support determining custom widgets '
-                                  'automatically')
 def test_load_ui_custom_auto(tmpdir):
     """
     Test that we can load a .ui file with custom widgets without having to

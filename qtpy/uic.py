@@ -154,8 +154,40 @@ elif PYSIDE:
 
                 return widget
 
-    def loadUi(uifile, baseinstance=None, customWidgets=None,
-               workingDirectory=None):
+    def _get_custom_widgets(ui_file):
+        """
+        This function is used to parse a ui file and look for the <customwidgets>
+        section, then automatically load all the custom widget classes.
+        """
+
+        import sys
+        import importlib
+        from xml.etree.ElementTree import ElementTree
+
+        # Parse the UI file
+        etree = ElementTree()
+        ui = etree.parse(ui_file)
+
+        # Get the customwidgets section
+        custom_widgets = ui.find('customwidgets')
+
+        custom_widget_classes = dict()
+
+        if custom_widgets is None:
+            return custom_widget_classes
+
+        for custom_widget in custom_widgets.getchildren():
+
+            cw_class = custom_widget.find('class').text
+            cw_header = custom_widget.find('header').text
+
+            module = importlib.import_module(cw_header)
+
+            custom_widget_classes[cw_class] = getattr(module, cw_class)
+
+        return custom_widget_classes
+
+    def loadUi(uifile, baseinstance=None, workingDirectory=None):
         """
         Dynamically load a user interface from the given ``uifile``.
 
@@ -170,11 +202,6 @@ elif PYSIDE:
         or a subclass thereof, too. You cannot load a ``QMainWindow`` UI file
         with a plain :class:`~PySide.QtGui.QWidget` as ``baseinstance``.
 
-        ``customWidgets`` is a dictionary mapping from class name to class
-        object for custom widgets. Usually, this should be done by calling
-        registerCustomWidget on the QUiLoader, but with PySide 1.1.2 on Ubuntu
-        12.04 x86_64 this causes a segfault.
-
         :method:`~PySide.QtCore.QMetaObject.connectSlotsByName()` is called on
         the created user interface, so you can implemented your slots according
         to its conventions in your widget class.
@@ -182,6 +209,9 @@ elif PYSIDE:
         Return ``baseinstance``, if ``baseinstance`` is not ``None``. Otherwise
         return the newly created instance of the user interface.
         """
+
+        # We parse the UI file and import any required custom widgets
+        customWidgets = _get_custom_widgets(uifile)
 
         loader = UiLoader(baseinstance, customWidgets)
 
