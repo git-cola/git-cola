@@ -8,8 +8,6 @@
 
 """
 Provides QtTest and functions
-.. warning:: PySide is not supported here, that's why there is not unit tests
-    running with PySide.
 """
 
 from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
@@ -25,6 +23,6 @@ elif PYQT4:
         def qWaitForWindowActive(QWidget):
             OldQTest.qWaitForWindowShown(QWidget)
 elif PYSIDE:
-    raise ImportError('QtTest support is incomplete for PySide')
+    from PySide.QtTest import QTest
 else:
     raise PythonQtError('No Qt bindings could be found')
