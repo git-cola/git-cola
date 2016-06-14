@@ -14,7 +14,10 @@ from `qtpy` instead of `PyQt5`.
 
 This project is based on the [pyqode.qt](https://github.com/pyQode/pyqode.qt)
 project and the [spyderlib.qt](https://github.com/spyder-ide/spyder/tree/2.3/spyderlib/qt)
-module from the [Spyder](https://github.com/spyder-ide/spyder) project.
+module from the [Spyder](https://github.com/spyder-ide/spyder) project, and
+also includes contributions adapted from
+[qt-helpers](https://github.com/glue-viz/qt-helpers), developed as part of the
+[glue](http://glueviz.org) project.
 
 Unlike `pyqode.qt` this is not a namespace package, so it is not tied
 to a particular project or namespace.
