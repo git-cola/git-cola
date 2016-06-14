@@ -34,7 +34,7 @@
   <customwidget>
    <class>_QComboBoxSubclass</class>
    <extends>QComboBox</extends>
-   <header>qtpy.uic</header>
+   <header>qcombobox_subclass</header>
   </customwidget>
  </customwidgets>
  <resources/>

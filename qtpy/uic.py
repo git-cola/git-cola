@@ -191,10 +191,3 @@ elif PYSIDE:
         widget = loader.load(uifile)
         QMetaObject.connectSlotsByName(widget)
         return widget
-
-
-class _QComboBoxSubclass(QComboBox):
-    """
-    This is a private class that is used only for testing purposes.
-    """
-    pass

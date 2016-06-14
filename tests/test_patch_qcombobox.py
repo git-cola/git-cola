@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from qtpy import QtGui, QtWidgets
 
 def get_qapp(icon_path=None):
