@@ -171,10 +171,10 @@ elif PYSIDE:
         # Get the customwidgets section
         custom_widgets = ui.find('customwidgets')
 
-        custom_widget_classes = dict()
-
         if custom_widgets is None:
-            return custom_widget_classes
+            return {}
+
+        custom_widget_classes = {}
 
         for custom_widget in custom_widgets.getchildren():
 
