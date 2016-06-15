@@ -84,6 +84,7 @@ if API in PYQT5_API:
     try:
         from PyQt5.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
         from PyQt5.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
+        PYSIDE_VERSION = None
     except ImportError:
         API = 'pyqt'
 
@@ -103,6 +104,7 @@ if API in PYQT4_API:
             pass
         from PyQt4.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
         from PyQt4.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
+        PYSIDE_VERSION = None
         PYQT5 = False
         PYQT4 = True
     except ImportError:
@@ -115,6 +117,7 @@ if API in PYSIDE_API:
     try:
         from PySide import __version__ as PYSIDE_VERSION  # analysis:ignore
         from PySide.QtCore import __version__ as QT_VERSION  # analysis:ignore
+        PYQT_VERSION = None
         PYQT5 = False
         PYSIDE = True
     except ImportError:
