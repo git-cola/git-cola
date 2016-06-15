@@ -9,6 +9,15 @@ def get_qapp(icon_path=None):
     return qapp
 
 
+class Data(object):
+    """
+    Test class to store in userData. The __getitem__ is needed in order to
+    reproduce the segmentation fault.
+    """
+    def __getitem__(self, item):
+        raise ValueError("Failing")
+
+
 def test_patched_qcombobox():
     """
     In PySide, using Python objects as userData in QComboBox causes
@@ -20,14 +29,6 @@ def test_patched_qcombobox():
     """
 
     app = get_qapp()
-
-    class Data(object):
-        """
-        Test class to store in userData. The __getitem__ is needed in order to
-        reproduce the segmentation fault.
-        """
-        def __getitem__(self, item):
-            raise ValueError("Failing")
 
     data1 = Data()
     data2 = Data()
@@ -73,3 +74,21 @@ def test_patched_qcombobox():
     assert widget.itemText(4) == 'd'
     assert widget.itemText(5) == 'g'
     assert widget.itemText(6) == 'f'
+
+
+def test_model_item():
+    """
+    This is a regression test for an issue that caused the call to item(0)
+    below to trigger segmentation faults in PySide. The issue is
+    non-deterministic when running the call once, so we include a loop to make
+    sure that we trigger the fault.
+    """
+    app = get_qapp()
+    combo = QtWidgets.QComboBox()
+    label_data = [('a', None)]
+    for iter in range(10000):
+        combo.clear()
+        for i, (label, data) in enumerate(label_data):
+            combo.addItem(label, userData=data)
+        model = combo.model()
+        model.item(0)
