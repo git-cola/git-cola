@@ -83,18 +83,12 @@ def test_model_item():
     non-deterministic when running the call once, so we include a loop to make
     sure that we trigger the fault.
     """
-
     app = get_qapp()
-
     combo = QtWidgets.QComboBox()
-
     label_data = [('a', None)]
-
     for iter in range(10000):
-
         combo.clear()
         for i, (label, data) in enumerate(label_data):
             combo.addItem(label, userData=data)
-
         model = combo.model()
         model.item(0)
