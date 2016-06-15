@@ -53,7 +53,7 @@ packages::
 import os
 
 # Version of QtPy
-__version__ = "1.1.dev0"
+from qtpy._version import __version__
 
 #: Qt API environment variable name
 QT_API = 'QT_API'
