@@ -4,6 +4,10 @@
 """
 
 from __future__ import division, absolute_import, unicode_literals
+import os
+import sys
+from argparse import ArgumentParser
+
 
 __copyright__ = """
 Copyright (C) 2007-2016 David Aguilar and contributors
@@ -19,21 +23,19 @@ GNU General Public License for more details.
 
 """
 
-import os
-import sys
-from argparse import ArgumentParser
-from os.path import abspath
-from os.path import dirname
-from os.path import join
-from os.path import realpath
-
 
 def setup_environment():
     """Provides access to the cola modules"""
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
+    abspath = os.path.abspath
+    dirname = os.path.dirname
+    realpath = os.path.realpath
+    join = os.path.join
+
     python2 = sys.version_info[0] == 2
     prefix = dirname(dirname(realpath(abspath(__file__))))
+
     if python2:
         cola_mod = join(prefix, str('cola'), str('__init__.py'))
         install_lib = join(prefix, str('share'), str('git-cola'), str('lib'))

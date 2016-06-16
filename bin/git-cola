@@ -4,6 +4,9 @@
 """
 
 from __future__ import division, absolute_import, unicode_literals
+import os
+import sys
+
 
 __copyright__ = """
 Copyright (C) 2007-2016 David Aguilar and contributors
@@ -18,9 +21,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 """
-
-import os
-import sys
 
 
 def setup_environment():
