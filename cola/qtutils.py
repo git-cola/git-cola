@@ -22,7 +22,7 @@ from cola.widgets import defs
 
 
 def connect_action(action, fn):
-    """Connectc an action to a function"""
+    """Connect an action to a function"""
     action.connect(action, SIGNAL('triggered()'), fn)
 
 
