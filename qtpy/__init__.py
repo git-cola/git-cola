@@ -110,8 +110,8 @@ if API in PYQT4_API:
     except ImportError:
         API = 'pyside'
     else:
-        is_old_pyqt = __version__.startswith(('4.4', '4.5', '4.6', '4.7'))
-        is_pyqt46 = __version__.startswith('4.6')
+        is_old_pyqt = PYQT_VERSION.startswith(('4.4', '4.5', '4.6', '4.7'))
+        is_pyqt46 = PYQT_VERSION.startswith('4.6')
 
 if API in PYSIDE_API:
     try:
