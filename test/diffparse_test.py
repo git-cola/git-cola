@@ -9,49 +9,57 @@ from test import helper
 
 
 class ParseDiffTestCase(unittest.TestCase):
+
     def test_diff(self):
         fixture_path = helper.fixture('diff.txt')
         parser = DiffParser('cola/diffparse.py', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(len(hunks), 3)
-
         self.assertEqual(hunks[0].first_line_idx, 0)
         self.assertEqual(len(hunks[0].lines), 23)
-        self.assertEqual(hunks[0].lines[0],
+        self.assertEqual(
+                hunks[0].lines[0],
                 '@@ -6,10 +6,21 @@ from cola import gitcmds')
-        self.assertEqual(hunks[0].lines[1],
+        self.assertEqual(
+                hunks[0].lines[1],
                 ' from cola import gitcfg')
-        self.assertEqual(hunks[0].lines[2],
-                ' ')
-        self.assertEqual(hunks[0].lines[3],
-                ' ')
-        self.assertEqual(hunks[0].lines[4],
-                '+class DiffSource(object):')
-        self.assertEqual(hunks[0].lines[-1],
+        self.assertEqual(hunks[0].lines[2], ' ')
+        self.assertEqual(hunks[0].lines[3], ' ')
+        self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):')
+        self.assertEqual(
+                hunks[0].lines[-1],
                 "         self._header_start_re = re.compile('^@@ -(\d+)"
                 " \+(\d+),(\d+) @@.*')")
 
         self.assertEqual(hunks[1].first_line_idx, 23)
         self.assertEqual(len(hunks[1].lines), 18)
-        self.assertEqual(hunks[1].lines[0],
+        self.assertEqual(
+                hunks[1].lines[0],
                 '@@ -29,13 +40,11 @@ class DiffParser(object):')
-        self.assertEqual(hunks[1].lines[1],
+        self.assertEqual(
+                hunks[1].lines[1],
                 '         self.diff_sel = []')
-        self.assertEqual(hunks[1].lines[2],
+        self.assertEqual(
+                hunks[1].lines[2],
                 '         self.selected = []')
-        self.assertEqual(hunks[1].lines[3],
+        self.assertEqual(
+                hunks[1].lines[3],
                 '         self.filename = filename')
-        self.assertEqual(hunks[1].lines[4],
+        self.assertEqual(
+                hunks[1].lines[4],
                 '+        self.diff_source = diff_source or DiffSource()')
-        self.assertEqual(hunks[1].lines[-1],
+        self.assertEqual(
+                hunks[1].lines[-1],
                 '         self.header = header')
 
         self.assertEqual(hunks[2].first_line_idx, 41)
         self.assertEqual(len(hunks[2].lines), 16)
-        self.assertEqual(hunks[2].lines[0],
+        self.assertEqual(
+                hunks[2].lines[0],
                 '@@ -43,11 +52,10 @@ class DiffParser(object):')
-        self.assertEqual(hunks[2].lines[-1],
+        self.assertEqual(
+                hunks[2].lines[-1],
                 '         """Writes a new diff corresponding to the user\'s'
                 ' selection."""')
 
@@ -87,9 +95,9 @@ class ParseDiffTestCase(unittest.TestCase):
         parser = DiffParser('rijndael.js', core.read(fixture_path))
         hunks = parser.hunks
 
-        self.assertEqual(hunks[0].lines[0],
-                '@@ -1,39 +1 @@')
-        self.assertEqual(hunks[-1].lines[-1],
+        self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@')
+        self.assertEqual(
+                hunks[-1].lines[-1],
                 "+module.exports = require('./build/Release/rijndael');")
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 39)
@@ -101,10 +109,8 @@ class ParseDiffTestCase(unittest.TestCase):
         parser = DiffParser('filename', core.read(fixture_path))
         hunks = parser.hunks
 
-        self.assertEqual(hunks[0].lines[0],
-                '@@ -1,2 +0,0 @@')
-        self.assertEqual(hunks[-1].lines[-1],
-                '-second')
+        self.assertEqual(hunks[0].lines[0], '@@ -1,2 +0,0 @@')
+        self.assertEqual(hunks[-1].lines[-1], '-second')
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 2)
         self.assertEqual(hunks[0].new_start, 0)
