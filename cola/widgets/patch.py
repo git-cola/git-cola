@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 
-from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 
@@ -15,7 +14,6 @@ from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.standard import Dialog
 from cola.widgets.standard import DraggableTreeWidget
-from cola.compat import ustr
 
 
 def apply_patches():
@@ -36,8 +34,8 @@ def new_apply_patches(patches=None, parent=None):
 def get_patches_from_paths(paths):
     paths = [core.decode(p) for p in paths]
     patches = [p for p in paths
-                if core.isfile(p) and (
-                    p.endswith('.patch') or p.endswith('.mbox'))]
+               if core.isfile(p) and
+               (p.endswith('.patch') or p.endswith('.mbox'))]
     dirs = [p for p in paths if core.isdir(p)]
     dirs.sort()
     for d in dirs:
@@ -99,11 +97,11 @@ class ApplyPatches(Dialog):
 
         self.close_button = qtutils.close_button()
 
-        self.add_action = qtutils.add_action(self,
-                N_('Add'), self.add_files, hotkeys.ADD_ITEM)
+        self.add_action = qtutils.add_action(
+                self, N_('Add'), self.add_files, hotkeys.ADD_ITEM)
 
-        self.remove_action = qtutils.add_action(self,
-                N_('Remove'), self.tree.remove_selected,
+        self.remove_action = qtutils.add_action(
+                self, N_('Remove'), self.tree.remove_selected,
                 hotkeys.DELETE, hotkeys.BACKSPACE, hotkeys.REMOVE_ITEM)
 
         self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
