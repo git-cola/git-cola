@@ -25,10 +25,10 @@ e.g.: sudo apt-get install python-qt4
 """
 
 # /usr/include/sysexits.h
-#define EX_OK           0   /* successful termination */
-#define EX_USAGE        64  /* command line usage error */
-#define EX_NOINPUT      66  /* cannot open input */
-#define EX_UNAVAILABLE  69  /* service unavailable */
+# #define EX_OK           0   /* successful termination */
+# #define EX_USAGE        64  /* command line usage error */
+# #define EX_NOINPUT      66  /* cannot open input */
+# #define EX_UNAVAILABLE  69  /* service unavailable */
 EX_OK = 0
 EX_USAGE = 64
 EX_NOINPUT = 66
@@ -64,7 +64,6 @@ from cola import i18n
 from cola import qtcompat
 from cola import qtutils
 from cola import resources
-from cola import utils
 from cola import version
 from cola.decorators import memoize
 from cola.i18n import N_
@@ -201,7 +200,7 @@ class ColaQApplication(QtGui.QApplication):
 
     def __init__(self, argv):
         QtGui.QApplication.__init__(self, argv)
-        self.view = None ## injected by application_start()
+        self.view = None  # injected by application_start()
 
     def event(self, e):
         if e.type() == QtCore.QEvent.ApplicationActivate:
