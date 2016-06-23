@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import json
 
 from cola import core
 from cola import utils
@@ -100,6 +101,7 @@ class Commit(object):
                  'email',
                  'generation',
                  'parsed')
+
     def __init__(self, sha1=None, log_entry=None):
         self.sha1 = sha1
         self.summary = None
@@ -116,8 +118,9 @@ class Commit(object):
 
     def parse(self, log_entry, sep=logsep):
         self.sha1 = log_entry[:40]
-        (parents, tags, author, authdate, email, summary) = \
-                log_entry[41:].split(sep, 5)
+        after_sha1 = log_entry[41:]
+        details = after_sha1.split(sep, 5)
+        (parents, tags, author, authdate, email, summary) = details
 
         self.summary = summary and summary or ''
         self.author = author and author or ''
@@ -146,11 +149,11 @@ class Commit(object):
         """Add tag/branch labels from `git log --decorate ....`"""
 
         if tag.startswith('tag: '):
-            tag = tag[5:] # tag: refs/
+            tag = tag[5:]  # tag: refs/
         elif tag.startswith('refs/remotes/'):
-            tag = tag[13:] # refs/remotes/
+            tag = tag[13:]  # refs/remotes/
         elif tag.startswith('refs/heads/'):
-            tag = tag[11:] # refs/heads/
+            tag = tag[11:]  # refs/heads/
         if tag.endswith('/HEAD'):
             return
 
@@ -193,15 +196,18 @@ class Commit(object):
     def __str__(self):
         return self.sha1
 
+    def data(self):
+        return {
+            'sha1': self.sha1,
+            'summary': self.summary,
+            'author': self.author,
+            'authdate': self.authdate,
+            'parents': [p.sha1 for p in self.parents],
+            'tags': self.tags,
+        }
+
     def __repr__(self):
-        return ("{\n"
-                "  sha1: " + self.sha1 + "\n"
-                "  summary: " + self.summary + "\n"
-                "  author: " + self.author + "\n"
-                "  authdate: " + self.authdate + "\n"
-                "  parents: [" + ', '.join([p.sha1 for p in self.parents]) + "]\n"
-                "  tags: [" + ', '.join(self.tags) + "]\n"
-                "}")
+        return json.dumps(self.data(), sort_keys=True, indent=4)
 
     def is_fork(self):
         ''' Returns True if the node is a fork'''
@@ -232,7 +238,6 @@ class RepoReader(object):
 
     cached = property(lambda self: self._cached)
     """Return True when no commits remain to be read"""
-
 
     def __len__(self):
         return len(self._topo_list)
@@ -283,7 +288,7 @@ class RepoReader(object):
             self._topo_list.append(c)
             return c
 
-    __next__ = next # for Python 3
+    __next__ = next  # for Python 3
 
     def __getitem__(self, sha1):
         return self._objects[sha1]
