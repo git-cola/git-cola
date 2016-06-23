@@ -35,12 +35,14 @@ def stage_or_unstage(widget):
 
 
 def move_down(widget):
-    return qtutils.add_action(widget,
-            N_('Next File'), lambda: widget.emit(SIGNAL('move_down()')),
+    return qtutils.add_action(
+            widget, N_('Next File'),
+            lambda: widget.emit(SIGNAL('move_down()')),
             hotkeys.MOVE_DOWN_SECONDARY)
 
 
 def move_up(widget):
-    return qtutils.add_action(widget,
-            N_('Previous File'), lambda: widget.emit(SIGNAL('move_up()')),
+    return qtutils.add_action(
+            widget, N_('Previous File'),
+            lambda: widget.emit(SIGNAL('move_up()')),
             hotkeys.MOVE_UP_SECONDARY)
