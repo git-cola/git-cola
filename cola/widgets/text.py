@@ -124,9 +124,9 @@ class TextEdit(QtGui.QTextEdit):
         cursor = self.textCursor()
         offset = cursor.position()
         contents = self.toPlainText()
-        while (offset >= 1
-                and contents[offset-1]
-                and contents[offset-1] != '\n'):
+        while (offset >= 1 and
+                contents[offset-1] and
+                contents[offset-1] != '\n'):
             offset -= 1
         data = contents[offset:]
         if '\n' in data:
