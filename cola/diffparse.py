@@ -39,9 +39,8 @@ def _format_range(start, count):
         return '%d,%d' % (start, count)
 
 
-def _format_hunk_header(old_start, old_count,
-                       new_start, new_count,
-                       heading=''):
+def _format_hunk_header(old_start, old_count, new_start, new_count,
+                        heading=''):
     return '@@ -%s +%s @@%s' % (_format_range(old_start, old_count),
                                 _format_range(new_start, new_count),
                                 heading)
