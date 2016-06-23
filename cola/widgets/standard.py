@@ -122,8 +122,10 @@ class MainWindowMixin(WidgetMixin):
         if windowstate is None:
             result = False
         else:
-            result = self.restoreState(QtCore.QByteArray.fromBase64(str(windowstate)),
-                                       self.widget_version) and result
+            from_base64 = QtCore.QByteArray.fromBase64
+            result = self.restoreState(
+                    from_base64(str(windowstate)),
+                    self.widget_version) and result
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
         self.update_dockwidget_tooltips()
@@ -331,7 +333,7 @@ class DraggableTreeMixin(TreeMixin):
                 self.setItemSelected(item, True)
             self.emit(SIGNAL(self.ITEMS_MOVED_SIGNAL), clicked_items)
         self._inner_drag = False
-        event.accept() # must be called after dropEvent()
+        event.accept()  # must be called after dropEvent()
 
     def mousePressEvent(self, event):
         """Clear the selection when a mouse click hits no item"""
