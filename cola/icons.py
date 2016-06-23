@@ -169,12 +169,14 @@ def download():
 def discard():
     return icon('trashcan.svg')
 
+
 # folder vs directory: directory is opaque, folder is just an outline
 # directory is used for the File Browser, where more contrast with the file
 # icons are needed.
 
 def folder():
     return icon('folder.svg')
+
 
 def directory():
     return icon('file-directory.svg')
