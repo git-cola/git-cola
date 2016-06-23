@@ -28,6 +28,7 @@ _encoding_tests = [
     # <-- add encodings here
 ]
 
+
 def decode(enc, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
     """
@@ -203,7 +204,8 @@ def _fork_win32(args, cwd=None):
         argv = [decode(arg) for arg in args]
     else:
         argv = [encode(arg) for arg in args]
-    DETACHED_PROCESS = 0x00000008 # Amazing!
+
+    DETACHED_PROCESS = 0x00000008  # Amazing!
     return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
 
 
@@ -224,8 +226,8 @@ def _win32_find_exe(exe):
     # extensions specified in PATHEXT
     if '.' not in exe:
         extensions = getenv('PATHEXT', '').split(os.pathsep)
-        candidates.extend([exe+ext for ext in extensions
-                            if ext.startswith('.')])
+        candidates.extend([(exe + ext) for ext in extensions
+                           if ext.startswith('.')])
     # search the current directory first
     for candidate in candidates:
         if exists(candidate):
@@ -250,12 +252,18 @@ else:
     fork = _fork_posix
 
 
+def _decorator_noop(x):
+    return x
+
+
 def wrap(action, fn, decorator=None):
     """Wrap arguments with `action`, optionally decorate the result"""
     if decorator is None:
-        decorator = lambda x: x
+        decorator = _decorator_noop
+
     def wrapped(*args, **kwargs):
         return decorator(fn(action(*args, **kwargs)))
+
     return wrapped
 
 
@@ -308,7 +316,12 @@ makedirs = wrap(mkpath, os.makedirs)
 try:
     readlink = wrap(mkpath, os.readlink, decorator=decode)
 except AttributeError:
-    readlink = lambda p: p
+
+    def _readlink_noop(p):
+        return p
+
+    readlink = _readlink_noop
+
 realpath = wrap(mkpath, os.path.realpath, decorator=decode)
 relpath = wrap(mkpath, os.path.relpath, decorator=decode)
 stat = wrap(mkpath, os.stat)
