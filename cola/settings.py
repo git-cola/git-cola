@@ -30,7 +30,7 @@ def read_json(path):
     try:
         with core.xopen(path, 'rt') as fp:
             return mkdict(json.load(fp))
-    except: # bad path or json
+    except:  # bad path or json
         return {}
 
 
