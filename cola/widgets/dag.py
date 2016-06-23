@@ -116,37 +116,37 @@ class ViewerMixin(object):
 
     def context_menu_actions(self):
         return {
-        'diff_this_selected':
+            'diff_this_selected':
             qtutils.add_action(self, N_('Diff this -> selected'),
                                self.diff_this_selected),
-        'diff_selected_this':
+            'diff_selected_this':
             qtutils.add_action(self, N_('Diff selected -> this'),
                                self.diff_selected_this),
-        'create_branch':
+            'create_branch':
             qtutils.add_action(self, N_('Create Branch'),
                                self.create_branch),
-        'create_patch':
+            'create_patch':
             qtutils.add_action(self, N_('Create Patch'),
                                self.create_patch),
-        'create_tag':
+            'create_tag':
             qtutils.add_action(self, N_('Create Tag'),
                                self.create_tag),
-        'create_tarball':
+            'create_tarball':
             qtutils.add_action(self, N_('Save As Tarball/Zip...'),
                                self.create_tarball),
-        'cherry_pick':
+            'cherry_pick':
             qtutils.add_action(self, N_('Cherry Pick'),
                                self.cherry_pick),
-        'reset_branch_head':
+            'reset_branch_head':
             qtutils.add_action(self, N_('Reset Branch Head'),
                                self.reset_branch_head),
-        'reset_worktree':
+            'reset_worktree':
             qtutils.add_action(self, N_('Reset Worktree'),
                                self.reset_worktree),
-        'save_blob':
+            'save_blob':
             qtutils.add_action(self, N_('Grab File...'),
                                self.save_blob_dialog),
-        'copy':
+            'copy':
             qtutils.add_action(self, N_('Copy SHA-1'),
                                self.copy_to_clipboard,
                                QtGui.QKeySequence.Copy),
@@ -411,11 +411,11 @@ class GitDAG(standard.MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
-        self.lock_layout_action = qtutils.add_action_bool(self,
-                N_('Lock Layout'), self.set_lock_layout, False)
+        self.lock_layout_action = qtutils.add_action_bool(
+                self, N_('Lock Layout'), self.set_lock_layout, False)
 
-        self.refresh_action = qtutils.add_action(self,
-                N_('Refresh'), self.refresh, hotkeys.REFRESH)
+        self.refresh_action = qtutils.add_action(
+                self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
 
         # Create the application menu
         self.menubar = QtGui.QMenuBar(self)
@@ -760,14 +760,14 @@ class Edge(QtGui.QGraphicsItem):
 
         else:
 
-            #Define points starting from source
+            # Define points starting from source
             point1 = QPointF(self.source.x(), self.source.y())
             point2 = QPointF(point1.x(), point1.y() - connector_length)
             point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
 
-            #Define points starting from dest
+            # Define points starting from dest
             point4 = QPointF(self.dest.x(), self.dest.y())
-            point5 = QPointF(point4.x(),point3.y() - arc_rect)
+            point5 = QPointF(point4.x(), point3.y() - arc_rect)
             point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
 
             start_angle_arc1 = 180
@@ -948,7 +948,6 @@ class Commit(QtGui.QGraphicsItem):
         painter.setBrush(self.brush)
         painter.drawEllipse(inner)
 
-
     def mousePressEvent(self, event):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
         self.pressed = True
@@ -1021,7 +1020,6 @@ class Label(QtGui.QGraphicsItem):
         except AttributeError:
             font = cache.label_font = QtGui.QApplication.font()
             font.setPointSize(6)
-
 
         # Draw tags
         painter.setBrush(self.color)
@@ -1329,9 +1327,9 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
         """Handle mouse wheel zooming."""
         zoom = math.pow(2.0, event.delta()/512.0)
         factor = (self.matrix()
-                        .scale(zoom, zoom)
-                        .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
-                        .width())
+                  .scale(zoom, zoom)
+                  .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
+                  .width())
         if factor < 0.014 or factor > 42.0:
             return
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
@@ -1464,7 +1462,7 @@ class GraphView(ViewerMixin, QtGui.QGraphicsView):
 
             y_pos = min(y_pos, y_min - y_off)
 
-            #y_pos = y_off
+            # y_pos = y_off
             positions[sha1] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
