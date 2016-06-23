@@ -68,8 +68,8 @@ class SelectCommitsDialog(QtGui.QDialog):
                                         self.splitter, self.input_layout)
         self.setLayout(self.main_layout)
 
-        self.connect(self.commit_list,
-                     SIGNAL('itemSelectionChanged()'), self.commit_sha1_selected)
+        self.connect(self.commit_list, SIGNAL('itemSelectionChanged()'),
+                     self.commit_sha1_selected)
 
         self.connect(self.commit_list,
                      SIGNAL('itemDoubleClicked(QListWidgetItem*)'),
@@ -99,7 +99,7 @@ class SelectCommitsDialog(QtGui.QDialog):
         return self.selected_commits()
 
     def commit_sha1_selected(self):
-        sha1  = self.selected_commit()
+        sha1 = self.selected_commit()
         selected = sha1 is not None
         self.select_button.setEnabled(selected)
         if not selected:
