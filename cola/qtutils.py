@@ -166,12 +166,16 @@ def paths_from_indexes(model, indexes,
     return paths_from_items(items, item_type=item_type, item_filter=item_filter)
 
 
+def _true_filter(x):
+    return True
+
+
 def paths_from_items(items,
                      item_type=TreeWidgetItem.TYPE,
                      item_filter=None):
     """Return a list of paths from a list of items"""
     if item_filter is None:
-        item_filter = lambda x: True
+        item_filter = _true_filter
     return [i.path for i in items
             if i.type() == item_type and item_filter(i)]
 
@@ -442,7 +446,6 @@ def set_items(widget, items):
     """Clear the existing widget contents and set the new items."""
     widget.clear()
     add_items(widget, items)
-
 
 
 def create_treeitem(filename, staged=False, deleted=False, untracked=False):
