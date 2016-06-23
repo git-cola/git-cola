@@ -85,16 +85,19 @@ class GitCommandWidget(standard.Dialog):
 
         # Put them in a horizontal layout at the bottom.
         self.button_box = QtGui.QDialogButtonBox(self)
-        self.button_box.addButton(self.button_abort, QtGui.QDialogButtonBox.RejectRole)
-        self.button_box.addButton(self.button_close, QtGui.QDialogButtonBox.AcceptRole)
+        self.button_box.addButton(self.button_abort,
+                                  QtGui.QDialogButtonBox.RejectRole)
+        self.button_box.addButton(self.button_close,
+                                  QtGui.QDialogButtonBox.AcceptRole)
 
         # Connect the signals to the process
         self.connect(self.proc, SIGNAL('readyReadStandardOutput()'),
-                self.read_stdout)
+                     self.read_stdout)
         self.connect(self.proc, SIGNAL('readyReadStandardError()'),
-                self.read_stderr)
+                     self.read_stderr)
         self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
-        self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'), self.stateChanged)
+        self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'),
+                     self.stateChanged)
 
         qtutils.connect_button(self.button_abort, self.abortProc)
         qtutils.connect_button(self.button_close, self.close)
@@ -170,7 +173,7 @@ class GitCommandWidget(standard.Dialog):
         else:
             self.button_abort.setEnabled(True)
 
-    def finishProc(self, status ):
+    def finishProc(self, status):
         self.exitstatus = status
 
 
