@@ -68,9 +68,8 @@ class SelectionModel(Observable):
 
     # These properties wrap the individual selection items
     # to provide higher-level pseudo-selections.
-    unstaged = property(lambda self: self.unmerged +
-                                     self.modified +
-                                     self.untracked)
+    unstaged = property(lambda self:
+                        self.unmerged + self.modified + self.untracked)
 
     def __init__(self):
         Observable.__init__(self)
