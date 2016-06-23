@@ -23,6 +23,7 @@ _USER_XDG_CONFIG = core.expanduser(
         join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
              'git', 'config'))
 
+
 @memoize
 def current():
     """Return the GitConfig singleton."""
@@ -36,7 +37,7 @@ def _stat_info():
              ('user', _USER_CONFIG)]
     config = git.current().git_path('config')
     if config:
-         paths.append(('repo', config))
+        paths.append(('repo', config))
 
     statinfo = []
     for category, path in paths:
@@ -226,7 +227,7 @@ class GitConfig(observable.Observable):
         header_subkey = re.compile(r'^\[(\s+) "(\s+)"\]$')
 
         with core.xopen(path, 'rt') as f:
-            file_lines  = f.readlines()
+            file_lines = f.readlines()
 
         stripped_lines = [line.strip() for line in file_lines]
         lines = [line for line in stripped_lines if bool(line)]
@@ -375,25 +376,26 @@ class GitConfig(observable.Observable):
         prefix = len('guitool.%s.' % name)
         guitools = self.find('guitool.%s.*' % name)
         return dict([(key[prefix:], value)
-                        for (key, value) in guitools.items()])
+                     for (key, value) in guitools.items()])
 
     def get_guitool_names(self):
         guitools = self.find('guitool.*.cmd')
         prefix = len('guitool.')
         suffix = len('.cmd')
         return sorted([name[prefix:-suffix]
-                        for (name, cmd) in guitools.items()])
+                       for (name, cmd) in guitools.items()])
 
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
         names = self.get_guitool_names()
-        return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
+        return [(name, self.get('guitool.%s.shortcut' % name))
+                for name in names]
 
     def terminal(self):
         term = self.get('cola.terminal', None)
         if not term:
             # find a suitable default terminal
-            term = 'xterm -e' # for mac osx
+            term = 'xterm -e'  # for mac osx
             candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
             for basename in candidates:
                 if core.exists('/usr/bin/%s' % basename):
