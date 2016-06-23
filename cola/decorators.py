@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
-
-__all__ = ('decorator', 'memoize', 'interruptable')
-
 import errno
 import functools
+
+
+__all__ = ('decorator', 'memoize', 'interruptable')
 
 
 def decorator(caller, func=None):
@@ -46,7 +46,7 @@ def memoize(func):
 
 def _memoize(func, *args, **opts):
     """Implements memoized cache lookups"""
-    if opts: # frozenset is used to ensure hashability
+    if opts:  # frozenset is used to ensure hashability
         key = args, frozenset(opts.items())
     else:
         key = args
