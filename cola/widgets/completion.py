@@ -265,7 +265,8 @@ class GatherCompletionsThread(QtCore.QThread):
 
 class HighlightDelegate(QtGui.QStyledItemDelegate):
     """A delegate used for auto-completion to give formatted completion"""
-    def __init__(self, parent=None): # model, parent=None):
+
+    def __init__(self, parent=None):
         QtGui.QStyledItemDelegate.__init__(self, parent)
         self.highlight_text = ''
         self.case_sensitive = False
@@ -273,11 +274,11 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         self.doc = QtGui.QTextDocument()
         try:
             self.doc.setDocumentMargin(0)
-        except: # older PyQt4
+        except:  # older PyQt4
             pass
 
     def set_highlight_text(self, text, case_sensitive):
-        """Sets the text that will be made bold in the term name when displayed"""
+        """Sets the text that will be made bold when displayed"""
         self.highlight_text = text
         self.case_sensitive = case_sensitive
 
@@ -396,14 +397,22 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.emit(SIGNAL('updated()'))
 
 
+def _identity(x):
+    return x
+
+
+def _lower(x):
+    return x.lower()
+
+
 def filter_matches(match_text, candidates, case_sensitive,
                    sort_key=lambda x: x):
     """Filter candidates and return the matches"""
 
     if case_sensitive:
-        case_transform = lambda x: x
+        case_transform = _identity
     else:
-        case_transform = lambda x: x.lower()
+        case_transform = _lower
 
     if match_text:
         match_text = case_transform(match_text)
@@ -464,7 +473,7 @@ class GitCompletionModel(CompletionModel):
     def emit_update(self):
         try:
             self.emit(SIGNAL(UPDATE_SIGNAL))
-        except RuntimeError: # C++ object has been deleted
+        except RuntimeError:  # C++ object has been deleted
             self.dispose()
 
     def matches(self):
