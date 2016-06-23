@@ -98,7 +98,7 @@ class StartupDialog(standard.Dialog):
         if not self.restore_state(settings=settings):
             screen = QtGui.QApplication.instance().desktop()
             self.setGeometry(screen.width() // 4, screen.height() // 4,
-                            screen.width() // 2, screen.height() // 2)
+                             screen.width() // 2, screen.height() // 2)
 
     def find_git_repo(self):
         """
