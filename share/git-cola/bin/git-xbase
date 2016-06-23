@@ -104,8 +104,8 @@ class MainWindow(QtGui.QMainWindow):
         self.connect(editor, SIGNAL('exit(int)'), self.exit)
         editor.setFocus()
 
-        self.show_help_action = qtutils.add_action(self,
-                N_('Show Help'), show_help, hotkeys.QUESTION)
+        self.show_help_action = qtutils.add_action(
+                self, N_('Show Help'), show_help, hotkeys.QUESTION)
 
         self.menubar = QtGui.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -192,8 +192,8 @@ class Editor(QtGui.QWidget):
                               % re_comment_char)
         pick_rgx = re.compile((r'^\s*(%s)?\s*'
                                r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                               r'\s+([0-9a-f]{7,40})\s+(.+)$')
-                               % re_comment_char)
+                               r'\s+([0-9a-f]{7,40})'
+                               r'\s+(.+)$') % re_comment_char)
         for line in insns.splitlines():
             match = pick_rgx.match(line)
             if match:
@@ -258,41 +258,42 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.setColumnCount(5)
 
         # actions
-        self.copy_sha1_action = qtutils.add_action(self,
-                N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
+        self.copy_sha1_action = qtutils.add_action(
+                self, N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
 
-        self.external_diff_action = qtutils.add_action(self,
-                N_('External Diff'), self.external_diff, hotkeys.DIFF)
+        self.external_diff_action = qtutils.add_action(
+                self, N_('External Diff'), self.external_diff, hotkeys.DIFF)
 
-        self.toggle_enabled_action = qtutils.add_action(self,
-                N_('Toggle Enabled'), self.toggle_enabled,
+        self.toggle_enabled_action = qtutils.add_action(
+                self, N_('Toggle Enabled'), self.toggle_enabled,
                 hotkeys.PRIMARY_ACTION)
 
-        self.action_pick = qtutils.add_action(self,
-                N_('Pick'), lambda: self.set_selected_to(PICK),
+        self.action_pick = qtutils.add_action(
+                self, N_('Pick'), lambda: self.set_selected_to(PICK),
                 *hotkeys.REBASE_PICK)
 
-        self.action_reword = qtutils.add_action(self,
-                N_('Reword'), lambda: self.set_selected_to(REWORD),
+        self.action_reword = qtutils.add_action(
+                self, N_('Reword'), lambda: self.set_selected_to(REWORD),
                 *hotkeys.REBASE_REWORD)
 
-        self.action_edit = qtutils.add_action(self,
-                N_('Edit'), lambda: self.set_selected_to(EDIT),
+        self.action_edit = qtutils.add_action(
+                self, N_('Edit'), lambda: self.set_selected_to(EDIT),
                 *hotkeys.REBASE_EDIT)
 
-        self.action_fixup = qtutils.add_action(self,
-                N_('Fixup'), lambda: self.set_selected_to(FIXUP),
+        self.action_fixup = qtutils.add_action(
+                self, N_('Fixup'), lambda: self.set_selected_to(FIXUP),
                 *hotkeys.REBASE_FIXUP)
 
-        self.action_squash = qtutils.add_action(self,
-                N_('Squash'), lambda: self.set_selected_to(SQUASH),
+        self.action_squash = qtutils.add_action(
+                self, N_('Squash'), lambda: self.set_selected_to(SQUASH),
                 *hotkeys.REBASE_SQUASH)
 
-        self.action_shift_down = qtutils.add_action(self,
-                N_('Shift Down'), self.shift_down, hotkeys.MOVE_DOWN_TERTIARY)
+        self.action_shift_down = qtutils.add_action(
+                self, N_('Shift Down'), self.shift_down,
+                hotkeys.MOVE_DOWN_TERTIARY)
 
-        self.action_shift_up = qtutils.add_action(self,
-                N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
+        self.action_shift_up = qtutils.add_action(
+                self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
 
         self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
                      self.item_changed)
