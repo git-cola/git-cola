@@ -173,7 +173,6 @@ class TextWrapper(object):
         """
         return len(word.replace('\t', '')) + word.count('\t') * self.tabwidth
 
-
     # -- Public interface ----------------------------------------------
 
     def wrap(self, text):
