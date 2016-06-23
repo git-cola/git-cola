@@ -31,7 +31,6 @@ def create_tag(name='', ref='', sign=False, settings=None):
     return view
 
 
-
 class TagOptions(object):
     """Simple data container for the CreateTag dialog."""
 
@@ -147,4 +146,3 @@ class CreateTag(standard.Dialog):
             qtutils.critical(N_('Error: could not create tag "%s"') % tag_name,
                              (N_('git tag returned exit code %s') % status) +
                              ((output+err) and ('\n\n' + output + err) or ''))
-
