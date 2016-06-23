@@ -1,4 +1,4 @@
-from __future__  import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, unicode_literals
 
 import os
 import sys
@@ -22,8 +22,13 @@ except NameError:
     # Python 3
     unichr = chr
 
+
+def _bchr_py3(i):
+    return bytes([i])
+
+
 if PY3:
-    bchr = lambda i: bytes([i])
+    bchr = _bchr_py3
 else:
     bchr = chr
 
