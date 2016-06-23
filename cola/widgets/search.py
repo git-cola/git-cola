@@ -142,7 +142,9 @@ class SearchEngine(object):
     def results(self):
         pass
 
+
 class RevisionSearch(SearchEngine):
+
     def results(self):
         query, opts = self.common_args()
         args = utils.shell_split(query)
@@ -354,10 +356,9 @@ def search_commits(parent):
     return widget
 
 
-
 if __name__ == '__main__':
     import sys
     app = QtGui.QApplication(sys.argv)
-    search = Search()
-    search.show()
+    widget = Search()
+    widget.show()
     sys.exit(app.exec_())
