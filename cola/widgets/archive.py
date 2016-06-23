@@ -49,8 +49,7 @@ class ExpandableGroupBox(QtGui.QGroupBox):
         QtGui.QGroupBox.mousePressEvent(self, event)
 
     def mouseReleaseEvent(self, event):
-        if (event.button() == Qt.LeftButton and
-            self.click_pos == event.pos()):
+        if event.button() == Qt.LeftButton and self.click_pos == event.pos():
             self.set_expanded(not self.expanded)
         QtGui.QGroupBox.mouseReleaseEvent(self, event)
 
