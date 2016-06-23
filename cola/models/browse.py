@@ -95,7 +95,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._interesting_paths = set()
         self._interesting_files = set()
         self._known_paths = set()
-        self._dir_entries= {}
+        self._dir_entries = {}
         self._dir_rows = collections.defaultdict(int)
 
         self.connect(self, SIGNAL('updated()'),
@@ -125,7 +125,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         except KeyError:
             if create:
                 row = self.entries[path] = [self.create_column(c, path)
-                                                for c in Columns.ALL]
+                                            for c in Columns.ALL]
             else:
                 row = None
         return row
@@ -411,13 +411,13 @@ class GitRepoInfoTask(qtutils.Task):
         app = QtGui.QApplication.instance()
         entry = GitRepoEntryStore.entry(self.path, self._parent, self._runtask)
         app.postEvent(entry,
-                GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
+                      GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
         app.postEvent(entry,
-                GitRepoInfoEvent(Columns.AGE, self.data('date')))
+                      GitRepoInfoEvent(Columns.AGE, self.data('date')))
         app.postEvent(entry,
-                GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
+                      GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
         app.postEvent(entry,
-                GitRepoInfoEvent(Columns.STATUS, self.status()))
+                      GitRepoInfoEvent(Columns.STATUS, self.status()))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
