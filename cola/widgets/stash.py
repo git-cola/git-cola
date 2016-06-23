@@ -167,8 +167,9 @@ class StashView(Dialog):
         # Sanitize the stash name
         stash_name = utils.sanitize(stash_name)
         if stash_name in self.names:
-            qtutils.critical(N_('Error: Stash exists'),
-                             N_('A stash named "%s" already exists') % stash_name)
+            qtutils.critical(
+                    N_('Error: Stash exists'),
+                    N_('A stash named "%s" already exists') % stash_name)
             return
 
         keep_index = self.keep_index.isChecked()
@@ -183,11 +184,12 @@ class StashView(Dialog):
         name = self.selected_name()
         if not selection:
             return
-        if not qtutils.confirm(N_('Drop Stash?'),
-                               N_('Recovering a dropped stash is not possible.'),
-                               N_('Drop the "%s" stash?') % name,
-                               N_('Drop Stash'),
-                               default=True, icon=icons.discard()):
+        if not qtutils.confirm(
+                N_('Drop Stash?'),
+                N_('Recovering a dropped stash is not possible.'),
+                N_('Drop the "%s" stash?') % name,
+                N_('Drop Stash'),
+                default=True, icon=icons.discard()):
             return
         cmds.do(DropStash, selection)
         self.update_from_model()
