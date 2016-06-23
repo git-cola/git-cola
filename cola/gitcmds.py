@@ -154,12 +154,16 @@ def for_each_ref_basename(refs, git=git):
     return list(map(lambda x: x[len(refs) + 1:], non_heads))
 
 
+def _triple(x, y):
+    return (x, len(x) + 1, y)
+
+
 def all_refs(split=False, git=git):
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
     tags = []
-    triple = lambda x, y: (x, len(x) + 1, y)
+    triple = _triple
     query = (triple('refs/tags', tags),
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
@@ -223,6 +227,8 @@ def commit_diff(sha1, git=git):
 
 
 _diff_overrides = {}
+
+
 def update_diff_overrides(space_at_eol, space_change,
                           all_space, function_context):
     _diff_overrides['ignore_space_at_eol'] = space_at_eol
@@ -388,7 +394,7 @@ def format_patchsets(to_export, revs, output='patches'):
             master_idx = revs[cur_master_idx:].index(rev)
             master_idx += cur_master_idx
         except ValueError:
-            master_idx  = revs.index(rev)
+            master_idx = revs.index(rev)
 
         if master_idx == cur_master_idx + 1:
             patches_to_export[patchset_idx].append(rev)
@@ -579,12 +585,13 @@ def parse_ls_tree(rev):
             objtype = match.group(2)
             sha1 = match.group(3)
             filename = match.group(4)
-            output.append((mode, objtype, sha1, filename,) )
+            output.append((mode, objtype, sha1, filename,))
     return output
 
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
+
 
 def parse_rev_list(raw_revs):
     """Parse `git log --pretty=online` output into (SHA-1, summary) pairs."""
