@@ -433,7 +433,7 @@ class CommitMessageEditor(QtGui.QWidget):
         """Attempt to create a commit from the index and commit message."""
         if not bool(self.summary.value()):
             # Describe a good commit message
-            error_msg = N_(''
+            error_msg = N_(
                 'Please supply a commit message.\n\n'
                 'A good commit message has the following format:\n\n'
                 '- First line: Describe in one sentence what you did.\n'
@@ -446,7 +446,7 @@ class CommitMessageEditor(QtGui.QWidget):
         msg = self.commit_message(raw=False)
 
         if not self.model.staged:
-            error_msg = N_(''
+            error_msg = N_(
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.')
             if self.model.modified:
@@ -480,7 +480,7 @@ class CommitMessageEditor(QtGui.QWidget):
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %
-                                    (status,),
+                                 (status,),
                                  out + err)
 
     def build_fixup_menu(self):
@@ -511,7 +511,6 @@ class CommitMessageEditor(QtGui.QWidget):
         if len(commits) == 6:
             menu.addSeparator()
             menu.addAction(N_('More...'), chooser)
-
 
     def choose_commit(self, cmd):
         revs, summaries = gitcmds.log_helper()
@@ -588,8 +587,8 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         SpellCheckTextEdit.__init__(self, hint, parent)
         self.extra_actions = []
 
-        self.action_emit_leave = qtutils.add_action(self,
-                'Shift Tab', self.emit_leave, hotkeys.LEAVE)
+        self.action_emit_leave = qtutils.add_action(
+                self, 'Shift Tab', self.emit_leave, hotkeys.LEAVE)
 
     def contextMenuEvent(self, event):
         menu, spell_menu = self.context_menu()
