@@ -20,7 +20,7 @@ def gettext(s):
         # Python 3 compat
         _translation.ugettext = _translation.gettext
         txt = _translation.gettext(s)
-    if txt[-6:-4] == '@@': # handle @@verb / @@noun
+    if txt[-6:-4] == '@@':  # handle @@verb / @@noun
         txt = txt[:-6]
     return txt
 
@@ -53,6 +53,7 @@ def install(locale):
                                         localedir=_get_locale_dir(),
                                         fallback=True)
 
+
 def uninstall():
     global _translation
     _translation = _null_translation
@@ -76,7 +77,7 @@ def _install_custom_language():
 
 
 def _check_win32_locale():
-    for i in ('LANGUAGE','LC_ALL','LC_MESSAGES','LANG'):
+    for i in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
         if os.environ.get(i):
             break
     else:
