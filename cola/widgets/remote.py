@@ -117,7 +117,8 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_name = QtGui.QLineEdit()
         self.remotes = QtGui.QListWidget()
         if action == PUSH:
-            self.remotes.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+            mode = QtGui.QAbstractItemView.ExtendedSelection
+            self.remotes.setSelectionMode(mode)
         self.remotes.addItems(self.model.remotes)
 
         self.remote_branch_label = QtGui.QLabel()
@@ -139,25 +140,34 @@ class RemoteActionDialog(standard.Dialog):
 
         self.buttons = utils.Group(self.action_button, self.close_button)
 
-        self.local_branch_layout = qtutils.hbox(defs.small_margin, defs.spacing,
-                                                self.local_label,
-                                                self.local_branch)
+        self.local_branch_layout = qtutils.hbox(
+                defs.small_margin,
+                defs.spacing,
+                self.local_label,
+                self.local_branch)
 
-        self.remote_branch_layout = qtutils.hbox(defs.small_margin, defs.spacing,
-                                                 self.remote_label,
-                                                 self.remote_name)
+        self.remote_branch_layout = qtutils.hbox(
+                defs.small_margin,
+                defs.spacing,
+                self.remote_label,
+                self.remote_name)
 
-        self.remote_branches_layout = qtutils.hbox(defs.small_margin, defs.spacing,
-                                                   self.remote_branch_label,
-                                                   self.remote_branch)
+        self.remote_branches_layout = qtutils.hbox(
+                defs.small_margin,
+                defs.spacing,
+                self.remote_branch_label,
+                self.remote_branch)
 
-        self.options_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                           qtutils.STRETCH,
-                                           self.ffwd_only_checkbox,
-                                           self.tags_checkbox,
-                                           self.rebase_checkbox,
-                                           self.action_button,
-                                           self.close_button)
+        self.options_layout = qtutils.hbox(
+                defs.no_margin,
+                defs.button_spacing,
+                qtutils.STRETCH,
+                self.ffwd_only_checkbox,
+                self.tags_checkbox,
+                self.rebase_checkbox,
+                self.action_button,
+                self.close_button)
+
         if action == PUSH:
             widgets = (
                     self.remote_branch_layout, self.remotes,
@@ -165,7 +175,7 @@ class RemoteActionDialog(standard.Dialog):
                     self.remote_branches_layout, self.remote_branches,
                     self.options_layout,
             )
-        else: # fetch and pull
+        else:  # fetch and pull
             widgets = (
                     self.remote_branch_layout, self.remotes,
                     self.remote_branches_layout, self.remote_branches,
@@ -296,7 +306,7 @@ class RemoteActionDialog(standard.Dialog):
             display = ('%s\t(%s)'
                        % (remote_name, N_('URL: %s') % url))
             displayed.append(display)
-        qtutils.set_items(widget,displayed)
+        qtutils.set_items(widget, displayed)
 
     def update_remotes(self, *rest):
         """Update the remote name when a remote from the list is selected"""
@@ -328,7 +338,7 @@ class RemoteActionDialog(standard.Dialog):
             self.set_remote_branches(all_branches)
         self.set_remote_branch('')
 
-    def update_local_branches(self,*rest):
+    def update_local_branches(self, *rest):
         """Update the local/remote branch names when a branch is selected"""
         branches = self.model.local_branches
         widget = self.local_branches
@@ -338,7 +348,7 @@ class RemoteActionDialog(standard.Dialog):
         self.set_local_branch(selection)
         self.set_remote_branch(selection)
 
-    def update_remote_branches(self,*rest):
+    def update_remote_branches(self, *rest):
         """Update the remote branch name when a branch is selected"""
         widget = self.remote_branches
         branches = self.filtered_remote_branches
@@ -385,7 +395,7 @@ class RemoteActionDialog(standard.Dialog):
             model_action = self.model.fetch
         elif action == PUSH:
             model_action = self.push_to_all
-        else: # if action == PULL:
+        else:  # if action == PULL:
             model_action = self.model.pull
 
         remote_name = self.remote_name.text()
@@ -409,7 +419,7 @@ class RemoteActionDialog(standard.Dialog):
                 args = dict(branch=branch, remote=remote)
                 msg = N_('Branch "%(branch)s" does not exist in "%(remote)s".\n'
                          'A new remote branch will be published.') % args
-                info_txt= N_('Create a new remote branch?')
+                info_txt = N_('Create a new remote branch?')
                 ok_text = N_('Create Remote Branch')
                 if not qtutils.confirm(title, msg, info_txt, ok_text,
                                        icon=icons.cola()):
@@ -427,7 +437,7 @@ class RemoteActionDialog(standard.Dialog):
                          'history!\n(Did you pull first?)')
                 info_txt = N_('Force push to %s?') % remote
                 ok_text = N_('Force Push')
-            else: # pull: shouldn't happen since the controls are hidden
+            else:  # pull: shouldn't happen since the controls are hidden
                 msg = "You probably don't want to do this.\n\tContinue?"
                 return
 
@@ -451,7 +461,7 @@ class RemoteActionDialog(standard.Dialog):
 
         already_up_to_date = N_('Already up-to-date.')
 
-        if not out: # git fetch --tags --verbose doesn't print anything...
+        if not out:  # git fetch --tags --verbose doesn't print anything...
             out = already_up_to_date
 
         command = 'git %s' % self.action.lower()
