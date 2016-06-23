@@ -256,17 +256,17 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         select_untracked = mkselect(new_c.untracked, self.untracked_item)
 
         saved_selection = [
-        (set(new_c.staged), old_c.staged, set(old_s.staged),
-            select_staged),
+            (set(new_c.staged), old_c.staged, set(old_s.staged),
+             select_staged),
 
-        (set(new_c.unmerged), old_c.unmerged, set(old_s.unmerged),
-            select_unmerged),
+            (set(new_c.unmerged), old_c.unmerged, set(old_s.unmerged),
+             select_unmerged),
 
-        (set(new_c.modified), old_c.modified, set(old_s.modified),
-            select_modified),
+            (set(new_c.modified), old_c.modified, set(old_s.modified),
+             select_modified),
 
-        (set(new_c.untracked), old_c.untracked, set(old_s.untracked),
-            select_untracked),
+            (set(new_c.untracked), old_c.untracked, set(old_s.untracked),
+             select_untracked),
         ]
 
         # Restore the current item
@@ -544,7 +544,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         # Do all of the selected items exist?
-        all_exist = all(not i in self.m.staged_deleted and core.exists(i)
+        all_exist = all(i not in self.m.staged_deleted and core.exists(i)
                         for i in self.staged())
 
         if all_exist:
@@ -632,7 +632,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         # Do all of the selected items exist?
-        all_exist = all(not i in self.m.unstaged_deleted and core.exists(i)
+        all_exist = all(i not in self.m.unstaged_deleted and core.exists(i)
                         for i in self.staged())
 
         if all_exist and self.unstaged():
@@ -693,7 +693,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         menu.addAction(self.copy_relpath_action)
         menu.addAction(self.view_history_action)
         return menu
-
 
     def _delete_untracked_files(self):
         cmds.do(cmds.Delete, self.untracked())
@@ -863,7 +862,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 self.idx_staged: cmds.DiffStagedSummary,
                 self.idx_modified: cmds.Diffstat,
                 # TODO implement UnmergedSummary
-                #self.idx_unmerged: cmds.UnmergedSummary,
+                # self.idx_unmerged: cmds.UnmergedSummary,
                 self.idx_untracked: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
             cmds.do(cls)
@@ -934,10 +933,12 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Copy a selected relative path to the clipboard"""
         self.copy_path(absolute=False)
 
+    def _item_filter(self, item):
+        return not item.deleted and core.exists(item.path)
+
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
-        item_filter = lambda item: not item.deleted and core.exists(item.path)
-        paths = qtutils.paths_from_items(items, item_filter=item_filter)
+        paths = qtutils.paths_from_items(items, item_filter=self._item_filter)
         return qtutils.mimedata_from_paths(paths)
 
     def mimeTypes(self):
@@ -949,7 +950,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
 
     def view_history(self):
         """Signal that we should view history for paths."""
-        cmds.do(cmds.VisualizePaths, selection.union(selection.selection_model()))
+        cmds.do(cmds.VisualizePaths,
+                selection.union(selection.selection_model()))
 
 
 class StatusFilterWidget(QtGui.QWidget):
