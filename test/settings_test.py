@@ -27,7 +27,7 @@ class SettingsTestCase(unittest.TestCase):
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
         settings = self.new_settings()
-        settings.gui_state['test-gui'] = {'foo':'bar'}
+        settings.gui_state['test-gui'] = {'foo': 'bar'}
         settings.save()
 
         settings = self.new_settings()
