@@ -1,6 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import time
+import hashlib
 
 from cola import sipcompat
 sipcompat.initialize()
@@ -14,7 +14,6 @@ from cola import core
 from cola import icons
 from cola.compat import ustr, parse
 from cola.widgets import defs
-import hashlib
 
 
 class Gravatar(object):
