@@ -14,14 +14,21 @@ def patch(obj, attr, value):
         setattr(obj, attr, value)
 
 
-def install():
-    set_contents_margins = lambda self, *args: self.setMargin(max(args))
-    patch(QtGui.QHBoxLayout, 'setContentsMargins', set_contents_margins)
-    patch(QtGui.QVBoxLayout, 'setContentsMargins', set_contents_margins)
+def _set_contents_margins(self, *args):
+    """Polyfill for older PyQt versions"""
+    self.setMargin(max(args))
 
-    set_margin = lambda self, x: self.setContentsMargins(x, x, x, x)
-    patch(QtGui.QHBoxLayout, 'setMargin', set_margin)
-    patch(QtGui.QVBoxLayout, 'setMargin', set_margin)
+
+def _set_margin(self, x):
+    self.setContentsMargins(x, x, x, x)
+
+
+def install():
+    patch(QtGui.QHBoxLayout, 'setContentsMargins', _set_contents_margins)
+    patch(QtGui.QVBoxLayout, 'setContentsMargins', _set_contents_margins)
+
+    patch(QtGui.QHBoxLayout, 'setMargin', _set_margin)
+    patch(QtGui.QVBoxLayout, 'setMargin', _set_margin)
 
     patch(QtGui.QKeySequence, 'Preferences', hotkeys.PREFERENCES)
     patch(QtGui.QGraphicsItem, 'mapRectToScene', _map_rect_to_scene)
