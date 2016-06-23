@@ -100,31 +100,31 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
 
-        self.open_action = qtutils.add_action(self,
-                N_('Open'), self.open_repo, hotkeys.OPEN, *hotkeys.ACCEPT)
+        self.open_action = qtutils.add_action(
+                self, N_('Open'), self.open_repo, hotkeys.OPEN, *hotkeys.ACCEPT)
 
-        self.open_new_action = qtutils.add_action(self,
-                N_('Open in New Window'), self.open_new_repo, hotkeys.NEW)
+        self.open_new_action = qtutils.add_action(
+                self, N_('Open in New Window'), self.open_new_repo, hotkeys.NEW)
 
-        self.set_default_repo_action = qtutils.add_action(self,
-                N_('Set Default Repository'), self.set_default_repo)
+        self.set_default_repo_action = qtutils.add_action(
+                self, N_('Set Default Repository'), self.set_default_repo)
 
-        self.clear_default_repo_action = qtutils.add_action(self,
-                N_('Clear Default Repository'), self.clear_default_repo)
+        self.clear_default_repo_action = qtutils.add_action(
+                self, N_('Clear Default Repository'), self.clear_default_repo)
 
-        self.open_default_action = qtutils.add_action(self,
-                cmds.OpenDefaultApp.name(), self.open_default,
+        self.open_default_action = qtutils.add_action(
+                self, cmds.OpenDefaultApp.name(), self.open_default,
                 hotkeys.PRIMARY_ACTION)
 
-        self.launch_editor_action = qtutils.add_action(self,
-                cmds.Edit.name(), self.launch_editor, hotkeys.EDIT)
+        self.launch_editor_action = qtutils.add_action(
+                self, cmds.Edit.name(), self.launch_editor, hotkeys.EDIT)
 
-        self.launch_terminal_action = qtutils.add_action(self,
-                cmds.LaunchTerminal.name(), self.launch_terminal,
+        self.launch_terminal_action = qtutils.add_action(
+                self, cmds.LaunchTerminal.name(), self.launch_terminal,
                 hotkeys.TERMINAL)
 
-        self.copy_action = qtutils.add_action(self,
-                N_('Copy'), self.copy, hotkeys.COPY)
+        self.copy_action = qtutils.add_action(
+                self, N_('Copy'), self.copy, hotkeys.COPY)
 
         self.connect(self, SIGNAL('itemSelectionChanged()'),
                      self.item_selection_changed)
