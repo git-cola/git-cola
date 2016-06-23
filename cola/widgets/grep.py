@@ -58,8 +58,8 @@ class GrepThread(QtCore.QThread):
             args = [query]
         status, out, err = git.grep(self.regexp_mode, n=True, *args)
         if query == self.query:
-            self.emit(SIGNAL('result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'),
-                      status, out, err)
+            worker_signal = 'result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
+            self.emit(SIGNAL(worker_signal), status, out, err)
         else:
             self.run()
 
@@ -91,15 +91,15 @@ class Grep(Dialog):
         combo.addItems(items)
         combo.setCurrentIndex(0)
         combo.setEditable(False)
-        combo.setItemData(0,
+        combo.setItemData(
+                0,
                 N_('Search using a POSIX basic regular expression'),
                 Qt.ToolTipRole)
-        combo.setItemData(1,
+        combo.setItemData(
+                1,
                 N_('Search using a POSIX extended regular expression'),
                 Qt.ToolTipRole)
-        combo.setItemData(2,
-                N_('Search for a fixed string'),
-                Qt.ToolTipRole)
+        combo.setItemData(2, N_('Search for a fixed string'), Qt.ToolTipRole)
         combo.setItemData(0, '--basic-regexp', Qt.UserRole)
         combo.setItemData(1, '--extended-regexp', Qt.UserRole)
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
@@ -141,8 +141,8 @@ class Grep(Dialog):
         self.setLayout(self.mainlayout)
 
         self.worker_thread = GrepThread(self)
-        self.connect(self.worker_thread,
-                     SIGNAL('result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'),
+        worker_signal = 'result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
+        self.connect(self.worker_thread, SIGNAL(worker_signal),
                      self.process_result, Qt.QueuedConnection)
 
         self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
