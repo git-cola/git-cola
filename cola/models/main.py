@@ -37,11 +37,11 @@ class MainModel(Observable):
     message_updated = 'updated'
 
     # States
-    mode_none = 'none' # Default: nothing's happened, do nothing
-    mode_worktree = 'worktree' # Comparing index to worktree
-    mode_untracked = 'untracked' # Dealing with an untracked file
-    mode_index = 'index' # Comparing index to last commit
-    mode_amend = 'amend' # Amending a commit
+    mode_none = 'none'  # Default: nothing's happened, do nothing
+    mode_worktree = 'worktree'  # Comparing index to worktree
+    mode_untracked = 'untracked'  # Dealing with an untracked file
+    mode_index = 'index'  # Comparing index to last commit
+    mode_amend = 'amend'  # Amending a commit
 
     # Modes where we can checkout files from the $head
     modes_undoable = set((mode_amend, mode_index, mode_worktree))
@@ -52,7 +52,8 @@ class MainModel(Observable):
     # Modes where we can partially unstage files
     modes_unstageable = set((mode_amend, mode_index))
 
-    unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
+    unstaged = property(
+            lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
     def __init__(self, cwd=None):
@@ -78,7 +79,7 @@ class MainModel(Observable):
 
         self.commitmsg = ''  # current commit message
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
-        self._prev_commitmsg = '' # saved here when clobbered by .git/MERGE_MSG
+        self._prev_commitmsg = ''  # saved here when clobbered by .git/MERGE_MSG
 
         self.modified = []  # modified, staged, untracked, unmerged paths
         self.staged = []
@@ -242,7 +243,11 @@ class MainModel(Observable):
             self.set_mode(self.mode_none)
 
     def _update_commitmsg(self):
-        """Check for git merge message files, or clear it when the merge completes"""
+        """Check for merge message files and update the commit message
+
+        The message is cleared when the merge completes
+
+        """
         if self.amending():
             return
         # Check if there's a message file in .git/
@@ -321,9 +326,10 @@ class MainModel(Observable):
 
         return (status, '\n'.join(outs), '\n'.join(errs))
 
-    def _sliced_add(self, input_items):
-        lambda_fn = lambda x: self.git.add('--', force=True, verbose=True, *x)
-        return self._sliced_op(input_items, lambda_fn)
+    def _sliced_add(self, items):
+        add = self.git.add
+        return self._sliced_op(
+                items, lambda x: add('--', force=True, verbose=True, *x))
 
     def stage_modified(self):
         status, out, err = self._sliced_add(self.modified)
@@ -336,8 +342,8 @@ class MainModel(Observable):
         return (status, out, err)
 
     def reset(self, *items):
-        lambda_fn = lambda x: self.git.reset('--', *x)
-        status, out, err = self._sliced_op(items, lambda_fn)
+        reset = self.git.reset
+        status, out, err = self._sliced_op(items, lambda x: reset('--', *x))
         self.update_file_status()
         return (status, out, err)
 
@@ -369,7 +375,7 @@ class MainModel(Observable):
 
         kwargs = {
             'list': True,
-            'global': not local, # global is a python keyword
+            'global': not local,  # global is a python keyword
         }
         config_lines = self.git.config(**kwargs)[STDOUT].splitlines()
         newdict = {}
@@ -379,14 +385,14 @@ class MainModel(Observable):
             except:
                 # value-less entry in .gitconfig
                 continue
-            k = k.replace('.','_') # git -> model
+            k = k.replace('.', '_')  # git -> model
             if v == 'true' or v == 'false':
                 v = bool(eval(v.title()))
             try:
                 v = int(eval(v))
             except:
                 pass
-            newdict[k]=v
+            newdict[k] = v
         return newdict
 
     def remote_url(self, name, action):
@@ -402,7 +408,8 @@ class MainModel(Observable):
 
     def push(self, remote, remote_branch='', local_branch='', **opts):
         # Swap the branches in push mode (reverse of fetch)
-        opts.update(dict(local_branch=remote_branch, remote_branch=local_branch))
+        opts.update(dict(local_branch=remote_branch,
+                         remote_branch=local_branch))
         return run_remote_action(self.git.push, remote, **opts)
 
     def pull(self, remote, **opts):
