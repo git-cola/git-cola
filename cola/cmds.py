@@ -276,8 +276,8 @@ class ApplyPatches(Command):
         basenames = '\n'.join([os.path.basename(p) for p in self.patches])
         Interaction.information(
                 N_('Patch(es) Applied'),
-                (N_('%d patch(es) applied.') + '\n\n%s') %
-                    (len(self.patches), basenames))
+                (N_('%d patch(es) applied.') +
+                 '\n\n%s') % (len(self.patches), basenames))
 
 
 class Archive(BaseCommand):
@@ -471,7 +471,7 @@ class Commit(ResetMode):
     def strip_comments(msg, comment_char='#'):
         # Strip off comments
         message_lines = [line for line in msg.split('\n')
-                            if not line.startswith(comment_char)]
+                         if not line.startswith(comment_char)]
         msg = '\n'.join(message_lines)
         if not msg.endswith('\n'):
             msg += '\n'
@@ -631,7 +631,7 @@ class RemoveFiles(Command):
             if filename:
                 try:
                     remove(filename)
-                    rescan=True
+                    rescan = True
                 except:
                     bad_filenames.append(filename)
 
@@ -698,8 +698,10 @@ class RenameBranch(Command):
         self.new_branch = new_branch
 
     def do(self):
-        status, out, err = self.model.rename_branch(self.branch, self.new_branch)
+        status, out, err = self.model.rename_branch(self.branch,
+                                                    self.new_branch)
         Interaction.log_status(status, out, err)
+
 
 class DeleteRemoteBranch(Command):
     """Delete a remote git branch."""
@@ -719,15 +721,14 @@ class DeleteRemoteBranch(Command):
             Interaction.information(
                 N_('Remote Branch Deleted'),
                 N_('"%(branch)s" has been deleted from "%(remote)s".')
-                    % dict(branch=self.branch, remote=self.remote))
+                % dict(branch=self.branch, remote=self.remote))
         else:
             command = 'git push'
             message = (N_('"%(command)s" returned exit status %(status)d') %
-                        dict(command=command, status=status))
+                       dict(command=command, status=status))
 
             Interaction.critical(N_('Error Deleting Remote Branch'),
                                  message, out + err)
-
 
 
 class Diff(Command):
@@ -960,7 +961,6 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
         return LoadCommitMessageFromFile.do(self)
 
 
-
 class LoadCommitMessageFromSHA1(Command):
     """Load a previous commit message"""
 
@@ -1106,7 +1106,7 @@ class Clone(Command):
             self.error_message = N_('Error: could not clone "%s"') % self.url
             self.error_details = (
                     (N_('git clone returned exit code %s') % status) +
-                     ((out+err) and ('\n\n' + out + err) or ''))
+                    ((out+err) and ('\n\n' + out + err) or ''))
 
         return self
 
@@ -1118,7 +1118,7 @@ def unix_path(path, is_win32=utils.is_win32):
     if is_win32():
         first = path[0]
         second = path[1]
-        if second == ':': # sanity check, this better be a Windows-style path
+        if second == ':':  # sanity check, this better be a Windows-style path
             unix_path = '/' + first + path[2:].replace('\\', '/')
 
     return unix_path
