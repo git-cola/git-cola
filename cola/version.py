@@ -69,6 +69,7 @@ def git_version_str():
     """Returns the current GIT version"""
     return git.version()[STDOUT].strip()
 
+
 @memoize
 def git_version():
     """Returns the current GIT version"""
