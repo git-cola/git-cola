@@ -115,6 +115,7 @@ def add_dag_command(subparser):
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git log arguments')
 
+
 def add_diff_command(subparser):
     parser = add_command(subparser, 'diff', 'view diffs', cmd_diff)
     parser.add_argument('args', nargs='*', metavar='<args>',
@@ -136,6 +137,7 @@ def add_grep_command(subparser):
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git grep arguments')
 
+
 def add_merge_command(subparser):
     add_command(subparser, 'merge', 'merge branches', cmd_merge)
 
@@ -156,8 +158,8 @@ def add_rebase_command(subparser):
                         help='display a diffstat of what changed upstream')
     parser.add_argument('-q', '--quiet', default=False, action='store_true',
                         help='be quiet. implies --no-stat')
-    parser.add_argument('-i', '--interactive', default=True, action='store_true',
-                        help=argparse.SUPPRESS)
+    parser.add_argument('-i', '--interactive', default=True,
+                        action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--autostash', default=False, action='store_true',
                         help='automatically stash/stash pop before and after')
     parser.add_argument('--fork-point', default=False, action='store_true',
@@ -174,12 +176,16 @@ def add_rebase_command(subparser):
     parser.add_argument('-m', '--merge', default=False, action='store_true',
                         help='use merging strategies to rebase')
     parser.add_argument('-x', '--exec', default=None,
-                        help='add exec lines after each commit of the editable list')
-    parser.add_argument('-k', '--keep-empty', default=False, action='store_true',
+                        help='add exec lines after each commit of '
+                             'the editable list')
+    parser.add_argument('-k', '--keep-empty', default=False,
+                        action='store_true',
                         help='preserve empty commits during rebase')
-    parser.add_argument('-f', '--force-rebase', default=False, action='store_true',
+    parser.add_argument('-f', '--force-rebase', default=False,
+                        action='store_true',
                         help='force rebase even if branch is up to date')
-    parser.add_argument('-X', '--strategy-option', default=None, metavar='<arg>',
+    parser.add_argument('-X', '--strategy-option', default=None,
+                        metavar='<arg>',
                         help='pass the argument through to the merge strategy')
     parser.add_argument('--stat', default=False, action='store_true',
                         help='display a diffstat of what changed upstream')
@@ -207,22 +213,24 @@ def add_rebase_command(subparser):
                         help="passed to 'git am' by 'git rebase'")
     parser.add_argument('--whitespace', default=False, action='store_true',
                         help="passed to 'git apply' by 'git rebase'")
-    parser.add_argument('--ignore-whitespace', default=False, action='store_true',
+    parser.add_argument('--ignore-whitespace', default=False,
+                        action='store_true',
                         help="passed to 'git apply' by 'git rebase'")
     parser.add_argument('-C', dest='context_lines', default=None, metavar='<n>',
                         help="passed to 'git apply' by 'git rebase'")
 
     actions = parser.add_argument_group('actions')
     actions.add_argument('--continue', default=False, action='store_true',
-                        help='continue')
+                         help='continue')
     actions.add_argument('--abort', default=False, action='store_true',
-                        help='abort and check out the original branch')
+                         help='abort and check out the original branch')
     actions.add_argument('--skip', default=False, action='store_true',
-                        help='skip current patch and continue')
+                         help='skip current patch and continue')
     actions.add_argument('--edit-todo', default=False, action='store_true',
-                        help='edit the todo list during an interactive rebase')
+                         help='edit the todo list during an interactive rebase')
 
-    parser.add_argument('upstream', nargs='?', default=None, metavar='<upstream>',
+    parser.add_argument('upstream', nargs='?', default=None,
+                        metavar='<upstream>',
                         help='the upstream configured in branch.<name>.remote '
                              'and branch.<name>.merge options will be used '
                              'when <upstream> is omitted; see git-rebase(1) '
@@ -256,13 +264,14 @@ def add_tag_command(subparser):
     parser.add_argument('-s', '--sign', default=False, action='store_true',
                         help='annotated and GPG-signed tag')
 
+
 def add_version_command(subparser):
     parser = add_command(subparser, 'version', 'print the version', cmd_version)
     parser.add_argument('--brief', action='store_true', default=False,
                         help='print the version number only')
 
-# entry points
 
+# entry points
 def cmd_cola(args):
     status_filter = args.status_filter
     if status_filter:
@@ -399,7 +408,7 @@ def cmd_rebase(args):
             'strategy': args.strategy,
             'no_ff': args.no_ff,
             'merge': args.merge,
-            'exec': getattr(args, 'exec', None), # python keyword
+            'exec': getattr(args, 'exec', None),  # python keyword
             'keep_empty': args.keep_empty,
             'force_rebase': args.force_rebase,
             'strategy_option': args.strategy_option,
@@ -414,7 +423,7 @@ def cmd_rebase(args):
             'whitespace': args.whitespace,
             'ignore_whitespace': args.ignore_whitespace,
             'C': args.context_lines,
-            'continue': getattr(args, 'continue', False), # python keyword
+            'continue': getattr(args, 'continue', False),  # python keyword
             'abort': args.abort,
             'skip': args.skip,
             'edit_todo': args.edit_todo,
