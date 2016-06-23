@@ -99,7 +99,6 @@ def textwidth():
     return gitcfg.current().get(TEXTWIDTH, 72)
 
 
-
 class PreferencesModel(observable.Observable):
     message_config_updated = 'config_updated'
 
