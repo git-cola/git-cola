@@ -32,7 +32,6 @@ def compare_branches():
 
 class CompareBranchesDialog(standard.Dialog):
 
-
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent=parent)
 
@@ -91,7 +90,8 @@ class CompareBranchesDialog(standard.Dialog):
         self.splitter = qtutils.splitter(Qt.Vertical,
                                          self.top_widget, self.bottom_widget)
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing, self.splitter)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
+                                        self.splitter)
         self.setLayout(self.main_layout)
         self.resize(658, 350)
 
@@ -142,7 +142,6 @@ class CompareBranchesDialog(standard.Dialog):
         else:
             right_item = None
         return (left_item, right_item)
-
 
     def update_diff_files(self, *rest):
         """Updates the list of files whenever the selection changes"""
@@ -208,7 +207,6 @@ class CompareBranchesDialog(standard.Dialog):
             # Compare against the remote branch
             return branch
 
-
     def update_combo_boxes(self, left=False):
         """Update listwidgets from the combobox selection
 
@@ -227,7 +225,7 @@ class CompareBranchesDialog(standard.Dialog):
         # sandbox as a valid choice.  If we're looking at
         # "remote" stuff then also include the branch point.
         if which == self.LOCAL:
-            new_list = ([self.SANDBOX]+ self.local_branches)
+            new_list = ([self.SANDBOX] + self.local_branches)
         else:
             new_list = ([self.BRANCH_POINT] + self.remote_branches)
 
