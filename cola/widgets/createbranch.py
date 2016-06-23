@@ -257,21 +257,23 @@ class CreateBranchDialog(Dialog):
                 return
             lines = [msg]
             for idx, commit in enumerate(commits):
-                subject = commit[1][0:min(len(commit[1]),16)]
+                subject = commit[1][0:min(len(commit[1]), 16)]
                 if len(subject) < len(commit[1]):
                     subject += '...'
-                lines.append('\t' + commit[0][:8]
-                        +'\t' + subject)
+                lines.append('\t' + commit[0][:8] + '\t' + subject)
                 if idx >= 5:
                     skip = len(commits) - 5
                     lines.append('\t(%s)' % (N_('%d skipped') % skip))
                     break
             line = N_('Recovering lost commits may not be easy.')
             lines.append(line)
+
+            info_text = (N_('Reset "%(branch)s" to "%(revision)s"?') %
+                         dict(branch=branch, revision=revision))
+
             if not qtutils.confirm(N_('Reset Branch?'),
                                    '\n'.join(lines),
-                                   (N_('Reset "%(branch)s" to "%(revision)s"?') %
-                                    dict(branch=branch, revision=revision)),
+                                   info_text,
                                    N_('Reset Branch'),
                                    default=False,
                                    icon=icons.undo()):
