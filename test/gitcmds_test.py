@@ -118,7 +118,8 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.git('fetch', 'origin')
         local, remote, tags = gitcmds.all_refs(split=True)
         self.assertEqual(local, ['a', 'b', 'c', 'master'])
-        self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
+        self.assertEqual(remote,
+                         ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
         self.assertEqual(tags, ['d', 'e', 'f'])
 
 
