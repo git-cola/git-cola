@@ -325,9 +325,9 @@ class MainView(standard.MainWindow):
         # For "Start Rebase" only, reverse the first argument to setEnabled()
         # so that we can operate on it as a group.
         # We can do this because can_rebase == not is_rebasing
-        set_disabled = lambda x: self.rebase_start_action.setEnabled(not x)
-        self.rebase_start_action_proxy = utils.Proxy(self.rebase_start_action,
-                                                     setEnabled=set_disabled)
+        self.rebase_start_action_proxy = utils.Proxy(
+                self.rebase_start_action,
+                setEnabled=lambda x: self.rebase_start_action.setEnabled(not x))
 
         self.rebase_group = utils.Group(self.rebase_start_action_proxy,
                                         self.rebase_edit_todo_action,
@@ -472,7 +472,6 @@ class MainView(standard.MainWindow):
         self.addDockWidget(bottom, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
         self.tabifyDockWidget(self.actionsdockwidget, self.logdockwidget)
-
 
         # Listen for model notifications
         model.add_observer(model.message_updated, self._update)
@@ -691,12 +690,14 @@ class MainView(standard.MainWindow):
             toggleview = dockwidget.toggleViewAction()
             toggleview.setShortcut('Shift+' + shortcut)
             self.view_menu.addAction(toggleview)
+
             def showdock(show, dockwidget=dockwidget):
                 if show:
                     dockwidget.raise_()
                     dockwidget.widget().setFocus()
                 else:
                     self.setFocus()
+
             self.addAction(toggleview)
             qtutils.connect_action_bool(toggleview, showdock)
 
@@ -709,10 +710,13 @@ class MainView(standard.MainWindow):
             self.addAction(toggleview)
             qtutils.connect_action(toggleview, focusdock)
 
-        focus = lambda: focus_dock(self.commitdockwidget)
-        focus_status = lambda: focus_dock(self.statusdockwidget)
-        qtutils.add_action(self, 'Focus Commit Message', focus, hotkeys.FOCUS)
-        qtutils.add_action(self, 'Focus Status Window', focus_status, hotkeys.FOCUS_STATUS)
+        qtutils.add_action(self, 'Focus Commit Message',
+                           lambda: focus_dock(self.commitdockwidget),
+                           hotkeys.FOCUS)
+
+        qtutils.add_action(self, 'Focus Status Window',
+                           lambda: focus_dock(self.statusdockwidget),
+                           hotkeys.FOCUS_STATUS)
 
     def preferences(self):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
