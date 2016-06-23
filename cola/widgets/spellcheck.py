@@ -14,7 +14,6 @@ import sys
 from PyQt4.Qt import QAction
 from PyQt4.Qt import QApplication
 from PyQt4.Qt import QEvent
-from PyQt4.Qt import QMenu
 from PyQt4.Qt import QMouseEvent
 from PyQt4.Qt import QSyntaxHighlighter
 from PyQt4.Qt import QTextCharFormat
@@ -37,17 +36,18 @@ def train(features, model):
 
 
 def edits1(word):
-    splits     = [(word[:i], word[i:]) for i in range(len(word) + 1)]
-    deletes    = [a + b[1:] for a, b in splits if b]
-    transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b)>1]
-    replaces   = [a + c + b[1:] for a, b in splits for c in alphabet if b]
-    inserts    = [a + c + b     for a, b in splits for c in alphabet]
+    splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
+    deletes = [a + b[1:] for a, b in splits if b]
+    transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b) > 1]
+    replaces = [a + c + b[1:] for a, b in splits for c in alphabet if b]
+    inserts = [a + c + b for a, b in splits for c in alphabet]
     return set(deletes + transposes + replaces + inserts)
 
 
 def known_edits2(word, words):
     return set(e2 for e1 in edits1(word)
-                  for e2 in edits1(e1) if e2 in words)
+               for e2 in edits1(e1) if e2 in words)
+
 
 def known(word, words):
     return set(w for w in word if w in words)
@@ -190,7 +190,7 @@ class Highlighter(QSyntaxHighlighter):
         for word_object in re.finditer(self.WORDS, text):
             if not self.spellcheck.check(word_object.group()):
                 self.setFormat(word_object.start(),
-                    word_object.end() - word_object.start(), fmt)
+                               word_object.end() - word_object.start(), fmt)
 
 
 class SpellAction(QAction):
