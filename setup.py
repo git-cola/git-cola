@@ -51,7 +51,8 @@ def main():
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',
-          data_files = cola_data_files())
+          data_files=cola_data_files())
+
 
 def cola_data_files():
     data = [
