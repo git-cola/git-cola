@@ -55,13 +55,12 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.color_header = RGB(cfg.color('header', 'bbbbbb'))
 
         self.diff_header_fmt = make_format(fg=self.color_header)
-        self.bold_diff_header_fmt = make_format(fg=self.color_header,
-                                                  bold=True)
+        self.bold_diff_header_fmt = make_format(fg=self.color_header, bold=True)
 
         self.diff_add_fmt = make_format(fg=self.color_text,
-                                          bg=self.color_add)
+                                        bg=self.color_add)
         self.diff_remove_fmt = make_format(fg=self.color_text,
-                                             bg=self.color_remove)
+                                           bg=self.color_remove)
         self.bad_whitespace_fmt = make_format(bg=Qt.red)
 
     def set_enabled(self, enabled):
@@ -123,6 +122,7 @@ class DiffTextEdit(VimMonoTextView):
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  whitespace=whitespace)
+
 
 class DiffEditorWidget(QtGui.QWidget):
 
