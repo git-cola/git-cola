@@ -128,9 +128,9 @@ class Finder(standard.Dialog):
                                           self.close_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.no_spacing,
-                                       self.input_layout,
-                                       self.tree,
-                                       self.bottom_layout)
+                                        self.input_layout,
+                                        self.tree,
+                                        self.bottom_layout)
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.input_txt)
 
@@ -153,8 +153,8 @@ class Finder(standard.Dialog):
         qtutils.add_action(self, 'Focus Input', self.focus_input,
                            hotkeys.FOCUS, hotkeys.FINDER)
 
-        self.show_help_action = qtutils.add_action(self,
-                N_('Show Help'), show_help, hotkeys.QUESTION)
+        self.show_help_action = qtutils.add_action(
+                self, N_('Show Help'), show_help, hotkeys.QUESTION)
 
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.open_default_button, self.open_default)
