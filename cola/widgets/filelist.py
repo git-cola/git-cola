@@ -15,6 +15,7 @@ from cola.widgets.diff import FILES_SELECTED
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
 DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
+
 class FileWidget(TreeWidget):
 
     def __init__(self, notifier, parent):
@@ -101,6 +102,7 @@ class FileWidget(TreeWidget):
         items = self.selected_items()
         self.notifier.notify_observers(HISTORIES_SELECTED,
                                        [i.path for i in items])
+
 
 class FileTreeWidgetItem(QtGui.QTreeWidgetItem):
 
