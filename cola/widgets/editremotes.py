@@ -16,7 +16,7 @@ from cola.widgets import text
 
 
 def remote_editor():
-    view= new_remote_editor(parent=qtutils.active_window())
+    view = new_remote_editor(parent=qtutils.active_window())
     view.show()
     view.raise_()
     return view
@@ -39,7 +39,7 @@ class RemoteEditor(QtGui.QDialog):
         else:
             self.resize(720, 300)
 
-        self.default_hint = N_(''
+        self.default_hint = N_(
             'Add and remove remote repositories using the \n'
             'Add(+) and Delete(-) buttons on the left-hand side.\n'
             '\n'
