@@ -14,6 +14,7 @@ from cola.i18n import N_
 from cola.widgets import defs
 from cola.widgets.text import MonoTextView
 
+
 def launch_about_dialog():
     """Launches the Help -> About dialog"""
     view = AboutView(qtutils.active_window())
@@ -42,9 +43,10 @@ If not, see http://www.gnu.org/licenses/.
 
 """
 
+
 class AboutView(QtGui.QDialog):
-    """Provides the git-cola 'About' dialog.
-    """
+    """Provides the git-cola 'About' dialog"""
+
     def __init__(self, parent=None):
         QtGui.QDialog.__init__(self, parent)
 
@@ -53,7 +55,7 @@ class AboutView(QtGui.QDialog):
 
         self.label = QtGui.QLabel()
         self.pixmap = QtGui.QPixmap(icons.name_from_basename('logo-top.png'))
-        #self.label.setStyleSheet('QWidget {background: #000; }')
+        # self.label.setStyleSheet('QWidget {background: #000; }')
         self.label.setPixmap(self.pixmap)
         self.label.setAlignment(Qt.AlignRight | Qt.AlignTop)
 
@@ -83,7 +85,8 @@ class AboutView(QtGui.QDialog):
 
     def set_version(self, version):
         """Sets the version field in the 'about' dialog"""
-        self.text.setPlainText(self.text.toPlainText().replace('$VERSION', version))
+        text = self.text.toPlainText().replace('$VERSION', version)
+        self.text.setPlainText(text)
 
 
 def show_shortcuts():
