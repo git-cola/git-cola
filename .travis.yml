@@ -18,7 +18,6 @@ before_install:
 
 # command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
-  - pip install sphinx
   # SIP
   - mkdir -p local/sandbox
   - cd local/sandbox
@@ -37,13 +36,13 @@ install:
   - make -j4
   - make install
   - cd ../../..
-  # Additional dependency for python 2.6
-  - pip install argparse
-  # Test dependencies
-  - pip install mock
   # Pylint
   - pip install astroid==1.4.3
   - pip install pylint==1.5.2
+  # Build dependencies
+  - pip install --requirement requirements.txt
+  # Test dependencies
+  - pip install --requirement extras/requirements-dev.txt
 
 script:
   - make all

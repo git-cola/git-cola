@@ -42,7 +42,6 @@ New releases are available on the
 
 # NUTRITIONAL FACTS
 
-
 ## ACTIVE INGREDIENTS
 
 * [git](http://git-scm.com/) 1.6.3 or newer.
@@ -130,6 +129,7 @@ If not, please file a bug against your distribution ;-)
 
 Use the [one-click install link](http://software.opensuse.org/package/git-cola).
 
+
 ## MAC OS X
 
 Before setting up homebrew, use
@@ -138,7 +138,7 @@ Before setting up homebrew, use
 
 Sphinx is used to build the documentation.
 
-    sudo pip install sphinx
+    sudo pip install --requirement requirements.txt
 
 [Homebrew](http://mxcl.github.com/homebrew/) is the easiest way to install
 git-cola's *Qt4* and *PyQt4* dependencies.  We will use homebrew to install
@@ -259,11 +259,11 @@ See `git cola --help-commands` for the full list of commands.
 
 The following commands should be run during development:
 
-   # Run the unit tests
-   $ make test
+    # Run the unit tests
+    $ make test
 
-   # Check for pylint warnings.  All new code must pass 100%.
-   $ make pylint
+    # Check for pylint warnings.  All new code must pass 100%.
+    $ make pylint
 
 The test suite can be found in the [test](test) directory.
 
@@ -273,9 +273,9 @@ Checkout the [Travis config file](.travis.yml) for more details.
 
 When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
-## WINDOWS (continued)
+# WINDOWS (continued)
 
-# WINDOWS-ONLY HISTORY BROWSER CONFIGURATION UPGRADE
+## WINDOWS-ONLY HISTORY BROWSER CONFIGURATION UPGRADE
 
 You may need to configure your history browser if you are upgrading from an
 older version of *git-cola*.
@@ -302,18 +302,20 @@ users should not need to configure anything.
 # BUILDING WINDOWS INSTALLERS
 
 Windows installers are built using
-[Pynsist](http://pynsist.readthedocs.io/en/latest/).
-[NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
+
+* [Pynsist](http://pynsist.readthedocs.io/en/latest/).
+
+* [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
 To build the installer using *Pynsist*:
 
-1. (If building from a non-Windows platform), run
-   `./contrib/win32/fetch_pyqt_windows.sh`.
-   This will download a PyQt binary installer for Windows and unpack its files
-   into `pynsist_pkgs/`.
-2. Run `pynsist pynsist.cfg`.
-   The installer will be built in `build/nsis/`.
+* If building from a non-Windows platform run
+  `./contrib/win32/fetch_pyqt_windows.sh`.
+  This will download a PyQt binary installer for Windows and unpack its files
+  into `pynsist_pkgs/`.
 
+* Run `pynsist pynsist.cfg`.
+  The installer will be built in `build/nsis/`.
 
 Before *Pynsist*, installers were built using *InnoSetup*.
 The *InnoSetup* scripts are still available:
@@ -321,6 +323,3 @@ The *InnoSetup* scripts are still available:
     ./contrib/win32/create-installer.sh
 
 You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
-That is normally the case when you run the *msysGit bash* and not the
-*Git for Windows bash* (look [here](http://msysgit.github.com/)
-for the differences).

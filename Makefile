@@ -192,6 +192,6 @@ pylint:
 .PHONY: pylint
 
 requirements:
-	$(PIP) install --requirement extras/requirements.txt
+	$(PIP) install --requirement requirements.txt
 	$(PIP) install --requirement extras/requirements-dev.txt
 .PHONY: requirements
