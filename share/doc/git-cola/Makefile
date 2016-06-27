@@ -4,20 +4,24 @@ htmldir ?= $(docdir)/html
 mandir ?= $(prefix)/share/man/man1
 # DESTDIR =
 
-SED ?= sed
-RSYNC ?= rsync
-MKDIR_P ?= mkdir -p
+# External commands
 INSTALL ?= install
+MKDIR_P ?= mkdir -p
+RSYNC ?= rsync
+SED ?= sed
 
-# You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-PAPER         =
+RSYNC_FLAGS = -r --delete --delete-excluded
+RSYNC_FLAGS += --exclude=.buildinfo --exclude=.gitignore
+RSYNC_CMD = $(RSYNC) $(RSYNC_FLAGS)
+
+SPHINXOPTS =
+SPHINXBUILD = sphinx-build
+PAPER =
 
 # Internal variables.
-PAPEROPT_a4     = -D latex_paper_size=a4
+PAPEROPT_a4 = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+ALLSPHINXOPTS = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 .PHONY: all help clean html man dirhtml pickle json
 .PHONY: htmlhelp qthelp latex changes linkcheck doctest
@@ -85,7 +89,7 @@ install-files:
 
 install-html: install-files html
 	$(MKDIR_P) $(DESTDIR)$(htmldir)
-	$(RSYNC) -r --delete --delete-excluded --exclude=.buildinfo --exclude=.gitignore _build/html/ $(DESTDIR)$(htmldir)/
+	$(RSYNC_CMD) _build/html/ $(DESTDIR)$(htmldir)/
 
 install-man: man
 	$(MKDIR_P) $(DESTDIR)$(mandir)
