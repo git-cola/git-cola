@@ -48,13 +48,35 @@ New releases are available on the
 
 * [Python](http://python.org/) 2.6, 2.7, and 3.2 or newer.
 
-* [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.4 or newer
+* [QtPy](https://github.com/spyder-ide/qtpy) 1.0.2 or newer.
 
 * [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer.
   argparse is part of the stdlib in Python 2.7; install argparse separately if
   you are running on Python 2.6.
 
 * [Sphinx](http://sphinx-doc.org/) for building the documentation.
+
+*git-cola* uses *QtPy*, so you can choose between *PyQt4*, *PyQt5*, and
+*PySide* by setting the `QT_API` environment variable to `pyqt4`, `pyqt5` or
+`pyside` as desired.  `qtpy` defaults to `pyqt5` and falls back to `pyqt4`
+if `pyqt5` is not installed.
+
+Any of the following Python Qt libraries must be installed:
+
+* [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download) 4.6 or newer
+
+* [PyQt5](http://www.riverbankcomputing.co.uk/software/pyqt/download5) 5.2 or newer
+
+* [PySide](https://github.com/PySide/PySide) 1.1.0 or newer
+
+*NOTE*: *git-cola* includes a vendored copy of its *QtPy* dependency.
+
+We provide a copy of the `qtpy` module when installing *git-cola* so that you
+are not required to install *QtPy* separately.  If you'd like to provide your
+own `qtpy` module, for example from the `python-qtpy` Debian package, then use
+`make NO_VENDOR_LIBS=1 ...` when invoking `make`, or export
+`GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
+
 
 ## ADDITIVES
 
@@ -99,10 +121,9 @@ If you want to do a global install you can do
 
     make prefix=/usr install
 
-There are also platform-specific installation methods.
-You'll probably want to use one of these anyways since they
-have a nice side-effect of installing *git-cola*'s PyQt4
-and argparse dependencies.
+The platform-specific installation methods below use the native
+package manager.  You should use one of these so that all of *git-cola*'s
+dependencies are installed.
 
 ## LINUX
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from __future__ import absolute_import, division, unicode_literals
 
 # Hacktastic hack to fix python's stupid ascii default encoding, which
@@ -31,6 +30,7 @@ version = scope['VERSION']
 
 def main():
     """Runs distutils.setup()"""
+    vendor_libs = should_vendor_libs()
 
     scripts = [
         'bin/git-cola',
@@ -51,10 +51,18 @@ def main():
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',
-          data_files=cola_data_files())
+          data_files=cola_data_files(vendor_libs))
 
 
-def cola_data_files():
+def should_vendor_libs():
+    vendor_libs = not os.getenv('GIT_COLA_NO_VENDOR_LIBS', '')
+    if '--no-vendor-libs' in sys.argv:
+        sys.argv.remove('--no-vendor-libs')
+        vendor_libs = False
+    return vendor_libs
+
+
+def cola_data_files(vendor_libs):
     data = [
         _app_path('share/git-cola/bin', '*'),
         _app_path('share/git-cola/icons', '*.png'),
@@ -67,17 +75,23 @@ def cola_data_files():
         _package('cola.widgets'),
     ]
 
+    if vendor_libs:
+        data.extend([
+            _package('qtpy', subdirs=('extras', 'qtpy')),
+            _package('qtpy._patch', subdirs=('extras', 'qtpy')),
+        ])
+
     data.extend([_app_path(localedir, 'git-cola.mo')
                  for localedir in glob('share/locale/*/LC_MESSAGES')])
     return data
 
 
-def _package(package, subdir=None):
-    subdirs = package.split('.')
-    app_dir = os.path.join('share', 'git-cola', 'lib', *subdirs)
-    if subdir:
-        subdirs.insert(0, subdir)
-    src_dir = os.path.join(*subdirs)
+def _package(package, subdirs=None):
+    dirs = package.split('.')
+    app_dir = os.path.join('share', 'git-cola', 'lib', *dirs)
+    if subdirs:
+        dirs = list(subdirs) + dirs
+    src_dir = os.path.join(*dirs)
     return (app_dir, glob(os.path.join(src_dir, '*.py')))
 
 
