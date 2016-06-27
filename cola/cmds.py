@@ -931,7 +931,7 @@ class LoadCommitMessageFromFile(Command):
         self.old_directory = self.model.directory
 
     def do(self):
-        path = self.path
+        path = os.path.expanduser(self.path)
         if not path or not core.isfile(path):
             raise UsageError(N_('Error: Cannot find commit template'),
                              N_('%s: No such file or directory.') % path)
