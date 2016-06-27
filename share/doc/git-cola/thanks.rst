@@ -94,6 +94,7 @@ Thanks
 * Peter Júnoš
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
+* Rolando Espinoza La fuente
 * Rustam Safin
 * Samsul Ma'arif
 * Sebastian Brass
