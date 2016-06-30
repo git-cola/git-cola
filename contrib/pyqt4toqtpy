@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# This script helps convert code from PyQt4 to QtPy.
+# This script performs simple textual replacements only.
+# Signals, slots, and other details must be fixed manually.
+
+sed -i \
+    -e 's/^from PyQt4/from qtpy/' \
+    -e 's/^import PyQt4/import qtpy/' \
+    -e 's/QtGui.QAbstractItemView/QtWidgets.QAbstractItemView/g' \
+    -e 's/QtGui.QAction/QtWidgets.QAction/g' \
+    -e 's/QtGui.QApplication/QtWidgets.QApplication/g' \
+    -e 's/QtGui.QButtonGroup/QtWidgets.QButtonGroup/g' \
+    -e 's/QtGui.QBoxLayout/QtWidgets.QBoxLayout/g' \
+    -e 's/QtGui.QCheckBox/QtWidgets.QCheckBox/g' \
+    -e 's/QtGui.QComboBox/QtWidgets.QComboBox/g' \
+    -e 's/QtGui.QCompleter/QtWidgets.QCompleter/g' \
+    -e 's/QtGui.QDateEdit/QtWidgets.QDateEdit/g' \
+    -e 's/QtGui.QDateTimeEdit/QtWidgets.QDateTimeEdit/g' \
+    -e 's/QtGui.QDialog/QtWidgets.QDialog/g' \
+    -e 's/QtGui.QDock/QtWidgets.QDock/g' \
+    -e 's/QtGui.QFileDialog/QtWidgets.QFileDialog/g' \
+    -e 's/QtGui.QFontComboBox/QtWidgets.QFontComboBox/g' \
+    -e 's/QtGui.QFormLayout/QtWidgets.QFormLayout/g' \
+    -e 's/QtGui.QGraphics/QtWidgets.QGraphics/g' \
+    -e 's/QtGui.QGroupBox/QtWidgets.QGroupBox/g' \
+    -e 's/QtGui.QHBoxLayout/QtWidgets.QHBoxLayout/g' \
+    -e 's/QtGui.QInputDialog/QtWidgets.QInputDialog/g' \
+    -e 's/QtGui.QItemSelection/QtCore.QItemSelection/g' \
+    -e 's/QtGui.QLabel/QtWidgets.QLabel/g' \
+    -e 's/QtGui.QLayout/QtWidgets.QLayout/g' \
+    -e 's/QtGui.QLineEdit/QtWidgets.QLineEdit/g' \
+    -e 's/QtGui.QList/QtWidgets.QList/g' \
+    -e 's/QtGui.QMainWindow/QtWidgets.QMainWindow/g' \
+    -e 's/QtGui.QMenu/QtWidgets.QMenu/g' \
+    -e 's/QtGui.QMessageBox/QtWidgets.QMessageBox/g' \
+    -e 's/QtGui.QPlainTextEdit/QtWidgets.QPlainTextEdit/g' \
+    -e 's/QtGui.QPushButton/QtWidgets.QPushButton/g' \
+    -e 's/QtGui.QProgressDialog/QtWidgets.QProgressDialog/g' \
+    -e 's/QtGui.QRadioButton/QtWidgets.QRadioButton/g' \
+    -e 's/QtGui.QSizePolicy/QtWidgets.QSizePolicy/g' \
+    -e 's/QtGui.QSpinBox/QtWidgets.QSpinBox/g' \
+    -e 's/QtGui.QSplitter/QtWidgets.QSplitter/g' \
+    -e 's/QtGui.QStackedWidget/QtWidgets.QStackedWidget/g' \
+    -e 's/QtGui.QTabBar/QtWidgets.QTabBar/g' \
+    -e 's/QtGui.QTextEdit/QtWidgets.QTextEdit/g' \
+    -e 's/QtGui.QToolButton/QtWidgets.QToolButton/g' \
+    -e 's/QtGui.QTree/QtWidgets.QTree/g' \
+    -e 's/QtGui.QStyleOptionViewItemV4/QtWidgets.QStyleOptionViewItem/g' \
+    -e 's/QtGui.QStyle/QtWidgets.QStyle/g' \
+    -e 's/QtGui.QVBoxLayout/QtWidgets.QVBoxLayout/g' \
+    -e 's/QtGui.QWidget/QtWidgets.QWidget/g' \
+    "$@"
