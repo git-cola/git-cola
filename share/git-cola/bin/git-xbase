@@ -5,6 +5,7 @@ import sys
 import re
 from argparse import ArgumentParser
 
+
 def setup_environment():
     abspath = os.path.abspath
     dirname = os.path.dirname
