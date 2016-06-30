@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, unicode_literals
-
-__copyright__ = """
-2012, Peter Norvig (http://norvig.com/spell-correct.html)
-2013, David Aguilar <davvid@gmail.com>
-"""
-
 import collections
 import re
 import sys
@@ -25,6 +19,11 @@ from cola import qtutils
 from cola.i18n import N_
 from cola.widgets.text import HintedTextEdit
 
+
+__copyright__ = """
+2012, Peter Norvig (http://norvig.com/spell-correct.html)
+2013, David Aguilar <davvid@gmail.com>
+"""
 
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
 
