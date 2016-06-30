@@ -2,7 +2,6 @@
 """Miscellaneous Qt utility functions."""
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import PYQT4
 from qtpy import compat
 from qtpy import QtGui
 from qtpy import QtCore
