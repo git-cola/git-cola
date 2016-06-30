@@ -15,6 +15,24 @@ Development
 Packaging
 ---------
 
+* `git cola` is now compatible with *PyQt5*, *PyQt4*, and *Pyside*.
+  `git cola` previously supported *PyQt4* only, but will now use whichever
+  library is available.  Users are not required to upgrade at this time,
+  but *PyQt5* support can be enabled anytime by making its python
+  modules available.
+
+  https://github.com/git-cola/git-cola/issues/232
+
+  *NOTE*: We do not yet recommend using *PyQt5* because there are known
+  exit-on-segfault bugs in *Qt5* that have not yet been addressed.
+  `git cola` is sensitive to this bug and is known to crash on exit
+  when using `git dag` or the interactive rebase feature on *PyQt5*.
+
+  https://bugreports.qt.io/browse/QTBUG-52988
+
+  *PyQt4* is stable and there are no known issues when using it so
+  we recommend using it until the Qt5 bugs have been resolved.
+
 * `git cola` now depends on *QtPy* and includes a bundled copy of the
   `qtpy` library.  If you are packaging `git cola` and would prefer to use
   `qtpy` from your distribution instead of the built-in version then use
