@@ -356,19 +356,23 @@ def open_files(title, directory=None, filters=''):
     return result[0]
 
 
-def opendir_dialog(title, path):
+def opendir_dialog(caption, path):
     """Prompts for a directory path"""
 
-    flags = (QtWidgets.QFileDialog.ShowDirsOnly |
-             QtWidgets.QFileDialog.DontResolveSymlinks)
-    return (QtWidgets.QFileDialog
-                 .getExistingDirectory(active_window(), title, path, flags))
+    options = (QtWidgets.QFileDialog.ShowDirsOnly |
+               QtWidgets.QFileDialog.DontResolveSymlinks)
+    return compat.getexistingdirectory(parent=active_window(),
+                                       caption=caption,
+                                       basedir=path,
+                                       options=options)
 
 
 def save_as(filename, title='Save As...'):
     """Creates a Save File dialog and returns a filename."""
-    return (QtWidgets.QFileDialog
-                 .getSaveFileName(active_window(), title, filename))
+    result = compat.getsavefilename(parent=active_window(),
+                                    caption=title,
+                                    basedir=filename)
+    return result[0]
 
 
 def copy_path(filename, absolute=True):
