@@ -24,10 +24,12 @@ if PY3:
         return bytes([i])
 
     int_types = (int,)
+    maxsize = sys.maxsize
     ustr = str
     unichr = chr
 else:
     bchr = chr
+    maxsize = sys.maxint
     # pylint: disable=unicode-builtin
     ustr = unicode
     unichr = unichr

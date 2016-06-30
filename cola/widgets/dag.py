@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import collections
 import math
 
@@ -19,6 +18,7 @@ from cola import icons
 from cola import observable
 from cola import qtcompat
 from cola import qtutils
+from cola.compat import maxsize
 from cola.i18n import N_
 from cola.models import dag
 from cola.widgets import archive
@@ -1232,11 +1232,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if not items:
             rect = self.scene().itemsBoundingRect()
         else:
-            maxint = 9223372036854775807
-            x_min = maxint
-            y_min = maxint
-            x_max = -maxint
-            ymax = -maxint
+            x_min = y_min = maxsize
+            x_max = y_max = -maxsize
+
             for item in items:
                 pos = item.pos()
                 item_rect = item.boundingRect()
@@ -1245,14 +1243,17 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 x_min = min(x_min, pos.x())
                 y_min = min(y_min, pos.y()-y_off)
                 x_max = max(x_max, pos.x()+x_off)
-                ymax = max(ymax, pos.y())
-            rect = QtCore.QRectF(x_min, y_min, x_max-x_min, ymax-y_min)
+                y_max = max(y_max, pos.y())
+            rect = QtCore.QRectF(x_min, y_min, x_max-x_min, y_max-y_min)
+
         x_adjust = GraphView.x_adjust
         y_adjust = GraphView.y_adjust
+
         rect.setX(rect.x() - x_adjust)
         rect.setY(rect.y() - y_adjust)
         rect.setHeight(rect.height() + y_adjust*2)
         rect.setWidth(rect.width() + x_adjust*2)
+
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
 
