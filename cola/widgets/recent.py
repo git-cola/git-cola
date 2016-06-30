@@ -86,7 +86,7 @@ class RecentFileDialog(standard.Dialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.tree.selectionChanged.connect(self.selection_changed)
+        self.tree.selection_changed.connect(self.tree_selection_changed)
         self.tree.path_chosen.connect(self.edit_file)
         self.count.valueChanged.connect(self.count_changed)
         self.count.editingFinished.connect(self.refresh)
@@ -128,7 +128,7 @@ class RecentFileDialog(standard.Dialog):
     def count_changed(self, value):
         self.refresh_button.setEnabled(True)
 
-    def selection_changed(self):
+    def tree_selection_changed(self):
         """Update actions based on the current selection"""
         filenames = self.tree.selected_files()
         self.edit_button.setEnabled(bool(filenames))
