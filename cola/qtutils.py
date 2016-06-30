@@ -113,7 +113,7 @@ def form(margin, spacing, *widgets):
 
 
 def grid(margin, spacing, *widgets):
-    layout = QtGui.QGridLayout()
+    layout = QtWidgets.QGridLayout()
     layout.setSpacing(spacing)
     set_margin(layout, margin)
 
