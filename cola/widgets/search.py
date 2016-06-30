@@ -152,6 +152,7 @@ class RevisionSearch(SearchEngine):
 
 
 class PathSearch(SearchEngine):
+
     def results(self):
         query, args = self.common_args()
         paths = ['--'] + utils.shell_split(query)
@@ -159,24 +160,28 @@ class PathSearch(SearchEngine):
 
 
 class MessageSearch(SearchEngine):
+
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, grep=query, **kwargs)
 
 
 class AuthorSearch(SearchEngine):
+
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, author=query, **kwargs)
 
 
 class CommitterSearch(SearchEngine):
+
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, committer=query, **kwargs)
 
 
 class DiffSearch(SearchEngine):
+
     def results(self):
         query, kwargs = self.common_args()
         return gitcmds.parse_rev_list(
@@ -184,6 +189,7 @@ class DiffSearch(SearchEngine):
 
 
 class DateRangeSearch(SearchEngine):
+
     def validate(self):
         return self.model.start_date < self.model.end_date
 

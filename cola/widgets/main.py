@@ -69,7 +69,6 @@ class MainView(standard.MainWindow):
 
         # Runs asynchronous tasks
         self.runtask = qtutils.RunTask()
-        self.progress = standard.ProgressDialog('', '', self)
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
@@ -792,7 +791,8 @@ class MainView(standard.MainWindow):
         cmds.do(cmds.RebaseAbort)
 
     def clone_repo(self):
-        guicmds.clone_repo(self, self.runtask, self.progress,
+        progress = standard.ProgressDialog('', '', self)
+        guicmds.clone_repo(self, self.runtask, progress,
                            guicmds.report_clone_repo_errors, True)
 
 

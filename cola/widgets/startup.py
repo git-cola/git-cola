@@ -29,7 +29,6 @@ class StartupDialog(standard.Dialog):
 
         self.repodir = None
         self.runtask = qtutils.RunTask(parent=self)
-        self.progress = standard.ProgressDialog('', '', self)
 
         self.new_button = qtutils.create_button(text=N_('New...'),
                                                 icon=icons.new())
@@ -125,7 +124,8 @@ class StartupDialog(standard.Dialog):
             self.accept()
 
     def clone_repo(self):
-        guicmds.clone_repo(self, self.runtask, self.progress,
+        progress = standard.ProgressDialog('', '', self)
+        guicmds.clone_repo(self, self.runtask, progress,
                            self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
