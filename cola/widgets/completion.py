@@ -286,8 +286,8 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
     def paint(self, painter, option, index):
         """Overloaded Qt method for custom painting of a model index"""
         if not self.highlight_text:
-            return QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
-
+            return QtWidgets.QStyledItemDelegate.paint(self, painter,
+                                                       option, index)
         text = index.data()
         if self.case_sensitive:
             html = text.replace(self.highlight_text,
