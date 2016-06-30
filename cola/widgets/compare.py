@@ -1,7 +1,6 @@
 """Provides dialogs for comparing branches and commits."""
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -62,7 +61,7 @@ class CompareBranchesDialog(standard.Dialog):
 
         Expanding = QtWidgets.QSizePolicy.Expanding
         Minimum = QtWidgets.QSizePolicy.Minimum
-        self.button_spacer = QtGui.QSpacerItem(1, 1, Expanding, Minimum)
+        self.button_spacer = QtWidgets.QSpacerItem(1, 1, Expanding, Minimum)
 
         self.button_compare = qtutils.create_button(text=N_('Compare'),
                                                     icon=icons.diff())
