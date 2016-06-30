@@ -22,6 +22,13 @@ except NameError:
     # Python 3
     unichr = chr
 
+try:
+    # pylint: disable=bytes-builtin
+    bstr = bytes
+except NameError:
+    # Python <= 2.5
+    bstr = str
+
 
 def _bchr_py3(i):
     return bytes([i])

@@ -12,7 +12,9 @@ from PyQt4.QtCore import SIGNAL
 
 from cola import core
 from cola import icons
-from cola.compat import ustr, parse
+from cola.compat import bstr
+from cola.compat import ustr
+from cola.compat import parse
 from cola.widgets import defs
 
 
@@ -77,7 +79,7 @@ class GravatarLabel(QtGui.QLabel):
     def network_finished(self, reply):
         email = self.email
 
-        header = QtCore.QByteArray('Location')
+        header = QtCore.QByteArray(bstr('Location'))
         location = ustr(reply.rawHeader(header)).strip()
         if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)
