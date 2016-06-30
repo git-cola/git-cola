@@ -14,6 +14,7 @@ from cola.models import main
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
+from cola.widgets.standard import ProgressDialog
 from cola.widgets.text import LineEdit
 
 
@@ -94,11 +95,7 @@ class CreateBranchDialog(Dialog):
         self.opts = CreateOpts(model)
         self.thread = CreateThread(self.opts, self)
 
-        self.progress = QtWidgets.QProgressDialog(self)
-        self.progress.setRange(0, 0)
-        self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(N_('Create Branch'))
-        self.progress.setWindowModality(Qt.WindowModal)
+        self.progress = None
 
         self.branch_name_label = QtWidgets.QLabel()
         self.branch_name_label.setText(N_('Branch Name'))
@@ -275,12 +272,10 @@ class CreateBranchDialog(Dialog):
                                    default=False,
                                    icon=icons.undo()):
                 return
-        self.setEnabled(False)
-        self.progress.setEnabled(True)
-        QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
 
-        # Show a nice progress bar
-        self.progress.setLabelText(N_('Updating...'))
+        title = N_('Create Branch')
+        label = N_('Updating')
+        self.progress = ProgressDialog(title, label, self)
         self.progress.show()
         self.thread.start()
 
@@ -288,9 +283,8 @@ class CreateBranchDialog(Dialog):
         Interaction.log_status(status, out, err)
 
     def thread_result(self, results):
-        self.setEnabled(True)
-        self.progress.close()
-        QtWidgets.QApplication.restoreOverrideCursor()
+        self.progress.hide()
+        del self.progress
 
         for (cmd, status, out, err) in results:
             if status != 0:
