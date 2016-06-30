@@ -98,6 +98,8 @@ class _BaseThread(QtCore.QThread):
 
 
 if AVAILABLE == 'inotify':
+    import select
+
     class _InotifyThread(_BaseThread):
         _TRIGGER_MASK = (
                 inotify.IN_ATTRIB |
@@ -172,6 +174,8 @@ if AVAILABLE == 'inotify':
                             continue
                         else:
                             raise
+                    except select.error:
+                        continue
                     else:
                         if not self._running:
                             break
