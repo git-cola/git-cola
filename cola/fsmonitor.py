@@ -101,7 +101,6 @@ class _BaseThread(QtCore.QThread):
 
 
 if AVAILABLE == 'inotify':
-    import select
 
     class _InotifyThread(_BaseThread):
         _TRIGGER_MASK = (
