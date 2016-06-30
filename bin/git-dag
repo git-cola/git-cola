@@ -53,9 +53,7 @@ def setup_environment():
 setup_environment()
 
 
-from cola.app import add_common_arguments
-from cola.app import application_init
-from cola.app import application_start
+from cola import app
 from cola.widgets.dag import git_dag
 
 
@@ -68,7 +66,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.set_defaults(func=cmd_dag)
 
-    add_common_arguments(parser)
+    app.add_common_arguments(parser)
     parser.add_argument('-c', '--count', '--max-count', metavar='<count>',
                         type=int, default=1000,
                         help='number of commits to display')
@@ -83,9 +81,9 @@ def parse_args():
 
 
 def cmd_dag(args):
-    context = application_init(args)
+    context = app.application_init(args)
     view = git_dag(context.model, args=args, settings=args.settings)
-    return application_start(context, view, monitor_refs_only=True)
+    return app.application_start(context, view, monitor_refs_only=True)
 
 
 if __name__ == '__main__':
