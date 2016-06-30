@@ -427,6 +427,7 @@ class ProgressDialog(QtGui.QProgressDialog):
                      self.update_progress, Qt.QueuedConnection)
 
         self.set_details(title, label)
+        self.reset()
 
     def set_details(self, title, label):
         self.setWindowTitle(title)
