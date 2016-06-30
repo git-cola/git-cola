@@ -481,21 +481,22 @@ class ProgressDialog(QtWidgets.QProgressDialog):
     """
     def __init__(self, title, label, parent):
         QtWidgets.QProgressDialog.__init__(self, parent)
-        self.setFont(qtutils.diff_font())
-        self.setRange(0, 0)
-        self.setCancelButton(None)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-        self.progress_thread = progress = ProgressAnimationThread(label, self)
-        progress.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self.reset()
+        self.setRange(0, 0)
+        self.setMinimumDuration(0)
+        self.setCancelButton(None)
+        self.setFont(qtutils.diff_font())
+        self.thread = ProgressAnimationThread(label, self)
+        self.thread.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.set_details(title, label)
-        self.reset()
 
     def set_details(self, title, label):
         self.setWindowTitle(title)
         self.setLabelText(label + '     ')
-        self.progress_thread.set_text(label)
+        self.thread.set_text(label)
 
     def refresh(self, txt):
         self.setLabelText(txt)
@@ -506,13 +507,13 @@ class ProgressDialog(QtWidgets.QProgressDialog):
 
     def show(self):
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
-        self.progress_thread.start()
         super(ProgressDialog, self).show()
+        self.thread.start()
 
     def hide(self):
         QtWidgets.QApplication.restoreOverrideCursor()
-        self.progress_thread.stop()
-        self.progress_thread.wait()
+        self.thread.stop()
+        self.thread.wait()
         super(ProgressDialog, self).hide()
 
 
