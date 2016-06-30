@@ -220,7 +220,8 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
     diff_commits = Signal(object, object)
 
     def __init__(self, notifier, parent):
-        super(CommitTreeWidget, self).__init__(parent=parent)
+        standard.TreeWidget.__init__(self, parent=parent)
+        ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
@@ -1028,7 +1029,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     y_off = 24
 
     def __init__(self, notifier, parent):
-        super(GraphView, self).__init__(parent)
+        QtWidgets.QGraphicsView.__init__(self, parent)
+        ViewerMixin.__init__(self)
 
         highlight = self.palette().color(QtGui.QPalette.Highlight)
         Commit.commit_selected_color = highlight
