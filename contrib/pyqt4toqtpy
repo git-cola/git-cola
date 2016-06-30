@@ -23,6 +23,7 @@ sed -i \
     -e 's/QtGui.QFontComboBox/QtWidgets.QFontComboBox/g' \
     -e 's/QtGui.QFormLayout/QtWidgets.QFormLayout/g' \
     -e 's/QtGui.QGraphics/QtWidgets.QGraphics/g' \
+    -e 's/QtGui.QGridLayout/QtWidgets.QGridLayout/g' \
     -e 's/QtGui.QGroupBox/QtWidgets.QGroupBox/g' \
     -e 's/QtGui.QHBoxLayout/QtWidgets.QHBoxLayout/g' \
     -e 's/QtGui.QInputDialog/QtWidgets.QInputDialog/g' \
@@ -39,6 +40,7 @@ sed -i \
     -e 's/QtGui.QProgressDialog/QtWidgets.QProgressDialog/g' \
     -e 's/QtGui.QRadioButton/QtWidgets.QRadioButton/g' \
     -e 's/QtGui.QSizePolicy/QtWidgets.QSizePolicy/g' \
+    -e 's/QtGui.QSpacerItem/QtWidgets.QSpacerItem/g' \
     -e 's/QtGui.QSpinBox/QtWidgets.QSpinBox/g' \
     -e 's/QtGui.QSplitter/QtWidgets.QSplitter/g' \
     -e 's/QtGui.QStackedWidget/QtWidgets.QStackedWidget/g' \
