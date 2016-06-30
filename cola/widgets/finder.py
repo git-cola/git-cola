@@ -91,7 +91,8 @@ class Finder(standard.Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.input_label = QtWidgets.QLabel(os.path.basename(core.getcwd()) + '/')
+        label = os.path.basename(core.getcwd()) + '/'
+        self.input_label = QtWidgets.QLabel(label)
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
         self.input_txt.hint.enable(True)
 
