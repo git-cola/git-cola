@@ -1,9 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import re
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt, SIGNAL
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import actions
 from cola import cmds
@@ -20,7 +21,8 @@ from cola.models import selection
 from cola.qtutils import add_action
 from cola.qtutils import create_action_button
 from cola.qtutils import create_menu
-from cola.qtutils import RGB, make_format
+from cola.qtutils import make_format
+from cola.qtutils import RGB
 from cola.widgets import defs
 from cola.widgets.text import VimMonoTextView
 
@@ -116,18 +118,18 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
 
 class DiffTextEdit(VimMonoTextView):
-    def __init__(self, parent, whitespace=True):
 
+    def __init__(self, parent, whitespace=True):
         VimMonoTextView.__init__(self, parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  whitespace=whitespace)
 
 
-class DiffEditorWidget(QtGui.QWidget):
+class DiffEditorWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self.editor = DiffEditor(self, parent.titleBarWidget())
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
@@ -137,6 +139,12 @@ class DiffEditorWidget(QtGui.QWidget):
 
 
 class DiffEditor(DiffTextEdit):
+
+    up = Signal()
+    down = Signal()
+    options_changed = Signal()
+    updated = Signal()
+    diff_text_changed = Signal(object)
 
     def __init__(self, parent, titlebar):
         DiffTextEdit.__init__(self, parent)
@@ -188,23 +196,20 @@ class DiffEditor(DiffTextEdit):
         self.stage_or_unstage = actions.stage_or_unstage(self)
 
         # Emit up/down signals so that they can be routed by the main widget
-        self.move_down = actions.move_down(self)
         self.move_up = actions.move_up(self)
+        self.move_down = actions.move_down(self)
 
-        model.add_observer(model.message_diff_text_changed, self._emit_text)
+        diff_text_changed = model.message_diff_text_changed
+        model.add_observer(diff_text_changed, self.diff_text_changed.emit)
 
         self.selection_model = selection_model = selection.selection_model()
         selection_model.add_observer(selection_model.message_selection_changed,
-                                     self._update)
-        self.connect(self, SIGNAL('update()'),
-                     self._update_callback, Qt.QueuedConnection)
+                                     self.updated.emit)
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.connect(self, SIGNAL('set_text(PyQt_PyObject)'), self.setPlainText)
+        self.diff_text_changed.connect(self.setPlainText)
 
-    def _update(self):
-        self.emit(SIGNAL('update()'))
-
-    def _update_callback(self):
+    def refresh(self):
         enabled = False
         s = self.selection_model.selection()
         if s.modified and self.model.stageable():
@@ -213,9 +218,6 @@ class DiffEditor(DiffTextEdit):
             elif s.modified[0] not in main.model().unstaged_deleted:
                 enabled = True
         self.action_revert_selection.setEnabled(enabled)
-
-    def _emit_text(self, text):
-        self.emit(SIGNAL('set_text(PyQt_PyObject)'), text)
 
     def _update_diff_opts(self):
         space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
@@ -227,7 +229,7 @@ class DiffEditor(DiffTextEdit):
                                       space_change,
                                       all_space,
                                       function_context)
-        self.emit(SIGNAL('diff_options_updated()'))
+        self.options_changed.emit()
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -311,16 +313,36 @@ class DiffEditor(DiffTextEdit):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def wheelEvent(self, event):
+        ev = event
         if event.modifiers() & Qt.ControlModifier:
+            event.accept()
             # Intercept the Control modifier to not resize the text
             # when doing control+mousewheel
-            event.accept()
-            event = QtGui.QWheelEvent(event.pos(), event.delta(),
-                                      Qt.NoButton,
-                                      Qt.NoModifier,
-                                      event.orientation())
+            if hasattr(event, 'angleDelta'):
+                angle = event.angleDelta()
+                if abs(angle.x()) > abs(angle.y()):
+                    delta = angle.x()
+                    orientation = Qt.Horizontal
+                else:
+                    delta = angle.y()
+                    orientation = Qt.Vertical
 
-        return DiffTextEdit.wheelEvent(self, event)
+                ev = QtGui.QWheelEvent(event.pos(),
+                                       event.globalPos(),
+                                       event.pixelDelta(),
+                                       event.angleDelta(),
+                                       delta,
+                                       orientation,
+                                       Qt.NoButton,
+                                       Qt.NoModifier)
+            else:
+                ev = QtGui.QWheelEvent(event.pos(),
+                                       event.delta(),
+                                       Qt.NoButton,
+                                       Qt.NoModifier,
+                                       event.orientation())
+
+        return DiffTextEdit.wheelEvent(self, ev)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
@@ -440,10 +462,10 @@ class DiffEditor(DiffTextEdit):
                 self.has_selection(), reverse, apply_to_worktree)
 
 
-class DiffWidget(QtGui.QWidget):
+class DiffWidget(QtWidgets.QWidget):
 
     def __init__(self, notifier, parent):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self.runtask = qtutils.RunTask(parent=self)
 
@@ -453,8 +475,8 @@ class DiffWidget(QtGui.QWidget):
         summary_font = QtGui.QFont(author_font)
         summary_font.setWeight(QtGui.QFont.Bold)
 
-        policy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding,
-                                   QtGui.QSizePolicy.Minimum)
+        policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
+                                   QtWidgets.QSizePolicy.Minimum)
 
         self.gravatar_label = gravatar.GravatarLabel()
 
@@ -536,10 +558,10 @@ class DiffWidget(QtGui.QWidget):
         self.set_diff_sha1(self.sha1, filenames[0])
 
 
-class TextLabel(QtGui.QLabel):
+class TextLabel(QtWidgets.QLabel):
 
     def __init__(self, parent=None):
-        QtGui.QLabel.__init__(self, parent)
+        QtWidgets.QLabel.__init__(self, parent)
         self.setTextInteractionFlags(Qt.TextSelectableByMouse |
                                      Qt.LinksAccessibleByMouse)
         self._display = ''
@@ -574,7 +596,7 @@ class TextLabel(QtGui.QLabel):
     # Qt overrides
     def setFont(self, font):
         self._metrics = QtGui.QFontMetrics(font)
-        QtGui.QLabel.setFont(self, font)
+        QtWidgets.QLabel.setFont(self, font)
 
     def resizeEvent(self, event):
         if self._elide:
@@ -582,7 +604,7 @@ class TextLabel(QtGui.QLabel):
             block = self.blockSignals(True)
             self.setText(self._display)
             self.blockSignals(block)
-        QtGui.QLabel.resizeEvent(self, event)
+        QtWidgets.QLabel.resizeEvent(self, event)
 
 
 class DiffInfoTask(qtutils.Task):

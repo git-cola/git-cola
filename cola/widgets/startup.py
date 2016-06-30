@@ -5,10 +5,9 @@ found at startup.
 
 """
 from __future__ import division, absolute_import, unicode_literals
-
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import core
 from cola import guicmds
@@ -43,7 +42,7 @@ class StartupDialog(standard.Dialog):
         settings.load()
         self.settings = settings
 
-        self.bookmarks_label = QtGui.QLabel(N_('Select Repository...'))
+        self.bookmarks_label = QtWidgets.QLabel(N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
 
         self.bookmarks_model = QtGui.QStandardItemModel()
@@ -63,9 +62,9 @@ class StartupDialog(standard.Dialog):
             item.setEditable(False)
             self.bookmarks_model.appendRow(item)
 
-        selection_mode = QtGui.QAbstractItemView.SingleSelection
+        selection_mode = QtWidgets.QAbstractItemView.SingleSelection
 
-        self.bookmarks = QtGui.QListView()
+        self.bookmarks = QtWidgets.QListView()
         self.bookmarks.setSelectionMode(selection_mode)
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setModel(self.bookmarks_model)
@@ -91,13 +90,14 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
 
-        self.connect(self.bookmarks,
-                     SIGNAL('activated(QModelIndex)'), self.open_bookmark)
+        self.bookmarks.activated.connect(self.open_bookmark)
 
-        if not self.restore_state(settings=settings):
-            screen = QtGui.QApplication.instance().desktop()
-            self.setGeometry(screen.width() // 4, screen.height() // 4,
-                             screen.width() // 2, screen.height() // 2)
+        self.init_state(settings, self.resize_widget)
+
+    def resize_widget(self):
+        screen = QtWidgets.QApplication.instance().desktop()
+        self.setGeometry(screen.width() // 4, screen.height() // 4,
+                         screen.width() // 2, screen.height() // 2)
 
     def find_git_repo(self):
         """
@@ -111,7 +111,7 @@ class StartupDialog(standard.Dialog):
         """
         self.show()
         self.raise_()
-        if self.exec_() == QtGui.QDialog.Accepted:
+        if self.exec_() == QtWidgets.QDialog.Accepted:
             return self.repodir
         return None
 

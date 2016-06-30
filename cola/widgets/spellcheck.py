@@ -11,15 +11,15 @@ import collections
 import re
 import sys
 
-from PyQt4.Qt import QAction
-from PyQt4.Qt import QApplication
-from PyQt4.Qt import QEvent
-from PyQt4.Qt import QMouseEvent
-from PyQt4.Qt import QSyntaxHighlighter
-from PyQt4.Qt import QTextCharFormat
-from PyQt4.Qt import QTextCursor
-from PyQt4.Qt import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy.QtCore import Qt
+from qtpy.QtCore import QEvent
+from qtpy.QtCore import Signal
+from qtpy.QtGui import QMouseEvent
+from qtpy.QtGui import QSyntaxHighlighter
+from qtpy.QtGui import QTextCharFormat
+from qtpy.QtGui import QTextCursor
+from qtpy.QtWidgets import QAction
+from qtpy.QtWidgets import QApplication
 
 from cola import qtutils
 from cola.i18n import N_
@@ -141,8 +141,7 @@ class SpellCheckTextEdit(HintedTextEdit):
                 spell_menu = qtutils.create_menu(title, self)
                 for word in self.spellcheck.suggest(text):
                     action = SpellAction(word, spell_menu)
-                    self.connect(action, SIGNAL('correct(PyQt_PyObject)'),
-                                 self.correct)
+                    action.result.connect(self.correct)
                     spell_menu.addAction(action)
                 # Only add the spelling suggests to the menu if there are
                 # suggestions.
@@ -196,13 +195,14 @@ class Highlighter(QSyntaxHighlighter):
 class SpellAction(QAction):
     """QAction that returns the text in a signal.
     """
+    result = Signal(object)
 
     def __init__(self, *args):
         QAction.__init__(self, *args)
-        self.connect(self, SIGNAL('triggered()'), self.correct)
+        self.triggered.connect(self.correct)
 
     def correct(self):
-        self.emit(SIGNAL('correct(PyQt_PyObject)'), self.text())
+        self.result.emit(self.text())
 
 
 def main(args=sys.argv):

@@ -1,10 +1,10 @@
 """Provides the main() routine and ColaApplication"""
 from __future__ import division, absolute_import, unicode_literals
-
 import argparse
 import os
 import signal
 import sys
+
 
 __copyright__ = """
 Copyright (C) 2009-2016 David Aguilar and contributors
@@ -18,12 +18,6 @@ if sys.platform == 'darwin':
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
-
-errmsg = """Sorry, you do not seem to have PyQt4 installed.
-Please install it before using git-cola.
-e.g.: sudo apt-get install python-qt4
-"""
-
 # /usr/include/sysexits.h
 # #define EX_OK           0   /* successful termination */
 # #define EX_USAGE        64  /* command line usage error */
@@ -34,23 +28,18 @@ EX_USAGE = 64
 EX_NOINPUT = 66
 EX_UNAVAILABLE = 69
 
-
 try:
-    from cola import sipcompat
+    from qtpy import QtCore
 except ImportError:
+    errmsg = """
+Sorry, you do not seem to have PyQt5, Pyside, or PyQt4 installed.
+Please install it before using git-cola, e.g.:
+    $ sudo apt-get install python-qt4
+"""
     sys.stderr.write(errmsg)
     sys.exit(EX_UNAVAILABLE)
 
-sipcompat.initialize()
-
-try:
-    from PyQt4 import QtCore
-except ImportError:
-    sys.stderr.write(errmsg)
-    sys.exit(EX_UNAVAILABLE)
-
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
 
 # Import cola modules
 from cola import cmds
@@ -162,8 +151,7 @@ class ColaApplication(object):
         qtutils.install()
         icons.install()
 
-        QtCore.QObject.connect(fsmonitor.current(), SIGNAL('files_changed'),
-                               self._update_files)
+        fsmonitor.current().files_changed.connect(self._update_files)
 
         if gui:
             self._app = current(tuple(argv))
@@ -196,10 +184,10 @@ def current(argv):
     return ColaQApplication(list(argv))
 
 
-class ColaQApplication(QtGui.QApplication):
+class ColaQApplication(QtWidgets.QApplication):
 
     def __init__(self, argv):
-        QtGui.QApplication.__init__(self, argv)
+        super(ColaQApplication, self).__init__(argv)
         self.view = None  # injected by application_start()
 
     def event(self, e):
@@ -207,7 +195,7 @@ class ColaQApplication(QtGui.QApplication):
             cfg = gitcfg.current()
             if cfg.get('cola.refreshonfocus', False):
                 cmds.do(cmds.Refresh)
-        return QtGui.QApplication.event(self, e)
+        return super(ColaQApplication, self).event(e)
 
     def commitData(self, session_mgr):
         """Save session data"""
@@ -287,7 +275,7 @@ def application_start(context, view, monitor_refs_only=False):
 
     msg_timer = QtCore.QTimer()
     msg_timer.setSingleShot(True)
-    msg_timer.connect(msg_timer, SIGNAL('timeout()'), _send_msg)
+    msg_timer.timeout.connect(_send_msg)
     msg_timer.start(0)
 
     # Start the event loop

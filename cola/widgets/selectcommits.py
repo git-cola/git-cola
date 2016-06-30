@@ -1,9 +1,8 @@
 """A GUI for selecting commits"""
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import gitcmds
 from cola import qtutils
@@ -27,28 +26,28 @@ class Model(object):
         self.summaries = summaries
 
 
-class SelectCommitsDialog(QtGui.QDialog):
+class SelectCommitsDialog(QtWidgets.QDialog):
 
     def __init__(self, model,
                  parent=None, title=None, multiselect=True, syntax=True):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.model = model
         if title:
             self.setWindowTitle(title)
 
-        self.commit_list = QtGui.QListWidget()
         if multiselect:
-            mode = QtGui.QAbstractItemView.ExtendedSelection
+            mode = QtWidgets.QAbstractItemView.ExtendedSelection
         else:
-            mode = QtGui.QAbstractItemView.SingleSelection
-        self.commit_list.setSelectionMode(mode)
-        self.commit_list.setAlternatingRowColors(True)
+            mode = QtWidgets.QAbstractItemView.SingleSelection
+        commits = self.commits = QtWidgets.QListWidget()
+        commits.setSelectionMode(mode)
+        commits.setAlternatingRowColors(True)
 
         self.commit_text = DiffTextEdit(self, whitespace=False)
 
-        self.label = QtGui.QLabel()
+        self.label = QtWidgets.QLabel()
         self.label.setText(N_('Revision Expression:'))
-        self.revision = QtGui.QLineEdit()
+        self.revision = QtWidgets.QLineEdit()
         self.revision.setReadOnly(True)
 
         self.select_button = qtutils.ok_button(N_('Select'),
@@ -57,7 +56,7 @@ class SelectCommitsDialog(QtGui.QDialog):
 
         # Make the list widget slighty larger
         self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.commit_list, self.commit_text)
+                                         self.commits, self.commit_text)
         self.splitter.setSizes([100, 150])
 
         self.input_layout = qtutils.hbox(defs.no_margin, defs.spacing,
@@ -68,12 +67,8 @@ class SelectCommitsDialog(QtGui.QDialog):
                                         self.splitter, self.input_layout)
         self.setLayout(self.main_layout)
 
-        self.connect(self.commit_list, SIGNAL('itemSelectionChanged()'),
-                     self.commit_sha1_selected)
-
-        self.connect(self.commit_list,
-                     SIGNAL('itemDoubleClicked(QListWidgetItem*)'),
-                     self.commit_sha1_double_clicked)
+        commits.itemSelectionChanged.connect(self.commit_sha1_selected)
+        commits.itemDoubleClicked.connect(self.commit_sha1_double_clicked)
 
         qtutils.connect_button(self.select_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
@@ -81,10 +76,10 @@ class SelectCommitsDialog(QtGui.QDialog):
         self.resize(700, 420)
 
     def selected_commit(self):
-        return qtutils.selected_item(self.commit_list, self.model.revisions)
+        return qtutils.selected_item(self.commits, self.model.revisions)
 
     def selected_commits(self):
-        return qtutils.selected_items(self.commit_list, self.model.revisions)
+        return qtutils.selected_items(self.commits, self.model.revisions)
 
     def select_commits(self):
         summaries = self.model.summaries
@@ -92,9 +87,9 @@ class SelectCommitsDialog(QtGui.QDialog):
             msg = N_('No commits exist in this branch.')
             Interaction.log(msg)
             return []
-        qtutils.set_items(self.commit_list, summaries)
+        qtutils.set_items(self.commits, summaries)
         self.show()
-        if self.exec_() != QtGui.QDialog.Accepted:
+        if self.exec_() != QtWidgets.QDialog.Accepted:
             return []
         return self.selected_commits()
 

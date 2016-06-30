@@ -2,13 +2,11 @@ from __future__ import division, absolute_import, unicode_literals
 
 import re
 
-from cola import sipcompat
-sipcompat.initialize()
-
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import core
 from cola import gitcmds
@@ -20,21 +18,25 @@ from cola.widgets import defs
 from cola.widgets import text
 
 
-UPDATE_SIGNAL = 'update()'
-
-
 class CompletionLineEdit(text.HintedLineEdit):
     """An lineedit with advanced completion abilities"""
+
+    activated = Signal()
+    changed = Signal()
+    cleared = Signal()
+    enter = Signal()
+    up = Signal()
+    down = Signal()
 
     # Activation keys will cause a selected completion item to be chosen
     ACTIVATION_KEYS = (Qt.Key_Return, Qt.Key_Enter)
 
     # Navigation keys trigger signals that widgets can use for customization
     NAVIGATION_KEYS = {
-            Qt.Key_Return: 'return()',
-            Qt.Key_Enter: 'enter()',
-            Qt.Key_Up: 'up()',
-            Qt.Key_Down: 'down()',
+            Qt.Key_Return: 'enter',
+            Qt.Key_Enter: 'enter',
+            Qt.Key_Up: 'up',
+            Qt.Key_Down: 'down',
     }
 
     def __init__(self, model_factory, hint='', parent=None):
@@ -55,15 +57,11 @@ class CompletionLineEdit(text.HintedLineEdit):
         self._delegate = HighlightDelegate(self)
         completer.popup().setItemDelegate(self._delegate)
 
-        self.connect(self, SIGNAL('textChanged(QString)'), self._text_changed)
-
-        self.connect(self._completer, SIGNAL('activated(QString)'),
-                     self.choose_completion)
-
-        self.connect(self._completion_model, SIGNAL('updated()'),
-                     self._completions_updated, Qt.QueuedConnection)
-
-        self.connect(self, SIGNAL('destroyed(QObject*)'), self.dispose)
+        self.textChanged.connect(self._text_changed)
+        self._completer.activated.connect(self.choose_completion)
+        self._completion_model.updated.connect(self._completions_updated,
+                                               type=Qt.QueuedConnection)
+        self.destroyed.connect(self.dispose)
 
     def __del__(self):
         self.dispose()
@@ -129,7 +127,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         words.append(completion)
         text = core.list2cmdline(words)
         self.setText(text)
-        self.emit(SIGNAL('changed()'))
+        self.changed.emit()
         self._do_text_changed(text, '')
         self.popup().hide()
 
@@ -175,8 +173,8 @@ class CompletionLineEdit(text.HintedLineEdit):
             return
         # Select the first item
         idx = self._completion_model.index(0, 0)
-        selection = QtGui.QItemSelection(idx, idx)
-        mode = QtGui.QItemSelectionModel.Select
+        selection = QtCore.QItemSelection(idx, idx)
+        mode = QtCore.QItemSelectionModel.Select
         popup.selectionModel().select(selection, mode)
 
     def selected_completion(self):
@@ -215,7 +213,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         # Clearing a line should always emit a signal
         is_empty = not bool(self.value())
         if is_empty:
-            self.emit(SIGNAL('cleared()'))
+            self.cleared.emit()
         return result
 
     def keyReleaseEvent(self, event):
@@ -225,9 +223,10 @@ class CompletionLineEdit(text.HintedLineEdit):
         if not visible:
             # If it's a navigation key then emit a signal
             try:
-                msg = self.NAVIGATION_KEYS[key]
                 event.accept()
-                self.emit(SIGNAL(msg))
+                msg = self.NAVIGATION_KEYS[key]
+                signal = getattr(self, msg)
+                signal.emit()
                 return
             except KeyError:
                 pass
@@ -238,12 +237,14 @@ class CompletionLineEdit(text.HintedLineEdit):
         selection = self.completion_selection()
         if visible and selection and key in self.ACTIVATION_KEYS:
             self.choose_completion(selection)
-            self.emit(SIGNAL('activated()'))
+            self.activated.emit()
             return
         return result
 
 
 class GatherCompletionsThread(QtCore.QThread):
+
+    items_gathered = Signal(object)
 
     def __init__(self, model):
         QtCore.QThread.__init__(self)
@@ -260,14 +261,14 @@ class GatherCompletionsThread(QtCore.QThread):
             items = self.model.gather_matches(self.case_sensitive)
 
         if text is not None:
-            self.emit(SIGNAL('items_gathered(PyQt_PyObject)'), items)
+            self.items_gathered.emit(items)
 
 
-class HighlightDelegate(QtGui.QStyledItemDelegate):
+class HighlightDelegate(QtWidgets.QStyledItemDelegate):
     """A delegate used for auto-completion to give formatted completion"""
 
     def __init__(self, parent=None):
-        QtGui.QStyledItemDelegate.__init__(self, parent)
+        QtWidgets.QStyledItemDelegate.__init__(self, parent)
         self.highlight_text = ''
         self.case_sensitive = False
 
@@ -285,7 +286,7 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
     def paint(self, painter, option, index):
         """Overloaded Qt method for custom painting of a model index"""
         if not self.highlight_text:
-            return QtGui.QStyledItemDelegate.paint(self, painter, option, index)
+            return QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
 
         text = index.data()
         if self.case_sensitive:
@@ -304,25 +305,26 @@ class HighlightDelegate(QtGui.QStyledItemDelegate):
         self.doc.setHtml(html)
 
         # Painting item without text, Text Document will paint the text
-        optionV4 = QtGui.QStyleOptionViewItemV4(option)
-        self.initStyleOption(optionV4, index)
-        optionV4.text = ''
+        params = QtWidgets.QStyleOptionViewItem(option)
+        self.initStyleOption(params, index)
+        params.text = ''
 
-        style = QtGui.QApplication.style()
-        style.drawControl(QtGui.QStyle.CE_ItemViewItem, optionV4, painter)
+        style = QtWidgets.QApplication.style()
+        style.drawControl(QtWidgets.QStyle.CE_ItemViewItem, params, painter)
         ctx = QtGui.QAbstractTextDocumentLayout.PaintContext()
 
         # Highlighting text if item is selected
-        if (optionV4.state & QtGui.QStyle.State_Selected):
-            color = optionV4.palette.color(QtGui.QPalette.Active,
-                                           QtGui.QPalette.HighlightedText)
+        if (params.state & QtWidgets.QStyle.State_Selected):
+            color = params.palette.color(QtGui.QPalette.Active,
+                                         QtGui.QPalette.HighlightedText)
             ctx.palette.setColor(QtGui.QPalette.Text, color)
 
         # translate the painter to where the text is drawn
-        rect = style.subElementRect(QtGui.QStyle.SE_ItemViewItemText, optionV4)
+        item_text = QtWidgets.QStyle.SE_ItemViewItemText
+        rect = style.subElementRect(item_text, params)
         painter.save()
 
-        start = rect.topLeft() + QtCore.QPoint(3, 0)
+        start = rect.topLeft() + QtCore.QPoint(defs.margin, 0)
         painter.translate(start)
 
         # tell the text document to draw the html for us
@@ -339,6 +341,10 @@ def ref_sort_key(ref):
 
 class CompletionModel(QtGui.QStandardItemModel):
 
+    updated = Signal()
+    items_gathered = Signal(object)
+    model_updated = Signal()
+
     def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
         self.match_text = ''
@@ -346,9 +352,8 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.case_sensitive = False
 
         self.update_thread = GatherCompletionsThread(self)
-        self.connect(self.update_thread,
-                     SIGNAL('items_gathered(PyQt_PyObject)'),
-                     self.apply_matches, Qt.QueuedConnection)
+        self.update_thread.items_gathered.connect(self.apply_matches,
+                                                  type=Qt.QueuedConnection)
 
     def update(self):
         case_sensitive = self.update_thread.case_sensitive
@@ -394,7 +399,7 @@ class CompletionModel(QtGui.QStandardItemModel):
 
         self.clear()
         self.invisibleRootItem().appendRows(items)
-        self.emit(SIGNAL('updated()'))
+        self.updated.emit()
 
 
 def _identity(x):
@@ -435,16 +440,15 @@ def filter_path_matches(match_text, file_list, case_sensitive):
     return (paths, dirs)
 
 
-class Completer(QtGui.QCompleter):
+class Completer(QtWidgets.QCompleter):
 
     def __init__(self, model, parent):
-        QtGui.QCompleter.__init__(self, parent)
+        QtWidgets.QCompleter.__init__(self, parent)
         self._model = model
-        self.setCompletionMode(QtGui.QCompleter.UnfilteredPopupCompletion)
+        self.setCompletionMode(QtWidgets.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
-        self.connect(model, SIGNAL(UPDATE_SIGNAL),
-                     self.update, Qt.QueuedConnection)
+        model.model_updated.connect(self.update, type=Qt.QueuedConnection)
         self.setModel(model)
 
     def update(self):
@@ -463,16 +467,16 @@ class GitCompletionModel(CompletionModel):
         CompletionModel.__init__(self, parent)
         self.main_model = model = main.model()
         msg = model.message_updated
-        model.add_observer(msg, self.emit_update)
+        model.add_observer(msg, self.emit_model_updated)
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
                               sort_key=ref_sort_key)
         return (refs, (), set())
 
-    def emit_update(self):
+    def emit_model_updated(self):
         try:
-            self.emit(SIGNAL(UPDATE_SIGNAL))
+            self.model_updated.emit()
         except RuntimeError:  # C++ object has been deleted
             self.dispose()
 
@@ -480,7 +484,7 @@ class GitCompletionModel(CompletionModel):
         return []
 
     def dispose(self):
-        self.main_model.remove_observer(self.emit_update)
+        self.main_model.remove_observer(self.emit_model_updated)
 
 
 class GitRefCompletionModel(GitCompletionModel):
@@ -580,10 +584,8 @@ class GitTrackedCompletionModel(GitPathCompletionModel):
 
     def __init__(self, parent):
         GitPathCompletionModel.__init__(self, parent)
-        self.connect(self, SIGNAL(UPDATE_SIGNAL),
-                     self.gather_paths, Qt.QueuedConnection)
+        self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
         self._paths = []
-        self._updated = False
 
     def gather_paths(self):
         self._paths = gitcmds.tracked_files()
@@ -603,10 +605,8 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
     def __init__(self, parent):
         GitRefCompletionModel.__init__(self, parent)
-        self.connect(self, SIGNAL(UPDATE_SIGNAL),
-                     self.gather_paths, Qt.QueuedConnection)
+        self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
         self._paths = []
-        self._updated = False
 
     def gather_paths(self):
         self._paths = gitcmds.tracked_files()
@@ -651,14 +651,14 @@ GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel)
 GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel)
 
 
-class GitDialog(QtGui.QDialog):
+class GitDialog(QtWidgets.QDialog):
 
     def __init__(self, lineedit, title, button_text, parent, icon=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setWindowTitle(title)
         self.setMinimumWidth(333)
 
-        self.label = QtGui.QLabel()
+        self.label = QtWidgets.QLabel()
         self.label.setText(title)
 
         self.lineedit = lineedit()
@@ -678,12 +678,11 @@ class GitDialog(QtGui.QDialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
+        self.lineedit.textChanged.connect(self.text_changed)
+        self.lineedit.enter.connect(self.accept)
+
         qtutils.connect_button(self.ok_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
-
-        self.connect(self.lineedit, SIGNAL('textChanged(QString)'),
-                     self.text_changed)
-        self.connect(self.lineedit, SIGNAL('return()'), self.accept)
 
         self.setWindowModality(Qt.WindowModal)
         self.ok_button.setEnabled(False)

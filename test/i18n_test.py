@@ -1,9 +1,5 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
-
-from cola import sipcompat
-sipcompat.initialize()
 
 from cola import i18n
 from cola.i18n import N_

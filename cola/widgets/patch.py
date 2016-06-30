@@ -1,9 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import core
 from cola import cmds
@@ -73,7 +72,7 @@ class ApplyPatches(Dialog):
         self.curdir = core.getcwd()
         self.inner_drag = False
 
-        self.usage = QtGui.QLabel()
+        self.usage = QtWidgets.QLabel()
         self.usage.setText(N_("""
             <p>
                 Drag and drop or use the <strong>Add</strong> button to add
@@ -122,8 +121,7 @@ class ApplyPatches(Dialog):
         qtutils.connect_button(self.apply_button, self.apply_patches)
         qtutils.connect_button(self.close_button, self.close)
 
-        if not self.restore_state():
-            self.resize(666, 420)
+        self.init_state(None, self.resize, 666, 420)
 
     def apply_patches(self):
         items = self.tree.items()
@@ -136,7 +134,7 @@ class ApplyPatches(Dialog):
     def add_files(self):
         files = qtutils.open_files(N_('Select patch file(s)...'),
                                    directory=self.curdir,
-                                   filter='Patches (*.patch *.mbox)')
+                                   filters='Patches (*.patch *.mbox)')
         if not files:
             return
         self.curdir = os.path.dirname(files[0])
@@ -163,9 +161,6 @@ class ApplyPatches(Dialog):
 
 class PatchTreeWidget(DraggableTreeWidget):
 
-    def __init__(self, parent=None):
-        super(PatchTreeWidget, self).__init__(parent=parent)
-
     def add_paths(self, paths):
         patches = get_patches_from_paths(paths)
         if not patches:
@@ -173,7 +168,7 @@ class PatchTreeWidget(DraggableTreeWidget):
         items = []
         icon = icons.file_text()
         for patch in patches:
-            item = QtGui.QTreeWidgetItem()
+            item = QtWidgets.QTreeWidgetItem()
             flags = item.flags() & ~Qt.ItemIsDropEnabled
             item.setFlags(flags)
             item.setIcon(0, icon)

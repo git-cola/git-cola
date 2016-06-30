@@ -1,8 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import cmds
 from cola import icons
@@ -53,7 +53,7 @@ class CreateTag(standard.Dialog):
             self.setWindowModality(QtCore.Qt.WindowModal)
 
         # Tag label
-        self.tag_name_label = QtGui.QLabel(self)
+        self.tag_name_label = QtWidgets.QLabel(self)
         self.tag_name_label.setText(N_('Name'))
 
         self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), self)
@@ -61,21 +61,21 @@ class CreateTag(standard.Dialog):
         self.tag_name.setToolTip(N_('Specifies the tag name'))
 
         # Sign Tag
-        self.sign_label = QtGui.QLabel(self)
+        self.sign_label = QtWidgets.QLabel(self)
         self.sign_label.setText(N_('Sign Tag'))
 
         tooltip = N_('Whether to sign the tag (git tag -s)')
         self.sign_tag = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         # Tag message
-        self.tag_msg_label = QtGui.QLabel(self)
+        self.tag_msg_label = QtWidgets.QLabel(self)
         self.tag_msg_label.setText(N_('Message'))
 
         self.tag_msg = text.HintedTextEdit(N_('Tag message...'), self)
         self.tag_msg.setToolTip(N_('Specifies the tag message'))
         self.tag_msg.hint.enable(True)
         # Revision
-        self.rev_label = QtGui.QLabel(self)
+        self.rev_label = QtWidgets.QLabel(self)
         self.rev_label.setText(N_('Revision'))
 
         self.revision = completion.GitRefLineEdit()
@@ -104,8 +104,7 @@ class CreateTag(standard.Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_tag)
 
-        if not self.restore_state(settings=settings):
-            self.resize(defs.scale(720), defs.scale(210))
+        self.init_state(settings, self.resize, defs.scale(720), defs.scale(210))
 
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""

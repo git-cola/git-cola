@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
 
 from cola import cmds
 from cola import hotkeys
@@ -24,20 +23,16 @@ class FileWidget(TreeWidget):
         self.setHeaderLabels([N_('Filename'), N_('Additions'), N_('Deletions')])
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
-        self.show_history_action = (
-                qtutils.add_action(self, N_('Show History'),
-                                   self.show_file_history, hotkeys.HISTORY))
+        self.show_history_action = qtutils.add_action(
+                self, N_('Show History'), self.show_history, hotkeys.HISTORY)
 
-        self.launch_difftool_action = (
-                qtutils.add_action(self, N_('Launch Diff Tool'),
-                                   self.show_file_diff, hotkeys.DIFF))
+        self.launch_difftool_action = qtutils.add_action(
+                self, N_('Launch Diff Tool'), self.show_diff, hotkeys.DIFF)
 
-        self.launch_editor_action = (
-                qtutils.add_action(self, N_('Launch Diff Tool'),
-                                   self.edit_paths, hotkeys.EDIT))
+        self.launch_editor_action = qtutils.add_action(
+                self, N_('Launch Diff Tool'), self.edit_paths, hotkeys.EDIT)
 
-        self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self.selection_changed)
+        self.itemSelectionChanged.connect(self.selection_changed)
 
     def selection_changed(self):
         items = self.selected_items()
@@ -89,7 +84,7 @@ class FileWidget(TreeWidget):
         menu.addAction(self.launch_difftool_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def show_file_diff(self):
+    def show_diff(self):
         self.notifier.notify_observers(DIFFTOOL_SELECTED, self.selected_paths())
 
     def selected_paths(self):
@@ -98,16 +93,16 @@ class FileWidget(TreeWidget):
     def edit_paths(self):
         cmds.do(cmds.Edit, self.selected_paths())
 
-    def show_file_history(self):
+    def show_history(self):
         items = self.selected_items()
         self.notifier.notify_observers(HISTORIES_SELECTED,
                                        [i.path for i in items])
 
 
-class FileTreeWidgetItem(QtGui.QTreeWidgetItem):
+class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def __init__(self, file_log, parent=None):
-        QtGui.QTreeWidgetItem.__init__(self, parent)
+        QtWidgets.QTreeWidgetItem.__init__(self, parent)
         texts = file_log.split('\t')
         self.path = path = texts[2]
         self.setText(0, path)

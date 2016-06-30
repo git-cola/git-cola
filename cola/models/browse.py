@@ -3,13 +3,11 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 import time
 
-from cola import sipcompat
-sipcompat.initialize()
-
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import gitcfg
 from cola import gitcmds
@@ -29,11 +27,11 @@ INFO_EVENT_TYPE = QtCore.QEvent.User + 42
 class Columns(object):
     """Defines columns in the worktree browser"""
 
-    NAME = 'Name'
-    STATUS = 'Status'
-    AGE = 'Age'
-    MESSAGE = 'Message'
-    AUTHOR = 'Author'
+    NAME = 'name'
+    STATUS = 'status'
+    AGE = 'age'
+    MESSAGE = 'message'
+    AUTHOR = 'author'
     ALL = (NAME, STATUS, MESSAGE, AUTHOR, AGE)
 
     @classmethod
@@ -86,6 +84,9 @@ def _item_path(item):
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
 
+    updated = Signal()
+    restore = Signal()
+
     def __init__(self, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
 
@@ -98,8 +99,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._dir_entries = {}
         self._dir_rows = collections.defaultdict(int)
 
-        self.connect(self, SIGNAL('updated()'),
-                     self.refresh, Qt.QueuedConnection)
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         model = main.model()
         model.add_observer(model.message_updated, self._model_updated)
@@ -211,7 +211,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def _model_updated(self):
         """Observes model changes and updates paths accordingly."""
-        self.emit(SIGNAL('updated()'))
+        self.updated.emit()
 
     def refresh(self):
         old_files = self._interesting_files
@@ -222,7 +222,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         if new_files != old_files or not old_paths:
             self.clear()
             self._initialize()
-            self.emit(SIGNAL('restore()'))
+            self.restore.emit()
 
         # Existing items
         for path in sorted(new_paths.union(old_paths)):
@@ -292,6 +292,12 @@ class GitRepoEntry(QtCore.QObject):
     Emits signal names matching those defined in Columns.
 
     """
+    name = Signal(object)
+    status = Signal(object)
+    author = Signal(object)
+    message = Signal(object)
+    age = Signal(object)
+
     def __init__(self, path, parent, runtask):
         QtCore.QObject.__init__(self, parent)
         self.path = path
@@ -300,7 +306,7 @@ class GitRepoEntry(QtCore.QObject):
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
         # 'name' is cheap to calculate so simply emit a signal
-        self.emit(SIGNAL(Columns.NAME), utils.basename(self.path))
+        self.name.emit(utils.basename(self.path))
         if '/' not in self.path:
             self.update()
 
@@ -314,7 +320,8 @@ class GitRepoEntry(QtCore.QObject):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
         if e.type() == INFO_EVENT_TYPE:
             e.accept()
-            self.emit(SIGNAL(e.signal), *e.data)
+            signal = getattr(self, e.signal)
+            signal.emit(*e.data)
             return True
         return QtCore.QObject.event(self, e)
 
@@ -408,7 +415,7 @@ class GitRepoInfoTask(qtutils.Task):
 
     def task(self):
         """Perform expensive lookups and post corresponding events."""
-        app = QtGui.QApplication.instance()
+        app = QtWidgets.QApplication.instance()
         entry = GitRepoEntryStore.entry(self.path, self._parent, self._runtask)
         app.postEvent(entry,
                       GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
@@ -449,11 +456,10 @@ class GitRepoItem(QtGui.QStandardItem):
         self.setEditable(False)
         entry = GitRepoEntryStore.entry(path, parent, runtask)
         if column == Columns.STATUS:
-            QtCore.QObject.connect(entry, SIGNAL(column), self.set_status,
-                                   Qt.QueuedConnection)
+            entry.status.connect(self.set_status, type=Qt.QueuedConnection)
         else:
-            QtCore.QObject.connect(entry, SIGNAL(column), self.setText,
-                                   Qt.QueuedConnection)
+            signal = getattr(entry, column)
+            signal.connect(self.setText, type=Qt.QueuedConnection)
 
     def set_status(self, data):
         icon, txt = data

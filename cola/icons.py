@@ -1,11 +1,10 @@
 """The only file where icon filenames are mentioned"""
 
 from __future__ import absolute_import, division, unicode_literals
-
 import mimetypes
 import os
 
-from PyQt4 import QtGui
+from qtpy import QtGui
 
 from cola import qtcompat
 from cola import resources

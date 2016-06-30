@@ -2,12 +2,12 @@ from __future__ import division, absolute_import, unicode_literals
 
 import time
 
-
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QDockWidget
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
+from qtpy.QtWidgets import QDockWidget
 
 from cola import core
 from cola import gitcfg
@@ -20,23 +20,23 @@ from cola.widgets import defs
 class WidgetMixin(object):
     """Mix-in for common utilities and serialization of widget state"""
 
-    def __init__(self, QtClass):
-        self.QtClass = QtClass
-        self._apply_state_applied = False
+    def center(self):
+        parent = self.parent()
+        if parent is None:
+            return
+        left = parent.x()
+        width = parent.width()
+        center_x = left + width//2
+        x = center_x - self.width()//2
+        y = parent.y()
 
-    def show(self):
-        """Automatically centers dialogs"""
-        if not self._apply_state_applied and self.parent() is not None:
-            left = self.parent().x()
-            width = self.parent().width()
-            center_x = left + width//2
+        self.move(x, y)
 
-            x = center_x - self.width()//2
-            y = self.parent().y()
-
-            self.move(x, y)
-        # Call the base Qt show()
-        return self.QtClass.show(self)
+    def resize_to_desktop(self):
+        desktop = QtWidgets.QApplication.instance().desktop()
+        width = desktop.width()
+        height = desktop.height()
+        self.resize(width, height)
 
     def name(self):
         """Returns the name of the view class"""
@@ -95,13 +95,19 @@ class WidgetMixin(object):
 
     def closeEvent(self, event):
         self.save_settings()
-        self.QtClass.closeEvent(self, event)
+        self.Base.closeEvent(self, event)
+
+    def init_state(self, settings, callback, *args, **kwargs):
+        """Restore saved settings or set the initial location"""
+        if not self.restore_state(settings=settings):
+            callback(*args, **kwargs)
+            self.center()
 
 
 class MainWindowMixin(WidgetMixin):
 
-    def __init__(self, QtClass):
-        WidgetMixin.__init__(self, QtClass)
+    def __init__(self):
+        WidgetMixin.__init__(self)
         # Dockwidget options
         self.dockwidgets = []
         self.lock_layout = False
@@ -154,13 +160,15 @@ class MainWindowMixin(WidgetMixin):
 
 class TreeMixin(object):
 
-    def __init__(self, QtClass):
-        self.QtClass = QtClass
-        self.setAlternatingRowColors(True)
-        self.setUniformRowHeights(True)
-        self.setAllColumnsShowFocus(True)
-        self.setAnimated(True)
-        self.setRootIsDecorated(False)
+    def __init__(self, widget, Base):
+        self.widget = widget
+        self.Base = Base
+
+        widget.setAlternatingRowColors(True)
+        widget.setUniformRowHeights(True)
+        widget.setAllColumnsShowFocus(True)
+        widget.setAnimated(True)
+        widget.setRootIsDecorated(False)
 
     def keyPressEvent(self, event):
         """
@@ -176,8 +184,9 @@ class TreeMixin(object):
         # Check whether the item is expanded before calling the base class
         # keyPressEvent otherwise we end up collapsing and changing the
         # current index in one shot, which we don't want to do.
-        index = self.currentIndex()
-        was_expanded = self.isExpanded(index)
+        widget = self.widget
+        index = widget.currentIndex()
+        was_expanded = widget.isExpanded(index)
         was_collapsed = not was_expanded
 
         # Vim keybindings...
@@ -208,64 +217,65 @@ class TreeMixin(object):
         # Re-read the event key to take the remappings into account
         key = event.key()
         if key == Qt.Key_Up:
-            idxs = self.selectedIndexes()
+            idxs = widget.selectedIndexes()
             rows = [idx.row() for idx in idxs]
             if len(rows) == 1 and rows[0] == 0:
                 # The cursor is at the beginning of the line.
                 # If we have selection then simply reset the cursor.
                 # Otherwise, emit a signal so that the parent can
                 # change focus.
-                self.emit(SIGNAL('up()'))
+                widget.up.emit()
 
         elif key == Qt.Key_Space:
-            self.emit(SIGNAL('space()'))
+            widget.space.emit()
 
-        result = self.QtClass.keyPressEvent(self, event)
+        result = self.Base.keyPressEvent(widget, event)
 
         # Let others hook in here before we change the indexes
-        self.emit(SIGNAL('indexAboutToChange()'))
+        widget.index_about_to_change.emit()
 
         # Automatically select the first entry when expanding a directory
         if (key == Qt.Key_Right and was_collapsed and
-                self.isExpanded(index)):
-            index = self.moveCursor(self.MoveDown, event.modifiers())
-            self.setCurrentIndex(index)
+                widget.isExpanded(index)):
+            index = widget.moveCursor(widget.MoveDown, event.modifiers())
+            widget.setCurrentIndex(index)
 
         # Process non-root entries with valid parents only.
         elif key == Qt.Key_Left and index.parent().isValid():
 
             # File entries have rowCount() == 0
-            if self.model().itemFromIndex(index).rowCount() == 0:
-                self.setCurrentIndex(index.parent())
+            if widget.model().itemFromIndex(index).rowCount() == 0:
+                widget.setCurrentIndex(index.parent())
 
             # Otherwise, do this for collapsed directories only
             elif was_collapsed:
-                self.setCurrentIndex(index.parent())
+                widget.setCurrentIndex(index.parent())
 
         # If it's a movement key ensure we have a selection
         elif key in (Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_Down):
             # Try to select the first item if the model index is invalid
             item = self.selected_item()
             if item is None or not index.isValid():
-                index = self.model().index(0, 0, QtCore.QModelIndex())
+                index = widget.model().index(0, 0, QtCore.QModelIndex())
                 if index.isValid():
-                    self.setCurrentIndex(index)
+                    widget.setCurrentIndex(index)
 
         return result
 
     def items(self):
-        root = self.invisibleRootItem()
+        root = self.widget.invisibleRootItem()
         child = root.child
         count = root.childCount()
         return [child(i) for i in range(count)]
 
     def selected_items(self):
         """Return all selected items"""
-        if hasattr(self, 'selectedItems'):
-            return self.selectedItems()
+        widget = self.widget
+        if hasattr(widget, 'selectedItems'):
+            return widget.selectedItems()
         else:
-            item_from_index = self.model().itemFromIndex
-            return [item_from_index(i) for i in self.selectedIndexes()]
+            item_from_index = widget.model().itemFromIndex
+            return [item_from_index(i) for i in widget.selectedIndexes()]
 
     def selected_item(self):
         """Return the first selected item"""
@@ -275,43 +285,47 @@ class TreeMixin(object):
         return selected_items[0]
 
     def current_item(self):
-        if hasattr(self, 'currentItem'):
-            item = self.currentItem()
+        item = None
+        widget = self.widget
+        if hasattr(widget, 'currentItem'):
+            item = widget.currentItem()
         else:
-            index = self.currentIndex()
+            index = widget.currentIndex()
             if index.isValid():
-                item = self.model().itemFromIndex(index)
-            else:
-                item = None
+                item = widget.model().itemFromIndex(index)
         return item
 
 
 class DraggableTreeMixin(TreeMixin):
-    """A tree widget with internal drag+drop reordering of rows"""
+    """A tree widget with internal drag+drop reordering of rows
 
-    ITEMS_MOVED_SIGNAL = 'items_moved'
+    Expects that the widget provides an `items_moved` signal.
 
-    def __init__(self, QtClass):
-        super(DraggableTreeMixin, self).__init__(QtClass)
-        self.setAcceptDrops(True)
-        self.setSelectionMode(self.SingleSelection)
-        self.setDragEnabled(True)
-        self.setDropIndicatorShown(True)
-        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
-        self.setSortingEnabled(False)
+    """
+    def __init__(self, widget, Base):
+        super(DraggableTreeMixin, self).__init__(widget, Base)
+
         self._inner_drag = False
+        widget.setAcceptDrops(True)
+        widget.setSelectionMode(widget.SingleSelection)
+        widget.setDragEnabled(True)
+        widget.setDropIndicatorShown(True)
+        widget.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        widget.setSortingEnabled(False)
 
     def dragEnterEvent(self, event):
         """Accept internal drags only"""
-        self.QtClass.dragEnterEvent(self, event)
-        self._inner_drag = event.source() == self
+        widget = self.widget
+        self.Base.dragEnterEvent(widget, event)
+        self._inner_drag = event.source() == widget
         if self._inner_drag:
             event.acceptProposedAction()
         else:
             event.ignore()
 
     def dragLeaveEvent(self, event):
-        self.QtClass.dragLeaveEvent(self, event)
+        widget = self.widget
+        self.Base.dragLeaveEvent(widget, event)
         if self._inner_drag:
             event.accept()
         else:
@@ -323,56 +337,57 @@ class DraggableTreeMixin(TreeMixin):
         if not self._inner_drag:
             event.ignore()
             return
+        widget = self.widget
         clicked_items = self.selected_items()
         event.setDropAction(Qt.MoveAction)
-        self.QtClass.dropEvent(self, event)
+        self.Base.dropEvent(widget, event)
 
         if clicked_items:
-            self.clearSelection()
+            widget.clearSelection()
             for item in clicked_items:
-                self.setItemSelected(item, True)
-            self.emit(SIGNAL(self.ITEMS_MOVED_SIGNAL), clicked_items)
+                item.setSelected(True)
+            widget.items_moved.emit(clicked_items)
         self._inner_drag = False
         event.accept()  # must be called after dropEvent()
 
     def mousePressEvent(self, event):
         """Clear the selection when a mouse click hits no item"""
-        clicked_item = self.itemAt(event.pos())
+        widget = self.widget
+        clicked_item = widget.itemAt(event.pos())
         if clicked_item is None:
-            self.clearSelection()
-        return self.QtClass.mousePressEvent(self, event)
+            widget.clearSelection()
+        return self.Base.mousePressEvent(widget, event)
 
 
-class Widget(WidgetMixin, QtGui.QWidget):
+class Widget(QtWidgets.QWidget, WidgetMixin):
+    Base = QtWidgets.QWidget
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
-        WidgetMixin.__init__(self, QtGui.QWidget)
+        QtWidgets.QWidget.__init__(self, parent)
+        WidgetMixin.__init__(self)
 
 
-class Dialog(WidgetMixin, QtGui.QDialog):
+class Dialog(QtWidgets.QDialog, WidgetMixin):
+    Base = QtWidgets.QDialog
 
     def __init__(self, parent=None, save_settings=False):
-        QtGui.QDialog.__init__(self, parent)
-        WidgetMixin.__init__(self, QtGui.QDialog)
+        QtWidgets.QDialog.__init__(self, parent)
+        WidgetMixin.__init__(self)
         self._save_settings = save_settings
-
-    def close(self):
-        if self._save_settings:
-            self.save_settings()
-        return self.QtClass.close(self)
 
     def reject(self):
         if self._save_settings:
             self.save_settings()
-        return self.QtClass.reject(self)
+        return self.Base.reject(self)
 
 
-class MainWindow(MainWindowMixin, QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow, MainWindowMixin):
+    Base = QtWidgets.QMainWindow
 
     def __init__(self, parent=None):
-        QtGui.QMainWindow.__init__(self, parent)
-        MainWindowMixin.__init__(self, QtGui.QMainWindow)
+        QtWidgets.QMainWindow.__init__(self, parent)
+        MainWindowMixin.__init__(self)
+
         self.setStyleSheet("""
             QMainWindow::separator {
                 width: %(separator)spx;
@@ -384,28 +399,78 @@ class MainWindow(MainWindowMixin, QtGui.QMainWindow):
             """ % dict(separator=defs.separator))
 
 
-class TreeView(TreeMixin, QtGui.QTreeView):
+class TreeView(QtWidgets.QTreeView):
+    Mixin = TreeMixin
+
+    up = Signal()
+    space = Signal()
+    index_about_to_change = Signal()
 
     def __init__(self, parent=None):
-        QtGui.QTreeView.__init__(self, parent)
-        TreeMixin.__init__(self, QtGui.QTreeView)
+        QtWidgets.QTreeView.__init__(self, parent)
+        self._mixin = self.Mixin(self, QtWidgets.QTreeView)
+
+    def keyPressEvent(self, event):
+        return self._mixin.keyPressEvent(event)
+
+    def current_item(self):
+        return self._mixin.current_item()
+
+    def selected_item(self):
+        return self._mixin.selected_item()
+
+    def selected_items(self):
+        return self._mixin.selected_items()
+
+    def items(self):
+        return self._mixin.items()
 
 
-class TreeWidget(TreeMixin, QtGui.QTreeWidget):
+class TreeWidget(QtWidgets.QTreeWidget):
+    Mixin = TreeMixin
+
+    up = Signal()
+    space = Signal()
+    index_about_to_change = Signal()
 
     def __init__(self, parent=None):
-        QtGui.QTreeWidget.__init__(self, parent)
-        TreeMixin.__init__(self, QtGui.QTreeWidget)
+        super(TreeWidget, self).__init__(parent)
+        self._mixin = self.Mixin(self, QtWidgets.QTreeWidget)
+
+    def keyPressEvent(self, event):
+        return self._mixin.keyPressEvent(event)
+
+    def current_item(self):
+        return self._mixin.current_item()
+
+    def selected_item(self):
+        return self._mixin.selected_item()
+
+    def selected_items(self):
+        return self._mixin.selected_items()
+
+    def items(self):
+        return self._mixin.items()
 
 
-class DraggableTreeWidget(DraggableTreeMixin, QtGui.QTreeWidget):
+class DraggableTreeWidget(TreeWidget):
+    Mixin = DraggableTreeMixin
+    items_moved = Signal(object)
 
-    def __init__(self, parent=None):
-        QtGui.QTreeWidget.__init__(self, parent)
-        DraggableTreeMixin.__init__(self, QtGui.QTreeWidget)
+    def mousePressEvent(self, event):
+        return self._mixin.mousePressEvent(event)
+
+    def dropEvent(self, event):
+        return self._mixin.dropEvent(event)
+
+    def dragLeaveEvent(self, event):
+        return self._mixin.dragLeaveEvent(event)
+
+    def dragEnterEvent(self, event):
+        return self._mixin.dragEnterEvent(event)
 
 
-class ProgressDialog(QtGui.QProgressDialog):
+class ProgressDialog(QtWidgets.QProgressDialog):
     """Custom progress dialog
 
     This dialog ignores the ESC key so that it is not
@@ -415,16 +480,14 @@ class ProgressDialog(QtGui.QProgressDialog):
 
     """
     def __init__(self, title, label, parent):
-        QtGui.QProgressDialog.__init__(self, parent)
+        QtWidgets.QProgressDialog.__init__(self, parent)
         self.setFont(qtutils.diff_font())
         self.setRange(0, 0)
         self.setCancelButton(None)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-        self.progress_thread = ProgressAnimationThread(label, self)
-        self.connect(self.progress_thread,
-                     SIGNAL('update_progress(PyQt_PyObject)'),
-                     self.update_progress, Qt.QueuedConnection)
+        self.progress_thread = progress = ProgressAnimationThread(label, self)
+        progress.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.set_details(title, label)
         self.reset()
@@ -434,27 +497,30 @@ class ProgressDialog(QtGui.QProgressDialog):
         self.setLabelText(label + '     ')
         self.progress_thread.set_text(label)
 
-    def update_progress(self, txt):
+    def refresh(self, txt):
         self.setLabelText(txt)
 
     def keyPressEvent(self, event):
         if event.key() != Qt.Key_Escape:
-            QtGui.QProgressDialog.keyPressEvent(self, event)
+            super(ProgressDialog, self).keyPressEvent(event)
 
     def show(self):
-        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
+        QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
         self.progress_thread.start()
-        QtGui.QProgressDialog.show(self)
+        super(ProgressDialog, self).show()
 
     def hide(self):
-        QtGui.QApplication.restoreOverrideCursor()
+        QtWidgets.QApplication.restoreOverrideCursor()
         self.progress_thread.stop()
         self.progress_thread.wait()
-        QtGui.QProgressDialog.hide(self)
+        super(ProgressDialog, self).hide()
 
 
 class ProgressAnimationThread(QtCore.QThread):
-    """Emits a pseudo-animated text stream for progress bars"""
+    """Emits a pseudo-animated text stream for progress bars
+
+    """
+    updated = Signal(object)
 
     def __init__(self, txt, parent, timeout=0.1):
         QtCore.QThread.__init__(self, parent)
@@ -483,13 +549,13 @@ class ProgressAnimationThread(QtCore.QThread):
     def run(self):
         self.running = True
         while self.running:
-            self.emit(SIGNAL('update_progress(PyQt_PyObject)'), self.cycle())
+            self.updated.emit(self.cycle())
             time.sleep(self.timeout)
 
 
-class SpinBox(QtGui.QSpinBox):
+class SpinBox(QtWidgets.QSpinBox):
     def __init__(self, parent=None):
-        QtGui.QSpinBox.__init__(self, parent)
+        QtWidgets.QSpinBox.__init__(self, parent)
         self.setMinimum(1)
         self.setMaximum(99999)
         self.setPrefix('')

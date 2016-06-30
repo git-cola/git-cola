@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import sys
 import re
 from argparse import ArgumentParser
-
 
 def setup_environment():
     abspath = os.path.abspath
@@ -18,9 +15,16 @@ def setup_environment():
     else:
         modules = os.path.join(prefix, 'share', 'git-cola', 'lib')
     sys.path.insert(1, modules)
+
 setup_environment()
 
 from cola import app
+
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
+
 from cola import core
 from cola import difftool
 from cola import hotkeys
@@ -35,10 +39,6 @@ from cola.widgets import defs
 from cola.widgets import diff
 from cola.widgets import standard
 from cola.widgets import text
-
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
 
 
 PICK = 'pick'
@@ -81,8 +81,9 @@ def parse_args():
 
 
 def new_window(filename):
-    editor = Editor(filename)
-    window = MainWindow(editor)
+    window = MainWindow()
+    editor = Editor(filename, parent=window)
+    window.set_editor(editor)
     return window
 
 
@@ -91,40 +92,46 @@ def unabbrev(cmd):
     return ABBREV.get(cmd, cmd)
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, editor, parent=None):
+    def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.status = 1
+        self.editor = None
         default_title = '%s - git xbase' % core.getcwd()
         title = core.getenv('GIT_XBASE_TITLE', default_title)
         self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(title)
-        self.setCentralWidget(editor)
-        self.connect(editor, SIGNAL('exit(int)'), self.exit)
-        editor.setFocus()
 
         self.show_help_action = qtutils.add_action(
                 self, N_('Show Help'), show_help, hotkeys.QUESTION)
 
-        self.menubar = QtGui.QMenuBar(self)
+        self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
         self.help_menu.addAction(self.show_help_action)
         self.setMenuBar(self.menubar)
 
         qtutils.add_close_action(self)
 
+    def set_editor(self, editor):
+        self.editor = editor
+        self.setCentralWidget(editor)
+        editor.exit.connect(self.exit)
+        editor.setFocus()
+
     def exit(self, status):
         self.status = status
         self.close()
 
 
-class Editor(QtGui.QWidget):
+class Editor(QtWidgets.QWidget):
+    exit = Signal(int)
 
     def __init__(self, filename, parent=None):
         super(Editor, self).__init__(parent)
 
         self.widget_version = 1
+        self.status = 1
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char()
 
@@ -167,12 +174,12 @@ class Editor(QtGui.QWidget):
             self, N_('Rebase'), self.rebase, 'Ctrl+Return')
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
+        self.tree.external_diff.connect(self.external_diff)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
         qtutils.connect_button(self.help_button, show_help)
         qtutils.connect_button(self.cancel_button, self.cancel)
-        self.connect(self.tree, SIGNAL('external_diff()'), self.external_diff)
 
         insns = core.read(filename)
         self.parse_sequencer_instructions(insns)
@@ -182,9 +189,6 @@ class Editor(QtGui.QWidget):
         self.extdiff_button.setEnabled(bool(commits))
 
     # helpers
-    def emit_exit(self, status):
-        self.emit(SIGNAL('exit(int)'), status)
-
     def parse_sequencer_instructions(self, insns):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
@@ -220,18 +224,21 @@ class Editor(QtGui.QWidget):
 
     # actions
     def cancel(self):
-        self.emit_exit(1)
+        self.status = 1
+        self.exit.emit(1)
 
     def rebase(self):
         lines = [item.value() for item in self.tree.items()]
         sequencer_instructions = '\n'.join(lines) + '\n'
         try:
             core.write(self.filename, sequencer_instructions)
-            self.emit_exit(0)
+            self.status = 0
+            self.exit.emit(0)
         except Exception as e:
             msg, details = utils.format_exception(e)
             sys.stderr.write(msg + '\n\n' + details)
-            self.emit_exit(128)
+            self.status = 128
+            self.exit.emit(128)
 
     def external_diff(self):
         items = self.tree.selected_items()
@@ -243,6 +250,8 @@ class Editor(QtGui.QWidget):
 
 
 class RebaseTreeWidget(standard.DraggableTreeWidget):
+    external_diff = Signal()
+    move_rows = Signal(object, object)
 
     def __init__(self, notifier, comment_char, parent=None):
         super(RebaseTreeWidget, self).__init__(parent=parent)
@@ -262,7 +271,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                 self, N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
 
         self.external_diff_action = qtutils.add_action(
-                self, N_('External Diff'), self.external_diff, hotkeys.DIFF)
+                self, N_('External Diff'), self.external_diff.emit,
+                hotkeys.DIFF)
 
         self.toggle_enabled_action = qtutils.add_action(
                 self, N_('Toggle Enabled'), self.toggle_enabled,
@@ -295,15 +305,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.action_shift_up = qtutils.add_action(
                 self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
 
-        self.connect(self, SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
-                     self.item_changed)
-
-        self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self.selection_changed)
-
-        self.connect(self, SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
-                     self.move)
-        self.connect(self, SIGNAL(self.ITEMS_MOVED_SIGNAL), self.decorate)
+        self.itemChanged.connect(self.item_changed)
+        self.itemSelectionChanged.connect(self.selection_changed)
+        self.move_rows.connect(self.move)
+        self.items_moved.connect(self.decorate)
 
     def add_item(self, idx, enabled, command,
                  sha1hex='', summary='', cmdexec=''):
@@ -367,9 +372,6 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             commits = commits[-1:]
         self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
 
-    def external_diff(self):
-        self.emit(SIGNAL('external_diff()'))
-
     def toggle_enabled(self):
         item = self.selected_item()
         if item is None:
@@ -391,8 +393,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         items = self.items()
         idx = items.index(item)
         if idx < len(items) - 1:
-            self.emit(SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
-                      [idx], idx + 1)
+            self.move_rows.emit([idx], idx + 1)
 
     def shift_up(self):
         item = self.selected_item()
@@ -401,8 +402,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         items = self.items()
         idx = items.index(item)
         if idx > 0:
-            self.emit(SIGNAL('move(PyQt_PyObject,PyQt_PyObject)'),
-                      [idx], idx - 1)
+            self.move_rows.emit([idx], idx - 1)
 
     def move(self, src_idxs, dst_idx):
         new_items = []
@@ -444,7 +444,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
-class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
+class ComboBox(QtWidgets.QComboBox):
+    validate = Signal()
+
+
+class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
@@ -453,7 +457,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
     def __init__(self, idx, enabled, command,
                  sha1hex='', summary='', cmdexec='', comment_char='#',
                  parent=None):
-        QtGui.QTreeWidgetItem.__init__(self, parent)
+        QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
         self.idx = idx
@@ -495,14 +499,15 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
         else:
             items = COMMANDS
             idx = COMMAND_IDX[self.command]
-        combo = self.combo = QtGui.QComboBox()
+        combo = self.combo = ComboBox()
         combo.setEditable(False)
         combo.addItems(items)
         combo.setCurrentIndex(idx)
         combo.setEnabled(self.is_commit())
-        combo.connect(combo, SIGNAL('currentIndexChanged(QString)'),
-                      self.set_command_and_validate)
-        combo.connect(combo, SIGNAL('validate()'), parent.validate)
+
+        signal = combo.currentIndexChanged['QString']
+        signal.connect(self.set_command_and_validate)
+        combo.validate.connect(parent.validate)
 
         parent.setItemWidget(self, self.COMMAND_COLUMN, combo)
 
@@ -551,7 +556,7 @@ class RebaseTreeWidgetItem(QtGui.QTreeWidgetItem):
 
     def set_command_and_validate(self, command):
         self.set_command(command)
-        self.combo.emit(SIGNAL('validate()'))
+        self.combo.validate.emit()
 
 
 def show_help():

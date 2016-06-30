@@ -2,13 +2,10 @@ from __future__ import division, absolute_import, unicode_literals
 import time
 import hashlib
 
-from cola import sipcompat
-sipcompat.initialize()
-
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4 import QtNetwork
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy import QtNetwork
 
 from cola import core
 from cola import icons
@@ -32,10 +29,10 @@ class Gravatar(object):
         return url
 
 
-class GravatarLabel(QtGui.QLabel):
+class GravatarLabel(QtWidgets.QLabel):
 
     def __init__(self, parent=None):
-        QtGui.QLabel.__init__(self, parent)
+        QtWidgets.QLabel.__init__(self, parent)
 
         self.email = None
         self.response = None
@@ -44,9 +41,7 @@ class GravatarLabel(QtGui.QLabel):
         self.pixmaps = {}
 
         self.network = QtNetwork.QNetworkAccessManager()
-        self.connect(self.network,
-                     SIGNAL('finished(QNetworkReply*)'),
-                     self.network_finished)
+        self.network.finished.connect(self.network_finished)
 
     def set_email(self, email):
         if email in self.pixmaps:

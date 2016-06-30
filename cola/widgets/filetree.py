@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, unicode_literals
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
+from qtpy import QtCore
+from qtpy import QtWidgets
 
 from cola import icons
 from cola.widgets import standard
@@ -22,14 +22,14 @@ class FileTree(standard.TreeWidget):
         from_filename = icons.from_filename
         for filename in filenames:
             icon = from_filename(filename)
-            item = QtGui.QTreeWidgetItem()
+            item = QtWidgets.QTreeWidgetItem()
             item.setIcon(0, icon)
             item.setText(0, filename)
             item.setData(0, QtCore.Qt.UserRole, filename)
             items.append(item)
         self.addTopLevelItems(items)
-        if select:
-            self.setItemSelected(items[0], True)
+        if select and items:
+            items[0].setSelected(True)
 
     def filename_from_item(self, item):
         return item.data(0, QtCore.Qt.UserRole)

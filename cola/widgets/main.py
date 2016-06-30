@@ -4,9 +4,10 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import core
@@ -53,12 +54,15 @@ from cola.widgets import stash
 
 
 class MainView(standard.MainWindow):
+    config_actions_changed = Signal(object)
+    updated = Signal()
 
     def __init__(self, model, parent=None, settings=None):
         standard.MainWindow.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Default size; this is thrown out when save/restore is used
+        self.dag = None
         self.model = model
         self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel()
@@ -107,7 +111,7 @@ class MainView(standard.MainWindow):
         self.bookmarkswidget.connect_to(self.recentwidget)
 
         # "Commit Message Editor" widget
-        self.position_label = QtGui.QLabel()
+        self.position_label = QtWidgets.QLabel()
         self.position_label.setAlignment(Qt.AlignCenter)
         font = qtutils.default_monospace_font()
         font.setPointSize(int(font.pointSize() * 0.8))
@@ -338,7 +342,7 @@ class MainView(standard.MainWindow):
             self, N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
-        self.menubar = QtGui.QMenuBar(self)
+        self.menubar = QtWidgets.QMenuBar(self)
 
         # File Menu
         create_menu = qtutils.create_menu
@@ -473,8 +477,9 @@ class MainView(standard.MainWindow):
         self.tabifyDockWidget(self.actionsdockwidget, self.logdockwidget)
 
         # Listen for model notifications
-        model.add_observer(model.message_updated, self._update)
-        model.add_observer(model.message_mode_changed, lambda x: self._update())
+        model.add_observer(model.message_updated, self.updated.emit)
+        model.add_observer(model.message_mode_changed,
+                           lambda mode: self.updated.emit())
 
         prefs_model.add_observer(prefs_model.message_config_updated,
                                  self._config_updated)
@@ -482,42 +487,25 @@ class MainView(standard.MainWindow):
         # Set a default value
         self.show_cursor_position(1, 0)
 
-        self.connect(self.open_recent_menu, SIGNAL('aboutToShow()'),
-                     self.build_recent_menu)
+        self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
+        self.commitmsgeditor.cursor_changed.connect(self.show_cursor_position)
 
-        self.connect(self.commitmsgeditor, SIGNAL('cursorPosition(int,int)'),
-                     self.show_cursor_position)
+        self.diffeditor.options_changed.connect(self.statuswidget.refresh)
+        self.diffeditor.up.connect(self.statuswidget.move_up)
+        self.diffeditor.down.connect(self.statuswidget.move_down)
 
-        self.connect(self.diffeditor, SIGNAL('diff_options_updated()'),
-                     self.statuswidget.refresh)
+        self.commitmsgeditor.up.connect(self.statuswidget.move_up)
+        self.commitmsgeditor.down.connect(self.statuswidget.move_down)
 
-        self.connect(self.diffeditor, SIGNAL('move_down()'),
-                     self.statuswidget.move_down)
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.connect(self.diffeditor, SIGNAL('move_up()'),
-                     self.statuswidget.move_up)
-
-        self.connect(self.commitmsgeditor, SIGNAL('move_down()'),
-                     self.statuswidget.move_down)
-
-        self.connect(self.commitmsgeditor, SIGNAL('move_up()'),
-                     self.statuswidget.move_up)
-
-        self.connect(self, SIGNAL('update()'),
-                     self._update_callback, Qt.QueuedConnection)
-
-        self.connect(self, SIGNAL('install_cfg_actions(PyQt_PyObject)'),
-                     self._install_config_actions, Qt.QueuedConnection)
-
+        self.config_actions_changed.connect(self._install_config_actions,
+                                            type=Qt.QueuedConnection)
         # Install .git-config-defined actions
         self.init_config_actions()
-
-        # Restore saved settings
-        if not self.restore_state(settings=settings):
-            self.resize(987, 610)
-            self.set_initial_size()
-
         self.statusdockwidget.widget().setFocus()
+
+        self.init_state(settings, self.set_initial_size)
 
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
@@ -527,6 +515,7 @@ class MainView(standard.MainWindow):
                         N_('git cola version %s') % version.version())
 
     def set_initial_size(self):
+        self.resize(987, 610)
         self.statuswidget.set_initial_size()
         self.commitmsgeditor.set_initial_size()
 
@@ -589,7 +578,7 @@ class MainView(standard.MainWindow):
 
     def get_config_actions(self):
         actions = cfgactions.get_config_actions()
-        self.emit(SIGNAL('install_cfg_actions(PyQt_PyObject)'), actions)
+        self.config_actions_changed.emit(actions)
 
     def _install_config_actions(self, names_and_shortcuts):
         """Install .gitconfig-defined actions"""
@@ -602,10 +591,7 @@ class MainView(standard.MainWindow):
             if shortcut:
                 action.setShortcut(shortcut)
 
-    def _update(self):
-        self.emit(SIGNAL('update()'))
-
-    def _update_callback(self):
+    def refresh(self):
         """Update the title with the current branch and directory name."""
         alerts = []
         branch = self.model.currentbranch
@@ -701,7 +687,7 @@ class MainView(standard.MainWindow):
             qtutils.connect_action_bool(toggleview, showdock)
 
             # Create a new shortcut Shift+<shortcut> that gives focus
-            toggleview = QtGui.QAction(self)
+            toggleview = QtWidgets.QAction(self)
             toggleview.setShortcut(shortcut)
 
             def focusdock(dockwidget=dockwidget):
@@ -721,7 +707,9 @@ class MainView(standard.MainWindow):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        view = dag.git_dag(self.model)
+        if self.dag is None:
+            self.dag = dag.git_dag(self.model)
+        view = self.dag
         view.show()
         view.raise_()
 
@@ -775,7 +763,7 @@ class MainView(standard.MainWindow):
         if not upstream:
             return
         self.model.is_rebasing = True
-        self._update_callback()
+        self.refresh()
         cmds.do(cmds.Rebase, upstream=upstream)
 
     def rebase_edit_todo(self):

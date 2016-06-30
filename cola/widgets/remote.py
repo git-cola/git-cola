@@ -1,10 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import fnmatch
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import gitcmds
 from cola import icons
@@ -104,28 +103,28 @@ class RemoteActionDialog(standard.Dialog):
         self.runtask = qtutils.RunTask(parent=self)
         self.progress = ProgressDialog(title, N_('Updating'), self)
 
-        self.local_label = QtGui.QLabel()
+        self.local_label = QtWidgets.QLabel()
         self.local_label.setText(N_('Local Branch'))
 
-        self.local_branch = QtGui.QLineEdit()
-        self.local_branches = QtGui.QListWidget()
+        self.local_branch = QtWidgets.QLineEdit()
+        self.local_branches = QtWidgets.QListWidget()
         self.local_branches.addItems(self.model.local_branches)
 
-        self.remote_label = QtGui.QLabel()
+        self.remote_label = QtWidgets.QLabel()
         self.remote_label.setText(N_('Remote'))
 
-        self.remote_name = QtGui.QLineEdit()
-        self.remotes = QtGui.QListWidget()
+        self.remote_name = QtWidgets.QLineEdit()
+        self.remotes = QtWidgets.QListWidget()
         if action == PUSH:
-            mode = QtGui.QAbstractItemView.ExtendedSelection
+            mode = QtWidgets.QAbstractItemView.ExtendedSelection
             self.remotes.setSelectionMode(mode)
         self.remotes.addItems(self.model.remotes)
 
-        self.remote_branch_label = QtGui.QLabel()
+        self.remote_branch_label = QtWidgets.QLabel()
         self.remote_branch_label.setText(N_('Remote Branch'))
 
-        self.remote_branch = QtGui.QLineEdit()
-        self.remote_branches = QtGui.QListWidget()
+        self.remote_branch = QtWidgets.QLineEdit()
+        self.remote_branches = QtWidgets.QListWidget()
         self.remote_branches.addItems(self.model.remote_branches)
 
         text = N_('Fast Forward Only ')
@@ -201,14 +200,13 @@ class RemoteActionDialog(standard.Dialog):
         self.set_field_defaults()
 
         # Setup signals and slots
-        self.connect(self.remotes, SIGNAL('itemSelectionChanged()'),
-                     self.update_remotes)
+        self.remotes.itemSelectionChanged.connect(self.update_remotes)
 
-        self.connect(self.local_branches, SIGNAL('itemSelectionChanged()'),
-                     self.update_local_branches)
+        local = self.local_branches
+        local.itemSelectionChanged.connect(self.update_local_branches)
 
-        self.connect(self.remote_branches, SIGNAL('itemSelectionChanged()'),
-                     self.update_remote_branches)
+        remote = self.remote_branches
+        remote.itemSelectionChanged.connect(self.update_remote_branches)
 
         connect_button(self.action_button, self.action_callback)
         connect_button(self.close_button, self.close)
@@ -226,9 +224,7 @@ class RemoteActionDialog(standard.Dialog):
         else:
             self.rebase_checkbox.hide()
 
-        if not self.restore_state():
-            self.resize(666, 420)
-
+        self.init_state(None, self.resize, 666, 420)
         self.remote_name.setFocus()
 
     def set_rebase(self, value):
@@ -281,7 +277,7 @@ class RemoteActionDialog(standard.Dialog):
         """Selects a remote by index"""
         item = self.remotes.item(idx)
         if item:
-            self.remotes.setItemSelected(item, True)
+            item.setSelected(True)
             self.remotes.setCurrentItem(item)
             self.set_remote_name(item.text())
             return True
@@ -293,7 +289,7 @@ class RemoteActionDialog(standard.Dialog):
         item = self.local_branches.item(idx)
         if not item:
             return False
-        self.local_branches.setItemSelected(item, True)
+        item.setSelected(True)
         self.local_branches.setCurrentItem(item)
         self.local_branch.setText(item.text())
         return True

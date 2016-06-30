@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-from PyQt4.QtGui import QKeySequence
-from PyQt4.QtCore import Qt
+from qtpy.QtGui import QKeySequence
+from qtpy.QtCore import Qt
 
 # A-G
 STAGE_MODIFIED = Qt.AltModifier + Qt.Key_A
