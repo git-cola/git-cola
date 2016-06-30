@@ -32,6 +32,7 @@ else:
     maxsize = sys.maxint
     # pylint: disable=unicode-builtin
     ustr = unicode
+    # pylint: disable=unichr-builtin
     unichr = unichr
     int_types = (int, long)  # pylint: disable=long-builtin
 
