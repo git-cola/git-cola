@@ -310,8 +310,7 @@ class Search(SearchWidget):
             self.commit_text.setText('')
 
     def browse_callback(self):
-        paths = QtGui.QFileDialog.getOpenFileNames(self,
-                                                   N_('Choose Path(s)'))
+        paths = qtutils.open_files(N_('Choose Path(s)'))
         if not paths:
             return
         filepaths = []
