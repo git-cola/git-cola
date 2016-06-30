@@ -29,6 +29,7 @@ def mkdate(timespec):
 
 
 class SearchOptions(object):
+
     def __init__(self):
         self.query = ''
         self.max_count = 500
@@ -37,6 +38,7 @@ class SearchOptions(object):
 
 
 class SearchWidget(standard.Dialog):
+
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
@@ -258,7 +260,7 @@ class Search(SearchWidget):
         if mode == self.PATH:
             self.browse_callback()
 
-    def set_commit_list(self, commits):
+    def set_commits(self, commits):
         widget = self.commit_list
         widget.clear()
         widget.addItems(commits)
@@ -313,19 +315,23 @@ class Search(SearchWidget):
         if not paths:
             return
         filepaths = []
-        lenprefix = len(core.getcwd()) + 1
+        curdir = core.getcwd()
+        prefix_len = len(curdir) + 1
         for path in paths:
-            if not path.startswith(core.getcwd()):
+            if not path.startswith(curdir):
                 continue
-            filepaths.append(path[lenprefix:])
+            relpath = path[prefix_len:]
+            if relpath:
+                filepaths.append(relpath)
+
         query = core.list2cmdline(filepaths)
         self.query.setText(query)
         if query:
             self.search_callback()
 
     def display_results(self):
-        commit_list = [result[1] for result in self.results]
-        self.set_commit_list(commit_list)
+        commits = [result[1] for result in self.results]
+        self.set_commits(commits)
 
     def selected_revision(self):
         result = qtutils.selected_item(self.commit_list, self.results)
