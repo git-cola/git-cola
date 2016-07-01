@@ -1,5 +1,19 @@
 # History of changes
 
+## Version 1.1.1 (2016-07-01)
+
+### Bugfixes
+
+**Pull requests**
+
+* [PR 44](https://github.com/spyder-ide/qtpy/pull/44) - Make qtpy to set the QT_API environment variable
+
+In this release 1 pull requests were merged
+
+
+---
+
+
 ## Version 1.1 (2016-06-30)
 
 ### New features
