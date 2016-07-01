@@ -67,7 +67,8 @@ PYQT4_API = [
 #: names of the expected PySide api
 PYSIDE_API = ['pyside']
 
-API = os.environ.get(QT_API, 'pyqt5').lower()
+os.environ.setdefault(QT_API, 'pyqt5')
+API = os.environ[QT_API]
 assert API in (PYQT5_API + PYQT4_API + PYSIDE_API)
 
 is_old_pyqt = is_pyqt46 = False
@@ -86,7 +87,7 @@ if API in PYQT5_API:
         from PyQt5.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
         PYSIDE_VERSION = None
     except ImportError:
-        API = 'pyqt'
+        API = os.environ['QT_API'] = 'pyqt'
 
 if API in PYQT4_API:
     try:
@@ -108,7 +109,7 @@ if API in PYQT4_API:
         PYQT5 = False
         PYQT4 = True
     except ImportError:
-        API = 'pyside'
+        API = os.environ['QT_API'] = 'pyside'
     else:
         is_old_pyqt = PYQT_VERSION.startswith(('4.4', '4.5', '4.6', '4.7'))
         is_pyqt46 = PYQT_VERSION.startswith('4.6')
