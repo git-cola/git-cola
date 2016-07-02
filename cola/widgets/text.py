@@ -72,6 +72,7 @@ class LineEditCursorPosition(object):
 class TextEdit(QtWidgets.QTextEdit):
 
     cursor_changed = Signal(int, int)
+    leave = Signal()
 
     def __init__(self, parent=None, get_value=None):
         QtWidgets.QTextEdit.__init__(self, parent)
@@ -430,7 +431,6 @@ class VimMixin(object):
 class VimHintedTextView(HintedTextView):
     Base = HintedTextView
     Mixin = VimMixin
-    leave = Signal()
 
     def __init__(self, hint='', parent=None):
         super(VimHintedTextView, self).__init__(hint, parent=parent)
@@ -449,7 +449,6 @@ class VimHintedTextView(HintedTextView):
 class VimMonoTextView(MonoTextView):
     Base = MonoTextView
     Mixin = VimMixin
-    leave = Signal()
 
     def __init__(self, parent=None):
         MonoTextView.__init__(self, parent)

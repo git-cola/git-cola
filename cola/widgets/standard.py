@@ -359,7 +359,7 @@ class DraggableTreeMixin(TreeMixin):
         return self.Base.mousePressEvent(widget, event)
 
 
-class Widget(QtWidgets.QWidget, WidgetMixin):
+class Widget(WidgetMixin, QtWidgets.QWidget):
     Base = QtWidgets.QWidget
 
     def __init__(self, parent=None):
@@ -367,7 +367,7 @@ class Widget(QtWidgets.QWidget, WidgetMixin):
         WidgetMixin.__init__(self)
 
 
-class Dialog(QtWidgets.QDialog, WidgetMixin):
+class Dialog(WidgetMixin, QtWidgets.QDialog):
     Base = QtWidgets.QDialog
 
     def __init__(self, parent=None, save_settings=False):
@@ -381,7 +381,7 @@ class Dialog(QtWidgets.QDialog, WidgetMixin):
         return self.Base.reject(self)
 
 
-class MainWindow(QtWidgets.QMainWindow, MainWindowMixin):
+class MainWindow(MainWindowMixin, QtWidgets.QMainWindow):
     Base = QtWidgets.QMainWindow
 
     def __init__(self, parent=None):
