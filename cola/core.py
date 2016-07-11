@@ -7,6 +7,7 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 from __future__ import division, absolute_import, unicode_literals
 
 import os
+import functools
 import sys
 import itertools
 import platform
@@ -261,6 +262,7 @@ def wrap(action, fn, decorator=None):
     if decorator is None:
         decorator = _decorator_noop
 
+    @functools.wraps(fn)
     def wrapped(*args, **kwargs):
         return decorator(fn(action(*args, **kwargs)))
 
@@ -269,6 +271,7 @@ def wrap(action, fn, decorator=None):
 
 def decorate(decorator, fn):
     """Decorate the result of `fn` with `action`"""
+    @functools.wraps(fn)
     def decorated(*args, **kwargs):
         return decorator(fn(*args, **kwargs))
     return decorated
