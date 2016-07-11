@@ -4,88 +4,95 @@ from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 
 # A-G
-STAGE_MODIFIED = Qt.AltModifier + Qt.Key_A
-WORD_LEFT = Qt.Key_B
-BLAME = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_B
-BRANCH = Qt.ControlModifier + Qt.Key_B
-CHECKOUT = Qt.AltModifier + Qt.Key_B
-CHERRY_PICK = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_C
-DIFFSTAT = Qt.AltModifier + Qt.Key_D
-DIFF = Qt.ControlModifier + Qt.Key_D
-DIFF_SECONDARY = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_D
-EDIT = Qt.ControlModifier + Qt.Key_E
-EDIT_SECONDARY = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_E
-EXPORT = Qt.AltModifier + Qt.Key_E
-FIT = Qt.Key_F
-FETCH = Qt.ControlModifier + Qt.Key_F
-FILTER = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_F
-GREP = Qt.ControlModifier + Qt.Key_G
+STAGE_MODIFIED = QKeySequence(Qt.ALT + Qt.Key_A)
+WORD_LEFT = QKeySequence(Qt.Key_B)
+BLAME = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_B)
+BRANCH = QKeySequence(Qt.CTRL + Qt.Key_B)
+CHECKOUT = QKeySequence(Qt.ALT + Qt.Key_B)
+CHERRY_PICK = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_C)
+DIFFSTAT = QKeySequence(Qt.ALT + Qt.Key_D)
+DIFF = QKeySequence(Qt.CTRL + Qt.Key_D)
+DIFF_SECONDARY = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_D)
+EDIT = QKeySequence(Qt.CTRL + Qt.Key_E)
+EDIT_SECONDARY = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_E)
+EXPORT = QKeySequence(Qt.ALT + Qt.Key_E)
+FIT = QKeySequence(Qt.Key_F)
+FETCH = QKeySequence(Qt.CTRL + Qt.Key_F)
+FILTER = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_F)
+GREP = QKeySequence(Qt.CTRL + Qt.Key_G)
 # H-P
-MOVE_LEFT = Qt.Key_H
-HISTORY = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_H
-SIGNOFF = Qt.ControlModifier + Qt.Key_I
-MOVE_DOWN = Qt.Key_J
-MOVE_DOWN_SECONDARY = Qt.AltModifier + Qt.Key_J
-MOVE_DOWN_TERTIARY = Qt.ShiftModifier + Qt.Key_J
-MOVE_UP = Qt.Key_K
-MOVE_UP_SECONDARY = Qt.AltModifier + Qt.Key_K
-MOVE_UP_TERTIARY = Qt.ShiftModifier + Qt.Key_K
-MOVE_RIGHT = Qt.Key_L
-FOCUS = Qt.ControlModifier + Qt.Key_L
-FOCUS_STATUS = Qt.ControlModifier + Qt.Key_K
-AMEND = Qt.ControlModifier + Qt.Key_M
-MERGE = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_M
-PUSH = Qt.ControlModifier + Qt.Key_P
-PULL = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_P
+MOVE_LEFT = QKeySequence(Qt.Key_H)
+MOVE_LEFT_SHIFT = QKeySequence(Qt.SHIFT + Qt.Key_H)
+HISTORY = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_H)
+SIGNOFF = QKeySequence(Qt.CTRL + Qt.Key_I)
+MOVE_DOWN = QKeySequence(Qt.Key_J)
+MOVE_DOWN_SHIFT = QKeySequence(Qt.SHIFT + Qt.Key_J)
+MOVE_DOWN_SECONDARY = QKeySequence(Qt.ALT + Qt.Key_J)
+MOVE_DOWN_TERTIARY = QKeySequence(Qt.SHIFT + Qt.Key_J)
+MOVE_UP = QKeySequence(Qt.Key_K)
+MOVE_UP_SHIFT = QKeySequence(Qt.SHIFT + Qt.Key_K)
+MOVE_UP_SECONDARY = QKeySequence(Qt.ALT + Qt.Key_K)
+MOVE_UP_TERTIARY = QKeySequence(Qt.SHIFT + Qt.Key_K)
+MOVE_RIGHT = QKeySequence(Qt.Key_L)
+MOVE_RIGHT_SHIFT = QKeySequence(Qt.SHIFT + Qt.Key_L)
+FOCUS = QKeySequence(Qt.CTRL + Qt.Key_L)
+FOCUS_STATUS = QKeySequence(Qt.CTRL + Qt.Key_K)
+AMEND = QKeySequence(Qt.CTRL + Qt.Key_M)
+MERGE = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_M)
+PUSH = QKeySequence(Qt.CTRL + Qt.Key_P)
+PULL = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_P)
 # Q-Z
-QUIT = Qt.ControlModifier + Qt.Key_Q
-REFRESH = Qt.ControlModifier + Qt.Key_R
-REFRESH_SECONDARY = Qt.Key_F5
+QUIT = QKeySequence(Qt.CTRL + Qt.Key_Q)
+REFRESH = QKeySequence(Qt.CTRL + Qt.Key_R)
+REFRESH_SECONDARY = QKeySequence(Qt.Key_F5)
 REFRESH_HOTKEYS = (REFRESH, REFRESH_SECONDARY)
-STAGE_DIFF = Qt.Key_S
-STAGE_SELECTION = Qt.ControlModifier + Qt.Key_S
-STASH = Qt.AltModifier + Qt.ShiftModifier + Qt.Key_S
-FINDER = Qt.ControlModifier + Qt.Key_T
-FINDER_SECONDARY = Qt.Key_T
-TERMINAL = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_T
-STAGE_UNTRACKED = Qt.AltModifier + Qt.Key_U
-REVERT = Qt.ControlModifier + Qt.Key_U
-WORD_RIGHT = Qt.Key_W
-UNDO = Qt.ControlModifier + Qt.Key_Z
+STAGE_DIFF = QKeySequence(Qt.Key_S)
+STAGE_SELECTION = QKeySequence(Qt.CTRL + Qt.Key_S)
+STASH = QKeySequence(Qt.ALT + Qt.SHIFT + Qt.Key_S)
+FINDER = QKeySequence(Qt.CTRL + Qt.Key_T)
+FINDER_SECONDARY = QKeySequence(Qt.Key_T)
+TERMINAL = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_T)
+STAGE_UNTRACKED = QKeySequence(Qt.ALT + Qt.Key_U)
+REVERT = QKeySequence(Qt.CTRL + Qt.Key_U)
+WORD_RIGHT = QKeySequence(Qt.Key_W)
+UNDO = QKeySequence(Qt.CTRL + Qt.Key_Z)
 
 # Numbers
-START_OF_LINE = Qt.Key_0
+START_OF_LINE = QKeySequence(Qt.Key_0)
 
 # Special keys
-BACKSPACE = Qt.Key_Backspace
-TRASH = Qt.ControlModifier + Qt.Key_Backspace
-DELETE_FILE = Qt.ControlModifier + Qt.ShiftModifier + Qt.Key_Backspace
-DELETE_FILE_SECONDARY = Qt.ControlModifier + Qt.Key_Backspace
-PREFERENCES = Qt.ControlModifier + Qt.Key_Comma
-END_OF_LINE = Qt.Key_Dollar
-DOWN = Qt.Key_Down
-ENTER = Qt.Key_Enter
-ZOOM_OUT = Qt.Key_Minus
-REMOVE_ITEM = Qt.Key_Minus
-ADD_ITEM = Qt.Key_Plus
-ZOOM_IN = Qt.Key_Plus
-ZOOM_IN_SECONDARY = Qt.Key_Equal
+BACKSPACE = QKeySequence(Qt.Key_Backspace)
+TRASH = QKeySequence(Qt.CTRL + Qt.Key_Backspace)
+DELETE_FILE = QKeySequence(Qt.CTRL + Qt.SHIFT + Qt.Key_Backspace)
+DELETE_FILE_SECONDARY = QKeySequence(Qt.CTRL + Qt.Key_Backspace)
+PREFERENCES = QKeySequence(Qt.CTRL + Qt.Key_Comma)
+END_OF_LINE = QKeySequence(Qt.Key_Dollar)
+DOWN = QKeySequence(Qt.Key_Down)
+ENTER = QKeySequence(Qt.Key_Enter)
+ZOOM_OUT = QKeySequence(Qt.Key_Minus)
+REMOVE_ITEM = QKeySequence(Qt.Key_Minus)
+ADD_ITEM = QKeySequence(Qt.Key_Plus)
+ZOOM_IN = QKeySequence(Qt.Key_Plus)
+ZOOM_IN_SECONDARY = QKeySequence(Qt.Key_Equal)
 
-QUESTION = Qt.Key_Question
-RETURN = Qt.Key_Return
+QUESTION = QKeySequence(Qt.Key_Question)
+RETURN = QKeySequence(Qt.Key_Return)
 ACCEPT = (ENTER, RETURN)
-COMMIT = Qt.ControlModifier + Qt.Key_Return
-PRIMARY_ACTION = Qt.Key_Space
-SECONDARY_ACTION = Qt.ShiftModifier + Qt.Key_Space
-LEAVE = Qt.ShiftModifier + Qt.Key_Tab
-UP = Qt.Key_Up
+COMMIT = QKeySequence(Qt.CTRL + Qt.Key_Return)
+PRIMARY_ACTION = QKeySequence(QKeySequence(Qt.Key_Space))
+SECONDARY_ACTION = QKeySequence(Qt.SHIFT + Qt.Key_Space)
+LEAVE = QKeySequence(Qt.SHIFT + Qt.Key_Tab)
+UP = QKeySequence(Qt.Key_Up)
+
+CTRL_RETURN = QKeySequence(Qt.CTRL + Qt.Key_Return)
+CTRL_ENTER = QKeySequence(Qt.CTRL + Qt.Key_Enter)
 
 # Rebase
-REBASE_PICK = (Qt.Key_1, Qt.Key_P)
-REBASE_REWORD = (Qt.Key_2, Qt.Key_R)
-REBASE_EDIT = (Qt.Key_3, Qt.Key_E)
-REBASE_FIXUP = (Qt.Key_4, Qt.Key_F)
-REBASE_SQUASH = (Qt.Key_5, Qt.Key_S)
+REBASE_PICK = (QKeySequence(Qt.Key_1), QKeySequence(Qt.Key_P))
+REBASE_REWORD = (QKeySequence(Qt.Key_2), QKeySequence(Qt.Key_R))
+REBASE_EDIT = (QKeySequence(Qt.Key_3), QKeySequence(Qt.Key_E))
+REBASE_FIXUP = (QKeySequence(Qt.Key_4), QKeySequence(Qt.Key_F))
+REBASE_SQUASH = (QKeySequence(Qt.Key_5), QKeySequence(Qt.Key_S))
 
 # Key Sequences
 COPY = QKeySequence.Copy

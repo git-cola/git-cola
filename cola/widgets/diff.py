@@ -191,7 +191,7 @@ class DiffEditor(DiffTextEdit):
             self, 'Revert', self.revert_selection, hotkeys.REVERT)
         self.action_revert_selection.setIcon(icons.undo())
 
-        self.launch_editor = actions.launch_editor(self, 'Return', 'Enter')
+        self.launch_editor = actions.launch_editor(self, *hotkeys.ACCEPT)
         self.launch_difftool = actions.launch_difftool(self)
         self.stage_or_unstage = actions.stage_or_unstage(self)
 

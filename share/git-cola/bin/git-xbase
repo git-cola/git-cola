@@ -172,7 +172,8 @@ class Editor(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
-            self, N_('Rebase'), self.rebase, 'Ctrl+Return')
+            self, N_('Rebase'), self.rebase,
+            hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
         self.tree.external_diff.connect(self.external_diff)
@@ -488,6 +489,9 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         flags = flags & ~Qt.ItemIsDropEnabled
         self.setFlags(flags)
 
+    def __eq__(self, other):
+        return self is other
+
     def copy(self):
         return self.__class__(self.idx, self.is_enabled(), self.command,
                               sha1hex=self.sha1hex, summary=self.summary,
@@ -506,8 +510,8 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         combo.setCurrentIndex(idx)
         combo.setEnabled(self.is_commit())
 
-        signal = combo.currentIndexChanged['QString']
-        signal.connect(self.set_command_and_validate)
+        signal = combo.currentIndexChanged
+        signal.connect(lambda x: self.set_command_and_validate(combo))
         combo.validate.connect(parent.validate)
 
         parent.setItemWidget(self, self.COMMAND_COLUMN, combo)
@@ -547,15 +551,17 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def refresh(self):
         """Update the view to match the updated state"""
-        command = self.command
-        self.combo.setCurrentIndex(COMMAND_IDX[command])
+        if self.is_commit():
+            command = self.command
+            self.combo.setCurrentIndex(COMMAND_IDX[command])
 
     def reset_command(self, command):
         """Set and refresh the item in one shot"""
         self.set_command(command)
         self.refresh()
 
-    def set_command_and_validate(self, command):
+    def set_command_and_validate(self, combo):
+        command = COMMANDS[combo.currentIndex()]
         self.set_command(command)
         self.combo.validate.emit()
 

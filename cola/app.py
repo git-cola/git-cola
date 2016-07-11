@@ -68,7 +68,7 @@ def setup_environment():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Session management wants an absolute path when restarting
-    sys.argv[0] = sys_argv0 = core.abspath(sys.argv[0])
+    sys.argv[0] = sys_argv0 = os.path.abspath(sys.argv[0])
 
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')

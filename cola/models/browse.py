@@ -21,7 +21,7 @@ from cola.models import main
 
 
 # Custom event type for GitRepoInfoEvents
-INFO_EVENT_TYPE = QtCore.QEvent.User + 42
+INFO_EVENT_TYPE = QtCore.QEvent.Type(QtCore.QEvent.registerEventType())
 
 
 class Columns(object):
@@ -430,7 +430,7 @@ class GitRepoInfoTask(qtutils.Task):
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
     def __init__(self, signal, *data):
-        QtCore.QEvent.__init__(self, QtCore.QEvent.User + 1)
+        QtCore.QEvent.__init__(self, INFO_EVENT_TYPE)
         self.signal = signal
         self.data = data
 
@@ -472,7 +472,7 @@ class GitRepoItem(QtGui.QStandardItem):
 
 class GitRepoNameItem(GitRepoItem):
     """Subclass GitRepoItem to provide a custom type()."""
-    TYPE = QtGui.QStandardItem.UserType + 1
+    TYPE = QtGui.QStandardItem.ItemType(QtGui.QStandardItem.UserType + 1)
 
     def __init__(self, path, parent, runtask):
         GitRepoItem.__init__(self, Columns.NAME, path, parent, runtask)

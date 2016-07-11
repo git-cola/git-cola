@@ -341,10 +341,14 @@ class VimMixin(object):
         self.widget = widget
         self.Base = widget.Base
         # Common vim/unix-ish keyboard actions
-        self.add_navigation('Up', hotkeys.MOVE_UP, shift=True)
-        self.add_navigation('Down', hotkeys.MOVE_DOWN, shift=True)
-        self.add_navigation('Left', hotkeys.MOVE_LEFT, shift=True)
-        self.add_navigation('Right', hotkeys.MOVE_RIGHT, shift=True)
+        self.add_navigation('Up', hotkeys.MOVE_UP,
+                            shift=hotkeys.MOVE_UP_SHIFT)
+        self.add_navigation('Down', hotkeys.MOVE_DOWN,
+                            shift=hotkeys.MOVE_DOWN_SHIFT)
+        self.add_navigation('Left', hotkeys.MOVE_LEFT,
+                            shift=hotkeys.MOVE_LEFT_SHIFT)
+        self.add_navigation('Right', hotkeys.MOVE_RIGHT,
+                            shift=hotkeys.MOVE_RIGHT_SHIFT)
         self.add_navigation('WordLeft', hotkeys.WORD_LEFT)
         self.add_navigation('WordRight', hotkeys.WORD_RIGHT)
         self.add_navigation('StartOfLine', hotkeys.START_OF_LINE)
@@ -358,7 +362,7 @@ class VimMixin(object):
                            lambda: widget.page(widget.height()//2),
                            hotkeys.PRIMARY_ACTION)
 
-    def add_navigation(self, name, hotkey, shift=False):
+    def add_navigation(self, name, hotkey, shift=None):
         """Add a hotkey along with a shift-variant"""
         widget = self.widget
         direction = getattr(QtGui.QTextCursor, name)
@@ -366,8 +370,7 @@ class VimMixin(object):
                            lambda: self.move(direction), hotkey)
         if shift:
             qtutils.add_action(widget, 'Shift' + name,
-                               lambda: self.move(direction, True),
-                               Qt.ShiftModifier | hotkey)
+                               lambda: self.move(direction, True), shift)
 
     def move(self, direction, select=False, n=1):
         widget = self.widget
