@@ -139,6 +139,9 @@ def start_command(cmd, cwd=None, add_env=None,
         # the subprocess.
         cwd = None
 
+    if PY2 and cwd:
+        cwd = encode(cwd)
+
     if WIN32:
         CREATE_NO_WINDOW = 0x08000000
         extra['creationflags'] = CREATE_NO_WINDOW
@@ -308,9 +311,9 @@ abspath = wrap(mkpath, os.path.abspath, decorator=decode)
 chdir = wrap(mkpath, os.chdir)
 exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
-try:  # Python 2
-    getcwd = os.getcwdu
-except AttributeError:
+if PY2:
+    getcwd = decorate(decode, os.getcwd)
+else:
     getcwd = os.getcwd
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)

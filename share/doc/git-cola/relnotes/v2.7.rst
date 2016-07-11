@@ -3,6 +3,16 @@
 git-cola v2.7 (pre-release)
 ===========================
 
+Fixes
+-----
+
+* When repositories stored in non-ASCII, UTF-8-encoded filesystem paths
+  were operated upon with `LC_ALL=C` set in the environment, unicode errors
+  would occur when using `python2`.  `git cola` was made more robust and will
+  now operate correctly within this environment.
+
+  https://github.com/git-cola/git-cola/issues/581
+
 Development
 -----------
 
