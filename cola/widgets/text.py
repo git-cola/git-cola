@@ -1,7 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import Qt, SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import hotkeys
 from cola import qtutils
@@ -10,21 +13,28 @@ from cola.models import prefs
 from cola.widgets import defs
 
 
-def get_value_stripped(widget):
-    return widget.as_unicode().strip()
+def get_stripped(widget):
+    return widget.get().strip()
 
 
-class LineEdit(QtGui.QLineEdit):
+class LineEdit(QtWidgets.QLineEdit):
+
+    cursor_changed = Signal(int, int)
 
     def __init__(self, parent=None, row=1, get_value=None):
-        QtGui.QLineEdit.__init__(self, parent)
+        QtWidgets.QLineEdit.__init__(self, parent)
         self._row = row
         if get_value is None:
-            get_value = get_value_stripped
+            get_value = get_stripped
         self._get_value = get_value
         self.cursor_position = LineEditCursorPosition(self, row)
 
+    def get(self):
+        """Return the raw unicode value from Qt"""
+        return self.text()
+
     def value(self):
+        """Return the processed value, e.g. stripped"""
         return self._get_value(self)
 
     def set_value(self, value, block=False):
@@ -36,9 +46,6 @@ class LineEdit(QtGui.QLineEdit):
         if block:
             self.blockSignals(blocksig)
 
-    def as_unicode(self):
-        return self.text()
-
     def reset_cursor(self):
         self.setCursorPosition(0)
 
@@ -49,38 +56,42 @@ class LineEditCursorPosition(object):
     def __init__(self, widget, row):
         self._widget = widget
         self._row = row
-        # Translate cursorPositionChanged into cursorPosition
-        widget.connect(widget, SIGNAL('cursorPositionChanged(int,int)'),
-                       lambda old, new: self.emit())
+        # Translate cursorPositionChanged into cursor_changed(int, int)
+        widget.cursorPositionChanged.connect(lambda old, new: self.emit())
 
     def emit(self):
         widget = self._widget
         row = self._row
         col = widget.cursorPosition()
-        widget.emit(SIGNAL('cursorPosition(int,int)'), row, col)
+        widget.cursor_changed.emit(row, col)
 
     def reset(self):
         self._widget.setCursorPosition(0)
 
 
-class TextEdit(QtGui.QTextEdit):
+class TextEdit(QtWidgets.QTextEdit):
+
+    cursor_changed = Signal(int, int)
+    leave = Signal()
 
     def __init__(self, parent=None, get_value=None):
-        QtGui.QTextEdit.__init__(self, parent)
+        QtWidgets.QTextEdit.__init__(self, parent)
         self.cursor_position = TextEditCursorPosition(self)
         if get_value is None:
-            get_value = get_value_stripped
+            get_value = get_stripped
         self._get_value = get_value
         self._tabwidth = 8
         self.setMinimumSize(QtCore.QSize(1, 1))
-        self.setLineWrapMode(QtGui.QTextEdit.NoWrap)
+        self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.setAcceptRichText(False)
         self.setCursorWidth(defs.cursor_width)
 
-    def as_unicode(self):
+    def get(self):
+        """Return the raw unicode value from Qt"""
         return self.toPlainText()
 
     def value(self):
+        """Return a safe value, e.g. a stripped value"""
         return self._get_value(self)
 
     def set_value(self, value, block=False):
@@ -115,9 +126,9 @@ class TextEdit(QtGui.QTextEdit):
 
     def set_linebreak(self, brk):
         if brk:
-            wrapmode = QtGui.QTextEdit.FixedPixelWidth
+            wrapmode = QtWidgets.QTextEdit.FixedPixelWidth
         else:
-            wrapmode = QtGui.QTextEdit.NoWrap
+            wrapmode = QtWidgets.QTextEdit.NoWrap
         self.setLineWrapMode(wrapmode)
 
     def selected_line(self):
@@ -141,26 +152,26 @@ class TextEdit(QtGui.QTextEdit):
         if event.button() == Qt.RightButton:
             if not self.textCursor().hasSelection():
                 self.setTextCursor(self.cursorForPosition(event.pos()))
-        QtGui.QTextEdit.mousePressEvent(self, event)
+        QtWidgets.QTextEdit.mousePressEvent(self, event)
 
 
 class TextEditCursorPosition(object):
 
     def __init__(self, widget):
         self._widget = widget
-        widget.connect(widget, SIGNAL('cursorPositionChanged()'), self.emit)
+        widget.cursorPositionChanged.connect(self.emit)
 
     def emit(self):
         widget = self._widget
         cursor = widget.textCursor()
         position = cursor.position()
-        txt = widget.as_unicode()
+        txt = widget.get()
         before = txt[:position]
         row = before.count('\n')
         line = before.split('\n')[row]
         col = cursor.columnNumber()
         col += line[:col].count('\t') * (widget.tabwidth() - 1)
-        widget.emit(SIGNAL('cursorPosition(int,int)'), row+1, col)
+        widget.cursor_changed.emit(row+1, col)
 
     def reset(self):
         widget = self._widget
@@ -197,7 +208,7 @@ class MonoTextView(MonoTextEdit):
 
 
 def get_value_hinted(widget):
-    text = get_value_stripped(widget)
+    text = get_stripped(widget)
     hint = widget.hint.value()
     if text == hint:
         return ''
@@ -216,21 +227,22 @@ class HintWidget(QtCore.QObject):
         widget.installEventFilter(self)
 
         # Palette for normal text
-        self.default_palette = QtGui.QPalette(widget.palette())
+        QPalette = QtGui.QPalette
+        self.default_palette = QPalette(widget.palette())
 
         # Palette used for the placeholder text
-        self.hint_palette = pal = QtGui.QPalette(widget.palette())
+        self.hint_palette = pal = QPalette(widget.palette())
         color = self.hint_palette.text().color()
         color.setAlpha(128)
-        pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
-        pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
+        pal.setColor(QPalette.Active, QPalette.Text, color)
+        pal.setColor(QPalette.Inactive, QPalette.Text, color)
 
         # Palette for error text
-        self.error_palette = pal = QtGui.QPalette(widget.palette())
+        self.error_palette = pal = QPalette(widget.palette())
         color = QtGui.QColor(Qt.red)
         color.setAlpha(200)
-        pal.setColor(QtGui.QPalette.Active, QtGui.QPalette.Text, color)
-        pal.setColor(QtGui.QPalette.Inactive, QtGui.QPalette.Text, color)
+        pal.setColor(QPalette.Active, QPalette.Text, color)
+        pal.setColor(QPalette.Inactive, QPalette.Text, color)
 
     def widget(self):
         """Return the parent text widget"""
@@ -238,7 +250,7 @@ class HintWidget(QtCore.QObject):
 
     def active(self):
         """Return True when hint-mode is active"""
-        return self.value() == get_value_stripped(self._widget)
+        return self.value() == get_stripped(self._widget)
 
     def value(self):
         """Return the current hint text"""
@@ -310,7 +322,7 @@ class HintedTextEdit(TextEdit):
         self.hint = HintWidget(self, hint)
         setup_mono_font(self)
         # Refresh palettes when text changes
-        self.connect(self, SIGNAL('textChanged()'), self.hint.refresh)
+        self.textChanged.connect(self.hint.refresh)
 
 
 # The read-only variant.
@@ -325,38 +337,44 @@ class HintedTextView(HintedTextEdit):
 
 class VimMixin(object):
 
-    def __init__(self, base):
-        self._base = base
+    def __init__(self, widget):
+        self.widget = widget
+        self.Base = widget.Base
         # Common vim/unix-ish keyboard actions
-        self.add_navigation('Up', hotkeys.MOVE_UP, shift=True)
-        self.add_navigation('Down', hotkeys.MOVE_DOWN, shift=True)
-        self.add_navigation('Left', hotkeys.MOVE_LEFT, shift=True)
-        self.add_navigation('Right', hotkeys.MOVE_RIGHT, shift=True)
+        self.add_navigation('Up', hotkeys.MOVE_UP,
+                            shift=hotkeys.MOVE_UP_SHIFT)
+        self.add_navigation('Down', hotkeys.MOVE_DOWN,
+                            shift=hotkeys.MOVE_DOWN_SHIFT)
+        self.add_navigation('Left', hotkeys.MOVE_LEFT,
+                            shift=hotkeys.MOVE_LEFT_SHIFT)
+        self.add_navigation('Right', hotkeys.MOVE_RIGHT,
+                            shift=hotkeys.MOVE_RIGHT_SHIFT)
         self.add_navigation('WordLeft', hotkeys.WORD_LEFT)
         self.add_navigation('WordRight', hotkeys.WORD_RIGHT)
         self.add_navigation('StartOfLine', hotkeys.START_OF_LINE)
         self.add_navigation('EndOfLine', hotkeys.END_OF_LINE)
 
-        qtutils.add_action(self, 'PageUp',
-                           lambda: self.page(-self.height()//2),
+        qtutils.add_action(widget, 'PageUp',
+                           lambda: widget.page(-widget.height()//2),
                            hotkeys.SECONDARY_ACTION)
 
-        qtutils.add_action(self, 'PageDown',
-                           lambda: self.page(self.height()//2),
+        qtutils.add_action(widget, 'PageDown',
+                           lambda: widget.page(widget.height()//2),
                            hotkeys.PRIMARY_ACTION)
 
-    def add_navigation(self, name, hotkey, shift=False):
+    def add_navigation(self, name, hotkey, shift=None):
         """Add a hotkey along with a shift-variant"""
+        widget = self.widget
         direction = getattr(QtGui.QTextCursor, name)
-        qtutils.add_action(self, name,
+        qtutils.add_action(widget, name,
                            lambda: self.move(direction), hotkey)
         if shift:
-            qtutils.add_action(self, 'Shift' + name,
-                               lambda: self.move(direction, True),
-                               Qt.ShiftModifier | hotkey)
+            qtutils.add_action(widget, 'Shift' + name,
+                               lambda: self.move(direction, True), shift)
 
     def move(self, direction, select=False, n=1):
-        cursor = self.textCursor()
+        widget = self.widget
+        cursor = widget.textCursor()
         if select:
             mode = QtGui.QTextCursor.KeepAnchor
         else:
@@ -365,17 +383,19 @@ class VimMixin(object):
             self.set_text_cursor(cursor)
 
     def page(self, offset):
-        rect = self.cursorRect()
+        widget = self.widget
+        rect = widget.cursorRect()
         x = rect.x()
         y = rect.y() + offset
-        new_cursor = self.cursorForPosition(QtCore.QPoint(x, y))
+        new_cursor = widget.cursorForPosition(QtCore.QPoint(x, y))
         if new_cursor is not None:
             self.set_text_cursor(new_cursor)
 
     def set_text_cursor(self, cursor):
-        self.setTextCursor(cursor)
-        self.ensureCursorVisible()
-        self.viewport().update()
+        widget = self.widget
+        widget.setTextCursor(cursor)
+        widget.ensureCursorVisible()
+        widget.viewport().update()
 
     def keyPressEvent(self, event):
         """Custom keyboard behaviors
@@ -389,14 +409,15 @@ class VimMixin(object):
         is moved to the beginning of the line.
 
         """
+        widget = self.widget
         if event.key() == Qt.Key_Up:
-            cursor = self.textCursor()
+            cursor = widget.textCursor()
             position = cursor.position()
             if position == 0:
                 # The cursor is at the beginning of the line.
                 # Emit a signal so that the parent can e.g. change focus.
-                self.emit(SIGNAL('leave()'))
-            elif self.value()[:position].count('\n') == 0:
+                widget.leave.emit()
+            elif widget.value()[:position].count('\n') == 0:
                 # The cursor is in the middle of the first line of text.
                 # We can't go up ~ jump to the beginning of the line.
                 # Select the text if shift is pressed.
@@ -405,23 +426,45 @@ class VimMixin(object):
                 else:
                     mode = QtGui.QTextCursor.MoveAnchor
                 cursor.movePosition(QtGui.QTextCursor.StartOfLine, mode)
-                self.setTextCursor(cursor)
+                widget.setTextCursor(cursor)
 
-        return self._base.keyPressEvent(self, event)
+        return self.Base.keyPressEvent(widget, event)
 
 
-class VimHintedTextView(VimMixin, HintedTextView):
+class VimHintedTextView(HintedTextView):
+    Base = HintedTextView
+    Mixin = VimMixin
 
     def __init__(self, hint='', parent=None):
-        HintedTextView.__init__(self, hint, parent=parent)
-        VimMixin.__init__(self, HintedTextView)
+        super(VimHintedTextView, self).__init__(hint, parent=parent)
+        self._mixin = self.Mixin(self)
+
+    def move(self, direction, select=False, n=1):
+        return self._mixin.page(direction, select=select, n=n)
+
+    def page(self, offset):
+        return self._mixin.page(offset)
+
+    def keyPressEvent(self, event):
+        return self._mixin.keyPressEvent(event)
 
 
-class VimMonoTextView(VimMixin, MonoTextView):
+class VimMonoTextView(MonoTextView):
+    Base = MonoTextView
+    Mixin = VimMixin
 
     def __init__(self, parent=None):
         MonoTextView.__init__(self, parent)
-        VimMixin.__init__(self, MonoTextView)
+        self._mixin = self.Mixin(self)
+
+    def move(self, direction, select=False, n=1):
+        return self._mixin.page(direction, select=select, n=n)
+
+    def page(self, offset):
+        return self._mixin.page(offset)
+
+    def keyPressEvent(self, event):
+        return self._mixin.keyPressEvent(event)
 
 
 class HintedLineEdit(LineEdit):
@@ -430,19 +473,18 @@ class HintedLineEdit(LineEdit):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
         self.setFont(qtutils.diff_font())
-        self.connect(self, SIGNAL('textChanged(QString)'),
-                     lambda text: self.hint.refresh())
+        self.textChanged.connect(lambda text: self.hint.refresh())
 
 
 def text_dialog(text, title):
     """Show a wall of text in a dialog"""
     parent = qtutils.active_window()
-    label = QtGui.QLabel(parent)
+    label = QtWidgets.QLabel(parent)
     label.setFont(qtutils.diff_font())
     label.setText(text)
     label.setTextInteractionFlags(Qt.NoTextInteraction)
 
-    widget = QtGui.QDialog(parent)
+    widget = QtWidgets.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
     widget.setWindowTitle(title)
 

@@ -2,17 +2,16 @@ from __future__ import division, absolute_import, unicode_literals
 import time
 import hashlib
 
-from cola import sipcompat
-sipcompat.initialize()
-
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4 import QtNetwork
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy import QtNetwork
 
 from cola import core
 from cola import icons
-from cola.compat import ustr, parse
+from cola.compat import bstr
+from cola.compat import ustr
+from cola.compat import parse
 from cola.widgets import defs
 
 
@@ -30,10 +29,10 @@ class Gravatar(object):
         return url
 
 
-class GravatarLabel(QtGui.QLabel):
+class GravatarLabel(QtWidgets.QLabel):
 
     def __init__(self, parent=None):
-        QtGui.QLabel.__init__(self, parent)
+        QtWidgets.QLabel.__init__(self, parent)
 
         self.email = None
         self.response = None
@@ -42,9 +41,7 @@ class GravatarLabel(QtGui.QLabel):
         self.pixmaps = {}
 
         self.network = QtNetwork.QNetworkAccessManager()
-        self.connect(self.network,
-                     SIGNAL('finished(QNetworkReply*)'),
-                     self.network_finished)
+        self.network.finished.connect(self.network_finished)
 
     def set_email(self, email):
         if email in self.pixmaps:
@@ -77,7 +74,7 @@ class GravatarLabel(QtGui.QLabel):
     def network_finished(self, reply):
         email = self.email
 
-        header = QtCore.QByteArray('Location')
+        header = QtCore.QByteArray(bstr('Location'))
         location = ustr(reply.rawHeader(header)).strip()
         if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)

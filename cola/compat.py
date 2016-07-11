@@ -1,7 +1,11 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import sys
+try:
+    import urllib2 as parse
+except ImportError:
+    # Python 3
+    from urllib import parse
 
 
 PY2 = sys.version_info[0] == 2
@@ -9,39 +13,28 @@ PY3 = sys.version_info[0] >= 3
 WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
 
 try:
-    # pylint: disable=unicode-builtin
-    ustr = unicode
+    # pylint: disable=bytes-builtin
+    bstr = bytes
 except NameError:
-    # Python 3
-    ustr = str
-
-try:
-    # pylint: disable=unichr-builtin
-    unichr = unichr
-except NameError:
-    # Python 3
-    unichr = chr
-
-
-def _bchr_py3(i):
-    return bytes([i])
-
+    # Python <= 2.5
+    bstr = str
 
 if PY3:
-    bchr = _bchr_py3
+    def bchr(i):
+        return bytes([i])
+
+    int_types = (int,)
+    maxsize = sys.maxsize
+    ustr = str
+    unichr = chr
 else:
     bchr = chr
-
-if PY3:
-    int_types = (int,)
-else:
+    maxsize = sys.maxint
+    # pylint: disable=unicode-builtin
+    ustr = unicode
+    # pylint: disable=unichr-builtin
+    unichr = unichr
     int_types = (int, long)  # pylint: disable=long-builtin
-
-try:
-    import urllib2 as parse
-except ImportError:
-    # Python 3
-    from urllib import parse
 
 
 def setenv(key, value):

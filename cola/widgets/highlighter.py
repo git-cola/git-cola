@@ -1,6 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtCore, QtGui
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+
 
 have_pygments = True
 try:
@@ -97,10 +100,9 @@ def highlight_document(edit, filename):
 
 
 if __name__ == '__main__':
-    import sys
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication([])
 
-    python = QtGui.QPlainTextEdit()
+    python = QtWidgets.QPlainTextEdit()
     f = open(__file__, 'r')
     python.setPlainText(f.read())
     f.close()
@@ -109,4 +111,4 @@ if __name__ == '__main__':
     python.show()
     highlight_document(python, __file__)
 
-    sys.exit(app.exec_())
+    app.exec_()

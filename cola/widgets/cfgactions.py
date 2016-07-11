@@ -1,10 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import os
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import core
 from cola import gitcfg
@@ -16,6 +15,7 @@ from cola.interaction import Interaction
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets import standard
+from cola.widgets.text import LineEdit
 
 
 def install():
@@ -31,7 +31,7 @@ def get_config_actions():
 def confirm_config_action(name, opts):
     dlg = ActionDialog(qtutils.active_window(), name, opts)
     dlg.show()
-    if dlg.exec_() != QtGui.QDialog.Accepted:
+    if dlg.exec_() != QtWidgets.QDialog.Accepted:
         return False
     rev = dlg.revision()
     if rev:
@@ -70,7 +70,7 @@ class GitCommandWidget(standard.Dialog):
         self.err = ''
 
         # Create the text browser
-        self.output_text = QtGui.QTextBrowser(self)
+        self.output_text = QtWidgets.QTextBrowser(self)
         self.output_text.setAcceptDrops(False)
         self.output_text.setTabChangesFocus(True)
         self.output_text.setUndoRedoEnabled(False)
@@ -84,20 +84,17 @@ class GitCommandWidget(standard.Dialog):
         self.button_close = qtutils.close_button()
 
         # Put them in a horizontal layout at the bottom.
-        self.button_box = QtGui.QDialogButtonBox(self)
+        self.button_box = QtWidgets.QDialogButtonBox(self)
         self.button_box.addButton(self.button_abort,
-                                  QtGui.QDialogButtonBox.RejectRole)
+                                  QtWidgets.QDialogButtonBox.RejectRole)
         self.button_box.addButton(self.button_close,
-                                  QtGui.QDialogButtonBox.AcceptRole)
+                                  QtWidgets.QDialogButtonBox.AcceptRole)
 
         # Connect the signals to the process
-        self.connect(self.proc, SIGNAL('readyReadStandardOutput()'),
-                     self.read_stdout)
-        self.connect(self.proc, SIGNAL('readyReadStandardError()'),
-                     self.read_stderr)
-        self.connect(self.proc, SIGNAL('finished(int)'), self.finishProc)
-        self.connect(self.proc, SIGNAL('stateChanged(QProcess::ProcessState)'),
-                     self.stateChanged)
+        self.proc.readyReadStandardOutput.connect(self.read_stdout)
+        self.proc.readyReadStandardError.connect(self.read_stderr)
+        self.proc.finished.connect(self.proc_finished)
+        self.proc.stateChanged.connect(self.proc_state_changed)
 
         qtutils.connect_button(self.button_abort, self.abortProc)
         qtutils.connect_button(self.button_close, self.close)
@@ -166,14 +163,14 @@ class GitCommandWidget(standard.Dialog):
 
         return standard.Dialog.closeEvent(self, event)
 
-    def stateChanged(self, newstate):
+    def proc_state_changed(self, newstate):
         # State of process has changed - change the abort button state.
         if newstate == QtCore.QProcess.NotRunning:
             self.button_abort.setEnabled(False)
         else:
             self.button_abort.setEnabled(True)
 
-    def finishProc(self, status):
+    def proc_finished(self, status):
         self.exitstatus = status
 
 
@@ -197,19 +194,19 @@ class ActionDialog(standard.Dialog):
         if title:
             self.setWindowTitle(os.path.expandvars(title))
 
-        self.prompt = QtGui.QLabel()
+        self.prompt = QtWidgets.QLabel()
         prompt = opts.get('prompt')
         if prompt:
             self.prompt.setText(os.path.expandvars(prompt))
 
-        self.argslabel = QtGui.QLabel()
+        self.argslabel = QtWidgets.QLabel()
         if 'argprompt' not in opts or opts.get('argprompt') is True:
             argprompt = N_('Arguments')
         else:
             argprompt = opts.get('argprompt')
         self.argslabel.setText(argprompt)
 
-        self.argstxt = QtGui.QLineEdit()
+        self.argstxt = LineEdit()
         if self.opts.get('argprompt'):
             try:
                 # Remember the previous value
@@ -255,9 +252,7 @@ class ActionDialog(standard.Dialog):
                                  self.revselect, self.btnlayt)
         self.setLayout(self.layt)
 
-        self.connect(self.argstxt, SIGNAL('textChanged(QString)'),
-                     self._argstxt_changed)
-
+        self.argstxt.textChanged.connect(self._argstxt_changed)
         qtutils.connect_button(self.closebtn, self.reject)
         qtutils.connect_button(self.runbtn, self.accept)
 
@@ -275,15 +270,15 @@ class ActionDialog(standard.Dialog):
         self.VALUES[self.name]['argstxt'] = value
 
 
-class RevisionSelector(QtGui.QWidget):
+class RevisionSelector(QtWidgets.QWidget):
 
     def __init__(self, parent, revs):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self._revs = revs
         self._revdict = dict(revs)
 
-        self._rev_label = QtGui.QLabel()
+        self._rev_label = QtWidgets.QLabel()
         self._revision = completion.GitRefLineEdit()
 
         # Create the radio buttons
@@ -297,7 +292,7 @@ class RevisionSelector(QtGui.QWidget):
             self._radio_btns[label] = radio
         radio_btns.append(qtutils.STRETCH)
 
-        self._rev_list = QtGui.QListWidget()
+        self._rev_list = QtWidgets.QListWidget()
         label, rev_list = self._revs[0]
         self._radio_btns[label].setChecked(True)
         qtutils.set_items(self._rev_list, rev_list)
@@ -313,8 +308,7 @@ class RevisionSelector(QtGui.QWidget):
                                   self._rev_list)
         self.setLayout(self._layt)
 
-        self.connect(self._rev_list, SIGNAL('itemSelectionChanged()'),
-                     self._rev_list_selection_changed)
+        self._rev_list.itemSelectionChanged.connect(self.selection_changed)
 
     def revision(self):
         return self._revision.text()
@@ -327,7 +321,7 @@ class RevisionSelector(QtGui.QWidget):
         revs = self._revdict[sender]
         qtutils.set_items(self._rev_list, revs)
 
-    def _rev_list_selection_changed(self):
+    def selection_changed(self):
         items = self._rev_list.selectedItems()
         if not items:
             return

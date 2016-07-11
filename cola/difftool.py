@@ -1,9 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import core
 from cola import gitcmds
@@ -79,7 +78,7 @@ def diff_commits(parent, a, b):
     dlg = FileDiffDialog(parent, a=a, b=b)
     dlg.show()
     dlg.raise_()
-    return dlg.exec_() == QtGui.QDialog.Accepted
+    return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
 def diff_expression(parent, expr,
@@ -89,14 +88,14 @@ def diff_expression(parent, expr,
         return dlg
     dlg.show()
     dlg.raise_()
-    return dlg.exec_() == QtGui.QDialog.Accepted
+    return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
-class FileDiffDialog(QtGui.QDialog):
+class FileDiffDialog(QtWidgets.QDialog):
 
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
                  hide_expr=False):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         self.a = a
@@ -132,21 +131,15 @@ class FileDiffDialog(QtGui.QDialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
-                     self.tree_selection_changed)
+        self.tree.itemSelectionChanged.connect(self.tree_selection_changed)
+        self.tree.itemDoubleClicked.connect(self.tree_double_clicked)
+        self.tree.up.connect(self.focus_input)
 
-        self.connect(self.tree,
-                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self.tree_double_clicked)
+        self.expr.textChanged.connect(self.text_changed)
 
-        self.connect(self.expr, SIGNAL('textChanged(QString)'),
-                     self.text_changed)
-        self.connect(self.tree, SIGNAL('up()'), self.focus_input)
-
-        self.connect(self.expr, SIGNAL('activated()'), self.focus_tree)
-        self.connect(self.expr, SIGNAL('down()'), self.focus_tree)
-        self.connect(self.expr, SIGNAL('enter()'), self.focus_tree)
-        self.connect(self.expr, SIGNAL('return()'), self.focus_tree)
+        self.expr.activated.connect(self.focus_tree)
+        self.expr.down.connect(self.focus_tree)
+        self.expr.enter.connect(self.focus_tree)
 
         qtutils.connect_button(self.diff_button, self.diff)
         qtutils.connect_button(self.close_button, self.close)

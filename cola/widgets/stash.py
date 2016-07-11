@@ -1,10 +1,9 @@
 """Provides the StashView dialog."""
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import cmds
 from cola import icons
@@ -46,7 +45,7 @@ class StashView(Dialog):
         else:
             self.resize(700, 420)
 
-        self.stash_list = QtGui.QListWidget(self)
+        self.stash_list = QtWidgets.QListWidget(self)
         self.stash_text = DiffTextEdit(self)
 
         self.button_apply = qtutils.create_toolbutton(
@@ -91,8 +90,7 @@ class StashView(Dialog):
         self.setTabOrder(self.button_drop, self.keep_index)
         self.setTabOrder(self.keep_index, self.button_close)
 
-        self.connect(self.stash_list, SIGNAL('itemSelectionChanged()'),
-                     self.item_selected)
+        self.stash_list.itemSelectionChanged.connect(self.item_selected)
 
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_save, self.stash_save)

@@ -1,9 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import core
@@ -47,6 +48,7 @@ def worktree_browser(update=True, settings=None):
 
 
 class Browser(standard.Widget):
+    updated = Signal()
 
     def __init__(self, parent, update=True, settings=None):
         standard.Widget.__init__(self, parent)
@@ -55,8 +57,8 @@ class Browser(standard.Widget):
         self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
 
-        self.connect(self, SIGNAL('updated()'),
-                     self._updated_callback, Qt.QueuedConnection)
+        self.updated.connect(self._updated_callback, type=Qt.QueuedConnection)
+
         self.model = main.model()
         self.model.add_observer(self.model.message_updated, self.model_updated)
         if parent is None:
@@ -64,16 +66,14 @@ class Browser(standard.Widget):
         if update:
             self.model_updated()
 
-        # Restore saved settings
-        if not self.restore_state(settings=settings):
-            self.resize(720, 420)
+        self.init_state(settings, self.resize, 720, 420)
 
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
     def model_updated(self):
         """Update the title with the current branch and directory name."""
-        self.emit(SIGNAL('updated()'))
+        self.updated.emit()
 
     def _updated_callback(self):
         branch = self.model.currentbranch
@@ -93,6 +93,14 @@ class Browser(standard.Widget):
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
+    about_to_update = Signal()
+    item_expanded = Signal(object)
+    difftool_predecessor = Signal(object)
+    history = Signal(object)
+    model_expanded = Signal(object)
+    model_collapsed = Signal(object)
+    updated = Signal()
+
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
@@ -104,7 +112,7 @@ class RepoTreeView(standard.TreeView):
         self.setDragEnabled(True)
         self.setRootIsDecorated(False)
         self.setSortingEnabled(False)
-        self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
         model = main.model()
@@ -112,21 +120,20 @@ class RepoTreeView(standard.TreeView):
                            self.emit_about_to_update)
         model.add_observer(model.message_updated, self.emit_update)
 
-        self.connect(self, SIGNAL('about_to_update()'), self.save_selection,
-                     Qt.QueuedConnection)
-        self.connect(self, SIGNAL('update()'), self.update_actions,
-                     Qt.QueuedConnection)
+        self.about_to_update.connect(self.save_selection,
+                                     type=Qt.QueuedConnection)
+        self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
 
         # The non-Qt cola application model
-        self.connect(self, SIGNAL('expanded(QModelIndex)'), self.size_columns)
-        self.connect(self, SIGNAL('expanded(QModelIndex)'), self.expanded)
+        self.model_expanded.connect(self.size_columns)
+        self.model_expanded.connect(self.expanded)
 
-        self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.size_columns)
-        self.connect(self, SIGNAL('collapsed(QModelIndex)'), self.collapsed)
+        self.model_collapsed.connect(self.size_columns)
+        self.model_collapsed.connect(self.collapsed)
 
         # Sync selection before the key press event changes the model index
-        self.connect(self, SIGNAL('indexAboutToChange()'), self.sync_selection,
-                     Qt.QueuedConnection)
+        queued = Qt.QueuedConnection
+        self.index_about_to_change.connect(self.sync_selection, type=queued)
 
         self.action_history = qtutils.add_action_with_status_tip(
                 self, N_('View History...'),
@@ -151,7 +158,7 @@ class RepoTreeView(standard.TreeView):
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
                 self, N_('Diff Against Predecessor...'),
                 N_('Launch git-difftool against previous versions.'),
-                self.difftool_predecessor, hotkeys.DIFF_SECONDARY)
+                self.diff_predecessor, hotkeys.DIFF_SECONDARY)
 
         self.action_revert_unstaged = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUnstagedEdits.name(),
@@ -214,10 +221,10 @@ class RepoTreeView(standard.TreeView):
         return size
 
     def emit_update(self):
-        self.emit(SIGNAL('update()'))
+        self.updated.emit()
 
     def emit_about_to_update(self):
-        self.emit(SIGNAL('about_to_update()'))
+        self.about_to_update.emit()
 
     def save_selection(self):
         selection = self.selected_paths()
@@ -306,7 +313,7 @@ class RepoTreeView(standard.TreeView):
 
     def mousePressEvent(self, event):
         """Synchronize the selection on mouse-press."""
-        result = QtGui.QTreeView.mousePressEvent(self, event)
+        result = QtWidgets.QTreeView.mousePressEvent(self, event)
         self.sync_selection()
         return result
 
@@ -342,7 +349,7 @@ class RepoTreeView(standard.TreeView):
 
     def selectionChanged(self, old, new):
         """Override selectionChanged to update available actions."""
-        result = QtGui.QTreeView.selectionChanged(self, old, new)
+        result = QtWidgets.QTreeView.selectionChanged(self, old, new)
         if not self.restoring_selection:
             self.update_actions()
             self.update_diff()
@@ -356,9 +363,8 @@ class RepoTreeView(standard.TreeView):
 
     def setModel(self, model):
         """Set the concrete QAbstractItemModel instance."""
-        QtGui.QTreeView.setModel(self, model)
-        self.connect(model, SIGNAL('restore()'), self.restore,
-                     Qt.QueuedConnection)
+        QtWidgets.QTreeView.setModel(self, model)
+        model.restore.connect(self.restore, type=Qt.QueuedConnection)
 
     def item_from_index(self, model_index):
         """Return the name item corresponding to the model index."""
@@ -412,16 +418,16 @@ class RepoTreeView(standard.TreeView):
 
     def view_history(self):
         """Signal that we should view history for paths."""
-        self.emit(SIGNAL('history(PyQt_PyObject)'), self.selected_paths())
+        self.history.emit(self.selected_paths())
 
     def untrack_selected(self):
         """untrack selected paths."""
         cmds.do(cmds.Untrack, self.selected_tracked_paths())
 
-    def difftool_predecessor(self):
+    def diff_predecessor(self):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
-        self.emit(SIGNAL('difftool_predecessor(PyQt_PyObject)'), paths)
+        self.difftool_predecessor.emit(paths)
 
     def current_path(self):
         """Return the path for the current item."""
@@ -433,17 +439,15 @@ class RepoTreeView(standard.TreeView):
 
 class BrowserController(QtCore.QObject):
 
-    def __init__(self, view=None):
+    def __init__(self, view):
         QtCore.QObject.__init__(self, view)
         self.model = main.model()
         self.view = view
         self.runtask = qtutils.RunTask(parent=self)
-        self.connect(view, SIGNAL('history(PyQt_PyObject)'),
-                     self.view_history)
-        self.connect(view, SIGNAL('expanded(QModelIndex)'),
-                     self.query_model)
-        self.connect(view, SIGNAL('difftool_predecessor(PyQt_PyObject)'),
-                     self.difftool_predecessor)
+
+        view.history.connect(self.view_history)
+        view.item_expanded.connect(self.query_model)
+        view.difftool_predecessor.connect(self.difftool_predecessor)
 
     def view_history(self, entries):
         """Launch the configured history browser path-limited to entries."""
@@ -508,7 +512,7 @@ class SaveBlob(BaseCommand):
                 N_('File saved to "%s"') % model.filename)
 
 
-class BrowseDialog(QtGui.QDialog):
+class BrowseDialog(QtWidgets.QDialog):
 
     @staticmethod
     def browse(ref):
@@ -561,7 +565,7 @@ class BrowseDialog(QtGui.QDialog):
         return model.filename
 
     def __init__(self, model, select_file=False, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -590,14 +594,12 @@ class BrowseDialog(QtGui.QDialog):
 
         # connections
         if select_file:
-            self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
-                         self.path_chosen)
+            self.tree.path_chosen.connect(self.path_chosen)
         else:
-            self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
-                         self.save_path)
+            self.tree.path_chosen.connect(self.save_path)
 
-        self.connect(self.tree, SIGNAL('selectionChanged()'),
-                     self.selection_changed, Qt.QueuedConnection)
+        self.tree.selection_changed.connect(self.selection_changed,
+                                            type=Qt.QueuedConnection)
 
         qtutils.connect_button(self.close, self.reject)
         qtutils.connect_button(self.save, self.save_blob)
@@ -642,12 +644,13 @@ class BrowseDialog(QtGui.QDialog):
 
 class GitTreeWidget(standard.TreeView):
 
+    selection_changed = Signal()
+    path_chosen = Signal(object)
+
     def __init__(self, parent=None):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
-
-        self.connect(self, SIGNAL('doubleClicked(QModelIndex)'),
-                     self.double_clicked)
+        self.doubleClicked.connect(self.double_clicked)
 
     def double_clicked(self, index):
         item = self.model().itemFromIndex(index)
@@ -655,15 +658,15 @@ class GitTreeWidget(standard.TreeView):
             return
         if item.is_dir:
             return
-        self.emit(SIGNAL('path_chosen(PyQt_PyObject)'), item.path)
+        self.path_chosen.emit(item.path)
 
     def selected_files(self):
         items = self.selected_items()
         return [i.path for i in items if not i.is_dir]
 
     def selectionChanged(self, old_selection, new_selection):
-        QtGui.QTreeView.selectionChanged(self, old_selection, new_selection)
-        self.emit(SIGNAL('selectionChanged()'))
+        QtWidgets.QTreeView.selectionChanged(self, old_selection, new_selection)
+        self.selection_changed.emit()
 
     def select_first_file(self):
         """Select the first filename in the tree"""

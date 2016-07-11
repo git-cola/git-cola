@@ -1,9 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import icons
@@ -26,9 +27,9 @@ def new_remote_editor(parent=None):
     return RemoteEditor(parent=parent)
 
 
-class RemoteEditor(QtGui.QDialog):
+class RemoteEditor(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.setWindowTitle(N_('Edit Remotes'))
         if parent is not None:
@@ -47,7 +48,7 @@ class RemoteEditor(QtGui.QDialog):
             'and pressing "enter", or by double-clicking.')
 
         self.remote_list = []
-        self.remotes = QtGui.QListWidget()
+        self.remotes = QtWidgets.QListWidget()
         self.remotes.setToolTip(N_(
             'Remote git repositories - double-click to rename'))
 
@@ -90,15 +91,11 @@ class RemoteEditor(QtGui.QDialog):
         qtutils.connect_button(self.refresh_btn, self.refresh)
         qtutils.connect_button(self.close_btn, self.close)
 
-        self.connect(self.info_thread, SIGNAL('info(PyQt_PyObject)'),
-                     self.info.set_value, Qt.QueuedConnection)
+        thread = self.info_thread
+        thread.result.connect(self.info.set_value, type=Qt.QueuedConnection)
 
-        self.connect(self.remotes,
-                     SIGNAL('itemChanged(QListWidgetItem*)'),
-                     self.remote_renamed)
-
-        self.connect(self.remotes, SIGNAL('itemSelectionChanged()'),
-                     self.selection_changed)
+        self.remotes.itemChanged.connect(self.remote_renamed)
+        self.remotes.itemSelectionChanged.connect(self.selection_changed)
 
     def refresh(self):
         remotes = git.remote()[STDOUT].splitlines()
@@ -159,6 +156,8 @@ class RemoteEditor(QtGui.QDialog):
 
 
 class RemoteInfoThread(QtCore.QThread):
+    result = Signal(object)
+
     def __init__(self, parent):
         QtCore.QThread.__init__(self, parent)
         self.remote = None
@@ -171,15 +170,15 @@ class RemoteInfoThread(QtCore.QThread):
         # This call takes a long time and we may have selected a
         # different remote...
         if remote == self.remote:
-            self.emit(SIGNAL('info(PyQt_PyObject)'), out + err)
+            self.result.emit(out + err)
         else:
             self.run()
 
 
-class AddRemoteWidget(QtGui.QDialog):
+class AddRemoteWidget(QtWidgets.QDialog):
 
     def __init__(self, parent):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.setWindowModality(Qt.WindowModal)
 
         self.add_btn = qtutils.create_button(text=N_('Add Remote'),
@@ -209,8 +208,8 @@ class AddRemoteWidget(QtGui.QDialog):
                                     self._form, self._btn_layout)
         self.setLayout(self._layout)
 
-        self.connect(self.name, SIGNAL('textChanged(QString)'), self.validate)
-        self.connect(self.url, SIGNAL('textChanged(QString)'), self.validate)
+        self.name.textChanged.connect(self.validate)
+        self.url.textChanged.connect(self.validate)
 
         qtutils.connect_button(self.add_btn, self.accept)
         qtutils.connect_button(self.close_btn, self.reject)
@@ -223,4 +222,4 @@ class AddRemoteWidget(QtGui.QDialog):
     def add_remote(self):
         self.show()
         self.raise_()
-        return self.exec_() == QtGui.QDialog.Accepted
+        return self.exec_() == QtWidgets.QDialog.Accepted

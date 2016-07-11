@@ -1,8 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import cmds
 from cola import gitcfg
@@ -39,11 +38,11 @@ def abort_merge():
         gitcmds.abort_merge()
 
 
-class MergeView(QtGui.QDialog):
+class MergeView(QtWidgets.QDialog):
     """Provides a dialog for merging branches."""
 
     def __init__(self, cfg, model, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         self.cfg = cfg
         self.model = model
         if parent is not None:
@@ -51,8 +50,8 @@ class MergeView(QtGui.QDialog):
         self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Widgets
-        self.title_label = QtGui.QLabel()
-        self.revision_label = QtGui.QLabel()
+        self.title_label = QtWidgets.QLabel()
+        self.revision_label = QtWidgets.QLabel()
         self.revision_label.setText(N_('Revision to Merge'))
 
         self.revision = completion.GitRefLineEdit()
@@ -64,7 +63,7 @@ class MergeView(QtGui.QDialog):
 
         self.radio_tag = qtutils.radio(text=N_('Tag'))
 
-        self.revisions = QtGui.QListWidget()
+        self.revisions = QtWidgets.QListWidget()
         self.revisions.setAlternatingRowColors(True)
 
         self.button_viz = qtutils.create_button(text=N_('Visualize'),
@@ -117,11 +116,8 @@ class MergeView(QtGui.QDialog):
         self.setLayout(self.mainlayt)
 
         # Signal/slot connections
-        self.connect(self.revision, SIGNAL('textChanged(QString)'),
-                     self.update_title)
-
-        self.connect(self.revisions, SIGNAL('itemSelectionChanged()'),
-                     self.revision_selected)
+        self.revision.textChanged.connect(self.update_title)
+        self.revisions.itemSelectionChanged.connect(self.revision_selected)
 
         qtutils.connect_button(self.button_close, self.reject)
         qtutils.connect_button(self.checkbox_squash, self.toggle_squash)

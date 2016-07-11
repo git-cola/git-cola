@@ -1,10 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
 
 from cola import cmds
 from cola import qtutils
@@ -25,17 +23,17 @@ def preferences(model=None, parent=None):
     return view
 
 
-class FormWidget(QtGui.QWidget):
+class FormWidget(QtWidgets.QWidget):
 
     def __init__(self, model, parent, source='user'):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.model = model
         self.config_to_widget = {}
         self.widget_to_config = {}
         self.source = source
         self.config = gitcfg.current()
         self.defaults = {}
-        self.setLayout(QtGui.QFormLayout())
+        self.setLayout(QtWidgets.QFormLayout())
 
     def add_row(self, label, widget):
         self.layout().addRow(label, widget)
@@ -48,19 +46,15 @@ class FormWidget(QtGui.QWidget):
             self.connect_widget_to_config(widget, config)
 
     def connect_widget_to_config(self, widget, config):
-        if isinstance(widget, QtGui.QSpinBox):
-            widget.connect(widget, SIGNAL('valueChanged(int)'),
-                           self._int_config_changed(config))
+        if isinstance(widget, QtWidgets.QSpinBox):
+            widget.valueChanged.connect(self._int_config_changed(config))
 
-        elif isinstance(widget, QtGui.QCheckBox):
-            widget.connect(widget, SIGNAL('toggled(bool)'),
-                           self._bool_config_changed(config))
+        elif isinstance(widget, QtWidgets.QCheckBox):
+            widget.toggled.connect(self._bool_config_changed(config))
 
-        elif isinstance(widget, QtGui.QLineEdit):
-            widget.connect(widget, SIGNAL('editingFinished()'),
-                           self._text_config_changed(config))
-            widget.connect(widget, SIGNAL('returnPressed()'),
-                           self._text_config_changed(config))
+        elif isinstance(widget, QtWidgets.QLineEdit):
+            widget.editingFinished.connect(self._text_config_changed(config))
+            widget.returnPressed.connect(self._text_config_changed(config))
 
     def _int_config_changed(self, config):
         def runner(value):
@@ -92,11 +86,11 @@ class FormWidget(QtGui.QWidget):
 
     def set_widget_value(self, widget, value):
         widget.blockSignals(True)
-        if isinstance(widget, QtGui.QSpinBox):
+        if isinstance(widget, QtWidgets.QSpinBox):
             widget.setValue(value)
-        elif isinstance(widget, QtGui.QLineEdit):
+        elif isinstance(widget, QtWidgets.QLineEdit):
             widget.setText(value)
-        elif isinstance(widget, QtGui.QCheckBox):
+        elif isinstance(widget, QtWidgets.QCheckBox):
             widget.setChecked(value)
         widget.blockSignals(False)
 
@@ -106,14 +100,14 @@ class RepoFormWidget(FormWidget):
     def __init__(self, model, parent, source):
         FormWidget.__init__(self, model, parent, source=source)
 
-        self.name = QtGui.QLineEdit()
-        self.email = QtGui.QLineEdit()
-        self.merge_verbosity = QtGui.QSpinBox()
+        self.name = QtWidgets.QLineEdit()
+        self.email = QtWidgets.QLineEdit()
+        self.merge_verbosity = QtWidgets.QSpinBox()
         self.merge_verbosity.setMinimum(0)
         self.merge_verbosity.setMaximum(5)
         self.merge_verbosity.setProperty('value', 5)
 
-        self.diff_context = QtGui.QSpinBox()
+        self.diff_context = QtWidgets.QSpinBox()
         self.diff_context.setMinimum(2)
         self.diff_context.setMaximum(99)
         self.diff_context.setProperty('value', 5)
@@ -151,27 +145,27 @@ class SettingsFormWidget(FormWidget):
     def __init__(self, model, parent):
         FormWidget.__init__(self, model, parent)
 
-        self.fixed_font = QtGui.QFontComboBox()
+        self.fixed_font = QtWidgets.QFontComboBox()
 
-        self.font_size = QtGui.QSpinBox()
+        self.font_size = QtWidgets.QSpinBox()
         self.font_size.setMinimum(8)
         self.font_size.setProperty('value', 12)
         self._font_str = None
 
-        self.tabwidth = QtGui.QSpinBox()
+        self.tabwidth = QtWidgets.QSpinBox()
         self.tabwidth.setWrapping(True)
         self.tabwidth.setMaximum(42)
 
-        self.textwidth = QtGui.QSpinBox()
+        self.textwidth = QtWidgets.QSpinBox()
         self.textwidth.setWrapping(True)
         self.textwidth.setMaximum(150)
 
         self.linebreak = qtutils.checkbox()
-        self.editor = QtGui.QLineEdit()
-        self.historybrowser = QtGui.QLineEdit()
-        self.blameviewer = QtGui.QLineEdit()
-        self.difftool = QtGui.QLineEdit()
-        self.mergetool = QtGui.QLineEdit()
+        self.editor = QtWidgets.QLineEdit()
+        self.historybrowser = QtWidgets.QLineEdit()
+        self.blameviewer = QtWidgets.QLineEdit()
+        self.difftool = QtWidgets.QLineEdit()
+        self.mergetool = QtWidgets.QLineEdit()
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()
@@ -210,11 +204,8 @@ class SettingsFormWidget(FormWidget):
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
         })
 
-        self.connect(self.fixed_font, SIGNAL('currentFontChanged(QFont)'),
-                     self.current_font_changed)
-
-        self.connect(self.font_size, SIGNAL('valueChanged(int)'),
-                     self.font_size_changed)
+        self.fixed_font.currentFontChanged.connect(self.current_font_changed)
+        self.font_size.valueChanged.connect(self.font_size_changed)
 
     def update_from_config(self):
         FormWidget.update_from_config(self)
@@ -250,7 +241,7 @@ class PreferencesView(standard.Dialog):
 
         self.resize(600, 360)
 
-        self.tab_bar = QtGui.QTabBar()
+        self.tab_bar = QtWidgets.QTabBar()
         self.tab_bar.setDrawBase(False)
         self.tab_bar.addTab(N_('All Repositories'))
         self.tab_bar.addTab(N_('Current Repository'))
@@ -260,7 +251,7 @@ class PreferencesView(standard.Dialog):
         self.repo_form = RepoFormWidget(model, self, source='repo')
         self.options_form = SettingsFormWidget(model, self)
 
-        self.stack_widget = QtGui.QStackedWidget()
+        self.stack_widget = QtWidgets.QStackedWidget()
         self.stack_widget.addWidget(self.user_form)
         self.stack_widget.addWidget(self.repo_form)
         self.stack_widget.addWidget(self.options_form)
@@ -275,11 +266,8 @@ class PreferencesView(standard.Dialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.connect(self.tab_bar, SIGNAL('currentChanged(int)'),
-                     self.stack_widget.setCurrentIndex)
-
-        self.connect(self.stack_widget, SIGNAL('currentChanged(int)'),
-                     self.update_widget)
+        self.tab_bar.currentChanged.connect(self.stack_widget.setCurrentIndex)
+        self.stack_widget.currentChanged.connect(self.update_widget)
 
         qtutils.connect_button(self.close_button, self.accept)
         qtutils.add_close_action(self)

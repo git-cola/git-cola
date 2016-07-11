@@ -1,12 +1,10 @@
 """Provides widgets related to bookmarks"""
-
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import core
@@ -27,10 +25,10 @@ BOOKMARKS = 0
 RECENT_REPOS = 1
 
 
-class BookmarksWidget(QtGui.QWidget):
+class BookmarksWidget(QtWidgets.QWidget):
 
     def __init__(self, style=BOOKMARKS, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self.style = style
         self.settings = Settings()
@@ -62,7 +60,7 @@ class BookmarksWidget(QtGui.QWidget):
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.main_layout)
 
-        self.corner_widget = QtGui.QWidget(self)
+        self.corner_widget = QtWidgets.QWidget(self)
         self.corner_widget.setLayout(self.button_layout)
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
@@ -71,8 +69,8 @@ class BookmarksWidget(QtGui.QWidget):
         qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
         qtutils.connect_button(self.open_button, self.tree.open_repo)
 
-        self.connect(self.tree, SIGNAL('itemSelectionChanged()'),
-                     self.tree_item_selection_changed)
+        item_selection_changed = self.tree_item_selection_changed
+        self.tree.itemSelectionChanged.connect(item_selection_changed)
 
         QtCore.QTimer.singleShot(0, self.reload_bookmarks)
 
@@ -86,18 +84,19 @@ class BookmarksWidget(QtGui.QWidget):
         self.button_group.setEnabled(enabled)
 
     def connect_to(self, other):
-        self.connect(self.tree, SIGNAL('default_changed()'), other.tree.refresh)
-        self.connect(other.tree, SIGNAL('default_changed()'), self.tree.refresh)
+        self.tree.default_changed.connect(other.tree.refresh)
+        other.tree.default_changed.connect(self.tree.refresh)
 
 
 class BookmarksTreeWidget(standard.TreeWidget):
+    default_changed = Signal()
 
     def __init__(self, style, settings, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
         self.style = style
         self.settings = settings
 
-        self.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
 
         self.open_action = qtutils.add_action(
@@ -126,11 +125,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.copy_action = qtutils.add_action(
                 self, N_('Copy'), self.copy, hotkeys.COPY)
 
-        self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self.item_selection_changed)
-
-        self.connect(self, SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self.tree_double_clicked)
+        self.itemSelectionChanged.connect(self.item_selection_changed)
+        self.itemDoubleClicked.connect(self.tree_double_clicked)
 
         self.action_group = utils.Group(self.open_action,
                                         self.open_new_action,
@@ -195,11 +191,11 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def set_default_item(self, item):
         cmds.do(cmds.SetDefaultRepo, item.path)
         self.refresh()
-        self.emit(SIGNAL('default_changed()'))
+        self.default_changed.emit()
 
     def clear_default_repo(self):
         self.apply_fn(self.clear_default_item)
-        self.emit(SIGNAL('default_changed()'))
+        self.default_changed.emit()
 
     def clear_default_item(self, item):
         cmds.do(cmds.SetDefaultRepo, None)
@@ -277,10 +273,10 @@ class BuildItem(object):
         return BookmarksTreeWidgetItem(path, icon, is_default)
 
 
-class BookmarksTreeWidgetItem(QtGui.QTreeWidgetItem):
+class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def __init__(self, path, icon, is_default):
-        QtGui.QTreeWidgetItem.__init__(self)
+        QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path
         self.is_default = is_default
 

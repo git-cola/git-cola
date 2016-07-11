@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import hotkeys
@@ -41,6 +41,7 @@ def goto_grep(line):
 
 
 class GrepThread(QtCore.QThread):
+    result = Signal(object, object, object)
 
     def __init__(self, parent):
         QtCore.QThread.__init__(self, parent)
@@ -58,8 +59,7 @@ class GrepThread(QtCore.QThread):
             args = [query]
         status, out, err = git.grep(self.regexp_mode, n=True, *args)
         if query == self.query:
-            worker_signal = 'result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
-            self.emit(SIGNAL(worker_signal), status, out, err)
+            self.result.emit(status, out, err)
         else:
             self.run()
 
@@ -79,13 +79,13 @@ class Grep(Dialog):
         self.refresh_action = qtutils.add_action(
                 self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
 
-        self.input_label = QtGui.QLabel('git grep')
+        self.input_label = QtWidgets.QLabel('git grep')
         self.input_label.setFont(diff_font())
 
         self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
         self.input_txt.hint.enable(True)
 
-        self.regexp_combo = combo = QtGui.QComboBox()
+        self.regexp_combo = combo = QtWidgets.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
         items = [N_('Basic Regexp'), N_('Extended Regexp'), N_('Fixed String')]
         combo.addItems(items)
@@ -140,19 +140,12 @@ class Grep(Dialog):
                                        self.bottom_layout)
         self.setLayout(self.mainlayout)
 
-        self.worker_thread = GrepThread(self)
-        worker_signal = 'result(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
-        self.connect(self.worker_thread, SIGNAL(worker_signal),
-                     self.process_result, Qt.QueuedConnection)
+        thread = self.worker_thread = GrepThread(self)
+        thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
-        self.connect(self.input_txt, SIGNAL('textChanged(QString)'),
-                     lambda s: self.search())
-
-        self.connect(self.regexp_combo, SIGNAL('currentIndexChanged(int)'),
-                     lambda x: self.search())
-
-        self.connect(self.result_txt, SIGNAL('leave()'),
-                     lambda: self.input_txt.setFocus())
+        self.input_txt.textChanged.connect(lambda s: self.search())
+        self.regexp_combo.currentIndexChanged.connect(lambda x: self.search())
+        self.result_txt.leave.connect(self.input_txt.setFocus)
 
         qtutils.add_action(self.input_txt, 'Focus Results', self.focus_results,
                            hotkeys.DOWN, *hotkeys.ACCEPT)
@@ -162,9 +155,11 @@ class Grep(Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
-        if not self.restore_state():
-            width, height = qtutils.default_size(parent, 666, 420)
-            self.resize(width, height)
+        self.init_state(None, self.resize_widget, parent)
+
+    def resize_widget(self, parent):
+        width, height = qtutils.default_size(parent, 666, 420)
+        self.resize(width, height)
 
     def focus_input(self):
         self.input_txt.setFocus()

@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
+from qtpy import QtCore
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import gitcmds
 from cola import icons
@@ -14,9 +14,8 @@ from cola.models import main
 from cola.widgets import defs
 from cola.widgets import completion
 from cola.widgets.standard import Dialog
-
-
-COMMAND_SIGNAL = 'command(PyQt_PyObject,PyQt_PyObject,PyQt_PyObject)'
+from cola.widgets.standard import ProgressDialog
+from cola.widgets.text import LineEdit
 
 
 def create_new_branch(revision='', settings=None):
@@ -43,6 +42,9 @@ class CreateOpts(object):
 
 
 class CreateThread(QtCore.QThread):
+    command = Signal(object, object, object)
+    result = Signal(object)
+
     def __init__(self, opts, parent):
         QtCore.QThread.__init__(self, parent)
         self.opts = opts
@@ -60,23 +62,23 @@ class CreateThread(QtCore.QThread):
         if track and '/' in revision:
             remote = revision.split('/', 1)[0]
             status, out, err = model.git.fetch(remote)
-            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
+            self.command.emit(status, out, err)
             results.append(('fetch', status, out, err))
 
         if status == 0:
             status, out, err = model.create_branch(branch, revision,
                                                    force=reset,
                                                    track=track)
-            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
+            self.command.emit(status, out, err)
 
         results.append(('branch', status, out, err))
         if status == 0 and checkout:
             status, out, err = model.git.checkout(branch)
-            self.emit(SIGNAL(COMMAND_SIGNAL), status, out, err)
+            self.command.emit(status, out, err)
             results.append(('checkout', status, out, err))
 
         main.model().update_status()
-        self.emit(SIGNAL('done(PyQt_PyObject)'), results)
+        self.result.emit(results)
 
 
 class CreateBranchDialog(Dialog):
@@ -93,18 +95,14 @@ class CreateBranchDialog(Dialog):
         self.opts = CreateOpts(model)
         self.thread = CreateThread(self.opts, self)
 
-        self.progress = QtGui.QProgressDialog(self)
-        self.progress.setRange(0, 0)
-        self.progress.setCancelButton(None)
-        self.progress.setWindowTitle(N_('Create Branch'))
-        self.progress.setWindowModality(Qt.WindowModal)
+        self.progress = None
 
-        self.branch_name_label = QtGui.QLabel()
+        self.branch_name_label = QtWidgets.QLabel()
         self.branch_name_label.setText(N_('Branch Name'))
 
-        self.branch_name = QtGui.QLineEdit()
+        self.branch_name = LineEdit()
 
-        self.rev_label = QtGui.QLabel()
+        self.rev_label = QtWidgets.QLabel()
         self.rev_label.setText(N_('Starting Revision'))
 
         self.revision = completion.GitRefLineEdit()
@@ -116,9 +114,9 @@ class CreateBranchDialog(Dialog):
         self.remote_radio = qtutils.radio(text=N_('Tracking branch'))
         self.tag_radio = qtutils.radio(text=N_('Tag'))
 
-        self.branch_list = QtGui.QListWidget()
+        self.branch_list = QtWidgets.QListWidget()
 
-        self.update_existing_label = QtGui.QLabel()
+        self.update_existing_label = QtWidgets.QLabel()
         self.update_existing_label.setText(N_('Update Existing Branch:'))
 
         self.no_update_radio = qtutils.radio(text=N_('No'))
@@ -199,18 +197,14 @@ class CreateBranchDialog(Dialog):
         qtutils.connect_button(self.remote_radio, self.display_model)
         qtutils.connect_button(self.tag_radio, self.display_model)
 
-        self.connect(self.branch_list, SIGNAL('itemSelectionChanged()'),
-                     self.branch_item_changed)
+        branches = self.branch_list
+        branches.itemSelectionChanged.connect(self.branch_item_changed)
 
-        self.connect(self.thread, SIGNAL(COMMAND_SIGNAL),
-                     self.thread_command, Qt.QueuedConnection)
+        thread = self.thread
+        thread.command.connect(self.thread_command, type=Qt.QueuedConnection)
+        thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
 
-        self.connect(self.thread, SIGNAL('done(PyQt_PyObject)'),
-                     self.thread_done, Qt.QueuedConnection)
-
-        if not self.restore_state(settings=settings):
-            self.resize(555, 333)
-
+        self.init_state(settings, self.resize, 555, 333)
         self.display_model()
 
     def set_revision(self, revision):
@@ -218,7 +212,7 @@ class CreateBranchDialog(Dialog):
 
     def getopts(self):
         self.opts.revision = self.revision.value()
-        self.opts.branch = self.branch_name.text()
+        self.opts.branch = self.branch_name.value()
         self.opts.checkout = self.checkout_checkbox.isChecked()
         self.opts.reset = self.reset_radio.isChecked()
         self.opts.fetch = self.fetch_checkbox.isChecked()
@@ -278,22 +272,19 @@ class CreateBranchDialog(Dialog):
                                    default=False,
                                    icon=icons.undo()):
                 return
-        self.setEnabled(False)
-        self.progress.setEnabled(True)
-        QtGui.QApplication.setOverrideCursor(Qt.WaitCursor)
 
-        # Show a nice progress bar
-        self.progress.setLabelText(N_('Updating...'))
+        title = N_('Create Branch')
+        label = N_('Updating')
+        self.progress = ProgressDialog(title, label, self)
         self.progress.show()
         self.thread.start()
 
     def thread_command(self, status, out, err):
         Interaction.log_status(status, out, err)
 
-    def thread_done(self, results):
-        self.setEnabled(True)
-        self.progress.close()
-        QtGui.QApplication.restoreOverrideCursor()
+    def thread_result(self, results):
+        self.progress.hide()
+        del self.progress
 
         for (cmd, status, out, err) in results:
             if status != 0:
@@ -323,7 +314,7 @@ class CreateBranchDialog(Dialog):
         if branch == 'HEAD':
             return
         # Signal that we've clicked on a remote branch
-        self.branch_name.setText(branch)
+        self.branch_name.set_value(branch)
 
     def display_model(self):
         """Sets the branch list to the available branches

@@ -2,8 +2,9 @@ from __future__ import division, absolute_import, unicode_literals
 
 import time
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola.i18n import N_
 from cola.widgets import defs
@@ -11,10 +12,12 @@ from cola.widgets.text import MonoTextView
 from cola import qtutils
 
 
-class LogWidget(QtGui.QWidget):
+class LogWidget(QtWidgets.QWidget):
     """A simple dialog to display command logs."""
+    channel = Signal(object)
+
     def __init__(self, parent=None, output=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         self.output_text = MonoTextView(self)
         if output:
@@ -22,7 +25,7 @@ class LogWidget(QtGui.QWidget):
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.output_text)
         self.setLayout(self.main_layout)
-        self.connect(self, SIGNAL('log'), self.log)
+        self.channel.connect(self.log, type=Qt.QueuedConnection)
 
     def clear(self):
         self.output_text.clear()
@@ -56,4 +59,4 @@ class LogWidget(QtGui.QWidget):
     def safe_log(self, msg):
         """A version of the log() method that can be called from other
         threads."""
-        self.emit(SIGNAL('log'), msg)
+        self.channel.emit(msg)

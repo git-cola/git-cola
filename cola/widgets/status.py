@@ -1,11 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import itertools
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import core
@@ -21,7 +20,7 @@ from cola.widgets import completion
 from cola.widgets import defs
 
 
-class StatusWidget(QtGui.QWidget):
+class StatusWidget(QtWidgets.QWidget):
     """
     Provides a git-status-like repository widget.
 
@@ -29,8 +28,9 @@ class StatusWidget(QtGui.QWidget):
     Qt signals.
 
     """
+
     def __init__(self, titlebar, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the paths filter')
         icon = icons.ellipsis()
@@ -82,7 +82,11 @@ class StatusWidget(QtGui.QWidget):
         self.tree.move_down()
 
 
-class StatusTreeWidget(QtGui.QTreeWidget):
+class StatusTreeWidget(QtWidgets.QTreeWidget):
+    # Signals
+    about_to_update = Signal()
+    updated = Signal()
+
     # Item categories
     idx_header = -1
     idx_staged = 0
@@ -95,9 +99,9 @@ class StatusTreeWidget(QtGui.QTreeWidget):
     mode = property(lambda self: self.m.mode)
 
     def __init__(self, parent=None):
-        QtGui.QTreeWidget.__init__(self, parent)
+        QtWidgets.QTreeWidget.__init__(self, parent)
 
-        self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.headerItem().setHidden(True)
         self.setAllColumnsShowFocus(True)
         self.setSortingEnabled(False)
@@ -196,27 +200,19 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(icons.discard())
 
-        self.connect(self, SIGNAL('about_to_update()'),
-                     self._about_to_update, Qt.QueuedConnection)
-        self.connect(self, SIGNAL('updated()'),
-                     self._updated, Qt.QueuedConnection)
+        about_to_update = self._about_to_update
+        self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.m = main.model()
         self.m.add_observer(self.m.message_about_to_update,
-                            self.about_to_update)
-        self.m.add_observer(self.m.message_updated, self.updated)
+                            self.about_to_update.emit)
+        self.m.add_observer(self.m.message_updated, self.updated.emit)
 
-        self.connect(self, SIGNAL('itemSelectionChanged()'),
-                     self.show_selection)
-
-        self.connect(self, SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self.double_clicked)
-
-        self.connect(self, SIGNAL('itemCollapsed(QTreeWidgetItem*)'),
-                     lambda x: self.update_column_widths())
-
-        self.connect(self, SIGNAL('itemExpanded(QTreeWidgetItem*)'),
-                     lambda x: self.update_column_widths())
+        self.itemSelectionChanged.connect(self.show_selection)
+        self.itemDoubleClicked.connect(self.double_clicked)
+        self.itemCollapsed.connect(lambda x: self.update_column_widths())
+        self.itemExpanded.connect(lambda x: self.update_column_widths())
 
     def add_toplevel_item(self, txt, icon, hide=False):
         font = self.font()
@@ -225,14 +221,14 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         else:
             font.setItalic(True)
 
-        item = QtGui.QTreeWidgetItem(self)
+        item = QtWidgets.QTreeWidgetItem(self)
         item.setFont(0, font)
         item.setText(0, txt)
         item.setIcon(0, icon)
         if prefs.bold_headers():
             item.setBackground(0, self.palette().midlight())
         if hide:
-            self.setItemHidden(item, True)
+            item.setHidden(True)
 
     def restore_selection(self):
         if not self.old_selection or not self.old_contents:
@@ -244,10 +240,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         def mkselect(lst, widget_getter):
             def select(item, current=False):
                 idx = lst.index(item)
-                widget = widget_getter(idx)
+                item = widget_getter(idx)
                 if current:
-                    self.setCurrentItem(widget)
-                self.setItemSelected(widget, True)
+                    self.setCurrentItem(item)
+                item.setSelected(True)
             return select
 
         select_staged = mkselect(new_c.staged, self.staged_item)
@@ -276,7 +272,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 item = self.invisibleRootItem().child(idx)
                 if item is not None:
                     self.setCurrentItem(item)
-                    self.setItemSelected(item, True)
+                    item.setSelected(True)
                 return
             # Reselect the current item
             selection_info = saved_selection[category]
@@ -367,9 +363,6 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         parent = self.topLevelItem(idx)
         return parent.child(itemidx)
 
-    def about_to_update(self):
-        self.emit(SIGNAL('about_to_update()'))
-
     def _about_to_update(self):
         self.save_scrollbars()
         self.save_selection()
@@ -403,11 +396,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         self.old_selection = self.selection()
         self.old_current_item = self.current_item()
 
-    def updated(self):
-        """Update display from model data."""
-        self.emit(SIGNAL('updated()'))
-
-    def _updated(self):
+    def refresh(self):
         self.set_staged(self.m.staged)
         self.set_modified(self.m.modified)
         self.set_unmerged(self.m.unmerged)
@@ -448,10 +437,8 @@ class StatusTreeWidget(QtGui.QTreeWidget):
         """Add a list of items to a treewidget item."""
         self.blockSignals(True)
         parent = self.topLevelItem(idx)
-        if items:
-            self.setItemHidden(parent, False)
-        else:
-            self.setItemHidden(parent, True)
+        hide = not bool(items)
+        parent.setHidden(hide)
 
         # sip v4.14.7 and below leak memory in parent.takeChildren()
         # so we use this backwards-compatible construct instead
@@ -790,7 +777,7 @@ class StatusTreeWidget(QtGui.QTreeWidget):
             hscrollbar.setValue(hscroll)
 
         self.setCurrentItem(item)
-        self.setItemSelected(item, True)
+        item.setSelected(True)
 
     def staged(self):
         return self._subtree_selection(self.idx_staged, self.m.staged)
@@ -954,10 +941,10 @@ class StatusTreeWidget(QtGui.QTreeWidget):
                 selection.union(selection.selection_model()))
 
 
-class StatusFilterWidget(QtGui.QWidget):
+class StatusFilterWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        QtGui.QWidget.__init__(self, parent)
+        QtWidgets.QWidget.__init__(self, parent)
         self.main_model = main.model()
 
         hint = N_('Filter paths...')
@@ -970,10 +957,11 @@ class StatusFilterWidget(QtGui.QWidget):
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
-        self.connect(self.text, SIGNAL('changed()'), self.apply_filter)
-        self.connect(self.text, SIGNAL('cleared()'), self.apply_filter)
-        self.connect(self.text, SIGNAL('return()'), self.apply_filter)
-        self.connect(self.text, SIGNAL('editingFinished()'), self.apply_filter)
+        text = self.text
+        text.changed.connect(self.apply_filter)
+        text.cleared.connect(self.apply_filter)
+        text.enter.connect(self.apply_filter)
+        text.editingFinished.connect(self.apply_filter)
 
     def apply_filter(self):
         text = self.text.value()

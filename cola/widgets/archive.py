@@ -2,10 +2,10 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import core
@@ -15,29 +15,32 @@ from cola.git import git
 from cola.git import STDOUT
 from cola.i18n import N_
 from cola.widgets import defs
+from cola.widgets.text import LineEdit
 
 
-class ExpandableGroupBox(QtGui.QGroupBox):
+class ExpandableGroupBox(QtWidgets.QGroupBox):
+
+    expanded = Signal(bool)
 
     def __init__(self, parent=None):
-        QtGui.QGroupBox.__init__(self, parent)
+        QtWidgets.QGroupBox.__init__(self, parent)
         self.setFlat(True)
-        self.expanded = True
+        self.is_expanded = True
         self.click_pos = None
         self.arrow_icon_size = defs.small_icon
 
     def set_expanded(self, expanded):
-        if expanded == self.expanded:
-            self.emit(SIGNAL('expanded(bool)'), expanded)
+        if expanded == self.is_expanded:
+            self.expanded.emit(expanded)
             return
-        self.expanded = expanded
-        for widget in self.findChildren(QtGui.QWidget):
+        self.is_expanded = expanded
+        for widget in self.findChildren(QtWidgets.QWidget):
             widget.setHidden(not expanded)
-        self.emit(SIGNAL('expanded(bool)'), expanded)
+        self.expanded.emit(expanded)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            option = QtGui.QStyleOptionGroupBox()
+            option = QtWidgets.QStyleOptionGroupBox()
             self.initStyleOption(option)
             icon_size = defs.small_icon
             button_area = QtCore.QRect(0, 0, icon_size, icon_size)
@@ -46,27 +49,27 @@ class ExpandableGroupBox(QtGui.QGroupBox):
             top_left = adjusted.topLeft()
             button_area.moveTopLeft(QtCore.QPoint(top_left))
             self.click_pos = event.pos()
-        QtGui.QGroupBox.mousePressEvent(self, event)
+        QtWidgets.QGroupBox.mousePressEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton and self.click_pos == event.pos():
-            self.set_expanded(not self.expanded)
-        QtGui.QGroupBox.mouseReleaseEvent(self, event)
+            self.set_expanded(not self.is_expanded)
+        QtWidgets.QGroupBox.mouseReleaseEvent(self, event)
 
     def paintEvent(self, event):
-        painter = QtGui.QStylePainter(self)
-        option = QtGui.QStyleOptionGroupBox()
+        painter = QtWidgets.QStylePainter(self)
+        option = QtWidgets.QStyleOptionGroupBox()
         self.initStyleOption(option)
         painter.save()
         painter.translate(self.arrow_icon_size + defs.spacing, 0)
         painter.drawText(option.rect, Qt.AlignLeft, self.title())
         painter.restore()
 
-        style = QtGui.QStyle
+        style = QtWidgets.QStyle
         point = option.rect.adjusted(0, -4, 0, 0).topLeft()
         icon_size = self.arrow_icon_size
         option.rect = QtCore.QRect(point.x(), point.y(), icon_size, icon_size)
-        if self.expanded:
+        if self.is_expanded:
             painter.drawPrimitive(style.PE_IndicatorArrowDown, option)
         else:
             painter.drawPrimitive(style.PE_IndicatorArrowRight, option)
@@ -82,10 +85,10 @@ def show_save_dialog(oid, parent=None):
     return dlg
 
 
-class GitArchiveDialog(QtGui.QDialog):
+class GitArchiveDialog(QtWidgets.QDialog):
 
     def __init__(self, ref, shortref=None, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -104,14 +107,14 @@ class GitArchiveDialog(QtGui.QDialog):
         # widgets
         self.setWindowTitle(N_('Save Archive'))
 
-        self.filetext = QtGui.QLineEdit()
-        self.filetext.setText(self.filename)
+        self.filetext = LineEdit()
+        self.filetext.set_value(self.filename)
 
         self.browse = qtutils.create_toolbutton(icon=icons.file_zip())
 
         self.format_strings = (
                 git.archive('--list')[STDOUT].rstrip().splitlines())
-        self.format_combo = QtGui.QComboBox()
+        self.format_combo = QtWidgets.QComboBox()
         self.format_combo.setEditable(False)
         self.format_combo.addItems(self.format_strings)
 
@@ -119,10 +122,10 @@ class GitArchiveDialog(QtGui.QDialog):
         self.save_button = qtutils.create_button(text=N_('Save'),
                                                  icon=icons.save(),
                                                  default=True)
-        self.prefix_label = QtGui.QLabel()
+        self.prefix_label = QtWidgets.QLabel()
         self.prefix_label.setText(N_('Prefix'))
-        self.prefix_text = QtGui.QLineEdit()
-        self.prefix_text.setText(self.prefix)
+        self.prefix_text = LineEdit()
+        self.prefix_text.set_value(self.prefix)
 
         self.prefix_group = ExpandableGroupBox()
         self.prefix_group.setTitle(N_('Advanced'))
@@ -156,22 +159,14 @@ class GitArchiveDialog(QtGui.QDialog):
         else:
             idx = 0
         self.format_combo.setCurrentIndex(idx)
-        self.update_filetext_for_format(idx)
+        self.update_format(idx)
 
         # connections
-        self.connect(self.filetext, SIGNAL('textChanged(QString)'),
-                     self.filetext_changed)
-
-        self.connect(self.prefix_text, SIGNAL('textChanged(QString)'),
-                     self.prefix_text_changed)
-
-        self.connect(self.format_combo, SIGNAL('currentIndexChanged(int)'),
-                     self.update_filetext_for_format)
-
-        self.connect(self.prefix_group, SIGNAL('expanded(bool)'),
-                     self.prefix_group_expanded)
-
-        self.connect(self, SIGNAL('accepted()'), self.archive_saved)
+        self.filetext.textChanged.connect(self.filetext_changed)
+        self.prefix_text.textChanged.connect(self.prefix_text_changed)
+        self.format_combo.currentIndexChanged[int].connect(self.update_format)
+        self.prefix_group.expanded.connect(self.prefix_group_expanded)
+        self.accepted.connect(self.archive_saved)
 
         qtutils.connect_button(self.browse, self.choose_filename)
         qtutils.connect_button(self.close_button, self.reject)
@@ -201,11 +196,11 @@ class GitArchiveDialog(QtGui.QDialog):
         if not filename:
             return
         self.filetext.setText(filename)
-        self.update_filetext_for_format(self.format_combo.currentIndex())
+        self.update_format(self.format_combo.currentIndex())
 
     def filetext_changed(self, filename):
         self.filename = filename
-        self.save.setEnabled(bool(self.filename))
+        self.save_button.setEnabled(bool(self.filename))
         prefix = self.strip_exts(os.path.basename(self.filename)) + '/'
         self.prefix_text.setText(prefix)
 
@@ -219,7 +214,7 @@ class GitArchiveDialog(QtGui.QDialog):
                 return text[:-len(ext)]
         return text
 
-    def update_filetext_for_format(self, idx):
+    def update_format(self, idx):
         self.fmt = self.format_strings[idx]
         text = self.strip_exts(self.filetext.text())
         self.filename = '%s.%s' % (text, self.fmt)

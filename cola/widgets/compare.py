@@ -1,9 +1,8 @@
 """Provides dialogs for comparing branches and commits."""
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import qtutils
 from cola import difftool
@@ -15,10 +14,10 @@ from cola.widgets import defs
 from cola.widgets import standard
 
 
-class FileItem(QtGui.QTreeWidgetItem):
+class FileItem(QtWidgets.QTreeWidgetItem):
 
     def __init__(self, path, icon):
-        QtGui.QTreeWidgetItem.__init__(self, [path])
+        QtWidgets.QTreeWidgetItem.__init__(self, [path])
         self.path = path
         self.setIcon(0, icon)
 
@@ -44,25 +43,25 @@ class CompareBranchesDialog(standard.Dialog):
         self.remote_branches = gitcmds.branch_list(remote=True)
         self.local_branches = gitcmds.branch_list(remote=False)
 
-        self.top_widget = QtGui.QWidget()
-        self.bottom_widget = QtGui.QWidget()
+        self.top_widget = QtWidgets.QWidget()
+        self.bottom_widget = QtWidgets.QWidget()
 
-        self.left_combo = QtGui.QComboBox()
+        self.left_combo = QtWidgets.QComboBox()
         self.left_combo.addItem(N_('Local'))
         self.left_combo.addItem(N_('Remote'))
         self.left_combo.setCurrentIndex(0)
 
-        self.right_combo = QtGui.QComboBox()
+        self.right_combo = QtWidgets.QComboBox()
         self.right_combo.addItem(N_('Local'))
         self.right_combo.addItem(N_('Remote'))
         self.right_combo.setCurrentIndex(1)
 
-        self.left_list = QtGui.QListWidget()
-        self.right_list = QtGui.QListWidget()
+        self.left_list = QtWidgets.QListWidget()
+        self.right_list = QtWidgets.QListWidget()
 
-        self.button_spacer = QtGui.QSpacerItem(1, 1,
-                                               QtGui.QSizePolicy.Expanding,
-                                               QtGui.QSizePolicy.Minimum)
+        Expanding = QtWidgets.QSizePolicy.Expanding
+        Minimum = QtWidgets.QSizePolicy.Minimum
+        self.button_spacer = QtWidgets.QSpacerItem(1, 1, Expanding, Minimum)
 
         self.button_compare = qtutils.create_button(text=N_('Compare'),
                                                     icon=icons.diff())
@@ -98,23 +97,14 @@ class CompareBranchesDialog(standard.Dialog):
         connect_button(self.button_close, self.accept)
         connect_button(self.button_compare, self.compare)
 
-        self.connect(self.diff_files,
-                     SIGNAL('itemDoubleClicked(QTreeWidgetItem*,int)'),
-                     self.compare)
+        self.diff_files.itemDoubleClicked.connect(self.compare)
+        self.left_combo.currentIndexChanged.connect(
+                lambda x: self.update_combo_boxes(left=True))
+        self.right_combo.currentIndexChanged.connect(
+                lambda x: self.update_combo_boxes(left=False))
 
-        self.connect(self.left_combo,
-                     SIGNAL('currentIndexChanged(int)'),
-                     lambda x: self.update_combo_boxes(left=True))
-
-        self.connect(self.right_combo,
-                     SIGNAL('currentIndexChanged(int)'),
-                     lambda x: self.update_combo_boxes(left=False))
-
-        self.connect(self.left_list,
-                     SIGNAL('itemSelectionChanged()'), self.update_diff_files)
-
-        self.connect(self.right_list,
-                     SIGNAL('itemSelectionChanged()'), self.update_diff_files)
+        self.left_list.itemSelectionChanged.connect(self.update_diff_files)
+        self.right_list.itemSelectionChanged.connect(self.update_diff_files)
 
         self.update_combo_boxes(left=True)
         self.update_combo_boxes(left=False)
@@ -123,12 +113,12 @@ class CompareBranchesDialog(standard.Dialog):
         item = self.left_list.item(0)
         if item:
             self.left_list.setCurrentItem(item)
-            self.left_list.setItemSelected(item, True)
+            item.setSelected(True)
 
         item = self.right_list.item(0)
         if item:
             self.right_list.setCurrentItem(item)
-            self.right_list.setItemSelected(item, True)
+            item.setSelected(True)
 
     def selection(self):
         left_item = self.left_list.currentItem()
@@ -234,7 +224,7 @@ class CompareBranchesDialog(standard.Dialog):
         if new_list:
             item = widget.item(0)
             widget.setCurrentItem(item)
-            widget.setItemSelected(item, True)
+            item.setSelected(True)
 
     def compare(self, *args):
         """Shows the diff for a specific file

@@ -1,8 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
-
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from cola import core
 from cola import resources
@@ -44,16 +44,16 @@ If not, see http://www.gnu.org/licenses/.
 """
 
 
-class AboutView(QtGui.QDialog):
+class AboutView(QtWidgets.QDialog):
     """Provides the git-cola 'About' dialog"""
 
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self.setWindowTitle(N_('About git-cola'))
         self.setWindowModality(Qt.WindowModal)
 
-        self.label = QtGui.QLabel()
+        self.label = QtWidgets.QLabel()
         self.pixmap = QtGui.QPixmap(icons.name_from_basename('logo-top.png'))
         # self.label.setStyleSheet('QWidget {background: #000; }')
         self.label.setPixmap(self.pixmap)
@@ -91,7 +91,7 @@ class AboutView(QtGui.QDialog):
 
 def show_shortcuts():
     try:
-        from PyQt4 import QtWebKit
+        from qtpy import QtWebEngineWidgets
     except ImportError:
         # redhat disabled QtWebKit in their qt build but don't punish the
         # users
@@ -99,27 +99,21 @@ def show_shortcuts():
                             'The keyboard shortcuts feature is unavailable.'))
         return
 
-    try:
-        html = show_shortcuts.html
-    except AttributeError:
-        hotkeys_html = resources.doc(N_('hotkeys.html'))
-        html = show_shortcuts.html = core.read(hotkeys_html)
+    hotkeys_html = resources.doc(N_('hotkeys.html'))
+    html = core.read(hotkeys_html)
 
-    try:
-        widget = show_shortcuts.widget
-    except AttributeError:
-        parent = qtutils.active_window()
-        widget = show_shortcuts.widget = QtGui.QDialog(parent)
-        widget.setWindowModality(Qt.WindowModal)
-        widget.setWindowTitle(N_('Shortcuts'))
+    parent = qtutils.active_window()
+    widget = QtWidgets.QDialog()
+    widget.setWindowModality(Qt.WindowModal)
+    widget.setWindowTitle(N_('Shortcuts'))
 
-        web = QtWebKit.QWebView(parent)
-        web.setHtml(html)
+    web = QtWebEngineWidgets.QWebEngineView(parent)
+    web.setHtml(html)
 
-        layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
-        widget.setLayout(layout)
-        widget.resize(800, min(parent.height(), 600))
-        qtutils.add_action(widget, N_('Close'), widget.accept,
-                           hotkeys.QUESTION, *hotkeys.ACCEPT)
+    layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
+    widget.setLayout(layout)
+    widget.resize(800, min(parent.height(), 600))
+    qtutils.add_action(widget, N_('Close'), widget.accept,
+                       hotkeys.QUESTION, *hotkeys.ACCEPT)
     widget.show()
-    return widget
+    widget.exec_()

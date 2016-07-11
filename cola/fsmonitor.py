@@ -33,8 +33,8 @@ elif utils.is_linux():
     else:
         AVAILABLE = 'inotify'
 
-from PyQt4 import QtCore
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy.QtCore import Signal
 
 from cola import core
 from cola import gitcfg
@@ -46,6 +46,9 @@ from cola.interaction import Interaction
 
 
 class _Monitor(QtCore.QObject):
+
+    files_changed = Signal()
+
     def __init__(self, thread_class):
         QtCore.QObject.__init__(self)
         self._thread_class = thread_class
@@ -89,7 +92,7 @@ class _BaseThread(QtCore.QThread):
     def notify(self):
         """Notifies all observers"""
         self._pending = False
-        self._monitor.emit(SIGNAL('files_changed'))
+        self._monitor.files_changed.emit()
 
     @staticmethod
     def _log_enabled_message():
@@ -98,6 +101,7 @@ class _BaseThread(QtCore.QThread):
 
 
 if AVAILABLE == 'inotify':
+
     class _InotifyThread(_BaseThread):
         _TRIGGER_MASK = (
                 inotify.IN_ATTRIB |
@@ -172,6 +176,8 @@ if AVAILABLE == 'inotify':
                             continue
                         else:
                             raise
+                    except select.error:
+                        continue
                     else:
                         if not self._running:
                             break

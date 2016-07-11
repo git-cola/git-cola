@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import Qt
-from PyQt4.QtCore import SIGNAL
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 from cola import cmds
 from cola import gitcmds
@@ -25,6 +25,8 @@ def browse_recent_files():
 
 
 class UpdateFileListThread(QtCore.QThread):
+    result = Signal(object)
+
     def __init__(self, count):
         QtCore.QThread.__init__(self)
         self.count = count
@@ -32,10 +34,11 @@ class UpdateFileListThread(QtCore.QThread):
     def run(self):
         ref = 'HEAD~%d' % self.count
         filenames = gitcmds.diff_index_filenames(ref)
-        self.emit(SIGNAL('filenames(PyQt_PyObject)'), filenames)
+        self.result.emit(filenames)
 
 
 class RecentFileDialog(standard.Dialog):
+
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Recently Modified Files'))
@@ -44,13 +47,13 @@ class RecentFileDialog(standard.Dialog):
         count = 8
         self.update_thread = UpdateFileListThread(count)
 
-        self.count = QtGui.QSpinBox()
+        self.count = QtWidgets.QSpinBox()
         self.count.setMinimum(0)
         self.count.setMaximum(10000)
         self.count.setValue(count)
         self.count.setSuffix(N_(' commits ago'))
 
-        self.count_label = QtGui.QLabel()
+        self.count_label = QtWidgets.QLabel()
         self.count_label.setText(N_('Showing changes since'))
 
         self.refresh_button = qtutils.refresh_button(enabled=False)
@@ -83,19 +86,13 @@ class RecentFileDialog(standard.Dialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.connect(self.tree, SIGNAL('selectionChanged()'),
-                     self.selection_changed)
+        self.tree.selection_changed.connect(self.tree_selection_changed)
+        self.tree.path_chosen.connect(self.edit_file)
+        self.count.valueChanged.connect(self.count_changed)
+        self.count.editingFinished.connect(self.refresh)
 
-        self.connect(self.tree, SIGNAL('path_chosen(PyQt_PyObject)'),
-                     self.edit_file)
-
-        self.connect(self.count, SIGNAL('valueChanged(int)'),
-                     self.count_changed)
-
-        self.connect(self.count, SIGNAL('editingFinished()'), self.refresh)
-
-        self.connect(self.update_thread, SIGNAL('filenames(PyQt_PyObject)'),
-                     self.set_filenames, Qt.QueuedConnection)
+        thread = self.update_thread
+        thread.result.connect(self.set_filenames, type=Qt.QueuedConnection)
 
         qtutils.connect_button(self.refresh_button, self.refresh)
         qtutils.connect_button(self.expand_button, self.tree.expandAll)
@@ -131,7 +128,7 @@ class RecentFileDialog(standard.Dialog):
     def count_changed(self, value):
         self.refresh_button.setEnabled(True)
 
-    def selection_changed(self):
+    def tree_selection_changed(self):
         """Update actions based on the current selection"""
         filenames = self.tree.selected_files()
         self.edit_button.setEnabled(bool(filenames))

@@ -1,9 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 import re
 
-from PyQt4 import QtGui
+from qtpy import QtWidgets
 
 from cola import cmds
 from cola import core
@@ -83,12 +82,12 @@ def new_repo():
     :returns str: repository path or None if no repository was created.
 
     """
-    dlg = QtGui.QFileDialog()
-    dlg.setFileMode(QtGui.QFileDialog.Directory)
-    dlg.setOption(QtGui.QFileDialog.ShowDirsOnly)
+    dlg = QtWidgets.QFileDialog()
+    dlg.setFileMode(QtWidgets.QFileDialog.Directory)
+    dlg.setOption(QtWidgets.QFileDialog.ShowDirsOnly)
     dlg.show()
     dlg.raise_()
-    if dlg.exec_() != QtGui.QFileDialog.Accepted:
+    if dlg.exec_() != QtWidgets.QFileDialog.Accepted:
         return None
     paths = dlg.selectedFiles()
     if not paths:

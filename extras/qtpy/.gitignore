@@ -1,0 +1,36 @@
+# Python compiled files
+*.py[ocd]
+
+# C extensions
+*.so
+
+# Kate
+.directory
+
+# PyPi configuration
+.pypirc
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Translations
+*.mo
+
+# Gedit files
+*~
+
+# Other files
+toread.md
+
