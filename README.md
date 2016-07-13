@@ -48,7 +48,7 @@ New releases are available on the
 
 * [Python](http://python.org/) 2.6, 2.7, and 3.2 or newer.
 
-* [QtPy](https://github.com/spyder-ide/qtpy) 1.0.2 or newer.
+* [QtPy](https://github.com/spyder-ide/qtpy) 1.1.0 or newer.
 
 * [argparse](https://pypi.python.org/pypi/argparse) 1.1 or newer.
   argparse is part of the stdlib in Python 2.7; install argparse separately if
