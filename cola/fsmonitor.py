@@ -10,8 +10,8 @@ import os.path
 import select
 from threading import Lock
 
-from cola import utils
-from cola.decorators import memoize
+from . import utils
+from .decorators import memoize
 
 AVAILABLE = None
 
@@ -27,7 +27,7 @@ if utils.is_win32():
         AVAILABLE = 'pywin32'
 elif utils.is_linux():
     try:
-        from cola import inotify
+        from . import inotify
     except ImportError:
         pass
     else:
@@ -36,13 +36,13 @@ elif utils.is_linux():
 from qtpy import QtCore
 from qtpy.QtCore import Signal
 
-from cola import core
-from cola import gitcfg
-from cola import gitcmds
-from cola.compat import bchr
-from cola.git import git
-from cola.i18n import N_
-from cola.interaction import Interaction
+from . import core
+from . import gitcfg
+from . import gitcmds
+from .compat import bchr
+from .git import git
+from .i18n import N_
+from .interaction import Interaction
 
 
 class _Monitor(QtCore.QObject):

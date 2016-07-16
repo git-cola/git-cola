@@ -15,9 +15,9 @@ from qtpy.QtGui import QTextCursor
 from qtpy.QtWidgets import QAction
 from qtpy.QtWidgets import QApplication
 
-from cola import qtutils
-from cola.i18n import N_
-from cola.widgets.text import HintedTextEdit
+from .. import qtutils
+from ..i18n import N_
+from .text import HintedTextEdit
 
 
 __copyright__ = """

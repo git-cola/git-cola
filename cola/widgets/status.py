@@ -6,18 +6,18 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import core
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.i18n import N_
-from cola.models import main
-from cola.models import prefs
-from cola.models import selection
-from cola.widgets import completion
-from cola.widgets import defs
+from .. import cmds
+from .. import core
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .. import utils
+from ..i18n import N_
+from ..models import main
+from ..models import prefs
+from ..models import selection
+from . import completion
+from . import defs
 
 
 class StatusWidget(QtWidgets.QWidget):

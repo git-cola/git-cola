@@ -6,25 +6,25 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import actions
-from cola import cmds
-from cola import core
-from cola import gitcfg
-from cola import gitcmds
-from cola import gravatar
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.models import main
-from cola.models import selection
-from cola.qtutils import add_action
-from cola.qtutils import create_action_button
-from cola.qtutils import create_menu
-from cola.qtutils import make_format
-from cola.qtutils import RGB
-from cola.widgets import defs
-from cola.widgets.text import VimMonoTextView
+from .. import actions
+from .. import cmds
+from .. import core
+from .. import gitcfg
+from .. import gitcmds
+from .. import gravatar
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from ..models import main
+from ..models import selection
+from ..qtutils import add_action
+from ..qtutils import create_action_button
+from ..qtutils import create_menu
+from ..qtutils import make_format
+from ..qtutils import RGB
+from . import defs
+from .text import VimMonoTextView
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'

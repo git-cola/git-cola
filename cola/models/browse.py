@@ -9,15 +9,15 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import gitcfg
-from cola import gitcmds
-from cola import core
-from cola import icons
-from cola import utils
-from cola import qtutils
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.models import main
+from .. import gitcfg
+from .. import gitcmds
+from .. import core
+from .. import icons
+from .. import utils
+from .. import qtutils
+from ..git import STDOUT
+from ..i18n import N_
+from ..models import main
 
 
 # Custom event type for GitRepoInfoEvents

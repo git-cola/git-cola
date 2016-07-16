@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 
 from qtpy import QtCore
@@ -7,15 +6,15 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import core
-from cola import icons
-from cola import qtutils
-from cola.git import git
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets.text import LineEdit
+from .. import cmds
+from .. import core
+from .. import icons
+from .. import qtutils
+from ..git import git
+from ..git import STDOUT
+from ..i18n import N_
+from . import defs
+from .text import LineEdit
 
 
 class ExpandableGroupBox(QtWidgets.QGroupBox):

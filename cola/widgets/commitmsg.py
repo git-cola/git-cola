@@ -7,26 +7,26 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import actions
-from cola import cmds
-from cola import core
-from cola import gitcmds
-from cola import gitcfg
-from cola import hotkeys
-from cola import icons
-from cola import textwrap
-from cola import qtutils
-from cola.cmds import Interaction
-from cola.gitcmds import commit_message_path
-from cola.i18n import N_
-from cola.models import dag
-from cola.models import prefs
-from cola.models import selection
-from cola.utils import Group
-from cola.widgets import defs
-from cola.widgets.selectcommits import select_commits
-from cola.widgets.spellcheck import SpellCheckTextEdit
-from cola.widgets.text import HintedLineEdit
+from .. import actions
+from .. import cmds
+from .. import core
+from .. import gitcmds
+from .. import gitcfg
+from .. import hotkeys
+from .. import icons
+from .. import textwrap
+from .. import qtutils
+from ..cmds import Interaction
+from ..gitcmds import commit_message_path
+from ..i18n import N_
+from ..models import dag
+from ..models import prefs
+from ..models import selection
+from ..utils import Group
+from . import defs
+from .selectcommits import select_commits
+from .spellcheck import SpellCheckTextEdit
+from .text import HintedLineEdit
 
 
 class CommitMessageEditor(QtWidgets.QWidget):

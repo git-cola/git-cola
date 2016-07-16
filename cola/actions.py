@@ -1,10 +1,10 @@
 from __future__ import absolute_import
 
-from cola import cmds
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
+from . import cmds
+from . import hotkeys
+from . import icons
+from . import qtutils
+from .i18n import N_
 
 
 def cmd_action(widget, cmd, icon, *shortcuts):

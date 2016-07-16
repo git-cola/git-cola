@@ -4,14 +4,14 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import cmds
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets import completion
-from cola.widgets import standard
-from cola.widgets import text
+from .. import cmds
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from . import defs
+from . import completion
+from . import standard
+from . import text
 
 
 def new_create_tag(name='', ref='', sign=False, settings=None, parent=None):

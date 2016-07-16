@@ -6,19 +6,19 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import core
-from cola import git
-from cola import gitcfg
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.i18n import N_
-from cola.models import prefs
-from cola.settings import Settings
-from cola.widgets import defs
-from cola.widgets import standard
+from .. import cmds
+from .. import core
+from .. import git
+from .. import gitcfg
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .. import utils
+from ..i18n import N_
+from ..models import prefs
+from ..settings import Settings
+from ..widgets import defs
+from ..widgets import standard
 
 
 BOOKMARKS = 0

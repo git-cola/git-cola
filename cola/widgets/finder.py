@@ -6,20 +6,20 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import core
-from cola import gitcmds
-from cola import hotkeys
-from cola import icons
-from cola import utils
-from cola import qtutils
-from cola.i18n import N_
-from cola.utils import Group
-from cola.widgets import completion
-from cola.widgets import defs
-from cola.widgets import filetree
-from cola.widgets import standard
-from cola.widgets import text
+from ..i18n import N_
+from ..utils import Group
+from .. import cmds
+from .. import core
+from .. import gitcmds
+from .. import hotkeys
+from .. import icons
+from .. import utils
+from .. import qtutils
+from . import completion
+from . import defs
+from . import filetree
+from . import standard
+from . import text
 
 
 def finder(paths=None):

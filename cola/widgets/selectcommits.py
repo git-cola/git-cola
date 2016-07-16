@@ -4,12 +4,12 @@ from __future__ import division, absolute_import, unicode_literals
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import gitcmds
-from cola import qtutils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.widgets import defs
-from cola.widgets.diff import DiffTextEdit
+from .. import gitcmds
+from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from . import defs
+from .diff import DiffTextEdit
 
 
 def select_commits(title, revs, summaries, multiselect=True):

@@ -6,11 +6,11 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import hotkeys
-from cola import qtutils
-from cola.i18n import N_
-from cola.models import prefs
-from cola.widgets import defs
+from .. import hotkeys
+from .. import qtutils
+from ..i18n import N_
+from ..models import prefs
+from . import defs
 
 
 def get_stripped(widget):

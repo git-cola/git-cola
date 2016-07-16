@@ -3,8 +3,8 @@ from __future__ import division, absolute_import, unicode_literals
 import os
 import sys
 
-from cola import core
-from cola.i18n import N_
+from . import core
+from .i18n import N_
 
 
 class Interaction(object):

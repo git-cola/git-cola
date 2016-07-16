@@ -9,12 +9,12 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QDockWidget
 
-from cola import core
-from cola import gitcfg
-from cola import qtcompat
-from cola import qtutils
-from cola.settings import Settings
-from cola.widgets import defs
+from .. import core
+from .. import gitcfg
+from .. import qtcompat
+from .. import qtutils
+from ..settings import Settings
+from . import defs
 
 
 class WidgetMixin(object):

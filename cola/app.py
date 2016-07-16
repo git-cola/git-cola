@@ -42,25 +42,25 @@ Please install it before using git-cola, e.g.:
 from qtpy import QtWidgets
 
 # Import cola modules
-from cola import cmds
-from cola import core
-from cola import compat
-from cola import fsmonitor
-from cola import git
-from cola import gitcfg
-from cola import icons
-from cola import i18n
-from cola import qtcompat
-from cola import qtutils
-from cola import resources
-from cola import version
-from cola.decorators import memoize
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
-from cola.widgets import cfgactions
-from cola.widgets import startup
-from cola.settings import Session
+from . import cmds
+from . import core
+from . import compat
+from . import fsmonitor
+from . import git
+from . import gitcfg
+from . import icons
+from . import i18n
+from . import qtcompat
+from . import qtutils
+from . import resources
+from . import version
+from .decorators import memoize
+from .i18n import N_
+from .interaction import Interaction
+from .models import main
+from .widgets import cfgactions
+from .widgets import startup
+from .settings import Session
 
 
 def setup_environment():

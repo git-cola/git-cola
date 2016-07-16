@@ -6,16 +6,16 @@ from __future__ import division, absolute_import, unicode_literals
 import copy
 import os
 
-from cola import core
-from cola import git
-from cola import gitcmds
-from cola import gitcfg
-from cola.git import STDOUT
-from cola.observable import Observable
-from cola.decorators import memoize
-from cola.models.selection import selection_model
-from cola.models import prefs
-from cola.compat import ustr
+from .. import core
+from .. import git
+from .. import gitcmds
+from .. import gitcfg
+from ..git import STDOUT
+from ..observable import Observable
+from ..decorators import memoize
+from ..models.selection import selection_model
+from ..models import prefs
+from ..compat import ustr
 
 
 @memoize

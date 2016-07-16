@@ -6,14 +6,14 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import icons
-from cola import qtutils
-from cola.git import git
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets import text
+from .. import cmds
+from .. import icons
+from .. import qtutils
+from ..git import git
+from ..git import STDOUT
+from ..i18n import N_
+from . import defs
+from . import text
 
 
 def remote_editor():

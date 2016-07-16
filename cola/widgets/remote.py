@@ -5,17 +5,17 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import gitcmds
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
-from cola.qtutils import connect_button
-from cola.widgets import defs
-from cola.widgets import standard
-from cola.widgets.standard import ProgressDialog
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from ..qtutils import connect_button
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from .. import utils
+from .standard import ProgressDialog
+from . import defs
+from . import standard
 
 
 FETCH = 'FETCH'

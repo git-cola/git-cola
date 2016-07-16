@@ -1,10 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from cola import observable
-from cola.git import git
-from cola.git import STDOUT
-from cola.interaction import Interaction
-from cola.models import main
+from .. import observable
+from ..git import git
+from ..git import STDOUT
+from ..interaction import Interaction
+from ..models import main
 
 
 class StashModel(observable.Observable):

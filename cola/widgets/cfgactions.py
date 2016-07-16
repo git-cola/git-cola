@@ -1,21 +1,21 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import os
+
 from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import gitcfg
-from cola import gitcmds
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.widgets import defs
-from cola.widgets import completion
-from cola.widgets import standard
-from cola.widgets.text import LineEdit
+from .. import core
+from .. import gitcfg
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from . import defs
+from . import completion
+from . import standard
+from .text import LineEdit
 
 
 def install():

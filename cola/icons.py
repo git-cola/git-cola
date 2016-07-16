@@ -6,10 +6,10 @@ import os
 
 from qtpy import QtGui
 
-from cola import qtcompat
-from cola import resources
-from cola.compat import ustr
-from cola.decorators import memoize
+from . import qtcompat
+from . import resources
+from .compat import ustr
+from .decorators import memoize
 
 
 KNOWN_FILE_MIME_TYPES = [

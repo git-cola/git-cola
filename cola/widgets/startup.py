@@ -5,18 +5,19 @@ found at startup.
 
 """
 from __future__ import division, absolute_import, unicode_literals
+
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import guicmds
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.settings import Settings
-from cola.widgets import defs
-from cola.widgets import standard
+from .. import core
+from .. import guicmds
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from ..settings import Settings
+from . import defs
+from . import standard
 
 
 class StartupDialog(standard.Dialog):

@@ -3,8 +3,8 @@ from __future__ import absolute_import, division, unicode_literals
 from qtpy import QtCore
 from qtpy import QtWidgets
 
-from cola import icons
-from cola.widgets import standard
+from .. import icons
+from . import standard
 
 
 class FileTree(standard.TreeWidget):

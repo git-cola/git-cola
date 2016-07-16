@@ -3,8 +3,8 @@ from __future__ import division, absolute_import, unicode_literals
 
 import collections
 
-from cola.observable import Observable
-from cola.decorators import memoize
+from ..observable import Observable
+from ..decorators import memoize
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 

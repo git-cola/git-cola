@@ -5,18 +5,18 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import hotkeys
-from cola import utils
-from cola import qtutils
-from cola.cmds import do
-from cola.git import git
-from cola.i18n import N_
-from cola.qtutils import diff_font
-from cola.utils import Group
-from cola.widgets import defs
-from cola.widgets.standard import Dialog
-from cola.widgets.text import VimHintedTextView, HintedLineEdit
+from .. import cmds
+from .. import hotkeys
+from .. import utils
+from .. import qtutils
+from ..cmds import do
+from ..git import git
+from ..i18n import N_
+from ..qtutils import diff_font
+from ..utils import Group
+from .standard import Dialog
+from .text import VimHintedTextView, HintedLineEdit
+from . import defs
 
 
 def grep():

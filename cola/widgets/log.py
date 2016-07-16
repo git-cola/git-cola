@@ -1,15 +1,14 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import time
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets.text import MonoTextView
-from cola import qtutils
+from .. import qtutils
+from ..i18n import N_
+from . import defs
+from .text import MonoTextView
 
 
 class LogWidget(QtWidgets.QWidget):

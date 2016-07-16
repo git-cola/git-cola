@@ -3,15 +3,15 @@ from __future__ import division, absolute_import, unicode_literals
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import cmds
-from cola import gitcfg
-from cola import gitcmds
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.models import main
-from cola.widgets import completion
-from cola.widgets import defs
+from ..i18n import N_
+from ..models import main
+from .. import cmds
+from .. import gitcfg
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from . import completion
+from . import defs
 
 
 def local_merge():

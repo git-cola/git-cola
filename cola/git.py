@@ -8,11 +8,11 @@ import subprocess
 import threading
 from os.path import join
 
-from cola import core
-from cola.compat import int_types
-from cola.compat import ustr
-from cola.decorators import memoize
-from cola.interaction import Interaction
+from . import core
+from .compat import int_types
+from .compat import ustr
+from .decorators import memoize
+from .interaction import Interaction
 
 
 INDEX_LOCK = threading.Lock()
@@ -353,9 +353,8 @@ git = current()
 """
 Git command singleton
 
->>> from cola.git import git
->>> from cola.git import STDOUT
->>> 'git' == git.version()[STDOUT][:3].lower()
+>>> git = current()
+>>> 'git' == git.version()[0][:3].lower()
 True
 
 """

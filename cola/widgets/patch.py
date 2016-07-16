@@ -4,15 +4,15 @@ import os
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import cmds
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets.standard import Dialog
-from cola.widgets.standard import DraggableTreeWidget
+from ..i18n import N_
+from .. import core
+from .. import cmds
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .standard import Dialog
+from .standard import DraggableTreeWidget
+from . import defs
 
 
 def apply_patches():

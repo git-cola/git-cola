@@ -6,17 +6,17 @@ import argparse
 import os
 import sys
 
-from cola.app import add_common_arguments
-from cola.app import application_init
-from cola.app import application_start
+from .app import add_common_arguments
+from .app import application_init
+from .app import application_start
 
 # NOTE: these must be imported *after* cola.app.
 # PyQt4 may not be available until after cola.app has gotten a chance to
 # install the homebrew modules in sys.path.
-from cola import cmds
-from cola import compat
-from cola import core
-from cola import utils
+from . import cmds
+from . import compat
+from . import core
+from . import utils
 
 
 def main(argv=None):
@@ -273,12 +273,12 @@ def add_version_command(subparser):
 
 # entry points
 def cmd_cola(args):
+    from .widgets.main import MainView
     status_filter = args.status_filter
     if status_filter:
         status_filter = core.abspath(status_filter)
 
     context = application_init(args)
-    from cola.widgets.main import MainView
     view = MainView(context.model, settings=args.settings)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
@@ -290,53 +290,52 @@ def cmd_cola(args):
 
 
 def cmd_am(args):
+    from .widgets.patch import new_apply_patches
     context = application_init(args)
-    from cola.widgets.patch import new_apply_patches
     view = new_apply_patches(patches=args.patches)
     return application_start(context, view)
 
 
 def cmd_archive(args):
+    from .widgets.archive import GitArchiveDialog
     context = application_init(args, update=True)
     if args.ref is None:
         args.ref = context.model.currentbranch
-
-    from cola.widgets.archive import GitArchiveDialog
     view = GitArchiveDialog(args.ref)
     return application_start(context, view)
 
 
 def cmd_branch(args):
+    from .widgets.createbranch import create_new_branch
     context = application_init(args, update=True)
-    from cola.widgets.createbranch import create_new_branch
     view = create_new_branch(settings=args.settings)
     return application_start(context, view)
 
 
 def cmd_browse(args):
+    from .widgets.browse import worktree_browser
     context = application_init(args)
-    from cola.widgets.browse import worktree_browser
     view = worktree_browser(update=False, settings=args.settings)
     return application_start(context, view)
 
 
 def cmd_config(args):
+    from .widgets.prefs import preferences
     context = application_init(args)
-    from cola.widgets.prefs import preferences
     view = preferences()
     return application_start(context, view)
 
 
 def cmd_dag(args):
     context = application_init(args)
-    from cola.widgets.dag import git_dag
+    from .widgets.dag import git_dag
     view = git_dag(context.model, args=args, settings=args.settings)
     return application_start(context, view)
 
 
 def cmd_diff(args):
     context = application_init(args)
-    from cola.difftool import diff_expression
+    from .difftool import diff_expression
     expr = core.list2cmdline(args.args)
     view = diff_expression(None, expr, create_widget=True)
     return application_start(context, view)
@@ -346,7 +345,7 @@ def cmd_fetch(args):
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
     context = application_init(args)
-    from cola.widgets import remote
+    from .widgets import remote
     context.model.update_status()
     view = remote.fetch()
     return application_start(context, view)
@@ -354,7 +353,7 @@ def cmd_fetch(args):
 
 def cmd_find(args):
     context = application_init(args)
-    from cola.widgets import finder
+    from .widgets import finder
     paths = core.list2cmdline(args.paths)
     view = finder.finder(paths=paths)
     return application_start(context, view)
@@ -362,7 +361,7 @@ def cmd_find(args):
 
 def cmd_grep(args):
     context = application_init(args)
-    from cola.widgets import grep
+    from .widgets import grep
     text = core.list2cmdline(args.args)
     view = grep.new_grep(text=text, parent=None)
     return application_start(context, view)
@@ -370,20 +369,20 @@ def cmd_grep(args):
 
 def cmd_merge(args):
     context = application_init(args, update=True)
-    from cola.widgets.merge import MergeView
+    from .widgets.merge import MergeView
     view = MergeView(context.cfg, context.model, parent=None)
     return application_start(context, view)
 
 
 def cmd_version(args):
-    from cola import version
+    from . import version
     version.print_version(brief=args.brief)
     return 0
 
 
 def cmd_pull(args):
+    from .widgets import remote
     context = application_init(args, update=True)
-    from cola.widgets import remote
     view = remote.pull()
     if args.rebase:
         view.set_rebase(True)
@@ -391,8 +390,8 @@ def cmd_pull(args):
 
 
 def cmd_push(args):
+    from .widgets import remote
     context = application_init(args, update=True)
-    from cola.widgets import remote
     view = remote.push()
     return application_start(context, view)
 
@@ -440,29 +439,29 @@ def cmd_rebase(args):
 
 
 def cmd_remote(args):
+    from .widgets import editremotes
     context = application_init(args)
-    from cola.widgets import editremotes
     view = editremotes.new_remote_editor()
     return application_start(context, view)
 
 
 def cmd_search(args):
+    from .widgets.search import search
     context = application_init(args)
-    from cola.widgets.search import search
     view = search()
     return application_start(context, view)
 
 
 def cmd_stash(args):
+    from .widgets.stash import stash
     context = application_init(args)
-    from cola.widgets.stash import stash
     view = stash()
     return application_start(context, view)
 
 
 def cmd_tag(args):
+    from .widgets.createtag import new_create_tag
     context = application_init(args)
-    from cola.widgets.createtag import new_create_tag
     view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign,
                           settings=args.settings)
     return application_start(context, view)

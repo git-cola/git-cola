@@ -13,11 +13,11 @@ import itertools
 import platform
 import subprocess
 
-from cola.decorators import interruptable
-from cola.compat import ustr
-from cola.compat import PY2
-from cola.compat import PY3
-from cola.compat import WIN32
+from .decorators import interruptable
+from .compat import ustr
+from .compat import PY2
+from .compat import PY3
+from .compat import WIN32
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)

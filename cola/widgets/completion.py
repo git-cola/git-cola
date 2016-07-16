@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import re
 
 from qtpy import QtCore
@@ -8,14 +7,14 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import core
-from cola import gitcmds
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.models import main
-from cola.widgets import defs
-from cola.widgets import text
+from .. import core
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from .. import utils
+from ..models import main
+from . import defs
+from . import text
 
 
 class CompletionLineEdit(text.HintedLineEdit):

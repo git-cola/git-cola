@@ -4,19 +4,19 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import gitcmds
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
-from cola.models import selection
-from cola.widgets import completion
-from cola.widgets import defs
-from cola.widgets import filetree
+from . import core
+from . import gitcmds
+from . import hotkeys
+from . import icons
+from . import qtutils
+from . import utils
+from .i18n import N_
+from .interaction import Interaction
+from .models import main
+from .models import selection
+from .widgets import completion
+from .widgets import defs
+from .widgets import filetree
 
 
 def run():

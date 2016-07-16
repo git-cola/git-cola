@@ -4,15 +4,15 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import resources
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola import version
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets.text import MonoTextView
+from .. import core
+from .. import resources
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .. import version
+from ..i18n import N_
+from . import defs
+from .text import MonoTextView
 
 
 def launch_about_dialog():

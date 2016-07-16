@@ -6,7 +6,7 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import hotkeys
+from . import hotkeys
 
 
 def patch(obj, attr, value):

@@ -5,7 +5,7 @@ import os
 import webbrowser
 from os.path import dirname
 
-from cola import core
+from . import core
 
 
 _modpath = core.abspath(__file__)

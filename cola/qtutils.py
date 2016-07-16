@@ -9,17 +9,17 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import core
-from cola import gitcfg
-from cola import hotkeys
-from cola import icons
-from cola import utils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.compat import int_types
-from cola.compat import ustr
-from cola.models import prefs
-from cola.widgets import defs
+from . import core
+from . import gitcfg
+from . import hotkeys
+from . import icons
+from . import utils
+from .i18n import N_
+from .interaction import Interaction
+from .compat import int_types
+from .compat import ustr
+from .models import prefs
+from .widgets import defs
 
 
 def connect_action(action, fn):

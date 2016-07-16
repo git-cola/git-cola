@@ -7,12 +7,12 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy import QtNetwork
 
-from cola import core
-from cola import icons
-from cola.compat import bstr
-from cola.compat import ustr
-from cola.compat import parse
-from cola.widgets import defs
+from . import core
+from . import icons
+from .compat import bstr
+from .compat import ustr
+from .compat import parse
+from .widgets import defs
 
 
 class Gravatar(object):

@@ -4,15 +4,15 @@ from __future__ import division, absolute_import, unicode_literals
 from qtpy import QtCore
 from qtpy import QtWidgets
 
-from cola import cmds
-from cola import qtutils
-from cola.i18n import N_
-from cola.models.selection import selection_model
-from cola.widgets import defs
-from cola.widgets import remote
-from cola.widgets import stash
-from cola.qtutils import create_button
-from cola.qtutils import connect_button
+from .. import cmds
+from .. import qtutils
+from ..i18n import N_
+from ..models.selection import selection_model
+from ..widgets import defs
+from ..widgets import remote
+from ..widgets import stash
+from ..qtutils import create_button
+from ..qtutils import connect_button
 
 
 class QFlowLayoutWidget(QtWidgets.QWidget):

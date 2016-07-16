@@ -8,13 +8,13 @@ import struct
 from binascii import unhexlify
 from os.path import join
 
-from cola import core
-from cola import git
-from cola import observable
-from cola.compat import int_types
-from cola.decorators import memoize
-from cola.git import STDOUT
-from cola.compat import ustr
+from . import core
+from . import git
+from . import observable
+from .compat import int_types
+from .decorators import memoize
+from .git import STDOUT
+from .compat import ustr
 
 BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 

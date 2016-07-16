@@ -2,14 +2,14 @@ from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtWidgets
 
-from cola import cmds
-from cola import hotkeys
-from cola import qtutils
-from cola.i18n import N_
-from cola.git import git
-from cola.widgets.standard import TreeWidget
-from cola.widgets.diff import COMMITS_SELECTED
-from cola.widgets.diff import FILES_SELECTED
+from .. import cmds
+from .. import hotkeys
+from .. import qtutils
+from ..i18n import N_
+from ..git import git
+from .standard import TreeWidget
+from .diff import COMMITS_SELECTED
+from .diff import FILES_SELECTED
 
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
 DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'

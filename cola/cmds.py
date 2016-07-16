@@ -11,22 +11,22 @@ try:
 except ImportError:
     send2trash = None
 
-from cola import compat
-from cola import core
-from cola import fsmonitor
-from cola import gitcfg
-from cola import gitcmds
-from cola import icons
-from cola import utils
-from cola import difftool
-from cola import resources
-from cola.diffparse import DiffParser
-from cola.git import STDOUT
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
-from cola.models import prefs
-from cola.models import selection
+from . import compat
+from . import core
+from . import fsmonitor
+from . import gitcfg
+from . import gitcmds
+from . import icons
+from . import utils
+from . import difftool
+from . import resources
+from .diffparse import DiffParser
+from .git import STDOUT
+from .i18n import N_
+from .interaction import Interaction
+from .models import main
+from .models import prefs
+from .models import selection
 
 
 class UsageError(Exception):

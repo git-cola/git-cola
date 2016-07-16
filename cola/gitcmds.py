@@ -4,13 +4,13 @@ from __future__ import division, absolute_import, unicode_literals
 import re
 from io import StringIO
 
-from cola import core
-from cola import gitcfg
-from cola import utils
-from cola import version
-from cola.git import git
-from cola.git import STDOUT
-from cola.i18n import N_
+from . import core
+from . import gitcfg
+from . import utils
+from . import version
+from .git import git
+from .git import STDOUT
+from .i18n import N_
 
 
 EMPTY_TREE_SHA1 = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'

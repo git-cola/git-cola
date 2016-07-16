@@ -10,26 +10,26 @@ from qtpy.QtCore import Signal
 from qtpy.QtCore import QPointF
 from qtpy.QtCore import QRectF
 
-from cola import core
-from cola import cmds
-from cola import difftool
-from cola import hotkeys
-from cola import icons
-from cola import observable
-from cola import qtcompat
-from cola import qtutils
-from cola.compat import maxsize
-from cola.i18n import N_
-from cola.models import dag
-from cola.widgets import archive
-from cola.widgets import browse
-from cola.widgets import completion
-from cola.widgets import createbranch
-from cola.widgets import createtag
-from cola.widgets import defs
-from cola.widgets import diff
-from cola.widgets import filelist
-from cola.widgets import standard
+from .. import core
+from .. import cmds
+from .. import difftool
+from .. import hotkeys
+from .. import icons
+from .. import observable
+from .. import qtcompat
+from .. import qtutils
+from ..compat import maxsize
+from ..i18n import N_
+from ..models import dag
+from . import archive
+from . import browse
+from . import completion
+from . import createbranch
+from . import createtag
+from . import defs
+from . import diff
+from . import filelist
+from . import standard
 
 
 def git_dag(model, args=None, settings=None):

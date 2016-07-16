@@ -1,16 +1,15 @@
 """Text wrapping and filling.
 """
 from __future__ import division, absolute_import, unicode_literals
+import re
+
+from .compat import ustr
 
 # Copyright (C) 1999-2001 Gregory P. Ward.
 # Copyright (C) 2002, 2003 Python Software Foundation.
 # Copyright (C) 2013, David Aguilar
 # Written by Greg Ward <gward@python.net>
 # Simplified for git-cola by David Aguilar <davvid@gmail.com>
-
-import re
-
-from cola.compat import ustr
 
 
 class TextWrapper(object):

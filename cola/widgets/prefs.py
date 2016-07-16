@@ -4,14 +4,14 @@ import os
 from qtpy import QtCore
 from qtpy import QtWidgets
 
-from cola import cmds
-from cola import qtutils
-from cola import gitcfg
-from cola.i18n import N_
-from cola.models import prefs
-from cola.qtutils import diff_font
-from cola.widgets import defs
-from cola.widgets import standard
+from ..i18n import N_
+from ..models import prefs
+from ..qtutils import diff_font
+from .. import cmds
+from .. import qtutils
+from .. import gitcfg
+from . import defs
+from . import standard
 
 
 def preferences(model=None, parent=None):

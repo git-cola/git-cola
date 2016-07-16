@@ -5,17 +5,17 @@ from qtpy import QtCore
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import gitcmds
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.models import main
-from cola.widgets import defs
-from cola.widgets import completion
-from cola.widgets.standard import Dialog
-from cola.widgets.standard import ProgressDialog
-from cola.widgets.text import LineEdit
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from . import defs
+from . import completion
+from .standard import Dialog
+from .standard import ProgressDialog
+from .text import LineEdit
 
 
 def create_new_branch(revision='', settings=None):

@@ -6,20 +6,20 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import core
-from cola import gitcmds
-from cola import icons
-from cola import utils
-from cola import qtutils
-from cola.i18n import N_
-from cola.interaction import Interaction
-from cola.git import git
-from cola.git import STDOUT
-from cola.qtutils import connect_button
-from cola.qtutils import create_toolbutton
-from cola.widgets import defs
-from cola.widgets import standard
-from cola.widgets.diff import DiffTextEdit
+from .. import core
+from .. import gitcmds
+from .. import icons
+from .. import utils
+from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..git import git
+from ..git import STDOUT
+from ..qtutils import connect_button
+from ..qtutils import create_toolbutton
+from . import defs
+from . import standard
+from .diff import DiffTextEdit
 
 
 def mkdate(timespec):

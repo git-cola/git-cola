@@ -1,10 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 import json
 
-from cola import core
-from cola import utils
-from cola.git import git
-from cola.observable import Observable
+from .. import core
+from .. import utils
+from ..git import git
+from ..observable import Observable
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator

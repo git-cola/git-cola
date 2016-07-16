@@ -5,9 +5,9 @@ import gettext as _gettext
 import os
 import sys
 
-from cola import compat
-from cola import core
-from cola import resources
+from . import compat
+from . import core
+from . import resources
 
 _null_translation = _gettext.NullTranslations()
 _translation = _null_translation

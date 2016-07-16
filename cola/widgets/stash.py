@@ -5,18 +5,18 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import cmds
-from cola import icons
-from cola import qtutils
-from cola import utils
-from cola.i18n import N_
-from cola.models.stash import StashModel
-from cola.models.stash import ApplyStash
-from cola.models.stash import SaveStash
-from cola.models.stash import DropStash
-from cola.widgets import defs
-from cola.widgets.diff import DiffTextEdit
-from cola.widgets.standard import Dialog
+from .. import cmds
+from .. import icons
+from .. import qtutils
+from .. import utils
+from ..i18n import N_
+from ..models.stash import StashModel
+from ..models.stash import ApplyStash
+from ..models.stash import SaveStash
+from ..models.stash import DropStash
+from . import defs
+from .diff import DiffTextEdit
+from .standard import Dialog
 
 
 def stash():

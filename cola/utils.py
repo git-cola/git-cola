@@ -1,7 +1,6 @@
 # Copyright (c) 2008 David Aguilar
 """This module provides miscellaneous utility functions."""
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 import random
 import re
@@ -11,7 +10,7 @@ import tempfile
 import time
 import traceback
 
-from cola import core
+from . import core
 
 random.seed(hash(time.time()))
 

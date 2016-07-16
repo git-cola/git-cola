@@ -4,14 +4,14 @@ from __future__ import division, absolute_import, unicode_literals
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from cola import qtutils
-from cola import difftool
-from cola import gitcmds
-from cola import icons
-from cola.i18n import N_
-from cola.qtutils import connect_button
-from cola.widgets import defs
-from cola.widgets import standard
+from .. import difftool
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+from ..i18n import N_
+from ..qtutils import connect_button
+from . import defs
+from . import standard
 
 
 class FileItem(QtWidgets.QTreeWidgetItem):

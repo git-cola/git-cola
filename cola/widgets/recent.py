@@ -5,16 +5,16 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from cola import cmds
-from cola import gitcmds
-from cola import hotkeys
-from cola import icons
-from cola import qtutils
-from cola.i18n import N_
-from cola.widgets import defs
-from cola.widgets import standard
-from cola.widgets.browse import GitTreeWidget
-from cola.widgets.browse import GitFileTreeModel
+from ..i18n import N_
+from .. import cmds
+from .. import gitcmds
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .browse import GitTreeWidget
+from .browse import GitFileTreeModel
+from . import defs
+from . import standard
 
 
 def browse_recent_files():
