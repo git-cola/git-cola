@@ -11,8 +11,9 @@ class WordWrapTestCase(unittest.TestCase):
         self.tabwidth = 8
         self.limit = None
 
-    def wrap(self, text):
-        return textwrap.word_wrap(text, self.tabwidth, self.limit)
+    def wrap(self, text, break_on_hyphens=True):
+        return textwrap.word_wrap(text, self.tabwidth, self.limit,
+                                  break_on_hyphens=break_on_hyphens)
 
     def test_word_wrap(self):
         self.limit = 16
@@ -37,7 +38,10 @@ class WordWrapTestCase(unittest.TestCase):
         self.limit = 4
         text = '12--5'
         expect = '12--\n5'
-        self.assertEqual(expect, self.wrap(text))
+        self.assertEqual(expect, self.wrap(text, break_on_hyphens=True))
+
+        expect = '12--5'
+        self.assertEqual(expect, self.wrap(text, break_on_hyphens=False))
 
     def test_word_wrap_many_lines(self):
         self.limit = 2
