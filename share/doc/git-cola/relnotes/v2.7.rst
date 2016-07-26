@@ -13,6 +13,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/581
 
+* Support for the `GIT_WORK_TREE` environment variable was fixed.
+
+  https://github.com/git-cola/git-cola/pull/582
+
 Development
 -----------
 
@@ -20,7 +24,6 @@ Development
   when running the `git cola` test suite using Python3.
 
   https://github.com/git-cola/git-cola/issues/569
-
 
 Packaging
 ---------
