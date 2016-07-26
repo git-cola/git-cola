@@ -114,6 +114,7 @@ Thanks
 * Ｖ字龍 (Vdragon)
 * Vaibhav Sagar
 * Vaiz
+* Ved Vyas
 * Ville Skyttä
 * Virgil Dupras
 * Vitor Lobo
