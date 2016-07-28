@@ -45,9 +45,11 @@ sed -i \
     -e 's/QtGui.QSplitter/QtWidgets.QSplitter/g' \
     -e 's/QtGui.QStackedWidget/QtWidgets.QStackedWidget/g' \
     -e 's/QtGui.QTabBar/QtWidgets.QTabBar/g' \
+    -e 's/QtGui.QTabWidget/QtWidgets.QTabWidget/g' \
     -e 's/QtGui.QTextEdit/QtWidgets.QTextEdit/g' \
     -e 's/QtGui.QToolButton/QtWidgets.QToolButton/g' \
     -e 's/QtGui.QTree/QtWidgets.QTree/g' \
+    -e 's/QtGui.QScrollArea/QtWidgets.QScrollArea/g' \
     -e 's/QtGui.QStyleOptionViewItemV4/QtWidgets.QStyleOptionViewItem/g' \
     -e 's/QtGui.QStyle/QtWidgets.QStyle/g' \
     -e 's/QtGui.QVBoxLayout/QtWidgets.QVBoxLayout/g' \
