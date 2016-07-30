@@ -82,6 +82,8 @@ build_win32_pynsist () {
 		PATH='"$WIN32_PYTHON"':'"$WIN32_PYTHON/Scripts"':'"$WIN32_GIT"':'"$WIN32_NSIS"':"$PATH"
 		export PATH
 		cd '"$WIN32_COLA_DIR"' &&
+		PYTHONPATH=./extras/qtpy &&
+		export PYTHONPATH &&
 		rm -rf build/nsis &&
 		pynsist pynsist.cfg
 	'
@@ -108,6 +110,8 @@ build_win32_innosetup () {
 		PATH='"$WIN32_PYTHON"':'"$WIN32_GIT"':"$PATH"
 		export PATH
 		cd '"$WIN32_COLA_DIR"' &&
+		PYTHONPATH=./extras/qtpy &&
+		export PYTHONPATH &&
 		contrib/win32/create-installer.sh
 	'
 	do_or_die scp -P $WIN32_SSH_PORT \
