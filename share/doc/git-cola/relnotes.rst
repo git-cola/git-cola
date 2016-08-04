@@ -31,6 +31,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/563
 
+Fixes
+-----
+* The diffstat view is now properly updated when notifications are
+  received via inotify filesystem monitoring.
+
+  https://github.com/git-cola/git-cola/issues/577
+
 .. _v2.7:
 
 git-cola v2.7

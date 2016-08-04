@@ -39,6 +39,7 @@ class MainModel(Observable):
     # States
     mode_none = 'none'  # Default: nothing's happened, do nothing
     mode_worktree = 'worktree'  # Comparing index to worktree
+    mode_diffstat = 'diffstat'  # Showing a diffstat
     mode_untracked = 'untracked'  # Dealing with an untracked file
     mode_index = 'index'  # Comparing index to last commit
     mode_amend = 'amend'  # Amending a commit
