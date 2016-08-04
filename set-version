@@ -11,12 +11,14 @@ def main():
     args = parser.parse_args()
     version = args.version
 
+    # Old workflow: move relnotes/unreleased.rst to relnotes/vX.Y.rst
     #ReleaseNotes(version).update()
     CreateReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
-    RelnotesVersion(version).update()
-    RelnotesUnreleasedVersion(version).update()
+    # Old workflow: updated relnotes.rst with the latest relnotes/vX.Y.rst
+    #RelnotesVersion(version).update()
+    RelnotesStableVersion(version).update()
 
     return 0
 
@@ -210,12 +212,12 @@ class RelnotesVersion(Version):
         return '    relnotes/%s\n%s' % (self.tag_version, txt)
 
 
-class RelnotesUnreleasedVersion(Version):
+class RelnotesStableVersion(Version):
 
-    path = 'share/doc/git-cola/relnotes/unreleased.rst'
+    path = 'share/doc/git-cola/relnotes/relnotes.rst'
 
     def __init__(self, version):
-        super(RelnotesUnreleasedVersion, self).__init__(version)
+        super(RelnotesStableVersion, self).__init__(version)
         self.last = ''
         self.section = ''
 
@@ -233,11 +235,6 @@ class RelnotesUnreleasedVersion(Version):
         version = self.tag_version
         return (r':ref:`%s <%s>` is the latest stable release.'
                 % (version, version))
-
-    def warn(self):
-        path = 'share/doc/git-cola/relnotes/%s.rst' % self.tag_version
-        if not os.path.exists(path):
-            warn('%s does not exist!' % path)
 
 
 if __name__ == '__main__':
