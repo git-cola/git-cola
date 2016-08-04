@@ -2,3 +2,9 @@
 
 git-cola v2.8 (beta)
 ====================
+
+Usability, bells and whistles
+-----------------------------
+* `git cola push` learned to configure upstream branches.
+
+  https://github.com/git-cola/git-cola/issues/563

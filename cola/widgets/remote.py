@@ -132,6 +132,10 @@ class RemoteActionDialog(standard.Dialog):
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
         self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase '))
 
+        text = N_('Set upstream')
+        tooltip = N_('Configure the remote branch as the the new upstream')
+        self.upstream_checkbox = qtutils.checkbox(text=text, tooltip=tooltip)
+
         if icon is None:
             icon = icons.ok()
         self.action_button = qtutils.create_button(text=title, icon=icon)
@@ -164,6 +168,7 @@ class RemoteActionDialog(standard.Dialog):
                 self.ffwd_only_checkbox,
                 self.tags_checkbox,
                 self.rebase_checkbox,
+                self.upstream_checkbox,
                 self.action_button,
                 self.close_button)
 
@@ -213,6 +218,9 @@ class RemoteActionDialog(standard.Dialog):
 
         qtutils.add_action(self, N_('Close'), self.close,
                            QtGui.QKeySequence.Close, 'Esc')
+
+        if action in (PULL, FETCH):
+            self.upstream_checkbox.hide()
 
         if action == PULL:
             self.tags_checkbox.hide()
@@ -364,6 +372,7 @@ class RemoteActionDialog(standard.Dialog):
 
         ffwd_only = self.ffwd_only_checkbox.isChecked()
         rebase = self.rebase_checkbox.isChecked()
+        set_upstream = self.upstream_checkbox.isChecked()
         tags = self.tags_checkbox.isChecked()
 
         return (remote_name,
@@ -372,6 +381,7 @@ class RemoteActionDialog(standard.Dialog):
                     'remote_branch': remote_branch,
                     'ffwd': ffwd_only,
                     'rebase': rebase,
+                    'set_upstream': set_upstream,
                     'tags': tags,
                 })
 

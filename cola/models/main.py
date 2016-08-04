@@ -514,12 +514,16 @@ def remote_args(remote,
     what = refspec_arg(local_branch, remote_branch, ffwd, pull, push)
     if what:
         args.append(what)
+
     kwargs = {
         'verbose': True,
         'tags': tags,
     }
     if pull and rebase:
         kwargs['rebase'] = rebase
+    if push and set_upstream:
+        kwargs['set_upstream'] = set_upstream
+
     return (args, kwargs)
 
 
