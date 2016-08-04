@@ -761,7 +761,7 @@ class Diffstat(Command):
                                    M=True,
                                    stat=True)[STDOUT]
         self.new_diff_text = diff
-        self.new_mode = self.model.mode_worktree
+        self.new_mode = self.model.mode_diffstat
 
 
 class DiffStaged(Diff):
