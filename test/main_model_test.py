@@ -91,7 +91,7 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertEqual(args, [self.remote, 'remote:local'])
         self.assertTrue(kwargs['verbose'])
         self.assertFalse(kwargs['tags'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
 
     def test_remote_args_fetch_tags(self):
         # Fetch tags
@@ -104,7 +104,7 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertEqual(args, [self.remote, 'remote:local'])
         self.assertTrue(kwargs['verbose'])
         self.assertTrue(kwargs['tags'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
 
     def test_remote_args_pull(self):
         # Pull
@@ -116,7 +116,7 @@ class RemoteArgsTestCase(unittest.TestCase):
 
         self.assertEqual(args, [self.remote, 'remote'])
         self.assertTrue(kwargs['verbose'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
         self.assertFalse(kwargs['tags'])
 
     def test_remote_args_pull_rebase(self):
@@ -143,7 +143,7 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertEqual(args, [self.remote, 'local:remote'])
         self.assertTrue(kwargs['verbose'])
         self.assertFalse(kwargs['tags'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
 
     def test_remote_args_push_tags(self):
         # Push, swap local and remote
@@ -156,7 +156,35 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertEqual(args, [self.remote, 'local:remote'])
         self.assertTrue(kwargs['verbose'])
         self.assertTrue(kwargs['tags'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
+
+    def test_remote_args_push_same_remote_and_local(self):
+        (args, kwargs) = \
+            main.remote_args(self.remote,
+                             tags=True,
+                             local_branch=self.local_branch,
+                             remote_branch=self.local_branch,
+                             push=True)
+
+        self.assertEqual(args, [self.remote, 'local'])
+        self.assertTrue(kwargs['verbose'])
+        self.assertTrue(kwargs['tags'])
+        self.assertFalse('rebase' in kwargs)
+
+    def test_remote_args_push_set_upstream(self):
+        (args, kwargs) = \
+            main.remote_args(self.remote,
+                             tags=True,
+                             local_branch=self.local_branch,
+                             remote_branch=self.local_branch,
+                             push=True,
+                             set_upstream=True)
+
+        self.assertEqual(args, [self.remote, 'local'])
+        self.assertTrue(kwargs['verbose'])
+        self.assertTrue(kwargs['tags'])
+        self.assertTrue(kwargs['set_upstream'])
+        self.assertFalse('rebase' in kwargs)
 
     def test_run_remote_action(self):
 
@@ -172,7 +200,7 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertEqual(args, (self.remote, 'remote:local'))
         self.assertTrue(kwargs['verbose'])
         self.assertFalse(kwargs['tags'])
-        self.assertFalse(kwargs['rebase'])
+        self.assertFalse('rebase' in kwargs)
 
 
 if __name__ == '__main__':
