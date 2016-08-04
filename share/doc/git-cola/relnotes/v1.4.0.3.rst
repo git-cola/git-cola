@@ -1,8 +1,0 @@
-.. _v1.4.0.3:
-
-git-cola v1.4.0.3
-=================
-Fixes
------
-* Fix X11 warnings on application startup
-

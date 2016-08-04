@@ -2,6 +2,7 @@
 Git Cola Documentation
 ======================
 .. toctree::
+    :maxdepth: 3
 
     git-cola
     git-dag
@@ -10,7 +11,7 @@ Git Cola Documentation
 Release Notes
 =============
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
     relnotes
 
