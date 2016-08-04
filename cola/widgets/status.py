@@ -271,8 +271,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if category == self.idx_header:
                 item = self.invisibleRootItem().child(idx)
                 if item is not None:
+                    self.blockSignals(True)
                     self.setCurrentItem(item)
                     item.setSelected(True)
+                    self.blockSignals(False)
+                    self.show_selection()
                 return
             # Reselect the current item
             selection_info = saved_selection[category]
