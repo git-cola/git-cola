@@ -41,6 +41,7 @@ Thanks
 * `Git Hackers <http://git-scm.com/about>`_
 * Glen Mailer
 * Guillaume de Bure
+* Guo Yunhe
 * Harro Verton
 * Ilya Tumaykin
 * Ingo Weinhold
