@@ -10,17 +10,17 @@ except ImportError:
 
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] >= 3
+PY26_PLUS = PY2 and sys.version_info[1] >= 6
 WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
 
-try:
+if PY3:
+    def bstr(x):
+        # pylint: disable=bytes-builtin
+        return bytes(x, encoding='utf8')
+elif PY26_PLUS:
     # pylint: disable=bytes-builtin
-    bytes()
-    if PY3:
-        def bstr(x):
-            return bytes(x, encoding='latin1')
-    else:
-        bstr = bytes
-except NameError:
+    bstr = bytes
+else:
     # Python <= 2.5
     bstr = str
 
