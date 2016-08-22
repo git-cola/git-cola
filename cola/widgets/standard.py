@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 
 import time
 
-import qtpy
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -129,12 +128,9 @@ class MainWindowMixin(WidgetMixin):
         if windowstate is None:
             result = False
         else:
-            windowstate = str(windowstate)
-            if qtpy.PYQT5:
-                windowstate = str.encode(windowstate, encoding='us-ascii')
             from_base64 = QtCore.QByteArray.fromBase64
             result = self.restoreState(
-                    from_base64(windowstate),
+                    from_base64(core.encode(windowstate)),
                     self.widget_version) and result
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
