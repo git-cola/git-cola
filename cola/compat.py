@@ -14,7 +14,12 @@ WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
 
 try:
     # pylint: disable=bytes-builtin
-    bstr = bytes
+    bytes()
+    if PY3:
+        def bstr(x):
+            return bytes(x, encoding='latin1')
+    else:
+        bstr = bytes
 except NameError:
     # Python <= 2.5
     bstr = str
