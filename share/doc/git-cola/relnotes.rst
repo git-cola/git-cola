@@ -38,6 +38,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/577
 
+* Python3 with PyQt5 had a bug that prevented `git cola` from starting.
+
+  https://github.com/git-cola/git-cola/pull/589
+
 .. _v2.7:
 
 git-cola v2.7
