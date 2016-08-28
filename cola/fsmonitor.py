@@ -122,7 +122,7 @@ class _BaseThread(QtCore.QThread):
         self._force_notify = False
         self._file_paths = set()
         if do_notify:
-            self._monitor.emit(SIGNAL('files_changed'))
+            self._monitor.files_changed.emit()
 
     @staticmethod
     def _log_enabled_message():
