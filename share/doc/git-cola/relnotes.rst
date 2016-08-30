@@ -2,16 +2,10 @@
 Releases
 ========
 
-.. toctree::
-    :maxdepth: 1
-    :titlesonly:
-
-.. _unreleased:
-
 Latest Release
 ==============
 
-:ref:`v2.7 <v2.7>` is the latest stable release.
+:ref:`v2.8 <v2.8>` is the latest stable release.
 
 Development version
 ===================
@@ -22,8 +16,8 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v2.8:
 
-git-cola v2.8 (beta)
-====================
+git-cola v2.8
+=============
 
 Usability, bells and whistles
 -----------------------------
