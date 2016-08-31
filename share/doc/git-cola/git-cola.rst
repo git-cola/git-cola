@@ -214,8 +214,8 @@ Revert Unstaged Edits
 Reverts unstaged content by checking out selected paths
 from the index/staging area
 
-Revert Uncommited Edits
-~~~~~~~~~~~~~~~~~~~~~~~
+Revert Uncommitted Edits
+~~~~~~~~~~~~~~~~~~~~~~~~
 Throws away uncommitted edits
 
 Unstage Selected
@@ -386,7 +386,7 @@ Defaults to `true`.
 cola.defaultrepo
 ----------------
 `git cola`, when run outside of a Git repository, prompts the user for a
-repository.  Set `cola.defaultrepo` to the path of a Git repostiory to make
+repository.  Set `cola.defaultrepo` to the path of a Git repository to make
 `git cola` attempt to use that repository before falling back to prompting
 the user for a repository.
 
@@ -558,7 +558,7 @@ gettext language code, e.g. "en", "de", "ja", "zh", etc.::
     mkdir -p ~/.config/git-cola &&
     echo en >~/.config/git-cola/language
 
-Alternatively you may also use LANGAUGE environmental variable to temporarily
+Alternatively you may also use LANGUAGE environmental variable to temporarily
 change `git cola`'s language just like any other gettext-based program.  For
 example to temporarily change `git cola`'s language to English::
 

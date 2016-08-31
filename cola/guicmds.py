@@ -263,7 +263,7 @@ class CloneTask(qtutils.Task):
 
 
 def clone_repo(parent, runtask, progress, finish, spawn):
-    """Clone a repostiory asynchronously with progress animation"""
+    """Clone a repository asynchronously with progress animation"""
     result = prompt_for_clone()
     if result is None:
         return

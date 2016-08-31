@@ -183,7 +183,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
-        # MoveToTrash command is avaialble.  When available, the hotkey
+        # MoveToTrash command is available.  When available, the hotkey
         # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(

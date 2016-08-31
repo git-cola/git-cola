@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('--sudo', default=False, action='store_true',
                         help='allow commands to use sudo')
     parser.add_argument('--skip-missing', default=False, action='store_true',
-                        help='skip missing interpretors')
+                        help='skip missing interpreters')
     parser.add_argument('--no-prompt', '-y', default=False, action='store_true',
                         help='do not prompt before each command')
     parser.add_argument('--default', default='y', metavar='<cmd>',
@@ -60,7 +60,7 @@ def load_yaml(filename):
         return yaml.load(f)
 
 
-def find_interpretor(language, version):
+def find_interpreter(language, version):
     return distutils.spawn.find_executable(language + version)
 
 
@@ -552,7 +552,7 @@ def build(args, data):
         versions = data[language]
 
     if args.skip_missing:
-        versions = [v for v in versions if find_interpretor(language, v)]
+        versions = [v for v in versions if find_interpreter(language, v)]
 
     status = 0
 

@@ -318,7 +318,7 @@ def new_model(app, repo, prompt=False, settings=None):
         valid = model.set_worktree(repo)
         if not valid:
             # We are not currently in a git repository so we need to find one.
-            # Before prompting the user for a repostiory, check if they've
+            # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
             default_repo = gitcfg.current().get('cola.defaultrepo')
             if default_repo:

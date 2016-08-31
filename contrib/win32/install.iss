@@ -346,7 +346,7 @@ begin
         Modify the environment
 
         This must happen no later than usUninstall to make
-        "ChangesEnvironment=yes" not happend before the change!
+        "ChangesEnvironment=yes" not happen before the change!
     }
 
     AppDir:=ExpandConstant('{app}');
