@@ -158,7 +158,7 @@ class Git(object):
         return self.paths.worktree
 
     def is_valid(self):
-        """Is this a valid git repostiory?
+        """Is this a valid git repository?
 
         Cache the result to avoid hitting the filesystem.
 

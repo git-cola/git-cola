@@ -54,7 +54,7 @@ def run_command(title, command):
 
 
 class GitCommandWidget(standard.Dialog):
-    """Nice TextView that reads the output of a command syncronously"""
+    """Nice TextView that reads the output of a command synchronously"""
 
     # Keep us in scope otherwise PyQt kills the widget
     def __init__(self, title, parent=None):

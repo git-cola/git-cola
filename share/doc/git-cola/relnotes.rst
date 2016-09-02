@@ -169,7 +169,7 @@ Usability, bells and whistles
 * `git cola`'s Bookmarks widget can now be used to set a "Default Repository".
   Under the hood, we set the `cola.defaultrepo` configuration variable.
   The default repository is used whenever `git cola` is launched outside of
-  a Git repostiory.  When unset, or when set to a bogus value, `git cola`
+  a Git repository.  When unset, or when set to a bogus value, `git cola`
   will prompt for a repository, as it previously did.
 
   https://github.com/git-cola/git-cola/issues/513
@@ -432,7 +432,7 @@ Usability, bells and whistles
 
 * Traditional Chinese (Taiwan) translation updates.
 
-* The system theme's icons are now used whereever possible.
+* The system theme's icons are now used wherever possible.
 
   https://github.com/git-cola/git-cola/pull/458
 
@@ -1188,7 +1188,7 @@ Usability, bells and whistles
 * The "File" menu now provides a "New Repository..." menu action.
 
 * `git dag` now uses a dock-widget interface so that its widgets can
-  be layed-out and arranged.  Customizations are saved and restored
+  be laid-out and arranged.  Customizations are saved and restored
   the next time `git dag` is launched.
 
 * `git dag` now has a "Zoom Best Fit" button next alongside the

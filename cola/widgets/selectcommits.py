@@ -54,7 +54,7 @@ class SelectCommitsDialog(QtWidgets.QDialog):
                                                enabled=False, default=True)
         self.close_button = qtutils.close_button()
 
-        # Make the list widget slighty larger
+        # Make the list widget slightly larger
         self.splitter = qtutils.splitter(Qt.Vertical,
                                          self.commits, self.commit_text)
         self.splitter.setSizes([100, 150])
