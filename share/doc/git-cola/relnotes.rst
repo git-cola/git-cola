@@ -14,6 +14,17 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+
+.. _v2.9:
+
+git-cola v2.9 (beta)
+====================
+
+Development
+-----------
+* Typofixes in comments, naming, and strings have been applied.
+
+
 .. _v2.8:
 
 git-cola v2.8
