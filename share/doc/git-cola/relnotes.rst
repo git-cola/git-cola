@@ -22,6 +22,10 @@ git-cola v2.9 (beta)
 
 Fixes
 -----
+* `git cola browse` was not updating when expanding items.
+
+  https://github.com/git-cola/git-cola/issues/588
+
 * Typofixes in comments, naming, and strings have been applied.
 
   https://github.com/git-cola/git-cola/pull/593
