@@ -94,11 +94,8 @@ class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
     about_to_update = Signal()
-    item_expanded = Signal(object)
     difftool_predecessor = Signal(object)
     history = Signal(object)
-    model_expanded = Signal(object)
-    model_collapsed = Signal(object)
     updated = Signal()
 
     def __init__(self, parent):
@@ -124,12 +121,11 @@ class RepoTreeView(standard.TreeView):
                                      type=Qt.QueuedConnection)
         self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
 
-        # The non-Qt cola application model
-        self.model_expanded.connect(self.size_columns)
-        self.model_expanded.connect(self.expanded)
+        self.expanded.connect(lambda idx: self.size_columns())
+        self.expanded.connect(self.index_expanded)
 
-        self.model_collapsed.connect(self.size_columns)
-        self.model_collapsed.connect(self.collapsed)
+        self.collapsed.connect(lambda idx: self.size_columns())
+        self.collapsed.connect(self.index_collapsed)
 
         # Sync selection before the key press event changes the model index
         queued = Qt.QueuedConnection
@@ -181,11 +177,11 @@ class RepoTreeView(standard.TreeView):
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
 
-    def expanded(self, index):
+    def index_expanded(self, index):
         item = self.model().itemFromIndex(index)
         self.saved_open_folders.add(item.path)
 
-    def collapsed(self, index):
+    def index_collapsed(self, index):
         item = self.model().itemFromIndex(index)
         self.saved_open_folders.remove(item.path)
 
@@ -446,7 +442,7 @@ class BrowserController(QtCore.QObject):
         self.runtask = qtutils.RunTask(parent=self)
 
         view.history.connect(self.view_history)
-        view.item_expanded.connect(self.query_model)
+        view.expanded.connect(self.query_model)
         view.difftool_predecessor.connect(self.difftool_predecessor)
 
     def view_history(self, entries):
