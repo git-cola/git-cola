@@ -20,9 +20,11 @@ Clone the git-cola repo to get the latest development version:
 git-cola v2.9 (beta)
 ====================
 
-Development
------------
+Fixes
+-----
 * Typofixes in comments, naming, and strings have been applied.
+
+  https://github.com/git-cola/git-cola/pull/593
 
 
 .. _v2.8:
