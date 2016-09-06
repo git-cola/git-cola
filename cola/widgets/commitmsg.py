@@ -460,6 +460,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         sign = self.sign_action.isChecked()
         status, out, err = cmds.do(cmds.Commit, amend, msg, sign,
                                    no_verify=no_verify)
+        self.bypass_commit_hooks_action.setChecked(False)
         if status != 0:
             Interaction.critical(N_('Commit failed'),
                                  N_('"git commit" returned exit code %s') %
