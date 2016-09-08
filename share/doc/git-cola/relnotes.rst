@@ -20,6 +20,15 @@ Clone the git-cola repo to get the latest development version:
 git-cola v2.9 (beta)
 ====================
 
+Usability, bells and whistles
+-----------------------------
+* The `Bypass Commit Hooks` feature now disables itself automatically
+  when a new commit is created.  The new behavior turns the option into a
+  single-use flag, which helps prevent users from accidentally leaving it
+  active longer than intended.
+
+  https://github.com/git-cola/git-cola/pull/595
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
