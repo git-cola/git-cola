@@ -82,8 +82,13 @@ def diff_commits(parent, a, b):
 
 
 def diff_expression(parent, expr,
-                    create_widget=False, hide_expr=False):
-    dlg = FileDiffDialog(parent, expr=expr, hide_expr=hide_expr)
+                    create_widget=False,
+                    hide_expr=False,
+                    focus_tree=False):
+    dlg = FileDiffDialog(parent,
+                         expr=expr,
+                         hide_expr=hide_expr,
+                         focus_tree=focus_tree)
     if create_widget:
         return dlg
     dlg.show()
@@ -94,7 +99,7 @@ def diff_expression(parent, expr,
 class FileDiffDialog(QtWidgets.QDialog):
 
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
-                 hide_expr=False):
+                 hide_expr=False, focus_tree=False):
         QtWidgets.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
@@ -149,6 +154,9 @@ class FileDiffDialog(QtWidgets.QDialog):
 
         self.resize(720, 420)
         self.refresh()
+
+        if focus_tree:
+            self.focus_tree()
 
     def focus_tree(self):
         self.tree.setFocus()
