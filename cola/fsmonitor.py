@@ -11,6 +11,7 @@ import select
 from threading import Lock
 
 from . import utils
+from . import version
 from .decorators import memoize
 
 AVAILABLE = None
@@ -54,10 +55,10 @@ class _Monitor(QtCore.QObject):
         self._thread_class = thread_class
         self._thread = None
 
-    def start(self, refs_only=False):
+    def start(self):
         if self._thread_class is not None:
             assert self._thread is None
-            self._thread = self._thread_class(self, refs_only)
+            self._thread = self._thread_class(self)
             self._thread.start()
 
     def stop(self):
@@ -78,12 +79,18 @@ class _BaseThread(QtCore.QThread):
     #: modifications into a single signal.
     _NOTIFICATION_DELAY = 888
 
-    def __init__(self, monitor, refs_only):
+    def __init__(self, monitor):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
-        self._refs_only = refs_only
         self._running = True
-        self._pending = False
+        self._use_check_ignore = version.check('check-ignore',
+                                               version.git_version())
+        self._force_notify = False
+        self._file_paths = set()
+
+    @property
+    def _pending(self):
+        return self._force_notify or self._file_paths
 
     def refresh(self):
         """Do any housekeeping necessary in response to repository changes."""
@@ -91,8 +98,31 @@ class _BaseThread(QtCore.QThread):
 
     def notify(self):
         """Notifies all observers"""
-        self._pending = False
-        self._monitor.files_changed.emit()
+        do_notify = False
+        if self._force_notify:
+            do_notify = True
+        elif self._file_paths:
+            proc = core.start_command(['git', 'check-ignore', '--verbose',
+                                       '--non-matching', '-z', '--stdin'])
+            path_list = bchr(0).join(core.encode(path)
+                                     for path in self._file_paths)
+            out, err = proc.communicate(path_list)
+            if proc.returncode:
+                do_notify = True
+            else:
+                # Each output record is four fields separated by NULL
+                # characters (records are also separated by NULL characters):
+                # <source> <NULL> <linenum> <NULL> <pattern> <NULL> <pathname>
+                # For paths which are not ignored, all fields will be empty
+                # except for <pathname>.  So to see if we have any non-ignored
+                # files, we simply check every fourth field to see if any of
+                # them are empty.
+                source_fields = out.split(bchr(0))[0:-1:4]
+                do_notify = not all(source_fields)
+        self._force_notify = False
+        self._file_paths = set()
+        if do_notify:
+            self._monitor.files_changed.emit()
 
     @staticmethod
     def _log_enabled_message():
@@ -118,24 +148,21 @@ if AVAILABLE == 'inotify':
                 inotify.IN_ONLYDIR
         )
 
-        def __init__(self, monitor, refs_only):
-            _BaseThread.__init__(self, monitor, refs_only)
-            if refs_only:
-                worktree = None
-            else:
-                worktree = git.worktree()
-                if worktree is not None:
-                    worktree = core.abspath(worktree)
+        def __init__(self, monitor):
+            _BaseThread.__init__(self, monitor)
+            worktree = git.worktree()
+            if worktree is not None:
+                worktree = core.abspath(worktree)
             self._worktree = worktree
             self._git_dir = git.git_path()
             self._lock = Lock()
             self._inotify_fd = None
             self._pipe_r = None
             self._pipe_w = None
-            self._worktree_wds = set()
-            self._worktree_wd_map = {}
-            self._git_dir_wds = set()
-            self._git_dir_wd_map = {}
+            self._worktree_wd_to_path_map = {}
+            self._worktree_path_to_wd_map = {}
+            self._git_dir_wd_to_path_map = {}
+            self._git_dir_path_to_wd_map = {}
             self._git_dir_wd = None
 
         @staticmethod
@@ -208,16 +235,19 @@ if AVAILABLE == 'inotify':
                                 os.path.dirname(os.path.join(self._worktree,
                                                              path))
                                 for path in gitcmds.tracked_files())
-                        self._refresh_watches(tracked_dirs, self._worktree_wds,
-                                              self._worktree_wd_map)
+                        self._refresh_watches(tracked_dirs,
+                                              self._worktree_wd_to_path_map,
+                                              self._worktree_path_to_wd_map)
                     git_dirs = set()
                     git_dirs.add(self._git_dir)
                     for dirpath, dirnames, filenames in core.walk(
                             os.path.join(self._git_dir, 'refs')):
                         git_dirs.add(dirpath)
-                    self._refresh_watches(git_dirs, self._git_dir_wds,
-                                          self._git_dir_wd_map)
-                    self._git_dir_wd = self._git_dir_wd_map[self._git_dir]
+                    self._refresh_watches(git_dirs,
+                                          self._git_dir_wd_to_path_map,
+                                          self._git_dir_path_to_wd_map)
+                    self._git_dir_wd = \
+                            self._git_dir_path_to_wd_map[self._git_dir]
                 except OSError as e:
                     if e.errno == errno.ENOSPC:
                         self._log_out_of_wds_message()
@@ -225,11 +255,12 @@ if AVAILABLE == 'inotify':
                     else:
                         raise
 
-        def _refresh_watches(self, paths_to_watch, wd_set, wd_map):
-            watched_paths = set(wd_map)
+        def _refresh_watches(self, paths_to_watch, wd_to_path_map,
+                             path_to_wd_map):
+            watched_paths = set(path_to_wd_map)
             for path in watched_paths - paths_to_watch:
-                wd = wd_map.pop(path)
-                wd_set.remove(wd)
+                wd = path_to_wd_map.pop(path)
+                wd_to_path_set.pop(wd)
                 try:
                     inotify.rm_watch(self._inotify_fd, wd)
                 except OSError as e:
@@ -257,35 +288,36 @@ if AVAILABLE == 'inotify':
                     else:
                         raise
                 else:
-                    wd_set.add(wd)
-                    wd_map[path] = wd
+                    wd_to_path_map[wd] = path
+                    path_to_wd_map[path] = wd
 
-        def _event_is_relevant(self, wd, mask, name):
+        def _check_event(self, wd, mask, name):
             if mask & inotify.IN_Q_OVERFLOW:
-                return True
+                self._force_notify = True
             elif not mask & self._TRIGGER_MASK:
-                return False
-            elif wd in self._worktree_wds:
-                return True
+                pass
             elif mask & inotify.IN_ISDIR:
-                return False
+                pass
+            elif wd in self._worktree_wd_to_path_map:
+                if self._use_check_ignore:
+                    self._file_paths.add(
+                            os.path.join(self._worktree_wd_to_path_map[wd],
+                                         core.decode(name)))
+                else:
+                    self._force_notify = True
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
-                if name == 'HEAD':
-                    return True
-                elif not self._refs_only and name == 'index':
-                    return True
-            elif (wd in self._git_dir_wds and
-                    not core.decode(name).endswith('.lock')):
-                return True
-            else:
-                return False
+                if name == 'HEAD' or name == 'index':
+                    self._force_notify = True
+            elif (wd in self._git_dir_wd_to_path_map
+                    and not core.decode(name).endswith('.lock')):
+                self._force_notify = True
 
         def _handle_events(self):
             for wd, mask, cookie, name in \
                     inotify.read_events(self._inotify_fd):
-                if self._event_is_relevant(wd, mask, name):
-                    self._pending = True
+                if not self._force_notify:
+                    self._check_event(wd, mask, name)
 
         def stop(self):
             self._running = False
@@ -355,14 +387,11 @@ if AVAILABLE == 'pywin32':
                   win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
                   win32con.FILE_NOTIFY_CHANGE_SECURITY)
 
-        def __init__(self, monitor, refs_only):
-            _BaseThread.__init__(self, monitor, refs_only)
-            if refs_only:
-                worktree = None
-            else:
-                worktree = git.worktree()
-                if worktree is not None:
-                    worktree = self._transform_path(core.abspath(worktree))
+        def __init__(self, monitor):
+            _BaseThread.__init__(self, monitor)
+            worktree = git.worktree()
+            if worktree is not None:
+                worktree = self._transform_path(core.abspath(worktree))
             self._worktree = worktree
             self._worktree_watch = None
             self._git_dir = self._transform_path(core.abspath(git.git_path()))
@@ -429,20 +458,30 @@ if AVAILABLE == 'pywin32':
                 for action, path in self._worktree_watch.read():
                     if not self._running:
                         break
+                    if self._force_notify:
+                        continue
                     path = self._worktree + '/' + self._transform_path(path)
-                    if (path != self._git_dir and
-                            not path.startswith(self._git_dir + '/')):
-                        self._pending = True
+                    if (path != self._git_dir
+                        and not path.startswith(self._git_dir + '/')
+                        and not os.path.isdir(path)
+                       ):
+                        if self._use_check_ignore:
+                            self._file_paths.add(path)
+                        else:
+                            self._force_notify = True
             for action, path in self._git_dir_watch.read():
                 if not self._running:
                     break
+                if self._force_notify:
+                    continue
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
                     continue
-                if path == 'head' or path.startswith('refs/'):
-                    self._pending = True
-                elif not self._refs_only and path == 'index':
-                    self._pending = True
+                if (path == 'head'
+                    or path == 'index'
+                    or path.startswith('refs/')
+                   ):
+                    self._force_notify = True
 
         def stop(self):
             self._running = False
