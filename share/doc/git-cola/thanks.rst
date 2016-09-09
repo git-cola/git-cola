@@ -36,6 +36,7 @@ Thanks
 * deniz1a
 * Dmitry Kann
 * Eric Drechsel
+* Fabio Coatti
 * Geoffrey van Wyk
 * geotavros
 * `Git Hackers <http://git-scm.com/about>`_
