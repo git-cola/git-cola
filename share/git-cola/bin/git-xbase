@@ -148,8 +148,8 @@ class Editor(QtWidgets.QWidget):
             icon=icons.ok())
 
         self.extdiff_button = qtutils.create_button(
-            text=N_('External Diff'),
-            tooltip=N_('Launch external diff\n'
+            text=N_('Launch Diff Tool'),
+            tooltip=N_('Launch external diff tool\n'
                        'Shortcut: Ctrl+D'))
         self.extdiff_button.setEnabled(False)
 
@@ -273,7 +273,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                 self, N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
 
         self.external_diff_action = qtutils.add_action(
-                self, N_('External Diff'), self.external_diff.emit,
+                self, N_('Launch Diff Tool'), self.external_diff.emit,
                 hotkeys.DIFF)
 
         self.toggle_enabled_action = qtutils.add_action(
@@ -600,7 +600,7 @@ spacebar = toggle enabled
 
 ctrl+enter = accept changes and rebase
 ctrl+q     = cancel and abort the rebase
-ctrl+d     = launch external diff
+ctrl+d     = launch difftool
 """)
     title = N_('Help - git-xbase')
     return text.text_dialog(help_text, title)

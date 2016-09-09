@@ -46,13 +46,36 @@ def git_dag(model, args=None, settings=None):
     return view
 
 
+class FocusRedirectProxy(object):
+    """Redirect actions from the main widget to child widgets"""
+
+    def __init__(self, *widgets):
+        """Provide proxied widgets; the default widget must be first"""
+        self.widgets = widgets
+        self.default = widgets[0]
+
+    def __getattr__(self, name):
+        return (lambda *args, **kwargs:
+                self._forward_action(name, *args, **kwargs))
+
+    def _forward_action(self, name, *args, **kwargs):
+        """Forward the captured action to the focused or default widget"""
+        widget = QtWidgets.QApplication.focusWidget()
+        if widget in self.widgets and hasattr(widget, name):
+            fn = getattr(widget, name)
+        else:
+            fn = getattr(self.default, name)
+
+        return fn(*args, **kwargs)
+
+
 class ViewerMixin(object):
     """Implementations must provide selected_items()"""
 
     def __init__(self):
         self.selected = None
         self.clicked = None
-        self.menu_actions = self.context_menu_actions()
+        self.menu_actions = None  # provided by implementation
 
     def selected_item(self):
         """Return the currently selected item"""
@@ -105,6 +128,11 @@ class ViewerMixin(object):
     def create_tarball(self):
         self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
 
+    def show_diff(self):
+        self.with_oid(lambda oid:
+                difftool.diff_expression(self, oid + '^!',
+                                         hide_expr=False, focus_tree=True))
+
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
 
@@ -113,44 +141,6 @@ class ViewerMixin(object):
 
     def save_blob_dialog(self):
         self.with_oid(lambda oid: browse.BrowseDialog.browse(oid))
-
-    def context_menu_actions(self):
-        return {
-            'diff_this_selected':
-            qtutils.add_action(self, N_('Diff this -> selected'),
-                               self.diff_this_selected),
-            'diff_selected_this':
-            qtutils.add_action(self, N_('Diff selected -> this'),
-                               self.diff_selected_this),
-            'create_branch':
-            qtutils.add_action(self, N_('Create Branch'),
-                               self.create_branch),
-            'create_patch':
-            qtutils.add_action(self, N_('Create Patch'),
-                               self.create_patch),
-            'create_tag':
-            qtutils.add_action(self, N_('Create Tag'),
-                               self.create_tag),
-            'create_tarball':
-            qtutils.add_action(self, N_('Save As Tarball/Zip...'),
-                               self.create_tarball),
-            'cherry_pick':
-            qtutils.add_action(self, N_('Cherry Pick'),
-                               self.cherry_pick),
-            'reset_branch_head':
-            qtutils.add_action(self, N_('Reset Branch Head'),
-                               self.reset_branch_head),
-            'reset_worktree':
-            qtutils.add_action(self, N_('Reset Worktree'),
-                               self.reset_worktree),
-            'save_blob':
-            qtutils.add_action(self, N_('Grab File...'),
-                               self.save_blob_dialog),
-            'copy':
-            qtutils.add_action(self, N_('Copy SHA-1'),
-                               self.copy_to_clipboard,
-                               QtGui.QKeySequence.Copy),
-        }
 
     def update_menu_actions(self, event):
         selected_items = self.selected_items()
@@ -172,6 +162,7 @@ class ViewerMixin(object):
 
         self.menu_actions['diff_this_selected'].setEnabled(can_diff)
         self.menu_actions['diff_selected_this'].setEnabled(can_diff)
+        self.menu_actions['diff_commit'].setEnabled(has_single_selection)
 
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
         self.menu_actions['copy'].setEnabled(has_single_selection)
@@ -188,6 +179,7 @@ class ViewerMixin(object):
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.menu_actions['diff_this_selected'])
         menu.addAction(self.menu_actions['diff_selected_this'])
+        menu.addAction(self.menu_actions['diff_commit'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['create_branch'])
         menu.addAction(self.menu_actions['create_tag'])
@@ -203,6 +195,48 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['save_blob'])
         menu.addAction(self.menu_actions['copy'])
         menu.exec_(self.mapToGlobal(event.pos()))
+
+
+def viewer_actions(widget):
+    return {
+        'diff_this_selected':
+        qtutils.add_action(widget, N_('Diff this -> selected'),
+                           widget.proxy.diff_this_selected),
+        'diff_selected_this':
+        qtutils.add_action(widget, N_('Diff selected -> this'),
+                           widget.proxy.diff_selected_this),
+        'create_branch':
+        qtutils.add_action(widget, N_('Create Branch'),
+                           widget.proxy.create_branch),
+        'create_patch':
+        qtutils.add_action(widget, N_('Create Patch'),
+                           widget.proxy.create_patch),
+        'create_tag':
+        qtutils.add_action(widget, N_('Create Tag'),
+                           widget.proxy.create_tag),
+        'create_tarball':
+        qtutils.add_action(widget, N_('Save As Tarball/Zip...'),
+                           widget.proxy.create_tarball),
+        'cherry_pick':
+        qtutils.add_action(widget, N_('Cherry Pick'),
+                           widget.proxy.cherry_pick),
+        'diff_commit':
+        qtutils.add_action(widget, N_('Launch Diff Tool'),
+                           widget.proxy.show_diff, hotkeys.DIFF),
+        'reset_branch_head':
+        qtutils.add_action(widget, N_('Reset Branch Head'),
+                           widget.proxy.reset_branch_head),
+        'reset_worktree':
+        qtutils.add_action(widget, N_('Reset Worktree'),
+                           widget.proxy.reset_worktree),
+        'save_blob':
+        qtutils.add_action(widget, N_('Grab File...'),
+                           widget.proxy.save_blob_dialog),
+        'copy':
+        qtutils.add_action(widget, N_('Copy SHA-1'),
+                           widget.proxy.copy_to_clipboard,
+                           QtGui.QKeySequence.Copy),
+    }
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -227,6 +261,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
         self.sha1map = {}
+        self.menu_actions = None
         self.notifier = notifier
         self.selecting = False
         self.commits = []
@@ -382,6 +417,14 @@ class GitDAG(standard.MainWindow):
         self.diffwidget = diff.DiffWidget(notifier, self)
         self.filewidget = filelist.FileWidget(notifier, self)
         self.graphview = GraphView(notifier, self)
+
+        self.proxy = FocusRedirectProxy(self.treewidget,
+                                        self.graphview,
+                                        self.filewidget)
+
+        self.viewer_actions = actions = viewer_actions(self)
+        self.treewidget.menu_actions = actions
+        self.graphview.menu_actions = actions
 
         self.controls_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                             self.revtext, self.maxresults)
@@ -1037,6 +1080,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         Commit.selected_outline_color = highlight.darker()
 
         self.selection_list = []
+        self.menu_actions = None
         self.notifier = notifier
         self.commits = []
         self.items = {}

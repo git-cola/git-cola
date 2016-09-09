@@ -27,7 +27,7 @@ class FileWidget(TreeWidget):
                 self, N_('Show History'), self.show_history, hotkeys.HISTORY)
 
         self.launch_difftool_action = qtutils.add_action(
-                self, N_('Launch Diff Tool'), self.show_diff, hotkeys.DIFF)
+                self, N_('Launch Diff Tool'), self.show_diff)
 
         self.launch_editor_action = qtutils.add_action(
                 self, N_('Launch Diff Tool'), self.edit_paths, hotkeys.EDIT)

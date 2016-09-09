@@ -28,6 +28,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/595
 
+* `git dag` learned to launch an external diff viewer on selected commits.
+  The standard `Ctrl+D` shortcut can be used to view diffs.
+
+  https://github.com/git-cola/git-cola/issues/468
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
