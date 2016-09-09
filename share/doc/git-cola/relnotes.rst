@@ -14,7 +14,6 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
-
 .. _v2.9:
 
 git-cola v2.9 (beta)
@@ -39,6 +38,12 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/593
 
+* The inotify and win32 filesystem monitoring no longer refreshes
+  when updates are made to ignored files.
+
+  https://github.com/git-cola/git-cola/issues/517
+
+  https://github.com/git-cola/git-cola/issues/516
 
 .. _v2.8:
 
