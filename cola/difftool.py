@@ -20,6 +20,7 @@ from .widgets import filetree
 
 
 def run():
+    """Start a default difftool session"""
     files = selection.selected_group()
     if not files:
         return
@@ -29,6 +30,7 @@ def run():
 
 
 def launch_with_head(filenames, staged, head):
+    """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
     else:
@@ -38,7 +40,15 @@ def launch_with_head(filenames, staged, head):
 
 def launch(left=None, right=None, paths=None,
            left_take_parent=False, staged=False):
-    """Launches 'git difftool' with given parameters"""
+    """Launches 'git difftool' with given parameters
+
+    :param left: first argument to difftool
+    :param right: second argument to difftool_args
+    :param paths: paths to diff
+    :param staged: activate `git difftool --staged`
+    :param left_take_parent: whether to append the first-parent ~ for diffing
+
+    """
 
     difftool_args = ['git', 'difftool', '--no-prompt']
     if staged:
@@ -59,8 +69,8 @@ def launch(left=None, right=None, paths=None,
                 left += '~'
             else:
                 # No parent, assume it's the root commit, so we have to diff
-                # against the empty tree.  The empty tree is a built-in
-                # git constant SHA1.  The empty tree is a built-in Git SHA1.
+                # against the empty tree.  Git's empty tree is a built-in
+                # constant SHA-1.
                 left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
         difftool_args.append(left)
 
@@ -75,6 +85,7 @@ def launch(left=None, right=None, paths=None,
 
 
 def diff_commits(parent, a, b):
+    """Show a dialog for diffing two commits"""
     dlg = FileDiffDialog(parent, a=a, b=b)
     dlg.show()
     dlg.raise_()
@@ -85,6 +96,7 @@ def diff_expression(parent, expr,
                     create_widget=False,
                     hide_expr=False,
                     focus_tree=False):
+    """Show a diff dialog for diff expressions"""
     dlg = FileDiffDialog(parent,
                          expr=expr,
                          hide_expr=hide_expr,
@@ -100,6 +112,8 @@ class FileDiffDialog(QtWidgets.QDialog):
 
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
                  hide_expr=False, focus_tree=False):
+        """Show files with differences and launch difftool"""
+
         QtWidgets.QDialog.__init__(self, parent)
         self.setAttribute(Qt.WA_MacMetalStyle)
 
@@ -159,9 +173,11 @@ class FileDiffDialog(QtWidgets.QDialog):
             self.focus_tree()
 
     def focus_tree(self):
+        """Focus the files tree"""
         self.tree.setFocus()
 
     def focus_input(self):
+        """Focus the expression input"""
         self.expr.setFocus()
 
     def text_changed(self, txt):
@@ -169,6 +185,7 @@ class FileDiffDialog(QtWidgets.QDialog):
         self.refresh()
 
     def refresh(self):
+        """Redo the diff when the expression changes"""
         if self.diff_expr is not None:
             self.diff_arg = utils.shell_split(self.diff_expr)
         elif self.b is None:
