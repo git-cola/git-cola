@@ -33,6 +33,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/468
 
+* `git dag` learned to launch directory diffs via `git difftool --dir-diff`.
+  The `Ctrl+Shift+D` shortcut launches difftool in directory-diff mode.
+
+  https://github.com/git-cola/git-cola/issues/468
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.

@@ -133,6 +133,10 @@ class ViewerMixin(object):
                 difftool.diff_expression(self, oid + '^!',
                                          hide_expr=False, focus_tree=True))
 
+    def show_dir_diff(self):
+        self.with_oid(lambda oid:
+                difftool.launch(left=oid, left_take_magic=True, dir_diff=True))
+
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
 
@@ -163,6 +167,7 @@ class ViewerMixin(object):
         self.menu_actions['diff_this_selected'].setEnabled(can_diff)
         self.menu_actions['diff_selected_this'].setEnabled(can_diff)
         self.menu_actions['diff_commit'].setEnabled(has_single_selection)
+        self.menu_actions['diff_commit_all'].setEnabled(has_single_selection)
 
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
         self.menu_actions['copy'].setEnabled(has_single_selection)
@@ -180,6 +185,7 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['diff_this_selected'])
         menu.addAction(self.menu_actions['diff_selected_this'])
         menu.addAction(self.menu_actions['diff_commit'])
+        menu.addAction(self.menu_actions['diff_commit_all'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['create_branch'])
         menu.addAction(self.menu_actions['create_tag'])
@@ -223,6 +229,9 @@ def viewer_actions(widget):
         'diff_commit':
         qtutils.add_action(widget, N_('Launch Diff Tool'),
                            widget.proxy.show_diff, hotkeys.DIFF),
+        'diff_commit_all':
+        qtutils.add_action(widget, N_('Launch Directory Diff Tool'),
+                           widget.proxy.show_dir_diff, hotkeys.DIFF_SECONDARY),
         'reset_branch_head':
         qtutils.add_action(widget, N_('Reset Branch Head'),
                            widget.proxy.reset_branch_head),
