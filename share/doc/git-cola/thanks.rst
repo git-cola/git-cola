@@ -67,6 +67,7 @@ Thanks
 * Leho Kraav
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
+* Łukasz Wojniłowicz
 * Luke Bakken
 * Maarten Nieber
 * Maaaks
