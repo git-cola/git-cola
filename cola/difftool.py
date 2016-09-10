@@ -38,14 +38,15 @@ def launch_with_head(filenames, staged, head):
     launch(left=left, staged=staged, paths=filenames)
 
 
-def launch(left=None, right=None, paths=None,
-           left_take_parent=False, staged=False):
+def launch(left=None, right=None, paths=None, staged=False, dir_diff=False,
+           left_take_magic=False, left_take_parent=False):
     """Launches 'git difftool' with given parameters
 
     :param left: first argument to difftool
     :param right: second argument to difftool_args
     :param paths: paths to diff
     :param staged: activate `git difftool --staged`
+    :param left_take_magic: whether to append the magic ^! diff expression
     :param left_take_parent: whether to append the first-parent ~ for diffing
 
     """
@@ -55,7 +56,8 @@ def launch(left=None, right=None, paths=None,
         difftool_args.append('--cached')
 
     if left:
-        if left_take_parent:
+        if left_take_parent or left_take_magic:
+            suffix = left_take_magic and '^!' or '~'
             # Check root commit (no parents and thus cannot execute '~')
             model = main.model()
             git = model.git
@@ -66,12 +68,14 @@ def launch(left=None, right=None, paths=None,
 
             if len(out.split()) >= 2:
                 # Commit has a parent, so we can take its child as requested
-                left += '~'
+                left += suffix
             else:
                 # No parent, assume it's the root commit, so we have to diff
                 # against the empty tree.  Git's empty tree is a built-in
                 # constant SHA-1.
                 left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+                if not right and left_take_magic:
+                    right = left
         difftool_args.append(left)
 
     if right:
