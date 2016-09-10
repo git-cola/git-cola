@@ -46,6 +46,7 @@ def launch(left=None, right=None, paths=None, staged=False, dir_diff=False,
     :param right: second argument to difftool_args
     :param paths: paths to diff
     :param staged: activate `git difftool --staged`
+    :param dir_diff: activate `git difftool --dir-diff`
     :param left_take_magic: whether to append the magic ^! diff expression
     :param left_take_parent: whether to append the first-parent ~ for diffing
 
@@ -54,6 +55,8 @@ def launch(left=None, right=None, paths=None, staged=False, dir_diff=False,
     difftool_args = ['git', 'difftool', '--no-prompt']
     if staged:
         difftool_args.append('--cached')
+    if dir_diff:
+        difftool_args.append('--dir-diff')
 
     if left:
         if left_take_parent or left_take_magic:
@@ -143,11 +146,16 @@ class FileDiffDialog(QtWidgets.QDialog):
         self.diff_button = qtutils.create_button(text=N_('Compare'),
                                                  icon=icons.diff(),
                                                  enabled=False)
+        self.diff_all_button = qtutils.create_button(text=N_('Compare All'),
+                                                     icon=icons.diff())
         self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                           qtutils.STRETCH,
-                                          self.diff_button, self.close_button)
+                                          self.diff_button,
+                                          self.diff_all_button,
+                                          defs.spacing,
+                                          self.close_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.expr, self.tree,
@@ -165,9 +173,13 @@ class FileDiffDialog(QtWidgets.QDialog):
         self.expr.enter.connect(self.focus_tree)
 
         qtutils.connect_button(self.diff_button, self.diff)
+        qtutils.connect_button(self.diff_all_button,
+                               lambda: self.diff(dir_diff=True))
         qtutils.connect_button(self.close_button, self.close)
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
+        qtutils.add_action(self, 'Diff All', lambda: self.diff(dir_diff=True),
+                           hotkeys.CTRL_ENTER, hotkeys.CTRL_RETURN)
         qtutils.add_close_action(self)
 
         self.resize(720, 420)
@@ -206,17 +218,19 @@ class FileDiffDialog(QtWidgets.QDialog):
         self.tree.set_filenames(filenames, select=True)
 
     def tree_selection_changed(self):
-        self.diff_button.setEnabled(self.tree.has_selection())
+        has_selection = self.tree.has_selection()
+        self.diff_button.setEnabled(has_selection)
+        self.diff_all_button.setEnabled(has_selection)
 
     def tree_double_clicked(self, item, column):
         path = self.tree.filename_from_item(item)
         left, right = self._left_right_args()
         launch(left=left, right=right, paths=[path])
 
-    def diff(self):
+    def diff(self, dir_diff=False):
         paths = self.tree.selected_filenames()
         left, right = self._left_right_args()
-        launch(left=left, right=right, paths=paths)
+        launch(left=left, right=right, paths=paths, dir_diff=dir_diff)
 
     def _left_right_args(self):
         if self.diff_arg:
