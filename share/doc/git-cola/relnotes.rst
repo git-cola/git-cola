@@ -21,6 +21,10 @@ git-cola v2.9 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* New Polish translation thanks to Łukasz Wojniłowicz
+
+  https://github.com/git-cola/git-cola/pull/598
+
 * The `Bypass Commit Hooks` feature now disables itself automatically
   when a new commit is created.  The new behavior turns the option into a
   single-use flag, which helps prevent users from accidentally leaving it
