@@ -63,7 +63,7 @@ class Settings(object):
         missing_recent = []
 
         for bookmark in self.bookmarks:
-            if not self.verify(bookmark):
+            if not self.verify(bookmark['path']):
                 missing_bookmarks.append(bookmark)
 
         for bookmark in missing_bookmarks:
@@ -82,13 +82,15 @@ class Settings(object):
             except:
                 pass
 
-    def add_bookmark(self, bookmark):
+    def add_bookmark(self, path, name):
         """Adds a bookmark to the saved settings"""
+        bookmark = { 'path': path, 'name' : name }
         if bookmark not in self.bookmarks:
             self.bookmarks.append(bookmark)
 
-    def remove_bookmark(self, bookmark):
+    def remove_bookmark(self, path, name):
         """Remove a bookmark"""
+        bookmark = { 'path': path, 'name' : name }
         if bookmark in self.bookmarks:
             self.bookmarks.remove(bookmark)
 

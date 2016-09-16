@@ -144,13 +144,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         # bookmarks
         if self.style == BOOKMARKS:
-            items = [builder.get(path) for path in settings.bookmarks]
+            items = [builder.get(bookmark['path'],bookmark['name']) for bookmark in settings.bookmarks]
 
             if prefs.sort_bookmarks():
                 items.sort()
         elif self.style == RECENT_REPOS:
             # recent items
-            items = [builder.get(path) for path in settings.recent]
+            items = [builder.get(path,path) for path in settings.recent]
         else:
             items = []
         self.clear()
@@ -231,9 +231,17 @@ class BookmarksTreeWidget(standard.TreeWidget):
                                   text=core.getcwd())
         if not ok:
             return
+
         normpath = utils.expandpath(path)
+        name = os.path.basename(normpath)
+        name, ok = qtutils.prompt(N_('Rename favorite?'),
+                                  title=N_('New name:'),
+                                  text=name)
+        if not ok:
+               name = os.path.basename(normpath)
+
         if git.is_git_worktree(normpath):
-            self.settings.add_bookmark(normpath)
+            self.settings.add_bookmark(normpath,name)
             self.settings.save()
             self.refresh()
         else:
@@ -252,7 +260,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         else:
             return
         ok, status, out, err = cmds.do(cmd, self.settings, item.path,
-                                       icon=icons.discard())
+                                       item.name, icon=icons.discard())
         if ok:
             self.refresh()
 
@@ -264,24 +272,23 @@ class BuildItem(object):
         self.folder_icon = icons.folder()
         self.default_repo = gitcfg.current().get('cola.defaultrepo')
 
-    def get(self, path):
+    def get(self, path, name):
         is_default = self.default_repo == path
         if is_default:
             icon = self.star_icon
         else:
             icon = self.folder_icon
-        return BookmarksTreeWidgetItem(path, icon, is_default)
+        return BookmarksTreeWidgetItem(path, name, icon, is_default)
 
 
 class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
-    def __init__(self, path, icon, is_default):
+    def __init__(self, path, name, icon, is_default):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path
+        self.name = name
         self.is_default = is_default
 
         self.setIcon(0, icon)
-        normpath = os.path.normpath(path)
-        basename = os.path.basename(normpath)
-        self.setText(0, basename)
+        self.setText(0, name)
         self.setToolTip(0, path)
