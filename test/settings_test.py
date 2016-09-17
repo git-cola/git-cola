@@ -41,13 +41,13 @@ class SettingsTestCase(unittest.TestCase):
         # We automatically purge missing entries so we mock-out
         # git.is_git_worktree() so that this bookmark is kept.
 
-        bookmark = '/tmp/python/thinks/this/exists'
+        bookmark = { 'path': '/tmp/python/thinks/this/exists', 'name' : 'exists' }
 
         def mock_verify(path):
-            return path == bookmark
+            return path == bookmark['path']
 
         settings = self.new_settings()
-        settings.add_bookmark(bookmark)
+        settings.add_bookmark(bookmark['path'],bookmark['name'])
         settings.save()
 
         settings = self.new_settings(verify=mock_verify)
@@ -56,16 +56,16 @@ class SettingsTestCase(unittest.TestCase):
         self.assertEqual(len(settings.bookmarks), 1)
         self.assertTrue(bookmark in bookmarks)
 
-        settings.remove_bookmark(bookmark)
+        settings.remove_bookmark(bookmark['path'],bookmark['name'])
         bookmarks = settings.bookmarks
         self.assertEqual(len(bookmarks), 0)
         self.assertFalse(bookmark in bookmarks)
 
     def test_bookmarks_removes_missing_entries(self):
         """Test that missing entries are removed after a reload"""
-        bookmark = '/tmp/this/does/not/exist'
+        bookmark = { 'path': '/tmp/this/does/not/exist', 'name' : 'notexist' }
         settings = self.new_settings()
-        settings.add_bookmark(bookmark)
+        settings.add_bookmark(bookmark['path'],bookmark['name'])
         settings.save()
 
         settings = self.new_settings()
