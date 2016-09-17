@@ -60,17 +60,30 @@ class Settings(object):
 
     def remove_missing(self):
         missing_bookmarks = []
+        update_bookmarks = []
         missing_recent = []
 
         for bookmark in self.bookmarks:
-            if not self.verify(bookmark['path']):
-                missing_bookmarks.append(bookmark)
+            try:
+                if not self.verify(bookmark['path']):
+                    missing_bookmarks.append(bookmark)
+            except:
+                """Old version bookmark format """
+                new_bookmark = { 'path' : bookmark, 'name' : os.path.basename(bookmark) }
+                if not self.verify(new_bookmark['path']):
+                    missing_bookmarks.append(new_bookmark)
+                else:
+                    update_bookmarks.append(new_bookmark)
+                    self.bookmarks.remove(bookmark)
 
         for bookmark in missing_bookmarks:
             try:
                 self.bookmarks.remove(bookmark)
             except:
                 pass
+
+        for bookmark in update_bookmarks:
+            self.bookmarks.append(bookmark)
 
         for recent in self.recent:
             if not self.verify(recent):
