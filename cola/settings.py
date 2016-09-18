@@ -70,11 +70,10 @@ class Settings(object):
             except:
                 """Old version bookmark format """
                 new_bookmark = { 'path' : bookmark, 'name' : os.path.basename(bookmark) }
-                if not self.verify(new_bookmark['path']):
-                    missing_bookmarks.append(new_bookmark)
+                if not self.verify(bookmark):
+                    missing_bookmarks.append(bookmark)
                 else:
                     update_bookmarks.append(new_bookmark)
-                    self.bookmarks.remove(bookmark)
 
         for bookmark in missing_bookmarks:
             try:
@@ -82,8 +81,12 @@ class Settings(object):
             except:
                 pass
 
-        for bookmark in update_bookmarks:
-            self.bookmarks.append(bookmark)
+        """In case of old settings version, clear old bookmars list and fill with new list"""
+        if update_bookmarks:
+            for bookmark in update_bookmarks:
+                self.bookmarks.remove(bookmark['path'])
+            for bookmark in update_bookmarks:
+                self.bookmarks.append(bookmark)
 
         for recent in self.recent:
             if not self.verify(recent):
