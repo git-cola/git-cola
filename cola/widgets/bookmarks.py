@@ -144,13 +144,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         # bookmarks
         if self.style == BOOKMARKS:
-            items = [builder.get(bookmark['path'],bookmark['name']) for bookmark in settings.bookmarks]
+            items = [builder.get(bookmark['path'], bookmark['name']) for bookmark in settings.bookmarks]
 
             if prefs.sort_bookmarks():
                 items.sort()
         elif self.style == RECENT_REPOS:
             # recent items
-            items = [builder.get(path,path) for path in settings.recent]
+            items = [builder.get(path, path) for path in settings.recent]
         else:
             items = []
         self.clear()
@@ -235,13 +235,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
         normpath = utils.expandpath(path)
         name = os.path.basename(normpath)
         name, ok = qtutils.prompt(N_('Rename favorite?'),
-                                  title=N_('New name:'),
+                                  title=N_('Enter new name:'),
                                   text=name)
         if not ok:
                name = os.path.basename(normpath)
 
         if git.is_git_worktree(normpath):
-            self.settings.add_bookmark(normpath,name)
+            self.settings.add_bookmark(normpath, name)
             self.settings.save()
             self.refresh()
         else:
