@@ -111,6 +111,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.clear_default_repo_action = qtutils.add_action(
                 self, N_('Clear Default Repository'), self.clear_default_repo)
 
+        self.rename_repo_action = qtutils.add_action(
+                self, N_('Rename Repository'), self.rename_repo)
+
         self.open_default_action = qtutils.add_action(
                 self, cmds.OpenDefaultApp.name(), self.open_default,
                 hotkeys.PRIMARY_ACTION)
@@ -133,7 +136,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
                                         self.copy_action,
                                         self.launch_editor_action,
                                         self.launch_terminal_action,
-                                        self.open_default_action)
+                                        self.open_default_action,
+                                        self.rename_repo_action)
         self.action_group.setEnabled(False)
         self.set_default_repo_action.setEnabled(False)
         self.clear_default_repo_action.setEnabled(False)
@@ -172,6 +176,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             menu.addAction(self.clear_default_repo_action)
         else:
             menu.addAction(self.set_default_repo_action)
+        menu.addAction(self.rename_repo_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def apply_fn(self, fn, *args, **kwargs):
@@ -199,6 +204,20 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
     def clear_default_item(self, item):
         cmds.do(cmds.SetDefaultRepo, None, None)
+        self.refresh()
+
+    def rename_repo(self):
+        self.apply_fn(self.rename_repo_item)
+
+    def rename_repo_item(self, item):
+        newName, ok = qtutils.prompt(N_('Rename favorite Repository'),
+                                  title=N_('Enter new name for Repository'),
+                                  text=item.name)
+        if not ok:
+            return
+        self.settings.remove_bookmark(item.path, item.name)
+        self.settings.add_bookmark(item.path, newName)
+        self.settings.save()
         self.refresh()
 
     def open_repo(self):
