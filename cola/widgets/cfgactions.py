@@ -142,7 +142,7 @@ class GitCommandWidget(standard.Dialog):
             # Terminate seems to do nothing in windows
             self.proc.terminate()
             # Kill the process.
-            QtCore.QTimer.singleShot(1000, self.proc, QtCore.SLOT('kill()'))
+            QtCore.QTimer.singleShot(1000, self.proc, self.proc.kill)
 
     def closeEvent(self, event):
         if self.proc.state() != QtCore.QProcess.NotRunning:
