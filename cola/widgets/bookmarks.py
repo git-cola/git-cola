@@ -111,6 +111,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.clear_default_repo_action = qtutils.add_action(
                 self, N_('Clear Default Repository'), self.clear_default_repo)
 
+        self.rename_repo_action = qtutils.add_action(
+                self, N_('Rename Repository'), self.rename_repo)
+
         self.open_default_action = qtutils.add_action(
                 self, cmds.OpenDefaultApp.name(), self.open_default,
                 hotkeys.PRIMARY_ACTION)
@@ -133,7 +136,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
                                         self.copy_action,
                                         self.launch_editor_action,
                                         self.launch_terminal_action,
-                                        self.open_default_action)
+                                        self.open_default_action,
+                                        self.rename_repo_action)
         self.action_group.setEnabled(False)
         self.set_default_repo_action.setEnabled(False)
         self.clear_default_repo_action.setEnabled(False)
@@ -144,13 +148,14 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         # bookmarks
         if self.style == BOOKMARKS:
-            items = [builder.get(path) for path in settings.bookmarks]
+            items = [builder.get(entry['path'], entry['name'])
+                        for entry in settings.bookmarks]
 
             if prefs.sort_bookmarks():
                 items.sort()
         elif self.style == RECENT_REPOS:
             # recent items
-            items = [builder.get(path) for path in settings.recent]
+            items = [builder.get(path, path) for path in settings.recent]
         else:
             items = []
         self.clear()
@@ -172,6 +177,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             menu.addAction(self.clear_default_repo_action)
         else:
             menu.addAction(self.set_default_repo_action)
+        menu.addAction(self.rename_repo_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def apply_fn(self, fn, *args, **kwargs):
@@ -189,7 +195,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.apply_fn(self.set_default_item)
 
     def set_default_item(self, item):
-        cmds.do(cmds.SetDefaultRepo, item.path)
+        cmds.do(cmds.SetDefaultRepo, item.path, item.name)
         self.refresh()
         self.default_changed.emit()
 
@@ -198,7 +204,20 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.default_changed.emit()
 
     def clear_default_item(self, item):
-        cmds.do(cmds.SetDefaultRepo, None)
+        cmds.do(cmds.SetDefaultRepo, None, None)
+        self.refresh()
+
+    def rename_repo(self):
+        self.apply_fn(self.rename_repo_item)
+
+    def rename_repo_item(self, item):
+        name, ok = qtutils.prompt(N_('Rename favorite Repository'),
+                                  title=N_('Enter new name for Repository'),
+                                  text=item.name)
+        if not ok:
+            return
+        self.settings.rename_bookmark(item.path, item.name, name)
+        self.settings.save()
         self.refresh()
 
     def open_repo(self):
@@ -231,9 +250,17 @@ class BookmarksTreeWidget(standard.TreeWidget):
                                   text=core.getcwd())
         if not ok:
             return
+
         normpath = utils.expandpath(path)
+        name = os.path.basename(normpath)
+        name, ok = qtutils.prompt(N_('Rename favorite?'),
+                                  title=N_('Enter new name:'),
+                                  text=name)
+        if not ok:
+               name = os.path.basename(normpath)
+
         if git.is_git_worktree(normpath):
-            self.settings.add_bookmark(normpath)
+            self.settings.add_bookmark(normpath, name)
             self.settings.save()
             self.refresh()
         else:
@@ -252,7 +279,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         else:
             return
         ok, status, out, err = cmds.do(cmd, self.settings, item.path,
-                                       icon=icons.discard())
+                                       item.name, icon=icons.discard())
         if ok:
             self.refresh()
 
@@ -264,24 +291,23 @@ class BuildItem(object):
         self.folder_icon = icons.folder()
         self.default_repo = gitcfg.current().get('cola.defaultrepo')
 
-    def get(self, path):
+    def get(self, path, name):
         is_default = self.default_repo == path
         if is_default:
             icon = self.star_icon
         else:
             icon = self.folder_icon
-        return BookmarksTreeWidgetItem(path, icon, is_default)
+        return BookmarksTreeWidgetItem(path, name, icon, is_default)
 
 
 class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
-    def __init__(self, path, icon, is_default):
+    def __init__(self, path, name, icon, is_default):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path
+        self.name = name
         self.is_default = is_default
 
         self.setIcon(0, icon)
-        normpath = os.path.normpath(path)
-        basename = os.path.basename(normpath)
-        self.setText(0, basename)
+        self.setText(0, name)
         self.setToolTip(0, path)

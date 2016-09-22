@@ -569,10 +569,11 @@ class RemoteRename(RemoteCommand):
 
 class RemoveFromSettings(ConfirmAction):
 
-    def __init__(self, settings, repo, icon=None):
+    def __init__(self, settings, repo, name, icon=None):
         ConfirmAction.__init__(self)
         self.settings = settings
         self.repo = repo
+        self.name = name
         self.icon = icon
 
     def success(self):
@@ -582,14 +583,14 @@ class RemoveFromSettings(ConfirmAction):
 class RemoveBookmark(RemoveFromSettings):
 
     def confirm(self):
-        repo = self.repo
+        name = self.name
         title = msg = N_('Delete Bookmark?')
-        info = N_('%s will be removed from your bookmarks.') % repo
+        info = N_('%s will be removed from your bookmarks.') % name
         ok_text = N_('Delete Bookmark')
         return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
 
     def action(self):
-        self.settings.remove_bookmark(self.repo)
+        self.settings.remove_bookmark(self.repo,self.name)
         return (0, '', '')
 
 
@@ -1425,9 +1426,10 @@ class RunConfigAction(Command):
 
 class SetDefaultRepo(Command):
 
-    def __init__(self, repo):
+    def __init__(self, repo, name):
         Command.__init__(self)
         self.repo = repo
+        self.name = name
 
     def do(self):
         gitcfg.current().set_user('cola.defaultrepo', self.repo)

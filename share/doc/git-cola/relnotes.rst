@@ -42,6 +42,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/468
 
+* Items in the "Favorites" list can now be renamed, which makes it
+  easier to differentiate between several checkouts of the same repository.
+
+  https://github.com/git-cola/git-cola/issues/599
+
+  https://github.com/git-cola/git-cola/pull/601
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.

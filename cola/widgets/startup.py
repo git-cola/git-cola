@@ -53,7 +53,10 @@ class StartupDialog(standard.Dialog):
         self.bookmarks_model.appendRow(item)
 
         added = set()
-        all_repos = settings.bookmarks + settings.recent
+
+        # Bookmarks/"Favorites" is a dict list and Recent is a string list
+        bookmarks = [i['path'] for i in settings.bookmarks]
+        all_repos = bookmarks + settings.recent
 
         for repo in all_repos:
             if repo in added:
