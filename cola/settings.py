@@ -60,33 +60,17 @@ class Settings(object):
 
     def remove_missing(self):
         missing_bookmarks = []
-        update_bookmarks = []
         missing_recent = []
 
         for bookmark in self.bookmarks:
-            if isinstance(bookmark, dict):
-                if not self.verify(bookmark['path']):
-                    missing_bookmarks.append(bookmark)
-            else:
-                #Old version bookmark format detected
-                new_bookmark = {'path': bookmark, 'name': os.path.basename(bookmark)}
-                if not self.verify(bookmark):
-                    missing_bookmarks.append(bookmark)
-                else:
-                    update_bookmarks.append(new_bookmark)
+            if not self.verify(bookmark['path']):
+                missing_bookmarks.append(bookmark)
 
         for bookmark in missing_bookmarks:
             try:
                 self.bookmarks.remove(bookmark)
             except:
                 pass
-
-        #In case of old settings version, clear old bookmars list first and after fill with new list
-        if update_bookmarks:
-            for bookmark in update_bookmarks:
-                self.bookmarks.remove(bookmark['path'])
-            for bookmark in update_bookmarks:
-                self.bookmarks.append(bookmark)
 
         for recent in self.recent:
             if not self.verify(recent):
@@ -130,7 +114,16 @@ class Settings(object):
 
     def load(self):
         self.values.update(self.asdict())
+        self.upgrade_settings()
         self.remove_missing()
+
+    def upgrade_settings(self):
+        """Upgrade git-cola settings"""
+        # Upgrade bookmarks to the new dict-based bookmarks format.
+        if self.bookmarks and not isinstance(self.bookmarks[0], dict):
+            bookmarks = [dict(name=os.path.basename(path), path=path)
+                            for path in self.bookmarks]
+            self.values['bookmarks'] = bookmarks
 
     def asdict(self):
         path = self.path()
