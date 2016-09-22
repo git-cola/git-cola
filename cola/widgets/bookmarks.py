@@ -4,6 +4,7 @@ import os
 
 from qtpy import QtCore
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
@@ -99,8 +100,15 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
 
+        # We make the items editable, but we don't want the double-click
+        # behavior to trigger editing.  Make it behave like Mac OS X's Finder.
+        self.setEditTriggers(self.SelectedClicked)
+
         self.open_action = qtutils.add_action(
-                self, N_('Open'), self.open_repo, hotkeys.OPEN, *hotkeys.ACCEPT)
+                self, N_('Open'), self.open_repo, hotkeys.OPEN)
+
+        self.accept_action = qtutils.add_action(
+                self, N_('Accept'), self.accept_repo, *hotkeys.ACCEPT)
 
         self.open_new_action = qtutils.add_action(
                 self, N_('Open in New Window'), self.open_new_repo, hotkeys.NEW)
@@ -128,6 +136,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.copy_action = qtutils.add_action(
                 self, N_('Copy'), self.copy, hotkeys.COPY)
 
+        self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.item_selection_changed)
         self.itemDoubleClicked.connect(self.tree_double_clicked)
 
@@ -180,6 +189,14 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.rename_repo_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
+    def item_changed(self, item, index):
+        self.rename_bookmark(item, item.text(0))
+
+    def rename_bookmark(self, item, new_name):
+        self.settings.rename_bookmark(item.path, item.name, new_name)
+        self.settings.save()
+        item.name = new_name
+
     def apply_fn(self, fn, *args, **kwargs):
         item = self.selected_item()
         if item:
@@ -208,17 +225,19 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.refresh()
 
     def rename_repo(self):
-        self.apply_fn(self.rename_repo_item)
+        self.apply_fn(lambda item: self.editItem(item, 0))
 
-    def rename_repo_item(self, item):
-        name, ok = qtutils.prompt(N_('Rename favorite Repository'),
-                                  title=N_('Enter new name for Repository'),
-                                  text=item.name)
-        if not ok:
-            return
-        self.settings.rename_bookmark(item.path, item.name, name)
-        self.settings.save()
-        self.refresh()
+    def accept_repo(self):
+        self.apply_fn(lambda item: self.accept_item(item))
+
+    def accept_item(self, item):
+        if self.state() & self.EditingState:
+            widget = self.itemWidget(item, 0)
+            if widget:
+                self.commitData(widget)
+            self.closePersistentEditor(item, 0)
+        else:
+            self.open_repo()
 
     def open_repo(self):
         self.apply_fn(lambda item: cmds.do(cmds.OpenRepo, item.path))
@@ -311,3 +330,4 @@ class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setIcon(0, icon)
         self.setText(0, name)
         self.setToolTip(0, path)
+        self.setFlags(self.flags() | Qt.ItemIsEditable)
