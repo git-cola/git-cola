@@ -44,6 +44,7 @@ Thanks
 * Guillaume de Bure
 * Guo Yunhe
 * Harro Verton
+* Igor Galarraga
 * Ilya Tumaykin
 * Ingo Weinhold
 * Ismael Juma
