@@ -84,15 +84,17 @@ class Settings(object):
 
     def add_bookmark(self, path, name):
         """Adds a bookmark to the saved settings"""
-        bookmark = { 'path': path, 'name' : name }
+        bookmark = {'path': path, 'name': name}
         if bookmark not in self.bookmarks:
             self.bookmarks.append(bookmark)
 
     def remove_bookmark(self, path, name):
         """Remove a bookmark"""
-        bookmark = { 'path': path, 'name' : name }
-        if bookmark in self.bookmarks:
+        bookmark = {'path': path, 'name': name}
+        try:
             self.bookmarks.remove(bookmark)
+        except ValueError:
+            pass
 
     def remove_recent(self, entry):
         """Removes an item from the recent items list"""
