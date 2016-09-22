@@ -211,13 +211,12 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.apply_fn(self.rename_repo_item)
 
     def rename_repo_item(self, item):
-        newName, ok = qtutils.prompt(N_('Rename favorite Repository'),
+        name, ok = qtutils.prompt(N_('Rename favorite Repository'),
                                   title=N_('Enter new name for Repository'),
                                   text=item.name)
         if not ok:
             return
-        self.settings.remove_bookmark(item.path, item.name)
-        self.settings.add_bookmark(item.path, newName)
+        self.settings.rename_bookmark(item.path, item.name, name)
         self.settings.save()
         self.refresh()
 
