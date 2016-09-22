@@ -54,18 +54,11 @@ class StartupDialog(standard.Dialog):
 
         added = set()
 
-        #Bookmarks is a dict list and Recent is a string list
-        bookmarks_repos = settings.bookmarks
-        recent_repos = settings.recent
+        # Bookmarks/"Favorites" is a dict list and Recent is a string list
+        bookmarks = [i['path'] for i in settings.bookmarks]
+        all_repos = bookmarks + settings.recent
 
-        for repo in bookmarks_repos:
-            if repo['path'] in added:
-                continue
-            added.add(repo['path'])
-            item = QtGui.QStandardItem(repo['path'])
-            item.setEditable(False)
-            self.bookmarks_model.appendRow(item)
-        for repo in recent_repos:
+        for repo in all_repos:
             if repo in added:
                 continue
             added.add(repo)
@@ -80,7 +73,7 @@ class StartupDialog(standard.Dialog):
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setModel(self.bookmarks_model)
 
-        if not bookmarks_repos and not recent_repos:
+        if not all_repos:
             self.bookmarks_label.setMinimumHeight(1)
             self.bookmarks.setMinimumHeight(1)
             self.bookmarks_label.hide()
