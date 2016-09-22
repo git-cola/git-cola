@@ -96,6 +96,14 @@ class Settings(object):
         except ValueError:
             pass
 
+    def rename_bookmark(self, path, name, new_name):
+        bookmark = {'path': path, 'name': name}
+        try:
+            index = self.bookmarks.index(bookmark)
+        except ValueError:
+            return
+        self.bookmarks[index]['name'] = new_name
+
     def remove_recent(self, entry):
         """Removes an item from the recent items list"""
         if entry in self.recent:

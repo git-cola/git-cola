@@ -41,7 +41,8 @@ class SettingsTestCase(unittest.TestCase):
         # We automatically purge missing entries so we mock-out
         # git.is_git_worktree() so that this bookmark is kept.
 
-        bookmark = {'path': '/tmp/python/thinks/this/exists', 'name': 'exists'}
+        bookmark = {'path': '/tmp/python/thinks/this/exists',
+                    'name': 'exists'}
 
         def mock_verify(path):
             return path == bookmark['path']
@@ -72,6 +73,18 @@ class SettingsTestCase(unittest.TestCase):
         bookmarks = settings.bookmarks
         self.assertEqual(len(settings.bookmarks), 0)
         self.assertFalse(bookmark in bookmarks)
+
+    def test_rename_bookmark(self):
+        settings = self.new_settings()
+        settings.add_bookmark('/tmp/repo', 'a')
+        settings.add_bookmark('/tmp/repo', 'b')
+        settings.add_bookmark('/tmp/repo', 'c')
+
+        settings.rename_bookmark('/tmp/repo', 'b', 'test')
+
+        expect = ['a', 'test', 'c']
+        actual = [i['name'] for i in settings.bookmarks]
+        self.assertEqual(expect, actual)
 
 
 if __name__ == '__main__':
