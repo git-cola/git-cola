@@ -148,7 +148,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         # bookmarks
         if self.style == BOOKMARKS:
-            items = [builder.get(bookmark['path'], bookmark['name']) for bookmark in settings.bookmarks]
+            items = [builder.get(entry['path'], entry['name'])
+                        for entry in settings.bookmarks]
 
             if prefs.sort_bookmarks():
                 items.sort()
