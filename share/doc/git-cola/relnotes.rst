@@ -66,6 +66,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/516
 
+* The `Refresh` button on the actions panel no longer raises an
+  exception when using PyQt5.
+
+  https://github.com/git-cola/git-cola/issues/604
+
 .. _v2.8:
 
 git-cola v2.8
