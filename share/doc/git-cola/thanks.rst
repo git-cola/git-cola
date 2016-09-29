@@ -32,6 +32,7 @@ Thanks
 * David Aguilar
 * David LeGare
 * David Martínez Martí
+* Dawid Drozd
 * Dennis Gilmore
 * deniz1a
 * Dmitry Kann
