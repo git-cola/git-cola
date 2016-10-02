@@ -49,6 +49,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/601
 
+* The startup screen now includes a logo and `git cola` version information.
+
+  https://github.com/git-cola/git-cola/issues/526
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
