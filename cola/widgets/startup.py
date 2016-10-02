@@ -16,6 +16,7 @@ from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..settings import Settings
+from ..version import version
 from . import defs
 from . import standard
 
@@ -26,6 +27,18 @@ class StartupDialog(standard.Dialog):
     def __init__(self, parent=None, settings=None):
         standard.Dialog.__init__(self, parent, save_settings=True)
         self.setWindowTitle(N_('git-cola'))
+
+        # Top-most large icon
+        logo_pixmap = icons.cola().pixmap(defs.huge_icon, defs.huge_icon)
+
+        self.logo_label = QtWidgets.QLabel()
+        self.logo_label.setPixmap(logo_pixmap)
+        self.logo_label.setAlignment(Qt.AlignCenter)
+
+        self.logo_text_label = QtWidgets.QLabel()
+        self.logo_text_label.setText('git cola v%s' % version())
+        self.logo_text_label.setAlignment(Qt.AlignCenter)
+        self.logo_text_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
         self.repodir = None
         self.runtask = qtutils.RunTask(parent=self)
@@ -73,19 +86,23 @@ class StartupDialog(standard.Dialog):
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setModel(self.bookmarks_model)
 
-        if not all_repos:
-            self.bookmarks_label.setMinimumHeight(1)
-            self.bookmarks.setMinimumHeight(1)
-            self.bookmarks_label.hide()
-            self.bookmarks.hide()
+        self.logo_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                        self.logo_label,
+                                        self.logo_text_label,
+                                        defs.button_spacing,
+                                        qtutils.STRETCH)
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                           self.open_button, self.clone_button,
                                           self.new_button, qtutils.STRETCH,
                                           self.close_button)
 
+        self.center_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                          self.logo_layout, self.bookmarks)
+
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.bookmarks_label, self.bookmarks,
+                                        self.bookmarks_label,
+                                        self.center_layout,
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
