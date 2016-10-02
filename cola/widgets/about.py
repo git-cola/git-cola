@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -54,15 +53,20 @@ class AboutView(QtWidgets.QDialog):
         self.setWindowTitle(N_('About git-cola'))
         self.setWindowModality(Qt.WindowModal)
 
-        self.pixmap = QtGui.QPixmap(icons.name_from_basename('logo-top.png'))
-        self.label = QtWidgets.QLabel()
-        self.label.setPixmap(self.pixmap)
-        self.label.setAlignment(Qt.AlignRight | Qt.AlignTop)
+        # Top-most large icon
+        logo_pixmap = icons.cola().pixmap(defs.huge_icon, defs.large_icon)
 
-        palette = self.label.palette()
-        palette.setColor(QtGui.QPalette.Window, Qt.black)
-        self.label.setAutoFillBackground(True)
-        self.label.setPalette(palette)
+        self.logo_label = QtWidgets.QLabel()
+        self.logo_label.setPixmap(logo_pixmap)
+        self.logo_label.setAlignment(Qt.AlignCenter)
+
+        self.logo_text_label = QtWidgets.QLabel()
+        self.logo_text_label.setText('Git Cola')
+        self.logo_text_label.setAlignment(Qt.AlignLeft | Qt.AlignCenter)
+        self.logo_text_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        font = self.logo_text_label.font()
+        font.setPointSize(24)
+        self.logo_text_label.setFont(font)
 
         self.text = MonoTextView(self)
         self.text.setReadOnly(True)
@@ -71,17 +75,22 @@ class AboutView(QtWidgets.QDialog):
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
+        self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                        self.logo_label, self.logo_text_label,
+                                        qtutils.STRETCH)
+
         self.button_layout = qtutils.hbox(defs.spacing, defs.margin,
                                           qtutils.STRETCH, self.close_button)
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.label, self.text,
+                                        self.logo_layout,
+                                        self.text,
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
-        self.resize(666, 420)
-
         qtutils.connect_button(self.close_button, self.accept)
+
+        self.resize(defs.scale(600), defs.scale(720))
 
     def set_version(self, version):
         """Sets the version field in the 'about' dialog"""
