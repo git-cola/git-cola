@@ -26,6 +26,7 @@ tool_button_height = scale(28)
 small_icon = scale(16)
 medium_icon = scale(48)
 large_icon = scale(96)
+huge_icon = scale(192)
 
 max_size = scale(4096)
 
