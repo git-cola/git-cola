@@ -35,10 +35,8 @@ class StartupDialog(standard.Dialog):
         self.logo_label.setPixmap(logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
-        self.logo_text_label = QtWidgets.QLabel()
-        self.logo_text_label.setText(version.cola_version())
+        self.logo_text_label = qtutils.label(version.cola_version())
         self.logo_text_label.setAlignment(Qt.AlignCenter)
-        self.logo_text_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
         self.repodir = None
         self.runtask = qtutils.RunTask(parent=self)
