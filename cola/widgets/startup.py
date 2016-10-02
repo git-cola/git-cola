@@ -14,9 +14,9 @@ from .. import core
 from .. import guicmds
 from .. import icons
 from .. import qtutils
+from .. import version
 from ..i18n import N_
 from ..settings import Settings
-from ..version import version
 from . import defs
 from . import standard
 
@@ -36,7 +36,7 @@ class StartupDialog(standard.Dialog):
         self.logo_label.setAlignment(Qt.AlignCenter)
 
         self.logo_text_label = QtWidgets.QLabel()
-        self.logo_text_label.setText('git cola v%s' % version())
+        self.logo_text_label.setText(version.cola_version())
         self.logo_text_label.setAlignment(Qt.AlignCenter)
         self.logo_text_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
