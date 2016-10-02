@@ -102,11 +102,11 @@ def form(margin, spacing, *widgets):
     layout.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
     set_margin(layout, margin)
 
-    for idx, (label, widget) in enumerate(widgets):
-        if isinstance(label, (str, ustr)):
-            layout.addRow(label, widget)
+    for idx, (name, widget) in enumerate(widgets):
+        if isinstance(name, (str, ustr)):
+            layout.addRow(name, widget)
         else:
-            layout.setWidget(idx, QtWidgets.QFormLayout.LabelRole, label)
+            layout.setWidget(idx, QtWidgets.QFormLayout.LabelRole, name)
             layout.setWidget(idx, QtWidgets.QFormLayout.FieldRole, widget)
 
     return layout
@@ -137,6 +137,13 @@ def splitter(orientation, *widgets):
         layout.setStretchFactor(idx, 1)
 
     return layout
+
+
+def label(text):
+    widget = QtWidgets.QLabel()
+    widget.setText(text)
+    widget.setTextInteractionFlags(Qt.TextSelectableByMouse)
+    return widget
 
 
 def prompt(msg, title=None, text=''):
@@ -663,12 +670,12 @@ class DockTitleBarWidget(QtWidgets.QWidget):
 
     def __init__(self, parent, title, stretch=True):
         QtWidgets.QWidget.__init__(self, parent)
-        self.label = label = QtWidgets.QLabel()
-        font = label.font()
+        self.label = qlabel = QtWidgets.QLabel()
+        font = qlabel.font()
         font.setBold(True)
-        label.setFont(font)
-        label.setText(title)
-        label.setCursor(Qt.OpenHandCursor)
+        qlabel.setFont(font)
+        qlabel.setText(title)
+        qlabel.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
             tooltip=N_('Close'), icon=icons.close())
@@ -684,7 +691,7 @@ class DockTitleBarWidget(QtWidgets.QWidget):
             separator = SKIPPED
 
         self.main_layout = hbox(defs.small_margin, defs.spacing,
-                                label, separator, self.corner_layout,
+                                qlabel, separator, self.corner_layout,
                                 self.toggle_button, self.close_button)
         self.setLayout(self.main_layout)
 
