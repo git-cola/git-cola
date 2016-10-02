@@ -22,6 +22,10 @@ from .models import prefs
 from .widgets import defs
 
 
+STRETCH = object()
+SKIPPED = object()
+
+
 def connect_action(action, fn):
     """Connect an action to a function"""
     action.triggered[bool].connect(lambda x: fn())
@@ -63,10 +67,6 @@ def buttongroup(*items):
     for i in items:
         group.addButton(i)
     return group
-
-
-STRETCH = object()
-SKIPPED = object()
 
 
 def set_margin(layout, margin):
