@@ -15,11 +15,12 @@ from . import defs
 from .text import MonoTextView
 
 
-def launch_about_dialog():
+def about_dialog():
     """Launches the Help -> About dialog"""
     view = AboutView(qtutils.active_window())
     view.set_version(version.version())
     view.show()
+    return view
 
 
 COPYRIGHT = """git-cola: The highly caffeinated git GUI v$VERSION
@@ -53,9 +54,8 @@ class AboutView(QtWidgets.QDialog):
         self.setWindowTitle(N_('About git-cola'))
         self.setWindowModality(Qt.WindowModal)
 
-        self.label = QtWidgets.QLabel()
         self.pixmap = QtGui.QPixmap(icons.name_from_basename('logo-top.png'))
-        # self.label.setStyleSheet('QWidget {background: #000; }')
+        self.label = QtWidgets.QLabel()
         self.label.setPixmap(self.pixmap)
         self.label.setAlignment(Qt.AlignRight | Qt.AlignTop)
 

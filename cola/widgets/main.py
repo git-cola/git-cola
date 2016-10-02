@@ -273,7 +273,7 @@ class MainView(standard.MainWindow):
             self, N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate))
         self.help_about_action = add_action(
-            self, N_('About'), about.launch_about_dialog)
+            self, N_('About'), about.about_dialog)
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'), guicmds.diff_expression)

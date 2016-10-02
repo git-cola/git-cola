@@ -42,6 +42,7 @@ def parse_args(argv):
     subparser = parser.add_subparsers(title='valid commands')
 
     add_cola_command(subparser)
+    add_about_command(subparser)
     add_am_command(subparser)
     add_archive_command(subparser)
     add_branch_command(subparser)
@@ -81,6 +82,9 @@ def add_cola_command(subparser):
     parser.add_argument('--status-filter', '-s', metavar='<path>',
                         default='', help='status path filter')
 
+
+def add_about_command(parent):
+    parser = add_command(parent, 'about', 'about git-cola', cmd_about)
 
 def add_am_command(parent):
     parser = add_command(parent, 'am', 'apply patches using "git am"', cmd_am)
@@ -286,6 +290,13 @@ def cmd_cola(args):
     if status_filter:
         view.set_filter(core.relpath(status_filter))
 
+    return application_start(context, view)
+
+
+def cmd_about(args):
+    from .widgets import about
+    context = application_init(args)
+    view = about.about_dialog()
     return application_start(context, view)
 
 
