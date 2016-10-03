@@ -99,16 +99,14 @@ class AboutView(QtWidgets.QDialog):
 
 
 def show_shortcuts():
+    hotkeys_html = resources.doc(N_('hotkeys.html'))
     try:
         from qtpy import QtWebEngineWidgets
     except ImportError:
-        # redhat disabled QtWebKit in their qt build but don't punish the
-        # users
-        qtutils.critical(N_('This PyQt4 does not include QtWebKit.\n'
-                            'The keyboard shortcuts feature is unavailable.'))
+        # redhat disabled QtWebKit in their qt build but don't punish the users
+        webbrowser.open_new_tab('file://' + hotkeys_html)
         return
 
-    hotkeys_html = resources.doc(N_('hotkeys.html'))
     html = core.read(hotkeys_html)
 
     parent = qtutils.active_window()
