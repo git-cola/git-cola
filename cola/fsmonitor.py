@@ -260,7 +260,7 @@ if AVAILABLE == 'inotify':
             watched_paths = set(path_to_wd_map)
             for path in watched_paths - paths_to_watch:
                 wd = path_to_wd_map.pop(path)
-                wd_to_path_set.pop(wd)
+                wd_to_path_map.pop(wd)
                 try:
                     inotify.rm_watch(self._inotify_fd, wd)
                 except OSError as e:

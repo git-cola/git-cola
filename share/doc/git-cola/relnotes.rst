@@ -75,6 +75,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/604
 
+* Fixed a typo in the inotify backend that is triggered when files are removed.
+
+  https://github.com/git-cola/git-cola/issues/607
+
 .. _v2.8:
 
 git-cola v2.8
