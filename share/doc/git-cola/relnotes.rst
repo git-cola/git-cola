@@ -79,6 +79,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/607
 
+* Fixed a typo when recovering from a failed attempt to open a repository.
+
+  https://github.com/git-cola/git-cola/issues/606
+
 .. _v2.8:
 
 git-cola v2.8

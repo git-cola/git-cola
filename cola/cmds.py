@@ -1073,7 +1073,7 @@ class OpenRepo(Command):
 
     def do(self):
         git = self.model.git
-        old_repo = git.gitcwd()
+        old_repo = git.getcwd()
         if self.model.set_worktree(self.repo_path):
             fsmonitor.current().stop()
             fsmonitor.current().start()
