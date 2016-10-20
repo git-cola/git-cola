@@ -198,7 +198,8 @@ class Git(object):
                 _stdin=None,
                 _stderr=subprocess.PIPE,
                 _stdout=subprocess.PIPE,
-                _readonly=False):
+                _readonly=False,
+                _no_win32_startupinfo=False):
         """
         Execute a command and returns its output
 
@@ -216,15 +217,6 @@ class Git(object):
             _cwd = core.getcwd()
 
         extra = {}
-        if sys.platform == 'win32':
-            # If git-cola is invoked on Windows using "start pythonw git-cola",
-            # a console window will briefly flash on the screen each time
-            # git-cola invokes git, which is very annoying.  The code below
-            # prevents this by ensuring that any window will be hidden.
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
-            startupinfo.wShowWindow = subprocess.SW_HIDE
-            extra['startupinfo'] = startupinfo
 
         if hasattr(os, 'setsid'):
             # SSH uses the SSH_ASKPASS variable only if the process is really
@@ -239,7 +231,8 @@ class Git(object):
             INDEX_LOCK.acquire()
         status, out, err = core.run_command(
                 command, cwd=_cwd, encoding=_encoding,
-                stdin=_stdin, stdout=_stdout, stderr=_stderr, **extra)
+                stdin=_stdin, stdout=_stdout, stderr=_stderr,
+                no_win32_startupinfo=_no_win32_startupinfo, **extra)
         # Let the next thread in
         if not _readonly:
             INDEX_LOCK.release()
@@ -309,7 +302,9 @@ class Git(object):
                 '_stderr',
                 '_raw',
                 '_readonly',
+                '_no_win32_startupinfo',
                 )
+
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)
