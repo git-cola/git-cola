@@ -707,8 +707,7 @@ class MainView(standard.MainWindow):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        if self.dag is None:
-            self.dag = dag.git_dag(self.model)
+        self.dag = dag.git_dag(self.model, existing_view=self.dag)
         view = self.dag
         view.show()
         view.raise_()
