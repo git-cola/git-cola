@@ -5,7 +5,6 @@ import sys
 import re
 from argparse import ArgumentParser
 
-
 def setup_environment():
     abspath = os.path.abspath
     dirname = os.path.dirname
@@ -41,6 +40,7 @@ from cola.widgets import diff
 from cola.widgets import standard
 from cola.widgets import text
 
+from cola.utils import is_darwin
 
 PICK = 'pick'
 REWORD = 'reword'
@@ -66,8 +66,10 @@ def main():
 
     desktop = context.app.desktop()
     window = new_window(args.filename)
-    window.resize(desktop.width(), desktop.height())
-    window.show()
+    if is_darwin():
+        window.resize(desktop.width(), desktop.height())
+    else:
+        window.showMaximized()
     window.raise_()
     context.app.exec_()
     return window.status

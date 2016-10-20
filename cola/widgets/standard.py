@@ -15,7 +15,7 @@ from .. import qtcompat
 from .. import qtutils
 from ..settings import Settings
 from . import defs
-
+from ..utils import is_darwin
 
 class WidgetMixin(object):
     """Mix-in for common utilities and serialization of widget state"""
@@ -36,7 +36,17 @@ class WidgetMixin(object):
         desktop = QtWidgets.QApplication.instance().desktop()
         width = desktop.width()
         height = desktop.height()
-        self.resize(width, height)
+        if is_darwin():
+            self.resize(width, height)
+        else:
+            shown = self.isVisible()
+            # earlier show() fools Windows focus stealing prevention. the main
+            # window is blocked for the duration of "git rebase" and we don't
+            # want to present a blocked window with git-xbase hidden somewhere.
+            self.show()
+            self.setWindowState(Qt.WindowMaximized)
+            if not shown:
+                self.hide()
 
     def name(self):
         """Returns the name of the view class"""
