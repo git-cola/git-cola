@@ -319,6 +319,16 @@ class Git(object):
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise e
+
+            if WIN32:
+                # see if git exists at all. on win32 it can fail with ENOENT in
+                # case of argv overflow. we should be safe from that but use
+                # defensive coding for the worst-case scenario. on other OS-en
+                # we have ENAMETOOLONG which doesn't exist in with32 API.
+                status, out, err = self.execute(['git', '--version'])
+                if status == 0:
+                    raise e
+
             core.stderr("error: unable to execute 'git'\n"
                         "error: please ensure that 'git' is in your $PATH")
             if sys.platform == 'win32':
