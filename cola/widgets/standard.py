@@ -59,6 +59,13 @@ class WidgetMixin(object):
         if gitcfg.current().get('cola.savewindowsettings', True):
             settings.save_gui_state(self)
 
+    def resizeEvent(self, event):
+        state = self.windowState()
+        maximized = bool(state & Qt.WindowMaximized)
+        if not maximized:
+            self._unmaximized_size = event.size()
+        super(WidgetMixin, self).resizeEvent(event)
+
     def restore_state(self, settings=None):
         if settings is None:
             settings = Settings()
@@ -89,11 +96,21 @@ class WidgetMixin(object):
         """Exports data for view save/restore"""
         state = self.windowState()
         maximized = bool(state & Qt.WindowMaximized)
+        width, height = self.width(), self.height()
+
+        # when maximized we don't want to overwrite saved width/height with
+        # desktop dimensions.
+        if maximized:
+            try:
+                old_size = self._unmaximized_size
+                width, height = old_size.width(), old_size.height()
+            except:
+                width, height = None, None
         return {
             'x': self.x(),
             'y': self.y(),
-            'width': self.width(),
-            'height': self.height(),
+            'width': width,
+            'height': height,
             'maximized': maximized,
         }
 
