@@ -32,7 +32,7 @@ from . import filelist
 from . import standard
 
 
-def git_dag(model, args=None, settings=None):
+def git_dag(model, args=None, settings=None, existing_view=None):
     """Return a pre-populated git DAG widget."""
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
@@ -40,7 +40,11 @@ def git_dag(model, args=None, settings=None):
     ctx = dag.DAG(branch_doubledash, 1000)
     ctx.set_arguments(args)
 
-    view = GitDAG(model, ctx, settings=settings)
+    if existing_view is None:
+        view = GitDAG(model, ctx, settings=settings)
+    else:
+        view = existing_view
+        view.set_context(ctx)
     if ctx.ref:
         view.display()
     return view
@@ -400,7 +404,7 @@ class GitDAG(standard.MainWindow):
         self.commit_list = []
         self.selection = []
 
-        self.thread = ReaderThread(ctx, self)
+        self.thread = None
         self.revtext = completion.GitLogLineEdit()
         self.maxresults = standard.SpinBox()
 
@@ -495,11 +499,6 @@ class GitDAG(standard.MainWindow):
         self.addDockWidget(right, self.graphview_dock)
         self.addDockWidget(right, self.file_dock)
 
-        # Update fields affected by model
-        self.revtext.setText(ctx.ref)
-        self.maxresults.setValue(ctx.count)
-        self.update_window_title()
-
         # Also re-loads dag.* from the saved state
         self.init_state(settings, self.resize_to_desktop)
 
@@ -507,11 +506,6 @@ class GitDAG(standard.MainWindow):
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
         qtutils.connect_button(self.zoom_to_fit,
                                self.graphview.zoom_to_fit)
-        thread = self.thread
-        thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
-        thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
-        thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
-        thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
@@ -530,6 +524,26 @@ class GitDAG(standard.MainWindow):
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)
+
+        self.set_context(ctx)
+
+    def set_context(self, ctx):
+        self.ctx = ctx
+
+        # Update fields affected by model
+        self.revtext.setText(ctx.ref)
+        self.maxresults.setValue(ctx.count)
+        self.update_window_title()
+
+        if self.thread is not None:
+            self.thread.stop()
+        self.thread = ReaderThread(ctx, self)
+
+        thread = self.thread
+        thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
+        thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
+        thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
+        thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
     def focus_input(self):
         self.revtext.setFocus()
