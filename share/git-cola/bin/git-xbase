@@ -40,8 +40,6 @@ from cola.widgets import diff
 from cola.widgets import standard
 from cola.widgets import text
 
-from cola.utils import is_darwin
-
 PICK = 'pick'
 REWORD = 'reword'
 EDIT = 'edit'
@@ -66,7 +64,7 @@ def main():
 
     desktop = context.app.desktop()
     window = new_window(args.filename)
-    if is_darwin():
+    if utils.is_darwin():
         window.resize(desktop.width(), desktop.height())
     else:
         window.showMaximized()

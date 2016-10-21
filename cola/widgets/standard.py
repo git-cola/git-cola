@@ -13,9 +13,9 @@ from .. import core
 from .. import gitcfg
 from .. import qtcompat
 from .. import qtutils
+from .. import utils
 from ..settings import Settings
 from . import defs
-from ..utils import is_darwin
 
 class WidgetMixin(object):
     """Mix-in for common utilities and serialization of widget state"""
@@ -36,7 +36,7 @@ class WidgetMixin(object):
         desktop = QtWidgets.QApplication.instance().desktop()
         width = desktop.width()
         height = desktop.height()
-        if is_darwin():
+        if utils.is_darwin():
             self.resize(width, height)
         else:
             shown = self.isVisible()
