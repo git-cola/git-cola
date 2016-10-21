@@ -83,6 +83,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/606
 
+* `git dag` now properly updates itself when launched from the menubar.
+
+  https://github.com/git-cola/git-cola/pull/613
+
 .. _v2.8:
 
 git-cola v2.8
