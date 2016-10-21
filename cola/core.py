@@ -109,6 +109,7 @@ def start_command(cmd, cwd=None, add_env=None,
                   universal_newlines=False,
                   stdin=subprocess.PIPE,
                   stdout=subprocess.PIPE,
+                  no_win32_startupinfo=False,
                   stderr=subprocess.PIPE,
                   **extra):
     """Start the given command, and return a subprocess object.
@@ -143,8 +144,18 @@ def start_command(cmd, cwd=None, add_env=None,
         cwd = encode(cwd)
 
     if WIN32:
-        CREATE_NO_WINDOW = 0x08000000
-        extra['creationflags'] = CREATE_NO_WINDOW
+        # If git-cola is invoked on Windows using "start pythonw git-cola",
+        # a console window will briefly flash on the screen each time
+        # git-cola invokes git, which is very annoying.  The code below
+        # prevents this by ensuring that any window will be hidden.
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = subprocess.SW_HIDE
+        extra['startupinfo'] = startupinfo
+
+        if WIN32 and not no_win32_startupinfo:
+            CREATE_NO_WINDOW = 0x08000000
+            extra['creationflags'] = CREATE_NO_WINDOW
 
     return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, env=env,
