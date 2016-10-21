@@ -87,6 +87,13 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/613
 
+* If git-cola is invoked on Windows using `start pythonw git-cola`,
+  a console window will briefly flash on the screen each time
+  `git cola` invokes `git`.  The console window is now suppressed.
+
+* We now avoid some problematic Popen flags on Windows which were
+  breaking the `git rebase` feature on Windows.
+
 .. _v2.8:
 
 git-cola v2.8
