@@ -312,31 +312,7 @@ When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
 # WINDOWS (continued)
 
-## WINDOWS-ONLY HISTORY BROWSER CONFIGURATION UPGRADE
-
-You may need to configure your history browser if you are upgrading from an
-older version of *git-cola*.
-
-`gitk` was originally the default history browser, but `gitk` cannot be
-launched as-is on Windows because `gitk` is a shell script.
-
-If you are configured to use `gitk`, then change your configuration to
-go through Git's `sh.exe` on Windows.  Similarly,we must go through
-`python.exe` if we want to use `git-dag`.
-
-If you want to use *gitk* as your history browser open the
-*Preferences* screen and change the history browser command to:
-
-    C:/Git/bin/sh.exe --login -i C:/Git/bin/gitk
-
-Alternatively, if you'd like to use *git-dag* as your history browser, use:
-
-    C:/Python27/python.exe C:/git-cola/bin/git-dag
-
-*git-dag* became the default history browser on Windows in `v2.3`, so new
-users should not need to configure anything.
-
-# BUILDING WINDOWS INSTALLERS
+## BUILDING WINDOWS INSTALLERS
 
 Windows installers are built using
 
@@ -360,3 +336,27 @@ The *InnoSetup* scripts are still available:
     ./contrib/win32/create-installer.sh
 
 You have to make sure that the file */share/InnoSetup/ISCC.exe* exists.
+
+## WINDOWS HISTORY BROWSER CONFIGURATION UPGRADE
+
+You may need to configure your history browser if you are upgrading from an
+older version of *git-cola*.
+
+`gitk` was originally the default history browser, but `gitk` cannot be
+launched as-is on Windows because `gitk` is a shell script.
+
+If you are configured to use `gitk`, then change your configuration to
+go through Git's `sh.exe` on Windows.  Similarly,we must go through
+`python.exe` if we want to use `git-dag`.
+
+If you want to use *gitk* as your history browser open the
+*Preferences* screen and change the history browser command to:
+
+    "C:/Program Files/Git/bin/sh.exe" --login -i C:/Git/bin/gitk
+
+Alternatively, if you'd like to use *git-dag* as your history browser, use:
+
+    C:/Python34/python.exe C:/git-cola/bin/git-dag
+
+*git-dag* became the default history browser on Windows in `v2.3`, so new
+users should not need to configure anything.
