@@ -228,7 +228,7 @@ Download and install the following:
   * [64-bit](http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.4/PyQt4-4.11.4-gpl-Py3.4-Qt4.8.7-x64.exe)
   * [32-bit](http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.4/PyQt4-4.11.4-gpl-Py3.4-Qt4.8.7-x32.exe)
 
-* [git-cola Installer](https://github.com/git-cola/git-cola/downloads)
+* [Git Cola](https://github.com/git-cola/git-cola/downloads)
 
 Once these are installed you can run *git cola* from the Start menu or
 by double-clicking on the `git-cola.pyw` script.
