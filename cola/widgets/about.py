@@ -157,7 +157,8 @@ def mailto(email, text, palette):
 
 def render_authors(authors):
     """Render a list of author details into richtext html"""
-    map(lambda x: x.setdefault('email', ''), authors)
+    for x in authors:
+        x.setdefault('email', '')
 
     entries = [("""
         <p>
