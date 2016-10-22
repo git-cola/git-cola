@@ -4,8 +4,10 @@ import os
 import math
 
 
-scale_factor = float(os.getenv('GIT_COLA_SCALE', '1'))
-
+try:
+    scale_factor = float(os.getenv('GIT_COLA_SCALE', '1'))
+except ValueError:
+    scale_factor = 1.0
 
 def scale(value, scale_factor=scale_factor):
     return int(value * scale_factor)
