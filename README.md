@@ -129,6 +129,18 @@ The instructions below assume that you have *git-cola* present in your
 `$PATH`.  Replace "git cola" with "./bin/git-cola" as needed if you'd like to
 just run it in-place.
 
+# DOCUMENTATION
+
+* [HTML documentation](https://git-cola.readthedocs.io/en/latest/)
+
+* [git-cola manual](share/doc/git-cola/git-cola.rst)
+
+* [git-dag manual](share/doc/git-cola/git-dag.rst)
+
+* [Keyboard shortcuts](https://git-cola.github.io/share/doc/git-cola/hotkeys.html)
+
+* [Contributing guidelines](CONTRIBUTING.md)
+
 # INSTALLATION
 
 Normally you can just do "make install" to install *git-cola*
@@ -218,18 +230,6 @@ If you are developing *git-cola* on Windows you can use `python.exe` to run
     python.exe ./bin/git-cola
 
 See "WINDOWS (continued)" below for more details.
-
-# DOCUMENTATION
-
-* [HTML documentation](https://git-cola.readthedocs.io/en/latest/)
-
-* [git-cola manual](share/doc/git-cola/git-cola.rst)
-
-* [git-dag manual](share/doc/git-cola/git-dag.rst)
-
-* [Keyboard shortcuts](https://git-cola.github.io/share/doc/git-cola/hotkeys.html)
-
-* [Contributing guidelines](CONTRIBUTING.md)
 
 # GOODIES
 
