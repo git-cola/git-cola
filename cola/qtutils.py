@@ -153,10 +153,20 @@ def splitter(orientation, *widgets):
     return layout
 
 
-def label(text):
+def label(text=None, align=None, fmt=None, selectable=True, stylesheet=None):
+    """Create a QLabel with the specified properties"""
     widget = QtWidgets.QLabel()
-    widget.setText(text)
-    widget.setTextInteractionFlags(Qt.TextSelectableByMouse)
+    if stylesheet:
+        widget.setStyleSheet(stylesheet)
+    if align is not None:
+        widget.setAlignment(align)
+    if fmt is not None:
+        widget.setTextFormat(fmt)
+    if selectable:
+        widget.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        widget.setOpenExternalLinks(True)
+    if text:
+        widget.setText(text)
     return widget
 
 
