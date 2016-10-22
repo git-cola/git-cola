@@ -36,8 +36,10 @@ Thanks
 * Dennis Gilmore
 * deniz1a
 * Dmitry Kann
+* Drugoy
 * Eric Drechsel
 * Fabio Coatti
+* Garoe Dorta
 * Geoffrey van Wyk
 * geotavros
 * `Git Hackers <http://git-scm.com/about>`_

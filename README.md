@@ -211,23 +211,32 @@ Once brew has installed git-cola you can:
 
 ## WINDOWS INSTALLATION
 
-Download the latest stable Git, Python 2.x, and Py2x-PyQt4 installers
+**IMPORTANT** If you have a 64-bit machine, install the 64-bit versions only.
+Do not mix 32-bit and 64-bit versions.
 
-* [msysGit](http://msysgit.github.com/)
+Download and install the following:
 
-* [Python](http://python.org/download/)
+* [Git for Windows](https://git-for-windows.github.io/)
 
-* [PyQt](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
+* [Python](https://www.python.org/downloads/)
+  * Python 3.4 is recommended.  Python 2.7 is also supported.
+  * [64-bit](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi)
+  * [32-bit](https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi)
+
+* [PyQt](https://riverbankcomputing.com/software/pyqt/download/)
+  * PyQt4 4.11 is recommended.  PyQt4 requires a matching Python version.
+  * [64-bit](http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.4/PyQt4-4.11.4-gpl-Py3.4-Qt4.8.7-x64.exe)
+  * [32-bit](http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.4/PyQt4-4.11.4-gpl-Py3.4-Qt4.8.7-x32.exe)
 
 * [git-cola Installer](https://github.com/git-cola/git-cola/downloads)
 
-Once these are installed you can run *git-cola* from the Start menu or
+Once these are installed you can run *git cola* from the Start menu or
 by double-clicking on the `git-cola.pyw` script.
 
-If you are developing *git-cola* on Windows you can use `python.exe` to run
-*git-cola* directly from source.
+If you are developing *git cola* on Windows you can use `python.exe` to run
+directly from the source tree.  For example, from a Git Bash terminal:
 
-    python.exe ./bin/git-cola
+    /c/Python34/python.exe ./bin/git-cola
 
 See "WINDOWS (continued)" below for more details.
 
