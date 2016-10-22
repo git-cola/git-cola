@@ -1,6 +1,6 @@
 Windows Tips
 ============
-* git-cola is tested on msysgit
+* git-cola is tested on Git for Windows.
 * Other git environments should work fine as long as `git`
   can be found in the $PATH.
 * The provided `cola` shell script can be used to launch *git-cola*
