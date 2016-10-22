@@ -1,5 +1,11 @@
+# encoding: utf-8
 from __future__ import division, absolute_import, unicode_literals
+import platform
+import webbrowser
+import sys
 
+import qtpy
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -11,37 +17,13 @@ from .. import qtutils
 from .. import version
 from ..i18n import N_
 from . import defs
-from .text import MonoTextView
 
 
 def about_dialog():
     """Launches the Help -> About dialog"""
     view = AboutView(qtutils.active_window())
-    view.set_version(version.version())
     view.show()
     return view
-
-
-COPYRIGHT = """git-cola: The highly caffeinated git GUI v$VERSION
-
-Copyright (C) 2007-2016 David Aguilar and contributors
-
-This program is free software: you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-version 2 as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will
-be useful, but WITHOUT ANY WARRANTY; without even the
-implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.
-
-See the GNU General Public License for more details.
-
-You should have received a copy of the
-GNU General Public License along with this program.
-If not, see http://www.gnu.org/licenses/.
-
-"""
 
 
 class AboutView(QtWidgets.QDialog):
@@ -63,14 +45,21 @@ class AboutView(QtWidgets.QDialog):
         self.logo_text_label = QtWidgets.QLabel()
         self.logo_text_label.setText('Git Cola')
         self.logo_text_label.setAlignment(Qt.AlignLeft | Qt.AlignCenter)
-        self.logo_text_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
         font = self.logo_text_label.font()
-        font.setPointSize(24)
+        font.setPointSize(defs.logo_text)
         self.logo_text_label.setFont(font)
 
-        self.text = MonoTextView(self)
-        self.text.setReadOnly(True)
-        self.text.setPlainText(COPYRIGHT)
+        self.text = qtutils.textbrowser(text=copyright_text())
+        self.version = qtutils.textbrowser(text=version_text())
+        self.authors = qtutils.textbrowser(text=authors_text())
+        self.translators = qtutils.textbrowser(text=translators_text())
+
+        self.tabs = QtWidgets.QTabWidget()
+        self.tabs.addTab(self.text, N_('About'))
+        self.tabs.addTab(self.version, N_('Version'))
+        self.tabs.addTab(self.authors, N_('Authors'))
+        self.tabs.addTab(self.translators, N_('Translators'))
 
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
@@ -84,7 +73,7 @@ class AboutView(QtWidgets.QDialog):
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.logo_layout,
-                                        self.text,
+                                        self.tabs,
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
@@ -92,10 +81,224 @@ class AboutView(QtWidgets.QDialog):
 
         self.resize(defs.scale(600), defs.scale(720))
 
-    def set_version(self, version):
-        """Sets the version field in the 'about' dialog"""
-        text = self.text.toPlainText().replace('$VERSION', version)
-        self.text.setPlainText(text)
+
+def copyright_text():
+    return """
+Git Cola: The highly caffeinated Git GUI
+
+Copyright (C) 2007-2016 David Aguilar and contributors
+
+This program is free software: you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+version 2 as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will
+be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+
+See the GNU General Public License for more details.
+
+You should have received a copy of the
+GNU General Public License along with this program.
+If not, see http://www.gnu.org/licenses/.
+
+"""
+
+
+def version_text():
+    git_version = version.git_version()
+    cola_version = version.version()
+    python_path = sys.executable
+    python_version = sys.version
+    qt_version = qtpy.QT_VERSION
+    qtpy_version = qtpy.__version__
+    pyqt_api_name = qtpy.API_NAME
+    if qtpy.PYQT5 or qtpy.PYQT4:
+        pyqt_api_version = qtpy.PYQT_VERSION
+    elif qtpy.PYSIDE:
+        pyqt_api_version = qtpy.PYSIDE_VERSION
+    else:
+        pyqt_api_version = 'unknown'
+
+    platform_version = platform.platform()
+
+    return N_("""
+        <br>
+            Git Cola version %(cola_version)s
+        <ul>
+            <li> %(platform_version)s
+            <li> Python (%(python_path)s) %(python_version)s
+            <li> Git %(git_version)s
+            <li> Qt %(qt_version)s
+            <li> QtPy %(qtpy_version)s
+            <li> %(pyqt_api_name)s %(pyqt_api_version)s
+        </ul>
+    """) % locals()
+
+
+def link(url, text, palette=None):
+    if palette is None:
+        palette = QtGui.QPalette()
+
+    color = palette.color(QtGui.QPalette.Foreground)
+    rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+
+    return ("""
+        <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
+            href="%(url)s">
+            %(text)s
+        </a>
+    """ % locals())
+
+def mailto(email, text, palette):
+    return link('mailto:%s' % email, text, palette) + '<br>'
+
+
+def render_authors(authors):
+    """Render a list of author details into richtext html"""
+    map(lambda x: x.setdefault('email', ''), authors)
+
+    entries = [("""
+        <p>
+            <strong>%(name)s</strong><br>
+            <em>%(title)s</em><br>
+            %(email)s
+        </p>
+    """ % author) for author in authors]
+
+    return ''.join(entries)
+
+
+def contributors_text(authors, epilogue=''):
+    author_text = render_authors(authors)
+
+    bug_url = 'https://github.com/git-cola/git-cola/issues'
+    bug_link = link(bug_url, bug_url)
+
+    return N_("""
+        <br>
+        Please use %(bug_link)s to report issues.
+        <br>
+
+        %(author_text)s
+        %(epilogue)s
+    """) % locals()
+
+
+def authors_text():
+    palette = QtGui.QPalette()
+    email_text = N_('Email contributor')
+    authors = (
+        dict(name='David Aguilar',
+             title=N_('Maintainer (since 2007) and developer'),
+             email=mailto('davvid@gmail.com', email_text, palette)),
+        # Please submit a pull request if you would like to include your
+        # email address in the about screen.
+        dict(name='Daniel Harding', title=N_('Developer')),
+        dict(name='Ｖ字龍(Vdragon)', title=N_('Developer')),
+        dict(name='Guillaume de Bure', title=N_('Developer')),
+        dict(name='Uri Okrent', title=N_('Developer')),
+        dict(name='Alex Chernetz', title=N_('Developer')),
+        dict(name='Thomas Kluyver', title=N_('Developer')),
+        dict(name='Minarto Margoliono', title=N_('Developer')),
+        dict(name='Andreas Sommer', title=N_('Developer')),
+        dict(name='Virgil Dupras', title=N_('Developer')),
+        dict(name='Igor Galarraga', title=N_('Developer')),
+        dict(name='Barry Roberts', title=N_('Developer')),
+        dict(name='Ville Skyttä', title=N_('Developer')),
+        dict(name='Steffen Prohaska', title=N_('Developer')),
+        dict(name='Justin Lecher', title=N_('Developer')),
+        dict(name='Benedict Lee', title=N_('Developer')),
+        dict(name='Sven Claussner', title=N_('Developer')),
+        dict(name='Rustam Safin', title=N_('Developer')),
+        dict(name='Michael Geddes', title=N_('Developer')),
+        dict(name='v.paritskiy', title=N_('Developer')),
+        dict(name='Michael Homer', title=N_('Developer')),
+        dict(name='Marco Costalba', title=N_('Developer')),
+        dict(name='Karl Bielefeldt', title=N_('Developer')),
+        dict(name='David Martínez Martí', title=N_('Developer')),
+        dict(name='Ben Boeckel', title=N_('Developer')),
+        dict(name='Wolfgang Ocker', title=N_('Developer')),
+        dict(name='Wesley Wong', title=N_('Developer')),
+        dict(name='Voicu Hodrea', title=N_('Developer')),
+        dict(name='Ved Vyas', title=N_('Developer')),
+        dict(name='Vaibhav Sagar', title=N_('Developer')),
+        dict(name='Sebastian Schuberth', title=N_('Developer')),
+        dict(name='Sebastian Brass', title=N_('Developer')),
+        dict(name='Rolando Espinoza', title=N_('Developer')),
+        dict(name='Paul Weingardt', title=N_('Developer')),
+        dict(name='Paulo Fidalgo', title=N_('Developer')),
+        dict(name='Paul Hildebrandt', title=N_('Developer')),
+        dict(name='Mikhail Terekhov', title=N_('Developer')),
+        dict(name='Md. Mahbub Alam', title=N_('Developer')),
+        dict(name='Matthew E. Levine', title=N_('Developer')),
+        dict(name='Maicon D. Filippsen', title=N_('Developer')),
+        dict(name='Maciej Filipiak', title=N_('Developer')),
+        dict(name='Kelvie Wong', title=N_('Developer')),
+        dict(name='Karthik Manamcheri', title=N_('Developer')),
+        dict(name='Jamie Pate', title=N_('Developer')),
+        dict(name='Jake Biesinger', title=N_('Developer')),
+        dict(name='Iulian Udrea', title=N_('Developer')),
+        dict(name='Ilya Tumaykin', title=N_('Developer')),
+        dict(name='George Vasilakos', title=N_('Developer')),
+        dict(name='David Zumbrunnen', title=N_('Developer')),
+        dict(name='Daniel Pavel', title=N_('Developer')),
+        dict(name='Daniel King', title=N_('Developer')),
+        dict(name='Daniel Haskin', title=N_('Developer')),
+        dict(name='Clément Pit', title=N_('Developer')),
+        dict(name='Charles', title=N_('Developer')),
+        dict(name='Boris W', title=N_('Developer')),
+        dict(name='Audrius Karabanovas', title=N_('Developer')),
+        dict(name='aj-bagwell', title=N_('Developer')),
+        dict(name='Adrien be', title=N_('Developer')),
+    )
+    return contributors_text(authors)
+
+
+def translators_text():
+    palette = QtGui.QPalette()
+    contact = N_('Email contributor')
+    email = lambda addr: mailto(addr, contact, palette)
+
+    translators = (
+        dict(name='Barış ÇELİK',
+             email=email('bariscelikweb@gmail.com'),
+             title=N_('Turkish translation')),
+        dict(name='Łukasz Wojniłowicz',
+             email=email('lukasz.wojnilowicz@gmail.com'),
+             title=N_('Polish translation')),
+        dict(name='Minarto Margoliono',
+             email=email('lie.r.min.g@gmail.com'),
+             title=N_('Indonesian translation')),
+        dict(name='Peter Dave Hello',
+             title=N_('Traditional Chinese (Taiwan) translation')),
+        dict(name='Pilar Molina Lopez',
+             email=email('pilarmolinalopez@gmail.com'),
+             title=N_('Spanish translation')),
+        dict(name="Samsul Ma'arif",
+             email=email('samsul@samsul.web.id'),
+             title=N_('Indonesian translation')),
+        dict(name='Sven Claussner',
+             email=email('sclaussner@src.gnome.org'),
+             title=N_('German translation')),
+        dict(name='Vaiz',
+             email=email('vaizerd@gmail.com'),
+             title=N_('Russian translation')),
+        dict(name='Ｖ字龍(Vdragon)',
+             email=email('Vdragon.Taiwan@gmail.com'),
+             title=N_('Traditional Chinese (Taiwan) translation')),
+        dict(name='Vitor Lobo',
+             email=email('lobocode@gmail.com'),
+             title=N_('Brazilian translation')),
+        dict(name='Zhang Han',
+             email=email('zhanghan@gmx.cn'),
+             title=N_('Chinese translation')),
+        dict(name='Zeioth',
+             email=email('Zeioth@hotmail.com'),
+             title=N_('Spanish translation')),
+    )
+    return contributors_text(translators)
 
 
 def show_shortcuts():
