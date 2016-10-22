@@ -37,37 +37,39 @@ do
 	esac
 done
 
-BASENAME=git-cola-$VERSION
-ETC=$BASENAME/etc
-ROOT=$BASENAME
-TARGET="$ROOT".exe
+BASENAME="git-cola-$VERSION"
+ETC="$BASENAME/etc"
+ROOT="$BASENAME"
+TARGET="$ROOT.exe"
 
-echo "Building installer for git-cola $VERSION"
+echo "Building installer for git-cola $VERSION" &&
 
 python setup.py --quiet install \
 	--prefix="$ROOT" \
-	--install-scripts="$ROOT"/bin
-rm -rf "$ROOT/lib" "$ROOT/Lib" build
+	--install-scripts="$ROOT"/bin &&
 
-cp "$BASENAME/bin/git-cola" $BASENAME/bin/git-cola.pyw
-cp "$BASENAME/bin/git-dag" $BASENAME/bin/git-dag.pyw
-mkdir -p $ETC 2>/dev/null
-cp "$WIN32/git.bmp" "$WIN32/gpl-2.0.rtf" "$WIN32/git.ico" "$ETC"
+rm -rf "$ROOT/lib" "$ROOT/Lib" build &&
 
-NOTES="$ETC/ReleaseNotes.txt"
+cp "$BASENAME/bin/git-cola" $BASENAME/bin/git-cola.pyw &&
+cp "$BASENAME/bin/git-dag" $BASENAME/bin/git-dag.pyw &&
 
-printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" > $NOTES
-printf "To run cola, just type 'cola' from a Git Bash session.\n\n\n" >> $NOTES
+mkdir -p "$ETC" 2>/dev/null &&
+cp "$WIN32/git.bmp" "$WIN32/gpl-2.0.rtf" "$WIN32/git.ico" "$ETC" &&
 
-tag=$(git tag | tail -2 | head -1)
-echo "--------------------------------------------------------" >> $NOTES
-echo "      Changes since $tag" >> $NOTES
-echo "--------------------------------------------------------" >> $NOTES
-echo >> $NOTES
-git shortlog $tag.. >> $NOTES
+NOTES="$ETC/ReleaseNotes.txt" &&
+
+printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" >"$NOTES" &&
+printf "To run cola, just type 'cola' from a Git Bash session.\n\n\n" >>"$NOTES" &&
+
+tag=$(git tag | tail -2 | head -1) &&
+echo "--------------------------------------------------------" >>"$NOTES" &&
+echo "      Changes since $tag" >>"$NOTES" &&
+echo "--------------------------------------------------------" >>"$NOTES" &&
+echo >>"$NOTES" &&
+git shortlog "$tag.." >>"$NOTES" &&
 
 # LF -> CRLF
-vim -c "set ff=dos" -c "wq" $NOTES
+vim -c "set ff=dos" -c "wq" "$NOTES" &&
 sed -e "s/%APPVERSION%/$VERSION/" -e "s/%OUTPUTDIR%/../" \
 	< "$WIN32/install.iss" > "$BASENAME/install.iss" &&
 (
