@@ -72,23 +72,23 @@ def list2cmdline(cmd):
 def read(filename, size=-1, encoding=None, errors='strict'):
     """Read filename and return contents"""
     with xopen(filename, 'rb') as fh:
-        return fread(fh, size=size, encoding=encoding, errors=errors)
+        return xread(fh, size=size, encoding=encoding, errors=errors)
 
 
 def write(path, contents, encoding=None):
     """Writes a unicode string to a file"""
     with xopen(path, 'wb') as fh:
-        return fwrite(fh, contents, encoding=encoding)
+        return xwrite(fh, contents, encoding=encoding)
 
 
 @interruptable
-def fread(fh, size=-1, encoding=None, errors='strict'):
+def xread(fh, size=-1, encoding=None, errors='strict'):
     """Read from a filehandle and retry when interrupted"""
     return decode(fh.read(size), encoding=encoding, errors=errors)
 
 
 @interruptable
-def fwrite(fh, content, encoding=None):
+def xwrite(fh, content, encoding=None):
     """Write to a filehandle and retry when interrupted"""
     return fh.write(encode(content, encoding=encoding))
 
