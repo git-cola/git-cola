@@ -160,6 +160,15 @@ def label(text):
     return widget
 
 
+def textbrowser(text=None):
+    """Create a QTextBrowser for the specified text"""
+    widget = QtWidgets.QTextBrowser()
+    widget.setOpenExternalLinks(True)
+    if text:
+        widget.setText(text)
+    return widget
+
+
 def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
