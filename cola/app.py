@@ -5,7 +5,6 @@ import os
 import signal
 import sys
 
-
 __copyright__ = """
 Copyright (C) 2009-2016 David Aguilar and contributors
 """
@@ -18,16 +17,7 @@ if sys.platform == 'darwin':
     if os.path.isdir(homebrew_mods):
         sys.path.append(homebrew_mods)
 
-# /usr/include/sysexits.h
-# #define EX_OK           0   /* successful termination */
-# #define EX_USAGE        64  /* command line usage error */
-# #define EX_NOINPUT      66  /* cannot open input */
-# #define EX_UNAVAILABLE  69  /* service unavailable */
-EX_OK = 0
-EX_USAGE = 64
-EX_NOINPUT = 66
-EX_UNAVAILABLE = 69
-
+from . import core
 try:
     from qtpy import QtCore
 except ImportError:
@@ -36,8 +26,7 @@ Sorry, you do not seem to have PyQt5, Pyside, or PyQt4 installed.
 Please install it before using git-cola, e.g.:
     $ sudo apt-get install python-qt4
 """
-    sys.stderr.write(errmsg)
-    sys.exit(EX_UNAVAILABLE)
+    core.error(errmsg)
 
 from qtpy import QtWidgets
 
@@ -212,7 +201,7 @@ def process_args(args):
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
         version.print_version()
-        sys.exit(EX_OK)
+        sys.exit(core.EXIT_SUCCESS)
 
     # Handle session management
     restore_session(args)
@@ -226,7 +215,7 @@ def process_args(args):
         errmsg = N_('fatal: "%s" is not a directory.  '
                     'Please specify a correct --repo <path>.') % repo
         core.stderr(errmsg)
-        sys.exit(EX_USAGE)
+        sys.exit(core.EXIT_USAGE)
 
 
 def restore_session(args):
@@ -332,7 +321,7 @@ def new_model(app, repo, prompt=False, settings=None):
                                             settings=settings)
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
-            sys.exit(EX_NOINPUT)
+            sys.exit(core.EXIT_NOINPUT)
         valid = model.set_worktree(gitdir)
 
     return model

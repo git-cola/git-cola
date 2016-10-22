@@ -5,7 +5,6 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 import functools
 import sys
@@ -18,6 +17,20 @@ from .compat import ustr
 from .compat import PY2
 from .compat import PY3
 from .compat import WIN32
+
+# /usr/include/stdlib.h
+#define EXIT_SUCCESS    0   /* Successful exit status.  */
+#define EXIT_FAILURE    1   /* Failing exit status.  */
+EXIT_SUCCESS = 0
+EXIT_FAILURE = 1
+
+# /usr/include/sysexits.h
+# #define EX_USAGE        64  /* command line usage error */
+# #define EX_NOINPUT      66  /* cannot open input */
+# #define EX_UNAVAILABLE  69  /* service unavailable */
+EXIT_USAGE = 64
+EXIT_NOINPUT = 66
+EXIT_UNAVAILABLE = 69
 
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
@@ -311,6 +324,11 @@ def stderr(msg, linesep='\n'):
     if PY2:
         msg = encode(msg, encoding='utf-8')
     sys.stderr.write(msg)
+
+
+def error(msg, status=EXIT_FAILURE, linesep='\n'):
+    stderr(msg, linesep=linesep)
+    sys.exit(status)
 
 
 @interruptable
