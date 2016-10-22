@@ -20,6 +20,9 @@ from . import defs
 class WidgetMixin(object):
     """Mix-in for common utilities and serialization of widget state"""
 
+    def __init__(self):
+        self._unmaximized_size = None
+
     def center(self):
         parent = self.parent()
         if parent is None:
@@ -60,11 +63,22 @@ class WidgetMixin(object):
             settings.save_gui_state(self)
 
     def resizeEvent(self, event):
+        super(WidgetMixin, self).resizeEvent(event)
+        # Use a timer to so that the window size and state is up to date.
+        # If we ask for the window state here it will never realize that
+        # we have been maximized because the window state change is processed
+        # after the resize event.  Using a timer event causes it to happen
+        # after all the events have been processsed.
+        size = event.size()
+        QtCore.QTimer.singleShot(1, lambda: self._store_unmaximized_size(size))
+
+    def _store_unmaximized_size(self, size):
         state = self.windowState()
         maximized = bool(state & Qt.WindowMaximized)
         if not maximized:
-            self._unmaximized_size = event.size()
-        super(WidgetMixin, self).resizeEvent(event)
+            width, height = size.width(), size.height()
+            if width > 0 and height > 0:
+                self._unmaximized_size = (width, height)
 
     def restore_state(self, settings=None):
         if settings is None:
@@ -87,6 +101,10 @@ class WidgetMixin(object):
         try:
             if state['maximized']:
                 self.showMaximized()
+                try:
+                    self._unmaximized_size = (state['width'], state['height'])
+                except:
+                    pass
         except:
             result = False
         self._apply_state_applied = result
@@ -96,16 +114,13 @@ class WidgetMixin(object):
         """Exports data for view save/restore"""
         state = self.windowState()
         maximized = bool(state & Qt.WindowMaximized)
-        width, height = self.width(), self.height()
-
         # when maximized we don't want to overwrite saved width/height with
         # desktop dimensions.
-        if maximized:
-            try:
-                old_size = self._unmaximized_size
-                width, height = old_size.width(), old_size.height()
-            except:
-                width, height = None, None
+        if maximized and self._unmaximized_size:
+            width, height = self._unmaximized_size
+        else:
+            width, height = self.width(), self.height()
+
         return {
             'x': self.x(),
             'y': self.y(),
