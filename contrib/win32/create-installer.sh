@@ -59,7 +59,6 @@ cp "$WIN32/git.bmp" "$WIN32/gpl-2.0.rtf" "$WIN32/git.ico" "$ETC" &&
 NOTES="$ETC/ReleaseNotes.txt" &&
 
 printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" >"$NOTES" &&
-printf "To run cola, just type 'cola' from a Git Bash session.\n\n\n" >>"$NOTES" &&
 
 tag=$(git tag | tail -2 | head -1) &&
 echo "--------------------------------------------------------" >>"$NOTES" &&
