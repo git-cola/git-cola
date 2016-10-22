@@ -63,10 +63,10 @@ if `pyqt5` is not installed.
 
 Any of the following Python Qt libraries must be installed:
 
-* [PyQt4](http://www.riverbankcomputing.co.uk/software/pyqt/download)
+* [PyQt4](https://www.riverbankcomputing.com/software/pyqt/download)
   4.6 or newer
 
-* [PyQt5](http://www.riverbankcomputing.co.uk/software/pyqt/download5)
+* [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download5)
   5.2 or newer
 
 * [PySide](https://github.com/PySide/PySide)
@@ -189,8 +189,8 @@ Sphinx is used to build the documentation.
 
     sudo pip install --requirement requirements.txt
 
-[Homebrew](http://mxcl.github.com/homebrew/) is the easiest way to install
-git-cola's *Qt4* and *PyQt4* dependencies.  We will use homebrew to install
+[Homebrew](http://brew.sh/) is the easiest way to install
+git-cola's *Qt4* and *PyQt4* dependencies.  We will use Homebrew to install
 the git-cola recipe, but build our own .app bundle from source.
 
     brew install git-cola
