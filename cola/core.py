@@ -299,15 +299,15 @@ def xopen(path, mode='r', encoding=None):
     return open(mkpath(path, encoding=encoding), mode)
 
 
-def stdout(msg):
-    msg = msg + '\n'
+def stdout(msg, linesep='\n'):
+    msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding='utf-8')
     sys.stdout.write(msg)
 
 
-def stderr(msg):
-    msg = msg + '\n'
+def stderr(msg, linesep='\n'):
+    msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding='utf-8')
     sys.stderr.write(msg)
