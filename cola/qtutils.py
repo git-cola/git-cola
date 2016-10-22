@@ -47,22 +47,27 @@ def button_action(button, action):
 
 
 def connect_toggle(toggle, fn):
+    """Connect a toggle button to a function"""
     toggle.toggled.connect(fn)
 
 
 def active_window():
+    """Return the active window for the current application"""
     return QtWidgets.QApplication.activeWindow()
 
 
 def hbox(margin, spacing, *items):
+    """Create an HBoxLayout with the specified sizes and items"""
     return box(QtWidgets.QHBoxLayout, margin, spacing, *items)
 
 
 def vbox(margin, spacing, *items):
+    """Create a VBoxLayout with the specified sizes and items"""
     return box(QtWidgets.QVBoxLayout, margin, spacing, *items)
 
 
 def buttongroup(*items):
+    """Create a QButtonGroup for the specified items"""
     group = QtWidgets.QButtonGroup()
     for i in items:
         group.addButton(i)
@@ -70,10 +75,12 @@ def buttongroup(*items):
 
 
 def set_margin(layout, margin):
+    """Set the content margins for a layout"""
     layout.setContentsMargins(margin, margin, margin, margin)
 
 
 def box(cls, margin, spacing, *items):
+    """Create a QBoxLayout with the specified sizes and items"""
     stretch = STRETCH
     skipped = SKIPPED
     layout = cls()
@@ -97,6 +104,7 @@ def box(cls, margin, spacing, *items):
 
 
 def form(margin, spacing, *widgets):
+    """Create a QFormLayout with the specified sizes and items"""
     layout = QtWidgets.QFormLayout()
     layout.setSpacing(spacing)
     layout.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
@@ -113,6 +121,7 @@ def form(margin, spacing, *widgets):
 
 
 def grid(margin, spacing, *widgets):
+    """Create a QGridLayout with the specified sizes and items"""
     layout = QtWidgets.QGridLayout()
     layout.setSpacing(spacing)
     set_margin(layout, margin)
@@ -128,6 +137,11 @@ def grid(margin, spacing, *widgets):
 
 
 def splitter(orientation, *widgets):
+    """Create a spliter over the specified widgets
+
+    :param orientation: Qt.Horizontal or Qt.Vertical
+
+    """
     layout = QtWidgets.QSplitter()
     layout.setOrientation(orientation)
     layout.setHandleWidth(defs.handle_width)
