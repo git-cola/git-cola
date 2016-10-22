@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import math
 
@@ -34,6 +33,8 @@ max_size = scale(4096)
 
 border = max(1, scale(0.5))
 checkbox = scale(12)
+
+logo_text = 24
 
 radio_border = max(1, scale(1.0 - (1.0 / math.pi)))
 
