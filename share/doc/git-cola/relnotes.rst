@@ -53,6 +53,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/526
 
+* The `About` page was revamped to contain multiple tabs.  A new tab was added
+  that provides details about `git cola`''s dependencies.  New tabs were also
+  added for giving credit to `git cola`'s authors and translators.
+
+* The `About` page can now be accessed via `git cola about`.
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
