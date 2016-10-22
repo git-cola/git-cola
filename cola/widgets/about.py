@@ -194,6 +194,8 @@ def authors_text():
         dict(name='David Aguilar',
              title=N_('Maintainer (since 2007) and developer'),
              email=mailto('davvid@gmail.com', email_text, palette)),
+        # The names listed here are listed in the same order as
+        # `git shortlog --summary --numbered --no-merges`
         # Please submit a pull request if you would like to include your
         # email address in the about screen.
         dict(name='Daniel Harding', title=N_('Developer')),
@@ -204,6 +206,7 @@ def authors_text():
         dict(name='Thomas Kluyver', title=N_('Developer')),
         dict(name='Minarto Margoliono', title=N_('Developer')),
         dict(name='Andreas Sommer', title=N_('Developer')),
+        dict(name='Stanislaw Halik', title=N_('Developer')),
         dict(name='Virgil Dupras', title=N_('Developer')),
         dict(name='Igor Galarraga', title=N_('Developer')),
         dict(name='Barry Roberts', title=N_('Developer')),
