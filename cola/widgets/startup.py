@@ -35,18 +35,18 @@ class StartupDialog(standard.Dialog):
         self.logo_label.setPixmap(logo_pixmap)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
-        self.logo_text_label = qtutils.label(version.cola_version())
+        self.logo_text_label = qtutils.label(text=version.cola_version())
         self.logo_text_label.setAlignment(Qt.AlignCenter)
 
         self.repodir = None
         self.runtask = qtutils.RunTask(parent=self)
 
-        self.new_button = qtutils.create_button(text=N_('New...'),
-                                                icon=icons.new())
-        self.open_button = qtutils.create_button(text=N_('Open...'),
-                                                 icon=icons.repo())
-        self.clone_button = qtutils.create_button(text=N_('Clone...'),
-                                                  icon=icons.cola())
+        self.new_button = qtutils.create_button(
+                text=N_('New...'), icon=icons.new())
+        self.open_button = qtutils.create_button(
+                text=N_('Open...'), icon=icons.repo())
+        self.clone_button = qtutils.create_button(
+                text=N_('Clone...'), icon=icons.cola())
         self.close_button = qtutils.close_button()
 
         if settings is None:
@@ -54,7 +54,7 @@ class StartupDialog(standard.Dialog):
         settings.load()
         self.settings = settings
 
-        self.bookmarks_label = QtWidgets.QLabel(N_('Select Repository...'))
+        self.bookmarks_label = qtutils.label(text=N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
 
         self.bookmarks_model = QtGui.QStandardItemModel()
