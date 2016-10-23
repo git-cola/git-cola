@@ -1,0 +1,126 @@
+#!/usr/bin/env python
+from __future__ import division, absolute_import, unicode_literals
+import argparse
+import os
+import sys
+
+sys.path.append(os.getcwd())
+from cola import core
+from cola.git import Git
+
+def main():
+    args = parse_args()
+    git = Git()
+    # We use git-subtree for QtPy, and thus include its history.
+    # We only want to see the git-cola committers, so filter
+    # the git log output using `sans_qtpy`
+    qtpy_oid = '49a1fcf17140dd016601dd7acc0dcd7b629aa57d'
+    sans_qtpy = '^' + qtpy_oid
+
+    # If someone wants their email to be public they can add a mapping here
+    emails = {
+        # 'name': 'email@example.com',
+    }
+
+    #         1234
+    indent = '    ' * 2
+    if args.count:
+        suffix = "\t# %(count)s"
+    else:
+        suffix = ''
+
+    dev_snippet = (
+        "%(indent)sdict(name=%(name_q)s, title=N_('Developer')),%(suffix)s")
+
+    dev_email_snippet = (
+        "%(indent)sdict(name=%(name_q)s, title=N_('Developer'),\n"
+        "%(indent)s     mailto(%(email_q)s, email_text, palette)),%(suffix)s")
+
+    pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
+
+    committers = get_committers(git, 'HEAD', sans_qtpy, '--', *pathspecs)
+    for idx, (count, name) in enumerate(committers):
+        if idx == 0:  # skip over maintainer
+            continue
+        email = emails.get(name, '')
+        if email:
+            email_q = quote(email)
+            snippet = dev_email_snippet
+        else:
+            snippet = dev_snippet
+
+        name_q = quote(name)
+        core.stdout(snippet % locals())
+
+    return 0
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--count', default=False, help='show counts',
+                        action='store_true')
+    return parser.parse_args()
+
+
+def quote(name):
+    if "'" in name and '"' in name:
+        return "'''%s'''" % name
+    elif "'" in name:
+        return '"%s"' % name
+    else:
+        return "'%s'" % name
+
+
+def git_error(name, args, status, out, err):
+    if out:
+        core.stdout(out, linesep='')
+    core.error('error: git %s %s returned exit status %s\n%s'
+               % (name, ' '.join(args), status, err),
+               status=status)
+
+
+def check_error(name, args, status, out, err):
+    if status != 0:
+        git_error(name, args, status, out, err)
+
+
+def get_pathspecs(git, exclude=()):
+    status, out, err = git.ls_files()
+    check_error('ls-files', (), status, out, err)
+
+    pathspecs = set()
+    pathspecs.add('**/TODO')
+    pathspecs.add('TODO')
+
+    for path in out.splitlines():
+        if os.path.islink(path):
+            continue
+        basename = os.path.basename(path)
+        if basename.startswith('.') or '.' not in basename:
+            pathspecs.add('**/' + path)
+            pathspecs.add(path)
+        else:
+            base, ext = os.path.splitext(basename)
+            if ext in exclude:
+                continue
+            pathspecs.add('**/*' + ext)
+            pathspecs.add('*' + ext)
+
+    return list(sorted(pathspecs))
+
+
+def get_committers(git, *args):
+    status, out, err = git.shortlog(summary=True,
+                                    numbered=True,
+                                    no_merges=True,
+                                    *args)
+    check_error('shortlog', args, status, out, err)
+
+    return [count_name(*(line.split('\t')))
+            for line in out.splitlines()]
+
+
+def count_name(count, name):
+    return (int(count), name)
+
+sys.exit(main())
