@@ -13,7 +13,8 @@ def main():
 
     # Old workflow: move relnotes/unreleased.rst to relnotes/vX.Y.rst
     #ReleaseNotes(version).update()
-    CreateReleaseNotes(version).update()
+    # Old workflow: separate file per release
+    #CreateReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
     # Old workflow: updated relnotes.rst with the latest relnotes/vX.Y.rst
@@ -214,7 +215,7 @@ class RelnotesVersion(Version):
 
 class RelnotesStableVersion(Version):
 
-    path = 'share/doc/git-cola/relnotes/relnotes.rst'
+    path = 'share/doc/git-cola/relnotes.rst'
 
     def __init__(self, version):
         super(RelnotesStableVersion, self).__init__(version)
