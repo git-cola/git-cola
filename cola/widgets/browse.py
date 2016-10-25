@@ -630,7 +630,7 @@ class BrowseDialog(QtWidgets.QDialog):
         filenames = self.tree.selected_files()
         if not filenames:
             return
-        self.path_chosen(filenames[0], close=True)
+        self.save_path(filenames[0])
 
     def selection_changed(self):
         """Update actions based on the current selection"""

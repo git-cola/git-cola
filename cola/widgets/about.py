@@ -251,6 +251,7 @@ def authors_text():
         dict(name='Paul Hildebrandt', title=N_('Developer')),
         dict(name='Paul Weingardt', title=N_('Developer')),
         dict(name='Paulo Fidalgo', title=N_('Developer')),
+        dict(name='Philip Stark', title=N_('Developer')),
         dict(name='Rolando Espinoza', title=N_('Developer')),
         dict(name="Samsul Ma'arif", title=N_('Developer')),
         dict(name='Sebastian Brass', title=N_('Developer')),

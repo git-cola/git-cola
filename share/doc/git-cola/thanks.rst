@@ -100,6 +100,7 @@ Thanks
 * Paulo Fidalgo
 * Peter Dave Hello
 * Peter Júnoš
+* Philip Stark
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
 * Rolando Espinoza La fuente
