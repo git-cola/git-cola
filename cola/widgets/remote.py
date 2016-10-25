@@ -438,6 +438,14 @@ class RemoteActionDialog(standard.Dialog):
                 info_txt = N_('Force fetching from %s?') % remote
                 ok_text = N_('Force Fetch')
             elif action == PUSH:
+                if not remote_branch:
+                    # Push implementation (see function `refspec_arg`) only
+                    # does force-push if remote branch name is given
+                    title = N_('Force Push')
+                    msg = N_('You must first select the remote branch for a force-push.')
+                    qtutils.critical(title, msg)
+                    return
+
                 title = N_('Force Push?')
                 msg = N_('Non-fast-forward push overwrites published '
                          'history!\n(Did you pull first?)')
