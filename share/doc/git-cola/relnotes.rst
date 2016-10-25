@@ -100,6 +100,11 @@ Fixes
 * We now avoid some problematic Popen flags on Windows which were
   breaking the `git rebase` feature on Windows.
 
+* The `Save` button in `git dag`'s "Grab File..." feature now properly
+  prompts for a filename when saving files.
+
+  https://github.com/git-cola/git-cola/pull/617
+
 .. _v2.8:
 
 git-cola v2.8
