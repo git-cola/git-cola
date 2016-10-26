@@ -97,12 +97,17 @@ class Settings(object):
             pass
 
     def rename_bookmark(self, path, name, new_name):
-        bookmark = {'path': path, 'name': name}
+        bookmark = {'name': name, 'path': path}
         try:
             index = self.bookmarks.index(bookmark)
         except ValueError:
-            return
-        self.bookmarks[index]['name'] = new_name
+            return False
+
+        if all([entry['name'] != new_name for entry in self.bookmarks]):
+            self.bookmarks[index]['name'] = new_name
+            return True
+
+        return False
 
     def remove_recent(self, entry):
         """Removes an item from the recent items list"""

@@ -193,9 +193,11 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.rename_bookmark(item, item.text(0))
 
     def rename_bookmark(self, item, new_name):
-        self.settings.rename_bookmark(item.path, item.name, new_name)
-        self.settings.save()
-        item.name = new_name
+        if self.settings.rename_bookmark(item.path, item.name, new_name):
+            self.settings.save()
+            item.name = new_name
+        else:
+            item.setText(0, item.name)
 
     def apply_fn(self, fn, *args, **kwargs):
         item = self.selected_item()
