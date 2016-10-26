@@ -235,6 +235,58 @@ def prompt_two(msg, title1=None, text1='', title2=None, text2=''):
         return (None, None, False)
 
 
+def prompt_n(msg, inputs):
+    """Presents the user with N input widgets and returns the results"""
+    dialog = QtWidgets.QDialog(active_window())
+    dialog.setWindowModality(Qt.WindowModal)
+    dialog.setWindowTitle(msg)
+
+    long_value = msg
+    for k, v in inputs:
+        if len(k + v) > len(long_value):
+            long_value = k + v
+
+    metrics = QtGui.QFontMetrics(dialog.font())
+    min_width = metrics.width(long_value) + 100
+    if min_width > 720:
+        min_width = 720
+    dialog.setMinimumWidth(min_width)
+
+    ok_b = ok_button(msg, default=True, enabled=False)
+    close_b = close_button()
+
+    form_widgets = []
+
+    def get_values():
+        return [pair[1].text().strip() for pair in form_widgets]
+
+    for name, value in inputs:
+        lineedit = QtWidgets.QLineEdit()
+        # Enable the OK button only when all fields have been populated
+        lineedit.textChanged.connect(
+                lambda x: ok_b.setEnabled(all(get_values())))
+        if value:
+            lineedit.setText(value)
+        form_widgets.append((name, lineedit))
+
+    # layouts
+    form_layout = form(defs.no_margin, defs.button_spacing, *form_widgets)
+    button_layout = hbox(defs.no_margin, defs.button_spacing,
+                         STRETCH, close_b, ok_b)
+    main_layout = vbox(defs.margin, defs.button_spacing,
+                       form_layout, button_layout)
+    dialog.setLayout(main_layout)
+
+    # connections
+    connect_button(ok_b, dialog.accept)
+    connect_button(close_b, dialog.reject)
+
+    accepted = dialog.exec_() == QtWidgets.QDialog.Accepted
+    text = get_values()
+    ok = accepted and all(text)
+    return (ok, text)
+
+
 class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     TYPE = QtGui.QStandardItem.UserType + 101
