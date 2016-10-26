@@ -153,20 +153,19 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
     def refresh(self):
         settings = self.settings
-        builder = BuildItem(self.style)
+        builder = BuildItem()
 
         # bookmarks
         if self.style == BOOKMARKS:
-            items = [builder.get(entry['path'], entry['name'])
-                        for entry in settings.bookmarks]
-
-            if prefs.sort_bookmarks():
-                items.sort()
+            entries = settings.bookmarks
+        # recent items
         elif self.style == RECENT_REPOS:
-            # recent items
-            items = [builder.get(path, path) for path in settings.recent]
-        else:
-            items = []
+            entries = settings.recent
+
+        items = [builder.get(entry['path'], entry['name']) for entry in entries]
+        if self.style == BOOKMARKS and prefs.sort_bookmarks():
+            items.sort(key=lambda x: x.name)
+
         self.clear()
         self.addTopLevelItems(items)
 
@@ -190,10 +189,16 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def item_changed(self, item, index):
-        self.rename_bookmark(item, item.text(0))
+        self.rename_entry(item, item.text(0))
 
-    def rename_bookmark(self, item, new_name):
-        if self.settings.rename_bookmark(item.path, item.name, new_name):
+    def rename_entry(self, item, new_name):
+        if self.style == BOOKMARKS:
+            rename = self.settings.rename_bookmark
+        elif self.style == RECENT_REPOS:
+            rename = self.settings.rename_recent
+        else:
+            rename = lambda *args: False
+        if rename(item.path, item.name, new_name):
             self.settings.save()
             item.name = new_name
         else:
@@ -304,7 +309,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
 class BuildItem(object):
 
-    def __init__(self, style):
+    def __init__(self):
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()
         self.default_repo = gitcfg.current().get('cola.defaultrepo')

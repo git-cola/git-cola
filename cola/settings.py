@@ -73,7 +73,7 @@ class Settings(object):
                 pass
 
         for recent in self.recent:
-            if not self.verify(recent):
+            if not self.verify(recent['path']):
                 missing_recent.append(recent)
 
         for recent in missing_recent:
@@ -96,30 +96,46 @@ class Settings(object):
         except ValueError:
             pass
 
-    def rename_bookmark(self, path, name, new_name):
-        bookmark = {'name': name, 'path': path}
+    def rename_entry(self, entries, path, name, new_name):
+        entry = {'name': name, 'path': path}
         try:
-            index = self.bookmarks.index(bookmark)
+            index = entries.index(entry)
         except ValueError:
             return False
 
-        if all([entry['name'] != new_name for entry in self.bookmarks]):
-            self.bookmarks[index]['name'] = new_name
+        if all([item['name'] != new_name for item in entries]):
+            entries[index]['name'] = new_name
             return True
 
         return False
 
-    def remove_recent(self, entry):
-        """Removes an item from the recent items list"""
-        if entry in self.recent:
-            self.recent.remove(entry)
+    def rename_bookmark(self, path, name, new_name):
+        return self.rename_entry(self.bookmarks, path, name, new_name)
 
-    def add_recent(self, entry):
-        if entry in self.recent:
-            self.recent.remove(entry)
+    def add_recent(self, path):
+        try:
+            index = [recent['path'] for recent in self.recent].index(path)
+            entry = self.recent.pop(index)
+        except IndexError:
+            entry = {
+                'name': os.path.basename(path),
+                'path': path,
+            }
         self.recent.insert(0, entry)
+
         if len(self.recent) >= 8:
             self.recent.pop()
+
+    def remove_recent(self, path):
+        """Removes an item from the recent items list"""
+        try:
+            index = [recent['path'] for recent in self.recent].index(path)
+        except IndexError:
+            return
+        self.recent.pop(index)
+
+    def rename_recent(self, path, name, new_name):
+        return self.rename_entry(self.recent, path, name, new_name)
 
     def path(self):
         return self._file
@@ -139,6 +155,11 @@ class Settings(object):
             bookmarks = [dict(name=os.path.basename(path), path=path)
                             for path in self.bookmarks]
             self.values['bookmarks'] = bookmarks
+
+        if self.recent and not isinstance(self.recent[0], dict):
+            recent = [dict(name=os.path.basename(path), path=path)
+                        for path in self.recent]
+            self.values['recent'] = recent
 
     def asdict(self):
         path = self.path()
