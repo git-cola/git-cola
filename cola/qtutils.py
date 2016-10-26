@@ -189,52 +189,6 @@ def prompt(msg, title=None, text=''):
     return (result[0], result[1])
 
 
-def prompt_two(msg, title1=None, text1='', title2=None, text2=''):
-    """Presents the user with double input widget and returns the inputs."""
-    if title1 is None:
-        title1 = msg
-    if title2 is None:
-        title2 = msg
-
-    dialog = QtWidgets.QDialog()
-
-    dialog.setWindowModality(Qt.ApplicationModal)
-
-    dialog.setWindowTitle(msg)
-    # min_width = font.width + 80pixels (window title buttons + margins)
-    min_width = QtGui.QFontMetrics(dialog.font()).width(msg) + 80
-    if min_width > 500:
-        min_width = 500
-    dialog.setMinimumWidth(min_width)
-
-    label1 = QtWidgets.QLabel(title1, dialog)
-    edit1 = QtWidgets.QLineEdit(dialog)
-    edit1.setText(text1)
-    edit1.setSelection(0, len(text1))
-
-    label2 = QtWidgets.QLabel(title2, dialog)
-    edit2 = QtWidgets.QLineEdit(dialog)
-    edit2.setText(text2)
-
-    buttonbox = QtWidgets.QDialogButtonBox(
-        QtWidgets.QDialogButtonBox.Ok |
-        QtWidgets.QDialogButtonBox.Cancel)
-
-    layout = vbox(defs.margin, defs.spacing, label1, edit1,
-                  label2, edit2, buttonbox)
-    dialog.setLayout(layout)
-
-    buttonbox.accepted.connect(dialog.accept)
-    buttonbox.rejected.connect(dialog.reject)
-
-    retval = dialog.exec_()
-
-    if retval == QtWidgets.QDialog.Accepted:
-        return (edit1.text(), edit2.text(), True)
-    else:
-        return (None, None, False)
-
-
 def prompt_n(msg, inputs):
     """Presents the user with N input widgets and returns the results"""
     dialog = QtWidgets.QDialog(active_window())

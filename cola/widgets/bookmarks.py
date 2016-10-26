@@ -266,15 +266,14 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def add_bookmark(self):
         normpath = utils.expandpath(core.getcwd())
         name = os.path.basename(normpath)
-        name, path, ok = qtutils.prompt_two(
-                                N_('Adding favorite git repository'),
-                                title1=N_('Favorite item name:'),
-                                text1=name,
-                                title2=N_('Repository path:'),
-                                text2=core.getcwd())
+        prompt = (
+            (N_('Name'), name),
+            (N_('Path'), core.getcwd()),
+        )
+        ok, values = qtutils.prompt_n(N_('Add Favorite'), prompt)
         if not ok:
             return
-
+        name, path = values
         normpath = utils.expandpath(path)
         if git.is_git_worktree(normpath):
             self.settings.add_bookmark(normpath, name)
