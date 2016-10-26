@@ -590,7 +590,7 @@ class RemoveBookmark(RemoveFromSettings):
         return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
 
     def action(self):
-        self.settings.remove_bookmark(self.repo,self.name)
+        self.settings.remove_bookmark(self.repo, self.name)
         return (0, '', '')
 
 
