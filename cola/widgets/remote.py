@@ -71,6 +71,10 @@ def combine(result, existing):
             return result
 
 
+def disable(checkbox, value):
+    if value:
+        checkbox.setChecked(False)
+
 class ActionTask(qtutils.Task):
 
     def __init__(self, parent, model_action, remote, kwargs):
@@ -138,7 +142,6 @@ class RemoteActionDialog(standard.Dialog):
                      'fast-forward')
         self.no_ff_checkbox = qtutils.checkbox(checked=False, text=text,
                                                tooltip=tooltip)
-
         text = N_('Force')
         tooltip = N_('Allow non-fast-forward updates.  Using "force" can '
                      'cause the remote repository to lose commits; '
@@ -231,6 +234,11 @@ class RemoteActionDialog(standard.Dialog):
 
         remote = self.remote_branches
         remote.itemSelectionChanged.connect(self.update_remote_branches)
+
+        self.no_ff_checkbox.clicked.connect(
+                lambda x: disable(self.ffwd_only_checkbox, x))
+        self.ffwd_only_checkbox.clicked.connect(
+                lambda x: disable(self.no_ff_checkbox, x))
 
         connect_button(self.action_button, self.action_callback)
         connect_button(self.close_button, self.close)
