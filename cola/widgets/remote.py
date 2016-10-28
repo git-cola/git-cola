@@ -156,7 +156,10 @@ class RemoteActionDialog(standard.Dialog):
                                                tooltip=tooltip)
 
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
-        self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase'))
+
+        tooltip = N_('Rebase the current branch instead of merging')
+        self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase'),
+                                                tooltip=tooltip)
 
         text = N_('Set upstream')
         tooltip = N_('Configure the remote branch as the the new upstream')
