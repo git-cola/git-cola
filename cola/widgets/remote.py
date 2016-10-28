@@ -537,12 +537,34 @@ class Fetch(RemoteActionDialog):
         RemoteActionDialog.__init__(self, model, FETCH, N_('Fetch'),
                                     parent=parent, icon=icons.repo())
 
+    def export_state(self):
+        state = RemoteActionDialog.export_state(self)
+        state['tags'] = self.tags_checkbox.isChecked()
+        return state
+
+    def apply_state(self, state):
+        result = RemoteActionDialog.apply_state(self, state)
+        tags = bool(state.get('tags', False))
+        self.tags_checkbox.setChecked(tags)
+        return result
+
 
 class Push(RemoteActionDialog):
 
     def __init__(self, model, parent=None):
         RemoteActionDialog.__init__(self, model, PUSH, N_('Push'),
                                     parent=parent, icon=icons.push())
+
+    def export_state(self):
+        state = RemoteActionDialog.export_state(self)
+        state['tags'] = self.tags_checkbox.isChecked()
+        return state
+
+    def apply_state(self, state):
+        result = RemoteActionDialog.apply_state(self, state)
+        tags = bool(state.get('tags', False))
+        self.tags_checkbox.setChecked(tags)
+        return result
 
 
 class Pull(RemoteActionDialog):
