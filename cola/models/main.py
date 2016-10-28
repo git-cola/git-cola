@@ -503,7 +503,7 @@ class MainModel(Observable):
 def remote_args(remote,
                 local_branch='',
                 remote_branch='',
-                ff_only=True,
+                ff_only=False,
                 force=False,
                 no_ff=False,
                 tags=False,
@@ -519,14 +519,22 @@ def remote_args(remote,
         args.append(what)
 
     kwargs = {
-        'ff_only': pull and ff_only,
-        'no_ff': pull and no_ff,
-        'force': not pull and force,
-        'rebase': pull and rebase,
-        'set_upstream': push and set_upstream,
-        'tags': tags,
         'verbose': True,
     }
+    if pull:
+        if rebase:
+            kwargs['rebase'] = True
+        elif ff_only:
+            kwargs['ff_only'] = True
+        elif no_ff:
+            kwargs['no_ff'] = True
+    elif force:
+        kwargs['force'] = True
+
+    if push and set_upstream:
+        kwargs['set_upstream'] = True
+    if tags:
+        kwargs['tags'] = True
 
     return (args, kwargs)
 
