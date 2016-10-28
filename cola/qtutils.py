@@ -574,10 +574,14 @@ def add_close_action(widget):
                       widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
 
+def desktop():
+    return QtWidgets.QApplication.instance().desktop()
+
+
 def center_on_screen(widget):
     """Move widget to the center of the default screen"""
-    desktop = QtWidgets.QApplication.instance().desktop()
-    rect = desktop.screenGeometry(QtGui.QCursor().pos())
+    desk = desktop()
+    rect = desk.screenGeometry(QtGui.QCursor().pos())
     cy = rect.height()//2
     cx = rect.width()//2
     widget.move(cx - widget.width()//2, cy - widget.height()//2)
