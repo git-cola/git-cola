@@ -8,6 +8,7 @@ Thanks
 * AJ Bagwell
 * Alex Chernetz
 * Alexander Kozienko
+* Alf Eaton
 * anderben
 * Andreas Sommer
 * Andrew Chen
