@@ -59,6 +59,13 @@ Usability, bells and whistles
 
 * The `About` page can now be accessed via `git cola about`.
 
+* The "Fast-forward only" and "No fast-forward" options supported by
+  `git pull` are now accessible via `git cola pull`.
+
+* Doing a forced push no longer requires selecting the remote branch.
+
+  https://github.com/git-cola/git-cola/pull/618
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
