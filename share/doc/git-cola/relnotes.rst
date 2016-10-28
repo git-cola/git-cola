@@ -66,6 +66,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/618
 
+* `git cola push` now has an option to suppress the prompt that is shown
+  when pushing would create new remote branches.
+
+  https://github.com/git-cola/git-cola/issues/605
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.

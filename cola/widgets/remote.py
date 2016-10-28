@@ -132,6 +132,11 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branches = QtWidgets.QListWidget()
         self.remote_branches.addItems(self.model.remote_branches)
 
+        text = N_('Prompt on creation')
+        tooltip = N_('Prompt when pushing creates new remote branches')
+        self.prompt_checkbox = qtutils.checkbox(checked=True, text=text,
+                                                tooltip=tooltip)
+
         text = N_('Fast-forward only')
         tooltip = N_('Refuse to merge unless the current HEAD is already up-'
                      'to-date or the merge can be resolved as a fast-forward')
@@ -190,6 +195,7 @@ class RemoteActionDialog(standard.Dialog):
                 self.tags_checkbox,
                 self.rebase_checkbox,
                 self.upstream_checkbox,
+                self.prompt_checkbox,
                 self.force_checkbox,
                 qtutils.STRETCH,
                 self.close_button,
@@ -255,6 +261,7 @@ class RemoteActionDialog(standard.Dialog):
         if action != PUSH:
             # Push-only options
             self.upstream_checkbox.hide()
+            self.prompt_checkbox.hide()
 
         if action == PULL:
             # Fetch and Push-only options
@@ -465,7 +472,9 @@ class RemoteActionDialog(standard.Dialog):
         if action == PUSH and not remote_branch:
             branch = local_branch
             candidate = '%s/%s' % (remote, branch)
-            if candidate not in self.model.remote_branches:
+            prompt = self.prompt_checkbox.isChecked()
+
+            if prompt and candidate not in self.model.remote_branches:
                 title = N_('Push')
                 args = dict(branch=branch, remote=remote)
                 msg = N_('Branch "%(branch)s" does not exist in "%(remote)s".\n'
@@ -567,12 +576,18 @@ class Push(RemoteActionDialog):
     def export_state(self):
         state = RemoteActionDialog.export_state(self)
         state['tags'] = self.tags_checkbox.isChecked()
+        state['prompt'] = self.prompt_checkbox.isChecked()
         return state
 
     def apply_state(self, state):
         result = RemoteActionDialog.apply_state(self, state)
+
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
+
+        prompt = bool(state.get('prompt', True))
+        self.prompt_checkbox.setChecked(prompt)
+
         return result
 
 
