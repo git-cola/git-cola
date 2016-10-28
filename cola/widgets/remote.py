@@ -252,10 +252,12 @@ class RemoteActionDialog(standard.Dialog):
         qtutils.add_action(self, N_('Close'), self.close,
                            QtGui.QKeySequence.Close, 'Esc')
 
-        if action in (PULL, FETCH):
+        if action != PUSH:
+            # Push-only options
             self.upstream_checkbox.hide()
 
         if action == PULL:
+            # Fetch and Push-only options
             self.force_checkbox.hide()
             self.tags_checkbox.hide()
             self.local_label.hide()
@@ -263,6 +265,7 @@ class RemoteActionDialog(standard.Dialog):
             self.local_branches.hide()
             self.remote_branch.setFocus()
         else:
+            # Pull-only options
             self.rebase_checkbox.hide()
             self.no_ff_checkbox.hide()
             self.ff_only_checkbox.hide()
