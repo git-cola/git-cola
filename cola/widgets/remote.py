@@ -245,13 +245,13 @@ class RemoteActionDialog(standard.Dialog):
         remote = self.remote_branches
         remote.itemSelectionChanged.connect(self.update_remote_branches)
 
-        self.no_ff_checkbox.clicked.connect(
+        self.no_ff_checkbox.toggled.connect(
                 lambda x: disable(x, self.ff_only_checkbox,
                                   self.rebase_checkbox))
-        self.ff_only_checkbox.clicked.connect(
+        self.ff_only_checkbox.toggled.connect(
                 lambda x: disable(x, self.no_ff_checkbox,
                                   self.rebase_checkbox))
-        self.rebase_checkbox.clicked.connect(
+        self.rebase_checkbox.toggled.connect(
                 lambda x: disable(x, self.no_ff_checkbox,
                                   self.ff_only_checkbox))
 
