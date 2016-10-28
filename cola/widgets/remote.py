@@ -127,10 +127,27 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branches = QtWidgets.QListWidget()
         self.remote_branches.addItems(self.model.remote_branches)
 
-        text = N_('Fast Forward Only ')
-        self.ffwd_only_checkbox = qtutils.checkbox(text=text, checked=True)
+        text = N_('Fast-forward only')
+        tooltip = N_('Refuse to merge unless the current HEAD is already up-'
+                     'to-date or the merge can be resolved as a fast-forward')
+        self.ffwd_only_checkbox = qtutils.checkbox(checked=True, text=text,
+                                                   tooltip=tooltip)
+
+        text = N_('No fast-forward')
+        tooltip = N_('Create a merge commit even when the merge resolves as a '
+                     'fast-forward')
+        self.no_ff_checkbox = qtutils.checkbox(checked=False, text=text,
+                                               tooltip=tooltip)
+
+        text = N_('Force')
+        tooltip = N_('Allow non-fast-forward updates.  Using "force" can '
+                     'cause the remote repository to lose commits; '
+                     'use it with care')
+        self.force_checkbox = qtutils.checkbox(checked=False, text=text,
+                                               tooltip=tooltip)
+
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
-        self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase '))
+        self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase'))
 
         text = N_('Set upstream')
         tooltip = N_('Configure the remote branch as the the new upstream')
@@ -164,13 +181,15 @@ class RemoteActionDialog(standard.Dialog):
         self.options_layout = qtutils.hbox(
                 defs.no_margin,
                 defs.button_spacing,
-                qtutils.STRETCH,
                 self.ffwd_only_checkbox,
+                self.no_ff_checkbox,
                 self.tags_checkbox,
                 self.rebase_checkbox,
                 self.upstream_checkbox,
-                self.action_button,
-                self.close_button)
+                self.force_checkbox,
+                qtutils.STRETCH,
+                self.close_button,
+                self.action_button)
 
         if action == PUSH:
             widgets = (
@@ -223,6 +242,7 @@ class RemoteActionDialog(standard.Dialog):
             self.upstream_checkbox.hide()
 
         if action == PULL:
+            self.force_checkbox.hide()
             self.tags_checkbox.hide()
             self.local_label.hide()
             self.local_branch.hide()
@@ -230,6 +250,8 @@ class RemoteActionDialog(standard.Dialog):
             self.remote_branch.setFocus()
         else:
             self.rebase_checkbox.hide()
+            self.no_ff_checkbox.hide()
+            self.ffwd_only_checkbox.hide()
 
         desktop = qtutils.desktop()
         width = desktop.width()/2
@@ -372,17 +394,21 @@ class RemoteActionDialog(standard.Dialog):
         local_branch = self.local_branch.text()
         remote_branch = self.remote_branch.text()
 
-        ffwd_only = self.ffwd_only_checkbox.isChecked()
+        ff_only = self.ffwd_only_checkbox.isChecked()
+        force = self.force_checkbox.isChecked()
+        no_ff = self.no_ff_checkbox.isChecked()
         rebase = self.rebase_checkbox.isChecked()
         set_upstream = self.upstream_checkbox.isChecked()
         tags = self.tags_checkbox.isChecked()
 
         return (remote_name,
                 {
+                    'ff_only': ff_only,
+                    'force': force,
                     'local_branch': local_branch,
-                    'remote_branch': remote_branch,
-                    'ffwd': ffwd_only,
+                    'no_ff': no_ff,
                     'rebase': rebase,
+                    'remote_branch': remote_branch,
                     'set_upstream': set_upstream,
                     'tags': tags,
                 })
@@ -433,30 +459,20 @@ class RemoteActionDialog(standard.Dialog):
                                        icon=icons.cola()):
                     return
 
-        if not self.ffwd_only_checkbox.isChecked():
+        if self.force_checkbox.isChecked():
             if action == FETCH:
                 title = N_('Force Fetch?')
                 msg = N_('Non-fast-forward fetch overwrites local history!')
                 info_txt = N_('Force fetching from %s?') % remote
                 ok_text = N_('Force Fetch')
             elif action == PUSH:
-                if not remote_branch:
-                    # Push implementation (see function `refspec_arg`) only
-                    # does force-push if remote branch name is given
-                    title = N_('Force Push')
-                    msg = N_('You must first select the remote branch for a force-push.')
-                    qtutils.critical(title, msg)
-                    return
-
                 title = N_('Force Push?')
                 msg = N_('Non-fast-forward push overwrites published '
                          'history!\n(Did you pull first?)')
                 info_txt = N_('Force push to %s?') % remote
                 ok_text = N_('Force Push')
             else:  # pull: shouldn't happen since the controls are hidden
-                msg = "You probably don't want to do this.\n\tContinue?"
                 return
-
             if not qtutils.confirm(title, msg, info_txt, ok_text,
                                    default=False, icon=icons.discard()):
                 return
