@@ -224,7 +224,6 @@ class RemoteActionDialog(standard.Dialog):
 
         if action == PULL:
             self.tags_checkbox.hide()
-            self.ffwd_only_checkbox.hide()
             self.local_label.hide()
             self.local_branch.hide()
             self.local_branches.hide()
