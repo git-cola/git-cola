@@ -140,14 +140,14 @@ class RemoteActionDialog(standard.Dialog):
         text = N_('Fast-forward only')
         tooltip = N_('Refuse to merge unless the current HEAD is already up-'
                      'to-date or the merge can be resolved as a fast-forward')
-        self.ff_only_checkbox = qtutils.checkbox(checked=True, text=text,
-                                                 tooltip=tooltip)
+        self.ff_only_checkbox = qtutils.checkbox(checked=True,
+                                                 text=text, tooltip=tooltip)
 
         text = N_('No fast-forward')
         tooltip = N_('Create a merge commit even when the merge resolves as a '
                      'fast-forward')
-        self.no_ff_checkbox = qtutils.checkbox(checked=False, text=text,
-                                               tooltip=tooltip)
+        self.no_ff_checkbox = qtutils.checkbox(checked=False,
+                                               text=text, tooltip=tooltip)
         text = N_('Force')
         tooltip = N_('Allow non-fast-forward updates.  Using "force" can '
                      'cause the remote repository to lose commits; '
@@ -620,13 +620,10 @@ class Pull(RemoteActionDialog):
 
     def export_state(self):
         state = RemoteActionDialog.export_state(self)
-        rebase = self.rebase_checkbox.isChecked()
-        ff_only = not rebase and self.ff_only_checkbox.isChecked()
-        no_ff = (not rebase and not ff_only and
-                    not self.no_ff_checkbox.isChecked())
-        state['ff_only'] = ff_only
-        state['no_ff'] = no_ff
-        state['rebase'] = rebase
+
+        state['ff_only'] = self.ff_only_checkbox.isChecked()
+        state['no_ff'] = self.no_ff_checkbox.isChecked()
+        state['rebase'] = self.rebase_checkbox.isChecked()
 
         return state
 
