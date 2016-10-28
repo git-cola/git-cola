@@ -71,9 +71,10 @@ def combine(result, existing):
             return result
 
 
-def disable(checkbox, value):
+def disable(value, *checkboxes):
     if value:
-        checkbox.setChecked(False)
+        for checkbox in checkboxes:
+            checkbox.setChecked(False)
 
 class ActionTask(qtutils.Task):
 
@@ -134,8 +135,8 @@ class RemoteActionDialog(standard.Dialog):
         text = N_('Fast-forward only')
         tooltip = N_('Refuse to merge unless the current HEAD is already up-'
                      'to-date or the merge can be resolved as a fast-forward')
-        self.ffwd_only_checkbox = qtutils.checkbox(checked=True, text=text,
-                                                   tooltip=tooltip)
+        self.ff_only_checkbox = qtutils.checkbox(checked=True, text=text,
+                                                 tooltip=tooltip)
 
         text = N_('No fast-forward')
         tooltip = N_('Create a merge commit even when the merge resolves as a '
@@ -184,7 +185,7 @@ class RemoteActionDialog(standard.Dialog):
         self.options_layout = qtutils.hbox(
                 defs.no_margin,
                 defs.button_spacing,
-                self.ffwd_only_checkbox,
+                self.ff_only_checkbox,
                 self.no_ff_checkbox,
                 self.tags_checkbox,
                 self.rebase_checkbox,
@@ -236,9 +237,14 @@ class RemoteActionDialog(standard.Dialog):
         remote.itemSelectionChanged.connect(self.update_remote_branches)
 
         self.no_ff_checkbox.clicked.connect(
-                lambda x: disable(self.ffwd_only_checkbox, x))
-        self.ffwd_only_checkbox.clicked.connect(
-                lambda x: disable(self.no_ff_checkbox, x))
+                lambda x: disable(x, self.ff_only_checkbox,
+                                  self.rebase_checkbox))
+        self.ff_only_checkbox.clicked.connect(
+                lambda x: disable(x, self.no_ff_checkbox,
+                                  self.rebase_checkbox))
+        self.rebase_checkbox.clicked.connect(
+                lambda x: disable(x, self.no_ff_checkbox,
+                                  self.ff_only_checkbox))
 
         connect_button(self.action_button, self.action_callback)
         connect_button(self.close_button, self.close)
@@ -259,7 +265,7 @@ class RemoteActionDialog(standard.Dialog):
         else:
             self.rebase_checkbox.hide()
             self.no_ff_checkbox.hide()
-            self.ffwd_only_checkbox.hide()
+            self.ff_only_checkbox.hide()
 
         desktop = qtutils.desktop()
         width = desktop.width()/2
@@ -397,12 +403,12 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_branch(branch)
 
     def common_args(self):
-        """Returns git arguments common to fetch/push/pulll"""
+        """Returns git arguments common to fetch/push/pull"""
         remote_name = self.remote_name.text()
         local_branch = self.local_branch.text()
         remote_branch = self.remote_branch.text()
 
-        ff_only = self.ffwd_only_checkbox.isChecked()
+        ff_only = self.ff_only_checkbox.isChecked()
         force = self.force_checkbox.isChecked()
         no_ff = self.no_ff_checkbox.isChecked()
         rebase = self.rebase_checkbox.isChecked()
@@ -575,17 +581,32 @@ class Pull(RemoteActionDialog):
 
     def apply_state(self, state):
         result = RemoteActionDialog.apply_state(self, state)
-        try:
-            rebase = state['rebase']
-        except KeyError:
-            result = False
-        else:
-            self.rebase_checkbox.setChecked(rebase)
+        # Rebase has the highest priority
+        rebase = bool(state.get('rebase', False))
+        ff_only = not rebase and bool(state.get('ff_only', False))
+        no_ff = not rebase and not ff_only and bool(state.get('no_ff', False))
+
+        self.rebase_checkbox.setChecked(rebase)
+        self.no_ff_checkbox.setChecked(no_ff)
+
+        # Allow users coming from older versions that have rebase=False to
+        # pickup the new ff_only=True default by only setting ff_only False
+        # when it either exists in the config or when rebase=True.
+        if 'ff_only' in state or rebase:
+            self.ff_only_checkbox.setChecked(ff_only)
+
         return result
 
     def export_state(self):
         state = RemoteActionDialog.export_state(self)
-        state['rebase'] = self.rebase_checkbox.isChecked()
+        rebase = self.rebase_checkbox.isChecked()
+        ff_only = not rebase and self.ff_only_checkbox.isChecked()
+        no_ff = (not rebase and not ff_only and
+                    not self.no_ff_checkbox.isChecked())
+        state['ff_only'] = ff_only
+        state['no_ff'] = no_ff
+        state['rebase'] = rebase
+
         return state
 
     def done(self, exit_code):
