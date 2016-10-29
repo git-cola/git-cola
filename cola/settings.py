@@ -129,10 +129,13 @@ class Settings(object):
     def remove_recent(self, path):
         """Removes an item from the recent items list"""
         try:
-            index = [recent['path'] for recent in self.recent].index(path)
+            index = [recent.get('path', '') for recent in self.recent].index(path)
+        except ValueError:
+            return
+        try:
+            self.recent.pop(index)
         except IndexError:
             return
-        self.recent.pop(index)
 
     def rename_recent(self, path, name, new_name):
         return self.rename_entry(self.recent, path, name, new_name)
