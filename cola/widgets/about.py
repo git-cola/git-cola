@@ -26,6 +26,21 @@ def about_dialog():
     return view
 
 
+class ExpandingTabBar(QtWidgets.QTabBar):
+    """A TabBar with tabs that expand to fill the empty space
+
+    The setExpanding(True) method does not work in practice because
+    it respects the OS style.  We override the style by implementing
+    tabSizeHint() so that we can specify the size explicitly.
+
+    """
+
+    def tabSizeHint(self, tab_index):
+        size = super(ExpandingTabBar, self).tabSizeHint(tab_index)
+        size.setWidth(self.parent().width() / self.count() - 1)
+        return size
+
+
 class AboutView(QtWidgets.QDialog):
     """Provides the git-cola 'About' dialog"""
 
@@ -56,6 +71,7 @@ class AboutView(QtWidgets.QDialog):
         self.translators = qtutils.textbrowser(text=translators_text())
 
         self.tabs = QtWidgets.QTabWidget()
+        self.tabs.setTabBar(ExpandingTabBar(self.tabs))
         self.tabs.addTab(self.text, N_('About'))
         self.tabs.addTab(self.version, N_('Version'))
         self.tabs.addTab(self.authors, N_('Authors'))
