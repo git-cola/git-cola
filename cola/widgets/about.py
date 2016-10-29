@@ -187,20 +187,14 @@ def render_authors(authors):
     return ''.join(entries)
 
 
-def contributors_text(authors, epilogue=''):
+def contributors_text(authors, prelude='', epilogue=''):
     author_text = render_authors(authors)
 
-    bug_url = 'https://github.com/git-cola/git-cola/issues'
-    bug_link = link(bug_url, bug_url)
-
-    return N_("""
-        <br>
-        Please use %(bug_link)s to report issues.
-        <br>
-
+    return '''
+        %(prelude)s
         %(author_text)s
         %(epilogue)s
-    """) % locals()
+    ''' % locals()
 
 
 def authors_text():
@@ -280,7 +274,15 @@ def authors_text():
         dict(name='ZH', title=N_('Developer')),
         dict(name='aj-bagwell', title=N_('Developer')),
     )
-    return contributors_text(authors)
+    bug_url = 'https://github.com/git-cola/git-cola/issues'
+    bug_link = link(bug_url, bug_url)
+    prelude = N_('''
+        <br>
+        Please use %(bug_link)s to report issues.
+        <br>
+    ''') % locals()
+
+    return contributors_text(authors, prelude=prelude)
 
 
 def translators_text():
@@ -325,7 +327,35 @@ def translators_text():
              email=email('Zeioth@hotmail.com'),
              title=N_('Spanish translation')),
     )
-    return contributors_text(translators)
+
+    bug_url = 'https://github.com/git-cola/git-cola/issues'
+    bug_link = link(bug_url, bug_url)
+
+    prelude = N_('''
+        <br>
+            Git Cola has been translated into different languages thanks
+            to the help of the individuals listed below.
+
+        <br>
+        <p>
+            Translation is approximate.  If you find a mistake,
+            please let us know by opening an issue on Github:
+        </p>
+
+        <p>
+            %(bug_link)s
+        </p>
+
+        <br>
+        <p>
+            We invite you to participate in translation by adding or updating
+            a translation and opening a pull request.
+        </p>
+
+        <br>
+
+    ''') % locals()
+    return contributors_text(translators, prelude=prelude)
 
 
 def show_shortcuts():
