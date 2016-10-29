@@ -116,7 +116,7 @@ class Settings(object):
         try:
             index = [recent['path'] for recent in self.recent].index(path)
             entry = self.recent.pop(index)
-        except IndexError:
+        except (IndexError, ValueError):
             entry = {
                 'name': os.path.basename(path),
                 'path': path,
