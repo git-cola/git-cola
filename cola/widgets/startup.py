@@ -56,20 +56,20 @@ class StartupDialog(standard.Dialog):
 
         self.bookmarks_label = qtutils.label(text=N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
-
         self.bookmarks_model = QtGui.QStandardItemModel()
 
         item = QtGui.QStandardItem(N_('Select manually...'))
         item.setEditable(False)
         self.bookmarks_model.appendRow(item)
 
-        added = set()
 
-        # Bookmarks/"Favorites" is a dict list and Recent is a string list
+        # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
         bookmarks = [i['path'] for i in settings.bookmarks]
-        all_repos = bookmarks + settings.recent
+        recent = [i['path'] for i in settings.recent]
+        all_repos = bookmarks + recent
 
-        for repo in all_repos:
+        added = set()
+        for repo in sorted(all_repos, key=lambda x: x.lower()):
             if repo in added:
                 continue
             added.add(repo)
