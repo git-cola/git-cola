@@ -2,14 +2,15 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 import math
 
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
-from qtpy.QtCore import QPointF
-from qtpy.QtCore import QRectF
 
+from ..compat import maxsize
+from ..i18n import N_
+from ..models import dag
 from .. import core
 from .. import cmds
 from .. import difftool
@@ -18,9 +19,6 @@ from .. import icons
 from .. import observable
 from .. import qtcompat
 from .. import qtutils
-from ..compat import maxsize
-from ..i18n import N_
-from ..models import dag
 from . import archive
 from . import browse
 from . import completion
@@ -789,6 +787,8 @@ class Edge(QtWidgets.QGraphicsItem):
         return self.bound
 
     def paint(self, painter, option, widget):
+        QRectF = QtCore.QRectF
+        QPointF = QtCore.QPointF
 
         arc_rect = 10
         connector_length = 5
@@ -800,9 +800,7 @@ class Edge(QtWidgets.QGraphicsItem):
             path.moveTo(self.source.x(), self.source.y())
             path.lineTo(self.dest.x(), self.dest.y())
             painter.drawPath(path)
-
         else:
-
             # Define points starting from source
             point1 = QPointF(self.source.x(), self.source.y())
             point2 = QPointF(point1.x(), point1.y() - connector_length)
@@ -1071,6 +1069,7 @@ class Label(QtWidgets.QGraphicsItem):
 
         current_width = 0
 
+        QRectF = QtCore.QRectF
         for tag in self.commit.tags:
             text_rect = painter.boundingRect(
                     QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
