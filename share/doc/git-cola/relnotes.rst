@@ -71,6 +71,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/605
 
+* `git dag` now shows commit messages in a more readable color.
+
+  https://github.com/git-cola/git-cola/issues/574
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.

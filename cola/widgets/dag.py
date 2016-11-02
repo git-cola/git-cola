@@ -425,7 +425,7 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.treewidget = CommitTreeWidget(notifier, self)
-        self.diffwidget = diff.DiffWidget(notifier, self)
+        self.diffwidget = diff.DiffWidget(notifier, self, is_commit=True)
         self.filewidget = filelist.FileWidget(notifier, self)
         self.graphview = GraphView(notifier, self)
 
