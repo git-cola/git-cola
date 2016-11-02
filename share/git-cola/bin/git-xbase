@@ -205,10 +205,10 @@ class Editor(QtWidgets.QWidget):
             if match:
                 enabled = match.group(1) is None
                 command = unabbrev(match.group(2))
-                sha1hex = match.group(3)
+                oid = match.group(3)
                 summary = match.group(4)
                 self.tree.add_item(idx, enabled, command,
-                                   sha1hex=sha1hex, summary=summary)
+                                   oid=oid, summary=summary)
                 idx += 1
                 continue
             match = exec_rgx.match(line)
@@ -247,7 +247,7 @@ class Editor(QtWidgets.QWidget):
         if not items:
             return
         item = items[0]
-        difftool.diff_expression(self, item.sha1hex + '^!',
+        difftool.diff_expression(self, item.oid + '^!',
                                  hide_expr=True)
 
 
@@ -269,8 +269,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.setColumnCount(5)
 
         # actions
-        self.copy_sha1_action = qtutils.add_action(
-                self, N_('Copy SHA-1'), self.copy_sha1, QtGui.QKeySequence.Copy)
+        self.copy_oid_action = qtutils.add_action(
+                self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy)
 
         self.external_diff_action = qtutils.add_action(
                 self, N_('Launch Diff Tool'), self.external_diff.emit,
@@ -313,10 +313,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.items_moved.connect(self.decorate)
 
     def add_item(self, idx, enabled, command,
-                 sha1hex='', summary='', cmdexec=''):
+                 oid='', summary='', cmdexec=''):
         comment_char = self.comment_char
         item = RebaseTreeWidgetItem(idx, enabled, command,
-                                    sha1hex=sha1hex, summary=summary,
+                                    oid=oid, summary=summary,
                                     cmdexec=cmdexec, comment_char=comment_char)
         self.invisibleRootItem().addChild(item)
 
@@ -353,19 +353,19 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         item.reset_command(command)
         self.validate()
 
-    def copy_sha1(self):
+    def copy_oid(self):
         item = self.selected_item()
         if item is None:
             return
-        clipboard = item.sha1hex or item.cmdexec
+        clipboard = item.oid or item.cmdexec
         qtutils.set_clipboard(clipboard)
 
     def selection_changed(self):
         item = self.selected_item()
         if item is None or not item.is_commit():
             return
-        sha1hex = item.sha1hex
-        ctx = dag.DAG(sha1hex, 2)
+        oid = item.oid
+        ctx = dag.DAG(oid, 2)
         repo = dag.RepoReader(ctx)
         commits = []
         for c in repo:
@@ -441,7 +441,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addSeparator()
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
-        menu.addAction(self.copy_sha1_action)
+        menu.addAction(self.copy_oid_action)
         menu.addAction(self.external_diff_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -454,24 +454,24 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
-    SHA1LEN = 7
+    OID_LENGTH = 7
 
     def __init__(self, idx, enabled, command,
-                 sha1hex='', summary='', cmdexec='', comment_char='#',
+                 oid='', summary='', cmdexec='', comment_char='#',
                  parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
         self.idx = idx
-        self.sha1hex = sha1hex
+        self.oid = oid
         self.summary = summary
         self.cmdexec = cmdexec
         self.comment_char = comment_char
 
         # if core.abbrev is set to a higher value then we will notice by
-        # simply tracking the longest sha1 we've seen
-        sha1len = self.__class__.SHA1LEN
-        sha1len = self.__class__.SHA1LEN = max(len(sha1hex), sha1len)
+        # simply tracking the longest oid we've seen
+        oid_len = self.__class__.OID_LENGTH
+        self.__class__.OID_LENGTH = max(len(oid), oid_len)
 
         self.setText(0, '%02d' % idx)
         self.set_enabled(enabled)
@@ -481,7 +481,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             self.setText(3, '')
             self.setText(4, cmdexec)
         else:
-            self.setText(3, sha1hex)
+            self.setText(3, oid)
             self.setText(4, summary)
 
         flags = self.flags() | Qt.ItemIsUserCheckable
@@ -494,7 +494,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def copy(self):
         return self.__class__(self.idx, self.is_enabled(), self.command,
-                              sha1hex=self.sha1hex, summary=self.summary,
+                              oid=self.oid, summary=self.summary,
                               cmdexec=self.cmdexec)
 
     def decorate(self, parent):
@@ -520,7 +520,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return self.command == EXEC
 
     def is_commit(self):
-        return bool(self.command != EXEC and self.sha1hex and self.summary)
+        return bool(self.command != EXEC and self.oid and self.summary)
 
     def value(self):
         """Return the serialized representation of an item"""
@@ -531,7 +531,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         if self.is_exec():
             return ('%s%s %s' % (comment, self.command, self.cmdexec))
         return ('%s%s %s %s' %
-                (comment, self.command, self.sha1hex, self.summary))
+                (comment, self.command, self.oid, self.summary))
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked

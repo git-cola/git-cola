@@ -22,23 +22,23 @@ class CommitFactory(object):
         cls.root_generation = 0
 
     @classmethod
-    def new(cls, sha1=None, log_entry=None):
-        if not sha1 and log_entry:
-            sha1 = log_entry[:40]
+    def new(cls, oid=None, log_entry=None):
+        if not oid and log_entry:
+            oid = log_entry[:40]
         try:
-            commit = cls.commits[sha1]
+            commit = cls.commits[oid]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
             cls.root_generation = max(commit.generation,
                                       cls.root_generation)
         except KeyError:
-            commit = Commit(sha1=sha1,
+            commit = Commit(oid=oid,
                             log_entry=log_entry)
             if not log_entry:
                 cls.root_generation += 1
                 commit.generation = max(commit.generation,
                                         cls.root_generation)
-            cls.commits[sha1] = commit
+            cls.commits[oid] = commit
         return commit
 
 
@@ -91,7 +91,7 @@ class DAG(Observable):
 class Commit(object):
     root_generation = 0
 
-    __slots__ = ('sha1',
+    __slots__ = ('oid',
                  'summary',
                  'parents',
                  'children',
@@ -102,8 +102,8 @@ class Commit(object):
                  'generation',
                  'parsed')
 
-    def __init__(self, sha1=None, log_entry=None):
-        self.sha1 = sha1
+    def __init__(self, oid=None, log_entry=None):
+        self.oid = oid
         self.summary = None
         self.parents = []
         self.children = []
@@ -117,9 +117,9 @@ class Commit(object):
             self.parse(log_entry)
 
     def parse(self, log_entry, sep=logsep):
-        self.sha1 = log_entry[:40]
-        after_sha1 = log_entry[41:]
-        details = after_sha1.split(sep, 5)
+        self.oid = log_entry[:40]
+        after_oid = log_entry[41:]
+        details = after_oid.split(sep, 5)
         (parents, tags, author, authdate, email, summary) = details
 
         self.summary = summary and summary or ''
@@ -129,8 +129,8 @@ class Commit(object):
 
         if parents:
             generation = None
-            for parent_sha1 in parents.split(' '):
-                parent = CommitFactory.new(sha1=parent_sha1)
+            for parent_oid in parents.split(' '):
+                parent = CommitFactory.new(oid=parent_oid)
                 parent.children.append(self)
                 if generation is None:
                     generation = parent.generation+1
@@ -194,15 +194,15 @@ class Commit(object):
             self.tags.add(tag)
 
     def __str__(self):
-        return self.sha1
+        return self.oid
 
     def data(self):
         return {
-            'sha1': self.sha1,
+            'oid': self.oid,
             'summary': self.summary,
             'author': self.author,
             'authdate': self.authdate,
-            'parents': [p.sha1 for p in self.parents],
+            'parents': [p.oid for p in self.parents],
             'tags': self.tags,
         }
 
@@ -279,19 +279,19 @@ class RepoReader(object):
             self._proc = None
             raise StopIteration
 
-        sha1 = log_entry[:40]
+        oid = log_entry[:40]
         try:
-            return self._objects[sha1]
+            return self._objects[oid]
         except KeyError:
             c = CommitFactory.new(log_entry=log_entry)
-            self._objects[c.sha1] = c
+            self._objects[c.oid] = c
             self._topo_list.append(c)
             return c
 
     __next__ = next  # for Python 3
 
-    def __getitem__(self, sha1):
-        return self._objects[sha1]
+    def __getitem__(self, oid):
+        return self._objects[oid]
 
     def items(self):
         return self._objects.items()

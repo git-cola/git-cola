@@ -95,7 +95,7 @@ def add_am_command(parent):
 def add_archive_command(parent):
     parser = add_command(parent, 'archive', 'save an archive', cmd_archive)
     parser.add_argument('ref', metavar='<ref>', nargs='?', default=None,
-                        help='SHA-1 to archive')
+                        help='commit to archive')
 
 
 def add_branch_command(subparser):
@@ -264,7 +264,7 @@ def add_tag_command(subparser):
     parser.add_argument('name', metavar='<name>', nargs='?', default=None,
                         help='tag name')
     parser.add_argument('ref', metavar='<ref>', nargs='?', default=None,
-                        help='SHA-1 to tag')
+                        help='commit to tag')
     parser.add_argument('-s', '--sign', default=False, action='store_true',
                         help='annotated and GPG-signed tag')
 

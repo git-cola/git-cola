@@ -75,7 +75,7 @@ def launch(left=None, right=None, paths=None, staged=False, dir_diff=False,
             else:
                 # No parent, assume it's the root commit, so we have to diff
                 # against the empty tree.  Git's empty tree is a built-in
-                # constant SHA-1.
+                # constant object name.
                 left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
                 if not right and left_take_magic:
                     right = left

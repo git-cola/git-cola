@@ -86,19 +86,19 @@ class ViewerMixin(object):
             return None
         return selected_items[0]
 
-    def selected_sha1(self):
+    def selected_oid(self):
         item = self.selected_item()
         if item is None:
             result = None
         else:
-            result = item.commit.sha1
+            result = item.commit.oid
         return result
 
-    def selected_sha1s(self):
+    def selected_oids(self):
         return [i.commit for i in self.selected_items()]
 
     def with_oid(self, fn):
-        oid = self.selected_sha1()
+        oid = self.selected_oid()
         if oid:
             result = fn(oid)
         else:
@@ -106,14 +106,14 @@ class ViewerMixin(object):
         return result
 
     def diff_selected_this(self):
-        clicked_sha1 = self.clicked.sha1
-        selected_sha1 = self.selected.sha1
-        self.diff_commits.emit(selected_sha1, clicked_sha1)
+        clicked_oid = self.clicked.oid
+        selected_oid = self.selected.oid
+        self.diff_commits.emit(selected_oid, clicked_oid)
 
     def diff_this_selected(self):
-        clicked_sha1 = self.clicked.sha1
-        selected_sha1 = self.selected.sha1
-        self.diff_commits.emit(clicked_sha1, selected_sha1)
+        clicked_oid = self.clicked.oid
+        selected_oid = self.selected.oid
+        self.diff_commits.emit(clicked_oid, selected_oid)
 
     def cherry_pick(self):
         self.with_oid(lambda oid: cmds.do(cmds.CherryPick, [oid]))
@@ -271,7 +271,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
-        self.sha1map = {}
+        self.oidmap = {}
         self.menu_actions = None
         self.notifier = notifier
         self.selecting = False
@@ -301,13 +301,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             return
         found = finder(item)
         if found:
-            self.select([found.commit.sha1])
+            self.select([found.commit.oid])
 
     def selected_commit_range(self):
         selected_items = self.selected_items()
         if not selected_items:
             return None, None
-        return selected_items[-1].commit.sha1, selected_items[0].commit.sha1
+        return selected_items[-1].commit.oid, selected_items[0].commit.oid
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -325,15 +325,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if self.selecting:
             return
         with qtutils.BlockSignals(self):
-            self.select([commit.sha1 for commit in commits])
+            self.select([commit.oid for commit in commits])
 
-    def select(self, sha1s):
-        if not sha1s:
+    def select(self, oids):
+        if not oids:
             return
         self.clearSelection()
-        for idx, sha1 in enumerate(sha1s):
+        for idx, oid in enumerate(oids):
             try:
-                item = self.sha1map[sha1]
+                item = self.oidmap[oid]
             except KeyError:
                 continue
             self.scrollToItem(item)
@@ -341,15 +341,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     def adjust_columns(self):
         width = self.width()-20
-        zero = width*2//3
-        onetwo = width//6
+        zero = width * 2 / 3
+        onetwo = width / 6
         self.setColumnWidth(0, zero)
         self.setColumnWidth(1, onetwo)
         self.setColumnWidth(2, onetwo)
 
     def clear(self):
         QtWidgets.QTreeWidget.clear(self)
-        self.sha1map.clear()
+        self.oidmap.clear()
         self.commits = []
 
     def add_commits(self, commits):
@@ -358,18 +358,18 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         for c in reversed(commits):
             item = CommitTreeWidgetItem(c)
             items.append(item)
-            self.sha1map[c.sha1] = item
+            self.oidmap[c.oid] = item
             for tag in c.tags:
-                self.sha1map[tag] = item
+                self.oidmap[tag] = item
         self.insertTopLevelItems(0, items)
 
     def create_patch(self):
         items = self.selectedItems()
         if not items:
             return
-        sha1s = [item.commit.sha1 for item in reversed(items)]
-        all_sha1s = [c.sha1 for c in self.commits]
-        cmds.do(cmds.FormatPatch, sha1s, all_sha1s)
+        oids = [item.commit.oid for item in reversed(items)]
+        all_oids = [c.oid for c in self.commits]
+        cmds.do(cmds.FormatPatch, oids, all_oids)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -612,7 +612,7 @@ class GitDAG(standard.MainWindow):
         self.commit_list.extend(commits)
         # Keep track of commits
         for commit_obj in commits:
-            self.commits[commit_obj.sha1] = commit_obj
+            self.commits[commit_obj.oid] = commit_obj
             for tag in commit_obj.tags:
                 self.commits[tag] = commit_obj
         self.graphview.add_commits(commits)
@@ -636,7 +636,7 @@ class GitDAG(standard.MainWindow):
             # No commits, exist, early-out
             return
 
-        new_commits = [self.commits.get(s.sha1, None) for s in selection]
+        new_commits = [self.commits.get(s.oid, None) for s in selection]
         new_commits = [c for c in new_commits if c is not None]
         if new_commits:
             # The old selection exists in the new state
@@ -922,7 +922,7 @@ class Commit(QtWidgets.QGraphicsItem):
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
-        self.setToolTip(commit.sha1[:7] + ': ' + commit.summary)
+        self.setToolTip(commit.oid[:7] + ': ' + commit.summary)
 
         if commit.tags:
             self.label = label = Label(commit)
@@ -1175,14 +1175,14 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def commits_selected(self, commits):
         if self.selecting:
             return
-        self.select([commit.sha1 for commit in commits])
+        self.select([commit.oid for commit in commits])
 
-    def select(self, sha1s):
-        """Select the item for the SHA-1"""
+    def select(self, oids):
+        """Select the item for the oids"""
         self.scene().clearSelection()
-        for sha1 in sha1s:
+        for oid in oids:
             try:
-                item = self.items[sha1]
+                item = self.items[oid]
             except KeyError:
                 continue
             item.blockSignals(True)
@@ -1199,10 +1199,10 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         for commit in commits:
             if (generation is None or
                     criteria_fn(generation, commit.generation)):
-                sha1 = commit.sha1
+                oid = commit.oid
                 generation = commit.generation
         try:
-            return self.items[sha1]
+            return self.items[oid]
         except KeyError:
             return None
 
@@ -1219,9 +1219,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if not items:
             return
         selected_commits = self.sort_by_generation([n.commit for n in items])
-        sha1s = [c.sha1 for c in selected_commits]
-        all_sha1s = [c.sha1 for c in self.commits]
-        cmds.do(cmds.FormatPatch, sha1s, all_sha1s)
+        oids = [c.oid for c in selected_commits]
+        all_oids = [c.oid for c in self.commits]
+        cmds.do(cmds.FormatPatch, oids, all_oids)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""
@@ -1286,7 +1286,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         items = self.selected_items()
         if not items:
             commits = self_commits[-8:]
-            items = [self_items[c.sha1] for c in commits]
+            items = [self_items[c.oid] for c in commits]
 
         self.fit_view_to_items(items)
 
@@ -1438,7 +1438,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         scene = self.scene()
         for commit in commits:
             item = Commit(commit, self.notifier)
-            self.items[commit.sha1] = item
+            self.items[commit.oid] = item
             for ref in commit.tags:
                 self.items[ref] = item
             scene.addItem(item)
@@ -1451,13 +1451,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         scene = self.scene()
         for commit in commits:
             try:
-                commit_item = self.items[commit.sha1]
+                commit_item = self.items[commit.oid]
             except KeyError:
                 # TODO - Handle truncated history viewing
                 continue
             for parent in reversed(commit.parents):
                 try:
-                    parent_item = self.items[parent.sha1]
+                    parent_item = self.items[parent.oid]
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
@@ -1466,8 +1466,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     def layout_commits(self, nodes):
         positions = self.position_nodes(nodes)
-        for sha1, (x, y) in positions.items():
-            item = self.items[sha1]
+        for oid, (x, y) in positions.items():
+            item = self.items[oid]
             item.setPos(x, y)
 
     def position_nodes(self, nodes):
@@ -1481,7 +1481,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         for node in nodes:
             generation = node.generation
-            sha1 = node.sha1
+            oid = node.oid
 
             if node.is_fork():
                 # This is a fan-out so sweep over child generations and
@@ -1509,7 +1509,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             y_pos = min(y_pos, y_min - y_off)
 
             # y_pos = y_off
-            positions[sha1] = (x_pos, y_pos)
+            positions[oid] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
             y_min = y_pos

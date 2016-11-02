@@ -962,14 +962,14 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
         return LoadCommitMessageFromFile.do(self)
 
 
-class LoadCommitMessageFromSHA1(Command):
+class LoadCommitMessageFromOID(Command):
     """Load a previous commit message"""
 
-    def __init__(self, sha1, prefix=''):
+    def __init__(self, oid, prefix=''):
         Command.__init__(self)
-        self.sha1 = sha1
+        self.oid = oid
         self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = prefix + self.model.prev_commitmsg(sha1)
+        self.new_commitmsg = prefix + self.model.prev_commitmsg(oid)
         self.undoable = True
 
     def do(self):
@@ -979,11 +979,11 @@ class LoadCommitMessageFromSHA1(Command):
         self.model.set_commitmsg(self.old_commitmsg)
 
 
-class LoadFixupMessage(LoadCommitMessageFromSHA1):
+class LoadFixupMessage(LoadCommitMessageFromOID):
     """Load a fixup message"""
 
-    def __init__(self, sha1):
-        LoadCommitMessageFromSHA1.__init__(self, sha1, prefix='fixup! ')
+    def __init__(self, oid):
+        LoadCommitMessageFromOID.__init__(self, oid, prefix='fixup! ')
         if self.new_commitmsg:
             self.new_commitmsg = self.new_commitmsg.splitlines()[0]
 

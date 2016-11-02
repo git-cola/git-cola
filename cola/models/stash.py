@@ -50,14 +50,14 @@ class ApplyStash(object):
 
 
 class DropStash(object):
-    def __init__(self, stash_sha1):
-        self.stash_sha1 = stash_sha1
+    def __init__(self, stash_oid):
+        self.stash_oid = stash_oid
 
     def is_undoable(self):
         return False
 
     def do(self):
-        status, out, err = git.stash('drop', self.stash_sha1)
+        status, out, err = git.stash('drop', self.stash_oid)
         Interaction.log_status(status, out, err)
 
 

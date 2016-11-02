@@ -494,17 +494,17 @@ class DiffWidget(QtWidgets.QWidget):
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
-        self.sha1_label = TextLabel()
-        self.sha1_label.setTextFormat(Qt.PlainText)
-        self.sha1_label.setSizePolicy(policy)
-        self.sha1_label.setAlignment(Qt.AlignTop)
-        self.sha1_label.elide()
+        self.oid_label = TextLabel()
+        self.oid_label.setTextFormat(Qt.PlainText)
+        self.oid_label.setSizePolicy(policy)
+        self.oid_label.setAlignment(Qt.AlignTop)
+        self.oid_label.elide()
 
         self.diff = DiffTextEdit(self, whitespace=False)
 
         self.info_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
                                         self.author_label, self.summary_label,
-                                        self.sha1_label)
+                                        self.oid_label)
 
         self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                         self.gravatar_label, self.info_layout)
@@ -517,9 +517,9 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
-    def set_diff_sha1(self, sha1, filename=None):
+    def set_diff_oid(self, oid, filename=None):
         self.diff.setText('+++ ' + N_('Loading...'))
-        task = DiffInfoTask(sha1, filename, self)
+        task = DiffInfoTask(oid, filename, self)
         task.connect(self.diff.setText)
         self.runtask.start(task)
 
@@ -527,7 +527,7 @@ class DiffWidget(QtWidgets.QWidget):
         if len(commits) != 1:
             return
         commit = commits[0]
-        self.sha1 = commit.sha1
+        self.oid = commit.oid
 
         email = commit.email or ''
         summary = commit.summary or ''
@@ -547,15 +547,15 @@ class DiffWidget(QtWidgets.QWidget):
         author_template = '%(author)s <%(email)s>' % template_args
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
-        self.sha1_label.set_text(self.sha1)
+        self.oid_label.set_text(self.oid)
 
-        self.set_diff_sha1(self.sha1)
+        self.set_diff_oid(self.oid)
         self.gravatar_label.set_email(email)
 
     def files_selected(self, filenames):
         if not filenames:
             return
-        self.set_diff_sha1(self.sha1, filenames[0])
+        self.set_diff_oid(self.oid, filenames[0])
 
 
 class TextLabel(QtWidgets.QLabel):
@@ -609,10 +609,10 @@ class TextLabel(QtWidgets.QLabel):
 
 class DiffInfoTask(qtutils.Task):
 
-    def __init__(self, sha1, filename, parent):
+    def __init__(self, oid, filename, parent):
         qtutils.Task.__init__(self, parent)
-        self.sha1 = sha1
+        self.oid = oid
         self.filename = filename
 
     def task(self):
-        return gitcmds.diff_info(self.sha1, filename=self.filename)
+        return gitcmds.diff_info(self.oid, filename=self.filename)

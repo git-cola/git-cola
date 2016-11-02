@@ -67,8 +67,8 @@ class SelectCommitsDialog(QtWidgets.QDialog):
                                         self.splitter, self.input_layout)
         self.setLayout(self.main_layout)
 
-        commits.itemSelectionChanged.connect(self.commit_sha1_selected)
-        commits.itemDoubleClicked.connect(self.commit_sha1_double_clicked)
+        commits.itemSelectionChanged.connect(self.commit_oid_selected)
+        commits.itemDoubleClicked.connect(self.commit_oid_double_clicked)
 
         qtutils.connect_button(self.select_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
@@ -93,21 +93,21 @@ class SelectCommitsDialog(QtWidgets.QDialog):
             return []
         return self.selected_commits()
 
-    def commit_sha1_selected(self):
-        sha1 = self.selected_commit()
-        selected = sha1 is not None
+    def commit_oid_selected(self):
+        oid = self.selected_commit()
+        selected = oid is not None
         self.select_button.setEnabled(selected)
         if not selected:
             self.commit_text.setText('')
             self.revision.setText('')
             return
-        self.revision.setText(sha1)
+        self.revision.setText(oid)
         self.revision.selectAll()
-        # Display the sha1's commit
-        commit_diff = gitcmds.commit_diff(sha1)
+        # Display the oid's commit
+        commit_diff = gitcmds.commit_diff(oid)
         self.commit_text.setText(commit_diff)
 
-    def commit_sha1_double_clicked(self, item):
-        sha1 = self.selected_commit()
-        if sha1:
+    def commit_oid_double_clicked(self, item):
+        oid = self.selected_commit()
+        if oid:
             self.accept()

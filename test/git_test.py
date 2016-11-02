@@ -229,8 +229,8 @@ class GitCommandTest(unittest.TestCase):
 
     def test_show(self):
         """Test running 'git show'"""
-        sha = 'HEAD'
-        content = self.git.show(sha)[STDOUT]
+        oid = 'HEAD'
+        content = self.git.show(oid)[STDOUT]
         self.failUnless(content.startswith('commit '))
 
     def test_stdout(self):

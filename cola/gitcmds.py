@@ -13,7 +13,7 @@ from .git import STDOUT
 from .i18n import N_
 
 
-EMPTY_TREE_SHA1 = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 
 
 class InvalidRepositoryError(Exception):
@@ -222,8 +222,8 @@ def log(git, *args, **kwargs):
                    no_ext_diff=True, *args, **kwargs)[STDOUT]
 
 
-def commit_diff(sha1, git=git):
-    return log(git, '-1', sha1, '--') + '\n\n' + sha1_diff(git, sha1)
+def commit_diff(oid, git=git):
+    return log(git, '-1', oid, '--') + '\n\n' + oid_diff(git, oid)
 
 
 _diff_overrides = {}
@@ -258,30 +258,30 @@ def _add_filename(args, filename):
         args.extend(['--', filename])
 
 
-def sha1_diff(git, sha1, filename=None):
-    """Return the diff for a sha1"""
-    # Naively "$sha1^!" is what we'd like to use but that doesn't
+def oid_diff(git, oid, filename=None):
+    """Return the diff for an oid"""
+    # Naively "$oid^!" is what we'd like to use but that doesn't
     # give the correct result for merges--the diff is reversed.
-    # Be explicit and compare sha1 against its first parent.
-    args = [sha1 + '~', sha1]
+    # Be explicit and compare oid against its first parent.
+    args = [oid + '~', oid]
     opts = common_diff_opts()
     _add_filename(args, filename)
     status, out, err = git.diff(*args, **opts)
     if status != 0:
-        # We probably don't have "$sha1~" because this is the root commit.
+        # We probably don't have "$oid~" because this is the root commit.
         # "git show" is clever enough to handle the root commit.
-        args = [sha1 + '^!']
+        args = [oid + '^!']
         _add_filename(args, filename)
         status, out, err = git.show(pretty='format:', *args, **opts)
         out = out.lstrip()
     return out
 
 
-def diff_info(sha1, git=git, filename=None):
-    decoded = log(git, '-1', sha1, '--', pretty='format:%b').strip()
+def diff_info(oid, git=git, filename=None):
+    decoded = log(git, '-1', oid, '--', pretty='format:%b').strip()
     if decoded:
         decoded += '\n\n'
-    return decoded + sha1_diff(git, sha1, filename=filename)
+    return decoded + oid_diff(git, oid, filename=filename)
 
 
 def diff_helper(commit=None,
@@ -505,7 +505,7 @@ def diff_index(head, cached=True, paths=None):
     status, out, err = git.diff_index(cached=cached, z=True, *args)
     if status != 0:
         # handle git init
-        args[0] = EMPTY_TREE_SHA1
+        args[0] = EMPTY_TREE_OID
         status, out, err = git.diff_index(cached=cached, z=True, *args)
 
     for path, status, is_submodule in _parse_raw_diff(out):
@@ -574,7 +574,7 @@ def merge_base_parent(branch):
 
 
 def parse_ls_tree(rev):
-    """Return a list of(mode, type, sha1, path) tuples."""
+    """Return a list of (mode, type, oid, path) tuples."""
     output = []
     lines = git.ls_tree(rev, r=True)[STDOUT].splitlines()
     regex = re.compile(r'^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
@@ -583,9 +583,9 @@ def parse_ls_tree(rev):
         if match:
             mode = match.group(1)
             objtype = match.group(2)
-            sha1 = match.group(3)
+            oid = match.group(3)
             filename = match.group(4)
-            output.append((mode, objtype, sha1, filename,))
+            output.append((mode, objtype, oid, filename,))
     return output
 
 
@@ -594,7 +594,7 @@ REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
 
 
 def parse_rev_list(raw_revs):
-    """Parse `git log --pretty=online` output into (SHA-1, summary) pairs."""
+    """Parse `git log --pretty=online` output into (oid, summary) pairs."""
     revs = []
     for line in raw_revs.splitlines():
         match = REV_LIST_REGEX.match(line)
@@ -606,7 +606,7 @@ def parse_rev_list(raw_revs):
 
 
 def log_helper(all=False, extra_args=None):
-    """Return parallel arrays containing the SHA-1s and summaries."""
+    """Return parallel arrays containing oids and summaries."""
     revs = []
     summaries = []
     args = []
@@ -622,7 +622,7 @@ def log_helper(all=False, extra_args=None):
 
 
 def rev_list_range(start, end):
-    """Return a (SHA-1, summary) pairs between start and end."""
+    """Return (oid, summary) pairs between start and end."""
     revrange = '%s..%s' % (start, end)
     out = git.rev_list(revrange, pretty='oneline')[STDOUT]
     return parse_rev_list(out)

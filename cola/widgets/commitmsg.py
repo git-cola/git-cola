@@ -474,7 +474,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
                                 prefix='fixup! ')
 
     def build_commitmsg_menu(self):
-        self.build_commits_menu(cmds.LoadCommitMessageFromSHA1,
+        self.build_commits_menu(cmds.LoadCommitMessageFromOID,
                                 self.load_commitmsg_menu,
                                 self.choose_commit_message)
 
@@ -490,7 +490,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         menu.clear()
         for c in menu_commits:
-            menu.addAction(prefix + c.summary, cmds.run(cmd, c.sha1))
+            menu.addAction(prefix + c.summary, cmds.run(cmd, c.oid))
 
         if len(commits) == 6:
             menu.addSeparator()
@@ -498,15 +498,15 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def choose_commit(self, cmd):
         revs, summaries = gitcmds.log_helper()
-        sha1s = select_commits(N_('Select Commit'), revs, summaries,
-                               multiselect=False)
-        if not sha1s:
+        oids = select_commits(N_('Select Commit'), revs, summaries,
+                              multiselect=False)
+        if not oids:
             return
-        sha1 = sha1s[0]
-        cmds.do(cmd, sha1)
+        oid = oids[0]
+        cmds.do(cmd, oid)
 
     def choose_commit_message(self):
-        self.choose_commit(cmds.LoadCommitMessageFromSHA1)
+        self.choose_commit(cmds.LoadCommitMessageFromOID)
 
     def choose_fixup_commit(self):
         self.choose_commit(cmds.LoadFixupMessage)

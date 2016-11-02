@@ -43,8 +43,8 @@ class FileWidget(TreeWidget):
         if not commits:
             return
         commit = commits[0]
-        sha1 = commit.sha1
-        status, out, err = git.show(sha1, z=True, numstat=True,
+        oid = commit.oid
+        status, out, err = git.show(oid, z=True, numstat=True,
                                     oneline=True, no_renames=True)
         if status == 0:
             paths = [f for f in out.rstrip('\0').split('\0') if f]
