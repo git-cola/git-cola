@@ -5,17 +5,17 @@ import webbrowser
 import sys
 
 import qtpy
+from qtpy.QtCore import Qt
 from qtpy import QtGui
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt
 
+from ..i18n import N_
 from .. import core
 from .. import resources
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import version
-from ..i18n import N_
 from . import defs
 
 

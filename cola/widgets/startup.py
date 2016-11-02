@@ -6,17 +6,17 @@ found at startup.
 """
 from __future__ import division, absolute_import, unicode_literals
 
+from qtpy.QtCore import Qt
 from qtpy import QtGui
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt
 
+from ..i18n import N_
+from ..settings import Settings
 from .. import core
 from .. import guicmds
 from .. import icons
 from .. import qtutils
 from .. import version
-from ..i18n import N_
-from ..settings import Settings
 from . import defs
 from . import standard
 
