@@ -36,9 +36,26 @@ class ExpandingTabBar(QtWidgets.QTabBar):
     """
 
     def tabSizeHint(self, tab_index):
+        width = self.parent().width() / max(1, self.count()) - 1
         size = super(ExpandingTabBar, self).tabSizeHint(tab_index)
-        size.setWidth(self.parent().width() / self.count() - 1)
+        size.setWidth(width)
         return size
+
+
+class ExpandingTabWidget(QtWidgets.QTabWidget):
+
+    def __init__(self, parent=None):
+        super(ExpandingTabWidget, self).__init__(parent)
+        self.setTabBar(ExpandingTabBar(self))
+
+    def resizeEvent(self, event):
+        """Forward resize events to the ExpandingTabBar"""
+        # Qt does not resize the tab bar when the dialog is resized
+        # so manually forward resize events to the tab bar.
+        width = event.size().width()
+        height = self.tabBar().height()
+        self.tabBar().resize(width, height)
+        return super(ExpandingTabWidget, self).resizeEvent(event)
 
 
 class AboutView(QtWidgets.QDialog):
@@ -70,8 +87,7 @@ class AboutView(QtWidgets.QDialog):
         self.authors = qtutils.textbrowser(text=authors_text())
         self.translators = qtutils.textbrowser(text=translators_text())
 
-        self.tabs = QtWidgets.QTabWidget()
-        self.tabs.setTabBar(ExpandingTabBar(self.tabs))
+        self.tabs = ExpandingTabWidget()
         self.tabs.addTab(self.text, N_('About'))
         self.tabs.addTab(self.version, N_('Version'))
         self.tabs.addTab(self.authors, N_('Authors'))
