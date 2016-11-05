@@ -149,15 +149,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.launch_editor_action.setIcon(icons.edit())
 
         if not utils.is_win32():
-            self.open_using_default_app = qtutils.add_action(
-                self, cmds.OpenDefaultApp.name(),
-                self._open_using_default_app, hotkeys.PRIMARY_ACTION)
-            self.open_using_default_app.setIcon(icons.default_app())
+            self.default_app_action = common.default_app_action(
+                    self, self.selected_group)
 
-            self.open_parent_dir_action = qtutils.add_action(
-                self, cmds.OpenParentDir.name(),
-                self._open_parent_dir, hotkeys.SECONDARY_ACTION)
-            self.open_parent_dir_action.setIcon(icons.folder())
+            self.parent_dir_action = common.parent_dir_action(
+                    self, self.selected_group)
 
         self.up_action = qtutils.add_action(
             self, N_('Move Up'), self.move_up,
@@ -487,6 +483,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         """Set up the status menu for the repo status tree."""
         s = self.selection()
         menu = qtutils.create_menu('Status', self)
+        menu.addAction(self.launch_editor_action)
 
         selected_indexes = self.selected_indexes()
         if selected_indexes:
@@ -496,12 +493,18 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 return self._create_header_context_menu(menu, idx)
 
         if s.staged:
-            return self._create_staged_context_menu(menu, s)
+            self._create_staged_context_menu(menu, s)
 
         elif s.unmerged:
-            return self._create_unmerged_context_menu(menu, s)
+            self._create_unmerged_context_menu(menu, s)
         else:
-            return self._create_unstaged_context_menu(menu, s)
+            self._create_unstaged_context_menu(menu, s)
+
+        if not utils.is_win32():
+            menu.addSeparator()
+            menu.addAction(self.default_app_action)
+            menu.addAction(self.parent_dir_action)
+        return menu
 
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
@@ -539,23 +542,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                         for i in self.staged())
 
         if all_exist:
-            menu.addAction(self.launch_editor_action)
             menu.addAction(self.launch_difftool_action)
 
-        if all_exist and not utils.is_win32():
-            menu.addSeparator()
-            open_default = cmds.run(cmds.OpenDefaultApp, self.staged())
-            action = menu.addAction(icons.default_app(),
-                                    cmds.OpenDefaultApp.name(), open_default)
-            action.setShortcut(hotkeys.PRIMARY_ACTION)
-
-            action = menu.addAction(icons.folder(),
-                                    cmds.OpenParentDir.name(),
-                                    self._open_parent_dir)
-            action.setShortcut(hotkeys.SECONDARY_ACTION)
-
         if self.m.undoable():
-            menu.addSeparator()
             menu.addAction(self.revert_unstaged_edits_action)
 
         menu.addSeparator()
@@ -569,9 +558,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo,
                                 core.abspath(s.staged[0])))
-
-        menu.addAction(self.launch_editor_action)
-        menu.addSeparator()
 
         action = menu.addAction(icons.remove(), N_('Unstage Selected'),
                                 cmds.run(cmds.Unstage, self.staged()))
@@ -589,20 +575,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         action = menu.addAction(icons.add(), N_('Stage Selected'),
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
-        menu.addSeparator()
-        menu.addAction(self.launch_editor_action)
-
-        if not utils.is_win32():
-            menu.addSeparator()
-            open_default = cmds.run(cmds.OpenDefaultApp, self.unmerged())
-            action = menu.addAction(icons.default_app(),
-                                    cmds.OpenDefaultApp.name(), open_default)
-            action.setShortcut(hotkeys.PRIMARY_ACTION)
-
-            action = menu.addAction(icons.folder(),
-                                    cmds.OpenParentDir.name(),
-                                    self._open_parent_dir)
-            action.setShortcut(hotkeys.SECONDARY_ACTION)
 
         menu.addSeparator()
         menu.addAction(self.copy_path_action)
@@ -626,9 +598,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         all_exist = all(i not in self.m.unstaged_deleted and core.exists(i)
                         for i in self.staged())
 
-        if all_exist and self.unstaged():
-            menu.addAction(self.launch_editor_action)
-
         if all_exist and s.modified and self.m.stageable():
             menu.addAction(self.launch_difftool_action)
 
@@ -636,18 +605,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if self.m.undoable():
                 menu.addSeparator()
                 menu.addAction(self.revert_unstaged_edits_action)
-
-        if all_exist and self.unstaged() and not utils.is_win32():
-            menu.addSeparator()
-            open_default = cmds.run(cmds.OpenDefaultApp, self.unstaged())
-            action = menu.addAction(icons.default_app(),
-                                    cmds.OpenDefaultApp.name(), open_default)
-            action.setShortcut(hotkeys.PRIMARY_ACTION)
-
-            action = menu.addAction(icons.folder(),
-                                    cmds.OpenParentDir.name(),
-                                    self._open_parent_dir)
-            action.setShortcut(hotkeys.SECONDARY_ACTION)
 
         if all_exist and s.untracked:
             menu.addSeparator()
@@ -670,8 +627,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _create_modified_submodule_context_menu(self, menu, s):
         menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo, core.abspath(s.modified[0])))
-
-        menu.addAction(self.launch_editor_action)
 
         if self.m.stageable():
             menu.addSeparator()
@@ -825,12 +780,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
         cmds.do(cmds.StageOrUnstage)
-
-    def _open_using_default_app(self):
-        cmds.do(cmds.OpenDefaultApp, self.selected_group())
-
-    def _open_parent_dir(self):
-        cmds.do(cmds.OpenParentDir, self.selected_group())
 
     def show_selection(self):
         """Show the selected item."""
