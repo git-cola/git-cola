@@ -78,6 +78,7 @@ Thanks
 * Maaaks
 * Maciej Filipiak
 * Mahmoud Hossam
+* Mateusz Kedzior
 * Maicon D. Filippsen
 * Marco Costalba
 * Markus Heidelberg
