@@ -181,6 +181,9 @@ class RepoTreeView(standard.TreeView):
             self.action_parent_dir = common.parent_dir_action(
                     self, self.selected_paths)
 
+            self.action_terminal = common.terminal_action(
+                    self, self.selected_paths)
+
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
 
@@ -295,6 +298,8 @@ class RepoTreeView(standard.TreeView):
         if not utils.is_win32():
             self.action_default_app.setEnabled(selected)
             self.action_parent_dir.setEnabled(selected)
+            self.action_terminal.setEnabled(selected)
+
         self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
@@ -320,6 +325,7 @@ class RepoTreeView(standard.TreeView):
             menu.addSeparator()
             menu.addAction(self.action_default_app)
             menu.addAction(self.action_parent_dir)
+            menu.addAction(self.action_terminal)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def mousePressEvent(self, event):
