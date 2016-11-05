@@ -83,6 +83,18 @@ class ColaUtilsTestCase(unittest.TestCase):
         actual = utils.strip_one('git')
         self.assertEqual(expect, actual)
 
+    def test_select_directory(self):
+        filename = utils.tmp_filename('test')
+        expect = os.path.dirname(filename)
+        actual = utils.select_directory([filename])
+        self.assertEqual(expect, actual)
+
+    def test_select_directory_prefers_directories(self):
+        filename = utils.tmp_filename('test')
+        expect = '.'
+        actual = utils.select_directory([filename, '.'])
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
