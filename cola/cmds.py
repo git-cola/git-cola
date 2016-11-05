@@ -1049,7 +1049,10 @@ class OpenParentDir(OpenDefaultApp):
     def do(self):
         if not self.filenames:
             return
-        dirs = list(set(map(os.path.dirname, self.filenames)))
+        dirnames = list(set([os.path.dirname(x) for x in self.filenames]))
+        # os.path.dirname() can return an empty string so we fallback to
+        # the current directory
+        dirs = [(dirname or core.getcwd()) for dirname in dirnames]
         core.fork([self.launcher] + dirs)
 
 
