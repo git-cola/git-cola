@@ -1209,11 +1209,11 @@ msgid "Blame..."
 msgstr "Umbenennen..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr ""
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "Lösche Datei(en)..."
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1422,7 +1422,7 @@ msgstr "Anwenden"
 
 #: cola/widgets/patch.py:135
 #, fuzzy
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "Lösche Datei(en)..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1466,7 +1466,7 @@ msgid "Search Date Range"
 msgstr "Datum von-bis"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "Pfad wählen"
 
 #: cola/widgets/spellcheck.py:139
@@ -2094,7 +2094,7 @@ msgid "Visualize"
 msgstr "In Verlaufsansicht anzeigen"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr ""
 
 #: cola/widgets/merge.py:73
@@ -2427,12 +2427,12 @@ msgstr "Am Nachbessern"
 
 #: cola/widgets/browse.py:136
 #, fuzzy
-msgid "View history for selected path(s)"
+msgid "View history for selected paths"
 msgstr "Zeige den Verlauf für den ausgewählten Pfad"
 
 #: cola/widgets/browse.py:141
 #, fuzzy
-msgid "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
 msgstr "Änderungen am ausgewählten Pfad vormerken"
 
 #: cola/widgets/browse.py:145
@@ -2440,11 +2440,11 @@ msgid "Untrack Selected"
 msgstr "Auswahl von Versionskontrolle ausnehmen"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr "Führe keine Versionskontrolle für den ausgewählten Pfad durch"
 
 #: cola/widgets/browse.py:151
-msgid "Launch git-difftool on the current path."
+msgid "Launch git-difftool on the current path"
 msgstr "Aktuellen Pfad im Vergleichswerkzeug öffnen"
 
 #: cola/widgets/browse.py:155
@@ -2452,21 +2452,21 @@ msgid "Diff Against Predecessor..."
 msgstr "Mit einem Vorgänger vergleichen..."
 
 #: cola/widgets/browse.py:156
-msgid "Launch git-difftool against previous versions."
-msgstr "Vergleicht mit einer Vorgängerversion."
+msgid "Launch git-difftool against previous versions"
+msgstr "Vergleicht mit einer Vorgängerversion"
 
 #: cola/widgets/browse.py:161
 #, fuzzy
-msgid "Revert unstaged changes to selected paths."
+msgid "Revert unstaged changes to selected paths"
 msgstr "Verwirft Änderungen am ausgewählten Pfad"
 
 #: cola/widgets/browse.py:166
 #, fuzzy
-msgid "Revert uncommitted changes to selected paths."
+msgid "Revert uncommitted changes to selected paths"
 msgstr "Verwirft Änderungen am ausgewählten Pfad"
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
+msgid "Edit selected paths"
 msgstr "Ausgewählten Pfad bearbeiten"
 
 #: cola/widgets/browse.py:470
@@ -2817,7 +2817,7 @@ msgstr "Im Quell-Projektarchiv geändert"
 #~ msgid "No files selected for checkout from HEAD."
 #~ msgstr "Es sind keine Dateien zum Auschecken von HEAD ausgewählt."
 
-#~ msgid "Remove selected path(s) from the staging area."
+#~ msgid "Remove selected paths from the staging area"
 #~ msgstr "Änderungen am ausgewählten Pfad nicht mehr vormerken"
 
 #~ msgid "Revert Uncommitted Changes..."

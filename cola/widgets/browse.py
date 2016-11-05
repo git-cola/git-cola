@@ -134,42 +134,42 @@ class RepoTreeView(standard.TreeView):
 
         self.action_history = qtutils.add_action_with_status_tip(
                 self, N_('View History...'),
-                N_('View history for selected path(s)'),
+                N_('View history for selected paths'),
                 self.view_history, hotkeys.HISTORY)
 
         self.action_stage = qtutils.add_action_with_status_tip(
                 self, cmds.StageOrUnstage.name(),
-                N_('Stage/unstage selected path(s) for commit'),
+                N_('Stage/unstage selected paths for commit'),
                 cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
 
         self.action_untrack = qtutils.add_action_with_status_tip(
                 self, N_('Untrack Selected'),
-                N_('Stop tracking path(s)'),
+                N_('Stop tracking paths'),
                 self.untrack_selected)
 
         self.action_difftool = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchDifftool.name(),
-                N_('Launch git-difftool on the current path.'),
+                N_('Launch git-difftool on the current path'),
                 cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
 
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
                 self, N_('Diff Against Predecessor...'),
-                N_('Launch git-difftool against previous versions.'),
+                N_('Launch git-difftool against previous versions'),
                 self.diff_predecessor, hotkeys.DIFF_SECONDARY)
 
         self.action_revert_unstaged = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUnstagedEdits.name(),
-                N_('Revert unstaged changes to selected paths.'),
+                N_('Revert unstaged changes to selected paths'),
                 cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
 
         self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUncommittedEdits.name(),
-                N_('Revert uncommitted changes to selected paths.'),
+                N_('Revert uncommitted changes to selected paths'),
                 cmds.run(cmds.RevertUncommittedEdits), hotkeys.UNDO)
 
         self.action_editor = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchEditor.name(),
-                N_('Edit selected path(s).'),
+                N_('Edit selected paths'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
         self.action_refresh = qtutils.add_action(

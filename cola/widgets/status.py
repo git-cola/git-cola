@@ -188,7 +188,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(
-                self, N_('Move file(s) to trash'),
+                self, N_('Move files to trash'),
                 self._trash_untracked_files, hotkeys.TRASH)
             self.move_to_trash_action.setIcon(icons.discard())
             delete_shortcut = hotkeys.DELETE_FILE
@@ -197,7 +197,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             delete_shortcut = hotkeys.DELETE_FILE_SECONDARY
 
         self.delete_untracked_files_action = qtutils.add_action(
-            self, N_('Delete File(s)...'),
+            self, N_('Delete Files...'),
             self._delete_untracked_files, delete_shortcut)
         self.delete_untracked_files_action.setIcon(icons.discard())
 

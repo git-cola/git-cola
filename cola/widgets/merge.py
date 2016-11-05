@@ -69,7 +69,7 @@ class MergeView(QtWidgets.QDialog):
         self.button_viz = qtutils.create_button(text=N_('Visualize'),
                                                 icon=icons.visualize())
 
-        tooltip = N_('Squash the merged commit(s) into a single commit')
+        tooltip = N_('Squash the merged commits into a single commit')
         self.checkbox_squash = qtutils.checkbox(text=N_('Squash'),
                                                 tooltip=tooltip)
 
