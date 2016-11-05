@@ -283,6 +283,7 @@ class RepoTreeView(standard.TreeView):
         tracked = bool(self.selected_tracked_paths(selection=selection))
         revertable = staged or modified
 
+        self.action_editor.setEnabled(selected)
         self.action_history.setEnabled(selected)
         self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
