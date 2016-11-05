@@ -6,6 +6,17 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..models.browse import GitRepoEntryStore
+from ..models.browse import GitRepoModel
+from ..models.browse import GitRepoNameItem
+from ..models.selection import State
+from ..models.selection import selection_model
+from ..cmds import BaseCommand
+from ..git import git
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from ..compat import ustr
 from .. import cmds
 from .. import core
 from .. import difftool
@@ -14,20 +25,10 @@ from .. import hotkeys
 from .. import icons
 from .. import utils
 from .. import qtutils
-from ..cmds import BaseCommand
-from ..git import git
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import main
-from ..models.browse import GitRepoEntryStore
-from ..models.browse import GitRepoModel
-from ..models.browse import GitRepoNameItem
-from ..models.selection import State
-from ..models.selection import selection_model
-from ..compat import ustr
+from .selectcommits import select_commits
+from . import common
 from . import defs
 from . import standard
-from .selectcommits import select_commits
 
 
 def worktree_browser_widget(parent, update=True, settings=None):

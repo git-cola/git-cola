@@ -1,21 +1,22 @@
 from __future__ import division, absolute_import, unicode_literals
 import itertools
 
-from qtpy import QtCore
-from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
+from qtpy import QtCore
+from qtpy import QtWidgets
 
+from ..i18n import N_
+from ..models import main
+from ..models import prefs
+from ..models import selection
 from .. import cmds
 from .. import core
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import utils
-from ..i18n import N_
-from ..models import main
-from ..models import prefs
-from ..models import selection
+from . import common
 from . import completion
 from . import defs
 

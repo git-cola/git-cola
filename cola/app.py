@@ -31,6 +31,13 @@ Please install it before using git-cola, e.g.:
 from qtpy import QtWidgets
 
 # Import cola modules
+from .decorators import memoize
+from .i18n import N_
+from .interaction import Interaction
+from .models import main
+from .widgets import cfgactions
+from .widgets import startup
+from .settings import Session
 from . import cmds
 from . import core
 from . import compat
@@ -43,13 +50,6 @@ from . import qtcompat
 from . import qtutils
 from . import resources
 from . import version
-from .decorators import memoize
-from .i18n import N_
-from .interaction import Interaction
-from .models import main
-from .widgets import cfgactions
-from .widgets import startup
-from .settings import Session
 
 
 def setup_environment():
