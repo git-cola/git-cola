@@ -126,6 +126,18 @@ def dirname(path):
     return path.rsplit('/', 1)[0]
 
 
+def select_directory(paths):
+    """Return the first directory in a list of paths"""
+    if not paths:
+        return core.getcwd()
+
+    for path in paths:
+        if core.isdir(path):
+            return path
+
+    return os.path.dirname(paths[0])
+
+
 def strip_prefix(prefix, string):
     """Return string, without the prefix. Blow up if string doesn't
     start with prefix."""

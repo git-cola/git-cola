@@ -1199,11 +1199,11 @@ msgid "Blame..."
 msgstr "Close..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
-msgstr "Move file(s) to trash"
+msgid "Move files to trash"
+msgstr "Move files to trash"
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "Dosyaları Sil..."
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1412,8 +1412,8 @@ msgid "Apply"
 msgstr "Apply"
 
 #: cola/widgets/patch.py:135
-msgid "Select patch file(s)..."
-msgstr "Select patch file(s)..."
+msgid "Select patch files..."
+msgstr "Select patch files..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
 msgid "Search"
@@ -1456,8 +1456,8 @@ msgid "Search Date Range"
 msgstr "Search Date Range"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
-msgstr "Choose Path(s)"
+msgid "Choose Paths"
+msgstr "Choose Paths"
 
 #: cola/widgets/spellcheck.py:139
 msgid "Spelling Suggestions"
@@ -2070,8 +2070,8 @@ msgid "Visualize"
 msgstr "Visualize"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
-msgstr "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
+msgstr "Squash the merged commits into a single commit"
 
 #: cola/widgets/merge.py:73
 msgid "Squash"
@@ -2396,20 +2396,20 @@ msgid "(Amending)"
 msgstr "(Amending)"
 
 #: cola/widgets/browse.py:136
-msgid "View history for selected path(s)"
-msgstr "View history for selected path(s)"
+msgid "View history for selected paths"
+msgstr "View history for selected paths"
 
 #: cola/widgets/browse.py:141
-msgid "Stage/unstage selected path(s) for commit"
-msgstr "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
+msgstr "Stage/unstage selected paths for commit"
 
 #: cola/widgets/browse.py:145
 msgid "Untrack Selected"
 msgstr "Untrack Selected"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
-msgstr "Stop tracking path(s)"
+msgid "Stop tracking paths"
+msgstr "Stop tracking paths"
 
 #: cola/widgets/browse.py:151
 msgid "Launch git-difftool on the current path."
@@ -2432,8 +2432,8 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "Revert uncommitted changes to selected paths."
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
-msgstr "Edit selected path(s)."
+msgid "Edit selected paths"
+msgstr "Edit selected paths"
 
 #: cola/widgets/browse.py:470
 msgid "Select Previous Version"

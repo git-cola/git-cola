@@ -1219,11 +1219,11 @@ msgid "Blame..."
 msgstr "更名..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr "移动文件到回收站"
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "删除文件..."
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1432,7 +1432,7 @@ msgid "Apply"
 msgstr "应用"
 
 #: cola/widgets/patch.py:135
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "选择补丁文件..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1476,7 +1476,7 @@ msgid "Search Date Range"
 msgstr "查找日期范围"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "选择路径"
 
 #: cola/widgets/spellcheck.py:139
@@ -2090,7 +2090,7 @@ msgid "Visualize"
 msgstr "图示"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr "压缩合并中提交成单一提交"
 
 #: cola/widgets/merge.py:73
@@ -2410,11 +2410,11 @@ msgid "(Amending)"
 msgstr "(正在修正)"
 
 #: cola/widgets/browse.py:136
-msgid "View history for selected path(s)"
+msgid "View history for selected paths"
 msgstr "查看所选路径历史."
 
 #: cola/widgets/browse.py:141
-msgid "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
 msgstr "缓存已选路径以提交."
 
 #: cola/widgets/browse.py:145
@@ -2422,7 +2422,7 @@ msgid "Untrack Selected"
 msgstr "取消跟踪所选项目"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr "停止跟踪路径"
 
 #: cola/widgets/browse.py:151
@@ -2446,8 +2446,8 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "撤销所选文件的改动."
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
-msgstr "编辑所选路径."
+msgid "Edit selected paths"
+msgstr "编辑所选路径"
 
 #: cola/widgets/browse.py:470
 msgid "Select Previous Version"
@@ -2784,7 +2784,7 @@ msgstr "上游已更改"
 #~ msgid "No files selected for checkout from HEAD."
 #~ msgstr "未选择从 HEAD 中签出的文件."
 
-#~ msgid "Remove selected path(s) from the staging area."
+#~ msgid "Remove selected paths from the staging area."
 #~ msgstr "从缓存区移除所选路径."
 
 #~ msgid "Revert Uncommitted Changes..."

@@ -1201,11 +1201,11 @@ msgid "Blame..."
 msgstr "指摘(Blame)..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr "將檔案移動到資源回收筒"
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "刪除檔案……"
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1414,7 +1414,7 @@ msgid "Apply"
 msgstr "套用"
 
 #: cola/widgets/patch.py:135
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "選擇修正檔……"
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1458,7 +1458,7 @@ msgid "Search Date Range"
 msgstr "搜尋日期範圍"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "選取路徑"
 
 #: cola/widgets/spellcheck.py:139
@@ -2071,7 +2071,7 @@ msgid "Visualize"
 msgstr "視覺化顯示"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr "將合併之版本提交（們）壓為單一版本提交"
 
 #: cola/widgets/merge.py:73
@@ -2391,11 +2391,11 @@ msgid "(Amending)"
 msgstr "（正在修正前一個版本提交）"
 
 #: cola/widgets/browse.py:136
-msgid "View history for selected path(s)"
+msgid "View history for selected paths"
 msgstr "檢視被選取的路徑（們）的變更紀錄"
 
 #: cola/widgets/browse.py:141
-msgid "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
 msgstr "將被選取的路徑移進／移出版本提交準備區域"
 
 #: cola/widgets/browse.py:145
@@ -2403,7 +2403,7 @@ msgid "Untrack Selected"
 msgstr "將被選取的項目移出版本提交準備區域"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr "停止追蹤路徑"
 
 #: cola/widgets/browse.py:151
@@ -2427,8 +2427,8 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "撤銷被選取的路徑尚未被提交的內容變更。"
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
-msgstr "編輯選取的路徑。"
+msgid "Edit selected paths"
+msgstr "編輯選取的路徑"
 
 #: cola/widgets/browse.py:470
 msgid "Select Previous Version"
@@ -2766,7 +2766,7 @@ msgstr "在上游被變更"
 #~ msgid "No files selected for checkout from HEAD."
 #~ msgstr "沒有選取任何需要自 HEAD 取出的檔案"
 
-#~ msgid "Remove selected path(s) from the staging area."
+#~ msgid "Remove selected paths from the staging area"
 #~ msgstr "將選取的路徑自版本提交準備區域中移除"
 
 #~ msgid "Revert Uncommitted Changes..."

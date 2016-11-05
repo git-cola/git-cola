@@ -6,6 +6,17 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..models.browse import GitRepoEntryStore
+from ..models.browse import GitRepoModel
+from ..models.browse import GitRepoNameItem
+from ..models.selection import State
+from ..models.selection import selection_model
+from ..cmds import BaseCommand
+from ..git import git
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from ..compat import ustr
 from .. import cmds
 from .. import core
 from .. import difftool
@@ -14,20 +25,10 @@ from .. import hotkeys
 from .. import icons
 from .. import utils
 from .. import qtutils
-from ..cmds import BaseCommand
-from ..git import git
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import main
-from ..models.browse import GitRepoEntryStore
-from ..models.browse import GitRepoModel
-from ..models.browse import GitRepoNameItem
-from ..models.selection import State
-from ..models.selection import selection_model
-from ..compat import ustr
+from .selectcommits import select_commits
+from . import common
 from . import defs
 from . import standard
-from .selectcommits import select_commits
 
 
 def worktree_browser_widget(parent, update=True, settings=None):
@@ -133,46 +134,55 @@ class RepoTreeView(standard.TreeView):
 
         self.action_history = qtutils.add_action_with_status_tip(
                 self, N_('View History...'),
-                N_('View history for selected path(s)'),
+                N_('View history for selected paths'),
                 self.view_history, hotkeys.HISTORY)
 
         self.action_stage = qtutils.add_action_with_status_tip(
                 self, cmds.StageOrUnstage.name(),
-                N_('Stage/unstage selected path(s) for commit'),
+                N_('Stage/unstage selected paths for commit'),
                 cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
 
         self.action_untrack = qtutils.add_action_with_status_tip(
                 self, N_('Untrack Selected'),
-                N_('Stop tracking path(s)'),
+                N_('Stop tracking paths'),
                 self.untrack_selected)
 
         self.action_difftool = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchDifftool.name(),
-                N_('Launch git-difftool on the current path.'),
+                N_('Launch git-difftool on the current path'),
                 cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
 
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
                 self, N_('Diff Against Predecessor...'),
-                N_('Launch git-difftool against previous versions.'),
+                N_('Launch git-difftool against previous versions'),
                 self.diff_predecessor, hotkeys.DIFF_SECONDARY)
 
         self.action_revert_unstaged = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUnstagedEdits.name(),
-                N_('Revert unstaged changes to selected paths.'),
+                N_('Revert unstaged changes to selected paths'),
                 cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
 
         self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUncommittedEdits.name(),
-                N_('Revert uncommitted changes to selected paths.'),
+                N_('Revert uncommitted changes to selected paths'),
                 cmds.run(cmds.RevertUncommittedEdits), hotkeys.UNDO)
 
         self.action_editor = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchEditor.name(),
-                N_('Edit selected path(s).'),
+                N_('Edit selected paths'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
-        self.action_refresh = qtutils.add_action(
-                self, N_('Refresh'), cmds.run(cmds.Refresh), hotkeys.REFRESH)
+        self.action_refresh = common.refresh_action(self)
+
+        if not utils.is_win32():
+            self.action_default_app = common.default_app_action(
+                    self, self.selected_paths)
+
+            self.action_parent_dir = common.parent_dir_action(
+                    self, self.selected_paths)
+
+            self.action_terminal = common.terminal_action(
+                    self, self.selected_paths)
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
@@ -283,7 +293,13 @@ class RepoTreeView(standard.TreeView):
         tracked = bool(self.selected_tracked_paths(selection=selection))
         revertable = staged or modified
 
+        self.action_editor.setEnabled(selected)
         self.action_history.setEnabled(selected)
+        if not utils.is_win32():
+            self.action_default_app.setEnabled(selected)
+            self.action_parent_dir.setEnabled(selected)
+            self.action_terminal.setEnabled(selected)
+
         self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
@@ -305,6 +321,11 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_revert_unstaged)
         menu.addAction(self.action_revert_uncommitted)
         menu.addAction(self.action_untrack)
+        if not utils.is_win32():
+            menu.addSeparator()
+            menu.addAction(self.action_default_app)
+            menu.addAction(self.action_parent_dir)
+            menu.addAction(self.action_terminal)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def mousePressEvent(self, event):

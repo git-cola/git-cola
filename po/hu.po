@@ -1261,12 +1261,12 @@ msgid "Blame..."
 msgstr "Átnevezés..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr ""
 
 #: cola/widgets/status.py:199
 #, fuzzy
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "Törlés..."
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1479,7 +1479,7 @@ msgstr "Apple"
 
 #: cola/widgets/patch.py:135
 #, fuzzy
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "Törlés..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1528,7 +1528,7 @@ msgstr ""
 
 #: cola/widgets/search.py:306
 #, fuzzy
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "%s választása"
 
 #: cola/widgets/spellcheck.py:139
@@ -2179,7 +2179,7 @@ msgid "Visualize"
 msgstr "Vizualizálás"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr ""
 
 #: cola/widgets/merge.py:73
@@ -2506,12 +2506,12 @@ msgstr ""
 
 #: cola/widgets/browse.py:136
 #, fuzzy
-msgid "View history for selected path(s)"
+msgid "View history for selected paths"
 msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
 
 #: cola/widgets/browse.py:141
 #, fuzzy
-msgid "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
 msgstr "Kiválasztva commitolásra"
 
 #: cola/widgets/browse.py:145
@@ -2519,7 +2519,7 @@ msgid "Untrack Selected"
 msgstr ""
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr ""
 
 #: cola/widgets/browse.py:151
@@ -2545,7 +2545,7 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "Visszaállítja a változtatásokat a(z) %s fájlban?"
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
+msgid "Edit selected paths"
 msgstr ""
 
 #: cola/widgets/browse.py:470

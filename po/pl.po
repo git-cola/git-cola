@@ -1202,11 +1202,11 @@ msgid "Blame..."
 msgstr "Przejrzyj autorów..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr "Przenieś plik(i) do kosza"
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "Usuń plik(i)..."
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1416,7 +1416,7 @@ msgid "Apply"
 msgstr "Zastosuj"
 
 #: cola/widgets/patch.py:135
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "Wybierz plik(i) łat(y)..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1460,7 +1460,7 @@ msgid "Search Date Range"
 msgstr "Wyszukaj zakresu dat"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "Wybierz ścieżkę/ścieżki"
 
 #: cola/widgets/spellcheck.py:139
@@ -2076,7 +2076,7 @@ msgid "Visualize"
 msgstr "Zobrazuj"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr "Złącz scalone wdrożenie/wdrożenia w pojedyncze wdrożenie"
 
 #: cola/widgets/merge.py:73
@@ -2400,11 +2400,11 @@ msgid "(Amending)"
 msgstr "(Uzupełnianie)"
 
 #: cola/widgets/browse.py:136
-msgid "View history for selected path(s)"
+msgid "View history for selected paths"
 msgstr "Przejrzyj historię dla wybranej ścieżki/ścieżek"
 
 #: cola/widgets/browse.py:141
-msgid "Stage/unstage selected path(s) for commit"
+msgid "Stage/unstage selected paths for commit"
 msgstr "Dobierz/odłóż wybraną ścieżkę/ścieżki dla wdrożenia"
 
 #: cola/widgets/browse.py:145
@@ -2412,7 +2412,7 @@ msgid "Untrack Selected"
 msgstr "Nie zarządzaj wybranymi"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr "Zaprzestań zarządzanie ścieżką/ścieżkami"
 
 #: cola/widgets/browse.py:151
@@ -2436,7 +2436,7 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "Wycofaj niewdrożone zmiany w wybranych ścieżkach."
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
+msgid "Edit selected paths"
 msgstr "Edytuj wybraną ścieżkę/ścieżki"
 
 #: cola/widgets/browse.py:470

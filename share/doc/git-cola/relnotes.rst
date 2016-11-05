@@ -75,6 +75,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/574
 
+* `git cola browse` and the `status` widget learned to launch the OS-specified
+  default action for a file.  When used on directories via `git cola browse`,
+  or when "Open Parent Directory" is used on files, the OS-specified
+  file browser will typically be used.
+
+* `git cola browse` and the `status` widget learned to launch terminals.
+
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.

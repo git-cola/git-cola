@@ -1193,11 +1193,11 @@ msgid "Blame..."
 msgstr "Tutup..."
 
 #: cola/widgets/status.py:190
-msgid "Move file(s) to trash"
+msgid "Move files to trash"
 msgstr ""
 
 #: cola/widgets/status.py:199
-msgid "Delete File(s)..."
+msgid "Delete Files..."
 msgstr "Hapus Berkas...?"
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
@@ -1408,7 +1408,7 @@ msgid "Apply"
 msgstr "Terapkan"
 
 #: cola/widgets/patch.py:135
-msgid "Select patch file(s)..."
+msgid "Select patch files..."
 msgstr "Pilih berkas patch..."
 
 #: cola/widgets/search.py:43 cola/widgets/search.py:61 cola/widgets/grep.py:72
@@ -1452,7 +1452,7 @@ msgid "Search Date Range"
 msgstr "Cari Rentang Tanggal"
 
 #: cola/widgets/search.py:306
-msgid "Choose Path(s)"
+msgid "Choose Paths"
 msgstr "Pilih Lokasi"
 
 #: cola/widgets/spellcheck.py:139
@@ -2073,7 +2073,7 @@ msgid "Visualize"
 msgstr "Visualisasikan"
 
 #: cola/widgets/merge.py:72
-msgid "Squash the merged commit(s) into a single commit"
+msgid "Squash the merged commits into a single commit"
 msgstr ""
 
 #: cola/widgets/merge.py:73
@@ -2394,20 +2394,20 @@ msgstr "(Mengubah)"
 
 #: cola/widgets/browse.py:136
 #, fuzzy
-msgid "View history for selected path(s)"
-msgstr "Tampilkan histori untuk lokasi terpilih."
+msgid "View history for selected paths"
+msgstr "Tampilkan histori untuk lokasi terpilih"
 
 #: cola/widgets/browse.py:141
 #, fuzzy
-msgid "Stage/unstage selected path(s) for commit"
-msgstr "Stage lokasi terpilih untuk commit."
+msgid "Stage/unstage selected paths for commit"
+msgstr "Stage lokasi terpilih untuk commit"
 
 #: cola/widgets/browse.py:145
 msgid "Untrack Selected"
 msgstr "Jangan Lacak Terpilih"
 
 #: cola/widgets/browse.py:146
-msgid "Stop tracking path(s)"
+msgid "Stop tracking paths"
 msgstr "Hentikan melacak lokasi"
 
 #: cola/widgets/browse.py:151
@@ -2433,8 +2433,8 @@ msgid "Revert uncommitted changes to selected paths."
 msgstr "Kembalikan perubahan ke lokasi terpilih."
 
 #: cola/widgets/browse.py:171
-msgid "Edit selected path(s)."
-msgstr "Sunting lokasi terpilih."
+msgid "Edit selected paths"
+msgstr "Sunting lokasi terpilih"
 
 #: cola/widgets/browse.py:470
 msgid "Select Previous Version"
@@ -2772,8 +2772,8 @@ msgstr "Ubah Upstream"
 #~ msgid "No files selected for checkout from HEAD."
 #~ msgstr "Tidak ada berkas terpilih untuk checkout dari HEAD."
 
-#~ msgid "Remove selected path(s) from the staging area."
-#~ msgstr "Buang lokasi terpilih dari staging area."
+#~ msgid "Remove selected paths from the staging area"
+#~ msgstr "Buang lokasi terpilih dari staging area"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Kembalikan Perubahan Tak Tercommit..."
