@@ -155,6 +155,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self.parent_dir_action = common.parent_dir_action(
                     self, self.selected_group)
 
+            self.terminal_action = common.terminal_action(
+                    self, self.selected_group)
+
         self.up_action = qtutils.add_action(
             self, N_('Move Up'), self.move_up,
             hotkeys.MOVE_UP, hotkeys.MOVE_UP_SECONDARY)
@@ -504,6 +507,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addSeparator()
             menu.addAction(self.default_app_action)
             menu.addAction(self.parent_dir_action)
+            menu.addAction(self.terminal_action)
+
         return menu
 
     def _create_header_context_menu(self, menu, idx):
