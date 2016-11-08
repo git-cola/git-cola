@@ -206,7 +206,7 @@ def prompt_n(msg, inputs):
         min_width = 720
     dialog.setMinimumWidth(min_width)
 
-    ok_b = ok_button(msg, default=True, enabled=False)
+    ok_b = ok_button(msg, enabled=False)
     close_b = close_button()
 
     form_widgets = []
