@@ -654,9 +654,10 @@ def create_action_button(tooltip=None, icon=None):
     return button
 
 
-def ok_button(text, default=False, enabled=True):
-    return create_button(text=text, icon=icons.ok(),
-                         default=default, enabled=enabled)
+def ok_button(text, default=True, enabled=True, icon=None):
+    if icon is None:
+        icon = icons.ok()
+    return create_button(text=text, icon=icon, default=default, enabled=enabled)
 
 
 def close_button():
