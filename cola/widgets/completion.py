@@ -696,8 +696,8 @@ class GitDialog(QtWidgets.QDialog):
         self.lineedit.setText(ref)
 
     @classmethod
-    def get(cls, title, button_text, parent, default=None, icon=None):
-        dlg = cls(title, button_text, parent, icon=icon)
+    def get(cls, title, text, parent, default=None, icon=None):
+        dlg = cls(title, text, parent, icon=icon)
         if default:
             dlg.set_text(default)
 
@@ -723,27 +723,27 @@ class GitDialog(QtWidgets.QDialog):
 
 class GitRefDialog(GitDialog):
 
-    def __init__(self, title, button_text, parent, icon=None):
+    def __init__(self, title, text, parent, icon=None):
         GitDialog.__init__(self, GitRefLineEdit,
-                           title, button_text, parent, icon=icon)
+                           title, text, parent, icon=icon)
 
 
 class GitPotentialBranchDialog(GitDialog):
 
-    def __init__(self, title, button_text, parent, icon=None):
+    def __init__(self, title, text, parent, icon=None):
         GitDialog.__init__(self, GitPotentialBranchLineEdit,
-                           title, button_text, parent, icon=icon)
+                           title, text, parent, icon=icon)
 
 
 class GitBranchDialog(GitDialog):
 
-    def __init__(self, title, button_text, parent, icon=None):
+    def __init__(self, title, text, parent, icon=None):
         GitDialog.__init__(self, GitBranchLineEdit,
-                           title, button_text, parent, icon=icon)
+                           title, text, parent, icon=icon)
 
 
 class GitRemoteBranchDialog(GitDialog):
 
-    def __init__(self, title, button_text, parent, icon=None):
+    def __init__(self, title, text, parent, icon=None):
         GitDialog.__init__(self, GitRemoteBranchLineEdit,
-                           title, button_text, parent, icon=icon)
+                           title, text, parent, icon=icon)
