@@ -165,9 +165,7 @@ class RemoteActionDialog(standard.Dialog):
         tooltip = N_('Configure the remote branch as the the new upstream')
         self.upstream_checkbox = qtutils.checkbox(text=text, tooltip=tooltip)
 
-        if icon is None:
-            icon = icons.ok()
-        self.action_button = qtutils.create_button(text=title, icon=icon)
+        self.action_button = qtutils.ok_button(title, icon=icon)
         self.close_button = qtutils.close_button()
 
         self.buttons = utils.Group(self.action_button, self.close_button)
