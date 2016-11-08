@@ -110,7 +110,7 @@ def strip_one(path):
     return path.strip('/').split('/', 1)[-1]
 
 
-def dirname(path):
+def dirname(path, current_dir=''):
     """
     An os.path.dirname() implementation that always uses '/'
 
@@ -122,7 +122,7 @@ def dirname(path):
         path = path.replace('//', '/')
     path_dirname = path.rsplit('/', 1)[0]
     if path_dirname == path:
-        return ''
+        return current_dir
     return path.rsplit('/', 1)[0]
 
 
