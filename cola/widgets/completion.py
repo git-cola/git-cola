@@ -652,9 +652,10 @@ GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel)
 
 class GitDialog(QtWidgets.QDialog):
 
-    def __init__(self, lineedit, title, button_text, parent, icon=None):
+    def __init__(self, lineedit, title, text, parent, icon=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.setWindowTitle(title)
+        self.setWindowModality(Qt.WindowModal)
         self.setMinimumWidth(333)
 
         self.label = QtWidgets.QLabel()
@@ -663,9 +664,7 @@ class GitDialog(QtWidgets.QDialog):
         self.lineedit = lineedit()
         self.setFocusProxy(self.lineedit)
 
-        if icon is None:
-            icon = icons.ok()
-        self.ok_button = qtutils.create_button(text=button_text, icon=icon)
+        self.ok_button = qtutils.ok_button(text, icon=icon, enabled=False)
         self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
@@ -679,12 +678,8 @@ class GitDialog(QtWidgets.QDialog):
 
         self.lineedit.textChanged.connect(self.text_changed)
         self.lineedit.enter.connect(self.accept)
-
         qtutils.connect_button(self.ok_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
-
-        self.setWindowModality(Qt.WindowModal)
-        self.ok_button.setEnabled(False)
 
     def text(self):
         return self.lineedit.text()
