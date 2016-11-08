@@ -113,22 +113,18 @@ class GitCommandWidget(standard.Dialog):
         self.proc.start(self.command[0], self.command[1:])
 
     def read_stdout(self):
-        rawbytes = self.proc.readAllStandardOutput()
-        data = ''
-        for b in rawbytes:
-            data += b
-        text = core.decode(data)
+        text = self.read_stream(self.proc.readAllStandardOutput)
         self.out += text
-        self.append_text(text)
 
     def read_stderr(self):
-        rawbytes = self.proc.readAllStandardError()
-        data = ''
-        for b in rawbytes:
-            data += b
-        text = core.decode(data)
+        text = self.read_stream(self.proc.readAllStandardError)
         self.err += text
+
+    def read_stream(self, fn):
+        data = fn().data()
+        text = core.decode(data)
         self.append_text(text)
+        return text
 
     def append_text(self, text):
         cursor = self.output_text.textCursor()
