@@ -1361,7 +1361,7 @@ class RunConfigAction(Command):
         self.model = main.model()
 
     def do(self):
-        for env in ('FILENAME', 'REVISION', 'ARGS'):
+        for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
             try:
                 compat.unsetenv(env)
             except KeyError:
@@ -1385,7 +1385,9 @@ class RunConfigAction(Command):
                         N_('Please select a file'),
                         N_('"%s" requires a selected file.') % cmd)
                 return False
+            dirname = utils.dirname(filename, current_dir='.')
             compat.setenv('FILENAME', filename)
+            compat.setenv('DIRNAME', dirname)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
