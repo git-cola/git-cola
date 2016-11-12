@@ -122,6 +122,7 @@ Thanks
 * Trevor Alexander
 * Ugo Riboni
 * Uri Okrent
+* Utku Karatas
 * Ｖ字龍 (Vdragon)
 * Vaibhav Sagar
 * Vaiz
