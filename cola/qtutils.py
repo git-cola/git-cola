@@ -760,6 +760,7 @@ class DockTitleBarWidget(QtWidgets.QWidget):
 
     def __init__(self, parent, title, stretch=True):
         QtWidgets.QWidget.__init__(self, parent)
+        self.setAutoFillBackground(True)
         self.label = qlabel = QtWidgets.QLabel()
         font = qlabel.font()
         font.setBold(True)
