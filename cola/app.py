@@ -9,14 +9,6 @@ __copyright__ = """
 Copyright (C) 2009-2016 David Aguilar and contributors
 """
 
-# Make homebrew work by default
-if sys.platform == 'darwin':
-    from distutils import sysconfig
-    python_version = sysconfig.get_python_version()
-    homebrew_mods = '/usr/local/lib/python%s/site-packages' % python_version
-    if os.path.isdir(homebrew_mods):
-        sys.path.append(homebrew_mods)
-
 from . import core
 try:
     from qtpy import QtCore
