@@ -105,6 +105,7 @@ Thanks
 * Philip Stark
 * Pilar Molina Lopez
 * Raghavendra Karunanidhi
+* Rainer Müller
 * Rolando Espinoza La fuente
 * Rustam Safin
 * Samsul Ma'arif
