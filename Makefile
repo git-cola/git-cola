@@ -133,6 +133,8 @@ uninstall:
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-cola-folder-handler.desktop
 	$(RM) $(DESTDIR)$(prefix)/share/applications/git-dag.desktop
+	$(RM) $(DESTDIR)$(prefix)/share/appdata/git-dag.appdata.xml
+	$(RM) $(DESTDIR)$(prefix)/share/appdata/git-cola.appdata.xml
 	$(RM) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
 	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
@@ -142,6 +144,7 @@ uninstall:
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/locale 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/doc 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/applications 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/appdata 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/bin 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix) 2>/dev/null
