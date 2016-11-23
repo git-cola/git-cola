@@ -60,7 +60,7 @@ NOTES="$ETC/ReleaseNotes.txt" &&
 
 printf "git-cola: v$VERSION\nBottled-on: $(date)\n\n\n" >"$NOTES" &&
 
-tag=$(git tag --sort=version:refname | tail -2 | head -1) &&
+tag=$(git tag | tail -2 | head -1) &&
 echo "--------------------------------------------------------" >>"$NOTES" &&
 echo "      Changes since $tag" >>"$NOTES" &&
 echo "--------------------------------------------------------" >>"$NOTES" &&
