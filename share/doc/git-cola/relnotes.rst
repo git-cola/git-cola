@@ -130,8 +130,8 @@ Fixes
 
 Development
 -----------
-* The `qtpy` symlink in the source tree has been removed.
-  This makes it easier to develop `git cola` on Windows.
+* The `qtpy` symlink in the source tree has been removed to allow for easier
+  development on Windows.
 
   https://github.com/git-cola/git-cola/issues/626
 
