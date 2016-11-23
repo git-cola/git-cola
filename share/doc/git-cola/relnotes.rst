@@ -128,6 +128,13 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/617
 
+Development
+-----------
+* The `qtpy` symlink in the source tree has been removed.
+  This makes it easier to develop `git cola` on Windows.
+
+  https://github.com/git-cola/git-cola/issues/626
+
 .. _v2.8:
 
 git-cola v2.8

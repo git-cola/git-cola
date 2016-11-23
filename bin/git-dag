@@ -46,6 +46,7 @@ def setup_environment():
 
     if os.path.exists(cola_mod):
         # Source tree
+        sys.path.insert(1, join(prefix, str('extras'), str('qtpy')))
         sys.path.insert(1, prefix)
     else:
         # Install tree
