@@ -5,7 +5,7 @@ Releases
 Latest Release
 ==============
 
-:ref:`v2.9 <v2.9>` is the latest stable release.
+:ref:`v2.9.1 <v2.9.1>` is the latest stable release.
 
 Development version
 ===================
@@ -13,6 +13,14 @@ Development version
 Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
+
+.. _v2.9.1:
+
+Fixes
+-----
+* The "Open Recent" menu was updated to new bookmarks format.
+
+  https://github.com/git-cola/git-cola/issues/628
 
 .. _v2.9:
 

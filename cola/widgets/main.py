@@ -537,8 +537,8 @@ class MainView(standard.MainWindow):
         menu = self.open_recent_menu
         menu.clear()
         for r in recent:
-            name = os.path.basename(r)
-            directory = os.path.dirname(r)
+            name = r['name']
+            directory = r['path']
             text = '%s %s %s' % (name, unichr(0x2192), directory)
             menu.addAction(text, cmds.run(cmd, r))
 

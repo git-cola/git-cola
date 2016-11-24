@@ -69,6 +69,7 @@ Thanks
 * Kerrick Staley
 * Kevin Kofler
 * Kirit Sælensminde
+* László Böszörményi
 * Leho Kraav
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
