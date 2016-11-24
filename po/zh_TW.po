@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-28 01:01-0700\n"
-"PO-Revision-Date: 2016-05-14 17:44+0800\n"
+"PO-Revision-Date: 2016-11-24 17:36+0800\n"
 "Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -284,16 +284,16 @@ msgstr "git clone 命令傳回了 %s 錯誤狀態碼"
 #: cola/cmds.py:1196
 #, python-format
 msgid "Rebase onto %s"
-msgstr "變更基底(rebase)至 %s 版本"
+msgstr "變更基底至 %s"
 
 #: cola/cmds.py:1197 cola/cmds.py:1227 cola/cmds.py:1228 cola/cmds.py:1240
 #: cola/cmds.py:1241 cola/widgets/main.py:429 cola/widgets/remote.py:161
 msgid "Rebase"
-msgstr "變更基底(rebase)"
+msgstr "變更基底"
 
 #: cola/cmds.py:1214
 msgid "Edit Rebase"
-msgstr "編輯變更基底(rebase)"
+msgstr "編輯變更基底"
 
 #: cola/cmds.py:1215 cola/widgets/archive.py:121 cola/widgets/browse.py:579
 #: cola/widgets/stash.py:57
@@ -393,7 +393,7 @@ msgstr "錯誤：%s"
 
 #: cola/cmds.py:1478
 msgid "Sign Off"
-msgstr "簽名(Sign Off)"
+msgstr "署名(Sign Off)"
 
 #: cola/cmds.py:1499
 msgid "unknown"
@@ -600,7 +600,7 @@ msgstr "目錄已存在"
 
 #: cola/guicmds.py:173 cola/widgets/search.py:77
 msgid "Export Patches"
-msgstr "匯出修正"
+msgstr "匯出修正檔"
 
 #: cola/guicmds.py:191 cola/guicmds.py:200 cola/widgets/startup.py:140
 msgid "Open Git Repository..."
@@ -712,9 +712,8 @@ msgid "Compare"
 msgstr "比較差異"
 
 #: cola/difftool.py:149
-#, fuzzy
 msgid "Compare All"
-msgstr "比較差異"
+msgstr "比較全部檔案差異"
 
 #: cola/widgets/finder.py:48
 #, fuzzy
@@ -739,11 +738,11 @@ msgstr ""
 "K, Up       = 往上移動\n"
 "Enter       = 編輯選取的檔案\n"
 "Spacebar    = 以預設應用軟體開啟檔案\n"
-"Ctrl+L      = Focus Text Entry Field\n"
+"Ctrl+L      = 將焦點移至文字輸入欄位\n"
 "?           = 顯示幫助訊息\n"
 "\n"
-"The up and down arrows change focus between the text entry field\n"
-"and the results.\n"
+"用上、下方向鍵來瀏覽文字輸入欄位\n"
+"以及結果。\n"
 
 #: cola/widgets/finder.py:61
 msgid "Help - Find Files"
@@ -800,7 +799,7 @@ msgstr "最近使用的版本倉庫"
 
 #: cola/widgets/bookmarks.py:111
 msgid "Accept"
-msgstr ""
+msgstr "接受"
 
 #: cola/widgets/bookmarks.py:114
 msgid "Open in New Window"
@@ -815,9 +814,8 @@ msgid "Clear Default Repository"
 msgstr "清除預設版本倉庫"
 
 #: cola/widgets/bookmarks.py:123
-#, fuzzy
 msgid "Rename Repository"
-msgstr "克隆版本倉庫"
+msgstr "更名版本倉庫"
 
 #: cola/widgets/bookmarks.py:137 cola/widgets/diff.py:307
 msgid "Copy"
@@ -837,12 +835,11 @@ msgstr "名稱"
 
 #: cola/widgets/bookmarks.py:278
 msgid "Path"
-msgstr ""
+msgstr "所在路徑"
 
 #: cola/widgets/bookmarks.py:280
-#, fuzzy
 msgid "Add Favorite"
-msgstr "喜愛的版本倉庫"
+msgstr "新增喜愛的版本倉庫"
 
 #: cola/widgets/bookmarks.py:291
 #, python-format
@@ -1052,11 +1049,11 @@ msgstr "檔案瀏覽器……"
 
 #: cola/widgets/main.py:310
 msgid "DAG..."
-msgstr "DAG……"
+msgstr "有向無環圖(DAG)……"
 
 #: cola/widgets/main.py:314
 msgid "Start Interactive Rebase..."
-msgstr "開始互動式 Rebase"
+msgstr "開始互動式變更基底"
 
 #: cola/widgets/main.py:317
 msgid "Edit..."
@@ -1115,13 +1112,13 @@ msgid ""
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
-"這個版本倉庫正在進行 rebase 程序。\n"
-"解決所有的 rebase 衝突，提交變更，然後執行：\n"
-"    Rebase > 繼續"
+"這個版本倉庫正在進行變更基底程序。\n"
+"解決所有的變更基底衝突，提交變更，然後執行：\n"
+"    變更基底 > 繼續"
 
 #: cola/widgets/main.py:611
 msgid "Rebasing"
-msgstr "正在進行 Rebase"
+msgstr "正在進行變更基底程序"
 
 #: cola/widgets/main.py:615
 msgid ""
@@ -1145,7 +1142,7 @@ msgstr "無法變更基底"
 
 #: cola/widgets/main.py:757
 msgid "You cannot rebase with uncommitted changes."
-msgstr "您不能在還有尚未提交至版本倉庫的內容變更的時候進行 rebase。"
+msgstr "您不能在還有尚未提交至版本倉庫的內容變更的時候進行變更基底。"
 
 #: cola/widgets/main.py:759
 msgid "Select New Upstream"
@@ -1300,9 +1297,8 @@ msgid "Cherry Pick"
 msgstr "挑取(cherry-pick)"
 
 #: cola/widgets/dag.py:237
-#, fuzzy
 msgid "Launch Directory Diff Tool"
-msgstr "啟動差異檢視工具"
+msgstr "啟動目錄差異檢視工具"
 
 #: cola/widgets/dag.py:246
 msgid "Grab File..."
@@ -1359,11 +1355,11 @@ msgstr "圖"
 #: cola/widgets/dag.py:561
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
-msgstr "%(project)s: %(ref)s - DAG"
+msgstr "%(project)s: %(ref)s - 有向無環圖(DAG)"
 
 #: cola/widgets/dag.py:564
 msgid " - DAG"
-msgstr " - DAG"
+msgstr " - 有向無環圖(DAG)"
 
 #: cola/widgets/dag.py:1141
 msgid "Select Parent"
@@ -1471,7 +1467,7 @@ msgstr "偵測尚未合併檔案中的衝突標記"
 
 #: cola/widgets/prefs.py:122
 msgid "User Name"
-msgstr "用戶名"
+msgstr "使用者名稱"
 
 #: cola/widgets/prefs.py:123
 msgid "Email Address"
@@ -1483,7 +1479,7 @@ msgstr "合併資訊詳細程度"
 
 #: cola/widgets/prefs.py:125
 msgid "Number of Diff Context Lines"
-msgstr "Diff 上下文行數"
+msgstr "內容差異上下文行數"
 
 #: cola/widgets/prefs.py:126
 msgid "Summarize Merge Commits"
@@ -1663,18 +1659,16 @@ msgid "About git-cola"
 msgstr "關於 git-cola"
 
 #: cola/widgets/about.py:60
-#, fuzzy
 msgid "Version"
 msgstr "版本"
 
 #: cola/widgets/about.py:61
-#, fuzzy
 msgid "Authors"
-msgstr "作者"
+msgstr "作者群"
 
 #: cola/widgets/about.py:62
 msgid "Translators"
-msgstr ""
+msgstr "翻譯者們"
 
 #: cola/widgets/about.py:126
 #, python-format
@@ -1692,6 +1686,18 @@ msgid ""
 "        </ul>\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola 第 %(cola_version)s　版\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) 第 %(python_version)s 版\n"
+"            <li> Git 第 %(git_version)s　版\n"
+"            <li> Qt 第 %(qt_version)s 版\n"
+"            <li> QtPy 第 %(qtpy_version)s 版\n"
+"            <li> %(pyqt_api_name)s 第 %(pyqt_api_version)s　版\n"
+"        </ul>\n"
+"    "
 
 #: cola/widgets/about.py:180
 #, python-format
@@ -1705,14 +1711,22 @@ msgid ""
 "        %(epilogue)s\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"        請透過 %(bug_link)s 來回報使用問題\n"
+"        <br>\n"
+"\n"
+"        %(author_text)s\n"
+"        %(epilogue)s\n"
+"    "
 
 #: cola/widgets/about.py:192 cola/widgets/about.py:272
 msgid "Email contributor"
-msgstr ""
+msgstr "寄電子郵件給這位貢獻者"
 
 #: cola/widgets/about.py:195
 msgid "Maintainer (since 2007) and developer"
-msgstr ""
+msgstr "（自從 2007 年開始）維護者與開發者"
 
 #: cola/widgets/about.py:203 cola/widgets/about.py:204
 #: cola/widgets/about.py:205 cola/widgets/about.py:206
@@ -1747,43 +1761,43 @@ msgstr ""
 #: cola/widgets/about.py:263 cola/widgets/about.py:264
 #: cola/widgets/about.py:265
 msgid "Developer"
-msgstr ""
+msgstr "軟體開發者"
 
 #: cola/widgets/about.py:278
 msgid "Turkish translation"
-msgstr ""
+msgstr "土耳其語翻譯"
 
 #: cola/widgets/about.py:281
 msgid "Polish translation"
-msgstr ""
+msgstr "波蘭語翻譯"
 
 #: cola/widgets/about.py:284 cola/widgets/about.py:292
 msgid "Indonesian translation"
-msgstr ""
+msgstr "印度尼西亞語翻譯"
 
 #: cola/widgets/about.py:286 cola/widgets/about.py:301
 msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
+msgstr "傳統中文（台灣地區）翻譯"
 
 #: cola/widgets/about.py:289 cola/widgets/about.py:310
 msgid "Spanish translation"
-msgstr ""
+msgstr "西班牙語翻譯"
 
 #: cola/widgets/about.py:295
 msgid "German translation"
-msgstr ""
+msgstr "德語翻譯"
 
 #: cola/widgets/about.py:298
 msgid "Russian translation"
-msgstr ""
+msgstr "俄羅斯語翻譯"
 
 #: cola/widgets/about.py:304
 msgid "Brazilian translation"
-msgstr ""
+msgstr "巴西語翻譯"
 
 #: cola/widgets/about.py:307
 msgid "Chinese translation"
-msgstr ""
+msgstr "簡體中文翻譯"
 
 #: cola/widgets/about.py:316
 msgid "hotkeys.html"
@@ -2189,36 +2203,33 @@ msgstr "遠端分支名"
 
 #: cola/widgets/remote.py:135
 msgid "Prompt on creation"
-msgstr ""
+msgstr "建新分支時提示"
 
 #: cola/widgets/remote.py:136
-#, fuzzy
 msgid "Prompt when pushing creates new remote branches"
-msgstr "要建立新的遠端分支嗎？"
+msgstr "在建立新的遠端分支時提示使用者"
 
 #: cola/widgets/remote.py:140
-#, fuzzy
 msgid "Fast-forward only"
-msgstr "僅更新可進行快速前移式合併者"
+msgstr "只允許快速前移式合併"
 
 #: cola/widgets/remote.py:141
 msgid ""
 "Refuse to merge unless the current HEAD is already up-to-date or the merge "
 "can be resolved as a fast-forward"
 msgstr ""
+"除非當前 HEAD 指標早就是最新版本或是分支合併能以快速前移式處理否則拒絕合併分"
+"支"
 
 #: cola/widgets/remote.py:146
-#, fuzzy
 msgid "No fast-forward"
 msgstr "不進行快速前移式合併"
 
 #: cola/widgets/remote.py:147
-#, fuzzy
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併版本提交"
+msgstr "就算該合併是一個快速前移式合併也總是建立一個合併版本提交"
 
 #: cola/widgets/remote.py:151
-#, fuzzy
 msgid "Force"
 msgstr "強制推送"
 
@@ -2227,24 +2238,24 @@ msgid ""
 "Allow non-fast-forward updates.  Using \"force\" can cause the remote "
 "repository to lose commits; use it with care"
 msgstr ""
+"允許非快速前移式更新。使用「強制」可能會造成遠端版本倉庫遺失版本提交；請小心"
+"使用"
 
 #: cola/widgets/remote.py:158
 msgid "Include tags "
 msgstr "包含標籤 "
 
 #: cola/widgets/remote.py:160
-#, fuzzy
 msgid "Rebase the current branch instead of merging"
-msgstr "將當前分支的 head 指向一個新的版本提交？"
+msgstr "不合併分支，而是將遠端分支變更基底到當前分支"
 
 #: cola/widgets/remote.py:164
-#, fuzzy
 msgid "Set upstream"
-msgstr "選擇新的上游版本"
+msgstr "設為上游追蹤分支"
 
 #: cola/widgets/remote.py:165
 msgid "Configure the remote branch as the the new upstream"
-msgstr ""
+msgstr "將此遠端分支設維新的上游分支"
 
 #: cola/widgets/remote.py:362
 #, python-format
@@ -2320,7 +2331,7 @@ msgstr "早就已經是最新版本。"
 
 #: cola/widgets/remote.py:548
 msgid "Have you rebased/pulled lately?"
-msgstr "您最近有作 rebase/pull 嗎？"
+msgstr "您最近有作變更基底或 pull 操作嗎？"
 
 #: cola/widgets/remote.py:558
 msgid "Fetch"
