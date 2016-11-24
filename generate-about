@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 from __future__ import division, absolute_import, unicode_literals
 import argparse
 import os
@@ -20,6 +21,7 @@ def main():
     # If someone wants their email to be public they can add a mapping here
     emails = {
         # 'name': 'email@example.com',
+        'Ｖ字龍(Vdragon)': 'Vdragon.Taiwan@gmail.com'
     }
 
     #         1234
