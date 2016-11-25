@@ -117,9 +117,9 @@ class Finder(standard.Dialog):
         self.edit_button = qtutils.edit_button()
         self.edit_button.setShortcut(hotkeys.EDIT)
 
-        text = cmds.OpenDefaultApp.name()
+        name = cmds.OpenDefaultApp.name()
         icon = icons.default_app()
-        self.open_default_button = qtutils.create_button(text=text, icon=icon)
+        self.open_default_button = qtutils.create_button(text=name, icon=icon)
         self.open_default_button.setShortcut(hotkeys.PRIMARY_ACTION)
 
         self.button_group = Group(self.edit_button, self.open_default_button)
@@ -179,7 +179,7 @@ class Finder(standard.Dialog):
         qtutils.add_close_action(self)
 
         self.init_state(None, self.resize,
-                        *qtutils.default_size(parent, 666, 420))
+                        *qtutils.default_size(parent, 720, 420))
 
     def focus_tree(self):
         self.tree.setFocus()
