@@ -215,11 +215,11 @@ def contributors_text(authors, prelude='', epilogue=''):
 
 def authors_text():
     palette = QtGui.QPalette()
-    email_text = N_('Email contributor')
+    contact = N_('Email contributor')
     authors = (
         dict(name='David Aguilar',
              title=N_('Maintainer (since 2007) and developer'),
-             email=mailto('davvid@gmail.com', email_text, palette)),
+             email=mailto('davvid@gmail.com', contact, palette)),
         # The names listed here are listed in the same order as
         # `git shortlog --summary --numbered --no-merges`
         # Please submit a pull request if you would like to include your
@@ -227,15 +227,16 @@ def authors_text():
         # See the `generate-about` script in the "todo" branch.
         # vim :read! ./Meta/generate-about
         dict(name='Daniel Harding', title=N_('Developer')),
-        dict(name='Ｖ字龍(Vdragon)', title=N_('Developer')),
+        dict(name='Ｖ字龍(Vdragon)', title=N_('Developer'),
+             email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
         dict(name='Guillaume de Bure', title=N_('Developer')),
         dict(name='Alex Chernetz', title=N_('Developer')),
         dict(name='Uri Okrent', title=N_('Developer')),
         dict(name='Thomas Kluyver', title=N_('Developer')),
-        dict(name='Minarto Margoliono', title=N_('Developer')),
         dict(name='Andreas Sommer', title=N_('Developer')),
-        dict(name='Stanislaw Halik', title=N_('Developer')),
+        dict(name='Minarto Margoliono', title=N_('Developer')),
         dict(name='Igor Galarraga', title=N_('Developer')),
+        dict(name='Stanislaw Halik', title=N_('Developer')),
         dict(name='Virgil Dupras', title=N_('Developer')),
         dict(name='Barry Roberts', title=N_('Developer')),
         dict(name='Stefan Naewe', title=N_('Developer')),
@@ -272,12 +273,14 @@ def authors_text():
         dict(name='Maicon D. Filippsen', title=N_('Developer')),
         dict(name='Markus Heidelberg', title=N_('Developer')),
         dict(name='Matthew E. Levine', title=N_('Developer')),
+        dict(name='Matthias Mailänder', title=N_('Developer')),
         dict(name='Md. Mahbub Alam', title=N_('Developer')),
         dict(name='Mikhail Terekhov', title=N_('Developer')),
         dict(name='Paul Hildebrandt', title=N_('Developer')),
         dict(name='Paul Weingardt', title=N_('Developer')),
         dict(name='Paulo Fidalgo', title=N_('Developer')),
         dict(name='Philip Stark', title=N_('Developer')),
+        dict(name='Rainer Müller', title=N_('Developer')),
         dict(name='Rolando Espinoza', title=N_('Developer')),
         dict(name="Samsul Ma'arif", title=N_('Developer')),
         dict(name='Sebastian Brass', title=N_('Developer')),
@@ -308,7 +311,8 @@ def translators_text():
 
     translators = (
         dict(name='Ｖ字龍(Vdragon)',
-             title=N_('Traditional Chinese (Taiwan) translation')),
+             title=N_('Traditional Chinese (Taiwan) translation'),
+             email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
         dict(name='Vitor Lobo',
              title=N_('Brazilian translation')),
         dict(name='Minarto Margoliono',
