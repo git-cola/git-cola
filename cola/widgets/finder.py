@@ -1,3 +1,4 @@
+"""File finder widgets"""
 from __future__ import division, absolute_import, unicode_literals
 import os
 
@@ -31,12 +32,23 @@ def finder(paths=None):
 
 
 def new_finder(paths=None, parent=None):
+    """Create a finder widget"""
     widget = Finder(parent=parent)
     widget.search_for(paths or '')
     return widget
 
 
 def add_wildcards(arg):
+    """Add "*" around user input to generate ls-files pathspecs matches
+
+    >>> '*x*' == \
+        add_wildcards('x') == \
+        add_wildcards('*x') == \
+        add_wildcards('x*') == \
+        add_wildcards('*x*')
+    True
+
+    """
     if not arg.startswith('*'):
         arg = '*' + arg
     if not arg.endswith('*'):
@@ -45,6 +57,7 @@ def add_wildcards(arg):
 
 
 def show_help():
+    """Show the help page"""
     help_text = N_("""
 Keyboard Shortcuts
 ------------------
@@ -63,6 +76,8 @@ and the results.
 
 
 class FindFilesThread(QtCore.QThread):
+    """Finds files asynchronously"""
+
     result = Signal(object)
 
     def __init__(self, parent):
@@ -83,6 +98,7 @@ class FindFilesThread(QtCore.QThread):
 
 
 class Finder(standard.Dialog):
+    """File Finder dialog"""
 
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent)
