@@ -136,15 +136,19 @@ uninstall:
 	$(RM) $(DESTDIR)$(prefix)/share/appdata/git-dag.appdata.xml
 	$(RM) $(DESTDIR)$(prefix)/share/appdata/git-cola.appdata.xml
 	$(RM) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable/apps/git-cola.svg
-	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM_R) $(DESTDIR)$(prefix)/share/doc/git-cola
+	$(RM_R) $(DESTDIR)$(prefix)/share/git-cola
 	$(RM) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES/git-cola.mo
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/applications 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/appdata 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/doc 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/locale/*/LC_MESSAGES 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/locale/* 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share/locale 2>/dev/null
-	-$(RMDIR) $(DESTDIR)$(prefix)/share/doc 2>/dev/null
-	-$(RMDIR) $(DESTDIR)$(prefix)/share/applications 2>/dev/null
-	-$(RMDIR) $(DESTDIR)$(prefix)/share/appdata 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable/apps 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/icons/hicolor/scalable 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/icons/hicolor 2>/dev/null
+	-$(RMDIR) $(DESTDIR)$(prefix)/share/icons 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/share 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix)/bin 2>/dev/null
 	-$(RMDIR) $(DESTDIR)$(prefix) 2>/dev/null
