@@ -11,6 +11,7 @@
 /test/tmp
 /tags
 /.coverage
+__pycache__
 .DS_Store
 .noseids
 *.gz
