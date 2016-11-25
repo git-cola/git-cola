@@ -14,6 +14,21 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v2.10:
+
+git-cola v2.10 (beta)
+=====================
+
+Packaging
+---------
+* `appdata.xml` files are now provided at
+  `share/appdata/git-cola.xml` and `share/appdata/git-dag.xml`
+  for use by the Linux software gallery.
+
+  https://people.freedesktop.org/~hughsient/appdata/
+
+  https://github.com/git-cola/git-cola/pull/627
+
 .. _v2.9.1:
 
 Fixes
