@@ -1,5 +1,7 @@
-git-cola's release scripts
-==========================
+git-cola maintenance scripts
+============================
+This branch is typically checked out as a worktree called "Meta" at the
+top-level of the git-cola repository.
 
 Creating a new release
 ----------------------
@@ -16,6 +18,7 @@ structure should look roughly like this:
 
 	$HOME/src/git-cola
 	$HOME/src/git-cola.github.com
+	$HOME/src/git-cola/github.io (symlink) -> ../git-cola.github.com
 
 "$HOME/src" can be any arbitrary directory.
 
