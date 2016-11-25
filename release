@@ -120,6 +120,7 @@ build_win32_innosetup () {
 	do_or_die ssh -p $WIN32_SSH_PORT \
 		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
 
+	do_or_die mv "Git Cola-$VERSION".exe git-cola-"$VERSION".exe
 	do_or_die chmod 644 git-cola-"$VERSION".exe
 	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
