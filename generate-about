@@ -36,7 +36,7 @@ def main():
 
     dev_email_snippet = (
         "%(indent)sdict(name=%(name_q)s, title=N_('Developer'),\n"
-        "%(indent)s     email=mailto(%(email_q)s, email_text, palette)),%(suffix)s")
+        "%(indent)s     email=mailto(%(email_q)s, contact, palette)),%(suffix)s")
 
     pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
 
