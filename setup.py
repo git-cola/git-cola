@@ -67,6 +67,7 @@ def cola_data_files(vendor_libs):
         _app_path('share/git-cola/bin', '*'),
         _app_path('share/git-cola/icons', '*.png'),
         _app_path('share/git-cola/icons', '*.svg'),
+        _app_path('share/appdata', '*.xml'),
         _app_path('share/applications', '*.desktop'),
         _app_path('share/doc/git-cola', '*.rst'),
         _app_path('share/doc/git-cola', '*.html'),

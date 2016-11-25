@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>git-cola.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Git Cola</name>
+  <summary>Sleek and powerful Git GUI</summary>
+  <description>
+    <p>
+      git-cola is a simple, powerful, and feature-rich GUI for git that provides an easy way to interact with Git repositories.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://git-cola.github.io/images/screenshot-main-linux.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://git-cola.github.io/</url>
+</component>
