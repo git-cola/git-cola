@@ -1,0 +1,3 @@
+./Meta/set-version vX.Y
+./Meta/tag
+./Meta/github.io.sh
