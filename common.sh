@@ -17,7 +17,7 @@ WIN32_PYTHON=/c/Python27
 WIN32_GIT="/c/Progra~1/Git/bin"
 WIN32_NSIS="/c/Progra~1/NSIS"
 
-DOCUMENT_ROOT="$COLA_TOP/../git-cola.github.com"
+DOCUMENT_ROOT="$COLA_TOP/../git-cola.github.io"
 RELEASES="$DOCUMENT_ROOT/releases"
 
 # _the_ cola version

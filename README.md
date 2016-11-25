@@ -13,12 +13,11 @@ running:
 This branch is intended to be checked out in a seperate repository within a
 git-cola repository, e.g. at git-cola/Meta (and is the reason that git-cola's
 .gitignore mentions "Meta".  The release script assumes that you have a clone
-of git-cola.github.com sibling to the git-cola repository.  Your directory
+of git-cola.github.io sibling to the git-cola repository.  Your directory
 structure should look roughly like this:
 
 	$HOME/src/git-cola
-	$HOME/src/git-cola.github.com
-	$HOME/src/git-cola/github.io (symlink) -> ../git-cola.github.com
+	$HOME/src/git-cola.github.io
 
 "$HOME/src" can be any arbitrary directory.
 
@@ -52,7 +51,7 @@ The following steps should be taken when creating a new release.
 * Start a Windows VM session
 
 * Run `Meta/release --all` to build the installers and update
-  the sibling `git-cola.github.com` repository.
+  the sibling `git-cola.github.io` repository.
 
-* Commit `git-cola.github.com` changes, `git commit -sm'git-cola vX.Y'`
+* Commit `git-cola.github.io` changes, `git commit -sm'git-cola vX.Y'`
   and push them to github.
