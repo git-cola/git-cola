@@ -78,8 +78,8 @@ def cola_data_files(vendor_libs):
 
     if vendor_libs:
         data.extend([
-            _package('qtpy', subdirs=('extras', 'qtpy')),
-            _package('qtpy._patch', subdirs=('extras', 'qtpy')),
+            _package('qtpy'),
+            _package('qtpy._patch'),
         ])
 
     data.extend([_app_path(localedir, 'git-cola.mo')
