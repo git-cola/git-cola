@@ -62,7 +62,7 @@ def setup_environment():
 
     # Setup the path so that git finds us when we run 'git cola'
     path_entries = core.getenv('PATH', '').split(os.pathsep)
-    bindir = os.path.dirname(sys_argv0)
+    bindir = core.decode(os.path.dirname(sys_argv0))
     path_entries.append(bindir)
     path = os.pathsep.join(path_entries)
     compat.setenv('PATH', path)

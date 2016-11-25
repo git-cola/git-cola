@@ -19,6 +19,12 @@ Clone the git-cola repo to get the latest development version:
 git-cola v2.10 (beta)
 =====================
 
+Fixes
+-----
+* `git cola` now works when installed in non-ascii, utf8-encoded paths.
+
+  https://github.com/git-cola/git-cola/issues/629
+
 Packaging
 ---------
 * `appdata.xml` files are now provided at
