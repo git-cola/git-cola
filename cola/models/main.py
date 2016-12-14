@@ -138,6 +138,7 @@ class MainModel(Observable):
             core.write(path, msg)
         except:
             pass
+        return path
 
     def set_diff_text(self, txt):
         self.diff_text = txt
