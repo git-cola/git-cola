@@ -212,7 +212,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         commit_msg_path = commit_message_path()
         if commit_msg_path:
             commit_msg = core.read(commit_msg_path)
-        self.set_commit_message(commit_msg)
+        model.set_commitmsg(commit_msg)
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
