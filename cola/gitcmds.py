@@ -630,7 +630,7 @@ def rev_list_range(start, end):
 
 def commit_message_path():
     """Return the path to .git/GIT_COLA_MSG"""
-    path = git.git_path("GIT_COLA_MSG")
+    path = git.git_path('GIT_COLA_MSG')
     if core.exists(path):
         return path
     return None
