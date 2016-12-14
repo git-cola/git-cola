@@ -19,6 +19,7 @@ from .. import core
 from .. import guicmds
 from .. import git
 from .. import gitcfg
+from .. import gitcmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
@@ -205,6 +206,10 @@ class MainView(standard.MainWindow):
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'), guicmds.load_commitmsg)
 
+        self.prepare_commitmsg_hook_action = add_action(
+            self, N_('Prepare Commit Message'),
+            cmds.run(cmds.PrepareCommitMessageHook))
+
         self.save_tarball_action = add_action(
             self, N_('Save As Tarball/Zip...'), self.save_archive)
 
@@ -359,9 +364,6 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.edit_remotes_action)
         self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.load_commitmsg_action)
-        self.file_menu.addAction(self.load_commitmsg_template_action)
-        self.file_menu.addSeparator()
         self.file_menu.addAction(self.apply_patches_action)
         self.file_menu.addAction(self.export_patches_action)
         self.file_menu.addAction(self.save_tarball_action)
@@ -390,14 +392,18 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.search_commits_action)
         self.menubar.addAction(self.actions_menu.menuAction())
 
-        # Staging Area Menu
-        self.commit_menu = create_menu(N_('Staging Area'), self.menubar)
-        self.commit_menu.setTitle(N_('Staging Area'))
+        # Commit Menu
+        self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
+        self.commit_menu.setTitle(N_('Commit@@verb'))
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.unstage_all_action)
         self.commit_menu.addAction(self.unstage_selected_action)
+        self.commit_menu.addSeparator()
+        self.commit_menu.addAction(self.load_commitmsg_action)
+        self.commit_menu.addAction(self.load_commitmsg_template_action)
+        self.commit_menu.addAction(self.prepare_commitmsg_hook_action)
         self.menubar.addAction(self.commit_menu.menuAction())
 
         # Diff Menu
@@ -487,6 +493,7 @@ class MainView(standard.MainWindow):
         # Set a default value
         self.show_cursor_position(1, 0)
 
+        self.commit_menu.aboutToShow.connect(self.update_menu_actions)
         self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
         self.commitmsgeditor.cursor_changed.connect(self.show_cursor_position)
 
@@ -526,7 +533,7 @@ class MainView(standard.MainWindow):
     def closeEvent(self, event):
         """Save state in the settings manager."""
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
-        self.model.save_commitmsg(commit_msg)
+        self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
@@ -639,6 +646,12 @@ class MainView(standard.MainWindow):
         enabled = not self.model.is_empty_repository()
         self.rename_branch_action.setEnabled(enabled)
         self.delete_branch_action.setEnabled(enabled)
+
+    def update_menu_actions(self):
+        # Enable the Prepare Commit Message action if the hook exists
+        hook = gitcmds.prepare_commit_message_hook()
+        enabled = os.path.exists(hook)
+        self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
     def export_state(self):
         state = standard.MainWindow.export_state(self)

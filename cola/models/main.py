@@ -130,12 +130,17 @@ class MainModel(Observable):
         if notify:
             self.notify_observers(self.message_commit_message_changed, msg)
 
-    def save_commitmsg(self, msg):
+    def save_commitmsg(self, msg=None):
+        if msg is None:
+            msg = self.commitmsg
         path = self.git.git_path('GIT_COLA_MSG')
         try:
+            if not msg.endswith('\n'):
+                msg += '\n'
             core.write(path, msg)
         except:
             pass
+        return path
 
     def set_diff_text(self, txt):
         self.diff_text = txt

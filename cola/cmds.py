@@ -978,6 +978,49 @@ class LoadCommitMessageFromOID(Command):
         self.model.set_commitmsg(self.old_commitmsg)
 
 
+class PrepareCommitMessageHook(Command):
+    """Use the cola-prepare-commit-msg hook to prepare the commit message
+    """
+    def __init__(self):
+        Command.__init__(self)
+        self.old_commitmsg = self.model.commitmsg
+        self.undoable = True
+
+    def get_message(self):
+
+        title = N_('Error running prepare-commitmsg hook')
+        hook = gitcmds.prepare_commit_message_hook()
+
+        if os.path.exists(hook):
+            filename = self.model.save_commitmsg()
+            status, out, err = core.run_command([hook, filename])
+
+            if status == 0:
+                result = core.read(filename)
+            else:
+                result = self.old_commitmsg
+                details = out or ''
+                if err:
+                    if details and not details.endswith('\n'):
+                        details += '\n'
+                    details += err
+                message = N_('"%s" returned exit status %d') % (hook, status)
+                Interaction.critical(title, message=message, details=details)
+        else:
+            message = N_('A hook must be provided at "%s"') % hook
+            Interaction.critical(title, message=message)
+            result = self.old_commitmsg
+
+        return result
+
+    def do(self):
+        msg = self.get_message()
+        self.model.set_commitmsg(msg)
+
+    def undo(self):
+        self.model.set_commitmsg(self.old_commitmsg)
+
+
 class LoadFixupMessage(LoadCommitMessageFromOID):
     """Load a fixup message"""
 

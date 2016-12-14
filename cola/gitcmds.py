@@ -630,7 +630,7 @@ def rev_list_range(start, end):
 
 def commit_message_path():
     """Return the path to .git/GIT_COLA_MSG"""
-    path = git.git_path("GIT_COLA_MSG")
+    path = git.git_path('GIT_COLA_MSG')
     if core.exists(path):
         return path
     return None
@@ -643,6 +643,13 @@ def merge_message_path():
         if core.exists(path):
             return path
     return None
+
+
+def prepare_commit_message_hook(config=None):
+    default_hook = git.git_path('hooks', 'cola-prepare-commit-msg')
+    if config is None:
+        config = gitcfg.current()
+    return config.get('cola.preparecommitmessagehook', default_hook)
 
 
 def abort_merge():

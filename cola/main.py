@@ -10,9 +10,6 @@ from .app import add_common_arguments
 from .app import application_init
 from .app import application_start
 
-# NOTE: these must be imported *after* cola.app.
-# PyQt4 may not be available until after cola.app has gotten a chance to
-# install the homebrew modules in sys.path.
 from . import cmds
 from . import compat
 from . import core
