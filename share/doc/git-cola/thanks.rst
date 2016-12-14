@@ -71,6 +71,7 @@ Thanks
 * Kirit Sælensminde
 * László Böszörményi
 * Leho Kraav
+* Lev Zlotin
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
 * Łukasz Wojniłowicz
