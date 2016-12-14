@@ -130,7 +130,9 @@ class MainModel(Observable):
         if notify:
             self.notify_observers(self.message_commit_message_changed, msg)
 
-    def save_commitmsg(self, msg):
+    def save_commitmsg(self, msg=None):
+        if msg is None:
+            msg = self.commitmsg
         path = self.git.git_path('GIT_COLA_MSG')
         try:
             core.write(path, msg)

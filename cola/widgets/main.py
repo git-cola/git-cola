@@ -526,7 +526,7 @@ class MainView(standard.MainWindow):
     def closeEvent(self, event):
         """Save state in the settings manager."""
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
-        self.model.save_commitmsg(commit_msg)
+        self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
 
     def build_recent_menu(self):
