@@ -337,6 +337,22 @@ Using this option is equivalent to passing the ``--gpg-sign`` option to
 This option's default value can be configured using the `cola.signcommits`
 configuration variable.
 
+Prepare Commit Message
+----------------------
+The ``Commit -> Prepare Commit Message`` action runs the
+`cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
+This is a `git cola`-specific hook that takes the same parameters
+as Git's `prepare-commit-msg hook <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks>`_
+
+The hook is passed the path to `.git/GIT_COLA_MSG` as the first argument and the hook is expected to write
+an updated commit message to specified path.  After running this action, the
+commit message editor is updated with the new commit message.
+
+To override the default path to this hook set the
+`cola.prepareCommitMessageHook` `git config` variable to the path to the
+hook script.  This is useful if you would like to use a common hook
+across all repositories.
+
 APPLY PATCHES
 =============
 Use the ``File -> Apply Patches`` menu item to begin applying patches.

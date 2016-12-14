@@ -645,6 +645,13 @@ def merge_message_path():
     return None
 
 
+def prepare_commit_message_hook(config=None):
+    default_hook = git.git_path('hooks', 'cola-prepare-commit-msg')
+    if config is None:
+        config = gitcfg.current()
+    return config.get('cola.preparecommitmessagehook', default_hook)
+
+
 def abort_merge():
     """Abort a merge by reading the tree at HEAD."""
     # Reset the worktree
