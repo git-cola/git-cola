@@ -19,6 +19,16 @@ Clone the git-cola repo to get the latest development version:
 git-cola v2.10 (beta)
 =====================
 
+Usability, bells and whistles
+-----------------------------
+* `git cola` can now invoke the `.git/hooks/cola-prepare-commit-msg`
+  hook to update the commit message.  This hook takes the same parameters
+  as Git's `prepare-commit-message` hook.  The default path to this hook
+  can be overridden by setting the `cola.prepareCommitMessageHook`
+  configuration variable.
+
+  http://git-cola.readthedocs.io/en/latest/git-cola.html#prepare-commit-message
+
 Fixes
 -----
 * `git cola` now works when installed in non-ascii, utf8-encoded paths.
