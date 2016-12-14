@@ -135,6 +135,8 @@ class MainModel(Observable):
             msg = self.commitmsg
         path = self.git.git_path('GIT_COLA_MSG')
         try:
+            if not msg.endswith('\n'):
+                msg += '\n'
             core.write(path, msg)
         except:
             pass
