@@ -54,6 +54,7 @@ Thanks
 * Ismael Juma
 * Iulian Udrea
 * Ivar Smolin
+* Jan @hanksoff
 * Jakub Wilk
 * James Geiger
 * Jeff Dagenais

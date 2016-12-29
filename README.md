@@ -195,6 +195,11 @@ the git-cola recipe, but build our own .app bundle from source.
 
     brew install git-cola
 
+    # pyqt homebrew caveats
+    mkdir -p "$HOME"/Library/Python/2.7/lib/python/site-packages
+    echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' \
+        >>"$HOME"/Library/Python/2.7/lib/python/site-packages/homebrew.pth
+
 Once brew has installed git-cola you can:
 
 1. Clone git-cola
