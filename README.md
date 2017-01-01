@@ -204,11 +204,13 @@ Once brew has installed git-cola you can:
 
 2. Build the git-cola.app application bundle
 
+    ```
     make \
         PYTHON=$(brew --prefix python3)/bin/python3 \
         PYTHON_CONFIG=$(brew --prefix python3)/bin/python3-config \
         SPHINXBUILD=$(brew --prefix sphinx-doc)/bin/sphinx-build \
         git-cola.app
+   ```
 
 3. Copy it to _/Applications_
 
