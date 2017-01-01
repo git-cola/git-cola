@@ -185,19 +185,16 @@ Before setting up homebrew, use
 [pip](https://pip.readthedocs.io/en/latest/installing.html) to install
 [sphinx](http://sphinx-doc.org/latest/install.html).
 
-Sphinx is used to build the documentation.
 
-    sudo pip install --requirement requirements.txt
 
 [Homebrew](http://brew.sh/) is the easiest way to install
 git-cola's *Qt4* and *PyQt4* dependencies.  We will use Homebrew to install
 the git-cola recipe, but build our own .app bundle from source.
+Sphinx is used to build the documentation.
 
+    brew install sphinx-doc
+    brew install pyqt5
     brew install git-cola
-
-    # pyqt homebrew caveats
-    mkdir -p "$HOME"/Library/Python/2.7/lib/python/site-packages
-    echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >>"$HOME"/Library/Python/2.7/lib/python/site-packages/homebrew.pth
 
 Once brew has installed git-cola you can:
 
@@ -207,11 +204,19 @@ Once brew has installed git-cola you can:
 
 2. Build the git-cola.app application bundle
 
-    `make git-cola.app`
+    make \
+        PYTHON=$(brew --prefix python3)/bin/python3 \
+        PYTHON_CONFIG=$(brew --prefix python3)/bin/python3-config \
+        SPHINXBUILD=$(brew --prefix sphinx-doc)/bin/sphinx-build \
+        git-cola.app
 
 3. Copy it to _/Applications_
 
     `rm -fr /Applications/git-cola.app && cp -r git-cola.app /Applications`
+
+Newer versions of Homebrew install their own `python3` installation and
+provide the `PyQt5` modules for `python3` only.  You have to use
+`python3 ./bin/git-cola` when running from the source tree.
 
 ## WINDOWS INSTALLATION
 

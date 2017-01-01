@@ -16,6 +16,8 @@ NOSETESTS = nosetests
 PIP = pip
 PYLINT = pylint
 PYTHON = python
+PYTHON_CONFIG = python-config
+PYTHON_DARWIN_APP = $(shell $(PYTHON_CONFIG) --prefix)/Resources/Python.app/Contents/MacOS/Python
 RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
@@ -31,7 +33,6 @@ bindir = $(prefix)/bin
 datadir = $(prefix)/share/git-cola
 coladir = $(datadir)/lib
 hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
-darwin_python = /System/Library/Frameworks/Python.framework/Resources/Python.app/Contents/MacOS/Python
 # DESTDIR =
 
 cola_base := git-cola
@@ -188,7 +189,7 @@ git-cola.app:
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
-	$(LN_S) $(darwin_python) $(cola_app)/Contents/Resources/git-cola
+	$(LN_S) $(PYTHON_DARWIN_APP) $(cola_app)/Contents/Resources/git-cola
 .PHONY: git-cola.app
 
 app-tarball: git-cola.app
