@@ -547,7 +547,7 @@ class MainView(standard.MainWindow):
             name = r['name']
             directory = r['path']
             text = '%s %s %s' % (name, unichr(0x2192), directory)
-            menu.addAction(text, cmds.run(cmd, r))
+            menu.addAction(text, cmds.run(cmd, directory))
 
     # Accessors
     mode = property(lambda self: self.model.mode)
