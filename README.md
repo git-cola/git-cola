@@ -181,16 +181,12 @@ Use the [one-click install link](http://software.opensuse.org/package/git-cola).
 
 ## MAC OS X
 
-Before setting up homebrew, use
-[pip](https://pip.readthedocs.io/en/latest/installing.html) to install
-[sphinx](http://sphinx-doc.org/latest/install.html).
-
-
-
 [Homebrew](http://brew.sh/) is the easiest way to install
 git-cola's *Qt4* and *PyQt4* dependencies.  We will use Homebrew to install
 the git-cola recipe, but build our own .app bundle from source.
-Sphinx is used to build the documentation.
+
+[Sphinx](http://sphinx-doc.org/latest/install.html) is used to build the
+documentation.
 
     brew install sphinx-doc
     brew install pyqt5
