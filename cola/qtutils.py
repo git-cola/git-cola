@@ -761,11 +761,10 @@ class DockTitleBarWidget(QtWidgets.QWidget):
     def __init__(self, parent, title, stretch=True):
         QtWidgets.QWidget.__init__(self, parent)
         self.setAutoFillBackground(True)
-        self.label = qlabel = QtWidgets.QLabel()
+        self.label = qlabel = QtWidgets.QLabel(title, self)
         font = qlabel.font()
         font.setBold(True)
         qlabel.setFont(font)
-        qlabel.setText(title)
         qlabel.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
@@ -817,6 +816,7 @@ def create_dock(title, parent, stretch=True):
     dock.setObjectName(title)
     titlebar = DockTitleBarWidget(dock, title, stretch=stretch)
     dock.setTitleBarWidget(titlebar)
+    dock.setAutoFillBackground(True)
     if hasattr(parent, 'dockwidgets'):
         parent.dockwidgets.append(dock)
     return dock
