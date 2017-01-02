@@ -24,11 +24,11 @@ msgstr ""
 
 #: cola/cmds.py:157
 msgid "Amend"
-msgstr "修正前一次的版本提交"
+msgstr "修正前一次的修訂版提交"
 
 #: cola/cmds.py:191
 msgid "Cannot Amend"
-msgstr "無法修正前一次的版本提交"
+msgstr "無法修正前一次的修訂版提交"
 
 #: cola/cmds.py:192
 msgid ""
@@ -36,7 +36,7 @@ msgid ""
 "Cannot amend while merging."
 msgstr ""
 "您現在正在進行分支合併。\n"
-"您不能在進行分支合併時修正前一次的版本提交。"
+"您不能在進行分支合併時修正前一次的修訂版提交。"
 
 #: cola/cmds.py:265
 #, python-format
@@ -71,7 +71,7 @@ msgstr "重設分支"
 
 #: cola/cmds.py:406
 msgid "Point the current branch head to a new commit?"
-msgstr "將當前分支的 head 指向一個新的版本提交？"
+msgstr "將當前分支的 head 指向一個新的修訂版提交？"
 
 #: cola/cmds.py:407
 #, python-format
@@ -95,7 +95,7 @@ msgstr "工作目錄數將被用「git reset --merge %s」命令重設"
 #: cola/cmds.py:463
 #, python-format
 msgid "Created commit: %s"
-msgstr "建立了一個新的版本提交：%s"
+msgstr "建立了一個新的修訂版提交：%s"
 
 #: cola/cmds.py:465
 #, python-format
@@ -242,7 +242,7 @@ msgstr "啟動終端機"
 
 #: cola/cmds.py:937
 msgid "Error: Cannot find commit template"
-msgstr "錯誤：無法找到版本提交範本"
+msgstr "錯誤：無法找到修訂版提交範本"
 
 #: cola/cmds.py:938
 #, python-format
@@ -251,7 +251,7 @@ msgstr "%s：無此檔案或目錄。"
 
 #: cola/cmds.py:958
 msgid "Error: Unconfigured commit template"
-msgstr "錯誤：未被設定的版本提交範本"
+msgstr "錯誤：未被設定的修訂版提交範本"
 
 #: cola/cmds.py:959
 msgid ""
@@ -259,9 +259,9 @@ msgid ""
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
 msgstr ""
-"版本提交範本尚未被設定。\n"
+"修訂版提交範本尚未被設定。\n"
 "使用「git config」命令來定義「commit.template」設定值\n"
-"使其指向一個版本提交範本。"
+"使其指向一個修訂版提交範本。"
 
 #: cola/cmds.py:1023
 msgid "Open Using Default Application"
@@ -308,27 +308,27 @@ msgstr "重新整理"
 
 #: cola/cmds.py:1316
 msgid "Revert Unstaged Edits..."
-msgstr "撤銷尚未移入版本提交準備區域的內容修改……"
+msgstr "撤銷尚未移入修訂版提交準備區域的內容修改……"
 
 #: cola/cmds.py:1325
 msgid "Revert Unstaged Changes?"
-msgstr "要撤銷尚未移入版本提交準備區域的內容變動嗎？"
+msgstr "要撤銷尚未移入修訂版提交準備區域的內容變動嗎？"
 
 #: cola/cmds.py:1326
 msgid ""
 "This operation drops unstaged changes.\n"
 "These changes cannot be recovered."
 msgstr ""
-"此操作將丟棄尚未移入版本提交準備區域的內容變動。\n"
+"此操作將丟棄尚未移入修訂版提交準備區域的內容變動。\n"
 "這些內容變動將無法被還原。"
 
 #: cola/cmds.py:1328
 msgid "Revert the unstaged changes?"
-msgstr "要撤銷尚未移入版本提交準備區域的內容變動嗎？"
+msgstr "要撤銷尚未移入修訂版提交準備區域的內容變動嗎？"
 
 #: cola/cmds.py:1329
 msgid "Revert Unstaged Changes"
-msgstr "撤銷尚未移入版本提交準備區域的內容變動"
+msgstr "撤銷尚未移入修訂版提交準備區域的內容變動"
 
 #: cola/cmds.py:1338
 msgid "Revert Uncommitted Edits..."
@@ -370,11 +370,11 @@ msgstr "「%s」操作需要有選取檔案才能執行。"
 
 #: cola/cmds.py:1396
 msgid "Invalid Revision"
-msgstr "無效的版本"
+msgstr "無效的修訂版"
 
 #: cola/cmds.py:1397
 msgid "The revision expression cannot be empty."
-msgstr "版本表達式不可以是空的。"
+msgstr "修訂版表達式不可以是空的。"
 
 #: cola/cmds.py:1412
 #, python-format
@@ -401,7 +401,7 @@ msgstr "未知使用者"
 
 #: cola/cmds.py:1543
 msgid "Stage conflicts?"
-msgstr "要將合併衝突移入版本提交準備區域嗎？"
+msgstr "要將合併衝突移入修訂版提交準備區域嗎？"
 
 #: cola/cmds.py:1544
 #, python-format
@@ -414,11 +414,11 @@ msgstr ""
 "%s 看起來包含未解決的合併衝突。\n"
 "\n"
 "您可能應該要跳過這個檔案。\n"
-"無論如何都要將它移入版本提交準備區域嗎？"
+"無論如何都要將它移入修訂版提交準備區域嗎？"
 
 #: cola/cmds.py:1547
 msgid "Stage conflicts"
-msgstr "將合併衝突移入版本提交準備區域"
+msgstr "將合併衝突移入修訂版提交準備區域"
 
 #: cola/cmds.py:1548
 msgid "Skip"
@@ -427,33 +427,33 @@ msgstr "跳過"
 #: cola/cmds.py:1558 cola/widgets/action.py:58 cola/widgets/diff.py:243
 #: cola/widgets/commitmsg.py:225
 msgid "Stage"
-msgstr "移動到版本提交準備區域"
+msgstr "移動到修訂版提交準備區域"
 
 #: cola/cmds.py:1565
 #, python-format
 msgid "Staging: %s"
-msgstr "移動到版本提交準備區域：%s..."
+msgstr "移動到修訂版提交準備區域：%s..."
 
 #: cola/cmds.py:1606
 msgid "Stage Modified"
-msgstr "將已變更的項目移入版本提交準備區域"
+msgstr "將已變更的項目移入修訂版提交準備區域"
 
 #: cola/cmds.py:1617
 msgid "Stage Unmerged"
-msgstr "將尚未合併的檔案移動到版本提交準備區域"
+msgstr "將尚未合併的檔案移動到修訂版提交準備區域"
 
 #: cola/cmds.py:1628
 msgid "Stage Untracked"
-msgstr "將尚未追蹤其版本的項目移動到版本提交準備區域"
+msgstr "將尚未追蹤其版本的項目移動到修訂版提交準備區域"
 
 #: cola/cmds.py:1639
 msgid "Stage / Unstage"
-msgstr "移入／移出版本提交準備區域"
+msgstr "移入／移出修訂版提交準備區域"
 
 #: cola/cmds.py:1669
 #, python-format
 msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-msgstr "將「%(revision)s」版本加上「%(name)s」標籤"
+msgstr "將「%(revision)s」修訂版加上「%(name)s」標籤"
 
 #: cola/cmds.py:1680
 msgid "GPG-signed"
@@ -462,17 +462,17 @@ msgstr "已簽署 GPG 簽章"
 #: cola/cmds.py:1704 cola/widgets/action.py:59 cola/widgets/diff.py:245
 #: cola/widgets/commitmsg.py:227
 msgid "Unstage"
-msgstr "移出版本提交準備區域"
+msgstr "移出修訂版提交準備區域"
 
 #: cola/cmds.py:1711
 #, python-format
 msgid "Unstaging: %s"
-msgstr "正在將「%s」移出版本提交準備區域"
+msgstr "正在將「%s」移出修訂版提交準備區域"
 
 #: cola/cmds.py:1739
 #, python-format
 msgid "Untracking: %s"
-msgstr "正在將「%s」移出版本提交準備區域"
+msgstr "正在將「%s」移出修訂版提交準備區域"
 
 #: cola/cmds.py:1824
 msgid "Error Launching History Browser"
@@ -537,7 +537,7 @@ msgstr "移除遠端分支"
 
 #: cola/guicmds.py:53
 msgid "Browse Commits..."
-msgstr "瀏覽版本提交……"
+msgstr "瀏覽修訂版提交……"
 
 #: cola/guicmds.py:53
 msgid "Browse"
@@ -553,7 +553,7 @@ msgstr "取出"
 
 #: cola/guicmds.py:70
 msgid "Cherry-Pick Commit"
-msgstr "挑取(cherry-pick)版本提交並合併至當前分支"
+msgstr "挑取(cherry-pick)修訂版提交並合併至當前分支"
 
 #: cola/guicmds.py:83 cola/widgets/main.py:176
 msgid "New Repository..."
@@ -608,7 +608,7 @@ msgstr "開啟一個 Git 版控庫"
 
 #: cola/guicmds.py:209
 msgid "Load Commit Message"
-msgstr "自檔案載入版本提交訊息"
+msgstr "自檔案載入修訂版提交訊息"
 
 #: cola/guicmds.py:242
 msgid "Select Branch to Review"
@@ -774,11 +774,11 @@ msgstr "顯示幫助訊息"
 
 #: cola/widgets/selectcommits.py:49
 msgid "Revision Expression:"
-msgstr "版本表達式："
+msgstr "修訂版表達式："
 
 #: cola/widgets/selectcommits.py:87
 msgid "No commits exist in this branch."
-msgstr "此分支中無任何版本提交。"
+msgstr "此分支中無任何修訂版提交。"
 
 #: cola/widgets/bookmarks.py:39 cola/widgets/patch.py:87
 #: cola/widgets/patch.py:100
@@ -877,11 +877,11 @@ msgstr "內容差異"
 
 #: cola/widgets/main.py:148 cola/widgets/status.py:507
 msgid "Unstage All"
-msgstr "將所有項目移出版本提交準備區域"
+msgstr "將所有項目移出修訂版提交準備區域"
 
 #: cola/widgets/main.py:152
 msgid "Unstage From Commit"
-msgstr "移出版本提交準備區域"
+msgstr "移出修訂版提交準備區域"
 
 #: cola/widgets/main.py:156
 msgid "Diffstat"
@@ -889,11 +889,11 @@ msgstr "顯示內容差異"
 
 #: cola/widgets/main.py:159
 msgid "Stage Changed Files To Commit"
-msgstr "將所有被修改的檔案移入版本提交準備區域"
+msgstr "將所有被修改的檔案移入修訂版提交準備區域"
 
 #: cola/widgets/main.py:164
 msgid "Stage All Untracked"
-msgstr "將所有尚未追蹤其版本的項目移動到版本提交準備區域"
+msgstr "將所有尚未追蹤其版本的項目移動到修訂版提交準備區域"
 
 #: cola/widgets/main.py:169
 msgid "Apply Patches..."
@@ -921,7 +921,7 @@ msgstr "挑取(cherry-pick)……"
 
 #: cola/widgets/main.py:206
 msgid "Load Commit Message..."
-msgstr "自檔案載入版本提交訊息"
+msgstr "自檔案載入修訂版提交訊息"
 
 #: cola/widgets/main.py:209 cola/widgets/dag.py:228
 msgid "Save As Tarball/Zip..."
@@ -1001,7 +1001,7 @@ msgstr "瀏覽其他分支中的檔案……"
 
 #: cola/widgets/main.py:273
 msgid "Get Commit Message Template"
-msgstr "取得版本提交訊息範本"
+msgstr "取得修訂版提交訊息範本"
 
 #: cola/widgets/main.py:276 cola/widgets/about.py:59
 msgid "About"
@@ -1081,7 +1081,7 @@ msgstr "打開最近使用的版控庫"
 
 #: cola/widgets/main.py:394 cola/widgets/main.py:395
 msgid "Staging Area"
-msgstr "版本提交準備區域"
+msgstr "修訂版提交準備區域"
 
 #: cola/widgets/main.py:412
 msgid "Branch"
@@ -1134,7 +1134,7 @@ msgstr "正在進行分支合併"
 
 #: cola/widgets/main.py:620
 msgid "Amending"
-msgstr "正在修正前一個版本提交"
+msgstr "正在修正前一個修訂版提交"
 
 #: cola/widgets/main.py:756
 msgid "Unable to rebase"
@@ -1158,7 +1158,7 @@ msgstr "切換路徑過濾器開關"
 
 #: cola/widgets/status.py:118 cola/models/browse.py:407
 msgid "Staged"
-msgstr "已被移入版本提交準備區域"
+msgstr "已被移入修訂版提交準備區域"
 
 #: cola/widgets/status.py:119 cola/models/browse.py:401
 msgid "Unmerged"
@@ -1207,7 +1207,7 @@ msgstr "刪除檔案……"
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
 msgid "Unstage Selected"
-msgstr "將被選取的項目移出版本提交準備區域"
+msgstr "將被選取的項目移出修訂版提交準備區域"
 
 #: cola/widgets/status.py:568 cola/widgets/status.py:670
 #: cola/widgets/diff.py:253 cola/widgets/diff.py:277
@@ -1217,7 +1217,7 @@ msgstr "啟動 git-cola"
 #: cola/widgets/status.py:588 cola/widgets/status.py:620
 #: cola/widgets/status.py:677
 msgid "Stage Selected"
-msgstr "將被選取的項目移入版本提交準備區域"
+msgstr "將被選取的項目移入修訂版提交準備區域"
 
 #: cola/widgets/status.py:658
 msgid "Add to .gitignore"
@@ -1268,15 +1268,15 @@ msgstr "標籤"
 
 #: cola/widgets/cfgactions.py:230 cola/widgets/createtag.py:79
 msgid "Revision"
-msgstr "版本"
+msgstr "修訂版"
 
 #: cola/widgets/dag.py:213
 msgid "Diff this -> selected"
-msgstr "顯示此版本→被選取的版本的內容差異"
+msgstr "顯示此修訂版→被選取的修訂版的內容差異"
 
 #: cola/widgets/dag.py:216
 msgid "Diff selected -> this"
-msgstr "顯示被選取的版本→此版本的內容差異"
+msgstr "顯示被選取的修訂版→此修訂版的內容差異"
 
 #: cola/widgets/dag.py:219 cola/widgets/createbranch.py:90
 #: cola/widgets/createbranch.py:134 cola/widgets/createbranch.py:276
@@ -1435,7 +1435,7 @@ msgstr "以路徑搜尋"
 
 #: cola/widgets/search.py:214
 msgid "Search Commit Messages"
-msgstr "搜尋版本提交訊息"
+msgstr "搜尋修訂版提交訊息"
 
 #: cola/widgets/search.py:215
 msgid "Search Diffs"
@@ -1588,7 +1588,7 @@ msgstr "內容差異選項"
 
 #: cola/widgets/diff.py:258
 msgid "Stage Selected Lines"
-msgstr "將選取的行移入版本提交準備區域(&S)"
+msgstr "將選取的行移入修訂版提交準備區域(&S)"
 
 #: cola/widgets/diff.py:259
 msgid "Revert Selected Lines..."
@@ -1596,7 +1596,7 @@ msgstr "撤銷選取行的內容變更……"
 
 #: cola/widgets/diff.py:261
 msgid "Stage Diff Hunk"
-msgstr "將此內容差異區塊移入版本提交準備區域"
+msgstr "將此內容差異區塊移入修訂版提交準備區域"
 
 #: cola/widgets/diff.py:262
 msgid "Revert Diff Hunk..."
@@ -1604,11 +1604,11 @@ msgstr "撤銷此內容差異區塊的內容變更……"
 
 #: cola/widgets/diff.py:282
 msgid "Unstage Selected Lines"
-msgstr "將被選取的行移出版本提交準備區域"
+msgstr "將被選取的行移出修訂版提交準備區域"
 
 #: cola/widgets/diff.py:284
 msgid "Unstage Diff Hunk"
-msgstr "將此內容差異區塊移出版本提交準備區域"
+msgstr "將此內容差異區塊移出修訂版提交準備區域"
 
 #: cola/widgets/diff.py:310
 msgid "Select All"
@@ -1640,7 +1640,7 @@ msgstr "最近修改過的檔案"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
-msgstr " 個版本提交前"
+msgstr " 個修訂版提交前"
 
 #: cola/widgets/recent.py:57
 msgid "Showing changes since"
@@ -1899,7 +1899,7 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:53
 msgid "Sign off on this commit"
-msgstr "於此版本提交上簽名"
+msgstr "於此修訂版提交上簽名"
 
 #: cola/widgets/commitmsg.py:56 cola/widgets/commitmsg.py:99
 msgid "Commit@@verb"
@@ -1907,7 +1907,7 @@ msgstr "提交"
 
 #: cola/widgets/commitmsg.py:58
 msgid "Commit staged changes"
-msgstr "提交版本提交準備區域中的變更"
+msgstr "提交修訂版提交準備區域中的變更"
 
 #: cola/widgets/commitmsg.py:59
 msgid "Clear..."
@@ -1918,7 +1918,7 @@ msgid ""
 "Commit staged changes\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"提交版本提交準備區域中的變更\n"
+"提交修訂版提交準備區域中的變更\n"
 "鍵盤快捷鍵：Ctrl+Enter"
 
 #: cola/widgets/commitmsg.py:105
@@ -1935,7 +1935,7 @@ msgstr "不執行提交掛勾程式"
 
 #: cola/widgets/commitmsg.py:130 cola/widgets/merge.py:88
 msgid "Create Signed Commit"
-msgstr "建立經 GPG 簽署過的版本提交"
+msgstr "建立經 GPG 簽署過的修訂版提交"
 
 #: cola/widgets/commitmsg.py:136
 msgid "Check Spelling"
@@ -1943,19 +1943,19 @@ msgstr "檢查拼字問題"
 
 #: cola/widgets/commitmsg.py:149
 msgid "Load Previous Commit Message"
-msgstr "載入先前的版本提交的訊息"
+msgstr "載入先前的修訂版提交的訊息"
 
 #: cola/widgets/commitmsg.py:153
 msgid "Fixup Previous Commit"
-msgstr "修正先前的版本提交"
+msgstr "修正先前的修訂版提交"
 
 #: cola/widgets/commitmsg.py:311
 msgid "Clear commit message?"
-msgstr "清除版本提交訊息？"
+msgstr "清除修訂版提交訊息？"
 
 #: cola/widgets/commitmsg.py:312
 msgid "The commit message will be cleared."
-msgstr "版本提交訊息將會被移除。"
+msgstr "修訂版提交訊息將會被移除。"
 
 #: cola/widgets/commitmsg.py:313
 msgid "This cannot be undone.  Clear commit message?"
@@ -1963,7 +1963,7 @@ msgstr "此操作將無法復原。要清除提交訊息嗎？"
 
 #: cola/widgets/commitmsg.py:314
 msgid "Clear commit message"
-msgstr "清除版本提交訊息"
+msgstr "清除修訂版提交訊息"
 
 #: cola/widgets/commitmsg.py:420
 msgid ""
@@ -1975,9 +1975,9 @@ msgid ""
 "- Second line: Blank\n"
 "- Remaining lines: Describe why this change is good.\n"
 msgstr ""
-"請提供一條版本提交訊息。\n"
+"請提供一條修訂版提交訊息。\n"
 "\n"
-"一條好的版本提交有下列格式：\n"
+"一條好的修訂版提交有下列格式：\n"
 "\n"
 "- 第一行: 一句話概括您所做的變更。\n"
 "- 第二行: 空行\n"
@@ -1985,7 +1985,7 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:426
 msgid "Missing Commit Message"
-msgstr "缺少版本提交訊息"
+msgstr "缺少修訂版提交訊息"
 
 #: cola/widgets/commitmsg.py:433
 msgid ""
@@ -1995,19 +1995,19 @@ msgid ""
 msgstr ""
 "沒有可以提交的內容變動。\n"
 "\n"
-"提交前你必須至少將至少一個檔案移入版本提交準備區域。"
+"提交前你必須至少將至少一個檔案移入修訂版提交準備區域。"
 
 #: cola/widgets/commitmsg.py:436
 msgid "Would you like to stage and commit all modified files?"
-msgstr "您要將所有被修改的檔案移入版本提交準備區域並提交出去嗎？"
+msgstr "您要將所有被修改的檔案移入修訂版提交準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:439
 msgid "Stage and commit?"
-msgstr "要移入版本提交準備區域並提交出去嗎？"
+msgstr "要移入修訂版提交準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:440
 msgid "Stage and Commit"
-msgstr "移入版本提交準備區域並提交出去"
+msgstr "移入修訂版提交準備區域並提交出去"
 
 #: cola/widgets/commitmsg.py:444
 msgid "Nothing to commit"
@@ -2015,7 +2015,7 @@ msgstr "沒有東西可以提交"
 
 #: cola/widgets/commitmsg.py:452
 msgid "Rewrite Published Commit?"
-msgstr "要重寫已推送出去的版本提交嗎？"
+msgstr "要重寫已推送出去的修訂版提交嗎？"
 
 #: cola/widgets/commitmsg.py:453
 msgid ""
@@ -2023,17 +2023,17 @@ msgid ""
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
-"此版本提交已經被推送到遠端版控庫。\n"
+"此修訂版提交已經被推送到遠端版控庫。\n"
 "此操作將會重寫已推送出去的變更紀錄。\n"
 "您可能不想要做此操作。"
 
 #: cola/widgets/commitmsg.py:456
 msgid "Amend the published commit?"
-msgstr "要修正已被推送出去的版本提交嗎？"
+msgstr "要修正已被推送出去的修訂版提交嗎？"
 
 #: cola/widgets/commitmsg.py:457
 msgid "Amend Commit"
-msgstr "修正前一個版本提交"
+msgstr "修正前一個修訂版提交"
 
 #: cola/widgets/commitmsg.py:465
 msgid "Commit failed"
@@ -2050,11 +2050,11 @@ msgstr "更多……"
 
 #: cola/widgets/commitmsg.py:501
 msgid "Select Commit"
-msgstr "選取版本提交"
+msgstr "選取修訂版提交"
 
 #: cola/widgets/commitmsg.py:547
 msgid "Commit summary"
-msgstr "版本提交描述"
+msgstr "修訂版提交描述"
 
 #: cola/widgets/commitmsg.py:573
 msgid "Extended description..."
@@ -2078,7 +2078,7 @@ msgstr "中止分支合併(merge"
 
 #: cola/widgets/merge.py:55 cola/widgets/merge.py:59
 msgid "Revision to Merge"
-msgstr "要合併的版本"
+msgstr "要合併的修訂版"
 
 #: cola/widgets/merge.py:69
 msgid "Visualize"
@@ -2086,17 +2086,17 @@ msgstr "視覺化顯示"
 
 #: cola/widgets/merge.py:72
 msgid "Squash the merged commits into a single commit"
-msgstr "將合併之版本提交（們）壓為單一版本提交"
+msgstr "將合併之修訂版提交（們）壓為單一修訂版提交"
 
 #: cola/widgets/merge.py:73
 msgid "Squash"
-msgstr "壓為單一版本提交"
+msgstr "壓為單一修訂版提交"
 
 #: cola/widgets/merge.py:76
 msgid ""
 "Always create a merge commit when enabled, even when the merge is a fast-"
 "forward update"
-msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併版本提交"
+msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併修訂版提交"
 
 #: cola/widgets/merge.py:78
 msgid "No fast forward"
@@ -2110,7 +2110,7 @@ msgstr "若不存在版本衝突時提交該合併。取消勾選以保持合併
 
 #: cola/widgets/merge.py:90
 msgid "GPG-sign the merge commit"
-msgstr "用 GPG 簽署合併版本提交"
+msgstr "用 GPG 簽署合併修訂版提交"
 
 #: cola/widgets/merge.py:96
 msgid "Merge"
@@ -2119,7 +2119,7 @@ msgstr "合併"
 #: cola/widgets/merge.py:144
 #, python-format
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr "合併「%(revision)s」版本至「%(branch)s」分支中"
+msgstr "合併「%(revision)s」修訂版至「%(branch)s」分支中"
 
 #: cola/widgets/merge.py:147
 #, python-format
@@ -2128,15 +2128,15 @@ msgstr "合併到「%s」分支"
 
 #: cola/widgets/merge.py:195 cola/widgets/merge.py:204
 msgid "No Revision Specified"
-msgstr "沒有選取版本"
+msgstr "沒有選取修訂版"
 
 #: cola/widgets/merge.py:196
 msgid "You must specify a revision to view."
-msgstr "您必須要選擇一個版本來檢視。"
+msgstr "您必須要選擇一個修訂版來檢視。"
 
 #: cola/widgets/merge.py:205
 msgid "You must specify a revision to merge."
-msgstr "您必須要選擇一個版本來合併。"
+msgstr "您必須要選擇一個修訂版來合併。"
 
 #: cola/widgets/filelist.py:23
 msgid "Filename"
@@ -2227,7 +2227,7 @@ msgstr "不進行快速前移式合併"
 
 #: cola/widgets/remote.py:147
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "就算該合併是一個快速前移式合併也總是建立一個合併版本提交"
+msgstr "就算該合併是一個快速前移式合併也總是建立一個合併修訂版提交"
 
 #: cola/widgets/remote.py:151
 msgid "Force"
@@ -2238,7 +2238,7 @@ msgid ""
 "Allow non-fast-forward updates.  Using \"force\" can cause the remote "
 "repository to lose commits; use it with care"
 msgstr ""
-"允許非快速前移式更新。使用「強制」可能會造成遠端版控庫遺失版本提交；請小心使"
+"允許非快速前移式更新。使用「強制」可能會造成遠端版控庫遺失修訂版提交；請小心使"
 "用"
 
 #: cola/widgets/remote.py:158
@@ -2399,7 +2399,7 @@ msgstr "%(project)s：%(branch)s - 瀏覽"
 
 #: cola/widgets/browse.py:89
 msgid "(Amending)"
-msgstr "（正在修正前一個版本提交）"
+msgstr "（正在修正前一個修訂版提交）"
 
 #: cola/widgets/browse.py:136
 msgid "View history for selected paths"
@@ -2407,11 +2407,11 @@ msgstr "檢視被選取的路徑（們）的變更紀錄"
 
 #: cola/widgets/browse.py:141
 msgid "Stage/unstage selected paths for commit"
-msgstr "將被選取的路徑移進／移出版本提交準備區域"
+msgstr "將被選取的路徑移進／移出修訂版提交準備區域"
 
 #: cola/widgets/browse.py:145
 msgid "Untrack Selected"
-msgstr "將被選取的項目移出版本提交準備區域"
+msgstr "將被選取的項目移出修訂版提交準備區域"
 
 #: cola/widgets/browse.py:146
 msgid "Stop tracking paths"
@@ -2431,7 +2431,7 @@ msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:161
 msgid "Revert unstaged changes to selected paths."
-msgstr "撤銷被選取的路徑尚未移入版本提交準備區域的內容變更。"
+msgstr "撤銷被選取的路徑尚未移入修訂版提交準備區域的內容變更。"
 
 #: cola/widgets/browse.py:166
 msgid "Revert uncommitted changes to selected paths."
@@ -2448,7 +2448,7 @@ msgstr "選擇先前版本"
 #: cola/widgets/browse.py:500
 #, python-format
 msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr "已將「%(filename)s」檔案自「%(ref)s」版本保存至「%(destination)s」目錄"
+msgstr "已將「%(filename)s」檔案自「%(ref)s」修訂版保存至「%(destination)s」目錄"
 
 #: cola/widgets/browse.py:520
 #, python-format
@@ -2470,7 +2470,7 @@ msgstr "分支名稱"
 
 #: cola/widgets/createbranch.py:106
 msgid "Starting Revision"
-msgstr "起始版本"
+msgstr "起始修訂版"
 
 #: cola/widgets/createbranch.py:113
 msgid "Local branch"
@@ -2506,7 +2506,7 @@ msgstr "缺少資料"
 
 #: cola/widgets/createbranch.py:233
 msgid "Please provide both a branch name and revision expression."
-msgstr "請填寫分支名稱與版本表達式。"
+msgstr "請填寫分支名稱與修訂版表達式。"
 
 #: cola/widgets/createbranch.py:238
 #, python-format
@@ -2520,7 +2520,7 @@ msgstr "分支已存在"
 #: cola/widgets/createbranch.py:246
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr "重置「%(branch)s」分支到「%(revision)s」版本將導致版本提交的丟失。"
+msgstr "重置「%(branch)s」分支到「%(revision)s」修訂版將導致修訂版提交的丟失。"
 
 #: cola/widgets/createbranch.py:260
 #, python-format
@@ -2534,7 +2534,7 @@ msgstr "恢復丟失的提交是比較困難的."
 #: cola/widgets/createbranch.py:265
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr "要重設「%(branch)s」分支到 「%(revision)s」版本嗎？"
+msgstr "要重設「%(branch)s」分支到 「%(revision)s」修訂版嗎？"
 
 #: cola/widgets/createbranch.py:268
 msgid "Reset Branch?"
@@ -2641,11 +2641,11 @@ msgstr "指定 SHA-1 雜湊給標籤"
 
 #: cola/widgets/createtag.py:118
 msgid "Missing Revision"
-msgstr "缺少的版本"
+msgstr "缺少的修訂版"
 
 #: cola/widgets/createtag.py:119
 msgid "Please specify a revision to tag."
-msgstr "請指定一個版本來套用標籤。"
+msgstr "請指定一個修訂版來套用標籤。"
 
 #: cola/widgets/createtag.py:122
 msgid "Missing Name"
@@ -2715,7 +2715,7 @@ msgstr "%d 天前"
 
 #: cola/models/browse.py:403
 msgid "Partially Staged"
-msgstr "部份內容變更被移入版本提交準備區域"
+msgstr "部份內容變更被移入修訂版提交準備區域"
 
 #: cola/models/browse.py:409
 msgid "Changed Upstream"
@@ -2778,10 +2778,10 @@ msgstr "在上游被變更"
 #~ msgstr "沒有選取任何需要自 HEAD 取出的檔案"
 
 #~ msgid "Remove selected paths from the staging area"
-#~ msgstr "將選取的路徑自版本提交準備區域中移除"
+#~ msgstr "將選取的路徑自修訂版提交準備區域中移除"
 
 #~ msgid "Revert Uncommitted Changes..."
-#~ msgstr "撤銷尚未建立版本提交的內容變動"
+#~ msgstr "撤銷尚未建立修訂版提交的內容變動"
 
 #~ msgid "Bookmarks..."
 #~ msgstr "書籤……"
@@ -2796,7 +2796,7 @@ msgstr "在上游被變更"
 #~ msgstr "套用選取的內容差異至當前工作目錄樹"
 
 #~ msgid "Index"
-#~ msgstr "版本提交準備區域"
+#~ msgstr "修訂版提交準備區域"
 
 #~ msgid "Branch created"
 #~ msgstr "分支已建立"

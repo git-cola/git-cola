@@ -27,7 +27,7 @@ msgstr "註：這個文件是為了幫助翻譯人員統一名詞術語。終端
 #              修正，其實每次amend的結果也不一定就是最後結果，說不定還需要修改。所以不
 #              如就叫修改
 msgid "amend"
-msgstr "修正前一次的版本提交"
+msgstr "修正前一次的修訂版提交"
 
 #. ""
 #. git annotate 文件名：用來標註文件的每一行在什麼時候被誰最後修改。
@@ -58,7 +58,7 @@ msgstr "取出"
 
 #. "A single point in the git history."
 msgid "commit [noun]"
-msgstr "版本提交"
+msgstr "修訂版提交"
 
 #. "The action of storing a new snapshot of the project's state in the git history."
 msgid "commit [verb]"
@@ -86,7 +86,7 @@ msgstr "撈取"
 #. "A collection of files. The index is a stored version of your working tree."
 #. index是working tree和repository之間的緩存
 msgid "index (in git-gui: staging area)"
-msgstr "版本提交準備區域"
+msgstr "修訂版提交準備區域"
 
 #. "A successful merge results in the creation of a new commit representing the result of the merge."
 msgid "merge [noun]"
@@ -129,8 +129,9 @@ msgid "revert"
 msgstr "撤銷"
 
 #. "A particular state of files and directories which was stored in the object database."
+#. Ｖ字龍：修訂版(revision)指得是版本控制系統控管內容修改的最小單位，與「版本(version)」的差異為「修訂版」微不足道到作者沒必要給它指定一個有意義的識別名稱（Vx.y.z）而是使用版本控制系統隨機產生的識別名稱（如 a3dfe84...）或是編號（如 Build 12345）
 msgid "revision"
-msgstr "版本"
+msgstr "修訂版"
 
 #. ""
 msgid "sign off"
@@ -140,13 +141,13 @@ msgstr "簽名"
 #. ""
 #. 似乎是git-gui裡面顯示的本次提交的文件清單區域
 msgid "staging area"
-msgstr "版本提交準備區域"
+msgstr "修訂版提交準備區域"
 
 # 意思應該是 commit 的準備區域的樣子
 #. ""
 #. 似乎是git-gui裡面顯示的本次提交的文件清單區域
 msgid "stage"
-msgstr "移入版本提交準備區域"
+msgstr "移入修訂版提交準備區域"
 
 #. ""
 msgid "status"
