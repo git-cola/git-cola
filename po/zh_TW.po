@@ -308,27 +308,27 @@ msgstr "重新整理"
 
 #: cola/cmds.py:1316
 msgid "Revert Unstaged Edits..."
-msgstr "撤銷尚未移入修訂版提交準備區域的內容修改……"
+msgstr "撤銷尚未移入新修訂版準備區域的內容修改……"
 
 #: cola/cmds.py:1325
 msgid "Revert Unstaged Changes?"
-msgstr "要撤銷尚未移入修訂版提交準備區域的內容變動嗎？"
+msgstr "要撤銷尚未移入新修訂版準備區域的內容變動嗎？"
 
 #: cola/cmds.py:1326
 msgid ""
 "This operation drops unstaged changes.\n"
 "These changes cannot be recovered."
 msgstr ""
-"此操作將丟棄尚未移入修訂版提交準備區域的內容變動。\n"
+"此操作將丟棄尚未移入新修訂版準備區域的內容變動。\n"
 "這些內容變動將無法被還原。"
 
 #: cola/cmds.py:1328
 msgid "Revert the unstaged changes?"
-msgstr "要撤銷尚未移入修訂版提交準備區域的內容變動嗎？"
+msgstr "要撤銷尚未移入新修訂版準備區域的內容變動嗎？"
 
 #: cola/cmds.py:1329
 msgid "Revert Unstaged Changes"
-msgstr "撤銷尚未移入修訂版提交準備區域的內容變動"
+msgstr "撤銷尚未移入新修訂版準備區域的內容變動"
 
 #: cola/cmds.py:1338
 msgid "Revert Uncommitted Edits..."
@@ -401,7 +401,7 @@ msgstr "未知使用者"
 
 #: cola/cmds.py:1543
 msgid "Stage conflicts?"
-msgstr "要將合併衝突移入修訂版提交準備區域嗎？"
+msgstr "要將合併衝突移入新修訂版準備區域嗎？"
 
 #: cola/cmds.py:1544
 #, python-format
@@ -414,11 +414,11 @@ msgstr ""
 "%s 看起來包含未解決的合併衝突。\n"
 "\n"
 "您可能應該要跳過這個檔案。\n"
-"無論如何都要將它移入修訂版提交準備區域嗎？"
+"無論如何都要將它移入新修訂版準備區域嗎？"
 
 #: cola/cmds.py:1547
 msgid "Stage conflicts"
-msgstr "將合併衝突移入修訂版提交準備區域"
+msgstr "將合併衝突移入新修訂版準備區域"
 
 #: cola/cmds.py:1548
 msgid "Skip"
@@ -427,28 +427,28 @@ msgstr "跳過"
 #: cola/cmds.py:1558 cola/widgets/action.py:58 cola/widgets/diff.py:243
 #: cola/widgets/commitmsg.py:225
 msgid "Stage"
-msgstr "移動到修訂版提交準備區域"
+msgstr "移動到新修訂版準備區域"
 
 #: cola/cmds.py:1565
 #, python-format
 msgid "Staging: %s"
-msgstr "移動到修訂版提交準備區域：%s..."
+msgstr "移動到新修訂版準備區域：%s..."
 
 #: cola/cmds.py:1606
 msgid "Stage Modified"
-msgstr "將已變更的項目移入修訂版提交準備區域"
+msgstr "將已變更的項目移入新修訂版準備區域"
 
 #: cola/cmds.py:1617
 msgid "Stage Unmerged"
-msgstr "將尚未合併的檔案移動到修訂版提交準備區域"
+msgstr "將尚未合併的檔案移動到新修訂版準備區域"
 
 #: cola/cmds.py:1628
 msgid "Stage Untracked"
-msgstr "將尚未追蹤其版本的項目移動到修訂版提交準備區域"
+msgstr "將尚未追蹤其版本的項目移動到新修訂版準備區域"
 
 #: cola/cmds.py:1639
 msgid "Stage / Unstage"
-msgstr "移入／移出修訂版提交準備區域"
+msgstr "移入／移出新修訂版準備區域"
 
 #: cola/cmds.py:1669
 #, python-format
@@ -462,17 +462,17 @@ msgstr "已簽署 GPG 簽章"
 #: cola/cmds.py:1704 cola/widgets/action.py:59 cola/widgets/diff.py:245
 #: cola/widgets/commitmsg.py:227
 msgid "Unstage"
-msgstr "移出修訂版提交準備區域"
+msgstr "移出新修訂版準備區域"
 
 #: cola/cmds.py:1711
 #, python-format
 msgid "Unstaging: %s"
-msgstr "正在將「%s」移出修訂版提交準備區域"
+msgstr "正在將「%s」移出新修訂版準備區域"
 
 #: cola/cmds.py:1739
 #, python-format
 msgid "Untracking: %s"
-msgstr "正在將「%s」移出修訂版提交準備區域"
+msgstr "正在將「%s」移出新修訂版準備區域"
 
 #: cola/cmds.py:1824
 msgid "Error Launching History Browser"
@@ -877,11 +877,11 @@ msgstr "內容差異"
 
 #: cola/widgets/main.py:148 cola/widgets/status.py:507
 msgid "Unstage All"
-msgstr "將所有項目移出修訂版提交準備區域"
+msgstr "將所有項目移出新修訂版準備區域"
 
 #: cola/widgets/main.py:152
 msgid "Unstage From Commit"
-msgstr "移出修訂版提交準備區域"
+msgstr "移出新修訂版準備區域"
 
 #: cola/widgets/main.py:156
 msgid "Diffstat"
@@ -889,11 +889,11 @@ msgstr "顯示內容差異"
 
 #: cola/widgets/main.py:159
 msgid "Stage Changed Files To Commit"
-msgstr "將所有被修改的檔案移入修訂版提交準備區域"
+msgstr "將所有被修改的檔案移入新修訂版準備區域"
 
 #: cola/widgets/main.py:164
 msgid "Stage All Untracked"
-msgstr "將所有尚未追蹤其版本的項目移動到修訂版提交準備區域"
+msgstr "將所有尚未追蹤其版本的項目移動到新修訂版準備區域"
 
 #: cola/widgets/main.py:169
 msgid "Apply Patches..."
@@ -1081,7 +1081,7 @@ msgstr "打開最近使用的版控庫"
 
 #: cola/widgets/main.py:394 cola/widgets/main.py:395
 msgid "Staging Area"
-msgstr "修訂版提交準備區域"
+msgstr "新修訂版準備區域"
 
 #: cola/widgets/main.py:412
 msgid "Branch"
@@ -1158,7 +1158,7 @@ msgstr "切換路徑過濾器開關"
 
 #: cola/widgets/status.py:118 cola/models/browse.py:407
 msgid "Staged"
-msgstr "已被移入修訂版提交準備區域"
+msgstr "已被移入新修訂版準備區域"
 
 #: cola/widgets/status.py:119 cola/models/browse.py:401
 msgid "Unmerged"
@@ -1207,7 +1207,7 @@ msgstr "刪除檔案……"
 
 #: cola/widgets/status.py:532 cola/widgets/status.py:575
 msgid "Unstage Selected"
-msgstr "將被選取的項目移出修訂版提交準備區域"
+msgstr "將被選取的項目移出新修訂版準備區域"
 
 #: cola/widgets/status.py:568 cola/widgets/status.py:670
 #: cola/widgets/diff.py:253 cola/widgets/diff.py:277
@@ -1217,7 +1217,7 @@ msgstr "啟動 git-cola"
 #: cola/widgets/status.py:588 cola/widgets/status.py:620
 #: cola/widgets/status.py:677
 msgid "Stage Selected"
-msgstr "將被選取的項目移入修訂版提交準備區域"
+msgstr "將被選取的項目移入新修訂版準備區域"
 
 #: cola/widgets/status.py:658
 msgid "Add to .gitignore"
@@ -1588,7 +1588,7 @@ msgstr "內容差異選項"
 
 #: cola/widgets/diff.py:258
 msgid "Stage Selected Lines"
-msgstr "將選取的行移入修訂版提交準備區域(&S)"
+msgstr "將選取的行移入新修訂版準備區域(&S)"
 
 #: cola/widgets/diff.py:259
 msgid "Revert Selected Lines..."
@@ -1596,7 +1596,7 @@ msgstr "撤銷選取行的內容變更……"
 
 #: cola/widgets/diff.py:261
 msgid "Stage Diff Hunk"
-msgstr "將此內容差異區塊移入修訂版提交準備區域"
+msgstr "將此內容差異區塊移入新修訂版準備區域"
 
 #: cola/widgets/diff.py:262
 msgid "Revert Diff Hunk..."
@@ -1604,11 +1604,11 @@ msgstr "撤銷此內容差異區塊的內容變更……"
 
 #: cola/widgets/diff.py:282
 msgid "Unstage Selected Lines"
-msgstr "將被選取的行移出修訂版提交準備區域"
+msgstr "將被選取的行移出新修訂版準備區域"
 
 #: cola/widgets/diff.py:284
 msgid "Unstage Diff Hunk"
-msgstr "將此內容差異區塊移出修訂版提交準備區域"
+msgstr "將此內容差異區塊移出新修訂版準備區域"
 
 #: cola/widgets/diff.py:310
 msgid "Select All"
@@ -1907,7 +1907,7 @@ msgstr "提交"
 
 #: cola/widgets/commitmsg.py:58
 msgid "Commit staged changes"
-msgstr "提交修訂版提交準備區域中的變更"
+msgstr "提交新修訂版準備區域中的變更"
 
 #: cola/widgets/commitmsg.py:59
 msgid "Clear..."
@@ -1918,7 +1918,7 @@ msgid ""
 "Commit staged changes\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"提交修訂版提交準備區域中的變更\n"
+"提交新修訂版準備區域中的變更\n"
 "鍵盤快捷鍵：Ctrl+Enter"
 
 #: cola/widgets/commitmsg.py:105
@@ -1995,19 +1995,19 @@ msgid ""
 msgstr ""
 "沒有可以提交的內容變動。\n"
 "\n"
-"提交前你必須至少將至少一個檔案移入修訂版提交準備區域。"
+"提交前你必須至少將至少一個檔案移入新修訂版準備區域。"
 
 #: cola/widgets/commitmsg.py:436
 msgid "Would you like to stage and commit all modified files?"
-msgstr "您要將所有被修改的檔案移入修訂版提交準備區域並提交出去嗎？"
+msgstr "您要將所有被修改的檔案移入新修訂版準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:439
 msgid "Stage and commit?"
-msgstr "要移入修訂版提交準備區域並提交出去嗎？"
+msgstr "要移入新修訂版準備區域並提交出去嗎？"
 
 #: cola/widgets/commitmsg.py:440
 msgid "Stage and Commit"
-msgstr "移入修訂版提交準備區域並提交出去"
+msgstr "移入新修訂版準備區域並提交出去"
 
 #: cola/widgets/commitmsg.py:444
 msgid "Nothing to commit"
@@ -2407,11 +2407,11 @@ msgstr "檢視被選取的路徑（們）的變更紀錄"
 
 #: cola/widgets/browse.py:141
 msgid "Stage/unstage selected paths for commit"
-msgstr "將被選取的路徑移進／移出修訂版提交準備區域"
+msgstr "將被選取的路徑移進／移出新修訂版準備區域"
 
 #: cola/widgets/browse.py:145
 msgid "Untrack Selected"
-msgstr "將被選取的項目移出修訂版提交準備區域"
+msgstr "將被選取的項目移出新修訂版準備區域"
 
 #: cola/widgets/browse.py:146
 msgid "Stop tracking paths"
@@ -2431,7 +2431,7 @@ msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:161
 msgid "Revert unstaged changes to selected paths."
-msgstr "撤銷被選取的路徑尚未移入修訂版提交準備區域的內容變更。"
+msgstr "撤銷被選取的路徑尚未移入新修訂版準備區域的內容變更。"
 
 #: cola/widgets/browse.py:166
 msgid "Revert uncommitted changes to selected paths."
@@ -2715,7 +2715,7 @@ msgstr "%d 天前"
 
 #: cola/models/browse.py:403
 msgid "Partially Staged"
-msgstr "部份內容變更被移入修訂版提交準備區域"
+msgstr "部份內容變更被移入新修訂版準備區域"
 
 #: cola/models/browse.py:409
 msgid "Changed Upstream"
