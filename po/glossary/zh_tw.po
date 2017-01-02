@@ -62,7 +62,7 @@ msgstr "版本提交"
 
 #. "The action of storing a new snapshot of the project's state in the git history."
 msgid "commit [verb]"
-msgstr "提交（至版本倉庫）"
+msgstr "提交（至版控庫）"
 
 #. ""
 #. 差異？差別？
@@ -103,19 +103,22 @@ msgstr "訊息"
 
 #. "Pulling a branch means to fetch it and merge it."
 msgid "pull"
-msgstr "撈取並合併至本地版本倉庫中"
+msgstr "撈取並合併至本地版控庫中"
 
 #. "Pushing a branch means to get the branch's head ref from a remote repository, and ... (well, can someone please explain it for mere mortals?)"
 msgid "push"
-msgstr "推送至遠端版本倉庫"
+msgstr "推送至遠端版控庫"
 
 #. ""
 msgid "redo"
 msgstr "重做"
 
 #. "A collection of refs (?) together with an object database containing all objects which are reachable from the refs... (oops, you've lost me here. Again, please an explanation for mere mortals?)"
+#. In revision control systems, a repository[1] is an on-disk data structure which stores metadata for a set of files and/or directory structure.（摘錄自 [Repository (version control) - Wikipedia](https://en.wikipedia.org/wiki/Repository_(version_control))）
+#. Ｖ字龍：過去所採用的「版本倉庫」翻譯之理解為「存放版本的倉庫」並不符合 VCS Repo 除了版本之外保存其他版本控制需要的詮釋資料的實際情況，所以被棄用）
+#. Ｖ字龍：「版控庫」為「因版本控制目的而建立的倉庫（至於倉庫內存了什麼哪些東西不是一般使用者該關心的細節）」的簡寫
 msgid "repository"
-msgstr "版本倉庫"
+msgstr "版控庫"
 
 #. ""
 msgid "reset"
