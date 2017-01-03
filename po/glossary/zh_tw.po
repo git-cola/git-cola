@@ -27,7 +27,7 @@ msgstr "註：這個文件是為了幫助翻譯人員統一名詞術語。終端
 #              修正，其實每次amend的結果也不一定就是最後結果，說不定還需要修改。所以不
 #              如就叫修改
 msgid "amend"
-msgstr "修正前一次的版本提交"
+msgstr "修正前一次的修訂版提交"
 
 #. ""
 #. git annotate 文件名：用來標註文件的每一行在什麼時候被誰最後修改。
@@ -58,11 +58,11 @@ msgstr "取出"
 
 #. "A single point in the git history."
 msgid "commit [noun]"
-msgstr "版本提交"
+msgstr "修訂版提交"
 
 #. "The action of storing a new snapshot of the project's state in the git history."
 msgid "commit [verb]"
-msgstr "提交（至版本倉庫）"
+msgstr "提交（至版控庫）"
 
 #. ""
 #. 差異？差別？
@@ -86,7 +86,7 @@ msgstr "撈取"
 #. "A collection of files. The index is a stored version of your working tree."
 #. index是working tree和repository之間的緩存
 msgid "index (in git-gui: staging area)"
-msgstr "版本提交準備區域"
+msgstr "新修訂版準備區域"
 
 #. "A successful merge results in the creation of a new commit representing the result of the merge."
 msgid "merge [noun]"
@@ -103,19 +103,22 @@ msgstr "訊息"
 
 #. "Pulling a branch means to fetch it and merge it."
 msgid "pull"
-msgstr "撈取並合併至本地版本倉庫中"
+msgstr "撈取並合併至本地版控庫中"
 
 #. "Pushing a branch means to get the branch's head ref from a remote repository, and ... (well, can someone please explain it for mere mortals?)"
 msgid "push"
-msgstr "推送至遠端版本倉庫"
+msgstr "推送至遠端版控庫"
 
 #. ""
 msgid "redo"
 msgstr "重做"
 
 #. "A collection of refs (?) together with an object database containing all objects which are reachable from the refs... (oops, you've lost me here. Again, please an explanation for mere mortals?)"
+#. In revision control systems, a repository[1] is an on-disk data structure which stores metadata for a set of files and/or directory structure.（摘錄自 [Repository (version control) - Wikipedia](https://en.wikipedia.org/wiki/Repository_(version_control))）
+#. Ｖ字龍：過去所採用的「版本倉庫」翻譯之理解為「存放版本的倉庫」並不符合 VCS Repo 除了版本之外保存其他版本控制需要的詮釋資料的實際情況，所以被棄用）
+#. Ｖ字龍：「版控庫」為「因版本控制目的而建立的倉庫（至於倉庫內存了什麼哪些東西不是一般使用者該關心的細節）」的簡寫
 msgid "repository"
-msgstr "版本倉庫"
+msgstr "版控庫"
 
 #. ""
 msgid "reset"
@@ -126,8 +129,9 @@ msgid "revert"
 msgstr "撤銷"
 
 #. "A particular state of files and directories which was stored in the object database."
+#. Ｖ字龍：修訂版(revision)指得是版本控制系統控管內容修改的最小單位，與「版本(version)」的差異為「修訂版」微不足道到作者沒必要給它指定一個有意義的識別名稱（Vx.y.z）而是使用版本控制系統隨機產生的識別名稱（如 a3dfe84...）或是編號（如 Build 12345）
 msgid "revision"
-msgstr "版本"
+msgstr "修訂版"
 
 #. ""
 msgid "sign off"
@@ -137,13 +141,13 @@ msgstr "簽名"
 #. ""
 #. 似乎是git-gui裡面顯示的本次提交的文件清單區域
 msgid "staging area"
-msgstr "版本提交準備區域"
+msgstr "新修訂版準備區域"
 
 # 意思應該是 commit 的準備區域的樣子
 #. ""
 #. 似乎是git-gui裡面顯示的本次提交的文件清單區域
 msgid "stage"
-msgstr "移入版本提交準備區域"
+msgstr "移入新修訂版準備區域"
 
 #. ""
 msgid "status"
