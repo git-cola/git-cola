@@ -189,7 +189,6 @@ the git-cola recipe, but build our own .app bundle from source.
 documentation.
 
     brew install sphinx-doc
-    brew install pyqt5
     brew install git-cola
 
 Once brew has installed git-cola you can:
@@ -215,6 +214,28 @@ Once brew has installed git-cola you can:
 Newer versions of Homebrew install their own `python3` installation and
 provide the `PyQt5` modules for `python3` only.  You have to use
 `python3 ./bin/git-cola` when running from the source tree.
+
+### UPGRADING USING HOMEBREW
+
+If you upgrade using `brew` then it is recommended that you re-install
+*git-cola*'s dependencies when upgrading.  Re-installing ensures that the
+Python modules provided by Homebrew will be properly setup.
+
+This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
+Homebrew now bundles its own Python3 installation instead of using the
+system-provided default Python.
+
+
+    # update homebrew
+    brew update
+
+    # uninstall git-cola and its dependencies
+    brew uninstall git-cola
+    brew uninstall pyqt5
+    brew uninstall sip
+
+    # re-install git-cola and its dependencies
+    brew install git-cola
 
 ## WINDOWS INSTALLATION
 
