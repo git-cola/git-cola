@@ -6,6 +6,7 @@ import os
 
 from qtpy import QtGui
 
+from . import gitcfg
 from . import qtcompat
 from . import resources
 from .compat import ustr
@@ -31,9 +32,14 @@ KNOWN_FILE_EXTENSIONS = {
     '.cxx':     'file-code.svg',
 }
 
+cfg = gitcfg.current()
+style = cfg.icon_style()
 
 def install():
-    icon_dir = resources.icon_dir()
+    if not style or style == "light":
+        icon_dir = resources.icon_dir()
+    else:
+        icon_dir = resources.icon_dir(style)
     qtcompat.add_search_path('icons', icon_dir)
 
 
