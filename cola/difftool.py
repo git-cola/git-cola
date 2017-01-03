@@ -122,7 +122,6 @@ class FileDiffDialog(QtWidgets.QDialog):
         """Show files with differences and launch difftool"""
 
         QtWidgets.QDialog.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
 
         self.a = a
         self.b = b

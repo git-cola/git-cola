@@ -102,7 +102,6 @@ class Finder(standard.Dialog):
 
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)

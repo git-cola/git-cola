@@ -63,7 +63,6 @@ class ApplyPatches(Dialog):
 
     def __init__(self, parent=None):
         super(ApplyPatches, self).__init__(parent=parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Apply Patches'))
         self.setAcceptDrops(True)
         if parent is not None:

@@ -47,7 +47,6 @@ class CreateTag(standard.Dialog):
 
         self.opts = opts
 
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Create Tag'))
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)

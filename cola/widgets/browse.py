@@ -583,7 +583,6 @@ class BrowseDialog(QtWidgets.QDialog):
 
     def __init__(self, model, select_file=False, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 

@@ -47,7 +47,6 @@ class MergeView(QtWidgets.QDialog):
         self.model = model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-        self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Widgets
         self.title_label = QtWidgets.QLabel()

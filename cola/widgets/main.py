@@ -60,7 +60,6 @@ class MainView(standard.MainWindow):
 
     def __init__(self, model, parent=None, settings=None):
         standard.MainWindow.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
 
         # Default size; this is thrown out when save/restore is used
         self.dag = None

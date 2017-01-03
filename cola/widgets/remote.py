@@ -100,7 +100,6 @@ class RemoteActionDialog(standard.Dialog):
         self.filtered_remote_branches = []
         self.selected_remotes = []
 
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(title)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)

@@ -68,7 +68,6 @@ class Grep(Dialog):
 
     def __init__(self, parent=None):
         Dialog.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Search'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)

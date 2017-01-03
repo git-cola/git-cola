@@ -39,7 +39,6 @@ class SearchWidget(standard.Dialog):
 
     def __init__(self, parent):
         standard.Dialog.__init__(self, parent)
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtWidgets.QComboBox()

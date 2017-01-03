@@ -389,7 +389,6 @@ class GitDAG(standard.MainWindow):
     def __init__(self, model, ctx, parent=None, settings=None):
         super(GitDAG, self).__init__(parent)
 
-        self.setAttribute(Qt.WA_MacMetalStyle)
         self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed

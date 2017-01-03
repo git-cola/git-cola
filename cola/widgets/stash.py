@@ -38,7 +38,6 @@ class StashView(Dialog):
         self.names = []
 
         self.setWindowTitle(N_('Stash'))
-        self.setAttribute(QtCore.Qt.WA_MacMetalStyle)
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
             self.resize(parent.width(), 420)
