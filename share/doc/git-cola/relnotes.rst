@@ -53,8 +53,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/628
 
-* Some styling issues that caused black backgrounds on dock widgets
-  when using PyQ5 on Mac OS X have been fixed.
+* Styling issues that caused black backgrounds in various widgets when using
+  PyQ5 on Mac OS X have been fixed.
+
+  https://github.com/git-cola/git-cola/issues/624
 
 * The "Open Recent" menu action was broken and has been fixed.
 
