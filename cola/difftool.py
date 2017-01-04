@@ -69,6 +69,8 @@ class FileDiffDialog(QtWidgets.QDialog):
         self.diff_button = qtutils.create_button(text=N_('Compare'),
                                                  icon=icons.diff(),
                                                  enabled=False)
+        self.diff_button.setShortcut(hotkeys.DIFF)
+
         self.diff_all_button = qtutils.create_button(text=N_('Compare All'),
                                                      icon=icons.diff())
         self.edit_button = qtutils.edit_button()
