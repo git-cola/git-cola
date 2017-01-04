@@ -71,13 +71,16 @@ class FileDiffDialog(QtWidgets.QDialog):
                                                  enabled=False)
         self.diff_all_button = qtutils.create_button(text=N_('Compare All'),
                                                      icon=icons.diff())
+        self.edit_button = qtutils.edit_button()
+        self.edit_button.setShortcut(hotkeys.EDIT)
+
         self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          qtutils.STRETCH,
                                           self.diff_button,
                                           self.diff_all_button,
-                                          defs.spacing,
+                                          self.edit_button,
+                                          qtutils.STRETCH,
                                           self.close_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
@@ -98,6 +101,7 @@ class FileDiffDialog(QtWidgets.QDialog):
         qtutils.connect_button(self.diff_button, self.diff)
         qtutils.connect_button(self.diff_all_button,
                                lambda: self.diff(dir_diff=True))
+        qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.close_button, self.close)
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
@@ -166,3 +170,7 @@ class FileDiffDialog(QtWidgets.QDialog):
         else:
             right = None
         return (left, right)
+
+    def edit(self):
+        paths = self.tree.selected_filenames()
+        cmds.do(cmds.Edit, paths)
