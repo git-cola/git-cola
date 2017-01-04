@@ -137,7 +137,8 @@ class ViewerMixin(object):
 
     def show_dir_diff(self):
         self.with_oid(lambda oid:
-                difftool.launch(left=oid, left_take_magic=True, dir_diff=True))
+                cmds.difftool_launch(left=oid, left_take_magic=True,
+                                     dir_diff=True))
 
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
@@ -650,7 +651,7 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, a, b):
         paths = self.ctx.paths()
         if paths:
-            difftool.launch(left=a, right=b, paths=paths)
+            cmds.difftool_launch(left=a, right=b, paths=paths)
         else:
             difftool.diff_commits(self, a, b)
 
@@ -675,8 +676,8 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        difftool.launch(left=bottom, left_take_parent=True,
-                        right=top, paths=files)
+        cmds.difftool_launch(left=bottom, left_take_parent=True,
+                             right=top, paths=files)
 
 
 class ReaderThread(QtCore.QThread):

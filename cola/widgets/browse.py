@@ -19,7 +19,6 @@ from ..models import main
 from ..compat import ustr
 from .. import cmds
 from .. import core
-from .. import difftool
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -493,7 +492,7 @@ class BrowserController(QtCore.QObject):
         if not commits:
             return
         commit = commits[0]
-        difftool.launch(left=commit, paths=paths)
+        cmds.difftool_launch(left=commit, paths=paths)
 
 
 class BrowseModel(object):

@@ -4,7 +4,7 @@ from __future__ import division, absolute_import, unicode_literals
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from .. import difftool
+from .. import cmds
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -244,4 +244,4 @@ class CompareBranchesDialog(standard.Dialog):
                 right = None
         else:
             left, right = self.start, self.end
-        difftool.launch(left=left, right=right, paths=[filename])
+        cmds.difftool_launch(left=left, right=right, paths=[filename])
