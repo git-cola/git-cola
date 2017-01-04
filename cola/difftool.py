@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -131,7 +130,7 @@ class FileDiffDialog(QtWidgets.QDialog):
             title = N_('git-cola diff')
 
         self.setWindowTitle(title)
-        self.setWindowModality(QtCore.Qt.WindowModal)
+        self.setWindowModality(Qt.WindowModal)
 
         self.expr = completion.GitRefLineEdit(parent=self)
         if expr is not None:
