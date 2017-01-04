@@ -12,7 +12,6 @@ from . import cmds
 from . import core
 from . import difftool
 from . import gitcmds
-from . import hotkeys
 from . import icons
 from . import qtutils
 from . import utils
