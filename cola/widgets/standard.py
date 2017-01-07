@@ -9,13 +9,14 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QDockWidget
 
+from ..settings import Settings
 from .. import core
 from .. import gitcfg
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
-from ..settings import Settings
 from . import defs
+
 
 class WidgetMixin(object):
     """Mix-in for common utilities and serialization of widget state"""
@@ -100,20 +101,24 @@ class WidgetMixin(object):
         """Imports data for view save/restore"""
         result = True
         try:
-            x, y = int(state['x']), int(state['y'])
-            self.move(x, y)
-
             width, height = int(state['width']), int(state['height'])
             self.resize(width, height)
 
+            x, y = int(state['x']), int(state['y'])
+            self.move(x, y)
+
             # calling resize/move won't invoke QWidget::{resize,move}Event
+            # so store the unmaximized size if we properly restored.
             self._unmaximized_rect = (x, y, width, height)
         except:
             result = False
         try:
             if state['maximized']:
                 try:
-                    self.resize_to_desktop()
+                    if utils.is_win32() or utils.is_darwin():
+                        self.resize_to_desktop()
+                    else:
+                        self.showMaximized()
                 except:
                     pass
         except:
@@ -138,8 +143,10 @@ class WidgetMixin(object):
             except:
                 pass
         else:
-            ret['width'], ret['height'] = self.width(), self.height()
-            ret['x'], ret['y'] = self.x(), self.y()
+            ret['width'] = self.width()
+            ret['height'] = self.height()
+            ret['x'] = self.x()
+            ret['y'] = self.y()
 
         return ret
 

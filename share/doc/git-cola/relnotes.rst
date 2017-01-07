@@ -50,6 +50,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/634
 
+* Exiting `git cola` with a maximized main window would hang when reopened
+  on Linux.
+
+  https://github.com/git-cola/git-cola/issues/641
+
 Packaging
 ---------
 * `appdata.xml` files are now provided at
