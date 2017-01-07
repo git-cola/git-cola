@@ -29,11 +29,31 @@ Usability, bells and whistles
 
   http://git-cola.readthedocs.io/en/latest/git-cola.html#prepare-commit-message
 
+* `git cola diff` (and the corresponding `Diff` menu actions) can now
+  launch difftool with the standard `Ctrl+D` hotkey.  The `Ctrl+E` hotkey was
+  also added for launching an editor.
+
+* Traditional Chinese (Taiwan) translation updates.
+
 Fixes
 -----
 * `git cola` now works when installed in non-ascii, utf8-encoded paths.
 
   https://github.com/git-cola/git-cola/issues/629
+
+* Styling issues that caused black backgrounds in various widgets when using
+  PyQ5 on Mac OS X have been fixed.
+
+  https://github.com/git-cola/git-cola/issues/624
+
+* The "Open Recent" menu action was broken and has been fixed.
+
+  https://github.com/git-cola/git-cola/issues/634
+
+* Exiting `git cola` with a maximized main window would hang when reopened
+  on Linux.
+
+  https://github.com/git-cola/git-cola/issues/641
 
 Packaging
 ---------
@@ -47,20 +67,14 @@ Packaging
 
 .. _v2.9.1:
 
+git-cola v2.9.1
+===============
+
 Fixes
 -----
 * The "Open Recent" menu was updated to new bookmarks format.
 
   https://github.com/git-cola/git-cola/issues/628
-
-* Styling issues that caused black backgrounds in various widgets when using
-  PyQ5 on Mac OS X have been fixed.
-
-  https://github.com/git-cola/git-cola/issues/624
-
-* The "Open Recent" menu action was broken and has been fixed.
-
-  https://github.com/git-cola/git-cola/issues/634
 
 .. _v2.9:
 
