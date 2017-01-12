@@ -2,13 +2,15 @@
 
 from __future__ import absolute_import, division, unicode_literals
 
-from distutils import log
+import os
+import re
 from distutils.command.build import build
 from distutils.core import Command
 from distutils.dep_util import newer
 from distutils.spawn import find_executable
-import os
-import re
+from distutils import log
+
+from . import build_util
 
 
 class build_mo(Command):
@@ -20,18 +22,15 @@ class build_mo(Command):
     #   - long name,
     #   - short name (None if no short name),
     #   - help string.
-    user_options = [(str('build-dir='), str('d'),
-                        'Directory to build locale files'),
-                    (str('output-base='), str('o'),
-                        'mo-files base name'),
-                    (str('source-dir='), None,
-                        'Directory with sources po files'),
-                    (str('force'), str('f'),
-                        'Force creation of mo files'),
-                    (str('lang='), None,
-                        'Comma-separated list of languages to process')]
-
-    boolean_options = ['force']
+    user_options = [
+        ('build-dir=', 'd', 'Directory to build locale files'),
+        ('output-base=', 'o', 'mo-files base name'),
+        ('source-dir=', None, 'Directory with sources po files'),
+        ('force', 'f', 'Force creation of mo files'),
+        ('lang=', None, 'Comma-separated list of languages to process'),
+    ]
+    user_options = build_util.stringify_options(user_options)
+    boolean_options = build_util.stringify_list(['force'])
 
     def initialize_options(self):
         self.build_dir = None
