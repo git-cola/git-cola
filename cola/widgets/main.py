@@ -708,6 +708,7 @@ class MainView(standard.MainWindow):
             self.addAction(toggleview)
             qtutils.connect_action(toggleview, focusdock)
 
+        # These widgets warrant home-row hotkey status
         qtutils.add_action(self, 'Focus Commit Message',
                            lambda: focus_dock(self.commitdockwidget),
                            hotkeys.FOCUS)
@@ -715,6 +716,10 @@ class MainView(standard.MainWindow):
         qtutils.add_action(self, 'Focus Status Window',
                            lambda: focus_dock(self.statusdockwidget),
                            hotkeys.FOCUS_STATUS)
+
+        qtutils.add_action(self, 'Focus Diff Editor',
+                           lambda: focus_dock(self.diffdockwidget),
+                           hotkeys.FOCUS_DIFF)
 
     def preferences(self):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)

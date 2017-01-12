@@ -154,6 +154,10 @@ The `Control-{1, 2, 3, ...}` hotkey gives focus to a specific tool.
 A hidden tool can be re-opened using the `Tools` menu or
 the `Shift+Control-{1, 2, 3, ...}` shortcut keys.
 
+The Diff editor can be focused with `Ctrl-j`.
+the Status tool can be focused with `Ctrl-k`.
+the Commit tool can be focused with `Ctrl-l`.
+
 .. _status:
 
 STATUS
