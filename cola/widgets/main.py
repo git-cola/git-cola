@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 import os
 
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -509,8 +510,6 @@ class MainView(standard.MainWindow):
                                             type=Qt.QueuedConnection)
         # Install .git-config-defined actions
         self.init_config_actions()
-        self.statusdockwidget.widget().setFocus()
-
         self.init_state(settings, self.set_initial_size)
 
         # Route command output here
@@ -519,6 +518,8 @@ class MainView(standard.MainWindow):
         Interaction.safe_log = self.logwidget.safe_log
         Interaction.log(version.git_version_str() + '\n' +
                         N_('git cola version %s') % version.version())
+        # Focus the status widget; this must be deferred
+        QtCore.QTimer.singleShot(0, lambda: self.statuswidget.setFocus())
 
     def set_initial_size(self):
         self.resize(987, 610)
