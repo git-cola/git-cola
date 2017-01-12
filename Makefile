@@ -174,12 +174,21 @@ tags:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 .PHONY: tags
 
+# Update i18n files
+i18n: mo pot
+.PHONY: i18n
+
+i18n-update: i18n
+	git add po
+	git commit -sm'i18n: update translation template'
+.PHONY: i18n-update
+
 pot:
-	$(SETUP) build_pot -N -d po
+	$(SETUP) build_pot --no-lang --build-dir=po
 .PHONY: pot
 
 mo:
-	$(SETUP) build_mo -f
+	$(SETUP) build_mo --force
 .PHONY: mo
 
 git-cola.app:
