@@ -72,12 +72,14 @@ class WidgetMixin(object):
         # after all the events have been processsed.
         # Timer with a delay of zero will trigger immediately after control
         # returns to the main loop.
-        QtCore.QTimer.singleShot(0, lambda: self._store_unmaximized_dimensions())
+        QtCore.QTimer.singleShot(
+                0, lambda: self._store_unmaximized_dimensions())
 
     def moveEvent(self, event):
         super(WidgetMixin, self).moveEvent(event)
         # as per the QObject::resizeEvent() override
-        QtCore.QTimer.singleShot(0, lambda: self._store_unmaximized_dimensions())
+        QtCore.QTimer.singleShot(
+                0, lambda: self._store_unmaximized_dimensions())
 
     def _store_unmaximized_dimensions(self):
         state = self.windowState()
@@ -138,8 +140,9 @@ class WidgetMixin(object):
         # when maximized we don't want to overwrite saved x/y/width/height with
         # desktop dimensions.
         if maximized:
+            rect = self._unmaximized_rect
             try:
-                ret['x'], ret['y'], ret['width'], ret['height'] = self._unmaximized_rect
+                ret['x'], ret['y'], ret['width'], ret['height'] = rect
             except:
                 pass
         else:
