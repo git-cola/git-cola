@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+"""git-cola installer
+
+NOTE: This script is not typically invoked directly; use the Makefile
+targets instead.
+
+"""
+
 from __future__ import absolute_import, division, unicode_literals
 
 # Hacktastic hack to fix python's stupid ascii default encoding, which
@@ -7,10 +14,10 @@ import sys
 try:
     # pylint: disable=reload-builtin
     reload(sys)
-    sys.setdefaultencoding('utf-8')
+    # pylint: disable=no-member
+    sys.setdefaultencoding('utf8')
 except NameError:  # Python3
     pass
-
 
 import os
 from glob import glob
@@ -24,7 +31,7 @@ from extras import cmdclass
 here = os.path.dirname(__file__)
 version = os.path.join(here, 'cola', '_version.py')
 scope = {}
-exec(open(version).read(), scope)
+exec(open(version).read(), scope)  # pylint: disable=exec-used
 version = scope['VERSION']
 
 
@@ -51,10 +58,11 @@ def main():
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',
-          data_files=cola_data_files(vendor_libs))
+          data_files=_data_files(vendor_libs))
 
 
 def should_vendor_libs():
+    """Return True if we should include vendored libraries"""
     vendor_libs = not os.getenv('GIT_COLA_NO_VENDOR_LIBS', '')
     if '--no-vendor-libs' in sys.argv:
         sys.argv.remove('--no-vendor-libs')
@@ -62,7 +70,8 @@ def should_vendor_libs():
     return vendor_libs
 
 
-def cola_data_files(vendor_libs):
+def _data_files(vendor_libs):
+    """Return the list of data files"""
     data = [
         _app_path('share/git-cola/bin', '*'),
         _app_path('share/git-cola/icons', '*.png'),
@@ -88,6 +97,7 @@ def cola_data_files(vendor_libs):
 
 
 def _package(package, subdirs=None):
+    """Collect python files for a given python "package" name"""
     dirs = package.split('.')
     app_dir = os.path.join('share', 'git-cola', 'lib', *dirs)
     if subdirs:
@@ -97,6 +107,7 @@ def _package(package, subdirs=None):
 
 
 def _app_path(dirname, entry):
+    """Construct (dirname, [glob-expanded-entries relative to dirname])"""
     return (dirname, glob(os.path.join(dirname, entry)))
 
 
