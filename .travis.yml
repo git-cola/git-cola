@@ -51,4 +51,4 @@ script:
   # TODO tests currently fail on Python3 due to sip
   - env GIT_COLA_NO_HISTORY=1 make test flags=--verbose
   # pylint 1.4 uses python2.7+ syntax so skip pylint on python2.6
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint
+  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint3k

@@ -25,7 +25,10 @@ TAR = tar
 
 # Flags
 FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
-PYLINT_FLAGS = --py3k --output-format=colorized --rcfile=.pylintrc
+PYLINT_FLAGS = --rcfile=.pylintrc
+ifdef color
+    PYLINT_FLAGS += --output-format=colorized
+endif
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -213,8 +216,12 @@ flake8:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(PYTHON_DIRS)
 .PHONY: flake8
 
+pylint3k:
+	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
+.PHONY: pylint3k
+
 pylint:
-	$(PYLINT) $(PYLINT_FLAGS) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
+	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint
 
 requirements:
