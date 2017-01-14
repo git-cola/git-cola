@@ -104,7 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle(title)
 
         self.show_help_action = qtutils.add_action(
-                self, N_('Show Help'), show_help, hotkeys.QUESTION)
+            self, N_('Show Help'), show_help, hotkeys.QUESTION)
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -269,23 +269,23 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
         # actions
         self.copy_oid_action = qtutils.add_action(
-                self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy)
+            self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy)
 
         self.external_diff_action = qtutils.add_action(
-                self, N_('Launch Diff Tool'), self.external_diff.emit,
-                hotkeys.DIFF)
+            self, N_('Launch Diff Tool'), self.external_diff.emit,
+            hotkeys.DIFF)
 
         self.toggle_enabled_action = qtutils.add_action(
-                self, N_('Toggle Enabled'), self.toggle_enabled,
-                hotkeys.PRIMARY_ACTION)
+            self, N_('Toggle Enabled'), self.toggle_enabled,
+            hotkeys.PRIMARY_ACTION)
 
         self.action_pick = qtutils.add_action(
-                self, N_('Pick'), lambda: self.set_selected_to(PICK),
-                *hotkeys.REBASE_PICK)
+            self, N_('Pick'), lambda: self.set_selected_to(PICK),
+            *hotkeys.REBASE_PICK)
 
         self.action_reword = qtutils.add_action(
-                self, N_('Reword'), lambda: self.set_selected_to(REWORD),
-                *hotkeys.REBASE_REWORD)
+            self, N_('Reword'), lambda: self.set_selected_to(REWORD),
+            *hotkeys.REBASE_REWORD)
 
         self.action_edit = qtutils.add_action(
                 self, N_('Edit'), lambda: self.set_selected_to(EDIT),
