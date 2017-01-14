@@ -5,7 +5,7 @@ Releases
 Latest Release
 ==============
 
-:ref:`v2.9.1 <v2.9.1>` is the latest stable release.
+:ref:`v2.10 <v2.10>` is the latest stable release.
 
 Development version
 ===================
@@ -16,8 +16,8 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v2.10:
 
-git-cola v2.10 (beta)
-=====================
+git-cola v2.10
+==============
 
 Usability, bells and whistles
 -----------------------------
