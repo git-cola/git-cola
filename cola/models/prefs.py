@@ -30,6 +30,7 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+SPELL_CHECK = 'cola.spellcheck'
 
 
 def default_blame_viewer():
@@ -86,6 +87,8 @@ def history_browser():
 def linebreak():
     return gitcfg.current().get(LINEBREAK, True)
 
+def spellcheck():
+    return gitcfg.current().get(SPELL_CHECK, False)
 
 def sort_bookmarks():
     return gitcfg.current().get(SORT_BOOKMARKS, True)
