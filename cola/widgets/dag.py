@@ -1444,7 +1444,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 self.items[ref] = item
             scene.addItem(item)
 
-        self.layout_commits(commits)
+        self.layout_commits()
         self.link(commits)
 
     def link(self, commits):
@@ -1465,7 +1465,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 edge = Edge(parent_item, commit_item)
                 scene.addItem(edge)
 
-    def layout_commits(self, nodes):
+    def layout_commits(self):
         positions = self.position_nodes()
         for oid, (x, y) in positions.items():
             item = self.items[oid]
