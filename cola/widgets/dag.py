@@ -1466,7 +1466,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 scene.addItem(edge)
 
     def layout_commits(self, nodes):
-        positions = self.position_nodes(nodes)
+        positions = self.position_nodes()
         for oid, (x, y) in positions.items():
             item = self.items[oid]
             item.setPos(x, y)
@@ -1582,7 +1582,7 @@ coordinates based on its row and column multiplied by the coefficient.
                 if child.column is None:
                     child.column = node.column
 
-    def position_nodes(self, nodes):
+    def position_nodes(self):
         self.recompute_columns()
 
         x_max = self.x_max
