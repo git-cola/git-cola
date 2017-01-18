@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import collections
 import math
+from itertools import count
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -1443,7 +1444,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 self.items[ref] = item
             scene.addItem(item)
 
-        self.layout_commits(commits)
+        self.layout_commits()
         self.link(commits)
 
     def link(self, commits):
@@ -1464,55 +1465,142 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 edge = Edge(parent_item, commit_item)
                 scene.addItem(edge)
 
-    def layout_commits(self, nodes):
-        positions = self.position_nodes(nodes)
+    def layout_commits(self):
+        positions = self.position_nodes()
         for oid, (x, y) in positions.items():
             item = self.items[oid]
             item.setPos(x, y)
 
-    def position_nodes(self, nodes):
-        positions = {}
+    """Commit node layout technique
+
+    Nodes are aligned by a mesh. Node row is generation number of
+corresponding commit. Columns are distributed using the algorithm described
+below.
+
+    Column assignment algorithm
+
+    The algorithm traverses nodes in generation ascend order. This guarantees
+that a node will be visited after all its parents.
+
+    The set of occupied columns are maintained during work. Initially it is
+empty and no node occupied a column. Empty columns are selected by request in
+index ascend order starting from 0. Each column has its reference counter.
+Being allocated a column is assigned 1 reference. When a counter reaches 0 the
+column is removed from occupied column set. Currently no counter becomes
+gather than 1, but leave_column method is written in generic way.
+
+    Initialization is performed by reset_columns method. Column allocation is
+implemented in alloc_column method. Initialization and main loop are in
+recompute_columns method.
+
+    Actions for each node are follow.
+    1. If the node was not assigned a column then it is assigned empty one.
+    2. Handle columns occupied by parents. Handling is leaving columns of some
+parents. One of parents occupies same column as the node. The column should not
+be left. Hence if the node is not a merge then nothing is done during the step.
+Other parents of merge node are processed in follow way.
+    2.1. If parent is fork then a brother node could be at column of the
+parent. So, the column cannot be left. Note that the brother itself or one of
+its descendant will perform the column leaving at appropriate time.
+    2.2 The parent may not occupy a column. This is possible when some commits
+were not added to the DAG (during repository reading, for instance). No column
+should be left.
+    2.3. Leave column of the parent. The parent is a regular commit. Its
+outgoing edge is turned form its column to column of the node. Hence, the
+column is left.
+    3. Define columns of children. If a child have a column assigned then it
+should no be overridden. One of children is assigned same column as the node.
+If the node is a fork then the child is chosen in generation descent order.
+This is a heuristic and it only affects resulting appearance of the graph.
+Other children are assigned empty columns in same order. It is the heuristic
+too.
+
+    After the algorithm was done all commit graphic items are assigned
+coordinates based on its row and column multiplied by the coefficient.
+    """
+
+    def reset_columns(self):
+        for node in self.commits:
+            node.column = None
+        self.columns = {}
+
+    def alloc_column(self):
+        columns = self.columns
+        for c in count(0):
+            if c not in columns:
+                break
+        columns[c] = 1
+        return c
+
+    def leave_column(self, column):
+        count = self.columns[column]
+        if count == 1:
+            del self.columns[column]
+        else:
+            self.columns[column] = count - 1
+
+    def recompute_columns(self):
+        self.reset_columns()
+
+        for node in self.sort_by_generation(list(self.commits)):
+            if node.column is None:
+                # Node is either root or its parent is not in items. The last
+                # happens when tree loading is in progress. Allocate new
+                # columns for such nodes.
+                node.column = self.alloc_column()
+
+            if node.is_merge():
+                for parent in node.parents:
+                    if parent.is_fork():
+                        continue
+                    if parent.column == node.column:
+                        continue
+                    if parent.column is None:
+                        # Parent is in not among commits being layoutted, so it
+                        # have no column.
+                        continue
+                    self.leave_column(parent.column)
+
+            # Propagate column to children which are still without one.
+            if node.is_fork():
+                sorted_children = sorted(node.children,
+                                         key=lambda c: c.generation,
+                                         reverse=True)
+                citer = iter(sorted_children)
+                for child in citer:
+                    if child.column is None:
+                        # Top most child occupies column of parent.
+                        child.column = node.column
+                        break
+
+                # Rest children are allocated new column.
+                for child in citer:
+                    if child.column is None:
+                        child.column = self.alloc_column()
+            elif node.children:
+                child = node.children[0]
+                if child.column is None:
+                    child.column = node.column
+
+    def position_nodes(self):
+        self.recompute_columns()
 
         x_max = self.x_max
-        y_min = self.y_min
+        x_min = self.x_min
         x_off = self.x_off
         y_off = self.y_off
-        x_offsets = self.x_offsets
+        y_min = y_off
 
-        for node in nodes:
-            generation = node.generation
-            oid = node.oid
+        positions = {}
 
-            if node.is_fork():
-                # This is a fan-out so sweep over child generations and
-                # shift them to the right to avoid overlapping edges
-                child_gens = [c.generation for c in node.children]
-                maxgen = max(child_gens)
-                for g in range(generation + 1, maxgen):
-                    x_offsets[g] += x_off
+        for node in self.commits:
+            x_pos = x_min + node.column * x_off
+            y_pos = y_off - node.generation * y_off
 
-            if len(node.parents) == 1:
-                # Align nodes relative to their parents
-                parent_gen = node.parents[0].generation
-                parent_off = x_offsets[parent_gen]
-                x_offsets[generation] = max(parent_off-x_off,
-                                            x_offsets[generation])
-
-            cur_xoff = x_offsets[generation]
-            next_xoff = cur_xoff
-            next_xoff += x_off
-            x_offsets[generation] = next_xoff
-
-            x_pos = cur_xoff
-            y_pos = -generation * y_off
-
-            y_pos = min(y_pos, y_min - y_off)
-
-            # y_pos = y_off
-            positions[oid] = (x_pos, y_pos)
+            positions[node.oid] = (x_pos, y_pos)
 
             x_max = max(x_max, x_pos)
-            y_min = y_pos
+            y_min = min(y_min, y_pos)
 
         self.x_max = x_max
         self.y_min = y_min
