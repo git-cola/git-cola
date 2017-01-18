@@ -1,3 +1,5 @@
+"""Widgets for Fetch, Push, and Pull"""
+
 from __future__ import division, absolute_import, unicode_literals
 import fnmatch
 
@@ -24,14 +26,17 @@ PULL = 'PULL'
 
 
 def fetch():
+    """Fetch from remote repositories"""
     return run(Fetch)
 
 
 def push():
+    """Push to remote repositories"""
     return run(Push)
 
 
 def pull():
+    """Pull from remote repositories"""
     return run(Pull)
 
 
@@ -77,6 +82,7 @@ def disable(value, *checkboxes):
             checkbox.setChecked(False)
 
 class ActionTask(qtutils.Task):
+    """Run actions asynchronously"""
 
     def __init__(self, parent, model_action, remote, kwargs):
         qtutils.Task.__init__(self, parent)
@@ -90,10 +96,11 @@ class ActionTask(qtutils.Task):
 
 
 class RemoteActionDialog(standard.Dialog):
+    """Interface for performing remote operations"""
 
     def __init__(self, model, action, title, parent=None, icon=None):
-        """Customizes the dialog based on the remote action
-        """
+        """Customize the dialog based on the remote action"""
+
         standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.action = action
@@ -281,12 +288,15 @@ class RemoteActionDialog(standard.Dialog):
         width = desktop.width()/2
         height = desktop.height() - desktop.height()/4
         self.init_state(None, self.resize, width, height)
+
         self.remote_name.setFocus()
 
     def set_rebase(self, value):
+        """Check the rebase checkbox"""
         self.rebase_checkbox.setChecked(value)
 
     def set_field_defaults(self):
+        """Set sensible initial defaults"""
         # Default to "git fetch origin master"
         action = self.action
         if action == FETCH or action == PULL:
@@ -306,31 +316,35 @@ class RemoteActionDialog(standard.Dialog):
             self.set_remote_branch('')
 
     def set_remote_name(self, remote_name):
+        """Set the remote name"""
         self.remote_name.setText(remote_name)
         if remote_name:
             self.remote_name.selectAll()
 
     def set_local_branch(self, branch):
+        """Set the local branch name"""
         self.local_branch.setText(branch)
         if branch:
             self.local_branch.selectAll()
 
     def set_remote_branch(self, branch):
+        """Set the remote branch name"""
         self.remote_branch.setText(branch)
         if branch:
             self.remote_branch.selectAll()
 
     def set_remote_branches(self, branches):
+        """Set the list of remote branches"""
         self.remote_branches.clear()
         self.remote_branches.addItems(branches)
         self.filtered_remote_branches = branches
 
     def select_first_remote(self):
-        """Selects the first remote in the list view"""
+        """Select the first remote in the list view"""
         return self.select_remote(0)
 
     def select_remote(self, idx):
-        """Selects a remote by index"""
+        """Select a remote by index"""
         item = self.remotes.item(idx)
         if item:
             item.setSelected(True)
@@ -440,6 +454,7 @@ class RemoteActionDialog(standard.Dialog):
     # Actions
 
     def push_to_all(self, dummy_remote, *args, **kwargs):
+        """Push to all selected remotes"""
         selected_remotes = self.selected_remotes
         all_results = None
         for remote in selected_remotes:
@@ -448,6 +463,7 @@ class RemoteActionDialog(standard.Dialog):
         return all_results
 
     def action_callback(self):
+        """Perform the actual fetch/push/pull operation"""
         action = self.action
         if action == FETCH:
             model_action = self.model.fetch
@@ -513,7 +529,7 @@ class RemoteActionDialog(standard.Dialog):
                            finish=self.action_completed)
 
     def action_completed(self, task):
-        # Grab the results of the action and finish up
+        """Grab the results of the action and finish up"""
         status, out, err = task.result
         self.buttons.setEnabled(True)
 
@@ -550,17 +566,20 @@ class RemoteActionDialog(standard.Dialog):
 
 # Use distinct classes so that each saves its own set of preferences
 class Fetch(RemoteActionDialog):
+    """Fetch from remote repositories"""
 
     def __init__(self, model, parent=None):
         RemoteActionDialog.__init__(self, model, FETCH, N_('Fetch'),
                                     parent=parent, icon=icons.repo())
 
     def export_state(self):
+        """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
         state['tags'] = self.tags_checkbox.isChecked()
         return state
 
     def apply_state(self, state):
+        """Apply persistent settings"""
         result = RemoteActionDialog.apply_state(self, state)
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
@@ -568,18 +587,21 @@ class Fetch(RemoteActionDialog):
 
 
 class Push(RemoteActionDialog):
+    """Push to remote repositories"""
 
     def __init__(self, model, parent=None):
         RemoteActionDialog.__init__(self, model, PUSH, N_('Push'),
                                     parent=parent, icon=icons.push())
 
     def export_state(self):
+        """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
         state['tags'] = self.tags_checkbox.isChecked()
         state['prompt'] = self.prompt_checkbox.isChecked()
         return state
 
     def apply_state(self, state):
+        """Apply persistent settings"""
         result = RemoteActionDialog.apply_state(self, state)
 
         tags = bool(state.get('tags', False))
@@ -587,17 +609,18 @@ class Push(RemoteActionDialog):
 
         prompt = bool(state.get('prompt', True))
         self.prompt_checkbox.setChecked(prompt)
-
         return result
 
 
 class Pull(RemoteActionDialog):
+    """Pull from remote repositories"""
 
     def __init__(self, model, parent=None):
         RemoteActionDialog.__init__(self, model, PULL, N_('Pull'),
                                     parent=parent, icon=icons.pull())
 
     def apply_state(self, state):
+        """Apply persistent settings"""
         result = RemoteActionDialog.apply_state(self, state)
         # Rebase has the highest priority
         rebase = bool(state.get('rebase', False))
@@ -616,6 +639,7 @@ class Pull(RemoteActionDialog):
         return result
 
     def export_state(self):
+        """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
 
         state['ff_only'] = self.ff_only_checkbox.isChecked()
