@@ -177,52 +177,64 @@ class RemoteActionDialog(standard.Dialog):
         self.buttons = utils.Group(self.action_button, self.close_button)
 
         self.local_branch_layout = qtutils.hbox(
-                defs.small_margin,
-                defs.spacing,
-                self.local_label,
-                self.local_branch)
+            defs.small_margin,
+            defs.spacing,
+            self.local_label,
+            self.local_branch)
+
+        self.remote_layout = qtutils.hbox(
+            defs.small_margin,
+            defs.spacing,
+            self.remote_label,
+            self.remote_name)
 
         self.remote_branch_layout = qtutils.hbox(
-                defs.small_margin,
-                defs.spacing,
-                self.remote_label,
-                self.remote_name)
-
-        self.remote_branches_layout = qtutils.hbox(
-                defs.small_margin,
-                defs.spacing,
-                self.remote_branch_label,
-                self.remote_branch)
+            defs.small_margin,
+            defs.spacing,
+            self.remote_branch_label,
+            self.remote_branch)
 
         self.options_layout = qtutils.hbox(
-                defs.no_margin,
-                defs.button_spacing,
-                self.ff_only_checkbox,
-                self.no_ff_checkbox,
-                self.tags_checkbox,
-                self.rebase_checkbox,
-                self.upstream_checkbox,
-                self.prompt_checkbox,
-                self.force_checkbox,
-                qtutils.STRETCH,
-                self.close_button,
-                self.action_button)
+            defs.no_margin,
+            defs.button_spacing,
+            self.ff_only_checkbox,
+            self.no_ff_checkbox,
+            self.tags_checkbox,
+            self.rebase_checkbox,
+            self.upstream_checkbox,
+            self.prompt_checkbox,
+            self.force_checkbox,
+            qtutils.STRETCH,
+            self.close_button,
+            self.action_button)
+
+        self.remote_input_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing,
+            self.remote_layout, self.remotes)
+
+        self.local_branch_input_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing,
+            self.local_branch_layout, self.local_branches)
+
+        self.remote_branch_input_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing,
+            self.remote_branch_layout, self.remote_branches)
 
         if action == PUSH:
             widgets = (
-                    self.remote_branch_layout, self.remotes,
-                    self.local_branch_layout, self.local_branches,
-                    self.remote_branches_layout, self.remote_branches,
-                    self.options_layout,
-            )
+                self.remote_input_layout,
+                self.local_branch_input_layout,
+                self.remote_branch_input_layout)
         else:  # fetch and pull
             widgets = (
-                    self.remote_branch_layout, self.remotes,
-                    self.remote_branches_layout, self.remote_branches,
-                    self.local_branch_layout, self.local_branches,
-                    self.options_layout,
-            )
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, *widgets)
+                self.remote_input_layout,
+                self.remote_branch_input_layout,
+                self.local_branch_input_layout)
+        self.top_layout = qtutils.hbox(defs.no_margin, defs.spacing, *widgets)
+
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing,
+            self.top_layout, self.options_layout)
         self.setLayout(self.main_layout)
 
         default_remote = gitcmds.default_remote() or 'origin'
