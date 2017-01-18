@@ -35,6 +35,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/645
 
+* `git dag` now uses an improved algorithm for laying out the graph,
+  which avoids collisions under certain graph configurations.
+
+  https://github.com/git-cola/git-cola/pull/648
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using
