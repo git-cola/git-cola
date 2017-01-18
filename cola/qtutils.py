@@ -26,6 +26,14 @@ STRETCH = object()
 SKIPPED = object()
 
 
+def disconnect(signal):
+    """Disconnect signal from all slots"""
+    try:
+        signal.disconnect()
+    except TypeError:  # allow unconnected slots
+        pass
+
+
 def connect_action(action, fn):
     """Connect an action to a function"""
     action.triggered[bool].connect(lambda x: fn())

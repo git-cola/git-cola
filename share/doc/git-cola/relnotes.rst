@@ -14,6 +14,16 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v2.11:
+
+git-cola v2.11 (beta)
+=====================
+
+Fixes
+=====
+* Properly handle the case where an existing file is untracked using
+  the File Browser.
+
 .. _v2.10:
 
 git-cola v2.10
