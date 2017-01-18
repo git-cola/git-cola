@@ -563,6 +563,10 @@ class RemoteActionDialog(standard.Dialog):
         Interaction.critical(self.windowTitle(),
                              message=message, details=details)
 
+    def done(self, exit_code):
+        self.save_state()
+        return super(RemoteActionDialog, self).done(exit_code)
+
 
 # Use distinct classes so that each saves its own set of preferences
 class Fetch(RemoteActionDialog):
@@ -647,7 +651,3 @@ class Pull(RemoteActionDialog):
         state['rebase'] = self.rebase_checkbox.isChecked()
 
         return state
-
-    def done(self, exit_code):
-        self.save_state()
-        return RemoteActionDialog.done(self, exit_code)
