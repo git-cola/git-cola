@@ -170,6 +170,7 @@ class SettingsFormWidget(FormWidget):
         self.sort_bookmarks = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()
         self.save_gui_settings = qtutils.checkbox()
+        self.check_spelling = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -186,6 +187,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Bold with dark background font instead of italic '
                         'headers (restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
+        self.add_row(N_('Check spelling'), self.check_spelling)
 
         self.set_config({
             prefs.SAVEWINDOWSETTINGS: (self.save_gui_settings, True),
@@ -202,6 +204,7 @@ class SettingsFormWidget(FormWidget):
                                  prefs.default_blame_viewer()),
             prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
             prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
+            prefs.SPELL_CHECK: (self.check_spelling, False),
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)

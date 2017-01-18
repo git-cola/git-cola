@@ -135,7 +135,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
-        self.check_spelling_action.setChecked(False)
+        self.check_spelling_action.setChecked(prefs.spellcheck())
+        self.toggle_check_spelling(prefs.spellcheck())
 
         # Line wrapping
         self.autowrap_action = self.actions_menu.addAction(
@@ -218,6 +219,16 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.setTabOrder(self.summary, self.description)
         self.setFont(qtutils.diff_font())
         self.setFocusProxy(self.summary)
+
+        gitcfg.current().add_observer(gitcfg.current().message_user_config_changed, self.on_user_setting_changed)
+
+    def on_user_setting_changed(self, key, value):
+        if key != prefs.SPELL_CHECK:
+            return
+        if self.check_spelling_action.isChecked() == value:
+            return
+        self.check_spelling_action.setChecked(value)
+        self.toggle_check_spelling(value)
 
     def refresh(self):
         enabled = self.model.stageable() or self.model.unstageable()
@@ -514,6 +525,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
     def toggle_check_spelling(self, enabled):
         spellcheck = self.description.spellcheck
 
+        if gitcfg.current().get_user(prefs.SPELL_CHECK) != enabled:
+            gitcfg.current().set_user(prefs.SPELL_CHECK, enabled)
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
