@@ -277,7 +277,6 @@ class RemoteActionDialog(standard.Dialog):
             self.local_label.hide()
             self.local_branch.hide()
             self.local_branches.hide()
-            self.remote_branch.setFocus()
         else:
             # Pull-only options
             self.rebase_checkbox.hide()
