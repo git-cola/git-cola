@@ -224,6 +224,10 @@ pylint:
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint
 
+pylint-check:
+	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
+.PHONY: pylint-check
+
 requirements:
 	$(PIP) install --requirement requirements.txt
 	$(PIP) install --requirement extras/requirements-dev.txt
