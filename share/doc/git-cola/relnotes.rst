@@ -23,6 +23,11 @@ Usability, bells and whistles
 -----------------------------
 * Autocompletion was added to the `Fetch`, `Push`, and `Pull` dialogs.
 
+* The commit message editor now remembers the "Spellcheck" setting
+  after exiting.
+
+  https://github.com/git-cola/git-cola/pull/645
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using
