@@ -56,25 +56,28 @@ def run(RemoteDialog):
     return view
 
 
-def combine(result, existing):
-    if existing is None:
-        return result
+def combine(result, prev):
+    """Combine multiple (status, out, err) tuples into a combined tuple
 
-    if type(existing) is tuple:
-        if len(existing) == 3:
-            return (max(existing[0], result[0]),
-                    combine(existing[1], result[1]),
-                    combine(existing[2], result[2]))
-        else:
-            raise AssertionError('combine() with length %d' % len(existing))
+    The current state is passed in via `prev`.
+    The status code is a max() over all the subprocess status codes.
+    Individual (out, err) strings are sequentially concatenated together.
+
+    """
+    if isinstance(prev, (tuple, list)):
+        if len(prev) != 3:
+            raise AssertionError('combine() with length %d' % len(prev))
+        combined = (max(prev[0], result[0]),
+                    combine(prev[1], result[1]),
+                    combine(prev[2], result[2]))
+    elif prev and result:
+        combined = prev + '\n\n' + result
+    elif prev:
+        combined = prev
     else:
-        if existing and result:
-            return existing + '\n\n' + result
-        elif existing:
-            return existing
-        else:
-            return result
+        combined = result
 
+    return combined
 
 def disable(value, *checkboxes):
     if value:
