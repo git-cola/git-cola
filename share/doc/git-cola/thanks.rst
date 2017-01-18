@@ -40,6 +40,7 @@ Thanks
 * Drugoy
 * Eric Drechsel
 * Fabio Coatti
+* Filip Danilović
 * Garoe Dorta
 * Geoffrey van Wyk
 * geotavros
