@@ -57,9 +57,16 @@ def share(*args):
     return prefix('share', 'git-cola', *args)
 
 
-def icon_dir():
+def icon_dir(style=None):
     """Return the path to the style dir within the cola install tree."""
-    return share('icons')
+    if style:
+        style_dir = share('icons', style)
+        if os.path.isdir(style_dir):
+            return style_dir
+        else:
+            return share('icons')
+    else:
+        return share('icons')
 
 
 def config_home(*args):
