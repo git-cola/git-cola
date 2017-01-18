@@ -954,6 +954,8 @@ class Commit(QtWidgets.QGraphicsItem):
         self.pressed = False
         self.dragged = False
 
+        self.edges = {}
+
     def blockSignals(self, blocked):
         self.notifier.notification_enabled = not blocked
 
@@ -1501,7 +1503,14 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
-                edge = Edge(parent_item, commit_item)
+                try:
+                    edge = parent_item.edges[commit.oid]
+                except KeyError:
+                    edge = Edge(parent_item, commit_item)
+                else:
+                    continue
+                parent_item.edges[commit.oid] = edge
+                commit_item.edges[parent.oid] = edge
                 scene.addItem(edge)
 
     def layout_commits(self):
