@@ -1,9 +1,9 @@
 Git Cola Dark Icons
 --------------
-All icons in this directory, besides color inversion, 
-are unmodified original ones. All kudos and copyrights go to their 
+All icons in this directory, besides color inversion,
+are unmodified original ones. All kudos and copyrights go to their
 respective authors ( see original readme bellow ).
-  
+
 2017 Filip Danilovic
 
 --------------------
