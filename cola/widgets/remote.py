@@ -365,19 +365,22 @@ class RemoteActionDialog(standard.Dialog):
             item.setSelected(True)
             self.remotes.setCurrentItem(item)
             self.set_remote_name(item.text())
-            return True
+            result = True
         else:
-            return False
+            result = False
+        return result
 
     def select_local_branch(self, idx):
         """Selects a local branch by index in the list view"""
         item = self.local_branches.item(idx)
-        if not item:
-            return False
-        item.setSelected(True)
-        self.local_branches.setCurrentItem(item)
-        self.local_branch.setText(item.text())
-        return True
+        if item:
+            item.setSelected(True)
+            self.local_branches.setCurrentItem(item)
+            self.local_branch.setText(item.text())
+            result = True
+        else:
+            result = False
+        return result
 
     def display_remotes(self, widget):
         """Display the available remotes in a listwidget"""
