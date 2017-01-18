@@ -579,11 +579,6 @@ class RemoteActionDialog(standard.Dialog):
         status, out, err = task.result
         self.buttons.setEnabled(True)
 
-        already_up_to_date = N_('Already up-to-date.')
-
-        if not out:  # git fetch --tags --verbose doesn't print anything...
-            out = already_up_to_date
-
         command = 'git %s' % self.action.lower()
         message = (N_('"%(command)s" returned exit status %(status)d') %
                    dict(command=command, status=status))
