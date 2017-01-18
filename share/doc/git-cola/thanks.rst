@@ -38,6 +38,7 @@ Thanks
 * deniz1a
 * Dmitry Kann
 * Drugoy
+* Efimov Vasily
 * Eric Drechsel
 * Fabio Coatti
 * Filip Danilović
