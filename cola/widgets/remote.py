@@ -130,6 +130,9 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_label.setText(N_('Remote'))
 
         self.remote_name = QtWidgets.QLineEdit()
+        self.remote_name.editingFinished.connect(self.remote_name_edited)
+        self.remote_name.textEdited.connect(lambda x: self.remote_name_edited())
+
         self.remotes = QtWidgets.QListWidget()
         if action == PUSH:
             mode = QtWidgets.QAbstractItemView.ExtendedSelection
@@ -403,11 +406,13 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_name(selection)
         self.selected_remotes = qtutils.selected_items(self.remotes,
                                                        self.model.remotes)
+        self.set_remote_to(selection, self.selected_remotes)
 
+    def set_remote_to(self, remote, selected_remotes):
         all_branches = gitcmds.branch_list(remote=True)
         branches = []
         patterns = []
-        for remote in self.selected_remotes:
+        for remote in selected_remotes:
             pat = remote + '/*'
             patterns.append(pat)
 
@@ -421,6 +426,11 @@ class RemoteActionDialog(standard.Dialog):
         else:
             self.set_remote_branches(all_branches)
         self.set_remote_branch('')
+
+    def remote_name_edited(self):
+        """Update the current remote when the remote name is typed manually"""
+        remote = self.remote_name.text()
+        self.set_remote_to(remote, [remote])
 
     def update_local_branches(self):
         """Update the local/remote branch names when a branch is selected"""
