@@ -413,7 +413,3 @@ class GitConfig(observable.Observable):
         except Exception:
             r, g, b = struct.unpack(struct_layout, unhexlify(default))
         return (r, g, b)
-
-    def icon_style(self):
-        theme = self.get('cola.iconstyle', None)
-        return theme

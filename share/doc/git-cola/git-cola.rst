@@ -420,13 +420,6 @@ cola.fontdiff
 -------------
 Specifies the font to use for `git cola`'s diff display.
 
-cola.iconstyle
---------------
-Specifies the icon style to use throughout `git-cola`. The style specified
-must be the name of the subdirectory containing the icons, which in turn must be
-placed in the main "icons" directory. If unset, or set to "light", then the
-default style will be used.
-
 cola.inotify
 ------------
 Set to `false` to disable file system change monitoring.  Defaults to `true`,
@@ -551,6 +544,15 @@ environment variables.
 
 ENVIRONMENT VARIABLES
 =====================
+
+GIT_COLA_ICON_THEME
+-------------------
+Specifies the icon theme to use throughout `git-cola`. The theme specified
+must be the name of the subdirectory containing the icons, which in turn must
+be placed in the main "icons" directory. If unset, or set to "light", then the
+default style will be used.
+
+If set to an absolute directory path then icons in that directory will be used.
 
 GIT_COLA_SCALE
 --------------
