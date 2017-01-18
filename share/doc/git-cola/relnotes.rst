@@ -21,6 +21,13 @@ git-cola v2.11 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* `git cola` now includes a dark icon theme.  The dark icon theme can be
+  activated either by setting the `GIT_COLA_ICON_THEME` environment variable
+  to `dark`, by configuring `cola.icontheme` to `dark`, or by specifying
+  `--icon-theme=dark` on the command line.
+
+  https://github.com/git-cola/git-cola/pull/638
+
 * Autocompletion was added to the `Fetch`, `Push`, and `Pull` dialogs.
 
 * The commit message editor now remembers the "Spellcheck" setting

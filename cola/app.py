@@ -125,12 +125,12 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, argv, locale=None, gui=True):
+    def __init__(self, argv, locale=None, gui=True, icon_theme=None):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
         qtutils.install()
-        icons.install()
+        icons.install(icon_theme)
 
         fsmonitor.current().files_changed.connect(self._update_files)
 
@@ -282,6 +282,14 @@ def add_common_arguments(parser):
     parser.add_argument('--prompt', action='store_true', default=False,
                         help='prompt for a repository')
 
+    # Specify the icon theme
+    default_icon_theme = os.getenv('GIT_COLA_ICON_THEME')
+    if not default_icon_theme:
+        default_icon_theme = gitcfg.current().get('cola.icontheme')
+    parser.add_argument('--icon-theme', metavar='<theme>',
+                        default=default_icon_theme,
+                        help='specify an icon theme (name or directory)')
+
     # Resume an X Session Management session
     parser.add_argument('-session', metavar='<session>', default=None,
                         help=argparse.SUPPRESS)
@@ -289,7 +297,7 @@ def add_common_arguments(parser):
 
 def new_application(args):
     # Initialize the app
-    return ColaApplication(sys.argv)
+    return ColaApplication(sys.argv, icon_theme=args.icon_theme)
 
 
 def new_model(app, repo, prompt=False, settings=None):
