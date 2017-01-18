@@ -373,7 +373,7 @@ class RemoteActionDialog(standard.Dialog):
             displayed.append(display)
         qtutils.set_items(widget, displayed)
 
-    def update_remotes(self, *rest):
+    def update_remotes(self):
         """Update the remote name when a remote from the list is selected"""
         widget = self.remotes
         remotes = self.model.remotes
@@ -403,7 +403,7 @@ class RemoteActionDialog(standard.Dialog):
             self.set_remote_branches(all_branches)
         self.set_remote_branch('')
 
-    def update_local_branches(self, *rest):
+    def update_local_branches(self):
         """Update the local/remote branch names when a branch is selected"""
         branches = self.model.local_branches
         widget = self.local_branches
@@ -413,7 +413,7 @@ class RemoteActionDialog(standard.Dialog):
         self.set_local_branch(selection)
         self.set_remote_branch(selection)
 
-    def update_remote_branches(self, *rest):
+    def update_remote_branches(self):
         """Update the remote branch name when a branch is selected"""
         widget = self.remote_branches
         branches = self.filtered_remote_branches
