@@ -121,6 +121,7 @@ Thanks
 * Stefan Naewe
 * Steffen Prohaska
 * Sven Claussner
+* Szymon Judasz
 * Taylor Braun-Jones
 * Thiemo van Engelen
 * Thomas Kluyver
