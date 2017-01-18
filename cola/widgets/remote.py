@@ -79,7 +79,9 @@ def combine(result, prev):
 
     return combined
 
-def disable(value, *checkboxes):
+
+def uncheck(value, *checkboxes):
+    """Uncheck the specified checkboxes if value is True"""
     if value:
         for checkbox in checkboxes:
             checkbox.setChecked(False)
@@ -265,14 +267,13 @@ class RemoteActionDialog(standard.Dialog):
         remote.itemSelectionChanged.connect(self.update_remote_branches)
 
         self.no_ff_checkbox.toggled.connect(
-                lambda x: disable(x, self.ff_only_checkbox,
-                                  self.rebase_checkbox))
+            lambda x: uncheck(x, self.ff_only_checkbox, self.rebase_checkbox))
+
         self.ff_only_checkbox.toggled.connect(
-                lambda x: disable(x, self.no_ff_checkbox,
-                                  self.rebase_checkbox))
+            lambda x: uncheck(x, self.no_ff_checkbox, self.rebase_checkbox))
+
         self.rebase_checkbox.toggled.connect(
-                lambda x: disable(x, self.no_ff_checkbox,
-                                  self.ff_only_checkbox))
+            lambda x: uncheck(x, self.no_ff_checkbox, self.ff_only_checkbox))
 
         connect_button(self.action_button, self.action_callback)
         connect_button(self.close_button, self.close)
