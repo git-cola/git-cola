@@ -86,6 +86,17 @@ def uncheck(value, *checkboxes):
         for checkbox in checkboxes:
             checkbox.setChecked(False)
 
+
+def strip_remotes(remote_branches):
+    """Strip the <remote>/ prefixes from branches
+
+    e.g. "origin/master" becomes "master".
+
+    """
+    branches = [utils.strip_one(branch) for branch in remote_branches]
+    return [branch for branch in branches if branch != 'HEAD']
+
+
 class ActionTask(qtutils.Task):
     """Run actions asynchronously"""
 
@@ -123,6 +134,8 @@ class RemoteActionDialog(standard.Dialog):
         self.local_label.setText(N_('Local Branch'))
 
         self.local_branch = QtWidgets.QLineEdit()
+        qtutils.add_completer(self.local_branch, self.model.local_branches)
+
         self.local_branches = QtWidgets.QListWidget()
         self.local_branches.addItems(self.model.local_branches)
 
@@ -130,6 +143,7 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_label.setText(N_('Remote'))
 
         self.remote_name = QtWidgets.QLineEdit()
+        qtutils.add_completer(self.remote_name, self.model.remotes)
         self.remote_name.editingFinished.connect(self.remote_name_edited)
         self.remote_name.textEdited.connect(lambda x: self.remote_name_edited())
 
@@ -143,6 +157,9 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branch_label.setText(N_('Remote Branch'))
 
         self.remote_branch = QtWidgets.QLineEdit()
+        remote_branches = strip_remotes(self.model.remote_branches)
+        qtutils.add_completer(self.remote_branch, remote_branches)
+
         self.remote_branches = QtWidgets.QListWidget()
         self.remote_branches.addItems(self.model.remote_branches)
 
@@ -356,6 +373,7 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branches.clear()
         self.remote_branches.addItems(branches)
         self.filtered_remote_branches = branches
+        qtutils.add_completer(self.remote_branch, strip_remotes(branches))
 
     def select_first_remote(self):
         """Select the first remote in the list view"""

@@ -19,6 +19,10 @@ Clone the git-cola repo to get the latest development version:
 git-cola v2.11 (beta)
 =====================
 
+Usability, bells and whistles
+-----------------------------
+* Autocompletion was added to the `Fetch`, `Push`, and `Pull` dialogs.
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using

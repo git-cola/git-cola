@@ -187,6 +187,14 @@ def textbrowser(text=None):
     return widget
 
 
+def add_completer(widget, items):
+    """Add simple completion to a widget"""
+    completer = QtWidgets.QCompleter(items, widget)
+    completer.setCaseSensitivity(Qt.CaseInsensitive)
+    completer.setCompletionMode(QtWidgets.QCompleter.InlineCompletion)
+    widget.setCompleter(completer)
+
+
 def prompt(msg, title=None, text=''):
     """Presents the user with an input widget and returns the input."""
     if title is None:
