@@ -55,6 +55,13 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(self.config.get('does.not.exist'), None)
         self.assertEqual(self.config.get('does.not.exist', default=42), 42)
 
+    def test_get_all(self):
+        """Test getting multiple values in get_all()"""
+        self.git('config', '--add', 'test.value', 'abc')
+        self.git('config', '--add', 'test.value', 'def')
+        expect = ['abc', 'def']
+        self.assertEqual(expect, self.config.get_all('test.value'))
+
     def test_guitool_opts(self):
         self.git('config', 'guitool.hello world.cmd', 'hello world')
         opts = self.config.get_guitool_opts('hello world')

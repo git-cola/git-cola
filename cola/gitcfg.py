@@ -277,6 +277,15 @@ class GitConfig(observable.Observable):
         """Return the string value for a config key."""
         return self._get(self._all, key, default)
 
+    def get_all(self, key):
+        """Return all values for a key"""
+        status, out, err = self.git.config(key, z=True, get_all=True)
+        if status == 0:
+            result = [x for x in out.rstrip(chr(0)).split(chr(0)) if x]
+        else:
+            result = []
+        return result
+
     def get_user(self, key, default=None):
         return self._get(self._user, key, default)
 
