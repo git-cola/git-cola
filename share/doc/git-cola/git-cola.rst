@@ -422,16 +422,26 @@ Specifies the font to use for `git cola`'s diff display.
 
 cola.icontheme
 --------------
-Specifies the icon theme to use throughout `git cola`. The theme specified
+Specifies the icon themes to use throughout `git cola`. The theme specified
 must be the name of the subdirectory containing the icons, which in turn must
 be placed in the inside the main "icons" directory in `git cola`'s
-installation prefix. If unset, or set to "light", then the default style will
-be used.
+installation prefix.
+
+If unset, or set either "light" or "default", then the default style will be
+used.  If set to "dark" then the built-in "dark" icon theme, which is
+suitable for a dark window manager theme, will be used.
 
 If set to an absolute directory path then icons in that directory will be used.
+This value can be set to multiple values using,
+`git config --add cola.icontheme $theme`.
 
 This setting can be overridden by the `GIT_COLA_ICON_THEME` environment
-variable, or by specifying `--icon-theme=<theme>` on the command line.
+variable, which can specify multiple themes using a colon-separated value.
+
+The icon theme can also be specified by passing `--icon-theme=<theme>` on the
+command line, once for each icon theme, in the order that they should be
+searched.  This can be used to override a subset of the icons, and fallback
+to the built-in icons for the remainder.
 
 cola.inotify
 ------------

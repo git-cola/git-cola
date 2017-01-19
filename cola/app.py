@@ -118,6 +118,24 @@ def setup_environment():
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
+def get_icon_themes():
+    """Return the default icon theme names"""
+    themes = []
+
+    icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
+    if icon_themes_env:
+        themes.extend([x for x in icon_themes_env.split(':') if x])
+
+    icon_themes_cfg = gitcfg.current().get_all('cola.icontheme')
+    if icon_themes_cfg:
+        themes.extend(icon_themes_cfg)
+
+    if not themes:
+        themes.append('light')
+
+    return themes
+
+
 # style note: we use camelCase here since we're masquerading a Qt class
 class ColaApplication(object):
     """The main cola application
@@ -125,12 +143,12 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, argv, locale=None, gui=True, icon_theme=None):
+    def __init__(self, argv, locale=None, gui=True, icon_themes=None):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
         qtutils.install()
-        icons.install(icon_theme)
+        icons.install(icon_themes or get_icon_themes())
 
         fsmonitor.current().files_changed.connect(self._update_files)
 
@@ -283,11 +301,8 @@ def add_common_arguments(parser):
                         help='prompt for a repository')
 
     # Specify the icon theme
-    default_icon_theme = os.getenv('GIT_COLA_ICON_THEME')
-    if not default_icon_theme:
-        default_icon_theme = gitcfg.current().get('cola.icontheme')
     parser.add_argument('--icon-theme', metavar='<theme>',
-                        default=default_icon_theme,
+                        dest='icon_themes', action='append', default=[],
                         help='specify an icon theme (name or directory)')
 
     # Resume an X Session Management session
@@ -297,7 +312,7 @@ def add_common_arguments(parser):
 
 def new_application(args):
     # Initialize the app
-    return ColaApplication(sys.argv, icon_theme=args.icon_theme)
+    return ColaApplication(sys.argv, icon_themes=args.icon_themes)
 
 
 def new_model(app, repo, prompt=False, settings=None):

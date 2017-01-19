@@ -32,9 +32,10 @@ KNOWN_FILE_EXTENSIONS = {
 }
 
 
-def install(icon_theme):
-    icon_dir = resources.icon_dir(icon_theme)
-    qtcompat.add_search_path('icons', icon_dir)
+def install(icon_themes):
+    for theme in icon_themes:
+        icon_dir = resources.icon_dir(theme)
+        qtcompat.add_search_path('icons', icon_dir)
 
 
 def name_from_basename(basename):
