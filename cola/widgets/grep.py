@@ -181,7 +181,7 @@ class Grep(Dialog):
         self.init_state(None, self.resize_widget, parent)
 
     def resize_widget(self, parent):
-        width, height = qtutils.default_size(parent, 666, 420)
+        width, height = qtutils.default_size(parent, 720, 445)
         self.resize(width, height)
 
     def focus_input(self):
