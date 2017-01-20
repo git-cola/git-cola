@@ -5,17 +5,20 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import cmds
-from .. import hotkeys
-from .. import utils
-from .. import qtutils
 from ..cmds import do
 from ..git import git
 from ..i18n import N_
 from ..qtutils import diff_font
 from ..utils import Group
+from .. import cmds
+from .. import core
+from .. import hotkeys
+from .. import utils
+from .. import qtutils
 from .standard import Dialog
-from .text import VimHintedTextView, HintedLineEdit
+from .text import HintedLineEdit
+from .text import VimHintedTextView
+from .text import VimMonoTextView
 from . import defs
 
 
@@ -34,10 +37,21 @@ def new_grep(text=None, parent=None):
     return widget
 
 
+def parse_grep_line(line):
+    try:
+        filename, line_number, contents = line.split(':', 2)
+        result = (filename, line_number, contents)
+    except ValueError:
+        result = None
+    return result
+
+
 def goto_grep(line):
     """Called when Search -> Grep's right-click 'goto' action."""
-    filename, line_number, contents = line.split(':', 2)
-    do(cmds.Edit, [filename], line_number=line_number)
+    parsed_line = parse_grep_line(line)
+    if parsed_line:
+        filename, line_number, contents = parsed_line
+        do(cmds.Edit, [filename], line_number=line_number)
 
 
 class GrepThread(QtCore.QThread):
@@ -68,6 +82,8 @@ class Grep(Dialog):
 
     def __init__(self, parent=None):
         Dialog.__init__(self, parent)
+        self.grep_result = ''
+
         self.setWindowTitle(N_('Search'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -106,6 +122,9 @@ class Grep(Dialog):
         self.result_txt = GrepTextView(N_('grep result...'), self)
         self.result_txt.hint.enable(True)
 
+        self.preview_txt = PreviewTextView(self)
+        self.preview_txt.setFocusProxy(self.result_txt)
+
         self.edit_button = qtutils.edit_button()
         qtutils.button_action(self.edit_button, self.edit_action)
 
@@ -134,8 +153,12 @@ class Grep(Dialog):
                                           self.shell_checkbox, qtutils.STRETCH,
                                           self.close_button)
 
+        self.splitter = qtutils.splitter(Qt.Vertical,
+                                         self.result_txt, self.preview_txt)
+
         self.mainlayout = qtutils.vbox(defs.margin, defs.no_spacing,
-                                       self.input_layout, self.result_txt,
+                                       self.input_layout,
+                                       self.splitter,
                                        self.bottom_layout)
         self.setLayout(self.mainlayout)
 
@@ -145,6 +168,7 @@ class Grep(Dialog):
         self.input_txt.textChanged.connect(lambda s: self.search())
         self.regexp_combo.currentIndexChanged.connect(lambda x: self.search())
         self.result_txt.leave.connect(self.input_txt.setFocus)
+        self.result_txt.cursorPositionChanged.connect(self.update_preview)
 
         qtutils.add_action(self.input_txt, 'Focus Results', self.focus_results,
                            hotkeys.DOWN, *hotkeys.ACCEPT)
@@ -222,6 +246,7 @@ class Grep(Dialog):
         scroll = self.text_scroll()
         offset = min(len(value), self.text_offset())
 
+        self.grep_result = value
         self.result_txt.set_value(value)
         # restore
         self.set_text_scroll(scroll)
@@ -230,6 +255,12 @@ class Grep(Dialog):
         enabled = status == 0
         self.edit_group.setEnabled(enabled)
         self.refresh_group.setEnabled(True)
+
+    def update_preview(self):
+        parsed_line = parse_grep_line(self.result_txt.selected_line())
+        if parsed_line:
+            filename, line_number, content = parsed_line
+            self.preview_txt.preview(filename, line_number)
 
     def edit(self):
         goto_grep(self.result_txt.selected_line()),
@@ -251,3 +282,32 @@ class GrepTextView(VimHintedTextView):
 
     def edit(self):
         goto_grep(self.selected_line())
+
+
+class PreviewTextView(VimMonoTextView):
+
+    def __init__(self, parent):
+        VimMonoTextView.__init__(self, parent)
+        self.filename = None
+
+    def preview(self, filename, line_number):
+        if filename != self.filename:
+            content = core.read(filename, errors='ignore')
+            self.setText(content)
+            self.filename = filename
+
+        cursor = self.textCursor()
+        cursor.setPosition(0)
+        self.setTextCursor(cursor)
+        self.ensureCursorVisible()
+
+        cursor.movePosition(cursor.Down, cursor.MoveAnchor, int(line_number)-1)
+        cursor.movePosition(cursor.EndOfLine, cursor.KeepAnchor)
+        self.setTextCursor(cursor)
+        self.ensureCursorVisible()
+
+        scrollbar = self.verticalScrollBar()
+        step = scrollbar.pageStep() // 2
+        position = scrollbar.sliderPosition() + step
+        scrollbar.setSliderPosition(position)
+        self.ensureCursorVisible()
