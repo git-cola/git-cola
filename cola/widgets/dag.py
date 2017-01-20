@@ -1595,7 +1595,7 @@ coordinates based on its row and column multiplied by the coefficient.
 
         for node in self.commits:
             x_pos = x_min + node.column * x_off
-            y_pos = y_off - node.generation * y_off
+            y_pos = -y_off - node.generation * y_off
 
             positions[node.oid] = (x_pos, y_pos)
 
