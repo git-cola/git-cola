@@ -154,9 +154,24 @@ def splitter(orientation, *widgets):
     layout.setOrientation(orientation)
     layout.setHandleWidth(defs.handle_width)
     layout.setChildrenCollapsible(True)
+
+    palette = QtGui.QPalette()
+    highlight = palette.color(palette.Highlight)
+    highlight_rgb = rgb_css(highlight)
+
+    layout.setStyleSheet("""
+        QSplitter::handle:hover {
+            background: %(highlight_rgb)s;
+        }
+        """ % dict(highlight_rgb=highlight_rgb))
+
     for idx, widget in enumerate(widgets):
         layout.addWidget(widget)
         layout.setStretchFactor(idx, 1)
+
+    # Workaround for Qt not setting the WA_Hover property for QSplitter
+    # Cf. https://bugreports.qt.io/browse/QTBUG-13768
+    layout.handle(1).setAttribute(Qt.WA_Hover)
 
     return layout
 
