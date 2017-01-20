@@ -458,14 +458,8 @@ class MainWindow(MainWindowMixin, QtWidgets.QMainWindow):
         window = palette.color(QtGui.QPalette.Window)
         highlight = palette.color(QtGui.QPalette.Highlight)
 
-        window_rgb = ('rgb(%d, %d, %d)'
-                 % (window.red(),
-                    window.blue(),
-                    window.green()))
-        highlight_rgb = ('rgb(%d, %d, %d)'
-                 % (highlight.red(),
-                    highlight.blue(),
-                    highlight.green()))
+        window_rgb = qtutils.rgb_css(window)
+        highlight_rgb = qtutils.rgb_css(highlight)
 
         self.setStyleSheet("""
             QMainWindow::separator {

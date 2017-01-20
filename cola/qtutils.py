@@ -1009,6 +1009,11 @@ def RGB(args):
     return rgba(*args)
 
 
+def rgb_css(color):
+    """Convert a QColor into an rgb(int, int, int) CSS string"""
+    return 'rgb(%d, %d, %d)' % (color.red(), color.green(), color.blue())
+
+
 def make_format(fg=None, bg=None, bold=False):
     fmt = QtGui.QTextCharFormat()
     if fg:
