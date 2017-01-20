@@ -1092,7 +1092,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     y_adjust = Commit.commit_radius*4/3
 
     x_off = 18
-    y_off = 24
+    y_off = -24
 
     def __init__(self, notifier, parent):
         QtWidgets.QGraphicsView.__init__(self, parent)
@@ -1595,7 +1595,7 @@ coordinates based on its row and column multiplied by the coefficient.
 
         for node in self.commits:
             x_pos = x_min + node.column * x_off
-            y_pos = -y_off - node.generation * y_off
+            y_pos = y_off + node.generation * y_off
 
             positions[node.oid] = (x_pos, y_pos)
 
