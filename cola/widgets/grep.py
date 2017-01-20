@@ -31,6 +31,7 @@ def grep():
 
 
 def new_grep(text=None, parent=None):
+    """Construct a new Grep dialog"""
     widget = Grep(parent=parent)
     if text:
         widget.search_for(text)
@@ -38,6 +39,7 @@ def new_grep(text=None, parent=None):
 
 
 def parse_grep_line(line):
+    """Parse a grep result line into (filename, line_number, content)"""
     try:
         filename, line_number, contents = line.split(':', 2)
         result = (filename, line_number, contents)
@@ -55,6 +57,8 @@ def goto_grep(line):
 
 
 class GrepThread(QtCore.QThread):
+    """Gather `git grep` results in a background thread"""
+
     result = Signal(object, object, object)
 
     def __init__(self, parent):
@@ -79,6 +83,7 @@ class GrepThread(QtCore.QThread):
 
 
 class Grep(Dialog):
+    """A dialog for searching content using `git grep`"""
 
     def __init__(self, parent=None):
         Dialog.__init__(self, parent)
@@ -181,25 +186,31 @@ class Grep(Dialog):
         self.init_state(None, self.resize_widget, parent)
 
     def resize_widget(self, parent):
+        """Set the initial size of the widget"""
         width, height = qtutils.default_size(parent, 720, 445)
         self.resize(width, height)
 
     def focus_input(self):
+        """Focus the grep input field and select the text"""
         self.input_txt.setFocus()
         self.input_txt.selectAll()
 
     def focus_results(self):
+        """Give focus to the results window"""
         self.result_txt.setFocus()
 
     def done(self, exit_code):
+        """Save the widget state when closing the dialog"""
         self.save_state()
         return Dialog.done(self, exit_code)
 
     def regexp_mode(self):
+        """Return the selected grep regex mode"""
         idx = self.regexp_combo.currentIndex()
         return self.regexp_combo.itemData(idx, Qt.UserRole)
 
     def search(self):
+        """Initiate a search by starting the GrepThread"""
         self.edit_group.setEnabled(False)
         self.refresh_group.setEnabled(False)
         query = self.input_txt.value()
@@ -212,29 +223,34 @@ class Grep(Dialog):
         self.worker_thread.start()
 
     def search_for(self, txt):
+        """Set the initial value of the input text"""
         self.input_txt.set_value(txt)
 
     def text_scroll(self):
+        """Return the scrollbar value for the results window"""
         scrollbar = self.result_txt.verticalScrollBar()
         if scrollbar:
             return scrollbar.value()
         return None
 
     def set_text_scroll(self, scroll):
+        """Set the scrollbar value for the results window"""
         scrollbar = self.result_txt.verticalScrollBar()
         if scrollbar and scroll is not None:
             scrollbar.setValue(scroll)
 
     def text_offset(self):
+        """Return the cursor's offset within the result text"""
         return self.result_txt.textCursor().position()
 
     def set_text_offset(self, offset):
+        """Set the text cursor from an offset"""
         cursor = self.result_txt.textCursor()
         cursor.setPosition(offset)
         self.result_txt.setTextCursor(cursor)
 
     def process_result(self, status, out, err):
-
+        """Apply the results from grep to the widgets"""
         if status == 0:
             value = out + err
         elif out + err:
@@ -257,16 +273,19 @@ class Grep(Dialog):
         self.refresh_group.setEnabled(True)
 
     def update_preview(self):
+        """Update the file preview window"""
         parsed_line = parse_grep_line(self.result_txt.selected_line())
         if parsed_line:
             filename, line_number, content = parsed_line
             self.preview_txt.preview(filename, line_number)
 
     def edit(self):
+        """Launch an editor on the currently selected line"""
         goto_grep(self.result_txt.selected_line()),
 
 
 class GrepTextView(VimHintedTextView):
+    """A text view with hotkeys for launching editors"""
 
     def __init__(self, hint, parent):
         VimHintedTextView.__init__(self, hint=hint, parent=parent)
