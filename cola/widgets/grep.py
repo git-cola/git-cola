@@ -284,17 +284,55 @@ class GrepTextView(VimHintedTextView):
         goto_grep(self.selected_line())
 
 
+class PreviewTask(qtutils.Task):
+    """Asynchronous task for loading file content"""
+
+    def __init__(self, parent, filename, line_number):
+        qtutils.Task.__init__(self, parent)
+
+        self.content = ''
+        self.filename = filename
+        self.line_number = line_number
+
+    def task(self):
+        self.content = core.read(self.filename, errors='ignore')
+        return (self.filename, self.content, self.line_number)
+
+
 class PreviewTextView(VimMonoTextView):
+    """Preview window for file contents"""
 
     def __init__(self, parent):
         VimMonoTextView.__init__(self, parent)
         self.filename = None
+        self.content = None
+        self.runtask = qtutils.RunTask(parent=self)
 
     def preview(self, filename, line_number):
+        """Preview the a file at the specified line number"""
+
         if filename != self.filename:
-            content = core.read(filename, errors='ignore')
-            self.setText(content)
+            request = PreviewTask(self, filename, line_number)
+            self.runtask.start(request, finish=self.show_preview)
+        else:
+            self.scroll_to_line(line_number)
+
+    def show_preview(self, task):
+        """Show the results of the asynchronous file read"""
+
+        filename = task.filename
+        content = task.content
+        line_number = task.line_number
+
+        if filename != self.filename:
             self.filename = filename
+            self.content = content
+            self.setText(content)
+
+        self.scroll_to_line(line_number)
+
+    def scroll_to_line(self, line_number):
+        """Scroll to the specified line number"""
 
         cursor = self.textCursor()
         cursor.setPosition(0)
