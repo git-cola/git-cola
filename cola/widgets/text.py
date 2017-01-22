@@ -639,4 +639,4 @@ class LineNumbers(TextDecorator):
                              rect.height(),
                              Qt.AlignRight | Qt.AlignVCenter,
                              number)
-            block = block.next()
+            block = block.next()  # pylint: disable=next-method-called
