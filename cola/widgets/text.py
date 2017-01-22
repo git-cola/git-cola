@@ -152,7 +152,7 @@ class TextEdit(QtWidgets.QTextEdit):
         if event.button() == Qt.RightButton:
             if not self.textCursor().hasSelection():
                 self.setTextCursor(self.cursorForPosition(event.pos()))
-        QtWidgets.QTextEdit.mousePressEvent(self, event)
+        super(TextEdit, self).mousePressEvent(event)
 
 
 class TextEditCursorPosition(object):
