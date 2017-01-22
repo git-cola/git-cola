@@ -216,7 +216,7 @@ class DiffEditor(DiffTextEdit):
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.diff_text_changed.connect(self.setPlainText)
+        self.diff_text_changed.connect(self.set_value)
 
     def refresh(self):
         enabled = False
