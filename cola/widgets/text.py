@@ -551,13 +551,12 @@ class VimTextBrowser(VimTextEdit):
         self.numbers.refresh_size()
 
 
-class LineNumbers(QtWidgets.QWidget):
+class TextDecorator(QtWidgets.QWidget):
     """Provide line numbers for QPlainTextEdit widgets"""
 
     def __init__(self, parent):
         QtWidgets.QWidget.__init__(self, parent)
         self.editor = parent
-        self.highlight_line = -1
 
         parent.blockCountChanged.connect(lambda x: self._refresh_viewport())
         parent.cursorPositionChanged.connect(self.refresh)
@@ -590,6 +589,13 @@ class LineNumbers(QtWidgets.QWidget):
 
     def sizeHint(self):
         return QtCore.QSize(self.width_hint(), 0)
+
+
+class LineNumbers(TextDecorator):
+
+    def __init__(self, parent):
+        self.highlight_line = -1
+        TextDecorator.__init__(self, parent)
 
     def width_hint(self):
         document = self.editor.document()
