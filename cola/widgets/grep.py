@@ -17,8 +17,8 @@ from .. import utils
 from .. import qtutils
 from .standard import Dialog
 from .text import HintedLineEdit
-from .text import VimHintedTextView
-from .text import VimMonoTextView
+from .text import VimHintedTextEdit
+from .text import VimTextBrowser
 from . import defs
 
 
@@ -103,7 +103,6 @@ class Grep(Dialog):
         self.input_label.setFont(diff_font())
 
         self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
-        self.input_txt.hint.enable(True)
 
         self.regexp_combo = combo = QtWidgets.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
@@ -125,7 +124,6 @@ class Grep(Dialog):
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
         self.result_txt = GrepTextView(N_('grep result...'), self)
-        self.result_txt.hint.enable(True)
 
         self.preview_txt = PreviewTextView(self)
         self.preview_txt.setFocusProxy(self.result_txt)
@@ -198,11 +196,6 @@ class Grep(Dialog):
     def focus_results(self):
         """Give focus to the results window"""
         self.result_txt.setFocus()
-
-    def done(self, exit_code):
-        """Save the widget state when closing the dialog"""
-        self.save_state()
-        return Dialog.done(self, exit_code)
 
     def regexp_mode(self):
         """Return the selected grep regex mode"""
@@ -283,12 +276,27 @@ class Grep(Dialog):
         """Launch an editor on the currently selected line"""
         goto_grep(self.result_txt.selected_line()),
 
+    def export_state(self):
+        """Export persistent settings"""
+        state = super(Grep, self).export_state()
+        state['sizes'] = self.splitter.sizes()
+        return state
 
-class GrepTextView(VimHintedTextView):
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super(Grep, self).apply_state(state)
+        try:
+            self.splitter.setSizes(state['sizes'])
+        except:
+            result = False
+        return result
+
+
+class GrepTextView(VimHintedTextEdit):
     """A text view with hotkeys for launching editors"""
 
     def __init__(self, hint, parent):
-        VimHintedTextView.__init__(self, hint=hint, parent=parent)
+        VimHintedTextEdit.__init__(self, hint, parent=parent)
 
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)
@@ -314,15 +322,18 @@ class PreviewTask(qtutils.Task):
         self.line_number = line_number
 
     def task(self):
-        self.content = core.read(self.filename, errors='ignore')
+        try:
+            self.content = core.read(self.filename, errors='ignore')
+        except IOError:
+            pass
         return (self.filename, self.content, self.line_number)
 
 
-class PreviewTextView(VimMonoTextView):
+class PreviewTextView(VimTextBrowser):
     """Preview window for file contents"""
 
     def __init__(self, parent):
-        VimMonoTextView.__init__(self, parent)
+        VimTextBrowser.__init__(self, parent)
         self.filename = None
         self.content = None
         self.runtask = qtutils.RunTask(parent=self)
@@ -346,7 +357,7 @@ class PreviewTextView(VimMonoTextView):
         if filename != self.filename:
             self.filename = filename
             self.content = content
-            self.setText(content)
+            self.set_value(content)
 
         self.scroll_to_line(line_number)
 

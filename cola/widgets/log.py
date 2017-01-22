@@ -8,7 +8,7 @@ from qtpy.QtCore import Signal
 from .. import qtutils
 from ..i18n import N_
 from . import defs
-from .text import MonoTextView
+from .text import VimTextEdit
 
 
 class LogWidget(QtWidgets.QWidget):
@@ -18,7 +18,7 @@ class LogWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, output=None):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.output_text = MonoTextView(self)
+        self.output_text = VimTextEdit(parent=self)
         if output:
             self.set_output(output)
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
@@ -30,7 +30,7 @@ class LogWidget(QtWidgets.QWidget):
         self.output_text.clear()
 
     def set_output(self, output):
-        self.output_text.setText(output)
+        self.output_text.set_value(output)
 
     def log_status(self, status, out, err=None):
         msg = []

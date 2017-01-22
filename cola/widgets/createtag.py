@@ -55,7 +55,7 @@ class CreateTag(standard.Dialog):
         self.tag_name_label = QtWidgets.QLabel(self)
         self.tag_name_label.setText(N_('Name'))
 
-        self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), self)
+        self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), parent=self)
         self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
 
@@ -72,7 +72,6 @@ class CreateTag(standard.Dialog):
 
         self.tag_msg = text.HintedTextEdit(N_('Tag message...'), self)
         self.tag_msg.setToolTip(N_('Specifies the tag message'))
-        self.tag_msg.hint.enable(True)
         # Revision
         self.rev_label = QtWidgets.QLabel(self)
         self.rev_label.setText(N_('Revision'))

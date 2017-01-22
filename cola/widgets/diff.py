@@ -24,7 +24,7 @@ from ..qtutils import create_menu
 from ..qtutils import make_format
 from ..qtutils import RGB
 from . import defs
-from .text import VimMonoTextView
+from .text import VimTextEdit
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -125,10 +125,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
-class DiffTextEdit(VimMonoTextView):
+class DiffTextEdit(VimTextEdit):
 
     def __init__(self, parent, is_commit=False, whitespace=True):
-        VimMonoTextView.__init__(self, parent)
+        VimTextEdit.__init__(self, parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  is_commit=is_commit,
@@ -527,9 +527,9 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
     def set_diff_oid(self, oid, filename=None):
-        self.diff.setText('+++ ' + N_('Loading...'))
+        self.diff.set_value('+++ ' + N_('Loading...'))
         task = DiffInfoTask(oid, filename, self)
-        task.connect(self.diff.setText)
+        task.connect(self.diff.set_value)
         self.runtask.start(task)
 
     def commits_selected(self, commits):

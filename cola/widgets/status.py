@@ -908,7 +908,6 @@ class StatusFilterWidget(QtWidgets.QWidget):
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
         self.text.setToolTip(hint)
-        self.text.hint.enable(True)
         self.setFocusProxy(self.text)
         self._filter = None
 

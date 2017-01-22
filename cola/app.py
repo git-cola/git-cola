@@ -20,6 +20,7 @@ Please install it before using git-cola, e.g.:
 """
     core.error(errmsg)
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 
 # Import cola modules
@@ -28,6 +29,7 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import main
 from .widgets import cfgactions
+from .widgets import defs
 from .widgets import startup
 from .settings import Session
 from . import cmds
@@ -155,8 +157,78 @@ class ColaApplication(object):
         if gui:
             self._app = current(tuple(argv))
             self._app.setWindowIcon(icons.cola())
+            self._install_style()
         else:
             self._app = QtCore.QCoreApplication(argv)
+
+    def _install_style(self):
+        palette = self._app.palette()
+        window = palette.color(QtGui.QPalette.Window)
+        highlight = palette.color(QtGui.QPalette.Highlight)
+        shadow = palette.color(QtGui.QPalette.Shadow)
+        base = palette.color(QtGui.QPalette.Base)
+
+        window_rgb = qtutils.rgb_css(window)
+        highlight_rgb = qtutils.rgb_css(highlight)
+        shadow_rgb = qtutils.rgb_css(shadow)
+        base_rgb = qtutils.rgb_css(base)
+
+        self._app.setStyleSheet("""
+            QCheckBox::indicator {
+                width: %(checkbox_size)spx;
+                height: %(checkbox_size)spx;
+            }
+            QCheckBox::indicator::unchecked {
+                border: %(checkbox_border)spx solid %(shadow_rgb)s;
+                background: %(base_rgb)s;
+            }
+            QCheckBox::indicator::checked {
+                image: url(%(checkbox_icon)s);
+                border: %(checkbox_border)spx solid %(shadow_rgb)s;
+                background: %(base_rgb)s;
+            }
+
+            QRadioButton::indicator {
+                width: %(radio_size)spx;
+                height: %(radio_size)spx;
+            }
+            QRadioButton::indicator::unchecked {
+                border: %(radio_border)spx solid %(shadow_rgb)s;
+                border-radius: %(radio_radius)spx;
+                background: %(base_rgb)s;
+            }
+            QRadioButton::indicator::checked {
+                image: url(%(radio_icon)s);
+                border: %(radio_border)spx solid %(shadow_rgb)s;
+                border-radius: %(radio_radius)spx;
+                background: %(base_rgb)s;
+            }
+
+            QSplitter::handle:hover {
+                background: %(highlight_rgb)s;
+            }
+
+            QMainWindow::separator {
+                background: %(window_rgb)s;
+                width: %(separator)spx;
+                height: %(separator)spx;
+            }
+            QMainWindow::separator:hover {
+                background: %(highlight_rgb)s;
+            }
+
+            """ % dict(separator=defs.separator,
+                       window_rgb=window_rgb,
+                       highlight_rgb=highlight_rgb,
+                       shadow_rgb=shadow_rgb,
+                       base_rgb=base_rgb,
+                       checkbox_border=defs.border,
+                       checkbox_icon=icons.check_name(),
+                       checkbox_size=defs.checkbox,
+                       radio_border=defs.radio_border,
+                       radio_icon=icons.dot_name(),
+                       radio_radius=defs.checkbox//2,
+                       radio_size=defs.checkbox))
 
     def activeWindow(self):
         """Wrap activeWindow()"""

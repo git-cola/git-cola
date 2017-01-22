@@ -155,16 +155,6 @@ def splitter(orientation, *widgets):
     layout.setHandleWidth(defs.handle_width)
     layout.setChildrenCollapsible(True)
 
-    palette = QtGui.QPalette()
-    highlight = palette.color(palette.Highlight)
-    highlight_rgb = rgb_css(highlight)
-
-    layout.setStyleSheet("""
-        QSplitter::handle:hover {
-            background: %(highlight_rgb)s;
-        }
-        """ % dict(highlight_rgb=highlight_rgb))
-
     for idx, widget in enumerate(widgets):
         layout.addWidget(widget)
         layout.setStretchFactor(idx, 1)
@@ -176,11 +166,9 @@ def splitter(orientation, *widgets):
     return layout
 
 
-def label(text=None, align=None, fmt=None, selectable=True, stylesheet=None):
+def label(text=None, align=None, fmt=None, selectable=True):
     """Create a QLabel with the specified properties"""
     widget = QtWidgets.QLabel()
-    if stylesheet:
-        widget.setStyleSheet(stylesheet)
     if align is not None:
         widget.setAlignment(align)
     if fmt is not None:
@@ -605,8 +593,14 @@ def add_close_action(widget):
                       widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
 
+def app():
+    """Return the current application"""
+    return QtWidgets.QApplication.instance()
+
+
 def desktop():
-    return QtWidgets.QApplication.instance().desktop()
+    """Return the desktop"""
+    return app().desktop()
 
 
 def center_on_screen(widget):
@@ -706,8 +700,9 @@ def refresh_button(enabled=True, default=False):
 
 
 def hide_button_menu_indicator(button):
-    cls = type(button)
-    name = cls.__name__
+    """Hide the menu indicator icon on buttons"""
+
+    name = button.__class__.__name__
     stylesheet = """
         %(name)s::menu-indicator {
             image: none;
@@ -719,72 +714,29 @@ def hide_button_menu_indicator(button):
                 border-style: none;
             }
         """
-    button.setStyleSheet(stylesheet % {'name': name})
+    button.setStyleSheet(stylesheet % dict(name=name))
 
 
 def checkbox(text='', tooltip='', checked=None):
-    cb = QtWidgets.QCheckBox()
-    if text:
-        cb.setText(text)
-    if tooltip:
-        cb.setToolTip(tooltip)
-    if checked is not None:
-        cb.setChecked(checked)
-
-    url = icons.check_name()
-    style = """
-        QCheckBox::indicator {
-            width: %(size)dpx;
-            height: %(size)dpx;
-        }
-        QCheckBox::indicator::unchecked {
-            border: %(border)dpx solid #999;
-            background: #fff;
-        }
-        QCheckBox::indicator::checked {
-            image: url(%(url)s);
-            border: %(border)dpx solid black;
-            background: #fff;
-        }
-    """ % dict(size=defs.checkbox, border=defs.border, url=url)
-    cb.setStyleSheet(style)
-
-    return cb
+    """Create a checkbox"""
+    return _checkbox(QtWidgets.QCheckBox, text, tooltip, checked)
 
 
 def radio(text='', tooltip='', checked=None):
-    rb = QtWidgets.QRadioButton()
+    """Create a radio button"""
+    return _checkbox(QtWidgets.QRadioButton, text, tooltip, checked)
+
+
+def _checkbox(cls, text, tooltip, checked):
+    """Create a widget and apply properties"""
+    widget = cls()
     if text:
-        rb.setText(text)
+        widget.setText(text)
     if tooltip:
-        rb.setToolTip(tooltip)
+        widget.setToolTip(tooltip)
     if checked is not None:
-        rb.setChecked(checked)
-
-    size = defs.checkbox
-    radius = size / 2
-    border = defs.radio_border
-    url = icons.dot_name()
-    style = """
-        QRadioButton::indicator {
-            width: %(size)dpx;
-            height: %(size)dpx;
-        }
-        QRadioButton::indicator::unchecked {
-            background: #fff;
-            border: %(border)dpx solid #999;
-            border-radius: %(radius)dpx;
-        }
-        QRadioButton::indicator::checked {
-            image: url(%(url)s);
-            background: #fff;
-            border: %(border)dpx solid black;
-            border-radius: %(radius)dpx;
-        }
-    """ % dict(size=size, radius=radius, border=border, url=url)
-    rb.setStyleSheet(style)
-
-    return rb
+        widget.setChecked(checked)
+    return widget
 
 
 class DockTitleBarWidget(QtWidgets.QWidget):

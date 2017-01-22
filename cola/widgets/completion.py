@@ -39,7 +39,7 @@ class CompletionLineEdit(text.HintedLineEdit):
     }
 
     def __init__(self, model_factory, hint='', parent=None):
-        text.HintedLineEdit.__init__(self, hint=hint, parent=parent)
+        text.HintedLineEdit.__init__(self, hint, parent=parent)
         # Tracks when the completion popup was active during key events
         self._was_visible = False
         # The most recently selected completion item
@@ -628,12 +628,12 @@ class GitLogCompletionModel(GitRefCompletionModel):
         return (refs, paths, dirs)
 
 
-def bind_lineedit(model):
+def bind_lineedit(model, hint=''):
     """Create a line edit bound against a specific model"""
 
     class BoundLineEdit(CompletionLineEdit):
 
-        def __init__(self, hint='', parent=None):
+        def __init__(self, hint=hint, parent=None):
             CompletionLineEdit.__init__(self, model,
                                         hint=hint, parent=parent)
 
@@ -641,13 +641,16 @@ def bind_lineedit(model):
 
 
 # Concrete classes
-GitLogLineEdit = bind_lineedit(GitLogCompletionModel)
-GitRefLineEdit = bind_lineedit(GitRefCompletionModel)
-GitPotentialBranchLineEdit = bind_lineedit(GitPotentialBranchCompletionModel)
-GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel)
-GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel)
-GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel)
-GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel)
+GitLogLineEdit = bind_lineedit(GitLogCompletionModel, hint='<ref>')
+GitRefLineEdit = bind_lineedit(GitRefCompletionModel, hint='<ref>')
+GitPotentialBranchLineEdit = bind_lineedit(GitPotentialBranchCompletionModel,
+                                           hint='<branch>')
+GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel, hint='<branch>')
+GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel,
+                                        hint='<remote-branch>')
+GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel,
+                                        hint='<path>')
+GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel, hint='<path>')
 
 
 class GitDialog(QtWidgets.QDialog):

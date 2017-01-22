@@ -1,4 +1,6 @@
+"""Text widgets"""
 from __future__ import division, absolute_import, unicode_literals
+import math
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -69,22 +71,23 @@ class LineEditCursorPosition(object):
         self._widget.setCursorPosition(0)
 
 
-class TextEdit(QtWidgets.QTextEdit):
+class TextEdit(QtWidgets.QPlainTextEdit):
 
     cursor_changed = Signal(int, int)
     leave = Signal()
 
-    def __init__(self, parent=None, get_value=None):
-        QtWidgets.QTextEdit.__init__(self, parent)
+    def __init__(self, parent=None, get_value=None, readonly=False):
+        QtWidgets.QPlainTextEdit.__init__(self, parent)
         self.cursor_position = TextEditCursorPosition(self)
         if get_value is None:
             get_value = get_stripped
         self._get_value = get_value
         self._tabwidth = 8
         self.setMinimumSize(QtCore.QSize(1, 1))
-        self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
-        self.setAcceptRichText(False)
+        self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
         self.setCursorWidth(defs.cursor_width)
+        if readonly:
+            setup_readonly_flags(self)
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -97,9 +100,17 @@ class TextEdit(QtWidgets.QTextEdit):
     def set_value(self, value, block=False):
         if block:
             blocksig = self.blockSignals(True)
+
+        # Save cursor position
         cursor = self.textCursor()
+        position = cursor.position()
+        # Update text
         self.setPlainText(value)
+        # Restore cursor
+        cursor = self.textCursor()
+        cursor.setPosition(min(position, cursor.position()))
         self.setTextCursor(cursor)
+
         if block:
             self.blockSignals(blocksig)
 
@@ -118,17 +129,11 @@ class TextEdit(QtWidgets.QTextEdit):
         pixels = fm.width('M' * width)
         self.setTabStopWidth(pixels)
 
-    def set_textwidth(self, width):
-        font = self.font()
-        fm = QtGui.QFontMetrics(font)
-        pixels = fm.width('M' * (width + 1)) + 1
-        self.setLineWrapColumnOrWidth(pixels)
-
     def set_linebreak(self, brk):
         if brk:
-            wrapmode = QtWidgets.QTextEdit.FixedPixelWidth
+            wrapmode = QtWidgets.QPlainTextEdit.WidgetWidth
         else:
-            wrapmode = QtWidgets.QTextEdit.NoWrap
+            wrapmode = QtWidgets.QPlainTextEdit.NoWrap
         self.setLineWrapMode(wrapmode)
 
     def selected_line(self):
@@ -152,7 +157,7 @@ class TextEdit(QtWidgets.QTextEdit):
         if event.button() == Qt.RightButton:
             if not self.textCursor().hasSelection():
                 self.setTextCursor(self.cursorForPosition(event.pos()))
-        QtWidgets.QTextEdit.mousePressEvent(self, event)
+        super(TextEdit, self).mousePressEvent(event)
 
 
 class TextEditCursorPosition(object):
@@ -189,22 +194,16 @@ def setup_readonly_flags(widget):
     widget.setAcceptDrops(False)
     widget.setTabChangesFocus(True)
     widget.setUndoRedoEnabled(False)
+    widget.setReadOnly(True)
     widget.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
                                    Qt.TextSelectableByMouse)
 
 
 class MonoTextEdit(TextEdit):
 
-    def __init__(self, parent):
-        TextEdit.__init__(self, parent)
+    def __init__(self, parent=None, readonly=False):
+        TextEdit.__init__(self, parent=parent, readonly=readonly)
         setup_mono_font(self)
-
-
-class MonoTextView(MonoTextEdit):
-
-    def __init__(self, parent):
-        MonoTextEdit.__init__(self, parent)
-        setup_readonly_flags(self)
 
 
 def get_value_hinted(widget):
@@ -217,32 +216,58 @@ def get_value_hinted(widget):
 
 
 class HintWidget(QtCore.QObject):
-    """Extend a widget to provide hint messages"""
+    """Extend a widget to provide hint messages
+
+    This primarily exists because setPlaceholderText() is only available
+    in Qt5, so this class provides consistent behavior across versions.
+
+    """
 
     def __init__(self, widget, hint):
         QtCore.QObject.__init__(self, widget)
         self._widget = widget
         self._hint = hint
         self._is_error = False
-        widget.installEventFilter(self)
+
+        self.modern = modern = hasattr(widget, 'setPlaceholderText')
+        if modern:
+            widget.setPlaceholderText(hint)
 
         # Palette for normal text
         QPalette = QtGui.QPalette
-        self.default_palette = QPalette(widget.palette())
+        palette = widget.palette()
 
-        # Palette used for the placeholder text
-        self.hint_palette = pal = QPalette(widget.palette())
-        color = self.hint_palette.text().color()
-        color.setAlpha(128)
-        pal.setColor(QPalette.Active, QPalette.Text, color)
-        pal.setColor(QPalette.Inactive, QPalette.Text, color)
+        hint_color = palette.color(QPalette.Disabled, QPalette.Text)
+        error_bg_color = QtGui.QColor(Qt.red).darker()
+        error_fg_color = QtGui.QColor(Qt.white)
 
-        # Palette for error text
-        self.error_palette = pal = QPalette(widget.palette())
-        color = QtGui.QColor(Qt.red)
-        color.setAlpha(200)
-        pal.setColor(QPalette.Active, QPalette.Text, color)
-        pal.setColor(QPalette.Inactive, QPalette.Text, color)
+        hint_rgb = qtutils.rgb_css(hint_color)
+        error_bg_rgb = qtutils.rgb_css(error_bg_color)
+        error_fg_rgb = qtutils.rgb_css(error_fg_color)
+
+        env = dict(name=widget.__class__.__name__,
+                   error_fg_rgb=error_fg_rgb,
+                   error_bg_rgb=error_bg_rgb,
+                   hint_rgb=hint_rgb)
+
+        self._default_style = ''
+
+        self._hint_style = """
+            %(name)s {
+                color: %(hint_rgb)s;
+            }
+        """ % env
+
+        self._error_style = """
+            %(name)s {
+                color: %(error_fg_rgb)s;
+                background-color: %(error_bg_rgb)s;
+            }
+        """ % env
+
+        if not modern:
+            widget.installEventFilter(self)
+            self.enable(True)
 
     def widget(self):
         """Return the parent text widget"""
@@ -263,19 +288,24 @@ class HintWidget(QtCore.QObject):
 
     def set_value(self, hint):
         """Change the hint text"""
-        # If hint-mode is currently active, re-activate it with the new text
-        active = self.active()
-        self._hint = hint
-        if active or self.active():
-            self.enable(True)
+        if self.modern:
+            self._hint = hint
+            self._widget.setPlaceholderText(hint)
+        else:
+            # If hint-mode is currently active, re-activate it
+            active = self.active()
+            self._hint = hint
+            if active or self.active():
+                self.enable(True)
 
     def enable(self, hint):
         """Enable/disable hint-mode"""
-        if hint:
-            self._widget.set_value(self.value(), block=True)
-            self._widget.cursor_position.reset()
-        else:
-            self._widget.clear()
+        if not self.modern:
+            if hint:
+                self._widget.set_value(self.value(), block=True)
+                self._widget.cursor_position.reset()
+            else:
+                self._widget.clear()
         self._update_palette(hint)
 
     def refresh(self):
@@ -285,20 +315,20 @@ class HintWidget(QtCore.QObject):
     def _update_palette(self, hint):
         """Update to palette for normal/error/hint mode"""
         if self._is_error:
-            self._widget.setPalette(self.error_palette)
+            style = self._error_style
+        elif not self.modern and hint:
+            style = self._hint_style
         else:
-            if hint:
-                self._widget.setPalette(self.hint_palette)
-            else:
-                self._widget.setPalette(self.default_palette)
+            style = self._default_style
+        self._widget.setStyleSheet(style)
 
     def eventFilter(self, obj, event):
         """Enable/disable hint-mode when focus changes"""
         etype = event.type()
         if etype == QtCore.QEvent.FocusIn:
-            self._widget.hint.focus_in()
+            self.focus_in()
         elif etype == QtCore.QEvent.FocusOut:
-            self._widget.hint.focus_out()
+            self.focus_out()
         return False
 
     def focus_in(self):
@@ -311,26 +341,28 @@ class HintWidget(QtCore.QObject):
     def focus_out(self):
         """Re-enable hint-mode when losing focus"""
         widget = self.widget()
-        if not bool(widget.value()):
+        if not widget.value():
             self.enable(True)
 
 
 class HintedTextEdit(TextEdit):
+    """A hinted text edit"""
 
-    def __init__(self, hint, parent=None):
-        TextEdit.__init__(self, parent=parent, get_value=get_value_hinted)
+    def __init__(self, hint, parent=None, readonly=False):
+        TextEdit.__init__(self, parent=parent,
+                          get_value=get_value_hinted,
+                          readonly=readonly)
         self.hint = HintWidget(self, hint)
         setup_mono_font(self)
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
 
-
-# The read-only variant.
-class HintedTextView(HintedTextEdit):
-
-    def __init__(self, hint, parent=None):
-        HintedTextEdit.__init__(self, hint, parent=parent)
-        setup_readonly_flags(self)
+    def set_value(self, value, block=False):
+        """Set the widget text or enable hint mode when empty"""
+        if value or self.hint.modern:
+            TextEdit.set_value(self, value, block=block)
+        else:
+            self.hint.enable(True)
 
 
 # The vim-like read-only text view
@@ -431,12 +463,17 @@ class VimMixin(object):
         return self.Base.keyPressEvent(widget, event)
 
 
-class VimHintedTextView(HintedTextView):
-    Base = HintedTextView
+class VimHintedTextEdit(HintedTextEdit):
+    """HintedTextEdit with vim hotkeys
+
+    This can only be used in read-only mode.
+
+    """
+    Base = HintedTextEdit
     Mixin = VimMixin
 
-    def __init__(self, hint='', parent=None):
-        super(VimHintedTextView, self).__init__(hint, parent=parent)
+    def __init__(self, hint, parent=None):
+        HintedTextEdit.__init__(self, hint, parent=parent, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -449,12 +486,17 @@ class VimHintedTextView(HintedTextView):
         return self._mixin.keyPressEvent(event)
 
 
-class VimMonoTextView(MonoTextView):
-    Base = MonoTextView
+class VimTextEdit(MonoTextEdit):
+    """Text viewer with vim-like hotkeys
+
+    This can only be used in read-only mode.
+
+    """
+    Base = MonoTextEdit
     Mixin = VimMixin
 
     def __init__(self, parent=None):
-        MonoTextView.__init__(self, parent)
+        MonoTextEdit.__init__(self, parent=None, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -469,7 +511,7 @@ class VimMonoTextView(MonoTextView):
 
 class HintedLineEdit(LineEdit):
 
-    def __init__(self, hint='', parent=None):
+    def __init__(self, hint, parent=None):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
         self.setFont(qtutils.diff_font())
@@ -495,3 +537,100 @@ def text_dialog(text, title):
                        Qt.Key_Question, Qt.Key_Enter, Qt.Key_Return)
     widget.show()
     return widget
+
+
+class VimTextBrowser(VimTextEdit):
+    """Text viewer with line number annotations"""
+
+    def __init__(self, parent=None, readonly=False):
+        VimTextEdit.__init__(self, parent=parent)
+        self.numbers = LineNumbers(self)
+
+    def resizeEvent(self, event):
+        super(VimTextBrowser, self).resizeEvent(event)
+        self.numbers.refresh_size()
+
+
+class LineNumbers(QtWidgets.QWidget):
+    """Provide line numbers for QPlainTextEdit widgets"""
+
+    def __init__(self, parent):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.editor = parent
+        self.highlight_line = -1
+
+        parent.blockCountChanged.connect(lambda x: self._refresh_viewport())
+        parent.cursorPositionChanged.connect(self.refresh)
+        parent.updateRequest.connect(self._refresh_rect)
+
+        self._refresh_viewport()
+
+    def refresh(self):
+        """Refresh the numbers display"""
+        rect = self.editor.viewport().rect()
+        self._refresh_rect(rect, 0)
+
+    def _refresh_rect(self, rect, dy):
+        if dy:
+            self.scroll(0, dy)
+        else:
+            self.update(0, rect.y(), self.width(), rect.height())
+
+        if rect.contains(self.editor.viewport().rect()):
+            self._refresh_viewport()
+
+    def _refresh_viewport(self):
+        self.editor.setViewportMargins(self.width_hint(), 0, 0, 0)
+
+    def refresh_size(self):
+        rect = self.editor.contentsRect()
+        geom = QtCore.QRect(rect.left(), rect.top(),
+                            self.width_hint(), rect.height())
+        self.setGeometry(geom)
+
+    def sizeHint(self):
+        return QtCore.QSize(self.width_hint(), 0)
+
+    def width_hint(self):
+        document = self.editor.document()
+        digits = int(math.log(max(1, document.blockCount()), 10))
+        return defs.margin + self.fontMetrics().width('0') * (digits + 2)
+
+    def paintEvent(self, event):
+        """Paint the line number"""
+        QPalette = QtGui.QPalette
+        painter = QtGui.QPainter(self)
+        palette = self.palette()
+
+        painter.fillRect(event.rect(), palette.color(QPalette.Base))
+
+        editor = self.editor
+        content_offset = editor.contentOffset()
+        block = editor.firstVisibleBlock()
+        current_block_number = max(0, self.editor.textCursor().blockNumber())
+        width = self.width()
+
+        highlight = palette.color(QPalette.Highlight)
+        window = palette.color(QPalette.Window)
+        disabled = palette.color(QPalette.Disabled, QPalette.Text)
+        painter.setPen(disabled)
+
+        while block.isValid():
+            block_number = block.blockNumber();
+            bounding_rect = editor.blockBoundingGeometry(block)
+            rect = bounding_rect.translated(content_offset).toRect()
+
+            if block_number == self.highlight_line:
+                painter.fillRect(rect.x(), rect.y(),
+                                 width, rect.height(), highlight)
+            elif block_number == current_block_number:
+                painter.fillRect(rect.x(), rect.y(),
+                                 width, rect.height(), window)
+
+            number = '%s' % (block_number + 1)
+            painter.drawText(rect.x(), rect.y(),
+                             self.width() - (defs.margin * 2),
+                             rect.height(),
+                             Qt.AlignRight | Qt.AlignVCenter,
+                             number)
+            block = block.next()

@@ -109,7 +109,6 @@ class Finder(standard.Dialog):
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
-        self.input_txt.hint.enable(True)
 
         self.tree = filetree.FileTree(parent=self)
 
@@ -185,10 +184,6 @@ class Finder(standard.Dialog):
 
     def focus_input(self):
         self.input_txt.setFocus()
-
-    def done(self, exit_code):
-        self.save_state()
-        return standard.Dialog.done(self, exit_code)
 
     def search(self):
         self.button_group.setEnabled(False)
