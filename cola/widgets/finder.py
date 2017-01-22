@@ -185,10 +185,6 @@ class Finder(standard.Dialog):
     def focus_input(self):
         self.input_txt.setFocus()
 
-    def done(self, exit_code):
-        self.save_state()
-        return standard.Dialog.done(self, exit_code)
-
     def search(self):
         self.button_group.setEnabled(False)
         self.refresh_button.setEnabled(False)

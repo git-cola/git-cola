@@ -197,11 +197,6 @@ class Grep(Dialog):
         """Give focus to the results window"""
         self.result_txt.setFocus()
 
-    def done(self, exit_code):
-        """Save the widget state when closing the dialog"""
-        self.save_state()
-        return Dialog.done(self, exit_code)
-
     def regexp_mode(self):
         """Return the selected grep regex mode"""
         idx = self.regexp_combo.currentIndex()

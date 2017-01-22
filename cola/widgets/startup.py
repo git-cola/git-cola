@@ -25,7 +25,7 @@ class StartupDialog(standard.Dialog):
     """Provides a GUI to Open or Clone a git repository."""
 
     def __init__(self, parent=None, settings=None):
-        standard.Dialog.__init__(self, parent, save_settings=True)
+        standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('git-cola'))
 
         # Top-most large icon

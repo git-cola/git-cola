@@ -57,10 +57,10 @@ class WidgetMixin(object):
         return self.__class__.__name__.lower()
 
     def save_state(self, settings=None):
-        if settings is None:
-            settings = Settings()
-            settings.load()
         if gitcfg.current().get('cola.savewindowsettings', True):
+            if settings is None:
+                settings = Settings()
+                settings.load()
             settings.save_gui_state(self)
 
     def resizeEvent(self, event):
@@ -153,10 +153,7 @@ class WidgetMixin(object):
 
         return ret
 
-    def save_settings(self):
-        settings = Settings()
-        settings.load()
-        settings.add_recent(core.getcwd())
+    def save_settings(self, settings=None):
         return self.save_state(settings=settings)
 
     def closeEvent(self, event):
@@ -187,6 +184,13 @@ class MainWindowMixin(WidgetMixin):
         state['lock_layout'] = self.lock_layout
         state['windowstate'] = windowstate.toBase64().data().decode('ascii')
         return state
+
+    def save_settings(self, settings=None):
+        if settings is None:
+            settings = Settings()
+            settings.load()
+            settings.add_recent(core.getcwd())
+        return WidgetMixin.save_settings(self, settings=settings)
 
     def apply_state(self, state):
         result = WidgetMixin.apply_state(self, state)
@@ -436,15 +440,25 @@ class Widget(WidgetMixin, QtWidgets.QWidget):
 class Dialog(WidgetMixin, QtWidgets.QDialog):
     Base = QtWidgets.QDialog
 
-    def __init__(self, parent=None, save_settings=False):
+    def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         WidgetMixin.__init__(self)
-        self._save_settings = save_settings
+
+    def accept(self):
+        self.save_settings()
+        return self.Base.accept(self)
 
     def reject(self):
-        if self._save_settings:
-            self.save_settings()
+        self.save_settings()
         return self.Base.reject(self)
+
+    def close(self):
+        """save_settings() is handled by accept() and reject()"""
+        self.Base.close(self)
+
+    def closeEvent(self, event):
+        """save_settings() is handled by accept() and reject()"""
+        self.Base.closeEvent(self, event)
 
 
 class MainWindow(MainWindowMixin, QtWidgets.QMainWindow):
