@@ -30,7 +30,7 @@ class LogWidget(QtWidgets.QWidget):
         self.output_text.clear()
 
     def set_output(self, output):
-        self.output_text.setText(output)
+        self.output_text.set_value(output)
 
     def log_status(self, status, out, err=None):
         msg = []
