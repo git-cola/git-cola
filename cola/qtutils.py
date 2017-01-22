@@ -704,8 +704,9 @@ def refresh_button(enabled=True, default=False):
 
 
 def hide_button_menu_indicator(button):
-    cls = type(button)
-    name = cls.__name__
+    """Hide the menu indicator icon on buttons"""
+
+    name = button.__class__.__name__
     stylesheet = """
         %(name)s::menu-indicator {
             image: none;
@@ -717,7 +718,7 @@ def hide_button_menu_indicator(button):
                 border-style: none;
             }
         """
-    button.setStyleSheet(stylesheet % {'name': name})
+    button.setStyleSheet(stylesheet % dict(name=name))
 
 
 def checkbox(text='', tooltip='', checked=None):
