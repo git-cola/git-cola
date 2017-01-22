@@ -527,9 +527,9 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
     def set_diff_oid(self, oid, filename=None):
-        self.diff.setText('+++ ' + N_('Loading...'))
+        self.diff.set_value('+++ ' + N_('Loading...'))
         task = DiffInfoTask(oid, filename, self)
-        task.connect(self.diff.setText)
+        task.connect(self.diff.set_value)
         self.runtask.start(task)
 
     def commits_selected(self, commits):
