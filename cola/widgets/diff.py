@@ -6,6 +6,14 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..i18n import N_
+from ..models import main
+from ..models import selection
+from ..qtutils import add_action
+from ..qtutils import create_action_button
+from ..qtutils import create_menu
+from ..qtutils import make_format
+from ..qtutils import RGB
 from .. import actions
 from .. import cmds
 from .. import core
@@ -15,16 +23,9 @@ from .. import gravatar
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
-from ..i18n import N_
-from ..models import main
-from ..models import selection
-from ..qtutils import add_action
-from ..qtutils import create_action_button
-from ..qtutils import create_menu
-from ..qtutils import make_format
-from ..qtutils import RGB
-from . import defs
+from .text import TextDecorator
 from .text import VimTextEdit
+from . import defs
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
