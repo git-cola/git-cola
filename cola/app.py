@@ -165,39 +165,43 @@ class ColaApplication(object):
         palette = self._app.palette()
         window = palette.color(QtGui.QPalette.Window)
         highlight = palette.color(QtGui.QPalette.Highlight)
+        shadow = palette.color(QtGui.QPalette.Shadow)
+        base = palette.color(QtGui.QPalette.Base)
 
         window_rgb = qtutils.rgb_css(window)
         highlight_rgb = qtutils.rgb_css(highlight)
+        shadow_rgb = qtutils.rgb_css(shadow)
+        base_rgb = qtutils.rgb_css(base)
 
         self._app.setStyleSheet("""
             QCheckBox::indicator {
-                width: %(checkbox_size)dpx;
-                height: %(checkbox_size)dpx;
+                width: %(checkbox_size)spx;
+                height: %(checkbox_size)spx;
             }
             QCheckBox::indicator::unchecked {
-                border: %(checkbox_border)dpx solid #999;
-                background: #fff;
+                border: %(checkbox_border)spx solid %(shadow_rgb)s;
+                background: %(base_rgb)s;
             }
             QCheckBox::indicator::checked {
                 image: url(%(checkbox_icon)s);
-                border: %(checkbox_border)dpx solid black;
-                background: #fff;
+                border: %(checkbox_border)spx solid %(shadow_rgb)s;
+                background: %(base_rgb)s;
             }
 
             QRadioButton::indicator {
-                width: %(radio_size)dpx;
-                height: %(radio_size)dpx;
+                width: %(radio_size)spx;
+                height: %(radio_size)spx;
             }
             QRadioButton::indicator::unchecked {
-                background: #fff;
-                border: %(radio_border)dpx solid #999;
-                border-radius: %(radio_radius)dpx;
+                border: %(radio_border)spx solid %(shadow_rgb)s;
+                border-radius: %(radio_radius)spx;
+                background: %(base_rgb)s;
             }
             QRadioButton::indicator::checked {
                 image: url(%(radio_icon)s);
-                background: #fff;
-                border: %(radio_border)dpx solid black;
-                border-radius: %(radio_radius)dpx;
+                border: %(radio_border)spx solid %(shadow_rgb)s;
+                border-radius: %(radio_radius)spx;
+                background: %(base_rgb)s;
             }
 
             QSplitter::handle:hover {
@@ -216,6 +220,8 @@ class ColaApplication(object):
             """ % dict(separator=defs.separator,
                        window_rgb=window_rgb,
                        highlight_rgb=highlight_rgb,
+                       shadow_rgb=shadow_rgb,
+                       base_rgb=base_rgb,
                        checkbox_border=defs.border,
                        checkbox_icon=icons.check_name(),
                        checkbox_size=defs.checkbox,
