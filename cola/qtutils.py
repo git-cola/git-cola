@@ -593,8 +593,14 @@ def add_close_action(widget):
                       widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
 
+def app():
+    """Return the current application"""
+    return QtWidgets.QApplication.instance()
+
+
 def desktop():
-    return QtWidgets.QApplication.instance().desktop()
+    """Return the desktop"""
+    return app().desktop()
 
 
 def center_on_screen(widget):
