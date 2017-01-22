@@ -276,6 +276,21 @@ class Grep(Dialog):
         """Launch an editor on the currently selected line"""
         goto_grep(self.result_txt.selected_line()),
 
+    def export_state(self):
+        """Export persistent settings"""
+        state = super(Grep, self).export_state()
+        state['sizes'] = self.splitter.sizes()
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super(Grep, self).apply_state(state)
+        try:
+            self.splitter.setSizes(state['sizes'])
+        except:
+            result = False
+        return result
+
 
 class GrepTextView(VimHintedTextEdit):
     """A text view with hotkeys for launching editors"""
