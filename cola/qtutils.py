@@ -155,16 +155,6 @@ def splitter(orientation, *widgets):
     layout.setHandleWidth(defs.handle_width)
     layout.setChildrenCollapsible(True)
 
-    palette = QtGui.QPalette()
-    highlight = palette.color(palette.Highlight)
-    highlight_rgb = rgb_css(highlight)
-
-    layout.setStyleSheet("""
-        QSplitter::handle:hover {
-            background: %(highlight_rgb)s;
-        }
-        """ % dict(highlight_rgb=highlight_rgb))
-
     for idx, widget in enumerate(widgets):
         layout.addWidget(widget)
         layout.setStretchFactor(idx, 1)
@@ -722,68 +712,25 @@ def hide_button_menu_indicator(button):
 
 
 def checkbox(text='', tooltip='', checked=None):
-    cb = QtWidgets.QCheckBox()
-    if text:
-        cb.setText(text)
-    if tooltip:
-        cb.setToolTip(tooltip)
-    if checked is not None:
-        cb.setChecked(checked)
-
-    url = icons.check_name()
-    style = """
-        QCheckBox::indicator {
-            width: %(size)dpx;
-            height: %(size)dpx;
-        }
-        QCheckBox::indicator::unchecked {
-            border: %(border)dpx solid #999;
-            background: #fff;
-        }
-        QCheckBox::indicator::checked {
-            image: url(%(url)s);
-            border: %(border)dpx solid black;
-            background: #fff;
-        }
-    """ % dict(size=defs.checkbox, border=defs.border, url=url)
-    cb.setStyleSheet(style)
-
-    return cb
+    """Create a checkbox"""
+    return _checkbox(QtWidgets.QCheckBox, text, tooltip, checked)
 
 
 def radio(text='', tooltip='', checked=None):
-    rb = QtWidgets.QRadioButton()
+    """Create a radio button"""
+    return _checkbox(QtWidgets.QRadioButton, text, tooltip, checked)
+
+
+def _checkbox(cls, text, tooltip, checked):
+    """Create a widget and apply properties"""
+    widget = cls()
     if text:
-        rb.setText(text)
+        widget.setText(text)
     if tooltip:
-        rb.setToolTip(tooltip)
+        widget.setToolTip(tooltip)
     if checked is not None:
-        rb.setChecked(checked)
-
-    size = defs.checkbox
-    radius = size / 2
-    border = defs.radio_border
-    url = icons.dot_name()
-    style = """
-        QRadioButton::indicator {
-            width: %(size)dpx;
-            height: %(size)dpx;
-        }
-        QRadioButton::indicator::unchecked {
-            background: #fff;
-            border: %(border)dpx solid #999;
-            border-radius: %(radius)dpx;
-        }
-        QRadioButton::indicator::checked {
-            image: url(%(url)s);
-            background: #fff;
-            border: %(border)dpx solid black;
-            border-radius: %(radius)dpx;
-        }
-    """ % dict(size=size, radius=radius, border=border, url=url)
-    rb.setStyleSheet(style)
-
-    return rb
+        widget.setChecked(checked)
+    return widget
 
 
 class DockTitleBarWidget(QtWidgets.QWidget):

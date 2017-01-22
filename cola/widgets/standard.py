@@ -454,26 +454,6 @@ class MainWindow(MainWindowMixin, QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
         MainWindowMixin.__init__(self)
 
-        palette = self.palette()
-        window = palette.color(QtGui.QPalette.Window)
-        highlight = palette.color(QtGui.QPalette.Highlight)
-
-        window_rgb = qtutils.rgb_css(window)
-        highlight_rgb = qtutils.rgb_css(highlight)
-
-        self.setStyleSheet("""
-            QMainWindow::separator {
-                background: %(window_rgb)s;
-                width: %(separator)spx;
-                height: %(separator)spx;
-            }
-            QMainWindow::separator:hover {
-                background: %(highlight_rgb)s;
-            }
-            """ % dict(separator=defs.separator,
-                       window_rgb=window_rgb,
-                       highlight_rgb=highlight_rgb))
-
 
 class TreeView(QtWidgets.QTreeView):
     Mixin = TreeMixin
