@@ -40,8 +40,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/648
 
-* The `Grep` tool now shows a preview of the selected file's content
-  in a split window below the grep results.
+* `Grep` now shows a preview of the selected file's content in a split window
+  below the grep results.
+
+* `Grep` now includes line numbers in the preview pane's output.
+
+* `Edit Remotes` now remembers its window settings after exiting.
 
 Fixes
 =====
