@@ -6,13 +6,14 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import cmds
-from .. import icons
-from .. import qtutils
 from ..git import git
 from ..git import STDOUT
 from ..i18n import N_
+from .. import cmds
+from .. import icons
+from .. import qtutils
 from . import defs
+from . import standard
 from . import text
 
 
@@ -27,18 +28,14 @@ def new_remote_editor(parent=None):
     return RemoteEditor(parent=parent)
 
 
-class RemoteEditor(QtWidgets.QDialog):
+class RemoteEditor(standard.Dialog):
+
     def __init__(self, parent=None):
-        QtWidgets.QDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent)
 
         self.setWindowTitle(N_('Edit Remotes'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
-            width = max(640, parent.width())
-            height = max(480, parent.height())
-            self.resize(width, height)
-        else:
-            self.resize(720, 300)
 
         self.default_hint = N_(
             'Add and remove remote repositories using the \n'
@@ -89,13 +86,21 @@ class RemoteEditor(QtWidgets.QDialog):
         qtutils.connect_button(self.add_btn, self.add)
         qtutils.connect_button(self.delete_btn, self.delete)
         qtutils.connect_button(self.refresh_btn, self.refresh)
-        qtutils.connect_button(self.close_btn, self.close)
+        qtutils.connect_button(self.close_btn, self.accept)
+        qtutils.add_close_action(self)
 
         thread = self.info_thread
         thread.result.connect(self.info.set_value, type=Qt.QueuedConnection)
 
         self.remotes.itemChanged.connect(self.remote_renamed)
         self.remotes.itemSelectionChanged.connect(self.selection_changed)
+
+        self.init_state(None, self.resize_widget, parent)
+
+    def resize_widget(self, parent):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, 720, 445)
+        self.resize(width, height)
 
     def refresh(self):
         remotes = git.remote()[STDOUT].splitlines()
