@@ -39,7 +39,7 @@ class CompletionLineEdit(text.HintedLineEdit):
     }
 
     def __init__(self, model_factory, hint='', parent=None):
-        text.HintedLineEdit.__init__(self, hint=hint, parent=parent)
+        text.HintedLineEdit.__init__(self, hint, parent=parent)
         # Tracks when the completion popup was active during key events
         self._was_visible = False
         # The most recently selected completion item

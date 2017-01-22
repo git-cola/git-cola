@@ -109,7 +109,6 @@ class Finder(standard.Dialog):
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
         self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
-        self.input_txt.hint.enable(True)
 
         self.tree = filetree.FileTree(parent=self)
 

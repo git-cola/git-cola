@@ -200,8 +200,6 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.description.leave.connect(self.focus_summary)
         self.updated.connect(self.refresh)
 
-        self.summary.hint.enable(True)
-        self.description.hint.enable(True)
         self.commit_group.setEnabled(False)
 
         self.set_tabwidth(prefs.tabwidth())
@@ -371,16 +369,10 @@ class CommitMessageEditor(QtWidgets.QWidget):
         focus_description = not description
 
         # Update summary
-        if not summary and not self.summary.hasFocus():
-            self.summary.hint.enable(True)
-        else:
-            self.summary.set_value(summary, block=True)
+        self.summary.set_value(summary, block=True)
 
         # Update description
-        if not description and not self.description.hasFocus():
-            self.description.hint.enable(True)
-        else:
-            self.description.set_value(description, block=True)
+        self.description.set_value(description, block=True)
 
         # Update text color
         self.refresh_palettes()
@@ -401,7 +393,6 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def set_textwidth(self, width):
         self._textwidth = width
-        self.description.set_textwidth(width)
 
     def set_linebreak(self, brk):
         self._linebreak = brk
@@ -558,7 +549,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
     def __init__(self, parent=None):
         hint = N_('Commit summary')
-        HintedLineEdit.__init__(self, hint, parent)
+        HintedLineEdit.__init__(self, hint, parent=parent)
         self.extra_actions = []
 
         comment_char = prefs.comment_char()

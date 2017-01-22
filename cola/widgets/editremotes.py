@@ -52,7 +52,7 @@ class RemoteEditor(QtWidgets.QDialog):
         self.remotes.setToolTip(N_(
             'Remote git repositories - double-click to rename'))
 
-        self.info = text.HintedTextView(self.default_hint, self)
+        self.info = text.VimHintedTextEdit(self.default_hint, parent=self)
         font = self.info.font()
         metrics = QtGui.QFontMetrics(font)
         width = metrics.width('_' * 42)
@@ -103,7 +103,7 @@ class RemoteEditor(QtWidgets.QDialog):
         self.remotes.addItems(remotes)
         self.remote_list = remotes
         self.info.hint.set_value(self.default_hint)
-        self.info.hint.enable(True)
+        self.info.set_value(self.default_hint)
         for idx, r in enumerate(remotes):
             item = self.remotes.item(idx)
             item.setFlags(item.flags() | Qt.ItemIsEditable)
@@ -149,7 +149,7 @@ class RemoteEditor(QtWidgets.QDialog):
         if remote is None:
             return
         self.info.hint.set_value(N_('Gathering info for "%s"...') % remote)
-        self.info.hint.enable(True)
+        self.info.set_value('')
 
         self.info_thread.remote = remote
         self.info_thread.start()
@@ -187,7 +187,6 @@ class AddRemoteWidget(QtWidgets.QDialog):
 
         def lineedit(hint):
             widget = text.HintedLineEdit(hint)
-            widget.hint.enable(True)
             metrics = QtGui.QFontMetrics(widget.font())
             widget.setMinimumWidth(metrics.width('_' * 32))
             return widget
