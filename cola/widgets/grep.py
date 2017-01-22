@@ -349,7 +349,7 @@ class PreviewTextView(VimMonoTextView):
         if filename != self.filename:
             self.filename = filename
             self.content = content
-            self.setText(content)
+            self.set_value(content)
 
         self.scroll_to_line(line_number)
 
