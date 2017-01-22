@@ -314,7 +314,10 @@ class PreviewTask(qtutils.Task):
         self.line_number = line_number
 
     def task(self):
-        self.content = core.read(self.filename, errors='ignore')
+        try:
+            self.content = core.read(self.filename, errors='ignore')
+        except IOError:
+            pass
         return (self.filename, self.content, self.line_number)
 
 
