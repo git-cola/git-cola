@@ -668,7 +668,7 @@ class MainView(standard.MainWindow):
         show_status_filter = state.get('show_status_filter', False)
         self.statuswidget.filter_widget.setVisible(show_status_filter)
 
-        diff_numbers = state.get('diff_numbers', False)
+        diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
 
         return result

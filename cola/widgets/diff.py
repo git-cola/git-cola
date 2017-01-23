@@ -139,7 +139,7 @@ class DiffTextEdit(VimHintedTextEdit):
                                                  whitespace=whitespace)
         cfg = gitcfg.current()
         self.numbers = DiffLineNumbers(self)
-        self.numbers.setVisible(cfg.get('cola.diffnumbers', False))
+        self.numbers.hide()
 
     def resizeEvent(self, event):
         super(DiffTextEdit, self).resizeEvent(event)
