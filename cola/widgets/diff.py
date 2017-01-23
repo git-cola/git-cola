@@ -598,10 +598,10 @@ class DiffEditor(DiffTextEdit):
     def selected_lines(self):
         cursor = self.textCursor()
         selection_start = cursor.selectionStart()
-        selection_end = cursor.selectionEnd()
+        selection_end = max(selection_start, cursor.selectionEnd() - 1)
 
         line_start = 0
-        for line_idx, line in enumerate(self.toPlainText().split('\n')):
+        for line_idx, line in enumerate(self.value().splitlines()):
             line_end = line_start + len(line)
             if line_start <= selection_start <= line_end:
                 first_line_idx = line_idx
