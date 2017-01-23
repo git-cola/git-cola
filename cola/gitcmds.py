@@ -347,8 +347,7 @@ def extract_diff_header(status, deleted,
     del_tag = 'deleted file mode '
     output = StringIO()
 
-    diff = diffoutput.split('\n')
-    for line in diff:
+    for line in diffoutput.splitlines():
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
         if start or (deleted and del_tag in line):
@@ -359,7 +358,7 @@ def extract_diff_header(status, deleted,
             elif not suppress_header:
                 output.write(line + '\n')
 
-    result = output.getvalue()
+    result = output.getvalue().rstrip('\n')
     output.close()
 
     if with_diff_header:
