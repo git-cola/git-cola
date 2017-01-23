@@ -48,9 +48,6 @@ class LineEdit(QtWidgets.QLineEdit):
         if block:
             self.blockSignals(blocksig)
 
-    def reset_cursor(self):
-        self.setCursorPosition(0)
-
 
 class LineEditCursorPosition(object):
     """Translate cursorPositionChanged(int,int) into cursorPosition(int,int)
@@ -113,11 +110,6 @@ class TextEdit(QtWidgets.QPlainTextEdit):
 
         if block:
             self.blockSignals(blocksig)
-
-    def reset_cursor(self):
-        cursor = self.textCursor()
-        cursor.setPosition(0)
-        self.setTextCursor(cursor)
 
     def tabwidth(self):
         return self._tabwidth
