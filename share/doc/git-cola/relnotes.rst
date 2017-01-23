@@ -47,6 +47,10 @@ Usability, bells and whistles
 
 * `Edit Remotes` now remembers its window settings after exiting.
 
+* `Diff` now has an option to display line numbers in the editor.
+
+  https://github.com/git-cola/git-cola/issues/136
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using

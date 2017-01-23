@@ -1,20 +1,12 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
+import math
 
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import actions
-from .. import cmds
-from .. import core
-from .. import gitcfg
-from .. import gitcmds
-from .. import gravatar
-from .. import hotkeys
-from .. import icons
-from .. import qtutils
 from ..i18n import N_
 from ..models import main
 from ..models import selection
@@ -23,8 +15,20 @@ from ..qtutils import create_action_button
 from ..qtutils import create_menu
 from ..qtutils import make_format
 from ..qtutils import RGB
+from .. import actions
+from .. import cmds
+from .. import compat
+from .. import core
+from .. import diffparse
+from .. import gitcfg
+from .. import gitcmds
+from .. import gravatar
+from .. import hotkeys
+from .. import icons
+from .. import qtutils
+from .text import TextDecorator
+from .text import VimHintedTextEdit
 from . import defs
-from .text import VimTextEdit
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -125,14 +129,159 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
-class DiffTextEdit(VimTextEdit):
+class DiffTextEdit(VimHintedTextEdit):
 
     def __init__(self, parent, is_commit=False, whitespace=True):
-        VimTextEdit.__init__(self, parent)
+        VimHintedTextEdit.__init__(self, '', parent=parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  is_commit=is_commit,
                                                  whitespace=whitespace)
+        cfg = gitcfg.current()
+        self.numbers = DiffLineNumbers(self)
+        self.numbers.setVisible(cfg.get('cola.diffnumbers', False))
+
+    def resizeEvent(self, event):
+        super(DiffTextEdit, self).resizeEvent(event)
+        self.numbers.refresh_size()
+
+    def set_loading_message(self):
+        self.hint.set_value('+++ ' + N_('Loading...'))
+        self.set_value('')
+
+    def set_diff(self, diff):
+        self.hint.set_value('')
+        self.parse_diff_line_numbers(diff)
+        self.set_value(diff)
+
+    def parse_diff_line_numbers(self, diff):
+        self.numbers.set_diff(diff)
+
+
+class FormatDigits(object):
+    """Format numbers for use in diff line numbers"""
+
+    def __init__(self, length):
+        self.fmt = ('%%0%dd' % length)
+        self.empty = (' ' * length)
+        self.dash = (compat.unichr(0xb7) * length)
+
+    def value(self, value):
+        return (self.fmt % value)
+
+
+def format_diff_line(a, b, fmt,
+                     dash=diffparse.DiffLines.DASH,
+                     empty=diffparse.DiffLines.EMPTY):
+    """Format a diff line number entry"""
+
+    return ('%s %s'
+            % (_format_diff_partial(a, fmt, dash, empty),
+               _format_diff_partial(b, fmt, dash, empty)))
+
+
+def _format_diff_partial(value, fmt, dash, empty):
+    """Format one element from the diff line number display"""
+    if value == dash:
+        result = fmt.dash
+    elif value == empty:
+        result = fmt.empty
+    else:
+        result = fmt.value(value)
+    return result
+
+
+class DiffLineNumbers(TextDecorator):
+
+    def __init__(self, parent):
+        self.highlight_line = -1
+        self.lines = None
+        self.parser = diffparse.DiffLines()
+        TextDecorator.__init__(self, parent)
+
+        self.setFont(qtutils.diff_font())
+
+    def set_diff(self, diff):
+        parser = self.parser
+        lines = parser.parse(diff)
+        if parser.valid:
+            self.lines = lines
+        else:
+            self.lines = None
+
+    def set_lines(self, lines):
+        self.lines = lines
+
+    def width_hint(self):
+        if not self.isVisible():
+            return 0
+        document = self.editor.document()
+        parser = self.parser
+        if parser.valid:
+            digits = parser.digits()
+        else:
+            digits = 2
+
+        extra = 5
+        return (defs.margin +
+                (self.fontMetrics().width('0') * (digits + extra)))
+
+    def set_highlighted(self, line_number):
+        """Set the line to highlight"""
+        self.highlight_line = line_number
+
+    def paintEvent(self, event):
+        """Paint the line number"""
+        if not self.lines:
+            return
+
+        QPalette = QtGui.QPalette
+        painter = QtGui.QPainter(self)
+        palette = self.palette()
+
+        painter.fillRect(event.rect(), palette.color(QPalette.Base))
+
+        editor = self.editor
+        content_offset = editor.contentOffset()
+        block = editor.firstVisibleBlock()
+        current_block_number = max(0, self.editor.textCursor().blockNumber())
+        width = self.width()
+
+        highlight = palette.color(QPalette.Highlight)
+        window = palette.color(QPalette.Window)
+        disabled = palette.color(QPalette.Disabled, QPalette.Text)
+        painter.setPen(disabled)
+
+        lines = self.lines
+        num_lines = len(self.lines)
+
+        digits = self.parser.digits()
+        fmt = FormatDigits(digits)
+
+        while block.isValid():
+            block_number = block.blockNumber();
+            if block_number >= num_lines:
+                break
+
+            bounding_rect = editor.blockBoundingGeometry(block)
+            rect = bounding_rect.translated(content_offset).toRect()
+
+            if block_number == self.highlight_line:
+                painter.fillRect(rect.x(), rect.y(),
+                                 width, rect.height(), highlight)
+            elif block_number == current_block_number:
+                painter.fillRect(rect.x(), rect.y(),
+                                 width, rect.height(), window)
+
+            a, b = lines[block_number]
+            number = format_diff_line(a, b, fmt)
+
+            painter.drawText(rect.x(), rect.y(),
+                             self.width() - (defs.margin * 2),
+                             rect.height(),
+                             Qt.AlignRight | Qt.AlignVCenter,
+                             number)
+            block = block.next()  # pylint: disable=next-method-called
 
 
 class DiffEditorWidget(QtWidgets.QWidget):
@@ -179,6 +328,11 @@ class DiffEditor(DiffTextEdit):
             self._update_diff_opts)
         self.diff_function_context_action.setCheckable(True)
 
+        self.diff_show_line_numbers = add_action(
+            self, N_('Show lines numbers'),
+            self._update_diff_opts)
+        self.diff_show_line_numbers.setCheckable(True)
+
         self.diffopts_button = create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure())
         self.diffopts_menu = create_menu(N_('Diff Options'),
@@ -187,6 +341,7 @@ class DiffEditor(DiffTextEdit):
         self.diffopts_menu.addAction(self.diff_ignore_space_at_eol_action)
         self.diffopts_menu.addAction(self.diff_ignore_space_change_action)
         self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
+        self.diffopts_menu.addAction(self.diff_show_line_numbers)
         self.diffopts_menu.addAction(self.diff_function_context_action)
         self.diffopts_button.setMenu(self.diffopts_menu)
         qtutils.hide_button_menu_indicator(self.diffopts_button)
@@ -216,7 +371,7 @@ class DiffEditor(DiffTextEdit):
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.diff_text_changed.connect(self.set_value)
+        self.diff_text_changed.connect(self.set_diff)
 
     def refresh(self):
         enabled = False
@@ -228,11 +383,21 @@ class DiffEditor(DiffTextEdit):
                 enabled = True
         self.action_revert_selection.setEnabled(enabled)
 
+    def enable_line_numbers(self, enabled):
+        """Enable/disable the diff line number display"""
+        self.numbers.setVisible(enabled)
+        self.diff_show_line_numbers.setChecked(enabled)
+
+    def show_line_numbers(self):
+        """Return True if we should show line numbers"""
+        return self.diff_show_line_numbers.isChecked()
+
     def _update_diff_opts(self):
         space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
         space_change = self.diff_ignore_space_change_action.isChecked()
         all_space = self.diff_ignore_all_space_action.isChecked()
         function_context = self.diff_function_context_action.isChecked()
+        self.numbers.setVisible(self.show_line_numbers())
 
         gitcmds.update_diff_overrides(space_at_eol,
                                       space_change,
@@ -527,7 +692,7 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
     def set_diff_oid(self, oid, filename=None):
-        self.diff.set_value('+++ ' + N_('Loading...'))
+        self.diff.set_loading_message()
         task = DiffInfoTask(oid, filename, self)
         task.connect(self.diff.set_value)
         self.runtask.start(task)

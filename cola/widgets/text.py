@@ -602,6 +602,10 @@ class LineNumbers(TextDecorator):
         digits = int(math.log(max(1, document.blockCount()), 10))
         return defs.margin + self.fontMetrics().width('0') * (digits + 2)
 
+    def set_highlighted(self, line_number):
+        """Set the line to highlight"""
+        self.highlight_line = line_number
+
     def paintEvent(self, event):
         """Paint the line number"""
         QPalette = QtGui.QPalette

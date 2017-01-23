@@ -364,12 +364,15 @@ class PreviewTextView(VimTextBrowser):
     def scroll_to_line(self, line_number):
         """Scroll to the specified line number"""
 
+        line_num = int(line_number) - 1
+        self.numbers.set_highlighted(line_num)
+
         cursor = self.textCursor()
         cursor.setPosition(0)
         self.setTextCursor(cursor)
         self.ensureCursorVisible()
 
-        cursor.movePosition(cursor.Down, cursor.MoveAnchor, int(line_number)-1)
+        cursor.movePosition(cursor.Down, cursor.MoveAnchor, line_num)
         cursor.movePosition(cursor.EndOfLine, cursor.KeepAnchor)
         self.setTextCursor(cursor)
         self.ensureCursorVisible()
