@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, unicode_literals
 import unittest
 
 from cola import core
-from cola.diffparse import _parse_range_str, DiffParser
+from cola import diffparse
 
 from test import helper
 
@@ -12,7 +12,8 @@ class ParseDiffTestCase(unittest.TestCase):
 
     def test_diff(self):
         fixture_path = helper.fixture('diff.txt')
-        parser = DiffParser('cola/diffparse.py', core.read(fixture_path))
+        parser = diffparse.DiffParser('cola/diffparse.py',
+                                      core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(len(hunks), 3)
@@ -65,7 +66,7 @@ class ParseDiffTestCase(unittest.TestCase):
 
     def test_diff_at_start(self):
         fixture_path = helper.fixture('diff-start.txt')
-        parser = DiffParser('foo bar/a', core.read(fixture_path))
+        parser = diffparse.DiffParser('foo bar/a', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(hunks[0].lines[0], '@@ -1 +1,4 @@')
@@ -92,7 +93,7 @@ class ParseDiffTestCase(unittest.TestCase):
 
     def test_diff_at_end(self):
         fixture_path = helper.fixture('diff-end.txt')
-        parser = DiffParser('rijndael.js', core.read(fixture_path))
+        parser = diffparse.DiffParser('rijndael.js', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@')
@@ -106,7 +107,7 @@ class ParseDiffTestCase(unittest.TestCase):
 
     def test_diff_that_empties_file(self):
         fixture_path = helper.fixture('diff-empty.txt')
-        parser = DiffParser('filename', core.read(fixture_path))
+        parser = diffparse.DiffParser('filename', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(hunks[0].lines[0], '@@ -1,2 +0,0 @@')
@@ -130,18 +131,19 @@ class ParseDiffTestCase(unittest.TestCase):
 
 
 class ParseRangeStrTestCase(unittest.TestCase):
+
     def test_parse_range_str(self):
-        start, count = _parse_range_str('1,2')
+        start, count = diffparse._parse_range_str('1,2')
         self.assertEqual(start, 1)
         self.assertEqual(count, 2)
 
     def test_parse_range_str_single_line(self):
-        start, count = _parse_range_str('2')
+        start, count = diffparse._parse_range_str('2')
         self.assertEqual(start, 2)
         self.assertEqual(count, 1)
 
     def test_parse_range_str_empty(self):
-        start, count = _parse_range_str('0,0')
+        start, count = diffparse._parse_range_str('0,0')
         self.assertEqual(start, 0)
         self.assertEqual(count, 0)
 
