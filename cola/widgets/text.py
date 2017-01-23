@@ -392,15 +392,15 @@ class HintWidget(QtCore.QObject):
             if active or self.active():
                 self.enable(True)
 
-    def enable(self, hint):
+    def enable(self, enable):
         """Enable/disable hint-mode"""
         if not self.modern:
-            if hint:
-                self._widget.set_value(self.value(), block=True)
+            if enable and self._hint:
+                self._widget.set_value(self._hint, block=True)
                 self._widget.cursor_position.reset()
             else:
                 self._widget.clear()
-        self._update_palette(hint)
+        self._update_palette(enable)
 
     def refresh(self):
         """Update the palette to match the current mode"""
