@@ -665,7 +665,7 @@ class VimTextBrowser(VimTextEdit):
 
 
 class TextDecorator(QtWidgets.QWidget):
-    """Provide line numbers for QPlainTextEdit widgets"""
+    """Common functionality for providing line numbers in text widgets"""
 
     def __init__(self, parent):
         QtWidgets.QWidget.__init__(self, parent)
@@ -705,6 +705,7 @@ class TextDecorator(QtWidgets.QWidget):
 
 
 class LineNumbers(TextDecorator):
+    """Provide line numbers for QPlainTextEdit widgets"""
 
     def __init__(self, parent):
         self.highlight_line = -1
