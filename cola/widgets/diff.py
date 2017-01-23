@@ -191,11 +191,11 @@ class DiffLineNumbers(TextDecorator):
             return 0
         parser = self.parser
         if parser.valid:
-            digits = parser.digits()
+            digits = parser.digits() * 2
         else:
-            digits = 2
+            digits = 4
 
-        extra = 5
+        extra = 2  # one space in-between, one space after
         return (defs.margin +
                 (self.fontMetrics().width('0') * (digits + extra)))
 
@@ -254,10 +254,8 @@ class DiffLineNumbers(TextDecorator):
             text = fmt.value(a, b)
 
             painter.drawText(rect.x(), rect.y(),
-                             self.width() - (defs.margin * 2),
-                             rect.height(),
-                             Qt.AlignRight | Qt.AlignVCenter,
-                             number)
+                             self.width() - (defs.margin * 2), rect.height(),
+                             Qt.AlignRight | Qt.AlignVCenter, text)
             block = block.next()  # pylint: disable=next-method-called
 
 
