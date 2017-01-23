@@ -657,6 +657,7 @@ class MainView(standard.MainWindow):
         state = standard.MainWindow.export_state(self)
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
+        state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
         return state
 
     def apply_state(self, state):
@@ -666,6 +667,10 @@ class MainView(standard.MainWindow):
 
         show_status_filter = state.get('show_status_filter', False)
         self.statuswidget.filter_widget.setVisible(show_status_filter)
+
+        diff_numbers = state.get('diff_numbers', False)
+        self.diffeditor.enable_line_numbers(diff_numbers)
+
         return result
 
     def setup_dockwidget_view_menu(self):
