@@ -67,6 +67,12 @@ def _parse_diff(diff_text):
 
 
 class DiffParser(object):
+    """Parse and rewrite diffs to produce edited patches
+
+    This parser is used for modifying the worktree and index by constructing
+    temporary patches that are applied using "git apply".
+
+    """
 
     def __init__(self, filename, diff_text):
         self.filename = filename
@@ -160,8 +166,7 @@ class DiffParser(object):
             return '\n'.join(lines)
 
     def generate_hunk_patch(self, line_idx, reverse=False):
-        """Return a patch containing only the hunk corresponding to the
-        specified line."""
+        """Return a patch containing the hunk for the specified line only"""
         if not self.hunks:
             return None
         for hunk in self.hunks:
