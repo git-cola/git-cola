@@ -151,8 +151,8 @@ class DiffLinesTestCase(unittest.TestCase):
         # Diff header
         line = 0
         count = 1
-        self.assertEqual(lines[line][0], parser.EMPTY)
-        self.assertEqual(lines[line][1], parser.EMPTY)
+        self.assertEqual(lines[line][0], parser.DASH)
+        self.assertEqual(lines[line][1], parser.DASH)
         line += count
 
         # 3 lines of context
@@ -169,7 +169,7 @@ class DiffLinesTestCase(unittest.TestCase):
         # 10 lines of new text
         count = 10
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.DASH)
+            self.assertEqual(lines[line+i][0], parser.EMPTY)
             self.assertEqual(lines[line+i][1], current_new+i)
 
         line += count
@@ -188,14 +188,14 @@ class DiffLinesTestCase(unittest.TestCase):
         count = 1
         for i in range(count):
             self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], parser.DASH)
+            self.assertEqual(lines[line+i][1], parser.EMPTY)
         line += count
         current_old += count
 
         # 2 lines of addition
         count = 2
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.DASH)
+            self.assertEqual(lines[line+i][0], parser.EMPTY)
             self.assertEqual(lines[line+i][1], current_new+i)
         line += count
         current_new += count
@@ -212,8 +212,8 @@ class DiffLinesTestCase(unittest.TestCase):
         # 1 line of header
         count = 1
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.EMPTY)
-            self.assertEqual(lines[line+i][1], parser.EMPTY)
+            self.assertEqual(lines[line+i][0], parser.DASH)
+            self.assertEqual(lines[line+i][1], parser.DASH)
         line += count
 
         # 3 more lines of context
