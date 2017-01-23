@@ -1,5 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
-
+import math
 import re
 
 from collections import defaultdict
@@ -64,6 +64,79 @@ def _parse_diff(diff_text):
         elif line:
             hunks[-1].lines.append(line)
     return hunks
+
+
+def digits(number):
+    """Return the number of digits needed to display a number"""
+    if number >= 0:
+        result = int(math.log10(number)) + 1
+    else:
+        result = 1
+    return result
+
+
+class DiffLines(object):
+    """Parse diffs and gather line numbers"""
+
+    EMPTY = -1
+    DASH = -2
+
+    def __init__(self):
+        self.max_old = -1
+        self.max_new = -1
+        self.valid = True
+
+    def digits(self):
+        return digits(max(self.max_old, self.max_new))
+
+    def parse(self, diff_text):
+        self.max_old = -1
+        self.max_new = -1
+
+        lines = []
+        old_start = 0
+        old_count = 0
+        new_start = 0
+        new_count = 0
+
+        INITIAL_STATE = 0
+        DIFF_STATE = 1
+        state = INITIAL_STATE
+
+        for idx, text in enumerate(diff_text.split('\n')):
+            match = _HUNK_HEADER_RE.match(text)
+            if match:
+                state = DIFF_STATE
+
+                old_start, old_count = _parse_range_str(match.group(1))
+                new_start, new_count = _parse_range_str(match.group(2))
+
+                lines.append((self.EMPTY, self.EMPTY))
+                self.max_old = max(old_start + old_count, self.max_old)
+                self.max_new = max(new_start + new_count, self.max_new)
+            else:
+                if state == INITIAL_STATE:
+                    lines.append((self.EMPTY, self.EMPTY))
+                    continue
+
+                if text.startswith('-'):
+                    lines.append((old_start, self.DASH))
+                    old_start += 1
+                elif text.startswith('+'):
+                    lines.append((self.DASH, new_start))
+                    new_start += 1
+                elif text.startswith(' '):
+                    lines.append((old_start, new_start))
+                    old_start += 1
+                    new_start += 1
+                elif not text:
+                    old_start += 1
+                    new_start += 1
+                else:
+                    self.valid = False
+                    continue
+
+        return lines
 
 
 class DiffParser(object):
