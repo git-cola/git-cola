@@ -233,8 +233,6 @@ class DiffLinesTestCase(unittest.TestCase):
         expect_max_new = 62
         self.assertEqual(expect_max_new, parser.max_new)
 
-        print parser.max_old
-        print parser.max_new
         self.assertEqual(parser.digits(), 2)
 
 class ParseRangeStrTestCase(unittest.TestCase):
