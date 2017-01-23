@@ -1,8 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
 import math
 import re
-
 from collections import defaultdict
+
+from . import compat
 
 
 _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
@@ -137,6 +138,42 @@ class DiffLines(object):
                     continue
 
         return lines
+
+
+class FormatDigits(object):
+    """Format numbers for use in diff line numbers"""
+
+    DASH = DiffLines.DASH
+    EMPTY = DiffLines.EMPTY
+
+    def __init__(self, dash='', empty=''):
+        self.fmt = ''
+        self.empty = ''
+        self.dash = ''
+        self._dash = dash or compat.unichr(0xb7)
+        self._empty = empty or ' '
+
+    def set_digits(self, digits):
+        self.fmt = ('%%0%dd' % digits)
+        self.empty = (self._empty * digits)
+        self.dash = (self._dash * digits)
+
+    def value(self, old, new):
+        old_str = self._format(old)
+        new_str = self._format(new)
+        return ('%s %s' % (old_str, new_str))
+
+    def number(self, value):
+        return (self.fmt % value)
+
+    def _format(self, value):
+        if value == self.DASH:
+            result = self.dash
+        elif value == self.EMPTY:
+            result = self.empty
+        else:
+            result = self.number(value)
+        return result
 
 
 class DiffParser(object):

@@ -164,47 +164,15 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.numbers.set_diff(diff)
 
 
-class FormatDigits(object):
-    """Format numbers for use in diff line numbers"""
-
-    def __init__(self, length):
-        self.fmt = ('%%0%dd' % length)
-        self.empty = (' ' * length)
-        self.dash = (compat.unichr(0xb7) * length)
-
-    def value(self, value):
-        return (self.fmt % value)
-
-
-def format_diff_line(a, b, fmt,
-                     dash=diffparse.DiffLines.DASH,
-                     empty=diffparse.DiffLines.EMPTY):
-    """Format a diff line number entry"""
-
-    return ('%s %s'
-            % (_format_diff_partial(a, fmt, dash, empty),
-               _format_diff_partial(b, fmt, dash, empty)))
-
-
-def _format_diff_partial(value, fmt, dash, empty):
-    """Format one element from the diff line number display"""
-    if value == dash:
-        result = fmt.dash
-    elif value == empty:
-        result = fmt.empty
-    else:
-        result = fmt.value(value)
-    return result
-
-
 class DiffLineNumbers(TextDecorator):
 
     def __init__(self, parent):
         self.highlight_line = -1
         self.lines = None
         self.parser = diffparse.DiffLines()
-        TextDecorator.__init__(self, parent)
+        self.formatter = diffparse.FormatDigits()
 
+        TextDecorator.__init__(self, parent)
         self.setFont(qtutils.diff_font())
 
     def set_diff(self, diff):
@@ -261,7 +229,8 @@ class DiffLineNumbers(TextDecorator):
         num_lines = len(self.lines)
 
         digits = self.parser.digits()
-        fmt = FormatDigits(digits)
+        fmt = self.formatter
+        fmt.set_digits(digits)
 
         while block.isValid():
             block_number = block.blockNumber();
@@ -282,7 +251,7 @@ class DiffLineNumbers(TextDecorator):
                                  width, rect.height(), window)
 
             a, b = lines[block_number]
-            number = format_diff_line(a, b, fmt)
+            text = fmt.value(a, b)
 
             painter.drawText(rect.x(), rect.y(),
                              self.width() - (defs.margin * 2),

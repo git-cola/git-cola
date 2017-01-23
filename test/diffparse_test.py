@@ -235,6 +235,67 @@ class DiffLinesTestCase(unittest.TestCase):
 
         self.assertEqual(parser.digits(), 2)
 
+
+class FormatDiffLinesTestCase(unittest.TestCase):
+
+    def test_format_basic(self):
+        fmt = diffparse.FormatDigits()
+        fmt.set_digits(2)
+
+        expect = '01 99'
+        actual = fmt.value(1, 99)
+        self.assertEqual(expect, actual)
+
+    def test_format_reuse(self):
+        fmt = diffparse.FormatDigits()
+
+        fmt.set_digits(3)
+        expect = '001 099'
+        actual = fmt.value(1, 99)
+        self.assertEqual(expect, actual)
+
+        fmt.set_digits(4)
+        expect = '0001 0099'
+        actual = fmt.value(1, 99)
+        self.assertEqual(expect, actual)
+
+    def test_format_special_values(self):
+        fmt = diffparse.FormatDigits(dash='-')
+        fmt.set_digits(3)
+
+        expect = '    099'
+        actual = fmt.value(fmt.EMPTY, 99)
+        self.assertEqual(expect, actual)
+
+        expect = '001    '
+        actual = fmt.value(1, fmt.EMPTY)
+        self.assertEqual(expect, actual)
+
+        expect = '       '
+        actual = fmt.value(fmt.EMPTY, fmt.EMPTY)
+        self.assertEqual(expect, actual)
+
+        expect = '--- 001'
+        actual = fmt.value(fmt.DASH, 1)
+        self.assertEqual(expect, actual)
+
+        expect = '099 ---'
+        actual = fmt.value(99, fmt.DASH)
+        self.assertEqual(expect, actual)
+
+        expect = '--- ---'
+        actual = fmt.value(fmt.DASH, fmt.DASH)
+        self.assertEqual(expect, actual)
+
+        expect = '    ---'
+        actual = fmt.value(fmt.EMPTY, fmt.DASH)
+        self.assertEqual(expect, actual)
+
+        expect = '---    '
+        actual = fmt.value(fmt.DASH, fmt.EMPTY)
+        self.assertEqual(expect, actual)
+
+
 class ParseRangeStrTestCase(unittest.TestCase):
 
     def test_parse_range_str(self):
