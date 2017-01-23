@@ -137,7 +137,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  is_commit=is_commit,
                                                  whitespace=whitespace)
-        cfg = gitcfg.current()
         self.numbers = DiffLineNumbers(self)
         self.numbers.hide()
 
@@ -222,7 +221,6 @@ class DiffLineNumbers(TextDecorator):
     def width_hint(self):
         if not self.isVisible():
             return 0
-        document = self.editor.document()
         parser = self.parser
         if parser.valid:
             digits = parser.digits()
