@@ -141,6 +141,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.numbers = DiffLineNumbers(self)
         self.numbers.hide()
 
+        self.cursorPositionChanged.connect(self._cursor_changed)
+
+    def _cursor_changed(self):
+        """Update the line number display when the cursor changes"""
+        line_number = max(0, self.textCursor().blockNumber())
+        self.numbers.set_highlighted(line_number)
+
     def resizeEvent(self, event):
         super(DiffTextEdit, self).resizeEvent(event)
         self.numbers.refresh_size()
@@ -248,9 +255,9 @@ class DiffLineNumbers(TextDecorator):
         width = self.width()
 
         highlight = palette.color(QPalette.Highlight)
+        highlight_text = palette.color(QPalette.HighlightedText)
         window = palette.color(QPalette.Window)
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
-        painter.setPen(disabled)
 
         lines = self.lines
         num_lines = len(self.lines)
@@ -266,7 +273,10 @@ class DiffLineNumbers(TextDecorator):
             bounding_rect = editor.blockBoundingGeometry(block)
             rect = bounding_rect.translated(content_offset).toRect()
 
+            painter.setPen(disabled)
+
             if block_number == self.highlight_line:
+                painter.setPen(highlight_text)
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
             elif block_number == current_block_number:
