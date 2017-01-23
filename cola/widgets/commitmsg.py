@@ -393,6 +393,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def set_textwidth(self, width):
         self._textwidth = width
+        self.description.set_textwidth(width)
 
     def set_linebreak(self, brk):
         self._linebreak = brk
