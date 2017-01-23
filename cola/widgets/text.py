@@ -80,6 +80,7 @@ class BaseTextEditExtension(QtCore.QObject):
         self._get_value = get_value
         self._tabwidth = 8
         widget.setMinimumSize(QtCore.QSize(1, 1))
+        widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
         widget.setLineWrapMode(widget.NoWrap)
         widget.setCursorWidth(defs.cursor_width)
         if readonly:
