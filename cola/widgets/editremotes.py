@@ -49,7 +49,7 @@ class RemoteEditor(standard.Dialog):
         self.remotes.setToolTip(N_(
             'Remote git repositories - double-click to rename'))
 
-        self.info = text.VimHintedTextEdit(self.default_hint, parent=self)
+        self.info = text.VimHintedPlainTextEdit(self.default_hint, parent=self)
         font = self.info.font()
         metrics = QtGui.QFontMetrics(font)
         width = metrics.width('_' * 42)

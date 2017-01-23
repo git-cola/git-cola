@@ -17,7 +17,7 @@ from .. import utils
 from .. import qtutils
 from .standard import Dialog
 from .text import HintedLineEdit
-from .text import VimHintedTextEdit
+from .text import VimHintedPlainTextEdit
 from .text import VimTextBrowser
 from . import defs
 
@@ -292,11 +292,11 @@ class Grep(Dialog):
         return result
 
 
-class GrepTextView(VimHintedTextEdit):
+class GrepTextView(VimHintedPlainTextEdit):
     """A text view with hotkeys for launching editors"""
 
     def __init__(self, hint, parent):
-        VimHintedTextEdit.__init__(self, hint, parent=parent)
+        VimHintedPlainTextEdit.__init__(self, hint, parent=parent)
 
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)

@@ -27,7 +27,7 @@ from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .text import TextDecorator
-from .text import VimHintedTextEdit
+from .text import VimHintedPlainTextEdit
 from . import defs
 
 
@@ -129,10 +129,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
-class DiffTextEdit(VimHintedTextEdit):
+class DiffTextEdit(VimHintedPlainTextEdit):
 
     def __init__(self, parent, is_commit=False, whitespace=True):
-        VimHintedTextEdit.__init__(self, '', parent=parent)
+        VimHintedPlainTextEdit.__init__(self, '', parent=parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  is_commit=is_commit,

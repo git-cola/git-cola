@@ -68,70 +68,68 @@ class LineEditCursorPosition(object):
         self._widget.setCursorPosition(0)
 
 
-class TextEdit(QtWidgets.QPlainTextEdit):
 
-    cursor_changed = Signal(int, int)
-    leave = Signal()
+class BaseTextEditExtension(QtCore.QObject):
 
-    def __init__(self, parent=None, get_value=None, readonly=False):
-        QtWidgets.QPlainTextEdit.__init__(self, parent)
-        self.cursor_position = TextEditCursorPosition(self)
+    def __init__(self, widget, get_value, readonly):
+        QtCore.QObject.__init__(self, widget)
+        self.widget = widget
+        self.cursor_position = TextEditCursorPosition(widget, self)
         if get_value is None:
             get_value = get_stripped
         self._get_value = get_value
         self._tabwidth = 8
-        self.setMinimumSize(QtCore.QSize(1, 1))
-        self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
-        self.setCursorWidth(defs.cursor_width)
+        widget.setMinimumSize(QtCore.QSize(1, 1))
+        widget.setLineWrapMode(widget.NoWrap)
+        widget.setCursorWidth(defs.cursor_width)
         if readonly:
-            setup_readonly_flags(self)
+            setup_readonly_flags(widget)
 
     def get(self):
         """Return the raw unicode value from Qt"""
-        return self.toPlainText()
+        return self.widget.toPlainText()
 
     def value(self):
         """Return a safe value, e.g. a stripped value"""
-        return self._get_value(self)
+        return self._get_value(self.widget)
 
     def set_value(self, value, block=False):
         if block:
-            blocksig = self.blockSignals(True)
+            blocksig = self.widget.blockSignals(True)
 
         # Save cursor position
-        cursor = self.textCursor()
+        cursor = self.widget.textCursor()
         position = cursor.position()
         # Update text
-        self.setPlainText(value)
+        self.widget.setPlainText(value)
         # Restore cursor
-        cursor = self.textCursor()
+        cursor = self.widget.textCursor()
         cursor.setPosition(min(position, cursor.position()))
-        self.setTextCursor(cursor)
+        self.widget.setTextCursor(cursor)
 
         if block:
-            self.blockSignals(blocksig)
+            self.widget.blockSignals(blocksig)
 
     def tabwidth(self):
         return self._tabwidth
 
     def set_tabwidth(self, width):
         self._tabwidth = width
-        font = self.font()
+        font = self.widget.font()
         fm = QtGui.QFontMetrics(font)
         pixels = fm.width('M' * width)
-        self.setTabStopWidth(pixels)
+        self.widget.setTabStopWidth(pixels)
+
+    def set_textwidth(self, width):
+        pass
 
     def set_linebreak(self, brk):
-        if brk:
-            wrapmode = QtWidgets.QPlainTextEdit.WidgetWidth
-        else:
-            wrapmode = QtWidgets.QPlainTextEdit.NoWrap
-        self.setLineWrapMode(wrapmode)
+        pass
 
     def selected_line(self):
-        cursor = self.textCursor()
+        cursor = self.widget.textCursor()
         offset = cursor.position()
-        contents = self.toPlainText()
+        contents = self.value()
         while (offset >= 1 and
                 contents[offset-1] and
                 contents[offset-1] != '\n'):
@@ -143,23 +141,126 @@ class TextEdit(QtWidgets.QPlainTextEdit):
             line = data
         return line
 
-    def mousePressEvent(self, event):
+    def mouse_press_event(self, event):
         # Move the text cursor so that the right-click events operate
         # on the current position, not the last left-clicked position.
+        widget = self.widget
         if event.button() == Qt.RightButton:
-            if not self.textCursor().hasSelection():
-                self.setTextCursor(self.cursorForPosition(event.pos()))
+            if not widget.textCursor().hasSelection():
+                cursor = widget.cursorForPosition(event.pos())
+                widget.setTextCursor(widget.cursorForPosition(event.pos()))
+
+
+class PlainTextEditExtension(BaseTextEditExtension):
+
+    def set_linebreak(self, brk):
+        if brk:
+            wrapmode = QtWidgets.QPlainTextEdit.WidgetWidth
+        else:
+            wrapmode = QtWidgets.QPlainTextEdit.NoWrap
+        self.widget.setLineWrapMode(wrapmode)
+
+
+class PlainTextEdit(QtWidgets.QPlainTextEdit):
+
+    cursor_changed = Signal(int, int)
+    leave = Signal()
+
+    def __init__(self, parent=None, get_value=None, readonly=False):
+        QtWidgets.QPlainTextEdit.__init__(self, parent)
+        self.ext = PlainTextEditExtension(self, get_value, readonly)
+        self.cursor_position = self.ext.cursor_position
+
+    def get(self):
+        """Return the raw unicode value from Qt"""
+        return self.ext.get()
+
+    def value(self):
+        """Return a safe value, e.g. a stripped value"""
+        return self.ext.value()
+
+    def set_value(self, value, block=False):
+        self.ext.set_value(value, block=block)
+
+    def selected_line(self):
+        return self.ext.selected_line()
+
+    def set_tabwidth(self, width):
+        self.ext.set_tabwidth(width)
+
+    def set_textwidth(self, width):
+        self.ext.set_textwidth(width)
+
+    def set_linebreak(self, brk):
+        self.ext.set_linebreak(brk)
+
+    def mousePressEvent(self, event):
+        self.ext.mouse_press_event(event)
+        super(PlainTextEdit, self).mousePressEvent(event)
+
+
+class TextEditExtension(BaseTextEditExtension):
+
+    def set_linebreak(self, brk):
+        if brk:
+            wrapmode = QtWidgets.QTextEdit.FixedColumnWidth
+        else:
+            wrapmode = QtWidgets.QTextEdit.NoWrap
+        self.widget.setLineWrapMode(wrapmode)
+
+    def set_textwidth(self, width):
+        self.widget.setLineWrapColumnOrWidth(width)
+
+
+
+class TextEdit(QtWidgets.QTextEdit):
+
+    cursor_changed = Signal(int, int)
+    leave = Signal()
+
+    def __init__(self, parent=None, get_value=None, readonly=False):
+        QtWidgets.QTextEdit.__init__(self, parent)
+        self.ext = TextEditExtension(self, get_value, readonly)
+        self.cursor_position = self.ext.cursor_position
+
+    def get(self):
+        """Return the raw unicode value from Qt"""
+        return self.ext.get()
+
+    def value(self):
+        """Return a safe value, e.g. a stripped value"""
+        return self.ext.value()
+
+    def set_value(self, value, block=False):
+        self.ext.set_value(value, block=block)
+
+    def selected_line(self):
+        return self.ext.selected_line()
+
+    def set_tabwidth(self, width):
+        self.ext.set_tabwidth(width)
+
+    def set_textwidth(self, width):
+        self.ext.set_textwidth(width)
+
+    def set_linebreak(self, brk):
+        self.ext.set_linebreak(brk)
+
+    def mousePressEvent(self, event):
+        self.ext.mouse_press_event(event)
         super(TextEdit, self).mousePressEvent(event)
 
 
 class TextEditCursorPosition(object):
 
-    def __init__(self, widget):
+    def __init__(self, widget, ext):
         self._widget = widget
+        self._ext = ext
         widget.cursorPositionChanged.connect(self.emit)
 
     def emit(self):
         widget = self._widget
+        ext = self._ext
         cursor = widget.textCursor()
         position = cursor.position()
         txt = widget.get()
@@ -167,7 +268,7 @@ class TextEditCursorPosition(object):
         row = before.count('\n')
         line = before.split('\n')[row]
         col = cursor.columnNumber()
-        col += line[:col].count('\t') * (widget.tabwidth() - 1)
+        col += line[:col].count('\t') * (ext.tabwidth() - 1)
         widget.cursor_changed.emit(row+1, col)
 
     def reset(self):
@@ -191,10 +292,10 @@ def setup_readonly_flags(widget):
                                    Qt.TextSelectableByMouse)
 
 
-class MonoTextEdit(TextEdit):
+class MonoTextEdit(PlainTextEdit):
 
     def __init__(self, parent=None, readonly=False):
-        TextEdit.__init__(self, parent=parent, readonly=readonly)
+        PlainTextEdit.__init__(self, parent=parent, readonly=readonly)
         setup_mono_font(self)
 
 
@@ -337,13 +438,32 @@ class HintWidget(QtCore.QObject):
             self.enable(True)
 
 
+class HintedPlainTextEdit(PlainTextEdit):
+    """A hinted plain text edit"""
+
+    def __init__(self, hint, parent=None, readonly=False):
+        PlainTextEdit.__init__(self, parent=parent,
+                               get_value=get_value_hinted,
+                               readonly=readonly)
+        self.hint = HintWidget(self, hint)
+        setup_mono_font(self)
+        # Refresh palettes when text changes
+        self.textChanged.connect(self.hint.refresh)
+
+    def set_value(self, value, block=False):
+        """Set the widget text or enable hint mode when empty"""
+        if value or self.hint.modern:
+            PlainTextEdit.set_value(self, value, block=block)
+        else:
+            self.hint.enable(True)
+
+
 class HintedTextEdit(TextEdit):
     """A hinted text edit"""
 
     def __init__(self, hint, parent=None, readonly=False):
         TextEdit.__init__(self, parent=parent,
-                          get_value=get_value_hinted,
-                          readonly=readonly)
+                          get_value=get_value_hinted, readonly=readonly)
         self.hint = HintWidget(self, hint)
         setup_mono_font(self)
         # Refresh palettes when text changes
@@ -455,17 +575,17 @@ class VimMixin(object):
         return self.Base.keyPressEvent(widget, event)
 
 
-class VimHintedTextEdit(HintedTextEdit):
-    """HintedTextEdit with vim hotkeys
+class VimHintedPlainTextEdit(HintedPlainTextEdit):
+    """HintedPlainTextEdit with vim hotkeys
 
     This can only be used in read-only mode.
 
     """
-    Base = HintedTextEdit
+    Base = HintedPlainTextEdit
     Mixin = VimMixin
 
     def __init__(self, hint, parent=None):
-        HintedTextEdit.__init__(self, hint, parent=parent, readonly=True)
+        HintedPlainTextEdit.__init__(self, hint, parent=parent, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
