@@ -81,6 +81,7 @@ class BaseTextEditExtension(QtCore.QObject):
         self._tabwidth = 8
         self._readonly = readonly
         self._init_flags()
+        self.init()
 
     def _init_flags(self):
         widget = self.widget
@@ -157,6 +158,10 @@ class BaseTextEditExtension(QtCore.QObject):
 
     # For extension by sub-classes
 
+    def init(self):
+        """Called during init for class-specific settings"""
+        pass
+
     def set_textwidth(self, width):
         """Set the text width"""
         pass
@@ -215,6 +220,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
 
 class TextEditExtension(BaseTextEditExtension):
+
+    def init(self):
+        widget = self.widget
+        widget.setAcceptRichText(False)
 
     def set_linebreak(self, brk):
         if brk:
