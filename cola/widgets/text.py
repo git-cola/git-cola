@@ -79,12 +79,22 @@ class BaseTextEditExtension(QtCore.QObject):
             get_value = get_stripped
         self._get_value = get_value
         self._tabwidth = 8
+        self._readonly = readonly
+        self._init_flags()
+
+    def _init_flags(self):
+        widget = self.widget
         widget.setMinimumSize(QtCore.QSize(1, 1))
         widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
         widget.setLineWrapMode(widget.NoWrap)
         widget.setCursorWidth(defs.cursor_width)
-        if readonly:
-            setup_readonly_flags(widget)
+        if self._readonly:
+            widget.setReadOnly(True)
+            widget.setAcceptDrops(False)
+            widget.setTabChangesFocus(True)
+            widget.setUndoRedoEnabled(False)
+            widget.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
+                                           Qt.TextSelectableByMouse)
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -121,12 +131,6 @@ class BaseTextEditExtension(QtCore.QObject):
         pixels = fm.width('M' * width)
         self.widget.setTabStopWidth(pixels)
 
-    def set_textwidth(self, width):
-        pass
-
-    def set_linebreak(self, brk):
-        pass
-
     def selected_line(self):
         cursor = self.widget.textCursor()
         offset = cursor.position()
@@ -150,6 +154,16 @@ class BaseTextEditExtension(QtCore.QObject):
             if not widget.textCursor().hasSelection():
                 cursor = widget.cursorForPosition(event.pos())
                 widget.setTextCursor(widget.cursorForPosition(event.pos()))
+
+    # For extension by sub-classes
+
+    def set_textwidth(self, width):
+        """Set the text width"""
+        pass
+
+    def set_linebreak(self, brk):
+        """Enable word wrapping"""
+        pass
 
 
 class PlainTextEditExtension(BaseTextEditExtension):
@@ -282,15 +296,6 @@ class TextEditCursorPosition(object):
 def setup_mono_font(widget):
     widget.setFont(qtutils.diff_font())
     widget.set_tabwidth(prefs.tabwidth())
-
-
-def setup_readonly_flags(widget):
-    widget.setAcceptDrops(False)
-    widget.setTabChangesFocus(True)
-    widget.setUndoRedoEnabled(False)
-    widget.setReadOnly(True)
-    widget.setTextInteractionFlags(Qt.TextSelectableByKeyboard |
-                                   Qt.TextSelectableByMouse)
 
 
 class MonoTextEdit(PlainTextEdit):
