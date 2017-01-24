@@ -1477,6 +1477,28 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 corresponding commit. Columns are distributed using the algorithm described
 below.
 
+    Row assignment algorithm
+
+    The algorithm aims consequent.
+    1. A commit should be above all its parents.
+    2. No commit should be at right side of a commit with a tag in same row.
+This prevents overlapping of tag labels with commits and other labels.
+    3. Commit density should be maximized.
+
+    The algorithm requires that all parents of a commit were assigned column.
+Nodes must be traversed in generation ascend order. This guarantees that all
+parents of a commit were assigned row. So, the algorithm may operate in course
+of column assignment algorithm.
+
+   Row assignment uses frontier. A frontier is a dictionary that contains
+minimum available row index for each column. It propagates during the
+algorithm. Set of cells with tags is also maintained to meet second aim.
+
+    Initialization is performed by reset_rows method. Each new column should
+be declared using declare_column method. Getting row for a cell is implemented
+in alloc_cell method. Frontier must be propagated for any child of fork
+commit which occupies different column. This meets first aim.
+
     Column assignment algorithm
 
     The algorithm traverses nodes in generation ascend order. This guarantees
@@ -1524,6 +1546,20 @@ coordinates based on its row and column multiplied by the coefficient.
             node.column = None
         self.columns = {}
 
+    def reset_rows(self):
+        self.frontier = {}
+        self.tagged_cells = set()
+
+    def declare_column(self, column):
+        try:
+            # This is heuristic that mostly affects roots. Note that the
+            # frontier values for fork children will be overridden in course of
+            # propagate_frontier.
+            self.frontier[column] = self.frontier[column - 1] - 1
+        except KeyError:
+            # First commit must be assigned 0 row.
+            self.frontier[column] = 0
+
     def alloc_column(self):
         columns = self.columns
         for c in count(0):
@@ -1531,6 +1567,57 @@ coordinates based on its row and column multiplied by the coefficient.
                 break
         columns[c] = 1
         return c
+
+    def alloc_cell(self, column, tags):
+        # Get empty cell from frontier.
+        cell_row = self.frontier[column]
+
+        if tags:
+            # Prevent overlapping with right cells. Do not occupy row if the
+            # row is occupied by a commit at right side.
+            for c in range(column + 1, len(self.frontier)):
+                frontier = self.frontier[c]
+                if frontier > cell_row:
+                    cell_row = frontier
+
+        # Avoid overlapping with tags of left cells.
+        # Sorting is a part for column overlapping check optimization.
+        columns = sorted(range(0, column), key=lambda c: self.frontier[c])
+        while columns:
+            # Optimization. Remove columns which cannot contain overlapping
+            # tags because all its commits are below.
+            while columns:
+                c = columns[0]
+                if self.frontier[c] <= cell_row:
+                    # The column cannot overlap.
+                    columns.pop(0)
+                else:
+                    # This column may overlap because the frontier is above.
+                    # Consequent columns may overlap too because columns
+                    # sorting criteria.
+                    break
+
+            for c in columns:
+                if (c, cell_row) in self.tagged_cells:
+                    # Overlapping. Try next row.
+                    cell_row += 1
+                    break
+            else:
+                # No overlapping was found.
+                break
+            # Note that all checks should be made for new cell_row value.
+
+        if tags:
+            self.tagged_cells.add((column, cell_row))
+
+        # Propagate frontier.
+        self.frontier[column] = cell_row + 1
+        return cell_row
+
+    def propagate_frontier(self, column, value):
+        current = self.frontier[column]
+        if current < value:
+            self.frontier[column] = value
 
     def leave_column(self, column):
         count = self.columns[column]
