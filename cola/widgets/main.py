@@ -149,6 +149,8 @@ class MainView(standard.MainWindow):
 
         self.commit_amend_action = add_action_bool(
             self, N_('Amend Last Commit'), cmds.run(cmds.AmendMode), False)
+        self.commit_amend_action.setShortcut(hotkeys.AMEND)
+        self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
         self.unstage_all_action = add_action(
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
