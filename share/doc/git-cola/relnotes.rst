@@ -51,6 +51,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/136
 
+* `Amend Last Commit` can now be triggered via the `Commit` menu in addition
+  to the commit message editor's options.
+
+  https://github.com/git-cola/git-cola/issues/640
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using

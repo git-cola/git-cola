@@ -127,6 +127,7 @@ Thanks
 * Taylor Braun-Jones
 * Thiemo van Engelen
 * Thomas Kluyver
+* Tim Schumacher
 * Trevor Alexander
 * Ugo Riboni
 * Uri Okrent

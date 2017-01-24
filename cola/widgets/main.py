@@ -145,6 +145,11 @@ class MainView(standard.MainWindow):
 
         # All Actions
         add_action = qtutils.add_action
+        add_action_bool = qtutils.add_action_bool
+
+        self.commit_amend_action = add_action_bool(
+            self, N_('Amend Last Commit'), cmds.run(cmds.AmendMode), False)
+
         self.unstage_all_action = add_action(
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
         self.unstage_all_action.setIcon(icons.remove())
@@ -343,7 +348,7 @@ class MainView(standard.MainWindow):
                                         self.rebase_skip_action,
                                         self.rebase_abort_action)
 
-        self.lock_layout_action = qtutils.add_action_bool(
+        self.lock_layout_action = add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
@@ -395,6 +400,8 @@ class MainView(standard.MainWindow):
         # Commit Menu
         self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
         self.commit_menu.setTitle(N_('Commit@@verb'))
+        self.commit_menu.addAction(self.commit_amend_action)
+        self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()
@@ -625,6 +632,9 @@ class MainView(standard.MainWindow):
 
         if self.mode == self.model.mode_amend:
             alerts.append(N_('Amending'))
+            self.commit_amend_action.setChecked(True)
+        else:
+            self.commit_amend_action.setChecked(False)
 
         l = unichr(0xab)
         r = unichr(0xbb)
