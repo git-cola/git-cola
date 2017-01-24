@@ -145,6 +145,8 @@ class MainView(standard.MainWindow):
 
         # All Actions
         add_action = qtutils.add_action
+        add_action_bool = qtutils.add_action_bool
+
         self.unstage_all_action = add_action(
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
         self.unstage_all_action.setIcon(icons.remove())
@@ -343,7 +345,7 @@ class MainView(standard.MainWindow):
                                         self.rebase_skip_action,
                                         self.rebase_abort_action)
 
-        self.lock_layout_action = qtutils.add_action_bool(
+        self.lock_layout_action = add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
