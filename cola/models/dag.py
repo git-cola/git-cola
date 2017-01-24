@@ -101,6 +101,7 @@ class Commit(object):
                  'email',
                  'generation',
                  'column',
+                 'row',
                  'parsed')
 
     def __init__(self, oid=None, log_entry=None):
@@ -115,6 +116,7 @@ class Commit(object):
         self.parsed = False
         self.generation = CommitFactory.root_generation
         self.column = None
+        self.row = None
         if log_entry:
             self.parse(log_entry)
 
