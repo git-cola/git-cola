@@ -1473,9 +1473,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     """Commit node layout technique
 
-    Nodes are aligned by a mesh. Node row is generation number of
-corresponding commit. Columns are distributed using the algorithm described
-below.
+    Nodes are aligned by a mesh. Columns and rows are distributed using
+algorithms described below.
 
     Row assignment algorithm
 
@@ -1513,7 +1512,9 @@ gather than 1, but leave_column method is written in generic way.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
-recompute_columns method.
+recompute_columns method. Main loop also embeds row assignment algorithm by
+implementation. So, the algorithm initialization is also performed during
+recompute_grid method by calling reset_rows.
 
     Actions for each node are follow.
     1. If the node was not assigned a column then it is assigned empty one.
@@ -1530,12 +1531,17 @@ should be left.
     2.3. Leave column of the parent. The parent is a regular commit. Its
 outgoing edge is turned form its column to column of the node. Hence, the
 column is left.
-    3. Define columns of children. If a child have a column assigned then it
-should no be overridden. One of children is assigned same column as the node.
-If the node is a fork then the child is chosen in generation descent order.
-This is a heuristic and it only affects resulting appearance of the graph.
-Other children are assigned empty columns in same order. It is the heuristic
-too.
+    3. Get row for the node.
+    4. Define columns and rows of children.
+    4.1 If a child have a column assigned then it should no be overridden. One
+of children is assigned same column as the node. If the node is a fork then the
+child is chosen in generation descent order. This is a heuristic and it only
+affects resulting appearance of the graph. Other children are assigned empty
+columns in same order. It is the heuristic too.
+    4.2 All children will got row during step 3 of its iteration. But frontier
+must be propagated during this iteration to meet first aim of the row
+assignment algorithm. Frontier of child that occupies same row was propagated
+during step 3. Hence, it must be propagated for children on side columns.
 
     After the algorithm was done all commit graphic items are assigned
 coordinates based on its row and column multiplied by the coefficient.
@@ -1565,6 +1571,7 @@ coordinates based on its row and column multiplied by the coefficient.
         for c in count(0):
             if c not in columns:
                 break
+        self.declare_column(c)
         columns[c] = 1
         return c
 
@@ -1628,6 +1635,7 @@ coordinates based on its row and column multiplied by the coefficient.
 
     def recompute_columns(self):
         self.reset_columns()
+        self.reset_rows()
 
         for node in self.sort_by_generation(list(self.commits)):
             if node.column is None:
@@ -1648,7 +1656,10 @@ coordinates based on its row and column multiplied by the coefficient.
                         continue
                     self.leave_column(parent.column)
 
-            # Propagate column to children which are still without one.
+            node.row = self.alloc_cell(node.column, node.tags)
+
+            # Propagate column to children which are still without one. Also
+            # propagate frontier for children.
             if node.is_fork():
                 sorted_children = sorted(node.children,
                                          key=lambda c: c.generation,
@@ -1658,16 +1669,25 @@ coordinates based on its row and column multiplied by the coefficient.
                     if child.column is None:
                         # Top most child occupies column of parent.
                         child.column = node.column
+                        # Note that frontier is propagated in course of
+                        # alloc_cell.
                         break
+                    else:
+                        self.propagate_frontier(child.column, node.row + 1)
 
                 # Rest children are allocated new column.
                 for child in citer:
                     if child.column is None:
                         child.column = self.alloc_column()
+                    self.propagate_frontier(child.column, node.row + 1)
             elif node.children:
                 child = node.children[0]
                 if child.column is None:
                     child.column = node.column
+                    # Note that frontier is propagated in course of alloc_cell.
+                elif child.column != node.column:
+                    # Child node have other parents and occupies side column.
+                    self.propagate_frontier(child.column, node.row + 1)
 
     def position_nodes(self):
         self.recompute_columns()
