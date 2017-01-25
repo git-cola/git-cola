@@ -1,10 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
 
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
 
 from ..models.browse import GitRepoEntryStore
 from ..models.browse import GitRepoModel
@@ -30,25 +30,23 @@ from . import defs
 from . import standard
 
 
-def worktree_browser_widget(parent, update=True, settings=None):
-    """Return a widget for immediate use."""
+def worktree_browser(parent=None, update=True, settings=None, show=False):
+    """Create a new worktree browser"""
     view = Browser(parent, update=update, settings=settings)
-    view.tree.setModel(GitRepoModel(view.tree))
-    view.ctl = BrowserController(view.tree)
+    model = GitRepoModel(view.tree)
+    view.set_model(model)
     if update:
-        view.tree.refresh()
-    return view
-
-
-def worktree_browser(update=True, settings=None):
-    """Launch a new worktree browser session."""
-    view = worktree_browser_widget(None, update=update, settings=settings)
-    view.show()
+        view.refresh()
+    if show:
+        view.show()
     return view
 
 
 class Browser(standard.Widget):
     updated = Signal()
+
+    # Read-only mode property
+    mode = property(lambda self: self.model.mode)
 
     def __init__(self, parent, update=True, settings=None):
         standard.Widget.__init__(self, parent)
@@ -68,8 +66,13 @@ class Browser(standard.Widget):
 
         self.init_state(settings, self.resize, 720, 420)
 
-    # Read-only mode property
-    mode = property(lambda self: self.model.mode)
+    def set_model(self, model):
+        """Set the model"""
+        self.tree.setModel(model)
+
+    def refresh(self):
+        """Refresh the model triggering view updates"""
+        self.tree.refresh()
 
     def model_updated(self):
         """Update the title with the current branch and directory name."""

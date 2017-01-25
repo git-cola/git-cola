@@ -81,7 +81,8 @@ class MainView(standard.MainWindow):
                                  cfg.get('cola.classicdockable'))
         if self.browser_dockable:
             self.browserdockwidget = create_dock(N_('Browser'), self)
-            self.browserwidget = browse.worktree_browser_widget(self)
+            self.browserwidget = (
+                    browse.worktree_browser(parent=self, update=False))
             self.browserdockwidget.setWidget(self.browserwidget)
 
         # "Actions" widget
@@ -316,7 +317,8 @@ class MainView(standard.MainWindow):
             self, N_('Review...'), guicmds.review_branch)
 
         self.browse_action = add_action(
-            self, N_('File Browser...'), browse.worktree_browser)
+            self, N_('File Browser...'),
+            lambda: browse.worktree_browser(show=True))
         self.browse_action.setIcon(icons.cola())
 
         self.dag_action = add_action(self, N_('DAG...'), self.git_dag)
