@@ -1512,7 +1512,7 @@ gather than 1, but leave_column method is written in generic way.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
-recompute_columns method. Main loop also embeds row assignment algorithm by
+recompute_grid method. Main loop also embeds row assignment algorithm by
 implementation. So, the algorithm initialization is also performed during
 recompute_grid method by calling reset_rows.
 
@@ -1633,7 +1633,7 @@ coordinates based on its row and column multiplied by the coefficient.
         else:
             self.columns[column] = count - 1
 
-    def recompute_columns(self):
+    def recompute_grid(self):
         self.reset_columns()
         self.reset_rows()
 
@@ -1690,7 +1690,7 @@ coordinates based on its row and column multiplied by the coefficient.
                     self.propagate_frontier(child.column, node.row + 1)
 
     def position_nodes(self):
-        self.recompute_columns()
+        self.recompute_grid()
 
         x_max = self.x_max
         x_min = self.x_min
