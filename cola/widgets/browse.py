@@ -97,8 +97,6 @@ class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
     about_to_update = Signal()
-    difftool_predecessor = Signal(object)
-    history = Signal(object)
     updated = Signal()
 
     def __init__(self, parent):
@@ -108,6 +106,8 @@ class RepoTreeView(standard.TreeView):
         self.saved_current_path = None
         self.saved_open_folders = set()
         self.restoring_selection = False
+        self.runtask = qtutils.RunTask(parent=self)
+        self.turbo = False
 
         self.setDragEnabled(True)
         self.setRootIsDecorated(False)
@@ -124,7 +124,6 @@ class RepoTreeView(standard.TreeView):
                                      type=Qt.QueuedConnection)
         self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
 
-        self.expanded.connect(lambda idx: self.size_columns())
         self.expanded.connect(self.index_expanded)
 
         self.collapsed.connect(lambda idx: self.size_columns())
@@ -190,8 +189,31 @@ class RepoTreeView(standard.TreeView):
         self.size_columns()
 
     def index_expanded(self, index):
+        """Update information about a directory as it is expanded."""
+        # Remember open folders so that we can restore them when refreshing
         item = self.model().itemFromIndex(index)
         self.saved_open_folders.add(item.path)
+        self.size_columns()
+
+        # update information about a directory as it is expanded
+        if item.cached:
+            return
+        path = item.path
+        runtask = self.runtask
+        turbo = self.turbo
+
+        self.model().populate(item)
+
+        entry = GitRepoEntryStore.entry
+        entry(path, self, runtask, turbo).update()
+
+        for row in range(item.rowCount()):
+            path = item.child(row, 0).path
+            entry(path, self, runtask, turbo).update()
+        item.cached = True
+
+    def add_subdir(self, item):
+        path = item.path
 
     def index_collapsed(self, index):
         item = self.model().itemFromIndex(index)
@@ -382,6 +404,7 @@ class RepoTreeView(standard.TreeView):
 
     def setModel(self, model):
         """Set the concrete QAbstractItemModel instance."""
+        self.turbo = model.turbo
         QtWidgets.QTreeView.setModel(self, model)
         model.restore.connect(self.restore, type=Qt.QueuedConnection)
 
@@ -436,8 +459,9 @@ class RepoTreeView(standard.TreeView):
                 if p not in untracked or p in tracked]
 
     def view_history(self):
-        """Signal that we should view history for paths."""
-        self.history.emit(self.selected_paths())
+        """Launch the configured history browser path-limited to entries."""
+        entries = list(map(ustr, entries))
+        cmds.do(cmds.VisualizePaths, entries)
 
     def untrack_selected(self):
         """untrack selected paths."""
@@ -446,48 +470,6 @@ class RepoTreeView(standard.TreeView):
     def diff_predecessor(self):
         """Diff paths against previous versions."""
         paths = self.selected_tracked_paths()
-        self.difftool_predecessor.emit(paths)
-
-    def current_path(self):
-        """Return the path for the current item."""
-        index = self.currentIndex()
-        if not index.isValid():
-            return None
-        return self.item_from_index(index).path
-
-
-class BrowserController(QtCore.QObject):
-
-    def __init__(self, view):
-        QtCore.QObject.__init__(self, view)
-        self.model = main.model()
-        self.view = view
-        self.runtask = qtutils.RunTask(parent=self)
-
-        view.history.connect(self.view_history)
-        view.expanded.connect(self.query_model)
-        view.difftool_predecessor.connect(self.difftool_predecessor)
-
-    def view_history(self, entries):
-        """Launch the configured history browser path-limited to entries."""
-        entries = list(map(ustr, entries))
-        cmds.do(cmds.VisualizePaths, entries)
-
-    def query_model(self, model_index):
-        """Update information about a directory as it is expanded."""
-        item = self.view.item_from_index(model_index)
-        if item.cached:
-            return
-        path = item.path
-        GitRepoEntryStore.entry(path, self.view, self.runtask).update()
-        entry = GitRepoEntryStore.entry
-        for row in range(item.rowCount()):
-            path = item.child(row, 0).path
-            entry(path, self.view, self.runtask).update()
-        item.cached = True
-
-    def difftool_predecessor(self, paths):
-        """Prompt for an older commit and launch difftool against it."""
         args = ['--'] + paths
         revs, summaries = gitcmds.log_helper(all=False, extra_args=args)
         commits = select_commits(N_('Select Previous Version'),
@@ -497,8 +479,16 @@ class BrowserController(QtCore.QObject):
         commit = commits[0]
         cmds.difftool_launch(left=commit, paths=paths)
 
+    def current_path(self):
+        """Return the path for the current item."""
+        index = self.currentIndex()
+        if not index.isValid():
+            return None
+        return self.item_from_index(index).path
+
 
 class BrowseModel(object):
+    """Context data used for browsing branches via git-ls-tree"""
 
     def __init__(self, ref):
         self.ref = ref

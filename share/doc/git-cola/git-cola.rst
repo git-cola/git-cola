@@ -505,6 +505,14 @@ cola.textwidth
 The number of columns used for line wrapping.
 Tabs are counted according to `cola.tabwidth`.
 
+cola.turbo
+----------
+Set to `true` to enables "turbo" mode.  "Turbo" mode disables some
+features that can slow things down when operating on huge repositories.
+"Turbo" mode will skip loading Git commit messages, author details, status
+information, and commit date details in the `File Browser` tool.
+Defaults to `false`.
+
 cola.color.text
 ---------------
 The default diff text color, in hexadecimal RRGGBB notation.

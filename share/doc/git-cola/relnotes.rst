@@ -56,6 +56,17 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/640
 
+* The `File Browser` tool was made much faster and can now operate on
+  much larger repositories.
+
+  https://github.com/git-cola/git-cola/issues/499
+
+* A new "turbo" mode was added that allows you to opt-out of operations
+  that can slow `git cola` on large repositories.  The turbo mode is
+  enabled by configuring `git config cola.turbo true`.  Turbo mode
+  disables the background loading of Git commit messages and other
+  details in the `File Browser` widget.
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using
