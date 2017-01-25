@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import collections
 import time
 
@@ -27,27 +26,36 @@ INFO_EVENT_TYPE = QtCore.QEvent.Type(QtCore.QEvent.registerEventType())
 class Columns(object):
     """Defines columns in the worktree browser"""
 
-    NAME = 'name'
-    STATUS = 'status'
-    AGE = 'age'
-    MESSAGE = 'message'
-    AUTHOR = 'author'
+    NAME = 0
+    STATUS = 1
+    MESSAGE = 2
+    AUTHOR = 3
+    AGE = 4
+
     ALL = (NAME, STATUS, MESSAGE, AUTHOR, AGE)
+    ATTRS = ('name', 'status', 'message', 'author', 'age')
+    TEXT = []
 
     @classmethod
     def text(cls, column):
-        if column == cls.NAME:
-            return N_('Name')
-        elif column == cls.STATUS:
-            return N_('Status')
-        elif column == cls.MESSAGE:
-            return N_('Message')
-        elif column == cls.AUTHOR:
-            return N_('Author')
-        elif column == cls.AGE:
-            return N_('Age')
-        else:
-            raise NotImplementedError('Mapping required for "%s"' % column)
+        try:
+            value = cls.TEXT[column]
+        except IndexError:
+            # Defer translation until runtime
+            cls.TEXT.extend([
+                N_('Name'),
+                N_('Status'),
+                N_('Message'),
+                N_('Author'),
+                N_('Age'),
+            ])
+            value = cls.TEXT[column]
+        return value
+
+    @classmethod
+    def attr(cls, column):
+        """Return the attribute for the column"""
+        return cls.ATTRS[column]
 
 
 class GitRepoEntryStore(object):
@@ -55,12 +63,12 @@ class GitRepoEntryStore(object):
     entries = {}
 
     @classmethod
-    def entry(cls, path, parent, runtask):
+    def entry(cls, path, parent, runtask, turbo):
         """Return the shared GitRepoEntry for a path."""
         try:
             e = cls.entries[path]
         except KeyError:
-            e = cls.entries[path] = GitRepoEntry(path, parent, runtask)
+            e = cls.entries[path] = GitRepoEntry(path, parent, runtask, turbo)
         return e
 
     @classmethod
@@ -69,16 +77,6 @@ class GitRepoEntryStore(object):
             del cls.entries[path]
         except KeyError:
             pass
-
-
-def _item_path(item):
-    """Return the item's path"""
-    try:
-        path = item.path
-    except AttributeError:
-        # the root QStandardItem does not have a 'path' attribute
-        path = ''
-    return path
 
 
 class GitRepoModel(QtGui.QStandardItemModel):
@@ -91,13 +89,13 @@ class GitRepoModel(QtGui.QStandardItemModel):
         QtGui.QStandardItemModel.__init__(self, parent)
 
         self.entries = {}
+        self.turbo = gitcfg.current().get('cola.turbo', False)
         self._runtask = qtutils.RunTask(parent=parent)
         self._parent = parent
         self._interesting_paths = set()
         self._interesting_files = set()
         self._known_paths = set()
         self._dir_entries = {}
-        self._dir_rows = collections.defaultdict(int)
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
@@ -119,81 +117,71 @@ class GitRepoModel(QtGui.QStandardItemModel):
         super(GitRepoModel, self).clear()
         self.entries.clear()
 
-    def row(self, path, create=True):
+    def columnCount(self, index):
+        return len(Columns.ALL)
+
+    def hasChildren(self, index):
+        if index.isValid():
+            item = self.itemFromIndex(index)
+            return item.hasChildren()
+        return True
+
+    def canFetchMore(self, index):
+        item = self.itemFromIndex(index)
+        if item and item.is_dir:
+            return True
+        return False
+
+    def rowCount(self, index):
+        if not index.isValid():
+            return self.invisibleRootItem().rowCount()
+
+        item = self.itemFromIndex(index)
+        return item.rowCount()
+
+    def row(self, path, create=True, is_dir=False):
         try:
             row = self.entries[path]
         except KeyError:
             if create:
-                row = self.entries[path] = [self.create_column(c, path)
-                                            for c in Columns.ALL]
+                column = self.create_column
+                row = self.entries[path] = [
+                        column(c, path, is_dir) for c in Columns.ALL]
             else:
                 row = None
         return row
 
-    def create_column(self, col, path):
+    def create_column(self, col, path, is_dir):
         """Creates a StandardItem for use in a treeview cell."""
-        # GitRepoNameItem is the only one that returns a custom type(),
-        # so we use to infer selections.
+        # GitRepoNameItem is the only one that returns a custom type()
+        # and is used to infer selections.
         if col == Columns.NAME:
-            item = GitRepoNameItem(path, self._parent, self._runtask)
+            item = GitRepoNameItem(path, self._parent, is_dir,
+                                   self._runtask, self.turbo)
         else:
-            item = GitRepoItem(col, path, self._parent, self._runtask)
+            item = GitRepoItem(col, path, self._parent,
+                               self._runtask, self.turbo)
         return item
 
-    def _add_file(self, parent, path, insert=False):
-        """Add a file entry to the model."""
-
-        self._known_paths.add(path)
-
-        # Create model items
-        row_items = self.row(path)
-
-        # Use a standard file icon for the name field
-        row_items[0].setIcon(self.file_icon)
-
-        if not insert:
-            # Add file paths at the end of the list
-            parent.appendRow(row_items)
-            self.entry(path).update_name()
-            return
-        # Entries exist so try to find an a good insertion point
-        done = False
-        for idx in range(parent.rowCount()):
-            child = parent.child(idx, 0)
-            if child.rowCount() > 0:
-                continue
-            if path < child.path:
-                parent.insertRow(idx, row_items)
-                done = True
-                break
-
-        # No adequate place found so simply append
-        if not done:
-            parent.appendRow(row_items)
-        self.entry(path).update_name()
+    def populate(self, item):
+        self.populate_dir(item, item.path + '/')
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
 
         # Create model items
-        row_items = self.row(path)
+        row_items = self.row(path, is_dir=True)
 
         # Use a standard directory icon
-        row_items[0].setIcon(self.dir_icon)
-
-        # Insert directories before file paths
-        # TODO: have self._dir_rows's keys based on something less flaky than
-        # QStandardItem instances.
-        parent_path = _item_path(parent)
-        row = self._dir_rows[parent_path]
-        parent.insertRow(row, row_items)
-        self._dir_rows[parent_path] += 1
+        name_item = row_items[0]
+        name_item.setIcon(self.dir_icon)
+        parent.appendRow(row_items)
 
         # Update the 'name' column for this entry
         self.entry(path).update_name()
         self._known_paths.add(path)
 
-        return row_items[0]
+        return name_item
 
     def path_is_interesting(self, path):
         """Return True if path has a status."""
@@ -238,51 +226,65 @@ class GitRepoModel(QtGui.QStandardItemModel):
             text = Columns.text(header)
             self.setHeaderData(idx, Qt.Horizontal, text)
 
+        root = self.invisibleRootItem()
+        self._dir_entries = {'': root}
         self._entries = {}
-        self._dir_rows = collections.defaultdict(int)
         self._known_paths = set()
-        self._dir_entries = {'': self.invisibleRootItem()}
         self._interesting_files = files = self.get_files()
         self._interesting_paths = self.get_paths(files=files)
-        for path in gitcmds.all_files():
-            self.add_file(path)
 
-    def add_file(self, path, insert=False):
-        """Add a file to the model."""
-        dirname = utils.dirname(path)
-        if dirname in self._dir_entries:
-            parent = self._dir_entries[dirname]
-        else:
-            parent = self._create_dir_entry(dirname, self._dir_entries)
-            self._dir_entries[dirname] = parent
-        self._add_file(parent, path, insert=insert)
+        self.populate_dir(root, './')
 
-    def _create_dir_entry(self, dirname, direntries):
+    def add_file(self, parent, path):
+        """Add a file entry to the model."""
+
+        self._known_paths.add(path)
+
+        # Create model items
+        row_items = self.row(path)
+
+        # Use a standard file icon for the name field
+        row_items[0].setIcon(self.file_icon)
+
+        # Add file paths at the end of the list
+        parent.appendRow(row_items)
+        self.entry(path).update_name()
+
+    def _get_dir_entry(self, dirname, entries):
         """
         Create a directory entry for the model.
 
         This ensures that directories are always listed before files.
 
         """
-        entries = dirname.split('/')
-        curdir = []
-        parent = self.invisibleRootItem()
-        curdir_append = curdir.append
-        self_add_directory = self.add_directory
-        for entry in entries:
-            curdir_append(entry)
-            path = '/'.join(curdir)
+        try:
+            entry = entries[dirname]
+        except KeyError:
             try:
-                parent = direntries[path]
+                parent = entries[utils.dirname(dirname)]
             except KeyError:
-                grandparent = parent
-                parent = self_add_directory(grandparent, path)
-                direntries[path] = parent
-        return parent
+                parent = self._get_dir_entry(utils.dirname(dirname), entries)
+
+            entry = self.add_directory(parent, dirname)
+            entries[dirname] = entry
+
+        return entry
+
+    def populate_dir(self, parent, path):
+        """Populate a subtree"""
+        dirs, paths = gitcmds.listdir(path)
+
+        # Insert directories before file paths
+        for dirname in dirs:
+            self.add_directory(parent, dirname)
+
+        for filename in paths:
+            self.add_file(parent, filename)
 
     def entry(self, path):
         """Return the GitRepoEntry for a path."""
-        return GitRepoEntryStore.entry(path, self._parent, self._runtask)
+        return GitRepoEntryStore.entry(path, self._parent,
+                                       self._runtask, self.turbo)
 
 
 class GitRepoEntry(QtCore.QObject):
@@ -298,10 +300,11 @@ class GitRepoEntry(QtCore.QObject):
     message = Signal(object)
     age = Signal(object)
 
-    def __init__(self, path, parent, runtask):
+    def __init__(self, path, parent, runtask, turbo):
         QtCore.QObject.__init__(self, parent)
         self.path = path
         self.runtask = runtask
+        self.turbo = turbo
 
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
@@ -313,15 +316,21 @@ class GitRepoEntry(QtCore.QObject):
     def update(self):
         """Starts a GitRepoInfoTask to calculate info for entries."""
         # GitRepoInfoTask handles expensive lookups
-        task = GitRepoInfoTask(self.path, self, self.runtask)
+        if self.turbo:
+            # Turbo mode does not run background tasks
+            return
+        task = GitRepoInfoTask(self.path, self, self.runtask, self.turbo)
         self.runtask.start(task)
 
     def event(self, e):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
         if e.type() == INFO_EVENT_TYPE:
             e.accept()
-            signal = getattr(self, e.signal)
-            signal.emit(*e.data)
+            attrs = (Columns.STATUS, Columns.MESSAGE,
+                     Columns.AUTHOR, Columns.AGE)
+            for (attr, value) in zip(attrs, e.data):
+                signal = getattr(self, Columns.attr(attr))
+                signal.emit(value)
             return True
         return QtCore.QObject.event(self, e)
 
@@ -329,11 +338,12 @@ class GitRepoEntry(QtCore.QObject):
 class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
-    def __init__(self, path, parent, runtask):
+    def __init__(self, path, parent, runtask, turbo):
         qtutils.Task.__init__(self, parent)
         self.path = path
         self._parent = parent
         self._runtask = runtask
+        self._turbo = turbo
         self._cfg = gitcfg.current()
         self._data = {}
 
@@ -344,7 +354,11 @@ class GitRepoInfoTask(qtutils.Task):
         Supported keys are 'date', 'message', and 'author'
 
         """
-        if not self._data:
+        if self._turbo:
+            # Turbo mode skips the expensive git-log lookup
+            return ''
+
+        elif not self._data:
             log_line = main.model().git.log('-1', '--', self.path,
                                             no_color=True,
                                             pretty=r'format:%ar%x01%s%x01%an',
@@ -360,6 +374,7 @@ class GitRepoInfoTask(qtutils.Task):
                 self._data['date'] = self.date()
                 self._data['message'] = '-'
                 self._data['author'] = self._cfg.get('user.name', 'unknown')
+
         return self._data[key]
 
     def name(self):
@@ -416,22 +431,22 @@ class GitRepoInfoTask(qtutils.Task):
     def task(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtWidgets.QApplication.instance()
-        entry = GitRepoEntryStore.entry(self.path, self._parent, self._runtask)
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.AGE, self.data('date')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.STATUS, self.status()))
+        entry = GitRepoEntryStore.entry(self.path, self._parent,
+                                        self._runtask, self._turbo)
+        data = (
+            self.status(),
+            self.data('message'),
+            self.data('author'),
+            self.data('date'),
+        )
+        app.postEvent(entry, GitRepoInfoEvent(data))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
-    def __init__(self, signal, *data):
+
+    def __init__(self, data):
         QtCore.QEvent.__init__(self, INFO_EVENT_TYPE)
-        self.signal = signal
         self.data = data
 
     def type(self):
@@ -447,19 +462,19 @@ class GitRepoItem(QtGui.QStandardItem):
     One is created for each column -- Name, Status, Age, etc.
 
     """
-    def __init__(self, column, path, parent, runtask):
+    def __init__(self, column, path, parent, runtask, turbo):
         QtGui.QStandardItem.__init__(self)
         self.path = path
         self.runtask = runtask
         self.cached = False
         self.setDragEnabled(False)
         self.setEditable(False)
-        entry = GitRepoEntryStore.entry(path, parent, runtask)
+        entry = GitRepoEntryStore.entry(path, parent, runtask, turbo)
         if column == Columns.STATUS:
             qtutils.disconnect(entry.status)
             entry.status.connect(self.set_status, type=Qt.QueuedConnection)
         else:
-            signal = getattr(entry, column)
+            signal = getattr(entry, Columns.attr(column))
             qtutils.disconnect(signal)
             signal.connect(self.setText, type=Qt.QueuedConnection)
 
@@ -476,8 +491,9 @@ class GitRepoNameItem(GitRepoItem):
     """Subclass GitRepoItem to provide a custom type()."""
     TYPE = QtGui.QStandardItem.ItemType(QtGui.QStandardItem.UserType + 1)
 
-    def __init__(self, path, parent, runtask):
-        GitRepoItem.__init__(self, Columns.NAME, path, parent, runtask)
+    def __init__(self, path, parent, is_dir, runtask, turbo):
+        GitRepoItem.__init__(self, Columns.NAME, path, parent, runtask, turbo)
+        self.is_dir = is_dir
         self.setDragEnabled(True)
 
     def type(self):
@@ -490,3 +506,6 @@ class GitRepoNameItem(GitRepoItem):
 
         """
         return GitRepoNameItem.TYPE
+
+    def hasChildren(self):
+        return self.is_dir
