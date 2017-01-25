@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import collections
 import time
 
@@ -27,27 +26,36 @@ INFO_EVENT_TYPE = QtCore.QEvent.Type(QtCore.QEvent.registerEventType())
 class Columns(object):
     """Defines columns in the worktree browser"""
 
-    NAME = 'name'
-    STATUS = 'status'
-    AGE = 'age'
-    MESSAGE = 'message'
-    AUTHOR = 'author'
+    NAME = 0
+    STATUS = 1
+    MESSAGE = 2
+    AUTHOR = 3
+    AGE = 4
+
     ALL = (NAME, STATUS, MESSAGE, AUTHOR, AGE)
+    ATTRS = ('name', 'status', 'message', 'author', 'age')
+    TEXT = []
 
     @classmethod
     def text(cls, column):
-        if column == cls.NAME:
-            return N_('Name')
-        elif column == cls.STATUS:
-            return N_('Status')
-        elif column == cls.MESSAGE:
-            return N_('Message')
-        elif column == cls.AUTHOR:
-            return N_('Author')
-        elif column == cls.AGE:
-            return N_('Age')
-        else:
-            raise NotImplementedError('Mapping required for "%s"' % column)
+        try:
+            value = cls.TEXT[column]
+        except IndexError:
+            # Defer translation until runtime
+            cls.TEXT.extend([
+                N_('Name'),
+                N_('Status'),
+                N_('Message'),
+                N_('Author'),
+                N_('Age'),
+            ])
+            value = cls.TEXT[column]
+        return value
+
+    @classmethod
+    def attr(cls, column):
+        """Return the attribute for the column"""
+        return cls.ATTRS[column]
 
 
 class GitRepoEntryStore(object):
@@ -320,8 +328,11 @@ class GitRepoEntry(QtCore.QObject):
         """Receive GitRepoInfoEvents and emit corresponding Qt signals."""
         if e.type() == INFO_EVENT_TYPE:
             e.accept()
-            signal = getattr(self, e.signal)
-            signal.emit(*e.data)
+            attrs = (Columns.STATUS, Columns.MESSAGE,
+                     Columns.AUTHOR, Columns.AGE)
+            for (attr, value) in zip(attrs, e.data):
+                signal = getattr(self, Columns.attr(attr))
+                signal.emit(value)
             return True
         return QtCore.QObject.event(self, e)
 
@@ -416,22 +427,22 @@ class GitRepoInfoTask(qtutils.Task):
     def task(self):
         """Perform expensive lookups and post corresponding events."""
         app = QtWidgets.QApplication.instance()
-        entry = GitRepoEntryStore.entry(self.path, self._parent, self._runtask)
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.MESSAGE, self.data('message')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.AGE, self.data('date')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.AUTHOR, self.data('author')))
-        app.postEvent(entry,
-                      GitRepoInfoEvent(Columns.STATUS, self.status()))
+        entry = GitRepoEntryStore.entry(self.path, self._parent,
+                                        self._runtask, self._turbo)
+        data = (
+            self.status(),
+            self.data('message'),
+            self.data('author'),
+            self.data('date'),
+        )
+        app.postEvent(entry, GitRepoInfoEvent(data))
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
-    def __init__(self, signal, *data):
+
+    def __init__(self, data):
         QtCore.QEvent.__init__(self, INFO_EVENT_TYPE)
-        self.signal = signal
         self.data = data
 
     def type(self):
@@ -459,7 +470,7 @@ class GitRepoItem(QtGui.QStandardItem):
             qtutils.disconnect(entry.status)
             entry.status.connect(self.set_status, type=Qt.QueuedConnection)
         else:
-            signal = getattr(entry, column)
+            signal = getattr(entry, Columns.attr(column))
             qtutils.disconnect(signal)
             signal.connect(self.setText, type=Qt.QueuedConnection)
 
