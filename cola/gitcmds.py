@@ -40,6 +40,39 @@ def diff_filenames(*args):
     return _parse_diff_filenames(out)
 
 
+def listdir(dirname, ref='HEAD'):
+    """Get the contents of a directory according to Git
+
+    Query Git for the content of a directory, taking ignored
+    files into account.
+
+    """
+    dirs = []
+    files = []
+
+    # first, parse git ls-tree to get the tracked files
+    # in a list of (type, path) tuples
+    entries = ls_tree(dirname, ref=ref)
+    for entry in entries:
+        if entry[0][0] == 't':  # tree
+            dirs.append(entry[1])
+        else:
+            files.append(entry[1])
+
+    # gather untracked files
+    untracked = untracked_files(paths=[dirname], directory=True)
+    for path in untracked:
+        if path.endswith('/'):
+            dirs.append(path[:-1])
+        else:
+            files.append(path)
+
+    dirs.sort()
+    files.sort()
+
+    return (dirs, files)
+
+
 def diff(args):
     """Return a list of filenames for the given diff arguments
 
@@ -199,14 +232,14 @@ def tracked_branch(branch=None, config=None):
     return None
 
 
-def untracked_files(git=git, paths=None):
+def untracked_files(git=git, paths=None, **kwargs):
     """Returns a sorted list of untracked files."""
 
     if paths is None:
         paths = []
     args = ['--'] + paths
     out = git.ls_files(z=True, others=True, exclude_standard=True,
-                       *args)[STDOUT]
+                       *args, **kwargs)[STDOUT]
     if out:
         return out[:-1].split('\0')
     return []
@@ -587,6 +620,24 @@ def parse_ls_tree(rev):
             output.append((mode, objtype, oid, filename,))
     return output
 
+
+def ls_tree(path, ref='HEAD'):
+    """Return a parsed git ls-tree result for a single directory"""
+
+    result = []
+    status, out, err = git.ls_tree(ref, '--', path, z=True, full_tree=True)
+    if status == 0 and out:
+        for line in out[:-1].split('\0'):
+            # .....6 ...4 ......................................40
+            # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
+            # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
+            # 0..... 7... 12......................................	53
+            # path offset = 6 + 1 + 4 + 1 + 40 + 1 = 53
+            objtype = line[7:11]
+            relpath = line[53:]
+            result.append((objtype, relpath))
+
+    return result
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
