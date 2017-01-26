@@ -36,9 +36,12 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/645
 
 * `git dag` now uses an improved algorithm for laying out the graph,
-  which avoids collisions under certain graph configurations.
+  which avoids collisions under certain graph configurations, and
+  avoids overlapping tag with commits.
 
   https://github.com/git-cola/git-cola/pull/648
+
+  https://github.com/git-cola/git-cola/pull/651
 
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
