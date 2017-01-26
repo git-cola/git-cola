@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import time
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -19,6 +20,7 @@ class LogWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.output_text = VimTextEdit(parent=self)
+        self.highlighter = LogSyntaxHighlighter(self.output_text.document())
         if output:
             self.set_output(output)
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
@@ -58,3 +60,17 @@ class LogWidget(QtWidgets.QWidget):
         """A version of the log() method that can be called from other
         threads."""
         self.channel.emit(msg)
+
+
+class LogSyntaxHighlighter(QtGui.QSyntaxHighlighter):
+    """Implements the log syntax highlighting"""
+
+    def __init__(self, doc):
+        QtGui.QSyntaxHighlighter.__init__(self, doc)
+        palette = QtGui.QPalette()
+        QPalette = QtGui.QPalette
+        self.disabled_color = palette.color(QPalette.Disabled, QPalette.Text)
+
+    def highlightBlock(self, text):
+        log_end = text.find(':  ') + 1
+        self.setFormat(0, log_end, self.disabled_color)
