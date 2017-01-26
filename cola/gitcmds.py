@@ -36,7 +36,7 @@ def diff_index_filenames(ref):
 def diff_filenames(*args):
     """Return a list of filenames that have been modified"""
     out = git.diff_tree(name_only=True, no_commit_id=True, r=True, z=True,
-                        *args)[STDOUT]
+                        _readonly=True, *args)[STDOUT]
     return _parse_diff_filenames(out)
 
 
@@ -181,7 +181,7 @@ def branch_list(remote=False):
 
 def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
-    out = git.for_each_ref(refs, format='%(refname)')[STDOUT]
+    out = git.for_each_ref(refs, format='%(refname)', _readonly=True)[STDOUT]
     output = out.splitlines()
     non_heads = [x for x in output if not x.endswith('/HEAD')]
     return list(map(lambda x: x[len(refs) + 1:], non_heads))
@@ -200,7 +200,7 @@ def all_refs(split=False, git=git):
     query = (triple('refs/tags', tags),
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
-    out = git.for_each_ref(format='%(refname)')[STDOUT]
+    out = git.for_each_ref(format='%(refname)', _readonly=True)[STDOUT]
     for ref in out.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
@@ -252,7 +252,7 @@ def tag_list():
 
 def log(git, *args, **kwargs):
     return git.log(no_color=True, no_abbrev_commit=True,
-                   no_ext_diff=True, *args, **kwargs)[STDOUT]
+                   no_ext_diff=True, _readonly=True, *args, **kwargs)[STDOUT]
 
 
 def commit_diff(oid, git=git):
@@ -305,7 +305,8 @@ def oid_diff(git, oid, filename=None):
         # "git show" is clever enough to handle the root commit.
         args = [oid + '^!']
         _add_filename(args, filename)
-        status, out, err = git.show(pretty='format:', *args, **opts)
+        status, out, err = git.show(pretty='format:', _readonly=True,
+                                    *args, **opts)
         out = out.lstrip()
     return out
 
@@ -595,7 +596,7 @@ def _branch_status(branch):
 
 def merge_base(head, ref):
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
-    return git.merge_base(head, ref)[STDOUT]
+    return git.merge_base(head, ref, _readonly=True)[STDOUT]
 
 
 def merge_base_parent(branch):
@@ -608,7 +609,7 @@ def merge_base_parent(branch):
 def parse_ls_tree(rev):
     """Return a list of (mode, type, oid, path) tuples."""
     output = []
-    lines = git.ls_tree(rev, r=True)[STDOUT].splitlines()
+    lines = git.ls_tree(rev, r=True, _readonly=True)[STDOUT].splitlines()
     regex = re.compile(r'^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
     for line in lines:
         match = regex.match(line)
