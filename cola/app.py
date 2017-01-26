@@ -344,10 +344,7 @@ def application_start(context, view):
     # Start the filesystem monitor thread
     fsmonitor.current().start()
 
-    msg_timer = QtCore.QTimer()
-    msg_timer.setSingleShot(True)
-    msg_timer.timeout.connect(_send_msg)
-    msg_timer.start(0)
+    QtCore.QTimer.singleShot(0, _send_msg)
 
     # Start the event loop
     result = context.app.exec_()
@@ -429,9 +426,17 @@ def init_update_task(parent, runtask, model):
 
 
 def _send_msg():
-    if git.GIT_COLA_TRACE == 'trace':
-        msg = 'info: debug mode enabled using GIT_COLA_TRACE=trace'
-        Interaction.log(msg)
+    trace = git.GIT_COLA_TRACE
+    if trace == '2' or trace == 'trace':
+        msg1 = 'info: debug level 2: trace mode enabled'
+        msg2 = 'info: set GIT_COLA_TRACE=1 for less-verbose output'
+        Interaction.log(msg1)
+        Interaction.log(msg2)
+    elif trace:
+        msg1 = 'info: debug level 1'
+        msg2 = 'info: set GIT_COLA_TRACE=2 for trace mode'
+        Interaction.log(msg1)
+        Interaction.log(msg2)
 
 
 class ApplicationContext(object):
