@@ -61,14 +61,21 @@ class Columns(object):
 class GitRepoEntryStore(object):
 
     entries = {}
+    default_author = ''
 
     @classmethod
     def entry(cls, path, parent, runtask, turbo):
         """Return the shared GitRepoEntry for a path."""
+        default_author = cls.default_author
+        if not default_author:
+            author = N_('Author')
+            default_author = gitcfg.current().get('user.name', author)
+            cls.default_author = default_author
         try:
             e = cls.entries[path]
         except KeyError:
-            e = cls.entries[path] = GitRepoEntry(path, parent, runtask, turbo)
+            e = cls.entries[path] = GitRepoEntry(path, parent, runtask,
+                                                 turbo, default_author)
         return e
 
     @classmethod
@@ -300,11 +307,12 @@ class GitRepoEntry(QtCore.QObject):
     message = Signal(object)
     age = Signal(object)
 
-    def __init__(self, path, parent, runtask, turbo):
+    def __init__(self, path, parent, runtask, turbo, default_author):
         QtCore.QObject.__init__(self, parent)
         self.path = path
         self.runtask = runtask
         self.turbo = turbo
+        self.default_author = default_author
 
     def update_name(self):
         """Emits a signal corresponding to the entry's name."""
@@ -319,7 +327,8 @@ class GitRepoEntry(QtCore.QObject):
         if self.turbo:
             # Turbo mode does not run background tasks
             return
-        task = GitRepoInfoTask(self.path, self, self.runtask, self.turbo)
+        task = GitRepoInfoTask(self.path, self, self.runtask,
+                               self.turbo, self.default_author)
         self.runtask.start(task)
 
     def event(self, e):
@@ -338,13 +347,13 @@ class GitRepoEntry(QtCore.QObject):
 class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
-    def __init__(self, path, parent, runtask, turbo):
+    def __init__(self, path, parent, runtask, turbo, default_author):
         qtutils.Task.__init__(self, parent)
         self.path = path
         self._parent = parent
         self._runtask = runtask
         self._turbo = turbo
-        self._cfg = gitcfg.current()
+        self._default_author = default_author
         self._data = {}
 
     def data(self, key):
@@ -372,7 +381,7 @@ class GitRepoInfoTask(qtutils.Task):
             else:
                 self._data['date'] = self.date()
                 self._data['message'] = '-'
-                self._data['author'] = self._cfg.get('user.name', 'unknown')
+                self._data['author'] = self._default_author
 
         return self._data[key]
 
