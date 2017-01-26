@@ -348,8 +348,7 @@ class GitRepoInfoTask(qtutils.Task):
         self._data = {}
 
     def data(self, key):
-        """
-        Return git data for a path.
+        """Return git data for a path
 
         Supported keys are 'date', 'message', and 'author'
 
@@ -382,8 +381,7 @@ class GitRepoInfoTask(qtutils.Task):
         return utils.basename(self.path)
 
     def date(self):
-        """
-        Returns a relative date for a file path.
+        """Returns a relative date for a file path
 
         This is typically used for new entries that do not have
         'git log' information.
