@@ -1092,7 +1092,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     y_adjust = Commit.commit_radius*4/3
 
     x_off = 18
-    y_off = 24
+    y_off = -24
 
     def __init__(self, notifier, parent):
         QtWidgets.QGraphicsView.__init__(self, parent)
@@ -1473,9 +1473,30 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     """Commit node layout technique
 
-    Nodes are aligned by a mesh. Node row is generation number of
-corresponding commit. Columns are distributed using the algorithm described
-below.
+    Nodes are aligned by a mesh. Columns and rows are distributed using
+algorithms described below.
+
+    Row assignment algorithm
+
+    The algorithm aims consequent.
+    1. A commit should be above all its parents.
+    2. No commit should be at right side of a commit with a tag in same row.
+This prevents overlapping of tag labels with commits and other labels.
+    3. Commit density should be maximized.
+
+    The algorithm requires that all parents of a commit were assigned column.
+Nodes must be traversed in generation ascend order. This guarantees that all
+parents of a commit were assigned row. So, the algorithm may operate in course
+of column assignment algorithm.
+
+   Row assignment uses frontier. A frontier is a dictionary that contains
+minimum available row index for each column. It propagates during the
+algorithm. Set of cells with tags is also maintained to meet second aim.
+
+    Initialization is performed by reset_rows method. Each new column should
+be declared using declare_column method. Getting row for a cell is implemented
+in alloc_cell method. Frontier must be propagated for any child of fork
+commit which occupies different column. This meets first aim.
 
     Column assignment algorithm
 
@@ -1491,7 +1512,9 @@ gather than 1, but leave_column method is written in generic way.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
-recompute_columns method.
+recompute_grid method. Main loop also embeds row assignment algorithm by
+implementation. So, the algorithm initialization is also performed during
+recompute_grid method by calling reset_rows.
 
     Actions for each node are follow.
     1. If the node was not assigned a column then it is assigned empty one.
@@ -1508,12 +1531,17 @@ should be left.
     2.3. Leave column of the parent. The parent is a regular commit. Its
 outgoing edge is turned form its column to column of the node. Hence, the
 column is left.
-    3. Define columns of children. If a child have a column assigned then it
-should no be overridden. One of children is assigned same column as the node.
-If the node is a fork then the child is chosen in generation descent order.
-This is a heuristic and it only affects resulting appearance of the graph.
-Other children are assigned empty columns in same order. It is the heuristic
-too.
+    3. Get row for the node.
+    4. Define columns and rows of children.
+    4.1 If a child have a column assigned then it should no be overridden. One
+of children is assigned same column as the node. If the node is a fork then the
+child is chosen in generation descent order. This is a heuristic and it only
+affects resulting appearance of the graph. Other children are assigned empty
+columns in same order. It is the heuristic too.
+    4.2 All children will got row during step 3 of its iteration. But frontier
+must be propagated during this iteration to meet first aim of the row
+assignment algorithm. Frontier of child that occupies same row was propagated
+during step 3. Hence, it must be propagated for children on side columns.
 
     After the algorithm was done all commit graphic items are assigned
 coordinates based on its row and column multiplied by the coefficient.
@@ -1524,13 +1552,79 @@ coordinates based on its row and column multiplied by the coefficient.
             node.column = None
         self.columns = {}
 
+    def reset_rows(self):
+        self.frontier = {}
+        self.tagged_cells = set()
+
+    def declare_column(self, column):
+        try:
+            # This is heuristic that mostly affects roots. Note that the
+            # frontier values for fork children will be overridden in course of
+            # propagate_frontier.
+            self.frontier[column] = self.frontier[column - 1] - 1
+        except KeyError:
+            # First commit must be assigned 0 row.
+            self.frontier[column] = 0
+
     def alloc_column(self):
         columns = self.columns
         for c in count(0):
             if c not in columns:
                 break
+        self.declare_column(c)
         columns[c] = 1
         return c
+
+    def alloc_cell(self, column, tags):
+        # Get empty cell from frontier.
+        cell_row = self.frontier[column]
+
+        if tags:
+            # Prevent overlapping with right cells. Do not occupy row if the
+            # row is occupied by a commit at right side.
+            for c in range(column + 1, len(self.frontier)):
+                frontier = self.frontier[c]
+                if frontier > cell_row:
+                    cell_row = frontier
+
+        # Avoid overlapping with tags of left cells.
+        # Sorting is a part for column overlapping check optimization.
+        columns = sorted(range(0, column), key=lambda c: self.frontier[c])
+        while columns:
+            # Optimization. Remove columns which cannot contain overlapping
+            # tags because all its commits are below.
+            while columns:
+                c = columns[0]
+                if self.frontier[c] <= cell_row:
+                    # The column cannot overlap.
+                    columns.pop(0)
+                else:
+                    # This column may overlap because the frontier is above.
+                    # Consequent columns may overlap too because columns
+                    # sorting criteria.
+                    break
+
+            for c in columns:
+                if (c, cell_row) in self.tagged_cells:
+                    # Overlapping. Try next row.
+                    cell_row += 1
+                    break
+            else:
+                # No overlapping was found.
+                break
+            # Note that all checks should be made for new cell_row value.
+
+        if tags:
+            self.tagged_cells.add((column, cell_row))
+
+        # Propagate frontier.
+        self.frontier[column] = cell_row + 1
+        return cell_row
+
+    def propagate_frontier(self, column, value):
+        current = self.frontier[column]
+        if current < value:
+            self.frontier[column] = value
 
     def leave_column(self, column):
         count = self.columns[column]
@@ -1539,8 +1633,9 @@ coordinates based on its row and column multiplied by the coefficient.
         else:
             self.columns[column] = count - 1
 
-    def recompute_columns(self):
+    def recompute_grid(self):
         self.reset_columns()
+        self.reset_rows()
 
         for node in self.sort_by_generation(list(self.commits)):
             if node.column is None:
@@ -1561,7 +1656,10 @@ coordinates based on its row and column multiplied by the coefficient.
                         continue
                     self.leave_column(parent.column)
 
-            # Propagate column to children which are still without one.
+            node.row = self.alloc_cell(node.column, node.tags)
+
+            # Propagate column to children which are still without one. Also
+            # propagate frontier for children.
             if node.is_fork():
                 sorted_children = sorted(node.children,
                                          key=lambda c: c.generation,
@@ -1571,19 +1669,28 @@ coordinates based on its row and column multiplied by the coefficient.
                     if child.column is None:
                         # Top most child occupies column of parent.
                         child.column = node.column
+                        # Note that frontier is propagated in course of
+                        # alloc_cell.
                         break
+                    else:
+                        self.propagate_frontier(child.column, node.row + 1)
 
                 # Rest children are allocated new column.
                 for child in citer:
                     if child.column is None:
                         child.column = self.alloc_column()
+                    self.propagate_frontier(child.column, node.row + 1)
             elif node.children:
                 child = node.children[0]
                 if child.column is None:
                     child.column = node.column
+                    # Note that frontier is propagated in course of alloc_cell.
+                elif child.column != node.column:
+                    # Child node have other parents and occupies side column.
+                    self.propagate_frontier(child.column, node.row + 1)
 
     def position_nodes(self):
-        self.recompute_columns()
+        self.recompute_grid()
 
         x_max = self.x_max
         x_min = self.x_min
@@ -1595,7 +1702,7 @@ coordinates based on its row and column multiplied by the coefficient.
 
         for node in self.commits:
             x_pos = x_min + node.column * x_off
-            y_pos = y_off - node.generation * y_off
+            y_pos = y_off + node.row * y_off
 
             positions[node.oid] = (x_pos, y_pos)
 
