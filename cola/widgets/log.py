@@ -48,10 +48,9 @@ class LogWidget(QtWidgets.QWidget):
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
         text = self.output_text
-        cursor.insertText(time.asctime() + '\n')
+        prefix = time.asctime() + ':  '
         for line in msg.splitlines():
-            cursor.insertText(line + '\n')
-        cursor.insertText('\n')
+            cursor.insertText(prefix + line + '\n')
         cursor.movePosition(cursor.End)
         text.setTextCursor(cursor)
 
