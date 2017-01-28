@@ -6,7 +6,6 @@ from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 
-from ..models.browse import GitRepoEntryStore
 from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
@@ -15,6 +14,7 @@ from ..cmds import BaseCommand
 from ..git import git
 from ..i18n import N_
 from ..interaction import Interaction
+from ..models import browse
 from ..models import main
 from ..compat import ustr
 from .. import cmds
@@ -68,7 +68,7 @@ class Browser(standard.Widget):
 
     def set_model(self, model):
         """Set the model"""
-        self.tree.setModel(model)
+        self.tree.set_model(model)
 
     def refresh(self):
         """Refresh the model triggering view updates"""
@@ -106,13 +106,13 @@ class RepoTreeView(standard.TreeView):
         self.saved_current_path = None
         self.saved_open_folders = set()
         self.restoring_selection = False
-        self.runtask = qtutils.RunTask(parent=self)
-        self.turbo = False
+
+        self.info_event_type = browse.GitRepoInfoEvent.TYPE
 
         self.setDragEnabled(True)
         self.setRootIsDecorated(False)
         self.setSortingEnabled(False)
-        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.setSelectionMode(self.ExtendedSelection)
 
         # Observe model updates
         model = main.model()
@@ -191,7 +191,7 @@ class RepoTreeView(standard.TreeView):
     def index_expanded(self, index):
         """Update information about a directory as it is expanded."""
         # Remember open folders so that we can restore them when refreshing
-        item = self.model().itemFromIndex(index)
+        item = self.item_from_index(index)
         self.saved_open_folders.add(item.path)
         self.size_columns()
 
@@ -199,24 +199,19 @@ class RepoTreeView(standard.TreeView):
         if item.cached:
             return
         path = item.path
-        runtask = self.runtask
-        turbo = self.turbo
 
-        self.model().populate(item)
-
-        entry = GitRepoEntryStore.entry
-        entry(path, self, runtask, turbo).update()
+        model = self.model()
+        model.populate(item)
+        model.update_entry(path)
 
         for row in range(item.rowCount()):
             path = item.child(row, 0).path
-            entry(path, self, runtask, turbo).update()
+            model.update_entry(path)
+
         item.cached = True
 
-    def add_subdir(self, item):
-        path = item.path
-
     def index_collapsed(self, index):
-        item = self.model().itemFromIndex(index)
+        item = self.item_from_index(index)
         self.saved_open_folders.remove(item.path)
 
     def refresh(self):
@@ -235,7 +230,7 @@ class RepoTreeView(standard.TreeView):
 
         if column == 1:
             # Status
-            size = x_width * 10
+            size = x_width * 11
         elif column == 2:
             # Summary
             size = x_width * 64
@@ -272,8 +267,9 @@ class RepoTreeView(standard.TreeView):
         self.restoring_selection = True
 
         # Restore opened folders
+        model = self.model()
         for path in sorted(self.saved_open_folders):
-            row = self.model().row(path, create=False)
+            row = model.get(path)
             if not row:
                 continue
             index = row[0].index()
@@ -285,7 +281,7 @@ class RepoTreeView(standard.TreeView):
         current_index = None
         current_path = self.saved_current_path
         if current_path:
-            row = self.model().row(current_path, create=False)
+            row = model.get(current_path)
             if row:
                 current_index = row[0].index()
 
@@ -294,7 +290,7 @@ class RepoTreeView(standard.TreeView):
 
         # Restore selected items
         for path in self.saved_selection:
-            row = self.model().row(path, create=False)
+            row = model.get(path)
             if not row:
                 continue
             index = row[0].index()
@@ -306,6 +302,21 @@ class RepoTreeView(standard.TreeView):
 
         self.size_columns()
         self.update_diff()
+
+    def event(self, ev):
+        """Respond to GitRepoInfoEvents"""
+        if ev.type() == self.info_event_type:
+            ev.accept()
+            self.apply_data(ev.data)
+        return super(RepoTreeView, self).event(ev)
+
+    def apply_data(self, data):
+        entry = self.model().get(data[0])
+        if entry:
+            entry[1].set_status(data[1])
+            entry[2].setText(data[2])
+            entry[3].setText(data[3])
+            entry[4].setText(data[4])
 
     def update_actions(self):
         """Enable/disable actions."""
@@ -402,10 +413,9 @@ class RepoTreeView(standard.TreeView):
             cached = paths[0] in main.model().staged
             cmds.do(cmds.Diff, paths[0], cached)
 
-    def setModel(self, model):
+    def set_model(self, model):
         """Set the concrete QAbstractItemModel instance."""
-        self.turbo = model.turbo
-        QtWidgets.QTreeView.setModel(self, model)
+        self.setModel(model)
         model.restore.connect(self.restore, type=Qt.QueuedConnection)
 
     def item_from_index(self, model_index):

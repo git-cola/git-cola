@@ -218,6 +218,13 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.ext.mouse_press_event(event)
         super(PlainTextEdit, self).mousePressEvent(event)
 
+    def wheelEvent(self, event):
+        """Disable control+wheelscroll text resizing"""
+        if event.modifiers() & Qt.ControlModifier:
+            event.ignore()
+            return
+        return super(PlainTextEdit, self).wheelEvent(event)
+
 
 class TextEditExtension(BaseTextEditExtension):
 
@@ -273,6 +280,13 @@ class TextEdit(QtWidgets.QTextEdit):
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
         super(TextEdit, self).mousePressEvent(event)
+
+    def wheelEvent(self, event):
+        """Disable control+wheelscroll text resizing"""
+        if event.modifiers() & Qt.ControlModifier:
+            event.ignore()
+            return
+        return super(TextEdit, self).wheelEvent(event)
 
 
 class TextEditCursorPosition(object):
@@ -689,8 +703,6 @@ class TextDecorator(QtWidgets.QWidget):
         parent.cursorPositionChanged.connect(self.refresh)
         parent.updateRequest.connect(self._refresh_rect)
 
-        self._refresh_viewport()
-
     def refresh(self):
         """Refresh the numbers display"""
         rect = self.editor.viewport().rect()
@@ -722,8 +734,8 @@ class LineNumbers(TextDecorator):
     """Provide line numbers for QPlainTextEdit widgets"""
 
     def __init__(self, parent):
-        self.highlight_line = -1
         TextDecorator.__init__(self, parent)
+        self.highlight_line = -1
 
     def width_hint(self):
         document = self.editor.document()
@@ -747,6 +759,7 @@ class LineNumbers(TextDecorator):
         block = editor.firstVisibleBlock()
         current_block_number = max(0, self.editor.textCursor().blockNumber())
         width = self.width()
+        event_rect_bottom = event.rect().bottom()
 
         highlight = palette.color(QPalette.Highlight)
         window = palette.color(QPalette.Window)
@@ -754,10 +767,13 @@ class LineNumbers(TextDecorator):
         painter.setPen(disabled)
 
         while block.isValid():
-            block_number = block.blockNumber();
-            bounding_rect = editor.blockBoundingGeometry(block)
-            rect = bounding_rect.translated(content_offset).toRect()
+            block_geom = editor.blockBoundingGeometry(block)
+            block_top = block_geom.translated(content_offset).top()
+            if not block.isVisible() or block_top >= event_rect_bottom:
+                break
 
+            rect = block_geom.translated(content_offset).toRect()
+            block_number = block.blockNumber();
             if block_number == self.highlight_line:
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
