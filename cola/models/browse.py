@@ -429,17 +429,18 @@ class GitRepoInfoTask(qtutils.Task):
         untracked = utils.add_parents(model.untracked)
         upstream_changed = utils.add_parents(model.upstream_changed)
 
-        if self.path in unmerged:
+        path = self.path
+        if path in unmerged:
             status = (icons.modified_name(), N_('Unmerged'))
-        elif self.path in modified and self.path in staged:
+        elif path in modified and self.path in staged:
             status = (icons.partial_name(), N_('Partially Staged'))
-        elif self.path in modified:
+        elif path in modified:
             status = (icons.modified_name(), N_('Modified'))
-        elif self.path in staged:
+        elif path in staged:
             status = (icons.staged_name(), N_('Staged'))
-        elif self.path in upstream_changed:
+        elif path in upstream_changed:
             status = (icons.upstream_name(), N_('Changed Upstream'))
-        elif self.path in untracked:
+        elif path in untracked:
             status = (None, '?')
         else:
             status = (None, '')
