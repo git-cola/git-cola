@@ -206,9 +206,11 @@ class Grep(Dialog):
         """Initiate a search by starting the GrepThread"""
         self.edit_group.setEnabled(False)
         self.refresh_group.setEnabled(False)
+
         query = self.input_txt.value()
         if len(query) < 2:
-            self.result_txt.set_value('')
+            self.result_txt.clear()
+            self.preview_txt.clear()
             return
         self.worker_thread.query = query
         self.worker_thread.shell = self.shell_checkbox.isChecked()
@@ -346,6 +348,11 @@ class PreviewTextView(VimTextBrowser):
             self.runtask.start(request, finish=self.show_preview)
         else:
             self.scroll_to_line(line_number)
+
+    def clear(self):
+        self.filename = ''
+        self.content = ''
+        super(VimTextBrowser, self).clear()
 
     def show_preview(self, task):
         """Show the results of the asynchronous file read"""
