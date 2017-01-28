@@ -225,6 +225,7 @@ class DiffLineNumbers(TextDecorator):
         block = editor.firstVisibleBlock()
         current_block_number = max(0, editor.textCursor().blockNumber())
         width = self.width()
+        event_rect_bottom = event.rect().bottom()
 
         highlight = self._highlight
         highlight_text = self._highlight_text
@@ -240,11 +241,12 @@ class DiffLineNumbers(TextDecorator):
             block_number = block.blockNumber()
             if block_number >= num_lines:
                 break
+            block_geom = editor.blockBoundingGeometry(block)
+            block_top = block_geom.translated(content_offset).top()
+            if not block.isVisible() or block_top >= event_rect_bottom:
+                break
 
-            bounding_rect = editor.blockBoundingGeometry(block)
-            rect = bounding_rect.translated(content_offset).toRect()
-
-
+            rect = block_geom.translated(content_offset).toRect()
             if block_number == self.highlight_line:
                 painter.setPen(highlight_text)
                 painter.fillRect(rect.x(), rect.y(),
