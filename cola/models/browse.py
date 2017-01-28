@@ -37,18 +37,28 @@ class Columns(object):
     TEXT = []
 
     @classmethod
+    def init(cls):
+        cls.TEXT.extend([
+            N_('Name'),
+            N_('Status'),
+            N_('Message'),
+            N_('Author'),
+            N_('Age'),
+        ])
+
+    @classmethod
+    def text_values(cls):
+        if not cls.TEXT:
+            cls.init()
+        return cls.TEXT
+
+    @classmethod
     def text(cls, column):
         try:
             value = cls.TEXT[column]
         except IndexError:
             # Defer translation until runtime
-            cls.TEXT.extend([
-                N_('Name'),
-                N_('Status'),
-                N_('Message'),
-                N_('Author'),
-                N_('Age'),
-            ])
+            cls.init()
             value = cls.TEXT[column]
         return value
 
