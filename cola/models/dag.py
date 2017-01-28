@@ -153,11 +153,12 @@ class Commit(object):
         """Add tag/branch labels from `git log --decorate ....`"""
 
         if tag.startswith('tag: '):
-            tag = tag[5:]  # tag: refs/
-        elif tag.startswith('refs/remotes/'):
-            tag = tag[13:]  # refs/remotes/
-        elif tag.startswith('refs/heads/'):
-            tag = tag[11:]  # refs/heads/
+            tag = tag[5:]  # strip off "tag: " leaving refs/tags/
+
+        if tag.startswith('refs/'):
+            # strip off refs/ leaving just tags/XXX remotes/XXX heads/XXX
+            tag = tag[5:]
+
         if tag.endswith('/HEAD'):
             return
 
@@ -193,7 +194,7 @@ class Commit(object):
         head_arrow = 'HEAD -> '
         if tag.startswith(head_arrow):
             self.tags.add('HEAD')
-            self.tags.add(tag[len(head_arrow):])
+            self.add_label(tag[len(head_arrow):])
         else:
             self.tags.add(tag)
 
@@ -232,6 +233,7 @@ class RepoReader(object):
         self._cmd = ['git', 'log',
                      '--topo-order',
                      '--reverse',
+                     '--decorate=full',
                      '--pretty='+logfmt]
         self._cached = False
         """Indicates that all data has been read"""

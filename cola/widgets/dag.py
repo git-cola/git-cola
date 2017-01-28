@@ -1026,7 +1026,8 @@ class Label(QtWidgets.QGraphicsItem):
 
     def __init__(self, commit,
                  other_color=QtGui.QColor(Qt.white),
-                 head_color=QtGui.QColor(Qt.green)):
+                 head_color=QtGui.QColor(Qt.green),
+                 remote_color=QtGui.QColor(Qt.yellow)):
         QtWidgets.QGraphicsItem.__init__(self)
         self.setZValue(-1)
 
@@ -1034,15 +1035,17 @@ class Label(QtWidgets.QGraphicsItem):
         # needs to be taller to accommodate.
         self.commit = commit
 
-        if 'HEAD' in commit.tags:
-            self.color = head_color
-        else:
-            self.color = other_color
+        self.white_color = other_color
+        self.green_color = head_color
+        self.green_color.setAlpha(180)
+        self.green_pen = QtGui.QPen()
+        self.green_pen.setColor(self.green_color.darker().darker())
+        self.green_pen.setWidth(1.0)
 
-        self.color.setAlpha(180)
-        self.pen = QtGui.QPen()
-        self.pen.setColor(self.color.darker())
-        self.pen.setWidth(1.0)
+        self.remote_color = remote_color
+        self.text_pen = QtGui.QPen()
+        self.text_pen.setColor(QtGui.QColor(Qt.darkGray))
+        self.text_pen.setWidth(1.0)
 
     def type(self):
         return self.item_type
@@ -1063,18 +1066,36 @@ class Label(QtWidgets.QGraphicsItem):
             font = cache.label_font = QtWidgets.QApplication.font()
             font.setPointSize(6)
 
-        # Draw tags
-        painter.setBrush(self.color)
-        painter.setPen(self.pen)
+        # Draw tags and branches
         painter.setFont(font)
 
         current_width = 0
-
         QRectF = QtCore.QRectF
+
         for tag in self.commit.tags:
+            if tag == 'HEAD':
+                painter.setPen(self.text_pen)
+                painter.setBrush(self.remote_color)
+            elif tag.startswith('remotes/'):
+                tag = tag[8:]
+                painter.setPen(self.text_pen)
+                painter.setBrush(self.white_color)
+            elif tag.startswith('tags/'):
+                tag = tag[5:]
+                painter.setPen(self.text_pen)
+                painter.setBrush(self.remote_color)
+            elif tag.startswith('heads/'):
+                tag = tag[6:]
+                painter.setPen(self.green_pen)
+                painter.setBrush(self.green_color)
+            else:
+                painter.setPen(self.text_pen)
+                painter.setBrush(self.white_color)
+
             text_rect = painter.boundingRect(
                     QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
             box_rect = text_rect.adjusted(-1, -1, 1, 1)
+
             painter.drawRoundedRect(box_rect, 2, 2)
             painter.drawText(text_rect, Qt.TextSingleLine, tag)
             current_width += text_rect.width() + 5
