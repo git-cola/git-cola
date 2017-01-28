@@ -167,19 +167,29 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 class DiffLineNumbers(TextDecorator):
 
     def __init__(self, parent):
+        TextDecorator.__init__(self, parent)
         self.highlight_line = -1
         self.lines = None
         self.parser = diffparse.DiffLines()
         self.formatter = diffparse.FormatDigits()
 
-        TextDecorator.__init__(self, parent)
         self.setFont(qtutils.diff_font())
+        self._char_width = self.fontMetrics().width('0')
+
+        QPalette = QtGui.QPalette
+        self._palette = palette = self.palette()
+        self._base = palette.color(QtGui.QPalette.Base)
+        self._highlight = palette.color(QPalette.Highlight)
+        self._highlight_text = palette.color(QPalette.HighlightedText)
+        self._window = palette.color(QPalette.Window)
+        self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
 
     def set_diff(self, diff):
         parser = self.parser
         lines = parser.parse(diff)
         if parser.valid:
             self.lines = lines
+            self.formatter.set_digits(self.parser.digits())
         else:
             self.lines = None
 
@@ -196,8 +206,7 @@ class DiffLineNumbers(TextDecorator):
             digits = 4
 
         extra = 2  # one space in-between, one space after
-        return (defs.margin +
-                (self.fontMetrics().width('0') * (digits + extra)))
+        return defs.margin + (self._char_width * (digits + extra))
 
     def set_highlighted(self, line_number):
         """Set the line to highlight"""
@@ -208,44 +217,39 @@ class DiffLineNumbers(TextDecorator):
         if not self.lines:
             return
 
-        QPalette = QtGui.QPalette
         painter = QtGui.QPainter(self)
-        palette = self.palette()
-
-        painter.fillRect(event.rect(), palette.color(QPalette.Base))
+        painter.fillRect(event.rect(), self._base)
 
         editor = self.editor
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
-        current_block_number = max(0, self.editor.textCursor().blockNumber())
+        current_block_number = max(0, editor.textCursor().blockNumber())
         width = self.width()
 
-        highlight = palette.color(QPalette.Highlight)
-        highlight_text = palette.color(QPalette.HighlightedText)
-        window = palette.color(QPalette.Window)
-        disabled = palette.color(QPalette.Disabled, QPalette.Text)
+        highlight = self._highlight
+        highlight_text = self._highlight_text
+        window = self._window
+        disabled = self._disabled
 
+        fmt = self.formatter
         lines = self.lines
         num_lines = len(self.lines)
-
-        digits = self.parser.digits()
-        fmt = self.formatter
-        fmt.set_digits(digits)
+        painter.setPen(disabled)
 
         while block.isValid():
-            block_number = block.blockNumber();
+            block_number = block.blockNumber()
             if block_number >= num_lines:
                 break
 
             bounding_rect = editor.blockBoundingGeometry(block)
             rect = bounding_rect.translated(content_offset).toRect()
 
-            painter.setPen(disabled)
 
             if block_number == self.highlight_line:
                 painter.setPen(highlight_text)
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
+                painter.setPen(disabled)
             elif block_number == current_block_number:
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), window)
@@ -256,6 +260,7 @@ class DiffLineNumbers(TextDecorator):
             painter.drawText(rect.x(), rect.y(),
                              self.width() - (defs.margin * 2), rect.height(),
                              Qt.AlignRight | Qt.AlignVCenter, text)
+
             block = block.next()  # pylint: disable=next-method-called
 
 
