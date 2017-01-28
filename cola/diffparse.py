@@ -107,38 +107,36 @@ class DiffLines(object):
         state = INITIAL_STATE
 
         for text in diff_text.splitlines():
-            match = _HUNK_HEADER_RE.match(text)
-            if match:
-                state = DIFF_STATE
-
-                old_start, old_count = _parse_range_str(match.group(1))
-                new_start, new_count = _parse_range_str(match.group(2))
-                old_cur = old_start
-                new_cur = new_start
-
-                lines.append((self.DASH, self.DASH))
-                self.max_old = max(old_start + old_count, self.max_old)
-                self.max_new = max(new_start + new_count, self.max_new)
+            if text.startswith('@@ -'):
+                parts = text.split(' ', 4)
+                if parts[0] == '@@' and parts[3] == '@@':
+                    state = DIFF_STATE
+                    old_start, old_count = _parse_range_str(parts[1][1:])
+                    new_start, new_count = _parse_range_str(parts[2][1:])
+                    old_cur = old_start
+                    new_cur = new_start
+                    self.max_old = max(old_start + old_count, self.max_old)
+                    self.max_new = max(new_start + new_count, self.max_new)
+                    lines.append((self.DASH, self.DASH))
+                    continue
+            if state == INITIAL_STATE:
+                lines.append((self.EMPTY, self.EMPTY))
+            elif text.startswith('-'):
+                lines.append((old_cur, self.EMPTY))
+                old_cur += 1
+            elif text.startswith('+'):
+                lines.append((self.EMPTY, new_cur))
+                new_cur += 1
+            elif text.startswith(' '):
+                lines.append((old_cur, new_cur))
+                old_cur += 1
+                new_cur += 1
+            elif not text:
+                old_cur += 1
+                new_cur += 1
             else:
-                if state == INITIAL_STATE:
-                    lines.append((self.EMPTY, self.EMPTY))
-                    continue
-                if text.startswith('-'):
-                    lines.append((old_cur, self.EMPTY))
-                    old_cur += 1
-                elif text.startswith('+'):
-                    lines.append((self.EMPTY, new_cur))
-                    new_cur += 1
-                elif text.startswith(' '):
-                    lines.append((old_cur, new_cur))
-                    old_cur += 1
-                    new_cur += 1
-                elif not text:
-                    old_cur += 1
-                    new_cur += 1
-                else:
-                    self.valid = False
-                    continue
+                self.valid = False
+                continue
 
         return lines
 
