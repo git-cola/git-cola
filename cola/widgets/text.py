@@ -218,6 +218,13 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.ext.mouse_press_event(event)
         super(PlainTextEdit, self).mousePressEvent(event)
 
+    def wheelEvent(self, event):
+        """Disable control+wheelscroll text resizing"""
+        if event.modifiers() & Qt.ControlModifier:
+            event.ignore()
+            return
+        return super(PlainTextEdit, self).wheelEvent(event)
+
 
 class TextEditExtension(BaseTextEditExtension):
 
@@ -273,6 +280,13 @@ class TextEdit(QtWidgets.QTextEdit):
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
         super(TextEdit, self).mousePressEvent(event)
+
+    def wheelEvent(self, event):
+        """Disable control+wheelscroll text resizing"""
+        if event.modifiers() & Qt.ControlModifier:
+            event.ignore()
+            return
+        return super(TextEdit, self).wheelEvent(event)
 
 
 class TextEditCursorPosition(object):

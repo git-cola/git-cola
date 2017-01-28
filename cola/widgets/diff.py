@@ -468,38 +468,6 @@ class DiffEditor(DiffTextEdit):
         action.setShortcut(QtGui.QKeySequence.SelectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def wheelEvent(self, event):
-        ev = event
-        if event.modifiers() & Qt.ControlModifier:
-            event.accept()
-            # Intercept the Control modifier to not resize the text
-            # when doing control+mousewheel
-            if hasattr(event, 'angleDelta'):
-                angle = event.angleDelta()
-                if abs(angle.x()) > abs(angle.y()):
-                    delta = angle.x()
-                    orientation = Qt.Horizontal
-                else:
-                    delta = angle.y()
-                    orientation = Qt.Vertical
-
-                ev = QtGui.QWheelEvent(event.pos(),
-                                       event.globalPos(),
-                                       event.pixelDelta(),
-                                       event.angleDelta(),
-                                       delta,
-                                       orientation,
-                                       Qt.NoButton,
-                                       Qt.NoModifier)
-            else:
-                ev = QtGui.QWheelEvent(event.pos(),
-                                       event.delta(),
-                                       Qt.NoButton,
-                                       Qt.NoModifier,
-                                       event.orientation())
-
-        return DiffTextEdit.wheelEvent(self, ev)
-
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
             # Intercept right-click to move the cursor to the current position.
