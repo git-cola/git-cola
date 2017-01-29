@@ -37,8 +37,7 @@ class GitIgnoreView(Dialog):
 
         # Create edit filename
         self.edit_filename = QtWidgets.QLineEdit()
-        self.edit_filename.setText('/' + ';/'.join(selection_model().untracked))
-        self.edit_filename.setDisabled(True)
+        self.check_filename()
 
         self.filename_layt = qtutils.vbox(defs.no_margin, defs.spacing,
                                           self.text_description,
@@ -77,6 +76,7 @@ class GitIgnoreView(Dialog):
         self.edit_filename.setDisabled(False)
 
     def check_filename(self):
+        self.edit_filename.setText('/' + ';/'.join(selection_model().untracked))
         self.edit_filename.setDisabled(True)
 
     def close(self):
