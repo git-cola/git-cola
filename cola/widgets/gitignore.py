@@ -1,7 +1,6 @@
 """Provides the StashView dialog."""
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy.QtCore import Qt
 from qtpy import QtCore
 from qtpy import QtWidgets
 
@@ -27,8 +26,6 @@ class GitIgnoreView(Dialog):
         Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(N_('GitIgnore'))
-        #self.setWindowFlags(Qt.FramelessWindowHint)
-        #self.setWindowFlags(Qt.WindowTitleHint)
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
 
