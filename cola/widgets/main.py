@@ -114,8 +114,8 @@ class MainView(standard.MainWindow):
         self.bookmarkswidget.connect_to(self.recentwidget)
 
         # "Branch" widgets
-        self.branchdockwidget = create_dock(N_('Branchs'), self)
-        self.branchwidget = branch.BranchWidget(parent=self.branchdockwidget)
+        self.branchdockwidget = create_dock(N_('Branches'), self)
+        self.branchwidget = branch.BranchesWidget(parent=self.branchdockwidget)
         self.branchdockwidget.setWidget(self.branchwidget)
 
         # "Commit Message Editor" widget
