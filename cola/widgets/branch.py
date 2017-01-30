@@ -1,6 +1,5 @@
 """Provides widgets related to branchs"""
 from __future__ import division, absolute_import, unicode_literals
-import os
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -8,17 +7,11 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
-from .. import core
-from .. import git
-from .. import gitcfg
 from .. import gitcmds
-from .. import hotkeys
 from .. import icons
 from .. import qtutils
-from .. import utils
 from ..i18n import N_
-from ..models import prefs
-from ..settings import Settings
+from ..models import main
 from ..widgets import defs
 from ..widgets import standard
 
@@ -36,16 +29,8 @@ class BranchWidget(QtWidgets.QWidget):
         self.setFocusProxy(self.tree)
         self.setToolTip(N_('Branchs'))
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.refresh_button)
-
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.main_layout)
-
-        self.corner_widget = QtWidgets.QWidget(self)
-        self.corner_widget.setLayout(self.button_layout)
-        titlebar = parent.titleBarWidget()
-        titlebar.add_corner_widget(self.corner_widget)
 
         qtutils.connect_button(self.refresh_button, self.reload_branchs)
 
@@ -62,46 +47,85 @@ class BranchTreeWidget(standard.TreeWidget):
     def __init__(self, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
 
-        #self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
         self.setColumnCount(1)
         self.current = None
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
+        self.m = main.model()
+        self.m.add_observer(self.m.message_updated, self.updated.emit)
+
     def refresh(self):
-        builder = BuildItem()
-
         self.current = gitcmds.current_branch()
-        local_branchs = BranchTreeWidgetItem("Local", icons.ellipsis())
-        entries = gitcmds.branch_list()
-        local_items = [builder.get(entry, self.current) for entry in entries]
-        local_items.sort(key=lambda x: x)
 
-        local_branchs.addChildren(local_items)
-
-        remote_branchs = BranchTreeWidgetItem("Remote", icons.ellipsis())
-        entries = gitcmds.branch_list(True)
-        remote_items = [builder.get(entry) for entry in entries]
-        remote_items.sort(key=lambda x: x)
-
-        remote_branchs.addChildren(remote_items)
+        local_branch = self.create_branch_item(N_("Local"),
+                                          gitcmds.branch_list(),
+                                          self.current)
+        remote_branch = self.create_branch_item(N_("Remote"),
+                                          gitcmds.branch_list(True))
 
         self.clear()
-        self.addTopLevelItems([local_branchs, remote_branchs])
+        self.addTopLevelItems([local_branch, remote_branch])
 
         self.expandAll()
 
     def contextMenuEvent(self, event):
-        menu = qtutils.create_menu(N_('Actions'), self)
-        menu.addAction(qtutils.add_action(self, N_('Checkout'),
-                                 self.checkout_action))
+        selected = self.selected_item()
 
-        menu.exec_(self.mapToGlobal(event.pos()))
+        if selected.parent() is not None and selected.name != self.current:
+            menu = qtutils.create_menu(N_('Actions'), self)
+            menu.addAction(qtutils.add_action(self, N_('Checkout'),
+                            self.checkout_action))
+            menu.addAction(qtutils.add_action(self,
+                                     N_('Merge in current branch'),
+                                     self.merge_action))
+            menu.addSeparator()
+            delete_menu_action = qtutils.add_action(self,
+                                     N_('Delete'),
+                                     self.delete_action)
+            delete_menu_action.setIcon(icons.discard())
+            menu.addAction(delete_menu_action)
+
+            menu.exec_(self.mapToGlobal(event.pos()))
+
+    def create_branch_item(self, branch_name, children, current=False):
+        builder = BuildItem()
+
+        branch = BranchTreeWidgetItem(branch_name, icons.ellipsis())
+        items = [builder.get(child, current) for child in children]
+        items.sort(key=lambda x: x)
+
+        branch.addChildren(items)
+
+        return branch
+
+    def delete_action(self):
+        title = N_('Delete Branch')
+        question = N_('Delete selected branch?')
+        info = N_('The branch will be deleted')
+        ok_btn = N_('Delete Branch')
+
+        confirm = qtutils.confirm(title, question, info, ok_btn)
+        if self.selected_item().name != self.current and confirm:
+            cmds.do(cmds.DeleteBranch, self.selected_item().name)
+
+            self.refresh()
+
+    def merge_action(self):
+        cmds.do(cmds.Merge, self.selected_item().name,
+                            True, False, False, False)
+
+        self.refresh()
 
     def checkout_action(self):
         if self.selected_item().name != self.current:
-            cmds.do(cmds.CheckoutBranch, self.selected_item().name)
+            status, result = cmds.do(cmds.CheckoutBranch,
+                                     self.selected_item().name)
+            if status != 0:
+                qtutils.information(N_("Checkout result"), result)
+
             self.refresh()
 
         ## We make the items editable, but we don't want the double-click
