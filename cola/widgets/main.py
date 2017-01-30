@@ -31,6 +31,7 @@ from . import about
 from . import action
 from . import archive
 from . import bookmarks
+from . import branch
 from . import browse
 from . import cfgactions
 from . import commitmsg
@@ -111,6 +112,11 @@ class MainView(standard.MainWindow):
         self.recentdockwidget.setWidget(self.recentwidget)
         self.recentdockwidget.hide()
         self.bookmarkswidget.connect_to(self.recentwidget)
+
+        # "Branch" widgets
+        self.branchdockwidget = create_dock(N_('Branchs'), self)
+        self.branchwidget = branch.BranchWidget(parent=self.branchdockwidget)
+        self.branchdockwidget.setWidget(self.branchwidget)
 
         # "Commit Message Editor" widget
         self.position_label = QtWidgets.QLabel()
@@ -488,6 +494,7 @@ class MainView(standard.MainWindow):
         self.addDockWidget(left, self.diffdockwidget)
         self.addDockWidget(right, self.statusdockwidget)
         self.addDockWidget(right, self.bookmarksdockwidget)
+        self.addDockWidget(right, self.branchdockwidget)
         self.addDockWidget(right, self.recentdockwidget)
         self.addDockWidget(bottom, self.actionsdockwidget)
         self.addDockWidget(bottom, self.logdockwidget)
@@ -701,6 +708,7 @@ class MainView(standard.MainWindow):
             (optkey + '+4', self.actionsdockwidget),
             (optkey + '+5', self.bookmarksdockwidget),
             (optkey + '+6', self.recentdockwidget),
+            (optkey + '+7', self.branchdockwidget),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
