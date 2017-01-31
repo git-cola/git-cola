@@ -23,16 +23,11 @@ class BranchesWidget(QtWidgets.QWidget):
 
         self.tree = BranchesTreeWidget(parent=self)
 
-        self.refresh_button = qtutils.create_action_button(
-                tooltip=N_('Refresh'), icon=icons.sync())
-
         self.setFocusProxy(self.tree)
         self.setToolTip(N_('Branches'))
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.main_layout)
-
-        qtutils.connect_button(self.refresh_button, self.reload_branches)
 
         QtCore.QTimer.singleShot(0, self.reload_branches)
 
@@ -65,11 +60,13 @@ class BranchesTreeWidget(standard.TreeWidget):
                                           self.current)
         remote_branches = self.create_branch_item(N_("Remote"),
                                           gitcmds.branch_list(True))
+        tag_branches = self.create_branch_item(N_("Tags"),
+                                          gitcmds.tag_list())
 
         self.clear()
-        self.addTopLevelItems([local_branches, remote_branches])
+        self.addTopLevelItems([local_branches, remote_branches, tag_branches])
 
-        self.expandAll()
+        self.expandItem(local_branches)
 
     def contextMenuEvent(self, event):
         selected = self.selected_item()
@@ -150,4 +147,4 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setIcon(0, icon)
         self.setText(0, name)
         self.setToolTip(0, name)
-        self.setFlags(self.flags() | Qt.ItemIsEditable)
+        self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
