@@ -1665,18 +1665,6 @@ coordinates based on its row and column multiplied by the coefficient.
                 # columns for such nodes.
                 node.column = self.alloc_column()
 
-            if node.is_merge():
-                for parent in node.parents:
-                    if parent.is_fork():
-                        continue
-                    if parent.column == node.column:
-                        continue
-                    if parent.column is None:
-                        # Parent is in not among commits being laid out. Hence, it
-                        # have no column.
-                        continue
-                    self.leave_column(parent.column)
-
             node.row = self.alloc_cell(node.column, node.tags)
 
             # Allocate columns for children which are still without one. Also
@@ -1695,6 +1683,10 @@ coordinates based on its row and column multiplied by the coefficient.
                         break
                     else:
                         self.propagate_frontier(child.column, node.row + 1)
+                else:
+                    # No child occupies same column.
+                    self.leave_column(node.column)
+                    # Note that the loop below will pass no iteration.
 
                 # Rest children are allocated new column.
                 for child in citer:
@@ -1707,10 +1699,15 @@ coordinates based on its row and column multiplied by the coefficient.
                     child.column = node.column
                     # Note that frontier is propagated in course of alloc_cell.
                 elif child.column != node.column:
-                    # Child node have other parents and occupies side column.
+                    # Child node have other parents and occupies column of one
+                    # of them.
+                    self.leave_column(node.column)
                     # But frontier must be propagated with respect to this
                     # parent.
                     self.propagate_frontier(child.column, node.row + 1)
+            else:
+                # This is a leaf node.
+                self.leave_column(node.column)
 
     def position_nodes(self):
         self.recompute_grid()
