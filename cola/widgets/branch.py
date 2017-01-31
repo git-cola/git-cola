@@ -1,5 +1,6 @@
 """Provides widgets related to branchs"""
 from __future__ import division, absolute_import, unicode_literals
+import re
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -79,11 +80,18 @@ class BranchesTreeWidget(standard.TreeWidget):
                                      N_('Merge in current branch'),
                                      self.merge_action))
             menu.addSeparator()
-            delete_menu_action = qtutils.add_action(self,
-                                     N_('Delete'),
-                                     self.delete_action)
-            delete_menu_action.setIcon(icons.discard())
-            menu.addAction(delete_menu_action)
+
+            if N_("Tags") != selected.parent().name:
+                delete_label = N_("Delete branch")
+
+                if N_("Remote") == selected.parent().name:
+                    delete_label = N_("Delete remote branch")
+
+                delete_menu_action = qtutils.add_action(self,
+                                         delete_label,
+                                         self.delete_action)
+                delete_menu_action.setIcon(icons.discard())
+                menu.addAction(delete_menu_action)
 
             menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -104,22 +112,38 @@ class BranchesTreeWidget(standard.TreeWidget):
         info = N_('The branch will be deleted')
         ok_btn = N_('Delete Branch')
 
-        confirm = qtutils.confirm(title, question, info, ok_btn)
-        if self.selected_item().name != self.current and confirm:
-            cmds.do(cmds.DeleteBranch, self.selected_item().name)
+        selected_name = self.selected_item().name
+        if selected_name != self.current and qtutils.confirm(
+                                     title, question, info, ok_btn):
+            remote = False
+            if N_("Remote") == self.selected_item().parent().name:
+                    remote = True
+
+            if remote is False:
+                cmds.do(cmds.DeleteBranch, self.selected_item().name)
+            else:
+                rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+                match = rgx.match(selected_name)
+                if match:
+                    remote = match.group('remote')
+                    branch = match.group('branch')
+                    cmds.do(cmds.DeleteRemoteBranch,
+                            self.selected_item().name, branch)
 
             self.refresh()
 
     def merge_action(self):
-        cmds.do(cmds.Merge, self.selected_item().name,
-                            True, False, False, False)
+        if self.selected_item().name != self.current:
+            cmds.do(cmds.Merge, self.selected_item().name,
+                                True, False, False, False)
 
-        self.refresh()
+            self.refresh()
 
     def checkout_action(self):
         if self.selected_item().name != self.current:
             status, result = cmds.do(cmds.CheckoutBranch,
                                      self.selected_item().name)
+
             if status != 0:
                 qtutils.information(N_("Checkout result"), result)
 
