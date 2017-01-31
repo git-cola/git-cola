@@ -1672,14 +1672,14 @@ coordinates based on its row and column multiplied by the coefficient.
                     if parent.column == node.column:
                         continue
                     if parent.column is None:
-                        # Parent is in not among commits being layoutted, so it
+                        # Parent is in not among commits being laid out. Hence, it
                         # have no column.
                         continue
                     self.leave_column(parent.column)
 
             node.row = self.alloc_cell(node.column, node.tags)
 
-            # Propagate column to children which are still without one. Also
+            # Allocate columns for children which are still without one. Also
             # propagate frontier for children.
             if node.is_fork():
                 sorted_children = sorted(node.children,
@@ -1708,6 +1708,8 @@ coordinates based on its row and column multiplied by the coefficient.
                     # Note that frontier is propagated in course of alloc_cell.
                 elif child.column != node.column:
                     # Child node have other parents and occupies side column.
+                    # But frontier must be propagated with respect to this
+                    # parent.
                     self.propagate_frontier(child.column, node.row + 1)
 
     def position_nodes(self):
