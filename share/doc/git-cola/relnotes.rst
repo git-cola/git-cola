@@ -43,6 +43,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/651
 
+  https://github.com/git-cola/git-cola/pull/654
+
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
 
