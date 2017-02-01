@@ -1116,7 +1116,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     x_adjust = Commit.commit_radius*4/3
     y_adjust = Commit.commit_radius*4/3
 
-    x_off = 18
+    x_off = -18
     y_off = -24
 
     def __init__(self, notifier, parent):
