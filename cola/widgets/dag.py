@@ -1537,8 +1537,12 @@ that a node will be visited after all its parents.
 
     The set of occupied columns are maintained during work. Initially it is
 empty and no node occupied a column. Empty columns are allocated on demand.
-Index of allocated column is selected in ascend order starting from 0. The
-index is added to set of occupied column.
+Free index for column being allocated is searched in following way.
+    1. Start from desired column and look towards graph center (0 column).
+    2. Start from center and look in both directions simultaneously.
+Desired column is defaulted to 0. Fork node should set desired column for
+children equal to its one. This prevents branch from jumping too far from
+its fork.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
