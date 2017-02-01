@@ -979,7 +979,6 @@ class Commit(QtWidgets.QGraphicsItem):
         return self.item_shape
 
     def paint(self, painter, option, widget,
-              inner=inner_rect,
               cache=Cache):
 
         # Do not draw outside the exposed rect
@@ -988,7 +987,7 @@ class Commit(QtWidgets.QGraphicsItem):
         # Draw ellipse
         painter.setPen(self.commit_pen)
         painter.setBrush(self.brush)
-        painter.drawEllipse(inner)
+        painter.drawEllipse(self.inner_rect)
 
     def mousePressEvent(self, event):
         QtWidgets.QGraphicsItem.mousePressEvent(self, event)
@@ -1056,10 +1055,7 @@ class Label(QtWidgets.QGraphicsItem):
     def shape(self):
         return self.item_shape
 
-    def paint(self, painter, option, widget,
-              text_opts=text_options,
-              black=Qt.black,
-              cache=Cache):
+    def paint(self, painter, option, widget, cache=Cache):
         try:
             font = cache.label_font
         except AttributeError:
