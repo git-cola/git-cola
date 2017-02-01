@@ -1581,12 +1581,27 @@ step 2. Hence, it must be propagated for children on side columns.
         self.tagged_cells = set()
 
     def declare_column(self, column):
-        try:
+        if self.frontier:
+            # Align new column frontier by frontier of nearest column.
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
             # propagate_frontier.
-            self.frontier[column] = self.frontier[column - 1] - 1
-        except KeyError:
+            for offset in count(1):
+                for c in [column + offset, column - offset]:
+                    if not c in self.columns:
+                        # Column 'c' is not occupied.
+                        continue
+                    try:
+                        frontier = self.frontier[c]
+                    except KeyError:
+                        # Column 'c' was never allocated.
+                        continue
+                    self.frontier[column] = frontier - 1
+                    break
+                else:
+                    continue
+                break
+        else:
             # First commit must be assigned 0 row.
             self.frontier[column] = 0
 
