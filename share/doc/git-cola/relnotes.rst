@@ -72,6 +72,10 @@ Usability, bells and whistles
   disables the background loading of Git commit messages and other
   details in the `File Browser` widget.
 
+* A new GitIgnore dialog allows adding custom gitignore patterns.
+
+  https://github.com/git-cola/git-cola/pull/653
+
 Fixes
 =====
 * Properly handle the case where an existing file is untracked using
