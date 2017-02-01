@@ -1573,6 +1573,8 @@ step 2. Hence, it must be propagated for children on side columns.
         for node in self.commits:
             node.column = None
         self.columns = {}
+        self.max_column = 0
+        self.min_column = 0
 
     def reset_rows(self):
         self.frontier = {}
@@ -1592,6 +1594,8 @@ step 2. Hence, it must be propagated for children on side columns.
         columns = self.columns
         for c in count(0):
             if c not in columns:
+                if c > self.max_column:
+                    self.max_column = c
                 break
         self.declare_column(c)
         columns[c] = 1
