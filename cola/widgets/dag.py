@@ -508,6 +508,7 @@ class GitDAG(standard.MainWindow):
 
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
+        self.filewidget.grab_file.connect(self.grab_file)
 
         self.maxresults.editingFinished.connect(self.display)
         self.revtext.textChanged.connect(self.text_changed)
@@ -679,6 +680,12 @@ class GitDAG(standard.MainWindow):
             return
         cmds.difftool_launch(left=bottom, left_take_parent=True,
                              right=top, paths=files)
+
+    def grab_file(self, filename):
+        """Save the selected file from the filelist widget"""
+        oid = self.treewidget.selected_oid()
+        model = browse.BrowseModel(oid, filename=filename)
+        browse.save_path(filename, model)
 
 
 class ReaderThread(QtCore.QThread):
