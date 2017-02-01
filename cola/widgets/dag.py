@@ -1068,20 +1068,28 @@ class Label(QtWidgets.QGraphicsItem):
         current_width = 0
         QRectF = QtCore.QRectF
 
+        HEAD = 'HEAD'
+        remotes_prefix = 'remotes/'
+        tags_prefix = 'tags/'
+        heads_prefix = 'heads/'
+        remotes_len = len(remotes_prefix)
+        tags_len = len(tags_prefix)
+        heads_len = len(heads_prefix)
+
         for tag in self.commit.tags:
-            if tag == 'HEAD':
+            if tag == HEAD:
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
-            elif tag.startswith('remotes/'):
-                tag = tag[8:]
+            elif tag.startswith(remotes_prefix):
+                tag = tag[remotes_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.white_color)
-            elif tag.startswith('tags/'):
-                tag = tag[5:]
+            elif tag.startswith(tags_prefix):
+                tag = tag[tags_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
-            elif tag.startswith('heads/'):
-                tag = tag[6:]
+            elif tag.startswith(heads_prefix):
+                tag = tag[heads_len:]
                 painter.setPen(self.green_pen)
                 painter.setBrush(self.green_color)
             else:
