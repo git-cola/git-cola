@@ -127,8 +127,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if match:
                     remote = match.group('remote')
                     branch = match.group('branch')
-                    cmds.do(cmds.DeleteRemoteBranch,
-                            self.selected_item().name, branch)
+                    cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
             self.refresh()
 
