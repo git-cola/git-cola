@@ -1612,6 +1612,11 @@ step 2. Hence, it must be propagated for children on side columns.
                 if c > self.max_column:
                     self.max_column = c
                 break
+            c = -c
+            if c not in columns:
+                if c < self.min_column:
+                    self.min_column = c
+                break
         self.declare_column(c)
         columns[c] = 1
         return c
