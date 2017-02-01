@@ -928,7 +928,7 @@ class Commit(QtWidgets.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, -self.commit_radius/2.0)
+            label.setPos(xpos + 1, -self.commit_radius/2.0)
         else:
             self.label = None
 
