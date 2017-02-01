@@ -1605,18 +1605,31 @@ step 2. Hence, it must be propagated for children on side columns.
             # First commit must be assigned 0 row.
             self.frontier[column] = 0
 
-    def alloc_column(self):
+    def alloc_column(self, column = 0):
         columns = self.columns
-        for c in count(0):
+        # First, look for free column by moving from desired column to graph
+        # center (column 0).
+        for c in range(column, 0, -1 if column > 0 else 1):
             if c not in columns:
                 if c > self.max_column:
                     self.max_column = c
-                break
-            c = -c
-            if c not in columns:
-                if c < self.min_column:
+                elif c < self.min_column:
                     self.min_column = c
                 break
+        else:
+            # If no free column was found between graph center and desired
+            # column then look for free one by moving from center along both
+            # directions simultaneously.
+            for c in count(0):
+                if c not in columns:
+                    if c > self.max_column:
+                        self.max_column = c
+                    break
+                c = -c
+                if c not in columns:
+                    if c < self.min_column:
+                        self.min_column = c
+                    break
         self.declare_column(c)
         columns[c] = 1
         return c
