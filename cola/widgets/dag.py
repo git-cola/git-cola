@@ -508,6 +508,7 @@ class GitDAG(standard.MainWindow):
 
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
+        self.filewidget.grab_file.connect(self.grab_file)
 
         self.maxresults.editingFinished.connect(self.display)
         self.revtext.textChanged.connect(self.text_changed)
@@ -679,6 +680,12 @@ class GitDAG(standard.MainWindow):
             return
         cmds.difftool_launch(left=bottom, left_take_parent=True,
                              right=top, paths=files)
+
+    def grab_file(self, filename):
+        """Save the selected file from the filelist widget"""
+        oid = self.treewidget.selected_oid()
+        model = browse.BrowseModel(oid, filename=filename)
+        browse.save_path(filename, model)
 
 
 class ReaderThread(QtCore.QThread):
@@ -923,12 +930,12 @@ class Commit(QtWidgets.QGraphicsItem):
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
-        self.setToolTip(commit.oid[:7] + ': ' + commit.summary)
+        self.setToolTip(commit.oid[:12] + ': ' + commit.summary)
 
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos, -self.commit_radius/2.0)
+            label.setPos(xpos + 1, -self.commit_radius/2.0)
         else:
             self.label = None
 
@@ -979,7 +986,6 @@ class Commit(QtWidgets.QGraphicsItem):
         return self.item_shape
 
     def paint(self, painter, option, widget,
-              inner=inner_rect,
               cache=Cache):
 
         # Do not draw outside the exposed rect
@@ -988,7 +994,7 @@ class Commit(QtWidgets.QGraphicsItem):
         # Draw ellipse
         painter.setPen(self.commit_pen)
         painter.setBrush(self.brush)
-        painter.drawEllipse(inner)
+        painter.drawEllipse(self.inner_rect)
 
     def mousePressEvent(self, event):
         QtWidgets.QGraphicsItem.mousePressEvent(self, event)
@@ -1056,10 +1062,7 @@ class Label(QtWidgets.QGraphicsItem):
     def shape(self):
         return self.item_shape
 
-    def paint(self, painter, option, widget,
-              text_opts=text_options,
-              black=Qt.black,
-              cache=Cache):
+    def paint(self, painter, option, widget, cache=Cache):
         try:
             font = cache.label_font
         except AttributeError:
@@ -1072,20 +1075,28 @@ class Label(QtWidgets.QGraphicsItem):
         current_width = 0
         QRectF = QtCore.QRectF
 
+        HEAD = 'HEAD'
+        remotes_prefix = 'remotes/'
+        tags_prefix = 'tags/'
+        heads_prefix = 'heads/'
+        remotes_len = len(remotes_prefix)
+        tags_len = len(tags_prefix)
+        heads_len = len(heads_prefix)
+
         for tag in self.commit.tags:
-            if tag == 'HEAD':
+            if tag == HEAD:
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
-            elif tag.startswith('remotes/'):
-                tag = tag[8:]
+            elif tag.startswith(remotes_prefix):
+                tag = tag[remotes_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.white_color)
-            elif tag.startswith('tags/'):
-                tag = tag[5:]
+            elif tag.startswith(tags_prefix):
+                tag = tag[tags_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
-            elif tag.startswith('heads/'):
-                tag = tag[6:]
+            elif tag.startswith(heads_prefix):
+                tag = tag[heads_len:]
                 painter.setPen(self.green_pen)
                 painter.setBrush(self.green_color)
             else:
@@ -1112,7 +1123,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     x_adjust = Commit.commit_radius*4/3
     y_adjust = Commit.commit_radius*4/3
 
-    x_off = 18
+    x_off = -18
     y_off = -24
 
     def __init__(self, notifier, parent):
@@ -1525,47 +1536,37 @@ commit which occupies different column. This meets first aim.
 that a node will be visited after all its parents.
 
     The set of occupied columns are maintained during work. Initially it is
-empty and no node occupied a column. Empty columns are selected by request in
-index ascend order starting from 0. Each column has its reference counter.
-Being allocated a column is assigned 1 reference. When a counter reaches 0 the
-column is removed from occupied column set. Currently no counter becomes
-gather than 1, but leave_column method is written in generic way.
+empty and no node occupied a column. Empty columns are allocated on demand.
+Index of allocated column is selected in ascend order starting from 0. The
+index is added to set of occupied column.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
-recompute_grid method. Main loop also embeds row assignment algorithm by
-implementation. So, the algorithm initialization is also performed during
-recompute_grid method by calling reset_rows.
+recompute_grid method. The method also embeds row assignment algorithm by
+implementation.
 
     Actions for each node are follow.
     1. If the node was not assigned a column then it is assigned empty one.
-    2. Handle columns occupied by parents. Handling is leaving columns of some
-parents. One of parents occupies same column as the node. The column should not
-be left. Hence if the node is not a merge then nothing is done during the step.
-Other parents of merge node are processed in follow way.
-    2.1. If parent is fork then a brother node could be at column of the
-parent. So, the column cannot be left. Note that the brother itself or one of
-its descendant will perform the column leaving at appropriate time.
-    2.2 The parent may not occupy a column. This is possible when some commits
-were not added to the DAG (during repository reading, for instance). No column
-should be left.
-    2.3. Leave column of the parent. The parent is a regular commit. Its
-outgoing edge is turned form its column to column of the node. Hence, the
-column is left.
-    3. Get row for the node.
-    4. Define columns and rows of children.
-    4.1 If a child have a column assigned then it should no be overridden. One
-of children is assigned same column as the node. If the node is a fork then the
+    2. Allocate row.
+    3. Allocate columns for children.
+    If a child have a column assigned then it should no be overridden. One of
+children is assigned same column as the node. If the node is a fork then the
 child is chosen in generation descent order. This is a heuristic and it only
 affects resulting appearance of the graph. Other children are assigned empty
 columns in same order. It is the heuristic too.
-    4.2 All children will got row during step 3 of its iteration. But frontier
-must be propagated during this iteration to meet first aim of the row
-assignment algorithm. Frontier of child that occupies same row was propagated
-during step 3. Hence, it must be propagated for children on side columns.
+    4. If no child occupies column of the node then leave it.
+    It is possible in consequent situations.
+    4.1 The node is a leaf.
+    4.2 The node is a fork and all its children are already assigned side
+column. It is possible if all the children are merges.
+    4.3 Single node child is a merge that is already assigned a column.
+    5. Propagate frontier with respect to this node.
+    Each frontier entry corresponding to column occupied by any node's child
+must be gather than node row index. This meets first aim of the row assignment
+algorithm.
+    Note that frontier of child that occupies same row was propagated during
+step 2. Hence, it must be propagated for children on side columns.
 
-    After the algorithm was done all commit graphic items are assigned
-coordinates based on its row and column multiplied by the coefficient.
     """
 
     def reset_columns(self):
@@ -1665,21 +1666,9 @@ coordinates based on its row and column multiplied by the coefficient.
                 # columns for such nodes.
                 node.column = self.alloc_column()
 
-            if node.is_merge():
-                for parent in node.parents:
-                    if parent.is_fork():
-                        continue
-                    if parent.column == node.column:
-                        continue
-                    if parent.column is None:
-                        # Parent is in not among commits being layoutted, so it
-                        # have no column.
-                        continue
-                    self.leave_column(parent.column)
-
             node.row = self.alloc_cell(node.column, node.tags)
 
-            # Propagate column to children which are still without one. Also
+            # Allocate columns for children which are still without one. Also
             # propagate frontier for children.
             if node.is_fork():
                 sorted_children = sorted(node.children,
@@ -1695,6 +1684,10 @@ coordinates based on its row and column multiplied by the coefficient.
                         break
                     else:
                         self.propagate_frontier(child.column, node.row + 1)
+                else:
+                    # No child occupies same column.
+                    self.leave_column(node.column)
+                    # Note that the loop below will pass no iteration.
 
                 # Rest children are allocated new column.
                 for child in citer:
@@ -1707,8 +1700,15 @@ coordinates based on its row and column multiplied by the coefficient.
                     child.column = node.column
                     # Note that frontier is propagated in course of alloc_cell.
                 elif child.column != node.column:
-                    # Child node have other parents and occupies side column.
+                    # Child node have other parents and occupies column of one
+                    # of them.
+                    self.leave_column(node.column)
+                    # But frontier must be propagated with respect to this
+                    # parent.
                     self.propagate_frontier(child.column, node.row + 1)
+            else:
+                # This is a leaf node.
+                self.leave_column(node.column)
 
     def position_nodes(self):
         self.recompute_grid()

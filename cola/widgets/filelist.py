@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtWidgets
+from qtpy.QtCore import Signal
 
 from .. import cmds
 from .. import hotkeys
@@ -17,6 +18,8 @@ DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
 class FileWidget(TreeWidget):
 
+    grab_file = Signal(object)
+
     def __init__(self, notifier, parent):
         TreeWidget.__init__(self, parent)
         self.notifier = notifier
@@ -31,6 +34,9 @@ class FileWidget(TreeWidget):
 
         self.launch_editor_action = qtutils.add_action(
                 self, N_('Launch Diff Tool'), self.edit_paths, hotkeys.EDIT)
+
+        self.grab_file_action = qtutils.add_action(
+                self, N_('Grab File...'), self._grab_file)
 
         self.itemSelectionChanged.connect(self.selection_changed)
 
@@ -80,12 +86,18 @@ class FileWidget(TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
+        menu.addAction(self.grab_file_action)
         menu.addAction(self.show_history_action)
         menu.addAction(self.launch_difftool_action)
+        menu.addAction(self.launch_editor_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_diff(self):
         self.notifier.notify_observers(DIFFTOOL_SELECTED, self.selected_paths())
+
+    def _grab_file(self):
+        for path in self.selected_paths():
+            self.grab_file.emit(path)
 
     def selected_paths(self):
         return [i.path for i in self.selected_items()]

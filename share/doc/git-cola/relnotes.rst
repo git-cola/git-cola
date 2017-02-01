@@ -43,6 +43,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/651
 
+  https://github.com/git-cola/git-cola/pull/654
+
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
 
@@ -69,6 +71,10 @@ Usability, bells and whistles
   enabled by configuring `git config cola.turbo true`.  Turbo mode
   disables the background loading of Git commit messages and other
   details in the `File Browser` widget.
+
+* A new GitIgnore dialog allows adding custom gitignore patterns.
+
+  https://github.com/git-cola/git-cola/pull/653
 
 Fixes
 =====

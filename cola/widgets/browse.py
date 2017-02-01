@@ -42,6 +42,18 @@ def worktree_browser(parent=None, update=True, settings=None, show=False):
     return view
 
 
+def save_path(path, model):
+    """Choose an output filename based on the selected path"""
+    filename = qtutils.save_as(model.filename)
+    if filename:
+        model.filename = filename
+        cmds.do(SaveBlob, model)
+        result = True
+    else:
+        result = False
+    return result
+
+
 class Browser(standard.Widget):
     updated = Signal()
 
@@ -500,10 +512,10 @@ class RepoTreeView(standard.TreeView):
 class BrowseModel(object):
     """Context data used for browsing branches via git-ls-tree"""
 
-    def __init__(self, ref):
+    def __init__(self, ref, filename=None):
         self.ref = ref
-        self.relpath = None
-        self.filename = None
+        self.relpath = filename
+        self.filename = filename
 
 
 class SaveBlob(BaseCommand):
@@ -639,13 +651,8 @@ class BrowseDialog(QtWidgets.QDialog):
     def save_path(self, path):
         """Choose an output filename based on the selected path"""
         self.path_chosen(path, close=False)
-        model = self.model
-        filename = qtutils.save_as(model.filename)
-        if not filename:
-            return
-        model.filename = filename
-        cmds.do(SaveBlob, model)
-        self.accept()
+        if save_path(path, self.model):
+            self.accept()
 
     def save_blob(self):
         """Save the currently selected file"""

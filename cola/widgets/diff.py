@@ -131,25 +131,31 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
 class DiffTextEdit(VimHintedPlainTextEdit):
 
-    def __init__(self, parent, is_commit=False, whitespace=True):
+    def __init__(self, parent,
+                 is_commit=False, whitespace=True, numbers=False):
         VimHintedPlainTextEdit.__init__(self, '', parent=parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(self.document(),
                                                  is_commit=is_commit,
                                                  whitespace=whitespace)
-        self.numbers = DiffLineNumbers(self)
-        self.numbers.hide()
+        if numbers:
+            self.numbers = DiffLineNumbers(self)
+            self.numbers.hide()
+        else:
+            self.numbers = None
 
         self.cursorPositionChanged.connect(self._cursor_changed)
 
     def _cursor_changed(self):
         """Update the line number display when the cursor changes"""
         line_number = max(0, self.textCursor().blockNumber())
-        self.numbers.set_highlighted(line_number)
+        if self.numbers:
+            self.numbers.set_highlighted(line_number)
 
     def resizeEvent(self, event):
         super(DiffTextEdit, self).resizeEvent(event)
-        self.numbers.refresh_size()
+        if self.numbers:
+            self.numbers.refresh_size()
 
     def set_loading_message(self):
         self.hint.set_value('+++ ' + N_('Loading...'))
@@ -157,11 +163,9 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def set_diff(self, diff):
         self.hint.set_value('')
-        self.parse_diff_line_numbers(diff)
+        if self.numbers:
+            self.numbers.set_diff(diff)
         self.set_value(diff)
-
-    def parse_diff_line_numbers(self, diff):
-        self.numbers.set_diff(diff)
 
 
 class DiffLineNumbers(TextDecorator):
@@ -287,7 +291,7 @@ class DiffEditor(DiffTextEdit):
     diff_text_changed = Signal(object)
 
     def __init__(self, parent, titlebar):
-        DiffTextEdit.__init__(self, parent)
+        DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
 
         # "Diff Options" tool menu

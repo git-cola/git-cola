@@ -59,6 +59,7 @@ Thanks
 * Jan @hanksoff
 * Jakub Wilk
 * James Geiger
+* Javier Rodriguez Cuevas
 * Jeff Dagenais
 * Jérôme Carretero
 * JiCiT
