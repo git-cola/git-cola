@@ -1720,7 +1720,7 @@ step 2. Hence, it must be propagated for children on side columns.
                 # Rest children are allocated new column.
                 for child in citer:
                     if child.column is None:
-                        child.column = self.alloc_column()
+                        child.column = self.alloc_column(node.column)
                     self.propagate_frontier(child.column, node.row + 1)
             elif node.children:
                 child = node.children[0]
