@@ -1606,34 +1606,25 @@ step 2. Hence, it must be propagated for children on side columns.
         cell_row = self.frontier[column]
 
         if tags:
-            # Prevent overlapping with right cells. Do not occupy row if the
-            # row is occupied by a commit at right side.
-            for c in range(column + 1, len(self.frontier)):
+            # Prevent overlapping of tag with cells already allocated a row.
+            if self.x_off > 0:
+                can_overlap = list(range(column + 1, self.max_column + 1))
+            else:
+                can_overlap = list(range(column - 1, self.min_column - 1, -1))
+            for c in can_overlap:
                 frontier = self.frontier[c]
                 if frontier > cell_row:
                     cell_row = frontier
 
-        # Avoid overlapping with tags of left cells.
-        # Sorting is a part for column overlapping check optimization.
-        columns = sorted(range(0, column), key=lambda c: self.frontier[c])
-        while columns:
-            # Optimization. Remove columns which cannot contain overlapping
-            # tags because all its commits are below.
-            while columns:
-                c = columns[0]
-                if self.frontier[c] <= cell_row:
-                    # The column cannot overlap.
-                    columns.pop(0)
-                else:
-                    # This column may overlap because the frontier is above.
-                    # Consequent columns may overlap too because columns
-                    # sorting criteria.
-                    break
-
-            for c in columns:
+        # Avoid overlapping with tags of commits at cell_row.
+        if self.x_off > 0:
+            can_overlap = list(range(self.min_column, column))
+        else:
+            can_overlap = list(range(self.max_column, column, -1))
+        for cell_row in count(cell_row):
+            for c in can_overlap:
                 if (c, cell_row) in self.tagged_cells:
                     # Overlapping. Try next row.
-                    cell_row += 1
                     break
             else:
                 # No overlapping was found.
