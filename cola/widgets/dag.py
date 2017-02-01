@@ -923,7 +923,7 @@ class Commit(QtWidgets.QGraphicsItem):
         self.setZValue(0)
         self.setFlag(selectable)
         self.setCursor(cursor)
-        self.setToolTip(commit.oid[:7] + ': ' + commit.summary)
+        self.setToolTip(commit.oid[:12] + ': ' + commit.summary)
 
         if commit.tags:
             self.label = label = Label(commit)
