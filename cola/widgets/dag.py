@@ -810,7 +810,6 @@ class Edge(QtWidgets.QGraphicsItem):
         if self.source.x() == self.dest.x():
             path.moveTo(self.source.x(), self.source.y())
             path.lineTo(self.dest.x(), self.dest.y())
-            painter.drawPath(path)
         else:
             # Define points starting from source
             point1 = QPointF(self.source.x(), self.source.y())
@@ -845,7 +844,8 @@ class Edge(QtWidgets.QGraphicsItem):
             path.arcTo(QRectF(point6, point5),
                        start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
-            painter.drawPath(path)
+
+        painter.drawPath(path)
 
 
 class EdgeColor(object):
