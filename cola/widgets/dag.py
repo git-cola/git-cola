@@ -1537,8 +1537,12 @@ that a node will be visited after all its parents.
 
     The set of occupied columns are maintained during work. Initially it is
 empty and no node occupied a column. Empty columns are allocated on demand.
-Index of allocated column is selected in ascend order starting from 0. The
-index is added to set of occupied column.
+Free index for column being allocated is searched in following way.
+    1. Start from desired column and look towards graph center (0 column).
+    2. Start from center and look in both directions simultaneously.
+Desired column is defaulted to 0. Fork node should set desired column for
+children equal to its one. This prevents branch from jumping too far from
+its fork.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
@@ -1573,26 +1577,63 @@ step 2. Hence, it must be propagated for children on side columns.
         for node in self.commits:
             node.column = None
         self.columns = {}
+        self.max_column = 0
+        self.min_column = 0
 
     def reset_rows(self):
         self.frontier = {}
         self.tagged_cells = set()
 
     def declare_column(self, column):
-        try:
+        if self.frontier:
+            # Align new column frontier by frontier of nearest column.
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
             # propagate_frontier.
-            self.frontier[column] = self.frontier[column - 1] - 1
-        except KeyError:
+            for offset in count(1):
+                for c in [column + offset, column - offset]:
+                    if not c in self.columns:
+                        # Column 'c' is not occupied.
+                        continue
+                    try:
+                        frontier = self.frontier[c]
+                    except KeyError:
+                        # Column 'c' was never allocated.
+                        continue
+                    self.frontier[column] = frontier - 1
+                    break
+                else:
+                    continue
+                break
+        else:
             # First commit must be assigned 0 row.
             self.frontier[column] = 0
 
-    def alloc_column(self):
+    def alloc_column(self, column = 0):
         columns = self.columns
-        for c in count(0):
+        # First, look for free column by moving from desired column to graph
+        # center (column 0).
+        for c in range(column, 0, -1 if column > 0 else 1):
             if c not in columns:
+                if c > self.max_column:
+                    self.max_column = c
+                elif c < self.min_column:
+                    self.min_column = c
                 break
+        else:
+            # If no free column was found between graph center and desired
+            # column then look for free one by moving from center along both
+            # directions simultaneously.
+            for c in count(0):
+                if c not in columns:
+                    if c > self.max_column:
+                        self.max_column = c
+                    break
+                c = -c
+                if c not in columns:
+                    if c < self.min_column:
+                        self.min_column = c
+                    break
         self.declare_column(c)
         columns[c] = 1
         return c
@@ -1602,34 +1643,25 @@ step 2. Hence, it must be propagated for children on side columns.
         cell_row = self.frontier[column]
 
         if tags:
-            # Prevent overlapping with right cells. Do not occupy row if the
-            # row is occupied by a commit at right side.
-            for c in range(column + 1, len(self.frontier)):
+            # Prevent overlapping of tag with cells already allocated a row.
+            if self.x_off > 0:
+                can_overlap = list(range(column + 1, self.max_column + 1))
+            else:
+                can_overlap = list(range(column - 1, self.min_column - 1, -1))
+            for c in can_overlap:
                 frontier = self.frontier[c]
                 if frontier > cell_row:
                     cell_row = frontier
 
-        # Avoid overlapping with tags of left cells.
-        # Sorting is a part for column overlapping check optimization.
-        columns = sorted(range(0, column), key=lambda c: self.frontier[c])
-        while columns:
-            # Optimization. Remove columns which cannot contain overlapping
-            # tags because all its commits are below.
-            while columns:
-                c = columns[0]
-                if self.frontier[c] <= cell_row:
-                    # The column cannot overlap.
-                    columns.pop(0)
-                else:
-                    # This column may overlap because the frontier is above.
-                    # Consequent columns may overlap too because columns
-                    # sorting criteria.
-                    break
-
-            for c in columns:
+        # Avoid overlapping with tags of commits at cell_row.
+        if self.x_off > 0:
+            can_overlap = list(range(self.min_column, column))
+        else:
+            can_overlap = list(range(self.max_column, column, -1))
+        for cell_row in count(cell_row):
+            for c in can_overlap:
                 if (c, cell_row) in self.tagged_cells:
                     # Overlapping. Try next row.
-                    cell_row += 1
                     break
             else:
                 # No overlapping was found.
@@ -1692,7 +1724,7 @@ step 2. Hence, it must be propagated for children on side columns.
                 # Rest children are allocated new column.
                 for child in citer:
                     if child.column is None:
-                        child.column = self.alloc_column()
+                        child.column = self.alloc_column(node.column)
                     self.propagate_frontier(child.column, node.row + 1)
             elif node.children:
                 child = node.children[0]
