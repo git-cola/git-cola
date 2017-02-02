@@ -790,6 +790,10 @@ class Edge(QtWidgets.QGraphicsItem):
         rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
         self.bound = rect.normalized()
 
+    def commits_were_invalidated(self):
+        self.recompute_bound()
+        self.prepareGeometryChange()
+
     # Qt overrides
     def type(self):
         return self.item_type
