@@ -1519,9 +1519,23 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     def layout_commits(self):
         positions = self.position_nodes()
+
+        # Each edge is accounted in two commits. Hence, accumulate invalid
+        # edges to prevent double edge invalidation.
+        invalid_edges = set()
+
         for oid, (x, y) in positions.items():
             item = self.items[oid]
-            item.setPos(x, y)
+
+            pos = item.pos()
+            if pos != (x, y):
+                item.setPos(x, y)
+
+                for edge in item.edges.values():
+                    invalid_edges.add(edge)
+
+        for edge in invalid_edges:
+            edge.commits_were_invalidated()
 
     """Commit node layout technique
 
