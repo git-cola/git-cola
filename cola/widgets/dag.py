@@ -797,14 +797,13 @@ class Edge(QtWidgets.QGraphicsItem):
     def boundingRect(self):
         return self.bound
 
-    def paint(self, painter, option, widget):
+    def recompute_path(self):
         QRectF = QtCore.QRectF
         QPointF = QtCore.QPointF
 
         arc_rect = 10
         connector_length = 5
 
-        painter.setPen(self.pen)
         path = QtGui.QPainterPath()
 
         if self.source.x() == self.dest.x():
@@ -845,7 +844,12 @@ class Edge(QtWidgets.QGraphicsItem):
                        start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
 
-        painter.drawPath(path)
+        self.path = path
+
+    def paint(self, painter, option, widget):
+        self.recompute_path()
+        painter.setPen(self.pen)
+        painter.drawPath(self.path)
 
 
 class EdgeColor(object):
