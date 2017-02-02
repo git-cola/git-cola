@@ -763,16 +763,7 @@ class Edge(QtWidgets.QGraphicsItem):
         self.commit = source.commit
         self.setZValue(-2)
 
-        dest_pt = Commit.item_bbox.center()
-
-        self.source_pt = self.mapFromItem(self.source, dest_pt)
-        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
-        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
-
-        width = self.dest_pt.x() - self.source_pt.x()
-        height = self.dest_pt.y() - self.source_pt.y()
-        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        self.bound = rect.normalized()
+        self.recompute_bound()
 
         # Choose a new color for new branch edges
         if self.source.x() < self.dest.x():
@@ -786,6 +777,18 @@ class Edge(QtWidgets.QGraphicsItem):
             line = Qt.SolidLine
 
         self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
+
+    def recompute_bound(self):
+        dest_pt = Commit.item_bbox.center()
+
+        self.source_pt = self.mapFromItem(self.source, dest_pt)
+        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
+        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
+
+        width = self.dest_pt.x() - self.source_pt.x()
+        height = self.dest_pt.y() - self.source_pt.y()
+        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
+        self.bound = rect.normalized()
 
     # Qt overrides
     def type(self):
