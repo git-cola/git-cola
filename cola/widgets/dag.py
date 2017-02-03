@@ -764,6 +764,7 @@ class Edge(QtWidgets.QGraphicsItem):
         self.setZValue(-2)
 
         self.recompute_bound()
+        self.path_valid = False
 
         # Choose a new color for new branch edges
         if self.source.x() < self.dest.x():
@@ -793,6 +794,12 @@ class Edge(QtWidgets.QGraphicsItem):
     def commits_were_invalidated(self):
         self.recompute_bound()
         self.prepareGeometryChange()
+        # The path should not be recomputed immediately because just small part
+        # of DAG is actually shown at same time. It will be recomputed on
+        # demand in course of 'paint' method.
+        self.path_valid = False
+        # Hence, just queue redrawing.
+        self.update()
 
     # Qt overrides
     def type(self):
@@ -849,9 +856,11 @@ class Edge(QtWidgets.QGraphicsItem):
             path.lineTo(point4)
 
         self.path = path
+        self.path_valid = True
 
     def paint(self, painter, option, widget):
-        self.recompute_path()
+        if not self.path_valid:
+            self.recompute_path()
         painter.setPen(self.pen)
         painter.drawPath(self.path)
 
