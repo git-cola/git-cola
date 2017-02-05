@@ -76,8 +76,12 @@ class BranchesTreeWidget(standard.TreeWidget):
         if selected.childCount() == 0 and full_name != self.current:
             menu = qtutils.create_menu(N_('Actions'), self)
 
-            menu.addAction(qtutils.add_action(self, N_('Checkout'),
+            menu.addAction(qtutils.add_action(self,
+                                    N_('Checkout'),
                                     self.checkout_action))
+            menu.addAction(qtutils.add_action(self,
+                                    N_('Checkout as new branch'),
+                                    self.checkout_new_action))
             menu.addAction(qtutils.add_action(self,
                                     N_('Merge in current branch'),
                                     self.merge_action))
@@ -276,14 +280,18 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             self.refresh()
 
+    def checkout_new_action(self):
+        print("checkout new")
+
     def checkout_action(self):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
-            status, result = cmds.do(cmds.CheckoutBranch, full_name)
+            status, out, err = self.model.git.checkout(full_name)
+            self.model.update_status()
 
             if status != 0:
-                qtutils.information(N_("Checkout result"), result)
+                qtutils.information(N_("Checkout result"), out)
 
             self.refresh()
 
