@@ -12,6 +12,7 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import main
 from ..widgets import defs
 from ..widgets import standard
@@ -79,9 +80,6 @@ class BranchesTreeWidget(standard.TreeWidget):
             menu.addAction(qtutils.add_action(self,
                                     N_('Checkout'),
                                     self.checkout_action))
-            menu.addAction(qtutils.add_action(self,
-                                    N_('Checkout as new branch'),
-                                    self.checkout_new_action))
             menu.addAction(qtutils.add_action(self,
                                     N_('Merge in current branch'),
                                     self.merge_action))
@@ -280,18 +278,16 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             self.refresh()
 
-    def checkout_new_action(self):
-        print("checkout new")
-
     def checkout_action(self):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
             status, out, err = self.model.git.checkout(full_name)
+            Interaction.log_status(status, out, err)
             self.model.update_status()
 
-            if status != 0:
-                qtutils.information(N_("Checkout result"), out)
+            if status > 0:
+                qtutils.information(N_("Checkout result"), err)
 
             self.refresh()
 
