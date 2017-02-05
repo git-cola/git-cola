@@ -95,10 +95,13 @@ class BranchesTreeWidget(standard.TreeWidget):
                                             self.rename_action))
 
                 if N_("Remote") == root.name:
-                    menu.addSeparator()
-                    menu.addAction(qtutils.add_action(self,
+                    pull_menu_action = qtutils.add_action(self,
                                             N_("Pull"),
-                                            self.pull_action))
+                                            self.pull_action)
+                    pull_menu_action.setIcon(icons.pull())
+
+                    menu.addSeparator()
+                    menu.addAction(pull_menu_action)
 
                 if N_("Tags") != root.name:
                     delete_label = N_("Delete branch")
