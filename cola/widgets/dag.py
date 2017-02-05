@@ -747,7 +747,17 @@ class ReaderThread(QtCore.QThread):
 
 
 class Cache(object):
-    pass
+
+    _label_font = None
+
+    @classmethod
+    def label_font(cls):
+        font = cls._label_font
+        if font is None:
+            font = cls._label_font = QtWidgets.QApplication.font()
+            font.setPointSize(6)
+        return font
+
 
 
 class Edge(QtWidgets.QGraphicsItem):
@@ -1085,13 +1095,8 @@ class Label(QtWidgets.QGraphicsItem):
         return self.item_shape
 
     def paint(self, painter, option, widget, cache=Cache):
-        try:
-            font = cache.label_font
-        except AttributeError:
-            font = cache.label_font = QtWidgets.QApplication.font()
-            font.setPointSize(6)
-
         # Draw tags and branches
+        font = cache.label_font()
         painter.setFont(font)
 
         current_width = 0
