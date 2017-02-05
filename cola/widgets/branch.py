@@ -248,12 +248,10 @@ class BranchesTreeWidget(standard.TreeWidget):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
-            print("action", full_name)
-            #status, result = cmds.do(cmds.CheckoutBranch,
-            #self.selected_item().full_name)
+            status, result = cmds.do(cmds.CheckoutBranch, full_name)
 
-            #if status != 0:
-                #qtutils.information(N_("Checkout result"), result)
+            if status != 0:
+                qtutils.information(N_("Checkout result"), result)
 
             self.refresh()
 
