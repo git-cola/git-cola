@@ -238,9 +238,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
-            print("action", full_name)
-            #cmds.do(cmds.Merge, self.selected_item().full_name,
-                                #True, False, False, False)
+            cmds.do(cmds.Merge, full_name, True, False, False, False)
 
             self.refresh()
 
