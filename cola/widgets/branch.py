@@ -50,8 +50,8 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.m = main.model()
-        self.m.add_observer(self.m.message_updated, self.updated.emit)
+        self.model = main.model()
+        self.model.add_observer(self.model.message_updated, self.updated.emit)
 
     def refresh(self):
         self.current = gitcmds.current_branch()
@@ -77,25 +77,40 @@ class BranchesTreeWidget(standard.TreeWidget):
             menu = qtutils.create_menu(N_('Actions'), self)
 
             menu.addAction(qtutils.add_action(self, N_('Checkout'),
-                            self.checkout_action))
+                                    self.checkout_action))
             menu.addAction(qtutils.add_action(self,
-                                     N_('Merge in current branch'),
-                                     self.merge_action))
-            menu.addSeparator()
+                                    N_('Merge in current branch'),
+                                    self.merge_action))
 
             root = self.get_root(selected)
 
-            if root is not None and N_("Tags") != root.name:
-                delete_label = N_("Delete branch")
+            if root is not None:
+
+                if N_("Local") == root.name:
+                    menu.addSeparator()
+                    menu.addAction(qtutils.add_action(self,
+                                            N_("Rename branch"),
+                                            self.rename_action))
 
                 if N_("Remote") == root.name:
-                    delete_label = N_("Delete remote branch")
+                    menu.addSeparator()
+                    menu.addAction(qtutils.add_action(self,
+                                            N_("Pull"),
+                                            self.pull_action))
 
-                delete_menu_action = qtutils.add_action(self,
-                                         delete_label,
-                                         self.delete_action)
-                delete_menu_action.setIcon(icons.discard())
-                menu.addAction(delete_menu_action)
+                if N_("Tags") != root.name:
+                    delete_label = N_("Delete branch")
+
+                    if N_("Remote") == root.name:
+                        delete_label = N_("Delete remote branch")
+
+                    delete_menu_action = qtutils.add_action(self,
+                                            delete_label,
+                                            self.delete_action)
+                    delete_menu_action.setIcon(icons.discard())
+
+                    menu.addSeparator()
+                    menu.addAction(delete_menu_action)
 
             menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -205,6 +220,22 @@ class BranchesTreeWidget(standard.TreeWidget):
         branch.addChildren(generate_tree(group_branches(children)))
 
         return branch
+
+    def rename_action(self):
+        branch = self.get_full_name(self.selected_item())
+        new_branch = qtutils.prompt(N_("Rename branch"),
+                                    N_("New branch name"),
+                                    branch)
+        if new_branch[1] is True and new_branch[0]:
+            cmds.do(cmds.RenameBranch, branch, new_branch[0])
+
+            self.refresh()
+
+    def pull_action(self):
+        full_name = self.get_full_name(self.selected_item())
+
+        if full_name != self.current:
+            self.model.pull(full_name, pull=True, ff_only=True)
 
     def delete_action(self):
         title = N_('Delete Branch')
