@@ -647,7 +647,6 @@ class GitDAG(standard.MainWindow):
             # The old selection is now empty.  Select the top-most commit
             self.notifier.notify_observers(diff.COMMITS_SELECTED, [commit_obj])
 
-        self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 
     def diff_commits(self, a, b):
@@ -1821,14 +1820,6 @@ step 2. Hence, it must be propagated for children on side columns.
         self.y_min = y_min
 
         return positions
-
-    def update_scene_rect(self):
-        y_min = self.y_min
-        x_max = self.x_max
-        self.scene().setSceneRect(-GraphView.x_adjust,
-                                  y_min-GraphView.y_adjust,
-                                  x_max + GraphView.x_adjust,
-                                  abs(y_min) + GraphView.y_adjust)
 
     def sort_by_generation(self, commits):
         if len(commits) < 2:
