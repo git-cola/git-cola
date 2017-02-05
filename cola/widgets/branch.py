@@ -242,7 +242,20 @@ class BranchesTreeWidget(standard.TreeWidget):
             if match:
                 remote = match.group('remote')
                 branch = match.group('branch')
-                self.model.pull(remote, remote_branch=branch, ff_only=True)
+                args = {
+                    'local_branch': '',
+                    'no_ff': False,
+                    'force': False,
+                    'tags': False,
+                    'rebase': False,
+                    'remote_branch': branch,
+                    'set_upstream': False,
+                    'ff_only': True
+                }
+                status, out, err = self.model.pull(remote, **args)
+                Interaction.log_status(status, out, err)
+                if status > 0:
+                    qtutils.information(N_("Pull result"), err)
 
     def delete_action(self):
         title = N_('Delete Branch')
