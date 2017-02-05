@@ -763,16 +763,8 @@ class Edge(QtWidgets.QGraphicsItem):
         self.commit = source.commit
         self.setZValue(-2)
 
-        dest_pt = Commit.item_bbox.center()
-
-        self.source_pt = self.mapFromItem(self.source, dest_pt)
-        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
-        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
-
-        width = self.dest_pt.x() - self.source_pt.x()
-        height = self.dest_pt.y() - self.source_pt.y()
-        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        self.bound = rect.normalized()
+        self.recompute_bound()
+        self.path_valid = False
 
         # Choose a new color for new branch edges
         if self.source.x() < self.dest.x():
@@ -787,6 +779,28 @@ class Edge(QtWidgets.QGraphicsItem):
 
         self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
 
+    def recompute_bound(self):
+        dest_pt = Commit.item_bbox.center()
+
+        self.source_pt = self.mapFromItem(self.source, dest_pt)
+        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
+        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
+
+        width = self.dest_pt.x() - self.source_pt.x()
+        height = self.dest_pt.y() - self.source_pt.y()
+        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
+        self.bound = rect.normalized()
+
+    def commits_were_invalidated(self):
+        self.recompute_bound()
+        self.prepareGeometryChange()
+        # The path should not be recomputed immediately because just small part
+        # of DAG is actually shown at same time. It will be recomputed on
+        # demand in course of 'paint' method.
+        self.path_valid = False
+        # Hence, just queue redrawing.
+        self.update()
+
     # Qt overrides
     def type(self):
         return self.item_type
@@ -794,20 +808,18 @@ class Edge(QtWidgets.QGraphicsItem):
     def boundingRect(self):
         return self.bound
 
-    def paint(self, painter, option, widget):
+    def recompute_path(self):
         QRectF = QtCore.QRectF
         QPointF = QtCore.QPointF
 
         arc_rect = 10
         connector_length = 5
 
-        painter.setPen(self.pen)
         path = QtGui.QPainterPath()
 
         if self.source.x() == self.dest.x():
             path.moveTo(self.source.x(), self.source.y())
             path.lineTo(self.dest.x(), self.dest.y())
-            painter.drawPath(path)
         else:
             # Define points starting from source
             point1 = QPointF(self.source.x(), self.source.y())
@@ -842,7 +854,15 @@ class Edge(QtWidgets.QGraphicsItem):
             path.arcTo(QRectF(point6, point5),
                        start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
-            painter.drawPath(path)
+
+        self.path = path
+        self.path_valid = True
+
+    def paint(self, painter, option, widget):
+        if not self.path_valid:
+            self.recompute_path()
+        painter.setPen(self.pen)
+        painter.drawPath(self.path)
 
 
 class EdgeColor(object):
@@ -946,6 +966,8 @@ class Commit(QtWidgets.QGraphicsItem):
 
         self.pressed = False
         self.dragged = False
+
+        self.edges = {}
 
     def blockSignals(self, blocked):
         self.notifier.notification_enabled = not blocked
@@ -1494,14 +1516,35 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
-                edge = Edge(parent_item, commit_item)
+                try:
+                    edge = parent_item.edges[commit.oid]
+                except KeyError:
+                    edge = Edge(parent_item, commit_item)
+                else:
+                    continue
+                parent_item.edges[commit.oid] = edge
+                commit_item.edges[parent.oid] = edge
                 scene.addItem(edge)
 
     def layout_commits(self):
         positions = self.position_nodes()
+
+        # Each edge is accounted in two commits. Hence, accumulate invalid
+        # edges to prevent double edge invalidation.
+        invalid_edges = set()
+
         for oid, (x, y) in positions.items():
             item = self.items[oid]
-            item.setPos(x, y)
+
+            pos = item.pos()
+            if pos != (x, y):
+                item.setPos(x, y)
+
+                for edge in item.edges.values():
+                    invalid_edges.add(edge)
+
+        for edge in invalid_edges:
+            edge.commits_were_invalidated()
 
     """Commit node layout technique
 
