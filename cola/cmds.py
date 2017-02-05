@@ -324,8 +324,6 @@ class Checkout(Command):
         else:
             self.model.update_file_status()
 
-        return status, err
-
 
 class BlamePaths(Command):
     """Blame view for paths."""
