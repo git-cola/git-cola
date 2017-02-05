@@ -221,18 +221,16 @@ class BranchesTreeWidget(standard.TreeWidget):
                     remote = True
 
             if remote is False:
-                print("action", full_name)
-                #cmds.do(cmds.DeleteBranch, selected_full_name)
+                cmds.do(cmds.DeleteBranch, full_name)
             else:
                 rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
                 match = rgx.match(full_name)
                 if match:
                     remote = match.group('remote')
                     branch = match.group('branch')
-                    print("action", remote, branch)
-                    #cmds.do(cmds.DeleteRemoteBranch, remote, branch)
+                    cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
-            #self.refresh()
+            self.refresh()
 
     def merge_action(self):
         full_name = self.get_full_name(self.selected_item())
