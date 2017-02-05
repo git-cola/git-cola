@@ -1342,10 +1342,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self_commits = self.commits
         self_items = self.items
 
-        items = self.selected_items()
-        if not items:
-            commits = self_commits[-8:]
-            items = [self_items[c.oid] for c in commits]
+        commits = self_commits[-7:]
+        items = [self_items[c.oid] for c in commits]
+
+        selected = self.selected_items()
+        if selected:
+            items.extend(selected)
 
         self.fit_view_to_items(items)
 
