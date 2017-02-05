@@ -235,7 +235,12 @@ class BranchesTreeWidget(standard.TreeWidget):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
-            self.model.pull(full_name, pull=True, ff_only=True)
+            rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+            match = rgx.match(full_name)
+            if match:
+                remote = match.group('remote')
+                branch = match.group('branch')
+                self.model.pull(remote, remote_branch=branch, ff_only=True)
 
     def delete_action(self):
         title = N_('Delete Branch')
