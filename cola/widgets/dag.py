@@ -1652,8 +1652,21 @@ step 2. Hence, it must be propagated for children on side columns.
     """
 
     def reset_columns(self):
+        # Some children of displayed commits might not be accounted in
+        # 'commits' list. It is common case during loading of big graph.
+        # But, they are assigned a column that must be reseted. Hence, use
+        # depth-first traversal to reset all columns assigned.
         for node in self.commits:
-            node.column = None
+            if node.column is None:
+                continue
+            stack = [node]
+            while stack:
+                node = stack.pop()
+                node.column = None
+                for child in node.children:
+                    if child.column is not None:
+                        stack.append(child)
+
         self.columns = {}
         self.max_column = 0
         self.min_column = 0
