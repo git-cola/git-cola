@@ -265,6 +265,7 @@ class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     diff_commits = Signal(object, object)
+    zoom_to_fit = Signal()
 
     def __init__(self, notifier, parent):
         standard.TreeWidget.__init__(self, parent=parent)
@@ -279,11 +280,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.selecting = False
         self.commits = []
 
-        self.action_up = qtutils.add_action(self, N_('Go Up'),
-                                            self.go_up, hotkeys.MOVE_UP)
+        self.action_up = qtutils.add_action(
+            self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP)
 
-        self.action_down = qtutils.add_action(self, N_('Go Down'),
-                                              self.go_down, hotkeys.MOVE_DOWN)
+        self.action_down = qtutils.add_action(
+            self, N_('Go Down'), self.go_down, hotkeys.MOVE_DOWN)
+
+        self.zoom_to_fit_action = qtutils.add_action(
+            self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
@@ -506,6 +510,7 @@ class GitDAG(standard.MainWindow):
         qtutils.connect_button(self.zoom_to_fit,
                                self.graphview.zoom_to_fit)
 
+        self.treewidget.zoom_to_fit.connect(self.graphview.zoom_to_fit)
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
