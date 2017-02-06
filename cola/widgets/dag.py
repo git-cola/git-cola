@@ -1080,11 +1080,33 @@ class Label(QtWidgets.QGraphicsItem):
     def type(self):
         return self.item_type
 
-    def boundingRect(self, rect=item_bbox):
-        return rect
+    def boundingRect(self, cache=Cache):
+        QPainterPath = QtGui.QPainterPath
+        QRectF = QtCore.QRectF
+        QPoint = QtCore.QPoint
 
-    def shape(self):
-        return self.item_shape
+        width = 72
+        height = 18
+        current_width = 0
+        spacing = self.item_spacing
+        border = self.border + self.text_offset  # text offset=1 in paint()
+
+        font = cache.label_font()
+        item_shape = QPainterPath()
+
+        base_rect = QRectF(0, 0, width, height)
+        base_rect = base_rect.adjusted(-border, -border, border, border)
+        item_shape.addRect(base_rect)
+
+        for tag in self.commit.tags:
+            text_shape = QPainterPath()
+            text_shape.addText(current_width, 0, font, tag)
+            text_rect = text_shape.boundingRect()
+            box_rect = text_rect.adjusted(-border, -border, border, border)
+            item_shape.addRect(box_rect)
+            current_width = item_shape.boundingRect().width() + spacing
+
+        return item_shape.boundingRect()
 
     def paint(self, painter, option, widget, cache=Cache):
         # Draw tags and branches
