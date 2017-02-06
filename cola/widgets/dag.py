@@ -1138,10 +1138,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     diff_commits = Signal(object, object)
 
-    x_min = 24
-    x_max = 0
-    y_min = 24
-
     x_adjust = Commit.commit_radius*4/3
     y_adjust = Commit.commit_radius*4/3
 
@@ -1163,7 +1159,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.items = {}
         self.saved_matrix = self.transform()
 
-        self.x_offsets = collections.defaultdict(lambda: self.x_min)
+        self.x_start = 24
+        self.x_min = 24
+        self.x_offsets = collections.defaultdict(lambda: self.x_start)
 
         self.is_panning = False
         self.pressed = False
@@ -1212,8 +1210,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.selection_list = []
         self.items.clear()
         self.x_offsets.clear()
-        self.x_max = 24
-        self.y_min = 24
+        self.x_min = 24
         self.commits = []
 
     # ViewerMixin interface
@@ -1361,18 +1358,23 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             x_max = y_max = -maxsize
 
             for item in items:
-                pos = item.pos()
                 item_rect = item.boundingRect()
-                x_off = item_rect.width() * 5
-                y_off = item_rect.height() * 10
-                x_min = min(x_min, pos.x())
-                y_min = min(y_min, pos.y()-y_off)
-                x_max = max(x_max, pos.x()+x_off)
-                y_max = max(y_max, pos.y())
-            rect = QtCore.QRectF(x_min, y_min, x_max-x_min, y_max-y_min)
+                x_off = item_rect.width()
+                y_off = item_rect.height()
+                pos = item.pos()
+                x = pos.x()
+                y = pos.y()
+                x_min = min(x_min, x)
+                x_max = max(x_max, x)
+                y_min = min(y_min, y)
+                y_max = max(y_max, y)
 
-        x_adjust = GraphView.x_adjust
-        y_adjust = GraphView.y_adjust
+            rect = QtCore.QRectF(x_min, y_min,
+                                 abs(x_max - x_min),
+                                 abs(y_max - y_min))
+
+        x_adjust = abs(GraphView.x_adjust)
+        y_adjust = abs(GraphView.y_adjust)
 
         rect.setX(rect.x() - x_adjust)
         rect.setY(rect.y() - y_adjust)
@@ -1797,25 +1799,21 @@ step 2. Hence, it must be propagated for children on side columns.
     def position_nodes(self):
         self.recompute_grid()
 
-        x_max = self.x_max
+        x_start = self.x_start
         x_min = self.x_min
         x_off = self.x_off
         y_off = self.y_off
-        y_min = y_off
 
         positions = {}
 
         for node in self.commits:
-            x_pos = x_min + node.column * x_off
+            x_pos = x_start + node.column * x_off
             y_pos = y_off + node.row * y_off
 
             positions[node.oid] = (x_pos, y_pos)
+            x_min = min(x_min, x_pos)
 
-            x_max = max(x_max, x_pos)
-            y_min = min(y_min, y_pos)
-
-        self.x_max = x_max
-        self.y_min = y_min
+        self.x_min = x_min
 
         return positions
 
