@@ -1403,10 +1403,11 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         x_adjust = abs(GraphView.x_adjust)
         y_adjust = abs(GraphView.y_adjust)
 
+        count = max(2, 10 - len(items)//2)
         rect.setX(rect.x() - x_adjust)
         rect.setY(rect.y() - y_adjust)
-        rect.setHeight(rect.height() + y_adjust*2)
-        rect.setWidth(rect.width() + x_adjust*2)
+        rect.setHeight(rect.height() + y_adjust*count)
+        rect.setWidth(rect.width() + x_adjust*count)
 
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
