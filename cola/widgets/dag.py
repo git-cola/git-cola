@@ -1188,7 +1188,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         self.x_start = 24
         self.x_min = 24
-        self.x_offsets = collections.defaultdict(lambda: self.x_start)
+        self.x_offsets = collections.defaultdict(lambda: self.x_min)
 
         self.is_panning = False
         self.pressed = False
