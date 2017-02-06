@@ -1771,10 +1771,7 @@ step 2. Hence, it must be propagated for children on side columns.
         return cell_row
 
     def propagate_frontier(self, column, value):
-        try:
-            current = self.frontier[column]
-        except KeyError:
-            current = self.frontier[column] = max(self.frontier.values())
+        current = self.frontier[column]
         if current < value:
             self.frontier[column] = value
 
