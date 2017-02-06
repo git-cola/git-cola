@@ -1088,7 +1088,6 @@ class Label(QtWidgets.QGraphicsItem):
     def boundingRect(self, cache=Cache):
         QPainterPath = QtGui.QPainterPath
         QRectF = QtCore.QRectF
-        QPoint = QtCore.QPoint
 
         width = 72
         height = 18
@@ -1386,9 +1385,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             x_max = y_max = -maxsize
 
             for item in items:
-                item_rect = item.boundingRect()
-                x_off = item_rect.width()
-                y_off = item_rect.height()
                 pos = item.pos()
                 x = pos.x()
                 y = pos.y()
