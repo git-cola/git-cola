@@ -1048,41 +1048,34 @@ class Commit(QtWidgets.QGraphicsItem):
 
 
 class Label(QtWidgets.QGraphicsItem):
+
     item_type = QtWidgets.QGraphicsItem.UserType + 3
 
-    width = 72
-    height = 18
+    head_color=QtGui.QColor(Qt.green)
+    other_color = QtGui.QColor(Qt.white)
+    remote_color = QtGui.QColor(Qt.yellow)
 
-    item_shape = QtGui.QPainterPath()
-    item_shape.addRect(0, 0, width, height)
-    item_bbox = item_shape.boundingRect()
+    head_pen = QtGui.QPen()
+    head_pen.setColor(head_color.darker().darker())
+    head_pen.setWidth(1.0)
 
-    text_options = QtGui.QTextOption()
-    text_options.setAlignment(Qt.AlignCenter)
-    text_options.setAlignment(Qt.AlignVCenter)
+    text_pen = QtGui.QPen()
+    text_pen.setColor(QtGui.QColor(Qt.darkGray))
+    text_pen.setWidth(1.0)
 
-    def __init__(self, commit,
-                 other_color=QtGui.QColor(Qt.white),
-                 head_color=QtGui.QColor(Qt.green),
-                 remote_color=QtGui.QColor(Qt.yellow)):
+    alpha = 180
+    head_color.setAlpha(alpha)
+    other_color.setAlpha(alpha)
+    remote_color.setAlpha(alpha)
+
+    border = 2
+    item_spacing = 5
+    text_offset = 1
+
+    def __init__(self, commit):
         QtWidgets.QGraphicsItem.__init__(self)
         self.setZValue(-1)
-
-        # Starts with enough space for two tags. Any more and the commit
-        # needs to be taller to accommodate.
         self.commit = commit
-
-        self.white_color = other_color
-        self.green_color = head_color
-        self.green_color.setAlpha(180)
-        self.green_pen = QtGui.QPen()
-        self.green_pen.setColor(self.green_color.darker().darker())
-        self.green_pen.setWidth(1.0)
-
-        self.remote_color = remote_color
-        self.text_pen = QtGui.QPen()
-        self.text_pen.setColor(QtGui.QColor(Qt.darkGray))
-        self.text_pen.setWidth(1.0)
 
     def type(self):
         return self.item_type
@@ -1099,6 +1092,9 @@ class Label(QtWidgets.QGraphicsItem):
         painter.setFont(font)
 
         current_width = 0
+        border = self.border
+        offset = self.text_offset
+        spacing = self.item_spacing
         QRectF = QtCore.QRectF
 
         HEAD = 'HEAD'
@@ -1116,26 +1112,26 @@ class Label(QtWidgets.QGraphicsItem):
             elif tag.startswith(remotes_prefix):
                 tag = tag[remotes_len:]
                 painter.setPen(self.text_pen)
-                painter.setBrush(self.white_color)
+                painter.setBrush(self.other_color)
             elif tag.startswith(tags_prefix):
                 tag = tag[tags_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
             elif tag.startswith(heads_prefix):
                 tag = tag[heads_len:]
-                painter.setPen(self.green_pen)
-                painter.setBrush(self.green_color)
+                painter.setPen(self.head_pen)
+                painter.setBrush(self.head_color)
             else:
                 painter.setPen(self.text_pen)
-                painter.setBrush(self.white_color)
+                painter.setBrush(self.other_color)
 
             text_rect = painter.boundingRect(
                     QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
-            box_rect = text_rect.adjusted(-1, -1, 1, 1)
+            box_rect = text_rect.adjusted(-offset, -offset, offset, offset)
 
-            painter.drawRoundedRect(box_rect, 2, 2)
+            painter.drawRoundedRect(box_rect, border, border)
             painter.drawText(text_rect, Qt.TextSingleLine, tag)
-            current_width += text_rect.width() + 5
+            current_width += text_rect.width() + spacing
 
 
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
