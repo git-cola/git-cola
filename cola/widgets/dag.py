@@ -1164,8 +1164,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     diff_commits = Signal(object, object)
 
-    x_adjust = Commit.commit_radius*4/3
-    y_adjust = Commit.commit_radius*4/3
+    x_adjust = int(Commit.commit_radius*4/3)
+    y_adjust = int(Commit.commit_radius*4/3)
 
     x_off = -18
     y_off = -24
