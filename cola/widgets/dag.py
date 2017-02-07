@@ -1206,7 +1206,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor(Qt.white))
-        self.setOptimizationFlags(QtWidgets.QGraphicsView.DontSavePainterState)
 
         qtutils.add_action(self, N_('Zoom In'), self.zoom_in,
                            hotkeys.ZOOM_IN, hotkeys.ZOOM_IN_SECONDARY)
