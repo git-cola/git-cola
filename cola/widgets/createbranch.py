@@ -192,9 +192,9 @@ class CreateBranchDialog(Dialog):
         qtutils.add_close_action(self)
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_branch)
-        qtutils.connect_button(self.local_radio, self.display_model)
-        qtutils.connect_button(self.remote_radio, self.display_model)
-        qtutils.connect_button(self.tag_radio, self.display_model)
+        qtutils.connect_toggle(self.local_radio, self.display_model)
+        qtutils.connect_toggle(self.remote_radio, self.display_model)
+        qtutils.connect_toggle(self.tag_radio, self.display_model)
 
         branches = self.branch_list
         branches.itemSelectionChanged.connect(self.branch_item_changed)
