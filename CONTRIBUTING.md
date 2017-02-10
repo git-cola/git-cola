@@ -12,15 +12,19 @@ The style here is the standard Python PEP-8 style:
 
 http://www.python.org/dev/peps/pep-0008/
 
-* We use 4-space indents.
+* Follow the same style as the existing code.
 
-* We use variable_names_with_underscores.  No camelCase.
-  The only exception is when overriding Qt functions.
+* Use 4-space indents.
+
+* Use variable_names_with_underscores, AKA "snake case" naming.
+  No camelCase.  The only exception is when overriding Qt functions.
 
 * Do not introduce trailing whitespace.  The "Diff" viewer displays
   trailing whitespace in red, or you can use "git diff --check".
 
-* Generally, follow the same style as the existing code.
+* If you use SublimeText, configure "newline_at_eof_on_save" to true.
+
+https://robots.thoughtbot.com/no-newline-at-end-of-file
 
 ## Describe your changes well.
 
