@@ -120,7 +120,8 @@ then you just add a line saying
 Signed-off-by: Random J Developer <random@developer.example.org>
 
 This line can be automatically added by Git if you run the git-commit
-command with the -s option.
+command with the -s option, or using the `Ctrl+i` hotkey in git-cola's
+commit message editor.
 
 Notice that you can place your own Signed-off-by: line when
 forwarding somebody else's patch with the above rules for
