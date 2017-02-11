@@ -186,16 +186,40 @@ class BranchesTreeWidget(standard.TreeWidget):
                 item.setExpanded(True)
                 load_item_state(item, states[item.name])
 
+    def get_branch_status(self):
+        result = {'ahead': 0, 'behind': 0}
+        tracked_branch = gitcmds.tracked_branch()
+
+        if self.current is not None and tracked_branch is not None:
+            args = ["--oneline"]
+
+            origin = tracked_branch + ".." + self.current
+            log = self.model.git.log(origin, *args)
+            result['ahead'] = len(log[1].splitlines())
+
+            origin = self.current + ".." + tracked_branch
+            log = self.model.git.log(origin, *args)
+            result['behind'] = len(log[1].splitlines())
+
     def update_select_branch(self, branch, current):
         for i in range(branch.childCount()):
             item = branch.child(i)
 
             if self.get_full_name(item) == current:
                 item.setIcon(0, icons.star())
-                unpushed = self.get_unpushed_merges()
-                if unpushed > 0:
-                    unpushed_str = str(unpushed)
-                    item.setText(0, item.text(0) + "\t\u2191" + unpushed_str)
+                status = self.get_branch_status()
+                ahead_str = ""
+                behind_str = ""
+
+                if status["ahead"] > 0:
+                    ahead_str = "\u2191" + str(status["ahead"])
+
+                if status["behind"] > 0:
+                    behind_str = "\u2193" + str(status["behind"])
+
+                if status["ahead"] > 0 or status["behind"] > 0:
+                    item.setText(0, item.text(0) + "\t" +
+                                 ahead_str + "  " + behind_str)
                 break
             elif (item.childCount() > 0):
                 self.update_select_branch(item, current)
@@ -225,18 +249,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         result = '/'.join(reversed(parents))
 
         return result[result.find('/') + 1:]
-
-    def get_unpushed_merges(self):
-        result = 0
-        tracked_branch = gitcmds.tracked_branch()
-
-        if self.current is not None and tracked_branch is not None:
-            origin = tracked_branch + "..HEAD"
-            args = ["--oneline"]
-            log = self.model.git.log(origin, *args)
-            result = len(log[1].splitlines())
-
-        return result
 
     def create_branch_item(self, branch_name, children, icon):
 
