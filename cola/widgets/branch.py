@@ -60,7 +60,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
-        self.setColumnCount(1)
+        self.setColumnCount(2)
 
         self.current = None
         self.name_local_branch = N_("Local branch")
@@ -89,7 +89,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.clear()
         self.addTopLevelItems([local_branches, remote_branches, tags])
-        self.set_select_branch_icon(local_branches, self.current)
+        self.update_select_branch(local_branches, self.current)
         self.load_tree_states(states)
 
     def contextMenuEvent(self, event):
@@ -179,15 +179,25 @@ class BranchesTreeWidget(standard.TreeWidget):
                 item.setExpanded(True)
                 load_item_state(item, states[item.name])
 
-    def set_select_branch_icon(self, branch, current):
+    def update_select_branch(self, branch, current):
         for i in range(branch.childCount()):
             item = branch.child(i)
 
             if self.get_full_name(item) == current:
                 item.setIcon(0, icons.star())
+                unpushed = self.get_unpushed_merges()
+                if unpushed > 0:
+                    unpushed_str = str(unpushed)
+                    item.setIcon(1, icons.push())
+                    item.setText(1, unpushed_str)
+                    item.setToolTip(1, N_("Push: " + unpushed_str))
+                    self.setColumnWidth(0, self.width() - 65)
+                    self.setColumnWidth(1, 15)
+                else:
+                    self.setColumnWidth(0, self.width() - 50)
                 break
             elif (item.childCount() > 0):
-                self.set_select_branch_icon(item, current)
+                self.update_select_branch(item, current)
 
     # returns top level item from an item,
     # if is top level it will returns himself
@@ -214,6 +224,17 @@ class BranchesTreeWidget(standard.TreeWidget):
         result = '/'.join(reversed(parents))
 
         return result[result.find('/') + 1:]
+
+    def get_unpushed_merges(self):
+        result = 0
+
+        if self.current is not None:
+            origin = "origin/" + self.current + "..HEAD"
+            args = ["--oneline"]
+            log = self.model.git.log(origin, *args)
+            result = len(log[1].splitlines())
+
+        return result
 
     def create_branch_item(self, branch_name, children):
 
@@ -347,5 +368,6 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setIcon(0, icon)
         self.setText(0, name)
         self.setToolTip(0, name)
+
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
