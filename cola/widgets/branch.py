@@ -201,6 +201,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             log = self.model.git.log(origin, *args)
             result['behind'] = len(log[1].splitlines())
 
+        return result
+
     def update_select_branch(self, branch, current):
         for i in range(branch.childCount()):
             item = branch.child(i)
