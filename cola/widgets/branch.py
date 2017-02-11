@@ -231,9 +231,10 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def get_unpushed_merges(self):
         result = 0
+        tracked_branch = gitcmds.tracked_branch()
 
-        if self.current is not None:
-            origin = gitcmds.tracked_branch() + "..HEAD"
+        if self.current is not None and tracked_branch is not None:
+            origin = tracked_branch + "..HEAD"
             args = ["--oneline"]
             log = self.model.git.log(origin, *args)
             result = len(log[1].splitlines())
