@@ -18,6 +18,20 @@ from ..widgets import defs
 from ..widgets import standard
 
 
+class AsyncPullTask(qtutils.Task):
+    """Run pull action asynchronously"""
+
+    def __init__(self, parent, remote, args):
+        qtutils.Task.__init__(self, parent)
+        self.parent = parent
+        self.remote = remote
+        self.args = args
+
+    def task(self):
+        """Runs action and captures the result"""
+        return self.parent.model.pull(self.remote, **self.args)
+
+
 class BranchesWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
@@ -57,6 +71,10 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.model = main.model()
         self.model.add_observer(self.model.message_updated, self.updated.emit)
+
+        self.runtask = qtutils.RunTask(parent=self)
+        self.progress = standard.ProgressDialog(N_('Pull'),
+                                                N_('Updating'), self)
 
     def refresh(self):
         self.current = gitcmds.current_branch()
@@ -261,10 +279,16 @@ class BranchesTreeWidget(standard.TreeWidget):
                     'set_upstream': False,
                     'ff_only': True
                 }
-                status, out, err = self.model.pull(remote, **args)
-                Interaction.log_status(status, out, err)
-                if status > 0:
-                    qtutils.information(N_("Pull result"), err)
+                task = AsyncPullTask(self, remote, args)
+                self.runtask.start(task,
+                                   progress=self.progress,
+                                   finish=self.pull_completed)
+
+    def pull_completed(self, task):
+        status, out, err = task.result
+        Interaction.log_status(status, out, err)
+        if status > 0:
+            qtutils.information(N_("Pull result"), err)
 
     def delete_action(self):
         title = N_('Delete Branch')
