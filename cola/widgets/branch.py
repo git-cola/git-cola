@@ -97,54 +97,52 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def contextMenuEvent(self, event):
         selected = self.selected_item()
+        root = self.get_root(selected)
         full_name = self.get_full_name(selected)
         menu = qtutils.create_menu(N_('Actions'), self)
 
-        if selected.childCount() == 0:
-
-            if full_name == self.current:
-                pull_menu_action = qtutils.add_action(self,
-                                        N_("Pull"),
-                                        self.pull_action)
-                pull_menu_action.setIcon(icons.pull())
-
-                menu.addSeparator()
-                menu.addAction(pull_menu_action)
-            else:
+        if selected.childCount() == 0 and root is not None:
+            # all branches except current item
+            if full_name != self.current:
                 menu.addAction(qtutils.add_action(self,
-                                        N_('Checkout'),
-                                        self.checkout_action))
+                                            N_('Checkout'),
+                                            self.checkout_action))
                 merge_menu_action = qtutils.add_action(self,
                                         N_('Merge in current branch'),
                                         self.merge_action)
                 merge_menu_action.setIcon(icons.merge())
+
                 menu.addAction(merge_menu_action)
 
-                root = self.get_root(selected)
+            # local and remote branch
+            if self.name_tags_branch != root.name:
+                pull_menu_action = qtutils.add_action(self,
+                                        N_("Pull"),
+                                        self.pull_action)
+                pull_menu_action.setIcon(icons.pull())
+                menu.addAction(pull_menu_action)
 
-                if root is not None:
+                # local branch
+                if self.name_local_branch == root.name:
+                    rename_menu_action = qtutils.add_action(self,
+                                            N_("Rename branch"),
+                                            self.rename_action)
+                    rename_menu_action.setIcon(icons.edit())
 
-                    if self.name_local_branch == root.name:
-                        menu.addSeparator()
-                        rename_menu_action = qtutils.add_action(self,
-                                                N_("Rename branch"),
-                                                self.rename_action)
-                        rename_menu_action.setIcon(icons.edit())
-                        menu.addAction(rename_menu_action)
+                    menu.addSeparator()
+                    menu.addAction(rename_menu_action)
 
-                    if self.name_tags_branch != root.name:
-                        delete_label = N_("Delete branch")
+                delete_label = N_("Delete branch")
+                if self.name_remote_branch == root.name:
+                    delete_label = N_("Delete remote branch")
 
-                        if self.name_remote_branch == root.name:
-                            delete_label = N_("Delete remote branch")
+                delete_menu_action = qtutils.add_action(self,
+                                        delete_label,
+                                        self.delete_action)
+                delete_menu_action.setIcon(icons.discard())
 
-                        delete_menu_action = qtutils.add_action(self,
-                                                delete_label,
-                                                self.delete_action)
-                        delete_menu_action.setIcon(icons.discard())
-
-                        menu.addSeparator()
-                        menu.addAction(delete_menu_action)
+                menu.addSeparator()
+                menu.addAction(delete_menu_action)
 
             menu.exec_(self.mapToGlobal(event.pos()))
 
