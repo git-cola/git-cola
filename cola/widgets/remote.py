@@ -320,8 +320,8 @@ class RemoteActionDialog(standard.Dialog):
             self.ff_only_checkbox.hide()
 
         desktop = qtutils.desktop()
-        width = desktop.width()/2
-        height = desktop.height() - desktop.height()/4
+        width = desktop.width()//2
+        height = desktop.height() - desktop.height()//4
         self.init_state(None, self.resize, width, height)
 
         self.remote_name.setFocus()
