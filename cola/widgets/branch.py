@@ -47,7 +47,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
         self.setColumnCount(1)
+
         self.current = None
+        self.name_local_branch = N_("Local branch")
+        self.name_remote_branch = N_("Remote")
+        self.name_tags_branch = N_("Tags")
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
@@ -58,11 +62,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current = gitcmds.current_branch()
         states = self.save_tree_states()
 
-        local_branches = self.create_branch_item(N_("Local"),
+        local_branches = self.create_branch_item(self.name_local_branch,
                                           gitcmds.branch_list())
-        remote_branches = self.create_branch_item(N_("Remote"),
+        remote_branches = self.create_branch_item(self.name_remote_branch,
                                           gitcmds.branch_list(True))
-        tags = self.create_branch_item(N_("Tags"),
+        tags = self.create_branch_item(self.name_tags_branch,
                                           gitcmds.tag_list())
 
         self.clear()
@@ -73,49 +77,49 @@ class BranchesTreeWidget(standard.TreeWidget):
     def contextMenuEvent(self, event):
         selected = self.selected_item()
         full_name = self.get_full_name(selected)
+        menu = qtutils.create_menu(N_('Actions'), self)
 
-        if selected.childCount() == 0 and full_name != self.current:
-            menu = qtutils.create_menu(N_('Actions'), self)
+        if selected.childCount() == 0:
 
-            menu.addAction(qtutils.add_action(self,
-                                    N_('Checkout'),
-                                    self.checkout_action))
-            menu.addAction(qtutils.add_action(self,
-                                    N_('Merge in current branch'),
-                                    self.merge_action))
+            if full_name == self.current:
+                pull_menu_action = qtutils.add_action(self,
+                                        N_("Pull"),
+                                        self.pull_action)
+                pull_menu_action.setIcon(icons.pull())
 
-            root = self.get_root(selected)
+                menu.addSeparator()
+                menu.addAction(pull_menu_action)
+            else:
+                menu.addAction(qtutils.add_action(self,
+                                        N_('Checkout'),
+                                        self.checkout_action))
+                menu.addAction(qtutils.add_action(self,
+                                        N_('Merge in current branch'),
+                                        self.merge_action))
 
-            if root is not None:
+                root = self.get_root(selected)
 
-                if N_("Local") == root.name:
-                    menu.addSeparator()
-                    menu.addAction(qtutils.add_action(self,
-                                            N_("Rename branch"),
-                                            self.rename_action))
+                if root is not None:
 
-                if N_("Remote") == root.name:
-                    pull_menu_action = qtutils.add_action(self,
-                                            N_("Pull"),
-                                            self.pull_action)
-                    pull_menu_action.setIcon(icons.pull())
+                    if self.name_local_branch == root.name:
+                        menu.addSeparator()
+                        menu.addAction(qtutils.add_action(self,
+                                                N_("Rename branch"),
+                                                self.rename_action))
 
-                    menu.addSeparator()
-                    menu.addAction(pull_menu_action)
+                    if self.name_tags_branch != root.name:
+                        delete_label = N_("Delete branch")
 
-                if N_("Tags") != root.name:
-                    delete_label = N_("Delete branch")
+                        if self.name_remote_branch == root.name:
+                            delete_label = N_("Delete remote branch")
 
-                    if N_("Remote") == root.name:
-                        delete_label = N_("Delete remote branch")
+                        delete_menu_action = qtutils.add_action(self,
+                                                delete_label,
+                                                self.delete_action)
+                        delete_menu_action.setIcon(icons.discard())
 
-                    delete_menu_action = qtutils.add_action(self,
-                                            delete_label,
-                                            self.delete_action)
-                    delete_menu_action.setIcon(icons.discard())
-
-                    menu.addSeparator()
-                    menu.addAction(delete_menu_action)
+                        menu.addSeparator()
+                        menu.addAction(delete_menu_action)
 
             menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -161,11 +165,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         for i in range(branch.childCount()):
             item = branch.child(i)
 
-            if (item.childCount() > 0):
-                self.set_select_branch_icon(item, current)
-            elif self.get_full_name(item) == current:
+            if self.get_full_name(item) == current:
                 item.setIcon(0, icons.star())
                 break
+            elif (item.childCount() > 0):
+                self.set_select_branch_icon(item, current)
 
     # returns top level item from an item,
     # if is top level it will returns himself
@@ -239,9 +243,11 @@ class BranchesTreeWidget(standard.TreeWidget):
     def pull_action(self):
         full_name = self.get_full_name(self.selected_item())
 
-        if full_name != self.current:
+        if full_name == self.current:
+            remote_name = gitcmds.tracked_branch()
             rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
-            match = rgx.match(full_name)
+            match = rgx.match(remote_name)
+
             if match:
                 remote = match.group('remote')
                 branch = match.group('branch')
@@ -271,7 +277,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                                      title, question, info, ok_btn):
             remote = False
             root = self.get_root(self.selected_item())
-            if N_("Remote") == root.name:
+            if self.name_remote_branch == root.name:
                     remote = True
 
             if remote is False:
@@ -318,3 +324,4 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setText(0, name)
         self.setToolTip(0, name)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
