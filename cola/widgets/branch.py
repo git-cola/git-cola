@@ -60,7 +60,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
-        self.setColumnCount(2)
+        self.setColumnCount(1)
 
         self.current = None
         self.name_local_branch = N_("Local branch")
@@ -192,13 +192,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 unpushed = self.get_unpushed_merges()
                 if unpushed > 0:
                     unpushed_str = str(unpushed)
-                    item.setIcon(1, icons.push())
-                    item.setText(1, unpushed_str)
-                    item.setToolTip(1, N_("Push: " + unpushed_str))
-                    self.setColumnWidth(0, self.width() - 65)
-                    self.setColumnWidth(1, 15)
-                else:
-                    self.setColumnWidth(0, self.width() - 50)
+                    item.setText(0, item.getText(0) + "  " + unpushed_str)
                 break
             elif (item.childCount() > 0):
                 self.update_select_branch(item, current)
