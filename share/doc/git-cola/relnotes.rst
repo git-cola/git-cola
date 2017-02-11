@@ -85,6 +85,11 @@ Fixes
 * Properly handle the case where an existing file is untracked using
   the File Browser.
 
+* Fix a quirk where the "Create Branch" dialog sometimes required clicking
+  twice on the radio buttons.
+
+  https://github.com/git-cola/git-cola/pull/662
+
 .. _v2.10:
 
 git-cola v2.10
