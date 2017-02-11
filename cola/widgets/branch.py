@@ -192,7 +192,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 unpushed = self.get_unpushed_merges()
                 if unpushed > 0:
                     unpushed_str = str(unpushed)
-                    item.setText(0, item.getText(0) + "  " + unpushed_str)
+                    item.setText(0, item.text(0) + "\t\u2191" + unpushed_str)
                 break
             elif (item.childCount() > 0):
                 self.update_select_branch(item, current)
