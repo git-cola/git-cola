@@ -133,9 +133,9 @@ class BaseTextEditExtension(QtCore.QObject):
         self.widget.setTabStopWidth(pixels)
 
     def selected_line(self):
-        cursor = self.widget.textCursor()
-        offset = cursor.position()
         contents = self.value()
+        cursor = self.widget.textCursor()
+        offset = min(cursor.position(), len(contents)-1)
         while (offset >= 1 and
                 contents[offset-1] and
                 contents[offset-1] != '\n'):

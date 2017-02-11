@@ -265,6 +265,7 @@ class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     diff_commits = Signal(object, object)
+    zoom_to_fit = Signal()
 
     def __init__(self, notifier, parent):
         standard.TreeWidget.__init__(self, parent=parent)
@@ -279,11 +280,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.selecting = False
         self.commits = []
 
-        self.action_up = qtutils.add_action(self, N_('Go Up'),
-                                            self.go_up, hotkeys.MOVE_UP)
+        self.action_up = qtutils.add_action(
+            self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP)
 
-        self.action_down = qtutils.add_action(self, N_('Go Down'),
-                                              self.go_down, hotkeys.MOVE_DOWN)
+        self.action_down = qtutils.add_action(
+            self, N_('Go Down'), self.go_down, hotkeys.MOVE_DOWN)
+
+        self.zoom_to_fit_action = qtutils.add_action(
+            self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
@@ -506,6 +510,7 @@ class GitDAG(standard.MainWindow):
         qtutils.connect_button(self.zoom_to_fit,
                                self.graphview.zoom_to_fit)
 
+        self.treewidget.zoom_to_fit.connect(self.graphview.zoom_to_fit)
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
@@ -647,7 +652,6 @@ class GitDAG(standard.MainWindow):
             # The old selection is now empty.  Select the top-most commit
             self.notifier.notify_observers(diff.COMMITS_SELECTED, [commit_obj])
 
-        self.graphview.update_scene_rect()
         self.graphview.set_initial_view()
 
     def diff_commits(self, a, b):
@@ -747,7 +751,17 @@ class ReaderThread(QtCore.QThread):
 
 
 class Cache(object):
-    pass
+
+    _label_font = None
+
+    @classmethod
+    def label_font(cls):
+        font = cls._label_font
+        if font is None:
+            font = cls._label_font = QtWidgets.QApplication.font()
+            font.setPointSize(6)
+        return font
+
 
 
 class Edge(QtWidgets.QGraphicsItem):
@@ -763,16 +777,8 @@ class Edge(QtWidgets.QGraphicsItem):
         self.commit = source.commit
         self.setZValue(-2)
 
-        dest_pt = Commit.item_bbox.center()
-
-        self.source_pt = self.mapFromItem(self.source, dest_pt)
-        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
-        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
-
-        width = self.dest_pt.x() - self.source_pt.x()
-        height = self.dest_pt.y() - self.source_pt.y()
-        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
-        self.bound = rect.normalized()
+        self.recompute_bound()
+        self.path_valid = False
 
         # Choose a new color for new branch edges
         if self.source.x() < self.dest.x():
@@ -787,6 +793,28 @@ class Edge(QtWidgets.QGraphicsItem):
 
         self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
 
+    def recompute_bound(self):
+        dest_pt = Commit.item_bbox.center()
+
+        self.source_pt = self.mapFromItem(self.source, dest_pt)
+        self.dest_pt = self.mapFromItem(self.dest, dest_pt)
+        self.line = QtCore.QLineF(self.source_pt, self.dest_pt)
+
+        width = self.dest_pt.x() - self.source_pt.x()
+        height = self.dest_pt.y() - self.source_pt.y()
+        rect = QtCore.QRectF(self.source_pt, QtCore.QSizeF(width, height))
+        self.bound = rect.normalized()
+
+    def commits_were_invalidated(self):
+        self.recompute_bound()
+        self.prepareGeometryChange()
+        # The path should not be recomputed immediately because just small part
+        # of DAG is actually shown at same time. It will be recomputed on
+        # demand in course of 'paint' method.
+        self.path_valid = False
+        # Hence, just queue redrawing.
+        self.update()
+
     # Qt overrides
     def type(self):
         return self.item_type
@@ -794,20 +822,18 @@ class Edge(QtWidgets.QGraphicsItem):
     def boundingRect(self):
         return self.bound
 
-    def paint(self, painter, option, widget):
+    def recompute_path(self):
         QRectF = QtCore.QRectF
         QPointF = QtCore.QPointF
 
         arc_rect = 10
         connector_length = 5
 
-        painter.setPen(self.pen)
         path = QtGui.QPainterPath()
 
         if self.source.x() == self.dest.x():
             path.moveTo(self.source.x(), self.source.y())
             path.lineTo(self.dest.x(), self.dest.y())
-            painter.drawPath(path)
         else:
             # Define points starting from source
             point1 = QPointF(self.source.x(), self.source.y())
@@ -842,7 +868,15 @@ class Edge(QtWidgets.QGraphicsItem):
             path.arcTo(QRectF(point6, point5),
                        start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
-            painter.drawPath(path)
+
+        self.path = path
+        self.path_valid = True
+
+    def paint(self, painter, option, widget):
+        if not self.path_valid:
+            self.recompute_path()
+        painter.setPen(self.pen)
+        painter.drawPath(self.path)
 
 
 class EdgeColor(object):
@@ -947,6 +981,8 @@ class Commit(QtWidgets.QGraphicsItem):
         self.pressed = False
         self.dragged = False
 
+        self.edges = {}
+
     def blockSignals(self, blocked):
         self.notifier.notification_enabled = not blocked
 
@@ -1017,62 +1053,74 @@ class Commit(QtWidgets.QGraphicsItem):
 
 
 class Label(QtWidgets.QGraphicsItem):
+
     item_type = QtWidgets.QGraphicsItem.UserType + 3
 
-    width = 72
-    height = 18
+    head_color=QtGui.QColor(Qt.green)
+    other_color = QtGui.QColor(Qt.white)
+    remote_color = QtGui.QColor(Qt.yellow)
 
-    item_shape = QtGui.QPainterPath()
-    item_shape.addRect(0, 0, width, height)
-    item_bbox = item_shape.boundingRect()
+    head_pen = QtGui.QPen()
+    head_pen.setColor(head_color.darker().darker())
+    head_pen.setWidth(1.0)
 
-    text_options = QtGui.QTextOption()
-    text_options.setAlignment(Qt.AlignCenter)
-    text_options.setAlignment(Qt.AlignVCenter)
+    text_pen = QtGui.QPen()
+    text_pen.setColor(QtGui.QColor(Qt.darkGray))
+    text_pen.setWidth(1.0)
 
-    def __init__(self, commit,
-                 other_color=QtGui.QColor(Qt.white),
-                 head_color=QtGui.QColor(Qt.green),
-                 remote_color=QtGui.QColor(Qt.yellow)):
+    alpha = 180
+    head_color.setAlpha(alpha)
+    other_color.setAlpha(alpha)
+    remote_color.setAlpha(alpha)
+
+    border = 2
+    item_spacing = 5
+    text_offset = 1
+
+    def __init__(self, commit):
         QtWidgets.QGraphicsItem.__init__(self)
         self.setZValue(-1)
-
-        # Starts with enough space for two tags. Any more and the commit
-        # needs to be taller to accommodate.
         self.commit = commit
-
-        self.white_color = other_color
-        self.green_color = head_color
-        self.green_color.setAlpha(180)
-        self.green_pen = QtGui.QPen()
-        self.green_pen.setColor(self.green_color.darker().darker())
-        self.green_pen.setWidth(1.0)
-
-        self.remote_color = remote_color
-        self.text_pen = QtGui.QPen()
-        self.text_pen.setColor(QtGui.QColor(Qt.darkGray))
-        self.text_pen.setWidth(1.0)
 
     def type(self):
         return self.item_type
 
-    def boundingRect(self, rect=item_bbox):
-        return rect
+    def boundingRect(self, cache=Cache):
+        QPainterPath = QtGui.QPainterPath
+        QRectF = QtCore.QRectF
 
-    def shape(self):
-        return self.item_shape
+        width = 72
+        height = 18
+        current_width = 0
+        spacing = self.item_spacing
+        border = self.border + self.text_offset  # text offset=1 in paint()
+
+        font = cache.label_font()
+        item_shape = QPainterPath()
+
+        base_rect = QRectF(0, 0, width, height)
+        base_rect = base_rect.adjusted(-border, -border, border, border)
+        item_shape.addRect(base_rect)
+
+        for tag in self.commit.tags:
+            text_shape = QPainterPath()
+            text_shape.addText(current_width, 0, font, tag)
+            text_rect = text_shape.boundingRect()
+            box_rect = text_rect.adjusted(-border, -border, border, border)
+            item_shape.addRect(box_rect)
+            current_width = item_shape.boundingRect().width() + spacing
+
+        return item_shape.boundingRect()
 
     def paint(self, painter, option, widget, cache=Cache):
-        try:
-            font = cache.label_font
-        except AttributeError:
-            font = cache.label_font = QtWidgets.QApplication.font()
-            font.setPointSize(6)
-
         # Draw tags and branches
+        font = cache.label_font()
         painter.setFont(font)
 
         current_width = 0
+        border = self.border
+        offset = self.text_offset
+        spacing = self.item_spacing
         QRectF = QtCore.QRectF
 
         HEAD = 'HEAD'
@@ -1090,38 +1138,34 @@ class Label(QtWidgets.QGraphicsItem):
             elif tag.startswith(remotes_prefix):
                 tag = tag[remotes_len:]
                 painter.setPen(self.text_pen)
-                painter.setBrush(self.white_color)
+                painter.setBrush(self.other_color)
             elif tag.startswith(tags_prefix):
                 tag = tag[tags_len:]
                 painter.setPen(self.text_pen)
                 painter.setBrush(self.remote_color)
             elif tag.startswith(heads_prefix):
                 tag = tag[heads_len:]
-                painter.setPen(self.green_pen)
-                painter.setBrush(self.green_color)
+                painter.setPen(self.head_pen)
+                painter.setBrush(self.head_color)
             else:
                 painter.setPen(self.text_pen)
-                painter.setBrush(self.white_color)
+                painter.setBrush(self.other_color)
 
             text_rect = painter.boundingRect(
                     QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
-            box_rect = text_rect.adjusted(-1, -1, 1, 1)
+            box_rect = text_rect.adjusted(-offset, -offset, offset, offset)
 
-            painter.drawRoundedRect(box_rect, 2, 2)
+            painter.drawRoundedRect(box_rect, border, border)
             painter.drawText(text_rect, Qt.TextSingleLine, tag)
-            current_width += text_rect.width() + 5
+            current_width += text_rect.width() + spacing
 
 
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     diff_commits = Signal(object, object)
 
-    x_min = 24
-    x_max = 0
-    y_min = 24
-
-    x_adjust = Commit.commit_radius*4/3
-    y_adjust = Commit.commit_radius*4/3
+    x_adjust = int(Commit.commit_radius*4/3)
+    y_adjust = int(Commit.commit_radius*4/3)
 
     x_off = -18
     y_off = -24
@@ -1141,6 +1185,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.items = {}
         self.saved_matrix = self.transform()
 
+        self.x_start = 24
+        self.x_min = 24
         self.x_offsets = collections.defaultdict(lambda: self.x_min)
 
         self.is_panning = False
@@ -1190,8 +1236,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.selection_list = []
         self.items.clear()
         self.x_offsets.clear()
-        self.x_max = 24
-        self.y_min = 24
+        self.x_min = 24
         self.commits = []
 
     # ViewerMixin interface
@@ -1316,10 +1361,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self_commits = self.commits
         self_items = self.items
 
-        items = self.selected_items()
-        if not items:
-            commits = self_commits[-8:]
-            items = [self_items[c.oid] for c in commits]
+        commits = self_commits[-7:]
+        items = [self_items[c.oid] for c in commits]
+
+        selected = self.selected_items()
+        if selected:
+            items.extend(selected)
 
         self.fit_view_to_items(items)
 
@@ -1338,22 +1385,27 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
             for item in items:
                 pos = item.pos()
-                item_rect = item.boundingRect()
-                x_off = item_rect.width() * 5
-                y_off = item_rect.height() * 10
-                x_min = min(x_min, pos.x())
-                y_min = min(y_min, pos.y()-y_off)
-                x_max = max(x_max, pos.x()+x_off)
-                y_max = max(y_max, pos.y())
-            rect = QtCore.QRectF(x_min, y_min, x_max-x_min, y_max-y_min)
+                x = pos.x()
+                y = pos.y()
+                x_min = min(x_min, x)
+                x_max = max(x_max, x)
+                y_min = min(y_min, y)
+                y_max = max(y_max, y)
 
-        x_adjust = GraphView.x_adjust
-        y_adjust = GraphView.y_adjust
+            rect = QtCore.QRectF(x_min, y_min,
+                                 abs(x_max - x_min),
+                                 abs(y_max - y_min))
 
-        rect.setX(rect.x() - x_adjust)
-        rect.setY(rect.y() - y_adjust)
-        rect.setHeight(rect.height() + y_adjust*2)
-        rect.setWidth(rect.width() + x_adjust*2)
+        x_adjust = abs(GraphView.x_adjust)
+        y_adjust = abs(GraphView.y_adjust)
+
+        count = max(2.0, 10.0 - len(items)/2.0)
+        y_offset = int(y_adjust * count)
+        x_offset = int(x_adjust * count)
+        rect.setX(rect.x() - x_offset//2)
+        rect.setY(rect.y() - y_adjust//2)
+        rect.setHeight(rect.height() + y_offset)
+        rect.setWidth(rect.width() + x_offset)
 
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
@@ -1494,14 +1546,35 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 except KeyError:
                     # TODO - Handle truncated history viewing
                     continue
-                edge = Edge(parent_item, commit_item)
+                try:
+                    edge = parent_item.edges[commit.oid]
+                except KeyError:
+                    edge = Edge(parent_item, commit_item)
+                else:
+                    continue
+                parent_item.edges[commit.oid] = edge
+                commit_item.edges[parent.oid] = edge
                 scene.addItem(edge)
 
     def layout_commits(self):
         positions = self.position_nodes()
+
+        # Each edge is accounted in two commits. Hence, accumulate invalid
+        # edges to prevent double edge invalidation.
+        invalid_edges = set()
+
         for oid, (x, y) in positions.items():
             item = self.items[oid]
-            item.setPos(x, y)
+
+            pos = item.pos()
+            if pos != (x, y):
+                item.setPos(x, y)
+
+                for edge in item.edges.values():
+                    invalid_edges.add(edge)
+
+        for edge in invalid_edges:
+            edge.commits_were_invalidated()
 
     """Commit node layout technique
 
@@ -1537,8 +1610,12 @@ that a node will be visited after all its parents.
 
     The set of occupied columns are maintained during work. Initially it is
 empty and no node occupied a column. Empty columns are allocated on demand.
-Index of allocated column is selected in ascend order starting from 0. The
-index is added to set of occupied column.
+Free index for column being allocated is searched in following way.
+    1. Start from desired column and look towards graph center (0 column).
+    2. Start from center and look in both directions simultaneously.
+Desired column is defaulted to 0. Fork node should set desired column for
+children equal to its one. This prevents branch from jumping too far from
+its fork.
 
     Initialization is performed by reset_columns method. Column allocation is
 implemented in alloc_column method. Initialization and main loop are in
@@ -1570,29 +1647,83 @@ step 2. Hence, it must be propagated for children on side columns.
     """
 
     def reset_columns(self):
+        # Some children of displayed commits might not be accounted in
+        # 'commits' list. It is common case during loading of big graph.
+        # But, they are assigned a column that must be reseted. Hence, use
+        # depth-first traversal to reset all columns assigned.
         for node in self.commits:
-            node.column = None
+            if node.column is None:
+                continue
+            stack = [node]
+            while stack:
+                node = stack.pop()
+                node.column = None
+                for child in node.children:
+                    if child.column is not None:
+                        stack.append(child)
+
         self.columns = {}
+        self.max_column = 0
+        self.min_column = 0
 
     def reset_rows(self):
         self.frontier = {}
         self.tagged_cells = set()
 
     def declare_column(self, column):
-        try:
+        if self.frontier:
+            # Align new column frontier by frontier of nearest column. If all
+            # columns were left then select maximum frontier value.
+            if not self.columns:
+                self.frontier[column] = max(self.frontier.values())
+                return
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
             # propagate_frontier.
-            self.frontier[column] = self.frontier[column - 1] - 1
-        except KeyError:
+            for offset in count(1):
+                for c in [column + offset, column - offset]:
+                    if not c in self.columns:
+                        # Column 'c' is not occupied.
+                        continue
+                    try:
+                        frontier = self.frontier[c]
+                    except KeyError:
+                        # Column 'c' was never allocated.
+                        continue
+                    self.frontier[column] = frontier - 1
+                    break
+                else:
+                    continue
+                break
+        else:
             # First commit must be assigned 0 row.
             self.frontier[column] = 0
 
-    def alloc_column(self):
+    def alloc_column(self, column = 0):
         columns = self.columns
-        for c in count(0):
+        # First, look for free column by moving from desired column to graph
+        # center (column 0).
+        for c in range(column, 0, -1 if column > 0 else 1):
             if c not in columns:
+                if c > self.max_column:
+                    self.max_column = c
+                elif c < self.min_column:
+                    self.min_column = c
                 break
+        else:
+            # If no free column was found between graph center and desired
+            # column then look for free one by moving from center along both
+            # directions simultaneously.
+            for c in count(0):
+                if c not in columns:
+                    if c > self.max_column:
+                        self.max_column = c
+                    break
+                c = -c
+                if c not in columns:
+                    if c < self.min_column:
+                        self.min_column = c
+                    break
         self.declare_column(c)
         columns[c] = 1
         return c
@@ -1602,34 +1733,25 @@ step 2. Hence, it must be propagated for children on side columns.
         cell_row = self.frontier[column]
 
         if tags:
-            # Prevent overlapping with right cells. Do not occupy row if the
-            # row is occupied by a commit at right side.
-            for c in range(column + 1, len(self.frontier)):
+            # Prevent overlapping of tag with cells already allocated a row.
+            if self.x_off > 0:
+                can_overlap = list(range(column + 1, self.max_column + 1))
+            else:
+                can_overlap = list(range(column - 1, self.min_column - 1, -1))
+            for c in can_overlap:
                 frontier = self.frontier[c]
                 if frontier > cell_row:
                     cell_row = frontier
 
-        # Avoid overlapping with tags of left cells.
-        # Sorting is a part for column overlapping check optimization.
-        columns = sorted(range(0, column), key=lambda c: self.frontier[c])
-        while columns:
-            # Optimization. Remove columns which cannot contain overlapping
-            # tags because all its commits are below.
-            while columns:
-                c = columns[0]
-                if self.frontier[c] <= cell_row:
-                    # The column cannot overlap.
-                    columns.pop(0)
-                else:
-                    # This column may overlap because the frontier is above.
-                    # Consequent columns may overlap too because columns
-                    # sorting criteria.
-                    break
-
-            for c in columns:
+        # Avoid overlapping with tags of commits at cell_row.
+        if self.x_off > 0:
+            can_overlap = list(range(self.min_column, column))
+        else:
+            can_overlap = list(range(self.max_column, column, -1))
+        for cell_row in count(cell_row):
+            for c in can_overlap:
                 if (c, cell_row) in self.tagged_cells:
                     # Overlapping. Try next row.
-                    cell_row += 1
                     break
             else:
                 # No overlapping was found.
@@ -1692,7 +1814,7 @@ step 2. Hence, it must be propagated for children on side columns.
                 # Rest children are allocated new column.
                 for child in citer:
                     if child.column is None:
-                        child.column = self.alloc_column()
+                        child.column = self.alloc_column(node.column)
                     self.propagate_frontier(child.column, node.row + 1)
             elif node.children:
                 child = node.children[0]
@@ -1713,35 +1835,23 @@ step 2. Hence, it must be propagated for children on side columns.
     def position_nodes(self):
         self.recompute_grid()
 
-        x_max = self.x_max
+        x_start = self.x_start
         x_min = self.x_min
         x_off = self.x_off
         y_off = self.y_off
-        y_min = y_off
 
         positions = {}
 
         for node in self.commits:
-            x_pos = x_min + node.column * x_off
+            x_pos = x_start + node.column * x_off
             y_pos = y_off + node.row * y_off
 
             positions[node.oid] = (x_pos, y_pos)
+            x_min = min(x_min, x_pos)
 
-            x_max = max(x_max, x_pos)
-            y_min = min(y_min, y_pos)
-
-        self.x_max = x_max
-        self.y_min = y_min
+        self.x_min = x_min
 
         return positions
-
-    def update_scene_rect(self):
-        y_min = self.y_min
-        x_max = self.x_max
-        self.scene().setSceneRect(-GraphView.x_adjust,
-                                  y_min-GraphView.y_adjust,
-                                  x_max + GraphView.x_adjust,
-                                  abs(y_min) + GraphView.y_adjust)
 
     def sort_by_generation(self, commits):
         if len(commits) < 2:

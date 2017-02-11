@@ -1,5 +1,4 @@
 """Widgets for Fetch, Push, and Pull"""
-
 from __future__ import division, absolute_import, unicode_literals
 import fnmatch
 
@@ -268,10 +267,10 @@ class RemoteActionDialog(standard.Dialog):
         if default_remote in remotes:
             idx = remotes.index(default_remote)
             if self.select_remote(idx):
-                self.remote_name.setText(default_remote)
+                self.set_remote_name(default_remote)
         else:
             if self.select_first_remote():
-                self.remote_name.setText(remotes[0])
+                self.set_remote_name(remotes[0])
 
         # Trim the remote list to just the default remote
         self.update_remotes()
@@ -320,11 +319,9 @@ class RemoteActionDialog(standard.Dialog):
             self.ff_only_checkbox.hide()
 
         desktop = qtutils.desktop()
-        width = desktop.width()/2
-        height = desktop.height() - desktop.height()/4
+        width = desktop.width()//2
+        height = desktop.height() - desktop.height()//4
         self.init_state(None, self.resize, width, height)
-
-        self.remote_name.setFocus()
 
     def set_rebase(self, value):
         """Check the rebase checkbox"""
@@ -353,8 +350,6 @@ class RemoteActionDialog(standard.Dialog):
     def set_remote_name(self, remote_name):
         """Set the remote name"""
         self.remote_name.setText(remote_name)
-        if remote_name:
-            self.remote_name.selectAll()
 
     def set_local_branch(self, branch):
         """Set the local branch name"""

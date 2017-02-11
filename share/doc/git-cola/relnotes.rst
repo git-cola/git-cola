@@ -45,6 +45,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/654
 
+  https://github.com/git-cola/git-cola/pull/656
+
+  https://github.com/git-cola/git-cola/pull/659
+
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
 
@@ -80,6 +84,11 @@ Fixes
 =====
 * Properly handle the case where an existing file is untracked using
   the File Browser.
+
+* Fix a quirk where the "Create Branch" dialog sometimes required clicking
+  twice on the radio buttons.
+
+  https://github.com/git-cola/git-cola/pull/662
 
 .. _v2.10:
 
