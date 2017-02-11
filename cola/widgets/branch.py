@@ -233,7 +233,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         result = 0
 
         if self.current is not None:
-            origin = "origin/" + self.current + "..HEAD"
+            origin = gitcmds.tracked_branch() + "..HEAD"
             args = ["--oneline"]
             log = self.model.git.log(origin, *args)
             result = len(log[1].splitlines())
