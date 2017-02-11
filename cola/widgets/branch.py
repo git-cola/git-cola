@@ -80,16 +80,19 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current = gitcmds.current_branch()
         states = self.save_tree_states()
 
-        local_branches = self.create_branch_item(self.name_local_branch,
-                                          gitcmds.branch_list())
-        remote_branches = self.create_branch_item(self.name_remote_branch,
-                                          gitcmds.branch_list(True))
+        local = self.create_branch_item(self.name_local_branch,
+                                        gitcmds.branch_list(),
+                                        icons.branch())
+        remote = self.create_branch_item(self.name_remote_branch,
+                                         gitcmds.branch_list(True),
+                                         icons.branch())
         tags = self.create_branch_item(self.name_tags_branch,
-                                          gitcmds.tag_list())
+                                       gitcmds.tag_list(),
+                                       icons.tag())
 
         self.clear()
-        self.addTopLevelItems([local_branches, remote_branches, tags])
-        self.update_select_branch(local_branches, self.current)
+        self.addTopLevelItems([local, remote, tags])
+        self.update_select_branch(local, self.current)
         self.load_tree_states(states)
 
     def contextMenuEvent(self, event):
@@ -235,7 +238,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         return result
 
-    def create_branch_item(self, branch_name, children):
+    def create_branch_item(self, branch_name, children, icon):
 
         # returns a nested dictionary from a list of branches names
         # grouped by their names separated by the character /
@@ -251,7 +254,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         def generate_tree(group_branches):
             result = []
             for key, value in group_branches.iteritems():
-                item = BranchTreeWidgetItem(key, icons.branch())
+                item = BranchTreeWidgetItem(key, icon)
                 item.addChildren(generate_tree(value))
 
                 if (item.childCount() > 0):
