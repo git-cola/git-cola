@@ -111,9 +111,11 @@ class BranchesTreeWidget(standard.TreeWidget):
                 menu.addAction(qtutils.add_action(self,
                                         N_('Checkout'),
                                         self.checkout_action))
-                menu.addAction(qtutils.add_action(self,
+                merge_menu_action = qtutils.add_action(self,
                                         N_('Merge in current branch'),
-                                        self.merge_action))
+                                        self.merge_action)
+                merge_menu_action.setIcon(icons.merge())
+                menu.addAction(merge_menu_action)
 
                 root = self.get_root(selected)
 
@@ -121,9 +123,11 @@ class BranchesTreeWidget(standard.TreeWidget):
 
                     if self.name_local_branch == root.name:
                         menu.addSeparator()
-                        menu.addAction(qtutils.add_action(self,
+                        rename_menu_action = qtutils.add_action(self,
                                                 N_("Rename branch"),
-                                                self.rename_action))
+                                                self.rename_action)
+                        rename_menu_action.setIcon(icons.edit())
+                        menu.addAction(rename_menu_action)
 
                     if self.name_tags_branch != root.name:
                         delete_label = N_("Delete branch")
@@ -252,7 +256,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         def generate_tree(group_branches):
             result = []
             for key, value in group_branches.iteritems():
-                item = BranchTreeWidgetItem(key, icons.folder())
+                item = BranchTreeWidgetItem(key, icons.branch())
                 item.addChildren(generate_tree(value))
 
                 if (item.childCount() > 0):
