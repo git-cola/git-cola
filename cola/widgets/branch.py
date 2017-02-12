@@ -21,15 +21,24 @@ from ..widgets import standard
 class AsyncPullTask(qtutils.Task):
     """Run pull action asynchronously"""
 
-    def __init__(self, parent, remote, args):
+    def __init__(self, parent, remote, branch):
         qtutils.Task.__init__(self, parent)
         self.parent = parent
         self.remote = remote
-        self.args = args
+        self.args = {
+            'local_branch': '',
+            'no_ff': False,
+            'force': False,
+            'tags': False,
+            'rebase': False,
+            'remote_branch': branch,
+            'set_upstream': False,
+            'ff_only': True
+        }
 
     def task(self):
         """Runs action and captures the result"""
-        return self.parent.model.pull(self.remote, **self.args)
+        return self.parent.m.pull(self.remote, **self.args)
 
 
 class BranchesWidget(QtWidgets.QWidget):
@@ -310,17 +319,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             if match:
                 remote = match.group('remote')
                 branch = match.group('branch')
-                args = {
-                    'local_branch': '',
-                    'no_ff': False,
-                    'force': False,
-                    'tags': False,
-                    'rebase': False,
-                    'remote_branch': branch,
-                    'set_upstream': False,
-                    'ff_only': True
-                }
-                task = AsyncPullTask(self, remote, args)
+                task = AsyncPullTask(self, remote, branch)
                 self.runtask.start(task,
                                    progress=self.progress,
                                    finish=self.pull_completed)
