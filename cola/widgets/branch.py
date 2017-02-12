@@ -347,15 +347,11 @@ class BranchesTreeWidget(standard.TreeWidget):
                     branch = match.group('branch')
                     cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
-            self.refresh()
-
     def merge_action(self):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
             cmds.do(cmds.Merge, full_name, True, False, False, False)
-
-            self.refresh()
 
     def checkout_action(self):
         full_name = self.get_full_name(self.selected_item())
