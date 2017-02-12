@@ -301,9 +301,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def pull_action(self):
         full_name = self.get_full_name(self.selected_item())
+        remote_name = gitcmds.tracked_branch(full_name)
 
-        if full_name == self.current:
-            remote_name = gitcmds.tracked_branch()
+        if remote_name is not None:
             rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
             match = rgx.match(remote_name)
 
