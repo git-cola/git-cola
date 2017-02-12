@@ -222,18 +222,16 @@ class BranchesTreeWidget(standard.TreeWidget):
             if self.get_full_name(item) == current:
                 item.setIcon(0, icons.star())
                 status = self.get_branch_status()
-                ahead_str = ""
-                behind_str = ""
+                status_str = ""
 
                 if status["ahead"] > 0:
-                    ahead_str = "\u2191" + str(status["ahead"])
+                    status_str += "\u2191" + str(status["ahead"])
 
                 if status["behind"] > 0:
-                    behind_str = "\u2193" + str(status["behind"])
+                    status_str += "  \u2193" + str(status["behind"])
 
-                if status["ahead"] > 0 or status["behind"] > 0:
-                    item.setText(0, item.text(0) + "\t" +
-                                 ahead_str + "  " + behind_str)
+                if status_str != "":
+                    item.setText(0, item.text(0) + "\t" + status_str)
 
                 break
             elif (item.childCount() > 0):
