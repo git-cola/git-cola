@@ -117,7 +117,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             # local and remote branch
             if self.name_tags_branch != root.name:
                 pull_menu_action = qtutils.add_action(self,
-                                        N_("Pull"),
+                                        N_("Pull in current branch"),
                                         self.pull_action)
                 pull_menu_action.setIcon(icons.pull())
                 menu.addAction(pull_menu_action)
@@ -220,6 +220,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if status["ahead"] > 0 or status["behind"] > 0:
                     item.setText(0, item.text(0) + "\t" +
                                  ahead_str + "  " + behind_str)
+
                 break
             elif (item.childCount() > 0):
                 self.update_select_branch(item, current)
