@@ -141,17 +141,19 @@ class BranchesTreeWidget(standard.TreeWidget):
                     menu.addSeparator()
                     menu.addAction(rename_menu_action)
 
-                delete_label = N_("Delete branch")
-                if self.name_remote_branch == root.name:
-                    delete_label = N_("Delete remote branch")
+                # not current item
+                if full_name != self.current:
+                    delete_label = N_("Delete branch")
+                    if self.name_remote_branch == root.name:
+                        delete_label = N_("Delete remote branch")
 
-                delete_menu_action = qtutils.add_action(self,
-                                        delete_label,
-                                        self.delete_action)
-                delete_menu_action.setIcon(icons.discard())
+                    delete_menu_action = qtutils.add_action(self,
+                                            delete_label,
+                                            self.delete_action)
+                    delete_menu_action.setIcon(icons.discard())
 
-                menu.addSeparator()
-                menu.addAction(delete_menu_action)
+                    menu.addSeparator()
+                    menu.addAction(delete_menu_action)
 
             menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -297,8 +299,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         if new_branch[1] is True and new_branch[0]:
             cmds.do(cmds.RenameBranch, branch, new_branch[0])
 
-            self.refresh()
-
     def pull_action(self):
         full_name = self.get_full_name(self.selected_item())
 
@@ -320,6 +320,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         Interaction.log_status(status, out, err)
         if status > 0:
             qtutils.information(N_("Pull result"), err)
+
+        self.refresh()
 
     def delete_action(self):
         title = N_('Delete Branch')
@@ -365,8 +367,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             if status > 0:
                 qtutils.information(N_("Checkout result"), err)
-
-            self.refresh()
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
