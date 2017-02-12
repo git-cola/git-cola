@@ -69,12 +69,17 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.model = main.model()
-        self.model.add_observer(self.model.message_updated, self.updated.emit)
+        self.m = main.model()
+        self.m.add_observer(self.m.message_updated, self.updated.emit)
 
         self.runtask = qtutils.RunTask(parent=self)
         self.progress = standard.ProgressDialog(N_('Pull'),
                                                 N_('Updating'), self)
+
+    # fix key == Qt.Key_Left and index.parent().isValid() error throw
+    # in standard.py when navigating with keyboard and press left key
+    def model(self):
+        return self
 
     def refresh(self):
         self.current = gitcmds.current_branch()
@@ -192,11 +197,11 @@ class BranchesTreeWidget(standard.TreeWidget):
             args = ["--oneline"]
 
             origin = tracked_branch + ".." + self.current
-            log = self.model.git.log(origin, *args)
+            log = self.m.git.log(origin, *args)
             result['ahead'] = len(log[1].splitlines())
 
             origin = self.current + ".." + tracked_branch
-            log = self.model.git.log(origin, *args)
+            log = self.m.git.log(origin, *args)
             result['behind'] = len(log[1].splitlines())
 
         return result
@@ -364,9 +369,9 @@ class BranchesTreeWidget(standard.TreeWidget):
         full_name = self.get_full_name(self.selected_item())
 
         if full_name != self.current:
-            status, out, err = self.model.git.checkout(full_name)
+            status, out, err = self.m.git.checkout(full_name)
             Interaction.log_status(status, out, err)
-            self.model.update_status()
+            self.m.update_status()
 
             if status > 0:
                 qtutils.information(N_("Checkout result"), err)
@@ -383,6 +388,10 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setIcon(0, icon)
         self.setText(0, name)
         self.setToolTip(0, name)
-
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+
+    # fix key == Qt.Key_Left and index.parent().isValid() error throw
+    # in standard.py when navigating with keyboard and press left key
+    def rowCount(self):
+        return 1
 
