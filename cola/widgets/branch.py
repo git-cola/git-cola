@@ -125,19 +125,17 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             # local and remote branch
             if self.name_tags_branch != root.name:
-                pull_menu_action = qtutils.add_action(self,
-                                        N_("Pull from origin"),
-                                        self.pull_action)
-                pull_menu_action.setIcon(icons.pull())
-                menu.addSeparator()
-                menu.addAction(pull_menu_action)
-
-                remote = gitcmds.tracked_branch(full_name)
-                if remote is None:
-                    pull_menu_action.setDisabled(True)
-
                 # local branch
                 if self.name_local_branch == root.name:
+                    remote = gitcmds.tracked_branch(full_name)
+                    if remote is not None:
+                        pull_menu_action = qtutils.add_action(self,
+                                                N_("Pull from origin"),
+                                                self.pull_action)
+                        pull_menu_action.setIcon(icons.pull())
+                        menu.addSeparator()
+                        menu.addAction(pull_menu_action)
+
                     rename_menu_action = qtutils.add_action(self,
                                             N_("Rename branch"),
                                             self.rename_action)
