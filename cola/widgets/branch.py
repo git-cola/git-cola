@@ -26,13 +26,13 @@ class AsyncPullTask(qtutils.Task):
         self.remote = remote
         self.args = {
             'local_branch': '',
-            'no_ff': False,
+            'no_ff': True,
             'force': False,
             'tags': False,
             'rebase': False,
             'remote_branch': branch,
             'set_upstream': False,
-            'ff_only': True
+            'ff_only': False
         }
 
     def task(self):
