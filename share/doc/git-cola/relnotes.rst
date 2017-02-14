@@ -90,6 +90,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/662
 
+* Fixed a focus issue to ensure that "Push", "Fetch", and "Pull" can
+  be executed with the press of a single enter key after being shown.
+
+  https://github.com/git-cola/git-cola/issues/661
+
 .. _v2.10:
 
 git-cola v2.10
