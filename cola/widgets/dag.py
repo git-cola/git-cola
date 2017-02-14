@@ -1904,6 +1904,27 @@ step 2. Hence, it must be propagated for children on side columns.
         else:
             self.wheel_pan(event)
 
+    def fitInView(self, rect, flags=Qt.IgnoreAspectRatio):
+        """Override fitInView to remove unwanted margins
+
+        https://bugreports.qt.io/browse/QTBUG-42331 - based on QT sources
+
+        """
+        if self.scene() is None or rect.isNull():
+            return
+        unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
+        self.scale(1.0/unity.width(), 1.0/unity.height())
+        view_rect = self.viewport().rect()
+        scene_rect = self.transform().mapRect(rect)
+        xratio = view_rect.width() / scene_rect.width()
+        yratio = view_rect.height() / scene_rect.height()
+        if flags == Qt.KeepAspectRatio:
+            xratio = yratio = min(xratio, yratio)
+        elif flags == Qt.KeepAspectRatioByExpanding:
+            xratio = yratio = max(xratio, yratio)
+        self.scale(xratio, yratio)
+        self.centerOn(rect.center())
+
 
 # Glossary
 # ========
