@@ -16,6 +16,11 @@ from ..models import main
 from ..widgets import defs
 from ..widgets import standard
 
+SEPARATOR_CHAR = '/'
+NAME_LOCAL_BRANCH = N_("Local branch")
+NAME_REMOTE_BRANCH = N_("Remote")
+NAME_TAGS_BRANCH = N_("Tags")
+
 
 class AsyncPullTask(qtutils.Task):
     """Run pull action asynchronously"""
@@ -41,7 +46,6 @@ class AsyncPullTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QWidget):
-
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -62,13 +66,11 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
+        self.setAlternatingRowColors(False)
+        self.setRootIsDecorated(True)
         self.setColumnCount(1)
 
         self.current = None
-        self.separator_char = '/'
-        self.name_local_branch = N_("Local branch")
-        self.name_remote_branch = N_("Remote")
-        self.name_tags_branch = N_("Tags")
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
@@ -88,13 +90,13 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current = gitcmds.current_branch()
         states = self.save_tree_states()
 
-        local = self.create_branch_item(self.name_local_branch,
+        local = self.create_branch_item(NAME_LOCAL_BRANCH,
                                         gitcmds.branch_list(),
                                         icons.branch())
-        remote = self.create_branch_item(self.name_remote_branch,
+        remote = self.create_branch_item(NAME_REMOTE_BRANCH,
                                          gitcmds.branch_list(True),
                                          icons.branch())
-        tags = self.create_branch_item(self.name_tags_branch,
+        tags = self.create_branch_item(NAME_TAGS_BRANCH,
                                        gitcmds.tag_list(),
                                        icons.tag())
 
@@ -113,32 +115,33 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             # all branches except current item
             if full_name != self.current:
-                menu.addAction(qtutils.add_action(self,
-                                            N_('Checkout'),
-                                            self.checkout_action))
+                menu.addAction(qtutils.add_action(
+                    self,
+                    N_('Checkout'),
+                    self.checkout_action))
                 merge_menu_action = qtutils.add_action(self,
-                                        N_('Merge in current branch'),
-                                        self.merge_action)
+                                                       N_('Merge in current branch'),
+                                                       self.merge_action)
                 merge_menu_action.setIcon(icons.merge())
 
                 menu.addAction(merge_menu_action)
 
             # local and remote branch
-            if self.name_tags_branch != root.name:
+            if NAME_TAGS_BRANCH != root.name:
                 # local branch
-                if self.name_local_branch == root.name:
+                if NAME_LOCAL_BRANCH == root.name:
                     remote = gitcmds.tracked_branch(full_name)
                     if remote is not None:
                         pull_menu_action = qtutils.add_action(self,
-                                                N_("Pull from origin"),
-                                                self.pull_action)
+                                                              N_("Pull from origin"),
+                                                              self.pull_action)
                         pull_menu_action.setIcon(icons.pull())
                         menu.addSeparator()
                         menu.addAction(pull_menu_action)
 
                     rename_menu_action = qtutils.add_action(self,
-                                            N_("Rename branch"),
-                                            self.rename_action)
+                                                            N_("Rename branch"),
+                                                            self.rename_action)
                     rename_menu_action.setIcon(icons.edit())
 
                     menu.addSeparator()
@@ -147,12 +150,12 @@ class BranchesTreeWidget(standard.TreeWidget):
                 # not current item
                 if full_name != self.current:
                     delete_label = N_("Delete branch")
-                    if self.name_remote_branch == root.name:
+                    if NAME_REMOTE_BRANCH == root.name:
                         delete_label = N_("Delete remote branch")
 
                     delete_menu_action = qtutils.add_action(self,
-                                            delete_label,
-                                            self.delete_action)
+                                                            delete_label,
+                                                            self.delete_action)
                     delete_menu_action.setIcon(icons.discard())
 
                     menu.addSeparator()
@@ -163,12 +166,12 @@ class BranchesTreeWidget(standard.TreeWidget):
     def save_tree_states(self):
         # iterates over children generating a nested
         # dictionary with those that are expanded
-        def save_item_state(item):
+        def save_item_state(tree_item):
             result = {}
-            for i in range(item.childCount()):
+            for i in range(tree_item.childCount()):
                 tree = result
-                child = item.child(i)
-                if item.isExpanded():
+                child = tree_item.child(i)
+                if tree_item.isExpanded():
                     tree = tree.setdefault(child.name, save_item_state(child))
 
             return result
@@ -198,18 +201,18 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def update_select_branch(self, branch, current):
         # get a dictionary with commits ahead an behind
-        def get_branch_status(git, current):
+        def get_branch_status(git, current_branch):
             result = {'ahead': 0, 'behind': 0}
             tracked_branch = gitcmds.tracked_branch()
 
-            if current is not None and tracked_branch is not None:
+            if current_branch is not None and tracked_branch is not None:
                 args = ["--oneline"]
 
-                origin = tracked_branch + ".." + current
+                origin = tracked_branch + ".." + current_branch
                 log = git.log(origin, *args)
                 result['ahead'] = len(log[1].splitlines())
 
-                origin = current + ".." + tracked_branch
+                origin = current_branch + ".." + tracked_branch
                 log = git.log(origin, *args)
                 result['behind'] = len(log[1].splitlines())
 
@@ -233,7 +236,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                     item.setText(0, item.text(0) + "\t" + status_str)
 
                 break
-            elif (item.childCount() > 0):
+            elif item.childCount() > 0:
                 self.update_select_branch(item, current)
 
     # returns top level item from an item,
@@ -249,7 +252,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         return parents[len(parents) - 1]
 
     # returns branch name from tree item, it is generated by iterating
-    # over parents and joining their names with self.separator_char
+    # over parents and joining their names with SEPARATOR_CHAR
     def get_full_name(self, item):
         parents = [item.name]
         parent = item.parent()
@@ -258,29 +261,29 @@ class BranchesTreeWidget(standard.TreeWidget):
             parents.append(parent.name)
             parent = parent.parent()
 
-        result = self.separator_char.join(reversed(parents))
+        result = SEPARATOR_CHAR.join(reversed(parents))
 
-        return result[result.find(self.separator_char) + 1:]
+        return result[result.find(SEPARATOR_CHAR) + 1:]
 
     def create_branch_item(self, branch_name, children, icon):
         # returns a nested dictionary from a list of branches names
-        # grouped by their names separated by self.separator_char
+        # grouped by their names separated by SEPARATOR_CHAR
         def group_branches(branches):
             result = {}
             for item in branches:
                 tree = result
-                for part in item.split(self.separator_char):
+                for part in item.split(SEPARATOR_CHAR):
                     tree = tree.setdefault(part, {})
 
             return result
 
-        def generate_tree(group_branches):
+        def generate_tree(grouped_branches):
             result = []
-            for key, value in group_branches.iteritems():
+            for key, value in grouped_branches.iteritems():
                 item = BranchTreeWidgetItem(key, icon)
                 item.addChildren(generate_tree(value))
 
-                if (item.childCount() > 0):
+                if item.childCount() > 0:
                     item.setIcon(0, icons.ellipsis())
 
                 result.append(item)
@@ -334,11 +337,11 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         full_name = self.get_full_name(self.selected_item())
         if full_name != self.current and qtutils.confirm(
-                                     title, question, info, ok_btn):
+                title, question, info, ok_btn):
             remote = False
             root = self.get_root(self.selected_item())
-            if self.name_remote_branch == root.name:
-                    remote = True
+            if NAME_REMOTE_BRANCH == root.name:
+                remote = True
 
             if remote is False:
                 cmds.do(cmds.DeleteBranch, full_name)
@@ -369,7 +372,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, name, icon):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.name = name
@@ -383,4 +385,3 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     # in standard.py when navigating with keyboard and press left key
     def rowCount(self):
         return 1
-
