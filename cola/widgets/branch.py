@@ -16,6 +16,7 @@ from ..models import main
 from ..widgets import defs
 from ..widgets import standard
 
+
 SEPARATOR_CHAR = '/'
 NAME_LOCAL_BRANCH = N_("Local branch")
 NAME_REMOTE_BRANCH = N_("Remote")
@@ -190,13 +191,14 @@ class BranchesTreeWidget(standard.TreeWidget):
     def load_tree_states(self, states):
         # iterate over children expanding those that
         # exists in a nested dictionary
-        def load_item_state(item, state):
-            for key, value in state.iteritems():
-                for i in range(item.childCount()):
-                    child = item.child(i)
-                    if child.name == key and len(value.keys()) > 0:
+        def load_item_state(tree_item, state):
+            for key in state.keys():
+                for i in range(tree_item.childCount()):
+                    child = tree_item.child(i)
+                    child_state = state[key]
+                    if child.name == key and len(child_state.keys()) > 0:
                         child.setExpanded(True)
-                        load_item_state(child, value)
+                        load_item_state(child, child_state)
 
         for item in self.items():
             if item.name in states and len(states[item.name].keys()) > 0:
@@ -283,9 +285,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         def generate_tree(grouped_branches):
             result = []
-            for key, value in grouped_branches.iteritems():
+            for key in grouped_branches.keys():
                 item = BranchTreeWidgetItem(key, icon)
-                item.addChildren(generate_tree(value))
+                item.addChildren(generate_tree(grouped_branches[key]))
 
                 if item.childCount() > 0:
                     item.setIcon(0, icons.ellipsis())
