@@ -175,8 +175,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             result = {}
             for i in range(tree_item.childCount()):
                 tree = result
-                child = tree_item.child(i)
                 if tree_item.isExpanded():
+                    child = tree_item.child(i)
                     tree = tree.setdefault(child.name, save_item_state(child))
 
             return result
