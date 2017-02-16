@@ -119,9 +119,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                     self,
                     N_('Checkout'),
                     self.checkout_action))
-                merge_menu_action = qtutils.add_action(self,
-                                                       N_('Merge in current branch'),
-                                                       self.merge_action)
+                merge_menu_action = qtutils.add_action(
+                    self,
+                    N_('Merge in current branch'),
+                    self.merge_action)
                 merge_menu_action.setIcon(icons.merge())
 
                 menu.addAction(merge_menu_action)
@@ -132,16 +133,18 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if NAME_LOCAL_BRANCH == root.name:
                     remote = gitcmds.tracked_branch(full_name)
                     if remote is not None:
-                        pull_menu_action = qtutils.add_action(self,
-                                                              N_("Pull from origin"),
-                                                              self.pull_action)
+                        pull_menu_action = qtutils.add_action(
+                            self,
+                            N_("Pull from origin"),
+                            self.pull_action)
                         pull_menu_action.setIcon(icons.pull())
                         menu.addSeparator()
                         menu.addAction(pull_menu_action)
 
-                    rename_menu_action = qtutils.add_action(self,
-                                                            N_("Rename branch"),
-                                                            self.rename_action)
+                    rename_menu_action = qtutils.add_action(
+                        self,
+                        N_("Rename branch"),
+                        self.rename_action)
                     rename_menu_action.setIcon(icons.edit())
 
                     menu.addSeparator()
@@ -153,9 +156,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                     if NAME_REMOTE_BRANCH == root.name:
                         delete_label = N_("Delete remote branch")
 
-                    delete_menu_action = qtutils.add_action(self,
-                                                            delete_label,
-                                                            self.delete_action)
+                    delete_menu_action = qtutils.add_action(
+                        self,
+                        delete_label,
+                        self.delete_action)
                     delete_menu_action.setIcon(icons.discard())
 
                     menu.addSeparator()
