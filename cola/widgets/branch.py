@@ -331,7 +331,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         if full_name != self.current_branch:
             status, out, err = self.m.git.checkout(full_name)
             Interaction.log_status(status, out, err)
-            self.m.update_status()
 
             if status > 0:
                 qtutils.information(N_("Checkout result"), err)
