@@ -72,7 +72,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setColumnCount(1)
 
         self.m = main.model()
-        self.tree_helper = TreeHelper()
+        self.tree_helper = BranchesTreeHelper()
         self.current = None
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
@@ -91,21 +91,25 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current = gitcmds.current_branch()
         states = self.save_tree_states()
 
-        local = self.tree_helper.create_item(
+        local_dict = self.tree_helper.group_branches(gitcmds.branch_list(),
+                                                     SEPARATOR_CHAR)
+        remote_dict = self.tree_helper.group_branches(gitcmds.branch_list(True),
+                                                     SEPARATOR_CHAR)
+        tags_dict = self.tree_helper.group_branches(gitcmds.tag_list(),
+                                                    SEPARATOR_CHAR)
+
+        local = self.tree_helper.create_top_level_item(
                                         NAME_LOCAL_BRANCH,
-                                        gitcmds.branch_list(),
-                                        icons.branch(),
-                                        SEPARATOR_CHAR)
-        remote = self.tree_helper.create_item(
+                                        local_dict,
+                                        icons.branch())
+        remote = self.tree_helper.create_top_level_item(
                                         NAME_REMOTE_BRANCH,
-                                        gitcmds.branch_list(True),
-                                        icons.branch(),
-                                        SEPARATOR_CHAR)
-        tags = self.tree_helper.create_item(
+                                        remote_dict,
+                                        icons.branch())
+        tags = self.tree_helper.create_top_level_item(
                                         NAME_TAGS_BRANCH,
-                                        gitcmds.tag_list(),
-                                        icons.tag(),
-                                        SEPARATOR_CHAR)
+                                        tags_dict,
+                                        icons.tag())
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -233,7 +237,8 @@ class BranchesTreeWidget(standard.TreeWidget):
                     item.setText(0, item.text(0) + "\t" + status_str)
 
     def rename_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
         new_branch = qtutils.prompt(N_("Rename branch"),
                                     N_("New branch name"),
                                     branch)
@@ -241,7 +246,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             cmds.do(cmds.RenameBranch, branch, new_branch[0])
 
     def pull_action(self):
-        full_name = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
+        full_name = self.tree_helper.get_full_name(self.selected_item(),
+                                                   SEPARATOR_CHAR)
         remote_name = gitcmds.tracked_branch(full_name)
 
         if remote_name is not None:
@@ -270,7 +276,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         info = N_('The branch will be deleted')
         ok_btn = N_('Delete Branch')
 
-        full_name = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
+        full_name = self.tree_helper.get_full_name(self.selected_item(),
+                                                   SEPARATOR_CHAR)
         if full_name != self.current and qtutils.confirm(
                 title, question, info, ok_btn):
             remote = False
@@ -289,13 +296,15 @@ class BranchesTreeWidget(standard.TreeWidget):
                     cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
     def merge_action(self):
-        full_name = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
+        full_name = self.tree_helper.get_full_name(self.selected_item(),
+                                                   SEPARATOR_CHAR)
 
         if full_name != self.current:
             cmds.do(cmds.Merge, full_name, True, False, False, False)
 
     def checkout_action(self):
-        full_name = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
+        full_name = self.tree_helper.get_full_name(self.selected_item(),
+                                                   SEPARATOR_CHAR)
 
         if full_name != self.current:
             status, out, err = self.m.git.checkout(full_name)
@@ -322,26 +331,30 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return 1
 
 
-class TreeHelper(object):
-    # create a tree item
+class BranchesTreeHelper(object):
+
     @staticmethod
-    def create_item(name, children, icon, separator_char):
-        # create a dict from a list of strings which is
-        # splited by SEPARATOR_CHAR
-        def group_branches(branches):
-            result = {}
-            for item in branches:
-                tree = result
-                for part in item.split(separator_char):
-                    tree = tree.setdefault(part, {})
+    def group_branches(list_branches, separator_char):
+        """Create a dict from a list of strings
+        which is splited by SEPARATOR_CHAR"""
+        result = {}
+        for item in list_branches:
+            tree = result
+            for part in item.split(separator_char):
+                tree = tree.setdefault(part, {})
 
-            return result
+        return result
 
-        def generate_tree(grouped_branches):
+    @staticmethod
+    def create_top_level_item(name, dict_children, child_icon):
+        """Create a top level tree item and its children """
+
+        def create_children(grouped_branches):
+            """Create children items for a tree item"""
             result = []
             for key in grouped_branches.keys():
-                item = BranchTreeWidgetItem(key, icon)
-                item.addChildren(generate_tree(grouped_branches[key]))
+                item = BranchTreeWidgetItem(key, child_icon)
+                item.addChildren(create_children(grouped_branches[key]))
 
                 if item.childCount() > 0:
                     item.setIcon(0, icons.ellipsis())
@@ -353,13 +366,13 @@ class TreeHelper(object):
             return result
 
         branch = BranchTreeWidgetItem(name, icons.ellipsis())
-        branch.addChildren(generate_tree(group_branches(children)))
+        branch.addChildren(create_children(dict_children))
 
         return branch
 
-    # returns top level item from an item
     @staticmethod
     def get_root(item):
+        """Returns top level item from an item"""
         parents = [item]
         parent = item.parent()
 
@@ -369,10 +382,10 @@ class TreeHelper(object):
 
         return parents[len(parents) - 1]
 
-    # returns item full name generated by iterating over
-    # parents and joining their names with 'join_char'
     @staticmethod
     def get_full_name(item, join_char):
+        """Returns item full name generated by iterating over
+        parents and joining their names with 'join_char'"""
         parents = [item.name]
         parent = item.parent()
 
@@ -384,17 +397,17 @@ class TreeHelper(object):
 
         return result[result.find(join_char) + 1:]
 
-    # expand tree parents from item
     @staticmethod
     def expand_from_item(item):
+        """Expand tree parents from item"""
         parent = item.parent()
 
         while parent is not None:
             parent.setExpanded(True)
             parent = parent.parent()
 
-    # load expanded items from a dict
     def load_state(self, item, state):
+        """Load expanded items from a dict"""
         if len(state.keys()) > 0:
             item.setExpanded(True)
 
@@ -403,8 +416,8 @@ class TreeHelper(object):
             if child.name in state:
                 self.load_state(child, state[child.name])
 
-    # save expanded items in a dict
     def save_state(self, item):
+        """Save expanded items in a dict"""
         result = {item.name: {}}
 
         if item.isExpanded():
