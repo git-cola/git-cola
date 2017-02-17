@@ -103,7 +103,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
-        self.update_select_branch(local, self.current)
+        self.update_select_branch()
         self.load_tree_states(states)
 
     def contextMenuEvent(self, event):
@@ -205,45 +205,39 @@ class BranchesTreeWidget(standard.TreeWidget):
                 item.setExpanded(True)
                 load_item_state(item, states[item.name])
 
-    def update_select_branch(self, branch, current):
-        # get a dictionary with commits ahead an behind
-        def get_branch_status(git, current_branch):
-            result = {'ahead': 0, 'behind': 0}
-            tracked_branch = gitcmds.tracked_branch()
+    def update_select_branch(self):
+        parts = self.current.split(SEPARATOR_CHAR)
+        current_item = self.findItems(
+                            parts[len(parts) - 1],
+                            Qt.MatchExactly | Qt.MatchRecursive)
 
-            if current_branch is not None and tracked_branch is not None:
+        if len(current_item) > 0:
+            item = current_item[0]
+            tracked_branch = gitcmds.tracked_branch(self.current)
+
+            item.setIcon(0, icons.star())
+
+            if self.current is not None and tracked_branch is not None:
+                status = {'ahead': 0, 'behind': 0}
+                status_str = ""
                 args = ["--oneline"]
 
-                origin = tracked_branch + ".." + current_branch
-                log = git.log(origin, *args)
-                result['ahead'] = len(log[1].splitlines())
+                origin = tracked_branch + ".." + self.current
+                log = self.m.git.log(origin, *args)
+                status['ahead'] = len(log[1].splitlines())
 
-                origin = current_branch + ".." + tracked_branch
-                log = git.log(origin, *args)
-                result['behind'] = len(log[1].splitlines())
+                origin = self.current + ".." + tracked_branch
+                log = self.m.git.log(origin, *args)
+                status['behind'] = len(log[1].splitlines())
 
-            return result
+            if status["ahead"] > 0:
+                status_str += "\u2191" + str(status["ahead"])
 
-        for i in range(branch.childCount()):
-            item = branch.child(i)
+            if status["behind"] > 0:
+                status_str += "  \u2193" + str(status["behind"])
 
-            if self.get_full_name(item) == current:
-                item.setIcon(0, icons.star())
-                status = get_branch_status(self.m.git, current)
-                status_str = ""
-
-                if status["ahead"] > 0:
-                    status_str += "\u2191" + str(status["ahead"])
-
-                if status["behind"] > 0:
-                    status_str += "  \u2193" + str(status["behind"])
-
-                if status_str != "":
-                    item.setText(0, item.text(0) + "\t" + status_str)
-
-                break
-            elif item.childCount() > 0:
-                self.update_select_branch(item, current)
+            if status_str != "":
+                item.setText(0, item.text(0) + "\t" + status_str)
 
     # returns top level item from an item,
     # if is top level it will returns himself
