@@ -91,15 +91,21 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current = gitcmds.current_branch()
         states = self.save_tree_states()
 
-        local = self.create_branch_item(NAME_LOCAL_BRANCH,
+        local = self.tree_helper.create_item(
+                                        NAME_LOCAL_BRANCH,
                                         gitcmds.branch_list(),
-                                        icons.branch())
-        remote = self.create_branch_item(NAME_REMOTE_BRANCH,
-                                         gitcmds.branch_list(True),
-                                         icons.branch())
-        tags = self.create_branch_item(NAME_TAGS_BRANCH,
-                                       gitcmds.tag_list(),
-                                       icons.tag())
+                                        icons.branch(),
+                                        SEPARATOR_CHAR)
+        remote = self.tree_helper.create_item(
+                                        NAME_REMOTE_BRANCH,
+                                        gitcmds.branch_list(True),
+                                        icons.branch(),
+                                        SEPARATOR_CHAR)
+        tags = self.tree_helper.create_item(
+                                        NAME_TAGS_BRANCH,
+                                        gitcmds.tag_list(),
+                                        icons.tag(),
+                                        SEPARATOR_CHAR)
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -182,16 +188,27 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.tree_helper.load_state(item, states[item.name])
 
     def update_select_branch(self):
-        parts = self.current.split(SEPARATOR_CHAR)
-        current_item = self.findItems(
-                            parts[len(parts) - 1],
-                            Qt.MatchExactly | Qt.MatchRecursive)
+        def get_current_branch_item():
+            result = None
 
-        if len(current_item) > 0:
-            item = current_item[0]
-            tracked_branch = gitcmds.tracked_branch(self.current)
+            if self.current is not None:
+                parts = self.current.split(SEPARATOR_CHAR)
+                items = self.findItems(
+                    parts[len(parts) - 1],
+                    Qt.MatchExactly | Qt.MatchRecursive)
 
+                if len(items) > 0:
+                    result = items[0]
+
+            return result
+
+        item = get_current_branch_item()
+
+        if item is not None:
+            self.tree_helper.expand_from_item(item)
             item.setIcon(0, icons.star())
+
+            tracked_branch = gitcmds.tracked_branch(self.current)
 
             if self.current is not None and tracked_branch is not None:
                 status = {'ahead': 0, 'behind': 0}
@@ -206,46 +223,14 @@ class BranchesTreeWidget(standard.TreeWidget):
                 log = self.m.git.log(origin, *args)
                 status['behind'] = len(log[1].splitlines())
 
-            if status["ahead"] > 0:
-                status_str += "\u2191" + str(status["ahead"])
+                if status["ahead"] > 0:
+                    status_str += "\u2191" + str(status["ahead"])
 
-            if status["behind"] > 0:
-                status_str += "  \u2193" + str(status["behind"])
+                if status["behind"] > 0:
+                    status_str += "  \u2193" + str(status["behind"])
 
-            if status_str != "":
-                item.setText(0, item.text(0) + "\t" + status_str)
-
-    def create_branch_item(self, branch_name, children, icon):
-        # returns a nested dictionary from a list of branches names
-        # grouped by their names separated by SEPARATOR_CHAR
-        def group_branches(branches):
-            result = {}
-            for item in branches:
-                tree = result
-                for part in item.split(SEPARATOR_CHAR):
-                    tree = tree.setdefault(part, {})
-
-            return result
-
-        def generate_tree(grouped_branches):
-            result = []
-            for key in grouped_branches.keys():
-                item = BranchTreeWidgetItem(key, icon)
-                item.addChildren(generate_tree(grouped_branches[key]))
-
-                if item.childCount() > 0:
-                    item.setIcon(0, icons.ellipsis())
-
-                result.append(item)
-
-            result.sort(key=lambda x: x)
-
-            return result
-
-        branch = BranchTreeWidgetItem(branch_name, icons.ellipsis())
-        branch.addChildren(generate_tree(group_branches(children)))
-
-        return branch
+                if status_str != "":
+                    item.setText(0, item.text(0) + "\t" + status_str)
 
     def rename_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SEPARATOR_CHAR)
@@ -338,6 +323,75 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
 
 class TreeHelper(object):
+    # create a tree item
+    @staticmethod
+    def create_item(name, children, icon, separator_char):
+        # create a dict from a list of strings which is
+        # splited by SEPARATOR_CHAR
+        def group_branches(branches):
+            result = {}
+            for item in branches:
+                tree = result
+                for part in item.split(separator_char):
+                    tree = tree.setdefault(part, {})
+
+            return result
+
+        def generate_tree(grouped_branches):
+            result = []
+            for key in grouped_branches.keys():
+                item = BranchTreeWidgetItem(key, icon)
+                item.addChildren(generate_tree(grouped_branches[key]))
+
+                if item.childCount() > 0:
+                    item.setIcon(0, icons.ellipsis())
+
+                result.append(item)
+
+            result.sort(key=lambda x: x)
+
+            return result
+
+        branch = BranchTreeWidgetItem(name, icons.ellipsis())
+        branch.addChildren(generate_tree(group_branches(children)))
+
+        return branch
+
+    # returns top level item from an item
+    @staticmethod
+    def get_root(item):
+        parents = [item]
+        parent = item.parent()
+
+        while parent is not None:
+            parents.append(parent)
+            parent = parent.parent()
+
+        return parents[len(parents) - 1]
+
+    # returns item full name generated by iterating over
+    # parents and joining their names with 'join_char'
+    @staticmethod
+    def get_full_name(item, join_char):
+        parents = [item.name]
+        parent = item.parent()
+
+        while parent is not None:
+            parents.append(parent.name)
+            parent = parent.parent()
+
+        result = join_char.join(reversed(parents))
+
+        return result[result.find(join_char) + 1:]
+
+    # expand tree parents from item
+    @staticmethod
+    def expand_from_item(item):
+        parent = item.parent()
+
+        while parent is not None:
+            parent.setExpanded(True)
+            parent = parent.parent()
 
     # load expanded items from a dict
     def load_state(self, item, state):
@@ -359,28 +413,3 @@ class TreeHelper(object):
                 result[item.name].update(self.save_state(child))
 
         return result
-
-    # returns top level item from an item
-    def get_root(self, item):
-        parents = [item]
-        parent = item.parent()
-
-        while parent is not None:
-            parents.append(parent)
-            parent = parent.parent()
-
-        return parents[len(parents) - 1]
-
-    # returns item full name generated by iterating over
-    # parents and joining their names with 'join_char'
-    def get_full_name(self, item, join_char):
-        parents = [item.name]
-        parent = item.parent()
-
-        while parent is not None:
-            parents.append(parent.name)
-            parent = parent.parent()
-
-        result = join_char.join(reversed(parents))
-
-        return result[result.find(join_char) + 1:]
