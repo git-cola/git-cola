@@ -195,7 +195,31 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.tree_helper.load_state(item, states[item.name])
 
     def update_select_branch(self):
-        item = self.tree_helper.find_child(
+
+        def find_child(top_level_item, name):
+            """Find child by name recursive"""
+            def find_recursive(parent, name):
+                result = None
+
+                for i in range(parent.childCount()):
+                    child = parent.child(i)
+                    full_name = self.tree_helper.get_full_name(
+                        child,
+                        SEPARATOR_CHAR)
+
+                    if full_name == name:
+                        result = child
+                        return result
+                    else:
+                        result = find_recursive(child, name)
+                        if result is not None:
+                            return result
+
+                return result
+
+            return find_recursive(top_level_item, name)
+
+        item = find_child(
             self.topLevelItem(0),
             self.current_branch)
 
@@ -365,27 +389,6 @@ class BranchesTreeHelper(object):
         branch.addChildren(create_children(dict_children))
 
         return branch
-
-    @staticmethod
-    def find_child(top_level_item, name):
-        """Find child by name recursive"""
-        def find_recursive(parent, name):
-            result = None
-
-            for i in range(parent.childCount()):
-                child = parent.child(i)
-                if child.name == leaf_name:
-                    result = child
-                    return result
-                else:
-                    return find_recursive(child, name)
-
-            return result
-
-        parts = name.split(SEPARATOR_CHAR)
-        leaf_name = parts[len(parts) - 1]
-
-        return find_recursive(top_level_item, leaf_name)
 
     @staticmethod
     def get_root(item):
