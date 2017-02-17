@@ -333,7 +333,15 @@ class BranchesTreeWidget(standard.TreeWidget):
             Interaction.log_status(status, out, err)
 
             if status > 0:
-                qtutils.information(N_("Checkout result"), err)
+                title = N_('Error Checkout')
+                msg = (N_('"%(command)s" returned exit status %(status)d') %
+                       dict(command='Checkout', status=status))
+                details = N_('Output:\n%s') % out
+                if err:
+                    details += '\n\n'
+                    details += N_('Errors: %s') % err
+
+                qtutils.critical(title, msg, details)
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
