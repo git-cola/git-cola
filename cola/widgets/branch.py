@@ -277,11 +277,12 @@ class BranchesTreeWidget(standard.TreeWidget):
             if match:
                 remote = match.group('remote')
                 branch = match.group('branch')
-                task = AsyncPullTask(self, remote, branch)
-                self.runtask.start(
-                    task,
-                    progress=self.progress,
-                    finish=self.pull_completed)
+                self.git_helper.pull(remote, branch)
+                # task = AsyncPullTask(self, remote, branch)
+                # self.runtask.start(
+                #     task,
+                #     progress=self.progress,
+                #     finish=self.pull_completed)
 
     def pull_completed(self, task):
         status, out, err = task.result
@@ -309,7 +310,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             if remote is False:
                 self.git_helper.delete_local(full_name)
-                # cmds.do(cmds.DeleteBranch, full_name)
             else:
                 rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
                 match = rgx.match(full_name)
@@ -317,7 +317,6 @@ class BranchesTreeWidget(standard.TreeWidget):
                     remote = match.group('remote')
                     branch = match.group('branch')
                     self.git_helper.delete_remote(remote, branch)
-                    # cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
             self.m.update_remotes()
 
@@ -452,6 +451,20 @@ class BranchesTreeHelper(object):
 class GitHelper(object):
     def __init__(self, git):
         self.git = git
+
+    def pull(self, remote, branch):
+        args = {
+            'local_branch': '',
+            'no_ff': True,
+            'force': False,
+            'tags': False,
+            'rebase': False,
+            'remote_branch': branch,
+            'set_upstream': False,
+            'ff_only': False
+        }
+        status, out, err = self.git.pull(remote, **args)
+        self.show_result("Pull", status, out, err)
 
     def delete_remote(self, remote, branch):
         status, out, err = self.git.push(remote, branch, delete=True)
