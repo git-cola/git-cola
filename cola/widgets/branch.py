@@ -6,7 +6,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import cmds
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -25,13 +24,15 @@ NAME_TAGS_BRANCH = N_("Tags")
 class AsyncGitActionTask(qtutils.Task):
     """Run git action asynchronously"""
 
-    def __init__(self, parent, git_helper, action, args, kwarg, refresh=False):
+    def __init__(self, parent, git_helper, action, args, kwarg,
+                 refresh_tree, update_remotes):
         qtutils.Task.__init__(self, parent)
         self.git_helper = git_helper
         self.action = action
         self.args = args
         self.kwarg = kwarg
-        self.refresh = refresh
+        self.refresh_tree = refresh_tree
+        self.update_remotes = update_remotes
 
     def task(self):
         """Runs action and captures the result"""
@@ -56,7 +57,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     updated = Signal()
 
     def __init__(self, parent=None):
-        standard.TreeWidget.__init__(self, parent=parent)
+        standard.TreeWidget.__init__(self, parent)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -64,13 +65,14 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setRootIsDecorated(True)
         self.setColumnCount(1)
 
-        self.m = main.model()
+        model = main.model()
+
         self.tree_helper = BranchesTreeHelper()
-        self.git_helper = GitHelper(self.m.git)
+        self.git_helper = GitHelper(model.git)
         self.current_branch = None
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        self.m.add_observer(self.m.message_updated, self.updated.emit)
+        model.add_observer(model.message_updated, self.updated.emit)
 
         self.runtask = qtutils.RunTask(parent=self)
 
@@ -84,28 +86,22 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current_branch = gitcmds.current_branch()
         states = self.save_tree_state()
 
-        local_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(),
-            SEPARATOR_CHAR)
-        remote_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(True),
-            SEPARATOR_CHAR)
-        tags_dict = self.tree_helper.group_branches(
-            gitcmds.tag_list(),
-            SEPARATOR_CHAR)
+        local_dict = self.tree_helper.group_branches(gitcmds.branch_list(),
+                                                     SEPARATOR_CHAR)
+        remote_dict = self.tree_helper.group_branches(gitcmds.branch_list(True),
+                                                      SEPARATOR_CHAR)
+        tags_dict = self.tree_helper.group_branches(gitcmds.tag_list(),
+                                                    SEPARATOR_CHAR)
 
-        local = self.tree_helper.create_top_level_item(
-            NAME_LOCAL_BRANCH,
-            local_dict,
-            icons.branch())
-        remote = self.tree_helper.create_top_level_item(
-            NAME_REMOTE_BRANCH,
-            remote_dict,
-            icons.branch())
-        tags = self.tree_helper.create_top_level_item(
-            NAME_TAGS_BRANCH,
-            tags_dict,
-            icons.tag())
+        local = self.tree_helper.create_top_level_item(NAME_LOCAL_BRANCH,
+                                                       local_dict,
+                                                       icons.branch())
+        remote = self.tree_helper.create_top_level_item(NAME_REMOTE_BRANCH,
+                                                        remote_dict,
+                                                        icons.branch())
+        tags = self.tree_helper.create_top_level_item(NAME_TAGS_BRANCH,
+                                                      tags_dict,
+                                                      icons.tag())
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -228,11 +224,11 @@ class BranchesTreeWidget(standard.TreeWidget):
                 args = ["--oneline"]
 
                 origin = tracked_branch + ".." + self.current_branch
-                log = self.m.git.log(origin, *args)
+                log = self.git_helper.log(origin, args)
                 status['ahead'] = len(log[1].splitlines())
 
                 origin = self.current_branch + ".." + tracked_branch
-                log = self.m.git.log(origin, *args)
+                log = self.git_helper.log(origin, args)
                 status['behind'] = len(log[1].splitlines())
 
                 if status["ahead"] > 0:
@@ -244,8 +240,13 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if status_str != "":
                     item.setText(0, item.text(0) + "\t" + status_str)
 
-    def git_action_async(self, action, args, kwarg={}):
-        task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg)
+    def git_action_async(self, action, args, kwarg=None,
+                         refresh_tree=False, update_remotes=False):
+        if kwarg is None:
+            kwarg = {}
+
+        task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg,
+                                  refresh_tree, update_remotes)
         progress = standard.ProgressDialog(
             N_('Executing action %s') % action,
             N_('Updating'), self)
@@ -258,8 +259,13 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_completed(self, task):
         status, out, err = task.result
         self.git_helper.show_result(task.action, status, out, err)
-        if task.refresh:
+
+        if task.refresh_tree:
             self.refresh()
+
+        if task.update_remotes:
+            model = main.model()
+            model.update_remotes()
 
     def rename_action(self):
         branch = self.tree_helper.get_full_name(
@@ -270,7 +276,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_("New branch name"),
             branch)
         if new_branch[1] is True and new_branch[0]:
-            self.git_action_async('rename', [branch, new_branch[0]])
+            self.git_action_async('rename', [branch, new_branch[0]],
+                                  refresh_tree=True)
 
     def pull_action(self):
         branch = self.tree_helper.get_full_name(
@@ -285,7 +292,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             if match:
                 remote = match.group('remote')
                 branch_name = match.group('branch')
-                self.git_action_async('pull', [remote, branch_name], {}, True)
+                self.git_action_async('pull', [remote, branch_name],
+                                      refresh_tree=True)
 
     def delete_action(self):
         title = N_('Delete Branch')
@@ -293,11 +301,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         info = N_('The branch will be no longer available.')
         ok_btn = N_('Delete Branch')
 
-        branch = self.tree_helper.get_full_name(
-            self.selected_item(),
-            SEPARATOR_CHAR)
-        if branch != self.current_branch and qtutils.confirm(
-                title, question, info, ok_btn):
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
+
+        if branch != self.current_branch and qtutils.confirm(title, question,
+                                                             info, ok_btn):
             remote = False
             root = self.tree_helper.get_root(self.selected_item())
             if NAME_REMOTE_BRANCH == root.name:
@@ -311,9 +319,9 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if match:
                     remote = match.group('remote')
                     branch_name = match.group('branch')
-                    self.git_action_async('delete_remote', [remote, branch_name])
-
-            self.m.update_remotes()
+                    self.git_action_async('delete_remote',
+                                          [remote, branch_name],
+                                          update_remotes=True)
 
     def merge_action(self):
         branch = self.tree_helper.get_full_name(
@@ -321,12 +329,11 @@ class BranchesTreeWidget(standard.TreeWidget):
             SEPARATOR_CHAR)
 
         if branch != self.current_branch:
-            self.git_action_async('merge', [branch])
+            self.git_action_async('merge', [branch], refresh_tree=True)
 
     def checkout_action(self):
-        branch = self.tree_helper.get_full_name(
-            self.selected_item(),
-            SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
 
         if branch != self.current_branch:
             self.git_action_async('checkout', [branch])
@@ -344,7 +351,8 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     # fix key == Qt.Key_Left and index.parent().isValid() error throw
     # in standard.py when navigating with keyboard and press left key
-    def rowCount(self):
+    @staticmethod
+    def rowCount():
         return 1
 
 
@@ -446,6 +454,9 @@ class BranchesTreeHelper(object):
 class GitHelper(object):
     def __init__(self, git):
         self.git = git
+
+    def log(self, origin, args):
+        return self.git.log(origin, *args)
 
     def pull(self, remote, branch):
         return self.git.pull(
