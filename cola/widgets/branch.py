@@ -118,14 +118,11 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             # all branches except current item
             if full_name != self.current_branch:
-                menu.addAction(qtutils.add_action(
-                    self,
-                    N_('Checkout'),
-                    self.checkout_action))
-                merge_menu_action = qtutils.add_action(
-                    self,
-                    N_('Merge in current branch'),
-                    self.merge_action)
+                menu.addAction(qtutils.add_action(self, N_('Checkout'),
+                                                  self.checkout_action))
+                merge_menu_action = qtutils.add_action(self,
+                                               N_('Merge in current branch'),
+                                               self.merge_action)
                 merge_menu_action.setIcon(icons.merge())
 
                 menu.addAction(merge_menu_action)
@@ -136,18 +133,16 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if NAME_LOCAL_BRANCH == root.name:
                     remote = gitcmds.tracked_branch(full_name)
                     if remote is not None:
-                        pull_menu_action = qtutils.add_action(
-                            self,
-                            N_("Pull from origin"),
-                            self.pull_action)
+                        pull_menu_action = qtutils.add_action(self,
+                                                      N_("Pull from origin"),
+                                                      self.pull_action)
                         pull_menu_action.setIcon(icons.pull())
                         menu.addSeparator()
                         menu.addAction(pull_menu_action)
 
-                    rename_menu_action = qtutils.add_action(
-                        self,
-                        N_("Rename branch"),
-                        self.rename_action)
+                    rename_menu_action = qtutils.add_action(self,
+                                                            N_("Rename branch"),
+                                                            self.rename_action)
                     rename_menu_action.setIcon(icons.edit())
 
                     menu.addSeparator()
@@ -159,10 +154,8 @@ class BranchesTreeWidget(standard.TreeWidget):
                     if NAME_REMOTE_BRANCH == root.name:
                         delete_label = N_("Delete remote branch")
 
-                    delete_menu_action = qtutils.add_action(
-                        self,
-                        delete_label,
-                        self.delete_action)
+                    delete_menu_action = qtutils.add_action(self, delete_label,
+                                                            self.delete_action)
                     delete_menu_action.setIcon(icons.discard())
 
                     menu.addSeparator()
@@ -192,9 +185,8 @@ class BranchesTreeWidget(standard.TreeWidget):
 
                 for i in range(parent.childCount()):
                     child = parent.child(i)
-                    full_name = self.tree_helper.get_full_name(
-                        child,
-                        SEPARATOR_CHAR)
+                    full_name = self.tree_helper.get_full_name(child,
+                                                               SEPARATOR_CHAR)
 
                     if full_name == child_name:
                         result = child
@@ -240,21 +232,18 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if status_str != "":
                     item.setText(0, item.text(0) + "\t" + status_str)
 
-    def git_action_async(self, action, args, kwarg=None,
-                         refresh_tree=False, update_remotes=False):
+    def git_action_async(self, action, args, kwarg=None, refresh_tree=False,
+                         update_remotes=False):
         if kwarg is None:
             kwarg = {}
 
         task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg,
                                   refresh_tree, update_remotes)
-        progress = standard.ProgressDialog(
-            N_('Executing action %s') % action,
-            N_('Updating'), self)
+        progress = standard.ProgressDialog(N_('Executing action %s') % action,
+                                           N_('Updating'), self)
 
-        self.runtask.start(
-            task,
-            progress=progress,
-            finish=self.git_action_completed)
+        self.runtask.start(task, progress=progress,
+                           finish=self.git_action_completed)
 
     def git_action_completed(self, task):
         status, out, err = task.result
@@ -268,21 +257,17 @@ class BranchesTreeWidget(standard.TreeWidget):
             model.update_remotes()
 
     def rename_action(self):
-        branch = self.tree_helper.get_full_name(
-            self.selected_item(),
-            SEPARATOR_CHAR)
-        new_branch = qtutils.prompt(
-            N_("Rename branch"),
-            N_("New branch name"),
-            branch)
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
+        new_branch = qtutils.prompt(N_("Rename branch"), N_("New branch name"),
+                                    branch)
         if new_branch[1] is True and new_branch[0]:
             self.git_action_async('rename', [branch, new_branch[0]],
                                   refresh_tree=True)
 
     def pull_action(self):
-        branch = self.tree_helper.get_full_name(
-            self.selected_item(),
-            SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
         remote_branch = gitcmds.tracked_branch(branch)
 
         if remote_branch is not None:
