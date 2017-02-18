@@ -465,7 +465,7 @@ class GitHelper(object):
         self.git = git
 
     def merge(self, branch):
-        status, out, err = self.model.git.merge(branch,
+        status, out, err = self.git.merge(branch,
                                                 gpg_sign=False,
                                                 no_ff=False,
                                                 no_commit=True,
