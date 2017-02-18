@@ -132,17 +132,21 @@ class BranchesTreeWidget(standard.TreeWidget):
 
                     remote = gitcmds.tracked_branch(full_name)
                     if remote is not None:
-                        push_menu_action = qtutils.add_action(
-                            self, N_('Push to origin'), self.push_action)
-                        push_menu_action.setIcon(icons.push())
                         menu.addSeparator()
-                        menu.addAction(push_menu_action)
+
+                        fetch_menu_action = qtutils.add_action(
+                            self, N_('Fetch from origin'), self.fetch_action)
+                        menu.addAction(fetch_menu_action)
 
                         pull_menu_action = qtutils.add_action(
                             self, N_("Pull from origin"), self.pull_action)
                         pull_menu_action.setIcon(icons.pull())
-                        menu.addSeparator()
                         menu.addAction(pull_menu_action)
+
+                        push_menu_action = qtutils.add_action(
+                            self, N_('Push to origin'), self.push_action)
+                        push_menu_action.setIcon(icons.push())
+                        menu.addAction(push_menu_action)
 
                     rename_menu_action = qtutils.add_action(self,
                                                             N_("Rename branch"),
@@ -259,6 +263,20 @@ class BranchesTreeWidget(standard.TreeWidget):
         if task.update_remotes:
             model = main.model()
             model.update_remotes()
+
+    def fetch_action(self):
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
+        remote_branch = gitcmds.tracked_branch(branch)
+
+        if remote_branch is not None:
+            rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+            match = rgx.match(remote_branch)
+
+            if match:
+                remote = match.group('remote')
+                branch_name = match.group('branch')
+                self.git_action_async('fetch', [remote, branch_name])
 
     def push_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(),
@@ -460,6 +478,9 @@ class GitHelper(object):
 
     def log(self, origin, args):
         return self.git.log(origin, *args)
+
+    def fetch(self, remote, branch):
+        return self.git.fetch(remote, branch, verbose=True)
 
     def push(self, remote, branch):
         return self.git.push(remote, branch, verbose=True)
