@@ -200,7 +200,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         def find_child(top_level_item, name):
             """Find child by name recursive"""
-            def find_recursive(parent, name):
+            def find_recursive(parent, child_name):
                 result = None
 
                 for i in range(parent.childCount()):
@@ -209,11 +209,11 @@ class BranchesTreeWidget(standard.TreeWidget):
                         child,
                         SEPARATOR_CHAR)
 
-                    if full_name == name:
+                    if full_name == child_name:
                         result = child
                         return result
                     else:
-                        result = find_recursive(child, name)
+                        result = find_recursive(child, child_name)
                         if result is not None:
                             return result
 
@@ -263,7 +263,6 @@ class BranchesTreeWidget(standard.TreeWidget):
             branch)
         if new_branch[1] is True and new_branch[0]:
             self.git_helper.rename(branch, new_branch[0])
-            # cmds.do(cmds.RenameBranch, branch, new_branch[0])
 
     def pull_action(self):
         full_name = self.tree_helper.get_full_name(
@@ -309,14 +308,18 @@ class BranchesTreeWidget(standard.TreeWidget):
                 remote = True
 
             if remote is False:
-                cmds.do(cmds.DeleteBranch, full_name)
+                self.git_helper.delete_local(full_name)
+                # cmds.do(cmds.DeleteBranch, full_name)
             else:
                 rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
                 match = rgx.match(full_name)
                 if match:
                     remote = match.group('remote')
                     branch = match.group('branch')
-                    cmds.do(cmds.DeleteRemoteBranch, remote, branch)
+                    self.git_helper.delete_remote(remote, branch)
+                    # cmds.do(cmds.DeleteRemoteBranch, remote, branch)
+
+            self.m.update_remotes()
 
     def merge_action(self):
         full_name = self.tree_helper.get_full_name(
@@ -325,7 +328,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         if full_name != self.current_branch:
             self.git_helper.merge(full_name)
-            # cmds.do(cmds.Merge, full_name, True, False, False, False)
 
     def checkout_action(self):
         full_name = self.tree_helper.get_full_name(
@@ -334,19 +336,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         if full_name != self.current_branch:
             self.git_helper.checkout(full_name)
-            # status, out, err = self.m.git.checkout(full_name)
-            # Interaction.log_status(status, out, err)
-            #
-            # if status > 0:
-            #     title = N_('Error Checkout')
-            #     msg = (N_('"%(command)s" returned exit status %(status)d') %
-            #            dict(command='Checkout', status=status))
-            #     details = N_('Output:\n%s') % out
-            #     if err:
-            #         details += '\n\n'
-            #         details += N_('Errors: %s') % err
-            #
-            #     qtutils.critical(title, msg, details)
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -464,23 +453,33 @@ class GitHelper(object):
     def __init__(self, git):
         self.git = git
 
+    def delete_remote(self, remote, branch):
+        status, out, err = self.git.push(remote, branch, delete=True)
+        self.show_result("Delete remote", status, out, err)
+
+    def delete_local(self, branch):
+        status, out, err = self.git.branch(branch, D=True)
+        self.show_result("Delete local", status, out, err)
+
     def merge(self, branch):
-        status, out, err = self.git.merge(branch,
-                                                gpg_sign=False,
-                                                no_ff=False,
-                                                no_commit=True,
-                                                squash=False)
-        self.showResult("Merge", status, out, err)
+        status, out, err = self.git.merge(
+            branch,
+            gpg_sign=False,
+            no_ff=False,
+            no_commit=True,
+            squash=False)
+        self.show_result("Merge", status, out, err)
 
     def rename(self, branch, new_branch):
         status, out, err = self.git.branch(branch, new_branch, M=True)
-        self.showResult("Rename", status, out, err)
+        self.show_result("Rename", status, out, err)
 
     def checkout(self, branch):
         status, out, err = self.git.checkout(branch)
-        self.showResult("Checkout", status, out, err)
+        self.show_result("Checkout", status, out, err)
 
-    def showResult(self, command, status, out, err):
+    @staticmethod
+    def show_result(command, status, out, err):
         Interaction.log_status(status, out, err)
 
         if status > 0:
