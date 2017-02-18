@@ -72,6 +72,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.m = main.model()
         self.tree_helper = BranchesTreeHelper()
+        self.git_helper = GitHelper(self.m.git)
         self.current_branch = None
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
@@ -88,6 +89,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         return self
 
     def refresh(self):
+        print("refresh\n")
         self.current_branch = gitcmds.current_branch()
         states = self.save_tree_state()
 
@@ -260,7 +262,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_("New branch name"),
             branch)
         if new_branch[1] is True and new_branch[0]:
-            cmds.do(cmds.RenameBranch, branch, new_branch[0])
+            self.git_helper.rename(branch, new_branch[0])
+            # cmds.do(cmds.RenameBranch, branch, new_branch[0])
 
     def pull_action(self):
         full_name = self.tree_helper.get_full_name(
@@ -321,7 +324,8 @@ class BranchesTreeWidget(standard.TreeWidget):
             SEPARATOR_CHAR)
 
         if full_name != self.current_branch:
-            cmds.do(cmds.Merge, full_name, True, False, False, False)
+            self.git_helper.merge(full_name)
+            # cmds.do(cmds.Merge, full_name, True, False, False, False)
 
     def checkout_action(self):
         full_name = self.tree_helper.get_full_name(
@@ -329,19 +333,20 @@ class BranchesTreeWidget(standard.TreeWidget):
             SEPARATOR_CHAR)
 
         if full_name != self.current_branch:
-            status, out, err = self.m.git.checkout(full_name)
-            Interaction.log_status(status, out, err)
-
-            if status > 0:
-                title = N_('Error Checkout')
-                msg = (N_('"%(command)s" returned exit status %(status)d') %
-                       dict(command='Checkout', status=status))
-                details = N_('Output:\n%s') % out
-                if err:
-                    details += '\n\n'
-                    details += N_('Errors: %s') % err
-
-                qtutils.critical(title, msg, details)
+            self.git_helper.checkout(full_name)
+            # status, out, err = self.m.git.checkout(full_name)
+            # Interaction.log_status(status, out, err)
+            #
+            # if status > 0:
+            #     title = N_('Error Checkout')
+            #     msg = (N_('"%(command)s" returned exit status %(status)d') %
+            #            dict(command='Checkout', status=status))
+            #     details = N_('Output:\n%s') % out
+            #     if err:
+            #         details += '\n\n'
+            #         details += N_('Errors: %s') % err
+            #
+            #     qtutils.critical(title, msg, details)
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -453,3 +458,38 @@ class BranchesTreeHelper(object):
                 result[item.name].update(self.save_state(child))
 
         return result
+
+
+class GitHelper(object):
+    def __init__(self, git):
+        self.git = git
+
+    def merge(self, branch):
+        status, out, err = self.model.git.merge(branch,
+                                                gpg_sign=False,
+                                                no_ff=False,
+                                                no_commit=True,
+                                                squash=False)
+        self.showResult("Merge", status, out, err)
+
+    def rename(self, branch, new_branch):
+        status, out, err = self.git.branch(branch, new_branch, M=True)
+        self.showResult("Rename", status, out, err)
+
+    def checkout(self, branch):
+        status, out, err = self.git.checkout(branch)
+        self.showResult("Checkout", status, out, err)
+
+    def showResult(self, command, status, out, err):
+        Interaction.log_status(status, out, err)
+
+        if status > 0:
+            title = N_('Error %s') % command
+            msg = (N_('"%(command)s" returned exit status %(status)d') %
+                   dict(command=command, status=status))
+            details = N_('Output:\n%s') % out
+            if err:
+                details += '\n\n'
+                details += N_('Errors: %s') % err
+
+            qtutils.critical(title, msg, details)
