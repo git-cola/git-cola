@@ -82,7 +82,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         return self
 
     def refresh(self):
-        print("refresh\n")
         self.current_branch = gitcmds.current_branch()
         states = self.save_tree_state()
 
