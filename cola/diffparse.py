@@ -87,6 +87,7 @@ class DiffLines(object):
         self.max_old = -1
         self.max_new = -1
         self.valid = True
+        self.merge = False
 
     def digits(self):
         return digits(max(self.max_old, self.max_new))
@@ -94,18 +95,26 @@ class DiffLines(object):
     def parse(self, diff_text):
         self.max_old = -1
         self.max_new = -1
+        self.max_base = -1
 
         lines = []
-        old_start = 0
+
         old_count = 0
-        new_start = 0
-        new_count = 0
         old_cur = 0
+        old_start = 0
+
+        new_count = 0
         new_cur = 0
+        new_start = 0
+
+        base_count = 0
+        base_cur = 0
+        base_start = 0
 
         INITIAL_STATE = 0
         DIFF_STATE = 1
         state = INITIAL_STATE
+        self.merge = merge = False
 
         for text in diff_text.splitlines():
             if text.startswith('@@ -'):
@@ -120,21 +129,65 @@ class DiffLines(object):
                     self.max_new = max(new_start + new_count, self.max_new)
                     lines.append((self.DASH, self.DASH))
                     continue
+            if text.startswith('@@@ -'):
+                self.merge = merge = True
+                parts = text.split(' ', 5)
+                if parts[0] == '@@@' and parts[4] == '@@@':
+                    state = DIFF_STATE
+                    old_start, old_count = _parse_range_str(parts[1][1:])
+                    base_start, base_count = _parse_range_str(parts[2][1:])
+                    new_start, new_count = _parse_range_str(parts[3][1:])
+
+                    old_cur = old_start
+                    new_cur = new_start
+                    base_cur = base_start
+
+                    self.max_old = max(old_start + old_count, self.max_old)
+                    self.max_new = max(new_start + new_count, self.max_new)
+                    self.max_base = max(base_start + base_count, self.max_base)
+
+                    lines.append((self.DASH, self.DASH, self.DASH))
+                    continue
             if state == INITIAL_STATE:
-                lines.append((self.EMPTY, self.EMPTY))
-            elif text.startswith('-'):
+                if merge:
+                    lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
+                else:
+                    lines.append((self.EMPTY, self.EMPTY))
+            elif not merge and text.startswith('-'):
                 lines.append((old_cur, self.EMPTY))
                 old_cur += 1
-            elif text.startswith('+'):
+            elif merge and text.startswith('- '):
+                lines.append((self.EMPTY, base_cur, self.EMPTY))
+                base_cur += 1
+            elif merge and text.startswith(' -'):
+                lines.append((self.EMPTY, base_cur, self.EMPTY))
+                base_cur += 1
+            elif not merge and text.startswith('+'):
                 lines.append((self.EMPTY, new_cur))
                 new_cur += 1
-            elif text.startswith(' '):
+            elif merge and text.startswith('++'):
+                lines.append((self.EMPTY, self.EMPTY, new_cur))
+                new_cur += 1
+            elif merge and text.startswith('+ '):
+                lines.append((self.EMPTY, base_cur, new_cur))
+                base_cur += 1
+                new_cur += 1
+            elif merge and text.startswith(' +'):
+                lines.append((old_cur, self.EMPTY, new_cur))
+                old_cur += 1
+                new_cur += 1
+            elif not merge and text.startswith(' '):
                 lines.append((old_cur, new_cur))
-                old_cur += 1
                 new_cur += 1
+                old_cur += 1
+            elif merge and text.startswith('  '):
+                lines.append((old_cur, base_cur, new_cur))
+                base_cur += 1
+                new_cur += 1
+                old_cur += 1
             elif not text:
-                old_cur += 1
                 new_cur += 1
+                old_cur += 1
             else:
                 self.valid = False
                 continue

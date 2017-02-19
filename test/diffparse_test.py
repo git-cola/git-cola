@@ -235,6 +235,36 @@ class DiffLinesTestCase(unittest.TestCase):
 
         self.assertEqual(parser.digits(), 2)
 
+    def test_diff_line_for_merge(self):
+        """Verify the basic line counts"""
+        text = """@@@ -1,23 -1,33 +1,75 @@@
+++<<<<<<< upstream
+ +
+ +Ok
+"""
+        parser = self.parser
+        lines = parser.parse(text)
+        self.assertEqual(len(lines), 4)
+        self.assertEqual(len(lines[0]), 3)
+        self.assertEqual(len(lines[1]), 3)
+        self.assertEqual(len(lines[2]), 3)
+        self.assertEqual(len(lines[3]), 3)
+
+        self.assertEqual(lines[0][0], parser.DASH)
+        self.assertEqual(lines[0][1], parser.DASH)
+        self.assertEqual(lines[0][2], parser.DASH)
+
+        self.assertEqual(lines[1][0], parser.EMPTY)
+        self.assertEqual(lines[1][1], parser.EMPTY)
+        self.assertEqual(lines[1][2], 1)
+
+        self.assertEqual(lines[2][0], 1)
+        self.assertEqual(lines[2][1], parser.EMPTY)
+        self.assertEqual(lines[2][2], 2)
+
+        self.assertEqual(lines[3][0], 2)
+        self.assertEqual(lines[3][1], parser.EMPTY)
+        self.assertEqual(lines[3][2], 3)
 
 class FormatDiffLinesTestCase(unittest.TestCase):
 
