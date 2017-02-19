@@ -965,20 +965,30 @@ class RunTask(QtCore.QObject):
 
 # Syntax highlighting
 
+def rgb(r, g, b):
+    color = QtGui.QColor()
+    color.setRgb(r, g, b)
+    return color
+
+
 def rgba(r, g, b, a=255):
-    c = QtGui.QColor()
-    c.setRgb(r, g, b)
-    c.setAlpha(a)
-    return c
+    color = rgb(r, g, b)
+    color.setAlpha(a)
+    return color
 
 
 def RGB(args):
-    return rgba(*args)
+    return rgb(*args)
 
 
 def rgb_css(color):
     """Convert a QColor into an rgb(int, int, int) CSS string"""
     return 'rgb(%d, %d, %d)' % (color.red(), color.green(), color.blue())
+
+
+def rgb_hex(color):
+    """Convert a QColor into a hex aabbcc string"""
+    return '%x%x%x' % (color.red(), color.green(), color.blue())
 
 
 def make_format(fg=None, bg=None, bold=False):
