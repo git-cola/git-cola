@@ -82,6 +82,14 @@ Usability, bells and whistles
 
 Fixes
 =====
+* `git cola`'s spellchecker now supports the new `dict-common` filesystem
+  layout, and prefers the `/usr/share/dict/cracklib-small` file over the
+  `/usr/share/dict/words` provided on older distributions.
+  This makes the spellchecker compatible with Arch, which does not provide
+  a `words` symlink like Debian.
+
+  https://github.com/git-cola/git-cola/issues/663
+
 * Properly handle the case where an existing file is untracked using
   the File Browser.
 
