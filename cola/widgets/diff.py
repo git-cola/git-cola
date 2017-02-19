@@ -56,11 +56,16 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.enabled = True
         self.is_commit = is_commit
 
+        QPalette = QtGui.QPalette
         cfg = gitcfg.current()
+        palette = QPalette()
+        disabled = palette.color(QPalette.Disabled, QPalette.Text)
+        header = qtutils.rgb_hex(disabled)
+
         self.color_text = RGB(cfg.color('text', '030303'))
         self.color_add = RGB(cfg.color('add', 'd2ffe4'))
         self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
-        self.color_header = RGB(cfg.color('header', 'bbbbbb'))
+        self.color_header = RGB(cfg.color('header', header))
 
         self.diff_header_fmt = make_format(fg=self.color_header)
         self.bold_diff_header_fmt = make_format(fg=self.color_header, bold=True)

@@ -986,6 +986,11 @@ def rgb_css(color):
     return 'rgb(%d, %d, %d)' % (color.red(), color.green(), color.blue())
 
 
+def rgb_hex(color):
+    """Convert a QColor into a hex aabbcc string"""
+    return '%x%x%x' % (color.red(), color.green(), color.blue())
+
+
 def make_format(fg=None, bg=None, bold=False):
     fmt = QtGui.QTextCharFormat()
     if fg:
