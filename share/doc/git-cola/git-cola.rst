@@ -357,6 +357,74 @@ To override the default path to this hook set the
 hook script.  This is useful if you would like to use a common hook
 across all repositories.
 
+BRANCHES
+========
+
+The `Branches` tool provides a visual tree to navigate through the branches.
+The tree has three main nodes `Local Branch`, `Remote Branch` and `Tags`.
+Branches are grouped by their name divided by the character '/'.Ex::
+
+    branch/feature/foo
+    branch/feature/bar
+    branch/doe
+
+Will produce::
+
+    branch
+        - doe
+        + feature
+            - bar
+            - foo
+
+Current branch will display a star icon. If current branch has commits
+ahead/behind it will display an up/down arrow with it's number.
+
+Actions
+-------
+Various actions are available through the right-click context menu.
+Different actions are available depending of selected branch status.
+
+Checkout
+~~~~~~~~
+The checkout action runs
+`git checkout [<branchname>] <https://git-scm.com/docs/git-checkout>`_.
+
+Merge in current branch
+~~~~~~~~~~~~~~~~~~~~~~~
+The merge action runs
+`git merge --no-ff --no-commit [<branchname>] <https://git-scm.com/docs/git-merge>`_.
+
+Fetch
+~~~~~
+The fetch action runs
+`git fetch [<remote>] [<branchname>] <https://git-scm.com/docs/git-fetch>`_.
+
+Pull
+~~~~
+The pull action runs
+`git pull --no-ff [<remote>] [<branchname>] <https://git-scm.com/docs/git-pull>`_.
+
+Push
+~~~~
+The push action runs
+`git push [<remote>] [<branchname>] <https://git-scm.com/docs/git-push>`_.
+
+Rename Branch
+~~~~~~~~~~~~~
+The rename branch action runs
+`git branch -M [<branchname>] <https://git-scm.com/docs/git-push>`_.
+
+Delete Branch
+~~~~~~~~~~~~~
+The delete branch branch action runs
+`git branch -D [<branchname>] <https://git-scm.com/docs/git-branch>`_.
+
+Delete Remote Branch
+~~~~~~~~~~~~~
+The remote branch action runs
+`git push --delete [<remote>] [<branchname>] <https://git-scm.com/docs/git-push>`_.
+
+
 APPLY PATCHES
 =============
 Use the ``File -> Apply Patches`` menu item to begin applying patches.
