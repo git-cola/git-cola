@@ -496,8 +496,7 @@ class GitHelper(object):
         return self.git.branch(branch, D=True)
 
     def merge(self, branch):
-        return self.git.merge(branch, gpg_sign=False, no_ff=False,
-                              no_commit=True, squash=False)
+        return self.git.merge(branch, no_ff=False, no_commit=True)
 
     def rename(self, branch, new_branch):
         return self.git.branch(branch, new_branch, M=True)
