@@ -965,15 +965,20 @@ class RunTask(QtCore.QObject):
 
 # Syntax highlighting
 
+def rgb(r, g, b):
+    color = QtGui.QColor()
+    color.setRgb(r, g, b)
+    return color
+
+
 def rgba(r, g, b, a=255):
-    c = QtGui.QColor()
-    c.setRgb(r, g, b)
-    c.setAlpha(a)
-    return c
+    color = rgb(r, g, b)
+    color.setAlpha(a)
+    return color
 
 
 def RGB(args):
-    return rgba(*args)
+    return rgb(*args)
 
 
 def rgb_css(color):
