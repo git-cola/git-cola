@@ -10,6 +10,7 @@ _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
 
 class _DiffHunk(object):
+
     def __init__(self, old_start, old_count, new_start, new_count, heading,
                  first_line_idx, lines):
         self.old_start = old_start
@@ -163,6 +164,12 @@ class FormatDigits(object):
         old_str = self._format(old)
         new_str = self._format(new)
         return ('%s %s' % (old_str, new_str))
+
+    def merge_value(self, old, base, new):
+        old_str = self._format(old)
+        base_str = self._format(base)
+        new_str = self._format(new)
+        return ('%s %s %s' % (old_str, base_str, new_str))
 
     def number(self, value):
         return (self.fmt % value)
