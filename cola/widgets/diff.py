@@ -209,12 +209,19 @@ class DiffLineNumbers(TextDecorator):
         if not self.isVisible():
             return 0
         parser = self.parser
+
+        if parser.merge:
+            columns = 3
+            extra = 3  # one space in-between, one space after
+        else:
+            columns = 2
+            extra = 2  # one space in-between, one space after
+
         if parser.valid:
-            digits = parser.digits() * 2
+            digits = parser.digits() * columns
         else:
             digits = 4
 
-        extra = 2  # one space in-between, one space after
         return defs.margin + (self._char_width * (digits + extra))
 
     def set_highlighted(self, line_number):
@@ -265,8 +272,13 @@ class DiffLineNumbers(TextDecorator):
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), window)
 
-            a, b = lines[block_number]
-            text = fmt.value(a, b)
+            line = lines[block_number]
+            if len(line) == 2:
+                a, b = line
+                text = fmt.value(a, b)
+            elif len(line) == 3:
+                old, base, new = line
+                text = fmt.merge_value(old, base, new)
 
             painter.drawText(rect.x(), rect.y(),
                              self.width() - (defs.margin * 2), rect.height(),
