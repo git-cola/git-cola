@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, absolute_import, unicode_literals
 import collections
+import os
 import re
 import sys
 
@@ -16,6 +17,7 @@ from qtpy.QtWidgets import QAction
 from qtpy.QtWidgets import QApplication
 
 from .. import qtutils
+from .. import gitcfg
 from ..i18n import N_
 from .text import HintedTextEdit
 
@@ -65,6 +67,7 @@ def correct(word, words):
 
 
 class NorvigSpellCheck(object):
+
     def __init__(self):
         self.words = collections.defaultdict(lambda: 1)
         self.extra_words = set()
@@ -89,8 +92,28 @@ class NorvigSpellCheck(object):
         return word.replace('.', '') in self.words
 
     def read(self):
-        for (path, title) in (('/usr/share/dict/words', True),
-                              ('/usr/share/dict/propernames', False)):
+        """Read dictionary words"""
+        paths = []
+
+        words = '/usr/share/dict/words'
+        cracklib = '/usr/share/dict/cracklib-small'
+        propernames = '/usr/share/dict/propernames'
+
+        cfg = gitcfg.current()
+        cfg_dictionary = cfg.get('cola.dictionary', None)
+
+        if os.path.exists(cracklib):
+            paths.append((cracklib, True))
+        else:
+            paths.append((words, True))
+
+        if os.path.exists(propernames):
+            paths.append((propernames, False))
+
+        if cfg_dictionary and os.path.exists(cfg_dictionary):
+            paths.append((cfg_dictionary, False))
+
+        for (path, title) in paths:
             try:
                 with open(path, 'r') as f:
                     for word in f:
@@ -99,6 +122,7 @@ class NorvigSpellCheck(object):
                             yield word.rstrip().title()
             except IOError:
                 pass
+
         raise StopIteration
 
 
