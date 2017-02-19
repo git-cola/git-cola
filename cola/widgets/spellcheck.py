@@ -17,6 +17,7 @@ from qtpy.QtWidgets import QAction
 from qtpy.QtWidgets import QApplication
 
 from .. import qtutils
+from .. import gitcfg
 from ..i18n import N_
 from .text import HintedTextEdit
 
@@ -98,6 +99,9 @@ class NorvigSpellCheck(object):
         cracklib = '/usr/share/dict/cracklib-small'
         propernames = '/usr/share/dict/propernames'
 
+        cfg = gitcfg.current()
+        cfg_dictionary = cfg.get('cola.dictionary', None)
+
         if os.path.exists(cracklib):
             paths.append((cracklib, True))
         else:
@@ -105,6 +109,9 @@ class NorvigSpellCheck(object):
 
         if os.path.exists(propernames):
             paths.append((propernames, False))
+
+        if cfg_dictionary and os.path.exists(cfg_dictionary):
+            paths.append((cfg_dictionary, False))
 
         for (path, title) in paths:
             try:
