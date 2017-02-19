@@ -16,8 +16,8 @@ from ..widgets import defs
 from ..widgets import standard
 
 SEPARATOR_CHAR = '/'
-NAME_LOCAL_BRANCH = N_("Local branch")
-NAME_REMOTE_BRANCH = N_("Remote")
+NAME_LOCAL_BRANCH = N_("Local Branch")
+NAME_REMOTE_BRANCH = N_("Remote Branch")
 NAME_TAGS_BRANCH = N_("Tags")
 
 
@@ -135,21 +135,21 @@ class BranchesTreeWidget(standard.TreeWidget):
                         menu.addSeparator()
 
                         fetch_menu_action = qtutils.add_action(
-                            self, N_('Fetch from origin'), self.fetch_action)
+                            self, N_('Fetch'), self.fetch_action)
                         menu.addAction(fetch_menu_action)
 
                         pull_menu_action = qtutils.add_action(
-                            self, N_("Pull from origin"), self.pull_action)
+                            self, N_("Pull"), self.pull_action)
                         pull_menu_action.setIcon(icons.pull())
                         menu.addAction(pull_menu_action)
 
                         push_menu_action = qtutils.add_action(
-                            self, N_('Push to origin'), self.push_action)
+                            self, N_('Push'), self.push_action)
                         push_menu_action.setIcon(icons.push())
                         menu.addAction(push_menu_action)
 
                     rename_menu_action = qtutils.add_action(self,
-                                                            N_("Rename branch"),
+                                                            N_("Rename Branch"),
                                                             self.rename_action)
                     rename_menu_action.setIcon(icons.edit())
 
@@ -158,9 +158,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
                 # not current item
                 if full_name != self.current_branch:
-                    delete_label = N_("Delete branch")
+                    delete_label = N_("Delete Branch")
                     if NAME_REMOTE_BRANCH == root.name:
-                        delete_label = N_("Delete remote branch")
+                        delete_label = N_("Delete Remote Branch")
 
                     delete_menu_action = qtutils.add_action(self, delete_label,
                                                             self.delete_action)
@@ -295,7 +295,8 @@ class BranchesTreeWidget(standard.TreeWidget):
     def rename_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(),
                                                 SEPARATOR_CHAR)
-        new_branch = qtutils.prompt(N_("Rename branch"), N_("New branch name"),
+        new_branch = qtutils.prompt(N_("Rename branch"),
+                                    N_("Enter New Branch Name"),
                                     branch)
         if new_branch[1] is True and new_branch[0]:
             self.git_action_async('rename', [branch, new_branch[0]],
