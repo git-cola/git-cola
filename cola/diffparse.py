@@ -162,6 +162,10 @@ class DiffLines(object):
             elif merge and text.startswith(' -'):
                 lines.append((self.EMPTY, base_cur, self.EMPTY))
                 base_cur += 1
+            elif merge and text.startswith('--'):
+                lines.append((old_cur, base_cur, self.EMPTY))
+                base_cur += 1
+                old_cur += 1
             elif not merge and text.startswith('+'):
                 lines.append((self.EMPTY, new_cur))
                 new_cur += 1
@@ -174,8 +178,8 @@ class DiffLines(object):
                 new_cur += 1
             elif merge and text.startswith(' +'):
                 lines.append((old_cur, self.EMPTY, new_cur))
-                old_cur += 1
                 new_cur += 1
+                old_cur += 1
             elif not merge and text.startswith(' '):
                 lines.append((old_cur, new_cur))
                 new_cur += 1
@@ -186,6 +190,7 @@ class DiffLines(object):
                 new_cur += 1
                 old_cur += 1
             elif not text:
+                base_cur += 1
                 new_cur += 1
                 old_cur += 1
             else:
