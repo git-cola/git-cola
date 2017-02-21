@@ -228,10 +228,10 @@ class DiffLinesTestCase(unittest.TestCase):
         current_old += count
 
         expect_max_old = 54
-        self.assertEqual(expect_max_old, parser.max_old)
+        self.assertEqual(expect_max_old, parser.old.max_value)
 
         expect_max_new = 62
-        self.assertEqual(expect_max_new, parser.max_new)
+        self.assertEqual(expect_max_new, parser.new.max_value)
 
         self.assertEqual(parser.digits(), 2)
 

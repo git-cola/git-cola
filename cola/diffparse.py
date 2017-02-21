@@ -77,6 +77,36 @@ def digits(number):
     return result
 
 
+class Counter(object):
+    """Keep track of a diff range's values"""
+
+    def __init__(self, start=0, value=0, count=0, max_value=-1):
+        self.value = value
+        self.start = start
+        self.count = count
+        self.max_value = max_value
+        self._initial_max_value = max_value
+
+    def reset(self):
+        """Reset the max counter and return self for convenience"""
+        self.max_value = self._initial_max_value
+        return self
+
+    def parse(self, range_str):
+        """Parse a diff range and setup internal state"""
+        start, count = _parse_range_str(range_str)
+        self.start = start
+        self.count = count
+        self.value = start
+        self.max_value = max(start + count, self.max_value)
+
+    def tick(self, amount=1):
+        """Return the current value and increment to the next"""
+        value = self.value
+        self.value += amount
+        return value
+
+
 class DiffLines(object):
     """Parse diffs and gather line numbers"""
 
@@ -84,49 +114,39 @@ class DiffLines(object):
     DASH = -2
 
     def __init__(self):
-        self.max_old = -1
-        self.max_new = -1
         self.valid = True
         self.merge = False
 
+        # diff <old> <new>
+        # merge <ours> <theirs> <new>
+        self.old = Counter()
+        self.new = Counter()
+        self.ours = Counter()
+        self.theirs = Counter()
+
     def digits(self):
-        return digits(max(self.max_old, self.max_new))
+        return digits(max(self.old.max_value, self.new.max_value,
+                          self.ours.max_value, self.theirs.max_value))
 
     def parse(self, diff_text):
-        self.max_old = -1
-        self.max_new = -1
-        self.max_base = -1
-
         lines = []
-
-        old_count = 0
-        old_cur = 0
-        old_start = 0
-
-        new_count = 0
-        new_cur = 0
-        new_start = 0
-
-        base_count = 0
-        base_cur = 0
-        base_start = 0
-
         INITIAL_STATE = 0
         DIFF_STATE = 1
         state = INITIAL_STATE
-        self.merge = merge = False
+        merge = self.merge = False
+
+        old = self.old.reset()
+        new = self.new.reset()
+        ours = self.ours.reset()
+        theirs = self.theirs.reset()
 
         for text in diff_text.splitlines():
             if text.startswith('@@ -'):
                 parts = text.split(' ', 4)
                 if parts[0] == '@@' and parts[3] == '@@':
                     state = DIFF_STATE
-                    old_start, old_count = _parse_range_str(parts[1][1:])
-                    new_start, new_count = _parse_range_str(parts[2][1:])
-                    old_cur = old_start
-                    new_cur = new_start
-                    self.max_old = max(old_start + old_count, self.max_old)
-                    self.max_new = max(new_start + new_count, self.max_new)
+                    old.parse(parts[1][1:])
+                    new.parse(parts[2][1:])
                     lines.append((self.DASH, self.DASH))
                     continue
             if text.startswith('@@@ -'):
@@ -134,18 +154,9 @@ class DiffLines(object):
                 parts = text.split(' ', 5)
                 if parts[0] == '@@@' and parts[4] == '@@@':
                     state = DIFF_STATE
-                    old_start, old_count = _parse_range_str(parts[1][1:])
-                    base_start, base_count = _parse_range_str(parts[2][1:])
-                    new_start, new_count = _parse_range_str(parts[3][1:])
-
-                    old_cur = old_start
-                    new_cur = new_start
-                    base_cur = base_start
-
-                    self.max_old = max(old_start + old_count, self.max_old)
-                    self.max_new = max(new_start + new_count, self.max_new)
-                    self.max_base = max(base_start + base_count, self.max_base)
-
+                    ours.parse(parts[1][1:])
+                    theirs.parse(parts[2][1:])
+                    new.parse(parts[3][1:])
                     lines.append((self.DASH, self.DASH, self.DASH))
                     continue
             if state == INITIAL_STATE:
@@ -154,45 +165,30 @@ class DiffLines(object):
                 else:
                     lines.append((self.EMPTY, self.EMPTY))
             elif not merge and text.startswith('-'):
-                lines.append((old_cur, self.EMPTY))
-                old_cur += 1
+                lines.append((old.tick(), self.EMPTY))
             elif merge and text.startswith('- '):
-                lines.append((self.EMPTY, base_cur, self.EMPTY))
-                base_cur += 1
+                lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
             elif merge and text.startswith(' -'):
-                lines.append((self.EMPTY, base_cur, self.EMPTY))
-                base_cur += 1
+                lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
             elif merge and text.startswith('--'):
-                lines.append((old_cur, base_cur, self.EMPTY))
-                base_cur += 1
-                old_cur += 1
+                lines.append((ours.tick(), theirs.tick(), self.EMPTY))
             elif not merge and text.startswith('+'):
-                lines.append((self.EMPTY, new_cur))
-                new_cur += 1
+                lines.append((self.EMPTY, new.tick()))
             elif merge and text.startswith('++'):
-                lines.append((self.EMPTY, self.EMPTY, new_cur))
-                new_cur += 1
+                lines.append((self.EMPTY, self.EMPTY, new.tick()))
             elif merge and text.startswith('+ '):
-                lines.append((self.EMPTY, base_cur, new_cur))
-                base_cur += 1
-                new_cur += 1
+                lines.append((self.EMPTY, theirs.tick(), new.tick()))
             elif merge and text.startswith(' +'):
-                lines.append((old_cur, self.EMPTY, new_cur))
-                new_cur += 1
-                old_cur += 1
+                lines.append((ours.tick(), self.EMPTY, new.tick()))
             elif not merge and text.startswith(' '):
-                lines.append((old_cur, new_cur))
-                new_cur += 1
-                old_cur += 1
+                lines.append((old.tick(), new.tick()))
             elif merge and text.startswith('  '):
-                lines.append((old_cur, base_cur, new_cur))
-                base_cur += 1
-                new_cur += 1
-                old_cur += 1
+                lines.append((ours.tick(), theirs.tick(), new.tick()))
             elif not text:
-                base_cur += 1
-                new_cur += 1
-                old_cur += 1
+                new.tick()
+                old.tick()
+                ours.tick()
+                theirs.tick()
             else:
                 self.valid = False
                 continue
