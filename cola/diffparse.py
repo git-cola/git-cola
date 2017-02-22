@@ -80,10 +80,8 @@ def digits(number):
 class Counter(object):
     """Keep track of a diff range's values"""
 
-    def __init__(self, start=0, value=0, count=0, max_value=-1):
+    def __init__(self, value=0, max_value=-1):
         self.value = value
-        self.start = start
-        self.count = count
         self.max_value = max_value
         self._initial_max_value = max_value
 
@@ -95,8 +93,6 @@ class Counter(object):
     def parse(self, range_str):
         """Parse a diff range and setup internal state"""
         start, count = _parse_range_str(range_str)
-        self.start = start
-        self.count = count
         self.value = start
         self.max_value = max(start + count, self.max_value)
 
