@@ -750,12 +750,11 @@ this is the default value when using `gpg2`.
 Next, edit `~/.gnupg/gpg-agent.conf` to contain a pinentry-program line
 pointing to the pinentry program for your platform.
 
-The following example `~/.gnupg/gpg-agent.conf` shows how to use pinentry-qt on Linux::
+The following example `~/.gnupg/gpg-agent.conf` shows how to use
+pinentry-gtk-2 on Linux::
 
-    pinentry-program /usr/bin/pinentry-qt
+    pinentry-program /usr/bin/pinentry-gtk-2
     default-cache-ttl 3600
-    enable-ssh-support
-    use-standard-socket
 
 This following example `.gnupg/gpg-agent.conf` shows how to use MacGPG2's
 pinentry app on On Mac OS X::
@@ -765,16 +764,13 @@ pinentry app on On Mac OS X::
     enable-ssh-support
     use-standard-socket
 
-Once this has been setup then you will need to start the gpg-agent daemon.
-First, check if it is already running.::
+Once this has been setup then you will need to reload your gpg-agent config.::
 
-    env | grep GPG_AGENT_INFO
-    echo bye | gpg-connect-agent
+    echo RELOADAGENT | gpg-connect-agent
 
 If you see the following output::
 
-    GPG_AGENT_INFO=...
-    OK closing connection
+    OK
 
 Then the daemon is already running, and you do not need to start it yourself.
 
