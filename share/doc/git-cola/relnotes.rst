@@ -23,6 +23,9 @@ Usability, bells and whistles
 -----------------------------
 * New and improved French translations.
 
+* The new `Branches` widget makes it easier to checkout, merge, push,
+  and pull branches from a single interface.
+
 * `git cola` now includes a dark icon theme.  The dark icon theme can be
   activated either by setting the `GIT_COLA_ICON_THEME` environment variable
   to `dark`, by configuring `cola.icontheme` to `dark`, or by specifying
