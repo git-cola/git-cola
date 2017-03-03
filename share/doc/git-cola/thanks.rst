@@ -94,6 +94,7 @@ Thanks
 * Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
+* Mickael Albertus
 * MikHulk
 * Minarto Margoliono
 * Naraesk
