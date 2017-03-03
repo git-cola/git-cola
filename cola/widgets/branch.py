@@ -1,5 +1,6 @@
 """Provides widgets related to branches"""
 from __future__ import division, absolute_import, unicode_literals
+import collections
 import re
 
 from qtpy import QtWidgets
@@ -87,22 +88,27 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.current_branch = gitcmds.current_branch()
         states = self.save_tree_state()
 
-        local_dict = self.tree_helper.group_branches(gitcmds.branch_list(),
-                                                     SEPARATOR_CHAR)
-        remote_dict = self.tree_helper.group_branches(gitcmds.branch_list(True),
-                                                      SEPARATOR_CHAR)
-        tags_dict = self.tree_helper.group_branches(gitcmds.tag_list(),
-                                                    SEPARATOR_CHAR)
+        local_dict = self.tree_helper.group_branches(
+            gitcmds.branch_list(), SEPARATOR_CHAR)
 
-        local = self.tree_helper.create_top_level_item(NAME_LOCAL_BRANCH,
-                                                       local_dict,
-                                                       icons.branch())
-        remote = self.tree_helper.create_top_level_item(NAME_REMOTE_BRANCH,
-                                                        remote_dict,
-                                                        icons.branch())
-        tags = self.tree_helper.create_top_level_item(NAME_TAGS_BRANCH,
-                                                      tags_dict,
-                                                      icons.tag())
+        remote_dict = self.tree_helper.group_branches(
+            gitcmds.branch_list(remote=True), SEPARATOR_CHAR)
+
+        tags_dict = self.tree_helper.group_branches(
+            gitcmds.tag_list(), SEPARATOR_CHAR)
+
+        ellipsis = icons.ellipsis()
+        local = self.tree_helper.create_top_level_item(
+            NAME_LOCAL_BRANCH, local_dict,
+            icon=icons.branch(), ellipsis=ellipsis)
+
+        remote = self.tree_helper.create_top_level_item(
+            NAME_REMOTE_BRANCH, remote_dict,
+            icon=icons.branch(), ellipsis=ellipsis)
+
+        tags = self.tree_helper.create_top_level_item(
+            NAME_TAGS_BRANCH, tags_dict,
+            icon=icons.tag(), ellipsis=ellipsis)
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -194,13 +200,13 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             if self.current_branch is not None and tracked_branch is not None:
                 status = {'ahead': 0, 'behind': 0}
-                status_str = ""
+                status_str = ''
 
-                origin = tracked_branch + ".." + self.current_branch
+                origin = tracked_branch + '..' + self.current_branch
                 log = self.git_helper.log(origin)
                 status['ahead'] = len(log[1].splitlines())
 
-                origin = self.current_branch + ".." + tracked_branch
+                origin = self.current_branch + '..' + tracked_branch
                 log = self.git_helper.log(origin)
                 status['behind'] = len(log[1].splitlines())
 
@@ -323,13 +329,14 @@ class BranchesTreeWidget(standard.TreeWidget):
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-    def __init__(self, name, icon):
+
+    def __init__(self, name, icon=None):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.name = name
-
-        self.setIcon(0, icon)
         self.setText(0, name)
         self.setToolTip(0, name)
+        if icon is not None:
+            self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
     # TODO: review standar.py 317.
@@ -345,35 +352,35 @@ class BranchesTreeHelper(object):
     @staticmethod
     def group_branches(list_branches, separator_char):
         """Convert a list of delimited strings to a nested tree dict"""
-        result = {}
+        odict = collections.OrderedDict
+        result = odict()
         for item in list_branches:
             tree = result
             for part in item.split(separator_char):
-                tree = tree.setdefault(part, {})
+                tree = tree.setdefault(part, odict())
 
         return result
 
     @staticmethod
-    def create_top_level_item(name, dict_children, child_icon):
+    def create_top_level_item(name, dict_children,
+                              icon=None, ellipsis=None):
         """Create a top level tree item and its children """
 
         def create_children(grouped_branches):
             """Create children items for a tree item"""
             result = []
-            for key in grouped_branches.keys():
-                item = BranchTreeWidgetItem(key, child_icon)
-                item.addChildren(create_children(grouped_branches[key]))
+            for k, v in grouped_branches.items():
+                item = BranchTreeWidgetItem(k, icon=icon)
+                item.addChildren(create_children(v))
 
-                if item.childCount() > 0:
-                    item.setIcon(0, icons.ellipsis())
+                if item.childCount() > 0 and ellipsis is not None:
+                    item.setIcon(0, ellipsis)
 
                 result.append(item)
 
-            result.sort()
-
             return result
 
-        branch = BranchTreeWidgetItem(name, icons.ellipsis())
+        branch = BranchTreeWidgetItem(name, icon=ellipsis)
         branch.addChildren(create_children(dict_children))
 
         return branch
