@@ -49,6 +49,11 @@ def connect_button(button, fn):
     button.pressed.connect(fn)
 
 
+def connect_released(button, fn):
+    """Connect a button to a function"""
+    button.released.connect(fn)
+
+
 def button_action(button, action):
     """Make a button trigger an action"""
     connect_button(button, action.trigger)
