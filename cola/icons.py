@@ -139,7 +139,7 @@ def close():
 
 
 def cola():
-    return from_theme('git-cola.svg')
+    return icon('git-cola.svg')
 
 
 def compare():
@@ -307,12 +307,12 @@ def upstream_name():
 
 
 def zoom_fit_best():
-    return from_theme('zoom-fit-best.svg')
+    return icon('zoom-fit-best.svg')
 
 
 def zoom_in():
-    return from_theme('zoom-in.svg')
+    return icon('zoom-in.svg')
 
 
 def zoom_out():
-    return from_theme('zoom-out.svg')
+    return icon('zoom-out.svg')
