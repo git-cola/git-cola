@@ -195,6 +195,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         """Return the raw unicode value from Qt"""
         return self.ext.get()
 
+    # For compatibility with QTextEdit
+    def setText(self, value):
+        self.set_value(value)
+
     def value(self):
         """Return a safe value, e.g. a stripped value"""
         return self.ext.value()
