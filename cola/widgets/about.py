@@ -315,6 +315,8 @@ def translators_text():
              email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
         dict(name='Vitor Lobo',
              title=N_('Brazilian translation')),
+        dict(name='Mickael Albertus',
+             title=N_('French translation')),
         dict(name='Minarto Margoliono',
              title=N_('Indonesian translation')),
         dict(name='Zhang Han',
