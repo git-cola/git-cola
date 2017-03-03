@@ -83,8 +83,7 @@ class _BaseThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
         self._monitor = monitor
         self._running = True
-        self._use_check_ignore = version.check('check-ignore',
-                                               version.git_version())
+        self._use_check_ignore = version.check_git('check-ignore')
         self._force_notify = False
         self._file_paths = set()
 
