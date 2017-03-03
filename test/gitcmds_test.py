@@ -105,7 +105,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(refs,
                          ['a', 'b', 'c', 'master',
                           'origin/a', 'origin/b', 'origin/c', 'origin/master',
-                          'd', 'e', 'f'])
+                          'f', 'e', 'd'])
 
     def test_all_refs_split(self):
         self.git('branch', 'a')
@@ -120,7 +120,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(local, ['a', 'b', 'c', 'master'])
         self.assertEqual(remote,
                          ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
-        self.assertEqual(tags, ['d', 'e', 'f'])
+        self.assertEqual(tags, ['f', 'e', 'd'])
 
 
 if __name__ == '__main__':

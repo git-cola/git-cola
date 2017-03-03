@@ -179,14 +179,19 @@ def branch_list(remote=False):
         return for_each_ref_basename('refs/heads')
 
 
-def for_each_ref_basename(refs, sort=False, git=git):
+def _version_sort():
+    if version.check_git('version-sort'):
+        sort = 'version:refname'
+    else:
+        sort = False
+    return sort
+
+
+def for_each_ref_basename(refs, git=git):
     """Return refs starting with 'refs'."""
+    sort = _version_sort()
     status, out, err = git.for_each_ref(refs, format='%(refname)',
                                         sort=sort, _readonly=True)
-    if status != 0 and sort:
-        # --sort=version:refname may not be supported
-        status, out, err = git.for_each_ref(refs, format='%(refname)',
-                                            _readonly=True)
     output = out.splitlines()
     non_heads = [x for x in output if not x.endswith('/HEAD')]
     return list(map(lambda x: x[len(refs) + 1:], non_heads))
@@ -205,12 +210,15 @@ def all_refs(split=False, git=git):
     query = (triple('refs/tags', tags),
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
-    out = git.for_each_ref(format='%(refname)', _readonly=True)[STDOUT]
+    sort = _version_sort()
+    status, out, err = git.for_each_ref(format='%(refname)',
+                                        sort=sort, _readonly=True)
     for ref in out.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
                 dst.append(ref[prefix_len:])
                 continue
+    tags.reverse()
     if split:
         return local_branches, remote_branches, tags
     else:
@@ -250,11 +258,10 @@ def untracked_files(git=git, paths=None, **kwargs):
     return []
 
 
-def tag_list(sort=False, reverse=True):
+def tag_list():
     """Return a list of tags."""
-    result = for_each_ref_basename('refs/tags', sort=sort)
-    if reverse:
-        result.reverse()
+    result = for_each_ref_basename('refs/tags')
+    result.reverse()
     return result
 
 
