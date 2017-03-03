@@ -26,6 +26,8 @@ _versions = {
     # git check-ignore was introduced in 1.8.2, but did not follow the same
     # rules as git add and git status until 1.8.5
     'check-ignore': '1.8.5',
+    # git for-each-ref --sort=version:refname
+    'version-sort': '2.0.0',
 }
 
 
@@ -52,6 +54,11 @@ def check_version(min_ver, ver):
 def check(key, ver):
     """Checks if a version is greater than the known version for <what>"""
     return check_version(get(key), ver)
+
+
+def check_git(key):
+    """Checks if Git has a specific feature"""
+    return check(key, git_version())
 
 
 def version_to_list(version):
