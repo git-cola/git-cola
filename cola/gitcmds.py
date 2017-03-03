@@ -179,9 +179,14 @@ def branch_list(remote=False):
         return for_each_ref_basename('refs/heads')
 
 
-def for_each_ref_basename(refs, git=git):
+def for_each_ref_basename(refs, sort=False, git=git):
     """Return refs starting with 'refs'."""
-    out = git.for_each_ref(refs, format='%(refname)', _readonly=True)[STDOUT]
+    status, out, err = git.for_each_ref(refs, format='%(refname)',
+                                        sort=sort, _readonly=True)
+    if status != 0 and sort:
+        # --sort=version:refname may not be supported
+        status, out, err = git.for_each_ref(refs, format='%(refname)',
+                                            _readonly=True)
     output = out.splitlines()
     non_heads = [x for x in output if not x.endswith('/HEAD')]
     return list(map(lambda x: x[len(refs) + 1:], non_heads))
@@ -245,9 +250,12 @@ def untracked_files(git=git, paths=None, **kwargs):
     return []
 
 
-def tag_list():
+def tag_list(sort=False, reverse=True):
     """Return a list of tags."""
-    return list(reversed(for_each_ref_basename('refs/tags')))
+    result = for_each_ref_basename('refs/tags', sort=sort)
+    if reverse:
+        result.reverse()
+    return result
 
 
 def log(git, *args, **kwargs):
