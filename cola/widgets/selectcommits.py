@@ -97,7 +97,7 @@ class SelectCommitsDialog(QtWidgets.QDialog):
         selected = oid is not None
         self.select_button.setEnabled(selected)
         if not selected:
-            self.commit_text.setText('')
+            self.commit_text.set_value('')
             self.revision.setText('')
             return
         self.revision.setText(oid)
