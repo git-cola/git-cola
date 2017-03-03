@@ -1,6 +1,5 @@
 """Provides widgets related to branches"""
 from __future__ import division, absolute_import, unicode_literals
-import collections
 import re
 
 from qtpy import QtWidgets
@@ -10,6 +9,7 @@ from qtpy.QtCore import Signal
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
+from ..compat import odict
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
@@ -352,7 +352,6 @@ class BranchesTreeHelper(object):
     @staticmethod
     def group_branches(list_branches, separator_char):
         """Convert a list of delimited strings to a nested tree dict"""
-        odict = collections.OrderedDict
         result = odict()
         for item in list_branches:
             tree = result

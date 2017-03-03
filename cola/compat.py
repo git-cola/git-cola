@@ -7,6 +7,12 @@ except ImportError:
     # Python 3
     from urllib import parse
 
+try:
+    # Python 2.7+
+    from collections import OrderedDict as odict
+except ImportError:
+    from .ordered_dict import OrderedDict as odict
+
 
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] >= 3
