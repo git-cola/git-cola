@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from __future__ import absolute_import, division, unicode_literals
 
 import unittest
@@ -9,7 +8,6 @@ try:
 except ImportError:
     from mock import MagicMock
 
-from cola import icons
 from cola.widgets.branch import BranchesTreeHelper, BranchTreeWidgetItem
 
 
@@ -36,8 +34,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
                                                     'child_2_2': {}}}
         tree_helper = BranchesTreeHelper()
 
-        result = tree_helper.create_top_level_item('top', dict_children,
-                                                   icons.branch())
+        result = tree_helper.create_top_level_item('top', dict_children)
         self.assertEqual('top', result.name)
         self.assertEqual(2, result.childCount())
         self.assertEqual('child_1', result.child(0).name)
@@ -97,7 +94,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
             'sub_child_2_1': {}, 'sub_child_2_2': {}}}}, result)
 
     def _create_item(self, name, expanded):
-        item = BranchTreeWidgetItem(name, icons.ellipsis())
+        item = BranchTreeWidgetItem(name)
         item.isExpanded = MagicMock(return_value=expanded)
 
         return item
