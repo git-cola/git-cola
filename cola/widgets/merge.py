@@ -59,7 +59,6 @@ class MergeView(QtWidgets.QDialog):
 
         self.radio_local = qtutils.radio(text=N_('Local Branch'), checked=True)
         self.radio_remote = qtutils.radio(text=N_('Tracking Branch'))
-
         self.radio_tag = qtutils.radio(text=N_('Tag'))
 
         self.revisions = QtWidgets.QListWidget()
@@ -118,13 +117,13 @@ class MergeView(QtWidgets.QDialog):
         self.revision.textChanged.connect(self.update_title)
         self.revisions.itemSelectionChanged.connect(self.revision_selected)
 
-        qtutils.connect_button(self.button_close, self.reject)
-        qtutils.connect_button(self.checkbox_squash, self.toggle_squash)
-        qtutils.connect_button(self.radio_local, self.update_revisions)
-        qtutils.connect_button(self.radio_remote, self.update_revisions)
-        qtutils.connect_button(self.radio_tag, self.update_revisions)
+        qtutils.connect_released(self.radio_local, self.update_revisions)
+        qtutils.connect_released(self.radio_remote, self.update_revisions)
+        qtutils.connect_released(self.radio_tag, self.update_revisions)
         qtutils.connect_button(self.button_merge, self.merge_revision)
+        qtutils.connect_button(self.checkbox_squash, self.toggle_squash)
         qtutils.connect_button(self.button_viz, self.viz_revision)
+        qtutils.connect_button(self.button_close, self.reject)
 
         # Observer messages
         model.add_observer(model.message_updated, self.update_all)
