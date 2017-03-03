@@ -16,8 +16,8 @@ from ..widgets import defs
 from ..widgets import standard
 
 SEPARATOR_CHAR = '/'
-NAME_LOCAL_BRANCH = N_('Local Branch')
-NAME_REMOTE_BRANCH = N_('Remote Branch')
+NAME_LOCAL_BRANCH = N_('Local Branches')
+NAME_REMOTE_BRANCH = N_('Remote Branches')
 NAME_TAGS_BRANCH = N_('Tags')
 
 
