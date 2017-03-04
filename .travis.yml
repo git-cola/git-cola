@@ -40,9 +40,9 @@ install:
   - pip install astroid==1.4.3
   - pip install pylint==1.5.2
   # Build dependencies
-  - pip install --requirement requirements.txt
+  - make requirements
   # Test dependencies
-  - pip install --requirement extras/requirements-dev.txt
+  - make requirements-dev
 
 script:
   - make all
