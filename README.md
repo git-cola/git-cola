@@ -337,7 +337,7 @@ The following commands should be run during development:
     $ make test
 
     # Check for pylint warnings.  All new code must pass 100%.
-    $ make pylint
+    $ make pylint3k
 
 The test suite can be found in the [test](test) directory.
 
