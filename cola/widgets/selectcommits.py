@@ -10,13 +10,14 @@ from ..i18n import N_
 from ..interaction import Interaction
 from . import defs
 from .diff import DiffTextEdit
+from .standard import Dialog
 
 
 def select_commits(title, revs, summaries, multiselect=True):
-    """Use the SelectCommitsDialog to select commits from a list."""
+    """Use the SelectCommits to select commits from a list."""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommitsDialog(model, parent, title, multiselect=multiselect)
+    dialog = SelectCommits(model, parent, title, multiselect=multiselect)
     return dialog.select_commits()
 
 
@@ -26,11 +27,11 @@ class Model(object):
         self.summaries = summaries
 
 
-class SelectCommitsDialog(QtWidgets.QDialog):
+class SelectCommits(Dialog):
 
     def __init__(self, model,
                  parent=None, title=None, multiselect=True, syntax=True):
-        QtWidgets.QDialog.__init__(self, parent)
+        Dialog.__init__(self, parent)
         self.model = model
         if title:
             self.setWindowTitle(title)
@@ -72,7 +73,12 @@ class SelectCommitsDialog(QtWidgets.QDialog):
         qtutils.connect_button(self.select_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
 
-        self.resize(700, 420)
+        self.init_state(None, self.resize_widget, parent)
+
+    def resize_widget(self, parent):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, 720, 480)
+        self.resize(width, height)
 
     def selected_commit(self):
         return qtutils.selected_item(self.commits, self.model.revisions)
