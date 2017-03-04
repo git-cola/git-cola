@@ -79,11 +79,11 @@ class CompareBranchesDialog(standard.Dialog):
         self.top_widget.setLayout(self.top_grid_layout)
 
         self.bottom_grid_layout = qtutils.grid(
-                defs.no_margin, defs.spacing,
+                defs.no_margin, defs.button_spacing,
                 (self.diff_files, 0, 0, 1, 4),
                 (self.button_spacer, 1, 1, 1, 1),
-                (self.button_compare, 1, 2, 1, 1),
-                (self.button_close, 1, 3, 1, 1))
+                (self.button_close, 1, 2, 1, 1),
+                (self.button_compare, 1, 3, 1, 1))
         self.bottom_widget.setLayout(self.bottom_grid_layout)
 
         self.splitter = qtutils.splitter(Qt.Vertical,

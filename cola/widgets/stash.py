@@ -67,10 +67,13 @@ class StashView(Dialog):
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
 
-        self.btn_layt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                     self.button_save, self.button_apply,
-                                     self.button_drop, self.keep_index,
-                                     qtutils.STRETCH, self.button_close)
+        self.btn_layt = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                     self.button_apply,
+                                     self.button_drop,
+                                     self.keep_index,
+                                     qtutils.STRETCH,
+                                     self.button_close,
+                                     self.button_save)
 
         self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
                                       self.splitter, self.btn_layt)

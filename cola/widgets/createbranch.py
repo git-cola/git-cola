@@ -177,8 +177,8 @@ class CreateBranchDialog(Dialog):
 
         self.buttons_layout = qtutils.hbox(defs.margin, defs.spacing,
                                            qtutils.STRETCH,
-                                           self.create_button,
-                                           self.close_button)
+                                           self.close_button,
+                                           self.create_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.branch_name_layout,

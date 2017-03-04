@@ -163,9 +163,11 @@ class Editor(QtWidgets.QWidget):
         splitter = qtutils.splitter(Qt.Vertical, self.tree, self.diff)
 
         controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.rebase_button, self.extdiff_button,
-                                       self.help_button, qtutils.STRETCH,
-                                       self.cancel_button)
+                                       self.extdiff_button,
+                                       self.help_button,
+                                       qtutils.STRETCH,
+                                       self.cancel_button,
+                                       self.rebase_button)
         layout = qtutils.vbox(defs.no_margin, defs.spacing,
                               splitter, controls_layout)
         self.setLayout(layout)
