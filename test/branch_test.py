@@ -8,6 +8,7 @@ try:
 except ImportError:
     from mock import MagicMock
 
+from cola.compat import odict
 from cola.widgets.branch import BranchesTreeHelper, BranchTreeWidgetItem
 
 
@@ -16,7 +17,8 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_a_valid_dict_on_group_branches(self):
         """Test the group_branches function."""
-        branches = ['top_1/child_1/child_1_1', 'top_1/child_1/child_1_2',
+        branches = ['top_1/child_1/child_1_1',
+                    'top_1/child_1/child_1_2',
                     'top_1/child_2/child_2_1/child_2_1_1',
                     'top_1/child_2/child_2_1/child_2_1_2']
         tree_helper = BranchesTreeHelper()
@@ -30,8 +32,11 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_create_a_valid_top_item_on_create_top_level_item(self):
         """Test the create_top_level_item function."""
-        dict_children = {'child_1': {}, 'child_2': {'child_2_1': {},
-                                                    'child_2_2': {}}}
+        dict_children = odict()
+        dict_children['child_1'] = {}
+        dict_children['child_2'] = odict()
+        dict_children['child_2']['child_2_1'] = {}
+        dict_children['child_2']['child_2_2'] = {}
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.create_top_level_item('top', dict_children)
