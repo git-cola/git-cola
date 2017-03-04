@@ -91,6 +91,9 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/663
 
+* The stash, export patches, diff, and gitignore dialogs now remember
+  their window sizes.
+
 Fixes
 =====
 * `git cola`'s spellchecker now supports the new `dict-common` filesystem
