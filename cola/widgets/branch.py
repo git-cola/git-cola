@@ -10,6 +10,7 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from ..compat import odict
+from ..compat import unichr
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
