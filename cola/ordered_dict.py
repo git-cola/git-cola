@@ -2,6 +2,7 @@
 # Passes Python2.7's test suite and incorporates all the latest updates.
 # Copyright 2009 Raymond Hettinger, released under the MIT License.
 # http://code.activestate.com/recipes/576693/
+from __future__ import absolute_import, division, unicode_literals
 try:
     from thread import get_ident as _get_ident
 except ImportError:
@@ -79,7 +80,7 @@ class OrderedDict(dict):
     def clear(self):
         'od.clear() -> None.  Remove all items from od.'
         try:
-            for node in self.__map.itervalues():
+            for node in self.__map.values():
                 del node[:]
             root = self.__root
             root[:] = [root, root, None]
