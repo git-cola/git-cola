@@ -229,6 +229,9 @@ pylint-check:
 .PHONY: pylint-check
 
 requirements:
-	$(PIP) install --requirement requirements.txt
-	$(PIP) install --requirement extras/requirements-dev.txt
+	$(PIP) install --requirement requirements/requirements.txt
 .PHONY: requirements
+
+requirements-dev:
+	$(PIP) install --requirement requirements/requirements-dev.txt
+.PHONY: requirements-dev
