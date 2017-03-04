@@ -617,11 +617,12 @@ def center_on_screen(widget):
     widget.move(cx - widget.width()//2, cy - widget.height()//2)
 
 
-def default_size(parent, width, height):
+def default_size(parent, width, height, use_parent_height=True):
     """Return the parent's size, or the provided defaults"""
     if parent is not None:
         width = parent.width()
-        height = parent.height()
+        if use_parent_height:
+            height = parent.height()
     return (width, height)
 
 

@@ -13,11 +13,12 @@ from .i18n import N_
 from .widgets import completion
 from .widgets import defs
 from .widgets import filetree
+from .widgets import standard
 
 
 def diff_commits(parent, a, b):
     """Show a dialog for diffing two commits"""
-    dlg = FileDiffDialog(parent, a=a, b=b)
+    dlg = Difftool(parent, a=a, b=b)
     dlg.show()
     dlg.raise_()
     return dlg.exec_() == QtWidgets.QDialog.Accepted
@@ -28,7 +29,7 @@ def diff_expression(parent, expr,
                     hide_expr=False,
                     focus_tree=False):
     """Show a diff dialog for diff expressions"""
-    dlg = FileDiffDialog(parent,
+    dlg = Difftool(parent,
                          expr=expr,
                          hide_expr=hide_expr,
                          focus_tree=focus_tree)
@@ -39,13 +40,13 @@ def diff_expression(parent, expr,
     return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
-class FileDiffDialog(QtWidgets.QDialog):
+class Difftool(standard.Dialog):
 
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
                  hide_expr=False, focus_tree=False):
         """Show files with differences and launch difftool"""
 
-        QtWidgets.QDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent=parent)
 
         self.a = a
         self.b = b
@@ -111,11 +112,16 @@ class FileDiffDialog(QtWidgets.QDialog):
                            hotkeys.CTRL_ENTER, hotkeys.CTRL_RETURN)
         qtutils.add_close_action(self)
 
-        self.resize(720, 420)
-        self.refresh()
+        self.init_state(None, self.resize_widget, parent)
 
+        self.refresh()
         if focus_tree:
             self.focus_tree()
+
+    def resize_widget(self, parent):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, 720, 420)
+        self.resize(width, height)
 
     def focus_tree(self):
         """Focus the files tree"""

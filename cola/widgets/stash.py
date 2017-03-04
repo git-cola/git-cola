@@ -40,9 +40,6 @@ class StashView(Dialog):
         self.setWindowTitle(N_('Stash'))
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
-            self.resize(parent.width(), 420)
-        else:
-            self.resize(700, 420)
 
         self.stash_list = QtWidgets.QListWidget(self)
         self.stash_text = DiffTextEdit(self)
@@ -70,10 +67,13 @@ class StashView(Dialog):
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
 
-        self.btn_layt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                     self.button_save, self.button_apply,
-                                     self.button_drop, self.keep_index,
-                                     qtutils.STRETCH, self.button_close)
+        self.btn_layt = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                     self.button_apply,
+                                     self.button_drop,
+                                     self.keep_index,
+                                     qtutils.STRETCH,
+                                     self.button_close,
+                                     self.button_save)
 
         self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
                                       self.splitter, self.btn_layt)
@@ -95,6 +95,14 @@ class StashView(Dialog):
         qtutils.connect_button(self.button_save, self.stash_save)
         qtutils.connect_button(self.button_drop, self.stash_drop)
         qtutils.connect_button(self.button_close, self.close)
+
+        self.init_state(None, self.resize_widget, parent)
+
+    def resize_widget(self, parent):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, 720, 420,
+                                             use_parent_height=False)
+        self.resize(width, height)
 
     def close(self):
         self.accept()
