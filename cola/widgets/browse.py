@@ -609,7 +609,8 @@ class BrowseBranch(standard.Dialog):
 
         # layouts
         self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
-                                    qtutils.STRETCH, self.close, self.save)
+                                    self.close_button, qtutils.STRETCH,
+                                    self.save)
 
         self.layt = qtutils.vbox(defs.margin, defs.spacing,
                                  self.tree, self.btnlayt)
