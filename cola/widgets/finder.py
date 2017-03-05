@@ -136,12 +136,12 @@ class Finder(standard.Dialog):
                                          self.input_label, self.input_txt)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.edit_button,
-                                          self.open_default_button,
-                                          self.refresh_button,
-                                          self.help_button,
+                                          self.close_button,
                                           qtutils.STRETCH,
-                                          self.close_button)
+                                          self.help_button,
+                                          self.refresh_button,
+                                          self.open_default_button,
+                                          self.edit_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.no_spacing,
                                         self.input_layout,
