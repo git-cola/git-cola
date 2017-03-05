@@ -181,12 +181,7 @@ class Grep(Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
-        self.init_state(None, self.resize_widget, parent)
-
-    def resize_widget(self, parent):
-        """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, 720, 445)
-        self.resize(width, height)
+        self.init_size(parent=parent)
 
     def focus_input(self):
         """Focus the grep input field and select the text"""
