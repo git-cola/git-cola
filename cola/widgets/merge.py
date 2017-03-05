@@ -92,7 +92,8 @@ class Merge(standard.Dialog):
         self.button_close = qtutils.close_button()
 
         icon = icons.merge()
-        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon)
+        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon,
+                                                  default=True)
 
         # Layouts
         self.revlayt = qtutils.hbox(defs.no_margin, defs.spacing,
