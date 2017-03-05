@@ -5,17 +5,17 @@ from qtpy import QtCore
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import gitcmds
-from .. import icons
-from .. import qtutils
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
-from . import defs
-from . import completion
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
 from .standard import Dialog
 from .standard import ProgressDialog
 from .text import LineEdit
+from . import defs
+from . import completion
 
 
 def create_new_branch(revision='', settings=None):
@@ -203,7 +203,7 @@ class CreateBranchDialog(Dialog):
         thread.command.connect(self.thread_command, type=Qt.QueuedConnection)
         thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
 
-        self.init_state(settings, self.resize, 555, 333)
+        self.init_size(settings=settings, parent=parent)
         self.display_model()
 
     def set_revision(self, revision):
