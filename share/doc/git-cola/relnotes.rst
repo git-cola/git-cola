@@ -94,6 +94,9 @@ Usability, bells and whistles
 * The stash, export patches, diff, and gitignore dialogs now remember
   their window sizes.
 
+* A new `git cola recent` sub-command was added for finding recently
+  edited files.
+
 Fixes
 =====
 * `git cola`'s spellchecker now supports the new `dict-common` filesystem

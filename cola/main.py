@@ -1,7 +1,5 @@
 """Launcher and command line interface to git-cola"""
-
 from __future__ import absolute_import, division, unicode_literals
-
 import argparse
 import os
 import sys
@@ -9,7 +7,6 @@ import sys
 from .app import add_common_arguments
 from .app import application_init
 from .app import application_start
-
 from . import cmds
 from . import compat
 from . import core
@@ -54,6 +51,7 @@ def parse_args(argv):
     add_pull_command(subparser)
     add_push_command(subparser)
     add_rebase_command(subparser)
+    add_recent_command(subparser)
     add_remote_command(subparser)
     add_search_command(subparser)
     add_stash_command(subparser)
@@ -242,6 +240,9 @@ def add_rebase_command(subparser):
                         help='git rebase will perform an automatic '
                              '"git checkout <branch>" before doing anything '
                              'else when <branch> is specified')
+
+def add_recent_command(subparser):
+    add_command(subparser, 'recent', 'edit recent files', cmd_recent)
 
 
 def add_remote_command(subparser):
@@ -444,6 +445,13 @@ def cmd_rebase(args):
     if err:
         core.stderr(err)
     return status
+
+
+def cmd_recent(args):
+    from .widgets import recent
+    context = application_init(args)
+    view = recent.browse_recent_files()
+    return application_start(context, view)
 
 
 def cmd_remote(args):

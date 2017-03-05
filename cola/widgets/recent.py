@@ -20,6 +20,7 @@ from . import standard
 def browse_recent_files():
     dialog = RecentFiles(parent=qtutils.active_window())
     dialog.show()
+    return dialog
 
 
 class UpdateFileListThread(QtCore.QThread):
