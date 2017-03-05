@@ -142,7 +142,7 @@ class Archive(Dialog):
         self.prefix_group.set_expanded(False)
 
         self.btnlayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                    qtutils.STRETCH, self.close_button,
+                                    self.close_button, qtutils.STRETCH,
                                     self.save_button)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.no_spacing,
