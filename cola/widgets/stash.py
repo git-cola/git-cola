@@ -94,12 +94,12 @@ class StashView(Dialog):
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_save, self.stash_save)
         qtutils.connect_button(self.button_drop, self.stash_drop)
-        qtutils.connect_button(self.button_close, self.close)
+        qtutils.connect_button(self.button_close, self.close_and_rescan)
 
         self.init_size(parent=parent)
 
-    def close(self):
-        self.accept()
+    def close_and_rescan(self):
+        self.reject()
         cmds.do(cmds.Rescan)
 
     def selected_stash(self):
