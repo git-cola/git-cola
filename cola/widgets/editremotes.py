@@ -68,18 +68,24 @@ class RemoteEditor(standard.Dialog):
                                                     tooltip=N_('Delete remote'))
         self.close_btn = qtutils.close_button()
 
+        self._actions_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                            self.add_btn,
+                                            self.delete_btn,
+                                            self.refresh_btn,
+                                            qtutils.STRETCH)
+        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                           self.close_btn,
+                                           qtutils.STRETCH)
+
         self._top_layout = qtutils.splitter(Qt.Horizontal,
                                             self.remotes, self.info)
         width = self._top_layout.width()
         self._top_layout.setSizes([width//4, width*3//4])
 
-        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                           self.add_btn, self.delete_btn,
-                                           self.refresh_btn, qtutils.STRETCH,
-                                           self.close_btn)
-
         self._layout = qtutils.vbox(defs.margin, defs.spacing,
-                                    self._top_layout, self._button_layout)
+                                    self._top_layout,
+                                    self._actions_layout,
+                                    self._button_layout)
         self.setLayout(self._layout)
         self.refresh()
 
