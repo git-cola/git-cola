@@ -60,8 +60,9 @@ class SelectCommits(Dialog):
         self.splitter.setSizes([100, 150])
 
         self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                         self.label, self.revision,
                                          self.close_button,
+                                         qtutils.STRETCH,
+                                         self.label, self.revision,
                                          self.select_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.margin,
