@@ -75,10 +75,11 @@ class RecentFiles(standard.Dialog):
                                        qtutils.STRETCH, self.refresh_button)
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.close_button,
+                                          qtutils.STRETCH,
                                           self.expand_button,
                                           self.collapse_button,
-                                          qtutils.STRETCH,
-                                          self.edit_button, self.close_button)
+                                          self.edit_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.top_layout, self.tree,
