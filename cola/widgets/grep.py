@@ -152,9 +152,11 @@ class Grep(Dialog):
                                          self.regexp_combo)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.edit_button, self.refresh_button,
-                                          self.shell_checkbox, qtutils.STRETCH,
-                                          self.close_button)
+                                          self.close_button,
+                                          qtutils.STRETCH,
+                                          self.shell_checkbox,
+                                          self.refresh_button,
+                                          self.edit_button)
 
         self.splitter = qtutils.splitter(Qt.Vertical,
                                          self.result_txt, self.preview_txt)
