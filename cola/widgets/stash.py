@@ -30,6 +30,7 @@ def stash():
 
 
 class StashView(Dialog):
+
     def __init__(self, model, parent=None):
         Dialog.__init__(self, parent=parent)
         self.model = model
@@ -44,17 +45,17 @@ class StashView(Dialog):
         self.stash_list = QtWidgets.QListWidget(self)
         self.stash_text = DiffTextEdit(self)
 
-        self.button_apply = qtutils.create_toolbutton(
+        self.button_apply = qtutils.create_button(
             text=N_('Apply'),
             tooltip=N_('Apply the selected stash'),
             icon=icons.ok())
 
-        self.button_save = qtutils.create_toolbutton(
+        self.button_save = qtutils.create_button(
             text=N_('Save'),
             tooltip=N_('Save modified state to new stash'),
-            icon=icons.save())
+            icon=icons.save(), default=True)
 
-        self.button_drop = qtutils.create_toolbutton(
+        self.button_drop = qtutils.create_button(
             text=N_('Drop'),
             tooltip=N_('Drop the selected stash'),
             icon=icons.discard())
@@ -94,18 +95,12 @@ class StashView(Dialog):
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_save, self.stash_save)
         qtutils.connect_button(self.button_drop, self.stash_drop)
-        qtutils.connect_button(self.button_close, self.close)
+        qtutils.connect_button(self.button_close, self.close_and_rescan)
 
-        self.init_state(None, self.resize_widget, parent)
+        self.init_size(parent=parent)
 
-    def resize_widget(self, parent):
-        """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, 720, 420,
-                                             use_parent_height=False)
-        self.resize(width, height)
-
-    def close(self):
-        self.accept()
+    def close_and_rescan(self):
+        self.reject()
         cmds.do(cmds.Rescan)
 
     def selected_stash(self):

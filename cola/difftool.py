@@ -69,7 +69,8 @@ class Difftool(standard.Dialog):
 
         self.diff_button = qtutils.create_button(text=N_('Compare'),
                                                  icon=icons.diff(),
-                                                 enabled=False)
+                                                 enabled=False,
+                                                 default=True)
         self.diff_button.setShortcut(hotkeys.DIFF)
 
         self.diff_all_button = qtutils.create_button(text=N_('Compare All'),

@@ -128,7 +128,7 @@ class Grep(Dialog):
         self.preview_txt = PreviewTextView(self)
         self.preview_txt.setFocusProxy(self.result_txt)
 
-        self.edit_button = qtutils.edit_button()
+        self.edit_button = qtutils.edit_button(default=True)
         qtutils.button_action(self.edit_button, self.edit_action)
 
         self.refresh_button = qtutils.refresh_button()

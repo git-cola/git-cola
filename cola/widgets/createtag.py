@@ -81,7 +81,8 @@ class CreateTag(standard.Dialog):
         self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
         # Buttons
         self.create_button = qtutils.create_button(text=N_('Create Tag'),
-                                                   icon=icons.tag())
+                                                   icon=icons.tag(),
+                                                   default=True)
         self.close_button = qtutils.close_button()
 
         # Form layout for inputs

@@ -112,7 +112,7 @@ class Finder(standard.Dialog):
 
         self.tree = filetree.FileTree(parent=self)
 
-        self.edit_button = qtutils.edit_button()
+        self.edit_button = qtutils.edit_button(default=True)
         self.edit_button.setShortcut(hotkeys.EDIT)
 
         name = cmds.OpenDefaultApp.name()
