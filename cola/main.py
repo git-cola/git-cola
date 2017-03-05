@@ -305,11 +305,11 @@ def cmd_am(args):
 
 
 def cmd_archive(args):
-    from .widgets.archive import GitArchiveDialog
+    from .widgets.archive import Archive
     context = application_init(args, update=True)
     if args.ref is None:
         args.ref = context.model.currentbranch
-    view = GitArchiveDialog(args.ref)
+    view = Archive(args.ref)
     return application_start(context, view)
 
 
