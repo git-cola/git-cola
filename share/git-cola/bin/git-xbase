@@ -144,7 +144,8 @@ class Editor(QtWidgets.QWidget):
             text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
             tooltip=N_('Accept changes and rebase\n'
                        'Shortcut: Ctrl+Enter'),
-            icon=icons.ok())
+            icon=icons.ok(),
+            default=True)
 
         self.extdiff_button = qtutils.create_button(
             text=N_('Launch Diff Tool'),
