@@ -90,9 +90,10 @@ class SearchWidget(standard.Dialog):
                                          self.commit_list, self.commit_text)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.button_close,
+                                          qtutils.STRETCH,
                                           self.button_export,
-                                          self.button_cherrypick,
-                                          qtutils.STRETCH, self.button_close)
+                                          self.button_cherrypick)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.top_layout, self.splitter,
