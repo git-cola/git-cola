@@ -99,10 +99,7 @@ class SearchWidget(standard.Dialog):
                                         self.bottom_layout)
         self.setLayout(self.main_layout)
 
-        if self.parent():
-            self.resize(self.parent().width(), self.parent().height())
-        else:
-            self.resize(720, 500)
+        self.init_size(parent=parent)
 
 
 def search():
