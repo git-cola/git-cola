@@ -119,12 +119,7 @@ class CompareBranchesDialog(standard.Dialog):
             self.right_list.setCurrentItem(item)
             item.setSelected(True)
 
-        self.init_state(None, self.resize_widget, parent)
-
-    def resize_widget(self, parent):
-        """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, 720, 480)
-        self.resize(width, height)
+        self.init_size(parent=parent)
 
     def selection(self):
         left_item = self.left_list.currentItem()
