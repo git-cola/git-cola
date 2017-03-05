@@ -107,8 +107,8 @@ class ApplyPatches(Dialog):
                                        qtutils.STRETCH, self.usage)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.apply_button, qtutils.STRETCH,
-                                          self.close_button)
+                                          self.close_button, qtutils.STRETCH,
+                                          self.apply_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.top_layout, self.tree,

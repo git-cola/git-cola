@@ -82,7 +82,7 @@ class CompareBranchesDialog(standard.Dialog):
                 defs.no_margin, defs.button_spacing,
                 (self.diff_files, 0, 0, 1, 4),
                 (self.button_spacer, 1, 1, 1, 1),
-                (self.button_close, 1, 2, 1, 1),
+                (self.button_close, 1, 0, 1, 1),
                 (self.button_compare, 1, 3, 1, 1))
         self.bottom_widget.setLayout(self.bottom_grid_layout)
 
@@ -119,12 +119,7 @@ class CompareBranchesDialog(standard.Dialog):
             self.right_list.setCurrentItem(item)
             item.setSelected(True)
 
-        self.init_state(None, self.resize_widget, parent)
-
-    def resize_widget(self, parent):
-        """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, 720, 480)
-        self.resize(width, height)
+        self.init_size(parent=parent)
 
     def selection(self):
         left_item = self.left_list.currentItem()

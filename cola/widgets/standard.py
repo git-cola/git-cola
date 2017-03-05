@@ -160,11 +160,24 @@ class WidgetMixin(object):
         self.save_settings()
         self.Base.closeEvent(self, event)
 
+    def init_size(self, parent=None, settings=None, width=0, height=0):
+        if not width:
+            width = defs.dialog_w
+        if not height:
+            height = defs.dialog_h
+        self.init_state(settings,
+                        self.resize_to_parent, parent, width, height)
+
     def init_state(self, settings, callback, *args, **kwargs):
         """Restore saved settings or set the initial location"""
         if not self.restore_state(settings=settings):
             callback(*args, **kwargs)
             self.center()
+
+    def resize_to_parent(self, parent, w, h):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, w, h)
+        self.resize(width, height)
 
 
 class MainWindowMixin(WidgetMixin):

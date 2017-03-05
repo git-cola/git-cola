@@ -152,9 +152,11 @@ class Grep(Dialog):
                                          self.regexp_combo)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.edit_button, self.refresh_button,
-                                          self.shell_checkbox, qtutils.STRETCH,
-                                          self.close_button)
+                                          self.close_button,
+                                          qtutils.STRETCH,
+                                          self.shell_checkbox,
+                                          self.refresh_button,
+                                          self.edit_button)
 
         self.splitter = qtutils.splitter(Qt.Vertical,
                                          self.result_txt, self.preview_txt)
@@ -181,12 +183,7 @@ class Grep(Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
-        self.init_state(None, self.resize_widget, parent)
-
-    def resize_widget(self, parent):
-        """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, 720, 445)
-        self.resize(width, height)
+        self.init_size(parent=parent)
 
     def focus_input(self):
         """Focus the grep input field and select the text"""
