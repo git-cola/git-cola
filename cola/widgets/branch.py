@@ -6,9 +6,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import gitcmds
-from .. import icons
-from .. import qtutils
 from ..compat import odict
 from ..compat import unichr
 from ..i18n import N_
@@ -16,10 +13,14 @@ from ..interaction import Interaction
 from ..models import main
 from ..widgets import defs
 from ..widgets import standard
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+
 
 SEPARATOR_CHAR = '/'
-NAME_LOCAL_BRANCH = N_('Local Branches')
-NAME_REMOTE_BRANCH = N_('Remote Branches')
+NAME_LOCAL_BRANCH = N_('Local')
+NAME_REMOTE_BRANCH = N_('Remote')
 NAME_TAGS_BRANCH = N_('Tags')
 
 
