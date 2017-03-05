@@ -148,7 +148,7 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
     def save_blob_dialog(self):
-        self.with_oid(lambda oid: browse.BrowseDialog.browse(oid))
+        self.with_oid(lambda oid: browse.BrowseBranch.browse(oid))
 
     def update_menu_actions(self, event):
         selected_items = self.selected_items()
