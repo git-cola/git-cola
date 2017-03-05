@@ -318,10 +318,7 @@ class RemoteActionDialog(standard.Dialog):
             self.no_ff_checkbox.hide()
             self.ff_only_checkbox.hide()
 
-        desktop = qtutils.desktop()
-        width = desktop.width()//2
-        height = desktop.height() - desktop.height()//4
-        self.init_state(None, self.resize, width, height)
+        self.init_size(parent=parent)
 
     def set_rebase(self, value):
         """Check the rebase checkbox"""
