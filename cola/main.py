@@ -377,8 +377,8 @@ def cmd_grep(args):
 
 def cmd_merge(args):
     context = application_init(args, update=True)
-    from .widgets.merge import MergeView
-    view = MergeView(context.cfg, context.model, parent=None)
+    from .widgets.merge import Merge
+    view = Merge(context.cfg, context.model, parent=None)
     return application_start(context, view)
 
 
