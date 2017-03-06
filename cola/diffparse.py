@@ -130,6 +130,7 @@ class DiffLines(object):
         DIFF_STATE = 1
         state = INITIAL_STATE
         merge = self.merge = False
+        NO_NEWLINE = '\\ No newline at end of file'
 
         old = self.old.reset()
         new = self.new.reset()
@@ -155,7 +156,7 @@ class DiffLines(object):
                     new.parse(parts[3][1:])
                     lines.append((self.DASH, self.DASH, self.DASH))
                     continue
-            if state == INITIAL_STATE:
+            if state == INITIAL_STATE or text == NO_NEWLINE:
                 if merge:
                     lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
                 else:
@@ -186,7 +187,10 @@ class DiffLines(object):
                 ours.tick()
                 theirs.tick()
             else:
-                self.valid = False
+                state = INITIAL_STATE
+                merge = False
+                lines.append((self.EMPTY, self.EMPTY))
+                #self.valid = False
                 continue
 
         return lines
