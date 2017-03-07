@@ -415,7 +415,7 @@ The delete branch branch action runs
 `git branch -D [<branchname>] <https://git-scm.com/docs/git-branch>`_.
 
 Delete Remote Branch
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 The remote branch action runs
 `git push --delete [<remote>] [<branchname>] <https://git-scm.com/docs/git-push>`_.
 
