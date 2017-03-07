@@ -74,11 +74,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.git_helper = GitHelper(model.git)
         self.current_branch = None
 
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_updated, self.updated.emit)
-
         self.runtask = qtutils.RunTask(parent=self)
         self._active = False
+
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        model.add_observer(model.message_updated, self.updated.emit)
 
     # TODO: review standard.py 317.
     # Original function returns 'QAbstractItemModel' object which has no
