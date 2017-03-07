@@ -78,6 +78,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         model.add_observer(model.message_updated, self.updated.emit)
 
         self.runtask = qtutils.RunTask(parent=self)
+        self._active = False
 
     # TODO: review standard.py 317.
     # Original function returns 'QAbstractItemModel' object which has no
@@ -87,6 +88,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         return self
 
     def refresh(self):
+        if not self._active:
+            return
         model = self.main_model
         self.current_branch = model.currentbranch
 
@@ -118,6 +121,13 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.addTopLevelItems([local, remote, tags])
         self.update_select_branch()
         self.load_tree_state(states)
+
+    def showEvent(self, event):
+        """Defer updating widgets until the widget is visible"""
+        if not self._active:
+            self._active = True
+            self.refresh()
+        return super(BranchesTreeWidget, self).showEvent(event)
 
     def contextMenuEvent(self, event):
         selected = self.selected_item()
