@@ -66,6 +66,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setHeaderHidden(True)
         self.setAlternatingRowColors(False)
         self.setColumnCount(1)
+        self.setExpandsOnDoubleClick(False)
 
         self.main_model = model = main.model()
 
@@ -78,6 +79,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         model.add_observer(model.message_updated, self.updated.emit)
+
+        # Expand items when they are clicked
+        self.clicked.connect(self._toggle_expanded)
 
     # TODO: review standard.py 317.
     # Original function returns 'QAbstractItemModel' object which has no
@@ -127,6 +131,10 @@ class BranchesTreeWidget(standard.TreeWidget):
             self._active = True
             self.refresh()
         return super(BranchesTreeWidget, self).showEvent(event)
+
+    def _toggle_expanded(self, index):
+        """Toggle expanded/collapsed state when items are clicked"""
+        self.setExpanded(index, not self.isExpanded(index))
 
     def contextMenuEvent(self, event):
         selected = self.selected_item()
