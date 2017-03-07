@@ -68,7 +68,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setRootIsDecorated(True)
         self.setColumnCount(1)
 
-        model = main.model()
+        self.main_model = model = main.model()
 
         self.tree_helper = BranchesTreeHelper()
         self.git_helper = GitHelper(model.git)
@@ -87,17 +87,19 @@ class BranchesTreeWidget(standard.TreeWidget):
         return self
 
     def refresh(self):
-        self.current_branch = gitcmds.current_branch()
+        model = self.main_model
+        self.current_branch = model.currentbranch
+
         states = self.save_tree_state()
 
         local_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(), SEPARATOR_CHAR)
+            model.local_branches, SEPARATOR_CHAR)
 
         remote_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(remote=True), SEPARATOR_CHAR)
+            model.remote_branches, SEPARATOR_CHAR)
 
         tags_dict = self.tree_helper.group_branches(
-            gitcmds.tag_list(), SEPARATOR_CHAR)
+            model.tags, SEPARATOR_CHAR)
 
         ellipsis = icons.ellipsis()
         local = self.tree_helper.create_top_level_item(
