@@ -65,7 +65,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
         self.setAlternatingRowColors(False)
-        self.setRootIsDecorated(True)
         self.setColumnCount(1)
 
         self.main_model = model = main.model()
