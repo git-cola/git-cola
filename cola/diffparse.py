@@ -188,10 +188,10 @@ class DiffLines(object):
                 theirs.tick()
             else:
                 state = INITIAL_STATE
-                merge = False
-                lines.append((self.EMPTY, self.EMPTY))
-                #self.valid = False
-                continue
+                if merge:
+                    lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
+                else:
+                    lines.append((self.EMPTY, self.EMPTY))
 
         return lines
 
