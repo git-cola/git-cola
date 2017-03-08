@@ -144,6 +144,7 @@ Thanks
 * Vitor Lobo
 * v.paritskiy
 * Wolfgang Ocker
+* Xieofxie
 * Yi EungJun
 * Zeioth
 * Zhang Han
