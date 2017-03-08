@@ -97,6 +97,7 @@ Thanks
 * Mickael Albertus
 * MikHulk
 * Minarto Margoliono
+* Myz
 * Naraesk
 * Nick Todd
 * Nicolas Dietrich
@@ -129,6 +130,7 @@ Thanks
 * Szymon Judasz
 * Taylor Braun-Jones
 * Thiemo van Engelen
+* Thomas Kiley
 * Thomas Kluyver
 * Tim Schumacher
 * Trevor Alexander
