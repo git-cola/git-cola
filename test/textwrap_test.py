@@ -109,8 +109,22 @@ Link: This also avoids word-wrap
         self.assertEqual(self.wrap(text), expect)
 
     def test_word_wrap_space_at_start_of_wrap(self):
-        inputs = """0 1 2 3 4 5 6 7 8 9  0 1 2 3 4 5 6 7 8 """
+        inputs = """0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 """
         expect = """0 1 2 3 4 5 6 7 8 9\n0 1 2 3 4 5 6 7 8"""
+        self.limit = 20
+        actual = self.wrap(inputs)
+        self.assertEqual(expect, actual)
+
+    def test_word_wrap_keeps_tabs_at_start(self):
+        inputs = """\tfirst line\n\n\tsecond line"""
+        expect = """\tfirst line\n\n\tsecond line"""
+        self.limit = 20
+        actual = self.wrap(inputs)
+        self.assertEqual(expect, actual)
+
+    def test_word_wrap_keeps_twospace_indents(self):
+        inputs = """first line\n\n* branch:\n  line1\n  line2\n"""
+        expect = """first line\n\n* branch:\n  line1\n  line2\n"""
         self.limit = 20
         actual = self.wrap(inputs)
         self.assertEqual(expect, actual)
