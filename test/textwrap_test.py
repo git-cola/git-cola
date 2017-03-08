@@ -115,6 +115,20 @@ Link: This also avoids word-wrap
         actual = self.wrap(inputs)
         self.assertEqual(expect, actual)
 
+    def test_word_wrap_keeps_tabs_at_start(self):
+        inputs = """\tfirst line\n\n\tsecond line"""
+        expect = """\tfirst line\n\n\tsecond line"""
+        self.limit = 20
+        actual = self.wrap(inputs)
+        self.assertEqual(expect, actual)
+
+    def test_word_wrap_keeps_twospace_indents(self):
+        inputs = """first line\n\n* branch:\n  line1\n  line2\n"""
+        expect = """first line\n\n* branch:\n  line1\n  line2\n"""
+        self.limit = 20
+        actual = self.wrap(inputs)
+        self.assertEqual(expect, actual)
+
     def test_word_wrap_ranges(self):
         text = 'a bb ccc dddd\neeeee'
         expect = 'a\nbb\nccc\ndddd\neeeee'
