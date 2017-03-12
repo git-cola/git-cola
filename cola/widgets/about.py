@@ -338,6 +338,8 @@ def translators_text():
              title=N_('Indonesian translation')),
         dict(name='Zeioth',
              title=N_('Spanish translation')),
+        dict(name='Igor Kopach',
+             title=N_('Ukranian translation')),
     )
 
     bug_url = 'https://github.com/git-cola/git-cola/issues'
