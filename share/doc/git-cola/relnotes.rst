@@ -21,6 +21,10 @@ git-cola v2.11 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* New Ukranian translation.
+
+  https://github.com/git-cola/git-cola/pull/670
+
 * New and improved French translations.
 
 * The new `Branches` widget makes it easier to checkout, merge, push,
