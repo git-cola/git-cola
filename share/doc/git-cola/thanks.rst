@@ -51,6 +51,7 @@ Thanks
 * Guo Yunhe
 * Harro Verton
 * Igor Galarraga
+* Igor Kopach
 * Ilya Tumaykin
 * Ingo Weinhold
 * Ismael Juma
