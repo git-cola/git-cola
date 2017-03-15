@@ -25,6 +25,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/670
 
+  https://github.com/git-cola/git-cola/pull/672
+
 * New and improved French translations.
 
 * The new `Branches` widget makes it easier to checkout, merge, push,
