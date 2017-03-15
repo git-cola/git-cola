@@ -376,7 +376,7 @@ def show_shortcuts():
     hotkeys_html = resources.doc(N_('hotkeys.html'))
     try:
         from qtpy import QtWebEngineWidgets
-    except ImportError:
+    except (ImportError, qtpy.PythonQtError):
         # redhat disabled QtWebKit in their qt build but don't punish the users
         webbrowser.open_new_tab('file://' + hotkeys_html)
         return
