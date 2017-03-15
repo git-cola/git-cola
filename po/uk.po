@@ -471,7 +471,7 @@ msgstr "Підписане GPG"
 #: cola/cmds.py:1749 cola/widgets/action.py:59 cola/widgets/diff.py:254
 #: cola/widgets/commitmsg.py:227
 msgid "Unstage"
-msgstr "Видалити з проіндексованого"
+msgstr "Видалити з індексу"
 
 #: cola/cmds.py:1756
 #, python-format
@@ -961,15 +961,15 @@ msgstr "Перервати злиття..."
 
 #: cola/widgets/main.py:229 cola/widgets/action.py:61
 msgid "Fetch..."
-msgstr "Отримати..."
+msgstr "Отримати"
 
 #: cola/widgets/main.py:231 cola/widgets/action.py:62
 msgid "Push..."
-msgstr "Надіслати..."
+msgstr "Надіслати"
 
 #: cola/widgets/main.py:233 cola/widgets/action.py:63
 msgid "Pull..."
-msgstr "Стягнути..."
+msgstr "Стягнути"
 
 #: cola/widgets/main.py:236 cola/widgets/startup.py:47
 msgid "Open..."
@@ -981,7 +981,7 @@ msgstr "Відкрити в новому вікні..."
 
 #: cola/widgets/main.py:244 cola/widgets/action.py:64
 msgid "Stash..."
-msgstr "Сховати..."
+msgstr "Сховати"
 
 #: cola/widgets/main.py:253 cola/widgets/startup.py:49
 msgid "Clone..."
@@ -1532,7 +1532,7 @@ msgstr "Ширина тексту"
 
 #: cola/widgets/prefs.py:178 cola/widgets/commitmsg.py:142
 msgid "Auto-Wrap Lines"
-msgstr "Авто-обгортка рядків"
+msgstr "Авто-перенос рядків"
 
 #: cola/widgets/prefs.py:179
 msgid "Editor"
