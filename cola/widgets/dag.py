@@ -293,6 +293,28 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
         self.itemSelectionChanged.connect(self.selection_changed)
 
+    def export_state(self):
+        """Export the widget's state"""
+        # The base class method is intentionally overridden because we only
+        # care about the details below for this subwidget.
+        state = {}
+        state['column_widths'] = self.column_widths()
+        return state
+
+    def apply_state(self, state):
+        """Apply the exported widget state"""
+        self.state = state
+        try:
+            column_widths = state['column_widths']
+        except (KeyError, ValueError):
+            column_widths = None
+        if column_widths:
+            self.set_column_widths(column_widths)
+        else:
+            self.adjust_columns()
+
+        return True
+
     # ViewerMixin
     def go_up(self):
         self.goto(self.itemAbove)
@@ -571,6 +593,7 @@ class GitDAG(standard.MainWindow):
     def export_state(self):
         state = standard.MainWindow.export_state(self)
         state['count'] = self.ctx.count
+        state['log'] = self.treewidget.export_state()
         return state
 
     def apply_state(self, state):
@@ -584,6 +607,14 @@ class GitDAG(standard.MainWindow):
             result = False
         self.ctx.set_count(count)
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
+
+        try:
+            log_state = state['log']
+        except (KeyError, ValueError):
+            log_state  = None
+        if log_state:
+            self.treewidget.apply_state(log_state)
+
         return result
 
     def model_updated(self):
@@ -600,10 +631,6 @@ class GitDAG(standard.MainWindow):
         self.ctx.set_ref(new_ref)
         self.ctx.set_count(new_count)
         self.thread.start()
-
-    def show(self):
-        standard.MainWindow.show(self)
-        self.treewidget.adjust_columns()
 
     def commits_selected(self, commits):
         if commits:
@@ -666,10 +693,6 @@ class GitDAG(standard.MainWindow):
         self.revtext.close_popup()
         self.thread.stop()
         standard.MainWindow.closeEvent(self, event)
-
-    def resizeEvent(self, e):
-        standard.MainWindow.resizeEvent(self, e)
-        self.treewidget.adjust_columns()
 
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
