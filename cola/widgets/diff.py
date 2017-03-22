@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
-import math
 
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -17,7 +16,6 @@ from ..qtutils import make_format
 from ..qtutils import RGB
 from .. import actions
 from .. import cmds
-from .. import compat
 from .. import core
 from .. import diffparse
 from .. import gitcfg
