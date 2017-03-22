@@ -60,6 +60,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/659
 
+* `git dag` now remembers its column sizes across sessions.
+
+  https://github.com/git-cola/git-cola/issues/674
+
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
 
