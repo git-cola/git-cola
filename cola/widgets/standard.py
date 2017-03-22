@@ -378,6 +378,22 @@ class TreeMixin(object):
                 item = widget.model().itemFromIndex(index)
         return item
 
+    def column_widths(self):
+        """Return the tree's column widths"""
+        widget = self.widget
+        count = widget.header().count()
+        return [widget.columnWidth(i) for i in range(count)]
+
+    def set_column_widths(self, widths):
+        """Set the tree's column widths"""
+        if widths:
+            widget = self.widget
+            count = widget.header().count()
+            if len(widths) > count:
+                widths = widths[:count]
+            for idx, value in enumerate(widths):
+                widget.setColumnWidth(idx, value)
+
 
 class DraggableTreeMixin(TreeMixin):
     """A tree widget with internal drag+drop reordering of rows
@@ -508,6 +524,12 @@ class TreeView(QtWidgets.QTreeView):
     def items(self):
         return self._mixin.items()
 
+    def column_widths(self):
+        return self._mixin.column_widths()
+
+    def set_column_widths(self, widths):
+        return self._mixin.set_column_widths(widths)
+
 
 class TreeWidget(QtWidgets.QTreeWidget):
     Mixin = TreeMixin
@@ -534,6 +556,12 @@ class TreeWidget(QtWidgets.QTreeWidget):
 
     def items(self):
         return self._mixin.items()
+
+    def column_widths(self):
+        return self._mixin.column_widths()
+
+    def set_column_widths(self, widths):
+        return self._mixin.set_column_widths(widths)
 
 
 class DraggableTreeWidget(TreeWidget):
