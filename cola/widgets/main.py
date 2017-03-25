@@ -76,6 +76,10 @@ class MainView(standard.MainWindow):
         # Runs asynchronous tasks
         self.runtask = qtutils.RunTask()
 
+        from cola.widgets.toolbar import create_toolbar
+        self.toolbar = self.addToolBar('Main Toolbar')
+        create_toolbar(self.toolbar)
+
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
         self.browser_dockable = (cfg.get('cola.browserdockable') or
@@ -553,6 +557,16 @@ class MainView(standard.MainWindow):
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
         self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
+
+    def configure_toolbar(self):
+        from cola.widgets.toolbar import configure_toolbar_dialog
+        configure_toolbar_dialog(self.toolbar)
+
+    def contextMenuEvent(self, event):
+        menu = self.createPopupMenu()
+        menu.addAction(N_('Configure toolbar'), self.configure_toolbar)
+
+        menu.exec_(event.globalPos())
 
     def build_recent_menu(self):
         settings = Settings()
