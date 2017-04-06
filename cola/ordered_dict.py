@@ -1,16 +1,22 @@
-# Backport of OrderedDict() class that runs on Python 2.4, 2.5, 2.6, 2.7 and pypy.
-# Passes Python2.7's test suite and incorporates all the latest updates.
-# Copyright 2009 Raymond Hettinger, released under the MIT License.
-# http://code.activestate.com/recipes/576693/
+"""Backport of OrderedDict() class
+
+Runs on Python 2.4, 2.5, 2.6, 2.7, 3.x and pypy.
+
+Passes Python2.7's test suite and incorporates all the latest updates.
+Copyright 2009 Raymond Hettinger, released under the MIT License.
+http://code.activestate.com/recipes/576693/
+
+"""
+from __future__ import absolute_import, division, unicode_literals
 try:
+    # Python2's "thread" module must be tried first
     from thread import get_ident as _get_ident
 except ImportError:
-    from dummy_thread import get_ident as _get_ident
-
-try:
-    from _abcoll import KeysView, ValuesView, ItemsView
-except ImportError:
-    pass
+    # Python2 also contains a "threading" module, but it does not
+    # contain get_ident(), so this part would fail if it were done first.
+    # get_ident() become available in the consolidated "threading" module
+    # until Python3.
+    from threading import get_ident as _get_ident
 
 
 class OrderedDict(dict):
@@ -79,7 +85,7 @@ class OrderedDict(dict):
     def clear(self):
         'od.clear() -> None.  Remove all items from od.'
         try:
-            for node in self.__map.itervalues():
+            for node in self.__map.values():
                 del node[:]
             root = self.__root
             root[:] = [root, root, None]
@@ -243,17 +249,3 @@ class OrderedDict(dict):
 
     def __ne__(self, other):
         return not self == other
-
-    # -- the following methods are only used in Python 2.7 --
-
-    def viewkeys(self):
-        "od.viewkeys() -> a set-like object providing a view on od's keys"
-        return KeysView(self)
-
-    def viewvalues(self):
-        "od.viewvalues() -> an object providing a view on od's values"
-        return ValuesView(self)
-
-    def viewitems(self):
-        "od.viewitems() -> a set-like object providing a view on od's items"
-        return ItemsView(self)

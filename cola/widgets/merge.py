@@ -11,6 +11,7 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from . import completion
+from . import standard
 from . import defs
 
 
@@ -18,7 +19,7 @@ def local_merge():
     """Provides a dialog for merging branches"""
     model = main.model()
     cfg = gitcfg.current()
-    view = MergeView(cfg, model, qtutils.active_window())
+    view = Merge(cfg, model, qtutils.active_window())
     view.show()
     view.raise_()
     return view
@@ -38,11 +39,11 @@ def abort_merge():
         gitcmds.abort_merge()
 
 
-class MergeView(QtWidgets.QDialog):
+class Merge(standard.Dialog):
     """Provides a dialog for merging branches."""
 
     def __init__(self, cfg, model, parent=None):
-        QtWidgets.QDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.cfg = cfg
         self.model = model
         if parent is not None:
@@ -91,7 +92,8 @@ class MergeView(QtWidgets.QDialog):
         self.button_close = qtutils.close_button()
 
         icon = icons.merge()
-        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon)
+        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon,
+                                                  default=True)
 
         # Layouts
         self.revlayt = qtutils.hbox(defs.no_margin, defs.spacing,
@@ -103,10 +105,10 @@ class MergeView(QtWidgets.QDialog):
                                       self.radio_tag)
 
         self.buttonlayt = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.button_viz, qtutils.STRETCH,
+                                       self.button_close, qtutils.STRETCH,
                                        self.checkbox_squash, self.checkbox_noff,
                                        self.checkbox_commit, self.checkbox_sign,
-                                       self.button_close, self.button_merge)
+                                       self.button_viz, self.button_merge)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.spacing,
                                      self.radiolayt, self.revisions,
@@ -128,7 +130,8 @@ class MergeView(QtWidgets.QDialog):
         # Observer messages
         model.add_observer(model.message_updated, self.update_all)
         self.update_all()
-        self.resize(700, 400)
+
+        self.init_size(parent=parent)
 
     def update_all(self):
         """Set the branch name for the window title and label."""

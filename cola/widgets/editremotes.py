@@ -68,18 +68,24 @@ class RemoteEditor(standard.Dialog):
                                                     tooltip=N_('Delete remote'))
         self.close_btn = qtutils.close_button()
 
+        self._actions_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                            self.add_btn,
+                                            self.delete_btn,
+                                            self.refresh_btn,
+                                            qtutils.STRETCH)
+        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
+                                           self.close_btn,
+                                           qtutils.STRETCH)
+
         self._top_layout = qtutils.splitter(Qt.Horizontal,
                                             self.remotes, self.info)
         width = self._top_layout.width()
         self._top_layout.setSizes([width//4, width*3//4])
 
-        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                           self.add_btn, self.delete_btn,
-                                           self.refresh_btn, qtutils.STRETCH,
-                                           self.close_btn)
-
         self._layout = qtutils.vbox(defs.margin, defs.spacing,
-                                    self._top_layout, self._button_layout)
+                                    self._top_layout,
+                                    self._actions_layout,
+                                    self._button_layout)
         self.setLayout(self._layout)
         self.refresh()
 
@@ -197,11 +203,11 @@ class AddRemoteWidget(QtWidgets.QDialog):
             return widget
 
         self.setWindowTitle(N_('Add remote'))
-        self.name = lineedit(N_('Name for the new remote'))
+        self.remote_name = lineedit(N_('Name for the new remote'))
         self.url = lineedit('git://git.example.com/repo.git')
 
         self._form = qtutils.form(defs.margin, defs.spacing,
-                                  (N_('Name'), self.name),
+                                  (N_('Name'), self.remote_name),
                                   (N_('URL'), self.url))
 
         self._btn_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
@@ -212,14 +218,14 @@ class AddRemoteWidget(QtWidgets.QDialog):
                                     self._form, self._btn_layout)
         self.setLayout(self._layout)
 
-        self.name.textChanged.connect(self.validate)
+        self.remote_name.textChanged.connect(self.validate)
         self.url.textChanged.connect(self.validate)
 
         qtutils.connect_button(self.add_btn, self.accept)
         qtutils.connect_button(self.close_btn, self.reject)
 
     def validate(self, dummy_text):
-        name = self.name.value()
+        name = self.remote_name.value()
         url = self.url.value()
         self.add_btn.setEnabled(bool(name) and bool(url))
 

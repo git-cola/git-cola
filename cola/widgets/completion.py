@@ -266,8 +266,9 @@ class GatherCompletionsThread(QtCore.QThread):
 class HighlightDelegate(QtWidgets.QStyledItemDelegate):
     """A delegate used for auto-completion to give formatted completion"""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         QtWidgets.QStyledItemDelegate.__init__(self, parent)
+        self.widget = parent
         self.highlight_text = ''
         self.case_sensitive = False
 
@@ -320,7 +321,7 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
 
         # translate the painter to where the text is drawn
         item_text = QtWidgets.QStyle.SE_ItemViewItemText
-        rect = style.subElementRect(item_text, params)
+        rect = style.subElementRect(item_text, params, self.widget)
         painter.save()
 
         start = rect.topLeft() + QtCore.QPoint(defs.margin, 0)

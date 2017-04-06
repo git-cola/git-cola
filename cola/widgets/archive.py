@@ -1,3 +1,4 @@
+"""Git Archive dialog"""
 from __future__ import division, absolute_import, unicode_literals
 import os
 
@@ -6,15 +7,16 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..git import git
+from ..git import STDOUT
+from ..i18n import N_
 from .. import cmds
 from .. import core
 from .. import icons
 from .. import qtutils
-from ..git import git
-from ..git import STDOUT
-from ..i18n import N_
-from . import defs
 from .text import LineEdit
+from .standard import Dialog
+from . import defs
 
 
 class ExpandableGroupBox(QtWidgets.QGroupBox):
@@ -76,7 +78,7 @@ class ExpandableGroupBox(QtWidgets.QGroupBox):
 
 def show_save_dialog(oid, parent=None):
     shortoid = oid[:7]
-    dlg = GitArchiveDialog(oid, shortoid, parent=parent)
+    dlg = Archive(oid, shortoid, parent=parent)
     dlg.show()
     dlg.raise_()
     if dlg.exec_() != dlg.Accepted:
@@ -84,10 +86,10 @@ def show_save_dialog(oid, parent=None):
     return dlg
 
 
-class GitArchiveDialog(QtWidgets.QDialog):
+class Archive(Dialog):
 
     def __init__(self, ref, shortref=None, parent=None):
-        QtWidgets.QDialog.__init__(self, parent)
+        Dialog.__init__(self, parent=parent)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -140,14 +142,13 @@ class GitArchiveDialog(QtWidgets.QDialog):
         self.prefix_group.set_expanded(False)
 
         self.btnlayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                    qtutils.STRETCH, self.close_button,
+                                    self.close_button, qtutils.STRETCH,
                                     self.save_button)
 
         self.mainlayt = qtutils.vbox(defs.margin, defs.no_spacing,
                                      self.filelayt, self.prefix_group,
                                      qtutils.STRETCH, self.btnlayt)
         self.setLayout(self.mainlayt)
-        self.resize(defs.scale(520), defs.scale(10))
 
         # initial setup; done before connecting to avoid
         # signal/slot side-effects
@@ -170,6 +171,8 @@ class GitArchiveDialog(QtWidgets.QDialog):
         qtutils.connect_button(self.browse, self.choose_filename)
         qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.save_button, self.save_archive)
+
+        self.init_size(parent=parent)
 
     def archive_saved(self):
         cmds.do(cmds.Archive, self.ref, self.fmt, self.prefix, self.filename)

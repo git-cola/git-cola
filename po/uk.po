@@ -1,0 +1,2790 @@
+# Translation of git-cola to ukrainian
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Igor Kopach <ikopach@ukr.net>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-12 04:09-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Igor Kopach <ikopach@ukr.net>\n"
+"Language-Team: Ukrainian\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: cola/cmds.py:155
+msgid "Amend"
+msgstr "Змінити"
+
+#: cola/cmds.py:189
+msgid "Cannot Amend"
+msgstr "Не вдається змінити"
+
+#: cola/cmds.py:190
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+"Ви знаходитесь в процесі злиття.\n"
+"Не можна робити зміни під час злиття."
+
+#: cola/cmds.py:263
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr "Латка %(current)d/%(count)d"
+
+#: cola/cmds.py:267
+msgid "Summary:"
+msgstr "Опис:"
+
+#: cola/cmds.py:276
+msgid "Patch(es) Applied"
+msgstr "Латку(и) застосовано"
+
+#: cola/cmds.py:277
+#, python-format
+msgid "%d patch(es) applied."
+msgstr "%d латку(ок) застосовано."
+
+#: cola/cmds.py:341
+msgid "Error Launching Blame Viewer"
+msgstr "Помилка запуску переглядача анотацій (blame)"
+
+#: cola/cmds.py:342
+#, python-format
+msgid "Cannot exec \"%s\": please configure a blame viewer"
+msgstr "Не вдалось виконати \"%s\": будь ласка сконфігуруйте переглядач анотацій (blame)"
+
+#: cola/cmds.py:403 cola/cmds.py:406 cola/widgets/createbranch.py:270
+msgid "Reset Branch"
+msgstr "Скинути гілку"
+
+#: cola/cmds.py:404
+msgid "Point the current branch head to a new commit?"
+msgstr "Встановити HEAD поточної гілки на новий коміт?"
+
+#: cola/cmds.py:405
+#, python-format
+msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+#: cola/cmds.py:418 cola/cmds.py:421 cola/guicmds.py:305
+#: cola/widgets/main.py:250 cola/widgets/dag.py:242
+msgid "Reset Worktree"
+msgstr "Скинути робоче дерево"
+
+#: cola/cmds.py:419
+msgid "Reset worktree?"
+msgstr "Скинути робоче дерево?"
+
+#: cola/cmds.py:420
+#, python-format
+msgid "The worktree will be reset using \"git reset --merge %s\""
+msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
+
+#: cola/cmds.py:461
+#, python-format
+msgid "Created commit: %s"
+msgstr "Створено коміт: %s"
+
+#: cola/cmds.py:463
+#, python-format
+msgid "Commit failed: %s"
+msgstr "Не вдалось створити коміт: %s"
+
+#: cola/cmds.py:529
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr "Не вдалось створити віддалений репозиторій \"%s\""
+
+#: cola/cmds.py:535
+msgid "Delete Remote"
+msgstr "Видалити віддалений репозиторій"
+
+#: cola/cmds.py:536
+msgid "Delete remote?"
+msgstr "Видалити віддалений репозиторій?"
+
+#: cola/cmds.py:537
+#, python-format
+msgid "Delete remote \"%s\""
+msgstr "Видалити віддалений репозиторій \"%s\""
+
+#: cola/cmds.py:538 cola/guicmds.py:24 cola/guicmds.py:32
+#: cola/widgets/bookmarks.py:41
+msgid "Delete"
+msgstr "Видалити"
+
+#: cola/cmds.py:546
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Не вдалось видалити віддалений репозиторій \"%s\""
+
+#: cola/cmds.py:556
+msgid "Rename Remote"
+msgstr "Перейменувати віддалений репозиторій"
+
+#: cola/cmds.py:557
+msgid "Rename remote?"
+msgstr "Перейменувати віддалений репозиторій?"
+
+#: cola/cmds.py:558
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Перейменувати віддалений репозиторій \"%(current)s\" в \"%(new)s\"?"
+
+#: cola/cmds.py:560 cola/guicmds.py:292
+msgid "Rename"
+msgstr "Перейменувати"
+
+#: cola/cmds.py:585
+msgid "Delete Bookmark?"
+msgstr "Видалити закладку?"
+
+#: cola/cmds.py:586
+#, python-format
+msgid "%s will be removed from your bookmarks."
+msgstr "%s буде видалено з ваших закладок."
+
+#: cola/cmds.py:587
+msgid "Delete Bookmark"
+msgstr "Видалити закладку"
+
+#: cola/cmds.py:599
+#, python-format
+msgid "Remove %s from the recent list?"
+msgstr "Видалити %s зі списку останніх?"
+
+#: cola/cmds.py:600
+#, python-format
+msgid "%s will be removed from your recent repositories."
+msgstr "%s буде видалено зі списку останніх репозиторіїв."
+
+#: cola/cmds.py:601 cola/widgets/patch.py:90 cola/widgets/patch.py:102
+msgid "Remove"
+msgstr "Видалити"
+
+#: cola/cmds.py:639 cola/cmds.py:1918 cola/widgets/bookmarks.py:290
+msgid "Error"
+msgstr "Помилка"
+
+#: cola/cmds.py:640
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr "Не вдалось видалити \"%s\""
+
+#: cola/cmds.py:657
+msgid "Delete Files?"
+msgstr "Видалити файли?"
+
+#: cola/cmds.py:658
+msgid "The following files will be deleted:"
+msgstr "Наступні файли будуть видалені:"
+
+#: cola/cmds.py:660
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr "Видалити %d файл(ів)?"
+
+#: cola/cmds.py:661
+msgid "Delete Files"
+msgstr "Видалити файли"
+
+#: cola/cmds.py:721
+msgid "Remote Branch Deleted"
+msgstr "Видалено віддалену гілку"
+
+#: cola/cmds.py:722
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" було видалено з \"%(remote)s\"."
+
+#: cola/cmds.py:726 cola/guicmds.py:98 cola/widgets/remote.py:526
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr "\"%(command)s\" завершилась з кодом %(status)d"
+
+#: cola/cmds.py:729
+msgid "Error Deleting Remote Branch"
+msgstr "Не вдалось видалити віддалену гілку"
+
+#: cola/cmds.py:805 cola/cmds.py:913
+msgid "Launch Editor"
+msgstr "Відкрити редактор"
+
+#: cola/cmds.py:841
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr "Не вдалось виконати \"%s\": будь ласка, сконфігуруйте ваш редактор"
+
+#: cola/cmds.py:844
+msgid "Error Editing File"
+msgstr "Помилка редагування файла"
+
+#: cola/cmds.py:864 cola/widgets/dag.py:233 cola/widgets/filelist.py:30
+#: cola/widgets/filelist.py:33
+msgid "Launch Diff Tool"
+msgstr "Запустити інструмент порівняння"
+
+#: cola/cmds.py:895
+msgid "Launch Terminal"
+msgstr "Запустити термінал"
+
+#: cola/cmds.py:934
+msgid "Error: Cannot find commit template"
+msgstr "Помилка: Не вдається знайти шаблон коміту"
+
+#: cola/cmds.py:935
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "%s: Немає такого файла або каталогу."
+
+#: cola/cmds.py:955
+msgid "Error: Unconfigured commit template"
+msgstr "Помилка: Шаблон коміту не сконфігуровано"
+
+#: cola/cmds.py:956
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Шаблон коміту не сконфігуровано.\n"
+"Використовуйте \"git config\" щоб задати \"commit.template\"\n"
+"так, щоб він вказував на шаблон коміту"
+
+#: cola/cmds.py:989
+msgid "Error running prepare-commitmsg hook"
+msgstr "Помилка застосування prepare-commitmsg гака (hook)"
+
+#: cola/cmds.py:1005
+#, python-format
+msgid "\"%s\" returned exit status %d"
+msgstr "\"%s\" завершилась з кодом %d"
+
+#: cola/cmds.py:1008
+#, python-format
+msgid "A hook must be provided at \"%s\""
+msgstr "Гак (hook) має бути в \"%s\""
+
+#: cola/cmds.py:1063
+msgid "Open Using Default Application"
+msgstr "Відкрити, використовуючи застосунок за замовчуванням"
+
+#: cola/cmds.py:1085
+msgid "Open Parent Directory"
+msgstr "Відкрити батьківський каталог"
+
+#: cola/cmds.py:1150
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Помилка: не вдалось клонувати \"%s\""
+
+#: cola/cmds.py:1152
+#, python-format
+msgid "git clone returned exit code %s"
+msgstr "git clone завершилась з кодом %s"
+
+#: cola/cmds.py:1239
+#, python-format
+msgid "Rebase onto %s"
+msgstr "Перемістити (rebase) на %s"
+
+#: cola/cmds.py:1240 cola/cmds.py:1270 cola/cmds.py:1271 cola/cmds.py:1283
+#: cola/cmds.py:1284 cola/widgets/main.py:435 cola/widgets/remote.py:160
+msgid "Rebase"
+msgstr "Перемістити (rebase)"
+
+#: cola/cmds.py:1257
+msgid "Edit Rebase"
+msgstr "Редагувати переміщення (rebase)"
+
+#: cola/cmds.py:1258 cola/widgets/archive.py:121 cola/widgets/browse.py:598
+#: cola/widgets/stash.py:56
+msgid "Save"
+msgstr "Зберегти"
+
+#: cola/cmds.py:1311 cola/qtutils.py:673 cola/widgets/action.py:60
+#: cola/widgets/dag.py:474 cola/widgets/recent.py:103 cola/widgets/grep.py:79
+#: cola/widgets/editremotes.py:69
+msgid "Refresh"
+msgstr "Оновити"
+
+#: cola/cmds.py:1359
+msgid "Revert Unstaged Edits..."
+msgstr "Відмінити непроіндексовані зміни..."
+
+#: cola/cmds.py:1368
+msgid "Revert Unstaged Changes?"
+msgstr "Відмінити непроіндексовані зміни?"
+
+#: cola/cmds.py:1369
+msgid ""
+"This operation drops unstaged changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Ця операція відмінить непроіндексовані зміни.\n"
+"Ці зміни не можна буде відновити."
+
+#: cola/cmds.py:1371
+msgid "Revert the unstaged changes?"
+msgstr "Відмінити непроіндексовані зміни?"
+
+#: cola/cmds.py:1372
+msgid "Revert Unstaged Changes"
+msgstr "Відмінити непроіндексовані зміни"
+
+#: cola/cmds.py:1381
+msgid "Revert Uncommitted Edits..."
+msgstr "Відмінити незакомітовані зміни..."
+
+#: cola/cmds.py:1387
+msgid "Revert Uncommitted Changes?"
+msgstr "Відмінити незакомітовані зміни?"
+
+#: cola/cmds.py:1388 cola/widgets/diff.py:458
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Ця операція відмінить незакомітовані зміни.\n"
+"Ці зміни не можна буде відновити."
+
+#: cola/cmds.py:1390 cola/widgets/diff.py:460
+msgid "Revert the uncommitted changes?"
+msgstr "Відмінити незакомітовані зміни?"
+
+#: cola/cmds.py:1391
+msgid "Revert Uncommitted Changes"
+msgstr "Відмінити незакомітовані зміни"
+
+#: cola/cmds.py:1419
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Виконати \"%s\"?"
+
+#: cola/cmds.py:1426
+msgid "Please select a file"
+msgstr "Будь ласка, виберіть файл"
+
+#: cola/cmds.py:1427
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" потребує вибраного файла."
+
+#: cola/cmds.py:1441
+msgid "Invalid Revision"
+msgstr "Неправильна ревізія"
+
+#: cola/cmds.py:1442
+msgid "The revision expression cannot be empty."
+msgstr "Поле ревізії не може бути порожнім."
+
+#: cola/cmds.py:1457
+#, python-format
+msgid "Running command: %s"
+msgstr "Запуск команди: %s"
+
+#: cola/cmds.py:1469 cola/cmds.py:1736 cola/interaction.py:77
+#, python-format
+msgid "Output: %s"
+msgstr "Вивід: %s"
+
+#: cola/cmds.py:1470 cola/guicmds.py:103 cola/interaction.py:78
+#, python-format
+msgid "Errors: %s"
+msgstr "Помилки: %s"
+
+#: cola/cmds.py:1523
+msgid "Sign Off"
+msgstr "Підписати"
+
+#: cola/cmds.py:1544
+msgid "unknown"
+msgstr "невідомий"
+
+#: cola/cmds.py:1588
+msgid "Stage conflicts?"
+msgstr "Проіндексувати конфлікт?"
+
+#: cola/cmds.py:1589
+#, python-format
+msgid ""
+"%s appears to contain merge conflicts.\n"
+"\n"
+"You should probably skip this file.\n"
+"Stage it anyways?"
+msgstr ""
+"%s здається містить конфлікт злиття.\n"
+"\n"
+"Скоріш за все, ви маєте пропустити цей файл.\n"
+"Проіндексувати в будь-якому випадку?"
+
+#: cola/cmds.py:1592
+msgid "Stage conflicts"
+msgstr "Проіндексувати конфлікт"
+
+#: cola/cmds.py:1593
+msgid "Skip"
+msgstr "Пропустити"
+
+#: cola/cmds.py:1603 cola/widgets/action.py:58 cola/widgets/diff.py:252
+#: cola/widgets/commitmsg.py:225
+msgid "Stage"
+msgstr "Проіндексувати"
+
+#: cola/cmds.py:1610
+#, python-format
+msgid "Staging: %s"
+msgstr "Індексація: %s"
+
+#: cola/cmds.py:1651
+msgid "Stage Modified"
+msgstr "Проіндексувати зміни"
+
+#: cola/cmds.py:1662
+msgid "Stage Unmerged"
+msgstr "Проіндексувати незлите"
+
+#: cola/cmds.py:1673
+msgid "Stage Untracked"
+msgstr "Проіндексувати файли, що не відслідковуються"
+
+#: cola/cmds.py:1684
+msgid "Stage / Unstage"
+msgstr "Проіндексувати / Видалити з проіндексованого"
+
+#: cola/cmds.py:1714
+#, python-format
+msgid "Tagging \"%(revision)s\" as \"%(name)s\""
+msgstr "Позначення \"%(revision)s\" як \"%(name)s\""
+
+#: cola/cmds.py:1725
+msgid "GPG-signed"
+msgstr "Підписане GPG"
+
+#: cola/cmds.py:1749 cola/widgets/action.py:59 cola/widgets/diff.py:254
+#: cola/widgets/commitmsg.py:227
+msgid "Unstage"
+msgstr "Видалити з індексу"
+
+#: cola/cmds.py:1756
+#, python-format
+msgid "Unstaging: %s"
+msgstr "Видалення з проіндексованого: %s"
+
+#: cola/cmds.py:1784
+#, python-format
+msgid "Untracking: %s"
+msgstr "Видалення зі списку файлів, що відслідковуються: %s"
+
+#: cola/cmds.py:1869
+msgid "Error Launching History Browser"
+msgstr "Помилка запуску браузера історії"
+
+#: cola/cmds.py:1870
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
+msgstr ""
+
+#: cola/actions.py:34
+msgid "Next File"
+msgstr ""
+
+#: cola/actions.py:40
+msgid "Previous File"
+msgstr ""
+
+#: cola/fsmonitor.py:129
+msgid "File system change monitoring: enabled.\n"
+msgstr "Відстеження змін файлової системи: увімкнено.\n"
+
+#: cola/fsmonitor.py:170
+msgid ""
+"File system change monitoring: disabled because the limit on the total "
+"number of inotify watches was reached.  You may be able to increase the "
+"limit on the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
+"&& sudo sysctl -p\n"
+msgstr ""
+"Відстеження змін файлової системи: вимкнено, тому що досягнуто верхньої межі "
+"кількості спостерігачів inotify. Ви можете збільшити ліміт "
+"кількості спостерігачів, виконавши:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
+"&& sudo sysctl -p\n"
+
+#: cola/fsmonitor.py:503
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr ""
+"Відстеження змін файлової системи: вимкнено, тому що \"cola.inotify\" є хибним (false).\n"
+
+#: cola/fsmonitor.py:512
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+"Відстеження змін файлової системи: вимкнено, тому що не встановлено pywin32.\n"
+
+#: cola/fsmonitor.py:516
+msgid ""
+"File system change monitoring: disabled because libc does not support the "
+"inotify system calls.\n"
+msgstr ""
+"Відстеження змін файлової системи: вимкнено, тому що libc не підтримує "
+"системних викликів inotify.\n"
+
+#: cola/guicmds.py:24
+msgid "Delete Branch"
+msgstr "Видалити гілку"
+
+#: cola/guicmds.py:32
+msgid "Delete Remote Branch"
+msgstr "Видалити віддалену гілку"
+
+#: cola/guicmds.py:53
+msgid "Browse Commits..."
+msgstr "Переглянути коміти..."
+
+#: cola/guicmds.py:53
+msgid "Browse"
+msgstr "Переглянути"
+
+#: cola/guicmds.py:61
+msgid "Checkout Branch"
+msgstr "Переключитись на гілку"
+
+#: cola/guicmds.py:61
+msgid "Checkout"
+msgstr "Переключитись"
+
+#: cola/guicmds.py:70
+msgid "Cherry-Pick Commit"
+msgstr "Висмикнути коміт (cherry pick)"
+
+#: cola/guicmds.py:83 cola/widgets/main.py:177
+msgid "New Repository..."
+msgstr "Новий репозиторій"
+
+#: cola/guicmds.py:97
+msgid "Error Creating Repository"
+msgstr "Помилка створення репозиторію"
+
+#: cola/guicmds.py:100
+#, python-format
+msgid ""
+"Output:\n"
+"%s"
+msgstr ""
+"Вивід:\n"
+"%s"
+
+#: cola/guicmds.py:122
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr "Шлях або URL для клонування (Env. $VARS okay)"
+
+#: cola/guicmds.py:143
+msgid "Error Cloning"
+msgstr "Помилка клонування"
+
+#: cola/guicmds.py:144 cola/guicmds.py:145
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr "Не вдалось розпізнати Git URL: \"%s\""
+
+#: cola/guicmds.py:149
+msgid "Select a parent directory for the new clone"
+msgstr "Виберіть батьківський каталог для нового клонування"
+
+#: cola/guicmds.py:158
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr "\"%s\" вже існує, cola створить новий каталог"
+
+#: cola/guicmds.py:160
+msgid "Directory Exists"
+msgstr "Каталог існує"
+
+#: cola/guicmds.py:173 cola/widgets/search.py:76
+msgid "Export Patches"
+msgstr "Експорт латок"
+
+#: cola/guicmds.py:191 cola/guicmds.py:200 cola/widgets/startup.py:140
+msgid "Open Git Repository..."
+msgstr "Відкрити Git репозиторій..."
+
+#: cola/guicmds.py:209
+msgid "Load Commit Message"
+msgstr "Завантажити повідомлення коміту"
+
+#: cola/guicmds.py:242
+msgid "Select Branch to Review"
+msgstr "Виберіть гілку для перевірки"
+
+#: cola/guicmds.py:242
+msgid "Review"
+msgstr "Перевірка"
+
+#: cola/guicmds.py:272
+msgid "Clone Repository"
+msgstr "Клонувати репозиторій"
+
+#: cola/guicmds.py:273
+#, python-format
+msgid "Cloning repository at %s"
+msgstr "Клонувати репозиторій в %s"
+
+#: cola/guicmds.py:289
+msgid "Rename Existing Branch"
+msgstr "Перейменувати існуючу гілку"
+
+#: cola/guicmds.py:289 cola/widgets/selectcommits.py:53
+#: cola/widgets/browse.py:596
+msgid "Select"
+msgstr "Вибрати"
+
+#: cola/guicmds.py:292
+msgid "Enter New Branch Name"
+msgstr "Введіть ім'я для нової гілки"
+
+#: cola/guicmds.py:299 cola/widgets/main.py:247 cola/widgets/dag.py:239
+msgid "Reset Branch Head"
+msgstr "Скинути HEAD гілки"
+
+#: cola/guicmds.py:299 cola/guicmds.py:305 cola/widgets/main.py:387
+#: cola/widgets/dag.py:200 cola/widgets/createbranch.py:124
+msgid "Reset"
+msgstr "Скинути"
+
+#: cola/interaction.py:58 cola/widgets/main.py:325
+msgid "Continue"
+msgstr "Продовжити"
+
+#: cola/interaction.py:69
+#, python-format
+msgid "Run %s?"
+msgstr "Запустити %s?"
+
+#: cola/interaction.py:70
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr "Виконати команду \"%s\"?"
+
+#: cola/interaction.py:72 cola/widgets/cfgactions.py:237
+msgid "Run"
+msgstr "Запустити"
+
+#: cola/interaction.py:79
+#, python-format
+msgid "Exit code: %s"
+msgstr "Код завершення: %s"
+
+#: cola/app.py:207
+#, python-format
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr ""
+"Критично: \"%s\" не є каталогом. Будь ласка, вкажіть коректний --repo <шлях>."
+
+#: cola/qtutils.py:573
+msgid "Close..."
+msgstr "Закрити..."
+
+#: cola/qtutils.py:664 cola/qtutils.py:771 cola/widgets/text.py:494
+#: cola/widgets/about.py:393 cola/widgets/remote.py:258
+msgid "Close"
+msgstr "Закрити"
+
+#: cola/qtutils.py:668 cola/widgets/grep.py:76
+msgid "Edit"
+msgstr "Редагувати"
+
+#: cola/qtutils.py:774 cola/qtutils.py:808
+msgid "Detach"
+msgstr "Відкріпити"
+
+#: cola/qtutils.py:806
+msgid "Attach"
+msgstr "Прикріпити"
+
+#: cola/gitcmds.py:441
+msgid "Nothing to do"
+msgstr "Нічого робити"
+
+#: cola/difftool.py:55
+msgid "git-cola diff"
+msgstr "Різниця git-cola"
+
+#: cola/difftool.py:69 cola/widgets/compare.py:66
+msgid "Compare"
+msgstr "Порівняти"
+
+#: cola/difftool.py:74
+msgid "Compare All"
+msgstr "Порівняти все"
+
+#: cola/widgets/finder.py:61
+msgid ""
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"J, Down     = Move Down\n"
+"K, Up       = Move Up\n"
+"Enter       = Edit Selected Files\n"
+"Spacebar    = Open File Using Default Application\n"
+"Ctrl + L    = Focus Text Entry Field\n"
+"?           = Show Help\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
+msgstr ""
+"\n"
+"Поєднання клавіш\n"
+"------------------\n"
+"J, Down     = Переміститись донизу\n"
+"K, Up       = Перейменувати вгору\n"
+"Enter       = Редагувати вибрані файли\n"
+"Spacebar    = Відкрити файл, використовуючи застосунок за замовчуванням\n"
+"Ctrl + L    = Фокус на полі для введення тексту\n"
+"?           = Показати довідку\n"
+"\n"
+"Стрілки вготу та вниз змінюють фокус поміж полем для введення тексту\n"
+"та результатами.\n"
+
+#: cola/widgets/finder.py:74
+msgid "Help - Find Files"
+msgstr "Допомога - Пошук файлів"
+
+#: cola/widgets/finder.py:105 cola/widgets/main.py:194
+msgid "Find Files"
+msgstr "Пошук файлів"
+
+#: cola/widgets/finder.py:111
+msgid "<path> ..."
+msgstr "<шлях> ..."
+
+#: cola/widgets/finder.py:131 cola/widgets/main.py:459
+msgid "Help"
+msgstr "Допомога"
+
+#: cola/widgets/finder.py:131
+msgid ""
+"Show help\n"
+"Shortcut: ?"
+msgstr ""
+"Показати допомогу\n"
+"Клавіша: ?"
+
+#: cola/widgets/finder.py:171
+msgid "Show Help"
+msgstr "Показати допомогу"
+
+#: cola/widgets/selectcommits.py:49
+msgid "Revision Expression:"
+msgstr "Вираз для визначення ревізії:"
+
+#: cola/widgets/selectcommits.py:86
+msgid "No commits exist in this branch."
+msgstr "На цій гілці немає комітів."
+
+#: cola/widgets/bookmarks.py:39 cola/widgets/patch.py:86
+#: cola/widgets/patch.py:99
+msgid "Add"
+msgstr "Додати"
+
+#: cola/widgets/bookmarks.py:44 cola/widgets/bookmarks.py:108
+msgid "Open"
+msgstr "Відкрити"
+
+#: cola/widgets/bookmarks.py:52
+msgid "Favorite repositories"
+msgstr "Улюблені репозиторіїї"
+
+#: cola/widgets/bookmarks.py:54
+msgid "Recent repositories"
+msgstr "Недавні репозиторіїї"
+
+#: cola/widgets/bookmarks.py:111
+msgid "Accept"
+msgstr "Погодитись"
+
+#: cola/widgets/bookmarks.py:114
+msgid "Open in New Window"
+msgstr "Відкрити в новому вікні"
+
+#: cola/widgets/bookmarks.py:117
+msgid "Set Default Repository"
+msgstr "Встановити репозиторій за замовчуванням"
+
+#: cola/widgets/bookmarks.py:120
+msgid "Clear Default Repository"
+msgstr "Очистити репозиторій за замовчуванням"
+
+#: cola/widgets/bookmarks.py:123
+msgid "Rename Repository"
+msgstr "Перейменувати репозиторій"
+
+#: cola/widgets/bookmarks.py:137 cola/widgets/diff.py:316
+msgid "Copy"
+msgstr "Скопіювати"
+
+#: cola/widgets/bookmarks.py:173 cola/widgets/main.py:88
+#: cola/widgets/main.py:376 cola/widgets/dag.py:187 cola/widgets/diff.py:246
+#: cola/widgets/commitmsg.py:103 cola/widgets/filelist.py:82
+#: cola/widgets/browse.py:312
+msgid "Actions"
+msgstr "Дії"
+
+#: cola/widgets/bookmarks.py:277 cola/widgets/editremotes.py:200
+#: cola/widgets/createtag.py:56 cola/models/browse.py:40
+msgid "Name"
+msgstr "Ім'я"
+
+#: cola/widgets/bookmarks.py:278
+msgid "Path"
+msgstr "Шлях"
+
+#: cola/widgets/bookmarks.py:280
+msgid "Add Favorite"
+msgstr "Додати улюбление"
+
+#: cola/widgets/bookmarks.py:291
+#, python-format
+msgid "%s is not a git repository."
+msgstr "%s не є репозиторієм git."
+
+#: cola/widgets/main.py:83
+msgid "Browser"
+msgstr "Переглядач"
+
+#: cola/widgets/main.py:95 cola/models/browse.py:42
+msgid "Status"
+msgstr "Статус"
+
+#: cola/widgets/main.py:102
+msgid "Favorites"
+msgstr "Улюбене"
+
+#: cola/widgets/main.py:107
+msgid "Recent"
+msgstr "Недавнє"
+
+#: cola/widgets/main.py:126 cola/widgets/merge.py:83
+msgid "Commit"
+msgstr "Коміт"
+
+#: cola/widgets/main.py:135
+msgid "Console"
+msgstr "Консоль"
+
+#: cola/widgets/main.py:141 cola/widgets/main.py:410 cola/widgets/dag.py:454
+msgid "Diff"
+msgstr "Різниця"
+
+#: cola/widgets/main.py:149 cola/widgets/status.py:516
+msgid "Unstage All"
+msgstr "Видалити все з проіндексованого"
+
+#: cola/widgets/main.py:153
+msgid "Unstage From Commit"
+msgstr "Прибрати з коміту"
+
+#: cola/widgets/main.py:157
+msgid "Diffstat"
+msgstr "Список різниць"
+
+#: cola/widgets/main.py:160
+msgid "Stage Changed Files To Commit"
+msgstr "Додати змінені файли до коміту"
+
+#: cola/widgets/main.py:165
+msgid "Stage All Untracked"
+msgstr "Проіндексувати всі непроіндексовані файли"
+
+#: cola/widgets/main.py:170
+msgid "Apply Patches..."
+msgstr "Примінити латки..."
+
+#: cola/widgets/main.py:173
+msgid "Export Patches..."
+msgstr "Експортувати латки..."
+
+#: cola/widgets/main.py:181 cola/widgets/prefs.py:238
+msgid "Preferences"
+msgstr "Налаштування"
+
+#: cola/widgets/main.py:185
+msgid "Edit Remotes..."
+msgstr "Редагувати віддалені репозиторіїї..."
+
+#: cola/widgets/main.py:199
+msgid "Recently Modified Files..."
+msgstr "Недавно змінені файли..."
+
+#: cola/widgets/main.py:203
+msgid "Cherry-Pick..."
+msgstr "Висмикнути коміт (cherry pick)..."
+
+#: cola/widgets/main.py:207
+msgid "Load Commit Message..."
+msgstr "Завантажити текст коміту..."
+
+#: cola/widgets/main.py:210
+msgid "Prepare Commit Message"
+msgstr "Підготувати текст коміту"
+
+#: cola/widgets/main.py:214 cola/widgets/dag.py:227
+msgid "Save As Tarball/Zip..."
+msgstr "Зберегти як Tarball/Zip..."
+
+#: cola/widgets/main.py:217
+msgid "Quit"
+msgstr "Вихід"
+
+#: cola/widgets/main.py:220
+msgid "Grep"
+msgstr "Пошук (grep)"
+
+#: cola/widgets/main.py:223
+msgid "Merge..."
+msgstr "Злиття"
+
+#: cola/widgets/main.py:226 cola/widgets/merge.py:30
+msgid "Abort Merge..."
+msgstr "Перервати злиття..."
+
+#: cola/widgets/main.py:229 cola/widgets/action.py:61
+msgid "Fetch..."
+msgstr "Отримати"
+
+#: cola/widgets/main.py:231 cola/widgets/action.py:62
+msgid "Push..."
+msgstr "Надіслати"
+
+#: cola/widgets/main.py:233 cola/widgets/action.py:63
+msgid "Pull..."
+msgstr "Стягнути"
+
+#: cola/widgets/main.py:236 cola/widgets/startup.py:47
+msgid "Open..."
+msgstr "Відкрити"
+
+#: cola/widgets/main.py:240
+msgid "Open in New Window..."
+msgstr "Відкрити в новому вікні..."
+
+#: cola/widgets/main.py:244 cola/widgets/action.py:64
+msgid "Stash..."
+msgstr "Сховати"
+
+#: cola/widgets/main.py:253 cola/widgets/startup.py:49
+msgid "Clone..."
+msgstr "Клонувати..."
+
+#: cola/widgets/main.py:257
+msgid "Documentation"
+msgstr "Документація"
+
+#: cola/widgets/main.py:261
+msgid "Keyboard Shortcuts"
+msgstr "Поєднання клавіш"
+
+#: cola/widgets/main.py:265
+msgid "Visualize Current Branch..."
+msgstr "Відобразити поточну гілку..."
+
+#: cola/widgets/main.py:268
+msgid "Visualize All Branches..."
+msgstr "Відобразити всі гілки..."
+
+#: cola/widgets/main.py:271
+msgid "Search..."
+msgstr "Пошук..."
+
+#: cola/widgets/main.py:274
+msgid "Browse Current Branch..."
+msgstr "Переглянути поточну гілку..."
+
+#: cola/widgets/main.py:276
+msgid "Browse Other Branch..."
+msgstr "Переглянути іншу гілку..."
+
+#: cola/widgets/main.py:278
+msgid "Get Commit Message Template"
+msgstr "Отримати шаблон тексту коміту"
+
+#: cola/widgets/main.py:281 cola/widgets/about.py:91
+msgid "About"
+msgstr "Про програму"
+
+#: cola/widgets/main.py:284
+msgid "Expression..."
+msgstr "Вираз..."
+
+#: cola/widgets/main.py:286
+msgid "Branches..."
+msgstr "Гілки..."
+
+#: cola/widgets/main.py:289
+msgid "Create Tag..."
+msgstr "Створити теґ..."
+
+#: cola/widgets/main.py:293
+msgid "Create..."
+msgstr "Створити..."
+
+#: cola/widgets/main.py:298
+msgid "Delete..."
+msgstr "Видалити..."
+
+#: cola/widgets/main.py:301
+msgid "Delete Remote Branch..."
+msgstr "Видалити віддалену гілку..."
+
+#: cola/widgets/main.py:304
+msgid "Rename Branch..."
+msgstr "Перейменувати гілку..."
+
+#: cola/widgets/main.py:307
+msgid "Checkout..."
+msgstr "Переключитись..."
+
+#: cola/widgets/main.py:309
+msgid "Review..."
+msgstr "Перевірка..."
+
+#: cola/widgets/main.py:312
+msgid "File Browser..."
+msgstr "Переглядач файлів..."
+
+#: cola/widgets/main.py:315
+msgid "DAG..."
+msgstr "Граф (DAG)..."
+
+#: cola/widgets/main.py:319
+msgid "Start Interactive Rebase..."
+msgstr "Розпочати інтерактивне переміщення..."
+
+#: cola/widgets/main.py:322
+msgid "Edit..."
+msgstr "Редагувати..."
+
+#: cola/widgets/main.py:328
+msgid "Skip Current Patch"
+msgstr "Пропустити поточну латку"
+
+#: cola/widgets/main.py:331 cola/widgets/cfgactions.py:82
+msgid "Abort"
+msgstr "Перервати"
+
+#: cola/widgets/main.py:347 cola/widgets/dag.py:471
+msgid "Lock Layout"
+msgstr "Закріпити положення елементів"
+
+#: cola/widgets/main.py:354
+msgid "File"
+msgstr "Файл"
+
+#: cola/widgets/main.py:356
+msgid "Open Recent"
+msgstr "Відкрити останній"
+
+#: cola/widgets/main.py:396 cola/widgets/main.py:397
+#: cola/widgets/commitmsg.py:56 cola/widgets/commitmsg.py:99
+msgid "Commit@@verb"
+msgstr ""
+
+#: cola/widgets/main.py:418
+msgid "Branch"
+msgstr "Гілка"
+
+#: cola/widgets/main.py:446 cola/widgets/dag.py:480
+msgid "View"
+msgstr "Вигляд"
+
+#: cola/widgets/main.py:520
+#, python-format
+msgid "git cola version %s"
+msgstr "версія git cola %s"
+
+#: cola/widgets/main.py:609 cola/widgets/browse.py:81
+#, python-format
+msgid "Repository: %s"
+msgstr "Репозиторій: %s"
+
+#: cola/widgets/main.py:611 cola/widgets/browse.py:83
+#, python-format
+msgid "Branch: %s"
+msgstr "Гілка: %s"
+
+#: cola/widgets/main.py:615
+msgid ""
+"This repository is currently being rebased.\n"
+"Resolve conflicts, commit changes, and run:\n"
+"    Rebase > Continue"
+msgstr ""
+"Цей репозиторій переміщено.\n"
+"Виправте конфлікти, закомітуйте зміни, і виконайте:\n"
+"    Перемістити (rebase) > Продовжити"
+
+#: cola/widgets/main.py:618
+msgid "Rebasing"
+msgstr "Переміщення"
+
+#: cola/widgets/main.py:622
+msgid ""
+"This repository is in the middle of a merge.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+"Цей репозиторій в процесі злиття.\n"
+"Виправте конфлікти та закомітуйте зміни."
+
+#: cola/widgets/main.py:624
+msgid "Merging"
+msgstr "Злиття"
+
+#: cola/widgets/main.py:627
+msgid "Amending"
+msgstr "Змінення"
+
+#: cola/widgets/main.py:774
+msgid "Unable to rebase"
+msgstr "Не вдалось перемістити (rebase)"
+
+#: cola/widgets/main.py:775
+msgid "You cannot rebase with uncommitted changes."
+msgstr "Не можна робити переміщення (rebase), якщо є незакомітовані зміни."
+
+#: cola/widgets/main.py:777
+msgid "Select New Upstream"
+msgstr "Вибрати нове віддалене джерело"
+
+#: cola/widgets/main.py:778
+msgid "Interactive Rebase"
+msgstr "Інтерактивне переміщення"
+
+#: cola/widgets/status.py:36
+msgid "Toggle the paths filter"
+msgstr "Перемкнути фільтр шляхів"
+
+#: cola/widgets/status.py:119 cola/models/browse.py:407
+msgid "Staged"
+msgstr "Проіндексоване"
+
+#: cola/widgets/status.py:120 cola/models/browse.py:401
+msgid "Unmerged"
+msgstr "Незлите"
+
+#: cola/widgets/status.py:121 cola/models/browse.py:405
+msgid "Modified"
+msgstr "Змінене"
+
+#: cola/widgets/status.py:122
+msgid "Untracked"
+msgstr "Не відслідковується"
+
+#: cola/widgets/status.py:162
+msgid "Move Up"
+msgstr "Перемістити вгору"
+
+#: cola/widgets/status.py:166 cola/widgets/commitmsg.py:176
+#: cola/widgets/commitmsg.py:179
+msgid "Move Down"
+msgstr "Перемістити вниз"
+
+#: cola/widgets/status.py:170
+msgid "Copy Path to Clipboard"
+msgstr "Скопіювати шлях в буфер обміну"
+
+#: cola/widgets/status.py:174
+msgid "Copy Relative Path to Clipboard"
+msgstr "Скопіювати відносний шлях в буфер обміну"
+
+#: cola/widgets/status.py:179 cola/widgets/browse.py:135
+msgid "View History..."
+msgstr "Переглянути історію..."
+
+#: cola/widgets/status.py:182
+msgid "Blame..."
+msgstr "Анотувати (blame)..."
+
+#: cola/widgets/status.py:190
+msgid "Move files to trash"
+msgstr "Перемістити файл до смітника"
+
+#: cola/widgets/status.py:199
+msgid "Delete Files..."
+msgstr "Видалити файли..."
+
+#: cola/widgets/status.py:541 cola/widgets/status.py:567
+msgid "Unstage Selected"
+msgstr "Видалити виділене з проіндексованого..."
+
+#: cola/widgets/status.py:563 cola/widgets/status.py:633
+#: cola/widgets/diff.py:262 cola/widgets/diff.py:286
+msgid "Launch git-cola"
+msgstr "Запустити git-cola"
+
+#: cola/widgets/status.py:580 cola/widgets/status.py:598
+#: cola/widgets/status.py:638
+msgid "Stage Selected"
+msgstr "Додати виділене до проіндексованого"
+
+#: cola/widgets/status.py:621
+msgid "Add to .gitignore"
+msgstr "Додати до .gitignore"
+
+#: cola/widgets/status.py:908
+msgid "Filter paths..."
+msgstr "Фільтрувати шляхи..."
+
+#: cola/widgets/log.py:42
+#, python-format
+msgid "exit code %s"
+msgstr "Код завершення %s"
+
+#: cola/widgets/cfgactions.py:146 cola/widgets/cfgactions.py:150
+msgid "Abort Action"
+msgstr "Перервати дію"
+
+#: cola/widgets/cfgactions.py:147
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Дія все ще виконується.\n"
+"Переривання може призвести до втрати даних."
+
+#: cola/widgets/cfgactions.py:149
+msgid "Abort the action?"
+msgstr "Перервати дію?"
+
+#: cola/widgets/cfgactions.py:200
+msgid "Arguments"
+msgstr "Аргументи"
+
+#: cola/widgets/cfgactions.py:220 cola/widgets/merge.py:60
+#: cola/widgets/remote.py:111
+msgid "Local Branch"
+msgstr "Локальна гілка"
+
+#: cola/widgets/cfgactions.py:221 cola/widgets/merge.py:61
+msgid "Tracking Branch"
+msgstr "Гілка, що відслідковуються"
+
+#: cola/widgets/cfgactions.py:222 cola/widgets/merge.py:63
+#: cola/widgets/createbranch.py:114
+msgid "Tag"
+msgstr "Теґ"
+
+#: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:78
+msgid "Revision"
+msgstr "Ревізія"
+
+#: cola/widgets/dag.py:212
+msgid "Diff this -> selected"
+msgstr "Порівняти це з виділеним"
+
+#: cola/widgets/dag.py:215
+msgid "Diff selected -> this"
+msgstr "Порівняти виділене з цим"
+
+#: cola/widgets/dag.py:218 cola/widgets/createbranch.py:89
+#: cola/widgets/createbranch.py:133 cola/widgets/createbranch.py:275
+msgid "Create Branch"
+msgstr "Створити гілку"
+
+#: cola/widgets/dag.py:221
+msgid "Create Patch"
+msgstr "Створити латку"
+
+#: cola/widgets/dag.py:224 cola/widgets/createtag.py:50
+#: cola/widgets/createtag.py:84
+msgid "Create Tag"
+msgstr "Створити теґ"
+
+#: cola/widgets/dag.py:230 cola/widgets/search.py:79
+msgid "Cherry Pick"
+msgstr "Висмикнути коміт (cherry pick)"
+
+#: cola/widgets/dag.py:236
+msgid "Launch Directory Diff Tool"
+msgstr "Запустити каталоговий інструмент порівняння"
+
+#: cola/widgets/dag.py:245
+msgid "Grab File..."
+msgstr "Взяти файл..."
+
+#: cola/widgets/dag.py:248
+msgid "Copy SHA-1"
+msgstr "Скопіювати SHA-1"
+
+#: cola/widgets/dag.py:273
+msgid "Summary"
+msgstr "Опис"
+
+#: cola/widgets/dag.py:273 cola/models/browse.py:46
+msgid "Author"
+msgstr "Автор"
+
+#: cola/widgets/dag.py:273
+msgid "Date, Time"
+msgstr "Дата, час"
+
+#: cola/widgets/dag.py:281
+msgid "Go Up"
+msgstr "Вгору"
+
+#: cola/widgets/dag.py:284
+msgid "Go Down"
+msgstr "Вниз"
+
+#: cola/widgets/dag.py:410 cola/widgets/dag.py:1134
+msgid "Zoom Out"
+msgstr "Віддалити"
+
+#: cola/widgets/dag.py:413 cola/widgets/dag.py:1131
+msgid "Zoom In"
+msgstr "Приблизити"
+
+#: cola/widgets/dag.py:416 cola/widgets/dag.py:1137
+msgid "Zoom to Fit"
+msgstr "Допасувати за розміром"
+
+#: cola/widgets/dag.py:446
+msgid "Log"
+msgstr "Журнал подій"
+
+#: cola/widgets/dag.py:451
+msgid "Files"
+msgstr "Файли"
+
+#: cola/widgets/dag.py:465
+msgid "Graph"
+msgstr "Графік"
+
+#: cola/widgets/dag.py:559
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr "%(project)s: %(ref)s - Граф (DAG)"
+
+#: cola/widgets/dag.py:562
+msgid " - DAG"
+msgstr " -Граф (DAG)"
+
+#: cola/widgets/dag.py:1140
+msgid "Select Parent"
+msgstr "Вибрати предка"
+
+#: cola/widgets/dag.py:1143
+msgid "Select Oldest Parent"
+msgstr "Вибрати найстаршого предка"
+
+#: cola/widgets/dag.py:1146
+msgid "Select Child"
+msgstr "Вибрати потомка"
+
+#: cola/widgets/dag.py:1149
+msgid "Select Newest Child"
+msgstr "Вибрати найновішого потомка"
+
+#: cola/widgets/patch.py:66
+msgid "Apply Patches"
+msgstr "Застосувати латки"
+
+#: cola/widgets/patch.py:75
+msgid ""
+"\n"
+"            <p>\n"
+"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                patches to the list\n"
+"            </p>\n"
+"            "
+msgstr ""
+"\n"
+"            <p>\n"
+"                Перетягніть та відпустіть або використовуйте кнопку\n"
+"                <strong>Додати</strong>, щоб додати латки до списку\n"
+"            </p>\n"
+"            "
+
+#: cola/widgets/patch.py:87
+msgid "Add patches (+)"
+msgstr "Додати латки (+)"
+
+#: cola/widgets/patch.py:91
+msgid "Remove selected (Delete)"
+msgstr "Видалити виділене (Видалити)"
+
+#: cola/widgets/patch.py:94 cola/widgets/stash.py:51
+msgid "Apply"
+msgstr "Застосувати"
+
+#: cola/widgets/patch.py:134
+msgid "Select patch file(s)..."
+msgstr "Виберіть файл(и) латки(ок)..."
+
+#: cola/widgets/search.py:42 cola/widgets/search.py:60 cola/widgets/grep.py:71
+msgid "Search"
+msgstr "Пошук"
+
+#: cola/widgets/search.py:46
+msgid "Browse..."
+msgstr "Переглянути..."
+
+#: cola/widgets/search.py:52 cola/widgets/search.py:57
+msgid "yyyy-MM-dd"
+msgstr "рррр-ММ-дд"
+
+#: cola/widgets/search.py:211
+msgid "Search by Expression"
+msgstr "Пошук за виразом"
+
+#: cola/widgets/search.py:212
+msgid "Search by Path"
+msgstr "Пошук за шляхом"
+
+#: cola/widgets/search.py:213
+msgid "Search Commit Messages"
+msgstr "Пошук тексту коіта"
+
+#: cola/widgets/search.py:214
+msgid "Search Diffs"
+msgstr "Пошук різниць"
+
+#: cola/widgets/search.py:215
+msgid "Search Authors"
+msgstr "Пошук авторів"
+
+#: cola/widgets/search.py:216
+msgid "Search Committers"
+msgstr "Пошук комітерів"
+
+#: cola/widgets/search.py:217
+msgid "Search Date Range"
+msgstr "Пошук діапазону дат"
+
+#: cola/widgets/search.py:305
+msgid "Choose Paths"
+msgstr "Вибрати шляхи"
+
+#: cola/widgets/spellcheck.py:139
+msgid "Spelling Suggestions"
+msgstr "Поради з правопису"
+
+#: cola/widgets/prefs.py:119
+msgid "Detect conflict markers in unmerged files"
+msgstr "Виявити мітки конфліктів в незлитих файлах"
+
+#: cola/widgets/prefs.py:122
+msgid "User Name"
+msgstr "Ім'я користувача"
+
+#: cola/widgets/prefs.py:123
+msgid "Email Address"
+msgstr "Адреса електронної пошти"
+
+#: cola/widgets/prefs.py:124
+msgid "Merge Verbosity"
+msgstr "Детальність злиття"
+
+#: cola/widgets/prefs.py:125
+msgid "Number of Diff Context Lines"
+msgstr "Число рядків контексту різниці"
+
+#: cola/widgets/prefs.py:126
+msgid "Summarize Merge Commits"
+msgstr "Підсумувати коміти злиття"
+
+#: cola/widgets/prefs.py:127
+msgid "Show Diffstat After Merge"
+msgstr "Показати список різниць після злиття"
+
+#: cola/widgets/prefs.py:128
+msgid "Display Untracked Files"
+msgstr "Показати файли, що не відслідковуються"
+
+#: cola/widgets/prefs.py:129
+msgid "Detect Conflict Markers"
+msgstr "Виявити мітки конфліктів"
+
+#: cola/widgets/prefs.py:174
+msgid "Fixed-Width Font"
+msgstr "Моноширний шрифт"
+
+#: cola/widgets/prefs.py:175
+msgid "Font Size"
+msgstr "Розмір шрифта"
+
+#: cola/widgets/prefs.py:176
+msgid "Tab Width"
+msgstr "Ширина табуляції"
+
+#: cola/widgets/prefs.py:177
+msgid "Text Width"
+msgstr "Ширина тексту"
+
+#: cola/widgets/prefs.py:178 cola/widgets/commitmsg.py:142
+msgid "Auto-Wrap Lines"
+msgstr "Авто-перенос рядків"
+
+#: cola/widgets/prefs.py:179
+msgid "Editor"
+msgstr "Редактор"
+
+#: cola/widgets/prefs.py:180
+msgid "History Browser"
+msgstr "Переглядач історії"
+
+#: cola/widgets/prefs.py:181
+msgid "Blame Viewer"
+msgstr "Переглядач анотацій (blame)"
+
+#: cola/widgets/prefs.py:182
+msgid "Diff Tool"
+msgstr "Інструмент порівняння"
+
+#: cola/widgets/prefs.py:183
+msgid "Merge Tool"
+msgstr "Інструмент злиття"
+
+#: cola/widgets/prefs.py:184
+msgid "Keep *.orig Merge Backups"
+msgstr "Зберігати резервні копії *.orig файлів після злиття"
+
+#: cola/widgets/prefs.py:185
+msgid "Sort bookmarks alphabetically"
+msgstr "Сортувати закладки за алфавітом"
+
+#: cola/widgets/prefs.py:186
+msgid ""
+"Bold with dark background font instead of italic headers (restart required)"
+msgstr ""
+"Напівжирний з темним фоном шрифт замість заголовків курсивом (потрібне перезавантаження)"
+
+#: cola/widgets/prefs.py:188
+msgid "Save GUI Settings"
+msgstr "Зберегти налаштування графічного інтерфейсу"
+
+#: cola/widgets/prefs.py:246
+msgid "All Repositories"
+msgstr "Всі репозиторіїї"
+
+#: cola/widgets/prefs.py:247
+msgid "Current Repository"
+msgstr "Поточний репозиторій"
+
+#: cola/widgets/prefs.py:248
+msgid "Settings"
+msgstr "Налаштування"
+
+#: cola/widgets/diff.py:164
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Ігнорувати зміни в пробільних знаках в кінці рядка"
+
+#: cola/widgets/diff.py:169
+msgid "Ignore changes in amount of whitespace"
+msgstr "Ігнорувати зміни в кількості пробілів"
+
+#: cola/widgets/diff.py:174
+msgid "Ignore all whitespace"
+msgstr "Ігнорувати всі пробіли"
+
+#: cola/widgets/diff.py:178
+msgid "Show whole surrounding functions of changes"
+msgstr "Показати всі оточуючі функції при змінах"
+
+#: cola/widgets/diff.py:183 cola/widgets/diff.py:184
+msgid "Diff Options"
+msgstr "Опції порівняння"
+
+#: cola/widgets/diff.py:267
+msgid "Stage Selected Lines"
+msgstr "Додати виділені рядки до проіндексованого"
+
+#: cola/widgets/diff.py:268
+msgid "Revert Selected Lines..."
+msgstr "Скасування виділених рядків..."
+
+#: cola/widgets/diff.py:270
+msgid "Stage Diff Hunk"
+msgstr "Додати частину різниці до проіндексованого"
+
+#: cola/widgets/diff.py:271
+msgid "Revert Diff Hunk..."
+msgstr "Скасувати частину різниці"
+
+#: cola/widgets/diff.py:291
+msgid "Unstage Selected Lines"
+msgstr "Видалити виділені рядки з проіндексованого"
+
+#: cola/widgets/diff.py:293
+msgid "Unstage Diff Hunk"
+msgstr "Видалити частину різниці з проіндексованого"
+
+#: cola/widgets/diff.py:319
+msgid "Select All"
+msgstr "Виділити все"
+
+#: cola/widgets/diff.py:451
+msgid "Revert Selected Lines?"
+msgstr "Скасувати виділені рядки?"
+
+#: cola/widgets/diff.py:452
+msgid "Revert Selected Lines"
+msgstr "Скасувати виділені рядки"
+
+#: cola/widgets/diff.py:454
+msgid "Revert Diff Hunk?"
+msgstr "Скасувати частину різниці?"
+
+#: cola/widgets/diff.py:455
+msgid "Revert Diff Hunk"
+msgstr "Скасувати частину різниці"
+
+#: cola/widgets/diff.py:530
+msgid "Loading..."
+msgstr "Завантаження..."
+
+#: cola/widgets/recent.py:44
+msgid "Recently Modified Files"
+msgstr "Недавно змінені файли"
+
+#: cola/widgets/recent.py:54
+msgid " commits ago"
+msgstr " комітів тому"
+
+#: cola/widgets/recent.py:57
+msgid "Showing changes since"
+msgstr "Показ змін від"
+
+#: cola/widgets/recent.py:65
+msgid "Expand all"
+msgstr "Розгорнути все"
+
+#: cola/widgets/recent.py:68
+msgid "Collapse all"
+msgstr "Згорнути все"
+
+#: cola/widgets/about.py:67
+msgid "About git-cola"
+msgstr "Про git-cola"
+
+#: cola/widgets/about.py:92
+msgid "Version"
+msgstr "Версія"
+
+#: cola/widgets/about.py:93
+msgid "Authors"
+msgstr "Автори"
+
+#: cola/widgets/about.py:94
+msgid "Translators"
+msgstr "Перекладачі"
+
+#: cola/widgets/about.py:158
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola version %(cola_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
+msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola версії %(cola_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
+
+#: cola/widgets/about.py:218 cola/widgets/about.py:309
+msgid "Email contributor"
+msgstr "Електронна пошта учасника"
+
+#: cola/widgets/about.py:221
+msgid "Maintainer (since 2007) and developer"
+msgstr "Супроводжуючий (з 2007) та розробник"
+
+#: cola/widgets/about.py:229 cola/widgets/about.py:230
+#: cola/widgets/about.py:232 cola/widgets/about.py:233
+#: cola/widgets/about.py:234 cola/widgets/about.py:235
+#: cola/widgets/about.py:236 cola/widgets/about.py:237
+#: cola/widgets/about.py:238 cola/widgets/about.py:239
+#: cola/widgets/about.py:240 cola/widgets/about.py:241
+#: cola/widgets/about.py:242 cola/widgets/about.py:243
+#: cola/widgets/about.py:244 cola/widgets/about.py:245
+#: cola/widgets/about.py:246 cola/widgets/about.py:247
+#: cola/widgets/about.py:248 cola/widgets/about.py:249
+#: cola/widgets/about.py:250 cola/widgets/about.py:251
+#: cola/widgets/about.py:252 cola/widgets/about.py:253
+#: cola/widgets/about.py:254 cola/widgets/about.py:255
+#: cola/widgets/about.py:256 cola/widgets/about.py:257
+#: cola/widgets/about.py:258 cola/widgets/about.py:259
+#: cola/widgets/about.py:260 cola/widgets/about.py:261
+#: cola/widgets/about.py:262 cola/widgets/about.py:263
+#: cola/widgets/about.py:264 cola/widgets/about.py:265
+#: cola/widgets/about.py:266 cola/widgets/about.py:267
+#: cola/widgets/about.py:268 cola/widgets/about.py:269
+#: cola/widgets/about.py:270 cola/widgets/about.py:271
+#: cola/widgets/about.py:272 cola/widgets/about.py:273
+#: cola/widgets/about.py:274 cola/widgets/about.py:275
+#: cola/widgets/about.py:276 cola/widgets/about.py:277
+#: cola/widgets/about.py:278 cola/widgets/about.py:279
+#: cola/widgets/about.py:280 cola/widgets/about.py:281
+#: cola/widgets/about.py:282 cola/widgets/about.py:283
+#: cola/widgets/about.py:284 cola/widgets/about.py:285
+#: cola/widgets/about.py:286 cola/widgets/about.py:287
+#: cola/widgets/about.py:288 cola/widgets/about.py:289
+#: cola/widgets/about.py:290 cola/widgets/about.py:291
+#: cola/widgets/about.py:292 cola/widgets/about.py:293
+#: cola/widgets/about.py:294
+msgid "Developer"
+msgstr "Розробник"
+
+#: cola/widgets/about.py:298
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"        Please use %(bug_link)s to report issues.\n"
+"        <br>\n"
+"    "
+msgstr ""
+"\n"
+"        <br>\n"
+"        Будь ласка, використовуйте %(bug_link)s щоб повідомляти про проблеми.\n"
+"        <br>\n"
+"    "
+
+#: cola/widgets/about.py:314 cola/widgets/about.py:332
+msgid "Traditional Chinese (Taiwan) translation"
+msgstr "Традиційний китайський (Тайвань) переклад"
+
+#: cola/widgets/about.py:317
+msgid "Brazilian translation"
+msgstr "Бразильський переклад"
+
+#: cola/widgets/about.py:319 cola/widgets/about.py:336
+msgid "Indonesian translation"
+msgstr "Індонезійський переклад"
+
+#: cola/widgets/about.py:321
+msgid "Chinese translation"
+msgstr "Китайський переклад"
+
+#: cola/widgets/about.py:323
+msgid "German translation"
+msgstr "Німецький переклад"
+
+#: cola/widgets/about.py:325
+msgid "Russian translation"
+msgstr "Російський переклад"
+
+#: cola/widgets/about.py:327
+msgid "Turkish translation"
+msgstr "Турецький переклад"
+
+#: cola/widgets/about.py:330
+msgid "Polish translation"
+msgstr "Польський переклад"
+
+#: cola/widgets/about.py:334 cola/widgets/about.py:338
+msgid "Spanish translation"
+msgstr "Іспанський переклад"
+
+#: cola/widgets/about.py:344
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola has been translated into different languages thanks\n"
+"            to the help of the individuals listed below.\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Translation is approximate.  If you find a mistake,\n"
+"            please let us know by opening an issue on Github:\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            We invite you to participate in translation by adding or "
+"updating\n"
+"            a translation and opening a pull request.\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola була перекладена на різні мови завдяки\n"
+"            завдяки допомозі осіб вказаних нижче.\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Переклад є приблизним. Якщо ви знайшли помилку,\n"
+"            будь ласка, дайте нам знати, створивши проблему на Github:\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Запрошуємо вас до участі в перекладі, додаючи або "
+"оновлюючи\n"
+"            переклад та відкриванні запитів на стягнення (pull request).\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
+
+#: cola/widgets/about.py:372
+msgid "hotkeys.html"
+msgstr ""
+
+#: cola/widgets/about.py:385
+msgid "Shortcuts"
+msgstr "Поєднання клавіш"
+
+#: cola/widgets/startup.py:29
+msgid "git-cola"
+msgstr ""
+
+#: cola/widgets/startup.py:45
+msgid "New..."
+msgstr "Новий"
+
+#: cola/widgets/startup.py:57
+msgid "Select Repository..."
+msgstr "Вибрати репозиторій..."
+
+#: cola/widgets/startup.py:61
+msgid "Select manually..."
+msgstr "Вибрати вручну..."
+
+#: cola/widgets/compare.py:37
+msgid "*** Branch Point ***"
+msgstr "*** Вказівка на гілку ***"
+
+#: cola/widgets/compare.py:38
+msgid "*** Sandbox ***"
+msgstr "Пісочниця"
+
+#: cola/widgets/compare.py:39 cola/widgets/compare.py:50
+#: cola/widgets/compare.py:55
+msgid "Local"
+msgstr "Локальна"
+
+#: cola/widgets/compare.py:41
+msgid "Branch Diff Viewer"
+msgstr "Переглядач різниц на гілкаї"
+
+#: cola/widgets/compare.py:51 cola/widgets/compare.py:56
+#: cola/widgets/remote.py:118
+msgid "Remote"
+msgstr "Віддалений репозиторій"
+
+#: cola/widgets/compare.py:71
+msgid "File Differences"
+msgstr "Різниця між файлами"
+
+#: cola/widgets/grep.py:84
+msgid "command-line arguments"
+msgstr "аргументи командного рядка "
+
+#: cola/widgets/grep.py:88
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr "Виберіть режим регулярного виразу \"git grep\""
+
+#: cola/widgets/grep.py:89
+msgid "Basic Regexp"
+msgstr "Базовий регулярний вираз"
+
+#: cola/widgets/grep.py:89
+msgid "Extended Regexp"
+msgstr "Розширений регулярний вираз"
+
+#: cola/widgets/grep.py:89
+msgid "Fixed String"
+msgstr "Фіксована послідовність знаків"
+
+#: cola/widgets/grep.py:95
+msgid "Search using a POSIX basic regular expression"
+msgstr "Шукати, використовуючи базовий регулярний вираз POSIX"
+
+#: cola/widgets/grep.py:99
+msgid "Search using a POSIX extended regular expression"
+msgstr "Шукати, використовуючи розширений регулярний вираз POSIX"
+
+#: cola/widgets/grep.py:101
+msgid "Search for a fixed string"
+msgstr "Шукати фіксовану послідовність знаків"
+
+#: cola/widgets/grep.py:106
+msgid "grep result..."
+msgstr "шукати в результатах..."
+
+#: cola/widgets/grep.py:115
+msgid "Shell arguments"
+msgstr "Аргументи командної стрічки"
+
+#: cola/widgets/grep.py:116
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+"Розібрати аргументи використовуючи командну стрічку.\n"
+"Запити з пробілами вимагатимуть \"лапок\"."
+
+#: cola/widgets/commitmsg.py:53
+msgid "Sign off on this commit"
+msgstr "Підписатись під цим комітом"
+
+#: cola/widgets/commitmsg.py:58
+msgid "Commit staged changes"
+msgstr "Закомітувати проіндексовані зміни"
+
+#: cola/widgets/commitmsg.py:59
+msgid "Clear..."
+msgstr "Очистити..."
+
+#: cola/widgets/commitmsg.py:96
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+"Закомітувати проіндексовані зміни\n"
+"Поєднання клавіш: Ctrl+Enter"
+
+#: cola/widgets/commitmsg.py:105
+msgid "Actions..."
+msgstr "Дії..."
+
+#: cola/widgets/commitmsg.py:116
+msgid "Amend Last Commit"
+msgstr "Змінити останній коміт"
+
+#: cola/widgets/commitmsg.py:123
+msgid "Bypass Commit Hooks"
+msgstr "Оминути гаки (hooks) коміту"
+
+#: cola/widgets/commitmsg.py:130 cola/widgets/merge.py:87
+msgid "Create Signed Commit"
+msgstr "Створити підписаний коміт"
+
+#: cola/widgets/commitmsg.py:136
+msgid "Check Spelling"
+msgstr "Перевірити правопис"
+
+#: cola/widgets/commitmsg.py:149
+msgid "Load Previous Commit Message"
+msgstr "Завантажити повідомлення попереднього коміту"
+
+#: cola/widgets/commitmsg.py:153
+msgid "Fixup Previous Commit"
+msgstr "Виправити попередній коміт"
+
+#: cola/widgets/commitmsg.py:311
+msgid "Clear commit message?"
+msgstr "Очистити повідомлення коміту?"
+
+#: cola/widgets/commitmsg.py:312
+msgid "The commit message will be cleared."
+msgstr "Повідомлення коміту буде очищено."
+
+#: cola/widgets/commitmsg.py:313
+msgid "This cannot be undone.  Clear commit message?"
+msgstr "Це неможливо буде відмінити. Очистити повідомлення коміту?"
+
+#: cola/widgets/commitmsg.py:314
+msgid "Clear commit message"
+msgstr "Очистити повідомлення коміту"
+
+#: cola/widgets/commitmsg.py:420
+msgid ""
+"Please supply a commit message.\n"
+"\n"
+"A good commit message has the following format:\n"
+"\n"
+"- First line: Describe in one sentence what you did.\n"
+"- Second line: Blank\n"
+"- Remaining lines: Describe why this change is good.\n"
+msgstr ""
+"Будь ласка, напишіть текст коміту.\n"
+"\n"
+"Хороше повідомлення коміту має наступний формат:\n"
+"\n"
+"- Перший рядок: Опишіть одним повідомленням що ви робили.\n"
+"- Другий рядок: Пусто\n"
+"- Решта рядків: Опишіть, чому ці зміни хороші.\n"
+
+#: cola/widgets/commitmsg.py:426
+msgid "Missing Commit Message"
+msgstr "Відсутнє повідомлення коміту"
+
+#: cola/widgets/commitmsg.py:433
+msgid ""
+"No changes to commit.\n"
+"\n"
+"You must stage at least 1 file before you can commit."
+msgstr ""
+"Немає змін для коміту.\n"
+"\n"
+"Ви маєте проіндексувати принаймні 1 файл перед тим, як ви зможете зробити коміт."
+
+#: cola/widgets/commitmsg.py:436
+msgid "Would you like to stage and commit all modified files?"
+msgstr "Хочете проіндексувати та закомітувати всі змінені файли?"
+
+#: cola/widgets/commitmsg.py:439
+msgid "Stage and commit?"
+msgstr "Проіндексувати та закомітувати?"
+
+#: cola/widgets/commitmsg.py:440
+msgid "Stage and Commit"
+msgstr "Проіндексувати та закомітувати"
+
+#: cola/widgets/commitmsg.py:444
+msgid "Nothing to commit"
+msgstr "Немає що комітувати"
+
+#: cola/widgets/commitmsg.py:452
+msgid "Rewrite Published Commit?"
+msgstr "Перезаписати опублікований коміт?"
+
+#: cola/widgets/commitmsg.py:453
+msgid ""
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
+msgstr ""
+"Цей коміт вже опубліковано.\n"
+"Ця операція перезапише опубліковану історію.\n"
+"Скоріш за все ви не хочете цього."
+
+#: cola/widgets/commitmsg.py:456
+msgid "Amend the published commit?"
+msgstr "Змінити опублікований коміт?"
+
+#: cola/widgets/commitmsg.py:457
+msgid "Amend Commit"
+msgstr "Змінити коміт"
+
+#: cola/widgets/commitmsg.py:465
+msgid "Commit failed"
+msgstr "Не вдалось зробити коміт"
+
+#: cola/widgets/commitmsg.py:466
+#, python-format
+msgid "\"git commit\" returned exit code %s"
+msgstr "команда \"git commit\" поверула код виходу %s"
+
+#: cola/widgets/commitmsg.py:497
+msgid "More..."
+msgstr "Більше..."
+
+#: cola/widgets/commitmsg.py:501
+msgid "Select Commit"
+msgstr "Вибрати коміт"
+
+#: cola/widgets/commitmsg.py:547
+msgid "Commit summary"
+msgstr "Опис коміту"
+
+#: cola/widgets/commitmsg.py:573
+msgid "Extended description..."
+msgstr "Розширений опис..."
+
+#: cola/widgets/merge.py:31
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Переривання поточного злиття спричинить втрату *ВСІХ* незакомітованих змін.\n"
+"Відновлення незакомітованих змін неможливе."
+
+#: cola/widgets/merge.py:34
+msgid "Aborting the current merge?"
+msgstr "Перервати поточне злиття?"
+
+#: cola/widgets/merge.py:35
+msgid "Abort Merge"
+msgstr "Перервати злиття"
+
+#: cola/widgets/merge.py:54 cola/widgets/merge.py:58
+msgid "Revision to Merge"
+msgstr "Ревізія для злиття"
+
+#: cola/widgets/merge.py:68
+msgid "Visualize"
+msgstr "Відобразити"
+
+#: cola/widgets/merge.py:71
+msgid "Squash the merged commits into a single commit"
+msgstr "Об'єднати злиті коміти в один коміт"
+
+#: cola/widgets/merge.py:72
+msgid "Squash"
+msgstr "Об'єднати"
+
+#: cola/widgets/merge.py:75
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a fast-"
+"forward update"
+msgstr ""
+"Якщо увімкнено, завжди створювати коміт злиття, навіть якщо злиття може бути виконано "
+"використовуючи метод перемотки (fast-forward)"
+
+#: cola/widgets/merge.py:77
+msgid "No fast forward"
+msgstr "Без перемотки (fast-forward)"
+
+#: cola/widgets/merge.py:81
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
+"uncommitted"
+msgstr ""
+"Закомітувати злиття, якщо немає конфліктів. Зніміть прапорець щоб залишити злиття "
+"незакомітованим"
+
+#: cola/widgets/merge.py:89
+msgid "GPG-sign the merge commit"
+msgstr "Підписати-GPG коміт злиття"
+
+#: cola/widgets/merge.py:95
+msgid "Merge"
+msgstr "Злиття"
+
+#: cola/widgets/merge.py:143
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr "Злити \"%(revision)s\" в \"%(branch)s\""
+
+#: cola/widgets/merge.py:146
+#, python-format
+msgid "Merge into \"%s\""
+msgstr "Злити в \"%s\""
+
+#: cola/widgets/merge.py:194 cola/widgets/merge.py:203
+msgid "No Revision Specified"
+msgstr "Ревізію не вказано"
+
+#: cola/widgets/merge.py:195
+msgid "You must specify a revision to view."
+msgstr "Ви маєте вказати ревізію для перегляду."
+
+#: cola/widgets/merge.py:204
+msgid "You must specify a revision to merge."
+msgstr "Ви маєте вказати ревізію для злиття."
+
+#: cola/widgets/filelist.py:23
+msgid "Filename"
+msgstr "Ім'я файла"
+
+#: cola/widgets/filelist.py:23
+msgid "Additions"
+msgstr "Додано"
+
+#: cola/widgets/filelist.py:23
+msgid "Deletions"
+msgstr "Видалено"
+
+#: cola/widgets/filelist.py:27
+msgid "Show History"
+msgstr "Показати історію"
+
+#: cola/widgets/archive.py:107
+msgid "Save Archive"
+msgstr "Зберегти архів"
+
+#: cola/widgets/archive.py:125
+msgid "Prefix"
+msgstr "Префікс"
+
+#: cola/widgets/archive.py:130
+msgid "Advanced"
+msgstr "Розширено"
+
+#: cola/widgets/archive.py:176 cola/widgets/browse.py:527
+msgid "File Saved"
+msgstr "Файл збережено"
+
+#: cola/widgets/archive.py:177 cola/widgets/browse.py:528
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Дайл збережено до \"%s\""
+
+#: cola/widgets/archive.py:184
+msgid "Overwrite File?"
+msgstr "Перезаписати файл?"
+
+#: cola/widgets/archive.py:185
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "Файл \"%s\" вже існує і буде перезаписаний."
+
+#: cola/widgets/archive.py:186
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr "Перезаписати \"%s\"?"
+
+#: cola/widgets/archive.py:187
+msgid "Overwrite"
+msgstr "Перезаписати"
+
+#: cola/widgets/remote.py:108 cola/widgets/createbranch.py:276
+msgid "Updating"
+msgstr "Оновлення"
+
+#: cola/widgets/remote.py:128
+msgid "Remote Branch"
+msgstr "Віддалена гілка"
+
+#: cola/widgets/remote.py:134
+msgid "Prompt on creation"
+msgstr "Підказати при створенні"
+
+#: cola/widgets/remote.py:135
+msgid "Prompt when pushing creates new remote branches"
+msgstr "Підказати коли надсилаются новостворені віддалені гілки"
+
+#: cola/widgets/remote.py:139
+msgid "Fast-forward only"
+msgstr "Лише перемотка (fast-forward)"
+
+#: cola/widgets/remote.py:140
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge "
+"can be resolved as a fast-forward"
+msgstr ""
+"Відмовтесь від злиття за винятком, коли поточний HEAD є оновленим або злиття "
+"може бети вирішено методом перемотки"
+
+#: cola/widgets/remote.py:145
+msgid "No fast-forward"
+msgstr "Без перемотки"
+
+#: cola/widgets/remote.py:146
+msgid "Create a merge commit even when the merge resolves as a fast-forward"
+msgstr "Створити коміт злиття навіть якщо злиття може бути вирішено методом перемотки"
+
+#: cola/widgets/remote.py:150
+msgid "Force"
+msgstr "Надіслати примусово"
+
+#: cola/widgets/remote.py:151
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
+"repository to lose commits; use it with care"
+msgstr ""
+"Дозволити оновлення без перемотки. Використання \"примусу\" може призвести до того, "
+"що віддалений репозиторій втратить коміти; використовйте це з обережністю"
+
+#: cola/widgets/remote.py:157
+msgid "Include tags "
+msgstr "Включити теґ"
+
+#: cola/widgets/remote.py:159
+msgid "Rebase the current branch instead of merging"
+msgstr "Перемістити поточну гілку замість злиття"
+
+#: cola/widgets/remote.py:163
+msgid "Set upstream"
+msgstr "Встановити віддалене джерело"
+
+#: cola/widgets/remote.py:164
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
+
+#: cola/widgets/remote.py:359
+#, python-format
+msgid "URL: %s"
+msgstr "Адреса URL: %s"
+
+#: cola/widgets/remote.py:461
+msgid "No repository selected."
+msgstr "Не вибрано жодного репозиторію."
+
+#: cola/widgets/remote.py:478 cola/widgets/remote.py:573
+msgid "Push"
+msgstr "Надіслати"
+
+#: cola/widgets/remote.py:480
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
+msgstr ""
+"Гілка \"%(branch)s\" не існує в \"%(remote)s\".\n"
+"Нова гілка буде опублікована."
+
+#: cola/widgets/remote.py:482
+msgid "Create a new remote branch?"
+msgstr "Створити нову віддалену гілку?"
+
+#: cola/widgets/remote.py:483
+msgid "Create Remote Branch"
+msgstr "Створити віддалену гілку"
+
+#: cola/widgets/remote.py:490
+msgid "Force Fetch?"
+msgstr "Отримати примусово?"
+
+#: cola/widgets/remote.py:491
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr "Отримання без використання методу перемотки перезапише локальну історію!"
+
+#: cola/widgets/remote.py:492
+#, python-format
+msgid "Force fetching from %s?"
+msgstr "Примусове отримання з %s?"
+
+#: cola/widgets/remote.py:493
+msgid "Force Fetch"
+msgstr "Отримати примусово"
+
+#: cola/widgets/remote.py:495
+msgid "Force Push?"
+msgstr "Надіслати примусово?"
+
+#: cola/widgets/remote.py:496
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
+"Надсилання без використання методу перемотки перезапише опубліковану історію!\n"
+"(Чи всі зміни стягнуто?)"
+
+#: cola/widgets/remote.py:498
+#, python-format
+msgid "Force push to %s?"
+msgstr "Надіслати примусово до %s?"
+
+#: cola/widgets/remote.py:499
+msgid "Force Push"
+msgstr "Надіслати примусово"
+
+#: cola/widgets/remote.py:520
+msgid "Already up-to-date."
+msgstr "Вже оновлено."
+
+#: cola/widgets/remote.py:545
+msgid "Have you rebased/pulled lately?"
+msgstr "Чи ви робили переміщення/стягнення останнім часом?"
+
+#: cola/widgets/remote.py:555
+msgid "Fetch"
+msgstr "Отримати"
+
+#: cola/widgets/remote.py:597
+msgid "Pull"
+msgstr "Стягнути"
+
+#: cola/widgets/editremotes.py:34
+msgid "Edit Remotes"
+msgstr "Редагувати віддалені репозиторіїї"
+
+#: cola/widgets/editremotes.py:44
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
+"Додавайте та видаляйте віддалені репозиторіїї використовуючи\n"
+"кнопки Додати(+) та Видалити(-) в лівій частині програми.\n"
+"\n"
+"Віддалені репозиторіїї можна перейменувати, вибрабравши один зі списку\n"
+"та натиснувши \"enter\", або подвійним кліком мишки."
+
+#: cola/widgets/editremotes.py:53
+msgid "Remote git repositories - double-click to rename"
+msgstr "Віддалені репозиторіїї git - подвійний клік для перейменування"
+
+#: cola/widgets/editremotes.py:65
+msgid "Add new remote git repository"
+msgstr "Додати новий віддалений репозиторій git"
+
+#: cola/widgets/editremotes.py:71
+msgid "Delete remote"
+msgstr "Видалити віддалений репозиторій"
+
+#: cola/widgets/editremotes.py:151
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Збирання інформації для \"%s\"..."
+
+#: cola/widgets/editremotes.py:184
+msgid "Add Remote"
+msgstr "Додати віддалений репозиторій"
+
+#: cola/widgets/editremotes.py:195
+msgid "Add remote"
+msgstr "Додати віддалений репозиторій"
+
+#: cola/widgets/editremotes.py:196
+msgid "Name for the new remote"
+msgstr "Назва нового віддаленого репозиторію"
+
+#: cola/widgets/editremotes.py:201
+msgid "URL"
+msgstr "Адреса URL"
+
+#: cola/widgets/browse.py:87
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr "%(project)s: %(branch)s - Переглянути"
+
+#: cola/widgets/browse.py:89
+msgid "(Amending)"
+msgstr "(Зміна коміту)"
+
+#: cola/widgets/browse.py:136
+msgid "View history for selected paths"
+msgstr "Подивитись історію для вибраних шляхів"
+
+#: cola/widgets/browse.py:141
+msgid "Stage/unstage selected paths for commit"
+msgstr "Додати/видалити з проіндексованого шляхи для коміту"
+
+#: cola/widgets/browse.py:145
+msgid "Untrack Selected"
+msgstr "Не відслідковувати виділене"
+
+#: cola/widgets/browse.py:146
+msgid "Stop tracking paths"
+msgstr "Перестати відслідковувати виділене"
+
+#: cola/widgets/browse.py:151
+msgid "Launch git-difftool on the current path"
+msgstr "Запустити git-difftool для поточного шляху"
+
+#: cola/widgets/browse.py:155
+msgid "Diff Against Predecessor..."
+msgstr "Різниця до попередника..."
+
+#: cola/widgets/browse.py:156
+msgid "Launch git-difftool against previous versions"
+msgstr "Запустити git-difftool до попередньої версії"
+
+#: cola/widgets/browse.py:161
+msgid "Revert unstaged changes to selected paths"
+msgstr "Відмінити непроіндексовані зміни на вибраних шляхах"
+
+#: cola/widgets/browse.py:166
+msgid "Revert uncommitted changes to selected paths"
+msgstr "Відмінити незакомітовані зміни на вибраних шляхах"
+
+#: cola/widgets/browse.py:171 cola/widgets/common.py:36
+msgid "Edit selected paths"
+msgstr "Редагувати вибрані шляхи"
+
+#: cola/widgets/browse.py:490
+msgid "Select Previous Version"
+msgstr "Вибрати попередню версію"
+
+#: cola/widgets/browse.py:520
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Збережено \"%(filename)s\" з \"%(ref)s\" до \"%(destination)s\""
+
+#: cola/widgets/browse.py:540
+#, python-format
+msgid "Browsing %s"
+msgstr "Перегляд %s"
+
+#: cola/widgets/browse.py:558
+#, python-format
+msgid "Select file from \"%s\""
+msgstr "Вибрати файл з \"%s\""
+
+#: cola/widgets/browse.py:567
+msgid "Select File"
+msgstr "Вибрати файл"
+
+#: cola/widgets/createbranch.py:100
+msgid "Branch Name"
+msgstr "Назва гілки"
+
+#: cola/widgets/createbranch.py:105
+msgid "Starting Revision"
+msgstr "Початкова ревізія"
+
+#: cola/widgets/createbranch.py:112
+msgid "Local branch"
+msgstr "Локальна гілка"
+
+#: cola/widgets/createbranch.py:113
+msgid "Tracking branch"
+msgstr "Гілка, що відстежується"
+
+#: cola/widgets/createbranch.py:119
+msgid "Update Existing Branch:"
+msgstr "Оновити існуючу гілку:"
+
+#: cola/widgets/createbranch.py:121
+msgid "No"
+msgstr "Ні"
+
+#: cola/widgets/createbranch.py:122
+msgid "Fast Forward Only"
+msgstr "Лише перемотка (fast-forward)"
+
+#: cola/widgets/createbranch.py:126
+msgid "Fetch Tracking Branch"
+msgstr "Отримати гілку, що відстежується"
+
+#: cola/widgets/createbranch.py:129
+msgid "Checkout After Creation"
+msgstr "Переключитись після створення"
+
+#: cola/widgets/createbranch.py:231
+msgid "Missing Data"
+msgstr "Дані відсутні"
+
+#: cola/widgets/createbranch.py:232
+msgid "Please provide both a branch name and revision expression."
+msgstr "Будь ласка, надайте як ім'я гілки так і вираз ревізії."
+
+#: cola/widgets/createbranch.py:237
+#, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Гілка \"%s\" вже існує."
+
+#: cola/widgets/createbranch.py:238 cola/widgets/createbranch.py:249
+msgid "Branch Exists"
+msgstr "Гілка існує"
+
+#: cola/widgets/createbranch.py:245
+#, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
+
+#: cola/widgets/createbranch.py:259
+#, python-format
+msgid "%d skipped"
+msgstr "%d пропущено"
+
+#: cola/widgets/createbranch.py:261
+msgid "Recovering lost commits may not be easy."
+msgstr "Відновлення втрачених комітів може бути нелегким."
+
+#: cola/widgets/createbranch.py:264
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
+msgstr "Скинути \"%(branch)s\" до \"%(revision)s\"?"
+
+#: cola/widgets/createbranch.py:267
+msgid "Reset Branch?"
+msgstr "Скинути гілку?"
+
+#: cola/widgets/createbranch.py:291
+msgid "Error Creating Branch"
+msgstr "Помилка при створенні гілки"
+
+#: cola/widgets/createbranch.py:292
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr "\"%(command)s\" завершилась з кодом \"%(status)d\""
+
+#: cola/widgets/stash.py:40
+msgid "Stash"
+msgstr "Сховати (stash)"
+
+#: cola/widgets/stash.py:52
+msgid "Apply the selected stash"
+msgstr "Застосувати виділений сховок"
+
+#: cola/widgets/stash.py:57
+msgid "Save modified state to new stash"
+msgstr "Зберегти змінений стан до нового сховка"
+
+#: cola/widgets/stash.py:61
+msgid "Drop"
+msgstr "Видалити"
+
+#: cola/widgets/stash.py:62
+msgid "Drop the selected stash"
+msgstr "Видалити вибраний сховок"
+
+#: cola/widgets/stash.py:67
+msgid "Keep Index"
+msgstr "Зберегти індекс"
+
+#: cola/widgets/stash.py:160
+msgid "Save Stash"
+msgstr "Зберегти сховок"
+
+#: cola/widgets/stash.py:161
+msgid "Enter a name for the stash"
+msgstr "Введіть назву для сховка"
+
+#: cola/widgets/stash.py:168
+msgid "Error: Stash exists"
+msgstr "Помилка: сховок вже існує"
+
+#: cola/widgets/stash.py:169
+#, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Сховок з назвою \"%s\" вже існує"
+
+#: cola/widgets/stash.py:185
+msgid "Drop Stash?"
+msgstr "Видалити сховок?"
+
+#: cola/widgets/stash.py:186
+msgid "Recovering a dropped stash is not possible."
+msgstr "Неможливо відновити видалений сховок."
+
+#: cola/widgets/stash.py:187
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr "Видалити \"%s\" сховок?"
+
+#: cola/widgets/stash.py:188
+msgid "Drop Stash"
+msgstr "Видалити сховок"
+
+#: cola/widgets/createtag.py:58
+msgid "vX.Y.Z"
+msgstr "vX.Y.Z"
+
+#: cola/widgets/createtag.py:60
+msgid "Specifies the tag name"
+msgstr "Задає ім'я теґу"
+
+#: cola/widgets/createtag.py:64
+msgid "Sign Tag"
+msgstr "Підписати теґ"
+
+#: cola/widgets/createtag.py:66
+msgid "Whether to sign the tag (git tag -s)"
+msgstr "Визначає, чи піписувати теґ (git tag -s)"
+
+#: cola/widgets/createtag.py:71 cola/models/browse.py:44
+msgid "Message"
+msgstr "Повідомлення"
+
+#: cola/widgets/createtag.py:73
+msgid "Tag message..."
+msgstr "Повідомлення теґу"
+
+#: cola/widgets/createtag.py:74
+msgid "Specifies the tag message"
+msgstr "Визначає повідомлення теґу"
+
+#: cola/widgets/createtag.py:82
+msgid "Specifies the SHA-1 to tag"
+msgstr "Визначає SHA-1 теґу"
+
+#: cola/widgets/createtag.py:117
+msgid "Missing Revision"
+msgstr "Ревізія відсутня"
+
+#: cola/widgets/createtag.py:118
+msgid "Please specify a revision to tag."
+msgstr "Будь ласка, вкажіть ревізію для теґу."
+
+#: cola/widgets/createtag.py:121
+msgid "Missing Name"
+msgstr "Назва відсутня"
+
+#: cola/widgets/createtag.py:122
+msgid "Please specify a name for the new tag."
+msgstr "Будь ласка, вкажіть назву для теґу."
+
+#: cola/widgets/createtag.py:125
+msgid "Missing Tag Message"
+msgstr "Назва теґу відсутня"
+
+#: cola/widgets/createtag.py:126
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr "Вібувся запит на підписання теґу, але повідомлення для теґу порожнє."
+
+#: cola/widgets/createtag.py:128
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+"Замість цього буде створено легкий непідписаний теґ.\n"
+"Створити непідписаний теґ?"
+
+#: cola/widgets/createtag.py:131
+msgid "Create Unsigned Tag"
+msgstr "Створити непідписаний теґ"
+
+#: cola/widgets/createtag.py:139
+msgid "Tag Created"
+msgstr "Теґ створено"
+
+#: cola/widgets/createtag.py:140
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Створено новий теґ з назвою \"%s\""
+
+#: cola/widgets/createtag.py:144
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Помилка: не вдалось створити теґ \"%s\""
+
+#: cola/widgets/createtag.py:145
+#, python-format
+msgid "git tag returned exit code %s"
+msgstr "Команда git tag завершилась з кодом %s"
+
+#: cola/models/browse.py:48
+msgid "Age"
+msgstr "Вік"
+
+#: cola/models/browse.py:380 cola/models/browse.py:384
+#, python-format
+msgid "%d minutes ago"
+msgstr "%d хвилин тому"
+
+#: cola/models/browse.py:387
+#, python-format
+msgid "%d hours ago"
+msgstr "%d годин тому"
+
+#: cola/models/browse.py:388
+#, python-format
+msgid "%d days ago"
+msgstr "%d днів тому"
+
+#: cola/models/browse.py:403
+msgid "Partially Staged"
+msgstr "Частково проіндексоване"
+
+#: cola/models/browse.py:409
+msgid "Changed Upstream"
+msgstr "Змінено в віддаленому джерелі"

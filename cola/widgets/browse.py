@@ -543,52 +543,45 @@ class SaveBlob(BaseCommand):
                 N_('File saved to "%s"') % model.filename)
 
 
-class BrowseDialog(QtWidgets.QDialog):
+class BrowseBranch(standard.Dialog):
 
-    @staticmethod
-    def browse(ref):
-        parent = qtutils.active_window()
+    @classmethod
+    def browse(cls, ref):
         model = BrowseModel(ref)
-        dlg = BrowseDialog(model, parent=parent)
+        dlg = cls(model, parent=qtutils.active_window())
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Browsing %s') % model.ref)
-        if hasattr(parent, 'width'):
-            dlg.resize(parent.width()*3//4, 333)
-        else:
-            dlg.resize(420, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
             return None
         return dlg
 
-    @staticmethod
-    def select_file(ref):
+    @classmethod
+    def select_file(cls, ref):
         parent = qtutils.active_window()
         model = BrowseModel(ref)
-        dlg = BrowseDialog(model, select_file=True, parent=parent)
+        dlg = cls(model, select_file=True, parent=parent)
         dlg_model = GitTreeModel(ref, dlg)
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Select file from "%s"') % model.ref)
-        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
             return None
         return model.filename
 
-    @staticmethod
-    def select_file_from_list(file_list, title=N_('Select File')):
+    @classmethod
+    def select_file_from_list(cls, file_list, title=N_('Select File')):
         parent = qtutils.active_window()
         model = BrowseModel(None)
-        dlg = BrowseDialog(model, select_file=True, parent=parent)
+        dlg = cls(model, select_file=True, parent=parent)
         dlg_model = GitFileTreeModel(dlg)
         dlg_model.add_files(file_list)
         dlg.setModel(dlg_model)
         dlg.expandAll()
         dlg.setWindowTitle(title)
-        dlg.resize(parent.width()*3//4, 333)
         dlg.show()
         dlg.raise_()
         if dlg.exec_() != dlg.Accepted:
@@ -596,7 +589,7 @@ class BrowseDialog(QtWidgets.QDialog):
         return model.filename
 
     def __init__(self, model, select_file=False, parent=None):
-        QtWidgets.QDialog.__init__(self, parent)
+        standard.Dialog.__init__(self, parent=parent)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -605,7 +598,7 @@ class BrowseDialog(QtWidgets.QDialog):
 
         # widgets
         self.tree = GitTreeWidget(parent=self)
-        self.close = qtutils.close_button()
+        self.close_button = qtutils.close_button()
 
         if select_file:
             text = N_('Select')
@@ -616,7 +609,8 @@ class BrowseDialog(QtWidgets.QDialog):
 
         # layouts
         self.btnlayt = qtutils.hbox(defs.margin, defs.spacing,
-                                    qtutils.STRETCH, self.close, self.save)
+                                    self.close_button, qtutils.STRETCH,
+                                    self.save)
 
         self.layt = qtutils.vbox(defs.margin, defs.spacing,
                                  self.tree, self.btnlayt)
@@ -631,8 +625,9 @@ class BrowseDialog(QtWidgets.QDialog):
         self.tree.selection_changed.connect(self.selection_changed,
                                             type=Qt.QueuedConnection)
 
-        qtutils.connect_button(self.close, self.reject)
+        qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.save, self.save_blob)
+        self.init_size(parent=parent)
 
     def expandAll(self):
         self.tree.expandAll()

@@ -30,6 +30,7 @@ def stash():
 
 
 class StashView(Dialog):
+
     def __init__(self, model, parent=None):
         Dialog.__init__(self, parent=parent)
         self.model = model
@@ -40,24 +41,21 @@ class StashView(Dialog):
         self.setWindowTitle(N_('Stash'))
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
-            self.resize(parent.width(), 420)
-        else:
-            self.resize(700, 420)
 
         self.stash_list = QtWidgets.QListWidget(self)
         self.stash_text = DiffTextEdit(self)
 
-        self.button_apply = qtutils.create_toolbutton(
+        self.button_apply = qtutils.create_button(
             text=N_('Apply'),
             tooltip=N_('Apply the selected stash'),
             icon=icons.ok())
 
-        self.button_save = qtutils.create_toolbutton(
+        self.button_save = qtutils.create_button(
             text=N_('Save'),
             tooltip=N_('Save modified state to new stash'),
-            icon=icons.save())
+            icon=icons.save(), default=True)
 
-        self.button_drop = qtutils.create_toolbutton(
+        self.button_drop = qtutils.create_button(
             text=N_('Drop'),
             tooltip=N_('Drop the selected stash'),
             icon=icons.discard())
@@ -70,10 +68,13 @@ class StashView(Dialog):
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
 
-        self.btn_layt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                     self.button_save, self.button_apply,
-                                     self.button_drop, self.keep_index,
-                                     qtutils.STRETCH, self.button_close)
+        self.btn_layt = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                     self.button_close,
+                                     qtutils.STRETCH,
+                                     self.keep_index,
+                                     self.button_drop,
+                                     self.button_apply,
+                                     self.button_save)
 
         self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
                                       self.splitter, self.btn_layt)
@@ -94,10 +95,12 @@ class StashView(Dialog):
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_save, self.stash_save)
         qtutils.connect_button(self.button_drop, self.stash_drop)
-        qtutils.connect_button(self.button_close, self.close)
+        qtutils.connect_button(self.button_close, self.close_and_rescan)
 
-    def close(self):
-        self.accept()
+        self.init_size(parent=parent)
+
+    def close_and_rescan(self):
+        self.reject()
         cmds.do(cmds.Rescan)
 
     def selected_stash(self):

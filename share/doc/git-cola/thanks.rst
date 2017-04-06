@@ -51,6 +51,7 @@ Thanks
 * Guo Yunhe
 * Harro Verton
 * Igor Galarraga
+* Igor Kopach
 * Ilya Tumaykin
 * Ingo Weinhold
 * Ismael Juma
@@ -97,7 +98,9 @@ Thanks
 * Mickael Albertus
 * MikHulk
 * Minarto Margoliono
+* Myz
 * Naraesk
+* Nick Todd
 * Nicolas Dietrich
 * OmegaPhil (Omega Weapon)
 * Owen Healy
@@ -128,6 +131,7 @@ Thanks
 * Szymon Judasz
 * Taylor Braun-Jones
 * Thiemo van Engelen
+* Thomas Kiley
 * Thomas Kluyver
 * Tim Schumacher
 * Trevor Alexander
@@ -143,6 +147,7 @@ Thanks
 * Vitor Lobo
 * v.paritskiy
 * Wolfgang Ocker
+* Xieofxie
 * Yi EungJun
 * Zeioth
 * Zhang Han

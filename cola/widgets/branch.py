@@ -6,19 +6,21 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import gitcmds
-from .. import icons
-from .. import qtutils
 from ..compat import odict
+from ..compat import unichr
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..widgets import defs
 from ..widgets import standard
+from .. import gitcmds
+from .. import icons
+from .. import qtutils
+
 
 SEPARATOR_CHAR = '/'
-NAME_LOCAL_BRANCH = N_('Local Branches')
-NAME_REMOTE_BRANCH = N_('Remote Branches')
+NAME_LOCAL_BRANCH = N_('Local')
+NAME_REMOTE_BRANCH = N_('Remote')
 NAME_TAGS_BRANCH = N_('Tags')
 
 
@@ -63,19 +65,23 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
         self.setAlternatingRowColors(False)
-        self.setRootIsDecorated(True)
         self.setColumnCount(1)
+        self.setExpandsOnDoubleClick(False)
 
-        model = main.model()
+        self.main_model = model = main.model()
 
         self.tree_helper = BranchesTreeHelper()
         self.git_helper = GitHelper(model.git)
         self.current_branch = None
 
+        self.runtask = qtutils.RunTask(parent=self)
+        self._active = False
+
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         model.add_observer(model.message_updated, self.updated.emit)
 
-        self.runtask = qtutils.RunTask(parent=self)
+        # Expand items when they are clicked
+        self.clicked.connect(self._toggle_expanded)
 
     # TODO: review standard.py 317.
     # Original function returns 'QAbstractItemModel' object which has no
@@ -85,17 +91,21 @@ class BranchesTreeWidget(standard.TreeWidget):
         return self
 
     def refresh(self):
-        self.current_branch = gitcmds.current_branch()
+        if not self._active:
+            return
+        model = self.main_model
+        self.current_branch = model.currentbranch
+
         states = self.save_tree_state()
 
         local_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(), SEPARATOR_CHAR)
+            model.local_branches, SEPARATOR_CHAR)
 
         remote_dict = self.tree_helper.group_branches(
-            gitcmds.branch_list(remote=True), SEPARATOR_CHAR)
+            model.remote_branches, SEPARATOR_CHAR)
 
         tags_dict = self.tree_helper.group_branches(
-            gitcmds.tag_list(), SEPARATOR_CHAR)
+            model.tags, SEPARATOR_CHAR)
 
         ellipsis = icons.ellipsis()
         local = self.tree_helper.create_top_level_item(
@@ -114,6 +124,17 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.addTopLevelItems([local, remote, tags])
         self.update_select_branch()
         self.load_tree_state(states)
+
+    def showEvent(self, event):
+        """Defer updating widgets until the widget is visible"""
+        if not self._active:
+            self._active = True
+            self.refresh()
+        return super(BranchesTreeWidget, self).showEvent(event)
+
+    def _toggle_expanded(self, index):
+        """Toggle expanded/collapsed state when items are clicked"""
+        self.setExpanded(index, not self.isExpanded(index))
 
     def contextMenuEvent(self, event):
         selected = self.selected_item()

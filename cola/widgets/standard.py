@@ -160,11 +160,24 @@ class WidgetMixin(object):
         self.save_settings()
         self.Base.closeEvent(self, event)
 
+    def init_size(self, parent=None, settings=None, width=0, height=0):
+        if not width:
+            width = defs.dialog_w
+        if not height:
+            height = defs.dialog_h
+        self.init_state(settings,
+                        self.resize_to_parent, parent, width, height)
+
     def init_state(self, settings, callback, *args, **kwargs):
         """Restore saved settings or set the initial location"""
         if not self.restore_state(settings=settings):
             callback(*args, **kwargs)
             self.center()
+
+    def resize_to_parent(self, parent, w, h):
+        """Set the initial size of the widget"""
+        width, height = qtutils.default_size(parent, w, h)
+        self.resize(width, height)
 
 
 class MainWindowMixin(WidgetMixin):
@@ -365,6 +378,22 @@ class TreeMixin(object):
                 item = widget.model().itemFromIndex(index)
         return item
 
+    def column_widths(self):
+        """Return the tree's column widths"""
+        widget = self.widget
+        count = widget.header().count()
+        return [widget.columnWidth(i) for i in range(count)]
+
+    def set_column_widths(self, widths):
+        """Set the tree's column widths"""
+        if widths:
+            widget = self.widget
+            count = widget.header().count()
+            if len(widths) > count:
+                widths = widths[:count]
+            for idx, value in enumerate(widths):
+                widget.setColumnWidth(idx, value)
+
 
 class DraggableTreeMixin(TreeMixin):
     """A tree widget with internal drag+drop reordering of rows
@@ -495,6 +524,12 @@ class TreeView(QtWidgets.QTreeView):
     def items(self):
         return self._mixin.items()
 
+    def column_widths(self):
+        return self._mixin.column_widths()
+
+    def set_column_widths(self, widths):
+        return self._mixin.set_column_widths(widths)
+
 
 class TreeWidget(QtWidgets.QTreeWidget):
     Mixin = TreeMixin
@@ -521,6 +556,12 @@ class TreeWidget(QtWidgets.QTreeWidget):
 
     def items(self):
         return self._mixin.items()
+
+    def column_widths(self):
+        return self._mixin.column_widths()
+
+    def set_column_widths(self, widths):
+        return self._mixin.set_column_widths(widths)
 
 
 class DraggableTreeWidget(TreeWidget):

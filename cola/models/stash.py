@@ -8,6 +8,7 @@ from ..models import main
 
 
 class StashModel(observable.Observable):
+
     def __init__(self):
         observable.Observable.__init__(self)
 
@@ -16,6 +17,8 @@ class StashModel(observable.Observable):
 
     def has_stashable_changes(self):
         model = main.model()
+        if not model.initialized:
+            model.update_status()
         return bool(model.modified + model.staged)
 
     def stash_info(self, revids=False, names=False):

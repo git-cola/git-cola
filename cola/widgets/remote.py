@@ -219,17 +219,16 @@ class RemoteActionDialog(standard.Dialog):
             self.remote_branch)
 
         self.options_layout = qtutils.hbox(
-            defs.no_margin,
-            defs.button_spacing,
+            defs.no_margin, defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.force_checkbox,
             self.ff_only_checkbox,
             self.no_ff_checkbox,
             self.tags_checkbox,
             self.rebase_checkbox,
             self.upstream_checkbox,
             self.prompt_checkbox,
-            self.force_checkbox,
-            qtutils.STRETCH,
-            self.close_button,
             self.action_button)
 
         self.remote_input_layout = qtutils.vbox(
@@ -318,10 +317,7 @@ class RemoteActionDialog(standard.Dialog):
             self.no_ff_checkbox.hide()
             self.ff_only_checkbox.hide()
 
-        desktop = qtutils.desktop()
-        width = desktop.width()//2
-        height = desktop.height() - desktop.height()//4
-        self.init_state(None, self.resize, width, height)
+        self.init_size(parent=parent)
 
     def set_rebase(self, value):
         """Check the rebase checkbox"""

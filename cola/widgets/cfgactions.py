@@ -176,7 +176,7 @@ class ActionDialog(standard.Dialog):
 
     def __init__(self, parent, name, opts):
         standard.Dialog.__init__(self, parent)
-        self.name = name
+        self.action_name = name
         self.opts = opts
 
         try:
@@ -263,7 +263,7 @@ class ActionDialog(standard.Dialog):
 
     def _argstxt_changed(self, value):
         """Store the argstxt value so that we can remember it between calls"""
-        self.VALUES[self.name]['argstxt'] = value
+        self.VALUES[self.action_name]['argstxt'] = value
 
 
 class RevisionSelector(QtWidgets.QWidget):

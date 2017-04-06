@@ -152,7 +152,7 @@ class TextWrapper(object):
 
             # Avoid whitespace at the beginining of the line.
             if (self.drop_whitespace and cur_line and
-                    cur_line[0] in (' ', '  ')):
+                    cur_line[0] in (' ',)):
                 cur_line.pop(0)
 
             # Convert current line back to a string and store it in list

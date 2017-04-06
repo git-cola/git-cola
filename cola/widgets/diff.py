@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
-import math
 
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -17,7 +16,6 @@ from ..qtutils import make_format
 from ..qtutils import RGB
 from .. import actions
 from .. import cmds
-from .. import compat
 from .. import core
 from .. import diffparse
 from .. import gitcfg
@@ -561,7 +559,11 @@ class DiffEditor(DiffTextEdit):
         selection_start = cursor.selectionStart()
         selection_end = max(selection_start, cursor.selectionEnd() - 1)
 
+        first_line_idx = -1
+        last_line_idx = -1
+        line_idx = 0
         line_start = 0
+
         for line_idx, line in enumerate(self.value().splitlines()):
             line_end = line_start + len(line)
             if line_start <= selection_start <= line_end:
@@ -570,6 +572,12 @@ class DiffEditor(DiffTextEdit):
                 last_line_idx = line_idx
                 break
             line_start = line_end + 1
+
+        if first_line_idx == -1:
+            first_line_idx = line_idx
+
+        if last_line_idx == -1:
+            last_line_idx = line_idx
 
         return first_line_idx, last_line_idx
 

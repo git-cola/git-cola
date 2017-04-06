@@ -21,6 +21,12 @@ git-cola v2.11 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* New Ukranian translation.
+
+  https://github.com/git-cola/git-cola/pull/670
+
+  https://github.com/git-cola/git-cola/pull/672
+
 * New and improved French translations.
 
 * The new `Branches` widget makes it easier to checkout, merge, push,
@@ -53,6 +59,10 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/656
 
   https://github.com/git-cola/git-cola/pull/659
+
+* `git dag` now remembers its column sizes across sessions.
+
+  https://github.com/git-cola/git-cola/issues/674
 
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
@@ -90,6 +100,12 @@ Usability, bells and whistles
   a newline-separated list of words.
 
   https://github.com/git-cola/git-cola/issues/663
+
+* The stash, export patches, diff, and gitignore dialogs now remember
+  their window sizes.
+
+* A new `git cola recent` sub-command was added for finding recently
+  edited files.
 
 Fixes
 =====

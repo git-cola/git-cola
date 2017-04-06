@@ -112,7 +112,7 @@ class Finder(standard.Dialog):
 
         self.tree = filetree.FileTree(parent=self)
 
-        self.edit_button = qtutils.edit_button()
+        self.edit_button = qtutils.edit_button(default=True)
         self.edit_button.setShortcut(hotkeys.EDIT)
 
         name = cmds.OpenDefaultApp.name()
@@ -136,12 +136,12 @@ class Finder(standard.Dialog):
                                          self.input_label, self.input_txt)
 
         self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.edit_button,
-                                          self.open_default_button,
-                                          self.refresh_button,
-                                          self.help_button,
+                                          self.close_button,
                                           qtutils.STRETCH,
-                                          self.close_button)
+                                          self.help_button,
+                                          self.refresh_button,
+                                          self.open_default_button,
+                                          self.edit_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.no_spacing,
                                         self.input_layout,
@@ -176,8 +176,7 @@ class Finder(standard.Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
-        self.init_state(None, self.resize,
-                        *qtutils.default_size(parent, 720, 420))
+        self.init_size(parent=parent)
 
     def focus_tree(self):
         self.tree.setFocus()

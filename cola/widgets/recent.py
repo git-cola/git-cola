@@ -18,10 +18,9 @@ from . import standard
 
 
 def browse_recent_files():
-    parent = qtutils.active_window()
-    dialog = RecentFileDialog(parent)
-    dialog.resize(parent.width(), min(parent.height(), 420))
+    dialog = RecentFiles(parent=qtutils.active_window())
     dialog.show()
+    return dialog
 
 
 class UpdateFileListThread(QtCore.QThread):
@@ -37,12 +36,13 @@ class UpdateFileListThread(QtCore.QThread):
         self.result.emit(filenames)
 
 
-class RecentFileDialog(standard.Dialog):
+class RecentFiles(standard.Dialog):
 
-    def __init__(self, parent):
-        standard.Dialog.__init__(self, parent)
+    def __init__(self, parent=None):
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Recently Modified Files'))
-        self.setWindowModality(Qt.WindowModal)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         count = 8
         self.update_thread = UpdateFileListThread(count)
@@ -76,10 +76,11 @@ class RecentFileDialog(standard.Dialog):
                                        qtutils.STRETCH, self.refresh_button)
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                          self.close_button,
+                                          qtutils.STRETCH,
                                           self.expand_button,
                                           self.collapse_button,
-                                          qtutils.STRETCH,
-                                          self.edit_button, self.close_button)
+                                          self.edit_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.top_layout, self.tree,
@@ -103,6 +104,7 @@ class RecentFileDialog(standard.Dialog):
         qtutils.add_action(self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
 
         self.update_thread.start()
+        self.init_size(parent=parent)
 
     def edit_selected(self):
         filenames = self.tree.selected_files()
