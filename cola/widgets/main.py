@@ -76,9 +76,11 @@ class MainView(standard.MainWindow):
         # Runs asynchronous tasks
         self.runtask = qtutils.RunTask()
 
-        from cola.widgets.toolbar import create_toolbar
-        self.toolbar = self.addToolBar('Main Toolbar')
-        create_toolbar(self.toolbar)
+        # ToolBar must be imported locally to avoid errors when import icons
+        from cola.widgets.toolbar import ColaToolBar
+        self.toolbar = ColaToolBar('Main Toolbar')
+        self.toolbar.load_config()
+        self.addToolBar(self.toolbar)
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
@@ -559,6 +561,7 @@ class MainView(standard.MainWindow):
         standard.MainWindow.closeEvent(self, event)
 
     def configure_toolbar(self):
+        # ToolBar must be imported locally to avoid errors when import icons
         from cola.widgets.toolbar import configure_toolbar_dialog
         configure_toolbar_dialog(self.toolbar)
 
@@ -723,6 +726,7 @@ class MainView(standard.MainWindow):
             (optkey + '+5', self.bookmarksdockwidget),
             (optkey + '+6', self.recentdockwidget),
             (optkey + '+7', self.branchdockwidget),
+            (optkey + '+8', self.toolbar),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut

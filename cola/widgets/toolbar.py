@@ -8,6 +8,7 @@ from cola import guicmds
 from cola.models import prefs
 from cola.qtutils import app
 from cola.widgets import action
+from cola.widgets import browse
 from cola.widgets import compare
 from cola.widgets import createbranch
 from cola.widgets import createtag
@@ -22,6 +23,7 @@ from cola.widgets import search
 from cola.widgets import standard
 from cola.widgets import stash
 from qtpy import QtGui
+from qtpy import QtCore
 from qtpy.QtCore import Qt
 from qtpy import QtWidgets
 
@@ -33,7 +35,6 @@ from . import defs
 
 SOURCE_CONFIG = 'user'
 PREFS_TOOLBAR = 'cola.toolbar'
-SEPARATOR_TEXT = '--------------------'
 
 ACTION_NEW_REPO = 1
 ACTION_OPEN_REPO = 2
@@ -64,7 +65,7 @@ ACTION_SEARCH = 31
 ACTION_AMMEND_LAST = 40
 ACTION_STAGE = 41
 ACTION_STAGE_ALL = 42
-ACTION_UNSTAGE_ALL= 43
+ACTION_UNSTAGE_ALL = 43
 ACTION_UNSTAGE = 44
 ACTION_LOAD_COMMIT = 45
 ACTION_APPLY_COMMIT = 46
@@ -90,13 +91,28 @@ ACTION_REBASE_CONT = 102
 ACTION_REBASE_IGNORE = 103
 ACTION_REBASE_ABORT = 104
 
+ACTION_SHOW_FILE_BROWSER = 110
+ACTION_SHOW_DAG = 111
 
-SEPARATOR_ACTION = {'title': SEPARATOR_TEXT, 'icon': None, 'action': None}
-# We assume that a child key defined in TOOLBAR_ACTIONS has a key defined
-# with the same name in TOOLBAR_TEXTS
+PARENT_FILE = 120
+PARENT_ACTIONS = 121
+PARENT_COMMIT = 122
+PARENT_DIFF = 123
+PARENT_BRANCH = 124
+PARENT_REBASE = 125
+PARENT_VIEW = 126
+
+SEPARATOR = 130
+SEPARATOR_TEXT = '--------------------'
+
+SEPARATOR_ACTION = {'title': SEPARATOR, 'icon': None, 'action': None}
+
+# We assume that a parent key defined in TOOLBAR_ACTIONS has a key
+# defined with the same name in PARENT_TEXTS and a child key in
+# TOOLBAR_ACTIONS a key in TOOLBAR_TEXTS. Icons are optional.
 TOOLBAR_ACTIONS = {
-    N_('File'): {
-        ACTION_NEW_REPO: lambda:  guicmds.open_new_repo(),
+    PARENT_FILE: {
+        ACTION_NEW_REPO: lambda: guicmds.open_new_repo(),
         ACTION_OPEN_REPO: lambda: guicmds.open_repo(),
         ACTION_OPEN_NEW_WIN: lambda: guicmds.open_repo_in_new_window(),
         ACTION_CLONE: lambda: app().activeWindow().clone_repo(),
@@ -109,7 +125,7 @@ TOOLBAR_ACTIONS = {
         ACTION_SAVE_TAR_ZIP: lambda: app().activeWindow().save_archive(),
         ACTION_PREFERENCES: lambda: app().activeWindow().preferences()
     },
-    N_('Actions'): {
+    PARENT_ACTIONS: {
         ACTION_FETCH: lambda: remote.fetch(),
         ACTION_PULL: lambda: remote.pull(),
         ACTION_PUSH: lambda: remote.push(),
@@ -123,7 +139,7 @@ TOOLBAR_ACTIONS = {
         ACTION_GREP: lambda: grep.grep(),
         ACTION_SEARCH: lambda: search.search()
     },
-    N_('Commit@@verb'): {
+    PARENT_COMMIT: {
         ACTION_AMMEND_LAST: cmds.run(cmds.AmendMode, True),
         ACTION_STAGE: lambda: action.ActionButtons.stage(
             action.ActionButtons()),
@@ -134,12 +150,12 @@ TOOLBAR_ACTIONS = {
         ACTION_LOAD_COMMIT: lambda: guicmds.load_commitmsg(),
         ACTION_APPLY_COMMIT: cmds.run(cmds.LoadCommitMessageFromTemplate)
     },
-    N_('Diff'): {
+    PARENT_DIFF: {
         ACTION_EXPRESSION: lambda: guicmds.diff_expression(),
         ACTION_BRANCHES: lambda: compare.compare_branches(),
         ACTION_DIFFSTAT: cmds.run(cmds.Diffstat)
     },
-    N_('Branch'): {
+    PARENT_BRANCH: {
         ACTION_REVIEW: lambda: guicmds.review_branch(),
         ACTION_CREATE: lambda: createbranch.create_new_branch(),
         ACTION_CHECKOUT: lambda: guicmds.checkout_branch(),
@@ -151,12 +167,16 @@ TOOLBAR_ACTIONS = {
         ACTION_VISUALIZE_CURRENT: cmds.run(cmds.VisualizeCurrent),
         ACTION_VISUALIZE_ALL: cmds.run(cmds.VisualizeAll)
     },
-    N_('Rebase'): {
+    PARENT_REBASE: {
         ACTION_REBASE: lambda: app().activeWindow().rebase_start(),
         ACTION_REBASE_EDIT: lambda: app().activeWindow().rebase_edit_todo(),
         ACTION_REBASE_CONT: lambda: app().activeWindow().rebase_continue(),
         ACTION_REBASE_IGNORE: lambda: app().activeWindow().rebase_skip(),
         ACTION_REBASE_ABORT: lambda: app().activeWindow().rebase_abort()
+    },
+    PARENT_VIEW: {
+        ACTION_SHOW_FILE_BROWSER: lambda: browse.worktree_browser(show=True),
+        ACTION_SHOW_DAG: lambda: app().activeWindow().git_dag()
     }
 }
 TOOLBAR_TEXTS = {
@@ -213,7 +233,10 @@ TOOLBAR_TEXTS = {
     ACTION_REBASE_EDIT: N_('Edit...'),
     ACTION_REBASE_CONT: N_('Continue'),
     ACTION_REBASE_IGNORE: N_('Skip Current Patch'),
-    ACTION_REBASE_ABORT: N_('Abort')
+    ACTION_REBASE_ABORT: N_('Abort'),
+
+    ACTION_SHOW_FILE_BROWSER: N_('File Browser...'),
+    ACTION_SHOW_DAG: N_('DAG...')
 }
 TOOLBAR_ICONS = {
     ACTION_NEW_REPO: icons.new(),
@@ -231,54 +254,97 @@ TOOLBAR_ICONS = {
     ACTION_MERGE: icons.merge(),
     ACTION_SEARCH: icons.search(),
 
-    # TODO: add more icons
+    ACTION_SHOW_FILE_BROWSER: icons.cola(),
+    ACTION_SHOW_DAG: icons.cola()
+}
+PARENT_TEXTS = {
+    PARENT_FILE: N_('File'),
+    PARENT_ACTIONS: N_('Actions'),
+    PARENT_COMMIT: N_('Commit@@verb'),
+    PARENT_DIFF: N_('Diff'),
+    PARENT_BRANCH: N_('Branch'),
+    PARENT_REBASE: N_('Rebase'),
+    PARENT_VIEW: N_('View')
 }
 
 
-def create_toolbar(toolbar):
-    toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
-    toolbar.clear()
-
-    actions_dict = load_toolbar_config()
-    for action_dict in actions_dict:
-        add_toolbar_action(toolbar, action_dict)
-
-
-def add_toolbar_action(toolbar, action_dict):
-    if action_dict['title'] == SEPARATOR_TEXT:
-        toolbar.addSeparator()
-    else:
-        callback = TOOLBAR_ACTIONS[action_dict['parent']][action_dict['action']]
-        if action_dict['icon'] in TOOLBAR_ICONS:
-            icon = TOOLBAR_ICONS[action_dict['icon']]
-            toolbar_action = toolbar.addAction(icon, action_dict['title'],
-                                               callback)
-        else:
-            toolbar_action = toolbar.addAction(action_dict['title'], callback)
-
-        toolbar_action.setData(action_dict)
-
-
-def load_toolbar_config():
-    prefs_model = prefs.PreferencesModel()
-    return json.loads(prefs_model.get_config(SOURCE_CONFIG, PREFS_TOOLBAR))
-
-
-def save_toolbar_config(actions_dict):
-    prefs_model = prefs.PreferencesModel()
-    cmds.do(prefs.SetConfig, prefs_model, SOURCE_CONFIG, PREFS_TOOLBAR,
-            json.dumps(actions_dict))
-
-
 def configure_toolbar_dialog(toolbar):
-    """Launches the Settings -> Toolbar dialog"""
+    """Launches the Toolbar configure dialog"""
     view = ToolbarView(toolbar, qtutils.active_window())
     view.show()
     return view
 
 
+class ColaToolBar(QtWidgets.QToolBar):
+    def __init__(self, title):
+        QtWidgets.QToolBar.__init__(self)
+        self.setWindowTitle(title)
+        self.setObjectName(title)
+
+    def show_icons(self, show_icons):
+        if show_icons:
+            self.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        else:
+            self.setToolButtonStyle(Qt.ToolButtonTextOnly)
+
+    def add_action_from_dict(self, action_dict):
+        if action_dict['title'] == SEPARATOR:
+            self.addSeparator()
+        else:
+            title = TOOLBAR_TEXTS[action_dict['title']]
+            callback = TOOLBAR_ACTIONS[action_dict['parent']][
+                action_dict['action']]
+            if action_dict['icon'] in TOOLBAR_ICONS:
+                icon = TOOLBAR_ICONS[action_dict['icon']]
+                toolbar_action = self.addAction(icon, title, callback)
+            else:
+                toolbar_action = self.addAction(title, callback)
+
+            toolbar_action.setData(action_dict)
+
+    def get_config(self):
+        prefs_model = prefs.PreferencesModel()
+        toolbar_config = prefs_model.get_config(SOURCE_CONFIG,
+                                                PREFS_TOOLBAR)
+        result = {
+            'actions_dict': {},
+            'show_icons': True
+        }
+        if toolbar_config:
+            result = json.loads(toolbar_config)
+
+        return result
+
+    def load_config(self):
+        config = self.get_config()
+        actions_dict = config['actions_dict']
+
+        # No actions, no toolbar. This must be deferred
+        if len(actions_dict) == 0:
+            QtCore.QTimer.singleShot(0, lambda: self.setVisible(False))
+            return
+
+        self.show_icons(config['show_icons'])
+
+        for action_dict in actions_dict:
+            self.add_action_from_dict(action_dict)
+
+    def save_config(self, actions_dict, show_icons):
+        prefs_model = prefs.PreferencesModel()
+        data = json.dumps(
+            {'actions_dict': actions_dict, 'show_icons': show_icons})
+        cmds.do(prefs.SetConfig, prefs_model, SOURCE_CONFIG, PREFS_TOOLBAR,
+                data)
+
+    # TODO: review widgets/main.py showdock method
+    # returning parent will prevent an error thrown in showdock method
+    # when user show the toolbar, because QToolBar class has no widget method
+    def widget(self):
+        return self
+
+
 class ToolbarView(QtWidgets.QDialog):
-    """Provides the git-cola 'Toolbar' dialog"""
+    """Provides the git-cola 'Toolbar' configure dialog"""
 
     def __init__(self, toolbar, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
@@ -298,8 +364,9 @@ class ToolbarView(QtWidgets.QDialog):
         left_items = self.left_items_from_dict(right_names_items['names'])
         self.left_list.load_items(left_items)
 
+        checked = toolbar.toolButtonStyle() == Qt.ToolButtonIconOnly
         checkbox_text = N_('Show icon? (if available)')
-        self.show_icon = qtutils.checkbox(checkbox_text, checkbox_text, True)
+        self.show_icon = qtutils.checkbox(checkbox_text, checkbox_text, checked)
         self.apply_button = qtutils.ok_button(N_('Apply'))
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
@@ -324,7 +391,6 @@ class ToolbarView(QtWidgets.QDialog):
         qtutils.connect_button(self.remove_item, self.remove_item_action)
         qtutils.connect_button(self.apply_button, self.apply_action)
         qtutils.connect_button(self.close_button, self.accept)
-        qtutils.connect_toggle(self.show_icon, self.show_icon_action)
 
         self.resize(550, 450)
 
@@ -335,27 +401,23 @@ class ToolbarView(QtWidgets.QDialog):
         items = self.right_list.selectedItems()
 
         for item in items:
-            take_item = self.right_list.takeItem(self.right_list.row(item))
-            data = take_item.data(Qt.UserRole)
-            if data and 'parent' in data:
-                self.left_list.update_top_item(data['parent'], data)
-
-    def show_icon_action(self):
-        if self.show_icon.isChecked():
-            self.toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        else:
-            self.toolbar.setToolButtonStyle(Qt.ToolButtonTextOnly)
+            took_item = self.right_list.takeItem(self.right_list.row(item))
+            data = took_item.data(Qt.UserRole)
+            if took_item.text() != SEPARATOR_TEXT and data:
+                self.left_list.update_top_item(PARENT_TEXTS[data['parent']],
+                                               data)
 
     def apply_action(self):
         self.toolbar.clear()
+        self.toolbar.show_icons(self.show_icon.isChecked())
 
         actions_dict = []
         for item in self.right_list.get_items():
             data = item.data(Qt.UserRole)
             actions_dict.append(data)
-            add_toolbar_action(self.toolbar, data)
+            self.toolbar.add_action_from_dict(data)
 
-        save_toolbar_config(actions_dict)
+        self.toolbar.save_config(actions_dict, self.show_icon.isChecked())
 
     def right_items_from_toolbar(self):
         right_names = []
@@ -379,12 +441,11 @@ class ToolbarView(QtWidgets.QDialog):
             left_items.setdefault(key, [])
             for action_key, action_callback in items.items():
                 left_items.setdefault(key, [])
-                title = TOOLBAR_TEXTS[action_key]
-                if title not in right_names:
+                if TOOLBAR_TEXTS[action_key] not in right_names:
                     icon = None
                     if action_key in TOOLBAR_ICONS:
                         icon = action_key
-                    left_items[key].append({'title': title, 'icon': icon,
+                    left_items[key].append({'title': action_key, 'icon': icon,
                                             'action': action_key,
                                             'parent': key})
         return left_items
@@ -457,8 +518,12 @@ class DraggableListWidget(QtWidgets.QListWidget):
     def add_item(self, action_dict):
         item = QtWidgets.QListWidgetItem()
 
-        item.setText(action_dict['title'])
         item.setData(Qt.UserRole, action_dict)
+
+        if action_dict['title'] == SEPARATOR:
+            item.setText(SEPARATOR_TEXT)
+        else:
+            item.setText(TOOLBAR_TEXTS[action_dict['title']])
 
         if action_dict['icon'] and action_dict['icon'] in TOOLBAR_ICONS:
             item.setIcon(TOOLBAR_ICONS[action_dict['icon']])
@@ -495,7 +560,7 @@ class ToolbarTreeWidget(standard.TreeView):
         self.model().clear()
 
         for key, actions_dict in actions_dict.items():
-            top_item = self.create_item(key)
+            top_item = self.create_item(PARENT_TEXTS[key])
             top_item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
 
             for action_dict in actions_dict:
@@ -516,7 +581,7 @@ class ToolbarTreeWidget(standard.TreeView):
         return item
 
     def create_child_item(self, top_item,  action_dict):
-        item = self.create_item(action_dict['title'])
+        item = self.create_item(TOOLBAR_TEXTS[action_dict['title']])
         item.setData(action_dict, Qt.UserRole)
 
         if action_dict['icon'] and action_dict['icon'] in TOOLBAR_ICONS:
