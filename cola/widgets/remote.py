@@ -186,6 +186,7 @@ class RemoteActionDialog(standard.Dialog):
                                                tooltip=tooltip)
 
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
+        self.prune_checkbox = qtutils.checkbox(text=N_('Prune '))
 
         tooltip = N_('Rebase the current branch instead of merging')
         self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase'),
@@ -226,6 +227,7 @@ class RemoteActionDialog(standard.Dialog):
             self.ff_only_checkbox,
             self.no_ff_checkbox,
             self.tags_checkbox,
+            self.prune_checkbox,
             self.rebase_checkbox,
             self.upstream_checkbox,
             self.prompt_checkbox,
@@ -298,6 +300,8 @@ class RemoteActionDialog(standard.Dialog):
 
         qtutils.add_action(self, N_('Close'), self.close,
                            QtGui.QKeySequence.Close, 'Esc')
+        if action != FETCH:
+            self.prune_checkbox.hide()
 
         if action != PUSH:
             # Push-only options
@@ -475,6 +479,7 @@ class RemoteActionDialog(standard.Dialog):
         rebase = self.rebase_checkbox.isChecked()
         set_upstream = self.upstream_checkbox.isChecked()
         tags = self.tags_checkbox.isChecked()
+        prune = self.prune_checkbox.isChecked()
 
         return (remote_name,
                 {
@@ -486,6 +491,7 @@ class RemoteActionDialog(standard.Dialog):
                     'remote_branch': remote_branch,
                     'set_upstream': set_upstream,
                     'tags': tags,
+                    'prune': prune,
                 })
 
     # Actions
@@ -608,6 +614,7 @@ class Fetch(RemoteActionDialog):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
         state['tags'] = self.tags_checkbox.isChecked()
+        state['prune'] = self.prune_checkbox.isChecked()
         return state
 
     def apply_state(self, state):
@@ -615,6 +622,8 @@ class Fetch(RemoteActionDialog):
         result = RemoteActionDialog.apply_state(self, state)
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
+        prune = bool(state.get('prune', False))
+        self.prune_checkbox.setChecked(prune)
         return result
 
 
