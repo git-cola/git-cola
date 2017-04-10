@@ -24,6 +24,7 @@ usage () {
 	echo "--doc-dir <dir>           - specify the documentation directory"
 	echo "--win32                   - build the win32 installer"
 	echo "--win32-innosetup         - build the InnoSetup installer"
+	echo "--win32-pynsist           - build the pynsist installer"
 	echo "--win32-login <user@host> - specify the win32 host"
 	echo "--win32-port <port #>     - specify the win32 ssh port number"
 	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
