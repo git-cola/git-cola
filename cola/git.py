@@ -67,9 +67,9 @@ def read_git_file(path):
         data = core.read(path).strip()
         if data.startswith(header):
             result = data[len(header):]
-    if result and not os.path.isabs(result):
-        path_folder = os.path.dirname(path)
-        result = os.path.join(path_folder, result)
+            if result and not os.path.isabs(result):
+                path_folder = os.path.dirname(path)
+                result = os.path.join(path_folder, result)
     return result
 
 
