@@ -75,6 +75,7 @@ Thanks
 * Kerrick Staley
 * Kevin Kofler
 * Kirit Sælensminde
+* Kyle Slane
 * László Böszörményi
 * Leho Kraav
 * Lev Zlotin
