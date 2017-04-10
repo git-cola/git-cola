@@ -431,7 +431,10 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         msg = self.commit_message(raw=False)
 
-        if not self.model.staged:
+        # we either need to have something staged, or be merging
+        # (if there was a merge conflict resolved, there may not be anything to stage,
+        #  but we still need to commit to complete the merge)
+        if not (self.model.staged or self.model.is_merging):
             error_msg = N_(
                 'No changes to commit.\n\n'
                 'You must stage at least 1 file before you can commit.')
