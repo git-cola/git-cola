@@ -107,6 +107,12 @@ Usability, bells and whistles
 * A new `git cola recent` sub-command was added for finding recently
   edited files.
 
+* The `Fetch` dialog now allows pruning remote branches.
+
+  https://github.com/git-cola/git-cola/issues/639
+
+  https://github.com/git-cola/git-cola/pull/680
+
 Fixes
 =====
 * `git cola`'s spellchecker now supports the new `dict-common` filesystem
@@ -129,6 +135,12 @@ Fixes
   be executed with the press of a single enter key after being shown.
 
   https://github.com/git-cola/git-cola/issues/661
+
+* Committing is now allowed in when resolving a merge results in no
+  changes.  This state was previously prevented by the commit message editor,
+  which prevented users from resolving merges that result in no changes.
+
+  https://github.com/git-cola/git-cola/pull/679
 
 .. _v2.10:
 
