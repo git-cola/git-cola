@@ -69,7 +69,8 @@ def read_git_file(path):
             result = data[len(header):]
             if result and not os.path.isabs(result):
                 path_folder = os.path.dirname(path)
-                result = os.path.join(path_folder, result)
+                repo_relative = os.path.join(path_folder, result)
+                result = os.path.normpath(repo_relative)
     return result
 
 
