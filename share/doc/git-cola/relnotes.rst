@@ -142,6 +142,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/679
 
+* The filesystem monitor would sometimes emit backtraces when directories
+  are modified.  This has been fixed.
+
+  https://bugzilla.redhat.com/show_bug.cgi?id=1438522
+
 .. _v2.10:
 
 git-cola v2.10
