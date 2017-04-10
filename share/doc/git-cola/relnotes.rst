@@ -147,6 +147,12 @@ Fixes
 
   https://bugzilla.redhat.com/show_bug.cgi?id=1438522
 
+* Absolute paths are now returned when querying for `.git`-relative paths
+  from within a submodule, which uses `.git`-files.
+  This fixes launching `git cola` from within a subdirectory of a submodule.
+
+  https://github.com/git-cola/git-cola/pull/675
+
 .. _v2.10:
 
 git-cola v2.10
