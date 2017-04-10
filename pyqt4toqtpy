@@ -6,7 +6,9 @@
 
 sed -i \
     -e 's/^from PyQt4/from qtpy/' \
+    -e 's/^from PyQt5/from qtpy/' \
     -e 's/^import PyQt4/import qtpy/' \
+    -e 's/^import PyQt5/import qtpy/' \
     -e 's/QtGui.QAbstractItemView/QtWidgets.QAbstractItemView/g' \
     -e 's/QtGui.QAction/QtWidgets.QAction/g' \
     -e 's/QtGui.QApplication/QtWidgets.QApplication/g' \
