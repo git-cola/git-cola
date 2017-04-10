@@ -37,6 +37,7 @@ Thanks
 * Dennis Gilmore
 * deniz1a
 * Dmitry Kann
+* Doug Hoskisson
 * Drugoy
 * Efimov Vasily
 * Eric Drechsel
