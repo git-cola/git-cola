@@ -279,6 +279,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.notifier = notifier
         self.selecting = False
         self.commits = []
+        self._adjust_columns = False
 
         self.action_up = qtutils.add_action(
             self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP)
@@ -303,7 +304,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     def apply_state(self, state):
         """Apply the exported widget state"""
-        self.state = state
         try:
             column_widths = state['column_widths']
         except (KeyError, ValueError):
@@ -311,9 +311,21 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if column_widths:
             self.set_column_widths(column_widths)
         else:
-            self.adjust_columns()
-
+            # Defer showing the columns until we are shown, and our true width
+            # is known.  Calling adjust_columns() here ends up with the wrong
+            # answer because we have not yet been parented to the layout.
+            # We set this flag that we process once during our initial
+            # showEvent().
+            self._adjust_columns = True
         return True
+
+    # Qt overrides
+    def showEvent(self, event):
+        """Override QWidget::showEvent() to size columns when we are shown"""
+        if self._adjust_columns:
+            self.adjust_columns()
+            self._adjust_columns = False
+        return standard.TreeWidget.showEvent(self, event)
 
     # ViewerMixin
     def go_up(self):
@@ -368,12 +380,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             item.setSelected(True)
 
     def adjust_columns(self):
-        width = self.width()-20
-        zero = width * 2 / 3
-        onetwo = width / 6
-        self.setColumnWidth(0, zero)
-        self.setColumnWidth(1, onetwo)
-        self.setColumnWidth(2, onetwo)
+        width = self.width()
+        two_thirds = (width * 2) // 3
+        one_sixth = width // 6
+
+        self.setColumnWidth(0, two_thirds)
+        self.setColumnWidth(1, one_sixth)
+        self.setColumnWidth(2, one_sixth)
 
     def clear(self):
         QtWidgets.QTreeWidget.clear(self)
