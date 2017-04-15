@@ -14,6 +14,15 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.0
+
+git-cola v3.0 (alpha)
+=====================
+
+Usability, bells and whistles
+-----------------------------
+* Updated Ukranian translation.
+
 .. _v2.11:
 
 git-cola v2.11
