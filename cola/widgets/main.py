@@ -2,7 +2,11 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
+import json
 import os
+
+from cola.widgets.toolbar import ColaToolBar
+from cola.widgets.toolbar import MAIN_ACTIONS
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -75,12 +79,6 @@ class MainView(standard.MainWindow):
 
         # Runs asynchronous tasks
         self.runtask = qtutils.RunTask()
-
-        # ToolBar must be imported locally to avoid errors when import icons
-        from cola.widgets.toolbar import ColaToolBar
-        self.toolbar = ColaToolBar('Main Toolbar')
-        self.toolbar.load_config()
-        self.addToolBar(self.toolbar)
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
@@ -560,16 +558,16 @@ class MainView(standard.MainWindow):
         self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
 
-    def configure_toolbar(self):
-        # ToolBar must be imported locally to avoid errors when import icons
-        from cola.widgets.toolbar import configure_toolbar_dialog
-        configure_toolbar_dialog(self.toolbar)
-
     def contextMenuEvent(self, event):
         menu = self.createPopupMenu()
-        menu.addAction(N_('Configure toolbar'), self.configure_toolbar)
+        menu.addAction(N_('Add toolbar'), self.add_toolbar)
 
         menu.exec_(event.globalPos())
+
+    def add_toolbar(self):
+        name = qtutils.prompt(N_('Add ToolBar'), N_('Enter ToolBar Name'))
+        if name[1] is True and name[0]:
+            self.addToolBar(ColaToolBar(name[0], MAIN_ACTIONS))
 
     def build_recent_menu(self):
         settings = Settings()
@@ -696,6 +694,16 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
+
+        saved_toolbars = []
+        toolbars = self.findChildren(ColaToolBar)
+        for toolbar in toolbars:
+            saved_toolbars.append({'name': toolbar.windowTitle(),
+                                   'area': self.toolBarArea(toolbar),
+                                   'config': json.dumps(toolbar.get_config())})
+
+        state['toolbar'] = saved_toolbars
+
         return state
 
     def apply_state(self, state):
@@ -708,6 +716,13 @@ class MainView(standard.MainWindow):
 
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
+
+        toolbar_data = state.get('toolbar', '[]')
+        for data in toolbar_data:
+            toolbar = ColaToolBar(data['name'], MAIN_ACTIONS)
+            toolbar_config = json.loads(data['config'])
+            toolbar.load_config(toolbar_config)
+            self.addToolBar(data['area'], toolbar)
 
         return result
 
@@ -725,8 +740,7 @@ class MainView(standard.MainWindow):
             (optkey + '+4', self.actionsdockwidget),
             (optkey + '+5', self.bookmarksdockwidget),
             (optkey + '+6', self.recentdockwidget),
-            (optkey + '+7', self.branchdockwidget),
-            (optkey + '+8', self.toolbar),
+            (optkey + '+7', self.branchdockwidget)
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
