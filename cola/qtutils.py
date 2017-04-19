@@ -994,7 +994,7 @@ def rgb_css(color):
 
 def rgb_hex(color):
     """Convert a QColor into a hex aabbcc string"""
-    return '%x%x%x' % (color.red(), color.green(), color.blue())
+    return '%02x%02x%02x' % (color.red(), color.green(), color.blue())
 
 
 def make_format(fg=None, bg=None, bold=False):
