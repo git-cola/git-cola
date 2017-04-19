@@ -467,8 +467,8 @@ class MainModel(Observable):
 
         for path in set(paths):
             if core.exists(path):
-                if path[-1:] == '/':
-                    path = path[:-1]
+                if path.endswith('/'):
+                    path = path.rstrip('/')
                 add.append(path)
             else:
                 remove.append(path)
