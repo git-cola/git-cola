@@ -32,6 +32,12 @@ Fixes
   buggy behavior we allow users to recover by issuing the appropriate
   `git submodule add` command to properly register the submodule.
 
+* We now avoid `git for-each-ref --sort=version:refname` on versions
+  of `git` older than `v2.7.0`.  Previously we only avoided it for
+  versions older than `v2.0.0`, which was a mistake.
+
+* The error message displayed when `git` is not installed has been fixed.
+
 .. _v2.11:
 
 git-cola v2.11
