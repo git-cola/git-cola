@@ -11,6 +11,7 @@ from os.path import join
 from . import core
 from .compat import int_types
 from .compat import ustr
+from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
 

@@ -27,7 +27,7 @@ _versions = {
     # rules as git add and git status until 1.8.5
     'check-ignore': '1.8.5',
     # git for-each-ref --sort=version:refname
-    'version-sort': '2.0.0',
+    'version-sort': '2.7.0',
 }
 
 
