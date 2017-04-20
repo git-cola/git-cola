@@ -123,7 +123,7 @@ class RemoteEditor(standard.Dialog):
         widget = AddRemoteWidget(self)
         if not widget.add_remote():
             return
-        name = widget.name.value()
+        name = widget.remote_name.value()
         url = widget.url.value()
         cmds.do(cmds.RemoteAdd, name, url)
         self.refresh()
