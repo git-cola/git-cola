@@ -23,6 +23,15 @@ Usability, bells and whistles
 -----------------------------
 * Updated Ukranian translation.
 
+Fixes
+-----
+* Adding untracked Git submodule repo directories previously ran
+  `git add submodule/` but we now call `git add submodule` without
+  the trailing slash (`/`) to avoid staging files that belong to the
+  submodule (which is possibly a `git` bug).  By working around the
+  buggy behavior we allow users to recover by issuing the appropriate
+  `git submodule add` command to properly register the submodule.
+
 .. _v2.11:
 
 git-cola v2.11
