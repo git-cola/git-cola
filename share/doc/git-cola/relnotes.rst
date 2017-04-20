@@ -32,11 +32,23 @@ Fixes
   buggy behavior we allow users to recover by issuing the appropriate
   `git submodule add` command to properly register the submodule.
 
+  https://github.com/git-cola/git-cola/pull/681
+
 * We now avoid `git for-each-ref --sort=version:refname` on versions
   of `git` older than `v2.7.0`.  Previously we only avoided it for
   versions older than `v2.0.0`, which was a mistake.
 
+  https://github.com/git-cola/git-cola/pull/686
+
 * The error message displayed when `git` is not installed has been fixed.
+
+  https://github.com/git-cola/git-cola/pull/686
+
+* Adding new remotes was silently broken.
+
+  https://github.com/git-cola/git-cola/issues/684
+
+  https://github.com/git-cola/git-cola/pull/685
 
 .. _v2.11:
 
