@@ -25,6 +25,10 @@ Usability, bells and whistles
 
 Fixes
 -----
+* `git dag` now prevents nodes from overlapping in more situations.
+
+  https://github.com/git-cola/git-cola/pull/689
+
 * Adding untracked Git submodule repo directories previously ran
   `git add submodule/` but we now call `git add submodule` without
   the trailing slash (`/`) to avoid staging files that belong to the
