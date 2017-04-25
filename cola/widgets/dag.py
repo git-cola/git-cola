@@ -1726,7 +1726,17 @@ step 2. Hence, it must be propagated for children on side columns.
                     except KeyError:
                         # Column 'c' was never allocated.
                         continue
-                    self.frontier[column] = frontier - 1
+
+                    frontier -= 1
+                    # The frontier of the column may be higher because of
+                    # tag overlapping prevention performed for previous head.
+                    try:
+                        if self.frontier[column] >= frontier:
+                            break
+                    except KeyError:
+                        pass
+
+                    self.frontier[column] = frontier
                     break
                 else:
                     continue
