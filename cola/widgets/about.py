@@ -217,18 +217,19 @@ def authors_text():
     palette = QtGui.QPalette()
     contact = N_('Email contributor')
     authors = (
-        dict(name='David Aguilar',
-             title=N_('Maintainer (since 2007) and developer'),
-             email=mailto('davvid@gmail.com', contact, palette)),
         # The names listed here are listed in the same order as
         # `git shortlog --summary --numbered --no-merges`
         # Please submit a pull request if you would like to include your
         # email address in the about screen.
         # See the `generate-about` script in the "todo" branch.
         # vim :read! ./Meta/generate-about
+        dict(name='David Aguilar',
+             title=N_('Maintainer (since 2007) and developer'),
+             email=mailto('davvid@gmail.com', contact, palette)),
         dict(name='Daniel Harding', title=N_('Developer')),
         dict(name='Ｖ字龍(Vdragon)', title=N_('Developer'),
              email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
+        dict(name='Efimov Vasily', title=N_('Developer')),
         dict(name='Guillaume de Bure', title=N_('Developer')),
         dict(name='Alex Chernetz', title=N_('Developer')),
         dict(name='Uri Okrent', title=N_('Developer')),
@@ -240,9 +241,12 @@ def authors_text():
         dict(name='Virgil Dupras', title=N_('Developer')),
         dict(name='Barry Roberts', title=N_('Developer')),
         dict(name='Stefan Naewe', title=N_('Developer')),
+        dict(name='Javier Rodriguez Cuevas', title=N_('Developer')),
         dict(name='Ville Skyttä', title=N_('Developer')),
         dict(name='Benedict Lee', title=N_('Developer')),
+        dict(name='Filip Danilović', title=N_('Developer')),
         dict(name='Steffen Prohaska', title=N_('Developer')),
+        dict(name='xhl', title=N_('Developer')),
         dict(name='Michael Geddes', title=N_('Developer')),
         dict(name='Rustam Safin', title=N_('Developer')),
         dict(name='David Martínez Martí', title=N_('Developer')),
@@ -251,9 +255,12 @@ def authors_text():
         dict(name='Marco Costalba', title=N_('Developer')),
         dict(name='Michael Homer', title=N_('Developer')),
         dict(name='Sven Claussner', title=N_('Developer')),
+        dict(name='Szymon Judasz', title=N_('Developer')),
         dict(name='v.paritskiy', title=N_('Developer')),
+        dict(name='AJ Bagwell', title=N_('Developer')),
         dict(name='Adrien be', title=N_('Developer')),
         dict(name='Audrius Karabanovas', title=N_('Developer')),
+        dict(name='Barrett Lowe', title=N_('Developer')),
         dict(name='Ben Boeckel', title=N_('Developer')),
         dict(name='Boris W', title=N_('Developer')),
         dict(name='Charles', title=N_('Developer')),
@@ -269,6 +276,7 @@ def authors_text():
         dict(name='Jamie Pate', title=N_('Developer')),
         dict(name='Karthik Manamcheri', title=N_('Developer')),
         dict(name='Kelvie Wong', title=N_('Developer')),
+        dict(name='Kyle', title=N_('Developer')),
         dict(name='Maciej Filipiak', title=N_('Developer')),
         dict(name='Maicon D. Filippsen', title=N_('Developer')),
         dict(name='Markus Heidelberg', title=N_('Developer')),
@@ -290,8 +298,8 @@ def authors_text():
         dict(name='Voicu Hodrea', title=N_('Developer')),
         dict(name='Wesley Wong', title=N_('Developer')),
         dict(name='Wolfgang Ocker', title=N_('Developer')),
-        dict(name='ZH', title=N_('Developer')),
-        dict(name='aj-bagwell', title=N_('Developer')),
+        dict(name='Zhang Han', title=N_('Developer')),
+        dict(name='beauxq', title=N_('Developer')),
     )
     bug_url = 'https://github.com/git-cola/git-cola/issues'
     bug_link = link(bug_url, bug_url)
@@ -310,26 +318,27 @@ def translators_text():
     email = lambda addr: mailto(addr, contact, palette)
 
     translators = (
+        # See the `generate-about` script in the "todo" branch.
+        # vim :read! ./Meta/generate-about --translators
         dict(name='Ｖ字龍(Vdragon)',
              title=N_('Traditional Chinese (Taiwan) translation'),
              email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
         dict(name='Vitor Lobo',
              title=N_('Brazilian translation')),
-        dict(name='Mickael Albertus',
-             title=N_('French translation')),
-        dict(name='Minarto Margoliono',
-             title=N_('Indonesian translation')),
         dict(name='Zhang Han',
              title=N_('Chinese translation')),
+        dict(name='Igor Kopach',
+             title=N_('Ukranian translation')),
+        dict(name='Minarto Margoliono',
+             title=N_('Indonesian translation')),
         dict(name='Sven Claussner',
              title=N_('German translation')),
         dict(name='Vaiz',
              title=N_('Russian translation')),
         dict(name='Barış ÇELİK',
              title=N_('Turkish translation')),
-        dict(name='Łukasz Wojniłowicz',
-             email=email('lukasz.wojnilowicz@gmail.com'),
-             title=N_('Polish translation')),
+        dict(name='Mickael Albertus',
+             title=N_('French translation')),
         dict(name='Peter Dave Hello',
              title=N_('Traditional Chinese (Taiwan) translation')),
         dict(name='Pilar Molina Lopez',
@@ -338,8 +347,8 @@ def translators_text():
              title=N_('Indonesian translation')),
         dict(name='Zeioth',
              title=N_('Spanish translation')),
-        dict(name='Igor Kopach',
-             title=N_('Ukranian translation')),
+        dict(name='Łukasz Wojniłowicz',
+             title=N_('Polish translation')),
     )
 
     bug_url = 'https://github.com/git-cola/git-cola/issues'
