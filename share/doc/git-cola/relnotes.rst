@@ -54,6 +54,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/685
 
+* In some situations the repo selection dialog had errors during
+  startup, as reported on Ubuntu 16.04.
+
+  https://github.com/git-cola/git-cola/issues/690
+
 .. _v2.11:
 
 git-cola v2.11
