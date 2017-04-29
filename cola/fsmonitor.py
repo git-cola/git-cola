@@ -246,7 +246,7 @@ if AVAILABLE == 'inotify':
                                           self._git_dir_wd_to_path_map,
                                           self._git_dir_path_to_wd_map)
                     self._git_dir_wd = \
-                            self._git_dir_path_to_wd_map[self._git_dir]
+                            self._git_dir_path_to_wd_map.get(self._git_dir)
                 except OSError as e:
                     if e.errno == errno.ENOSPC:
                         self._log_out_of_wds_message()
