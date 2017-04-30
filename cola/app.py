@@ -269,7 +269,8 @@ class ColaQApplication(QtWidgets.QApplication):
     def event(self, e):
         if e.type() == QtCore.QEvent.ApplicationActivate:
             cfg = gitcfg.current()
-            if cfg.get('cola.refreshonfocus', False):
+            if (self.context and self.context.model.git.is_valid()
+                    and cfg.get('cola.refreshonfocus', False)):
                 cmds.do(cmds.Refresh)
         return super(ColaQApplication, self).event(e)
 
