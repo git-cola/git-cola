@@ -54,8 +54,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/685
 
-* In some situations the repo selection dialog had errors during
-  startup, as reported on Ubuntu 16.04.
+* The repo selection dialog had errors during startup when the
+  `cola.refreshonfocus` feature was enabled, as reported on Ubuntu 16.04.
 
   https://github.com/git-cola/git-cola/issues/690
 
