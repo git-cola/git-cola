@@ -245,6 +245,10 @@ class ColaApplication(object):
         if hasattr(self._app, 'view'):
             self._app.view = view
 
+    def set_context(self, context):
+        if hasattr(self._app, 'context'):
+            self._app.context = context
+
     def _update_files(self):
         # Respond to file system updates
         cmds.do(cmds.Refresh)
@@ -260,11 +264,13 @@ class ColaQApplication(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ColaQApplication, self).__init__(argv)
         self.view = None  # injected by application_start()
+        self.context = None  # injected by application_start()
 
     def event(self, e):
         if e.type() == QtCore.QEvent.ApplicationActivate:
             cfg = gitcfg.current()
-            if cfg.get('cola.refreshonfocus', False):
+            if (self.context and self.context.model.git.is_valid()
+                    and cfg.get('cola.refreshonfocus', False)):
                 cmds.do(cmds.Refresh)
         return super(ColaQApplication, self).event(e)
 
@@ -332,6 +338,7 @@ def application_start(context, view):
     """Show the GUI and start the main event loop"""
     # Store the view for session management
     context.app.set_view(view)
+    context.app.set_context(context)
 
     # Make sure that we start out on top
     view.show()
