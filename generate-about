@@ -21,8 +21,30 @@ def main():
     # If someone wants their email to be public they can add a mapping here
     emails = {
         # 'name': 'email@example.com',
-        'Ｖ字龍(Vdragon)': 'Vdragon.Taiwan@gmail.com'
+        'David Aguilar': 'davvid@gmail.com',
+        'Ｖ字龍(Vdragon)': 'Vdragon.Taiwan@gmail.com',
     }
+    if args.translators:
+        titles = {
+            'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
+            'Vitor Lobo': 'Brazilian translation',
+            'Igor Kopach': 'Ukranian translation',
+            'Zhang Han': 'Chinese translation',
+            'Mickael Albertus': 'French translation',
+            'Minarto Margoliono': 'Indonesian translation',
+            'Sven Claussner': 'German translation',
+            'Vaiz': 'Russian translation',
+            'Barış ÇELİK': 'Turkish translation',
+            'Łukasz Wojniłowicz': 'Polish translation',
+            'Peter Dave Hello': 'Traditional Chinese (Taiwan) translation',
+            'Pilar Molina Lopez': 'Spanish translation',
+            "Samsul Ma'arif": 'Indonesian translation',
+            'Zeioth': 'Spanish translation',
+        }
+    else:
+        titles = {
+            'David Aguilar': 'Maintainer (since 2007) and developer',
+        }
 
     #         1234
     indent = '    ' * 2
@@ -31,28 +53,54 @@ def main():
     else:
         suffix = ''
 
-    dev_snippet = (
-        "%(indent)sdict(name=%(name_q)s, title=N_('Developer')),%(suffix)s")
+    snippet = (
+        "%(indent)sdict(name=%(name_q)s, title=N_('%(title)s')),%(suffix)s")
 
-    dev_email_snippet = (
-        "%(indent)sdict(name=%(name_q)s, title=N_('Developer'),\n"
+    title_snippet = (
+        "%(indent)sdict(name=%(name_q)s,\n"
+        "%(indent)s     title=N_('%(title)s')),%(suffix)s")
+
+    email_snippet = (
+        "%(indent)sdict(name=%(name_q)s, title=N_('%(title)s'),\n"
         "%(indent)s     email=mailto(%(email_q)s, contact, palette)),%(suffix)s")
 
-    pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
+    title_email_snippet = (
+        "%(indent)sdict(name=%(name_q)s,\n"
+        "%(indent)s     title=N_('%(title)s'),\n"
+        "%(indent)s     email=mailto(%(email_q)s, contact, palette)),%(suffix)s")
+
+    if args.translators:
+        pathspecs = (
+            'po/*.po',
+            'share/doc/git-cola/hotkeys_*.html',
+        )
+        default_title = 'Translation'
+        skip = set(['David Aguilar', 'Ville Skyttä'])
+
+    else:
+        pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
+        default_title = 'Developer'
+        skip = set()
 
     committers = get_committers(git, 'HEAD', sans_qtpy, '--', *pathspecs)
     for idx, (count, name) in enumerate(committers):
-        if idx == 0:  # skip over maintainer
+        if name in skip:  # skip over maintainer and false positives
             continue
+        title = titles.get(name, default_title)
         email = emails.get(name, '')
         if email:
             email_q = quote(email)
-            snippet = dev_email_snippet
+            if title != default_title:
+                current_snippet = title_email_snippet
+            else:
+                current_snippet = email_snippet
+        elif title != default_title:
+            current_snippet = title_snippet
         else:
-            snippet = dev_snippet
+            current_snippet = snippet
 
         name_q = quote(name)
-        core.stdout(snippet % locals())
+        core.stdout(current_snippet % locals())
 
     return 0
 
@@ -60,6 +108,8 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--count', default=False, help='show counts',
+                        action='store_true')
+    parser.add_argument('--translators', default=False, help='show translators',
                         action='store_true')
     return parser.parse_args()
 
