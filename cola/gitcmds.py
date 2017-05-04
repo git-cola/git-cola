@@ -739,3 +739,23 @@ def strip_remote(remotes, remote_branch):
         if remote_branch.startswith(prefix):
             return remote_branch[len(prefix):]
     return remote_branch.split('/', 1)[-1]
+
+
+def list_submodule():
+    SHA1_LENGTH = 40
+    status, data, err = git.submodule()
+    ret = []
+    if status == 0 and data:
+        data = data.splitlines()
+        #*8ca4b61504c200ba6af3a457f01fb95b7c1b9782 path (git describe for the SHA-1)
+        #* == '+': does not match the SHA-1 found in the index of the containing repository
+        #* == '-': not initialized
+        #* == ' ': otherwise
+        for line in data:
+            sign = line[:1]
+            sha1 = line[1:1+SHA1_LENGTH]
+            left_bracket = line.find('(',SHA1_LENGTH + 3)
+            path = line[1+SHA1_LENGTH+1:left_bracket-1]
+            desc = line[left_bracket+1:-1]
+            ret.append((sign,sha1,path,desc))
+    return ret
