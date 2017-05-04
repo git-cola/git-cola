@@ -13,7 +13,7 @@ Provides widget classes and functions.
     were the ``PyQt5.QtWidgets`` module.
 """
 
-from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
+from qtpy import is_old_pyqt, PYQT5, PYQT4, PYSIDE, PythonQtError
 from qtpy._patch.qcombobox import patch_qcombobox
 
 
@@ -24,23 +24,31 @@ elif PYQT4:
     QStyleOptionViewItem = QStyleOptionViewItemV4
 
     # These objects belong to QtGui
+    try:
+        del QGlyphRun
+        del QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2, QMatrix3x3
+        del QMatrix3x4, QMatrix4x2, QMatrix4x3, QMatrix4x4
+        del QQuaternion, QRadialGradient, QRawFont, QRegExpValidator
+        del QStaticText, QTouchEvent, QVector2D, QVector3D, QVector4D
+        del qFuzzyCompare
+    except NameError:
+        pass
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
          QCloseEvent, QColor, QConicalGradient, QContextMenuEvent, QCursor,
          QDesktopServices, QDoubleValidator, QDrag, QDragEnterEvent,
          QDragLeaveEvent, QDragMoveEvent, QDropEvent, QFileOpenEvent,
          QFocusEvent, QFont, QFontDatabase, QFontInfo, QFontMetrics,
-         QFontMetricsF, QGlyphRun, QGradient, QHelpEvent, QHideEvent,
+         QFontMetricsF, QGradient, QHelpEvent, QHideEvent,
          QHoverEvent, QIcon, QIconDragEvent, QIconEngine, QImage,
          QImageIOHandler, QImageReader, QImageWriter, QInputEvent,
          QInputMethodEvent, QKeyEvent, QKeySequence, QLinearGradient,
-         QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2, QMatrix3x3,
-         QMatrix3x4, QMatrix4x2, QMatrix4x3, QMatrix4x4, QMouseEvent,
+         QMouseEvent,
          QMoveEvent, QMovie, QPaintDevice, QPaintEngine, QPaintEngineState,
          QPaintEvent, QPainter, QPainterPath, QPainterPathStroker, QPalette,
          QPen, QPicture, QPictureIO, QPixmap, QPixmapCache, QPolygon,
-         QPolygonF, QQuaternion, QRadialGradient, QRawFont, QRegExpValidator,
+         QPolygonF,
          QRegion, QResizeEvent, QSessionManager, QShortcutEvent, QShowEvent,
-         QStandardItem, QStandardItemModel, QStaticText, QStatusTipEvent,
+         QStandardItem, QStandardItemModel, QStatusTipEvent,
          QSyntaxHighlighter, QTabletEvent, QTextBlock, QTextBlockFormat,
          QTextBlockGroup, QTextBlockUserData, QTextCharFormat, QTextCursor,
          QTextDocument, QTextDocumentFragment, QTextDocumentWriter,
@@ -48,9 +56,9 @@ elif PYQT4:
          QTextImageFormat, QTextInlineObject, QTextItem, QTextLayout,
          QTextLength, QTextLine, QTextList, QTextListFormat, QTextObject,
          QTextObjectInterface, QTextOption, QTextTable, QTextTableCell,
-         QTextTableCellFormat, QTextTableFormat, QTouchEvent, QTransform,
-         QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
-         QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qFuzzyCompare,
+         QTextTableCellFormat, QTextTableFormat, QTransform,
+         QValidator, QWhatsThisClickedEvent,
+         QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue,
          qGray, qGreen, qIsGray, qRed, qRgb, qRgba, QIntValidator)
 
     # These objects belong to QtPrintSupport
