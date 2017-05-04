@@ -59,6 +59,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/690
 
+* Restored support for PyQt 4.6 (Centos 6.8)
+
+  https://github.com/git-cola/git-cola/issues/692
+
 .. _v2.11:
 
 git-cola v2.11
