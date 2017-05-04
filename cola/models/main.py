@@ -91,6 +91,7 @@ class MainModel(Observable):
         self.staged_deleted = set()
         self.unstaged_deleted = set()
         self.submodules = set()
+        self.submodule_list = []
 
         self.local_branches = []
         self.remote_branches = []
@@ -199,7 +200,11 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
+        self._update_submodule_list()
         self.notify_observers(self.message_updated)
+
+    def _update_submodule_list(self):
+        self.submodule_list = gitcmds.list_submodule()
 
     def _update_files(self, update_index=False):
         display_untracked = prefs.display_untracked()
