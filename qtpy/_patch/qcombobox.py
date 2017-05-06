@@ -42,8 +42,8 @@ def patch_qcombobox(QComboBox):
     using PyQt4 and PySide to avoid issues.
     """
 
-    from qtpy.QtGui import QIcon
-    from qtpy.QtCore import Qt, QObject
+    from ..QtGui import QIcon
+    from ..QtCore import Qt, QObject
 
     class userDataWrapper():
         """

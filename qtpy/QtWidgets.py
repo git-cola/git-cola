@@ -13,8 +13,9 @@ Provides widget classes and functions.
     were the ``PyQt5.QtWidgets`` module.
 """
 
-from qtpy import is_old_pyqt, PYQT5, PYQT4, PYSIDE, PythonQtError
-from qtpy._patch.qcombobox import patch_qcombobox
+from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from ._patch.qcombobox import patch_qcombobox
+from ._patch.qheaderview import introduce_renamed_methods_qheaderview
 
 
 if PYQT5:
@@ -22,15 +23,17 @@ if PYQT5:
 elif PYQT4:
     from PyQt4.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
+    del QStyleOptionViewItemV4
 
     # These objects belong to QtGui
     try:
-        del QGlyphRun
-        del QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2, QMatrix3x3
-        del QMatrix3x4, QMatrix4x2, QMatrix4x3, QMatrix4x4
-        del QQuaternion, QRadialGradient, QRawFont, QRegExpValidator
-        del QStaticText, QTouchEvent, QVector2D, QVector3D, QVector4D
-        del qFuzzyCompare
+        # Older versions of PyQt4 do not provide these
+        del (QGlyphRun,
+             QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2, QMatrix3x3,
+             QMatrix3x4, QMatrix4x2, QMatrix4x3, QMatrix4x4,
+             QQuaternion, QRadialGradient, QRawFont, QRegExpValidator,
+             QStaticText, QTouchEvent, QVector2D, QVector3D, QVector4D,
+             qFuzzyCompare)
     except NameError:
         pass
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
@@ -42,11 +45,10 @@ elif PYQT4:
          QHoverEvent, QIcon, QIconDragEvent, QIconEngine, QImage,
          QImageIOHandler, QImageReader, QImageWriter, QInputEvent,
          QInputMethodEvent, QKeyEvent, QKeySequence, QLinearGradient,
-         QMouseEvent,
-         QMoveEvent, QMovie, QPaintDevice, QPaintEngine, QPaintEngineState,
-         QPaintEvent, QPainter, QPainterPath, QPainterPathStroker, QPalette,
-         QPen, QPicture, QPictureIO, QPixmap, QPixmapCache, QPolygon,
-         QPolygonF,
+         QMouseEvent, QMoveEvent, QMovie, QPaintDevice, QPaintEngine,
+         QPaintEngineState, QPaintEvent, QPainter, QPainterPath,
+         QPainterPathStroker, QPalette, QPen, QPicture, QPictureIO, QPixmap,
+         QPixmapCache, QPolygon, QPolygonF,
          QRegion, QResizeEvent, QSessionManager, QShortcutEvent, QShowEvent,
          QStandardItem, QStandardItemModel, QStatusTipEvent,
          QSyntaxHighlighter, QTabletEvent, QTextBlock, QTextBlockFormat,
@@ -59,7 +61,8 @@ elif PYQT4:
          QTextTableCellFormat, QTextTableFormat, QTransform,
          QValidator, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue,
-         qGray, qGreen, qIsGray, qRed, qRgb, qRgba, QIntValidator)
+         qGray, qGreen, qIsGray, qRed, qRgb, qRgba, QIntValidator,
+         QStringListModel)
 
     # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
@@ -72,9 +75,13 @@ elif PYQT4:
     # Patch QComboBox to allow Python objects to be passed to userData
     patch_qcombobox(QComboBox)
 
+    # QHeaderView: renamed methods
+    introduce_renamed_methods_qheaderview(QHeaderView)
+
 elif PYSIDE:
     from PySide.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
+    del QStyleOptionViewItemV4
 
     # These objects belong to QtGui
     del (QAbstractTextDocumentLayout, QActionEvent, QBitmap, QBrush, QClipboard,
@@ -104,7 +111,7 @@ elif PYSIDE:
          QTextTableCellFormat, QTextTableFormat, QTouchEvent, QTransform,
          QValidator, QVector2D, QVector3D, QVector4D, QWhatsThisClickedEvent,
          QWheelEvent, QWindowStateChangeEvent, qAlpha, qBlue, qGray, qGreen,
-         qIsGray, qRed, qRgb, qRgba, QIntValidator)
+         qIsGray, qRed, qRgb, qRgba, QIntValidator, QStringListModel)
 
     # These objects belong to QtPrintSupport
     del (QAbstractPrintDialog, QPageSetupDialog, QPrintDialog, QPrintEngine,
@@ -116,6 +123,9 @@ elif PYSIDE:
 
     # Patch QComboBox to allow Python objects to be passed to userData
     patch_qcombobox(QComboBox)
+
+    # QHeaderView: renamed methods
+    introduce_renamed_methods_qheaderview(QHeaderView)
 
 else:
     raise PythonQtError('No Qt bindings could be found')

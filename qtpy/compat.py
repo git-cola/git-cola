@@ -11,9 +11,9 @@ from __future__ import print_function
 import sys
 import collections
 
-from qtpy import PYQT4
-from qtpy.QtWidgets import QFileDialog
-from qtpy.py3compat import is_text_string, to_text_string, TEXT_TYPES
+from . import PYQT4
+from .QtWidgets import QFileDialog
+from .py3compat import is_text_string, to_text_string, TEXT_TYPES
 
 
 # =============================================================================
@@ -105,7 +105,7 @@ def _qfiledialog_wrapper(attr, parent=None, caption='', basedir='',
         options = QFileDialog.Options(0)
     try:
         # PyQt <v4.6 (API #1)
-        from qtpy.QtCore import QString
+        from .QtCore import QString
     except ImportError:
         # PySide or PyQt >=v4.6
         QString = None  # analysis:ignore

@@ -10,7 +10,7 @@
 Provides QtCore classes and functions.
 """
 
-from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
@@ -19,20 +19,30 @@ if PYQT5:
     from PyQt5.QtCore import pyqtSlot as Slot
     from PyQt5.QtCore import pyqtProperty as Property
     from PyQt5.QtCore import QT_VERSION_STR as __version__
+
+    # Those are imported from `import *`
+    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
 elif PYQT4:
     from PyQt4.QtCore import *
+    # Those are things we inherited from Spyder that fix crazy crashes under
+    # some specific situations. (See #34)
     from PyQt4.QtCore import QCoreApplication
     from PyQt4.QtCore import Qt
     from PyQt4.QtCore import pyqtSignal as Signal
     from PyQt4.QtCore import pyqtSlot as Slot
     from PyQt4.QtCore import pyqtProperty as Property
     from PyQt4.QtGui import (QItemSelection, QItemSelectionModel,
-                             QItemSelectionRange, QSortFilterProxyModel)
+                             QItemSelectionRange, QSortFilterProxyModel,
+                             QStringListModel)
     from PyQt4.QtCore import QT_VERSION_STR as __version__
+
+    # Those are imported from `import *`
+    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
 elif PYSIDE:
     from PySide.QtCore import *
     from PySide.QtGui import (QItemSelection, QItemSelectionModel,
-                              QItemSelectionRange, QSortFilterProxyModel)
+                              QItemSelectionRange, QSortFilterProxyModel,
+                              QStringListModel)
     import PySide.QtCore
     __version__ = PySide.QtCore.__version__
 else:

@@ -9,7 +9,7 @@
 Provides QtDesigner classes and functions.
 """
 
-from qtpy import PYQT5, PYQT4, PythonQtError
+from . import PYQT5, PYQT4, PythonQtError
 
 
 if PYQT5:

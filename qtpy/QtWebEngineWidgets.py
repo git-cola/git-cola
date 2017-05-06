@@ -10,7 +10,7 @@
 Provides QtWebEngineWidgets classes and functions.
 """
 
-from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 # To test if we are using WebEngine or WebKit

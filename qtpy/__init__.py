@@ -53,7 +53,7 @@ packages::
 import os
 
 # Version of QtPy
-from qtpy._version import __version__
+from ._version import __version__
 
 #: Qt API environment variable name
 QT_API = 'QT_API'
@@ -68,7 +68,7 @@ PYQT4_API = [
 PYSIDE_API = ['pyside']
 
 os.environ.setdefault(QT_API, 'pyqt5')
-API = os.environ[QT_API]
+API = os.environ[QT_API].lower()
 assert API in (PYQT5_API + PYQT4_API + PYSIDE_API)
 
 is_old_pyqt = is_pyqt46 = False

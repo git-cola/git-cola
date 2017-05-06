@@ -13,24 +13,23 @@ Provides QtGui classes and functions.
     the ``PyQt5.QtGui`` module.
 """
 
-from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
     from PyQt5.QtGui import *
 elif PYQT4:
-    # Older versions of PyQt4 do not provide these
     try:
-        from PyQt4.QtGui import QGlyphRun
-        from PyQt4.QtGui import QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2
-        from PyQt4.QtGui import QMatrix3x3, QMatrix3x4, QMatrix4x2, QMatrix4x3
-        from PyQt4.QtGui import QMatrix4x4, QTouchEvent, QQuaternion
-        from PyQt4.QtGui import QRadialGradient, QRawFont, QStaticText
-        from PyQt4.QtGui import QVector2D, QVector3D, QVector4D
-        from PyQt4.QtGui import qFuzzyCompare
+        # Older versions of PyQt4 do not provide these
+        from PyQt4.QtGui import (QGlyphRun, QMatrix2x2, QMatrix2x3,
+                                 QMatrix2x4, QMatrix3x2, QMatrix3x3,
+                                 QMatrix3x4, QMatrix4x2, QMatrix4x3,
+                                 QMatrix4x4, QTouchEvent, QQuaternion,
+                                 QRadialGradient, QRawFont, QStaticText,
+                                 QVector2D, QVector3D, QVector4D,
+                                 qFuzzyCompare)
     except ImportError:
         pass
-
     from PyQt4.Qt import QKeySequence, QTextCursor
     from PyQt4.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
                              QBrush, QClipboard, QCloseEvent, QColor,

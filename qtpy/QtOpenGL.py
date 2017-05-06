@@ -5,17 +5,17 @@
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Provides QtSvg classes and functions."""
+"""Provides QtOpenGL classes and functions."""
 
 # Local imports
 from . import PYQT4, PYQT5, PYSIDE, PythonQtError
 
 if PYQT5:
-    from PyQt5.QtSvg import *
+    from PyQt5.QtOpenGL import *
 elif PYQT4:
-    from PyQt4.QtSvg import *
+    from PyQt4.QtOpenGL import *
 elif PYSIDE:
-    from PySide.QtSvg import *
+    from PySide.QtOpenGL import *
 else:
     raise PythonQtError('No Qt bindings could be found')
 

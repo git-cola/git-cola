@@ -1,19 +1,20 @@
 import os
 
-from qtpy import PYSIDE, PYQT4, PYQT5
-from qtpy.QtWidgets import QComboBox
+from . import PYSIDE, PYQT4, PYQT5
+from .QtWidgets import QComboBox
 
-__all__ = ['loadUi']
 
 if PYQT5:
 
-    from PyQt5.uic import loadUi
+    from PyQt5.uic import *
 
 elif PYQT4:
 
-    from PyQt4.uic import loadUi
+    from PyQt4.uic import *
 
 elif PYSIDE:
+
+    __all__ = ['loadUi']
 
     # In PySide, loadUi does not exist, so we define it using QUiLoader, and
     # then make sure we expose that function. This is adapted from qt-helpers

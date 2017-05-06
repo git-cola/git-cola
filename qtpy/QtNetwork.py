@@ -10,7 +10,7 @@
 Provides QtNetwork classes and functions.
 """
 
-from qtpy import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
