@@ -153,6 +153,15 @@ class ViewerMixin(object):
     def reset_worktree(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
+    def reset_merge(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, ref=oid))
+
+    def reset_soft(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, ref=oid))
+
+    def reset_hard(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
+
     def checkout_detached(self):
         self.with_oid(lambda oid: cmds.do(cmds.Checkout, [oid]))
 
@@ -191,6 +200,9 @@ class ViewerMixin(object):
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
         self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
         self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['reset_merge'].setEnabled(has_single_selection)
+        self.menu_actions['reset_soft'].setEnabled(has_single_selection)
+        self.menu_actions['reset_hard'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
@@ -211,6 +223,10 @@ class ViewerMixin(object):
         reset_menu = menu.addMenu(N_('Reset'))
         reset_menu.addAction(self.menu_actions['reset_branch_head'])
         reset_menu.addAction(self.menu_actions['reset_worktree'])
+        reset_menu.addSeparator()
+        reset_menu.addAction(self.menu_actions['reset_merge'])
+        reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_hard'])
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
@@ -256,6 +272,15 @@ def viewer_actions(widget):
         'reset_worktree':
         qtutils.add_action(widget, N_('Reset Worktree'),
                            widget.proxy.reset_worktree),
+        'reset_merge':
+        qtutils.add_action(widget, N_('Reset Merge'),
+                           widget.proxy.reset_merge),
+        'reset_soft':
+        qtutils.add_action(widget, N_('Reset Soft'),
+                           widget.proxy.reset_soft),
+        'reset_hard':
+        qtutils.add_action(widget, N_('Reset Hard'),
+                           widget.proxy.reset_hard),
         'save_blob':
         qtutils.add_action(widget, N_('Grab File...'),
                            widget.proxy.save_blob_dialog),
@@ -843,7 +868,6 @@ class Cache(object):
             font = cls._label_font = QtWidgets.QApplication.font()
             font.setPointSize(6)
         return font
-
 
 
 class Edge(QtWidgets.QGraphicsItem):

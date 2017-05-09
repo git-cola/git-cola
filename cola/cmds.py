@@ -495,8 +495,7 @@ class ResetBranchHead(ResetCommand):
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
-        git = self.model.git
-        return git.reset(self.ref, '--', mixed=True)
+        return self.model.git.reset(self.ref, '--', mixed=True)
 
 
 class ResetWorktree(ResetCommand):
@@ -504,13 +503,55 @@ class ResetWorktree(ResetCommand):
     def confirm(self):
         title = N_('Reset Worktree')
         question = N_('Reset worktree?')
-        info = N_('The worktree will be reset using "git reset --merge %s"')
+        info = N_('The worktree will be reset using "git reset --keep %s"')
         ok_text = N_('Reset Worktree')
         info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
+        return self.model.git.reset(self.ref, '--', keep=True)
+
+
+class ResetMerge(ResetCommand):
+
+    def confirm(self):
+        title = N_('Reset Merge')
+        question = N_('Reset merge?')
+        info = N_('The branch will be reset using "git reset --merge %s"')
+        ok_text = N_('Reset Merge')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_text)
+
+    def reset(self):
         return self.model.git.reset(self.ref, '--', merge=True)
+
+
+class ResetSoft(ResetCommand):
+
+    def confirm(self):
+        title = N_('Reset Soft')
+        question = N_('Reset soft?')
+        info = N_('The branch will be reset using "git reset --soft %s"')
+        ok_text = N_('Reset Soft')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_text)
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', soft=True)
+
+
+class ResetHard(ResetCommand):
+
+    def confirm(self):
+        title = N_('Reset Hard')
+        question = N_('Reset hard?')
+        info = N_('The branch will be reset using "git reset --hard %s"')
+        ok_text = N_('Reset Hard')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_text)
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', hard=True)
 
 
 class Commit(ResetMode):
