@@ -147,6 +147,15 @@ class ViewerMixin(object):
     def reset_worktree(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
+    def reset_hard(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
+
+    def reset_soft(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, ref=oid))
+
+    def reset_keep(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetKeep, ref=oid))
+
     def save_blob_dialog(self):
         self.with_oid(lambda oid: browse.BrowseBranch.browse(oid))
 
@@ -181,6 +190,9 @@ class ViewerMixin(object):
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
         self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
         self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['reset_hard'].setEnabled(has_single_selection)
+        self.menu_actions['reset_soft'].setEnabled(has_single_selection)
+        self.menu_actions['reset_keep'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
@@ -201,6 +213,9 @@ class ViewerMixin(object):
         reset_menu = menu.addMenu(N_('Reset'))
         reset_menu.addAction(self.menu_actions['reset_branch_head'])
         reset_menu.addAction(self.menu_actions['reset_worktree'])
+        reset_menu.addAction(self.menu_actions['reset_hard'])
+        reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_keep'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
         menu.addAction(self.menu_actions['copy'])
@@ -237,11 +252,20 @@ def viewer_actions(widget):
         qtutils.add_action(widget, N_('Launch Directory Diff Tool'),
                            widget.proxy.show_dir_diff, hotkeys.DIFF_SECONDARY),
         'reset_branch_head':
-        qtutils.add_action(widget, N_('Reset Branch Head'),
+        qtutils.add_action(widget, N_('Reset Branch Head (mixed)'),
                            widget.proxy.reset_branch_head),
         'reset_worktree':
-        qtutils.add_action(widget, N_('Reset Worktree'),
+        qtutils.add_action(widget, N_('Reset Worktree (merge)'),
                            widget.proxy.reset_worktree),
+        'reset_hard':
+        qtutils.add_action(widget, N_('Reset Hard'),
+                           widget.proxy.reset_hard),
+        'reset_soft':
+        qtutils.add_action(widget, N_('Reset Soft'),
+                           widget.proxy.reset_soft),
+        'reset_keep':
+        qtutils.add_action(widget, N_('Reset Keep'),
+                           widget.proxy.reset_keep),
         'save_blob':
         qtutils.add_action(widget, N_('Grab File...'),
                            widget.proxy.save_blob_dialog),

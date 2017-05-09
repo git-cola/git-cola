@@ -425,6 +425,31 @@ class ResetWorktree(ResetCommand):
     def reset(self):
         return self.model.git.reset(self.ref, '--', merge=True)
 
+class ResetHard(ResetCommand):
+    def confirm(self):
+        title = N_('Reset Hard')
+        question = N_('Reset hard?')
+        info = N_('The branch will be reset using "git reset --hard %s"')
+        ok_btn = N_('Reset Hard')
+        info = info % self.ref
+        return Interaction.confirm(title, question, info, ok_btn)
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', hard=True)
+
+class ResetSoft(ResetCommand):
+    def confirm(self):
+        return True
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', soft=True)
+
+class ResetKeep(ResetCommand):
+    def confirm(self):
+        return True
+
+    def reset(self):
+        return self.model.git.reset(self.ref, '--', keep=True)
 
 class Commit(ResetMode):
     """Attempt to create a new commit."""
