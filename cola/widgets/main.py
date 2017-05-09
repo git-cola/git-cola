@@ -247,6 +247,8 @@ class MainView(standard.MainWindow):
 
         self.fetch_action = add_action(
             self, N_('Fetch...'), remote.fetch, hotkeys.FETCH)
+        self.fetch_all_action = add_action(
+            self, N_('Fetch All'), remote.fetch_all)
         self.push_action = add_action(
             self, N_('Push...'), remote.push, hotkeys.PUSH)
         self.pull_action = add_action(
@@ -396,6 +398,7 @@ class MainView(standard.MainWindow):
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
         self.actions_menu.addAction(self.fetch_action)
+        self.actions_menu.addAction(self.fetch_all_action)
         self.actions_menu.addAction(self.push_action)
         self.actions_menu.addAction(self.pull_action)
         self.actions_menu.addAction(self.stash_action)
