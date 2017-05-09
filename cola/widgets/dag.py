@@ -643,6 +643,7 @@ class GitDAG(standard.MainWindow):
         self.thread.stop()
         self.ctx.set_ref(new_ref)
         self.ctx.set_count(new_count)
+        self.update_window_title()
         self.thread.start()
 
     def commits_selected(self, commits):
