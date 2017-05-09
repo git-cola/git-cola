@@ -74,7 +74,7 @@ class SubmodulesTreeWidget(standard.TreeWidget):
             self.child_path = self.main_model.directory
             self.parent_paths = []
 
-        items = [self.list_helper.get(entry[2], entry[2])
+        items = [self.list_helper.get(entry[0], entry[2], entry[2])
         for entry in self.main_model.submodule_list]
 
         self.clear()
@@ -106,10 +106,13 @@ class SubmodulesTreeWidget(standard.TreeWidget):
 class BuildItem(object):
 
     def __init__(self):
-        self.folder_icon = icons.folder()
+        self.sign_folder_map = {}
+        self.sign_folder_map[' '] = icons.folder()
+        self.sign_folder_map['+'] = icons.new()
+        self.sign_folder_map['-'] = icons.add()
 
-    def get(self, path, name):
-        icon = self.folder_icon
+    def get(self, sign, path, name):
+        icon = self.sign_folder_map[sign]
         return SubmodulesTreeWidgetItem(path, name, icon)
 
 
