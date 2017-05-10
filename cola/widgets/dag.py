@@ -531,6 +531,8 @@ class GitDAG(standard.MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
+        self.show_file_in_ref_action = qtutils.add_action_bool(
+                self, N_('Show Files in Ref'), self.set_show_file_in_ref, False)
         self.lock_layout_action = qtutils.add_action_bool(
                 self, N_('Lock Layout'), self.set_lock_layout, False)
 
@@ -549,6 +551,7 @@ class GitDAG(standard.MainWindow):
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
         self.view_menu.addAction(self.file_dock.toggleViewAction())
         self.view_menu.addSeparator()
+        self.view_menu.addAction(self.show_file_in_ref_action)
         self.view_menu.addAction(self.lock_layout_action)
 
         self.menubar.addAction(self.view_menu.menuAction())
@@ -590,6 +593,9 @@ class GitDAG(standard.MainWindow):
         qtutils.add_close_action(self)
 
         self.set_context(ctx)
+
+    def set_show_file_in_ref(self, show):
+        self.revtext._completion_model.use_paths = show
 
     def set_context(self, ctx):
         self.ctx = ctx

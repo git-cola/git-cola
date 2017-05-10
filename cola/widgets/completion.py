@@ -606,6 +606,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
     def __init__(self, parent):
         GitRefCompletionModel.__init__(self, parent)
         self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
+        self.use_paths = False
         self._paths = []
 
     def gather_paths(self):
@@ -616,8 +617,11 @@ class GitLogCompletionModel(GitRefCompletionModel):
             self.gather_paths()
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
                               sort_key=ref_sort_key)
-        paths, dirs = filter_path_matches(self.match_text, self._paths,
-                                          case_sensitive)
+        paths = []
+        dirs = []
+        if self.use_paths:
+            paths, dirs = filter_path_matches(self.match_text, self._paths,
+                                              case_sensitive)
         has_doubledash = (self.match_text == '--' or
                           self.full_text.startswith('-- ') or
                           ' -- ' in self.full_text)
