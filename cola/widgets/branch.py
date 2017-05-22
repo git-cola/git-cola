@@ -513,13 +513,13 @@ class GitHelper(object):
     def show_result(command, status, out, err):
         Interaction.log_status(status, out, err)
 
-        if status > 0:
-            title = N_('Error %s') % command
-            msg = (N_('"%(command)s" returned exit status %(status)d') %
-                   dict(command=command, status=status))
-            details = N_('Output:\n%s') % out
+        if status != 0:
+            title = (N_('"%(command)s" returned exit status %(status)d') %
+                     dict(command=command, status=status))
+            details = title
+            msg = out
+            if msg:
+                msg += '\n'
             if err:
-                details += '\n\n'
-                details += N_('Errors: %s') % err
-
+                msg += err
             qtutils.critical(title, msg, details)
