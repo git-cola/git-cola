@@ -96,7 +96,7 @@ class GitCommandWidget(standard.Dialog):
         self.proc.finished.connect(self.proc_finished)
         self.proc.stateChanged.connect(self.proc_state_changed)
 
-        qtutils.connect_button(self.button_abort, self.abortProc)
+        qtutils.connect_button(self.button_abort, self.abort)
         qtutils.connect_button(self.button_close, self.close)
 
         self._layout = qtutils.vbox(defs.margin, defs.spacing,
@@ -133,12 +133,12 @@ class GitCommandWidget(standard.Dialog):
         cursor.movePosition(cursor.End)
         self.output_text.setTextCursor(cursor)
 
-    def abortProc(self):
+    def abort(self):
         if self.proc.state() != QtCore.QProcess.NotRunning:
             # Terminate seems to do nothing in windows
             self.proc.terminate()
             # Kill the process.
-            QtCore.QTimer.singleShot(1000, self.proc)
+            QtCore.QTimer.singleShot(1000, self.proc.kill)
 
     def closeEvent(self, event):
         if self.proc.state() != QtCore.QProcess.NotRunning:
@@ -150,7 +150,7 @@ class GitCommandWidget(standard.Dialog):
             ok_text = N_('Abort Action')
             if qtutils.confirm(title, msg, info_text, ok_text,
                                default=False, icon=icons.close()):
-                self.abortProc()
+                self.abort()
                 event.accept()
             else:
                 event.ignore()
