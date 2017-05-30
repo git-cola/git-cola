@@ -32,6 +32,7 @@ from . import action
 from . import archive
 from . import bookmarks
 from . import branch
+from . import submodule
 from . import browse
 from . import cfgactions
 from . import commitmsg
@@ -117,6 +118,11 @@ class MainView(standard.MainWindow):
         self.branchdockwidget = create_dock(N_('Branches'), self)
         self.branchwidget = branch.BranchesWidget(parent=self.branchdockwidget)
         self.branchdockwidget.setWidget(self.branchwidget)
+
+        # "Submodule" widgets
+        self.submoduledockwidget = create_dock(N_('Submodules'), self)
+        self.submodulewidget = submodule.SubmodulesWidget(parent=self.submoduledockwidget)
+        self.submoduledockwidget.setWidget(self.submodulewidget)
 
         # "Commit Message Editor" widget
         self.position_label = QtWidgets.QLabel()
@@ -241,6 +247,8 @@ class MainView(standard.MainWindow):
 
         self.fetch_action = add_action(
             self, N_('Fetch...'), remote.fetch, hotkeys.FETCH)
+        self.fetch_all_action = add_action(
+            self, N_('Fetch All'), remote.fetch_all)
         self.push_action = add_action(
             self, N_('Push...'), remote.push, hotkeys.PUSH)
         self.pull_action = add_action(
@@ -390,6 +398,7 @@ class MainView(standard.MainWindow):
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
         self.actions_menu.addAction(self.fetch_action)
+        self.actions_menu.addAction(self.fetch_all_action)
         self.actions_menu.addAction(self.push_action)
         self.actions_menu.addAction(self.pull_action)
         self.actions_menu.addAction(self.stash_action)
@@ -709,6 +718,7 @@ class MainView(standard.MainWindow):
             (optkey + '+5', self.bookmarksdockwidget),
             (optkey + '+6', self.recentdockwidget),
             (optkey + '+7', self.branchdockwidget),
+            (optkey + '+8', self.submoduledockwidget),
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut

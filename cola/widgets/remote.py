@@ -28,6 +28,9 @@ def fetch():
     """Fetch from remote repositories"""
     return run(Fetch)
 
+def fetch_all():
+    model = main.MainModel()
+    model.fetch('--all')
 
 def push():
     """Push to remote repositories"""

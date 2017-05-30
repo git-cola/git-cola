@@ -147,6 +147,15 @@ class ViewerMixin(object):
     def reset_worktree(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
+    def reset_hard(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
+
+    def reset_soft(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, ref=oid))
+
+    def reset_keep(self):
+        self.with_oid(lambda oid: cmds.do(cmds.ResetKeep, ref=oid))
+
     def save_blob_dialog(self):
         self.with_oid(lambda oid: browse.BrowseBranch.browse(oid))
 
@@ -181,6 +190,9 @@ class ViewerMixin(object):
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
         self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
         self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['reset_hard'].setEnabled(has_single_selection)
+        self.menu_actions['reset_soft'].setEnabled(has_single_selection)
+        self.menu_actions['reset_keep'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
@@ -201,6 +213,9 @@ class ViewerMixin(object):
         reset_menu = menu.addMenu(N_('Reset'))
         reset_menu.addAction(self.menu_actions['reset_branch_head'])
         reset_menu.addAction(self.menu_actions['reset_worktree'])
+        reset_menu.addAction(self.menu_actions['reset_hard'])
+        reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_keep'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
         menu.addAction(self.menu_actions['copy'])
@@ -237,11 +252,20 @@ def viewer_actions(widget):
         qtutils.add_action(widget, N_('Launch Directory Diff Tool'),
                            widget.proxy.show_dir_diff, hotkeys.DIFF_SECONDARY),
         'reset_branch_head':
-        qtutils.add_action(widget, N_('Reset Branch Head'),
+        qtutils.add_action(widget, N_('Reset Branch Head (mixed)'),
                            widget.proxy.reset_branch_head),
         'reset_worktree':
-        qtutils.add_action(widget, N_('Reset Worktree'),
+        qtutils.add_action(widget, N_('Reset Worktree (merge)'),
                            widget.proxy.reset_worktree),
+        'reset_hard':
+        qtutils.add_action(widget, N_('Reset Hard'),
+                           widget.proxy.reset_hard),
+        'reset_soft':
+        qtutils.add_action(widget, N_('Reset Soft'),
+                           widget.proxy.reset_soft),
+        'reset_keep':
+        qtutils.add_action(widget, N_('Reset Keep'),
+                           widget.proxy.reset_keep),
         'save_blob':
         qtutils.add_action(widget, N_('Grab File...'),
                            widget.proxy.save_blob_dialog),
@@ -507,6 +531,8 @@ class GitDAG(standard.MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
+        self.show_file_in_ref_action = qtutils.add_action_bool(
+                self, N_('Show Files in Ref'), self.set_show_file_in_ref, False)
         self.lock_layout_action = qtutils.add_action_bool(
                 self, N_('Lock Layout'), self.set_lock_layout, False)
 
@@ -525,6 +551,7 @@ class GitDAG(standard.MainWindow):
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
         self.view_menu.addAction(self.file_dock.toggleViewAction())
         self.view_menu.addSeparator()
+        self.view_menu.addAction(self.show_file_in_ref_action)
         self.view_menu.addAction(self.lock_layout_action)
 
         self.menubar.addAction(self.view_menu.menuAction())
@@ -566,6 +593,9 @@ class GitDAG(standard.MainWindow):
         qtutils.add_close_action(self)
 
         self.set_context(ctx)
+
+    def set_show_file_in_ref(self, show):
+        self.revtext._completion_model.use_paths = show
 
     def set_context(self, ctx):
         self.ctx = ctx
@@ -643,6 +673,7 @@ class GitDAG(standard.MainWindow):
         self.thread.stop()
         self.ctx.set_ref(new_ref)
         self.ctx.set_count(new_count)
+        self.update_window_title()
         self.thread.start()
 
     def commits_selected(self, commits):
