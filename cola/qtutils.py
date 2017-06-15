@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2016 David Aguilar
+# Copyright (c) 2008-2017 David Aguilar
 """Miscellaneous Qt utility functions."""
 from __future__ import division, absolute_import, unicode_literals
 

@@ -20,7 +20,7 @@ partial.svg
 upstream.svg
 
 Copyright (C) 2011 Uri Okrent
-Copyright (C) 2015-2016 David Aguilar and contributors
+Copyright (C) 2015-2017 David Aguilar and contributors
 
 License: MIT
 
