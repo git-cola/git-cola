@@ -12,6 +12,7 @@ from . import defs
 from . import completion
 from . import standard
 from . import text
+from ..models import main
 
 
 def new_create_tag(name='', ref='', sign=False, settings=None, parent=None):
@@ -58,6 +59,7 @@ class CreateTag(standard.Dialog):
         self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), parent=self)
         self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
+        qtutils.add_completer(self.tag_name, main.model().tags)
 
         # Sign Tag
         self.sign_label = QtWidgets.QLabel(self)
