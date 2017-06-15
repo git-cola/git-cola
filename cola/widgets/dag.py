@@ -248,7 +248,7 @@ def viewer_actions(widget):
         'copy':
         qtutils.add_action(widget, N_('Copy SHA-1'),
                            widget.proxy.copy_to_clipboard,
-                           QtGui.QKeySequence.Copy),
+                           hotkeys.COPY_SHA1),
     }
 
 
