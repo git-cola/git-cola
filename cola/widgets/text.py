@@ -68,7 +68,6 @@ class LineEditCursorPosition(object):
         self._widget.setCursorPosition(0)
 
 
-
 class BaseTextEditExtension(QtCore.QObject):
 
     def __init__(self, widget, get_value, readonly):
@@ -291,6 +290,28 @@ class TextEdit(QtWidgets.QTextEdit):
             event.ignore()
             return
         return super(TextEdit, self).wheelEvent(event)
+
+    def should_override_tab_with_spaces(self, event):
+        return prefs.override_tab_with_spaces() and event.key() == Qt.Key_Tab
+
+    def keyPressEvent(self, event):
+        override_tab = self.should_override_tab_with_spaces(event)
+        if override_tab:
+            tab_width = self.ext.tabwidth()
+            new_press_event = QtGui.QKeyEvent(QtGui.QKeyEvent.KeyPress, Qt.Key_A, Qt.NoModifier, tab_width * ' ')
+            new_release_event = QtGui.QKeyEvent(QtGui.QKeyEvent.KeyRelease, Qt.Key_A, Qt.NoModifier, tab_width * ' ')
+            event.accept()
+            QtCore.QCoreApplication.postEvent(self, new_press_event)
+            QtCore.QCoreApplication.postEvent(self, new_release_event)
+        else:
+            QtWidgets.QTextEdit.keyPressEvent(self, event)
+
+    def keyReleaseEvent(self, event):
+        override_tab = self.should_override_tab_with_spaces(event)
+        if not override_tab:
+            event.ignore()
+        else:
+            QtWidgets.QTextEdit.keyReleaseEvent(self, event)
 
 
 class TextEditCursorPosition(object):

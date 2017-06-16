@@ -171,10 +171,12 @@ class SettingsFormWidget(FormWidget):
         self.bold_headers = qtutils.checkbox()
         self.save_gui_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
+        self.override_tab_with_spaces = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
         self.add_row(N_('Tab Width'), self.tabwidth)
+        self.add_row(N_('Override tab with spaces'), self.override_tab_with_spaces)
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
         self.add_row(N_('Editor'), self.editor)
@@ -192,6 +194,7 @@ class SettingsFormWidget(FormWidget):
         self.set_config({
             prefs.SAVEWINDOWSETTINGS: (self.save_gui_settings, True),
             prefs.TABWIDTH: (self.tabwidth, 8),
+            prefs.OVERRIDE_TAB_WITH_SPACES: (self.override_tab_with_spaces, False),
             prefs.TEXTWIDTH: (self.textwidth, 72),
             prefs.LINEBREAK: (self.linebreak, True),
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),

@@ -24,6 +24,7 @@ MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
+OVERRIDE_TAB_WITH_SPACES = 'cola.overridetabwithspaces'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
 TABWIDTH = 'cola.tabwidth'
@@ -89,6 +90,9 @@ def linebreak():
 
 def spellcheck():
     return gitcfg.current().get(SPELL_CHECK, False)
+
+def override_tab_with_spaces():
+    return gitcfg.current().get(OVERRIDE_TAB_WITH_SPACES, False)
 
 def sort_bookmarks():
     return gitcfg.current().get(SORT_BOOKMARKS, True)
