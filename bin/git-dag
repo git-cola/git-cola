@@ -10,7 +10,7 @@ from argparse import ArgumentParser
 
 
 __copyright__ = """
-Copyright (C) 2007-2016 David Aguilar and contributors
+Copyright (C) 2007-2017 David Aguilar and contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 2 as
