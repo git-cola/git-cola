@@ -23,6 +23,9 @@ Usability, bells and whistles
 -----------------------------
 * Updated Ukranian translation.
 
+* The "name" field in the "Create Tag" dialog now includes autocompletion,
+  which makes it easy to see which tags currently exist.
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
