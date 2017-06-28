@@ -57,7 +57,7 @@ A menu will appear allowing you to diff the two commits.
 SHORTCUTS
 =========
 You can run commands using dedicated shortcuts. Select a single commit
-and then press ctrl + alt + c to copy sha1 or ctrl + d to run diff tool.
+and then press `Ctrl-Alt-c` to copy sha1 or `Ctrl-d` to run diff tool.
 
 You can read more about hotkeys from 'keyboard shortcuts' window or context menu.
 
