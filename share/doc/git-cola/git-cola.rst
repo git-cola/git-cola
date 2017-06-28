@@ -343,8 +343,8 @@ configuration variable.
 
 Prepare Commit Message
 ----------------------
-The ``Commit -> Prepare Commit Message`` action runs the
-`cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
+The ``Commit -> Prepare Commit Message`` action or `Ctrl-Shift-Return` keyboard shortcut
+runs the `cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
 This is a `git cola`-specific hook that takes the same parameters
 as Git's `prepare-commit-msg hook <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks>`_
 
