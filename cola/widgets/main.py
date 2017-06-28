@@ -2,11 +2,7 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import json
 import os
-
-from cola.widgets.toolbar import ColaToolBar
-from cola.widgets.toolbar import MAIN_ACTIONS
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -58,6 +54,10 @@ from . import search
 from . import standard
 from . import status
 from . import stash
+from .toolbar import ColaToolBar
+from .toolbar import ToolbarManager
+from .toolbarcmds import COLA_TOOLBAR_COMMANDS
+from .toolbarlayout import COLA_TOOLBAR_TREE
 
 
 class MainView(standard.MainWindow):
@@ -565,9 +565,11 @@ class MainView(standard.MainWindow):
         menu.exec_(event.globalPos())
 
     def add_toolbar(self):
-        name = qtutils.prompt(N_('Add ToolBar'), N_('Enter ToolBar Name'))
-        if name[1] is True and name[0]:
-            self.addToolBar(ColaToolBar(name[0], MAIN_ACTIONS))
+        name = 'ToolBar' + str(len(self.findChildren(ColaToolBar)) + 1)
+        toolbar = ColaToolBar(name, COLA_TOOLBAR_TREE, COLA_TOOLBAR_COMMANDS)
+
+        self.addToolBar(toolbar)
+        toolbar.configure_toolbar()
 
     def build_recent_menu(self):
         settings = Settings()
@@ -694,15 +696,7 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
-
-        saved_toolbars = []
-        toolbars = self.findChildren(ColaToolBar)
-        for toolbar in toolbars:
-            saved_toolbars.append({'name': toolbar.windowTitle(),
-                                   'area': self.toolBarArea(toolbar),
-                                   'config': json.dumps(toolbar.get_config())})
-
-        state['toolbar'] = saved_toolbars
+        state['toolbars'] = ToolbarManager.save_state(self.findChildren(ColaToolBar))
 
         return state
 
@@ -717,12 +711,20 @@ class MainView(standard.MainWindow):
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
 
-        toolbar_data = state.get('toolbar', '[]')
+        toolbar_data = state.get('toolbars', [])
         for data in toolbar_data:
-            toolbar = ColaToolBar(data['name'], MAIN_ACTIONS)
-            toolbar_config = json.loads(data['config'])
-            toolbar.load_config(toolbar_config)
+            toolbar = ColaToolBar(data['name'], COLA_TOOLBAR_TREE, COLA_TOOLBAR_COMMANDS)
+            toolbar.load_items(data['items'])
+            toolbar.set_show_icons(data['show_icons'])
+            toolbar.setVisible(data['visible'])
+            if data['break']:
+                self.addToolBarBreak(data['area'])
             self.addToolBar(data['area'], toolbar)
+            # floating toolbars must be set after added
+            if data['float']:
+                toolbar.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint)
+                toolbar.move(data['x'], data['y'])
+            # TODO: handle changed width when exists more than one toolbar in an area
 
         return result
 

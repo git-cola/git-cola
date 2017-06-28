@@ -1,31 +1,12 @@
 # encoding: utf-8
 from __future__ import division, absolute_import, unicode_literals
 
-import copy
-
-from cola import cmds
-from cola import guicmds
-from cola.qtutils import app
-from cola.widgets import action
-from cola.widgets import browse
-from cola.widgets import compare
-from cola.widgets import createbranch
-from cola.widgets import createtag
-from cola.widgets import editremotes
-from cola.widgets import finder
-from cola.widgets import grep
-from cola.widgets import merge
-from cola.widgets import patch
-from cola.widgets import recent
-from cola.widgets import remote
-from cola.widgets import search
-from cola.widgets import standard
-from cola.widgets import stash
 from qtpy import QtGui
 from qtpy.QtCore import Qt
 from qtpy import QtWidgets
 
 from ..i18n import N_
+from ..widgets import standard
 from .. import icons
 from .. import qtutils
 from . import defs
@@ -39,14 +20,15 @@ def configure_toolbar_dialog(toolbar):
 
 
 class ColaToolBar(QtWidgets.QToolBar):
-    SEPARATOR = 130
+    SEPARATOR = 'Separator'
 
-    def __init__(self, title, actions_tree):
+    def __init__(self, title, tree_layout, toolbar_commands):
         QtWidgets.QToolBar.__init__(self)
         self.setWindowTitle(title)
         self.setObjectName(title)
 
-        self.actions_tree = actions_tree
+        self.tree_layout = tree_layout
+        self.commands = toolbar_commands
 
     def set_show_icons(self, show_icons):
         if show_icons:
@@ -57,69 +39,29 @@ class ColaToolBar(QtWidgets.QToolBar):
     def show_icons(self):
         return self.toolButtonStyle() == Qt.ToolButtonIconOnly
 
-    def get_actions_tree(self):
-        return self.actions_tree
-
-    def get_current_actions_tree(self):
-        result = copy.deepcopy(self.actions_tree)
-        for toolbar_action in self.actions():
-            data = toolbar_action.data()
-            parent_id = data['parent_id']
-            child_id = data['child_id']
-            if parent_id in self.actions_tree:
-                result.setdefault(parent_id, {'title': toolbar_action.text(),
-                                              'items': {}})
-                if child_id in self.actions_tree[parent_id]['items']:
-                    del result[parent_id]['items'][child_id]
-
-        return result
-
-    def get_current_toolbar_actions(self):
-        current_actions = []
-        for toolbar_action in self.actions():
-            data = toolbar_action.data()
-            if data['child_id'] == self.SEPARATOR:
-                current_actions.append({'title': None,
-                                        'data': data, 'icon': None})
-            if data and data['parent_id'] in self.actions_tree:
-                items = self.actions_tree[data['parent_id']]['items']
-                if data['child_id'] in items:
-                    item = items[data['child_id']]
-                    current_actions.append({'title': item['title'],
-                                            'data': data, 'icon': item['icon']})
-
-        return current_actions
-
-    def get_config(self):
-        current_data = [x.data() for x in self.actions()]
-
-        return {'data': current_data, 'show_icons': self.show_icons()}
-
-    def load_config(self, config):
-        for data in config['data']:
+    def load_items(self, items):
+        for data in items:
             self.add_action_from_data(data)
 
-        self.set_show_icons(config['show_icons'])
-
     def add_action_from_data(self, data):
-        parent_id = data['parent_id']
-        child_id = data['child_id']
+        parent = data['parent']
+        child = data['child']
 
-        if child_id == self.SEPARATOR:
+        if child == self.SEPARATOR:
             toolbar_action = self.addSeparator()
             toolbar_action.setData(data)
         else:
-            if parent_id in self.actions_tree:
-                items = self.actions_tree[parent_id]['items']
-                if child_id in items:
-                    item = items[child_id]
-                    title = N_(item['title'])
-                    callback = item['action']
+            if parent in self.tree_layout:
+                tree_items = self.tree_layout[parent]
+                if child in tree_items and child in self.commands:
+                    command = self.commands[child]
+                    title = N_(command['title'])
+                    callback = command['action']
 
-                    if item['icon'] is None:
+                    if command['icon'] is None:
                         toolbar_action = self.addAction(title, callback)
                     else:
-                        icon = getattr(icons, item['icon'], None)
+                        icon = getattr(icons, command['icon'], None)
                         toolbar_action = self.addAction(icon(), title, callback)
 
                     toolbar_action.setData(data)
@@ -151,6 +93,10 @@ class ToolbarView(QtWidgets.QDialog):
         self.toolbar = toolbar
         self.left_list = ToolbarTreeWidget(self)
         self.right_list = DraggableListWidget(self)
+        self.text_toolbar_name = QtWidgets.QLabel()
+        self.text_toolbar_name.setText(N_('Name'))
+        self.toolbar_name = QtWidgets.QLineEdit()
+        self.toolbar_name.setText(toolbar.windowTitle())
         self.add_separator = qtutils.create_button(N_('Add Separator'))
         self.remove_item = qtutils.create_button(N_('Remove Element'))
         checked = toolbar.show_icons()
@@ -162,6 +108,8 @@ class ToolbarView(QtWidgets.QDialog):
 
         self.right_actions = qtutils.hbox(defs.no_margin, defs.spacing,
                                           self.add_separator, self.remove_item)
+        self.name_layout = qtutils.hbox(defs.no_margin, defs.spacing,
+                                        self.text_toolbar_name, self.toolbar_name)
         self.left_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.left_list)
         self.right_layout = qtutils.vbox(defs.no_margin, defs.spacing,
@@ -172,7 +120,8 @@ class ToolbarView(QtWidgets.QDialog):
                                            self.show_icon, qtutils.STRETCH,
                                            self.close_button, self.apply_button)
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.top_layout, self.actions_layout)
+                                        self.name_layout, self.top_layout,
+                                        self.actions_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_separator, self.add_separator_action)
@@ -185,31 +134,39 @@ class ToolbarView(QtWidgets.QDialog):
         self.load_left_items()
 
     def load_right_items(self):
-        right_items = self.toolbar.get_current_toolbar_actions()
-        for current in right_items:
-            if current['data']['child_id'] == self.toolbar.SEPARATOR:
+        for action in self.toolbar.actions():
+            data = action.data()
+            if data['child'] == self.toolbar.SEPARATOR:
                 self.add_separator_action()
             else:
-                self.right_list.add_item(current['title'], current['data'],
-                                         current['icon'])
+                command = self.toolbar.commands[data['child']]
+                self.right_list.add_item(command['title'], data, command['icon'])
 
     def load_left_items(self):
-        left_items = self.toolbar.get_current_actions_tree()
+        def current_children(actions):
+            result = []
+            for action in actions:
+                data = action.data()
+                if data['child'] != self.toolbar.SEPARATOR:
+                    result.append(data['child'])
 
-        for parent_id, parent in left_items.items():
-            top = self.left_list.insert_top(parent_id, parent['title'])
+            return result
 
-            for child_id, action_tree in parent['items'].items():
-                child = self.left_list.insert_child(parent_id, child_id,
-                                                    action_tree['title'],
-                                                    action_tree['icon'])
-
-                top.appendRow(child)
+        for parent in self.toolbar.tree_layout:
+            top = self.left_list.insert_top(parent)
+            current_items = current_children(self.toolbar.actions())
+            for item in self.toolbar.tree_layout[parent]:
+                if item not in current_items:
+                    command = self.toolbar.commands[item]
+                    child = self.left_list.create_child(parent, item,
+                                                        command['title'],
+                                                        command['icon'])
+                    top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
 
     def add_separator_action(self):
-        data = {'parent_id': None, 'child_id': self.toolbar.SEPARATOR}
+        data = {'parent': None, 'child': self.toolbar.SEPARATOR}
         self.right_list.add_separator(self.SEPARATOR_TEXT, data)
 
     def remove_item_action(self):
@@ -218,19 +175,19 @@ class ToolbarView(QtWidgets.QDialog):
         for item in items:
             took_item = self.right_list.takeItem(self.right_list.row(item))
             data = took_item.data(Qt.UserRole)
-            if data and data['child_id'] != self.toolbar.SEPARATOR:
-                actions_tree = self.toolbar.get_actions_tree()
-                if data['parent_id'] in actions_tree:
-                    parent_dict = actions_tree[data['parent_id']]
-                    child_dict = parent_dict['items'][data['child_id']]
-                    self.left_list.update_top_item(parent_dict['title'],
-                                                   data['child_id'],
-                                                   child_dict['title'],
-                                                   child_dict['icon'])
+            if data and data['child'] in self.toolbar.commands:
+                tree_layout = self.toolbar.tree_layout
+                if data['parent'] in tree_layout:
+                    command = self.toolbar.commands[data['child']]
+                    self.left_list.update_top_item(data['parent'],
+                                                   data['child'],
+                                                   command['title'],
+                                                   command['icon'])
 
     def apply_action(self):
         self.toolbar.clear()
         self.toolbar.set_show_icons(self.show_icon.isChecked())
+        self.toolbar.setWindowTitle(self.toolbar_name.text())
 
         for item in self.right_list.get_items():
             data = item.data(Qt.UserRole)
@@ -339,13 +296,12 @@ class ToolbarTreeWidget(standard.TreeView):
         item.setEditable(False)
         item.setDragEnabled(True)
         item.setText(N_(name))
-        item.setToolTip(N_(name))
         item.setData(data, Qt.UserRole)
 
         return item
 
-    def insert_top(self, parent_id, title):
-        item = self.create_item(title, parent_id)
+    def insert_top(self, title):
+        item = self.create_item(title, title)
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
 
         self.model().insertRow(0, item)
@@ -353,8 +309,8 @@ class ToolbarTreeWidget(standard.TreeView):
 
         return item
 
-    def insert_child(self, parent_id, child_id, title, icon_text=None):
-        data = {'parent_id': parent_id, 'child_id': child_id}
+    def create_child(self, parent, child, title, icon_text=None):
+        data = {'parent': parent, 'child': child}
         item = self.create_item(title, data)
 
         if icon_text is not None:
@@ -363,308 +319,37 @@ class ToolbarTreeWidget(standard.TreeView):
 
         return item
 
-    def update_top_item(self, parent_title, child_id, title, icon):
-        items = self.model().findItems(N_(parent_title), Qt.MatchExactly)
+    def update_top_item(self, parent, child, title, icon):
+        items = self.model().findItems(N_(parent), Qt.MatchExactly)
 
         if len(items) > 0:
             top = items[0]
-            child = self.insert_child(top.data(Qt.UserRole), child_id, title,
+            child = self.create_child(top.data(Qt.UserRole), child, title,
                                       icon)
             top.appendRow(child)
             top.sortChildren(0, Qt.AscendingOrder)
 
 
-MAIN_ACTIONS = {
-    120: {
-        'title': 'File',
-        'items': {
-            1: {
-                'title': 'New Repository...',
-                'action': lambda: guicmds.open_new_repo(),
-                'icon': 'new'
-            },
-            2: {
-                'title': 'Open...',
-                'action': lambda: guicmds.open_repo(),
-                'icon': 'folder'
-            },
-            3: {
-                'title': 'Open in New Window...',
-                'action': lambda: guicmds.open_repo_in_new_window(),
-                'icon': 'folder'
-            },
-            4: {
-                'title': 'Clone...',
-                'action': lambda: app().activeWindow().clone_repo(),
-                'icon': 'repo'
-            },
-            5: {
-                'title': 'Refresh...',
-                'action': cmds.run(cmds.Refresh),
-                'icon': 'sync'
-            },
-            6: {
-                'title': 'Find Files',
-                'action': lambda: finder.finder(),
-                'icon': 'zoom_in'
-            },
-            7: {
-                'title': 'Edit Remotes...',
-                'action': lambda: editremotes.remote_editor().exec_(),
-                'icon': None
-            },
-            8: {
-                'title': 'Recently Modified Files...',
-                'action': lambda: recent.browse_recent_files(),
-                'icon': None
-            },
-            9: {
-                'title': 'Apply Patches...',
-                'action': lambda: patch.apply_patches(),
-                'icon': None
-            },
-            10: {
-                'title': 'Export Patches...',
-                'action': lambda: guicmds.export_patches(),
-                'icon': None
-            },
-            11: {
-                'title': 'Save As Tarball/Zip...',
-                'action': lambda: app().activeWindow().save_archive(),
-                'icon': 'file_zip'
-            },
-            12: {
-                'title': 'Preferences',
-                'action': lambda: app().activeWindow().preferences(),
-                'icon': 'configure'
-            }
-        }
-    },
-    121: {
-        'title': 'Actions',
-        'items': {
-            20: {
-                'title': 'Fetch...',
-                'action': lambda: remote.fetch(),
-                'icon': None
-            },
-            21: {
-                'title': 'Pull...',
-                'action': lambda: remote.pull(),
-                'icon': 'pull'
-            },
-            22: {
-                'title': 'Push...',
-                'action': lambda: remote.push(),
-                'icon': 'push'
-            },
-            23: {
-                'title': 'Stash...',
-                'action': lambda: stash.stash(),
-                'icon': None
-            },
-            24: {
-                'title': 'Create Tag...',
-                'action': lambda: createtag.create_tag(),
-                'icon': 'tag'
-            },
-            25: {
-                'title': 'Cherry-Pick...',
-                'action': lambda: guicmds.cherry_pick(),
-                'icon': None
-            },
-            26: {
-                'title': 'Merge...',
-                'action': lambda: merge.local_merge(),
-                'icon': 'merge'
-            },
-            27: {
-                'title': 'Abort Merge...',
-                'action': lambda: merge.abort_merge(),
-                'icon': None
-            },
-            28: {
-                'title': 'Reset Branch Head',
-                'action': lambda: guicmds.reset_branch_head(),
-                'icon': None
-            },
-            29: {
-                'title': 'Reset Worktree',
-                'action': lambda: guicmds.reset_worktree(),
-                'icon': None
-            },
-            30: {
-                'title': 'Grep',
-                'action': lambda: grep.grep(),
-                'icon': None
-            },
-            31: {
-                'title': 'Search...',
-                'action': lambda: search.search(),
-                'icon': 'search'
-            }
-        }
-    },
-    122: {
-        'title': 'Commit@@verb',
-        'items': {
-            40: {
-                'title': 'Stage',
-                'action': cmds.run(cmds.AmendMode, True),
-                'icon': None
-            },
-            41: {
-                'title': 'Amend Last Commit',
-                'action': lambda: action.ActionButtons.stage(
-                    action.ActionButtons()),
-                'icon': None
-            },
-            42: {
-                'title': 'Stage All Untracked',
-                'action': cmds.run(cmds.StageUntracked),
-                'icon': None
-            },
-            43: {
-                'title': 'Unstage All',
-                'action': cmds.run(cmds.UnstageAll),
-                'icon': None
-            },
-            44: {
-                'title': 'Unstage',
-                'action': lambda: action.ActionButtons.unstage(
-                    action.ActionButtons()),
-                'icon': None
-            },
-            45: {
-                'title': 'Load Commit Message...',
-                'action': lambda: guicmds.load_commitmsg(),
-                'icon': None
-            },
-            46: {
-                'title': 'Get Commit Message Template',
-                'action': cmds.run(cmds.LoadCommitMessageFromTemplate),
-                'icon': None
-            }
-        }
-    },
-    123: {
-        'title': 'Diff',
-        'items': {
-            60: {
-                'title': 'Expression...',
-                'action': lambda: guicmds.diff_expression(),
-                'icon': None
-            },
-            61: {
-                'title': 'Branches...',
-                'action': lambda: compare.compare_branches(),
-                'icon': None
-            },
-            62: {
-                'title': 'Diffstat',
-                'action': cmds.run(cmds.Diffstat),
-                'icon': None
-            }
-        }
-     },
-    124: {
-        'title': 'Branch',
-        'items': {
-            80: {
-                'title': 'Review...',
-                'action': lambda: guicmds.review_branch(),
-                'icon': None
-            },
-            81: {
-                'title': 'Create...',
-                'action': lambda: createbranch.create_new_branch(),
-                'icon': None
-            },
-            82: {
-                'title': 'Checkout...',
-                'action': lambda: guicmds.checkout_branch(),
-                'icon': None
-            },
-            83: {
-                'title': 'Delete...',
-                'action': lambda: guicmds.delete_branch(),
-                'icon': None
-            },
-            84: {
-                'title': 'Delete Remote Branch...',
-                'action': lambda: guicmds.delete_remote_branch(),
-                'icon': None
-            },
-            85: {
-                'title': 'Rename Branch...',
-                'action': lambda: guicmds.rename_branch(),
-                'icon': None
-            },
-            86: {
-                'title': 'Browse Current Branch...',
-                'action': lambda: guicmds.browse_current(),
-                'icon': None
-            },
-            87: {
-                'title': 'Browse Other Branch...',
-                'action': lambda: guicmds.browse_other(),
-                'icon': None
-            },
-            88: {
-                'title': 'Visualize Current Branch...',
-                'action': cmds.run(cmds.VisualizeCurrent),
-                'icon': None
-            },
-            89: {
-                'title': 'Visualize All Branches...',
-                'action': cmds.run(cmds.VisualizeAll),
-                'icon': None
-            }
-        }
-    },
-    125: {
-        'title': 'Rebase',
-        'items': {
-            100: {
-                'title': 'Start Interactive Rebase...',
-                'action': lambda: app().activeWindow().rebase_start(),
-                'icon': None
-            },
-            101: {
-                'title': 'Edit...',
-                'action': lambda: app().activeWindow().rebase_edit_todo(),
-                'icon': None
-            },
-            102: {
-                'title': 'Continue',
-                'action': lambda: app().activeWindow().rebase_continue(),
-                'icon': None
-            },
-            103: {
-                'title': 'Skip Current Patch',
-                'action': lambda: app().activeWindow().rebase_skip(),
-                'icon': None
-            },
-            104: {
-                'title': 'Abort',
-                'action': lambda: app().activeWindow().rebase_abort(),
-                'icon': None
-            }
-        }
-    },
-    126: {
-        'title': 'View',
-        'items': {
-            120: {
-                'title': 'File Browser...',
-                'action': lambda: browse.worktree_browser(show=True),
-                'icon': 'cola'
-            },
-            121: {
-                'title': 'DAG...',
-                'action': lambda: app().activeWindow().git_dag(),
-                'icon': 'cola'
-            }
-        }
-    }
-}
+class ToolbarManager(object):
+    @staticmethod
+    def save_state(toolbars):
+        # filter removed toolbars
+        visible_toolbars = [x for x in toolbars if x.parent().toolBarArea(x) != Qt.NoToolBarArea]
+
+        result = []
+        for toolbar in visible_toolbars:
+            parent = toolbar.parent()
+            items = [x.data() for x in toolbar.actions()]
+
+            result.append({'name': toolbar.windowTitle(),
+                           'area': parent.toolBarArea(toolbar),
+                           'break': parent.toolBarBreak(toolbar),
+                           'float': toolbar.isFloating(),
+                           'x': toolbar.pos().x(),
+                           'y': toolbar.pos().y(),
+                           'width': toolbar.width(),
+                           'height': toolbar.height(),
+                           'show_icons': toolbar.show_icons(),
+                           'visible': toolbar.isVisible(),
+                           'items': items})
+        return result
