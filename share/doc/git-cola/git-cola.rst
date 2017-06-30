@@ -473,8 +473,8 @@ repository.  Set `cola.defaultrepo` to the path of a Git repository to make
 `git cola` attempt to use that repository before falling back to prompting
 the user for a repository.
 
-cola.dicitionary
-----------------
+cola.dictionary
+---------------
 Specifies an additional dictionary for `git cola` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
 
