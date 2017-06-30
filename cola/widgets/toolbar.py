@@ -80,15 +80,13 @@ class ColaToolBar(QtWidgets.QToolBar):
         menu.exec_(event.globalPos())
 
 
-class ToolbarView(QtWidgets.QDialog):
+class ToolbarView(standard.Dialog):
     """Provides the git-cola 'ColaToolBar' configure dialog"""
     SEPARATOR_TEXT = '----------------------------'
 
     def __init__(self, toolbar, parent=None):
-        QtWidgets.QDialog.__init__(self, parent)
-
+        standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Configure toolbar'))
-        self.setWindowModality(Qt.WindowModal)
 
         self.toolbar = toolbar
         self.left_list = ToolbarTreeWidget(self)
@@ -129,9 +127,10 @@ class ToolbarView(QtWidgets.QDialog):
         qtutils.connect_button(self.apply_button, self.apply_action)
         qtutils.connect_button(self.close_button, self.accept)
 
-        self.resize(550, 450)
         self.load_right_items()
         self.load_left_items()
+
+        self.init_size(parent=parent)
 
     def load_right_items(self):
         for action in self.toolbar.actions():
