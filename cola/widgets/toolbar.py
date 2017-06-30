@@ -9,7 +9,69 @@ from ..i18n import N_
 from ..widgets import standard
 from .. import icons
 from .. import qtutils
+from .toolbarcmds import COMMANDS
 from . import defs
+
+TREE_LAYOUT = {
+    'Others': [
+        'Others::LaunchEditor',
+        'Others::RevertUnstagedEdits'
+    ],
+    'File': [
+        'File::NewRepo',
+        'File::OpenRepo',
+        'File::OpenRepoNewWindow',
+        'File::Refresh',
+        'File::EditRemotes',
+        'File::RecentModified',
+        'File::ApplyPatches',
+        'File::ExportPatches',
+    ],
+    'Actions': [
+        'Actions::Fetch',
+        'Actions::Pull',
+        'Actions::Push',
+        'Actions::Stash',
+        'Actions::CreateTag',
+        'Actions::CherryPick',
+        'Actions::Merge',
+        'Actions::AbortMerge',
+        'Actions::ResetBrachHead',
+        'Actions::ResetWorktree',
+        'Actions::Grep',
+        'Actions::Search'
+    ],
+    'Commit@@verb': [
+        'Commit::Stage',
+        'Commit::AmendLast',
+        'Commit::StageAll',
+        'Commit::UnsageAll',
+        'Commit::Unstage',
+        'Commit::LoadCommitMessage',
+        'Commit::GetCommitMessageTemplate',
+    ],
+    'Diff': [
+        'Diff::Difftool',
+        'Diff::Expression',
+        'Diff::Branches',
+        'Diff::Diffstat'
+    ],
+    'Branch': [
+        'Branch::Review',
+        'Branch::Create',
+        'Branch::Checkout',
+        'Branch::Delete',
+        'Branch::DeleteRemote',
+        'Branch::Rename',
+        'Branch::BrowseCurrent',
+        'Branch::BrowseOther',
+        'Branch::VisualizeCurrent',
+        'Branch::VisualizeAll'
+    ],
+    'View': [
+        'View::FileBrowser'
+    ]
+}
 
 
 def configure_toolbar_dialog(toolbar):
@@ -21,6 +83,10 @@ def configure_toolbar_dialog(toolbar):
 
 class ColaToolBar(QtWidgets.QToolBar):
     SEPARATOR = 'Separator'
+
+    @staticmethod
+    def create(name):
+        return ColaToolBar(name, TREE_LAYOUT, COMMANDS)
 
     def __init__(self, title, tree_layout, toolbar_commands):
         QtWidgets.QToolBar.__init__(self)
@@ -78,6 +144,84 @@ class ColaToolBar(QtWidgets.QToolBar):
         menu.addAction(N_('Delete toolbar'), self.delete_toolbar)
 
         menu.exec_(event.globalPos())
+
+    @staticmethod
+    def save_state(parent):
+        # filter removed toolbars
+        toolbars = parent.findChildren(ColaToolBar)
+        visible_toolbars = [
+            x for x in toolbars
+                if x.parent().toolBarArea(x) != Qt.NoToolBarArea
+        ]
+
+        result = []
+        for toolbar in visible_toolbars:
+            parent = toolbar.parent()
+            items = [x.data() for x in toolbar.actions()]
+            toolbar_area = parent.toolBarArea(toolbar)
+
+            result.append({'name': toolbar.windowTitle(),
+                           'area': encode_toolbar_area(toolbar_area),
+                           'break': parent.toolBarBreak(toolbar),
+                           'float': toolbar.isFloating(),
+                           'x': toolbar.pos().x(),
+                           'y': toolbar.pos().y(),
+                           'width': toolbar.width(),
+                           'height': toolbar.height(),
+                           'show_icons': toolbar.show_icons(),
+                           'visible': toolbar.isVisible(),
+                           'items': items})
+        return result
+
+    @staticmethod
+    def apply_state(parent, toolbars):
+        for data in toolbars:
+            toolbar = ColaToolBar.create(data['name'])
+            toolbar.load_items(data['items'])
+            toolbar.set_show_icons(data['show_icons'])
+            toolbar.setVisible(data['visible'])
+
+            toolbar_area = decode_toolbar_area(data['area'])
+            if data['break']:
+                parent.addToolBarBreak(toolbar_area)
+            parent.addToolBar(toolbar_area, toolbar)
+
+            # floating toolbars must be set after added
+            if data['float']:
+                toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
+                toolbar.move(data['x'], data['y'])
+            # TODO: handle changed width when exists more than one toolbar in
+            # an area
+
+
+def encode_toolbar_area(toolbar_area):
+    """Encode a Qt::ToolBarArea as a string"""
+    if toolbar_area == Qt.LeftToolBarArea:
+        result = 'left'
+    elif toolbar_area == Qt.RightToolBarArea:
+        result = 'right'
+    elif toolbar_area == Qt.TopToolBarArea:
+        result = 'top'
+    elif toolbar_area == Qt.BottomToolBarArea:
+        result = 'bottom'
+    else:  # fallback to "bottom"
+        result = 'bottom'
+    return result
+
+
+def decode_toolbar_area(string):
+    """Decode an encoded toolbar area string into a Qt::ToolBarArea"""
+    if string == 'left':
+        result = Qt.LeftToolBarArea
+    elif string == 'right':
+        result = Qt.RightToolBarArea
+    elif string == 'top':
+        result = Qt.TopToolBarArea
+    elif string == 'bottom':
+        result = Qt.BottomToolBarArea
+    else:
+        result = Qt.BottomToolBarArea
+    return result
 
 
 class ToolbarView(standard.Dialog):
@@ -275,6 +419,7 @@ class DraggableListWidget(QtWidgets.QListWidget):
 
 
 class ToolbarTreeWidget(standard.TreeView):
+
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 
@@ -327,28 +472,3 @@ class ToolbarTreeWidget(standard.TreeView):
                                       icon)
             top.appendRow(child)
             top.sortChildren(0, Qt.AscendingOrder)
-
-
-class ToolbarManager(object):
-    @staticmethod
-    def save_state(toolbars):
-        # filter removed toolbars
-        visible_toolbars = [x for x in toolbars if x.parent().toolBarArea(x) != Qt.NoToolBarArea]
-
-        result = []
-        for toolbar in visible_toolbars:
-            parent = toolbar.parent()
-            items = [x.data() for x in toolbar.actions()]
-
-            result.append({'name': toolbar.windowTitle(),
-                           'area': parent.toolBarArea(toolbar),
-                           'break': parent.toolBarBreak(toolbar),
-                           'float': toolbar.isFloating(),
-                           'x': toolbar.pos().x(),
-                           'y': toolbar.pos().y(),
-                           'width': toolbar.width(),
-                           'height': toolbar.height(),
-                           'show_icons': toolbar.show_icons(),
-                           'visible': toolbar.isVisible(),
-                           'items': items})
-        return result

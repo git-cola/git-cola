@@ -55,9 +55,6 @@ from . import standard
 from . import status
 from . import stash
 from .toolbar import ColaToolBar
-from .toolbar import ToolbarManager
-from .toolbarcmds import COLA_TOOLBAR_COMMANDS
-from .toolbarlayout import COLA_TOOLBAR_TREE
 
 
 class MainView(standard.MainWindow):
@@ -555,7 +552,7 @@ class MainView(standard.MainWindow):
 
     # Qt overrides
     def closeEvent(self, event):
-        """Save state in the settings manager."""
+        """Save state in the settings"""
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
         self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
@@ -567,7 +564,7 @@ class MainView(standard.MainWindow):
 
     def add_toolbar(self):
         name = 'ToolBar' + str(len(self.findChildren(ColaToolBar)) + 1)
-        toolbar = ColaToolBar(name, COLA_TOOLBAR_TREE, COLA_TOOLBAR_COMMANDS)
+        toolbar = ColaToolBar.create(name)
 
         self.addToolBar(toolbar)
         toolbar.configure_toolbar()
@@ -697,7 +694,7 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
-        state['toolbars'] = ToolbarManager.save_state(self.findChildren(ColaToolBar))
+        state['toolbars'] = ColaToolBar.save_state(self)
 
         return state
 
@@ -712,20 +709,8 @@ class MainView(standard.MainWindow):
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
 
-        toolbar_data = state.get('toolbars', [])
-        for data in toolbar_data:
-            toolbar = ColaToolBar(data['name'], COLA_TOOLBAR_TREE, COLA_TOOLBAR_COMMANDS)
-            toolbar.load_items(data['items'])
-            toolbar.set_show_icons(data['show_icons'])
-            toolbar.setVisible(data['visible'])
-            if data['break']:
-                self.addToolBarBreak(data['area'])
-            self.addToolBar(data['area'], toolbar)
-            # floating toolbars must be set after added
-            if data['float']:
-                toolbar.setWindowFlags(QtCore.Qt.Tool | QtCore.Qt.FramelessWindowHint)
-                toolbar.move(data['x'], data['y'])
-            # TODO: handle changed width when exists more than one toolbar in an area
+        toolbars = state.get('toolbars', [])
+        ColaToolBar.apply_state(self, toolbars)
 
         return result
 

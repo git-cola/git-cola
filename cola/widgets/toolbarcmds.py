@@ -18,7 +18,7 @@ from ..widgets import remote
 from ..widgets import search
 from ..widgets import stash
 
-COLA_TOOLBAR_COMMANDS = {
+COMMANDS = {
     'Others::LaunchEditor': {
         'title': 'Launch Editor',
         'action': cmds.run(cmds.LaunchEditor),
