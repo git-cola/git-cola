@@ -474,6 +474,8 @@ class MainView(standard.MainWindow):
         self.setup_dockwidget_view_menu()
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.lock_layout_action)
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(N_('Add Toolbar'), self.add_toolbar)
         self.menubar.addAction(self.view_menu.menuAction())
 
         # Help Menu
@@ -560,8 +562,7 @@ class MainView(standard.MainWindow):
 
     def contextMenuEvent(self, event):
         menu = self.createPopupMenu()
-        menu.addAction(N_('Add toolbar'), self.add_toolbar)
-
+        menu.addAction(N_('Add Toolbar'), self.add_toolbar)
         menu.exec_(event.globalPos())
 
     def add_toolbar(self):
