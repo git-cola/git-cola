@@ -248,22 +248,36 @@ class ToolbarView(standard.Dialog):
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
-        self.right_actions = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.add_separator, self.remove_item)
-        self.name_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                        self.text_toolbar_name, self.toolbar_name)
-        self.left_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.left_list)
-        self.right_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                         self.right_list, self.right_actions)
-        self.top_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                       self.left_layout, self.right_layout)
-        self.actions_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                           self.show_icon, qtutils.STRETCH,
-                                           self.close_button, self.apply_button)
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.name_layout, self.top_layout,
-                                        self.actions_layout)
+        self.right_actions = qtutils.hbox(
+                defs.no_margin, defs.spacing,
+                self.add_separator,
+                self.remove_item)
+        self.name_layout = qtutils.hbox(
+                defs.no_margin, defs.spacing,
+                self.text_toolbar_name,
+                self.toolbar_name)
+        self.left_layout = qtutils.vbox(
+                defs.no_margin, defs.spacing,
+                self.left_list)
+        self.right_layout = qtutils.vbox(
+                defs.no_margin, defs.spacing,
+                self.right_list,
+                self.right_actions)
+        self.top_layout = qtutils.hbox(
+                defs.no_margin, defs.spacing,
+                self.left_layout,
+                self.right_layout)
+        self.actions_layout = qtutils.hbox(
+                defs.no_margin, defs.spacing,
+                self.show_icon,
+                qtutils.STRETCH,
+                self.close_button,
+                self.apply_button)
+        self.main_layout = qtutils.vbox(
+                defs.margin, defs.spacing,
+                self.name_layout,
+                self.top_layout,
+                self.actions_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_separator, self.add_separator_action)
