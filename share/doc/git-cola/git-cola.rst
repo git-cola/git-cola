@@ -480,8 +480,9 @@ This should be configured to the path of a newline-separated list of words.
 
 cola.expandtab
 --------------
-Enables to expand tabs into spaces in text edit fields when set to `true`.
-Amount of spaces is determined by `cola.tabwidth`.
+Expand tabs into spaces in the commit message editor.  When set to `true`,
+`git cola` will insert a configurable number of spaces when tab is pressed.
+The number of spaces is determined by `cola.tabwidth`.
 Defaults to `false`.
 
 cola.fileattributes

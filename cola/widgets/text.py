@@ -294,32 +294,25 @@ class TextEdit(QtWidgets.QTextEdit):
             return
         return super(TextEdit, self).wheelEvent(event)
 
-    def should_insert_spaces_instead_of_tabs(self, key_press_event):
-        return prefs.insert_spaces_instead_of_tabs() and key_press_event.key() == Qt.Key_Tab
+    def should_expandtab(self, event):
+        return event.key() == Qt.Key_Tab and prefs.expandtab()
 
-    def insert_spaces_before_cursor(self):
-        tab_width = max(self.ext.tabwidth(), 1)
-        spaces = ' ' * tab_width
-        cursor_position = self.textCursor().position()
-        new_cursor_position = cursor_position + tab_width
-        txt = self.value()
-        txt_before = txt[:cursor_position]
-        txt_after = txt[cursor_position:]
-        new_text = txt_before + spaces + txt_after
-        self.ext.set_value(new_text)
-        self.ext.set_cursor_position(new_cursor_position)
+    def expandtab(self):
+        tabwidth = max(self.ext.tabwidth(), 1)
+        cursor = self.textCursor()
+        cursor.insertText(' ' * tabwidth)
 
     def keyPressEvent(self, event):
-        override_tab = self.should_insert_spaces_instead_of_tabs(event)
-        if override_tab:
-            self.insert_spaces_before_cursor()
+        expandtab = self.should_expandtab(event)
+        if expandtab:
+            self.expandtab()
             event.accept()
         else:
             QtWidgets.QTextEdit.keyPressEvent(self, event)
 
     def keyReleaseEvent(self, event):
-        override_tab = self.should_insert_spaces_instead_of_tabs(event)
-        if not override_tab:
+        expandtab = self.should_expandtab(event)
+        if expandtab:
             event.ignore()
         else:
             QtWidgets.QTextEdit.keyReleaseEvent(self, event)
