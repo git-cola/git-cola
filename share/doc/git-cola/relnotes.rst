@@ -26,6 +26,13 @@ Usability, bells and whistles
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
 
+* `git cola` now has configurable toolbars.  Use the `View -> Add toolbar`
+  menu item to add a toolbar.
+
+* Setting `cola.expandtab` to `true` will now expand tabs into spaces
+  in the commit message editor.  The number of spaces to insert is determined
+  by consulting `cola.tabwidth`, which defaults to `8`.
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
