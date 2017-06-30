@@ -54,6 +54,7 @@ from . import search
 from . import standard
 from . import status
 from . import stash
+from .toolbar import ColaToolBar
 
 
 class MainView(standard.MainWindow):
@@ -470,6 +471,8 @@ class MainView(standard.MainWindow):
         self.setup_dockwidget_view_menu()
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.lock_layout_action)
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(N_('Add Toolbar'), self.add_toolbar)
         self.menubar.addAction(self.view_menu.menuAction())
 
         # Help Menu
@@ -549,10 +552,22 @@ class MainView(standard.MainWindow):
 
     # Qt overrides
     def closeEvent(self, event):
-        """Save state in the settings manager."""
+        """Save state in the settings"""
         commit_msg = self.commitmsgeditor.commit_message(raw=True)
         self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
+
+    def contextMenuEvent(self, event):
+        menu = self.createPopupMenu()
+        menu.addAction(N_('Add Toolbar'), self.add_toolbar)
+        menu.exec_(event.globalPos())
+
+    def add_toolbar(self):
+        name = 'ToolBar' + str(len(self.findChildren(ColaToolBar)) + 1)
+        toolbar = ColaToolBar.create(name)
+
+        self.addToolBar(toolbar)
+        toolbar.configure_toolbar()
 
     def build_recent_menu(self):
         settings = Settings()
@@ -679,6 +694,8 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
+        state['toolbars'] = ColaToolBar.save_state(self)
+
         return state
 
     def apply_state(self, state):
@@ -691,6 +708,9 @@ class MainView(standard.MainWindow):
 
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
+
+        toolbars = state.get('toolbars', [])
+        ColaToolBar.apply_state(self, toolbars)
 
         return result
 
@@ -708,7 +728,7 @@ class MainView(standard.MainWindow):
             (optkey + '+4', self.actionsdockwidget),
             (optkey + '+5', self.bookmarksdockwidget),
             (optkey + '+6', self.recentdockwidget),
-            (optkey + '+7', self.branchdockwidget),
+            (optkey + '+7', self.branchdockwidget)
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut
