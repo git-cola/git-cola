@@ -313,12 +313,11 @@ class ToolbarView(standard.Dialog):
             top = self.left_list.insert_top(parent)
             current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
-                if item not in current_items:
-                    command = self.toolbar.commands[item]
-                    child = self.left_list.create_child(parent, item,
-                                                        command['title'],
-                                                        command['icon'])
-                    top.appendRow(child)
+                command = self.toolbar.commands[item]
+                child = self.left_list.create_child(parent, item,
+                                                    command['title'],
+                                                    command['icon'])
+                top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
 
@@ -330,16 +329,7 @@ class ToolbarView(standard.Dialog):
         items = self.right_list.selectedItems()
 
         for item in items:
-            took_item = self.right_list.takeItem(self.right_list.row(item))
-            data = took_item.data(Qt.UserRole)
-            if data and data['child'] in self.toolbar.commands:
-                tree_layout = self.toolbar.tree_layout
-                if data['parent'] in tree_layout:
-                    command = self.toolbar.commands[data['child']]
-                    self.left_list.update_top_item(data['parent'],
-                                                   data['child'],
-                                                   command['title'],
-                                                   command['icon'])
+            self.right_list.takeItem(self.right_list.row(item))
 
     def apply_action(self):
         self.toolbar.clear()
@@ -476,13 +466,3 @@ class ToolbarTreeWidget(standard.TreeView):
             item.setIcon(icon())
 
         return item
-
-    def update_top_item(self, parent, child, title, icon):
-        items = self.model().findItems(N_(parent), Qt.MatchExactly)
-
-        if len(items) > 0:
-            top = items[0]
-            child = self.create_child(top.data(Qt.UserRole), child, title,
-                                      icon)
-            top.appendRow(child)
-            top.sortChildren(0, Qt.AscendingOrder)
