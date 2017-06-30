@@ -478,6 +478,12 @@ cola.dicitionary
 Specifies an additional dictionary for `git cola` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
 
+cola.expandtab
+--------------
+Enables to expand tabs into spaces in text edit fields when set to `true`.
+Amount of spaces is determined by `cola.tabwidth`.
+Defaults to `false`.
+
 cola.fileattributes
 -------------------
 Enables per-file gitattributes encoding support when set to `true`.
@@ -518,7 +524,7 @@ but also requires either Linux with inotify support or Windows with `pywin32`
 installed for file system change monitoring to actually function.
 
 cola.refreshonfocus
-----------------------
+-------------------
 Set to `true` to automatically refresh when `git cola` gains focus.  Defaults
 to `false` because this can cause a pause whenever switching to `git cola` from
 another application.

@@ -68,7 +68,6 @@ class LineEditCursorPosition(object):
         self._widget.setCursorPosition(0)
 
 
-
 class BaseTextEditExtension(QtCore.QObject):
 
     def __init__(self, widget, get_value, readonly):
@@ -115,12 +114,15 @@ class BaseTextEditExtension(QtCore.QObject):
         # Update text
         self.widget.setPlainText(value)
         # Restore cursor
-        cursor = self.widget.textCursor()
-        cursor.setPosition(min(position, cursor.position()))
-        self.widget.setTextCursor(cursor)
+        self.set_cursor_position(min(position, cursor.position()))
 
         if block:
             self.widget.blockSignals(blocksig)
+
+    def set_cursor_position(self, new_position):
+        cursor = self.widget.textCursor()
+        cursor.setPosition(new_position)
+        self.widget.setTextCursor(cursor)
 
     def tabwidth(self):
         return self._tabwidth
@@ -291,6 +293,36 @@ class TextEdit(QtWidgets.QTextEdit):
             event.ignore()
             return
         return super(TextEdit, self).wheelEvent(event)
+
+    def should_insert_spaces_instead_of_tabs(self, key_press_event):
+        return prefs.insert_spaces_instead_of_tabs() and key_press_event.key() == Qt.Key_Tab
+
+    def insert_spaces_before_cursor(self):
+        tab_width = max(self.ext.tabwidth(), 1)
+        spaces = ' ' * tab_width
+        cursor_position = self.textCursor().position()
+        new_cursor_position = cursor_position + tab_width
+        txt = self.value()
+        txt_before = txt[:cursor_position]
+        txt_after = txt[cursor_position:]
+        new_text = txt_before + spaces + txt_after
+        self.ext.set_value(new_text)
+        self.ext.set_cursor_position(new_cursor_position)
+
+    def keyPressEvent(self, event):
+        override_tab = self.should_insert_spaces_instead_of_tabs(event)
+        if override_tab:
+            self.insert_spaces_before_cursor()
+            event.accept()
+        else:
+            QtWidgets.QTextEdit.keyPressEvent(self, event)
+
+    def keyReleaseEvent(self, event):
+        override_tab = self.should_insert_spaces_instead_of_tabs(event)
+        if not override_tab:
+            event.ignore()
+        else:
+            QtWidgets.QTextEdit.keyReleaseEvent(self, event)
 
 
 class TextEditCursorPosition(object):

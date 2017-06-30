@@ -24,6 +24,7 @@ MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
+INSERT_SPACES_INSTEAD_OF_TABS = 'cola.expandtab'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
 TABWIDTH = 'cola.tabwidth'
@@ -87,8 +88,14 @@ def history_browser():
 def linebreak():
     return gitcfg.current().get(LINEBREAK, True)
 
+
 def spellcheck():
     return gitcfg.current().get(SPELL_CHECK, False)
+
+
+def insert_spaces_instead_of_tabs():
+    return gitcfg.current().get(INSERT_SPACES_INSTEAD_OF_TABS, False)
+
 
 def sort_bookmarks():
     return gitcfg.current().get(SORT_BOOKMARKS, True)
