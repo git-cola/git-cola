@@ -458,7 +458,7 @@ def format_patchsets(to_export, revs, output='patches'):
     for patchset in patches_to_export:
         stat, out, err = export_patchset(patchset[0],
                                          patchset[-1],
-                                         output='patches',
+                                         output=output,
                                          n=len(patchset) > 1,
                                          thread=True,
                                          patch_with_stat=True)
