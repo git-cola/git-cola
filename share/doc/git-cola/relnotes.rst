@@ -33,6 +33,11 @@ Usability, bells and whistles
   in the commit message editor.  The number of spaces to insert is determined
   by consulting `cola.tabwidth`, which defaults to `8`.
 
+* The "Copy SHA-1" hotkey is now `Alt + Ctrl + C`, to avoid clobbering the
+  ability to copy text from the DAG window.
+
+  https://github.com/git-cola/git-cola/pull/705
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
