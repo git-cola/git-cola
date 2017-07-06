@@ -38,6 +38,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/705
 
+* The "Prepare Commit Message" action can now be invoked via the
+  `Ctrl+Shift+Return` shortcut.
+
+  https://github.com/git-cola/git-cola/pull/707
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
