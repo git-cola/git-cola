@@ -1113,6 +1113,9 @@ class OpenRepo(Command):
     def __init__(self, repo_path):
         Command.__init__(self)
         self.repo_path = repo_path
+        self.new_mode = self.model.mode_none
+        self.new_diff_text = ''
+        self.new_commitmsg = ''
 
     def do(self):
         git = self.model.git
@@ -1121,6 +1124,7 @@ class OpenRepo(Command):
             fsmonitor.current().stop()
             fsmonitor.current().start()
             self.model.update_status()
+            self.model.set_commitmsg(self.new_commitmsg)
         else:
             self.model.set_worktree(old_repo)
 
