@@ -223,7 +223,7 @@ class MainView(standard.MainWindow):
 
         self.prepare_commitmsg_hook_action = add_action(
             self, N_('Prepare Commit Message'),
-            cmds.run(cmds.PrepareCommitMessageHook))
+            cmds.run(cmds.PrepareCommitMessageHook), hotkeys.PREPARE_COMMIT_MESSAGE)
 
         self.save_tarball_action = add_action(
             self, N_('Save As Tarball/Zip...'), self.save_archive)
