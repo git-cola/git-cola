@@ -83,6 +83,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/692
 
+* Switching repositories now resets the "Amend Mode" and other settings
+  when switching.
+
+  https://github.com/git-cola/git-cola/issues/710
+
 .. _v2.11:
 
 git-cola v2.11
