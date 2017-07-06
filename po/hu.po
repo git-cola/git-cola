@@ -1104,7 +1104,7 @@ msgstr "Push..."
 
 #: cola/widgets/main.py:250 cola/widgets/startup.py:47
 msgid "Open..."
-msgstr "Meggyitás..."
+msgstr "Megnyitás..."
 
 #: cola/widgets/main.py:254
 #, fuzzy
