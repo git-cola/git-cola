@@ -46,7 +46,7 @@ def connect_action_bool(action, fn):
 
 def connect_button(button, fn):
     """Connect a button to a function"""
-    button.pressed.connect(fn)
+    button.clicked.connect(fn)
 
 
 def connect_released(button, fn):
