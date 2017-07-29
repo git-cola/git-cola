@@ -2,6 +2,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -14,8 +15,10 @@ from ..models import main
 from ..widgets import defs
 from ..widgets import standard
 from .. import gitcmds
+from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .text import LineEdit
 
 
 SEPARATOR_CHAR = '/'
@@ -44,16 +47,39 @@ class AsyncGitActionTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, titlebar, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
+        tooltip = N_('Toggle the branches filter')
+        icon = icons.ellipsis()
+        self.filter_button = qtutils.create_action_button(tooltip=tooltip,
+                                                          icon=icon)
+
         self.tree = BranchesTreeWidget(parent=self)
+        self.filter_widget = BranchesFilterWidget(self.tree)
+        self.filter_widget.hide()
 
         self.setFocusProxy(self.tree)
         self.setToolTip(N_('Branches'))
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
+                                        self.filter_widget, self.tree)
         self.setLayout(self.main_layout)
+
+        self.toggle_action = qtutils.add_action(self, tooltip,
+                                                self.toggle_filter,
+                                                hotkeys.FILTER)
+
+        titlebar.add_corner_widget(self.filter_button)
+        qtutils.connect_button(self.filter_button, self.toggle_filter)
+
+    def toggle_filter(self):
+        shown = not self.filter_widget.isVisible()
+        self.filter_widget.setVisible(shown)
+        if shown:
+            self.filter_widget.setFocus(True)
+        else:
+            self.tree.setFocus(True)
 
 
 class BranchesTreeWidget(standard.TreeWidget):
@@ -523,3 +549,45 @@ class GitHelper(object):
             if err:
                 msg += err
             qtutils.critical(title, msg, details)
+
+
+class BranchesFilterWidget(QtWidgets.QWidget):
+    def __init__(self, tree, parent=None):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.tree = tree
+
+        hint = N_('Filter branches...')
+        self.text = LineEdit()
+        self.text.setClearButtonEnabled(True)
+        self.text.setToolTip(hint)
+        self.setFocusProxy(self.text)
+        self._filter = None
+
+        self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
+        self.setLayout(self.main_layout)
+
+        text = self.text
+        text.textChanged.connect(self.apply_filter)
+        self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
+
+    def apply_filter(self):
+        text = self.text.value()
+        if text == self._filter:
+            return
+
+        self._apply_bold(self._filter, False)
+        self._filter = text
+
+        if text == '':
+            return
+
+        self._apply_bold(text, True)
+
+    def _apply_bold(self, text, value):
+        children = self.tree.findItems(text, Qt.MatchContains | Qt.MatchRecursive)
+
+        for child in children:
+            if child.childCount() == 0:
+                font = child.font(0)
+                font.setBold(value)
+                child.setFont(0, font)

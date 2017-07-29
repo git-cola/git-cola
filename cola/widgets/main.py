@@ -116,7 +116,9 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdockwidget = create_dock(N_('Branches'), self)
-        self.branchwidget = branch.BranchesWidget(parent=self.branchdockwidget)
+        titlebar = self.branchdockwidget.titleBarWidget()
+        self.branchwidget = branch.BranchesWidget(titlebar,
+                                                  parent=self.branchdockwidget)
         self.branchdockwidget.setWidget(self.branchwidget)
 
         # "Commit Message Editor" widget
