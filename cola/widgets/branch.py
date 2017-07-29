@@ -567,7 +567,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.setLayout(self.main_layout)
 
         text = self.text
-        text.cursor_changed.connect(self.apply_filter)
+        text.textChanged.connect(self.apply_filter)
         self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
 
     def apply_filter(self):
@@ -575,19 +575,19 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         if text == self._filter:
             return
 
-        palette = self.palette()
-
-        background = palette.color(QtGui.QPalette.Base)
-        self._apply_color(self._filter, background)
+        self._apply_bold(self._filter, False)
+        self._filter = text
 
         if text == '':
             return
 
-        highlight = palette.color(QtGui.QPalette.Midlight)
-        self._apply_color(text, highlight)
+        self._apply_bold(text, True)
 
-    def _apply_color(self, text, color):
+    def _apply_bold(self, text, value):
         children = self.tree.findItems(text, Qt.MatchContains | Qt.MatchRecursive)
 
         for child in children:
-            child.setBackground(0, color)
+            if child.childCount() == 0:
+                font = child.font(0)
+                font.setBold(value)
+                child.setFont(0, font)
