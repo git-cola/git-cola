@@ -43,6 +43,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/707
 
+* The `Branches` pane now has a filter field that highlights branches whose
+  names match the string entered into its text field.
+
+  https://github.com/git-cola/git-cola/pull/713
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
