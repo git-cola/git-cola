@@ -48,6 +48,13 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/713
 
+* Actions that are triggered in response to button presses were being
+  triggered when the button was pressed, rather than when it was released,
+  which was a usability flaw.  All buttons now respond when clicked
+  rather than when pressed.
+
+  https://github.com/git-cola/git-cola/pull/715
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
