@@ -557,8 +557,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.tree = tree
 
         hint = N_('Filter branches...')
-        self.text = LineEdit()
-        self.text.setClearButtonEnabled(True)
+        self.text = LineEdit(parent=self, clear_button=True)
         self.text.setToolTip(hint)
         self.setFocusProxy(self.text)
         self._filter = None
