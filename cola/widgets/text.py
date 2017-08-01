@@ -23,13 +23,16 @@ class LineEdit(QtWidgets.QLineEdit):
 
     cursor_changed = Signal(int, int)
 
-    def __init__(self, parent=None, row=1, get_value=None):
+    def __init__(self, parent=None, row=1, get_value=None, clear_button=False):
         QtWidgets.QLineEdit.__init__(self, parent)
         self._row = row
         if get_value is None:
             get_value = get_stripped
         self._get_value = get_value
         self.cursor_position = LineEditCursorPosition(self, row)
+
+        if clear_button and hasattr(self, 'setClearButtonEnabled'):
+            self.setClearButtonEnabled(True)
 
     def get(self):
         """Return the raw unicode value from Qt"""
