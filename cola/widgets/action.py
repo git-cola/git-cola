@@ -50,6 +50,9 @@ def tooltip_button(text, layout):
     button.setToolTip(text)
     return button
 
+""" Takes care of argument mismatch for connect_button event"""
+def RefreshButtonAction():
+    return cmds.run(cmds.Refresh)
 
 class ActionButtons(QFlowLayoutWidget):
     def __init__(self, parent=None):
@@ -67,7 +70,7 @@ class ActionButtons(QFlowLayoutWidget):
         self.setMinimumHeight(30)
 
         # Add callbacks
-        connect_button(self.refresh_button, cmds.run(cmds.Refresh))
+        connect_button(self.refresh_button, RefreshButtonAction)
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)
