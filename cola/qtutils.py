@@ -46,7 +46,9 @@ def connect_action_bool(action, fn):
 
 def connect_button(button, fn):
     """Connect a button to a function"""
-    button.clicked.connect(fn)
+    # Some versions of Qt send the `bool` argument to the clicked callback,
+    # and some do not.  The lambda consumes all callback-provided arguments.
+    button.clicked.connect(lambda *args, **kwargs: fn())
 
 
 def connect_released(button, fn):
