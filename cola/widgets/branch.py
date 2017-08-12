@@ -2,7 +2,6 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -174,6 +173,12 @@ class BranchesTreeWidget(standard.TreeWidget):
             if full_name != self.current_branch:
                 menu.addAction(qtutils.add_action(self, N_('Checkout'),
                                                   self.checkout_action))
+                # remote branch
+                if NAME_REMOTE_BRANCH == root.name:
+                    label = N_('Checkout as new branch')
+                    action = self.checkout_new_branch_action
+                    menu.addAction(qtutils.add_action(self, label, action))
+
                 merge_menu_action = qtutils.add_action(
                     self, N_('Merge into current branch'), self.merge_action)
                 merge_menu_action.setIcon(icons.merge())
@@ -374,6 +379,14 @@ class BranchesTreeWidget(standard.TreeWidget):
         if branch != self.current_branch:
             self.git_action_async('checkout', [branch])
 
+    def checkout_new_branch_action(self):
+        branch = self.tree_helper.get_full_name(self.selected_item(),
+                                                SEPARATOR_CHAR)
+
+        if branch != self.current_branch:
+            new_branch = re.sub(r'^(?P<remote>[^/]+)/', '', branch)
+            self.git_action_async('checkout', [branch], {'b': new_branch})
+
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
@@ -532,8 +545,8 @@ class GitHelper(object):
     def rename(self, branch, new_branch):
         return self.git.branch(branch, new_branch, m=True)
 
-    def checkout(self, branch):
-        return self.git.checkout(branch)
+    def checkout(self, branch, **options):
+        return self.git.checkout(branch, **options)
 
     @staticmethod
     def show_result(command, status, out, err):
