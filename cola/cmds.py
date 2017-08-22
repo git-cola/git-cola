@@ -723,9 +723,7 @@ class DeleteRemoteBranch(Command):
                 % dict(branch=self.branch, remote=self.remote))
         else:
             command = 'git push'
-            message = (N_('"%(command)s" returned exit status %(status)d') %
-                       dict(command=command, status=status))
-
+            message = Interaction.format_command_status(command, status)
             Interaction.critical(N_('Error Deleting Remote Branch'),
                                  message, out + err)
 
@@ -1153,8 +1151,9 @@ class Clone(Command):
         else:
             self.error_message = N_('Error: could not clone "%s"') % self.url
             self.error_details = (
-                    (N_('git clone returned exit code %s') % status) +
-                    ((out+err) and ('\n\n' + out + err) or ''))
+                    Interaction.format_command_status('git clone', status) +
+                    ((out + err) and
+                        ('\n\n' + Interaction.format_out_err(out, err)) or ''))
 
         return self
 

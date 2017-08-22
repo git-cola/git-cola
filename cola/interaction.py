@@ -13,6 +13,21 @@ class Interaction(object):
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
     @staticmethod
+    def format_command_status(cmd, status):
+        return (N_('"%(command)s" returned exit status %(status)d') %
+                dict(command=cmd, status=status))
+
+    @staticmethod
+    def format_out_err(out, err):
+        """Format stdout and stderr into a single string"""
+        details = out or ''
+        if err:
+            if details and not details.endswith('\n'):
+                details += '\n'
+            details += err
+        return details
+
+    @staticmethod
     def information(title,
                     message=None, details=None, informative_text=None):
         if message is None:
