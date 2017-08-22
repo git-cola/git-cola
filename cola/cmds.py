@@ -1186,13 +1186,11 @@ class GitXBaseContext(object):
 
 class Rebase(Command):
 
-    def __init__(self,
-                 upstream=None, branch=None, capture_output=True, **kwargs):
+    def __init__(self, upstream=None, branch=None, **kwargs):
         """Start an interactive rebase session
 
         :param upstream: upstream branch
         :param branch: optional branch to checkout
-        :param capture_output: whether to capture stdout and stderr
         :param kwargs: forwarded directly to `git.rebase()`
 
         """
@@ -1200,16 +1198,11 @@ class Rebase(Command):
 
         self.upstream = upstream
         self.branch = branch
-        self.capture_output = capture_output
         self.kwargs = kwargs
 
     def prepare_arguments(self):
         args = []
         kwargs = {}
-
-        if self.capture_output:
-            kwargs['_stderr'] = None
-            kwargs['_stdout'] = None
 
         # Rebase actions must be the only option specified
         for action in ('continue', 'abort', 'skip', 'edit_todo'):
@@ -1241,8 +1234,11 @@ class Rebase(Command):
                 # could hide the main window while rebasing. that doesn't require
                 # as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
-        Interaction.log_status(status, out, err)
         self.model.update_status()
+        Interaction.log_status(status, out, err)
+        if status != 0:
+            title = N_('Rebase stopped')
+            Interaction.command_error(title, 'git rebase', status, out, err)
         return status, out, err
 
 
