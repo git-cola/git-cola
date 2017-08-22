@@ -370,6 +370,13 @@ def critical(title, message=None, details=None):
     mbox.exec_()
 
 
+def command_error(title, cmd, status, out, err):
+    """Report an error message about a failed command"""
+    details = Interaction.format_out_err(out, err)
+    message = Interaction.format_command_status(cmd, status)
+    critical(title, message=message, details=details)
+
+
 def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
@@ -1015,3 +1022,4 @@ def install():
     Interaction.confirm = staticmethod(confirm)
     Interaction.question = staticmethod(question)
     Interaction.information = staticmethod(information)
+    Interaction.command_error = staticmethod(command_error)

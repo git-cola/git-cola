@@ -995,13 +995,7 @@ class PrepareCommitMessageHook(Command):
                 result = core.read(filename)
             else:
                 result = self.old_commitmsg
-                details = out or ''
-                if err:
-                    if details and not details.endswith('\n'):
-                        details += '\n'
-                    details += err
-                message = N_('"%s" returned exit status %d') % (hook, status)
-                Interaction.critical(title, message=message, details=details)
+                Interaction.command_error(title, hook, status, out, err)
         else:
             message = N_('A hook must be provided at "%s"') % hook
             Interaction.critical(title, message=message)
