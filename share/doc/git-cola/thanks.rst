@@ -91,6 +91,7 @@ Thanks
 * Mahmoud Hossam
 * Mateusz Kedzior
 * Maicon D. Filippsen
+* Marcin Mielniczuk
 * Marco Costalba
 * Markus Heidelberg
 * Matěj Šmíd

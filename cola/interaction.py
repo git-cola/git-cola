@@ -12,6 +12,33 @@ class Interaction(object):
 
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
+    @classmethod
+    def command_error(cls, title, cmd, status, out, err):
+        """Display an error message for a failed command"""
+        core.stderr(title)
+        core.stderr('-' * len(title))
+        core.stderr(cls.format_command_status(cmd, status))
+        core.stdout('')
+        if out:
+            core.stdout(out)
+        if err:
+            core.stderr(err)
+
+    @staticmethod
+    def format_command_status(cmd, status):
+        return (N_('"%(command)s" returned exit status %(status)d') %
+                dict(command=cmd, status=status))
+
+    @staticmethod
+    def format_out_err(out, err):
+        """Format stdout and stderr into a single string"""
+        details = out or ''
+        if err:
+            if details and not details.endswith('\n'):
+                details += '\n'
+            details += err
+        return details
+
     @staticmethod
     def information(title,
                     message=None, details=None, informative_text=None):
@@ -74,10 +101,8 @@ class Interaction(object):
     @classmethod
     def log_status(cls, status, out, err=None):
         msg = (
-           (out and ((N_('Output: %s') % out) + '\n') or '') +
-           (err and ((N_('Errors: %s') % err) + '\n') or '') +
-           N_('Exit code: %s') % status
-        )
+           (out and (out + '\n') or '') +
+           (err and (err + '\n') or ''))
         cls.log(msg)
 
     @classmethod

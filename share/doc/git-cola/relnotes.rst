@@ -16,8 +16,8 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v3.0
 
-git-cola v3.0 (alpha)
-=====================
+git-cola v3.0 (beta)
+====================
 
 Usability, bells and whistles
 -----------------------------
@@ -99,6 +99,11 @@ Fixes
   when switching.
 
   https://github.com/git-cola/git-cola/issues/710
+
+* Rebase now displays error more extensive error messages when rebasing fails
+  or stops.
+
+  https://github.com/git-cola/git-cola/issues/721
 
 .. _v2.11:
 

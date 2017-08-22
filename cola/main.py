@@ -437,13 +437,8 @@ def cmd_rebase(args):
             'edit_todo': args.edit_todo,
             'upstream': args.upstream,
             'branch': args.branch,
-            'capture_output': False,
     }
     status, out, err = cmds.do(cmds.Rebase, **kwargs)
-    if out:
-        core.stdout(out)
-    if err:
-        core.stderr(err)
     return status
 
 

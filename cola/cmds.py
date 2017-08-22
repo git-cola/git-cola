@@ -723,9 +723,7 @@ class DeleteRemoteBranch(Command):
                 % dict(branch=self.branch, remote=self.remote))
         else:
             command = 'git push'
-            message = (N_('"%(command)s" returned exit status %(status)d') %
-                       dict(command=command, status=status))
-
+            message = Interaction.format_command_status(command, status)
             Interaction.critical(N_('Error Deleting Remote Branch'),
                                  message, out + err)
 
@@ -997,13 +995,7 @@ class PrepareCommitMessageHook(Command):
                 result = core.read(filename)
             else:
                 result = self.old_commitmsg
-                details = out or ''
-                if err:
-                    if details and not details.endswith('\n'):
-                        details += '\n'
-                    details += err
-                message = N_('"%s" returned exit status %d') % (hook, status)
-                Interaction.critical(title, message=message, details=details)
+                Interaction.command_error(title, hook, status, out, err)
         else:
             message = N_('A hook must be provided at "%s"') % hook
             Interaction.critical(title, message=message)
@@ -1153,8 +1145,9 @@ class Clone(Command):
         else:
             self.error_message = N_('Error: could not clone "%s"') % self.url
             self.error_details = (
-                    (N_('git clone returned exit code %s') % status) +
-                    ((out+err) and ('\n\n' + out + err) or ''))
+                    Interaction.format_command_status('git clone', status) +
+                    ((out + err) and
+                        ('\n\n' + Interaction.format_out_err(out, err)) or ''))
 
         return self
 
@@ -1193,13 +1186,11 @@ class GitXBaseContext(object):
 
 class Rebase(Command):
 
-    def __init__(self,
-                 upstream=None, branch=None, capture_output=True, **kwargs):
+    def __init__(self, upstream=None, branch=None, **kwargs):
         """Start an interactive rebase session
 
         :param upstream: upstream branch
         :param branch: optional branch to checkout
-        :param capture_output: whether to capture stdout and stderr
         :param kwargs: forwarded directly to `git.rebase()`
 
         """
@@ -1207,16 +1198,11 @@ class Rebase(Command):
 
         self.upstream = upstream
         self.branch = branch
-        self.capture_output = capture_output
         self.kwargs = kwargs
 
     def prepare_arguments(self):
         args = []
         kwargs = {}
-
-        if self.capture_output:
-            kwargs['_stderr'] = None
-            kwargs['_stdout'] = None
 
         # Rebase actions must be the only option specified
         for action in ('continue', 'abort', 'skip', 'edit_todo'):
@@ -1248,8 +1234,11 @@ class Rebase(Command):
                 # could hide the main window while rebasing. that doesn't require
                 # as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
-        Interaction.log_status(status, out, err)
         self.model.update_status()
+        Interaction.log_status(status, out, err)
+        if status != 0:
+            title = N_('Rebase stopped')
+            Interaction.command_error(title, 'git rebase', status, out, err)
         return status, out, err
 
 
