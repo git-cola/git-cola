@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-20 14:12-0700\n"
-"PO-Revision-Date: 2017-04-14 23:48+0200\n"
+"PO-Revision-Date: 2017-08-30 08:16+0200\n"
 "Last-Translator: Igor Kopach <ikopach@ukr.net>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk_UA\n"
@@ -839,9 +839,8 @@ msgid "Add Separator"
 msgstr ""
 
 #: cola/widgets/toolbar.py:243
-#, fuzzy
 msgid "Remove Element"
-msgstr "Видалити"
+msgstr "Видалити елемент"
 
 #: cola/widgets/toolbar.py:245
 msgid "Show icon? (if available)"
@@ -923,9 +922,8 @@ msgid "Tags"
 msgstr "Теґи"
 
 #: cola/widgets/branch.py:52
-#, fuzzy
 msgid "Toggle the branches filter"
-msgstr "Перемкнути фільтр шляхів"
+msgstr "Перемкнути фільтр гілок"
 
 #: cola/widgets/branch.py:62 cola/widgets/main.py:118
 msgid "Branches"
@@ -976,9 +974,8 @@ msgid "The branch will be no longer available."
 msgstr "Гілка не буде більше доступна."
 
 #: cola/widgets/branch.py:572
-#, fuzzy
 msgid "Filter branches..."
-msgstr "Фільтрувати шляхи..."
+msgstr "Фільтрувати гілки..."
 
 #: cola/widgets/main.py:85
 msgid "Browser"
@@ -1106,7 +1103,7 @@ msgstr "Відкрити в новому вікні..."
 
 #: cola/widgets/main.py:261 cola/widgets/action.py:64
 msgid "Stash..."
-msgstr "Сховати"
+msgstr "Сховок"
 
 #: cola/widgets/main.py:270 cola/widgets/startup.py:49
 msgid "Clone..."
@@ -1928,9 +1925,8 @@ msgid "Chinese translation"
 msgstr "Китайський переклад"
 
 #: cola/widgets/about.py:331
-#, fuzzy
 msgid "Ukranian translation"
-msgstr "Бразильський переклад"
+msgstr "Український переклад"
 
 #: cola/widgets/about.py:333 cola/widgets/about.py:347
 msgid "Indonesian translation"
