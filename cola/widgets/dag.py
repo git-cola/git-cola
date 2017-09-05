@@ -1,7 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import collections
+import itertools
 import math
-from itertools import count
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -1716,7 +1716,7 @@ step 2. Hence, it must be propagated for children on side columns.
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
             # propagate_frontier.
-            for offset in count(1):
+            for offset in itertools.count(1):
                 for c in [column + offset, column - offset]:
                     if not c in self.columns:
                         # Column 'c' is not occupied.
@@ -1760,7 +1760,7 @@ step 2. Hence, it must be propagated for children on side columns.
             # If no free column was found between graph center and desired
             # column then look for free one by moving from center along both
             # directions simultaneously.
-            for c in count(0):
+            for c in itertools.count(0):
                 if c not in columns:
                     if c > self.max_column:
                         self.max_column = c
@@ -1794,7 +1794,7 @@ step 2. Hence, it must be propagated for children on side columns.
             can_overlap = list(range(self.min_column, column))
         else:
             can_overlap = list(range(self.max_column, column, -1))
-        for cell_row in count(cell_row):
+        for cell_row in itertools.count(cell_row):
             for c in can_overlap:
                 if (c, cell_row) in self.tagged_cells:
                     # Overlapping. Try next row.
