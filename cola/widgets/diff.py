@@ -146,6 +146,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             self.numbers.hide()
         else:
             self.numbers = None
+        self.scrollvalue = None
 
         self.cursorPositionChanged.connect(self._cursor_changed)
 
@@ -160,15 +161,40 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         if self.numbers:
             self.numbers.refresh_size()
 
+    def save_scrollbar(self):
+        """Save the scrollbar value, but only on the first call"""
+        if self.scrollvalue is None:
+            scrollbar = self.verticalScrollBar()
+            if scrollbar:
+                scrollvalue = scrollbar.value()
+            else:
+                scrollvalue = None
+            self.scrollvalue = scrollvalue
+
+    def restore_scrollbar(self):
+        """Restore the scrollbar and clear state"""
+        scrollbar = self.verticalScrollBar()
+        scrollvalue = self.scrollvalue
+        if scrollbar and scrollvalue is not None:
+            scrollbar.setValue(scrollvalue)
+        self.scrollvalue = None
+
+
     def set_loading_message(self):
         self.hint.set_value('+++ ' + N_('Loading...'))
         self.set_value('')
 
     def set_diff(self, diff):
+        """Set the diff text, but save the scrollbar"""
+        self.save_scrollbar()
+
         self.hint.set_value('')
         if self.numbers:
             self.numbers.set_diff(diff)
         self.set_value(diff)
+
+        self.restore_scrollbar()
+
 
 
 class DiffLineNumbers(TextDecorator):
@@ -671,9 +697,10 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
     def set_diff_oid(self, oid, filename=None):
+        self.diff.save_scrollbar()
         self.diff.set_loading_message()
         task = DiffInfoTask(oid, filename, self)
-        task.connect(self.diff.set_value)
+        task.connect(self.diff.set_diff)
         self.runtask.start(task)
 
     def commits_selected(self, commits):
