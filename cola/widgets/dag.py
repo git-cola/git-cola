@@ -2,6 +2,7 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 import itertools
 import math
+import re
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -15,11 +16,13 @@ from ..models import dag
 from .. import core
 from .. import cmds
 from .. import difftool
+from .. import git
 from .. import hotkeys
 from .. import icons
 from .. import observable
 from .. import qtcompat
 from .. import qtutils
+from .. import utils
 from . import archive
 from . import browse
 from . import completion
@@ -441,6 +444,9 @@ class GitDAG(standard.MainWindow):
         self.commits = {}
         self.commit_list = []
         self.selection = []
+        self.last_oids = None
+        self.last_count = 0
+        self.force_refresh = False
 
         self.thread = None
         self.revtext = completion.GitLogLineEdit()
@@ -634,16 +640,37 @@ class GitDAG(standard.MainWindow):
         self.display()
 
     def refresh(self):
+        """Unconditionally refresh the DAG"""
+        # self.force_refresh triggers an Unconditional redraw
+        self.force_refresh = True
         cmds.do(cmds.Refresh)
+        self.force_refresh = False
 
     def display(self):
+        """Update the view when the Git refs change"""
         new_ref = self.revtext.value()
         new_count = self.maxresults.value()
 
-        self.thread.stop()
-        self.ctx.set_ref(new_ref)
-        self.ctx.set_count(new_count)
-        self.thread.start()
+        # The DAG tries to avoid updating when the object IDs have not
+        # changed.  Without doing this the DAG constantly redraws itself
+        # whenever inotify sends update events, which hurts usability.
+        #
+        # To minimize redraws we leverage `git rev-parse`.  The strategy is to
+        # use `git rev-parse` on the input line, which converts each argument
+        # into object IDs.  From there it's a simple matter of detecting when
+        # the object IDs changed.
+        oids = rev_parse(new_ref)
+        update = (self.force_refresh or
+                    new_count != self.last_count or
+                    oids != self.last_oids)
+        if update:
+            self.thread.stop()
+            self.ctx.set_ref(new_ref)
+            self.ctx.set_count(new_count)
+            self.thread.start()
+
+        self.last_oids = oids
+        self.last_count = new_count
 
     def commits_selected(self, commits):
         if commits:
@@ -726,6 +753,19 @@ class GitDAG(standard.MainWindow):
         oid = self.treewidget.selected_oid()
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(filename, model)
+
+
+def rev_parse(refs):
+    """Parse DAG arguments into object IDs"""
+    argv = utils.shell_split(refs or 'HEAD')
+    status, out, err = git.current().rev_parse(*argv)
+    oids = []
+    if status == 0:
+        rgx = re.compile(r'^[a-f0-9]{40}$')
+        for line in out.splitlines():
+            if rgx.match(line):
+                oids.append(line)
+    return ':'.join(oids)
 
 
 class ReaderThread(QtCore.QThread):
