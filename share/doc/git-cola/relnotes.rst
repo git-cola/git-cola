@@ -55,6 +55,18 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/715
 
+* The DAG window will now only refresh when object IDs change.
+  Previously, the DAG would redraw itself in response to inotify events,
+  such as filesystem operations, which was disruptive when inspecting a large
+  diff in its diff viewer.  The DAG will now only redraw when the object IDs
+  corresponding to its query input changes.  Furthermore, when redrawing, the
+  scrollbar positions are retained to minimize disruption to the viewport
+  contents.
+
+  https://github.com/git-cola/git-cola/issues/620
+
+  https://github.com/git-cola/git-cola/issues/724
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
