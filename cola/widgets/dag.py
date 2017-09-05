@@ -759,12 +759,10 @@ def rev_parse(refs):
     """Parse DAG arguments into object IDs"""
     argv = utils.shell_split(refs or 'HEAD')
     status, out, err = git.current().rev_parse(*argv)
-    oids = []
     if status == 0:
-        rgx = re.compile(r'^[a-f0-9]{40}$')
-        for line in out.splitlines():
-            if rgx.match(line):
-                oids.append(line)
+        oids = [oid for oid in out.splitlines() if oid]
+    else:
+        oids = []
     return ':'.join(oids)
 
 
