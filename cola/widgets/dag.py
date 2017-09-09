@@ -16,7 +16,7 @@ from ..models import dag
 from .. import core
 from .. import cmds
 from .. import difftool
-from .. import git
+from .. import gitcmds
 from .. import hotkeys
 from .. import icons
 from .. import observable
@@ -659,7 +659,8 @@ class GitDAG(standard.MainWindow):
         # use `git rev-parse` on the input line, which converts each argument
         # into object IDs.  From there it's a simple matter of detecting when
         # the object IDs changed.
-        oids = rev_parse(new_ref)
+        argv = utils.shell_split(new_ref or 'HEAD')
+        oids = gitcmds.parse_refs(argv)
         update = (self.force_refresh or
                     new_count != self.last_count or
                     oids != self.last_oids)
@@ -753,17 +754,6 @@ class GitDAG(standard.MainWindow):
         oid = self.treewidget.selected_oid()
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(filename, model)
-
-
-def rev_parse(refs):
-    """Parse DAG arguments into object IDs"""
-    argv = utils.shell_split(refs or 'HEAD')
-    status, out, err = git.current().rev_parse(*argv)
-    if status == 0:
-        oids = [oid for oid in out.splitlines() if oid]
-    else:
-        oids = []
-    return ':'.join(oids)
 
 
 class ReaderThread(QtCore.QThread):

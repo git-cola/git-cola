@@ -32,9 +32,6 @@ EXIT_USAGE = 64
 EXIT_NOINPUT = 66
 EXIT_UNAVAILABLE = 69
 
-# Object ID / SHA1-related constants
-OID_LENGTH = 40
-
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
 _encoding_tests = [

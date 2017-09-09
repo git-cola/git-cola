@@ -13,7 +13,9 @@ from .git import STDOUT
 from .i18n import N_
 
 
+# Object ID / SHA1-related constants
 EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+OID_LENGTH = 40
 
 
 class InvalidRepositoryError(Exception):
@@ -739,3 +741,13 @@ def strip_remote(remotes, remote_branch):
         if remote_branch.startswith(prefix):
             return remote_branch[len(prefix):]
     return remote_branch.split('/', 1)[-1]
+
+
+def parse_refs(argv):
+    """Parse command-line arguments into object IDs"""
+    status, out, err = git.rev_parse(*argv)
+    if status == 0:
+        oids = [oid for oid in out.splitlines() if oid]
+    else:
+        oids = argv
+    return oids
