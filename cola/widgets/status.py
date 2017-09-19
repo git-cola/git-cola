@@ -518,6 +518,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         return menu
 
+    def _add_copy_actions(self, menu):
+        copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
+        copy_menu.addAction(self.copy_path_action)
+        copy_menu.addAction(self.copy_relpath_action)
+        copy_menu.addAction(self.copy_leading_path_action)
+
+        menu.addSeparator()
+        menu.addMenu(copy_menu)
+        menu.addSeparator()
+
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
             menu.addAction(icons.remove(), N_('Unstage All'),
@@ -559,11 +569,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if self.m.undoable():
             menu.addAction(self.revert_unstaged_edits_action)
 
-        menu.addSeparator()
-        menu.addAction(self.copy_path_action)
-        menu.addAction(self.copy_relpath_action)
-        menu.addAction(self.copy_leading_path_action)
-        menu.addSeparator()
+        self._add_copy_actions(menu)
+
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -576,12 +583,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         action = menu.addAction(icons.remove(), N_('Unstage Selected'),
                                 cmds.run(cmds.Unstage, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
-        menu.addSeparator()
 
-        menu.addAction(self.copy_path_action)
-        menu.addAction(self.copy_relpath_action)
-        menu.addAction(self.copy_leading_path_action)
-        menu.addSeparator()
+        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
@@ -592,9 +595,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        menu.addSeparator()
-        menu.addAction(self.copy_path_action)
-        menu.addAction(self.copy_relpath_action)
+        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -631,11 +632,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(icons.edit(),
                             N_('Add to .gitignore'),
                             gitignore.gitignore_view)
-        menu.addSeparator()
-        menu.addAction(self.copy_path_action)
-        menu.addAction(self.copy_relpath_action)
-        menu.addAction(self.copy_leading_path_action)
-        menu.addSeparator()
+
+        self._add_copy_actions(menu)
         if not selection.selection_model().is_empty():
             menu.addAction(self.view_history_action)
             menu.addAction(self.view_blame_action)
@@ -651,11 +649,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        menu.addSeparator()
-        menu.addAction(self.copy_path_action)
-        menu.addAction(self.copy_relpath_action)
-        menu.addAction(self.copy_leading_path_action)
-        menu.addSeparator()
+        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
