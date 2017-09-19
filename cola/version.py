@@ -13,6 +13,10 @@ from .git import git
 from .git import STDOUT
 from .decorators import memoize
 from ._version import VERSION
+try:
+    from ._build_version import BUILD_VERSION
+except:
+    BUILD_VERSION = ''
 
 # minimum version requirements
 _versions = {
@@ -39,6 +43,11 @@ def get(key):
 def version():
     """Returns the current version"""
     return VERSION
+
+
+def build_version():
+    """Return the build version, which includes the Git ID"""
+    return BUILD_VERSION
 
 
 @memoize

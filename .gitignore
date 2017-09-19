@@ -1,5 +1,6 @@
 /build
 /config.mak
+/cola/_build_version.py
 /dist
 /env*
 /git-cola.app

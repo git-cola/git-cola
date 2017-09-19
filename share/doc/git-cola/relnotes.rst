@@ -73,6 +73,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/724
 
+* The "About" dialog now includes the SHA-1 where Git Cola was built.
+
+  https://github.com/git-cola/git-cola/issues/530
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.

@@ -141,6 +141,7 @@ If not, see http://www.gnu.org/licenses/.
 def version_text():
     git_version = version.git_version()
     cola_version = version.version()
+    build_version = version.build_version()
     python_path = sys.executable
     python_version = sys.version
     qt_version = qtpy.QT_VERSION
@@ -155,9 +156,15 @@ def version_text():
 
     platform_version = platform.platform()
 
+    # Only show the build version if _build_version.py exists
+    if build_version:
+        build_version = '(%s)' % build_version
+    else:
+        build_version = ''
+
     return N_("""
         <br>
-            Git Cola version %(cola_version)s
+            Git Cola version %(cola_version)s %(build_version)s
         <ul>
             <li> %(platform_version)s
             <li> Python (%(python_path)s) %(python_version)s

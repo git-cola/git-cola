@@ -87,7 +87,11 @@ PYTHON_SOURCES += setup.py
 all:: build
 .PHONY: all
 
-build:
+build_version:
+	@GIT=$(GIT) ./extras/generate-build-version.sh 2>/dev/null || true
+.PHONY: build_version
+
+build: build_version
 	$(SETUP) build
 .PHONY: build
 
