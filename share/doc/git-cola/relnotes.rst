@@ -77,6 +77,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/530
 
+* The "Status" widget now has a "Copy Leading Path to Clipboard" action.
+
+  https://github.com/git-cola/git-cola/issues/436
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
