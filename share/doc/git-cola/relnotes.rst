@@ -21,7 +21,13 @@ git-cola v3.0 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* Updated Simplified Chinese translation.
+
+  https://github.com/git-cola/git-cola/pull/726
+
 * Updated Ukranian translation.
+
+  https://github.com/git-cola/git-cola/pull/723
 
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
