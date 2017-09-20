@@ -169,24 +169,23 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
 
         self.copy_path_action = qtutils.add_action(
-            self, N_('Copy Path to Clipboard'), self.copy_path, hotkeys.COPY)
+            self, N_('Copy Path to Clipboard'), copy_path, hotkeys.COPY)
         self.copy_path_action.setIcon(icons.copy())
 
         self.copy_relpath_action = qtutils.add_action(
             self, N_('Copy Relative Path to Clipboard'),
-            self.copy_relpath, hotkeys.CUT)
+            copy_relpath, hotkeys.CUT)
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_action = qtutils.add_action(
-            self, N_('Copy Leading Path to Clipboard'),
-            self.copy_leading_path)
+            self, N_('Copy Leading Path to Clipboard'), copy_leading_path)
         self.copy_leading_path_action.setIcon(icons.copy())
 
         self.view_history_action = qtutils.add_action(
-            self, N_('View History...'), self.view_history, hotkeys.HISTORY)
+            self, N_('View History...'), view_history, hotkeys.HISTORY)
 
         self.view_blame_action = qtutils.add_action(
-            self, N_('Blame...'), self.view_blame, hotkeys.BLAME)
+            self, N_('Blame...'), view_blame, hotkeys.BLAME)
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
@@ -877,21 +876,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         else:
             self.select_by_index(0)
 
-    def copy_path(self, absolute=True):
-        """Copy a selected path to the clipboard"""
-        filename = selection.selection_model().filename()
-        qtutils.copy_path(filename, absolute=absolute)
-
-    def copy_relpath(self):
-        """Copy a selected relative path to the clipboard"""
-        self.copy_path(absolute=False)
-
-    def copy_leading_path(self):
-        """Copy the selected leading path to the clipboard"""
-        filename = selection.selection_model().filename()
-        dirname = os.path.dirname(filename)
-        qtutils.copy_path(dirname, absolute=False)
-
     def _item_filter(self, item):
         return not item.deleted and core.exists(item.path)
 
@@ -903,14 +887,34 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def mimeTypes(self):
         return qtutils.path_mimetypes()
 
-    def view_blame(self):
-        """Signal that we should view blame for paths."""
-        cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
 
-    def view_history(self):
-        """Signal that we should view history for paths."""
-        cmds.do(cmds.VisualizePaths,
-                selection.union(selection.selection_model()))
+def view_blame():
+    """Signal that we should view blame for paths."""
+    cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
+
+
+def view_history():
+    """Signal that we should view history for paths."""
+    cmds.do(cmds.VisualizePaths,
+            selection.union(selection.selection_model()))
+
+
+def copy_path(absolute=True):
+    """Copy a selected path to the clipboard"""
+    filename = selection.selection_model().filename()
+    qtutils.copy_path(filename, absolute=absolute)
+
+
+def copy_relpath():
+    """Copy a selected relative path to the clipboard"""
+    copy_path(absolute=False)
+
+
+def copy_leading_path():
+    """Copy the selected leading path to the clipboard"""
+    filename = selection.selection_model().filename()
+    dirname = os.path.dirname(filename)
+    qtutils.copy_path(dirname, absolute=False)
 
 
 class StatusFilterWidget(QtWidgets.QWidget):
