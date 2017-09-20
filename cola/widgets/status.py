@@ -518,9 +518,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(self.parent_dir_action)
             menu.addAction(self.terminal_action)
 
+        self._add_copy_actions(menu)
         return menu
 
     def _add_copy_actions(self, menu):
+        """Add the "Copy" sub-menu"""
         copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
@@ -529,7 +531,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         menu.addSeparator()
         menu.addMenu(copy_menu)
-        menu.addSeparator()
 
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
@@ -572,8 +573,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if self.m.undoable():
             menu.addAction(self.revert_unstaged_edits_action)
 
-        self._add_copy_actions(menu)
-
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -587,7 +586,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Unstage, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
@@ -598,7 +596,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -636,7 +633,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                             N_('Add to .gitignore'),
                             gitignore.gitignore_view)
 
-        self._add_copy_actions(menu)
         if not selection.selection_model().is_empty():
             menu.addAction(self.view_history_action)
             menu.addAction(self.view_blame_action)
@@ -652,7 +648,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
