@@ -826,6 +826,13 @@ def create_menu(title, parent):
     return qmenu
 
 
+def add_menu(title, parent):
+    """Create a menu and set its title."""
+    menu = create_menu(title, parent)
+    parent.addAction(menu.menuAction())
+    return menu
+
+
 def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     button = QtWidgets.QToolButton()
     button.setAutoRaise(True)

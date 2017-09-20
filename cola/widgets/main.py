@@ -366,10 +366,11 @@ class MainView(standard.MainWindow):
 
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
+        self.setMenuBar(self.menubar)
 
         # File Menu
-        create_menu = qtutils.create_menu
-        self.file_menu = create_menu(N_('File'), self.menubar)
+        add_menu = qtutils.add_menu
+        self.file_menu = add_menu(N_('File'), self.menubar)
         self.file_menu.addAction(self.new_repository_action)
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(icons.folder())
@@ -388,10 +389,14 @@ class MainView(standard.MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.preferences_action)
         self.file_menu.addAction(self.quit_action)
-        self.menubar.addAction(self.file_menu.menuAction())
+
+        # Edit Menu
+        self.edit_menu = add_menu(N_('Edit'), self.menubar)
+        self.edit_menu.aboutToShow.connect(
+                lambda: build_edit_menu(self.commitmsgeditor, self.edit_menu))
 
         # Actions menu
-        self.actions_menu = create_menu(N_('Actions'), self.menubar)
+        self.actions_menu = add_menu(N_('Actions'), self.menubar)
         self.actions_menu.addAction(self.fetch_action)
         self.actions_menu.addAction(self.push_action)
         self.actions_menu.addAction(self.pull_action)
@@ -408,11 +413,11 @@ class MainView(standard.MainWindow):
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.grep_action)
         self.actions_menu.addAction(self.search_commits_action)
-        self.menubar.addAction(self.actions_menu.menuAction())
 
         # Commit Menu
-        self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
+        self.commit_menu = add_menu(N_('Commit@@verb'), self.menubar)
         self.commit_menu.setTitle(N_('Commit@@verb'))
+        self.commit_menu.addAction(self.commitmsgeditor.commit_action)
         self.commit_menu.addAction(self.commit_amend_action)
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.stage_modified_action)
@@ -424,18 +429,16 @@ class MainView(standard.MainWindow):
         self.commit_menu.addAction(self.load_commitmsg_action)
         self.commit_menu.addAction(self.load_commitmsg_template_action)
         self.commit_menu.addAction(self.prepare_commitmsg_hook_action)
-        self.menubar.addAction(self.commit_menu.menuAction())
 
         # Diff Menu
-        self.diff_menu = create_menu(N_('Diff'), self.menubar)
+        self.diff_menu = add_menu(N_('Diff'), self.menubar)
         self.diff_menu.addAction(self.diff_expression_action)
         self.diff_menu.addAction(self.branch_compare_action)
         self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.show_diffstat_action)
-        self.menubar.addAction(self.diff_menu.menuAction())
 
         # Branch Menu
-        self.branch_menu = create_menu(N_('Branch'), self.menubar)
+        self.branch_menu = add_menu(N_('Branch'), self.menubar)
         self.branch_menu.addAction(self.branch_review_action)
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.create_branch_action)
@@ -449,10 +452,9 @@ class MainView(standard.MainWindow):
         self.branch_menu.addSeparator()
         self.branch_menu.addAction(self.visualize_current_action)
         self.branch_menu.addAction(self.visualize_all_action)
-        self.menubar.addAction(self.branch_menu.menuAction())
 
         # Rebase menu
-        self.rebase_menu = create_menu(N_('Rebase'), self.actions_menu)
+        self.rebase_menu = add_menu(N_('Rebase'), self.actions_menu)
         self.rebase_menu.addAction(self.rebase_start_action)
         self.rebase_menu.addAction(self.rebase_edit_todo_action)
         self.rebase_menu.addSeparator()
@@ -460,10 +462,9 @@ class MainView(standard.MainWindow):
         self.rebase_menu.addAction(self.rebase_skip_action)
         self.rebase_menu.addSeparator()
         self.rebase_menu.addAction(self.rebase_abort_action)
-        self.menubar.addAction(self.rebase_menu.menuAction())
 
         # View Menu
-        self.view_menu = create_menu(N_('View'), self.menubar)
+        self.view_menu = add_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.browse_action)
         self.view_menu.addAction(self.dag_action)
         self.view_menu.addSeparator()
@@ -475,17 +476,12 @@ class MainView(standard.MainWindow):
         self.view_menu.addAction(self.lock_layout_action)
         self.view_menu.addSeparator()
         self.view_menu.addAction(N_('Add Toolbar'), self.add_toolbar)
-        self.menubar.addAction(self.view_menu.menuAction())
 
         # Help Menu
-        self.help_menu = create_menu(N_('Help'), self.menubar)
+        self.help_menu = add_menu(N_('Help'), self.menubar)
         self.help_menu.addAction(self.help_docs_action)
         self.help_menu.addAction(self.help_shortcuts_action)
         self.help_menu.addAction(self.help_about_action)
-        self.menubar.addAction(self.help_menu.menuAction())
-
-        # Set main menu
-        self.setMenuBar(self.menubar)
 
         # Arrange dock widgets
         left = Qt.LeftDockWidgetArea
@@ -848,6 +844,18 @@ class MainView(standard.MainWindow):
         progress = standard.ProgressDialog('', '', self)
         guicmds.clone_repo(self, self.runtask, progress,
                            guicmds.report_clone_repo_errors, True)
+
+
+def build_edit_menu(editor, menu):
+    focus = editor.focusWidget()
+    if focus is not editor.description:
+        focus = editor.summary
+    # addActions() does not take ownership, so we have to hold onto a global
+    # reference to prevent edit_menu's destructor from running, deleting its
+    # actions, and removing them from the menu.
+    editor.current_edit_menu = edit_menu = focus.build_menu()
+    menu.clear()
+    menu.addActions(edit_menu.actions())
 
 
 def show_dock(dockwidget):

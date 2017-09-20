@@ -521,20 +521,17 @@ class GitDAG(standard.MainWindow):
 
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
+        self.setMenuBar(self.menubar)
 
         # View Menu
-        self.view_menu = qtutils.create_menu(N_('View'), self.menubar)
+        self.view_menu = qtutils.add_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.refresh_action)
-
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
         self.view_menu.addAction(self.file_dock.toggleViewAction())
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.lock_layout_action)
-
-        self.menubar.addAction(self.view_menu.menuAction())
-        self.setMenuBar(self.menubar)
 
         left = Qt.LeftDockWidgetArea
         right = Qt.RightDockWidgetArea
