@@ -556,15 +556,13 @@ class CommitSummaryLineEdit(HintedLineEdit):
         self._validator = QtGui.QRegExpValidator(regex, self)
         self.setValidator(self._validator)
 
-    def contextMenuEvent(self, event):
+    def build_menu(self):
         menu = self.createStandardContextMenu()
-        if self.extra_actions:
-            menu.addSeparator()
-        for action in self.extra_actions:
-            if action is None:
-                menu.addSeparator()
-            else:
-                menu.addAction(action)
+        add_menu_actions(menu, self.extra_actions)
+        return menu
+
+    def contextMenuEvent(self, event):
+        menu = self.build_menu()
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
@@ -579,15 +577,13 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.action_emit_leave = qtutils.add_action(
                 self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE)
 
-    def contextMenuEvent(self, event):
+    def build_menu(self):
         menu, spell_menu = self.context_menu()
-        if self.extra_actions:
-            menu.addSeparator()
-        for action in self.extra_actions:
-            if action is None:
-                menu.addSeparator()
-            else:
-                menu.addAction(action)
+        add_menu_actions(menu, self.extra_actions)
+        return menu
+
+    def contextMenuEvent(self, event):
+        menu = self.build_menu()
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
@@ -641,3 +637,12 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         SpellCheckTextEdit.setFont(self, font)
         fm = self.fontMetrics()
         self.setMinimumSize(QtCore.QSize(1, fm.height() * 2))
+
+
+def add_menu_actions(menu, extra_actions):
+    """Add actions to a menu, treating None as a separator"""
+    for action in extra_actions:
+        if action is None:
+            menu.addSeparator()
+        else:
+            menu.addAction(action)

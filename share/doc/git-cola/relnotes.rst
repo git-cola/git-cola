@@ -81,6 +81,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/436
 
+* The main menu now has an "Edit" menu.
+
+  https://github.com/git-cola/git-cola/issues/725
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.

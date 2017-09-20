@@ -390,6 +390,12 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quit_action)
         self.menubar.addAction(self.file_menu.menuAction())
 
+        # Edit Menu
+        self.edit_menu = create_menu(N_('Edit'), self.menubar)
+        self.edit_menu.aboutToShow.connect(
+                lambda: build_edit_menu(self.commitmsgeditor, self.edit_menu))
+        self.menubar.addAction(self.edit_menu.menuAction())
+
         # Actions menu
         self.actions_menu = create_menu(N_('Actions'), self.menubar)
         self.actions_menu.addAction(self.fetch_action)
@@ -413,6 +419,7 @@ class MainView(standard.MainWindow):
         # Commit Menu
         self.commit_menu = create_menu(N_('Commit@@verb'), self.menubar)
         self.commit_menu.setTitle(N_('Commit@@verb'))
+        self.commit_menu.addAction(self.commitmsgeditor.commit_action)
         self.commit_menu.addAction(self.commit_amend_action)
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.stage_modified_action)
@@ -848,6 +855,18 @@ class MainView(standard.MainWindow):
         progress = standard.ProgressDialog('', '', self)
         guicmds.clone_repo(self, self.runtask, progress,
                            guicmds.report_clone_repo_errors, True)
+
+
+def build_edit_menu(editor, menu):
+    focus = editor.focusWidget()
+    if focus is not editor.description:
+        focus = editor.summary
+    # addActions() does not take ownership, so we have to hold onto a global
+    # reference to prevent edit_menu's destructor from running, deleting its
+    # actions, and removing them from the menu.
+    editor.current_edit_menu = edit_menu = focus.build_menu()
+    menu.clear()
+    menu.addActions(edit_menu.actions())
 
 
 def show_dock(dockwidget):
