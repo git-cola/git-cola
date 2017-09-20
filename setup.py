@@ -91,7 +91,7 @@ def _data_files(vendor_libs):
     version_file = 'cola/_build_version.py'
     if os.path.exists(version_file):
         subdir = _lib_path('cola')
-        data.append((subdir, version_file))
+        data.append((subdir, [version_file]))
 
     if vendor_libs:
         data.extend([
