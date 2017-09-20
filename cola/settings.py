@@ -48,6 +48,7 @@ class Settings(object):
     bookmarks = property(lambda self: mklist(self.values['bookmarks']))
     gui_state = property(lambda self: mkdict(self.values['gui_state']))
     recent = property(lambda self: mklist(self.values['recent']))
+    copy_formats = property(lambda self: mklist(self.values['copy_formats']))
 
     def __init__(self, verify=git.is_git_worktree):
         """Load existing settings if they exist"""
@@ -55,6 +56,7 @@ class Settings(object):
                 'bookmarks': [],
                 'gui_state': {},
                 'recent': [],
+                'copy_formats': [],
         }
         self.verify = verify
 
