@@ -65,33 +65,27 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
 
+        # Menu acctions
+        menu_actions = [
+            None,
+            self.signoff_action,
+            self.commit_action,
+            None,
+            self.launch_editor,
+            self.launch_difftool,
+            self.stage_or_unstage,
+            None,
+            self.move_up,
+            self.move_down,
+        ]
+
         # Widgets
         self.summary = CommitSummaryLineEdit()
         self.summary.setMinimumHeight(defs.tool_button_height)
-        self.summary.extra_actions.append(self.clear_action)
-        self.summary.extra_actions.append(None)
-        self.summary.extra_actions.append(self.signoff_action)
-        self.summary.extra_actions.append(self.commit_action)
-        self.summary.extra_actions.append(None)
-        self.summary.extra_actions.append(self.launch_editor)
-        self.summary.extra_actions.append(self.launch_difftool)
-        self.summary.extra_actions.append(self.stage_or_unstage)
-        self.summary.extra_actions.append(None)
-        self.summary.extra_actions.append(self.move_up)
-        self.summary.extra_actions.append(self.move_down)
+        self.summary.extra_actions.extend(menu_actions)
 
         self.description = CommitMessageTextEdit()
-        self.description.extra_actions.append(self.clear_action)
-        self.description.extra_actions.append(None)
-        self.description.extra_actions.append(self.signoff_action)
-        self.description.extra_actions.append(self.commit_action)
-        self.description.extra_actions.append(None)
-        self.description.extra_actions.append(self.launch_editor)
-        self.description.extra_actions.append(self.launch_difftool)
-        self.description.extra_actions.append(self.stage_or_unstage)
-        self.description.extra_actions.append(None)
-        self.description.extra_actions.append(self.move_up)
-        self.description.extra_actions.append(self.move_down)
+        self.description.extra_actions.extend(menu_actions)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
