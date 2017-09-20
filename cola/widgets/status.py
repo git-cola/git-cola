@@ -181,6 +181,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self, N_('Copy Leading Path to Clipboard'), copy_leading_path)
         self.copy_leading_path_action.setIcon(icons.copy())
 
+        self.copy_basename_action = qtutils.add_action(
+            self, N_('Copy Basename to Clipboard'), copy_basename)
+        self.copy_basename_action.setIcon(icons.copy())
         self.view_history_action = qtutils.add_action(
             self, N_('View History...'), view_history, hotkeys.HISTORY)
 
@@ -522,6 +525,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
         copy_menu.addAction(self.copy_leading_path_action)
+        copy_menu.addAction(self.copy_basename_action)
 
         menu.addSeparator()
         menu.addMenu(copy_menu)
@@ -908,6 +912,12 @@ def copy_path(absolute=True):
 def copy_relpath():
     """Copy a selected relative path to the clipboard"""
     copy_path(absolute=False)
+
+
+def copy_basename():
+    filename = os.path.basename(selection.selection_model().filename())
+    basename, ext = os.path.splitext(filename)
+    qtutils.copy_path(basename, absolute=False)
 
 
 def copy_leading_path():
