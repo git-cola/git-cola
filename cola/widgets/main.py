@@ -850,12 +850,14 @@ def build_edit_menu(editor, menu):
     focus = editor.focusWidget()
     if focus is not editor.description:
         focus = editor.summary
-    # addActions() does not take ownership, so we have to hold onto a global
-    # reference to prevent edit_menu's destructor from running, deleting its
-    # actions, and removing them from the menu.
-    editor.current_edit_menu = edit_menu = focus.build_menu()
+
     menu.clear()
-    menu.addActions(edit_menu.actions())
+    edit_menu = focus.build_menu()
+    for action in edit_menu.actions():
+        # setParent() must be called so that ownership is taken.
+        # Not doing so triggers destruction, and removal of actions from the menu.
+        action.setParent(menu)
+        menu.addAction(action)
 
 
 def show_dock(dockwidget):
