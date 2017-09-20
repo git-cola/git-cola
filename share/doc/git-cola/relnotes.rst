@@ -84,6 +84,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/436
 
+* The "Status" widget now supports custom "Copy ... to Clipboard" actions.
+
+  https://github.com/git-cola/git-cola/issues/437
+
 * The main menu now has an "Edit" menu.
 
   https://github.com/git-cola/git-cola/issues/725
