@@ -77,9 +77,16 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/530
 
-* The "Status" widget now has a "Copy Leading Path to Clipboard" action.
+* The "Status" widget now has "Copy Leading Path to Clipboard" and
+  "Copy Basename to Clipboard" actions.
+
+  https://github.com/git-cola/git-cola/issues/435
 
   https://github.com/git-cola/git-cola/issues/436
+
+* The "Status" widget now supports custom "Copy ... to Clipboard" actions.
+
+  https://github.com/git-cola/git-cola/issues/437
 
 * The main menu now has an "Edit" menu.
 

@@ -12,15 +12,18 @@ from ..models import main
 from ..models import prefs
 from ..models import selection
 from ..widgets import gitignore
+from ..widgets import standard
 from .. import cmds
 from .. import core
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import settings
 from .. import utils
 from . import common
 from . import completion
 from . import defs
+from . import text
 
 
 class StatusWidget(QtWidgets.QWidget):
@@ -169,24 +172,30 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
 
         self.copy_path_action = qtutils.add_action(
-            self, N_('Copy Path to Clipboard'), self.copy_path, hotkeys.COPY)
+            self, N_('Copy Path to Clipboard'), copy_path, hotkeys.COPY)
         self.copy_path_action.setIcon(icons.copy())
 
         self.copy_relpath_action = qtutils.add_action(
             self, N_('Copy Relative Path to Clipboard'),
-            self.copy_relpath, hotkeys.CUT)
+            copy_relpath, hotkeys.CUT)
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_action = qtutils.add_action(
-            self, N_('Copy Leading Path to Clipboard'),
-            self.copy_leading_path)
+            self, N_('Copy Leading Path to Clipboard'), copy_leading_path)
         self.copy_leading_path_action.setIcon(icons.copy())
 
+        self.copy_basename_action = qtutils.add_action(
+            self, N_('Copy Basename to Clipboard'), copy_basename)
+        self.copy_basename_action.setIcon(icons.copy())
+
+        self.copy_customize_action = qtutils.add_action(
+                self, N_('Customize...'), lambda: customize_copy_actions(self))
+
         self.view_history_action = qtutils.add_action(
-            self, N_('View History...'), self.view_history, hotkeys.HISTORY)
+            self, N_('View History...'), view_history, hotkeys.HISTORY)
 
         self.view_blame_action = qtutils.add_action(
-            self, N_('Blame...'), self.view_blame, hotkeys.BLAME)
+            self, N_('Blame...'), view_blame, hotkeys.BLAME)
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
@@ -516,17 +525,35 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(self.parent_dir_action)
             menu.addAction(self.terminal_action)
 
+        self._add_copy_actions(menu)
         return menu
 
     def _add_copy_actions(self, menu):
+        """Add the "Copy" sub-menu"""
         copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
         copy_menu.addAction(self.copy_leading_path_action)
+        copy_menu.addAction(self.copy_basename_action)
+
+        current_settings = settings.Settings()
+        current_settings.load()
+
+        copy_formats = current_settings.copy_formats
+        if copy_formats:
+            copy_menu.addSeparator()
+
+        for entry in copy_formats:
+            name = entry.get('name', '')
+            fmt = entry.get('format', '')
+            if name and fmt:
+                copy_menu.addAction(name, lambda fmt=fmt: copy_format(fmt))
+
+        copy_menu.addSeparator()
+        copy_menu.addAction(self.copy_customize_action)
 
         menu.addSeparator()
         menu.addMenu(copy_menu)
-        menu.addSeparator()
 
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
@@ -569,8 +596,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if self.m.undoable():
             menu.addAction(self.revert_unstaged_edits_action)
 
-        self._add_copy_actions(menu)
-
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -584,7 +609,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Unstage, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
@@ -595,7 +619,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -633,7 +656,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                             N_('Add to .gitignore'),
                             gitignore.gitignore_view)
 
-        self._add_copy_actions(menu)
         if not selection.selection_model().is_empty():
             menu.addAction(self.view_history_action)
             menu.addAction(self.view_blame_action)
@@ -649,7 +671,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        self._add_copy_actions(menu)
         menu.addAction(self.view_history_action)
         return menu
 
@@ -877,21 +898,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         else:
             self.select_by_index(0)
 
-    def copy_path(self, absolute=True):
-        """Copy a selected path to the clipboard"""
-        filename = selection.selection_model().filename()
-        qtutils.copy_path(filename, absolute=absolute)
-
-    def copy_relpath(self):
-        """Copy a selected relative path to the clipboard"""
-        self.copy_path(absolute=False)
-
-    def copy_leading_path(self):
-        """Copy the selected leading path to the clipboard"""
-        filename = selection.selection_model().filename()
-        dirname = os.path.dirname(filename)
-        qtutils.copy_path(dirname, absolute=False)
-
     def _item_filter(self, item):
         return not item.deleted and core.exists(item.path)
 
@@ -903,14 +909,67 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def mimeTypes(self):
         return qtutils.path_mimetypes()
 
-    def view_blame(self):
-        """Signal that we should view blame for paths."""
-        cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
 
-    def view_history(self):
-        """Signal that we should view history for paths."""
-        cmds.do(cmds.VisualizePaths,
-                selection.union(selection.selection_model()))
+def view_blame():
+    """Signal that we should view blame for paths."""
+    cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
+
+
+def view_history():
+    """Signal that we should view history for paths."""
+    cmds.do(cmds.VisualizePaths,
+            selection.union(selection.selection_model()))
+
+
+def copy_path(absolute=True):
+    """Copy a selected path to the clipboard"""
+    filename = selection.selection_model().filename()
+    qtutils.copy_path(filename, absolute=absolute)
+
+
+def copy_relpath():
+    """Copy a selected relative path to the clipboard"""
+    copy_path(absolute=False)
+
+
+def copy_basename():
+    filename = os.path.basename(selection.selection_model().filename())
+    basename, ext = os.path.splitext(filename)
+    qtutils.copy_path(basename, absolute=False)
+
+
+def copy_leading_path():
+    """Copy the selected leading path to the clipboard"""
+    filename = selection.selection_model().filename()
+    dirname = os.path.dirname(filename)
+    qtutils.copy_path(dirname, absolute=False)
+
+
+def copy_format(fmt):
+    values = {}
+    values['path'] = path = selection.selection_model().filename()
+    values['abspath'] = abspath = os.path.abspath(path)
+    values['absdirname'] = os.path.dirname(abspath)
+    values['dirname'] = os.path.dirname(path)
+    values['filename'] = os.path.basename(path)
+    values['basename'], values['ext'] = os.path.splitext(os.path.basename(path))
+    qtutils.set_clipboard(fmt % values)
+
+
+def show_help():
+    help_text = N_(r"""
+        Format String Variables
+        -----------------------
+          %(path)s  =  relative filename path
+       %(abspath)s  =  absolute filename path
+       %(dirname)s  =  relative directory path
+    %(absdirname)s  =  absolute directory path
+      %(filename)s  =  file basename
+      %(basename)s  =  file basename without extension
+           %(ext)s  =  file extension
+""")
+    title = N_('Help - Custom Copy Actions')
+    return text.text_dialog(help_text, title)
 
 
 class StatusFilterWidget(QtWidgets.QWidget):
@@ -941,3 +1000,125 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self._filter = text
         paths = utils.shell_split(text)
         self.main_model.update_path_filter(paths)
+
+
+def customize_copy_actions(parent):
+    """Customize copy actions"""
+    dialog = CustomizeCopyActions(parent)
+    dialog.show()
+    dialog.raise_()
+    dialog.exec_()
+
+
+class CustomizeCopyActions(standard.Dialog):
+
+    def __init__(self, parent):
+        standard.Dialog.__init__(self, parent=parent)
+        self.setWindowTitle(N_('Custom Copy Actions'))
+
+        self.table = QtWidgets.QTableWidget(self)
+        self.table.setColumnCount(2)
+        self.table.setHorizontalHeaderLabels([
+            N_('Action Name'),
+            N_('Format String'),
+        ])
+        self.table.setSortingEnabled(False)
+        self.table.verticalHeader().hide()
+        self.table.horizontalHeader().setStretchLastSection(True)
+
+        self.add_button = qtutils.create_button(N_('Add'))
+        self.remove_button = qtutils.create_button(N_('Remove'))
+        self.remove_button.setEnabled(False)
+        self.show_help_button = qtutils.create_button(N_('Show Help'))
+        self.show_help_button.setShortcut(hotkeys.QUESTION)
+
+        self.close_button = qtutils.close_button()
+        self.save_button = qtutils.ok_button(N_('Save'))
+
+        self.buttons = qtutils.hbox(defs.no_margin, defs.button_spacing,
+                                    self.add_button,
+                                    self.remove_button,
+                                    self.show_help_button,
+                                    qtutils.STRETCH,
+                                    self.close_button,
+                                    self.save_button)
+
+        layout = qtutils.vbox(defs.margin, defs.spacing,
+                              self.table, self.buttons)
+        self.setLayout(layout)
+
+        qtutils.connect_button(self.add_button, self.add)
+        qtutils.connect_button(self.remove_button, self.remove)
+        qtutils.connect_button(self.show_help_button, show_help)
+        qtutils.connect_button(self.close_button, self.reject)
+        qtutils.connect_button(self.save_button, self.save)
+        qtutils.add_close_action(self)
+        self.table.itemSelectionChanged.connect(self.table_selection_changed)
+
+        self.init_size(parent=parent)
+
+        self.settings = settings.Settings()
+        QtCore.QTimer.singleShot(0, self.reload_settings)
+
+    def reload_settings(self):
+        # Called once after the GUI is initialized
+        self.settings.load()
+        table = self.table
+        for entry in self.settings.copy_formats:
+            name_string = entry.get('name', '')
+            format_string = entry.get('format', '')
+            if name_string and format_string:
+                name = QtWidgets.QTableWidgetItem(name_string)
+                fmt = QtWidgets.QTableWidgetItem(format_string)
+                rows = table.rowCount()
+                table.setRowCount(rows + 1)
+                table.setItem(rows, 0, name)
+                table.setItem(rows, 1, fmt)
+
+    def add(self):
+        self.table.setFocus(True)
+        rows = self.table.rowCount()
+        self.table.setRowCount(rows + 1)
+
+        name = QtWidgets.QTableWidgetItem(N_('Name'))
+        fmt = QtWidgets.QTableWidgetItem(N_(r'%(path)s'))
+        self.table.setItem(rows, 0, name)
+        self.table.setItem(rows, 1, fmt)
+
+        self.table.setCurrentCell(rows, 0)
+        self.table.editItem(name)
+
+    def remove(self):
+        """Remove selected items"""
+        # Gather a unique set of rows and remove them in reverse order
+        rows = set()
+        items = self.table.selectedItems()
+        for item in items:
+            rows.add(self.table.row(item))
+
+        for row in reversed(sorted(rows)):
+            self.table.removeRow(row)
+
+    def save(self):
+        copy_formats = []
+        for row in range(self.table.rowCount()):
+            name = self.table.item(row, 0)
+            fmt = self.table.item(row, 1)
+            if name and fmt:
+                entry = {
+                    'name': name.text(),
+                    'format': fmt.text(),
+                }
+                copy_formats.append(entry)
+
+        while self.settings.copy_formats:
+            self.settings.copy_formats.pop()
+
+        self.settings.copy_formats.extend(copy_formats)
+        self.settings.save()
+
+        self.accept()
+
+    def table_selection_changed(self):
+        items = self.table.selectedItems()
+        self.remove_button.setEnabled(bool(items))
