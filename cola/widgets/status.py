@@ -1087,6 +1087,16 @@ class CustomizeCopyActions(standard.Dialog):
                 table.setItem(rows, 0, name)
                 table.setItem(rows, 1, fmt)
 
+    def export_state(self):
+        state = super(CustomizeCopyActions, self).export_state()
+        standard.export_header_columns(self.table, state)
+        return state
+
+    def apply_state(self, state):
+        result = super(CustomizeCopyActions, self).apply_state(state)
+        standard.apply_header_columns(self.table, state) and result
+        return result
+
     def add(self):
         self.table.setFocus(True)
         rows = self.table.rowCount()

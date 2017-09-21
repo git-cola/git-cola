@@ -9,7 +9,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QDockWidget
 
-from ..settings import Settings
+from ..settings import Settings, mklist
 from .. import core
 from .. import gitcfg
 from .. import qtcompat
@@ -672,3 +672,26 @@ class SpinBox(QtWidgets.QSpinBox):
         self.setMaximum(99999)
         self.setPrefix('')
         self.setSuffix('')
+
+
+def export_header_columns(widget, state):
+    """Save QHeaderView column sizes"""
+    columns = []
+    header = widget.horizontalHeader()
+    for idx in range(header.count()):
+        columns.append(header.sectionSize(idx))
+
+    state['columns'] = columns
+
+
+def apply_header_columns(widget, state):
+    """Apply QHeaderView column sizes"""
+    columns = mklist(state.get('columns', []))
+    header = widget.horizontalHeader()
+    if header.stretchLastSection():
+        # Setting the size will make the section wider than necessary, which
+        # defeats the purpose of the stretch flag.  Skip the last column when
+        # it's stretchy so that it retains the stretchy behavior.
+        columns = columns[:-1]
+    for idx, size in enumerate(columns):
+        header.resizeSection(idx, size)
