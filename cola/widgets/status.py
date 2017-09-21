@@ -531,6 +531,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _add_copy_actions(self, menu):
         """Add the "Copy" sub-menu"""
+        enabled = selection.selection_model().filename() is not None
+        self.copy_path_action.setEnabled(enabled)
+        self.copy_relpath_action.setEnabled(enabled)
+        self.copy_leading_path_action.setEnabled(enabled)
+        self.copy_basename_action.setEnabled(enabled)
         copy_icon = icons.copy()
 
         menu.addSeparator()
@@ -556,6 +561,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if name and fmt:
                 action = copy_menu.addAction(name, lambda fmt=fmt: copy_format(fmt))
                 action.setIcon(copy_icon)
+                action.setEnabled(enabled)
 
         copy_menu.addSeparator()
         copy_menu.addAction(self.copy_customize_action)
