@@ -190,6 +190,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.copy_customize_action = qtutils.add_action(
                 self, N_('Customize...'), lambda: customize_copy_actions(self))
+        self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
             self, N_('View History...'), view_history, hotkeys.HISTORY)
@@ -530,7 +531,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _add_copy_actions(self, menu):
         """Add the "Copy" sub-menu"""
+        copy_icon = icons.copy()
+
+        menu.addSeparator()
         copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
+        menu.addMenu(copy_menu)
+
+        copy_menu.setIcon(copy_icon)
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
         copy_menu.addAction(self.copy_leading_path_action)
@@ -547,13 +554,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             name = entry.get('name', '')
             fmt = entry.get('format', '')
             if name and fmt:
-                copy_menu.addAction(name, lambda fmt=fmt: copy_format(fmt))
+                action = copy_menu.addAction(name, lambda fmt=fmt: copy_format(fmt))
+                action.setIcon(copy_icon)
 
         copy_menu.addSeparator()
         copy_menu.addAction(self.copy_customize_action)
 
-        menu.addSeparator()
-        menu.addMenu(copy_menu)
 
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
