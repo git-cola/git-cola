@@ -35,7 +35,7 @@ class StatusWidget(QtWidgets.QWidget):
 
     """
 
-    def __init__(self, titlebar, parent=None):
+    def __init__(self, titlebar, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the paths filter')
