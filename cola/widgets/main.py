@@ -391,6 +391,9 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quit_action)
 
         # Edit Menu
+        # Instead of defining a different global edit menu, reuse the context
+        # menus from the commit message editor, so that undo/redo affects the
+        # commit message.
         self.edit_menu = add_menu(N_('Edit'), self.menubar)
         self.edit_menu.aboutToShow.connect(
                 lambda: build_edit_menu(self.commitmsgeditor, self.edit_menu))
