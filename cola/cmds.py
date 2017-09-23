@@ -318,11 +318,15 @@ class Checkout(Command):
 
     def do(self):
         status, out, err = self.model.git.checkout(*self.argv)
-        Interaction.log_status(status, out, err)
         if self.checkout_branch:
             self.model.update_status()
         else:
             self.model.update_file_status()
+
+        Interaction.log_status(status, out, err)
+        if status != 0:
+            cmd = 'git checkout'
+            Interaction.command_error(N_('Error'), cmd, status, out, err)
 
 
 class BlamePaths(Command):
