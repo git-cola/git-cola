@@ -693,22 +693,22 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
-        st = None
-        um = None
-        m = None
-        ut = None
+        staged = None
+        unmerged = None
+        modified = None
+        untracked = None
 
         s = self.selection()
         if s.staged:
-            st = s.staged[0]
+            staged = s.staged[0]
         elif s.modified:
-            m = s.modified[0]
+            modified = s.modified[0]
         elif s.unmerged:
-            um = s.unmerged[0]
+            unmerged = s.unmerged[0]
         elif s.untracked:
-            ut = s.untracked[0]
+            untracked = s.untracked[0]
 
-        return selection.State(st, um, m, ut)
+        return selection.State(staged, unmerged, modified, untracked)
 
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""
