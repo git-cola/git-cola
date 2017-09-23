@@ -35,7 +35,7 @@ class StatusWidget(QtWidgets.QWidget):
 
     """
 
-    def __init__(self, titlebar, parent=None):
+    def __init__(self, titlebar, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the paths filter')
@@ -503,8 +503,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         """Set up the status menu for the repo status tree."""
         s = self.selection()
         menu = qtutils.create_menu('Status', self)
-        menu.addAction(self.launch_editor_action)
-
         selected_indexes = self.selected_indexes()
         if selected_indexes:
             category, idx = selected_indexes[0]
@@ -514,7 +512,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         if s.staged:
             self._create_staged_context_menu(menu, s)
-
         elif s.unmerged:
             self._create_unmerged_context_menu(menu, s)
         else:
@@ -527,6 +524,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(self.terminal_action)
 
         self._add_copy_actions(menu)
+
         return menu
 
     def _add_copy_actions(self, menu):
@@ -598,6 +596,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Unstage, self.staged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
+        menu.addAction(self.launch_editor_action)
+
         # Do all of the selected items exist?
         all_exist = all(i not in self.m.staged_deleted and core.exists(i)
                         for i in self.staged())
@@ -631,6 +631,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                 cmds.run(cmds.Stage, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
+        menu.addAction(self.launch_editor_action)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
         return menu
@@ -645,6 +646,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             action = menu.addAction(icons.add(), N_('Stage Selected'),
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
+
+        menu.addAction(self.launch_editor_action)
 
         # Do all of the selected items exist?
         all_exist = all(i not in self.m.unstaged_deleted and core.exists(i)
@@ -664,9 +667,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
-            menu.addAction(icons.edit(),
-                            N_('Add to .gitignore'),
-                            gitignore.gitignore_view)
+            menu.addAction(icons.edit(), N_('Add to .gitignore'),
+                           gitignore.gitignore_view)
 
         if not selection.selection_model().is_empty():
             menu.addAction(self.view_history_action)
@@ -694,22 +696,22 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
-        st = None
-        um = None
-        m = None
-        ut = None
+        staged = None
+        unmerged = None
+        modified = None
+        untracked = None
 
         s = self.selection()
         if s.staged:
-            st = s.staged[0]
+            staged = s.staged[0]
         elif s.modified:
-            m = s.modified[0]
+            modified = s.modified[0]
         elif s.unmerged:
-            um = s.unmerged[0]
+            unmerged = s.unmerged[0]
         elif s.untracked:
-            ut = s.untracked[0]
+            untracked = s.untracked[0]
 
-        return selection.State(st, um, m, ut)
+        return selection.State(staged, unmerged, modified, untracked)
 
     def selected_indexes(self):
         """Returns a list of (category, row) representing the tree selection."""

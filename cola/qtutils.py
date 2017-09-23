@@ -807,7 +807,7 @@ class DockTitleBarWidget(QtWidgets.QWidget):
         self.toggle_button.setToolTip(tooltip)
 
 
-def create_dock(title, parent, stretch=True):
+def create_dock(title, parent, stretch=True, widget=None, fn=None):
     """Create a dock widget and set it up accordingly."""
     dock = QtWidgets.QDockWidget(parent)
     dock.setWindowTitle(title)
@@ -817,6 +817,10 @@ def create_dock(title, parent, stretch=True):
     dock.setAutoFillBackground(True)
     if hasattr(parent, 'dockwidgets'):
         parent.dockwidgets.append(dock)
+    if fn:
+        widget = fn(dock)
+    if widget:
+        dock.setWidget(widget)
     return dock
 
 
