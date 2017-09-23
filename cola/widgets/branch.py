@@ -521,6 +521,7 @@ class BranchesTreeHelper(object):
 
 
 class GitHelper(object):
+
     def __init__(self, git):
         self.git = git
 
@@ -551,17 +552,8 @@ class GitHelper(object):
     @staticmethod
     def show_result(command, status, out, err):
         Interaction.log_status(status, out, err)
-
         if status != 0:
-            title = (N_('"%(command)s" returned exit status %(status)d') %
-                     dict(command=command, status=status))
-            details = title
-            msg = out
-            if msg:
-                msg += '\n'
-            if err:
-                msg += err
-            qtutils.critical(title, msg, details)
+            Interaction.command_error(N_('Error'), command, status, out, err)
 
 
 class BranchesFilterWidget(QtWidgets.QWidget):

@@ -150,6 +150,9 @@ class ViewerMixin(object):
     def reset_worktree(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
 
+    def checkout_detached(self):
+        self.with_oid(lambda oid: cmds.do(cmds.Checkout, [oid]))
+
     def save_blob_dialog(self):
         self.with_oid(lambda oid: browse.BrowseBranch.browse(oid))
 
@@ -176,6 +179,7 @@ class ViewerMixin(object):
         self.menu_actions['diff_commit'].setEnabled(has_single_selection)
         self.menu_actions['diff_commit_all'].setEnabled(has_single_selection)
 
+        self.menu_actions['checkout_detached'].setEnabled(has_single_selection)
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
         self.menu_actions['copy'].setEnabled(has_single_selection)
         self.menu_actions['create_branch'].setEnabled(has_single_selection)
@@ -204,6 +208,7 @@ class ViewerMixin(object):
         reset_menu = menu.addMenu(N_('Reset'))
         reset_menu.addAction(self.menu_actions['reset_branch_head'])
         reset_menu.addAction(self.menu_actions['reset_worktree'])
+        menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
         menu.addAction(self.menu_actions['copy'])
@@ -239,6 +244,9 @@ def viewer_actions(widget):
         'diff_commit_all':
         qtutils.add_action(widget, N_('Launch Directory Diff Tool'),
                            widget.proxy.show_dir_diff, hotkeys.DIFF_SECONDARY),
+        'checkout_detached':
+        qtutils.add_action(widget, N_('Checkout Detached HEAD'),
+                           widget.proxy.checkout_detached),
         'reset_branch_head':
         qtutils.add_action(widget, N_('Reset Branch Head'),
                            widget.proxy.reset_branch_head),

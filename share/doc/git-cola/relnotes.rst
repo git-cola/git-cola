@@ -92,6 +92,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/725
 
+* `git dag` learned to checkout commits into a detached HEAD state.
+
+  https://github.com/git-cola/git-cola/issues/698
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
