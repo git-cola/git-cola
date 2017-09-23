@@ -455,17 +455,15 @@ class MainView(standard.MainWindow):
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
-        self.view_menu.addAction(self.browse_action)
-        self.view_menu.addAction(self.dag_action)
-        self.view_menu.addSeparator()
+        self.view_menu.aboutToShow.connect(
+            lambda: self.build_view_menu(self.view_menu))
+
         if self.browser_dockable:
             self.view_menu.addAction(self.browserdock.toggleViewAction())
 
         self.setup_dockwidget_view_menu()
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.lock_layout_action)
-        self.view_menu.addSeparator()
-        self.view_menu.addAction(N_('Add Toolbar'), self.add_toolbar)
 
         # Help Menu
         self.help_menu = add_menu(N_('Help'), self.menubar)
@@ -545,9 +543,29 @@ class MainView(standard.MainWindow):
         self.model.save_commitmsg(msg=commit_msg)
         standard.MainWindow.closeEvent(self, event)
 
+    def create_view_menu(self):
+        menu = qtutils.create_menu(N_('View'), self)
+        self.build_view_menu(menu)
+        return menu
+
+    def build_view_menu(self, menu):
+        menu.clear()
+        menu.addAction(self.browse_action)
+        menu.addAction(self.dag_action)
+        menu.addSeparator()
+
+        popup_menu = self.createPopupMenu()
+        for action in popup_menu.actions():
+            menu.addAction(action)
+            action.setParent(menu)
+
+        menu.addSeparator()
+        action = menu.addAction(N_('Add Toolbar'), self.add_toolbar)
+        action.setIcon(icons.add())
+        return menu
+
     def contextMenuEvent(self, event):
-        menu = self.createPopupMenu()
-        menu.addAction(N_('Add Toolbar'), self.add_toolbar)
+        menu = self.create_view_menu()
         menu.exec_(event.globalPos())
 
     def add_toolbar(self):
