@@ -577,13 +577,8 @@ class RemoteActionDialog(standard.Dialog):
         self.buttons.setEnabled(True)
 
         command = 'git %s' % self.action.lower()
-        message = (N_('"%(command)s" returned exit status %(status)d') %
-                   dict(command=command, status=status))
-        details = ''
-        if out:
-            details = out
-        if err:
-            details += '\n\n' + err
+        message = Interaction.format_command_status(command, status)
+        details = Interaction.format_out_err(out, err)
 
         log_message = message
         if details:

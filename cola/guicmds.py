@@ -95,13 +95,7 @@ def new_repo():
         return path
     else:
         title = N_('Error Creating Repository')
-        msg = (N_('"%(command)s" returned exit status %(status)d') %
-               dict(command='git init %s' % path, status=status))
-        details = N_('Output:\n%s') % out
-        if err:
-            details += '\n\n'
-            details += N_('Errors: %s') % err
-        qtutils.critical(title, msg, details)
+        Interaction.command_error(title, 'git init', status, out, err)
         return None
 
 
