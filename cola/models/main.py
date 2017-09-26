@@ -468,7 +468,7 @@ class MainModel(Observable):
         remove = []
 
         for path in set(paths):
-            if core.exists(path):
+            if core.exists(path) or core.islink(path):
                 if path.endswith('/'):
                     path = path.rstrip('/')
                 add.append(path)

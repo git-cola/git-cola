@@ -20,7 +20,7 @@ from .. import qtutils
 from .text import LineEdit
 
 
-SEPARATOR_CHAR = '/'
+SLASH = '/'
 NAME_LOCAL_BRANCH = N_('Local')
 NAME_REMOTE_BRANCH = N_('Remote')
 NAME_TAGS_BRANCH = N_('Tags')
@@ -108,13 +108,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         # Expand items when they are clicked
         self.clicked.connect(self._toggle_expanded)
 
-    # TODO: review standard.py 317.
-    # Original function returns 'QAbstractItemModel' object which has no
-    # attribute 'itemFromIndex'. This workaround fix error throw when
-    # navigating with keyboard and press left key
-    def model(self):
-        return self
-
     def refresh(self):
         if not self._active:
             return
@@ -124,13 +117,12 @@ class BranchesTreeWidget(standard.TreeWidget):
         states = self.save_tree_state()
 
         local_dict = self.tree_helper.group_branches(
-            model.local_branches, SEPARATOR_CHAR)
+            model.local_branches, SLASH)
 
         remote_dict = self.tree_helper.group_branches(
-            model.remote_branches, SEPARATOR_CHAR)
+            model.remote_branches, SLASH)
 
-        tags_dict = self.tree_helper.group_branches(
-            model.tags, SEPARATOR_CHAR)
+        tags_dict = self.tree_helper.group_branches(model.tags, SLASH)
 
         ellipsis = icons.ellipsis()
         local = self.tree_helper.create_top_level_item(
@@ -166,7 +158,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         root = self.tree_helper.get_root(selected)
 
         if selected.childCount() == 0 and root is not None:
-            full_name = self.tree_helper.get_full_name(selected, SEPARATOR_CHAR)
+            full_name = self.tree_helper.get_full_name(selected, SLASH)
             menu = qtutils.create_menu(N_('Actions'), self)
 
             # all branches except current item
@@ -229,7 +221,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def save_tree_state(self):
         states = {}
-
         for item in self.items():
             states.update(self.tree_helper.save_state(item))
 
@@ -243,7 +234,6 @@ class BranchesTreeWidget(standard.TreeWidget):
     def update_select_branch(self):
         item = self.tree_helper.find_child(self.topLevelItem(0),
                                            self.current_branch)
-
         if item is not None:
             self.tree_helper.expand_from_item(item)
             item.setIcon(0, icons.star())
@@ -275,35 +265,28 @@ class BranchesTreeWidget(standard.TreeWidget):
                          update_remotes=False):
         if kwarg is None:
             kwarg = {}
-
         task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg,
                                   refresh_tree, update_remotes)
         progress = standard.ProgressDialog(N_('Executing action %s') % action,
                                            N_('Updating'), self)
-
         self.runtask.start(task, progress=progress,
                            finish=self.git_action_completed)
 
     def git_action_completed(self, task):
         status, out, err = task.result
         self.git_helper.show_result(task.action, status, out, err)
-
         if task.refresh_tree:
             self.refresh()
-
         if task.update_remotes:
             model = main.model()
             model.update_remotes()
 
     def push_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         remote_branch = gitcmds.tracked_branch(branch)
-
         if remote_branch is not None:
             rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
             match = rgx.match(remote_branch)
-
             if match:
                 remote = match.group('remote')
                 branch_name = match.group('branch')
@@ -312,8 +295,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.git_action_async('push', [remote, branch_name])
 
     def rename_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         new_branch = qtutils.prompt(N_('Rename branch'),
                                     N_('Enter New Branch Name'),
                                     branch)
@@ -322,8 +304,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                                   refresh_tree=True)
 
     def pull_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         remote_branch = gitcmds.tracked_branch(branch)
 
         if remote_branch is not None:
@@ -342,8 +323,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         info = N_('The branch will be no longer available.')
         ok_btn = N_('Delete Branch')
 
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
 
         if branch != self.current_branch and qtutils.confirm(title, question,
                                                              info, ok_btn):
@@ -365,24 +345,18 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.git_action_async('delete_local', [branch])
 
     def merge_action(self):
-        branch = self.tree_helper.get_full_name(
-            self.selected_item(),
-            SEPARATOR_CHAR)
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
 
         if branch != self.current_branch:
             self.git_action_async('merge', [branch], refresh_tree=True)
 
     def checkout_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
-
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         if branch != self.current_branch:
             self.git_action_async('checkout', [branch])
 
     def checkout_new_branch_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(),
-                                                SEPARATOR_CHAR)
-
+        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         if branch != self.current_branch:
             new_branch = re.sub(r'^(?P<remote>[^/]+)/', '', branch)
             self.git_action_async('checkout', [branch], {'b': new_branch})
@@ -486,7 +460,7 @@ class BranchesTreeHelper(object):
 
         for i in range(top_level_item.childCount()):
             child = top_level_item.child(i)
-            full_name = self.get_full_name(child, SEPARATOR_CHAR)
+            full_name = self.get_full_name(child, SLASH)
 
             if full_name == name:
                 result = child
@@ -578,14 +552,10 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         text = self.text.value()
         if text == self._filter:
             return
-
         self._apply_bold(self._filter, False)
         self._filter = text
-
-        if text == '':
-            return
-
-        self._apply_bold(text, True)
+        if text:
+            self._apply_bold(text, True)
 
     def _apply_bold(self, text, value):
         children = self.tree.findItems(text, Qt.MatchContains | Qt.MatchRecursive)

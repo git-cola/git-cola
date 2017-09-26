@@ -112,12 +112,37 @@ class BaseTextEditExtension(QtCore.QObject):
             blocksig = self.widget.blockSignals(True)
 
         # Save cursor position
-        cursor = self.widget.textCursor()
-        position = cursor.position()
+        offset, selection_text = self.offset_and_selection()
+        old_value = self.widget.value()
+
         # Update text
         self.widget.setPlainText(value)
+
         # Restore cursor
-        self.set_cursor_position(min(position, cursor.position()))
+        if selection_text and selection_text in value:
+            # If the old selection exists in the new text then re-select it.
+            idx = value.index(selection_text)
+            cursor = self.widget.textCursor()
+            cursor.setPosition(idx)
+            cursor.setPosition(idx + len(selection_text),
+                               QtGui.QTextCursor.KeepAnchor)
+            self.widget.setTextCursor(cursor)
+
+        elif value == old_value:
+            # Otherwise, if the text is identical and there is no selection
+            # then restore the cursor position.
+            cursor = self.widget.textCursor()
+            cursor.setPosition(offset)
+            self.widget.setTextCursor(cursor)
+        else:
+            # If none of the above applied then restore the cursor position.
+            position = max(0, min(offset, len(value) - 1))
+            cursor = self.widget.textCursor()
+            cursor.setPosition(position)
+            self.widget.setTextCursor(cursor)
+            cursor = self.widget.textCursor()
+            cursor.movePosition(QtGui.QTextCursor.StartOfLine)
+            self.widget.setTextCursor(cursor)
 
         if block:
             self.widget.blockSignals(blocksig)
@@ -151,6 +176,18 @@ class BaseTextEditExtension(QtCore.QObject):
         else:
             line = data
         return line
+
+    def cursor(self):
+        return self.widget.textCursor()
+
+    def has_selection(self):
+        return self.cursor().hasSelection()
+
+    def offset_and_selection(self):
+        cursor = self.cursor()
+        offset = cursor.selectionStart()
+        selection_text = cursor.selection().toPlainText()
+        return offset, selection_text
 
     def mouse_press_event(self, event):
         # Move the text cursor so that the right-click events operate
@@ -210,6 +247,9 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
     def set_value(self, value, block=False):
         self.ext.set_value(value, block=block)
+
+    def has_selection(self):
+        return self.ext.has_selection()
 
     def selected_line(self):
         return self.ext.selected_line()

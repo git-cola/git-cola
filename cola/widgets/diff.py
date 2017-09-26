@@ -540,45 +540,10 @@ class DiffEditor(DiffTextEdit):
         if text is None:
             return
 
-        offset, selection_text = self.offset_and_selection()
-        old_text = self.toPlainText()
-
         DiffTextEdit.setPlainText(self, text)
-
-        if selection_text and selection_text in text:
-            # If the old selection exists in the new text then re-select it.
-            idx = text.index(selection_text)
-            cursor = self.textCursor()
-            cursor.setPosition(idx)
-            cursor.setPosition(idx + len(selection_text),
-                               QtGui.QTextCursor.KeepAnchor)
-            self.setTextCursor(cursor)
-
-        elif text == old_text:
-            # Otherwise, if the text is identical and there is no selection
-            # then restore the cursor position.
-            cursor = self.textCursor()
-            cursor.setPosition(offset)
-            self.setTextCursor(cursor)
-        else:
-            # If none of the above applied then restore the cursor position.
-            position = max(0, min(offset, len(text) - 1))
-            cursor = self.textCursor()
-            cursor.setPosition(position)
-            cursor.movePosition(QtGui.QTextCursor.StartOfLine)
-            self.setTextCursor(cursor)
 
         if scrollbar and scrollvalue is not None:
             scrollbar.setValue(scrollvalue)
-
-    def has_selection(self):
-        return self.textCursor().hasSelection()
-
-    def offset_and_selection(self):
-        cursor = self.textCursor()
-        offset = cursor.selectionStart()
-        selection_text = cursor.selection().toPlainText()
-        return offset, selection_text
 
     def selected_lines(self):
         cursor = self.textCursor()
