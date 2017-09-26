@@ -49,6 +49,7 @@ Thanks
 * Geoffrey van Wyk
 * geotavros
 * `Git Hackers <http://git-scm.com/about>`_
+* green-eyed-bear
 * Glen Mailer
 * Guillaume de Bure
 * Guo Yunhe
