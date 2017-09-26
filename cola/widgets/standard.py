@@ -345,6 +345,14 @@ class TreeMixin(object):
 
         return result
 
+    def item_from_index(self, item):
+        """Return a QModelIndex from the provided item"""
+        if hasattr(self, 'itemFromIndex'):
+            index = self.itemFromIndex(item)
+        else:
+            index = self.model().itemFromIndex()
+        return index
+
     def items(self):
         root = self.widget.invisibleRootItem()
         child = root.child
@@ -357,7 +365,10 @@ class TreeMixin(object):
         if hasattr(widget, 'selectedItems'):
             return widget.selectedItems()
         else:
-            item_from_index = widget.model().itemFromIndex
+            if hasattr(widget, 'itemFromIndex'):
+                item_from_index = widget.itemFromIndex
+            else:
+                item_from_index = widget.model().itemFromIndex
             return [item_from_index(i) for i in widget.selectedIndexes()]
 
     def selected_item(self):

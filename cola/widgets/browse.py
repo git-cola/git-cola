@@ -203,7 +203,7 @@ class RepoTreeView(standard.TreeView):
     def index_expanded(self, index):
         """Update information about a directory as it is expanded."""
         # Remember open folders so that we can restore them when refreshing
-        item = self.item_from_index(index)
+        item = self.name_item_from_index(index)
         self.saved_open_folders.add(item.path)
         self.size_columns()
 
@@ -223,7 +223,7 @@ class RepoTreeView(standard.TreeView):
         item.cached = True
 
     def index_collapsed(self, index):
-        item = self.item_from_index(index)
+        item = self.name_item_from_index(index)
         self.saved_open_folders.remove(item.path)
 
     def refresh(self):
@@ -430,7 +430,7 @@ class RepoTreeView(standard.TreeView):
         self.setModel(model)
         model.restore.connect(self.restore, type=Qt.QueuedConnection)
 
-    def item_from_index(self, model_index):
+    def name_item_from_index(self, model_index):
         """Return the name item corresponding to the model index."""
         index = model_index.sibling(model_index.row(), 0)
         return self.model().itemFromIndex(index)
@@ -506,7 +506,7 @@ class RepoTreeView(standard.TreeView):
         index = self.currentIndex()
         if not index.isValid():
             return None
-        return self.item_from_index(index).path
+        return self.name_item_from_index(index).path
 
 
 class BrowseModel(object):

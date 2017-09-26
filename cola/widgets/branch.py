@@ -108,13 +108,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         # Expand items when they are clicked
         self.clicked.connect(self._toggle_expanded)
 
-    # TODO: review standard.py 317.
-    # Original function returns 'QAbstractItemModel' object which has no
-    # attribute 'itemFromIndex'. This workaround fix error throw when
-    # navigating with keyboard and press left key
-    def model(self):
-        return self
-
     def refresh(self):
         if not self._active:
             return
