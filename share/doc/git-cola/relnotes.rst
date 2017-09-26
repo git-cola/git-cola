@@ -146,6 +146,10 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/721
 
+* `git cola` learned to stage broken symlinks.
+
+  https://github.com/git-cola/git-cola/issues/727
+
 .. _v2.11:
 
 git-cola v2.11
