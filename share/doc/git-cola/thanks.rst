@@ -68,6 +68,7 @@ Thanks
 * Javier Rodriguez Cuevas
 * Jeff Dagenais
 * Jérôme Carretero
+* jfessard
 * JiCiT
 * Johann Schmitz
 * Jordan Bedwell
