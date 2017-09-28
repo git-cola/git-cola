@@ -459,8 +459,12 @@ class HintWidget(QtCore.QObject):
             }
         """ % env
 
-        if not modern:
-            widget.installEventFilter(self)
+    def init(self):
+        """Defer initialization to avoid circular dependencies during construction"""
+        if self.modern:
+            self.widget().setPlaceholderText(self.value())
+        else:
+            self.widget().installEventFilter(self)
             self.enable(True)
 
     def widget(self):
@@ -547,6 +551,7 @@ class HintedPlainTextEdit(PlainTextEdit):
                                get_value=get_value_hinted,
                                readonly=readonly)
         self.hint = HintWidget(self, hint)
+        self.hint.init()
         setup_mono_font(self)
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
@@ -566,6 +571,7 @@ class HintedTextEdit(TextEdit):
         TextEdit.__init__(self, parent=parent,
                           get_value=get_value_hinted, readonly=readonly)
         self.hint = HintWidget(self, hint)
+        self.hint.init()
         setup_mono_font(self)
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
@@ -727,6 +733,7 @@ class HintedLineEdit(LineEdit):
     def __init__(self, hint, parent=None):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
+        self.hint.init()
         self.setFont(qtutils.diff_font())
         self.textChanged.connect(lambda text: self.hint.refresh())
 
