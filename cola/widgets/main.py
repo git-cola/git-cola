@@ -324,16 +324,16 @@ class MainView(standard.MainWindow):
             self, N_('Start Interactive Rebase...'), self.rebase_start)
 
         self.rebase_edit_todo_action = add_action(
-            self, N_('Edit...'), self.rebase_edit_todo)
+            self, N_('Edit...'), cmds.rebase_edit_todo)
 
         self.rebase_continue_action = add_action(
-            self, N_('Continue'), self.rebase_continue)
+            self, N_('Continue'), cmds.rebase_continue)
 
         self.rebase_skip_action = add_action(
-            self, N_('Skip Current Patch'), self.rebase_skip)
+            self, N_('Skip Current Patch'), cmds.rebase_skip)
 
         self.rebase_abort_action = add_action(
-            self, N_('Abort'), self.rebase_abort)
+            self, N_('Abort'), cmds.rebase_abort)
 
         # For "Start Rebase" only, reverse the first argument to setEnabled()
         # so that we can operate on it as a group.
@@ -835,18 +835,6 @@ class MainView(standard.MainWindow):
         self.model.is_rebasing = True
         self.refresh()
         cmds.do(cmds.Rebase, upstream=upstream)
-
-    def rebase_edit_todo(self):
-        cmds.do(cmds.RebaseEditTodo)
-
-    def rebase_continue(self):
-        cmds.do(cmds.RebaseContinue)
-
-    def rebase_skip(self):
-        cmds.do(cmds.RebaseSkip)
-
-    def rebase_abort(self):
-        cmds.do(cmds.RebaseAbort)
 
     def clone_repo(self):
         progress = standard.ProgressDialog('', '', self)

@@ -274,21 +274,21 @@ COMMANDS = {
 #     },
 #     'Rebase::Edit': {
 #         'title': 'Edit...',
-#         'action': lambda: app().activeWindow().rebase_edit_todo(),
+#         'action': lambda: cmds.rebase_edit_todo(),
 #         'icon': None
 #     },
 #     'Rebase::Continue': {
 #         'title': 'Continue',
-#         'action': lambda: app().activeWindow().rebase_continue(),
+#         'action': lambda: cmds.rebase_continue(),
 #         'icon': None
 #     },
 #     'Rebase::SkipCurrentPatch': {
 #         'title': 'Skip Current Patch',
-#         'action': lambda: app().activeWindow().rebase_skip(),
+#         'action': lambda: cmds.rebase_skip(),
 #         'icon': None
 #     },
 #     'Rebase::Abort': {
 #         'title': 'Abort',
-#         'action': lambda: app().activeWindow().rebase_abort(),
+#         'action': lambda: cmds.rebase_abort(),
 #         'icon': None
 #     }

@@ -1987,3 +1987,19 @@ def difftool_launch(left=None, right=None, paths=None,
         difftool_args.extend(paths)
 
     core.fork(difftool_args)
+
+
+def rebase_edit_todo():
+    cmds.do(cmds.RebaseEditTodo)
+
+
+def rebase_continue():
+    cmds.do(cmds.RebaseContinue)
+
+
+def rebase_skip():
+    cmds.do(cmds.RebaseSkip)
+
+
+def rebase_abort():
+    cmds.do(cmds.RebaseAbort)
