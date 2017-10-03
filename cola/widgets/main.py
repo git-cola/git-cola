@@ -526,6 +526,7 @@ class MainView(standard.MainWindow):
         Interaction.log(version.git_version_str() + '\n' +
                         N_('git cola version %s') % version.version())
         # Focus the status widget; this must be deferred
+        QtCore.QTimer.singleShot(0, lambda: self.edit_menu.aboutToShow.emit())
         QtCore.QTimer.singleShot(0, lambda: self.statuswidget.setFocus())
 
     def set_initial_size(self):
