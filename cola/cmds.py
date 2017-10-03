@@ -1990,16 +1990,16 @@ def difftool_launch(left=None, right=None, paths=None,
 
 
 def rebase_edit_todo():
-    cmds.do(cmds.RebaseEditTodo)
+    do(RebaseEditTodo)
 
 
 def rebase_continue():
-    cmds.do(cmds.RebaseContinue)
+    do(RebaseContinue)
 
 
 def rebase_skip():
-    cmds.do(cmds.RebaseSkip)
+    do(RebaseSkip)
 
 
 def rebase_abort():
-    cmds.do(cmds.RebaseAbort)
+    do(RebaseAbort)
