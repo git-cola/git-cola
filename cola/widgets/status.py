@@ -771,7 +771,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 item = parent.child(idx)
                 if item is not None:
                     self.select_item(item)
-                    return
+                return
             idx -= len(content)
 
     def select_item(self, item):
