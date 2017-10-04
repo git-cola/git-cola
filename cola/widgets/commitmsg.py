@@ -213,9 +213,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.setFont(qtutils.diff_font())
         self.setFocusProxy(self.summary)
 
-        gitcfg.current().add_observer(gitcfg.current().message_user_config_changed, self.on_user_setting_changed)
+        cfg.add_observer(cfg.message_user_config_changed, self.config_changed)
 
-    def on_user_setting_changed(self, key, value):
+    def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:
             return
         if self.check_spelling_action.isChecked() == value:
@@ -514,13 +514,13 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def toggle_check_spelling(self, enabled):
         spellcheck = self.description.spellcheck
+        cfg = gitcfg.current()
 
-        if gitcfg.current().get_user(prefs.SPELL_CHECK) != enabled:
-            gitcfg.current().set_user(prefs.SPELL_CHECK, enabled)
+        if cfg.get_user(prefs.SPELL_CHECK) != enabled:
+            cfg.set_user(prefs.SPELL_CHECK, enabled)
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            cfg = gitcfg.current()
             user_name = cfg.get('user.name')
             if user_name:
                 for part in user_name.split():
