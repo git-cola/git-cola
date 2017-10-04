@@ -62,7 +62,6 @@ TERMINAL = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_T)
 STAGE_UNTRACKED = hotkey(Qt.ALT + Qt.Key_U)
 REVERT = hotkey(Qt.CTRL + Qt.Key_U)
 WORD_RIGHT = hotkey(Qt.Key_W)
-UNDO = hotkey(Qt.CTRL + Qt.Key_Z)
 
 # Numbers
 START_OF_LINE = hotkey(Qt.Key_0)
@@ -102,10 +101,14 @@ REBASE_EDIT = (hotkey(Qt.Key_3), hotkey(Qt.Key_E))
 REBASE_FIXUP = (hotkey(Qt.Key_4), hotkey(Qt.Key_F))
 REBASE_SQUASH = (hotkey(Qt.Key_5), hotkey(Qt.Key_S))
 
+UNDO = hotkey(Qt.CTRL + Qt.Key_Z)
+REDO = hotkey(Qt.SHIFT + Qt.CTRL + Qt.Key_Z)
+
 # Key Sequences
 COPY = QKeySequence.Copy
 CLOSE = QKeySequence.Close
 CUT = QKeySequence.Cut
+PASTE = QKeySequence.Paste
 DELETE = QKeySequence.Delete
 NEW = QKeySequence.New
 OPEN = QKeySequence.Open
