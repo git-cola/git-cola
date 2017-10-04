@@ -55,6 +55,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.commit_action = qtutils.add_action(self,
                                                 N_('Commit@@verb'),
                                                 self.commit, hotkeys.COMMIT)
+        self.commit_action.setIcon(icons.download())
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
