@@ -67,7 +67,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.move_down = actions.move_down(self)
 
         # Menu acctions
-        menu_actions = [
+        self.menu_actions = menu_actions = [
             None,
             self.signoff_action,
             self.commit_action,
@@ -83,10 +83,10 @@ class CommitMessageEditor(QtWidgets.QWidget):
         # Widgets
         self.summary = CommitSummaryLineEdit()
         self.summary.setMinimumHeight(defs.tool_button_height)
-        self.summary.extra_actions.extend(menu_actions)
+        self.summary.menu_actions.extend(menu_actions)
 
         self.description = CommitMessageTextEdit()
-        self.description.extra_actions.extend(menu_actions)
+        self.description.menu_actions.extend(menu_actions)
 
         commit_button_tooltip = N_('Commit staged changes\n'
                                    'Shortcut: Ctrl+Enter')
@@ -549,7 +549,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
     def __init__(self, parent=None):
         hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent=parent)
-        self.extra_actions = []
+        self.menu_actions = []
 
         comment_char = prefs.comment_char()
         re_comment_char = re.escape(comment_char)
@@ -559,7 +559,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
     def build_menu(self):
         menu = self.createStandardContextMenu()
-        add_menu_actions(menu, self.extra_actions)
+        add_menu_actions(menu, self.menu_actions)
         return menu
 
     def contextMenuEvent(self, event):
@@ -573,14 +573,14 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
     def __init__(self, parent=None):
         hint = N_('Extended description...')
         SpellCheckTextEdit.__init__(self, hint, parent)
-        self.extra_actions = []
+        self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(
                 self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE)
 
     def build_menu(self):
         menu, spell_menu = self.context_menu()
-        add_menu_actions(menu, self.extra_actions)
+        add_menu_actions(menu, self.menu_actions)
         return menu
 
     def contextMenuEvent(self, event):
@@ -640,9 +640,9 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.setMinimumSize(QtCore.QSize(1, fm.height() * 2))
 
 
-def add_menu_actions(menu, extra_actions):
+def add_menu_actions(menu, menu_actions):
     """Add actions to a menu, treating None as a separator"""
-    for action in extra_actions:
+    for action in menu_actions:
         if action is None:
             menu.addSeparator()
         else:

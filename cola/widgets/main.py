@@ -378,12 +378,20 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quit_action)
 
         # Edit Menu
-        # Instead of defining a different global edit menu, reuse the context
-        # menus from the commit message editor, so that undo/redo affects the
-        # commit message.
-        self.edit_menu = add_menu(N_('Edit'), self.menubar)
-        self.edit_menu.aboutToShow.connect(
-                lambda: build_edit_menu(self.commiteditor, self.edit_menu))
+        self.edit_proxy = edit_proxy = (
+                FocusProxy(editor, editor.summary, editor.description))
+        edit_menu = self.edit_menu = add_menu(N_('Edit'), self.menubar)
+        edit_menu.addAction(N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
+        edit_menu.addAction(N_('Redo'), edit_proxy.redo, hotkeys.REDO)
+        edit_menu.addSeparator()
+        edit_menu.addAction(N_('Cut'), edit_proxy.cut, hotkeys.CUT)
+        edit_menu.addAction(N_('Copy'), edit_proxy.copy, hotkeys.COPY)
+        edit_menu.addAction(N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
+        edit_menu.addAction(N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        edit_menu.addSeparator()
+        edit_menu.addAction(N_('Select All'), edit_proxy.selectAll)
+        edit_menu.addSeparator()
+        commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)
@@ -526,7 +534,6 @@ class MainView(standard.MainWindow):
         Interaction.log(version.git_version_str() + '\n' +
                         N_('git cola version %s') % version.version())
         # Focus the status widget; this must be deferred
-        QtCore.QTimer.singleShot(0, lambda: self.edit_menu.aboutToShow.emit())
         QtCore.QTimer.singleShot(0, lambda: self.statuswidget.setFocus())
 
     def set_initial_size(self):
@@ -844,18 +851,36 @@ class MainView(standard.MainWindow):
                            guicmds.report_clone_repo_errors, True)
 
 
-def build_edit_menu(editor, menu):
-    focus = editor.focusWidget()
-    if focus is not editor.description:
-        focus = editor.summary
 
-    menu.clear()
-    edit_menu = focus.build_menu()
-    # setParent() must be called so that ownership is taken.
-    # Not doing so triggers destruction, and removal of actions from the menu.
-    for menu_action in edit_menu.actions():
-        menu_action.setParent(menu)
-        menu.addAction(menu_action)
+class FocusProxy(object):
+    """Proxy over child widgets and operate on the focused widget"""
+
+    def __init__(self, parent, *widgets):
+        self.parent = parent
+        self.first = widgets[0]
+        self.widgets = widgets
+
+    def focus(self):
+        """Return the currently focused widget"""
+        focus = self.parent.focusWidget()
+        if focus not in self.widgets:
+            focus = self.first
+        return focus
+
+    def __getattr__(self, name):
+        """Return a callback that calls a common child method"""
+        def callback():
+            focus = self.focus()
+            getattr(focus, name)()
+        return callback
+
+    def delete(self):
+        """Specialized delete() to deal with QLineEdit vs QTextEdit"""
+        focus = self.focus()
+        if hasattr(focus, 'del_'):
+            focus.del_()
+        elif hasattr(focus, 'textCursor'):
+            focus.textCursor().deleteChar()
 
 
 def show_dock(dockwidget):
