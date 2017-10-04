@@ -556,13 +556,13 @@ class MainView(standard.MainWindow):
         menu.addSeparator()
 
         popup_menu = self.createPopupMenu()
-        for action in popup_menu.actions():
-            menu.addAction(action)
-            action.setParent(menu)
+        for menu_action in popup_menu.actions():
+            menu_action.setParent(menu)
+            menu.addAction(menu_action)
 
         menu.addSeparator()
-        action = menu.addAction(N_('Add Toolbar'), self.add_toolbar)
-        action.setIcon(icons.add())
+        menu_action = menu.addAction(N_('Add Toolbar'), self.add_toolbar)
+        menu_action.setIcon(icons.add())
         return menu
 
     def contextMenuEvent(self, event):
@@ -634,9 +634,10 @@ class MainView(standard.MainWindow):
         menu = self.actions_menu
         menu.addSeparator()
         for (name, shortcut) in names_and_shortcuts:
-            action = menu.addAction(name, cmds.run(cmds.RunConfigAction, name))
+            callback = cmds.run(cmds.RunConfigAction, name)
+            menu_action = menu.addAction(name, callback)
             if shortcut:
-                action.setShortcut(shortcut)
+                menu_action.setShortcut(shortcut)
 
     def refresh(self):
         """Update the title with the current branch and directory name."""
@@ -850,11 +851,11 @@ def build_edit_menu(editor, menu):
 
     menu.clear()
     edit_menu = focus.build_menu()
-    for action in edit_menu.actions():
-        # setParent() must be called so that ownership is taken.
-        # Not doing so triggers destruction, and removal of actions from the menu.
-        action.setParent(menu)
-        menu.addAction(action)
+    # setParent() must be called so that ownership is taken.
+    # Not doing so triggers destruction, and removal of actions from the menu.
+    for menu_action in edit_menu.actions():
+        menu_action.setParent(menu)
+        menu.addAction(menu_action)
 
 
 def show_dock(dockwidget):
