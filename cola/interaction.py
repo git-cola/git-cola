@@ -13,6 +13,13 @@ class Interaction(object):
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
     @classmethod
+    def command(cls, title, cmd, status, out, err):
+        """Log a command and display error messages on failure"""
+        cls.log_status(status, out, err)
+        if status != 0:
+            cls.command_error(title, cmd, status, out, err)
+
+    @classmethod
     def command_error(cls, title, cmd, status, out, err):
         """Display an error message for a failed command"""
         core.stderr(title)
