@@ -79,7 +79,7 @@ def add_cola_command(subparser):
 
 
 def add_about_command(parent):
-    parser = add_command(parent, 'about', 'about git-cola', cmd_about)
+    add_command(parent, 'about', 'about git-cola', cmd_about)
 
 def add_am_command(parent):
     parser = add_command(parent, 'am', 'apply patches using "git am"', cmd_am)
