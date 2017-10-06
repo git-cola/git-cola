@@ -72,16 +72,6 @@ Any of the following Python Qt libraries must be installed:
 * [PySide](https://github.com/PySide/PySide)
   1.1.0 or newer
 
-*NOTE*: We do not yet recommend using *PyQt5* because there are known
-exit-on-segfault bugs in *Qt5* that have not yet been addressed.
-*git-cola* is sensitive to this bug and is known to crash on exit
-when using `git dag` or the interactive rebase feature on *PyQt5*.
-
-[QTBUG-52988](https://bugreports.qt.io/browse/QTBUG-52988)
-
-*PyQt4* is stable and there are no known issues when using it so we recommend
-using *PyQt4* until the *Qt5* bugs have been resolved.
-
 Set `QT_API=pyqt4` in your environment if you have both
 versions of *PyQt* installed and want to ensure that PyQt4 is used.
 

@@ -24,7 +24,6 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 # Import cola modules
-from .decorators import memoize
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
@@ -237,9 +236,20 @@ class ColaApplication(object):
     def desktop(self):
         return self._app.desktop()
 
-    def exec_(self):
-        """Wrap exec_()"""
+    def start(self):
+        """Wrap exec_() and start the application"""
         return self._app.exec_()
+
+    def stop(self):
+        """Finalize the application"""
+        # Workaround QTBUG-52988 by deleting the app manually to prevent a
+        # crash during app shutdown.
+        # https://bugreports.qt.io/browse/QTBUG-52988
+        try:
+            del self._app
+        except:
+            pass
+        self._app = None
 
     def set_view(self, view):
         if hasattr(self._app, 'view'):
@@ -254,7 +264,6 @@ class ColaApplication(object):
         cmds.do(cmds.Refresh)
 
 
-@memoize
 def current(argv):
     return ColaQApplication(list(argv))
 
@@ -354,11 +363,13 @@ def application_start(context, view):
     QtCore.QTimer.singleShot(0, _send_msg)
 
     # Start the event loop
-    result = context.app.exec_()
+    result = context.app.start()
 
     # All done, cleanup
     fsmonitor.current().stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
+
+    context.app.stop()
 
     return result
 
