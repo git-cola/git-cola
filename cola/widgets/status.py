@@ -518,9 +518,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self._create_unstaged_context_menu(menu, s)
 
         if not utils.is_win32():
-            menu.addSeparator()
-            menu.addAction(self.default_app_action)
-            menu.addAction(self.parent_dir_action)
+            if not menu.isEmpty():
+                menu.addSeparator()
+            if not selection.selection_model().is_empty():
+                menu.addAction(self.default_app_action)
+                menu.addAction(self.parent_dir_action)
             menu.addAction(self.terminal_action)
 
         self._add_copy_actions(menu)
@@ -647,7 +649,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        menu.addAction(self.launch_editor_action)
+        if not selection.selection_model().is_empty():
+            menu.addAction(self.launch_editor_action)
 
         # Do all of the selected items exist?
         all_exist = all(i not in self.m.unstaged_deleted and core.exists(i)
