@@ -322,11 +322,7 @@ class Checkout(Command):
             self.model.update_status()
         else:
             self.model.update_file_status()
-
-        Interaction.log_status(status, out, err)
-        if status != 0:
-            cmd = 'git checkout'
-            Interaction.command_error(N_('Error'), cmd, status, out, err)
+        Interaction.command(N_('Error'), 'git checkout', status, out, err)
 
 
 class BlamePaths(Command):
@@ -388,7 +384,7 @@ class ResetCommand(ConfirmAction):
 
     def action(self):
         status, out, err = self.reset()
-        Interaction.log_status(status, out, err)
+        Interaction.command(N_('Error'), 'git reset', status, out, err)
         return status, out, err
 
     def success(self):
@@ -458,14 +454,12 @@ class Commit(ResetMode):
                                                      no_verify=self.no_verify)
         finally:
             core.unlink(tmp_file)
-
         if status == 0:
             ResetMode.do(self)
             self.model.set_commitmsg(self.new_commitmsg)
-            msg = N_('Created commit: %s') % out
-        else:
-            msg = N_('Commit failed: %s') % out
-        Interaction.log_status(status, msg, err)
+
+        title = N_('Commit failed')
+        Interaction.command(title, 'git commit', status, out, err)
 
         return status, out, err
 
@@ -717,19 +711,15 @@ class DeleteRemoteBranch(Command):
     def do(self):
         status, out, err = self.model.git.push(self.remote, self.branch,
                                                delete=True)
-        Interaction.log_status(status, out, err)
         self.model.update_status()
 
+        title = N_('Error Deleting Remote Branch')
+        Interaction.command(title, 'git push', status, out, err)
         if status == 0:
             Interaction.information(
                 N_('Remote Branch Deleted'),
                 N_('"%(branch)s" has been deleted from "%(remote)s".')
                 % dict(branch=self.branch, remote=self.remote))
-        else:
-            command = 'git push'
-            message = Interaction.format_command_status(command, status)
-            Interaction.critical(N_('Error Deleting Remote Branch'),
-                                 message, out + err)
 
 
 class Diff(Command):
@@ -1047,8 +1037,11 @@ class Merge(Command):
                                                 no_ff=no_ff,
                                                 no_commit=no_commit,
                                                 squash=squash)
-        Interaction.log_status(status, out, err)
         self.model.update_status()
+        title = N_('Merge failed.  Conflict resolution is required.')
+        Interaction.command(title, 'git merge', status, out, err)
+
+        return status, out, err
 
 
 class OpenDefaultApp(BaseCommand):
@@ -1239,10 +1232,9 @@ class Rebase(Command):
                 # as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
         self.model.update_status()
-        Interaction.log_status(status, out, err)
-        if status != 0:
-            title = N_('Rebase stopped')
-            Interaction.command_error(title, 'git rebase', status, out, err)
+        title = N_('Rebase stoppped')
+        Interaction.command(title, 'git rebase', status, out, err)
+
         return status, out, err
 
 
@@ -1462,12 +1454,12 @@ class RunConfigAction(Command):
         else:
             status, out, err = Interaction.run_command(title, cmd)
 
-        Interaction.log_status(status,
-                               out and (N_('Output: %s') % out) or '',
-                               err and (N_('Errors: %s') % err) or '')
-
         if not opts.get('background') and not opts.get('norescan'):
             self.model.update_status()
+
+        title = N_('Error')
+        Interaction.command(title, cmd, status, out, err)
+
         return status
 
 
@@ -1708,8 +1700,16 @@ class Tag(Command):
         self._sign = sign
 
     def do(self):
-        log_msg = (N_('Tagging "%(revision)s" as "%(name)s"') %
-                   dict(revision=self._revision, name=self._name))
+        title = N_('Missing Tag Message')
+        message = N_('Tag-signing was requested but the tag message is empty.')
+        info = N_('An unsigned, lightweight tag will be created instead.\n'
+                  'Create an unsigned tag?')
+        ok_text = N_('Create Unsigned Tag')
+        if (self._sign
+            and not self._message
+            and not Interaction.confirm(title, message, info, ok_text,
+                                        default=False, icon=icons.save())):
+            return
         opts = {}
         tmp_file = None
         try:
@@ -1719,23 +1719,22 @@ class Tag(Command):
                 core.write(tmp_file, self._message)
 
             if self._sign:
-                log_msg += ' (%s)' % N_('GPG-signed')
                 opts['s'] = True
             else:
                 opts['a'] = bool(self._message)
-            status, output, err = self.model.git.tag(self._name,
-                                                     self._revision, **opts)
+            status, out, err = self.model.git.tag(self._name,
+                                                  self._revision, **opts)
         finally:
             if tmp_file:
                 core.unlink(tmp_file)
 
-        if output:
-            log_msg += '\n' + (N_('Output: %s') % output)
-
-        Interaction.log_status(status, log_msg, err)
         if status == 0:
             self.model.update_status()
-        return (status, output, err)
+
+        title = N_('Error: could not create tag "%s"') % self._name
+        Interaction.command(title, 'git tag', status, out, err)
+
+        return (status, out, err)
 
 
 class Unstage(Command):

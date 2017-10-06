@@ -459,14 +459,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
             return
         no_verify = self.bypass_commit_hooks_action.isChecked()
         sign = self.sign_action.isChecked()
-        status, out, err = cmds.do(cmds.Commit, amend, msg, sign,
-                                   no_verify=no_verify)
+        cmds.do(cmds.Commit, amend, msg, sign, no_verify=no_verify)
         self.bypass_commit_hooks_action.setChecked(False)
-        if status != 0:
-            Interaction.critical(N_('Commit failed'),
-                                 N_('"git commit" returned exit code %s') %
-                                 (status,),
-                                 out + err)
 
     def build_fixup_menu(self):
         self.build_commits_menu(cmds.LoadFixupMessage,
