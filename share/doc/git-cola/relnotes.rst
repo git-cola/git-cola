@@ -96,6 +96,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/698
 
+* The `status` widget's context menus now omit actions selection-dependent
+  actions when no file is selected.
+
+  https://github.com/git-cola/git-cola/pull/731
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
