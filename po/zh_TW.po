@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the git-cola package.
 # Xudong Guan <xudong.guan@gmail.com>, 2007.
 # Eric Miao <eric.y.miao@gmail.com>, 2008.
-# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014.
+# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2017.
 #
 # 敬請參考 glossary/zh_tw.po 的辭彙翻譯
 #
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-20 14:12-0700\n"
-"PO-Revision-Date: 2017-01-02 21:00+0800\n"
+"PO-Revision-Date: 2017-10-08 07:32+0800\n"
 "Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -266,17 +266,17 @@ msgstr ""
 
 #: cola/cmds.py:989
 msgid "Error running prepare-commitmsg hook"
-msgstr ""
+msgstr "執行 prepare-commitmsg 掛勾程式時發生錯誤"
 
 #: cola/cmds.py:1005
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" returned exit status %d"
-msgstr "「%(command)s」命令傳回了 %(status)d 結束狀態碼"
+msgstr "「%s」命令傳回了 %d 結束狀態碼"
 
 #: cola/cmds.py:1008
 #, python-format
 msgid "A hook must be provided at \"%s\""
-msgstr ""
+msgstr "一個掛勾程式必須在「%s」被提供"
 
 #: cola/cmds.py:1063
 msgid "Open Using Default Application"
@@ -732,7 +732,6 @@ msgid "Compare All"
 msgstr "比較全部檔案差異"
 
 #: cola/widgets/finder.py:61
-#, fuzzy
 msgid ""
 "\n"
 "Keyboard Shortcuts\n"
@@ -757,8 +756,8 @@ msgstr ""
 "Ctrl+L      = 將焦點移至文字輸入欄位\n"
 "?           = 顯示幫助訊息\n"
 "\n"
-"用上、下方向鍵來瀏覽文字輸入欄位\n"
-"以及結果。\n"
+"用上、下方向鍵在文字輸入欄位與執行結果間\n"
+"變更焦點。\n"
 
 #: cola/widgets/finder.py:74
 msgid "Help - Find Files"
@@ -802,16 +801,15 @@ msgstr "新增到 Git 忽略規則(.gitignore)"
 
 #: cola/widgets/gitignore.py:34
 msgid "Ignore filename or pattern"
-msgstr ""
+msgstr "忽略檔案名稱或是式樣"
 
 #: cola/widgets/gitignore.py:45
-#, fuzzy
 msgid "Ignore exact filename"
-msgstr "忽略所有的空白"
+msgstr "忽略完全一致的檔名"
 
 #: cola/widgets/gitignore.py:47
 msgid "Ignore custom pattern"
-msgstr ""
+msgstr "忽略自訂式樣"
 
 #: cola/widgets/gitignore.py:53 cola/widgets/bookmarks.py:39
 #: cola/widgets/patch.py:86 cola/widgets/patch.py:99
@@ -820,12 +818,11 @@ msgstr "新增"
 
 #: cola/widgets/toolbar.py:143 cola/widgets/toolbar.py:233
 msgid "Configure toolbar"
-msgstr ""
+msgstr "設定工具列"
 
 #: cola/widgets/toolbar.py:144
-#, fuzzy
 msgid "Delete toolbar"
-msgstr "刪除書籤"
+msgstr "刪除工具列"
 
 #: cola/widgets/toolbar.py:239 cola/widgets/bookmarks.py:277
 #: cola/widgets/editremotes.py:210 cola/widgets/createtag.py:57
@@ -835,16 +832,15 @@ msgstr "名稱"
 
 #: cola/widgets/toolbar.py:242
 msgid "Add Separator"
-msgstr ""
+msgstr "新增分隔器"
 
 #: cola/widgets/toolbar.py:243
-#, fuzzy
 msgid "Remove Element"
-msgstr "移除"
+msgstr "移除元素"
 
 #: cola/widgets/toolbar.py:245
 msgid "Show icon? (if available)"
-msgstr ""
+msgstr "要顯示圖示嗎（如果有）？"
 
 #: cola/widgets/toolbar.py:247 cola/widgets/patch.py:94
 #: cola/widgets/stash.py:49
@@ -919,27 +915,23 @@ msgstr "遠端"
 
 #: cola/widgets/branch.py:26
 msgid "Tags"
-msgstr ""
+msgstr "標籤"
 
 #: cola/widgets/branch.py:52
-#, fuzzy
 msgid "Toggle the branches filter"
-msgstr "切換路徑過濾器開關"
+msgstr "切換分支過濾器開關"
 
 #: cola/widgets/branch.py:62 cola/widgets/main.py:118
-#, fuzzy
 msgid "Branches"
 msgstr "分支"
 
 #: cola/widgets/branch.py:178
-#, fuzzy
 msgid "Checkout as new branch"
-msgstr "取出分支內容"
+msgstr "取出為一新分支"
 
 #: cola/widgets/branch.py:183
-#, fuzzy
 msgid "Merge into current branch"
-msgstr "瀏覽目前分支中的檔案……"
+msgstr "合併進當前分支"
 
 #: cola/widgets/branch.py:198 cola/widgets/remote.py:660
 msgid "Pull"
@@ -951,14 +943,13 @@ msgid "Push"
 msgstr "推送至遠端版控庫"
 
 #: cola/widgets/branch.py:208
-#, fuzzy
 msgid "Rename Branch"
-msgstr "重新命名分支……"
+msgstr "重新命名分支"
 
 #: cola/widgets/branch.py:281
 #, python-format
 msgid "Executing action %s"
-msgstr ""
+msgstr "正在執行「%s」動作"
 
 #: cola/widgets/branch.py:282 cola/widgets/remote.py:130
 #: cola/widgets/createbranch.py:276
@@ -966,23 +957,20 @@ msgid "Updating"
 msgstr "正在更新"
 
 #: cola/widgets/branch.py:317
-#, fuzzy
 msgid "Rename branch"
-msgstr "重新命名分支……"
+msgstr "重新命名分支"
 
 #: cola/widgets/branch.py:341
-#, fuzzy
 msgid "Delete selected branch?"
-msgstr "移除遠端分支"
+msgstr "要移除選取的分支嗎？"
 
 #: cola/widgets/branch.py:342
 msgid "The branch will be no longer available."
-msgstr ""
+msgstr "此分支將不再存在。"
 
 #: cola/widgets/branch.py:572
-#, fuzzy
 msgid "Filter branches..."
-msgstr "過濾檔案路徑……"
+msgstr "過濾分支名稱……"
 
 #: cola/widgets/main.py:85
 msgid "Browser"
@@ -1066,9 +1054,8 @@ msgid "Load Commit Message..."
 msgstr "自檔案載入修訂版提交訊息"
 
 #: cola/widgets/main.py:227
-#, fuzzy
 msgid "Prepare Commit Message"
-msgstr "搜尋修訂版提交訊息"
+msgstr "準備修訂版提交訊息"
 
 #: cola/widgets/main.py:231 cola/widgets/dag.py:228
 msgid "Save As Tarball/Zip..."
@@ -1241,7 +1228,7 @@ msgstr "檢視"
 
 #: cola/widgets/main.py:477 cola/widgets/main.py:564
 msgid "Add Toolbar"
-msgstr ""
+msgstr "新增工具列"
 
 #: cola/widgets/main.py:543
 #, python-format
@@ -1554,7 +1541,6 @@ msgid "Remove selected (Delete)"
 msgstr "移除被選取的項目（刪除）"
 
 #: cola/widgets/patch.py:134
-#, fuzzy
 msgid "Select patch file(s)..."
 msgstr "選擇修正檔……"
 
@@ -1656,7 +1642,7 @@ msgstr "Tab 字元的顯示寬度"
 
 #: cola/widgets/prefs.py:179
 msgid "Insert spaces instead of tabs"
-msgstr ""
+msgstr "插入空白字元而非跨欄字元(tab)"
 
 #: cola/widgets/prefs.py:180
 msgid "Text Width"
@@ -1704,7 +1690,6 @@ msgid "Save GUI Settings"
 msgstr "保存圖形介面設定"
 
 #: cola/widgets/prefs.py:192
-#, fuzzy
 msgid "Check spelling"
 msgstr "檢查拼字問題"
 
@@ -1742,7 +1727,7 @@ msgstr "秀出整個包含變更的函式內容"
 
 #: cola/widgets/diff.py:333
 msgid "Show lines numbers"
-msgstr ""
+msgstr "顯示行號"
 
 #: cola/widgets/diff.py:338 cola/widgets/diff.py:339
 msgid "Diff Options"
@@ -1906,7 +1891,7 @@ msgid "Developer"
 msgstr "軟體開發者"
 
 #: cola/widgets/about.py:306
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "        <br>\n"
@@ -1918,9 +1903,6 @@ msgstr ""
 "        <br>\n"
 "        請透過 %(bug_link)s 來回報使用問題\n"
 "        <br>\n"
-"\n"
-"        %(author_text)s\n"
-"        %(epilogue)s\n"
 "    "
 
 #: cola/widgets/about.py:324 cola/widgets/about.py:343
@@ -1936,9 +1918,8 @@ msgid "Chinese translation"
 msgstr "簡體中文翻譯"
 
 #: cola/widgets/about.py:331
-#, fuzzy
 msgid "Ukranian translation"
-msgstr "巴西語翻譯"
+msgstr "烏克蘭語翻譯"
 
 #: cola/widgets/about.py:333 cola/widgets/about.py:347
 msgid "Indonesian translation"
@@ -1957,9 +1938,8 @@ msgid "Turkish translation"
 msgstr "土耳其語翻譯"
 
 #: cola/widgets/about.py:341
-#, fuzzy
 msgid "French translation"
-msgstr "德語翻譯"
+msgstr "法語翻譯"
 
 #: cola/widgets/about.py:345 cola/widgets/about.py:349
 msgid "Spanish translation"
@@ -1998,6 +1978,30 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            感謝下列眾位的幫助，\n"
+"            Git Cola 已被翻譯為多種不同的語言。\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            翻譯不一定都是精確的。如果您發現了一個失誤，\n"
+"            請透過在 GitHub 上建立議題的方式讓我們知道：\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            我們邀請您透過新增或更新翻譯並提交變更拉取請求的方式\n"
+"            來參與本軟體的翻譯\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
 
 #: cola/widgets/about.py:385
 msgid "hotkeys.html"
@@ -2424,9 +2428,8 @@ msgid "Include tags "
 msgstr "包含標籤 "
 
 #: cola/widgets/remote.py:189
-#, fuzzy
 msgid "Prune "
-msgstr "從..清除(prune)"
+msgstr "清除(prune)"
 
 #: cola/widgets/remote.py:191
 msgid "Rebase the current branch instead of merging"
@@ -2589,28 +2592,24 @@ msgid "Stop tracking paths"
 msgstr "停止追蹤路徑"
 
 #: cola/widgets/browse.py:165
-#, fuzzy
 msgid "Launch git-difftool on the current path"
-msgstr "在目前的路徑中啟動 git-difftool。"
+msgstr "在當前路徑中啟動 git-difftool。"
 
 #: cola/widgets/browse.py:169
 msgid "Diff Against Predecessor..."
 msgstr "與過去版本比較內容差異"
 
 #: cola/widgets/browse.py:170
-#, fuzzy
 msgid "Launch git-difftool against previous versions"
 msgstr "對先前的版本啟動 git-difftool 。"
 
 #: cola/widgets/browse.py:175
-#, fuzzy
 msgid "Revert unstaged changes to selected paths"
-msgstr "撤銷被選取的路徑尚未移入新修訂版準備區域的內容變更。"
+msgstr "在被選取的路徑中撤銷尚未移入新修訂版準備區域的內容變更"
 
 #: cola/widgets/browse.py:180
-#, fuzzy
 msgid "Revert uncommitted changes to selected paths"
-msgstr "撤銷被選取的路徑尚未被提交的內容變更。"
+msgstr "在被選取的路徑中撤銷尚未提交進版控的內容變更"
 
 #: cola/widgets/browse.py:185 cola/widgets/common.py:36
 msgid "Edit selected paths"
