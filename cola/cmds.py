@@ -1126,26 +1126,18 @@ class Clone(Command):
         self.url = url
         self.new_directory = new_directory
         self.spawn = spawn
-
-        self.ok = False
-        self.error_message = ''
-        self.error_details = ''
+        self.status = -1
+        self.out = ''
+        self.err = ''
 
     def do(self):
         status, out, err = self.model.git.clone(self.url, self.new_directory)
-        self.ok = status == 0
-
-        if self.ok:
-            if self.spawn:
-                core.fork([sys.executable, sys.argv[0],
-                           '--repo', self.new_directory])
-        else:
-            self.error_message = N_('Error: could not clone "%s"') % self.url
-            self.error_details = (
-                    Interaction.format_command_status('git clone', status) +
-                    ((out + err) and
-                        ('\n\n' + Interaction.format_out_err(out, err)) or ''))
-
+        self.status = status
+        self.out = out
+        self.err = err
+        if status == 0 and self.spawn:
+            executable = sys.executable
+            core.fork([executable, sys.argv[0], '--repo', self.new_directory])
         return self
 
 
