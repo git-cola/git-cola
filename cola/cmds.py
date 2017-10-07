@@ -1831,7 +1831,7 @@ class VisualizePaths(Command):
         Command.__init__(self)
         browser = utils.shell_split(prefs.history_browser())
         if paths:
-            self.argv = browser + list(paths)
+            self.argv = browser + ['--'] + list(paths)
         else:
             self.argv = browser
 
