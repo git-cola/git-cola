@@ -482,8 +482,8 @@ class RepoTreeView(standard.TreeView):
 
     def view_history(self):
         """Launch the configured history browser path-limited to entries."""
-        entries = list(map(ustr, entries))
-        cmds.do(cmds.VisualizePaths, entries)
+        paths = self.selected_paths()
+        cmds.do(cmds.VisualizePaths, paths)
 
     def untrack_selected(self):
         """untrack selected paths."""
