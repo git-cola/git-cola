@@ -74,21 +74,13 @@ class ConfirmAction(BaseCommand):
     def action(self):
         return (-1, '', '')
 
-    def ok(self, status):
-        return status == 0
-
     def success(self):
         pass
 
-    def fail(self, status, out, err):
-        title = msg = self.error_message()
-        details = self.error_details() or out + err
-        Interaction.critical(title, message=msg, details=details)
+    def command(self):
+        return 'git'
 
     def error_message(self):
-        return ''
-
-    def error_details(self):
         return ''
 
     def do(self):
@@ -97,10 +89,11 @@ class ConfirmAction(BaseCommand):
         ok = self.ok_to_run() and self.confirm()
         if ok:
             status, out, err = self.action()
-            if self.ok(status):
+            if status == 0:
                 self.success()
-            else:
-                self.fail(status, out, err)
+            title = self.error_message()
+            cmd = self.command()
+            Interaction.command(title, cmd, status, out, err)
 
         return ok, status, out, err
 
@@ -383,9 +376,13 @@ class ResetCommand(ConfirmAction):
         ConfirmAction.__init__(self, model=main.model(), ref=ref)
 
     def action(self):
-        status, out, err = self.reset()
-        Interaction.command(N_('Error'), 'git reset', status, out, err)
-        return status, out, err
+        return self.reset()
+
+    def command(self):
+        return 'git reset'
+
+    def error_message(self):
+        return N_('Error')
 
     def success(self):
         self.model.update_file_status()
