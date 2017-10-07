@@ -138,6 +138,37 @@ class Command(ModelCommand):
         self.model.set_mode(self.old_mode)
 
 
+class AbortMerge(ConfirmAction):
+    """Reset an in-progress merge back to HEAD"""
+
+    def __init__(self):
+        ConfirmAction.__init__(self, model=main.model())
+
+    def confirm(self):
+        title = N_('Abort Merge...')
+        question = N_('Aborting the current merge?')
+        info = N_('Aborting the current merge will cause '
+                     '*ALL* uncommitted changes to be lost.\n'
+                     'Recovering uncommitted changes is not possible.')
+        ok_txt = N_('Abort Merge')
+        return Interaction.confirm(title, question, info, ok_txt,
+                                   default=False, icon=icons.undo())
+
+    def action(self):
+        status, out, err = gitcmds.abort_merge()
+        self.model.update_file_status()
+        return status, out, err
+
+    def success(self):
+        self.model.set_commitmsg('')
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git merge'
+
+
 class AmendMode(Command):
     """Try to amend a commit."""
 
