@@ -55,7 +55,6 @@ class Merge(standard.Dialog):
         self.revision_label.setText(N_('Revision to Merge'))
 
         self.revision = completion.GitRefLineEdit()
-        self.revision.setFocus()
         self.revision.setToolTip(N_('Revision to Merge'))
 
         self.radio_local = qtutils.radio(text=N_('Local Branch'), checked=True)
@@ -132,6 +131,7 @@ class Merge(standard.Dialog):
         self.update_all()
 
         self.init_size(parent=parent)
+        self.revision.setFocus(True)
 
     def update_all(self):
         """Set the branch name for the window title and label."""
