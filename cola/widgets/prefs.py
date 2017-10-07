@@ -265,7 +265,7 @@ class PreferencesView(standard.Dialog):
         self.close_button = qtutils.close_button()
 
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.close_button, qtutils.STRETCH)
+                                          qtutils.STRETCH, self.close_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.tab_bar, self.stack_widget,
