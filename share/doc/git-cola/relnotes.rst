@@ -155,6 +155,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/727
 
+* The "View History" feature in the `Browser` tool was fixed, and now
+  disambiguates between refs and paths.
+
+  https://github.com/git-cola/git-cola/issues/732
+
 .. _v2.11:
 
 git-cola v2.11

@@ -104,6 +104,7 @@ Thanks
 * Michael Geddes
 * Michael Homer
 * Mickael Albertus
+* Mike Hanson
 * MikHulk
 * Minarto Margoliono
 * Myz

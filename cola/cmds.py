@@ -1841,7 +1841,7 @@ class VisualizeCurrent(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        launch_history_browser(browser + [self.model.currentbranch])
+        launch_history_browser(browser + [self.model.currentbranch] + ['--'])
 
 
 class VisualizePaths(Command):
@@ -1851,7 +1851,7 @@ class VisualizePaths(Command):
         Command.__init__(self)
         browser = utils.shell_split(prefs.history_browser())
         if paths:
-            self.argv = browser + list(paths)
+            self.argv = browser + ['--'] + list(paths)
         else:
             self.argv = browser
 
