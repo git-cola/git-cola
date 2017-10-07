@@ -403,9 +403,9 @@ class ResetBranchHead(ResetCommand):
         title = N_('Reset Branch')
         question = N_('Point the current branch head to a new commit?')
         info = N_('The branch will be reset using "git reset --mixed %s"')
-        ok_btn = N_('Reset Branch')
+        ok_text = N_('Reset Branch')
         info = info % self.ref
-        return Interaction.confirm(title, question, info, ok_btn)
+        return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         git = self.model.git
@@ -418,9 +418,9 @@ class ResetWorktree(ResetCommand):
         title = N_('Reset Worktree')
         question = N_('Reset worktree?')
         info = N_('The worktree will be reset using "git reset --merge %s"')
-        ok_btn = N_('Reset Worktree')
+        ok_text = N_('Reset Worktree')
         info = info % self.ref
-        return Interaction.confirm(title, question, info, ok_btn)
+        return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         return self.model.git.reset(self.ref, '--', merge=True)
@@ -533,8 +533,8 @@ class RemoteRemove(RemoteCommand):
         title = N_('Delete Remote')
         question = N_('Delete remote?')
         info = N_('Delete remote "%s"') % self.remote
-        ok_btn = N_('Delete')
-        return Interaction.confirm(title, question, info, ok_btn)
+        ok_text = N_('Delete')
+        return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
@@ -555,8 +555,8 @@ class RemoteRename(RemoteCommand):
         question = N_('Rename remote?')
         info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
                 dict(current=self.remote, new=self.new_remote))
-        ok_btn = N_('Rename')
-        return Interaction.confirm(title, question, info, ok_btn)
+        ok_text = N_('Rename')
+        return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
