@@ -1821,7 +1821,7 @@ class VisualizeCurrent(Command):
 
     def do(self):
         browser = utils.shell_split(prefs.history_browser())
-        launch_history_browser(browser + [self.model.currentbranch])
+        launch_history_browser(browser + [self.model.currentbranch] + ['--'])
 
 
 class VisualizePaths(Command):
