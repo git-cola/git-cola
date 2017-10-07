@@ -90,7 +90,7 @@ msgstr "要重設工作目錄樹嗎？"
 #: cola/cmds.py:420
 #, python-format
 msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr "工作目錄數將被用「git reset --merge %s」命令重設"
+msgstr "工作目錄樹將被用「git reset --merge %s」命令重設"
 
 #: cola/cmds.py:461
 #, python-format
