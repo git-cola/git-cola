@@ -664,10 +664,7 @@ class GitDialog(QtWidgets.QDialog):
 
         self.label = QtWidgets.QLabel()
         self.label.setText(title)
-
         self.lineedit = lineedit()
-        self.setFocusProxy(self.lineedit)
-
         self.ok_button = qtutils.ok_button(text, icon=icon, enabled=False)
         self.close_button = qtutils.close_button()
 
@@ -684,6 +681,9 @@ class GitDialog(QtWidgets.QDialog):
         self.lineedit.enter.connect(self.accept)
         qtutils.connect_button(self.ok_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
+
+        self.setFocusProxy(self.lineedit)
+        self.lineedit.setFocus(True)
 
     def text(self):
         return self.lineedit.text()
