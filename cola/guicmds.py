@@ -271,11 +271,14 @@ def clone_repo(parent, runtask, progress, finish, spawn):
 
 def report_clone_repo_errors(task):
     """Report errors from the clone task if they exist"""
-    if task.cmd is None or task.cmd.ok:
+    cmd = task.cmd
+    if cmd is None:
         return
-    Interaction.critical(task.cmd.error_message,
-                         message=task.cmd.error_message,
-                         details=task.cmd.error_details)
+    status = cmd.status
+    out = cmd.out
+    err = cmd.err
+    title = N_('Error: could not clone "%s"') % task.cmd.url
+    Interaction.command(title, 'git clone', status, out, err)
 
 
 def rename_branch():

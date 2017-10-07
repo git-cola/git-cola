@@ -126,7 +126,7 @@ COMMANDS = {
     },
     'Actions::AbortMerge': {
         'title': 'Abort Merge...',
-        'action': lambda: merge.abort_merge(),
+        'action': lambda: cmds.run(cmds.AbortMerge),
         'icon': None
     },
     'Actions::ResetBrachHead': {

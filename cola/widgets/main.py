@@ -227,7 +227,7 @@ class MainView(standard.MainWindow):
             self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
 
         self.merge_abort_action = add_action(
-            self, N_('Abort Merge...'), merge.abort_merge)
+            self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge))
 
         self.fetch_action = add_action(
             self, N_('Fetch...'), remote.fetch, hotkeys.FETCH)

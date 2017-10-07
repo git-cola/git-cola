@@ -74,21 +74,13 @@ class ConfirmAction(BaseCommand):
     def action(self):
         return (-1, '', '')
 
-    def ok(self, status):
-        return status == 0
-
     def success(self):
         pass
 
-    def fail(self, status, out, err):
-        title = msg = self.error_message()
-        details = self.error_details() or out + err
-        Interaction.critical(title, message=msg, details=details)
+    def command(self):
+        return 'git'
 
     def error_message(self):
-        return ''
-
-    def error_details(self):
         return ''
 
     def do(self):
@@ -97,10 +89,11 @@ class ConfirmAction(BaseCommand):
         ok = self.ok_to_run() and self.confirm()
         if ok:
             status, out, err = self.action()
-            if self.ok(status):
+            if status == 0:
                 self.success()
-            else:
-                self.fail(status, out, err)
+            title = self.error_message()
+            cmd = self.command()
+            Interaction.command(title, cmd, status, out, err)
 
         return ok, status, out, err
 
@@ -143,6 +136,37 @@ class Command(ModelCommand):
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_filename(self.old_filename)
         self.model.set_mode(self.old_mode)
+
+
+class AbortMerge(ConfirmAction):
+    """Reset an in-progress merge back to HEAD"""
+
+    def __init__(self):
+        ConfirmAction.__init__(self, model=main.model())
+
+    def confirm(self):
+        title = N_('Abort Merge...')
+        question = N_('Aborting the current merge?')
+        info = N_('Aborting the current merge will cause '
+                     '*ALL* uncommitted changes to be lost.\n'
+                     'Recovering uncommitted changes is not possible.')
+        ok_txt = N_('Abort Merge')
+        return Interaction.confirm(title, question, info, ok_txt,
+                                   default=False, icon=icons.undo())
+
+    def action(self):
+        status, out, err = gitcmds.abort_merge()
+        self.model.update_file_status()
+        return status, out, err
+
+    def success(self):
+        self.model.set_commitmsg('')
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git merge'
 
 
 class AmendMode(Command):
@@ -383,9 +407,13 @@ class ResetCommand(ConfirmAction):
         ConfirmAction.__init__(self, model=main.model(), ref=ref)
 
     def action(self):
-        status, out, err = self.reset()
-        Interaction.command(N_('Error'), 'git reset', status, out, err)
-        return status, out, err
+        return self.reset()
+
+    def command(self):
+        return 'git reset'
+
+    def error_message(self):
+        return N_('Error')
 
     def success(self):
         self.model.update_file_status()
@@ -403,9 +431,9 @@ class ResetBranchHead(ResetCommand):
         title = N_('Reset Branch')
         question = N_('Point the current branch head to a new commit?')
         info = N_('The branch will be reset using "git reset --mixed %s"')
-        ok_btn = N_('Reset Branch')
+        ok_text = N_('Reset Branch')
         info = info % self.ref
-        return Interaction.confirm(title, question, info, ok_btn)
+        return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         git = self.model.git
@@ -418,9 +446,9 @@ class ResetWorktree(ResetCommand):
         title = N_('Reset Worktree')
         question = N_('Reset worktree?')
         info = N_('The worktree will be reset using "git reset --merge %s"')
-        ok_btn = N_('Reset Worktree')
+        ok_text = N_('Reset Worktree')
         info = info % self.ref
-        return Interaction.confirm(title, question, info, ok_btn)
+        return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         return self.model.git.reset(self.ref, '--', merge=True)
@@ -533,8 +561,8 @@ class RemoteRemove(RemoteCommand):
         title = N_('Delete Remote')
         question = N_('Delete remote?')
         info = N_('Delete remote "%s"') % self.remote
-        ok_btn = N_('Delete')
-        return Interaction.confirm(title, question, info, ok_btn)
+        ok_text = N_('Delete')
+        return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
@@ -555,8 +583,8 @@ class RemoteRename(RemoteCommand):
         question = N_('Rename remote?')
         info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
                 dict(current=self.remote, new=self.new_remote))
-        ok_btn = N_('Rename')
-        return Interaction.confirm(title, question, info, ok_btn)
+        ok_text = N_('Rename')
+        return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
@@ -1126,26 +1154,18 @@ class Clone(Command):
         self.url = url
         self.new_directory = new_directory
         self.spawn = spawn
-
-        self.ok = False
-        self.error_message = ''
-        self.error_details = ''
+        self.status = -1
+        self.out = ''
+        self.err = ''
 
     def do(self):
         status, out, err = self.model.git.clone(self.url, self.new_directory)
-        self.ok = status == 0
-
-        if self.ok:
-            if self.spawn:
-                core.fork([sys.executable, sys.argv[0],
-                           '--repo', self.new_directory])
-        else:
-            self.error_message = N_('Error: could not clone "%s"') % self.url
-            self.error_details = (
-                    Interaction.format_command_status('git clone', status) +
-                    ((out + err) and
-                        ('\n\n' + Interaction.format_out_err(out, err)) or ''))
-
+        self.status = status
+        self.out = out
+        self.err = err
+        if status == 0 and self.spawn:
+            executable = sys.executable
+            core.fork([executable, sys.argv[0], '--repo', self.new_directory])
         return self
 
 
