@@ -25,20 +25,6 @@ def local_merge():
     return view
 
 
-def abort_merge():
-    """Prompts before aborting a merge in progress
-    """
-    title = N_('Abort Merge...')
-    txt = N_('Aborting the current merge will cause '
-             '*ALL* uncommitted changes to be lost.\n'
-             'Recovering uncommitted changes is not possible.')
-    info_txt = N_('Aborting the current merge?')
-    ok_txt = N_('Abort Merge')
-    if qtutils.confirm(title, txt, info_txt, ok_txt,
-                       default=False, icon=icons.undo()):
-        gitcmds.abort_merge()
-
-
 class Merge(standard.Dialog):
     """Provides a dialog for merging branches."""
 
