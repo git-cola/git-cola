@@ -723,7 +723,7 @@ def prepare_commit_message_hook(config=None):
 def abort_merge():
     """Abort a merge by reading the tree at HEAD."""
     # Reset the worktree
-    git.read_tree('HEAD', reset=True, u=True, v=True)
+    status, out, err = git.read_tree('HEAD', reset=True, u=True, v=True)
     # remove MERGE_HEAD
     merge_head = git.git_path('MERGE_HEAD')
     if core.exists(merge_head):
@@ -733,6 +733,7 @@ def abort_merge():
     while merge_msg_path:
         core.unlink(merge_msg_path)
         merge_msg_path = merge_message_path()
+    return status, out, err
 
 
 def strip_remote(remotes, remote_branch):
