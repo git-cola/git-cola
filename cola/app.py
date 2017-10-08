@@ -154,7 +154,7 @@ class ColaApplication(object):
         fsmonitor.current().files_changed.connect(self._update_files)
 
         if gui:
-            self._app = current(tuple(argv))
+            self._app = ColaQApplication(list(argv))
             self._app.setWindowIcon(icons.cola())
             self._install_style()
         else:
@@ -264,10 +264,6 @@ class ColaApplication(object):
         cmds.do(cmds.Refresh)
 
 
-def current(argv):
-    return ColaQApplication(list(argv))
-
-
 class ColaQApplication(QtWidgets.QApplication):
 
     def __init__(self, argv):
@@ -343,35 +339,50 @@ def application_init(args, update=False):
     return ApplicationContext(args, app, cfg, model)
 
 
-def application_start(context, view):
-    """Show the GUI and start the main event loop"""
-    # Store the view for session management
+def context_init(context, view):
+    """Store the view for session management"""
     context.app.set_view(view)
     context.app.set_context(context)
-
     # Make sure that we start out on top
     view.show()
     view.raise_()
 
-    # Scan for the first time
-    runtask = qtutils.RunTask(parent=view)
-    init_update_task(view, runtask, context.model)
 
-    # Start the filesystem monitor thread
-    fsmonitor.current().start()
-
-    QtCore.QTimer.singleShot(0, _send_msg)
-
+def application_run(context, view, start=None, stop=None):
+    """Run the application main loop"""
+    # Initialize and run startup callbacks
+    context_init(context, view)
+    if start:
+        start(context, view)
     # Start the event loop
     result = context.app.start()
-
-    # All done, cleanup
-    fsmonitor.current().stop()
-    QtCore.QThreadPool.globalInstance().waitForDone()
-
+    # Finish
+    if stop:
+        stop(context, view)
     context.app.stop()
 
     return result
+
+
+def application_start(context, view):
+    """Show the GUI and start the main event loop"""
+    # Store the view for session management
+    return application_run(context, view, start=start, stop=stop)
+
+
+def start(context, view):
+    """Scan for the first time"""
+    runtask = qtutils.RunTask(parent=view)
+    init_update_task(view, runtask, context.model)
+    # Start the filesystem monitor thread
+    fsmonitor.current().start()
+    QtCore.QTimer.singleShot(0, _send_msg)
+
+
+def stop(context, view):
+    """All done, cleanup"""
+    fsmonitor.current().stop()
+    QtCore.QThreadPool.globalInstance().waitForDone()
 
 
 def add_common_arguments(parser):
