@@ -20,6 +20,7 @@ setup_environment()
 
 from cola import app
 
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -59,18 +60,18 @@ ABBREV = {
 
 
 def main():
+    """Start a git-xbase session"""
     args = parse_args()
     context = app.application_init(args)
+    view = new_window(context, args.filename)
 
-    desktop = context.app.desktop()
-    window = new_window(args.filename)
-    if utils.is_darwin():
-        window.resize(desktop.width(), desktop.height())
-    else:
-        window.showMaximized()
-    window.raise_()
-    context.app.exec_()
-    return window.status
+    app.application_run(context, view, stop=stop)
+    return view.status
+
+
+def stop(context, view):
+    """All done, cleanup"""
+    QtCore.QThreadPool.globalInstance().waitForDone()
 
 
 def parse_args():
@@ -81,8 +82,8 @@ def parse_args():
     return parser.parse_args()
 
 
-def new_window(filename):
-    window = MainWindow()
+def new_window(context, filename):
+    window = XBaseWindow(context)
     editor = Editor(filename, parent=window)
     window.set_editor(editor)
     return window
@@ -93,10 +94,11 @@ def unabbrev(cmd):
     return ABBREV.get(cmd, cmd)
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class XBaseWindow(standard.MainWindow):
 
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
+    def __init__(self, context, settings=None, parent=None):
+        super(XBaseWindow, self).__init__(parent)
+        self.context = context
         self.status = 1
         self.editor = None
         default_title = '%s - git xbase' % core.getcwd()
@@ -112,6 +114,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMenuBar(self.menubar)
 
         qtutils.add_close_action(self)
+        self.init_state(settings, self.init_window_size)
+
+    def init_window_size(self):
+        """Set the window size on the first initial view"""
+        context = self.context
+        if utils.is_darwin():
+            desktop = context.app.desktop()
+            self.resize(desktop.width(), desktop.height())
+        else:
+            self.showMaximized()
 
     def set_editor(self, editor):
         self.editor = editor
