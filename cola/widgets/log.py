@@ -72,5 +72,6 @@ class LogSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.disabled_color = palette.color(QPalette.Disabled, QPalette.Text)
 
     def highlightBlock(self, text):
-        log_end = text.find(':  ') + 1
-        self.setFormat(0, log_end, self.disabled_color)
+        end = text.find(':  ')
+        if end > 0:
+            self.setFormat(0, end + 1, self.disabled_color)
