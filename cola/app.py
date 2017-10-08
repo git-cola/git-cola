@@ -154,7 +154,7 @@ class ColaApplication(object):
         fsmonitor.current().files_changed.connect(self._update_files)
 
         if gui:
-            self._app = current(tuple(argv))
+            self._app = ColaQApplication(list(argv))
             self._app.setWindowIcon(icons.cola())
             self._install_style()
         else:
@@ -262,10 +262,6 @@ class ColaApplication(object):
     def _update_files(self):
         # Respond to file system updates
         cmds.do(cmds.Refresh)
-
-
-def current(argv):
-    return ColaQApplication(list(argv))
 
 
 class ColaQApplication(QtWidgets.QApplication):
