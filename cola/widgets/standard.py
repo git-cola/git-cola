@@ -165,8 +165,7 @@ class WidgetMixin(object):
             width = defs.dialog_w
         if not height:
             height = defs.dialog_h
-        self.init_state(settings,
-                        self.resize_to_parent, parent, width, height)
+        self.init_state(settings, self.resize_to_parent, parent, width, height)
 
     def init_state(self, settings, callback, *args, **kwargs):
         """Restore saved settings or set the initial location"""
