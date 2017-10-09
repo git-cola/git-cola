@@ -212,7 +212,7 @@ class Editor(QtWidgets.QWidget):
                               % re_comment_char)
         pick_rgx = re.compile((r'^\s*(%s)?\s*'
                                r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                               r'\s+([0-9a-f]{7,40})'
+                               r'\s+([0-9a-f]{7,})'
                                r'\s+(.+)$') % re_comment_char)
         for line in insns.splitlines():
             match = pick_rgx.match(line)
