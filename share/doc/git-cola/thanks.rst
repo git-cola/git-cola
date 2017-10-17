@@ -120,6 +120,7 @@ Thanks
 * Paul Hildebrandt
 * Paul Weingardt
 * Paulo Fidalgo
+* Pavel Rehak
 * Peter Dave Hello
 * Peter Júnoš
 * Philip Stark
