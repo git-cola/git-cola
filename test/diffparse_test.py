@@ -21,56 +21,56 @@ class ParseDiffTestCase(unittest.TestCase):
         self.assertEqual(len(hunks[0].lines), 23)
         self.assertEqual(
                 hunks[0].lines[0],
-                '@@ -6,10 +6,21 @@ from cola import gitcmds')
+                '@@ -6,10 +6,21 @@ from cola import gitcmds\n')
         self.assertEqual(
                 hunks[0].lines[1],
-                ' from cola import gitcfg')
-        self.assertEqual(hunks[0].lines[2], ' ')
-        self.assertEqual(hunks[0].lines[3], ' ')
-        self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):')
+                ' from cola import gitcfg\n')
+        self.assertEqual(hunks[0].lines[2], ' \n')
+        self.assertEqual(hunks[0].lines[3], ' \n')
+        self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):\n')
         self.assertEqual(
                 hunks[0].lines[-1],
                 "         self._header_start_re = re.compile('^@@ -(\d+)"
-                " \+(\d+),(\d+) @@.*')")
+                " \+(\d+),(\d+) @@.*')\n")
 
         self.assertEqual(hunks[1].first_line_idx, 23)
         self.assertEqual(len(hunks[1].lines), 18)
         self.assertEqual(
                 hunks[1].lines[0],
-                '@@ -29,13 +40,11 @@ class DiffParser(object):')
+                '@@ -29,13 +40,11 @@ class DiffParser(object):\n')
         self.assertEqual(
                 hunks[1].lines[1],
-                '         self.diff_sel = []')
+                '         self.diff_sel = []\n')
         self.assertEqual(
                 hunks[1].lines[2],
-                '         self.selected = []')
+                '         self.selected = []\n')
         self.assertEqual(
                 hunks[1].lines[3],
-                '         self.filename = filename')
+                '         self.filename = filename\n')
         self.assertEqual(
                 hunks[1].lines[4],
-                '+        self.diff_source = diff_source or DiffSource()')
+                '+        self.diff_source = diff_source or DiffSource()\n')
         self.assertEqual(
                 hunks[1].lines[-1],
-                '         self.header = header')
+                '         self.header = header\n')
 
         self.assertEqual(hunks[2].first_line_idx, 41)
         self.assertEqual(len(hunks[2].lines), 16)
         self.assertEqual(
                 hunks[2].lines[0],
-                '@@ -43,11 +52,10 @@ class DiffParser(object):')
+                '@@ -43,11 +52,10 @@ class DiffParser(object):\n')
         self.assertEqual(
                 hunks[2].lines[-1],
                 '         """Writes a new diff corresponding to the user\'s'
-                ' selection."""')
+                ' selection."""\n')
 
     def test_diff_at_start(self):
         fixture_path = helper.fixture('diff-start.txt')
         parser = diffparse.DiffParser('foo bar/a', core.read(fixture_path))
         hunks = parser.hunks
 
-        self.assertEqual(hunks[0].lines[0], '@@ -1 +1,4 @@')
-        self.assertEqual(hunks[-1].lines[-1], '+c')
+        self.assertEqual(hunks[0].lines[0], '@@ -1 +1,4 @@\n')
+        self.assertEqual(hunks[-1].lines[-1], '+c\n')
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 1)
         self.assertEqual(hunks[0].new_start, 1)
@@ -96,10 +96,10 @@ class ParseDiffTestCase(unittest.TestCase):
         parser = diffparse.DiffParser('rijndael.js', core.read(fixture_path))
         hunks = parser.hunks
 
-        self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@')
+        self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@\n')
         self.assertEqual(
                 hunks[-1].lines[-1],
-                "+module.exports = require('./build/Release/rijndael');")
+                "+module.exports = require('./build/Release/rijndael');\n")
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 39)
         self.assertEqual(hunks[0].new_start, 1)
@@ -110,8 +110,8 @@ class ParseDiffTestCase(unittest.TestCase):
         parser = diffparse.DiffParser('filename', core.read(fixture_path))
         hunks = parser.hunks
 
-        self.assertEqual(hunks[0].lines[0], '@@ -1,2 +0,0 @@')
-        self.assertEqual(hunks[-1].lines[-1], '-second')
+        self.assertEqual(hunks[0].lines[0], '@@ -1,2 +0,0 @@\n')
+        self.assertEqual(hunks[-1].lines[-1], '-second\n')
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 2)
         self.assertEqual(hunks[0].new_start, 0)
