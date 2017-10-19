@@ -151,8 +151,6 @@ class ColaApplication(object):
         qtutils.install()
         icons.install(icon_themes or get_icon_themes())
 
-        fsmonitor.current().files_changed.connect(self._update_files)
-
         if gui:
             self._app = ColaQApplication(list(argv))
             self._app.setWindowIcon(icons.cola())
@@ -238,10 +236,15 @@ class ColaApplication(object):
 
     def start(self):
         """Wrap exec_() and start the application"""
+        # Defer connection so that local cola.inotify is honored
+        fsmonitor.current().files_changed.connect(self._update_files)
+        # Start the filesystem monitor thread
+        fsmonitor.current().start()
         return self._app.exec_()
 
     def stop(self):
         """Finalize the application"""
+        fsmonitor.current().stop()
         # Workaround QTBUG-52988 by deleting the app manually to prevent a
         # crash during app shutdown.
         # https://bugreports.qt.io/browse/QTBUG-52988
@@ -374,14 +377,11 @@ def start(context, view):
     """Scan for the first time"""
     runtask = qtutils.RunTask(parent=view)
     init_update_task(view, runtask, context.model)
-    # Start the filesystem monitor thread
-    fsmonitor.current().start()
     QtCore.QTimer.singleShot(0, _send_msg)
 
 
 def stop(context, view):
     """All done, cleanup"""
-    fsmonitor.current().stop()
     QtCore.QThreadPool.globalInstance().waitForDone()
 
 

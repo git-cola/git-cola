@@ -171,6 +171,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/730
 
+* `cola.inotify` in a repo-local config is now honored
+  when `git cola` is launched from a desktop entry (`git cola --prompt`).
+
+  https://github.com/git-cola/git-cola/issues/695
+
 .. _v2.11:
 
 git-cola v2.11
