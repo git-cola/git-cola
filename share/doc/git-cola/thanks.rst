@@ -86,6 +86,7 @@ Thanks
 * Lev Zlotin
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
+* Luca Ottaviano
 * Łukasz Wojniłowicz
 * Luke Bakken
 * Maarten Nieber

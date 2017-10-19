@@ -166,6 +166,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/732
 
+* The diff editor now has better support for files with CRLF `\r\n`
+  line endings.
+
+  https://github.com/git-cola/git-cola/issues/730
+
 .. _v2.11:
 
 git-cola v2.11

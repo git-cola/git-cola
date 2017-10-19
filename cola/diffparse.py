@@ -43,9 +43,9 @@ def _format_range(start, count):
 
 def _format_hunk_header(old_start, old_count, new_start, new_count,
                         heading=''):
-    return '@@ -%s +%s @@%s' % (_format_range(old_start, old_count),
-                                _format_range(new_start, new_count),
-                                heading)
+    return ('@@ -%s +%s @@%s\n'
+            % (_format_range(old_start, old_count),
+               _format_range(new_start, new_count), heading))
 
 
 def _parse_diff(diff_text):
@@ -58,13 +58,13 @@ def _parse_diff(diff_text):
             heading = match.group(3)
             hunks.append(_DiffHunk(old_start, old_count,
                                    new_start, new_count,
-                                   heading, line_idx, lines=[line]))
+                                   heading, line_idx, lines=[line + '\n']))
         elif not hunks:
             # first line of the diff is not a header line
             errmsg = 'Malformed diff?: %s' % diff_text
             raise AssertionError(errmsg)
         elif line:
-            hunks[-1].lines.append(line)
+            hunks[-1].lines.append(line + '\n')
     return hunks
 
 
@@ -137,7 +137,7 @@ class DiffLines(object):
         ours = self.ours.reset()
         theirs = self.theirs.reset()
 
-        for text in diff_text.splitlines():
+        for text in diff_text.split('\n'):
             if text.startswith('@@ -'):
                 parts = text.split(' ', 4)
                 if parts[0] == '@@' and parts[3] == '@@':
@@ -156,7 +156,7 @@ class DiffLines(object):
                     new.parse(parts[3][1:])
                     lines.append((self.DASH, self.DASH, self.DASH))
                     continue
-            if state == INITIAL_STATE or text == NO_NEWLINE:
+            if state == INITIAL_STATE or text.rstrip() == NO_NEWLINE:
                 if merge:
                     lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
                 else:
@@ -259,7 +259,8 @@ class DiffParser(object):
         CONTEXT = ' '
         NO_NEWLINE = '\\'
 
-        lines = ['--- a/%s' % self.filename, '+++ b/%s' % self.filename]
+        lines = ['--- a/%s\n' % self.filename,
+                 '+++ b/%s\n' % self.filename]
 
         start_offset = 0
 
@@ -334,8 +335,7 @@ class DiffParser(object):
         if len(lines) == 2:
             return None
         else:
-            lines.append('')
-            return '\n'.join(lines)
+            return ''.join(lines)
 
     def generate_hunk_patch(self, line_idx, reverse=False):
         """Return a patch containing the hunk for the specified line only"""
