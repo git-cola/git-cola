@@ -386,7 +386,7 @@ def diff_helper(commit=None,
 
 def extract_diff_header(status, deleted,
                         with_diff_header, suppress_header, diffoutput):
-    headers = []
+    """Split a diff into a header section and payload section"""
 
     if diffoutput.startswith('Submodule'):
         if with_diff_header:
@@ -396,26 +396,31 @@ def extract_diff_header(status, deleted,
 
     start = False
     del_tag = 'deleted file mode '
-    output = StringIO()
 
-    for line in diffoutput.splitlines():
+    output = StringIO()
+    headers = StringIO()
+
+    for line in diffoutput.split('\n'):
         if not start and '@@' == line[:2] and '@@' in line[2:]:
             start = True
         if start or (deleted and del_tag in line):
             output.write(line + '\n')
         else:
             if with_diff_header:
-                headers.append(line)
+                headers.write(line + '\n')
             elif not suppress_header:
                 output.write(line + '\n')
 
-    result = output.getvalue().rstrip('\n')
+    output_text = output.getvalue()
     output.close()
 
+    headers_text = headers.getvalue()
+    headers.close()
+
     if with_diff_header:
-        return('\n'.join(headers), result)
+        return(headers_text, output_text)
     else:
-        return result
+        return output_text
 
 
 def format_patchsets(to_export, revs, output='patches'):
