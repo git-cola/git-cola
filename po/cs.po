@@ -1,22 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translation of git-cola to Czech.
+# Copyright (C) 2017 Pavel Rehak
+# This file is distributed under the same license as the git-cola package.
+# Pavel Rehak <pavel-rehak@email.cz>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2017-10-16 19:58+0200\n"
-"Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
+"POT-Creation-Date: 2017-10-16 17:32+0200\n"
+"PO-Revision-Date: 2017-10-17 16:51+0200\n"
 "Language-Team: \n"
-"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Language: cs\n"
 
 #: cola/cmds.py:148 cola/widgets/main.py:230
 msgid "Abort Merge..."
@@ -135,7 +135,7 @@ msgstr ""
 #: cola/cmds.py:564 cola/guicmds.py:24 cola/guicmds.py:32
 #: cola/widgets/bookmarks.py:41 cola/widgets/main.py:390
 msgid "Delete"
-msgstr "Smazat"
+msgstr "Odstranit"
 
 #: cola/cmds.py:572
 #, python-format
@@ -161,7 +161,7 @@ msgstr ""
 
 #: cola/cmds.py:611
 msgid "Delete Bookmark?"
-msgstr ""
+msgstr "Odstranit záložku?"
 
 #: cola/cmds.py:612
 #, python-format
@@ -170,7 +170,7 @@ msgstr ""
 
 #: cola/cmds.py:613
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Odstranit záložku"
 
 #: cola/cmds.py:625
 #, python-format
@@ -194,20 +194,20 @@ msgstr ""
 
 #: cola/cmds.py:683
 msgid "Delete Files?"
-msgstr ""
+msgstr "Smazat soubory?"
 
 #: cola/cmds.py:684
 msgid "The following files will be deleted:"
-msgstr ""
+msgstr "Následující soubory budou smazány:"
 
 #: cola/cmds.py:686
 #, python-format
 msgid "Delete %d file(s)?"
-msgstr ""
+msgstr "Smazat %d soubor (soubory)?"
 
 #: cola/cmds.py:687
 msgid "Delete Files"
-msgstr ""
+msgstr "Smazat soubory"
 
 #: cola/cmds.py:744
 msgid "Error Deleting Remote Branch"
@@ -224,7 +224,7 @@ msgstr ""
 
 #: cola/cmds.py:825 cola/cmds.py:933
 msgid "Launch Editor"
-msgstr ""
+msgstr "Spustit editor"
 
 #: cola/cmds.py:861
 #, python-format
@@ -242,7 +242,7 @@ msgstr ""
 
 #: cola/cmds.py:915
 msgid "Launch Terminal"
-msgstr ""
+msgstr "Spustit terminál"
 
 #: cola/cmds.py:954
 msgid "Error: Cannot find commit template"
@@ -279,11 +279,11 @@ msgstr ""
 
 #: cola/cmds.py:1080
 msgid "Open Using Default Application"
-msgstr ""
+msgstr "Otevřít ve výchozí aplikaci"
 
 #: cola/cmds.py:1102
 msgid "Open Parent Directory"
-msgstr ""
+msgstr "Otevřít nadřazenou složku"
 
 #: cola/cmds.py:1246
 #, python-format
@@ -540,7 +540,7 @@ msgstr ""
 
 #: cola/guicmds.py:53
 msgid "Browse"
-msgstr ""
+msgstr "Procházet"
 
 #: cola/guicmds.py:61
 msgid "Checkout Branch"
@@ -594,7 +594,7 @@ msgstr ""
 
 #: cola/guicmds.py:185 cola/guicmds.py:194 cola/widgets/startup.py:140
 msgid "Open Git Repository..."
-msgstr ""
+msgstr "Otevřít Git repozitář..."
 
 #: cola/guicmds.py:203
 msgid "Load Commit Message"
@@ -835,11 +835,11 @@ msgstr "Otevřít v novém okně"
 
 #: cola/widgets/bookmarks.py:117
 msgid "Set Default Repository"
-msgstr ""
+msgstr "Nastavit výchozí repozitář"
 
 #: cola/widgets/bookmarks.py:120
 msgid "Clear Default Repository"
-msgstr ""
+msgstr "Zrušit výchozí repozitář"
 
 #: cola/widgets/bookmarks.py:123
 msgid "Rename Repository"
@@ -878,7 +878,7 @@ msgstr "Místní"
 #: cola/widgets/branch.py:25 cola/widgets/compare.py:51
 #: cola/widgets/compare.py:56 cola/widgets/remote.py:142
 msgid "Remote"
-msgstr ""
+msgstr "Vzdálená"
 
 #: cola/widgets/branch.py:26
 msgid "Tags"
@@ -1282,11 +1282,11 @@ msgstr ""
 
 #: cola/widgets/status.py:126 cola/models/browse.py:309
 msgid "Modified"
-msgstr ""
+msgstr "Změněno"
 
 #: cola/widgets/status.py:127
 msgid "Untracked"
-msgstr ""
+msgstr "Nesledováno"
 
 #: cola/widgets/status.py:167
 msgid "Move Up"
@@ -1299,11 +1299,11 @@ msgstr ""
 
 #: cola/widgets/status.py:175
 msgid "Copy Path to Clipboard"
-msgstr ""
+msgstr "Kopírovat cestu do schránky"
 
 #: cola/widgets/status.py:179
 msgid "Copy Relative Path to Clipboard"
-msgstr ""
+msgstr "Kopírovat relativní cestu do schránky"
 
 #: cola/widgets/status.py:184
 msgid "Copy Leading Path to Clipboard"
@@ -1320,7 +1320,7 @@ msgstr "Zavřít..."
 
 #: cola/widgets/status.py:196 cola/widgets/browse.py:149
 msgid "View History..."
-msgstr ""
+msgstr "Prohlížet historii..."
 
 #: cola/widgets/status.py:199
 msgid "Blame..."
@@ -1332,7 +1332,7 @@ msgstr ""
 
 #: cola/widgets/status.py:216
 msgid "Delete Files..."
-msgstr ""
+msgstr "Smazat soubory..."
 
 #: cola/widgets/status.py:542
 #, fuzzy
@@ -1515,11 +1515,11 @@ msgstr ""
 
 #: cola/widgets/dag.py:505
 msgid "Files"
-msgstr ""
+msgstr "Soubory"
 
 #: cola/widgets/dag.py:519
 msgid "Graph"
-msgstr ""
+msgstr "Graf"
 
 #: cola/widgets/dag.py:612
 #, python-format
@@ -1626,11 +1626,11 @@ msgstr ""
 
 #: cola/widgets/prefs.py:122
 msgid "User Name"
-msgstr ""
+msgstr "Uživatelské jméno"
 
 #: cola/widgets/prefs.py:123
 msgid "Email Address"
-msgstr ""
+msgstr "E-mailová adresa"
 
 #: cola/widgets/prefs.py:124
 msgid "Merge Verbosity"
@@ -1723,15 +1723,15 @@ msgstr ""
 
 #: cola/widgets/prefs.py:252
 msgid "All Repositories"
-msgstr ""
+msgstr "Všechny repozitáře"
 
 #: cola/widgets/prefs.py:253
 msgid "Current Repository"
-msgstr ""
+msgstr "Současný repozitář"
 
 #: cola/widgets/prefs.py:254
 msgid "Settings"
-msgstr ""
+msgstr "Nastavení"
 
 #: cola/widgets/diff.py:184
 msgid "Loading..."
@@ -2330,7 +2330,7 @@ msgstr ""
 
 #: cola/widgets/remote.py:156
 msgid "Remote Branch"
-msgstr ""
+msgstr "Vzdálená větev"
 
 #: cola/widgets/remote.py:165
 msgid "Prompt on creation"
@@ -2576,7 +2576,7 @@ msgstr ""
 
 #: cola/widgets/createbranch.py:100
 msgid "Branch Name"
-msgstr ""
+msgstr "Název větve"
 
 #: cola/widgets/createbranch.py:105
 msgid "Starting Revision"
