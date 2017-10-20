@@ -234,13 +234,15 @@ class Git(object):
         # Guard against thread-unsafe .git/index.lock files
         if not _readonly:
             INDEX_LOCK.acquire()
-        status, out, err = core.run_command(
-                command, cwd=_cwd, encoding=_encoding,
-                stdin=_stdin, stdout=_stdout, stderr=_stderr,
-                no_win32_startupinfo=_no_win32_startupinfo, **extra)
-        # Let the next thread in
-        if not _readonly:
-            INDEX_LOCK.release()
+        try:
+            status, out, err = core.run_command(
+                    command, cwd=_cwd, encoding=_encoding,
+                    stdin=_stdin, stdout=_stdout, stderr=_stderr,
+                    no_win32_startupinfo=_no_win32_startupinfo, **extra)
+        finally:
+            # Let the next thread in
+            if not _readonly:
+                INDEX_LOCK.release()
 
         if not _raw and out is not None:
             out = out.rstrip('\n')
