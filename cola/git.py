@@ -332,9 +332,14 @@ class Git(object):
                 # case of argv overflow. we should be safe from that but use
                 # defensive coding for the worst-case scenario. on other OS-en
                 # we have ENAMETOOLONG which doesn't exist in with32 API.
-                status, out, err = self.execute(['git', '--version'])
-                if status == 0:
-                    raise e
+                try:
+                    status, out, err = self.execute(['git', '--version'])
+                except FileNotFoundError:
+                    pass # git command is not available
+                else:
+                    if status == 0:
+                        # git is ok, there is something else...
+                        raise e
 
             core.stderr("error: unable to execute 'git'\n"
                         "error: please ensure that 'git' is in your $PATH")
