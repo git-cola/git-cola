@@ -334,7 +334,7 @@ class Git(object):
                 # we have ENAMETOOLONG which doesn't exist in with32 API.
                 try:
                     status, out, err = self.execute(['git', '--version'])
-                except FileNotFoundError:
+                except OSError:
                     pass # git command is not available
                 else:
                     if status == 0:
