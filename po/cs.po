@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2017-10-17 16:51+0200\n"
+"PO-Revision-Date: 2017-10-21 22:02+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,16 +121,16 @@ msgstr ""
 
 #: cola/cmds.py:561
 msgid "Delete Remote"
-msgstr ""
+msgstr "Odstranit vzdálený"
 
 #: cola/cmds.py:562
 msgid "Delete remote?"
-msgstr ""
+msgstr "Odstranit vzdálený?"
 
 #: cola/cmds.py:563
 #, python-format
 msgid "Delete remote \"%s\""
-msgstr ""
+msgstr "Odstranit vzdálený \"%s\""
 
 #: cola/cmds.py:564 cola/guicmds.py:24 cola/guicmds.py:32
 #: cola/widgets/bookmarks.py:41 cola/widgets/main.py:390
@@ -157,7 +157,7 @@ msgstr ""
 
 #: cola/cmds.py:586 cola/guicmds.py:289
 msgid "Rename"
-msgstr ""
+msgstr "Přejmenovat"
 
 #: cola/cmds.py:611
 msgid "Delete Bookmark?"
@@ -185,7 +185,7 @@ msgstr ""
 #: cola/cmds.py:627 cola/widgets/status.py:1048 cola/widgets/patch.py:90
 #: cola/widgets/patch.py:102
 msgid "Remove"
-msgstr ""
+msgstr "Odstranit"
 
 #: cola/cmds.py:666
 #, python-format
@@ -238,7 +238,7 @@ msgstr ""
 #: cola/cmds.py:884 cola/widgets/dag.py:242 cola/widgets/filelist.py:33
 #: cola/widgets/filelist.py:36
 msgid "Launch Diff Tool"
-msgstr ""
+msgstr "Spustit nástroj Diff"
 
 #: cola/cmds.py:915
 msgid "Launch Terminal"
@@ -306,7 +306,7 @@ msgstr ""
 #: cola/cmds.py:1267 cola/widgets/status.py:1054 cola/widgets/archive.py:123
 #: cola/widgets/browse.py:606 cola/widgets/stash.py:54
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #: cola/cmds.py:1320 cola/qtutils.py:713 cola/widgets/action.py:60
 #: cola/widgets/dag.py:528 cola/widgets/recent.py:104 cola/widgets/grep.py:100
@@ -528,7 +528,7 @@ msgstr ""
 #: cola/guicmds.py:24 cola/widgets/branch.py:209 cola/widgets/branch.py:321
 #: cola/widgets/branch.py:324
 msgid "Delete Branch"
-msgstr ""
+msgstr "Smazat větev"
 
 #: cola/guicmds.py:32 cola/widgets/branch.py:211
 msgid "Delete Remote Branch"
@@ -590,7 +590,7 @@ msgstr ""
 
 #: cola/guicmds.py:167 cola/widgets/search.py:76
 msgid "Export Patches"
-msgstr ""
+msgstr "Exportovat záplaty"
 
 #: cola/guicmds.py:185 cola/guicmds.py:194 cola/widgets/startup.py:140
 msgid "Open Git Repository..."
@@ -624,12 +624,12 @@ msgstr ""
 
 #: cola/guicmds.py:286
 msgid "Rename Existing Branch"
-msgstr ""
+msgstr "Přejmenovat stávající větev"
 
 #: cola/guicmds.py:286 cola/widgets/selectcommits.py:54
 #: cola/widgets/browse.py:604
 msgid "Select"
-msgstr ""
+msgstr "Vybrat"
 
 #: cola/guicmds.py:289 cola/widgets/branch.py:300
 msgid "Enter New Branch Name"
@@ -794,7 +794,7 @@ msgstr ""
 #: cola/widgets/status.py:1111 cola/widgets/editremotes.py:210
 #: cola/widgets/createtag.py:57 cola/models/browse.py:38
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #: cola/widgets/toolbar.py:242
 msgid "Add Separator"
@@ -811,7 +811,7 @@ msgstr ""
 #: cola/widgets/toolbar.py:247 cola/widgets/patch.py:94
 #: cola/widgets/stash.py:49
 msgid "Apply"
-msgstr ""
+msgstr "Aplikovat"
 
 #: cola/widgets/bookmarks.py:44 cola/widgets/bookmarks.py:108
 msgid "Open"
@@ -819,7 +819,7 @@ msgstr "Otevřít"
 
 #: cola/widgets/bookmarks.py:52
 msgid "Favorite repositories"
-msgstr ""
+msgstr "Oblíbené repozitáře"
 
 #: cola/widgets/bookmarks.py:54
 msgid "Recent repositories"
@@ -965,7 +965,7 @@ msgstr ""
 
 #: cola/widgets/main.py:138 cola/widgets/main.py:432 cola/widgets/dag.py:508
 msgid "Diff"
-msgstr ""
+msgstr "Diff"
 
 #: cola/widgets/main.py:147 cola/widgets/commitmsg.py:111
 msgid "Amend Last Commit"
@@ -993,11 +993,11 @@ msgstr ""
 
 #: cola/widgets/main.py:173
 msgid "Apply Patches..."
-msgstr ""
+msgstr "Aplikovat záplaty..."
 
 #: cola/widgets/main.py:176
 msgid "Export Patches..."
-msgstr ""
+msgstr "Exportovat záplaty..."
 
 #: cola/widgets/main.py:184 cola/widgets/prefs.py:244
 msgid "Preferences"
@@ -1424,12 +1424,12 @@ msgstr "Místní větev"
 
 #: cola/widgets/cfgactions.py:221 cola/widgets/merge.py:47
 msgid "Tracking Branch"
-msgstr ""
+msgstr "Sledovaná větev"
 
 #: cola/widgets/cfgactions.py:222 cola/widgets/merge.py:48
 #: cola/widgets/createbranch.py:114
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:79
 msgid "Revision"
@@ -1479,15 +1479,15 @@ msgstr ""
 
 #: cola/widgets/dag.py:286
 msgid "Summary"
-msgstr ""
+msgstr "Shrnutí"
 
 #: cola/widgets/dag.py:286 cola/models/browse.py:41 cola/models/browse.py:80
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: cola/widgets/dag.py:286
 msgid "Date, Time"
-msgstr ""
+msgstr "Datum, čas"
 
 #: cola/widgets/dag.py:296
 msgid "Go Up"
@@ -1503,11 +1503,11 @@ msgstr ""
 
 #: cola/widgets/dag.py:464 cola/widgets/dag.py:1282
 msgid "Zoom Out"
-msgstr ""
+msgstr "Oddálit"
 
 #: cola/widgets/dag.py:467 cola/widgets/dag.py:1279
 msgid "Zoom In"
-msgstr ""
+msgstr "Přiblížit"
 
 #: cola/widgets/dag.py:500
 msgid "Log"
@@ -1548,7 +1548,7 @@ msgstr ""
 
 #: cola/widgets/patch.py:66
 msgid "Apply Patches"
-msgstr ""
+msgstr "Aplikovat záplaty"
 
 #: cola/widgets/patch.py:75
 msgid ""
@@ -1759,7 +1759,7 @@ msgstr ""
 
 #: cola/widgets/diff.py:364 cola/widgets/diff.py:365
 msgid "Diff Options"
-msgstr ""
+msgstr "Volby Diff"
 
 #: cola/widgets/diff.py:459
 msgid "Stage Selected Lines"
@@ -1807,11 +1807,11 @@ msgstr "Nedávno změněné soubory"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
-msgstr ""
+msgstr " commits"
 
 #: cola/widgets/recent.py:57
 msgid "Showing changes since"
-msgstr ""
+msgstr "Zobrazit změny před"
 
 #: cola/widgets/recent.py:65
 msgid "Expand all"
@@ -1823,7 +1823,7 @@ msgstr ""
 
 #: cola/widgets/about.py:67
 msgid "About git-cola"
-msgstr ""
+msgstr "O programu git-cola"
 
 #: cola/widgets/about.py:92
 msgid "Version"
@@ -2000,7 +2000,7 @@ msgstr ""
 
 #: cola/widgets/about.py:412
 msgid "Shortcuts"
-msgstr ""
+msgstr "Klávesové zkratky"
 
 #: cola/widgets/startup.py:29
 msgid "git-cola"
@@ -2275,7 +2275,7 @@ msgstr ""
 
 #: cola/widgets/filelist.py:26
 msgid "Filename"
-msgstr ""
+msgstr "Název souboru"
 
 #: cola/widgets/filelist.py:26
 msgid "Additions"
@@ -2291,24 +2291,24 @@ msgstr ""
 
 #: cola/widgets/archive.py:109
 msgid "Save Archive"
-msgstr ""
+msgstr "Uložit Archiv"
 
 #: cola/widgets/archive.py:127
 msgid "Prefix"
-msgstr ""
+msgstr "Předpona"
 
 #: cola/widgets/archive.py:132
 msgid "Advanced"
-msgstr ""
+msgstr "Pokročilé"
 
 #: cola/widgets/archive.py:179 cola/widgets/browse.py:542
 msgid "File Saved"
-msgstr ""
+msgstr "Soubor uložen"
 
 #: cola/widgets/archive.py:180 cola/widgets/browse.py:543
 #, python-format
 msgid "File saved to \"%s\""
-msgstr ""
+msgstr "Soubor uložen jako \"%s\""
 
 #: cola/widgets/archive.py:187
 msgid "Overwrite File?"
@@ -2370,7 +2370,7 @@ msgstr ""
 
 #: cola/widgets/remote.py:188
 msgid "Include tags "
-msgstr ""
+msgstr "Zahrnout tagy "
 
 #: cola/widgets/remote.py:189
 msgid "Prune "
@@ -2403,14 +2403,16 @@ msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
+"Větev \"%(branch)s\" neexistuje v \"%(remote)s\".\n"
+"Bude uveřejněna nová vzdálená větev."
 
 #: cola/widgets/remote.py:541
 msgid "Create a new remote branch?"
-msgstr ""
+msgstr "Vytvořit novou vzdálenou větev?"
 
 #: cola/widgets/remote.py:542
 msgid "Create Remote Branch"
-msgstr ""
+msgstr "Vytvořit vzdálenou větev"
 
 #: cola/widgets/remote.py:549
 msgid "Force Fetch?"
@@ -2471,15 +2473,15 @@ msgstr ""
 
 #: cola/widgets/editremotes.py:50
 msgid "Remote git repositories - double-click to rename"
-msgstr ""
+msgstr "Vzdálené git repozitáře - dvojklikem přejmenovat"
 
 #: cola/widgets/editremotes.py:62
 msgid "Add new remote git repository"
-msgstr ""
+msgstr "Přidat nový vzdálený git repozitář"
 
 #: cola/widgets/editremotes.py:68
 msgid "Delete remote"
-msgstr ""
+msgstr "Odstranit vzdálený"
 
 #: cola/widgets/editremotes.py:162
 #, python-format
@@ -2488,11 +2490,11 @@ msgstr ""
 
 #: cola/widgets/editremotes.py:195
 msgid "Add Remote"
-msgstr ""
+msgstr "Přidat vzdálený"
 
 #: cola/widgets/editremotes.py:205
 msgid "Add remote"
-msgstr ""
+msgstr "Přidat vzdálený"
 
 #: cola/widgets/editremotes.py:206
 msgid "Name for the new remote"
@@ -2588,7 +2590,7 @@ msgstr "Místní větev"
 
 #: cola/widgets/createbranch.py:113
 msgid "Tracking branch"
-msgstr ""
+msgstr "Sledovaná větev"
 
 #: cola/widgets/createbranch.py:119
 msgid "Update Existing Branch:"
@@ -2673,7 +2675,7 @@ msgstr ""
 
 #: cola/widgets/stash.py:59
 msgid "Drop"
-msgstr ""
+msgstr "Zahodit"
 
 #: cola/widgets/stash.py:60
 msgid "Drop the selected stash"
@@ -2735,7 +2737,7 @@ msgstr ""
 
 #: cola/widgets/createtag.py:73 cola/models/browse.py:40
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 #: cola/widgets/createtag.py:75
 msgid "Tag message..."
@@ -2776,7 +2778,7 @@ msgstr ""
 
 #: cola/models/browse.py:42
 msgid "Age"
-msgstr ""
+msgstr "Stáří"
 
 #: cola/models/browse.py:283 cola/models/browse.py:287
 #, python-format
