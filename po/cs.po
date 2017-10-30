@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2017-10-21 22:02+0200\n"
+"PO-Revision-Date: 2017-10-30 21:09+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,8 @@ msgstr ""
 
 #: cola/cmds.py:150
 msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Aborting the current merge will cause *ALL* uncommitted changes to be "
+"lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
 
@@ -921,7 +922,7 @@ msgstr ""
 #: cola/widgets/branch.py:271 cola/widgets/remote.py:130
 #: cola/widgets/createbranch.py:276
 msgid "Updating"
-msgstr ""
+msgstr "Aktualizuje se"
 
 #: cola/widgets/branch.py:299
 msgid "Rename branch"
@@ -1314,9 +1315,8 @@ msgid "Copy Basename to Clipboard"
 msgstr ""
 
 #: cola/widgets/status.py:192
-#, fuzzy
 msgid "Customize..."
-msgstr "Zavřít..."
+msgstr ""
 
 #: cola/widgets/status.py:196 cola/widgets/browse.py:149
 msgid "View History..."
@@ -1335,9 +1335,8 @@ msgid "Delete Files..."
 msgstr "Smazat soubory..."
 
 #: cola/widgets/status.py:542
-#, fuzzy
 msgid "Copy..."
-msgstr "Kopírovat"
+msgstr "Kopírovat..."
 
 #: cola/widgets/status.py:597 cola/widgets/status.py:622
 msgid "Unstage Selected"
@@ -1381,9 +1380,8 @@ msgid "Custom Copy Actions"
 msgstr ""
 
 #: cola/widgets/status.py:1040
-#, fuzzy
 msgid "Action Name"
-msgstr "Akce"
+msgstr "Název akce"
 
 #: cola/widgets/status.py:1041
 msgid "Format String"
@@ -1554,7 +1552,8 @@ msgstr "Aplikovat záplaty"
 msgid ""
 "\n"
 "            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                Drag and drop or use the <strong>Add</strong> button to "
+"add\n"
 "                patches to the list\n"
 "            </p>\n"
 "            "
