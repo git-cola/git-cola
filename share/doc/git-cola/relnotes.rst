@@ -35,6 +35,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/737
 
+  https://github.com/git-cola/git-cola/pull/740
+
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
 
