@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2017-10-30 21:09+0100\n"
+"PO-Revision-Date: 2017-11-07 22:02+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: cola/cmds.py:148 cola/widgets/main.py:230
 msgid "Abort Merge..."
-msgstr "Zrušit Merge..."
+msgstr "Zrušit sloučení (merge)..."
 
 #: cola/cmds.py:149
 msgid "Aborting the current merge?"
@@ -35,7 +35,7 @@ msgstr ""
 
 #: cola/cmds.py:153
 msgid "Abort Merge"
-msgstr "Zrušit Merge"
+msgstr "Zrušit sloučení"
 
 #: cola/cmds.py:166 cola/cmds.py:349 cola/cmds.py:416 cola/cmds.py:665
 #: cola/cmds.py:1480 cola/cmds.py:1934 cola/widgets/bookmarks.py:290
@@ -443,7 +443,7 @@ msgstr ""
 
 #: cola/cmds.py:1723
 msgid "Missing Tag Message"
-msgstr ""
+msgstr "Zpráva značky chybí"
 
 #: cola/cmds.py:1724
 msgid "Tag-signing was requested but the tag message is empty."
@@ -457,12 +457,12 @@ msgstr ""
 
 #: cola/cmds.py:1727
 msgid "Create Unsigned Tag"
-msgstr ""
+msgstr "Vytvořit nepodepsanou značku"
 
 #: cola/cmds.py:1754
 #, python-format
 msgid "Error: could not create tag \"%s\""
-msgstr ""
+msgstr "Chyba: značka \"%s\" nemohla být vytvořena"
 
 #: cola/cmds.py:1765 cola/widgets/action.py:59 cola/widgets/diff.py:446
 #: cola/widgets/commitmsg.py:231
@@ -616,7 +616,7 @@ msgstr "Klonovat repozitář"
 #: cola/guicmds.py:267
 #, python-format
 msgid "Cloning repository at %s"
-msgstr ""
+msgstr "Klonuje se repozitář %s"
 
 #: cola/guicmds.py:280
 #, python-format
@@ -883,7 +883,7 @@ msgstr "Vzdálená"
 
 #: cola/widgets/branch.py:26
 msgid "Tags"
-msgstr ""
+msgstr "Značky"
 
 #: cola/widgets/branch.py:52
 msgid "Toggle the branches filter"
@@ -1038,7 +1038,7 @@ msgstr ""
 
 #: cola/widgets/main.py:227
 msgid "Merge..."
-msgstr ""
+msgstr "Sloučit (merge)..."
 
 #: cola/widgets/main.py:233 cola/widgets/action.py:61
 msgid "Fetch..."
@@ -1062,7 +1062,7 @@ msgstr "Otevřít v novém okně..."
 
 #: cola/widgets/main.py:248 cola/widgets/action.py:64
 msgid "Stash..."
-msgstr ""
+msgstr "Odložit (stash)..."
 
 #: cola/widgets/main.py:257 cola/widgets/startup.py:49
 msgid "Clone..."
@@ -1114,7 +1114,7 @@ msgstr ""
 
 #: cola/widgets/main.py:293
 msgid "Create Tag..."
-msgstr "Vytvořit Tag..."
+msgstr "Vytvořit značku..."
 
 #: cola/widgets/main.py:297
 msgid "Create..."
@@ -1212,7 +1212,7 @@ msgstr "Zobrazit"
 #: cola/widgets/main.py:535
 #, python-format
 msgid "git cola version %s"
-msgstr ""
+msgstr "git cola verze %s"
 
 #: cola/widgets/main.py:571
 msgid "Add Toolbar"
@@ -1427,11 +1427,11 @@ msgstr "Sledovaná větev"
 #: cola/widgets/cfgactions.py:222 cola/widgets/merge.py:48
 #: cola/widgets/createbranch.py:114
 msgid "Tag"
-msgstr "Tag"
+msgstr "Značka"
 
 #: cola/widgets/cfgactions.py:226 cola/widgets/createtag.py:79
 msgid "Revision"
-msgstr ""
+msgstr "Revize"
 
 #: cola/widgets/dag.py:221
 msgid "Diff this -> selected"
@@ -1453,7 +1453,7 @@ msgstr ""
 #: cola/widgets/dag.py:233 cola/widgets/createtag.py:51
 #: cola/widgets/createtag.py:85
 msgid "Create Tag"
-msgstr "Vytvořit Tag"
+msgstr "Vytvořit značku"
 
 #: cola/widgets/dag.py:239 cola/widgets/search.py:79
 msgid "Cherry Pick"
@@ -1558,18 +1558,25 @@ msgid ""
 "            </p>\n"
 "            "
 msgstr ""
+"\n"
+"            <p>\n"
+"                Táhněte a pusťte nebo použijte tlačítko <strong>Přidat</"
+"strong>, abyste přidali\n"
+"                záplaty na seznam\n"
+"            </p>\n"
+"            "
 
 #: cola/widgets/patch.py:87
 msgid "Add patches (+)"
-msgstr ""
+msgstr "Přidat záplaty (+)"
 
 #: cola/widgets/patch.py:91
 msgid "Remove selected (Delete)"
-msgstr ""
+msgstr "Odstranit vybrané (Smazat)"
 
 #: cola/widgets/patch.py:134
 msgid "Select patch file(s)..."
-msgstr ""
+msgstr "Vybrat soubor (soubory) se záplatami..."
 
 #: cola/widgets/search.py:42 cola/widgets/search.py:60 cola/widgets/grep.py:92
 msgid "Search"
@@ -1718,7 +1725,7 @@ msgstr ""
 
 #: cola/widgets/prefs.py:192
 msgid "Check spelling"
-msgstr ""
+msgstr "Kontrolovat pravopis"
 
 #: cola/widgets/prefs.py:252
 msgid "All Repositories"
@@ -2111,7 +2118,7 @@ msgstr ""
 
 #: cola/widgets/commitmsg.py:131
 msgid "Check Spelling"
-msgstr ""
+msgstr "Kontrolovat pravopis"
 
 #: cola/widgets/commitmsg.py:145
 msgid "Load Previous Commit Message"
@@ -2234,7 +2241,7 @@ msgstr ""
 
 #: cola/widgets/merge.py:62
 msgid "No fast forward"
-msgstr ""
+msgstr "Ne rychle vpřed"
 
 #: cola/widgets/merge.py:66
 msgid ""
@@ -2248,17 +2255,17 @@ msgstr ""
 
 #: cola/widgets/merge.py:80
 msgid "Merge"
-msgstr ""
+msgstr "Sloučit"
 
 #: cola/widgets/merge.py:131
 #, python-format
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
+msgstr "Začlenit \"%(revision)s\" do \"%(branch)s\""
 
 #: cola/widgets/merge.py:134
 #, python-format
 msgid "Merge into \"%s\""
-msgstr ""
+msgstr "Začlenit do \"%s\""
 
 #: cola/widgets/merge.py:182 cola/widgets/merge.py:191
 msgid "No Revision Specified"
@@ -2369,7 +2376,7 @@ msgstr ""
 
 #: cola/widgets/remote.py:188
 msgid "Include tags "
-msgstr "Zahrnout tagy "
+msgstr "Zahrnout značky "
 
 #: cola/widgets/remote.py:189
 msgid "Prune "
@@ -2593,7 +2600,7 @@ msgstr "Sledovaná větev"
 
 #: cola/widgets/createbranch.py:119
 msgid "Update Existing Branch:"
-msgstr ""
+msgstr "Aktualizovat stávající větev:"
 
 #: cola/widgets/createbranch.py:121
 msgid "No"
@@ -2601,7 +2608,7 @@ msgstr ""
 
 #: cola/widgets/createbranch.py:122
 msgid "Fast Forward Only"
-msgstr ""
+msgstr "Pouze rychle vpřed"
 
 #: cola/widgets/createbranch.py:126
 msgid "Fetch Tracking Branch"
@@ -2662,15 +2669,15 @@ msgstr ""
 
 #: cola/widgets/stash.py:41
 msgid "Stash"
-msgstr ""
+msgstr "Odložit"
 
 #: cola/widgets/stash.py:50
 msgid "Apply the selected stash"
-msgstr ""
+msgstr "Aplikovat vybraný odklad"
 
 #: cola/widgets/stash.py:55
 msgid "Save modified state to new stash"
-msgstr ""
+msgstr "Uložit modifikovaný stav jako nový odklad"
 
 #: cola/widgets/stash.py:59
 msgid "Drop"
@@ -2678,7 +2685,7 @@ msgstr "Zahodit"
 
 #: cola/widgets/stash.py:60
 msgid "Drop the selected stash"
-msgstr ""
+msgstr "Zahodit vybraný odklad"
 
 #: cola/widgets/stash.py:65
 msgid "Keep Index"
@@ -2686,37 +2693,37 @@ msgstr ""
 
 #: cola/widgets/stash.py:163
 msgid "Save Stash"
-msgstr ""
+msgstr "Uložit odklad"
 
 #: cola/widgets/stash.py:164
 msgid "Enter a name for the stash"
-msgstr ""
+msgstr "Zadat název odkladu"
 
 #: cola/widgets/stash.py:171
 msgid "Error: Stash exists"
-msgstr ""
+msgstr "Chyba: Odklad existuje"
 
 #: cola/widgets/stash.py:172
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr ""
+msgstr "Odklad s názvem \"%s\" již existuje"
 
 #: cola/widgets/stash.py:188
 msgid "Drop Stash?"
-msgstr ""
+msgstr "Zahodit odklad?"
 
 #: cola/widgets/stash.py:189
 msgid "Recovering a dropped stash is not possible."
-msgstr ""
+msgstr "Obnova zahozeného odkladu není možná."
 
 #: cola/widgets/stash.py:190
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr ""
+msgstr "Zahodit odklad \"%s\"?"
 
 #: cola/widgets/stash.py:191
 msgid "Drop Stash"
-msgstr ""
+msgstr "Zahodit odklad"
 
 #: cola/widgets/createtag.py:59
 msgid "vX.Y.Z"
@@ -2724,11 +2731,11 @@ msgstr ""
 
 #: cola/widgets/createtag.py:61
 msgid "Specifies the tag name"
-msgstr ""
+msgstr "Určuje název značky"
 
 #: cola/widgets/createtag.py:66
 msgid "Sign Tag"
-msgstr ""
+msgstr "Podepsat značku"
 
 #: cola/widgets/createtag.py:68
 msgid "Whether to sign the tag (git tag -s)"
@@ -2740,11 +2747,11 @@ msgstr "Zpráva"
 
 #: cola/widgets/createtag.py:75
 msgid "Tag message..."
-msgstr ""
+msgstr "Zpráva značky..."
 
 #: cola/widgets/createtag.py:76
 msgid "Specifies the tag message"
-msgstr ""
+msgstr "Určuje zprávu značky"
 
 #: cola/widgets/createtag.py:83
 msgid "Specifies the SHA-1 to tag"
@@ -2764,16 +2771,16 @@ msgstr ""
 
 #: cola/widgets/createtag.py:125
 msgid "Please specify a name for the new tag."
-msgstr ""
+msgstr "Prosím zadejte název nové značky."
 
 #: cola/widgets/createtag.py:131
 msgid "Tag Created"
-msgstr ""
+msgstr "Značka vytvořena"
 
 #: cola/widgets/createtag.py:132
 #, python-format
 msgid "Created a new tag named \"%s\""
-msgstr ""
+msgstr "Vytvořena nová značka s názvem \"%s\""
 
 #: cola/models/browse.py:42
 msgid "Age"
