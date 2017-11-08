@@ -29,7 +29,7 @@ def main():
             'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
             'Vitor Lobo': 'Brazilian translation',
             'Igor Kopach': 'Ukranian translation',
-            'Zhang Han': 'Chinese translation',
+            'Zhang Han': 'Simplified Chinese translation',
             'Mickael Albertus': 'French translation',
             'Minarto Margoliono': 'Indonesian translation',
             'Sven Claussner': 'German translation',
@@ -41,6 +41,8 @@ def main():
             "Samsul Ma'arif": 'Indonesian translation',
             'Zeioth': 'Spanish translation',
             'Pavel Rehak': 'Czech translation',
+            'Guo Yunhe': 'Simplified Chinese translation',
+            'balping': 'Hungarian translation',
         }
     else:
         titles = {
