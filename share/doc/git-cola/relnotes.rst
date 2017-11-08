@@ -37,6 +37,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/740
 
+  https://github.com/git-cola/git-cola/pull/743
+
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
 
@@ -154,8 +156,8 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/710
 
-* Rebase now displays error more extensive error messages when rebasing fails
-  or stops.
+* `git rebase` error messages now displayed when rebasing fails or stops
+  via the standalone `git cola rebase` front-end.
 
   https://github.com/git-cola/git-cola/issues/721
 
