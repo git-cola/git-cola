@@ -312,6 +312,10 @@ class Git(object):
                 '_no_win32_startupinfo',
                 )
 
+        if cmd == "diff":
+            # use invariant encoding for diff
+            kwargs["_encoding"] = "raw_unicode_escape"
+
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
                 _kwargs[kwarg] = kwargs.pop(kwarg)

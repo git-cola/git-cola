@@ -359,18 +359,14 @@ def diff_helper(commit=None,
     elif head and amending and cached:
         argv.append(head)
 
-    encoding = None
     if filename:
         argv.append('--')
         if type(filename) is list:
             argv.extend(filename)
         else:
             argv.append(filename)
-            cfg = gitcfg.current()
-            encoding = cfg.file_encoding(filename)
 
     status, out, err = git.diff(R=reverse, M=True, cached=cached,
-                                _encoding=encoding,
                                 *argv,
                                 **common_diff_opts())
     if status != 0:

@@ -250,11 +250,12 @@ class ApplyDiffSelection(Command):
         if patch is None:
             return
 
-        cfg = gitcfg.current()
-        encoding = cfg.file_encoding(self.model.filename)
         tmp_file = utils.tmp_filename('patch')
         try:
-            core.write(tmp_file, patch, encoding=encoding)
+            # Patch encoding is always "raw_unicode_escape" because
+            # model.diff_text is always same. See method `git` of
+            # class `cola.git.Git`.
+            core.write(tmp_file, patch, encoding="raw_unicode_escape")
             if self.apply_to_worktree:
                 status, out, err = self.model.apply_diff_to_worktree(tmp_file)
             else:
