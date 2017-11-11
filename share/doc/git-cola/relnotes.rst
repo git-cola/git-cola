@@ -111,6 +111,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/731
 
+* The startup dialog now focuses the repository list so that repositories
+  can be selected with the keyboard without mouse intervention.
+
+  https://github.com/git-cola/git-cola/issues/741
+
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
