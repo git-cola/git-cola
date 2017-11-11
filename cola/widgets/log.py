@@ -6,6 +6,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from .. import core
 from .. import qtutils
 from ..i18n import N_
 from . import defs
@@ -51,7 +52,7 @@ class LogWidget(QtWidgets.QWidget):
         cursor.movePosition(cursor.End)
         text = self.output_text
         # NOTE: the ':  ' colon-SP-SP suffix in used by the syntax highlighter
-        prefix = time.strftime('%I:%M %p %Ss %Y-%m-%d:  ')
+        prefix = core.decode(time.strftime('%I:%M %p %Ss %Y-%m-%d:  '))
         for line in msg.splitlines():
             cursor.insertText(prefix + line + '\n')
         cursor.movePosition(cursor.End)
