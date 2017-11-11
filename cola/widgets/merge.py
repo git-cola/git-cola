@@ -206,15 +206,13 @@ class Merge(standard.Dialog):
         state = super(Merge, self).export_state()
         state['no-ff'] = self.checkbox_noff.isChecked()
         state['sign'] = self.checkbox_sign.isChecked()
+        state['commit'] = self.checkbox_commit.isChecked()
         return state
 
     def apply_state(self, state):
         """Apply persistent settings"""
         result = super(Merge, self).apply_state(state)
-        no_ff = state.get('no-ff', False)
-        self.checkbox_noff.setChecked(no_ff)
-        self.checkbox_noff_state = no_ff
-
-        sign = state.get('sign', False)
-        self.checkbox_sign.setChecked(sign)
+        self.checkbox_noff.setChecked(state.get('no-ff', False))
+        self.checkbox_sign.setChecked(state.get('sign', False))
+        self.checkbox_commit.setChecked(state.get('commit', True))
         return result
