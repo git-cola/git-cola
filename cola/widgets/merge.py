@@ -134,6 +134,7 @@ class Merge(standard.Dialog):
                    dict(revision=revision, branch=branch))
         else:
             txt = N_('Merge into "%s"') % branch
+        self.button_merge.setEnabled(bool(revision))
         self.title_label.setText(txt)
         self.setWindowTitle(txt)
 
