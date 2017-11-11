@@ -138,7 +138,9 @@ def add_grep_command(subparser):
 
 
 def add_merge_command(subparser):
-    add_command(subparser, 'merge', 'merge branches', cmd_merge)
+    parser = add_command(subparser, 'merge', 'merge branches', cmd_merge)
+    parser.add_argument('ref', nargs='?', metavar='<ref>',
+                        help='branch, tag, or commit to merge')
 
 
 def add_pull_command(subparser):
@@ -379,7 +381,7 @@ def cmd_grep(args):
 def cmd_merge(args):
     context = application_init(args, update=True)
     from .widgets.merge import Merge
-    view = Merge(context.cfg, context.model, parent=None)
+    view = Merge(context.cfg, context.model, parent=None, ref=args.ref)
     return application_start(context, view)
 
 
