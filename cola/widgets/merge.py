@@ -28,7 +28,7 @@ def local_merge():
 class Merge(standard.Dialog):
     """Provides a dialog for merging branches."""
 
-    def __init__(self, cfg, model, parent=None):
+    def __init__(self, cfg, model, parent=None, ref=None):
         standard.Dialog.__init__(self, parent=parent)
         self.cfg = cfg
         self.model = model
@@ -42,6 +42,8 @@ class Merge(standard.Dialog):
 
         self.revision = completion.GitRefLineEdit()
         self.revision.setToolTip(N_('Revision to Merge'))
+        if ref:
+            self.revision.set_value(ref)
 
         self.radio_local = qtutils.radio(text=N_('Local Branch'), checked=True)
         self.radio_remote = qtutils.radio(text=N_('Tracking Branch'))
