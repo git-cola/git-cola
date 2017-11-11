@@ -22,6 +22,7 @@ Thanks
 * Benedict Lee
 * Benoît Nouyrigat
 * Bert Jacobs
+* 林博仁 (Lin-Buo-Ren)
 * Charles 101
 * Christian Jann
 * Christopher Meng
