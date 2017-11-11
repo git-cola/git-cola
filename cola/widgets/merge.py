@@ -104,6 +104,7 @@ class Merge(standard.Dialog):
 
         # Signal/slot connections
         self.revision.textChanged.connect(self.update_title)
+        self.revision.returnPressed.connect(self.merge_revision)
         self.revisions.itemSelectionChanged.connect(self.revision_selected)
 
         qtutils.connect_released(self.radio_local, self.update_revisions)
