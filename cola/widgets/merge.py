@@ -200,3 +200,17 @@ class Merge(standard.Dialog):
         sign = self.checkbox_sign.isChecked()
         cmds.do(cmds.Merge, revision, no_commit, squash, noff, sign)
         self.accept()
+
+    def export_state(self):
+        """Export persistent settings"""
+        state = super(Merge, self).export_state()
+        state['no-ff'] = self.checkbox_noff.isChecked()
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super(Merge, self).apply_state(state)
+        no_ff = state.get('no-ff', False)
+        self.checkbox_noff.setChecked(no_ff)
+        self.checkbox_noff_state = no_ff
+        return result
