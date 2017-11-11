@@ -64,6 +64,7 @@ Thanks
 * Ivar Smolin
 * Jan @hanksoff
 * Jan Šilhan
+* Jan Tumanov
 * Jakub Wilk
 * James Geiger
 * Javier Rodriguez Cuevas

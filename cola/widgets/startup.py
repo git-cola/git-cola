@@ -112,6 +112,7 @@ class StartupDialog(standard.Dialog):
         self.bookmarks.activated.connect(self.open_bookmark)
 
         self.init_state(settings, self.resize_widget)
+        self.bookmarks.setFocus(True)
 
     def resize_widget(self):
         screen = QtWidgets.QApplication.instance().desktop()

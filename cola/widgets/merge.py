@@ -104,6 +104,7 @@ class Merge(standard.Dialog):
 
         # Signal/slot connections
         self.revision.textChanged.connect(self.update_title)
+        self.revision.returnPressed.connect(self.merge_revision)
         self.revisions.itemSelectionChanged.connect(self.revision_selected)
 
         qtutils.connect_released(self.radio_local, self.update_revisions)
@@ -134,6 +135,7 @@ class Merge(standard.Dialog):
                    dict(revision=revision, branch=branch))
         else:
             txt = N_('Merge into "%s"') % branch
+        self.button_merge.setEnabled(bool(revision))
         self.title_label.setText(txt)
         self.setWindowTitle(txt)
 
