@@ -205,6 +205,7 @@ class Merge(standard.Dialog):
         """Export persistent settings"""
         state = super(Merge, self).export_state()
         state['no-ff'] = self.checkbox_noff.isChecked()
+        state['sign'] = self.checkbox_sign.isChecked()
         return state
 
     def apply_state(self, state):
@@ -213,4 +214,7 @@ class Merge(standard.Dialog):
         no_ff = state.get('no-ff', False)
         self.checkbox_noff.setChecked(no_ff)
         self.checkbox_noff_state = no_ff
+
+        sign = state.get('sign', False)
+        self.checkbox_sign.setChecked(sign)
         return result
