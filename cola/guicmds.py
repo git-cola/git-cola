@@ -8,6 +8,7 @@ from .models import main
 from .widgets import completion
 from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
+from .widgets.selectcommits import select_commits_and_output
 from . import cmds
 from . import core
 from . import difftool
@@ -164,10 +165,13 @@ def prompt_for_clone():
 def export_patches():
     """Run 'git format-patch' on a list of commits."""
     revs, summaries = gitcmds.log_helper()
-    to_export = select_commits(N_('Export Patches'), revs, summaries)
-    if not to_export:
+    to_export_and_output = select_commits_and_output(N_('Export Patches'), revs,
+                                                     summaries)
+    if not to_export_and_output['to_export']:
         return
-    cmds.do(cmds.FormatPatch, reversed(to_export), reversed(revs))
+
+    cmds.do(cmds.FormatPatch, reversed(to_export_and_output['to_export']),
+            reversed(revs), to_export_and_output['output'])
 
 
 def diff_expression():

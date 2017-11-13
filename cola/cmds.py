@@ -867,13 +867,15 @@ class Edit(Command):
 class FormatPatch(Command):
     """Output a patch series given all revisions and a selected subset."""
 
-    def __init__(self, to_export, revs):
+    def __init__(self, to_export, revs, output='patches'):
         Command.__init__(self)
         self.to_export = list(to_export)
         self.revs = list(revs)
+        self.output = output
 
     def do(self):
-        status, out, err = gitcmds.format_patchsets(self.to_export, self.revs)
+        status, out, err = gitcmds.format_patchsets(self.to_export, self.revs,
+                                                    self.output)
         Interaction.log_status(status, out, err)
 
 
