@@ -1252,7 +1252,7 @@ class Rebase(Command):
                 # as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
         self.model.update_status()
-        title = N_('Rebase stoppped')
+        title = N_('Rebase stopped')
         Interaction.command(title, 'git rebase', status, out, err)
 
         return status, out, err
