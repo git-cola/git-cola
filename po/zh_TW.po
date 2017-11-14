@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2017-10-08 07:32+0800\n"
+"PO-Revision-Date: 2017-11-15 02:56+0800\n"
 "Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -307,9 +307,8 @@ msgid "Rebase"
 msgstr "變更基底"
 
 #: cola/cmds.py:1255
-#, fuzzy
 msgid "Rebase stoppped"
-msgstr "變更基底(rebase)"
+msgstr "變更基底(rebase)已停止"
 
 #: cola/cmds.py:1266
 msgid "Edit Rebase"
@@ -1354,19 +1353,16 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "將相對路徑複製到剪貼簿"
 
 #: cola/widgets/status.py:184
-#, fuzzy
 msgid "Copy Leading Path to Clipboard"
-msgstr "將相對路徑複製到剪貼簿"
+msgstr "將前導路徑複製到剪貼簿"
 
 #: cola/widgets/status.py:188
-#, fuzzy
 msgid "Copy Basename to Clipboard"
-msgstr "將路徑複製到剪貼簿"
+msgstr "將基底檔名複製到剪貼簿"
 
 #: cola/widgets/status.py:192
-#, fuzzy
 msgid "Customize..."
-msgstr "關閉……"
+msgstr "自訂……"
 
 #: cola/widgets/status.py:196 cola/widgets/browse.py:149
 msgid "View History..."
@@ -1385,9 +1381,8 @@ msgid "Delete Files..."
 msgstr "刪除檔案……"
 
 #: cola/widgets/status.py:542
-#, fuzzy
 msgid "Copy..."
-msgstr "複製"
+msgstr "複製……"
 
 #: cola/widgets/status.py:597 cola/widgets/status.py:622
 msgid "Unstage Selected"
@@ -1420,7 +1415,7 @@ msgstr ""
 
 #: cola/widgets/status.py:989
 msgid "Help - Custom Copy Actions"
-msgstr ""
+msgstr "求助 - 自訂複製操作"
 
 #: cola/widgets/status.py:999
 msgid "Filter paths..."
@@ -1428,17 +1423,15 @@ msgstr "過濾檔案路徑……"
 
 #: cola/widgets/status.py:1035
 msgid "Custom Copy Actions"
-msgstr ""
+msgstr "自訂複製操作"
 
 #: cola/widgets/status.py:1040
-#, fuzzy
 msgid "Action Name"
-msgstr "選項..."
+msgstr "操作名稱"
 
 #: cola/widgets/status.py:1041
-#, fuzzy
 msgid "Format String"
-msgstr "固定內容字串"
+msgstr "格式字串"
 
 #: cola/widgets/status.py:1112
 #, python-format
@@ -1519,9 +1512,8 @@ msgid "Launch Directory Diff Tool"
 msgstr "啟動目錄差異檢視工具"
 
 #: cola/widgets/dag.py:248
-#, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "取出分支內容"
+msgstr "取出脫離的 HEAD 指標版本"
 
 #: cola/widgets/dag.py:257 cola/widgets/filelist.py:39
 msgid "Grab File..."
@@ -1898,7 +1890,7 @@ msgid "Translators"
 msgstr "翻譯者們"
 
 #: cola/widgets/about.py:165
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "        <br>\n"
@@ -1915,14 +1907,14 @@ msgid ""
 msgstr ""
 "\n"
 "        <br>\n"
-"            Git Cola 第 %(cola_version)s　版\n"
+"            Git Cola %(cola_version)s 版第 %(build_version)s 修訂版\n"
 "        <ul>\n"
 "            <li> %(platform_version)s\n"
 "            <li> Python (%(python_path)s) 第 %(python_version)s 版\n"
 "            <li> Git 第 %(git_version)s　版\n"
 "            <li> Qt 第 %(qt_version)s 版\n"
 "            <li> QtPy 第 %(qtpy_version)s 版\n"
-"            <li> %(pyqt_api_name)s 第 %(pyqt_api_version)s　版\n"
+"            <li> %(pyqt_api_name)s 第 %(pyqt_api_version)s 版\n"
 "        </ul>\n"
 "    "
 
@@ -1998,7 +1990,6 @@ msgid "Brazilian translation"
 msgstr "巴西語翻譯"
 
 #: cola/widgets/about.py:337 cola/widgets/about.py:349
-#, fuzzy
 msgid "Simplified Chinese translation"
 msgstr "簡體中文翻譯"
 
@@ -2027,18 +2018,16 @@ msgid "French translation"
 msgstr "法語翻譯"
 
 #: cola/widgets/about.py:353
-#, fuzzy
 msgid "Czech translation"
-msgstr "法語翻譯"
+msgstr "捷克語翻譯"
 
 #: cola/widgets/about.py:357 cola/widgets/about.py:361
 msgid "Spanish translation"
 msgstr "西班牙語翻譯"
 
 #: cola/widgets/about.py:363
-#, fuzzy
 msgid "Hungarian translation"
-msgstr "俄羅斯語翻譯"
+msgstr "匈牙利語翻譯"
 
 #: cola/widgets/about.py:365
 msgid "Polish translation"
