@@ -42,6 +42,21 @@ _encoding_tests = [
     # <-- add encodings here
 ]
 
+class DecodedStr(ustr):
+    __slots__ = ["encoding"]
+
+    def __new__(cls, string, encoding):
+        if isinstance(string, DecodedStr):
+            if encoding != string.encoding:
+                raise RuntimeError(
+                    "Encoding conflict: %s vs %s" % (string.encoding, encoding)
+                )
+
+            string = str(string)
+
+        obj = ustr.__new__(cls, string)
+        obj.encoding = encoding
+        return obj
 
 def decode(enc, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
