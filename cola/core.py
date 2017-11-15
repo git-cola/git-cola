@@ -61,8 +61,11 @@ class DecodedStr(ustr):
 def decode(enc, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
     """
-    if enc is None or type(enc) is ustr:
-        return enc
+    if enc is None:
+        return None
+
+    if isinstance(enc, ustr):
+        return DecodedStr(enc, "utf-8")
 
     if encoding is None:
         encoding_tests = _encoding_tests
@@ -71,10 +74,15 @@ def decode(enc, encoding=None, errors='strict'):
 
     for encoding in encoding_tests:
         try:
-            return enc.decode(encoding, errors)
+            enc = enc.decode(encoding, errors)
         except:
-            pass
-    return enc.decode('utf-8', errors='ignore')
+            continue
+        break # suitable encoding is found
+    else:
+        encoding = 'utf-8'
+        enc = enc.decode(encoding, errors='ignore')
+
+    return DecodedStr(enc, encoding)
 
 
 def encode(string, encoding=None):
