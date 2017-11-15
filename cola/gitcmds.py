@@ -380,8 +380,10 @@ def diff_helper(commit=None,
         else:
             return ''
 
-    return extract_diff_header(status, deleted,
-                               with_diff_header, suppress_header, out)
+    return core.DecodedStr(extract_diff_header(status, deleted,
+                                               with_diff_header,
+                                               suppress_header, out),
+                           out.encoding)
 
 
 def extract_diff_header(status, deleted,
