@@ -239,7 +239,9 @@ class ApplyDiffSelection(Command):
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
-        parser = DiffParser(self.model.filename, self.model.diff_text)
+        diff_text = self.model.diff_text
+
+        parser = DiffParser(self.model.filename, diff_text)
         if self.has_selection:
             patch = parser.generate_patch(self.first_line_idx,
                                           self.last_line_idx,
@@ -250,8 +252,13 @@ class ApplyDiffSelection(Command):
         if patch is None:
             return
 
-        cfg = gitcfg.current()
-        encoding = cfg.file_encoding(self.model.filename)
+        if isinstance(diff_text, core.DecodedStr):
+            # original encoding must prevail
+            encoding = diff_text.encoding
+        else:
+            cfg = gitcfg.current()
+            encoding = cfg.file_encoding(self.model.filename)
+
         tmp_file = utils.tmp_filename('patch')
         try:
             core.write(tmp_file, patch, encoding=encoding)
