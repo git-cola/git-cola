@@ -978,8 +978,8 @@ def show_help():
     help_text = N_(r"""
         Format String Variables
         -----------------------
-          %(path)s  =  relative filename path
-       %(abspath)s  =  absolute filename path
+          %(path)s  =  relative file path
+       %(abspath)s  =  absolute file path
        %(dirname)s  =  relative directory path
     %(absdirname)s  =  absolute directory path
       %(filename)s  =  file basename
