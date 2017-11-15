@@ -7,6 +7,7 @@ from qtpy.QtCore import Qt
 from .. import gitcmds
 from .. import qtutils
 from ..i18n import N_
+from ..icons import folder
 from ..interaction import Interaction
 from . import defs
 from .diff import DiffTextEdit
@@ -18,7 +19,17 @@ def select_commits(title, revs, summaries, multiselect=True):
     model = Model(revs, summaries)
     parent = qtutils.active_window()
     dialog = SelectCommits(model, parent, title, multiselect=multiselect)
+
     return dialog.select_commits()
+
+
+def select_commits_and_output(title, revs, summaries, multiselect=True):
+    """Use the SelectCommitsAndOutput to select commits from a list and output path."""
+    model = Model(revs, summaries)
+    parent = qtutils.active_window()
+    dialog = SelectCommitsAndOutput(model, parent, title,
+                                    multiselect=multiselect)
+    return dialog.select_commits_and_output()
 
 
 class Model(object):
@@ -118,3 +129,38 @@ class SelectCommits(Dialog):
         oid = self.selected_commit()
         if oid:
             self.accept()
+
+
+class SelectCommitsAndOutput(SelectCommits):
+
+    def __init__(self, model, parent=None, title=None, multiselect=True,
+                 syntax=True):
+        SelectCommits.__init__(self, model, parent, title, multiselect, syntax)
+
+        self.output_dir = 'output'
+        self.select_output = qtutils.create_button(tooltip=N_('Select output dir'),
+                                                   icon=folder())
+        self.output_text = QtWidgets.QLineEdit()
+        self.output_text.setReadOnly(True)
+        self.output_text.setText(self.output_dir)
+
+        output_layout = qtutils.hbox(defs.no_margin, defs.no_spacing,
+                                     self.select_output,
+                                     self.output_text)
+
+        self.input_layout.insertLayout(1, output_layout)
+        qtutils.connect_button(self.select_output, self.show_output_dialog)
+
+    def select_commits_and_output(self):
+        to_export = SelectCommits.select_commits(self)
+        output = self.output_dir
+
+        return {'to_export': to_export, 'output': output}
+
+    def show_output_dialog(self):
+        self.output_dir = qtutils.opendir_dialog(N_('Select output directory'),
+                                                 self.output_dir)
+        if not self.output_dir:
+            return
+
+        self.output_text.setText(self.output_dir)
