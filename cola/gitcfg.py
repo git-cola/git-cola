@@ -347,7 +347,7 @@ class GitConfig(observable.Observable):
         return value
 
     def gui_encoding(self):
-        return self.get_cached('gui.encoding', default='utf-8')
+        return self.get_cached('gui.encoding', default=None)
 
     def is_per_file_attrs_enabled(self):
         return self.get_cached('cola.fileattributes',
