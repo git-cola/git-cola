@@ -35,6 +35,23 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         actual = core.decode(None)
         self.assertEqual(expect, actual)
 
+    def test_decode_utf8(self):
+        filename = helper.fixture('cyrillic-utf-8.txt')
+        actual = core.read(filename)
+        self.assertEqual(actual.encoding, 'utf-8')
+
+    def test_decode_non_utf8(self):
+        filename = helper.fixture('cyrillic-cp1251.txt')
+        actual = core.read(filename)
+        self.assertEqual(actual.encoding, 'iso-8859-15')
+
+    def test_decode_non_utf8_string(self):
+        filename = helper.fixture('cyrillic-cp1251.txt')
+        with open(filename, 'rb') as f:
+            content = f.read()
+        actual = core.decode(content)
+        self.assertEqual(actual.encoding, 'iso-8859-15')
+
 
 if __name__ == '__main__':
     unittest.main()
