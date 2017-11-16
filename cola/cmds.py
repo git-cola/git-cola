@@ -252,7 +252,7 @@ class ApplyDiffSelection(Command):
         if patch is None:
             return
 
-        if isinstance(diff_text, core.DecodedStr):
+        if isinstance(diff_text, core.UStr):
             # original encoding must prevail
             encoding = diff_text.encoding
         else:
