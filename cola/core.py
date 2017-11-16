@@ -43,23 +43,57 @@ _encoding_tests = [
 ]
 
 
-def decode(enc, encoding=None, errors='strict'):
+class UStr(ustr):
+    """Unicode string wrapper that remembers its encoding
+
+    UStr wraps unicode strings to provide the `encoding` attribute.
+    UStr is used when decoding strings of an unknown encoding.
+    In order to generate patches that contain the original byte sequences,
+    we must preserve the original encoding when calling decode()
+    so that it can later be used when reconstructing the original
+    byte sequences.
+
+    """
+    def __new__(cls, string, encoding):
+
+        if isinstance(string, UStr):
+            if encoding != string.encoding:
+                raise ValueError('Encoding conflict: %s vs. %s'
+                                 % (string.encoding, encoding))
+            string = ustr(string)
+
+        obj = ustr.__new__(cls, string)
+        obj.encoding = encoding
+        return obj
+
+
+def decode(value, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
     """
-    if enc is None or type(enc) is ustr:
-        return enc
-
-    if encoding is None:
-        encoding_tests = _encoding_tests
+    if value is None:
+        result = None
+    elif isinstance(value, ustr):
+        result = UStr(value, 'utf-8')
     else:
-        encoding_tests = itertools.chain([encoding], _encoding_tests)
+        result = None
+        if encoding is None:
+            encoding_tests = _encoding_tests
+        else:
+            encoding_tests = itertools.chain([encoding], _encoding_tests)
 
-    for encoding in encoding_tests:
-        try:
-            return enc.decode(encoding, errors)
-        except:
-            pass
-    return enc.decode('utf-8', errors='ignore')
+        for encoding in encoding_tests:
+            try:
+                decoded = value.decode(encoding, errors)
+                result = UStr(decoded, encoding)
+                break
+            except ValueError:
+                pass
+
+        if result is None:
+            encoding = 'utf-8'
+            result = value.decode(encoding, errors='ignore')
+
+    return result
 
 
 def encode(string, encoding=None):

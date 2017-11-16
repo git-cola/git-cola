@@ -336,19 +336,22 @@ class GitConfig(observable.Observable):
                 result[key] = val
         return result
 
-    def get_cached(self, key, default=None):
+    def get_cached(self, key, default=None, fn=None):
         cache = self._value_cache
         try:
             value = cache[key]
         except KeyError:
+            if fn:
+                default = fn()
             value = cache[key] = self.get(key, default=default)
         return value
 
     def gui_encoding(self):
-        return self.get_cached('gui.encoding', default='utf-8')
+        return self.get_cached('gui.encoding', default=None)
 
     def is_per_file_attrs_enabled(self):
-        return self.get_cached('cola.fileattributes', default=False)
+        return self.get_cached('cola.fileattributes',
+                               fn=lambda: os.path.exists('.gitattributes'))
 
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
