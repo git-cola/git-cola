@@ -17,9 +17,9 @@ from .. import gitcmds
 from .. import icons
 from .. import utils
 from .. import qtutils
+from . import diff
 from . import defs
 from . import standard
-from .diff import DiffTextEdit
 
 
 def mkdate(timespec):
@@ -67,7 +67,7 @@ class SearchWidget(standard.Dialog):
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
         self.commit_list.setSelectionMode(selection_mode)
 
-        self.commit_text = DiffTextEdit(self, whitespace=False)
+        self.commit_text = diff.DiffTextEdit(self, whitespace=False)
 
         self.button_export = qtutils.create_button(text=N_('Export Patches'),
                                                    icon=icons.diff())
@@ -331,8 +331,8 @@ class Search(SearchWidget):
             self.commit_text.setText('')
         else:
             qtutils.set_clipboard(revision)
-            diff = gitcmds.commit_diff(revision)
-            self.commit_text.setText(diff)
+            diff_text = gitcmds.commit_diff(revision)
+            self.commit_text.setText(diff_text)
 
     def export_patch(self):
         revision = self.selected_revision()
