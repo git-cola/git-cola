@@ -21,6 +21,12 @@ git-cola v3.1 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* The list of "Recent" repositories previously capped the number of
+  repositories shown to 8 repositories.  This can be set to a higher
+  value by setting the `cola.maxrecent` git config variable.
+
+  https://github.com/git-cola/git-cola/issues/752
+
 * Updated Ukranian translation.
 
   https://github.com/git-cola/git-cola/pull/753
