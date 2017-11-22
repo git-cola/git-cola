@@ -174,8 +174,8 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Blame Viewer'), self.blameviewer)
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
-        self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
+        self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Bold with dark background font instead of italic '
                         'headers (restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
