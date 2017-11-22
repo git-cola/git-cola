@@ -8,6 +8,7 @@ import sys
 from . import core
 from . import git
 from . import resources
+from .models import prefs
 
 
 def mkdict(obj):
@@ -125,7 +126,7 @@ class Settings(object):
             }
         self.recent.insert(0, entry)
 
-        if len(self.recent) >= 8:
+        if len(self.recent) >= prefs.maxrecent():
             self.recent.pop()
 
     def remove_recent(self, path):

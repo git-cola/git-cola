@@ -19,6 +19,7 @@ EDITOR = 'gui.editor'
 FONTDIFF = 'cola.fontdiff'
 HISTORY_BROWSER = 'gui.historybrowser'
 LINEBREAK = 'cola.linebreak'
+MAXRECENT = 'cola.maxrecent'
 MERGE_DIFFSTAT = 'merge.diffstat'
 MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
@@ -87,6 +88,10 @@ def history_browser():
 
 def linebreak():
     return gitcfg.current().get(LINEBREAK, True)
+
+
+def maxrecent():
+    return gitcfg.current().get(MAXRECENT, 8)
 
 
 def spellcheck():
