@@ -102,14 +102,11 @@ class RepoFormWidget(FormWidget):
 
         self.name = QtWidgets.QLineEdit()
         self.email = QtWidgets.QLineEdit()
-        self.merge_verbosity = QtWidgets.QSpinBox()
-        self.merge_verbosity.setMinimum(0)
-        self.merge_verbosity.setMaximum(5)
+
+        self.merge_verbosity = standard.SpinBox(maximum=5)
         self.merge_verbosity.setProperty('value', 5)
 
-        self.diff_context = QtWidgets.QSpinBox()
-        self.diff_context.setMinimum(2)
-        self.diff_context.setMaximum(99)
+        self.diff_context = standard.SpinBox(minimum=2, maximum=99)
         self.diff_context.setProperty('value', 5)
 
         self.merge_summary = qtutils.checkbox(checked=True)
@@ -147,18 +144,11 @@ class SettingsFormWidget(FormWidget):
 
         self.fixed_font = QtWidgets.QFontComboBox()
 
-        self.font_size = QtWidgets.QSpinBox()
-        self.font_size.setMinimum(8)
+        self.font_size = standard.SpinBox(minimum=8)
         self.font_size.setProperty('value', 12)
-        self._font_str = None
 
-        self.tabwidth = QtWidgets.QSpinBox()
-        self.tabwidth.setWrapping(True)
-        self.tabwidth.setMaximum(42)
-
-        self.textwidth = QtWidgets.QSpinBox()
-        self.textwidth.setWrapping(True)
-        self.textwidth.setMaximum(150)
+        self.tabwidth = standard.SpinBox(maximum=42)
+        self.textwidth = standard.SpinBox(maximum=150)
 
         self.linebreak = qtutils.checkbox()
         self.editor = QtWidgets.QLineEdit()
