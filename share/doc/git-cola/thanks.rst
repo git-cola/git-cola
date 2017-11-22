@@ -44,6 +44,7 @@ Thanks
 * Drugoy
 * Efimov Vasily
 * Eric Drechsel
+* Erwan Bousse
 * Fabio Coatti
 * Filip Danilović
 * Garoe Dorta
