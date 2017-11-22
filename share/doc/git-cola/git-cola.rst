@@ -537,6 +537,12 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
+cola.maxrecent
+--------------
+`git cola` caps the number of recent repositories to avoid cluttering
+the start and recent repositories menu.  The maximum number of repositories to
+remember is controlled by `cola.maxrecent` and defaults to `8`.
+
 cola.dragencoding
 -----------------
 `git cola` encodes paths dragged from its widgets into `utf-16` when adding
