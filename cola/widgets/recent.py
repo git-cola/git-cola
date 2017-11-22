@@ -47,11 +47,8 @@ class RecentFiles(standard.Dialog):
         count = 8
         self.update_thread = UpdateFileListThread(count)
 
-        self.count = QtWidgets.QSpinBox()
-        self.count.setMinimum(0)
-        self.count.setMaximum(10000)
-        self.count.setValue(count)
-        self.count.setSuffix(N_(' commits ago'))
+        self.count = standard.SpinBox(value=count, maxi=10000,
+                                      suffix=N(' commits ago'))
 
         self.count_label = QtWidgets.QLabel()
         self.count_label.setText(N_('Showing changes since'))

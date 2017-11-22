@@ -677,13 +677,18 @@ class ProgressAnimationThread(QtCore.QThread):
 
 class SpinBox(QtWidgets.QSpinBox):
 
-    def __init__(self, parent=None, minimum=1, maximum=99999):
+    def __init__(self, parent=None, value=None,
+                 mini=1, maxi=99999, step=0, prefix='', suffix=''):
         QtWidgets.QSpinBox.__init__(self, parent)
+        self.setPrefix(prefix)
+        self.setSuffix(suffix)
         self.setWrapping(True)
-        self.setMinimum(minimum)
-        self.setMaximum(maximum)
-        self.setPrefix('')
-        self.setSuffix('')
+        self.setMinimum(mini)
+        self.setMaximum(maxi)
+        if step:
+            self.setSingleStep(step)
+        if value is not None:
+            self.setValue(value)
 
 
 def export_header_columns(widget, state):

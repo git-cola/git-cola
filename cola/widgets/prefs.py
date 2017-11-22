@@ -103,11 +103,8 @@ class RepoFormWidget(FormWidget):
         self.name = QtWidgets.QLineEdit()
         self.email = QtWidgets.QLineEdit()
 
-        self.merge_verbosity = standard.SpinBox(maximum=5)
-        self.merge_verbosity.setProperty('value', 5)
-
-        self.diff_context = standard.SpinBox(minimum=2, maximum=99)
-        self.diff_context.setProperty('value', 5)
+        self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
+        self.diff_context = standard.SpinBox(value=5, mini=2, maxi=9995)
 
         self.merge_summary = qtutils.checkbox(checked=True)
         self.merge_diffstat = qtutils.checkbox(checked=True)
@@ -143,21 +140,20 @@ class SettingsFormWidget(FormWidget):
         FormWidget.__init__(self, model, parent)
 
         self.fixed_font = QtWidgets.QFontComboBox()
+        self.font_size = standard.SpinBox(value=12, mini=8, maxi=192)
 
-        self.font_size = standard.SpinBox(minimum=8)
-        self.font_size.setProperty('value', 12)
+        self.maxrecent = standard.SpinBox(maxi=99)
+        self.tabwidth = standard.SpinBox(maxi=42)
+        self.textwidth = standard.SpinBox(maxi=150)
 
-        self.tabwidth = standard.SpinBox(maximum=42)
-        self.textwidth = standard.SpinBox(maximum=150)
-
-        self.linebreak = qtutils.checkbox()
         self.editor = QtWidgets.QLineEdit()
         self.historybrowser = QtWidgets.QLineEdit()
         self.blameviewer = QtWidgets.QLineEdit()
         self.difftool = QtWidgets.QLineEdit()
         self.mergetool = QtWidgets.QLineEdit()
+
+        self.linebreak = qtutils.checkbox()
         self.keep_merge_backups = qtutils.checkbox()
-        self.maxrecent = standard.SpinBox(maximum=99)
         self.sort_bookmarks = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()
         self.save_gui_settings = qtutils.checkbox()

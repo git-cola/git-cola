@@ -59,11 +59,7 @@ class SearchWidget(standard.Dialog):
         icon = icons.search()
         self.search_button = qtutils.create_button(text=N_('Search'),
                                                    icon=icon, default=True)
-        self.max_count = QtWidgets.QSpinBox()
-        self.max_count.setMinimum(5)
-        self.max_count.setMaximum(9995)
-        self.max_count.setSingleStep(5)
-        self.max_count.setValue(500)
+        self.max_count = standard.SpinBox(value=500, mini=5, maxi=9995, step=5)
 
         self.commit_list = QtWidgets.QListWidget()
         self.commit_list.setMinimumSize(QtCore.QSize(1, 1))
