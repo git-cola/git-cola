@@ -31,6 +31,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/753
 
+Packaging
+---------
+
+* The vendored `qtpy` library was updated to `v1.3.1`.
+
 .. _v3.0:
 
 git-cola v3.0

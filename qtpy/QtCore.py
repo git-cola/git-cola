@@ -10,7 +10,7 @@
 Provides QtCore classes and functions.
 """
 
-from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYSIDE2, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
@@ -22,6 +22,8 @@ if PYQT5:
 
     # Those are imported from `import *`
     del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
+elif PYSIDE2:
+    from PySide2.QtCore import *
 elif PYQT4:
     from PyQt4.QtCore import *
     # Those are things we inherited from Spyder that fix crazy crashes under
@@ -35,14 +37,58 @@ elif PYQT4:
                              QItemSelectionRange, QSortFilterProxyModel,
                              QStringListModel)
     from PyQt4.QtCore import QT_VERSION_STR as __version__
+    from PyQt4.QtCore import qInstallMsgHandler as qInstallMessageHandler
+
+    # QDesktopServices has has been split into (QDesktopServices and
+    # QStandardPaths) in Qt5
+    # This creates a dummy class that emulates QStandardPaths
+    from PyQt4.QtGui import QDesktopServices as _QDesktopServices
+
+    class QStandardPaths():
+        StandardLocation = _QDesktopServices.StandardLocation
+        displayName = _QDesktopServices.displayName
+        DesktopLocation = _QDesktopServices.DesktopLocation
+        DocumentsLocation = _QDesktopServices.DocumentsLocation
+        FontsLocation = _QDesktopServices.FontsLocation
+        ApplicationsLocation = _QDesktopServices.ApplicationsLocation
+        MusicLocation = _QDesktopServices.MusicLocation
+        MoviesLocation = _QDesktopServices.MoviesLocation
+        PicturesLocation = _QDesktopServices.PicturesLocation
+        TempLocation = _QDesktopServices.TempLocation
+        HomeLocation = _QDesktopServices.HomeLocation
+        DataLocation = _QDesktopServices.DataLocation
+        CacheLocation = _QDesktopServices.CacheLocation
 
     # Those are imported from `import *`
-    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
+    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR, qInstallMsgHandler
 elif PYSIDE:
     from PySide.QtCore import *
     from PySide.QtGui import (QItemSelection, QItemSelectionModel,
                               QItemSelectionRange, QSortFilterProxyModel,
                               QStringListModel)
+    from PySide.QtCore import qInstallMsgHandler as qInstallMessageHandler
+    del qInstallMsgHandler
+
+    # QDesktopServices has has been split into (QDesktopServices and
+    # QStandardPaths) in Qt5
+    # This creates a dummy class that emulates QStandardPaths
+    from PySide.QtGui import QDesktopServices as _QDesktopServices
+
+    class QStandardPaths():
+        StandardLocation = _QDesktopServices.StandardLocation
+        displayName = _QDesktopServices.displayName
+        DesktopLocation = _QDesktopServices.DesktopLocation
+        DocumentsLocation = _QDesktopServices.DocumentsLocation
+        FontsLocation = _QDesktopServices.FontsLocation
+        ApplicationsLocation = _QDesktopServices.ApplicationsLocation
+        MusicLocation = _QDesktopServices.MusicLocation
+        MoviesLocation = _QDesktopServices.MoviesLocation
+        PicturesLocation = _QDesktopServices.PicturesLocation
+        TempLocation = _QDesktopServices.TempLocation
+        HomeLocation = _QDesktopServices.HomeLocation
+        DataLocation = _QDesktopServices.DataLocation
+        CacheLocation = _QDesktopServices.CacheLocation
+
     import PySide.QtCore
     __version__ = PySide.QtCore.__version__
 else:

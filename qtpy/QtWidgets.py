@@ -13,13 +13,15 @@ Provides widget classes and functions.
     were the ``PyQt5.QtWidgets`` module.
 """
 
-from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYSIDE2, PYQT4, PYSIDE, PythonQtError
 from ._patch.qcombobox import patch_qcombobox
 from ._patch.qheaderview import introduce_renamed_methods_qheaderview
 
 
 if PYQT5:
     from PyQt5.QtWidgets import *
+elif PYSIDE2:
+    from PySide2.QtWidgets import *
 elif PYQT4:
     from PyQt4.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4

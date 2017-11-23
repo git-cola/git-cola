@@ -10,11 +10,13 @@
 Provides QtTest and functions
 """
 
-from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5,PYSIDE2, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
     from PyQt5.QtTest import QTest
+elif PYSIDE2:
+    from PySide2.QtTest import QTest
 elif PYQT4:
     from PyQt4.QtTest import QTest as OldQTest
 

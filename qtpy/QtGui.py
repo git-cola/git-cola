@@ -13,11 +13,13 @@ Provides QtGui classes and functions.
     the ``PyQt5.QtGui`` module.
 """
 
-from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYQT4, PYSIDE, PYSIDE2, PythonQtError
 
 
 if PYQT5:
     from PyQt5.QtGui import *
+elif PYSIDE2:
+    from PySide2.QtGui import *
 elif PYQT4:
     try:
         # Older versions of PyQt4 do not provide these
@@ -34,7 +36,7 @@ elif PYQT4:
     from PyQt4.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
                              QBrush, QClipboard, QCloseEvent, QColor,
                              QConicalGradient, QContextMenuEvent, QCursor,
-                             QDesktopServices, QDoubleValidator, QDrag,
+                             QDoubleValidator, QDrag,
                              QDragEnterEvent, QDragLeaveEvent, QDragMoveEvent,
                              QDropEvent, QFileOpenEvent, QFocusEvent, QFont,
                              QFontDatabase, QFontInfo, QFontMetrics,
@@ -66,11 +68,23 @@ elif PYQT4:
                              QWindowStateChangeEvent, qAlpha, qBlue,
                              qGray, qGreen, qIsGray, qRed, qRgb,
                              qRgba, QIntValidator)
+
+    # QDesktopServices has has been split into (QDesktopServices and
+    # QStandardPaths) in Qt5
+    # It only exposes QDesktopServices that are still in pyqt5
+    from PyQt4.QtGui import QDesktopServices as _QDesktopServices
+
+    class QDesktopServices():
+         openUrl = _QDesktopServices.openUrl
+         setUrlHandler = _QDesktopServices.setUrlHandler
+         unsetUrlHandler = _QDesktopServices.unsetUrlHandler
+
+
 elif PYSIDE:
     from PySide.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
                               QBrush, QClipboard, QCloseEvent, QColor,
                               QConicalGradient, QContextMenuEvent, QCursor,
-                              QDesktopServices, QDoubleValidator, QDrag,
+                              QDoubleValidator, QDrag,
                               QDragEnterEvent, QDragLeaveEvent, QDragMoveEvent,
                               QDropEvent, QFileOpenEvent, QFocusEvent, QFont,
                               QFontDatabase, QFontInfo, QFontMetrics,
@@ -106,5 +120,14 @@ elif PYSIDE:
                               QWindowStateChangeEvent, qAlpha, qBlue,
                               qGray, qGreen, qIsGray, qRed, qRgb, qRgba,
                               QIntValidator)
+    # QDesktopServices has has been split into (QDesktopServices and
+    # QStandardPaths) in Qt5
+    # It only exposes QDesktopServices that are still in pyqt5
+    from PySide.QtGui import QDesktopServices as _QDesktopServices
+
+    class QDesktopServices():
+         openUrl = _QDesktopServices.openUrl
+         setUrlHandler = _QDesktopServices.setUrlHandler
+         unsetUrlHandler = _QDesktopServices.unsetUrlHandler
 else:
     raise PythonQtError('No Qt bindings could be found')

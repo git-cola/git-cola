@@ -10,11 +10,13 @@
 Provides QtNetwork classes and functions.
 """
 
-from . import PYQT5, PYQT4, PYSIDE, PythonQtError
+from . import PYQT5, PYSIDE2, PYQT4, PYSIDE, PythonQtError
 
 
 if PYQT5:
     from PyQt5.QtNetwork import *
+elif PYSIDE2:
+    from PySide2.QtNetwork import *
 elif PYQT4:
     from PyQt4.QtNetwork import *
 elif PYSIDE:
