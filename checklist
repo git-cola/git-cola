@@ -1,3 +1,6 @@
 ./Meta/set-version vX.Y
+./Meta/release --doc
 ./Meta/tag
+# git cola push
+./Meta/release --all
 ./Meta/github.io.sh
