@@ -111,10 +111,13 @@ Thanks
 * Mike Hanson
 * MikHulk
 * Minarto Margoliono
+* Mosaab Alzoubi
 * Myz
 * Naraesk
 * Nick Todd
 * Nicolas Dietrich
+* Nikos Roussos
+* Oliver Haessler
 * OmegaPhil (Omega Weapon)
 * Owen Healy
 * Pamela Strucker
