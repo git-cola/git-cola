@@ -1,14 +1,29 @@
 #!/bin/sh
+. "$(dirname "$0")/common.sh"
 
-branch="$1"
-pull="$2"
+usage () {
+	echo "$0 <branch> <pull>"
+	exit 0
+}
 
-commit=$(git rev-parse "$branch") &&
-msg=$(
-	echo "$commit		$branch" |
-	git fmt-merge-msg --log |
-	sed -e "s,Merge $branch,Merge pull request #$pull from $branch," |
-	grep -v '^#'
-) &&
-git merge --no-ff --no-commit "$branch" &&
-git commit -m"$msg" --signoff
+main () {
+	if is_help "$1" || is_help "$2"
+	then
+		usage
+		return 0
+	fi
+
+	branch="$1"
+	pull="$2"
+	commit=$(git rev-parse "$branch") &&
+	msg=$(
+		echo "$commit		$branch" |
+		git fmt-merge-msg --log |
+		sed -e "s,Merge $branch,Merge pull request #$pull from $branch," |
+		grep -v '^#'
+	) &&
+	git merge --no-ff --no-commit "$branch" &&
+	git commit -m"$msg" --signoff
+}
+
+main "$@"
