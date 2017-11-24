@@ -1,5 +1,6 @@
-./Meta/set-version vX.Y
-./Meta/release --doc
+#!/bin/sh
+./Meta/update-qtpy ~/src/python/qtpy
+./Meta/set-version vA.B
 ./Meta/tag
 # git cola push
 ./Meta/release --all
