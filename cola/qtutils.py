@@ -826,8 +826,28 @@ def create_dock(title, parent, stretch=True, widget=None, fn=None):
 
 def create_menu(title, parent):
     """Create a menu and set its title."""
-    qmenu = QtWidgets.QMenu(title, parent)
+    qmenu = DebouncingMenu(title, parent)
     return qmenu
+
+
+class DebouncingMenu(QtWidgets.QMenu):
+    """Menu that debounces mouse release action ie. stops it if occurred
+    right after menu creation.
+
+    Disables annoying behaviour when RMB is pressed to show menu, cursor is
+    moved accidentally 1px onto newly created menu and released causing to
+    execute menu action
+    """
+
+    threshold_ms = 400
+
+    def __init__(self, title, parent):
+        QtWidgets.QMenu.__init__(self, title, parent)
+        self.created_at = utils.epoch_millis()
+
+    def mouseReleaseEvent(self, event):
+        if (utils.epoch_millis() - self.created_at) > DebouncingMenu.threshold_ms:
+            QtWidgets.QMenu.mouseReleaseEvent(self, event)
 
 
 def add_menu(title, parent):
