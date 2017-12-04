@@ -15,6 +15,10 @@ from . import core
 random.seed(hash(time.time()))
 
 
+def epoch_millis():
+    return int(time.time() * 1000)
+
+
 def add_parents(paths):
     """Iterate over each item in the set and add its parent directories."""
     all_paths = set()
