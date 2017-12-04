@@ -21,6 +21,17 @@ git-cola v3.1 (beta)
 
 Usability, bells and whistles
 -----------------------------
+* It was easy to accidentally trigger the first action in the `Status` tool's
+  context menu when using a quick right-click to bring up the menu.
+  A short sub-second delay was added to ensure that the top-most action is not
+  triggered unless enough time has passed.  This prevents accidental
+  activation of the first item (typically "Stage" or "Unstage") without
+  burdening common use cases.
+
+  https://github.com/git-cola/git-cola/pull/755
+
+  https://github.com/git-cola/git-cola/issues/643
+
 * The list of "Recent" repositories previously capped the number of
   repositories shown to 8 repositories.  This can be set to a higher
   value by setting the `cola.maxrecent` configuration variable.
