@@ -38,6 +38,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/752
 
+* Updated Turkish translation.
+
+  https://github.com/git-cola/git-cola/pull/756
+
 * Updated Ukranian translation.
 
   https://github.com/git-cola/git-cola/pull/753
