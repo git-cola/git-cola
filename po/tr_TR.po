@@ -1,22 +1,23 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translation of git-cola to Turkish.
+# Copyright (C) 2015, 2017 Barış ÇELİK.
+# This file is distributed under the same license as the git-cola package.
+#
+# Barış ÇELİK <bariscelikweb@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: git-cola\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2015-11-07 18:51+0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2017-12-05 10:28+0300\n"
+"Last-Translator: Barış ÇELİK <bariscelikweb@gmail.com>\n"
+"Language-Team: Turkish\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: cola/cmds.py:148 cola/widgets/main.py:230
 msgid "Abort Merge..."
@@ -28,10 +29,12 @@ msgstr "Aborting the current merge?"
 
 #: cola/cmds.py:150
 msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Aborting the current merge will cause *ALL* uncommitted changes to be "
+"lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Aborting the current merge will cause *ALL* uncommitted changes to be "
+"lost.\n"
 "Recovering uncommitted changes is not possible."
 
 #: cola/cmds.py:153
@@ -90,7 +93,7 @@ msgstr "Çalıştırılamayan sorgu \"%s\": lütfen editörü ayarlayın"
 
 #: cola/cmds.py:431 cola/cmds.py:434 cola/widgets/createbranch.py:270
 msgid "Reset Branch"
-msgstr "Reset Branch"
+msgstr "Branşı Sıfırla"
 
 #: cola/cmds.py:432
 msgid "Point the current branch head to a new commit?"
@@ -126,7 +129,7 @@ msgstr "Uzak \"%s\" oluşturulurken hata"
 
 #: cola/cmds.py:561
 msgid "Delete Remote"
-msgstr "Karşıda Sil"
+msgstr "Karşıdakini Sil"
 
 #: cola/cmds.py:562
 msgid "Delete remote?"
@@ -287,7 +290,7 @@ msgstr ""
 
 #: cola/cmds.py:1080
 msgid "Open Using Default Application"
-msgstr "Open Using Default Application"
+msgstr "Varsayılan Uygulamayla Aç"
 
 #: cola/cmds.py:1102
 msgid "Open Parent Directory"
@@ -304,9 +307,8 @@ msgid "Rebase"
 msgstr "Konumlandır"
 
 #: cola/cmds.py:1255
-#, fuzzy
 msgid "Rebase stoppped"
-msgstr "Rebase "
+msgstr "Konumlandırma durdu"
 
 #: cola/cmds.py:1266
 msgid "Edit Rebase"
@@ -374,11 +376,11 @@ msgstr "Revert Uncommitted Changes"
 #: cola/cmds.py:1428
 #, python-format
 msgid "Run \"%s\"?"
-msgstr "Run \"%s\"?"
+msgstr "Çalıştır \"%s\"?"
 
 #: cola/cmds.py:1435
 msgid "Please select a file"
-msgstr "Please select a file"
+msgstr "Lütfen bir dosya seçin"
 
 #: cola/cmds.py:1436
 #, python-format
@@ -429,7 +431,7 @@ msgstr "Stage conflicts"
 
 #: cola/cmds.py:1602
 msgid "Skip"
-msgstr "Skip"
+msgstr "Atla"
 
 #: cola/cmds.py:1612 cola/widgets/action.py:58 cola/widgets/diff.py:444
 #: cola/widgets/commitmsg.py:229
@@ -508,11 +510,11 @@ msgstr "Cannot exec \"%s\": please configure a history browser"
 
 #: cola/actions.py:34
 msgid "Next File"
-msgstr "Next File"
+msgstr "Sonraki Dosya"
 
 #: cola/actions.py:40
 msgid "Previous File"
-msgstr "Previous File"
+msgstr "Önceki Dosya"
 
 #: cola/fsmonitor.py:128
 #, fuzzy
@@ -561,7 +563,7 @@ msgstr "Browse Commits..."
 
 #: cola/guicmds.py:53
 msgid "Browse"
-msgstr "Browse"
+msgstr "Gözat"
 
 #: cola/guicmds.py:61
 msgid "Checkout Branch"
@@ -627,7 +629,7 @@ msgstr "Select Branch to Review"
 
 #: cola/guicmds.py:236
 msgid "Review"
-msgstr "Review"
+msgstr "Önizle"
 
 #: cola/guicmds.py:266
 msgid "Clone Repository"
@@ -650,7 +652,7 @@ msgstr "Rename Existing Branch"
 #: cola/guicmds.py:286 cola/widgets/selectcommits.py:54
 #: cola/widgets/browse.py:604
 msgid "Select"
-msgstr "Select"
+msgstr "Seç"
 
 #: cola/guicmds.py:289 cola/widgets/branch.py:300
 #, fuzzy
@@ -770,7 +772,7 @@ msgstr "Help - Find Files"
 
 #: cola/widgets/finder.py:105 cola/widgets/main.py:197
 msgid "Find Files"
-msgstr "Find Files"
+msgstr "Dosyaları Bul"
 
 #: cola/widgets/finder.py:111
 msgid "<path> ..."
@@ -778,19 +780,19 @@ msgstr "<path> ..."
 
 #: cola/widgets/finder.py:130 cola/widgets/main.py:477
 msgid "Help"
-msgstr "Help"
+msgstr "Yardım"
 
 #: cola/widgets/finder.py:130
 msgid ""
 "Show help\n"
 "Shortcut: ?"
 msgstr ""
-"Show help\n"
-"Shortcut: ?"
+"Yardımı göster\n"
+"Kısayol: ?"
 
 #: cola/widgets/finder.py:170 cola/widgets/status.py:1050
 msgid "Show Help"
-msgstr "Show Help"
+msgstr "Yardımı Göster"
 
 #: cola/widgets/selectcommits.py:50
 msgid "Revision Expression:"
@@ -1623,14 +1625,16 @@ msgstr "Apply Patches"
 msgid ""
 "\n"
 "            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                Drag and drop or use the <strong>Add</strong> button to "
+"add\n"
 "                patches to the list\n"
 "            </p>\n"
 "            "
 msgstr ""
 "\n"
 "            <p>\n"
-"                Drag and drop or use the <strong>Add</strong> button to add\n"
+"                Drag and drop or use the <strong>Add</strong> button to "
+"add\n"
 "                patches to the list\n"
 "            </p>\n"
 "            "
