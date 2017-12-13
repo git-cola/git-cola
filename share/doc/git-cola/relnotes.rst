@@ -51,6 +51,13 @@ Packaging
 
 * The vendored `qtpy` library was updated to `v1.3.1`.
 
+Fixes
+-----
+
+* Spelling and typofixes.
+
+  https://github.com/git-cola/git-cola/pull/748
+
 .. _v3.0:
 
 git-cola v3.0
