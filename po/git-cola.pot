@@ -1758,7 +1758,7 @@ msgid "Show whole surrounding functions of changes"
 msgstr ""
 
 #: cola/widgets/diff.py:359
-msgid "Show lines numbers"
+msgid "Show line numbers"
 msgstr ""
 
 #: cola/widgets/diff.py:364 cola/widgets/diff.py:365

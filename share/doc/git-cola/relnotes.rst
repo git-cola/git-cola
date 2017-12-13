@@ -42,7 +42,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/756
 
-* Updated Ukranian translation.
+* Updated Ukrainian translation.
 
   https://github.com/git-cola/git-cola/pull/753
 
@@ -69,7 +69,7 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/726
 
-* Updated Ukranian translation.
+* Updated Ukrainian translation.
 
   https://github.com/git-cola/git-cola/pull/723
 
@@ -236,7 +236,7 @@ git-cola v2.11
 
 Usability, bells and whistles
 -----------------------------
-* New Ukranian translation.
+* New Ukrainian translation.
 
   https://github.com/git-cola/git-cola/pull/670
 

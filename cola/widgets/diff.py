@@ -356,7 +356,7 @@ class DiffEditor(DiffTextEdit):
         self.diff_function_context_action.setCheckable(True)
 
         self.diff_show_line_numbers = add_action(
-            self, N_('Show lines numbers'),
+            self, N_('Show line numbers'),
             self._update_diff_opts)
         self.diff_show_line_numbers.setCheckable(True)
 
