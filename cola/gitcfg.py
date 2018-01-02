@@ -278,12 +278,51 @@ class GitConfig(observable.Observable):
         return self._get(self._all, key, default)
 
     def get_all(self, key):
-        """Return all values for a key"""
-        status, out, err = self.git.config(key, z=True, get_all=True)
+        """Return all values for a key sorted in priority order
+
+        The purpose of this function is to group the values returned by
+        `git config --show-origin --get-all` so that the relative order is
+        preserved but can still be overridden at each level.
+
+        One use case is the `cola.icontheme` variable, which is an ordered
+        list of icon themes to load.  This value can be set both in
+        ~/.gitconfig as well as .git/config, and we want to allow a
+        relative order to be defined in either file.
+
+        The problem is that git will read the system /etc/gitconfig,
+        global ~/.gitconfig, and then the local .git/config settings
+        and return them in that order, so we must post-process them to
+        get them in an order which makes sense for use for our values.
+        Otherwise, we cannot replace the order, or make a specific theme used
+        first, in our local .git/config since the native order returned by
+        git will always list the global config before the local one.
+
+        get_all() allows for this use case by gathering all of the per-config
+        values separately and then orders them according to the expected
+        local > global > system order.
+
+        """
+        result = []
+        status, out, err = self.git.config(key, z=True, get_all=True,
+                                           show_origin=True)
         if status == 0:
-            result = [x for x in out.rstrip(chr(0)).split(chr(0)) if x]
-        else:
-            result = []
+            current_source = ''
+            current_result = []
+            partial_results = []
+            items = [x for x in out.rstrip(chr(0)).split(chr(0)) if x]
+            for i in range(len(items) // 2):
+                source = items[i * 2]
+                value = items[i * 2 + 1]
+                if source != current_source:
+                    current_source = source
+                    current_result = []
+                    partial_results.append(current_result)
+                current_result.append(value)
+            # Git's results are ordered System, Global, Local.
+            # Reverse the order here so that Local has the highest priority.
+            for partial_result in reversed(partial_results):
+                result.extend(partial_result)
+
         return result
 
     def get_user(self, key, default=None):
