@@ -67,6 +67,15 @@ x.svg
 Copyright (C) 2012-2015 GitHub
 License: [MIT](http://choosealicense.com/licenses/mit/)
 
+Feathericons
+------------
+The following files are from the
+[feather](https://github.com/feathericons/feather) icon set:
+
+git-commit.svg
+
+Copyright (c) 2013-2017 Cole Bemis
+License: [MIT](https://github.com/feathericons/feather/blob/master/LICENSE)
 
 Gnome High Contrast Icons
 -------------------------
