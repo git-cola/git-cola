@@ -142,6 +142,10 @@ def cola():
     return icon('git-cola.svg')
 
 
+def commit():
+    return icon('git-commit.svg')
+
+
 def compare():
     return icon('git-compare.svg')
 

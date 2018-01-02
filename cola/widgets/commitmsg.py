@@ -55,7 +55,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.commit_action = qtutils.add_action(self,
                                                 N_('Commit@@verb'),
                                                 self.commit, hotkeys.COMMIT)
-        self.commit_action.setIcon(icons.download())
+        self.commit_action.setIcon(icons.commit())
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
@@ -92,7 +92,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
                                    'Shortcut: Ctrl+Enter')
         self.commit_button = qtutils.create_toolbutton(
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
-            icon=icons.download())
+            icon=icons.commit())
         self.commit_group = Group(self.commit_action, self.commit_button)
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
