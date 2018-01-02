@@ -297,6 +297,7 @@ class MainView(standard.MainWindow):
             self, N_('Create...'),
             lambda: createbranch.create_new_branch(settings=settings),
             hotkeys.BRANCH)
+        self.create_branch_action.setIcon(icons.branch())
 
         self.delete_branch_action = add_action(
             self, N_('Delete...'), guicmds.delete_branch)
