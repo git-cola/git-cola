@@ -16,7 +16,6 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import browse
 from ..models import main
-from ..compat import ustr
 from .. import cmds
 from .. import core
 from .. import gitcmds
