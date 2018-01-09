@@ -130,6 +130,30 @@ def dirname(path, current_dir=''):
     return path.rsplit('/', 1)[0]
 
 
+def splitpath(path):
+    """Split paths using '/' regardless of platform
+
+    """
+    return path.split('/')
+
+
+def pathset(path):
+    """Return all of the path components for the specified path
+
+    >>> pathset('foo/bar/baz') == ['foo', 'foo/bar', 'foo/bar/baz']
+    True
+
+    """
+    result = []
+    parts = splitpath(path)
+    prefix = ''
+    for part in parts:
+        result.append(prefix + part)
+        prefix += part + '/'
+
+    return result
+
+
 def select_directory(paths):
     """Return the first directory in a list of paths"""
     if not paths:

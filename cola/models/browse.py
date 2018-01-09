@@ -145,6 +145,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
+        # First, try returning an existing item
+        current_item = self.get(path)
+        if current_item is not None:
+            return current_item[0]
 
         # Create model items
         row_items = self.create_row(path, is_dir=True)
@@ -175,8 +179,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         # Insert directories before file paths
         for dirname in dirs:
-            self.add_directory(parent, dirname)
-            self.update_entry(dirname)
+            subparent = parent
+            for subdir in utils.pathset(dirname):
+                subparent = self.add_directory(subparent, subdir)
+                self.update_entry(subdir)
 
         for filename in paths:
             self.add_file(parent, filename)
