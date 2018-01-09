@@ -419,7 +419,7 @@ def extract_diff_header(status, deleted,
     headers.close()
 
     if with_diff_header:
-        return(headers_text, output_text)
+        return (headers_text, output_text)
     else:
         return output_text
 
