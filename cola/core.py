@@ -91,7 +91,8 @@ def decode(value, encoding=None, errors='strict'):
 
         if result is None:
             encoding = 'utf-8'
-            result = value.decode(encoding, errors='ignore')
+            decoded = value.decode(encoding, errors='ignore')
+            result = UStr(decoded, encoding)
 
     return result
 
@@ -243,7 +244,7 @@ def run_command(cmd, encoding=None, *args, **kwargs):
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
     exit_code = process.returncode
-    return (exit_code, output or '', errors or '')
+    return (exit_code, output or UStr('', 'utf-8'), errors or UStr('', 'utf-8'))
 
 
 @interruptable

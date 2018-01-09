@@ -245,7 +245,7 @@ class Git(object):
                 INDEX_LOCK.release()
 
         if not _raw and out is not None:
-            out = out.rstrip('\n')
+            out = core.UStr(out.rstrip('\n'), out.encoding)
 
         cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
