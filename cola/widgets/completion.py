@@ -249,17 +249,23 @@ class GatherCompletionsThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
         self.model = model
         self.case_sensitive = False
+        self.running = False
+
+    def dispose(self):
+        self.running = False
+        self.wait()
 
     def run(self):
         text = None
+        self.running = True
         # Loop when the matched text changes between the start and end time.
         # This happens when gather_matches() takes too long and the
         # model's match_text changes in-between.
-        while text != self.model.match_text:
+        while self.running and text != self.model.match_text:
             text = self.model.match_text
             items = self.model.gather_matches(self.case_sensitive)
 
-        if text is not None:
+        if self.running and text is not None:
             self.items_gathered.emit(items)
 
 
@@ -397,9 +403,15 @@ class CompletionModel(QtGui.QStandardItemModel):
                 item.setIcon(from_filename(match))
             items.append(item)
 
-        self.clear()
-        self.invisibleRootItem().appendRows(items)
-        self.updated.emit()
+        try:
+            self.clear()
+            self.invisibleRootItem().appendRows(items)
+            self.updated.emit()
+        except RuntimeError:  # C++ object has been deleted
+            pass
+
+    def dispose(self):
+        self.update_thread.dispose()
 
 
 def _identity(x):
@@ -484,6 +496,7 @@ class GitCompletionModel(CompletionModel):
         return []
 
     def dispose(self):
+        super(GitCompletionModel, self).dispose()
         self.main_model.remove_observer(self.emit_model_updated)
 
 
