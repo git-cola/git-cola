@@ -274,8 +274,8 @@ class RevisionSelector(QtWidgets.QWidget):
         self._revs = revs
         self._revdict = dict(revs)
 
-        self._rev_label = QtWidgets.QLabel()
-        self._revision = completion.GitRefLineEdit()
+        self._rev_label = QtWidgets.QLabel(self)
+        self._revision = completion.GitRefLineEdit(parent=self)
 
         # Create the radio buttons
         radio_btns = []
