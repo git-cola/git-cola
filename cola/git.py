@@ -279,7 +279,7 @@ class Git(object):
 
         """
         args = []
-        types_to_stringify = set((ustr, float, str) + int_types)
+        types_to_stringify = (ustr, float, str) + int_types
 
         for k, v in kwargs.items():
             if len(k) == 1:
@@ -288,10 +288,12 @@ class Git(object):
             else:
                 dashes = '--'
                 join = '='
-            type_of_value = type(v)
-            if v is True:
-                args.append('%s%s' % (dashes, dashify(k)))
-            elif type_of_value in types_to_stringify:
+            # isinstance(False, int) is True, so we have to check bool first
+            if isinstance(v, bool):
+                if v:
+                    args.append('%s%s' % (dashes, dashify(k)))
+                # else: pass  # False is ignored; flag=False inhibits --flag
+            elif isinstance(v, types_to_stringify):
                 args.append('%s%s%s%s' % (dashes, dashify(k), join, v))
 
         return args
