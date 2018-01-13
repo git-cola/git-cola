@@ -665,8 +665,7 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
         task = DiffInfoTask(oid, filename, self)
-        task.connect(self.diff.set_diff)
-        self.runtask.start(task)
+        self.runtask.start(task, result=self.diff.set_diff)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
