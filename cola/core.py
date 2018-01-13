@@ -32,10 +32,13 @@ EXIT_USAGE = 64
 EXIT_NOINPUT = 66
 EXIT_UNAVAILABLE = 69
 
+# Default encoding
+ENCODING = 'utf-8'
+
 # Some files are not in UTF-8; some other aren't in any codification.
 # Remember that GIT doesn't care about encodings (saves binary data)
 _encoding_tests = [
-    'utf-8',
+    ENCODING,
     'iso-8859-15',
     'windows1252',
     'ascii',
@@ -73,7 +76,7 @@ def decode(value, encoding=None, errors='strict'):
     if value is None:
         result = None
     elif isinstance(value, ustr):
-        result = UStr(value, 'utf-8')
+        result = UStr(value, ENCODING)
     else:
         result = None
         if encoding is None:
@@ -90,9 +93,9 @@ def decode(value, encoding=None, errors='strict'):
                 pass
 
         if result is None:
-            encoding = 'utf-8'
-            decoded = value.decode(encoding, errors='ignore')
-            result = UStr(decoded, encoding)
+            encoding = ENCODING
+            decoded = value.decode(ENCODING, errors='ignore')
+            result = UStr(decoded, ENCODING)
 
     return result
 
@@ -102,7 +105,7 @@ def encode(string, encoding=None):
     """
     if type(string) is not ustr:
         return string
-    return string.encode(encoding or 'utf-8', 'replace')
+    return string.encode(encoding or ENCODING, 'replace')
 
 
 def mkpath(path, encoding=None):
@@ -244,7 +247,9 @@ def run_command(cmd, encoding=None, *args, **kwargs):
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
     exit_code = process.returncode
-    return (exit_code, output or UStr('', 'utf-8'), errors or UStr('', 'utf-8'))
+    return (exit_code,
+            output or UStr('', ENCODING),
+            errors or UStr('', ENCODING))
 
 
 @interruptable
@@ -350,14 +355,14 @@ def xopen(path, mode='r', encoding=None):
 def stdout(msg, linesep='\n'):
     msg = msg + linesep
     if PY2:
-        msg = encode(msg, encoding='utf-8')
+        msg = encode(msg, encoding=ENCODING)
     sys.stdout.write(msg)
 
 
 def stderr(msg, linesep='\n'):
     msg = msg + linesep
     if PY2:
-        msg = encode(msg, encoding='utf-8')
+        msg = encode(msg, encoding=ENCODING)
     sys.stderr.write(msg)
 
 

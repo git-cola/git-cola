@@ -1525,7 +1525,7 @@ class ShowUntracked(Command):
         size = cfg.get('cola.readsize', 1024 * 2)
         try:
             result = core.read(filename, size=size,
-                               encoding='utf-8', errors='ignore')
+                               encoding=core.ENCODING, errors='ignore')
         except:
             result = ''
 

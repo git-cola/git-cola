@@ -18,11 +18,14 @@ PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] >= 3
 PY26_PLUS = PY2 and sys.version_info[1] >= 6
 WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
+ENCODING = 'utf-8'
+
 
 if PY3:
-    def bstr(x):
+    def bstr(x, encoding=ENCODING):
         # pylint: disable=bytes-builtin
-        return bytes(x, encoding='utf8')
+        return bytes(x, encoding=encoding)
+
 elif PY26_PLUS:
     # pylint: disable=bytes-builtin
     bstr = bytes
@@ -55,7 +58,7 @@ def setenv(key, value):
 
     """
     if not PY3 and type(value) is ustr:
-        value = value.encode('utf-8', 'replace')
+        value = value.encode(ENCODING, 'replace')
     os.environ[key] = value
     os.putenv(key, value)
 
