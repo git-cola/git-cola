@@ -1,4 +1,4 @@
-# Copyright (c) David Aguilar
+# Copyright (C) 2007-2018 David Aguilar and contributors
 """Provide git-cola's version number"""
 from __future__ import division, absolute_import, unicode_literals
 

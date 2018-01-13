@@ -6,7 +6,7 @@ import signal
 import sys
 
 __copyright__ = """
-Copyright (C) 2009-2017 David Aguilar and contributors
+Copyright (C) 2007-2017 David Aguilar and contributors
 """
 
 from . import core
