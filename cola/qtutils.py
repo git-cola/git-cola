@@ -943,13 +943,10 @@ class Task(QtCore.QRunnable):
     def run(self):
         self.result = self.task()
         self.channel.result.emit(self.result)
-        self.done()
+        self.channel.finished.emit(self)
 
     def task(self):
         return None
-
-    def done(self):
-        self.channel.finished.emit(self)
 
     def connect(self, handler):
         self.channel.result.connect(handler, type=Qt.QueuedConnection)
