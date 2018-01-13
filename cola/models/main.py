@@ -455,8 +455,8 @@ class MainModel(Observable):
             return pstr
 
     def is_commit_published(self):
-        head = self.git.rev_parse('HEAD')[STDOUT]
-        return bool(self.git.branch(r=True, contains=head)[STDOUT])
+        """Return True if the latest commit exists in any remote branch"""
+        return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
 
     def stage_paths(self, paths):
         """Stages add/removals to git."""
