@@ -15,7 +15,7 @@ try:
     # pylint: disable=reload-builtin
     reload(sys)
     # pylint: disable=no-member
-    sys.setdefaultencoding('utf8')
+    sys.setdefaultencoding('utf-8')
 except NameError:  # Python3
     pass
 
