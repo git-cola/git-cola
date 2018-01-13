@@ -1,0 +1,104 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('year')
+    args = parser.parse_args()
+
+    prefix = 'Copyright (C) 2007-'
+    fourspace_prefix = (' ' * 4) + prefix
+    comment_prefix = '# ' + prefix
+    year = args.year
+    steps = [
+        PrefixMatch(year, 'README.md', fourspace_prefix),
+        PrefixMatch(year, 'bin/git-dag', prefix),
+        PrefixMatch(year, 'bin/git-cola', prefix),
+        PrefixMatch(year, 'cola/widgets/about.py', prefix),
+        PrefixMatch(year, 'share/git-cola/icons/README.md', prefix),
+        PrefixMatch(year, 'share/git-cola/icons/dark/README.md', prefix),
+        PrefixMatch(year, 'cola/app.py', comment_prefix),
+        PrefixMatch(year, 'cola/fsmonitor.py', comment_prefix),
+        PrefixMatch(year, 'cola/observable.py', comment_prefix),
+        PrefixMatch(year, 'cola/qtutils.py', comment_prefix),
+        PrefixMatch(year, 'cola/utils.py', comment_prefix),
+        PrefixMatch(year, 'cola/version.py', comment_prefix),
+        PrefixMatch(year, 'cola/models/main.py', comment_prefix),
+    ]
+    for step in steps:
+        step.execute()
+
+    return 0
+
+
+def warn(msg):
+    sys.stderr.write('warning: %s\n' % msg)
+
+
+class Match(object):
+
+    def __init__(self, data, path):
+        self.readonly = False
+        self.data = data
+        self.path = path
+
+    def match(self):
+        return False
+
+    def replacement(self, txt):
+        return txt
+
+    def read(self):
+        with open(self.path, 'r') as f:
+            return f.read()
+
+    def write(self, content):
+        if self.readonly:
+            return
+        with open(self.path, 'w') as f:
+            f.write(content)
+
+    def filter(self, content):
+        if not content:
+            return ''
+        final_content = []
+        for txt in content.splitlines():
+            if self.match(txt):
+                final_content.append(self.replacement(txt))
+            else:
+                final_content.append(txt)
+        return '\n'.join(final_content) + '\n'
+
+    def execute(self):
+        if self.readonly:
+            self.warn()
+            return
+        content = self.filter(self.read())
+        self.write(content)
+        self.warn()
+
+    def warn(self):
+        pass
+
+
+
+class PrefixMatch(Match):
+
+    def __init__(self, data, path, prefix):
+        Match.__init__(self, data, path)
+        self.prefix = prefix
+
+    def match(self, txt):
+        return txt.startswith(self.prefix)
+
+    def replacement(self, txt):
+        offset = len(self.prefix) + len(self.data)
+        return self.prefix + self.data + txt[offset:]
+
+
+
+if __name__ == '__main__':
+    sys.exit(main())
