@@ -974,16 +974,17 @@ class RunTask(QtCore.QObject):
         self.tasks = []
         self.task_details = {}
         self.threadpool = QtCore.QThreadPool.globalInstance()
+        self.result_fn = None
 
-    def start(self, task, progress=None, finish=None):
+    def start(self, task, progress=None, finish=None, result=None):
         """Start the task and register a callback"""
+        self.result_fn = result
         if progress is not None:
             progress.show()
         # prevents garbage collection bugs in certain PyQt4 versions
         self.tasks.append(task)
         task_id = id(task)
-        self.task_details[task_id] = (progress, finish)
-
+        self.task_details[task_id] = (progress, finish, result)
         task.channel.finished.connect(self.finish, type=Qt.QueuedConnection)
         self.threadpool.start(task)
 
@@ -994,13 +995,16 @@ class RunTask(QtCore.QObject):
         except:
             pass
         try:
-            progress, finish = self.task_details[task_id]
+            progress, finish, result = self.task_details[task_id]
             del self.task_details[task_id]
         except KeyError:
-            finish = progress = None
+            finish = progress = result = None
 
         if progress is not None:
             progress.hide()
+
+        if result is not None:
+            result(task.result)
 
         if finish is not None:
             finish(task)
