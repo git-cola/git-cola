@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-import collections
 import time
 
 from qtpy import QtCore
