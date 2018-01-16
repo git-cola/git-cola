@@ -184,14 +184,26 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         # Insert directories before file paths
         for dirname in dirs:
-            subparent = parent
-            for subdir in utils.pathset(dirname):
-                subparent = self.add_directory(subparent, subdir)
-                self.update_entry(subdir)
+            dir_parent = parent
+            if '/' in dirname:
+                dir_parent = self.add_parent_directories(parent, dirname)
+            self.add_directory(dir_parent, dirname)
+            self.update_entry(dirname)
 
         for filename in paths:
-            self.add_file(parent, filename)
+            file_parent = parent
+            if '/' in filename:
+                file_parent = self.add_parent_directories(parent, filename)
+            self.add_file(file_parent, filename)
             self.update_entry(filename)
+
+    def add_parent_directories(self, parent, dirname):
+        """Ensure that all parent directory entries exist"""
+        sub_parent = parent
+        parent_dir = utils.dirname(dirname)
+        for dirname in utils.pathset(parent_dir):
+            sub_parent = self.add_directory(sub_parent, dirname)
+        return sub_parent
 
     def path_is_interesting(self, path):
         """Return True if path has a status."""
