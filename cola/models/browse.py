@@ -162,6 +162,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def add_file(self, parent, path):
         """Add a file entry to the model."""
 
+        file_entry = self.get(path)
+        if file_entry is not None:
+            return file_entry
+
         # Create model items
         row_items = self.create_row(path)
         name_item = row_items[0]
@@ -171,6 +175,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         # Add file paths at the end of the list
         parent.appendRow(row_items)
+
+        return name_item
 
     def populate_dir(self, parent, path):
         """Populate a subtree"""
