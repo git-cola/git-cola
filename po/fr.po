@@ -964,7 +964,7 @@ msgstr "Parcourir la branche courante..."
 
 #: cola/widgets/branch.py:190 cola/widgets/remote.py:655
 msgid "Pull"
-msgstr "Pousser"
+msgstr "Tirer"
 
 #: cola/widgets/branch.py:195 cola/widgets/remote.py:537
 #: cola/widgets/remote.py:629
