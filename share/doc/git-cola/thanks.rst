@@ -87,6 +87,7 @@ Thanks
 * László Böszörményi
 * Leho Kraav
 * Lev Zlotin
+* Louis Rousseau
 * Libor Jelinek
 * Liviu Cristian Mirea-Ghiban
 * Luca Ottaviano
