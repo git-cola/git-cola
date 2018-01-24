@@ -73,6 +73,7 @@ Thanks
 * Jérôme Carretero
 * jfessard
 * JiCiT
+* Johannes Löhnert
 * Johann Schmitz
 * Jordan Bedwell
 * Josh Taylor
