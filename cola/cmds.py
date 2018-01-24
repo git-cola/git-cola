@@ -1181,14 +1181,14 @@ class Clone(Command):
 def unix_path(path, is_win32=utils.is_win32):
     """Git for Windows requires unix paths, so force them here
     """
-    unix_path = path
     if is_win32():
+        path = path.replace('\\', '/')
         first = path[0]
         second = path[1]
         if second == ':':  # sanity check, this better be a Windows-style path
-            unix_path = '/' + first + path[2:].replace('\\', '/')
+            path = '/' + first + path[2:]
 
-    return unix_path
+    return path
 
 
 class GitXBaseContext(object):
