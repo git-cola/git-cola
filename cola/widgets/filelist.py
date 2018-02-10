@@ -33,7 +33,7 @@ class FileWidget(TreeWidget):
                 self, N_('Launch Diff Tool'), self.show_diff)
 
         self.launch_editor_action = qtutils.add_action(
-                self, N_('Launch Diff Tool'), self.edit_paths, hotkeys.EDIT)
+                self, N_('Launch Editor'), self.edit_paths, hotkeys.EDIT)
 
         self.grab_file_action = qtutils.add_action(
                 self, N_('Grab File...'), self._grab_file)
