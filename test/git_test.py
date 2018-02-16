@@ -219,19 +219,6 @@ class GitCommandTest(unittest.TestCase):
         version = self.git.version()[STDOUT]
         self.failUnless(version.startswith('git version'))
 
-    def test_tag(self):
-        """Test running 'git tag'"""
-        tags = self.git.tag()[STDOUT].splitlines()
-        if os.getenv('GIT_COLA_NO_HISTORY', False):
-            return
-        self.failUnless('v1.0.0' in tags)
-
-    def test_show(self):
-        """Test running 'git show'"""
-        oid = 'HEAD'
-        content = self.git.show(oid)[STDOUT]
-        self.failUnless(content.startswith('commit '))
-
     def test_stdout(self):
         """Test overflowing the stdout buffer"""
         # Write to stdout only
