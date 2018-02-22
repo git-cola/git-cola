@@ -13,7 +13,6 @@ from .. import icons
 from .. import qtutils
 from .standard import Dialog
 from .standard import ProgressDialog
-from .text import LineEdit
 from . import defs
 from . import completion
 
@@ -99,7 +98,10 @@ class CreateBranchDialog(Dialog):
         self.branch_name_label = QtWidgets.QLabel()
         self.branch_name_label.setText(N_('Branch Name'))
 
-        self.branch_name = LineEdit()
+        self.branch_name = completion.GitCreateBranchLineEdit()
+        self.branch_validator = completion.BranchValidator(
+            model.git, parent=self.branch_name)
+        self.branch_name.setValidator(self.branch_validator)
 
         self.rev_label = QtWidgets.QLabel()
         self.rev_label.setText(N_('Starting Revision'))
