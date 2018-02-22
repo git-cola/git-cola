@@ -740,7 +740,7 @@ class GitRefDialog(GitDialog):
                            title, text, parent, icon=icon)
 
 
-class GitPotentialBranchDialog(GitDialog):
+class GitCheckoutBranchDialog(GitDialog):
 
     def __init__(self, title, text, parent, icon=None):
         GitDialog.__init__(self, GitPotentialBranchLineEdit,

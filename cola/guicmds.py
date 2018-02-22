@@ -226,7 +226,7 @@ def choose_branch(title, button_text, default=None, icon=None):
 
 
 def choose_potential_branch(title, button_text, default=None, icon=None):
-    return choose_from_dialog(completion.GitPotentialBranchDialog.get,
+    return choose_from_dialog(completion.GitCheckoutBranchDialog.get,
                               title, button_text, default, icon=icon)
 
 
