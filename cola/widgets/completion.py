@@ -543,7 +543,7 @@ class GitPotentialBranchCompletionModel(GitCompletionModel):
 
 
 class GitBranchCompletionModel(GitCompletionModel):
-    """Completer for remote branches"""
+    """Completer for local branches"""
 
     def __init__(self, parent):
         GitCompletionModel.__init__(self, parent)
