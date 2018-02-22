@@ -56,6 +56,7 @@ Thanks
 * Guillaume de Bure
 * Guo Yunhe
 * Harro Verton
+* Hannes @kannes
 * Igor Galarraga
 * Igor Kopach
 * Ilya Tumaykin
