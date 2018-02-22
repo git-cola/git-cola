@@ -17,6 +17,34 @@ from . import defs
 from . import text
 
 
+class BranchValidator(QtGui.QValidator):
+    """Prevent invalid branch names"""
+
+    def __init__(self, git, parent=None):
+        super(BranchValidator, self).__init__(parent)
+        self._git = git
+        self._whitespace = re.compile(r'[ \t]')
+
+    def validate(self, string, idx):
+        """Scrub and validate the user-supplied input"""
+        state = self.Acceptable
+        # scrub whitespace
+        if self._whitespace.search(string):
+            string = self._whitespace.sub('', string)
+            idx = min(idx-1, len(string))
+        if string:  # Allow empty strings
+            status, out, err = self._git.check_ref_format(string, branch=True)
+            if status != 0:
+                # The intermediate string, when deleting characters, might
+                # end in a name that is invalid to Git, but we must allow it
+                # otherwise we won't be able to delete it using backspace.
+                if string.endswith('/') or string.endswith('.'):
+                    state = self.Intermediate
+                else:
+                    state = self.Invalid
+        return (state, string, idx)
+
+
 class CompletionLineEdit(text.HintedLineEdit):
     """An lineedit with advanced completion abilities"""
 
