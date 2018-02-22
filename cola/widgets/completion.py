@@ -539,31 +539,43 @@ class GitRefCompletionModel(GitCompletionModel):
         return model.local_branches + model.remote_branches + model.tags
 
 
-class GitPotentialBranchCompletionModel(GitCompletionModel):
-    """Completer for branches, tags, and potential branches"""
+def find_potential_branches(model):
+    remotes = model.remotes
+    remote_branches = model.remote_branches
 
-    def __init__(self, parent):
-        GitCompletionModel.__init__(self, parent)
+    ambiguous = set()
+    allnames = set(model.local_branches)
+    potential = []
+
+    for remote_branch in remote_branches:
+        branch = gitcmds.strip_remote(remotes, remote_branch)
+        if branch in allnames or branch == remote_branch:
+            ambiguous.add(branch)
+            continue
+        potential.append(branch)
+        allnames.add(branch)
+
+    potential_branches = [p for p in potential if p not in ambiguous]
+    return potential_branches
+
+
+class GitCreateBranchCompletionModel(GitCompletionModel):
+    """Completer for naming new branches"""
 
     def matches(self):
         model = self.main_model
-        remotes = model.remotes
-        remote_branches = model.remote_branches
+        potential_branches = find_potential_branches(model)
+        return (model.local_branches +
+                potential_branches +
+                model.tags)
 
-        ambiguous = set()
-        allnames = set(model.local_branches)
-        potential = []
 
-        for remote_branch in remote_branches:
-            branch = gitcmds.strip_remote(remotes, remote_branch)
-            if branch in allnames or branch == remote_branch:
-                ambiguous.add(branch)
-                continue
-            potential.append(branch)
-            allnames.add(branch)
+class GitCheckoutBranchCompletionModel(GitCompletionModel):
+    """Completer for git checkout <branch>"""
 
-        potential_branches = [p for p in potential if p not in ambiguous]
-
+    def matches(self):
+        model = self.main_model
+        potential_branches = find_potential_branches(model)
         return (model.local_branches +
                 potential_branches +
                 model.remote_branches +
@@ -685,8 +697,10 @@ def bind_lineedit(model, hint=''):
 # Concrete classes
 GitLogLineEdit = bind_lineedit(GitLogCompletionModel, hint='<ref>')
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel, hint='<ref>')
-GitPotentialBranchLineEdit = bind_lineedit(GitPotentialBranchCompletionModel,
-                                           hint='<branch>')
+GitCheckoutBranchLineEdit = bind_lineedit(GitCheckoutBranchCompletionModel,
+                                          hint='<branch>')
+GitCreateBranchLineEdit = bind_lineedit(GitCreateBranchCompletionModel,
+                                        hint='<branch>')
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel, hint='<branch>')
 GitRemoteBranchLineEdit = bind_lineedit(GitRemoteBranchCompletionModel,
                                         hint='<remote-branch>')
@@ -771,7 +785,7 @@ class GitRefDialog(GitDialog):
 class GitCheckoutBranchDialog(GitDialog):
 
     def __init__(self, title, text, parent, icon=None):
-        GitDialog.__init__(self, GitPotentialBranchLineEdit,
+        GitDialog.__init__(self, GitCheckoutBranchLineEdit,
                            title, text, parent, icon=icon)
 
 
