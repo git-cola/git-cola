@@ -38,6 +38,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/752
 
+* The "Create Branch" dialog now prevents invalid branch names.
+
+  https://github.com/git-cola/git-cola/issues/765
+
 * Updated Turkish translation.
 
   https://github.com/git-cola/git-cola/pull/756
