@@ -182,7 +182,7 @@ tags:
 .PHONY: tags
 
 # Update i18n files
-i18n: mo pot
+i18n: pot mo
 .PHONY: i18n
 
 i18n-update: i18n
