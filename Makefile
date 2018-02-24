@@ -24,6 +24,19 @@ RMDIR = rmdir
 TAR = tar
 
 # Flags
+# -----
+# "make V=1" increases verbosity
+# "make test V=2" increases test verbosity
+# "make pylint color=1" enables colorized pylint output
+# "make test flags={-x,--exitfirst}" exists on the first test failure
+ifdef V
+    VERBOSE = --verbose
+    ifeq ($(V),2)
+        TEST_VERBOSE = --verbose
+    endif
+else
+    QUIET = --quiet
+endif
 FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
 PYLINT_FLAGS = --rcfile=.pylintrc
 ifdef color
@@ -54,7 +67,6 @@ NOSE ?= $(NOSETESTS) $(NOSE_FLAGS) $(flags)
 
 SETUP ?= $(PYTHON) setup.py
 setup_args += --prefix=$(prefix)
-setup_args += --quiet
 setup_args += --force
 setup_args += --install-scripts=$(bindir)
 setup_args += --record=build/MANIFEST
@@ -92,11 +104,11 @@ build_version:
 .PHONY: build_version
 
 build: build_version
-	$(SETUP) build
+	$(SETUP) $(VERBOSE) build
 .PHONY: build
 
 install: all
-	$(SETUP) install $(setup_args)
+	$(SETUP) $(QUIET) install $(setup_args)
 	$(MKDIR_P) $(DESTDIR)$(hicolordir)
 	$(LN_S) $(datadir)/icons/git-cola.svg $(DESTDIR)$(hicolordir)/git-cola.svg
 	$(LN_S) git-cola $(DESTDIR)$(bindir)/cola
