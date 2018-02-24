@@ -547,7 +547,7 @@ msgstr ""
 #: cola/fsmonitor.py:128
 #, fuzzy
 msgid "File system change monitoring: enabled.\n"
-msgstr "ファイル変更時刻を信頼する"
+msgstr "ファイル変更時刻を信頼する\n"
 
 #: cola/fsmonitor.py:169
 msgid ""
@@ -2353,7 +2353,7 @@ msgid ""
 msgstr ""
 "コミットする変更がありません。\n"
 "\n"
-"最低一つの変更をコミット予定に加えてからコミットして下さい。\n"
+"最低一つの変更をコミット予定に加えてからコミットして下さい。"
 
 #: cola/widgets/commitmsg.py:437
 msgid "Would you like to stage and commit all modified files?"
