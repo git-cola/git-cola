@@ -1343,12 +1343,12 @@ msgstr ""
 #: cola/widgets/main.py:657 cola/widgets/browse.py:96
 #, fuzzy, python-format
 msgid "Repository: %s"
-msgstr "リポジトリ:"
+msgstr "リポジトリ: %s"
 
 #: cola/widgets/main.py:659 cola/widgets/browse.py:98
 #, fuzzy, python-format
 msgid "Branch: %s"
-msgstr "ブランチ:"
+msgstr "ブランチ: %s"
 
 #: cola/widgets/main.py:663
 msgid ""
