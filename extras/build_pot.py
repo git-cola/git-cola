@@ -73,12 +73,14 @@ class build_pot(Command):
         if not os.path.isdir(self.build_dir):
             log.info('Make directory: ' + self.build_dir)
             os.makedirs(self.build_dir)
-        self.spawn(['xgettext',
-                    '--keyword=N_',
-                    '-p', self.build_dir,
-                    '-o', self.output] +
-                    glob.glob('cola/*.py') +
-                    glob.glob('cola/*/*.py'))
+        self.spawn([
+            'xgettext',
+            '--language=Python',
+            '--keyword=N_',
+            '--output-dir', self.build_dir,
+            '--output', self.output] +
+            glob.glob('cola/*.py') +
+            glob.glob('cola/*/*.py'))
         self._force_LF(fullname)
         # regenerate english PO
         if self.english:
@@ -87,12 +89,12 @@ class build_pot(Command):
                 en_po = prj_name + '-' + 'en.po'
             else:
                 en_po = 'en.po'
-            self.spawn(['msginit',
+            self.spawn([
+                'msginit',
                 '--no-translator',
-                '-l', 'en',
-                '-i', os.path.join(self.build_dir, self.output),
-                '-o', os.path.join(self.build_dir, en_po),
-                ])
+                '--locale', 'en',
+                '--input', os.path.join(self.build_dir, self.output),
+                '--output-file', os.path.join(self.build_dir, en_po)])
         # search and update all po-files
         if self.no_lang:
             return
@@ -103,9 +105,11 @@ class build_pot(Command):
                     po_lang = po_lang[5:]
                 if po_lang not in self.lang:
                     continue
-            new_po = po + ".new"
-            cmd = "msgmerge %s %s -o %s" % (po, fullname, new_po)
-            self.spawn(cmd.split())
+            new_po = po + '.new'
+            self.spawn([
+                'msgmerge',
+                '--output-file', new_po,
+                po, fullname])
             # force LF line-endings
             log.info('%s --> %s' % (new_po, po))
             self._force_LF(new_po, po)

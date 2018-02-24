@@ -84,9 +84,9 @@ class build_mo(Command):
                     en_po = 'en.po'
                 self.spawn(['msginit',
                     '--no-translator',
-                    '-l', 'en',
-                    '-i', os.path.join(self.source_dir, pot),
-                    '-o', os.path.join(self.source_dir, en_po),
+                    '--locale', 'en',
+                    '--input', os.path.join(self.source_dir, pot),
+                    '--output-file', os.path.join(self.source_dir, en_po),
                     ])
 
         basename = self.output_base
@@ -105,7 +105,7 @@ class build_mo(Command):
             mo = os.path.join(dir_, basename)
             if self.force or newer(po, mo):
                 log.info('Compile: %s -> %s' % (po, mo))
-                self.spawn(['msgfmt', '-o', mo, po])
+                self.spawn(['msgfmt', '--use-fuzzy', '--output-file', mo, po])
 
 
 build.sub_commands.insert(0, ('build_mo', None))
