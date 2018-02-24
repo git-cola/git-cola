@@ -12,12 +12,12 @@ LN = ln
 LN_S = $(LN) -s -f
 MARKDOWN = markdown
 MKDIR_P = mkdir -p
-NOSETESTS = nosetests
 PIP = pip
 PYLINT = pylint
 PYTHON = python
 PYTHON_CONFIG = python-config
 PYTHON_DARWIN_APP = $(shell $(PYTHON_CONFIG) --prefix)/Resources/Python.app/Contents/MacOS/Python
+PYTEST ?= py.test
 RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
@@ -37,10 +37,14 @@ ifdef V
 else
     QUIET = --quiet
 endif
+PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE) --doctest-modules
 FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
 PYLINT_FLAGS = --rcfile=.pylintrc
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
+endif
+ifdef flags
+    PYTEST_FLAGS += $(flags)
 endif
 
 # These values can be overridden on the command-line or via config.mak
@@ -56,15 +60,6 @@ cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell $(PYTHON) bin/git-cola version --brief)
 cola_dist := $(cola_base)-$(cola_version)
-
-NOSE_FLAGS = --with-doctest
-NOSE_FLAGS += --with-id
-NOSE_FLAGS += --exclude=sphinxtogithub
-NOSE_FLAGS += --exclude=extras
-# Allows "make test flags=--stop"
-flags =
-NOSE ?= $(NOSETESTS) $(NOSE_FLAGS) $(flags)
-
 SETUP ?= $(PYTHON) setup.py
 setup_args += --prefix=$(prefix)
 setup_args += --force
@@ -175,11 +170,11 @@ uninstall:
 .PHONY: uninstall
 
 test: all
-	$(NOSE) $(PYTHON_DIRS)
+	$(PYTEST) $(PYTEST_FLAGS) $(PYTHON_DIRS)
 .PHONY: test
 
 coverage:
-	$(NOSE) --with-coverage --cover-package=cola $(PYTHON_DIRS)
+	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(PYTHON_DIRS)
 .PHONY: coverage
 
 clean:
