@@ -84,6 +84,7 @@ class build_mo(Command):
                     en_po = 'en.po'
                 self.spawn(['msginit',
                     '--no-translator',
+                    '--no-wrap',
                     '--locale', 'en',
                     '--input', os.path.join(self.source_dir, pot),
                     '--output-file', os.path.join(self.source_dir, en_po),

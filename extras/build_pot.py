@@ -77,6 +77,10 @@ class build_pot(Command):
             'xgettext',
             '--language=Python',
             '--keyword=N_',
+            '--no-wrap',
+            '--no-location',
+            '--omit-header',
+            '--sort-output',
             '--output-dir', self.build_dir,
             '--output', self.output] +
             glob.glob('bin/git-*') +
@@ -110,6 +114,9 @@ class build_pot(Command):
             new_po = po + '.new'
             self.spawn([
                 'msgmerge',
+                '--no-location',
+                '--no-wrap',
+                '--sort-output',
                 '--output-file', new_po,
                 po, fullname])
             # force LF line-endings
