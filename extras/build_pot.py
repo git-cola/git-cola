@@ -39,7 +39,7 @@ class build_pot(Command):
         if self.build_dir is None:
             self.build_dir = 'po'
         if not self.output:
-            self.output = (self.distribution.get_name() or 'messages')+'.pot'
+            self.output = (self.distribution.get_name() or 'messages') + '.pot'
         if self.lang is not None:
             self.lang = [i.strip() for i in self.lang.split(',') if i.strip()]
         if self.lang and self.no_lang:
@@ -107,6 +107,6 @@ class build_pot(Command):
             cmd = "msgmerge %s %s -o %s" % (po, fullname, new_po)
             self.spawn(cmd.split())
             # force LF line-endings
-            log.info("%s --> %s" % (new_po, po))
+            log.info('%s --> %s' % (new_po, po))
             self._force_LF(new_po, po)
             os.unlink(new_po)
