@@ -185,11 +185,6 @@ tags:
 i18n: pot mo
 .PHONY: i18n
 
-i18n-update: i18n
-	git add po
-	git commit -sm'i18n: update translation template'
-.PHONY: i18n-update
-
 pot:
 	$(SETUP) build_pot --no-lang --build-dir=po
 .PHONY: pot
