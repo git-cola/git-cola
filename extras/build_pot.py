@@ -79,6 +79,8 @@ class build_pot(Command):
             '--keyword=N_',
             '--output-dir', self.build_dir,
             '--output', self.output] +
+            glob.glob('bin/git-*') +
+            glob.glob('share/git-cola/bin/git-*') +
             glob.glob('cola/*.py') +
             glob.glob('cola/*/*.py'))
         self._force_LF(fullname)
