@@ -82,7 +82,7 @@ class MainView(standard.MainWindow):
         self.browser_dockable = (cfg.get('cola.browserdockable') or
                                  cfg.get('cola.classicdockable'))
         if self.browser_dockable:
-            self.browserdockwidget = create_dock(N_('Browser'), self,
+            self.browserdock = create_dock(N_('Browser'), self,
                     widget=browse.worktree_browser(parent=self, update=False))
 
         # "Actions" widget
