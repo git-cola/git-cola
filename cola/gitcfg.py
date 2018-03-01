@@ -159,12 +159,6 @@ class GitConfig(observable.Observable):
         for (cat, path, mtime) in statinfo:
             self._config_files[cat] = path
 
-    def update(self):
-        """Read config values from git."""
-        if self._cached():
-            return
-        self._read_configs()
-
     def _cached(self):
         """
         Return True when the cache matches.
@@ -178,14 +172,12 @@ class GitConfig(observable.Observable):
             return False
         return True
 
-    def _read_configs(self):
+    def update(self):
         """Read git config value into the system, user and repo dicts."""
-        self._map.clear()
-        self._system.clear()
-        self._user.clear()
-        self._user_or_system.clear()
-        self._repo.clear()
-        self._all.clear()
+        if self._cached():
+            return
+
+        self.reset_values()
 
         if 'system' in self._config_files:
             self._system.update(
@@ -258,12 +250,16 @@ class GitConfig(observable.Observable):
 
         return config
 
-    def _get(self, src, key, default):
-        self.update()
+    def _get(self, src, key, default, fn=None, cached=False):
+        if not cached or not src:
+            self.update()
         try:
             value = self._get_with_fallback(src, key)
         except KeyError:
-            value = default
+            if fn:
+                value = fn()
+            else:
+                value = default
         return value
 
     def _get_with_fallback(self, src, key):
@@ -279,9 +275,9 @@ class GitConfig(observable.Observable):
         # Allow the final KeyError to bubble up
         return src[key.lower()]
 
-    def get(self, key, default=None):
+    def get(self, key, default=None, fn=None, cached=False):
         """Return the string value for a config key."""
-        return self._get(self._all, key, default)
+        return self._get(self._all, key, default, fn=fn, cached=cached)
 
     def get_all(self, key):
         """Return all values for a key sorted in priority order
@@ -375,28 +371,19 @@ class GitConfig(observable.Observable):
         pat = pat.lower()
         match = fnmatch.fnmatch
         result = {}
-        self.update()
+        if not self._all:
+            self.update()
         for key, val in self._all.items():
             if match(key.lower(), pat):
                 result[key] = val
         return result
 
-    def get_cached(self, key, default=None, fn=None):
-        cache = self._value_cache
-        try:
-            value = cache[key]
-        except KeyError:
-            if fn:
-                default = fn()
-            value = cache[key] = self.get(key, default=default)
-        return value
-
     def gui_encoding(self):
-        return self.get_cached('gui.encoding', default=None)
+        return self.get('gui.encoding', default=None, cached=True)
 
     def is_per_file_attrs_enabled(self):
-        return self.get_cached('cola.fileattributes',
-                               fn=lambda: os.path.exists('.gitattributes'))
+        return self.get('cola.fileattributes', cached=True,
+                        fn=lambda: os.path.exists('.gitattributes'))
 
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
@@ -445,11 +432,11 @@ class GitConfig(observable.Observable):
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
         names = self.get_guitool_names()
-        return [(name, self.get('guitool.%s.shortcut' % name))
+        return [(name, self.get('guitool.%s.shortcut' % name, cached=True))
                 for name in names]
 
     def terminal(self):
-        term = self.get('cola.terminal', None)
+        term = self.get('cola.terminal', default=None, cached=True)
         if not term:
             # find a suitable default terminal
             term = 'xterm -e'  # for mac osx
@@ -461,7 +448,7 @@ class GitConfig(observable.Observable):
         return term
 
     def color(self, key, default):
-        string = self.get('cola.color.%s' % key, default)
+        string = self.get('cola.color.%s' % key, default=default, cached=True)
         string = core.encode(string)
         default = core.encode(default)
         struct_layout = core.encode('BBB')
