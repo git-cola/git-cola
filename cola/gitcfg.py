@@ -99,6 +99,7 @@ class GitConfig(observable.Observable):
 
     message_user_config_changed = 'user_config_changed'
     message_repo_config_changed = 'repo_config_changed'
+    message_updated = 'updated'
 
     def __init__(self):
         observable.Observable.__init__(self)
@@ -117,18 +118,21 @@ class GitConfig(observable.Observable):
         self._find_config_files()
 
     def reset(self):
-        self._map.clear()
-        self._system.clear()
-        self._user.clear()
-        self._user_or_system.clear()
-        self._repo.clear()
-        self._all.clear()
         self._cache_key = None
         self._configs = []
         self._config_files.clear()
         self._value_cache = {}
         self._attr_cache = {}
         self._find_config_files()
+        self.reset_values()
+
+    def reset_values(self):
+        self._map.clear()
+        self._system.clear()
+        self._user.clear()
+        self._user_or_system.clear()
+        self._repo.clear()
+        self._all.clear()
 
     def user(self):
         return copy.deepcopy(self._user)
@@ -200,6 +204,8 @@ class GitConfig(observable.Observable):
 
         for dct in (self._system, self._user, self._repo):
             self._all.update(dct)
+
+        self.notify_observers(self.message_updated)
 
     def read_config(self, path):
         """Return git config data from a path as a dictionary."""
