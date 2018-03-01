@@ -283,12 +283,18 @@ def cmd_cola(args):
         status_filter = core.abspath(status_filter)
 
     context = application_init(args)
+
+    context.timer.start('view')
     view = MainView(context.model, settings=args.settings)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
 
     if status_filter:
         view.set_filter(core.relpath(status_filter))
+
+    context.timer.stop('view')
+    if args.perf:
+        context.timer.display('view')
 
     return application_start(context, view)
 

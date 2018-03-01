@@ -330,20 +330,26 @@ def restore_session(args):
 def application_init(args, update=False):
     """Parses the command-line arguments and starts git-cola
     """
+    timer = Timer()
+    timer.start('init')
+
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
     process_args(args)
-
-    timer = Timer()
-    timer.start('init')
 
     app = new_application(args)
     model = new_model(app, args.repo,
                       prompt=args.prompt, settings=args.settings)
     if update:
         model.update_status()
+
     cfg = gitcfg.current()
+    timer.stop('init')
+
+    if args.perf:
+        timer.display('init')
+
     return ApplicationContext(args, app, cfg, model, timer)
 
 
@@ -361,10 +367,6 @@ def application_run(context, view, start=None, stop=None):
     context_init(context, view)
     if start:
         start(context, view)
-
-    context.timer.stop('init')
-    if context.args.perf:
-        context.timer.display('init')
 
     # Start the event loop
     result = context.app.start()
