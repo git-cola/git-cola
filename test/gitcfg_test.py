@@ -12,6 +12,7 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
         self.config = gitcfg.current()
+        self.config.reset()
 
     def test_string(self):
         """Test string values in get()."""

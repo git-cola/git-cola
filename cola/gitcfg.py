@@ -250,7 +250,7 @@ class GitConfig(observable.Observable):
 
         return config
 
-    def _get(self, src, key, default, fn=None, cached=False):
+    def _get(self, src, key, default, fn=None, cached=True):
         if not cached or not src:
             self.update()
         try:
@@ -275,7 +275,7 @@ class GitConfig(observable.Observable):
         # Allow the final KeyError to bubble up
         return src[key.lower()]
 
-    def get(self, key, default=None, fn=None, cached=False):
+    def get(self, key, default=None, fn=None, cached=True):
         """Return the string value for a config key."""
         return self._get(self._all, key, default, fn=fn, cached=cached)
 
@@ -379,10 +379,10 @@ class GitConfig(observable.Observable):
         return result
 
     def gui_encoding(self):
-        return self.get('gui.encoding', default=None, cached=True)
+        return self.get('gui.encoding', default=None)
 
     def is_per_file_attrs_enabled(self):
-        return self.get('cola.fileattributes', cached=True,
+        return self.get('cola.fileattributes',
                         fn=lambda: os.path.exists('.gitattributes'))
 
     def file_encoding(self, path):
@@ -432,11 +432,11 @@ class GitConfig(observable.Observable):
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
         names = self.get_guitool_names()
-        return [(name, self.get('guitool.%s.shortcut' % name, cached=True))
+        return [(name, self.get('guitool.%s.shortcut' % name))
                 for name in names]
 
     def terminal(self):
-        term = self.get('cola.terminal', default=None, cached=True)
+        term = self.get('cola.terminal', default=None)
         if not term:
             # find a suitable default terminal
             term = 'xterm -e'  # for mac osx
@@ -448,7 +448,7 @@ class GitConfig(observable.Observable):
         return term
 
     def color(self, key, default):
-        string = self.get('cola.color.%s' % key, default=default, cached=True)
+        string = self.get('cola.color.%s' % key, default=default)
         string = core.encode(string)
         default = core.encode(default)
         struct_layout = core.encode('BBB')

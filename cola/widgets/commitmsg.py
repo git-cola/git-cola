@@ -127,7 +127,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.sign_action = self.actions_menu.addAction(
                 N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
-        signcommits = cfg.get('cola.signcommits', default=False, cached=True)
+        signcommits = cfg.get('cola.signcommits', default=False)
         self.sign_action.setChecked(signcommits)
 
         # Spell checker
@@ -520,13 +520,13 @@ class CommitMessageEditor(QtWidgets.QWidget):
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            user_name = cfg.get('user.name', cached=True)
+            user_name = cfg.get('user.name')
             if user_name:
                 for part in user_name.split():
                     spellcheck.add_word(part)
 
             # Add our email address to the dictionary
-            user_email = cfg.get('user.email', cached=True)
+            user_email = cfg.get('user.email')
             if user_email:
                 for part in user_email.split('@'):
                     for elt in part.split('.'):

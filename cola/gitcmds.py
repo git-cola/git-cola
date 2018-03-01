@@ -26,7 +26,7 @@ def default_remote(config=None):
     """Return the remote tracked by the current branch."""
     if config is None:
         config = gitcfg.current()
-    return config.get('branch.%s.remote' % current_branch(), cached=True)
+    return config.get('branch.%s.remote' % current_branch())
 
 
 def diff_index_filenames(ref):
@@ -235,10 +235,10 @@ def tracked_branch(branch=None, config=None):
         branch = current_branch()
     if branch is None:
         return None
-    remote = config.get('branch.%s.remote' % branch, cached=True)
+    remote = config.get('branch.%s.remote' % branch)
     if not remote:
         return None
-    merge_ref = config.get('branch.%s.merge' % branch, cached=True)
+    merge_ref = config.get('branch.%s.merge' % branch)
     if not merge_ref:
         return None
     refs_heads = 'refs/heads/'
@@ -296,7 +296,7 @@ def common_diff_opts(config=None):
         'submodule': submodule,
         'no_color': True,
         'no_ext_diff': True,
-        'unified': config.get('gui.diffcontext', default=3, cached=True),
+        'unified': config.get('gui.diffcontext', default=3),
         '_raw': True,
     }
     opts.update(_diff_overrides)
@@ -723,8 +723,7 @@ def prepare_commit_message_hook(config=None):
     default_hook = git.git_path('hooks', 'cola-prepare-commit-msg')
     if config is None:
         config = gitcfg.current()
-    return config.get('cola.preparecommitmessagehook',
-                      default=default_hook, cached=True)
+    return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
 def abort_merge():

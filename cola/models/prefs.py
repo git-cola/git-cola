@@ -41,28 +41,28 @@ def default_blame_viewer():
 
 def blame_viewer():
     default = default_blame_viewer()
-    return gitcfg.current().get(BLAME_VIEWER, default=default, cached=True)
+    return gitcfg.current().get(BLAME_VIEWER, default=default)
 
 
 def bold_headers():
-    return gitcfg.current().get(BOLD_HEADERS, default=False, cached=True)
+    return gitcfg.current().get(BOLD_HEADERS, default=False)
 
 
 def check_conflicts():
-    return gitcfg.current().get(CHECKCONFLICTS, default=True, cached=True)
+    return gitcfg.current().get(CHECKCONFLICTS, default=True)
 
 
 def display_untracked():
-    return gitcfg.current().get(DISPLAY_UNTRACKED, default=True, cached=True)
+    return gitcfg.current().get(DISPLAY_UNTRACKED, default=True)
 
 
 def editor():
-    app = gitcfg.current().get(EDITOR, default='gvim', cached=True)
+    app = gitcfg.current().get(EDITOR, default='gvim')
     return {'vim': 'gvim -f'}.get(app, app)
 
 
 def comment_char():
-    return gitcfg.current().get(COMMENT_CHAR, default='#', cached=True)
+    return gitcfg.current().get(COMMENT_CHAR, default='#')
 
 
 def default_history_browser():
@@ -83,35 +83,35 @@ def default_history_browser():
 
 def history_browser():
     default = default_history_browser()
-    return gitcfg.current().get(HISTORY_BROWSER, default=default, cached=True)
+    return gitcfg.current().get(HISTORY_BROWSER, default=default)
 
 
 def linebreak():
-    return gitcfg.current().get(LINEBREAK, default=True, cached=True)
+    return gitcfg.current().get(LINEBREAK, default=True)
 
 
 def maxrecent():
-    return gitcfg.current().get(MAXRECENT, default=8, cached=True)
+    return gitcfg.current().get(MAXRECENT, default=8)
 
 
 def spellcheck():
-    return gitcfg.current().get(SPELL_CHECK, default=False, cached=True)
+    return gitcfg.current().get(SPELL_CHECK, default=False)
 
 
 def expandtab():
-    return gitcfg.current().get(EXPANDTAB, default=False, cached=True)
+    return gitcfg.current().get(EXPANDTAB, default=False)
 
 
 def sort_bookmarks():
-    return gitcfg.current().get(SORT_BOOKMARKS, default=True, cached=True)
+    return gitcfg.current().get(SORT_BOOKMARKS, default=True)
 
 
 def tabwidth():
-    return gitcfg.current().get(TABWIDTH, default=8, cached=True)
+    return gitcfg.current().get(TABWIDTH, default=8)
 
 
 def textwidth():
-    return gitcfg.current().get(TEXTWIDTH, default=72, cached=True)
+    return gitcfg.current().get(TEXTWIDTH, default=72)
 
 
 class PreferencesModel(observable.Observable):

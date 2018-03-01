@@ -280,8 +280,7 @@ class ColaQApplication(QtWidgets.QApplication):
             cfg = gitcfg.current()
             if (self.context
                     and self.context.model.git.is_valid()
-                    and cfg.get('cola.refreshonfocus',
-                                default=False, cached=True)):
+                    and cfg.get('cola.refreshonfocus', default=False)):
                 cmds.do(cmds.Refresh)
         return super(ColaQApplication, self).event(e)
 
@@ -437,7 +436,7 @@ def new_model(app, repo, prompt=False, settings=None):
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
             cfg = gitcfg.current()
-            default_repo = cfg.get('cola.defaultrepo', cached=True)
+            default_repo = cfg.get('cola.defaultrepo')
             if default_repo:
                 valid = model.set_worktree(default_repo)
 
