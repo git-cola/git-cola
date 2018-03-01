@@ -381,17 +381,18 @@ def application_run(context, view, start=None, stop=None):
 def application_start(context, view):
     """Show the GUI and start the main event loop"""
     # Store the view for session management
-    return application_run(context, view, start=start, stop=stop)
+    return application_run(context, view,
+                           start=default_start, stop=default_stop)
 
 
-def start(context, view):
+def default_start(context, view):
     """Scan for the first time"""
     runtask = qtutils.RunTask(parent=view)
     init_update_task(view, runtask, context.model)
     QtCore.QTimer.singleShot(0, _send_msg)
 
 
-def stop(context, view):
+def default_stop(context, view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
