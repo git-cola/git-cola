@@ -4,6 +4,7 @@ import argparse
 import os
 import signal
 import sys
+import time
 
 __copyright__ = """
 Copyright (C) 2007-2017 David Aguilar and contributors
@@ -277,8 +278,10 @@ class ColaQApplication(QtWidgets.QApplication):
     def event(self, e):
         if e.type() == QtCore.QEvent.ApplicationActivate:
             cfg = gitcfg.current()
-            if (self.context and self.context.model.git.is_valid()
-                    and cfg.get('cola.refreshonfocus', False)):
+            if (self.context
+                    and self.context.model.git.is_valid()
+                    and cfg.get('cola.refreshonfocus',
+                                default=False, cached=True)):
                 cmds.do(cmds.Refresh)
         return super(ColaQApplication, self).event(e)
 
@@ -333,13 +336,16 @@ def application_init(args, update=False):
     setup_environment()
     process_args(args)
 
+    timer = Timer()
+    timer.start('init')
+
     app = new_application(args)
     model = new_model(app, args.repo,
                       prompt=args.prompt, settings=args.settings)
     if update:
         model.update_status()
     cfg = gitcfg.current()
-    return ApplicationContext(args, app, cfg, model)
+    return ApplicationContext(args, app, cfg, model, timer)
 
 
 def context_init(context, view):
@@ -350,13 +356,17 @@ def context_init(context, view):
     view.show()
     view.raise_()
 
-
 def application_run(context, view, start=None, stop=None):
     """Run the application main loop"""
     # Initialize and run startup callbacks
     context_init(context, view)
     if start:
         start(context, view)
+
+    context.timer.stop('init')
+    if context.args.perf:
+        context.timer.display('init')
+
     # Start the event loop
     result = context.app.start()
     # Finish
@@ -407,6 +417,10 @@ def add_common_arguments(parser):
     parser.add_argument('-session', metavar='<session>', default=None,
                         help=argparse.SUPPRESS)
 
+    # Enable timing information
+    parser.add_argument('--perf', action='store_true', default=False,
+                        help=argparse.SUPPRESS)
+
 
 def new_application(args):
     # Initialize the app
@@ -422,7 +436,8 @@ def new_model(app, repo, prompt=False, settings=None):
             # We are not currently in a git repository so we need to find one.
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
-            default_repo = gitcfg.current().get('cola.defaultrepo')
+            cfg = gitcfg.current()
+            default_repo = cfg.get('cola.defaultrepo', cached=True)
             if default_repo:
                 valid = model.set_worktree(default_repo)
 
@@ -468,10 +483,35 @@ def _send_msg():
         Interaction.log(msg2)
 
 
+class Timer(object):
+    """Simple performance timer"""
+
+    def __init__(self):
+        self._data = {}
+
+    def start(self, key):
+        now = time.time()
+        self._data[key] = [now, now]
+
+    def stop(self, key):
+        entry = self._data[key]
+        entry[1] = time.time()
+        return self.elapsed(key)
+
+    def elapsed(self, key):
+        entry = self._data[key]
+        return entry[1] - entry[0]
+
+    def display(self, key):
+        elapsed = self.elapsed(key)
+        print('%s: %.5fs' % (key, elapsed))
+
+
 class ApplicationContext(object):
 
-    def __init__(self, args, app, cfg, model):
+    def __init__(self, args, app, cfg, model, timer):
         self.args = args
         self.app = app
         self.cfg = cfg
         self.model = model
+        self.timer = timer

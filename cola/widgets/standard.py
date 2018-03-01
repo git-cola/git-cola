@@ -57,7 +57,8 @@ class WidgetMixin(object):
         return self.__class__.__name__.lower()
 
     def save_state(self, settings=None):
-        if gitcfg.current().get('cola.savewindowsettings', True):
+        cfg = gitcfg.current()
+        if cfg.get('cola.savewindowsettings', default=True, cached=True):
             if settings is None:
                 settings = Settings()
                 settings.load()

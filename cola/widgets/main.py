@@ -79,10 +79,11 @@ class MainView(standard.MainWindow):
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
-        self.browser_dockable = (cfg.get('cola.browserdockable') or
-                                 cfg.get('cola.classicdockable'))
+        self.browser_dockable = (
+                cfg.get('cola.browserdockable', cached=True) or
+                cfg.get('cola.classicdockable', cached=True))
         if self.browser_dockable:
-            self.browserdockwidget = create_dock(N_('Browser'), self,
+            self.browserdock = create_dock(N_('Browser'), self,
                     widget=browse.worktree_browser(parent=self, update=False))
 
         # "Actions" widget
@@ -466,13 +467,7 @@ class MainView(standard.MainWindow):
         self.view_menu = add_menu(N_('View'), self.menubar)
         self.view_menu.aboutToShow.connect(
             lambda: self.build_view_menu(self.view_menu))
-
-        if self.browser_dockable:
-            self.view_menu.addAction(self.browserdock.toggleViewAction())
-
         self.setup_dockwidget_view_menu()
-        self.view_menu.addSeparator()
-        self.view_menu.addAction(self.lock_layout_action)
 
         # Help Menu
         self.help_menu = add_menu(N_('Help'), self.menubar)
@@ -571,6 +566,28 @@ class MainView(standard.MainWindow):
         menu.addSeparator()
         menu_action = menu.addAction(N_('Add Toolbar'), self.add_toolbar)
         menu_action.setIcon(icons.add())
+
+        dockwidgets = [
+            self.logdock,
+            self.commitdock,
+            self.statusdock,
+            self.diffdock,
+            self.actionsdock,
+            self.bookmarksdock,
+            self.recentdock,
+            self.branchdock
+        ]
+        if self.browser_dockable:
+            dockwidgets.append(self.browserdock)
+
+        for dockwidget in dockwidgets:
+            # Associate the action with the shortcut
+            toggleview = dockwidget.toggleViewAction()
+            menu.addAction(toggleview)
+
+        menu.addSeparator()
+        menu.addAction(self.lock_layout_action)
+
         return menu
 
     def contextMenuEvent(self, event):
@@ -717,7 +734,8 @@ class MainView(standard.MainWindow):
     def apply_state(self, state):
         """Imports data for save/restore"""
         result = standard.MainWindow.apply_state(self, state)
-        self.lock_layout_action.setChecked(state.get('lock_layout', False))
+        lock_layout = state.get('lock_layout', False)
+        self.lock_layout_action.setChecked(lock_layout)
 
         show_status_filter = state.get('show_status_filter', False)
         self.statuswidget.filter_widget.setVisible(show_status_filter)
@@ -750,7 +768,6 @@ class MainView(standard.MainWindow):
             # Associate the action with the shortcut
             toggleview = dockwidget.toggleViewAction()
             toggleview.setShortcut('Shift+' + shortcut)
-            self.view_menu.addAction(toggleview)
 
             def showdock(show, dockwidget=dockwidget):
                 if show:

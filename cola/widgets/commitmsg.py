@@ -85,6 +85,10 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
 
+        cfg = gitcfg.current()
+        self.summary_validator = MessageValidator(cfg, parent=self.summary)
+        self.summary.setValidator(self.summary_validator)
+
         self.description = CommitMessageTextEdit()
         self.description.menu_actions.extend(menu_actions)
 
@@ -120,18 +124,19 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.bypass_commit_hooks_action.setChecked(False)
 
         # Sign commits
-        cfg = gitcfg.current()
         self.sign_action = self.actions_menu.addAction(
                 N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
-        self.sign_action.setChecked(cfg.get('cola.signcommits', False))
+        signcommits = cfg.get('cola.signcommits', default=False, cached=True)
+        self.sign_action.setChecked(signcommits)
 
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
-        self.check_spelling_action.setChecked(prefs.spellcheck())
-        self.toggle_check_spelling(prefs.spellcheck())
+        spellcheck = prefs.spellcheck()
+        self.check_spelling_action.setChecked(spellcheck)
+        self.toggle_check_spelling(spellcheck)
 
         # Line wrapping
         self.autowrap_action = self.actions_menu.addAction(
@@ -515,13 +520,13 @@ class CommitMessageEditor(QtWidgets.QWidget):
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            user_name = cfg.get('user.name')
+            user_name = cfg.get('user.name', cached=True)
             if user_name:
                 for part in user_name.split():
                     spellcheck.add_word(part)
 
             # Add our email address to the dictionary
-            user_email = cfg.get('user.email')
+            user_email = cfg.get('user.email', cached=True)
             if user_email:
                 for part in user_email.split('@'):
                     for elt in part.split('.'):
@@ -536,6 +541,40 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.description.highlighter.enable(enabled)
 
 
+class MessageValidator(QtGui.QValidator):
+    """Prevent invalid branch names"""
+
+    config_updated = Signal()
+
+    def __init__(self, cfg, parent=None):
+        super(MessageValidator, self).__init__(parent)
+        self._comment_char = None
+        self._cfg = cfg
+        self.refresh()
+        self.config_updated.connect(self.refresh, type=Qt.QueuedConnection)
+        cfg.add_observer(cfg.message_updated, self.emit_config_updated)
+        self.destroyed.connect(self.teardown)
+
+    def teardown(self):
+        self._cfg.remove_observer(self.emit_model_updated)
+
+    def emit_config_updated(self):
+        self.config_updated.emit()
+
+    def refresh(self):
+        """Update comment char in response to config changes"""
+        self._comment_char = prefs.comment_char()
+
+    def validate(self, string, idx):
+        """Scrub whitespace and validate the commit message"""
+        string = string.lstrip()
+        if string.startswith(self._comment_char):
+            state = self.Invalid
+        else:
+            state = self.Acceptable
+        return (state, string, idx)
+
+
 class CommitSummaryLineEdit(HintedLineEdit):
 
     cursor = Signal(int, int)
@@ -544,12 +583,6 @@ class CommitSummaryLineEdit(HintedLineEdit):
         hint = N_('Commit summary')
         HintedLineEdit.__init__(self, hint, parent=parent)
         self.menu_actions = []
-
-        comment_char = prefs.comment_char()
-        re_comment_char = re.escape(comment_char)
-        regex = QtCore.QRegExp(r'^\s*[^%s \t].*' % re_comment_char)
-        self._validator = QtGui.QRegExpValidator(regex, self)
-        self.setValidator(self._validator)
 
     def build_menu(self):
         menu = self.createStandardContextMenu()

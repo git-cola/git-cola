@@ -136,6 +136,7 @@ Thanks
 * Peter Júnoš
 * Philip Stark
 * Pilar Molina Lopez
+* Radek Novacek
 * Radek Postołowicz
 * Raghavendra Karunanidhi
 * Rainer Müller
