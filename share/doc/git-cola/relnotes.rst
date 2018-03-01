@@ -62,6 +62,11 @@ Fixes
 
   https://github.com/git-cola/git-cola/pull/748
 
+* `core.commentChar` is now honored when set in the local repository
+  `.git/config`.
+
+  https://github.com/git-cola/git-cola/issues/766
+
 .. _v3.0:
 
 git-cola v3.0
