@@ -127,14 +127,16 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.sign_action = self.actions_menu.addAction(
                 N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
-        self.sign_action.setChecked(cfg.get('cola.signcommits', False))
+        signcommits = cfg.get('cola.signcommits', default=False, cached=True)
+        self.sign_action.setChecked(signcommits)
 
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
-        self.check_spelling_action.setChecked(prefs.spellcheck())
-        self.toggle_check_spelling(prefs.spellcheck())
+        spellcheck = prefs.spellcheck()
+        self.check_spelling_action.setChecked(spellcheck)
+        self.toggle_check_spelling(spellcheck)
 
         # Line wrapping
         self.autowrap_action = self.actions_menu.addAction(
@@ -518,13 +520,13 @@ class CommitMessageEditor(QtWidgets.QWidget):
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
             self.spellcheck_initialized = True
-            user_name = cfg.get('user.name')
+            user_name = cfg.get('user.name', cached=True)
             if user_name:
                 for part in user_name.split():
                     spellcheck.add_word(part)
 
             # Add our email address to the dictionary
-            user_email = cfg.get('user.email')
+            user_email = cfg.get('user.email', cached=True)
             if user_email:
                 for part in user_email.split('@'):
                     for elt in part.split('.'):

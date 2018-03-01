@@ -312,7 +312,8 @@ class BuildItem(object):
     def __init__(self):
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()
-        self.default_repo = gitcfg.current().get('cola.defaultrepo')
+        cfg = gitcfg.current()
+        self.default_repo = cfg.get('cola.defaultrepo', cached=True)
 
     def get(self, path, name):
         is_default = self.default_repo == path

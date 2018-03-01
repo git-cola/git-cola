@@ -498,7 +498,7 @@ def current():
 def _create_instance():
     thread_class = None
     cfg = gitcfg.current()
-    if not cfg.get('cola.inotify', True):
+    if not cfg.get('cola.inotify', default=True, cached=True):
         msg = N_('File system change monitoring: disabled because'
                  ' "cola.inotify" is false.\n')
         Interaction.log(msg)
