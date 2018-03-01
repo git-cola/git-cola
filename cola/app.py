@@ -506,7 +506,7 @@ class Timer(object):
 
     def display(self, key):
         elapsed = self.elapsed(key)
-        print('%s: %.5fs' % (key, elapsed))
+        sys.stdout.write('%s: %.5fs\n' % (key, elapsed))
 
 
 class ApplicationContext(object):

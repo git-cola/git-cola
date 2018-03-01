@@ -507,6 +507,9 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __eq__(self, other):
         return self is other
 
+    def __hash__(self):
+        return self.oid
+
     def copy(self):
         return self.__class__(self.idx, self.is_enabled(), self.command,
                               oid=self.oid, summary=self.summary,

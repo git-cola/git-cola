@@ -262,6 +262,7 @@ class RepoReader(object):
         self.reset()
         return self
 
+    # pylint: disable=next-method-defined
     def next(self):
         if self._cached:
             try:
@@ -300,4 +301,5 @@ class RepoReader(object):
         return self._objects[oid]
 
     def items(self):
+        # pylint: disable=dict-items-not-iterating
         return self._objects.items()

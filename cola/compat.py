@@ -43,7 +43,7 @@ if PY3:
     unichr = chr
 else:
     bchr = chr
-    maxsize = sys.maxint
+    maxsize = 2 ** 31
     # pylint: disable=unicode-builtin
     ustr = unicode
     # pylint: disable=unichr-builtin
