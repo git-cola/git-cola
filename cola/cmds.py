@@ -1331,6 +1331,7 @@ class Refresh(Command):
     def do(self):
         self.model.update_status(update_index=True)
         fsmonitor.current().refresh()
+        gitcfg.current().update()
 
 
 class RevertEditsCommand(ConfirmAction):
