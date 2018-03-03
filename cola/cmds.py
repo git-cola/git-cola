@@ -1191,21 +1191,28 @@ def unix_path(path, is_win32=utils.is_win32):
     return path
 
 
+def sequence_editor():
+    """Return a GIT_SEQUENCE_EDITOR environment value that enables git-xbase"""
+    xbase = unix_path(resources.share('bin', 'git-xbase'))
+    editor = core.list2cmdline([unix_path(sys.executable), xbase])
+    return editor
+
+
 class GitXBaseContext(object):
 
     def __init__(self, **kwargs):
-        self.env = {'GIT_EDITOR': prefs.editor()}
+        self.env = {
+            'GIT_EDITOR': prefs.editor(),
+            'GIT_SEQUENCE_EDITOR': sequence_editor(),
+        }
         self.env.update(kwargs)
 
     def __enter__(self):
-        compat.setenv('GIT_SEQUENCE_EDITOR',
-                      unix_path(resources.share('bin', 'git-xbase')))
         for var, value in self.env.items():
             compat.setenv(var, value)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        compat.unsetenv('GIT_SEQUENCE_EDITOR')
         for var in self.env:
             compat.unsetenv(var)
 
