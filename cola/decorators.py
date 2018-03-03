@@ -47,8 +47,7 @@ def memoize(func):
 def _memoize(func, *args, **opts):
     """Implements memoized cache lookups"""
     if opts:  # frozenset is used to ensure hashability
-        # pylint: disable=dict-items-not-iterating
-        key = (args, frozenset(opts.items()))
+        key = (args, frozenset(list(opts.items())))
     else:
         key = args
     cache = func.cache  # attribute added by memoize
