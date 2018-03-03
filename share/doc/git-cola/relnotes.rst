@@ -58,6 +58,13 @@ Packaging
 Fixes
 -----
 
+* The "Create Tag" dialog did not correctly handle the case when a signed
+  tag is requested, but no message is provided, and the user chooses to
+  create an unannotated tag instead.  This convenience fallback will now
+  properly create an unsigned, unannotated tag.
+
+  https://github.com/git-cola/git-cola/issues/696
+
 * `.gitconfig` and `.git/config` values editable by the Preferences dialog
   (aka `git cola config`) will now get unset when set to an empty value.
   For example, setting a different `user.email` in the current repository,

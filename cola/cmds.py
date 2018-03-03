@@ -1742,23 +1742,26 @@ class Tag(Command):
         info = N_('An unsigned, lightweight tag will be created instead.\n'
                   'Create an unsigned tag?')
         ok_text = N_('Create Unsigned Tag')
-        if (self._sign
-            and not self._message
-            and not Interaction.confirm(title, message, info, ok_text,
-                                        default=False, icon=icons.save())):
-            return
+        sign = self._sign
+        if sign and not self._message:
+            # We require a message in order to sign the tag, so if they
+            # choose to create an unsigned tag we have to clear the sign flag.
+            sign = False
+            if not Interaction.confirm(title, message, info, ok_text,
+                                       default=False, icon=icons.save()):
+                return
         opts = {}
         tmp_file = None
         try:
             if self._message:
                 tmp_file = utils.tmp_filename('tag-message')
-                opts['F'] = tmp_file
+                opts['file'] = tmp_file
                 core.write(tmp_file, self._message)
 
-            if self._sign:
-                opts['s'] = True
-            else:
-                opts['a'] = bool(self._message)
+            if sign:
+                opts['sign'] = True
+            if self._message:
+                opts['annotate'] = True
             status, out, err = self.model.git.tag(self._name,
                                                   self._revision, **opts)
         finally:
