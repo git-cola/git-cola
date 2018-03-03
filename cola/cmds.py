@@ -1334,6 +1334,13 @@ class Refresh(Command):
         gitcfg.current().update()
 
 
+class RefreshConfig(Command):
+    """Refresh the git config cache"""
+
+    def do(self):
+        gitcfg.current().update()
+
+
 class RevertEditsCommand(ConfirmAction):
 
     def __init__(self):
