@@ -65,6 +65,7 @@ class MainModel(Observable):
 
         # Initialize the git command object
         self.git = git.current()
+        self.cfg = gitcfg.current()
 
         self.initialized = False
         self.head = 'HEAD'
@@ -123,7 +124,7 @@ class MainModel(Observable):
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
-            gitcfg.current().reset()
+            self.cfg.reset()
         return is_valid
 
     def set_commitmsg(self, msg, notify=True):
