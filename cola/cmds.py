@@ -1322,7 +1322,7 @@ class Rescan(Command):
 
 
 class Refresh(Command):
-    """Update refs and refresh the index"""
+    """Update refs, refresh the index, and update config"""
 
     @staticmethod
     def name():
