@@ -21,7 +21,7 @@ install:
   # SIP
   - mkdir -p local/sandbox
   - cd local/sandbox
-  - wget "http://sourceforge.net/projects/pyqt/files/sip/sip-4.18.1/sip-4.18.1.tar.gz"
+  - wget "https://src.fedoraproject.org/repo/extras/sip/sip-4.18.1.tar.gz/9d664c33e8d0eabf1238a7ff44a399e9/sip-4.18.1.tar.gz"
   - tar xzf sip-4.18.1.tar.gz
   - cd sip-4.18.1
   - python configure.py --incdir="$(python -c 'import sys; print(sys.prefix)')"/include/python"$PYTHON_VERSION"
@@ -29,7 +29,7 @@ install:
   - make install
   - cd ..
   # PyQt4
-  - wget "http://sourceforge.net/projects/pyqt/files/PyQt4/PyQt-4.11.4/PyQt-x11-gpl-4.11.4.tar.gz"
+  - wget "https://src.fedoraproject.org/repo/pkgs/PyQt4/PyQt-x11-gpl-4.11.4.tar.gz/2fe8265b2ae2fc593241c2c84d09d481/PyQt-x11-gpl-4.11.4.tar.gz"
   - tar xzf PyQt-x11-gpl-4.11.4.tar.gz
   - cd PyQt-x11-gpl-4.11.4
   - python configure.py --confirm-license --no-designer-plugin --no-qsci-api --no-timestamp
