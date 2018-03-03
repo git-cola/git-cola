@@ -33,26 +33,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
         self.git('config', 'section.key', 'value')
         model = MainModel(cwd=core.getcwd())
         value = model.git.config('section.key', get=True)
-
         self.assertEqual(value, (0, 'value', ''))
-
-        #  Test config_set
-        model.config_set('section.bool', True)
-        value = model.git.config('section.bool', get=True)
-
-        self.assertEqual(value, (0, 'true', ''))
-        model.config_set('section.bool', False)
-
-        # Test config_dict
-        config_dict = model.config_dict(local=True)
-
-        self.assertEqual(config_dict['section_key'], 'value')
-        self.assertEqual(config_dict['section_bool'], False)
-
-        # Test config_dict --global
-        global_dict = model.config_dict(local=False)
-
-        self.assertEqual(type(global_dict), dict)
 
 
 if __name__ == '__main__':

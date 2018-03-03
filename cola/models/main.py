@@ -368,43 +368,6 @@ class MainModel(Observable):
         self.update_file_status()
         return (status, out, err)
 
-    def config_set(self, key, value, local=True):
-        # git config category.key value
-        strval = ustr(value)
-        if type(value) is bool:
-            # git uses "true" and "false"
-            strval = strval.lower()
-        if local:
-            argv = [key, strval]
-        else:
-            argv = ['--global', key, strval]
-        return self.git.config(*argv)
-
-    def config_dict(self, local=True):
-        """parses the lines from git config --list into a dictionary"""
-
-        kwargs = {
-            'list': True,
-            'global': not local,  # global is a python keyword
-        }
-        config_lines = self.git.config(**kwargs)[STDOUT].splitlines()
-        newdict = {}
-        for line in config_lines:
-            try:
-                k, v = line.split('=', 1)
-            except:
-                # value-less entry in .gitconfig
-                continue
-            k = k.replace('.', '_')  # git -> model
-            if v == 'true' or v == 'false':
-                v = bool(eval(v.title()))
-            try:
-                v = int(eval(v))
-            except:
-                pass
-            newdict[k] = v
-        return newdict
-
     def remote_url(self, name, action):
         if action == 'push':
             url = self.git.config('remote.%s.pushurl' % name,
