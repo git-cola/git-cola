@@ -262,8 +262,7 @@ class RepoReader(object):
         self.reset()
         return self
 
-    # pylint: disable=next-method-defined
-    def next(self):
+    def __next__(self):
         if self._cached:
             try:
                 self._idx += 1
@@ -295,11 +294,13 @@ class RepoReader(object):
             self._topo_list.append(c)
             return c
 
-    __next__ = next  # for Python 3
+    next = __next__  # python2
+
+    def __iter__(self):
+        return self
 
     def __getitem__(self, oid):
         return self._objects[oid]
 
     def items(self):
-        # pylint: disable=dict-items-not-iterating
-        return self._objects.items()
+        return list(self._objects.items())

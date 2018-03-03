@@ -23,6 +23,7 @@ Please install it before using git-cola, e.g.:
 
 from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 # Import cola modules
 from .i18n import N_
@@ -238,9 +239,13 @@ class ColaApplication(object):
     def start(self):
         """Wrap exec_() and start the application"""
         # Defer connection so that local cola.inotify is honored
-        fsmonitor.current().files_changed.connect(self._update_files)
+        monitor = fsmonitor.current()
+        monitor.files_changed.connect(
+            cmds.run(cmds.Refresh), type=Qt.QueuedConnection)
+        monitor.config_changed.connect(
+            cmds.run(cmds.RefreshConfig), type=Qt.QueuedConnection)
         # Start the filesystem monitor thread
-        fsmonitor.current().start()
+        monitor.start()
         return self._app.exec_()
 
     def stop(self):
@@ -262,10 +267,6 @@ class ColaApplication(object):
     def set_context(self, context):
         if hasattr(self._app, 'context'):
             self._app.context = context
-
-    def _update_files(self):
-        # Respond to file system updates
-        cmds.do(cmds.Refresh)
 
 
 class ColaQApplication(QtWidgets.QApplication):

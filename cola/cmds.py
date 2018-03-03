@@ -1322,7 +1322,7 @@ class Rescan(Command):
 
 
 class Refresh(Command):
-    """Update refs and refresh the index"""
+    """Update refs, refresh the index, and update config"""
 
     @staticmethod
     def name():
@@ -1331,6 +1331,14 @@ class Refresh(Command):
     def do(self):
         self.model.update_status(update_index=True)
         fsmonitor.current().refresh()
+        gitcfg.current().update()
+
+
+class RefreshConfig(Command):
+    """Refresh the git config cache"""
+
+    def do(self):
+        gitcfg.current().update()
 
 
 class RevertEditsCommand(ConfirmAction):
