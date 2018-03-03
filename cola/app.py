@@ -242,6 +242,8 @@ class ColaApplication(object):
         monitor = fsmonitor.current()
         monitor.files_changed.connect(
             cmds.run(cmds.Refresh), type=Qt.QueuedConnection)
+        monitor.config_changed.connect(
+            cmds.run(cmds.RefreshConfig), type=Qt.QueuedConnection)
         # Start the filesystem monitor thread
         monitor.start()
         return self._app.exec_()

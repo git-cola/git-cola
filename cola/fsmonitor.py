@@ -49,6 +49,7 @@ from .interaction import Interaction
 class _Monitor(QtCore.QObject):
 
     files_changed = Signal()
+    config_changed = Signal()
 
     def __init__(self, thread_class):
         QtCore.QObject.__init__(self)
@@ -85,11 +86,12 @@ class _BaseThread(QtCore.QThread):
         self._running = True
         self._use_check_ignore = version.check_git('check-ignore')
         self._force_notify = False
+        self._force_config = False
         self._file_paths = set()
 
     @property
     def _pending(self):
-        return self._force_notify or self._file_paths
+        return self._force_notify or self._file_paths or self._force_config
 
     def refresh(self):
         """Do any housekeeping necessary in response to repository changes."""
@@ -98,6 +100,9 @@ class _BaseThread(QtCore.QThread):
     def notify(self):
         """Notifies all observers"""
         do_notify = False
+        do_config = False
+        if self._force_config:
+            do_config = True
         if self._force_notify:
             do_notify = True
         elif self._file_paths:
@@ -119,9 +124,17 @@ class _BaseThread(QtCore.QThread):
                 source_fields = out.split(bchr(0))[0:-1:4]
                 do_notify = not all(source_fields)
         self._force_notify = False
+        self._force_config = False
         self._file_paths = set()
+
+        # "files changed" is a bigger hammer than "config changed".
+        # and is a superset relative to what is done in response to the
+        # signal.  Thus, the "elif" below avoids repeated work that
+        # would be done if it were a simple "if" check instead.
         if do_notify:
             self._monitor.files_changed.emit()
+        elif do_config:
+            self._monitor.config_changed.emit()
 
     @staticmethod
     def _log_enabled_message():
@@ -308,6 +321,8 @@ if AVAILABLE == 'inotify':
                 name = core.decode(name)
                 if name == 'HEAD' or name == 'index':
                     self._force_notify = True
+                elif name == 'config':
+                    self._force_config = True
             elif (wd in self._git_dir_wd_to_path_map
                     and not core.decode(name).endswith('.lock')):
                 self._force_notify = True
@@ -475,6 +490,9 @@ if AVAILABLE == 'pywin32':
                     continue
                 path = self._transform_path(path)
                 if path.endswith('.lock'):
+                    continue
+                if path == 'config':
+                    self._force_config = True
                     continue
                 if (path == 'head'
                     or path == 'index'
