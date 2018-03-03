@@ -58,6 +58,15 @@ Packaging
 Fixes
 -----
 
+* `.gitconfig` and `.git/config` values editable by the Preferences dialog
+  (aka `git cola config`) will now get unset when set to an empty value.
+  For example, setting a different `user.email` in the current repository,
+  followed by a subsequent emptying of that field, would previously result in
+  an empty string getting stored in the config.  This has been fixed so that
+  the value will now get unset in the config instead.
+
+  https://github.com/git-cola/git-cola/issues/406
+
 * Spelling and typofixes.
 
   https://github.com/git-cola/git-cola/pull/748
