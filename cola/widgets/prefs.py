@@ -53,8 +53,10 @@ class FormWidget(QtWidgets.QWidget):
             widget.toggled.connect(self._bool_config_changed(config))
 
         elif isinstance(widget, QtWidgets.QLineEdit):
-            widget.editingFinished.connect(self._text_config_changed(config))
-            widget.returnPressed.connect(self._text_config_changed(config))
+            widget.editingFinished.connect(
+                    self._text_config_changed(config, widget))
+            widget.returnPressed.connect(
+                    self._text_config_changed(config, widget))
 
     def _int_config_changed(self, config):
         def runner(value):
@@ -66,9 +68,9 @@ class FormWidget(QtWidgets.QWidget):
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
-    def _text_config_changed(self, config):
+    def _text_config_changed(self, config, widget):
         def runner():
-            value = self.sender().text()
+            value = widget.text()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
