@@ -1744,8 +1744,7 @@ step 2. Hence, it must be propagated for children on side columns.
             # Align new column frontier by frontier of nearest column. If all
             # columns were left then select maximum frontier value.
             if not self.columns:
-                # pylint: disable=dict-values-not-iterating
-                self.frontier[column] = max(self.frontier.values())
+                self.frontier[column] = max(list(self.frontier.values()))
                 return
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
