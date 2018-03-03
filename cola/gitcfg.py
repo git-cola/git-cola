@@ -113,7 +113,6 @@ class GitConfig(observable.Observable):
         self._cache_key = None
         self._configs = []
         self._config_files = {}
-        self._value_cache = {}
         self._attr_cache = {}
         self._find_config_files()
 
@@ -121,7 +120,6 @@ class GitConfig(observable.Observable):
         self._cache_key = None
         self._configs = []
         self._config_files.clear()
-        self._value_cache = {}
         self._attr_cache = {}
         self._find_config_files()
         self.reset_values()
