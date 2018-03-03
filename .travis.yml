@@ -7,6 +7,7 @@ python:
   - "3.3"
   - "3.4"
 
+# git and python are pre-installed
 before_install:
   # Update APT cache data since it may outdated
   - sudo apt-get -qq update
@@ -16,7 +17,6 @@ before_install:
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
 
-# command to install dependencies, git and python are pre-installed in build box thus are ignored
 install:
   # SIP
   - mkdir -p local/sandbox
