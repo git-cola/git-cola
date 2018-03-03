@@ -106,7 +106,8 @@ class CreateTag(standard.Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_tag)
 
-        self.init_state(settings, self.resize, defs.scale(720), defs.scale(210))
+        self.init_state(settings, self.resize,
+                        defs.scale(720), defs.scale(210))
 
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
