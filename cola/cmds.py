@@ -1193,7 +1193,8 @@ def unix_path(path, is_win32=utils.is_win32):
 
 def sequence_editor():
     """Return a GIT_SEQUENCE_EDITOR environment value that enables git-xbase"""
-    editor = unix_path(resources.share('bin', 'git-xbase'))
+    xbase = unix_path(resources.share('bin', 'git-xbase'))
+    editor = core.list2cmdline([unix_path(sys.executable), xbase])
     return editor
 
 
