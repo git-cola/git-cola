@@ -50,17 +50,24 @@ class CommandMixin(object):
 
 
 class ApplyStash(CommandMixin):
-    def __init__(self, selection, index):
-        self.selection = selection
+
+    def __init__(self, stash_name, index):
+        self.stash_ref = stash_name
         self.index = index
 
     def do(self):
+        ref = self.stash_ref
         if self.index:
-            args = ['apply', '--index', self.selection]
+            args = ['apply', '--index', ref]
         else:
-            args = ['apply', self.selection]
+            args = ['apply', ref]
         status, out, err = git.stash(*args)
-        Interaction.log_status(status, out, err)
+        if status == 0:
+            Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            Interaction.command_error(
+                title, 'git stash apply ' + ref, status, out, err)
 
 
 class DropStash(CommandMixin):
@@ -69,8 +76,12 @@ class DropStash(CommandMixin):
         self.stash_oid = stash_oid
 
     def do(self):
+        ref = 'refs/' + self.stash_oid
         status, out, err = git.stash('drop', self.stash_oid)
-        Interaction.log_status(status, out, err)
+        if status != 0:
+            pass
+        else:
+            Interaction.log_status(status, out, err)
 
 
 class SaveStash(CommandMixin):
