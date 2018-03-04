@@ -51,8 +51,8 @@ class CommandMixin(object):
 
 class ApplyStash(CommandMixin):
 
-    def __init__(self, stash_name, index):
-        self.stash_ref = stash_name
+    def __init__(self, stash_index, index):
+        self.stash_ref = 'refs/' + stash_index
         self.index = index
 
     def do(self):
@@ -73,8 +73,8 @@ class ApplyStash(CommandMixin):
 
 class DropStash(CommandMixin):
 
-    def __init__(self, stash_name):
-        self.stash_ref = stash_name
+    def __init__(self, stash_index):
+        self.stash_ref = 'refs/' + stash_index
 
     def do(self):
         status, out, err = git.stash('drop', self.stash_ref)
