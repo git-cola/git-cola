@@ -72,16 +72,17 @@ class ApplyStash(CommandMixin):
 
 class DropStash(CommandMixin):
 
-    def __init__(self, stash_oid):
-        self.stash_oid = stash_oid
+    def __init__(self, stash_name):
+        self.stash_ref = stash_name
 
     def do(self):
-        ref = 'refs/' + self.stash_oid
-        status, out, err = git.stash('drop', self.stash_oid)
-        if status != 0:
-            pass
-        else:
+        status, out, err = git.stash('drop', self.stash_ref)
+        if status == 0:
             Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            Interaction.command_error(
+                title, 'git stash drop ' + self.stash_ref, status, out, err)
 
 
 class SaveStash(CommandMixin):
