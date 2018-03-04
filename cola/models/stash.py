@@ -22,6 +22,9 @@ class StashModel(observable.Observable):
     def stash_list(self):
         return git.stash('list')[STDOUT].splitlines()
 
+    def is_staged(self):
+        return bool(self.model.staged)
+
     def is_changed(self):
         model = self.model
         return bool(model.modified or model.staged)

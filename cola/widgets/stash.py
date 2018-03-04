@@ -145,8 +145,10 @@ class StashView(Dialog):
         self.stash_text.setPlainText(diff_text)
 
     def update_actions(self):
+        is_staged = self.model.is_staged()
         is_changed = self.model.is_changed()
         is_selected = bool(self.selected_stash())
+        self.stash_index.setEnabled(is_staged)
         self.button_save.setEnabled(is_changed)
         self.button_apply.setEnabled(is_selected)
         self.button_drop.setEnabled(is_selected)
@@ -161,6 +163,12 @@ class StashView(Dialog):
 
         self.stash_list.clear()
         self.stash_list.addItems(self.stashes)
+
+        # "Stash Index" depends on staged changes, so disable this option
+        # if there are no staged changes.
+        is_staged = self.model.is_staged()
+        if self.stash_index.isChecked() and not is_staged:
+            self.stash_index.setChecked(False)
 
     def stash_apply(self):
         """Applies the currently selected stash
