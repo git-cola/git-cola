@@ -101,12 +101,14 @@ class MainView(standard.MainWindow):
         self.bookmarksdock = create_dock(
             N_('Favorites'), self, fn=lambda dock:
                 bookmarks.BookmarksWidget(bookmarks.BOOKMARKS, parent=dock))
+        bookmarkswidget = self.bookmarksdock.widget()
 
         self.recentdock = create_dock(
             N_('Recent'), self, fn=lambda dock:
                 bookmarks.BookmarksWidget(bookmarks.RECENT_REPOS, parent=dock))
+        recentwidget = self.recentdock.widget()
         self.recentdock.hide()
-        self.bookmarksdock.widget().connect_to(self.recentdock.widget())
+        bookmarkswidget.connect_to(recentwidget)
 
         # "Branch" widgets
         self.branchdock = create_dock(N_('Branches'), self,
@@ -381,18 +383,28 @@ class MainView(standard.MainWindow):
 
         # Edit Menu
         self.edit_proxy = edit_proxy = (
-                FocusProxy(editor, editor.summary, editor.description))
+            FocusProxy(editor, editor.summary, editor.description))
+
+        copy_widgets = (
+            self, editor.summary, editor.description, self.diffeditor,
+            bookmarkswidget.tree, recentwidget.tree,
+        )
+        edit_proxy.override('copy', copy_widgets)
+        edit_proxy.override('selectAll', copy_widgets)
+
         edit_menu = self.edit_menu = add_menu(N_('Edit'), self.menubar)
-        edit_menu.addAction(N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
-        edit_menu.addAction(N_('Redo'), edit_proxy.redo, hotkeys.REDO)
+        add_action(edit_menu, N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
+        add_action(edit_menu, N_('Redo'), edit_proxy.redo, hotkeys.REDO)
         edit_menu.addSeparator()
-        edit_menu.addAction(N_('Cut'), edit_proxy.cut, hotkeys.CUT)
-        edit_menu.addAction(N_('Copy'), edit_proxy.copy, hotkeys.COPY)
-        edit_menu.addAction(N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
-        edit_menu.addAction(N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
+        add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
+        add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
+        add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
         edit_menu.addSeparator()
-        edit_menu.addAction(N_('Select All'), edit_proxy.selectAll)
+        add_action(edit_menu, N_('Select All'), edit_proxy.selectAll,
+            hotkeys.SELECT_ALL)
         edit_menu.addSeparator()
+
         commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
 
         # Actions menu
@@ -873,28 +885,40 @@ class MainView(standard.MainWindow):
 class FocusProxy(object):
     """Proxy over child widgets and operate on the focused widget"""
 
-    def __init__(self, parent, *widgets):
-        self.parent = parent
-        self.first = widgets[0]
+    def __init__(self, *widgets):
         self.widgets = widgets
+        self.overrides = {}
 
-    def focus(self):
+    def override(self, name, widgets):
+        self.overrides[name] = widgets
+
+    def focus(self, name):
         """Return the currently focused widget"""
-        focus = self.parent.focusWidget()
-        if focus not in self.widgets:
-            focus = self.first
+        widgets = self.overrides.get(name, self.widgets)
+        # The parent must be the parent of all the proxied widgets
+        parent = widgets[0]
+        # The first widget is used as a fallback
+        fallback = widgets[1]
+        # We ignore the parent when delegating to child widgets
+        widgets = widgets[1:]
+
+        focus = parent.focusWidget()
+        if focus not in widgets:
+            focus = fallback
         return focus
 
     def __getattr__(self, name):
         """Return a callback that calls a common child method"""
         def callback():
-            focus = self.focus()
-            getattr(focus, name)()
+            focus = self.focus(name)
+            fn = getattr(focus, name, None)
+            if fn:
+                fn()
         return callback
 
     def delete(self):
         """Specialized delete() to deal with QLineEdit vs QTextEdit"""
-        focus = self.focus()
+        focus = self.focus('delete')
         if hasattr(focus, 'del_'):
             focus.del_()
         elif hasattr(focus, 'textCursor'):

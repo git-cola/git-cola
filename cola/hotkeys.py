@@ -112,3 +112,4 @@ PASTE = QKeySequence.Paste
 DELETE = QKeySequence.Delete
 NEW = QKeySequence.New
 OPEN = QKeySequence.Open
+SELECT_ALL = QKeySequence.SelectAll
