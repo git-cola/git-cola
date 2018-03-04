@@ -231,11 +231,14 @@ class StashView(Dialog):
         """Export persistent settings"""
         state = super(StashView, self).export_state()
         state['keep_index'] = self.keep_index.isChecked()
+        state['stash_index'] = self.stash_index.isChecked()
         return state
 
     def apply_state(self, state):
         """Apply persistent settings"""
         result = super(StashView, self).apply_state(state)
         keep_index = bool(state.get('keep_index', True))
+        stash_index = bool(state.get('stash_index', False))
         self.keep_index.setChecked(keep_index)
+        self.stash_index.setChecked(stash_index)
         return result
