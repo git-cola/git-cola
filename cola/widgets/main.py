@@ -393,15 +393,16 @@ class MainView(standard.MainWindow):
         edit_proxy.override('selectAll', copy_widgets)
 
         edit_menu = self.edit_menu = add_menu(N_('Edit'), self.menubar)
-        edit_menu.addAction(N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
-        edit_menu.addAction(N_('Redo'), edit_proxy.redo, hotkeys.REDO)
+        add_action(edit_menu, N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
+        add_action(edit_menu, N_('Redo'), edit_proxy.redo, hotkeys.REDO)
         edit_menu.addSeparator()
-        edit_menu.addAction(N_('Cut'), edit_proxy.cut, hotkeys.CUT)
-        edit_menu.addAction(N_('Copy'), edit_proxy.copy, hotkeys.COPY)
-        edit_menu.addAction(N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
-        edit_menu.addAction(N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
+        add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
+        add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
+        add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
         edit_menu.addSeparator()
-        edit_menu.addAction(N_('Select All'), edit_proxy.selectAll)
+        add_action(edit_menu, N_('Select All'), edit_proxy.selectAll,
+            hotkeys.SELECT_ALL)
         edit_menu.addSeparator()
 
         commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)

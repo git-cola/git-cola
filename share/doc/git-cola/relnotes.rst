@@ -62,6 +62,10 @@ Packaging
 Fixes
 -----
 
+* The `Ctrl+C` "Copy" hotkey on the diff viewer has been fixed.
+
+  https://github.com/git-cola/git-cola/issues/767
+
 * The "Create Tag" dialog did not correctly handle the case when a signed
   tag is requested, but no message is provided, and the user chooses to
   create an unannotated tag instead.  This convenience fallback will now
