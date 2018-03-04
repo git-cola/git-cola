@@ -66,8 +66,9 @@ class ApplyStash(CommandMixin):
             Interaction.log_status(status, out, err)
         else:
             title = N_('Error')
+            cmdargs = core.list2cmdline(args)
             Interaction.command_error(
-                title, 'git stash apply ' + ref, status, out, err)
+                title, 'git stash ' + cmdargs, status, out, err)
 
 
 class DropStash(CommandMixin):
@@ -101,9 +102,9 @@ class SaveStash(CommandMixin):
             Interaction.log_status(status, out, err)
         else:
             title = N_('Error')
-            args = core.list2cmdline(args)
+            cmdargs = core.list2cmdline(args)
             Interaction.command_error(
-                title, 'git stash save ' + args, status, out, err)
+                title, 'git stash ' + cmdargs, status, out, err)
 
 
 class StashIndex(CommandMixin):
