@@ -101,12 +101,14 @@ class MainView(standard.MainWindow):
         self.bookmarksdock = create_dock(
             N_('Favorites'), self, fn=lambda dock:
                 bookmarks.BookmarksWidget(bookmarks.BOOKMARKS, parent=dock))
+        bookmarkswidget = self.bookmarksdock.widget()
 
         self.recentdock = create_dock(
             N_('Recent'), self, fn=lambda dock:
                 bookmarks.BookmarksWidget(bookmarks.RECENT_REPOS, parent=dock))
+        recentwidget = self.recentdock.widget()
         self.recentdock.hide()
-        self.bookmarksdock.widget().connect_to(self.recentdock.widget())
+        bookmarkswidget.connect_to(recentwidget)
 
         # "Branch" widgets
         self.branchdock = create_dock(N_('Branches'), self,
