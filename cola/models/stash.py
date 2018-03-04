@@ -35,13 +35,16 @@ class StashModel(observable.Observable):
         return diffstat + '\n\n' + diff
 
 
-class ApplyStash(object):
-    def __init__(self, selection, index):
-        self.selection = selection
-        self.index = index
+class CommandMixin(object):
 
     def is_undoable(self):
         return False
+
+
+class ApplyStash(CommandMixin):
+    def __init__(self, selection, index):
+        self.selection = selection
+        self.index = index
 
     def do(self):
         if self.index:
@@ -52,26 +55,21 @@ class ApplyStash(object):
         Interaction.log_status(status, out, err)
 
 
-class DropStash(object):
+class DropStash(CommandMixin):
+
     def __init__(self, stash_oid):
         self.stash_oid = stash_oid
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         status, out, err = git.stash('drop', self.stash_oid)
         Interaction.log_status(status, out, err)
 
 
-class SaveStash(object):
+class SaveStash(CommandMixin):
 
     def __init__(self, stash_name, keep_index):
         self.stash_name = stash_name
         self.keep_index = keep_index
-
-    def is_undoable(self):
-        return False
 
     def do(self):
         if self.keep_index:
