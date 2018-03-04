@@ -537,7 +537,8 @@ def persist_clipboard():
 
 def add_action_bool(widget, text, fn, checked, *shortcuts):
     tip = text
-    action = _add_action(widget, text, tip, fn, connect_action_bool, *shortcuts)
+    action = _add_action(widget, text, tip, fn,
+                         connect_action_bool, *shortcuts)
     action.setCheckable(True)
     action.setChecked(checked)
     return action
