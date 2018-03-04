@@ -381,7 +381,7 @@ class MainView(standard.MainWindow):
 
         # Edit Menu
         self.edit_proxy = edit_proxy = (
-                FocusProxy(editor, editor.summary, editor.description))
+            FocusProxy(editor, editor.summary, editor.description))
         edit_menu = self.edit_menu = add_menu(N_('Edit'), self.menubar)
         edit_menu.addAction(N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
         edit_menu.addAction(N_('Redo'), edit_proxy.redo, hotkeys.REDO)
