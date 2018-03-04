@@ -62,19 +62,21 @@ class StashView(Dialog):
 
         self.button_close = qtutils.close_button()
 
-        self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True)
+        self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True,
+            tooltip=N_('Stash unstaged changes only, keeping staged changes'))
 
         # Arrange layouts
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
 
-        self.btn_layt = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                     self.button_close,
-                                     qtutils.STRETCH,
-                                     self.keep_index,
-                                     self.button_drop,
-                                     self.button_apply,
-                                     self.button_save)
+        self.btn_layt = qtutils.hbox(
+            defs.no_margin, defs.button_spacing,
+            self.button_close,
+            qtutils.STRETCH,
+            self.keep_index,
+            self.button_drop,
+            self.button_apply,
+            self.button_save)
 
         self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
                                       self.splitter, self.btn_layt)
