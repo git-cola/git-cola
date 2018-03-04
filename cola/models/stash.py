@@ -97,7 +97,13 @@ class SaveStash(CommandMixin):
         else:
             args = ['save', self.stash_name]
         status, out, err = git.stash(*args)
-        Interaction.log_status(status, out, err)
+        if status == 0:
+            Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            args = core.list2cmdline(args)
+            Interaction.command_error(
+                title, 'git stash save ' + args, status, out, err)
 
 
 class StashIndex(CommandMixin):
