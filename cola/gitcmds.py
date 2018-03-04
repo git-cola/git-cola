@@ -758,3 +758,13 @@ def parse_refs(argv):
     else:
         oids = argv
     return oids
+
+
+def rev_parse(name):
+    """Call git rev-parse and return the output"""
+    status, out, err = git.rev_parse(name)
+    if status == 0:
+        result = out.strip()
+    else:
+        result = name
+    return result
