@@ -51,6 +51,11 @@ def connect_button(button, fn):
     button.clicked.connect(lambda *args, **kwargs: fn())
 
 
+def connect_checkbox(checkbox, fn):
+    """Connect a checkbox to a function taking bool"""
+    checkbox.clicked.connect(lambda *args, **kwargs: fn(checkbox.isChecked()))
+
+
 def connect_released(button, fn):
     """Connect a button to a function"""
     button.released.connect(fn)
