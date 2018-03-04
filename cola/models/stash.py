@@ -15,15 +15,16 @@ class StashModel(observable.Observable):
 
     def __init__(self):
         observable.Observable.__init__(self)
+        self.model = model = main.model()
+        if not model.initialized:
+            model.update_status()
 
     def stash_list(self):
         return git.stash('list')[STDOUT].splitlines()
 
-    def has_stashable_changes(self):
-        model = main.model()
-        if not model.initialized:
-            model.update_status()
-        return bool(model.modified + model.staged)
+    def is_changed(self):
+        model = self.model
+        return bool(model.modified or model.staged)
 
     def stash_info(self, revids=False, names=False):
         """Parses "git stash list" and returns a list of stashes."""

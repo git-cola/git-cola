@@ -89,9 +89,6 @@ class StashView(Dialog):
 
         self.splitter.setSizes([self.width()//3, self.width()*2//3])
 
-        self.update_from_model()
-        self.update_actions()
-
         self.setTabOrder(self.button_save, self.button_apply)
         self.setTabOrder(self.button_apply, self.button_drop)
         self.setTabOrder(self.button_drop, self.keep_index)
@@ -108,6 +105,9 @@ class StashView(Dialog):
         qtutils.connect_checkbox(self.keep_index, self.keep_index_clicked)
 
         self.init_size(parent=parent)
+
+        self.update_from_model()
+        self.update_actions()
 
     def close_and_rescan(self):
         self.reject()
@@ -145,11 +145,11 @@ class StashView(Dialog):
         self.stash_text.setPlainText(diff_text)
 
     def update_actions(self):
-        has_changes = self.model.has_stashable_changes()
-        has_stash = bool(self.selected_stash())
-        self.button_save.setEnabled(has_changes)
-        self.button_apply.setEnabled(has_stash)
-        self.button_drop.setEnabled(has_stash)
+        is_changed = self.model.is_changed()
+        is_selected = bool(self.selected_stash())
+        self.button_save.setEnabled(is_changed)
+        self.button_apply.setEnabled(is_selected)
+        self.button_drop.setEnabled(is_selected)
 
     def update_from_model(self):
         """Initiates git queries on the model and updates the view
