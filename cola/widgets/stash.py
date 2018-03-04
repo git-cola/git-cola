@@ -39,7 +39,7 @@ class StashView(standard.Dialog):
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
 
-        self.stash_list = QtWidgets.QListWidget(self)
+        self.stash_list = standard.ListWidget(parent=self)
         self.stash_text = diff.DiffTextEdit(self)
 
         self.button_apply = qtutils.create_button(
