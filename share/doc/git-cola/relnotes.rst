@@ -22,6 +22,11 @@ git-cola v3.1 (beta)
 Usability, bells and whistles
 -----------------------------
 
+* The "Stash" tool learned to stash staged changes only.  Select the
+  "Stage Index" option and only staged changes will be stashed away.
+
+  https://github.com/git-cola/git-cola/issues/413
+
 * The Edit menu's "Copy" and "Select All" actions now forward to either the
   diff, status, recent, or favorites widgets, based on which widget has focus.
 

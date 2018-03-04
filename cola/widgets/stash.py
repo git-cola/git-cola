@@ -13,6 +13,7 @@ from ..i18n import N_
 from ..models.stash import StashModel
 from ..models.stash import ApplyStash
 from ..models.stash import SaveStash
+from ..models.stash import StashIndex
 from ..models.stash import DropStash
 from . import defs
 from .diff import DiffTextEdit
@@ -65,6 +66,9 @@ class StashView(Dialog):
         self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True,
             tooltip=N_('Stash unstaged changes only, keeping staged changes'))
 
+        self.stash_index = qtutils.checkbox(text=N_('Stash Index'),
+            tooltip=N_('Stash staged changes only'))
+
         # Arrange layouts
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
@@ -73,6 +77,7 @@ class StashView(Dialog):
             defs.no_margin, defs.button_spacing,
             self.button_close,
             qtutils.STRETCH,
+            self.stash_index,
             self.keep_index,
             self.button_drop,
             self.button_apply,
@@ -99,11 +104,24 @@ class StashView(Dialog):
         qtutils.connect_button(self.button_drop, self.stash_drop)
         qtutils.connect_button(self.button_close, self.close_and_rescan)
 
+        qtutils.connect_checkbox(self.stash_index, self.stash_index_clicked)
+        qtutils.connect_checkbox(self.keep_index, self.keep_index_clicked)
+
         self.init_size(parent=parent)
 
     def close_and_rescan(self):
         self.reject()
         cmds.do(cmds.Rescan)
+
+    # "stash" and "keep" index should mutually disable, but we don't
+    # want a radio button because we'd have to add a 3rd "default" option.
+    def stash_index_clicked(self, clicked):
+        if clicked:
+            self.keep_index.setChecked(False)
+
+    def keep_index_clicked(self, clicked):
+        if clicked:
+            self.stash_index.setChecked(False)
 
     def selected_stash(self):
         """Returns the stash name of the currently selected stash
@@ -175,7 +193,11 @@ class StashView(Dialog):
             return
 
         keep_index = self.keep_index.isChecked()
-        cmds.do(SaveStash, stash_name, keep_index)
+        stash_index = self.stash_index.isChecked()
+        if stash_index:
+            cmds.do(StashIndex, stash_name)
+        else:
+            cmds.do(SaveStash, stash_name, keep_index)
         self.accept()
         cmds.do(cmds.Rescan)
 
