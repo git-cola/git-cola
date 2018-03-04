@@ -218,3 +218,16 @@ class StashView(Dialog):
         cmds.do(DropStash, selection)
         self.update_from_model()
         self.stash_text.setPlainText('')
+
+    def export_state(self):
+        """Export persistent settings"""
+        state = super(StashView, self).export_state()
+        state['keep_index'] = self.keep_index.isChecked()
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super(StashView, self).apply_state(state)
+        keep_index = bool(state.get('keep_index', True))
+        self.keep_index.setChecked(keep_index)
+        return result
