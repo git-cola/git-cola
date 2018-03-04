@@ -875,16 +875,22 @@ class MainView(standard.MainWindow):
 class FocusProxy(object):
     """Proxy over child widgets and operate on the focused widget"""
 
-    def __init__(self, parent, *widgets):
-        self.parent = parent
-        self.first = widgets[0]
+    def __init__(self, *widgets):
         self.widgets = widgets
 
     def focus(self):
         """Return the currently focused widget"""
-        focus = self.parent.focusWidget()
-        if focus not in self.widgets:
-            focus = self.first
+        widgets = self.widgets
+        # The parent must be the parent of all the proxied widgets
+        parent = widgets[0]
+        # The first widget is used as a fallback
+        fallback = widgets[1]
+        # We ignore the parent when delegating to child widgets
+        widgets = widgets[1:]
+
+        focus = parent.focusWidget()
+        if focus not in widgets:
+            focus = fallback
         return focus
 
     def __getattr__(self, name):
