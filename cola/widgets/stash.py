@@ -160,6 +160,9 @@ class StashView(standard.Dialog):
 
         self.stash_list.clear()
         self.stash_list.addItems(self.stashes)
+        if self.stash_list.count() > 0:
+            item = self.stash_list.item(0)
+            self.stash_list.setCurrentItem(item)
 
         # "Stash Index" depends on staged changes, so disable this option
         # if there are no staged changes.
