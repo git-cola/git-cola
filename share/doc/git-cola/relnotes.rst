@@ -21,6 +21,10 @@ git-cola v3.1 (beta)
 
 Usability, bells and whistles
 -----------------------------
+
+* The Edit menu's "Copy" and "Select All" actions now forward to either the
+  diff, status, recent, or favorites widgets, based on which widget has focus.
+
 * It was easy to accidentally trigger the first action in the `Status` tool's
   context menu when using a quick right-click to bring up the menu.
   A short sub-second delay was added to ensure that the top-most action is not
