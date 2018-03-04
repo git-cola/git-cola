@@ -72,6 +72,7 @@ class StashView(Dialog):
         # Arrange layouts
         self.splitter = qtutils.splitter(Qt.Horizontal,
                                          self.stash_list, self.stash_text)
+        self.splitter.setChildrenCollapsible(False)
 
         self.btn_layt = qtutils.hbox(
             defs.no_margin, defs.button_spacing,
