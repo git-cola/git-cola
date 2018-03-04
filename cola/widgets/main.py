@@ -248,7 +248,7 @@ class MainView(standard.MainWindow):
         self.open_repo_new_action.setIcon(icons.folder())
 
         self.stash_action = add_action(
-            self, N_('Stash...'), stash.stash, hotkeys.STASH)
+            self, N_('Stash...'), stash.view, hotkeys.STASH)
 
         self.reset_branch_head_action = add_action(
             self, N_('Reset Branch Head'), guicmds.reset_branch_head)

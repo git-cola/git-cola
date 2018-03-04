@@ -5,35 +5,31 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
+from ..i18n import N_
+from ..models import stash
 from .. import cmds
 from .. import icons
 from .. import qtutils
 from .. import utils
-from ..i18n import N_
-from ..models.stash import StashModel
-from ..models.stash import ApplyStash
-from ..models.stash import SaveStash
-from ..models.stash import StashIndex
-from ..models.stash import DropStash
 from . import defs
-from .diff import DiffTextEdit
-from .standard import Dialog
+from . import diff
+from . import standard
 
 
-def stash():
+def view():
     """Launches a stash dialog using the provided model + view
     """
-    model = StashModel()
+    model = stash.StashModel()
     view = StashView(model, qtutils.active_window())
     view.show()
     view.raise_()
     return view
 
 
-class StashView(Dialog):
+class StashView(standard.Dialog):
 
     def __init__(self, model, parent=None):
-        Dialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.model = model
         self.stashes = []
         self.revids = []
@@ -44,7 +40,7 @@ class StashView(Dialog):
             self.setWindowModality(QtCore.Qt.WindowModal)
 
         self.stash_list = QtWidgets.QListWidget(self)
-        self.stash_text = DiffTextEdit(self)
+        self.stash_text = diff.DiffTextEdit(self)
 
         self.button_apply = qtutils.create_button(
             text=N_('Apply'),
@@ -178,7 +174,7 @@ class StashView(Dialog):
         if not selection:
             return
         index = self.keep_index.isChecked()
-        cmds.do(ApplyStash, selection, index)
+        cmds.do(stash.ApplyStash, selection, index)
         self.accept()
         cmds.do(cmds.Rescan)
 
@@ -204,9 +200,9 @@ class StashView(Dialog):
         keep_index = self.keep_index.isChecked()
         stash_index = self.stash_index.isChecked()
         if stash_index:
-            cmds.do(StashIndex, stash_name)
+            cmds.do(stash.StashIndex, stash_name)
         else:
-            cmds.do(SaveStash, stash_name, keep_index)
+            cmds.do(stash.SaveStash, stash_name, keep_index)
         self.accept()
         cmds.do(cmds.Rescan)
 
@@ -224,7 +220,7 @@ class StashView(Dialog):
                 N_('Drop Stash'),
                 default=True, icon=icons.discard()):
             return
-        cmds.do(DropStash, selection)
+        cmds.do(stash.DropStash, selection)
         self.update_from_model()
         self.stash_text.setPlainText('')
 
