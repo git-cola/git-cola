@@ -395,6 +395,7 @@ class MainView(standard.MainWindow):
         edit_menu.addSeparator()
         edit_menu.addAction(N_('Select All'), edit_proxy.selectAll)
         edit_menu.addSeparator()
+
         commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
 
         # Actions menu
@@ -877,10 +878,14 @@ class FocusProxy(object):
 
     def __init__(self, *widgets):
         self.widgets = widgets
+        self.overrides = {}
 
-    def focus(self):
+    def override(self, name, widgets):
+        self.overrides[name] = widgets
+
+    def focus(self, name):
         """Return the currently focused widget"""
-        widgets = self.widgets
+        widgets = self.overrides.get(name, self.widgets)
         # The parent must be the parent of all the proxied widgets
         parent = widgets[0]
         # The first widget is used as a fallback
@@ -896,7 +901,7 @@ class FocusProxy(object):
     def __getattr__(self, name):
         """Return a callback that calls a common child method"""
         def callback():
-            focus = self.focus()
+            focus = self.focus(name)
             fn = getattr(focus, name, None)
             if fn:
                 fn()
@@ -904,7 +909,7 @@ class FocusProxy(object):
 
     def delete(self):
         """Specialized delete() to deal with QLineEdit vs QTextEdit"""
-        focus = self.focus()
+        focus = self.focus('delete')
         if hasattr(focus, 'del_'):
             focus.del_()
         elif hasattr(focus, 'textCursor'):
