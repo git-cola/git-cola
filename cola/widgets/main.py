@@ -897,7 +897,9 @@ class FocusProxy(object):
         """Return a callback that calls a common child method"""
         def callback():
             focus = self.focus()
-            getattr(focus, name)()
+            fn = getattr(focus, name, None)
+            if fn:
+                fn()
         return callback
 
     def delete(self):
