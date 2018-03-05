@@ -472,9 +472,9 @@ def cmd_search(args):
 
 
 def cmd_stash(args):
-    from .widgets.stash import stash
+    from .widgets import stash
     context = application_init(args)
-    view = stash()
+    view = stash.view()
     return application_start(context, view)
 
 

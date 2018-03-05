@@ -27,6 +27,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/413
 
+* The "Stash" tool learned to use vim-like navigation keyboard shortcuts,
+  shows error messages when things go wrong, and now saves the "Stash Index"
+  and "Keep Index" options across sessions.
+
 * The Edit menu's "Copy" and "Select All" actions now forward to either the
   diff, status, recent, or favorites widgets, based on which widget has focus.
 

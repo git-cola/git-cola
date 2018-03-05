@@ -15,15 +15,19 @@ class StashModel(observable.Observable):
 
     def __init__(self):
         observable.Observable.__init__(self)
+        self.model = model = main.model()
+        if not model.initialized:
+            model.update_status()
 
     def stash_list(self):
         return git.stash('list')[STDOUT].splitlines()
 
-    def has_stashable_changes(self):
-        model = main.model()
-        if not model.initialized:
-            model.update_status()
-        return bool(model.modified + model.staged)
+    def is_staged(self):
+        return bool(self.model.staged)
+
+    def is_changed(self):
+        model = self.model
+        return bool(model.modified or model.staged)
 
     def stash_info(self, revids=False, names=False):
         """Parses "git stash list" and returns a list of stashes."""
@@ -46,27 +50,40 @@ class CommandMixin(object):
 
 
 class ApplyStash(CommandMixin):
-    def __init__(self, selection, index):
-        self.selection = selection
+
+    def __init__(self, stash_index, index):
+        self.stash_ref = 'refs/' + stash_index
         self.index = index
 
     def do(self):
+        ref = self.stash_ref
         if self.index:
-            args = ['apply', '--index', self.selection]
+            args = ['apply', '--index', ref]
         else:
-            args = ['apply', self.selection]
+            args = ['apply', ref]
         status, out, err = git.stash(*args)
-        Interaction.log_status(status, out, err)
+        if status == 0:
+            Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            cmdargs = core.list2cmdline(args)
+            Interaction.command_error(
+                title, 'git stash ' + cmdargs, status, out, err)
 
 
 class DropStash(CommandMixin):
 
-    def __init__(self, stash_oid):
-        self.stash_oid = stash_oid
+    def __init__(self, stash_index):
+        self.stash_ref = 'refs/' + stash_index
 
     def do(self):
-        status, out, err = git.stash('drop', self.stash_oid)
-        Interaction.log_status(status, out, err)
+        status, out, err = git.stash('drop', self.stash_ref)
+        if status == 0:
+            Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            Interaction.command_error(
+                title, 'git stash drop ' + self.stash_ref, status, out, err)
 
 
 class SaveStash(CommandMixin):
@@ -81,7 +98,13 @@ class SaveStash(CommandMixin):
         else:
             args = ['save', self.stash_name]
         status, out, err = git.stash(*args)
-        Interaction.log_status(status, out, err)
+        if status == 0:
+            Interaction.log_status(status, out, err)
+        else:
+            title = N_('Error')
+            cmdargs = core.list2cmdline(args)
+            Interaction.command_error(
+                title, 'git stash ' + cmdargs, status, out, err)
 
 
 class StashIndex(CommandMixin):

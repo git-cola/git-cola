@@ -9,9 +9,11 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QDockWidget
 
+from ..i18n import N_
 from ..settings import Settings, mklist
 from .. import core
 from .. import gitcfg
+from .. import hotkeys
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
@@ -239,6 +241,45 @@ class MainWindowMixin(WidgetMixin):
     def update_dockwidget_tooltips(self):
         for widget in self.dockwidgets:
             widget.titleBarWidget().update_tooltips()
+
+
+class ListWidget(QtWidgets.QListWidget):
+    """QListWidget with vim j/k navigation hotkeys"""
+
+    def __init__(self, parent=None):
+        super(ListWidget, self).__init__(parent)
+
+        self.up_action = qtutils.add_action(
+            self, N_('Move Up'), self.move_up,
+            hotkeys.MOVE_UP, hotkeys.MOVE_UP_SECONDARY)
+
+        self.down_action = qtutils.add_action(
+            self, N_('Move Down'), self.move_down,
+            hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
+
+    def selected_item(self):
+        return self.currentItem()
+
+    def selected_items(self):
+        return self.selectedItems()
+
+    def move_up(self):
+        self.move(-1)
+
+    def move_down(self):
+        self.move(1)
+
+    def move(self, direction):
+        item = self.selected_item()
+        if item:
+            row = (self.row(item) + direction) % self.count()
+        elif self.count() > 0:
+            row = (self.count() + direction) % self.count()
+        else:
+            return
+        new_item = self.item(row)
+        if new_item:
+            self.setCurrentItem(new_item)
 
 
 class TreeMixin(object):
