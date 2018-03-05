@@ -363,7 +363,7 @@ class MainView(standard.MainWindow):
 
         # File Menu
         add_menu = qtutils.add_menu
-        self.file_menu = add_menu(N_('File'), self.menubar)
+        self.file_menu = add_menu(N_('&File'), self.menubar)
         self.file_menu.addAction(self.new_repository_action)
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(icons.folder())
@@ -394,7 +394,7 @@ class MainView(standard.MainWindow):
         edit_proxy.override('copy', copy_widgets)
         edit_proxy.override('selectAll', copy_widgets)
 
-        edit_menu = self.edit_menu = add_menu(N_('Edit'), self.menubar)
+        edit_menu = self.edit_menu = add_menu(N_('&Edit'), self.menubar)
         add_action(edit_menu, N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
         add_action(edit_menu, N_('Redo'), edit_proxy.redo, hotkeys.REDO)
         edit_menu.addSeparator()

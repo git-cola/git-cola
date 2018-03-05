@@ -795,7 +795,7 @@ msgstr ""
 msgid "Drop the selected stash"
 msgstr ""
 
-msgid "Edit"
+msgid "&Edit"
 msgstr ""
 
 msgid "Edit Rebase"
@@ -926,7 +926,7 @@ msgstr ""
 msgid "Fetch..."
 msgstr ""
 
-msgid "File"
+msgid "&File"
 msgstr ""
 
 msgid "File Browser..."

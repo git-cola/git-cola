@@ -586,7 +586,7 @@ msgstr "Másolás..."
 msgid "Close"
 msgstr "Bezárás"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Szerkesztés"
 
 #, fuzzy
@@ -1000,8 +1000,8 @@ msgid "Lock Layout"
 msgstr ""
 
 #, fuzzy
-msgid "File"
-msgstr "Fájl:"
+msgid "&File"
+msgstr "&Fájl"
 
 #, fuzzy
 msgid "Open Recent"

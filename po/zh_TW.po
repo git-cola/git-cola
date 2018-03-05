@@ -547,7 +547,7 @@ msgstr "關閉……"
 msgid "Close"
 msgstr "關閉"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "編輯"
 
 msgid "Detach"
@@ -920,7 +920,7 @@ msgstr "中止"
 msgid "Lock Layout"
 msgstr "鎖住版面"
 
-msgid "File"
+msgid "&File"
 msgstr "檔案"
 
 msgid "Open Recent"

@@ -532,8 +532,8 @@ msgstr "Fechar"
 msgid "Close"
 msgstr "Fechar"
 
-msgid "Edit"
-msgstr "Editar"
+msgid "&Edit"
+msgstr "&Editar"
 
 msgid "Detach"
 msgstr "Desanexar"

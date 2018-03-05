@@ -546,8 +546,8 @@ msgstr "Close..."
 msgid "Close"
 msgstr "Close"
 
-msgid "Edit"
-msgstr "Edit"
+msgid "&Edit"
+msgstr "&Edit"
 
 msgid "Detach"
 msgstr "Detach"
@@ -936,7 +936,7 @@ msgstr "Abort"
 msgid "Lock Layout"
 msgstr "Lock Layout"
 
-msgid "File"
+msgid "&File"
 msgstr "Dosya"
 
 msgid "Open Recent"

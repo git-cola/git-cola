@@ -552,8 +552,8 @@ msgstr "Zamknij..."
 msgid "Close"
 msgstr "Zamknij"
 
-msgid "Edit"
-msgstr "Edycja"
+msgid "&Edit"
+msgstr "&Edycja"
 
 msgid "Detach"
 msgstr "Odłącz"
@@ -939,7 +939,7 @@ msgstr "Przerwij"
 msgid "Lock Layout"
 msgstr "Zablokuj układ"
 
-msgid "File"
+msgid "&File"
 msgstr "Plik"
 
 msgid "Open Recent"

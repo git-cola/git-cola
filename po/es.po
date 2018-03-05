@@ -533,7 +533,7 @@ msgstr "Cerrar..."
 msgid "Close"
 msgstr "Cerrar"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Editar"
 
 msgid "Detach"
@@ -913,7 +913,7 @@ msgstr "Abortar"
 msgid "Lock Layout"
 msgstr "Bloquear Paneles"
 
-msgid "File"
+msgid "&File"
 msgstr "Archivo"
 
 msgid "Open Recent"

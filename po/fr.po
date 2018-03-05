@@ -561,8 +561,8 @@ msgstr "Fermer..."
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Edit"
-msgstr "Editer"
+msgid "&Edit"
+msgstr "&Editer"
 
 msgid "Detach"
 msgstr "Détacher"
@@ -945,8 +945,8 @@ msgstr "Abandonner"
 msgid "Lock Layout"
 msgstr "Verrouillage"
 
-msgid "File"
-msgstr "Fichier"
+msgid "&File"
+msgstr "&Fichier"
 
 msgid "Open Recent"
 msgstr "Ouvrir récent"
