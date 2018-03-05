@@ -4,6 +4,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import main
 from .. import cmds
 from .. import gitcfg
@@ -183,8 +184,9 @@ class Merge(standard.Dialog):
         """Launch a gitk-like viewer on the selection revision"""
         revision = self.revision.text()
         if not revision:
-            qtutils.information(N_('No Revision Specified'),
-                                N_('You must specify a revision to view.'))
+            Interaction.information(
+                N_('No Revision Specified'),
+                N_('You must specify a revision to view.'))
             return
         cmds.do(cmds.VisualizeRevision, revision)
 
@@ -192,8 +194,9 @@ class Merge(standard.Dialog):
         """Merge the selected revision/branch"""
         revision = self.revision.text()
         if not revision:
-            qtutils.information(N_('No Revision Specified'),
-                                N_('You must specify a revision to merge.'))
+            Interaction.information(
+                N_('No Revision Specified'),
+                N_('You must specify a revision to merge.'))
             return
 
         noff = self.checkbox_noff.isChecked()

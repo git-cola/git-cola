@@ -540,8 +540,8 @@ class RemoteActionDialog(standard.Dialog):
                          'A new remote branch will be published.') % args
                 info_txt = N_('Create a new remote branch?')
                 ok_text = N_('Create Remote Branch')
-                if not qtutils.confirm(title, msg, info_txt, ok_text,
-                                       icon=icons.cola()):
+                if not Interaction.confirm(title, msg, info_txt, ok_text,
+                                           icon=icons.cola()):
                     return
 
         if self.force_checkbox.isChecked():
@@ -558,8 +558,8 @@ class RemoteActionDialog(standard.Dialog):
                 ok_text = N_('Force Push')
             else:  # pull: shouldn't happen since the controls are hidden
                 return
-            if not qtutils.confirm(title, msg, info_txt, ok_text,
-                                   default=False, icon=icons.discard()):
+            if not Interaction.confirm(title, msg, info_txt, ok_text,
+                                       default=False, icon=icons.discard()):
                 return
 
         # Disable the GUI by default

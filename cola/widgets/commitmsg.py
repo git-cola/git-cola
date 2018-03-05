@@ -16,7 +16,7 @@ from .. import hotkeys
 from .. import icons
 from .. import textwrap
 from .. import qtutils
-from ..cmds import Interaction
+from ..interaction import Interaction
 from ..gitcmds import commit_message_path
 from ..i18n import N_
 from ..models import dag
@@ -316,7 +316,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.update_actions()
 
     def clear(self):
-        if not qtutils.confirm(
+        if not Interaction.confirm(
                 N_('Clear commit message?'),
                 N_('The commit message will be cleared.'),
                 N_('This cannot be undone.  Clear commit message?'),
@@ -441,7 +441,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             if self.model.modified:
                 informative_text = N_('Would you like to stage and '
                                       'commit all modified files?')
-                if not qtutils.confirm(
+                if not Interaction.confirm(
                         N_('Stage and commit?'), error_msg, informative_text,
                         N_('Stage and Commit'),
                         default=True, icon=icons.save()):
@@ -454,13 +454,13 @@ class CommitMessageEditor(QtWidgets.QWidget):
         # Warn that amending published commits is generally bad
         amend = self.amend_action.isChecked()
         if (amend and self.model.is_commit_published() and
-            not qtutils.confirm(
-                        N_('Rewrite Published Commit?'),
-                        N_('This commit has already been published.\n'
-                           'This operation will rewrite published history.\n'
-                           'You probably don\'t want to do this.'),
-                        N_('Amend the published commit?'),
-                        N_('Amend Commit'), default=False, icon=icons.save())):
+            not Interaction.confirm(
+                    N_('Rewrite Published Commit?'),
+                    N_('This commit has already been published.\n'
+                       'This operation will rewrite published history.\n'
+                       'You probably don\'t want to do this.'),
+                    N_('Amend the published commit?'),
+                    N_('Amend Commit'), default=False, icon=icons.save())):
             return
         no_verify = self.bypass_commit_hooks_action.isChecked()
         sign = self.sign_action.isChecked()

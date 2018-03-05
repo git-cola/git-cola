@@ -16,6 +16,7 @@ from .. import icons
 from .. import qtutils
 from .. import utils
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import prefs
 from ..settings import Settings
 from ..widgets import defs
@@ -287,8 +288,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
             self.settings.save()
             self.refresh()
         else:
-            qtutils.critical(N_('Error'),
-                             N_('%s is not a Git repository.') % path)
+            Interaction.critical(
+                N_('Error'), N_('%s is not a Git repository.') % path)
 
     def delete_bookmark(self):
         """Removes a bookmark from the bookmarks list"""
