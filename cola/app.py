@@ -31,6 +31,7 @@ from .interaction import Interaction
 from .models import main
 from .widgets import cfgactions
 from .widgets import defs
+from .widgets import standard
 from .widgets import startup
 from .settings import Session
 from . import cmds
@@ -150,7 +151,7 @@ class ColaApplication(object):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
-        qtutils.install()
+        standard.install()
         icons.install(icon_themes or get_icon_themes())
 
         if gui:

@@ -7,6 +7,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import main
 from ..models import selection
 from ..qtutils import add_action
@@ -589,11 +590,12 @@ class DiffEditor(DiffTextEdit):
             title = N_('Revert Diff Hunk?')
             ok_text = N_('Revert Diff Hunk')
 
-        if not qtutils.confirm(title,
-                               N_('This operation drops uncommitted changes.\n'
-                                  'These changes cannot be recovered.'),
-                               N_('Revert the uncommitted changes?'),
-                               ok_text, default=True, icon=icons.undo()):
+        if not Interaction.confirm(
+                title,
+                N_('This operation drops uncommitted changes.\n'
+                   'These changes cannot be recovered.'),
+                N_('Revert the uncommitted changes?'),
+                ok_text, default=True, icon=icons.undo()):
             return
         self.process_diff_selection(reverse=True, apply_to_worktree=True)
 

@@ -148,8 +148,8 @@ class GitCommandWidget(standard.Dialog):
                      'Terminating it could result in data loss.')
             info_text = N_('Abort the action?')
             ok_text = N_('Abort Action')
-            if qtutils.confirm(title, msg, info_text, ok_text,
-                               default=False, icon=icons.close()):
+            if Interaction.confirm(title, msg, info_text, ok_text,
+                                   default=False, icon=icons.close()):
                 self.abort()
                 event.accept()
             else:

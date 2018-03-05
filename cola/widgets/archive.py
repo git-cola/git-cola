@@ -10,6 +10,7 @@ from qtpy.QtCore import Signal
 from ..git import git
 from ..git import STDOUT
 from ..i18n import N_
+from ..interaction import Interaction
 from .. import cmds
 from .. import core
 from .. import icons
@@ -176,8 +177,8 @@ class Archive(Dialog):
 
     def archive_saved(self):
         cmds.do(cmds.Archive, self.ref, self.fmt, self.prefix, self.filename)
-        qtutils.information(N_('File Saved'),
-                            N_('File saved to "%s"') % self.filename)
+        Interaction.information(
+            N_('File Saved'), N_('File saved to "%s"') % self.filename)
 
     def save_archive(self):
         filename = self.filename
@@ -188,8 +189,9 @@ class Archive(Dialog):
             msg = N_('The file "%s" exists and will be overwritten.') % filename
             info_txt = N_('Overwrite "%s"?') % filename
             ok_txt = N_('Overwrite')
-            if not qtutils.confirm(title, msg, info_txt, ok_txt,
-                                   default=False, icon=icons.save()):
+            if not Interaction.confirm(
+                    title, msg, info_txt, ok_txt,
+                    default=False, icon=icons.save()):
                 return
         self.accept()
 

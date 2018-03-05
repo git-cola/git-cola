@@ -325,8 +325,8 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
 
-        if branch != self.current_branch and qtutils.confirm(title, question,
-                                                             info, ok_btn):
+        if (branch != self.current_branch and
+                Interaction.confirm(title, question, info, ok_btn)):
             remote = False
             root = self.tree_helper.get_root(self.selected_item())
             if NAME_REMOTE_BRANCH == root.name:
