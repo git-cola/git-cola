@@ -789,6 +789,13 @@ class MessageBox(WidgetMixin, QtWidgets.QMessageBox):
         if default:
             self.setDefaultButton(default)
 
+        # Allow the messagebox to be moved like a dialog
+        flags = self.windowFlags()
+        flags = flags & ~Qt.MSWindowsFixedSizeDialogHint
+        flags = flags & ~Qt.Popup
+        flags = flags | Qt.Dialog
+        self.setWindowFlags(flags)
+
         self.init_size()
 
     def event(self, event):
@@ -833,6 +840,7 @@ def confirm(title, text, informative_text, ok_text,
         msgbox.setDefaultButton(ok)
     else:
         msgbox.setDefaultButton(cancel)
+
     msgbox.run()
     return msgbox.clickedButton() == ok
 
