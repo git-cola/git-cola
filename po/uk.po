@@ -550,7 +550,7 @@ msgstr "Закрити..."
 msgid "Close"
 msgstr "Закрити"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Редагувати"
 
 msgid "Detach"
@@ -925,7 +925,7 @@ msgstr "Перервати"
 msgid "Lock Layout"
 msgstr "Закріпити положення елементів"
 
-msgid "File"
+msgid "&File"
 msgstr "Файл"
 
 msgid "Open Recent"

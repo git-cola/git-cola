@@ -587,7 +587,7 @@ msgstr "Clona..."
 msgid "Close"
 msgstr "Chiudi"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Modifica"
 
 #, fuzzy
@@ -1001,8 +1001,8 @@ msgid "Lock Layout"
 msgstr ""
 
 #, fuzzy
-msgid "File"
-msgstr "File:"
+msgid "&File"
+msgstr "&File"
 
 #, fuzzy
 msgid "Open Recent"

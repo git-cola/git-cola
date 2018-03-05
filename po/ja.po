@@ -749,7 +749,7 @@ msgid "Close"
 msgstr "閉じる"
 
 #: cola/qtutils.py:708 cola/widgets/main.py:383 cola/widgets/grep.py:97
-msgid "Edit"
+msgid "&Edit"
 msgstr "編集"
 
 #: cola/qtutils.py:772 cola/qtutils.py:806
@@ -1290,7 +1290,7 @@ msgstr ""
 
 #: cola/widgets/main.py:360
 #, fuzzy
-msgid "File"
+msgid "&File"
 msgstr "ファイル:"
 
 #: cola/widgets/main.py:362

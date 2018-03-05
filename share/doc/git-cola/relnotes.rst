@@ -34,6 +34,10 @@ Usability, bells and whistles
 * The Edit menu's "Copy" and "Select All" actions now forward to either the
   diff, status, recent, or favorites widgets, based on which widget has focus.
 
+* The "File" and "Edit" menu can now be activated using `Alt-{f,e}` hotkeys.
+
+  https://github.com/git-cola/git-cola/issues/759
+
 * It was easy to accidentally trigger the first action in the `Status` tool's
   context menu when using a quick right-click to bring up the menu.
   A short sub-second delay was added to ensure that the top-most action is not

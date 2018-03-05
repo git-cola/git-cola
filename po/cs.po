@@ -525,7 +525,7 @@ msgstr "Zavřít..."
 msgid "Close"
 msgstr "Zavřít"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Upravit"
 
 msgid "Detach"
@@ -883,7 +883,7 @@ msgstr ""
 msgid "Lock Layout"
 msgstr "Zamknout rozvržení"
 
-msgid "File"
+msgid "&File"
 msgstr "Soubor"
 
 msgid "Open Recent"

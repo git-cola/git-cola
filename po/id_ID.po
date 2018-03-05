@@ -545,7 +545,7 @@ msgstr "Tutup..."
 msgid "Close"
 msgstr "Tutup"
 
-msgid "Edit"
+msgid "&Edit"
 msgstr "Sunting"
 
 msgid "Detach"
@@ -926,7 +926,7 @@ msgstr "Batal"
 msgid "Lock Layout"
 msgstr "Kunci Tata Letak"
 
-msgid "File"
+msgid "&File"
 msgstr "Berkas"
 
 msgid "Open Recent"
