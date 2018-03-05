@@ -15,7 +15,6 @@ from . import hotkeys
 from . import icons
 from . import utils
 from .i18n import N_
-from .interaction import Interaction
 from .compat import int_types
 from .compat import ustr
 from .models import prefs
@@ -307,121 +306,6 @@ def paths_from_items(items,
         item_filter = _true_filter
     return [i.path for i in items
             if i.type() == item_type and item_filter(i)]
-
-
-def confirm(title, text, informative_text, ok_text,
-            icon=None, default=True,
-            cancel_text=None, cancel_icon=None):
-    """Confirm that an action should take place"""
-    msgbox = MessageBox(parent=active_window(), title=title,
-                        text=text, info=informative_text)
-
-    icon = icons.mkicon(icon, icons.ok)
-    ok = msgbox.addButton(ok_text, QtWidgets.QMessageBox.ActionRole)
-    ok.setIcon(icon)
-
-    cancel = msgbox.addButton(QtWidgets.QMessageBox.Cancel)
-    cancel_icon = icons.mkicon(cancel_icon, icons.close)
-    cancel.setIcon(cancel_icon)
-    if cancel_text:
-        cancel.setText(cancel_text)
-
-    if default:
-        msgbox.setDefaultButton(ok)
-    else:
-        msgbox.setDefaultButton(cancel)
-    msgbox.exec_()
-    return msgbox.clickedButton() == ok
-
-
-class MessageBox(QtWidgets.QMessageBox):
-
-    def __init__(self, parent=None, title='', text='', details='', info='',
-                 icon=None, buttons=None, default=None):
-        QtWidgets.QMessageBox.__init__(self, parent)
-        self.setMouseTracking(True)
-        self.setSizeGripEnabled(True)
-        self.setTextFormat(Qt.PlainText)
-        self.setWindowModality(Qt.WindowModal)
-        if title:
-            self.setWindowTitle(title)
-        if text:
-            self.setText(text)
-        if info:
-            self.setInformativeText(info)
-        if details:
-            self.setDetailedText(details)
-        if icon:
-            self.setIcon(icon)
-        if buttons:
-            self.setStandardButtons(buttons)
-        if default:
-            self.setDefaultButton(default)
-
-    def event(self, event):
-        res = QtWidgets.QMessageBox.event(self, event)
-        event_type = event.type()
-        if (event_type == QtCore.QEvent.MouseMove or
-                event_type == QtCore.QEvent.MouseButtonPress):
-            maxi = QtCore.QSize(defs.max_size, defs.max_size)
-            self.setMaximumSize(maxi)
-            text = self.findChild(QtWidgets.QTextEdit)
-            if text is not None:
-                expand = QtWidgets.QSizePolicy.Expanding
-                text.setSizePolicy(QtWidgets.QSizePolicy(expand, expand))
-                text.setMaximumSize(maxi)
-        return res
-
-
-def critical(title, message=None, details=None):
-    """Show a warning with the provided title and message."""
-    if message is None:
-        message = title
-    mbox = MessageBox(parent=active_window(), title=title, text=message,
-                      icon=QtWidgets.QMessageBox.Critical,
-                      buttons=QtWidgets.QMessageBox.Close,
-                      default=Widgets.QMessageBox.Close,
-                      details=details)
-    mbox.exec_()
-
-
-def command_error(title, cmd, status, out, err):
-    """Report an error message about a failed command"""
-    details = Interaction.format_out_err(out, err)
-    message = Interaction.format_command_status(cmd, status)
-    critical(title, message=message, details=details)
-
-
-def information(title, message=None, details=None, informative_text=None):
-    """Show information with the provided title and message."""
-    if message is None:
-        message = title
-    mbox = MessageBox(parent=active_window(),
-                      title=title, text=message,
-                      details=details, info=informative_text,
-                      buttons=QtWidgets.QMessageBox.Close,
-                      default=QtWidgets.QMessageBox.Close)
-    # Render into a 1-inch wide pixmap
-    pixmap = icons.cola().pixmap(defs.large_icon)
-    mbox.setIconPixmap(pixmap)
-    mbox.exec_()
-
-
-def question(title, msg, default=True):
-    """Launches a QMessageBox question with the provided title and message.
-    Passing "default=False" will make "No" the default choice."""
-    yes = QtWidgets.QMessageBox.Yes
-    no = QtWidgets.QMessageBox.No
-    buttons = yes | no
-    if default:
-        default = yes
-    else:
-        default = no
-
-    parent = active_window()
-    QMessageBox = QtWidgets.QMessageBox
-    result = QMessageBox.question(parent, title, msg, buttons, default)
-    return result == QtWidgets.QMessageBox.Yes
 
 
 def tree_selection(tree_item, items):
@@ -1057,11 +941,3 @@ def make_format(fg=None, bg=None, bold=False):
     if bold:
         fmt.setFontWeight(QtGui.QFont.Bold)
     return fmt
-
-
-def install():
-    Interaction.critical = staticmethod(critical)
-    Interaction.confirm = staticmethod(confirm)
-    Interaction.question = staticmethod(question)
-    Interaction.information = staticmethod(information)
-    Interaction.command_error = staticmethod(command_error)
