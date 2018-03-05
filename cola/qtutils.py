@@ -313,11 +313,8 @@ def confirm(title, text, informative_text, ok_text,
             icon=None, default=True,
             cancel_text=None, cancel_icon=None):
     """Confirm that an action should take place"""
-    msgbox = QtWidgets.QMessageBox(active_window())
-    msgbox.setWindowModality(Qt.WindowModal)
-    msgbox.setWindowTitle(title)
-    msgbox.setText(text)
-    msgbox.setInformativeText(informative_text)
+    msgbox = MessageBox(parent=active_window(), title=title,
+                        text=text, info=informative_text)
 
     icon = icons.mkicon(icon, icons.ok)
     ok = msgbox.addButton(ok_text, QtWidgets.QMessageBox.ActionRole)
@@ -337,12 +334,29 @@ def confirm(title, text, informative_text, ok_text,
     return msgbox.clickedButton() == ok
 
 
-class ResizeableMessageBox(QtWidgets.QMessageBox):
+class MessageBox(QtWidgets.QMessageBox):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None, title='', text='', details='', info='',
+                 icon=None, buttons=None, default=None):
         QtWidgets.QMessageBox.__init__(self, parent)
         self.setMouseTracking(True)
         self.setSizeGripEnabled(True)
+        self.setTextFormat(Qt.PlainText)
+        self.setWindowModality(Qt.WindowModal)
+        if title:
+            self.setWindowTitle(title)
+        if text:
+            self.setText(text)
+        if info:
+            self.setInformativeText(info)
+        if details:
+            self.setDetailedText(details)
+        if icon:
+            self.setIcon(icon)
+        if buttons:
+            self.setStandardButtons(buttons)
+        if default:
+            self.setDefaultButton(default)
 
     def event(self, event):
         res = QtWidgets.QMessageBox.event(self, event)
@@ -363,15 +377,11 @@ def critical(title, message=None, details=None):
     """Show a warning with the provided title and message."""
     if message is None:
         message = title
-    mbox = ResizeableMessageBox(active_window())
-    mbox.setWindowTitle(title)
-    mbox.setTextFormat(Qt.PlainText)
-    mbox.setText(message)
-    mbox.setIcon(QtWidgets.QMessageBox.Critical)
-    mbox.setStandardButtons(QtWidgets.QMessageBox.Close)
-    mbox.setDefaultButton(QtWidgets.QMessageBox.Close)
-    if details:
-        mbox.setDetailedText(details)
+    mbox = MessageBox(parent=active_window(), title=title, text=message,
+                      icon=QtWidgets.QMessageBox.Critical,
+                      buttons=QtWidgets.QMessageBox.Close,
+                      default=Widgets.QMessageBox.Close,
+                      details=details)
     mbox.exec_()
 
 
@@ -386,17 +396,11 @@ def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
-    mbox = QtWidgets.QMessageBox(active_window())
-    mbox.setStandardButtons(QtWidgets.QMessageBox.Close)
-    mbox.setDefaultButton(QtWidgets.QMessageBox.Close)
-    mbox.setWindowTitle(title)
-    mbox.setWindowModality(Qt.WindowModal)
-    mbox.setTextFormat(Qt.PlainText)
-    mbox.setText(message)
-    if informative_text:
-        mbox.setInformativeText(informative_text)
-    if details:
-        mbox.setDetailedText(details)
+    mbox = MessageBox(parent=active_window(),
+                      title=title, text=message,
+                      details=details, info=informative_text,
+                      buttons=QtWidgets.QMessageBox.Close,
+                      default=QtWidgets.QMessageBox.Close)
     # Render into a 1-inch wide pixmap
     pixmap = icons.cola().pixmap(defs.large_icon)
     mbox.setIconPixmap(pixmap)
