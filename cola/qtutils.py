@@ -415,8 +415,8 @@ def question(title, msg, default=True):
         default = no
 
     parent = active_window()
-    MessageBox = QtWidgets.QMessageBox
-    result = MessageBox.question(parent, title, msg, buttons, default)
+    QMessageBox = QtWidgets.QMessageBox
+    result = QMessageBox.question(parent, title, msg, buttons, default)
     return result == QtWidgets.QMessageBox.Yes
 
 
