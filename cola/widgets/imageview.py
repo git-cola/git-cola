@@ -27,45 +27,40 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtGui import QIcon, QImage, QPixmap
-from PyQt5.QtCore import QPoint, QPointF, QRect, QRectF, QSize, QSizeF, pyqtSignal
-from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import (
-    QGraphicsView, QGraphicsScene, QGraphicsItem, QGraphicsPixmapItem, QRubberBand
-)
+import argparse
+import errno
+import os
+import sys
 
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 try:
     import numpy as np
     have_numpy = True
 except ImportError:
     have_numpy = False
 
-def clamp(a, _min, _max):
-    return max(min(a, _max), _min)
-
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QLineEdit, QSlider
-from PyQt5.QtGui import QImage
-from PyQt5.QtCore import QPoint, QPointF, QRect, QRectF, QSize, QSizeF, pyqtSignal
-from PyQt5.Qt import Qt
-from enum import Enum
-import os, sys
-
 main_loop_type = 'qt'
 
 
-class ImageView(QGraphicsView):
-    imageChanged = pyqtSignal()
+def clamp(a, _min, _max):
+    return max(min(a, _max), _min)
+
+
+class ImageView(QtWidgets.QGraphicsView):
+    imageChanged = Signal()
 
     def __init__(self, *args, **kwargs):
-        QGraphicsView.__init__(self, *args, **kwargs)
-        scene = QGraphicsScene(self)
-        self.graphics_pixmap = QGraphicsPixmapItem()
+        QtWidgets.QGraphicsView.__init__(self, *args, **kwargs)
+        scene = QtWidgets.QGraphicsScene(self)
+        self.graphics_pixmap = QtWidgets.QGraphicsPixmapItem()
         scene.addItem(self.graphics_pixmap)
         self.zoom_factor = 1.5
         self.setScene(scene)
-        self.start_drag = QPoint()
+        self.start_drag = QtCore.QPoint()
         self.rubberBand = None
         self.panning = False
         self.first_show_occured = False
@@ -82,28 +77,31 @@ class ImageView(QGraphicsView):
             if image.ndim == 3:
                 if image.shape[2] == 3:
                     if image_format is None:
-                        image_format = QImage.Format_RGB888
-                    q_image = QImage(image.data, image.shape[1], image.shape[0], image_format)
-                    pixmap = QPixmap.fromImage(q_image) #note this copies the data from the QImage referencing image original data
+                        image_format = QtGui.QImage.Format_RGB888
+                    q_image = QtGui.QImage(image.data, image.shape[1], image.shape[0], image_format)
+                    pixmap = QtGui.QPixmap.fromImage(q_image)
                 elif image.shape[2] == 4:
                     if image_format is None:
-                        image_format = QImage.Format_RGB32
-                    q_image = QImage(image.data, image.shape[1], image.shape[0], image_format)
-                    pixmap = QPixmap.fromImage(q_image) #note this copies the data from the QImage referencing image original data
+                        image_format = QtGui.QImage.Format_RGB32
+                    q_image = QtGui.QImage(
+                        image.data, image.shape[1],
+                        image.shape[0], image_format)
+                    pixmap = QtGui.QPixmap.fromImage(q_image)
                 else:
                     raise TypeError(image)
             elif image.ndim == 2:
                 image_rgb = np.dstack((image, image, image))
                 if image_format is None:
-                    image_format = QImage.Format_RGB888
-                q_image = QImage(image.data, image.shape[1], image.shape[0], image_format)
-                pixmap = QPixmap.fromImage(q_image) #note this copies the data from the QImage referencing original image
+                    image_format = QtGui.QImage.Format_RGB888
+                q_image = QtGui.QImage(image.data, image.shape[1],
+                                       image.shape[0], image_format)
+                pixmap = QtGui.QPixmap.fromImage(q_image)
             else:
                 raise ValueError(image)
 
-        elif isinstance(image, QImage):
-            pixmap = QPixmap.fromImage(image)
-        elif isinstance(image, QPixmap):
+        elif isinstance(image, QtGui.QImage):
+            pixmap = QtGui.QPixmap.fromImage(image)
+        elif isinstance(image, QtGui.QPixmap):
             pixmap = image
         else:
             raise TypeError(image)
@@ -125,19 +123,17 @@ class ImageView(QGraphicsView):
 
     def setSceneDims(self):
         pixmap = self.pixmap
-        self.setSceneRect(
-            QRectF(
-                #-QPointF(pixmap.width(), pixmap.height())/2, 1.5*QPointF(pixmap.width(), pixmap.height())
-                QPointF(0, 0), QPointF(pixmap.width(), pixmap.height())
-            )
-        )
+        self.setSceneRect(QtCore.QRectF(
+            QtCore.QPointF(0, 0),
+            QtCore.QPointF(pixmap.width(), pixmap.height())))
 
     @property
     def image_scene_rect(self):
-        return QRectF(self.graphics_pixmap.pos(), QSizeF(self.pixmap.size()))
+        return QtCore.QRectF(
+            self.graphics_pixmap.pos(), QtCore.QSizeF(self.pixmap.size()))
 
     def resizeEvent(self, event):
-        QGraphicsView.resizeEvent(self, event)
+        QtWidgets.QGraphicsView.resizeEvent(self, event)
         self.setSceneDims()
         event.accept()
         #self.reset()
@@ -148,7 +144,7 @@ class ImageView(QGraphicsView):
     def zoomROICentered(self, p, zoom_level_delta):
         pixmap = self.graphics_pixmap.pixmap()
         roi = self.current_scene_ROI
-        roi_dims = QPointF(roi.width(), roi.height())
+        roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_scalef = 1
         if zoom_level_delta > 0:
             roi_scalef = 1/self.zoom_factor
@@ -157,20 +153,23 @@ class ImageView(QGraphicsView):
         nroi_dims = roi_dims * roi_scalef
         nroi_dims.setX(max(nroi_dims.x(), 1))
         nroi_dims.setY(max(nroi_dims.y(), 1))
-        if nroi_dims.x() > self.pixmap.size().width() or nroi_dims.y() > self.pixmap.size().height():
+        if (nroi_dims.x() > self.pixmap.size().width() or
+            nroi_dims.y() > self.pixmap.size().height()):
             self.reset()
         else:
             nroi_center = p
             nroi_dimsh = nroi_dims / 2
             nroi_topleft = nroi_center - nroi_dimsh
-            nroi = QRectF(nroi_topleft.x(), nroi_topleft.y(), nroi_dims.x(), nroi_dims.y())
+            nroi = QtCore.QRectF(
+                nroi_topleft.x(), nroi_topleft.y(),
+                nroi_dims.x(), nroi_dims.y())
             self.fitInView(nroi, Qt.KeepAspectRatio)
             self.update()
 
     def zoomROITo(self, p, zoom_level_delta):
         pixmap = self.graphics_pixmap.pixmap()
         roi = self.current_scene_ROI
-        roi_dims = QPointF(roi.width(), roi.height())
+        roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_topleft = roi.topLeft()
         roi_scalef = 1
         if zoom_level_delta > 0:
@@ -180,7 +179,8 @@ class ImageView(QGraphicsView):
         nroi_dims = roi_dims * roi_scalef
         nroi_dims.setX(max(nroi_dims.x(), 1))
         nroi_dims.setY(max(nroi_dims.y(), 1))
-        if nroi_dims.x() > self.pixmap.size().width() or nroi_dims.y() > self.pixmap.size().height():
+        if (nroi_dims.x() > self.pixmap.size().width() or
+            nroi_dims.y() > self.pixmap.size().height()):
             self.reset()
         else:
             prel_scaled_x = (p.x() - roi_topleft.x()) / roi_dims.x()
@@ -188,12 +188,16 @@ class ImageView(QGraphicsView):
             nroi_topleft_x = p.x() - prel_scaled_x * nroi_dims.x()
             nroi_topleft_y = p.y() - prel_scaled_y * nroi_dims.y()
 
-            nroi = QRectF(nroi_topleft_x, nroi_topleft_y, nroi_dims.x(), nroi_dims.y())
+            nroi = QtCore.QRectF(
+                nroi_topleft_x, nroi_topleft_y,
+                nroi_dims.x(), nroi_dims.y())
             self.fitInView(nroi, Qt.KeepAspectRatio)
             self.update()
 
     def _scene_ROI(self, geometry):
-        return QRectF(self.mapToScene(geometry.topLeft()), self.mapToScene(geometry.bottomRight()))
+        return QtCore.QRectF(
+            self.mapToScene(geometry.topLeft()),
+            self.mapToScene(geometry.bottomRight()))
 
     @property
     def current_scene_ROI(self):
@@ -201,7 +205,7 @@ class ImageView(QGraphicsView):
         #return self._scene_ROI(self.viewport().geometry())
 
     def mousePressEvent(self, event):
-        QGraphicsView.mousePressEvent(self, event)
+        QtWidgets.QGraphicsView.mousePressEvent(self, event)
         button = event.button()
         modifier = event.modifiers()
 
@@ -214,15 +218,18 @@ class ImageView(QGraphicsView):
         if modifier == Qt.ShiftModifier and button == Qt.LeftButton:
             self.start_drag = event.pos()
             if self.rubberBand is None:
-                self.rubberBand = QRubberBand(QRubberBand.Rectangle, self.viewport())
-            self.rubberBand.setGeometry(QRect(self.start_drag, QSize()))
+                self.rubberBand = QtWidgets.QRubberBand(
+                    QtWidgets.QRubberBand.Rectangle, self.viewport())
+            self.rubberBand.setGeometry(
+                QtCore.QRect(self.start_drag, QtCore.QSize()))
             self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
-        QGraphicsView.mouseMoveEvent(self, event)
+        QtWidgets.QGraphicsView.mouseMoveEvent(self, event)
         #update selection display
         if self.rubberBand is not None:
-            self.rubberBand.setGeometry(QRect(self.start_drag, event.pos()).normalized())
+            self.rubberBand.setGeometry(
+                QtCore.QRect(self.start_drag, event.pos()).normalized())
 
         if self.panning:
             scene_end_drag = self.mapToScene(event.pos())
@@ -234,7 +241,9 @@ class ImageView(QGraphicsView):
             sy = scene2view.m22()
             dx = scene2view.dx()
             dy = scene2view.dy()
-            scene_pan_vector = QPointF(pan_vector.x() / sx, pan_vector.y() / sy)
+            scene_pan_x = pan_vector.x() / sx
+            scene_pan_y = pan_vector.y() / sy
+            scene_pan_vector = QtCore.QPointF(scene_pan_x, scene_pan_y)
             roi = self.current_scene_ROI
             top_left = roi.topLeft()
             new_top_left = top_left - scene_pan_vector
@@ -247,7 +256,7 @@ class ImageView(QGraphicsView):
         self.update()
 
     def mouseReleaseEvent(self, event):
-        QGraphicsView.mouseReleaseEvent(self, event)
+        QtWidgets.QGraphicsView.mouseReleaseEvent(self, event)
         #consume rubber band selection
         if self.rubberBand is not None:
             self.rubberBand.hide()
@@ -256,7 +265,9 @@ class ImageView(QGraphicsView):
             rect = self.rubberBand.geometry().normalized()
 
             if rect.width() > 5 and rect.height() > 5:
-                roi = QRectF(self.mapToScene(rect.topLeft()), self.mapToScene(rect.bottomRight()))
+                roi = QtCore.QRectF(
+                    self.mapToScene(rect.topLeft()),
+                    self.mapToScene(rect.bottomRight()))
                 self.fitInView(roi, Qt.KeepAspectRatio)
 
             self.rubberBand = None
@@ -278,7 +289,7 @@ class ImageView(QGraphicsView):
         pass
 
     def showEvent(self, event):
-        QGraphicsView.showEvent(self, event)
+        QtWidgets.QGraphicsView.showEvent(self, event)
         if event.spontaneous():
             return
         if not self.first_show_occured:
@@ -295,7 +306,7 @@ class ImageView(QGraphicsView):
         if self.scene() is None or rect.isNull():
             return
         self.last_scene_roi = rect
-        unity = self.transform().mapRect(QRectF(0, 0, 1, 1))
+        unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
         self.scale(1/unity.width(), 1/unity.height())
         viewRect = self.viewport().rect()
         sceneRect = self.transform().mapRect(rect)
@@ -326,9 +337,9 @@ class AppImageView(ImageView):
         self.main_widget.statusBar().showMessage(msg)
 
 
-class ImageViewerWindow(QMainWindow):
+class ImageViewerWindow(QtWidgets.QMainWindow):
     def __init__(self, image, input_path):
-        QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.image = image
         self.input_path = input_path
         self.image_view = AppImageView(self)
@@ -340,7 +351,7 @@ class ImageViewerWindow(QMainWindow):
         self.resize(image.size() + padding)
         #self.resize(797, 615)
 
-        central = QWidget(self)
+        central = QtWidgets.QWidget(self)
         central.setObjectName("MainWindow")
 
         self.verticalLayout = QtWidgets.QVBoxLayout(central)
@@ -362,7 +373,7 @@ class ImageViewerWindow(QMainWindow):
         self.setCentralWidget(central)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
-        screen = QDesktopWidget().screenGeometry(self)
+        screen = QtWidgets.QDesktopWidget().screenGeometry(self)
         size = self.geometry()
         self.move((screen.width()-size.width())/4, (screen.height()-size.height())/4)
 
@@ -370,7 +381,7 @@ class ImageViewerWindow(QMainWindow):
         self.image_view.reset()
 
     def hideEvent(self, event):
-        QMainWindow.hide(self)
+        QtWidgets.QMainWindow.hide(self)
 
     def update_view(self):
         self.image_view.image = self.image
@@ -385,7 +396,7 @@ class ImageViewerWindow(QMainWindow):
         global main_loop_type
         if key == Qt.Key_Escape:
             if main_loop_type == 'qt':
-                QApplication.quit()
+                QtWidgets.QApplication.quit()
             elif main_loop_type == 'ipython':
                 self.hide()
                 #import IPython
@@ -395,21 +406,21 @@ class ImageViewerWindow(QMainWindow):
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
     sys.stderr.write('\r')
-    QApplication.quit()
+    QtWidgets.QApplication.quit()
 
 
 def main():
-    import argparse, errno, sys
     parser = argparse.ArgumentParser(description='image viewer')
     parser.add_argument('inputs', type=str, nargs=1, help='path to the image')
-    parser.add_argument('--interactive', '-i', action='store_true', help='launch in interactive shell')
+    parser.add_argument('--interactive', '-i', action='store_true',
+        help='launch in interactive shell')
     opts = parser.parse_args()
 
     input_image = opts.inputs[0]
-    image = QImage()
+    image = QtGui.QImage()
     image.load(input_image)
 
-    app = QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     try:
         import signal
         signal.signal(signal.SIGINT, sigint_handler)
@@ -425,6 +436,7 @@ def main():
         start_ipython(user_ns=dict(globals(), **locals()), argv=[])
     else:
         app.exec_()
+
 
 if __name__ == '__main__':
     main()
