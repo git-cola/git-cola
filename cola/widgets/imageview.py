@@ -46,39 +46,43 @@ except ImportError:
 main_loop_type = 'qt'
 
 
-def clamp(a, _min, _max):
-    return max(min(a, _max), _min)
+def clamp(x, lo, hi):
+    return max(min(x, hi), lo)
 
 
 class ImageView(QtWidgets.QGraphicsView):
-    imageChanged = Signal()
+    image_changed = Signal()
 
-    def __init__(self, *args, **kwargs):
-        QtWidgets.QGraphicsView.__init__(self, *args, **kwargs)
+    def __init__(self, parent=None):
+        super(ImageView, self).__init__(parent)
+
         scene = QtWidgets.QGraphicsScene(self)
         self.graphics_pixmap = QtWidgets.QGraphicsPixmapItem()
         scene.addItem(self.graphics_pixmap)
-        self.zoom_factor = 1.5
         self.setScene(scene)
-        self.start_drag = QtCore.QPoint()
-        self.rubberBand = None
+
+        self.zoom_factor = 1.5
+        self.rubberband = None
         self.panning = False
         self.first_show_occured = False
         self.last_scene_roi = None
+        self.start_drag = QtCore.QPoint()
 
     @property
     def pixmap(self):
         return self.graphics_pixmap.pixmap()
 
     @pixmap.setter
-    def pixmap(self, image, image_format = None):
+    def pixmap(self, image, image_format=None):
         pixmap = None
         if have_numpy and isinstance(image, np.ndarray):
             if image.ndim == 3:
                 if image.shape[2] == 3:
                     if image_format is None:
                         image_format = QtGui.QImage.Format_RGB888
-                    q_image = QtGui.QImage(image.data, image.shape[1], image.shape[0], image_format)
+                    q_image = QtGui.QImage(
+                        image.data, image.shape[1],
+                        image.shape[0], image_format)
                     pixmap = QtGui.QPixmap.fromImage(q_image)
                 elif image.shape[2] == 4:
                     if image_format is None:
@@ -107,10 +111,10 @@ class ImageView(QtWidgets.QGraphicsView):
             raise TypeError(image)
 
         self.graphics_pixmap.setPixmap(pixmap)
-        self.setSceneDims()
+        self.update_scene_rect()
         #self.fitInView()
         self.graphics_pixmap.update()
-        self.imageChanged.emit()
+        self.image_changed.emit()
 
     #image property alias
     @property
@@ -121,7 +125,7 @@ class ImageView(QtWidgets.QGraphicsView):
     def image(self, image):
         self.pixmap = image
 
-    def setSceneDims(self):
+    def update_scene_rect(self):
         pixmap = self.pixmap
         self.setSceneRect(QtCore.QRectF(
             QtCore.QPointF(0, 0),
@@ -133,11 +137,9 @@ class ImageView(QtWidgets.QGraphicsView):
             self.graphics_pixmap.pos(), QtCore.QSizeF(self.pixmap.size()))
 
     def resizeEvent(self, event):
-        QtWidgets.QGraphicsView.resizeEvent(self, event)
-        self.setSceneDims()
+        super(ImageView, self).resizeEvent(event)
+        self.update_scene_rect()
         event.accept()
-        #self.reset()
-        #self.fitInView(roi, Qt.KeepAspectRatio)
         self.fitInView(self.last_scene_roi, Qt.KeepAspectRatio)
         self.update()
 
@@ -146,13 +148,16 @@ class ImageView(QtWidgets.QGraphicsView):
         roi = self.current_scene_ROI
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_scalef = 1
+
         if zoom_level_delta > 0:
             roi_scalef = 1/self.zoom_factor
         elif zoom_level_delta < 0:
             roi_scalef = self.zoom_factor
+
         nroi_dims = roi_dims * roi_scalef
         nroi_dims.setX(max(nroi_dims.x(), 1))
         nroi_dims.setY(max(nroi_dims.y(), 1))
+
         if (nroi_dims.x() > self.pixmap.size().width() or
             nroi_dims.y() > self.pixmap.size().height()):
             self.reset()
@@ -171,14 +176,17 @@ class ImageView(QtWidgets.QGraphicsView):
         roi = self.current_scene_ROI
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_topleft = roi.topLeft()
-        roi_scalef = 1
+        roi_scalef = 1.0
+
         if zoom_level_delta > 0:
-            roi_scalef = 1/self.zoom_factor
+            roi_scalef = 1.0 / self.zoom_factor
         elif zoom_level_delta < 0:
             roi_scalef = self.zoom_factor
+
         nroi_dims = roi_dims * roi_scalef
         nroi_dims.setX(max(nroi_dims.x(), 1))
         nroi_dims.setY(max(nroi_dims.y(), 1))
+
         if (nroi_dims.x() > self.pixmap.size().width() or
             nroi_dims.y() > self.pixmap.size().height()):
             self.reset()
@@ -202,10 +210,9 @@ class ImageView(QtWidgets.QGraphicsView):
     @property
     def current_scene_ROI(self):
         return self.last_scene_roi
-        #return self._scene_ROI(self.viewport().geometry())
 
     def mousePressEvent(self, event):
-        QtWidgets.QGraphicsView.mousePressEvent(self, event)
+        super(ImageView, self).mousePressEvent(event)
         button = event.button()
         modifier = event.modifiers()
 
@@ -217,18 +224,18 @@ class ImageView(QtWidgets.QGraphicsView):
         #initiate/show ROI selection
         if modifier == Qt.ShiftModifier and button == Qt.LeftButton:
             self.start_drag = event.pos()
-            if self.rubberBand is None:
-                self.rubberBand = QtWidgets.QRubberBand(
+            if self.rubberband is None:
+                self.rubberband = QtWidgets.QRubberBand(
                     QtWidgets.QRubberBand.Rectangle, self.viewport())
-            self.rubberBand.setGeometry(
+            self.rubberband.setGeometry(
                 QtCore.QRect(self.start_drag, QtCore.QSize()))
-            self.rubberBand.show()
+            self.rubberband.show()
 
     def mouseMoveEvent(self, event):
-        QtWidgets.QGraphicsView.mouseMoveEvent(self, event)
+        super(ImageView, self).mouseMoveEvent(event)
         #update selection display
-        if self.rubberBand is not None:
-            self.rubberBand.setGeometry(
+        if self.rubberband is not None:
+            self.rubberband.setGeometry(
                 QtCore.QRect(self.start_drag, event.pos()).normalized())
 
         if self.panning:
@@ -256,13 +263,13 @@ class ImageView(QtWidgets.QGraphicsView):
         self.update()
 
     def mouseReleaseEvent(self, event):
-        QtWidgets.QGraphicsView.mouseReleaseEvent(self, event)
+        super(ImageView, self).mouseReleaseEvent(event)
         #consume rubber band selection
-        if self.rubberBand is not None:
-            self.rubberBand.hide()
+        if self.rubberband is not None:
+            self.rubberband.hide()
 
             #set view to ROI
-            rect = self.rubberBand.geometry().normalized()
+            rect = self.rubberband.geometry().normalized()
 
             if rect.width() > 5 and rect.height() > 5:
                 roi = QtCore.QRectF(
@@ -270,7 +277,7 @@ class ImageView(QtWidgets.QGraphicsView):
                     self.mapToScene(rect.bottomRight()))
                 self.fitInView(roi, Qt.KeepAspectRatio)
 
-            self.rubberBand = None
+            self.rubberband = None
 
         if self.panning:
             self.panning = False
@@ -282,14 +289,17 @@ class ImageView(QtWidgets.QGraphicsView):
         #adjust zoom
         if abs(dy) > 0:
             scene_pos = self.mapToScene(event.pos())
-            sign = 1 if dy >= 0 else -1
+            if dy >= 0:
+                sign = 1
+            else:
+                sign = -1
             self.zoomROITo(scene_pos, sign)
 
     def keyPressEvent(self, event):
         pass
 
     def showEvent(self, event):
-        QtWidgets.QGraphicsView.showEvent(self, event)
+        super(ImageView, self).showEvent(event)
         if event.spontaneous():
             return
         if not self.first_show_occured:
@@ -297,21 +307,22 @@ class ImageView(QtWidgets.QGraphicsView):
             self.reset()
 
     def reset(self):
-        self.setSceneDims()
-        self.fitInView(self.image_scene_rect, Qt.KeepAspectRatio)
+        self.update_scene_rect()
+        self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
         self.update()
 
-    #override arbitrary and unwanted margins: https://bugreports.qt.io/browse/QTBUG-42331 - based on QT sources
-    def fitInView(self, rect, flags = Qt.IgnoreAspectRatio):
+    #override arbitrary and unwanted margins:
+    # https://bugreports.qt.io/browse/QTBUG-42331 - based on QT sources
+    def fitInView(self, rect, flags=Qt.IgnoreAspectRatio):
         if self.scene() is None or rect.isNull():
             return
         self.last_scene_roi = rect
-        unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
-        self.scale(1/unity.width(), 1/unity.height())
-        viewRect = self.viewport().rect()
+        unity = self.transform().mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
+        self.scale(1.0/unity.width(), 1.0/unity.height())
+        viewrect = self.viewport().rect()
         sceneRect = self.transform().mapRect(rect)
-        xratio = viewRect.width() / sceneRect.width()
-        yratio = viewRect.height() / sceneRect.height()
+        xratio = viewrect.width() / sceneRect.width()
+        yratio = viewrect.height() / sceneRect.height()
         if flags == Qt.KeepAspectRatio:
             xratio = yratio = min(xratio, yratio)
         elif flags == Qt.KeepAspectRatioByExpanding:
@@ -321,8 +332,9 @@ class ImageView(QtWidgets.QGraphicsView):
 
 
 class AppImageView(ImageView):
-    def __init__(self, *args, **kwargs):
-        ImageView.__init__(self, *args, **kwargs)
+
+    def __init__(self, parent=None):
+        ImageView.__init__(self, parent=parent)
         scene = self.scene()
         self.main_widget = None
 
@@ -338,44 +350,42 @@ class AppImageView(ImageView):
 
 
 class ImageViewerWindow(QtWidgets.QMainWindow):
+
     def __init__(self, image, input_path):
         QtWidgets.QMainWindow.__init__(self)
         self.image = image
         self.input_path = input_path
-        self.image_view = AppImageView(self)
+        self.image_view = AppImageView(parent=self)
         self.image_view.main_widget = self
-        self.statusBar().showMessage("")
+        self.statusBar().showMessage('')
 
-        #self.resize(image.size())
         padding = self.frameGeometry().size() - self.geometry().size()
         self.resize(image.size() + padding)
-        #self.resize(797, 615)
 
         central = QtWidgets.QWidget(self)
-        central.setObjectName("MainWindow")
-
-        self.verticalLayout = QtWidgets.QVBoxLayout(central)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        #self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        self.verticalLayout.setObjectName("verticalLayout")
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(1)
-        sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.image_view.sizePolicy().hasHeightForWidth())
-        self.image_view.setSizePolicy(sizePolicy)
-        self.image_view.setMouseTracking(True)
-        self.image_view.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.image_view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.image_view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.image_view.setObjectName("image_view")
-        self.verticalLayout.addWidget(self.image_view)
-
+        self.vbox = QtWidgets.QVBoxLayout(central)
+        self.vbox.setContentsMargins(0, 0, 0, 0)
         self.setCentralWidget(central)
         self.layout().setContentsMargins(0, 0, 0, 0)
 
+        Expanding = QtWidgets.QSizePolicy.Expanding
+        height_for_width = self.image_view.sizePolicy().hasHeightForWidth()
+        policy = QtWidgets.QSizePolicy(Expanding, Expanding)
+        policy.setHorizontalStretch(1)
+        policy.setVerticalStretch(1)
+        policy.setHeightForWidth(height_for_width)
+        self.image_view.setSizePolicy(policy)
+
+        self.image_view.setMouseTracking(True)
+        self.image_view.setFocusPolicy(Qt.NoFocus)
+        self.image_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.image_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.vbox.addWidget(self.image_view)
+
         screen = QtWidgets.QDesktopWidget().screenGeometry(self)
         size = self.geometry()
-        self.move((screen.width()-size.width())/4, (screen.height()-size.height())/4)
+        self.move((screen.width() - size.width()) // 4,
+                  (screen.height() - size.height()) // 4)
 
         self.update_view()
         self.image_view.reset()
@@ -411,12 +421,12 @@ def sigint_handler(*args):
 
 def main():
     parser = argparse.ArgumentParser(description='image viewer')
-    parser.add_argument('inputs', type=str, nargs=1, help='path to the image')
+    parser.add_argument('image', help='path to the image')
     parser.add_argument('--interactive', '-i', action='store_true',
-        help='launch in interactive shell')
+                        help='start an interactive shell')
     opts = parser.parse_args()
 
-    input_image = opts.inputs[0]
+    input_image = opts.image
     image = QtGui.QImage()
     image.load(input_image)
 
