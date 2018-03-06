@@ -1,3 +1,10 @@
+# Copyright (c) 2018 David Aguilar <davvid@gmail.com>
+#
+# Git Cola is GPL licensed, but this file has a more permissive license.
+# This file is dual-licensed Git Cola GPL + pyqimageview MIT.
+# imageview.py was originally based on the pyqimageview:
+# https://github.com/nevion/pyqimageview/
+#
 #The MIT License (MIT)
 #
 #Copyright (c) 2014 Jason Newton <nevion@gmail.com>
