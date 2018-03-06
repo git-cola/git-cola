@@ -134,6 +134,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.old_current_item = None
         self.expanded_items = set()
 
+        self.image_formats = qtutils.ImageFormats()
+
         self.process_selection_action = qtutils.add_action(
             self, cmds.StageOrUnstage.name(),
             cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
@@ -874,7 +876,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         elif category == self.idx_untracked:
             item = self.unstaged_items()[0]
-            cmds.do(cmds.ShowUntracked, item.path)
+            cmds.do(cmds.ShowUntracked, self.image_formats, item.path)
 
     def move_up(self):
         idx = self.selected_idx()

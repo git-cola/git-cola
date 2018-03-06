@@ -1531,13 +1531,21 @@ class SetDiffText(Command):
 class ShowUntracked(Command):
     """Show an untracked file."""
 
-    def __init__(self, filename):
+    def __init__(self, image_formats, filename):
         Command.__init__(self)
+        self.image_formats = image_formats
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = self.diff_text_for(filename)
+        self.new_diff_text = self.get_diff(filename)
 
-    def diff_text_for(self, filename):
+    def get_diff(self, filename):
+        if self.image_formats.ok(filename):
+            result = ''
+        else:
+            result = self.read(filename)
+        return result
+
+    def read(self, filename):
         cfg = gitcfg.current()
         size = cfg.get('cola.readsize', 1024 * 2)
         try:
