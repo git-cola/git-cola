@@ -139,8 +139,9 @@ class MainView(standard.MainWindow):
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(N_('Diff'), self,
-            fn=lambda dock: diff.DiffEditorWidget(dock))
-        self.diffeditor = self.diffdock.widget().editor
+            fn=lambda dock: diff.Viewer(dock.titleBarWidget(), dock))
+        self.diffwidget = self.diffdock.widget()
+        self.diffeditor = self.diffwidget.text.editor
 
         # All Actions
         add_action = qtutils.add_action

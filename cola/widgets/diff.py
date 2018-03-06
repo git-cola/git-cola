@@ -28,6 +28,7 @@ from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
 from . import defs
+from . import imageview
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -312,14 +313,56 @@ class DiffLineNumbers(TextDecorator):
             block = block.next()  # pylint: disable=next-method-called
 
 
+class Viewer(QtWidgets.QWidget):
+    """Text and image diff viewers"""
+
+    filename_changed = Signal(object)
+
+    def __init__(self, titlebar, parent=None):
+        super(Viewer, self).__init__(parent)
+
+        self.text = DiffEditorWidget(titlebar, parent=self)
+        self.image = imageview.ImageView(parent=self)
+        self.image_formats = qtutils.ImageFormats()
+        self.model = model = main.model()
+
+        stack = self.stack = QtWidgets.QStackedWidget(self)
+        stack.addWidget(self.text)
+        stack.addWidget(self.image)
+
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.no_spacing, self.stack)
+        self.setLayout(self.main_layout)
+
+        # Observe filename change notifications
+        filename_message = model.message_filename_changed
+        model.add_observer(filename_message, self.filename_changed.emit)
+        self.filename_changed.connect(
+            self.change_filename, type=Qt.QueuedConnection)
+
+        self.setFocusProxy(self.text)
+
+    def change_filename(self, filename):
+        """Manage the image and text diff views when selection changes"""
+        diff = self.model.diff_text
+        if (not diff and filename and
+                self.image_formats.ok(filename) and
+                self.image.load(filename)):
+            self.stack.setCurrentWidget(self.image)
+            self.setFocusProxy(self.image)
+        else:
+            self.stack.setCurrentWidget(self.text)
+            self.setFocusProxy(self.text)
+
+
 class DiffEditorWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, titlebar, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.editor = DiffEditor(self, parent.titleBarWidget())
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.editor)
+        self.editor = DiffEditor(self, titlebar)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.no_spacing, self.editor)
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.editor)
 
@@ -399,7 +442,6 @@ class DiffEditor(DiffTextEdit):
         selection_model.add_observer(selection_model.message_selection_changed,
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-
 
     def refresh(self):
         enabled = False
