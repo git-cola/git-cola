@@ -68,6 +68,14 @@ class ImageView(QtWidgets.QGraphicsView):
         self.last_scene_roi = None
         self.start_drag = QtCore.QPoint()
 
+    def load(self, filename):
+        image = QtGui.QImage()
+        image.load(filename)
+        ok = not image.isNull()
+        if ok:
+            self.pixmap = image
+        return ok
+
     @property
     def pixmap(self):
         return self.graphics_pixmap.pixmap()
@@ -314,7 +322,7 @@ class ImageView(QtWidgets.QGraphicsView):
     #override arbitrary and unwanted margins:
     # https://bugreports.qt.io/browse/QTBUG-42331 - based on QT sources
     def fitInView(self, rect, flags=Qt.IgnoreAspectRatio):
-        if self.scene() is None or rect.isNull():
+        if self.scene() is None or not rect or rect.isNull():
             return
         self.last_scene_roi = rect
         unity = self.transform().mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
