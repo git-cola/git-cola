@@ -393,13 +393,13 @@ class DiffEditor(DiffTextEdit):
 
         diff_text_changed = model.message_diff_text_changed
         model.add_observer(diff_text_changed, self.diff_text_changed.emit)
+        self.diff_text_changed.connect(self.set_diff, type=Qt.QueuedConnection)
 
         self.selection_model = selection_model = selection.selection_model()
         selection_model.add_observer(selection_model.message_selection_changed,
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.diff_text_changed.connect(self.set_diff)
 
     def refresh(self):
         enabled = False
