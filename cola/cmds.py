@@ -402,6 +402,7 @@ class ResetMode(Command):
         Command.__init__(self)
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
+        self.new_filename = ''
 
     def do(self):
         Command.do(self)
@@ -1142,6 +1143,7 @@ class OpenRepo(Command):
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
         self.new_commitmsg = ''
+        self.new_filename = ''
 
     def do(self):
         git = self.model.git
