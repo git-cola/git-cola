@@ -316,7 +316,8 @@ class DiffLineNumbers(TextDecorator):
 class Viewer(QtWidgets.QWidget):
     """Text and image diff viewers"""
 
-    filename_changed = Signal(object)
+    images_changed = Signal(object)
+    type_changed = Signal(object)
 
     def __init__(self, titlebar, parent=None):
         super(Viewer, self).__init__(parent)
@@ -334,25 +335,36 @@ class Viewer(QtWidgets.QWidget):
             defs.no_margin, defs.no_spacing, self.stack)
         self.setLayout(self.main_layout)
 
-        # Observe filename change notifications
-        filename_message = model.message_filename_changed
-        model.add_observer(filename_message, self.filename_changed.emit)
-        self.filename_changed.connect(
-            self.change_filename, type=Qt.QueuedConnection)
+        # Observe images
+        images_msg = model.message_images_changed
+        model.add_observer(images_msg, self.images_changed.emit)
+        self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
+
+        # Observe the diff type
+        diff_type_msg = model.message_diff_type_changed
+        model.add_observer(diff_type_msg, self.type_changed.emit)
+        self.type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
 
         self.setFocusProxy(self.text)
 
-    def change_filename(self, filename):
+    def set_diff_type(self, diff_type):
         """Manage the image and text diff views when selection changes"""
-        diff = self.model.diff_text
-        if (not diff and filename and
-                self.image_formats.ok(filename) and
-                self.image.load(filename)):
+        if diff_type == 'image':
             self.stack.setCurrentWidget(self.image)
             self.setFocusProxy(self.image)
         else:
             self.stack.setCurrentWidget(self.text)
             self.setFocusProxy(self.text)
+
+    def set_images(self, images):
+        # TODO comp images
+        if not images:
+            image = None
+            unlink = False
+        else:
+            image = images[0][0]
+            unlink = images[0][1]
+        self.image.load(image)
 
 
 class DiffEditorWidget(QtWidgets.QWidget):
