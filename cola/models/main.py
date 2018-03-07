@@ -31,6 +31,7 @@ class MainModel(Observable):
     message_about_to_update = 'about_to_update'
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
+    message_diff_type_changed = 'diff_type_changed'
     message_filename_changed = 'filename_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
@@ -70,6 +71,7 @@ class MainModel(Observable):
         self.initialized = False
         self.head = 'HEAD'
         self.diff_text = ''
+        self.diff_type = 'text'  # text, image
         self.mode = self.mode_none
         self.filename = None
         self.is_merging = False
@@ -145,8 +147,14 @@ class MainModel(Observable):
         return path
 
     def set_diff_text(self, txt):
+        """Update the text displayed in the diff editor"""
         self.diff_text = txt
         self.notify_observers(self.message_diff_text_changed, txt)
+
+    def set_diff_type(self, diff_type):  # text, image
+        """Set the diff type to either text or image"""
+        self.diff_type = diff_type
+        self.notify_observers(self.message_diff_type_changed, diff_type)
 
     def set_directory(self, path):
         self.directory = path

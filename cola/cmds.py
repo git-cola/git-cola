@@ -120,22 +120,25 @@ class Command(ModelCommand):
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
         self.old_mode = self.model.mode
+        self.old_diff_type = self.model.diff_type
 
         self.new_diff_text = self.old_diff_text
         self.new_filename = self.old_filename
         self.new_mode = self.old_mode
+        self.new_diff_type = self.old_diff_type
 
     def do(self):
         """Perform the operation."""
-        self.model.set_mode(self.new_mode)
         self.model.set_diff_text(self.new_diff_text)
         self.model.set_filename(self.new_filename)
+        self.model.set_mode(self.new_mode)
+        self.model.set_diff_type(self.new_diff_type)
 
     def undo(self):
         """Undo the operation."""
-        self.model.set_mode(self.old_mode)
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_filename(self.old_filename)
+        self.model.set_mode(self.old_mode)
 
 
 class AbortMerge(ConfirmAction):
@@ -346,6 +349,7 @@ class Checkout(Command):
         self.argv = argv
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
 
     def do(self):
         status, out, err = self.model.git.checkout(*self.argv)
@@ -402,11 +406,12 @@ class ResetMode(Command):
         Command.__init__(self)
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
         self.new_filename = ''
 
     def do(self):
-        Command.do(self)
         self.model.update_file_status()
+        Command.do(self)
 
 
 class ResetCommand(ConfirmAction):
@@ -768,10 +773,9 @@ class Diff(Command):
             opts['ref'] = self.model.head
         self.new_filename = filename
         self.new_mode = self.model.mode_worktree
-        self.new_diff_text = gitcmds.diff_helper(filename=filename,
-                                                 cached=cached,
-                                                 deleted=deleted,
-                                                 **opts)
+        self.new_diff_text = gitcmds.diff_helper(
+            filename=filename, cached=cached, deleted=deleted, **opts)
+        self.new_diff_type = 'text'
 
 
 class Diffstat(Command):
@@ -788,6 +792,7 @@ class Diffstat(Command):
                                    M=True,
                                    stat=True)[STDOUT]
         self.new_diff_text = diff
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_diffstat
 
 
@@ -810,6 +815,7 @@ class DiffStagedSummary(Command):
                                    patch_with_stat=True,
                                    M=True)[STDOUT]
         self.new_diff_text = diff
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_index
 
 
@@ -1142,6 +1148,7 @@ class OpenRepo(Command):
         self.repo_path = repo_path
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
         self.new_commitmsg = ''
         self.new_filename = ''
 
@@ -1526,28 +1533,22 @@ class SetDiffText(Command):
         Command.__init__(self)
         self.undoable = True
         self.new_diff_text = text
+        self.new_diff_type = 'text'
 
 
 class ShowUntracked(Command):
     """Show an untracked file."""
 
-    def __init__(self, image_formats, filename):
+    def __init__(self, filename):
         Command.__init__(self)
-        self.image_formats = image_formats
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = self.get_diff(filename)
-
-    def get_diff(self, filename):
-        if self.image_formats.ok(filename):
-            result = ''
-        else:
-            result = self.read(filename)
-        return result
+        self.new_diff_text = self.read(filename)
+        self.new_diff_type = 'text'
 
     def read(self, filename):
         cfg = gitcfg.current()
-        size = cfg.get('cola.readsize', 1024 * 2)
+        size = cfg.get('cola.readsize', 2048)
         try:
             result = core.read(filename, size=size,
                                encoding=core.ENCODING, errors='ignore')
@@ -1855,6 +1856,7 @@ class UntrackedSummary(Command):
             for u in untracked:
                 io.write('/'+u+'\n')
         self.new_diff_text = io.getvalue()
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_untracked
 
 
