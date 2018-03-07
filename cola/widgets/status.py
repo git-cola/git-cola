@@ -699,6 +699,19 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _trash_untracked_files(self):
         cmds.do(cmds.MoveToTrash, self.untracked())
 
+    def selected_path(self):
+        path = None
+        s = self.single_selection()
+        if s.staged:
+            path = s.staged
+        elif s.modified:
+            path = s.modified
+        elif s.unmerged:
+            path = s.unmerged
+        elif s.untracked:
+            path = s.untracked
+        return path
+
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
         staged = None
@@ -839,7 +852,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         """Show the selected item."""
         # Sync the selection model
         selected = self.selection()
-        selection.selection_model().set_selection(selected)
+        selection_model = selection.selection_model()
+        selection_model.set_selection(selected)
         self.update_actions(selected=selected)
 
         selected_indexes = self.selected_indexes()
@@ -849,9 +863,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             else:
                 cmds.do(cmds.ResetMode)
             return
-        category, idx = selected_indexes[0]
+
         # A header item e.g. 'Staged', 'Modified', etc.
-        if category == self.idx_header:
+        category, idx = selected_indexes[0]
+        header = category == self.idx_header
+        if header:
             cls = {
                 self.idx_staged: cmds.DiffStagedSummary,
                 self.idx_modified: cmds.Diffstat,
@@ -860,23 +876,43 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 self.idx_untracked: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
             cmds.do(cls)
+            return
+
+        staged = category == self.idx_staged
+        modified = category == self.idx_modified
+        unmerged = category == self.idx_unmerged
+        untracked = category == self.idx_untracked
+
         # A staged file
-        elif category == self.idx_staged:
+        if staged:
             item = self.staged_items()[0]
-            cmds.do(cmds.DiffStaged, item.path, deleted=item.deleted)
-
         # A modified file
-        elif category == self.idx_modified:
+        elif modified:
             item = self.modified_items()[0]
-            cmds.do(cmds.Diff, item.path, deleted=item.deleted)
-
-        elif category == self.idx_unmerged:
+        elif unmerged:
             item = self.unmerged_items()[0]
-            cmds.do(cmds.Diff, item.path)
-
-        elif category == self.idx_untracked:
+        elif untracked:
             item = self.unstaged_items()[0]
-            cmds.do(cmds.ShowUntracked, self.image_formats, item.path)
+        else:
+            item = None  # this shouldn't happen
+        assert(item is not None)
+
+        path = item.path
+        deleted = item.deleted
+        image = self.image_formats.ok(path)
+
+        # Images are diffed differently
+        if image:
+            cmds.do(cmds.DiffImage, path, deleted,
+                    staged, modified, unmerged, untracked)
+        elif staged:
+            cmds.do(cmds.DiffStaged, path, deleted=deleted)
+        elif modified:
+            cmds.do(cmds.Diff, path, deleted=deleted)
+        elif unmerged:
+            cmds.do(cmds.Diff, path)
+        elif untracked:
+            cmds.do(cmds.ShowUntracked, path)
 
     def move_up(self):
         idx = self.selected_idx()
