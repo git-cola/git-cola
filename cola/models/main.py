@@ -33,6 +33,7 @@ class MainModel(Observable):
     message_diff_text_changed = 'diff_text_changed'
     message_diff_type_changed = 'diff_type_changed'
     message_filename_changed = 'filename_changed'
+    message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
     message_updated = 'updated'
@@ -81,6 +82,7 @@ class MainModel(Observable):
         self.project = ''
         self.remotes = []
         self.filter_paths = None
+        self.images = []
 
         self.commitmsg = ''  # current commit message
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
@@ -155,6 +157,11 @@ class MainModel(Observable):
         """Set the diff type to either text or image"""
         self.diff_type = diff_type
         self.notify_observers(self.message_diff_type_changed, diff_type)
+
+    def set_images(self, images):
+        """Update the images shown in the preview pane"""
+        self.images = images
+        self.notify_observers(self.message_images_changed, images)
 
     def set_directory(self, path):
         self.directory = path
