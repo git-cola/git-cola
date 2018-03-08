@@ -13,8 +13,6 @@ from ..models import selection
 from ..qtutils import add_action
 from ..qtutils import create_action_button
 from ..qtutils import create_menu
-from ..qtutils import make_format
-from ..qtutils import RGB
 from .. import actions
 from .. import cmds
 from .. import core
@@ -62,19 +60,20 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
         header = qtutils.rgb_hex(disabled)
 
-        self.color_text = RGB(cfg.color('text', '030303'))
-        self.color_add = RGB(cfg.color('add', 'd2ffe4'))
-        self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
-        self.color_header = RGB(cfg.color('header', header))
+        self.color_text = qtutils.RGB(cfg.color('text', '030303'))
+        self.color_add = qtutils.RGB(cfg.color('add', 'd2ffe4'))
+        self.color_remove = qtutils.RGB(cfg.color('remove', 'fee0e4'))
+        self.color_header = qtutils.RGB(cfg.color('header', header))
 
-        self.diff_header_fmt = make_format(fg=self.color_header)
-        self.bold_diff_header_fmt = make_format(fg=self.color_header, bold=True)
+        self.diff_header_fmt = qtutils.make_format(fg=self.color_header)
+        self.bold_diff_header_fmt = qtutils.make_format(
+            fg=self.color_header, bold=True)
 
-        self.diff_add_fmt = make_format(fg=self.color_text,
-                                        bg=self.color_add)
-        self.diff_remove_fmt = make_format(fg=self.color_text,
-                                           bg=self.color_remove)
-        self.bad_whitespace_fmt = make_format(bg=Qt.red)
+        self.diff_add_fmt = qtutils.make_format(
+            fg=self.color_text, bg=self.color_add)
+        self.diff_remove_fmt = qtutils.make_format(
+            fg=self.color_text, bg=self.color_remove)
+        self.bad_whitespace_fmt = qtutils.make_format(bg=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
 
     def set_enabled(self, enabled):
@@ -278,6 +277,7 @@ class DiffLineNumbers(TextDecorator):
         lines = self.lines
         num_lines = len(self.lines)
         painter.setPen(disabled)
+        text = ''
 
         while block.isValid():
             block_number = block.blockNumber()
@@ -324,7 +324,6 @@ class Viewer(QtWidgets.QWidget):
 
         self.text = DiffEditorWidget(titlebar, parent=self)
         self.image = imageview.ImageView(parent=self)
-        self.image_formats = qtutils.ImageFormats()
         self.model = model = main.model()
 
         stack = self.stack = QtWidgets.QStackedWidget(self)
