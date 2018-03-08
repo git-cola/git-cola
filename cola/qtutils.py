@@ -193,6 +193,13 @@ def label(text=None, align=None, fmt=None, selectable=True):
     return widget
 
 
+def combo(items, editable=False, parent=None):
+    """Create a readonly (by default) combobox from a list of items"""
+    combo = QtWidgets.QComboBox()
+    combo.setEditable(editable)
+    combo.addItems(items)
+    return combo
+
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""
     widget = QtWidgets.QTextBrowser()
