@@ -144,8 +144,7 @@ class MainView(standard.MainWindow):
         self.diffdock = create_dock(N_('Diff'), self,
             fn=lambda dock: diff.Viewer(dock))
         self.diffviewer = self.diffdock.widget()
-        self.difftext = self.diffviewer.text
-        self.diffeditor = self.difftext.editor
+        self.diffeditor = self.diffviewer.text
         titlebar = self.diffdock.titleBarWidget()
         titlebar.add_corner_widget(self.diffeditor.options)
 

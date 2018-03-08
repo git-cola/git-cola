@@ -319,7 +319,7 @@ class Viewer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Viewer, self).__init__(parent)
 
-        self.text = DiffEditorWidget(parent=self)
+        self.text = DiffEditor(self)
         self.image = imageview.ImageView(parent=self)
         self.model = model = main.model()
 
@@ -361,18 +361,6 @@ class Viewer(QtWidgets.QWidget):
             image = images[0][0]
             unlink = images[0][1]
         self.image.load(image)
-
-
-class DiffEditorWidget(QtWidgets.QWidget):
-
-    def __init__(self, parent=None):
-        QtWidgets.QWidget.__init__(self, parent)
-
-        self.editor = DiffEditor(self)
-        self.main_layout = qtutils.vbox(
-            defs.no_margin, defs.no_spacing, self.editor)
-        self.setLayout(self.main_layout)
-        self.setFocusProxy(self.editor)
 
 
 class Options(QtWidgets.QWidget):
