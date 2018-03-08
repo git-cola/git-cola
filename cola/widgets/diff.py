@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import os
 import re
 
 from qtpy import QtCore
@@ -320,7 +321,10 @@ class Viewer(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Viewer, self).__init__(parent)
 
-        self.text = DiffEditor(self)
+        self.images = []
+        self.pixmaps = []
+        self.options = options = Options(self)
+        self.text = DiffEditor(options, self)
         self.image = imageview.ImageView(parent=self)
         self.model = model = main.model()
 
@@ -342,10 +346,14 @@ class Viewer(QtWidgets.QWidget):
         model.add_observer(diff_type_msg, self.type_changed.emit)
         self.type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
 
+        # Observe the image mode combo box
+        options.mode.currentIndexChanged.connect(lambda idx: self.render())
+
         self.setFocusProxy(self.text)
 
     def set_diff_type(self, diff_type):
         """Manage the image and text diff views when selection changes"""
+        self.options.set_diff_type(diff_type)
         if diff_type == 'image':
             self.stack.setCurrentWidget(self.image)
             self.setFocusProxy(self.image)
@@ -353,45 +361,95 @@ class Viewer(QtWidgets.QWidget):
             self.stack.setCurrentWidget(self.text)
             self.setFocusProxy(self.text)
 
-    def reset_images(self, images):
-        self.image.load(None)
-        # unlink_images(images)
+    def reset(self):
+        self.image.pixmap = QtGui.QPixmap()
+        self.cleanup()
+
+    def cleanup(self):
+        for (image, unlink) in self.images:
+            if unlink and core.exists(image):
+                os.unlink(image)
+        self.images = []
 
     def set_images(self, images):
-        image = None
-        unlink = False
+        self.images = images
+        self.pixmaps = []
         if not images:
-            self.reset_images(images)
-            return
+            self.reset()
+            return False
 
         # In order to comp, we first have to load all the images
         all_pixmaps = [QtGui.QPixmap(image[0]) for image in images]
         pixmaps = [pixmap for pixmap in all_pixmaps if not pixmap.isNull()]
         if not pixmaps:
-            self.reset_images(images)
+            self.reset()
             return False
 
-        # Side-by-side lineup comp ~ get the max height
-        sizes = [pixmap.size() for pixmap in pixmaps]
-        lineup_height = max([pixmap.height() for pixmap in pixmaps])
-        lineup_width = sum([pixmap.width() for pixmap in pixmaps])
+        self.pixmaps = pixmaps
+        self.render()
+        self.cleanup()
+        return True
 
-        lineup_size = QtCore.QSize(lineup_width, lineup_height)
-        lineup = QtGui.QImage(
-            lineup_size, QtGui.QImage.Format_ARGB32_Premultiplied)
+    def render(self):
+        if self.pixmaps:
+            if self.options.mode.currentIndex() == self.options.SIDE_BY_SIDE:
+                image = self.render_lineup()
+            elif self.options.mode.currentIndex() == self.options.PIXEL_DIFF:
+                image = self.render_pixel_diff()
+            else:
+                raise ValueError('Unhandled image diff mode')
+        else:
+            image = QtGui.QPixmap()
+        self.image.pixmap = image
+
+    def render_lineup(self):
+        # Side-by-side lineup comp
+        pixmaps = self.pixmaps
+        width = sum([pixmap.width() for pixmap in pixmaps])
+        height = max([pixmap.height() for pixmap in pixmaps])
+        image = create_image(width, height)
 
         # Paint each pixmap
-        painter = QtGui.QPainter(lineup)
-        painter.fillRect(lineup.rect(), Qt.transparent)
+        painter = create_painter(image)
         x = 0
         for pixmap in pixmaps:
             painter.drawPixmap(x, 0, pixmap)
             x += pixmap.width()
-
         painter.end()
 
-        # TODO unlink
-        self.image.pixmap = lineup
+        return image
+
+    def render_pixel_diff(self):
+        # Get the max size to use as the render canvas
+        pixmaps = self.pixmaps
+        if len(pixmaps) == 1:
+            return pixmaps[0]
+
+        width = max([pixmap.width() for pixmap in pixmaps])
+        height = max([pixmap.height() for pixmap in pixmaps])
+        image = create_image(width, height)
+
+        painter = create_painter(image)
+        for pixmap in (pixmaps[0], pixmaps[-1]):
+            x = (width - pixmap.width()) // 2
+            y = (height - pixmap.height()) // 2
+            painter.drawPixmap(x, y, pixmap)
+            painter.setCompositionMode(
+                QtGui.QPainter.CompositionMode_Difference)
+        painter.end()
+
+        return image
+
+
+def create_image(width, height):
+    size = QtCore.QSize(width, height)
+    return QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
+
+
+def create_painter(image):
+    painter = QtGui.QPainter(image)
+    painter.fillRect(image.rect(), Qt.transparent)
+    return painter
 
 
 class Options(QtWidgets.QWidget):
@@ -400,6 +458,10 @@ class Options(QtWidgets.QWidget):
     Actions are registered on the parent widget.
 
     """
+
+    # mode combobox indexes
+    SIDE_BY_SIDE = 0
+    PIXEL_DIFF = 1
 
     def __init__(self, parent):
         super(Options, self).__init__(parent)
@@ -419,12 +481,17 @@ class Options(QtWidgets.QWidget):
         self.show_line_numbers = self.add_option(
             N_('Show line numbers'))
 
-        self.button = button = qtutils.create_action_button(
+        self.options = options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure())
-        qtutils.hide_button_menu_indicator(button)
+        qtutils.hide_button_menu_indicator(options)
 
-        self.menu = menu = qtutils.create_menu(N_('Diff Options'), button)
-        button.setMenu(menu)
+        self.mode = mode = qtutils.combo([
+            N_('Side by side'),
+            N_('Pixel diff'),
+        ])
+
+        self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
+        options.setMenu(menu)
 
         menu.addAction(self.ignore_space_at_eol)
         menu.addAction(self.ignore_space_change)
@@ -432,8 +499,14 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.show_line_numbers)
         menu.addAction(self.function_context)
 
-        layout = qtutils.hbox(defs.no_margin, defs.no_spacing, button)
+        layout = qtutils.hbox(defs.no_margin, defs.no_spacing, mode, options)
         self.setLayout(layout)
+
+    def set_diff_type(self, diff_type):
+        is_text = diff_type == 'text'
+        is_image = diff_type == 'image'
+        self.options.setVisible(is_text)
+        self.mode.setVisible(is_image)
 
     def add_option(self, title):
         action = qtutils.add_action(self, title, self.update_options)
@@ -461,12 +534,12 @@ class DiffEditor(DiffTextEdit):
     updated = Signal()
     diff_text_changed = Signal(object)
 
-    def __init__(self, parent):
+    def __init__(self, options, parent):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
 
         # "Diff Options" tool menu
-        self.options = Options(self)
+        self.options = options
         self.action_apply_selection = qtutils.add_action(
             self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF)
 
