@@ -114,11 +114,9 @@ class Archive(Dialog):
 
         self.browse = qtutils.create_toolbutton(icon=icons.file_zip())
 
-        self.format_strings = (
-                git.archive('--list')[STDOUT].rstrip().splitlines())
-        self.format_combo = QtWidgets.QComboBox()
-        self.format_combo.setEditable(False)
-        self.format_combo.addItems(self.format_strings)
+        stdout = git.archive('--list')[STDOUT]
+        self.format_strings = stdout.rstrip().splitlines()
+        self.format_combo = qtutils.combo(self.format_strings)
 
         self.close_button = qtutils.close_button()
         self.save_button = qtutils.create_button(text=N_('Save'),

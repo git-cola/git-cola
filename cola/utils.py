@@ -207,9 +207,9 @@ else:
         return [core.decode(arg) for arg in _shell_split(s)]
 
 
-def tmp_filename(label):
+def tmp_filename(label, suffix=''):
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
-    fd = tempfile.NamedTemporaryFile(prefix=label+'-')
+    fd = tempfile.NamedTemporaryFile(prefix=label+'-', suffix=suffix)
     fd.close()
     return fd.name
 

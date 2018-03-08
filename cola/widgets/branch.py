@@ -46,7 +46,7 @@ class AsyncGitActionTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QWidget):
-    def __init__(self, titlebar, parent):
+    def __init__(self, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the branches filter')
@@ -68,8 +68,6 @@ class BranchesWidget(QtWidgets.QWidget):
         self.toggle_action = qtutils.add_action(self, tooltip,
                                                 self.toggle_filter,
                                                 hotkeys.FILTER)
-
-        titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
 
     def toggle_filter(self):

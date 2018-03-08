@@ -1,6 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
+import os
 import re
 
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -10,11 +12,6 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..models import selection
-from ..qtutils import add_action
-from ..qtutils import create_action_button
-from ..qtutils import create_menu
-from ..qtutils import make_format
-from ..qtutils import RGB
 from .. import actions
 from .. import cmds
 from .. import core
@@ -28,6 +25,7 @@ from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
 from . import defs
+from . import imageview
 
 
 COMMITS_SELECTED = 'COMMITS_SELECTED'
@@ -61,19 +59,20 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
         header = qtutils.rgb_hex(disabled)
 
-        self.color_text = RGB(cfg.color('text', '030303'))
-        self.color_add = RGB(cfg.color('add', 'd2ffe4'))
-        self.color_remove = RGB(cfg.color('remove', 'fee0e4'))
-        self.color_header = RGB(cfg.color('header', header))
+        self.color_text = qtutils.RGB(cfg.color('text', '030303'))
+        self.color_add = qtutils.RGB(cfg.color('add', 'd2ffe4'))
+        self.color_remove = qtutils.RGB(cfg.color('remove', 'fee0e4'))
+        self.color_header = qtutils.RGB(cfg.color('header', header))
 
-        self.diff_header_fmt = make_format(fg=self.color_header)
-        self.bold_diff_header_fmt = make_format(fg=self.color_header, bold=True)
+        self.diff_header_fmt = qtutils.make_format(fg=self.color_header)
+        self.bold_diff_header_fmt = qtutils.make_format(
+            fg=self.color_header, bold=True)
 
-        self.diff_add_fmt = make_format(fg=self.color_text,
-                                        bg=self.color_add)
-        self.diff_remove_fmt = make_format(fg=self.color_text,
-                                           bg=self.color_remove)
-        self.bad_whitespace_fmt = make_format(bg=Qt.red)
+        self.diff_add_fmt = qtutils.make_format(
+            fg=self.color_text, bg=self.color_add)
+        self.diff_remove_fmt = qtutils.make_format(
+            fg=self.color_text, bg=self.color_remove)
+        self.bad_whitespace_fmt = qtutils.make_format(bg=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
 
     def set_enabled(self, enabled):
@@ -277,6 +276,7 @@ class DiffLineNumbers(TextDecorator):
         lines = self.lines
         num_lines = len(self.lines)
         painter.setPen(disabled)
+        text = ''
 
         while block.isValid():
             block_number = block.blockNumber()
@@ -312,16 +312,217 @@ class DiffLineNumbers(TextDecorator):
             block = block.next()  # pylint: disable=next-method-called
 
 
-class DiffEditorWidget(QtWidgets.QWidget):
+class Viewer(QtWidgets.QWidget):
+    """Text and image diff viewers"""
+
+    images_changed = Signal(object)
+    type_changed = Signal(object)
 
     def __init__(self, parent=None):
-        QtWidgets.QWidget.__init__(self, parent)
+        super(Viewer, self).__init__(parent)
 
-        self.editor = DiffEditor(self, parent.titleBarWidget())
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.editor)
+        self.images = []
+        self.pixmaps = []
+        self.options = options = Options(self)
+        self.text = DiffEditor(options, self)
+        self.image = imageview.ImageView(parent=self)
+        self.image.setFocusPolicy(Qt.NoFocus)
+        self.model = model = main.model()
+
+        stack = self.stack = QtWidgets.QStackedWidget(self)
+        stack.addWidget(self.text)
+        stack.addWidget(self.image)
+
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.no_spacing, self.stack)
         self.setLayout(self.main_layout)
-        self.setFocusProxy(self.editor)
+
+        # Observe images
+        images_msg = model.message_images_changed
+        model.add_observer(images_msg, self.images_changed.emit)
+        self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
+
+        # Observe the diff type
+        diff_type_msg = model.message_diff_type_changed
+        model.add_observer(diff_type_msg, self.type_changed.emit)
+        self.type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
+
+        # Observe the image mode combo box
+        options.mode.currentIndexChanged.connect(lambda idx: self.render())
+
+        self.setFocusProxy(self.text)
+
+    def set_diff_type(self, diff_type):
+        """Manage the image and text diff views when selection changes"""
+        self.options.set_diff_type(diff_type)
+        if diff_type == 'image':
+            self.stack.setCurrentWidget(self.image)
+        else:
+            self.stack.setCurrentWidget(self.text)
+
+    def reset(self):
+        self.image.pixmap = QtGui.QPixmap()
+        self.cleanup()
+
+    def cleanup(self):
+        for (image, unlink) in self.images:
+            if unlink and core.exists(image):
+                os.unlink(image)
+        self.images = []
+
+    def set_images(self, images):
+        self.images = images
+        self.pixmaps = []
+        if not images:
+            self.reset()
+            return False
+
+        # In order to comp, we first have to load all the images
+        all_pixmaps = [QtGui.QPixmap(image[0]) for image in images]
+        pixmaps = [pixmap for pixmap in all_pixmaps if not pixmap.isNull()]
+        if not pixmaps:
+            self.reset()
+            return False
+
+        self.pixmaps = pixmaps
+        self.render()
+        self.cleanup()
+        return True
+
+    def render(self):
+        if self.pixmaps:
+            if self.options.mode.currentIndex() == self.options.SIDE_BY_SIDE:
+                image = self.render_lineup()
+            elif self.options.mode.currentIndex() == self.options.PIXEL_DIFF:
+                image = self.render_pixel_diff()
+            else:
+                raise ValueError('Unhandled image diff mode')
+        else:
+            image = QtGui.QPixmap()
+        self.image.pixmap = image
+
+    def render_lineup(self):
+        # Side-by-side lineup comp
+        pixmaps = self.pixmaps
+        width = sum([pixmap.width() for pixmap in pixmaps])
+        height = max([pixmap.height() for pixmap in pixmaps])
+        image = create_image(width, height)
+
+        # Paint each pixmap
+        painter = create_painter(image)
+        x = 0
+        for pixmap in pixmaps:
+            painter.drawPixmap(x, 0, pixmap)
+            x += pixmap.width()
+        painter.end()
+
+        return image
+
+    def render_pixel_diff(self):
+        # Get the max size to use as the render canvas
+        pixmaps = self.pixmaps
+        if len(pixmaps) == 1:
+            return pixmaps[0]
+
+        width = max([pixmap.width() for pixmap in pixmaps])
+        height = max([pixmap.height() for pixmap in pixmaps])
+        image = create_image(width, height)
+
+        painter = create_painter(image)
+        for pixmap in (pixmaps[0], pixmaps[-1]):
+            x = (width - pixmap.width()) // 2
+            y = (height - pixmap.height()) // 2
+            painter.drawPixmap(x, y, pixmap)
+            painter.setCompositionMode(
+                QtGui.QPainter.CompositionMode_Difference)
+        painter.end()
+
+        return image
+
+
+def create_image(width, height):
+    size = QtCore.QSize(width, height)
+    return QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
+
+
+def create_painter(image):
+    painter = QtGui.QPainter(image)
+    painter.fillRect(image.rect(), Qt.transparent)
+    return painter
+
+
+class Options(QtWidgets.QWidget):
+    """Provide the options widget used by the editor
+
+    Actions are registered on the parent widget.
+
+    """
+
+    # mode combobox indexes
+    SIDE_BY_SIDE = 0
+    PIXEL_DIFF = 1
+
+    def __init__(self, parent):
+        super(Options, self).__init__(parent)
+        self.widget = parent
+        self.ignore_space_at_eol = self.add_option(
+            N_('Ignore changes in whitespace at EOL'))
+
+        self.ignore_space_change = self.add_option(
+            N_('Ignore changes in amount of whitespace'))
+
+        self.ignore_all_space = self.add_option(
+            N_('Ignore all whitespace'))
+
+        self.function_context = self.add_option(
+            N_('Show whole surrounding functions of changes'))
+
+        self.show_line_numbers = self.add_option(
+            N_('Show line numbers'))
+
+        self.options = options = qtutils.create_action_button(
+            tooltip=N_('Diff Options'), icon=icons.configure())
+        qtutils.hide_button_menu_indicator(options)
+
+        self.mode = mode = qtutils.combo([
+            N_('Side by side'),
+            N_('Pixel diff'),
+        ])
+
+        self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
+        options.setMenu(menu)
+
+        menu.addAction(self.ignore_space_at_eol)
+        menu.addAction(self.ignore_space_change)
+        menu.addAction(self.ignore_all_space)
+        menu.addAction(self.show_line_numbers)
+        menu.addAction(self.function_context)
+
+        layout = qtutils.hbox(defs.no_margin, defs.no_spacing, mode, options)
+        self.setLayout(layout)
+
+    def set_diff_type(self, diff_type):
+        is_text = diff_type == 'text'
+        is_image = diff_type == 'image'
+        self.options.setVisible(is_text)
+        self.mode.setVisible(is_image)
+
+    def add_option(self, title):
+        action = qtutils.add_action(self, title, self.update_options)
+        action.setCheckable(True)
+        return action
+
+    def update_options(self):
+        space_at_eol = self.ignore_space_at_eol.isChecked()
+        space_change = self.ignore_space_change.isChecked()
+        all_space = self.ignore_all_space.isChecked()
+        function_context = self.function_context.isChecked()
+        gitcmds.update_diff_overrides(space_at_eol,
+                                      space_change,
+                                      all_space,
+                                      function_context)
+        self.widget.update_options()
+
 
 
 class DiffEditor(DiffTextEdit):
@@ -332,50 +533,12 @@ class DiffEditor(DiffTextEdit):
     updated = Signal()
     diff_text_changed = Signal(object)
 
-    def __init__(self, parent, titlebar):
+    def __init__(self, options, parent):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
 
         # "Diff Options" tool menu
-        self.diff_ignore_space_at_eol_action = add_action(
-            self, N_('Ignore changes in whitespace at EOL'),
-            self._update_diff_opts)
-        self.diff_ignore_space_at_eol_action.setCheckable(True)
-
-        self.diff_ignore_space_change_action = add_action(
-            self, N_('Ignore changes in amount of whitespace'),
-            self._update_diff_opts)
-        self.diff_ignore_space_change_action.setCheckable(True)
-
-        self.diff_ignore_all_space_action = add_action(
-            self, N_('Ignore all whitespace'), self._update_diff_opts)
-        self.diff_ignore_all_space_action.setCheckable(True)
-
-        self.diff_function_context_action = add_action(
-            self, N_('Show whole surrounding functions of changes'),
-            self._update_diff_opts)
-        self.diff_function_context_action.setCheckable(True)
-
-        self.diff_show_line_numbers = add_action(
-            self, N_('Show line numbers'),
-            self._update_diff_opts)
-        self.diff_show_line_numbers.setCheckable(True)
-
-        self.diffopts_button = create_action_button(
-            tooltip=N_('Diff Options'), icon=icons.configure())
-        self.diffopts_menu = create_menu(N_('Diff Options'),
-                                         self.diffopts_button)
-
-        self.diffopts_menu.addAction(self.diff_ignore_space_at_eol_action)
-        self.diffopts_menu.addAction(self.diff_ignore_space_change_action)
-        self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
-        self.diffopts_menu.addAction(self.diff_show_line_numbers)
-        self.diffopts_menu.addAction(self.diff_function_context_action)
-        self.diffopts_button.setMenu(self.diffopts_menu)
-        qtutils.hide_button_menu_indicator(self.diffopts_button)
-
-        titlebar.add_corner_widget(self.diffopts_button)
-
+        self.options = options
         self.action_apply_selection = qtutils.add_action(
             self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF)
 
@@ -393,13 +556,12 @@ class DiffEditor(DiffTextEdit):
 
         diff_text_changed = model.message_diff_text_changed
         model.add_observer(diff_text_changed, self.diff_text_changed.emit)
+        self.diff_text_changed.connect(self.set_diff, type=Qt.QueuedConnection)
 
         self.selection_model = selection_model = selection.selection_model()
         selection_model.add_observer(selection_model.message_selection_changed,
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-
-        self.diff_text_changed.connect(self.set_diff)
 
     def refresh(self):
         enabled = False
@@ -414,23 +576,14 @@ class DiffEditor(DiffTextEdit):
     def enable_line_numbers(self, enabled):
         """Enable/disable the diff line number display"""
         self.numbers.setVisible(enabled)
-        self.diff_show_line_numbers.setChecked(enabled)
+        self.options.show_line_numbers.setChecked(enabled)
 
     def show_line_numbers(self):
         """Return True if we should show line numbers"""
-        return self.diff_show_line_numbers.isChecked()
+        return self.options.show_line_numbers.isChecked()
 
-    def _update_diff_opts(self):
-        space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
-        space_change = self.diff_ignore_space_change_action.isChecked()
-        all_space = self.diff_ignore_all_space_action.isChecked()
-        function_context = self.diff_function_context_action.isChecked()
+    def update_options(self):
         self.numbers.setVisible(self.show_line_numbers())
-
-        gitcmds.update_diff_overrides(space_at_eol,
-                                      space_change,
-                                      all_space,
-                                      function_context)
         self.options_changed.emit()
 
     # Qt overrides

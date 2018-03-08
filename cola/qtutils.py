@@ -1,6 +1,7 @@
 # Copyright (C) 2007-2018 David Aguilar and contributors
 """Miscellaneous Qt utility functions."""
 from __future__ import division, absolute_import, unicode_literals
+import os
 
 from qtpy import compat
 from qtpy import QtGui
@@ -191,6 +192,13 @@ def label(text=None, align=None, fmt=None, selectable=True):
         widget.setText(text)
     return widget
 
+
+def combo(items, editable=False, parent=None):
+    """Create a readonly (by default) combobox from a list of items"""
+    combo = QtWidgets.QComboBox()
+    combo.setEditable(editable)
+    combo.addItems(items)
+    return combo
 
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""
@@ -941,3 +949,18 @@ def make_format(fg=None, bg=None, bold=False):
     if bold:
         fmt.setFontWeight(QtGui.QFont.Bold)
     return fmt
+
+
+class ImageFormats(object):
+
+    def __init__(self):
+        # returns a list of QByteArray objects
+        formats_qba = QtGui.QImageReader.supportedImageFormats()
+        # portability: python3 data() returns bytes, python2 returns str
+        decode = core.decode
+        formats = [decode(x.data()) for x in formats_qba]
+        self.extensions = set(['.' + fmt for fmt in formats])
+
+    def ok(self, filename):
+        _, ext = os.path.splitext(filename)
+        return ext in self.extensions

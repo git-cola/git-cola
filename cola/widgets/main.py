@@ -112,7 +112,10 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdock = create_dock(N_('Branches'), self,
-            fn=lambda dock: branch.BranchesWidget(dock.titleBarWidget(), dock))
+            fn=lambda dock: branch.BranchesWidget(dock))
+        self.branchwidget = self.branchdock.widget()
+        titlebar = self.branchdock.titleBarWidget()
+        titlebar.add_corner_widget(self.branchwidget.filter_button)
 
         # "Commit Message Editor" widget
         self.position_label = QtWidgets.QLabel()
@@ -139,8 +142,13 @@ class MainView(standard.MainWindow):
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(N_('Diff'), self,
-            fn=lambda dock: diff.DiffEditorWidget(dock))
-        self.diffeditor = self.diffdock.widget().editor
+            fn=lambda dock: diff.Viewer(dock))
+        self.diffviewer = self.diffdock.widget()
+        self.diffviewer.set_diff_type(self.model.diff_type)
+
+        self.diffeditor = self.diffviewer.text
+        titlebar = self.diffdock.titleBarWidget()
+        titlebar.add_corner_widget(self.diffviewer.options)
 
         # All Actions
         add_action = qtutils.add_action
@@ -741,6 +749,7 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
+        state['image_diff_mode'] = self.diffviewer.options.mode.currentIndex()
         state['toolbars'] = ColaToolBar.save_state(self)
 
         return state
@@ -756,6 +765,9 @@ class MainView(standard.MainWindow):
 
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
+
+        imagediff_mode = state.get('image_diff_mode', 0)
+        self.diffviewer.options.mode.setCurrentIndex(imagediff_mode)
 
         toolbars = state.get('toolbars', [])
         ColaToolBar.apply_state(self, toolbars)

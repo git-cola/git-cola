@@ -120,16 +120,19 @@ class Command(ModelCommand):
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
         self.old_mode = self.model.mode
+        self.old_diff_type = self.model.diff_type
 
         self.new_diff_text = self.old_diff_text
         self.new_filename = self.old_filename
         self.new_mode = self.old_mode
+        self.new_diff_type = self.old_diff_type
 
     def do(self):
         """Perform the operation."""
+        self.model.set_diff_text(self.new_diff_text)
         self.model.set_filename(self.new_filename)
         self.model.set_mode(self.new_mode)
-        self.model.set_diff_text(self.new_diff_text)
+        self.model.set_diff_type(self.new_diff_type)
 
     def undo(self):
         """Undo the operation."""
@@ -346,6 +349,7 @@ class Checkout(Command):
         self.argv = argv
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
 
     def do(self):
         status, out, err = self.model.git.checkout(*self.argv)
@@ -402,10 +406,12 @@ class ResetMode(Command):
         Command.__init__(self)
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
+        self.new_filename = ''
 
     def do(self):
-        Command.do(self)
         self.model.update_file_status()
+        Command.do(self)
 
 
 class ResetCommand(ConfirmAction):
@@ -757,6 +763,127 @@ class DeleteRemoteBranch(Command):
                 % dict(branch=self.branch, remote=self.remote))
 
 
+class DiffImage(Command):
+
+    def __init__(self,
+            filename, deleted, staged, modified, unmerged, untracked):
+        super(DiffImage, self).__init__()
+
+        self.new_filename = filename
+        self.new_diff_text = ''
+        self.new_diff_type = 'image'
+
+        self.staged = staged
+        self.modified = modified
+        self.unmerged = unmerged
+        self.untracked = untracked
+        self.deleted = deleted
+
+    def write_blob(self, oid, filename):
+        """Write a blob to disk"""
+        result = None
+        basename = os.path.basename(filename)
+        suffix = '-' + basename  # ensures the correct filename extension
+        blob = utils.tmp_filename('image', suffix=suffix)
+        git = self.model.git
+        with open(blob, 'wb') as fp:
+            status, out, err = git.cat_file('blob', oid, _stdout=fp)
+            Interaction.command(
+                N_('Error'), 'git cat-file', status, out, err)
+            if status == 0:
+                result = blob
+            else:
+                result = None
+        if not result:
+            core.unlink(blob)
+        return result
+
+    def do(self):
+        images = []
+        git = self.model.git
+        head = self.model.head
+        filename = self.new_filename
+
+        if self.staged:
+            index = git.diff_index(head, '--', filename, cached=True)[STDOUT]
+            if not index:
+                return
+            # Example:
+            #  :100644 100644 fabadb8... 4866510... M      describe.c
+            parts = index.split(' ')
+            if len(parts) > 3:
+                old_oid = parts[2]
+                new_oid = parts[3]
+
+            if old_oid == gitcmds.MISSING_BLOB_OID:
+                # TODO allow None to masquerade as an empty image?
+                images.append((filename, False))
+            else:
+                image = self.write_blob(old_oid, filename)
+                if image:
+                    images.append((image, True))
+
+            if new_oid != gitcmds.MISSING_BLOB_OID:
+                image = self.write_blob(new_oid, filename)
+                if image:
+                    images.append((image, True))
+
+        elif self.modified:
+            worktree = git.diff_files('--', filename)[STDOUT]
+            parts = worktree.split(' ')
+            if len(parts) < 4:
+                return
+
+            oid = parts[2]
+            if oid != gitcmds.MISSING_BLOB_OID:
+                image = self.write_blob(oid, filename)
+                if image:
+                    images.append((image, True))  # HEAD
+            images.append((filename, False))  # worktree
+
+        elif self.unmerged:
+            # DIFF FORMAT FOR MERGES
+            # "git-diff-tree", "git-diff-files" and "git-diff --raw"
+            # can take -c or --cc option to generate diff output also
+            # for merge commits. The output differs from the format
+            # described above in the following way:
+            #
+            #  1. there is a colon for each parent
+            #  2. there are more "src" modes and "src" sha1
+            #  3. status is concatenated status characters for each parent
+            #  4. no optional "score" number
+            #  5. single path, only for "dst"
+            # Example:
+            #  ::100644 100644 100644 fabadb8... cc95eb0... 4866510... \
+            #  MM      describe.c
+            index = git.diff_index(
+                head, '--', filename, cached=True, cc=True)[STDOUT]
+            if not index:
+                return
+            parts = index.split(' ')
+            if len(parts) < 4:
+                return
+            first_mode = parts[0]
+            num_parents = first_mode.count(':')  # colon for each parent
+
+            # remote, base, head
+            for i in range(parents):
+                offset = num_parents + i + 1
+                oid = parts[offset]
+                if oid != gitcmds.MISSING_BLOB_OID:
+                    image = self.write_blob(oid, filename)
+                    if image:
+                        images.append((image, True))
+
+            images.append((filename, False))
+
+        elif self.untracked:
+            images.append((filename, False))
+
+        self.model.set_images(images)
+        super(DiffImage, self).do()
+
+
 class Diff(Command):
     """Perform a diff and set the model's current text."""
 
@@ -767,10 +894,9 @@ class Diff(Command):
             opts['ref'] = self.model.head
         self.new_filename = filename
         self.new_mode = self.model.mode_worktree
-        self.new_diff_text = gitcmds.diff_helper(filename=filename,
-                                                 cached=cached,
-                                                 deleted=deleted,
-                                                 **opts)
+        self.new_diff_text = gitcmds.diff_helper(
+            filename=filename, cached=cached, deleted=deleted, **opts)
+        self.new_diff_type = 'text'
 
 
 class Diffstat(Command):
@@ -787,6 +913,7 @@ class Diffstat(Command):
                                    M=True,
                                    stat=True)[STDOUT]
         self.new_diff_text = diff
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_diffstat
 
 
@@ -809,6 +936,7 @@ class DiffStagedSummary(Command):
                                    patch_with_stat=True,
                                    M=True)[STDOUT]
         self.new_diff_text = diff
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_index
 
 
@@ -1141,7 +1269,9 @@ class OpenRepo(Command):
         self.repo_path = repo_path
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
+        self.new_diff_type = 'text'
         self.new_commitmsg = ''
+        self.new_filename = ''
 
     def do(self):
         git = self.model.git
@@ -1524,6 +1654,7 @@ class SetDiffText(Command):
         Command.__init__(self)
         self.undoable = True
         self.new_diff_text = text
+        self.new_diff_type = 'text'
 
 
 class ShowUntracked(Command):
@@ -1533,11 +1664,12 @@ class ShowUntracked(Command):
         Command.__init__(self)
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = self.diff_text_for(filename)
+        self.new_diff_text = self.read(filename)
+        self.new_diff_type = 'text'
 
-    def diff_text_for(self, filename):
+    def read(self, filename):
         cfg = gitcfg.current()
-        size = cfg.get('cola.readsize', 1024 * 2)
+        size = cfg.get('cola.readsize', 2048)
         try:
             result = core.read(filename, size=size,
                                encoding=core.ENCODING, errors='ignore')
@@ -1845,6 +1977,7 @@ class UntrackedSummary(Command):
             for u in untracked:
                 io.write('/'+u+'\n')
         self.new_diff_text = io.getvalue()
+        self.new_diff_type = 'text'
         self.new_mode = self.model.mode_untracked
 
 

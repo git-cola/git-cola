@@ -22,6 +22,11 @@ git-cola v3.1 (beta)
 Usability, bells and whistles
 -----------------------------
 
+* The "Diff" widget learned to diff images.  Side-by-side and pixel diff
+  modes allow you to inspect changes to common images formats.
+
+  https://github.com/git-cola/git-cola/issues/444
+
 * The "Stash" tool learned to stash staged changes only.  Select the
   "Stage Index" option and only staged changes will be stashed away.
 

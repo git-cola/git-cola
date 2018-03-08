@@ -105,6 +105,7 @@ Thanks
 * Marcin Mielniczuk
 * Marco Costalba
 * Markus Heidelberg
+* Martin Konecny
 * Matěj Šmíd
 * Matthew Levine
 * Matthias Mailänder
