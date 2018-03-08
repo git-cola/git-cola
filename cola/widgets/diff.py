@@ -326,6 +326,7 @@ class Viewer(QtWidgets.QWidget):
         self.options = options = Options(self)
         self.text = DiffEditor(options, self)
         self.image = imageview.ImageView(parent=self)
+        self.image.setFocusPolicy(Qt.NoFocus)
         self.model = model = main.model()
 
         stack = self.stack = QtWidgets.QStackedWidget(self)
@@ -356,10 +357,8 @@ class Viewer(QtWidgets.QWidget):
         self.options.set_diff_type(diff_type)
         if diff_type == 'image':
             self.stack.setCurrentWidget(self.image)
-            self.setFocusProxy(self.image)
         else:
             self.stack.setCurrentWidget(self.text)
-            self.setFocusProxy(self.text)
 
     def reset(self):
         self.image.pixmap = QtGui.QPixmap()

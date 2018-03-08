@@ -303,9 +303,6 @@ class ImageView(QtWidgets.QGraphicsView):
                 sign = -1
             self.zoomROITo(scene_pos, sign)
 
-    def keyPressEvent(self, event):
-        pass
-
     def showEvent(self, event):
         super(ImageView, self).showEvent(event)
         if event.spontaneous():
