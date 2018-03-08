@@ -700,17 +700,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         cmds.do(cmds.MoveToTrash, self.untracked())
 
     def selected_path(self):
-        path = None
         s = self.single_selection()
-        if s.staged:
-            path = s.staged
-        elif s.modified:
-            path = s.modified
-        elif s.unmerged:
-            path = s.unmerged
-        elif s.untracked:
-            path = s.untracked
-        return path
+        return s.staged or s.unmerged or s.modified or s.untracked or None
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
@@ -722,10 +713,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         s = self.selection()
         if s.staged:
             staged = s.staged[0]
-        elif s.modified:
-            modified = s.modified[0]
         elif s.unmerged:
             unmerged = s.unmerged[0]
+        elif s.modified:
+            modified = s.modified[0]
         elif s.untracked:
             untracked = s.untracked[0]
 
@@ -883,14 +874,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         unmerged = category == self.idx_unmerged
         untracked = category == self.idx_untracked
 
-        # A staged file
         if staged:
             item = self.staged_items()[0]
-        # A modified file
-        elif modified:
-            item = self.modified_items()[0]
         elif unmerged:
             item = self.unmerged_items()[0]
+        elif modified:
+            item = self.modified_items()[0]
         elif untracked:
             item = self.unstaged_items()[0]
         else:
