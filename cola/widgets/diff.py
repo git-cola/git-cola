@@ -10,9 +10,6 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..models import selection
-from ..qtutils import add_action
-from ..qtutils import create_action_button
-from ..qtutils import create_menu
 from .. import actions
 from .. import cmds
 from .. import core
@@ -319,10 +316,10 @@ class Viewer(QtWidgets.QWidget):
     images_changed = Signal(object)
     type_changed = Signal(object)
 
-    def __init__(self, titlebar, parent=None):
+    def __init__(self, parent=None):
         super(Viewer, self).__init__(parent)
 
-        self.text = DiffEditorWidget(titlebar, parent=self)
+        self.text = DiffEditorWidget(parent=self)
         self.image = imageview.ImageView(parent=self)
         self.model = model = main.model()
 
@@ -368,14 +365,73 @@ class Viewer(QtWidgets.QWidget):
 
 class DiffEditorWidget(QtWidgets.QWidget):
 
-    def __init__(self, titlebar, parent=None):
+    def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.editor = DiffEditor(self, titlebar)
+        self.editor = DiffEditor(self)
         self.main_layout = qtutils.vbox(
             defs.no_margin, defs.no_spacing, self.editor)
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.editor)
+
+
+class Options(QtWidgets.QWidget):
+    """Provide the options widget used by the editor
+
+    Actions are registered on the parent widget.
+
+    """
+
+    def __init__(self, parent):
+        super(Options, self).__init__(parent)
+        self.widget = parent
+        self.ignore_space_at_eol = self.add_option(
+            N_('Ignore changes in whitespace at EOL'))
+
+        self.ignore_space_change = self.add_option(
+            N_('Ignore changes in amount of whitespace'))
+
+        self.ignore_all_space = self.add_option(
+            N_('Ignore all whitespace'))
+
+        self.function_context = self.add_option(
+            N_('Show whole surrounding functions of changes'))
+
+        self.show_line_numbers = self.add_option(
+            N_('Show line numbers'))
+
+        self.button = button = qtutils.create_action_button(
+            tooltip=N_('Diff Options'), icon=icons.configure())
+        qtutils.hide_button_menu_indicator(button)
+
+        self.menu = menu = qtutils.create_menu(N_('Diff Options'), button)
+        button.setMenu(menu)
+
+        menu.addAction(self.ignore_space_at_eol)
+        menu.addAction(self.ignore_space_change)
+        menu.addAction(self.ignore_all_space)
+        menu.addAction(self.show_line_numbers)
+        menu.addAction(self.function_context)
+
+        layout = qtutils.hbox(defs.no_margin, defs.no_spacing, button)
+        self.setLayout(layout)
+
+    def add_option(self, title):
+        action = qtutils.add_action(self, title, self.update_options)
+        action.setCheckable(True)
+        return action
+
+    def update_options(self):
+        space_at_eol = self.ignore_space_at_eol.isChecked()
+        space_change = self.ignore_space_change.isChecked()
+        all_space = self.ignore_all_space.isChecked()
+        function_context = self.function_context.isChecked()
+        gitcmds.update_diff_overrides(space_at_eol,
+                                      space_change,
+                                      all_space,
+                                      function_context)
+        self.widget.update_options()
+
 
 
 class DiffEditor(DiffTextEdit):
@@ -386,50 +442,12 @@ class DiffEditor(DiffTextEdit):
     updated = Signal()
     diff_text_changed = Signal(object)
 
-    def __init__(self, parent, titlebar):
+    def __init__(self, parent):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
 
         # "Diff Options" tool menu
-        self.diff_ignore_space_at_eol_action = add_action(
-            self, N_('Ignore changes in whitespace at EOL'),
-            self._update_diff_opts)
-        self.diff_ignore_space_at_eol_action.setCheckable(True)
-
-        self.diff_ignore_space_change_action = add_action(
-            self, N_('Ignore changes in amount of whitespace'),
-            self._update_diff_opts)
-        self.diff_ignore_space_change_action.setCheckable(True)
-
-        self.diff_ignore_all_space_action = add_action(
-            self, N_('Ignore all whitespace'), self._update_diff_opts)
-        self.diff_ignore_all_space_action.setCheckable(True)
-
-        self.diff_function_context_action = add_action(
-            self, N_('Show whole surrounding functions of changes'),
-            self._update_diff_opts)
-        self.diff_function_context_action.setCheckable(True)
-
-        self.diff_show_line_numbers = add_action(
-            self, N_('Show line numbers'),
-            self._update_diff_opts)
-        self.diff_show_line_numbers.setCheckable(True)
-
-        self.diffopts_button = create_action_button(
-            tooltip=N_('Diff Options'), icon=icons.configure())
-        self.diffopts_menu = create_menu(N_('Diff Options'),
-                                         self.diffopts_button)
-
-        self.diffopts_menu.addAction(self.diff_ignore_space_at_eol_action)
-        self.diffopts_menu.addAction(self.diff_ignore_space_change_action)
-        self.diffopts_menu.addAction(self.diff_ignore_all_space_action)
-        self.diffopts_menu.addAction(self.diff_show_line_numbers)
-        self.diffopts_menu.addAction(self.diff_function_context_action)
-        self.diffopts_button.setMenu(self.diffopts_menu)
-        qtutils.hide_button_menu_indicator(self.diffopts_button)
-
-        titlebar.add_corner_widget(self.diffopts_button)
-
+        self.options = Options(self)
         self.action_apply_selection = qtutils.add_action(
             self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF)
 
@@ -467,23 +485,14 @@ class DiffEditor(DiffTextEdit):
     def enable_line_numbers(self, enabled):
         """Enable/disable the diff line number display"""
         self.numbers.setVisible(enabled)
-        self.diff_show_line_numbers.setChecked(enabled)
+        self.options.show_line_numbers.setChecked(enabled)
 
     def show_line_numbers(self):
         """Return True if we should show line numbers"""
-        return self.diff_show_line_numbers.isChecked()
+        return self.options.show_line_numbers.isChecked()
 
-    def _update_diff_opts(self):
-        space_at_eol = self.diff_ignore_space_at_eol_action.isChecked()
-        space_change = self.diff_ignore_space_change_action.isChecked()
-        all_space = self.diff_ignore_all_space_action.isChecked()
-        function_context = self.diff_function_context_action.isChecked()
+    def update_options(self):
         self.numbers.setVisible(self.show_line_numbers())
-
-        gitcmds.update_diff_overrides(space_at_eol,
-                                      space_change,
-                                      all_space,
-                                      function_context)
         self.options_changed.emit()
 
     # Qt overrides
