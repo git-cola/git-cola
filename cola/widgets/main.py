@@ -112,7 +112,10 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdock = create_dock(N_('Branches'), self,
-            fn=lambda dock: branch.BranchesWidget(dock.titleBarWidget(), dock))
+            fn=lambda dock: branch.BranchesWidget(dock))
+        self.branchwidget = self.branchdock.widget()
+        titlebar = self.branchdock.titleBarWidget()
+        titlebar.add_corner_widget(self.branchwidget.filter_button)
 
         # "Commit Message Editor" widget
         self.position_label = QtWidgets.QLabel()
