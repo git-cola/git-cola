@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
 
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -352,15 +353,45 @@ class Viewer(QtWidgets.QWidget):
             self.stack.setCurrentWidget(self.text)
             self.setFocusProxy(self.text)
 
+    def reset_images(self, images):
+        self.image.load(None)
+        # unlink_images(images)
+
     def set_images(self, images):
-        # TODO comp images
+        image = None
+        unlink = False
         if not images:
-            image = None
-            unlink = False
-        else:
-            image = images[0][0]
-            unlink = images[0][1]
-        self.image.load(image)
+            self.reset_images(images)
+            return
+
+        # In order to comp, we first have to load all the images
+        all_pixmaps = [QtGui.QPixmap(image[0]) for image in images]
+        pixmaps = [pixmap for pixmap in all_pixmaps if not pixmap.isNull()]
+        if not pixmaps:
+            self.reset_images(images)
+            return False
+
+        # Side-by-side lineup comp ~ get the max height
+        sizes = [pixmap.size() for pixmap in pixmaps]
+        lineup_height = max([pixmap.height() for pixmap in pixmaps])
+        lineup_width = sum([pixmap.width() for pixmap in pixmaps])
+
+        lineup_size = QtCore.QSize(lineup_width, lineup_height)
+        lineup = QtGui.QImage(
+            lineup_size, QtGui.QImage.Format_ARGB32_Premultiplied)
+
+        # Paint each pixmap
+        painter = QtGui.QPainter(lineup)
+        painter.fillRect(lineup.rect(), Qt.transparent)
+        x = 0
+        for pixmap in pixmaps:
+            painter.drawPixmap(x, 0, pixmap)
+            x += pixmap.width()
+
+        painter.end()
+
+        # TODO unlink
+        self.image.pixmap = lineup
 
 
 class Options(QtWidgets.QWidget):
