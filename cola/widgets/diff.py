@@ -447,7 +447,7 @@ def create_image(width, height):
 
 def create_painter(image):
     painter = QtGui.QPainter(image)
-    painter.fillRect(image.rect(), Qt.transparent)
+    painter.fillRect(image.rect(), Qt.white)
     return painter
 
 
