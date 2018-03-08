@@ -27,6 +27,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 
+from __future__ import absolute_import, division, unicode_literals
+
 import argparse
 import errno
 import os
@@ -350,7 +352,8 @@ class AppImageView(ImageView):
         ImageView.mouseMoveEvent(self, event)
         pos = event.pos()
         scene_pos = self.mapToScene(pos)
-        msg = 'ui: %d, %d  image: %d, %d'%(pos.y(), pos.x(), round(scene_pos.y()), round(scene_pos.x()))
+        msg = ('ui: %d, %d  image: %d, %d'
+               % (pos.y(), pos.x(), int(scene_pos.y()), int(scene_pos.x())))
         self.main_widget.statusBar().showMessage(msg)
 
 
