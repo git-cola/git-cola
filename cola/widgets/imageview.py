@@ -122,7 +122,7 @@ class ImageView(QtWidgets.QGraphicsView):
 
         self.graphics_pixmap.setPixmap(pixmap)
         self.update_scene_rect()
-        #self.fitInView()
+        self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
         self.graphics_pixmap.update()
         self.image_changed.emit()
 
