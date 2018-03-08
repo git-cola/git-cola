@@ -61,7 +61,7 @@ class ImageView(QtWidgets.QGraphicsView):
         scene.addItem(self.graphics_pixmap)
         self.setScene(scene)
 
-        self.zoom_factor = 1.5
+        self.zoom_factor = 1.125
         self.rubberband = None
         self.panning = False
         self.first_show_occured = False
