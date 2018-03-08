@@ -482,6 +482,7 @@ class Options(QtWidgets.QWidget):
 
         self.options = options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure())
+        options.setFocusPolicy(Qt.NoFocus)
         qtutils.hide_button_menu_indicator(options)
 
         self.mode = mode = qtutils.combo([
