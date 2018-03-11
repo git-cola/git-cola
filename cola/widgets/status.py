@@ -1136,7 +1136,7 @@ class CustomizeCopyActions(standard.Dialog):
         self.table.setRowCount(rows + 1)
 
         name = QtWidgets.QTableWidgetItem(N_('Name'))
-        fmt = QtWidgets.QTableWidgetItem(N_(r'%(path)s'))
+        fmt = QtWidgets.QTableWidgetItem(r'%(path)s')
         self.table.setItem(rows, 0, name)
         self.table.setItem(rows, 1, fmt)
 
