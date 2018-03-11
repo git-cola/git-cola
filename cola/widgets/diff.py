@@ -396,7 +396,7 @@ class Viewer(QtWidgets.QWidget):
             elif self.options.mode.currentIndex() == self.options.PIXEL_DIFF:
                 image = self.render_pixel_diff()
             else:
-                raise ValueError('Unhandled image diff mode')
+                image = self.render_lineup()
         else:
             image = QtGui.QPixmap()
         self.image.pixmap = image
