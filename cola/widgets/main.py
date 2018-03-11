@@ -364,9 +364,7 @@ class MainView(standard.MainWindow):
             self, N_('Lock Layout'), self.set_lock_layout, False)
 
         # Create the application menu
-        self.menubar = QtWidgets.QMenuBar()
-        if hasattr(self.menubar, 'setNativeMenuBar'):
-            self.menubar.setNativeMenuBar(True)
+        self.menubar = QtWidgets.QMenuBar(self)
         self.setMenuBar(self.menubar)
 
         # File Menu
