@@ -764,8 +764,10 @@ class MainView(standard.MainWindow):
         diff_numbers = state.get('show_diff_line_numbers', False)
         self.diffeditor.enable_line_numbers(diff_numbers)
 
-        imagediff_mode = state.get('image_diff_mode', 0)
-        self.diffviewer.options.mode.setCurrentIndex(imagediff_mode)
+        diff_options = self.diffviewer.options
+        count = diff_options.mode.count()
+        mode = min(count-1, max(0, state.get('image_diff_mode', 0)))
+        diff_options.mode.setCurrentIndex(mode)
 
         toolbars = state.get('toolbars', [])
         ColaToolBar.apply_state(self, toolbars)
