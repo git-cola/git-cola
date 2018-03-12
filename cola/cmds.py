@@ -727,6 +727,42 @@ class DeleteBranch(Command):
         Interaction.log_status(status, out, err)
 
 
+class Rename(Command):
+    """Rename a set of paths."""
+
+    def __init__(self, paths):
+        Command.__init__(self)
+        self.paths = paths
+
+    def do(self):
+        msg = N_('Untracking: %s') % (', '.join(self.paths))
+        Interaction.log(msg)
+
+        for path in self.paths:
+            ok = self.rename(path)
+            if not ok:
+                return
+
+        self.model.update_status()
+
+    def rename(self, path):
+        git = self.model.git
+        title = N_('Rename "%s"') % path
+
+        if os.path.isdir(path):
+            base_path = os.path.dirname(path)
+        else:
+            base_path = path
+        new_path = Interaction.save_as(base_path, title)
+        if not new_path:
+            return False
+
+        with CommandDisabled(UpdateFileStatus):
+            status, out, err = git.mv(path, new_path, force=True, verbose=True)
+            Interaction.command(N_('Error'), 'git mv', status, out, err)
+            return status == 0
+
+
 class RenameBranch(Command):
     """Rename a git branch."""
 
