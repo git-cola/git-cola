@@ -287,13 +287,13 @@ See `git cola --help-commands` for the full list of commands.
     $ git cola --help-commands
     usage: git-cola [-h]
     
-                    {cola,am,archive,branch,browse,classic,config,
+                    {cola,am,archive,branch,browse,config,
                      dag,diff,fetch,find,grep,merge,pull,push,
                      rebase,remote,search,stash,tag,version}
                     ...
     
     valid commands:
-      {cola,am,archive,branch,browse,classic,config,
+      {cola,am,archive,branch,browse,config,
        dag,diff,fetch,find,grep,merge,pull,push,
        rebase,remote,search,stash,tag,version}
 
@@ -302,7 +302,6 @@ See `git cola --help-commands` for the full list of commands.
         archive             save an archive
         branch              create a branch
         browse              browse repository
-        classic             browse repository
         config              edit configuration
         dag                 start git-dag
         diff                view diffs

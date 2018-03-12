@@ -79,9 +79,7 @@ class MainView(standard.MainWindow):
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
-        self.browser_dockable = (
-                cfg.get('cola.browserdockable') or
-                cfg.get('cola.classicdockable'))
+        self.browser_dockable = cfg.get('cola.browserdockable')
         if self.browser_dockable:
             self.browserdock = create_dock(N_('Browser'), self,
                     widget=browse.worktree_browser(parent=self, update=False))

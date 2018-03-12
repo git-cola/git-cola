@@ -99,7 +99,6 @@ def add_branch_command(subparser):
 
 def add_browse_command(subparser):
     add_command(subparser, 'browse', 'browse repository', cmd_browse)
-    add_command(subparser, 'classic', 'browse repository', cmd_browse)
 
 
 def add_config_command(subparser):
