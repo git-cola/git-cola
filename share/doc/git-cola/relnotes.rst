@@ -22,6 +22,10 @@ git-cola v3.1 (beta)
 Usability, bells and whistles
 -----------------------------
 
+* The "Browser" widget learned to rename files using "git mv".
+
+  https://github.com/git-cola/git-cola/issues/239
+
 * The "Diff" widget learned to diff images.  Side-by-side and pixel diff
   modes allow you to inspect changes to common images formats.
 

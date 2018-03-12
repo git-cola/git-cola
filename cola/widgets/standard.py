@@ -898,6 +898,10 @@ def question(title, msg, default=True):
     return result == QtWidgets.QMessageBox.Yes
 
 
+def save_as(filename, title):
+    return qtutils.save_as(filename, title=title)
+
+
 def install():
     """Install the GUI-model interaction hooks"""
     Interaction.critical = staticmethod(critical)
@@ -905,3 +909,4 @@ def install():
     Interaction.question = staticmethod(question)
     Interaction.information = staticmethod(information)
     Interaction.command_error = staticmethod(command_error)
+    Interaction.save_as = staticmethod(save_as)

@@ -118,3 +118,7 @@ class Interaction(object):
             core.stdout(message)
 
     safe_log = log
+
+    @staticmethod
+    def save_path(message):
+        return raw_input(message + ': ')
