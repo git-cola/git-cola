@@ -963,4 +963,4 @@ class ImageFormats(object):
 
     def ok(self, filename):
         _, ext = os.path.splitext(filename)
-        return ext in self.extensions
+        return ext.lower() in self.extensions
