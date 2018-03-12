@@ -502,7 +502,6 @@ class Options(QtWidgets.QWidget):
 
         self.options = options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure())
-        options.setFocusPolicy(Qt.NoFocus)
         qtutils.hide_button_menu_indicator(options)
 
         self.mode = mode = qtutils.combo([
@@ -523,6 +522,10 @@ class Options(QtWidgets.QWidget):
 
         layout = qtutils.hbox(defs.no_margin, defs.no_spacing, mode, options)
         self.setLayout(layout)
+
+        self.mode.setFocusPolicy(Qt.NoFocus)
+        self.options.setFocusPolicy(Qt.NoFocus)
+        self.setFocusPolicy(Qt.NoFocus)
 
     def set_diff_type(self, diff_type):
         is_text = diff_type == 'text'
