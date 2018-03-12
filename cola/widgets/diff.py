@@ -391,17 +391,18 @@ class Viewer(QtWidgets.QWidget):
 
     def render(self):
         if self.pixmaps:
-            if self.options.mode.currentIndex() == self.options.SIDE_BY_SIDE:
-                image = self.render_lineup()
-            elif self.options.mode.currentIndex() == self.options.PIXEL_DIFF:
-                image = self.render_pixel_diff()
+            mode = self.options.mode.currentIndex()
+            if mode == self.options.SIDE_BY_SIDE:
+                image = self.render_side_by_side()
+            elif mode == self.options.DIFF:
+                image = self.render_diff()
             else:
-                image = self.render_lineup()
+                image = self.render_side_by_side()
         else:
             image = QtGui.QPixmap()
         self.image.pixmap = image
 
-    def render_lineup(self):
+    def render_side_by_side(self):
         # Side-by-side lineup comp
         pixmaps = self.pixmaps
         width = sum([pixmap.width() for pixmap in pixmaps])
@@ -418,7 +419,7 @@ class Viewer(QtWidgets.QWidget):
 
         return image
 
-    def render_pixel_diff(self):
+    def render_comp(self, comp_mode):
         # Get the max size to use as the render canvas
         pixmaps = self.pixmaps
         if len(pixmaps) == 1:
@@ -433,11 +434,14 @@ class Viewer(QtWidgets.QWidget):
             x = (width - pixmap.width()) // 2
             y = (height - pixmap.height()) // 2
             painter.drawPixmap(x, y, pixmap)
-            painter.setCompositionMode(
-                QtGui.QPainter.CompositionMode_Difference)
+            painter.setCompositionMode(comp_mode)
         painter.end()
 
         return image
+
+    def render_diff(self):
+        comp_mode = QtGui.QPainter.CompositionMode_Difference
+        return self.render_comp(comp_mode)
 
 
 def create_image(width, height):
@@ -447,7 +451,7 @@ def create_image(width, height):
 
 def create_painter(image):
     painter = QtGui.QPainter(image)
-    painter.fillRect(image.rect(), Qt.white)
+    painter.fillRect(image.rect(), Qt.transparent)
     return painter
 
 
@@ -460,7 +464,7 @@ class Options(QtWidgets.QWidget):
 
     # mode combobox indexes
     SIDE_BY_SIDE = 0
-    PIXEL_DIFF = 1
+    DIFF = 1
 
     def __init__(self, parent):
         super(Options, self).__init__(parent)
@@ -487,7 +491,7 @@ class Options(QtWidgets.QWidget):
 
         self.mode = mode = qtutils.combo([
             N_('Side by side'),
-            N_('Pixel diff'),
+            N_('Diff'),
         ])
 
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
