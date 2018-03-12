@@ -1,6 +1,7 @@
 """Provides commands and queries for Git."""
 from __future__ import division, absolute_import, unicode_literals
 
+import os
 import re
 from io import StringIO
 
@@ -43,30 +44,25 @@ def diff_filenames(*args):
     return _parse_diff_filenames(out)
 
 
-def listdir(dirname, ref='HEAD'):
-    """Get the contents of a directory according to Git
+def listdir(dirname):
+    """Get the contents of a directory
 
-    Query Git for the content of a directory, taking ignored
-    files into account.
+    Scan the filesystem while categorizing directories and files.
 
     """
     dirs = []
     files = []
 
-    # first, parse git ls-tree to get the tracked files
-    # in a list of (type, path) tuples
-    entries = ls_tree(dirname, ref=ref)
-    for entry in entries:
-        if entry[0][0] == 't':  # tree
-            dirs.append(entry[1])
+    for relpath in os.listdir(dirname):
+        if relpath == '.git':
+            continue
+        if dirname == './':
+            path = relpath
         else:
-            files.append(entry[1])
+            path = dirname + relpath
 
-    # gather untracked files
-    untracked = untracked_files(paths=[dirname], directory=True)
-    for path in untracked:
-        if path.endswith('/'):
-            dirs.append(path[:-1])
+        if os.path.isdir(path):
+            dirs.append(path)
         else:
             files.append(path)
 

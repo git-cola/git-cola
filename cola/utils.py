@@ -137,6 +137,12 @@ def splitpath(path):
     return path.split('/')
 
 
+def join(*paths):
+    """Join paths using '/' regardless of platform
+
+    """
+    return '/'.join(paths)
+
 def pathset(path):
     """Return all of the path components for the specified path
 
