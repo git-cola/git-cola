@@ -446,7 +446,9 @@ class Viewer(QtWidgets.QWidget):
 
 def create_image(width, height):
     size = QtCore.QSize(width, height)
-    return QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
+    image =  QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
+    image.fill(Qt.transparent)
+    return image
 
 
 def create_painter(image):
