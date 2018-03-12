@@ -159,6 +159,10 @@ class RepoTreeView(standard.TreeView):
                 N_('Stop tracking paths'),
                 self.untrack_selected)
 
+        self.action_rename = qtutils.add_action_with_status_tip(
+                self, N_('Rename'), N_('Rename selected paths'),
+                self.rename_selected)
+
         self.action_difftool = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path'),
@@ -348,6 +352,7 @@ class RepoTreeView(standard.TreeView):
 
         self.action_stage.setEnabled(staged or unstaged)
         self.action_untrack.setEnabled(tracked)
+        self.action_rename.setEnabled(tracked)
         self.action_difftool.setEnabled(staged or modified)
         self.action_difftool_predecessor.setEnabled(tracked)
         self.action_revert_unstaged.setEnabled(revertable)
@@ -367,6 +372,7 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_revert_unstaged)
         menu.addAction(self.action_revert_uncommitted)
         menu.addAction(self.action_untrack)
+        menu.addAction(self.action_rename)
         if not utils.is_win32():
             menu.addSeparator()
             menu.addAction(self.action_default_app)
@@ -487,6 +493,10 @@ class RepoTreeView(standard.TreeView):
     def untrack_selected(self):
         """untrack selected paths."""
         cmds.do(cmds.Untrack, self.selected_tracked_paths())
+
+    def rename_selected(self):
+        """untrack selected paths."""
+        cmds.do(cmds.Rename, self.selected_tracked_paths())
 
     def diff_predecessor(self):
         """Diff paths against previous versions."""
