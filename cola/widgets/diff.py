@@ -398,6 +398,8 @@ class Viewer(QtWidgets.QWidget):
                 image = self.render_diff()
             elif mode == self.options.XOR:
                 image = self.render_xor()
+            elif mode == self.options.PIXEL_XOR:
+                image = self.render_pixel_xor()
             else:
                 image = self.render_side_by_side()
         else:
@@ -449,6 +451,10 @@ class Viewer(QtWidgets.QWidget):
         comp_mode = QtGui.QPainter.CompositionMode_Xor
         return self.render_comp(comp_mode)
 
+    def render_pixel_xor(self):
+        comp_mode = QtGui.QPainter.RasterOp_SourceXorDestination
+        return self.render_comp(comp_mode)
+
 
 def create_image(width, height):
     size = QtCore.QSize(width, height)
@@ -474,6 +480,7 @@ class Options(QtWidgets.QWidget):
     SIDE_BY_SIDE = 0
     DIFF = 1
     XOR = 2
+    PIXEL_XOR = 3
 
     def __init__(self, parent):
         super(Options, self).__init__(parent)
@@ -502,6 +509,7 @@ class Options(QtWidgets.QWidget):
             N_('Side by side'),
             N_('Diff'),
             N_('XOR'),
+            N_('Pixel XOR'),
         ])
 
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
