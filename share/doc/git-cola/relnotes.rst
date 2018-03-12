@@ -80,6 +80,10 @@ Packaging
 Fixes
 -----
 
+* Deleted unmerged files will now correctly use a deleted icon.
+
+  https://github.com/git-cola/git-cola/issues/479
+
 * The `Ctrl+C` "Copy" hotkey on the diff viewer has been fixed.
 
   https://github.com/git-cola/git-cola/issues/767

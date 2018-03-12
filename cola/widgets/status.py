@@ -446,7 +446,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
-        self._set_subtree(items, self.idx_unmerged)
+        deleted_set = set([path for path in items if not core.exists(path)])
+        self._set_subtree(items, self.idx_unmerged,
+                          deleted_set=deleted_set)
 
     def set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
