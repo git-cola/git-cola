@@ -121,4 +121,4 @@ class Interaction(object):
 
     @staticmethod
     def save_path(message):
-        return raw_input(message + ': ')
+        raise NotImplemented('save_path() is not implemented')
