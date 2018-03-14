@@ -12,6 +12,7 @@ from . import version
 from .git import git
 from .git import STDOUT
 from .i18n import N_
+from .interaction import Interaction
 
 
 # Object ID / SHA1-related constants
@@ -764,4 +765,24 @@ def rev_parse(name):
         result = out.strip()
     else:
         result = name
+    return result
+
+
+def write_blob(oid, filename):
+    """Write a blob to a temporary file and return the path"""
+    result = None
+    basename = os.path.basename(filename)
+    suffix = '-' + basename  # ensures the correct filename extension
+    blob = utils.tmp_filename('image', suffix=suffix)
+    with open(blob, 'wb') as fp:
+        status, out, err = git.cat_file(
+            oid, path=filename, filters=True, _stdout=fp)
+        Interaction.command(
+            N_('Error'), 'git cat-file', status, out, err)
+        if status == 0:
+            result = blob
+        else:
+            result = None
+    if not result:
+        core.unlink(blob)
     return result
