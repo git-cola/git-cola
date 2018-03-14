@@ -29,6 +29,7 @@ from .models import selection
 
 class UsageError(Exception):
     """Exception class for usage errors."""
+
     def __init__(self, title, message):
         Exception.__init__(self, message)
         self.title = title
@@ -823,7 +824,8 @@ class DiffImage(Command):
         blob = utils.tmp_filename('image', suffix=suffix)
         git = self.model.git
         with open(blob, 'wb') as fp:
-            status, out, err = git.cat_file('blob', oid, _stdout=fp)
+            status, out, err = git.cat_file(
+                oid, path=filename, filters=True, _stdout=fp)
             Interaction.command(
                 N_('Error'), 'git cat-file', status, out, err)
             if status == 0:
