@@ -898,7 +898,7 @@ class DiffImage(Command):
             merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
             annex_images = []
             for merge_head in merge_heads:
-                if core.exists(git.git_dir(merge_head)):
+                if core.exists(git.git_path(merge_head)):
                     image = gitcmds.annex_path(
                         merge_head, filename, config=cfg)
                     if image:
