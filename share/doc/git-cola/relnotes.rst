@@ -37,6 +37,10 @@ Usability, bells and whistles
   repositories, and `git annex add` can be run on untracked files from the
   status widget.  Install `git-annex` to activate this feature.
 
+* Git LFS operations are now included. `git lfs install` can be performed on
+  repositories, and `git lfs track` can be run on untracked files from the
+  status widget.  Install `git-lfs` to activate this feature.
+
 * The "Stash" tool learned to stash staged changes only.  Select the
   "Stage Index" option and only staged changes will be stashed away.
 

@@ -71,6 +71,7 @@ class MainModel(Observable):
 
         self.initialized = False
         self.annex = False
+        self.lfs = False
         self.head = 'HEAD'
         self.diff_text = ''
         self.diff_type = 'text'  # text, image
@@ -126,11 +127,13 @@ class MainModel(Observable):
         is_valid = self.git.is_valid()
         if is_valid:
             cwd = self.git.getcwd()
-            self.annex = self.cfg.is_annex()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
             self.cfg.reset()
+            self.annex = self.cfg.is_annex()
+            lfs = self.git.git_path('lfs')
+            self.lfs = bool(lfs and core.exists(lfs))
         return is_valid
 
     def set_commitmsg(self, msg, notify=True):

@@ -359,8 +359,10 @@ class MainView(standard.MainWindow):
                                         self.rebase_abort_action)
 
         self.annex_init_action = qtutils.add_action(
-                self, N_('Initialize Git Annex'),
-                cmds.run(cmds.AnnexInit))
+                self, N_('Initialize Git Annex'), cmds.run(cmds.AnnexInit))
+
+        self.lfs_init_action = qtutils.add_action(
+                self, N_('Initialize Git LFS'), cmds.run(cmds.LFSInstall))
 
         self.lock_layout_action = add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False)
@@ -379,9 +381,6 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.open_repo_new_action)
         self.file_menu.addAction(self.clone_repo_action)
         self.file_menu.addSeparator()
-        if find_executable('git-annex'):
-            self.file_menu.addAction(self.annex_init_action)
-            self.file_menu.addSeparator()
         self.file_menu.addAction(self.rescan_action)
         self.file_menu.addAction(self.find_files_action)
         self.file_menu.addAction(self.edit_remotes_action)
@@ -390,6 +389,17 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.apply_patches_action)
         self.file_menu.addAction(self.export_patches_action)
         self.file_menu.addAction(self.save_tarball_action)
+
+        # Git Annex / Git LFS
+        annex = find_executable('git-annex')
+        lfs = find_executable('git-lfs')
+        if annex or lfs:
+            self.file_menu.addSeparator()
+        if annex:
+            self.file_menu.addAction(self.annex_init_action)
+        if lfs:
+            self.file_menu.addAction(self.lfs_init_action)
+
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.preferences_action)
         self.file_menu.addAction(self.quit_action)
@@ -741,8 +751,8 @@ class MainView(standard.MainWindow):
         self.rename_branch_action.setEnabled(enabled)
         self.delete_branch_action.setEnabled(enabled)
 
-        is_annex = self.model.cfg.is_annex()
-        self.annex_init_action.setEnabled(not is_annex)
+        self.annex_init_action.setEnabled(not self.model.annex)
+        self.lfs_init_action.setEnabled(not self.model.lfs)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
