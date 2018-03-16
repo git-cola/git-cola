@@ -1,5 +1,6 @@
 """Git commands and queries for Git"""
 from __future__ import division, absolute_import, unicode_literals
+import json
 import os
 import re
 from io import StringIO
@@ -788,3 +789,31 @@ def write_blob(oid, filename):
     if not result:
         core.unlink(blob)
     return result
+
+
+def annex_path(head, filename, config=None):
+    config = get_config(config)
+    path = None
+    annex_info = {}
+
+    # unfortunately there's no way to filter this down to a single path
+    # so we just have to scan all reported paths
+    status, out, err = git.annex('findref', '--json', head)
+    if status == 0:
+        for line in out.splitlines():
+            info = json.loads(line)
+            try:
+                annex_file = info['file']
+            except (ValueError, KeyError):
+                continue
+            # we only care about this file so we can skip the rest
+            if annex_file == filename:
+                annex_info = info
+                break
+    key = annex_info.get('key', '')
+    if key:
+        status, out, err = git.annex('contentlocation', key)
+        if status == 0 and os.path.exists(out):
+            path = out
+
+    return path
