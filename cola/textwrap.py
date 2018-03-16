@@ -126,7 +126,7 @@ class TextWrapper(object):
 
             # First chunk on line is a space -- drop it, unless this
             # is the very beginning of the text (ie. no lines started yet).
-            if self.drop_whitespace and chunks[-1] == ' ' and lines:
+            if self.drop_whitespace and is_blank(chunks[-1]) and lines:
                 chunks.pop()
 
             while chunks:
@@ -147,7 +147,7 @@ class TextWrapper(object):
                     cur_line.append(chunks.pop())
 
             # If the last chunk on this line is all a space, drop it.
-            if self.drop_whitespace and cur_line and cur_line[-1] == ' ':
+            if self.drop_whitespace and cur_line and is_blank(cur_line[-1]):
                 cur_line.pop()
 
             # Avoid whitespace at the beginining of the line.
@@ -258,3 +258,7 @@ def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
             lines.append(w.fill(line))
 
     return '\n'.join(lines)
+
+
+def is_blank(string):
+    return string and not string.strip(' ')
