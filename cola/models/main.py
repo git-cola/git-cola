@@ -215,6 +215,9 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
+        self.emit_updated()
+
+    def emit_updated(self):
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):
