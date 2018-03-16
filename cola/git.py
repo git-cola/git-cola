@@ -78,10 +78,12 @@ def read_git_file(path):
 class Paths(object):
     """Git repository paths of interest"""
 
-    def __init__(self, git_dir=None, git_file=None, worktree=None):
+    def __init__(self, git_dir=None, git_file=None,
+                 worktree=None, common_dir=None):
         self.git_dir = git_dir
         self.git_file = git_file
         self.worktree = worktree
+        self.common_dir = common_dir
 
 
 def find_git_directory(curpath):
@@ -123,6 +125,17 @@ def find_git_directory(curpath):
         if git_dir_path:
             paths.git_file = paths.git_dir
             paths.git_dir = git_dir_path
+
+            commondir_file = join(git_dir_path, 'commondir')
+            if core.exists(commondir_file):
+                common_path = core.read(commondir_file).strip()
+                if common_path:
+                    if os.path.isabs(common_path):
+                        common_dir = common_path
+                    else:
+                        common_dir = os.path.join(git_dir_path, common_path)
+                        common_dir = os.path.normpath(common_dir)
+                    paths.common_dir = common_dir
 
     return paths
 
@@ -177,10 +190,13 @@ class Git(object):
         return valid
 
     def git_path(self, *paths):
+        result = None
         if self.paths.git_dir:
             result = join(self.paths.git_dir, *paths)
-        else:
-            result = None
+        if result and self.paths.common_dir and not core.exists(result):
+            common_result = join(self.paths.common_dir, *paths)
+            if core.exists(common_result):
+                result = common_result
         return result
 
     def git_dir(self):

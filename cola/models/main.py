@@ -70,6 +70,7 @@ class MainModel(Observable):
         self.cfg = gitcfg.current()
 
         self.initialized = False
+        self.annex = False
         self.head = 'HEAD'
         self.diff_text = ''
         self.diff_type = 'text'  # text, image
@@ -125,6 +126,7 @@ class MainModel(Observable):
         is_valid = self.git.is_valid()
         if is_valid:
             cwd = self.git.getcwd()
+            self.annex = self.cfg.is_annex()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
@@ -215,6 +217,9 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
+        self.emit_updated()
+
+    def emit_updated(self):
         self.notify_observers(self.message_updated)
 
     def _update_files(self, update_index=False):

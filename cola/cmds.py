@@ -232,6 +232,30 @@ class AmendMode(Command):
         self.model.update_file_status()
 
 
+class AnnexAdd(ModelCommand):
+
+    def __init__(self):
+        super(AnnexAdd, self).__init__()
+        self.filename = selection.selection_model().filename()
+
+    def do(self):
+        git = self.model.git
+        with CommandDisabled(UpdateFileStatus):
+            status, out, err = git.annex('add', self.filename)
+            Interaction.command(N_('Error'), 'git annex', status, out, err)
+        self.model.update_status()
+
+
+class AnnexInit(ModelCommand):
+
+    def do(self):
+        git = self.model.git
+        with CommandDisabled(UpdateFileStatus):
+            status, out, err = git.annex('init')
+            Interaction.command(N_('Error'), 'git annex', status, out, err)
+        self.model.cfg.reset()
+        self.model.emit_updated()
+
 class ApplyDiffSelection(Command):
 
     def __init__(self, first_line_idx, last_line_idx, has_selection,
@@ -816,7 +840,7 @@ class DiffImage(Command):
         self.unmerged = unmerged
         self.untracked = untracked
         self.deleted = deleted
-        self.annex = bool(self.model.cfg.get('annex.uuid', False))
+        self.annex = self.model.cfg.is_annex()
 
     def do(self):
         cfg = self.model.cfg
