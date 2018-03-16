@@ -24,10 +24,15 @@ class InvalidRepositoryError(Exception):
     pass
 
 
-def default_remote(config=None):
-    """Return the remote tracked by the current branch."""
+def get_config(config):
     if config is None:
         config = gitcfg.current()
+    return config
+
+
+def default_remote(config=None):
+    """Return the remote tracked by the current branch."""
+    config = get_config(config)
     return config.get('branch.%s.remote' % current_branch())
 
 
@@ -226,8 +231,7 @@ def all_refs(split=False, git=git):
 
 def tracked_branch(branch=None, config=None):
     """Return the remote branch associated with 'branch'."""
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     if branch is None:
         branch = current_branch()
     if branch is None:
@@ -285,8 +289,7 @@ def update_diff_overrides(space_at_eol, space_change,
 
 
 def common_diff_opts(config=None):
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
         'patience': True,
@@ -718,8 +721,7 @@ def merge_message_path():
 
 def prepare_commit_message_hook(config=None):
     default_hook = git.git_path('hooks', 'cola-prepare-commit-msg')
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
