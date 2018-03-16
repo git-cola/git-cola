@@ -34,6 +34,23 @@ class WordWrapTestCase(unittest.TestCase):
         expect = '123-5'
         self.assertEqual(expect, self.wrap(text))
 
+    def test_word_wrap_leading_spaces(self):
+        self.limit = 4
+        expect = '1234\n5'
+
+        self.assertEqual(expect, self.wrap('1234 5'))
+        self.assertEqual(expect, self.wrap('1234  5'))
+        self.assertEqual(expect, self.wrap('1234   5'))
+        self.assertEqual(expect, self.wrap('1234    5'))
+        self.assertEqual(expect, self.wrap('1234     5'))
+
+        expect = '123\n4'
+        self.assertEqual(expect, self.wrap('123 4'))
+        self.assertEqual(expect, self.wrap('123  4'))
+        self.assertEqual(expect, self.wrap('123   4'))
+        self.assertEqual(expect, self.wrap('123    4'))
+        self.assertEqual(expect, self.wrap('123     4'))
+
     def test_word_wrap_double_dashes(self):
         self.limit = 4
         text = '12--5'
@@ -73,7 +90,7 @@ else:
     def test_word_wrap_spaces(self):
         self.limit = 2
         text = ' ' * 6
-        self.assertEqual(' ' * 6, self.wrap(text))
+        self.assertEqual('', self.wrap(text))
 
     def test_word_wrap_special_tag(self):
         self.limit = 2
