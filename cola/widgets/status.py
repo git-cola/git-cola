@@ -1,6 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import itertools
 import os
+from distutils.spawn import find_executable
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -200,8 +201,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.view_blame_action = qtutils.add_action(
             self, N_('Blame...'), view_blame, hotkeys.BLAME)
 
-        self.add_annex_action = qtutils.add_action(
+        self.annex_add_action = qtutils.add_action(
             self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd))
+
+        self.lfs_track_action = qtutils.add_action(
+            self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack))
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
@@ -672,10 +676,17 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 menu.addAction(self.revert_unstaged_edits_action)
 
         if all_exist and s.untracked:
-            menu.addSeparator()
-            if self.m.annex:
-                menu.addAction(self.add_annex_action)
+            # Git Annex / Git LFS
+            annex = self.m.annex
+            lfs = find_executable('git-lfs')
+            if annex or lfs:
                 menu.addSeparator()
+            if annex:
+                menu.addAction(self.annex_add_action)
+            if lfs:
+                menu.addAction(self.lfs_track_action)
+
+            menu.addSeparator()
             if self.move_to_trash_action is not None:
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
