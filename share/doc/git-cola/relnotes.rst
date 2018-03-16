@@ -31,6 +31,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/444
 
+* Git LFS and Git Annex are natively supported by the image diff viewer.
+
+* Git Annex operations are now included. `git annex init` can be performed on
+  repositories, and `git annex add` can be run on untracked files from the
+  status widget.  Install `git-annex` to activate this feature.
+
 * The "Stash" tool learned to stash staged changes only.  Select the
   "Stage Index" option and only staged changes will be stashed away.
 

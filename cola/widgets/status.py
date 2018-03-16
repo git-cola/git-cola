@@ -200,6 +200,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.view_blame_action = qtutils.add_action(
             self, N_('Blame...'), view_blame, hotkeys.BLAME)
 
+        self.add_annex_action = qtutils.add_action(
+            self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd))
+
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
         # MoveToTrash command is available.  When available, the hotkey
@@ -670,6 +673,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         if all_exist and s.untracked:
             menu.addSeparator()
+            if self.m.annex:
+                menu.addAction(self.add_annex_action)
+                menu.addSeparator()
             if self.move_to_trash_action is not None:
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
