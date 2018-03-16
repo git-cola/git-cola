@@ -816,7 +816,7 @@ class DiffImage(Command):
         self.unmerged = unmerged
         self.untracked = untracked
         self.deleted = deleted
-        self.annex = bool(self.model.cfg.get('annex.uuid', False))
+        self.annex = self.model.cfg.is_annex()
 
     def do(self):
         cfg = self.model.cfg
