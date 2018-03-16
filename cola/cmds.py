@@ -64,7 +64,7 @@ class BaseCommand(object):
 class ConfirmAction(BaseCommand):
 
     def __init__(self, **kwargs):
-        BaseCommand.__init__(self, **kwargs)
+        super(ConfirmAction, self).__init__(**kwargs)
 
     def ok_to_run(self):
         return True
@@ -107,7 +107,7 @@ class ModelCommand(BaseCommand):
         # to allow being having the `model` value be overridden by passing
         # `model=xxx` during construction.
         self.model = main.model()
-        BaseCommand.__init__(self, **kwargs)
+        super(ModelCommand, self).__init__(**kwargs)
 
 
 class Command(ModelCommand):
@@ -116,7 +116,7 @@ class Command(ModelCommand):
     def __init__(self):
         """Initialize the command and stash away values for use in do()"""
         # These are commonly used so let's make it easier to write new commands.
-        ModelCommand.__init__(self)
+        super(Command, self).__init__()
 
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
