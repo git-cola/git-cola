@@ -1,6 +1,5 @@
-"""Provides commands and queries for Git."""
+"""Git commands and queries for Git"""
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 import re
 from io import StringIO
