@@ -254,6 +254,32 @@ class AnnexInit(ModelCommand):
         self.model.cfg.reset()
         self.model.emit_updated()
 
+
+class LFSTrack(ModelCommand):
+
+    def __init__(self):
+        super(LFSTrack, self).__init__()
+        self.filename = selection.selection_model().filename()
+        self.stage_cmd = Stage([self.filename])
+
+    def do(self):
+        git = self.model.git
+        status, out, err = git.lfs('track', self.filename)
+        Interaction.command(
+            N_('Error'), 'git lfs track', status, out, err)
+        if status == 0:
+            self.stage_cmd.do()
+
+
+class LFSInstall(ModelCommand):
+
+    def do(self):
+        git = self.model.git
+        status, out, err = git.lfs('install')
+        Interaction.command(
+            N_('Error'), 'git lfs install', status, out, err)
+        self.model.emit_updated()
+
 class ApplyDiffSelection(Command):
 
     def __init__(self, first_line_idx, last_line_idx, has_selection,
