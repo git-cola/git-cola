@@ -373,6 +373,10 @@ class GitConfig(observable.Observable):
                 result[key] = val
         return result
 
+    def is_annex(self):
+        """Return True when git-annex is enabled"""
+        return bool(self.get('annex.uuid', default=False))
+
     def gui_encoding(self):
         return self.get('gui.encoding', default=None)
 
