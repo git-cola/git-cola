@@ -240,9 +240,8 @@ class AnnexAdd(ModelCommand):
 
     def do(self):
         git = self.model.git
-        with CommandDisabled(UpdateFileStatus):
-            status, out, err = git.annex('add', self.filename)
-            Interaction.command(N_('Error'), 'git annex', status, out, err)
+        status, out, err = git.annex('add', self.filename)
+        Interaction.command(N_('Error'), 'git annex add', status, out, err)
         self.model.update_status()
 
 
@@ -250,9 +249,8 @@ class AnnexInit(ModelCommand):
 
     def do(self):
         git = self.model.git
-        with CommandDisabled(UpdateFileStatus):
-            status, out, err = git.annex('init')
-            Interaction.command(N_('Error'), 'git annex', status, out, err)
+        status, out, err = git.annex('init')
+        Interaction.command(N_('Error'), 'git annex init', status, out, err)
         self.model.cfg.reset()
         self.model.emit_updated()
 
@@ -783,10 +781,9 @@ class Rename(Command):
         if not new_path:
             return False
 
-        with CommandDisabled(UpdateFileStatus):
-            status, out, err = git.mv(path, new_path, force=True, verbose=True)
-            Interaction.command(N_('Error'), 'git mv', status, out, err)
-            return status == 0
+        status, out, err = git.mv(path, new_path, force=True, verbose=True)
+        Interaction.command(N_('Error'), 'git mv', status, out, err)
+        return status == 0
 
 
 class RenameBranch(Command):
