@@ -1,6 +1,6 @@
-"""Provides commands and queries for Git."""
+"""Git commands and queries for Git"""
 from __future__ import division, absolute_import, unicode_literals
-
+import json
 import os
 import re
 from io import StringIO
@@ -25,10 +25,15 @@ class InvalidRepositoryError(Exception):
     pass
 
 
-def default_remote(config=None):
-    """Return the remote tracked by the current branch."""
+def get_config(config):
     if config is None:
         config = gitcfg.current()
+    return config
+
+
+def default_remote(config=None):
+    """Return the remote tracked by the current branch."""
+    config = get_config(config)
     return config.get('branch.%s.remote' % current_branch())
 
 
@@ -227,8 +232,7 @@ def all_refs(split=False, git=git):
 
 def tracked_branch(branch=None, config=None):
     """Return the remote branch associated with 'branch'."""
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     if branch is None:
         branch = current_branch()
     if branch is None:
@@ -286,8 +290,7 @@ def update_diff_overrides(space_at_eol, space_change,
 
 
 def common_diff_opts(config=None):
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
         'patience': True,
@@ -719,8 +722,7 @@ def merge_message_path():
 
 def prepare_commit_message_hook(config=None):
     default_hook = git.git_path('hooks', 'cola-prepare-commit-msg')
-    if config is None:
-        config = gitcfg.current()
+    config = get_config(config)
     return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
@@ -776,7 +778,8 @@ def write_blob(oid, filename):
     blob = utils.tmp_filename('image', suffix=suffix)
     with open(blob, 'wb') as fp:
         status, out, err = git.cat_file(
-            oid, path=filename, filters=True, _stdout=fp)
+            oid, path=filename, filters=True,
+            _raw=True, _readonly=True,  _stdout=fp)
         Interaction.command(
             N_('Error'), 'git cat-file', status, out, err)
         if status == 0:
@@ -786,3 +789,31 @@ def write_blob(oid, filename):
     if not result:
         core.unlink(blob)
     return result
+
+
+def annex_path(head, filename, config=None):
+    config = get_config(config)
+    path = None
+    annex_info = {}
+
+    # unfortunately there's no way to filter this down to a single path
+    # so we just have to scan all reported paths
+    status, out, err = git.annex('findref', '--json', head)
+    if status == 0:
+        for line in out.splitlines():
+            info = json.loads(line)
+            try:
+                annex_file = info['file']
+            except (ValueError, KeyError):
+                continue
+            # we only care about this file so we can skip the rest
+            if annex_file == filename:
+                annex_info = info
+                break
+    key = annex_info.get('key', '')
+    if key:
+        status, out, err = git.annex('contentlocation', key)
+        if status == 0 and os.path.exists(out):
+            path = out
+
+    return path

@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-import json
 import os
 import re
 import sys
@@ -826,11 +825,11 @@ class DiffImage(Command):
         annex = self.annex
 
         if self.staged:
-            images = _get_staged_images(git, cfg, head, filename, annex)
+            images = self.staged_images()
         elif self.modified:
-            images = _get_modified_images(git, cfg, head, filename, annex)
+            images = self.modified_images()
         elif self.unmerged:
-            images = _get_unmerged_images(git, head, filename)
+            images = self.unmerged_images()
         elif self.untracked:
             images = [(filename, False)]
         else:
@@ -839,131 +838,135 @@ class DiffImage(Command):
         self.model.set_images(images)
         super(DiffImage, self).do()
 
+    def staged_images(self):
+        git = self.model.git
+        cfg = self.model.cfg
+        head = self.model.head
+        filename = self.new_filename
+        annex = self.annex
 
-def _get_staged_images(git, cfg, head, filename, annex):
-    images = []
+        images = []
+        index = git.diff_index(head, '--', filename, cached=True)[STDOUT]
+        if index:
+            # Example:
+            #  :100644 100644 fabadb8... 4866510... M      describe.c
+            parts = index.split(' ')
+            if len(parts) > 3:
+                old_oid = parts[2]
+                new_oid = parts[3]
 
-    index = git.diff_index(head, '--', filename, cached=True)[STDOUT]
-    if index:
+            if old_oid != gitcmds.MISSING_BLOB_OID:
+                # First, check if we can get a pre-image from git-annex
+                annex_image = None
+                if annex:
+                    annex_image = gitcmds.annex_path(
+                        head, filename, config=cfg)
+                if annex_image:
+                    images.append((annex_image, False))  # git annex HEAD
+                else:
+                    image = gitcmds.write_blob(old_oid, filename)
+                    if image:
+                        images.append((image, True))
+
+            if new_oid != gitcmds.MISSING_BLOB_OID:
+                found_in_annex = False
+                if annex and core.islink(filename):
+                    status, out, err = git.annex('status', '--', filename)
+                    if status == 0:
+                        details = out.split(' ')
+                        if details and details[0] == 'A':  # newly added file
+                            images.append((filename, False))
+                            found_in_annex = True
+
+                if not found_in_annex:
+                    image = gitcmds.write_blob(new_oid, filename)
+                    if image:
+                        images.append((image, True))
+
+        return images
+
+    def unmerged_images(self):
+        git = self.model.git
+        cfg = self.model.cfg
+        head = self.model.head
+        filename = self.new_filename
+        annex = self.annex
+
+        if annex:  # Attempt to find files in git-annex
+            annex_images = []
+            merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
+            annex_images = []
+            for merge_head in merge_heads:
+                if core.exists(git.git_dir(merge_head)):
+                    image = gitcmds.annex_path(
+                        merge_head, filename, config=cfg)
+                    if image:
+                        annex_images.append((image, False))
+            if annex_images:
+                annex_images.append((filename, False))
+                return annex_images
+
+        # DIFF FORMAT FOR MERGES
+        # "git-diff-tree", "git-diff-files" and "git-diff --raw"
+        # can take -c or --cc option to generate diff output also
+        # for merge commits. The output differs from the format
+        # described above in the following way:
+        #
+        #  1. there is a colon for each parent
+        #  2. there are more "src" modes and "src" sha1
+        #  3. status is concatenated status characters for each parent
+        #  4. no optional "score" number
+        #  5. single path, only for "dst"
         # Example:
-        #  :100644 100644 fabadb8... 4866510... M      describe.c
-        parts = index.split(' ')
-        if len(parts) > 3:
-            old_oid = parts[2]
-            new_oid = parts[3]
+        #  ::100644 100644 100644 fabadb8... cc95eb0... 4866510... \
+        #  MM      describe.c
+        images = []
+        index = git.diff_index(head, '--', filename,
+                               cached=True, cc=True)[STDOUT]
+        if index:
+            parts = index.split(' ')
+            if len(parts) > 3:
+                first_mode = parts[0]
+                num_parents = first_mode.count(':')
+                # colon for each parent, but for the index, the "parents"
+                # are really entries in stages 1,2,3 (head, base, remote)
+                # remote, base, head
+                for i in range(parents):
+                    offset = num_parents + i + 1
+                    oid = parts[offset]
+                    if oid != gitcmds.MISSING_BLOB_OID:
+                        image = gitcmds.write_blob(oid, filename)
+                        if image:
+                            images.append((image, True))
 
-        if old_oid != gitcmds.MISSING_BLOB_OID:
-            # First, check if we can get a pre-image from git-annex
-            annex_image = None
-            if annex:
-                annex_image = _annex_path(git, cfg, head, filename)
-            if annex_image:
-                images.append((annex_image, False))  # git annex HEAD
-            else:
-                image = gitcmds.write_blob(old_oid, filename)
-                if image:
-                    images.append((image, True))
+        images.append((filename, False))
+        return images
 
-        if new_oid != gitcmds.MISSING_BLOB_OID:
-            found_in_annex = False
-            if annex and core.islink(filename):
-                status, out, err = git.annex('status', '--', filename)
-                if status == 0:
-                    details = out.split(' ')
-                    if details and details[0] == 'A':  # newly added file
-                        images.append((filename, False))
-                        found_in_annex = True
+    def modified_images(self):
+        git = self.model.git
+        cfg = self.model.cfg
+        head = self.model.head
+        filename = self.new_filename
+        annex = self.annex
 
-            if not found_in_annex:
-                image = gitcmds.write_blob(new_oid, filename)
-                if image:
-                    images.append((image, True))
-
-    return images
-
-
-def _get_unmerged_images(git, head, filename):
-    # DIFF FORMAT FOR MERGES
-    # "git-diff-tree", "git-diff-files" and "git-diff --raw"
-    # can take -c or --cc option to generate diff output also
-    # for merge commits. The output differs from the format
-    # described above in the following way:
-    #
-    #  1. there is a colon for each parent
-    #  2. there are more "src" modes and "src" sha1
-    #  3. status is concatenated status characters for each parent
-    #  4. no optional "score" number
-    #  5. single path, only for "dst"
-    # Example:
-    #  ::100644 100644 100644 fabadb8... cc95eb0... 4866510... \
-    #  MM      describe.c
-    images = []
-    index = git.diff_index(head, '--', filename, cached=True, cc=True)[STDOUT]
-    if index:
-        parts = index.split(' ')
-        if len(parts) > 3:
-            first_mode = parts[0]
-            num_parents = first_mode.count(':')  # colon for each parent
-
-            # remote, base, head
-            for i in range(parents):
-                offset = num_parents + i + 1
-                oid = parts[offset]
+        images = []
+        annex_image = None
+        if annex:  # Check for a pre-image from git-annex
+            annex_image = gitcmds.annex_path(head, filename, config=cfg)
+        if annex_image:
+            images.append((annex_image, False))  # git annex HEAD
+        else:
+            worktree = git.diff_files('--', filename)[STDOUT]
+            parts = worktree.split(' ')
+            if len(parts) > 3:
+                oid = parts[2]
                 if oid != gitcmds.MISSING_BLOB_OID:
                     image = gitcmds.write_blob(oid, filename)
                     if image:
-                        images.append((image, True))
-            images.append((filename, False))
+                        images.append((image, True))  # HEAD
 
-    return images
-
-
-def _get_modified_images(git, cfg, head, filename, annex):
-    images = []
-    annex_image = None
-    if annex:  # Check for a pre-image from git-annex
-        annex_image = _annex_path(git, cfg, head, filename)
-    if annex_image:
-        images.append((annex_image, False))  # git annex HEAD
-    else:
-        worktree = git.diff_files('--', filename)[STDOUT]
-        parts = worktree.split(' ')
-        if len(parts) > 3:
-            oid = parts[2]
-            if oid != gitcmds.MISSING_BLOB_OID:
-                image = gitcmds.write_blob(oid, filename)
-                if image:
-                    images.append((image, True))  # HEAD
-
-    images.append((filename, False))  # worktree
-    return images
-
-
-def _annex_path(git, cfg, head, filename):
-    path = None
-    annex_info = {}
-
-    # unfortunately there's no way to filter this down to a single path
-    # so we just have to scan all reported paths
-    status, out, err = git.annex('findref', '--json', head)
-    if status == 0:
-        for line in out.splitlines():
-            info = json.loads(line)
-            try:
-                annex_file = info['file']
-            except (ValueError, KeyError):
-                continue
-            # we only care about this file so we can skip the rest
-            if annex_file == filename:
-                annex_info = info
-                break
-    key = annex_info.get('key', '')
-    if key:
-        status, out, err = git.annex('contentlocation', key)
-        if status == 0 and os.path.exists(out):
-            path = out
-
-    return path
+        images.append((filename, False))  # worktree
+        return images
 
 
 class Diff(Command):
