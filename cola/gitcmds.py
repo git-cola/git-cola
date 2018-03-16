@@ -777,7 +777,8 @@ def write_blob(oid, filename):
     blob = utils.tmp_filename('image', suffix=suffix)
     with open(blob, 'wb') as fp:
         status, out, err = git.cat_file(
-            oid, path=filename, filters=True, _stdout=fp)
+            oid, path=filename, filters=True,
+            _raw=True, _readonly=True,  _stdout=fp)
         Interaction.command(
             N_('Error'), 'git cat-file', status, out, err)
         if status == 0:
