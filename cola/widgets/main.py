@@ -701,7 +701,6 @@ class MainView(standard.MainWindow):
 
     def refresh(self):
         """Update the title with the current branch and directory name."""
-        alerts = []
         branch = self.model.currentbranch
         curdir = core.getcwd()
         is_merging = self.model.is_merging
@@ -716,32 +715,54 @@ class MainView(standard.MainWindow):
             msg += N_('This repository is currently being rebased.\n'
                       'Resolve conflicts, commit changes, and run:\n'
                       '    Rebase > Continue')
-            alerts.append(N_('Rebasing'))
 
         elif is_merging:
             msg += '\n\n'
             msg += N_('This repository is in the middle of a merge.\n'
                       'Resolve conflicts and commit changes.')
-            alerts.append(N_('Merging'))
+
+        self.refresh_window_title()
 
         if self.mode == self.model.mode_amend:
-            alerts.append(N_('Amending'))
             self.commit_amend_action.setChecked(True)
         else:
             self.commit_amend_action.setChecked(False)
 
-        l = unichr(0xab)
-        r = unichr(0xbb)
-        title = ('%s: %s %s%s' % (
-                    self.model.project,
-                    branch,
-                    alerts and ((r+' %s '+l+' ') % ', '.join(alerts)) or '',
-                    self.model.git.worktree()))
-
-        self.setWindowTitle(title)
         self.commitdock.setToolTip(msg)
         self.commiteditor.set_mode(self.mode)
         self.update_actions()
+
+    def refresh_window_title(self):
+        """Refresh the window title when state changes"""
+        alerts = []
+
+        project = self.model.project
+        branch = self.model.currentbranch
+        is_merging = self.model.is_merging
+        is_rebasing = self.model.is_rebasing
+        prefix = unichr(0xab)
+        suffix = unichr(0xbb)
+
+        if is_rebasing:
+            alerts.append(N_('Rebasing'))
+        elif is_merging:
+            alerts.append(N_('Merging'))
+
+        if self.mode == self.model.mode_amend:
+            alerts.append(N_('Amending'))
+
+        if alerts:
+            alert_text = (prefix + ' %s ' + suffix + ' ') % ', '.join(alerts)
+        else:
+            alert_text = ''
+
+        if self.model.cfg.get(prefs.SHOW_PATH, True):
+            path_text = self.model.git.worktree()
+        else:
+            path_text = ''
+
+        title = '%s: %s %s%s' % (project, branch, alert_text, path_text)
+        self.setWindowTitle(title)
 
     def update_actions(self):
         is_rebasing = self.model.is_rebasing
