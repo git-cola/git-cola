@@ -1936,17 +1936,20 @@ class Stage(Command):
         # `git add -u` doesn't work on untracked files
         if add:
             status, out, err = gitcmds.add(add)
+            Interaction.command(N_('Error'), 'git add', status, out, err)
 
         # If a path doesn't exist then that means it should be removed
         # from the index.   We use `git add -u` for that.
         if remove:
             status, out, err = gitcmds.add(remove, u=True)
+            Interaction.command(N_('Error'), 'git add -u', status, out, err)
 
         self.model.update_files(emit=True)
         return status, out, err
 
     def stage_all(self):
         status, out, err = self.git.add(v=True, u=True)
+        Interaction.command(N_('Error'), 'git add -u', status, out, err)
         self.model.update_file_status()
         return (status, out, err)
 
