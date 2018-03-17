@@ -104,6 +104,11 @@ Packaging
 
 * The vendored `qtpy` library was updated to `v1.3.1`.
 
+* The macOS installation was made simpler for better compatibility with
+  Homebrew.
+
+  https://github.com/git-cola/git-cola/issues/636
+
 Fixes
 -----
 
