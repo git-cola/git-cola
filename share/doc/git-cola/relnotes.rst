@@ -68,6 +68,14 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/643
 
+* The "Ctrl+S" hotkey now works for the header items in the Status tool.
+  Selected the "Modified" header item and activating the "Stage" hotkey,
+  for example, will stage all modified files.  This works for the "Staged",
+  "Modified", and "Untracked" headers.  This is not enabled for the
+  "Unmerged" header by design.
+
+  https://github.com/git-cola/git-cola/issues/772
+
 * The list of "Recent" repositories previously capped the number of
   repositories shown to 8 repositories.  This can be set to a higher
   value by setting the `cola.maxrecent` configuration variable.
