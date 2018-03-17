@@ -32,6 +32,7 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+SAFE_MODE = 'cola.safemode'
 SPELL_CHECK = 'cola.spellcheck'
 
 

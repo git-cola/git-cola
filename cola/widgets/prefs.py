@@ -115,6 +115,10 @@ class RepoFormWidget(FormWidget):
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
 
+        tooltip = N_(
+            'Prevent "Stage" from staging all files when nothing is selected')
+        self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
+
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
@@ -123,6 +127,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
+        self.add_row(N_('Safe Mode'), self.safe_mode)
 
         self.set_config({
             prefs.CHECKCONFLICTS: (self.check_conflicts, True),
@@ -133,6 +138,7 @@ class RepoFormWidget(FormWidget):
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, True),
             prefs.MERGE_SUMMARY: (self.merge_summary, True),
             prefs.MERGE_VERBOSITY: (self.merge_verbosity, 5),
+            prefs.SAFE_MODE: (self.safe_mode, False),
         })
 
 

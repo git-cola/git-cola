@@ -1918,7 +1918,10 @@ class Stage(Command):
         """Stages add/removals to git."""
         paths = self.paths
         if not paths:
-            return self.stage_all()
+            if self.model.cfg.get('cola.safemode', False):
+                return (0, '', '')
+            else:
+                return self.stage_all()
 
         add = []
         remove = []
