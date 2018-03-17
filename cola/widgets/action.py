@@ -7,6 +7,7 @@ from qtpy import QtWidgets
 from .. import cmds
 from .. import qtutils
 from ..i18n import N_
+from ..models import main
 from ..models.selection import selection_model
 from ..widgets import defs
 from ..widgets import remote
@@ -79,6 +80,9 @@ class ActionButtons(QFlowLayoutWidget):
         """Stage selected files, or all files if no selection exists."""
         paths = selection_model().unstaged
         if not paths:
+            model = main.model()
+            if model.cfg.get('cola.safemode', False):
+                return
             cmds.do(cmds.StageModified)
         else:
             cmds.do(cmds.Stage, paths)
