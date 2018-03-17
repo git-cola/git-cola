@@ -571,6 +571,12 @@ cola.savewindowsettings
 `git cola` will remember its window settings when set to `true`.
 Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
 
+cola.showpath
+-------------
+`git cola` displays the absolute path of the repository in the window title.
+This can be disabled by setting `cola.showpath` to `false`.
+Defaults to `true`.
+
 cola.signcommits
 ----------------
 `git cola` will sign commits by default when set `true`. Defaults to `false`.
