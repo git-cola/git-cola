@@ -490,7 +490,7 @@ def export_patchset(start, end, output='patches', **kwargs):
     return git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
 
-def reset(items):
+def reset_paths(items):
     """Run "git reset" while preventing argument overflow"""
     reset = git.reset
     status, out, err = utils.slice_fn(items, lambda paths: reset('--', *paths))
