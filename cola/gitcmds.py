@@ -25,6 +25,13 @@ class InvalidRepositoryError(Exception):
     pass
 
 
+def add(items, u=False):
+    """Run "git add" while preventing argument overflow"""
+    add = git.add
+    return utils.slice_fn(
+        items, lambda paths: add('--', force=True, verbose=True, u=u, *paths))
+
+
 def get_config(config):
     if config is None:
         config = gitcfg.current()
@@ -481,6 +488,13 @@ def format_patchsets(to_export, revs, output='patches'):
 def export_patchset(start, end, output='patches', **kwargs):
     """Export patches from start^ to end."""
     return git.format_patch('-o', output, start + '^..' + end, **kwargs)
+
+
+def reset(items):
+    """Run "git reset" while preventing argument overflow"""
+    reset = git.reset
+    status, out, err = utils.slice_fn(items, lambda paths: reset('--', *paths))
+    return (status, out, err)
 
 
 def unstage_paths(args, head='HEAD'):
