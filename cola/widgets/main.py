@@ -678,6 +678,10 @@ class MainView(standard.MainWindow):
             # text width used for line wrapping
             self.commiteditor.set_textwidth(value)
 
+        elif config == prefs.SHOW_PATH:
+            # the path in the window title was toggled
+            self.refresh_window_title()
+
     def init_config_actions(self):
         """Do the expensive "get_config_actions()" call in the background"""
         task = qtutils.SimpleTask(self, self.get_config_actions)
