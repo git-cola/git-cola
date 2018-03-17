@@ -381,12 +381,6 @@ class MainModel(Observable):
         self.update_file_status()
         return (status, out, err)
 
-    def unstage_all(self):
-        """Unstage all files, even while amending"""
-        status, out, err = self.git.reset(self.head, '--', '.')
-        self.update_file_status()
-        return (status, out, err)
-
     def stage_all(self):
         status, out, err = self.git.add(v=True, u=True)
         self.update_file_status()
@@ -476,13 +470,6 @@ class MainModel(Observable):
 
         self._update_files()
         self.notify_observers(self.message_updated)
-
-    def unstage_paths(self, paths):
-        if not paths:
-            self.unstage_all()
-            return
-        gitcmds.unstage_paths(paths, head=self.head)
-        self.update_file_status()
 
     def untrack_paths(self, paths):
         status, out, err = gitcmds.untrack_paths(paths, head=self.head)

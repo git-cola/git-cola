@@ -2067,14 +2067,32 @@ class Unstage(Command):
         msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         with CommandDisabled(UpdateFileStatus):
-            self.model.unstage_paths(self.paths)
+            self.unstage_paths()
+
+    def unstage_paths(self):
+        paths = self.paths
+        if not paths:
+            return unstage_all(model)
+        status, out, err = gitcmds.unstage_paths(paths, head=self.head)
+        Interaction.command(N_('Error'), 'git reset', status, out, err)
+        self.model.update_file_status()
 
 
 class UnstageAll(Command):
     """Unstage all files; resets the index."""
 
     def do(self):
-        self.model.unstage_all()
+        return unstage_all(self.model)
+
+
+def unstage_all(model):
+    """Unstage all files, even while amending"""
+    git = model.git
+    head = model.head
+    status, out, err = git.reset(head, '--', '.')
+    Interaction.command(N_('Error'), 'git reset', status, out, err)
+    model.update_file_status()
+    return (status, out, err)
 
 
 class UnstageSelected(Unstage):
