@@ -3,19 +3,20 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
-import copy
 import os
 
 from .. import core
 from .. import git
 from .. import gitcmds
 from .. import gitcfg
-from ..git import STDOUT
-from ..observable import Observable
-from ..decorators import memoize
-from ..models.selection import selection_model
-from ..models import prefs
 from ..compat import ustr
+from ..decorators import memoize
+from ..git import STDOUT
+from ..interaction import Interaction
+from ..i18n import N_
+from ..models import prefs
+from ..models.selection import selection_model
+from ..observable import Observable
 
 
 @memoize
@@ -25,7 +26,9 @@ def model():
 
 
 class MainModel(Observable):
-    """Provides a friendly wrapper for doing common git operations."""
+    """Repository status model"""
+    # TODO this class can probably be split apart into a DiffModel,
+    # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
 
     # Observable messages
     message_about_to_update = 'about_to_update'
@@ -205,14 +208,19 @@ class MainModel(Observable):
         self.filter_paths = filter_paths
         self.update_file_status()
 
-    def update_file_status(self, update_index=False):
+    def emit_about_to_update(self):
         self.notify_observers(self.message_about_to_update)
-        self._update_files(update_index=update_index)
+
+    def emit_updated(self):
         self.notify_observers(self.message_updated)
+
+    def update_file_status(self, update_index=False):
+        self.emit_about_to_update()
+        self.update_files(update_index=update_index, emit=True)
 
     def update_status(self, update_index=False):
         # Give observers a chance to respond
-        self.notify_observers(self.message_about_to_update)
+        self.emit_about_to_update()
         self.initialized = True
         self._update_merge_rebase_status()
         self._update_files(update_index=update_index)
@@ -222,8 +230,10 @@ class MainModel(Observable):
         self._update_commitmsg()
         self.emit_updated()
 
-    def emit_updated(self):
-        self.notify_observers(self.message_updated)
+    def update_files(self, update_index=False, emit=False):
+        self._update_files(update_index=update_index)
+        if emit:
+            self.emit_updated()
 
     def _update_files(self, update_index=False):
         display_untracked = prefs.display_untracked()
@@ -240,12 +250,12 @@ class MainModel(Observable):
         self.unstaged_deleted = state.get('unstaged_deleted', set())
         self.submodules = state.get('submodules', set())
 
-        sel = selection_model()
+        selection = selection_model()
         if self.is_empty():
-            sel.reset()
+            selection.reset()
         else:
-            sel.update(self)
-        if selection_model().is_empty():
+            selection.update(self)
+        if selection.is_empty():
             self.set_diff_text('')
 
     def is_empty(self):
@@ -308,83 +318,11 @@ class MainModel(Observable):
 
     def rename_branch(self, branch, new_branch):
         status, out, err = self.git.branch(branch, new_branch, M=True)
-        self.notify_observers(self.message_about_to_update)
+        self.emit_about_to_update()
         self._update_branches_and_tags()
         self._update_branch_heads()
-        self.notify_observers(self.message_updated)
+        self.emit_updated()
         return status, out, err
-
-    def _sliced_op(self, input_items, map_fn):
-        """Slice input_items and call map_fn over every slice
-
-        This exists because of "errno: Argument list too long"
-
-        """
-        # This comment appeared near the top of include/linux/binfmts.h
-        # in the Linux source tree:
-        #
-        # /*
-        #  * MAX_ARG_PAGES defines the number of pages allocated for arguments
-        #  * and envelope for the new program. 32 should suffice, this gives
-        #  * a maximum env+arg of 128kB w/4KB pages!
-        #  */
-        # #define MAX_ARG_PAGES 32
-        #
-        # 'size' is a heuristic to keep things highly performant by minimizing
-        # the number of slices.  If we wanted it to run as few commands as
-        # possible we could call "getconf ARG_MAX" and make a better guess,
-        # but it's probably not worth the complexity (and the extra call to
-        # getconf that we can't do on Windows anyways).
-        #
-        # In my testing, getconf ARG_MAX on Mac OS X Mountain Lion reported
-        # 262144 and Debian/Linux-x86_64 reported 2097152.
-        #
-        # The hard-coded max_arg_len value is safely below both of these
-        # real-world values.
-
-        max_arg_len = 32 * 4 * 1024
-        avg_filename_len = 300
-        size = max_arg_len // avg_filename_len
-
-        status = 0
-        outs = []
-        errs = []
-
-        items = copy.copy(input_items)
-        while items:
-            stat, out, err = map_fn(items[:size])
-            status = max(stat, status)
-            outs.append(out)
-            errs.append(err)
-            items = items[size:]
-
-        return (status, '\n'.join(outs), '\n'.join(errs))
-
-    def _sliced_add(self, items):
-        add = self.git.add
-        return self._sliced_op(
-                items, lambda x: add('--', force=True, verbose=True, *x))
-
-    def stage_modified(self):
-        status, out, err = self._sliced_add(self.modified)
-        self.update_file_status()
-        return (status, out, err)
-
-    def stage_untracked(self):
-        status, out, err = self._sliced_add(self.untracked)
-        self.update_file_status()
-        return (status, out, err)
-
-    def reset(self, *items):
-        reset = self.git.reset
-        status, out, err = self._sliced_op(items, lambda x: reset('--', *x))
-        self.update_file_status()
-        return (status, out, err)
-
-    def stage_all(self):
-        status, out, err = self.git.add(v=True, u=True)
-        self.update_file_status()
-        return (status, out, err)
 
     def remote_url(self, name, action):
         if action == 'push':
@@ -437,39 +375,6 @@ class MainModel(Observable):
     def is_commit_published(self):
         """Return True if the latest commit exists in any remote branch"""
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
-
-    def stage_paths(self, paths):
-        """Stages add/removals to git."""
-        if not paths:
-            self.stage_all()
-            return
-
-        add = []
-        remove = []
-
-        for path in set(paths):
-            if core.exists(path) or core.islink(path):
-                if path.endswith('/'):
-                    path = path.rstrip('/')
-                add.append(path)
-            else:
-                remove.append(path)
-
-        self.notify_observers(self.message_about_to_update)
-
-        # `git add -u` doesn't work on untracked files
-        if add:
-            self._sliced_add(add)
-
-        # If a path doesn't exist then that means it should be removed
-        # from the index.   We use `git add -u` for that.
-        if remove:
-            while remove:
-                self.git.add('--', u=True, *remove[:42])
-                remove = remove[42:]
-
-        self._update_files()
-        self.notify_observers(self.message_updated)
 
     def untrack_paths(self, paths):
         status, out, err = gitcmds.untrack_paths(paths, head=self.head)
