@@ -276,7 +276,7 @@ msgid "Revert Unstaged Changes?"
 msgstr "Oköade ändringar"
 
 msgid ""
-"This operation drops unstaged changes.\n"
+"This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
 
@@ -297,7 +297,7 @@ msgid "Revert Uncommitted Changes?"
 msgstr "Återställ ändringar"
 
 msgid ""
-"This operation drops uncommitted changes.\n"
+"This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
 

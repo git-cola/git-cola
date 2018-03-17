@@ -1662,8 +1662,9 @@ class RevertUnstagedEdits(RevertEditsCommand):
 
     def confirm(self):
         title = N_('Revert Unstaged Changes?')
-        text = N_('This operation drops unstaged changes.\n'
-                  'These changes cannot be recovered.')
+        text = N_(
+            'This operation removes unstaged edits from selected files.\n'
+            'These changes cannot be recovered.')
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
         return Interaction.confirm(title, text, info, ok_text,
@@ -1681,8 +1682,9 @@ class RevertUncommittedEdits(RevertEditsCommand):
 
     def confirm(self):
         title = N_('Revert Uncommitted Changes?')
-        text = N_('This operation drops uncommitted changes.\n'
-                  'These changes cannot be recovered.')
+        text = N_(
+            'This operation removes uncommitted edits from selected files.\n'
+            'These changes cannot be recovered.')
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
         return Interaction.confirm(title, text, info, ok_text,

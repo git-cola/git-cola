@@ -1968,12 +1968,12 @@ msgid ""
 msgstr ""
 
 msgid ""
-"This operation drops uncommitted changes.\n"
+"This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
 
 msgid ""
-"This operation drops unstaged changes.\n"
+"This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
 

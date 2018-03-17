@@ -13,6 +13,7 @@ Thanks
 * Andreas Schnederle-Wagner
 * Andreas Sommer
 * Andrew Chen
+* Andrej Kvasnica
 * Audrius Karabanovas
 * balping
 * Barış ÇELİK
