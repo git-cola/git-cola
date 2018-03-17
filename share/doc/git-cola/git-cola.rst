@@ -557,6 +557,15 @@ cola.readsize
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
 
+cola.safemode
+-------------
+The "Stage" button in the `git cola` Actions panel stages all files when it is
+activated and no files are selected.  This can be problematic if it is
+accidentally triggered after carefully preparing the index with staged
+changes.  "Safe Mode" is enabled by setting `cola.safemode` to `true`.
+When enabled, `git cola` will do nothing when "Stage" is activated without a
+selection.  Defaults to `false`.
+
 cola.savewindowsettings
 -----------------------
 `git cola` will remember its window settings when set to `true`.

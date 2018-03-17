@@ -1912,7 +1912,49 @@ class Stage(Command):
         # so there's no harm in ignoring updates from other threads
         # (e.g. the file system change monitor).
         with CommandDisabled(UpdateFileStatus):
-            self.model.stage_paths(self.paths)
+            return self.stage_paths()
+
+    def stage_paths(self):
+        """Stages add/removals to git."""
+        paths = self.paths
+        if not paths:
+            if self.model.cfg.get('cola.safemode', False):
+                return (0, '', '')
+            else:
+                return self.stage_all()
+
+        add = []
+        remove = []
+
+        for path in set(paths):
+            if core.exists(path) or core.islink(path):
+                if path.endswith('/'):
+                    path = path.rstrip('/')
+                add.append(path)
+            else:
+                remove.append(path)
+
+        self.model.emit_about_to_update()
+
+        # `git add -u` doesn't work on untracked files
+        if add:
+            status, out, err = gitcmds.add(add)
+            Interaction.command(N_('Error'), 'git add', status, out, err)
+
+        # If a path doesn't exist then that means it should be removed
+        # from the index.   We use `git add -u` for that.
+        if remove:
+            status, out, err = gitcmds.add(remove, u=True)
+            Interaction.command(N_('Error'), 'git add -u', status, out, err)
+
+        self.model.update_files(emit=True)
+        return status, out, err
+
+    def stage_all(self):
+        status, out, err = self.git.add(v=True, u=True)
+        Interaction.command(N_('Error'), 'git add -u', status, out, err)
+        self.model.update_file_status()
+        return (status, out, err)
 
 
 class StageCarefully(Stage):
@@ -1938,7 +1980,10 @@ class StageCarefully(Stage):
 
     def do(self):
         if self.ok_to_run():
-            Stage.do(self)
+            return Stage.do(self)
+        else:
+            return (0, '', '')
+
 
 
 class StageModified(StageCarefully):
@@ -2064,14 +2109,33 @@ class Unstage(Command):
         msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         with CommandDisabled(UpdateFileStatus):
-            self.model.unstage_paths(self.paths)
+            self.unstage_paths()
+
+    def unstage_paths(self):
+        paths = self.paths
+        head = self.model.head
+        if not paths:
+            return unstage_all(model)
+        status, out, err = gitcmds.unstage_paths(paths, head=head)
+        Interaction.command(N_('Error'), 'git reset', status, out, err)
+        self.model.update_file_status()
 
 
 class UnstageAll(Command):
     """Unstage all files; resets the index."""
 
     def do(self):
-        self.model.unstage_all()
+        return unstage_all(self.model)
+
+
+def unstage_all(model):
+    """Unstage all files, even while amending"""
+    git = model.git
+    head = model.head
+    status, out, err = git.reset(head, '--', '.')
+    Interaction.command(N_('Error'), 'git reset', status, out, err)
+    model.update_file_status()
+    return (status, out, err)
 
 
 class UnstageSelected(Unstage):
