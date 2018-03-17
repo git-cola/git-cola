@@ -1938,7 +1938,10 @@ class StageCarefully(Stage):
 
     def do(self):
         if self.ok_to_run():
-            Stage.do(self)
+            return Stage.do(self)
+        else:
+            return (0, '', '')
+
 
 
 class StageModified(StageCarefully):
