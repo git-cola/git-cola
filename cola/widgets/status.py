@@ -138,8 +138,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.image_formats = qtutils.ImageFormats()
 
         self.process_selection_action = qtutils.add_action(
-            self, cmds.StageOrUnstage.name(),
-            cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
+            self, cmds.StageOrUnstage.name(), self.stage_selection,
+            hotkeys.STAGE_SELECTION)
 
         self.revert_unstaged_edits_action = qtutils.add_action(
             self, cmds.RevertUnstagedEdits.name(),
@@ -356,6 +356,24 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if hscroll and self.old_hscroll is not None:
             hscroll.setValue(self.old_hscroll)
             self.old_hscroll = None
+
+    def stage_selection(self):
+        """Stage or unstage files according to the selection"""
+        selected_indexes = self.selected_indexes()
+        if selected_indexes:
+            category, idx = selected_indexes[0]
+            # A header item e.g. 'Staged', 'Modified', etc.
+            if category == self.idx_header:
+                if idx == self.idx_staged:
+                    cmds.do(cmds.UnstageAll)
+                elif idx == self.idx_modified:
+                    cmds.do(cmds.StageModified)
+                elif idx == self.idx_untracked:
+                    cmds.do(cmds.StageUntracked)
+                else:
+                    pass  # Do nothing for unmerged items, by design
+                return
+        cmds.do(cmds.StageOrUnstage)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
