@@ -6,11 +6,5 @@ export PATH
 # $0 = Contents/MacOS/git-cola
 macos="$(dirname "$0")"
 contents="$(dirname "$macos")"
-python="$contents/Resources/git-cola"
 
-if ! test -e "$python"
-then
-	python=python
-fi
-
-exec "$python" "$contents/Resources/bin/git-cola" --prompt
+exec "$contents/Resources/bin/git-cola" --prompt

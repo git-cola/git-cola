@@ -15,8 +15,6 @@ MKDIR_P = mkdir -p
 PIP = pip
 PYLINT = pylint
 PYTHON = python
-PYTHON_CONFIG = python-config
-PYTHON_DARWIN_APP = $(shell $(PYTHON_CONFIG) --prefix)/Resources/Python.app/Contents/MacOS/Python
 PYTEST ?= py.test
 RM = rm -f
 RM_R = rm -fr
@@ -207,7 +205,6 @@ git-cola.app:
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
-	$(LN_S) $(PYTHON_DARWIN_APP) $(cola_app)/Contents/Resources/git-cola
 .PHONY: git-cola.app
 
 app-tarball: git-cola.app
