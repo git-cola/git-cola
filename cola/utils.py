@@ -1,6 +1,7 @@
 # Copyright (C) 2007-2018 David Aguilar and contributors
 """This module provides miscellaneous utility functions."""
 from __future__ import division, absolute_import, unicode_literals
+import copy
 import os
 import random
 import re
@@ -274,3 +275,54 @@ class Proxy(object):
 
     def __getattr__(self, name):
         return getattr(self._obj, name)
+
+
+def slice_fn(input_items, map_fn):
+    """Slice input_items and call map_fn over every slice
+
+    This exists because of "errno: Argument list too long"
+
+    """
+    # This comment appeared near the top of include/linux/binfmts.h
+    # in the Linux source tree:
+    #
+    # /*
+    #  * MAX_ARG_PAGES defines the number of pages allocated for arguments
+    #  * and envelope for the new program. 32 should suffice, this gives
+    #  * a maximum env+arg of 128kB w/4KB pages!
+    #  */
+    # #define MAX_ARG_PAGES 32
+    #
+    # 'size' is a heuristic to keep things highly performant by minimizing
+    # the number of slices.  If we wanted it to run as few commands as
+    # possible we could call "getconf ARG_MAX" and make a better guess,
+    # but it's probably not worth the complexity (and the extra call to
+    # getconf that we can't do on Windows anyways).
+    #
+    # In my testing, getconf ARG_MAX on Mac OS X Mountain Lion reported
+    # 262144 and Debian/Linux-x86_64 reported 2097152.
+    #
+    # The hard-coded max_arg_len value is safely below both of these
+    # real-world values.
+
+    # 4K pages x 32 MAX_ARG_PAGES
+    max_arg_len = (32 * 4096) // 4  # allow plenty of space for the environment
+    max_filename_len = 256
+    size = max_arg_len // max_filename_len
+
+    status = 0
+    outs = []
+    errs = []
+
+    items = copy.copy(input_items)
+    while items:
+        stat, out, err = map_fn(items[:size])
+        if stat < 0:
+            status = min(stat, status)
+        else:
+            status = max(stat, status)
+        outs.append(out)
+        errs.append(err)
+        items = items[size:]
+
+    return (status, '\n'.join(outs), '\n'.join(errs))
