@@ -111,6 +111,7 @@ class RepoFormWidget(FormWidget):
         self.merge_summary = qtutils.checkbox(checked=True)
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
+        self.show_path = qtutils.checkbox(checked=True)
 
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
@@ -124,6 +125,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
+        self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
@@ -139,6 +141,7 @@ class RepoFormWidget(FormWidget):
             prefs.MERGE_SUMMARY: (self.merge_summary, True),
             prefs.MERGE_VERBOSITY: (self.merge_verbosity, 5),
             prefs.SAFE_MODE: (self.safe_mode, False),
+            prefs.SHOW_PATH: (self.show_path, True),
         })
 
 

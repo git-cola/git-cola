@@ -94,10 +94,20 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/753
 
+* The window title can be configured to not display the absolute path of the
+  repository.
+
+  https://github.com/git-cola/git-cola/issues/775
+
 Packaging
 ---------
 
 * The vendored `qtpy` library was updated to `v1.3.1`.
+
+* The macOS installation was made simpler for better compatibility with
+  Homebrew.
+
+  https://github.com/git-cola/git-cola/issues/636
 
 Fixes
 -----

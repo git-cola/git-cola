@@ -33,6 +33,7 @@ TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 SAFE_MODE = 'cola.safemode'
+SHOW_PATH = 'cola.showpath'
 SPELL_CHECK = 'cola.spellcheck'
 
 

@@ -19,7 +19,8 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
         """Test stage_paths() with an untracked file."""
         core.makedirs('foo/bar')
         self.touch('foo/bar/baz')
-        self.model.stage_paths(['foo'])
+        gitcmds.add(['foo'])
+        self.model.update_file_status()
 
         self.assertTrue('foo/bar/baz' in self.model.staged)
         self.assertTrue('foo/bar/baz' not in self.model.modified)
