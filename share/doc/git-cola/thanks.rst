@@ -10,6 +10,7 @@ Thanks
 * Alexander Kozienko
 * Alf Eaton
 * anderben
+* Andreas Schnederle-Wagner
 * Andreas Sommer
 * Andrew Chen
 * Audrius Karabanovas
