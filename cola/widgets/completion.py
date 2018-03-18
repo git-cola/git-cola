@@ -31,6 +31,17 @@ class ValidateRegex(object):
         return (state, string, idx)
 
 
+class RemoteValidator(QtGui.QValidator):
+    """Prevent invalid remote names"""
+
+    def __init__(self, parent=None):
+        super(RemoteValidator, self).__init__(parent)
+        self._validate = ValidateRegex(r'[ \t\\/]')
+
+    def validate(self, string, idx):
+        return self._validate.validate(string, idx)
+
+
 class BranchValidator(QtGui.QValidator):
     """Prevent invalid branch names"""
 
