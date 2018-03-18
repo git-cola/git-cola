@@ -114,7 +114,8 @@ def prompt_for_clone():
     Returns the target directory and URL
 
     """
-    url, ok = qtutils.prompt(N_('Path or URL to clone (Env. $VARS okay)'))
+    url, ok = qtutils.prompt(
+        N_('Path or URL to clone (Env. $VARS okay)'), title=N_('Clone...'))
     url = utils.expandpath(url)
     if not ok or not url:
         return None

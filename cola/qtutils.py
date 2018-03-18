@@ -222,7 +222,7 @@ def prompt(msg, title=None, text=''):
     if title is None:
         title = msg
     result = QtWidgets.QInputDialog.getText(
-            active_window(), msg, title,
+            active_window(), title, msg,
             QtWidgets.QLineEdit.Normal, text)
     return (result[0], result[1])
 
