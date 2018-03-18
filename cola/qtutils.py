@@ -570,7 +570,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None,
     button.setCursor(Qt.PointingHandCursor)
     button.setFocusPolicy(Qt.NoFocus)
     if text:
-        button.setText(text)
+        button.setText(' ' + text)
     if icon is not None:
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
@@ -771,7 +771,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
     if text is not None:
-        button.setText(text)
+        button.setText(' ' + text)
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
     if tooltip is not None:
         button.setToolTip(tooltip)
