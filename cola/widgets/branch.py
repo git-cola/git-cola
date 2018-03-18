@@ -294,9 +294,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def rename_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
-        new_branch = qtutils.prompt(N_('Rename branch'),
-                                    N_('Enter New Branch Name'),
-                                    branch)
+        new_branch = qtutils.prompt(
+            N_('Enter New Branch Name'),
+            title=N_('Rename branch'), text=branch)
         if new_branch[1] is True and new_branch[0]:
             self.git_action_async('rename', [branch, new_branch[0]],
                                   refresh_tree=True)

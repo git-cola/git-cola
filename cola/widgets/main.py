@@ -189,6 +189,10 @@ class MainView(standard.MainWindow):
             self, N_('New Repository...'), guicmds.open_new_repo)
         self.new_repository_action.setIcon(icons.new())
 
+        self.new_bare_repository_action = add_action(
+            self, N_('New Bare Repository...'), guicmds.new_bare_repo)
+        self.new_bare_repository_action.setIcon(icons.new())
+
         self.preferences_action = add_action(
             self, N_('Preferences'), self.preferences,
             QtGui.QKeySequence.Preferences)
@@ -373,11 +377,14 @@ class MainView(standard.MainWindow):
         # File Menu
         add_menu = qtutils.add_menu
         self.file_menu = add_menu(N_('&File'), self.menubar)
-        self.file_menu.addAction(self.new_repository_action)
+        # File->Open Recent menu
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(icons.folder())
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
+        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.new_repository_action)
+        self.file_menu.addAction(self.new_bare_repository_action)
         self.file_menu.addAction(self.clone_repo_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.rescan_action)

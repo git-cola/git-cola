@@ -248,9 +248,7 @@ class RemoteEditor(standard.Dialog):
                         item.setSelected(True)
 
     def add(self):
-        widget = AddRemoteDialog(self)
-        if widget.run():
-            cmds.do(cmds.RemoteAdd, widget.name, widget.url)
+        if add_remote(self):
             self.refresh()
 
     def delete(self):
@@ -308,6 +306,23 @@ class RemoteEditor(standard.Dialog):
         self.info_thread.start()
 
 
+
+def add_remote(parent, name='', url='',
+               readonly_url=False):
+    """Bring up the "Add Remote" dialog"""
+    widget = AddRemoteDialog(parent, readonly_url=readonly_url)
+    if name:
+        widget.name = name
+    if url:
+        widget.url = url
+    if widget.run():
+        cmds.do(cmds.RemoteAdd, widget.name, widget.url)
+        result = True
+    else:
+        result = False
+    return result
+
+
 def restore_focus(focus):
     if focus:
         focus.setFocus(Qt.OtherFocusReason)
@@ -337,15 +352,12 @@ class RemoteInfoThread(QtCore.QThread):
 
 class AddRemoteDialog(QtWidgets.QDialog):
 
-    name = property(operator.attrgetter('widget.name'))
-    url = property(operator.attrgetter('widget.url'))
-
-    def __init__(self, parent):
+    def __init__(self, parent, readonly_url=False):
         super(AddRemoteDialog, self).__init__(parent)
 
         self.setWindowModality(Qt.WindowModal)
 
-        self.widget = RemoteWidget(self)
+        self.widget = RemoteWidget(self, readonly_url=readonly_url)
         self.add_button = qtutils.create_button(
             text=N_('Add Remote'), icon=icons.ok(), enabled=False)
         self.close_button = qtutils.close_button()
@@ -362,6 +374,15 @@ class AddRemoteDialog(QtWidgets.QDialog):
         qtutils.connect_button(self.add_button, self.accept)
         qtutils.connect_button(self.close_button, self.reject)
 
+    def set_name(self, value):
+        self.widget.name = value
+
+    def set_url(self, value):
+        self.widget.url = value
+
+    name = property(operator.attrgetter('widget.name'), set_name)
+    url = property(operator.attrgetter('widget.url'), set_url)
+
     def run(self):
         self.show()
         self.raise_()
@@ -377,7 +398,7 @@ class RemoteWidget(QtWidgets.QWidget):
                    lambda self, value: self.remote_url.set_value(value))
     valid = Signal(bool)
 
-    def __init__(self, parent):
+    def __init__(self, parent, readonly_url=False):
         super(RemoteWidget, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
 
@@ -391,7 +412,8 @@ class RemoteWidget(QtWidgets.QWidget):
         self.remote_name = lineedit(N_('Name for the new remote'))
         self.remote_url = lineedit('git://git.example.com/repo.git')
         self.open_button = qtutils.create_button(
-                text=N_('Open...'), icon=icons.repo())
+            text=N_('Open...'), icon=icons.folder(),
+            tooltip=N_('Select repository'))
 
         self.url_layout = qtutils.hbox(
             defs.no_margin, defs.spacing,
@@ -410,6 +432,10 @@ class RemoteWidget(QtWidgets.QWidget):
         self.remote_name.textChanged.connect(self.validate)
         self.remote_url.textChanged.connect(self.validate)
         qtutils.connect_button(self.open_button, self.open_repo)
+
+        if readonly_url:
+            self.remote_url.setReadOnly(True)
+            self.open_button.setEnabled(False)
 
     def validate(self, dummy_text):
         name = self.name

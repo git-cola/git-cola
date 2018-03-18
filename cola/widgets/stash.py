@@ -189,8 +189,8 @@ class StashView(standard.Dialog):
         a git stash named accordingly.
 
         """
-        stash_name, ok = qtutils.prompt(N_('Save Stash'),
-                                        N_('Enter a name for the stash'))
+        stash_name, ok = qtutils.prompt(
+            N_('Enter a name for the stash'), title=N_('Save Stash'))
         if not ok or not stash_name:
             return
         # Sanitize the stash name

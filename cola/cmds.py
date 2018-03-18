@@ -1494,6 +1494,23 @@ class Clone(Command):
         return self
 
 
+class NewBareRepo(ModelCommand):
+    """Create a new shared bare repository"""
+
+    def __init__(self, path):
+        super(NewBareRepo, self).__init__()
+        self.path = path
+
+    def do(self):
+        git = self.model.git
+        path = self.path
+        status, out, err = git.init(path, bare=True, shared=True)
+        Interaction.command(
+            N_('Error'), 'git init --bare --shared "%s"' % path,
+            status, out, err)
+        return status == 0
+
+
 def unix_path(path, is_win32=utils.is_win32):
     """Git for Windows requires unix paths, so force them here
     """
