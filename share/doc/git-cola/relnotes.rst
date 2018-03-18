@@ -99,6 +99,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/775
 
+* The "Edit Remotes" editor learned to edit remote URLS.
+
 Packaging
 ---------
 
