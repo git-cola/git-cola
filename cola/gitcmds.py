@@ -44,6 +44,15 @@ def default_remote(config=None):
     return config.get('branch.%s.remote' % current_branch())
 
 
+def remote_url(remote, push=False, config=None):
+    """Return the URL for the specified remote"""
+    config = get_config(config)
+    url = config.get('remote.%s.url' % remote, '')
+    if push:
+        url = config.get('remote.%s.pushurl' % remote, url)
+    return url
+
+
 def diff_index_filenames(ref):
     """Return a of filenames that have been modified relative to the index"""
     out = git.diff_index(ref, name_only=True, z=True)[STDOUT]

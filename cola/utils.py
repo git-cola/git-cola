@@ -326,3 +326,19 @@ def slice_fn(input_items, map_fn):
         items = items[size:]
 
     return (status, '\n'.join(outs), '\n'.join(errs))
+
+
+class seq(object):
+
+    def __init__(self, seq):
+        self.seq = seq
+
+    def index(self, item, default=-1):
+        try:
+            idx = self.seq.index(item)
+        except ValueError:
+            idx = default
+        return idx
+
+    def __getitem__(self, idx):
+        return self.seq[idx]

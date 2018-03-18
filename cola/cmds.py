@@ -595,27 +595,31 @@ def file_summary(files):
 
 class RemoteCommand(ConfirmAction):
 
-    def __init__(self, remote):
-        ConfirmAction.__init__(self)
+    def __init__(self, name):
+        super(RemoteCommand, self).__init__()
         self.model = main.model()
-        self.remote = remote
+        self.name = name
 
     def success(self):
+        self.model.cfg.reset()
         self.model.update_remotes()
 
 
 class RemoteAdd(RemoteCommand):
 
-    def __init__(self, remote, url):
-        RemoteCommand.__init__(self, remote)
+    def __init__(self, name, url):
+        super(RemoteAdd, self).__init__(name)
         self.url = url
 
     def action(self):
         git = self.model.git
-        return git.remote('add', self.remote, self.url)
+        return git.remote('add', self.name, self.url)
 
     def error_message(self):
-        return N_('Error creating remote "%s"') % self.remote
+        return N_('Error creating remote "%s"') % self.name
+
+    def command(self):
+        return 'git remote add "%s" "%s"' % (self.name, self.url)
 
 
 class RemoteRemove(RemoteCommand):
@@ -623,35 +627,84 @@ class RemoteRemove(RemoteCommand):
     def confirm(self):
         title = N_('Delete Remote')
         question = N_('Delete remote?')
-        info = N_('Delete remote "%s"') % self.remote
+        info = N_('Delete remote "%s"') % self.name
         ok_text = N_('Delete')
         return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
-        return git.remote('rm', self.remote)
+        return git.remote('rm', self.name)
 
     def error_message(self):
-        return N_('Error deleting remote "%s"') % self.remote
+        return N_('Error deleting remote "%s"') % self.name
+
+    def command(self):
+        return 'git remote rm "%s"' % self.name
 
 
 class RemoteRename(RemoteCommand):
 
-    def __init__(self, remote, new_remote):
-        RemoteCommand.__init__(self, remote)
-        self.new_remote = new_remote
+    def __init__(self, name, new_name):
+        super(RemoteRename, self).__init__(name)
+        self.new_name = new_name
 
     def confirm(self):
         title = N_('Rename Remote')
         question = N_('Rename remote?')
         info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
-                dict(current=self.remote, new=self.new_remote))
+                dict(current=self.name, new=self.new_name))
         ok_text = N_('Rename')
         return Interaction.confirm(title, question, info, ok_text)
 
     def action(self):
         git = self.model.git
-        return git.remote('rename', self.remote, self.new_remote)
+        return git.remote('rename', self.name, self.new_name)
+
+    def error_message(self):
+        return (N_('Error renaming remote "%s" to "%s"')
+                % (self.name, self.new_name))
+
+    def command(self):
+        return 'git remote rename "%s" "%s"' % (self.name, self.new_name)
+
+
+class RemoteSetURL(RemoteCommand):
+
+    def __init__(self, name, url):
+        super(RemoteSetURL, self).__init__(name)
+        self.url = url
+
+    def action(self):
+        git = self.model.git
+        return git.remote('set-url', self.name, self.url)
+
+    def error_message(self):
+        return (N_('Unable to set remote URL for "%s" to "%s"')
+                % (self.name, self.url))
+
+    def command(self):
+        return 'git remote set-url "%s" "%s"' % (self.name, self.url)
+
+
+class RemoteEdit(BaseCommand):
+    """Combine RemoteRename and RemoteSetURL"""
+
+    def __init__(self, old_name, name, url):
+        super(RemoteEdit, self).__init__()
+        self.old_name = old_name
+        self.name = name
+        self.url = url
+        self.rename = RemoteRename(old_name, name)
+        self.set_url = RemoteSetURL(name, url)
+
+    def do(self):
+        result = self.rename.do()
+        name_ok = result[0]
+        url_ok = False
+        if name_ok:
+            result = self.set_url.do()
+            url_ok = result[0]
+        return name_ok, url_ok
 
 
 class RemoveFromSettings(ConfirmAction):
@@ -696,7 +749,7 @@ class RemoveRecent(RemoveFromSettings):
 
 
 class RemoveFiles(Command):
-    """Removes files."""
+    """Removes files"""
 
     def __init__(self, remover, filenames):
         Command.__init__(self)

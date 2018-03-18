@@ -17,21 +17,42 @@ from . import defs
 from . import text
 
 
+class ValidateRegex(object):
+
+    def __init__(self, regex):
+        self.regex = re.compile(regex)  # regex to scrub
+
+    def validate(self, string, idx):
+        """Scrub and validate the user-supplied input"""
+        state = QtGui.QValidator.Acceptable
+        if self.regex.search(string):
+            string = self.regex.sub('', string)  # scrub matching bits
+            idx = min(idx-1, len(string))
+        return (state, string, idx)
+
+
+class RemoteValidator(QtGui.QValidator):
+    """Prevent invalid remote names"""
+
+    def __init__(self, parent=None):
+        super(RemoteValidator, self).__init__(parent)
+        self._validate = ValidateRegex(r'[ \t\\/]')
+
+    def validate(self, string, idx):
+        return self._validate.validate(string, idx)
+
+
 class BranchValidator(QtGui.QValidator):
     """Prevent invalid branch names"""
 
     def __init__(self, git, parent=None):
         super(BranchValidator, self).__init__(parent)
         self._git = git
-        self._whitespace = re.compile(r'[ \t]')
+        self._validate = ValidateRegex(r'[ \t\\]')  # forward-slash is okay
 
     def validate(self, string, idx):
         """Scrub and validate the user-supplied input"""
-        state = self.Acceptable
-        # scrub whitespace
-        if self._whitespace.search(string):
-            string = self._whitespace.sub('', string)
-            idx = min(idx-1, len(string))
+        state, string, idx = self._validate.validate(string, idx)
         if string:  # Allow empty strings
             status, out, err = self._git.check_ref_format(string, branch=True)
             if status != 0:

@@ -194,8 +194,7 @@ class MainView(standard.MainWindow):
             QtGui.QKeySequence.Preferences)
 
         self.edit_remotes_action = add_action(
-            self, N_('Edit Remotes...'),
-            lambda: editremotes.remote_editor().exec_())
+            self, N_('Edit Remotes...'), editremotes.editor)
 
         self.rescan_action = add_action(
             self, cmds.Refresh.name(), cmds.run(cmds.Refresh),
