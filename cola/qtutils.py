@@ -568,6 +568,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None,
     """Create a button, set its title, and add it to the parent."""
     button = QtWidgets.QPushButton()
     button.setCursor(Qt.PointingHandCursor)
+    button.setFocusPolicy(Qt.NoFocus)
     if text:
         button.setText(text)
     if icon is not None:
@@ -587,6 +588,7 @@ def create_button(text='', layout=None, tooltip=None, icon=None,
 def create_action_button(tooltip=None, icon=None):
     button = QtWidgets.QPushButton()
     button.setCursor(Qt.PointingHandCursor)
+    button.setFocusPolicy(Qt.NoFocus)
     button.setFlat(True)
     if tooltip is not None:
         button.setToolTip(tooltip)
@@ -764,6 +766,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     button.setAutoRaise(True)
     button.setAutoFillBackground(True)
     button.setCursor(Qt.PointingHandCursor)
+    button.setFocusPolicy(Qt.NoFocus)
     if icon is not None:
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
