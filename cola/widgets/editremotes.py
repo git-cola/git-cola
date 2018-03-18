@@ -11,6 +11,7 @@ from ..git import git
 from ..git import STDOUT
 from ..i18n import N_
 from .. import cmds
+from .. import core
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -389,21 +390,34 @@ class RemoteWidget(QtWidgets.QWidget):
         self.setWindowTitle(N_('Add remote'))
         self.remote_name = lineedit(N_('Name for the new remote'))
         self.remote_url = lineedit('git://git.example.com/repo.git')
+        self.open_button = qtutils.create_button(
+                text=N_('Open...'), icon=icons.repo())
+
+        self.url_layout = qtutils.hbox(
+            defs.no_margin, defs.spacing,
+            self.remote_url, self.open_button)
 
         validate_remote = completion.RemoteValidator(self.remote_name)
         self.remote_name.setValidator(validate_remote)
 
         self._form = qtutils.form(defs.margin, defs.spacing,
                                   (N_('Name'), self.remote_name),
-                                  (N_('URL'), self.remote_url))
+                                  (N_('URL'), self.url_layout))
 
         self._layout = qtutils.vbox(defs.margin, defs.spacing, self._form)
         self.setLayout(self._layout)
 
         self.remote_name.textChanged.connect(self.validate)
         self.remote_url.textChanged.connect(self.validate)
+        qtutils.connect_button(self.open_button, self.open_repo)
 
     def validate(self, dummy_text):
         name = self.name
         url = self.url
         self.valid.emit(bool(name) and bool(url))
+
+    def open_repo(self):
+        repo = qtutils.opendir_dialog(
+            N_('Open Git Repository...'), core.getcwd())
+        if repo and git.is_git_dir(repo):
+            self.url = repo
