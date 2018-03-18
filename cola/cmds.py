@@ -668,6 +668,24 @@ class RemoteRename(RemoteCommand):
         return 'git remote rename "%s" "%s"' % (self.name, self.new_name)
 
 
+class RemoteSetURL(RemoteCommand):
+
+    def __init__(self, name, url):
+        super(RemoteSetURL, self).__init__(name)
+        self.url = url
+
+    def action(self):
+        git = self.model.git
+        return git.remote('set-url', self.name, self.url)
+
+    def error_message(self):
+        return (N_('Unable to set remote URL for "%s" to "%s"')
+                % (self.name, self.url))
+
+    def command(self):
+        return 'git remote set-url "%s" "%s"' % (self.name, self.url)
+
+
 class RemoveFromSettings(ConfirmAction):
 
     def __init__(self, settings, repo, name, icon=None):
