@@ -601,6 +601,7 @@ class RemoteCommand(ConfirmAction):
         self.remote = remote
 
     def success(self):
+        self.model.cfg.reset()
         self.model.update_remotes()
 
 
