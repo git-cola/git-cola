@@ -325,11 +325,8 @@ class MainModel(Observable):
         return status, out, err
 
     def remote_url(self, name, action):
-        if action == 'push':
-            url = self.cfg.get('remote.%s.pushurl' % name)
-            if url:
-                return url
-        return self.cfg.get('remote.%s.url' % name)
+        push = action == 'push'
+        return gitcmds.remote_url(name, push=push)
 
     def fetch(self, remote, **opts):
         return run_remote_action(self.git.fetch, remote, **opts)
