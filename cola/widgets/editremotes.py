@@ -17,22 +17,19 @@ from . import standard
 from . import text
 
 
-def remote_editor():
-    view = new_remote_editor(parent=qtutils.active_window())
-    view.show()
-    view.raise_()
+def editor(run=True):
+    view = RemoteEditor(parent=qtutils.active_window())
+    if run:
+        view.show()
+        view.raise_()
+        view.exec_()
     return view
-
-
-def new_remote_editor(parent=None):
-    return RemoteEditor(parent=parent)
 
 
 class RemoteEditor(standard.Dialog):
 
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent)
-
         self.setWindowTitle(N_('Edit Remotes'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)

@@ -459,7 +459,7 @@ def cmd_recent(args):
 def cmd_remote(args):
     from .widgets import editremotes
     context = application_init(args)
-    view = editremotes.new_remote_editor()
+    view = editremotes.editor(run=False)
     return application_start(context, view)
 
 

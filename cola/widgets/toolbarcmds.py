@@ -61,7 +61,7 @@ COMMANDS = {
     },
     'File::EditRemotes': {
         'title': 'Edit Remotes...',
-        'action': lambda: editremotes.remote_editor().exec_(),
+        'action': editremotes.editor,
         'icon': None
     },
     'File::RecentModified': {
