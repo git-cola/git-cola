@@ -6,6 +6,7 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import main
 from .widgets import completion
+from .widgets import editremotes
 from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output
@@ -105,6 +106,54 @@ def open_new_repo():
     if not dirname:
         return
     cmds.do(cmds.OpenRepo, dirname)
+
+
+def new_bare_repo():
+    result = None
+    repo = prompt_for_new_bare_repo()
+    if not repo:
+        return result
+    # Create bare repo
+    ok = cmds.do(cmds.NewBareRepo, repo)
+    if not ok:
+        return result
+    # Add a new remote pointing to the bare repo
+    parent = qtutils.active_window()
+    if editremotes.add_remote(parent,
+            name=os.path.basename(repo),
+            url=repo, readonly_url=True):
+        result = repo
+
+    return result
+
+
+
+def prompt_for_new_bare_repo():
+    path = qtutils.opendir_dialog(N_('Select Directory...'), core.getcwd())
+    if not path:
+        return None
+
+    bare_repo = None
+    default = os.path.basename(core.getcwd())
+    if not default.endswith('.git'):
+        default += '.git'
+    while not bare_repo:
+        name, ok = qtutils.prompt(
+            N_('Enter a name for the new bare repo'),
+            title=N_('New Bare Repository...'),
+            text=default)
+        if not name:
+            return None
+        if not name.endswith('.git'):
+            name += '.git'
+        repo = os.path.join(path, name)
+        if core.isdir(repo):
+            Interaction.critical(
+                    N_('Error'), N_('"%s" already exists') % repo)
+        else:
+            bare_repo = repo
+
+    return bare_repo
 
 
 def prompt_for_clone():
