@@ -101,6 +101,9 @@ Usability, bells and whistles
 
 * The "Edit Remotes" editor learned to edit remote URLS.
 
+* Bare repositories can now be created by selecting the
+  "New Bare Repository..." action from the `File` menu.
+
 Packaging
 ---------
 
