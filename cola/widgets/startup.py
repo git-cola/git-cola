@@ -44,7 +44,7 @@ class StartupDialog(standard.Dialog):
         self.new_button = qtutils.create_button(
                 text=N_('New...'), icon=icons.new())
         self.open_button = qtutils.create_button(
-                text=N_('Open...'), icon=icons.repo())
+                text=N_('Open...'), icon=icons.folder())
         self.clone_button = qtutils.create_button(
                 text=N_('Clone...'), icon=icons.cola())
         self.close_button = qtutils.close_button()
