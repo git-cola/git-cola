@@ -697,7 +697,7 @@ class RemoveRecent(RemoveFromSettings):
 
 
 class RemoveFiles(Command):
-    """Removes files."""
+    """Removes files"""
 
     def __init__(self, remover, filenames):
         Command.__init__(self)
