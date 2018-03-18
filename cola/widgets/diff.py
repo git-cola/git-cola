@@ -186,6 +186,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def set_diff(self, diff):
         """Set the diff text, but save the scrollbar"""
+        diff = diff.rstrip('\n')  # diffs include two empty newlines
         self.save_scrollbar()
 
         self.hint.set_value('')
