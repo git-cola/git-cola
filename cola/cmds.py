@@ -686,6 +686,27 @@ class RemoteSetURL(RemoteCommand):
         return 'git remote set-url "%s" "%s"' % (self.name, self.url)
 
 
+class RemoteEdit(BaseCommand):
+    """Combine RemoteRename and RemoteSetURL"""
+
+    def __init__(self, old_name, name, url):
+        super(RemoteEdit, self).__init__()
+        self.old_name = old_name
+        self.name = name
+        self.url = url
+        self.rename = RemoteRename(old_name, name)
+        self.set_url = RemoteSetURL(name, url)
+
+    def do(self):
+        result = self.rename.do()
+        name_ok = result[0]
+        url_ok = False
+        if name_ok:
+            result = self.set_url.do()
+            url_ok = result[0]
+        return name_ok, url_ok
+
+
 class RemoveFromSettings(ConfirmAction):
 
     def __init__(self, settings, repo, name, icon=None):
