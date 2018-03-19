@@ -1862,6 +1862,22 @@ class SetDiffText(Command):
         self.new_diff_type = 'text'
 
 
+class SetUpstreamBranch(ModelCommand):
+
+    def __init__(self, branch, remote, remote_branch):
+        super(SetUpstreamBranch, self).__init__()
+        self.branch = branch
+        self.remote = remote
+        self.remote_branch = remote_branch
+
+    def do(self):
+        cfg = self.model.cfg
+        remote = self.remote
+        branch = self.branch
+        remote_branch = self.remote_branch
+        cfg.set_repo('branch.%s.remote' % branch, remote)
+        cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
+
 class ShowUntracked(Command):
     """Show an untracked file."""
 
