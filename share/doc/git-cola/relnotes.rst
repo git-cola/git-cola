@@ -104,6 +104,8 @@ Usability, bells and whistles
 * Bare repositories can now be created by selecting the
   "New Bare Repository..." action from the `File` menu.
 
+* The "Branches" widget learned to configure upstream branches.
+
 Packaging
 ---------
 

@@ -193,17 +193,6 @@ class MainModel(Observable):
         self.mode = mode
         self.notify_observers(self.message_mode_changed, mode)
 
-    def apply_diff(self, filename):
-        return self.git.apply(filename, index=True, cached=True)
-
-    def apply_diff_to_worktree(self, filename):
-        return self.git.apply(filename)
-
-    def prev_commitmsg(self, *args):
-        """Queries git for the latest commit message."""
-        return self.git.log('-1', no_color=True, pretty='format:%s%n%n%b',
-                            *args)[STDOUT]
-
     def update_path_filter(self, filter_paths):
         self.filter_paths = filter_paths
         self.update_file_status()

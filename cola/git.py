@@ -279,41 +279,6 @@ class Git(object):
         # Allow access to the command's status code
         return (status, out, err)
 
-    def transform_kwargs(self, **kwargs):
-        """Transform kwargs into git command line options
-
-        Callers can assume the following behavior:
-
-        Passing foo=None ignores foo, so that callers can
-        use default values of None that are ignored unless
-        set explicitly.
-
-        Passing foo=False ignore foo, for the same reason.
-
-        Passing foo={string-or-number} results in ['--foo=<value>']
-        in the resulting arguments.
-
-        """
-        args = []
-        types_to_stringify = (ustr, float, str) + int_types
-
-        for k, v in kwargs.items():
-            if len(k) == 1:
-                dashes = '-'
-                join = ''
-            else:
-                dashes = '--'
-                join = '='
-            # isinstance(False, int) is True, so we have to check bool first
-            if isinstance(v, bool):
-                if v:
-                    args.append('%s%s' % (dashes, dashify(k)))
-                # else: pass  # False is ignored; flag=False inhibits --flag
-            elif isinstance(v, types_to_stringify):
-                args.append('%s%s%s%s' % (dashes, dashify(k), join, v))
-
-        return args
-
     def git(self, cmd, *args, **kwargs):
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
@@ -336,7 +301,7 @@ class Git(object):
 
         # Prepare the argument list
         git_args = ['git', '-c', 'diff.suppressBlankEmpty=false', dashify(cmd)]
-        opt_args = self.transform_kwargs(**kwargs)
+        opt_args = transform_kwargs(**kwargs)
         call = git_args + opt_args
         call.extend(args)
         try:
@@ -364,6 +329,42 @@ class Git(object):
             if sys.platform == 'win32':
                 _print_win32_git_hint()
             sys.exit(1)
+
+
+def transform_kwargs(**kwargs):
+    """Transform kwargs into git command line options
+
+    Callers can assume the following behavior:
+
+    Passing foo=None ignores foo, so that callers can
+    use default values of None that are ignored unless
+    set explicitly.
+
+    Passing foo=False ignore foo, for the same reason.
+
+    Passing foo={string-or-number} results in ['--foo=<value>']
+    in the resulting arguments.
+
+    """
+    args = []
+    types_to_stringify = (ustr, float, str) + int_types
+
+    for k, v in kwargs.items():
+        if len(k) == 1:
+            dashes = '-'
+            join = ''
+        else:
+            dashes = '--'
+            join = '='
+        # isinstance(False, int) is True, so we have to check bool first
+        if isinstance(v, bool):
+            if v:
+                args.append('%s%s' % (dashes, dashify(k)))
+            # else: pass  # False is ignored; flag=False inhibits --flag
+        elif isinstance(v, types_to_stringify):
+            args.append('%s%s%s%s' % (dashes, dashify(k), join, v))
+
+    return args
 
 
 def _print_win32_git_hint():

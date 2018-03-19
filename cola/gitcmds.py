@@ -32,16 +32,32 @@ def add(items, u=False):
         items, lambda paths: add('--', force=True, verbose=True, u=u, *paths))
 
 
+def apply_diff(filename):
+    return git.apply(filename, index=True, cached=True)
+
+
+def apply_diff_to_worktree(filename):
+    return git.apply(filename)
+
+
+def get_branch(branch):
+    if branch is None:
+        branch = current_branch()
+    return branch
+
+
 def get_config(config):
     if config is None:
         config = gitcfg.current()
     return config
 
 
-def default_remote(config=None):
-    """Return the remote tracked by the current branch."""
+
+def upstream_remote(branch=None, config=None):
+    """Return the remote associated with the specified branch"""
     config = get_config(config)
-    return config.get('branch.%s.remote' % current_branch())
+    branch = get_branch(branch)
+    return config.get('branch.%s.remote' % branch)
 
 
 def remote_url(remote, push=False, config=None):
@@ -263,6 +279,18 @@ def tracked_branch(branch=None, config=None):
     if merge_ref.startswith(refs_heads):
         return remote + '/' + merge_ref[len(refs_heads):]
     return None
+
+
+def parse_remote_branch(branch):
+    """Split a remote branch apart into (remote, name) components"""
+    rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+    match = rgx.match(branch)
+    remote = ''
+    branch = ''
+    if match:
+        remote = match.group('remote')
+        branch = match.group('branch')
+    return (remote, branch)
 
 
 def untracked_files(git=git, paths=None, **kwargs):
@@ -781,6 +809,12 @@ def parse_refs(argv):
     else:
         oids = argv
     return oids
+
+
+def prev_commitmsg(*args):
+    """Queries git for the latest commit message."""
+    return git.log('-1', no_color=True, pretty='format:%s%n%n%b',
+                   *args)[STDOUT]
 
 
 def rev_parse(name):

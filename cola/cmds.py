@@ -193,7 +193,7 @@ class AmendMode(Command):
 
         if self.amending:
             self.new_mode = self.model.mode_amend
-            self.new_commitmsg = self.model.prev_commitmsg()
+            self.new_commitmsg = gitcmds.prev_commitmsg()
             AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
@@ -316,9 +316,9 @@ class ApplyDiffSelection(Command):
         try:
             core.write(tmp_file, patch, encoding=encoding)
             if self.apply_to_worktree:
-                status, out, err = self.model.apply_diff_to_worktree(tmp_file)
+                status, out, err = gitcmds.apply_diff_to_worktree(tmp_file)
             else:
-                status, out, err = self.model.apply_diff(tmp_file)
+                status, out, err = gitcmds.apply_diff(tmp_file)
         finally:
             core.unlink(tmp_file)
 
@@ -1309,7 +1309,7 @@ class LoadCommitMessageFromOID(Command):
         Command.__init__(self)
         self.oid = oid
         self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = prefix + self.model.prev_commitmsg(oid)
+        self.new_commitmsg = prefix + gitcmds.prev_commitmsg(oid)
         self.undoable = True
 
     def do(self):
@@ -1861,6 +1861,22 @@ class SetDiffText(Command):
         self.new_diff_text = text
         self.new_diff_type = 'text'
 
+
+class SetUpstreamBranch(ModelCommand):
+
+    def __init__(self, branch, remote, remote_branch):
+        super(SetUpstreamBranch, self).__init__()
+        self.branch = branch
+        self.remote = remote
+        self.remote_branch = remote_branch
+
+    def do(self):
+        cfg = self.model.cfg
+        remote = self.remote
+        branch = self.branch
+        remote_branch = self.remote_branch
+        cfg.set_repo('branch.%s.remote' % branch, remote)
+        cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
 
 class ShowUntracked(Command):
     """Show an untracked file."""
