@@ -282,12 +282,9 @@ class BranchesTreeWidget(standard.TreeWidget):
     def push_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         remote_branch = gitcmds.tracked_branch(branch)
-        if remote_branch is not None:
-            rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
-            match = rgx.match(remote_branch)
-            if match:
-                remote = match.group('remote')
-                branch_name = match.group('branch')
+        if remote_branch:
+            remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
+            if remote and branch_name:
                 # we assume that user wants to "Push" the selected local
                 # branch to a remote with same name
                 self.git_action_async('push', [remote, branch_name])
@@ -304,16 +301,11 @@ class BranchesTreeWidget(standard.TreeWidget):
     def pull_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         remote_branch = gitcmds.tracked_branch(branch)
-
-        if remote_branch is not None:
-            rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
-            match = rgx.match(remote_branch)
-
-            if match:
-                remote = match.group('remote')
-                branch_name = match.group('branch')
-                self.git_action_async('pull', [remote, branch_name],
-                                      refresh_tree=True)
+        if remote_branch:
+            remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
+            if remote and branch_name:
+                self.git_action_async(
+                    'pull', [remote, branch_name], refresh_tree=True)
 
     def delete_action(self):
         title = N_('Delete Branch')
@@ -331,14 +323,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                 remote = True
 
             if remote:
-                rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
-                match = rgx.match(branch)
-                if match:
-                    remote = match.group('remote')
-                    branch_name = match.group('branch')
+                remote, branch_name = gitcmds.parse_remote_branch(branch)
+                if remote and branch_name:
                     self.git_action_async('delete_remote',
-                                          [remote, branch_name],
-                                          update_remotes=True)
+                        [remote, branch_name], update_remotes=True)
             else:
                 self.git_action_async('delete_local', [branch])
 
@@ -356,8 +344,8 @@ class BranchesTreeWidget(standard.TreeWidget):
     def checkout_new_branch_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         if branch != self.current_branch:
-            new_branch = re.sub(r'^(?P<remote>[^/]+)/', '', branch)
-            self.git_action_async('checkout', [branch], {'b': new_branch})
+            remote, new_branch = gitcmds.parse_remote_branch(branch)
+            self.git_action_async('checkout', ['-b', new_branch, branch])
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -371,7 +359,7 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
-    # TODO: review standar.py 317.
+    # TODO: review standard.py 317.
     # original function returns 'QTreeWidgetItem' object which has no
     # attribute 'rowCount'. This workaround fix error throw when
     # navigating with keyboard and press left key

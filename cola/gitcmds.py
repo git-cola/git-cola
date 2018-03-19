@@ -281,6 +281,18 @@ def tracked_branch(branch=None, config=None):
     return None
 
 
+def parse_remote_branch(branch):
+    """Split a remote branch apart into (remote, name) components"""
+    rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
+    match = rgx.match(branch)
+    remote = ''
+    branch = ''
+    if match:
+        remote = match.group('remote')
+        branch = match.group('branch')
+    return (remote, branch)
+
+
 def untracked_files(git=git, paths=None, **kwargs):
     """Returns a sorted list of untracked files."""
 

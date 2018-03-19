@@ -31,15 +31,12 @@ def delete_branch():
 
 def delete_remote_branch():
     """Launch the 'Delete Remote Branch' dialog."""
-    branch = choose_remote_branch(N_('Delete Remote Branch'), N_('Delete'),
-                                  icon=icons.discard())
-    if not branch:
+    remote_branch = choose_remote_branch(
+        N_('Delete Remote Branch'), N_('Delete'), icon=icons.discard())
+    if not remote_branch:
         return
-    rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
-    match = rgx.match(branch)
-    if match:
-        remote = match.group('remote')
-        branch = match.group('branch')
+    remote, branch = gitcmds.parse_remote_branch(remote_branch)
+    if remote and branch:
         cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
 
