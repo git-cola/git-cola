@@ -185,33 +185,63 @@ class GitCommandTest(unittest.TestCase):
         """Creates a git.Git instance for later use"""
         self.git = git.Git()
 
-    def test_transform_kwargs(self):
+    def test_transform_kwargs_empty(self):
         expect = []
-        actual = self.git.transform_kwargs(foo=None, bar=False)
+        actual = git.transform_kwargs(foo=None, bar=False)
         self.assertEqual(expect, actual)
 
+    def test_transform_kwargs_single_dash_from_True(self):
+        """Single dash for one-character True"""
         expect = ['-a']
-        actual = self.git.transform_kwargs(a=True)
+        actual = git.transform_kwargs(a=True)
         self.assertEqual(expect, actual)
 
+    def test_transform_kwargs_no_single_dash_from_False(self):
+        """No single-dash for False"""
+        expect = []
+        actual = git.transform_kwargs(a=False)
+        self.assertEqual(expect, actual)
+
+    def test_transform_kwargs_double_dash_from_True(self):
+        """Double-dash for longer True"""
         expect = ['--abc']
-        actual = self.git.transform_kwargs(abc=True)
+        actual = git.transform_kwargs(abc=True)
         self.assertEqual(expect, actual)
 
+    def test_transform_kwargs_no_double_dash_from_True(self):
+        """No double-dash for False"""
+        expect = []
+        actual = git.transform_kwargs(abc=False)
+        self.assertEqual(expect, actual)
+
+    def test_transform_kwargs_single_dash_int(self):
         expect = ['-a1']
-        actual = self.git.transform_kwargs(a=1)
+        actual = git.transform_kwargs(a=1)
         self.assertEqual(expect, actual)
 
+    def test_transform_kwargs_double_dash_int(self):
         expect = ['--abc=1']
-        actual = self.git.transform_kwargs(abc=1)
+        actual = git.transform_kwargs(abc=1)
         self.assertEqual(expect, actual)
 
+    def test_transform_kwargs_single_dash_float(self):
+        expect = ['-a1.5']
+        actual = git.transform_kwargs(a=1.5)
+        self.assertEqual(expect, actual)
+
+    def test_transform_kwargs_double_dash_float(self):
+        expect = ['--abc=1.5']
+        actual = git.transform_kwargs(abc=1.5)
+        self.assertEqual(expect, actual)
+
+    def test_transform_kwargs_single_dash_string(self):
         expect = ['-abc']
-        actual = self.git.transform_kwargs(a='bc')
+        actual = git.transform_kwargs(a='bc')
         self.assertEqual(expect, actual)
 
+    def test_transform_double_single_dash_string(self):
         expect = ['--abc=def']
-        actual = self.git.transform_kwargs(abc='def')
+        actual = git.transform_kwargs(abc='def')
         self.assertEqual(expect, actual)
 
     def test_version(self):
