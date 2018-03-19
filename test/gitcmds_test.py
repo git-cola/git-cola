@@ -32,12 +32,12 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.git('remote', 'rm', 'origin')
         self.assertEqual(gitcmds.branch_list(remote=True), [])
 
-    def test_default_remote(self):
-        """Test default_remote()."""
-        self.assertEqual(gitcmds.default_remote(config=self.config), None)
+    def test_upstream_remote(self):
+        """Test getting the configured upstream remote"""
+        self.assertEqual(gitcmds.upstream_remote(config=self.config), None)
         self.git('config', 'branch.master.remote', 'test')
         self.config.reset()
-        self.assertEqual(gitcmds.default_remote(config=self.config), 'test')
+        self.assertEqual(gitcmds.upstream_remote(config=self.config), 'test')
 
     def test_tracked_branch(self):
         """Test tracked_branch()."""

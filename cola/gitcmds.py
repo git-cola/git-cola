@@ -32,16 +32,24 @@ def add(items, u=False):
         items, lambda paths: add('--', force=True, verbose=True, u=u, *paths))
 
 
+def get_branch(branch):
+    if branch is None:
+        branch = current_branch()
+    return branch
+
+
 def get_config(config):
     if config is None:
         config = gitcfg.current()
     return config
 
 
-def default_remote(config=None):
-    """Return the remote tracked by the current branch."""
+
+def upstream_remote(branch=None, config=None):
+    """Return the remote associated with the specified branch"""
     config = get_config(config)
-    return config.get('branch.%s.remote' % current_branch())
+    branch = get_branch(branch)
+    return config.get('branch.%s.remote' % branch)
 
 
 def remote_url(remote, push=False, config=None):
