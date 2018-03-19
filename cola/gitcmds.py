@@ -32,6 +32,14 @@ def add(items, u=False):
         items, lambda paths: add('--', force=True, verbose=True, u=u, *paths))
 
 
+def apply_diff(filename):
+    return git.apply(filename, index=True, cached=True)
+
+
+def apply_diff_to_worktree(filename):
+    return git.apply(filename)
+
+
 def get_branch(branch):
     if branch is None:
         branch = current_branch()
@@ -789,6 +797,12 @@ def parse_refs(argv):
     else:
         oids = argv
     return oids
+
+
+def prev_commitmsg(*args):
+    """Queries git for the latest commit message."""
+    return git.log('-1', no_color=True, pretty='format:%s%n%n%b',
+                   *args)[STDOUT]
 
 
 def rev_parse(name):

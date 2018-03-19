@@ -193,7 +193,7 @@ class AmendMode(Command):
 
         if self.amending:
             self.new_mode = self.model.mode_amend
-            self.new_commitmsg = self.model.prev_commitmsg()
+            self.new_commitmsg = gitcmds.prev_commitmsg()
             AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
@@ -316,9 +316,9 @@ class ApplyDiffSelection(Command):
         try:
             core.write(tmp_file, patch, encoding=encoding)
             if self.apply_to_worktree:
-                status, out, err = self.model.apply_diff_to_worktree(tmp_file)
+                status, out, err = gitcmds.apply_diff_to_worktree(tmp_file)
             else:
-                status, out, err = self.model.apply_diff(tmp_file)
+                status, out, err = gitcmds.apply_diff(tmp_file)
         finally:
             core.unlink(tmp_file)
 
@@ -1309,7 +1309,7 @@ class LoadCommitMessageFromOID(Command):
         Command.__init__(self)
         self.oid = oid
         self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = prefix + self.model.prev_commitmsg(oid)
+        self.new_commitmsg = prefix + gitcmds.prev_commitmsg(oid)
         self.undoable = True
 
     def do(self):
