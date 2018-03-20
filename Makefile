@@ -191,8 +191,12 @@ i18n: pot mo
 .PHONY: i18n
 
 pot:
-	$(SETUP) build_pot --no-lang --build-dir=po
+	$(SETUP) build_pot --build-dir=po --no-lang
 .PHONY: pot
+
+po:
+	$(SETUP) build_pot --build-dir=po
+.PHONY: po
 
 mo:
 	$(SETUP) build_mo --force
