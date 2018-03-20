@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-03-17 19:33+0800\n"
+"PO-Revision-Date: 2018-03-21 01:27+0800\n"
 "Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -190,6 +190,40 @@ msgid ""
 "ctrl+q     = cancel and abort the rebase\n"
 "ctrl+d     = launch difftool\n"
 msgstr ""
+"\n"
+"可用命令\n"
+"--------\n"
+"pick = 選用這個修訂版提交\n"
+"reword = 選用這個修訂版提交，但編輯修訂版提交訊息\n"
+"edit = 選用這個修訂版提交，但停下來以進行修正(amending)\n"
+"squash = 選用這個修訂版提交，但是將其併入前一個修訂版提交\n"
+"fixup = 跟 squash 雷同，但丟棄此修訂版提交的紀錄訊息\n"
+"exec = 使用殼層(shell)執行命令（剩下的行）\n"
+"\n"
+"這些行可以被更動順序，他們將被從上至下執行。\n"
+"\n"
+"如果你停用任一行**該修訂版提交將會遺失**。\n"
+"\n"
+"但是，如果您停用所有行，這次變更基底(rebase)將被中止。\n"
+"\n"
+"鍵盤快捷鍵\n"
+"------------------\n"
+"? = 顯示此幫助訊息\n"
+"j = 往下移動\n"
+"k = 往上移動\n"
+"J = 將選取的行往下平移\n"
+"K = 將選取的行往上平移\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"空白鍵 = 切換啟用／停用\n"
+"\n"
+"ctrl+enter = 接受變更並變更基底\n"
+"ctrl+q     = 取消並中止變更基底程序\n"
+"ctrl+d     = 啟動內容差異檢視工具\n"
 
 msgid ""
 "\n"
@@ -233,9 +267,9 @@ msgstr "「%(command)s」命令傳回了 %(status)d 結束狀態代碼"
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr "「%(command)s」命令傳回了 %(status)d 結束狀態碼"
 
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" already exists"
-msgstr "「%s」分支早已存在。"
+msgstr "「%s」早已存在。"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
@@ -373,12 +407,11 @@ msgstr "關於 git-cola"
 msgid "Accept"
 msgstr "接受"
 
-#, fuzzy
 msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"提交新修訂版準備區域中的變更\n"
+"接受變更並變更基底(rebase)\n"
 "鍵盤快捷鍵：Ctrl+Enter"
 
 msgid "Action Name"
@@ -430,12 +463,11 @@ msgstr "新增遠端版控庫"
 msgid "Add to .gitignore"
 msgstr "新增到 Git 忽略規則(.gitignore)"
 
-#, fuzzy
 msgid "Add to Git Annex"
-msgstr "新增到 Git 忽略規則(.gitignore)"
+msgstr "新增到 Git Annex"
 
 msgid "Add to Git LFS"
-msgstr ""
+msgstr "新增到 Git LFS"
 
 msgid "Additions"
 msgstr "新增行數"
@@ -588,13 +620,12 @@ msgstr "不執行提交掛勾程式"
 msgid "Cancel"
 msgstr "取消"
 
-#, fuzzy
 msgid ""
 "Cancel rebase\n"
 "Shortcut: Ctrl+Q"
 msgstr ""
-"提交新修訂版準備區域中的變更\n"
-"鍵盤快捷鍵：Ctrl+Enter"
+"取消變更基底\n"
+"鍵盤快捷鍵：Ctrl+Q"
 
 msgid "Cannot Amend"
 msgstr "無法修正前一次的修訂版提交"
@@ -687,7 +718,7 @@ msgstr "全部折疊"
 # Ｖ字龍：注意此應翻譯為動詞。
 #, fuzzy
 msgid "Command"
-msgstr "提交變更"
+msgstr "Command"
 
 # Ｖ字龍：注意此應翻譯為動詞。
 msgid "Commit"
@@ -945,7 +976,7 @@ msgid "Edit Remotes..."
 msgstr "編輯遠端版控庫……"
 
 msgid "Edit remotes by selecting them from the list"
-msgstr ""
+msgstr "藉由從清單中選取它們來編輯遠端版控庫"
 
 msgid "Edit selected paths"
 msgstr "編輯選取的路徑"
@@ -963,14 +994,13 @@ msgid "Email contributor"
 msgstr "寄電子郵件給這位貢獻者"
 
 msgid "Enabled"
-msgstr ""
+msgstr "啟用"
 
 msgid "Enter New Branch Name"
 msgstr "輸入新的分支名稱"
 
-#, fuzzy
 msgid "Enter a name for the new bare repo"
-msgstr "輸入蒐藏(stash)的名稱"
+msgstr "輸入新裸裝版本庫(bare repo)的名稱"
 
 msgid "Enter a name for the stash"
 msgstr "輸入蒐藏(stash)的名稱"
@@ -1003,17 +1033,16 @@ msgstr "無法啟動變動紀錄瀏覽器"
 msgid "Error creating remote \"%s\""
 msgstr "建立「%s」遠端分支時發生錯誤"
 
-#, fuzzy
 msgid "Error creating stash"
-msgstr "建立新的分支時發生錯誤"
+msgstr "建立新的蒐藏時發生錯誤"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "移除「%s」遠端分支時發生錯誤"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
-msgstr "將「%(revision)s」修訂版加上「%(name)s」標籤"
+msgstr "將「%(name)s」更名為「%(new_name)s」時發生錯誤"
 
 msgid "Error running prepare-commitmsg hook"
 msgstr "執行 prepare-commitmsg 掛勾程式時發生錯誤"
@@ -1212,7 +1241,7 @@ msgid "Help - Find Files"
 msgstr "尋求幫助 - 尋找檔案"
 
 msgid "Help - git-xbase"
-msgstr ""
+msgstr "尋求幫助 - git-xbase"
 
 msgid "History Browser"
 msgstr "變更紀錄瀏覽器"
@@ -1244,13 +1273,11 @@ msgstr "包含標籤 "
 msgid "Indonesian translation"
 msgstr "印度尼西亞語翻譯"
 
-#, fuzzy
 msgid "Initialize Git Annex"
-msgstr "初始化..."
+msgstr "初始化 Git Annex"
 
-#, fuzzy
 msgid "Initialize Git LFS"
-msgstr "初始化..."
+msgstr "初始化 Git LFS"
 
 msgid "Insert spaces instead of tabs"
 msgstr "插入空白字元而非跨欄字元(tab)"
@@ -1286,6 +1313,8 @@ msgid ""
 "Launch external diff tool\n"
 "Shortcut: Ctrl+D"
 msgstr ""
+"啟動外部內容差異檢視工具\n"
+"鍵盤快捷鍵：Ctrl+D"
 
 msgid "Launch git-cola"
 msgstr "啟動 git-cola"
@@ -1394,9 +1423,8 @@ msgstr "名稱"
 msgid "Name for the new remote"
 msgstr "新遠端版控庫的名稱"
 
-#, fuzzy
 msgid "New Bare Repository..."
-msgstr "新版控庫……"
+msgstr "新的裸裝版控庫(bare repository)……"
 
 msgid "New Repository..."
 msgstr "新版控庫……"
@@ -1477,9 +1505,8 @@ msgstr "於新 git-cola 視窗中開啟版控庫……"
 msgid "Open..."
 msgstr "打開版控庫……"
 
-#, fuzzy
 msgid "Other branches"
-msgstr "過濾分支名稱……"
+msgstr "其他分支"
 
 msgid "Overwrite"
 msgstr "覆寫"
@@ -1568,7 +1595,7 @@ msgid "Prepare Commit Message"
 msgstr "準備修訂版提交訊息"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
-msgstr ""
+msgstr "避免 Stage 快捷鍵在沒有選取任何項目時將所有檔案移至修訂版提交準備區域"
 
 msgid "Previous File"
 msgstr "上個檔案"
@@ -1827,13 +1854,11 @@ msgstr "執行命令：%s"
 msgid "Russian translation"
 msgstr "俄羅斯語翻譯"
 
-#, fuzzy
 msgid "SHA-1"
-msgstr "複製 SHA-1 雜湊"
+msgstr "SHA-1 雜湊"
 
-#, fuzzy
 msgid "Safe Mode"
-msgstr "將已變更的項目移入新修訂版準備區域"
+msgstr "安全模式"
 
 msgid "Save"
 msgstr "保存"
@@ -1908,9 +1933,8 @@ msgstr "選擇子節點"
 msgid "Select Commit"
 msgstr "選取修訂版提交"
 
-#, fuzzy
 msgid "Select Directory..."
-msgstr "選擇版控庫"
+msgstr "選擇目錄……"
 
 msgid "Select File"
 msgstr "選取檔案"
@@ -1943,9 +1967,8 @@ msgstr "於「%s」中選取檔案"
 msgid "Select manually..."
 msgstr "手動選取……"
 
-#, fuzzy
 msgid "Select output dir"
-msgstr "選取修訂版提交"
+msgstr "選取輸出目錄"
 
 #, fuzzy
 msgid "Select output directory"
@@ -1975,10 +1998,10 @@ msgid "Shell arguments"
 msgstr "殼程式參數"
 
 msgid "Shift Down"
-msgstr ""
+msgstr "往下平移"
 
 msgid "Shift Up"
-msgstr ""
+msgstr "往上平移"
 
 msgid "Shortcuts"
 msgstr "鍵盤快捷鍵"
@@ -1987,7 +2010,7 @@ msgid "Show Diffstat After Merge"
 msgstr "在合併後顯示內容差異"
 
 msgid "Show Full Paths in the Window Title"
-msgstr ""
+msgstr "在視窗標題列中顯示版控庫的完整路徑"
 
 msgid "Show Help"
 msgstr "顯示幫助訊息"
@@ -2015,7 +2038,7 @@ msgid "Showing changes since"
 msgstr "顯示變更自前"
 
 msgid "Side by side"
-msgstr ""
+msgstr "並列檢視"
 
 msgid "Sign Off"
 msgstr "署名(Sign Off)"
@@ -2246,7 +2269,7 @@ msgstr ""
 "將所有的合併衝突解決並提交內容變更。"
 
 msgid "Toggle Enabled"
-msgstr ""
+msgstr "切換為啟用"
 
 msgid "Toggle the branches filter"
 msgstr "切換分支過濾器開關"
@@ -2284,7 +2307,7 @@ msgstr "無法變更基底"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
-msgstr ""
+msgstr "無法將「%(name)s」的 URL 設定為 %(url)s"
 
 msgid "Undo"
 msgstr "撤銷"
