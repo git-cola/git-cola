@@ -661,8 +661,8 @@ class RemoteRename(RemoteCommand):
         return git.remote('rename', self.name, self.new_name)
 
     def error_message(self):
-        return (N_('Error renaming remote "%s" to "%s"')
-                % (self.name, self.new_name))
+        return (N_('Error renaming "%(name)s" to "%(new_name)s"')
+                % dict(name=self.name, new_name=self.new_name))
 
     def command(self):
         return 'git remote rename "%s" "%s"' % (self.name, self.new_name)
@@ -679,8 +679,8 @@ class RemoteSetURL(RemoteCommand):
         return git.remote('set-url', self.name, self.url)
 
     def error_message(self):
-        return (N_('Unable to set remote URL for "%s" to "%s"')
-                % (self.name, self.url))
+        return (N_('Unable to set URL for "%(name)s" to "%(url)s"')
+                % dict(name=self.name, url=self.url))
 
     def command(self):
         return 'git remote set-url "%s" "%s"' % (self.name, self.url)
