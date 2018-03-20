@@ -142,6 +142,10 @@ msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr ""
 
 #, python-format
+msgid "\"%s\" already exists"
+msgstr ""
+
+#, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
 msgstr ""
 
@@ -150,10 +154,6 @@ msgid "\"%s\" requires a selected file."
 msgstr ""
 
 msgid "#"
-msgstr ""
-
-#, python-format
-msgid "%(path)s"
 msgstr ""
 
 #, python-format
@@ -206,6 +206,12 @@ msgstr ""
 
 #, python-format
 msgid "%s: No such file or directory."
+msgstr ""
+
+msgid "&Edit"
+msgstr ""
+
+msgid "&File"
 msgstr ""
 
 msgid "(Amending)"
@@ -313,6 +319,12 @@ msgid "Add remote"
 msgstr ""
 
 msgid "Add to .gitignore"
+msgstr ""
+
+msgid "Add to Git Annex"
+msgstr ""
+
+msgid "Add to Git LFS"
 msgstr ""
 
 msgid "Additions"
@@ -795,7 +807,7 @@ msgstr ""
 msgid "Drop the selected stash"
 msgstr ""
 
-msgid "&Edit"
+msgid "Edit"
 msgstr ""
 
 msgid "Edit Rebase"
@@ -805,6 +817,9 @@ msgid "Edit Remotes"
 msgstr ""
 
 msgid "Edit Remotes..."
+msgstr ""
+
+msgid "Edit remotes by selecting them from the list"
 msgstr ""
 
 msgid "Edit selected paths"
@@ -826,6 +841,9 @@ msgid "Enabled"
 msgstr ""
 
 msgid "Enter New Branch Name"
+msgstr ""
+
+msgid "Enter a name for the new bare repo"
 msgstr ""
 
 msgid "Enter a name for the stash"
@@ -859,8 +877,15 @@ msgstr ""
 msgid "Error creating remote \"%s\""
 msgstr ""
 
+msgid "Error creating stash"
+msgstr ""
+
 #, python-format
 msgid "Error deleting remote \"%s\""
+msgstr ""
+
+#, python-format
+msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
 msgstr ""
 
 msgid "Error running prepare-commitmsg hook"
@@ -924,9 +949,6 @@ msgid "Fetch Tracking Branch"
 msgstr ""
 
 msgid "Fetch..."
-msgstr ""
-
-msgid "&File"
 msgstr ""
 
 msgid "File Browser..."
@@ -1092,6 +1114,12 @@ msgstr ""
 msgid "Indonesian translation"
 msgstr ""
 
+msgid "Initialize Git Annex"
+msgstr ""
+
+msgid "Initialize Git LFS"
+msgstr ""
+
 msgid "Insert spaces instead of tabs"
 msgstr ""
 
@@ -1234,6 +1262,9 @@ msgstr ""
 msgid "Name for the new remote"
 msgstr ""
 
+msgid "New Bare Repository..."
+msgstr ""
+
 msgid "New Repository..."
 msgstr ""
 
@@ -1308,6 +1339,9 @@ msgstr ""
 msgid "Open..."
 msgstr ""
 
+msgid "Other branches"
+msgstr ""
+
 msgid "Overwrite"
 msgstr ""
 
@@ -1345,6 +1379,9 @@ msgstr ""
 msgid "Pick"
 msgstr ""
 
+msgid "Pixel XOR"
+msgstr ""
+
 msgid "Please provide both a branch name and revision expression."
 msgstr ""
 
@@ -1380,6 +1417,9 @@ msgid "Prefix"
 msgstr ""
 
 msgid "Prepare Commit Message"
+msgstr ""
+
+msgid "Prevent \"Stage\" from staging all files when nothing is selected"
 msgstr ""
 
 msgid "Previous File"
@@ -1483,6 +1523,10 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
+#, python-format
+msgid "Rename \"%s\""
+msgstr ""
+
 msgid "Rename Branch"
 msgstr ""
 
@@ -1506,6 +1550,9 @@ msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
 msgid "Rename remote?"
+msgstr ""
+
+msgid "Rename selected paths"
 msgstr ""
 
 #, python-format
@@ -1632,6 +1679,9 @@ msgstr ""
 msgid "SHA-1"
 msgstr ""
 
+msgid "Safe Mode"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 
@@ -1705,6 +1755,9 @@ msgstr ""
 msgid "Select Commit"
 msgstr ""
 
+msgid "Select Directory..."
+msgstr ""
+
 msgid "Select File"
 msgstr ""
 
@@ -1745,7 +1798,13 @@ msgstr ""
 msgid "Select patch file(s)..."
 msgstr ""
 
+msgid "Select repository"
+msgstr ""
+
 msgid "Set Default Repository"
+msgstr ""
+
+msgid "Set Upstream Branch"
 msgstr ""
 
 msgid "Set upstream"
@@ -1769,6 +1828,9 @@ msgstr ""
 msgid "Show Diffstat After Merge"
 msgstr ""
 
+msgid "Show Full Paths in the Window Title"
+msgstr ""
+
 msgid "Show Help"
 msgstr ""
 
@@ -1790,6 +1852,9 @@ msgid "Show whole surrounding functions of changes"
 msgstr ""
 
 msgid "Showing changes since"
+msgstr ""
+
+msgid "Side by side"
 msgstr ""
 
 msgid "Sign Off"
@@ -1895,6 +1960,15 @@ msgstr ""
 msgid "Stash"
 msgstr ""
 
+msgid "Stash Index"
+msgstr ""
+
+msgid "Stash staged changes only"
+msgstr ""
+
+msgid "Stash unstaged changes only, keeping staged changes"
+msgstr ""
+
 msgid "Stash..."
 msgstr ""
 
@@ -1968,6 +2042,11 @@ msgid ""
 msgstr ""
 
 msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+msgid ""
 "This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
@@ -2023,6 +2102,10 @@ msgid "Ukranian translation"
 msgstr ""
 
 msgid "Unable to rebase"
+msgstr ""
+
+#, python-format
+msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
 msgstr ""
 
 msgid "Undo"
@@ -2097,6 +2180,9 @@ msgid "Whether to sign the tag (git tag -s)"
 msgstr ""
 
 msgid "Would you like to stage and commit all modified files?"
+msgstr ""
+
+msgid "XOR"
 msgstr ""
 
 msgid ""

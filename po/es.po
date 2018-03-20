@@ -18,1194 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Abort Merge..."
-msgstr ""
-
-msgid "Aborting the current merge?"
-msgstr ""
-
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-
-msgid "Abort Merge"
-msgstr ""
-
-msgid "Error"
-msgstr ""
-
-msgid "Amend"
-msgstr ""
-
-msgid "Cannot Amend"
-msgstr ""
-
-msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
-msgstr ""
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr ""
-
-msgid "Summary:"
-msgstr "Resumen:"
-
-msgid "Patch(es) Applied"
-msgstr ""
-
-#, python-format
-msgid "%d patch(es) applied."
-msgstr ""
-
-msgid "Error Launching Blame Viewer"
-msgstr ""
-
-#, fuzzy, python-format
-msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
-
-msgid "Reset Branch"
-msgstr ""
-
-msgid "Point the current branch head to a new commit?"
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
-
-msgid "Reset Worktree"
-msgstr ""
-
-msgid "Reset worktree?"
-msgstr ""
-
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr ""
-
-msgid "Commit failed"
-msgstr ""
-
-#, python-format
-msgid "Error creating remote \"%s\""
-msgstr "Error al crear el repositorio remoto \"%s\""
-
-msgid "Delete Remote"
-msgstr "Eliminar Repositorio Remoto"
-
-msgid "Delete remote?"
-msgstr "Desea eliminar el repositorio remoto?"
-
-#, python-format
-msgid "Delete remote \"%s\""
-msgstr "Eliminar repositorio remoto \"%s\""
-
-msgid "Delete"
-msgstr "Eliminar"
-
-#, python-format
-msgid "Error deleting remote \"%s\""
-msgstr "Error al eliminar el repositorio remoto \"%s\""
-
-msgid "Rename Remote"
-msgstr "Renombrar Repositorio Remoto"
-
-msgid "Rename remote?"
-msgstr "Desea renombrar el repositorio remoto?"
-
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr ""
-"Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
-
-msgid "Rename"
-msgstr "Renombrar"
-
-#, fuzzy
-msgid "Delete Bookmark?"
-msgstr "Favoritos"
-
-#, python-format
-msgid "%s will be removed from your bookmarks."
-msgstr ""
-
-#, fuzzy
-msgid "Delete Bookmark"
-msgstr "Favoritos"
-
-#, python-format
-msgid "Remove %s from the recent list?"
-msgstr "Eliminar %s de la lista de recientes?"
-
-#, python-format
-msgid "%s will be removed from your recent repositories."
-msgstr "%s seran eliminado de tus repositorios recientes."
-
-msgid "Remove"
-msgstr "Eliminar"
-
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr "Fallo intentando eliminar \"%s\""
-
-msgid "Delete Files?"
-msgstr "Eliminar Archivos?"
-
-msgid "The following files will be deleted:"
-msgstr "Se eliminarán los siguientes archivos:"
-
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr "Desea eliminar %d archivos(s)?"
-
-msgid "Delete Files"
-msgstr "Eliminar Archivos"
-
-msgid "Error Deleting Remote Branch"
-msgstr "Error al Eliminar Rama Remota"
-
-msgid "Remote Branch Deleted"
-msgstr "Rama Remota Eliminada"
-
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "\"%(branch)s\" ha sido eliminado de \"%(remote)s\"."
-
-msgid "Launch Editor"
-msgstr "Abrir Editor"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
-
-msgid "Error Editing File"
-msgstr "Error al Editar Archivo"
-
-msgid "Launch Diff Tool"
-msgstr "Abrir Herramienta de Comparación"
-
-msgid "Launch Terminal"
-msgstr "Abrir Terminal"
-
-msgid "Error: Cannot find commit template"
-msgstr ""
-
-#, python-format
-msgid "%s: No such file or directory."
-msgstr "%s: El directorio o archivo no existe."
-
-msgid "Error: Unconfigured commit template"
-msgstr ""
-
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-"Primero debes configurar una plantilla de commit.\n"
-"Usa \"git config\" y modifica \"commit.template\"\n"
-"para que apunte a una plantilla."
-
-msgid "Error running prepare-commitmsg hook"
-msgstr ""
-
-#, python-format
-msgid "A hook must be provided at \"%s\""
-msgstr ""
-
-msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
-
-msgid "Open Using Default Application"
-msgstr "Abrir Usando Aplicación por Defecto"
-
-msgid "Open Parent Directory"
-msgstr "Abrir Directorio Padre"
-
-#, python-format
-msgid "Rebase onto %s"
-msgstr ""
-
-msgid "Rebase"
-msgstr ""
-
-msgid "Rebase stoppped"
-msgstr ""
-
-msgid "Edit Rebase"
-msgstr ""
-
-msgid "Save"
-msgstr "Guardar"
-
-msgid "Refresh"
-msgstr "Refrescar"
-
-msgid "Revert Unstaged Edits..."
-msgstr ""
-
-msgid "Revert Unstaged Changes?"
-msgstr ""
-
-msgid ""
-"This operation removes unstaged edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-msgid "Revert the unstaged changes?"
-msgstr ""
-
-msgid "Revert Unstaged Changes"
-msgstr ""
-
-msgid "Revert Uncommitted Edits..."
-msgstr ""
-
-msgid "Revert Uncommitted Changes?"
-msgstr ""
-
-msgid ""
-"This operation removes uncommitted edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-
-msgid "Revert the uncommitted changes?"
-msgstr ""
-
-msgid "Revert Uncommitted Changes"
-msgstr ""
-
-#, python-format
-msgid "Run \"%s\"?"
-msgstr "Desea ejecutar \"%s\"?"
-
-msgid "Please select a file"
-msgstr "Por favor, seleccione un archivo"
-
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr "\"%s\" requiere que seleccione un archivo"
-
-msgid "Invalid Revision"
-msgstr "Revisión inválida"
-
-msgid "The revision expression cannot be empty."
-msgstr ""
-
-#, python-format
-msgid "Running command: %s"
-msgstr "Ejecutando comando: %s"
-
-msgid "Sign Off"
-msgstr ""
-
-msgid "unknown"
-msgstr "desconocido"
-
-msgid "Stage conflicts?"
-msgstr ""
-
-#, python-format
-msgid ""
-"%s appears to contain merge conflicts.\n"
-"\n"
-"You should probably skip this file.\n"
-"Stage it anyways?"
-msgstr ""
-
-msgid "Stage conflicts"
-msgstr ""
-
-msgid "Skip"
-msgstr ""
-
-msgid "Stage"
-msgstr ""
-
-#, python-format
-msgid "Staging: %s"
-msgstr ""
-
-msgid "Stage Modified"
-msgstr ""
-
-msgid "Stage Unmerged"
-msgstr ""
-
-msgid "Stage Untracked"
-msgstr ""
-
-msgid "Stage / Unstage"
-msgstr ""
-
-msgid "Missing Tag Message"
-msgstr ""
-
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
-
-msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
-msgstr ""
-
-msgid "Create Unsigned Tag"
-msgstr ""
-
-#, python-format
-msgid "Error: could not create tag \"%s\""
-msgstr "Error: no se pudo crear la etiqueta \"%s\""
-
-msgid "Unstage"
-msgstr ""
-
-#, python-format
-msgid "Unstaging: %s"
-msgstr ""
-
-#, python-format
-msgid "Untracking: %s"
-msgstr ""
-
-msgid "Error Launching History Browser"
-msgstr ""
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
-
-#, fuzzy
-msgid "Next File"
-msgstr "Seleccionar Archivo"
-
-msgid "Previous File"
-msgstr ""
-
-#, fuzzy
-msgid "File system change monitoring: enabled.\n"
-msgstr "Notificación de archivo activada.\n"
-
-msgid ""
-"File system change monitoring: disabled because the limit on the total "
-"number of inotify watches was reached.  You may be able to increase the "
-"limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
-"&& sudo sysctl -p\n"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "inotify está desactivado porque \"cola.inotify\" es FALSO\n"
-
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
-
-msgid ""
-"File system change monitoring: disabled because libc does not support the "
-"inotify system calls.\n"
-msgstr ""
-
-msgid "Delete Branch"
-msgstr "Eliminar Rama"
-
-msgid "Delete Remote Branch"
-msgstr "Eliminar Rama Remota"
-
-msgid "Browse Commits..."
-msgstr ""
-
-msgid "Browse"
-msgstr ""
-
-msgid "Checkout Branch"
-msgstr ""
-
-msgid "Checkout"
-msgstr ""
-
-msgid "Cherry-Pick Commit"
-msgstr ""
-
-msgid "New Repository..."
-msgstr "Nuevo Repositorio..."
-
-msgid "Error Creating Repository"
-msgstr "Error al Crear Repositorio"
-
-msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Ruta o URL a Clonar (Env. $VARS okay)"
-
-msgid "Error Cloning"
-msgstr "Error al Crear Copia Local"
-
-#, python-format
-msgid "Could not parse Git URL: \"%s\""
-msgstr "No fue posible procesar la Git URL: \"%s\""
-
-msgid "Select a parent directory for the new clone"
-msgstr "Seleccione un directorio padre para la nueva copia local"
-
-#, python-format
-msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" ya existe, cola creará un nuevo directorio"
-
-msgid "Directory Exists"
-msgstr "El Directorio ya Existe"
-
-msgid "Export Patches"
-msgstr "Exportar Parches"
-
-msgid "Open Git Repository..."
-msgstr "Abrir Repositorio Git..."
-
-msgid "Load Commit Message"
-msgstr ""
-
-msgid "Select Branch to Review"
-msgstr ""
-
-msgid "Review"
-msgstr ""
-
-#, fuzzy
-msgid "Clone Repository"
-msgstr "Repositorio Actual"
-
-#, fuzzy, python-format
-msgid "Cloning repository at %s"
-msgstr "Repositorio: %s"
-
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr "Error: no se pudo clonar \"%s\""
-
-#, fuzzy
-msgid "Rename Existing Branch"
-msgstr "Acutalizar Rama Existente:"
-
-msgid "Select"
-msgstr "Seleccionar"
-
-#, fuzzy
-msgid "Enter New Branch Name"
-msgstr "Nombre de la Rama"
-
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Rama Remota Eliminada"
-
-msgid "Reset"
-msgstr ""
-
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr ""
-
-msgid "Continue"
-msgstr "Continuar"
-
-#, python-format
-msgid "Run %s?"
-msgstr "Desea ejecutar %s?"
-
-#, python-format
-msgid "Run the \"%s\" command?"
-msgstr "Desea ejecutar el comando %s?"
-
-msgid "Run"
-msgstr "Ejecutar"
-
-#, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr ""
-
-msgid "Close..."
-msgstr "Cerrar..."
-
-msgid "Close"
-msgstr "Cerrar"
-
-msgid "&Edit"
-msgstr "Editar"
-
-msgid "Detach"
-msgstr ""
-
-msgid "Attach"
-msgstr ""
-
-msgid "Nothing to do"
-msgstr ""
-
-msgid "git-cola diff"
-msgstr ""
-
-msgid "Compare"
-msgstr "Comparar"
-
-#, fuzzy
-msgid "Compare All"
-msgstr "Comparar"
-
-msgid ""
-"\n"
-"Keyboard Shortcuts\n"
-"------------------\n"
-"J, Down     = Move Down\n"
-"K, Up       = Move Up\n"
-"Enter       = Edit Selected Files\n"
-"Spacebar    = Open File Using Default Application\n"
-"Ctrl + L    = Focus Text Entry Field\n"
-"?           = Show Help\n"
-"\n"
-"The up and down arrows change focus between the text entry field\n"
-"and the results.\n"
-msgstr ""
-
-msgid "Help - Find Files"
-msgstr ""
-
-#, fuzzy
-msgid "Find Files"
-msgstr "Archivos"
-
-msgid "<path> ..."
-msgstr ""
-
-msgid "Help"
-msgstr "Ayuda"
-
-msgid ""
-"Show help\n"
-"Shortcut: ?"
-msgstr ""
-
-#, fuzzy
-msgid "Show Help"
-msgstr "Ayuda"
-
-msgid "Revision Expression:"
-msgstr ""
-
-msgid "No commits exist in this branch."
-msgstr ""
-
-msgid "Add to .gitignore"
-msgstr "Añadir a .gitignore"
-
-msgid "Ignore filename or pattern"
-msgstr ""
-
-#, fuzzy
-msgid "Ignore exact filename"
-msgstr "Ignorar todos los espacios en blanco"
-
-msgid "Ignore custom pattern"
-msgstr ""
-
-msgid "Add"
-msgstr "Añadir"
-
-msgid "Configure toolbar"
-msgstr ""
-
-#, fuzzy
-msgid "Delete toolbar"
-msgstr "Favoritos"
-
-msgid "Name"
-msgstr "Nombre"
-
-msgid "Add Separator"
-msgstr ""
-
-#, fuzzy
-msgid "Remove Element"
-msgstr "Eliminar"
-
-msgid "Show icon? (if available)"
-msgstr ""
-
-msgid "Apply"
-msgstr "Aplicar"
-
-msgid "Open"
-msgstr "Abrir"
-
-#, fuzzy
-msgid "Favorite repositories"
-msgstr "Todos los Repositorios"
-
-#, fuzzy
-msgid "Recent repositories"
-msgstr "Todos los Repositorios"
-
-msgid "Accept"
-msgstr ""
-
-msgid "Open in New Window"
-msgstr "Abrir en una Ventana Nueva"
-
-#, fuzzy
-msgid "Set Default Repository"
-msgstr "Seleccionar Repositorio..."
-
-#, fuzzy
-msgid "Clear Default Repository"
-msgstr "Repositorio Actual"
-
-#, fuzzy
-msgid "Rename Repository"
-msgstr "Repositorio Actual"
-
-msgid "Copy"
-msgstr "Copiar"
-
-msgid "Actions"
-msgstr "Acciones"
-
-msgid "Path"
-msgstr ""
-
-#, fuzzy
-msgid "Add Favorite"
-msgstr "Favoritos"
-
-#, fuzzy, python-format
-msgid "%s is not a Git repository."
-msgstr "Abrir Repositorio Git..."
-
-msgid "Local"
-msgstr ""
-
-msgid "Remote"
-msgstr "Repositorio Remoto"
-
-msgid "Tags"
-msgstr ""
-
-msgid "Toggle the branches filter"
-msgstr ""
-
-#, fuzzy
-msgid "Branches"
-msgstr "Rama"
-
-#, fuzzy
-msgid "Checkout as new branch"
-msgstr "Desea crear una nueva rama remota?"
-
-#, fuzzy
-msgid "Merge into current branch"
-msgstr "Explorar Rama Actual..."
-
-msgid "Pull"
-msgstr ""
-
-msgid "Push"
-msgstr ""
-
-#, fuzzy
-msgid "Rename Branch"
-msgstr "Rama Remota"
-
-#, python-format
-msgid "Executing action %s"
-msgstr ""
-
-msgid "Updating"
-msgstr "Actualizando"
-
-#, fuzzy
-msgid "Rename branch"
-msgstr "Rama Remota"
-
-#, fuzzy
-msgid "Delete selected branch?"
-msgstr "Eliminar Rama Remota"
-
-msgid "The branch will be no longer available."
-msgstr ""
-
-#, fuzzy
-msgid "Filter branches..."
-msgstr "Navegador de Archivos..."
-
-msgid "Browser"
-msgstr "Navegador"
-
-msgid "Status"
-msgstr "Estado"
-
-msgid "Favorites"
-msgstr "Favoritos"
-
-#, fuzzy
-msgid "Recent"
-msgstr "Abrir Recientes"
-
-msgid "Commit"
-msgstr ""
-
-msgid "Console"
-msgstr "Terminal"
-
-msgid "Diff"
-msgstr "Diferencia"
-
-msgid "Amend Last Commit"
-msgstr ""
-
-msgid "Unstage All"
-msgstr ""
-
-msgid "Unstage From Commit"
-msgstr ""
-
-msgid "Diffstat"
-msgstr ""
-
-msgid "Stage Changed Files To Commit"
-msgstr ""
-
-msgid "Stage All Untracked"
-msgstr ""
-
-msgid "Apply Patches..."
-msgstr "Aplicar Parches..."
-
-msgid "Export Patches..."
-msgstr "Exportar Parches..."
-
-msgid "Preferences"
-msgstr "Preferencias"
-
-msgid "Edit Remotes..."
-msgstr "Editar Repositorios Remotos..."
-
-msgid "Recently Modified Files..."
-msgstr "Archivos Modificados Recientemente..."
-
-msgid "Cherry-Pick..."
-msgstr ""
-
-msgid "Load Commit Message..."
-msgstr "Cargar Mensaje de Commit..."
-
-#, fuzzy
-msgid "Prepare Commit Message"
-msgstr "Cargar Mensaje de Commit..."
-
-msgid "Save As Tarball/Zip..."
-msgstr "Guardar Como Tarball/Zip..."
-
-msgid "Quit"
-msgstr "Salir"
-
-msgid "Grep"
-msgstr ""
-
-msgid "Merge..."
-msgstr ""
-
-msgid "Fetch..."
-msgstr ""
-
-msgid "Push..."
-msgstr ""
-
-msgid "Pull..."
-msgstr ""
-
-msgid "Open..."
-msgstr "Abrir..."
-
-msgid "Open in New Window..."
-msgstr "Abrir en una Ventana Nueva..."
-
-msgid "Stash..."
-msgstr ""
-
-msgid "Clone..."
-msgstr "Clonar..."
-
-msgid "Documentation"
-msgstr "Documentación"
-
-msgid "Keyboard Shortcuts"
-msgstr "Atajos de Teclado"
-
-msgid "Visualize Current Branch..."
-msgstr "Visualizar Rama Actual..."
-
-msgid "Visualize All Branches..."
-msgstr "Visualizar Todas las Ramas..."
-
-msgid "Search..."
-msgstr "Buscar..."
-
-msgid "Browse Current Branch..."
-msgstr "Explorar Rama Actual..."
-
-msgid "Browse Other Branch..."
-msgstr "Explorar Otra Rama..."
-
-msgid "Get Commit Message Template"
-msgstr "Aplicar Plantilla de Mensaje de Commit"
-
-msgid "About"
-msgstr "Sobre git-cola"
-
-msgid "Expression..."
-msgstr "Expresión..."
-
-msgid "Branches..."
-msgstr "Ramas..."
-
-msgid "Create Tag..."
-msgstr "Crear Etiqueta..."
-
-msgid "Create..."
-msgstr "Crear..."
-
-msgid "Delete..."
-msgstr "Eliminar..."
-
-msgid "Delete Remote Branch..."
-msgstr "Eliminar Rama Remota"
-
-#, fuzzy
-msgid "Rename Branch..."
-msgstr "Rama Remota"
-
-msgid "Checkout..."
-msgstr ""
-
-msgid "Review..."
-msgstr ""
-
-msgid "File Browser..."
-msgstr "Navegador de Archivos..."
-
-msgid "DAG..."
-msgstr ""
-
-msgid "Start Interactive Rebase..."
-msgstr "Comenzar Rebase Interactivo..."
-
-msgid "Edit..."
-msgstr "Editar..."
-
-msgid "Skip Current Patch"
-msgstr "Ignorar Parche Actual"
-
-msgid "Abort"
-msgstr "Abortar"
-
-msgid "Lock Layout"
-msgstr "Bloquear Paneles"
-
-msgid "&File"
-msgstr "Archivo"
-
-msgid "Open Recent"
-msgstr "Abrir Recientes"
-
-msgid "Undo"
-msgstr ""
-
-msgid "Redo"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Select All"
-msgstr ""
-
-msgid "Commit@@verb"
-msgstr ""
-
-msgid "Branch"
-msgstr "Rama"
-
-msgid "View"
-msgstr "Ver"
-
-#, python-format
-msgid "git cola version %s"
-msgstr "versión de git cola %s"
-
-msgid "Add Toolbar"
-msgstr ""
-
-#, python-format
-msgid "Repository: %s"
-msgstr "Repositorio: %s"
-
-#, python-format
-msgid "Branch: %s"
-msgstr "Rama: %s"
-
-msgid ""
-"This repository is currently being rebased.\n"
-"Resolve conflicts, commit changes, and run:\n"
-"    Rebase > Continue"
-msgstr ""
-
-msgid "Rebasing"
-msgstr ""
-
-msgid ""
-"This repository is in the middle of a merge.\n"
-"Resolve conflicts and commit changes."
-msgstr ""
-
-msgid "Merging"
-msgstr ""
-
-msgid "Amending"
-msgstr ""
-
-msgid "Unable to rebase"
-msgstr ""
-
-msgid "You cannot rebase with uncommitted changes."
-msgstr ""
-
-msgid "Select New Upstream"
-msgstr ""
-
-msgid "Interactive Rebase"
-msgstr ""
-
-msgid "Toggle the paths filter"
-msgstr ""
-
-msgid "Staged"
-msgstr ""
-
-msgid "Unmerged"
-msgstr ""
-
-msgid "Modified"
-msgstr "Modificado"
-
-msgid "Untracked"
-msgstr ""
-
-msgid "Move Up"
-msgstr "Subir"
-
-msgid "Move Down"
-msgstr "Bajar"
-
-msgid "Copy Path to Clipboard"
-msgstr ""
-
-msgid "Copy Relative Path to Clipboard"
-msgstr ""
-
-msgid "Copy Leading Path to Clipboard"
-msgstr ""
-
-msgid "Copy Basename to Clipboard"
-msgstr ""
-
-#, fuzzy
-msgid "Customize..."
-msgstr "Cerrar..."
-
-msgid "View History..."
-msgstr "Ver Historial..."
-
-#, fuzzy
-msgid "Blame..."
-msgstr "Cerrar..."
-
-msgid "Move files to trash"
-msgstr ""
-
-msgid "Delete Files..."
-msgstr "Eliminar Archivos..."
-
-#, fuzzy
-msgid "Copy..."
-msgstr "Copiar"
-
-msgid "Unstage Selected"
-msgstr ""
-
-msgid "Launch git-cola"
-msgstr "Ejecutar git-cola"
-
-msgid "Stage Selected"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        Format String Variables\n"
-"        -----------------------\n"
-"          %(path)s  =  relative file path\n"
-"       %(abspath)s  =  absolute file path\n"
-"       %(dirname)s  =  relative directory path\n"
-"    %(absdirname)s  =  absolute directory path\n"
-"      %(filename)s  =  file basename\n"
-"      %(basename)s  =  file basename without extension\n"
-"           %(ext)s  =  file extension\n"
-msgstr ""
-
-msgid "Help - Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Filter paths..."
-msgstr "Navegador de Archivos..."
-
-msgid "Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Action Name"
-msgstr "Acciones"
-
-msgid "Format String"
-msgstr ""
-
-#, python-format
-msgid "%(path)s"
-msgstr ""
-
-#, python-format
-msgid "exit code %s"
-msgstr ""
-
-msgid "Abort Action"
-msgstr "Abortar Acción"
-
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-"Una acción está siendo ejecutada.\n"
-"Cancelarla podría resultar en pérdida de información."
-
-msgid "Abort the action?"
-msgstr "Desea abortar la acción?"
-
-msgid "Arguments"
-msgstr "Argumentos"
-
-msgid "Local Branch"
-msgstr "Rama Local"
-
-msgid "Tracking Branch"
-msgstr ""
-
-msgid "Tag"
-msgstr "Etiqueta"
-
-msgid "Revision"
-msgstr ""
-
-msgid "Diff this -> selected"
-msgstr "Diferencia de esta -> seleccionada"
-
-msgid "Diff selected -> this"
-msgstr "Diferencia de seleccionada -> esta"
-
-msgid "Create Branch"
-msgstr "Crear Rama"
-
-msgid "Create Patch"
-msgstr "Crear Parche"
-
-msgid "Create Tag"
-msgstr "Crear Etiqueta"
-
-msgid "Cherry Pick"
-msgstr ""
-
-#, fuzzy
-msgid "Launch Directory Diff Tool"
-msgstr "Abrir Herramienta de Comparación"
-
-msgid "Checkout Detached HEAD"
-msgstr ""
-
-msgid "Grab File..."
-msgstr ""
-
-msgid "Copy SHA-1"
-msgstr ""
-
-msgid "Summary"
-msgstr "Resumen"
-
-msgid "Author"
-msgstr "Autor"
-
-msgid "Date, Time"
-msgstr "Fecha, Hora"
-
-msgid "Go Up"
-msgstr "Subir"
-
-msgid "Go Down"
-msgstr "Bajar"
-
-msgid "Zoom to Fit"
-msgstr ""
-
-msgid "Zoom Out"
-msgstr ""
-
-msgid "Zoom In"
-msgstr ""
-
-msgid "Log"
-msgstr ""
-
-msgid "Files"
-msgstr "Archivos"
-
-msgid "Graph"
-msgstr ""
-
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
-
-msgid " - DAG"
-msgstr ""
-
-msgid "Select Parent"
-msgstr "Seleccionar Padre"
-
-msgid "Select Oldest Parent"
-msgstr "Seleccionar padre más antiguo"
-
-msgid "Select Child"
-msgstr "Seleccionar Hijo"
-
-msgid "Select Newest Child"
-msgstr "Seleccionar hijo más reciente"
-
-msgid "Apply Patches"
-msgstr "Aplicar Parches"
-
 msgid ""
 "\n"
 "            <p>\n"
@@ -1216,294 +28,10 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Arrastre y suelte o use el botón <strong>Añadir</strong> "
-"para añadir\n"
+"                Arrastre y suelte o use el botón <strong>Añadir</strong> para añadir\n"
 "                parches a la lista\n"
 "            </p>\n"
 "            "
-
-msgid "Add patches (+)"
-msgstr "Añadir parches (+)"
-
-msgid "Remove selected (Delete)"
-msgstr "Eliminar seleccionados (Delete)"
-
-#, fuzzy
-msgid "Select patch file(s)..."
-msgstr "Seleccionar archivos de parche..."
-
-msgid "Search"
-msgstr "Buscar"
-
-msgid "Browse..."
-msgstr ""
-
-msgid "yyyy-MM-dd"
-msgstr ""
-
-msgid "Search by Expression"
-msgstr ""
-
-msgid "Search by Path"
-msgstr ""
-
-msgid "Search Commit Messages"
-msgstr ""
-
-msgid "Search Diffs"
-msgstr ""
-
-msgid "Search Authors"
-msgstr ""
-
-msgid "Search Committers"
-msgstr ""
-
-msgid "Search Date Range"
-msgstr ""
-
-msgid "Choose Paths"
-msgstr ""
-
-msgid "Spelling Suggestions"
-msgstr ""
-
-msgid "Detect conflict markers in unmerged files"
-msgstr ""
-
-msgid "User Name"
-msgstr "Nombre de Usuario"
-
-msgid "Email Address"
-msgstr "Email"
-
-msgid "Merge Verbosity"
-msgstr "Verbosidad de Merge"
-
-msgid "Number of Diff Context Lines"
-msgstr "Numero de lineas de contexto Diff"
-
-msgid "Summarize Merge Commits"
-msgstr "Sumario de Merge Commits"
-
-msgid "Show Diffstat After Merge"
-msgstr "Mostrar Diffstat tras Merge"
-
-msgid "Display Untracked Files"
-msgstr "Mostrar ficheros sin seguimiento"
-
-msgid "Detect Conflict Markers"
-msgstr "Detectar Conflict Markers"
-
-msgid "Fixed-Width Font"
-msgstr "Fuente de Ancho Fijo"
-
-msgid "Font Size"
-msgstr "Tamaño de Fuente"
-
-msgid "Tab Width"
-msgstr "Ancho de Tabulacion"
-
-msgid "Insert spaces instead of tabs"
-msgstr ""
-
-msgid "Text Width"
-msgstr "Ancho del texto"
-
-msgid "Auto-Wrap Lines"
-msgstr "Salto de Linea Automatico"
-
-msgid "Editor"
-msgstr ""
-
-msgid "History Browser"
-msgstr "Herramienta de Historial"
-
-msgid "Blame Viewer"
-msgstr ""
-
-msgid "Diff Tool"
-msgstr "Herramienta de Diff"
-
-msgid "Merge Tool"
-msgstr "Herramienta Merge"
-
-msgid "Keep *.orig Merge Backups"
-msgstr "Conservar Merge Backups *.orig"
-
-msgid "Sort bookmarks alphabetically"
-msgstr "Ordenar Favoritos Alfabeticamente"
-
-msgid ""
-"Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
-
-msgid "Save GUI Settings"
-msgstr "Guardar GUI al salir"
-
-msgid "Check spelling"
-msgstr ""
-
-msgid "All Repositories"
-msgstr "Todos los Repositorios"
-
-msgid "Current Repository"
-msgstr "Repositorio Actual"
-
-msgid "Settings"
-msgstr ""
-
-msgid "Loading..."
-msgstr ""
-
-msgid "Ignore changes in whitespace at EOL"
-msgstr "Ignorar cambios de espacios en blanco en EOL"
-
-msgid "Ignore changes in amount of whitespace"
-msgstr "Ignorar cambios en la cantidad de espacios en blanco"
-
-msgid "Ignore all whitespace"
-msgstr "Ignorar todos los espacios en blanco"
-
-msgid "Show whole surrounding functions of changes"
-msgstr "Mostrar todo lo que rodea"
-
-msgid "Show line numbers"
-msgstr ""
-
-msgid "Diff Options"
-msgstr ""
-
-msgid "Stage Selected Lines"
-msgstr ""
-
-msgid "Revert Selected Lines..."
-msgstr ""
-
-msgid "Stage Diff Hunk"
-msgstr ""
-
-msgid "Revert Diff Hunk..."
-msgstr ""
-
-msgid "Unstage Selected Lines"
-msgstr ""
-
-msgid "Unstage Diff Hunk"
-msgstr ""
-
-msgid "Revert Selected Lines?"
-msgstr ""
-
-msgid "Revert Selected Lines"
-msgstr ""
-
-msgid "Revert Diff Hunk?"
-msgstr ""
-
-msgid "Revert Diff Hunk"
-msgstr ""
-
-msgid "Recently Modified Files"
-msgstr "Archivos Modificados Recientemente"
-
-msgid " commits ago"
-msgstr ""
-
-msgid "Showing changes since"
-msgstr "Mostrando cambios desde"
-
-msgid "Expand all"
-msgstr "Expandir todo"
-
-msgid "Collapse all"
-msgstr "Colapsar todo"
-
-msgid "About git-cola"
-msgstr "Sobre git-cola"
-
-msgid "Version"
-msgstr ""
-
-#, fuzzy
-msgid "Authors"
-msgstr "Autor"
-
-msgid "Translators"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"            Git Cola version %(cola_version)s %(build_version)s\n"
-"        <ul>\n"
-"            <li> %(platform_version)s\n"
-"            <li> Python (%(python_path)s) %(python_version)s\n"
-"            <li> Git %(git_version)s\n"
-"            <li> Qt %(qt_version)s\n"
-"            <li> QtPy %(qtpy_version)s\n"
-"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
-"        </ul>\n"
-"    "
-msgstr ""
-
-msgid "Email contributor"
-msgstr ""
-
-msgid "Maintainer (since 2007) and developer"
-msgstr ""
-
-msgid "Developer"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"        Please use %(bug_link)s to report issues.\n"
-"        <br>\n"
-"    "
-msgstr ""
-
-msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
-
-msgid "Brazilian translation"
-msgstr ""
-
-msgid "Simplified Chinese translation"
-msgstr ""
-
-msgid "Ukranian translation"
-msgstr ""
-
-msgid "Indonesian translation"
-msgstr ""
-
-msgid "German translation"
-msgstr ""
-
-msgid "Russian translation"
-msgstr ""
-
-msgid "Turkish translation"
-msgstr ""
-
-msgid "French translation"
-msgstr ""
-
-msgid "Czech translation"
-msgstr ""
-
-msgid "Spanish translation"
-msgstr ""
-
-msgid "Hungarian translation"
-msgstr ""
-
-msgid "Polish translation"
-msgstr ""
 
 #, python-format
 msgid ""
@@ -1524,8 +52,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or "
-"updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -1534,23 +61,187 @@ msgid ""
 "    "
 msgstr ""
 
-msgid "hotkeys.html"
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola version %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
 msgstr ""
 
-msgid "Shortcuts"
-msgstr "Atajos"
-
-msgid "git-cola"
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"        Please use %(bug_link)s to report issues.\n"
+"        <br>\n"
+"    "
 msgstr ""
 
-msgid "New..."
-msgstr "Nuevo..."
+#, python-format
+msgid ""
+"\n"
+"        Format String Variables\n"
+"        -----------------------\n"
+"          %(path)s  =  relative file path\n"
+"       %(abspath)s  =  absolute file path\n"
+"       %(dirname)s  =  relative directory path\n"
+"    %(absdirname)s  =  absolute directory path\n"
+"      %(filename)s  =  file basename\n"
+"      %(basename)s  =  file basename without extension\n"
+"           %(ext)s  =  file extension\n"
+msgstr ""
 
-msgid "Select Repository..."
-msgstr "Seleccionar Repositorio..."
+msgid ""
+"\n"
+"Commands\n"
+"--------\n"
+"pick = use commit\n"
+"reword = use commit, but edit the commit message\n"
+"edit = use commit, but stop for amending\n"
+"squash = use commit, but meld into previous commit\n"
+"fixup = like \"squash\", but discard this commit's log message\n"
+"exec = run command (the rest of the line) using shell\n"
+"\n"
+"These lines can be re-ordered; they are executed from top to bottom.\n"
+"\n"
+"If you disable a line here THAT COMMIT WILL BE LOST.\n"
+"\n"
+"However, if you disable everything, the rebase will be aborted.\n"
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"? = show help\n"
+"j = move down\n"
+"k = move up\n"
+"J = shift row down\n"
+"K = shift row up\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacebar = toggle enabled\n"
+"\n"
+"ctrl+enter = accept changes and rebase\n"
+"ctrl+q     = cancel and abort the rebase\n"
+"ctrl+d     = launch difftool\n"
+msgstr ""
 
-msgid "Select manually..."
-msgstr "Seleccionar manualmente..."
+msgid ""
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"J, Down     = Move Down\n"
+"K, Up       = Move Up\n"
+"Enter       = Edit Selected Files\n"
+"Spacebar    = Open File Using Default Application\n"
+"Ctrl + L    = Focus Text Entry Field\n"
+"?           = Show Help\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
+msgstr ""
+
+msgid " - DAG"
+msgstr ""
+
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" ha sido eliminado de \"%(remote)s\"."
+
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr ""
+
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "\"%s\" already exists"
+msgstr "La rama \"%s\" ya existe."
+
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr "\"%s\" ya existe, cola creará un nuevo directorio"
+
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" requiere que seleccione un archivo"
+
+msgid "#"
+msgstr ""
+
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr ""
+
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr ""
+
+#, python-format
+msgid "%d days ago"
+msgstr "Hace %d días"
+
+#, python-format
+msgid "%d hours ago"
+msgstr "Hace %d horas"
+
+#, python-format
+msgid "%d minutes ago"
+msgstr "Hace %d minutos"
+
+#, python-format
+msgid "%d patch(es) applied."
+msgstr ""
+
+#, python-format
+msgid "%d skipped"
+msgstr ""
+
+#, python-format
+msgid ""
+"%s appears to contain merge conflicts.\n"
+"\n"
+"You should probably skip this file.\n"
+"Stage it anyways?"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "%s is not a Git repository."
+msgstr "Abrir Repositorio Git..."
+
+#, python-format
+msgid "%s will be removed from your bookmarks."
+msgstr ""
+
+#, python-format
+msgid "%s will be removed from your recent repositories."
+msgstr "%s seran eliminado de tus repositorios recientes."
+
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "%s: El directorio o archivo no existe."
+
+msgid "&Edit"
+msgstr "Editar"
+
+msgid "&File"
+msgstr "Archivo"
+
+msgid "(Amending)"
+msgstr ""
 
 msgid "*** Branch Point ***"
 msgstr ""
@@ -1558,346 +249,88 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
-msgid "Branch Diff Viewer"
-msgstr ""
-
-msgid "File Differences"
-msgstr ""
-
-msgid "command-line arguments"
-msgstr ""
-
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr ""
-
-msgid "Basic Regexp"
-msgstr ""
-
-msgid "Extended Regexp"
-msgstr ""
-
-msgid "Fixed String"
-msgstr ""
-
-msgid "Search using a POSIX basic regular expression"
-msgstr ""
-
-msgid "Search using a POSIX extended regular expression"
-msgstr ""
-
-msgid "Search for a fixed string"
-msgstr ""
-
-msgid "grep result..."
-msgstr ""
-
-msgid "Shell arguments"
+msgid "<path> ..."
 msgstr ""
 
 msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Primero debes configurar una plantilla de commit.\n"
+"Usa \"git config\" y modifica \"commit.template\"\n"
+"para que apunte a una plantilla."
+
+#, python-format
+msgid "A hook must be provided at \"%s\""
 msgstr ""
 
-msgid "Sign off on this commit"
+#, python-format
+msgid "A stash named \"%s\" already exists"
 msgstr ""
 
-msgid "Commit staged changes"
+msgid "Abort"
+msgstr "Abortar"
+
+msgid "Abort Action"
+msgstr "Abortar Acción"
+
+msgid "Abort Merge"
+msgstr ""
+
+msgid "Abort Merge..."
+msgstr ""
+
+msgid "Abort the action?"
+msgstr "Desea abortar la acción?"
+
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+
+msgid "Aborting the current merge?"
+msgstr ""
+
+msgid "About"
+msgstr "Sobre git-cola"
+
+msgid "About git-cola"
+msgstr "Sobre git-cola"
+
+msgid "Accept"
+msgstr ""
+
+msgid ""
+"Accept changes and rebase\n"
+"Shortcut: Ctrl+Enter"
 msgstr ""
 
 #, fuzzy
-msgid "Clear..."
-msgstr "Cerrar..."
+msgid "Action Name"
+msgstr "Acciones"
 
-msgid ""
-"Commit staged changes\n"
-"Shortcut: Ctrl+Enter"
-msgstr ""
+msgid "Actions"
+msgstr "Acciones"
 
 msgid "Actions..."
 msgstr "Acciones..."
 
-msgid "Bypass Commit Hooks"
-msgstr ""
-
-msgid "Create Signed Commit"
-msgstr ""
-
-msgid "Check Spelling"
-msgstr ""
-
-msgid "Load Previous Commit Message"
-msgstr ""
-
-msgid "Fixup Previous Commit"
-msgstr ""
-
-msgid "Clear commit message?"
-msgstr ""
+msgid "Add"
+msgstr "Añadir"
 
 #, fuzzy
-msgid "The commit message will be cleared."
-msgstr "Se eliminarán los siguientes archivos:"
+msgid "Add Favorite"
+msgstr "Favoritos"
 
-msgid "This cannot be undone.  Clear commit message?"
+msgid "Add Remote"
+msgstr "Añadir Repositorio Remoto"
+
+msgid "Add Separator"
 msgstr ""
 
-msgid "Clear commit message"
+msgid "Add Toolbar"
 msgstr ""
-
-msgid ""
-"Please supply a commit message.\n"
-"\n"
-"A good commit message has the following format:\n"
-"\n"
-"- First line: Describe in one sentence what you did.\n"
-"- Second line: Blank\n"
-"- Remaining lines: Describe why this change is good.\n"
-msgstr ""
-
-msgid "Missing Commit Message"
-msgstr ""
-
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit."
-msgstr ""
-
-msgid "Would you like to stage and commit all modified files?"
-msgstr ""
-
-msgid "Stage and commit?"
-msgstr ""
-
-msgid "Stage and Commit"
-msgstr ""
-
-msgid "Nothing to commit"
-msgstr ""
-
-msgid "Rewrite Published Commit?"
-msgstr ""
-
-msgid ""
-"This commit has already been published.\n"
-"This operation will rewrite published history.\n"
-"You probably don't want to do this."
-msgstr ""
-
-msgid "Amend the published commit?"
-msgstr ""
-
-msgid "Amend Commit"
-msgstr ""
-
-msgid "More..."
-msgstr "Más..."
-
-msgid "Select Commit"
-msgstr ""
-
-msgid "Commit summary"
-msgstr ""
-
-msgid "Extended description..."
-msgstr "Descripción extendida..."
-
-msgid "Revision to Merge"
-msgstr ""
-
-msgid "Visualize"
-msgstr ""
-
-msgid "Squash the merged commits into a single commit"
-msgstr ""
-
-msgid "Squash"
-msgstr ""
-
-msgid ""
-"Always create a merge commit when enabled, even when the merge is a fast-"
-"forward update"
-msgstr ""
-
-msgid "No fast forward"
-msgstr ""
-
-msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
-"uncommitted"
-msgstr ""
-
-msgid "GPG-sign the merge commit"
-msgstr ""
-
-msgid "Merge"
-msgstr ""
-
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
-
-#, python-format
-msgid "Merge into \"%s\""
-msgstr ""
-
-msgid "No Revision Specified"
-msgstr ""
-
-msgid "You must specify a revision to view."
-msgstr ""
-
-msgid "You must specify a revision to merge."
-msgstr ""
-
-msgid "Filename"
-msgstr ""
-
-msgid "Additions"
-msgstr ""
-
-msgid "Deletions"
-msgstr ""
-
-#, fuzzy
-msgid "Show History"
-msgstr "Ver Historial..."
-
-msgid "Save Archive"
-msgstr ""
-
-msgid "Prefix"
-msgstr "Prefijo"
-
-msgid "Advanced"
-msgstr ""
-
-msgid "File Saved"
-msgstr "Archivo Guardado"
-
-#, python-format
-msgid "File saved to \"%s\""
-msgstr "Archivo guardado en \"%s\""
-
-msgid "Overwrite File?"
-msgstr "Desea sobreescribir el archivo?"
-
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr "El archivo \"%s\" ya existe y será sobreescrito."
-
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr "Desea sobreescribir \"%s\"?"
-
-msgid "Overwrite"
-msgstr "Sobreescribir"
-
-msgid "Remote Branch"
-msgstr "Rama Remota"
-
-msgid "Prompt on creation"
-msgstr ""
-
-#, fuzzy
-msgid "Prompt when pushing creates new remote branches"
-msgstr "Desea crear una nueva rama remota?"
-
-msgid "Fast-forward only"
-msgstr ""
-
-msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge "
-"can be resolved as a fast-forward"
-msgstr ""
-
-msgid "No fast-forward"
-msgstr ""
-
-msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
-
-msgid "Force"
-msgstr ""
-
-msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
-"repository to lose commits; use it with care"
-msgstr ""
-
-msgid "Include tags "
-msgstr "Incluir etiquetas "
-
-msgid "Prune "
-msgstr ""
-
-msgid "Rebase the current branch instead of merging"
-msgstr ""
-
-msgid "Set upstream"
-msgstr ""
-
-msgid "Configure the remote branch as the the new upstream"
-msgstr ""
-
-#, python-format
-msgid "URL: %s"
-msgstr ""
-
-msgid "No repository selected."
-msgstr "Ningún repositorio ha sido seleccionado."
-
-#, python-format
-msgid ""
-"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
-"A new remote branch will be published."
-msgstr ""
-"La rama \"%(branch)s\" no existe en \"%(remote)s\".\n"
-"Se publicará una nueva rama remota."
-
-msgid "Create a new remote branch?"
-msgstr "Desea crear una nueva rama remota?"
-
-msgid "Create Remote Branch"
-msgstr "Crear Rama Remota"
-
-msgid "Force Fetch?"
-msgstr ""
-
-msgid "Non-fast-forward fetch overwrites local history!"
-msgstr ""
-
-#, python-format
-msgid "Force fetching from %s?"
-msgstr ""
-
-msgid "Force Fetch"
-msgstr ""
-
-msgid "Force Push?"
-msgstr ""
-
-msgid ""
-"Non-fast-forward push overwrites published history!\n"
-"(Did you pull first?)"
-msgstr ""
-
-#, python-format
-msgid "Force push to %s?"
-msgstr ""
-
-msgid "Force Push"
-msgstr ""
-
-msgid "Have you rebased/pulled lately?"
-msgstr ""
-
-msgid "Fetch"
-msgstr ""
-
-msgid "Edit Remotes"
-msgstr "Editar Repositorios Remotos"
 
 msgid ""
 "Add and remove remote repositories using the \n"
@@ -1913,267 +346,2021 @@ msgstr ""
 "seleccionando uno en la lista \n"
 "y presionando \"enter\", o haciendo doble-click."
 
-msgid "Remote git repositories - double-click to rename"
-msgstr "Repositorios de git remotos - doble click para renombrar"
-
 msgid "Add new remote git repository"
 msgstr "Añadir nuevo repositorio de git remoto"
 
-msgid "Delete remote"
-msgstr "Elimiar repositorio remoto"
-
-#, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "Runiendo información para \"%s\"..."
-
-msgid "Add Remote"
-msgstr "Añadir Repositorio Remoto"
+msgid "Add patches (+)"
+msgstr "Añadir parches (+)"
 
 msgid "Add remote"
 msgstr "Añadir repositorio remoto"
 
-msgid "Name for the new remote"
-msgstr "Nombre para el nuevo repositorio remoto"
+msgid "Add to .gitignore"
+msgstr "Añadir a .gitignore"
 
-msgid "URL"
+#, fuzzy
+msgid "Add to Git Annex"
+msgstr "Añadir a .gitignore"
+
+msgid "Add to Git LFS"
 msgstr ""
+
+msgid "Additions"
+msgstr ""
+
+msgid "Advanced"
+msgstr ""
+
+msgid "Age"
+msgstr "Edad"
+
+msgid "All Repositories"
+msgstr "Todos los Repositorios"
+
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgstr ""
+
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgstr ""
+
+msgid "Amend"
+msgstr ""
+
+msgid "Amend Commit"
+msgstr ""
+
+msgid "Amend Last Commit"
+msgstr ""
+
+msgid "Amend the published commit?"
+msgstr ""
+
+msgid "Amending"
+msgstr ""
+
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Una acción está siendo ejecutada.\n"
+"Cancelarla podría resultar en pérdida de información."
+
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Apply Patches"
+msgstr "Aplicar Parches"
+
+msgid "Apply Patches..."
+msgstr "Aplicar Parches..."
+
+msgid "Apply the selected stash"
+msgstr ""
+
+msgid "Arguments"
+msgstr "Argumentos"
+
+msgid "Attach"
+msgstr ""
+
+msgid "Author"
+msgstr "Autor"
+
+#, fuzzy
+msgid "Authors"
+msgstr "Autor"
+
+msgid "Auto-Wrap Lines"
+msgstr "Salto de Linea Automatico"
+
+msgid "Basic Regexp"
+msgstr ""
+
+msgid "Blame Viewer"
+msgstr ""
+
+#, fuzzy
+msgid "Blame..."
+msgstr "Cerrar..."
+
+msgid "Bold with dark background font instead of italic headers (restart required)"
+msgstr ""
+
+msgid "Branch"
+msgstr "Rama"
 
 #, python-format
-msgid "%(project)s: %(branch)s - Browse"
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
 msgstr ""
-
-msgid "(Amending)"
-msgstr ""
-
-msgid "View history for selected paths"
-msgstr ""
-
-msgid "Stage/unstage selected paths for commit"
-msgstr ""
-
-msgid "Untrack Selected"
-msgstr ""
-
-msgid "Stop tracking paths"
-msgstr ""
-
-msgid "Launch git-difftool on the current path"
-msgstr ""
-
-msgid "Diff Against Predecessor..."
-msgstr ""
-
-msgid "Launch git-difftool against previous versions"
-msgstr ""
-
-msgid "Revert unstaged changes to selected paths"
-msgstr ""
-
-msgid "Revert uncommitted changes to selected paths"
-msgstr ""
-
-msgid "Edit selected paths"
-msgstr ""
-
-msgid "Select Previous Version"
-msgstr ""
-
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr "Se guardó \"%(filename)s\" de \"%(ref)s\" en \"%(destination)s\""
-
-#, python-format
-msgid "Browsing %s"
-msgstr ""
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Seleccionar archivo de \"%s\""
-
-msgid "Select File"
-msgstr "Seleccionar Archivo"
-
-msgid "Branch Name"
-msgstr "Nombre de la Rama"
-
-msgid "Starting Revision"
-msgstr ""
-
-msgid "Local branch"
-msgstr "Rama local"
-
-msgid "Tracking branch"
-msgstr ""
-
-msgid "Update Existing Branch:"
-msgstr "Acutalizar Rama Existente:"
-
-msgid "No"
-msgstr ""
-
-msgid "Fast Forward Only"
-msgstr ""
-
-msgid "Fetch Tracking Branch"
-msgstr ""
-
-msgid "Checkout After Creation"
-msgstr ""
-
-msgid "Missing Data"
-msgstr "Datos Incompletos"
-
-msgid "Please provide both a branch name and revision expression."
-msgstr ""
+"La rama \"%(branch)s\" no existe en \"%(remote)s\".\n"
+"Se publicará una nueva rama remota."
 
 #, python-format
 msgid "Branch \"%s\" already exists."
 msgstr "La rama \"%s\" ya existe."
 
+msgid "Branch Diff Viewer"
+msgstr ""
+
 msgid "Branch Exists"
 msgstr "Rama Existe"
 
-#, python-format
-msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr ""
+msgid "Branch Name"
+msgstr "Nombre de la Rama"
 
 #, python-format
-msgid "%d skipped"
+msgid "Branch: %s"
+msgstr "Rama: %s"
+
+#, fuzzy
+msgid "Branches"
+msgstr "Rama"
+
+msgid "Branches..."
+msgstr "Ramas..."
+
+msgid "Brazilian translation"
 msgstr ""
 
-msgid "Recovering lost commits may not be easy."
+msgid "Browse"
+msgstr ""
+
+msgid "Browse Commits..."
+msgstr ""
+
+msgid "Browse Current Branch..."
+msgstr "Explorar Rama Actual..."
+
+msgid "Browse Other Branch..."
+msgstr "Explorar Otra Rama..."
+
+msgid "Browse..."
+msgstr ""
+
+msgid "Browser"
+msgstr "Navegador"
+
+#, python-format
+msgid "Browsing %s"
+msgstr ""
+
+msgid "Bypass Commit Hooks"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid ""
+"Cancel rebase\n"
+"Shortcut: Ctrl+Q"
+msgstr ""
+
+msgid "Cannot Amend"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "Cannot exec \"%s\": please configure a blame viewer"
+msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr ""
 
 #, python-format
-msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
+
+msgid "Changed Upstream"
 msgstr ""
 
-msgid "Reset Branch?"
+msgid "Check Spelling"
 msgstr ""
 
-msgid "Error Creating Branch"
-msgstr "Error al Crear Rama"
+msgid "Check spelling"
+msgstr ""
+
+msgid "Checkout"
+msgstr ""
+
+msgid "Checkout After Creation"
+msgstr ""
+
+msgid "Checkout Branch"
+msgstr ""
+
+msgid "Checkout Detached HEAD"
+msgstr ""
+
+#, fuzzy
+msgid "Checkout as new branch"
+msgstr "Desea crear una nueva rama remota?"
+
+msgid "Checkout..."
+msgstr ""
+
+msgid "Cherry Pick"
+msgstr ""
+
+msgid "Cherry-Pick Commit"
+msgstr ""
+
+msgid "Cherry-Pick..."
+msgstr ""
+
+msgid "Choose Paths"
+msgstr ""
+
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr ""
+
+#, fuzzy
+msgid "Clear Default Repository"
+msgstr "Repositorio Actual"
+
+msgid "Clear commit message"
+msgstr ""
+
+msgid "Clear commit message?"
+msgstr ""
+
+#, fuzzy
+msgid "Clear..."
+msgstr "Cerrar..."
+
+#, fuzzy
+msgid "Clone Repository"
+msgstr "Repositorio Actual"
+
+msgid "Clone..."
+msgstr "Clonar..."
+
+#, fuzzy, python-format
+msgid "Cloning repository at %s"
+msgstr "Repositorio: %s"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Close..."
+msgstr "Cerrar..."
+
+msgid "Collapse all"
+msgstr "Colapsar todo"
+
+msgid "Command"
+msgstr ""
+
+msgid "Commit"
+msgstr ""
+
+msgid "Commit failed"
+msgstr ""
+
+msgid "Commit staged changes"
+msgstr ""
+
+msgid ""
+"Commit staged changes\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+
+msgid "Commit summary"
+msgstr ""
+
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
+msgstr ""
+
+msgid "Commit@@verb"
+msgstr ""
+
+msgid "Compare"
+msgstr "Comparar"
+
+#, fuzzy
+msgid "Compare All"
+msgstr "Comparar"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr ""
+
+msgid "Configure toolbar"
+msgstr ""
+
+msgid "Console"
+msgstr "Terminal"
+
+msgid "Continue"
+msgstr "Continuar"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copy Basename to Clipboard"
+msgstr ""
+
+msgid "Copy Leading Path to Clipboard"
+msgstr ""
+
+msgid "Copy Path to Clipboard"
+msgstr ""
+
+msgid "Copy Relative Path to Clipboard"
+msgstr ""
+
+msgid "Copy SHA-1"
+msgstr ""
+
+#, fuzzy
+msgid "Copy..."
+msgstr "Copiar"
 
 #, python-format
-msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgid "Could not parse Git URL: \"%s\""
+msgstr "No fue posible procesar la Git URL: \"%s\""
+
+msgid "Create Branch"
+msgstr "Crear Rama"
+
+msgid "Create Patch"
+msgstr "Crear Parche"
+
+msgid "Create Remote Branch"
+msgstr "Crear Rama Remota"
+
+msgid "Create Signed Commit"
 msgstr ""
 
-msgid "Stash"
+msgid "Create Tag"
+msgstr "Crear Etiqueta"
+
+msgid "Create Tag..."
+msgstr "Crear Etiqueta..."
+
+msgid "Create Unsigned Tag"
 msgstr ""
 
-msgid "Apply the selected stash"
+msgid "Create a merge commit even when the merge resolves as a fast-forward"
 msgstr ""
 
-msgid "Save modified state to new stash"
+msgid "Create a new remote branch?"
+msgstr "Desea crear una nueva rama remota?"
+
+msgid "Create..."
+msgstr "Crear..."
+
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Se creó una nueva etiqueta con nombre \"%s\""
+
+msgid "Current Repository"
+msgstr "Repositorio Actual"
+
+msgid "Custom Copy Actions"
 msgstr ""
+
+#, fuzzy
+msgid "Customize..."
+msgstr "Cerrar..."
+
+msgid "Cut"
+msgstr ""
+
+msgid "Czech translation"
+msgstr ""
+
+msgid "DAG..."
+msgstr ""
+
+msgid "Date, Time"
+msgstr "Fecha, Hora"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr "Desea eliminar %d archivos(s)?"
+
+#, fuzzy
+msgid "Delete Bookmark"
+msgstr "Favoritos"
+
+#, fuzzy
+msgid "Delete Bookmark?"
+msgstr "Favoritos"
+
+msgid "Delete Branch"
+msgstr "Eliminar Rama"
+
+msgid "Delete Files"
+msgstr "Eliminar Archivos"
+
+msgid "Delete Files..."
+msgstr "Eliminar Archivos..."
+
+msgid "Delete Files?"
+msgstr "Eliminar Archivos?"
+
+msgid "Delete Remote"
+msgstr "Eliminar Repositorio Remoto"
+
+msgid "Delete Remote Branch"
+msgstr "Eliminar Rama Remota"
+
+msgid "Delete Remote Branch..."
+msgstr "Eliminar Rama Remota"
+
+msgid "Delete remote"
+msgstr "Elimiar repositorio remoto"
+
+#, python-format
+msgid "Delete remote \"%s\""
+msgstr "Eliminar repositorio remoto \"%s\""
+
+msgid "Delete remote?"
+msgstr "Desea eliminar el repositorio remoto?"
+
+#, fuzzy
+msgid "Delete selected branch?"
+msgstr "Eliminar Rama Remota"
+
+#, fuzzy
+msgid "Delete toolbar"
+msgstr "Favoritos"
+
+msgid "Delete..."
+msgstr "Eliminar..."
+
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr "Fallo intentando eliminar \"%s\""
+
+msgid "Deletions"
+msgstr ""
+
+msgid "Detach"
+msgstr ""
+
+msgid "Detect Conflict Markers"
+msgstr "Detectar Conflict Markers"
+
+msgid "Detect conflict markers in unmerged files"
+msgstr ""
+
+msgid "Developer"
+msgstr ""
+
+msgid "Diff"
+msgstr "Diferencia"
+
+msgid "Diff Against Predecessor..."
+msgstr ""
+
+msgid "Diff Options"
+msgstr ""
+
+msgid "Diff Tool"
+msgstr "Herramienta de Diff"
+
+msgid "Diff selected -> this"
+msgstr "Diferencia de seleccionada -> esta"
+
+msgid "Diff this -> selected"
+msgstr "Diferencia de esta -> seleccionada"
+
+msgid "Diffstat"
+msgstr ""
+
+msgid "Directory Exists"
+msgstr "El Directorio ya Existe"
+
+msgid "Display Untracked Files"
+msgstr "Mostrar ficheros sin seguimiento"
+
+msgid "Documentation"
+msgstr "Documentación"
 
 msgid "Drop"
 msgstr ""
 
-msgid "Drop the selected stash"
-msgstr ""
-
-msgid "Keep Index"
-msgstr ""
-
-msgid "Save Stash"
-msgstr ""
-
-msgid "Enter a name for the stash"
-msgstr ""
-
-msgid "Error: Stash exists"
-msgstr ""
-
-#, python-format
-msgid "A stash named \"%s\" already exists"
+msgid "Drop Stash"
 msgstr ""
 
 msgid "Drop Stash?"
-msgstr ""
-
-msgid "Recovering a dropped stash is not possible."
 msgstr ""
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
 msgstr ""
 
-msgid "Drop Stash"
+msgid "Drop the selected stash"
 msgstr ""
 
-msgid "vX.Y.Z"
+#, fuzzy
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Edit Rebase"
 msgstr ""
 
-msgid "Specifies the tag name"
+msgid "Edit Remotes"
+msgstr "Editar Repositorios Remotos"
+
+msgid "Edit Remotes..."
+msgstr "Editar Repositorios Remotos..."
+
+msgid "Edit remotes by selecting them from the list"
 msgstr ""
 
-msgid "Sign Tag"
+msgid "Edit selected paths"
 msgstr ""
 
-msgid "Whether to sign the tag (git tag -s)"
+msgid "Edit..."
+msgstr "Editar..."
+
+msgid "Editor"
+msgstr ""
+
+msgid "Email Address"
+msgstr "Email"
+
+msgid "Email contributor"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+#, fuzzy
+msgid "Enter New Branch Name"
+msgstr "Nombre de la Rama"
+
+#, fuzzy
+msgid "Enter a name for the new bare repo"
+msgstr "Nombre para el nuevo repositorio remoto"
+
+msgid "Enter a name for the stash"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Error Cloning"
+msgstr "Error al Crear Copia Local"
+
+msgid "Error Creating Branch"
+msgstr "Error al Crear Rama"
+
+msgid "Error Creating Repository"
+msgstr "Error al Crear Repositorio"
+
+msgid "Error Deleting Remote Branch"
+msgstr "Error al Eliminar Rama Remota"
+
+msgid "Error Editing File"
+msgstr "Error al Editar Archivo"
+
+msgid "Error Launching Blame Viewer"
+msgstr ""
+
+msgid "Error Launching History Browser"
+msgstr ""
+
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr "Error al crear el repositorio remoto \"%s\""
+
+#, fuzzy
+msgid "Error creating stash"
+msgstr "Error al Crear Rama"
+
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Error al eliminar el repositorio remoto \"%s\""
+
+#, fuzzy, python-format
+msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
+msgstr "Etiquetando \"%(revision)s\" como \"%(name)s\""
+
+msgid "Error running prepare-commitmsg hook"
+msgstr ""
+
+msgid "Error: Cannot find commit template"
+msgstr ""
+
+msgid "Error: Stash exists"
+msgstr ""
+
+msgid "Error: Unconfigured commit template"
+msgstr ""
+
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Error: no se pudo clonar \"%s\""
+
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Error: no se pudo crear la etiqueta \"%s\""
+
+#, python-format
+msgid "Executing action %s"
+msgstr ""
+
+msgid "Expand all"
+msgstr "Expandir todo"
+
+msgid "Export Patches"
+msgstr "Exportar Parches"
+
+msgid "Export Patches..."
+msgstr "Exportar Parches..."
+
+msgid "Expression..."
+msgstr "Expresión..."
+
+msgid "Extended Regexp"
+msgstr ""
+
+msgid "Extended description..."
+msgstr "Descripción extendida..."
+
+msgid "Fast Forward Only"
+msgstr ""
+
+msgid "Fast-forward only"
+msgstr ""
+
+#, fuzzy
+msgid "Favorite repositories"
+msgstr "Todos los Repositorios"
+
+msgid "Favorites"
+msgstr "Favoritos"
+
+msgid "Fetch"
+msgstr ""
+
+msgid "Fetch Tracking Branch"
+msgstr ""
+
+msgid "Fetch..."
+msgstr ""
+
+msgid "File Browser..."
+msgstr "Navegador de Archivos..."
+
+msgid "File Differences"
+msgstr ""
+
+msgid "File Saved"
+msgstr "Archivo Guardado"
+
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Archivo guardado en \"%s\""
+
+#, fuzzy
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr "inotify está desactivado porque \"cola.inotify\" es FALSO\n"
+
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgstr ""
+
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+msgstr ""
+
+#, fuzzy
+msgid "File system change monitoring: enabled.\n"
+msgstr "Notificación de archivo activada.\n"
+
+msgid "Filename"
+msgstr ""
+
+msgid "Files"
+msgstr "Archivos"
+
+#, fuzzy
+msgid "Filter branches..."
+msgstr "Navegador de Archivos..."
+
+#, fuzzy
+msgid "Filter paths..."
+msgstr "Navegador de Archivos..."
+
+#, fuzzy
+msgid "Find Files"
+msgstr "Archivos"
+
+msgid "Fixed String"
+msgstr ""
+
+msgid "Fixed-Width Font"
+msgstr "Fuente de Ancho Fijo"
+
+msgid "Fixup"
+msgstr ""
+
+msgid "Fixup Previous Commit"
+msgstr ""
+
+msgid "Font Size"
+msgstr "Tamaño de Fuente"
+
+msgid "Force"
+msgstr ""
+
+msgid "Force Fetch"
+msgstr ""
+
+msgid "Force Fetch?"
+msgstr ""
+
+msgid "Force Push"
+msgstr ""
+
+msgid "Force Push?"
+msgstr ""
+
+#, python-format
+msgid "Force fetching from %s?"
+msgstr ""
+
+#, python-format
+msgid "Force push to %s?"
+msgstr ""
+
+msgid "Format String"
+msgstr ""
+
+msgid "French translation"
+msgstr ""
+
+msgid "GPG-sign the merge commit"
+msgstr ""
+
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Runiendo información para \"%s\"..."
+
+msgid "German translation"
+msgstr ""
+
+msgid "Get Commit Message Template"
+msgstr "Aplicar Plantilla de Mensaje de Commit"
+
+msgid "Go Down"
+msgstr "Bajar"
+
+msgid "Go Up"
+msgstr "Subir"
+
+msgid "Grab File..."
+msgstr ""
+
+msgid "Graph"
+msgstr ""
+
+msgid "Grep"
+msgstr ""
+
+msgid "Have you rebased/pulled lately?"
+msgstr ""
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Help - Custom Copy Actions"
+msgstr ""
+
+msgid "Help - Find Files"
+msgstr ""
+
+msgid "Help - git-xbase"
+msgstr ""
+
+msgid "History Browser"
+msgstr "Herramienta de Historial"
+
+msgid "Hungarian translation"
+msgstr ""
+
+msgid "Ignore all whitespace"
+msgstr "Ignorar todos los espacios en blanco"
+
+msgid "Ignore changes in amount of whitespace"
+msgstr "Ignorar cambios en la cantidad de espacios en blanco"
+
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Ignorar cambios de espacios en blanco en EOL"
+
+msgid "Ignore custom pattern"
+msgstr ""
+
+#, fuzzy
+msgid "Ignore exact filename"
+msgstr "Ignorar todos los espacios en blanco"
+
+msgid "Ignore filename or pattern"
+msgstr ""
+
+msgid "Include tags "
+msgstr "Incluir etiquetas "
+
+msgid "Indonesian translation"
+msgstr ""
+
+msgid "Initialize Git Annex"
+msgstr ""
+
+msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Insert spaces instead of tabs"
+msgstr ""
+
+msgid "Interactive Rebase"
+msgstr ""
+
+msgid "Invalid Revision"
+msgstr "Revisión inválida"
+
+msgid "Keep *.orig Merge Backups"
+msgstr "Conservar Merge Backups *.orig"
+
+msgid "Keep Index"
+msgstr ""
+
+msgid "Keyboard Shortcuts"
+msgstr "Atajos de Teclado"
+
+msgid "Launch Diff Tool"
+msgstr "Abrir Herramienta de Comparación"
+
+#, fuzzy
+msgid "Launch Directory Diff Tool"
+msgstr "Abrir Herramienta de Comparación"
+
+msgid "Launch Editor"
+msgstr "Abrir Editor"
+
+msgid "Launch Terminal"
+msgstr "Abrir Terminal"
+
+msgid ""
+"Launch external diff tool\n"
+"Shortcut: Ctrl+D"
+msgstr ""
+
+msgid "Launch git-cola"
+msgstr "Ejecutar git-cola"
+
+msgid "Launch git-difftool against previous versions"
+msgstr ""
+
+msgid "Launch git-difftool on the current path"
+msgstr ""
+
+msgid "Load Commit Message"
+msgstr ""
+
+msgid "Load Commit Message..."
+msgstr "Cargar Mensaje de Commit..."
+
+msgid "Load Previous Commit Message"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Local"
+msgstr ""
+
+msgid "Local Branch"
+msgstr "Rama Local"
+
+msgid "Local branch"
+msgstr "Rama local"
+
+msgid "Lock Layout"
+msgstr "Bloquear Paneles"
+
+msgid "Log"
+msgstr ""
+
+msgid "Maintainer (since 2007) and developer"
+msgstr ""
+
+msgid "Merge"
+msgstr ""
+
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr ""
+
+msgid "Merge Tool"
+msgstr "Herramienta Merge"
+
+msgid "Merge Verbosity"
+msgstr "Verbosidad de Merge"
+
+msgid "Merge failed.  Conflict resolution is required."
+msgstr ""
+
+#, python-format
+msgid "Merge into \"%s\""
+msgstr ""
+
+#, fuzzy
+msgid "Merge into current branch"
+msgstr "Explorar Rama Actual..."
+
+msgid "Merge..."
+msgstr ""
+
+msgid "Merging"
 msgstr ""
 
 msgid "Message"
 msgstr "Mensaje"
 
-msgid "Tag message..."
+msgid "Missing Commit Message"
 msgstr ""
 
-msgid "Specifies the tag message"
-msgstr ""
+msgid "Missing Data"
+msgstr "Datos Incompletos"
 
-msgid "Specifies the SHA-1 to tag"
+msgid "Missing Name"
 msgstr ""
 
 msgid "Missing Revision"
 msgstr ""
 
-msgid "Please specify a revision to tag."
+msgid "Missing Tag Message"
 msgstr ""
 
-msgid "Missing Name"
+msgid "Modified"
+msgstr "Modificado"
+
+msgid "More..."
+msgstr "Más..."
+
+msgid "Move Down"
+msgstr "Bajar"
+
+msgid "Move Up"
+msgstr "Subir"
+
+msgid "Move files to trash"
 msgstr ""
 
-msgid "Please specify a name for the new tag."
-msgstr "Por favor, especifique un nombre para la nueva etiqueta"
+msgid "Name"
+msgstr "Nombre"
 
-msgid "Tag Created"
-msgstr "Etiqueta Creada"
+msgid "Name for the new remote"
+msgstr "Nombre para el nuevo repositorio remoto"
+
+#, fuzzy
+msgid "New Bare Repository..."
+msgstr "Nuevo Repositorio..."
+
+msgid "New Repository..."
+msgstr "Nuevo Repositorio..."
+
+msgid "New..."
+msgstr "Nuevo..."
+
+#, fuzzy
+msgid "Next File"
+msgstr "Seleccionar Archivo"
+
+msgid "No"
+msgstr ""
+
+msgid "No Revision Specified"
+msgstr ""
+
+msgid ""
+"No changes to commit.\n"
+"\n"
+"You must stage at least 1 file before you can commit."
+msgstr ""
+
+msgid "No commits exist in this branch."
+msgstr ""
+
+msgid "No fast forward"
+msgstr ""
+
+msgid "No fast-forward"
+msgstr ""
+
+msgid "No repository selected."
+msgstr "Ningún repositorio ha sido seleccionado."
+
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr ""
+
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
+
+msgid "Nothing to commit"
+msgstr ""
+
+msgid "Nothing to do"
+msgstr ""
+
+msgid "Number of Diff Context Lines"
+msgstr "Numero de lineas de contexto Diff"
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Open Git Repository..."
+msgstr "Abrir Repositorio Git..."
+
+msgid "Open Parent Directory"
+msgstr "Abrir Directorio Padre"
+
+msgid "Open Recent"
+msgstr "Abrir Recientes"
+
+msgid "Open Using Default Application"
+msgstr "Abrir Usando Aplicación por Defecto"
+
+msgid "Open in New Window"
+msgstr "Abrir en una Ventana Nueva"
+
+msgid "Open in New Window..."
+msgstr "Abrir en una Ventana Nueva..."
+
+msgid "Open..."
+msgstr "Abrir..."
+
+#, fuzzy
+msgid "Other branches"
+msgstr "Navegador de Archivos..."
+
+msgid "Overwrite"
+msgstr "Sobreescribir"
 
 #, python-format
-msgid "Created a new tag named \"%s\""
-msgstr "Se creó una nueva etiqueta con nombre \"%s\""
+msgid "Overwrite \"%s\"?"
+msgstr "Desea sobreescribir \"%s\"?"
 
-msgid "Age"
-msgstr "Edad"
-
-#, python-format
-msgid "%d minutes ago"
-msgstr "Hace %d minutos"
+msgid "Overwrite File?"
+msgstr "Desea sobreescribir el archivo?"
 
 #, python-format
-msgid "%d hours ago"
-msgstr "Hace %d horas"
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
 
-#, python-format
-msgid "%d days ago"
-msgstr "Hace %d días"
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
 
 msgid "Partially Staged"
 msgstr ""
 
-msgid "Changed Upstream"
+msgid "Paste"
 msgstr ""
 
-#~ msgid "Output: %s"
-#~ msgstr "Resultado: %s"
+msgid "Patch(es) Applied"
+msgstr ""
+
+msgid "Path"
+msgstr ""
+
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr "Ruta o URL a Clonar (Env. $VARS okay)"
+
+msgid "Pick"
+msgstr ""
+
+msgid "Pixel XOR"
+msgstr ""
+
+msgid "Please provide both a branch name and revision expression."
+msgstr ""
+
+msgid "Please select a file"
+msgstr "Por favor, seleccione un archivo"
+
+msgid "Please specify a name for the new tag."
+msgstr "Por favor, especifique un nombre para la nueva etiqueta"
+
+msgid "Please specify a revision to tag."
+msgstr ""
+
+msgid ""
+"Please supply a commit message.\n"
+"\n"
+"A good commit message has the following format:\n"
+"\n"
+"- First line: Describe in one sentence what you did.\n"
+"- Second line: Blank\n"
+"- Remaining lines: Describe why this change is good.\n"
+msgstr ""
+
+msgid "Point the current branch head to a new commit?"
+msgstr ""
+
+msgid "Polish translation"
+msgstr ""
+
+msgid "Preferences"
+msgstr "Preferencias"
+
+msgid "Prefix"
+msgstr "Prefijo"
+
+#, fuzzy
+msgid "Prepare Commit Message"
+msgstr "Cargar Mensaje de Commit..."
+
+msgid "Prevent \"Stage\" from staging all files when nothing is selected"
+msgstr ""
+
+msgid "Previous File"
+msgstr ""
+
+msgid "Prompt on creation"
+msgstr ""
+
+#, fuzzy
+msgid "Prompt when pushing creates new remote branches"
+msgstr "Desea crear una nueva rama remota?"
+
+msgid "Prune "
+msgstr ""
+
+msgid "Pull"
+msgstr ""
+
+msgid "Pull..."
+msgstr ""
+
+msgid "Push"
+msgstr ""
+
+msgid "Push..."
+msgstr ""
+
+msgid "Quit"
+msgstr "Salir"
+
+msgid "Rebase"
+msgstr ""
+
+#, python-format
+msgid "Rebase onto %s"
+msgstr ""
+
+msgid "Rebase stopped"
+msgstr ""
+
+msgid "Rebase the current branch instead of merging"
+msgstr ""
+
+msgid "Rebasing"
+msgstr ""
+
+#, fuzzy
+msgid "Recent"
+msgstr "Abrir Recientes"
+
+#, fuzzy
+msgid "Recent repositories"
+msgstr "Todos los Repositorios"
+
+#, fuzzy
+msgid "Recent repository count"
+msgstr "Todos los Repositorios"
+
+msgid "Recently Modified Files"
+msgstr "Archivos Modificados Recientemente"
+
+msgid "Recently Modified Files..."
+msgstr "Archivos Modificados Recientemente..."
+
+msgid "Recovering a dropped stash is not possible."
+msgstr ""
+
+msgid "Recovering lost commits may not be easy."
+msgstr ""
+
+msgid "Redo"
+msgstr ""
+
+msgid "Refresh"
+msgstr "Refrescar"
+
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgstr ""
+
+msgid "Remote"
+msgstr "Repositorio Remoto"
+
+msgid "Remote Branch"
+msgstr "Rama Remota"
+
+msgid "Remote Branch Deleted"
+msgstr "Rama Remota Eliminada"
+
+msgid "Remote git repositories - double-click to rename"
+msgstr "Repositorios de git remotos - doble click para renombrar"
+
+msgid "Remove"
+msgstr "Eliminar"
+
+#, python-format
+msgid "Remove %s from the recent list?"
+msgstr "Eliminar %s de la lista de recientes?"
+
+#, fuzzy
+msgid "Remove Element"
+msgstr "Eliminar"
+
+msgid "Remove selected (Delete)"
+msgstr "Eliminar seleccionados (Delete)"
+
+msgid "Rename"
+msgstr "Renombrar"
+
+#, fuzzy, python-format
+msgid "Rename \"%s\""
+msgstr "Renombrar"
+
+#, fuzzy
+msgid "Rename Branch"
+msgstr "Rama Remota"
+
+#, fuzzy
+msgid "Rename Branch..."
+msgstr "Rama Remota"
+
+#, fuzzy
+msgid "Rename Existing Branch"
+msgstr "Acutalizar Rama Existente:"
+
+msgid "Rename Remote"
+msgstr "Renombrar Repositorio Remoto"
+
+#, fuzzy
+msgid "Rename Repository"
+msgstr "Repositorio Actual"
+
+#, fuzzy
+msgid "Rename branch"
+msgstr "Rama Remota"
+
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
+
+msgid "Rename remote?"
+msgstr "Desea renombrar el repositorio remoto?"
+
+#, fuzzy
+msgid "Rename selected paths"
+msgstr "Eliminar seleccionados (Delete)"
+
+#, python-format
+msgid "Repository: %s"
+msgstr "Repositorio: %s"
+
+msgid "Reset"
+msgstr ""
+
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
+msgstr ""
+
+msgid "Reset Branch"
+msgstr ""
+
+#, fuzzy
+msgid "Reset Branch Head"
+msgstr "Rama Remota Eliminada"
+
+msgid "Reset Branch?"
+msgstr ""
+
+msgid "Reset Worktree"
+msgstr ""
+
+msgid "Reset worktree?"
+msgstr ""
+
+#, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr ""
+
+msgid "Revert Diff Hunk"
+msgstr ""
+
+msgid "Revert Diff Hunk..."
+msgstr ""
+
+msgid "Revert Diff Hunk?"
+msgstr ""
+
+msgid "Revert Selected Lines"
+msgstr ""
+
+msgid "Revert Selected Lines..."
+msgstr ""
+
+msgid "Revert Selected Lines?"
+msgstr ""
+
+msgid "Revert Uncommitted Changes"
+msgstr ""
+
+msgid "Revert Uncommitted Changes?"
+msgstr ""
+
+msgid "Revert Uncommitted Edits..."
+msgstr ""
+
+msgid "Revert Unstaged Changes"
+msgstr ""
+
+msgid "Revert Unstaged Changes?"
+msgstr ""
+
+msgid "Revert Unstaged Edits..."
+msgstr ""
+
+msgid "Revert the uncommitted changes?"
+msgstr ""
+
+msgid "Revert the unstaged changes?"
+msgstr ""
+
+msgid "Revert uncommitted changes to selected paths"
+msgstr ""
+
+msgid "Revert unstaged changes to selected paths"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Review..."
+msgstr ""
+
+msgid "Revision"
+msgstr ""
+
+msgid "Revision Expression:"
+msgstr ""
+
+msgid "Revision to Merge"
+msgstr ""
+
+msgid "Reword"
+msgstr ""
+
+msgid "Rewrite Published Commit?"
+msgstr ""
+
+msgid "Run"
+msgstr "Ejecutar"
+
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Desea ejecutar \"%s\"?"
+
+#, python-format
+msgid "Run %s?"
+msgstr "Desea ejecutar %s?"
+
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr "Desea ejecutar el comando %s?"
+
+#, python-format
+msgid "Running command: %s"
+msgstr "Ejecutando comando: %s"
+
+msgid "Russian translation"
+msgstr ""
+
+msgid "SHA-1"
+msgstr ""
+
+msgid "Safe Mode"
+msgstr ""
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Save Archive"
+msgstr ""
+
+msgid "Save As Tarball/Zip..."
+msgstr "Guardar Como Tarball/Zip..."
+
+msgid "Save GUI Settings"
+msgstr "Guardar GUI al salir"
+
+msgid "Save Stash"
+msgstr ""
+
+msgid "Save modified state to new stash"
+msgstr ""
+
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Se guardó \"%(filename)s\" de \"%(ref)s\" en \"%(destination)s\""
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Search Authors"
+msgstr ""
+
+msgid "Search Commit Messages"
+msgstr ""
+
+msgid "Search Committers"
+msgstr ""
+
+msgid "Search Date Range"
+msgstr ""
+
+msgid "Search Diffs"
+msgstr ""
+
+msgid "Search by Expression"
+msgstr ""
+
+msgid "Search by Path"
+msgstr ""
+
+msgid "Search for a fixed string"
+msgstr ""
+
+msgid "Search using a POSIX basic regular expression"
+msgstr ""
+
+msgid "Search using a POSIX extended regular expression"
+msgstr ""
+
+msgid "Search..."
+msgstr "Buscar..."
+
+msgid "Select"
+msgstr "Seleccionar"
+
+msgid "Select All"
+msgstr ""
+
+msgid "Select Branch to Review"
+msgstr ""
+
+msgid "Select Child"
+msgstr "Seleccionar Hijo"
+
+msgid "Select Commit"
+msgstr ""
+
+#, fuzzy
+msgid "Select Directory..."
+msgstr "Seleccionar Repositorio..."
+
+msgid "Select File"
+msgstr "Seleccionar Archivo"
+
+msgid "Select New Upstream"
+msgstr ""
+
+msgid "Select Newest Child"
+msgstr "Seleccionar hijo más reciente"
+
+msgid "Select Oldest Parent"
+msgstr "Seleccionar padre más antiguo"
+
+msgid "Select Parent"
+msgstr "Seleccionar Padre"
+
+msgid "Select Previous Version"
+msgstr ""
+
+msgid "Select Repository..."
+msgstr "Seleccionar Repositorio..."
+
+msgid "Select a parent directory for the new clone"
+msgstr "Seleccione un directorio padre para la nueva copia local"
+
+#, python-format
+msgid "Select file from \"%s\""
+msgstr "Seleccionar archivo de \"%s\""
+
+msgid "Select manually..."
+msgstr "Seleccionar manualmente..."
+
+msgid "Select output dir"
+msgstr ""
+
+#, fuzzy
+msgid "Select output directory"
+msgstr "Seleccionar Repositorio..."
+
+#, fuzzy
+msgid "Select patch file(s)..."
+msgstr "Seleccionar archivos de parche..."
+
+#, fuzzy
+msgid "Select repository"
+msgstr "Seleccionar Repositorio..."
+
+#, fuzzy
+msgid "Set Default Repository"
+msgstr "Seleccionar Repositorio..."
+
+#, fuzzy
+msgid "Set Upstream Branch"
+msgstr "Eliminar Rama"
+
+msgid "Set upstream"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Shell arguments"
+msgstr ""
+
+msgid "Shift Down"
+msgstr ""
+
+msgid "Shift Up"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr "Atajos"
+
+msgid "Show Diffstat After Merge"
+msgstr "Mostrar Diffstat tras Merge"
+
+msgid "Show Full Paths in the Window Title"
+msgstr ""
+
+#, fuzzy
+msgid "Show Help"
+msgstr "Ayuda"
+
+#, fuzzy
+msgid "Show History"
+msgstr "Ver Historial..."
+
+msgid ""
+"Show help\n"
+"Shortcut: ?"
+msgstr ""
+
+msgid "Show icon? (if available)"
+msgstr ""
+
+msgid "Show line numbers"
+msgstr ""
+
+msgid "Show whole surrounding functions of changes"
+msgstr "Mostrar todo lo que rodea"
+
+msgid "Showing changes since"
+msgstr "Mostrando cambios desde"
+
+msgid "Side by side"
+msgstr ""
+
+msgid "Sign Off"
+msgstr ""
+
+msgid "Sign Tag"
+msgstr ""
+
+msgid "Sign off on this commit"
+msgstr ""
+
+msgid "Simplified Chinese translation"
+msgstr ""
+
+msgid "Skip"
+msgstr ""
+
+msgid "Skip Current Patch"
+msgstr "Ignorar Parche Actual"
+
+msgid "Sort bookmarks alphabetically"
+msgstr "Ordenar Favoritos Alfabeticamente"
+
+msgid "Spanish translation"
+msgstr ""
+
+msgid "Specifies the SHA-1 to tag"
+msgstr ""
+
+msgid "Specifies the tag message"
+msgstr ""
+
+msgid "Specifies the tag name"
+msgstr ""
+
+msgid "Spelling Suggestions"
+msgstr ""
+
+msgid "Squash"
+msgstr ""
+
+msgid "Squash the merged commits into a single commit"
+msgstr ""
+
+msgid "Stage"
+msgstr ""
+
+msgid "Stage / Unstage"
+msgstr ""
+
+msgid "Stage All Untracked"
+msgstr ""
+
+msgid "Stage Changed Files To Commit"
+msgstr ""
+
+msgid "Stage Diff Hunk"
+msgstr ""
+
+msgid "Stage Modified"
+msgstr ""
+
+msgid "Stage Selected"
+msgstr ""
+
+msgid "Stage Selected Lines"
+msgstr ""
+
+msgid "Stage Unmerged"
+msgstr ""
+
+msgid "Stage Untracked"
+msgstr ""
+
+msgid "Stage and Commit"
+msgstr ""
+
+msgid "Stage and commit?"
+msgstr ""
+
+msgid "Stage conflicts"
+msgstr ""
+
+msgid "Stage conflicts?"
+msgstr ""
+
+msgid "Stage/unstage selected paths for commit"
+msgstr ""
+
+msgid "Staged"
+msgstr ""
+
+#, python-format
+msgid "Staging: %s"
+msgstr ""
+
+msgid "Start Interactive Rebase..."
+msgstr "Comenzar Rebase Interactivo..."
+
+msgid "Starting Revision"
+msgstr ""
+
+msgid "Stash"
+msgstr ""
+
+msgid "Stash Index"
+msgstr ""
+
+msgid "Stash staged changes only"
+msgstr ""
+
+msgid "Stash unstaged changes only, keeping staged changes"
+msgstr ""
+
+msgid "Stash..."
+msgstr ""
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Stop tracking paths"
+msgstr ""
+
+msgid "Summarize Merge Commits"
+msgstr "Sumario de Merge Commits"
+
+msgid "Summary"
+msgstr "Resumen"
+
+msgid "Summary:"
+msgstr "Resumen:"
+
+msgid "Tab Width"
+msgstr "Ancho de Tabulacion"
+
+msgid "Tag"
+msgstr "Etiqueta"
+
+msgid "Tag Created"
+msgstr "Etiqueta Creada"
+
+msgid "Tag message..."
+msgstr ""
+
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "Text Width"
+msgstr "Ancho del texto"
+
+msgid "The branch will be no longer available."
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, fuzzy
+msgid "The commit message will be cleared."
+msgstr "Se eliminarán los siguientes archivos:"
+
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "El archivo \"%s\" ya existe y será sobreescrito."
+
+msgid "The following files will be deleted:"
+msgstr "Se eliminarán los siguientes archivos:"
+
+msgid "The revision expression cannot be empty."
+msgstr ""
+
+#, python-format
+msgid "The worktree will be reset using \"git reset --merge %s\""
+msgstr ""
+
+msgid "This cannot be undone.  Clear commit message?"
+msgstr ""
+
+msgid ""
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
+msgstr ""
+
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+msgid ""
+"This operation removes uncommitted edits from selected files.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+msgid ""
+"This operation removes unstaged edits from selected files.\n"
+"These changes cannot be recovered."
+msgstr ""
+
+msgid ""
+"This repository is currently being rebased.\n"
+"Resolve conflicts, commit changes, and run:\n"
+"    Rebase > Continue"
+msgstr ""
+
+msgid ""
+"This repository is in the middle of a merge.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+
+msgid "Toggle Enabled"
+msgstr ""
+
+msgid "Toggle the branches filter"
+msgstr ""
+
+msgid "Toggle the paths filter"
+msgstr ""
+
+msgid "Tracking Branch"
+msgstr ""
+
+msgid "Tracking branch"
+msgstr ""
+
+msgid "Traditional Chinese (Taiwan) translation"
+msgstr ""
+
+msgid "Translators"
+msgstr ""
+
+msgid "Turkish translation"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+#, python-format
+msgid "URL: %s"
+msgstr ""
+
+msgid "Ukranian translation"
+msgstr ""
+
+msgid "Unable to rebase"
+msgstr ""
+
+#, python-format
+msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unmerged"
+msgstr ""
+
+msgid "Unstage"
+msgstr ""
+
+msgid "Unstage All"
+msgstr ""
+
+msgid "Unstage Diff Hunk"
+msgstr ""
+
+msgid "Unstage From Commit"
+msgstr ""
+
+msgid "Unstage Selected"
+msgstr ""
+
+msgid "Unstage Selected Lines"
+msgstr ""
+
+#, python-format
+msgid "Unstaging: %s"
+msgstr ""
+
+msgid "Untrack Selected"
+msgstr ""
+
+msgid "Untracked"
+msgstr ""
+
+#, python-format
+msgid "Untracking: %s"
+msgstr ""
+
+msgid "Update Existing Branch:"
+msgstr "Acutalizar Rama Existente:"
+
+msgid "Updating"
+msgstr "Actualizando"
+
+msgid "User Name"
+msgstr "Nombre de Usuario"
+
+msgid "Version"
+msgstr ""
+
+msgid "View"
+msgstr "Ver"
+
+msgid "View History..."
+msgstr "Ver Historial..."
+
+msgid "View history for selected paths"
+msgstr ""
+
+msgid "Visualize"
+msgstr ""
+
+msgid "Visualize All Branches..."
+msgstr "Visualizar Todas las Ramas..."
+
+msgid "Visualize Current Branch..."
+msgstr "Visualizar Rama Actual..."
+
+msgid "Whether to sign the tag (git tag -s)"
+msgstr ""
+
+msgid "Would you like to stage and commit all modified files?"
+msgstr ""
+
+msgid "XOR"
+msgstr ""
+
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+
+msgid "You cannot rebase with uncommitted changes."
+msgstr ""
+
+msgid "You must specify a revision to merge."
+msgstr ""
+
+msgid "You must specify a revision to view."
+msgstr ""
+
+msgid "Zoom In"
+msgstr ""
+
+msgid "Zoom Out"
+msgstr ""
+
+msgid "Zoom to Fit"
+msgstr ""
+
+msgid "command-line arguments"
+msgstr ""
+
+#, python-format
+msgid "exit code %s"
+msgstr ""
+
+#, python-format
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr ""
+
+#, python-format
+msgid "git cola version %s"
+msgstr "versión de git cola %s"
+
+msgid "git-cola"
+msgstr ""
+
+msgid "git-cola diff"
+msgstr ""
+
+msgid "grep result..."
+msgstr ""
+
+msgid "hotkeys.html"
+msgstr ""
+
+msgid "unknown"
+msgstr "desconocido"
+
+msgid "vX.Y.Z"
+msgstr ""
+
+msgid "yyyy-MM-dd"
+msgstr ""
+
+#~ msgid "Bookmarks"
+#~ msgstr "Favoritos"
+
+#~ msgid "Bookmarks..."
+#~ msgstr "Favoritos..."
+
+#, fuzzy
+#~ msgid "Error %s"
+#~ msgstr "Errores: %s"
 
 #~ msgid "Errors: %s"
 #~ msgstr "Errores: %s"
 
-#~ msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-#~ msgstr "Etiquetando \"%(revision)s\" como \"%(name)s\""
+#, fuzzy
+#~ msgid "Local Branches"
+#~ msgstr "Rama Local"
+
+#, fuzzy
+#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
+#~ msgstr "En sistemas Debian intente: sudo apt-get install python-pyinotify"
+
+#~ msgid "Options"
+#~ msgstr "Opciones"
 
 #~ msgid ""
 #~ "Output:\n"
@@ -2182,13 +2369,8 @@ msgstr ""
 #~ "Resultado:\n"
 #~ "%s"
 
-#, fuzzy
-#~ msgid "Error %s"
-#~ msgstr "Errores: %s"
-
-#, fuzzy
-#~ msgid "Local Branches"
-#~ msgstr "Rama Local"
+#~ msgid "Output: %s"
+#~ msgstr "Resultado: %s"
 
 #, fuzzy
 #~ msgid "Remote Branches"
@@ -2211,28 +2393,12 @@ msgstr ""
 #~ "Notificación de archivo: desactivada\n"
 #~ "Nota: instale pywin32 para activarla.\n"
 
+#~ msgid "inotify enabled."
+#~ msgstr "inotify activado."
+
 #~ msgid ""
 #~ "inotify: disabled\n"
 #~ "Note: install python-pyinotify to enable inotify.\n"
 #~ msgstr ""
 #~ "inotify: desactivado\n"
 #~ "Nota: instale python-pyinotify para activarlo.\n"
-
-#, fuzzy
-#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
-#~ msgstr "En sistemas Debian intente: sudo apt-get install python-pyinotify"
-
-#~ msgid "inotify enabled."
-#~ msgstr "inotify activado."
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Options"
-#~ msgstr "Opciones"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Favoritos"
-
-#~ msgid "Bookmarks..."
-#~ msgstr "Favoritos..."

@@ -1,6 +1,24 @@
 # The default target of this Makefile is...
 all::
 
+# Development
+# -----------
+# make test     # unit tests
+# make doc      # build docs
+# make flake8   # style check
+# make pyint3k  # python2/3 compatibility checks
+# make pylint   # full pylint check
+#               # TODO pylint config, tox, yapf, others?
+# Release Prep
+# ------------
+# make pot      # update main translation template
+# make po       # merge translations
+#
+# Installation
+# ------------
+# make prefix=<path> install
+# DESTDIR is also supported.
+
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
@@ -26,7 +44,7 @@ TAR = tar
 # "make V=1" increases verbosity
 # "make test V=2" increases test verbosity
 # "make pylint color=1" enables colorized pylint output
-# "make test flags={-x,--exitfirst}" exists on the first test failure
+# "make test flags={-x,--exitfirst}" exits on the first test failure
 ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
@@ -191,8 +209,12 @@ i18n: pot mo
 .PHONY: i18n
 
 pot:
-	$(SETUP) build_pot --no-lang --build-dir=po
+	$(SETUP) build_pot --build-dir=po --no-lang
 .PHONY: pot
+
+po:
+	$(SETUP) build_pot --build-dir=po
+.PHONY: po
 
 mo:
 	$(SETUP) build_mo --force
