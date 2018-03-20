@@ -26,7 +26,7 @@ TAR = tar
 # "make V=1" increases verbosity
 # "make test V=2" increases test verbosity
 # "make pylint color=1" enables colorized pylint output
-# "make test flags={-x,--exitfirst}" exists on the first test failure
+# "make test flags={-x,--exitfirst}" exits on the first test failure
 ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
