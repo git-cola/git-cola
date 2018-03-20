@@ -16,1214 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Abort Merge..."
-msgstr "Перервати злиття..."
-
-msgid "Aborting the current merge?"
-msgstr "Перервати поточне злиття?"
-
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-"Переривання поточного злиття спричинить втрату *ВСІХ* незакомітованих змін.\n"
-"Відновлення незакомітованих змін неможливе."
-
-msgid "Abort Merge"
-msgstr "Перервати злиття"
-
-msgid "Error"
-msgstr "Помилка"
-
-msgid "Amend"
-msgstr "Змінити"
-
-msgid "Cannot Amend"
-msgstr "Не вдається змінити"
-
-msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
-msgstr ""
-"Ви знаходитесь в процесі злиття.\n"
-"Не можна робити зміни під час злиття."
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "Латка %(current)d/%(count)d"
-
-msgid "Summary:"
-msgstr "Підсумок:"
-
-msgid "Patch(es) Applied"
-msgstr "Латку(и) застосовано"
-
-#, python-format
-msgid "%d patch(es) applied."
-msgstr "%d латку(ок) застосовано."
-
-msgid "Error Launching Blame Viewer"
-msgstr "Помилка запуску переглядача анотацій (blame)"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr ""
-"Не вдалось виконати \"%s\": будь ласка налаштуйте переглядач анотацій (blame)"
-
-msgid "Reset Branch"
-msgstr "Скинути гілку"
-
-msgid "Point the current branch head to a new commit?"
-msgstr "Встановити HEAD поточної гілки на новий коміт?"
-
-#, python-format
-msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
-
-msgid "Reset Worktree"
-msgstr "Скинути робоче дерево"
-
-msgid "Reset worktree?"
-msgstr "Скинути робоче дерево?"
-
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
-
-msgid "Commit failed"
-msgstr "Не вдалось зробити коміт"
-
-#, python-format
-msgid "Error creating remote \"%s\""
-msgstr "Не вдалось створити віддалений репозиторій \"%s\""
-
-msgid "Delete Remote"
-msgstr "Видалити віддалений репозиторій"
-
-msgid "Delete remote?"
-msgstr "Видалити віддалений репозиторій?"
-
-#, python-format
-msgid "Delete remote \"%s\""
-msgstr "Видалити віддалений репозиторій \"%s\""
-
-msgid "Delete"
-msgstr "Видалити"
-
-#, python-format
-msgid "Error deleting remote \"%s\""
-msgstr "Не вдалось видалити віддалений репозиторій \"%s\""
-
-msgid "Rename Remote"
-msgstr "Перейменувати віддалений репозиторій"
-
-msgid "Rename remote?"
-msgstr "Перейменувати віддалений репозиторій?"
-
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Перейменувати віддалений репозиторій \"%(current)s\" в \"%(new)s\"?"
-
-msgid "Rename"
-msgstr "Перейменувати"
-
-msgid "Delete Bookmark?"
-msgstr "Видалити закладку?"
-
-#, python-format
-msgid "%s will be removed from your bookmarks."
-msgstr "%s буде видалено з ваших закладок."
-
-msgid "Delete Bookmark"
-msgstr "Видалити закладку"
-
-#, python-format
-msgid "Remove %s from the recent list?"
-msgstr "Видалити %s зі списку останніх?"
-
-#, python-format
-msgid "%s will be removed from your recent repositories."
-msgstr "%s буде видалено зі списку останніх репозиторіїв."
-
-msgid "Remove"
-msgstr "Видалити"
-
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr "Не вдалось видалити \"%s\""
-
-msgid "Delete Files?"
-msgstr "Видалити файли?"
-
-msgid "The following files will be deleted:"
-msgstr "Наступні файли будуть видалені:"
-
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr "Видалити %d файл(ів)?"
-
-msgid "Delete Files"
-msgstr "Видалити файли"
-
-msgid "Error Deleting Remote Branch"
-msgstr "Не вдалось видалити віддалену гілку"
-
-msgid "Remote Branch Deleted"
-msgstr "Видалено віддалену гілку"
-
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "\"%(branch)s\" було видалено з \"%(remote)s\"."
-
-msgid "Launch Editor"
-msgstr "Відкрити редактор"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "Не вдалось виконати \"%s\": будь ласка, налаштуйте ваш редактор"
-
-msgid "Error Editing File"
-msgstr "Помилка редагування файла"
-
-msgid "Launch Diff Tool"
-msgstr "Запустити інструмент порівняння"
-
-msgid "Launch Terminal"
-msgstr "Запустити термінал"
-
-msgid "Error: Cannot find commit template"
-msgstr "Помилка: Не вдається знайти шаблон коміту"
-
-#, python-format
-msgid "%s: No such file or directory."
-msgstr "%s: Немає такого файла або каталогу."
-
-msgid "Error: Unconfigured commit template"
-msgstr "Помилка: Шаблон коміту не сконфігуровано"
-
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-"Шаблон коміту не сконфігуровано.\n"
-"Використовуйте \"git config\" щоб задати \"commit.template\"\n"
-"так, щоб він вказував на шаблон коміту"
-
-msgid "Error running prepare-commitmsg hook"
-msgstr "Помилка застосування prepare-commitmsg гака (hook)"
-
-#, python-format
-msgid "A hook must be provided at \"%s\""
-msgstr "Гак (hook) має бути в \"%s\""
-
-msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
-
-msgid "Open Using Default Application"
-msgstr "Відкрити, використовуючи застосунок за замовчуванням"
-
-msgid "Open Parent Directory"
-msgstr "Відкрити батьківський каталог"
-
-#, python-format
-msgid "Rebase onto %s"
-msgstr "Перемістити (rebase) на %s"
-
-msgid "Rebase"
-msgstr "Перемістити (rebase)"
-
-#, fuzzy
-msgid "Rebase stoppped"
-msgstr "Перемістити (rebase) на %s"
-
-msgid "Edit Rebase"
-msgstr "Редагувати переміщення (rebase)"
-
-msgid "Save"
-msgstr "Зберегти"
-
-msgid "Refresh"
-msgstr "Оновити"
-
-msgid "Revert Unstaged Edits..."
-msgstr "Відмінити непроіндексовані зміни..."
-
-msgid "Revert Unstaged Changes?"
-msgstr "Відмінити непроіндексовані зміни?"
-
-msgid ""
-"This operation removes unstaged edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Ця операція відмінить непроіндексовані зміни.\n"
-"Ці зміни не можна буде відновити."
-
-msgid "Revert the unstaged changes?"
-msgstr "Відмінити непроіндексовані зміни?"
-
-msgid "Revert Unstaged Changes"
-msgstr "Відмінити непроіндексовані зміни"
-
-msgid "Revert Uncommitted Edits..."
-msgstr "Відмінити незакомітовані зміни..."
-
-msgid "Revert Uncommitted Changes?"
-msgstr "Відмінити незакомітовані зміни?"
-
-msgid ""
-"This operation removes uncommitted edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Ця операція відмінить незакомітовані зміни.\n"
-"Ці зміни не можна буде відновити."
-
-msgid "Revert the uncommitted changes?"
-msgstr "Відмінити незакомітовані зміни?"
-
-msgid "Revert Uncommitted Changes"
-msgstr "Відмінити незакомітовані зміни"
-
-#, python-format
-msgid "Run \"%s\"?"
-msgstr "Виконати \"%s\"?"
-
-msgid "Please select a file"
-msgstr "Будь ласка, виберіть файл"
-
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr "\"%s\" потребує вибраного файла."
-
-msgid "Invalid Revision"
-msgstr "Неправильна ревізія"
-
-msgid "The revision expression cannot be empty."
-msgstr "Поле ревізії не може бути порожнім."
-
-#, python-format
-msgid "Running command: %s"
-msgstr "Запуск команди: %s"
-
-msgid "Sign Off"
-msgstr "Підписати"
-
-msgid "unknown"
-msgstr "невідомий"
-
-msgid "Stage conflicts?"
-msgstr "Проіндексувати конфлікт?"
-
-#, python-format
-msgid ""
-"%s appears to contain merge conflicts.\n"
-"\n"
-"You should probably skip this file.\n"
-"Stage it anyways?"
-msgstr ""
-"%s здається містить конфлікт злиття.\n"
-"\n"
-"Скоріш за все, ви маєте пропустити цей файл.\n"
-"Проіндексувати в будь-якому випадку?"
-
-msgid "Stage conflicts"
-msgstr "Проіндексувати конфлікт"
-
-msgid "Skip"
-msgstr "Пропустити"
-
-msgid "Stage"
-msgstr "Проіндексувати"
-
-#, python-format
-msgid "Staging: %s"
-msgstr "Індексація: %s"
-
-msgid "Stage Modified"
-msgstr "Проіндексувати зміни"
-
-msgid "Stage Unmerged"
-msgstr "Проіндексувати незлите"
-
-msgid "Stage Untracked"
-msgstr "Проіндексувати файли, що не відслідковуються"
-
-msgid "Stage / Unstage"
-msgstr "Проіндексувати / Видалити з проіндексованого"
-
-msgid "Missing Tag Message"
-msgstr "Назва теґу відсутня"
-
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr "Вібувся запит на підписання теґу, але повідомлення для теґу порожнє."
-
-msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
-msgstr ""
-"Замість цього буде створено легкий непідписаний теґ.\n"
-"Створити непідписаний теґ?"
-
-msgid "Create Unsigned Tag"
-msgstr "Створити непідписаний теґ"
-
-#, python-format
-msgid "Error: could not create tag \"%s\""
-msgstr "Помилка: не вдалось створити теґ \"%s\""
-
-msgid "Unstage"
-msgstr "Видалити з індексу"
-
-#, python-format
-msgid "Unstaging: %s"
-msgstr "Видалення з проіндексованого: %s"
-
-#, python-format
-msgid "Untracking: %s"
-msgstr "Видалення зі списку файлів, що відслідковуються: %s"
-
-msgid "Error Launching History Browser"
-msgstr "Помилка запуску браузера історії"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "Не вдалось виконати \"%s\": будь ласка налаштуйте переглядач історії"
-
-msgid "Next File"
-msgstr "Наступний файл"
-
-msgid "Previous File"
-msgstr "Попередній файл"
-
-msgid "File system change monitoring: enabled.\n"
-msgstr "Відстеження змін файлової системи: увімкнено.\n"
-
-msgid ""
-"File system change monitoring: disabled because the limit on the total "
-"number of inotify watches was reached.  You may be able to increase the "
-"limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
-"&& sudo sysctl -p\n"
-msgstr ""
-"Відстеження змін файлової системи: вимкнено, тому що досягнуто верхньої межі "
-"кількості спостерігачів inotify. Ви можете збільшити ліміт кількості "
-"спостерігачів, виконавши:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
-"&& sudo sysctl -p\n"
-
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr ""
-"Відстеження змін файлової системи: вимкнено, тому що \"cola.inotify\" є "
-"хибним (false).\n"
-
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
-"Відстеження змін файлової системи: вимкнено, тому що не встановлено "
-"pywin32.\n"
-
-msgid ""
-"File system change monitoring: disabled because libc does not support the "
-"inotify system calls.\n"
-msgstr ""
-"Відстеження змін файлової системи: вимкнено, тому що libc не підтримує "
-"системних викликів inotify.\n"
-
-msgid "Delete Branch"
-msgstr "Видалити гілку"
-
-msgid "Delete Remote Branch"
-msgstr "Видалити віддалену гілку"
-
-msgid "Browse Commits..."
-msgstr "Переглянути коміти..."
-
-msgid "Browse"
-msgstr "Переглянути"
-
-msgid "Checkout Branch"
-msgstr "Переключитись на гілку"
-
-msgid "Checkout"
-msgstr "Переключитись"
-
-msgid "Cherry-Pick Commit"
-msgstr "Висмикнути коміт (cherry pick)"
-
-msgid "New Repository..."
-msgstr "Новий репозиторій..."
-
-msgid "Error Creating Repository"
-msgstr "Помилка створення репозиторію"
-
-msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Шлях або URL для клонування (Env. $VARS okay)"
-
-msgid "Error Cloning"
-msgstr "Помилка клонування"
-
-#, python-format
-msgid "Could not parse Git URL: \"%s\""
-msgstr "Не вдалось розпізнати Git URL: \"%s\""
-
-msgid "Select a parent directory for the new clone"
-msgstr "Виберіть батьківський каталог для нового клонування"
-
-#, python-format
-msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" вже існує, cola створить новий каталог"
-
-msgid "Directory Exists"
-msgstr "Каталог існує"
-
-msgid "Export Patches"
-msgstr "Експорт латок"
-
-msgid "Open Git Repository..."
-msgstr "Відкрити Git репозиторій..."
-
-msgid "Load Commit Message"
-msgstr "Завантажити повідомлення коміту"
-
-msgid "Select Branch to Review"
-msgstr "Виберіть гілку для перевірки"
-
-msgid "Review"
-msgstr "Перевірка"
-
-msgid "Clone Repository"
-msgstr "Клонувати репозиторій"
-
-#, python-format
-msgid "Cloning repository at %s"
-msgstr "Клонувати репозиторій в %s"
-
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr "Помилка: не вдалось клонувати \"%s\""
-
-msgid "Rename Existing Branch"
-msgstr "Перейменувати існуючу гілку"
-
-msgid "Select"
-msgstr "Вибрати"
-
-msgid "Enter New Branch Name"
-msgstr "Введіть ім'я для нової гілки"
-
-msgid "Reset Branch Head"
-msgstr "Скинути HEAD гілки"
-
-msgid "Reset"
-msgstr "Скинути"
-
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" завершилась з кодом %(status)d"
-
-msgid "Continue"
-msgstr "Продовжити"
-
-#, python-format
-msgid "Run %s?"
-msgstr "Запустити %s?"
-
-#, python-format
-msgid "Run the \"%s\" command?"
-msgstr "Виконати команду \"%s\"?"
-
-msgid "Run"
-msgstr "Запустити"
-
-#, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr ""
-"критично: \"%s\" не є каталогом. Будь ласка, вкажіть коректний --repo <шлях>."
-
-msgid "Close..."
-msgstr "Закрити..."
-
-msgid "Close"
-msgstr "Закрити"
-
-msgid "&Edit"
-msgstr "Редагувати"
-
-msgid "Detach"
-msgstr "Відкріпити"
-
-msgid "Attach"
-msgstr "Прикріпити"
-
-msgid "Nothing to do"
-msgstr "Нічого робити"
-
-msgid "git-cola diff"
-msgstr "Різниця git-cola"
-
-msgid "Compare"
-msgstr "Порівняти"
-
-msgid "Compare All"
-msgstr "Порівняти все"
-
-msgid ""
-"\n"
-"Keyboard Shortcuts\n"
-"------------------\n"
-"J, Down     = Move Down\n"
-"K, Up       = Move Up\n"
-"Enter       = Edit Selected Files\n"
-"Spacebar    = Open File Using Default Application\n"
-"Ctrl + L    = Focus Text Entry Field\n"
-"?           = Show Help\n"
-"\n"
-"The up and down arrows change focus between the text entry field\n"
-"and the results.\n"
-msgstr ""
-"\n"
-"Поєднання клавіш\n"
-"------------------\n"
-"J, Down     = Переміститись донизу\n"
-"K, Up       = Перейменувати вгору\n"
-"Enter       = Редагувати вибрані файли\n"
-"Spacebar    = Відкрити файл, використовуючи застосунок за замовчуванням\n"
-"Ctrl + L    = Фокус на полі для введення тексту\n"
-"?           = Показати довідку\n"
-"\n"
-"Стрілки вготу та вниз змінюють фокус поміж полем для введення тексту\n"
-"та результатами.\n"
-
-msgid "Help - Find Files"
-msgstr "Допомога - Пошук файлів"
-
-msgid "Find Files"
-msgstr "Пошук файлів"
-
-msgid "<path> ..."
-msgstr "<шлях> ..."
-
-msgid "Help"
-msgstr "Допомога"
-
-msgid ""
-"Show help\n"
-"Shortcut: ?"
-msgstr ""
-"Показати допомогу\n"
-"Клавіша: ?"
-
-msgid "Show Help"
-msgstr "Показати допомогу"
-
-msgid "Revision Expression:"
-msgstr "Вираз для визначення ревізії:"
-
-msgid "No commits exist in this branch."
-msgstr "На цій гілці немає комітів."
-
-msgid "Add to .gitignore"
-msgstr "Додати до .gitignore"
-
-msgid "Ignore filename or pattern"
-msgstr "Ігнорувати ім'я файлу або шаблон"
-
-msgid "Ignore exact filename"
-msgstr "Ігнорувати точне ім'я файлу"
-
-#, fuzzy
-msgid "Ignore custom pattern"
-msgstr "Ігнорувати специфічний шаблон"
-
-msgid "Add"
-msgstr "Додати"
-
-msgid "Configure toolbar"
-msgstr ""
-
-#, fuzzy
-msgid "Delete toolbar"
-msgstr "Видалити закладку"
-
-msgid "Name"
-msgstr "Ім'я"
-
-msgid "Add Separator"
-msgstr ""
-
-msgid "Remove Element"
-msgstr "Видалити елемент"
-
-msgid "Show icon? (if available)"
-msgstr ""
-
-msgid "Apply"
-msgstr "Застосувати"
-
-msgid "Open"
-msgstr "Відкрити"
-
-msgid "Favorite repositories"
-msgstr "Улюблені репозиторіїї"
-
-msgid "Recent repositories"
-msgstr "Недавні репозиторіїї"
-
-msgid "Accept"
-msgstr "Погодитись"
-
-msgid "Open in New Window"
-msgstr "Відкрити в новому вікні"
-
-msgid "Set Default Repository"
-msgstr "Встановити репозиторій за замовчуванням"
-
-msgid "Clear Default Repository"
-msgstr "Очистити репозиторій за замовчуванням"
-
-msgid "Rename Repository"
-msgstr "Перейменувати репозиторій"
-
-msgid "Copy"
-msgstr "Скопіювати"
-
-msgid "Actions"
-msgstr "Дії"
-
-msgid "Path"
-msgstr "Шлях"
-
-msgid "Add Favorite"
-msgstr "Додати улюбление"
-
-#, python-format
-msgid "%s is not a Git repository."
-msgstr "%s не є репозиторієм Git."
-
-msgid "Local"
-msgstr "Локальна"
-
-msgid "Remote"
-msgstr "Віддалений репозиторій"
-
-msgid "Tags"
-msgstr "Теґи"
-
-msgid "Toggle the branches filter"
-msgstr "Перемкнути фільтр гілок"
-
-msgid "Branches"
-msgstr "Гілки"
-
-#, fuzzy
-msgid "Checkout as new branch"
-msgstr "Переключитись на гілку"
-
-msgid "Merge into current branch"
-msgstr "Злити до поточної гілки"
-
-msgid "Pull"
-msgstr "Стягнути"
-
-msgid "Push"
-msgstr "Надіслати"
-
-msgid "Rename Branch"
-msgstr "Перейменувати гілку"
-
-#, python-format
-msgid "Executing action %s"
-msgstr "Виконання дії %s"
-
-msgid "Updating"
-msgstr "Оновлення"
-
-msgid "Rename branch"
-msgstr "Перейменувати гілку"
-
-msgid "Delete selected branch?"
-msgstr "Видалити виділену гілку?"
-
-msgid "The branch will be no longer available."
-msgstr "Гілка не буде більше доступна."
-
-msgid "Filter branches..."
-msgstr "Фільтрувати гілки..."
-
-msgid "Browser"
-msgstr "Переглядач"
-
-msgid "Status"
-msgstr "Статус"
-
-msgid "Favorites"
-msgstr "Улюбене"
-
-msgid "Recent"
-msgstr "Недавнє"
-
-msgid "Commit"
-msgstr "Коміт"
-
-msgid "Console"
-msgstr "Консоль"
-
-msgid "Diff"
-msgstr "Різниця"
-
-msgid "Amend Last Commit"
-msgstr "Змінити останній коміт"
-
-msgid "Unstage All"
-msgstr "Видалити все з проіндексованого"
-
-msgid "Unstage From Commit"
-msgstr "Прибрати з коміту"
-
-msgid "Diffstat"
-msgstr "Список різниць"
-
-msgid "Stage Changed Files To Commit"
-msgstr "Додати змінені файли до коміту"
-
-msgid "Stage All Untracked"
-msgstr "Проіндексувати всі непроіндексовані файли"
-
-msgid "Apply Patches..."
-msgstr "Примінити латки..."
-
-msgid "Export Patches..."
-msgstr "Експортувати латки..."
-
-msgid "Preferences"
-msgstr "Налаштування"
-
-msgid "Edit Remotes..."
-msgstr "Редагувати віддалені репозиторіїї..."
-
-msgid "Recently Modified Files..."
-msgstr "Недавно змінені файли..."
-
-msgid "Cherry-Pick..."
-msgstr "Висмикнути коміт (cherry pick)..."
-
-msgid "Load Commit Message..."
-msgstr "Завантажити текст коміту..."
-
-msgid "Prepare Commit Message"
-msgstr "Підготувати текст коміту"
-
-msgid "Save As Tarball/Zip..."
-msgstr "Зберегти як Tarball/Zip..."
-
-msgid "Quit"
-msgstr "Вихід"
-
-msgid "Grep"
-msgstr "Пошук (grep)"
-
-msgid "Merge..."
-msgstr "Злиття"
-
-msgid "Fetch..."
-msgstr "Отримати"
-
-msgid "Push..."
-msgstr "Надіслати"
-
-msgid "Pull..."
-msgstr "Стягнути"
-
-msgid "Open..."
-msgstr "Відкрити"
-
-msgid "Open in New Window..."
-msgstr "Відкрити в новому вікні..."
-
-msgid "Stash..."
-msgstr "Сховок"
-
-msgid "Clone..."
-msgstr "Клонувати..."
-
-msgid "Documentation"
-msgstr "Документація"
-
-msgid "Keyboard Shortcuts"
-msgstr "Поєднання клавіш"
-
-msgid "Visualize Current Branch..."
-msgstr "Відобразити поточну гілку..."
-
-msgid "Visualize All Branches..."
-msgstr "Відобразити всі гілки..."
-
-msgid "Search..."
-msgstr "Пошук..."
-
-msgid "Browse Current Branch..."
-msgstr "Переглянути поточну гілку..."
-
-msgid "Browse Other Branch..."
-msgstr "Переглянути іншу гілку..."
-
-msgid "Get Commit Message Template"
-msgstr "Отримати шаблон тексту коміту"
-
-msgid "About"
-msgstr "Про програму"
-
-msgid "Expression..."
-msgstr "Вираз..."
-
-msgid "Branches..."
-msgstr "Гілки..."
-
-msgid "Create Tag..."
-msgstr "Створити теґ..."
-
-msgid "Create..."
-msgstr "Створити..."
-
-msgid "Delete..."
-msgstr "Видалити..."
-
-msgid "Delete Remote Branch..."
-msgstr "Видалити віддалену гілку..."
-
-msgid "Rename Branch..."
-msgstr "Перейменувати гілку..."
-
-msgid "Checkout..."
-msgstr "Переключитись..."
-
-msgid "Review..."
-msgstr "Перевірка..."
-
-msgid "File Browser..."
-msgstr "Переглядач файлів..."
-
-msgid "DAG..."
-msgstr "Граф (DAG)..."
-
-msgid "Start Interactive Rebase..."
-msgstr "Розпочати інтерактивне переміщення..."
-
-msgid "Edit..."
-msgstr "Редагувати..."
-
-msgid "Skip Current Patch"
-msgstr "Пропустити поточну латку"
-
-msgid "Abort"
-msgstr "Перервати"
-
-msgid "Lock Layout"
-msgstr "Закріпити положення елементів"
-
-msgid "&File"
-msgstr "Файл"
-
-msgid "Open Recent"
-msgstr "Відкрити останній"
-
-msgid "Undo"
-msgstr ""
-
-msgid "Redo"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Select All"
-msgstr "Виділити все"
-
-msgid "Commit@@verb"
-msgstr "Закомітувати"
-
-msgid "Branch"
-msgstr "Гілка"
-
-msgid "View"
-msgstr "Вигляд"
-
-#, python-format
-msgid "git cola version %s"
-msgstr "версія git cola %s"
-
-msgid "Add Toolbar"
-msgstr ""
-
-#, python-format
-msgid "Repository: %s"
-msgstr "Репозиторій: %s"
-
-#, python-format
-msgid "Branch: %s"
-msgstr "Гілка: %s"
-
-msgid ""
-"This repository is currently being rebased.\n"
-"Resolve conflicts, commit changes, and run:\n"
-"    Rebase > Continue"
-msgstr ""
-"Цей репозиторій переміщено.\n"
-"Виправте конфлікти, закомітуйте зміни, і виконайте:\n"
-"    Перемістити (rebase) > Продовжити"
-
-msgid "Rebasing"
-msgstr "Переміщення"
-
-msgid ""
-"This repository is in the middle of a merge.\n"
-"Resolve conflicts and commit changes."
-msgstr ""
-"Цей репозиторій в процесі злиття.\n"
-"Виправте конфлікти та закомітуйте зміни."
-
-msgid "Merging"
-msgstr "Злиття"
-
-msgid "Amending"
-msgstr "Змінення"
-
-msgid "Unable to rebase"
-msgstr "Не вдалось перемістити (rebase)"
-
-msgid "You cannot rebase with uncommitted changes."
-msgstr "Не можна робити переміщення (rebase), якщо є незакомітовані зміни."
-
-msgid "Select New Upstream"
-msgstr "Вибрати нове віддалене джерело"
-
-msgid "Interactive Rebase"
-msgstr "Інтерактивне переміщення"
-
-msgid "Toggle the paths filter"
-msgstr "Перемкнути фільтр шляхів"
-
-msgid "Staged"
-msgstr "Проіндексоване"
-
-msgid "Unmerged"
-msgstr "Незлите"
-
-msgid "Modified"
-msgstr "Змінене"
-
-msgid "Untracked"
-msgstr "Не відслідковується"
-
-msgid "Move Up"
-msgstr "Перемістити вгору"
-
-msgid "Move Down"
-msgstr "Перемістити вниз"
-
-msgid "Copy Path to Clipboard"
-msgstr "Скопіювати шлях в буфер обміну"
-
-msgid "Copy Relative Path to Clipboard"
-msgstr "Скопіювати відносний шлях в буфер обміну"
-
-#, fuzzy
-msgid "Copy Leading Path to Clipboard"
-msgstr "Скопіювати відносний шлях в буфер обміну"
-
-#, fuzzy
-msgid "Copy Basename to Clipboard"
-msgstr "Скопіювати шлях в буфер обміну"
-
-#, fuzzy
-msgid "Customize..."
-msgstr "Закрити..."
-
-msgid "View History..."
-msgstr "Переглянути історію..."
-
-msgid "Blame..."
-msgstr "Анотувати (blame)..."
-
-msgid "Move files to trash"
-msgstr "Перемістити файл до смітника"
-
-msgid "Delete Files..."
-msgstr "Видалити файли..."
-
-#, fuzzy
-msgid "Copy..."
-msgstr "Скопіювати"
-
-msgid "Unstage Selected"
-msgstr "Видалити виділене з проіндексованого"
-
-msgid "Launch git-cola"
-msgstr "Запустити git-cola"
-
-msgid "Stage Selected"
-msgstr "Додати виділене до проіндексованого"
-
-#, python-format
-msgid ""
-"\n"
-"        Format String Variables\n"
-"        -----------------------\n"
-"          %(path)s  =  relative file path\n"
-"       %(abspath)s  =  absolute file path\n"
-"       %(dirname)s  =  relative directory path\n"
-"    %(absdirname)s  =  absolute directory path\n"
-"      %(filename)s  =  file basename\n"
-"      %(basename)s  =  file basename without extension\n"
-"           %(ext)s  =  file extension\n"
-msgstr ""
-
-msgid "Help - Custom Copy Actions"
-msgstr ""
-
-msgid "Filter paths..."
-msgstr "Фільтрувати шляхи..."
-
-msgid "Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Action Name"
-msgstr "Дії"
-
-#, fuzzy
-msgid "Format String"
-msgstr "Фіксована послідовність знаків"
-
-#, python-format
-msgid "%(path)s"
-msgstr ""
-
-#, python-format
-msgid "exit code %s"
-msgstr "код завершення %s"
-
-msgid "Abort Action"
-msgstr "Перервати дію"
-
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-"Дія все ще виконується.\n"
-"Переривання може призвести до втрати даних."
-
-msgid "Abort the action?"
-msgstr "Перервати дію?"
-
-msgid "Arguments"
-msgstr "Аргументи"
-
-msgid "Local Branch"
-msgstr "Локальна гілка"
-
-msgid "Tracking Branch"
-msgstr "Гілка, що відслідковуються"
-
-msgid "Tag"
-msgstr "Теґ"
-
-msgid "Revision"
-msgstr "Ревізія"
-
-msgid "Diff this -> selected"
-msgstr "Порівняти це з виділеним"
-
-msgid "Diff selected -> this"
-msgstr "Порівняти виділене з цим"
-
-msgid "Create Branch"
-msgstr "Створити гілку"
-
-msgid "Create Patch"
-msgstr "Створити латку"
-
-msgid "Create Tag"
-msgstr "Створити теґ"
-
-msgid "Cherry Pick"
-msgstr "Висмикнути коміт (cherry pick)"
-
-msgid "Launch Directory Diff Tool"
-msgstr "Запустити каталоговий інструмент порівняння"
-
-#, fuzzy
-msgid "Checkout Detached HEAD"
-msgstr "Переключитись на гілку"
-
-msgid "Grab File..."
-msgstr "Взяти файл..."
-
-msgid "Copy SHA-1"
-msgstr "Скопіювати SHA-1"
-
-msgid "Summary"
-msgstr "Опис"
-
-msgid "Author"
-msgstr "Автор"
-
-msgid "Date, Time"
-msgstr "Дата, час"
-
-msgid "Go Up"
-msgstr "Вгору"
-
-msgid "Go Down"
-msgstr "Вниз"
-
-msgid "Zoom to Fit"
-msgstr "Допасувати за розміром"
-
-msgid "Zoom Out"
-msgstr "Віддалити"
-
-msgid "Zoom In"
-msgstr "Приблизити"
-
-msgid "Log"
-msgstr "Журнал подій"
-
-msgid "Files"
-msgstr "Файли"
-
-msgid "Graph"
-msgstr "Графік"
-
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr "%(project)s: %(ref)s - Граф (DAG)"
-
-msgid " - DAG"
-msgstr " - Граф (DAG)"
-
-msgid "Select Parent"
-msgstr "Вибрати предка"
-
-msgid "Select Oldest Parent"
-msgstr "Вибрати найстаршого предка"
-
-msgid "Select Child"
-msgstr "Вибрати потомка"
-
-msgid "Select Newest Child"
-msgstr "Вибрати найновішого потомка"
-
-msgid "Apply Patches"
-msgstr "Застосувати латки"
-
 msgid ""
 "\n"
 "            <p>\n"
@@ -1238,310 +30,6 @@ msgstr ""
 "                <strong>Додати</strong>, щоб додати латки до списку\n"
 "            </p>\n"
 "            "
-
-msgid "Add patches (+)"
-msgstr "Додати латки (+)"
-
-msgid "Remove selected (Delete)"
-msgstr "Видалити виділене (Видалити)"
-
-msgid "Select patch file(s)..."
-msgstr "Виберіть файл(и) латки(ок)..."
-
-msgid "Search"
-msgstr "Пошук"
-
-msgid "Browse..."
-msgstr "Переглянути..."
-
-msgid "yyyy-MM-dd"
-msgstr "рррр-ММ-дд"
-
-msgid "Search by Expression"
-msgstr "Пошук за виразом"
-
-msgid "Search by Path"
-msgstr "Пошук за шляхом"
-
-msgid "Search Commit Messages"
-msgstr "Пошук тексту коіта"
-
-msgid "Search Diffs"
-msgstr "Пошук різниць"
-
-msgid "Search Authors"
-msgstr "Пошук авторів"
-
-msgid "Search Committers"
-msgstr "Пошук комітерів"
-
-msgid "Search Date Range"
-msgstr "Пошук діапазону дат"
-
-msgid "Choose Paths"
-msgstr "Вибрати шляхи"
-
-msgid "Spelling Suggestions"
-msgstr "Поради з правопису"
-
-msgid "Detect conflict markers in unmerged files"
-msgstr "Виявити мітки конфліктів в незлитих файлах"
-
-msgid "User Name"
-msgstr "Ім'я користувача"
-
-msgid "Email Address"
-msgstr "Адреса електронної пошти"
-
-msgid "Merge Verbosity"
-msgstr "Детальність злиття"
-
-msgid "Number of Diff Context Lines"
-msgstr "Число рядків контексту різниці"
-
-msgid "Summarize Merge Commits"
-msgstr "Підсумувати коміти злиття"
-
-msgid "Show Diffstat After Merge"
-msgstr "Показати список різниць після злиття"
-
-msgid "Display Untracked Files"
-msgstr "Показати файли, що не відслідковуються"
-
-msgid "Detect Conflict Markers"
-msgstr "Виявити мітки конфліктів"
-
-msgid "Fixed-Width Font"
-msgstr "Моноширний шрифт"
-
-msgid "Font Size"
-msgstr "Розмір шрифта"
-
-msgid "Tab Width"
-msgstr "Ширина табуляції"
-
-msgid "Insert spaces instead of tabs"
-msgstr ""
-
-msgid "Text Width"
-msgstr "Ширина тексту"
-
-msgid "Auto-Wrap Lines"
-msgstr "Авто-перенос рядків"
-
-msgid "Editor"
-msgstr "Редактор"
-
-msgid "History Browser"
-msgstr "Переглядач історії"
-
-msgid "Blame Viewer"
-msgstr "Переглядач анотацій (blame)"
-
-msgid "Diff Tool"
-msgstr "Інструмент порівняння"
-
-msgid "Merge Tool"
-msgstr "Інструмент злиття"
-
-msgid "Keep *.orig Merge Backups"
-msgstr "Зберігати резервні копії *.orig файлів після злиття"
-
-msgid "Sort bookmarks alphabetically"
-msgstr "Сортувати закладки за алфавітом"
-
-msgid ""
-"Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
-"Напівжирний з темним фоном шрифт замість заголовків курсивом (потрібне "
-"перезавантаження)"
-
-msgid "Save GUI Settings"
-msgstr "Зберегти налаштування графічного інтерфейсу"
-
-msgid "Check spelling"
-msgstr "Перевірити правопис"
-
-msgid "All Repositories"
-msgstr "Всі репозиторіїї"
-
-msgid "Current Repository"
-msgstr "Поточний репозиторій"
-
-msgid "Settings"
-msgstr "Налаштування"
-
-msgid "Loading..."
-msgstr "Завантаження..."
-
-msgid "Ignore changes in whitespace at EOL"
-msgstr "Ігнорувати зміни в пробільних знаках в кінці рядка"
-
-msgid "Ignore changes in amount of whitespace"
-msgstr "Ігнорувати зміни в кількості пробілів"
-
-msgid "Ignore all whitespace"
-msgstr "Ігнорувати всі пробіли"
-
-msgid "Show whole surrounding functions of changes"
-msgstr "Показати всі оточуючі функції при змінах"
-
-msgid "Show line numbers"
-msgstr "Показати нумерацію рядків"
-
-msgid "Diff Options"
-msgstr "Опції порівняння"
-
-msgid "Stage Selected Lines"
-msgstr "Додати виділені рядки до проіндексованого"
-
-msgid "Revert Selected Lines..."
-msgstr "Скасування виділених рядків..."
-
-msgid "Stage Diff Hunk"
-msgstr "Додати частину різниці до проіндексованого"
-
-msgid "Revert Diff Hunk..."
-msgstr "Скасувати частину різниці..."
-
-msgid "Unstage Selected Lines"
-msgstr "Видалити виділені рядки з проіндексованого"
-
-msgid "Unstage Diff Hunk"
-msgstr "Видалити частину різниці з проіндексованого"
-
-msgid "Revert Selected Lines?"
-msgstr "Скасувати виділені рядки?"
-
-msgid "Revert Selected Lines"
-msgstr "Скасувати виділені рядки"
-
-msgid "Revert Diff Hunk?"
-msgstr "Скасувати частину різниці?"
-
-msgid "Revert Diff Hunk"
-msgstr "Скасувати частину різниці"
-
-msgid "Recently Modified Files"
-msgstr "Недавно змінені файли"
-
-msgid " commits ago"
-msgstr " комітів тому"
-
-msgid "Showing changes since"
-msgstr "Показ змін від"
-
-msgid "Expand all"
-msgstr "Розгорнути все"
-
-msgid "Collapse all"
-msgstr "Згорнути все"
-
-msgid "About git-cola"
-msgstr "Про git-cola"
-
-msgid "Version"
-msgstr "Версія"
-
-msgid "Authors"
-msgstr "Автори"
-
-msgid "Translators"
-msgstr "Перекладачі"
-
-#, fuzzy, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"            Git Cola version %(cola_version)s %(build_version)s\n"
-"        <ul>\n"
-"            <li> %(platform_version)s\n"
-"            <li> Python (%(python_path)s) %(python_version)s\n"
-"            <li> Git %(git_version)s\n"
-"            <li> Qt %(qt_version)s\n"
-"            <li> QtPy %(qtpy_version)s\n"
-"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
-"        </ul>\n"
-"    "
-msgstr ""
-"\n"
-"        <br>\n"
-"            Git Cola версії %(cola_version)s\n"
-"        <ul>\n"
-"            <li> %(platform_version)s\n"
-"            <li> Python (%(python_path)s) %(python_version)s\n"
-"            <li> Git %(git_version)s\n"
-"            <li> Qt %(qt_version)s\n"
-"            <li> QtPy %(qtpy_version)s\n"
-"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
-"        </ul>\n"
-"    "
-
-msgid "Email contributor"
-msgstr "Електронна пошта учасника"
-
-msgid "Maintainer (since 2007) and developer"
-msgstr "Супроводжуючий (з 2007) та розробник"
-
-msgid "Developer"
-msgstr "Розробник"
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"        Please use %(bug_link)s to report issues.\n"
-"        <br>\n"
-"    "
-msgstr ""
-"\n"
-"        <br>\n"
-"        Будь ласка, використовуйте %(bug_link)s щоб повідомляти про "
-"проблеми.\n"
-"        <br>\n"
-"    "
-
-msgid "Traditional Chinese (Taiwan) translation"
-msgstr "Традиційний китайський (Тайвань) переклад"
-
-msgid "Brazilian translation"
-msgstr "Бразильський переклад"
-
-#, fuzzy
-msgid "Simplified Chinese translation"
-msgstr "Китайський переклад"
-
-msgid "Ukranian translation"
-msgstr "Український переклад"
-
-msgid "Indonesian translation"
-msgstr "Індонезійський переклад"
-
-msgid "German translation"
-msgstr "Німецький переклад"
-
-msgid "Russian translation"
-msgstr "Російський переклад"
-
-msgid "Turkish translation"
-msgstr "Турецький переклад"
-
-msgid "French translation"
-msgstr "Французький переклад"
-
-#, fuzzy
-msgid "Czech translation"
-msgstr "Французький переклад"
-
-msgid "Spanish translation"
-msgstr "Іспанський переклад"
-
-#, fuzzy
-msgid "Hungarian translation"
-msgstr "Російський переклад"
-
-msgid "Polish translation"
-msgstr "Польський переклад"
 
 #, python-format
 msgid ""
@@ -1562,8 +50,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or "
-"updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -1596,23 +83,220 @@ msgstr ""
 "\n"
 "    "
 
-msgid "hotkeys.html"
+#, fuzzy, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola version %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
+msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola версії %(cola_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
+
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"        Please use %(bug_link)s to report issues.\n"
+"        <br>\n"
+"    "
+msgstr ""
+"\n"
+"        <br>\n"
+"        Будь ласка, використовуйте %(bug_link)s щоб повідомляти про проблеми.\n"
+"        <br>\n"
+"    "
+
+#, python-format
+msgid ""
+"\n"
+"        Format String Variables\n"
+"        -----------------------\n"
+"          %(path)s  =  relative file path\n"
+"       %(abspath)s  =  absolute file path\n"
+"       %(dirname)s  =  relative directory path\n"
+"    %(absdirname)s  =  absolute directory path\n"
+"      %(filename)s  =  file basename\n"
+"      %(basename)s  =  file basename without extension\n"
+"           %(ext)s  =  file extension\n"
 msgstr ""
 
-msgid "Shortcuts"
-msgstr "Поєднання клавіш"
+msgid ""
+"\n"
+"Commands\n"
+"--------\n"
+"pick = use commit\n"
+"reword = use commit, but edit the commit message\n"
+"edit = use commit, but stop for amending\n"
+"squash = use commit, but meld into previous commit\n"
+"fixup = like \"squash\", but discard this commit's log message\n"
+"exec = run command (the rest of the line) using shell\n"
+"\n"
+"These lines can be re-ordered; they are executed from top to bottom.\n"
+"\n"
+"If you disable a line here THAT COMMIT WILL BE LOST.\n"
+"\n"
+"However, if you disable everything, the rebase will be aborted.\n"
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"? = show help\n"
+"j = move down\n"
+"k = move up\n"
+"J = shift row down\n"
+"K = shift row up\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacebar = toggle enabled\n"
+"\n"
+"ctrl+enter = accept changes and rebase\n"
+"ctrl+q     = cancel and abort the rebase\n"
+"ctrl+d     = launch difftool\n"
+msgstr ""
 
-msgid "git-cola"
-msgstr "git-cola"
+msgid ""
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"J, Down     = Move Down\n"
+"K, Up       = Move Up\n"
+"Enter       = Edit Selected Files\n"
+"Spacebar    = Open File Using Default Application\n"
+"Ctrl + L    = Focus Text Entry Field\n"
+"?           = Show Help\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
+msgstr ""
+"\n"
+"Поєднання клавіш\n"
+"------------------\n"
+"J, Down     = Переміститись донизу\n"
+"K, Up       = Перейменувати вгору\n"
+"Enter       = Редагувати вибрані файли\n"
+"Spacebar    = Відкрити файл, використовуючи застосунок за замовчуванням\n"
+"Ctrl + L    = Фокус на полі для введення тексту\n"
+"?           = Показати довідку\n"
+"\n"
+"Стрілки вготу та вниз змінюють фокус поміж полем для введення тексту\n"
+"та результатами.\n"
 
-msgid "New..."
-msgstr "Новий..."
+msgid " - DAG"
+msgstr " - Граф (DAG)"
 
-msgid "Select Repository..."
-msgstr "Вибрати репозиторій..."
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" було видалено з \"%(remote)s\"."
 
-msgid "Select manually..."
-msgstr "Вибрати вручну..."
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr "\"%(command)s\" завершилась з кодом \"%(status)d\""
+
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr "\"%(command)s\" завершилась з кодом %(status)d"
+
+#, fuzzy, python-format
+msgid "\"%s\" already exists"
+msgstr "Гілка \"%s\" вже існує."
+
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr "\"%s\" вже існує, cola створить новий каталог"
+
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" потребує вибраного файла."
+
+msgid "#"
+msgstr ""
+
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr "%(project)s: %(branch)s - Переглянути"
+
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr "%(project)s: %(ref)s - Граф (DAG)"
+
+#, python-format
+msgid "%d days ago"
+msgstr "%d днів тому"
+
+#, python-format
+msgid "%d hours ago"
+msgstr "%d годин тому"
+
+#, python-format
+msgid "%d minutes ago"
+msgstr "%d хвилин тому"
+
+#, python-format
+msgid "%d patch(es) applied."
+msgstr "%d латку(ок) застосовано."
+
+#, python-format
+msgid "%d skipped"
+msgstr "%d пропущено"
+
+#, python-format
+msgid ""
+"%s appears to contain merge conflicts.\n"
+"\n"
+"You should probably skip this file.\n"
+"Stage it anyways?"
+msgstr ""
+"%s здається містить конфлікт злиття.\n"
+"\n"
+"Скоріш за все, ви маєте пропустити цей файл.\n"
+"Проіндексувати в будь-якому випадку?"
+
+#, python-format
+msgid "%s is not a Git repository."
+msgstr "%s не є репозиторієм Git."
+
+#, python-format
+msgid "%s will be removed from your bookmarks."
+msgstr "%s буде видалено з ваших закладок."
+
+#, python-format
+msgid "%s will be removed from your recent repositories."
+msgstr "%s буде видалено зі списку останніх репозиторіїв."
+
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "%s: Немає такого файла або каталогу."
+
+msgid "&Edit"
+msgstr "Редагувати"
+
+msgid "&File"
+msgstr "Файл"
+
+msgid "(Amending)"
+msgstr "(Зміна коміту)"
 
 msgid "*** Branch Point ***"
 msgstr "*** Вказівка на гілку ***"
@@ -1620,57 +304,386 @@ msgstr "*** Вказівка на гілку ***"
 msgid "*** Sandbox ***"
 msgstr "*** Пісочниця ***"
 
-msgid "Branch Diff Viewer"
-msgstr "Переглядач різниц на гілкаї"
+msgid "<path> ..."
+msgstr "<шлях> ..."
 
-msgid "File Differences"
-msgstr "Різниця між файлами"
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Шаблон коміту не сконфігуровано.\n"
+"Використовуйте \"git config\" щоб задати \"commit.template\"\n"
+"так, щоб він вказував на шаблон коміту"
 
-msgid "command-line arguments"
-msgstr "аргументи командного рядка"
+#, python-format
+msgid "A hook must be provided at \"%s\""
+msgstr "Гак (hook) має бути в \"%s\""
 
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr "Виберіть режим регулярного виразу \"git grep\""
+#, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Сховок з назвою \"%s\" вже існує"
+
+msgid "Abort"
+msgstr "Перервати"
+
+msgid "Abort Action"
+msgstr "Перервати дію"
+
+msgid "Abort Merge"
+msgstr "Перервати злиття"
+
+msgid "Abort Merge..."
+msgstr "Перервати злиття..."
+
+msgid "Abort the action?"
+msgstr "Перервати дію?"
+
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Переривання поточного злиття спричинить втрату *ВСІХ* незакомітованих змін.\n"
+"Відновлення незакомітованих змін неможливе."
+
+msgid "Aborting the current merge?"
+msgstr "Перервати поточне злиття?"
+
+msgid "About"
+msgstr "Про програму"
+
+msgid "About git-cola"
+msgstr "Про git-cola"
+
+msgid "Accept"
+msgstr "Погодитись"
+
+#, fuzzy
+msgid ""
+"Accept changes and rebase\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+"Закомітувати проіндексовані зміни\n"
+"Поєднання клавіш: Ctrl+Enter"
+
+#, fuzzy
+msgid "Action Name"
+msgstr "Дії"
+
+msgid "Actions"
+msgstr "Дії"
+
+msgid "Actions..."
+msgstr "Дії..."
+
+msgid "Add"
+msgstr "Додати"
+
+msgid "Add Favorite"
+msgstr "Додати улюбление"
+
+msgid "Add Remote"
+msgstr "Додати віддалений репозиторій"
+
+msgid "Add Separator"
+msgstr ""
+
+msgid "Add Toolbar"
+msgstr ""
+
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
+"Додавайте та видаляйте віддалені репозиторіїї використовуючи\n"
+"кнопки Додати(+) та Видалити(-) в лівій частині програми.\n"
+"\n"
+"Віддалені репозиторіїї можна перейменувати, вибрабравши один зі списку\n"
+"та натиснувши \"enter\", або подвійним кліком мишки."
+
+msgid "Add new remote git repository"
+msgstr "Додати новий віддалений репозиторій git"
+
+msgid "Add patches (+)"
+msgstr "Додати латки (+)"
+
+msgid "Add remote"
+msgstr "Додати віддалений репозиторій"
+
+msgid "Add to .gitignore"
+msgstr "Додати до .gitignore"
+
+#, fuzzy
+msgid "Add to Git Annex"
+msgstr "Додати до .gitignore"
+
+msgid "Add to Git LFS"
+msgstr ""
+
+msgid "Additions"
+msgstr "Додано"
+
+msgid "Advanced"
+msgstr "Розширено"
+
+msgid "Age"
+msgstr "Вік"
+
+msgid "All Repositories"
+msgstr "Всі репозиторіїї"
+
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgstr "Дозволити оновлення без перемотки. Використання \"примусу\" може призвести до того, що віддалений репозиторій втратить коміти; використовйте це з обережністю"
+
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgstr "Якщо увімкнено, завжди створювати коміт злиття, навіть якщо злиття може бути виконано використовуючи метод перемотки (fast-forward)"
+
+msgid "Amend"
+msgstr "Змінити"
+
+msgid "Amend Commit"
+msgstr "Змінити коміт"
+
+msgid "Amend Last Commit"
+msgstr "Змінити останній коміт"
+
+msgid "Amend the published commit?"
+msgstr "Змінити опублікований коміт?"
+
+msgid "Amending"
+msgstr "Змінення"
+
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Дія все ще виконується.\n"
+"Переривання може призвести до втрати даних."
+
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+"Замість цього буде створено легкий непідписаний теґ.\n"
+"Створити непідписаний теґ?"
+
+msgid "Apply"
+msgstr "Застосувати"
+
+msgid "Apply Patches"
+msgstr "Застосувати латки"
+
+msgid "Apply Patches..."
+msgstr "Примінити латки..."
+
+msgid "Apply the selected stash"
+msgstr "Застосувати виділений сховок"
+
+msgid "Arguments"
+msgstr "Аргументи"
+
+msgid "Attach"
+msgstr "Прикріпити"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Authors"
+msgstr "Автори"
+
+msgid "Auto-Wrap Lines"
+msgstr "Авто-перенос рядків"
 
 msgid "Basic Regexp"
 msgstr "Базовий регулярний вираз"
 
-msgid "Extended Regexp"
-msgstr "Розширений регулярний вираз"
+msgid "Blame Viewer"
+msgstr "Переглядач анотацій (blame)"
 
-msgid "Fixed String"
-msgstr "Фіксована послідовність знаків"
+msgid "Blame..."
+msgstr "Анотувати (blame)..."
 
-msgid "Search using a POSIX basic regular expression"
-msgstr "Шукати, використовуючи базовий регулярний вираз POSIX"
+msgid "Bold with dark background font instead of italic headers (restart required)"
+msgstr "Напівжирний з темним фоном шрифт замість заголовків курсивом (потрібне перезавантаження)"
 
-msgid "Search using a POSIX extended regular expression"
-msgstr "Шукати, використовуючи розширений регулярний вираз POSIX"
+msgid "Branch"
+msgstr "Гілка"
 
-msgid "Search for a fixed string"
-msgstr "Шукати фіксовану послідовність знаків"
-
-msgid "grep result..."
-msgstr "шукати в результатах..."
-
-msgid "Shell arguments"
-msgstr "Аргументи командної стрічки"
-
+#, python-format
 msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
 msgstr ""
-"Розібрати аргументи використовуючи командну стрічку.\n"
-"Запити з пробілами вимагатимуть \"лапок\"."
+"Гілка \"%(branch)s\" не існує в \"%(remote)s\".\n"
+"Нова гілка буде опублікована."
 
-msgid "Sign off on this commit"
-msgstr "Підписатись під цим комітом"
+#, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Гілка \"%s\" вже існує."
 
-msgid "Commit staged changes"
-msgstr "Закомітувати проіндексовані зміни"
+msgid "Branch Diff Viewer"
+msgstr "Переглядач різниц на гілкаї"
+
+msgid "Branch Exists"
+msgstr "Гілка існує"
+
+msgid "Branch Name"
+msgstr "Назва гілки"
+
+#, python-format
+msgid "Branch: %s"
+msgstr "Гілка: %s"
+
+msgid "Branches"
+msgstr "Гілки"
+
+msgid "Branches..."
+msgstr "Гілки..."
+
+msgid "Brazilian translation"
+msgstr "Бразильський переклад"
+
+msgid "Browse"
+msgstr "Переглянути"
+
+msgid "Browse Commits..."
+msgstr "Переглянути коміти..."
+
+msgid "Browse Current Branch..."
+msgstr "Переглянути поточну гілку..."
+
+msgid "Browse Other Branch..."
+msgstr "Переглянути іншу гілку..."
+
+msgid "Browse..."
+msgstr "Переглянути..."
+
+msgid "Browser"
+msgstr "Переглядач"
+
+#, python-format
+msgid "Browsing %s"
+msgstr "Перегляд %s"
+
+msgid "Bypass Commit Hooks"
+msgstr "Оминути гаки (hooks) коміту"
+
+msgid "Cancel"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Cancel rebase\n"
+"Shortcut: Ctrl+Q"
+msgstr ""
+"Закомітувати проіндексовані зміни\n"
+"Поєднання клавіш: Ctrl+Enter"
+
+msgid "Cannot Amend"
+msgstr "Не вдається змінити"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a blame viewer"
+msgstr "Не вдалось виконати \"%s\": будь ласка налаштуйте переглядач анотацій (blame)"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
+msgstr "Не вдалось виконати \"%s\": будь ласка налаштуйте переглядач історії"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr "Не вдалось виконати \"%s\": будь ласка, налаштуйте ваш редактор"
+
+msgid "Changed Upstream"
+msgstr "Змінено в віддаленому джерелі"
+
+msgid "Check Spelling"
+msgstr "Перевірити правопис"
+
+msgid "Check spelling"
+msgstr "Перевірити правопис"
+
+msgid "Checkout"
+msgstr "Переключитись"
+
+msgid "Checkout After Creation"
+msgstr "Переключитись після створення"
+
+msgid "Checkout Branch"
+msgstr "Переключитись на гілку"
+
+#, fuzzy
+msgid "Checkout Detached HEAD"
+msgstr "Переключитись на гілку"
+
+#, fuzzy
+msgid "Checkout as new branch"
+msgstr "Переключитись на гілку"
+
+msgid "Checkout..."
+msgstr "Переключитись..."
+
+msgid "Cherry Pick"
+msgstr "Висмикнути коміт (cherry pick)"
+
+msgid "Cherry-Pick Commit"
+msgstr "Висмикнути коміт (cherry pick)"
+
+msgid "Cherry-Pick..."
+msgstr "Висмикнути коміт (cherry pick)..."
+
+msgid "Choose Paths"
+msgstr "Вибрати шляхи"
+
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr "Виберіть режим регулярного виразу \"git grep\""
+
+msgid "Clear Default Repository"
+msgstr "Очистити репозиторій за замовчуванням"
+
+msgid "Clear commit message"
+msgstr "Очистити повідомлення коміту"
+
+msgid "Clear commit message?"
+msgstr "Очистити повідомлення коміту?"
 
 msgid "Clear..."
 msgstr "Очистити..."
+
+msgid "Clone Repository"
+msgstr "Клонувати репозиторій"
+
+msgid "Clone..."
+msgstr "Клонувати..."
+
+#, python-format
+msgid "Cloning repository at %s"
+msgstr "Клонувати репозиторій в %s"
+
+msgid "Close"
+msgstr "Закрити"
+
+msgid "Close..."
+msgstr "Закрити..."
+
+msgid "Collapse all"
+msgstr "Згорнути все"
+
+#, fuzzy
+msgid "Command"
+msgstr "Коміт"
+
+msgid "Commit"
+msgstr "Коміт"
+
+msgid "Commit failed"
+msgstr "Не вдалось зробити коміт"
+
+msgid "Commit staged changes"
+msgstr "Закомітувати проіндексовані зміни"
 
 msgid ""
 "Commit staged changes\n"
@@ -1679,35 +692,841 @@ msgstr ""
 "Закомітувати проіндексовані зміни\n"
 "Поєднання клавіш: Ctrl+Enter"
 
-msgid "Actions..."
-msgstr "Дії..."
+msgid "Commit summary"
+msgstr "Опис коміту"
 
-msgid "Bypass Commit Hooks"
-msgstr "Оминути гаки (hooks) коміту"
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
+msgstr "Закомітувати злиття, якщо немає конфліктів. Зніміть прапорець щоб залишити злиття незакомітованим"
+
+msgid "Commit@@verb"
+msgstr "Закомітувати"
+
+msgid "Compare"
+msgstr "Порівняти"
+
+msgid "Compare All"
+msgstr "Порівняти все"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
+
+msgid "Configure toolbar"
+msgstr ""
+
+msgid "Console"
+msgstr "Консоль"
+
+msgid "Continue"
+msgstr "Продовжити"
+
+msgid "Copy"
+msgstr "Скопіювати"
+
+#, fuzzy
+msgid "Copy Basename to Clipboard"
+msgstr "Скопіювати шлях в буфер обміну"
+
+#, fuzzy
+msgid "Copy Leading Path to Clipboard"
+msgstr "Скопіювати відносний шлях в буфер обміну"
+
+msgid "Copy Path to Clipboard"
+msgstr "Скопіювати шлях в буфер обміну"
+
+msgid "Copy Relative Path to Clipboard"
+msgstr "Скопіювати відносний шлях в буфер обміну"
+
+msgid "Copy SHA-1"
+msgstr "Скопіювати SHA-1"
+
+#, fuzzy
+msgid "Copy..."
+msgstr "Скопіювати"
+
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr "Не вдалось розпізнати Git URL: \"%s\""
+
+msgid "Create Branch"
+msgstr "Створити гілку"
+
+msgid "Create Patch"
+msgstr "Створити латку"
+
+msgid "Create Remote Branch"
+msgstr "Створити віддалену гілку"
 
 msgid "Create Signed Commit"
 msgstr "Створити підписаний коміт"
 
-msgid "Check Spelling"
-msgstr "Перевірити правопис"
+msgid "Create Tag"
+msgstr "Створити теґ"
 
-msgid "Load Previous Commit Message"
-msgstr "Завантажити повідомлення попереднього коміту"
+msgid "Create Tag..."
+msgstr "Створити теґ..."
+
+msgid "Create Unsigned Tag"
+msgstr "Створити непідписаний теґ"
+
+msgid "Create a merge commit even when the merge resolves as a fast-forward"
+msgstr "Створити коміт злиття навіть якщо злиття може бути вирішено методом перемотки"
+
+msgid "Create a new remote branch?"
+msgstr "Створити нову віддалену гілку?"
+
+msgid "Create..."
+msgstr "Створити..."
+
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Створено новий теґ з назвою \"%s\""
+
+msgid "Current Repository"
+msgstr "Поточний репозиторій"
+
+msgid "Custom Copy Actions"
+msgstr ""
+
+#, fuzzy
+msgid "Customize..."
+msgstr "Закрити..."
+
+msgid "Cut"
+msgstr ""
+
+#, fuzzy
+msgid "Czech translation"
+msgstr "Французький переклад"
+
+msgid "DAG..."
+msgstr "Граф (DAG)..."
+
+msgid "Date, Time"
+msgstr "Дата, час"
+
+msgid "Delete"
+msgstr "Видалити"
+
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr "Видалити %d файл(ів)?"
+
+msgid "Delete Bookmark"
+msgstr "Видалити закладку"
+
+msgid "Delete Bookmark?"
+msgstr "Видалити закладку?"
+
+msgid "Delete Branch"
+msgstr "Видалити гілку"
+
+msgid "Delete Files"
+msgstr "Видалити файли"
+
+msgid "Delete Files..."
+msgstr "Видалити файли..."
+
+msgid "Delete Files?"
+msgstr "Видалити файли?"
+
+msgid "Delete Remote"
+msgstr "Видалити віддалений репозиторій"
+
+msgid "Delete Remote Branch"
+msgstr "Видалити віддалену гілку"
+
+msgid "Delete Remote Branch..."
+msgstr "Видалити віддалену гілку..."
+
+msgid "Delete remote"
+msgstr "Видалити віддалений репозиторій"
+
+#, python-format
+msgid "Delete remote \"%s\""
+msgstr "Видалити віддалений репозиторій \"%s\""
+
+msgid "Delete remote?"
+msgstr "Видалити віддалений репозиторій?"
+
+msgid "Delete selected branch?"
+msgstr "Видалити виділену гілку?"
+
+#, fuzzy
+msgid "Delete toolbar"
+msgstr "Видалити закладку"
+
+msgid "Delete..."
+msgstr "Видалити..."
+
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr "Не вдалось видалити \"%s\""
+
+msgid "Deletions"
+msgstr "Видалено"
+
+msgid "Detach"
+msgstr "Відкріпити"
+
+msgid "Detect Conflict Markers"
+msgstr "Виявити мітки конфліктів"
+
+msgid "Detect conflict markers in unmerged files"
+msgstr "Виявити мітки конфліктів в незлитих файлах"
+
+msgid "Developer"
+msgstr "Розробник"
+
+msgid "Diff"
+msgstr "Різниця"
+
+msgid "Diff Against Predecessor..."
+msgstr "Різниця до попередника..."
+
+msgid "Diff Options"
+msgstr "Опції порівняння"
+
+msgid "Diff Tool"
+msgstr "Інструмент порівняння"
+
+msgid "Diff selected -> this"
+msgstr "Порівняти виділене з цим"
+
+msgid "Diff this -> selected"
+msgstr "Порівняти це з виділеним"
+
+msgid "Diffstat"
+msgstr "Список різниць"
+
+msgid "Directory Exists"
+msgstr "Каталог існує"
+
+msgid "Display Untracked Files"
+msgstr "Показати файли, що не відслідковуються"
+
+msgid "Documentation"
+msgstr "Документація"
+
+msgid "Drop"
+msgstr "Видалити"
+
+msgid "Drop Stash"
+msgstr "Видалити сховок"
+
+msgid "Drop Stash?"
+msgstr "Видалити сховок?"
+
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr "Видалити \"%s\" сховок?"
+
+msgid "Drop the selected stash"
+msgstr "Видалити вибраний сховок"
+
+#, fuzzy
+msgid "Edit"
+msgstr "Редагувати"
+
+msgid "Edit Rebase"
+msgstr "Редагувати переміщення (rebase)"
+
+msgid "Edit Remotes"
+msgstr "Редагувати віддалені репозиторіїї"
+
+msgid "Edit Remotes..."
+msgstr "Редагувати віддалені репозиторіїї..."
+
+msgid "Edit remotes by selecting them from the list"
+msgstr ""
+
+msgid "Edit selected paths"
+msgstr "Редагувати вибрані шляхи"
+
+msgid "Edit..."
+msgstr "Редагувати..."
+
+msgid "Editor"
+msgstr "Редактор"
+
+msgid "Email Address"
+msgstr "Адреса електронної пошти"
+
+msgid "Email contributor"
+msgstr "Електронна пошта учасника"
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Enter New Branch Name"
+msgstr "Введіть ім'я для нової гілки"
+
+#, fuzzy
+msgid "Enter a name for the new bare repo"
+msgstr "Введіть назву для сховка"
+
+msgid "Enter a name for the stash"
+msgstr "Введіть назву для сховка"
+
+msgid "Error"
+msgstr "Помилка"
+
+msgid "Error Cloning"
+msgstr "Помилка клонування"
+
+msgid "Error Creating Branch"
+msgstr "Помилка при створенні гілки"
+
+msgid "Error Creating Repository"
+msgstr "Помилка створення репозиторію"
+
+msgid "Error Deleting Remote Branch"
+msgstr "Не вдалось видалити віддалену гілку"
+
+msgid "Error Editing File"
+msgstr "Помилка редагування файла"
+
+msgid "Error Launching Blame Viewer"
+msgstr "Помилка запуску переглядача анотацій (blame)"
+
+msgid "Error Launching History Browser"
+msgstr "Помилка запуску браузера історії"
+
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr "Не вдалось створити віддалений репозиторій \"%s\""
+
+#, fuzzy
+msgid "Error creating stash"
+msgstr "Помилка при створенні гілки"
+
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Не вдалось видалити віддалений репозиторій \"%s\""
+
+#, fuzzy, python-format
+msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
+msgstr "Позначення \"%(revision)s\" як \"%(name)s\""
+
+msgid "Error running prepare-commitmsg hook"
+msgstr "Помилка застосування prepare-commitmsg гака (hook)"
+
+msgid "Error: Cannot find commit template"
+msgstr "Помилка: Не вдається знайти шаблон коміту"
+
+msgid "Error: Stash exists"
+msgstr "Помилка: сховок вже існує"
+
+msgid "Error: Unconfigured commit template"
+msgstr "Помилка: Шаблон коміту не сконфігуровано"
+
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Помилка: не вдалось клонувати \"%s\""
+
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Помилка: не вдалось створити теґ \"%s\""
+
+#, python-format
+msgid "Executing action %s"
+msgstr "Виконання дії %s"
+
+msgid "Expand all"
+msgstr "Розгорнути все"
+
+msgid "Export Patches"
+msgstr "Експорт латок"
+
+msgid "Export Patches..."
+msgstr "Експортувати латки..."
+
+msgid "Expression..."
+msgstr "Вираз..."
+
+msgid "Extended Regexp"
+msgstr "Розширений регулярний вираз"
+
+msgid "Extended description..."
+msgstr "Розширений опис..."
+
+msgid "Fast Forward Only"
+msgstr "Лише перемотка (fast-forward)"
+
+msgid "Fast-forward only"
+msgstr "Лише перемотка (fast-forward)"
+
+msgid "Favorite repositories"
+msgstr "Улюблені репозиторіїї"
+
+msgid "Favorites"
+msgstr "Улюбене"
+
+msgid "Fetch"
+msgstr "Отримати"
+
+msgid "Fetch Tracking Branch"
+msgstr "Отримати гілку, що відстежується"
+
+msgid "Fetch..."
+msgstr "Отримати"
+
+msgid "File Browser..."
+msgstr "Переглядач файлів..."
+
+msgid "File Differences"
+msgstr "Різниця між файлами"
+
+msgid "File Saved"
+msgstr "Файл збережено"
+
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Дайл збережено до \"%s\""
+
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr "Відстеження змін файлової системи: вимкнено, тому що \"cola.inotify\" є хибним (false).\n"
+
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgstr "Відстеження змін файлової системи: вимкнено, тому що libc не підтримує системних викликів inotify.\n"
+
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr "Відстеження змін файлової системи: вимкнено, тому що не встановлено pywin32.\n"
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+msgstr ""
+"Відстеження змін файлової системи: вимкнено, тому що досягнуто верхньої межі кількості спостерігачів inotify. Ви можете збільшити ліміт кількості спостерігачів, виконавши:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+
+msgid "File system change monitoring: enabled.\n"
+msgstr "Відстеження змін файлової системи: увімкнено.\n"
+
+msgid "Filename"
+msgstr "Ім'я файла"
+
+msgid "Files"
+msgstr "Файли"
+
+msgid "Filter branches..."
+msgstr "Фільтрувати гілки..."
+
+msgid "Filter paths..."
+msgstr "Фільтрувати шляхи..."
+
+msgid "Find Files"
+msgstr "Пошук файлів"
+
+msgid "Fixed String"
+msgstr "Фіксована послідовність знаків"
+
+msgid "Fixed-Width Font"
+msgstr "Моноширний шрифт"
+
+msgid "Fixup"
+msgstr ""
 
 msgid "Fixup Previous Commit"
 msgstr "Виправити попередній коміт"
 
-msgid "Clear commit message?"
-msgstr "Очистити повідомлення коміту?"
+msgid "Font Size"
+msgstr "Розмір шрифта"
 
-msgid "The commit message will be cleared."
-msgstr "Повідомлення коміту буде очищено."
+msgid "Force"
+msgstr "Надіслати примусово"
 
-msgid "This cannot be undone.  Clear commit message?"
-msgstr "Це неможливо буде відмінити. Очистити повідомлення коміту?"
+msgid "Force Fetch"
+msgstr "Отримати примусово"
 
-msgid "Clear commit message"
-msgstr "Очистити повідомлення коміту"
+msgid "Force Fetch?"
+msgstr "Отримати примусово?"
+
+msgid "Force Push"
+msgstr "Надіслати примусово"
+
+msgid "Force Push?"
+msgstr "Надіслати примусово?"
+
+#, python-format
+msgid "Force fetching from %s?"
+msgstr "Примусове отримання з %s?"
+
+#, python-format
+msgid "Force push to %s?"
+msgstr "Надіслати примусово до %s?"
+
+#, fuzzy
+msgid "Format String"
+msgstr "Фіксована послідовність знаків"
+
+msgid "French translation"
+msgstr "Французький переклад"
+
+msgid "GPG-sign the merge commit"
+msgstr "Підписати-GPG коміт злиття"
+
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Збирання інформації для \"%s\"..."
+
+msgid "German translation"
+msgstr "Німецький переклад"
+
+msgid "Get Commit Message Template"
+msgstr "Отримати шаблон тексту коміту"
+
+msgid "Go Down"
+msgstr "Вниз"
+
+msgid "Go Up"
+msgstr "Вгору"
+
+msgid "Grab File..."
+msgstr "Взяти файл..."
+
+msgid "Graph"
+msgstr "Графік"
+
+msgid "Grep"
+msgstr "Пошук (grep)"
+
+msgid "Have you rebased/pulled lately?"
+msgstr "Чи ви робили переміщення/стягнення останнім часом?"
+
+msgid "Help"
+msgstr "Допомога"
+
+msgid "Help - Custom Copy Actions"
+msgstr ""
+
+msgid "Help - Find Files"
+msgstr "Допомога - Пошук файлів"
+
+msgid "Help - git-xbase"
+msgstr ""
+
+msgid "History Browser"
+msgstr "Переглядач історії"
+
+#, fuzzy
+msgid "Hungarian translation"
+msgstr "Російський переклад"
+
+msgid "Ignore all whitespace"
+msgstr "Ігнорувати всі пробіли"
+
+msgid "Ignore changes in amount of whitespace"
+msgstr "Ігнорувати зміни в кількості пробілів"
+
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Ігнорувати зміни в пробільних знаках в кінці рядка"
+
+#, fuzzy
+msgid "Ignore custom pattern"
+msgstr "Ігнорувати специфічний шаблон"
+
+msgid "Ignore exact filename"
+msgstr "Ігнорувати точне ім'я файлу"
+
+msgid "Ignore filename or pattern"
+msgstr "Ігнорувати ім'я файлу або шаблон"
+
+msgid "Include tags "
+msgstr "Включити теґ"
+
+msgid "Indonesian translation"
+msgstr "Індонезійський переклад"
+
+msgid "Initialize Git Annex"
+msgstr ""
+
+msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Insert spaces instead of tabs"
+msgstr ""
+
+msgid "Interactive Rebase"
+msgstr "Інтерактивне переміщення"
+
+msgid "Invalid Revision"
+msgstr "Неправильна ревізія"
+
+msgid "Keep *.orig Merge Backups"
+msgstr "Зберігати резервні копії *.orig файлів після злиття"
+
+msgid "Keep Index"
+msgstr "Зберегти індекс"
+
+msgid "Keyboard Shortcuts"
+msgstr "Поєднання клавіш"
+
+msgid "Launch Diff Tool"
+msgstr "Запустити інструмент порівняння"
+
+msgid "Launch Directory Diff Tool"
+msgstr "Запустити каталоговий інструмент порівняння"
+
+msgid "Launch Editor"
+msgstr "Відкрити редактор"
+
+msgid "Launch Terminal"
+msgstr "Запустити термінал"
+
+msgid ""
+"Launch external diff tool\n"
+"Shortcut: Ctrl+D"
+msgstr ""
+
+msgid "Launch git-cola"
+msgstr "Запустити git-cola"
+
+msgid "Launch git-difftool against previous versions"
+msgstr "Запустити git-difftool до попередньої версії"
+
+msgid "Launch git-difftool on the current path"
+msgstr "Запустити git-difftool для поточного шляху"
+
+msgid "Load Commit Message"
+msgstr "Завантажити повідомлення коміту"
+
+msgid "Load Commit Message..."
+msgstr "Завантажити текст коміту..."
+
+msgid "Load Previous Commit Message"
+msgstr "Завантажити повідомлення попереднього коміту"
+
+msgid "Loading..."
+msgstr "Завантаження..."
+
+msgid "Local"
+msgstr "Локальна"
+
+msgid "Local Branch"
+msgstr "Локальна гілка"
+
+msgid "Local branch"
+msgstr "Локальна гілка"
+
+msgid "Lock Layout"
+msgstr "Закріпити положення елементів"
+
+msgid "Log"
+msgstr "Журнал подій"
+
+msgid "Maintainer (since 2007) and developer"
+msgstr "Супроводжуючий (з 2007) та розробник"
+
+msgid "Merge"
+msgstr "Злиття"
+
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr "Злити \"%(revision)s\" в \"%(branch)s\""
+
+msgid "Merge Tool"
+msgstr "Інструмент злиття"
+
+msgid "Merge Verbosity"
+msgstr "Детальність злиття"
+
+msgid "Merge failed.  Conflict resolution is required."
+msgstr ""
+
+#, python-format
+msgid "Merge into \"%s\""
+msgstr "Злити в \"%s\""
+
+msgid "Merge into current branch"
+msgstr "Злити до поточної гілки"
+
+msgid "Merge..."
+msgstr "Злиття"
+
+msgid "Merging"
+msgstr "Злиття"
+
+msgid "Message"
+msgstr "Повідомлення"
+
+msgid "Missing Commit Message"
+msgstr "Відсутнє повідомлення коміту"
+
+msgid "Missing Data"
+msgstr "Дані відсутні"
+
+msgid "Missing Name"
+msgstr "Назва відсутня"
+
+msgid "Missing Revision"
+msgstr "Ревізія відсутня"
+
+msgid "Missing Tag Message"
+msgstr "Назва теґу відсутня"
+
+msgid "Modified"
+msgstr "Змінене"
+
+msgid "More..."
+msgstr "Більше..."
+
+msgid "Move Down"
+msgstr "Перемістити вниз"
+
+msgid "Move Up"
+msgstr "Перемістити вгору"
+
+msgid "Move files to trash"
+msgstr "Перемістити файл до смітника"
+
+msgid "Name"
+msgstr "Ім'я"
+
+msgid "Name for the new remote"
+msgstr "Назва нового віддаленого репозиторію"
+
+#, fuzzy
+msgid "New Bare Repository..."
+msgstr "Новий репозиторій..."
+
+msgid "New Repository..."
+msgstr "Новий репозиторій..."
+
+msgid "New..."
+msgstr "Новий..."
+
+msgid "Next File"
+msgstr "Наступний файл"
+
+msgid "No"
+msgstr "Ні"
+
+msgid "No Revision Specified"
+msgstr "Ревізію не вказано"
+
+msgid ""
+"No changes to commit.\n"
+"\n"
+"You must stage at least 1 file before you can commit."
+msgstr ""
+"Немає змін для коміту.\n"
+"\n"
+"Ви маєте проіндексувати принаймні 1 файл перед тим, як ви зможете зробити коміт."
+
+msgid "No commits exist in this branch."
+msgstr "На цій гілці немає комітів."
+
+msgid "No fast forward"
+msgstr "Без перемотки (fast-forward)"
+
+msgid "No fast-forward"
+msgstr "Без перемотки"
+
+msgid "No repository selected."
+msgstr "Не вибрано жодного репозиторію."
+
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr "Отримання без використання методу перемотки перезапише локальну історію!"
+
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
+"Надсилання без використання методу перемотки перезапише опубліковану історію!\n"
+"(Чи всі зміни стягнуто?)"
+
+msgid "Nothing to commit"
+msgstr "Немає що комітувати"
+
+msgid "Nothing to do"
+msgstr "Нічого робити"
+
+msgid "Number of Diff Context Lines"
+msgstr "Число рядків контексту різниці"
+
+msgid "Open"
+msgstr "Відкрити"
+
+msgid "Open Git Repository..."
+msgstr "Відкрити Git репозиторій..."
+
+msgid "Open Parent Directory"
+msgstr "Відкрити батьківський каталог"
+
+msgid "Open Recent"
+msgstr "Відкрити останній"
+
+msgid "Open Using Default Application"
+msgstr "Відкрити, використовуючи застосунок за замовчуванням"
+
+msgid "Open in New Window"
+msgstr "Відкрити в новому вікні"
+
+msgid "Open in New Window..."
+msgstr "Відкрити в новому вікні..."
+
+msgid "Open..."
+msgstr "Відкрити"
+
+#, fuzzy
+msgid "Other branches"
+msgstr "Фільтрувати гілки..."
+
+msgid "Overwrite"
+msgstr "Перезаписати"
+
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr "Перезаписати \"%s\"?"
+
+msgid "Overwrite File?"
+msgstr "Перезаписати файл?"
+
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr "Латка %(current)d/%(count)d"
+
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+"Розібрати аргументи використовуючи командну стрічку.\n"
+"Запити з пробілами вимагатимуть \"лапок\"."
+
+msgid "Partially Staged"
+msgstr "Частково проіндексоване"
+
+msgid "Paste"
+msgstr ""
+
+msgid "Patch(es) Applied"
+msgstr "Латку(и) застосовано"
+
+msgid "Path"
+msgstr "Шлях"
+
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr "Шлях або URL для клонування (Env. $VARS okay)"
+
+msgid "Pick"
+msgstr ""
+
+msgid "Pixel XOR"
+msgstr ""
+
+msgid "Please provide both a branch name and revision expression."
+msgstr "Будь ласка, надайте як ім'я гілки так і вираз ревізії."
+
+msgid "Please select a file"
+msgstr "Будь ласка, виберіть файл"
+
+msgid "Please specify a name for the new tag."
+msgstr "Будь ласка, вкажіть назву для теґу."
+
+msgid "Please specify a revision to tag."
+msgstr "Будь ласка, вкажіть ревізію для теґу."
 
 msgid ""
 "Please supply a commit message.\n"
@@ -1726,33 +1545,652 @@ msgstr ""
 "- Другий рядок: Пусто\n"
 "- Решта рядків: Опишіть, чому ці зміни хороші.\n"
 
-msgid "Missing Commit Message"
-msgstr "Відсутнє повідомлення коміту"
+msgid "Point the current branch head to a new commit?"
+msgstr "Встановити HEAD поточної гілки на новий коміт?"
+
+msgid "Polish translation"
+msgstr "Польський переклад"
+
+msgid "Preferences"
+msgstr "Налаштування"
+
+msgid "Prefix"
+msgstr "Префікс"
+
+msgid "Prepare Commit Message"
+msgstr "Підготувати текст коміту"
+
+msgid "Prevent \"Stage\" from staging all files when nothing is selected"
+msgstr ""
+
+msgid "Previous File"
+msgstr "Попередній файл"
+
+msgid "Prompt on creation"
+msgstr "Підказати при створенні"
+
+msgid "Prompt when pushing creates new remote branches"
+msgstr "Підказати коли надсилаются новостворені віддалені гілки"
+
+msgid "Prune "
+msgstr ""
+
+msgid "Pull"
+msgstr "Стягнути"
+
+msgid "Pull..."
+msgstr "Стягнути"
+
+msgid "Push"
+msgstr "Надіслати"
+
+msgid "Push..."
+msgstr "Надіслати"
+
+msgid "Quit"
+msgstr "Вихід"
+
+msgid "Rebase"
+msgstr "Перемістити (rebase)"
+
+#, python-format
+msgid "Rebase onto %s"
+msgstr "Перемістити (rebase) на %s"
+
+#, fuzzy
+msgid "Rebase stopped"
+msgstr "Перемістити (rebase) на %s"
+
+msgid "Rebase the current branch instead of merging"
+msgstr "Перемістити поточну гілку замість злиття"
+
+msgid "Rebasing"
+msgstr "Переміщення"
+
+msgid "Recent"
+msgstr "Недавнє"
+
+msgid "Recent repositories"
+msgstr "Недавні репозиторіїї"
+
+#, fuzzy
+msgid "Recent repository count"
+msgstr "Недавні репозиторіїї"
+
+msgid "Recently Modified Files"
+msgstr "Недавно змінені файли"
+
+msgid "Recently Modified Files..."
+msgstr "Недавно змінені файли..."
+
+msgid "Recovering a dropped stash is not possible."
+msgstr "Неможливо відновити видалений сховок."
+
+msgid "Recovering lost commits may not be easy."
+msgstr "Відновлення втрачених комітів може бути нелегким."
+
+msgid "Redo"
+msgstr ""
+
+msgid "Refresh"
+msgstr "Оновити"
+
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgstr "Відмовтесь від злиття за винятком, коли поточний HEAD є оновленим або злиття може бети вирішено методом перемотки"
+
+msgid "Remote"
+msgstr "Віддалений репозиторій"
+
+msgid "Remote Branch"
+msgstr "Віддалена гілка"
+
+msgid "Remote Branch Deleted"
+msgstr "Видалено віддалену гілку"
+
+msgid "Remote git repositories - double-click to rename"
+msgstr "Віддалені репозиторіїї git - подвійний клік для перейменування"
+
+msgid "Remove"
+msgstr "Видалити"
+
+#, python-format
+msgid "Remove %s from the recent list?"
+msgstr "Видалити %s зі списку останніх?"
+
+msgid "Remove Element"
+msgstr "Видалити елемент"
+
+msgid "Remove selected (Delete)"
+msgstr "Видалити виділене (Видалити)"
+
+msgid "Rename"
+msgstr "Перейменувати"
+
+#, fuzzy, python-format
+msgid "Rename \"%s\""
+msgstr "Перейменувати"
+
+msgid "Rename Branch"
+msgstr "Перейменувати гілку"
+
+msgid "Rename Branch..."
+msgstr "Перейменувати гілку..."
+
+msgid "Rename Existing Branch"
+msgstr "Перейменувати існуючу гілку"
+
+msgid "Rename Remote"
+msgstr "Перейменувати віддалений репозиторій"
+
+msgid "Rename Repository"
+msgstr "Перейменувати репозиторій"
+
+msgid "Rename branch"
+msgstr "Перейменувати гілку"
+
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Перейменувати віддалений репозиторій \"%(current)s\" в \"%(new)s\"?"
+
+msgid "Rename remote?"
+msgstr "Перейменувати віддалений репозиторій?"
+
+#, fuzzy
+msgid "Rename selected paths"
+msgstr "Редагувати вибрані шляхи"
+
+#, python-format
+msgid "Repository: %s"
+msgstr "Репозиторій: %s"
+
+msgid "Reset"
+msgstr "Скинути"
+
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
+msgstr "Скинути \"%(branch)s\" до \"%(revision)s\"?"
+
+msgid "Reset Branch"
+msgstr "Скинути гілку"
+
+msgid "Reset Branch Head"
+msgstr "Скинути HEAD гілки"
+
+msgid "Reset Branch?"
+msgstr "Скинути гілку?"
+
+msgid "Reset Worktree"
+msgstr "Скинути робоче дерево"
+
+msgid "Reset worktree?"
+msgstr "Скинути робоче дерево?"
+
+#, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
+
+msgid "Revert Diff Hunk"
+msgstr "Скасувати частину різниці"
+
+msgid "Revert Diff Hunk..."
+msgstr "Скасувати частину різниці..."
+
+msgid "Revert Diff Hunk?"
+msgstr "Скасувати частину різниці?"
+
+msgid "Revert Selected Lines"
+msgstr "Скасувати виділені рядки"
+
+msgid "Revert Selected Lines..."
+msgstr "Скасування виділених рядків..."
+
+msgid "Revert Selected Lines?"
+msgstr "Скасувати виділені рядки?"
+
+msgid "Revert Uncommitted Changes"
+msgstr "Відмінити незакомітовані зміни"
+
+msgid "Revert Uncommitted Changes?"
+msgstr "Відмінити незакомітовані зміни?"
+
+msgid "Revert Uncommitted Edits..."
+msgstr "Відмінити незакомітовані зміни..."
+
+msgid "Revert Unstaged Changes"
+msgstr "Відмінити непроіндексовані зміни"
+
+msgid "Revert Unstaged Changes?"
+msgstr "Відмінити непроіндексовані зміни?"
+
+msgid "Revert Unstaged Edits..."
+msgstr "Відмінити непроіндексовані зміни..."
+
+msgid "Revert the uncommitted changes?"
+msgstr "Відмінити незакомітовані зміни?"
+
+msgid "Revert the unstaged changes?"
+msgstr "Відмінити непроіндексовані зміни?"
+
+msgid "Revert uncommitted changes to selected paths"
+msgstr "Відмінити незакомітовані зміни на вибраних шляхах"
+
+msgid "Revert unstaged changes to selected paths"
+msgstr "Відмінити непроіндексовані зміни на вибраних шляхах"
+
+msgid "Review"
+msgstr "Перевірка"
+
+msgid "Review..."
+msgstr "Перевірка..."
+
+msgid "Revision"
+msgstr "Ревізія"
+
+msgid "Revision Expression:"
+msgstr "Вираз для визначення ревізії:"
+
+msgid "Revision to Merge"
+msgstr "Ревізія для злиття"
+
+msgid "Reword"
+msgstr ""
+
+msgid "Rewrite Published Commit?"
+msgstr "Перезаписати опублікований коміт?"
+
+msgid "Run"
+msgstr "Запустити"
+
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Виконати \"%s\"?"
+
+#, python-format
+msgid "Run %s?"
+msgstr "Запустити %s?"
+
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr "Виконати команду \"%s\"?"
+
+#, python-format
+msgid "Running command: %s"
+msgstr "Запуск команди: %s"
+
+msgid "Russian translation"
+msgstr "Російський переклад"
+
+#, fuzzy
+msgid "SHA-1"
+msgstr "Скопіювати SHA-1"
+
+#, fuzzy
+msgid "Safe Mode"
+msgstr "Проіндексувати зміни"
+
+msgid "Save"
+msgstr "Зберегти"
+
+msgid "Save Archive"
+msgstr "Зберегти архів"
+
+msgid "Save As Tarball/Zip..."
+msgstr "Зберегти як Tarball/Zip..."
+
+msgid "Save GUI Settings"
+msgstr "Зберегти налаштування графічного інтерфейсу"
+
+msgid "Save Stash"
+msgstr "Зберегти сховок"
+
+msgid "Save modified state to new stash"
+msgstr "Зберегти змінений стан до нового сховка"
+
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Збережено \"%(filename)s\" з \"%(ref)s\" до \"%(destination)s\""
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Search Authors"
+msgstr "Пошук авторів"
+
+msgid "Search Commit Messages"
+msgstr "Пошук тексту коіта"
+
+msgid "Search Committers"
+msgstr "Пошук комітерів"
+
+msgid "Search Date Range"
+msgstr "Пошук діапазону дат"
+
+msgid "Search Diffs"
+msgstr "Пошук різниць"
+
+msgid "Search by Expression"
+msgstr "Пошук за виразом"
+
+msgid "Search by Path"
+msgstr "Пошук за шляхом"
+
+msgid "Search for a fixed string"
+msgstr "Шукати фіксовану послідовність знаків"
+
+msgid "Search using a POSIX basic regular expression"
+msgstr "Шукати, використовуючи базовий регулярний вираз POSIX"
+
+msgid "Search using a POSIX extended regular expression"
+msgstr "Шукати, використовуючи розширений регулярний вираз POSIX"
+
+msgid "Search..."
+msgstr "Пошук..."
+
+msgid "Select"
+msgstr "Вибрати"
+
+msgid "Select All"
+msgstr "Виділити все"
+
+msgid "Select Branch to Review"
+msgstr "Виберіть гілку для перевірки"
+
+msgid "Select Child"
+msgstr "Вибрати потомка"
+
+msgid "Select Commit"
+msgstr "Вибрати коміт"
+
+#, fuzzy
+msgid "Select Directory..."
+msgstr "Вибрати репозиторій..."
+
+msgid "Select File"
+msgstr "Вибрати файл"
+
+msgid "Select New Upstream"
+msgstr "Вибрати нове віддалене джерело"
+
+msgid "Select Newest Child"
+msgstr "Вибрати найновішого потомка"
+
+msgid "Select Oldest Parent"
+msgstr "Вибрати найстаршого предка"
+
+msgid "Select Parent"
+msgstr "Вибрати предка"
+
+msgid "Select Previous Version"
+msgstr "Вибрати попередню версію"
+
+msgid "Select Repository..."
+msgstr "Вибрати репозиторій..."
+
+msgid "Select a parent directory for the new clone"
+msgstr "Виберіть батьківський каталог для нового клонування"
+
+#, python-format
+msgid "Select file from \"%s\""
+msgstr "Вибрати файл з \"%s\""
+
+msgid "Select manually..."
+msgstr "Вибрати вручну..."
+
+#, fuzzy
+msgid "Select output dir"
+msgstr "Вибрати коміт"
+
+#, fuzzy
+msgid "Select output directory"
+msgstr "Вибрати репозиторій..."
+
+msgid "Select patch file(s)..."
+msgstr "Виберіть файл(и) латки(ок)..."
+
+#, fuzzy
+msgid "Select repository"
+msgstr "Вибрати репозиторій..."
+
+msgid "Set Default Repository"
+msgstr "Встановити репозиторій за замовчуванням"
+
+#, fuzzy
+msgid "Set Upstream Branch"
+msgstr "Встановити віддалене джерело"
+
+msgid "Set upstream"
+msgstr "Встановити віддалене джерело"
+
+msgid "Settings"
+msgstr "Налаштування"
+
+msgid "Shell arguments"
+msgstr "Аргументи командної стрічки"
+
+msgid "Shift Down"
+msgstr ""
+
+msgid "Shift Up"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr "Поєднання клавіш"
+
+msgid "Show Diffstat After Merge"
+msgstr "Показати список різниць після злиття"
+
+msgid "Show Full Paths in the Window Title"
+msgstr ""
+
+msgid "Show Help"
+msgstr "Показати допомогу"
+
+msgid "Show History"
+msgstr "Показати історію"
 
 msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit."
+"Show help\n"
+"Shortcut: ?"
 msgstr ""
-"Немає змін для коміту.\n"
-"\n"
-"Ви маєте проіндексувати принаймні 1 файл перед тим, як ви зможете зробити "
-"коміт."
+"Показати допомогу\n"
+"Клавіша: ?"
 
-msgid "Would you like to stage and commit all modified files?"
-msgstr "Хочете проіндексувати та закомітувати всі змінені файли?"
+msgid "Show icon? (if available)"
+msgstr ""
 
-msgid "Stage and commit?"
-msgstr "Проіндексувати та закомітувати?"
+msgid "Show line numbers"
+msgstr "Показати нумерацію рядків"
+
+msgid "Show whole surrounding functions of changes"
+msgstr "Показати всі оточуючі функції при змінах"
+
+msgid "Showing changes since"
+msgstr "Показ змін від"
+
+msgid "Side by side"
+msgstr ""
+
+msgid "Sign Off"
+msgstr "Підписати"
+
+msgid "Sign Tag"
+msgstr "Підписати теґ"
+
+msgid "Sign off on this commit"
+msgstr "Підписатись під цим комітом"
+
+#, fuzzy
+msgid "Simplified Chinese translation"
+msgstr "Китайський переклад"
+
+msgid "Skip"
+msgstr "Пропустити"
+
+msgid "Skip Current Patch"
+msgstr "Пропустити поточну латку"
+
+msgid "Sort bookmarks alphabetically"
+msgstr "Сортувати закладки за алфавітом"
+
+msgid "Spanish translation"
+msgstr "Іспанський переклад"
+
+msgid "Specifies the SHA-1 to tag"
+msgstr "Визначає SHA-1 теґу"
+
+msgid "Specifies the tag message"
+msgstr "Визначає повідомлення теґу"
+
+msgid "Specifies the tag name"
+msgstr "Задає ім'я теґу"
+
+msgid "Spelling Suggestions"
+msgstr "Поради з правопису"
+
+msgid "Squash"
+msgstr "Об'єднати"
+
+msgid "Squash the merged commits into a single commit"
+msgstr "Об'єднати злиті коміти в один коміт"
+
+msgid "Stage"
+msgstr "Проіндексувати"
+
+msgid "Stage / Unstage"
+msgstr "Проіндексувати / Видалити з проіндексованого"
+
+msgid "Stage All Untracked"
+msgstr "Проіндексувати всі непроіндексовані файли"
+
+msgid "Stage Changed Files To Commit"
+msgstr "Додати змінені файли до коміту"
+
+msgid "Stage Diff Hunk"
+msgstr "Додати частину різниці до проіндексованого"
+
+msgid "Stage Modified"
+msgstr "Проіндексувати зміни"
+
+msgid "Stage Selected"
+msgstr "Додати виділене до проіндексованого"
+
+msgid "Stage Selected Lines"
+msgstr "Додати виділені рядки до проіндексованого"
+
+msgid "Stage Unmerged"
+msgstr "Проіндексувати незлите"
+
+msgid "Stage Untracked"
+msgstr "Проіндексувати файли, що не відслідковуються"
 
 msgid "Stage and Commit"
 msgstr "Проіндексувати та закомітувати"
 
-msgid "Nothing to commit"
-msgstr "Немає що комітувати"
+msgid "Stage and commit?"
+msgstr "Проіндексувати та закомітувати?"
 
-msgid "Rewrite Published Commit?"
-msgstr "Перезаписати опублікований коміт?"
+msgid "Stage conflicts"
+msgstr "Проіндексувати конфлікт"
+
+msgid "Stage conflicts?"
+msgstr "Проіндексувати конфлікт?"
+
+msgid "Stage/unstage selected paths for commit"
+msgstr "Додати/видалити з проіндексованого шляхи для коміту"
+
+msgid "Staged"
+msgstr "Проіндексоване"
+
+#, python-format
+msgid "Staging: %s"
+msgstr "Індексація: %s"
+
+msgid "Start Interactive Rebase..."
+msgstr "Розпочати інтерактивне переміщення..."
+
+msgid "Starting Revision"
+msgstr "Початкова ревізія"
+
+msgid "Stash"
+msgstr "Сховати (stash)"
+
+#, fuzzy
+msgid "Stash Index"
+msgstr "Сховати (stash)"
+
+#, fuzzy
+msgid "Stash staged changes only"
+msgstr "Закомітувати проіндексовані зміни"
+
+#, fuzzy
+msgid "Stash unstaged changes only, keeping staged changes"
+msgstr "Відмінити непроіндексовані зміни на вибраних шляхах"
+
+msgid "Stash..."
+msgstr "Сховок"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Stop tracking paths"
+msgstr "Перестати відслідковувати виділене"
+
+msgid "Summarize Merge Commits"
+msgstr "Підсумувати коміти злиття"
+
+msgid "Summary"
+msgstr "Опис"
+
+msgid "Summary:"
+msgstr "Підсумок:"
+
+msgid "Tab Width"
+msgstr "Ширина табуляції"
+
+msgid "Tag"
+msgstr "Теґ"
+
+msgid "Tag Created"
+msgstr "Теґ створено"
+
+msgid "Tag message..."
+msgstr "Повідомлення теґу..."
+
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr "Вібувся запит на підписання теґу, але повідомлення для теґу порожнє."
+
+msgid "Tags"
+msgstr "Теґи"
+
+msgid "Text Width"
+msgstr "Ширина тексту"
+
+msgid "The branch will be no longer available."
+msgstr "Гілка не буде більше доступна."
+
+#, python-format
+msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+msgid "The commit message will be cleared."
+msgstr "Повідомлення коміту буде очищено."
+
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "Файл \"%s\" вже існує і буде перезаписаний."
+
+msgid "The following files will be deleted:"
+msgstr "Наступні файли будуть видалені:"
+
+msgid "The revision expression cannot be empty."
+msgstr "Поле ревізії не може бути порожнім."
+
+#, python-format
+msgid "The worktree will be reset using \"git reset --merge %s\""
+msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
+
+msgid "This cannot be undone.  Clear commit message?"
+msgstr "Це неможливо буде відмінити. Очистити повідомлення коміту?"
 
 msgid ""
 "This commit has already been published.\n"
@@ -1763,519 +2201,249 @@ msgstr ""
 "Ця операція перезапише опубліковану історію.\n"
 "Скоріш за все ви не хочете цього."
 
-msgid "Amend the published commit?"
-msgstr "Змінити опублікований коміт?"
-
-msgid "Amend Commit"
-msgstr "Змінити коміт"
-
-msgid "More..."
-msgstr "Більше..."
-
-msgid "Select Commit"
-msgstr "Вибрати коміт"
-
-msgid "Commit summary"
-msgstr "Опис коміту"
-
-msgid "Extended description..."
-msgstr "Розширений опис..."
-
-msgid "Revision to Merge"
-msgstr "Ревізія для злиття"
-
-msgid "Visualize"
-msgstr "Відобразити"
-
-msgid "Squash the merged commits into a single commit"
-msgstr "Об'єднати злиті коміти в один коміт"
-
-msgid "Squash"
-msgstr "Об'єднати"
+#, fuzzy
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Ця операція відмінить незакомітовані зміни.\n"
+"Ці зміни не можна буде відновити."
 
 msgid ""
-"Always create a merge commit when enabled, even when the merge is a fast-"
-"forward update"
+"This operation removes uncommitted edits from selected files.\n"
+"These changes cannot be recovered."
 msgstr ""
-"Якщо увімкнено, завжди створювати коміт злиття, навіть якщо злиття може бути "
-"виконано використовуючи метод перемотки (fast-forward)"
-
-msgid "No fast forward"
-msgstr "Без перемотки (fast-forward)"
+"Ця операція відмінить незакомітовані зміни.\n"
+"Ці зміни не можна буде відновити."
 
 msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
-"uncommitted"
+"This operation removes unstaged edits from selected files.\n"
+"These changes cannot be recovered."
 msgstr ""
-"Закомітувати злиття, якщо немає конфліктів. Зніміть прапорець щоб залишити "
-"злиття незакомітованим"
-
-msgid "GPG-sign the merge commit"
-msgstr "Підписати-GPG коміт злиття"
-
-msgid "Merge"
-msgstr "Злиття"
-
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr "Злити \"%(revision)s\" в \"%(branch)s\""
-
-#, python-format
-msgid "Merge into \"%s\""
-msgstr "Злити в \"%s\""
-
-msgid "No Revision Specified"
-msgstr "Ревізію не вказано"
-
-msgid "You must specify a revision to view."
-msgstr "Ви маєте вказати ревізію для перегляду."
-
-msgid "You must specify a revision to merge."
-msgstr "Ви маєте вказати ревізію для злиття."
-
-msgid "Filename"
-msgstr "Ім'я файла"
-
-msgid "Additions"
-msgstr "Додано"
-
-msgid "Deletions"
-msgstr "Видалено"
-
-msgid "Show History"
-msgstr "Показати історію"
-
-msgid "Save Archive"
-msgstr "Зберегти архів"
-
-msgid "Prefix"
-msgstr "Префікс"
-
-msgid "Advanced"
-msgstr "Розширено"
-
-msgid "File Saved"
-msgstr "Файл збережено"
-
-#, python-format
-msgid "File saved to \"%s\""
-msgstr "Дайл збережено до \"%s\""
-
-msgid "Overwrite File?"
-msgstr "Перезаписати файл?"
-
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr "Файл \"%s\" вже існує і буде перезаписаний."
-
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr "Перезаписати \"%s\"?"
-
-msgid "Overwrite"
-msgstr "Перезаписати"
-
-msgid "Remote Branch"
-msgstr "Віддалена гілка"
-
-msgid "Prompt on creation"
-msgstr "Підказати при створенні"
-
-msgid "Prompt when pushing creates new remote branches"
-msgstr "Підказати коли надсилаются новостворені віддалені гілки"
-
-msgid "Fast-forward only"
-msgstr "Лише перемотка (fast-forward)"
+"Ця операція відмінить непроіндексовані зміни.\n"
+"Ці зміни не можна буде відновити."
 
 msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge "
-"can be resolved as a fast-forward"
+"This repository is currently being rebased.\n"
+"Resolve conflicts, commit changes, and run:\n"
+"    Rebase > Continue"
 msgstr ""
-"Відмовтесь від злиття за винятком, коли поточний HEAD є оновленим або злиття "
-"може бети вирішено методом перемотки"
-
-msgid "No fast-forward"
-msgstr "Без перемотки"
-
-msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
-"Створити коміт злиття навіть якщо злиття може бути вирішено методом перемотки"
-
-msgid "Force"
-msgstr "Надіслати примусово"
+"Цей репозиторій переміщено.\n"
+"Виправте конфлікти, закомітуйте зміни, і виконайте:\n"
+"    Перемістити (rebase) > Продовжити"
 
 msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
-"repository to lose commits; use it with care"
+"This repository is in the middle of a merge.\n"
+"Resolve conflicts and commit changes."
 msgstr ""
-"Дозволити оновлення без перемотки. Використання \"примусу\" може призвести "
-"до того, що віддалений репозиторій втратить коміти; використовйте це з "
-"обережністю"
+"Цей репозиторій в процесі злиття.\n"
+"Виправте конфлікти та закомітуйте зміни."
 
-msgid "Include tags "
-msgstr "Включити теґ"
-
-msgid "Prune "
+msgid "Toggle Enabled"
 msgstr ""
 
-msgid "Rebase the current branch instead of merging"
-msgstr "Перемістити поточну гілку замість злиття"
+msgid "Toggle the branches filter"
+msgstr "Перемкнути фільтр гілок"
 
-msgid "Set upstream"
-msgstr "Встановити віддалене джерело"
+msgid "Toggle the paths filter"
+msgstr "Перемкнути фільтр шляхів"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
+msgid "Tracking Branch"
+msgstr "Гілка, що відслідковуються"
 
-#, python-format
-msgid "URL: %s"
-msgstr "Адреса URL: %s"
+msgid "Tracking branch"
+msgstr "Гілка, що відстежується"
 
-msgid "No repository selected."
-msgstr "Не вибрано жодного репозиторію."
+msgid "Traditional Chinese (Taiwan) translation"
+msgstr "Традиційний китайський (Тайвань) переклад"
 
-#, python-format
-msgid ""
-"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
-"A new remote branch will be published."
-msgstr ""
-"Гілка \"%(branch)s\" не існує в \"%(remote)s\".\n"
-"Нова гілка буде опублікована."
+msgid "Translators"
+msgstr "Перекладачі"
 
-msgid "Create a new remote branch?"
-msgstr "Створити нову віддалену гілку?"
-
-msgid "Create Remote Branch"
-msgstr "Створити віддалену гілку"
-
-msgid "Force Fetch?"
-msgstr "Отримати примусово?"
-
-msgid "Non-fast-forward fetch overwrites local history!"
-msgstr ""
-"Отримання без використання методу перемотки перезапише локальну історію!"
-
-#, python-format
-msgid "Force fetching from %s?"
-msgstr "Примусове отримання з %s?"
-
-msgid "Force Fetch"
-msgstr "Отримати примусово"
-
-msgid "Force Push?"
-msgstr "Надіслати примусово?"
-
-msgid ""
-"Non-fast-forward push overwrites published history!\n"
-"(Did you pull first?)"
-msgstr ""
-"Надсилання без використання методу перемотки перезапише опубліковану "
-"історію!\n"
-"(Чи всі зміни стягнуто?)"
-
-#, python-format
-msgid "Force push to %s?"
-msgstr "Надіслати примусово до %s?"
-
-msgid "Force Push"
-msgstr "Надіслати примусово"
-
-msgid "Have you rebased/pulled lately?"
-msgstr "Чи ви робили переміщення/стягнення останнім часом?"
-
-msgid "Fetch"
-msgstr "Отримати"
-
-msgid "Edit Remotes"
-msgstr "Редагувати віддалені репозиторіїї"
-
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
-msgstr ""
-"Додавайте та видаляйте віддалені репозиторіїї використовуючи\n"
-"кнопки Додати(+) та Видалити(-) в лівій частині програми.\n"
-"\n"
-"Віддалені репозиторіїї можна перейменувати, вибрабравши один зі списку\n"
-"та натиснувши \"enter\", або подвійним кліком мишки."
-
-msgid "Remote git repositories - double-click to rename"
-msgstr "Віддалені репозиторіїї git - подвійний клік для перейменування"
-
-msgid "Add new remote git repository"
-msgstr "Додати новий віддалений репозиторій git"
-
-msgid "Delete remote"
-msgstr "Видалити віддалений репозиторій"
-
-#, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "Збирання інформації для \"%s\"..."
-
-msgid "Add Remote"
-msgstr "Додати віддалений репозиторій"
-
-msgid "Add remote"
-msgstr "Додати віддалений репозиторій"
-
-msgid "Name for the new remote"
-msgstr "Назва нового віддаленого репозиторію"
+msgid "Turkish translation"
+msgstr "Турецький переклад"
 
 msgid "URL"
 msgstr "Адреса URL"
 
 #, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr "%(project)s: %(branch)s - Переглянути"
+msgid "URL: %s"
+msgstr "Адреса URL: %s"
 
-msgid "(Amending)"
-msgstr "(Зміна коміту)"
+msgid "Ukranian translation"
+msgstr "Український переклад"
 
-msgid "View history for selected paths"
-msgstr "Подивитись історію для вибраних шляхів"
+msgid "Unable to rebase"
+msgstr "Не вдалось перемістити (rebase)"
 
-msgid "Stage/unstage selected paths for commit"
-msgstr "Додати/видалити з проіндексованого шляхи для коміту"
+#, python-format
+msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unmerged"
+msgstr "Незлите"
+
+msgid "Unstage"
+msgstr "Видалити з індексу"
+
+msgid "Unstage All"
+msgstr "Видалити все з проіндексованого"
+
+msgid "Unstage Diff Hunk"
+msgstr "Видалити частину різниці з проіндексованого"
+
+msgid "Unstage From Commit"
+msgstr "Прибрати з коміту"
+
+msgid "Unstage Selected"
+msgstr "Видалити виділене з проіндексованого"
+
+msgid "Unstage Selected Lines"
+msgstr "Видалити виділені рядки з проіндексованого"
+
+#, python-format
+msgid "Unstaging: %s"
+msgstr "Видалення з проіндексованого: %s"
 
 msgid "Untrack Selected"
 msgstr "Не відслідковувати виділене"
 
-msgid "Stop tracking paths"
-msgstr "Перестати відслідковувати виділене"
-
-msgid "Launch git-difftool on the current path"
-msgstr "Запустити git-difftool для поточного шляху"
-
-msgid "Diff Against Predecessor..."
-msgstr "Різниця до попередника..."
-
-msgid "Launch git-difftool against previous versions"
-msgstr "Запустити git-difftool до попередньої версії"
-
-msgid "Revert unstaged changes to selected paths"
-msgstr "Відмінити непроіндексовані зміни на вибраних шляхах"
-
-msgid "Revert uncommitted changes to selected paths"
-msgstr "Відмінити незакомітовані зміни на вибраних шляхах"
-
-msgid "Edit selected paths"
-msgstr "Редагувати вибрані шляхи"
-
-msgid "Select Previous Version"
-msgstr "Вибрати попередню версію"
+msgid "Untracked"
+msgstr "Не відслідковується"
 
 #, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr "Збережено \"%(filename)s\" з \"%(ref)s\" до \"%(destination)s\""
-
-#, python-format
-msgid "Browsing %s"
-msgstr "Перегляд %s"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Вибрати файл з \"%s\""
-
-msgid "Select File"
-msgstr "Вибрати файл"
-
-msgid "Branch Name"
-msgstr "Назва гілки"
-
-msgid "Starting Revision"
-msgstr "Початкова ревізія"
-
-msgid "Local branch"
-msgstr "Локальна гілка"
-
-msgid "Tracking branch"
-msgstr "Гілка, що відстежується"
+msgid "Untracking: %s"
+msgstr "Видалення зі списку файлів, що відслідковуються: %s"
 
 msgid "Update Existing Branch:"
 msgstr "Оновити існуючу гілку:"
 
-msgid "No"
-msgstr "Ні"
+msgid "Updating"
+msgstr "Оновлення"
 
-msgid "Fast Forward Only"
-msgstr "Лише перемотка (fast-forward)"
+msgid "User Name"
+msgstr "Ім'я користувача"
 
-msgid "Fetch Tracking Branch"
-msgstr "Отримати гілку, що відстежується"
+msgid "Version"
+msgstr "Версія"
 
-msgid "Checkout After Creation"
-msgstr "Переключитись після створення"
+msgid "View"
+msgstr "Вигляд"
 
-msgid "Missing Data"
-msgstr "Дані відсутні"
+msgid "View History..."
+msgstr "Переглянути історію..."
 
-msgid "Please provide both a branch name and revision expression."
-msgstr "Будь ласка, надайте як ім'я гілки так і вираз ревізії."
+msgid "View history for selected paths"
+msgstr "Подивитись історію для вибраних шляхів"
 
-#, python-format
-msgid "Branch \"%s\" already exists."
-msgstr "Гілка \"%s\" вже існує."
+msgid "Visualize"
+msgstr "Відобразити"
 
-msgid "Branch Exists"
-msgstr "Гілка існує"
+msgid "Visualize All Branches..."
+msgstr "Відобразити всі гілки..."
 
-#, python-format
-msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr ""
-"Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
-
-#, python-format
-msgid "%d skipped"
-msgstr "%d пропущено"
-
-msgid "Recovering lost commits may not be easy."
-msgstr "Відновлення втрачених комітів може бути нелегким."
-
-#, python-format
-msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr "Скинути \"%(branch)s\" до \"%(revision)s\"?"
-
-msgid "Reset Branch?"
-msgstr "Скинути гілку?"
-
-msgid "Error Creating Branch"
-msgstr "Помилка при створенні гілки"
-
-#, python-format
-msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr "\"%(command)s\" завершилась з кодом \"%(status)d\""
-
-msgid "Stash"
-msgstr "Сховати (stash)"
-
-msgid "Apply the selected stash"
-msgstr "Застосувати виділений сховок"
-
-msgid "Save modified state to new stash"
-msgstr "Зберегти змінений стан до нового сховка"
-
-msgid "Drop"
-msgstr "Видалити"
-
-msgid "Drop the selected stash"
-msgstr "Видалити вибраний сховок"
-
-msgid "Keep Index"
-msgstr "Зберегти індекс"
-
-msgid "Save Stash"
-msgstr "Зберегти сховок"
-
-msgid "Enter a name for the stash"
-msgstr "Введіть назву для сховка"
-
-msgid "Error: Stash exists"
-msgstr "Помилка: сховок вже існує"
-
-#, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "Сховок з назвою \"%s\" вже існує"
-
-msgid "Drop Stash?"
-msgstr "Видалити сховок?"
-
-msgid "Recovering a dropped stash is not possible."
-msgstr "Неможливо відновити видалений сховок."
-
-#, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr "Видалити \"%s\" сховок?"
-
-msgid "Drop Stash"
-msgstr "Видалити сховок"
-
-msgid "vX.Y.Z"
-msgstr "vX.Y.Z"
-
-msgid "Specifies the tag name"
-msgstr "Задає ім'я теґу"
-
-msgid "Sign Tag"
-msgstr "Підписати теґ"
+msgid "Visualize Current Branch..."
+msgstr "Відобразити поточну гілку..."
 
 msgid "Whether to sign the tag (git tag -s)"
 msgstr "Визначає, чи піписувати теґ (git tag -s)"
 
-msgid "Message"
-msgstr "Повідомлення"
+msgid "Would you like to stage and commit all modified files?"
+msgstr "Хочете проіндексувати та закомітувати всі змінені файли?"
 
-msgid "Tag message..."
-msgstr "Повідомлення теґу..."
+msgid "XOR"
+msgstr ""
 
-msgid "Specifies the tag message"
-msgstr "Визначає повідомлення теґу"
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+"Ви знаходитесь в процесі злиття.\n"
+"Не можна робити зміни під час злиття."
 
-msgid "Specifies the SHA-1 to tag"
-msgstr "Визначає SHA-1 теґу"
+msgid "You cannot rebase with uncommitted changes."
+msgstr "Не можна робити переміщення (rebase), якщо є незакомітовані зміни."
 
-msgid "Missing Revision"
-msgstr "Ревізія відсутня"
+msgid "You must specify a revision to merge."
+msgstr "Ви маєте вказати ревізію для злиття."
 
-msgid "Please specify a revision to tag."
-msgstr "Будь ласка, вкажіть ревізію для теґу."
+msgid "You must specify a revision to view."
+msgstr "Ви маєте вказати ревізію для перегляду."
 
-msgid "Missing Name"
-msgstr "Назва відсутня"
+msgid "Zoom In"
+msgstr "Приблизити"
 
-msgid "Please specify a name for the new tag."
-msgstr "Будь ласка, вкажіть назву для теґу."
+msgid "Zoom Out"
+msgstr "Віддалити"
 
-msgid "Tag Created"
-msgstr "Теґ створено"
+msgid "Zoom to Fit"
+msgstr "Допасувати за розміром"
 
-#, python-format
-msgid "Created a new tag named \"%s\""
-msgstr "Створено новий теґ з назвою \"%s\""
-
-msgid "Age"
-msgstr "Вік"
-
-#, python-format
-msgid "%d minutes ago"
-msgstr "%d хвилин тому"
+msgid "command-line arguments"
+msgstr "аргументи командного рядка"
 
 #, python-format
-msgid "%d hours ago"
-msgstr "%d годин тому"
+msgid "exit code %s"
+msgstr "код завершення %s"
 
 #, python-format
-msgid "%d days ago"
-msgstr "%d днів тому"
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr "критично: \"%s\" не є каталогом. Будь ласка, вкажіть коректний --repo <шлях>."
 
-msgid "Partially Staged"
-msgstr "Частково проіндексоване"
+#, python-format
+msgid "git cola version %s"
+msgstr "версія git cola %s"
 
-msgid "Changed Upstream"
-msgstr "Змінено в віддаленому джерелі"
+msgid "git-cola"
+msgstr "git-cola"
 
-#~ msgid "Created commit: %s"
-#~ msgstr "Створено коміт: %s"
+msgid "git-cola diff"
+msgstr "Різниця git-cola"
 
-#~ msgid "Commit failed: %s"
-#~ msgstr "Не вдалось створити коміт: %s"
+msgid "grep result..."
+msgstr "шукати в результатах..."
+
+msgid "hotkeys.html"
+msgstr ""
+
+msgid "unknown"
+msgstr "невідомий"
+
+msgid "vX.Y.Z"
+msgstr "vX.Y.Z"
+
+msgid "yyyy-MM-dd"
+msgstr "рррр-ММ-дд"
+
+#~ msgid " commits ago"
+#~ msgstr " комітів тому"
 
 #~ msgid "\"%s\" returned exit status %d"
 #~ msgstr "\"%s\" завершилась з кодом %d"
 
-#~ msgid "git clone returned exit code %s"
-#~ msgstr "git clone завершилась з кодом %s"
+#~ msgid "\"git commit\" returned exit code %s"
+#~ msgstr "команда \"git commit\" поверула код виходу %s"
 
-#~ msgid "Output: %s"
-#~ msgstr "Вивід: %s"
+#~ msgid "Already up-to-date."
+#~ msgstr "Вже оновлено."
+
+#~ msgid "Commit failed: %s"
+#~ msgstr "Не вдалось створити коміт: %s"
+
+#~ msgid "Created commit: %s"
+#~ msgstr "Створено коміт: %s"
+
+#~ msgid "Error %s"
+#~ msgstr "Помилка %s"
 
 #~ msgid "Errors: %s"
 #~ msgstr "Помилки: %s"
 
-#~ msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-#~ msgstr "Позначення \"%(revision)s\" як \"%(name)s\""
+#~ msgid "Exit code: %s"
+#~ msgstr "Код завершення: %s"
 
 #~ msgid "GPG-signed"
 #~ msgstr "Підписане GPG"
@@ -2287,17 +2455,11 @@ msgstr "Змінено в віддаленому джерелі"
 #~ "Вивід:\n"
 #~ "%s"
 
-#~ msgid "Exit code: %s"
-#~ msgstr "Код завершення: %s"
+#~ msgid "Output: %s"
+#~ msgstr "Вивід: %s"
 
-#~ msgid "\"git commit\" returned exit code %s"
-#~ msgstr "команда \"git commit\" поверула код виходу %s"
+#~ msgid "git clone returned exit code %s"
+#~ msgstr "git clone завершилась з кодом %s"
 
 #~ msgid "git tag returned exit code %s"
 #~ msgstr "команда git tag завершилась з кодом %s"
-
-#~ msgid "Error %s"
-#~ msgstr "Помилка %s"
-
-#~ msgid "Already up-to-date."
-#~ msgstr "Вже оновлено."

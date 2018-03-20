@@ -19,1239 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-msgid "Abort Merge..."
-msgstr "Zusammenführung abbrechen..."
-
-msgid "Aborting the current merge?"
-msgstr "Möchten Sie die Zusammenführung abbrechen?"
-
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-"Achtung:\n"
-"Wenn Sie die Zusammenführung abbrechen, gehen alle noch nicht versionierten "
-"Änderungen unwiederbringlich verloren."
-
-msgid "Abort Merge"
-msgstr "Zusammenführung abbrechen"
-
-msgid "Error"
-msgstr "Fehler"
-
-msgid "Amend"
-msgstr "Ergänzen"
-
-msgid "Cannot Amend"
-msgstr "Fehler beim Ergänzen"
-
-msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
-msgstr ""
-"Es werden gerade Änderungen eingepflegt.Sie können deshalb im Moment keine "
-"Ergänzungen vornehmen."
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr ""
-
-msgid "Summary:"
-msgstr "Zusammenfassung"
-
-msgid "Patch(es) Applied"
-msgstr "Patch(es) angewendet"
-
-#, python-format
-msgid "%d patch(es) applied."
-msgstr "%d Patch(es) angewendet"
-
-#, fuzzy
-msgid "Error Launching Blame Viewer"
-msgstr "Werkzeug für die Verlaufsansicht"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr ""
-
-msgid "Reset Branch"
-msgstr "Zweig zurücksetzen"
-
-msgid "Point the current branch head to a new commit?"
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
-
-msgid "Reset Worktree"
-msgstr ""
-
-msgid "Reset worktree?"
-msgstr ""
-
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr ""
-
-msgid "Commit failed"
-msgstr "Versionierung fehlgeschlagen."
-
-#, python-format
-msgid "Error creating remote \"%s\""
-msgstr "Fehler beim Hinzufügen des externen Projektarchivs \"%s\""
-
-msgid "Delete Remote"
-msgstr "Externes Projektarchiv entfernen"
-
-msgid "Delete remote?"
-msgstr "Möchten Sie das externe Projektarchiv entfernen?"
-
-#, python-format
-msgid "Delete remote \"%s\""
-msgstr "Entferne externes Projektarchiv \"%s\""
-
-msgid "Delete"
-msgstr "Löschen"
-
-#, python-format
-msgid "Error deleting remote \"%s\""
-msgstr "Fehler beim Entfernen des externen Projektarchivs \"%s\""
-
-msgid "Rename Remote"
-msgstr "Externes Projektarchiv umbenennen"
-
-msgid "Rename remote?"
-msgstr "Möchten Sie das externe Projektarchiv umbenennen?"
-
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Benenne das externe Projektarchiv \"%(current)s\" um zu \"%(new)s\"."
-
-msgid "Rename"
-msgstr "Umbenennen"
-
-#, fuzzy
-msgid "Delete Bookmark?"
-msgstr "Favoriten"
-
-#, python-format
-msgid "%s will be removed from your bookmarks."
-msgstr ""
-
-#, fuzzy
-msgid "Delete Bookmark"
-msgstr "Favoriten"
-
-#, python-format
-msgid "Remove %s from the recent list?"
-msgstr ""
-
-#, python-format
-msgid "%s will be removed from your recent repositories."
-msgstr ""
-
-#, fuzzy
-msgid "Remove"
-msgstr "Externes Projektarchiv"
-
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr "Fehler beim Löschen von \"%s\""
-
-msgid "Delete Files?"
-msgstr "Datei(en) löschen?"
-
-msgid "The following files will be deleted:"
-msgstr "Die folgenden Zeilen werden gleich gelöscht:"
-
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr "Wollen Sie %d Datei(en) löschen?"
-
-msgid "Delete Files"
-msgstr "Lösche Dateien"
-
-msgid "Error Deleting Remote Branch"
-msgstr "Fehler beim Löschen des externen Zweigs"
-
-msgid "Remote Branch Deleted"
-msgstr "Externer Zweig gelöscht"
-
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "\"%(branch)s\" wurde von \"%(remote)s\" gelöscht."
-
-msgid "Launch Editor"
-msgstr "Mit Editor bearbeiten"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr ""
-
-#, fuzzy
-msgid "Error Editing File"
-msgstr "Fehler beim Laden des Vergleichs:"
-
-msgid "Launch Diff Tool"
-msgstr "Mit direktem Vorgänger vergleichen"
-
-#, fuzzy
-msgid "Launch Terminal"
-msgstr "Starte Werkzeug für die Zusammenführung"
-
-msgid "Error: Cannot find commit template"
-msgstr ""
-"Fehler: ich kann die Textvorlage zum Versionieren der Änderungen nicht finden"
-
-#, python-format
-msgid "%s: No such file or directory."
-msgstr "Fehler: Datei oder Verzeichnis »%s« nicht gefunden"
-
-msgid "Error: Unconfigured commit template"
-msgstr "Fehler: Keine Textvorlage zum Versionieren von Änderungen festgelegt."
-
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-"Eine Vorlage für die Versionsbeschreibung ist noch nicht festgelegt.\n"
-"Legen Sie bitte zuerst mit \"git config commit.template\" eine Vorlage fest."
-
-#, fuzzy
-msgid "Error running prepare-commitmsg hook"
-msgstr "Aufrufen der Vor-Eintragen-Kontrolle..."
-
-#, python-format
-msgid "A hook must be provided at \"%s\""
-msgstr ""
-
-msgid "Merge failed.  Conflict resolution is required."
-msgstr "Zusammenführen fehlgeschlagen. Konfliktauflösung ist notwendig."
-
-msgid "Open Using Default Application"
-msgstr "Mit der Standardanwendung öffnen"
-
-msgid "Open Parent Directory"
-msgstr "Übergeordnetes Verzeichnis öffnen"
-
-#, fuzzy, python-format
-msgid "Rebase onto %s"
-msgstr "Zweiganfang verschieben"
-
-msgid "Rebase"
-msgstr "Anfang verschieben"
-
-#, fuzzy
-msgid "Rebase stoppped"
-msgstr "Zweiganfang verschieben"
-
-#, fuzzy
-msgid "Edit Rebase"
-msgstr "Anfang verschieben"
-
-msgid "Save"
-msgstr "Speichern"
-
-msgid "Refresh"
-msgstr "Ansicht aktualisieren"
-
-msgid "Revert Unstaged Edits..."
-msgstr "Nicht vorgemerkte Änderungen zurücknehmen..."
-
-msgid "Revert Unstaged Changes?"
-msgstr "Wollen sie die nicht vorgemerkten Änderungen zurücknehmen?"
-
-msgid ""
-"This operation removes unstaged edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Damit verwerfen Sie nicht vorgemerkte Änderungen.\n"
-"Diese können nicht mehr wiederhergestellt werden."
-
-msgid "Revert the unstaged changes?"
-msgstr "Möchten Sie die nicht vorgemerkten Änderungen zurücknehmen?"
-
-msgid "Revert Unstaged Changes"
-msgstr "Nehme nicht vorgemerkte Änderungen zurück"
-
-#, fuzzy
-msgid "Revert Uncommitted Edits..."
-msgstr "Nicht versionierte Änderungen zurücknehmen..."
-
-msgid "Revert Uncommitted Changes?"
-msgstr "Möchten Sie die Änderungen verwerfen?"
-
-msgid ""
-"This operation removes uncommitted edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Damit verwerfen Sie unversionierte Änderungen.\n"
-"Dieser Schritt kann nicht rückgängig gemacht werden."
-
-msgid "Revert the uncommitted changes?"
-msgstr "Möchten Sie die unversionierten Änderungen verwerfen?"
-
-msgid "Revert Uncommitted Changes"
-msgstr "Unversionierte Änderungen zurücknehmen"
-
-#, python-format
-msgid "Run \"%s\"?"
-msgstr "Möchten Sie \"%s\" ausführen?"
-
-msgid "Please select a file"
-msgstr "Bitte wählen Sie eine Datei"
-
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr "\"%s\" erwartet, dass eine Datei ausgewählt wird."
-
-msgid "Invalid Revision"
-msgstr "Zweig oder Markierung ungültig"
-
-msgid "The revision expression cannot be empty."
-msgstr "Der Ausdruck darf nicht leer sein."
-
-#, python-format
-msgid "Running command: %s"
-msgstr "Führe Befehl \"%s\" aus"
-
-msgid "Sign Off"
-msgstr "Unterzeichnen"
-
-msgid "unknown"
-msgstr "unbekannt"
-
-#, fuzzy
-msgid "Stage conflicts?"
-msgstr "Vormerken und versionieren?"
-
-#, python-format
-msgid ""
-"%s appears to contain merge conflicts.\n"
-"\n"
-"You should probably skip this file.\n"
-"Stage it anyways?"
-msgstr ""
-
-#, fuzzy
-msgid "Stage conflicts"
-msgstr "Vormerken und versionieren?"
-
-msgid "Skip"
-msgstr ""
-
-msgid "Stage"
-msgstr "Änderung vormerken"
-
-#, python-format
-msgid "Staging: %s"
-msgstr "Vermerke Änderung an »%s«"
-
-msgid "Stage Modified"
-msgstr "Vermerke Änderung"
-
-msgid "Stage Unmerged"
-msgstr "Nicht zusammengeführte Dateien vormerken"
-
-msgid "Stage Untracked"
-msgstr "Neue Dateien vormerken"
-
-msgid "Stage / Unstage"
-msgstr "Vormerken/Nicht vormerken"
-
-msgid "Missing Tag Message"
-msgstr "Die Markierung hat keine Beschreibung"
-
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
-"Die Markierung sollte unterzeichnet werden, aber die dafür notwendige "
-"Beschreibung des Inhalts fehlt."
-
-msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
-msgstr ""
-"Anstelle dessen wird eine einfache, nicht unterzeichnete Markierung "
-"erstellt.\n"
-"Möchten Sie fortfahren?"
-
-msgid "Create Unsigned Tag"
-msgstr "Erzeuge nicht unterzeichnete Markierung"
-
-#, fuzzy, python-format
-msgid "Error: could not create tag \"%s\""
-msgstr "Fehler: Konnte das Projektarchiv \"%s\" nicht klonen"
-
-msgid "Unstage"
-msgstr "Änderung nicht vormerken"
-
-#, python-format
-msgid "Unstaging: %s"
-msgstr "Entferne Datei »%s« aus Vormerkliste"
-
-#, python-format
-msgid "Untracking: %s"
-msgstr "Führe keine Versionskontrolle mehr für \"%s\" aus."
-
-#, fuzzy
-msgid "Error Launching History Browser"
-msgstr "Werkzeug für die Verlaufsansicht"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
-
-#, fuzzy
-msgid "Next File"
-msgstr "Wähle Datei aus"
-
-msgid "Previous File"
-msgstr ""
-
-#, fuzzy
-msgid "File system change monitoring: enabled.\n"
-msgstr "Benachrichtigungen über Änderungen im Dateisystem aktiviert.\n"
-
-msgid ""
-"File system change monitoring: disabled because the limit on the total "
-"number of inotify watches was reached.  You may be able to increase the "
-"limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
-"&& sudo sysctl -p\n"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "Inotify ist deaktiviert, da \"cola.inotify\" auf FALSCH gesetzt ist.\n"
-
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
-
-msgid ""
-"File system change monitoring: disabled because libc does not support the "
-"inotify system calls.\n"
-msgstr ""
-
-msgid "Delete Branch"
-msgstr "Zweig löschen"
-
-msgid "Delete Remote Branch"
-msgstr "Externen Zweig löschen"
-
-msgid "Browse Commits..."
-msgstr "Zweig zur Ansicht wählen"
-
-msgid "Browse"
-msgstr "Ansehen"
-
-msgid "Checkout Branch"
-msgstr "Zweig wechseln"
-
-msgid "Checkout"
-msgstr "Umstellen"
-
-msgid "Cherry-Pick Commit"
-msgstr "Einzelne Version übernehmen"
-
-#, fuzzy
-msgid "New Repository..."
-msgstr "Wähle Projektarchiv..."
-
-msgid "Error Creating Repository"
-msgstr "Fehler beim Anlegen des Projektarchivs"
-
-msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Quell-Pfad oder -URL"
-
-msgid "Error Cloning"
-msgstr "Fehler beim Klonen"
-
-#, python-format
-msgid "Could not parse Git URL: \"%s\""
-msgstr "Die Adresse \"%s\" lässt sich nicht auswerten."
-
-msgid "Select a parent directory for the new clone"
-msgstr "Wählen Sie das übergeordnete Verzeichnis für den Klon"
-
-#, python-format
-msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" existiert bereits, git-cola wird ein neues Verzeichnis anlegen."
-
-#, fuzzy
-msgid "Directory Exists"
-msgstr "Verzeichnis:"
-
-msgid "Export Patches"
-msgstr "Patches exportieren"
-
-msgid "Open Git Repository..."
-msgstr "Projektarchiv öffnen"
-
-msgid "Load Commit Message"
-msgstr "Versionsbeschreibung aus Datei einfügen"
-
-msgid "Select Branch to Review"
-msgstr "Zweig zum Vergleichen auswählen"
-
-msgid "Review"
-msgstr "Vergleichen"
-
-#, fuzzy
-msgid "Clone Repository"
-msgstr "Projektarchiv klonen"
-
-#, fuzzy, python-format
-msgid "Cloning repository at %s"
-msgstr "Projektarchiv klonen"
-
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr "Fehler: Konnte das Projektarchiv \"%s\" nicht klonen"
-
-#, fuzzy
-msgid "Rename Existing Branch"
-msgstr "Existierenden Zweig aktualisieren:"
-
-msgid "Select"
-msgstr "Auswählen"
-
-#, fuzzy
-msgid "Enter New Branch Name"
-msgstr "Name des Zweigs"
-
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Zweig zurücksetzen"
-
-msgid "Reset"
-msgstr "Zurücksetzen"
-
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" wurde mit Code %(status)d beendet"
-
-msgid "Continue"
-msgstr "Fortsetzen"
-
-#, python-format
-msgid "Run %s?"
-msgstr "Möchten Sie \"%s\" ausführen?"
-
-#, python-format
-msgid "Run the \"%s\" command?"
-msgstr "Möchten Sie den Befehl \"%s\" ausführen?"
-
-msgid "Run"
-msgstr "Ausführen"
-
-#, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr ""
-
-msgid "Close..."
-msgstr "Schließen..."
-
-msgid "Close"
-msgstr "Schließen"
-
-msgid "&Edit"
-msgstr "Bearbeiten"
-
-msgid "Detach"
-msgstr "Loslösen"
-
-msgid "Attach"
-msgstr "Anhängen"
-
-msgid "Nothing to do"
-msgstr "Nichts zu tun"
-
-msgid "git-cola diff"
-msgstr ""
-
-msgid "Compare"
-msgstr "Vergleichen"
-
-#, fuzzy
-msgid "Compare All"
-msgstr "Vergleichen"
-
-msgid ""
-"\n"
-"Keyboard Shortcuts\n"
-"------------------\n"
-"J, Down     = Move Down\n"
-"K, Up       = Move Up\n"
-"Enter       = Edit Selected Files\n"
-"Spacebar    = Open File Using Default Application\n"
-"Ctrl + L    = Focus Text Entry Field\n"
-"?           = Show Help\n"
-"\n"
-"The up and down arrows change focus between the text entry field\n"
-"and the results.\n"
-msgstr ""
-
-msgid "Help - Find Files"
-msgstr ""
-
-#, fuzzy
-msgid "Find Files"
-msgstr "Projektarchiv"
-
-msgid "<path> ..."
-msgstr ""
-
-msgid "Help"
-msgstr "Hilfe"
-
-msgid ""
-"Show help\n"
-"Shortcut: ?"
-msgstr ""
-
-#, fuzzy
-msgid "Show Help"
-msgstr "Hilfe"
-
-msgid "Revision Expression:"
-msgstr "Eindeutiger Schlüssel der Version"
-
-msgid "No commits exist in this branch."
-msgstr "In diesem Zweig sind keine Versionen gespeichert"
-
-msgid "Add to .gitignore"
-msgstr "Von Versionskontrolle ausschließen"
-
-msgid "Ignore filename or pattern"
-msgstr ""
-
-#, fuzzy
-msgid "Ignore exact filename"
-msgstr "Alle Leerzeichen ignorieren"
-
-msgid "Ignore custom pattern"
-msgstr ""
-
-msgid "Add"
-msgstr "Hinzufügen"
-
-msgid "Configure toolbar"
-msgstr ""
-
-#, fuzzy
-msgid "Delete toolbar"
-msgstr "Favoriten"
-
-msgid "Name"
-msgstr ""
-
-msgid "Add Separator"
-msgstr ""
-
-#, fuzzy
-msgid "Remove Element"
-msgstr "Externes Projektarchiv"
-
-msgid "Show icon? (if available)"
-msgstr ""
-
-msgid "Apply"
-msgstr "Anwenden"
-
-msgid "Open"
-msgstr "Öffnen"
-
-#, fuzzy
-msgid "Favorite repositories"
-msgstr "Zuletzt benutzte Projektarchive"
-
-#, fuzzy
-msgid "Recent repositories"
-msgstr "Zuletzt benutzte Projektarchive"
-
-msgid "Accept"
-msgstr ""
-
-msgid "Open in New Window"
-msgstr ""
-
-#, fuzzy
-msgid "Set Default Repository"
-msgstr "Wähle Projektarchiv..."
-
-#, fuzzy
-msgid "Clear Default Repository"
-msgstr "Aktuelles Projektarchiv"
-
-#, fuzzy
-msgid "Rename Repository"
-msgstr "Projektarchiv klonen"
-
-msgid "Copy"
-msgstr "Kopieren"
-
-msgid "Actions"
-msgstr "Befehle"
-
-msgid "Path"
-msgstr ""
-
-#, fuzzy
-msgid "Add Favorite"
-msgstr "Hinzufügen"
-
-#, fuzzy, python-format
-msgid "%s is not a Git repository."
-msgstr "Git Projektarchiv:"
-
-msgid "Local"
-msgstr "Lokal"
-
-msgid "Remote"
-msgstr "Externes Projektarchiv"
-
-msgid "Tags"
-msgstr ""
-
-msgid "Toggle the branches filter"
-msgstr ""
-
-#, fuzzy
-msgid "Branches"
-msgstr "Zweig"
-
-#, fuzzy
-msgid "Checkout as new branch"
-msgstr "Zweig wechseln"
-
-#, fuzzy
-msgid "Merge into current branch"
-msgstr "Verzeichnisstruktur ansehen (aktueller Zweig)"
-
-msgid "Pull"
-msgstr "Abrufen und zusammenführen"
-
-msgid "Push"
-msgstr "Veröffentlichen"
-
-#, fuzzy
-msgid "Rename Branch"
-msgstr "Externer Zweig"
-
-#, fuzzy, python-format
-msgid "Executing action %s"
-msgstr "Wörterbuch auf %s zurückgesetzt."
-
-#, fuzzy
-msgid "Updating"
-msgstr "Aktualisiere..."
-
-#, fuzzy
-msgid "Rename branch"
-msgstr "Externer Zweig"
-
-#, fuzzy
-msgid "Delete selected branch?"
-msgstr "Externen Zweig löschen"
-
-msgid "The branch will be no longer available."
-msgstr ""
-
-#, fuzzy
-msgid "Filter branches..."
-msgstr "Abrufen..."
-
-msgid "Browser"
-msgstr "Verzeichnisstruktur"
-
-msgid "Status"
-msgstr "Zustand"
-
-msgid "Favorites"
-msgstr ""
-
-#, fuzzy
-msgid "Recent"
-msgstr "Zurücksetzen"
-
-msgid "Commit"
-msgstr "Version"
-
-msgid "Console"
-msgstr "Meldungen"
-
-msgid "Diff"
-msgstr "Vergleich"
-
-msgid "Amend Last Commit"
-msgstr "Letzte Version nachbessern"
-
-msgid "Unstage All"
-msgstr "Alle Vormerkungen aufheben"
-
-msgid "Unstage From Commit"
-msgstr "Vormerkung dieser Datei aufheben"
-
-msgid "Diffstat"
-msgstr "Vergleichsstatistik"
-
-msgid "Stage Changed Files To Commit"
-msgstr "Geänderte Dateien vormerken"
-
-msgid "Stage All Untracked"
-msgstr "Alle neuen Dateien vormerken"
-
-#, fuzzy
-msgid "Apply Patches..."
-msgstr "Patches exportieren..."
-
-msgid "Export Patches..."
-msgstr "Patches exportieren..."
-
-msgid "Preferences"
-msgstr "Einstellungen"
-
-msgid "Edit Remotes..."
-msgstr "Externe Projektarchive verwalten..."
-
-msgid "Recently Modified Files..."
-msgstr "Kürzlich geänderte Dateien suchen..."
-
-msgid "Cherry-Pick..."
-msgstr "Version übernehmen..."
-
-msgid "Load Commit Message..."
-msgstr "Versionsbeschreibung aus Datei einfügen..."
-
-#, fuzzy
-msgid "Prepare Commit Message"
-msgstr "In Versionsbeschreibungen"
-
-msgid "Save As Tarball/Zip..."
-msgstr "Als TAR- oder ZIP-Archiv exportieren..."
-
-msgid "Quit"
-msgstr "Beenden"
-
-msgid "Grep"
-msgstr "Suchen..."
-
-msgid "Merge..."
-msgstr "Zusammenführen..."
-
-msgid "Fetch..."
-msgstr "Abrufen..."
-
-msgid "Push..."
-msgstr "Veröffentlichen..."
-
-msgid "Pull..."
-msgstr "Abrufen und zusammenführen..."
-
-msgid "Open..."
-msgstr "Öffnen..."
-
-#, fuzzy
-msgid "Open in New Window..."
-msgstr "Projektarchiv öffnen"
-
-msgid "Stash..."
-msgstr "Git-Zwischenablage..."
-
-msgid "Clone..."
-msgstr "Klonen..."
-
-msgid "Documentation"
-msgstr "Online-Hilfe"
-
-msgid "Keyboard Shortcuts"
-msgstr "Tastenkürzel"
-
-msgid "Visualize Current Branch..."
-msgstr "Verlauf ansehen (aktueller Zweig)"
-
-msgid "Visualize All Branches..."
-msgstr "Verlauf ansehen (alle Zweige)"
-
-msgid "Search..."
-msgstr "Suchen..."
-
-msgid "Browse Current Branch..."
-msgstr "Verzeichnisstruktur ansehen (aktueller Zweig)"
-
-msgid "Browse Other Branch..."
-msgstr "Verzeichnisstruktur ansehen (beliebiger Zweig)..."
-
-msgid "Get Commit Message Template"
-msgstr "Versionsbeschreibung aus Vorlage einfügen"
-
-msgid "About"
-msgstr "Über git-cola"
-
-msgid "Expression..."
-msgstr "Mit Suchausdruck..."
-
-msgid "Branches..."
-msgstr "Zweige..."
-
-msgid "Create Tag..."
-msgstr "Neue Markierung..."
-
-msgid "Create..."
-msgstr "Neu..."
-
-msgid "Delete..."
-msgstr "Löschen..."
-
-msgid "Delete Remote Branch..."
-msgstr "Externen Zweig löschen..."
-
-#, fuzzy
-msgid "Rename Branch..."
-msgstr "Externer Zweig"
-
-msgid "Checkout..."
-msgstr "Wechseln..."
-
-msgid "Review..."
-msgstr "Mit anderem Zweig vergleichen..."
-
-#, fuzzy
-msgid "File Browser..."
-msgstr "Übersicht"
-
-msgid "DAG..."
-msgstr "Verlauf"
-
-msgid "Start Interactive Rebase..."
-msgstr ""
-
-#, fuzzy
-msgid "Edit..."
-msgstr "Bearbeiten"
-
-#, fuzzy
-msgid "Skip Current Patch"
-msgstr "Patch erstellen"
-
-msgid "Abort"
-msgstr "Abbrechen"
-
-msgid "Lock Layout"
-msgstr ""
-
-msgid "&File"
-msgstr "Projektarchiv"
-
-msgid "Open Recent"
-msgstr "Kürzlich verwendetes Projektarchiv öffnen"
-
-msgid "Undo"
-msgstr "Rückgängig"
-
-msgid "Redo"
-msgstr "Wiederholen"
-
-msgid "Cut"
-msgstr "Ausschneiden"
-
-msgid "Paste"
-msgstr "Einfügen"
-
-msgid "Select All"
-msgstr "Alle auswählen"
-
-msgid "Commit@@verb"
-msgstr "Version aufnehmen"
-
-msgid "Branch"
-msgstr "Zweig"
-
-#, fuzzy
-msgid "View"
-msgstr "Vergleichen"
-
-#, python-format
-msgid "git cola version %s"
-msgstr ""
-
-msgid "Add Toolbar"
-msgstr ""
-
-#, python-format
-msgid "Repository: %s"
-msgstr "Projektarchiv: %s"
-
-#, python-format
-msgid "Branch: %s"
-msgstr "Zweig: %s"
-
-msgid ""
-"This repository is currently being rebased.\n"
-"Resolve conflicts, commit changes, and run:\n"
-"    Rebase > Continue"
-msgstr ""
-
-#, fuzzy
-msgid "Rebasing"
-msgstr "Anfang verschieben"
-
-msgid ""
-"This repository is in the middle of a merge.\n"
-"Resolve conflicts and commit changes."
-msgstr ""
-
-#, fuzzy
-msgid "Merging"
-msgstr "Zusammenführen"
-
-msgid "Amending"
-msgstr "Am Nachbessern"
-
-#, fuzzy
-msgid "Unable to rebase"
-msgstr "Verzeichnis »%s« kann nicht aufgeräumt werden."
-
-#, fuzzy
-msgid "You cannot rebase with uncommitted changes."
-msgstr "Möchten Sie die unversionierten Änderungen verwerfen?"
-
-#, fuzzy
-msgid "Select New Upstream"
-msgstr "Neuen Anfang auswählen"
-
-msgid "Interactive Rebase"
-msgstr ""
-
-msgid "Toggle the paths filter"
-msgstr ""
-
-msgid "Staged"
-msgstr "Vorgemerkt"
-
-msgid "Unmerged"
-msgstr "Nicht zusammengeführt"
-
-msgid "Modified"
-msgstr "Geändert"
-
-msgid "Untracked"
-msgstr "Nicht unter Versionskontrolle"
-
-msgid "Move Up"
-msgstr "Nach oben bewegen"
-
-msgid "Move Down"
-msgstr "Nach unten bewegen"
-
-msgid "Copy Path to Clipboard"
-msgstr "Kopiere Pfad in Zwischenablage"
-
-#, fuzzy
-msgid "Copy Relative Path to Clipboard"
-msgstr "Kopiere Pfad in Zwischenablage"
-
-#, fuzzy
-msgid "Copy Leading Path to Clipboard"
-msgstr "Kopiere Pfad in Zwischenablage"
-
-#, fuzzy
-msgid "Copy Basename to Clipboard"
-msgstr "Kopiere Pfad in Zwischenablage"
-
-#, fuzzy
-msgid "Customize..."
-msgstr "Schließen..."
-
-msgid "View History..."
-msgstr "Verlauf anzeigen"
-
-#, fuzzy
-msgid "Blame..."
-msgstr "Umbenennen..."
-
-msgid "Move files to trash"
-msgstr ""
-
-msgid "Delete Files..."
-msgstr "Lösche Datei(en)..."
-
-#, fuzzy
-msgid "Copy..."
-msgstr "Kopieren"
-
-msgid "Unstage Selected"
-msgstr "Vormerkung für Auswahl aufheben"
-
-msgid "Launch git-cola"
-msgstr "Starte git-cola"
-
-msgid "Stage Selected"
-msgstr "Auswahl vormerken"
-
-#, python-format
-msgid ""
-"\n"
-"        Format String Variables\n"
-"        -----------------------\n"
-"          %(path)s  =  relative file path\n"
-"       %(abspath)s  =  absolute file path\n"
-"       %(dirname)s  =  relative directory path\n"
-"    %(absdirname)s  =  absolute directory path\n"
-"      %(filename)s  =  file basename\n"
-"      %(basename)s  =  file basename without extension\n"
-"           %(ext)s  =  file extension\n"
-msgstr ""
-
-msgid "Help - Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Filter paths..."
-msgstr "Abrufen..."
-
-msgid "Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Action Name"
-msgstr "Befehle"
-
-msgid "Format String"
-msgstr ""
-
-#, python-format
-msgid "%(path)s"
-msgstr ""
-
-#, python-format
-msgid "exit code %s"
-msgstr "Ende-Code %s"
-
-msgid "Abort Action"
-msgstr "Befehl abbrechen"
-
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-"Zurzeit wird noch ein Befehl ausgeführt.\n"
-"Wenn Sie ihn abbrechen, könnten Daten verloren gehen."
-
-msgid "Abort the action?"
-msgstr "Möchten Sie den Befehl abbrechen?"
-
-msgid "Arguments"
-msgstr "Argumente"
-
-msgid "Local Branch"
-msgstr "Lokaler Zweig"
-
-msgid "Tracking Branch"
-msgstr "Nachverfolgter Zweig"
-
-msgid "Tag"
-msgstr "Markierung"
-
-msgid "Revision"
-msgstr "Version"
-
-msgid "Diff this -> selected"
-msgstr "Mit Auswahl vergleichen"
-
-msgid "Diff selected -> this"
-msgstr "Auswahl mit diesem vergleichen"
-
-msgid "Create Branch"
-msgstr "Zweig erstellen"
-
-msgid "Create Patch"
-msgstr "Patch erstellen"
-
-msgid "Create Tag"
-msgstr "Markierung erzeugen"
-
-msgid "Cherry Pick"
-msgstr "Einzelne Version übernehmen"
-
-#, fuzzy
-msgid "Launch Directory Diff Tool"
-msgstr "Mit direktem Vorgänger vergleichen"
-
-#, fuzzy
-msgid "Checkout Detached HEAD"
-msgstr "Zweig wechseln"
-
-msgid "Grab File..."
-msgstr "Datei extrahieren..."
-
-msgid "Copy SHA-1"
-msgstr "Eindeutigen Schlüssel der Version kopieren"
-
-msgid "Summary"
-msgstr "Zusammenfassung"
-
-msgid "Author"
-msgstr "Autor"
-
-msgid "Date, Time"
-msgstr "Datum und Zeit"
-
-msgid "Go Up"
-msgstr "Nach oben"
-
-msgid "Go Down"
-msgstr "Nach unten"
-
-msgid "Zoom to Fit"
-msgstr "In Ansicht einpassen"
-
-msgid "Zoom Out"
-msgstr "Verkleinern"
-
-msgid "Zoom In"
-msgstr "Vergrößern"
-
-msgid "Log"
-msgstr ""
-
-#, fuzzy
-msgid "Files"
-msgstr "Projektarchiv"
-
-#, fuzzy
-msgid "Graph"
-msgstr "Suchen..."
-
-#, fuzzy, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr "%s: %s - Verlauf"
-
-msgid " - DAG"
-msgstr " - Verlauf"
-
-msgid "Select Parent"
-msgstr "Vorgänger Auswählen"
-
-msgid "Select Oldest Parent"
-msgstr "Ältesten Vorgänger auswählen"
-
-msgid "Select Child"
-msgstr "Nachfolger auswählen"
-
-msgid "Select Newest Child"
-msgstr "Jüngsten Nachfolger auswählen"
-
-#, fuzzy
-msgid "Apply Patches"
-msgstr "Patches exportieren"
-
 msgid ""
 "\n"
 "            <p>\n"
@@ -1259,297 +26,6 @@ msgid ""
 "                patches to the list\n"
 "            </p>\n"
 "            "
-msgstr ""
-
-msgid "Add patches (+)"
-msgstr ""
-
-#, fuzzy
-msgid "Remove selected (Delete)"
-msgstr "Externer Zweig gelöscht"
-
-#, fuzzy
-msgid "Select patch file(s)..."
-msgstr "Lösche Datei(en)..."
-
-msgid "Search"
-msgstr "Suchen"
-
-msgid "Browse..."
-msgstr "..."
-
-msgid "yyyy-MM-dd"
-msgstr ""
-
-msgid "Search by Expression"
-msgstr "Regulärer Ausdruck"
-
-msgid "Search by Path"
-msgstr "Datei"
-
-msgid "Search Commit Messages"
-msgstr "In Versionsbeschreibungen"
-
-msgid "Search Diffs"
-msgstr "In Versionsunterschieden"
-
-msgid "Search Authors"
-msgstr "Autor"
-
-msgid "Search Committers"
-msgstr "Eintragender"
-
-msgid "Search Date Range"
-msgstr "Datum von-bis"
-
-msgid "Choose Paths"
-msgstr "Pfad wählen"
-
-msgid "Spelling Suggestions"
-msgstr "Rechtschreibvorschläge"
-
-msgid "Detect conflict markers in unmerged files"
-msgstr ""
-
-msgid "User Name"
-msgstr "Benutzername"
-
-msgid "Email Address"
-msgstr "E-Mail-Adresse"
-
-msgid "Merge Verbosity"
-msgstr "Ausführlichkeit der Meldungen beim Zusammenführen"
-
-msgid "Number of Diff Context Lines"
-msgstr "Anzahl der Kontextzeilen beim Vergleich"
-
-msgid "Summarize Merge Commits"
-msgstr "Zusammenfassung beim Zusammenführen anzeigen"
-
-msgid "Show Diffstat After Merge"
-msgstr "Vergleichsstatistik nach Zusammenführen anzeigen"
-
-msgid "Display Untracked Files"
-msgstr ""
-
-msgid "Detect Conflict Markers"
-msgstr ""
-
-msgid "Fixed-Width Font"
-msgstr "Schriftart"
-
-msgid "Font Size"
-msgstr "Schriftgröße"
-
-msgid "Tab Width"
-msgstr "Tabulatorweite"
-
-msgid "Insert spaces instead of tabs"
-msgstr ""
-
-msgid "Text Width"
-msgstr "Textbreite"
-
-msgid "Auto-Wrap Lines"
-msgstr "Zeilen automatisch umbrechen"
-
-msgid "Editor"
-msgstr "Editor"
-
-msgid "History Browser"
-msgstr "Werkzeug für die Verlaufsansicht"
-
-#, fuzzy
-msgid "Blame Viewer"
-msgstr "Datei-Browser"
-
-msgid "Diff Tool"
-msgstr "Werkzeug zum Dateivergleich"
-
-msgid "Merge Tool"
-msgstr "Werkzeug zum Zusammenführen"
-
-msgid "Keep *.orig Merge Backups"
-msgstr "Sicherheitskopie beim Zusammenführen anlegen (Datei.orig)"
-
-msgid "Sort bookmarks alphabetically"
-msgstr ""
-
-msgid ""
-"Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
-
-msgid "Save GUI Settings"
-msgstr "Einstellungen der Programmoberfläche sichern"
-
-#, fuzzy
-msgid "Check spelling"
-msgstr "Rechtschreibung prüfen"
-
-msgid "All Repositories"
-msgstr "Alle Projektarchive"
-
-msgid "Current Repository"
-msgstr "Aktuelles Projektarchiv"
-
-msgid "Settings"
-msgstr "Allgemein"
-
-msgid "Loading..."
-msgstr "Lade..."
-
-msgid "Ignore changes in whitespace at EOL"
-msgstr "Leerzeichen am Zeilenende ignorieren"
-
-msgid "Ignore changes in amount of whitespace"
-msgstr "Anzahl von Leerzeichen ignorieren"
-
-msgid "Ignore all whitespace"
-msgstr "Alle Leerzeichen ignorieren"
-
-msgid "Show whole surrounding functions of changes"
-msgstr "Gesamte übergeordnete Funktion anzeigen"
-
-msgid "Show line numbers"
-msgstr ""
-
-msgid "Diff Options"
-msgstr "Vergleichsoptionen"
-
-#, fuzzy
-msgid "Stage Selected Lines"
-msgstr "Änderungen an den ausgewählte Zeilen vormerken"
-
-msgid "Revert Selected Lines..."
-msgstr "Änderungen an ausgewählte Zeilen verwerfen"
-
-msgid "Stage Diff Hunk"
-msgstr "Änderungen am Abschnitt vormerken"
-
-msgid "Revert Diff Hunk..."
-msgstr "Abschnitt verwerfen..."
-
-#, fuzzy
-msgid "Unstage Selected Lines"
-msgstr "Änderungen an ausgewählten Zeilen nicht vormerken"
-
-msgid "Unstage Diff Hunk"
-msgstr "Änderungen am Abschnitt nicht vormerken"
-
-msgid "Revert Selected Lines?"
-msgstr "Möchten Sie die Änderungen an den ausgewählten Zeilen verwerfen?"
-
-msgid "Revert Selected Lines"
-msgstr "Änderungen an den ausgewählten Zeilen verwerfen"
-
-msgid "Revert Diff Hunk?"
-msgstr "Möchten Sie den Abschnitt verwerfen?"
-
-msgid "Revert Diff Hunk"
-msgstr "Abschnitt verwerfen"
-
-msgid "Recently Modified Files"
-msgstr "Kürzlich geänderte Dateien suchen"
-
-msgid " commits ago"
-msgstr " Versionen davor"
-
-msgid "Showing changes since"
-msgstr "Änderungen seit"
-
-#, fuzzy
-msgid "Expand all"
-msgstr "Ausklappen"
-
-#, fuzzy
-msgid "Collapse all"
-msgstr "Zuklappen"
-
-msgid "About git-cola"
-msgstr "Über git-cola"
-
-#, fuzzy
-msgid "Version"
-msgstr "Version"
-
-#, fuzzy
-msgid "Authors"
-msgstr "Autor"
-
-msgid "Translators"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"            Git Cola version %(cola_version)s %(build_version)s\n"
-"        <ul>\n"
-"            <li> %(platform_version)s\n"
-"            <li> Python (%(python_path)s) %(python_version)s\n"
-"            <li> Git %(git_version)s\n"
-"            <li> Qt %(qt_version)s\n"
-"            <li> QtPy %(qtpy_version)s\n"
-"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
-"        </ul>\n"
-"    "
-msgstr ""
-
-msgid "Email contributor"
-msgstr ""
-
-msgid "Maintainer (since 2007) and developer"
-msgstr ""
-
-msgid "Developer"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"        Please use %(bug_link)s to report issues.\n"
-"        <br>\n"
-"    "
-msgstr ""
-
-msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
-
-msgid "Brazilian translation"
-msgstr ""
-
-msgid "Simplified Chinese translation"
-msgstr ""
-
-msgid "Ukranian translation"
-msgstr ""
-
-msgid "Indonesian translation"
-msgstr ""
-
-msgid "German translation"
-msgstr ""
-
-msgid "Russian translation"
-msgstr ""
-
-msgid "Turkish translation"
-msgstr ""
-
-msgid "French translation"
-msgstr ""
-
-msgid "Czech translation"
-msgstr ""
-
-msgid "Spanish translation"
-msgstr ""
-
-msgid "Hungarian translation"
-msgstr ""
-
-msgid "Polish translation"
 msgstr ""
 
 #, python-format
@@ -1571,8 +47,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or "
-"updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -1581,23 +56,188 @@ msgid ""
 "    "
 msgstr ""
 
-msgid "hotkeys.html"
-msgstr "hotkeys_de.html"
-
-msgid "Shortcuts"
-msgstr "Tastenkürzel"
-
-msgid "git-cola"
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola version %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
 msgstr ""
 
-msgid "New..."
-msgstr "Neu..."
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"        Please use %(bug_link)s to report issues.\n"
+"        <br>\n"
+"    "
+msgstr ""
 
-msgid "Select Repository..."
-msgstr "Wähle Projektarchiv..."
+#, python-format
+msgid ""
+"\n"
+"        Format String Variables\n"
+"        -----------------------\n"
+"          %(path)s  =  relative file path\n"
+"       %(abspath)s  =  absolute file path\n"
+"       %(dirname)s  =  relative directory path\n"
+"    %(absdirname)s  =  absolute directory path\n"
+"      %(filename)s  =  file basename\n"
+"      %(basename)s  =  file basename without extension\n"
+"           %(ext)s  =  file extension\n"
+msgstr ""
 
-msgid "Select manually..."
-msgstr "Selbst auswählen..."
+msgid ""
+"\n"
+"Commands\n"
+"--------\n"
+"pick = use commit\n"
+"reword = use commit, but edit the commit message\n"
+"edit = use commit, but stop for amending\n"
+"squash = use commit, but meld into previous commit\n"
+"fixup = like \"squash\", but discard this commit's log message\n"
+"exec = run command (the rest of the line) using shell\n"
+"\n"
+"These lines can be re-ordered; they are executed from top to bottom.\n"
+"\n"
+"If you disable a line here THAT COMMIT WILL BE LOST.\n"
+"\n"
+"However, if you disable everything, the rebase will be aborted.\n"
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"? = show help\n"
+"j = move down\n"
+"k = move up\n"
+"J = shift row down\n"
+"K = shift row up\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacebar = toggle enabled\n"
+"\n"
+"ctrl+enter = accept changes and rebase\n"
+"ctrl+q     = cancel and abort the rebase\n"
+"ctrl+d     = launch difftool\n"
+msgstr ""
+
+msgid ""
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"J, Down     = Move Down\n"
+"K, Up       = Move Up\n"
+"Enter       = Edit Selected Files\n"
+"Spacebar    = Open File Using Default Application\n"
+"Ctrl + L    = Focus Text Entry Field\n"
+"?           = Show Help\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
+msgstr ""
+
+msgid " - DAG"
+msgstr " - Verlauf"
+
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" wurde von \"%(remote)s\" gelöscht."
+
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr "Das Kommando \"%(command)s\" wurde mit dem Code \"%(status)d\" beendet."
+
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr "\"%(command)s\" wurde mit Code %(status)d beendet"
+
+#, fuzzy, python-format
+msgid "\"%s\" already exists"
+msgstr "Der Zweig »%s« existiert bereits."
+
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr "\"%s\" existiert bereits, git-cola wird ein neues Verzeichnis anlegen."
+
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" erwartet, dass eine Datei ausgewählt wird."
+
+msgid "#"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr "%s: %s - Übersicht"
+
+#, fuzzy, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr "%s: %s - Verlauf"
+
+#, python-format
+msgid "%d days ago"
+msgstr "vor %d Tagen"
+
+#, python-format
+msgid "%d hours ago"
+msgstr "vor %d Stunden"
+
+#, python-format
+msgid "%d minutes ago"
+msgstr "vor %d Minuten"
+
+#, python-format
+msgid "%d patch(es) applied."
+msgstr "%d Patch(es) angewendet"
+
+#, python-format
+msgid "%d skipped"
+msgstr "%d übersprungen"
+
+#, python-format
+msgid ""
+"%s appears to contain merge conflicts.\n"
+"\n"
+"You should probably skip this file.\n"
+"Stage it anyways?"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "%s is not a Git repository."
+msgstr "Git Projektarchiv:"
+
+#, python-format
+msgid "%s will be removed from your bookmarks."
+msgstr ""
+
+#, python-format
+msgid "%s will be removed from your recent repositories."
+msgstr ""
+
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "Fehler: Datei oder Verzeichnis »%s« nicht gefunden"
+
+msgid "&Edit"
+msgstr "Bearbeiten"
+
+msgid "&File"
+msgstr "Projektarchiv"
+
+#, fuzzy
+msgid "(Amending)"
+msgstr "Am Nachbessern"
 
 msgid "*** Branch Point ***"
 msgstr "*** Abzweigung ***"
@@ -1605,58 +245,400 @@ msgstr "*** Abzweigung ***"
 msgid "*** Sandbox ***"
 msgstr "*** Arbeitsbereich ***"
 
-msgid "Branch Diff Viewer"
-msgstr "Zweige vergleichen"
-
-msgid "File Differences"
-msgstr "Dateiunterschiede"
-
-msgid "command-line arguments"
-msgstr "Kommandozeilenargumente"
-
-msgid "Choose the \"git grep\" regular expression mode"
+msgid "<path> ..."
 msgstr ""
+
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Eine Vorlage für die Versionsbeschreibung ist noch nicht festgelegt.\n"
+"Legen Sie bitte zuerst mit \"git config commit.template\" eine Vorlage fest."
+
+#, python-format
+msgid "A hook must be provided at \"%s\""
+msgstr ""
+
+#, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Eine Ablage mit dem Namen »%s« existiert bereits."
+
+msgid "Abort"
+msgstr "Abbrechen"
+
+msgid "Abort Action"
+msgstr "Befehl abbrechen"
+
+msgid "Abort Merge"
+msgstr "Zusammenführung abbrechen"
+
+msgid "Abort Merge..."
+msgstr "Zusammenführung abbrechen..."
+
+msgid "Abort the action?"
+msgstr "Möchten Sie den Befehl abbrechen?"
+
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Achtung:\n"
+"Wenn Sie die Zusammenführung abbrechen, gehen alle noch nicht versionierten Änderungen unwiederbringlich verloren."
+
+msgid "Aborting the current merge?"
+msgstr "Möchten Sie die Zusammenführung abbrechen?"
+
+msgid "About"
+msgstr "Über git-cola"
+
+msgid "About git-cola"
+msgstr "Über git-cola"
+
+msgid "Accept"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Accept changes and rebase\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+"Vorgemerkte Änderungen versionieren\n"
+"Tastenkürzel: Strg+Enter"
+
+#, fuzzy
+msgid "Action Name"
+msgstr "Befehle"
+
+msgid "Actions"
+msgstr "Befehle"
+
+msgid "Actions..."
+msgstr "Befehle..."
+
+msgid "Add"
+msgstr "Hinzufügen"
+
+#, fuzzy
+msgid "Add Favorite"
+msgstr "Hinzufügen"
+
+msgid "Add Remote"
+msgstr "Hinzufügen"
+
+msgid "Add Separator"
+msgstr ""
+
+msgid "Add Toolbar"
+msgstr ""
+
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
+"Verwenden Sie die Knöpfe unterhalb der Liste auf der linken Seite,\n"
+"um externe Projektarchive zur Liste hinzuzufügen, zu löschen oder\n"
+"die Liste zu aktualisieren. Um den Namen eines externen Projekt-\n"
+"archivs zu ändern, wählen Sie es aus und drücken die \"Enter\"-\n"
+"Taste oder klicken doppelt mit der Maus darauf."
+
+msgid "Add new remote git repository"
+msgstr "Externes Projektarchiv hinzufügen"
+
+msgid "Add patches (+)"
+msgstr ""
+
+msgid "Add remote"
+msgstr "Externes Projektarchiv hinzufügen"
+
+msgid "Add to .gitignore"
+msgstr "Von Versionskontrolle ausschließen"
+
+#, fuzzy
+msgid "Add to Git Annex"
+msgstr "Von Versionskontrolle ausschließen"
+
+msgid "Add to Git LFS"
+msgstr ""
+
+#, fuzzy
+msgid "Additions"
+msgstr "Befehle"
+
+msgid "Advanced"
+msgstr "Erweitert"
+
+msgid "Age"
+msgstr "Alter"
+
+msgid "All Repositories"
+msgstr "Alle Projektarchive"
+
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgstr ""
+
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgstr ""
+
+msgid "Amend"
+msgstr "Ergänzen"
+
+msgid "Amend Commit"
+msgstr "Letzte Version nachbessern"
+
+msgid "Amend Last Commit"
+msgstr "Letzte Version nachbessern"
+
+msgid "Amend the published commit?"
+msgstr "Möchten Sie die veröffentlichte Version nachbessern?"
+
+msgid "Amending"
+msgstr "Am Nachbessern"
+
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Zurzeit wird noch ein Befehl ausgeführt.\n"
+"Wenn Sie ihn abbrechen, könnten Daten verloren gehen."
+
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+"Anstelle dessen wird eine einfache, nicht unterzeichnete Markierung erstellt.\n"
+"Möchten Sie fortfahren?"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+#, fuzzy
+msgid "Apply Patches"
+msgstr "Patches exportieren"
+
+#, fuzzy
+msgid "Apply Patches..."
+msgstr "Patches exportieren..."
+
+msgid "Apply the selected stash"
+msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
+
+msgid "Arguments"
+msgstr "Argumente"
+
+msgid "Attach"
+msgstr "Anhängen"
+
+msgid "Author"
+msgstr "Autor"
+
+#, fuzzy
+msgid "Authors"
+msgstr "Autor"
+
+msgid "Auto-Wrap Lines"
+msgstr "Zeilen automatisch umbrechen"
 
 msgid "Basic Regexp"
 msgstr ""
 
-msgid "Extended Regexp"
+#, fuzzy
+msgid "Blame Viewer"
+msgstr "Datei-Browser"
+
+#, fuzzy
+msgid "Blame..."
+msgstr "Umbenennen..."
+
+msgid "Bold with dark background font instead of italic headers (restart required)"
 msgstr ""
 
-msgid "Fixed String"
-msgstr ""
+msgid "Branch"
+msgstr "Zweig"
 
-msgid "Search using a POSIX basic regular expression"
-msgstr ""
-
-msgid "Search using a POSIX extended regular expression"
-msgstr ""
-
-msgid "Search for a fixed string"
-msgstr ""
-
-msgid "grep result..."
-msgstr "Suchergebnis"
-
-msgid "Shell arguments"
-msgstr "Als Kommandozeilenargumente"
-
+#, python-format
 msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
 msgstr ""
-"Führt die Suche in einer Kommandozeile aus.\n"
-"Setzen Sie Texte mit Leerzeichen in \"Gänsefüßchen\"."
+"Der Zweig \"%(branch)s\" existiert nicht im externen Projektarchiv \"%(remote)s\".\n"
+"Dort wird damit ein neuer Zweig angelegt."
 
-msgid "Sign off on this commit"
-msgstr "Unterzeichne diese Version"
+#, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Der Zweig »%s« existiert bereits."
 
-msgid "Commit staged changes"
-msgstr "Vorgemerkte Änderungen versionieren"
+msgid "Branch Diff Viewer"
+msgstr "Zweige vergleichen"
+
+msgid "Branch Exists"
+msgstr "Zweig existiert bereits"
+
+msgid "Branch Name"
+msgstr "Name des Zweigs"
+
+#, python-format
+msgid "Branch: %s"
+msgstr "Zweig: %s"
+
+#, fuzzy
+msgid "Branches"
+msgstr "Zweig"
+
+msgid "Branches..."
+msgstr "Zweige..."
+
+msgid "Brazilian translation"
+msgstr ""
+
+msgid "Browse"
+msgstr "Ansehen"
+
+msgid "Browse Commits..."
+msgstr "Zweig zur Ansicht wählen"
+
+msgid "Browse Current Branch..."
+msgstr "Verzeichnisstruktur ansehen (aktueller Zweig)"
+
+msgid "Browse Other Branch..."
+msgstr "Verzeichnisstruktur ansehen (beliebiger Zweig)..."
+
+msgid "Browse..."
+msgstr "..."
+
+msgid "Browser"
+msgstr "Verzeichnisstruktur"
+
+#, python-format
+msgid "Browsing %s"
+msgstr "Verzeichnisstruktur von »%s«"
+
+msgid "Bypass Commit Hooks"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#, fuzzy
+msgid ""
+"Cancel rebase\n"
+"Shortcut: Ctrl+Q"
+msgstr ""
+"Vorgemerkte Änderungen versionieren\n"
+"Tastenkürzel: Strg+Enter"
+
+msgid "Cannot Amend"
+msgstr "Fehler beim Ergänzen"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a blame viewer"
+msgstr ""
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
+msgstr ""
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr ""
+
+msgid "Changed Upstream"
+msgstr "Im Quell-Projektarchiv geändert"
+
+msgid "Check Spelling"
+msgstr "Rechtschreibung prüfen"
+
+#, fuzzy
+msgid "Check spelling"
+msgstr "Rechtschreibung prüfen"
+
+msgid "Checkout"
+msgstr "Umstellen"
+
+msgid "Checkout After Creation"
+msgstr "Zweig nach dem Erstellen im Arbeitsbereich bearbeiten"
+
+msgid "Checkout Branch"
+msgstr "Zweig wechseln"
+
+#, fuzzy
+msgid "Checkout Detached HEAD"
+msgstr "Zweig wechseln"
+
+#, fuzzy
+msgid "Checkout as new branch"
+msgstr "Zweig wechseln"
+
+msgid "Checkout..."
+msgstr "Wechseln..."
+
+msgid "Cherry Pick"
+msgstr "Einzelne Version übernehmen"
+
+msgid "Cherry-Pick Commit"
+msgstr "Einzelne Version übernehmen"
+
+msgid "Cherry-Pick..."
+msgstr "Version übernehmen..."
+
+msgid "Choose Paths"
+msgstr "Pfad wählen"
+
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr ""
+
+#, fuzzy
+msgid "Clear Default Repository"
+msgstr "Aktuelles Projektarchiv"
+
+#, fuzzy
+msgid "Clear commit message"
+msgstr "In Versionsbeschreibungen"
+
+#, fuzzy
+msgid "Clear commit message?"
+msgstr "In Versionsbeschreibungen"
 
 #, fuzzy
 msgid "Clear..."
 msgstr "Schließen..."
+
+#, fuzzy
+msgid "Clone Repository"
+msgstr "Projektarchiv klonen"
+
+msgid "Clone..."
+msgstr "Klonen..."
+
+#, fuzzy, python-format
+msgid "Cloning repository at %s"
+msgstr "Projektarchiv klonen"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Close..."
+msgstr "Schließen..."
+
+#, fuzzy
+msgid "Collapse all"
+msgstr "Zuklappen"
+
+#, fuzzy
+msgid "Command"
+msgstr "Version"
+
+msgid "Commit"
+msgstr "Version"
+
+msgid "Commit failed"
+msgstr "Versionierung fehlgeschlagen."
+
+msgid "Commit staged changes"
+msgstr "Vorgemerkte Änderungen versionieren"
 
 msgid ""
 "Commit staged changes\n"
@@ -1665,40 +647,875 @@ msgstr ""
 "Vorgemerkte Änderungen versionieren\n"
 "Tastenkürzel: Strg+Enter"
 
-msgid "Actions..."
-msgstr "Befehle..."
+msgid "Commit summary"
+msgstr "Kurzbeschreibung der Version"
 
-msgid "Bypass Commit Hooks"
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
 msgstr ""
+
+msgid "Commit@@verb"
+msgstr "Version aufnehmen"
+
+msgid "Compare"
+msgstr "Vergleichen"
+
+#, fuzzy
+msgid "Compare All"
+msgstr "Vergleichen"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr ""
+
+msgid "Configure toolbar"
+msgstr ""
+
+msgid "Console"
+msgstr "Meldungen"
+
+msgid "Continue"
+msgstr "Fortsetzen"
+
+msgid "Copy"
+msgstr "Kopieren"
+
+#, fuzzy
+msgid "Copy Basename to Clipboard"
+msgstr "Kopiere Pfad in Zwischenablage"
+
+#, fuzzy
+msgid "Copy Leading Path to Clipboard"
+msgstr "Kopiere Pfad in Zwischenablage"
+
+msgid "Copy Path to Clipboard"
+msgstr "Kopiere Pfad in Zwischenablage"
+
+#, fuzzy
+msgid "Copy Relative Path to Clipboard"
+msgstr "Kopiere Pfad in Zwischenablage"
+
+msgid "Copy SHA-1"
+msgstr "Eindeutigen Schlüssel der Version kopieren"
+
+#, fuzzy
+msgid "Copy..."
+msgstr "Kopieren"
+
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr "Die Adresse \"%s\" lässt sich nicht auswerten."
+
+msgid "Create Branch"
+msgstr "Zweig erstellen"
+
+msgid "Create Patch"
+msgstr "Patch erstellen"
+
+msgid "Create Remote Branch"
+msgstr "Neuen Zweig im externen Projektarchiv erzeugen"
 
 #, fuzzy
 msgid "Create Signed Commit"
 msgstr "Änderung %s übertragen:"
 
-msgid "Check Spelling"
-msgstr "Rechtschreibung prüfen"
+msgid "Create Tag"
+msgstr "Markierung erzeugen"
 
-msgid "Load Previous Commit Message"
-msgstr "Lade zuletzt verwendete Versionsbeschreibung"
+msgid "Create Tag..."
+msgstr "Neue Markierung..."
+
+msgid "Create Unsigned Tag"
+msgstr "Erzeuge nicht unterzeichnete Markierung"
+
+msgid "Create a merge commit even when the merge resolves as a fast-forward"
+msgstr ""
+
+msgid "Create a new remote branch?"
+msgstr "Möchten Sie einen neuen Zweig im externen Projektarchiv erzeugen?"
+
+msgid "Create..."
+msgstr "Neu..."
+
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Erzeuge eine Markierung mit dem Namen \"%s\""
+
+msgid "Current Repository"
+msgstr "Aktuelles Projektarchiv"
+
+msgid "Custom Copy Actions"
+msgstr ""
+
+#, fuzzy
+msgid "Customize..."
+msgstr "Schließen..."
+
+msgid "Cut"
+msgstr "Ausschneiden"
+
+msgid "Czech translation"
+msgstr ""
+
+msgid "DAG..."
+msgstr "Verlauf"
+
+msgid "Date, Time"
+msgstr "Datum und Zeit"
+
+msgid "Delete"
+msgstr "Löschen"
+
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr "Wollen Sie %d Datei(en) löschen?"
+
+#, fuzzy
+msgid "Delete Bookmark"
+msgstr "Favoriten"
+
+#, fuzzy
+msgid "Delete Bookmark?"
+msgstr "Favoriten"
+
+msgid "Delete Branch"
+msgstr "Zweig löschen"
+
+msgid "Delete Files"
+msgstr "Lösche Dateien"
+
+msgid "Delete Files..."
+msgstr "Lösche Datei(en)..."
+
+msgid "Delete Files?"
+msgstr "Datei(en) löschen?"
+
+msgid "Delete Remote"
+msgstr "Externes Projektarchiv entfernen"
+
+msgid "Delete Remote Branch"
+msgstr "Externen Zweig löschen"
+
+msgid "Delete Remote Branch..."
+msgstr "Externen Zweig löschen..."
+
+msgid "Delete remote"
+msgstr "Externes Projektarchiv entfernen"
+
+#, python-format
+msgid "Delete remote \"%s\""
+msgstr "Entferne externes Projektarchiv \"%s\""
+
+msgid "Delete remote?"
+msgstr "Möchten Sie das externe Projektarchiv entfernen?"
+
+#, fuzzy
+msgid "Delete selected branch?"
+msgstr "Externen Zweig löschen"
+
+#, fuzzy
+msgid "Delete toolbar"
+msgstr "Favoriten"
+
+msgid "Delete..."
+msgstr "Löschen..."
+
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr "Fehler beim Löschen von \"%s\""
+
+#, fuzzy
+msgid "Deletions"
+msgstr "Löschen"
+
+msgid "Detach"
+msgstr "Loslösen"
+
+msgid "Detect Conflict Markers"
+msgstr ""
+
+msgid "Detect conflict markers in unmerged files"
+msgstr ""
+
+msgid "Developer"
+msgstr ""
+
+msgid "Diff"
+msgstr "Vergleich"
+
+msgid "Diff Against Predecessor..."
+msgstr "Mit einem Vorgänger vergleichen..."
+
+msgid "Diff Options"
+msgstr "Vergleichsoptionen"
+
+msgid "Diff Tool"
+msgstr "Werkzeug zum Dateivergleich"
+
+msgid "Diff selected -> this"
+msgstr "Auswahl mit diesem vergleichen"
+
+msgid "Diff this -> selected"
+msgstr "Mit Auswahl vergleichen"
+
+msgid "Diffstat"
+msgstr "Vergleichsstatistik"
+
+#, fuzzy
+msgid "Directory Exists"
+msgstr "Verzeichnis:"
+
+msgid "Display Untracked Files"
+msgstr ""
+
+msgid "Documentation"
+msgstr "Online-Hilfe"
+
+msgid "Drop"
+msgstr "Löschen"
+
+msgid "Drop Stash"
+msgstr "Ablage löschen"
+
+msgid "Drop Stash?"
+msgstr "Möchten Sie die Ablage löschen?"
+
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr "Möchten Sie die Ablage \"%s\" löschen?"
+
+msgid "Drop the selected stash"
+msgstr "Die ausgewählte Ablage löschen"
+
+#, fuzzy
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#, fuzzy
+msgid "Edit Rebase"
+msgstr "Anfang verschieben"
+
+msgid "Edit Remotes"
+msgstr "Externe Projektarchive verwalten"
+
+msgid "Edit Remotes..."
+msgstr "Externe Projektarchive verwalten..."
+
+msgid "Edit remotes by selecting them from the list"
+msgstr ""
+
+msgid "Edit selected paths"
+msgstr "Ausgewählten Pfad bearbeiten"
+
+#, fuzzy
+msgid "Edit..."
+msgstr "Bearbeiten"
+
+msgid "Editor"
+msgstr "Editor"
+
+msgid "Email Address"
+msgstr "E-Mail-Adresse"
+
+msgid "Email contributor"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+#, fuzzy
+msgid "Enter New Branch Name"
+msgstr "Name des Zweigs"
+
+#, fuzzy
+msgid "Enter a name for the new bare repo"
+msgstr "Geben Sie einen Namen für die Ablage an"
+
+msgid "Enter a name for the stash"
+msgstr "Geben Sie einen Namen für die Ablage an"
+
+msgid "Error"
+msgstr "Fehler"
+
+msgid "Error Cloning"
+msgstr "Fehler beim Klonen"
+
+msgid "Error Creating Branch"
+msgstr "Fehler beim Erstellen des Zweigs"
+
+msgid "Error Creating Repository"
+msgstr "Fehler beim Anlegen des Projektarchivs"
+
+msgid "Error Deleting Remote Branch"
+msgstr "Fehler beim Löschen des externen Zweigs"
+
+#, fuzzy
+msgid "Error Editing File"
+msgstr "Fehler beim Laden des Vergleichs:"
+
+#, fuzzy
+msgid "Error Launching Blame Viewer"
+msgstr "Werkzeug für die Verlaufsansicht"
+
+#, fuzzy
+msgid "Error Launching History Browser"
+msgstr "Werkzeug für die Verlaufsansicht"
+
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr "Fehler beim Hinzufügen des externen Projektarchivs \"%s\""
+
+#, fuzzy
+msgid "Error creating stash"
+msgstr "Fehler beim Erstellen des Zweigs"
+
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Fehler beim Entfernen des externen Projektarchivs \"%s\""
+
+#, fuzzy, python-format
+msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
+msgstr "Markiere \"%(revision)s\" mit \"%(name)s\""
+
+#, fuzzy
+msgid "Error running prepare-commitmsg hook"
+msgstr "Aufrufen der Vor-Eintragen-Kontrolle..."
+
+msgid "Error: Cannot find commit template"
+msgstr "Fehler: ich kann die Textvorlage zum Versionieren der Änderungen nicht finden"
+
+msgid "Error: Stash exists"
+msgstr "Fehler: Diese Ablage existiert bereits"
+
+msgid "Error: Unconfigured commit template"
+msgstr "Fehler: Keine Textvorlage zum Versionieren von Änderungen festgelegt."
+
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Fehler: Konnte das Projektarchiv \"%s\" nicht klonen"
+
+#, fuzzy, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Fehler: Konnte das Projektarchiv \"%s\" nicht klonen"
+
+#, fuzzy, python-format
+msgid "Executing action %s"
+msgstr "Wörterbuch auf %s zurückgesetzt."
+
+#, fuzzy
+msgid "Expand all"
+msgstr "Ausklappen"
+
+msgid "Export Patches"
+msgstr "Patches exportieren"
+
+msgid "Export Patches..."
+msgstr "Patches exportieren..."
+
+msgid "Expression..."
+msgstr "Mit Suchausdruck..."
+
+msgid "Extended Regexp"
+msgstr ""
+
+msgid "Extended description..."
+msgstr "Ausführliche Versionsbeschreibung"
+
+msgid "Fast Forward Only"
+msgstr "Bei lokalen Änderungen abbrechen"
+
+#, fuzzy
+msgid "Fast-forward only"
+msgstr "Bei lokalen Änderungen abbrechen"
+
+#, fuzzy
+msgid "Favorite repositories"
+msgstr "Zuletzt benutzte Projektarchive"
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Fetch"
+msgstr "Abrufen"
+
+msgid "Fetch Tracking Branch"
+msgstr "Nachverfolgten Zweig abrufen"
+
+msgid "Fetch..."
+msgstr "Abrufen..."
+
+#, fuzzy
+msgid "File Browser..."
+msgstr "Übersicht"
+
+msgid "File Differences"
+msgstr "Dateiunterschiede"
+
+msgid "File Saved"
+msgstr "Datei gespeichert"
+
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Datei \"%s\" gespeichert"
+
+#, fuzzy
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr "Inotify ist deaktiviert, da \"cola.inotify\" auf FALSCH gesetzt ist.\n"
+
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgstr ""
+
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+msgstr ""
+
+#, fuzzy
+msgid "File system change monitoring: enabled.\n"
+msgstr "Benachrichtigungen über Änderungen im Dateisystem aktiviert.\n"
+
+#, fuzzy
+msgid "Filename"
+msgstr "Umbenennen"
+
+#, fuzzy
+msgid "Files"
+msgstr "Projektarchiv"
+
+#, fuzzy
+msgid "Filter branches..."
+msgstr "Abrufen..."
+
+#, fuzzy
+msgid "Filter paths..."
+msgstr "Abrufen..."
+
+#, fuzzy
+msgid "Find Files"
+msgstr "Projektarchiv"
+
+msgid "Fixed String"
+msgstr ""
+
+msgid "Fixed-Width Font"
+msgstr "Schriftart"
+
+msgid "Fixup"
+msgstr ""
 
 #, fuzzy
 msgid "Fixup Previous Commit"
 msgstr "Lade zuletzt verwendete Versionsbeschreibung"
 
-#, fuzzy
-msgid "Clear commit message?"
-msgstr "In Versionsbeschreibungen"
+msgid "Font Size"
+msgstr "Schriftgröße"
 
 #, fuzzy
-msgid "The commit message will be cleared."
-msgstr "Die folgenden Zeilen werden gleich gelöscht:"
+msgid "Force"
+msgstr "Veröffentlichung erzwingen"
 
-msgid "This cannot be undone.  Clear commit message?"
+msgid "Force Fetch"
+msgstr "Abruf erzwingen"
+
+msgid "Force Fetch?"
+msgstr "Möchten Sie den Abruf erzwingen?"
+
+msgid "Force Push"
+msgstr "Veröffentlichung erzwingen"
+
+msgid "Force Push?"
+msgstr "Möchten Sie die Veröffentlichung erzwingen?"
+
+#, python-format
+msgid "Force fetching from %s?"
+msgstr "Möchten Sie den Abruf von \"%s\" erzwingen?"
+
+#, python-format
+msgid "Force push to %s?"
+msgstr "Möchten Sie die Veröffentlichung in \"%s\" erzwingen?"
+
+msgid "Format String"
+msgstr ""
+
+msgid "French translation"
+msgstr ""
+
+msgid "GPG-sign the merge commit"
+msgstr ""
+
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Frage Informationen zu »%s« ab..."
+
+msgid "German translation"
+msgstr ""
+
+msgid "Get Commit Message Template"
+msgstr "Versionsbeschreibung aus Vorlage einfügen"
+
+msgid "Go Down"
+msgstr "Nach unten"
+
+msgid "Go Up"
+msgstr "Nach oben"
+
+msgid "Grab File..."
+msgstr "Datei extrahieren..."
+
+#, fuzzy
+msgid "Graph"
+msgstr "Suchen..."
+
+msgid "Grep"
+msgstr "Suchen..."
+
+msgid "Have you rebased/pulled lately?"
+msgstr "Haben Sie neulich Änderungen abgeholt und ggf. den Zweiganfang verschoben?"
+
+msgid "Help"
+msgstr "Hilfe"
+
+msgid "Help - Custom Copy Actions"
+msgstr ""
+
+msgid "Help - Find Files"
+msgstr ""
+
+msgid "Help - git-xbase"
+msgstr ""
+
+msgid "History Browser"
+msgstr "Werkzeug für die Verlaufsansicht"
+
+msgid "Hungarian translation"
+msgstr ""
+
+msgid "Ignore all whitespace"
+msgstr "Alle Leerzeichen ignorieren"
+
+msgid "Ignore changes in amount of whitespace"
+msgstr "Anzahl von Leerzeichen ignorieren"
+
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Leerzeichen am Zeilenende ignorieren"
+
+msgid "Ignore custom pattern"
 msgstr ""
 
 #, fuzzy
-msgid "Clear commit message"
-msgstr "In Versionsbeschreibungen"
+msgid "Ignore exact filename"
+msgstr "Alle Leerzeichen ignorieren"
+
+msgid "Ignore filename or pattern"
+msgstr ""
+
+msgid "Include tags "
+msgstr "Markierungen übernehmen"
+
+msgid "Indonesian translation"
+msgstr ""
+
+#, fuzzy
+msgid "Initialize Git Annex"
+msgstr "Initialisieren..."
+
+#, fuzzy
+msgid "Initialize Git LFS"
+msgstr "Initialisieren..."
+
+msgid "Insert spaces instead of tabs"
+msgstr ""
+
+msgid "Interactive Rebase"
+msgstr ""
+
+msgid "Invalid Revision"
+msgstr "Zweig oder Markierung ungültig"
+
+msgid "Keep *.orig Merge Backups"
+msgstr "Sicherheitskopie beim Zusammenführen anlegen (Datei.orig)"
+
+msgid "Keep Index"
+msgstr "Vormerkliste unverändert lassen"
+
+msgid "Keyboard Shortcuts"
+msgstr "Tastenkürzel"
+
+msgid "Launch Diff Tool"
+msgstr "Mit direktem Vorgänger vergleichen"
+
+#, fuzzy
+msgid "Launch Directory Diff Tool"
+msgstr "Mit direktem Vorgänger vergleichen"
+
+msgid "Launch Editor"
+msgstr "Mit Editor bearbeiten"
+
+#, fuzzy
+msgid "Launch Terminal"
+msgstr "Starte Werkzeug für die Zusammenführung"
+
+msgid ""
+"Launch external diff tool\n"
+"Shortcut: Ctrl+D"
+msgstr ""
+
+msgid "Launch git-cola"
+msgstr "Starte git-cola"
+
+msgid "Launch git-difftool against previous versions"
+msgstr "Vergleicht mit einer Vorgängerversion"
+
+msgid "Launch git-difftool on the current path"
+msgstr "Aktuellen Pfad im Vergleichswerkzeug öffnen"
+
+msgid "Load Commit Message"
+msgstr "Versionsbeschreibung aus Datei einfügen"
+
+msgid "Load Commit Message..."
+msgstr "Versionsbeschreibung aus Datei einfügen..."
+
+msgid "Load Previous Commit Message"
+msgstr "Lade zuletzt verwendete Versionsbeschreibung"
+
+msgid "Loading..."
+msgstr "Lade..."
+
+msgid "Local"
+msgstr "Lokal"
+
+msgid "Local Branch"
+msgstr "Lokaler Zweig"
+
+msgid "Local branch"
+msgstr "Lokalem Zweig"
+
+msgid "Lock Layout"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Maintainer (since 2007) and developer"
+msgstr ""
+
+msgid "Merge"
+msgstr "Zusammenführen"
+
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr "\"%(revision)s\" nach \"%(branch)s\" übernehmen"
+
+msgid "Merge Tool"
+msgstr "Werkzeug zum Zusammenführen"
+
+msgid "Merge Verbosity"
+msgstr "Ausführlichkeit der Meldungen beim Zusammenführen"
+
+msgid "Merge failed.  Conflict resolution is required."
+msgstr "Zusammenführen fehlgeschlagen. Konfliktauflösung ist notwendig."
+
+#, python-format
+msgid "Merge into \"%s\""
+msgstr "Zusammenführen in »%s«"
+
+#, fuzzy
+msgid "Merge into current branch"
+msgstr "Verzeichnisstruktur ansehen (aktueller Zweig)"
+
+msgid "Merge..."
+msgstr "Zusammenführen..."
+
+#, fuzzy
+msgid "Merging"
+msgstr "Zusammenführen"
+
+msgid "Message"
+msgstr "Beschreibung"
+
+msgid "Missing Commit Message"
+msgstr "Die Versionsbeschreibung fehlt"
+
+msgid "Missing Data"
+msgstr "Fehlende Daten"
+
+msgid "Missing Name"
+msgstr "Fehlender Name"
+
+msgid "Missing Revision"
+msgstr "Zweig oder Markierung fehlt"
+
+msgid "Missing Tag Message"
+msgstr "Die Markierung hat keine Beschreibung"
+
+msgid "Modified"
+msgstr "Geändert"
+
+msgid "More..."
+msgstr "Mehr..."
+
+msgid "Move Down"
+msgstr "Nach unten bewegen"
+
+msgid "Move Up"
+msgstr "Nach oben bewegen"
+
+msgid "Move files to trash"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Name for the new remote"
+msgstr "Name des neuen externen Projektarchivs"
+
+#, fuzzy
+msgid "New Bare Repository..."
+msgstr "Wähle Projektarchiv..."
+
+#, fuzzy
+msgid "New Repository..."
+msgstr "Wähle Projektarchiv..."
+
+msgid "New..."
+msgstr "Neu..."
+
+#, fuzzy
+msgid "Next File"
+msgstr "Wähle Datei aus"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "No Revision Specified"
+msgstr "Kein Zweig und keine Markierung ausgewählt"
+
+msgid ""
+"No changes to commit.\n"
+"\n"
+"You must stage at least 1 file before you can commit."
+msgstr ""
+"Keine Änderungen vorhanden, die versioniert werden könnten.\n"
+"\n"
+"Bitte stellen Sie mindestens eine geänderte Datei bereit."
+
+msgid "No commits exist in this branch."
+msgstr "In diesem Zweig sind keine Versionen gespeichert"
+
+#, fuzzy
+msgid "No fast forward"
+msgstr "Bei lokalen Änderungen abbrechen"
+
+#, fuzzy
+msgid "No fast-forward"
+msgstr "Bei lokalen Änderungen abbrechen"
+
+msgid "No repository selected."
+msgstr "Kein Projektarchiv ausgewählt."
+
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr "Achtung: Die lokale Vormerkliste wird dabei überschrieben!"
+
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
+"Achtung: Die Vormerkliste beim externen Projektarchiv wird dabei überschrieben!\n"
+"Haben Sie zuerst die externen Versionen bei sich übernommen?"
+
+msgid "Nothing to commit"
+msgstr "Keine Änderungen, die eingetragen werden können."
+
+msgid "Nothing to do"
+msgstr "Nichts zu tun"
+
+msgid "Number of Diff Context Lines"
+msgstr "Anzahl der Kontextzeilen beim Vergleich"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Open Git Repository..."
+msgstr "Projektarchiv öffnen"
+
+msgid "Open Parent Directory"
+msgstr "Übergeordnetes Verzeichnis öffnen"
+
+msgid "Open Recent"
+msgstr "Kürzlich verwendetes Projektarchiv öffnen"
+
+msgid "Open Using Default Application"
+msgstr "Mit der Standardanwendung öffnen"
+
+msgid "Open in New Window"
+msgstr ""
+
+#, fuzzy
+msgid "Open in New Window..."
+msgstr "Projektarchiv öffnen"
+
+msgid "Open..."
+msgstr "Öffnen..."
+
+#, fuzzy
+msgid "Other branches"
+msgstr "Abrufen..."
+
+msgid "Overwrite"
+msgstr "Überschreiben"
+
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr "Möchten Sie die Datei\"%s\" überschreiben?"
+
+msgid "Overwrite File?"
+msgstr "Möchten Sie die Datei überschreiben?"
+
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr ""
+
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+"Führt die Suche in einer Kommandozeile aus.\n"
+"Setzen Sie Texte mit Leerzeichen in \"Gänsefüßchen\"."
+
+msgid "Partially Staged"
+msgstr "Teilweise vorgemerkt"
+
+msgid "Paste"
+msgstr "Einfügen"
+
+msgid "Patch(es) Applied"
+msgstr "Patch(es) angewendet"
+
+msgid "Path"
+msgstr ""
+
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr "Quell-Pfad oder -URL"
+
+msgid "Pick"
+msgstr ""
+
+msgid "Pixel XOR"
+msgstr ""
+
+msgid "Please provide both a branch name and revision expression."
+msgstr "Bitte geben Sie Zweig und Revision an."
+
+msgid "Please select a file"
+msgstr "Bitte wählen Sie eine Datei"
+
+msgid "Please specify a name for the new tag."
+msgstr "Bitte geben Sie einen Namen für die neue Markierung an."
+
+msgid "Please specify a revision to tag."
+msgstr "Bitte wählen Sie einen Zweig zum markieren"
 
 msgid ""
 "Please supply a commit message.\n"
@@ -1719,162 +1536,27 @@ msgstr ""
 "\n"
 "- Rest: Eine ausführliche Beschreibung, warum diese Änderung hilfreich ist.\n"
 
-msgid "Missing Commit Message"
-msgstr "Die Versionsbeschreibung fehlt"
-
-msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit."
-msgstr ""
-"Keine Änderungen vorhanden, die versioniert werden könnten.\n"
-"\n"
-"Bitte stellen Sie mindestens eine geänderte Datei bereit."
-
-msgid "Would you like to stage and commit all modified files?"
-msgstr "Möchten Sie alle veränderten Dateien vormerken und versionieren?"
-
-msgid "Stage and commit?"
-msgstr "Vormerken und versionieren?"
-
-msgid "Stage and Commit"
-msgstr "Vormerken und versionieren"
-
-msgid "Nothing to commit"
-msgstr "Keine Änderungen, die eingetragen werden können."
-
-msgid "Rewrite Published Commit?"
-msgstr "Möchten Sie die bereits veröffentlichte Version nochmals schreiben?"
-
-msgid ""
-"This commit has already been published.\n"
-"This operation will rewrite published history.\n"
-"You probably don't want to do this."
-msgstr ""
-"Diese Version wurde bereits veröffentlicht.\n"
-"Mit dieser Operation werden Sie den Verlauf im externen Projektarchiv "
-"verändern.Möchten Sie das wirklich?"
-
-msgid "Amend the published commit?"
-msgstr "Möchten Sie die veröffentlichte Version nachbessern?"
-
-msgid "Amend Commit"
-msgstr "Letzte Version nachbessern"
-
-msgid "More..."
-msgstr "Mehr..."
-
-#, fuzzy
-msgid "Select Commit"
-msgstr "Wählen Sie eine Versionsbeschreibung aus"
-
-msgid "Commit summary"
-msgstr "Kurzbeschreibung der Version"
-
-msgid "Extended description..."
-msgstr "Ausführliche Versionsbeschreibung"
-
-msgid "Revision to Merge"
-msgstr "Zusammenführen von Zweig oder Markierung"
-
-msgid "Visualize"
-msgstr "In Verlaufsansicht anzeigen"
-
-msgid "Squash the merged commits into a single commit"
+msgid "Point the current branch head to a new commit?"
 msgstr ""
 
-msgid "Squash"
-msgstr "Versionen vereinigen"
-
-msgid ""
-"Always create a merge commit when enabled, even when the merge is a fast-"
-"forward update"
+msgid "Polish translation"
 msgstr ""
 
-#, fuzzy
-msgid "No fast forward"
-msgstr "Bei lokalen Änderungen abbrechen"
-
-msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
-"uncommitted"
-msgstr ""
-
-msgid "GPG-sign the merge commit"
-msgstr ""
-
-msgid "Merge"
-msgstr "Zusammenführen"
-
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr "\"%(revision)s\" nach \"%(branch)s\" übernehmen"
-
-#, python-format
-msgid "Merge into \"%s\""
-msgstr "Zusammenführen in »%s«"
-
-msgid "No Revision Specified"
-msgstr "Kein Zweig und keine Markierung ausgewählt"
-
-msgid "You must specify a revision to view."
-msgstr ""
-"Bitte wählen Sie zuerst einen Zweig oder \n"
-"eine Markierung für die Verlaufsansicht aus."
-
-msgid "You must specify a revision to merge."
-msgstr ""
-"Sie müssen einen Zweig oder eine Markierung für die Zusammenführung "
-"auswählen."
-
-#, fuzzy
-msgid "Filename"
-msgstr "Umbenennen"
-
-#, fuzzy
-msgid "Additions"
-msgstr "Befehle"
-
-#, fuzzy
-msgid "Deletions"
-msgstr "Löschen"
-
-#, fuzzy
-msgid "Show History"
-msgstr "Verlauf anzeigen"
-
-msgid "Save Archive"
-msgstr "Als TAR- oder ZIP-Archiv exportieren"
+msgid "Preferences"
+msgstr "Einstellungen"
 
 msgid "Prefix"
 msgstr "Verzeichnis"
 
-msgid "Advanced"
-msgstr "Erweitert"
+#, fuzzy
+msgid "Prepare Commit Message"
+msgstr "In Versionsbeschreibungen"
 
-msgid "File Saved"
-msgstr "Datei gespeichert"
+msgid "Prevent \"Stage\" from staging all files when nothing is selected"
+msgstr ""
 
-#, python-format
-msgid "File saved to \"%s\""
-msgstr "Datei \"%s\" gespeichert"
-
-msgid "Overwrite File?"
-msgstr "Möchten Sie die Datei überschreiben?"
-
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr "Die Datei \"%s\" existiert bereits und wird überschrieben."
-
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr "Möchten Sie die Datei\"%s\" überschreiben?"
-
-msgid "Overwrite"
-msgstr "Überschreiben"
-
-msgid "Remote Branch"
-msgstr "Externer Zweig"
+msgid "Previous File"
+msgstr ""
 
 msgid "Prompt on creation"
 msgstr ""
@@ -1884,574 +1566,1268 @@ msgid "Prompt when pushing creates new remote branches"
 msgstr "Möchten Sie einen neuen Zweig im externen Projektarchiv erzeugen?"
 
 #, fuzzy
-msgid "Fast-forward only"
-msgstr "Bei lokalen Änderungen abbrechen"
-
-msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge "
-"can be resolved as a fast-forward"
-msgstr ""
-
-#, fuzzy
-msgid "No fast-forward"
-msgstr "Bei lokalen Änderungen abbrechen"
-
-msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
-
-#, fuzzy
-msgid "Force"
-msgstr "Veröffentlichung erzwingen"
-
-msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
-"repository to lose commits; use it with care"
-msgstr ""
-
-msgid "Include tags "
-msgstr "Markierungen übernehmen"
-
-#, fuzzy
 msgid "Prune "
 msgstr "Aufräumen von"
+
+msgid "Pull"
+msgstr "Abrufen und zusammenführen"
+
+msgid "Pull..."
+msgstr "Abrufen und zusammenführen..."
+
+msgid "Push"
+msgstr "Veröffentlichen"
+
+msgid "Push..."
+msgstr "Veröffentlichen..."
+
+msgid "Quit"
+msgstr "Beenden"
+
+msgid "Rebase"
+msgstr "Anfang verschieben"
+
+#, fuzzy, python-format
+msgid "Rebase onto %s"
+msgstr "Zweiganfang verschieben"
+
+#, fuzzy
+msgid "Rebase stopped"
+msgstr "Zweiganfang verschieben"
 
 msgid "Rebase the current branch instead of merging"
 msgstr ""
 
 #, fuzzy
-msgid "Set upstream"
-msgstr "Neuen Anfang auswählen"
+msgid "Rebasing"
+msgstr "Anfang verschieben"
 
-msgid "Configure the remote branch as the the new upstream"
+#, fuzzy
+msgid "Recent"
+msgstr "Zurücksetzen"
+
+#, fuzzy
+msgid "Recent repositories"
+msgstr "Zuletzt benutzte Projektarchive"
+
+#, fuzzy
+msgid "Recent repository count"
+msgstr "Zuletzt benutzte Projektarchive"
+
+msgid "Recently Modified Files"
+msgstr "Kürzlich geänderte Dateien suchen"
+
+msgid "Recently Modified Files..."
+msgstr "Kürzlich geänderte Dateien suchen..."
+
+msgid "Recovering a dropped stash is not possible."
+msgstr "Eine gelöschte Ablage kann nicht wiederhergestellt werden."
+
+msgid "Recovering lost commits may not be easy."
+msgstr "Verworfene Versionen können nur mit größerem Aufwand wiederhergestellt werden."
+
+msgid "Redo"
+msgstr "Wiederholen"
+
+msgid "Refresh"
+msgstr "Ansicht aktualisieren"
+
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
 msgstr ""
 
-#, python-format
-msgid "URL: %s"
-msgstr "URL: %s"
+msgid "Remote"
+msgstr "Externes Projektarchiv"
 
-msgid "No repository selected."
-msgstr "Kein Projektarchiv ausgewählt."
+msgid "Remote Branch"
+msgstr "Externer Zweig"
 
-#, python-format
-msgid ""
-"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
-"A new remote branch will be published."
-msgstr ""
-"Der Zweig \"%(branch)s\" existiert nicht im externen Projektarchiv "
-"\"%(remote)s\".\n"
-"Dort wird damit ein neuer Zweig angelegt."
-
-msgid "Create a new remote branch?"
-msgstr "Möchten Sie einen neuen Zweig im externen Projektarchiv erzeugen?"
-
-msgid "Create Remote Branch"
-msgstr "Neuen Zweig im externen Projektarchiv erzeugen"
-
-msgid "Force Fetch?"
-msgstr "Möchten Sie den Abruf erzwingen?"
-
-msgid "Non-fast-forward fetch overwrites local history!"
-msgstr "Achtung: Die lokale Vormerkliste wird dabei überschrieben!"
-
-#, python-format
-msgid "Force fetching from %s?"
-msgstr "Möchten Sie den Abruf von \"%s\" erzwingen?"
-
-msgid "Force Fetch"
-msgstr "Abruf erzwingen"
-
-msgid "Force Push?"
-msgstr "Möchten Sie die Veröffentlichung erzwingen?"
-
-msgid ""
-"Non-fast-forward push overwrites published history!\n"
-"(Did you pull first?)"
-msgstr ""
-"Achtung: Die Vormerkliste beim externen Projektarchiv wird dabei "
-"überschrieben!\n"
-"Haben Sie zuerst die externen Versionen bei sich übernommen?"
-
-#, python-format
-msgid "Force push to %s?"
-msgstr "Möchten Sie die Veröffentlichung in \"%s\" erzwingen?"
-
-msgid "Force Push"
-msgstr "Veröffentlichung erzwingen"
-
-msgid "Have you rebased/pulled lately?"
-msgstr ""
-"Haben Sie neulich Änderungen abgeholt und ggf. den Zweiganfang verschoben?"
-
-msgid "Fetch"
-msgstr "Abrufen"
-
-msgid "Edit Remotes"
-msgstr "Externe Projektarchive verwalten"
-
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
-msgstr ""
-"Verwenden Sie die Knöpfe unterhalb der Liste auf der linken Seite,\n"
-"um externe Projektarchive zur Liste hinzuzufügen, zu löschen oder\n"
-"die Liste zu aktualisieren. Um den Namen eines externen Projekt-\n"
-"archivs zu ändern, wählen Sie es aus und drücken die \"Enter\"-\n"
-"Taste oder klicken doppelt mit der Maus darauf."
+msgid "Remote Branch Deleted"
+msgstr "Externer Zweig gelöscht"
 
 msgid "Remote git repositories - double-click to rename"
 msgstr "Externe Projektarchive - zum Umbenennen doppelklicken"
 
-msgid "Add new remote git repository"
-msgstr "Externes Projektarchiv hinzufügen"
-
-msgid "Delete remote"
-msgstr "Externes Projektarchiv entfernen"
+#, fuzzy
+msgid "Remove"
+msgstr "Externes Projektarchiv"
 
 #, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "Frage Informationen zu »%s« ab..."
+msgid "Remove %s from the recent list?"
+msgstr ""
 
-msgid "Add Remote"
-msgstr "Hinzufügen"
+#, fuzzy
+msgid "Remove Element"
+msgstr "Externes Projektarchiv"
 
-msgid "Add remote"
-msgstr "Externes Projektarchiv hinzufügen"
+#, fuzzy
+msgid "Remove selected (Delete)"
+msgstr "Externer Zweig gelöscht"
 
-msgid "Name for the new remote"
-msgstr "Name des neuen externen Projektarchivs"
-
-msgid "URL"
-msgstr "URL"
+msgid "Rename"
+msgstr "Umbenennen"
 
 #, fuzzy, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr "%s: %s - Übersicht"
+msgid "Rename \"%s\""
+msgstr "Umbenennen"
 
 #, fuzzy
-msgid "(Amending)"
-msgstr "Am Nachbessern"
+msgid "Rename Branch"
+msgstr "Externer Zweig"
 
 #, fuzzy
-msgid "View history for selected paths"
-msgstr "Zeige den Verlauf für den ausgewählten Pfad"
+msgid "Rename Branch..."
+msgstr "Externer Zweig"
 
 #, fuzzy
-msgid "Stage/unstage selected paths for commit"
-msgstr "Änderungen am ausgewählten Pfad vormerken"
-
-msgid "Untrack Selected"
-msgstr "Auswahl von Versionskontrolle ausnehmen"
-
-msgid "Stop tracking paths"
-msgstr "Führe keine Versionskontrolle für den ausgewählten Pfad durch"
-
-msgid "Launch git-difftool on the current path"
-msgstr "Aktuellen Pfad im Vergleichswerkzeug öffnen"
-
-msgid "Diff Against Predecessor..."
-msgstr "Mit einem Vorgänger vergleichen..."
-
-msgid "Launch git-difftool against previous versions"
-msgstr "Vergleicht mit einer Vorgängerversion"
-
-#, fuzzy
-msgid "Revert unstaged changes to selected paths"
-msgstr "Verwirft Änderungen am ausgewählten Pfad"
-
-#, fuzzy
-msgid "Revert uncommitted changes to selected paths"
-msgstr "Verwirft Änderungen am ausgewählten Pfad"
-
-msgid "Edit selected paths"
-msgstr "Ausgewählten Pfad bearbeiten"
-
-msgid "Select Previous Version"
-msgstr "Vorherige Version auswählen"
-
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr ""
-"Datei \"%(filename)s\" von \"%(ref)s\" nach \"%(destination)s\" gesichert"
-
-#, python-format
-msgid "Browsing %s"
-msgstr "Verzeichnisstruktur von »%s«"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Wähle Datei von \"%s\" aus"
-
-msgid "Select File"
-msgstr "Wähle Datei aus"
-
-msgid "Branch Name"
-msgstr "Name des Zweigs"
-
-msgid "Starting Revision"
-msgstr "Abzweigen von"
-
-msgid "Local branch"
-msgstr "Lokalem Zweig"
-
-msgid "Tracking branch"
-msgstr "Nachverfolgtem Zweig"
-
-msgid "Update Existing Branch:"
+msgid "Rename Existing Branch"
 msgstr "Existierenden Zweig aktualisieren:"
 
-msgid "No"
-msgstr "Nein"
+msgid "Rename Remote"
+msgstr "Externes Projektarchiv umbenennen"
 
-msgid "Fast Forward Only"
-msgstr "Bei lokalen Änderungen abbrechen"
+#, fuzzy
+msgid "Rename Repository"
+msgstr "Projektarchiv klonen"
 
-msgid "Fetch Tracking Branch"
-msgstr "Nachverfolgten Zweig abrufen"
-
-msgid "Checkout After Creation"
-msgstr "Zweig nach dem Erstellen im Arbeitsbereich bearbeiten"
-
-msgid "Missing Data"
-msgstr "Fehlende Daten"
-
-msgid "Please provide both a branch name and revision expression."
-msgstr "Bitte geben Sie Zweig und Revision an."
+#, fuzzy
+msgid "Rename branch"
+msgstr "Externer Zweig"
 
 #, python-format
-msgid "Branch \"%s\" already exists."
-msgstr "Der Zweig »%s« existiert bereits."
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Benenne das externe Projektarchiv \"%(current)s\" um zu \"%(new)s\"."
 
-msgid "Branch Exists"
-msgstr "Zweig existiert bereits"
+msgid "Rename remote?"
+msgstr "Möchten Sie das externe Projektarchiv umbenennen?"
 
-#, python-format
-msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr ""
-"Beim Zurücksetzen von »\"%(branch)s\" « nach »\"%(revision)s\"« werden "
-"Versionen verworfen."
+#, fuzzy
+msgid "Rename selected paths"
+msgstr "Ausgewählten Pfad bearbeiten"
 
 #, python-format
-msgid "%d skipped"
-msgstr "%d übersprungen"
+msgid "Repository: %s"
+msgstr "Projektarchiv: %s"
 
-msgid "Recovering lost commits may not be easy."
-msgstr ""
-"Verworfene Versionen können nur mit größerem Aufwand wiederhergestellt "
-"werden."
+msgid "Reset"
+msgstr "Zurücksetzen"
 
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Möchten Sie \"%(branch)s\" auf \"%(revision)s\" zurücksetzen?"
 
+msgid "Reset Branch"
+msgstr "Zweig zurücksetzen"
+
+#, fuzzy
+msgid "Reset Branch Head"
+msgstr "Zweig zurücksetzen"
+
 msgid "Reset Branch?"
 msgstr "Zweig zurücksetzen?"
 
-msgid "Error Creating Branch"
-msgstr "Fehler beim Erstellen des Zweigs"
+msgid "Reset Worktree"
+msgstr ""
+
+msgid "Reset worktree?"
+msgstr ""
 
 #, python-format
-msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "Beim Zurücksetzen von »\"%(branch)s\" « nach »\"%(revision)s\"« werden Versionen verworfen."
+
+msgid "Revert Diff Hunk"
+msgstr "Abschnitt verwerfen"
+
+msgid "Revert Diff Hunk..."
+msgstr "Abschnitt verwerfen..."
+
+msgid "Revert Diff Hunk?"
+msgstr "Möchten Sie den Abschnitt verwerfen?"
+
+msgid "Revert Selected Lines"
+msgstr "Änderungen an den ausgewählten Zeilen verwerfen"
+
+msgid "Revert Selected Lines..."
+msgstr "Änderungen an ausgewählte Zeilen verwerfen"
+
+msgid "Revert Selected Lines?"
+msgstr "Möchten Sie die Änderungen an den ausgewählten Zeilen verwerfen?"
+
+msgid "Revert Uncommitted Changes"
+msgstr "Unversionierte Änderungen zurücknehmen"
+
+msgid "Revert Uncommitted Changes?"
+msgstr "Möchten Sie die Änderungen verwerfen?"
+
+#, fuzzy
+msgid "Revert Uncommitted Edits..."
+msgstr "Nicht versionierte Änderungen zurücknehmen..."
+
+msgid "Revert Unstaged Changes"
+msgstr "Nehme nicht vorgemerkte Änderungen zurück"
+
+msgid "Revert Unstaged Changes?"
+msgstr "Wollen sie die nicht vorgemerkten Änderungen zurücknehmen?"
+
+msgid "Revert Unstaged Edits..."
+msgstr "Nicht vorgemerkte Änderungen zurücknehmen..."
+
+msgid "Revert the uncommitted changes?"
+msgstr "Möchten Sie die unversionierten Änderungen verwerfen?"
+
+msgid "Revert the unstaged changes?"
+msgstr "Möchten Sie die nicht vorgemerkten Änderungen zurücknehmen?"
+
+#, fuzzy
+msgid "Revert uncommitted changes to selected paths"
+msgstr "Verwirft Änderungen am ausgewählten Pfad"
+
+#, fuzzy
+msgid "Revert unstaged changes to selected paths"
+msgstr "Verwirft Änderungen am ausgewählten Pfad"
+
+msgid "Review"
+msgstr "Vergleichen"
+
+msgid "Review..."
+msgstr "Mit anderem Zweig vergleichen..."
+
+msgid "Revision"
+msgstr "Version"
+
+msgid "Revision Expression:"
+msgstr "Eindeutiger Schlüssel der Version"
+
+msgid "Revision to Merge"
+msgstr "Zusammenführen von Zweig oder Markierung"
+
+msgid "Reword"
 msgstr ""
-"Das Kommando \"%(command)s\" wurde mit dem Code \"%(status)d\" beendet."
 
-msgid "Stash"
-msgstr "Git-Zwischenablage"
+msgid "Rewrite Published Commit?"
+msgstr "Möchten Sie die bereits veröffentlichte Version nochmals schreiben?"
 
-msgid "Apply the selected stash"
-msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
+msgid "Run"
+msgstr "Ausführen"
 
-msgid "Save modified state to new stash"
-msgstr "Änderungen in einer neuen Ablage speichern"
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Möchten Sie \"%s\" ausführen?"
 
-msgid "Drop"
-msgstr "Löschen"
+#, python-format
+msgid "Run %s?"
+msgstr "Möchten Sie \"%s\" ausführen?"
 
-msgid "Drop the selected stash"
-msgstr "Die ausgewählte Ablage löschen"
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr "Möchten Sie den Befehl \"%s\" ausführen?"
 
-msgid "Keep Index"
-msgstr "Vormerkliste unverändert lassen"
+#, python-format
+msgid "Running command: %s"
+msgstr "Führe Befehl \"%s\" aus"
+
+msgid "Russian translation"
+msgstr ""
+
+#, fuzzy
+msgid "SHA-1"
+msgstr "Eindeutigen Schlüssel der Version kopieren"
+
+#, fuzzy
+msgid "Safe Mode"
+msgstr "Vermerke Änderung"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Save Archive"
+msgstr "Als TAR- oder ZIP-Archiv exportieren"
+
+msgid "Save As Tarball/Zip..."
+msgstr "Als TAR- oder ZIP-Archiv exportieren..."
+
+msgid "Save GUI Settings"
+msgstr "Einstellungen der Programmoberfläche sichern"
 
 msgid "Save Stash"
 msgstr "Ablage speichern"
 
-msgid "Enter a name for the stash"
-msgstr "Geben Sie einen Namen für die Ablage an"
-
-msgid "Error: Stash exists"
-msgstr "Fehler: Diese Ablage existiert bereits"
+msgid "Save modified state to new stash"
+msgstr "Änderungen in einer neuen Ablage speichern"
 
 #, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "Eine Ablage mit dem Namen »%s« existiert bereits."
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Datei \"%(filename)s\" von \"%(ref)s\" nach \"%(destination)s\" gesichert"
 
-msgid "Drop Stash?"
-msgstr "Möchten Sie die Ablage löschen?"
+msgid "Search"
+msgstr "Suchen"
 
-msgid "Recovering a dropped stash is not possible."
-msgstr "Eine gelöschte Ablage kann nicht wiederhergestellt werden."
+msgid "Search Authors"
+msgstr "Autor"
+
+msgid "Search Commit Messages"
+msgstr "In Versionsbeschreibungen"
+
+msgid "Search Committers"
+msgstr "Eintragender"
+
+msgid "Search Date Range"
+msgstr "Datum von-bis"
+
+msgid "Search Diffs"
+msgstr "In Versionsunterschieden"
+
+msgid "Search by Expression"
+msgstr "Regulärer Ausdruck"
+
+msgid "Search by Path"
+msgstr "Datei"
+
+msgid "Search for a fixed string"
+msgstr ""
+
+msgid "Search using a POSIX basic regular expression"
+msgstr ""
+
+msgid "Search using a POSIX extended regular expression"
+msgstr ""
+
+msgid "Search..."
+msgstr "Suchen..."
+
+msgid "Select"
+msgstr "Auswählen"
+
+msgid "Select All"
+msgstr "Alle auswählen"
+
+msgid "Select Branch to Review"
+msgstr "Zweig zum Vergleichen auswählen"
+
+msgid "Select Child"
+msgstr "Nachfolger auswählen"
+
+#, fuzzy
+msgid "Select Commit"
+msgstr "Wählen Sie eine Versionsbeschreibung aus"
+
+#, fuzzy
+msgid "Select Directory..."
+msgstr "Wähle Projektarchiv..."
+
+msgid "Select File"
+msgstr "Wähle Datei aus"
+
+#, fuzzy
+msgid "Select New Upstream"
+msgstr "Neuen Anfang auswählen"
+
+msgid "Select Newest Child"
+msgstr "Jüngsten Nachfolger auswählen"
+
+msgid "Select Oldest Parent"
+msgstr "Ältesten Vorgänger auswählen"
+
+msgid "Select Parent"
+msgstr "Vorgänger Auswählen"
+
+msgid "Select Previous Version"
+msgstr "Vorherige Version auswählen"
+
+msgid "Select Repository..."
+msgstr "Wähle Projektarchiv..."
+
+msgid "Select a parent directory for the new clone"
+msgstr "Wählen Sie das übergeordnete Verzeichnis für den Klon"
 
 #, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr "Möchten Sie die Ablage \"%s\" löschen?"
+msgid "Select file from \"%s\""
+msgstr "Wähle Datei von \"%s\" aus"
 
-msgid "Drop Stash"
-msgstr "Ablage löschen"
+msgid "Select manually..."
+msgstr "Selbst auswählen..."
 
-msgid "vX.Y.Z"
-msgstr "Eindeutige Kurzbezeichnung, z.B. v.X.Y.Z"
+#, fuzzy
+msgid "Select output dir"
+msgstr "Wählen Sie eine Versionsbeschreibung aus"
 
-msgid "Specifies the tag name"
-msgstr "Legt den Namen der Markierung fest"
+#, fuzzy
+msgid "Select output directory"
+msgstr "Wähle Projektarchiv..."
+
+#, fuzzy
+msgid "Select patch file(s)..."
+msgstr "Lösche Datei(en)..."
+
+#, fuzzy
+msgid "Select repository"
+msgstr "Wähle Projektarchiv..."
+
+#, fuzzy
+msgid "Set Default Repository"
+msgstr "Wähle Projektarchiv..."
+
+#, fuzzy
+msgid "Set Upstream Branch"
+msgstr "Neuen Anfang auswählen"
+
+#, fuzzy
+msgid "Set upstream"
+msgstr "Neuen Anfang auswählen"
+
+msgid "Settings"
+msgstr "Allgemein"
+
+msgid "Shell arguments"
+msgstr "Als Kommandozeilenargumente"
+
+msgid "Shift Down"
+msgstr ""
+
+msgid "Shift Up"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr "Tastenkürzel"
+
+msgid "Show Diffstat After Merge"
+msgstr "Vergleichsstatistik nach Zusammenführen anzeigen"
+
+msgid "Show Full Paths in the Window Title"
+msgstr ""
+
+#, fuzzy
+msgid "Show Help"
+msgstr "Hilfe"
+
+#, fuzzy
+msgid "Show History"
+msgstr "Verlauf anzeigen"
+
+msgid ""
+"Show help\n"
+"Shortcut: ?"
+msgstr ""
+
+msgid "Show icon? (if available)"
+msgstr ""
+
+msgid "Show line numbers"
+msgstr ""
+
+msgid "Show whole surrounding functions of changes"
+msgstr "Gesamte übergeordnete Funktion anzeigen"
+
+msgid "Showing changes since"
+msgstr "Änderungen seit"
+
+msgid "Side by side"
+msgstr ""
+
+msgid "Sign Off"
+msgstr "Unterzeichnen"
 
 msgid "Sign Tag"
 msgstr "Markierung unterzeichnen"
 
-msgid "Whether to sign the tag (git tag -s)"
+msgid "Sign off on this commit"
+msgstr "Unterzeichne diese Version"
+
+msgid "Simplified Chinese translation"
 msgstr ""
-"Legt fest, ob die Markierung unterzeichnet werden soll (siehe Befehl 'git "
-"tag -s')"
 
-msgid "Message"
-msgstr "Beschreibung"
+msgid "Skip"
+msgstr ""
 
-msgid "Tag message..."
-msgstr "Beschreibung"
+#, fuzzy
+msgid "Skip Current Patch"
+msgstr "Patch erstellen"
 
-msgid "Specifies the tag message"
-msgstr "Legt die Beschreibung der Markierung fest."
+msgid "Sort bookmarks alphabetically"
+msgstr ""
+
+msgid "Spanish translation"
+msgstr ""
 
 msgid "Specifies the SHA-1 to tag"
 msgstr "Legt den SHA-1-Wert für die Markierung fest"
 
-msgid "Missing Revision"
-msgstr "Zweig oder Markierung fehlt"
+msgid "Specifies the tag message"
+msgstr "Legt die Beschreibung der Markierung fest."
 
-msgid "Please specify a revision to tag."
-msgstr "Bitte wählen Sie einen Zweig zum markieren"
+msgid "Specifies the tag name"
+msgstr "Legt den Namen der Markierung fest"
 
-msgid "Missing Name"
-msgstr "Fehlender Name"
+msgid "Spelling Suggestions"
+msgstr "Rechtschreibvorschläge"
 
-msgid "Please specify a name for the new tag."
-msgstr "Bitte geben Sie einen Namen für die neue Markierung an."
+msgid "Squash"
+msgstr "Versionen vereinigen"
+
+msgid "Squash the merged commits into a single commit"
+msgstr ""
+
+msgid "Stage"
+msgstr "Änderung vormerken"
+
+msgid "Stage / Unstage"
+msgstr "Vormerken/Nicht vormerken"
+
+msgid "Stage All Untracked"
+msgstr "Alle neuen Dateien vormerken"
+
+msgid "Stage Changed Files To Commit"
+msgstr "Geänderte Dateien vormerken"
+
+msgid "Stage Diff Hunk"
+msgstr "Änderungen am Abschnitt vormerken"
+
+msgid "Stage Modified"
+msgstr "Vermerke Änderung"
+
+msgid "Stage Selected"
+msgstr "Auswahl vormerken"
+
+#, fuzzy
+msgid "Stage Selected Lines"
+msgstr "Änderungen an den ausgewählte Zeilen vormerken"
+
+msgid "Stage Unmerged"
+msgstr "Nicht zusammengeführte Dateien vormerken"
+
+msgid "Stage Untracked"
+msgstr "Neue Dateien vormerken"
+
+msgid "Stage and Commit"
+msgstr "Vormerken und versionieren"
+
+msgid "Stage and commit?"
+msgstr "Vormerken und versionieren?"
+
+#, fuzzy
+msgid "Stage conflicts"
+msgstr "Vormerken und versionieren?"
+
+#, fuzzy
+msgid "Stage conflicts?"
+msgstr "Vormerken und versionieren?"
+
+#, fuzzy
+msgid "Stage/unstage selected paths for commit"
+msgstr "Änderungen am ausgewählten Pfad vormerken"
+
+msgid "Staged"
+msgstr "Vorgemerkt"
+
+#, python-format
+msgid "Staging: %s"
+msgstr "Vermerke Änderung an »%s«"
+
+msgid "Start Interactive Rebase..."
+msgstr ""
+
+msgid "Starting Revision"
+msgstr "Abzweigen von"
+
+msgid "Stash"
+msgstr "Git-Zwischenablage"
+
+#, fuzzy
+msgid "Stash Index"
+msgstr "Git-Zwischenablage"
+
+#, fuzzy
+msgid "Stash staged changes only"
+msgstr "Vorgemerkte Änderungen versionieren"
+
+#, fuzzy
+msgid "Stash unstaged changes only, keeping staged changes"
+msgstr "Verwirft Änderungen am ausgewählten Pfad"
+
+msgid "Stash..."
+msgstr "Git-Zwischenablage..."
+
+msgid "Status"
+msgstr "Zustand"
+
+msgid "Stop tracking paths"
+msgstr "Führe keine Versionskontrolle für den ausgewählten Pfad durch"
+
+msgid "Summarize Merge Commits"
+msgstr "Zusammenfassung beim Zusammenführen anzeigen"
+
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+msgid "Summary:"
+msgstr "Zusammenfassung"
+
+msgid "Tab Width"
+msgstr "Tabulatorweite"
+
+msgid "Tag"
+msgstr "Markierung"
 
 msgid "Tag Created"
 msgstr "Markierung erzeugt"
 
+msgid "Tag message..."
+msgstr "Beschreibung"
+
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr "Die Markierung sollte unterzeichnet werden, aber die dafür notwendige Beschreibung des Inhalts fehlt."
+
+msgid "Tags"
+msgstr ""
+
+msgid "Text Width"
+msgstr "Textbreite"
+
+msgid "The branch will be no longer available."
+msgstr ""
+
 #, python-format
-msgid "Created a new tag named \"%s\""
-msgstr "Erzeuge eine Markierung mit dem Namen \"%s\""
+msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
 
-msgid "Age"
-msgstr "Alter"
-
-#, python-format
-msgid "%d minutes ago"
-msgstr "vor %d Minuten"
+#, fuzzy
+msgid "The commit message will be cleared."
+msgstr "Die folgenden Zeilen werden gleich gelöscht:"
 
 #, python-format
-msgid "%d hours ago"
-msgstr "vor %d Stunden"
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "Die Datei \"%s\" existiert bereits und wird überschrieben."
+
+msgid "The following files will be deleted:"
+msgstr "Die folgenden Zeilen werden gleich gelöscht:"
+
+msgid "The revision expression cannot be empty."
+msgstr "Der Ausdruck darf nicht leer sein."
 
 #, python-format
-msgid "%d days ago"
-msgstr "vor %d Tagen"
+msgid "The worktree will be reset using \"git reset --merge %s\""
+msgstr ""
 
-msgid "Partially Staged"
-msgstr "Teilweise vorgemerkt"
+msgid "This cannot be undone.  Clear commit message?"
+msgstr ""
 
-msgid "Changed Upstream"
-msgstr "Im Quell-Projektarchiv geändert"
+msgid ""
+"This commit has already been published.\n"
+"This operation will rewrite published history.\n"
+"You probably don't want to do this."
+msgstr ""
+"Diese Version wurde bereits veröffentlicht.\n"
+"Mit dieser Operation werden Sie den Verlauf im externen Projektarchiv verändern.Möchten Sie das wirklich?"
 
-#~ msgid "Created commit: %s"
-#~ msgstr "Änderung %s übertragen:"
+#, fuzzy
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Damit verwerfen Sie unversionierte Änderungen.\n"
+"Dieser Schritt kann nicht rückgängig gemacht werden."
 
-#~ msgid "Commit failed: %s"
-#~ msgstr "Versionierung fehlgeschlagen: %s"
+msgid ""
+"This operation removes uncommitted edits from selected files.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Damit verwerfen Sie unversionierte Änderungen.\n"
+"Dieser Schritt kann nicht rückgängig gemacht werden."
+
+msgid ""
+"This operation removes unstaged edits from selected files.\n"
+"These changes cannot be recovered."
+msgstr ""
+"Damit verwerfen Sie nicht vorgemerkte Änderungen.\n"
+"Diese können nicht mehr wiederhergestellt werden."
+
+msgid ""
+"This repository is currently being rebased.\n"
+"Resolve conflicts, commit changes, and run:\n"
+"    Rebase > Continue"
+msgstr ""
+
+msgid ""
+"This repository is in the middle of a merge.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+
+msgid "Toggle Enabled"
+msgstr ""
+
+msgid "Toggle the branches filter"
+msgstr ""
+
+msgid "Toggle the paths filter"
+msgstr ""
+
+msgid "Tracking Branch"
+msgstr "Nachverfolgter Zweig"
+
+msgid "Tracking branch"
+msgstr "Nachverfolgtem Zweig"
+
+msgid "Traditional Chinese (Taiwan) translation"
+msgstr ""
+
+msgid "Translators"
+msgstr ""
+
+msgid "Turkish translation"
+msgstr ""
+
+msgid "URL"
+msgstr "URL"
+
+#, python-format
+msgid "URL: %s"
+msgstr "URL: %s"
+
+msgid "Ukranian translation"
+msgstr ""
+
+#, fuzzy
+msgid "Unable to rebase"
+msgstr "Verzeichnis »%s« kann nicht aufgeräumt werden."
+
+#, python-format
+msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
+msgstr ""
+
+msgid "Undo"
+msgstr "Rückgängig"
+
+msgid "Unmerged"
+msgstr "Nicht zusammengeführt"
+
+msgid "Unstage"
+msgstr "Änderung nicht vormerken"
+
+msgid "Unstage All"
+msgstr "Alle Vormerkungen aufheben"
+
+msgid "Unstage Diff Hunk"
+msgstr "Änderungen am Abschnitt nicht vormerken"
+
+msgid "Unstage From Commit"
+msgstr "Vormerkung dieser Datei aufheben"
+
+msgid "Unstage Selected"
+msgstr "Vormerkung für Auswahl aufheben"
+
+#, fuzzy
+msgid "Unstage Selected Lines"
+msgstr "Änderungen an ausgewählten Zeilen nicht vormerken"
+
+#, python-format
+msgid "Unstaging: %s"
+msgstr "Entferne Datei »%s« aus Vormerkliste"
+
+msgid "Untrack Selected"
+msgstr "Auswahl von Versionskontrolle ausnehmen"
+
+msgid "Untracked"
+msgstr "Nicht unter Versionskontrolle"
+
+#, python-format
+msgid "Untracking: %s"
+msgstr "Führe keine Versionskontrolle mehr für \"%s\" aus."
+
+msgid "Update Existing Branch:"
+msgstr "Existierenden Zweig aktualisieren:"
+
+#, fuzzy
+msgid "Updating"
+msgstr "Aktualisiere..."
+
+msgid "User Name"
+msgstr "Benutzername"
+
+#, fuzzy
+msgid "Version"
+msgstr "Version"
+
+#, fuzzy
+msgid "View"
+msgstr "Vergleichen"
+
+msgid "View History..."
+msgstr "Verlauf anzeigen"
+
+#, fuzzy
+msgid "View history for selected paths"
+msgstr "Zeige den Verlauf für den ausgewählten Pfad"
+
+msgid "Visualize"
+msgstr "In Verlaufsansicht anzeigen"
+
+msgid "Visualize All Branches..."
+msgstr "Verlauf ansehen (alle Zweige)"
+
+msgid "Visualize Current Branch..."
+msgstr "Verlauf ansehen (aktueller Zweig)"
+
+msgid "Whether to sign the tag (git tag -s)"
+msgstr "Legt fest, ob die Markierung unterzeichnet werden soll (siehe Befehl 'git tag -s')"
+
+msgid "Would you like to stage and commit all modified files?"
+msgstr "Möchten Sie alle veränderten Dateien vormerken und versionieren?"
+
+msgid "XOR"
+msgstr ""
+
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr "Es werden gerade Änderungen eingepflegt.Sie können deshalb im Moment keine Ergänzungen vornehmen."
+
+#, fuzzy
+msgid "You cannot rebase with uncommitted changes."
+msgstr "Möchten Sie die unversionierten Änderungen verwerfen?"
+
+msgid "You must specify a revision to merge."
+msgstr "Sie müssen einen Zweig oder eine Markierung für die Zusammenführung auswählen."
+
+msgid "You must specify a revision to view."
+msgstr ""
+"Bitte wählen Sie zuerst einen Zweig oder \n"
+"eine Markierung für die Verlaufsansicht aus."
+
+msgid "Zoom In"
+msgstr "Vergrößern"
+
+msgid "Zoom Out"
+msgstr "Verkleinern"
+
+msgid "Zoom to Fit"
+msgstr "In Ansicht einpassen"
+
+msgid "command-line arguments"
+msgstr "Kommandozeilenargumente"
+
+#, python-format
+msgid "exit code %s"
+msgstr "Ende-Code %s"
+
+#, python-format
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr ""
+
+#, python-format
+msgid "git cola version %s"
+msgstr ""
+
+msgid "git-cola"
+msgstr ""
+
+msgid "git-cola diff"
+msgstr ""
+
+msgid "grep result..."
+msgstr "Suchergebnis"
+
+msgid "hotkeys.html"
+msgstr "hotkeys_de.html"
+
+msgid "unknown"
+msgstr "unbekannt"
+
+msgid "vX.Y.Z"
+msgstr "Eindeutige Kurzbezeichnung, z.B. v.X.Y.Z"
+
+msgid "yyyy-MM-dd"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "A good replacement for %s\n"
+#~ "is placing values for the user.name and\n"
+#~ "user.email settings into your personal\n"
+#~ "~/.gitconfig file.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Um den Namen »%s« zu ändern, sollten Sie die \n"
+#~ "gewünschten Werte für die Einstellung user.name und \n"
+#~ "user.email in Ihre Datei ~/.gitconfig einfügen.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "This is due to a known issue with the\n"
+#~ "Tcl binary distributed by Cygwin."
+#~ msgstr ""
+#~ "\n"
+#~ "Dies ist ein bekanntes Problem der Tcl-Version, die\n"
+#~ "in Cygwin mitgeliefert wird."
+
+#~ msgid " commits ago"
+#~ msgstr " Versionen davor"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
 #~ msgstr "\"%(command)s\" wurde mit Code %(status)d beendet"
 
-#~ msgid "git clone returned exit code %s"
-#~ msgstr "git clone wurde mit dem Fehlercode %s beendet"
-
-#~ msgid "Output: %s"
-#~ msgstr "Ausgabe: \"%s\""
-
-#~ msgid "Errors: %s"
-#~ msgstr "Fehler: \"%s\""
-
-#~ msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-#~ msgstr "Markiere \"%(revision)s\" mit \"%(name)s\""
-
-#~ msgid "GPG-signed"
-#~ msgstr "mit GPG signiert"
-
-#~ msgid ""
-#~ "Output:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Ausgabe:\n"
-#~ "%s"
-
-#~ msgid "Exit code: %s"
-#~ msgstr "Ende-Code: %s"
+#~ msgid "\"git %s\" succeeded."
+#~ msgstr "\"git %s\" erfolgreich ausgeführt."
 
 #~ msgid "\"git commit\" returned exit code %s"
 #~ msgstr "\"git commit\" wurde mit dem Code %s beendet"
 
-#, fuzzy
-#~ msgid "git tag returned exit code %s"
-#~ msgstr "git clone wurde mit dem Fehlercode %s beendet"
+#~ msgid "%s ... %*i of %*i %s (%3i%%)"
+#~ msgstr "%s ... %*i von %*i %s (%3i%%)"
+
+#~ msgid "%s Repository"
+#~ msgstr "Projektarchiv %s"
+
+#~ msgid "%s of %s"
+#~ msgstr "%s von %s"
+
+#~ msgid "'%s' is not an acceptable branch name."
+#~ msgstr "»%s« ist kein zulässiger Zweigname."
+
+#~ msgid "* Binary file (not showing content)."
+#~ msgstr "* Binärdatei (Inhalt wird nicht angezeigt)"
+
+#~ msgid "A branch is required for 'Merged Into'."
+#~ msgstr "Für »Zusammenführen mit« muss ein Zweig angegeben werden."
+
+#~ msgid "Abort completed.  Ready."
+#~ msgstr "Abbruch durchgeführt. Bereit."
+
+#~ msgid "Abort failed."
+#~ msgstr "Abbruch fehlgeschlagen."
+
+#~ msgid "Aborted checkout of '%s' (file level merging is required)."
+#~ msgstr "Auf Zweig »%s« umstellen abgebrochen (Zusammenführen der Dateien ist notwendig)."
+
+#~ msgid "Already up-to-date."
+#~ msgstr "Ist bereits aktuell"
+
+#~ msgid "Always (Do not perform merge checks)"
+#~ msgstr "Immer (Keine Zusammenführungsprüfung)"
+
+#~ msgid "Always (Do not perform merge test.)"
+#~ msgstr "Immer (ohne Zusammenführungstest)"
+
+#~ msgid "Amended Commit Message:"
+#~ msgstr "Nachgebesserte Beschreibung:"
+
+#~ msgid "Amended Initial Commit Message:"
+#~ msgstr "Nachgebesserte erste Beschreibung:"
+
+#~ msgid "Amended Merge Commit Message:"
+#~ msgstr "Nachgebesserte Zusammenführungs-Beschreibung:"
+
+#~ msgid "Annotation complete."
+#~ msgstr "Annotierung vollständig."
+
+#~ msgid "Any unstaged changes will be permanently lost by the revert."
+#~ msgstr "Alle nicht bereitgestellten Änderungen werden beim Verwerfen verloren gehen."
+
+#~ msgid "Apply Diff Selection to Work Tree"
+#~ msgstr "Auswahl auf den Arbeitsbereich anwenden"
+
+#~ msgid "Apply/Reverse Hunk"
+#~ msgstr "Kontext anwenden/umkehren"
+
+#~ msgid "Arbitrary URL:"
+#~ msgstr "Archiv-URL:"
+
+#~ msgid "Bookmarks"
+#~ msgstr "Favoriten"
+
+#~ msgid "Bookmarks Saved"
+#~ msgstr "Favoriten gesichert"
+
+#~ msgid "Bookmarks..."
+#~ msgstr "Favoriten..."
+
+#~ msgid ""
+#~ "Branch '%s' already exists.\n"
+#~ "\n"
+#~ "It cannot fast-forward to %s.\n"
+#~ "A merge is required."
+#~ msgstr ""
+#~ "Zweig »%s« existiert bereits.\n"
+#~ "\n"
+#~ "Zweig kann nicht mit »%s« schnellzusammengeführt werden. Reguläres Zusammenführen ist notwendig."
+
+#~ msgid "Branch '%s' does not exist."
+#~ msgstr "Zweig »%s« existiert nicht."
+
+#~ msgid "Branch created"
+#~ msgstr "Zweig erzeugt"
+
+#~ msgid "Browse %s's Files"
+#~ msgstr "Zweig »%s« durchblättern"
+
+#~ msgid "Browse Branch Files"
+#~ msgstr "Dateien des Zweigs durchblättern"
+
+#~ msgid "Browse Revision..."
+#~ msgstr "Zweig oder Markierung wählen"
+
+#~ msgid "Calling commit-msg hook..."
+#~ msgstr "Aufrufen der Versionsbeschreibungs-Kontrolle..."
+
+#~ msgid ""
+#~ "Cannot abort while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit.\n"
+#~ msgstr ""
+#~ "Abbruch der Nachbesserung ist nicht möglich.\n"
+#~ "\n"
+#~ "Sie müssen die Nachbesserung der Version abschließen.\n"
+
+#~ msgid ""
+#~ "Cannot amend while merging.\n"
+#~ "\n"
+#~ "You are currently in the middle of a merge that has not been fully completed.  You cannot amend the prior commit unless you first abort the current merge activity.\n"
+#~ msgstr ""
+#~ "Nachbesserung währen Zusammenführung nicht möglich.\n"
+#~ "\n"
+#~ "Sie haben das Zusammenführen von Versionen angefangen, aber noch nicht beendet. Sie können keine vorige Übertragung nachbessern, solange eine unfertige Zusammenführung existiert. Dazu müssen Sie die Zusammenführung beenden oder abbrechen.\n"
+
+#~ msgid "Cannot determine HEAD.  See console output for details."
+#~ msgstr "Die Zweigspitze (HEAD) konnte nicht gefunden werden.  Kontrollieren Sie die Ausgaben auf der Konsole für weitere Angaben."
+
+#~ msgid "Cannot fetch branches and objects.  See console output for details."
+#~ msgstr "Zweige und Objekte konnten nicht angefordert werden.  Kontrollieren Sie die Ausgaben auf der Konsole für weitere Angaben."
+
+#~ msgid "Cannot fetch tags.  See console output for details."
+#~ msgstr "Markierungen konnten nicht angefordert werden.  Kontrollieren Sie die Ausgaben auf der Konsole für weitere Angaben."
+
+#~ msgid "Cannot find git in PATH."
+#~ msgstr "Git kann im PATH nicht gefunden werden."
+
+#~ msgid ""
+#~ "Cannot merge while amending.\n"
+#~ "\n"
+#~ "You must finish amending this commit before starting any type of merge.\n"
+#~ msgstr ""
+#~ "Zusammenführen kann nicht gleichzeitig mit Nachbessern durchgeführt werden.\n"
+#~ "\n"
+#~ "Sie müssen zuerst die Nachbesserungs-Version abschließen, bevor Sie zusammenführen können.\n"
+
+#~ msgid "Cannot move to top of working directory:"
+#~ msgstr "Es konnte nicht in das oberste Verzeichnis der Arbeitskopie gewechselt werden:"
+
+#~ msgid "Cannot parse Git version string:"
+#~ msgstr "Git Versionsangabe kann nicht erkannt werden:"
+
+#~ msgid "Cannot resolve %s as a commit."
+#~ msgstr "»%s« wurde nicht als Version gefunden."
+
+#~ msgid "Cannot use funny .git directory:"
+#~ msgstr "Unerwartete Struktur des .git Verzeichnis:"
+
+#~ msgid "Cannot write shortcut:"
+#~ msgstr "Fehler beim Schreiben der Verknüpfung:"
+
+#~ msgid "Change Font"
+#~ msgstr "Schriftart ändern"
+
+#~ msgid "Checked out '%s'."
+#~ msgstr "Umgestellt auf »%s«."
+
+#~ msgid "Clone"
+#~ msgstr "Klonen"
+
+#~ msgid "Clone Type:"
+#~ msgstr "Art des Klonens:"
+
+#~ msgid "Clone failed."
+#~ msgstr "Klonen fehlgeschlagen."
+
+#~ msgid "Cloning from %s"
+#~ msgstr "Kopieren von »%s«"
+
+#~ msgid "Commit %s appears to be corrupt"
+#~ msgstr "Version »%s« scheint beschädigt zu sein"
+
+#~ msgid "Commit declined by commit-msg hook."
+#~ msgstr "Eintragen abgelehnt durch Versionsbeschreibungs-Kontrolle (»commit-message hook«)."
+
+#~ msgid "Commit declined by pre-commit hook."
+#~ msgstr "Eintragen abgelehnt durch Vor-Eintragen-Kontrolle (»pre-commit hook«)."
+
+#~ msgid "Commit failed: %s"
+#~ msgstr "Versionierung fehlgeschlagen: %s"
+
+#~ msgid "Commit@@noun"
+#~ msgstr "Version"
+
+#~ msgid "Compress Database"
+#~ msgstr "Datenbank komprimieren"
+
+#~ msgid "Compressing the object database"
+#~ msgstr "Objektdatenbank komprimieren"
+
+#~ msgid "Copied Or Moved Here By:"
+#~ msgstr "Kopiert oder verschoben durch:"
+
+#~ msgid "Copying objects"
+#~ msgstr "Objektdatenbank kopieren"
+
+#~ msgid "Counting objects"
+#~ msgstr "Objekte werden gezählt"
+
+#~ msgid "Create Desktop Icon"
+#~ msgstr "Desktop-Icon erstellen"
+
+#~ msgid "Created commit: %s"
+#~ msgstr "Änderung %s übertragen:"
+
+#~ msgid "Creating working directory"
+#~ msgstr "Arbeitskopie erstellen"
+
+#~ msgid "Current Branch:"
+#~ msgstr "Aktueller Zweig:"
+
+#~ msgid "Database Statistics"
+#~ msgstr "Datenbankstatistik"
+
+#~ msgid "Decrease Font Size"
+#~ msgstr "Schriftgröße verkleinern"
+
+#~ msgid "Delete Local Branch"
+#~ msgstr "Lokalen Zweig löschen"
+
+#~ msgid "Delete Only If"
+#~ msgstr "Nur löschen, wenn"
+
+#~ msgid "Delete Only If Merged Into"
+#~ msgstr "Nur löschen, wenn zusammengeführt nach"
+
+#~ msgid "Destination Repository"
+#~ msgstr "Ziel-Projektarchiv"
+
+#~ msgid "Detach From Local Branch"
+#~ msgstr "Verbindung zu lokalem Zweig lösen"
+
+#~ msgid "Diff/Console Font"
+#~ msgstr "Vergleich-Schriftart"
+
+#~ msgid "Directory %s already exists."
+#~ msgstr "Verzeichnis »%s« existiert bereits."
+
+#~ msgid "Disk space used by loose objects"
+#~ msgstr "Festplattenplatz von unverknüpften Objekten"
+
+#~ msgid "Disk space used by packed objects"
+#~ msgstr "Festplattenplatz von komprimierten Objekten"
+
+#~ msgid "Display"
+#~ msgstr "Anzeigen"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Nichts tun"
+
+#~ msgid "Enter Git Repository"
+#~ msgstr "Git Projektarchiv:"
 
 #, fuzzy
 #~ msgid "Error %s"
 #~ msgstr "Fehler: \"%s\""
 
-#~ msgid "Local Branches"
-#~ msgstr "Lokale Zweige"
+#~ msgid "Error loading commit data for amend:"
+#~ msgstr "Fehler beim Laden der Versionsdaten für Nachbessern:"
 
-#, fuzzy
-#~ msgid "Remote Branches"
-#~ msgstr "Externer Zweig"
+#~ msgid "Error: Command Failed"
+#~ msgstr "Fehler: Kommando fehlgeschlagen"
 
-#, fuzzy
-#~ msgid "Staging Area"
-#~ msgstr "Vermerke Änderung an »%s«"
+#~ msgid "Errors: %s"
+#~ msgstr "Fehler: \"%s\""
 
-#~ msgid "Already up-to-date."
-#~ msgstr "Ist bereits aktuell"
+#~ msgid "Exit code: %s"
+#~ msgstr "Ende-Code: %s"
 
-#~ msgid "Path to git repository"
-#~ msgstr "Pfad zum Projektarchiv"
+#~ msgid "Failed to completely save options:"
+#~ msgstr "Optionen konnten nicht gespeichert werden:"
 
-#~ msgid "Enter Git Repository"
-#~ msgstr "Git Projektarchiv:"
+#~ msgid "Failed to configure origin"
+#~ msgstr "Der Ursprungsort konnte nicht eingerichtet werden"
+
+#~ msgid "Failed to create repository %s:"
+#~ msgstr "Projektarchiv »%s« konnte nicht erstellt werden:"
 
 #~ msgid ""
-#~ "This PyQt4 does not include QtWebKit.\n"
-#~ "The keyboard shortcuts feature is unavailable."
+#~ "Failed to delete branches:\n"
+#~ "%s"
 #~ msgstr ""
-#~ "Das vorhandene PyQt4 enthält nicht die Komponente \"QtWebKit\".\n"
-#~ "Deshalb ist die Anzeige der Tastenkürzel nicht verfügbar."
+#~ "Fehler beim Löschen der Zweige:\n"
+#~ "%s"
+
+#~ msgid "Failed to open repository %s:"
+#~ msgstr "Projektarchiv »%s« konnte nicht geöffnet werden."
+
+#~ msgid "Failed to rename '%s'."
+#~ msgstr "Fehler beim Umbenennen von »%s«."
+
+#~ msgid ""
+#~ "Failed to set current branch.\n"
+#~ "\n"
+#~ "This working directory is only partially switched.  We successfully updated your files, but failed to update an internal Git file.\n"
+#~ "\n"
+#~ "This should not have occurred.  %s will now close and give up."
+#~ msgstr ""
+#~ "Lokaler Zweig kann nicht gesetzt werden.\n"
+#~ "\n"
+#~ "Diese Arbeitskopie ist nur teilweise umgestellt. Die Dateien sind korrekt aktualisiert, aber einige interne Git-Dateien konnten nicht geändert werden.\n"
+#~ "\n"
+#~ "Dies ist ein interner Programmfehler von %s. Programm wird jetzt abgebrochen."
+
+#~ msgid "Failed to stage selected hunk."
+#~ msgstr "Fehler beim Bereitstellen des gewählten Kontexts."
+
+#~ msgid "Failed to unstage selected hunk."
+#~ msgstr "Fehler beim Herausnehmen des gewählten Kontexts aus der Bereitstellung."
+
+#~ msgid "Failed to update '%s'."
+#~ msgstr "Aktualisieren von »%s« fehlgeschlagen."
 
 #~ msgid "Fast Forward Only "
 #~ msgstr "Nur Fast Forward"
 
-#~ msgid "Updating..."
-#~ msgstr "Aktualisiere..."
+#~ msgid "Fetch from"
+#~ msgstr "Anfordern von"
 
-#~ msgid ""
-#~ "file notification: disabled\n"
-#~ "Note: install pywin32 to enable.\n"
-#~ msgstr ""
-#~ "git-cola wird nicht über Änderungen im Dateisystem benachrichtigt.\n"
-#~ "Installieren Sie pywin32, um diese Funktion zu nutzen.\n"
+#~ msgid "Fetching new changes from %s"
+#~ msgstr "Neue Änderungen von »%s« holen"
 
-#~ msgid ""
-#~ "inotify: disabled\n"
-#~ "Note: install python-pyinotify to enable inotify.\n"
-#~ msgstr ""
-#~ "inotify: deaktiviert\n"
-#~ "Installieren Sie python-pyinotify, um diese Funktion zu nutzen.\n"
+#~ msgid "File level merge required."
+#~ msgstr "Zusammenführen der Dateien ist notwendig."
 
-#, fuzzy
-#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
-#~ msgstr ""
-#~ "Wenn Sie git-cola auf einem Debian-System gestartet haben, versuchen Sie "
-#~ "es mit \"sudo apt-get install python-pyinotify\" "
+#~ msgid "Font Example"
+#~ msgstr "Schriftbeispiel"
 
-#~ msgid "inotify enabled."
-#~ msgstr "inotify aktiviert"
+#~ msgid "Font Family"
+#~ msgstr "Schriftfamilie"
 
-#~ msgid "Cancel"
-#~ msgstr "Abbrechen"
+#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgstr "Überschreiben von existierenden Zweigen erzwingen (könnte Änderungen löschen)"
 
-#~ msgid "Options"
-#~ msgstr "Optionen"
+#~ msgid "From Repository"
+#~ msgstr "In Projektarchiv"
 
-#~ msgid "Bookmarks"
-#~ msgstr "Favoriten"
+#~ msgid "Full Copy (Slower, Redundant Backup)"
+#~ msgstr "Alles kopieren (langsamer, volle Redundanz)"
 
-#~ msgid "No files selected for checkout from HEAD."
-#~ msgstr "Es sind keine Dateien zum Auschecken von HEAD ausgewählt."
+#~ msgid "GPG-signed"
+#~ msgstr "mit GPG signiert"
 
-#~ msgid "Remove selected paths from the staging area"
-#~ msgstr "Änderungen am ausgewählten Pfad nicht mehr vormerken"
+#~ msgid "Garbage files"
+#~ msgstr "Dateien im Mülleimer"
 
-#~ msgid "Revert Uncommitted Changes..."
-#~ msgstr "Nicht versionierte Änderungen verwerfen"
+#~ msgid "Git Gui"
+#~ msgstr "Git Gui"
 
-#~ msgid "Bookmarks..."
-#~ msgstr "Favoriten..."
+#~ msgid "Git Repository (subproject)"
+#~ msgstr "Git-Projektarchiv (Unterprojekt)"
 
-#~ msgid "Process Diff Hunk"
-#~ msgstr "Abschnitt verarbeiten"
-
-#~ msgid "Process Selection"
-#~ msgstr "Auswahl verarbeiten"
-
-#~ msgid "Apply Diff Selection to Work Tree"
-#~ msgstr "Auswahl auf den Arbeitsbereich anwenden"
-
-#~ msgid "Branch created"
-#~ msgstr "Zweig erzeugt"
-
-#~ msgid "Index"
-#~ msgstr "Vormerkliste"
-
-#~ msgid "Bookmarks Saved"
-#~ msgstr "Favoriten gesichert"
-
-#~ msgid "Successfully saved bookmarks"
-#~ msgstr "Die Favoriten wurden erfolgreich gesichert."
-
-#~ msgid "Rebase..."
-#~ msgstr "Anfang verschieben..."
-
-#~ msgid "Tools"
-#~ msgstr "Ansicht"
-
-#~ msgid "Display"
-#~ msgstr "Anzeigen"
-
-#~ msgid "Success"
-#~ msgstr "Erfolgreich"
-
-#~ msgid "\"git %s\" succeeded."
-#~ msgstr "\"git %s\" erfolgreich ausgeführt."
-
-#~ msgid "Rescan"
-#~ msgstr "Ansicht aktualisieren"
-
-#~ msgid "Browse Revision..."
-#~ msgstr "Zweig oder Markierung wählen"
-
-#~ msgid "Rebase Branch"
-#~ msgstr "Anfang des Zweigs verschieben"
-
-#~ msgid "git-gui: fatal error"
-#~ msgstr "git-gui: Programmfehler"
-
-#~ msgid "Invalid font specified in %s:"
-#~ msgstr "Ungültige Zeichensatz-Angabe in %s:"
-
-#~ msgid "Main Font"
-#~ msgstr "Programmschriftart"
-
-#~ msgid "Diff/Console Font"
-#~ msgstr "Vergleich-Schriftart"
-
-#~ msgid "Cannot find git in PATH."
-#~ msgstr "Git kann im PATH nicht gefunden werden."
-
-#~ msgid "Cannot parse Git version string:"
-#~ msgstr "Git Versionsangabe kann nicht erkannt werden:"
+#~ msgid "Git directory not found:"
+#~ msgstr "Git-Verzeichnis nicht gefunden:"
 
 #~ msgid ""
 #~ "Git version cannot be determined.\n"
@@ -2470,130 +2846,221 @@ msgstr "Im Quell-Projektarchiv geändert"
 #~ "\n"
 #~ "Soll angenommen werden, »%s« sei Version 1.5.0?\n"
 
-#~ msgid "Git directory not found:"
-#~ msgstr "Git-Verzeichnis nicht gefunden:"
+#~ msgid "Hardlinks are unavailable.  Falling back to copying."
+#~ msgstr "Hardlinks nicht verfügbar. Stattdessen wird kopiert."
 
-#~ msgid "Cannot move to top of working directory:"
-#~ msgstr ""
-#~ "Es konnte nicht in das oberste Verzeichnis der Arbeitskopie gewechselt "
-#~ "werden:"
-
-#~ msgid "Cannot use funny .git directory:"
-#~ msgstr "Unerwartete Struktur des .git Verzeichnis:"
-
-#~ msgid "No working directory"
-#~ msgstr "Kein Arbeitsverzeichnis"
-
-#~ msgid "Refreshing file status..."
-#~ msgstr "Dateistatus aktualisieren..."
-
-#~ msgid "Ready."
-#~ msgstr "Bereit."
-
-#~ msgid "Modified, not staged"
-#~ msgstr "Verändert, nicht bereitgestellt"
-
-#~ msgid "Portions staged for commit"
-#~ msgstr "Teilweise bereitgestellt zum Eintragen"
-
-#~ msgid "Staged for commit, missing"
-#~ msgstr "Bereitgestellt zum Eintragen, fehlend"
-
-#~ msgid "Staged for removal"
-#~ msgstr "Bereitgestellt zum Löschen"
-
-#~ msgid "Staged for removal, still present"
-#~ msgstr "Bereitgestellt zum Löschen, trotzdem vorhanden"
-
-#~ msgid "Requires merge resolution"
-#~ msgstr "Konfliktauflösung nötig"
-
-#~ msgid "Starting gitk... please wait..."
-#~ msgstr "Gitk wird gestartet... bitte warten."
-
-#~ msgid ""
-#~ "Unable to start gitk:\n"
-#~ "\n"
-#~ "%s does not exist"
-#~ msgstr ""
-#~ "Gitk kann nicht gestartet werden:\n"
-#~ "\n"
-#~ "%s existiert nicht"
-
-#~ msgid "Repository"
-#~ msgstr "Projektarchiv"
-
-#~ msgid "Commit@@noun"
-#~ msgstr "Version"
-
-#~ msgid "Browse %s's Files"
-#~ msgstr "Zweig »%s« durchblättern"
-
-#~ msgid "Visualize %s's History"
-#~ msgstr "Historie von »%s« darstellen"
-
-#~ msgid "Database Statistics"
-#~ msgstr "Datenbankstatistik"
-
-#~ msgid "Compress Database"
-#~ msgstr "Datenbank komprimieren"
-
-#~ msgid "Verify Database"
-#~ msgstr "Datenbank überprüfen"
-
-#~ msgid "Create Desktop Icon"
-#~ msgstr "Desktop-Icon erstellen"
-
-#~ msgid "New Commit"
-#~ msgstr "Neue Version"
-
-#~ msgid "Local Merge..."
-#~ msgstr "Lokales Zusammenführen..."
-
-#~ msgid "Preferences..."
-#~ msgstr "Einstellungen..."
-
-#~ msgid "Current Branch:"
-#~ msgstr "Aktueller Zweig:"
-
-#~ msgid "Staged Changes (Will Commit)"
-#~ msgstr "Bereitstellung (zum Eintragen)"
-
-#~ msgid "Initial Commit Message:"
-#~ msgstr "Erste Versionsbeschreibung:"
-
-#~ msgid "Amended Commit Message:"
-#~ msgstr "Nachgebesserte Beschreibung:"
-
-#~ msgid "Amended Initial Commit Message:"
-#~ msgstr "Nachgebesserte erste Beschreibung:"
-
-#~ msgid "Amended Merge Commit Message:"
-#~ msgstr "Nachgebesserte Zusammenführungs-Beschreibung:"
-
-#~ msgid "Apply/Reverse Hunk"
-#~ msgstr "Kontext anwenden/umkehren"
-
-#~ msgid "Show Less Context"
-#~ msgstr "Weniger Zeilen anzeigen"
-
-#~ msgid "Show More Context"
-#~ msgstr "Mehr Zeilen anzeigen"
-
-#~ msgid "Decrease Font Size"
-#~ msgstr "Schriftgröße verkleinern"
+#~ msgid "In File:"
+#~ msgstr "In Datei:"
 
 #~ msgid "Increase Font Size"
 #~ msgstr "Schriftgröße vergrößern"
 
-#~ msgid "Unstage Hunk From Commit"
-#~ msgstr "Kontext aus Bereitstellung herausnehmen"
+#~ msgid "Index"
+#~ msgstr "Vormerkliste"
 
-#~ msgid "Stage Hunk For Commit"
-#~ msgstr "Kontext zur Bereitstellung hinzufügen"
+#~ msgid "Index Error"
+#~ msgstr "Fehler in Bereitstellung"
 
-#~ msgid "Initializing..."
-#~ msgstr "Initialisieren..."
+#~ msgid "Initial Commit Message:"
+#~ msgstr "Erste Versionsbeschreibung:"
+
+#~ msgid "Initial file checkout failed."
+#~ msgstr "Erstellen der Arbeitskopie fehlgeschlagen."
+
+#~ msgid "Invalid GIT_COMMITTER_IDENT:"
+#~ msgstr "Ungültiger Wert von GIT_COMMITTER_INDENT:"
+
+#~ msgid "Invalid date from Git: %s"
+#~ msgstr "Ungültiges Datum von Git: %s"
+
+#~ msgid "Invalid font specified in %s:"
+#~ msgstr "Ungültige Zeichensatz-Angabe in %s:"
+
+#~ msgid "Invalid spell checking configuration"
+#~ msgstr "Unbenutzbare Konfiguration der Rechtschreibprüfung"
+
+#~ msgid "KiB"
+#~ msgstr "KB"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before a merge can be performed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv überein.\n"
+#~ "\n"
+#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden geändert.  Vor einem Zusammenführen muss neu geladen werden.\n"
+#~ "\n"
+#~ "Es wird gleich neu geladen.\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before another commit can be created.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv überein.\n"
+#~ "\n"
+#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden geändert.  Vor dem Eintragen einer neuen Version muss neu geladen werden.\n"
+#~ "\n"
+#~ "Es wird gleich neu geladen.\n"
+
+#~ msgid ""
+#~ "Last scanned state does not match repository state.\n"
+#~ "\n"
+#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before the current branch can be changed.\n"
+#~ "\n"
+#~ "The rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv überein.\n"
+#~ "\n"
+#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden geändert.  Vor dem Wechseln des lokalen Zweigs muss neu geladen werden.\n"
+#~ "\n"
+#~ "Es wird gleich neu geladen.\n"
+
+#~ msgid "Linking objects"
+#~ msgstr "Objekte verlinken"
+
+#~ msgid "Loading annotation..."
+#~ msgstr "Annotierung laden..."
+
+#~ msgid "Loading copy/move tracking annotations..."
+#~ msgstr "Annotierungen für Kopieren/Verschieben werden geladen..."
+
+#~ msgid "Loading original location annotations..."
+#~ msgstr "Annotierungen für ursprünglichen Ort werden geladen..."
+
+#~ msgid "Local Branches"
+#~ msgstr "Lokale Zweige"
+
+#~ msgid "Local Merge..."
+#~ msgstr "Lokales Zusammenführen..."
+
+#~ msgid "Location %s already exists."
+#~ msgstr "Projektarchiv »%s« existiert bereits."
+
+#~ msgid "Main Font"
+#~ msgstr "Programmschriftart"
+
+#~ msgid "Match Tracking Branch Name"
+#~ msgstr "Passend zu Übernahmezweig-Name"
+
+#~ msgid "Match Tracking Branches"
+#~ msgstr "Passend zu Übernahmezweig"
+
+#~ msgid "Merge completed successfully."
+#~ msgstr "Zusammenführen erfolgreich abgeschlossen."
+
+#~ msgid "Merge strategy '%s' not supported."
+#~ msgstr "Zusammenführungsmethode »%s« nicht unterstützt."
+
+#~ msgid "Merged Into:"
+#~ msgstr "Zusammengeführt mit:"
+
+#~ msgid "Merging %s and %s..."
+#~ msgstr "Zusammenführen von %s und %s..."
+
+#~ msgid "Modified, not staged"
+#~ msgstr "Verändert, nicht bereitgestellt"
+
+#~ msgid "New Branch Name Template"
+#~ msgstr "Namensvorschlag für neue Zweige"
+
+#~ msgid "New Commit"
+#~ msgstr "Neue Version"
+
+#~ msgid "New Name:"
+#~ msgstr "Neuer Name:"
+
+#~ msgid ""
+#~ "No changes to commit.\n"
+#~ "\n"
+#~ "No files were modified by this commit and it was not a merge commit.\n"
+#~ "\n"
+#~ "A rescan will be automatically started now.\n"
+#~ msgstr ""
+#~ "Keine Änderungen einzutragen.\n"
+#~ "\n"
+#~ "Es gibt keine geänderte Datei bei dieser Version und es wurde auch nichts zusammengeführt.\n"
+#~ "\n"
+#~ "Das Arbeitsverzeichnis wird daher jetzt neu geladen.\n"
+
+#~ msgid "No default branch obtained."
+#~ msgstr "Kein voreingestellter Zweig gefunden."
+
+#~ msgid ""
+#~ "No differences detected.\n"
+#~ "\n"
+#~ "%s has no changes.\n"
+#~ "\n"
+#~ "The modification date of this file was updated by another application, but the content within the file was not changed.\n"
+#~ "\n"
+#~ "A rescan will be automatically started to find other files which may have the same state."
+#~ msgstr ""
+#~ "Keine Änderungen feststellbar.\n"
+#~ "\n"
+#~ "»%s« enthält keine Änderungen. Zwar wurde das Änderungsdatum dieser Datei von einem anderen Programm modifiziert, aber der Inhalt der Datei ist unverändert.\n"
+#~ "\n"
+#~ "Das Arbeitsverzeichnis wird jetzt neu geladen, um diese Änderung bei allen Dateien zu prüfen."
+
+#~ msgid "No files selected for checkout from HEAD."
+#~ msgstr "Es sind keine Dateien zum Auschecken von HEAD ausgewählt."
+
+#~ msgid "No working directory"
+#~ msgstr "Kein Arbeitsverzeichnis"
+
+#~ msgid "Number of loose objects"
+#~ msgstr "Anzahl unverknüpfter Objekte"
+
+#~ msgid "Number of packed objects"
+#~ msgstr "Anzahl komprimierter Objekte"
+
+#~ msgid "Number of packs"
+#~ msgstr "Anzahl Komprimierungseinheiten"
+
+#, fuzzy
+#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
+#~ msgstr "Wenn Sie git-cola auf einem Debian-System gestartet haben, versuchen Sie es mit \"sudo apt-get install python-pyinotify\" "
+
+#~ msgid "One or more of the merge tests failed because you have not fetched the necessary commits.  Try fetching from %s first."
+#~ msgstr "Ein oder mehrere Zusammenführungen sind fehlgeschlagen, da Sie nicht die notwendigen Versionen vorher angefordert haben.  Sie sollten versuchen, zuerst von »%s« anzufordern."
+
+#~ msgid "Options"
+#~ msgstr "Optionen"
+
+#~ msgid "Original File:"
+#~ msgstr "Ursprüngliche Datei:"
+
+#~ msgid "Originally By:"
+#~ msgstr "Ursprünglich von:"
+
+#~ msgid ""
+#~ "Output:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Ausgabe:\n"
+#~ "%s"
+
+#~ msgid "Output: %s"
+#~ msgstr "Ausgabe: \"%s\""
+
+#~ msgid "Packed objects waiting for pruning"
+#~ msgstr "Komprimierte Objekte, die zum Aufräumen vorgesehen sind"
+
+#~ msgid "Path to git repository"
+#~ msgstr "Pfad zum Projektarchiv"
+
+#~ msgid "Please select one or more branches to delete."
+#~ msgstr "Bitte wählen Sie mindestens einen Zweig, der gelöscht werden soll."
+
+#~ msgid "Please supply a branch name."
+#~ msgstr "Bitte geben Sie einen Zweignamen an."
+
+#~ msgid "Portions staged for commit"
+#~ msgstr "Teilweise bereitgestellt zum Eintragen"
 
 #~ msgid ""
 #~ "Possible environment issues exist.\n"
@@ -2609,651 +3076,87 @@ msgstr "Im Quell-Projektarchiv geändert"
 #~ "von %s an Git weitergegeben werden:\n"
 #~ "\n"
 
-#~ msgid ""
-#~ "\n"
-#~ "This is due to a known issue with the\n"
-#~ "Tcl binary distributed by Cygwin."
-#~ msgstr ""
-#~ "\n"
-#~ "Dies ist ein bekanntes Problem der Tcl-Version, die\n"
-#~ "in Cygwin mitgeliefert wird."
+#~ msgid "Preferences..."
+#~ msgstr "Einstellungen..."
 
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "A good replacement for %s\n"
-#~ "is placing values for the user.name and\n"
-#~ "user.email settings into your personal\n"
-#~ "~/.gitconfig file.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Um den Namen »%s« zu ändern, sollten Sie die \n"
-#~ "gewünschten Werte für die Einstellung user.name und \n"
-#~ "user.email in Ihre Datei ~/.gitconfig einfügen.\n"
+#~ msgid "Process Diff Hunk"
+#~ msgstr "Abschnitt verarbeiten"
 
-#~ msgid "git-gui - a graphical user interface for Git."
-#~ msgstr "git-gui - eine grafische Oberfläche für Git."
+#~ msgid "Process Selection"
+#~ msgstr "Auswahl verarbeiten"
+
+#~ msgid "Prune Tracking Branches During Fetch"
+#~ msgstr "Übernahmezweige aufräumen während Anforderung"
+
+#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgstr "Übernahmezweige aufräumen und entfernen, die in »%s« gelöscht wurden"
+
+#~ msgid "Push Branches"
+#~ msgstr "Zweige versenden"
+
+#~ msgid "Push to"
+#~ msgstr "Versenden nach"
+
+#~ msgid "Pushing %s %s to %s"
+#~ msgstr "%s %s nach %s versenden"
 
 #~ msgid "Reading %s..."
 #~ msgstr "%s lesen..."
 
-#~ msgid "Loading copy/move tracking annotations..."
-#~ msgstr "Annotierungen für Kopieren/Verschieben werden geladen..."
+#~ msgid "Ready to commit."
+#~ msgstr "Bereit zum Eintragen."
 
-#~ msgid "lines annotated"
-#~ msgstr "Zeilen annotiert"
+#~ msgid "Ready."
+#~ msgstr "Bereit."
 
-#~ msgid "Loading original location annotations..."
-#~ msgstr "Annotierungen für ursprünglichen Ort werden geladen..."
+#~ msgid "Rebase Branch"
+#~ msgstr "Anfang des Zweigs verschieben"
 
-#~ msgid "Annotation complete."
-#~ msgstr "Annotierung vollständig."
+#~ msgid "Rebase..."
+#~ msgstr "Anfang verschieben..."
 
-#~ msgid "Loading annotation..."
-#~ msgstr "Annotierung laden..."
-
-#~ msgid "Original File:"
-#~ msgstr "Ursprüngliche Datei:"
-
-#~ msgid "Originally By:"
-#~ msgstr "Ursprünglich von:"
-
-#~ msgid "In File:"
-#~ msgstr "In Datei:"
-
-#~ msgid "Copied Or Moved Here By:"
-#~ msgstr "Kopiert oder verschoben durch:"
-
-#~ msgid "Detach From Local Branch"
-#~ msgstr "Verbindung zu lokalem Zweig lösen"
-
-#~ msgid "Match Tracking Branch Name"
-#~ msgstr "Passend zu Übernahmezweig-Name"
-
-#~ msgid "Tracking branch %s is not a branch in the remote repository."
-#~ msgstr "Übernahmezweig »%s« ist kein Zweig im anderen Projektarchiv."
-
-#~ msgid "Please supply a branch name."
-#~ msgstr "Bitte geben Sie einen Zweignamen an."
-
-#~ msgid "'%s' is not an acceptable branch name."
-#~ msgstr "»%s« ist kein zulässiger Zweigname."
-
-#~ msgid "Delete Local Branch"
-#~ msgstr "Lokalen Zweig löschen"
-
-#~ msgid "Delete Only If Merged Into"
-#~ msgstr "Nur löschen, wenn zusammengeführt nach"
-
-#~ msgid "Always (Do not perform merge test.)"
-#~ msgstr "Immer (ohne Zusammenführungstest)"
-
-#~ msgid "The following branches are not completely merged into %s:"
-#~ msgstr "Folgende Zweige sind noch nicht mit »%s« zusammengeführt:"
+#~ msgid ""
+#~ "Recovering deleted branches is difficult.\n"
+#~ "\n"
+#~ "Delete the selected branches?"
+#~ msgstr ""
+#~ "Das Wiederherstellen von gelöschten Zweigen ist nur mit größerem Aufwand möglich.\n"
+#~ "\n"
+#~ "Sollen die ausgewählten Zweige gelöscht werden?"
 
 #~ msgid ""
 #~ "Recovering deleted branches is difficult. \n"
 #~ "\n"
 #~ " Delete the selected branches?"
 #~ msgstr ""
-#~ "Gelöschte Zweige können nur mit größerem Aufwand wiederhergestellt "
-#~ "werden.\n"
+#~ "Gelöschte Zweige können nur mit größerem Aufwand wiederhergestellt werden.\n"
 #~ "\n"
 #~ "Gewählte Zweige jetzt löschen?"
 
-#~ msgid ""
-#~ "Failed to delete branches:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Fehler beim Löschen der Zweige:\n"
-#~ "%s"
+#~ msgid "Refreshing file status..."
+#~ msgstr "Dateistatus aktualisieren..."
 
-#~ msgid "New Name:"
-#~ msgstr "Neuer Name:"
+#, fuzzy
+#~ msgid "Remote Branches"
+#~ msgstr "Externer Zweig"
 
-#~ msgid "Failed to rename '%s'."
-#~ msgstr "Fehler beim Umbenennen von »%s«."
+#~ msgid "Remote:"
+#~ msgstr "Anderes Archiv:"
 
-#~ msgid "[Up To Parent]"
-#~ msgstr "[Nach oben]"
+#~ msgid "Remove selected paths from the staging area"
+#~ msgstr "Änderungen am ausgewählten Pfad nicht mehr vormerken"
 
-#~ msgid "Browse Branch Files"
-#~ msgstr "Dateien des Zweigs durchblättern"
+#~ msgid "Repository"
+#~ msgstr "Projektarchiv"
 
-#~ msgid "fatal: Cannot resolve %s"
-#~ msgstr "Fehler: »%s« kann nicht als Zweig oder Version erkannt werden"
+#~ msgid "Requires merge resolution"
+#~ msgstr "Konfliktauflösung nötig"
 
-#~ msgid "Branch '%s' does not exist."
-#~ msgstr "Zweig »%s« existiert nicht."
-
-#~ msgid ""
-#~ "Branch '%s' already exists.\n"
-#~ "\n"
-#~ "It cannot fast-forward to %s.\n"
-#~ "A merge is required."
-#~ msgstr ""
-#~ "Zweig »%s« existiert bereits.\n"
-#~ "\n"
-#~ "Zweig kann nicht mit »%s« schnellzusammengeführt werden. Reguläres "
-#~ "Zusammenführen ist notwendig."
-
-#~ msgid "Merge strategy '%s' not supported."
-#~ msgstr "Zusammenführungsmethode »%s« nicht unterstützt."
-
-#~ msgid "Failed to update '%s'."
-#~ msgstr "Aktualisieren von »%s« fehlgeschlagen."
-
-#~ msgid "Staging area (index) is already locked."
-#~ msgstr "Bereitstellung (»index«) ist zur Bearbeitung gesperrt (»locked«)."
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before the current branch can be changed.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv "
-#~ "überein.\n"
-#~ "\n"
-#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden "
-#~ "geändert.  Vor dem Wechseln des lokalen Zweigs muss neu geladen werden.\n"
-#~ "\n"
-#~ "Es wird gleich neu geladen.\n"
-
-#~ msgid "Updating working directory to '%s'..."
-#~ msgstr "Arbeitskopie umstellen auf »%s«..."
-
-#~ msgid "files checked out"
-#~ msgstr "Dateien aktualisiert"
-
-#~ msgid "Aborted checkout of '%s' (file level merging is required)."
-#~ msgstr ""
-#~ "Auf Zweig »%s« umstellen abgebrochen (Zusammenführen der Dateien ist "
-#~ "notwendig)."
-
-#~ msgid "File level merge required."
-#~ msgstr "Zusammenführen der Dateien ist notwendig."
-
-#~ msgid "Staying on branch '%s'."
-#~ msgstr "Es wird auf Zweig »%s« verblieben."
-
-#~ msgid ""
-#~ "You are no longer on a local branch.\n"
-#~ "\n"
-#~ "If you wanted to be on a branch, create one now starting from 'This "
-#~ "Detached Checkout'."
-#~ msgstr ""
-#~ "Die Arbeitskopie ist nicht auf einem lokalen Zweig.\n"
-#~ "\n"
-#~ "Wenn Sie auf einem Zweig arbeiten möchten, erstellen Sie bitte jetzt "
-#~ "einen Zweig mit der Auswahl »Abgetrennte Arbeitskopie-Version«."
-
-#~ msgid "Checked out '%s'."
-#~ msgstr "Umgestellt auf »%s«."
+#~ msgid "Rescan"
+#~ msgstr "Ansicht aktualisieren"
 
 #~ msgid "Reset '%s'?"
 #~ msgstr "»%s« zurücksetzen?"
-
-#~ msgid ""
-#~ "Failed to set current branch.\n"
-#~ "\n"
-#~ "This working directory is only partially switched.  We successfully "
-#~ "updated your files, but failed to update an internal Git file.\n"
-#~ "\n"
-#~ "This should not have occurred.  %s will now close and give up."
-#~ msgstr ""
-#~ "Lokaler Zweig kann nicht gesetzt werden.\n"
-#~ "\n"
-#~ "Diese Arbeitskopie ist nur teilweise umgestellt. Die Dateien sind korrekt "
-#~ "aktualisiert, aber einige interne Git-Dateien konnten nicht geändert "
-#~ "werden.\n"
-#~ "\n"
-#~ "Dies ist ein interner Programmfehler von %s. Programm wird jetzt "
-#~ "abgebrochen."
-
-#~ msgid "Font Family"
-#~ msgstr "Schriftfamilie"
-
-#~ msgid "Font Example"
-#~ msgstr "Schriftbeispiel"
-
-#~ msgid ""
-#~ "This is example text.\n"
-#~ "If you like this text, it can be your font."
-#~ msgstr ""
-#~ "Dies ist ein Beispieltext.\n"
-#~ "Wenn Ihnen dieser Text gefällt, sollten Sie diese Schriftart wählen."
-
-#~ msgid "Git Gui"
-#~ msgstr "Git Gui"
-
-#~ msgid "Failed to create repository %s:"
-#~ msgstr "Projektarchiv »%s« konnte nicht erstellt werden:"
-
-#~ msgid "Directory %s already exists."
-#~ msgstr "Verzeichnis »%s« existiert bereits."
-
-#~ msgid "Clone"
-#~ msgstr "Klonen"
-
-#~ msgid "Clone Type:"
-#~ msgstr "Art des Klonens:"
-
-#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-#~ msgstr "Standard (schnell, teilweise redundant, Hardlinks)"
-
-#~ msgid "Full Copy (Slower, Redundant Backup)"
-#~ msgstr "Alles kopieren (langsamer, volle Redundanz)"
-
-#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
-#~ msgstr "Verknüpft (schnell, nicht empfohlen, kein Backup)"
-
-#~ msgid "Standard only available for local repository."
-#~ msgstr "Standard ist nur für lokale Projektarchive verfügbar."
-
-#~ msgid "Shared only available for local repository."
-#~ msgstr "Verknüpft ist nur für lokale Projektarchive verfügbar."
-
-#~ msgid "Location %s already exists."
-#~ msgstr "Projektarchiv »%s« existiert bereits."
-
-#~ msgid "Failed to configure origin"
-#~ msgstr "Der Ursprungsort konnte nicht eingerichtet werden"
-
-#~ msgid "Counting objects"
-#~ msgstr "Objekte werden gezählt"
-
-#~ msgid "buckets"
-#~ msgstr "Buckets"
-
-#~ msgid "Unable to copy objects/info/alternates: %s"
-#~ msgstr ""
-#~ "Kopien von Objekten/Info/Alternates konnten nicht erstellt werden: %s"
-
-#~ msgid "The 'master' branch has not been initialized."
-#~ msgstr "Der »master«-Zweig wurde noch nicht initialisiert."
-
-#~ msgid "Hardlinks are unavailable.  Falling back to copying."
-#~ msgstr "Hardlinks nicht verfügbar. Stattdessen wird kopiert."
-
-#~ msgid "Cloning from %s"
-#~ msgstr "Kopieren von »%s«"
-
-#~ msgid "Copying objects"
-#~ msgstr "Objektdatenbank kopieren"
-
-#~ msgid "KiB"
-#~ msgstr "KB"
-
-#~ msgid "Unable to copy object: %s"
-#~ msgstr "Objekt kann nicht kopiert werden: %s"
-
-#~ msgid "Linking objects"
-#~ msgstr "Objekte verlinken"
-
-#~ msgid "objects"
-#~ msgstr "Objekte"
-
-#~ msgid "Unable to hardlink object: %s"
-#~ msgstr "Für Objekt konnte kein Hardlink erstellt werden: %s"
-
-#~ msgid "Cannot fetch branches and objects.  See console output for details."
-#~ msgstr ""
-#~ "Zweige und Objekte konnten nicht angefordert werden.  Kontrollieren Sie "
-#~ "die Ausgaben auf der Konsole für weitere Angaben."
-
-#~ msgid "Cannot fetch tags.  See console output for details."
-#~ msgstr ""
-#~ "Markierungen konnten nicht angefordert werden.  Kontrollieren Sie die "
-#~ "Ausgaben auf der Konsole für weitere Angaben."
-
-#~ msgid "Cannot determine HEAD.  See console output for details."
-#~ msgstr ""
-#~ "Die Zweigspitze (HEAD) konnte nicht gefunden werden.  Kontrollieren Sie "
-#~ "die Ausgaben auf der Konsole für weitere Angaben."
-
-#~ msgid "Clone failed."
-#~ msgstr "Klonen fehlgeschlagen."
-
-#~ msgid "No default branch obtained."
-#~ msgstr "Kein voreingestellter Zweig gefunden."
-
-#~ msgid "Cannot resolve %s as a commit."
-#~ msgstr "»%s« wurde nicht als Version gefunden."
-
-#~ msgid "Creating working directory"
-#~ msgstr "Arbeitskopie erstellen"
-
-#~ msgid "files"
-#~ msgstr "Dateien"
-
-#~ msgid "Initial file checkout failed."
-#~ msgstr "Erstellen der Arbeitskopie fehlgeschlagen."
-
-#~ msgid "Failed to open repository %s:"
-#~ msgstr "Projektarchiv »%s« konnte nicht geöffnet werden."
-
-#~ msgid "This Detached Checkout"
-#~ msgstr "Abgetrennte Arbeitskopie-Version"
-
-#~ msgid "Updated"
-#~ msgstr "Aktualisiert"
-
-#~ msgid ""
-#~ "There is nothing to amend.\n"
-#~ "\n"
-#~ "You are about to create the initial commit.  There is no commit before "
-#~ "this to amend.\n"
-#~ msgstr ""
-#~ "Keine Version zur Nachbesserung vorhanden.\n"
-#~ "\n"
-#~ "Sie sind dabei, die erste Version zu übertragen. Es gibt keine "
-#~ "existierende Version, die Sie nachbessern könnten.\n"
-
-#~ msgid ""
-#~ "Cannot amend while merging.\n"
-#~ "\n"
-#~ "You are currently in the middle of a merge that has not been fully "
-#~ "completed.  You cannot amend the prior commit unless you first abort the "
-#~ "current merge activity.\n"
-#~ msgstr ""
-#~ "Nachbesserung währen Zusammenführung nicht möglich.\n"
-#~ "\n"
-#~ "Sie haben das Zusammenführen von Versionen angefangen, aber noch nicht "
-#~ "beendet. Sie können keine vorige Übertragung nachbessern, solange eine "
-#~ "unfertige Zusammenführung existiert. Dazu müssen Sie die Zusammenführung "
-#~ "beenden oder abbrechen.\n"
-
-#~ msgid "Error loading commit data for amend:"
-#~ msgstr "Fehler beim Laden der Versionsdaten für Nachbessern:"
-
-#~ msgid "Unable to obtain your identity:"
-#~ msgstr "Benutzername konnte nicht bestimmt werden:"
-
-#~ msgid "Invalid GIT_COMMITTER_IDENT:"
-#~ msgstr "Ungültiger Wert von GIT_COMMITTER_INDENT:"
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before another commit can be created.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv "
-#~ "überein.\n"
-#~ "\n"
-#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden "
-#~ "geändert.  Vor dem Eintragen einer neuen Version muss neu geladen "
-#~ "werden.\n"
-#~ "\n"
-#~ "Es wird gleich neu geladen.\n"
-
-#~ msgid ""
-#~ "Unmerged files cannot be committed.\n"
-#~ "\n"
-#~ "File %s has merge conflicts.  You must resolve them and stage the file "
-#~ "before committing.\n"
-#~ msgstr ""
-#~ "Nicht zusammengeführte Dateien können nicht eingetragen werden.\n"
-#~ "\n"
-#~ "Die Datei »%s« hat noch nicht aufgelöste Zusammenführungs-Konflikte. Sie "
-#~ "müssen diese Konflikte auflösen, bevor Sie eintragen können.\n"
-
-#~ msgid ""
-#~ "Unknown file state %s detected.\n"
-#~ "\n"
-#~ "File %s cannot be committed by this program.\n"
-#~ msgstr ""
-#~ "Unbekannter Dateizustand »%s«.\n"
-#~ "\n"
-#~ "Datei »%s« kann nicht eingetragen werden.\n"
-
-#~ msgid "warning: Tcl does not support encoding '%s'."
-#~ msgstr "Warning: Tcl/Tk unterstützt die Zeichencodierung »%s« nicht."
-
-#~ msgid "Commit declined by pre-commit hook."
-#~ msgstr ""
-#~ "Eintragen abgelehnt durch Vor-Eintragen-Kontrolle (»pre-commit hook«)."
-
-#~ msgid "Calling commit-msg hook..."
-#~ msgstr "Aufrufen der Versionsbeschreibungs-Kontrolle..."
-
-#~ msgid "Commit declined by commit-msg hook."
-#~ msgstr ""
-#~ "Eintragen abgelehnt durch Versionsbeschreibungs-Kontrolle (»commit-"
-#~ "message hook«)."
-
-#~ msgid "write-tree failed:"
-#~ msgstr "write-tree fehlgeschlagen:"
-
-#~ msgid "Commit %s appears to be corrupt"
-#~ msgstr "Version »%s« scheint beschädigt zu sein"
-
-#~ msgid ""
-#~ "No changes to commit.\n"
-#~ "\n"
-#~ "No files were modified by this commit and it was not a merge commit.\n"
-#~ "\n"
-#~ "A rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Keine Änderungen einzutragen.\n"
-#~ "\n"
-#~ "Es gibt keine geänderte Datei bei dieser Version und es wurde auch nichts "
-#~ "zusammengeführt.\n"
-#~ "\n"
-#~ "Das Arbeitsverzeichnis wird daher jetzt neu geladen.\n"
-
-#~ msgid "commit-tree failed:"
-#~ msgstr "commit-tree fehlgeschlagen:"
-
-#~ msgid "update-ref failed:"
-#~ msgstr "update-ref fehlgeschlagen:"
-
-#~ msgid "Working... please wait..."
-#~ msgstr "Verarbeitung. Bitte warten..."
-
-#~ msgid "Error: Command Failed"
-#~ msgstr "Fehler: Kommando fehlgeschlagen"
-
-#~ msgid "Number of loose objects"
-#~ msgstr "Anzahl unverknüpfter Objekte"
-
-#~ msgid "Disk space used by loose objects"
-#~ msgstr "Festplattenplatz von unverknüpften Objekten"
-
-#~ msgid "Number of packed objects"
-#~ msgstr "Anzahl komprimierter Objekte"
-
-#~ msgid "Number of packs"
-#~ msgstr "Anzahl Komprimierungseinheiten"
-
-#~ msgid "Disk space used by packed objects"
-#~ msgstr "Festplattenplatz von komprimierten Objekten"
-
-#~ msgid "Packed objects waiting for pruning"
-#~ msgstr "Komprimierte Objekte, die zum Aufräumen vorgesehen sind"
-
-#~ msgid "Garbage files"
-#~ msgstr "Dateien im Mülleimer"
-
-#~ msgid "Compressing the object database"
-#~ msgstr "Objektdatenbank komprimieren"
-
-#~ msgid "Verifying the object database with fsck-objects"
-#~ msgstr "Die Objektdatenbank durch »fsck-objects« überprüfen lassen"
-
-#~ msgid ""
-#~ "This repository currently has approximately %i loose objects.\n"
-#~ "\n"
-#~ "To maintain optimal performance it is strongly recommended that you "
-#~ "compress the database when more than %i loose objects exist.\n"
-#~ "\n"
-#~ "Compress the database now?"
-#~ msgstr ""
-#~ "Dieses Projektarchiv enthält ungefähr %i nicht verknüpfte Objekte.\n"
-#~ "\n"
-#~ "Für eine optimale Performance wird empfohlen, die Datenbank des "
-#~ "Projektarchivs zu komprimieren, sobald mehr als %i nicht verknüpfte "
-#~ "Objekte vorliegen.\n"
-#~ "\n"
-#~ "Soll die Datenbank jetzt komprimiert werden?"
-
-#~ msgid "Invalid date from Git: %s"
-#~ msgstr "Ungültiges Datum von Git: %s"
-
-#~ msgid ""
-#~ "No differences detected.\n"
-#~ "\n"
-#~ "%s has no changes.\n"
-#~ "\n"
-#~ "The modification date of this file was updated by another application, "
-#~ "but the content within the file was not changed.\n"
-#~ "\n"
-#~ "A rescan will be automatically started to find other files which may have "
-#~ "the same state."
-#~ msgstr ""
-#~ "Keine Änderungen feststellbar.\n"
-#~ "\n"
-#~ "»%s« enthält keine Änderungen. Zwar wurde das Änderungsdatum dieser Datei "
-#~ "von einem anderen Programm modifiziert, aber der Inhalt der Datei ist "
-#~ "unverändert.\n"
-#~ "\n"
-#~ "Das Arbeitsverzeichnis wird jetzt neu geladen, um diese Änderung bei "
-#~ "allen Dateien zu prüfen."
-
-#~ msgid "Unable to display %s"
-#~ msgstr "Datei »%s« kann nicht angezeigt werden"
-
-#~ msgid "Git Repository (subproject)"
-#~ msgstr "Git-Projektarchiv (Unterprojekt)"
-
-#~ msgid "* Binary file (not showing content)."
-#~ msgstr "* Binärdatei (Inhalt wird nicht angezeigt)"
-
-#~ msgid "Failed to unstage selected hunk."
-#~ msgstr ""
-#~ "Fehler beim Herausnehmen des gewählten Kontexts aus der Bereitstellung."
-
-#~ msgid "Failed to stage selected hunk."
-#~ msgstr "Fehler beim Bereitstellen des gewählten Kontexts."
-
-#~ msgid "warning"
-#~ msgstr "Warnung"
-
-#~ msgid "You must correct the above errors before committing."
-#~ msgstr ""
-#~ "Sie müssen die obigen Fehler zuerst beheben, bevor Sie eintragen können."
-
-#~ msgid "Unable to unlock the index."
-#~ msgstr "Bereitstellung kann nicht wieder freigegeben werden."
-
-#~ msgid "Index Error"
-#~ msgstr "Fehler in Bereitstellung"
-
-#~ msgid ""
-#~ "Updating the Git index failed.  A rescan will be automatically started to "
-#~ "resynchronize git-gui."
-#~ msgstr ""
-#~ "Das Aktualisieren der Git-Bereitstellung ist fehlgeschlagen. Eine "
-#~ "allgemeine Git-Aktualisierung wird jetzt gestartet, um git-gui wieder mit "
-#~ "git zu synchronisieren."
-
-#~ msgid "Unlock Index"
-#~ msgstr "Bereitstellung freigeben"
-
-#~ msgid "Ready to commit."
-#~ msgstr "Bereit zum Eintragen."
-
-#~ msgid "Revert changes in these %i files?"
-#~ msgstr "Änderungen in den gewählten %i Dateien verwerfen?"
-
-#~ msgid "Any unstaged changes will be permanently lost by the revert."
-#~ msgstr ""
-#~ "Alle nicht bereitgestellten Änderungen werden beim Verwerfen verloren "
-#~ "gehen."
-
-#~ msgid "Do Nothing"
-#~ msgstr "Nichts tun"
-
-#~ msgid ""
-#~ "Cannot merge while amending.\n"
-#~ "\n"
-#~ "You must finish amending this commit before starting any type of merge.\n"
-#~ msgstr ""
-#~ "Zusammenführen kann nicht gleichzeitig mit Nachbessern durchgeführt "
-#~ "werden.\n"
-#~ "\n"
-#~ "Sie müssen zuerst die Nachbesserungs-Version abschließen, bevor Sie "
-#~ "zusammenführen können.\n"
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before a merge can be performed.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Der letzte geladene Status stimmt nicht mehr mit dem Projektarchiv "
-#~ "überein.\n"
-#~ "\n"
-#~ "Ein anderes Git-Programm hat das Projektarchiv seit dem letzten Laden "
-#~ "geändert.  Vor einem Zusammenführen muss neu geladen werden.\n"
-#~ "\n"
-#~ "Es wird gleich neu geladen.\n"
-
-#~ msgid ""
-#~ "You are in the middle of a conflicted merge.\n"
-#~ "\n"
-#~ "File %s has merge conflicts.\n"
-#~ "\n"
-#~ "You must resolve them, stage the file, and commit to complete the current "
-#~ "merge.  Only then can you begin another merge.\n"
-#~ msgstr ""
-#~ "Zusammenführung mit Konflikten.\n"
-#~ "\n"
-#~ "Die Datei »%s« enthält Konflikte beim Zusammenführen. Sie müssen diese "
-#~ "Konflikte per Hand auflösen. Anschließend müssen Sie die Datei wieder "
-#~ "bereitstellen und eintragen, um die Zusammenführung abzuschließen. Erst "
-#~ "danach kann eine neue Zusammenführung begonnen werden.\n"
-
-#~ msgid ""
-#~ "You are in the middle of a change.\n"
-#~ "\n"
-#~ "File %s is modified.\n"
-#~ "\n"
-#~ "You should complete the current commit before starting a merge.  Doing so "
-#~ "will help you abort a failed merge, should the need arise.\n"
-#~ msgstr ""
-#~ "Es liegen Änderungen vor.\n"
-#~ "\n"
-#~ "Die Datei »%s« wurde geändert.  Sie sollten zuerst die bereitgestellte "
-#~ "Version abschließen, bevor Sie eine Zusammenführung beginnen.  Mit dieser "
-#~ "Reihenfolge können Sie mögliche Konflikte beim Zusammenführen wesentlich "
-#~ "einfacher beheben oder abbrechen.\n"
-
-#~ msgid "%s of %s"
-#~ msgstr "%s von %s"
-
-#~ msgid "Merging %s and %s..."
-#~ msgstr "Zusammenführen von %s und %s..."
-
-#~ msgid "Merge completed successfully."
-#~ msgstr "Zusammenführen erfolgreich abgeschlossen."
-
-#~ msgid ""
-#~ "Cannot abort while amending.\n"
-#~ "\n"
-#~ "You must finish amending this commit.\n"
-#~ msgstr ""
-#~ "Abbruch der Nachbesserung ist nicht möglich.\n"
-#~ "\n"
-#~ "Sie müssen die Nachbesserung der Version abschließen.\n"
 
 #~ msgid ""
 #~ "Reset changes?\n"
@@ -3264,67 +3167,91 @@ msgstr "Im Quell-Projektarchiv geändert"
 #~ msgstr ""
 #~ "Änderungen zurücksetzen?\n"
 #~ "\n"
-#~ "Wenn Sie zurücksetzen, gehen alle noch nicht eingetragenen Änderungen "
-#~ "verloren.\n"
+#~ "Wenn Sie zurücksetzen, gehen alle noch nicht eingetragenen Änderungen verloren.\n"
 #~ "\n"
 #~ "Änderungen jetzt zurücksetzen?"
-
-#~ msgid "files reset"
-#~ msgstr "Dateien zurückgesetzt"
-
-#~ msgid "Abort failed."
-#~ msgstr "Abbruch fehlgeschlagen."
-
-#~ msgid "Abort completed.  Ready."
-#~ msgstr "Abbruch durchgeführt. Bereit."
 
 #~ msgid "Restore Defaults"
 #~ msgstr "Voreinstellungen wiederherstellen"
 
-#~ msgid "%s Repository"
-#~ msgstr "Projektarchiv %s"
+#~ msgid "Revert Uncommitted Changes..."
+#~ msgstr "Nicht versionierte Änderungen verwerfen"
 
-#~ msgid "Prune Tracking Branches During Fetch"
-#~ msgstr "Übernahmezweige aufräumen während Anforderung"
+#~ msgid "Revert changes in these %i files?"
+#~ msgstr "Änderungen in den gewählten %i Dateien verwerfen?"
 
-#~ msgid "Match Tracking Branches"
-#~ msgstr "Passend zu Übernahmezweig"
+#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
+#~ msgstr "Verknüpft (schnell, nicht empfohlen, kein Backup)"
 
-#~ msgid "New Branch Name Template"
-#~ msgstr "Namensvorschlag für neue Zweige"
+#~ msgid "Shared only available for local repository."
+#~ msgstr "Verknüpft ist nur für lokale Projektarchive verfügbar."
+
+#~ msgid "Show Less Context"
+#~ msgstr "Weniger Zeilen anzeigen"
+
+#~ msgid "Show More Context"
+#~ msgstr "Mehr Zeilen anzeigen"
+
+#~ msgid "Source Branches"
+#~ msgstr "Lokale Zweige"
+
+#~ msgid "Spell Checker Failed"
+#~ msgstr "Rechtschreibprüfung fehlgeschlagen"
+
+#~ msgid "Spell checker silently failed on startup"
+#~ msgstr "Rechtschreibprüfungsprogramm mit Fehler abgebrochen"
+
+#~ msgid "Spell checking is unavailable"
+#~ msgstr "Rechtschreibprüfung nicht verfügbar"
 
 #~ msgid "Spelling Dictionary:"
 #~ msgstr "Wörterbuch Rechtschreibprüfung:"
 
-#~ msgid "Change Font"
-#~ msgstr "Schriftart ändern"
+#~ msgid "Stage Hunk For Commit"
+#~ msgstr "Kontext zur Bereitstellung hinzufügen"
 
-#~ msgid "pt."
-#~ msgstr "pt."
+#~ msgid "Staged Changes (Will Commit)"
+#~ msgstr "Bereitstellung (zum Eintragen)"
 
-#~ msgid "Failed to completely save options:"
-#~ msgstr "Optionen konnten nicht gespeichert werden:"
+#~ msgid "Staged for commit, missing"
+#~ msgstr "Bereitgestellt zum Eintragen, fehlend"
 
-#~ msgid "From Repository"
-#~ msgstr "In Projektarchiv"
+#~ msgid "Staged for removal"
+#~ msgstr "Bereitgestellt zum Löschen"
 
-#~ msgid "Remote:"
-#~ msgstr "Anderes Archiv:"
+#~ msgid "Staged for removal, still present"
+#~ msgstr "Bereitgestellt zum Löschen, trotzdem vorhanden"
 
-#~ msgid "Arbitrary URL:"
-#~ msgstr "Archiv-URL:"
+#, fuzzy
+#~ msgid "Staging Area"
+#~ msgstr "Vermerke Änderung an »%s«"
 
-#~ msgid "Delete Only If"
-#~ msgstr "Nur löschen, wenn"
+#~ msgid "Staging area (index) is already locked."
+#~ msgstr "Bereitstellung (»index«) ist zur Bearbeitung gesperrt (»locked«)."
 
-#~ msgid "Merged Into:"
-#~ msgstr "Zusammengeführt mit:"
+#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
+#~ msgstr "Standard (schnell, teilweise redundant, Hardlinks)"
 
-#~ msgid "Always (Do not perform merge checks)"
-#~ msgstr "Immer (Keine Zusammenführungsprüfung)"
+#~ msgid "Standard only available for local repository."
+#~ msgstr "Standard ist nur für lokale Projektarchive verfügbar."
 
-#~ msgid "A branch is required for 'Merged Into'."
-#~ msgstr "Für »Zusammenführen mit« muss ein Zweig angegeben werden."
+#~ msgid "Starting gitk... please wait..."
+#~ msgstr "Gitk wird gestartet... bitte warten."
+
+#~ msgid "Staying on branch '%s'."
+#~ msgstr "Es wird auf Zweig »%s« verblieben."
+
+#~ msgid "Success"
+#~ msgstr "Erfolgreich"
+
+#~ msgid "Successfully saved bookmarks"
+#~ msgstr "Die Favoriten wurden erfolgreich gesichert."
+
+#~ msgid "The 'master' branch has not been initialized."
+#~ msgstr "Der »master«-Zweig wurde noch nicht initialisiert."
+
+#~ msgid "The following branches are not completely merged into %s:"
+#~ msgstr "Folgende Zweige sind noch nicht mit »%s« zusammengeführt:"
 
 #~ msgid ""
 #~ "The following branches are not completely merged into %s:\n"
@@ -3336,91 +3263,248 @@ msgstr "Im Quell-Projektarchiv geändert"
 #~ " - %s"
 
 #~ msgid ""
-#~ "One or more of the merge tests failed because you have not fetched the "
-#~ "necessary commits.  Try fetching from %s first."
+#~ "There is nothing to amend.\n"
+#~ "\n"
+#~ "You are about to create the initial commit.  There is no commit before this to amend.\n"
 #~ msgstr ""
-#~ "Ein oder mehrere Zusammenführungen sind fehlgeschlagen, da Sie nicht die "
-#~ "notwendigen Versionen vorher angefordert haben.  Sie sollten versuchen, "
-#~ "zuerst von »%s« anzufordern."
+#~ "Keine Version zur Nachbesserung vorhanden.\n"
+#~ "\n"
+#~ "Sie sind dabei, die erste Version zu übertragen. Es gibt keine existierende Version, die Sie nachbessern könnten.\n"
 
-#~ msgid "Please select one or more branches to delete."
-#~ msgstr "Bitte wählen Sie mindestens einen Zweig, der gelöscht werden soll."
+#~ msgid "This Detached Checkout"
+#~ msgstr "Abgetrennte Arbeitskopie-Version"
 
 #~ msgid ""
-#~ "Recovering deleted branches is difficult.\n"
-#~ "\n"
-#~ "Delete the selected branches?"
+#~ "This PyQt4 does not include QtWebKit.\n"
+#~ "The keyboard shortcuts feature is unavailable."
 #~ msgstr ""
-#~ "Das Wiederherstellen von gelöschten Zweigen ist nur mit größerem Aufwand "
-#~ "möglich.\n"
-#~ "\n"
-#~ "Sollen die ausgewählten Zweige gelöscht werden?"
+#~ "Das vorhandene PyQt4 enthält nicht die Komponente \"QtWebKit\".\n"
+#~ "Deshalb ist die Anzeige der Tastenkürzel nicht verfügbar."
 
-#~ msgid "Fetch from"
-#~ msgstr "Anfordern von"
-
-#~ msgid "Push to"
-#~ msgstr "Versenden nach"
-
-#~ msgid "Cannot write shortcut:"
-#~ msgstr "Fehler beim Schreiben der Verknüpfung:"
-
-#~ msgid "Unsupported spell checker"
-#~ msgstr "Rechtschreibprüfungsprogramm nicht unterstützt"
-
-#~ msgid "Spell checking is unavailable"
-#~ msgstr "Rechtschreibprüfung nicht verfügbar"
-
-#~ msgid "Invalid spell checking configuration"
-#~ msgstr "Unbenutzbare Konfiguration der Rechtschreibprüfung"
-
-#~ msgid "Spell checker silently failed on startup"
-#~ msgstr "Rechtschreibprüfungsprogramm mit Fehler abgebrochen"
-
-#~ msgid "Unrecognized spell checker"
-#~ msgstr "Unbekanntes Rechtschreibprüfungsprogramm"
-
-#~ msgid "Unexpected EOF from spell checker"
-#~ msgstr "Unerwartetes EOF vom Rechtschreibprüfungsprogramm"
-
-#~ msgid "Spell Checker Failed"
-#~ msgstr "Rechtschreibprüfung fehlgeschlagen"
-
-#~ msgid "%s ... %*i of %*i %s (%3i%%)"
-#~ msgstr "%s ... %*i von %*i %s (%3i%%)"
-
-#~ msgid "Fetching new changes from %s"
-#~ msgstr "Neue Änderungen von »%s« holen"
-
-#~ msgid "remote prune %s"
-#~ msgstr "Aufräumen von »%s«"
-
-#~ msgid "Pruning tracking branches deleted from %s"
+#~ msgid ""
+#~ "This is example text.\n"
+#~ "If you like this text, it can be your font."
 #~ msgstr ""
-#~ "Übernahmezweige aufräumen und entfernen, die in »%s« gelöscht wurden"
+#~ "Dies ist ein Beispieltext.\n"
+#~ "Wenn Ihnen dieser Text gefällt, sollten Sie diese Schriftart wählen."
 
-#~ msgid "push %s"
-#~ msgstr "»%s« versenden..."
+#~ msgid ""
+#~ "This repository currently has approximately %i loose objects.\n"
+#~ "\n"
+#~ "To maintain optimal performance it is strongly recommended that you compress the database when more than %i loose objects exist.\n"
+#~ "\n"
+#~ "Compress the database now?"
+#~ msgstr ""
+#~ "Dieses Projektarchiv enthält ungefähr %i nicht verknüpfte Objekte.\n"
+#~ "\n"
+#~ "Für eine optimale Performance wird empfohlen, die Datenbank des Projektarchivs zu komprimieren, sobald mehr als %i nicht verknüpfte Objekte vorliegen.\n"
+#~ "\n"
+#~ "Soll die Datenbank jetzt komprimiert werden?"
 
-#~ msgid "Pushing %s %s to %s"
-#~ msgstr "%s %s nach %s versenden"
+#~ msgid "Tools"
+#~ msgstr "Ansicht"
 
-#~ msgid "Push Branches"
-#~ msgstr "Zweige versenden"
-
-#~ msgid "Source Branches"
-#~ msgstr "Lokale Zweige"
-
-#~ msgid "Destination Repository"
-#~ msgstr "Ziel-Projektarchiv"
+#~ msgid "Tracking branch %s is not a branch in the remote repository."
+#~ msgstr "Übernahmezweig »%s« ist kein Zweig im anderen Projektarchiv."
 
 #~ msgid "Transfer Options"
 #~ msgstr "Netzwerk-Einstellungen"
 
-#~ msgid "Force overwrite existing branch (may discard changes)"
+#~ msgid "Unable to copy object: %s"
+#~ msgstr "Objekt kann nicht kopiert werden: %s"
+
+#~ msgid "Unable to copy objects/info/alternates: %s"
+#~ msgstr "Kopien von Objekten/Info/Alternates konnten nicht erstellt werden: %s"
+
+#~ msgid "Unable to display %s"
+#~ msgstr "Datei »%s« kann nicht angezeigt werden"
+
+#~ msgid "Unable to hardlink object: %s"
+#~ msgstr "Für Objekt konnte kein Hardlink erstellt werden: %s"
+
+#~ msgid "Unable to obtain your identity:"
+#~ msgstr "Benutzername konnte nicht bestimmt werden:"
+
+#~ msgid ""
+#~ "Unable to start gitk:\n"
+#~ "\n"
+#~ "%s does not exist"
 #~ msgstr ""
-#~ "Überschreiben von existierenden Zweigen erzwingen (könnte Änderungen "
-#~ "löschen)"
+#~ "Gitk kann nicht gestartet werden:\n"
+#~ "\n"
+#~ "%s existiert nicht"
+
+#~ msgid "Unable to unlock the index."
+#~ msgstr "Bereitstellung kann nicht wieder freigegeben werden."
+
+#~ msgid "Unexpected EOF from spell checker"
+#~ msgstr "Unerwartetes EOF vom Rechtschreibprüfungsprogramm"
+
+#~ msgid ""
+#~ "Unknown file state %s detected.\n"
+#~ "\n"
+#~ "File %s cannot be committed by this program.\n"
+#~ msgstr ""
+#~ "Unbekannter Dateizustand »%s«.\n"
+#~ "\n"
+#~ "Datei »%s« kann nicht eingetragen werden.\n"
+
+#~ msgid "Unlock Index"
+#~ msgstr "Bereitstellung freigeben"
+
+#~ msgid ""
+#~ "Unmerged files cannot be committed.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file before committing.\n"
+#~ msgstr ""
+#~ "Nicht zusammengeführte Dateien können nicht eingetragen werden.\n"
+#~ "\n"
+#~ "Die Datei »%s« hat noch nicht aufgelöste Zusammenführungs-Konflikte. Sie müssen diese Konflikte auflösen, bevor Sie eintragen können.\n"
+
+#~ msgid "Unrecognized spell checker"
+#~ msgstr "Unbekanntes Rechtschreibprüfungsprogramm"
+
+#~ msgid "Unstage Hunk From Commit"
+#~ msgstr "Kontext aus Bereitstellung herausnehmen"
+
+#~ msgid "Unsupported spell checker"
+#~ msgstr "Rechtschreibprüfungsprogramm nicht unterstützt"
+
+#~ msgid "Updated"
+#~ msgstr "Aktualisiert"
+
+#~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
+#~ msgstr "Das Aktualisieren der Git-Bereitstellung ist fehlgeschlagen. Eine allgemeine Git-Aktualisierung wird jetzt gestartet, um git-gui wieder mit git zu synchronisieren."
+
+#~ msgid "Updating working directory to '%s'..."
+#~ msgstr "Arbeitskopie umstellen auf »%s«..."
+
+#~ msgid "Updating..."
+#~ msgstr "Aktualisiere..."
 
 #~ msgid "Use thin pack (for slow network connections)"
 #~ msgstr "Kompaktes Datenformat benutzen (für langsame Netzverbindungen)"
+
+#~ msgid "Verify Database"
+#~ msgstr "Datenbank überprüfen"
+
+#~ msgid "Verifying the object database with fsck-objects"
+#~ msgstr "Die Objektdatenbank durch »fsck-objects« überprüfen lassen"
+
+#~ msgid "Visualize %s's History"
+#~ msgstr "Historie von »%s« darstellen"
+
+#~ msgid "Working... please wait..."
+#~ msgstr "Verarbeitung. Bitte warten..."
+
+#~ msgid ""
+#~ "You are in the middle of a change.\n"
+#~ "\n"
+#~ "File %s is modified.\n"
+#~ "\n"
+#~ "You should complete the current commit before starting a merge.  Doing so will help you abort a failed merge, should the need arise.\n"
+#~ msgstr ""
+#~ "Es liegen Änderungen vor.\n"
+#~ "\n"
+#~ "Die Datei »%s« wurde geändert.  Sie sollten zuerst die bereitgestellte Version abschließen, bevor Sie eine Zusammenführung beginnen.  Mit dieser Reihenfolge können Sie mögliche Konflikte beim Zusammenführen wesentlich einfacher beheben oder abbrechen.\n"
+
+#~ msgid ""
+#~ "You are in the middle of a conflicted merge.\n"
+#~ "\n"
+#~ "File %s has merge conflicts.\n"
+#~ "\n"
+#~ "You must resolve them, stage the file, and commit to complete the current merge.  Only then can you begin another merge.\n"
+#~ msgstr ""
+#~ "Zusammenführung mit Konflikten.\n"
+#~ "\n"
+#~ "Die Datei »%s« enthält Konflikte beim Zusammenführen. Sie müssen diese Konflikte per Hand auflösen. Anschließend müssen Sie die Datei wieder bereitstellen und eintragen, um die Zusammenführung abzuschließen. Erst danach kann eine neue Zusammenführung begonnen werden.\n"
+
+#~ msgid ""
+#~ "You are no longer on a local branch.\n"
+#~ "\n"
+#~ "If you wanted to be on a branch, create one now starting from 'This Detached Checkout'."
+#~ msgstr ""
+#~ "Die Arbeitskopie ist nicht auf einem lokalen Zweig.\n"
+#~ "\n"
+#~ "Wenn Sie auf einem Zweig arbeiten möchten, erstellen Sie bitte jetzt einen Zweig mit der Auswahl »Abgetrennte Arbeitskopie-Version«."
+
+#~ msgid "You must correct the above errors before committing."
+#~ msgstr "Sie müssen die obigen Fehler zuerst beheben, bevor Sie eintragen können."
+
+#~ msgid "[Up To Parent]"
+#~ msgstr "[Nach oben]"
+
+#~ msgid "buckets"
+#~ msgstr "Buckets"
+
+#~ msgid "commit-tree failed:"
+#~ msgstr "commit-tree fehlgeschlagen:"
+
+#~ msgid "fatal: Cannot resolve %s"
+#~ msgstr "Fehler: »%s« kann nicht als Zweig oder Version erkannt werden"
+
+#~ msgid ""
+#~ "file notification: disabled\n"
+#~ "Note: install pywin32 to enable.\n"
+#~ msgstr ""
+#~ "git-cola wird nicht über Änderungen im Dateisystem benachrichtigt.\n"
+#~ "Installieren Sie pywin32, um diese Funktion zu nutzen.\n"
+
+#~ msgid "files"
+#~ msgstr "Dateien"
+
+#~ msgid "files checked out"
+#~ msgstr "Dateien aktualisiert"
+
+#~ msgid "files reset"
+#~ msgstr "Dateien zurückgesetzt"
+
+#~ msgid "git clone returned exit code %s"
+#~ msgstr "git clone wurde mit dem Fehlercode %s beendet"
+
+#, fuzzy
+#~ msgid "git tag returned exit code %s"
+#~ msgstr "git clone wurde mit dem Fehlercode %s beendet"
+
+#~ msgid "git-gui - a graphical user interface for Git."
+#~ msgstr "git-gui - eine grafische Oberfläche für Git."
+
+#~ msgid "git-gui: fatal error"
+#~ msgstr "git-gui: Programmfehler"
+
+#~ msgid "inotify enabled."
+#~ msgstr "inotify aktiviert"
+
+#~ msgid ""
+#~ "inotify: disabled\n"
+#~ "Note: install python-pyinotify to enable inotify.\n"
+#~ msgstr ""
+#~ "inotify: deaktiviert\n"
+#~ "Installieren Sie python-pyinotify, um diese Funktion zu nutzen.\n"
+
+#~ msgid "lines annotated"
+#~ msgstr "Zeilen annotiert"
+
+#~ msgid "objects"
+#~ msgstr "Objekte"
+
+#~ msgid "pt."
+#~ msgstr "pt."
+
+#~ msgid "push %s"
+#~ msgstr "»%s« versenden..."
+
+#~ msgid "remote prune %s"
+#~ msgstr "Aufräumen von »%s«"
+
+#~ msgid "update-ref failed:"
+#~ msgstr "update-ref fehlgeschlagen:"
+
+#~ msgid "warning"
+#~ msgstr "Warnung"
+
+#~ msgid "warning: Tcl does not support encoding '%s'."
+#~ msgstr "Warning: Tcl/Tk unterstützt die Zeichencodierung »%s« nicht."
+
+#~ msgid "write-tree failed:"
+#~ msgstr "write-tree fehlgeschlagen:"

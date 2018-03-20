@@ -16,1220 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Abort Merge..."
-msgstr "Batalkan Penggabungan..."
-
-msgid "Aborting the current merge?"
-msgstr "Batalkan merge saat ini?"
-
-msgid ""
-"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
-"Recovering uncommitted changes is not possible."
-msgstr ""
-"Membatalkan merge saat ini akan menghilangkan *SEMUA* perubahan commit.\n"
-"Mengembalikan perubahan yang belum dicommit tidak dimungkinkan."
-
-msgid "Abort Merge"
-msgstr "Batalkan Merge"
-
-msgid "Error"
-msgstr "Error"
-
-msgid "Amend"
-msgstr "Ubah"
-
-msgid "Cannot Amend"
-msgstr "Tidak dapat diubah"
-
-msgid ""
-"You are in the middle of a merge.\n"
-"Cannot amend while merging."
-msgstr ""
-"Anda sedang melakukan merjer.\n"
-"Tidak dapat mengubah ketika merjer"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "PATCH %(current)d/%(count)d"
-
-msgid "Summary:"
-msgstr "Ringkasan:"
-
-msgid "Patch(es) Applied"
-msgstr "Patch Diterapkan"
-
-#, python-format
-msgid "%d patch(es) applied."
-msgstr "%d patch diterapkan."
-
-#, fuzzy
-msgid "Error Launching Blame Viewer"
-msgstr "Errot Menjalankan Peramban Histori"
-
-#, fuzzy, python-format
-msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
-
-msgid "Reset Branch"
-msgstr "Atur Ulang Cabang"
-
-msgid "Point the current branch head to a new commit?"
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
-
-msgid "Reset Worktree"
-msgstr ""
-
-msgid "Reset worktree?"
-msgstr ""
-
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr ""
-
-msgid "Commit failed"
-msgstr "Commit gagal"
-
-#, python-format
-msgid "Error creating remote \"%s\""
-msgstr "Error membuat hulu \"%s\""
-
-msgid "Delete Remote"
-msgstr "Hapus Hulu"
-
-msgid "Delete remote?"
-msgstr "Hapus hulu?"
-
-#, python-format
-msgid "Delete remote \"%s\""
-msgstr "Hapus hulu \"%s\""
-
-msgid "Delete"
-msgstr "Hapus"
-
-#, python-format
-msgid "Error deleting remote \"%s\""
-msgstr "Error menghapus hulu \"%s\""
-
-msgid "Rename Remote"
-msgstr "Ganti Nama Hulu"
-
-msgid "Rename remote?"
-msgstr "Ganti nama hulu?"
-
-#, python-format
-msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
-
-msgid "Rename"
-msgstr "Ganti nama"
-
-#, fuzzy
-msgid "Delete Bookmark?"
-msgstr "Markah"
-
-#, python-format
-msgid "%s will be removed from your bookmarks."
-msgstr ""
-
-#, fuzzy
-msgid "Delete Bookmark"
-msgstr "Markah"
-
-#, python-format
-msgid "Remove %s from the recent list?"
-msgstr ""
-
-#, python-format
-msgid "%s will be removed from your recent repositories."
-msgstr ""
-
-msgid "Remove"
-msgstr "Hapus"
-
-#, python-format
-msgid "Deleting \"%s\" failed"
-msgstr "Gagal menghapus \"%s\""
-
-msgid "Delete Files?"
-msgstr "Hapus Berkas?"
-
-msgid "The following files will be deleted:"
-msgstr "Berkas berikut akan dihapus:"
-
-#, python-format
-msgid "Delete %d file(s)?"
-msgstr "Hapus %d berkas?"
-
-msgid "Delete Files"
-msgstr "Hapus Berkas"
-
-msgid "Error Deleting Remote Branch"
-msgstr "Error menghapus Cabang Hulu"
-
-msgid "Remote Branch Deleted"
-msgstr "Cabang Hulu Dihapus"
-
-#, python-format
-msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr "\"%(branch)s\" telah dihapus dari \"%(remote)s\"."
-
-msgid "Launch Editor"
-msgstr "Jalankan Penyunting"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
-
-msgid "Error Editing File"
-msgstr "Error Menyunting Berkas"
-
-msgid "Launch Diff Tool"
-msgstr "Jalankan Alat Diff"
-
-msgid "Launch Terminal"
-msgstr "Jalankan Terminal"
-
-msgid "Error: Cannot find commit template"
-msgstr "Error: Tidak dapat melakukan commit templat"
-
-#, python-format
-msgid "%s: No such file or directory."
-msgstr "%s: Berkas atau direktori tidak ada."
-
-msgid "Error: Unconfigured commit template"
-msgstr "Error: Commit templat belum dikonfigurasi"
-
-msgid ""
-"A commit template has not been configured.\n"
-"Use \"git config\" to define \"commit.template\"\n"
-"so that it points to a commit template."
-msgstr ""
-"Templat commit belum dikonfigurasi.\n"
-"Gunakan \"git config\" untuk menentukan \"commit.template\"\n"
-"agar mengarah ke templat commit."
-
-msgid "Error running prepare-commitmsg hook"
-msgstr ""
-
-#, python-format
-msgid "A hook must be provided at \"%s\""
-msgstr ""
-
-msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
-
-msgid "Open Using Default Application"
-msgstr "Buka dengan Aplikasi Bawaan"
-
-msgid "Open Parent Directory"
-msgstr "Bukan Direktori di Atasnya"
-
-#, python-format
-msgid "Rebase onto %s"
-msgstr "Rebase ke %s"
-
-msgid "Rebase"
-msgstr "Rebase"
-
-#, fuzzy
-msgid "Rebase stoppped"
-msgstr "Rebase"
-
-msgid "Edit Rebase"
-msgstr "Sunting Rebase"
-
-msgid "Save"
-msgstr "Simpan"
-
-msgid "Refresh"
-msgstr "Segarkan"
-
-msgid "Revert Unstaged Edits..."
-msgstr "Kembalikan Suntingan tak distag..."
-
-msgid "Revert Unstaged Changes?"
-msgstr "Kembalikan Perubahan Belum Distag?"
-
-msgid ""
-"This operation removes unstaged edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Operasi ini membuang perubahan belum distag.\n"
-"Perubahan ini tidak dapat dikembalikan"
-
-msgid "Revert the unstaged changes?"
-msgstr "Kembalikan perubahan belum distag?"
-
-msgid "Revert Unstaged Changes"
-msgstr "Kembalikan Perubahan Belum Distag"
-
-#, fuzzy
-msgid "Revert Uncommitted Edits..."
-msgstr "Kembalikan Suntingan Belum dicommmit..."
-
-msgid "Revert Uncommitted Changes?"
-msgstr "Kembalikan Perubahan Tak Tercommit?"
-
-msgid ""
-"This operation removes uncommitted edits from selected files.\n"
-"These changes cannot be recovered."
-msgstr ""
-"Operasi ini akan menghilangkan perubahan tak tercommit.\n"
-"Perubahan ini tidak dapat direkoveri."
-
-msgid "Revert the uncommitted changes?"
-msgstr "Kembalikan perubahan tak tercommit?"
-
-msgid "Revert Uncommitted Changes"
-msgstr "Kembalikan Perubahan Tak Tercommit"
-
-#, python-format
-msgid "Run \"%s\"?"
-msgstr "Jalankan \"%s\"?"
-
-msgid "Please select a file"
-msgstr "Silahkan pilih berkas"
-
-#, python-format
-msgid "\"%s\" requires a selected file."
-msgstr "\"%s\" berkas terpilih diperlukan."
-
-msgid "Invalid Revision"
-msgstr "Revisi Salah"
-
-msgid "The revision expression cannot be empty."
-msgstr "Ekspresi revisi tidak boleh kosong."
-
-#, python-format
-msgid "Running command: %s"
-msgstr "Menjalankan perintah: %s"
-
-msgid "Sign Off"
-msgstr "Sign Off"
-
-msgid "unknown"
-msgstr "tidak diketahui"
-
-#, fuzzy
-msgid "Stage conflicts?"
-msgstr "Stage dan commit?"
-
-#, python-format
-msgid ""
-"%s appears to contain merge conflicts.\n"
-"\n"
-"You should probably skip this file.\n"
-"Stage it anyways?"
-msgstr ""
-
-#, fuzzy
-msgid "Stage conflicts"
-msgstr "Stage dan commit?"
-
-msgid "Skip"
-msgstr ""
-
-msgid "Stage"
-msgstr "Stage"
-
-#, python-format
-msgid "Staging: %s"
-msgstr "Staging: %s"
-
-msgid "Stage Modified"
-msgstr "Stage Berubah"
-
-msgid "Stage Unmerged"
-msgstr "Stage Tak Termerge"
-
-msgid "Stage Untracked"
-msgstr "Stage Tak Terlacak"
-
-msgid "Stage / Unstage"
-msgstr "Stage / Unstage"
-
-msgid "Missing Tag Message"
-msgstr "Pesan Tag Tidak Ditemukan"
-
-msgid "Tag-signing was requested but the tag message is empty."
-msgstr "Penandaan tag diperlukan tetapi pesan tag kosong."
-
-msgid ""
-"An unsigned, lightweight tag will be created instead.\n"
-"Create an unsigned tag?"
-msgstr ""
-"Tak bertanda, tag ringan akan dibuat.\n"
-"Buat tag tak bertanda?"
-
-msgid "Create Unsigned Tag"
-msgstr "Buat Tag tak Bertanda"
-
-#, python-format
-msgid "Error: could not create tag \"%s\""
-msgstr "Error: tidak dapat membuat tag \"%s\""
-
-msgid "Unstage"
-msgstr "Unstage"
-
-#, python-format
-msgid "Unstaging: %s"
-msgstr "Unstaging: %s"
-
-#, python-format
-msgid "Untracking: %s"
-msgstr "Untracking: %s"
-
-msgid "Error Launching History Browser"
-msgstr "Errot Menjalankan Peramban Histori"
-
-#, python-format
-msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "Tidak dapat menjalankan \"%s\": silahkan konfigurasi peramban histori"
-
-#, fuzzy
-msgid "Next File"
-msgstr "Pilih Berkas"
-
-msgid "Previous File"
-msgstr ""
-
-#, fuzzy
-msgid "File system change monitoring: enabled.\n"
-msgstr "Pemberitahuan berkas diaktifkan.\n"
-
-msgid ""
-"File system change monitoring: disabled because the limit on the total "
-"number of inotify watches was reached.  You may be able to increase the "
-"limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
-"&& sudo sysctl -p\n"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "inotify dinonaktifkan karena \"cola.inotify\" ialah false\n"
-
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
-
-msgid ""
-"File system change monitoring: disabled because libc does not support the "
-"inotify system calls.\n"
-msgstr ""
-
-msgid "Delete Branch"
-msgstr "Hapus Cabang"
-
-msgid "Delete Remote Branch"
-msgstr "Hapus Cabang Hulu"
-
-msgid "Browse Commits..."
-msgstr "Ramban Commit..."
-
-msgid "Browse"
-msgstr "Ramban"
-
-msgid "Checkout Branch"
-msgstr "Checkout Cabang"
-
-msgid "Checkout"
-msgstr "Checkout"
-
-msgid "Cherry-Pick Commit"
-msgstr "Commit Cherry-Pick"
-
-msgid "New Repository..."
-msgstr "Repositori Baru..."
-
-msgid "Error Creating Repository"
-msgstr "Error Membuat Repositori"
-
-msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Lokasi atau URL untuk kloning (Env. $VARS oke)"
-
-msgid "Error Cloning"
-msgstr "Error Kloning"
-
-#, python-format
-msgid "Could not parse Git URL: \"%s\""
-msgstr "Tidak dapat mengurai URL Git: \"%s\""
-
-msgid "Select a parent directory for the new clone"
-msgstr "Pilih direktori di atasnya untuk klon baru"
-
-#, python-format
-msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" sudah ada, cola akan membuat direktori baru"
-
-msgid "Directory Exists"
-msgstr "Direktori Sudah Ada"
-
-msgid "Export Patches"
-msgstr "Ekspor Patch"
-
-msgid "Open Git Repository..."
-msgstr "Bukan Repositori Git..."
-
-msgid "Load Commit Message"
-msgstr "Muat Pesan Commit"
-
-msgid "Select Branch to Review"
-msgstr "Pilih Cabang untuk Ditinjau"
-
-msgid "Review"
-msgstr "Tinjau"
-
-#, fuzzy
-msgid "Clone Repository"
-msgstr "Repositori Saat Ini"
-
-#, fuzzy, python-format
-msgid "Cloning repository at %s"
-msgstr "Repositori: %s"
-
-#, python-format
-msgid "Error: could not clone \"%s\""
-msgstr "Error: tidak bisa kloning \"%s\""
-
-#, fuzzy
-msgid "Rename Existing Branch"
-msgstr "Perbarui Cabang yang Ada:"
-
-msgid "Select"
-msgstr "Pilih"
-
-#, fuzzy
-msgid "Enter New Branch Name"
-msgstr "Nama Cabang"
-
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Atur Ulang Cabang"
-
-msgid "Reset"
-msgstr "Reset"
-
-#, python-format
-msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" keluar dengan status %(status)d"
-
-msgid "Continue"
-msgstr "Lanjutkan"
-
-#, python-format
-msgid "Run %s?"
-msgstr "Jalankan %s?"
-
-#, python-format
-msgid "Run the \"%s\" command?"
-msgstr "Jalankan perintah \"%s\"?"
-
-msgid "Run"
-msgstr "Jalankan"
-
-#, fuzzy, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "fatal: \"%s\" bukan direktori. Silahkan tentukan --repo <path>."
-
-msgid "Close..."
-msgstr "Tutup..."
-
-msgid "Close"
-msgstr "Tutup"
-
-msgid "&Edit"
-msgstr "Sunting"
-
-msgid "Detach"
-msgstr "Lepaskan"
-
-msgid "Attach"
-msgstr "Lampirkan"
-
-msgid "Nothing to do"
-msgstr "Tak ada yang perlu dilakukan"
-
-msgid "git-cola diff"
-msgstr "git-cola diff"
-
-msgid "Compare"
-msgstr "Bandingkan"
-
-#, fuzzy
-msgid "Compare All"
-msgstr "Bandingkan"
-
-msgid ""
-"\n"
-"Keyboard Shortcuts\n"
-"------------------\n"
-"J, Down     = Move Down\n"
-"K, Up       = Move Up\n"
-"Enter       = Edit Selected Files\n"
-"Spacebar    = Open File Using Default Application\n"
-"Ctrl + L    = Focus Text Entry Field\n"
-"?           = Show Help\n"
-"\n"
-"The up and down arrows change focus between the text entry field\n"
-"and the results.\n"
-msgstr ""
-
-msgid "Help - Find Files"
-msgstr ""
-
-#, fuzzy
-msgid "Find Files"
-msgstr "Berkas"
-
-msgid "<path> ..."
-msgstr ""
-
-msgid "Help"
-msgstr "Bantuan"
-
-msgid ""
-"Show help\n"
-"Shortcut: ?"
-msgstr ""
-
-#, fuzzy
-msgid "Show Help"
-msgstr "Bantuan"
-
-msgid "Revision Expression:"
-msgstr "Ekspresi Revisi:"
-
-msgid "No commits exist in this branch."
-msgstr "Tidak ada commit di cabang ini."
-
-msgid "Add to .gitignore"
-msgstr "Tambahkan ke .gitignore"
-
-msgid "Ignore filename or pattern"
-msgstr ""
-
-#, fuzzy
-msgid "Ignore exact filename"
-msgstr "Abaikan semua spasi"
-
-msgid "Ignore custom pattern"
-msgstr ""
-
-msgid "Add"
-msgstr "Tambah"
-
-msgid "Configure toolbar"
-msgstr ""
-
-#, fuzzy
-msgid "Delete toolbar"
-msgstr "Markah"
-
-msgid "Name"
-msgstr "Nama"
-
-msgid "Add Separator"
-msgstr ""
-
-#, fuzzy
-msgid "Remove Element"
-msgstr "Hapus"
-
-msgid "Show icon? (if available)"
-msgstr ""
-
-msgid "Apply"
-msgstr "Terapkan"
-
-msgid "Open"
-msgstr "Buka"
-
-#, fuzzy
-msgid "Favorite repositories"
-msgstr "Semua Repositori"
-
-#, fuzzy
-msgid "Recent repositories"
-msgstr "Semua Repositori"
-
-msgid "Accept"
-msgstr ""
-
-msgid "Open in New Window"
-msgstr "Bukan di Jendela Baru"
-
-#, fuzzy
-msgid "Set Default Repository"
-msgstr "Pilih Repository..."
-
-#, fuzzy
-msgid "Clear Default Repository"
-msgstr "Repositori Saat Ini"
-
-#, fuzzy
-msgid "Rename Repository"
-msgstr "Repositori Saat Ini"
-
-msgid "Copy"
-msgstr "Salin"
-
-msgid "Actions"
-msgstr "Aksi"
-
-msgid "Path"
-msgstr ""
-
-#, fuzzy
-msgid "Add Favorite"
-msgstr "Tambahkan Hulu"
-
-#, fuzzy, python-format
-msgid "%s is not a Git repository."
-msgstr "Masukkan Repositori Git"
-
-msgid "Local"
-msgstr "Lokal"
-
-msgid "Remote"
-msgstr "Hulu"
-
-msgid "Tags"
-msgstr ""
-
-msgid "Toggle the branches filter"
-msgstr ""
-
-#, fuzzy
-msgid "Branches"
-msgstr "Cabang"
-
-#, fuzzy
-msgid "Checkout as new branch"
-msgstr "Checkout Cabang"
-
-#, fuzzy
-msgid "Merge into current branch"
-msgstr "Jelajah Cabang Saat ini..."
-
-#, fuzzy
-msgid "Pull"
-msgstr "Tarik..."
-
-msgid "Push"
-msgstr "Push"
-
-#, fuzzy
-msgid "Rename Branch"
-msgstr "Cabang Hulu"
-
-#, python-format
-msgid "Executing action %s"
-msgstr ""
-
-msgid "Updating"
-msgstr "Sedang memperbarui"
-
-#, fuzzy
-msgid "Rename branch"
-msgstr "Cabang Hulu"
-
-#, fuzzy
-msgid "Delete selected branch?"
-msgstr "Hapus Cabang Hulu"
-
-msgid "The branch will be no longer available."
-msgstr ""
-
-#, fuzzy
-msgid "Filter branches..."
-msgstr "Ambil..."
-
-msgid "Browser"
-msgstr "Jelajah"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Favorites"
-msgstr ""
-
-#, fuzzy
-msgid "Recent"
-msgstr "Reset"
-
-msgid "Commit"
-msgstr "Commit"
-
-msgid "Console"
-msgstr "Konsol"
-
-msgid "Diff"
-msgstr "Diff"
-
-msgid "Amend Last Commit"
-msgstr "Ubah Commit Terakhir"
-
-msgid "Unstage All"
-msgstr "Unstage Semua"
-
-msgid "Unstage From Commit"
-msgstr "Unstage dari Commit"
-
-msgid "Diffstat"
-msgstr "Diffstat"
-
-msgid "Stage Changed Files To Commit"
-msgstr "Stage Berkas yang Berubah untuk di-commit"
-
-msgid "Stage All Untracked"
-msgstr "Stage Semua yang tak terlacak"
-
-msgid "Apply Patches..."
-msgstr "Terapkan Patch..."
-
-msgid "Export Patches..."
-msgstr "Ekspor Patch..."
-
-msgid "Preferences"
-msgstr "Preferensi"
-
-msgid "Edit Remotes..."
-msgstr "Sunting Hulu..."
-
-msgid "Recently Modified Files..."
-msgstr "Berkas Baru Dimodifikasi..."
-
-msgid "Cherry-Pick..."
-msgstr "Cherry-Pick..."
-
-msgid "Load Commit Message..."
-msgstr "Muat Pesan Commit..."
-
-#, fuzzy
-msgid "Prepare Commit Message"
-msgstr "Cari Pesan Commit"
-
-msgid "Save As Tarball/Zip..."
-msgstr "Simpan Sebagai Tarball/Zip.."
-
-msgid "Quit"
-msgstr "Tutup"
-
-msgid "Grep"
-msgstr "Grep"
-
-msgid "Merge..."
-msgstr "Gabung..."
-
-msgid "Fetch..."
-msgstr "Ambil..."
-
-msgid "Push..."
-msgstr "Tekan..."
-
-msgid "Pull..."
-msgstr "Tarik..."
-
-msgid "Open..."
-msgstr "Buka..."
-
-msgid "Open in New Window..."
-msgstr "Buka di Jendela Baru..."
-
-msgid "Stash..."
-msgstr "Stash..."
-
-msgid "Clone..."
-msgstr "Clon...."
-
-msgid "Documentation"
-msgstr "Dokumentasi"
-
-msgid "Keyboard Shortcuts"
-msgstr "Pintasan Papan Tik"
-
-msgid "Visualize Current Branch..."
-msgstr "Visualisasikan Cabang Saat ini..."
-
-msgid "Visualize All Branches..."
-msgstr "Visualisasikan Semua Cabang..."
-
-msgid "Search..."
-msgstr "Cari..."
-
-msgid "Browse Current Branch..."
-msgstr "Jelajah Cabang Saat ini..."
-
-msgid "Browse Other Branch..."
-msgstr "Jelajah Cabang Lain..."
-
-msgid "Get Commit Message Template"
-msgstr "Ambil Templat Pesan Commit"
-
-msgid "About"
-msgstr "Tentang"
-
-msgid "Expression..."
-msgstr "Ekspresi..."
-
-msgid "Branches..."
-msgstr "Cabang..."
-
-msgid "Create Tag..."
-msgstr "Buat Tag..."
-
-msgid "Create..."
-msgstr "Buat..."
-
-msgid "Delete..."
-msgstr "Hapus..."
-
-msgid "Delete Remote Branch..."
-msgstr "Hapus Cabang Hulu..."
-
-#, fuzzy
-msgid "Rename Branch..."
-msgstr "Cabang Hulu"
-
-msgid "Checkout..."
-msgstr "Checkout..."
-
-msgid "Review..."
-msgstr "Pratampil..."
-
-msgid "File Browser..."
-msgstr "Jelajah Berkas..."
-
-msgid "DAG..."
-msgstr "DAG..."
-
-msgid "Start Interactive Rebase..."
-msgstr "Mulai Rebase Interaktif..."
-
-msgid "Edit..."
-msgstr "Sunting..."
-
-msgid "Skip Current Patch"
-msgstr "Lewati Cabang Saat Ini"
-
-msgid "Abort"
-msgstr "Batal"
-
-msgid "Lock Layout"
-msgstr "Kunci Tata Letak"
-
-msgid "&File"
-msgstr "Berkas"
-
-msgid "Open Recent"
-msgstr "Buka yang Terkini"
-
-msgid "Undo"
-msgstr ""
-
-msgid "Redo"
-msgstr ""
-
-msgid "Cut"
-msgstr ""
-
-msgid "Paste"
-msgstr ""
-
-msgid "Select All"
-msgstr "Pilih Semua"
-
-msgid "Commit@@verb"
-msgstr "Commit@@verb"
-
-msgid "Branch"
-msgstr "Cabang"
-
-msgid "View"
-msgstr "Tampil"
-
-#, python-format
-msgid "git cola version %s"
-msgstr "git cola versi %s"
-
-msgid "Add Toolbar"
-msgstr ""
-
-#, python-format
-msgid "Repository: %s"
-msgstr "Repositori: %s"
-
-#, python-format
-msgid "Branch: %s"
-msgstr "Cabang: %s"
-
-msgid ""
-"This repository is currently being rebased.\n"
-"Resolve conflicts, commit changes, and run:\n"
-"    Rebase > Continue"
-msgstr ""
-"Repositori ini sedang direbase.\n"
-"Perbaiki konflik, commitkan perubahan, dan jalankan:\n"
-"    Rebase > Lanjutkan"
-
-msgid "Rebasing"
-msgstr "Me-rebase"
-
-msgid ""
-"This repository is in the middle of a merge.\n"
-"Resolve conflicts and commit changes."
-msgstr ""
-"Repositori ini sedang dimerge.\n"
-"Perbaiki konflik dan commitkan perubahan."
-
-msgid "Merging"
-msgstr "Menggabungkan"
-
-msgid "Amending"
-msgstr "Mengubah"
-
-msgid "Unable to rebase"
-msgstr ""
-
-#, fuzzy
-msgid "You cannot rebase with uncommitted changes."
-msgstr "Kembalikan perubahan tak tercommit?"
-
-msgid "Select New Upstream"
-msgstr "Pilih Upstream Baru"
-
-msgid "Interactive Rebase"
-msgstr "rebase Interaktif"
-
-msgid "Toggle the paths filter"
-msgstr ""
-
-msgid "Staged"
-msgstr "Stagged"
-
-msgid "Unmerged"
-msgstr "Tak termerjer"
-
-msgid "Modified"
-msgstr "Berubah"
-
-msgid "Untracked"
-msgstr "Tak Terlacak"
-
-msgid "Move Up"
-msgstr "Pindah Ke Atas"
-
-msgid "Move Down"
-msgstr "Pindah Ke Bawah"
-
-msgid "Copy Path to Clipboard"
-msgstr "Salin Lokasi ke Papan klip"
-
-#, fuzzy
-msgid "Copy Relative Path to Clipboard"
-msgstr "Salin Lokasi ke Papan klip"
-
-#, fuzzy
-msgid "Copy Leading Path to Clipboard"
-msgstr "Salin Lokasi ke Papan klip"
-
-#, fuzzy
-msgid "Copy Basename to Clipboard"
-msgstr "Salin Lokasi ke Papan klip"
-
-#, fuzzy
-msgid "Customize..."
-msgstr "Tutup..."
-
-msgid "View History..."
-msgstr "Tampilkan Histori..."
-
-#, fuzzy
-msgid "Blame..."
-msgstr "Tutup..."
-
-msgid "Move files to trash"
-msgstr ""
-
-msgid "Delete Files..."
-msgstr "Hapus Berkas...?"
-
-#, fuzzy
-msgid "Copy..."
-msgstr "Salin"
-
-msgid "Unstage Selected"
-msgstr "Unstage Terpilih"
-
-msgid "Launch git-cola"
-msgstr "Jalankan git-cola"
-
-msgid "Stage Selected"
-msgstr "Stage Terpilih"
-
-#, python-format
-msgid ""
-"\n"
-"        Format String Variables\n"
-"        -----------------------\n"
-"          %(path)s  =  relative file path\n"
-"       %(abspath)s  =  absolute file path\n"
-"       %(dirname)s  =  relative directory path\n"
-"    %(absdirname)s  =  absolute directory path\n"
-"      %(filename)s  =  file basename\n"
-"      %(basename)s  =  file basename without extension\n"
-"           %(ext)s  =  file extension\n"
-msgstr ""
-
-msgid "Help - Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Filter paths..."
-msgstr "Ambil..."
-
-msgid "Custom Copy Actions"
-msgstr ""
-
-#, fuzzy
-msgid "Action Name"
-msgstr "Aksi"
-
-#, fuzzy
-msgid "Format String"
-msgstr "String Tetap"
-
-#, python-format
-msgid "%(path)s"
-msgstr ""
-
-#, python-format
-msgid "exit code %s"
-msgstr "kode keluar %s"
-
-msgid "Abort Action"
-msgstr "Batalkan Aksi"
-
-msgid ""
-"An action is still running.\n"
-"Terminating it could result in data loss."
-msgstr ""
-"Aksi ini masih berjalan.\n"
-"Mengakhiri ini dapat menghilangkan data."
-
-msgid "Abort the action?"
-msgstr "Batalkan aksi?"
-
-msgid "Arguments"
-msgstr "Argumen"
-
-msgid "Local Branch"
-msgstr "Cabang Lokal"
-
-msgid "Tracking Branch"
-msgstr "Melacak Cabang"
-
-msgid "Tag"
-msgstr "Tag"
-
-msgid "Revision"
-msgstr "Revisi"
-
-msgid "Diff this -> selected"
-msgstr "Diff ini -> terpilih"
-
-msgid "Diff selected -> this"
-msgstr "Diff terpilih -> ini"
-
-msgid "Create Branch"
-msgstr "Buat Cabang"
-
-msgid "Create Patch"
-msgstr "Buat Patch"
-
-msgid "Create Tag"
-msgstr "Buat Tag"
-
-msgid "Cherry Pick"
-msgstr "Cherry Pick"
-
-#, fuzzy
-msgid "Launch Directory Diff Tool"
-msgstr "Jalankan Alat Diff"
-
-#, fuzzy
-msgid "Checkout Detached HEAD"
-msgstr "Checkout Cabang"
-
-msgid "Grab File..."
-msgstr "Ambil Berkas..."
-
-msgid "Copy SHA-1"
-msgstr "Salin SHA-1"
-
-msgid "Summary"
-msgstr "Ringkasan"
-
-msgid "Author"
-msgstr "Penulis"
-
-msgid "Date, Time"
-msgstr "Tanggal, Waktu"
-
-msgid "Go Up"
-msgstr "Ke Atas"
-
-msgid "Go Down"
-msgstr "Ke Bawah"
-
-msgid "Zoom to Fit"
-msgstr "Zoom agar Sesuai"
-
-msgid "Zoom Out"
-msgstr "Perkecil"
-
-msgid "Zoom In"
-msgstr "Perbesar"
-
-msgid "Log"
-msgstr "Log"
-
-msgid "Files"
-msgstr "Berkas"
-
-msgid "Graph"
-msgstr "Grafik"
-
-#, python-format
-msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
-
-msgid " - DAG"
-msgstr " - DAG"
-
-msgid "Select Parent"
-msgstr "Pilih Indukan"
-
-msgid "Select Oldest Parent"
-msgstr "Pilih Indukan Tertua"
-
-msgid "Select Child"
-msgstr "Pilih Anakan"
-
-msgid "Select Newest Child"
-msgstr "Pilih Anakan Terbaru"
-
-msgid "Apply Patches"
-msgstr "Terapkan Patch"
-
 msgid ""
 "\n"
 "            <p>\n"
@@ -1240,299 +26,10 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Drag dan drop atau gunakan tombol <strong>Tambah</strong> "
-"untuk menambah\n"
+"                Drag dan drop atau gunakan tombol <strong>Tambah</strong> untuk menambah\n"
 "                patch ke daftar\n"
 "            </p>\n"
 "            "
-
-msgid "Add patches (+)"
-msgstr "Tambahkan patch (+)"
-
-msgid "Remove selected (Delete)"
-msgstr "Hapus yang terpilih (Hapus)"
-
-#, fuzzy
-msgid "Select patch file(s)..."
-msgstr "Pilih berkas patch..."
-
-msgid "Search"
-msgstr "Cari"
-
-msgid "Browse..."
-msgstr "Jelajah..."
-
-msgid "yyyy-MM-dd"
-msgstr "dd-MM-yyyy"
-
-msgid "Search by Expression"
-msgstr "Cari berdasarkan Ekspresi"
-
-msgid "Search by Path"
-msgstr "Cari berdasarkan Lokasi"
-
-msgid "Search Commit Messages"
-msgstr "Cari Pesan Commit"
-
-msgid "Search Diffs"
-msgstr "Cari Diff"
-
-msgid "Search Authors"
-msgstr "Cari Penulis"
-
-msgid "Search Committers"
-msgstr "Cari Commiter"
-
-msgid "Search Date Range"
-msgstr "Cari Rentang Tanggal"
-
-msgid "Choose Paths"
-msgstr "Pilih Lokasi"
-
-msgid "Spelling Suggestions"
-msgstr "Saran Ejaan"
-
-msgid "Detect conflict markers in unmerged files"
-msgstr ""
-
-msgid "User Name"
-msgstr "Nama Pengguna"
-
-msgid "Email Address"
-msgstr "Alamat Email"
-
-msgid "Merge Verbosity"
-msgstr "Verbositas Merge"
-
-msgid "Number of Diff Context Lines"
-msgstr "Jumlah Baris Context Diff"
-
-msgid "Summarize Merge Commits"
-msgstr "Ringkasan Merge Commit"
-
-msgid "Show Diffstat After Merge"
-msgstr "Tampilkan Diffstat setelah Merge"
-
-msgid "Display Untracked Files"
-msgstr "Tampilkan Berkas Tak Terlacak"
-
-msgid "Detect Conflict Markers"
-msgstr ""
-
-msgid "Fixed-Width Font"
-msgstr "Lebar-Tetap Font"
-
-msgid "Font Size"
-msgstr "Ukuran Font"
-
-msgid "Tab Width"
-msgstr "Lebar Tab"
-
-msgid "Insert spaces instead of tabs"
-msgstr ""
-
-msgid "Text Width"
-msgstr "Lebar Teks"
-
-msgid "Auto-Wrap Lines"
-msgstr "Auto-Wrap Baris"
-
-msgid "Editor"
-msgstr "Penyunting"
-
-msgid "History Browser"
-msgstr "Penjelajah Histori"
-
-#, fuzzy
-msgid "Blame Viewer"
-msgstr "Penampil Diff Cabang"
-
-msgid "Diff Tool"
-msgstr "Alat Diff"
-
-msgid "Merge Tool"
-msgstr "Alat Merger"
-
-msgid "Keep *.orig Merge Backups"
-msgstr "Biarkan *.orig Merge Backup"
-
-msgid "Sort bookmarks alphabetically"
-msgstr ""
-
-msgid ""
-"Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
-
-msgid "Save GUI Settings"
-msgstr "Simpan Pengaturan GUI"
-
-#, fuzzy
-msgid "Check spelling"
-msgstr "Periksa Ejaan"
-
-msgid "All Repositories"
-msgstr "Semua Repositori"
-
-msgid "Current Repository"
-msgstr "Repositori Saat Ini"
-
-msgid "Settings"
-msgstr "Pengaturan"
-
-msgid "Loading..."
-msgstr "Memuat..."
-
-msgid "Ignore changes in whitespace at EOL"
-msgstr "Abaikan perubahan spasi pada EOL"
-
-msgid "Ignore changes in amount of whitespace"
-msgstr "Abaikan perubahan jumlah spasi"
-
-msgid "Ignore all whitespace"
-msgstr "Abaikan semua spasi"
-
-msgid "Show whole surrounding functions of changes"
-msgstr "Tampilkan seluruh sekitar fungsi perubahan"
-
-msgid "Show line numbers"
-msgstr ""
-
-msgid "Diff Options"
-msgstr "Pilihan Diff"
-
-#, fuzzy
-msgid "Stage Selected Lines"
-msgstr "Stage Batis &Terpilih"
-
-msgid "Revert Selected Lines..."
-msgstr "Kembalikan Baris Terpilih..."
-
-msgid "Stage Diff Hunk"
-msgstr "Stage Area Diff"
-
-msgid "Revert Diff Hunk..."
-msgstr "Kembalikan Area Diff..."
-
-#, fuzzy
-msgid "Unstage Selected Lines"
-msgstr "Unstage Baris &Terpilih"
-
-msgid "Unstage Diff Hunk"
-msgstr "Unstage Area Diff"
-
-msgid "Revert Selected Lines?"
-msgstr "Kembalikan Baris Terpilih?"
-
-msgid "Revert Selected Lines"
-msgstr "Kembalikan Baris Terpilih"
-
-msgid "Revert Diff Hunk?"
-msgstr "Kembalikan Area Diff?"
-
-msgid "Revert Diff Hunk"
-msgstr "Kembalikan Area Diff"
-
-msgid "Recently Modified Files"
-msgstr "Berkas yang Baru Dimodifikasi"
-
-msgid " commits ago"
-msgstr " commit yang lalu"
-
-msgid "Showing changes since"
-msgstr "Menampilkan perubahan sejak"
-
-msgid "Expand all"
-msgstr "Bentangkan semua"
-
-msgid "Collapse all"
-msgstr "Gulung semua"
-
-msgid "About git-cola"
-msgstr "Tentang git-cola"
-
-#, fuzzy
-msgid "Version"
-msgstr "Revisi"
-
-#, fuzzy
-msgid "Authors"
-msgstr "Penulis"
-
-msgid "Translators"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"            Git Cola version %(cola_version)s %(build_version)s\n"
-"        <ul>\n"
-"            <li> %(platform_version)s\n"
-"            <li> Python (%(python_path)s) %(python_version)s\n"
-"            <li> Git %(git_version)s\n"
-"            <li> Qt %(qt_version)s\n"
-"            <li> QtPy %(qtpy_version)s\n"
-"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
-"        </ul>\n"
-"    "
-msgstr ""
-
-msgid "Email contributor"
-msgstr ""
-
-msgid "Maintainer (since 2007) and developer"
-msgstr ""
-
-msgid "Developer"
-msgstr ""
-
-#, python-format
-msgid ""
-"\n"
-"        <br>\n"
-"        Please use %(bug_link)s to report issues.\n"
-"        <br>\n"
-"    "
-msgstr ""
-
-msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
-
-msgid "Brazilian translation"
-msgstr ""
-
-msgid "Simplified Chinese translation"
-msgstr ""
-
-msgid "Ukranian translation"
-msgstr ""
-
-msgid "Indonesian translation"
-msgstr ""
-
-msgid "German translation"
-msgstr ""
-
-msgid "Russian translation"
-msgstr ""
-
-msgid "Turkish translation"
-msgstr ""
-
-msgid "French translation"
-msgstr ""
-
-msgid "Czech translation"
-msgstr ""
-
-msgid "Spanish translation"
-msgstr ""
-
-msgid "Hungarian translation"
-msgstr ""
-
-msgid "Polish translation"
-msgstr ""
 
 #, python-format
 msgid ""
@@ -1553,8 +50,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or "
-"updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -1563,23 +59,187 @@ msgid ""
 "    "
 msgstr ""
 
-msgid "hotkeys.html"
-msgstr "hotkeys.html"
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"            Git Cola version %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
+msgstr ""
 
-msgid "Shortcuts"
-msgstr "Pintasan"
+#, python-format
+msgid ""
+"\n"
+"        <br>\n"
+"        Please use %(bug_link)s to report issues.\n"
+"        <br>\n"
+"    "
+msgstr ""
 
-msgid "git-cola"
-msgstr "git-cola"
+#, python-format
+msgid ""
+"\n"
+"        Format String Variables\n"
+"        -----------------------\n"
+"          %(path)s  =  relative file path\n"
+"       %(abspath)s  =  absolute file path\n"
+"       %(dirname)s  =  relative directory path\n"
+"    %(absdirname)s  =  absolute directory path\n"
+"      %(filename)s  =  file basename\n"
+"      %(basename)s  =  file basename without extension\n"
+"           %(ext)s  =  file extension\n"
+msgstr ""
 
-msgid "New..."
-msgstr "Baru..."
+msgid ""
+"\n"
+"Commands\n"
+"--------\n"
+"pick = use commit\n"
+"reword = use commit, but edit the commit message\n"
+"edit = use commit, but stop for amending\n"
+"squash = use commit, but meld into previous commit\n"
+"fixup = like \"squash\", but discard this commit's log message\n"
+"exec = run command (the rest of the line) using shell\n"
+"\n"
+"These lines can be re-ordered; they are executed from top to bottom.\n"
+"\n"
+"If you disable a line here THAT COMMIT WILL BE LOST.\n"
+"\n"
+"However, if you disable everything, the rebase will be aborted.\n"
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"? = show help\n"
+"j = move down\n"
+"k = move up\n"
+"J = shift row down\n"
+"K = shift row up\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacebar = toggle enabled\n"
+"\n"
+"ctrl+enter = accept changes and rebase\n"
+"ctrl+q     = cancel and abort the rebase\n"
+"ctrl+d     = launch difftool\n"
+msgstr ""
 
-msgid "Select Repository..."
-msgstr "Pilih Repository..."
+msgid ""
+"\n"
+"Keyboard Shortcuts\n"
+"------------------\n"
+"J, Down     = Move Down\n"
+"K, Up       = Move Up\n"
+"Enter       = Edit Selected Files\n"
+"Spacebar    = Open File Using Default Application\n"
+"Ctrl + L    = Focus Text Entry Field\n"
+"?           = Show Help\n"
+"\n"
+"The up and down arrows change focus between the text entry field\n"
+"and the results.\n"
+msgstr ""
 
-msgid "Select manually..."
-msgstr "Pilih secara manual..."
+msgid " - DAG"
+msgstr " - DAG"
+
+#, python-format
+msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
+msgstr "\"%(branch)s\" telah dihapus dari \"%(remote)s\"."
+
+#, python-format
+msgid "\"%(command)s\" returned exit status \"%(status)d\""
+msgstr "\"%(command)s\" menghasilkan exit status \"%(status)d\""
+
+#, python-format
+msgid "\"%(command)s\" returned exit status %(status)d"
+msgstr "\"%(command)s\" keluar dengan status %(status)d"
+
+#, fuzzy, python-format
+msgid "\"%s\" already exists"
+msgstr "Cabang \"%s\" sudah ada."
+
+#, python-format
+msgid "\"%s\" already exists, cola will create a new directory"
+msgstr "\"%s\" sudah ada, cola akan membuat direktori baru"
+
+#, python-format
+msgid "\"%s\" requires a selected file."
+msgstr "\"%s\" berkas terpilih diperlukan."
+
+msgid "#"
+msgstr ""
+
+#, python-format
+msgid "%(project)s: %(branch)s - Browse"
+msgstr "%(project)s: %(branch)s - Jelajah"
+
+#, python-format
+msgid "%(project)s: %(ref)s - DAG"
+msgstr ""
+
+#, python-format
+msgid "%d days ago"
+msgstr "%d hari lalu"
+
+#, python-format
+msgid "%d hours ago"
+msgstr "%d jam lalu"
+
+#, python-format
+msgid "%d minutes ago"
+msgstr "%d menit lalu"
+
+#, python-format
+msgid "%d patch(es) applied."
+msgstr "%d patch diterapkan."
+
+#, python-format
+msgid "%d skipped"
+msgstr "%d dilewati"
+
+#, python-format
+msgid ""
+"%s appears to contain merge conflicts.\n"
+"\n"
+"You should probably skip this file.\n"
+"Stage it anyways?"
+msgstr ""
+
+#, fuzzy, python-format
+msgid "%s is not a Git repository."
+msgstr "Masukkan Repositori Git"
+
+#, python-format
+msgid "%s will be removed from your bookmarks."
+msgstr ""
+
+#, python-format
+msgid "%s will be removed from your recent repositories."
+msgstr ""
+
+#, python-format
+msgid "%s: No such file or directory."
+msgstr "%s: Berkas atau direktori tidak ada."
+
+msgid "&Edit"
+msgstr "Sunting"
+
+msgid "&File"
+msgstr "Berkas"
+
+msgid "(Amending)"
+msgstr "(Mengubah)"
 
 msgid "*** Branch Point ***"
 msgstr "*** Poin Cabang ***"
@@ -1587,58 +247,396 @@ msgstr "*** Poin Cabang ***"
 msgid "*** Sandbox ***"
 msgstr "*** Bak Pasir ***"
 
-msgid "Branch Diff Viewer"
-msgstr "Penampil Diff Cabang"
+msgid "<path> ..."
+msgstr ""
 
-msgid "File Differences"
-msgstr "Perbedaan Berkas"
+msgid ""
+"A commit template has not been configured.\n"
+"Use \"git config\" to define \"commit.template\"\n"
+"so that it points to a commit template."
+msgstr ""
+"Templat commit belum dikonfigurasi.\n"
+"Gunakan \"git config\" untuk menentukan \"commit.template\"\n"
+"agar mengarah ke templat commit."
 
-msgid "command-line arguments"
-msgstr "argumen baris-perintah"
+#, python-format
+msgid "A hook must be provided at \"%s\""
+msgstr ""
 
-msgid "Choose the \"git grep\" regular expression mode"
-msgstr "Pilih mode ekspresi reguler \"git grep\""
+#, python-format
+msgid "A stash named \"%s\" already exists"
+msgstr "Stash dengan nama \"%s\" sudah ada"
+
+msgid "Abort"
+msgstr "Batal"
+
+msgid "Abort Action"
+msgstr "Batalkan Aksi"
+
+msgid "Abort Merge"
+msgstr "Batalkan Merge"
+
+msgid "Abort Merge..."
+msgstr "Batalkan Penggabungan..."
+
+msgid "Abort the action?"
+msgstr "Batalkan aksi?"
+
+msgid ""
+"Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+"Membatalkan merge saat ini akan menghilangkan *SEMUA* perubahan commit.\n"
+"Mengembalikan perubahan yang belum dicommit tidak dimungkinkan."
+
+msgid "Aborting the current merge?"
+msgstr "Batalkan merge saat ini?"
+
+msgid "About"
+msgstr "Tentang"
+
+msgid "About git-cola"
+msgstr "Tentang git-cola"
+
+msgid "Accept"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Accept changes and rebase\n"
+"Shortcut: Ctrl+Enter"
+msgstr ""
+"Commit perubahan stage\n"
+"Pintasan: Ctrl+Enter"
+
+#, fuzzy
+msgid "Action Name"
+msgstr "Aksi"
+
+msgid "Actions"
+msgstr "Aksi"
+
+msgid "Actions..."
+msgstr "Aksi..."
+
+msgid "Add"
+msgstr "Tambah"
+
+#, fuzzy
+msgid "Add Favorite"
+msgstr "Tambahkan Hulu"
+
+msgid "Add Remote"
+msgstr "Tambahkan Hulu"
+
+msgid "Add Separator"
+msgstr ""
+
+msgid "Add Toolbar"
+msgstr ""
+
+msgid ""
+"Add and remove remote repositories using the \n"
+"Add(+) and Delete(-) buttons on the left-hand side.\n"
+"\n"
+"Remotes can be renamed by selecting one from the list\n"
+"and pressing \"enter\", or by double-clicking."
+msgstr ""
+"Tambah dan hapus repositori hulu menggunakan tombol \n"
+"Tambah(+) dan Hapus(-) pada sisi sebelah kiri.\n"
+"Hulu dapat diganti nama dengan memilih salah satu dari \n"
+"daftar dan tekan \"enter\", atau dobel-klik."
+
+msgid "Add new remote git repository"
+msgstr "Tambahkan repositori git hulu"
+
+msgid "Add patches (+)"
+msgstr "Tambahkan patch (+)"
+
+msgid "Add remote"
+msgstr "Tambahkan hulu"
+
+msgid "Add to .gitignore"
+msgstr "Tambahkan ke .gitignore"
+
+#, fuzzy
+msgid "Add to Git Annex"
+msgstr "Tambahkan ke .gitignore"
+
+msgid "Add to Git LFS"
+msgstr ""
+
+msgid "Additions"
+msgstr "Penambahan"
+
+msgid "Advanced"
+msgstr "Mahir"
+
+msgid "Age"
+msgstr "Usia"
+
+msgid "All Repositories"
+msgstr "Semua Repositori"
+
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgstr ""
+
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgstr ""
+
+msgid "Amend"
+msgstr "Ubah"
+
+msgid "Amend Commit"
+msgstr "Ubah Commit"
+
+msgid "Amend Last Commit"
+msgstr "Ubah Commit Terakhir"
+
+msgid "Amend the published commit?"
+msgstr "Ubah penerbitan commit?"
+
+msgid "Amending"
+msgstr "Mengubah"
+
+msgid ""
+"An action is still running.\n"
+"Terminating it could result in data loss."
+msgstr ""
+"Aksi ini masih berjalan.\n"
+"Mengakhiri ini dapat menghilangkan data."
+
+msgid ""
+"An unsigned, lightweight tag will be created instead.\n"
+"Create an unsigned tag?"
+msgstr ""
+"Tak bertanda, tag ringan akan dibuat.\n"
+"Buat tag tak bertanda?"
+
+msgid "Apply"
+msgstr "Terapkan"
+
+msgid "Apply Patches"
+msgstr "Terapkan Patch"
+
+msgid "Apply Patches..."
+msgstr "Terapkan Patch..."
+
+msgid "Apply the selected stash"
+msgstr "Terapkan stash terpilih"
+
+msgid "Arguments"
+msgstr "Argumen"
+
+msgid "Attach"
+msgstr "Lampirkan"
+
+msgid "Author"
+msgstr "Penulis"
+
+#, fuzzy
+msgid "Authors"
+msgstr "Penulis"
+
+msgid "Auto-Wrap Lines"
+msgstr "Auto-Wrap Baris"
 
 msgid "Basic Regexp"
 msgstr "Regexp Dasar"
 
-msgid "Extended Regexp"
-msgstr "Regexp Perluasan"
+#, fuzzy
+msgid "Blame Viewer"
+msgstr "Penampil Diff Cabang"
 
-msgid "Fixed String"
-msgstr "String Tetap"
+#, fuzzy
+msgid "Blame..."
+msgstr "Tutup..."
 
-msgid "Search using a POSIX basic regular expression"
-msgstr "Cari menggunakan ekspresi reguler POSIX dasar"
-
-msgid "Search using a POSIX extended regular expression"
-msgstr "Cari menggunakan ekspresi reguler POSIX perluasan"
-
-msgid "Search for a fixed string"
-msgstr "Cari teks tetap"
-
-msgid "grep result..."
-msgstr "hasil grep..."
-
-msgid "Shell arguments"
-msgstr "Argumen shell"
-
-msgid ""
-"Parse arguments using a shell.\n"
-"Queries with spaces will require \"double quotes\"."
+msgid "Bold with dark background font instead of italic headers (restart required)"
 msgstr ""
-"Uraikan argumen menggunakan sebuah shell.\n"
-"Queri dengan spasi memerlukan \"tanda kutip dua\"."
 
-msgid "Sign off on this commit"
-msgstr "Tanda tangani commit ini"
+msgid "Branch"
+msgstr "Cabang"
 
-msgid "Commit staged changes"
-msgstr "Commit perubahan stage"
+#, python-format
+msgid ""
+"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
+"A new remote branch will be published."
+msgstr ""
+"Cabang \"%(branch)s\" tidak ada di \"%(remote)s\".\n"
+"Cabang hulu baru akan di publikasikan."
+
+#, python-format
+msgid "Branch \"%s\" already exists."
+msgstr "Cabang \"%s\" sudah ada."
+
+msgid "Branch Diff Viewer"
+msgstr "Penampil Diff Cabang"
+
+msgid "Branch Exists"
+msgstr "Cabang Sudah Ada"
+
+msgid "Branch Name"
+msgstr "Nama Cabang"
+
+#, python-format
+msgid "Branch: %s"
+msgstr "Cabang: %s"
+
+#, fuzzy
+msgid "Branches"
+msgstr "Cabang"
+
+msgid "Branches..."
+msgstr "Cabang..."
+
+msgid "Brazilian translation"
+msgstr ""
+
+msgid "Browse"
+msgstr "Ramban"
+
+msgid "Browse Commits..."
+msgstr "Ramban Commit..."
+
+msgid "Browse Current Branch..."
+msgstr "Jelajah Cabang Saat ini..."
+
+msgid "Browse Other Branch..."
+msgstr "Jelajah Cabang Lain..."
+
+msgid "Browse..."
+msgstr "Jelajah..."
+
+msgid "Browser"
+msgstr "Jelajah"
+
+#, python-format
+msgid "Browsing %s"
+msgstr "Ramban %s"
+
+msgid "Bypass Commit Hooks"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Batalkan"
+
+#, fuzzy
+msgid ""
+"Cancel rebase\n"
+"Shortcut: Ctrl+Q"
+msgstr ""
+"Commit perubahan stage\n"
+"Pintasan: Ctrl+Enter"
+
+msgid "Cannot Amend"
+msgstr "Tidak dapat diubah"
+
+#, fuzzy, python-format
+msgid "Cannot exec \"%s\": please configure a blame viewer"
+msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure a history browser"
+msgstr "Tidak dapat menjalankan \"%s\": silahkan konfigurasi peramban histori"
+
+#, python-format
+msgid "Cannot exec \"%s\": please configure your editor"
+msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
+
+msgid "Changed Upstream"
+msgstr "Ubah Upstream"
+
+msgid "Check Spelling"
+msgstr "Periksa Ejaan"
+
+#, fuzzy
+msgid "Check spelling"
+msgstr "Periksa Ejaan"
+
+msgid "Checkout"
+msgstr "Checkout"
+
+msgid "Checkout After Creation"
+msgstr "Checkout Setelah Dibuat"
+
+msgid "Checkout Branch"
+msgstr "Checkout Cabang"
+
+#, fuzzy
+msgid "Checkout Detached HEAD"
+msgstr "Checkout Cabang"
+
+#, fuzzy
+msgid "Checkout as new branch"
+msgstr "Checkout Cabang"
+
+msgid "Checkout..."
+msgstr "Checkout..."
+
+msgid "Cherry Pick"
+msgstr "Cherry Pick"
+
+msgid "Cherry-Pick Commit"
+msgstr "Commit Cherry-Pick"
+
+msgid "Cherry-Pick..."
+msgstr "Cherry-Pick..."
+
+msgid "Choose Paths"
+msgstr "Pilih Lokasi"
+
+msgid "Choose the \"git grep\" regular expression mode"
+msgstr "Pilih mode ekspresi reguler \"git grep\""
+
+#, fuzzy
+msgid "Clear Default Repository"
+msgstr "Repositori Saat Ini"
+
+#, fuzzy
+msgid "Clear commit message"
+msgstr "Cari Pesan Commit"
+
+#, fuzzy
+msgid "Clear commit message?"
+msgstr "Cari Pesan Commit"
 
 #, fuzzy
 msgid "Clear..."
 msgstr "Tutup..."
+
+#, fuzzy
+msgid "Clone Repository"
+msgstr "Repositori Saat Ini"
+
+msgid "Clone..."
+msgstr "Clon...."
+
+#, fuzzy, python-format
+msgid "Cloning repository at %s"
+msgstr "Repositori: %s"
+
+msgid "Close"
+msgstr "Tutup"
+
+msgid "Close..."
+msgstr "Tutup..."
+
+msgid "Collapse all"
+msgstr "Gulung semua"
+
+#, fuzzy
+msgid "Command"
+msgstr "Commit"
+
+msgid "Commit"
+msgstr "Commit"
+
+msgid "Commit failed"
+msgstr "Commit gagal"
+
+msgid "Commit staged changes"
+msgstr "Commit perubahan stage"
 
 msgid ""
 "Commit staged changes\n"
@@ -1647,39 +645,860 @@ msgstr ""
 "Commit perubahan stage\n"
 "Pintasan: Ctrl+Enter"
 
-msgid "Actions..."
-msgstr "Aksi..."
+msgid "Commit summary"
+msgstr "Ringkasan commit"
 
-msgid "Bypass Commit Hooks"
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
 msgstr ""
+
+msgid "Commit@@verb"
+msgstr "Commit@@verb"
+
+msgid "Compare"
+msgstr "Bandingkan"
+
+#, fuzzy
+msgid "Compare All"
+msgstr "Bandingkan"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr ""
+
+msgid "Configure toolbar"
+msgstr ""
+
+msgid "Console"
+msgstr "Konsol"
+
+msgid "Continue"
+msgstr "Lanjutkan"
+
+msgid "Copy"
+msgstr "Salin"
+
+#, fuzzy
+msgid "Copy Basename to Clipboard"
+msgstr "Salin Lokasi ke Papan klip"
+
+#, fuzzy
+msgid "Copy Leading Path to Clipboard"
+msgstr "Salin Lokasi ke Papan klip"
+
+msgid "Copy Path to Clipboard"
+msgstr "Salin Lokasi ke Papan klip"
+
+#, fuzzy
+msgid "Copy Relative Path to Clipboard"
+msgstr "Salin Lokasi ke Papan klip"
+
+msgid "Copy SHA-1"
+msgstr "Salin SHA-1"
+
+#, fuzzy
+msgid "Copy..."
+msgstr "Salin"
+
+#, python-format
+msgid "Could not parse Git URL: \"%s\""
+msgstr "Tidak dapat mengurai URL Git: \"%s\""
+
+msgid "Create Branch"
+msgstr "Buat Cabang"
+
+msgid "Create Patch"
+msgstr "Buat Patch"
+
+msgid "Create Remote Branch"
+msgstr "Buat Cabang Hulu"
 
 #, fuzzy
 msgid "Create Signed Commit"
 msgstr "Buat commit: %s"
 
-msgid "Check Spelling"
-msgstr "Periksa Ejaan"
+msgid "Create Tag"
+msgstr "Buat Tag"
 
-msgid "Load Previous Commit Message"
-msgstr "Muat Pesan Commit Sebelumnya"
+msgid "Create Tag..."
+msgstr "Buat Tag..."
+
+msgid "Create Unsigned Tag"
+msgstr "Buat Tag tak Bertanda"
+
+msgid "Create a merge commit even when the merge resolves as a fast-forward"
+msgstr ""
+
+msgid "Create a new remote branch?"
+msgstr "Buat cabang baru di hulu?"
+
+msgid "Create..."
+msgstr "Buat..."
+
+#, python-format
+msgid "Created a new tag named \"%s\""
+msgstr "Buat tag baru bernama \"%s\""
+
+msgid "Current Repository"
+msgstr "Repositori Saat Ini"
+
+msgid "Custom Copy Actions"
+msgstr ""
+
+#, fuzzy
+msgid "Customize..."
+msgstr "Tutup..."
+
+msgid "Cut"
+msgstr ""
+
+msgid "Czech translation"
+msgstr ""
+
+msgid "DAG..."
+msgstr "DAG..."
+
+msgid "Date, Time"
+msgstr "Tanggal, Waktu"
+
+msgid "Delete"
+msgstr "Hapus"
+
+#, python-format
+msgid "Delete %d file(s)?"
+msgstr "Hapus %d berkas?"
+
+#, fuzzy
+msgid "Delete Bookmark"
+msgstr "Markah"
+
+#, fuzzy
+msgid "Delete Bookmark?"
+msgstr "Markah"
+
+msgid "Delete Branch"
+msgstr "Hapus Cabang"
+
+msgid "Delete Files"
+msgstr "Hapus Berkas"
+
+msgid "Delete Files..."
+msgstr "Hapus Berkas...?"
+
+msgid "Delete Files?"
+msgstr "Hapus Berkas?"
+
+msgid "Delete Remote"
+msgstr "Hapus Hulu"
+
+msgid "Delete Remote Branch"
+msgstr "Hapus Cabang Hulu"
+
+msgid "Delete Remote Branch..."
+msgstr "Hapus Cabang Hulu..."
+
+msgid "Delete remote"
+msgstr "Hapus hulu"
+
+#, python-format
+msgid "Delete remote \"%s\""
+msgstr "Hapus hulu \"%s\""
+
+msgid "Delete remote?"
+msgstr "Hapus hulu?"
+
+#, fuzzy
+msgid "Delete selected branch?"
+msgstr "Hapus Cabang Hulu"
+
+#, fuzzy
+msgid "Delete toolbar"
+msgstr "Markah"
+
+msgid "Delete..."
+msgstr "Hapus..."
+
+#, python-format
+msgid "Deleting \"%s\" failed"
+msgstr "Gagal menghapus \"%s\""
+
+msgid "Deletions"
+msgstr "Penghapusan"
+
+msgid "Detach"
+msgstr "Lepaskan"
+
+msgid "Detect Conflict Markers"
+msgstr ""
+
+msgid "Detect conflict markers in unmerged files"
+msgstr ""
+
+msgid "Developer"
+msgstr ""
+
+msgid "Diff"
+msgstr "Diff"
+
+msgid "Diff Against Predecessor..."
+msgstr "Diff Pada Predessor..."
+
+msgid "Diff Options"
+msgstr "Pilihan Diff"
+
+msgid "Diff Tool"
+msgstr "Alat Diff"
+
+msgid "Diff selected -> this"
+msgstr "Diff terpilih -> ini"
+
+msgid "Diff this -> selected"
+msgstr "Diff ini -> terpilih"
+
+msgid "Diffstat"
+msgstr "Diffstat"
+
+msgid "Directory Exists"
+msgstr "Direktori Sudah Ada"
+
+msgid "Display Untracked Files"
+msgstr "Tampilkan Berkas Tak Terlacak"
+
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+msgid "Drop"
+msgstr "Buang"
+
+msgid "Drop Stash"
+msgstr "Buang Stash"
+
+msgid "Drop Stash?"
+msgstr "Buang Stash?"
+
+#, python-format
+msgid "Drop the \"%s\" stash?"
+msgstr "Buang stash \"%s\"?"
+
+msgid "Drop the selected stash"
+msgstr "Buang stash terpilih"
+
+#, fuzzy
+msgid "Edit"
+msgstr "Sunting"
+
+msgid "Edit Rebase"
+msgstr "Sunting Rebase"
+
+msgid "Edit Remotes"
+msgstr "Sunting Hulu"
+
+msgid "Edit Remotes..."
+msgstr "Sunting Hulu..."
+
+msgid "Edit remotes by selecting them from the list"
+msgstr ""
+
+msgid "Edit selected paths"
+msgstr "Sunting lokasi terpilih"
+
+msgid "Edit..."
+msgstr "Sunting..."
+
+msgid "Editor"
+msgstr "Penyunting"
+
+msgid "Email Address"
+msgstr "Alamat Email"
+
+msgid "Email contributor"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+#, fuzzy
+msgid "Enter New Branch Name"
+msgstr "Nama Cabang"
+
+#, fuzzy
+msgid "Enter a name for the new bare repo"
+msgstr "Masukkan nama untuk stash"
+
+msgid "Enter a name for the stash"
+msgstr "Masukkan nama untuk stash"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Error Cloning"
+msgstr "Error Kloning"
+
+msgid "Error Creating Branch"
+msgstr "Erroe Membuat Cabang"
+
+msgid "Error Creating Repository"
+msgstr "Error Membuat Repositori"
+
+msgid "Error Deleting Remote Branch"
+msgstr "Error menghapus Cabang Hulu"
+
+msgid "Error Editing File"
+msgstr "Error Menyunting Berkas"
+
+#, fuzzy
+msgid "Error Launching Blame Viewer"
+msgstr "Errot Menjalankan Peramban Histori"
+
+msgid "Error Launching History Browser"
+msgstr "Errot Menjalankan Peramban Histori"
+
+#, python-format
+msgid "Error creating remote \"%s\""
+msgstr "Error membuat hulu \"%s\""
+
+#, fuzzy
+msgid "Error creating stash"
+msgstr "Erroe Membuat Cabang"
+
+#, python-format
+msgid "Error deleting remote \"%s\""
+msgstr "Error menghapus hulu \"%s\""
+
+#, fuzzy, python-format
+msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
+msgstr "Menandai \"%(revision)s\" sebagai \"%(name)s\""
+
+msgid "Error running prepare-commitmsg hook"
+msgstr ""
+
+msgid "Error: Cannot find commit template"
+msgstr "Error: Tidak dapat melakukan commit templat"
+
+msgid "Error: Stash exists"
+msgstr "Error: Stash sudah ada"
+
+msgid "Error: Unconfigured commit template"
+msgstr "Error: Commit templat belum dikonfigurasi"
+
+#, python-format
+msgid "Error: could not clone \"%s\""
+msgstr "Error: tidak bisa kloning \"%s\""
+
+#, python-format
+msgid "Error: could not create tag \"%s\""
+msgstr "Error: tidak dapat membuat tag \"%s\""
+
+#, python-format
+msgid "Executing action %s"
+msgstr ""
+
+msgid "Expand all"
+msgstr "Bentangkan semua"
+
+msgid "Export Patches"
+msgstr "Ekspor Patch"
+
+msgid "Export Patches..."
+msgstr "Ekspor Patch..."
+
+msgid "Expression..."
+msgstr "Ekspresi..."
+
+msgid "Extended Regexp"
+msgstr "Regexp Perluasan"
+
+msgid "Extended description..."
+msgstr "Perluaskan penjelasan..."
+
+msgid "Fast Forward Only"
+msgstr "Hanya Fast Forward"
+
+#, fuzzy
+msgid "Fast-forward only"
+msgstr "Hanya Fast Forward"
+
+#, fuzzy
+msgid "Favorite repositories"
+msgstr "Semua Repositori"
+
+msgid "Favorites"
+msgstr ""
+
+#, fuzzy
+msgid "Fetch"
+msgstr "Ambil..."
+
+msgid "Fetch Tracking Branch"
+msgstr "Fetch Cabang Terlacak"
+
+msgid "Fetch..."
+msgstr "Ambil..."
+
+msgid "File Browser..."
+msgstr "Jelajah Berkas..."
+
+msgid "File Differences"
+msgstr "Perbedaan Berkas"
+
+msgid "File Saved"
+msgstr "Berkas Tersimpan"
+
+#, python-format
+msgid "File saved to \"%s\""
+msgstr "Berkas disimpan di \"%s\""
+
+#, fuzzy
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr "inotify dinonaktifkan karena \"cola.inotify\" ialah false\n"
+
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgstr ""
+
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+msgstr ""
+
+#, fuzzy
+msgid "File system change monitoring: enabled.\n"
+msgstr "Pemberitahuan berkas diaktifkan.\n"
+
+msgid "Filename"
+msgstr "Namaberkas"
+
+msgid "Files"
+msgstr "Berkas"
+
+#, fuzzy
+msgid "Filter branches..."
+msgstr "Ambil..."
+
+#, fuzzy
+msgid "Filter paths..."
+msgstr "Ambil..."
+
+#, fuzzy
+msgid "Find Files"
+msgstr "Berkas"
+
+msgid "Fixed String"
+msgstr "String Tetap"
+
+msgid "Fixed-Width Font"
+msgstr "Lebar-Tetap Font"
+
+msgid "Fixup"
+msgstr ""
 
 msgid "Fixup Previous Commit"
 msgstr "Perbaiki Commit Sebelumnya"
 
-#, fuzzy
-msgid "Clear commit message?"
-msgstr "Cari Pesan Commit"
+msgid "Font Size"
+msgstr "Ukuran Font"
 
 #, fuzzy
-msgid "The commit message will be cleared."
-msgstr "Berkas berikut akan dihapus:"
+msgid "Force"
+msgstr "Paksa Push"
 
-msgid "This cannot be undone.  Clear commit message?"
+msgid "Force Fetch"
+msgstr "Paksa Fetch"
+
+msgid "Force Fetch?"
+msgstr "Paksa Fetch?"
+
+msgid "Force Push"
+msgstr "Paksa Push"
+
+msgid "Force Push?"
+msgstr "Paksa Push?"
+
+#, python-format
+msgid "Force fetching from %s?"
+msgstr "Paksa fetch dari %s?"
+
+#, python-format
+msgid "Force push to %s?"
+msgstr "Paksa push ke %s?"
+
+#, fuzzy
+msgid "Format String"
+msgstr "String Tetap"
+
+msgid "French translation"
+msgstr ""
+
+msgid "GPG-sign the merge commit"
+msgstr ""
+
+#, python-format
+msgid "Gathering info for \"%s\"..."
+msgstr "Mengumpulkan info untuk \"%s\"..."
+
+msgid "German translation"
+msgstr ""
+
+msgid "Get Commit Message Template"
+msgstr "Ambil Templat Pesan Commit"
+
+msgid "Go Down"
+msgstr "Ke Bawah"
+
+msgid "Go Up"
+msgstr "Ke Atas"
+
+msgid "Grab File..."
+msgstr "Ambil Berkas..."
+
+msgid "Graph"
+msgstr "Grafik"
+
+msgid "Grep"
+msgstr "Grep"
+
+msgid "Have you rebased/pulled lately?"
+msgstr "Sudahkan Anda rebase/tarik baru-baru ini?"
+
+msgid "Help"
+msgstr "Bantuan"
+
+msgid "Help - Custom Copy Actions"
+msgstr ""
+
+msgid "Help - Find Files"
+msgstr ""
+
+msgid "Help - git-xbase"
+msgstr ""
+
+msgid "History Browser"
+msgstr "Penjelajah Histori"
+
+msgid "Hungarian translation"
+msgstr ""
+
+msgid "Ignore all whitespace"
+msgstr "Abaikan semua spasi"
+
+msgid "Ignore changes in amount of whitespace"
+msgstr "Abaikan perubahan jumlah spasi"
+
+msgid "Ignore changes in whitespace at EOL"
+msgstr "Abaikan perubahan spasi pada EOL"
+
+msgid "Ignore custom pattern"
 msgstr ""
 
 #, fuzzy
-msgid "Clear commit message"
-msgstr "Cari Pesan Commit"
+msgid "Ignore exact filename"
+msgstr "Abaikan semua spasi"
+
+msgid "Ignore filename or pattern"
+msgstr ""
+
+msgid "Include tags "
+msgstr "Sertakan tag "
+
+msgid "Indonesian translation"
+msgstr ""
+
+msgid "Initialize Git Annex"
+msgstr ""
+
+msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Insert spaces instead of tabs"
+msgstr ""
+
+msgid "Interactive Rebase"
+msgstr "rebase Interaktif"
+
+msgid "Invalid Revision"
+msgstr "Revisi Salah"
+
+msgid "Keep *.orig Merge Backups"
+msgstr "Biarkan *.orig Merge Backup"
+
+msgid "Keep Index"
+msgstr "Pertahankan Index"
+
+msgid "Keyboard Shortcuts"
+msgstr "Pintasan Papan Tik"
+
+msgid "Launch Diff Tool"
+msgstr "Jalankan Alat Diff"
+
+#, fuzzy
+msgid "Launch Directory Diff Tool"
+msgstr "Jalankan Alat Diff"
+
+msgid "Launch Editor"
+msgstr "Jalankan Penyunting"
+
+msgid "Launch Terminal"
+msgstr "Jalankan Terminal"
+
+msgid ""
+"Launch external diff tool\n"
+"Shortcut: Ctrl+D"
+msgstr ""
+
+msgid "Launch git-cola"
+msgstr "Jalankan git-cola"
+
+#, fuzzy
+msgid "Launch git-difftool against previous versions"
+msgstr "Jalankan git-difftool pada versi sebelumnya."
+
+#, fuzzy
+msgid "Launch git-difftool on the current path"
+msgstr "Jalankan git-difftool pada lokasi saat ini."
+
+msgid "Load Commit Message"
+msgstr "Muat Pesan Commit"
+
+msgid "Load Commit Message..."
+msgstr "Muat Pesan Commit..."
+
+msgid "Load Previous Commit Message"
+msgstr "Muat Pesan Commit Sebelumnya"
+
+msgid "Loading..."
+msgstr "Memuat..."
+
+msgid "Local"
+msgstr "Lokal"
+
+msgid "Local Branch"
+msgstr "Cabang Lokal"
+
+msgid "Local branch"
+msgstr "Cabang Lokal"
+
+msgid "Lock Layout"
+msgstr "Kunci Tata Letak"
+
+msgid "Log"
+msgstr "Log"
+
+msgid "Maintainer (since 2007) and developer"
+msgstr ""
+
+msgid "Merge"
+msgstr "Merge"
+
+#, python-format
+msgid "Merge \"%(revision)s\" into \"%(branch)s\""
+msgstr "Merge \"%(revision)s\" ke \"%(branch)s\""
+
+msgid "Merge Tool"
+msgstr "Alat Merger"
+
+msgid "Merge Verbosity"
+msgstr "Verbositas Merge"
+
+msgid "Merge failed.  Conflict resolution is required."
+msgstr ""
+
+#, python-format
+msgid "Merge into \"%s\""
+msgstr "Merge ke \"%s\""
+
+#, fuzzy
+msgid "Merge into current branch"
+msgstr "Jelajah Cabang Saat ini..."
+
+msgid "Merge..."
+msgstr "Gabung..."
+
+msgid "Merging"
+msgstr "Menggabungkan"
+
+msgid "Message"
+msgstr "Pesan"
+
+msgid "Missing Commit Message"
+msgstr "Pesan Commit Tidak Ada"
+
+msgid "Missing Data"
+msgstr "Data Hilang"
+
+msgid "Missing Name"
+msgstr "Nama Tidak Ditemukan"
+
+msgid "Missing Revision"
+msgstr "Revisi Tidak Ditemukan"
+
+msgid "Missing Tag Message"
+msgstr "Pesan Tag Tidak Ditemukan"
+
+msgid "Modified"
+msgstr "Berubah"
+
+msgid "More..."
+msgstr "Lanjut..."
+
+msgid "Move Down"
+msgstr "Pindah Ke Bawah"
+
+msgid "Move Up"
+msgstr "Pindah Ke Atas"
+
+msgid "Move files to trash"
+msgstr ""
+
+msgid "Name"
+msgstr "Nama"
+
+msgid "Name for the new remote"
+msgstr "Nama untuk hulu baru"
+
+#, fuzzy
+msgid "New Bare Repository..."
+msgstr "Repositori Baru..."
+
+msgid "New Repository..."
+msgstr "Repositori Baru..."
+
+msgid "New..."
+msgstr "Baru..."
+
+#, fuzzy
+msgid "Next File"
+msgstr "Pilih Berkas"
+
+msgid "No"
+msgstr "Tidak"
+
+msgid "No Revision Specified"
+msgstr "Revisi tidak Ditentukan"
+
+msgid ""
+"No changes to commit.\n"
+"\n"
+"You must stage at least 1 file before you can commit."
+msgstr ""
+"Tidak ada perubahan untuk dicommit.\n"
+"\n"
+"Anda harus menstag setidaknya 1 berkas sebelum Anda commit."
+
+msgid "No commits exist in this branch."
+msgstr "Tidak ada commit di cabang ini."
+
+#, fuzzy
+msgid "No fast forward"
+msgstr "Hanya Fast Forward"
+
+#, fuzzy
+msgid "No fast-forward"
+msgstr "Hanya Fast Forward"
+
+msgid "No repository selected."
+msgstr "Tidak ada repositori terpilih"
+
+msgid "Non-fast-forward fetch overwrites local history!"
+msgstr "Nonfast-forward fetch menimpa histori lokal!"
+
+msgid ""
+"Non-fast-forward push overwrites published history!\n"
+"(Did you pull first?)"
+msgstr ""
+"Non-fast-forward push menimpa histori terpublikasi!\n"
+"(Apakah sudah ditarik sebelumnya?)"
+
+msgid "Nothing to commit"
+msgstr "Tidak ada yang dicommit"
+
+msgid "Nothing to do"
+msgstr "Tak ada yang perlu dilakukan"
+
+msgid "Number of Diff Context Lines"
+msgstr "Jumlah Baris Context Diff"
+
+msgid "Open"
+msgstr "Buka"
+
+msgid "Open Git Repository..."
+msgstr "Bukan Repositori Git..."
+
+msgid "Open Parent Directory"
+msgstr "Bukan Direktori di Atasnya"
+
+msgid "Open Recent"
+msgstr "Buka yang Terkini"
+
+msgid "Open Using Default Application"
+msgstr "Buka dengan Aplikasi Bawaan"
+
+msgid "Open in New Window"
+msgstr "Bukan di Jendela Baru"
+
+msgid "Open in New Window..."
+msgstr "Buka di Jendela Baru..."
+
+msgid "Open..."
+msgstr "Buka..."
+
+#, fuzzy
+msgid "Other branches"
+msgstr "Ambil..."
+
+msgid "Overwrite"
+msgstr "Timpa"
+
+#, python-format
+msgid "Overwrite \"%s\"?"
+msgstr "Timpa \"%s\""
+
+msgid "Overwrite File?"
+msgstr "Timpa Berkas?"
+
+#, python-format
+msgid "PATCH %(current)d/%(count)d"
+msgstr "PATCH %(current)d/%(count)d"
+
+msgid ""
+"Parse arguments using a shell.\n"
+"Queries with spaces will require \"double quotes\"."
+msgstr ""
+"Uraikan argumen menggunakan sebuah shell.\n"
+"Queri dengan spasi memerlukan \"tanda kutip dua\"."
+
+msgid "Partially Staged"
+msgstr "Sebagian Stagged"
+
+msgid "Paste"
+msgstr ""
+
+msgid "Patch(es) Applied"
+msgstr "Patch Diterapkan"
+
+msgid "Path"
+msgstr ""
+
+msgid "Path or URL to clone (Env. $VARS okay)"
+msgstr "Lokasi atau URL untuk kloning (Env. $VARS oke)"
+
+msgid "Pick"
+msgstr ""
+
+msgid "Pixel XOR"
+msgstr ""
+
+msgid "Please provide both a branch name and revision expression."
+msgstr "Silahkan tentukan nama cabang dan ekspresi revisi."
+
+msgid "Please select a file"
+msgstr "Silahkan pilih berkas"
+
+msgid "Please specify a name for the new tag."
+msgstr "Silahkan tentukan nama untuk tag baru."
+
+msgid "Please specify a revision to tag."
+msgstr "Tentukan revisi untuk di-tag"
 
 msgid ""
 "Please supply a commit message.\n"
@@ -1698,32 +1517,673 @@ msgstr ""
 "- Baris kedua: Kosong\n"
 "- Baris selanjutnya : Jelaskan mengapa perubahan ini bagus.\n"
 
-msgid "Missing Commit Message"
-msgstr "Pesan Commit Tidak Ada"
+msgid "Point the current branch head to a new commit?"
+msgstr ""
+
+msgid "Polish translation"
+msgstr ""
+
+msgid "Preferences"
+msgstr "Preferensi"
+
+msgid "Prefix"
+msgstr "Awalan"
+
+#, fuzzy
+msgid "Prepare Commit Message"
+msgstr "Cari Pesan Commit"
+
+msgid "Prevent \"Stage\" from staging all files when nothing is selected"
+msgstr ""
+
+msgid "Previous File"
+msgstr ""
+
+msgid "Prompt on creation"
+msgstr ""
+
+#, fuzzy
+msgid "Prompt when pushing creates new remote branches"
+msgstr "Buat cabang baru di hulu?"
+
+msgid "Prune "
+msgstr ""
+
+#, fuzzy
+msgid "Pull"
+msgstr "Tarik..."
+
+msgid "Pull..."
+msgstr "Tarik..."
+
+msgid "Push"
+msgstr "Push"
+
+msgid "Push..."
+msgstr "Tekan..."
+
+msgid "Quit"
+msgstr "Tutup"
+
+msgid "Rebase"
+msgstr "Rebase"
+
+#, python-format
+msgid "Rebase onto %s"
+msgstr "Rebase ke %s"
+
+#, fuzzy
+msgid "Rebase stopped"
+msgstr "Rebase"
+
+msgid "Rebase the current branch instead of merging"
+msgstr ""
+
+msgid "Rebasing"
+msgstr "Me-rebase"
+
+#, fuzzy
+msgid "Recent"
+msgstr "Reset"
+
+#, fuzzy
+msgid "Recent repositories"
+msgstr "Semua Repositori"
+
+#, fuzzy
+msgid "Recent repository count"
+msgstr "Semua Repositori"
+
+msgid "Recently Modified Files"
+msgstr "Berkas yang Baru Dimodifikasi"
+
+msgid "Recently Modified Files..."
+msgstr "Berkas Baru Dimodifikasi..."
+
+msgid "Recovering a dropped stash is not possible."
+msgstr "Tidak mungkin mengembalikan stash yang dibuang."
+
+msgid "Recovering lost commits may not be easy."
+msgstr "Mengembalikan commit yang hilang tidak akan mudah."
+
+msgid "Redo"
+msgstr ""
+
+msgid "Refresh"
+msgstr "Segarkan"
+
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgstr ""
+
+msgid "Remote"
+msgstr "Hulu"
+
+msgid "Remote Branch"
+msgstr "Cabang Hulu"
+
+msgid "Remote Branch Deleted"
+msgstr "Cabang Hulu Dihapus"
+
+msgid "Remote git repositories - double-click to rename"
+msgstr "Repositori hulu git - dobel-klik untuk mengganti nama"
+
+msgid "Remove"
+msgstr "Hapus"
+
+#, python-format
+msgid "Remove %s from the recent list?"
+msgstr ""
+
+#, fuzzy
+msgid "Remove Element"
+msgstr "Hapus"
+
+msgid "Remove selected (Delete)"
+msgstr "Hapus yang terpilih (Hapus)"
+
+msgid "Rename"
+msgstr "Ganti nama"
+
+#, fuzzy, python-format
+msgid "Rename \"%s\""
+msgstr "Ganti nama"
+
+#, fuzzy
+msgid "Rename Branch"
+msgstr "Cabang Hulu"
+
+#, fuzzy
+msgid "Rename Branch..."
+msgstr "Cabang Hulu"
+
+#, fuzzy
+msgid "Rename Existing Branch"
+msgstr "Perbarui Cabang yang Ada:"
+
+msgid "Rename Remote"
+msgstr "Ganti Nama Hulu"
+
+#, fuzzy
+msgid "Rename Repository"
+msgstr "Repositori Saat Ini"
+
+#, fuzzy
+msgid "Rename branch"
+msgstr "Cabang Hulu"
+
+#, python-format
+msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
+msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
+
+msgid "Rename remote?"
+msgstr "Ganti nama hulu?"
+
+#, fuzzy
+msgid "Rename selected paths"
+msgstr "Sunting lokasi terpilih"
+
+#, python-format
+msgid "Repository: %s"
+msgstr "Repositori: %s"
+
+msgid "Reset"
+msgstr "Reset"
+
+#, python-format
+msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
+msgstr "Atur Ulang \"%(branch)s\" ke \"%(revision)s\"?"
+
+msgid "Reset Branch"
+msgstr "Atur Ulang Cabang"
+
+#, fuzzy
+msgid "Reset Branch Head"
+msgstr "Atur Ulang Cabang"
+
+msgid "Reset Branch?"
+msgstr "Atur Ulang Cabang?"
+
+msgid "Reset Worktree"
+msgstr ""
+
+msgid "Reset worktree?"
+msgstr ""
+
+#, python-format
+msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
+msgstr "Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
+
+msgid "Revert Diff Hunk"
+msgstr "Kembalikan Area Diff"
+
+msgid "Revert Diff Hunk..."
+msgstr "Kembalikan Area Diff..."
+
+msgid "Revert Diff Hunk?"
+msgstr "Kembalikan Area Diff?"
+
+msgid "Revert Selected Lines"
+msgstr "Kembalikan Baris Terpilih"
+
+msgid "Revert Selected Lines..."
+msgstr "Kembalikan Baris Terpilih..."
+
+msgid "Revert Selected Lines?"
+msgstr "Kembalikan Baris Terpilih?"
+
+msgid "Revert Uncommitted Changes"
+msgstr "Kembalikan Perubahan Tak Tercommit"
+
+msgid "Revert Uncommitted Changes?"
+msgstr "Kembalikan Perubahan Tak Tercommit?"
+
+#, fuzzy
+msgid "Revert Uncommitted Edits..."
+msgstr "Kembalikan Suntingan Belum dicommmit..."
+
+msgid "Revert Unstaged Changes"
+msgstr "Kembalikan Perubahan Belum Distag"
+
+msgid "Revert Unstaged Changes?"
+msgstr "Kembalikan Perubahan Belum Distag?"
+
+msgid "Revert Unstaged Edits..."
+msgstr "Kembalikan Suntingan tak distag..."
+
+msgid "Revert the uncommitted changes?"
+msgstr "Kembalikan perubahan tak tercommit?"
+
+msgid "Revert the unstaged changes?"
+msgstr "Kembalikan perubahan belum distag?"
+
+#, fuzzy
+msgid "Revert uncommitted changes to selected paths"
+msgstr "Kembalikan perubahan ke lokasi terpilih."
+
+#, fuzzy
+msgid "Revert unstaged changes to selected paths"
+msgstr "Kembalikan perubahan ke lokasi terpilih."
+
+msgid "Review"
+msgstr "Tinjau"
+
+msgid "Review..."
+msgstr "Pratampil..."
+
+msgid "Revision"
+msgstr "Revisi"
+
+msgid "Revision Expression:"
+msgstr "Ekspresi Revisi:"
+
+msgid "Revision to Merge"
+msgstr "Revisi untuk Dimerge"
+
+msgid "Reword"
+msgstr ""
+
+msgid "Rewrite Published Commit?"
+msgstr "Tulis Ulang Penerbit Commit?"
+
+msgid "Run"
+msgstr "Jalankan"
+
+#, python-format
+msgid "Run \"%s\"?"
+msgstr "Jalankan \"%s\"?"
+
+#, python-format
+msgid "Run %s?"
+msgstr "Jalankan %s?"
+
+#, python-format
+msgid "Run the \"%s\" command?"
+msgstr "Jalankan perintah \"%s\"?"
+
+#, python-format
+msgid "Running command: %s"
+msgstr "Menjalankan perintah: %s"
+
+msgid "Russian translation"
+msgstr ""
+
+#, fuzzy
+msgid "SHA-1"
+msgstr "Salin SHA-1"
+
+#, fuzzy
+msgid "Safe Mode"
+msgstr "Stage Berubah"
+
+msgid "Save"
+msgstr "Simpan"
+
+msgid "Save Archive"
+msgstr "Simpan Arsip"
+
+msgid "Save As Tarball/Zip..."
+msgstr "Simpan Sebagai Tarball/Zip.."
+
+msgid "Save GUI Settings"
+msgstr "Simpan Pengaturan GUI"
+
+msgid "Save Stash"
+msgstr "Simpan Stash"
+
+msgid "Save modified state to new stash"
+msgstr "Simpan perubahan ke stash baru"
+
+#, python-format
+msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
+msgstr "Simpan \"%(filename)s\" dari \"%(ref)s\" ke \"%(destination)s\""
+
+msgid "Search"
+msgstr "Cari"
+
+msgid "Search Authors"
+msgstr "Cari Penulis"
+
+msgid "Search Commit Messages"
+msgstr "Cari Pesan Commit"
+
+msgid "Search Committers"
+msgstr "Cari Commiter"
+
+msgid "Search Date Range"
+msgstr "Cari Rentang Tanggal"
+
+msgid "Search Diffs"
+msgstr "Cari Diff"
+
+msgid "Search by Expression"
+msgstr "Cari berdasarkan Ekspresi"
+
+msgid "Search by Path"
+msgstr "Cari berdasarkan Lokasi"
+
+msgid "Search for a fixed string"
+msgstr "Cari teks tetap"
+
+msgid "Search using a POSIX basic regular expression"
+msgstr "Cari menggunakan ekspresi reguler POSIX dasar"
+
+msgid "Search using a POSIX extended regular expression"
+msgstr "Cari menggunakan ekspresi reguler POSIX perluasan"
+
+msgid "Search..."
+msgstr "Cari..."
+
+msgid "Select"
+msgstr "Pilih"
+
+msgid "Select All"
+msgstr "Pilih Semua"
+
+msgid "Select Branch to Review"
+msgstr "Pilih Cabang untuk Ditinjau"
+
+msgid "Select Child"
+msgstr "Pilih Anakan"
+
+msgid "Select Commit"
+msgstr "Pilih Commit"
+
+#, fuzzy
+msgid "Select Directory..."
+msgstr "Pilih Repository..."
+
+msgid "Select File"
+msgstr "Pilih Berkas"
+
+msgid "Select New Upstream"
+msgstr "Pilih Upstream Baru"
+
+msgid "Select Newest Child"
+msgstr "Pilih Anakan Terbaru"
+
+msgid "Select Oldest Parent"
+msgstr "Pilih Indukan Tertua"
+
+msgid "Select Parent"
+msgstr "Pilih Indukan"
+
+msgid "Select Previous Version"
+msgstr "Pilih Versi Sebelumnya"
+
+msgid "Select Repository..."
+msgstr "Pilih Repository..."
+
+msgid "Select a parent directory for the new clone"
+msgstr "Pilih direktori di atasnya untuk klon baru"
+
+#, python-format
+msgid "Select file from \"%s\""
+msgstr "Pilih berkas dari \"%s\""
+
+msgid "Select manually..."
+msgstr "Pilih secara manual..."
+
+#, fuzzy
+msgid "Select output dir"
+msgstr "Pilih Commit"
+
+#, fuzzy
+msgid "Select output directory"
+msgstr "Pilih Repository..."
+
+#, fuzzy
+msgid "Select patch file(s)..."
+msgstr "Pilih berkas patch..."
+
+#, fuzzy
+msgid "Select repository"
+msgstr "Pilih Repository..."
+
+#, fuzzy
+msgid "Set Default Repository"
+msgstr "Pilih Repository..."
+
+#, fuzzy
+msgid "Set Upstream Branch"
+msgstr "Pilih Upstream Baru"
+
+#, fuzzy
+msgid "Set upstream"
+msgstr "Pilih Upstream Baru"
+
+msgid "Settings"
+msgstr "Pengaturan"
+
+msgid "Shell arguments"
+msgstr "Argumen shell"
+
+msgid "Shift Down"
+msgstr ""
+
+msgid "Shift Up"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr "Pintasan"
+
+msgid "Show Diffstat After Merge"
+msgstr "Tampilkan Diffstat setelah Merge"
+
+msgid "Show Full Paths in the Window Title"
+msgstr ""
+
+#, fuzzy
+msgid "Show Help"
+msgstr "Bantuan"
+
+msgid "Show History"
+msgstr "Tunjukan sejarah"
 
 msgid ""
-"No changes to commit.\n"
-"\n"
-"You must stage at least 1 file before you can commit."
+"Show help\n"
+"Shortcut: ?"
 msgstr ""
-"Tidak ada perubahan untuk dicommit.\n"
-"\n"
-"Anda harus menstag setidaknya 1 berkas sebelum Anda commit."
 
-msgid "Would you like to stage and commit all modified files?"
-msgstr "Apakah Anda ingin menstage dan commit semua berkas yang berubah?"
+msgid "Show icon? (if available)"
+msgstr ""
 
-msgid "Stage and commit?"
-msgstr "Stage dan commit?"
+msgid "Show line numbers"
+msgstr ""
+
+msgid "Show whole surrounding functions of changes"
+msgstr "Tampilkan seluruh sekitar fungsi perubahan"
+
+msgid "Showing changes since"
+msgstr "Menampilkan perubahan sejak"
+
+msgid "Side by side"
+msgstr ""
+
+msgid "Sign Off"
+msgstr "Sign Off"
+
+msgid "Sign Tag"
+msgstr "Tandai Tag"
+
+msgid "Sign off on this commit"
+msgstr "Tanda tangani commit ini"
+
+msgid "Simplified Chinese translation"
+msgstr ""
+
+msgid "Skip"
+msgstr ""
+
+msgid "Skip Current Patch"
+msgstr "Lewati Cabang Saat Ini"
+
+msgid "Sort bookmarks alphabetically"
+msgstr ""
+
+msgid "Spanish translation"
+msgstr ""
+
+msgid "Specifies the SHA-1 to tag"
+msgstr "Tentukan SHA-1 untuk di-tag"
+
+msgid "Specifies the tag message"
+msgstr "Tentukan pesan tag"
+
+msgid "Specifies the tag name"
+msgstr "Tentukan nama tag"
+
+msgid "Spelling Suggestions"
+msgstr "Saran Ejaan"
+
+msgid "Squash"
+msgstr "Squash"
+
+msgid "Squash the merged commits into a single commit"
+msgstr ""
+
+msgid "Stage"
+msgstr "Stage"
+
+msgid "Stage / Unstage"
+msgstr "Stage / Unstage"
+
+msgid "Stage All Untracked"
+msgstr "Stage Semua yang tak terlacak"
+
+msgid "Stage Changed Files To Commit"
+msgstr "Stage Berkas yang Berubah untuk di-commit"
+
+msgid "Stage Diff Hunk"
+msgstr "Stage Area Diff"
+
+msgid "Stage Modified"
+msgstr "Stage Berubah"
+
+msgid "Stage Selected"
+msgstr "Stage Terpilih"
+
+#, fuzzy
+msgid "Stage Selected Lines"
+msgstr "Stage Batis &Terpilih"
+
+msgid "Stage Unmerged"
+msgstr "Stage Tak Termerge"
+
+msgid "Stage Untracked"
+msgstr "Stage Tak Terlacak"
 
 msgid "Stage and Commit"
 msgstr "Stage dan Commit"
 
-msgid "Nothing to commit"
-msgstr "Tidak ada yang dicommit"
+msgid "Stage and commit?"
+msgstr "Stage dan commit?"
 
-msgid "Rewrite Published Commit?"
-msgstr "Tulis Ulang Penerbit Commit?"
+#, fuzzy
+msgid "Stage conflicts"
+msgstr "Stage dan commit?"
+
+#, fuzzy
+msgid "Stage conflicts?"
+msgstr "Stage dan commit?"
+
+#, fuzzy
+msgid "Stage/unstage selected paths for commit"
+msgstr "Stage lokasi terpilih untuk commit"
+
+msgid "Staged"
+msgstr "Stagged"
+
+#, python-format
+msgid "Staging: %s"
+msgstr "Staging: %s"
+
+msgid "Start Interactive Rebase..."
+msgstr "Mulai Rebase Interaktif..."
+
+msgid "Starting Revision"
+msgstr "Memulai Revisi"
+
+msgid "Stash"
+msgstr "Stash"
+
+#, fuzzy
+msgid "Stash Index"
+msgstr "Stash"
+
+#, fuzzy
+msgid "Stash staged changes only"
+msgstr "Commit perubahan stage"
+
+#, fuzzy
+msgid "Stash unstaged changes only, keeping staged changes"
+msgstr "Kembalikan perubahan ke lokasi terpilih."
+
+msgid "Stash..."
+msgstr "Stash..."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Stop tracking paths"
+msgstr "Hentikan melacak lokasi"
+
+msgid "Summarize Merge Commits"
+msgstr "Ringkasan Merge Commit"
+
+msgid "Summary"
+msgstr "Ringkasan"
+
+msgid "Summary:"
+msgstr "Ringkasan:"
+
+msgid "Tab Width"
+msgstr "Lebar Tab"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Tag Created"
+msgstr "Tag Telah Dibuat"
+
+msgid "Tag message..."
+msgstr "Pesan tag..."
+
+msgid "Tag-signing was requested but the tag message is empty."
+msgstr "Penandaan tag diperlukan tetapi pesan tag kosong."
+
+msgid "Tags"
+msgstr ""
+
+msgid "Text Width"
+msgstr "Lebar Teks"
+
+msgid "The branch will be no longer available."
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, fuzzy
+msgid "The commit message will be cleared."
+msgstr "Berkas berikut akan dihapus:"
+
+#, python-format
+msgid "The file \"%s\" exists and will be overwritten."
+msgstr "Berkas \"%s\" sudah ada dan akan ditimpa."
+
+msgid "The following files will be deleted:"
+msgstr "Berkas berikut akan dihapus:"
+
+msgid "The revision expression cannot be empty."
+msgstr "Ekspresi revisi tidak boleh kosong."
+
+#, python-format
+msgid "The worktree will be reset using \"git reset --merge %s\""
+msgstr ""
+
+msgid "This cannot be undone.  Clear commit message?"
+msgstr ""
 
 msgid ""
 "This commit has already been published.\n"
@@ -1734,523 +2194,290 @@ msgstr ""
 "Operasi ini akan menulis ulang sejarah publikasi.\n"
 "Mungkin Anda tidak ingin melakukan ini."
 
-msgid "Amend the published commit?"
-msgstr "Ubah penerbitan commit?"
-
-msgid "Amend Commit"
-msgstr "Ubah Commit"
-
-msgid "More..."
-msgstr "Lanjut..."
-
-msgid "Select Commit"
-msgstr "Pilih Commit"
-
-msgid "Commit summary"
-msgstr "Ringkasan commit"
-
-msgid "Extended description..."
-msgstr "Perluaskan penjelasan..."
-
-msgid "Revision to Merge"
-msgstr "Revisi untuk Dimerge"
-
-msgid "Visualize"
-msgstr "Visualisasikan"
-
-msgid "Squash the merged commits into a single commit"
+#, fuzzy
+msgid ""
+"This operation drops uncommitted changes.\n"
+"These changes cannot be recovered."
 msgstr ""
-
-msgid "Squash"
-msgstr "Squash"
+"Operasi ini akan menghilangkan perubahan tak tercommit.\n"
+"Perubahan ini tidak dapat direkoveri."
 
 msgid ""
-"Always create a merge commit when enabled, even when the merge is a fast-"
-"forward update"
+"This operation removes uncommitted edits from selected files.\n"
+"These changes cannot be recovered."
 msgstr ""
-
-#, fuzzy
-msgid "No fast forward"
-msgstr "Hanya Fast Forward"
+"Operasi ini akan menghilangkan perubahan tak tercommit.\n"
+"Perubahan ini tidak dapat direkoveri."
 
 msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
-"uncommitted"
+"This operation removes unstaged edits from selected files.\n"
+"These changes cannot be recovered."
 msgstr ""
-
-msgid "GPG-sign the merge commit"
-msgstr ""
-
-msgid "Merge"
-msgstr "Merge"
-
-#, python-format
-msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr "Merge \"%(revision)s\" ke \"%(branch)s\""
-
-#, python-format
-msgid "Merge into \"%s\""
-msgstr "Merge ke \"%s\""
-
-msgid "No Revision Specified"
-msgstr "Revisi tidak Ditentukan"
-
-msgid "You must specify a revision to view."
-msgstr "Anda harus tentukan revisi untuk ditampilkan."
-
-msgid "You must specify a revision to merge."
-msgstr "Anda harus tentukan revisi untuk dimerge."
-
-msgid "Filename"
-msgstr "Namaberkas"
-
-msgid "Additions"
-msgstr "Penambahan"
-
-msgid "Deletions"
-msgstr "Penghapusan"
-
-msgid "Show History"
-msgstr "Tunjukan sejarah"
-
-msgid "Save Archive"
-msgstr "Simpan Arsip"
-
-msgid "Prefix"
-msgstr "Awalan"
-
-msgid "Advanced"
-msgstr "Mahir"
-
-msgid "File Saved"
-msgstr "Berkas Tersimpan"
-
-#, python-format
-msgid "File saved to \"%s\""
-msgstr "Berkas disimpan di \"%s\""
-
-msgid "Overwrite File?"
-msgstr "Timpa Berkas?"
-
-#, python-format
-msgid "The file \"%s\" exists and will be overwritten."
-msgstr "Berkas \"%s\" sudah ada dan akan ditimpa."
-
-#, python-format
-msgid "Overwrite \"%s\"?"
-msgstr "Timpa \"%s\""
-
-msgid "Overwrite"
-msgstr "Timpa"
-
-msgid "Remote Branch"
-msgstr "Cabang Hulu"
-
-msgid "Prompt on creation"
-msgstr ""
-
-#, fuzzy
-msgid "Prompt when pushing creates new remote branches"
-msgstr "Buat cabang baru di hulu?"
-
-#, fuzzy
-msgid "Fast-forward only"
-msgstr "Hanya Fast Forward"
+"Operasi ini membuang perubahan belum distag.\n"
+"Perubahan ini tidak dapat dikembalikan"
 
 msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge "
-"can be resolved as a fast-forward"
+"This repository is currently being rebased.\n"
+"Resolve conflicts, commit changes, and run:\n"
+"    Rebase > Continue"
 msgstr ""
-
-#, fuzzy
-msgid "No fast-forward"
-msgstr "Hanya Fast Forward"
-
-msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
-
-#, fuzzy
-msgid "Force"
-msgstr "Paksa Push"
+"Repositori ini sedang direbase.\n"
+"Perbaiki konflik, commitkan perubahan, dan jalankan:\n"
+"    Rebase > Lanjutkan"
 
 msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
-"repository to lose commits; use it with care"
+"This repository is in the middle of a merge.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+"Repositori ini sedang dimerge.\n"
+"Perbaiki konflik dan commitkan perubahan."
+
+msgid "Toggle Enabled"
 msgstr ""
 
-msgid "Include tags "
-msgstr "Sertakan tag "
-
-msgid "Prune "
+msgid "Toggle the branches filter"
 msgstr ""
 
-msgid "Rebase the current branch instead of merging"
+msgid "Toggle the paths filter"
 msgstr ""
 
-#, fuzzy
-msgid "Set upstream"
-msgstr "Pilih Upstream Baru"
+msgid "Tracking Branch"
+msgstr "Melacak Cabang"
 
-msgid "Configure the remote branch as the the new upstream"
+msgid "Tracking branch"
+msgstr "Melacak cabang"
+
+msgid "Traditional Chinese (Taiwan) translation"
 msgstr ""
 
-#, python-format
-msgid "URL: %s"
-msgstr "URL: %s"
-
-msgid "No repository selected."
-msgstr "Tidak ada repositori terpilih"
-
-#, python-format
-msgid ""
-"Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
-"A new remote branch will be published."
+msgid "Translators"
 msgstr ""
-"Cabang \"%(branch)s\" tidak ada di \"%(remote)s\".\n"
-"Cabang hulu baru akan di publikasikan."
 
-msgid "Create a new remote branch?"
-msgstr "Buat cabang baru di hulu?"
-
-msgid "Create Remote Branch"
-msgstr "Buat Cabang Hulu"
-
-msgid "Force Fetch?"
-msgstr "Paksa Fetch?"
-
-msgid "Non-fast-forward fetch overwrites local history!"
-msgstr "Nonfast-forward fetch menimpa histori lokal!"
-
-#, python-format
-msgid "Force fetching from %s?"
-msgstr "Paksa fetch dari %s?"
-
-msgid "Force Fetch"
-msgstr "Paksa Fetch"
-
-msgid "Force Push?"
-msgstr "Paksa Push?"
-
-msgid ""
-"Non-fast-forward push overwrites published history!\n"
-"(Did you pull first?)"
+msgid "Turkish translation"
 msgstr ""
-"Non-fast-forward push menimpa histori terpublikasi!\n"
-"(Apakah sudah ditarik sebelumnya?)"
-
-#, python-format
-msgid "Force push to %s?"
-msgstr "Paksa push ke %s?"
-
-msgid "Force Push"
-msgstr "Paksa Push"
-
-msgid "Have you rebased/pulled lately?"
-msgstr "Sudahkan Anda rebase/tarik baru-baru ini?"
-
-#, fuzzy
-msgid "Fetch"
-msgstr "Ambil..."
-
-msgid "Edit Remotes"
-msgstr "Sunting Hulu"
-
-msgid ""
-"Add and remove remote repositories using the \n"
-"Add(+) and Delete(-) buttons on the left-hand side.\n"
-"\n"
-"Remotes can be renamed by selecting one from the list\n"
-"and pressing \"enter\", or by double-clicking."
-msgstr ""
-"Tambah dan hapus repositori hulu menggunakan tombol \n"
-"Tambah(+) dan Hapus(-) pada sisi sebelah kiri.\n"
-"Hulu dapat diganti nama dengan memilih salah satu dari \n"
-"daftar dan tekan \"enter\", atau dobel-klik."
-
-msgid "Remote git repositories - double-click to rename"
-msgstr "Repositori hulu git - dobel-klik untuk mengganti nama"
-
-msgid "Add new remote git repository"
-msgstr "Tambahkan repositori git hulu"
-
-msgid "Delete remote"
-msgstr "Hapus hulu"
-
-#, python-format
-msgid "Gathering info for \"%s\"..."
-msgstr "Mengumpulkan info untuk \"%s\"..."
-
-msgid "Add Remote"
-msgstr "Tambahkan Hulu"
-
-msgid "Add remote"
-msgstr "Tambahkan hulu"
-
-msgid "Name for the new remote"
-msgstr "Nama untuk hulu baru"
 
 msgid "URL"
 msgstr "URL"
 
 #, python-format
-msgid "%(project)s: %(branch)s - Browse"
-msgstr "%(project)s: %(branch)s - Jelajah"
+msgid "URL: %s"
+msgstr "URL: %s"
 
-msgid "(Amending)"
-msgstr "(Mengubah)"
+msgid "Ukranian translation"
+msgstr ""
+
+msgid "Unable to rebase"
+msgstr ""
+
+#, python-format
+msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unmerged"
+msgstr "Tak termerjer"
+
+msgid "Unstage"
+msgstr "Unstage"
+
+msgid "Unstage All"
+msgstr "Unstage Semua"
+
+msgid "Unstage Diff Hunk"
+msgstr "Unstage Area Diff"
+
+msgid "Unstage From Commit"
+msgstr "Unstage dari Commit"
+
+msgid "Unstage Selected"
+msgstr "Unstage Terpilih"
+
+#, fuzzy
+msgid "Unstage Selected Lines"
+msgstr "Unstage Baris &Terpilih"
+
+#, python-format
+msgid "Unstaging: %s"
+msgstr "Unstaging: %s"
+
+msgid "Untrack Selected"
+msgstr "Jangan Lacak Terpilih"
+
+msgid "Untracked"
+msgstr "Tak Terlacak"
+
+#, python-format
+msgid "Untracking: %s"
+msgstr "Untracking: %s"
+
+msgid "Update Existing Branch:"
+msgstr "Perbarui Cabang yang Ada:"
+
+msgid "Updating"
+msgstr "Sedang memperbarui"
+
+msgid "User Name"
+msgstr "Nama Pengguna"
+
+#, fuzzy
+msgid "Version"
+msgstr "Revisi"
+
+msgid "View"
+msgstr "Tampil"
+
+msgid "View History..."
+msgstr "Tampilkan Histori..."
 
 #, fuzzy
 msgid "View history for selected paths"
 msgstr "Tampilkan histori untuk lokasi terpilih"
 
-#, fuzzy
-msgid "Stage/unstage selected paths for commit"
-msgstr "Stage lokasi terpilih untuk commit"
+msgid "Visualize"
+msgstr "Visualisasikan"
 
-msgid "Untrack Selected"
-msgstr "Jangan Lacak Terpilih"
+msgid "Visualize All Branches..."
+msgstr "Visualisasikan Semua Cabang..."
 
-msgid "Stop tracking paths"
-msgstr "Hentikan melacak lokasi"
-
-#, fuzzy
-msgid "Launch git-difftool on the current path"
-msgstr "Jalankan git-difftool pada lokasi saat ini."
-
-msgid "Diff Against Predecessor..."
-msgstr "Diff Pada Predessor..."
-
-#, fuzzy
-msgid "Launch git-difftool against previous versions"
-msgstr "Jalankan git-difftool pada versi sebelumnya."
-
-#, fuzzy
-msgid "Revert unstaged changes to selected paths"
-msgstr "Kembalikan perubahan ke lokasi terpilih."
-
-#, fuzzy
-msgid "Revert uncommitted changes to selected paths"
-msgstr "Kembalikan perubahan ke lokasi terpilih."
-
-msgid "Edit selected paths"
-msgstr "Sunting lokasi terpilih"
-
-msgid "Select Previous Version"
-msgstr "Pilih Versi Sebelumnya"
-
-#, python-format
-msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr "Simpan \"%(filename)s\" dari \"%(ref)s\" ke \"%(destination)s\""
-
-#, python-format
-msgid "Browsing %s"
-msgstr "Ramban %s"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Pilih berkas dari \"%s\""
-
-msgid "Select File"
-msgstr "Pilih Berkas"
-
-msgid "Branch Name"
-msgstr "Nama Cabang"
-
-msgid "Starting Revision"
-msgstr "Memulai Revisi"
-
-msgid "Local branch"
-msgstr "Cabang Lokal"
-
-msgid "Tracking branch"
-msgstr "Melacak cabang"
-
-msgid "Update Existing Branch:"
-msgstr "Perbarui Cabang yang Ada:"
-
-msgid "No"
-msgstr "Tidak"
-
-msgid "Fast Forward Only"
-msgstr "Hanya Fast Forward"
-
-msgid "Fetch Tracking Branch"
-msgstr "Fetch Cabang Terlacak"
-
-msgid "Checkout After Creation"
-msgstr "Checkout Setelah Dibuat"
-
-msgid "Missing Data"
-msgstr "Data Hilang"
-
-msgid "Please provide both a branch name and revision expression."
-msgstr "Silahkan tentukan nama cabang dan ekspresi revisi."
-
-#, python-format
-msgid "Branch \"%s\" already exists."
-msgstr "Cabang \"%s\" sudah ada."
-
-msgid "Branch Exists"
-msgstr "Cabang Sudah Ada"
-
-#, python-format
-msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr ""
-"Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
-
-#, python-format
-msgid "%d skipped"
-msgstr "%d dilewati"
-
-msgid "Recovering lost commits may not be easy."
-msgstr "Mengembalikan commit yang hilang tidak akan mudah."
-
-#, python-format
-msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr "Atur Ulang \"%(branch)s\" ke \"%(revision)s\"?"
-
-msgid "Reset Branch?"
-msgstr "Atur Ulang Cabang?"
-
-msgid "Error Creating Branch"
-msgstr "Erroe Membuat Cabang"
-
-#, python-format
-msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr "\"%(command)s\" menghasilkan exit status \"%(status)d\""
-
-msgid "Stash"
-msgstr "Stash"
-
-msgid "Apply the selected stash"
-msgstr "Terapkan stash terpilih"
-
-msgid "Save modified state to new stash"
-msgstr "Simpan perubahan ke stash baru"
-
-msgid "Drop"
-msgstr "Buang"
-
-msgid "Drop the selected stash"
-msgstr "Buang stash terpilih"
-
-msgid "Keep Index"
-msgstr "Pertahankan Index"
-
-msgid "Save Stash"
-msgstr "Simpan Stash"
-
-msgid "Enter a name for the stash"
-msgstr "Masukkan nama untuk stash"
-
-msgid "Error: Stash exists"
-msgstr "Error: Stash sudah ada"
-
-#, python-format
-msgid "A stash named \"%s\" already exists"
-msgstr "Stash dengan nama \"%s\" sudah ada"
-
-msgid "Drop Stash?"
-msgstr "Buang Stash?"
-
-msgid "Recovering a dropped stash is not possible."
-msgstr "Tidak mungkin mengembalikan stash yang dibuang."
-
-#, python-format
-msgid "Drop the \"%s\" stash?"
-msgstr "Buang stash \"%s\"?"
-
-msgid "Drop Stash"
-msgstr "Buang Stash"
-
-msgid "vX.Y.Z"
-msgstr "vX.Y.Z"
-
-msgid "Specifies the tag name"
-msgstr "Tentukan nama tag"
-
-msgid "Sign Tag"
-msgstr "Tandai Tag"
+msgid "Visualize Current Branch..."
+msgstr "Visualisasikan Cabang Saat ini..."
 
 msgid "Whether to sign the tag (git tag -s)"
 msgstr "Kalau menandai tag (git tag -s)"
 
-msgid "Message"
-msgstr "Pesan"
+msgid "Would you like to stage and commit all modified files?"
+msgstr "Apakah Anda ingin menstage dan commit semua berkas yang berubah?"
 
-msgid "Tag message..."
-msgstr "Pesan tag..."
+msgid "XOR"
+msgstr ""
 
-msgid "Specifies the tag message"
-msgstr "Tentukan pesan tag"
+msgid ""
+"You are in the middle of a merge.\n"
+"Cannot amend while merging."
+msgstr ""
+"Anda sedang melakukan merjer.\n"
+"Tidak dapat mengubah ketika merjer"
 
-msgid "Specifies the SHA-1 to tag"
-msgstr "Tentukan SHA-1 untuk di-tag"
+#, fuzzy
+msgid "You cannot rebase with uncommitted changes."
+msgstr "Kembalikan perubahan tak tercommit?"
 
-msgid "Missing Revision"
-msgstr "Revisi Tidak Ditemukan"
+msgid "You must specify a revision to merge."
+msgstr "Anda harus tentukan revisi untuk dimerge."
 
-msgid "Please specify a revision to tag."
-msgstr "Tentukan revisi untuk di-tag"
+msgid "You must specify a revision to view."
+msgstr "Anda harus tentukan revisi untuk ditampilkan."
 
-msgid "Missing Name"
-msgstr "Nama Tidak Ditemukan"
+msgid "Zoom In"
+msgstr "Perbesar"
 
-msgid "Please specify a name for the new tag."
-msgstr "Silahkan tentukan nama untuk tag baru."
+msgid "Zoom Out"
+msgstr "Perkecil"
 
-msgid "Tag Created"
-msgstr "Tag Telah Dibuat"
+msgid "Zoom to Fit"
+msgstr "Zoom agar Sesuai"
 
-#, python-format
-msgid "Created a new tag named \"%s\""
-msgstr "Buat tag baru bernama \"%s\""
-
-msgid "Age"
-msgstr "Usia"
-
-#, python-format
-msgid "%d minutes ago"
-msgstr "%d menit lalu"
+msgid "command-line arguments"
+msgstr "argumen baris-perintah"
 
 #, python-format
-msgid "%d hours ago"
-msgstr "%d jam lalu"
+msgid "exit code %s"
+msgstr "kode keluar %s"
+
+#, fuzzy, python-format
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr "fatal: \"%s\" bukan direktori. Silahkan tentukan --repo <path>."
 
 #, python-format
-msgid "%d days ago"
-msgstr "%d hari lalu"
+msgid "git cola version %s"
+msgstr "git cola versi %s"
 
-msgid "Partially Staged"
-msgstr "Sebagian Stagged"
+msgid "git-cola"
+msgstr "git-cola"
 
-msgid "Changed Upstream"
-msgstr "Ubah Upstream"
+msgid "git-cola diff"
+msgstr "git-cola diff"
 
-#~ msgid "Created commit: %s"
-#~ msgstr "Buat commit: %s"
+msgid "grep result..."
+msgstr "hasil grep..."
 
-#~ msgid "Commit failed: %s"
-#~ msgstr "Commit gagal: %s"
+msgid "hotkeys.html"
+msgstr "hotkeys.html"
+
+msgid "unknown"
+msgstr "tidak diketahui"
+
+msgid "vX.Y.Z"
+msgstr "vX.Y.Z"
+
+msgid "yyyy-MM-dd"
+msgstr "dd-MM-yyyy"
+
+#~ msgid " commits ago"
+#~ msgstr " commit yang lalu"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
 #~ msgstr "\"%(command)s\" keluar dengan status %(status)d"
 
-#~ msgid "git clone returned exit code %s"
-#~ msgstr "git clone keluar kode %s"
+#~ msgid "\"git commit\" returned exit code %s"
+#~ msgstr "\"git commit\" returned exit code %s"
 
-#~ msgid "Output: %s"
-#~ msgstr "Keluaran: %s"
+#~ msgid "Already up-to-date."
+#~ msgstr "Sudah up-to-date."
+
+#~ msgid "Apply Diff Selection to Work Tree"
+#~ msgstr "Terapkan Diff Terpilih ke Work Tree"
+
+#~ msgid "Bookmarks"
+#~ msgstr "Markah"
+
+#~ msgid "Bookmarks..."
+#~ msgstr "Markah..."
+
+#~ msgid "Commit failed: %s"
+#~ msgstr "Commit gagal: %s"
+
+#~ msgid "Created commit: %s"
+#~ msgstr "Buat commit: %s"
+
+#~ msgid "Enter Git Repository"
+#~ msgstr "Masukkan Repositori Git"
+
+#, fuzzy
+#~ msgid "Error %s"
+#~ msgstr "Error: %s"
 
 #~ msgid "Errors: %s"
 #~ msgstr "Error: %s"
 
-#~ msgid "Tagging \"%(revision)s\" as \"%(name)s\""
-#~ msgstr "Menandai \"%(revision)s\" sebagai \"%(name)s\""
+#~ msgid "Exit code: %s"
+#~ msgstr "Kode exit: %s"
+
+#~ msgid "Fast Forward Only "
+#~ msgstr "Hanya Fast Forward"
+
+#~ msgid "Filter"
+#~ msgstr "Saring"
 
 #~ msgid "GPG-signed"
 #~ msgstr "tandatangan-GPG"
+
+#, fuzzy
+#~ msgid "Local Branches"
+#~ msgstr "Cabang Lokal"
+
+#~ msgid "No files selected for checkout from HEAD."
+#~ msgstr "Tidak ada berkas terpilih untuk checkout dari HEAD."
+
+#, fuzzy
+#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
+#~ msgstr "Pada sistem Debian: sudo apt-get install python-pyinotify"
+
+#~ msgid "Options"
+#~ msgstr "Pilihan"
 
 #~ msgid ""
 #~ "Output:\n"
@@ -2259,38 +2486,30 @@ msgstr "Ubah Upstream"
 #~ "Keluaran:\n"
 #~ "%s"
 
-#~ msgid "Exit code: %s"
-#~ msgstr "Kode exit: %s"
+#~ msgid "Output: %s"
+#~ msgstr "Keluaran: %s"
 
-#~ msgid "\"git commit\" returned exit code %s"
-#~ msgstr "\"git commit\" returned exit code %s"
+#~ msgid "Path to git repository"
+#~ msgstr "Lokasi repositori git"
 
-#~ msgid "git tag returned exit code %s"
-#~ msgstr "git tag menghasilkan kode exit %s"
+#~ msgid "Process Diff Hunk"
+#~ msgstr "Proses Area Diff"
 
-#, fuzzy
-#~ msgid "Error %s"
-#~ msgstr "Error: %s"
-
-#, fuzzy
-#~ msgid "Local Branches"
-#~ msgstr "Cabang Lokal"
+#~ msgid "Process Selection"
+#~ msgstr "Proses Pilihan"
 
 #, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "Cabang Hulu"
 
+#~ msgid "Remove selected paths from the staging area"
+#~ msgstr "Buang lokasi terpilih dari staging area"
+
+#~ msgid "Revert Uncommitted Changes..."
+#~ msgstr "Kembalikan Perubahan Tak Tercommit..."
+
 #~ msgid "Staging Area"
 #~ msgstr "Area Stagnan"
-
-#~ msgid "Already up-to-date."
-#~ msgstr "Sudah up-to-date."
-
-#~ msgid "Path to git repository"
-#~ msgstr "Lokasi repositori git"
-
-#~ msgid "Enter Git Repository"
-#~ msgstr "Masukkan Repositori Git"
 
 #~ msgid ""
 #~ "This PyQt4 does not include QtWebKit.\n"
@@ -2298,9 +2517,6 @@ msgstr "Ubah Upstream"
 #~ msgstr ""
 #~ "PyQt4 ini tidak menyertakan QtWebKit.\n"
 #~ "Fitur pintasan papan tik tak tersedia."
-
-#~ msgid "Fast Forward Only "
-#~ msgstr "Hanya Fast Forward"
 
 #~ msgid "Updating..."
 #~ msgstr "Memperbarui..."
@@ -2312,49 +2528,18 @@ msgstr "Ubah Upstream"
 #~ "berkas pemberitahuan: dinonaktifkan\n"
 #~ "Catatan: install pywin32 untuk mengaktifkan.\n"
 
+#~ msgid "git clone returned exit code %s"
+#~ msgstr "git clone keluar kode %s"
+
+#~ msgid "git tag returned exit code %s"
+#~ msgstr "git tag menghasilkan kode exit %s"
+
+#~ msgid "inotify enabled."
+#~ msgstr "inotify diaktifkan."
+
 #~ msgid ""
 #~ "inotify: disabled\n"
 #~ "Note: install python-pyinotify to enable inotify.\n"
 #~ msgstr ""
 #~ "inotify: dinonaktifkan\n"
 #~ "Catatan: install python-pyinotify untuk mengaktifkan inotify.\n"
-
-#, fuzzy
-#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
-#~ msgstr "Pada sistem Debian: sudo apt-get install python-pyinotify"
-
-#~ msgid "inotify enabled."
-#~ msgstr "inotify diaktifkan."
-
-#~ msgid "Cancel"
-#~ msgstr "Batalkan"
-
-#~ msgid "Options"
-#~ msgstr "Pilihan"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Markah"
-
-#~ msgid "No files selected for checkout from HEAD."
-#~ msgstr "Tidak ada berkas terpilih untuk checkout dari HEAD."
-
-#~ msgid "Remove selected paths from the staging area"
-#~ msgstr "Buang lokasi terpilih dari staging area"
-
-#~ msgid "Revert Uncommitted Changes..."
-#~ msgstr "Kembalikan Perubahan Tak Tercommit..."
-
-#~ msgid "Bookmarks..."
-#~ msgstr "Markah..."
-
-#~ msgid "Filter"
-#~ msgstr "Saring"
-
-#~ msgid "Process Diff Hunk"
-#~ msgstr "Proses Area Diff"
-
-#~ msgid "Process Selection"
-#~ msgstr "Proses Pilihan"
-
-#~ msgid "Apply Diff Selection to Work Tree"
-#~ msgstr "Terapkan Diff Terpilih ke Work Tree"
