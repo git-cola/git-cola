@@ -1,6 +1,24 @@
 # The default target of this Makefile is...
 all::
 
+# Development
+# -----------
+# make test     # unit tests
+# make doc      # build docs
+# make flake8   # style check
+# make pyint3k  # python2/3 compatibility checks
+# make pylint   # full pylint check
+#               # TODO pylint config, tox, yapf, others?
+# Release Prep
+# ------------
+# make pot      # update main translation template
+# make po       # merge translations
+#
+# Installation
+# ------------
+# make prefix=<path> install
+# DESTDIR is also supported.
+
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
