@@ -119,6 +119,10 @@ Packaging
 Fixes
 -----
 
+* Translations marked "fuzzy" will no longer be used when translating strings.
+
+  https://github.com/git-cola/git-cola/issues/782
+
 * Deleted unmerged files will now correctly use a deleted icon.
 
   https://github.com/git-cola/git-cola/issues/479

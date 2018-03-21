@@ -106,7 +106,7 @@ class build_mo(Command):
             mo = os.path.join(dir_, basename)
             if self.force or newer(po, mo):
                 log.info('Compile: %s -> %s' % (po, mo))
-                self.spawn(['msgfmt', '--use-fuzzy', '--output-file', mo, po])
+                self.spawn(['msgfmt', '--output-file', mo, po])
 
 
 build.sub_commands.insert(0, ('build_mo', None))
