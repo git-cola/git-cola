@@ -46,7 +46,7 @@ New releases are available on the
 
 * [git](http://git-scm.com/) 1.6.3 or newer.
 
-* [Python](http://python.org/) 2.6, 2.7, and 3.2 or newer.
+* [Python](http://python.org/) 2.6 or newer (Python 2+3 compatible).
 
 * [QtPy](https://github.com/spyder-ide/qtpy) 1.1.0 or newer.
 
