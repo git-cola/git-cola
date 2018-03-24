@@ -8,4 +8,5 @@ Windows Tips
 * If your python is installed in a location other than `/c/Python*/`
   then you can tell the `cola` script about it by setting the
   `cola.pythonlocation` git configuration variable.  e.g.:
- $ git config --global cola.pythonlocation "/c/Program Files/Python27/python.exe"
+
+   $ git config --global cola.pythonlocation "/c/Python27/python.exe"
