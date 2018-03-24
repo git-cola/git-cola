@@ -46,7 +46,7 @@ New releases are available on the
 
 * [git](http://git-scm.com/) 1.6.3 or newer.
 
-* [Python](http://python.org/) 2.6, 2.7, and 3.2 or newer.
+* [Python](http://python.org/) 2.6 or newer (Python 2+3 compatible).
 
 * [QtPy](https://github.com/spyder-ide/qtpy) 1.1.0 or newer.
 
@@ -337,6 +337,16 @@ Checkout the [Travis config file](.travis.yml) for more details.
 When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
 # WINDOWS (continued)
+
+## Multiple Python versions
+
+If you have multiple versions of Python installed, the `contrib/win32/cola`
+launcher script might choose the newer version instead of the python
+that has PyQt installed.  In order to resolve this, you can set the
+`cola.pythonlocation` git configuration variable to tell cola where to
+find python.  For example:
+
+    git config --global cola.pythonlocation /c/Python34
 
 ## BUILDING WINDOWS INSTALLERS
 
