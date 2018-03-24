@@ -338,6 +338,16 @@ When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
 # WINDOWS (continued)
 
+## Multiple Python versions
+
+If you have multiple versions of Python installed, the `contrib/win32/cola`
+launcher script might choose the newer version instead of the python
+that has PyQt installed.  In order to resolve this, you can set the
+`cola.pythonlocation` git configuration variable to tell cola where to
+find python.  For example:
+
+    git config --global cola.pythonlocation /c/Python34
+
 ## BUILDING WINDOWS INSTALLERS
 
 Windows installers are built using
