@@ -116,6 +116,10 @@ Packaging
 
   https://github.com/git-cola/git-cola/issues/636
 
+* The Windows installer is now much simpler.  Git Cola now bundles
+  Python and PyQt5, so users need only install the "Git for Windows"
+  and "Git Cola" installers to get things working.
+
 Fixes
 -----
 
