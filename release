@@ -19,16 +19,10 @@ usage () {
 	echo "options:"
 	echo "--all                     - build tarball, win32, docs, and web"
 	echo "--tarball                 - build the tarball"
-	echo "--tarball-dir             - specify the tarball release directory"
+	echo "--tarball-dir             - specify the tarball directory"
 	echo "--doc                     - build the documentation"
 	echo "--doc-dir <dir>           - specify the documentation directory"
 	echo "--win32                   - build the win32 installer"
-	echo "--win32-innosetup         - build the InnoSetup installer"
-	echo "--win32-pynsist           - build the pynsist installer"
-	echo "--win32-login <user@host> - specify the win32 host"
-	echo "--win32-port <port #>     - specify the win32 ssh port number"
-	echo "--win32-cola-dir <dir>    - specify the win32 cola repo path"
-	echo "--win32-python-dir <dir>  - specify the win32 python directory"
 	echo "--version <version>       - specify the version number"
 	echo "--upload                  - upload release assets to github"
 	echo "--upload-file <path>      - upload one release asset"
@@ -61,67 +55,11 @@ build_tarball () {
 	fi
 }
 
-build_win32_remotely () {
-	case "$win32_installer" in
-	innosetup)
-		build_win32_innosetup
-		;;
-	pynsist)
-		build_win32_pynsist
-		;;
-	*)
-		echo 1>&2 "unknown win32 installer: $win32_installer"
-		exit 1
-		;;
-	esac
-}
-
-build_win32_pynsist () {
+build_win32 () {
 	title Building pynsist installer
 
-	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
-		PATH='"$WIN32_PYTHON"':'"$WIN32_PYTHON/Scripts"':'"$WIN32_GIT"':'"$WIN32_NSIS"':"$PATH"
-		export PATH
-		cd '"$WIN32_COLA_DIR"' &&
-		PYTHONPATH=./extras/qtpy &&
-		export PYTHONPATH &&
-		rm -rf build/nsis &&
-		pynsist pynsist.cfg
-	'
-	do_or_die scp -P $WIN32_SSH_PORT \
-		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/build/nsis/"*.exe" .
-
-	do_or_die ssh -p $WIN32_SSH_PORT \
-		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/build/nsis/*.exe"
-
-	do_or_die mv git-cola_"$VERSION".exe git-cola-"$VERSION".exe
-	do_or_die chmod 644 git-cola-"$VERSION".exe
-	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
-		-xi git-cola-"$VERSION".exe
-	if test "$do_upload" = true
-	then
-		upload_file git-cola-"$VERSION".windows.zip
-	fi
-}
-
-build_win32_innosetup () {
-	title Building InnoSetup installer
-
-	do_or_die ssh -p $WIN32_SSH_PORT "$WIN32_LOGIN" '
-		PATH='"$WIN32_PYTHON"':'"$WIN32_GIT"':"$PATH"
-		export PATH
-		cd '"$WIN32_COLA_DIR"' &&
-		PYTHONPATH=./extras/qtpy &&
-		export PYTHONPATH &&
-		contrib/win32/create-installer.sh
-	'
-	do_or_die scp -P $WIN32_SSH_PORT \
-		"$WIN32_LOGIN":"$WIN32_COLA_DIR"/"*.exe" .
-
-	do_or_die ssh -p $WIN32_SSH_PORT \
-		"$WIN32_LOGIN" "/bin/rm '$WIN32_COLA_DIR'/*.exe"
-
-	do_or_die mv "Git Cola-$VERSION".exe git-cola-"$VERSION".exe
+	do_or_die ./contrib/win32/run-pynsist.sh
+	do_or_die mv build/nsis/git-cola_*.exe git-cola-"$VERSION".exe
 	do_or_die chmod 644 git-cola-"$VERSION".exe
 	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
@@ -170,34 +108,6 @@ do
 		do_win32=true
 		shift
 		;;
-	--win32-innosetup)
-		win32_installer=innosetup
-		shift
-		;;
-	--win32-pynsist)
-		win32_installer=pynsist
-		shift
-		;;
-	--win32-login)
-		WIN32_LOGIN="$2"
-		shift
-		shift
-		;;
-	--win32-cola-dir)
-		WIN32_COLA_DIR="$2"
-		shift
-		shift
-		;;
-	--win32-python-dir)
-		WIN32_PYTHON="$2"
-		shift
-		shift
-		;;
-	--win32-port)
-		WIN32_SSH_PORT="$2"
-		shift
-		shift
-		;;
 	--upload)
 		do_upload=true
 		shift
@@ -235,7 +145,7 @@ fi
 
 if test "$do_win32" = true
 then
-	build_win32_remotely
+	build_win32
 fi
 
 if test "$do_docs" = true
