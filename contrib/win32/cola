@@ -37,6 +37,12 @@ fi
 # add that path to the top of the list below or
 # set the `cola.pythonlocation` git configuration variable.
 for python in \
+	"/c/Python39" \
+	"/c/Python38" \
+	"/c/Python37" \
+	"/c/Python36" \
+	"/c/Python35" \
+	"/c/Python34" \
 	"/c/Python27" \
 	"/c/Python26" \
 	"/c/Python25"
