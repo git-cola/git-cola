@@ -3,7 +3,6 @@
 from __future__  import absolute_import, division, unicode_literals
 
 import argparse
-import distutils.spawn
 import json
 import os
 import re
@@ -61,7 +60,7 @@ def load_yaml(filename):
 
 
 def find_interpreter(language, version):
-    return distutils.spawn.find_executable(language + version)
+    return core.find_executable(language + version)
 
 
 def get_platform(platform):
@@ -232,7 +231,7 @@ def default_shell():
     else:
         shell = '/bin/sh'
     for sh in ('bash', 'zsh', 'ksh', 'sh'):
-        executable = distutils.spawn.find_executable(sh)
+        executable = core.find_executable(sh)
         if executable:
             shell = executable
             break
