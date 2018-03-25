@@ -2,7 +2,6 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 import os
-from distutils.spawn import find_executable
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -397,8 +396,8 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.save_tarball_action)
 
         # Git Annex / Git LFS
-        annex = find_executable('git-annex')
-        lfs = find_executable('git-lfs')
+        annex = core.find_executable('git-annex')
+        lfs = core.find_executable('git-lfs')
         if annex or lfs:
             self.file_menu.addSeparator()
         if annex:
