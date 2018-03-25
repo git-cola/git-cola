@@ -4,13 +4,10 @@ import argparse
 import os
 import sys
 
-from .app import add_common_arguments
-from .app import application_init
-from .app import application_start
+from . import app
 from . import cmds
 from . import compat
 from . import core
-from . import utils
 
 
 def main(argv=None):
@@ -29,6 +26,10 @@ def main(argv=None):
         argv.append('--help')
     args = parse_args(argv)
     return args.func(args)
+
+
+def winmain():
+    return app.winmain(main)
 
 
 def parse_args(argv):
@@ -64,7 +65,7 @@ def parse_args(argv):
 def add_command(parent, name, description, func):
     parser = parent.add_parser(str(name), help=description)
     parser.set_defaults(func=func)
-    add_common_arguments(parser)
+    app.add_common_arguments(parser)
     return parser
 
 
@@ -281,7 +282,7 @@ def cmd_cola(args):
     if status_filter:
         status_filter = core.abspath(status_filter)
 
-    context = application_init(args)
+    context = app.application_init(args)
 
     context.timer.start('view')
     view = MainView(context.model, settings=args.settings)
@@ -295,99 +296,99 @@ def cmd_cola(args):
     if args.perf:
         context.timer.display('view')
 
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_about(args):
     from .widgets import about
-    context = application_init(args)
+    context = app.application_init(args)
     view = about.about_dialog()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_am(args):
     from .widgets.patch import new_apply_patches
-    context = application_init(args)
+    context = app.application_init(args)
     view = new_apply_patches(patches=args.patches)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_archive(args):
     from .widgets.archive import Archive
-    context = application_init(args, update=True)
+    context = app.application_init(args, update=True)
     if args.ref is None:
         args.ref = context.model.currentbranch
     view = Archive(args.ref)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_branch(args):
     from .widgets.createbranch import create_new_branch
-    context = application_init(args, update=True)
+    context = app.application_init(args, update=True)
     view = create_new_branch(settings=args.settings)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_browse(args):
     from .widgets.browse import worktree_browser
-    context = application_init(args)
+    context = app.application_init(args)
     view = worktree_browser(update=False, settings=args.settings)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_config(args):
     from .widgets.prefs import preferences
-    context = application_init(args)
+    context = app.application_init(args)
     view = preferences()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_dag(args):
-    context = application_init(args)
+    context = app.application_init(args)
     from .widgets.dag import git_dag
     view = git_dag(context.model, args=args, settings=args.settings)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_diff(args):
-    context = application_init(args)
+    context = app.application_init(args)
     from .difftool import diff_expression
     expr = core.list2cmdline(args.args)
     view = diff_expression(None, expr, create_widget=True)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_fetch(args):
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
-    context = application_init(args)
+    context = app.application_init(args)
     from .widgets import remote
     context.model.update_status()
     view = remote.fetch()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_find(args):
-    context = application_init(args)
+    context = app.application_init(args)
     from .widgets import finder
     paths = core.list2cmdline(args.paths)
     view = finder.finder(paths=paths)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_grep(args):
-    context = application_init(args)
+    context = app.application_init(args)
     from .widgets import grep
     text = core.list2cmdline(args.args)
     view = grep.new_grep(text=text, parent=None)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_merge(args):
-    context = application_init(args, update=True)
+    context = app.application_init(args, update=True)
     from .widgets.merge import Merge
     view = Merge(context.cfg, context.model, parent=None, ref=args.ref)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_version(args):
@@ -398,18 +399,18 @@ def cmd_version(args):
 
 def cmd_pull(args):
     from .widgets import remote
-    context = application_init(args, update=True)
+    context = app.application_init(args, update=True)
     view = remote.pull()
     if args.rebase:
         view.set_rebase(True)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_push(args):
     from .widgets import remote
-    context = application_init(args, update=True)
+    context = app.application_init(args, update=True)
     view = remote.push()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_rebase(args):
@@ -451,85 +452,46 @@ def cmd_rebase(args):
 
 def cmd_recent(args):
     from .widgets import recent
-    context = application_init(args)
+    context = app.application_init(args)
     view = recent.browse_recent_files()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_remote(args):
     from .widgets import editremotes
-    context = application_init(args)
+    context = app.application_init(args)
     view = editremotes.editor(run=False)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_search(args):
     from .widgets.search import search
-    context = application_init(args)
+    context = app.application_init(args)
     view = search()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_stash(args):
     from .widgets import stash
-    context = application_init(args)
+    context = app.application_init(args)
     view = stash.view()
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 def cmd_tag(args):
     from .widgets.createtag import new_create_tag
-    context = application_init(args)
+    context = app.application_init(args)
     view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign,
                           settings=args.settings)
-    return application_start(context, view)
+    return app.application_start(context, view)
 
 
 # Windows shortcut launch features:
-
-def find_git():
-    """Return the path of git.exe, or None if we can't find it."""
-    if not utils.is_win32():
-        return None  # UNIX systems have git in their $PATH
-
-    # If the user wants to use a Git/bin/ directory from a non-standard
-    # directory then they can write its location into
-    # ~/.config/git-cola/git-bindir
-    git_bindir = os.path.expanduser(os.path.join('~', '.config', 'git-cola',
-                                                 'git-bindir'))
-    if core.exists(git_bindir):
-        custom_path = core.read(git_bindir).strip()
-        if custom_path and core.exists(custom_path):
-            return custom_path
-
-    # Try to find Git's bin/ directory in one of the typical locations
-    pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
-    pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
-    for p in [pf32, pf, 'C:\\']:
-        candidate = os.path.join(p, 'Git\\bin')
-        if os.path.isdir(candidate):
-            return candidate
-
-    return None
-
-
 def shortcut_launch():
     """Launch from a shortcut
 
-    Prompt for the repository by default, and try to find git.
+    Prompt for the repository by default.
+
     """
     argv = ['cola', '--prompt']
-    git_path = find_git()
-    if git_path:
-        prepend_path(git_path)
-
-    return main(argv)
-
-
-def prepend_path(path):
-    # Adds git to the PATH.  This is needed on Windows.
-    path = core.decode(path)
-    path_entries = core.getenv('PATH', '').split(os.pathsep)
-    if path not in path_entries:
-        path_entries.insert(0, path)
-        compat.setenv('PATH', os.pathsep.join(path_entries))
+    return app.winmain(main, argv)
