@@ -45,6 +45,7 @@ from . import i18n
 from . import qtcompat
 from . import qtutils
 from . import resources
+from . import utils
 from . import version
 
 
@@ -527,6 +528,32 @@ def winmain(main, argv):
     if git_path:
         prepend_path(git_path)
     return main(argv)
+
+
+def find_git():
+    """Return the path of git.exe, or None if we can't find it."""
+    if not utils.is_win32():
+        return None  # UNIX systems have git in their $PATH
+
+    # If the user wants to use a Git/bin/ directory from a non-standard
+    # directory then they can write its location into
+    # ~/.config/git-cola/git-bindir
+    git_bindir = os.path.expanduser(os.path.join('~', '.config', 'git-cola',
+                                                 'git-bindir'))
+    if core.exists(git_bindir):
+        custom_path = core.read(git_bindir).strip()
+        if custom_path and core.exists(custom_path):
+            return custom_path
+
+    # Try to find Git's bin/ directory in one of the typical locations
+    pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
+    pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
+    for p in [pf32, pf, 'C:\\']:
+        candidate = os.path.join(p, 'Git\\bin')
+        if os.path.isdir(candidate):
+            return candidate
+
+    return None
 
 
 def prepend_path(path):
