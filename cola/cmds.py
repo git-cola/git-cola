@@ -1917,7 +1917,8 @@ class SignOff(Command):
         signoff = self.signoff()
         if signoff in self.model.commitmsg:
             return
-        self.model.set_commitmsg(self.model.commitmsg + '\n' + signoff)
+        msg = self.model.commitmsg.rstrip()
+        self.model.set_commitmsg(msg + '\n' + signoff)
 
     def undo(self):
         self.model.set_commitmsg(self.old_commitmsg)
