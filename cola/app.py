@@ -519,3 +519,20 @@ class ApplicationContext(object):
         self.cfg = cfg
         self.model = model
         self.timer = timer
+
+
+def winmain(main, argv):
+    """Find Git and launch main(argv)"""
+    git_path = find_git()
+    if git_path:
+        prepend_path(git_path)
+    return main(argv)
+
+
+def prepend_path(path):
+    # Adds git to the PATH.  This is needed on Windows.
+    path = core.decode(path)
+    path_entries = core.getenv('PATH', '').split(os.pathsep)
+    if path not in path_entries:
+        path_entries.insert(0, path)
+        compat.setenv('PATH', os.pathsep.join(path_entries))

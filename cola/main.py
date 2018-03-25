@@ -516,14 +516,11 @@ def find_git():
 def shortcut_launch():
     """Launch from a shortcut
 
-    Prompt for the repository by default, and try to find git.
+    Prompt for the repository by default.
+
     """
     argv = ['cola', '--prompt']
-    git_path = find_git()
-    if git_path:
-        prepend_path(git_path)
-
-    return main(argv)
+    return app.winmain(main, argv)
 
 
 def prepend_path(path):
