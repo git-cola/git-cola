@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 import itertools
 import os
-from distutils.spawn import find_executable
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -696,7 +695,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if all_exist and s.untracked:
             # Git Annex / Git LFS
             annex = self.m.annex
-            lfs = find_executable('git-lfs')
+            lfs = core.find_executable('git-lfs')
             if annex or lfs:
                 menu.addSeparator()
             if annex:
