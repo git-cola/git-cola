@@ -6,7 +6,6 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
 import sys
-from argparse import ArgumentParser
 
 
 __copyright__ = """
@@ -51,42 +50,6 @@ def setup_environment():
         sys.path.insert(1, install_lib)
 setup_environment()
 
-# pylint: disable=wrong-import-position
-from cola import app
-from cola.widgets.dag import git_dag
-
-
-def main():
-    """Run git-dag"""
-    args = parse_args()
-    return args.func(args)
-
-
-def parse_args():
-    """Parse command-line arguments"""
-    parser = ArgumentParser()
-    parser.set_defaults(func=cmd_dag)
-
-    app.add_common_arguments(parser)
-    parser.add_argument('-c', '--count', '--max-count', metavar='<count>',
-                        type=int, default=1000,
-                        help='number of commits to display')
-    parser.add_argument('args', nargs='*', metavar='<args>',
-                        help='git log arguments')
-    args, rest = parser.parse_known_args()
-    if rest:
-        # splice unknown arguments to the beginning ~
-        # these are forwarded to git-log(1).
-        args.args[:0] = rest
-    return args
-
-
-def cmd_dag(args):
-    """Run git-dag via the `git cola dag` sub-command"""
-    context = app.application_init(args)
-    view = git_dag(context.model, args=args, settings=args.settings)
-    return app.application_start(context, view)
-
-
 if __name__ == '__main__':
-    sys.exit(main())
+    from cola import dag
+    sys.exit(dag.main())
