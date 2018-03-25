@@ -6,6 +6,7 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 """
 from __future__ import division, absolute_import, unicode_literals
 import os
+import distutils.spawn as spawn
 import functools
 import sys
 import itertools
@@ -384,6 +385,10 @@ if PY2:
     getcwd = decorate(decode, os.getcwd)
 else:
     getcwd = os.getcwd
+if PY2:
+    find_executable = wrap(mkpath, spawn.find_executable, decorator=decode)
+else:
+    find_executable = wrap(decode, spawn.find_executable, decorator=decode)
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)
 islink = wrap(mkpath, os.path.islink)
