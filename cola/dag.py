@@ -13,6 +13,10 @@ def main():
     return args.func(args)
 
 
+def winmain():
+    return app.winmain(main)
+
+
 def parse_args():
     """Parse command-line arguments"""
     parser = argparse.ArgumentParser()

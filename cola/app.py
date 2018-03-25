@@ -522,12 +522,12 @@ class ApplicationContext(object):
         self.timer = timer
 
 
-def winmain(main, argv):
+def winmain(main, *argv):
     """Find Git and launch main(argv)"""
     git_path = find_git()
     if git_path:
         prepend_path(git_path)
-    return main(argv)
+    return main(*argv)
 
 
 def find_git():

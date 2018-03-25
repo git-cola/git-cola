@@ -28,6 +28,10 @@ def main(argv=None):
     return args.func(args)
 
 
+def winmain():
+    return app.winmain(main)
+
+
 def parse_args(argv):
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(title='valid commands')
