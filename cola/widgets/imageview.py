@@ -160,7 +160,7 @@ class ImageView(QtWidgets.QGraphicsView):
         roi_scalef = 1
 
         if zoom_level_delta > 0:
-            roi_scalef = 1/self.zoom_factor
+            roi_scalef = 1.0/self.zoom_factor
         elif zoom_level_delta < 0:
             roi_scalef = self.zoom_factor
 
@@ -168,18 +168,14 @@ class ImageView(QtWidgets.QGraphicsView):
         nroi_dims.setX(max(nroi_dims.x(), 1))
         nroi_dims.setY(max(nroi_dims.y(), 1))
 
-        if (nroi_dims.x() > self.pixmap.size().width() or
-            nroi_dims.y() > self.pixmap.size().height()):
-            self.reset()
-        else:
-            nroi_center = p
-            nroi_dimsh = nroi_dims / 2
-            nroi_topleft = nroi_center - nroi_dimsh
-            nroi = QtCore.QRectF(
-                nroi_topleft.x(), nroi_topleft.y(),
-                nroi_dims.x(), nroi_dims.y())
-            self.fitInView(nroi, Qt.KeepAspectRatio)
-            self.update()
+        nroi_center = p
+        nroi_dimsh = nroi_dims / 2.0
+        nroi_topleft = nroi_center - nroi_dimsh
+        nroi = QtCore.QRectF(
+            nroi_topleft.x(), nroi_topleft.y(),
+            nroi_dims.x(), nroi_dims.y())
+        self.fitInView(nroi, Qt.KeepAspectRatio)
+        self.update()
 
     def zoomROITo(self, p, zoom_level_delta):
         pixmap = self.graphics_pixmap.pixmap()
@@ -194,23 +190,19 @@ class ImageView(QtWidgets.QGraphicsView):
             roi_scalef = self.zoom_factor
 
         nroi_dims = roi_dims * roi_scalef
-        nroi_dims.setX(max(nroi_dims.x(), 1))
-        nroi_dims.setY(max(nroi_dims.y(), 1))
+        nroi_dims.setX(max(nroi_dims.x(), 1.0))
+        nroi_dims.setY(max(nroi_dims.y(), 1.0))
 
-        if (nroi_dims.x() > self.pixmap.size().width() or
-            nroi_dims.y() > self.pixmap.size().height()):
-            self.reset()
-        else:
-            prel_scaled_x = (p.x() - roi_topleft.x()) / roi_dims.x()
-            prel_scaled_y = (p.y() - roi_topleft.y()) / roi_dims.y()
-            nroi_topleft_x = p.x() - prel_scaled_x * nroi_dims.x()
-            nroi_topleft_y = p.y() - prel_scaled_y * nroi_dims.y()
+        prel_scaled_x = (p.x() - roi_topleft.x()) / roi_dims.x()
+        prel_scaled_y = (p.y() - roi_topleft.y()) / roi_dims.y()
+        nroi_topleft_x = p.x() - prel_scaled_x * nroi_dims.x()
+        nroi_topleft_y = p.y() - prel_scaled_y * nroi_dims.y()
 
-            nroi = QtCore.QRectF(
-                nroi_topleft_x, nroi_topleft_y,
-                nroi_dims.x(), nroi_dims.y())
-            self.fitInView(nroi, Qt.KeepAspectRatio)
-            self.update()
+        nroi = QtCore.QRectF(
+            nroi_topleft_x, nroi_topleft_y,
+            nroi_dims.x(), nroi_dims.y())
+        self.fitInView(nroi, Qt.KeepAspectRatio)
+        self.update()
 
     def _scene_ROI(self, geometry):
         return QtCore.QRectF(
@@ -305,14 +297,6 @@ class ImageView(QtWidgets.QGraphicsView):
                 sign = -1
             self.zoomROITo(scene_pos, sign)
 
-    def showEvent(self, event):
-        super(ImageView, self).showEvent(event)
-        if event.spontaneous():
-            return
-        if not self.first_show_occured:
-            self.first_show_occured = True
-            self.reset()
-
     def reset(self):
         self.update_scene_rect()
         self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
@@ -327,9 +311,9 @@ class ImageView(QtWidgets.QGraphicsView):
         unity = self.transform().mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
         self.scale(1.0/unity.width(), 1.0/unity.height())
         viewrect = self.viewport().rect()
-        sceneRect = self.transform().mapRect(rect)
-        xratio = viewrect.width() / sceneRect.width()
-        yratio = viewrect.height() / sceneRect.height()
+        scene_rect = self.transform().mapRect(rect)
+        xratio = viewrect.width() / scene_rect.width()
+        yratio = viewrect.height() / scene_rect.height()
         if flags == Qt.KeepAspectRatio:
             xratio = yratio = min(xratio, yratio)
         elif flags == Qt.KeepAspectRatioByExpanding:

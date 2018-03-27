@@ -794,10 +794,8 @@ class MainView(standard.MainWindow):
         state = standard.MainWindow.export_state(self)
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
-        state['show_diff_line_numbers'] = self.diffeditor.show_line_numbers()
-        state['image_diff_mode'] = self.diffviewer.options.mode.currentIndex()
-        state['toolbars'] = ColaToolBar.save_state(self)
-
+        state['toolbars'] = ColaToolBar.export_state(self)
+        self.diffviewer.export_state(state)
         return state
 
     def apply_state(self, state):
@@ -809,16 +807,9 @@ class MainView(standard.MainWindow):
         show_status_filter = state.get('show_status_filter', False)
         self.statuswidget.filter_widget.setVisible(show_status_filter)
 
-        diff_numbers = state.get('show_diff_line_numbers', False)
-        self.diffeditor.enable_line_numbers(diff_numbers)
-
-        diff_options = self.diffviewer.options
-        count = diff_options.mode.count()
-        mode = min(count-1, max(0, state.get('image_diff_mode', 0)))
-        diff_options.mode.setCurrentIndex(mode)
-
         toolbars = state.get('toolbars', [])
         ColaToolBar.apply_state(self, toolbars)
+        result = self.diffviewer.apply_state(state) and result
 
         return result
 
