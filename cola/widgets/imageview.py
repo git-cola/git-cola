@@ -327,9 +327,9 @@ class ImageView(QtWidgets.QGraphicsView):
         unity = self.transform().mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
         self.scale(1.0/unity.width(), 1.0/unity.height())
         viewrect = self.viewport().rect()
-        sceneRect = self.transform().mapRect(rect)
-        xratio = viewrect.width() / sceneRect.width()
-        yratio = viewrect.height() / sceneRect.height()
+        scene_rect = self.transform().mapRect(rect)
+        xratio = viewrect.width() / scene_rect.width()
+        yratio = viewrect.height() / scene_rect.height()
         if flags == Qt.KeepAspectRatio:
             xratio = yratio = min(xratio, yratio)
         elif flags == Qt.KeepAspectRatioByExpanding:
