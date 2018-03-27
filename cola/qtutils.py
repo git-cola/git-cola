@@ -193,12 +193,23 @@ def label(text=None, align=None, fmt=None, selectable=True):
     return widget
 
 
+class ComboBox(QtWidgets.QComboBox):
+    """Custom read-only combobox with a convenient API"""
+
+    def __init__(self, items=None, editable=False, parent=None):
+        super(ComboBox, self).__init__(parent)
+        self.setEditable(editable)
+        if items:
+            self.addItems(items)
+
+    def set_index(self, idx):
+        idx = utils.clamp(idx, 0, self.count()-1)
+        self.setCurrentIndex(idx)
+
+
 def combo(items, editable=False, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
-    combo = QtWidgets.QComboBox()
-    combo.setEditable(editable)
-    combo.addItems(items)
-    return combo
+    return ComboBox(editable=editable, items=items, parent=parent)
 
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""

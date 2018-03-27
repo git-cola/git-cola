@@ -25,6 +25,11 @@ def asint(obj, default=0):
     return value
 
 
+def clamp(value, lo, hi):
+    """Clamp a value to the specified range"""
+    return min(hi, max(lo, value))
+
+
 def epoch_millis():
     return int(time.time() * 1000)
 
