@@ -146,7 +146,7 @@ class ColaToolBar(QtWidgets.QToolBar):
         menu.exec_(event.globalPos())
 
     @staticmethod
-    def save_state(parent):
+    def export_state(parent):
         # filter removed toolbars
         toolbars = parent.findChildren(ColaToolBar)
         visible_toolbars = [
@@ -160,17 +160,19 @@ class ColaToolBar(QtWidgets.QToolBar):
             items = [x.data() for x in toolbar.actions()]
             toolbar_area = parent.toolBarArea(toolbar)
 
-            result.append({'name': toolbar.windowTitle(),
-                           'area': encode_toolbar_area(toolbar_area),
-                           'break': parent.toolBarBreak(toolbar),
-                           'float': toolbar.isFloating(),
-                           'x': toolbar.pos().x(),
-                           'y': toolbar.pos().y(),
-                           'width': toolbar.width(),
-                           'height': toolbar.height(),
-                           'show_icons': toolbar.show_icons(),
-                           'visible': toolbar.isVisible(),
-                           'items': items})
+            result.append({
+                'name': toolbar.windowTitle(),
+                'area': encode_toolbar_area(toolbar_area),
+                'break': parent.toolBarBreak(toolbar),
+                'float': toolbar.isFloating(),
+                'x': toolbar.pos().x(),
+                'y': toolbar.pos().y(),
+                'width': toolbar.width(),
+                'height': toolbar.height(),
+                'show_icons': toolbar.show_icons(),
+                'visible': toolbar.isVisible(),
+                'items': items,
+                })
         return result
 
     @staticmethod
