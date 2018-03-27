@@ -21,6 +21,7 @@ from .. import gitcmds
 from .. import gravatar
 from .. import hotkeys
 from .. import icons
+from .. import utils
 from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
@@ -349,9 +350,24 @@ class Viewer(QtWidgets.QWidget):
         self.type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
 
         # Observe the image mode combo box
-        options.mode.currentIndexChanged.connect(lambda idx: self.render())
+        options.image_mode.currentIndexChanged.connect(lambda _: self.render())
 
         self.setFocusProxy(self.text)
+
+    def export_state(self, state):
+        state['show_diff_line_numbers'] = self.text.show_line_numbers()
+        state['image_diff_mode'] = self.options.image_mode.currentIndex()
+        return state
+
+    def apply_state(self, state):
+        diff_numbers = bool(state.get('show_diff_line_numbers', False))
+        self.text.enable_line_numbers(diff_numbers)
+
+        count = self.options.image_mode.count()
+        image_mode = utils.asint(state.get('image_diff_mode', 0))
+        image_mode = min(count-1, max(0, image_mode))
+        self.options.image_mode.setCurrentIndex(image_mode)
+        return True
 
     def set_diff_type(self, diff_type):
         """Manage the image and text diff views when selection changes"""
@@ -392,7 +408,7 @@ class Viewer(QtWidgets.QWidget):
 
     def render(self):
         if self.pixmaps:
-            mode = self.options.mode.currentIndex()
+            mode = self.options.image_mode.currentIndex()
             if mode == self.options.SIDE_BY_SIDE:
                 image = self.render_side_by_side()
             elif mode == self.options.DIFF:
@@ -505,7 +521,7 @@ class Options(QtWidgets.QWidget):
             tooltip=N_('Diff Options'), icon=icons.configure())
         qtutils.hide_button_menu_indicator(options)
 
-        self.mode = mode = qtutils.combo([
+        self.image_mode = mode = qtutils.combo([
             N_('Side by side'),
             N_('Diff'),
             N_('XOR'),
@@ -524,7 +540,7 @@ class Options(QtWidgets.QWidget):
         layout = qtutils.hbox(defs.no_margin, defs.no_spacing, mode, options)
         self.setLayout(layout)
 
-        self.mode.setFocusPolicy(Qt.NoFocus)
+        self.image_mode.setFocusPolicy(Qt.NoFocus)
         self.options.setFocusPolicy(Qt.NoFocus)
         self.setFocusPolicy(Qt.NoFocus)
 
@@ -532,7 +548,7 @@ class Options(QtWidgets.QWidget):
         is_text = diff_type == 'text'
         is_image = diff_type == 'image'
         self.options.setVisible(is_text)
-        self.mode.setVisible(is_image)
+        self.image_mode.setVisible(is_image)
 
     def add_option(self, title):
         action = qtutils.add_action(self, title, self.update_options)
