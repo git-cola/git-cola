@@ -16,6 +16,15 @@ from . import core
 random.seed(hash(time.time()))
 
 
+def asint(obj, default=0):
+    """Make any value into a int, even if the cast fails"""
+    try:
+        value = int(obj)
+    except TypeError:
+        value = default
+    return value
+
+
 def epoch_millis():
     return int(time.time() * 1000)
 
