@@ -351,22 +351,25 @@ class Viewer(QtWidgets.QWidget):
 
         # Observe the image mode combo box
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
+        options.zoom_mode.currentIndexChanged.connect(lambda _: self.render())
 
         self.setFocusProxy(self.text)
 
     def export_state(self, state):
         state['show_diff_line_numbers'] = self.text.show_line_numbers()
         state['image_diff_mode'] = self.options.image_mode.currentIndex()
+        state['image_zoom_mode'] = self.options.zoom_mode.currentIndex()
         return state
 
     def apply_state(self, state):
         diff_numbers = bool(state.get('show_diff_line_numbers', False))
         self.text.enable_line_numbers(diff_numbers)
 
-        count = self.options.image_mode.count()
         image_mode = utils.asint(state.get('image_diff_mode', 0))
-        image_mode = min(count-1, max(0, image_mode))
-        self.options.image_mode.setCurrentIndex(image_mode)
+        self.options.image_mode.set_index(image_mode)
+
+        zoom_mode = utils.asint(state.get('image_zoom_mode', 0))
+        self.options.zoom_mode.set_index(zoom_mode)
         return True
 
     def set_diff_type(self, diff_type):
@@ -374,6 +377,7 @@ class Viewer(QtWidgets.QWidget):
         self.options.set_diff_type(diff_type)
         if diff_type == 'image':
             self.stack.setCurrentWidget(self.image)
+            self.render()
         else:
             self.stack.setCurrentWidget(self.text)
 
@@ -407,6 +411,7 @@ class Viewer(QtWidgets.QWidget):
         return True
 
     def render(self):
+        # Update images
         if self.pixmaps:
             mode = self.options.image_mode.currentIndex()
             if mode == self.options.SIDE_BY_SIDE:
@@ -422,6 +427,15 @@ class Viewer(QtWidgets.QWidget):
         else:
             image = QtGui.QPixmap()
         self.image.pixmap = image
+
+        # Apply zoom
+        zoom_mode = self.options.zoom_mode.currentIndex()
+        zoom_factor = self.options.zoom_factors[zoom_mode][1]
+        if zoom_factor > 0.0:
+            self.image.resetTransform()
+            self.image.scale(zoom_factor, zoom_factor)
+            poly = self.image.mapToScene(self.image.viewport().rect())
+            self.image.last_scene_roi = poly.boundingRect()
 
     def render_side_by_side(self):
         # Side-by-side lineup comp
@@ -528,6 +542,18 @@ class Options(QtWidgets.QWidget):
             N_('Pixel XOR'),
         ])
 
+        self.zoom_factors = (
+            (N_('Zoom to Fit'), 0.0),
+            (N_('100%'), 1.0),
+            (N_('50%'), 0.5),
+            (N_('25%'), 0.25),
+            (N_('200%'), 2.0),
+            (N_('400%'), 4.0),
+            (N_('800%'), 8.0),
+        )
+        zoom_modes = [factor[0] for factor in self.zoom_factors]
+        self.zoom_mode = qtutils.combo(zoom_modes, parent=self)
+
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
         options.setMenu(menu)
 
@@ -537,10 +563,12 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.show_line_numbers)
         menu.addAction(self.function_context)
 
-        layout = qtutils.hbox(defs.no_margin, defs.no_spacing, mode, options)
+        layout = qtutils.hbox(defs.no_margin, defs.no_spacing,
+            self.image_mode, self.zoom_mode, options)
         self.setLayout(layout)
 
         self.image_mode.setFocusPolicy(Qt.NoFocus)
+        self.zoom_mode.setFocusPolicy(Qt.NoFocus)
         self.options.setFocusPolicy(Qt.NoFocus)
         self.setFocusPolicy(Qt.NoFocus)
 
@@ -549,6 +577,7 @@ class Options(QtWidgets.QWidget):
         is_image = diff_type == 'image'
         self.options.setVisible(is_text)
         self.image_mode.setVisible(is_image)
+        self.zoom_mode.setVisible(is_image)
 
     def add_option(self, title):
         action = qtutils.add_action(self, title, self.update_options)
@@ -565,7 +594,6 @@ class Options(QtWidgets.QWidget):
                                       all_space,
                                       function_context)
         self.widget.update_options()
-
 
 
 class DiffEditor(DiffTextEdit):
