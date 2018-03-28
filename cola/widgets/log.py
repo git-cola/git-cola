@@ -27,7 +27,7 @@ class LogWidget(QtWidgets.QWidget):
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
                                         self.output_text)
         self.setLayout(self.main_layout)
-        self.channel.connect(self.log, type=Qt.QueuedConnection)
+        self.channel.connect(self.append, type=Qt.QueuedConnection)
 
     def clear(self):
         self.output_text.clear()
@@ -45,7 +45,8 @@ class LogWidget(QtWidgets.QWidget):
             msg.append(N_('exit code %s') % status)
         self.log('\n'.join(msg))
 
-    def log(self, msg):
+    def append(self, msg):
+        """Append to the end of the log message"""
         if not msg:
             return
         cursor = self.output_text.textCursor()
@@ -58,9 +59,10 @@ class LogWidget(QtWidgets.QWidget):
         cursor.movePosition(cursor.End)
         text.setTextCursor(cursor)
 
-    def safe_log(self, msg):
-        """A version of the log() method that can be called from other
-        threads."""
+    def log(self, msg):
+        """Add output to the log window"""
+        # Funnel through a Qt queued to allow thread-safe logging from
+        # asynchronous QRunnables, filesystem notification, etc.
         self.channel.emit(msg)
 
 

@@ -139,7 +139,7 @@ class _BaseThread(QtCore.QThread):
     @staticmethod
     def _log_enabled_message():
         msg = N_('File system change monitoring: enabled.\n')
-        Interaction.safe_log(msg)
+        Interaction.log(msg)
 
 
 if AVAILABLE == 'inotify':
@@ -187,7 +187,7 @@ if AVAILABLE == 'inotify':
                      '    echo fs.inotify.max_user_watches=100000 |'
                      ' sudo tee -a /etc/sysctl.conf &&'
                      ' sudo sysctl -p\n')
-            Interaction.safe_log(msg)
+            Interaction.log(msg)
 
         def run(self):
             try:

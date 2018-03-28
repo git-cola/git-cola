@@ -116,9 +116,3 @@ class Interaction(object):
     def log(cls, message):
         if cls.VERBOSE:
             core.stdout(message)
-
-    safe_log = log
-
-    @staticmethod
-    def save_path(message):
-        raise NotImplemented('save_path() is not implemented')
