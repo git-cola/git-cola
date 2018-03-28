@@ -530,12 +530,17 @@ def desktop():
     return app().desktop()
 
 
-def center_on_screen(widget):
-    """Move widget to the center of the default screen"""
+def desktop_size():
     desk = desktop()
     rect = desk.screenGeometry(QtGui.QCursor().pos())
-    cy = rect.height()//2
-    cx = rect.width()//2
+    return (rect.width(), rect.height())
+
+
+def center_on_screen(widget):
+    """Move widget to the center of the default screen"""
+    width, height = desktop_size()
+    cx = width // 2
+    cy = height // 2
     widget.move(cx - widget.width()//2, cy - widget.height()//2)
 
 
