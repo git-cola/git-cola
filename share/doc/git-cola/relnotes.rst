@@ -123,6 +123,11 @@ Packaging
 Fixes
 -----
 
+* Uninitialized difftool errors will now be displayed graphically.
+  They were previously going to the shell.
+
+  https://github.com/git-cola/git-cola/issues/457
+
 * Translations marked "fuzzy" will no longer be used when translating strings.
 
   https://github.com/git-cola/git-cola/issues/782
