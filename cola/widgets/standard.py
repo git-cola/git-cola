@@ -1,5 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
-
+import functools
 import time
 
 from qtpy import QtCore
@@ -895,6 +895,21 @@ def save_as(filename, title):
     return qtutils.save_as(filename, title=title)
 
 
+def async_command(title, cmd, runtask):
+    cmd_partial = functools.partial(core.run_command, cmd)
+    task = qtutils.SimpleTask(qtutils.active_window(), cmd_partial)
+
+    result_partial = functools.partial(async_command_result, title, cmd)
+    task.connect(result_partial)
+    runtask.start(task)
+
+
+def async_command_result(title, cmd, result):
+    status, out, err = result
+    cmd_string = core.list2cmdline(cmd)
+    Interaction.command(title, cmd_string, status, out, err)
+
+
 def install():
     """Install the GUI-model interaction hooks"""
     Interaction.critical = staticmethod(critical)
@@ -903,3 +918,4 @@ def install():
     Interaction.information = staticmethod(information)
     Interaction.command_error = staticmethod(command_error)
     Interaction.save_as = staticmethod(save_as)
+    Interaction.async_command = staticmethod(async_command)
