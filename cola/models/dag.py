@@ -46,10 +46,11 @@ class DAG(Observable):
     ref_updated = 'ref_updated'
     count_updated = 'count_updated'
 
-    def __init__(self, ref, count):
+    def __init__(self, ref, count, context):
         Observable.__init__(self)
         self.ref = ref
         self.count = count
+        self.context = context
         self.overrides = {}
 
     def set_ref(self, ref):

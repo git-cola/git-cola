@@ -34,16 +34,17 @@ from . import filelist
 from . import standard
 
 
-def git_dag(model, args=None, settings=None, existing_view=None):
+def git_dag(context, args=None, settings=None, existing_view=None):
     """Return a pre-populated git DAG widget."""
+    model = context.model
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
     branch_doubledash = branch and (branch + ' --') or ''
-    ctx = dag.DAG(branch_doubledash, 1000)
+    ctx = dag.DAG(branch_doubledash, 1000, context)
     ctx.set_arguments(args)
 
     if existing_view is None:
-        view = GitDAG(model, ctx, settings=settings)
+        view = GitDAG(ctx, settings=settings)
     else:
         view = existing_view
         view.set_context(ctx)
@@ -137,12 +138,14 @@ class ViewerMixin(object):
     def show_diff(self):
         self.with_oid(lambda oid:
                 difftool.diff_expression(self, oid + '^!',
-                                         hide_expr=False, focus_tree=True))
+                                         hide_expr=False, focus_tree=True,
+                                         context=self.context))
 
     def show_dir_diff(self):
         self.with_oid(lambda oid:
                 cmds.difftool_launch(left=oid, left_take_magic=True,
-                                     dir_diff=True))
+                                     dir_diff=True,
+                                     context=self.context))
 
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
@@ -438,15 +441,16 @@ class GitDAG(standard.MainWindow):
     """The git-dag widget."""
     updated = Signal()
 
-    def __init__(self, model, ctx, parent=None, settings=None):
+    def __init__(self, ctx, parent=None, settings=None):
         super(GitDAG, self).__init__(parent)
 
         self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed
         self.widget_version = 2
-        self.model = model
         self.ctx = ctx
+        self.context = ctx and ctx.context
+        self.model = self.context and self.context.model
         self.settings = settings
 
         self.commits = {}
@@ -580,6 +584,8 @@ class GitDAG(standard.MainWindow):
 
     def set_context(self, ctx):
         self.ctx = ctx
+        self.context = ctx.context
+        self.model = self.context and self.context.model
 
         # Update fields affected by model
         self.revtext.setText(ctx.ref)
@@ -730,9 +736,10 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, a, b):
         paths = self.ctx.paths()
         if paths:
-            cmds.difftool_launch(left=a, right=b, paths=paths)
+            cmds.difftool_launch(left=a, right=b, paths=paths,
+                                 context=self.context)
         else:
-            difftool.diff_commits(self, a, b)
+            difftool.diff_commits(self, a, b, context=self.context)
 
     # Qt overrides
     def closeEvent(self, event):
@@ -752,7 +759,8 @@ class GitDAG(standard.MainWindow):
         if not top:
             return
         cmds.difftool_launch(left=bottom, left_take_parent=True,
-                             right=top, paths=files)
+                             right=top, paths=files,
+                             context=self.context)
 
     def grab_file(self, filename):
         """Save the selected file from the filelist widget"""

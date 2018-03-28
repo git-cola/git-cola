@@ -36,10 +36,10 @@ class CommitMessageEditor(QtWidgets.QWidget):
     up = Signal()
     updated = Signal()
 
-    def __init__(self, model, parent):
+    def __init__(self, parent, context):
         QtWidgets.QWidget.__init__(self, parent)
-
-        self.model = model
+        self.context = context
+        self.model = model = context.model
         self.spellcheck_initialized = False
 
         self._linebreak = None
@@ -60,7 +60,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
         self.launch_editor = actions.launch_editor(self)
-        self.launch_difftool = actions.launch_difftool(self)
+        self.launch_difftool = actions.launch_difftool(self, self.context)
         self.stage_or_unstage = actions.stage_or_unstage(self)
 
         self.move_up = actions.move_up(self)

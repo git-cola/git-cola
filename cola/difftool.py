@@ -16,23 +16,21 @@ from .widgets import filetree
 from .widgets import standard
 
 
-def diff_commits(parent, a, b):
+def diff_commits(parent, a, b, context=None):
     """Show a dialog for diffing two commits"""
-    dlg = Difftool(parent, a=a, b=b)
+    dlg = Difftool(parent, a=a, b=b, context=context)
     dlg.show()
     dlg.raise_()
     return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
 def diff_expression(parent, expr,
-                    create_widget=False,
-                    hide_expr=False,
-                    focus_tree=False):
+                    create_widget=False, hide_expr=False,
+                    focus_tree=False, context=None):
     """Show a diff dialog for diff expressions"""
     dlg = Difftool(parent,
-                         expr=expr,
-                         hide_expr=hide_expr,
-                         focus_tree=focus_tree)
+                   expr=expr, hide_expr=hide_expr,
+                   focus_tree=focus_tree, context=context)
     if create_widget:
         return dlg
     dlg.show()
@@ -43,7 +41,7 @@ def diff_expression(parent, expr,
 class Difftool(standard.Dialog):
 
     def __init__(self, parent, a=None, b=None, expr=None, title=None,
-                 hide_expr=False, focus_tree=False):
+                 hide_expr=False, focus_tree=False, context=None):
         """Show files with differences and launch difftool"""
 
         standard.Dialog.__init__(self, parent=parent)
@@ -51,6 +49,7 @@ class Difftool(standard.Dialog):
         self.a = a
         self.b = b
         self.diff_expr = expr
+        self.context = context
 
         if title is None:
             title = N_('git-cola diff')
@@ -161,13 +160,14 @@ class Difftool(standard.Dialog):
     def tree_double_clicked(self, item, column):
         path = self.tree.filename_from_item(item)
         left, right = self._left_right_args()
-        cmds.difftool_launch(left=left, right=right, paths=[path])
+        cmds.difftool_launch(left=left, right=right, paths=[path],
+                             context=self.context)
 
     def diff(self, dir_diff=False):
         paths = self.tree.selected_filenames()
         left, right = self._left_right_args()
         cmds.difftool_launch(left=left, right=right, paths=paths,
-                             dir_diff=dir_diff)
+                             dir_diff=dir_diff, context=self.context)
 
     def _left_right_args(self):
         if self.diff_arg:
