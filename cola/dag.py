@@ -25,7 +25,7 @@ def shortcut_launch():
 def parse_args(argv=None):
     """Parse command-line arguments"""
     if argv is None:
-        argv = sys.argv
+        argv = sys.argv[1:]
     parser = argparse.ArgumentParser()
     parser.set_defaults(func=cmd_dag)
 
