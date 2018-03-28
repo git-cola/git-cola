@@ -303,7 +303,8 @@ class CloneTask(qtutils.Task):
 
     def task(self):
         """Runs the model action and captures the result"""
-        self.cmd = cmds.do(cmds.Clone, self.url, self.destdir, spawn=self.spawn)
+        self.cmd = cmds.do(
+            cmds.Clone, self.url, self.destdir, spawn=self.spawn)
         return self.cmd
 
 
