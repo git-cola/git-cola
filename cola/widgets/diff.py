@@ -564,7 +564,7 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.function_context)
 
         layout = qtutils.hbox(defs.no_margin, defs.no_spacing,
-            self.image_mode, self.zoom_mode, options)
+            self.image_mode, defs.button_spacing, self.zoom_mode, options)
         self.setLayout(layout)
 
         self.image_mode.setFocusPolicy(Qt.NoFocus)
