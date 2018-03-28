@@ -150,7 +150,7 @@ class StartupDialog(standard.Dialog):
                            self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
-        if task.cmd and task.cmd.ok:
+        if task.cmd and task.cmd.status == 0:
             self.repodir = task.destdir
             self.accept()
         else:
