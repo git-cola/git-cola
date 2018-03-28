@@ -1,4 +1,5 @@
 # encoding: utf-8
+# TODO add a mechanism to inject the context
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtGui
