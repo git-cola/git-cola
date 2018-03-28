@@ -262,10 +262,6 @@ class ColaApplication(object):
             pass
         self._app = None
 
-    def set_view(self, view):
-        if hasattr(self._app, 'view'):
-            self._app.view = view
-
     def set_context(self, context):
         if hasattr(self._app, 'context'):
             self._app.context = context
@@ -275,8 +271,7 @@ class ColaQApplication(QtWidgets.QApplication):
 
     def __init__(self, argv):
         super(ColaQApplication, self).__init__(argv)
-        self.view = None  # injected by application_start()
-        self.context = None  # injected by application_start()
+        self.context = None  # injected by the context in application_init()
 
     def event(self, e):
         if e.type() == QtCore.QEvent.ApplicationActivate:
@@ -289,13 +284,16 @@ class ColaQApplication(QtWidgets.QApplication):
 
     def commitData(self, session_mgr):
         """Save session data"""
-        if self.view is None:
+        if not self.context or not self.context.view:
+            return
+        view = self.context.view
+        if not hasattr(view, 'save_state'):
             return
         sid = session_mgr.sessionId()
         skey = session_mgr.sessionKey()
         session_id = '%s_%s' % (sid, skey)
         session = Session(session_id, repo=core.getcwd())
-        self.view.save_state(settings=session)
+        view.save_state(settings=session)
 
 
 def process_args(args):
@@ -358,24 +356,23 @@ def application_init(args, update=False):
 
 def context_init(context, view):
     """Store the view for session management"""
-    context.app.set_view(view)
-    context.app.set_context(context)
-    # Make sure that we start out on top
+    context.set_view(view)
     view.show()
     view.raise_()
+
 
 def application_run(context, view, start=None, stop=None):
     """Run the application main loop"""
     # Initialize and run startup callbacks
     context_init(context, view)
     if start:
-        start(context, view)
+        start(context)
 
     # Start the event loop
     result = context.app.start()
     # Finish
     if stop:
-        stop(context, view)
+        stop(context)
     context.app.stop()
 
     return result
@@ -388,14 +385,13 @@ def application_start(context, view):
                            start=default_start, stop=default_stop)
 
 
-def default_start(context, view):
+def default_start(context):
     """Scan for the first time"""
-    runtask = qtutils.RunTask(parent=view)
-    init_update_task(view, runtask, context.model)
-    QtCore.QTimer.singleShot(0, _send_msg)
+    QtCore.QTimer.singleShot(0, startup_message)
+    QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(context, view):
+def default_stop(context):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
@@ -474,7 +470,7 @@ def init_update_task(parent, runtask, model):
     runtask.start(task)
 
 
-def _send_msg():
+def startup_message():
     trace = git.GIT_COLA_TRACE
     if trace == '2' or trace == 'trace':
         msg1 = 'info: debug level 2: trace mode enabled'
@@ -520,6 +516,13 @@ class ApplicationContext(object):
         self.cfg = cfg
         self.model = model
         self.timer = timer
+        self.view = None
+        self.runtask = None
+        app.set_context(self)  # inject the context
+
+    def set_view(self, view):
+        self.view = view
+        self.runtask = qtutils.RunTask(parent=view)
 
 
 def winmain(main, *argv):

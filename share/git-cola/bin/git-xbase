@@ -78,7 +78,7 @@ def main():
     return view.status
 
 
-def stop(context, view):
+def stop(context):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 

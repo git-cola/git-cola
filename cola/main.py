@@ -296,7 +296,13 @@ def cmd_cola(args):
     if args.perf:
         context.timer.display('view')
 
-    return app.application_start(context, view)
+    return app.application_run(context, view,
+        start=start_cola, stop=app.default_stop)
+
+
+def start_cola(context):
+    app.default_start(context)
+    context.view.start(context)
 
 
 def cmd_about(args):
