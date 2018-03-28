@@ -6,15 +6,25 @@ import re
 from argparse import ArgumentParser
 
 def setup_environment():
-    abspath = os.path.abspath
-    dirname = os.path.dirname
-    prefix = dirname(dirname(dirname(dirname(abspath(__file__)))))
-    source_tree = os.path.join(prefix, 'cola', '__init__.py')
-    if os.path.exists(source_tree):
+    dirname = path.dirname
+    path = os.path
+    #       <prefix>/  share/git-cola/   bin/git-xbase
+    prefix = dirname(dirname(dirname(dirname(path.abspath(__file__)))))
+    source_tree = path.join(prefix, str('cola'), str('__init__.py'))
+    unixpkgs = path.join(prefix, str('share'), str('git-cola'), str('lib'))
+    winpkgs = path.join(prefix, str('pkgs'))
+    # str() avoids unicode on python2 by staying in bytes
+
+    if path.exists(source_tree):
         modules = prefix
+    elif path.exists(unixpkgs):
+        modules = unixpkgs
+    elif path.exists(winpkgs):
+        modules = winpkgs
     else:
-        modules = os.path.join(prefix, 'share', 'git-cola', 'lib')
-    sys.path.insert(1, modules)
+        modules = None
+    if modules:
+        sys.path.insert(1, modules)
 
 setup_environment()
 
@@ -64,7 +74,6 @@ def main():
     args = parse_args()
     context = app.application_init(args)
     view = new_window(context, args.filename)
-
     app.application_run(context, view, stop=stop)
     return view.status
 
