@@ -221,7 +221,7 @@ def export_patches():
             reversed(revs), to_export_and_output['output'])
 
 
-def diff_expression():
+def diff_expression(context=None):
     """Diff using an arbitrary expression."""
     tracked = gitcmds.tracked_branch()
     current = gitcmds.current_branch()
@@ -229,7 +229,7 @@ def diff_expression():
         ref = tracked + '..' + current
     else:
         ref = 'origin/master..'
-    difftool.diff_expression(qtutils.active_window(), ref)
+    difftool.diff_expression(qtutils.active_window(), ref, context=context)
 
 
 def open_repo():
@@ -282,13 +282,14 @@ def choose_remote_branch(title, button_text, default=None, icon=None):
                               title, button_text, default, icon=icon)
 
 
-def review_branch():
+def review_branch(context=None):
     """Diff against an arbitrary revision, branch, tag, etc."""
     branch = choose_ref(N_('Select Branch to Review'), N_('Review'))
     if not branch:
         return
     merge_base = gitcmds.merge_base_parent(branch)
-    difftool.diff_commits(qtutils.active_window(), merge_base, branch)
+    difftool.diff_commits(qtutils.active_window(), merge_base, branch,
+                          context=context)
 
 
 class CloneTask(qtutils.Task):

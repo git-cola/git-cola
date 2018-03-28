@@ -285,7 +285,7 @@ def cmd_cola(args):
     context = app.application_init(args)
 
     context.timer.start('view')
-    view = MainView(context.model, settings=args.settings)
+    view = MainView(context.model, settings=args.settings, context=context)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
 
@@ -352,7 +352,7 @@ def cmd_config(args):
 def cmd_dag(args):
     context = app.application_init(args)
     from .widgets.dag import git_dag
-    view = git_dag(context.model, args=args, settings=args.settings)
+    view = git_dag(context, args=args, settings=args.settings)
     return app.application_start(context, view)
 
 
@@ -360,7 +360,7 @@ def cmd_diff(args):
     context = app.application_init(args)
     from .difftool import diff_expression
     expr = core.list2cmdline(args.args)
-    view = diff_expression(None, expr, create_widget=True)
+    view = diff_expression(None, expr, create_widget=True, context=context)
     return app.application_start(context, view)
 
 

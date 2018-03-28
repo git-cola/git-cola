@@ -320,13 +320,14 @@ class Viewer(QtWidgets.QWidget):
     images_changed = Signal(object)
     type_changed = Signal(object)
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         super(Viewer, self).__init__(parent)
 
+        self.context = context
         self.images = []
         self.pixmaps = []
         self.options = options = Options(self)
-        self.text = DiffEditor(options, self)
+        self.text = DiffEditor(options, self, context)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
         self.model = model = main.model()
@@ -604,9 +605,10 @@ class DiffEditor(DiffTextEdit):
     updated = Signal()
     diff_text_changed = Signal(object)
 
-    def __init__(self, options, parent):
+    def __init__(self, options, parent, context):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
+        self.context = context
 
         # "Diff Options" tool menu
         self.options = options
@@ -618,7 +620,7 @@ class DiffEditor(DiffTextEdit):
         self.action_revert_selection.setIcon(icons.undo())
 
         self.launch_editor = actions.launch_editor(self, *hotkeys.ACCEPT)
-        self.launch_difftool = actions.launch_difftool(self)
+        self.launch_difftool = actions.launch_difftool(self, self.context)
         self.stage_or_unstage = actions.stage_or_unstage(self)
 
         # Emit up/down signals so that they can be routed by the main widget

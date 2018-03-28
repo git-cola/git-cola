@@ -35,8 +35,9 @@ class StatusWidget(QtWidgets.QWidget):
 
     """
 
-    def __init__(self, titlebar, parent):
+    def __init__(self, titlebar, parent, context):
         QtWidgets.QWidget.__init__(self, parent)
+        self.context = context
 
         tooltip = N_('Toggle the paths filter')
         icon = icons.ellipsis()
@@ -44,7 +45,7 @@ class StatusWidget(QtWidgets.QWidget):
                                                           icon=icon)
         self.filter_widget = StatusFilterWidget()
         self.filter_widget.hide()
-        self.tree = StatusTreeWidget()
+        self.tree = StatusTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
@@ -104,8 +105,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         QtWidgets.QTreeWidget.__init__(self, parent)
+        self.context = context
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.headerItem().setHidden(True)
@@ -147,7 +149,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.launch_difftool_action = qtutils.add_action(
             self, cmds.LaunchDifftool.name(),
-            cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
+            cmds.run(cmds.LaunchDifftool, context=self.context), hotkeys.DIFF)
         self.launch_difftool_action.setIcon(icons.diff())
 
         self.launch_editor_action = qtutils.add_action(

@@ -280,6 +280,7 @@ class LFSInstall(ModelCommand):
             N_('Error'), 'git lfs install', status, out, err)
         self.model.emit_updated()
 
+
 class ApplyDiffSelection(Command):
 
     def __init__(self, first_line_idx, last_line_idx, has_selection,
@@ -1129,13 +1130,15 @@ class DiffStagedSummary(Command):
 class Difftool(Command):
     """Run git-difftool limited by path."""
 
-    def __init__(self, staged, filenames):
+    def __init__(self, staged, filenames, context=None):
         Command.__init__(self)
         self.staged = staged
         self.filenames = filenames
+        self.context = context
 
     def do(self):
-        difftool_launch_with_head(self.filenames, self.staged, self.model.head)
+        difftool_launch_with_head(
+            self.filenames, self.staged, self.model.head, context=self.context)
 
 
 class Edit(Command):
@@ -1206,8 +1209,9 @@ class LaunchDifftool(BaseCommand):
     def name():
         return N_('Launch Diff Tool')
 
-    def __init__(self):
+    def __init__(self, context=None):
         BaseCommand.__init__(self)
+        self.context = context
 
     def do(self):
         s = selection.selection()
@@ -1228,7 +1232,7 @@ class LaunchDifftool(BaseCommand):
                     argv.extend(mergetool)
                 core.fork(argv)
         else:
-            difftool_run()
+            difftool_run(context=self.context)
 
 
 class LaunchTerminal(BaseCommand):
@@ -2381,28 +2385,31 @@ def do_cmd(cmd):
         return None
 
 
-def difftool_run():
+def difftool_run(context=None):
     """Start a default difftool session"""
     files = selection.selected_group()
     if not files:
         return
     s = selection.selection()
     model = main.model()
-    difftool_launch_with_head(files, bool(s.staged), model.head)
+    difftool_launch_with_head(
+        files, bool(s.staged), model.head, context=context)
 
 
-def difftool_launch_with_head(filenames, staged, head):
+def difftool_launch_with_head(filenames, staged, head, context=None):
     """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
     else:
         left = head
-    difftool_launch(left=left, staged=staged, paths=filenames)
+    difftool_launch(left=left, staged=staged, paths=filenames,
+                    context=context)
 
 
 def difftool_launch(left=None, right=None, paths=None,
                     staged=False, dir_diff=False,
-                    left_take_magic=False, left_take_parent=False):
+                    left_take_magic=False, left_take_parent=False,
+                    context=None):
     """Launches 'git difftool' with given parameters
 
     :param left: first argument to difftool

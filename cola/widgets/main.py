@@ -1,6 +1,7 @@
 """This view provides the main git-cola user interface.
 """
 from __future__ import division, absolute_import, unicode_literals
+import functools
 import os
 
 from qtpy import QtCore
@@ -60,10 +61,10 @@ class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
     updated = Signal()
 
-    def __init__(self, model, parent=None, settings=None):
+    def __init__(self, model, parent=None, settings=None, context=None):
         standard.MainWindow.__init__(self, parent)
 
-        # Default size; this is thrown out when save/restore is used
+        self.context = context
         self.dag = None
         self.model = model
         self.settings = settings
@@ -72,9 +73,6 @@ class MainView(standard.MainWindow):
         # The widget version is used by import/export_state().
         # Change this whenever dockwidgets are removed.
         self.widget_version = 2
-
-        # Runs asynchronous tasks
-        self.runtask = qtutils.RunTask()
 
         create_dock = qtutils.create_dock
         cfg = gitcfg.current()
@@ -91,7 +89,8 @@ class MainView(standard.MainWindow):
 
         # "Repository Status" widget
         self.statusdock = create_dock(N_('Status'), self,
-            fn=lambda dock: status.StatusWidget(dock.titleBarWidget(), dock))
+            fn=lambda dock:
+                status.StatusWidget(dock.titleBarWidget(), dock, self.context))
         self.statuswidget = self.statusdock.widget()
 
         # "Switch Repository" widgets
@@ -126,7 +125,8 @@ class MainView(standard.MainWindow):
         width = fm.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
-        self.commiteditor = editor = commitmsg.CommitMessageEditor(model, self)
+        self.commiteditor = editor = commitmsg.CommitMessageEditor(
+            self, self.context)
         self.commitdock = create_dock(N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
@@ -139,7 +139,7 @@ class MainView(standard.MainWindow):
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(N_('Diff'), self,
-            fn=lambda dock: diff.Viewer(dock))
+            fn=lambda dock: diff.Viewer(self.context, parent=dock))
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
 
@@ -296,7 +296,8 @@ class MainView(standard.MainWindow):
             self, N_('About'), about.about_dialog)
 
         self.diff_expression_action = add_action(
-            self, N_('Expression...'), guicmds.diff_expression)
+            self, N_('Expression...'),
+            lambda: guicmds.diff_expression(context=self.context))
         self.branch_compare_action = add_action(
             self, N_('Branches...'), compare.compare_branches)
 
@@ -322,7 +323,8 @@ class MainView(standard.MainWindow):
         self.checkout_branch_action = add_action(
             self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
-            self, N_('Review...'), guicmds.review_branch)
+            self, N_('Review...'),
+            functools.partial(guicmds.review_branch, context=self.context))
 
         self.browse_action = add_action(
             self, N_('File Browser...'),
@@ -352,7 +354,8 @@ class MainView(standard.MainWindow):
         # We can do this because can_rebase == not is_rebasing
         self.rebase_start_action_proxy = utils.Proxy(
                 self.rebase_start_action,
-                setEnabled=lambda x: self.rebase_start_action.setEnabled(not x))
+                setEnabled=lambda x:
+                    self.rebase_start_action.setEnabled(not x))
 
         self.rebase_group = utils.Group(self.rebase_start_action_proxy,
                                         self.rebase_edit_todo_action,
@@ -559,8 +562,6 @@ class MainView(standard.MainWindow):
 
         self.config_actions_changed.connect(self._install_config_actions,
                                             type=Qt.QueuedConnection)
-        # Install .git-config-defined actions
-        self.init_config_actions()
         self.init_state(settings, self.set_initial_size)
 
         # Route command output here
@@ -572,7 +573,9 @@ class MainView(standard.MainWindow):
         QtCore.QTimer.singleShot(0, lambda: self.statuswidget.setFocus())
 
     def set_initial_size(self):
-        self.resize(987, 610)
+        # Default size; this is thrown out when save/restore is used
+        width, height = qtutils.desktop_size()
+        self.resize((width*3)//4, height)
         self.statuswidget.set_initial_size()
         self.commiteditor.set_initial_size()
 
@@ -686,10 +689,11 @@ class MainView(standard.MainWindow):
             # the path in the window title was toggled
             self.refresh_window_title()
 
-    def init_config_actions(self):
+    def start(self, context):
         """Do the expensive "get_config_actions()" call in the background"""
+        # Install .git-config-defined actions
         task = qtutils.SimpleTask(self, self.get_config_actions)
-        self.runtask.start(task)
+        context.runtask.start(task)
 
     def get_config_actions(self):
         actions = cfgactions.get_config_actions()
@@ -869,7 +873,7 @@ class MainView(standard.MainWindow):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        self.dag = dag.git_dag(self.model, existing_view=self.dag)
+        self.dag = dag.git_dag(self.context, existing_view=self.dag)
         view = self.dag
         view.show()
         view.raise_()
@@ -929,7 +933,7 @@ class MainView(standard.MainWindow):
 
     def clone_repo(self):
         progress = standard.ProgressDialog('', '', self)
-        guicmds.clone_repo(self, self.runtask, progress,
+        guicmds.clone_repo(self, self.context.runtask, progress,
                            guicmds.report_clone_repo_errors, True)
 
 

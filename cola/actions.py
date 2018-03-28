@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import functools
 
 from . import cmds
 from . import hotkeys
@@ -18,9 +19,13 @@ def launch_editor(widget, *shortcuts):
     return cmd_action(widget, cmds.LaunchEditor, icon, hotkeys.EDIT, *shortcuts)
 
 
-def launch_difftool(widget):
+def launch_difftool(widget, context):
     icon = icons.diff()
-    return cmd_action(widget, cmds.LaunchDifftool, icon, hotkeys.DIFF)
+    cmd = cmds.LaunchDifftool
+    action = qtutils.add_action(
+        widget, cmd.name(), cmds.run(cmd, context=context), hotkeys.DIFF)
+    action.setIcon(icon)
+    return action
 
 
 def stage_or_unstage(widget):

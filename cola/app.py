@@ -456,18 +456,17 @@ def new_model(app, repo, prompt=False, settings=None):
     return model
 
 
-def init_update_task(parent, runtask, model):
+def async_update(context):
     """Update the model in the background
 
     git-cola should startup as quickly as possible.
 
     """
-
     def update_status():
-        model.update_status(update_index=True)
+        context.model.update_status(update_index=True)
 
-    task = qtutils.SimpleTask(parent, update_status)
-    runtask.start(task)
+    task = qtutils.SimpleTask(context.view, update_status)
+    context.runtask.start(task)
 
 
 def startup_message():
