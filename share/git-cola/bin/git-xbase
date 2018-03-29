@@ -6,14 +6,14 @@ import re
 from argparse import ArgumentParser
 
 def setup_environment():
-    dirname = path.dirname
     path = os.path
+    dirname = path.dirname
     #       <prefix>/  share/git-cola/   bin/git-xbase
     prefix = dirname(dirname(dirname(dirname(path.abspath(__file__)))))
+    # str() avoids unicode on python2 by staying in bytes
     source_tree = path.join(prefix, str('cola'), str('__init__.py'))
     unixpkgs = path.join(prefix, str('share'), str('git-cola'), str('lib'))
     winpkgs = path.join(prefix, str('pkgs'))
-    # str() avoids unicode on python2 by staying in bytes
 
     if path.exists(source_tree):
         modules = prefix
