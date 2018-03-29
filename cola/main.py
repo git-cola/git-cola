@@ -300,9 +300,9 @@ def cmd_cola(args):
         start=start_cola, stop=app.default_stop)
 
 
-def start_cola(context):
-    app.default_start(context)
-    context.view.start(context)
+def start_cola(context, view):
+    app.default_start(context, view)
+    view.start(context)
 
 
 def cmd_about(args):

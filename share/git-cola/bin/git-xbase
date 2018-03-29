@@ -74,11 +74,11 @@ def main():
     args = parse_args()
     context = app.application_init(args)
     view = new_window(context, args.filename)
-    app.application_run(context, view, stop=stop)
+    app.application_run(context, view, start=view.start, stop=stop)
     return view.status
 
 
-def stop(context):
+def stop(context, view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
@@ -139,6 +139,9 @@ class XBaseWindow(standard.MainWindow):
         self.setCentralWidget(editor)
         editor.exit.connect(self.exit)
         editor.setFocus()
+
+    def start(self, context, view):
+        self.editor.start()
 
     def exit(self, status):
         self.status = status
@@ -206,7 +209,8 @@ class Editor(QtWidgets.QWidget):
         qtutils.connect_button(self.help_button, show_help)
         qtutils.connect_button(self.cancel_button, self.cancel)
 
-        insns = core.read(filename)
+    def start(self):
+        insns = core.read(self.filename)
         self.parse_sequencer_instructions(insns)
 
     # notifier callbacks

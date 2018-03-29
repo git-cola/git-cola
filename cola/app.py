@@ -366,13 +366,13 @@ def application_run(context, view, start=None, stop=None):
     # Initialize and run startup callbacks
     context_init(context, view)
     if start:
-        start(context)
+        start(context, view)
 
     # Start the event loop
     result = context.app.start()
     # Finish
     if stop:
-        stop(context)
+        stop(context, view)
     context.app.stop()
 
     return result
@@ -385,13 +385,13 @@ def application_start(context, view):
                            start=default_start, stop=default_stop)
 
 
-def default_start(context):
+def default_start(context, view):
     """Scan for the first time"""
     QtCore.QTimer.singleShot(0, startup_message)
     QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(context):
+def default_stop(context, view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
