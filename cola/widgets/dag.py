@@ -40,15 +40,15 @@ def git_dag(context, args=None, settings=None, existing_view=None):
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
     branch_doubledash = branch and (branch + ' --') or ''
-    ctx = dag.DAG(branch_doubledash, 1000, context)
-    ctx.set_arguments(args)
+    params = dag.DAG(branch_doubledash, 1000)
+    params.set_arguments(args)
 
     if existing_view is None:
-        view = GitDAG(ctx, settings=settings)
+        view = GitDAG(context, params, settings=settings)
     else:
         view = existing_view
-        view.set_context(ctx)
-    if ctx.ref:
+        view.set_params(params)
+    if params.ref:
         view.display()
     return view
 
@@ -441,16 +441,16 @@ class GitDAG(standard.MainWindow):
     """The git-dag widget."""
     updated = Signal()
 
-    def __init__(self, ctx, parent=None, settings=None):
+    def __init__(self, context, params, parent=None, settings=None):
         super(GitDAG, self).__init__(parent)
 
         self.setMinimumSize(420, 420)
 
         # change when widgets are added/removed
         self.widget_version = 2
-        self.ctx = ctx
-        self.context = ctx and ctx.context
-        self.model = self.context and self.context.model
+        self.context = context
+        self.params = params
+        self.model = context and context.model
         self.settings = settings
 
         self.commits = {}
@@ -580,21 +580,19 @@ class GitDAG(standard.MainWindow):
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)
 
-        self.set_context(ctx)
+        self.set_params(params)
 
-    def set_context(self, ctx):
-        self.ctx = ctx
-        self.context = ctx.context
-        self.model = self.context and self.context.model
+    def set_params(self, params):
+        self.params = params
 
         # Update fields affected by model
-        self.revtext.setText(ctx.ref)
-        self.maxresults.setValue(ctx.count)
+        self.revtext.setText(params.ref)
+        self.maxresults.setValue(params.count)
         self.update_window_title()
 
         if self.thread is not None:
             self.thread.stop()
-        self.thread = ReaderThread(ctx, self)
+        self.thread = ReaderThread(params, self)
 
         thread = self.thread
         thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
@@ -609,20 +607,20 @@ class GitDAG(standard.MainWindow):
         self.treewidget.setFocus()
 
     def text_changed(self, txt):
-        self.ctx.ref = txt
+        self.params.ref = txt
         self.update_window_title()
 
     def update_window_title(self):
         project = self.model.project
-        if self.ctx.ref:
+        if self.params.ref:
             self.setWindowTitle(N_('%(project)s: %(ref)s - DAG')
-                                % dict(project=project, ref=self.ctx.ref))
+                                % dict(project=project, ref=self.params.ref))
         else:
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
         state = standard.MainWindow.export_state(self)
-        state['count'] = self.ctx.count
+        state['count'] = self.params.count
         state['log'] = self.treewidget.export_state()
         return state
 
@@ -630,12 +628,12 @@ class GitDAG(standard.MainWindow):
         result = standard.MainWindow.apply_state(self, state)
         try:
             count = state['count']
-            if self.ctx.overridden('count'):
-                count = self.ctx.count
+            if self.params.overridden('count'):
+                count = self.params.count
         except:
-            count = self.ctx.count
+            count = self.params.count
             result = False
-        self.ctx.set_count(count)
+        self.params.set_count(count)
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
 
         try:
@@ -677,8 +675,8 @@ class GitDAG(standard.MainWindow):
                     oids != self.last_oids)
         if update:
             self.thread.stop()
-            self.ctx.set_ref(new_ref)
-            self.ctx.set_count(new_count)
+            self.params.set_ref(new_ref)
+            self.params.set_count(new_count)
             self.thread.start()
 
         self.last_oids = oids
@@ -734,7 +732,7 @@ class GitDAG(standard.MainWindow):
         self.graphview.set_initial_view()
 
     def diff_commits(self, a, b):
-        paths = self.ctx.paths()
+        paths = self.params.paths()
         if paths:
             cmds.difftool_launch(left=a, right=b, paths=paths,
                                  context=self.context)
@@ -775,16 +773,16 @@ class ReaderThread(QtCore.QThread):
     end = Signal()
     status = Signal(object)
 
-    def __init__(self, ctx, parent):
+    def __init__(self, params, parent):
         QtCore.QThread.__init__(self, parent)
-        self.ctx = ctx
+        self.params = params
         self._abort = False
         self._stop = False
         self._mutex = QtCore.QMutex()
         self._condition = QtCore.QWaitCondition()
 
     def run(self):
-        repo = dag.RepoReader(self.ctx)
+        repo = dag.RepoReader(self.params)
         repo.reset()
         self.begin.emit()
         commits = []

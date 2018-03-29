@@ -46,11 +46,10 @@ class DAG(Observable):
     ref_updated = 'ref_updated'
     count_updated = 'count_updated'
 
-    def __init__(self, ref, count, context):
+    def __init__(self, ref, count):
         Observable.__init__(self)
         self.ref = ref
         self.count = count
-        self.context = context
         self.overrides = {}
 
     def set_ref(self, ref):
@@ -226,8 +225,8 @@ class Commit(object):
 
 class RepoReader(object):
 
-    def __init__(self, ctx, git=git):
-        self.ctx = ctx
+    def __init__(self, params, git=git):
+        self.params = params
         self.git = git
         self._proc = None
         self._objects = {}
@@ -273,8 +272,8 @@ class RepoReader(object):
                 raise StopIteration
 
         if self._proc is None:
-            ref_args = utils.shell_split(self.ctx.ref)
-            cmd = self._cmd + ['-%d' % self.ctx.count] + ref_args
+            ref_args = utils.shell_split(self.params.ref)
+            cmd = self._cmd + ['-%d' % self.params.count] + ref_args
             self._proc = core.start_command(cmd)
             self._topo_list = []
 
