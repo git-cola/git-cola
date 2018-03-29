@@ -124,5 +124,5 @@ class Interaction(object):
         return None
 
     @staticmethod
-    def async_command(command, runtask):
+    def async_command(title, command, runtask):
         pass
