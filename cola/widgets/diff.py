@@ -836,10 +836,10 @@ class DiffEditor(DiffTextEdit):
 
 class DiffWidget(QtWidgets.QWidget):
 
-    def __init__(self, notifier, parent, is_commit=False):
+    def __init__(self, notifier, context, parent, is_commit=False):
         QtWidgets.QWidget.__init__(self, parent)
 
-        self.runtask = qtutils.RunTask(parent=self)
+        self.context = context
 
         author_font = QtGui.QFont(self.font())
         author_font.setPointSize(int(author_font.pointSize() * 1.1))
@@ -893,7 +893,7 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
         task = DiffInfoTask(oid, filename, self)
-        self.runtask.start(task, result=self.diff.set_diff)
+        self.context.runtask.start(task, result=self.diff.set_diff)
 
     def commits_selected(self, commits):
         if len(commits) != 1:

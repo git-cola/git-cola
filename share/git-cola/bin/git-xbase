@@ -93,7 +93,7 @@ def parse_args():
 
 def new_window(context, filename):
     window = XBaseWindow(context)
-    editor = Editor(filename, parent=window)
+    editor = Editor(context, filename, parent=window)
     window.set_editor(editor)
     return window
 
@@ -151,16 +151,17 @@ class XBaseWindow(standard.MainWindow):
 class Editor(QtWidgets.QWidget):
     exit = Signal(int)
 
-    def __init__(self, filename, parent=None):
+    def __init__(self, context, filename, parent=None):
         super(Editor, self).__init__(parent)
 
         self.widget_version = 1
         self.status = 1
+        self.context = context
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char()
 
         self.notifier = notifier = observable.Observable()
-        self.diff = diff.DiffWidget(notifier, self)
+        self.diff = diff.DiffWidget(notifier, context, self)
         self.tree = RebaseTreeWidget(notifier, comment_char, self)
         self.setFocusProxy(self.tree)
 
