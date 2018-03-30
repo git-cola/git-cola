@@ -34,7 +34,7 @@ class Clone(standard.Dialog):
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
-        self.setWindowTitle(N_('Clone...'))
+        self.setWindowTitle(N_('Clone Repository'))
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
 
