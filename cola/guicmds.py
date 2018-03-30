@@ -272,8 +272,8 @@ def clone_repo_prepared(url, destdir, submodules, shallow,
     # Use a thread to update in the background
     progress.set_details(N_('Clone Repository'),
                          N_('Cloning repository at %s') % url)
-    runtask.start(CloneTask(url, destdir, submodules, shallow,
-                            spawn, parent), finish=finish, progress=progress)
+    task = CloneTask(url, destdir, submodules, shallow, spawn, parent)
+    runtask.start(task, finish=finish, progress=progress)
 
 
 def report_clone_repo_errors(task):
