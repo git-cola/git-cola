@@ -5,6 +5,7 @@ import re
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
+from .widgets import clone
 from .widgets import completion
 from .widgets import editremotes
 from .widgets.browse import BrowseBranch
@@ -153,62 +154,6 @@ def prompt_for_new_bare_repo():
     return bare_repo
 
 
-def prompt_for_clone():
-    """
-    Present a GUI for cloning a repository.
-
-    Returns the target directory and URL
-
-    """
-    url, ok = qtutils.prompt(
-        N_('Path or URL to clone (Env. $VARS okay)'), title=N_('Clone...'))
-    url = utils.expandpath(url)
-    if not ok or not url:
-        return None
-    try:
-        # Pick a suitable basename by parsing the URL
-        newurl = url.replace('\\', '/').rstrip('/')
-        default = newurl.rsplit('/', 1)[-1]
-        if default == '.git':
-            # The end of the URL is /.git, so assume it's a file path
-            default = os.path.basename(os.path.dirname(newurl))
-        if default.endswith('.git'):
-            # The URL points to a bare repo
-            default = default[:-4]
-        if url == '.':
-            # The URL is the current repo
-            default = os.path.basename(core.getcwd())
-        if not default:
-            raise
-    except:
-        Interaction.information(
-                N_('Error Cloning'),
-                N_('Could not parse Git URL: "%s"') % url)
-        Interaction.log(N_('Could not parse Git URL: "%s"') % url)
-        return None
-
-    # Prompt the user for a directory to use as the parent directory
-    msg = N_('Select a parent directory for the new clone')
-    dirname = qtutils.opendir_dialog(msg, main.model().getcwd())
-    if not dirname:
-        return None
-    count = 1
-    destdir = os.path.join(dirname, default)
-    olddestdir = destdir
-    if core.exists(destdir):
-        # An existing path can be specified
-        msg = (N_('"%s" already exists, cola will create a new directory') %
-               destdir)
-        Interaction.information(N_('Directory Exists'), msg)
-
-    # Make sure the new destdir doesn't exist
-    while core.exists(destdir):
-        destdir = olddestdir + str(count)
-        count += 1
-
-    return url, destdir
-
-
 def export_patches():
     """Run 'git format-patch' on a list of commits."""
     revs, summaries = gitcmds.log_helper()
@@ -295,31 +240,40 @@ def review_branch(context=None):
 class CloneTask(qtutils.Task):
     """Clones a Git repository"""
 
-    def __init__(self, url, destdir, spawn, parent):
+    def __init__(self, url, destdir, submodules, shallow, spawn, parent):
         qtutils.Task.__init__(self, parent)
         self.url = url
         self.destdir = destdir
+        self.submodules = submodules
+        self.shallow = shallow
         self.spawn = spawn
         self.cmd = None
 
     def task(self):
         """Runs the model action and captures the result"""
         self.cmd = cmds.do(
-            cmds.Clone, self.url, self.destdir, spawn=self.spawn)
+            cmds.Clone, self.url, self.destdir,
+            self.submodules, self.shallow, spawn=self.spawn)
         return self.cmd
 
 
 def clone_repo(parent, runtask, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
-    result = prompt_for_clone()
-    if result is None:
-        return
+
+    res_cba = lambda a, b, c, d: clone_repo_prepared(a, b, c, d,
+                                                     parent, runtask,
+                                                     progress, finish, spawn)
+    prompt = clone.prompt_for_clone()
+    prompt.result.connect(res_cba)
+
+
+def clone_repo_prepared(url, destdir, submodules, shallow,
+                        parent, runtask, progress, finish, spawn):
     # Use a thread to update in the background
-    url, destdir = result
     progress.set_details(N_('Clone Repository'),
                          N_('Cloning repository at %s') % url)
-    task = CloneTask(url, destdir, spawn, parent)
-    runtask.start(task, finish=finish, progress=progress)
+    runtask.start(CloneTask(url, destdir, submodules, shallow,
+                            spawn, parent), finish=finish, progress=progress)
 
 
 def report_clone_repo_errors(task):
