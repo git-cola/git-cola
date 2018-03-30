@@ -1478,17 +1478,29 @@ class OpenRepo(Command):
 class Clone(Command):
     """Clones a repository and optionally spawns a new cola session."""
 
-    def __init__(self, url, new_directory, spawn=True):
+    def __init__(self, url, new_directory,
+                 submodules=False, shallow=False, spawn=True):
         Command.__init__(self)
         self.url = url
         self.new_directory = new_directory
+        self.submodules = submodules
+        self.shallow = shallow
         self.spawn = spawn
         self.status = -1
         self.out = ''
         self.err = ''
 
     def do(self):
-        status, out, err = self.model.git.clone(self.url, self.new_directory)
+        depth = 1 if self.shallow else None
+        recurse_submodules = self.submodules
+        shallow_submodules = self.submodules and self.shallow
+
+        status, out, err = self.model.git.clone(
+            self.url, self.new_directory,
+            recurse_submodules=recurse_submodules,
+            shallow_submodules=shallow_submodules,
+            depth=depth)
+
         self.status = status
         self.out = out
         self.err = err
