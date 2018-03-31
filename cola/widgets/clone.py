@@ -45,10 +45,10 @@ class Clone(standard.Dialog):
         self.url = text.HintedLineEdit(hint, parent=self)
         self.url.setToolTip(N_('Path or URL to clone (Env. $VARS okay)'))
 
-        # Import submodules
+        # Initialize submodules
         self.submodules = qtutils.checkbox(checked=False)
         self.submodules_label = QtWidgets.QLabel(self)
-        self.submodules_label.setText(N_('Import all required submodules'))
+        self.submodules_label.setText(N_('Initialize required submodules'))
 
         # Reduce commit history
         self.shallow = qtutils.checkbox(checked=False)
