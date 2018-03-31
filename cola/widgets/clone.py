@@ -41,7 +41,7 @@ class Clone(standard.Dialog):
         # Repository location
         self.url_label = QtWidgets.QLabel(self)
         self.url_label.setText(N_('Repository location'))
-        hint = N_('git://git.example.com/repo.git')
+        hint = 'git://git.example.com/repo.git'
         self.url = text.HintedLineEdit(hint, parent=self)
         self.url.setToolTip(N_('Path or URL to clone (Env. $VARS okay)'))
 
@@ -56,7 +56,7 @@ class Clone(standard.Dialog):
         self.shallow_label.setText(N_('Reduce commit history to minimum'))
 
         # Buttons
-        self.ok_button = qtutils.create_button(text=N_('OK'),
+        self.ok_button = qtutils.create_button(text='OK',
                                                icon=icons.ok(), default=True)
         self.close_button = qtutils.close_button()
 
