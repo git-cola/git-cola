@@ -380,7 +380,7 @@ msgid "Abort Action"
 msgstr "中止操作"
 
 msgid "Abort Merge"
-msgstr "中止分支合併(merge"
+msgstr "中止分支合併(merge)"
 
 msgid "Abort Merge..."
 msgstr "中止分支合併(merge)……"
