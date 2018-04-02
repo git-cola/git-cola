@@ -195,7 +195,7 @@ class StashView(standard.Dialog):
         # Sanitize the stash name
         stash_name = utils.sanitize(stash_name)
         if stash_name in self.names:
-            Intercept.critical(
+            Interaction.critical(
                 N_('Error: Stash exists'),
                 N_('A stash named "%s" already exists') % stash_name)
             return
