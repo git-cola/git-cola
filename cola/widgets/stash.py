@@ -2,7 +2,6 @@
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtCore
-from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from ..i18n import N_
