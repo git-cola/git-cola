@@ -1,8 +1,8 @@
 """Provides the StashView dialog."""
 from __future__ import division, absolute_import, unicode_literals
 
+from qtpy import QtCore
 from qtpy.QtCore import Qt
-from qtpy import QtWidgets
 
 from ..i18n import N_
 from ..interaction import Interaction
@@ -180,7 +180,7 @@ class StashView(standard.Dialog):
         index = self.keep_index.isChecked()
         cmds.do(stash.ApplyStash, selection, index)
         cmds.do(cmds.Rescan)
-        self.accept()
+        QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -209,7 +209,7 @@ class StashView(standard.Dialog):
         else:
             cmds.do(stash.SaveStash, stash_name, keep_index)
         cmds.do(cmds.Rescan)
-        self.accept()
+        QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_drop(self):
         """Drops the currently selected stash
