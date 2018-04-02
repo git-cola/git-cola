@@ -211,6 +211,7 @@ def combo(items, editable=False, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
     return ComboBox(editable=editable, items=items, parent=parent)
 
+
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""
     widget = QtWidgets.QTextBrowser()
@@ -228,12 +229,14 @@ def add_completer(widget, items):
     widget.setCompleter(completer)
 
 
-def prompt(msg, title=None, text=''):
+def prompt(msg, title=None, text='', parent=None):
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
+    if parent is None:
+        parent = active_window()
     result = QtWidgets.QInputDialog.getText(
-            active_window(), title, msg,
+            parent, title, msg,
             QtWidgets.QLineEdit.Normal, text)
     return (result[0], result[1])
 

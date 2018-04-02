@@ -480,7 +480,7 @@ def cmd_search(args):
 def cmd_stash(args):
     from .widgets import stash
     context = app.application_init(args)
-    view = stash.view()
+    view = stash.view(show=False)
     return app.application_start(context, view)
 
 

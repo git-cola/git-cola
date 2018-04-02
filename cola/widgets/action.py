@@ -72,7 +72,7 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)
-        connect_button(self.stash_button, stash.stash)
+        connect_button(self.stash_button, stash.view)
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
 

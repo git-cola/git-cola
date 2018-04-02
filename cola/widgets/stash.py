@@ -2,6 +2,7 @@
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy.QtCore import Qt
+from qtpy import QtWidgets
 
 from ..i18n import N_
 from ..interaction import Interaction
@@ -15,14 +16,15 @@ from . import diff
 from . import standard
 
 
-def view():
+def view(show=True):
     """Launches a stash dialog using the provided model + view
     """
     model = stash.StashModel()
-    view = StashView(model, qtutils.active_window())
-    view.show()
-    view.raise_()
-    return view
+    stash_view = StashView(model, qtutils.active_window())
+    if show:
+        stash_view.show()
+        stash_view.raise_()
+    return stash_view
 
 
 class StashView(standard.Dialog):
@@ -106,8 +108,8 @@ class StashView(standard.Dialog):
         self.update_actions()
 
     def close_and_rescan(self):
-        self.reject()
         cmds.do(cmds.Rescan)
+        self.reject()
 
     # "stash" and "keep" index should mutually disable, but we don't
     # want a radio button because we'd have to add a 3rd "default" option.
@@ -177,8 +179,8 @@ class StashView(standard.Dialog):
             return
         index = self.keep_index.isChecked()
         cmds.do(stash.ApplyStash, selection, index)
-        self.accept()
         cmds.do(cmds.Rescan)
+        self.accept()
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -188,7 +190,8 @@ class StashView(standard.Dialog):
 
         """
         stash_name, ok = qtutils.prompt(
-            N_('Enter a name for the stash'), title=N_('Save Stash'))
+            N_('Enter a name for the stash'), title=N_('Save Stash'),
+            parent=self)
         if not ok or not stash_name:
             return
         # Sanitize the stash name
@@ -205,8 +208,8 @@ class StashView(standard.Dialog):
             cmds.do(stash.StashIndex, stash_name)
         else:
             cmds.do(stash.SaveStash, stash_name, keep_index)
-        self.accept()
         cmds.do(cmds.Rescan)
+        self.accept()
 
     def stash_drop(self):
         """Drops the currently selected stash
