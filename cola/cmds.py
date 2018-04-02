@@ -1491,7 +1491,9 @@ class Clone(Command):
         self.err = ''
 
     def do(self):
-        depth = 1 if self.shallow else None
+        kwargs = {}
+        if self.shallow:
+            kwargs['depth'] = 1
         recurse_submodules = self.submodules
         shallow_submodules = self.submodules and self.shallow
 
@@ -1499,7 +1501,7 @@ class Clone(Command):
             self.url, self.new_directory,
             recurse_submodules=recurse_submodules,
             shallow_submodules=shallow_submodules,
-            depth=depth)
+            **kwargs)
 
         self.status = status
         self.out = out
