@@ -1,7 +1,6 @@
 """Provides the StashView dialog."""
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtCore
 from qtpy.QtCore import Qt
 
 from ..i18n import N_
@@ -37,7 +36,7 @@ class StashView(standard.Dialog):
 
         self.setWindowTitle(N_('Stash'))
         if parent is not None:
-            self.setWindowModality(QtCore.Qt.WindowModal)
+            self.setWindowModality(Qt.WindowModal)
 
         self.stash_list = standard.ListWidget(parent=self)
         self.stash_text = diff.DiffTextEdit(self)
