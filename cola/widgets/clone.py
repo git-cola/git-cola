@@ -56,7 +56,7 @@ class Clone(standard.Dialog):
         self.shallow_label.setText(N_('Reduce commit history to minimum'))
 
         # Buttons
-        self.ok_button = qtutils.create_button(text='OK',
+        self.ok_button = qtutils.create_button(text=N_('OK'),
                                                icon=icons.ok(), default=True)
         self.close_button = qtutils.close_button()
 
