@@ -382,7 +382,10 @@ chdir = wrap(mkpath, os.chdir)
 exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
 if PY2:
-    getcwd = decorate(decode, os.getcwd)
+    if hasattr(os, 'getcwdu'):
+        getcwd = os.getcwdu
+    else:
+        getcwd = decorate(decode, os.getcwd)
 else:
     getcwd = os.getcwd
 if PY2:
