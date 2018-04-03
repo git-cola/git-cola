@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import functools
 import os
 import re
 
@@ -259,16 +260,14 @@ class CloneTask(qtutils.Task):
 
 def clone_repo(parent, runtask, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
-
-    res_cba = lambda a, b, c, d: clone_repo_prepared(a, b, c, d,
-                                                     parent, runtask,
-                                                     progress, finish, spawn)
+    clone_callback = functools.partial(
+        clone_repository, parent, runtask, progress, finish, spawn)
     prompt = clone.prompt_for_clone()
-    prompt.result.connect(res_cba)
+    prompt.result.connect(clone_callback)
 
 
-def clone_repo_prepared(url, destdir, submodules, shallow,
-                        parent, runtask, progress, finish, spawn):
+def clone_repository(parent, runtask, progress, finish, spawn,
+                     url, destdir, submodules, shallow):
     # Use a thread to update in the background
     progress.set_details(N_('Clone Repository'),
                          N_('Cloning repository at %s') % url)
