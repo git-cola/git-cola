@@ -29,7 +29,7 @@ def prompt_for_clone():
 class Clone(standard.Dialog):
 
     # Signal binding for returning the input data
-    result = QtCore.Signal(str, str, bool, bool)
+    result = QtCore.Signal(object, object, bool, bool)
 
     def __init__(self, parent=None):
         standard.Dialog.__init__(self, parent=parent)
@@ -39,38 +39,34 @@ class Clone(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         # Repository location
-        self.url_label = QtWidgets.QLabel(self)
-        self.url_label.setText(N_('Repository location'))
+        self.url_label = QtWidgets.QLabel(N_('URL'))
         hint = 'git://git.example.com/repo.git'
         self.url = text.HintedLineEdit(hint, parent=self)
         self.url.setToolTip(N_('Path or URL to clone (Env. $VARS okay)'))
 
         # Initialize submodules
-        self.submodules = qtutils.checkbox(checked=False)
-        self.submodules_label = QtWidgets.QLabel(self)
-        self.submodules_label.setText(N_('Initialize required submodules'))
+        self.submodules = qtutils.checkbox(
+            text=N_('Inititalize submodules'), checked=False)
 
         # Reduce commit history
-        self.shallow = qtutils.checkbox(checked=False)
-        self.shallow_label = QtWidgets.QLabel(self)
-        self.shallow_label.setText(N_('Reduce commit history to minimum'))
+        self.shallow = qtutils.checkbox(
+            text=N_('Reduce commit history to minimum'), checked=False)
 
         # Buttons
-        self.ok_button = qtutils.create_button(text=N_('OK'),
-                                               icon=icons.ok(), default=True)
+        self.ok_button = qtutils.create_button(
+            text=N_('Clone'), icon=icons.ok(), default=True)
         self.close_button = qtutils.close_button()
 
         # Form layout for inputs
         self.input_layout = qtutils.form(
-            defs.margin, defs.spacing,
-            (self.url_label, self.url),
-            (self.submodules, self.submodules_label),
-            (self.shallow, self.shallow_label))
+            defs.no_margin, defs.button_spacing,
+            (self.url_label, self.url))
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          qtutils.STRETCH,
-                                          self.ok_button,
-                                          self.close_button)
+        self.button_layout = qtutils.hbox(
+            defs.margin, defs.spacing,
+            self.submodules, defs.button_spacing,
+            self.shallow, qtutils.STRETCH,
+            self.ok_button, self.close_button)
 
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
                                         self.input_layout, self.button_layout)
@@ -79,7 +75,7 @@ class Clone(standard.Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.ok_button, self.prepare_to_clone)
 
-        self.init_state(None, self.resize)
+        self.init_state(settings, self.resize, 720, 200)
 
 
     def prepare_to_clone(self):
