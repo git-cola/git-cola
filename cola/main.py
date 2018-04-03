@@ -116,6 +116,8 @@ def add_dag_command(subparser):
     parser.add_argument('-c', '--count', metavar='<count>',
                         type=int, default=1000,
                         help='number of commits to display')
+    parser.add_argument('--all', action='store_true', dest='show_all',
+                        help='visualize all branches', default=False)
     parser.add_argument('args', nargs='*', metavar='<args>',
                         help='git log arguments')
 
@@ -363,8 +365,14 @@ def cmd_config(args):
 
 def cmd_dag(args):
     context = app.application_init(args)
-    from .widgets.dag import git_dag
-    view = git_dag(context, args=args, settings=args.settings)
+    from .widgets import dag
+    # cola.main() uses parse_args(), unlike dag.main() which uses
+    # parse_known_args(), thus we aren't able to automatically forward
+    # all unknown arguments.  Special-case support for "--all" since it's
+    # used by the history viewer command on Windows.
+    if args.show_all:
+        args.args.insert(0, '--all')
+    view = dag.git_dag(context, args=args, settings=args.settings)
     return app.application_start(context, view)
 
 
@@ -511,5 +519,7 @@ def shortcut_launch():
     Prompt for the repository by default.
 
     """
-    argv = ['cola', '--prompt']
+    argv = sys.argv[1:]
+    if not argv:
+        argv = ['cola', '--prompt']
     return app.winmain(main, argv)
