@@ -220,7 +220,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.apply_fn(self.set_default_item)
 
     def set_default_item(self, item):
-        cmds.do(cmds.SetDefaultRepo, item.path, item.name)
+        cmds.do(cmds.SetDefaultRepo, item.path)
         self.refresh()
         self.default_changed.emit()
 
@@ -229,7 +229,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.default_changed.emit()
 
     def clear_default_item(self, item):
-        cmds.do(cmds.SetDefaultRepo, None, None)
+        cmds.do(cmds.SetDefaultRepo, None)
         self.refresh()
 
     def rename_repo(self):
