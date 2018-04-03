@@ -74,9 +74,15 @@ class Clone(standard.Dialog):
 
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.ok_button, self.prepare_to_clone)
+        self.url.textChanged.connect(lambda x: self.update_actions())
 
         self.init_state(settings, self.resize, 720, 200)
+        self.update_actions()
 
+    def update_actions(self):
+        url = self.url.value().strip()
+        enabled = bool(url)
+        self.ok_button.setEnabled(enabled)
 
     def prepare_to_clone(self):
         """Grabs and validates the input data"""
