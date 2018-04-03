@@ -120,8 +120,9 @@ class Clone(standard.Dialog):
         olddestdir = destdir
         if core.exists(destdir):
             # An existing path can be specified
-            msg = (N_('"%s" already exists, cola will create a new directory') %
-                destdir)
+            msg = (
+                N_('"%s" already exists, cola will create a new directory')
+                % destdir)
             Interaction.information(N_('Directory Exists'), msg)
 
         # Make sure the new destdir doesn't exist
