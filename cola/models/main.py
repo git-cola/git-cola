@@ -20,9 +20,9 @@ from ..observable import Observable
 
 
 @memoize
-def model():
+def model(gitcmd=None, cfg=None):
     """Returns the main model singleton"""
-    return MainModel()
+    return MainModel(cfg=cfg, gitcmd=gitcmd)
 
 
 class MainModel(Observable):
@@ -62,15 +62,15 @@ class MainModel(Observable):
             lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    def __init__(self, cwd=None):
+    def __init__(self, cwd=None, cfg=None, gitcmd=None):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
         Observable.__init__(self)
 
         # Initialize the git command object
-        self.git = git.current()
-        self.cfg = gitcfg.current()
+        self.git = gitcmd or git.current()  # TODO context?
+        self.cfg = cfg or gitcfg.current()  # TODO context?
 
         self.initialized = False
         self.annex = False
