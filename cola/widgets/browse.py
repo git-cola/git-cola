@@ -10,7 +10,7 @@ from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
 from ..models.selection import selection_model
-from ..cmds import BaseCommand
+from ..cmds import CommandMixin
 from ..git import git
 from ..i18n import N_
 from ..interaction import Interaction
@@ -527,10 +527,9 @@ class BrowseModel(object):
         self.filename = filename
 
 
-class SaveBlob(BaseCommand):
+class SaveBlob(CommandMixin):
 
     def __init__(self, model):
-        BaseCommand.__init__(self)
         self.model = model
 
     def do(self):

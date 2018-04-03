@@ -36,23 +36,19 @@ class UsageError(Exception):
         self.msg = message
 
 
-class BaseCommand(object):
-    """Base class for all commands; provides the command pattern"""
-
+class CommandMixin(object):
+    """Mixin interface for commands"""
+    UNDOABLE = False
     DISABLED = False
-
-    def __init__(self, **kwargs):
-        self.undoable = False
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-    def is_undoable(self):
-        """Can this be undone?"""
-        return self.undoable
 
     @staticmethod
     def name():
-        return 'Unknown'
+        return '(undefined)'
+
+    @classmethod
+    def is_undoable(cls):
+        """Can this be undone?"""
+        return cls.UNDOABLE
 
     def do(self):
         pass
@@ -61,10 +57,16 @@ class BaseCommand(object):
         pass
 
 
-class ConfirmAction(BaseCommand):
+class ContextCommand(CommandMixin):
 
-    def __init__(self, **kwargs):
-        super(ConfirmAction, self).__init__(**kwargs)
+    def __init__(self, context):
+        self.context = context
+        self.model = context.model
+        self.cfg = context.cfg
+        self.git = context.git
+
+
+class ConfirmAction(CommandMixin):
 
     def ok_to_run(self):
         return True
@@ -99,24 +101,22 @@ class ConfirmAction(BaseCommand):
         return ok, status, out, err
 
 
-class ModelCommand(BaseCommand):
-    """Commands that manipulate the main models"""
+class ModelCommand(CommandMixin):
+    """Commands that manipulate the main model"""
 
-    def __init__(self, **kwargs):
-        # Note: self.model is set before calling the base class constructor
-        # to allow being having the `model` value be overridden by passing
-        # `model=xxx` during construction.
-        self.model = main.model()
-        super(ModelCommand, self).__init__(**kwargs)
+    def __init__(self, model=None):
+        if model is None:  # TODO context
+            model = main.model()
+        self.model = model
 
 
-class Command(ModelCommand):
-    """Base class for commands that modify the main model"""
+class EditModel(ModelCommand):
+    """Commands that mutate the main model diff data"""
 
     def __init__(self):
-        """Initialize the command and stash away values for use in do()"""
-        # These are commonly used so let's make it easier to write new commands.
-        super(Command, self).__init__()
+        """Common edit operations on the main model"""
+        # TODO context
+        super(EditModel, self).__init__()
 
         self.old_diff_text = self.model.diff_text
         self.old_filename = self.model.filename
@@ -147,7 +147,7 @@ class AbortMerge(ConfirmAction):
     """Reset an in-progress merge back to HEAD"""
 
     def __init__(self):
-        ConfirmAction.__init__(self, model=main.model())
+        self.model = main.model()  # TODO context
 
     def confirm(self):
         title = N_('Abort Merge...')
@@ -174,9 +174,9 @@ class AbortMerge(ConfirmAction):
         return 'git merge'
 
 
-class AmendMode(Command):
+class AmendMode(EditModel):
     """Try to amend a commit."""
-
+    UNDOABLE = True
     LAST_MESSAGE = None
 
     @staticmethod
@@ -184,8 +184,7 @@ class AmendMode(Command):
         return N_('Amend')
 
     def __init__(self, amend):
-        Command.__init__(self)
-        self.undoable = True
+        super(AmendMode, self).__init__()  # TODO context
         self.skip = False
         self.amending = amend
         self.old_commitmsg = self.model.commitmsg
@@ -220,7 +219,7 @@ class AmendMode(Command):
                            'Cannot amend while merging.'))
                 return
         self.skip = False
-        Command.do(self)
+        super(AmendMode, self).do()
         self.model.set_commitmsg(self.new_commitmsg)
         self.model.update_file_status()
 
@@ -228,7 +227,7 @@ class AmendMode(Command):
         if self.skip:
             return
         self.model.set_commitmsg(self.old_commitmsg)
-        Command.undo(self)
+        super(AmendMode, self).undo()
         self.model.update_file_status()
 
 
@@ -281,11 +280,11 @@ class LFSInstall(ModelCommand):
         self.model.emit_updated()
 
 
-class ApplyDiffSelection(Command):
+class ApplyDiffSelection(ModelCommand):
 
     def __init__(self, first_line_idx, last_line_idx, has_selection,
                  reverse, apply_to_worktree):
-        Command.__init__(self)
+        super(ApplyDiffSelection, self).__init__()  # TODO context
         self.first_line_idx = first_line_idx
         self.last_line_idx = last_line_idx
         self.has_selection = has_selection
@@ -327,10 +326,10 @@ class ApplyDiffSelection(Command):
         self.model.update_file_status(update_index=True)
 
 
-class ApplyPatches(Command):
+class ApplyPatches(ModelCommand):
 
     def __init__(self, patches):
-        Command.__init__(self)
+        super(ApplyPatches, self).__init__()  # TODO context
         self.patches = patches
 
     def do(self):
@@ -363,10 +362,9 @@ class ApplyPatches(Command):
                  '\n\n%s') % (len(self.patches), basenames))
 
 
-class Archive(BaseCommand):
+class Archive(CommandMixin):
 
     def __init__(self, ref, fmt, prefix, filename):
-        BaseCommand.__init__(self)
         self.ref = ref
         self.fmt = fmt
         self.prefix = prefix
@@ -387,22 +385,21 @@ class Archive(BaseCommand):
         Interaction.log_status(status, out or '', err or '')
 
 
-class Checkout(Command):
-    """
-    A command object for git-checkout.
+class Checkout(EditModel):
+    """A command object for git-checkout.
 
     'argv' is handed off directly to git.
 
     """
-
     def __init__(self, argv, checkout_branch=False):
-        Command.__init__(self)
+        super(Checkout, self).__init__()  # TODO context
         self.argv = argv
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
         self.new_diff_type = 'text'
 
     def do(self):
+        super(Checkout, self).do()
         status, out, err = self.model.git.checkout(*self.argv)
         if self.checkout_branch:
             self.model.update_status()
@@ -411,11 +408,10 @@ class Checkout(Command):
         Interaction.command(N_('Error'), 'git checkout', status, out, err)
 
 
-class BlamePaths(Command):
+class BlamePaths(CommandMixin):
     """Blame view for paths."""
 
     def __init__(self, paths):
-        Command.__init__(self)
         viewer = utils.shell_split(prefs.blame_viewer())
         self.argv = viewer + list(paths)
 
@@ -435,14 +431,14 @@ class CheckoutBranch(Checkout):
 
     def __init__(self, branch):
         args = [branch]
-        Checkout.__init__(self, args, checkout_branch=True)
+        super(CheckoutBranch, self).__init__(args, checkout_branch=True)
 
 
-class CherryPick(Command):
+class CherryPick(ModelCommand):
     """Cherry pick commits into the current branch."""
 
     def __init__(self, commits):
-        Command.__init__(self)
+        super(CherryPick, self).__init__()  # TODO context
         self.commits = commits
 
     def do(self):
@@ -450,25 +446,26 @@ class CherryPick(Command):
         self.model.update_file_status()
 
 
-class ResetMode(Command):
+class ResetMode(EditModel):
     """Reset the mode and clear the model's diff text."""
 
     def __init__(self):
-        Command.__init__(self)
+        super(ResetMode, self).__init__()
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
         self.new_diff_type = 'text'
         self.new_filename = ''
 
     def do(self):
+        super(ResetMode, self).do()
         self.model.update_file_status()
-        Command.do(self)
 
 
 class ResetCommand(ConfirmAction):
 
     def __init__(self, ref):
-        ConfirmAction.__init__(self, model=main.model(), ref=ref)
+        self.model = main.model()  # TODO context
+        self.ref = ref
 
     def action(self):
         return self.reset()
@@ -522,7 +519,7 @@ class Commit(ResetMode):
     """Attempt to create a new commit."""
 
     def __init__(self, amend, msg, sign, no_verify=False):
-        ResetMode.__init__(self)
+        super(Commit, self).__init__()  # TODO context
         self.amend = amend
         self.msg = msg
         self.sign = sign
@@ -547,7 +544,7 @@ class Commit(ResetMode):
         finally:
             core.unlink(tmp_file)
         if status == 0:
-            ResetMode.do(self)
+            super(Commit, self).do()
             self.model.set_commitmsg(self.new_commitmsg)
 
         title = N_('Commit failed')
@@ -567,11 +564,11 @@ class Commit(ResetMode):
         return msg
 
 
-class Ignore(Command):
+class Ignore(ModelCommand):
     """Add files to .gitignore"""
 
     def __init__(self, filenames):
-        Command.__init__(self)
+        super(Ignore, self).__init__()  # TODO context
         self.filenames = list(filenames)
 
     def do(self):
@@ -597,9 +594,8 @@ def file_summary(files):
 class RemoteCommand(ConfirmAction):
 
     def __init__(self, name):
-        super(RemoteCommand, self).__init__()
-        self.model = main.model()
-        self.name = name
+        self.model = main.model()  # TODO context
+        self.name = name  # TODO base class method/member variable conflict
 
     def success(self):
         self.model.cfg.reset()
@@ -609,7 +605,7 @@ class RemoteCommand(ConfirmAction):
 class RemoteAdd(RemoteCommand):
 
     def __init__(self, name, url):
-        super(RemoteAdd, self).__init__(name)
+        super(RemoteAdd, self).__init__(name)  # TODO context
         self.url = url
 
     def action(self):
@@ -646,7 +642,7 @@ class RemoteRemove(RemoteCommand):
 class RemoteRename(RemoteCommand):
 
     def __init__(self, name, new_name):
-        super(RemoteRename, self).__init__(name)
+        super(RemoteRename, self).__init__(name)  # TODO context
         self.new_name = new_name
 
     def confirm(self):
@@ -672,7 +668,7 @@ class RemoteRename(RemoteCommand):
 class RemoteSetURL(RemoteCommand):
 
     def __init__(self, name, url):
-        super(RemoteSetURL, self).__init__(name)
+        super(RemoteSetURL, self).__init__(name)  # TODO context
         self.url = url
 
     def action(self):
@@ -687,11 +683,11 @@ class RemoteSetURL(RemoteCommand):
         return 'git remote set-url "%s" "%s"' % (self.name, self.url)
 
 
-class RemoteEdit(BaseCommand):
+class RemoteEdit(CommandMixin):
     """Combine RemoteRename and RemoteSetURL"""
 
     def __init__(self, old_name, name, url):
-        super(RemoteEdit, self).__init__()
+        # TODO context
         self.old_name = old_name
         self.name = name
         self.url = url
@@ -711,7 +707,7 @@ class RemoteEdit(BaseCommand):
 class RemoveFromSettings(ConfirmAction):
 
     def __init__(self, settings, repo, name, icon=None):
-        ConfirmAction.__init__(self)
+        # TODO context
         self.settings = settings
         self.repo = repo
         self.name = name
@@ -749,11 +745,11 @@ class RemoveRecent(RemoveFromSettings):
         return (0, '', '')
 
 
-class RemoveFiles(Command):
+class RemoveFiles(ModelCommand):
     """Removes files"""
 
     def __init__(self, remover, filenames):
-        Command.__init__(self)
+        super(RemoveFiles, self).__init__()  # TODO context
         if remover is None:
             remover = os.remove
         self.remover = remover
@@ -790,7 +786,7 @@ class Delete(RemoveFiles):
     """Delete files."""
 
     def __init__(self, filenames):
-        RemoveFiles.__init__(self, os.remove, filenames)
+        super(Delete, self).__init__(os.remove, filenames)  # TODO context
 
     def do(self):
         files = self.filenames
@@ -807,7 +803,7 @@ class Delete(RemoveFiles):
                                    default=True, icon=icons.remove()):
             return
 
-        return RemoveFiles.do(self)
+        return super(Delete, self).do(self)
 
 
 class MoveToTrash(RemoveFiles):
@@ -816,14 +812,15 @@ class MoveToTrash(RemoveFiles):
     AVAILABLE = send2trash is not None
 
     def __init__(self, filenames):
-        RemoveFiles.__init__(self, send2trash, filenames)
+        # TODO context
+        super(MoveToTrash, self).__init__(send2trash, filenames)
 
 
-class DeleteBranch(Command):
+class DeleteBranch(EditModel):
     """Delete a git branch."""
 
     def __init__(self, branch):
-        Command.__init__(self)
+        super(DeleteBranch, self).__init__()  # TODO context
         self.branch = branch
 
     def do(self):
@@ -831,11 +828,11 @@ class DeleteBranch(Command):
         Interaction.log_status(status, out, err)
 
 
-class Rename(Command):
+class Rename(ModelCommand):
     """Rename a set of paths."""
 
     def __init__(self, paths):
-        Command.__init__(self)
+        super(Rename, self).__init__()  # TODO context
         self.paths = paths
 
     def do(self):
@@ -866,11 +863,11 @@ class Rename(Command):
         return status == 0
 
 
-class RenameBranch(Command):
+class RenameBranch(ModelCommand):
     """Rename a git branch."""
 
     def __init__(self, branch, new_branch):
-        Command.__init__(self)
+        super(RenameBranch, self).__init__()  # TODO context
         self.branch = branch
         self.new_branch = new_branch
 
@@ -880,11 +877,11 @@ class RenameBranch(Command):
         Interaction.log_status(status, out, err)
 
 
-class DeleteRemoteBranch(Command):
+class DeleteRemoteBranch(ModelCommand):
     """Delete a remote git branch."""
 
     def __init__(self, remote, branch):
-        Command.__init__(self)
+        super(DeleteRemoteBranch, self).__init__()  # TODO context
         self.remote = remote
         self.branch = branch
 
@@ -902,11 +899,11 @@ class DeleteRemoteBranch(Command):
                 % dict(branch=self.branch, remote=self.remote))
 
 
-class DiffImage(Command):
+class DiffImage(EditModel):
 
     def __init__(self,
             filename, deleted, staged, modified, unmerged, untracked):
-        super(DiffImage, self).__init__()
+        super(DiffImage, self).__init__()  # TODO context
 
         self.new_filename = filename
         self.new_diff_text = ''
@@ -1071,11 +1068,11 @@ class DiffImage(Command):
         return images
 
 
-class Diff(Command):
+class Diff(EditModel):
     """Perform a diff and set the model's current text."""
 
     def __init__(self, filename, cached=False, deleted=False):
-        Command.__init__(self)
+        super(Diff, self).__init__()  # TODO context
         opts = {}
         if cached:
             opts['ref'] = self.model.head
@@ -1086,11 +1083,11 @@ class Diff(Command):
         self.new_diff_type = 'text'
 
 
-class Diffstat(Command):
+class Diffstat(EditModel):
     """Perform a diffstat and set the model's diff text."""
 
     def __init__(self):
-        Command.__init__(self)
+        super(Diffstat, self).__init__()  # TODO context
         cfg = gitcfg.current()
         diff_context = cfg.get('diff.context', 3)
         diff = self.model.git.diff(self.model.head,
@@ -1108,14 +1105,16 @@ class DiffStaged(Diff):
     """Perform a staged diff on a file."""
 
     def __init__(self, filename, deleted=None):
-        Diff.__init__(self, filename, cached=True, deleted=deleted)
+        # TODO context
+        super(DiffStaged, self).__init__(
+            filename, cached=True, deleted=deleted)
         self.new_mode = self.model.mode_index
 
 
-class DiffStagedSummary(Command):
+class DiffStagedSummary(EditModel):
 
     def __init__(self):
-        Command.__init__(self)
+        super(DiffStagedSummary, self).__init__()  # TODO context
         diff = self.model.git.diff(self.model.head,
                                    cached=True,
                                    no_color=True,
@@ -1127,11 +1126,11 @@ class DiffStagedSummary(Command):
         self.new_mode = self.model.mode_index
 
 
-class Difftool(Command):
+class Difftool(ModelCommand):
     """Run git-difftool limited by path."""
 
     def __init__(self, staged, filenames, context=None):
-        Command.__init__(self)
+        super(Difftool, self).__init__()  # TODO context (required)
         self.staged = staged
         self.filenames = filenames
         self.context = context
@@ -1141,7 +1140,7 @@ class Difftool(Command):
             self.filenames, self.staged, self.model.head, context=self.context)
 
 
-class Edit(Command):
+class Edit(CommandMixin):
     """Edit a file using the configured gui.editor."""
 
     @staticmethod
@@ -1149,7 +1148,6 @@ class Edit(Command):
         return N_('Launch Editor')
 
     def __init__(self, filenames, line_number=None):
-        Command.__init__(self)
         self.filenames = filenames
         self.line_number = line_number
 
@@ -1188,11 +1186,10 @@ class Edit(Command):
             Interaction.critical(N_('Error Editing File'), message, details)
 
 
-class FormatPatch(Command):
+class FormatPatch(CommandMixin):
     """Output a patch series given all revisions and a selected subset."""
 
     def __init__(self, to_export, revs, output='patches'):
-        Command.__init__(self)
         self.to_export = list(to_export)
         self.revs = list(revs)
         self.output = output
@@ -1203,14 +1200,14 @@ class FormatPatch(Command):
         Interaction.log_status(status, out, err)
 
 
-class LaunchDifftool(BaseCommand):
+class LaunchDifftool(CommandMixin):
 
     @staticmethod
     def name():
         return N_('Launch Diff Tool')
 
     def __init__(self, context=None):
-        BaseCommand.__init__(self)
+        # TODO context (required)
         self.context = context
 
     def do(self):
@@ -1235,14 +1232,13 @@ class LaunchDifftool(BaseCommand):
             difftool_run(context=self.context)
 
 
-class LaunchTerminal(BaseCommand):
+class LaunchTerminal(CommandMixin):
 
     @staticmethod
     def name():
         return N_('Launch Terminal')
 
     def __init__(self, path):
-        BaseCommand.__init__(self)
         self.path = path
 
     def do(self):
@@ -1262,15 +1258,15 @@ class LaunchEditor(Edit):
     def __init__(self):
         s = selection.selection()
         allfiles = s.staged + s.unmerged + s.modified + s.untracked
-        Edit.__init__(self, allfiles)
+        super(LaunchEditor, self).__init__(allfiles)
 
 
-class LoadCommitMessageFromFile(Command):
+class LoadCommitMessageFromFile(ModelCommand):
     """Loads a commit message from a path."""
+    UNDOABLE = True
 
     def __init__(self, path):
-        Command.__init__(self)
-        self.undoable = True
+        super(LoadCommitMessageFromFile, self).__init__()  # TODO context
         self.path = path
         self.old_commitmsg = self.model.commitmsg
         self.old_directory = self.model.directory
@@ -1306,15 +1302,15 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
         return LoadCommitMessageFromFile.do(self)
 
 
-class LoadCommitMessageFromOID(Command):
+class LoadCommitMessageFromOID(ModelCommand):
     """Load a previous commit message"""
+    UNDOABLE = True
 
     def __init__(self, oid, prefix=''):
-        Command.__init__(self)
+        super(LoadCommitMessageFromOID, self).__init__()  # TODO context
         self.oid = oid
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = prefix + gitcmds.prev_commitmsg(oid)
-        self.undoable = True
 
     def do(self):
         self.model.set_commitmsg(self.new_commitmsg)
@@ -1323,13 +1319,14 @@ class LoadCommitMessageFromOID(Command):
         self.model.set_commitmsg(self.old_commitmsg)
 
 
-class PrepareCommitMessageHook(Command):
+class PrepareCommitMessageHook(ModelCommand):
     """Use the cola-prepare-commit-msg hook to prepare the commit message
     """
+    UNDOABLE = True
+
     def __init__(self):
-        Command.__init__(self)
+        super(PrepareCommitMessageHook, self).__init__()  # TODO context
         self.old_commitmsg = self.model.commitmsg
-        self.undoable = True
 
     def get_message(self):
 
@@ -1364,16 +1361,16 @@ class LoadFixupMessage(LoadCommitMessageFromOID):
     """Load a fixup message"""
 
     def __init__(self, oid):
-        LoadCommitMessageFromOID.__init__(self, oid, prefix='fixup! ')
+        super(LoadFixupMessage, self).__init__(oid, prefix='fixup! ')
         if self.new_commitmsg:
             self.new_commitmsg = self.new_commitmsg.splitlines()[0]
 
 
-class Merge(Command):
+class Merge(ModelCommand):
     """Merge commits"""
 
     def __init__(self, revision, no_commit, squash, no_ff, sign):
-        Command.__init__(self)
+        super(Merge, self).__init__()  # TODO context
         self.revision = revision
         self.no_ff = no_ff
         self.no_commit = no_commit
@@ -1399,7 +1396,7 @@ class Merge(Command):
         return status, out, err
 
 
-class OpenDefaultApp(BaseCommand):
+class OpenDefaultApp(CommandMixin):
     """Open a file using the OS default."""
 
     @staticmethod
@@ -1407,7 +1404,6 @@ class OpenDefaultApp(BaseCommand):
         return N_('Open Using Default Application')
 
     def __init__(self, filenames):
-        BaseCommand.__init__(self)
         if utils.is_darwin():
             launcher = 'open'
         else:
@@ -1441,11 +1437,11 @@ class OpenParentDir(OpenDefaultApp):
         core.fork([self.launcher] + dirs)
 
 
-class OpenNewRepo(Command):
+class OpenNewRepo(ModelCommand):
     """Launches git-cola on a repo."""
 
     def __init__(self, repo_path):
-        Command.__init__(self)
+        super(OpenNewRepo, self).__init__()  # TODO context
         self.repo_path = repo_path
 
     def do(self):
@@ -1453,9 +1449,10 @@ class OpenNewRepo(Command):
         core.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
 
 
-class OpenRepo(Command):
+class OpenRepo(EditModel):
+
     def __init__(self, repo_path):
-        Command.__init__(self)
+        super(OpenRepo, self).__init__()  # TODO context
         self.repo_path = repo_path
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
@@ -1471,16 +1468,17 @@ class OpenRepo(Command):
             fsmonitor.current().start()
             self.model.update_status()
             self.model.set_commitmsg(self.new_commitmsg)
+            super(EditModel, self).do()
         else:
             self.model.set_worktree(old_repo)
 
 
-class Clone(Command):
+class Clone(ModelCommand):
     """Clones a repository and optionally spawns a new cola session."""
 
     def __init__(self, url, new_directory,
                  submodules=False, shallow=False, spawn=True):
-        Command.__init__(self)
+        super(Clone, self).__init__()  # TODO context
         self.url = url
         self.new_directory = new_directory
         self.submodules = submodules
@@ -1568,7 +1566,7 @@ class GitXBaseContext(object):
             compat.unsetenv(var)
 
 
-class Rebase(Command):
+class Rebase(ModelCommand):
 
     def __init__(self, upstream=None, branch=None, **kwargs):
         """Start an interactive rebase session
@@ -1578,7 +1576,7 @@ class Rebase(Command):
         :param kwargs: forwarded directly to `git.rebase()`
 
         """
-        Command.__init__(self)
+        super(Rebase, self).__init__()  # TODO context
 
         self.upstream = upstream
         self.branch = branch
@@ -1625,7 +1623,7 @@ class Rebase(Command):
         return status, out, err
 
 
-class RebaseEditTodo(Command):
+class RebaseEditTodo(ModelCommand):
 
     def do(self):
         (status, out, err) = (1, '', '')
@@ -1638,7 +1636,7 @@ class RebaseEditTodo(Command):
         return status, out, err
 
 
-class RebaseContinue(Command):
+class RebaseContinue(ModelCommand):
 
     def do(self):
         (status, out, err) = (1, '', '')
@@ -1651,7 +1649,7 @@ class RebaseContinue(Command):
         return status, out, err
 
 
-class RebaseSkip(Command):
+class RebaseSkip(ModelCommand):
 
     def do(self):
         (status, out, err) = (1, '', '')
@@ -1664,7 +1662,7 @@ class RebaseSkip(Command):
         return status, out, err
 
 
-class RebaseAbort(Command):
+class RebaseAbort(ModelCommand):
 
     def do(self):
         status, out, err = self.model.git.rebase(abort=True)
@@ -1672,14 +1670,14 @@ class RebaseAbort(Command):
         self.model.update_status()
 
 
-class Rescan(Command):
+class Rescan(ModelCommand):
     """Rescan for changes"""
 
     def do(self):
         self.model.update_status()
 
 
-class Refresh(Command):
+class Refresh(ModelCommand):
     """Update refs, refresh the index, and update config"""
 
     @staticmethod
@@ -1692,7 +1690,7 @@ class Refresh(Command):
         gitcfg.current().update()
 
 
-class RefreshConfig(Command):
+class RefreshConfig(CommandMixin):
     """Refresh the git config cache"""
 
     def do(self):
@@ -1702,8 +1700,7 @@ class RefreshConfig(Command):
 class RevertEditsCommand(ConfirmAction):
 
     def __init__(self):
-        ConfirmAction.__init__(self)
-        self.model = main.model()
+        self.model = main.model()  # TODO context
         self.icon = icons.undo()
 
     def ok_to_run(self):
@@ -1779,13 +1776,12 @@ class RevertUncommittedEdits(RevertEditsCommand):
                                    default=True, icon=self.icon)
 
 
-class RunConfigAction(Command):
+class RunConfigAction(CommandMixin):
     """Run a user-configured action, typically from the "Tools" menu"""
 
     def __init__(self, action_name):
-        Command.__init__(self)
         self.action_name = action_name
-        self.model = main.model()
+        self.model = main.model()  # TODO context
 
     def do(self):
         for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
@@ -1860,22 +1856,20 @@ class RunConfigAction(Command):
         return status
 
 
-class SetDefaultRepo(Command):
+class SetDefaultRepo(CommandMixin):
 
-    def __init__(self, repo, name):
-        Command.__init__(self)
+    def __init__(self, repo):
         self.repo = repo
-        self.name = name
 
     def do(self):
         gitcfg.current().set_user('cola.defaultrepo', self.repo)
 
 
-class SetDiffText(Command):
+class SetDiffText(EditModel):
+    UNDOABLE = True
 
     def __init__(self, text):
-        Command.__init__(self)
-        self.undoable = True
+        super(SetDiffText, self).__init__()  # TODO context
         self.new_diff_text = text
         self.new_diff_type = 'text'
 
@@ -1896,11 +1890,12 @@ class SetUpstreamBranch(ModelCommand):
         cfg.set_repo('branch.%s.remote' % branch, remote)
         cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
 
-class ShowUntracked(Command):
+
+class ShowUntracked(EditModel):
     """Show an untracked file."""
 
     def __init__(self, filename):
-        Command.__init__(self)
+        super(ShowUntracked, self).__init__()  # TODO context
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
         self.new_diff_text = self.read(filename)
@@ -1920,15 +1915,15 @@ class ShowUntracked(Command):
         return result
 
 
-class SignOff(Command):
+class SignOff(ModelCommand):
+    UNDOABLE = True
 
     @staticmethod
     def name():
         return N_('Sign Off')
 
     def __init__(self):
-        Command.__init__(self)
-        self.undoable = True
+        super(SignOff, self).__init__()  # TODO context
         self.old_commitmsg = self.model.commitmsg
 
     def do(self):
@@ -1948,7 +1943,7 @@ class SignOff(Command):
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
 
-        cfg = gitcfg.current()
+        cfg = gitcfg.current()  # TODO context
         name = cfg.get('user.name', user)
         email = cfg.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
@@ -2000,7 +1995,7 @@ def should_stage_conflicts(path):
                                default=False, cancel_text=cancel_text)
 
 
-class Stage(Command):
+class Stage(ModelCommand):
     """Stage a set of paths."""
 
     @staticmethod
@@ -2008,7 +2003,7 @@ class Stage(Command):
         return N_('Stage')
 
     def __init__(self, paths):
-        Command.__init__(self)
+        super(Stage, self).__init__()  # TODO context
         self.paths = paths
 
     def do(self):
@@ -2075,7 +2070,7 @@ class StageCarefully(Stage):
 
     """
     def __init__(self):
-        Stage.__init__(self, None)
+        super(StageCarefully, self).__init__(None)
         self.init_paths()
 
     def init_paths(self):
@@ -2126,7 +2121,7 @@ class StageUntracked(StageCarefully):
         self.paths = self.model.untracked
 
 
-class StageOrUnstage(Command):
+class StageOrUnstage(CommandMixin):
     """If the selection is staged, unstage it, otherwise stage"""
 
     @staticmethod
@@ -2150,11 +2145,11 @@ class StageOrUnstage(Command):
             do(Stage, unstaged)
 
 
-class Tag(Command):
+class Tag(ModelCommand):
     """Create a tag object."""
 
     def __init__(self, name, revision, sign=False, message=''):
-        Command.__init__(self)
+        super(Tag, self).__init__()  # TODO context
         self._name = name
         self._message = message
         self._revision = revision
@@ -2201,7 +2196,7 @@ class Tag(Command):
         return (status, out, err)
 
 
-class Unstage(Command):
+class Unstage(ModelCommand):
     """Unstage a set of paths."""
 
     @staticmethod
@@ -2209,7 +2204,7 @@ class Unstage(Command):
         return N_('Unstage')
 
     def __init__(self, paths):
-        Command.__init__(self)
+        super(Unstage, self).__init__()  # TODO context
         self.paths = paths
 
     def do(self):
@@ -2228,7 +2223,7 @@ class Unstage(Command):
         self.model.update_file_status()
 
 
-class UnstageAll(Command):
+class UnstageAll(ModelCommand):
     """Unstage all files; resets the index."""
 
     def do(self):
@@ -2249,14 +2244,15 @@ class UnstageSelected(Unstage):
     """Unstage selected files."""
 
     def __init__(self):
-        Unstage.__init__(self, selection.selection_model().staged)
+        staged = selection.selection_model().staged
+        super(UnstageSelected, self).__init__(staged)
 
 
-class Untrack(Command):
+class Untrack(ModelCommand):
     """Unstage a set of paths."""
 
     def __init__(self, paths):
-        Command.__init__(self)
+        super(Untrack, self).__init__()  # TODO context
         self.paths = paths
 
     def do(self):
@@ -2267,11 +2263,11 @@ class Untrack(Command):
         Interaction.log_status(status, out, err)
 
 
-class UntrackedSummary(Command):
+class UntrackedSummary(EditModel):
     """List possible .gitignore rules as the diff text."""
 
     def __init__(self):
-        Command.__init__(self)
+        super(UntrackedSummary, self).__init__()  # TODO context
         untracked = self.model.untracked
         suffix = len(untracked) > 1 and 's' or ''
         io = StringIO()
@@ -2285,14 +2281,14 @@ class UntrackedSummary(Command):
         self.new_mode = self.model.mode_untracked
 
 
-class UpdateFileStatus(Command):
+class UpdateFileStatus(ModelCommand):
     """Rescans for changes."""
 
     def do(self):
         self.model.update_file_status()
 
 
-class VisualizeAll(Command):
+class VisualizeAll(CommandMixin):
     """Visualize all branches."""
 
     def do(self):
@@ -2300,7 +2296,7 @@ class VisualizeAll(Command):
         launch_history_browser(browser + ['--all'])
 
 
-class VisualizeCurrent(Command):
+class VisualizeCurrent(ModelCommand):  # TODO context
     """Visualize all branches."""
 
     def do(self):
@@ -2308,11 +2304,10 @@ class VisualizeCurrent(Command):
         launch_history_browser(browser + [self.model.currentbranch] + ['--'])
 
 
-class VisualizePaths(Command):
+class VisualizePaths(CommandMixin):
     """Path-limited visualization."""
 
     def __init__(self, paths):
-        Command.__init__(self)
         browser = utils.shell_split(prefs.history_browser())
         if paths:
             self.argv = browser + ['--'] + list(paths)
@@ -2323,11 +2318,10 @@ class VisualizePaths(Command):
         launch_history_browser(self.argv)
 
 
-class VisualizeRevision(Command):
+class VisualizeRevision(CommandMixin):
     """Visualize a specific revision."""
 
     def __init__(self, revision, paths=None):
-        Command.__init__(self)
         self.revision = revision
         self.paths = paths
 
@@ -2405,7 +2399,7 @@ def difftool_run(context=None):
     if not files:
         return
     s = selection.selection()
-    model = main.model()
+    model = main.model()  # TODO context, need to not allow None
     difftool_launch_with_head(
         files, bool(s.staged), model.head, context=context)
 
@@ -2446,7 +2440,7 @@ def difftool_launch(left=None, right=None, paths=None,
         if left_take_parent or left_take_magic:
             suffix = left_take_magic and '^!' or '~'
             # Check root commit (no parents and thus cannot execute '~')
-            model = main.model()
+            model = main.model()  # TODO context
             git = model.git
             status, out, err = git.rev_list(left, parents=True, n=1)
             Interaction.log_status(status, out, err)
