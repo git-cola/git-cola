@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2017-11-20 19:28+0100\n"
+"PO-Revision-Date: 2018-04-03 23:44+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -60,6 +60,30 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola byla přeložena do různých jazyků díky\n"
+"            pomoci jednotlivců uvedených níže.\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Překlad je přibližný.  Najdete-li chybu,\n"
+"            oznamte nám to prosím tak, že otevřete issue na Githubu:\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Vyzýváme vás, abyste se na překladu podíleli tím, že doplníte nebo aktualizujete\n"
+"            překlad, a otevřete pull request.\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
 
 #, python-format
 msgid ""
@@ -76,6 +100,18 @@ msgid ""
 "        </ul>\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola verze %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -167,9 +203,9 @@ msgstr ""
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr ""
 
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" already exists"
-msgstr "Větev \"%s\" již existuje."
+msgstr "\"%s\" již existuje"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
@@ -184,7 +220,7 @@ msgstr ""
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
-msgstr ""
+msgstr "%(project)s: %(branch)s - Procházet"
 
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
@@ -192,15 +228,15 @@ msgstr ""
 
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "Před %d dny"
 
 #, python-format
 msgid "%d hours ago"
-msgstr ""
+msgstr "Před %d hodinami"
 
 #, python-format
 msgid "%d minutes ago"
-msgstr ""
+msgstr "Před %d minutami"
 
 #, python-format
 msgid "%d patch(es) applied."
@@ -298,13 +334,10 @@ msgstr "O programu git-cola"
 msgid "Accept"
 msgstr ""
 
-#, fuzzy
 msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"Zapsat (commit) připravené změny\n"
-"Klávesová zkratka: Ctrl+Enter"
 
 msgid "Action Name"
 msgstr "Název akce"
@@ -355,9 +388,8 @@ msgstr "Přidat vzdálený"
 msgid "Add to .gitignore"
 msgstr "Přidat do .gitignore"
 
-#, fuzzy
 msgid "Add to Git Annex"
-msgstr "Přidat do .gitignore"
+msgstr ""
 
 msgid "Add to Git LFS"
 msgstr ""
@@ -479,7 +511,7 @@ msgid "Branches..."
 msgstr "Větve..."
 
 msgid "Brazilian translation"
-msgstr ""
+msgstr "Brazilský překlad"
 
 msgid "Browse"
 msgstr "Procházet"
@@ -507,15 +539,12 @@ msgid "Bypass Commit Hooks"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
-#, fuzzy
 msgid ""
 "Cancel rebase\n"
 "Shortcut: Ctrl+Q"
 msgstr ""
-"Zapsat (commit) připravené změny\n"
-"Klávesová zkratka: Ctrl+Enter"
 
 msgid "Cannot Amend"
 msgstr ""
@@ -526,7 +555,7 @@ msgstr ""
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
+msgstr "Nelze spustit \"%s\": prosím nakonfigurujte prohlížeč historie"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
@@ -605,15 +634,14 @@ msgstr "Zavřít..."
 msgid "Collapse all"
 msgstr "Sbalit vše"
 
-#, fuzzy
 msgid "Command"
-msgstr "Zapsat"
+msgstr ""
 
 msgid "Commit"
 msgstr "Zapsat"
 
 msgid "Commit failed"
-msgstr ""
+msgstr "Zapsání se nezdařilo"
 
 msgid "Commit staged changes"
 msgstr "Zapsat připravené změny"
@@ -724,7 +752,7 @@ msgid "Cut"
 msgstr "Vyjmout"
 
 msgid "Czech translation"
-msgstr ""
+msgstr "Český překlad"
 
 msgid "DAG..."
 msgstr ""
@@ -777,7 +805,7 @@ msgid "Delete remote?"
 msgstr "Odstranit vzdálený?"
 
 msgid "Delete selected branch?"
-msgstr ""
+msgstr "Smazat vybranou větev?"
 
 msgid "Delete toolbar"
 msgstr ""
@@ -787,7 +815,7 @@ msgstr "Smazat..."
 
 #, python-format
 msgid "Deleting \"%s\" failed"
-msgstr ""
+msgstr "Odstraňování \"%s\" selhalo"
 
 msgid "Deletions"
 msgstr ""
@@ -850,7 +878,6 @@ msgstr "Zahodit odklad \"%s\"?"
 msgid "Drop the selected stash"
 msgstr "Zahodit vybraný odklad"
 
-#, fuzzy
 msgid "Edit"
 msgstr "Upravit"
 
@@ -873,13 +900,13 @@ msgid "Edit..."
 msgstr "Upravit..."
 
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 msgid "Email Address"
 msgstr "E-mailová adresa"
 
 msgid "Email contributor"
-msgstr ""
+msgstr "Napsat přispěvateli e-mail"
 
 msgid "Enabled"
 msgstr ""
@@ -887,9 +914,8 @@ msgstr ""
 msgid "Enter New Branch Name"
 msgstr ""
 
-#, fuzzy
 msgid "Enter a name for the new bare repo"
-msgstr "Zadat název odkladu"
+msgstr ""
 
 msgid "Enter a name for the stash"
 msgstr "Zadat název odkladu"
@@ -916,15 +942,14 @@ msgid "Error Launching Blame Viewer"
 msgstr ""
 
 msgid "Error Launching History Browser"
-msgstr ""
+msgstr "Chyba při spouštění prohlížeče historie"
 
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Chyba při vytváření vzdálené \"%s\""
 
-#, fuzzy
 msgid "Error creating stash"
-msgstr "Chyba při vytváření větve"
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1035,7 +1060,7 @@ msgid "Files"
 msgstr "Soubory"
 
 msgid "Filter branches..."
-msgstr ""
+msgstr "Filtrovat větve..."
 
 msgid "Filter paths..."
 msgstr ""
@@ -1056,7 +1081,7 @@ msgid "Fixup Previous Commit"
 msgstr ""
 
 msgid "Font Size"
-msgstr ""
+msgstr "Velikost písma"
 
 msgid "Force"
 msgstr "Vynutit"
@@ -1085,7 +1110,7 @@ msgid "Format String"
 msgstr ""
 
 msgid "French translation"
-msgstr ""
+msgstr "Francouzský překlad"
 
 msgid "GPG-sign the merge commit"
 msgstr ""
@@ -1095,7 +1120,7 @@ msgid "Gathering info for \"%s\"..."
 msgstr ""
 
 msgid "German translation"
-msgstr ""
+msgstr "Německý překlad"
 
 msgid "Get Commit Message Template"
 msgstr "Získat šablonu zprávy zápisu"
@@ -1131,10 +1156,10 @@ msgid "Help - git-xbase"
 msgstr ""
 
 msgid "History Browser"
-msgstr ""
+msgstr "Prohlížeč historie"
 
 msgid "Hungarian translation"
-msgstr ""
+msgstr "Maďarský překlad"
 
 msgid "Ignore all whitespace"
 msgstr ""
@@ -1158,7 +1183,7 @@ msgid "Include tags "
 msgstr "Zahrnout značky "
 
 msgid "Indonesian translation"
-msgstr ""
+msgstr "Indonéský překlad"
 
 msgid "Initialize Git Annex"
 msgstr ""
@@ -1167,7 +1192,7 @@ msgid "Initialize Git LFS"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
-msgstr ""
+msgstr "Vkládat mezery místo tabelátorů"
 
 msgid "Interactive Rebase"
 msgstr ""
@@ -1308,9 +1333,8 @@ msgstr "Název"
 msgid "Name for the new remote"
 msgstr ""
 
-#, fuzzy
 msgid "New Bare Repository..."
-msgstr "Nový repozitář…"
+msgstr ""
 
 msgid "New Repository..."
 msgstr "Nový repozitář…"
@@ -1346,12 +1370,14 @@ msgid "No repository selected."
 msgstr ""
 
 msgid "Non-fast-forward fetch overwrites local history!"
-msgstr ""
+msgstr "Vyzvednutí Ne rychle vpřed přepíše místní historii!"
 
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
+"Odeslání Ne rychle vpřed přepíše uveřejněnou historii!\n"
+"(Dali jste nejdříve stáhnout?)"
 
 msgid "Nothing to commit"
 msgstr ""
@@ -1386,19 +1412,18 @@ msgstr "Otevřít v novém okně..."
 msgid "Open..."
 msgstr "Otevřít…"
 
-#, fuzzy
 msgid "Other branches"
-msgstr "Větve"
+msgstr ""
 
 msgid "Overwrite"
-msgstr ""
+msgstr "Přepsat"
 
 #, python-format
 msgid "Overwrite \"%s\"?"
-msgstr ""
+msgstr "Přepsat  \"%s\"?"
 
 msgid "Overwrite File?"
-msgstr ""
+msgstr "Přepsat soubor?"
 
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
@@ -1434,7 +1459,7 @@ msgid "Please provide both a branch name and revision expression."
 msgstr ""
 
 msgid "Please select a file"
-msgstr ""
+msgstr "Prosím vyberte soubor"
 
 msgid "Please specify a name for the new tag."
 msgstr "Prosím zadejte název nové značky."
@@ -1456,7 +1481,7 @@ msgid "Point the current branch head to a new commit?"
 msgstr ""
 
 msgid "Polish translation"
-msgstr ""
+msgstr "Polský překlad"
 
 msgid "Preferences"
 msgstr "Předvolby"
@@ -1519,9 +1544,8 @@ msgstr "Nedávné"
 msgid "Recent repositories"
 msgstr "Nedávné repozitáře"
 
-#, fuzzy
 msgid "Recent repository count"
-msgstr "Nedávné repozitáře"
+msgstr ""
 
 msgid "Recently Modified Files"
 msgstr "Nedávno změněné soubory"
@@ -1572,9 +1596,9 @@ msgstr "Odstranit vybrané (Smazat)"
 msgid "Rename"
 msgstr "Přejmenovat"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rename \"%s\""
-msgstr "Přejmenovat"
+msgstr "Přejmenovat \"%s\""
 
 msgid "Rename Branch"
 msgstr "Přejmenovat větev"
@@ -1601,9 +1625,8 @@ msgstr "Přejmenovat vzdálenou \"%(current)s\" na \"%(new)s\"?"
 msgid "Rename remote?"
 msgstr "Přejmenovat vzdálenou?"
 
-#, fuzzy
 msgid "Rename selected paths"
-msgstr "Odstranit vybrané (Smazat)"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -1660,7 +1683,7 @@ msgid "Revert Uncommitted Changes?"
 msgstr "Vrátit nezapsané změny?"
 
 msgid "Revert Uncommitted Edits..."
-msgstr ""
+msgstr "Vrátit nezapsané úpravy..."
 
 msgid "Revert Unstaged Changes"
 msgstr "Vrátit nepřipravené změny"
@@ -1724,15 +1747,13 @@ msgid "Running command: %s"
 msgstr ""
 
 msgid "Russian translation"
-msgstr ""
+msgstr "Ruský překlad"
 
-#, fuzzy
 msgid "SHA-1"
-msgstr "Kopírovat SHA-1"
+msgstr "SHA-1"
 
-#, fuzzy
 msgid "Safe Mode"
-msgstr "Změněné připravit k zapsání"
+msgstr ""
 
 msgid "Save"
 msgstr "Uložit"
@@ -1744,7 +1765,7 @@ msgid "Save As Tarball/Zip..."
 msgstr "Uložit jako Tarball/Zip..."
 
 msgid "Save GUI Settings"
-msgstr ""
+msgstr "Uložit nastavení GUI"
 
 msgid "Save Stash"
 msgstr "Uložit odklad"
@@ -1807,9 +1828,8 @@ msgstr ""
 msgid "Select Commit"
 msgstr "Vybrat zápis"
 
-#, fuzzy
 msgid "Select Directory..."
-msgstr "Vybrat Repozitář..."
+msgstr "Vybrat Složku..."
 
 msgid "Select File"
 msgstr "Vybrat soubor"
@@ -1842,27 +1862,23 @@ msgstr ""
 msgid "Select manually..."
 msgstr "Vybrat ručně..."
 
-#, fuzzy
 msgid "Select output dir"
-msgstr "Vybrat zápis"
+msgstr ""
 
-#, fuzzy
 msgid "Select output directory"
-msgstr "Vybrat Repozitář..."
+msgstr "Vybrat výstupní složku"
 
 msgid "Select patch file(s)..."
 msgstr "Vybrat soubor (soubory) se záplatami..."
 
-#, fuzzy
 msgid "Select repository"
-msgstr "Vybrat Repozitář..."
+msgstr "Vybrat repozitář"
 
 msgid "Set Default Repository"
 msgstr "Nastavit výchozí repozitář"
 
-#, fuzzy
 msgid "Set Upstream Branch"
-msgstr "Nastavit upstream"
+msgstr ""
 
 msgid "Set upstream"
 msgstr "Nastavit upstream"
@@ -1924,7 +1940,7 @@ msgid "Sign off on this commit"
 msgstr ""
 
 msgid "Simplified Chinese translation"
-msgstr ""
+msgstr "Překlad do zjednodušené čínštiny"
 
 msgid "Skip"
 msgstr ""
@@ -1933,10 +1949,10 @@ msgid "Skip Current Patch"
 msgstr ""
 
 msgid "Sort bookmarks alphabetically"
-msgstr ""
+msgstr "Záložky řadit abecedně"
 
 msgid "Spanish translation"
-msgstr ""
+msgstr "Španělský překlad"
 
 msgid "Specifies the SHA-1 to tag"
 msgstr ""
@@ -1960,7 +1976,7 @@ msgid "Stage"
 msgstr "Připravit k zapsání"
 
 msgid "Stage / Unstage"
-msgstr ""
+msgstr "Připravit k zapsání / zrušit přípravu"
 
 msgid "Stage All Untracked"
 msgstr "Připravit všechny nesledované"
@@ -2017,13 +2033,11 @@ msgstr "Počáteční revize"
 msgid "Stash"
 msgstr "Odložit"
 
-#, fuzzy
 msgid "Stash Index"
-msgstr "Odložit"
+msgstr ""
 
-#, fuzzy
 msgid "Stash staged changes only"
-msgstr "Zapsat připravené změny"
+msgstr ""
 
 msgid "Stash unstaged changes only, keeping staged changes"
 msgstr ""
@@ -2047,7 +2061,7 @@ msgid "Summary:"
 msgstr ""
 
 msgid "Tab Width"
-msgstr ""
+msgstr "Šířka tabelátoru"
 
 msgid "Tag"
 msgstr "Značka"
@@ -2065,7 +2079,7 @@ msgid "Tags"
 msgstr "Značky"
 
 msgid "Text Width"
-msgstr ""
+msgstr "Šířka textu"
 
 msgid "The branch will be no longer available."
 msgstr ""
@@ -2079,7 +2093,7 @@ msgstr ""
 
 #, python-format
 msgid "The file \"%s\" exists and will be overwritten."
-msgstr ""
+msgstr "Soubor \"%s\" existuje a bude přepsán."
 
 msgid "The following files will be deleted:"
 msgstr "Následující soubory budou smazány:"
@@ -2100,7 +2114,6 @@ msgid ""
 "You probably don't want to do this."
 msgstr ""
 
-#, fuzzy
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
@@ -2155,17 +2168,17 @@ msgid "Translators"
 msgstr "Překladatelé"
 
 msgid "Turkish translation"
-msgstr ""
+msgstr "Turecký překlad"
 
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #, python-format
 msgid "URL: %s"
 msgstr "URL: %s"
 
 msgid "Ukranian translation"
-msgstr ""
+msgstr "Ukrajinský překlad"
 
 msgid "Unable to rebase"
 msgstr ""
@@ -2203,7 +2216,7 @@ msgid "Unstaging: %s"
 msgstr ""
 
 msgid "Untrack Selected"
-msgstr ""
+msgstr "Přestat sledovat vybrané"
 
 msgid "Untracked"
 msgstr "Nesledováno"
@@ -2272,7 +2285,7 @@ msgid "Zoom Out"
 msgstr "Oddálit"
 
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "Přizpůsobit velikosti okna"
 
 msgid "command-line arguments"
 msgstr ""
@@ -2290,7 +2303,7 @@ msgid "git cola version %s"
 msgstr "git cola verze %s"
 
 msgid "git-cola"
-msgstr ""
+msgstr "git-cola"
 
 msgid "git-cola diff"
 msgstr ""
@@ -2308,7 +2321,7 @@ msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
-msgstr ""
+msgstr "rrrr-mm-dd"
 
 #~ msgid " commits ago"
 #~ msgstr " zápisy"
