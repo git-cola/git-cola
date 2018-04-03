@@ -74,7 +74,7 @@ def default_history_browser():
         # because we don't have to guess paths.
         git_cola = sys.argv[0].replace("\\", '/')
         python = sys.executable.replace("\\", '/')
-        argv = [python, git_cola, 'dag']
+        argv = [python, git_cola, 'dag', '--repo', core.getcwd()]
         argv = core.prep_for_subprocess(argv)
         default = core.list2cmdline(argv)
     else:
