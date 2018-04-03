@@ -17,12 +17,12 @@ from . import text
 from ..models import main
 
 
-def prompt_for_clone():
+def prompt_for_clone(show=True, settings=None):
     """Presents a GUI for cloning a repository"""
-
-    view = Clone(qtutils.active_window())
-    view.show()
-    view.raise_()
+    view = Clone(settings=settings, parent=qtutils.active_window())
+    if show:
+        view.show()
+        view.raise_()
     return view
 
 
@@ -31,7 +31,7 @@ class Clone(standard.Dialog):
     # Signal binding for returning the input data
     result = QtCore.Signal(object, object, bool, bool)
 
-    def __init__(self, parent=None):
+    def __init__(self, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
         self.setWindowTitle(N_('Clone Repository'))

@@ -42,6 +42,7 @@ def parse_args(argv):
     add_archive_command(subparser)
     add_branch_command(subparser)
     add_browse_command(subparser)
+    add_clone_command(subparser)
     add_config_command(subparser)
     add_dag_command(subparser)
     add_diff_command(subparser)
@@ -100,6 +101,10 @@ def add_branch_command(subparser):
 
 def add_browse_command(subparser):
     add_command(subparser, 'browse', 'browse repository', cmd_browse)
+
+
+def add_clone_command(subparser):
+    add_command(subparser, 'clone', 'clone repository', cmd_clone)
 
 
 def add_config_command(subparser):
@@ -339,6 +344,13 @@ def cmd_browse(args):
     from .widgets.browse import worktree_browser
     context = app.application_init(args)
     view = worktree_browser(update=False, settings=args.settings)
+    return app.application_start(context, view)
+
+
+def cmd_clone(args):
+    from .widgets import clone
+    context = app.application_init(args)
+    view = clone.prompt_for_clone(show=False, settings=args.settings)
     return app.application_start(context, view)
 
 

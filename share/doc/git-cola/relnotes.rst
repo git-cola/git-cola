@@ -106,6 +106,8 @@ Usability, bells and whistles
 
 * The "Branches" widget learned to configure upstream branches.
 
+* A new `git cola clone` sub-command was added for cloning repositories.
+
 Packaging
 ---------
 
