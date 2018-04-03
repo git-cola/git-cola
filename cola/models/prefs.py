@@ -72,9 +72,10 @@ def default_history_browser():
         # On Windows, a sensible default is "python git-cola dag"
         # which is different than `gitk` below, but is preferred
         # because we don't have to guess paths.
-        git_cola = sys.argv[0].replace("\\", '/')
-        python = sys.executable.replace("\\", '/')
-        argv = [python, git_cola, 'dag', '--repo', core.getcwd()]
+        git_cola = sys.argv[0].replace('\\', '/')
+        python = sys.executable.replace('\\', '/')
+        cwd = core.getcwd().replace('\\', '/')
+        argv = [python, git_cola, 'dag', '--repo', cwd]
         argv = core.prep_for_subprocess(argv)
         default = core.list2cmdline(argv)
     else:
