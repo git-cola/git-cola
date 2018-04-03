@@ -340,18 +340,19 @@ def application_init(args, update=False):
     process_args(args)
 
     app = new_application(args)
-    model = new_model(app, args.repo,
+    gitcmd = git.current()  # TODO non-singleton
+    cfg = gitcfg.current()  # TODO non-singleton
+    model = new_model(app, gitcmd, cfg, args.repo,
                       prompt=args.prompt, settings=args.settings)
     if update:
         model.update_status()
 
-    cfg = gitcfg.current()
     timer.stop('init')
 
     if args.perf:
         timer.display('init')
 
-    return ApplicationContext(args, app, cfg, model, timer)
+    return ApplicationContext(args, app, cfg, gitcmd, model, timer)
 
 
 def context_init(context, view):
@@ -428,8 +429,9 @@ def new_application(args):
     return ColaApplication(sys.argv, icon_themes=args.icon_themes)
 
 
-def new_model(app, repo, prompt=False, settings=None):
-    model = main.model()
+def new_model(app, gitcmd, cfg, repo, prompt=False, settings=None):
+    # TODO model = main.MainModel(git=gitcmd, cfg=cfg)
+    model = main.model()  # TODO non-singleton
     valid = False
     if not prompt:
         valid = model.set_worktree(repo)
@@ -437,7 +439,6 @@ def new_model(app, repo, prompt=False, settings=None):
             # We are not currently in a git repository so we need to find one.
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
-            cfg = gitcfg.current()
             default_repo = cfg.get('cola.defaultrepo')
             if default_repo:
                 valid = model.set_worktree(default_repo)
@@ -509,14 +510,15 @@ class Timer(object):
 
 class ApplicationContext(object):
 
-    def __init__(self, args, app, cfg, model, timer):
+    def __init__(self, args, app, cfg, gitcmd, model, timer):
         self.args = args
         self.app = app
         self.cfg = cfg
+        self.git = gitcmd
         self.model = model
+        self.runtask = None
         self.timer = timer
         self.view = None
-        self.runtask = None
         app.set_context(self)  # inject the context
 
     def set_view(self, view):
