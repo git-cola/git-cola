@@ -243,6 +243,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -610,6 +628,9 @@ msgstr "Messaggio di fusione:"
 msgid "Clear..."
 msgstr "Clona..."
 
+msgid "Clone"
+msgstr "Clona"
+
 #, fuzzy
 msgid "Clone Repository"
 msgstr "Clona archivio esistente"
@@ -879,6 +900,10 @@ msgstr ""
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Opzioni"
 
 #, fuzzy
 msgid "Directory Exists"
@@ -1254,6 +1279,9 @@ msgstr "Inizializzazione..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "Inizializzazione..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1681,6 +1709,9 @@ msgstr "Ricomporre le revisioni perdute potrebbe non essere semplice."
 
 msgid "Redo"
 msgstr "Ripeti"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Rinfresca"
@@ -2691,9 +2722,6 @@ msgstr ""
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "Attivazione di '%s' completata."
-
-#~ msgid "Clone"
-#~ msgstr "Clona"
 
 #~ msgid "Clone Type:"
 #~ msgstr "Tipo di clone:"

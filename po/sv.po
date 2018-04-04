@@ -242,6 +242,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -609,6 +627,9 @@ msgstr "Incheckningsmeddelande för sammanslagning:"
 msgid "Clear..."
 msgstr "Klona..."
 
+msgid "Clone"
+msgstr "Klona"
+
 #, fuzzy
 msgid "Clone Repository"
 msgstr "Klona befintligt arkiv"
@@ -878,6 +899,10 @@ msgstr ""
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Alternativ"
 
 #, fuzzy
 msgid "Directory Exists"
@@ -1253,6 +1278,9 @@ msgstr "Initierar..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "Initierar..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1680,6 +1708,9 @@ msgstr "Det kanske inte är så enkelt att återskapa förlorade incheckningar."
 
 msgid "Redo"
 msgstr "Gör om"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Uppdatera"
@@ -2691,9 +2722,6 @@ msgstr ""
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "Checkade ut \"%s\"."
-
-#~ msgid "Clone"
-#~ msgstr "Klona"
 
 #~ msgid "Clone Type:"
 #~ msgstr "Typ av klon:"

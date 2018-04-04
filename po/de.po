@@ -245,6 +245,24 @@ msgstr "*** Abzweigung ***"
 msgid "*** Sandbox ***"
 msgstr "*** Arbeitsbereich ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -606,6 +624,9 @@ msgstr "In Versionsbeschreibungen"
 msgid "Clear..."
 msgstr "Schließen..."
 
+msgid "Clone"
+msgstr "Klonen"
+
 #, fuzzy
 msgid "Clone Repository"
 msgstr "Projektarchiv klonen"
@@ -858,6 +879,10 @@ msgstr "Mit Auswahl vergleichen"
 
 msgid "Diffstat"
 msgstr "Vergleichsstatistik"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Werkzeug zum Dateivergleich"
 
 #, fuzzy
 msgid "Directory Exists"
@@ -1224,6 +1249,9 @@ msgstr "Initialisieren..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "Initialisieren..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1628,6 +1656,9 @@ msgstr "Verworfene Versionen können nur mit größerem Aufwand wiederhergestell
 
 msgid "Redo"
 msgstr "Wiederholen"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Ansicht aktualisieren"
@@ -2630,9 +2661,6 @@ msgstr ""
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "Umgestellt auf »%s«."
-
-#~ msgid "Clone"
-#~ msgstr "Klonen"
 
 #~ msgid "Clone Type:"
 #~ msgstr "Art des Klonens:"

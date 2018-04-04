@@ -243,6 +243,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -610,6 +628,9 @@ msgstr "Merge commit üzenet:"
 msgid "Clear..."
 msgstr "Másolás..."
 
+msgid "Clone"
+msgstr "Bezárás"
+
 #, fuzzy
 msgid "Clone Repository"
 msgstr "Létező repó másolása"
@@ -879,6 +900,10 @@ msgstr ""
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Opciók"
 
 #, fuzzy
 msgid "Directory Exists"
@@ -1254,6 +1279,9 @@ msgstr "Inicializálás..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "Inicializálás..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1681,6 +1709,9 @@ msgstr "Az elveszett commitok helyreállítása nem biztos, hogy egyszerű."
 
 msgid "Redo"
 msgstr "Mégis"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Frissítés"
@@ -2720,9 +2751,6 @@ msgstr ""
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "'%s' kifejtve."
-
-#~ msgid "Clone"
-#~ msgstr "Bezárás"
 
 #~ msgid "Clone Type:"
 #~ msgstr "Másolás típusa:"

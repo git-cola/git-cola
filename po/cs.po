@@ -249,6 +249,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -586,6 +604,10 @@ msgstr ""
 msgid "Clear..."
 msgstr ""
 
+#, fuzzy
+msgid "Clone"
+msgstr "Klonovat..."
+
 msgid "Clone Repository"
 msgstr "Klonovat repozitář"
 
@@ -824,6 +846,10 @@ msgstr "Diff tento -> vybraný"
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Diff"
 
 msgid "Directory Exists"
 msgstr ""
@@ -1164,6 +1190,9 @@ msgid "Initialize Git Annex"
 msgstr ""
 
 msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Inititalize submodules"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
@@ -1537,6 +1566,9 @@ msgstr ""
 
 msgid "Redo"
 msgstr "Znovu"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Načíst znovu"

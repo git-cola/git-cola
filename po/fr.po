@@ -287,6 +287,24 @@ msgstr "*** Point de branchement ***"
 msgid "*** Sandbox ***"
 msgstr "*** Bac à sable ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr "<path>..."
 
@@ -638,6 +656,9 @@ msgstr "Effacer le message de commit ?"
 msgid "Clear..."
 msgstr "Effacer..."
 
+msgid "Clone"
+msgstr "Cloner"
+
 msgid "Clone Repository"
 msgstr "Cloner le dépôt"
 
@@ -883,6 +904,10 @@ msgstr "Différence ceci -> sélection"
 
 msgid "Diffstat"
 msgstr "Statistiques des différences"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Outil de différence"
 
 msgid "Directory Exists"
 msgstr "Répertoire existant"
@@ -1235,6 +1260,9 @@ msgstr "Initialisation..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "Initialisation..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1625,6 +1653,9 @@ msgstr "Récupérer les commits perdus ne sera peut être pas facile."
 
 msgid "Redo"
 msgstr "Refaire"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "Rafraichir"
@@ -2599,9 +2630,6 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "'%s' emprunté."
-
-#~ msgid "Clone"
-#~ msgstr "Cloner"
 
 #~ msgid "Clone Type:"
 #~ msgstr "Type de clonage :"

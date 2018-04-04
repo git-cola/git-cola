@@ -247,6 +247,24 @@ msgstr "*** Poin Cabang ***"
 msgid "*** Sandbox ***"
 msgstr "*** Bak Pasir ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -606,6 +624,10 @@ msgid "Clear..."
 msgstr "Tutup..."
 
 #, fuzzy
+msgid "Clone"
+msgstr "Clon...."
+
+#, fuzzy
 msgid "Clone Repository"
 msgstr "Repositori Saat Ini"
 
@@ -855,6 +877,10 @@ msgstr "Diff ini -> terpilih"
 
 msgid "Diffstat"
 msgstr "Diffstat"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Alat Diff"
 
 msgid "Directory Exists"
 msgstr "Direktori Sudah Ada"
@@ -1208,6 +1234,9 @@ msgid "Initialize Git Annex"
 msgstr ""
 
 msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Inititalize submodules"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
@@ -1607,6 +1636,9 @@ msgid "Recovering lost commits may not be easy."
 msgstr "Mengembalikan commit yang hilang tidak akan mudah."
 
 msgid "Redo"
+msgstr ""
+
+msgid "Reduce commit history to minimum"
 msgstr ""
 
 msgid "Refresh"
