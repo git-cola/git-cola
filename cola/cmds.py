@@ -39,7 +39,6 @@ class UsageError(Exception):
 class CommandMixin(object):
     """Mixin interface for commands"""
     UNDOABLE = False
-    DISABLED = False
 
     @staticmethod
     def name():
@@ -2353,28 +2352,12 @@ def run(cls, *args, **opts):
     return runner
 
 
-class CommandDisabled(object):
-
-    """Context manager to temporarily disable a command from running"""
-    def __init__(self, cmdclass):
-        self.cmdclass = cmdclass
-
-    def __enter__(self):
-        self.cmdclass.DISABLED = True
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.cmdclass.DISABLED = False
-
-
 def do(cls, *args, **opts):
     """Run a command in-place"""
     return do_cmd(cls(*args, **opts))
 
 
 def do_cmd(cmd):
-    if hasattr(cmd, 'DISABLED') and cmd.DISABLED:
-        return None
     try:
         return cmd.do()
     except Exception as e:
