@@ -2359,6 +2359,9 @@ def do(cls, *args, **opts):
         return cmd.do()
     except Exception as e:
         msg, details = utils.format_exception(e)
+        if hasattr(cls, '__name__'):
+            msg = ('%s exception:\n%s'
+                    % (cls.__name__, msg))
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 
