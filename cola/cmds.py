@@ -1261,8 +1261,8 @@ class LaunchEditor(Edit):
 
     def __init__(self):
         s = selection.selection()
-        allfiles = s.staged + s.unmerged + s.modified + s.untracked
-        super(LaunchEditor, self).__init__(allfiles)
+        filenames = s.staged + s.unmerged + s.modified + s.untracked
+        super(LaunchEditor, self).__init__(filenames, background_editor=True)
 
 
 class LoadCommitMessageFromFile(ModelCommand):
