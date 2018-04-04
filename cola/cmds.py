@@ -1147,9 +1147,10 @@ class Edit(CommandMixin):
     def name():
         return N_('Launch Editor')
 
-    def __init__(self, filenames, line_number=None):
+    def __init__(self, filenames, line_number=None, background_editor=False):
         self.filenames = filenames
         self.line_number = line_number
+        self.background_editor = background_editor
 
     def do(self):
         if not self.filenames:
@@ -1157,7 +1158,10 @@ class Edit(CommandMixin):
         filename = self.filenames[0]
         if not core.exists(filename):
             return
-        editor = prefs.editor()
+        if self.background_editor:
+            editor = prefs.background_editor()
+        else:
+            editor = prefs.editor()
         opts = []
 
         if self.line_number is None:
