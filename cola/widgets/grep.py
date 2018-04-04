@@ -264,6 +264,8 @@ class Grep(Dialog):
         enabled = status == 0
         self.edit_group.setEnabled(enabled)
         self.refresh_group.setEnabled(True)
+        if not value:
+            self.preview_txt.clear()
 
     def update_preview(self):
         """Update the file preview window"""
