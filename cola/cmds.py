@@ -2013,12 +2013,7 @@ class Stage(ModelCommand):
     def do(self):
         msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        # Prevent external updates while we are staging files.
-        # We update file stats at the end of this operation
-        # so there's no harm in ignoring updates from other threads
-        # (e.g. the file system change monitor).
-        with CommandDisabled(UpdateFileStatus):
-            return self.stage_paths()
+        return self.stage_paths()
 
     def stage_paths(self):
         """Stages add/removals to git."""
@@ -2214,8 +2209,7 @@ class Unstage(ModelCommand):
     def do(self):
         msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        with CommandDisabled(UpdateFileStatus):
-            self.unstage_paths()
+        self.unstage_paths()
 
     def unstage_paths(self):
         paths = self.paths
@@ -2262,8 +2256,7 @@ class Untrack(ModelCommand):
     def do(self):
         msg = N_('Untracking: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        with CommandDisabled(UpdateFileStatus):
-            status, out, err = self.model.untrack_paths(self.paths)
+        status, out, err = self.model.untrack_paths(self.paths)
         Interaction.log_status(status, out, err)
 
 
@@ -2283,13 +2276,6 @@ class UntrackedSummary(EditModel):
         self.new_diff_text = io.getvalue()
         self.new_diff_type = 'text'
         self.new_mode = self.model.mode_untracked
-
-
-class UpdateFileStatus(ModelCommand):
-    """Rescans for changes."""
-
-    def do(self):
-        self.model.update_file_status()
 
 
 class VisualizeAll(CommandMixin):
