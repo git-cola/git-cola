@@ -803,7 +803,7 @@ class Delete(RemoveFiles):
                                    default=True, icon=icons.remove()):
             return
 
-        return super(Delete, self).do(self)
+        return super(Delete, self).do()
 
 
 class MoveToTrash(RemoveFiles):
