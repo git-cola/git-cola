@@ -1165,7 +1165,7 @@ class Edit(CommandMixin):
         else:
             # Single-file w/ line-numbers (likely from grep)
             editor_opts = {
-                    '*vim*': ['+'+self.line_number, filename],
+                    '*vim*': [filename, '+'+self.line_number],
                     '*emacs*': ['+'+self.line_number, filename],
                     '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
                     '*notepad++*': ['-n'+self.line_number, filename],
