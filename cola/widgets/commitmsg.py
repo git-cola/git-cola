@@ -47,9 +47,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self._tabwidth = None
 
         # Actions
-        self.signoff_action = qtutils.add_action(self, cmds.SignOff.name(),
-                                                 cmds.run(cmds.SignOff),
-                                                 hotkeys.SIGNOFF)
+        self.signoff_action = qtutils.add_action(
+            self, cmds.SignOff.name(),
+            cmds.run(cmds.SignOff, self.context), hotkeys.SIGNOFF)
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
         self.commit_action = qtutils.add_action(self,

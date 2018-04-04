@@ -1918,15 +1918,15 @@ class ShowUntracked(EditModel):
         return result
 
 
-class SignOff(ModelCommand):
+class SignOff(ContextCommand):
     UNDOABLE = True
 
     @staticmethod
     def name():
         return N_('Sign Off')
 
-    def __init__(self):
-        super(SignOff, self).__init__()  # TODO context
+    def __init__(self, context):
+        super(SignOff, self).__init__(context)
         self.old_commitmsg = self.model.commitmsg
 
     def do(self):
@@ -1946,7 +1946,7 @@ class SignOff(ModelCommand):
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
 
-        cfg = gitcfg.current()  # TODO context
+        cfg = self.cfg
         name = cfg.get('user.name', user)
         email = cfg.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
