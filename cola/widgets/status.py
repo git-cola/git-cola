@@ -13,6 +13,7 @@ from ..models import prefs
 from ..models import selection
 from ..widgets import gitignore
 from ..widgets import standard
+from .. import actions
 from .. import cmds
 from .. import core
 from .. import hotkeys
@@ -152,10 +153,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cmds.run(cmds.LaunchDifftool, context=self.context), hotkeys.DIFF)
         self.launch_difftool_action.setIcon(icons.diff())
 
-        self.launch_editor_action = qtutils.add_action(
-            self, cmds.LaunchEditor.name(),
-            cmds.run(cmds.LaunchEditor), hotkeys.EDIT, *hotkeys.ACCEPT)
-        self.launch_editor_action.setIcon(icons.edit())
+        self.launch_editor_action = actions.launch_editor(
+            self, *hotkeys.ACCEPT)
 
         if not utils.is_win32():
             self.default_app_action = common.default_app_action(
