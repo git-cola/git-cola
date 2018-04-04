@@ -8,6 +8,7 @@ from .. import observable
 from .. import utils
 
 
+BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
 BOLD_HEADERS = 'cola.boldheaders'
 CHECKCONFLICTS = 'cola.checkconflicts'
@@ -60,6 +61,15 @@ def display_untracked():
 
 def editor():
     app = gitcfg.current().get(EDITOR, default='gvim')
+    return _remap_editor(app)
+
+
+def background_editor():
+    app = gitcfg.current().get(BACKGROUND_EDITOR, default=editor())
+    return _remap_editor(app)
+
+
+def _remap_editor(app):
     return {'vim': 'gvim -f'}.get(app, app)
 
 
