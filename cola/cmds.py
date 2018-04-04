@@ -2354,11 +2354,8 @@ def run(cls, *args, **opts):
 
 def do(cls, *args, **opts):
     """Run a command in-place"""
-    return do_cmd(cls(*args, **opts))
-
-
-def do_cmd(cmd):
     try:
+        cmd = cls(*args, **opts)
         return cmd.do()
     except Exception as e:
         msg, details = utils.format_exception(e)
