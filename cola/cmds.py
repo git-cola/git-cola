@@ -39,7 +39,6 @@ class UsageError(Exception):
 class CommandMixin(object):
     """Mixin interface for commands"""
     UNDOABLE = False
-    DISABLED = False
 
     @staticmethod
     def name():
@@ -803,7 +802,7 @@ class Delete(RemoveFiles):
                                    default=True, icon=icons.remove()):
             return
 
-        return super(Delete, self).do(self)
+        return super(Delete, self).do()
 
 
 class MoveToTrash(RemoveFiles):
@@ -1147,9 +1146,10 @@ class Edit(CommandMixin):
     def name():
         return N_('Launch Editor')
 
-    def __init__(self, filenames, line_number=None):
+    def __init__(self, filenames, line_number=None, background_editor=False):
         self.filenames = filenames
         self.line_number = line_number
+        self.background_editor = background_editor
 
     def do(self):
         if not self.filenames:
@@ -1157,7 +1157,10 @@ class Edit(CommandMixin):
         filename = self.filenames[0]
         if not core.exists(filename):
             return
-        editor = prefs.editor()
+        if self.background_editor:
+            editor = prefs.background_editor()
+        else:
+            editor = prefs.editor()
         opts = []
 
         if self.line_number is None:
@@ -1165,7 +1168,7 @@ class Edit(CommandMixin):
         else:
             # Single-file w/ line-numbers (likely from grep)
             editor_opts = {
-                    '*vim*': ['+'+self.line_number, filename],
+                    '*vim*': [filename, '+'+self.line_number],
                     '*emacs*': ['+'+self.line_number, filename],
                     '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
                     '*notepad++*': ['-n'+self.line_number, filename],
@@ -1257,8 +1260,8 @@ class LaunchEditor(Edit):
 
     def __init__(self):
         s = selection.selection()
-        allfiles = s.staged + s.unmerged + s.modified + s.untracked
-        super(LaunchEditor, self).__init__(allfiles)
+        filenames = s.staged + s.unmerged + s.modified + s.untracked
+        super(LaunchEditor, self).__init__(filenames, background_editor=True)
 
 
 class LoadCommitMessageFromFile(ModelCommand):
@@ -1915,15 +1918,15 @@ class ShowUntracked(EditModel):
         return result
 
 
-class SignOff(ModelCommand):
+class SignOff(ContextCommand):
     UNDOABLE = True
 
     @staticmethod
     def name():
         return N_('Sign Off')
 
-    def __init__(self):
-        super(SignOff, self).__init__()  # TODO context
+    def __init__(self, context):
+        super(SignOff, self).__init__(context)
         self.old_commitmsg = self.model.commitmsg
 
     def do(self):
@@ -1943,7 +1946,7 @@ class SignOff(ModelCommand):
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
 
-        cfg = gitcfg.current()  # TODO context
+        cfg = self.cfg
         name = cfg.get('user.name', user)
         email = cfg.get('user.email', '%s@%s' % (user, core.node()))
         return '\nSigned-off-by: %s <%s>' % (name, email)
@@ -2009,12 +2012,7 @@ class Stage(ModelCommand):
     def do(self):
         msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        # Prevent external updates while we are staging files.
-        # We update file stats at the end of this operation
-        # so there's no harm in ignoring updates from other threads
-        # (e.g. the file system change monitor).
-        with CommandDisabled(UpdateFileStatus):
-            return self.stage_paths()
+        return self.stage_paths()
 
     def stage_paths(self):
         """Stages add/removals to git."""
@@ -2210,8 +2208,7 @@ class Unstage(ModelCommand):
     def do(self):
         msg = N_('Unstaging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        with CommandDisabled(UpdateFileStatus):
-            self.unstage_paths()
+        self.unstage_paths()
 
     def unstage_paths(self):
         paths = self.paths
@@ -2258,8 +2255,7 @@ class Untrack(ModelCommand):
     def do(self):
         msg = N_('Untracking: %s') % (', '.join(self.paths))
         Interaction.log(msg)
-        with CommandDisabled(UpdateFileStatus):
-            status, out, err = self.model.untrack_paths(self.paths)
+        status, out, err = self.model.untrack_paths(self.paths)
         Interaction.log_status(status, out, err)
 
 
@@ -2279,13 +2275,6 @@ class UntrackedSummary(EditModel):
         self.new_diff_text = io.getvalue()
         self.new_diff_type = 'text'
         self.new_mode = self.model.mode_untracked
-
-
-class UpdateFileStatus(ModelCommand):
-    """Rescans for changes."""
-
-    def do(self):
-        self.model.update_file_status()
 
 
 class VisualizeAll(CommandMixin):
@@ -2363,32 +2352,16 @@ def run(cls, *args, **opts):
     return runner
 
 
-class CommandDisabled(object):
-
-    """Context manager to temporarily disable a command from running"""
-    def __init__(self, cmdclass):
-        self.cmdclass = cmdclass
-
-    def __enter__(self):
-        self.cmdclass.DISABLED = True
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.cmdclass.DISABLED = False
-
-
 def do(cls, *args, **opts):
     """Run a command in-place"""
-    return do_cmd(cls(*args, **opts))
-
-
-def do_cmd(cmd):
-    if hasattr(cmd, 'DISABLED') and cmd.DISABLED:
-        return None
     try:
+        cmd = cls(*args, **opts)
         return cmd.do()
     except Exception as e:
         msg, details = utils.format_exception(e)
+        if hasattr(cls, '__name__'):
+            msg = ('%s exception:\n%s'
+                    % (cls.__name__, msg))
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 

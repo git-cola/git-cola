@@ -14,8 +14,9 @@ def cmd_action(widget, cmd, icon, *shortcuts):
 
 
 def launch_editor(widget, *shortcuts):
-    icon = icons.configure()
-    return cmd_action(widget, cmds.LaunchEditor, icon, hotkeys.EDIT, *shortcuts)
+    icon = icons.edit()
+    return cmd_action(widget, cmds.LaunchEditor, icon,
+        hotkeys.EDIT, *shortcuts)
 
 
 def launch_difftool(widget, context):

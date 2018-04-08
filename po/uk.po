@@ -304,6 +304,24 @@ msgstr "*** Вказівка на гілку ***"
 msgid "*** Sandbox ***"
 msgstr "*** Пісочниця ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr "<шлях> ..."
 
@@ -653,6 +671,10 @@ msgstr "Очистити повідомлення коміту?"
 msgid "Clear..."
 msgstr "Очистити..."
 
+#, fuzzy
+msgid "Clone"
+msgstr "Клонувати..."
+
 msgid "Clone Repository"
 msgstr "Клонувати репозиторій"
 
@@ -897,6 +919,10 @@ msgstr "Порівняти це з виділеним"
 
 msgid "Diffstat"
 msgstr "Список різниць"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Інструмент порівняння"
 
 msgid "Directory Exists"
 msgstr "Каталог існує"
@@ -1243,6 +1269,9 @@ msgid "Initialize Git Annex"
 msgstr ""
 
 msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Inititalize submodules"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
@@ -1630,6 +1659,9 @@ msgid "Recovering lost commits may not be easy."
 msgstr "Відновлення втрачених комітів може бути нелегким."
 
 msgid "Redo"
+msgstr ""
+
+msgid "Reduce commit history to minimum"
 msgstr ""
 
 msgid "Refresh"

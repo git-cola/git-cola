@@ -285,6 +285,24 @@ msgstr "*** 分支点 ***"
 msgid "*** Sandbox ***"
 msgstr "*** 沙盒 ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr "<路径> ..."
 
@@ -633,6 +651,9 @@ msgstr "清除提交消息吗?"
 msgid "Clear..."
 msgstr "清除..."
 
+msgid "Clone"
+msgstr "克隆"
+
 msgid "Clone Repository"
 msgstr "克隆已有版本库"
 
@@ -877,6 +898,10 @@ msgstr "此文件 -> 所选文件 比较差异"
 
 msgid "Diffstat"
 msgstr "差异统计"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "差异比较工具"
 
 msgid "Directory Exists"
 msgstr "目录已存在"
@@ -1222,6 +1247,9 @@ msgstr "初始化..."
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "初始化..."
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr "插入空格而非制表符"
@@ -1609,6 +1637,9 @@ msgstr "恢复丢失的提交是比较困难的."
 
 msgid "Redo"
 msgstr "重做"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "刷新"
@@ -2577,9 +2608,6 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "'%s' 已被 checkout"
-
-#~ msgid "Clone"
-#~ msgstr "克隆"
 
 #~ msgid "Clone Type:"
 #~ msgstr "克隆类型:"

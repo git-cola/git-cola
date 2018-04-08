@@ -243,6 +243,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -610,6 +628,9 @@ msgstr "マージコミットメッセージ:"
 msgid "Clear..."
 msgstr "複製…"
 
+msgid "Clone"
+msgstr "複製"
+
 #, fuzzy
 msgid "Clone Repository"
 msgstr "既存リポジトリを複製する"
@@ -879,6 +900,10 @@ msgstr ""
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "オプション"
 
 #, fuzzy
 msgid "Directory Exists"
@@ -1254,6 +1279,9 @@ msgstr "初期化しています…"
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "初期化しています…"
+
+msgid "Inititalize submodules"
+msgstr ""
 
 msgid "Insert spaces instead of tabs"
 msgstr ""
@@ -1681,6 +1709,9 @@ msgstr "失なわれたコミットを回復するのは簡単ではありませ
 
 msgid "Redo"
 msgstr "やり直し"
+
+msgid "Reduce commit history to minimum"
+msgstr ""
 
 msgid "Refresh"
 msgstr "再読み込み"
@@ -2690,9 +2721,6 @@ msgstr ""
 
 #~ msgid "Checked out '%s'."
 #~ msgstr "'%s' をチェックアウトしました"
-
-#~ msgid "Clone"
-#~ msgstr "複製"
 
 #~ msgid "Clone Type:"
 #~ msgstr "複製方式:"

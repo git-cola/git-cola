@@ -201,7 +201,7 @@ class Finder(standard.Dialog):
 
     def edit(self):
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.Edit, paths)
+        cmds.do(cmds.Edit, paths, background_editor=True)
 
     def open_default(self):
         paths = self.tree.selected_filenames()

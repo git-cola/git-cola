@@ -53,7 +53,8 @@ def goto_grep(line):
     parsed_line = parse_grep_line(line)
     if parsed_line:
         filename, line_number, contents = parsed_line
-        do(cmds.Edit, [filename], line_number=line_number)
+        do(cmds.Edit, [filename],
+            line_number=line_number, background_editor=True)
 
 
 class GrepThread(QtCore.QThread):
@@ -263,6 +264,8 @@ class Grep(Dialog):
         enabled = status == 0
         self.edit_group.setEnabled(enabled)
         self.refresh_group.setEnabled(True)
+        if not value:
+            self.preview_txt.clear()
 
     def update_preview(self):
         """Update the file preview window"""

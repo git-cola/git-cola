@@ -264,6 +264,24 @@ msgstr "*** Punkt gałęzi ***"
 msgid "*** Sandbox ***"
 msgstr "*** Piaskownica ***"
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr "<ścieżka> ..."
 
@@ -617,6 +635,10 @@ msgstr "Wyczyścić opis wdrożenia?"
 msgid "Clear..."
 msgstr "Wyczyść..."
 
+#, fuzzy
+msgid "Clone"
+msgstr "Sklonuj..."
+
 msgid "Clone Repository"
 msgstr "Sklonuj repozytorium"
 
@@ -863,6 +885,10 @@ msgstr "Różnica tego wzgl. zaznaczenia"
 
 msgid "Diffstat"
 msgstr "Statystyka różnicy"
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Narzędzie różnicy"
 
 msgid "Directory Exists"
 msgstr "Katalog istnieje"
@@ -1211,6 +1237,9 @@ msgid "Initialize Git Annex"
 msgstr ""
 
 msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Inititalize submodules"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
@@ -1604,6 +1633,9 @@ msgid "Recovering lost commits may not be easy."
 msgstr "Przywrócenie utraconych wdrożeń może nie być łatwe."
 
 msgid "Redo"
+msgstr ""
+
+msgid "Reduce commit history to minimum"
 msgstr ""
 
 msgid "Refresh"

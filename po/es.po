@@ -249,6 +249,24 @@ msgstr ""
 msgid "*** Sandbox ***"
 msgstr ""
 
+msgid "100%"
+msgstr ""
+
+msgid "200%"
+msgstr ""
+
+msgid "25%"
+msgstr ""
+
+msgid "400%"
+msgstr ""
+
+msgid "50%"
+msgstr ""
+
+msgid "800%"
+msgstr ""
+
 msgid "<path> ..."
 msgstr ""
 
@@ -595,6 +613,10 @@ msgid "Clear..."
 msgstr "Cerrar..."
 
 #, fuzzy
+msgid "Clone"
+msgstr "Clonar..."
+
+#, fuzzy
 msgid "Clone Repository"
 msgstr "Repositorio Actual"
 
@@ -837,6 +859,10 @@ msgstr "Diferencia de esta -> seleccionada"
 
 msgid "Diffstat"
 msgstr ""
+
+#, fuzzy
+msgid "Difftool"
+msgstr "Herramienta de Diff"
 
 msgid "Directory Exists"
 msgstr "El Directorio ya Existe"
@@ -1185,6 +1211,9 @@ msgid "Initialize Git Annex"
 msgstr ""
 
 msgid "Initialize Git LFS"
+msgstr ""
+
+msgid "Inititalize submodules"
 msgstr ""
 
 msgid "Insert spaces instead of tabs"
@@ -1564,6 +1593,9 @@ msgid "Recovering lost commits may not be easy."
 msgstr ""
 
 msgid "Redo"
+msgstr ""
+
+msgid "Reduce commit history to minimum"
 msgstr ""
 
 msgid "Refresh"
