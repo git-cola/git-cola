@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-04-03 23:44+0200\n"
+"PO-Revision-Date: 2018-04-08 21:03+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -209,14 +209,14 @@ msgstr "\"%s\" již existuje"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr ""
+msgstr "\"%s\" již existuje, cola vytvoří novou složku"
 
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr ""
 
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
@@ -260,11 +260,11 @@ msgstr ""
 
 #, python-format
 msgid "%s will be removed from your bookmarks."
-msgstr ""
+msgstr "%s bude odstraněn ze záložek."
 
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr ""
+msgstr "%s bude odstraněn z nedávných repozitářů."
 
 #, python-format
 msgid "%s: No such file or directory."
@@ -352,13 +352,13 @@ msgid "Add"
 msgstr "Přidat"
 
 msgid "Add Favorite"
-msgstr ""
+msgstr "Přidat oblíbený"
 
 msgid "Add Remote"
 msgstr "Přidat vzdálený"
 
 msgid "Add Separator"
-msgstr ""
+msgstr "Přidat oddělovač"
 
 msgid "Add Toolbar"
 msgstr "Přidat nástrojovou lištu"
@@ -395,7 +395,7 @@ msgid "Add to Git LFS"
 msgstr ""
 
 msgid "Additions"
-msgstr ""
+msgstr "Přidáno"
 
 msgid "Advanced"
 msgstr "Pokročilé"
@@ -425,7 +425,7 @@ msgid "Amend the published commit?"
 msgstr ""
 
 msgid "Amending"
-msgstr ""
+msgstr "Pozměnit"
 
 msgid ""
 "An action is still running.\n"
@@ -559,7 +559,7 @@ msgstr "Nelze spustit \"%s\": prosím nakonfigurujte prohlížeč historie"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
-msgstr ""
+msgstr "Nelze spustit \"%s\": prosím nakonfigurujte editor"
 
 msgid "Changed Upstream"
 msgstr ""
@@ -672,7 +672,7 @@ msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
 msgid "Configure toolbar"
-msgstr ""
+msgstr "Upravit nástrojovou lištu"
 
 msgid "Console"
 msgstr "Konzola"
@@ -808,7 +808,7 @@ msgid "Delete selected branch?"
 msgstr "Smazat vybranou větev?"
 
 msgid "Delete toolbar"
-msgstr ""
+msgstr "Odstranit nástrojovou lištu"
 
 msgid "Delete..."
 msgstr "Smazat..."
@@ -818,7 +818,7 @@ msgid "Deleting \"%s\" failed"
 msgstr "Odstraňování \"%s\" selhalo"
 
 msgid "Deletions"
-msgstr ""
+msgstr "Odstraněno"
 
 msgid "Detach"
 msgstr "Odpojit"
@@ -1063,7 +1063,7 @@ msgid "Filter branches..."
 msgstr "Filtrovat větve..."
 
 msgid "Filter paths..."
-msgstr ""
+msgstr "Filtrovat cesty..."
 
 msgid "Find Files"
 msgstr "Hledat soubory"
@@ -1444,7 +1444,7 @@ msgid "Patch(es) Applied"
 msgstr "Záplata (záplaty) aplikována"
 
 msgid "Path"
-msgstr ""
+msgstr "Cesta"
 
 msgid "Path or URL to clone (Env. $VARS okay)"
 msgstr "Cesta nebo URL, která se má klonovat (Env. $VARS okay)"
@@ -1585,10 +1585,10 @@ msgstr "Odstranit"
 
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr ""
+msgstr "Odstranit %s ze seznamu nedávných?"
 
 msgid "Remove Element"
-msgstr ""
+msgstr "Odebrat prvek"
 
 msgid "Remove selected (Delete)"
 msgstr "Odstranit vybrané (Smazat)"
@@ -1829,7 +1829,7 @@ msgid "Select Commit"
 msgstr "Vybrat zápis"
 
 msgid "Select Directory..."
-msgstr "Vybrat Složku..."
+msgstr "Vybrat složku..."
 
 msgid "Select File"
 msgstr "Vybrat soubor"
@@ -1916,7 +1916,7 @@ msgid ""
 msgstr ""
 
 msgid "Show icon? (if available)"
-msgstr ""
+msgstr "Zobrazit ikonu? (je-li dostupná)"
 
 msgid "Show line numbers"
 msgstr ""
@@ -2150,10 +2150,10 @@ msgid "Toggle Enabled"
 msgstr ""
 
 msgid "Toggle the branches filter"
-msgstr ""
+msgstr "Zobrazit/skrýt filtr větví"
 
 msgid "Toggle the paths filter"
-msgstr ""
+msgstr "Zobrazit/skrýt filtr cest"
 
 msgid "Tracking Branch"
 msgstr "Sledovaná větev"
@@ -2203,7 +2203,7 @@ msgid "Unstage Diff Hunk"
 msgstr "Zrušit přípravu komplexu rozdílů"
 
 msgid "Unstage From Commit"
-msgstr ""
+msgstr "Zrušit přípravu k zapsání"
 
 msgid "Unstage Selected"
 msgstr "Zrušit přípravu vybraných"
