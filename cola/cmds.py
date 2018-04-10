@@ -16,8 +16,8 @@ from . import fsmonitor
 from . import gitcfg
 from . import gitcmds
 from . import icons
-from . import utils
 from . import resources
+from . import utils
 from .diffparse import DiffParser
 from .git import STDOUT
 from .i18n import N_
