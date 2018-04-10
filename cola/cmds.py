@@ -16,8 +16,8 @@ from . import fsmonitor
 from . import gitcfg
 from . import gitcmds
 from . import icons
-from . import utils
 from . import resources
+from . import utils
 from .diffparse import DiffParser
 from .git import STDOUT
 from .i18n import N_
@@ -962,7 +962,7 @@ class DiffImage(EditModel):
                 if annex_image:
                     images.append((annex_image, False))  # git annex HEAD
                 else:
-                    image = gitcmds.write_blob(old_oid, filename)
+                    image = gitcmds.write_blob_path(head, old_oid, filename)
                     if image:
                         images.append((image, True))
 
@@ -990,16 +990,18 @@ class DiffImage(EditModel):
         filename = self.new_filename
         annex = self.annex
 
+        candiate_merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
+        merge_heads = [
+            merge_head for merge_head in candidate_merge_heads
+                if core.exists(git.git_path(merge_head))]
+
         if annex:  # Attempt to find files in git-annex
             annex_images = []
-            merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
-            annex_images = []
             for merge_head in merge_heads:
-                if core.exists(git.git_path(merge_head)):
-                    image = gitcmds.annex_path(
-                        merge_head, filename, config=cfg)
-                    if image:
-                        annex_images.append((image, False))
+                image = gitcmds.annex_path(
+                    merge_head, filename, config=cfg)
+                if image:
+                    annex_images.append((image, False))
             if annex_images:
                 annex_images.append((filename, False))
                 return annex_images
@@ -1032,8 +1034,13 @@ class DiffImage(EditModel):
                 for i in range(parents):
                     offset = num_parents + i + 1
                     oid = parts[offset]
+                    try:
+                        merge_head = merge_heads[i]
+                    except IndexError:
+                        merge_head = 'HEAD'
                     if oid != gitcmds.MISSING_BLOB_OID:
-                        image = gitcmds.write_blob(oid, filename)
+                        image = gitcmds.write_blob_path(
+                            merge_head, oid, filename)
                         if image:
                             images.append((image, True))
 
@@ -1059,7 +1066,7 @@ class DiffImage(EditModel):
             if len(parts) > 3:
                 oid = parts[2]
                 if oid != gitcmds.MISSING_BLOB_OID:
-                    image = gitcmds.write_blob(oid, filename)
+                    image = gitcmds.write_blob_path(head, oid, filename)
                     if image:
                         images.append((image, True))  # HEAD
 
