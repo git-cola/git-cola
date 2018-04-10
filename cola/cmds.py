@@ -230,15 +230,15 @@ class AmendMode(EditModel):
         self.model.update_file_status()
 
 
-class AnnexAdd(ModelCommand):
+class AnnexAdd(ContextCommand):
 
-    def __init__(self):
-        super(AnnexAdd, self).__init__()
+    def __init__(self, context):
+        super(AnnexAdd, self).__init__(context)
         self.filename = selection.selection_model().filename()
+        # TODO context.selection.filename()
 
     def do(self):
-        git = self.model.git
-        status, out, err = git.annex('add', self.filename)
+        status, out, err = self.git.annex('add', self.filename)
         Interaction.command(N_('Error'), 'git annex add', status, out, err)
         self.model.update_status()
 

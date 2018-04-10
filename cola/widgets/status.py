@@ -202,7 +202,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self, N_('Blame...'), view_blame, hotkeys.BLAME)
 
         self.annex_add_action = qtutils.add_action(
-            self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd))
+            self, N_('Add to Git Annex'),
+            cmds.run(cmds.AnnexAdd, self.context))
 
         self.lfs_track_action = qtutils.add_action(
             self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack))
