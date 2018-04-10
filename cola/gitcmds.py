@@ -860,6 +860,13 @@ def cat_file_to_path(filename, object_name, **kwargs):
     return result
 
 
+def write_blob_path(head, oid, filename):
+    """Use write_blob() when modern git is available"""
+    if version.check_git('cat-file-textconv-path'):
+        return write_blob(oid, filename)
+    return cat_file_to_path(filename, head + ':' + filename)
+
+
 def annex_path(head, filename, config=None):
     """Return the git-annex path for a filename at the specified commit"""
     config = get_config(config)
