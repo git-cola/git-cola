@@ -828,23 +828,35 @@ def rev_parse(name):
 
 
 def write_blob(oid, filename):
-    """Write a blob to a temporary file and return the path"""
+    """Write a blob to a temporary file and return the path
+
+    Modern versions of Git allow invoking filters.  Older versions
+    get the object content as-is.
+
+    """
+    if version.check_git('cat-file-textconv-path'):
+        return cat_file_to_path(filename, oid, path=filename, filters=True)
+    else:
+        return cat_file_to_path(filename, oid)
+
+
+def cat_file_to_path(filename, object_name, **kwargs):
+    """Redirect git cat-file output to a path"""
     result = None
+    # Use the original filename in the suffix so that the generated filename
+    # has the correct extension, and so that it resembles the original name.
     basename = os.path.basename(filename)
     suffix = '-' + basename  # ensures the correct filename extension
-    blob = utils.tmp_filename('image', suffix=suffix)
-    with open(blob, 'wb') as fp:
-        status, out, err = git.cat_file(
-            oid, path=filename, filters=True,
-            _raw=True, _readonly=True,  _stdout=fp)
+    path = utils.tmp_filename('blob', suffix=suffix)
+    with open(path, 'wb') as fp:
+        status, out, err = git.cat_file(object_name,
+            _raw=True, _readonly=True, _stdout=fp, **kwargs)
         Interaction.command(
             N_('Error'), 'git cat-file', status, out, err)
         if status == 0:
-            result = blob
-        else:
-            result = None
+            result = path
     if not result:
-        core.unlink(blob)
+        core.unlink(path)
     return result
 
 
