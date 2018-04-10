@@ -32,6 +32,9 @@ _versions = {
     'check-ignore': '1.8.5',
     # git for-each-ref --sort=version:refname
     'version-sort': '2.7.0',
+    # git cat-file --textconv --path=<path> rather than
+    # git cat-file --textconv SHA1:<path> when SHA1 is unknown
+    'cat-file-textconv-path': '2.11.0',
 }
 
 
