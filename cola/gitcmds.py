@@ -849,6 +849,7 @@ def write_blob(oid, filename):
 
 
 def annex_path(head, filename, config=None):
+    """Return the git-annex path for a filename at the specified commit"""
     config = get_config(config)
     path = None
     annex_info = {}
