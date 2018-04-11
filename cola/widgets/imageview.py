@@ -70,6 +70,22 @@ class ImageView(QtWidgets.QGraphicsView):
         self.last_scene_roi = None
         self.start_drag = QtCore.QPoint()
 
+        CHECK_MEDIUM = 8
+        CHECK_GRAY = 0x80
+        CHECK_LIGHT = 0xcc
+        check_pattern = QtGui.QImage(CHECK_MEDIUM * 2, CHECK_MEDIUM * 2,
+                                    QtGui.QImage.Format_RGB888)
+        color_gray = QtGui.QColor(CHECK_GRAY, CHECK_GRAY, CHECK_GRAY)
+        color_light = QtGui.QColor(CHECK_LIGHT, CHECK_LIGHT, CHECK_LIGHT)
+        painter = QtGui.QPainter(check_pattern)
+        painter.fillRect(0, 0, CHECK_MEDIUM, CHECK_MEDIUM, color_gray)
+        painter.fillRect(CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM,
+                         color_gray)
+        painter.fillRect(0, CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM, color_light)
+        painter.fillRect(CHECK_MEDIUM, 0, CHECK_MEDIUM, CHECK_MEDIUM, color_light)
+        self.check_pattern = check_pattern
+        self.check_brush = QtGui.QBrush(check_pattern)
+
     def load(self, filename):
         image = QtGui.QImage()
         image.load(filename)
@@ -119,6 +135,15 @@ class ImageView(QtWidgets.QGraphicsView):
             pixmap = image
         else:
             raise TypeError(image)
+
+        if pixmap.hasAlpha():
+            image_with_check = QtGui.QImage(pixmap.width(), pixmap.height(),
+                                 QtGui.QImage.Format_ARGB32)
+            self.image_with_check = image_with_check
+            painter = QtGui.QPainter(image_with_check)
+            painter.fillRect(image_with_check.rect(), self.check_brush)
+            painter.drawPixmap(0, 0, pixmap)
+            pixmap = QtGui.QPixmap.fromImage(image_with_check)
 
         self.graphics_pixmap.setPixmap(pixmap)
         self.update_scene_rect()
