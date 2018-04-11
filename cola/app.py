@@ -29,6 +29,7 @@ from qtpy.QtCore import Qt
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
+from .models import selection
 from .widgets import cfgactions
 from .widgets import defs
 from .widgets import standard
@@ -340,19 +341,27 @@ def application_init(args, update=False):
     process_args(args)
 
     app = new_application(args)
-    gitcmd = git.current()  # TODO non-singleton
     cfg = gitcfg.current()  # TODO non-singleton
-    model = new_model(app, gitcmd, cfg, args.repo,
+    gitcmd = git.current()  # TODO non-singleton
+    selection_model = selection.selection_model()  # TODO non-singleton
+
+    # TODO switch all commands and widgets to use the context to access
+    # objects instead of using singleton accessor functions.
+    context = ApplicationContext(
+        args, app, cfg, gitcmd, timer, selection_model)
+
+    model = new_model(context, args.repo,
                       prompt=args.prompt, settings=args.settings)
+    context.model = model
     if update:
         model.update_status()
 
     timer.stop('init')
-
     if args.perf:
         timer.display('init')
 
-    return ApplicationContext(args, app, cfg, gitcmd, model, timer)
+    app.set_context(context)  # inject the context
+    return context
 
 
 def context_init(context, view):
@@ -429,8 +438,8 @@ def new_application(args):
     return ColaApplication(sys.argv, icon_themes=args.icon_themes)
 
 
-def new_model(app, gitcmd, cfg, repo, prompt=False, settings=None):
-    # TODO model = main.MainModel(git=gitcmd, cfg=cfg)
+def new_model(context, repo, prompt=False, settings=None):
+    # TODO model = main.MainModel(context=context)
     model = main.model()  # TODO non-singleton
     valid = False
     if not prompt:
@@ -439,7 +448,7 @@ def new_model(app, gitcmd, cfg, repo, prompt=False, settings=None):
             # We are not currently in a git repository so we need to find one.
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
-            default_repo = cfg.get('cola.defaultrepo')
+            default_repo = context.cfg.get('cola.defaultrepo')
             if default_repo:
                 valid = model.set_worktree(default_repo)
 
@@ -447,7 +456,7 @@ def new_model(app, gitcmd, cfg, repo, prompt=False, settings=None):
         # If we've gotten into this loop then that means that neither the
         # current directory nor the default repository were available.
         # Prompt the user for a repository.
-        startup_dlg = startup.StartupDialog(app.activeWindow(),
+        startup_dlg = startup.StartupDialog(qtutils.active_window(),
                                             settings=settings)
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
@@ -510,16 +519,16 @@ class Timer(object):
 
 class ApplicationContext(object):
 
-    def __init__(self, args, app, cfg, gitcmd, model, timer):
+    def __init__(self, args, app, cfg, gitcmd, timer, selection):
         self.args = args
         self.app = app
         self.cfg = cfg
         self.git = gitcmd
-        self.model = model
-        self.runtask = None
+        self.model = None
         self.timer = timer
+        self.runtask = None
+        self.selection = selection
         self.view = None
-        app.set_context(self)  # inject the context
 
     def set_view(self, view):
         self.view = view

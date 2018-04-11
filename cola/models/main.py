@@ -14,15 +14,15 @@ from ..decorators import memoize
 from ..git import STDOUT
 from ..interaction import Interaction
 from ..i18n import N_
-from ..models import prefs
-from ..models.selection import selection_model
 from ..observable import Observable
+from .selection import selection_model
+from . import prefs
 
 
 @memoize
-def model(gitcmd=None, cfg=None):
+def model():
     """Returns the main model singleton"""
-    return MainModel(cfg=cfg, gitcmd=gitcmd)
+    return MainModel()
 
 
 class MainModel(Observable):
@@ -62,15 +62,17 @@ class MainModel(Observable):
             lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    def __init__(self, cwd=None, cfg=None, gitcmd=None):
+    def __init__(self, cwd=None, context=None):
         """Reads git repository settings and sets several methods
         so that they refer to the git module.  This object
         encapsulates cola's interaction with git."""
         Observable.__init__(self)
 
         # Initialize the git command object
-        self.git = gitcmd or git.current()  # TODO context?
-        self.cfg = cfg or gitcfg.current()  # TODO context?
+        self.git = context and context.git or git.current()
+        self.cfg = context and context.cfg or gitcfg.current()
+        self.selection = context and context.selection or selection_model()
+        # TODO make context required
 
         self.initialized = False
         self.annex = False
@@ -239,7 +241,7 @@ class MainModel(Observable):
         self.unstaged_deleted = state.get('unstaged_deleted', set())
         self.submodules = state.get('submodules', set())
 
-        selection = selection_model()
+        selection = self.selection
         if self.is_empty():
             selection.reset()
         else:
