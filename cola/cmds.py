@@ -63,6 +63,7 @@ class ContextCommand(CommandMixin):
         self.model = context.model
         self.cfg = context.cfg
         self.git = context.git
+        self.selection = context.selection
 
 
 class ConfirmAction(CommandMixin):
@@ -234,8 +235,7 @@ class AnnexAdd(ContextCommand):
 
     def __init__(self, context):
         super(AnnexAdd, self).__init__(context)
-        self.filename = selection.selection_model().filename()
-        # TODO context.selection.filename()
+        self.filename = self.selection.filename()
 
     def do(self):
         status, out, err = self.git.annex('add', self.filename)
