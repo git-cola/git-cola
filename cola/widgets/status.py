@@ -206,7 +206,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cmds.run(cmds.AnnexAdd, self.context))
 
         self.lfs_track_action = qtutils.add_action(
-            self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack))
+            self, N_('Add to Git LFS'),
+            cmds.run(cmds.LFSTrack, self.context))
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the

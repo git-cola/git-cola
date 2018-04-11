@@ -253,16 +253,15 @@ class AnnexInit(ModelCommand):
         self.model.emit_updated()
 
 
-class LFSTrack(ModelCommand):
+class LFSTrack(ContextCommand):
 
-    def __init__(self):
-        super(LFSTrack, self).__init__()
-        self.filename = selection.selection_model().filename()
+    def __init__(self, context):
+        super(LFSTrack, self).__init__(context)
+        self.filename = self.selection.filename()
         self.stage_cmd = Stage([self.filename])
 
     def do(self):
-        git = self.model.git
-        status, out, err = git.lfs('track', self.filename)
+        status, out, err = self.git.lfs('track', self.filename)
         Interaction.command(
             N_('Error'), 'git lfs track', status, out, err)
         if status == 0:
