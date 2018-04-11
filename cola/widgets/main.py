@@ -54,6 +54,7 @@ from . import search
 from . import standard
 from . import status
 from . import stash
+# TODO from . import toolbar, and make non-singleton!
 from .toolbar import ColaToolBar
 
 
