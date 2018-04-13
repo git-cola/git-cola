@@ -7,6 +7,7 @@ Thanks
 * Adrien be
 * AJ Bagwell
 * Alex Chernetz
+* Alex Gulyás
 * Alexander Kozienko
 * Alf Eaton
 * anderben
