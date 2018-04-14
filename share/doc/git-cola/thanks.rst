@@ -83,6 +83,7 @@ Thanks
 * Jordan Bedwell
 * Josh Taylor
 * Justin Lecher
+* Kai Krakow
 * Karl Bielefeldt
 * Karthik Manamcheri
 * Kelvie Wong
