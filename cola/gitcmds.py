@@ -335,9 +335,11 @@ def update_diff_overrides(space_at_eol, space_change,
 
 def common_diff_opts(config=None):
     config = get_config(config)
+    # Default to --patience when diff.algorithm is unset
+    patience = not config.get('diff.algorithm', default='')
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
-        'patience': config.get('diff.algorithm', 'patience') == 'patience',
+        'patience': patience,
         'submodule': submodule,
         'no_color': True,
         'no_ext_diff': True,
