@@ -337,7 +337,7 @@ def common_diff_opts(config=None):
     config = get_config(config)
     submodule = version.check('diff-submodule', version.git_version())
     opts = {
-        'patience': True,
+        'patience': config.get('diff.algorithm', 'patience') == 'patience',
         'submodule': submodule,
         'no_color': True,
         'no_ext_diff': True,
