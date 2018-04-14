@@ -25,7 +25,7 @@ class ColaI18nTestCase(unittest.TestCase):
         """Test that strings with @@verb are translated
         """
         i18n.install('de_DE')
-        expect = 'Version aufnehmen'
+        expect = 'Commit aufnehmen'
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
