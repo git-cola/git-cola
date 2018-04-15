@@ -290,6 +290,9 @@ msgstr "%(project)s：%(branch)s - 瀏覽"
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s: %(ref)s - 有向無環圖(DAG)"
 
+msgid "%I:%M %p %Ss %Y-%m-%d:  "
+msgstr ""
+
 #, python-format
 msgid "%d days ago"
 msgstr "%d 天前"

@@ -224,6 +224,9 @@ msgstr "%(project)s : %(branch)s - Naviguer"
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s : %(ref)s - DAG"
 
+msgid "%I:%M %p %Ss %Y-%m-%d:  "
+msgstr ""
+
 #, python-format
 msgid "%d days ago"
 msgstr "il y a %d jours"

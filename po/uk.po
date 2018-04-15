@@ -241,6 +241,9 @@ msgstr "%(project)s: %(branch)s - Переглянути"
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s: %(ref)s - Граф (DAG)"
 
+msgid "%I:%M %p %Ss %Y-%m-%d:  "
+msgstr ""
+
 #, python-format
 msgid "%d days ago"
 msgstr "%d днів тому"

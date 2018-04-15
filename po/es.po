@@ -190,6 +190,9 @@ msgstr ""
 msgid "%(project)s: %(ref)s - DAG"
 msgstr ""
 
+msgid "%I:%M %p %Ss %Y-%m-%d:  "
+msgstr ""
+
 #, python-format
 msgid "%d days ago"
 msgstr "Hace %d días"
