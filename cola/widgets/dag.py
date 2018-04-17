@@ -577,7 +577,7 @@ class GitDAG(standard.MainWindow):
         self.model.add_observer(self.model.message_updated, self.updated.emit)
         self.updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
-        qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
+        qtutils.add_action(self, 'Focus', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)
 
         self.set_params(params)
@@ -706,7 +706,6 @@ class GitDAG(standard.MainWindow):
         self.clear()
 
     def thread_end(self):
-        self.focus_tree()
         self.restore_selection()
 
     def thread_status(self, successful):
