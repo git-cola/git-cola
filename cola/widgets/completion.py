@@ -224,6 +224,18 @@ class CompletionLineEdit(text.HintedLineEdit):
             return None
         return item.text()
 
+    def select_completion(self):
+        """Choose the selected completion option from the completion popup"""
+        result = False
+        visible = self.popup().isVisible()
+        if visible:
+            selection = self.selected_completion()
+            if selection:
+                self.choose_completion(selection)
+                result = True
+        return result
+
+    # Qt overrides
     def event(self, event):
         """Override QWidget::event() for tab completion"""
         event_type = event.type()
@@ -239,7 +251,6 @@ class CompletionLineEdit(text.HintedLineEdit):
 
         return text.HintedLineEdit.event(self, event)
 
-    # Qt events
     def keyPressEvent(self, event):
         """Process completion and navigation events"""
         key = event.key()
@@ -263,18 +274,6 @@ class CompletionLineEdit(text.HintedLineEdit):
         if navigation:
             signal = getattr(self, navigation)
             signal.emit()
-
-    def select_completion(self):
-        """Choose the selected completion option from the completion popup"""
-        result = False
-        visible = self.popup().isVisible()
-        if visible:
-            selection = self.selected_completion()
-            if selection:
-                self.choose_completion(selection)
-                result = True
-        return result
-
 
 
 class GatherCompletionsThread(QtCore.QThread):
