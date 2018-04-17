@@ -90,7 +90,7 @@ class CompletionLineEdit(text.HintedLineEdit):
     def __init__(self, model_factory, hint='', parent=None):
         text.HintedLineEdit.__init__(self, hint, parent=parent)
         # Tracks when the completion popup was active during key events
-        self._was_visible = False
+
         # The most recently selected completion item
         self._selection = None
 
@@ -116,10 +116,6 @@ class CompletionLineEdit(text.HintedLineEdit):
 
     def dispose(self, *args):
         self._completer.dispose()
-
-    def was_visible(self):
-        """Was the popup visible during the last keypress event?"""
-        return self._was_visible
 
     def completion_selection(self):
         """Return the last completion's selection"""
@@ -195,11 +191,6 @@ class CompletionLineEdit(text.HintedLineEdit):
             return ''
         return words[-1]
 
-    def event(self, event):
-        if event.type() == QtCore.QEvent.Hide:
-            self.close_popup()
-        return text.HintedLineEdit.event(self, event)
-
     def complete_last_word(self):
         self.update_matches()
         self.complete()
@@ -207,13 +198,6 @@ class CompletionLineEdit(text.HintedLineEdit):
     def close_popup(self):
         if self.popup().isVisible():
             self.popup().close()
-
-    def _update_popup_items(self, prefix):
-        """
-        Filters the completer's popup items to only show items
-        with the given prefix.
-        """
-        self._completer.setCompletionPrefix(prefix)
 
     def _completions_updated(self):
         popup = self.popup()
@@ -239,55 +223,57 @@ class CompletionLineEdit(text.HintedLineEdit):
             return
         return item.text()
 
+    def event(self, event):
+        """Override QWidget::event() for tab completion"""
+        event_type = event.type()
+
+        if (event_type == QtCore.QEvent.KeyPress
+                and event.key() == Qt.Key_Tab
+                and self.select_completion()):
+            return True
+
+        # Make sure the popup goes away during teardown
+        if event_type == QtCore.QEvent.Hide:
+            self.close_popup()
+
+        return text.HintedLineEdit.event(self, event)
+
     # Qt events
     def keyPressEvent(self, event):
-        self._was_visible = visible = self.popup().isVisible()
+        """Process completion and navigation events"""
         key = event.key()
-        was_empty = not bool(self.value())
+        text.HintedLineEdit.keyPressEvent(self, event)
 
-        if visible:
-            self._selection = self.selected_completion()
-        else:
-            self._selection = None
-            if event.key() in self.ACTIVATION_KEYS:
-                event.accept()
-                return
-
-        result = text.HintedLineEdit.keyPressEvent(self, event)
-
-        # Backspace at the beginning of the line should hide the popup
-        if was_empty and visible and key == Qt.Key_Backspace:
-            self.popup().hide()
-        # Clearing a line should always emit a signal
-        is_empty = not bool(self.value())
+        # Hide the popup when the field is empty
+        is_empty = not self.value()
         if is_empty:
             self.cleared.emit()
-        return result
+            if self.popup().isVisible():
+                self.popup().hide()
 
-    def keyReleaseEvent(self, event):
-        """React to release events, handle completion"""
-        key = event.key()
-        visible = self.was_visible()
-        if not visible:
-            # If it's a navigation key then emit a signal
-            try:
-                event.accept()
-                msg = self.NAVIGATION_KEYS[key]
-                signal = getattr(self, msg)
-                signal.emit()
-                return
-            except KeyError:
-                pass
-        # Run the real release event
-        result = text.HintedLineEdit.keyReleaseEvent(self, event)
-        # If the popup was visible and we have a selected popup item
-        # then choose that completion.
-        selection = self.completion_selection()
-        if visible and selection and key in self.ACTIVATION_KEYS:
-            self.choose_completion(selection)
+        # Activation keys select the completion when pressed and emit the
+        # activated signal.  Navigation keys have lower priority, and only
+        # emit when it wasn't already handled as an activation event.
+        if key in self.ACTIVATION_KEYS and self.select_completion():
             self.activated.emit()
             return
+
+        navigation = self.NAVIGATION_KEYS.get(key, None)
+        if navigation:
+            signal = getattr(self, navigation)
+            signal.emit()
+
+    def select_completion(self):
+        """Choose the selected completion option from the completion popup"""
+        result = False
+        visible = self.popup().isVisible()
+        if visible:
+            selection = self.selected_completion()
+            if selection:
+                self.choose_completion(selection)
+                result = True
         return result
+
 
 
 class GatherCompletionsThread(QtCore.QThread):
