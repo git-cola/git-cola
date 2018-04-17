@@ -226,9 +226,6 @@ msgstr "%(project)s: %(branch)s - 浏览器"
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s: %(ref)s - 历史视图"
 
-msgid "%I:%M %p %Ss %Y-%m-%d:  "
-msgstr ""
-
 #, python-format
 msgid "%d days ago"
 msgstr "%d 天前"
