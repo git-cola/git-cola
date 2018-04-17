@@ -12,6 +12,7 @@
 /test/tmp
 /tags
 /.coverage
+/.idea
 __pycache__
 .DS_Store
 .noseids
