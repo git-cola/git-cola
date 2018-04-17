@@ -706,7 +706,6 @@ class GitDAG(standard.MainWindow):
         self.clear()
 
     def thread_end(self):
-        self.focus_tree()
         self.restore_selection()
 
     def thread_status(self, successful):
