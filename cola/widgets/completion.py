@@ -210,6 +210,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         popup.selectionModel().select(selection, mode)
 
     def selected_completion(self):
+        """Return the selected completion item"""
         popup = self.popup()
         if not popup.isVisible():
             return None
