@@ -253,21 +253,23 @@ class CompletionLineEdit(text.HintedLineEdit):
 
     def keyPressEvent(self, event):
         """Process completion and navigation events"""
-        key = event.key()
         text.HintedLineEdit.keyPressEvent(self, event)
+        visible = self.popup().isVisible()
 
         # Hide the popup when the field is empty
         is_empty = not self.value()
         if is_empty:
             self.cleared.emit()
-            if self.popup().isVisible():
+            if visible:
                 self.popup().hide()
 
         # Activation keys select the completion when pressed and emit the
         # activated signal.  Navigation keys have lower priority, and only
         # emit when it wasn't already handled as an activation event.
-        if key in self.ACTIVATION_KEYS and self.select_completion():
-            self.activated.emit()
+        key = event.key()
+        if key in self.ACTIVATION_KEYS and visible:
+            if self.select_completion():
+                self.activated.emit()
             return
 
         navigation = self.NAVIGATION_KEYS.get(key, None)
