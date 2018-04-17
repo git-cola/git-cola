@@ -53,7 +53,7 @@ class LogWidget(QtWidgets.QWidget):
         cursor.movePosition(cursor.End)
         text = self.output_text
         # NOTE: the ':  ' colon-SP-SP suffix in used by the syntax highlighter
-        prefix = core.decode(time.strftime(N_('%I:%M %p %Ss %Y-%m-%d:  ')))
+        prefix = core.decode(time.strftime('%x %X:  '))
         for line in msg.splitlines():
             cursor.insertText(prefix + line + '\n')
         cursor.movePosition(cursor.End)
