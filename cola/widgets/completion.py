@@ -220,7 +220,7 @@ class CompletionLineEdit(text.HintedLineEdit):
         idx = indexes[0]
         item = self._completion_model.itemFromIndex(idx)
         if not item:
-            return
+            return None
         return item.text()
 
     def event(self, event):
