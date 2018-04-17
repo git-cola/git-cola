@@ -566,8 +566,8 @@ class GitDAG(standard.MainWindow):
         self.filewidget.grab_file.connect(self.grab_file)
 
         self.maxresults.editingFinished.connect(self.display)
-        self.revtext.textChanged.connect(self.text_changed)
 
+        self.revtext.textChanged.connect(self.text_changed)
         self.revtext.activated.connect(self.display)
         self.revtext.enter.connect(self.display)
         self.revtext.down.connect(self.focus_tree)
