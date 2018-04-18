@@ -96,6 +96,14 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/753
 
+* Updated German translation.
+
+  https://github.com/git-cola/git-cola/pull/802
+
+* Updated Czech translation
+
+  https://github.com/git-cola/git-cola/pull/792
+
 * The window title can be configured to not display the absolute path of the
   repository.
 
@@ -168,6 +176,16 @@ Fixes
   `.git/config`.
 
   https://github.com/git-cola/git-cola/issues/766
+
+* The log window was using a format string that did not display
+  correctly in all locales.  A locale-aware format is now used.
+
+  https://github.com/git-cola/git-cola/pull/800
+
+* The dialog displayed when prompting for a reference could sometimes
+  lose focus.
+
+  https://github.com/git-cola/git-cola/pull/804
 
 .. _v3.0:
 
