@@ -364,7 +364,9 @@ class TreeMixin(object):
         elif key == Qt.Key_Left and index.parent().isValid():
 
             # File entries have rowCount() == 0
-            if widget.model().itemFromIndex(index).rowCount() == 0:
+            model = widget.model()
+            if (hasattr(model, 'itemFromIndex')
+                    and model.itemFromIndex(index).rowCount() == 0):
                 widget.setCurrentIndex(index.parent())
 
             # Otherwise, do this for collapsed directories only
