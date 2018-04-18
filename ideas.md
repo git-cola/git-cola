@@ -1,5 +1,3 @@
-- Make tab select the first item in the completion list
-
 - replace QMessagebox with custom widgets so we can save their sizes and
   make them have sensible behavior: resizable, better initial size,
   have the details shown by default.
