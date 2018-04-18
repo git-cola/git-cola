@@ -368,14 +368,15 @@ def transform_kwargs(**kwargs):
 
 
 def _print_win32_git_hint():
-    hint = ('\n'
-            'hint: If you have Git installed in a custom location, e.g.\n'
-            'hint: C:\\Tools\\Git, then you can create a file at\n'
-            'hint: ~/.config/git-cola/git-bindir with following text\n'
-            'hint: and git-cola will add the specified location to your $PATH\n'
-            'hint: automatically when starting cola:\n'
-            'hint:\n'
-            'hint: C:\\Tools\\Git\\bin\n')
+    hint = (
+        '\n'
+        'hint: If you have Git installed in a custom location, e.g.\n'
+        'hint: C:\\Tools\\Git, then you can create a file at\n'
+        'hint: ~/.config/git-cola/git-bindir with following text\n'
+        'hint: and git-cola will add the specified location to your $PATH\n'
+        'hint: automatically when starting cola:\n'
+        'hint:\n'
+        'hint: C:\\Tools\\Git\\bin\n')
     core.stderr(hint)
 
 
