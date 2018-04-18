@@ -775,6 +775,7 @@ class GitDialog(QtWidgets.QDialog):
             dlg.lineedit.popup().move(mapped.x(), mapped.y())
             dlg.lineedit.popup().show()
             dlg.lineedit.refresh()
+            dlg.lineedit.setFocus(True)
 
         QtCore.QTimer().singleShot(100, show_popup)
 
