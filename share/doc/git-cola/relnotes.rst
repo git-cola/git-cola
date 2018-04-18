@@ -31,6 +31,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/444
 
+  https://github.com/git-cola/git-cola/pull/803
+
 * Git LFS and Git Annex are natively supported by the image diff viewer.
 
 * Git Annex operations are now included. `git annex init` can be performed on
