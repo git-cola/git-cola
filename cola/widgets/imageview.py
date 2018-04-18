@@ -44,6 +44,8 @@ try:
 except ImportError:
     have_numpy = False
 
+from .. import qtcompat
+
 main_loop_type = 'qt'
 
 
@@ -310,12 +312,11 @@ class ImageView(QtWidgets.QGraphicsView):
         self.update()
 
     def wheelEvent(self, event):
-        dy = event.angleDelta().y()
-        update = False
+        delta = qtcompat.wheel_delta(event)
         #adjust zoom
-        if abs(dy) > 0:
+        if abs(delta) > 0:
             scene_pos = self.mapToScene(event.pos())
-            if dy >= 0:
+            if delta >= 0:
                 sign = 1
             else:
                 sign = -1
