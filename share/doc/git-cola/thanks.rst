@@ -179,7 +179,7 @@ Thanks
 * v.paritskiy
 * Wolfgang Ocker
 * wsdfhjxc
-* Xieofxie
+* Xie Hua Liang (xieofxie)
 * Yi EungJun
 * Zauber Paracelsus
 * Zeioth
