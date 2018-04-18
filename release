@@ -59,7 +59,7 @@ build_win32 () {
 	title Building pynsist installer
 
 	do_or_die ./contrib/win32/run-pynsist.sh
-	do_or_die mv build/nsis/git-cola_*.exe git-cola-"$VERSION".exe
+	do_or_die cp build/nsis/git-cola_"$VERSION".exe git-cola-"$VERSION".exe
 	do_or_die chmod 644 git-cola-"$VERSION".exe
 	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
 		-xi git-cola-"$VERSION".exe
