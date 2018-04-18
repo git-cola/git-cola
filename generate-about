@@ -24,7 +24,11 @@ def main():
         'David Aguilar': 'davvid@gmail.com',
         'Ｖ字龍(Vdragon)': 'Vdragon.Taiwan@gmail.com',
     }
+    # Some committers we skip because their changes touched the
+    # translations, but they're not really a translator.
+    skip = set()
     if args.translators:
+        default_title = 'Translation'
         titles = {
             'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
             'Vitor Lobo': 'Brazilian translation',
@@ -44,13 +48,21 @@ def main():
             'Guo Yunhe': 'Simplified Chinese translation',
             'balping': 'Hungarian translation',
         }
+        pathspecs = (
+            'po/*.po',
+            'share/doc/git-cola/hotkeys_*.html',
+        )
+        skip.add('Ville Skyttä')
+        skip.add('Szymon Judasz')
+        skip.add('David Aguilar')
     else:
+        default_title = 'Developer'
         titles = {
             'David Aguilar': 'Maintainer (since 2007) and developer',
         }
+        pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
 
-    #         1234
-    indent = '    ' * 2
+    indent = ' ' * 8
     if args.count:
         suffix = "\t# %(count)s"
     else:
@@ -71,19 +83,6 @@ def main():
         "%(indent)sdict(name=%(name_q)s,\n"
         "%(indent)s     title=N_('%(title)s'),\n"
         "%(indent)s     email=mailto(%(email_q)s, contact, palette)),%(suffix)s")
-
-    if args.translators:
-        pathspecs = (
-            'po/*.po',
-            'share/doc/git-cola/hotkeys_*.html',
-        )
-        default_title = 'Translation'
-        skip = set(['David Aguilar', 'Ville Skyttä'])
-
-    else:
-        pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
-        default_title = 'Developer'
-        skip = set()
 
     committers = get_committers(git, 'HEAD', sans_qtpy, '--', *pathspecs)
     for idx, (count, name) in enumerate(committers):
