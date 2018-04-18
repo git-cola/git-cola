@@ -30,23 +30,23 @@ def main():
     if args.translators:
         default_title = 'Translation'
         titles = {
-            'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
-            'Vitor Lobo': 'Brazilian translation',
+            'balping': 'Hungarian translation',
+            'Barış ÇELİK': 'Turkish translation',
+            'Guo Yunhe': 'Simplified Chinese translation',
             'Igor Kopach': 'Ukranian translation',
-            'Zhang Han': 'Simplified Chinese translation',
             'Mickael Albertus': 'French translation',
             'Minarto Margoliono': 'Indonesian translation',
-            'Sven Claussner': 'German translation',
-            'Vaiz': 'Russian translation',
-            'Barış ÇELİK': 'Turkish translation',
             'Łukasz Wojniłowicz': 'Polish translation',
+            'Pavel Rehak': 'Czech translation',
             'Peter Dave Hello': 'Traditional Chinese (Taiwan) translation',
             'Pilar Molina Lopez': 'Spanish translation',
             "Samsul Ma'arif": 'Indonesian translation',
+            'Sven Claussner': 'German translation',
+            'Vaiz': 'Russian translation',
+            'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
+            'Vitor Lobo': 'Brazilian translation',
             'Zeioth': 'Spanish translation',
-            'Pavel Rehak': 'Czech translation',
-            'Guo Yunhe': 'Simplified Chinese translation',
-            'balping': 'Hungarian translation',
+            'Zhang Han': 'Simplified Chinese translation',
         }
         pathspecs = (
             'po/*.po',
