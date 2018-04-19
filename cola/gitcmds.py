@@ -836,13 +836,21 @@ def write_blob(oid, filename):
     get the object content as-is.
 
     """
-    if version.check_git('cat-file-textconv-path'):
-        return cat_file_to_path(filename, oid, path=filename, filters=True)
-    else:
+    if version.check_git('cat-file-filters-path'):
         return cat_file_to_path(filename, oid)
+    else:
+        return cat_file_blob(filename, oid)
 
 
-def cat_file_to_path(filename, object_name, **kwargs):
+def cat_file_blob(filename, oid):
+    return cat_file(filename, 'blob', oid)
+
+
+def cat_file_to_path(filename, oid):
+    return cat_file(filename, oid, path=filename, filters=True)
+
+
+def cat_file(filename, *args, **kwargs):
     """Redirect git cat-file output to a path"""
     result = None
     # Use the original filename in the suffix so that the generated filename
@@ -851,8 +859,8 @@ def cat_file_to_path(filename, object_name, **kwargs):
     suffix = '-' + basename  # ensures the correct filename extension
     path = utils.tmp_filename('blob', suffix=suffix)
     with open(path, 'wb') as fp:
-        status, out, err = git.cat_file(object_name,
-            _raw=True, _readonly=True, _stdout=fp, **kwargs)
+        status, out, err = git.cat_file(
+            _raw=True, _readonly=True, _stdout=fp, *args, **kwargs)
         Interaction.command(
             N_('Error'), 'git cat-file', status, out, err)
         if status == 0:
@@ -864,7 +872,7 @@ def cat_file_to_path(filename, object_name, **kwargs):
 
 def write_blob_path(head, oid, filename):
     """Use write_blob() when modern git is available"""
-    if version.check_git('cat-file-textconv-path'):
+    if version.check_git('cat-file-filters-path'):
         return write_blob(oid, filename)
     return cat_file_to_path(filename, head + ':' + filename)
 
