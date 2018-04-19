@@ -874,7 +874,8 @@ def write_blob_path(head, oid, filename):
     """Use write_blob() when modern git is available"""
     if version.check_git('cat-file-filters-path'):
         return write_blob(oid, filename)
-    return cat_file_to_path(filename, head + ':' + filename)
+    else:
+        return cat_file_blob(filename, head + ':' + filename)
 
 
 def annex_path(head, filename, config=None):
