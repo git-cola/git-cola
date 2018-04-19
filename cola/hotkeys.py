@@ -95,6 +95,7 @@ CTRL_RETURN = hotkey(Qt.CTRL + Qt.Key_Return)
 CTRL_ENTER = hotkey(Qt.CTRL + Qt.Key_Enter)
 
 # Rebase
+REBASE_START_AND_CONTINUE = hotkey(Qt.ALT + Qt.Key_R)
 REBASE_PICK = (hotkey(Qt.Key_1), hotkey(Qt.Key_P))
 REBASE_REWORD = (hotkey(Qt.Key_2), hotkey(Qt.Key_R))
 REBASE_EDIT = (hotkey(Qt.Key_3), hotkey(Qt.Key_E))

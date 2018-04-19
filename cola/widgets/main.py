@@ -336,13 +336,15 @@ class MainView(standard.MainWindow):
         self.dag_action.setIcon(icons.cola())
 
         self.rebase_start_action = add_action(
-            self, N_('Start Interactive Rebase...'), self.rebase_start)
+            self, N_('Start Interactive Rebase...'), self.rebase_start,
+            hotkeys.REBASE_START_AND_CONTINUE)
 
         self.rebase_edit_todo_action = add_action(
             self, N_('Edit...'), cmds.rebase_edit_todo)
 
         self.rebase_continue_action = add_action(
-            self, N_('Continue'), cmds.rebase_continue)
+            self, N_('Continue'), cmds.rebase_continue,
+            hotkeys.REBASE_START_AND_CONTINUE)
 
         self.rebase_skip_action = add_action(
             self, N_('Skip Current Patch'), cmds.rebase_skip)
