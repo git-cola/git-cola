@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-04-08 21:03+0200\n"
+"PO-Revision-Date: 2018-04-20 16:34+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -434,13 +434,13 @@ msgid "Amend"
 msgstr ""
 
 msgid "Amend Commit"
-msgstr ""
+msgstr "Pozměnit zápis"
 
 msgid "Amend Last Commit"
 msgstr "Pozměnit poslední zápis"
 
 msgid "Amend the published commit?"
-msgstr ""
+msgstr "Pozměnit uveřejněný zápis?"
 
 msgid "Amending"
 msgstr "Pozměnit"
@@ -454,6 +454,8 @@ msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
 msgstr ""
+"Místo toho bude vytvořena nepodepsaná odlehčená značka.\n"
+"Vytvořit nepodepsanou značku?"
 
 msgid "Apply"
 msgstr "Aplikovat"
@@ -633,9 +635,8 @@ msgstr ""
 msgid "Clear..."
 msgstr ""
 
-#, fuzzy
 msgid "Clone"
-msgstr "Klonovat..."
+msgstr "Klonovat"
 
 msgid "Clone Repository"
 msgstr "Klonovat repozitář"
@@ -679,7 +680,7 @@ msgid "Commit summary"
 msgstr "Souhrn zápisu"
 
 msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr ""
+msgstr "Zapsat sloučení, pokud nejsou žádné konflikty. Odškrtnout, aby sloučení zůstalo nezapsáno"
 
 msgid "Commit@@verb"
 msgstr ""
@@ -743,7 +744,7 @@ msgid "Create Tag"
 msgstr "Vytvořit značku"
 
 msgid "Create Tag..."
-msgstr "Vytvořit značku..."
+msgstr "Vytvořit značku (tag)..."
 
 msgid "Create Unsigned Tag"
 msgstr "Vytvořit nepodepsanou značku"
@@ -875,9 +876,8 @@ msgstr "Diff tento -> vybraný"
 msgid "Diffstat"
 msgstr ""
 
-#, fuzzy
 msgid "Difftool"
-msgstr "Diff"
+msgstr ""
 
 msgid "Directory Exists"
 msgstr ""
@@ -1321,7 +1321,7 @@ msgid "Merge..."
 msgstr "Sloučit (merge)..."
 
 msgid "Merging"
-msgstr ""
+msgstr "Slučování"
 
 msgid "Message"
 msgstr "Zpráva"
@@ -1385,6 +1385,9 @@ msgid ""
 "\n"
 "You must stage at least 1 file before you can commit."
 msgstr ""
+"Žádné změny, které by bylo možné zapsat.\n"
+"\n"
+"Je potřeba připravit k zapsání alespoň jeden soubor předtím, než ho bude možné zapsat."
 
 msgid "No commits exist in this branch."
 msgstr "V této větvi nejsou žádné zápisy."
@@ -1700,13 +1703,13 @@ msgid "Revert Diff Hunk?"
 msgstr "Vrátit komplex rozdílů?"
 
 msgid "Revert Selected Lines"
-msgstr ""
+msgstr "Vrátit vybrané řádky"
 
 msgid "Revert Selected Lines..."
-msgstr ""
+msgstr "Vrátit vybrané řádky..."
 
 msgid "Revert Selected Lines?"
-msgstr ""
+msgstr "Vrátit vybrané řádky?"
 
 msgid "Revert Uncommitted Changes"
 msgstr "Vrátit nezapsané změny"
@@ -1895,7 +1898,7 @@ msgid "Select manually..."
 msgstr "Vybrat ručně..."
 
 msgid "Select output dir"
-msgstr ""
+msgstr "Vybrat výstupní složku"
 
 msgid "Select output directory"
 msgstr "Vybrat výstupní složku"
@@ -1963,7 +1966,7 @@ msgid "Side by side"
 msgstr ""
 
 msgid "Sign Off"
-msgstr ""
+msgstr "Podepsat"
 
 msgid "Sign Tag"
 msgstr "Podepsat značku"
@@ -2026,7 +2029,7 @@ msgid "Stage Selected"
 msgstr "Vybrané připravit k zapsání"
 
 msgid "Stage Selected Lines"
-msgstr ""
+msgstr "Připravit k zapsání vybrané řádky"
 
 msgid "Stage Unmerged"
 msgstr ""
@@ -2035,10 +2038,10 @@ msgid "Stage Untracked"
 msgstr "Nesledované připravit k zapsání"
 
 msgid "Stage and Commit"
-msgstr ""
+msgstr "Připravit k zapsání a zapsat"
 
 msgid "Stage and commit?"
-msgstr ""
+msgstr "Připravit k zapsání a zapsat?"
 
 msgid "Stage conflicts"
 msgstr ""
@@ -2105,7 +2108,7 @@ msgid "Tag message..."
 msgstr "Zpráva značky..."
 
 msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
+msgstr "Byl požadován podpis značky, ale zpráva značky je prázdná."
 
 msgid "Tags"
 msgstr "Značky"
@@ -2145,6 +2148,9 @@ msgid ""
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
+"Tento zápis byl již uveřejněn.\n"
+"Tato činnost přepíše uveřejněnou historii.\n"
+"Pravděpodobně to nechcete udělat."
 
 msgid ""
 "This operation drops uncommitted changes.\n"
@@ -2291,7 +2297,7 @@ msgid "Whether to sign the tag (git tag -s)"
 msgstr ""
 
 msgid "Would you like to stage and commit all modified files?"
-msgstr ""
+msgstr "Chcete připravit k zapsání a zapsat všechny změněné soubory?"
 
 msgid "XOR"
 msgstr ""
