@@ -1191,7 +1191,7 @@ class Edit(CommandMixin):
         except Exception as e:
             message = (N_('Cannot exec "%s": please configure your editor')
                        % editor)
-            details = core.decode(e.strerror)
+            _, details = utils.format_exception(e)
             Interaction.critical(N_('Error Editing File'), message, details)
 
 
