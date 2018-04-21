@@ -104,6 +104,8 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/792
 
+  https://github.com/git-cola/git-cola/pull/806
+
 * The window title can be configured to not display the absolute path of the
   repository.
 
