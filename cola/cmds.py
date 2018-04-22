@@ -2220,7 +2220,7 @@ class Unstage(ModelCommand):
         paths = self.paths
         head = self.model.head
         if not paths:
-            return unstage_all(model)
+            return unstage_all(self.model)
         status, out, err = gitcmds.unstage_paths(paths, head=head)
         Interaction.command(N_('Error'), 'git reset', status, out, err)
         self.model.update_file_status()
