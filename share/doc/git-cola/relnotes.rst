@@ -16,8 +16,8 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v3.1:
 
-git-cola v3.1 (beta)
-====================
+git-cola v3.1
+=============
 
 Usability, bells and whistles
 -----------------------------
