@@ -442,7 +442,10 @@ class GitConfig(observable.Observable):
             candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
             for basename in candidates:
                 if core.exists('/usr/bin/%s' % basename):
-                    term = '%s -e' % basename
+                    if basename == 'gnome-terminal':
+                        term = '%s --' % basename
+                    else:
+                        term = '%s -e' % basename
                     break
         return term
 
