@@ -113,7 +113,3 @@ def print_version(brief=False):
     else:
         msg = cola_version()
     sys.stdout.write('%s\n' % msg)
-
-
-if __name__ == '__main__':
-    print_version(brief=True)
