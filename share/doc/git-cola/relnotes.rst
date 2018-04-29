@@ -21,7 +21,6 @@ git-cola v3.1
 
 Usability, bells and whistles
 -----------------------------
-
 * The "Browser" widget learned to rename files using "git mv".
 
   https://github.com/git-cola/git-cola/issues/239
@@ -122,7 +121,6 @@ Usability, bells and whistles
 
 Packaging
 ---------
-
 * The vendored `qtpy` library was updated to `v1.3.1`.
 
 * The macOS installation was made simpler for better compatibility with
@@ -136,7 +134,6 @@ Packaging
 
 Fixes
 -----
-
 * Uninitialized difftool errors will now be displayed graphically.
   They were previously going to the shell.
 
@@ -460,7 +457,7 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/680
 
 Fixes
-=====
+-----
 * `git cola`'s spellchecker now supports the new `dict-common` filesystem
   layout, and prefers the `/usr/share/dict/cracklib-small` file over the
   `/usr/share/dict/words` provided on older distributions.
