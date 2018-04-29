@@ -106,7 +106,7 @@ COMMANDS = {
     },
     'Actions::Stash': {
         'title': 'Stash...',
-        'action': lambda: stash.stash(),
+        'action': lambda: stash.view(),
         'icon': None
     },
     'Actions::CreateTag': {
