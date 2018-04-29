@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-04-20 16:34+0200\n"
+"PO-Revision-Date: 2018-04-29 18:29+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -286,22 +286,22 @@ msgid "*** Sandbox ***"
 msgstr ""
 
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 msgid "25%"
-msgstr ""
+msgstr "25%"
 
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 msgid "800%"
-msgstr ""
+msgstr "800%"
 
 msgid "<path> ..."
 msgstr ""
@@ -339,9 +339,11 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
+"Zrušení současného sloučení způsobí, že *VŠECHNY* nezapsané změny budou ztraceny.\n"
+"Obnovení nezapsaných změn není možné."
 
 msgid "Aborting the current merge?"
-msgstr ""
+msgstr "Zrušit současné sloučení?"
 
 msgid "About"
 msgstr "O aplikaci"
@@ -938,7 +940,7 @@ msgid "Enabled"
 msgstr ""
 
 msgid "Enter New Branch Name"
-msgstr ""
+msgstr "Zadat nový název větve"
 
 msgid "Enter a name for the new bare repo"
 msgstr ""
@@ -2117,11 +2119,11 @@ msgid "Text Width"
 msgstr "Šířka textu"
 
 msgid "The branch will be no longer available."
-msgstr ""
+msgstr "Větev nebude již k dispozici."
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
+msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
 
 msgid "The commit message will be cleared."
 msgstr ""
@@ -2247,7 +2249,7 @@ msgid "Unstage Selected"
 msgstr "Zrušit přípravu vybraných"
 
 msgid "Unstage Selected Lines"
-msgstr ""
+msgstr "Zrušit přípravu vybraných řádek"
 
 #, python-format
 msgid "Unstaging: %s"
