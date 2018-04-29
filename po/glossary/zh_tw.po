@@ -1,19 +1,18 @@
 # Translation of git-cola glossary to Traditional Chinese(Taiwan)
 # Copyright (C) 2007 Shawn Pearce, et al.
 # This file is distributed under the same license as the git-cola package.
-# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014.
+# Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>, 2014, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola glossary\n"
-"PO-Revision-Date: 2016-11-24 18:13+0800\n"
-"Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
-"Language-Team: Chinese Traditional <>\n"
+"PO-Revision-Date: 2018-04-29 22:48+0800\n"
+"Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
+"Language-Team: Chinese <Chinese l10n <chinese-l10n@googlegroups.com>>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.8.7.1\n"
 
 #. "English Definition (Dear translator: This file will never be visible to the user! It should only serve as a tool for you, the translator. Nothing more.)"
 msgid ""
@@ -109,6 +108,7 @@ msgstr "撈取並合併至本地版控庫中"
 msgid "push"
 msgstr "推送至遠端版控庫"
 
+# 相對於「復原(undo)」
 #. ""
 msgid "redo"
 msgstr "重做"
@@ -169,10 +169,10 @@ msgstr "追蹤分支"
 msgid "undo"
 msgstr "復原"
 
+# 注意和fetch的區分
 #. ""
-#, fuzzy
 msgid "update"
-msgstr "更新。注意和fetch的區分"
+msgstr "更新"
 
 #. ""
 msgid "verify"
@@ -206,4 +206,8 @@ msgstr "合併衝突"
 
 #. ""
 msgid "stash"
-msgstr "蒐藏(stash)"
+msgstr "珍藏"
+
+#. "Cherry-picking, moving only some revisions from one branch to another in version control"
+msgid "cherry-pick"
+msgstr "揀選"

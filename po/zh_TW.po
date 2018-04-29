@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-03-21 01:27+0800\n"
-"Last-Translator: Ｖ字龍 <Vdragon.Taiwan@gmail.com>\n"
+"PO-Revision-Date: 2018-04-29 22:43+0800\n"
+"Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,8 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or updating\n"
+"            We invite you to participate in translation by adding or"
+" updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -354,22 +355,22 @@ msgid "*** Sandbox ***"
 msgstr "*** 沙盒 ***"
 
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 msgid "25%"
-msgstr ""
+msgstr "25%"
 
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 msgid "800%"
-msgstr ""
+msgstr "800%"
 
 msgid "<path> ..."
 msgstr "〈路徑〉……"
@@ -389,7 +390,7 @@ msgstr "一個掛勾程式必須在「%s」被提供"
 
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "名為「%s」的蒐藏(stash)已經存在。"
+msgstr "名為「%s」的珍藏已經存在。"
 
 msgid "Abort"
 msgstr "中止"
@@ -499,10 +500,14 @@ msgstr "建立時間"
 msgid "All Repositories"
 msgstr "所有的版控庫"
 
-msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
+" repository to lose commits; use it with care"
 msgstr "允許非快速前移式更新。使用「強制」可能會造成遠端版控庫遺失修訂版提交；請小心使用"
 
-msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a"
+" fast-forward update"
 msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併修訂版提交"
 
 msgid "Amend"
@@ -570,7 +575,8 @@ msgstr "指謫(blame)查看器"
 msgid "Blame..."
 msgstr "指摘(Blame)..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid ""
+"Bold with dark background font instead of italic headers (restart required)"
 msgstr "標題用帶深色底色的粗體而非斜體（需要重新啟動應用軟體設定才會生效）"
 
 msgid "Branch"
@@ -737,9 +743,8 @@ msgid "Collapse all"
 msgstr "全部折疊"
 
 # Ｖ字龍：注意此應翻譯為動詞。
-#, fuzzy
 msgid "Command"
-msgstr "Command"
+msgstr "命令"
 
 # Ｖ字龍：注意此應翻譯為動詞。
 msgid "Commit"
@@ -761,7 +766,9 @@ msgstr ""
 msgid "Commit summary"
 msgstr "修訂版提交描述"
 
-msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
+" uncommitted"
 msgstr "若不存在版本衝突時提交該合併。取消勾選以保持合併於尚未提交狀態"
 
 msgid "Commit@@verb"
@@ -958,9 +965,8 @@ msgstr "顯示此修訂版→被選取的修訂版的內容差異"
 msgid "Diffstat"
 msgstr "顯示內容差異"
 
-#, fuzzy
 msgid "Difftool"
-msgstr "顯示內容差異的工具"
+msgstr "內容差異檢視器"
 
 msgid "Directory Exists"
 msgstr "目錄已存在"
@@ -975,19 +981,18 @@ msgid "Drop"
 msgstr "丟棄"
 
 msgid "Drop Stash"
-msgstr "丟棄蒐藏(stash)"
+msgstr "丟棄珍藏"
 
 msgid "Drop Stash?"
-msgstr "丟棄蒐藏(stash)？"
+msgstr "丟棄珍藏？"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr "是否要丟棄名為「%s」的蒐藏(stash)"
+msgstr "是否要丟棄名為「%s」的珍藏"
 
 msgid "Drop the selected stash"
 msgstr "丟棄被選取的 stash"
 
-#, fuzzy
 msgid "Edit"
 msgstr "編輯"
 
@@ -1028,7 +1033,7 @@ msgid "Enter a name for the new bare repo"
 msgstr "輸入新裸裝版本庫(bare repo)的名稱"
 
 msgid "Enter a name for the stash"
-msgstr "輸入蒐藏(stash)的名稱"
+msgstr "輸入珍藏的名稱"
 
 msgid "Error"
 msgstr "發生錯誤"
@@ -1059,7 +1064,7 @@ msgid "Error creating remote \"%s\""
 msgstr "建立「%s」遠端分支時發生錯誤"
 
 msgid "Error creating stash"
-msgstr "建立新的蒐藏時發生錯誤"
+msgstr "建立新的珍藏時發生錯誤"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1076,7 +1081,7 @@ msgid "Error: Cannot find commit template"
 msgstr "錯誤：無法找到修訂版提交範本"
 
 msgid "Error: Stash exists"
-msgstr "錯誤：蒐藏(stash)已存在"
+msgstr "錯誤：珍藏已存在"
 
 msgid "Error: Unconfigured commit template"
 msgstr "錯誤：未被設定的修訂版提交範本"
@@ -1145,23 +1150,31 @@ msgstr "檔案已保存"
 msgid "File saved to \"%s\""
 msgstr "檔案已保存至「%s」"
 
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr "檔案系統變動監控：因為「cola.inotify」 Git 設定值被設定為 false 而被停用。\n"
 
-msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgid ""
+"File system change monitoring: disabled because libc does not support the"
+" inotify system calls.\n"
 msgstr "檔案系統變動監控：因為 libc 程式庫不支援 inotify 系統呼叫而被停用。\n"
 
-msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
 msgstr "檔案系統變動監控：因為 pywin32 沒有安裝而被停用。\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"File system change monitoring: disabled because the limit on the total number"
+" of inotify watches was reached.  You may be able to increase the limit on"
+" the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
 msgstr ""
 "檔案系統變動監控：因為已經達到 inotify watch 的總數上限而被停用。您可以執行下列命令來增加 watch 的數量限制：\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
 
 msgid "File system change monitoring: enabled.\n"
 msgstr "檔案系統變動監控：已啟用。\n"
@@ -1188,10 +1201,10 @@ msgid "Fixed-Width Font"
 msgstr "等寬字型"
 
 msgid "Fixup"
-msgstr ""
+msgstr "修理"
 
 msgid "Fixup Previous Commit"
-msgstr "修正先前的修訂版提交"
+msgstr "修理先前的修訂版提交"
 
 msgid "Font Size"
 msgstr "字體大小"
@@ -1305,7 +1318,7 @@ msgid "Initialize Git LFS"
 msgstr "初始化 Git LFS"
 
 msgid "Inititalize submodules"
-msgstr ""
+msgstr "初始化子模組"
 
 msgid "Insert spaces instead of tabs"
 msgstr "插入空白字元而非跨欄字元(tab)"
@@ -1576,7 +1589,7 @@ msgid "Pick"
 msgstr ""
 
 msgid "Pixel XOR"
-msgstr ""
+msgstr "像素互斥或(XOR)"
 
 msgid "Please provide both a branch name and revision expression."
 msgstr "請填寫分支名稱與修訂版表達式。"
@@ -1659,9 +1672,8 @@ msgstr "變更基底"
 msgid "Rebase onto %s"
 msgstr "變更基底至 %s"
 
-#, fuzzy
 msgid "Rebase stopped"
-msgstr "變更基底(rebase)已停止"
+msgstr "變更基底已停止"
 
 msgid "Rebase the current branch instead of merging"
 msgstr "不合併分支，而是將遠端分支變更基底到當前分支"
@@ -1675,9 +1687,8 @@ msgstr "最近使用的版控庫"
 msgid "Recent repositories"
 msgstr "最近使用的版控庫"
 
-#, fuzzy
 msgid "Recent repository count"
-msgstr "最近使用的版控庫"
+msgstr "最近使用的版控庫數量"
 
 msgid "Recently Modified Files"
 msgstr "最近修改過的檔案"
@@ -1686,7 +1697,7 @@ msgid "Recently Modified Files..."
 msgstr "最近修改過的檔案……"
 
 msgid "Recovering a dropped stash is not possible."
-msgstr "要救回一個丟棄的蒐藏(stash)是不可能的。"
+msgstr "要救回一個丟棄的珍藏是不可能的。"
 
 msgid "Recovering lost commits may not be easy."
 msgstr "恢復丟失的提交是比較困難的."
@@ -1695,12 +1706,14 @@ msgid "Redo"
 msgstr "重做"
 
 msgid "Reduce commit history to minimum"
-msgstr ""
+msgstr "將版本提交歷史量降到最低"
 
 msgid "Refresh"
 msgstr "重新整理"
 
-msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge"
+" can be resolved as a fast-forward"
 msgstr "除非當前 HEAD 指標早就是最新版本或是分支合併能以快速前移式處理否則拒絕合併分支"
 
 msgid "Remote"
@@ -1729,11 +1742,11 @@ msgid "Remove selected (Delete)"
 msgstr "移除被選取的項目（刪除）"
 
 msgid "Rename"
-msgstr "更名..."
+msgstr "重新命名"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rename \"%s\""
-msgstr "更名..."
+msgstr "重新命名「%s」"
 
 msgid "Rename Branch"
 msgstr "重新命名分支"
@@ -1760,9 +1773,8 @@ msgstr "要將「%(current)s」遠端分支重新命名為「%(new)s」嗎？"
 msgid "Rename remote?"
 msgstr "重新命名遠端版控庫嗎？"
 
-#, fuzzy
 msgid "Rename selected paths"
-msgstr "編輯選取的路徑"
+msgstr "重新命名選取的路徑"
 
 #, python-format
 msgid "Repository: %s"
@@ -1858,7 +1870,7 @@ msgid "Revision to Merge"
 msgstr "要合併的修訂版"
 
 msgid "Reword"
-msgstr ""
+msgstr "重新敘述"
 
 msgid "Rewrite Published Commit?"
 msgstr "要重寫已推送出去的修訂版提交嗎？"
@@ -1904,7 +1916,7 @@ msgid "Save GUI Settings"
 msgstr "保存圖形介面設定"
 
 msgid "Save Stash"
-msgstr "保存蒐藏(stash)"
+msgstr "保存珍藏"
 
 msgid "Save modified state to new stash"
 msgstr "將被修改的狀態保存至一個新的 stash"
@@ -2001,21 +2013,18 @@ msgstr "手動選取……"
 msgid "Select output dir"
 msgstr "選取輸出目錄"
 
-#, fuzzy
 msgid "Select output directory"
-msgstr "選擇版控庫"
+msgstr "選擇要輸出的目錄"
 
 msgid "Select patch file(s)..."
 msgstr "選擇修正檔……"
 
-#, fuzzy
 msgid "Select repository"
 msgstr "選擇版控庫"
 
 msgid "Set Default Repository"
 msgstr "設定預設版控庫"
 
-#, fuzzy
 msgid "Set Upstream Branch"
 msgstr "設為上游追蹤分支"
 
@@ -2172,22 +2181,19 @@ msgid "Starting Revision"
 msgstr "起始修訂版"
 
 msgid "Stash"
-msgstr "蒐藏"
+msgstr "珍藏"
 
-#, fuzzy
 msgid "Stash Index"
-msgstr "蒐藏"
+msgstr "將修訂版提交準備區域（索引）中的變更存入珍藏"
 
-#, fuzzy
 msgid "Stash staged changes only"
-msgstr "提交新修訂版準備區域中的變更"
+msgstr "只將移入新修訂版提交準備區域中的變更存入珍藏"
 
-#, fuzzy
 msgid "Stash unstaged changes only, keeping staged changes"
-msgstr "在被選取的路徑中撤銷尚未移入新修訂版準備區域的內容變更"
+msgstr "只將尚未移入新修訂版提交準備區域的變更存入珍藏，保留移入新修訂版提交準備區域的變更"
 
 msgid "Stash..."
-msgstr "蒐藏(stash)..."
+msgstr "珍藏..."
 
 msgid "Status"
 msgstr "狀態"
@@ -2261,12 +2267,11 @@ msgstr ""
 "此操作將會重寫已推送出去的變更紀錄。\n"
 "您可能不想要做此操作。"
 
-#, fuzzy
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
 msgstr ""
-"此操作將會丟棄尚未提交至版控庫的內容變更。\n"
+"此操作將會丟棄尚未提交進版控庫的內容變更。\n"
 "這些內容變更將無法被救回。"
 
 msgid ""
@@ -2415,7 +2420,7 @@ msgid "Would you like to stage and commit all modified files?"
 msgstr "您要將所有被修改的檔案移入新修訂版準備區域並提交出去嗎？"
 
 msgid "XOR"
-msgstr ""
+msgstr "互斥或(XOR)"
 
 msgid ""
 "You are in the middle of a merge.\n"
@@ -2450,7 +2455,8 @@ msgid "exit code %s"
 msgstr "程式以 %s 狀態碼結束"
 
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "致命錯誤：「%s」並不是個目錄。請指定一個正確的 --repo 〈路徑〉。"
 
 #, python-format
