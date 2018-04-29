@@ -277,9 +277,12 @@ def add_tag_command(subparser):
 
 
 def add_version_command(subparser):
-    parser = add_command(subparser, 'version', 'print the version', cmd_version)
+    parser = add_command(
+        subparser, 'version', 'print the version', cmd_version)
     parser.add_argument('--brief', action='store_true', default=False,
                         help='print the version number only')
+    parser.add_argument('--build', action='store_true', default=False,
+                        help='print the build version')
 
 
 # entry points
@@ -419,7 +422,7 @@ def cmd_merge(args):
 
 def cmd_version(args):
     from . import version
-    version.print_version(brief=args.brief)
+    version.print_version(brief=args.brief, build=args.build)
     return 0
 
 

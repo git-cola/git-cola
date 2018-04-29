@@ -103,13 +103,20 @@ def git_version():
         return '1.6.3'
 
 
-def cola_version():
-    return 'cola version %s' % version()
-
-
-def print_version(brief=False):
-    if brief:
-        msg = version()
+def cola_version(build=False):
+    if build:
+        suffix = build_version() or version()
     else:
-        msg = cola_version()
+        suffix = version()
+    return 'cola version %s' % suffix
+
+
+def print_version(brief=False, build=False):
+    if brief:
+        if build:
+            msg = build_version()
+        else:
+            msg = version()
+    else:
+        msg = cola_version(build=build)
     sys.stdout.write('%s\n' % msg)
