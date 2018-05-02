@@ -20,6 +20,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/813
 
+Fixes
+-----
+* The DAG window now updates itself when branches and tags are created.
+
+  https://github.com/git-cola/git-cola/issues/814
+
 .. _v3.1:
 
 git-cola v3.1
