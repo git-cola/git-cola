@@ -26,7 +26,7 @@ Thanks
 * Benoît Nouyrigat
 * Bert Jacobs
 * birgersp
-* 林博仁 (Lin-Buo-Ren)
+* 林博仁 (Buo-ren Lin)
 * Charles 101
 * Christian Jann
 * Christopher Meng
