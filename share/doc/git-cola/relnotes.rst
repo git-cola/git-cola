@@ -14,6 +14,12 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+Usability, bells and whistles
+-----------------------------
+* Updated Czech translation
+
+  https://github.com/git-cola/git-cola/pull/813
+
 .. _v3.1:
 
 git-cola v3.1
