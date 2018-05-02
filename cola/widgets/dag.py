@@ -456,8 +456,8 @@ class GitDAG(standard.MainWindow):
         self.commits = {}
         self.commit_list = []
         self.selection = []
-        self.last_oids = None
-        self.last_count = 0
+        self.old_oids = None
+        self.old_count = 0
         self.force_refresh = False
 
         self.thread = None
@@ -657,9 +657,8 @@ class GitDAG(standard.MainWindow):
 
     def display(self):
         """Update the view when the Git refs change"""
-        new_ref = self.revtext.value()
-        new_count = self.maxresults.value()
-
+        ref = self.revtext.value()
+        count = self.maxresults.value()
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
         # whenever inotify sends update events, which hurts usability.
@@ -668,19 +667,19 @@ class GitDAG(standard.MainWindow):
         # use `git rev-parse` on the input line, which converts each argument
         # into object IDs.  From there it's a simple matter of detecting when
         # the object IDs changed.
-        argv = utils.shell_split(new_ref or 'HEAD')
+        argv = utils.shell_split(ref or 'HEAD')
         oids = gitcmds.parse_refs(argv)
-        update = (self.force_refresh or
-                    new_count != self.last_count or
-                    oids != self.last_oids)
+        update = (self.force_refresh
+                  or count != self.old_count
+                  or oids != self.old_oids)
         if update:
             self.thread.stop()
-            self.params.set_ref(new_ref)
-            self.params.set_count(new_count)
+            self.params.set_ref(ref)
+            self.params.set_count(count)
             self.thread.start()
 
-        self.last_oids = oids
-        self.last_count = new_count
+        self.old_oids = oids
+        self.old_count = count
 
     def commits_selected(self, commits):
         if commits:
