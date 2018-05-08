@@ -73,7 +73,8 @@ class FileWidget(TreeWidget):
 
     def adjust_columns(self, size, old_size):
         if size.isValid() and old_size.isValid():
-            self.setColumnWidth(0, self.columnWidth(0) + size.width() - old_size.width())
+            width = (self.columnWidth(0) + size.width() - old_size.width())
+            self.setColumnWidth(0, width)
         else:
             width = self.width()
             two_thirds = (width * 2) // 3
@@ -81,7 +82,7 @@ class FileWidget(TreeWidget):
             self.setColumnWidth(0, two_thirds)
             self.setColumnWidth(1, one_sixth)
             self.setColumnWidth(2, one_sixth)
-  
+
     def show(self):
         self.adjust_columns(QSize(), QSize())
 
@@ -111,8 +112,8 @@ class FileWidget(TreeWidget):
 
     def show_history(self):
         items = self.selected_items()
-        self.notifier.notify_observers(HISTORIES_SELECTED,
-                                       [i.path for i in items])
+        paths = [i.path for i in items]
+        self.notifier.notify_observers(HISTORIES_SELECTED, paths)
 
 
 class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):
