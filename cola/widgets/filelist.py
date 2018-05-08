@@ -2,6 +2,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Signal
+from qtpy.QtCore import QSize
 
 from .. import cmds
 from .. import hotkeys
@@ -70,19 +71,22 @@ class FileWidget(TreeWidget):
             files.append(item)
         self.insertTopLevelItems(0, files)
 
-    def adjust_columns(self):
-        width = self.width() - 20
-        zero = width*2 // 3
-        onetwo = width // 6
-        self.setColumnWidth(0, zero)
-        self.setColumnWidth(1, onetwo)
-        self.setColumnWidth(2, onetwo)
-
+    def adjust_columns(self, size, old_size):
+        if size.isValid() and old_size.isValid():
+            self.setColumnWidth(0, self.columnWidth(0) + size.width() - old_size.width())
+        else:
+            width = self.width()
+            two_thirds = (width * 2) // 3
+            one_sixth = width // 6
+            self.setColumnWidth(0, two_thirds)
+            self.setColumnWidth(1, one_sixth)
+            self.setColumnWidth(2, one_sixth)
+  
     def show(self):
-        self.adjust_columns()
+        self.adjust_columns(QSize(), QSize())
 
     def resizeEvent(self, e):
-        self.adjust_columns()
+        self.adjust_columns(e.size(), e.oldSize())
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
