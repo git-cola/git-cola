@@ -1071,7 +1071,7 @@ class DiffImage(EditModel):
                 # colon for each parent, but for the index, the "parents"
                 # are really entries in stages 1,2,3 (head, base, remote)
                 # remote, base, head
-                for i in range(parents):
+                for i in range(num_parents):
                     offset = num_parents + i + 1
                     oid = parts[offset]
                     try:
