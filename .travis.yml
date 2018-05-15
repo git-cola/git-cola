@@ -4,7 +4,7 @@ python:
   - "2.6"
   - "2.7"
 #  - "3.2" Sphinx depends on Pygments, which only supports Python 3.3+
-  - "3.3"
+#  - "3.3" dotless pytest not available
   - "3.4"
 
 # git and python are pre-installed
