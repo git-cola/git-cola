@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-04-29 18:29+0200\n"
+"PO-Revision-Date: 2018-05-12 22:20+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 msgid ""
@@ -135,6 +135,16 @@ msgid ""
 "      %(basename)s  =  file basename without extension\n"
 "           %(ext)s  =  file extension\n"
 msgstr ""
+"\n"
+"        Proměnné formátovacího řetězce\n"
+"        -----------------------\n"
+"          %(path)s  =  relativní cesta souboru\n"
+"       %(abspath)s  =  absolutní cesta souboru\n"
+"       %(dirname)s  =  relativní cesta složky\n"
+"    %(absdirname)s  =  absolutní cesta složky\n"
+"      %(filename)s  =  název souboru\n"
+"      %(basename)s  =  název souboru bez přípony\n"
+"           %(ext)s  =  přípona souboru\n"
 
 msgid ""
 "\n"
@@ -189,7 +199,7 @@ msgid ""
 msgstr ""
 
 msgid " - DAG"
-msgstr ""
+msgstr " - DAG"
 
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
@@ -224,7 +234,7 @@ msgstr "%(project)s: %(branch)s - Procházet"
 
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
+msgstr "%(project)s: %(ref)s - DAG"
 
 #, python-format
 msgid "%d days ago"
@@ -256,7 +266,7 @@ msgstr ""
 
 #, python-format
 msgid "%s is not a Git repository."
-msgstr ""
+msgstr "%s není Git repozitář."
 
 #, python-format
 msgid "%s will be removed from your bookmarks."
@@ -271,13 +281,13 @@ msgid "%s: No such file or directory."
 msgstr ""
 
 msgid "&Edit"
-msgstr "Upravit"
+msgstr "&Upravit"
 
 msgid "&File"
-msgstr "Soubor"
+msgstr "&Soubor"
 
 msgid "(Amending)"
-msgstr ""
+msgstr "(Pozměnit)"
 
 msgid "*** Branch Point ***"
 msgstr ""
@@ -584,7 +594,7 @@ msgid "Cannot exec \"%s\": please configure your editor"
 msgstr "Nelze spustit \"%s\": prosím nakonfigurujte editor"
 
 msgid "Changed Upstream"
-msgstr ""
+msgstr "Změněno v upstreamu"
 
 msgid "Check Spelling"
 msgstr "Kontrolovat pravopis"
@@ -685,7 +695,7 @@ msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge u
 msgstr "Zapsat sloučení, pokud nejsou žádné konflikty. Odškrtnout, aby sloučení zůstalo nezapsáno"
 
 msgid "Commit@@verb"
-msgstr ""
+msgstr "Zapsat"
 
 msgid "Compare"
 msgstr "Porovnat"
@@ -709,7 +719,7 @@ msgid "Copy"
 msgstr "Kopírovat"
 
 msgid "Copy Basename to Clipboard"
-msgstr ""
+msgstr "Kopírovat název souboru do schránky"
 
 msgid "Copy Leading Path to Clipboard"
 msgstr ""
@@ -768,10 +778,10 @@ msgid "Current Repository"
 msgstr "Současný repozitář"
 
 msgid "Custom Copy Actions"
-msgstr ""
+msgstr "Vlastní akce kopírování"
 
 msgid "Customize..."
-msgstr ""
+msgstr "Přizpůsobit..."
 
 msgid "Cut"
 msgstr "Vyjmout"
@@ -780,7 +790,7 @@ msgid "Czech translation"
 msgstr "Český překlad"
 
 msgid "DAG..."
-msgstr ""
+msgstr "DAG..."
 
 msgid "Date, Time"
 msgstr "Datum, čas"
@@ -1135,7 +1145,7 @@ msgid "Force push to %s?"
 msgstr "Vynutit odeslání do %s?"
 
 msgid "Format String"
-msgstr ""
+msgstr "Formátovací řetězec"
 
 msgid "French translation"
 msgstr "Francouzský překlad"
@@ -1175,7 +1185,7 @@ msgid "Help"
 msgstr "Nápověda"
 
 msgid "Help - Custom Copy Actions"
-msgstr ""
+msgstr "Nápověda - Vlastní akce kopírování"
 
 msgid "Help - Find Files"
 msgstr ""
@@ -1362,7 +1372,7 @@ msgid "Name"
 msgstr "Název"
 
 msgid "Name for the new remote"
-msgstr ""
+msgstr "Název nového vzdáleného"
 
 msgid "New Bare Repository..."
 msgstr ""
@@ -1597,7 +1607,7 @@ msgid "Redo"
 msgstr "Znovu"
 
 msgid "Reduce commit history to minimum"
-msgstr ""
+msgstr "Omezit historii zápisů na minimum"
 
 msgid "Refresh"
 msgstr "Načíst znovu"
@@ -1680,7 +1690,7 @@ msgid "Reset Branch"
 msgstr "Resetovat větev"
 
 msgid "Reset Branch Head"
-msgstr ""
+msgstr "Resetovat hlavu větve"
 
 msgid "Reset Branch?"
 msgstr "Resetovat větev?"
@@ -1762,7 +1772,7 @@ msgid "Reword"
 msgstr ""
 
 msgid "Rewrite Published Commit?"
-msgstr ""
+msgstr "Přepsat uveřejněný zápis?"
 
 msgid "Run"
 msgstr ""
@@ -1890,7 +1900,7 @@ msgid "Select Repository..."
 msgstr "Vybrat Repozitář..."
 
 msgid "Select a parent directory for the new clone"
-msgstr ""
+msgstr "Vybrat nadřazenou složku pro nový klon"
 
 #, python-format
 msgid "Select file from \"%s\""
@@ -1942,10 +1952,10 @@ msgid "Show Full Paths in the Window Title"
 msgstr ""
 
 msgid "Show Help"
-msgstr ""
+msgstr "Zobrazit nápovědu"
 
 msgid "Show History"
-msgstr ""
+msgstr "Zobrazit historii"
 
 msgid ""
 "Show help\n"
@@ -2202,7 +2212,7 @@ msgid "Tracking branch"
 msgstr "Sledovaná větev"
 
 msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
+msgstr "Překlad do tradiční čínštiny (taiwanštiny)"
 
 msgid "Translators"
 msgstr "Překladatelé"
