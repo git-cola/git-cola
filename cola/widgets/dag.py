@@ -1788,7 +1788,7 @@ step 2. Hence, it must be propagated for children on side columns.
             # propagate_frontier.
             for offset in itertools.count(1):
                 for c in [column + offset, column - offset]:
-                    if not c in self.columns:
+                    if c not in self.columns:
                         # Column 'c' is not occupied.
                         continue
                     try:
