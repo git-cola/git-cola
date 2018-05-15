@@ -145,6 +145,7 @@ Thanks
 * Pilar Molina Lopez
 * Radek Novacek
 * Radek Postołowicz
+* Rafael Nascimento
 * Raghavendra Karunanidhi
 * Rainer Müller
 * Robbert Korving
