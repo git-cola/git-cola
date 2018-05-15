@@ -86,7 +86,7 @@ smaller project it is a good discipline to follow it.
 
 The sign-off is a simple line at the end of the explanation for
 the patch, which certifies that you wrote it or otherwise have
-the right to pass it on as a open-source patch.  The rules are
+the right to pass it on as an open-source patch.  The rules are
 pretty simple: if you can certify the below:
 
 Developer's Certificate of Origin 1.1

@@ -1,6 +1,6 @@
 # Copyright (C) 2008-2017 David Aguilar
 # Copyright (C) 2015 Daniel Harding
-"""Provides an filesystem monitoring for Linux (via inotify) and for Windows
+"""Provides a filesystem monitor for Linux (via inotify) and for Windows
 (via pywin32 and the ReadDirectoryChanges function)"""
 from __future__ import division, absolute_import, unicode_literals
 

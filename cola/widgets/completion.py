@@ -67,7 +67,7 @@ class BranchValidator(QtGui.QValidator):
 
 
 class CompletionLineEdit(text.HintedLineEdit):
-    """An lineedit with advanced completion abilities"""
+    """A lineedit with advanced completion abilities"""
 
     activated = Signal()
     changed = Signal()
