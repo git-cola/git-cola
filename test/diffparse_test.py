@@ -30,8 +30,8 @@ class ParseDiffTestCase(unittest.TestCase):
         self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):\n')
         self.assertEqual(
                 hunks[0].lines[-1],
-                "         self._header_start_re = re.compile('^@@ -(\d+)"
-                " \+(\d+),(\d+) @@.*')\n")
+                "         self._header_start_re = re.compile('^@@ -(\\d+)"
+                " \\+(\\d+),(\\d+) @@.*')\n")
 
         self.assertEqual(hunks[1].first_line_idx, 23)
         self.assertEqual(len(hunks[1].lines), 18)

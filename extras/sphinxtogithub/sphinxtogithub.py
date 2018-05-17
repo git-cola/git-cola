@@ -281,7 +281,7 @@ class LayoutFactory(object):
 def sphinx_extension(app, exception):
     "Wrapped up as a Sphinx Extension"
 
-    if not app.builder.name in ("html", "dirhtml"):
+    if app.builder.name not in ("html", "dirhtml"):
         return
 
     if not app.config.sphinx_to_github:
