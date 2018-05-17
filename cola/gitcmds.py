@@ -70,7 +70,9 @@ def remote_url(remote, push=False, config=None):
 
 
 def diff_index_filenames(ref):
-    """Return a of filenames that have been modified relative to the index"""
+    """
+    Return a diff of filenames that have been modified relative to the index
+    """
     out = git.diff_index(ref, name_only=True, z=True)[STDOUT]
     return _parse_diff_filenames(out)
 

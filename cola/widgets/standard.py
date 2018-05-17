@@ -637,7 +637,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
     This dialog ignores the ESC key so that it is not
     prematurely closed.
 
-    An thread is spawned to animate the progress label text.
+    A thread is spawned to animate the progress label text.
 
     """
     def __init__(self, title, label, parent):
