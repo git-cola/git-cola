@@ -285,7 +285,7 @@ class ImageView(QtWidgets.QGraphicsView):
             scene_rect = self.sceneRect()
             new_top_left.setX(clamp(new_top_left.x(), scene_rect.left(), scene_rect.right()))
             new_top_left.setY(clamp(new_top_left.y(), scene_rect.top(), scene_rect.bottom()))
-            nroi = QRectF(new_top_left, roi.size())
+            nroi = QtCore.QRectF(new_top_left, roi.size())
             self.fitInView(nroi, Qt.KeepAspectRatio)
             self.start_drag = end_drag
         self.update()
