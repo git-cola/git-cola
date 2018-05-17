@@ -1030,7 +1030,7 @@ class DiffImage(EditModel):
         filename = self.new_filename
         annex = self.annex
 
-        candiate_merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
+        candidate_merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
         merge_heads = [
             merge_head for merge_head in candidate_merge_heads
                 if core.exists(git.git_path(merge_head))]
