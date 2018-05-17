@@ -87,7 +87,7 @@ def _config_key_value(line, splitchar):
     try:
         k, v = line.split(splitchar, 1)
     except ValueError:
-        # the user has an emptyentry in their git config,
+        # the user has an empty entry in their git config,
         # which Git interprets as meaning "true"
         k = line
         v = 'true'
