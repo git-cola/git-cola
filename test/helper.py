@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import shutil
 import stat
@@ -83,11 +82,9 @@ class GitRepositoryTestCase(TmpPathTestCase):
         gitcmds.reset()
 
     def git(self, *args):
-        p = subprocess.Popen(['git'] + list(args), stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-        output, error = p.communicate()
-        self.failIf(p.returncode != 0)
-        return output.strip()
+        status, out, err = core.run_command(['git'] + list(args))
+        self.assertEqual(status, 0)
+        return out
 
     def initialize_repo(self):
         self.git('init')
