@@ -159,6 +159,7 @@ class Editor(QtWidgets.QWidget):
         self.context = context
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char()
+        self.cancel_action = core.getenv('GIT_XBASE_CANCEL_ACTION', 'abort')
 
         self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(notifier, context, self)
@@ -255,8 +256,13 @@ class Editor(QtWidgets.QWidget):
 
     # actions
     def cancel(self):
-        self.status = 1
-        self.exit.emit(1)
+        if self.cancel_action == 'save':
+            status = self.save('')
+        else:
+            status = 1
+
+        self.status = status
+        self.exit.emit(status)
 
     def rebase(self):
         lines = [item.value() for item in self.tree.items()]
