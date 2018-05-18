@@ -104,7 +104,7 @@ def decode(value, encoding=None, errors='strict'):
 def encode(string, encoding=None):
     """encode(unencoded_string) returns a string encoded in utf-8
     """
-    if type(string) is not ustr:
+    if not isinstance(string, ustr):
         return string
     return string.encode(encoding or ENCODING, 'replace')
 

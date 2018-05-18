@@ -26,6 +26,12 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/814
 
+* The user's `$PATH` environment variable can now contain utf-8
+  encoded paths.  Previously, launching external commands could
+  lead to tracebacks.
+
+  https://github.com/git-cola/git-cola/issues/807
+
 .. _v3.1:
 
 git-cola v3.1
