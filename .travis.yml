@@ -46,9 +46,8 @@ install:
 
 script:
   - make all
-  # Sphinx requires Python 3.4
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || test "3.3" = "$TRAVIS_PYTHON_VERSION" || make doc
-  # TODO tests currently fail on Python3 due to sip
+  # Sphinx requires Python 2.7 or 3.4+
+  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make doc
   - make test V=2
   # pylint 1.4 uses python2.7+ syntax so skip pylint on python2.6
   - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint3k
