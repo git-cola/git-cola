@@ -1603,6 +1603,7 @@ class GitXBaseContext(object):
         self.env = {
             'GIT_EDITOR': prefs.editor(),
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
+            'GIT_XBASE_CANCEL_ACTION': 'save',
         }
         self.env.update(kwargs)
 
@@ -1667,9 +1668,9 @@ class Rebase(ModelCommand):
                 # as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
         self.model.update_status()
-        title = N_('Rebase stopped')
-        Interaction.command(title, 'git rebase', status, out, err)
-
+        if err.strip() != 'Nothing to do':
+            title = N_('Rebase stopped')
+            Interaction.command(title, 'git rebase', status, out, err)
         return status, out, err
 
 

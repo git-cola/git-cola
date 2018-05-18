@@ -159,6 +159,7 @@ class Editor(QtWidgets.QWidget):
         self.context = context
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char()
+        self.cancel_action = core.getenv('GIT_XBASE_CANCEL_ACTION', 'abort')
 
         self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(notifier, context, self)
@@ -255,21 +256,31 @@ class Editor(QtWidgets.QWidget):
 
     # actions
     def cancel(self):
-        self.status = 1
-        self.exit.emit(1)
+        if self.cancel_action == 'save':
+            status = self.save('')
+        else:
+            status = 1
+
+        self.status = status
+        self.exit.emit(status)
 
     def rebase(self):
         lines = [item.value() for item in self.tree.items()]
         sequencer_instructions = '\n'.join(lines) + '\n'
+        status = self.save(sequencer_instructions)
+        self.status = status
+        self.exit.emit(status)
+
+    def save(self, string):
+        """Save the instruction sheet"""
         try:
-            core.write(self.filename, sequencer_instructions)
-            self.status = 0
-            self.exit.emit(0)
+            core.write(self.filename, string)
+            status = 0
         except Exception as e:
             msg, details = utils.format_exception(e)
             sys.stderr.write(msg + '\n\n' + details)
-            self.status = 128
-            self.exit.emit(128)
+            status = 128
+        return status
 
     def external_diff(self):
         items = self.tree.selected_items()
