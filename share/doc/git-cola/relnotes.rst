@@ -20,6 +20,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/813
 
+* The `git xbase` rebase editor no longer displays an error when
+  cancelling an interactive rebase.
+
+  https://github.com/git-cola/git-cola/issues/814
+
 Fixes
 -----
 * The DAG window now updates itself when branches and tags are created.
