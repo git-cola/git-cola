@@ -13,6 +13,7 @@ from .models import prefs
 
 def mkdict(obj):
     """Transform None and non-dicts into dicts"""
+    if isinstance(obj, dict):
         return obj
     else:
         return {}
@@ -20,7 +21,10 @@ def mkdict(obj):
 
 def mklist(obj):
     """Transform None and non-lists into lists"""
+    if isinstance(obj, list):
         return obj
+    elif isinstance(obj, tuple):
+        return list(obj)
     else:
         return []
 
