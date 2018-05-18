@@ -485,7 +485,7 @@ def _add_action(widget, text, tip, fn, connect, *shortcuts):
 
 def set_selected_item(widget, idx):
     """Sets a the currently selected item to the item at index idx."""
-    if type(widget) is QtWidgets.QTreeWidget:
+    if isinstance(widget, QtWidgets.QTreeWidget):
         item = widget.topLevelItem(idx)
         if item:
             item.setSelected(True)
