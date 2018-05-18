@@ -12,14 +12,14 @@ from .models import prefs
 
 
 def mkdict(obj):
-    if type(obj) is dict:
+    """Transform None and non-dicts into dicts"""
         return obj
     else:
         return {}
 
 
 def mklist(obj):
-    if type(obj) is list:
+    """Transform None and non-lists into lists"""
         return obj
     else:
         return []
