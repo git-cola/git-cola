@@ -57,7 +57,7 @@ def setenv(key, value):
     Why?  win32 requires putenv().  UNIX only requires os.environ.
 
     """
-    if not PY3 and type(value) is ustr:
+    if not PY3 and isinstance(value, ustr):
         value = value.encode(ENCODING, 'replace')
     os.environ[key] = value
     os.putenv(key, value)
