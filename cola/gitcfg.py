@@ -335,7 +335,7 @@ class GitConfig(observable.Observable):
         return self._get(self._user_or_system, key, default)
 
     def python_to_git(self, value):
-        if type(value) is bool:
+        if isinstance(value, bool):
             if value:
                 return 'true'
             else:

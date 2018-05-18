@@ -80,7 +80,7 @@ def grep(pattern, items, squash=True):
     :returns: List of matching items
 
     """
-    isdict = type(items) is dict
+    isdict = isinstance(items, dict)
     if pattern in __grep_cache:
         regex = __grep_cache[pattern]
     else:

@@ -26,6 +26,23 @@ Fixes
 
   https://github.com/git-cola/git-cola/issues/814
 
+* The user's `$PATH` environment variable can now contain utf-8
+  encoded paths.  Previously, launching external commands could
+  lead to tracebacks.
+
+  https://github.com/git-cola/git-cola/issues/807
+
+* Git Cola development sandboxes can now be stored on utf-8 encoded
+  filesystem paths.  Previously, the interactive rebase feature
+  could be broken when running in that environment.
+
+  https://github.com/git-cola/git-cola/issues/825
+
+* The log window now uses an ISO-8601 timestamp, which
+  avoids localized output in the log window.
+
+  https://github.com/git-cola/git-cola/issues/817
+
 .. _v3.1:
 
 git-cola v3.1

@@ -15,11 +15,13 @@ from cola import gitcmds
 
 def tmp_path(*paths):
     """Returns a path relative to the test/tmp directory"""
-    return os.path.join(os.path.dirname(__file__), 'tmp', *paths)
+    dirname = core.decode(os.path.dirname(__file__))
+    return os.path.join(dirname, 'tmp', *paths)
 
 
 def fixture(*paths):
-    return os.path.join(os.path.dirname(__file__), 'fixtures', *paths)
+    dirname = core.decode(os.path.dirname(__file__))
+    return os.path.join(dirname, 'fixtures', *paths)
 
 
 def run_unittest(suite):

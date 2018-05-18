@@ -411,7 +411,7 @@ def diff_helper(commit=None,
     encoding = None
     if filename:
         argv.append('--')
-        if type(filename) is list:
+        if isinstance(filename, (list, tuple)):
             argv.extend(filename)
         else:
             argv.append(filename)
