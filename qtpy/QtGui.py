@@ -12,6 +12,7 @@ Provides QtGui classes and functions.
     exposed here. Therefore, you need to treat/use this package as if it were
     the ``PyQt5.QtGui`` module.
 """
+import warnings
 
 from . import PYQT5, PYQT4, PYSIDE, PYSIDE2, PythonQtError
 
@@ -75,10 +76,21 @@ elif PYQT4:
     from PyQt4.QtGui import QDesktopServices as _QDesktopServices
 
     class QDesktopServices():
-         openUrl = _QDesktopServices.openUrl
-         setUrlHandler = _QDesktopServices.setUrlHandler
-         unsetUrlHandler = _QDesktopServices.unsetUrlHandler
+        openUrl = _QDesktopServices.openUrl
+        setUrlHandler = _QDesktopServices.setUrlHandler
+        unsetUrlHandler = _QDesktopServices.unsetUrlHandler
 
+        def __getattr__(self, name):
+            attr = getattr(_QDesktopServices, name)
+
+            new_name = name
+            if name == 'storageLocation':
+                new_name = 'writableLocation'
+            warnings.warn(("Warning QDesktopServices.{} is deprecated in Qt5"
+                            "we recommend you use QDesktopServices.{} instead").format(name, new_name),
+                           DeprecationWarning)
+            return attr
+    QDesktopServices = QDesktopServices()
 
 elif PYSIDE:
     from PySide.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
@@ -126,8 +138,20 @@ elif PYSIDE:
     from PySide.QtGui import QDesktopServices as _QDesktopServices
 
     class QDesktopServices():
-         openUrl = _QDesktopServices.openUrl
-         setUrlHandler = _QDesktopServices.setUrlHandler
-         unsetUrlHandler = _QDesktopServices.unsetUrlHandler
+        openUrl = _QDesktopServices.openUrl
+        setUrlHandler = _QDesktopServices.setUrlHandler
+        unsetUrlHandler = _QDesktopServices.unsetUrlHandler
+
+        def __getattr__(self, name):
+            attr = getattr(_QDesktopServices, name)
+
+            new_name = name
+            if name == 'storageLocation':
+                new_name = 'writableLocation'
+            warnings.warn(("Warning QDesktopServices.{} is deprecated in Qt5"
+                            "we recommend you use QDesktopServices.{} instead").format(name, new_name),
+                           DeprecationWarning)
+            return attr
+    QDesktopServices = QDesktopServices()
 else:
     raise PythonQtError('No Qt bindings could be found')

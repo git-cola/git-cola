@@ -10,12 +10,13 @@
 **QtPy** is a shim over the various Python Qt bindings. It is used to write
 Qt binding indenpendent libraries or applications.
 
-The shim will automatically select the first available API (PyQt5, PyQt4 and
-finally PySide).
+If one of the APIs has already been imported, then it will be used.
 
-You can force the use of one specific bindings (e.g. if your application is
-using one specific bindings and you need to use library that use QtPy) by
-setting up the ``QT_API`` environment variable.
+Otherwise, the shim will automatically select the first available API (PyQt5,
+PySide2, PyQt4 and finally PySide); in that case, you can force the use of one
+specific bindings (e.g. if your application is using one specific bindings and
+you need to use library that use QtPy) by setting up the ``QT_API`` environment
+variable.
 
 PyQt5
 =====
@@ -62,9 +63,22 @@ packages::
 """
 
 import os
+import sys
+import warnings
 
 # Version of QtPy
 from ._version import __version__
+
+
+class PythonQtError(Exception):
+    """Error raise if no bindings could be selected"""
+    pass
+
+
+class PythonQtWarning(Warning):
+    """Warning if some features are not implemented in a binding."""
+    pass
+
 
 # Qt API environment variable name
 QT_API = 'QT_API'
@@ -86,7 +100,9 @@ PYSIDE2_API = ['pyside2']
 
 # Setting a default value for QT_API
 os.environ.setdefault(QT_API, 'pyqt5')
+
 API = os.environ[QT_API].lower()
+initial_api = API
 assert API in (PYQT5_API + PYQT4_API + PYSIDE_API + PYSIDE2_API)
 
 is_old_pyqt = is_pyqt46 = False
@@ -94,15 +110,20 @@ PYQT5 = True
 PYQT4 = PYSIDE = PYSIDE2 = False
 
 
-class PythonQtError(Exception):
-    """Error raise if no bindings could be selected"""
-    pass
+if 'PyQt5' in sys.modules:
+    API = 'pyqt5'
+elif 'PySide2' in sys.modules:
+    API = 'pyside2'
+elif 'PyQt4' in sys.modules:
+    API = 'pyqt4'
+elif 'PySide' in sys.modules:
+    API = 'pyside'
 
 
 if API in PYQT5_API:
     try:
-        from PyQt5.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
-        from PyQt5.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
+        from PyQt5.QtCore import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
+        from PyQt5.QtCore import QT_VERSION_STR as QT_VERSION  # analysis:ignore
         PYSIDE_VERSION = None
     except ImportError:
         API = os.environ['QT_API'] = 'pyside2'
@@ -129,7 +150,7 @@ if API in PYQT4_API:
             sip.setapi('QTextStream', 2)
             sip.setapi('QTime', 2)
             sip.setapi('QUrl', 2)
-        except AttributeError:
+        except (AttributeError, ValueError):
             # PyQt < v4.6
             pass
         from PyQt4.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
@@ -153,12 +174,18 @@ if API in PYSIDE_API:
     except ImportError:
         raise PythonQtError('No Qt bindings could be found')
 
+# If a correct API name is passed to QT_API and it could not be found,
+# switches to another and informs through the warning
+if API != initial_api:
+    warnings.warn('Selected binding "{}" could not be found, '
+                  'using "{}"'.format(initial_api, API), RuntimeWarning)
+
 API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
             'pyside': 'PySide', 'pyside2':'PySide2'}[API]
 
 if PYQT4:
-        import sip
-        try:
-            API_NAME += (" (API v{0})".format(sip.getapi('QString')))
-        except AttributeError:
-            pass
+    import sip
+    try:
+        API_NAME += (" (API v{0})".format(sip.getapi('QString')))
+    except AttributeError:
+        pass

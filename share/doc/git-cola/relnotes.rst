@@ -25,6 +25,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/814
 
+Packaging
+---------
+* The vendored `qtpy` library was updated to `v1.4.2`.
+
 Fixes
 -----
 * The DAG window now updates itself when branches and tags are created.

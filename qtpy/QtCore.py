@@ -24,6 +24,10 @@ if PYQT5:
     del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
 elif PYSIDE2:
     from PySide2.QtCore import *
+    try:  # may be limited to PySide-5.11a1 only 
+        from PySide2.QtGui import QStringListModel
+    except:
+        pass
 elif PYQT4:
     from PyQt4.QtCore import *
     # Those are things we inherited from Spyder that fix crazy crashes under
@@ -58,6 +62,7 @@ elif PYQT4:
         HomeLocation = _QDesktopServices.HomeLocation
         DataLocation = _QDesktopServices.DataLocation
         CacheLocation = _QDesktopServices.CacheLocation
+        writableLocation = _QDesktopServices.storageLocation
 
     # Those are imported from `import *`
     del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR, qInstallMsgHandler
@@ -88,6 +93,7 @@ elif PYSIDE:
         HomeLocation = _QDesktopServices.HomeLocation
         DataLocation = _QDesktopServices.DataLocation
         CacheLocation = _QDesktopServices.CacheLocation
+        writableLocation = _QDesktopServices.storageLocation
 
     import PySide.QtCore
     __version__ = PySide.QtCore.__version__
