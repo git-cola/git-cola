@@ -822,7 +822,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 return
             idx -= len(content)
 
-    def select_item(self, item):
+    def scroll_to_item(self, item):
         # First, scroll to the item, but keep the original hscroll
         hscroll = None
         hscrollbar = self.horizontalScrollBar()
@@ -832,6 +832,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if hscroll is not None:
             hscrollbar.setValue(hscroll)
 
+    def select_item(self, item):
+        self.scroll_to_item(item)
         self.setCurrentItem(item)
         item.setSelected(True)
 
@@ -880,6 +882,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def show_selection(self):
         """Show the selected item."""
+        self.scroll_to_item(self.currentItem())
         # Sync the selection model
         selected = self.selection()
         selection_model = selection.selection_model()
