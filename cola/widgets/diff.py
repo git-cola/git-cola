@@ -328,6 +328,7 @@ class Viewer(QtWidgets.QWidget):
         self.pixmaps = []
         self.options = options = Options(self)
         self.text = DiffEditor(options, self, context)
+        self.options.widget = self.text
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
         self.model = model = main.model()
