@@ -1,3 +1,21 @@
+Next-up Issues
+==============
+
+https://github.com/git-cola/git-cola/issues/709 - UI unresponsive large LFS
+https://github.com/git-cola/git-cola/issues/771 - hotkey for diffstat/index
+https://github.com/git-cola/git-cola/issues/798 - snap package
+https://github.com/git-cola/git-cola/issues/787 - windows10
+https://github.com/git-cola/git-cola/issues/493 - git add -N partial untracked
+https://github.com/git-cola/git-cola/issues/552 - diff against arbitrary ref
+https://github.com/git-cola/git-cola/issues/555 - nautilus integration
+https://github.com/git-cola/git-cola/issues/827 - fedora build
+
+Notes
+=====
+
+snap package home/git interface
+https://forum.snapcraft.io/t/new-interface-proprosal-the-git-interface/5498/2
+
 Ideas
 =====
 
