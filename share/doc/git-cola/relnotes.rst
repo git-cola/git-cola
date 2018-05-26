@@ -16,6 +16,14 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The status widget now ensures that each item is visible when selection
+  changes.  Previously, if you scrolled to the right to see the name of
+  a long filename, and then selected a short filename above it, the widget
+  may not have shown the short filename in the viewport.  We now ensure
+  that the filenames are visible when the selection changes.
+
+  https://github.com/git-cola/git-cola/pull/828
+
 * Updated Czech translation
 
   https://github.com/git-cola/git-cola/pull/813
