@@ -1,3 +1,6 @@
+Ideas
+=====
+
 - replace QMessagebox with custom widgets so we can save their sizes and
   make them have sensible behavior: resizable, better initial size,
   have the details shown by default.
@@ -5,6 +8,7 @@
   (name, label, fn)?
 
 - when pushing new branches, automatically set the upstream?
+
 - break apart widgets.remote into push, pull, fetch and reusable widgets
 
 - look at keyPressEvent for the tree mixin in widgets.standard and
