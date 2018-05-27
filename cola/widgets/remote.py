@@ -186,7 +186,11 @@ class RemoteActionDialog(standard.Dialog):
                                                tooltip=tooltip)
 
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
-        self.prune_checkbox = qtutils.checkbox(text=N_('Prune '))
+
+        tooltip = N_('Remove any remote-tracking references that no longer '
+                     'exist on the remote')
+        self.prune_checkbox = qtutils.checkbox(text=N_('Prune '),
+                                               tooltip=tooltip)
 
         tooltip = N_('Rebase the current branch instead of merging')
         self.rebase_checkbox = qtutils.checkbox(text=N_('Rebase'),
