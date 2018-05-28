@@ -129,6 +129,9 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+msgid " commits ago"
+msgstr ""
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
@@ -1547,6 +1550,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr ""
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr ""
 
@@ -1605,7 +1611,25 @@ msgstr ""
 msgid "Reset Branch?"
 msgstr ""
 
+msgid "Reset Hard"
+msgstr ""
+
+msgid "Reset Merge"
+msgstr ""
+
+msgid "Reset Soft"
+msgstr ""
+
 msgid "Reset Worktree"
+msgstr ""
+
+msgid "Reset hard?"
+msgstr ""
+
+msgid "Reset merge?"
+msgstr ""
+
+msgid "Reset soft?"
 msgstr ""
 
 msgid "Reset worktree?"
@@ -2042,7 +2066,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 msgid "The commit message will be cleared."
@@ -2059,7 +2095,7 @@ msgid "The revision expression cannot be empty."
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
