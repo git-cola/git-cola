@@ -187,7 +187,7 @@ class RemoteActionDialog(standard.Dialog):
 
         self.tags_checkbox = qtutils.checkbox(text=N_('Include tags '))
 
-        tooltip = N_('Remove any remote-tracking references that no longer '
+        tooltip = N_('Remove remote-tracking branches that no longer '
                      'exist on the remote')
         self.prune_checkbox = qtutils.checkbox(text=N_('Prune '),
                                                tooltip=tooltip)
