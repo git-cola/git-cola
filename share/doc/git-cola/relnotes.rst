@@ -39,6 +39,12 @@ Packaging
 
 Fixes
 -----
+* Changing diff options was causing resulting in an exception.
+
+  https://github.com/git-cola/git-cola/issues/833
+
+  https://github.com/git-cola/git-cola/pull/834
+
 * The DAG window now updates itself when branches and tags are created.
 
   https://github.com/git-cola/git-cola/issues/814
