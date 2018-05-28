@@ -147,6 +147,10 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+#, fuzzy
+msgid " commits ago"
+msgstr "Incheckningsmeddelande för sammanslagning:"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
@@ -1744,6 +1748,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr "Fjärr"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 #, fuzzy
 msgid "Remove selected (Delete)"
 msgstr "Byt namn på gren"
@@ -1814,8 +1821,32 @@ msgstr "Ta bort gren"
 msgid "Reset Branch?"
 msgstr "Ta bort gren"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Ta bort gren"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Revisioner att slå ihop"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Återställ"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Ta bort gren"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Ta bort gren"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Återställa \"%s\"?"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2308,7 +2339,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2327,7 +2370,7 @@ msgid "The revision expression cannot be empty."
 msgstr "Revisionsuttrycket är tomt."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -3212,9 +3255,6 @@ msgstr ""
 
 #~ msgid "Rescan"
 #~ msgstr "Sök på nytt"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "Återställa \"%s\"?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

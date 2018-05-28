@@ -166,6 +166,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - DAG"
 
+msgid " commits ago"
+msgstr " wdrożeń temu"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" została usunięta z \"%(remote)s\"."
@@ -1667,6 +1670,9 @@ msgstr "Usunąć %s z listy ostatnich?"
 msgid "Remove Element"
 msgstr "Usuń"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Usuń wybrane (Usuń)"
 
@@ -1729,8 +1735,32 @@ msgstr "Wyzeruj HEAD gałęzi"
 msgid "Reset Branch?"
 msgstr "Wyzerować gałąź?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Wyzeruj HEAD gałęzi"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Wydanie do scalenia"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Wyzeruj drzewo robocze"
+
 msgid "Reset Worktree"
 msgstr "Wyzeruj drzewo robocze"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Wyzerować gałąź?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Wyzerować drzewo robocze?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Wyzerować drzewo robocze?"
 
 msgid "Reset worktree?"
 msgstr "Wyzerować drzewo robocze?"
@@ -2180,8 +2210,20 @@ msgstr "Szerokość tekstu"
 msgid "The branch will be no longer available."
 msgstr ""
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
 
 msgid "The commit message will be cleared."
@@ -2197,8 +2239,8 @@ msgstr "Zostaną usunięte następujące pliki:"
 msgid "The revision expression cannot be empty."
 msgstr "Wyrażenie wydania nie może być puste."
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "Drzewo robocze zostanie wyzerowane przy użyciu \"git reset --merge %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2431,9 +2473,6 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
-
-#~ msgid " commits ago"
-#~ msgstr " wdrożeń temu"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"

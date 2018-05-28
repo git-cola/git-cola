@@ -168,6 +168,9 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+msgid " commits ago"
+msgstr " коммитов назад"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" была удалена из \"%(remote)s\"."
@@ -1677,6 +1680,9 @@ msgstr "Удалить %s из списка последних изменени�
 msgid "Remove Element"
 msgstr "Удалить"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Удалить выбранное (Delete)"
 
@@ -1740,8 +1746,32 @@ msgstr "Сбросить (reset) ветвь"
 msgid "Reset Branch?"
 msgstr "Сбросить (reset) ветвь?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Сбросить (reset) ветвь"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Версия для объединения"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Сброс"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Сбросить (reset) ветвь?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Сбросить (reset) ветвь?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Сбросить '%s'?"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2197,7 +2227,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 msgid "The commit message will be cleared."
@@ -2214,7 +2256,7 @@ msgid "The revision expression cannot be empty."
 msgstr "Поле версии не может быть пустым."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2471,9 +2513,6 @@ msgstr ""
 #~ "\n"
 #~ "Это известная проблема с Tcl,\n"
 #~ "распространяемым Cygwin."
-
-#~ msgid " commits ago"
-#~ msgstr " коммитов назад"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
@@ -3136,9 +3175,6 @@ msgstr ""
 
 #~ msgid "Rescan"
 #~ msgstr "Перечитать"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "Сбросить '%s'?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

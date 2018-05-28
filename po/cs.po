@@ -201,6 +201,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - DAG"
 
+msgid " commits ago"
+msgstr " zápisy"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" byla smazána z \"%(remote)s\"."
@@ -1637,6 +1640,9 @@ msgstr "Odstranit %s ze seznamu nedávných?"
 msgid "Remove Element"
 msgstr "Odebrat prvek"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Odstranit vybrané (Smazat)"
 
@@ -1695,8 +1701,32 @@ msgstr "Resetovat hlavu větve"
 msgid "Reset Branch?"
 msgstr "Resetovat větev?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Resetovat hlavu větve"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Revize ke sloučení"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Resetovat pracovní adresář"
+
 msgid "Reset Worktree"
 msgstr "Resetovat pracovní adresář"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Resetovat větev?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Resetovat pracovní adresář?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Resetovat pracovní adresář?"
 
 msgid "Reset worktree?"
 msgstr "Resetovat pracovní adresář?"
@@ -2131,8 +2161,20 @@ msgstr "Šířka textu"
 msgid "The branch will be no longer available."
 msgstr "Větev nebude již k dispozici."
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
 
 msgid "The commit message will be cleared."
@@ -2148,9 +2190,9 @@ msgstr "Následující soubory budou smazány:"
 msgid "The revision expression cannot be empty."
 msgstr ""
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
-msgstr ""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
+msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr ""
@@ -2372,6 +2414,3 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "rrrr-mm-dd"
-
-#~ msgid " commits ago"
-#~ msgstr " zápisy"

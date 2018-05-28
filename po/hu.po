@@ -148,6 +148,10 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+#, fuzzy
+msgid " commits ago"
+msgstr "Merge commit üzenet:"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
@@ -1745,6 +1749,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr "Távoli"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 #, fuzzy
 msgid "Remove selected (Delete)"
 msgstr "Branch átnevezése"
@@ -1815,8 +1822,32 @@ msgstr "Branch törlése"
 msgid "Reset Branch?"
 msgstr "Branch törlése"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Branch törlése"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Merge-ölni szándékozott revízió"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Visszaállítás"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Branch törlése"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Branch törlése"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Visszaállítjuk a következőt: '%s'?"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2309,7 +2340,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2328,7 +2371,7 @@ msgid "The revision expression cannot be empty."
 msgstr "A revízió kifejezés üres."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -3242,9 +3285,6 @@ msgstr ""
 
 #~ msgid "Rescan"
 #~ msgstr "Keresés újra"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "Visszaállítjuk a következőt: '%s'?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

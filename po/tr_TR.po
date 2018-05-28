@@ -169,6 +169,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - DAG"
 
+msgid " commits ago"
+msgstr " commits ago"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" öğesi \"%(remote)s\" uzak kaynağından silindi."
@@ -1675,6 +1678,9 @@ msgstr "%s  öğesini son kullanılanlardan sil?"
 msgid "Remove Element"
 msgstr "Kaldır"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Remove selected (Delete)"
 
@@ -1738,8 +1744,32 @@ msgstr "Reset Branch"
 msgid "Reset Branch?"
 msgstr "Reset Branch?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Reset Branch"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Revision to Merge"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Sıfırla"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Reset Branch?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Reset Branch?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Sıfırla"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2193,7 +2223,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 msgid "The commit message will be cleared."
@@ -2210,7 +2252,7 @@ msgid "The revision expression cannot be empty."
 msgstr "The revision expression cannot be empty."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2443,9 +2485,6 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
-
-#~ msgid " commits ago"
-#~ msgstr " commits ago"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"

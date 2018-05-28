@@ -153,6 +153,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - DAG"
 
+msgid " commits ago"
+msgstr " commit yang lalu"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" telah dihapus dari \"%(remote)s\"."
@@ -1670,6 +1673,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr "Hapus"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Hapus yang terpilih (Hapus)"
 
@@ -1735,8 +1741,32 @@ msgstr "Atur Ulang Cabang"
 msgid "Reset Branch?"
 msgstr "Atur Ulang Cabang?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Atur Ulang Cabang"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Revisi untuk Dimerge"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Reset"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Atur Ulang Cabang?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Atur Ulang Cabang?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Reset"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2193,7 +2223,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2211,7 +2253,7 @@ msgid "The revision expression cannot be empty."
 msgstr "Ekspresi revisi tidak boleh kosong."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2446,9 +2488,6 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "dd-MM-yyyy"
-
-#~ msgid " commits ago"
-#~ msgstr " commit yang lalu"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"

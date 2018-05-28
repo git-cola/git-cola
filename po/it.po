@@ -148,6 +148,10 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+#, fuzzy
+msgid " commits ago"
+msgstr "Messaggio di fusione:"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
@@ -1745,6 +1749,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr "Remoto"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 #, fuzzy
 msgid "Remove selected (Delete)"
 msgstr "Rinomina ramo"
@@ -1815,8 +1822,32 @@ msgstr "Elimina ramo"
 msgid "Reset Branch?"
 msgstr "Elimina ramo"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Elimina ramo"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Revisione da fondere"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Ripristina"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Elimina ramo"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Elimina ramo"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Ripristinare '%s'?"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2309,7 +2340,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2328,7 +2371,7 @@ msgid "The revision expression cannot be empty."
 msgstr "L'espressione di revisione è vuota."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -3209,9 +3252,6 @@ msgstr ""
 
 #~ msgid "Rescan"
 #~ msgstr "Analizza nuovamente"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "Ripristinare '%s'?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

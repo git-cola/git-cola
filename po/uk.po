@@ -206,6 +206,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - Граф (DAG)"
 
+msgid " commits ago"
+msgstr " комітів тому"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" було видалено з \"%(remote)s\"."
@@ -1692,6 +1695,9 @@ msgstr "Видалити %s зі списку останніх?"
 msgid "Remove Element"
 msgstr "Видалити елемент"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Видалити виділене (Видалити)"
 
@@ -1751,8 +1757,32 @@ msgstr "Скинути HEAD гілки"
 msgid "Reset Branch?"
 msgstr "Скинути гілку?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Скинути HEAD гілки"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Ревізія для злиття"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Скинути робоче дерево"
+
 msgid "Reset Worktree"
 msgstr "Скинути робоче дерево"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Скинути гілку?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Скинути робоче дерево?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Скинути робоче дерево?"
 
 msgid "Reset worktree?"
 msgstr "Скинути робоче дерево?"
@@ -2200,8 +2230,20 @@ msgstr "Ширина тексту"
 msgid "The branch will be no longer available."
 msgstr "Гілка не буде більше доступна."
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
 
 msgid "The commit message will be cleared."
@@ -2217,8 +2259,8 @@ msgstr "Наступні файли будуть видалені:"
 msgid "The revision expression cannot be empty."
 msgstr "Поле ревізії не може бути порожнім."
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2449,9 +2491,6 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "рррр-ММ-дд"
-
-#~ msgid " commits ago"
-#~ msgstr " комітів тому"
 
 #~ msgid "\"%s\" returned exit status %d"
 #~ msgstr "\"%s\" завершилась з кодом %d"

@@ -155,6 +155,10 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+#, fuzzy
+msgid " commits ago"
+msgstr "Hace %d minutos"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" ha sido eliminado de \"%(remote)s\"."
@@ -1627,6 +1631,9 @@ msgstr "Eliminar %s de la lista de recientes?"
 msgid "Remove Element"
 msgstr "Eliminar"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Eliminar seleccionados (Delete)"
 
@@ -1692,7 +1699,27 @@ msgstr "Rama Remota Eliminada"
 msgid "Reset Branch?"
 msgstr ""
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Rama Remota Eliminada"
+
+msgid "Reset Merge"
+msgstr ""
+
+msgid "Reset Soft"
+msgstr ""
+
 msgid "Reset Worktree"
+msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Rama Remota Eliminada"
+
+msgid "Reset merge?"
+msgstr ""
+
+msgid "Reset soft?"
 msgstr ""
 
 msgid "Reset worktree?"
@@ -2137,7 +2164,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2155,7 +2194,7 @@ msgid "The revision expression cannot be empty."
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"

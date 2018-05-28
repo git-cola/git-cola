@@ -191,6 +191,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - 历史视图"
 
+msgid " commits ago"
+msgstr " 个提交之前"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "已从远端 \"%(remote)s\" 删除分支 \"%(branch)s\"."
@@ -1669,6 +1672,9 @@ msgstr "将 %s 从最近使用列表中移除吗?"
 msgid "Remove Element"
 msgstr "移除元素"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "移除所选 (删除)"
 
@@ -1728,8 +1734,32 @@ msgstr "复位分支头"
 msgid "Reset Branch?"
 msgstr "重置分支吗?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "复位分支头"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "要合并的版本"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "重置工作树"
+
 msgid "Reset Worktree"
 msgstr "重置工作树"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "重置分支吗?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "要重置工作树吗？"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "复位 '%s'?"
 
 msgid "Reset worktree?"
 msgstr "要重置工作树吗？"
@@ -2178,7 +2208,19 @@ msgid "The branch will be no longer available."
 msgstr "分支已不可用。"
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 msgid "The commit message will be cleared."
@@ -2195,7 +2237,7 @@ msgid "The revision expression cannot be empty."
 msgstr "版本表达式不能为空."
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2448,9 +2490,6 @@ msgstr "yyyy-MM-dd"
 #~ "\n"
 #~ "这是由 Cygwin 发布的 Tcl 代码中一个\n"
 #~ "已知问题所引起."
-
-#~ msgid " commits ago"
-#~ msgstr " 个提交之前"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
@@ -3112,9 +3151,6 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Rescan"
 #~ msgstr "重新扫描"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "复位 '%s'?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

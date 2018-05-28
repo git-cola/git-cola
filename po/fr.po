@@ -189,6 +189,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - DAG"
 
+msgid " commits ago"
+msgstr " commits avant"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "« %(branch)s » a été supprimé de « %(remote)s »."
@@ -1686,6 +1689,9 @@ msgstr "Supprimer %s de la liste des dépôts récents ?"
 msgid "Remove Element"
 msgstr "Supprimer"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Supprimer la sélection"
 
@@ -1747,8 +1753,32 @@ msgstr "Supprimer la branche principale"
 msgid "Reset Branch?"
 msgstr "Réinitialiser la branche ?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Supprimer la branche principale"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Révision à fusionner"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Réinitialiser l'arbre de travail"
+
 msgid "Reset Worktree"
 msgstr "Réinitialiser l'arbre de travail"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Réinitialiser la branche ?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Réinitialiser l'arbre de travail ?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "Réinitialiser '%s' ?"
 
 msgid "Reset worktree?"
 msgstr "Réinitialiser l'arbre de travail ?"
@@ -2197,8 +2227,20 @@ msgstr "Largeur du texte"
 msgid "The branch will be no longer available."
 msgstr ""
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "La branche sera réinitialisée en utilisant « git reset --mixed %s »"
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "La branche sera réinitialisée en utilisant « git reset --mixed %s »"
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "La branche sera réinitialisée en utilisant « git reset --mixed %s »"
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "La branche sera réinitialisée en utilisant « git reset --mixed %s »"
 
 msgid "The commit message will be cleared."
@@ -2214,8 +2256,8 @@ msgstr "Les fichiers suivants seront effacés :"
 msgid "The revision expression cannot be empty."
 msgstr "L'expression de révision est vide."
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "Cet arbre de travail sera réinitialisé en utilisant « git reset --merge %s »"
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2472,9 +2514,6 @@ msgstr "dd/MM/yyyy"
 #~ "\n"
 #~ "Ceci est du à un problème connu avec\n"
 #~ "le binaire Tcl distribué par Cygwin."
-
-#~ msgid " commits ago"
-#~ msgstr " commits avant"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
@@ -3138,9 +3177,6 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Rescan"
 #~ msgstr "Resynchroniser"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "Réinitialiser '%s' ?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

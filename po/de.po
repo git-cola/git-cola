@@ -260,6 +260,9 @@ msgstr ""
 msgid " - DAG"
 msgstr " - Verlauf"
 
+msgid " commits ago"
+msgstr " Versionen davor"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" wurde von \"%(remote)s\" gelöscht."
@@ -1722,6 +1725,9 @@ msgstr "%s aus dem Verlauf entfernen?"
 msgid "Remove Element"
 msgstr "Element entfernen"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 msgid "Remove selected (Delete)"
 msgstr "Auswahl entfernen (löschen)"
 
@@ -1780,8 +1786,32 @@ msgstr "Branch-Head zurücksetzen"
 msgid "Reset Branch?"
 msgstr "Branch zurücksetzen?"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "Branch-Head zurücksetzen"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "Zusammenzuführende Revision"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "Arbeitsbaum zurücksetzen"
+
 msgid "Reset Worktree"
 msgstr "Arbeitsbaum zurücksetzen"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "Branch zurücksetzen?"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "Arbeitsbaum zurücksetzen?"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "»%s« zurücksetzen?"
 
 msgid "Reset worktree?"
 msgstr "Arbeitsbaum zurücksetzen?"
@@ -2218,8 +2248,20 @@ msgstr "Textbreite"
 msgid "The branch will be no longer available."
 msgstr "Der Branch wird nicht mehr verfügbar sein."
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
 
 msgid "The commit message will be cleared."
@@ -2235,8 +2277,8 @@ msgstr "Die folgenden Zeilen werden gleich gelöscht:"
 msgid "The revision expression cannot be empty."
 msgstr "Der Ausdruck darf nicht leer sein."
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --merge %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2487,9 +2529,6 @@ msgstr "dd.MM.yyyy"
 #~ "\n"
 #~ "Dies ist ein bekanntes Problem der Tcl-Version, die\n"
 #~ "in Cygwin mitgeliefert wird."
-
-#~ msgid " commits ago"
-#~ msgstr " Versionen davor"
 
 #, fuzzy
 #~ msgid "\"%s\" returned exit status %d"
@@ -3178,9 +3217,6 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Rescan"
 #~ msgstr "Ansicht aktualisieren"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "»%s« zurücksetzen?"
 
 #~ msgid ""
 #~ "Reset changes?\n"

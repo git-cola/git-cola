@@ -148,6 +148,10 @@ msgstr ""
 msgid " - DAG"
 msgstr ""
 
+#, fuzzy
+msgid " commits ago"
+msgstr "マージコミットメッセージ:"
+
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr ""
@@ -1745,6 +1749,9 @@ msgstr ""
 msgid "Remove Element"
 msgstr "リモート"
 
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
+
 #, fuzzy
 msgid "Remove selected (Delete)"
 msgstr "ブランチの名前変更"
@@ -1815,8 +1822,32 @@ msgstr "ブランチ削除"
 msgid "Reset Branch?"
 msgstr "ブランチ削除"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "ブランチ削除"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "マージするリビジョン"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "リセット"
+
 msgid "Reset Worktree"
 msgstr ""
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "ブランチ削除"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "ブランチ削除"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "'%s' をリセットしますか？"
 
 msgid "Reset worktree?"
 msgstr ""
@@ -2309,7 +2340,19 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr ""
+
+#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr ""
+
+#, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
 #, fuzzy
@@ -2328,7 +2371,7 @@ msgid "The revision expression cannot be empty."
 msgstr "リビジョン式が空です。"
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -3208,9 +3251,6 @@ msgstr ""
 
 #~ msgid "Rescan"
 #~ msgstr "再スキャン"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "'%s' をリセットしますか？"
 
 #~ msgid ""
 #~ "Reset changes?\n"

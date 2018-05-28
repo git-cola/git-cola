@@ -55,8 +55,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or"
-" updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -255,6 +254,9 @@ msgstr ""
 
 msgid " - DAG"
 msgstr " - 有向無環圖(DAG)"
+
+msgid " commits ago"
+msgstr " 個修訂版提交前"
 
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
@@ -500,14 +502,10 @@ msgstr "建立時間"
 msgid "All Repositories"
 msgstr "所有的版控庫"
 
-msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
-" repository to lose commits; use it with care"
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr "允許非快速前移式更新。使用「強制」可能會造成遠端版控庫遺失修訂版提交；請小心使用"
 
-msgid ""
-"Always create a merge commit when enabled, even when the merge is a"
-" fast-forward update"
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
 msgstr "於啟用時，就算該合併是一個快速前移式更新也總是建立一個合併修訂版提交"
 
 msgid "Amend"
@@ -575,8 +573,7 @@ msgstr "指謫(blame)查看器"
 msgid "Blame..."
 msgstr "指摘(Blame)..."
 
-msgid ""
-"Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold with dark background font instead of italic headers (restart required)"
 msgstr "標題用帶深色底色的粗體而非斜體（需要重新啟動應用軟體設定才會生效）"
 
 msgid "Branch"
@@ -766,9 +763,7 @@ msgstr ""
 msgid "Commit summary"
 msgstr "修訂版提交描述"
 
-msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
-" uncommitted"
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
 msgstr "若不存在版本衝突時提交該合併。取消勾選以保持合併於尚未提交狀態"
 
 msgid "Commit@@verb"
@@ -1150,31 +1145,23 @@ msgstr "檔案已保存"
 msgid "File saved to \"%s\""
 msgstr "檔案已保存至「%s」"
 
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr "檔案系統變動監控：因為「cola.inotify」 Git 設定值被設定為 false 而被停用。\n"
 
-msgid ""
-"File system change monitoring: disabled because libc does not support the"
-" inotify system calls.\n"
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
 msgstr "檔案系統變動監控：因為 libc 程式庫不支援 inotify 系統呼叫而被停用。\n"
 
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
 msgstr "檔案系統變動監控：因為 pywin32 沒有安裝而被停用。\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number"
-" of inotify watches was reached.  You may be able to increase the limit on"
-" the number of watches by running:\n"
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
-" sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 msgstr ""
 "檔案系統變動監控：因為已經達到 inotify watch 的總數上限而被停用。您可以執行下列命令來增加 watch 的數量限制：\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
-" sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 
 msgid "File system change monitoring: enabled.\n"
 msgstr "檔案系統變動監控：已啟用。\n"
@@ -1711,9 +1698,7 @@ msgstr "將版本提交歷史量降到最低"
 msgid "Refresh"
 msgstr "重新整理"
 
-msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge"
-" can be resolved as a fast-forward"
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
 msgstr "除非當前 HEAD 指標早就是最新版本或是分支合併能以快速前移式處理否則拒絕合併分支"
 
 msgid "Remote"
@@ -1737,6 +1722,9 @@ msgstr "要將「%s」版控庫從最近使用的版控庫清單中移除嗎？"
 
 msgid "Remove Element"
 msgstr "移除元素"
+
+msgid "Remove remote-tracking branches that no longer exist on the remote"
+msgstr ""
 
 msgid "Remove selected (Delete)"
 msgstr "移除被選取的項目（刪除）"
@@ -1796,8 +1784,32 @@ msgstr "重設分支 Head"
 msgid "Reset Branch?"
 msgstr "要重設分支嗎？"
 
+#, fuzzy
+msgid "Reset Hard"
+msgstr "重設分支 Head"
+
+#, fuzzy
+msgid "Reset Merge"
+msgstr "要合併的修訂版"
+
+#, fuzzy
+msgid "Reset Soft"
+msgstr "重設工作目錄樹"
+
 msgid "Reset Worktree"
 msgstr "重設工作目錄樹"
+
+#, fuzzy
+msgid "Reset hard?"
+msgstr "要重設分支嗎？"
+
+#, fuzzy
+msgid "Reset merge?"
+msgstr "要重設工作目錄樹嗎？"
+
+#, fuzzy
+msgid "Reset soft?"
+msgstr "復位 '%s'?"
 
 msgid "Reset worktree?"
 msgstr "要重設工作目錄樹嗎？"
@@ -2234,8 +2246,20 @@ msgstr "單行文字寬度限制"
 msgid "The branch will be no longer available."
 msgstr "此分支將不再存在。"
 
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --hard %s\""
+msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --merge %s\""
+msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
+msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+
+#, fuzzy, python-format
+msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
 
 msgid "The commit message will be cleared."
@@ -2251,8 +2275,8 @@ msgstr "下列檔案將會被移除："
 msgid "The revision expression cannot be empty."
 msgstr "修訂版表達式不可以是空的。"
 
-#, python-format
-msgid "The worktree will be reset using \"git reset --merge %s\""
+#, fuzzy, python-format
+msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "工作目錄樹將被用「git reset --merge %s」命令重設"
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2455,8 +2479,7 @@ msgid "exit code %s"
 msgstr "程式以 %s 狀態碼結束"
 
 #, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "致命錯誤：「%s」並不是個目錄。請指定一個正確的 --repo 〈路徑〉。"
 
 #, python-format
@@ -2505,9 +2528,6 @@ msgstr "yyyy-MM-dd"
 #~ "\n"
 #~ "這是由 Cygwin 發佈的 Tcl 代碼中一個\n"
 #~ "已知問題所引起."
-
-#~ msgid " commits ago"
-#~ msgstr " 個修訂版提交前"
 
 #~ msgid "\"%s\" returned exit status %d"
 #~ msgstr "「%s」命令傳回了 %d 結束狀態碼"
@@ -3173,9 +3193,6 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Rescan"
 #~ msgstr "重新掃瞄"
-
-#~ msgid "Reset '%s'?"
-#~ msgstr "復位 '%s'?"
 
 #~ msgid ""
 #~ "Reset changes?\n"
