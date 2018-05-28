@@ -382,6 +382,9 @@ class Viewer(QtWidgets.QWidget):
         else:
             self.stack.setCurrentWidget(self.text)
 
+    def update_options(self):
+        self.text.update_options()
+
     def reset(self):
         self.image.pixmap = QtGui.QPixmap()
         self.cleanup()
