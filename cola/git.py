@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import functools
 import errno
 import os
@@ -367,6 +366,7 @@ def transform_kwargs(**kwargs):
     return args
 
 
+@memoize
 def _print_win32_git_hint():
     hint = (
         '\n'
