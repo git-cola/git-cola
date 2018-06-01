@@ -11,6 +11,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..compat import unichr
+from ..compat import WIN32
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import prefs
@@ -570,10 +571,30 @@ class MainView(standard.MainWindow):
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
-        Interaction.log(version.git_version_str() + '\n' +
-                        N_('git cola version %s') % version.version())
         # Focus the status widget; this must be deferred
-        QtCore.QTimer.singleShot(0, lambda: self.statuswidget.setFocus())
+        QtCore.QTimer.singleShot(0, self.initialize)
+
+    def initialize(self):
+        git_version = version.git_version_str()
+        if git_version:
+            ok = True
+            Interaction.log(git_version + '\n' +
+                            N_('git cola version %s') % version.version())
+        else:
+            ok = False
+            error_msg = N_('error: unable to execute git')
+            Interaction.log(error_msg)
+
+        if ok:
+            self.statuswidget.setFocus()
+        else:
+            title = N_('error: unable to execute git')
+            msg = title
+            details = ''
+            if WIN32:
+                details = git.win32_git_error_hint()
+            Interaction.critical(title, message=msg, details=details)
+            self.context.app.exit(2)
 
     def set_initial_size(self):
         # Default size; this is thrown out when save/restore is used

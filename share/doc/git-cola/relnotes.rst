@@ -39,6 +39,11 @@ Packaging
 
 Fixes
 -----
+* We now display an error message graphically when `Git` is not installed.
+  Previously, the message went to stderr only.
+
+  https://github.com/git-cola/git-cola/issues/830
+
 * Changing diff options was causing resulting in an exception.
 
   https://github.com/git-cola/git-cola/issues/833

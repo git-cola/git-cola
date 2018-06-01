@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-
 import functools
 import errno
 import os
@@ -18,6 +17,7 @@ from .interaction import Interaction
 
 INDEX_LOCK = threading.Lock()
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
+GIT = core.getenv('GIT_COLA_GIT', 'git')
 STATUS = 0
 STDOUT = 1
 STDERR = 2
@@ -300,35 +300,37 @@ class Git(object):
                 _kwargs[kwarg] = kwargs.pop(kwarg)
 
         # Prepare the argument list
-        git_args = ['git', '-c', 'diff.suppressBlankEmpty=false', dashify(cmd)]
+        git_args = [GIT, '-c', 'diff.suppressBlankEmpty=false', dashify(cmd)]
         opt_args = transform_kwargs(**kwargs)
         call = git_args + opt_args
         call.extend(args)
         try:
-            return self.execute(call, **_kwargs)
+            result = self.execute(call, **_kwargs)
         except OSError as e:
-            if e.errno != errno.ENOENT:
-                raise e
-
-            if WIN32:
+            if WIN32 and e.errno == errno.ENOENT:
                 # see if git exists at all. on win32 it can fail with ENOENT in
                 # case of argv overflow. we should be safe from that but use
-                # defensive coding for the worst-case scenario. on other OS-en
-                # we have ENAMETOOLONG which doesn't exist in with32 API.
-                try:
-                    status, out, err = self.execute(['git', '--version'])
-                except OSError:
-                    pass # git command is not available
-                else:
-                    if status == 0:
-                        # git is ok, there is something else...
-                        raise e
-
-            core.stderr("error: unable to execute 'git'\n"
-                        "error: please ensure that 'git' is in your $PATH")
-            if sys.platform == 'win32':
+                # defensive coding for the worst-case scenario. On UNIX
+                # we have ENAMETOOLONG but that doesn't exist on Windows.
+                if _git_is_installed():
+                    raise e
                 _print_win32_git_hint()
-            sys.exit(1)
+            result = (1, '', "error: unable to execute '%s'" % GIT)
+        return result
+
+
+def _git_is_installed():
+    """Return True if git is installed"""
+    # On win32 Git commands can fail with ENOENT in case of argv overflow. we
+    # should be safe from that but use defensive coding for the worst-case
+    # scenario. On UNIX we have ENAMETOOLONG but that doesn't exist on
+    # Windows.
+    try:
+        status, out, err = Git.execute([GIT, '--version'])
+        result = status == 0
+    except OSError:
+        result = False
+    return result
 
 
 def transform_kwargs(**kwargs):
@@ -367,17 +369,22 @@ def transform_kwargs(**kwargs):
     return args
 
 
-def _print_win32_git_hint():
-    hint = (
+def win32_git_error_hint():
+    return (
         '\n'
-        'hint: If you have Git installed in a custom location, e.g.\n'
-        'hint: C:\\Tools\\Git, then you can create a file at\n'
-        'hint: ~/.config/git-cola/git-bindir with following text\n'
-        'hint: and git-cola will add the specified location to your $PATH\n'
-        'hint: automatically when starting cola:\n'
-        'hint:\n'
-        'hint: C:\\Tools\\Git\\bin\n')
-    core.stderr(hint)
+        'NOTE: If you have Git installed in a custom location, e.g.\n'
+        'C:\\Tools\\Git, then you can create a file at\n'
+        '~/.config/git-cola/git-bindir with following text\n'
+        'and git-cola will add the specified location to your $PATH\n'
+        'automatically when starting cola:\n'
+        '\n'
+        r'C:\Tools\Git\bin')
+
+
+@memoize
+def _print_win32_git_hint():
+    hint = '\n' + win32_git_error_hint() + '\n'
+    core.stderr("error: unable to execute 'git'" + hint)
 
 
 @memoize

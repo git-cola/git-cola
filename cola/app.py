@@ -267,6 +267,9 @@ class ColaApplication(object):
         if hasattr(self._app, 'context'):
             self._app.context = context
 
+    def exit(self, status):
+        return self._app.exit(status)
+
 
 class ColaQApplication(QtWidgets.QApplication):
 
