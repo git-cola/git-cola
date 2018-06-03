@@ -26,6 +26,8 @@ Usability, bells and whistles
 
 * Updated Czech translation
 
+  https://github.com/git-cola/git-cola/pull/835
+
   https://github.com/git-cola/git-cola/pull/813
 
 * The `git xbase` rebase editor no longer displays an error when
