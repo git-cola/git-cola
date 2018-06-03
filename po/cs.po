@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-05-12 22:20+0200\n"
+"PO-Revision-Date: 2018-06-03 15:12+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -440,10 +440,10 @@ msgid "All Repositories"
 msgstr "Všechny repozitáře"
 
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
-msgstr ""
+msgstr "Povolit aktualizace Ne rychle vpřed. Použití „vynutit“ může způsobit, že vzdálený repositář ztratí zápisy; používejte obezřetně"
 
 msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr ""
+msgstr "Vždy vytvořit zápis sloučení, je-li povoleno, a to i v případě, že sloučení je aktualizace Rychle vpřed"
 
 msgid "Amend"
 msgstr ""
@@ -618,7 +618,7 @@ msgid "Checkout Detached HEAD"
 msgstr ""
 
 msgid "Checkout as new branch"
-msgstr ""
+msgstr "Přepnout jako novou větev"
 
 msgid "Checkout..."
 msgstr "Přepnout..."
@@ -695,7 +695,7 @@ msgid "Commit summary"
 msgstr "Souhrn zápisu"
 
 msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr "Zapsat sloučení, pokud nejsou žádné konflikty. Odškrtnout, aby sloučení zůstalo nezapsáno"
+msgstr "Zapsat sloučení, pokud nejsou žádné konflikty. Je-li odškrtnuto, sloučení zůstane nezapsáno"
 
 msgid "Commit@@verb"
 msgstr "Zapsat"
@@ -707,7 +707,7 @@ msgid "Compare All"
 msgstr "Porovnat vše"
 
 msgid "Configure the remote branch as the the new upstream"
-msgstr ""
+msgstr "Nastavit vzdálenou větev jako nový upstream"
 
 msgid "Configure toolbar"
 msgstr "Upravit nástrojovou lištu"
@@ -765,7 +765,7 @@ msgid "Create Unsigned Tag"
 msgstr "Vytvořit nepodepsanou značku"
 
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
+msgstr "Vytvořit zápis sloučení i v případě, že je sloučení vyřešeno jako Rychle vpřed"
 
 msgid "Create a new remote branch?"
 msgstr "Vytvořit novou vzdálenou větev?"
@@ -1154,7 +1154,7 @@ msgid "French translation"
 msgstr "Francouzský překlad"
 
 msgid "GPG-sign the merge commit"
-msgstr ""
+msgstr "GPG podepsaný zápis sloučení"
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1570,7 +1570,7 @@ msgid "Quit"
 msgstr "Ukončit"
 
 msgid "Rebase"
-msgstr ""
+msgstr "Přeskládat"
 
 #, python-format
 msgid "Rebase onto %s"
@@ -1580,7 +1580,7 @@ msgid "Rebase stopped"
 msgstr ""
 
 msgid "Rebase the current branch instead of merging"
-msgstr ""
+msgstr "Místo sloučení přeskládat současnou větev"
 
 msgid "Rebasing"
 msgstr ""
@@ -1616,7 +1616,7 @@ msgid "Refresh"
 msgstr "Načíst znovu"
 
 msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
-msgstr ""
+msgstr "Odmítnout sloučení, jestliže současná HLAVA není již aktualizovaná, nebo sloučení, které nemůže být vyřešeno jako Rychle vpřed"
 
 msgid "Remote"
 msgstr "Vzdálená"
@@ -1641,7 +1641,7 @@ msgid "Remove Element"
 msgstr "Odebrat prvek"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr ""
+msgstr "Odstranit odkazy na vzdálené větve, které již neexistují ve vzdáleném"
 
 msgid "Remove selected (Delete)"
 msgstr "Odstranit vybrané (Smazat)"
@@ -1701,32 +1701,26 @@ msgstr "Resetovat hlavu větve"
 msgid "Reset Branch?"
 msgstr "Resetovat větev?"
 
-#, fuzzy
 msgid "Reset Hard"
-msgstr "Resetovat hlavu větve"
+msgstr ""
 
-#, fuzzy
 msgid "Reset Merge"
-msgstr "Revize ke sloučení"
+msgstr ""
 
-#, fuzzy
 msgid "Reset Soft"
-msgstr "Resetovat pracovní adresář"
+msgstr ""
 
 msgid "Reset Worktree"
 msgstr "Resetovat pracovní adresář"
 
-#, fuzzy
 msgid "Reset hard?"
-msgstr "Resetovat větev?"
+msgstr ""
 
-#, fuzzy
 msgid "Reset merge?"
-msgstr "Resetovat pracovní adresář?"
+msgstr ""
 
-#, fuzzy
 msgid "Reset soft?"
-msgstr "Resetovat pracovní adresář?"
+msgstr ""
 
 msgid "Reset worktree?"
 msgstr "Resetovat pracovní adresář?"
@@ -2102,7 +2096,7 @@ msgid "Staging: %s"
 msgstr ""
 
 msgid "Start Interactive Rebase..."
-msgstr ""
+msgstr "Zahájit interaktivní přeskládání..."
 
 msgid "Starting Revision"
 msgstr "Počáteční revize"
@@ -2111,13 +2105,13 @@ msgid "Stash"
 msgstr "Odložit"
 
 msgid "Stash Index"
-msgstr ""
+msgstr "Odložit index"
 
 msgid "Stash staged changes only"
-msgstr ""
+msgstr "Odložit pouze připravené změny"
 
 msgid "Stash unstaged changes only, keeping staged changes"
-msgstr ""
+msgstr "Odložit pouze nepřipravené změny, zachovat připravené změny"
 
 msgid "Stash..."
 msgstr "Odložit (stash)..."
@@ -2161,21 +2155,21 @@ msgstr "Šířka textu"
 msgid "The branch will be no longer available."
 msgstr "Větev nebude již k dispozici."
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+msgstr "Větev bude resetována za použití \"git reset --hard %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+msgstr "Větev bude resetována za použití \"git reset --merge %s\""
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+msgstr "Větev bude resetována za použití \"git reset --soft %s\""
 
 msgid "The commit message will be cleared."
 msgstr ""
@@ -2190,9 +2184,9 @@ msgstr "Následující soubory budou smazány:"
 msgid "The revision expression cannot be empty."
 msgstr ""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Větev bude resetována za použití \"git reset --mixed %s\""
+msgstr "Větev bude resetována za použití \"git reset --keep %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr ""
