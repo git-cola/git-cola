@@ -611,23 +611,23 @@ Defaults to `false`.
 
 cola.color.text
 ---------------
-The default diff text color, in hexadecimal RRGGBB notation.
-Defaults to "030303".
+The default diff text color, in hexadecimal #RRGGBB notation.
+Defaults to "#030303".
 
 cola.color.add
 --------------
-The default diff "add" background color, in hexadecimal RRGGBB notation.
-Defaults to "d2ffe4".
+The default diff "add" background color, in hexadecimal #RRGGBB notation.
+Defaults to "#d2ffe4".
 
 cola.color.remove
 -----------------
-The default diff "remove" background color, in hexadecimal RRGGBB notation.
-Defaults to "fee0e4".
+The default diff "remove" background color, in hexadecimal #RRGGBB notation.
+Defaults to "#fee0e4".
 
 cola.color.header
 -----------------
-The default diff header text color, in hexadecimal RRGGBB notation.
-Defaults to "bbbbbb".
+The default diff header text color, in hexadecimal #RRGGBB notation.
+Defaults to "#bbbbbb".
 
 gui.diffcontext
 ---------------

@@ -73,14 +73,21 @@ def _config_to_python(v):
         v = True
     elif v in ('false', 'no'):
         v = False
-    elif v.startswith("'") and v.endswith("'"):
-        return v[1:-1]
     else:
         try:
             v = int(v)
         except ValueError:
             pass
     return v
+
+
+def unhex(value):
+    """Convert a value (int or hex string) into bytes"""
+    if isinstance(value, int_types):
+        # If the value is an integer then it's a value that was converted
+        # by the config reader.  Zero-pad it into a 6-digit hex number.
+        value = '%06d' % value
+    return unhexlify(value.lstrip('#'))
 
 
 def _config_key_value(line, splitchar):
@@ -457,7 +464,7 @@ class GitConfig(observable.Observable):
         default = core.encode(default)
         struct_layout = core.encode('BBB')
         try:
-            r, g, b = struct.unpack(struct_layout, unhexlify(string))
+            r, g, b = struct.unpack(struct_layout, unhex(string))
         except Exception:
-            r, g, b = struct.unpack(struct_layout, unhexlify(default))
+            r, g, b = struct.unpack(struct_layout, unhex(default))
         return (r, g, b)
