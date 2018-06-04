@@ -73,6 +73,8 @@ def _config_to_python(v):
         v = True
     elif v in ('false', 'no'):
         v = False
+    elif v.startswith("'") and v.endswith("'"):
+        return v[1:-1]
     else:
         try:
             v = int(v)
