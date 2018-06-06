@@ -41,14 +41,19 @@ Packaging
 
 Fixes
 -----
-* Custom color values that are do not contain any hexadecimal
-  characters were being converted into integers by the config reader,
-  which then caused the configured colors to be ignored.
+* Custom color values that did not contain any hexadecimal digits in the
+  `a-f` range were being converted into integers by the config reader.  This
+  then caused the configured colors to be ignored.
 
-  These values are now interpreted correctly.  We now also allow configured
-  color values to contain a `#` prefix, just like HTML.
+  These color values are now interpreted correctly.  Additionally, color
+  values can now use an optional HTML-like `#` prefix.
 
   https://github.com/git-cola/git-cola/pull/836
+
+  Example `.gitconfig` snippet::
+
+    [cola "color"]
+        text = "#0a0303"
 
 * We now display an error message graphically when `Git` is not installed.
   Previously, the message went to stderr only.
