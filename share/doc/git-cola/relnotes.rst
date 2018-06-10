@@ -41,6 +41,8 @@ Packaging
 
 * `python3-distutils` is needed to build cola on Debian.
 
+  https://github.com/git-cola/git-cola/issues/837
+
 Fixes
 -----
 * Custom color values that did not contain any hexadecimal digits in the

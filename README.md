@@ -84,7 +84,8 @@ own `qtpy` module, for example from the `python-qtpy` Debian package, then use
 `GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
 
 Python3 users on debian will need to install `python3-distutils` in order
-to run the Makefile's install targets.
+to run the Makefile's installation steps.  `distutils` is a Python build
+requirement, but not needed at runtime.
 
 
 ## ADDITIVES
