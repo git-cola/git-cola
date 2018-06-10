@@ -83,6 +83,9 @@ own `qtpy` module, for example from the `python-qtpy` Debian package, then use
 `make NO_VENDOR_LIBS=1 ...` when invoking `make`, or export
 `GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
 
+Python3 users on debian will need to install `python3-distutils` in order
+to run the Makefile's install targets.
+
 
 ## ADDITIVES
 
