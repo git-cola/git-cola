@@ -6,7 +6,6 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 """
 from __future__ import division, absolute_import, unicode_literals
 import os
-import distutils.spawn as spawn
 import functools
 import sys
 import itertools
@@ -388,10 +387,41 @@ if PY2:
         getcwd = decorate(decode, os.getcwd)
 else:
     getcwd = os.getcwd
+
+
+
+# NOTE: find_executable() is originally from the stdlib, but starting with
+# python3.7 the stdlib no longer bundles distutils.
+def _find_executable(executable, path=None):
+    """Tries to find 'executable' in the directories listed in 'path'.
+
+    A string listing directories separated by 'os.pathsep'; defaults to
+    os.environ['PATH'].  Returns the complete filename or None if not found.
+    """
+    if path is None:
+        path = os.environ['PATH']
+
+    paths = path.split(os.pathsep)
+    base, ext = os.path.splitext(executable)
+
+    if (sys.platform == 'win32') and (ext != '.exe'):
+        executable = executable + '.exe'
+
+    if not os.path.isfile(executable):
+        for p in paths:
+            f = os.path.join(p, executable)
+            if os.path.isfile(f):
+                # the file exists, we have a shot at spawn working
+                return f
+        return None
+    else:
+        return executable
+
+
 if PY2:
-    find_executable = wrap(mkpath, spawn.find_executable, decorator=decode)
+    find_executable = wrap(mkpath, _find_executable, decorator=decode)
 else:
-    find_executable = wrap(decode, spawn.find_executable, decorator=decode)
+    find_executable = wrap(decode, _find_executable, decorator=decode)
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)
 islink = wrap(mkpath, os.path.islink)
