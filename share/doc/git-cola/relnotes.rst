@@ -39,6 +39,8 @@ Packaging
 ---------
 * The vendored `qtpy` library was updated to `v1.4.2`.
 
+* `python3-distutils` is needed to build cola on Debian.
+
 Fixes
 -----
 * Custom color values that did not contain any hexadecimal digits in the
