@@ -79,6 +79,7 @@ Thanks
 * Jérôme Carretero
 * jfessard
 * JiCiT
+* Jimmy M. Coleman
 * Johannes Löhnert
 * Johann Schmitz
 * Jordan Bedwell
