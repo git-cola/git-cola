@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-04-29 23:41+0800\n"
+"PO-Revision-Date: 2018-06-11 21:44+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -1756,10 +1756,10 @@ msgstr "重新命名分支"
 
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "要將「%(current)s」遠端分支重新命名為「%(new)s」嗎？"
+msgstr "要將「%(current)s」遠端版控庫改名為「%(new)s」嗎？"
 
 msgid "Rename remote?"
-msgstr "重新命名遠端版控庫嗎？"
+msgstr "要重新命名遠端版控庫嗎？"
 
 msgid "Rename selected paths"
 msgstr "重新命名選取的路徑"
