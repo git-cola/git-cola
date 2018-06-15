@@ -55,13 +55,13 @@ class Interaction(object):
         scope['title'] = title
         scope['title_dashes'] = '-' * len(title)
         scope['message'] = message
-        scope['details'] = details and '\n'+details or ''
+        scope['details'] = details and ('\n' + details) or ''
         scope['informative_text'] = (
                 informative_text and ('\n' + informative_text) or '')
         sys.stdout.write("""
 %(title)s
 %(title_dashes)s
-%(message)s%(details)s%(informative_text)s\n""" % scope)
+%(message)s%(informative_text)s%(details)s\n""" % scope)
 
     @classmethod
     def critical(cls, title, message=None, details=None):
