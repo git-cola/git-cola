@@ -686,9 +686,11 @@ class RemoteRename(RemoteCommand):
 
     def confirm(self):
         title = N_('Rename Remote')
-        info = (N_('Rename remote "%(current)s" to "%(new)s"?') %
+        text = (N_('Rename remote "%(current)s" to "%(new)s"?') %
                 dict(current=self.name, new=self.new_name))
-        return Interaction.question(title, info)
+        info_text = ''
+        ok_text = title
+        return Interaction.confirm(title, text, info_text, ok_text)
 
     def action(self):
         git = self.model.git
