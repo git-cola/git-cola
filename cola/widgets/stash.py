@@ -20,7 +20,7 @@ def view(show=True):
     """Launches a stash dialog using the provided model + view
     """
     model = stash.StashModel()
-    stash_view = StashView(model, qtutils.active_window())
+    stash_view = StashView(model, parent=qtutils.active_window())
     if show:
         stash_view.show()
         stash_view.raise_()
