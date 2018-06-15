@@ -19,11 +19,7 @@ https://forum.snapcraft.io/t/new-interface-proprosal-the-git-interface/5498/2
 Ideas
 =====
 
-- replace QMessagebox with custom widgets so we can save their sizes and
-  make them have sensible behavior: resizable, better initial size,
-  have the details shown by default.
-- custom buttons?  Pass in an dict of names and button labels?
-  (name, label, fn)?
+- save and restore the selected remotes in the "git cola push"
 
 - when pushing new branches, automatically set the upstream?
 
