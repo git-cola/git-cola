@@ -1,4 +1,4 @@
-"""Provides the StashView dialog."""
+"""Widgets for manipulating git stashes"""
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtCore
