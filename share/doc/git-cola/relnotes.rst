@@ -35,6 +35,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/814
 
+* The dialog shown when renaming remotes has been simplified.
+
+  https://github.com/git-cola/git-cola/pull/840
+
+  https://github.com/git-cola/git-cola/issues/838
+
 Packaging
 ---------
 * The vendored `qtpy` library was updated to `v1.4.2`.
