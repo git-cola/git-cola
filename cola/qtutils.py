@@ -623,8 +623,10 @@ def ok_button(text, default=True, enabled=True, icon=None):
     return create_button(text=text, icon=icon, default=default, enabled=enabled)
 
 
-def close_button():
-    return create_button(text=N_('Close'), icon=icons.close())
+def close_button(text=None, icon=None):
+    text = text or N_('Close')
+    icon = icons.mkicon(icon, icons.close)
+    return create_button(text=text, icon=icon)
 
 
 def edit_button(enabled=True, default=False):
