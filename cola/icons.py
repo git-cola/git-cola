@@ -5,6 +5,7 @@ import mimetypes
 import os
 
 from qtpy import QtGui
+from qtpy import QtWidgets
 
 from . import qtcompat
 from . import resources
@@ -101,10 +102,9 @@ def mkicon(icon, default=None):
     return icon
 
 
-@memoize
 def from_style(key):
     """Maintain a cache of standard icons and return cache entries."""
-    style = QtGui.QApplication.instance().style()
+    style = QtWidgets.QApplication.instance().style()
     return style.standardIcon(key)
 
 
