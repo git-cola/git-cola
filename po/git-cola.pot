@@ -1111,6 +1111,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr ""
 
@@ -1585,9 +1588,6 @@ msgstr ""
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
-msgid "Rename remote?"
-msgstr ""
-
 msgid "Rename selected paths"
 msgstr ""
 
@@ -1877,6 +1877,9 @@ msgid "Shift Up"
 msgstr ""
 
 msgid "Shortcuts"
+msgstr ""
+
+msgid "Show Details..."
 msgstr ""
 
 msgid "Show Diffstat After Merge"
@@ -2251,6 +2254,9 @@ msgstr ""
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2275,6 +2281,9 @@ msgid "Zoom to Fit"
 msgstr ""
 
 msgid "command-line arguments"
+msgstr ""
+
+msgid "error: unable to execute git"
 msgstr ""
 
 #, python-format
