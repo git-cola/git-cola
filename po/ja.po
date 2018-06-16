@@ -1244,6 +1244,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 #, fuzzy
 msgid "History Browser"
 msgstr "ファイル・ブラウザ"
@@ -1792,10 +1795,6 @@ msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
 #, fuzzy
-msgid "Rename remote?"
-msgstr "リモート"
-
-#, fuzzy
 msgid "Rename selected paths"
 msgstr "ブランチの名前変更"
 
@@ -2127,6 +2126,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr ""
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "削除…"
 
 msgid "Show Diffstat After Merge"
 msgstr "マージ後に diffstat を表示"
@@ -2538,6 +2541,9 @@ msgstr ""
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2563,6 +2569,9 @@ msgid "Zoom to Fit"
 msgstr ""
 
 msgid "command-line arguments"
+msgstr ""
+
+msgid "error: unable to execute git"
 msgstr ""
 
 #, fuzzy, python-format
@@ -3242,6 +3251,10 @@ msgstr ""
 
 #~ msgid "Remote:"
 #~ msgstr "リモート:"
+
+#, fuzzy
+#~ msgid "Rename remote?"
+#~ msgstr "リモート"
 
 #~ msgid "Repository"
 #~ msgstr "リポジトリ"

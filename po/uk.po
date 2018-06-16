@@ -1236,6 +1236,9 @@ msgstr "Допомога - Пошук файлів"
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Переглядач історії"
 
@@ -1730,9 +1733,6 @@ msgstr "Перейменувати гілку"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Перейменувати віддалений репозиторій \"%(current)s\" в \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Перейменувати віддалений репозиторій?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Редагувати вибрані шляхи"
@@ -2037,6 +2037,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Поєднання клавіш"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Видалити файли..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Показати список різниць після злиття"
@@ -2431,6 +2435,9 @@ msgstr "Хочете проіндексувати та закомітувати 
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2458,6 +2465,9 @@ msgstr "Допасувати за розміром"
 
 msgid "command-line arguments"
 msgstr "аргументи командного рядка"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -2528,6 +2538,9 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Output: %s"
 #~ msgstr "Вивід: %s"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Перейменувати віддалений репозиторій?"
 
 #~ msgid "git clone returned exit code %s"
 #~ msgstr "git clone завершилась з кодом %s"

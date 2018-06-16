@@ -1196,6 +1196,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Prohlížeč historie"
 
@@ -1675,9 +1678,6 @@ msgstr "Přejmenovat větev"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Přejmenovat vzdálenou \"%(current)s\" na \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Přejmenovat vzdálenou?"
-
 msgid "Rename selected paths"
 msgstr ""
 
@@ -1968,6 +1968,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Klávesové zkratky"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Smazat soubory..."
 
 msgid "Show Diffstat After Merge"
 msgstr ""
@@ -2350,6 +2354,9 @@ msgstr "Chcete připravit k zapsání a zapsat všechny změněné soubory?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2374,6 +2381,9 @@ msgid "Zoom to Fit"
 msgstr "Přizpůsobit velikosti okna"
 
 msgid "command-line arguments"
+msgstr ""
+
+msgid "error: unable to execute git"
 msgstr ""
 
 #, python-format
@@ -2408,3 +2418,6 @@ msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
 msgstr "rrrr-mm-dd"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Přejmenovat vzdálenou?"

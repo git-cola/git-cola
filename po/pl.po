@@ -1205,6 +1205,9 @@ msgstr "Pomoc - Znajdź pliki"
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Przeglądarka historii"
 
@@ -1708,9 +1711,6 @@ msgstr "Zmień nazwę gałęzi..."
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Zmień nazwę zdalnego repozytorium z \"%(current)s\" na \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Zmienić nazwę zdalnego repozytorium?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Edytuj wybraną ścieżkę/ścieżki"
@@ -2018,6 +2018,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Skróty"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Usuń plik(i)..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Pokaż statystykę różnicy po scaleniu"
@@ -2413,6 +2417,9 @@ msgstr "Czy chcesz zebrać i wdrożyć wszystkie zmienione pliki?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2440,6 +2447,9 @@ msgstr "Dopasuj"
 
 msgid "command-line arguments"
 msgstr "argumenty wiersza poleceń"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -2529,6 +2539,9 @@ msgstr "yyyy-MM-dd"
 #, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "Zdalna gałąź"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Zmienić nazwę zdalnego repozytorium?"
 
 #~ msgid "Staging Area"
 #~ msgstr "Punkt zbiorczy"

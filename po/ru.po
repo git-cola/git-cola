@@ -1212,6 +1212,9 @@ msgstr "Помощь - Поиск файлов"
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Просмотрщик истории"
 
@@ -1718,9 +1721,6 @@ msgstr "Переименовать ветвь..."
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Переименовать внешнюю ветвь \"%(current)s\" на \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Переименовать внешнюю ветвь?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Редактировать выбранный путь(и)"
@@ -2032,6 +2032,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Горячие клавиши"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Удалить файл(ы)..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Показать отчет об изменениях после объединения"
@@ -2429,6 +2433,9 @@ msgstr "Вы хотить добавить к коммиту и закоммит
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2456,6 +2463,9 @@ msgstr "Подогнать по размеру"
 
 msgid "command-line arguments"
 msgstr "фраза для поиска / аргументы командной строки"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -3166,6 +3176,9 @@ msgstr ""
 
 #~ msgid "Remote:"
 #~ msgstr "внешний:"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Переименовать внешнюю ветвь?"
 
 #~ msgid "Repository"
 #~ msgstr "Репозиторий"

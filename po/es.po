@@ -1180,6 +1180,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Herramienta de Historial"
 
@@ -1671,9 +1674,6 @@ msgstr "Rama Remota"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Desea renombrar el repositorio remoto?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Eliminar seleccionados (Delete)"
@@ -1974,6 +1974,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Atajos"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Eliminar Archivos..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostrar Diffstat tras Merge"
@@ -2350,6 +2354,9 @@ msgstr ""
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2374,6 +2381,9 @@ msgid "Zoom to Fit"
 msgstr ""
 
 msgid "command-line arguments"
+msgstr ""
+
+msgid "error: unable to execute git"
 msgstr ""
 
 #, python-format
@@ -2446,6 +2456,9 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "Rama Remota"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Desea renombrar el repositorio remoto?"
 
 #~ msgid ""
 #~ "This PyQt4 does not include QtWebKit.\n"

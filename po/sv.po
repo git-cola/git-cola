@@ -1243,6 +1243,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 #, fuzzy
 msgid "History Browser"
 msgstr "Filbläddrare"
@@ -1791,10 +1794,6 @@ msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
 #, fuzzy
-msgid "Rename remote?"
-msgstr "Fjärr"
-
-#, fuzzy
 msgid "Rename selected paths"
 msgstr "Byt namn på gren"
 
@@ -2126,6 +2125,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr ""
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Ta bort..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Visa diffstatistik efter sammanslagning"
@@ -2537,6 +2540,9 @@ msgstr ""
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2562,6 +2568,9 @@ msgid "Zoom to Fit"
 msgstr ""
 
 msgid "command-line arguments"
+msgstr ""
+
+msgid "error: unable to execute git"
 msgstr ""
 
 #, fuzzy, python-format
@@ -3246,6 +3255,10 @@ msgstr ""
 
 #~ msgid "Remote:"
 #~ msgstr "Fjärr:"
+
+#, fuzzy
+#~ msgid "Rename remote?"
+#~ msgstr "Fjärr"
 
 #~ msgid "Repository"
 #~ msgstr "Arkiv"

@@ -1268,6 +1268,9 @@ msgstr "尋求幫助 - 尋找檔案"
 msgid "Help - git-xbase"
 msgstr "尋求幫助 - git-xbase"
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "變更紀錄瀏覽器"
 
@@ -1758,9 +1761,6 @@ msgstr "重新命名分支"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "要將「%(current)s」遠端版控庫改名為「%(new)s」嗎？"
 
-msgid "Rename remote?"
-msgstr "要重新命名遠端版控庫嗎？"
-
 msgid "Rename selected paths"
 msgstr "重新命名選取的路徑"
 
@@ -2057,6 +2057,10 @@ msgstr "往上平移"
 
 msgid "Shortcuts"
 msgstr "鍵盤快捷鍵"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "刪除檔案……"
 
 msgid "Show Diffstat After Merge"
 msgstr "在合併後顯示內容差異"
@@ -2446,6 +2450,9 @@ msgstr "您要將所有被修改的檔案移入新修訂版準備區域並提交
 msgid "XOR"
 msgstr "互斥或(XOR)"
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2473,6 +2480,9 @@ msgstr "縮放以符合視窗大小"
 
 msgid "command-line arguments"
 msgstr "命令列參數"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -3184,6 +3194,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Remove selected paths from the staging area"
 #~ msgstr "將選取的路徑自修訂版提交準備區域中移除"
+
+#~ msgid "Rename remote?"
+#~ msgstr "要重新命名遠端版控庫嗎？"
 
 #~ msgid "Repository"
 #~ msgstr "版本庫(repository)"

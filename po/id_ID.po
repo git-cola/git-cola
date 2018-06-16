@@ -1202,6 +1202,9 @@ msgstr ""
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Penjelajah Histori"
 
@@ -1713,9 +1716,6 @@ msgstr "Cabang Hulu"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Ganti nama hulu?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Sunting lokasi terpilih"
@@ -2027,6 +2027,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Pintasan"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Hapus Berkas...?"
 
 msgid "Show Diffstat After Merge"
 msgstr "Tampilkan Diffstat setelah Merge"
@@ -2427,6 +2431,9 @@ msgstr "Apakah Anda ingin menstage dan commit semua berkas yang berubah?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2455,6 +2462,9 @@ msgstr "Zoom agar Sesuai"
 
 msgid "command-line arguments"
 msgstr "argumen baris-perintah"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -2575,6 +2585,9 @@ msgstr "dd-MM-yyyy"
 
 #~ msgid "Remove selected paths from the staging area"
 #~ msgstr "Buang lokasi terpilih dari staging area"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Ganti nama hulu?"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Kembalikan Perubahan Tak Tercommit..."

@@ -1212,6 +1212,9 @@ msgstr "帮助 - 查找文件"
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "历史浏览器"
 
@@ -1707,9 +1710,6 @@ msgstr "重命名分支"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "重命名远端 \"%(current)s\" 为 \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "重命名远端吗?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "编辑所选路径"
@@ -2014,6 +2014,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "快捷键"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "删除文件..."
 
 msgid "Show Diffstat After Merge"
 msgstr "在合并后显示 Diffstat"
@@ -2408,6 +2412,9 @@ msgstr "要缓存并提交所有已修改文件吗?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2435,6 +2442,9 @@ msgstr "缩放到适合"
 
 msgid "command-line arguments"
 msgstr "命令行参数"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -3142,6 +3152,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Remove selected paths from the staging area."
 #~ msgstr "从缓存区移除所选路径."
+
+#~ msgid "Rename remote?"
+#~ msgstr "重命名远端吗?"
 
 #~ msgid "Repository"
 #~ msgstr "版本库(repository)"

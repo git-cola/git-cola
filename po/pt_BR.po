@@ -1264,6 +1264,9 @@ msgstr "Ajuda - Procurar Arquivos"
 msgid "Help - git-xbase"
 msgstr "Ajuda - git-xbase"
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Navegador de Histórico"
 
@@ -1759,9 +1762,6 @@ msgstr "Renomear branch"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Renomear remoto de \"%(current)s\" para \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Renomear Remoto?"
-
 msgid "Rename selected paths"
 msgstr "Renomear caminhos selecionados"
 
@@ -2062,6 +2062,10 @@ msgstr "Shift Para Cima"
 
 msgid "Shortcuts"
 msgstr "Atalhos"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Excluir Arquiv(o)s..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostrar o Status de Comparação após Mesclagem"
@@ -2455,6 +2459,9 @@ msgstr "Gostaria de stage e commit todos os arquivos modificados ?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2482,6 +2489,9 @@ msgstr "Zoom para Ajustar"
 
 msgid "command-line arguments"
 msgstr "Argumentos da linha de comando"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -2576,6 +2586,9 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "Branch Remoto"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Renomear Remoto?"
 
 #~ msgid "Updating..."
 #~ msgstr "Atualização..."

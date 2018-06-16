@@ -1212,6 +1212,9 @@ msgstr "Help - Find Files"
 msgid "Help - git-xbase"
 msgstr ""
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Geçmiş Görüntüleyici"
 
@@ -1716,9 +1719,6 @@ msgstr "Dalı Yeniden Adlandır..."
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Rename remote \"%(current)s\" to \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Uzaktakini yeniden adlandır?"
-
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Edit selected paths"
@@ -2029,6 +2029,10 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Shortcuts"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Dosyaları Sil..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Show Diffstat After Merge"
@@ -2425,6 +2429,9 @@ msgstr "Would you like to stage and commit all modified files?"
 msgid "XOR"
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2452,6 +2459,9 @@ msgstr "Zoom to Fit"
 
 msgid "command-line arguments"
 msgstr "command-line arguments"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -2547,6 +2557,9 @@ msgstr "yyyy-MM-dd"
 #, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "Remote Branch"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Uzaktakini yeniden adlandır?"
 
 #~ msgid "Staging Area"
 #~ msgstr "Staging Area"

@@ -1272,6 +1272,9 @@ msgstr "Hilfe - Dateien suchen"
 msgid "Help - git-xbase"
 msgstr "Hilfe - git-xbase"
 
+msgid "Hide Details.."
+msgstr ""
+
 msgid "History Browser"
 msgstr "Werkzeug für die Verlaufsansicht"
 
@@ -1760,9 +1763,6 @@ msgstr "Branch umbenennen"
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Externe Referenz \"%(current)s\" umbenennen zu \"%(new)s\"?"
 
-msgid "Rename remote?"
-msgstr "Möchten Sie die externe Referenz umbenennen?"
-
 msgid "Rename selected paths"
 msgstr "Ausgewählten Pfad umbenennen"
 
@@ -2059,6 +2059,10 @@ msgstr "Nach oben schieben"
 
 msgid "Shortcuts"
 msgstr "Tastenkürzel"
+
+#, fuzzy
+msgid "Show Details..."
+msgstr "Lösche Datei(en)..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Vergleichsstatistik nach Zusammenführen anzeigen"
@@ -2448,6 +2452,9 @@ msgstr "Möchten Sie alle veränderten Dateien vormerken und aufnehmen?"
 msgid "XOR"
 msgstr "XOR"
 
+msgid "Yes"
+msgstr ""
+
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -2473,6 +2480,9 @@ msgstr "In Ansicht einpassen"
 
 msgid "command-line arguments"
 msgstr "Kommandozeilenargumente"
+
+msgid "error: unable to execute git"
+msgstr ""
 
 #, python-format
 msgid "exit code %s"
@@ -3208,6 +3218,9 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Remove selected paths from the staging area"
 #~ msgstr "Änderungen am ausgewählten Pfad nicht mehr vormerken"
+
+#~ msgid "Rename remote?"
+#~ msgstr "Möchten Sie die externe Referenz umbenennen?"
 
 #~ msgid "Repository"
 #~ msgstr "Projektarchiv"
