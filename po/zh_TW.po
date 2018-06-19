@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-06-11 21:44+0800\n"
+"PO-Revision-Date: 2018-06-19 15:44+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -272,7 +272,7 @@ msgstr "「%(command)s」命令傳回了 %(status)d 結束狀態碼"
 
 #, python-format
 msgid "\"%s\" already exists"
-msgstr "「%s」早已存在。"
+msgstr "「%s」早已存在"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
@@ -327,7 +327,7 @@ msgstr ""
 
 #, python-format
 msgid "%s is not a Git repository."
-msgstr "%s 不是一個 Git 版控庫"
+msgstr "%s 不是一個 Git 版控庫。"
 
 #, python-format
 msgid "%s will be removed from your bookmarks."
@@ -392,7 +392,7 @@ msgstr "一個掛勾程式必須在「%s」被提供"
 
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "名為「%s」的珍藏已經存在。"
+msgstr "名為「%s」的珍藏已經存在"
 
 msgid "Abort"
 msgstr "中止"
@@ -776,7 +776,7 @@ msgid "Compare All"
 msgstr "比較全部檔案差異"
 
 msgid "Configure the remote branch as the the new upstream"
-msgstr "將此遠端分支設維新的上游分支"
+msgstr "將此遠端分支設為新的上游分支"
 
 msgid "Configure toolbar"
 msgstr "設定工具列"
@@ -899,7 +899,7 @@ msgid "Delete Remote Branch"
 msgstr "移除遠端分支"
 
 msgid "Delete Remote Branch..."
-msgstr "移除遠端分支"
+msgstr "移除遠端分支……"
 
 msgid "Delete remote"
 msgstr "移除遠端版控庫"
@@ -943,7 +943,7 @@ msgid "Diff"
 msgstr "內容差異"
 
 msgid "Diff Against Predecessor..."
-msgstr "與過去版本比較內容差異"
+msgstr "與過去版本比較內容差異……"
 
 msgid "Diff Options"
 msgstr "內容差異選項"
@@ -983,7 +983,7 @@ msgstr "丟棄珍藏？"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr "是否要丟棄名為「%s」的珍藏"
+msgstr "是否要丟棄名為「%s」的珍藏？"
 
 msgid "Drop the selected stash"
 msgstr "丟棄被選取的 stash"
@@ -1109,7 +1109,7 @@ msgid "Extended Regexp"
 msgstr "延伸正規表達式"
 
 msgid "Extended description..."
-msgstr "延伸描述"
+msgstr "延伸描述……"
 
 msgid "Fast Forward Only"
 msgstr "僅更新可進行快速前移式合併者"
@@ -1351,16 +1351,16 @@ msgid "Launch git-cola"
 msgstr "啟動 git-cola"
 
 msgid "Launch git-difftool against previous versions"
-msgstr "對先前的版本啟動 git-difftool 。"
+msgstr "對先前的版本啟動 git-difftool"
 
 msgid "Launch git-difftool on the current path"
-msgstr "在當前路徑中啟動 git-difftool。"
+msgstr "在當前路徑中啟動 git-difftool"
 
 msgid "Load Commit Message"
 msgstr "自檔案載入修訂版提交訊息"
 
 msgid "Load Commit Message..."
-msgstr "自檔案載入修訂版提交訊息"
+msgstr "自檔案載入修訂版提交訊息……"
 
 msgid "Load Previous Commit Message"
 msgstr "載入先前的修訂版提交的訊息"
@@ -1491,7 +1491,7 @@ msgid "No fast-forward"
 msgstr "不進行快速前移式合併"
 
 msgid "No repository selected."
-msgstr "沒有選擇版控庫"
+msgstr "沒有選擇版控庫。"
 
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr "非快速前移式的撈取(fetch)將會覆寫本地版控庫的變更紀錄！"
@@ -1516,7 +1516,7 @@ msgid "Open"
 msgstr "開啟"
 
 msgid "Open Git Repository..."
-msgstr "開啟一個 Git 版控庫"
+msgstr "開啟一個 Git 版控庫……"
 
 msgid "Open Parent Directory"
 msgstr "開啟上一層目錄"
@@ -1588,7 +1588,7 @@ msgid "Please select a file"
 msgstr "請選擇一個檔案"
 
 msgid "Please specify a name for the new tag."
-msgstr "請指定新標籤的名稱"
+msgstr "請指定新標籤的名稱。"
 
 msgid "Please specify a revision to tag."
 msgstr "請指定一個修訂版來套用標籤。"
@@ -1638,7 +1638,7 @@ msgid "Prompt when pushing creates new remote branches"
 msgstr "在建立新的遠端分支時提示使用者"
 
 msgid "Prune "
-msgstr "清除(prune)"
+msgstr "清除(prune) "
 
 msgid "Pull"
 msgstr "自遠端分支撈取並合併(pull)"
@@ -1727,7 +1727,7 @@ msgid "Remove Element"
 msgstr "移除元素"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr ""
+msgstr "移除不再存在於遠端板控庫上的遠端追蹤分支"
 
 msgid "Remove selected (Delete)"
 msgstr "移除被選取的項目（刪除）"
@@ -1784,32 +1784,26 @@ msgstr "重設分支 Head"
 msgid "Reset Branch?"
 msgstr "要重設分支嗎？"
 
-#, fuzzy
 msgid "Reset Hard"
-msgstr "重設分支 Head"
+msgstr "硬式重設"
 
-#, fuzzy
 msgid "Reset Merge"
-msgstr "要合併的修訂版"
+msgstr "合併式重設"
 
-#, fuzzy
 msgid "Reset Soft"
-msgstr "重設工作目錄樹"
+msgstr "軟式重設"
 
 msgid "Reset Worktree"
 msgstr "重設工作目錄樹"
 
-#, fuzzy
 msgid "Reset hard?"
-msgstr "要重設分支嗎？"
+msgstr "要進行硬式重設嗎？"
 
-#, fuzzy
 msgid "Reset merge?"
-msgstr "要重設工作目錄樹嗎？"
+msgstr "要進行合併式重設嗎？"
 
-#, fuzzy
 msgid "Reset soft?"
-msgstr "復位 '%s'?"
+msgstr "要進行軟式重設嗎？"
 
 msgid "Reset worktree?"
 msgstr "要重設工作目錄樹嗎？"
@@ -2010,7 +2004,7 @@ msgid "Select Previous Version"
 msgstr "選擇先前版本"
 
 msgid "Select Repository..."
-msgstr "選擇版控庫"
+msgstr "選擇版控庫……"
 
 msgid "Select a parent directory for the new clone"
 msgstr "選取新克隆的 Git 版控庫要放置的目錄"
@@ -2058,9 +2052,8 @@ msgstr "往上平移"
 msgid "Shortcuts"
 msgstr "鍵盤快捷鍵"
 
-#, fuzzy
 msgid "Show Details..."
-msgstr "刪除檔案……"
+msgstr "顯示詳細資訊……"
 
 msgid "Show Diffstat After Merge"
 msgstr "在合併後顯示內容差異"
@@ -2188,10 +2181,10 @@ msgstr "已被移入新修訂版準備區域"
 
 #, python-format
 msgid "Staging: %s"
-msgstr "移動到新修訂版準備區域：%s..."
+msgstr "正在移動到新修訂版準備區域：%s"
 
 msgid "Start Interactive Rebase..."
-msgstr "開始互動式變更基底"
+msgstr "開始互動式變更基底……"
 
 msgid "Starting Revision"
 msgstr "起始修訂版"
@@ -2250,21 +2243,21 @@ msgstr "單行文字寬度限制"
 msgid "The branch will be no longer available."
 msgstr "此分支將不再存在。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+msgstr "這個分支將會被用「git reset --hard %s」命令重設"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+msgstr "這個分支將會被用「git reset --merge %s」命令重設"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
+msgstr "這個分支將會被用「git reset --soft %s」命令重設"
 
 msgid "The commit message will be cleared."
 msgstr "修訂版提交訊息將會被移除。"
@@ -2279,9 +2272,9 @@ msgstr "下列檔案將會被移除："
 msgid "The revision expression cannot be empty."
 msgstr "修訂版表達式不可以是空的。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "工作目錄樹將被用「git reset --merge %s」命令重設"
+msgstr "工作目錄樹將被用「git reset --keep %s」命令重設"
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "此操作將無法復原。要清除提交訊息嗎？"
@@ -2342,7 +2335,7 @@ msgid "Toggle the paths filter"
 msgstr "切換路徑過濾器開關"
 
 msgid "Tracking Branch"
-msgstr "跟蹤分支:"
+msgstr "跟蹤分支"
 
 msgid "Tracking branch"
 msgstr "追蹤分支"
@@ -2427,7 +2420,7 @@ msgid "View"
 msgstr "檢視"
 
 msgid "View History..."
-msgstr "檢視變更紀錄"
+msgstr "檢視變更紀錄……"
 
 msgid "View history for selected paths"
 msgstr "檢視被選取的路徑（們）的變更紀錄"
@@ -2451,7 +2444,7 @@ msgid "XOR"
 msgstr "互斥或(XOR)"
 
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 msgid ""
 "You are in the middle of a merge.\n"
@@ -2482,7 +2475,7 @@ msgid "command-line arguments"
 msgstr "命令列參數"
 
 msgid "error: unable to execute git"
-msgstr ""
+msgstr "錯誤：無法執行 git"
 
 #, python-format
 msgid "exit code %s"
