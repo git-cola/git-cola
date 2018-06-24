@@ -1661,11 +1661,11 @@ class Rebase(ModelCommand):
         with GitXBaseContext(
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
                 GIT_XBASE_ACTION=N_('Rebase')):
-                # XXX this blocks the user interface window for the duration of our
-                # git-xbase's invocation. would need to implement signals for
-                # QProcess and continue running the main thread. alternatively we
-                # could hide the main window while rebasing. that doesn't require
-                # as much effort.
+                # TODO this blocks the user interface window for the duration
+                # of git-xbase's invocation. We would need to implement
+                # signals for QProcess and continue running the main thread.
+                # alternatively we could hide the main window while rebasing.
+                # that doesn't require as much effort.
                 status, out, err = self.model.git.rebase(*args, _no_win32_startupinfo=True, **kwargs)
         self.model.update_status()
         if err.strip() != 'Nothing to do':
