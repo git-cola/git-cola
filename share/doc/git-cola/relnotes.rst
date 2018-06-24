@@ -51,6 +51,11 @@ Packaging
 
 Fixes
 -----
+* Diffing image files was not updating the available context menus,
+  which prevented the "Stage" action from being present in the menu.
+
+  https://github.com/git-cola/git-cola/issues/841
+
 * `git cola` now detects when `git lfs uninstall` has been run.  This allows
   you to re-initialize "Git LFS" in an existing repository where it had been
   previously uninstalled.

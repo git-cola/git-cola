@@ -938,6 +938,19 @@ class DeleteRemoteBranch(ModelCommand):
                 % dict(branch=self.branch, remote=self.remote))
 
 
+
+def get_mode(model, staged, modified, unmerged, untracked):
+    if staged:
+        mode = model.mode_index
+    elif modified or unmerged:
+        mode = model.mode_worktree
+    elif untracked:
+        mode = model.mode_untracked
+    else:
+        mode = model.mode
+    return mode
+
+
 class DiffImage(EditModel):
 
     def __init__(self,
@@ -947,7 +960,8 @@ class DiffImage(EditModel):
         self.new_filename = filename
         self.new_diff_text = ''
         self.new_diff_type = 'image'
-
+        self.new_mode = get_mode(
+                self.model, staged, modified, unmerged, untracked)
         self.staged = staged
         self.modified = modified
         self.unmerged = unmerged
