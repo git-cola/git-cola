@@ -21,6 +21,10 @@ git-cola v3.2
 
 Usability, bells and whistles
 -----------------------------
+* The `git cola dag` DAG window now supports `git revert`.
+
+  https://github.com/git-cola/git-cola/issues/843
+
 * `git stash pop` is now supported by the stash dialog.
 
   https://github.com/git-cola/git-cola/issues/844

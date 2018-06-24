@@ -123,6 +123,9 @@ class ViewerMixin(object):
     def cherry_pick(self):
         self.with_oid(lambda oid: cmds.do(cmds.CherryPick, [oid]))
 
+    def revert(self):
+        self.with_oid(lambda oid: cmds.do(cmds.Revert, oid))
+
     def copy_to_clipboard(self):
         self.with_oid(lambda oid: qtutils.set_clipboard(oid))
 
@@ -203,6 +206,7 @@ class ViewerMixin(object):
         self.menu_actions['reset_merge'].setEnabled(has_single_selection)
         self.menu_actions['reset_soft'].setEnabled(has_single_selection)
         self.menu_actions['reset_hard'].setEnabled(has_single_selection)
+        self.menu_actions['revert'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
@@ -217,6 +221,7 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['create_tag'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['cherry_pick'])
+        menu.addAction(self.menu_actions['revert'])
         menu.addAction(self.menu_actions['create_patch'])
         menu.addAction(self.menu_actions['create_tarball'])
         menu.addSeparator()
@@ -257,6 +262,9 @@ def viewer_actions(widget):
         'cherry_pick':
         qtutils.add_action(widget, N_('Cherry Pick'),
                            widget.proxy.cherry_pick),
+        'revert':
+        qtutils.add_action(widget, N_('Revert'),
+                           widget.proxy.revert),
         'diff_commit':
         qtutils.add_action(widget, N_('Launch Diff Tool'),
                            widget.proxy.show_diff, hotkeys.DIFF),
