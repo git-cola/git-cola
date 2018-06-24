@@ -16,6 +16,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* `git stash pop` is now supported by the stash dialog.
+
+  https://github.com/git-cola/git-cola/issues/844
+
 * The status widget now ensures that each item is visible when selection
   changes.  Previously, if you scrolled to the right to see the name of
   a long filename, and then selected a short filename above it, the widget

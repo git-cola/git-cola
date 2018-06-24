@@ -58,6 +58,11 @@ class StashView(standard.Dialog):
             tooltip=N_('Drop the selected stash'),
             icon=icons.discard())
 
+        self.button_pop = qtutils.create_button(
+            text=N_('Pop'),
+            tooltip=N_('Apply and drop the selected stash (git stash pop)'),
+            icon=icons.discard())
+
         self.button_close = qtutils.close_button()
 
         self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True,
@@ -77,25 +82,21 @@ class StashView(standard.Dialog):
             qtutils.STRETCH,
             self.stash_index,
             self.keep_index,
-            self.button_drop,
+            self.button_save,
             self.button_apply,
-            self.button_save)
+            self.button_pop,
+            self.button_drop)
 
         self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
                                       self.splitter, self.btn_layt)
         self.setLayout(self.main_layt)
-
         self.splitter.setSizes([self.width()//3, self.width()*2//3])
-
-        self.setTabOrder(self.button_save, self.button_apply)
-        self.setTabOrder(self.button_apply, self.button_drop)
-        self.setTabOrder(self.button_drop, self.keep_index)
-        self.setTabOrder(self.keep_index, self.button_close)
 
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
 
-        qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_save, self.stash_save)
+        qtutils.connect_button(self.button_apply, self.stash_apply)
+        qtutils.connect_button(self.button_pop, self.stash_pop)
         qtutils.connect_button(self.button_drop, self.stash_drop)
         qtutils.connect_button(self.button_close, self.close_and_rescan)
 
@@ -147,9 +148,11 @@ class StashView(standard.Dialog):
         is_changed = self.model.is_changed()
         is_selected = bool(self.selected_stash())
         self.stash_index.setEnabled(is_staged)
+        self.keep_index.setEnabled(is_changed)
         self.button_save.setEnabled(is_changed)
         self.button_apply.setEnabled(is_selected)
         self.button_drop.setEnabled(is_selected)
+        self.button_pop.setEnabled(is_selected)
 
     def update_from_model(self):
         """Initiates git queries on the model and updates the view
@@ -171,14 +174,17 @@ class StashView(standard.Dialog):
         if self.stash_index.isChecked() and not is_staged:
             self.stash_index.setChecked(False)
 
-    def stash_apply(self):
+    def stash_pop(self):
+        self.stash_apply(pop=True)
+
+    def stash_apply(self, pop=False):
         """Applies the currently selected stash
         """
         selection = self.selected_stash()
         if not selection:
             return
         index = self.keep_index.isChecked()
-        cmds.do(stash.ApplyStash, selection, index)
+        cmds.do(stash.ApplyStash, selection, index, pop)
         cmds.do(cmds.Rescan)
         QtCore.QTimer.singleShot(1, lambda: self.accept())
 

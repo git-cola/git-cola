@@ -51,16 +51,22 @@ class CommandMixin(object):
 
 class ApplyStash(CommandMixin):
 
-    def __init__(self, stash_index, index):
+    def __init__(self, stash_index, index, pop):
         self.stash_ref = 'refs/' + stash_index
         self.index = index
+        self.pop = pop
 
     def do(self):
         ref = self.stash_ref
-        if self.index:
-            args = ['apply', '--index', ref]
+        pop = self.pop
+        if pop:
+            action = 'pop'
         else:
-            args = ['apply', ref]
+            action = 'apply'
+        if self.index:
+            args = [action, '--index', ref]
+        else:
+            args = [action, ref]
         status, out, err = git.stash(*args)
         if status == 0:
             Interaction.log_status(status, out, err)
