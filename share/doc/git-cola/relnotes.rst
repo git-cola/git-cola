@@ -14,6 +14,11 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.2:
+
+git-cola v3.2
+=============
+
 Usability, bells and whistles
 -----------------------------
 * `git stash pop` is now supported by the stash dialog.
