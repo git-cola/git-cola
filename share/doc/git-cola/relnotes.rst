@@ -51,6 +51,12 @@ Packaging
 
 Fixes
 -----
+* `git cola` now detects when `git lfs uninstall` has been run.  This allows
+  you to re-initialize "Git LFS" in an existing repository where it had been
+  previously uninstalled.
+
+  https://github.com/git-cola/git-cola/issues/842
+
 * Custom color values that did not contain any hexadecimal digits in the
   `a-f` range were being converted into integers by the config reader.  This
   then caused the configured colors to be ignored.

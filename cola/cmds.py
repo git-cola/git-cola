@@ -275,7 +275,7 @@ class LFSInstall(ModelCommand):
         status, out, err = git.lfs('install')
         Interaction.command(
             N_('Error'), 'git lfs install', status, out, err)
-        self.model.emit_updated()
+        self.model.update_config(reset=True, emit=True)
 
 
 class ApplyDiffSelection(ModelCommand):

@@ -135,11 +135,23 @@ class MainModel(Observable):
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
-            self.cfg.reset()
-            self.annex = self.cfg.is_annex()
-            lfs = self.git.git_path('lfs')
-            self.lfs = bool(lfs and core.exists(lfs))
+            self.update_config(reset=True)
         return is_valid
+
+    def is_git_lfs_enabled(self):
+        """Return True if `git lfs install` has been run
+
+        We check for the existence of the "lfs" object-storea, and one of the
+        "git lfs install"-provided hooks.  This allows us to detect when
+        "git lfs uninstall" has been run.
+
+        """
+        lfs_filter = self.cfg.get('filter.lfs.clean', default=False)
+        lfs_dir = lfs_filter and self.git.git_path('lfs')
+        lfs_hook = lfs_filter and self.git.git_path('hooks', 'post-merge')
+        return (lfs_filter
+                and lfs_dir and core.exists(lfs_dir)
+                and lfs_hook and core.exists(lfs_hook))
 
     def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
@@ -219,7 +231,16 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
+        self.update_config()
         self.emit_updated()
+
+    def update_config(self, emit=False, reset=False):
+        if reset:
+            self.cfg.reset()
+        self.annex = self.cfg.is_annex()
+        self.lfs = self.is_git_lfs_enabled()
+        if emit:
+            self.emit_updated()
 
     def update_files(self, update_index=False, emit=False):
         self._update_files(update_index=update_index)
