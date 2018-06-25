@@ -8,6 +8,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..i18n import N_
+from ..qtutils import get
 from ..utils import Group
 from .. import cmds
 from .. import core
@@ -187,7 +188,7 @@ class Finder(standard.Dialog):
     def search(self):
         self.button_group.setEnabled(False)
         self.refresh_button.setEnabled(False)
-        query = self.input_txt.value()
+        query = get(self.input_txt)
         self.worker_thread.query = query
         self.worker_thread.start()
 

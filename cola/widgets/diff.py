@@ -12,6 +12,7 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..models import selection
+from ..qtutils import get
 from .. import actions
 from .. import cmds
 from .. import core
@@ -167,7 +168,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         if self.scrollvalue is None:
             scrollbar = self.verticalScrollBar()
             if scrollbar:
-                scrollvalue = scrollbar.value()
+                scrollvalue = get(scrollbar)
             else:
                 scrollvalue = None
             self.scrollvalue = scrollvalue
@@ -589,10 +590,10 @@ class Options(QtWidgets.QWidget):
         return action
 
     def update_options(self):
-        space_at_eol = self.ignore_space_at_eol.isChecked()
-        space_change = self.ignore_space_change.isChecked()
-        all_space = self.ignore_all_space.isChecked()
-        function_context = self.function_context.isChecked()
+        space_at_eol = get(self.ignore_space_at_eol)
+        space_change = get(self.ignore_space_change)
+        all_space = get(self.ignore_all_space)
+        function_context = get(self.function_context)
         gitcmds.update_diff_overrides(space_at_eol,
                                       space_change,
                                       all_space,
@@ -656,7 +657,7 @@ class DiffEditor(DiffTextEdit):
 
     def show_line_numbers(self):
         """Return True if we should show line numbers"""
-        return self.options.show_line_numbers.isChecked()
+        return get(self.options.show_line_numbers)
 
     def update_options(self):
         self.numbers.setVisible(self.show_line_numbers())
@@ -763,7 +764,7 @@ class DiffEditor(DiffTextEdit):
 
         scrollbar = self.verticalScrollBar()
         if scrollbar:
-            scrollvalue = scrollbar.value()
+            scrollvalue = get(scrollbar)
         else:
             scrollvalue = None
 
@@ -785,7 +786,7 @@ class DiffEditor(DiffTextEdit):
         line_idx = 0
         line_start = 0
 
-        for line_idx, line in enumerate(self.value().splitlines()):
+        for line_idx, line in enumerate(get(self).splitlines()):
             line_end = line_start + len(line)
             if line_start <= selection_start <= line_end:
                 first_line_idx = line_idx

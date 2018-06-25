@@ -15,6 +15,7 @@ from ..compat import WIN32
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import prefs
+from ..qtutils import get
 from ..settings import Settings
 from .. import cmds
 from .. import core
@@ -1011,7 +1012,7 @@ def show_dock(dockwidget):
 
 
 def focus_dock(dockwidget):
-    if dockwidget.toggleViewAction().isChecked():
+    if get(dockwidget.toggleViewAction()):
         show_dock(dockwidget)
     else:
         dockwidget.toggleViewAction().trigger()

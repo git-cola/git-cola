@@ -179,7 +179,8 @@ class CompletionLineEdit(text.HintedLineEdit):
         return utils.shell_split(self.value())
 
     def _ends_with_whitespace(self):
-        return self.value() != self.value().rstrip()
+        value = self.value()
+        return value != value.rstrip()
 
     def _last_word(self):
         if self._ends_with_whitespace():

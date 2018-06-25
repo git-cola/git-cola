@@ -12,6 +12,7 @@ from ..git import git
 from ..git import STDOUT
 from ..qtutils import connect_button
 from ..qtutils import create_toolbutton
+from ..qtutils import get
 from .. import core
 from .. import gitcmds
 from .. import icons
@@ -281,12 +282,11 @@ class Search(SearchWidget):
 
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
-        self.model.query = self.query.text()
-        self.model.max_count = self.max_count.value()
+        self.model.query = get(self.query)
+        self.model.max_count = get(self.max_count)
 
-        fmt = Qt.ISODate
-        self.model.start_date = self.start_date.date().toString(fmt)
-        self.model.end_date = self.end_date.date().toString(fmt)
+        self.model.start_date = get(self.start_date)
+        self.model.end_date = get(self.end_date)
 
         self.results = engineclass(self.model).search()
         if self.results:

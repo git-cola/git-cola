@@ -8,6 +8,7 @@ from qtpy import QtWidgets
 
 from ..i18n import N_
 from ..widgets import standard
+from ..qtutils import get
 from .. import icons
 from .. import qtutils
 from .toolbarcmds import COMMANDS
@@ -336,7 +337,7 @@ class ToolbarView(standard.Dialog):
 
     def apply_action(self):
         self.toolbar.clear()
-        self.toolbar.set_show_icons(self.show_icon.isChecked())
+        self.toolbar.set_show_icons(get(self.show_icon))
         self.toolbar.setWindowTitle(self.toolbar_name.text())
 
         for item in self.right_list.get_items():

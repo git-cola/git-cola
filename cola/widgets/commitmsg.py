@@ -22,6 +22,7 @@ from ..i18n import N_
 from ..models import dag
 from ..models import prefs
 from ..models import selection
+from ..qtutils import get
 from ..utils import Group
 from . import defs
 from .selectcommits import select_commits
@@ -223,7 +224,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
     def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:
             return
-        if self.check_spelling_action.isChecked() == value:
+        if get(self.check_spelling_action) == value:
             return
         self.check_spelling_action.setChecked(value)
         self.toggle_check_spelling(value)
@@ -259,7 +260,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         """
         cur_position = self.summary.cursorPosition()
-        end_position = len(self.summary.value())
+        end_position = len(get(self.summary))
         if cur_position == end_position:
             self.focus_description()
         else:
@@ -267,9 +268,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def commit_message(self, raw=True):
         """Return the commit message as a unicode string"""
-        summary = self.summary.value()
+        summary = get(self.summary)
         if raw:
-            description = self.description.value()
+            description = get(self.description)
         else:
             description = self.formatted_description()
         if summary and description:
@@ -282,7 +283,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             return ''
 
     def formatted_description(self):
-        text = self.description.value()
+        text = get(self.description)
         if not self._linebreak:
             return text
         return textwrap.word_wrap(text, self._tabwidth, self._textwidth)
@@ -299,7 +300,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         if '\n' in value:
             summary, description = value.split('\n', 1)
             description = description.lstrip('\n')
-            cur_description = self.description.value()
+            cur_description = get(self.description)
             if cur_description:
                 description = description + '\n' + cur_description
             # this callback is triggered by changing `summary`
@@ -325,7 +326,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.model.set_commitmsg('')
 
     def update_actions(self):
-        commit_enabled = bool(self.summary.value())
+        commit_enabled = bool(get(self.summary))
         self.commit_group.setEnabled(commit_enabled)
 
     def refresh_palettes(self):
@@ -417,7 +418,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
-        if not bool(self.summary.value()):
+        if not bool(get(self.summary)):
             # Describe a good commit message
             error_msg = N_(
                 'Please supply a commit message.\n\n'
@@ -452,7 +453,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             cmds.do(cmds.StageModified)
 
         # Warn that amending published commits is generally bad
-        amend = self.amend_action.isChecked()
+        amend = get(self.amend_action)
         if (amend and self.model.is_commit_published() and
             not Interaction.confirm(
                     N_('Rewrite Published Commit?'),
@@ -462,8 +463,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
                     N_('Amend the published commit?'),
                     N_('Amend Commit'), default=False, icon=icons.save())):
             return
-        no_verify = self.bypass_commit_hooks_action.isChecked()
-        sign = self.sign_action.isChecked()
+        no_verify = get(self.bypass_commit_hooks_action)
+        sign = get(self.sign_action)
         cmds.do(cmds.Commit, amend, msg, sign, no_verify=no_verify)
         self.bypass_commit_hooks_action.setChecked(False)
 

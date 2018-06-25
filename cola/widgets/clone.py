@@ -11,10 +11,11 @@ from .. import utils
 from .. import qtutils
 from ..i18n import N_
 from ..interaction import Interaction
+from ..models import main
+from ..qtutils import get
 from . import defs
 from . import standard
 from . import text
-from ..models import main
 
 
 def prompt_for_clone(show=True, settings=None):
@@ -80,17 +81,17 @@ class Clone(standard.Dialog):
         self.update_actions()
 
     def update_actions(self):
-        url = self.url.value().strip()
+        url = get(self.url).strip()
         enabled = bool(url)
         self.ok_button.setEnabled(enabled)
 
     def prepare_to_clone(self):
         """Grabs and validates the input data"""
 
-        submodules = self.submodules.isChecked()
-        shallow = self.shallow.isChecked()
+        submodules = get(self.submodules)
+        shallow = get(self.shallow)
 
-        url = self.url.value()
+        url = get(self.url)
         url = utils.expandpath(url)
         if not url:
             return None

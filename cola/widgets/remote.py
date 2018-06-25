@@ -10,6 +10,7 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..qtutils import connect_button
+from ..qtutils import get
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -477,13 +478,13 @@ class RemoteActionDialog(standard.Dialog):
         local_branch = self.local_branch.text()
         remote_branch = self.remote_branch.text()
 
-        ff_only = self.ff_only_checkbox.isChecked()
-        force = self.force_checkbox.isChecked()
-        no_ff = self.no_ff_checkbox.isChecked()
-        rebase = self.rebase_checkbox.isChecked()
-        set_upstream = self.upstream_checkbox.isChecked()
-        tags = self.tags_checkbox.isChecked()
-        prune = self.prune_checkbox.isChecked()
+        ff_only = get(self.ff_only_checkbox)
+        force = get(self.force_checkbox)
+        no_ff = get(self.no_ff_checkbox)
+        rebase = get(self.rebase_checkbox)
+        set_upstream = get(self.upstream_checkbox)
+        tags = get(self.tags_checkbox)
+        prune = get(self.prune_checkbox)
 
         return (remote_name,
                 {
@@ -535,7 +536,7 @@ class RemoteActionDialog(standard.Dialog):
         if action == PUSH and not remote_branch:
             branch = local_branch
             candidate = '%s/%s' % (remote, branch)
-            prompt = self.prompt_checkbox.isChecked()
+            prompt = get(self.prompt_checkbox)
 
             if prompt and candidate not in self.model.remote_branches:
                 title = N_('Push')
@@ -548,7 +549,7 @@ class RemoteActionDialog(standard.Dialog):
                                            icon=icons.cola()):
                     return
 
-        if self.force_checkbox.isChecked():
+        if get(self.force_checkbox):
             if action == FETCH:
                 title = N_('Force Fetch?')
                 msg = N_('Non-fast-forward fetch overwrites local history!')
@@ -612,8 +613,8 @@ class Fetch(RemoteActionDialog):
     def export_state(self):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
-        state['tags'] = self.tags_checkbox.isChecked()
-        state['prune'] = self.prune_checkbox.isChecked()
+        state['tags'] = get(self.tags_checkbox)
+        state['prune'] = get(self.prune_checkbox)
         return state
 
     def apply_state(self, state):
@@ -636,8 +637,8 @@ class Push(RemoteActionDialog):
     def export_state(self):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
-        state['tags'] = self.tags_checkbox.isChecked()
-        state['prompt'] = self.prompt_checkbox.isChecked()
+        state['tags'] = get(self.tags_checkbox)
+        state['prompt'] = get(self.prompt_checkbox)
         return state
 
     def apply_state(self, state):
@@ -682,8 +683,8 @@ class Pull(RemoteActionDialog):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
 
-        state['ff_only'] = self.ff_only_checkbox.isChecked()
-        state['no_ff'] = self.no_ff_checkbox.isChecked()
-        state['rebase'] = self.rebase_checkbox.isChecked()
+        state['ff_only'] = get(self.ff_only_checkbox)
+        state['no_ff'] = get(self.no_ff_checkbox)
+        state['rebase'] = get(self.rebase_checkbox)
 
         return state

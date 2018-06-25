@@ -13,6 +13,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..qtutils import get
 from .. import core
 from .. import cmds
 from .. import difftool
@@ -691,8 +692,8 @@ class GitDAG(standard.MainWindow):
 
     def display(self):
         """Update the view when the Git refs change"""
-        ref = self.revtext.value()
-        count = self.maxresults.value()
+        ref = get(self.revtext)
+        count = get(self.maxresults)
         model = self.model
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
@@ -1609,7 +1610,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         adjust_scrollbars = True
         scrollbar = self.verticalScrollBar()
         if scrollbar:
-            value = scrollbar.value()
+            value = get(scrollbar)
             min_ = scrollbar.minimum()
             max_ = scrollbar.maximum()
             range_ = max_ - min_

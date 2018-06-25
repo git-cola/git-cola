@@ -13,6 +13,7 @@ from ..models import prefs
 from ..models import selection
 from ..widgets import gitignore
 from ..widgets import standard
+from ..qtutils import get
 from .. import actions
 from .. import cmds
 from .. import core
@@ -419,11 +420,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def save_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll:
-            self.old_vscroll = vscroll.value()
+            self.old_vscroll = get(vscroll)
 
         hscroll = self.horizontalScrollBar()
         if hscroll:
-            self.old_hscroll = hscroll.value()
+            self.old_hscroll = get(hscroll)
 
     def current_item(self):
         s = self.selected_indexes()
@@ -827,7 +828,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         hscroll = None
         hscrollbar = self.horizontalScrollBar()
         if hscrollbar:
-            hscroll = hscrollbar.value()
+            hscroll = get(hscrollbar)
         self.scrollToItem(item)
         if hscroll is not None:
             hscrollbar.setValue(hscroll)
@@ -1081,7 +1082,7 @@ class StatusFilterWidget(QtWidgets.QWidget):
         text.editingFinished.connect(self.apply_filter)
 
     def apply_filter(self):
-        text = self.text.value()
+        text = get(self.text)
         if text == self._filter:
             return
         self._filter = text

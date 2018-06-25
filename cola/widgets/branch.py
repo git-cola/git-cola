@@ -14,6 +14,7 @@ from ..interaction import Interaction
 from ..models import main
 from ..widgets import defs
 from ..widgets import standard
+from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
@@ -626,7 +627,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
 
     def apply_filter(self):
-        text = self.text.value()
+        text = get(self.text)
         if text == self._filter:
             return
         self._apply_bold(self._filter, False)

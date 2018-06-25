@@ -7,6 +7,7 @@ from qtpy.QtCore import Qt
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import stash
+from ..qtutils import get
 from .. import cmds
 from .. import icons
 from .. import qtutils
@@ -171,7 +172,7 @@ class StashView(standard.Dialog):
         # "Stash Index" depends on staged changes, so disable this option
         # if there are no staged changes.
         is_staged = self.model.is_staged()
-        if self.stash_index.isChecked() and not is_staged:
+        if get(self.stash_index) and not is_staged:
             self.stash_index.setChecked(False)
 
     def stash_pop(self):
@@ -208,8 +209,8 @@ class StashView(standard.Dialog):
                 N_('A stash named "%s" already exists') % stash_name)
             return
 
-        keep_index = self.keep_index.isChecked()
-        stash_index = self.stash_index.isChecked()
+        keep_index = get(self.keep_index)
+        stash_index = get(self.stash_index)
         if stash_index:
             cmds.do(stash.StashIndex, stash_name)
         else:
@@ -238,9 +239,9 @@ class StashView(standard.Dialog):
     def export_state(self):
         """Export persistent settings"""
         state = super(StashView, self).export_state()
-        state['keep_index'] = self.keep_index.isChecked()
-        state['stash_index'] = self.stash_index.isChecked()
-        state['sizes'] = self.splitter.sizes()
+        state['keep_index'] = get(self.keep_index)
+        state['stash_index'] = get(self.stash_index)
+        state['sizes'] = get(self.splitter)
         return state
 
     def apply_state(self, state):

@@ -10,6 +10,7 @@ from qtpy.QtCore import Signal
 from ..git import git
 from ..git import STDOUT
 from ..i18n import N_
+from ..qtutils import get
 from .. import cmds
 from .. import core
 from .. import gitcmds
@@ -392,9 +393,9 @@ class AddRemoteDialog(QtWidgets.QDialog):
 
 class RemoteWidget(QtWidgets.QWidget):
 
-    name = property(lambda self: self.remote_name.value(),
+    name = property(lambda self: get(self.remote_name),
                     lambda self, value: self.remote_name.set_value(value))
-    url = property(lambda self: self.remote_url.value(),
+    url = property(lambda self: get(self.remote_url),
                    lambda self, value: self.remote_url.set_value(value))
     valid = Signal(bool)
 

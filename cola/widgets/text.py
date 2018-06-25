@@ -8,6 +8,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..qtutils import get
 from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
@@ -113,7 +114,7 @@ class BaseTextEditExtension(QtCore.QObject):
 
         # Save cursor position
         offset, selection_text = self.offset_and_selection()
-        old_value = self.widget.value()
+        old_value = get(self.widget)
 
         # Update text
         self.widget.setPlainText(value)
@@ -402,7 +403,7 @@ class MonoTextEdit(PlainTextEdit):
 
 def get_value_hinted(widget):
     text = get_stripped(widget)
-    hint = widget.hint.value()
+    hint = get(widget.hint)
     if text == hint:
         return ''
     else:
@@ -539,7 +540,7 @@ class HintWidget(QtCore.QObject):
     def focus_out(self):
         """Re-enable hint-mode when losing focus"""
         widget = self.widget()
-        if not widget.value():
+        if not get(widget):
             self.enable(True)
 
 
@@ -668,7 +669,7 @@ class VimMixin(object):
                 # The cursor is at the beginning of the line.
                 # Emit a signal so that the parent can e.g. change focus.
                 widget.leave.emit()
-            elif widget.value()[:position].count('\n') == 0:
+            elif get(widget)[:position].count('\n') == 0:
                 # The cursor is in the middle of the first line of text.
                 # We can't go up ~ jump to the beginning of the line.
                 # Select the text if shift is pressed.

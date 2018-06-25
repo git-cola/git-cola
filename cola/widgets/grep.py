@@ -15,6 +15,7 @@ from .. import core
 from .. import hotkeys
 from .. import utils
 from .. import qtutils
+from ..qtutils import get
 from .standard import Dialog
 from .text import HintedLineEdit
 from .text import VimHintedPlainTextEdit
@@ -205,13 +206,13 @@ class Grep(Dialog):
         self.edit_group.setEnabled(False)
         self.refresh_group.setEnabled(False)
 
-        query = self.input_txt.value()
+        query = get(self.input_txt)
         if len(query) < 2:
             self.result_txt.clear()
             self.preview_txt.clear()
             return
         self.worker_thread.query = query
-        self.worker_thread.shell = self.shell_checkbox.isChecked()
+        self.worker_thread.shell = get(self.shell_checkbox)
         self.worker_thread.regexp_mode = self.regexp_mode()
         self.worker_thread.start()
 
@@ -223,7 +224,7 @@ class Grep(Dialog):
         """Return the scrollbar value for the results window"""
         scrollbar = self.result_txt.verticalScrollBar()
         if scrollbar:
-            return scrollbar.value()
+            return get(scrollbar)
         return None
 
     def set_text_scroll(self, scroll):
@@ -281,7 +282,7 @@ class Grep(Dialog):
     def export_state(self):
         """Export persistent settings"""
         state = super(Grep, self).export_state()
-        state['sizes'] = self.splitter.sizes()
+        state['sizes'] = get(self.splitter)
         return state
 
     def apply_state(self, state):

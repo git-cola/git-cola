@@ -9,6 +9,7 @@ from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..interaction import Interaction
+from ..qtutils import get
 from . import defs
 from . import completion
 from . import standard
@@ -113,10 +114,10 @@ class CreateTag(standard.Dialog):
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
 
-        revision = self.revision.value()
-        tag_name = self.tag_name.value()
-        tag_msg = self.tag_msg.value()
-        sign_tag = self.sign_tag.isChecked()
+        revision = get(self.revision)
+        tag_name = get(self.tag_name)
+        tag_msg = get(self.tag_msg)
+        sign_tag = get(self.sign_tag)
 
         if not revision:
             Interaction.critical(

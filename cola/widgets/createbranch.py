@@ -8,6 +8,7 @@ from qtpy.QtCore import Signal
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
+from ..qtutils import get
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -212,20 +213,20 @@ class CreateBranchDialog(Dialog):
         self.revision.setText(revision)
 
     def getopts(self):
-        self.opts.revision = self.revision.value()
-        self.opts.branch = self.branch_name.value()
-        self.opts.checkout = self.checkout_checkbox.isChecked()
-        self.opts.reset = self.reset_radio.isChecked()
-        self.opts.fetch = self.fetch_checkbox.isChecked()
-        self.opts.track = self.remote_radio.isChecked()
+        self.opts.revision = get(self.revision)
+        self.opts.branch = get(self.branch_name)
+        self.opts.checkout = get(self.checkout_checkbox)
+        self.opts.reset = get(self.reset_radio)
+        self.opts.fetch = get(self.fetch_checkbox)
+        self.opts.track = get(self.remote_radio)
 
     def create_branch(self):
         """Creates a branch; called by the "Create Branch" button"""
         self.getopts()
         revision = self.opts.revision
         branch = self.opts.branch
-        no_update = self.no_update_radio.isChecked()
-        ffwd_only = self.ffwd_only_radio.isChecked()
+        no_update = get(self.no_update_radio)
+        ffwd_only = get(self.ffwd_only_radio)
         existing_branches = gitcmds.branch_list()
         check_branch = False
 
@@ -307,7 +308,7 @@ class CreateBranchDialog(Dialog):
         self.revision.setText(remote_branch)
 
         # Set the branch field if we're branching from a remote branch.
-        if not self.remote_radio.isChecked():
+        if not get(self.remote_radio):
             return
         branch = gitcmds.strip_remote(self.model.remotes, remote_branch)
         if branch == 'HEAD':
@@ -324,9 +325,9 @@ class CreateBranchDialog(Dialog):
     def branch_sources(self):
         """Get the list of items for populating the branch root list.
         """
-        if self.local_radio.isChecked():
+        if get(self.local_radio):
             return self.model.local_branches
-        elif self.remote_radio.isChecked():
+        elif get(self.remote_radio):
             return self.model.remote_branches
-        elif self.tag_radio.isChecked():
+        elif get(self.tag_radio):
             return self.model.tags

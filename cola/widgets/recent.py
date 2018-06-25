@@ -6,6 +6,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..i18n import N_
+from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
@@ -121,7 +122,7 @@ class RecentFiles(standard.Dialog):
         self.tree_model.clear()
         self.tree.setEnabled(False)
 
-        self.update_thread.count = self.count.value()
+        self.update_thread.count = get(self.count)
         self.update_thread.start()
 
     def count_changed(self, value):
