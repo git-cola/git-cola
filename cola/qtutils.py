@@ -50,7 +50,7 @@ def connect_button(button, fn):
 
 def connect_checkbox(checkbox, fn):
     """Connect a checkbox to a function taking bool"""
-    checkbox.clicked.connect(lambda *args, **kwargs: fn(checkbox.isChecked()))
+    checkbox.clicked.connect(lambda *args, **kwargs: fn(get(checkbox)))
 
 
 def connect_released(button, fn):
@@ -74,6 +74,25 @@ def disconnect(signal):
         signal.disconnect()
     except TypeError:  # allow unconnected slots
         pass
+
+
+def get(widget):
+    """Query a widget for its python value"""
+    if hasattr(widget, 'isChecked'):
+        value = widget.isChecked()
+    elif hasattr(widget, 'value'):
+        value = widget.value()
+    elif hasattr(widget, 'text'):
+        value = widget.text()
+    elif hasattr(widget, 'toPlainText'):
+        value = widget.toPlainText()
+    elif hasattr(widget, 'sizes'):
+        value = widget.sizes()
+    elif hasattr(widget, 'date'):
+        value = widget.date().toString(Qt.ISODate)
+    else:
+        value = None
+    return value
 
 
 def hbox(margin, spacing, *items):
