@@ -26,12 +26,9 @@ STRETCH = object()
 SKIPPED = object()
 
 
-def disconnect(signal):
-    """Disconnect signal from all slots"""
-    try:
-        signal.disconnect()
-    except TypeError:  # allow unconnected slots
-        pass
+def active_window():
+    """Return the active window for the current application"""
+    return QtWidgets.QApplication.activeWindow()
 
 
 def connect_action(action, fn):
@@ -71,9 +68,12 @@ def connect_toggle(toggle, fn):
     toggle.toggled.connect(fn)
 
 
-def active_window():
-    """Return the active window for the current application"""
-    return QtWidgets.QApplication.activeWindow()
+def disconnect(signal):
+    """Disconnect signal from all slots"""
+    try:
+        signal.disconnect()
+    except TypeError:  # allow unconnected slots
+        pass
 
 
 def hbox(margin, spacing, *items):
