@@ -104,10 +104,13 @@ class ConfirmAction(CommandMixin):
 class ModelCommand(CommandMixin):
     """Commands that manipulate the main model"""
 
-    def __init__(self, model=None):
+    def __init__(self, model=None, context=None):
+        if context and not model:
+            model = context.model
         if model is None:  # TODO context
             model = main.model()
         self.model = model
+        self.context = context
 
 
 class EditModel(ModelCommand):
@@ -1747,7 +1750,7 @@ class RebaseAbort(ModelCommand):
         self.model.update_status()
 
 
-class Rescan(ModelCommand):
+class Rescan(ContextCommand):
     """Rescan for changes"""
 
     def do(self):

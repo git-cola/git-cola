@@ -1,26 +1,27 @@
 from __future__ import division, absolute_import, unicode_literals
 
+from .. import cmds
 from .. import core
 from .. import observable
 from .. import gitcmds
 from .. import utils
 from ..i18n import N_
-from ..git import git
 from ..git import STDOUT
 from ..interaction import Interaction
-from ..models import main
 
 
 class StashModel(observable.Observable):
 
-    def __init__(self):
+    def __init__(self, context):
         observable.Observable.__init__(self)
-        self.model = model = main.model()
+        self.context = context
+        self.git = context.git
+        self.model = model = context.model
         if not model.initialized:
             model.update_status()
 
     def stash_list(self):
-        return git.stash('list')[STDOUT].splitlines()
+        return self.git.stash('list')[STDOUT].splitlines()
 
     def is_staged(self):
         return bool(self.model.staged)
@@ -38,6 +39,7 @@ class StashModel(observable.Observable):
         return stashes, revids, names
 
     def stash_diff(self, rev):
+        git = self.git
         diffstat = git.stash('show', rev)[STDOUT]
         diff = git.stash('show', '-p', '--no-ext-diff', rev)[STDOUT]
         return diffstat + '\n\n' + diff
@@ -49,9 +51,10 @@ class CommandMixin(object):
         return False
 
 
-class ApplyStash(CommandMixin):
+class ApplyStash(cmds.ContextCommand):
 
-    def __init__(self, stash_index, index, pop):
+    def __init__(self, context, stash_index, index, pop):
+        super(ApplyStash, self).__init__(context)
         self.stash_ref = 'refs/' + stash_index
         self.index = index
         self.pop = pop
@@ -67,7 +70,7 @@ class ApplyStash(CommandMixin):
             args = [action, '--index', ref]
         else:
             args = [action, ref]
-        status, out, err = git.stash(*args)
+        status, out, err = self.git.stash(*args)
         if status == 0:
             Interaction.log_status(status, out, err)
         else:
@@ -77,12 +80,14 @@ class ApplyStash(CommandMixin):
                 title, 'git stash ' + cmdargs, status, out, err)
 
 
-class DropStash(CommandMixin):
+class DropStash(cmds.ContextCommand):
 
-    def __init__(self, stash_index):
+    def __init__(self, context, stash_index):
+        super(DropStash, self).__init__(context)
         self.stash_ref = 'refs/' + stash_index
 
     def do(self):
+        git = self.git
         status, out, err = git.stash('drop', self.stash_ref)
         if status == 0:
             Interaction.log_status(status, out, err)
@@ -94,7 +99,8 @@ class DropStash(CommandMixin):
 
 class SaveStash(CommandMixin):
 
-    def __init__(self, stash_name, keep_index):
+    def __init__(self, context, stash_name, keep_index):
+        super(SaveStash, self).__init__(context)
         self.stash_name = stash_name
         self.keep_index = keep_index
 
@@ -103,7 +109,7 @@ class SaveStash(CommandMixin):
             args = ['save', '--keep-index', self.stash_name]
         else:
             args = ['save', self.stash_name]
-        status, out, err = git.stash(*args)
+        status, out, err = self.git.stash(*args)
         if status == 0:
             Interaction.log_status(status, out, err)
         else:
@@ -116,11 +122,13 @@ class SaveStash(CommandMixin):
 class StashIndex(CommandMixin):
     """Stash the index away"""
 
-    def __init__(self, stash_name):
+    def __init__(self, context, stash_name):
+        super(StashIndex, self).__init__(context)
         self.stash_name = stash_name
 
     def do(self):
         # Manually create a stash representing the index state
+        git = self.git
         name = self.stash_name
         branch = gitcmds.current_branch()
         head = gitcmds.rev_parse('HEAD')

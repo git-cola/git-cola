@@ -17,11 +17,11 @@ from . import diff
 from . import standard
 
 
-def view(show=True):
+def view(context, show=True):
     """Launches a stash dialog using the provided model + view
     """
-    model = stash.StashModel()
-    stash_view = StashView(model, parent=qtutils.active_window())
+    model = stash.StashModel(context)
+    stash_view = StashView(context, model, parent=qtutils.active_window())
     if show:
         stash_view.show()
         stash_view.raise_()
@@ -30,8 +30,9 @@ def view(show=True):
 
 class StashView(standard.Dialog):
 
-    def __init__(self, model, parent=None):
+    def __init__(self, context, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
+        self.context = context
         self.model = model
         self.stashes = []
         self.revids = []
@@ -110,10 +111,10 @@ class StashView(standard.Dialog):
         self.update_actions()
 
     def close_and_rescan(self):
-        cmds.do(cmds.Rescan)
+        cmds.do(cmds.Rescan, self.context)
         self.reject()
 
-    # "stash" and "keep" index should mutually disable, but we don't
+    # "stash" and "keep" index are mutually disable, but we don't
     # want a radio button because we'd have to add a 3rd "default" option.
     def stash_index_clicked(self, clicked):
         if clicked:
@@ -184,9 +185,9 @@ class StashView(standard.Dialog):
         selection = self.selected_stash()
         if not selection:
             return
-        index = self.keep_index.isChecked()
-        cmds.do(stash.ApplyStash, selection, index, pop)
-        cmds.do(cmds.Rescan)
+        index = get(self.keep_index)
+        cmds.do(stash.ApplyStash, self.context, selection, index, pop)
+        cmds.do(cmds.Rescan, self.context)
         QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_save(self):
@@ -212,10 +213,10 @@ class StashView(standard.Dialog):
         keep_index = get(self.keep_index)
         stash_index = get(self.stash_index)
         if stash_index:
-            cmds.do(stash.StashIndex, stash_name)
+            cmds.do(stash.StashIndex, self.context, stash_name)
         else:
-            cmds.do(stash.SaveStash, stash_name, keep_index)
-        cmds.do(cmds.Rescan)
+            cmds.do(stash.SaveStash, self.context, stash_name, keep_index)
+        cmds.do(cmds.Rescan, self.context)
         QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_drop(self):
@@ -232,7 +233,7 @@ class StashView(standard.Dialog):
                 N_('Drop Stash'),
                 default=True, icon=icons.discard()):
             return
-        cmds.do(stash.DropStash, selection)
+        cmds.do(stash.DropStash, self.context, selection)
         self.update_from_model()
         self.stash_text.setPlainText('')
 

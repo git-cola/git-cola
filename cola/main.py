@@ -295,7 +295,7 @@ def cmd_cola(args):
     context = app.application_init(args)
 
     context.timer.start('view')
-    view = MainView(context.model, settings=args.settings, context=context)
+    view = MainView(context, settings=args.settings)
     if args.amend:
         cmds.do(cmds.AmendMode, True)
 
@@ -503,7 +503,7 @@ def cmd_search(args):
 def cmd_stash(args):
     from .widgets import stash
     context = app.application_init(args)
-    view = stash.view(show=False)
+    view = stash.view(context, show=False)
     return app.application_start(context, view)
 
 

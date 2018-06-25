@@ -64,12 +64,12 @@ class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
     updated = Signal()
 
-    def __init__(self, model, parent=None, settings=None, context=None):
+    def __init__(self, context, parent=None, settings=None):
         standard.MainWindow.__init__(self, parent)
 
         self.context = context
         self.dag = None
-        self.model = model
+        self.model = model = context.model
         self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel()
 
@@ -258,8 +258,9 @@ class MainView(standard.MainWindow):
             self, N_('Open in New Window...'), guicmds.open_repo_in_new_window)
         self.open_repo_new_action.setIcon(icons.folder())
 
+        stash_view = functools.partial(stash.view, context)
         self.stash_action = add_action(
-            self, N_('Stash...'), stash.view, hotkeys.STASH)
+            self, N_('Stash...'), stash_view, hotkeys.STASH)
 
         self.reset_branch_head_action = add_action(
             self, N_('Reset Branch Head'), guicmds.reset_branch_head)
