@@ -481,6 +481,10 @@ msgstr "应用补丁"
 msgid "Apply Patches..."
 msgstr "应用补丁..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "应用所选暂存"
+
 msgid "Apply the selected stash"
 msgstr "应用所选暂存"
 
@@ -1563,6 +1567,9 @@ msgstr ""
 msgid "Polish translation"
 msgstr "波兰语翻译"
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "首选项"
 
@@ -1767,6 +1774,9 @@ msgstr "要重置工作树吗？"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "复位 \"%(branch)s\" to \"%(revision)s\" 将丢失提交."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "撤销差异区域"

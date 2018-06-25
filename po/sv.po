@@ -441,6 +441,9 @@ msgstr ""
 msgid "Apply Patches..."
 msgstr ""
 
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr ""
+
 msgid "Apply the selected stash"
 msgstr ""
 
@@ -1624,6 +1627,9 @@ msgstr ""
 msgid "Polish translation"
 msgstr ""
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Inställningar"
 
@@ -1853,6 +1859,9 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Om du återställer \"%s\" till \"%s\" går följande incheckningar förlorade:"
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr ""

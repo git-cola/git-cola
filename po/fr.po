@@ -483,6 +483,10 @@ msgstr "Appliquer les patchs"
 msgid "Apply Patches..."
 msgstr "Appliquer les patchs..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Appliquer la remise actuelle"
+
 msgid "Apply the selected stash"
 msgstr "Appliquer la remise actuelle"
 
@@ -1577,6 +1581,9 @@ msgstr "Pointer la tête de branche actuelle vers un nouveau commit ?"
 msgid "Polish translation"
 msgstr "Traduction polonaise"
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Préférences"
 
@@ -1786,6 +1793,9 @@ msgstr "Réinitialiser l'arbre de travail ?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Réinitialiser « %s » à « %s » va faire perdre les commits."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Rétablir section de différences"

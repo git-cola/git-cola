@@ -481,6 +481,10 @@ msgstr "Aplikovat záplaty"
 msgid "Apply Patches..."
 msgstr "Aplikovat záplaty..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Aplikovat vybraný odklad"
+
 msgid "Apply the selected stash"
 msgstr "Aplikovat vybraný odklad"
 
@@ -1533,6 +1537,9 @@ msgstr ""
 msgid "Polish translation"
 msgstr "Polský překlad"
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Předvolby"
 
@@ -1728,6 +1735,9 @@ msgstr "Resetovat pracovní adresář?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetováním \"%(branch)s\" do \"%(revision)s\" se ztratí zápisy."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Vrátit komplex rozdílů"

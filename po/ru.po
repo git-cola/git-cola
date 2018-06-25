@@ -463,6 +463,10 @@ msgstr "Применить патчи"
 msgid "Apply Patches..."
 msgstr "Применить патчи..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Применить выбранные заначки (stash)"
+
 msgid "Apply the selected stash"
 msgstr "Применить выбранные заначки (stash)"
 
@@ -1567,6 +1571,9 @@ msgstr ""
 msgid "Polish translation"
 msgstr ""
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Настройки"
 
@@ -1779,6 +1786,9 @@ msgstr ""
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Сброс \"%(branch)s\" в \"%(revision)s\" приведет к потере коммитов."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Откатить изменения в этой части"

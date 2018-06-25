@@ -540,6 +540,10 @@ msgstr "Aplicar Patches"
 msgid "Apply Patches..."
 msgstr "Aplicar Patches..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Aplicar o stash selecionar"
+
 msgid "Apply the selected stash"
 msgstr "Aplicar o stash selecionar"
 
@@ -1615,6 +1619,9 @@ msgstr "Apontar o HEAD do branch atual para um novo commit?"
 msgid "Polish translation"
 msgstr ""
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -1818,6 +1825,9 @@ msgstr "Resetar Worktree?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetar \"%(branch)s\" para \"%(revision)s\" irá perder commits."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Reverter pedaço do Diff"

@@ -443,6 +443,10 @@ msgstr "Terapkan Patch"
 msgid "Apply Patches..."
 msgstr "Terapkan Patch..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Terapkan stash terpilih"
+
 msgid "Apply the selected stash"
 msgstr "Terapkan stash terpilih"
 
@@ -1558,6 +1562,9 @@ msgstr ""
 msgid "Polish translation"
 msgstr ""
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Preferensi"
 
@@ -1774,6 +1781,9 @@ msgstr ""
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Kembalikan Area Diff"

@@ -500,6 +500,10 @@ msgstr "Застосувати латки"
 msgid "Apply Patches..."
 msgstr "Примінити латки..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Застосувати виділений сховок"
+
 msgid "Apply the selected stash"
 msgstr "Застосувати виділений сховок"
 
@@ -1586,6 +1590,9 @@ msgstr "Встановити HEAD поточної гілки на новий к
 msgid "Polish translation"
 msgstr "Польський переклад"
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Налаштування"
 
@@ -1790,6 +1797,9 @@ msgstr "Скинути робоче дерево?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Скасувати частину різниці"

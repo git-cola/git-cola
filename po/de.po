@@ -551,6 +551,10 @@ msgstr "Patches anwenden"
 msgid "Apply Patches..."
 msgstr "Patches anwenden..."
 
+#, fuzzy
+msgid "Apply and drop the selected stash (git stash pop)"
+msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
+
 msgid "Apply the selected stash"
 msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
 
@@ -1618,6 +1622,9 @@ msgstr "Soll der Branch-Head auf einen neuen Commit zeigen?"
 msgid "Polish translation"
 msgstr "Polnische Übersetzung"
 
+msgid "Pop"
+msgstr ""
+
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -1819,6 +1826,9 @@ msgstr "Arbeitsbaum zurücksetzen?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Das Zurücksetzen von \"%(branch)s\" nach \"%(revision)s\" verwirft Commits."
+
+msgid "Revert"
+msgstr ""
 
 msgid "Revert Diff Hunk"
 msgstr "Abschnitt verwerfen"
