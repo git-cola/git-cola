@@ -444,6 +444,18 @@ class CherryPick(ModelCommand):
         self.model.update_file_status()
 
 
+class Revert(ModelCommand):
+    """Cherry pick commits into the current branch."""
+
+    def __init__(self, oid):
+        super(Revert, self).__init__()  # TODO context
+        self.oid = oid
+
+    def do(self):
+        self.model.git.revert(self.oid)
+        self.model.update_file_status()
+
+
 class ResetMode(EditModel):
     """Reset the mode and clear the model's diff text."""
 

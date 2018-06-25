@@ -14,8 +14,21 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.2:
+
+git-cola v3.2
+=============
+
 Usability, bells and whistles
 -----------------------------
+* The `git cola dag` DAG window now supports `git revert`.
+
+  https://github.com/git-cola/git-cola/issues/843
+
+* `git stash pop` is now supported by the stash dialog.
+
+  https://github.com/git-cola/git-cola/issues/844
+
 * The status widget now ensures that each item is visible when selection
   changes.  Previously, if you scrolled to the right to see the name of
   a long filename, and then selected a short filename above it, the widget
