@@ -6,14 +6,14 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-05-12 18:38-0300\n"
+"PO-Revision-Date: 2018-06-25 12:37-0300\n"
 "Last-Translator: Rafael Nascimento <rafaeln.dev@gmail.com>\n"
 "Language-Team: Brazillian <LL@li.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 
 msgid ""
 "\n"
@@ -250,7 +250,7 @@ msgid " - DAG"
 msgstr "Visualizar o Histórico"
 
 msgid " commits ago"
-msgstr "confirmações anteriores"
+msgstr "commits anteriores"
 
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
@@ -540,9 +540,8 @@ msgstr "Aplicar Patches"
 msgid "Apply Patches..."
 msgstr "Aplicar Patches..."
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
-msgstr "Aplicar o stash selecionar"
+msgstr "Aplicar e cancelar o stash selecionado (git stash pop)"
 
 msgid "Apply the selected stash"
 msgstr "Aplicar o stash selecionar"
@@ -1269,7 +1268,7 @@ msgid "Help - git-xbase"
 msgstr "Ajuda - git-xbase"
 
 msgid "Hide Details.."
-msgstr ""
+msgstr "Esconder Detalhes..."
 
 msgid "History Browser"
 msgstr "Navegador de Histórico"
@@ -1734,7 +1733,7 @@ msgid "Remove Element"
 msgstr "Remover Elemento"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr ""
+msgstr "Remover rastreamento remoto de branchs que não existem mais no remoto "
 
 msgid "Remove selected (Delete)"
 msgstr "Remover selecionado"
@@ -1792,32 +1791,26 @@ msgstr "Resetar Head do Branch"
 msgid "Reset Branch?"
 msgstr "Resetar Branch?"
 
-#, fuzzy
 msgid "Reset Hard"
-msgstr "Resetar Head do Branch"
+msgstr "Resetar Hard"
 
-#, fuzzy
 msgid "Reset Merge"
-msgstr "Revisão para Merge"
+msgstr "Resetar Merge"
 
-#, fuzzy
 msgid "Reset Soft"
-msgstr "Resetar Worktree"
+msgstr "Resetar Soft"
 
 msgid "Reset Worktree"
 msgstr "Resetar Worktree"
 
-#, fuzzy
 msgid "Reset hard?"
-msgstr "Resetar Branch?"
+msgstr "Resetar hard?"
 
-#, fuzzy
 msgid "Reset merge?"
-msgstr "Resetar Worktree?"
+msgstr "Resetar merge?"
 
-#, fuzzy
 msgid "Reset soft?"
-msgstr "Resetar Worktree?"
+msgstr "Resetar soft?"
 
 msgid "Reset worktree?"
 msgstr "Resetar Worktree?"
@@ -1827,7 +1820,7 @@ msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetar \"%(branch)s\" para \"%(revision)s\" irá perder commits."
 
 msgid "Revert"
-msgstr ""
+msgstr "Reverter"
 
 msgid "Revert Diff Hunk"
 msgstr "Reverter pedaço do Diff"
@@ -2073,9 +2066,8 @@ msgstr "Shift Para Cima"
 msgid "Shortcuts"
 msgstr "Atalhos"
 
-#, fuzzy
 msgid "Show Details..."
-msgstr "Excluir Arquiv(o)s..."
+msgstr "Mostrar Detalhes..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostrar o Status de Comparação após Mesclagem"
@@ -2268,21 +2260,21 @@ msgstr "Largura do Texto"
 msgid "The branch will be no longer available."
 msgstr "O branch não ficará mais disponível"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "O branch será resetado usando \"git reset --mixed %s\""
+msgstr "O branch será resetado usando \"git reset --hard %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "O branch será resetado usando \"git reset --mixed %s\""
+msgstr "O branch será resetado usando \"git reset --merge %s\""
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "O branch será resetado usando \"git reset --mixed %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "O branch será resetado usando \"git reset --mixed %s\""
+msgstr "O branch será resetado usando \"git reset --soft %s\""
 
 #, fuzzy
 msgid "The commit message will be cleared."
@@ -2298,9 +2290,9 @@ msgstr "Os arquivos a seguir serão apagados:"
 msgid "The revision expression cannot be empty."
 msgstr "A revisão da expressão não pode ser vazia"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "O worktree será resetado usando \"git reset --merge %s\""
+msgstr "O worktree será resetado usando \"git reset --keep %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Isso não pode ser feito. Limpar mensagem do commit ?"
@@ -2470,7 +2462,7 @@ msgid "XOR"
 msgstr ""
 
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 msgid ""
 "You are in the middle of a merge.\n"
@@ -2501,7 +2493,7 @@ msgid "command-line arguments"
 msgstr "Argumentos da linha de comando"
 
 msgid "error: unable to execute git"
-msgstr ""
+msgstr "erro: incapaz de executar git"
 
 #, python-format
 msgid "exit code %s"
