@@ -37,12 +37,6 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/pull/828
 
-* Updated Czech translation
-
-  https://github.com/git-cola/git-cola/pull/835
-
-  https://github.com/git-cola/git-cola/pull/813
-
 * The `git xbase` rebase editor no longer displays an error when
   cancelling an interactive rebase.
 
@@ -53,6 +47,18 @@ Usability, bells and whistles
   https://github.com/git-cola/git-cola/pull/840
 
   https://github.com/git-cola/git-cola/issues/838
+
+Translations
+------------
+* Updated Brazilian translation
+
+  https://github.com/git-cola/git-cola/pull/845
+
+* Updated Czech translation
+
+  https://github.com/git-cola/git-cola/pull/835
+
+  https://github.com/git-cola/git-cola/pull/813
 
 Packaging
 ---------
