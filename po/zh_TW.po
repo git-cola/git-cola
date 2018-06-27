@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-06-19 15:44+0800\n"
+"PO-Revision-Date: 2018-06-28 00:36+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
@@ -392,7 +392,7 @@ msgstr "一個掛勾程式必須在「%s」被提供"
 
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "名為「%s」的珍藏已經存在"
+msgstr "名為「%s」的珍藏項目已經存在"
 
 msgid "Abort"
 msgstr "中止"
@@ -546,12 +546,11 @@ msgstr "套用修正"
 msgid "Apply Patches..."
 msgstr "套用修正……"
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
-msgstr "套用被選取的 stash"
+msgstr "套用並丟棄被選取的珍藏項目(git stash pop)"
 
 msgid "Apply the selected stash"
-msgstr "套用被選取的 stash"
+msgstr "套用被選取的珍藏項目"
 
 msgid "Arguments"
 msgstr "參數"
@@ -980,17 +979,17 @@ msgid "Drop"
 msgstr "丟棄"
 
 msgid "Drop Stash"
-msgstr "丟棄珍藏"
+msgstr "丟棄珍藏項目"
 
 msgid "Drop Stash?"
-msgstr "丟棄珍藏？"
+msgstr "要丟棄珍藏項目嗎？"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr "是否要丟棄名為「%s」的珍藏？"
+msgstr "是否要丟棄名為「%s」的珍藏項目？"
 
 msgid "Drop the selected stash"
-msgstr "丟棄被選取的 stash"
+msgstr "丟棄被選取的珍藏項目"
 
 msgid "Edit"
 msgstr "編輯"
@@ -1032,7 +1031,7 @@ msgid "Enter a name for the new bare repo"
 msgstr "輸入新裸裝版本庫(bare repo)的名稱"
 
 msgid "Enter a name for the stash"
-msgstr "輸入珍藏的名稱"
+msgstr "輸入珍藏項目的名稱"
 
 msgid "Error"
 msgstr "發生錯誤"
@@ -1063,7 +1062,7 @@ msgid "Error creating remote \"%s\""
 msgstr "建立「%s」遠端分支時發生錯誤"
 
 msgid "Error creating stash"
-msgstr "建立新的珍藏時發生錯誤"
+msgstr "建立新的珍藏項目時發生錯誤"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1080,7 +1079,7 @@ msgid "Error: Cannot find commit template"
 msgstr "錯誤：無法找到修訂版提交範本"
 
 msgid "Error: Stash exists"
-msgstr "錯誤：珍藏已存在"
+msgstr "錯誤：珍藏項目已存在"
 
 msgid "Error: Unconfigured commit template"
 msgstr "錯誤：未被設定的修訂版提交範本"
@@ -1273,7 +1272,7 @@ msgid "Help - git-xbase"
 msgstr "尋求幫助 - git-xbase"
 
 msgid "Hide Details.."
-msgstr ""
+msgstr "隱藏詳細資訊……"
 
 msgid "History Browser"
 msgstr "變更紀錄瀏覽器"
@@ -1621,7 +1620,7 @@ msgid "Polish translation"
 msgstr "波蘭語翻譯"
 
 msgid "Pop"
-msgstr ""
+msgstr "POP"
 
 msgid "Preferences"
 msgstr "偏好設定"
@@ -1694,7 +1693,7 @@ msgid "Recently Modified Files..."
 msgstr "最近修改過的檔案……"
 
 msgid "Recovering a dropped stash is not possible."
-msgstr "要救回一個丟棄的珍藏是不可能的。"
+msgstr "要救回一個丟棄的珍藏項目是不可能的。"
 
 msgid "Recovering lost commits may not be easy."
 msgstr "恢復丟失的提交是比較困難的."
@@ -1820,7 +1819,7 @@ msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "重置「%(branch)s」分支到「%(revision)s」修訂版將導致修訂版提交的丟失。"
 
 msgid "Revert"
-msgstr ""
+msgstr "撤銷修訂版提交"
 
 msgid "Revert Diff Hunk"
 msgstr "撤銷選取內容差異區塊的內容變更"
@@ -1932,10 +1931,10 @@ msgid "Save GUI Settings"
 msgstr "保存圖形介面設定"
 
 msgid "Save Stash"
-msgstr "保存珍藏"
+msgstr "保存珍藏項目"
 
 msgid "Save modified state to new stash"
-msgstr "將被修改的狀態保存至一個新的 stash"
+msgstr "將被修改的狀態保存為一個新的珍藏項目"
 
 #, python-format
 msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
@@ -2200,19 +2199,19 @@ msgid "Starting Revision"
 msgstr "起始修訂版"
 
 msgid "Stash"
-msgstr "珍藏"
+msgstr "珍藏項目"
 
 msgid "Stash Index"
-msgstr "將修訂版提交準備區域（索引）中的變更存入珍藏"
+msgstr "將修訂版提交準備區域中的變更存為珍藏項目"
 
 msgid "Stash staged changes only"
-msgstr "只將移入新修訂版提交準備區域中的變更存入珍藏"
+msgstr "只將移入新修訂版提交準備區域中的變更存為珍藏項目"
 
 msgid "Stash unstaged changes only, keeping staged changes"
-msgstr "只將尚未移入新修訂版提交準備區域的變更存入珍藏，保留移入新修訂版提交準備區域的變更"
+msgstr "只將尚未移入新修訂版提交準備區域的變更存入珍藏項目，保留移入新修訂版提交準備區域的變更"
 
 msgid "Stash..."
-msgstr "珍藏..."
+msgstr "珍藏項目(STASH)..."
 
 msgid "Status"
 msgstr "狀態"

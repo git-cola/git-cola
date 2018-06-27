@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola glossary\n"
-"PO-Revision-Date: 2018-04-29 22:48+0800\n"
+"PO-Revision-Date: 2018-06-27 23:50+0800\n"
 "Last-Translator: Ｖ字龍(Vdragon) <Vdragon.Taiwan@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -206,7 +206,7 @@ msgstr "合併衝突"
 
 #. ""
 msgid "stash"
-msgstr "珍藏"
+msgstr "珍藏項目"
 
 #. "Cherry-picking, moving only some revisions from one branch to another in version control"
 msgid "cherry-pick"
