@@ -45,12 +45,6 @@ class StashModel(observable.Observable):
         return diffstat + '\n\n' + diff
 
 
-class CommandMixin(object):
-
-    def is_undoable(self):
-        return False
-
-
 class ApplyStash(cmds.ContextCommand):
 
     def __init__(self, context, stash_index, index, pop):
@@ -97,7 +91,7 @@ class DropStash(cmds.ContextCommand):
                 title, 'git stash drop ' + self.stash_ref, status, out, err)
 
 
-class SaveStash(CommandMixin):
+class SaveStash(cmds.ContextCommand):
 
     def __init__(self, context, stash_name, keep_index):
         super(SaveStash, self).__init__(context)
@@ -119,7 +113,7 @@ class SaveStash(CommandMixin):
                 title, 'git stash ' + cmdargs, status, out, err)
 
 
-class StashIndex(CommandMixin):
+class StashIndex(cmds.ContextCommand):
     """Stash the index away"""
 
     def __init__(self, context, stash_name):

@@ -70,6 +70,10 @@ Packaging
 
 Fixes
 -----
+* A regression when saving stashes was fixed.
+
+  https://github.com/git-cola/git-cola/issues/847
+
 * Diffing image files was not updating the available context menus,
   which prevented the "Stage" action from being present in the menu.
 
