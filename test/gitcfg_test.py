@@ -63,6 +63,20 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         expect = ['abc', 'def']
         self.assertEqual(expect, self.config.get_all('test.value'))
 
+    def assert_color(self, expect, git_value, key='test', default=None):
+        self.git('config', 'cola.color.%s' % key, git_value)
+        gitcfg.current().reset()
+        actual = self.config.color(key, None)
+        self.assertEqual(expect, actual)
+
+    def test_color_rrggbb(self):
+        self.assert_color((0xaa, 0xbb, 0xcc), 'aabbcc')
+        self.assert_color((0xaa, 0xbb, 0xcc), '#aabbcc')
+
+    def test_color_int(self):
+        self.assert_color((0x10, 0x20, 0x30), '102030')
+        self.assert_color((0x10, 0x20, 0x30), '#102030')
+
     def test_guitool_opts(self):
         self.git('config', 'guitool.hello world.cmd', 'hello world')
         opts = self.config.get_guitool_opts('hello world')

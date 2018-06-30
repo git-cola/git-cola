@@ -88,12 +88,14 @@ Fixes
   These color values are now interpreted correctly.  Additionally, color
   values can now use an optional HTML-like `#` prefix.
 
-  https://github.com/git-cola/git-cola/pull/836
-
   Example `.gitconfig` snippet::
 
     [cola "color"]
         text = "#0a0303"
+
+  https://github.com/git-cola/git-cola/pull/836
+
+  https://github.com/git-cola/git-cola/issues/849
 
 * We now display an error message graphically when `Git` is not installed.
   Previously, the message went to stderr only.

@@ -87,7 +87,7 @@ def unhex(value):
         # If the value is an integer then it's a value that was converted
         # by the config reader.  Zero-pad it into a 6-digit hex number.
         value = '%06d' % value
-    return unhexlify(value.lstrip('#'))
+    return unhexlify(core.encode(value.lstrip('#')))
 
 
 def _config_key_value(line, splitchar):
@@ -459,12 +459,10 @@ class GitConfig(observable.Observable):
         return term
 
     def color(self, key, default):
-        string = self.get('cola.color.%s' % key, default=default)
-        string = core.encode(string)
-        default = core.encode(default)
+        value = self.get('cola.color.%s' % key, default=default)
         struct_layout = core.encode('BBB')
         try:
-            r, g, b = struct.unpack(struct_layout, unhex(string))
+            r, g, b = struct.unpack(struct_layout, unhex(value))
         except Exception:
             r, g, b = struct.unpack(struct_layout, unhex(default))
         return (r, g, b)
