@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 17:32+0200\n"
-"PO-Revision-Date: 2018-06-03 15:12+0200\n"
+"PO-Revision-Date: 2018-07-01 07:25+0200\n"
 "Last-Translator: Pavel Rehak <pavel-rehak@email.cz>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -121,6 +121,11 @@ msgid ""
 "        <br>\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"        K hlášení problémů prosím použijte %(bug_link)s.\n"
+"        <br>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -210,11 +215,11 @@ msgstr "\"%(branch)s\" byla smazána z \"%(remote)s\"."
 
 #, python-format
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr ""
+msgstr "\"%(command)s\" vrátil návratový kód \"%(status)d\""
 
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr ""
+msgstr "\"%(command)s\" vrátil návratový kód %(status)d"
 
 #, python-format
 msgid "\"%s\" already exists"
@@ -233,7 +238,7 @@ msgstr "#"
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
-msgstr "%(project)s: %(branch)s - Procházet"
+msgstr "%(project)s: %(branch)s - procházet"
 
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
@@ -253,7 +258,7 @@ msgstr "Před %d minutami"
 
 #, python-format
 msgid "%d patch(es) applied."
-msgstr "Záplata (záplaty) %d aplikována."
+msgstr "%d záplata (záplaty) aplikována."
 
 #, python-format
 msgid "%d skipped"
@@ -334,7 +339,7 @@ msgid "A stash named \"%s\" already exists"
 msgstr "Odklad s názvem \"%s\" již existuje"
 
 msgid "Abort"
-msgstr ""
+msgstr "Zrušit"
 
 msgid "Abort Action"
 msgstr ""
@@ -371,6 +376,8 @@ msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
+"Přijmout změny a přeskládat\n"
+"Klávesová zkratka: Ctrl+Enter"
 
 msgid "Action Name"
 msgstr "Název akce"
@@ -469,7 +476,7 @@ msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
 msgstr ""
-"Místo toho bude vytvořena nepodepsaná odlehčená značka.\n"
+"Místo toho bude vytvořena nepodepsaná prostá značka.\n"
 "Vytvořit nepodepsanou značku?"
 
 msgid "Apply"
@@ -481,9 +488,8 @@ msgstr "Aplikovat záplaty"
 msgid "Apply Patches..."
 msgstr "Aplikovat záplaty..."
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
-msgstr "Aplikovat vybraný odklad"
+msgstr "Aplikovat a zahodit vybraný odklad (git stash pop)"
 
 msgid "Apply the selected stash"
 msgstr "Aplikovat vybraný odklad"
@@ -513,7 +519,7 @@ msgid "Blame..."
 msgstr ""
 
 msgid "Bold with dark background font instead of italic headers (restart required)"
-msgstr ""
+msgstr "Hlavičky tučným písmem na tmavém pozadí místo kurzívy (vyžaduje restart)"
 
 msgid "Branch"
 msgstr "Větev"
@@ -677,7 +683,7 @@ msgid "Collapse all"
 msgstr "Sbalit vše"
 
 msgid "Command"
-msgstr ""
+msgstr "Příkaz"
 
 msgid "Commit"
 msgstr "Zapsat"
@@ -872,7 +878,7 @@ msgid "Detect conflict markers in unmerged files"
 msgstr ""
 
 msgid "Developer"
-msgstr ""
+msgstr "Vývojář"
 
 msgid "Diff"
 msgstr "Diff"
@@ -884,7 +890,7 @@ msgid "Diff Options"
 msgstr "Volby Diff"
 
 msgid "Diff Tool"
-msgstr ""
+msgstr "Nástroj Diff"
 
 msgid "Diff selected -> this"
 msgstr "Diff vybraný -> tento"
@@ -927,7 +933,7 @@ msgid "Edit"
 msgstr "Upravit"
 
 msgid "Edit Rebase"
-msgstr ""
+msgstr "Upravit přeskládání"
 
 msgid "Edit Remotes"
 msgstr "Upravit vzdálené"
@@ -954,7 +960,7 @@ msgid "Email contributor"
 msgstr "Napsat přispěvateli e-mail"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Povoleno"
 
 msgid "Enter New Branch Name"
 msgstr "Zadat nový název větve"
@@ -1117,13 +1123,13 @@ msgid "Fixed String"
 msgstr ""
 
 msgid "Fixed-Width Font"
-msgstr ""
+msgstr "Písmo s pevnou šířkou"
 
 msgid "Fixup"
 msgstr ""
 
 msgid "Fixup Previous Commit"
-msgstr ""
+msgstr "Opravit předchozí zápis"
 
 msgid "Font Size"
 msgstr "Velikost písma"
@@ -1186,7 +1192,7 @@ msgid "Grep"
 msgstr ""
 
 msgid "Have you rebased/pulled lately?"
-msgstr ""
+msgstr "Nepřeskládali/nestáhli jste v poslední době?"
 
 msgid "Help"
 msgstr "Nápověda"
@@ -1210,22 +1216,22 @@ msgid "Hungarian translation"
 msgstr "Maďarský překlad"
 
 msgid "Ignore all whitespace"
-msgstr ""
+msgstr "Ignorovat všechny mezery"
 
 msgid "Ignore changes in amount of whitespace"
-msgstr ""
+msgstr "Ignorovat změny v počtu mezer"
 
 msgid "Ignore changes in whitespace at EOL"
-msgstr ""
+msgstr "Ignorovat změny v mezerách na konci řádků"
 
 msgid "Ignore custom pattern"
-msgstr ""
+msgstr "Ignorovat dle šablony"
 
 msgid "Ignore exact filename"
-msgstr ""
+msgstr "Ignorovat přesný název souboru"
 
 msgid "Ignore filename or pattern"
-msgstr ""
+msgstr "Ignorovat název souboru nebo šablonu"
 
 msgid "Include tags "
 msgstr "Zahrnout značky "
@@ -1246,7 +1252,7 @@ msgid "Insert spaces instead of tabs"
 msgstr "Vkládat mezery místo tabelátorů"
 
 msgid "Interactive Rebase"
-msgstr ""
+msgstr "Interaktivní přeskládání"
 
 msgid "Invalid Revision"
 msgstr ""
@@ -1314,7 +1320,7 @@ msgid "Log"
 msgstr ""
 
 msgid "Maintainer (since 2007) and developer"
-msgstr ""
+msgstr "Správce (od roku 2007) a vývojář"
 
 msgid "Merge"
 msgstr "Sloučit"
@@ -1324,13 +1330,13 @@ msgid "Merge \"%(revision)s\" into \"%(branch)s\""
 msgstr "Začlenit \"%(revision)s\" do \"%(branch)s\""
 
 msgid "Merge Tool"
-msgstr ""
+msgstr "Nástroj sloučení"
 
 msgid "Merge Verbosity"
 msgstr ""
 
 msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
+msgstr "Sloučení selhalo.  Je třeba rozhodnout o konfliktech."
 
 #, python-format
 msgid "Merge into \"%s\""
@@ -1376,7 +1382,7 @@ msgid "Move Up"
 msgstr ""
 
 msgid "Move files to trash"
-msgstr ""
+msgstr "Přesunout soubory do koše"
 
 msgid "Name"
 msgstr "Název"
@@ -1467,7 +1473,7 @@ msgid "Open..."
 msgstr "Otevřít…"
 
 msgid "Other branches"
-msgstr ""
+msgstr "Další větve"
 
 msgid "Overwrite"
 msgstr "Přepsat"
@@ -1532,7 +1538,7 @@ msgid ""
 msgstr ""
 
 msgid "Point the current branch head to a new commit?"
-msgstr ""
+msgstr "Umístit současnou hlavu větve na nový zápis?"
 
 msgid "Polish translation"
 msgstr "Polský překlad"
@@ -1584,16 +1590,16 @@ msgstr "Přeskládat"
 
 #, python-format
 msgid "Rebase onto %s"
-msgstr ""
+msgstr "Přeskládat do %s"
 
 msgid "Rebase stopped"
-msgstr ""
+msgstr "Přeskládání zastaveno"
 
 msgid "Rebase the current branch instead of merging"
 msgstr "Místo sloučení přeskládat současnou větev"
 
 msgid "Rebasing"
-msgstr ""
+msgstr "Přeskládání"
 
 msgid "Recent"
 msgstr "Nedávné"
@@ -1602,7 +1608,7 @@ msgid "Recent repositories"
 msgstr "Nedávné repozitáře"
 
 msgid "Recent repository count"
-msgstr ""
+msgstr "Počet nedávných repozitářů"
 
 msgid "Recently Modified Files"
 msgstr "Nedávno změněné soubory"
@@ -1770,7 +1776,7 @@ msgid "Revert Unstaged Changes"
 msgstr "Vrátit nepřipravené změny"
 
 msgid "Revert Unstaged Changes?"
-msgstr "Vrátit nepřipravené úpravy?"
+msgstr "Vrátit nepřipravené změny?"
 
 msgid "Revert Unstaged Edits..."
 msgstr "Vrátit nepřipravené úpravy..."
@@ -1862,25 +1868,25 @@ msgid "Search"
 msgstr "Hledat"
 
 msgid "Search Authors"
-msgstr ""
+msgstr "Hledat autory"
 
 msgid "Search Commit Messages"
-msgstr ""
+msgstr "Hledat zprávy zápisů"
 
 msgid "Search Committers"
-msgstr ""
+msgstr "Hledat tvůrce zápisů"
 
 msgid "Search Date Range"
-msgstr ""
+msgstr "Hledat datový rozsah"
 
 msgid "Search Diffs"
-msgstr ""
+msgstr "Hledat rozdíly"
 
 msgid "Search by Expression"
-msgstr ""
+msgstr "Hledat dle výrazu"
 
 msgid "Search by Path"
-msgstr ""
+msgstr "Hledat dle cesty"
 
 msgid "Search for a fixed string"
 msgstr ""
@@ -1959,7 +1965,7 @@ msgid "Set Default Repository"
 msgstr "Nastavit výchozí repozitář"
 
 msgid "Set Upstream Branch"
-msgstr ""
+msgstr "Nastavit upstream větev"
 
 msgid "Set upstream"
 msgstr "Nastavit upstream"
@@ -1979,9 +1985,8 @@ msgstr ""
 msgid "Shortcuts"
 msgstr "Klávesové zkratky"
 
-#, fuzzy
 msgid "Show Details..."
-msgstr "Smazat soubory..."
+msgstr "Zobrazit podrobnosti..."
 
 msgid "Show Diffstat After Merge"
 msgstr ""
@@ -2004,7 +2009,7 @@ msgid "Show icon? (if available)"
 msgstr "Zobrazit ikonu? (je-li dostupná)"
 
 msgid "Show line numbers"
-msgstr ""
+msgstr "Zobrazit čísla řádků"
 
 msgid "Show whole surrounding functions of changes"
 msgstr ""
@@ -2031,7 +2036,7 @@ msgid "Skip"
 msgstr ""
 
 msgid "Skip Current Patch"
-msgstr ""
+msgstr "Přeskočit současnou záplatu"
 
 msgid "Sort bookmarks alphabetically"
 msgstr "Záložky řadit abecedně"
@@ -2082,7 +2087,7 @@ msgid "Stage Selected Lines"
 msgstr "Připravit k zapsání vybrané řádky"
 
 msgid "Stage Unmerged"
-msgstr ""
+msgstr "Nesloučené připravit k zapsání"
 
 msgid "Stage Untracked"
 msgstr "Nesledované připravit k zapsání"
@@ -2110,7 +2115,7 @@ msgid "Staging: %s"
 msgstr ""
 
 msgid "Start Interactive Rebase..."
-msgstr "Zahájit interaktivní přeskládání..."
+msgstr "Zahájit interaktivní přeskládání (rebase)..."
 
 msgid "Starting Revision"
 msgstr "Počáteční revize"
@@ -2281,7 +2286,7 @@ msgid "Ukranian translation"
 msgstr "Ukrajinský překlad"
 
 msgid "Unable to rebase"
-msgstr ""
+msgstr "Nelze přeskládat"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
@@ -2373,7 +2378,7 @@ msgid ""
 msgstr ""
 
 msgid "You cannot rebase with uncommitted changes."
-msgstr ""
+msgstr "Nelze přeskládat s nezapsanými změnami."
 
 msgid "You must specify a revision to merge."
 msgstr ""
