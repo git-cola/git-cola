@@ -56,6 +56,10 @@ Translations
 
 * Updated Czech translation
 
+  https://github.com/git-cola/git-cola/pull/854
+
+  https://github.com/git-cola/git-cola/pull/853
+
   https://github.com/git-cola/git-cola/pull/835
 
   https://github.com/git-cola/git-cola/pull/813
