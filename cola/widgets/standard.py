@@ -521,6 +521,11 @@ class Dialog(WidgetMixin, QtWidgets.QDialog):
     def __init__(self, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
         WidgetMixin.__init__(self)
+        # Disable the Help button hint on Windows
+        if hasattr(Qt, 'WindowContextHelpButtonHint'):
+            help_hint = Qt.WindowContextHelpButtonHint
+            flags = self.windowFlags() & ~help_hint
+            self.setWindowFlags(flags)
 
     def accept(self):
         self.save_settings()
