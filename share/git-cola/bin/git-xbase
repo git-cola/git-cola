@@ -408,7 +408,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         ctx = dag.DAG(oid, 2)
         repo = dag.RepoReader(ctx)
         commits = []
-        for c in repo:
+        for c in repo.get():
             commits.append(c)
         if commits:
             commits = commits[-1:]
