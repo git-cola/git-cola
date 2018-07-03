@@ -4,6 +4,7 @@ Thanks
 
 * Aaron Cook
 * Aaron Wolf
+* Adam Lesperance
 * Adrien be
 * AJ Bagwell
 * Alex Chernetz

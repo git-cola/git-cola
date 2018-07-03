@@ -827,7 +827,7 @@ class ReaderThread(QtCore.QThread):
         repo.reset()
         self.begin.emit()
         commits = []
-        for c in repo:
+        for c in repo.get():
             self._mutex.lock()
             if self._stop:
                 self._condition.wait(self._mutex)

@@ -74,6 +74,10 @@ Packaging
 
 Fixes
 -----
+* The spellcheck feature was broken under Python3.
+
+  https://github.com/git-cola/git-cola/issues/857
+
 * A regression when saving stashes was fixed.
 
   https://github.com/git-cola/git-cola/issues/847
