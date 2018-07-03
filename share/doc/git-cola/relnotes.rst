@@ -48,6 +48,10 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/838
 
+* The help dialog in the `git-xbase` Rebase editor is now scrollable.
+
+  https://github.com/git-cola/git-cola/issues/855
+
 Translations
 ------------
 * Updated Brazilian translation

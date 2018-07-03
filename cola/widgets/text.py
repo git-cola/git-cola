@@ -742,16 +742,21 @@ class HintedLineEdit(LineEdit):
 def text_dialog(text, title):
     """Show a wall of text in a dialog"""
     parent = qtutils.active_window()
+
     label = QtWidgets.QLabel(parent)
     label.setFont(qtutils.diff_font())
     label.setText(text)
     label.setTextInteractionFlags(Qt.NoTextInteraction)
+    label.setMargin(defs.large_margin)
 
     widget = QtWidgets.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
     widget.setWindowTitle(title)
 
-    layout = qtutils.hbox(defs.margin, defs.spacing, label)
+    scroll = QtWidgets.QScrollArea()
+    scroll.setWidget(label)
+
+    layout = qtutils.hbox(defs.margin, defs.spacing, scroll)
     widget.setLayout(layout)
 
     qtutils.add_action(widget, N_('Close'), widget.accept,
