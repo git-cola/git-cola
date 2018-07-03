@@ -484,7 +484,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         commits = dag.RepoReader(ctx)
 
         menu_commits = []
-        for idx, c in enumerate(commits):
+        for idx, c in enumerate(commits.get()):
             menu_commits.insert(0, c)
             if idx > 5:
                 continue
