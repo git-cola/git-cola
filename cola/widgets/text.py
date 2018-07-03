@@ -746,8 +746,9 @@ def text_dialog(text, title):
     label = QtWidgets.QLabel(parent)
     label.setFont(qtutils.diff_font())
     label.setText(text)
-    label.setTextInteractionFlags(Qt.NoTextInteraction)
     label.setMargin(defs.large_margin)
+    text_flags = Qt.TextSelectableByKeyboard | Qt.TextSelectableByMouse
+    label.setTextInteractionFlags(text_flags)
 
     widget = QtWidgets.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
