@@ -70,6 +70,10 @@ Translations
 
 Packaging
 ---------
+* The Makefile is now resilient to DESTDIR and prefix containing whitespace.
+
+  https://github.com/git-cola/git-cola/pull/858
+
 * The vendored `qtpy` library was updated to `v1.4.2`.
 
 * `python3-distutils` is needed to build cola on Debian.
