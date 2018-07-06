@@ -87,11 +87,12 @@ class ColaToolBar(QtWidgets.QToolBar):
     SEPARATOR = 'Separator'
 
     @staticmethod
-    def create(name):
-        return ColaToolBar(name, TREE_LAYOUT, COMMANDS)
+    def create(context, name):
+        return ColaToolBar(context, name, TREE_LAYOUT, COMMANDS)
 
-    def __init__(self, title, tree_layout, toolbar_commands):
+    def __init__(self, context, title, tree_layout, toolbar_commands):
         QtWidgets.QToolBar.__init__(self)
+        self.context = context
         self.setWindowTitle(title)
         self.setObjectName(title)
 
@@ -178,9 +179,9 @@ class ColaToolBar(QtWidgets.QToolBar):
         return result
 
     @staticmethod
-    def apply_state(parent, toolbars):
+    def apply_state(parent, context, toolbars):
         for data in toolbars:
-            toolbar = ColaToolBar.create(data['name'])
+            toolbar = ColaToolBar.create(context, data['name'])
             toolbar.load_items(data['items'])
             toolbar.set_show_icons(data['show_icons'])
             toolbar.setVisible(data['visible'])

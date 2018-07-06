@@ -664,7 +664,7 @@ class MainView(standard.MainWindow):
 
     def add_toolbar(self):
         name = 'ToolBar' + str(len(self.findChildren(ColaToolBar)) + 1)
-        toolbar = ColaToolBar.create(name)
+        toolbar = ColaToolBar.create(self.context, name)
 
         self.addToolBar(toolbar)
         toolbar.configure_toolbar()
@@ -837,7 +837,7 @@ class MainView(standard.MainWindow):
         self.statuswidget.filter_widget.setVisible(show_status_filter)
 
         toolbars = state.get('toolbars', [])
-        ColaToolBar.apply_state(self, toolbars)
+        ColaToolBar.apply_state(self, self.context, toolbars)
         result = self.diffviewer.apply_state(state) and result
 
         return result

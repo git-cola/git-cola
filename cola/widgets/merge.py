@@ -9,7 +9,6 @@ from ..models import main
 from ..qtutils import get
 from .. import cmds
 from .. import gitcfg
-from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from . import completion
