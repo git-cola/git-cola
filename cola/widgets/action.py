@@ -1,5 +1,6 @@
 """The "Actions" widget"""
 from __future__ import division, absolute_import, unicode_literals
+import functools
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -53,9 +54,11 @@ def tooltip_button(text, layout):
 
 
 class ActionButtons(QFlowLayoutWidget):
-    def __init__(self, parent=None):
+
+    def __init__(self, context, parent=None):
         QFlowLayoutWidget.__init__(self, parent)
         layout = self.layout()
+        self.context = context
         self.stage_button = tooltip_button(N_('Stage'), layout)
         self.unstage_button = tooltip_button(N_('Unstage'), layout)
         self.refresh_button = tooltip_button(N_('Refresh'), layout)
@@ -72,7 +75,7 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)
-        connect_button(self.stash_button, stash.view)
+        connect_button(self.stash_button, functools.partial(stash.view, context))
         connect_button(self.stage_button, self.stage)
         connect_button(self.unstage_button, self.unstage)
 

@@ -86,7 +86,7 @@ class MainView(standard.MainWindow):
 
         # "Actions" widget
         self.actionsdock = create_dock(N_('Actions'), self,
-                widget=action.ActionButtons(self))
+                widget=action.ActionButtons(context, self))
         self.actionsdock.toggleViewAction().setChecked(False)
         self.actionsdock.hide()
 
