@@ -1,6 +1,5 @@
-# encoding: utf-8
-# TODO add a mechanism to inject the context
 from __future__ import division, absolute_import, unicode_literals
+import functools
 
 from qtpy import QtGui
 from qtpy.QtCore import Qt
@@ -47,7 +46,7 @@ TREE_LAYOUT = {
         'Commit::Stage',
         'Commit::AmendLast',
         'Commit::StageAll',
-        'Commit::UnsageAll',
+        'Commit::UnstageAll',
         'Commit::Unstage',
         'Commit::LoadCommitMessage',
         'Commit::GetCommitMessageTemplate',
@@ -71,7 +70,7 @@ TREE_LAYOUT = {
         'Branch::VisualizeAll'
     ],
     'View': [
-        'View::FileBrowser'
+        'View::FileBrowser',
     ]
 }
 
@@ -126,12 +125,20 @@ class ColaToolBar(QtWidgets.QToolBar):
                     command = self.commands[child]
                     title = N_(command['title'])
                     callback = command['action']
+                    use_context = command.get('context', True)
+                    if use_context:
+                        callback = functools.partial(callback, self.context)
 
-                    if command['icon'] is None:
-                        toolbar_action = self.addAction(title, callback)
+                    icon = None
+                    command_icon = command.get('icon', None)
+                    if command_icon:
+                        icon = getattr(icons, command_icon, None)
+                        if callable(icon):
+                            icon = icon()
+                    if icon:
+                        toolbar_action = self.addAction(icon, title, callback)
                     else:
-                        icon = getattr(icons, command['icon'], None)
-                        toolbar_action = self.addAction(icon(), title, callback)
+                        toolbar_action = self.addAction(title, callback)
 
                     toolbar_action.setData(data)
 
