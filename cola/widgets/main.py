@@ -65,6 +65,7 @@ class MainView(standard.MainWindow):
 
     def __init__(self, context, parent=None, settings=None):
         standard.MainWindow.__init__(self, parent)
+        self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.context = context
         self.dag = None
