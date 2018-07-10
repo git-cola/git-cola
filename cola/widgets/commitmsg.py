@@ -557,7 +557,7 @@ class MessageValidator(QtGui.QValidator):
         self.destroyed.connect(self.teardown)
 
     def teardown(self):
-        self._cfg.remove_observer(self.emit_model_updated)
+        self._cfg.remove_observer(self.emit_config_updated)
 
     def emit_config_updated(self):
         self.config_updated.emit()
