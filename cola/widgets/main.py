@@ -56,8 +56,7 @@ from . import search
 from . import standard
 from . import status
 from . import stash
-# TODO from . import toolbar, and make non-singleton!
-from .toolbar import ColaToolBar
+from . import toolbar
 
 
 class MainView(standard.MainWindow):
@@ -72,6 +71,7 @@ class MainView(standard.MainWindow):
         self.model = model = context.model
         self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel()
+        self.toolbar_state = toolbar.ToolBarState(self.context, self)
 
         # The widget version is used by import/export_state().
         # Change this whenever dockwidgets are removed.
@@ -632,7 +632,8 @@ class MainView(standard.MainWindow):
             menu.addAction(menu_action)
 
         menu.addSeparator()
-        menu_action = menu.addAction(N_('Add Toolbar'), self.add_toolbar)
+        menu_action = menu.addAction(N_('Add Toolbar'),
+            functools.partial(toolbar.add_toolbar, self.context, self))
         menu_action.setIcon(icons.add())
 
         dockwidgets = [
@@ -661,13 +662,6 @@ class MainView(standard.MainWindow):
     def contextMenuEvent(self, event):
         menu = self.create_view_menu()
         menu.exec_(event.globalPos())
-
-    def add_toolbar(self):
-        name = 'ToolBar' + str(len(self.findChildren(ColaToolBar)) + 1)
-        toolbar = ColaToolBar.create(self.context, name)
-
-        self.addToolBar(toolbar)
-        toolbar.configure_toolbar()
 
     def build_recent_menu(self):
         settings = Settings()
@@ -823,13 +817,14 @@ class MainView(standard.MainWindow):
         state = standard.MainWindow.export_state(self)
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
-        state['toolbars'] = ColaToolBar.export_state(self)
+        state['toolbars'] = self.toolbar_state.export_state()
         self.diffviewer.export_state(state)
+
         return state
 
     def apply_state(self, state):
         """Imports data for save/restore"""
-        result = standard.MainWindow.apply_state(self, state)
+        base_ok = standard.MainWindow.apply_state(self, state)
         lock_layout = state.get('lock_layout', False)
         self.lock_layout_action.setChecked(lock_layout)
 
@@ -837,10 +832,10 @@ class MainView(standard.MainWindow):
         self.statuswidget.filter_widget.setVisible(show_status_filter)
 
         toolbars = state.get('toolbars', [])
-        ColaToolBar.apply_state(self, self.context, toolbars)
-        result = self.diffviewer.apply_state(state) and result
+        self.toolbar_state.apply_state(toolbars)
 
-        return result
+        diff_ok = self.diffviewer.apply_state(state)
+        return base_ok and diff_ok
 
     def setup_dockwidget_view_menu(self):
         # Hotkeys for toggling the dock widgets

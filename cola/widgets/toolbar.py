@@ -75,26 +75,96 @@ TREE_LAYOUT = {
 }
 
 
-def configure_toolbar_dialog(toolbar):
+def configure(toolbar, parent=None):
     """Launches the Toolbar configure dialog"""
     view = ToolbarView(toolbar, qtutils.active_window())
     view.show()
     return view
 
 
-class ColaToolBar(QtWidgets.QToolBar):
+def get_toolbars(widget):
+    return widget.findChildren(ToolBar)
+
+
+def add_toolbar(context, widget):
+    toolbars = get_toolbars(widget)
+    name = 'ToolBar%d' % (len(toolbars) + 1)
+    toolbar = ToolBar.create(context, name)
+    widget.addToolBar(toolbar)
+    configure(toolbar)
+
+
+class ToolBarState(object):
+    """export_state() and apply_state() providers for toolbars"""
+
+    def __init__(self, context, widget):
+        """widget must be a QMainWindow for toolBarArea(), etc."""
+        self.context = context
+        self.widget = widget
+
+    def apply_state(self, toolbars):
+        context = self.context
+        widget = self.widget
+
+        for data in toolbars:
+            toolbar = ToolBar.create(context, data['name'])
+            toolbar.load_items(data['items'])
+            toolbar.set_show_icons(data['show_icons'])
+            toolbar.setVisible(data['visible'])
+
+            toolbar_area = decode_toolbar_area(data['area'])
+            if data['break']:
+                widget.addToolBarBreak(toolbar_area)
+            widget.addToolBar(toolbar_area, toolbar)
+
+            # floating toolbars must be set after added
+            if data['float']:
+                toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
+                toolbar.move(data['x'], data['y'])
+            # TODO: handle changed width when exists more than one toolbar in
+            # an area
+
+    def export_state(self):
+        result = []
+        widget = self.widget
+        toolbars = widget.findChildren(ToolBar)
+
+        for toolbar in toolbars:
+            toolbar_area = widget.toolBarArea(toolbar)
+            if toolbar_area == Qt.NoToolBarArea:
+                continue  # filter out removed toolbars
+            items = [x.data() for x in toolbar.actions()]
+
+            result.append({
+                'name': toolbar.windowTitle(),
+                'area': encode_toolbar_area(toolbar_area),
+                'break': widget.toolBarBreak(toolbar),
+                'float': toolbar.isFloating(),
+                'x': toolbar.pos().x(),
+                'y': toolbar.pos().y(),
+                'width': toolbar.width(),
+                'height': toolbar.height(),
+                'show_icons': toolbar.show_icons(),
+                'visible': toolbar.isVisible(),
+                'items': items,
+                })
+
+        return result
+
+
+class ToolBar(QtWidgets.QToolBar):
     SEPARATOR = 'Separator'
 
     @staticmethod
     def create(context, name):
-        return ColaToolBar(context, name, TREE_LAYOUT, COMMANDS)
+        return ToolBar(context, name, TREE_LAYOUT, COMMANDS)
 
     def __init__(self, context, title, tree_layout, toolbar_commands):
         QtWidgets.QToolBar.__init__(self)
-        self.context = context
         self.setWindowTitle(title)
         self.setObjectName(title)
 
+        self.context = context
         self.tree_layout = tree_layout
         self.commands = toolbar_commands
 
@@ -118,92 +188,40 @@ class ColaToolBar(QtWidgets.QToolBar):
         if child == self.SEPARATOR:
             toolbar_action = self.addSeparator()
             toolbar_action.setData(data)
-        else:
-            if parent in self.tree_layout:
-                tree_items = self.tree_layout[parent]
-                if child in tree_items and child in self.commands:
-                    command = self.commands[child]
-                    title = N_(command['title'])
-                    callback = command['action']
-                    use_context = command.get('context', True)
-                    if use_context:
-                        callback = functools.partial(callback, self.context)
+            return
 
-                    icon = None
-                    command_icon = command.get('icon', None)
-                    if command_icon:
-                        icon = getattr(icons, command_icon, None)
-                        if callable(icon):
-                            icon = icon()
-                    if icon:
-                        toolbar_action = self.addAction(icon, title, callback)
-                    else:
-                        toolbar_action = self.addAction(title, callback)
+        tree_items = self.tree_layout.get(parent, [])
+        if child in tree_items and child in self.commands:
+            command = self.commands[child]
+            title = N_(command['title'])
+            callback = command['action']
+            use_context = command.get('context', True)
+            if use_context:
+                callback = functools.partial(callback, self.context)
 
-                    toolbar_action.setData(data)
+            icon = None
+            command_icon = command.get('icon', None)
+            if command_icon:
+                icon = getattr(icons, command_icon, None)
+                if callable(icon):
+                    icon = icon()
+            if icon:
+                toolbar_action = self.addAction(icon, title, callback)
+            else:
+                toolbar_action = self.addAction(title, callback)
 
-    def configure_toolbar(self):
-        configure_toolbar_dialog(self)
+            toolbar_action.setData(data)
 
     def delete_toolbar(self):
         self.parent().removeToolBar(self)
 
     def contextMenuEvent(self, event):
         menu = QtWidgets.QMenu()
-        menu.addAction(N_('Configure toolbar'), self.configure_toolbar)
+        menu.addAction(N_('Configure toolbar'),
+            functools.partial(configure, self))
         menu.addAction(N_('Delete toolbar'), self.delete_toolbar)
 
         menu.exec_(event.globalPos())
-
-    @staticmethod
-    def export_state(parent):
-        # filter removed toolbars
-        toolbars = parent.findChildren(ColaToolBar)
-        visible_toolbars = [
-            x for x in toolbars
-                if x.parent().toolBarArea(x) != Qt.NoToolBarArea
-        ]
-
-        result = []
-        for toolbar in visible_toolbars:
-            parent = toolbar.parent()
-            items = [x.data() for x in toolbar.actions()]
-            toolbar_area = parent.toolBarArea(toolbar)
-
-            result.append({
-                'name': toolbar.windowTitle(),
-                'area': encode_toolbar_area(toolbar_area),
-                'break': parent.toolBarBreak(toolbar),
-                'float': toolbar.isFloating(),
-                'x': toolbar.pos().x(),
-                'y': toolbar.pos().y(),
-                'width': toolbar.width(),
-                'height': toolbar.height(),
-                'show_icons': toolbar.show_icons(),
-                'visible': toolbar.isVisible(),
-                'items': items,
-                })
-        return result
-
-    @staticmethod
-    def apply_state(parent, context, toolbars):
-        for data in toolbars:
-            toolbar = ColaToolBar.create(context, data['name'])
-            toolbar.load_items(data['items'])
-            toolbar.set_show_icons(data['show_icons'])
-            toolbar.setVisible(data['visible'])
-
-            toolbar_area = decode_toolbar_area(data['area'])
-            if data['break']:
-                parent.addToolBarBreak(toolbar_area)
-            parent.addToolBar(toolbar_area, toolbar)
-
-            # floating toolbars must be set after added
-            if data['float']:
-                toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
-                toolbar.move(data['x'], data['y'])
-            # TODO: handle changed width when exists more than one toolbar in
-            # an area
 
 
 def encode_toolbar_area(toolbar_area):
@@ -237,7 +255,7 @@ def decode_toolbar_area(string):
 
 
 class ToolbarView(standard.Dialog):
-    """Provides the git-cola 'ColaToolBar' configure dialog"""
+    """Provides the git-cola 'ToolBar' configure dialog"""
     SEPARATOR_TEXT = '----------------------------'
 
     def __init__(self, toolbar, parent=None):
