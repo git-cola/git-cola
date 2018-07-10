@@ -178,7 +178,7 @@ COMMANDS = {
     'Commit::Stage': {
         'title': 'Stage',
         'context': False,
-        'action': cmds.do(cmds.StageOrUnstage),
+        'action': cmds.run(cmds.StageOrUnstage),
         'icon': 'add'
     },
     'Commit::AmendLast': {
