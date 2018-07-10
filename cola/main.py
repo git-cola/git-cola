@@ -348,7 +348,8 @@ def cmd_branch(args):
 def cmd_browse(args):
     from .widgets.browse import worktree_browser
     context = app.application_init(args)
-    view = worktree_browser(update=False, settings=args.settings)
+    view = worktree_browser(
+        context, show=False, update=False, settings=args.settings)
     return app.application_start(context, view)
 
 

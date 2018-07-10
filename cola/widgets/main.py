@@ -81,8 +81,9 @@ class MainView(standard.MainWindow):
         cfg = gitcfg.current()
         self.browser_dockable = cfg.get('cola.browserdockable')
         if self.browser_dockable:
-            self.browserdock = create_dock(N_('Browser'), self,
-                    widget=browse.worktree_browser(parent=self, update=False))
+            browser = browse.worktree_browser(context, parent=self,
+                                              show=False, update=False)
+            self.browserdock = create_dock(N_('Browser'), self, widget=browser)
 
         # "Actions" widget
         self.actionsdock = create_dock(N_('Actions'), self,
@@ -330,7 +331,7 @@ class MainView(standard.MainWindow):
 
         self.browse_action = add_action(
             self, N_('File Browser...'),
-            lambda: browse.worktree_browser(show=True))
+            lambda: browse.worktree_browser(context))
         self.browse_action.setIcon(icons.cola())
 
         self.dag_action = add_action(self, N_('DAG...'), self.git_dag)

@@ -301,8 +301,7 @@ COMMANDS = {
     },
     'View::FileBrowser': {
         'title': 'File Browser...',
-        'context': False,
-        'action': lambda: browse.worktree_browser(show=True),
+        'action': browse.worktree_browser,
         'icon': 'cola'
     },
     'View::DAG': {

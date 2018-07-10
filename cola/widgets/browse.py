@@ -15,7 +15,6 @@ from ..git import git
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import browse
-from ..models import main
 from .. import cmds
 from .. import core
 from .. import gitcmds
@@ -29,9 +28,10 @@ from . import defs
 from . import standard
 
 
-def worktree_browser(parent=None, update=True, settings=None, show=False):
+def worktree_browser(context, parent=None, update=True,
+                     settings=None, show=True):
     """Create a new worktree browser"""
-    view = Browser(parent, update=update, settings=settings)
+    view = Browser(context, parent, update=update, settings=settings)
     model = GitRepoModel(view.tree)
     view.set_model(model)
     if update:
@@ -59,16 +59,16 @@ class Browser(standard.Widget):
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
-    def __init__(self, parent, update=True, settings=None):
+    def __init__(self, context, parent, update=True, settings=None):
         standard.Widget.__init__(self, parent)
         self.settings = settings
-        self.tree = RepoTreeView(self)
+        self.tree = RepoTreeView(context, self)
         self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
 
         self.updated.connect(self._updated_callback, type=Qt.QueuedConnection)
 
-        self.model = main.model()
+        self.model = context.model
         self.model.add_observer(self.model.message_updated, self.model_updated)
         if parent is None:
             qtutils.add_close_action(self)
@@ -110,9 +110,10 @@ class RepoTreeView(standard.TreeView):
     about_to_update = Signal()
     updated = Signal()
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         standard.TreeView.__init__(self, parent)
 
+        self.context = context
         self.saved_selection = []
         self.saved_current_path = None
         self.saved_open_folders = set()
@@ -126,7 +127,7 @@ class RepoTreeView(standard.TreeView):
         self.setSelectionMode(self.ExtendedSelection)
 
         # Observe model updates
-        model = main.model()
+        model = context.model
         model.add_observer(model.message_about_to_update,
                            self.emit_about_to_update)
         model.add_observer(model.message_updated, self.emit_update)
@@ -395,7 +396,7 @@ class RepoTreeView(standard.TreeView):
         state = State(staged, unmerged, modified, untracked)
 
         paths = self.selected_paths()
-        model = main.model()
+        model = self.context.model
         model_staged = utils.add_parents(model.staged)
         model_modified = utils.add_parents(model.modified)
         model_unmerged = utils.add_parents(model.unmerged)
@@ -427,7 +428,8 @@ class RepoTreeView(standard.TreeView):
     def update_diff(self):
         paths = self.sync_selection()
         if paths and self.model().path_is_interesting(paths[0]):
-            cached = paths[0] in main.model().staged
+            model = self.context.model
+            cached = paths[0] in model.staged
             cmds.do(cmds.Diff, paths[0], cached)
 
     def set_model(self, model):
@@ -452,14 +454,15 @@ class RepoTreeView(standard.TreeView):
         """Return selected staged paths."""
         if selection is None:
             selection = self.selected_paths()
-        staged = utils.add_parents(main.model().staged)
+        model = self.context.model
+        staged = utils.add_parents(model.staged)
         return [p for p in selection if p in staged]
 
     def selected_modified_paths(self, selection=None):
         """Return selected modified paths."""
         if selection is None:
             selection = self.selected_paths()
-        model = main.model()
+        model = self.context.model
         modified = utils.add_parents(model.modified)
         return [p for p in selection if p in modified]
 
@@ -467,7 +470,7 @@ class RepoTreeView(standard.TreeView):
         """Return selected unstaged paths."""
         if selection is None:
             selection = self.selected_paths()
-        model = main.model()
+        model = self.context.model
         modified = utils.add_parents(model.modified)
         untracked = utils.add_parents(model.untracked)
         unstaged = modified.union(untracked)
@@ -477,7 +480,7 @@ class RepoTreeView(standard.TreeView):
         """Return selected tracked paths."""
         if selection is None:
             selection = self.selected_paths()
-        model = main.model()
+        model = self.context.model
         staged = set(self.selected_staged_paths(selection=selection))
         modified = set(self.selected_modified_paths(selection=selection))
         untracked = utils.add_parents(model.untracked)
