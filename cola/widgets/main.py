@@ -281,10 +281,10 @@ class MainView(standard.MainWindow):
 
         self.visualize_current_action = add_action(
             self, N_('Visualize Current Branch...'),
-            cmds.run(cmds.VisualizeCurrent))
+            cmds.run(cmds.VisualizeCurrent, context))
         self.visualize_all_action = add_action(
             self, N_('Visualize All Branches...'),
-            cmds.run(cmds.VisualizeAll))
+            cmds.run(cmds.VisualizeAll, context))
         self.search_commits_action = add_action(
             self, N_('Search...'), search.search)
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 from __future__ import absolute_import, division, unicode_literals
 
 from .. import cmds
@@ -289,13 +288,11 @@ COMMANDS = {
     },
     'Branch::VisualizeCurrent': {
         'title': 'Visualize Current Branch...',
-        'context': False,
         'action': cmds.run(cmds.VisualizeCurrent),
         'icon': None
     },
     'Branch::VisualizeAll': {
         'title': 'Visualize All Branches...',
-        'context': False,
         'action': cmds.run(cmds.VisualizeAll),
         'icon': None
     },

@@ -2354,7 +2354,7 @@ class UntrackedSummary(EditModel):
         self.new_mode = self.model.mode_untracked
 
 
-class VisualizeAll(CommandMixin):
+class VisualizeAll(ContextCommand):
     """Visualize all branches."""
 
     def do(self):
@@ -2362,7 +2362,7 @@ class VisualizeAll(CommandMixin):
         launch_history_browser(browser + ['--all'])
 
 
-class VisualizeCurrent(ModelCommand):  # TODO context
+class VisualizeCurrent(ContextCommand):
     """Visualize all branches."""
 
     def do(self):
