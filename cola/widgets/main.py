@@ -71,7 +71,7 @@ class MainView(standard.MainWindow):
         self.model = model = context.model
         self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel()
-        self.toolbar_state = toolbar.ToolBarState(self.context, self)
+        self.toolbar_state = toolbar.ToolBarState(context, self)
 
         # The widget version is used by import/export_state().
         # Change this whenever dockwidgets are removed.
@@ -86,14 +86,14 @@ class MainView(standard.MainWindow):
 
         # "Actions" widget
         self.actionsdock = create_dock(N_('Actions'), self,
-                widget=action.ActionButtons(context, self))
+            widget=action.ActionButtons(context, self))
         self.actionsdock.toggleViewAction().setChecked(False)
         self.actionsdock.hide()
 
         # "Repository Status" widget
         self.statusdock = create_dock(N_('Status'), self,
             fn=lambda dock:
-                status.StatusWidget(dock.titleBarWidget(), dock, self.context))
+                status.StatusWidget(dock.titleBarWidget(), dock, context))
         self.statuswidget = self.statusdock.widget()
 
         # "Switch Repository" widgets
@@ -126,8 +126,8 @@ class MainView(standard.MainWindow):
         width = fm.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
-        self.commiteditor = editor = commitmsg.CommitMessageEditor(
-            self, self.context)
+        editor = commitmsg.CommitMessageEditor(self, context)
+        self.commiteditor = editor
         self.commitdock = create_dock(N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
@@ -140,7 +140,7 @@ class MainView(standard.MainWindow):
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(N_('Diff'), self,
-            fn=lambda dock: diff.Viewer(self.context, parent=dock))
+            fn=lambda dock: diff.Viewer(context, parent=dock))
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
 
@@ -299,7 +299,7 @@ class MainView(standard.MainWindow):
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'),
-            lambda: guicmds.diff_expression(context=self.context))
+            lambda: guicmds.diff_expression(context=context))
         self.branch_compare_action = add_action(
             self, N_('Branches...'), compare.compare_branches)
 
@@ -326,7 +326,7 @@ class MainView(standard.MainWindow):
             self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
             self, N_('Review...'),
-            functools.partial(guicmds.review_branch, context=self.context))
+            functools.partial(guicmds.review_branch, context=context))
 
         self.browse_action = add_action(
             self, N_('File Browser...'),
@@ -892,8 +892,7 @@ class MainView(standard.MainWindow):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        self.dag = dag.git_dag(self.context, existing_view=self.dag)
-        view = self.dag
+        view = self.dag = dag.git_dag(self.context, existing_view=self.dag)
         view.show()
         view.raise_()
 
