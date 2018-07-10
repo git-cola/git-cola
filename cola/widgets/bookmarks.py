@@ -27,6 +27,14 @@ BOOKMARKS = 0
 RECENT_REPOS = 1
 
 
+def bookmark(parent):
+    return BookmarksWidget(BOOKMARKS, parent=parent)
+
+
+def recent(parent):
+    return BookmarksWidget(RECENT_REPOS, parent=parent)
+
+
 class BookmarksWidget(QtWidgets.QWidget):
 
     def __init__(self, style=BOOKMARKS, parent=None):

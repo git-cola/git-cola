@@ -98,13 +98,11 @@ class MainView(standard.MainWindow):
 
         # "Switch Repository" widgets
         self.bookmarksdock = create_dock(
-            N_('Favorites'), self, fn=lambda dock:
-                bookmarks.BookmarksWidget(bookmarks.BOOKMARKS, parent=dock))
+            N_('Favorites'), self, fn=lambda dock: bookmarks.bookmark(dock))
         bookmarkswidget = self.bookmarksdock.widget()
 
         self.recentdock = create_dock(
-            N_('Recent'), self, fn=lambda dock:
-                bookmarks.BookmarksWidget(bookmarks.RECENT_REPOS, parent=dock))
+            N_('Recent'), self, fn=lambda dock: bookmarks.recent(dock))
         recentwidget = self.recentdock.widget()
         self.recentdock.hide()
         bookmarkswidget.connect_to(recentwidget)
