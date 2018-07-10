@@ -70,6 +70,7 @@ TREE_LAYOUT = {
         'Branch::VisualizeAll'
     ],
     'View': [
+        'View::DAG',
         'View::FileBrowser',
     ]
 }

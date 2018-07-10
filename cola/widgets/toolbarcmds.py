@@ -305,11 +305,11 @@ COMMANDS = {
         'action': lambda: browse.worktree_browser(show=True),
         'icon': 'cola'
     },
-    #'View::DAG': {
-    #    'title': 'DAG...',
-    #    'action': dag.git_dag,
-    #    'icon': 'cola'
-    #}
+    'View::DAG': {
+        'title': 'DAG...',
+        'action': lambda context: dag.git_dag(context, show=True),
+        'icon': 'cola'
+    },
 }
 #     'Rebase::StartInteractive': {
 #         'title': 'Start Interactive Rebase...',

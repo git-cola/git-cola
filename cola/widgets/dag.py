@@ -35,7 +35,7 @@ from . import filelist
 from . import standard
 
 
-def git_dag(context, args=None, settings=None, existing_view=None):
+def git_dag(context, args=None, settings=None, existing_view=None, show=False):
     """Return a pre-populated git DAG widget."""
     model = context.model
     branch = model.currentbranch
@@ -51,6 +51,8 @@ def git_dag(context, args=None, settings=None, existing_view=None):
         view.set_params(params)
     if params.ref:
         view.display()
+    if show:
+        view.show()
     return view
 
 
