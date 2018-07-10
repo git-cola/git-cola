@@ -83,6 +83,7 @@ class ViewerMixin(object):
     """Implementations must provide selected_items()"""
 
     def __init__(self):
+        self.context = None  # provided by implementation
         self.selected = None
         self.clicked = None
         self.menu_actions = None  # provided by implementation
@@ -172,7 +173,8 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: cmds.do(cmds.Checkout, [oid]))
 
     def save_blob_dialog(self):
-        self.with_oid(lambda oid: browse.BrowseBranch.browse(oid))
+        context = self.context
+        self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid))
 
     def update_menu_actions(self, event):
         selected_items = self.selected_items()
@@ -317,13 +319,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
     diff_commits = Signal(object, object)
     zoom_to_fit = Signal()
 
-    def __init__(self, notifier, parent):
-        standard.TreeWidget.__init__(self, parent=parent)
+    def __init__(self, context, notifier, parent):
+        standard.TreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
 
+        self.context = context
         self.oidmap = {}
         self.menu_actions = None
         self.notifier = notifier
@@ -486,7 +489,7 @@ class GitDAG(standard.MainWindow):
         self.widget_version = 2
         self.context = context
         self.params = params
-        self.model = context and context.model
+        self.model = context.model
         self.settings = settings
 
         self.commits = {}
@@ -519,10 +522,10 @@ class GitDAG(standard.MainWindow):
                                    self.difftool_selected)
         self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
-        self.treewidget = CommitTreeWidget(notifier, self)
+        self.treewidget = CommitTreeWidget(context, notifier, self)
         self.diffwidget = diff.DiffWidget(notifier, context, self, is_commit=True)
         self.filewidget = filelist.FileWidget(notifier, self)
-        self.graphview = GraphView(notifier, self)
+        self.graphview = GraphView(context, notifier, self)
 
         self.proxy = FocusRedirectProxy(self.treewidget,
                                         self.graphview,
@@ -1287,7 +1290,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     x_off = -18
     y_off = -24
 
-    def __init__(self, notifier, parent):
+    def __init__(self, context, notifier, parent):
         QtWidgets.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
 
@@ -1295,6 +1298,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         Commit.commit_selected_color = highlight
         Commit.selected_outline_color = highlight.darker()
 
+        self.context = context
         self.selection_list = []
         self.menu_actions = None
         self.notifier = notifier

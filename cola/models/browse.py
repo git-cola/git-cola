@@ -7,7 +7,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import gitcfg
 from .. import gitcmds
 from .. import core
 from .. import icons
@@ -69,12 +68,13 @@ class GitRepoModel(QtGui.QStandardItemModel):
     model_updated = Signal()
     restore = Signal()
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtGui.QStandardItemModel.__init__(self, parent)
         self.setColumnCount(len(Columns.ALL))
 
+        self.context = context
         self.entries = {}
-        cfg = gitcfg.current()
+        cfg = context.cfg
         self.turbo = cfg.get('cola.turbo', False)
         self.default_author = cfg.get('user.name', N_('Author'))
         self._parent = parent

@@ -42,19 +42,19 @@ def delete_remote_branch():
         cmds.do(cmds.DeleteRemoteBranch, remote, branch)
 
 
-def browse_current():
+def browse_current(context):
     """Launch the 'Browse Current Branch' dialog."""
     branch = gitcmds.current_branch()
-    BrowseBranch.browse(branch)
+    BrowseBranch.browse(context, branch)
 
 
-def browse_other():
+def browse_other(context):
     """Prompt for a branch and inspect content at that point in time."""
     # Prompt for a branch to browse
     branch = choose_ref(N_('Browse Commits...'), N_('Browse'))
     if not branch:
         return
-    BrowseBranch.browse(branch)
+    BrowseBranch.browse(context, branch)
 
 
 def checkout_branch():

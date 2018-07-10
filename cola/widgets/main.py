@@ -289,9 +289,11 @@ class MainView(standard.MainWindow):
             self, N_('Search...'), search.search)
 
         self.browse_branch_action = add_action(
-            self, N_('Browse Current Branch...'), guicmds.browse_current)
+            self, N_('Browse Current Branch...'),
+            lambda: guicmds.browse_current(context))
         self.browse_other_branch_action = add_action(
-            self, N_('Browse Other Branch...'), guicmds.browse_other)
+            self, N_('Browse Other Branch...'),
+            lambda: guicmds.browse_other(context))
         self.load_commitmsg_template_action = add_action(
             self, N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate))

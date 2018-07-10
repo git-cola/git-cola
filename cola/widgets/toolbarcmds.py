@@ -276,13 +276,11 @@ COMMANDS = {
     },
     'Branch::BrowseCurrent': {
         'title': 'Browse Current Branch...',
-        'context': False,
         'action': guicmds.browse_current,
         'icon': None
     },
     'Branch::BrowseOther': {
         'title': 'Browse Other Branch...',
-        'context': False,
         'action': guicmds.browse_other,
         'icon': None
     },

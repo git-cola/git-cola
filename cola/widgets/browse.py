@@ -10,8 +10,6 @@ from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
 from ..models.selection import selection_model
-from ..cmds import CommandMixin
-from ..git import git
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import browse
@@ -32,7 +30,7 @@ def worktree_browser(context, parent=None, update=True,
                      settings=None, show=True):
     """Create a new worktree browser"""
     view = Browser(context, parent, update=update, settings=settings)
-    model = GitRepoModel(view.tree)
+    model = GitRepoModel(context, view.tree)
     view.set_model(model)
     if update:
         view.refresh()
@@ -41,12 +39,12 @@ def worktree_browser(context, parent=None, update=True,
     return view
 
 
-def save_path(path, model):
+def save_path(context, path, model):
     """Choose an output filename based on the selected path"""
     filename = qtutils.save_as(model.filename)
     if filename:
         model.filename = filename
-        cmds.do(SaveBlob, model)
+        cmds.do(SaveBlob, context, model)
         result = True
     else:
         result = False
@@ -530,19 +528,19 @@ class BrowseModel(object):
         self.filename = filename
 
 
-class SaveBlob(CommandMixin):
+class SaveBlob(cmds.ContextCommand):
 
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, context, model):
+        super(SaveBlob, self).__init__(context)
+        self.browse_model = model
 
     def do(self):
-        model = self.model
-        cmd = ['git', 'show', '%s:%s' % (model.ref, model.relpath)]
+        git = self.context.git
+        model = self.browse_model
+        ref = '%s:%s' % (model.ref, model.relpath)
         with core.xopen(model.filename, 'wb') as fp:
-            proc = core.start_command(cmd, stdout=fp)
-            out, err = proc.communicate()
+            status, out, err = git.show(ref, _stdout=fp)
 
-        status = proc.returncode
         msg = (N_('Saved "%(filename)s" from "%(ref)s" to "%(destination)s"') %
                dict(filename=model.relpath,
                     ref=model.ref,
@@ -557,10 +555,10 @@ class SaveBlob(CommandMixin):
 class BrowseBranch(standard.Dialog):
 
     @classmethod
-    def browse(cls, ref):
+    def browse(cls, context, ref):
         model = BrowseModel(ref)
-        dlg = cls(model, parent=qtutils.active_window())
-        dlg_model = GitTreeModel(ref, dlg)
+        dlg = cls(context, model, parent=qtutils.active_window())
+        dlg_model = GitTreeModel(context, ref, dlg)
         dlg.setModel(dlg_model)
         dlg.setWindowTitle(N_('Browsing %s') % model.ref)
         dlg.show()
@@ -569,52 +567,20 @@ class BrowseBranch(standard.Dialog):
             return None
         return dlg
 
-    @classmethod
-    def select_file(cls, ref):
-        parent = qtutils.active_window()
-        model = BrowseModel(ref)
-        dlg = cls(model, select_file=True, parent=parent)
-        dlg_model = GitTreeModel(ref, dlg)
-        dlg.setModel(dlg_model)
-        dlg.setWindowTitle(N_('Select file from "%s"') % model.ref)
-        dlg.show()
-        dlg.raise_()
-        if dlg.exec_() != dlg.Accepted:
-            return None
-        return model.filename
-
-    @classmethod
-    def select_file_from_list(cls, file_list, title=N_('Select File')):
-        parent = qtutils.active_window()
-        model = BrowseModel(None)
-        dlg = cls(model, select_file=True, parent=parent)
-        dlg_model = GitFileTreeModel(dlg)
-        dlg_model.add_files(file_list)
-        dlg.setModel(dlg_model)
-        dlg.expandAll()
-        dlg.setWindowTitle(title)
-        dlg.show()
-        dlg.raise_()
-        if dlg.exec_() != dlg.Accepted:
-            return None
-        return model.filename
-
-    def __init__(self, model, select_file=False, parent=None):
+    def __init__(self, context, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
         # updated for use by commands
+        self.context = context
         self.model = model
 
         # widgets
         self.tree = GitTreeWidget(parent=self)
         self.close_button = qtutils.close_button()
 
-        if select_file:
-            text = N_('Select')
-        else:
-            text = N_('Save')
+        text = N_('Save')
         self.save = qtutils.create_button(text=text, enabled=False,
                                           default=True)
 
@@ -628,10 +594,7 @@ class BrowseBranch(standard.Dialog):
         self.setLayout(self.layt)
 
         # connections
-        if select_file:
-            self.tree.path_chosen.connect(self.path_chosen)
-        else:
-            self.tree.path_chosen.connect(self.save_path)
+        self.tree.path_chosen.connect(self.save_path)
 
         self.tree.selection_changed.connect(self.selection_changed,
                                             type=Qt.QueuedConnection)
@@ -657,7 +620,7 @@ class BrowseBranch(standard.Dialog):
     def save_path(self, path):
         """Choose an output filename based on the selected path"""
         self.path_chosen(path, close=False)
-        if save_path(path, self.model):
+        if save_path(self.context, path, self.model):
             self.accept()
 
     def save_blob(self):
@@ -796,13 +759,15 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
 
 class GitTreeModel(GitFileTreeModel):
 
-    def __init__(self, ref, parent):
+    def __init__(self, context, ref, parent):
         GitFileTreeModel.__init__(self, parent)
+        self.context = context
         self.ref = ref
         self._initialize()
 
     def _initialize(self):
         """Iterate over git-ls-tree and create GitTreeItems."""
+        git = self.context.git
         status, out, err = git.ls_tree('--full-tree', '-r', '-t', '-z',
                                        self.ref)
         if status != 0:
