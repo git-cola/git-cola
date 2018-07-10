@@ -810,7 +810,7 @@ class GitDAG(standard.MainWindow):
         """Save the selected file from the filelist widget"""
         oid = self.treewidget.selected_oid()
         model = browse.BrowseModel(oid, filename=filename)
-        browse.save_path(filename, model)
+        browse.save_path(self.context, filename, model)
 
 
 class ReaderThread(QtCore.QThread):
