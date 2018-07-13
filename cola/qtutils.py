@@ -768,6 +768,11 @@ def create_dock(title, parent, stretch=True, widget=None, fn=None):
     return dock
 
 
+def hide_dock(widget):
+    widget.toggleViewAction().setChecked(False)
+    widget.hide()
+
+
 def create_menu(title, parent):
     """Create a menu and set its title."""
     qmenu = DebouncingMenu(title, parent)
