@@ -82,6 +82,11 @@ Packaging
 
 Fixes
 -----
+* Dock widgets sizes are now properly saved and restored when the main
+  window is maximized.
+
+  https://github.com/git-cola/git-cola/issues/848
+
 * The spellcheck feature was broken under Python3.
 
   https://github.com/git-cola/git-cola/issues/857
