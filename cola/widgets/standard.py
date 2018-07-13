@@ -92,6 +92,8 @@ class WidgetMixin(object):
             from_base64 = QtCore.QByteArray.fromBase64
             result = self.restoreGeometry(from_base64(core.encode(geometry)))
         elif width and height:
+            # Users migrating from older versions won't have 'geometry'.
+            # They'll be upgraded to the new format on shutdown.
             self.resize(width, height)
             self.move(x, y)
             result = True
@@ -104,6 +106,11 @@ class WidgetMixin(object):
         state = {}
         geometry = self.saveGeometry()
         state['geometry'] = geometry.toBase64().data().decode('ascii')
+        # Until 2020: co-exist with older versions
+        state['width'] = self.width()
+        state['height'] = self.height()
+        state['x'] = self.x()
+        state['y'] = self.y()
         return state
 
     def save_settings(self, settings=None):
