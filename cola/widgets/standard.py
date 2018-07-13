@@ -68,87 +68,49 @@ class WidgetMixin(object):
                 settings.load()
             settings.save_gui_state(self)
 
-    def resizeEvent(self, event):
-        super(WidgetMixin, self).resizeEvent(event)
-        # Use a timer to so that the window size and state is up to date.
-        # If we ask for the window state here it will never realize that
-        # we have been maximized because the window state change is processed
-        # after the resize event.  Using a timer event causes it to happen
-        # after all the events have been processsed.
-        # Timer with a delay of zero will trigger immediately after control
-        # returns to the main loop.
-        QtCore.QTimer.singleShot(
-                0, lambda: self._store_unmaximized_dimensions())
-
-    def moveEvent(self, event):
-        super(WidgetMixin, self).moveEvent(event)
-        # as per the QObject::resizeEvent() override
-        QtCore.QTimer.singleShot(
-                0, lambda: self._store_unmaximized_dimensions())
-
-    def _store_unmaximized_dimensions(self):
-        state = self.windowState()
-        maximized = bool(state & Qt.WindowMaximized)
-        if not maximized:
-            size = self.size()
-            width, height = size.width(), size.height()
-            if not width or not height:
-                return
-            x, y = self.x(), self.y()
-            self._unmaximized_rect = dict(x=x, y=y, width=width, height=height)
-
     def restore_state(self, settings=None):
         if settings is None:
             settings = Settings()
             settings.load()
         state = settings.get_gui_state(self)
-        return bool(state) and self.apply_state(state)
+        if state:
+            result = self.apply_state(state)
+        else:
+            result = False
+        return result
 
     def apply_state(self, state):
         """Imports data for view save/restore"""
-        result = True
 
         width = utils.asint(state.get('width'))
         height = utils.asint(state.get('height'))
         x = utils.asint(state.get('x'))
         y = utils.asint(state.get('y'))
 
-        if width and height:
+        geometry = state.get('geometry', '')
+        if geometry:
+            from_base64 = QtCore.QByteArray.fromBase64
+            result = self.restoreGeometry(from_base64(core.encode(geometry)))
+        elif width and height:
+            # Users migrating from older versions won't have 'geometry'.
+            # They'll be upgraded to the new format on shutdown.
             self.resize(width, height)
             self.move(x, y)
-            # calling resize/move won't invoke QWidget::{resize,move}Event
-            # so store the unmaximized size if we properly restored.
-            self._unmaximized_rect = dict(x=x, y=y, width=width, height=height)
+            result = True
         else:
             result = False
-
-        if state.get('maximized', False):
-            if utils.is_win32() or utils.is_darwin():
-                self.resize_to_desktop()
-            elif hasattr(self, 'showMaximized'):
-                self.showMaximized()
-
         return result
 
     def export_state(self):
         """Exports data for view save/restore"""
-        window_state = self.windowState()
-        maximized = bool(window_state & Qt.WindowMaximized)
-
-        state = {
-            'maximized': maximized,
-        }
-
-        # when maximized we don't want to overwrite saved x/y/width/height with
-        # desktop dimensions.
-        if maximized:
-            state.update(self._unmaximized_rect)
-        else:
-            state['width'] = self.width()
-            state['height'] = self.height()
-            state['x'] = self.x()
-            state['y'] = self.y()
-
+        state = {}
+        geometry = self.saveGeometry()
+        state['geometry'] = geometry.toBase64().data().decode('ascii')
+        # Until 2020: co-exist with older versions
+        state['width'] = self.width()
+        state['height'] = self.height()
+        state['x'] = self.x()
+        state['y'] = self.y()
         return state
 
     def save_settings(self, settings=None):
@@ -212,10 +174,13 @@ class MainWindowMixin(WidgetMixin):
             result = self.restoreState(
                     from_base64(core.encode(windowstate)),
                     self.widget_version) and result
+
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
         self.update_dockwidget_tooltips()
+
         return result
+
 
     def set_lock_layout(self, lock_layout):
         self.lock_layout = lock_layout

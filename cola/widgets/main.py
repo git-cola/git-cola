@@ -89,8 +89,7 @@ class MainView(standard.MainWindow):
         # "Actions" widget
         self.actionsdock = create_dock(N_('Actions'), self,
             widget=action.ActionButtons(context, self))
-        self.actionsdock.toggleViewAction().setChecked(False)
-        self.actionsdock.hide()
+        qtutils.hide_dock(self.actionsdock)
 
         # "Repository Status" widget
         self.statusdock = create_dock(N_('Status'), self,
@@ -102,11 +101,12 @@ class MainView(standard.MainWindow):
         self.bookmarksdock = create_dock(
             N_('Favorites'), self, fn=lambda dock: bookmarks.bookmark(dock))
         bookmarkswidget = self.bookmarksdock.widget()
+        qtutils.hide_dock(self.bookmarksdock)
 
         self.recentdock = create_dock(
             N_('Recent'), self, fn=lambda dock: bookmarks.recent(dock))
         recentwidget = self.recentdock.widget()
-        self.recentdock.hide()
+        qtutils.hide_dock(self.recentdock)
         bookmarkswidget.connect_to(recentwidget)
 
         # "Branch" widgets
@@ -137,8 +137,7 @@ class MainView(standard.MainWindow):
         # "Console" widget
         self.logwidget = log.LogWidget()
         self.logdock = create_dock(N_('Console'), self, widget=self.logwidget)
-        self.logdock.toggleViewAction().setChecked(False)
-        self.logdock.hide()
+        qtutils.hide_dock(self.logdock)
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(N_('Diff'), self,
@@ -527,22 +526,22 @@ class MainView(standard.MainWindow):
         self.help_menu.addAction(self.help_about_action)
 
         # Arrange dock widgets
-        left = Qt.LeftDockWidgetArea
-        right = Qt.RightDockWidgetArea
         bottom = Qt.BottomDockWidgetArea
+        top = Qt.TopDockWidgetArea
 
-        self.addDockWidget(left, self.commitdock)
+        self.addDockWidget(top, self.statusdock)
+        self.addDockWidget(top, self.commitdock)
         if self.browser_dockable:
-            self.addDockWidget(left, self.browserdock)
+            self.addDockWidget(top, self.browserdock)
             self.tabifyDockWidget(self.browserdock, self.commitdock)
-        self.addDockWidget(left, self.diffdock)
-        self.addDockWidget(right, self.statusdock)
-        self.addDockWidget(right, self.bookmarksdock)
-        self.addDockWidget(right, self.branchdock)
-        self.addDockWidget(right, self.recentdock)
+        self.addDockWidget(top, self.bookmarksdock)
+        self.addDockWidget(top, self.branchdock)
+        self.addDockWidget(top, self.recentdock)
+        self.addDockWidget(bottom, self.diffdock)
         self.addDockWidget(bottom, self.actionsdock)
         self.addDockWidget(bottom, self.logdock)
         self.tabifyDockWidget(self.actionsdock, self.logdock)
+
 
         # Listen for model notifications
         model.add_observer(model.message_updated, self.updated.emit)

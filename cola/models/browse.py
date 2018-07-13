@@ -350,7 +350,10 @@ class GitRepoInfoTask(qtutils.Task):
             self.data('date'),
         )
         app = QtWidgets.QApplication.instance()
-        app.postEvent(self._parent, GitRepoInfoEvent(data))
+        try:
+            app.postEvent(self._parent, GitRepoInfoEvent(data))
+        except RuntimeError:
+            pass  # The app exited before this task finished
 
 
 class GitRepoInfoEvent(QtCore.QEvent):
