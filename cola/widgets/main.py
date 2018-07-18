@@ -317,7 +317,8 @@ class MainView(standard.MainWindow):
         self.create_branch_action.setIcon(icons.branch())
 
         self.delete_branch_action = add_action(
-            self, N_('Delete...'), guicmds.delete_branch)
+            self, N_('Delete...'),
+            functools.partial(guicmds.delete_branch, context))
 
         self.delete_remote_branch_action = add_action(
             self, N_('Delete Remote Branch...'),

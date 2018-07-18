@@ -258,7 +258,6 @@ COMMANDS = {
     },
     'Branch::Delete': {
         'title': 'Delete...',
-        'context': False,
         'action': guicmds.delete_branch,
         'icon': None
     },

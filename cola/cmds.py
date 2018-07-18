@@ -870,11 +870,11 @@ class MoveToTrash(RemoveFiles):
         super(MoveToTrash, self).__init__(send2trash, filenames)
 
 
-class DeleteBranch(EditModel):
+class DeleteBranch(ContextCommand):
     """Delete a git branch."""
 
-    def __init__(self, branch):
-        super(DeleteBranch, self).__init__()  # TODO context
+    def __init__(self, context, branch):
+        super(DeleteBranch, self).__init__(context)
         self.branch = branch
 
     def do(self):

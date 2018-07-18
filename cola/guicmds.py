@@ -22,13 +22,13 @@ from . import utils
 from . import git
 
 
-def delete_branch():
+def delete_branch(context):
     """Launch the 'Delete Branch' dialog."""
     icon = icons.discard()
     branch = choose_branch(N_('Delete Branch'), N_('Delete'), icon=icon)
     if not branch:
         return
-    cmds.do(cmds.DeleteBranch, branch)
+    cmds.do(cmds.DeleteBranch, context, branch)
 
 
 def delete_remote_branch(context):
