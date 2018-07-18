@@ -167,7 +167,8 @@ class MainView(standard.MainWindow):
         self.unstage_selected_action.setIcon(icons.remove())
 
         self.show_diffstat_action = add_action(
-            self, N_('Diffstat'), cmds.run(cmds.Diffstat), hotkeys.DIFFSTAT)
+            self, N_('Diffstat'), cmds.run(cmds.Diffstat, context),
+            hotkeys.DIFFSTAT)
 
         self.stage_modified_action = add_action(
             self, N_('Stage Changed Files To Commit'),

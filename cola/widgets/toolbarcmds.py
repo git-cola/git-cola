@@ -235,7 +235,6 @@ COMMANDS = {
     },
     'Diff::Diffstat': {
         'title': 'Diffstat',
-        'context': False,
         'action': cmds.run(cmds.Diffstat),
         'icon': None
     },

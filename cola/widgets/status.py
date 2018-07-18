@@ -909,7 +909,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 # self.idx_unmerged: cmds.UnmergedSummary,
                 self.idx_untracked: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
-            cmds.do(cls)
+            cmds.do(cls, self.context)
             return
 
         staged = category == self.idx_staged

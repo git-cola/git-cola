@@ -1190,12 +1190,12 @@ class Diff(EditModel):
         self.new_diff_type = 'text'
 
 
-class Diffstat(EditModel):
+class Diffstat(EditContext):
     """Perform a diffstat and set the model's diff text."""
 
-    def __init__(self):
-        super(Diffstat, self).__init__()  # TODO context
-        cfg = gitcfg.current()
+    def __init__(self, context):
+        super(Diffstat, self).__init__(context)
+        cfg = self.cfg
         diff_context = cfg.get('diff.context', 3)
         diff = self.model.git.diff(self.model.head,
                                    unified=diff_context,
@@ -1218,10 +1218,10 @@ class DiffStaged(Diff):
         self.new_mode = self.model.mode_index
 
 
-class DiffStagedSummary(EditModel):
+class DiffStagedSummary(EditContext):
 
-    def __init__(self):
-        super(DiffStagedSummary, self).__init__()  # TODO context
+    def __init__(self, context):
+        super(DiffStagedSummary, self).__init__(context)
         diff = self.model.git.diff(self.model.head,
                                    cached=True,
                                    no_color=True,
@@ -2368,11 +2368,11 @@ class Untrack(ModelCommand):
         Interaction.log_status(status, out, err)
 
 
-class UntrackedSummary(EditModel):
+class UntrackedSummary(EditContext):
     """List possible .gitignore rules as the diff text."""
 
-    def __init__(self):
-        super(UntrackedSummary, self).__init__()  # TODO context
+    def __init__(self, context):
+        super(UntrackedSummary, self).__init__(context)
         untracked = self.model.untracked
         suffix = len(untracked) > 1 and 's' or ''
         io = StringIO()
