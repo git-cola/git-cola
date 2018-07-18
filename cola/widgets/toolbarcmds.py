@@ -270,7 +270,6 @@ COMMANDS = {
     },
     'Branch::Rename': {
         'title': 'Rename Branch...',
-        'context': False,
         'action': guicmds.rename_branch,
         'icon': None
     },

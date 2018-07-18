@@ -323,7 +323,8 @@ class MainView(standard.MainWindow):
             self, N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
 
         self.rename_branch_action = add_action(
-            self, N_('Rename Branch...'), guicmds.rename_branch)
+            self, N_('Rename Branch...'),
+            functools.partial(guicmds.rename_branch, context))
 
         self.checkout_branch_action = add_action(
             self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)

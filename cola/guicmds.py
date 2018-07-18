@@ -287,7 +287,7 @@ def report_clone_repo_errors(task):
     Interaction.command(title, 'git clone', status, out, err)
 
 
-def rename_branch():
+def rename_branch(context):
     """Launch the 'Rename Branch' dialogs."""
     branch = choose_branch(N_('Rename Existing Branch'), N_('Select'))
     if not branch:
@@ -295,7 +295,7 @@ def rename_branch():
     new_branch = choose_branch(N_('Enter New Branch Name'), N_('Rename'))
     if not new_branch:
         return
-    cmds.do(cmds.RenameBranch, branch, new_branch)
+    cmds.do(cmds.RenameBranch, context, branch, new_branch)
 
 
 def reset_branch_head():

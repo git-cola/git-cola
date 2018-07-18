@@ -917,11 +917,11 @@ class Rename(ModelCommand):
         return status == 0
 
 
-class RenameBranch(ModelCommand):
+class RenameBranch(ContextCommand):
     """Rename a git branch."""
 
-    def __init__(self, branch, new_branch):
-        super(RenameBranch, self).__init__()  # TODO context
+    def __init__(self, context, branch, new_branch):
+        super(RenameBranch, self).__init__(context)
         self.branch = branch
         self.new_branch = new_branch
 
