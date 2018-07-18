@@ -376,7 +376,7 @@ def cmd_dag(args):
     # used by the history viewer command on Windows.
     if args.show_all:
         args.args.insert(0, '--all')
-    view = dag.git_dag(context, args=args, settings=args.settings)
+    view = dag.git_dag(context, args=args, settings=args.settings, show=False)
     return app.application_start(context, view)
 
 

@@ -299,7 +299,7 @@ COMMANDS = {
     },
     'View::DAG': {
         'title': 'DAG...',
-        'action': lambda context: dag.git_dag(context, show=True),
+        'action': dag.git_dag,
         'icon': 'cola'
     },
 }

@@ -897,9 +897,7 @@ class MainView(standard.MainWindow):
         return prefs_widget.preferences(model=self.prefs_model, parent=self)
 
     def git_dag(self):
-        view = self.dag = dag.git_dag(self.context, existing_view=self.dag)
-        view.show()
-        view.raise_()
+        self.dag = dag.git_dag(self.context, existing_view=self.dag)
 
     def save_archive(self):
         oid = self.model.git.rev_parse('HEAD')[git.STDOUT]
