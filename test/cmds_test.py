@@ -2,9 +2,14 @@
 
 from __future__ import absolute_import, division, unicode_literals
 import unittest
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 
 from cola import cmds
+from cola import app
 from cola.compat import unichr
 
 
@@ -45,6 +50,27 @@ class CmdsTestCase(unittest.TestCase):
         expect = path
         actual = cmds.unix_path(path, is_win32=lambda: False)
         self.assertEqual(expect, actual)
+
+    def test_context_edit_command(self):
+        model = mock.Mock()
+        model.diff_text = ''
+
+        args = app_inst = cfg = gitcmd = timer = selection = None
+        context = app.ApplicationContext(
+            args, app_inst, cfg, gitcmd, timer, selection)
+        context.model = model
+
+        cmd = cmds.EditContext(context)
+        cmd.new_diff_text = 'test_diff_text'
+        cmd.new_diff_type = 'test_diff_type'
+        cmd.new_mode = 'test_mode'
+        cmd.new_filename = 'test_filename'
+        cmd.do()
+
+        model.set_diff_text.assert_called_once_with('test_diff_text')
+        model.set_diff_type.assert_called_once_with('test_diff_type')
+        model.set_mode.assert_called_once_with('test_mode')
+        model.set_filename.assert_called_once_with('test_filename')
 
 
 if __name__ == '__main__':

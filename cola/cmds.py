@@ -66,6 +66,37 @@ class ContextCommand(CommandMixin):
         self.selection = context.selection
 
 
+class EditContext(ContextCommand):
+    """Commands that mutate the main model diff data"""
+
+    def __init__(self, context):
+        """Common edit operations on the main model"""
+        super(EditContext, self).__init__(context)
+
+        self.old_diff_text = self.model.diff_text
+        self.old_filename = self.model.filename
+        self.old_mode = self.model.mode
+        self.old_diff_type = self.model.diff_type
+
+        self.new_diff_text = self.old_diff_text
+        self.new_filename = self.old_filename
+        self.new_mode = self.old_mode
+        self.new_diff_type = self.old_diff_type
+
+    def do(self):
+        """Perform the operation."""
+        self.model.set_filename(self.new_filename)
+        self.model.set_mode(self.new_mode)
+        self.model.set_diff_text(self.new_diff_text)
+        self.model.set_diff_type(self.new_diff_type)
+
+    def undo(self):
+        """Undo the operation."""
+        self.model.set_filename(self.old_filename)
+        self.model.set_mode(self.old_mode)
+        self.model.set_diff_text(self.old_diff_text)
+        self.model.set_diff_type(self.old_diff_type)
+
 class ConfirmAction(CommandMixin):
 
     def ok_to_run(self):
