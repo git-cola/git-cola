@@ -341,7 +341,7 @@ def cmd_archive(args):
 def cmd_branch(args):
     from .widgets.createbranch import create_new_branch
     context = app.application_init(args, update=True)
-    view = create_new_branch(settings=args.settings)
+    view = create_new_branch(context, settings=args.settings)
     return app.application_start(context, view)
 
 

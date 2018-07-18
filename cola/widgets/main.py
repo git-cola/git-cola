@@ -312,7 +312,7 @@ class MainView(standard.MainWindow):
 
         self.create_branch_action = add_action(
             self, N_('Create...'),
-            lambda: createbranch.create_new_branch(settings=settings),
+            lambda: createbranch.create_new_branch(context, settings=settings),
             hotkeys.BRANCH)
         self.create_branch_action.setIcon(icons.branch())
 

@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import functools
 import collections
 import itertools
 import math
@@ -134,7 +135,9 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: qtutils.set_clipboard(oid))
 
     def create_branch(self):
-        self.with_oid(lambda oid: createbranch.create_new_branch(revision=oid))
+        create_new_branch = functools.partial(
+            createbranch.create_new_branch, self.context)
+        self.with_oid(lambda oid: create_new_branch(revision=oid))
 
     def create_tag(self):
         self.with_oid(lambda oid: createtag.create_tag(ref=oid))

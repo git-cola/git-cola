@@ -246,7 +246,6 @@ COMMANDS = {
     },
     'Branch::Create': {
         'title': 'Create...',
-        'context': False,
         'action': createbranch.create_new_branch,
         'icon': None
     },
