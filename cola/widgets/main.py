@@ -329,7 +329,7 @@ class MainView(standard.MainWindow):
             self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
             self, N_('Review...'),
-            functools.partial(guicmds.review_branch, context=context))
+            functools.partial(guicmds.review_branch, context))
 
         self.browse_action = add_action(
             self, N_('File Browser...'),

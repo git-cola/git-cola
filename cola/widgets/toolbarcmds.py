@@ -241,7 +241,7 @@ COMMANDS = {
     },
     'Branch::Review': {
         'title': 'Review...',
-        'action': lambda context: guicmds.review_branch(context=context),
+        'action': guicmds.review_branch,
         'icon': None
     },
     'Branch::Create': {

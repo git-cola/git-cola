@@ -228,7 +228,7 @@ def choose_remote_branch(title, button_text, default=None, icon=None):
                               title, button_text, default, icon=icon)
 
 
-def review_branch(context=None):
+def review_branch(context):
     """Diff against an arbitrary revision, branch, tag, etc."""
     branch = choose_ref(N_('Select Branch to Review'), N_('Review'))
     if not branch:
