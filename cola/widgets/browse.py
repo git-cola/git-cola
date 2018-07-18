@@ -165,7 +165,7 @@ class RepoTreeView(standard.TreeView):
         self.action_difftool = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path'),
-                cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
+                cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
 
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
                 self, N_('Diff Against Predecessor...'),
@@ -509,7 +509,7 @@ class RepoTreeView(standard.TreeView):
         if not commits:
             return
         commit = commits[0]
-        cmds.difftool_launch(left=commit, paths=paths)
+        cmds.difftool_launch(self.context, left=commit, paths=paths)
 
     def current_path(self):
         """Return the path for the current item."""

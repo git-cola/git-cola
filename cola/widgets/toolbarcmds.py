@@ -218,13 +218,12 @@ COMMANDS = {
     },
     'Diff::Difftool': {
         'title': 'Launch Diff tool',
-        'context': False,
         'action': cmds.run(cmds.LaunchDifftool),
         'icon': 'diff'
     },
     'Diff::Expression': {
         'title': 'Expression...',
-        'action': lambda context: guicmds.diff_expression(context=context),
+        'action': guicmds.diff_expression,
         'icon': None
     },
     'Diff::Branches': {

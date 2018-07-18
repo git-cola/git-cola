@@ -246,4 +246,5 @@ class CompareBranchesDialog(standard.Dialog):
                 right = None
         else:
             left, right = self.start, self.end
-        cmds.difftool_launch(left=left, right=right, paths=[filename])
+        context = self.context
+        cmds.difftool_launch(context, left=left, right=right, paths=[filename])

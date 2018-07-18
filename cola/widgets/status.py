@@ -151,7 +151,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.launch_difftool_action = qtutils.add_action(
             self, cmds.LaunchDifftool.name(),
-            cmds.run(cmds.LaunchDifftool, context=self.context), hotkeys.DIFF)
+            cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
         self.launch_difftool_action.setIcon(icons.diff())
 
         self.launch_editor_action = actions.launch_editor(

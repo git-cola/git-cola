@@ -146,16 +146,16 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
 
     def show_diff(self):
+        context = self.context
         self.with_oid(lambda oid:
-                difftool.diff_expression(self, oid + '^!',
-                                         hide_expr=False, focus_tree=True,
-                                         context=self.context))
+                difftool.diff_expression(context, self, oid + '^!',
+                                         hide_expr=False, focus_tree=True))
 
     def show_dir_diff(self):
+        context = self.context
         self.with_oid(lambda oid:
-                cmds.difftool_launch(left=oid, left_take_magic=True,
-                                     dir_diff=True,
-                                     context=self.context))
+            cmds.difftool_launch(context, left=oid, left_take_magic=True,
+                                 dir_diff=True))
 
     def reset_branch_head(self):
         self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
@@ -784,10 +784,9 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, a, b):
         paths = self.params.paths()
         if paths:
-            cmds.difftool_launch(left=a, right=b, paths=paths,
-                                 context=self.context)
+            cmds.difftool_launch(self.context, left=a, right=b, paths=paths)
         else:
-            difftool.diff_commits(self, a, b, context=self.context)
+            difftool.diff_commits(self.context, self, a, b)
 
     # Qt overrides
     def closeEvent(self, event):
@@ -806,9 +805,8 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        cmds.difftool_launch(left=bottom, left_take_parent=True,
-                             right=top, paths=files,
-                             context=self.context)
+        cmds.difftool_launch(self.context, left=bottom, left_take_parent=True,
+                             right=top, paths=files)
 
     def grab_file(self, filename):
         """Save the selected file from the filelist widget"""

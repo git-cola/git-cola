@@ -303,7 +303,7 @@ class MainView(standard.MainWindow):
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'),
-            lambda: guicmds.diff_expression(context=context))
+            functools.partial(guicmds.diff_expression, context))
         self.branch_compare_action = add_action(
             self, N_('Branches...'),
             functools.partial(compare.compare_branches, context))

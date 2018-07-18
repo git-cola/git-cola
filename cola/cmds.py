@@ -1233,18 +1233,17 @@ class DiffStagedSummary(EditContext):
         self.new_mode = self.model.mode_index
 
 
-class Difftool(ModelCommand):
+class Difftool(ContextCommand):
     """Run git-difftool limited by path."""
 
-    def __init__(self, staged, filenames, context=None):
-        super(Difftool, self).__init__()  # TODO context (required)
+    def __init__(self, context, staged, filenames):
+        super(Difftool, self).__init__(context)
         self.staged = staged
         self.filenames = filenames
-        self.context = context
 
     def do(self):
         difftool_launch_with_head(
-            self.filenames, self.staged, self.model.head, context=self.context)
+            self.context, self.filenames, self.staged, self.model.head)
 
 
 class Edit(CommandMixin):
@@ -1311,15 +1310,11 @@ class FormatPatch(CommandMixin):
         Interaction.log_status(status, out, err)
 
 
-class LaunchDifftool(CommandMixin):
+class LaunchDifftool(ContextCommand):
 
     @staticmethod
     def name():
         return N_('Launch Diff Tool')
-
-    def __init__(self, context=None):
-        # TODO context (required)
-        self.context = context
 
     def do(self):
         s = selection.selection()
@@ -1328,7 +1323,7 @@ class LaunchDifftool(CommandMixin):
             if utils.is_win32():
                 core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
             else:
-                cfg = gitcfg.current()
+                cfg = self.cfg
                 cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
                 mergetool = ['git', 'mergetool', '--no-prompt', '--']
@@ -1340,7 +1335,7 @@ class LaunchDifftool(CommandMixin):
                     argv.extend(mergetool)
                 core.fork(argv)
         else:
-            difftool_run(context=self.context)
+            difftool_run(self.context)
 
 
 class LaunchTerminal(CommandMixin):
@@ -2475,31 +2470,28 @@ def do(cls, *args, **opts):
         return None
 
 
-def difftool_run(context=None):
+def difftool_run(context):
     """Start a default difftool session"""
     files = selection.selected_group()
     if not files:
         return
     s = selection.selection()
-    model = main.model()  # TODO context, need to not allow None
-    difftool_launch_with_head(
-        files, bool(s.staged), model.head, context=context)
+    head = context.model.head
+    difftool_launch_with_head(context, files, bool(s.staged), head)
 
 
-def difftool_launch_with_head(filenames, staged, head, context=None):
+def difftool_launch_with_head(context, filenames, staged, head):
     """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
     else:
         left = head
-    difftool_launch(left=left, staged=staged, paths=filenames,
-                    context=context)
+    difftool_launch(context, left=left, staged=staged, paths=filenames)
 
 
-def difftool_launch(left=None, right=None, paths=None,
+def difftool_launch(context, left=None, right=None, paths=None,
                     staged=False, dir_diff=False,
-                    left_take_magic=False, left_take_parent=False,
-                    context=None):
+                    left_take_magic=False, left_take_parent=False):
     """Launches 'git difftool' with given parameters
 
     :param left: first argument to difftool
@@ -2548,7 +2540,7 @@ def difftool_launch(left=None, right=None, paths=None,
         difftool_args.append('--')
         difftool_args.extend(paths)
 
-    runtask = context and context.runtask or None
+    runtask = context.runtask
     if runtask:
         Interaction.async_command(N_('Difftool'), difftool_args, runtask)
     else:

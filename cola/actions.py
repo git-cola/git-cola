@@ -23,7 +23,7 @@ def launch_difftool(widget, context):
     icon = icons.diff()
     cmd = cmds.LaunchDifftool
     action = qtutils.add_action(
-        widget, cmd.name(), cmds.run(cmd, context=context), hotkeys.DIFF)
+        widget, cmd.name(), cmds.run(cmd, context), hotkeys.DIFF)
     action.setIcon(icon)
     return action
 

@@ -384,7 +384,7 @@ def cmd_diff(args):
     context = app.application_init(args)
     from .difftool import diff_expression
     expr = core.list2cmdline(args.args)
-    view = diff_expression(None, expr, create_widget=True, context=context)
+    view = diff_expression(context, None, expr, create_widget=True)
     return app.application_start(context, view)
 
 
