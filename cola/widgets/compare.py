@@ -22,18 +22,19 @@ class FileItem(QtWidgets.QTreeWidgetItem):
         self.setIcon(0, icon)
 
 
-def compare_branches():
+def compare_branches(context):
     """Launches a dialog for comparing a pair of branches"""
-    view = CompareBranchesDialog(qtutils.active_window())
+    view = CompareBranchesDialog(context, qtutils.active_window())
     view.show()
     return view
 
 
 class CompareBranchesDialog(standard.Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
 
+        self.context = context
         self.BRANCH_POINT = N_('*** Branch Point ***')
         self.SANDBOX = N_('*** Sandbox ***')
         self.LOCAL = N_('Local')

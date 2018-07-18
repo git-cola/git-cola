@@ -305,7 +305,8 @@ class MainView(standard.MainWindow):
             self, N_('Expression...'),
             lambda: guicmds.diff_expression(context=context))
         self.branch_compare_action = add_action(
-            self, N_('Branches...'), compare.compare_branches)
+            self, N_('Branches...'),
+            functools.partial(compare.compare_branches, context))
 
         self.create_tag_action = add_action(
             self, N_('Create Tag...'),

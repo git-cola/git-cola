@@ -229,7 +229,6 @@ COMMANDS = {
     },
     'Diff::Branches': {
         'title': 'Branches...',
-        'context': False,
         'action': compare.compare_branches,
         'icon': None
     },
