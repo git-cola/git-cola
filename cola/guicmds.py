@@ -57,12 +57,12 @@ def browse_other(context):
     BrowseBranch.browse(context, branch)
 
 
-def checkout_branch():
+def checkout_branch(context):
     """Launch the 'Checkout Branch' dialog."""
     branch = choose_potential_branch(N_('Checkout Branch'), N_('Checkout'))
     if not branch:
         return
-    cmds.do(cmds.CheckoutBranch, branch)
+    cmds.do(cmds.CheckoutBranch, context, branch)
 
 
 def cherry_pick():

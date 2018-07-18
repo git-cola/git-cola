@@ -329,7 +329,9 @@ class MainView(standard.MainWindow):
             functools.partial(guicmds.rename_branch, context))
 
         self.checkout_branch_action = add_action(
-            self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
+            self, N_('Checkout...'),
+            functools.partial(guicmds.checkout_branch, context),
+            hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
             self, N_('Review...'),
             functools.partial(guicmds.review_branch, context))

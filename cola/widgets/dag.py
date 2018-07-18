@@ -170,7 +170,8 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
 
     def checkout_detached(self):
-        self.with_oid(lambda oid: cmds.do(cmds.Checkout, [oid]))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.Checkout, context, [oid]))
 
     def save_blob_dialog(self):
         context = self.context

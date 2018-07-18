@@ -417,14 +417,14 @@ class Archive(CommandMixin):
         Interaction.log_status(status, out or '', err or '')
 
 
-class Checkout(EditModel):
+class Checkout(EditContext):
     """A command object for git-checkout.
 
     'argv' is handed off directly to git.
 
     """
-    def __init__(self, argv, checkout_branch=False):
-        super(Checkout, self).__init__()  # TODO context
+    def __init__(self, context, argv, checkout_branch=False):
+        super(Checkout, self).__init__(context)
         self.argv = argv
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
@@ -461,9 +461,10 @@ class BlamePaths(CommandMixin):
 class CheckoutBranch(Checkout):
     """Checkout a branch."""
 
-    def __init__(self, branch):
+    def __init__(self, context, branch):
         args = [branch]
-        super(CheckoutBranch, self).__init__(args, checkout_branch=True)
+        super(CheckoutBranch, self).__init__(
+            context, args, checkout_branch=True)
 
 
 class CherryPick(ModelCommand):

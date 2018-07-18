@@ -252,7 +252,6 @@ COMMANDS = {
     },
     'Branch::Checkout': {
         'title': 'Checkout...',
-        'context': False,
         'action': guicmds.checkout_branch,
         'icon': None
     },
