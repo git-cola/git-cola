@@ -931,11 +931,11 @@ class RenameBranch(ContextCommand):
         Interaction.log_status(status, out, err)
 
 
-class DeleteRemoteBranch(ModelCommand):
+class DeleteRemoteBranch(ContextCommand):
     """Delete a remote git branch."""
 
-    def __init__(self, remote, branch):
-        super(DeleteRemoteBranch, self).__init__()  # TODO context
+    def __init__(self, context, remote, branch):
+        super(DeleteRemoteBranch, self).__init__(context)
         self.remote = remote
         self.branch = branch
 

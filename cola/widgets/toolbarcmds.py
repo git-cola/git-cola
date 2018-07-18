@@ -264,7 +264,6 @@ COMMANDS = {
     },
     'Branch::DeleteRemote': {
         'title': 'Delete Remote Branch...',
-        'context': False,
         'action': guicmds.delete_remote_branch,
         'icon': None
     },

@@ -31,7 +31,7 @@ def delete_branch():
     cmds.do(cmds.DeleteBranch, branch)
 
 
-def delete_remote_branch():
+def delete_remote_branch(context):
     """Launch the 'Delete Remote Branch' dialog."""
     remote_branch = choose_remote_branch(
         N_('Delete Remote Branch'), N_('Delete'), icon=icons.discard())
@@ -39,7 +39,7 @@ def delete_remote_branch():
         return
     remote, branch = gitcmds.parse_remote_branch(remote_branch)
     if remote and branch:
-        cmds.do(cmds.DeleteRemoteBranch, remote, branch)
+        cmds.do(cmds.DeleteRemoteBranch, context, remote, branch)
 
 
 def browse_current(context):
