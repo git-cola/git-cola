@@ -291,10 +291,10 @@ class MainView(standard.MainWindow):
 
         self.browse_branch_action = add_action(
             self, N_('Browse Current Branch...'),
-            lambda: guicmds.browse_current(context))
+            functools.partial(guicmds.browse_current, context))
         self.browse_other_branch_action = add_action(
             self, N_('Browse Other Branch...'),
-            lambda: guicmds.browse_other(context))
+            functools.partial(guicmds.browse_other, context))
         self.load_commitmsg_template_action = add_action(
             self, N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate))
