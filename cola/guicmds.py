@@ -59,7 +59,8 @@ def browse_other(context):
 
 def checkout_branch(context):
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_potential_branch(N_('Checkout Branch'), N_('Checkout'))
+    branch = choose_potential_branch(
+        context, N_('Checkout Branch'), N_('Checkout'))
     if not branch:
         return
     cmds.do(cmds.CheckoutBranch, context, branch)
@@ -213,12 +214,13 @@ def choose_ref(title, button_text, default=None, icon=None):
                               title, button_text, default, icon=icon)
 
 
-def choose_branch(title, button_text, default=None, icon=None):
+def choose_branch(context, title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitBranchDialog.get,
                               title, button_text, default, icon=icon)
 
 
-def choose_potential_branch(title, button_text, default=None, icon=None):
+def choose_potential_branch(context, title, button_text,
+                            default=None, icon=None):
     return choose_from_dialog(completion.GitCheckoutBranchDialog.get,
                               title, button_text, default, icon=icon)
 
@@ -288,10 +290,11 @@ def report_clone_repo_errors(task):
 
 def rename_branch(context):
     """Launch the 'Rename Branch' dialogs."""
-    branch = choose_branch(N_('Rename Existing Branch'), N_('Select'))
+    branch = choose_branch(context, N_('Rename Existing Branch'), N_('Select'))
     if not branch:
         return
-    new_branch = choose_branch(N_('Enter New Branch Name'), N_('Rename'))
+    new_branch = choose_branch(
+        context, N_('Enter New Branch Name'), N_('Rename'))
     if not new_branch:
         return
     cmds.do(cmds.RenameBranch, context, branch, new_branch)
