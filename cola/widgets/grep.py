@@ -27,7 +27,6 @@ def grep():
     """Prompt and use 'git grep' to find the content."""
     widget = new_grep(parent=qtutils.active_window())
     widget.show()
-    widget.raise_()
     return widget
 
 
