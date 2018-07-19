@@ -165,7 +165,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 self, self.selected_group)
 
             self.terminal_action = common.terminal_action(
-                    self, self.selected_group)
+                context, self, self.selected_group)
 
         self.up_action = qtutils.add_action(
             self, N_('Move Up'), self.move_up,

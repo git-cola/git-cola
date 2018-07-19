@@ -29,7 +29,7 @@ def default_app_action(parent, fn):
     return action
 
 
-def edit_action(parent, *keys):
+def edit_action(context, parent, *keys):
     """Launch an editor -> QAction"""
     action = qtutils.add_action_with_status_tip(
             parent, cmds.LaunchEditor.name(),
@@ -53,7 +53,7 @@ def refresh_action(parent):
                               cmds.run(cmds.Refresh), hotkeys.REFRESH)
 
 
-def terminal_action(parent, fn):
+def terminal_action(context, parent, fn):
     """Launch a terminal -> QAction"""
     action = cmd_action(parent, cmds.LaunchTerminal,
                         lambda: utils.select_directory(fn()),
