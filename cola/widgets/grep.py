@@ -23,16 +23,16 @@ from .text import VimTextBrowser
 from . import defs
 
 
-def grep():
+def grep(context):
     """Prompt and use 'git grep' to find the content."""
-    widget = new_grep(parent=qtutils.active_window())
+    widget = new_grep(context, parent=qtutils.active_window())
     widget.show()
     return widget
 
 
-def new_grep(text=None, parent=None):
+def new_grep(context, text=None, parent=None):
     """Construct a new Grep dialog"""
-    widget = Grep(parent=parent)
+    widget = Grep(context, parent=parent)
     if text:
         widget.search_for(text)
     return widget
@@ -86,8 +86,9 @@ class GrepThread(QtCore.QThread):
 class Grep(Dialog):
     """A dialog for searching content using `git grep`"""
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         Dialog.__init__(self, parent)
+        self.context = context
         self.grep_result = ''
 
         self.setWindowTitle(N_('Search'))

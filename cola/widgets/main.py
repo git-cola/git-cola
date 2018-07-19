@@ -235,7 +235,8 @@ class MainView(standard.MainWindow):
             self, N_('Quit'), self.close, hotkeys.QUIT)
 
         self.grep_action = add_action(
-            self, N_('Grep'), grep.grep, hotkeys.GREP)
+            self, N_('Grep'), functools.partial(grep.grep, context),
+            hotkeys.GREP)
 
         self.merge_local_action = add_action(
             self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)

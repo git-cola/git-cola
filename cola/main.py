@@ -410,7 +410,7 @@ def cmd_grep(args):
     context = app.application_init(args)
     from .widgets import grep
     text = core.list2cmdline(args.args)
-    view = grep.new_grep(text=text, parent=None)
+    view = grep.new_grep(context, text=text, parent=None)
     return app.application_start(context, view)
 
 

@@ -163,7 +163,6 @@ COMMANDS = {
     },
     'Actions::Grep': {
         'title': 'Grep',
-        'context': False,
         'action': grep.grep,
         'icon': None
     },
