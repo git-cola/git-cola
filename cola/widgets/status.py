@@ -159,10 +159,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         if not utils.is_win32():
             self.default_app_action = common.default_app_action(
-                    self, self.selected_group)
+                self, self.selected_group)
 
             self.parent_dir_action = common.parent_dir_action(
-                    self, self.selected_group)
+                self, self.selected_group)
 
             self.terminal_action = common.terminal_action(
                     self, self.selected_group)
