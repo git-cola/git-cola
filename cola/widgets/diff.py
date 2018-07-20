@@ -328,7 +328,7 @@ class Viewer(QtWidgets.QWidget):
         self.images = []
         self.pixmaps = []
         self.options = options = Options(self)
-        self.text = DiffEditor(options, self, context)
+        self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
         self.model = model = main.model()
@@ -609,7 +609,7 @@ class DiffEditor(DiffTextEdit):
     updated = Signal()
     diff_text_changed = Signal(object)
 
-    def __init__(self, options, parent, context):
+    def __init__(self, context, options, parent):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
         self.context = context
