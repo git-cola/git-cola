@@ -163,6 +163,8 @@ class ColaApplication(object):
         else:
             self._app = QtCore.QCoreApplication(argv)
 
+        self.context = None  # injected by ApplicationContext
+
     def _install_style(self):
         palette = self._app.palette()
         window = palette.color(QtGui.QPalette.Window)
@@ -264,6 +266,7 @@ class ColaApplication(object):
         self._app = None
 
     def set_context(self, context):
+        self.context = context
         if hasattr(self._app, 'context'):
             self._app.context = context
 
@@ -358,14 +361,15 @@ def application_init(args, update=False):
     model = new_model(context, args.repo,
                       prompt=args.prompt, settings=args.settings)
     context.model = model
+
+    app.set_context(context)  # inject the context
+
     if update:
         model.update_status()
 
     timer.stop('init')
     if args.perf:
         timer.display('init')
-
-    app.set_context(context)  # inject the context
     return context
 
 
