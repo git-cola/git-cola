@@ -21,7 +21,6 @@ from .. import cmds
 from .. import core
 from .. import guicmds
 from .. import git
-from .. import gitcfg
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -79,7 +78,7 @@ class MainView(standard.MainWindow):
         self.widget_version = 2
 
         create_dock = qtutils.create_dock
-        cfg = gitcfg.current()
+        cfg = context.cfg
         self.browser_dockable = cfg.get('cola.browserdockable')
         if self.browser_dockable:
             browser = browse.worktree_browser(context, parent=self,
@@ -943,7 +942,7 @@ class MainView(standard.MainWindow):
         self.position_label.setText(css + div)
 
     def rebase_start(self):
-        cfg = gitcfg.current()
+        cfg = self.context.cfg
         if not cfg.get('rebase.autostash', False):
             if self.model.staged or self.model.unmerged or self.model.modified:
                 Interaction.information(
