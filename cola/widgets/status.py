@@ -1,4 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
+import functools
 import itertools
 import os
 
@@ -110,6 +111,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def __init__(self, context, parent=None):
         QtWidgets.QTreeWidget.__init__(self, parent)
         self.context = context
+        self.selection_model = context.selection
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.headerItem().setHidden(True)
@@ -176,7 +178,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
 
         self.copy_path_action = qtutils.add_action(
-            self, N_('Copy Path to Clipboard'), copy_path, hotkeys.COPY)
+            self, N_('Copy Path to Clipboard'),
+            functools.partial(copy_path, context), hotkeys.COPY)
         self.copy_path_action.setIcon(icons.copy())
 
         self.copy_relpath_action = qtutils.add_action(
@@ -185,11 +188,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_action = qtutils.add_action(
-            self, N_('Copy Leading Path to Clipboard'), copy_leading_path)
+            self, N_('Copy Leading Path to Clipboard'),
+            functools.partial(copy_leading_path, context))
         self.copy_leading_path_action.setIcon(icons.copy())
 
         self.copy_basename_action = qtutils.add_action(
-            self, N_('Copy Basename to Clipboard'), copy_basename)
+            self, N_('Copy Basename to Clipboard'),
+            functools.partial(copy_basename, context))
         self.copy_basename_action.setIcon(icons.copy())
 
         self.copy_customize_action = qtutils.add_action(
@@ -197,10 +202,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
-            self, N_('View History...'), view_history, hotkeys.HISTORY)
+            self, N_('View History...'),
+            functools.partial(view_history, context), hotkeys.HISTORY)
 
         self.view_blame_action = qtutils.add_action(
-            self, N_('Blame...'), view_blame, hotkeys.BLAME)
+            self, N_('Blame...'),
+            functools.partial(view_blame, context), hotkeys.BLAME)
 
         self.annex_add_action = qtutils.add_action(
             self, N_('Add to Git Annex'),
@@ -362,13 +369,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def stage_selection(self):
         """Stage or unstage files according to the selection"""
+        context = self.context
         selected_indexes = self.selected_indexes()
         if selected_indexes:
             category, idx = selected_indexes[0]
             # A header item e.g. 'Staged', 'Modified', etc.
             if category == self.idx_header:
                 if idx == self.idx_staged:
-                    cmds.do(cmds.UnstageAll)
+                    cmds.do(cmds.UnstageAll, context)
                 elif idx == self.idx_modified:
                     cmds.do(cmds.StageModified)
                 elif idx == self.idx_untracked:
@@ -458,7 +466,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def update_actions(self, selected=None):
         if selected is None:
-            selected = selection.selection()
+            selected = self.selection_model.selection()
         can_revert_edits = bool(selected.staged or selected.modified)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
@@ -552,7 +560,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if not utils.is_win32():
             if not menu.isEmpty():
                 menu.addSeparator()
-            if not selection.selection_model().is_empty():
+            if not self.selection_model.is_empty():
                 menu.addAction(self.default_app_action)
                 menu.addAction(self.parent_dir_action)
             menu.addAction(self.terminal_action)
@@ -563,7 +571,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _add_copy_actions(self, menu):
         """Add the "Copy" sub-menu"""
-        enabled = selection.selection_model().filename() is not None
+        enabled = self.selection_model.filename() is not None
         self.copy_path_action.setEnabled(enabled)
         self.copy_relpath_action.setEnabled(enabled)
         self.copy_leading_path_action.setEnabled(enabled)
@@ -587,11 +595,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if copy_formats:
             copy_menu.addSeparator()
 
+        context = self.context
         for entry in copy_formats:
             name = entry.get('name', '')
             fmt = entry.get('format', '')
             if name and fmt:
-                action = copy_menu.addAction(name, lambda fmt=fmt: copy_format(fmt))
+                action = copy_menu.addAction(
+                    name, lambda fmt=fmt: copy_format(context, fmt))
                 action.setIcon(copy_icon)
                 action.setEnabled(enabled)
 
@@ -602,7 +612,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _create_header_context_menu(self, menu, idx):
         if idx == self.idx_staged:
             menu.addAction(icons.remove(), N_('Unstage All'),
-                           cmds.run(cmds.UnstageAll))
+                           cmds.run(cmds.UnstageAll, self.context))
             return menu
         elif idx == self.idx_unmerged:
             action = menu.addAction(icons.add(), cmds.StageUnmerged.name(),
@@ -626,8 +636,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             return self._create_staged_submodule_context_menu(menu, s)
 
         if self.m.unstageable():
-            action = menu.addAction(icons.remove(), N_('Unstage Selected'),
-                                    cmds.run(cmds.Unstage, self.staged()))
+            action = menu.addAction(
+                icons.remove(), N_('Unstage Selected'),
+                cmds.run(cmds.Unstage, self.context, self.staged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.launch_editor_action)
@@ -651,8 +662,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                        cmds.run(cmds.OpenRepo,
                                 core.abspath(s.staged[0])))
 
-        action = menu.addAction(icons.remove(), N_('Unstage Selected'),
-                                cmds.run(cmds.Unstage, self.staged()))
+        action = menu.addAction(
+            icons.remove(), N_('Unstage Selected'),
+            cmds.run(cmds.Unstage, self.context, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.view_history_action)
@@ -681,7 +693,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                     cmds.run(cmds.Stage, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
-        if not selection.selection_model().is_empty():
+        if not self.selection_model.is_empty():
             menu.addAction(self.launch_editor_action)
 
         # Do all of the selected items exist?
@@ -715,7 +727,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(icons.edit(), N_('Add to .gitignore'),
                            gitignore.gitignore_view)
 
-        if not selection.selection_model().is_empty():
+        if not self.selection_model.is_empty():
             menu.addAction(self.view_history_action)
             menu.addAction(self.view_blame_action)
         return menu
@@ -796,11 +808,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         c = self.contents()
         s = self.single_selection()
         offset = 0
-        for content, selection in zip(c, s):
+        for content, sel in zip(c, s):
             if len(content) == 0:
                 continue
-            if selection is not None:
-                return offset + content.index(selection)
+            if sel is not None:
+                return offset + content.index(sel)
             offset += len(content)
         return None
 
@@ -886,7 +898,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.scroll_to_item(self.currentItem())
         # Sync the selection model
         selected = self.selection()
-        selection_model = selection.selection_model()
+        selection_model = self.selection_model
         selection_model.set_selection(selected)
         self.update_actions(selected=selected)
 
@@ -998,20 +1010,19 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return qtutils.path_mimetypes()
 
 
-def view_blame():
+def view_blame(context):
     """Signal that we should view blame for paths."""
-    cmds.do(cmds.BlamePaths, selection.union(selection.selection_model()))
+    cmds.do(cmds.BlamePaths, selection.union(context.selection))
 
 
-def view_history():
+def view_history(context):
     """Signal that we should view history for paths."""
-    cmds.do(cmds.VisualizePaths,
-            selection.union(selection.selection_model()))
+    cmds.do(cmds.VisualizePaths, selection.union(context.selection))
 
 
-def copy_path(absolute=True):
+def copy_path(context, absolute=True):
     """Copy a selected path to the clipboard"""
-    filename = selection.selection_model().filename()
+    filename = context.selection.filename()
     qtutils.copy_path(filename, absolute=absolute)
 
 
@@ -1020,27 +1031,28 @@ def copy_relpath():
     copy_path(absolute=False)
 
 
-def copy_basename():
-    filename = os.path.basename(selection.selection_model().filename())
+def copy_basename(context):
+    filename = os.path.basename(context.selection.filename())
     basename, ext = os.path.splitext(filename)
     qtutils.copy_path(basename, absolute=False)
 
 
-def copy_leading_path():
+def copy_leading_path(context):
     """Copy the selected leading path to the clipboard"""
-    filename = selection.selection_model().filename()
+    filename = context.selection.filename()
     dirname = os.path.dirname(filename)
     qtutils.copy_path(dirname, absolute=False)
 
 
-def copy_format(fmt):
+def copy_format(context, fmt):
     values = {}
-    values['path'] = path = selection.selection_model().filename()
+    values['path'] = path = context.selection.filename()
     values['abspath'] = abspath = os.path.abspath(path)
     values['absdirname'] = os.path.dirname(abspath)
     values['dirname'] = os.path.dirname(path)
     values['filename'] = os.path.basename(path)
-    values['basename'], values['ext'] = os.path.splitext(os.path.basename(path))
+    values['basename'], values['ext'] = (
+        os.path.splitext(os.path.basename(path)))
     qtutils.set_clipboard(fmt % values)
 
 

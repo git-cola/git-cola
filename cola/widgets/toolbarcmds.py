@@ -193,13 +193,11 @@ COMMANDS = {
     },
     'Commit::UnstageAll': {
         'title': 'Unstage All',
-        'context': False,
         'action': cmds.run(cmds.UnstageAll),
         'icon': None
     },
     'Commit::Unstage': {
         'title': 'Unstage',
-        'context': False,
         'action': cmds.run(cmds.UnstageSelected),
         'icon': 'remove'
     },

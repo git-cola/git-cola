@@ -2298,15 +2298,15 @@ class Tag(ModelCommand):
         return (status, out, err)
 
 
-class Unstage(ModelCommand):
+class Unstage(ContextCommand):
     """Unstage a set of paths."""
 
     @staticmethod
     def name():
         return N_('Unstage')
 
-    def __init__(self, paths):
-        super(Unstage, self).__init__()  # TODO context
+    def __init__(self, context, paths):
+        super(Unstage, self).__init__(context)
         self.paths = paths
 
     def do(self):
@@ -2324,7 +2324,7 @@ class Unstage(ModelCommand):
         self.model.update_file_status()
 
 
-class UnstageAll(ModelCommand):
+class UnstageAll(ContextCommand):
     """Unstage all files; resets the index."""
 
     def do(self):
@@ -2344,9 +2344,9 @@ def unstage_all(model):
 class UnstageSelected(Unstage):
     """Unstage selected files."""
 
-    def __init__(self):
-        staged = selection.selection_model().staged
-        super(UnstageSelected, self).__init__(staged)
+    def __init__(self, context):
+        staged = context.selection.staged
+        super(UnstageSelected, self).__init__(context, staged)
 
 
 class Untrack(ModelCommand):

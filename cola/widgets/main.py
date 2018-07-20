@@ -158,11 +158,12 @@ class MainView(standard.MainWindow):
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
         self.unstage_all_action = add_action(
-            self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
+            self, N_('Unstage All'), cmds.run(cmds.UnstageAll, context))
         self.unstage_all_action.setIcon(icons.remove())
 
         self.unstage_selected_action = add_action(
-            self, N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected))
+            self, N_('Unstage From Commit'),
+            cmds.run(cmds.UnstageSelected, context))
         self.unstage_selected_action.setIcon(icons.remove())
 
         self.show_diffstat_action = add_action(

@@ -613,6 +613,7 @@ class DiffEditor(DiffTextEdit):
         DiffTextEdit.__init__(self, parent, numbers=True)
         self.model = model = main.model()
         self.context = context
+        self.selection_model = selection_model = context.selection
 
         # "Diff Options" tool menu
         self.options = options
@@ -635,7 +636,6 @@ class DiffEditor(DiffTextEdit):
         model.add_observer(diff_text_changed, self.diff_text_changed.emit)
         self.diff_text_changed.connect(self.set_diff, type=Qt.QueuedConnection)
 
-        self.selection_model = selection_model = selection.selection_model()
         selection_model.add_observer(selection_model.message_selection_changed,
                                      self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
@@ -667,8 +667,9 @@ class DiffEditor(DiffTextEdit):
     def contextMenuEvent(self, event):
         """Create the context menu for the diff display."""
         menu = qtutils.create_menu(N_('Actions'), self)
-        s = selection.selection()
-        filename = selection.filename()
+        context = self.context
+        s = self.selection_model.selection()
+        filename = self.selection_model.filename()
 
         if self.model.stageable() or self.model.unstageable():
             if self.model.stageable():
@@ -703,8 +704,9 @@ class DiffEditor(DiffTextEdit):
 
         if s.staged and self.model.unstageable():
             if s.staged[0] in main.model().submodules:
-                action = menu.addAction(icons.remove(), cmds.Unstage.name(),
-                                        cmds.do(cmds.Unstage, s.staged))
+                action = menu.addAction(
+                    icons.remove(), cmds.Unstage.name(),
+                    cmds.do(cmds.Unstage, context, s.staged))
                 action.setShortcut(hotkeys.STAGE_SELECTION)
                 menu.addAction(icons.cola(), N_('Launch git-cola'),
                                cmds.do(cmds.OpenRepo,
@@ -831,7 +833,7 @@ class DiffEditor(DiffTextEdit):
 
     def process_diff_selection(self, reverse=False, apply_to_worktree=False):
         """Implement un/staging of the selected line(s) or hunk."""
-        if selection.selection_model().is_empty():
+        if self.selection_model.is_empty():
             return
         first_line_idx, last_line_idx = self.selected_lines()
         cmds.do(cmds.ApplyDiffSelection, first_line_idx, last_line_idx,
