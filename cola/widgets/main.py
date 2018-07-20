@@ -94,7 +94,7 @@ class MainView(standard.MainWindow):
         # "Repository Status" widget
         self.statusdock = create_dock(N_('Status'), self,
             fn=lambda dock:
-                status.StatusWidget(dock.titleBarWidget(), dock, context))
+                status.StatusWidget(context, dock.titleBarWidget(), dock))
         self.statuswidget = self.statusdock.widget()
 
         # "Switch Repository" widgets
@@ -128,7 +128,7 @@ class MainView(standard.MainWindow):
         width = fm.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
-        editor = commitmsg.CommitMessageEditor(self, context)
+        editor = commitmsg.CommitMessageEditor(context, self)
         self.commiteditor = editor
         self.commitdock = create_dock(N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
@@ -221,7 +221,8 @@ class MainView(standard.MainWindow):
             hotkeys.CHERRY_PICK)
 
         self.load_commitmsg_action = add_action(
-            self, N_('Load Commit Message...'), guicmds.load_commitmsg)
+            self, N_('Load Commit Message...'),
+            functools.partial(guicmds.load_commitmsg, context))
 
         self.prepare_commitmsg_hook_action = add_action(
             self, N_('Prepare Commit Message'),
@@ -298,7 +299,7 @@ class MainView(standard.MainWindow):
             functools.partial(guicmds.browse_other, context))
         self.load_commitmsg_template_action = add_action(
             self, N_('Get Commit Message Template'),
-            cmds.run(cmds.LoadCommitMessageFromTemplate))
+            cmds.run(cmds.LoadCommitMessageFromTemplate, context))
         self.help_about_action = add_action(
             self, N_('About'), about.about_dialog)
 

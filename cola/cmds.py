@@ -1367,12 +1367,12 @@ class LaunchEditor(Edit):
         super(LaunchEditor, self).__init__(filenames, background_editor=True)
 
 
-class LoadCommitMessageFromFile(ModelCommand):
+class LoadCommitMessageFromFile(ContextCommand):
     """Loads a commit message from a path."""
     UNDOABLE = True
 
-    def __init__(self, path):
-        super(LoadCommitMessageFromFile, self).__init__()  # TODO context
+    def __init__(self, context, path):
+        super(LoadCommitMessageFromFile, self).__init__(context)
         self.path = path
         self.old_commitmsg = self.model.commitmsg
         self.old_directory = self.model.directory
@@ -1393,10 +1393,10 @@ class LoadCommitMessageFromFile(ModelCommand):
 class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
     """Loads the commit message template specified by commit.template."""
 
-    def __init__(self):
-        cfg = gitcfg.current()
+    def __init__(self, context):
+        cfg = context.cfg
         template = cfg.get('commit.template')
-        LoadCommitMessageFromFile.__init__(self, template)
+        super(LoadCommitMessageFromTemplate, self).__init__(context, template)
 
     def do(self):
         if self.path is None:
@@ -1408,12 +1408,12 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
         return LoadCommitMessageFromFile.do(self)
 
 
-class LoadCommitMessageFromOID(ModelCommand):
+class LoadCommitMessageFromOID(ContextCommand):
     """Load a previous commit message"""
     UNDOABLE = True
 
-    def __init__(self, oid, prefix=''):
-        super(LoadCommitMessageFromOID, self).__init__()  # TODO context
+    def __init__(self, context, oid, prefix=''):
+        super(LoadCommitMessageFromOID, self).__init__(context)
         self.oid = oid
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = prefix + gitcmds.prev_commitmsg(oid)
@@ -1466,8 +1466,8 @@ class PrepareCommitMessageHook(ModelCommand):
 class LoadFixupMessage(LoadCommitMessageFromOID):
     """Load a fixup message"""
 
-    def __init__(self, oid):
-        super(LoadFixupMessage, self).__init__(oid, prefix='fixup! ')
+    def __init__(self, context, oid):
+        super(LoadFixupMessage, self).__init__(context, oid, prefix='fixup! ')
         if self.new_commitmsg:
             self.new_commitmsg = self.new_commitmsg.splitlines()[0]
 

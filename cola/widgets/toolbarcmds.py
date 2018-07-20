@@ -205,13 +205,11 @@ COMMANDS = {
     },
     'Commit::LoadCommitMessage': {
         'title': 'Load Commit Message...',
-        'context': False,
         'action': guicmds.load_commitmsg,
         'icon': None
     },
     'Commit::GetCommitMessageTemplate': {
         'title': 'Get Commit Message Template',
-        'context': False,
         'action': cmds.run(cmds.LoadCommitMessageFromTemplate),
         'icon': None
     },

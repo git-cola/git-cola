@@ -196,12 +196,12 @@ def open_repo_in_new_window():
     cmds.do(cmds.OpenNewRepo, dirname)
 
 
-def load_commitmsg():
+def load_commitmsg(context):
     """Load a commit message from a file."""
     filename = qtutils.open_file(N_('Load Commit Message'),
                                  directory=main.model().getcwd())
     if filename:
-        cmds.do(cmds.LoadCommitMessageFromFile, filename)
+        cmds.do(cmds.LoadCommitMessageFromFile, context, filename)
 
 
 def choose_from_dialog(get, title, button_text, default, icon=None):

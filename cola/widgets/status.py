@@ -37,7 +37,7 @@ class StatusWidget(QtWidgets.QWidget):
 
     """
 
-    def __init__(self, titlebar, parent, context):
+    def __init__(self, context, titlebar, parent):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
 

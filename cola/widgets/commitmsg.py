@@ -11,7 +11,6 @@ from .. import actions
 from .. import cmds
 from .. import core
 from .. import gitcmds
-from .. import gitcfg
 from .. import hotkeys
 from .. import icons
 from .. import textwrap
@@ -37,7 +36,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
     up = Signal()
     updated = Signal()
 
-    def __init__(self, parent, context):
+    def __init__(self, context, parent):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
         self.model = model = context.model
@@ -86,7 +85,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
 
-        cfg = gitcfg.current()
+        cfg = context.cfg
         self.summary_validator = MessageValidator(cfg, parent=self.summary)
         self.summary.setValidator(self.summary_validator)
 
@@ -490,8 +489,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
                 continue
 
         menu.clear()
+        context = self.context
         for c in menu_commits:
-            menu.addAction(prefix + c.summary, cmds.run(cmd, c.oid))
+            menu.addAction(prefix + c.summary, cmds.run(cmd, context, c.oid))
 
         if len(commits) == 6:
             menu.addSeparator()
@@ -504,7 +504,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         if not oids:
             return
         oid = oids[0]
-        cmds.do(cmd, oid)
+        cmds.do(cmd, self.context, oid)
 
     def choose_commit_message(self):
         self.choose_commit(cmds.LoadCommitMessageFromOID)
@@ -514,7 +514,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def toggle_check_spelling(self, enabled):
         spellcheck = self.description.spellcheck
-        cfg = gitcfg.current()
+        cfg = self.context.cfg
 
         if cfg.get_user(prefs.SPELL_CHECK) != enabled:
             cfg.set_user(prefs.SPELL_CHECK, enabled)
