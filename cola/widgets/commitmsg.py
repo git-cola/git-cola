@@ -60,8 +60,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
         self.launch_editor = actions.launch_editor(self)
-        self.launch_difftool = actions.launch_difftool(self, self.context)
         self.stage_or_unstage = actions.stage_or_unstage(self)
+        self.launch_difftool = actions.launch_difftool(context, self)
 
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)

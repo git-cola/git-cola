@@ -625,8 +625,8 @@ class DiffEditor(DiffTextEdit):
         self.action_revert_selection.setIcon(icons.undo())
 
         self.launch_editor = actions.launch_editor(self, *hotkeys.ACCEPT)
-        self.launch_difftool = actions.launch_difftool(self, self.context)
         self.stage_or_unstage = actions.stage_or_unstage(self)
+        self.launch_difftool = actions.launch_difftool(context, self)
 
         # Emit up/down signals so that they can be routed by the main widget
         self.move_up = actions.move_up(self)

@@ -19,7 +19,7 @@ def launch_editor(widget, *shortcuts):
         hotkeys.EDIT, *shortcuts)
 
 
-def launch_difftool(widget, context):
+def launch_difftool(context, widget):
     icon = icons.diff()
     cmd = cmds.LaunchDifftool
     action = qtutils.add_action(
