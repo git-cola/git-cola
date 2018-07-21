@@ -141,7 +141,7 @@ class RevisionSearch(SearchEngine):
     def results(self):
         query, opts = self.common_args()
         args = utils.shell_split(query)
-        return self.revisions(all=True, *args, **opts)
+        return self.revisions(*args, **opts)
 
 
 class PathSearch(SearchEngine):
@@ -351,10 +351,3 @@ def search_commits(parent):
     widget = Search(opts, parent)
     widget.show()
     return widget
-
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    widget = Search()
-    widget.show()
-    app.exec_()
