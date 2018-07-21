@@ -1,10 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import errno
 import os
 import sys
 import subprocess
 import threading
+from functools import partial
 from os.path import join
 
 from . import core
@@ -70,7 +70,7 @@ def read_git_file(path):
             result = data[len(header):]
             if result and not os.path.isabs(result):
                 path_folder = os.path.dirname(path)
-                repo_relative = os.path.join(path_folder, result)
+                repo_relative = join(path_folder, result)
                 result = os.path.normpath(repo_relative)
     return result
 
@@ -133,7 +133,7 @@ def find_git_directory(curpath):
                     if os.path.isabs(common_path):
                         common_dir = common_path
                     else:
-                        common_dir = os.path.join(git_dir_path, common_path)
+                        common_dir = join(git_dir_path, common_path)
                         common_dir = os.path.normpath(common_dir)
                     paths.common_dir = common_dir
 
@@ -206,7 +206,7 @@ class Git(object):
         return self.paths.git_dir
 
     def __getattr__(self, name):
-        git_cmd = functools.partial(self.git, name)
+        git_cmd = partial(self.git, name)
         setattr(self, name, git_cmd)
         return git_cmd
 
@@ -354,17 +354,17 @@ def transform_kwargs(**kwargs):
     for k, v in kwargs.items():
         if len(k) == 1:
             dashes = '-'
-            join = ''
+            eq = ''
         else:
             dashes = '--'
-            join = '='
+            eq = '='
         # isinstance(False, int) is True, so we have to check bool first
         if isinstance(v, bool):
             if v:
                 args.append('%s%s' % (dashes, dashify(k)))
             # else: pass  # False is ignored; flag=False inhibits --flag
         elif isinstance(v, types_to_stringify):
-            args.append('%s%s%s%s' % (dashes, dashify(k), join, v))
+            args.append('%s%s%s%s' % (dashes, dashify(k), eq, v))
 
     return args
 
