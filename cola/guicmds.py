@@ -1,7 +1,7 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import os
 import re
+from functools import partial
 
 from .i18n import N_
 from .interaction import Interaction
@@ -261,10 +261,9 @@ class CloneTask(qtutils.Task):
 
 def clone_repo(parent, runtask, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
-    clone_callback = functools.partial(
-        clone_repository, parent, runtask, progress, finish, spawn)
+    fn = partial(clone_repository, parent, runtask, progress, finish, spawn)
     prompt = clone.prompt_for_clone()
-    prompt.result.connect(clone_callback)
+    prompt.result.connect(fn)
 
 
 def clone_repository(parent, runtask, progress, finish, spawn,
