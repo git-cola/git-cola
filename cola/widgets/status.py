@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import itertools
 import os
 from functools import partial
@@ -180,7 +179,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.copy_path_action = qtutils.add_action(
             self, N_('Copy Path to Clipboard'),
-            functools.partial(copy_path, context), hotkeys.COPY)
+            partial(copy_path, context), hotkeys.COPY)
         self.copy_path_action.setIcon(icons.copy())
 
         self.copy_relpath_action = qtutils.add_action(
@@ -190,12 +189,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.copy_leading_path_action = qtutils.add_action(
             self, N_('Copy Leading Path to Clipboard'),
-            functools.partial(copy_leading_path, context))
+            partial(copy_leading_path, context))
         self.copy_leading_path_action.setIcon(icons.copy())
 
         self.copy_basename_action = qtutils.add_action(
             self, N_('Copy Basename to Clipboard'),
-            functools.partial(copy_basename, context))
+            partial(copy_basename, context))
         self.copy_basename_action.setIcon(icons.copy())
 
         self.copy_customize_action = qtutils.add_action(
@@ -203,20 +202,18 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
-            self, N_('View History...'),
-            functools.partial(view_history, context), hotkeys.HISTORY)
+            self, N_('View History...'), partial(view_history, context),
+            hotkeys.HISTORY)
 
         self.view_blame_action = qtutils.add_action(
             self, N_('Blame...'),
-            functools.partial(view_blame, context), hotkeys.BLAME)
+            partial(view_blame, context), hotkeys.BLAME)
 
         self.annex_add_action = qtutils.add_action(
-            self, N_('Add to Git Annex'),
-            cmds.run(cmds.AnnexAdd, self.context))
+            self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd, context))
 
         self.lfs_track_action = qtutils.add_action(
-            self, N_('Add to Git LFS'),
-            cmds.run(cmds.LFSTrack, self.context))
+            self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack, context))
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
