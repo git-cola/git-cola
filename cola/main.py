@@ -297,7 +297,7 @@ def cmd_cola(args):
     context.timer.start('view')
     view = MainView(context, settings=args.settings)
     if args.amend:
-        cmds.do(cmds.AmendMode, True)
+        cmds.do(cmds.AmendMode, context, amend=True)
 
     if status_filter:
         view.set_filter(core.relpath(status_filter))

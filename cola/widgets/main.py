@@ -3,6 +3,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import functools
 import os
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -153,7 +154,8 @@ class MainView(standard.MainWindow):
         add_action_bool = qtutils.add_action_bool
 
         self.commit_amend_action = add_action_bool(
-            self, N_('Amend Last Commit'), cmds.run(cmds.AmendMode), False)
+            self, N_('Amend Last Commit'),
+            partial(cmds.do, cmds.AmendMode, context), False)
         self.commit_amend_action.setShortcut(hotkeys.AMEND)
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 

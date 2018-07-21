@@ -1,5 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 import re
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -167,7 +168,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
         qtutils.connect_button(self.commit_button, self.commit)
 
         # Broadcast the amend mode
-        qtutils.connect_action_bool(self.amend_action, cmds.run(cmds.AmendMode))
+        qtutils.connect_action_bool(
+            self.amend_action, partial(cmds.run(cmds.AmendMode), context))
         qtutils.connect_action_bool(self.check_spelling_action,
                                     self.toggle_check_spelling)
 

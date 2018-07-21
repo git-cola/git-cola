@@ -180,8 +180,7 @@ COMMANDS = {
     },
     'Commit::AmendLast': {
         'title': 'Amend Last Commit',
-        'context': False,
-        'action': cmds.run(cmds.AmendMode, True),
+        'action': cmds.run(cmds.AmendMode),
         'icon': None
     },
     'Commit::StageAll': {

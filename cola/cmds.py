@@ -209,7 +209,7 @@ class AbortMerge(ConfirmAction):
         return 'git merge'
 
 
-class AmendMode(EditModel):
+class AmendMode(EditContext):
     """Try to amend a commit."""
     UNDOABLE = True
     LAST_MESSAGE = None
@@ -218,8 +218,8 @@ class AmendMode(EditModel):
     def name():
         return N_('Amend')
 
-    def __init__(self, amend):
-        super(AmendMode, self).__init__()  # TODO context
+    def __init__(self, context, amend=True):
+        super(AmendMode, self).__init__(context)
         self.skip = False
         self.amending = amend
         self.old_commitmsg = self.model.commitmsg
