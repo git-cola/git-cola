@@ -56,7 +56,6 @@ COMMANDS = {
     # },
     'File::Refresh': {
         'title': 'Refresh...',
-        'context': False,
         'action': cmds.run(cmds.Refresh),
         'icon': 'sync'
     },

@@ -1784,7 +1784,7 @@ class Rescan(ContextCommand):
         self.model.update_status()
 
 
-class Refresh(ModelCommand):
+class Refresh(ContextCommand):
     """Update refs, refresh the index, and update config"""
 
     @staticmethod
@@ -1793,8 +1793,8 @@ class Refresh(ModelCommand):
 
     def do(self):
         self.model.update_status(update_index=True)
-        fsmonitor.current().refresh()
-        gitcfg.current().update()
+        self.cfg.update()
+        self.fsmonitor.refresh()
 
 
 class RefreshConfig(CommandMixin):

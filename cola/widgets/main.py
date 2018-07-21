@@ -203,7 +203,7 @@ class MainView(standard.MainWindow):
             self, N_('Edit Remotes...'), editremotes.editor)
 
         self.rescan_action = add_action(
-            self, cmds.Refresh.name(), cmds.run(cmds.Refresh),
+            self, cmds.Refresh.name(), cmds.run(cmds.Refresh, context),
             *hotkeys.REFRESH_HOTKEYS)
         self.rescan_action.setIcon(icons.sync())
 

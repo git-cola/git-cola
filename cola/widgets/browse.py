@@ -187,7 +187,7 @@ class RepoTreeView(standard.TreeView):
                 N_('Edit selected paths'),
                 cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
 
-        self.action_refresh = common.refresh_action(self)
+        self.action_refresh = common.refresh_action(context, self)
 
         if not utils.is_win32():
             self.action_default_app = common.default_app_action(

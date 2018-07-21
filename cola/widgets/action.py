@@ -71,7 +71,7 @@ class ActionButtons(QFlowLayoutWidget):
         self.setMinimumHeight(30)
 
         # Add callbacks
-        connect_button(self.refresh_button, cmds.run(cmds.Refresh))
+        connect_button(self.refresh_button, cmds.run(cmds.Refresh, context))
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)

@@ -245,8 +245,9 @@ class ColaApplication(object):
         """Wrap exec_() and start the application"""
         # Defer connection so that local cola.inotify is honored
         monitor = fsmonitor.current()
+        context = self.context
         monitor.files_changed.connect(
-            cmds.run(cmds.Refresh), type=Qt.QueuedConnection)
+            cmds.run(cmds.Refresh, context), type=Qt.QueuedConnection)
         monitor.config_changed.connect(
             cmds.run(cmds.RefreshConfig), type=Qt.QueuedConnection)
         # Start the filesystem monitor thread
@@ -288,7 +289,7 @@ class ColaQApplication(QtWidgets.QApplication):
                 git = context.git
                 if (git.is_valid()
                         and cfg.get('cola.refreshonfocus', default=False)):
-                    cmds.do(cmds.Refresh)
+                    cmds.do(cmds.Refresh, context)
         return super(ColaQApplication, self).event(e)
 
     def commitData(self, session_mgr):

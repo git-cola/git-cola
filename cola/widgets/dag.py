@@ -696,7 +696,7 @@ class GitDAG(standard.MainWindow):
         """Unconditionally refresh the DAG"""
         # self.force_refresh triggers an Unconditional redraw
         self.force_refresh = True
-        cmds.do(cmds.Refresh)
+        cmds.do(cmds.Refresh, self.context)
         self.force_refresh = False
 
     def display(self):

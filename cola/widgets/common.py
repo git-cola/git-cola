@@ -47,10 +47,11 @@ def parent_dir_action(parent, fn):
     return action
 
 
-def refresh_action(parent):
+def refresh_action(context, parent):
     """Refresh the repository state -> QAction"""
     return qtutils.add_action(parent, cmds.Refresh.name(),
-                              cmds.run(cmds.Refresh), hotkeys.REFRESH)
+                              cmds.run(cmds.Refresh, context),
+                              hotkeys.REFRESH)
 
 
 def terminal_action(context, parent, fn):
