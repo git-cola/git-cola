@@ -64,6 +64,7 @@ class ContextCommand(CommandMixin):
         self.cfg = context.cfg
         self.git = context.git
         self.selection = context.selection
+        self.fsmonitor = context.fsmonitor
 
 
 class EditContext(ContextCommand):
