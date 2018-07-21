@@ -1,6 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import time
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -913,11 +913,9 @@ def save_as(filename, title):
 
 
 def async_command(title, cmd, runtask):
-    cmd_partial = functools.partial(core.run_command, cmd)
-    task = qtutils.SimpleTask(qtutils.active_window(), cmd_partial)
-
-    result_partial = functools.partial(async_command_result, title, cmd)
-    task.connect(result_partial)
+    parent = qtutils.active_window()
+    task = qtutils.SimpleTask(parent, partial(core.run_command, cmd))
+    task.connect(partial(async_command_result, title, cmd))
     runtask.start(task)
 
 
