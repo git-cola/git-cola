@@ -1,9 +1,9 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import collections
 import itertools
 import math
 import re
+from functools import partial
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -135,8 +135,8 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: qtutils.set_clipboard(oid))
 
     def create_branch(self):
-        create_new_branch = functools.partial(
-            createbranch.create_new_branch, self.context)
+        context = self.context
+        create_new_branch = partial(createbranch.create_new_branch, context)
         self.with_oid(lambda oid: create_new_branch(revision=oid))
 
     def create_tag(self):
