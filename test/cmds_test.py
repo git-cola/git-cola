@@ -52,13 +52,8 @@ class CmdsTestCase(unittest.TestCase):
         self.assertEqual(expect, actual)
 
     def test_context_edit_command(self):
-        model = mock.Mock()
-        model.diff_text = ''
-
-        args = app_inst = cfg = gitcmd = timer = selection = None
-        context = app.ApplicationContext(
-            args, app_inst, cfg, gitcmd, timer, selection)
-        context.model = model
+        context = mock.Mock()
+        model = context.model
 
         cmd = cmds.EditContext(context)
         cmd.new_diff_text = 'test_diff_text'
