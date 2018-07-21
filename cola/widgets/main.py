@@ -1,9 +1,7 @@
 """This view provides the main git-cola user interface.
 """
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import os
-import functools
 from functools import partial
 
 from qtpy import QtCore
@@ -225,7 +223,7 @@ class MainView(standard.MainWindow):
 
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'),
-            functools.partial(guicmds.load_commitmsg, context))
+            partial(guicmds.load_commitmsg, context))
 
         self.prepare_commitmsg_hook_action = add_action(
             self, N_('Prepare Commit Message'),
@@ -239,8 +237,7 @@ class MainView(standard.MainWindow):
             self, N_('Quit'), self.close, hotkeys.QUIT)
 
         self.grep_action = add_action(
-            self, N_('Grep'), functools.partial(grep.grep, context),
-            hotkeys.GREP)
+            self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP)
 
         self.merge_local_action = add_action(
             self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
@@ -295,10 +292,10 @@ class MainView(standard.MainWindow):
 
         self.browse_branch_action = add_action(
             self, N_('Browse Current Branch...'),
-            functools.partial(guicmds.browse_current, context))
+            partial(guicmds.browse_current, context))
         self.browse_other_branch_action = add_action(
             self, N_('Browse Other Branch...'),
-            functools.partial(guicmds.browse_other, context))
+            partial(guicmds.browse_other, context))
         self.load_commitmsg_template_action = add_action(
             self, N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate, context))
@@ -307,10 +304,10 @@ class MainView(standard.MainWindow):
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'),
-            functools.partial(guicmds.diff_expression, context))
+            partial(guicmds.diff_expression, context))
         self.branch_compare_action = add_action(
             self, N_('Branches...'),
-            functools.partial(compare.compare_branches, context))
+            partial(compare.compare_branches, context))
 
         self.create_tag_action = add_action(
             self, N_('Create Tag...'),
@@ -324,23 +321,23 @@ class MainView(standard.MainWindow):
 
         self.delete_branch_action = add_action(
             self, N_('Delete...'),
-            functools.partial(guicmds.delete_branch, context))
+            partial(guicmds.delete_branch, context))
 
         self.delete_remote_branch_action = add_action(
             self, N_('Delete Remote Branch...'),
-            functools.partial(guicmds.delete_remote_branch, context))
+            partial(guicmds.delete_remote_branch, context))
 
         self.rename_branch_action = add_action(
             self, N_('Rename Branch...'),
-            functools.partial(guicmds.rename_branch, context))
+            partial(guicmds.rename_branch, context))
 
         self.checkout_branch_action = add_action(
             self, N_('Checkout...'),
-            functools.partial(guicmds.checkout_branch, context),
+            partial(guicmds.checkout_branch, context),
             hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
             self, N_('Review...'),
-            functools.partial(guicmds.review_branch, context))
+            partial(guicmds.review_branch, context))
 
         self.browse_action = add_action(
             self, N_('File Browser...'),
@@ -645,7 +642,7 @@ class MainView(standard.MainWindow):
 
         menu.addSeparator()
         menu_action = menu.addAction(N_('Add Toolbar'),
-            functools.partial(toolbar.add_toolbar, self.context, self))
+            partial(toolbar.add_toolbar, self.context, self))
         menu_action.setIcon(icons.add())
 
         dockwidgets = [
