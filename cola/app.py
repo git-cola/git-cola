@@ -244,8 +244,8 @@ class ColaApplication(object):
     def start(self):
         """Wrap exec_() and start the application"""
         # Defer connection so that local cola.inotify is honored
-        monitor = fsmonitor.current()
         context = self.context
+        monitor = context.fsmonitor
         monitor.files_changed.connect(
             cmds.run(cmds.Refresh, context), type=Qt.QueuedConnection)
         monitor.config_changed.connect(
@@ -353,11 +353,12 @@ def application_init(args, update=False):
     cfg = gitcfg.current()  # TODO non-singleton
     gitcmd = git.current()  # TODO non-singleton
     selection_model = selection.selection_model()  # TODO non-singleton
+    fsmon = fsmonitor.current()
 
     # TODO switch all commands and widgets to use the context to access
     # objects instead of using singleton accessor functions.
     context = ApplicationContext(
-        args, app, cfg, gitcmd, timer, selection_model)
+        args, app, cfg, gitcmd, timer, selection_model, fsmon)
 
     model = new_model(context, args.repo,
                       prompt=args.prompt, settings=args.settings)
@@ -529,7 +530,7 @@ class Timer(object):
 
 class ApplicationContext(object):
 
-    def __init__(self, args, app, cfg, gitcmd, timer, selection):
+    def __init__(self, args, app, cfg, gitcmd, timer, selection, fsmon):
         self.args = args
         self.app = app
         self.cfg = cfg
@@ -538,6 +539,7 @@ class ApplicationContext(object):
         self.timer = timer
         self.runtask = None
         self.selection = selection
+        self.fsmonitor = fsmon
         self.view = None
 
     def set_view(self, view):
