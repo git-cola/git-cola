@@ -7,15 +7,16 @@ from . import qtutils
 from .i18n import N_
 
 
-def cmd_action(widget, cmd, icon, *shortcuts):
-    action = qtutils.add_action(widget, cmd.name(), cmds.run(cmd), *shortcuts)
+def cmd_action(widget, cmd, context, icon, *shortcuts):
+    action = qtutils.add_action(
+        widget, cmd.name(), cmds.run(cmd, context), *shortcuts)
     action.setIcon(icon)
     return action
 
 
-def launch_editor(widget, *shortcuts):
+def launch_editor(context, widget, *shortcuts):
     icon = icons.edit()
-    return cmd_action(widget, cmds.LaunchEditor, icon,
+    return cmd_action(widget, cmds.LaunchEditor, context, icon,
         hotkeys.EDIT, *shortcuts)
 
 
@@ -28,9 +29,9 @@ def launch_difftool(context, widget):
     return action
 
 
-def stage_or_unstage(widget):
+def stage_or_unstage(context, widget):
     icon = icons.add()
-    return cmd_action(widget, cmds.StageOrUnstage, icon,
+    return cmd_action(widget, cmds.StageOrUnstage, context, icon,
                       hotkeys.STAGE_SELECTION)
 
 

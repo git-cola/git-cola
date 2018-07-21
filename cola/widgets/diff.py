@@ -624,9 +624,10 @@ class DiffEditor(DiffTextEdit):
             self, 'Revert', self.revert_selection, hotkeys.REVERT)
         self.action_revert_selection.setIcon(icons.undo())
 
-        self.launch_editor = actions.launch_editor(self, *hotkeys.ACCEPT)
-        self.stage_or_unstage = actions.stage_or_unstage(self)
+        self.launch_editor = actions.launch_editor(context, self,
+                                                   *hotkeys.ACCEPT)
         self.launch_difftool = actions.launch_difftool(context, self)
+        self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
         # Emit up/down signals so that they can be routed by the main widget
         self.move_up = actions.move_up(self)
@@ -680,8 +681,9 @@ class DiffEditor(DiffTextEdit):
 
         if s.modified and self.model.stageable():
             if s.modified[0] in main.model().submodules:
-                action = menu.addAction(icons.add(), cmds.Stage.name(),
-                                        cmds.run(cmds.Stage, s.modified))
+                action = menu.addAction(
+                    icons.add(), cmds.Stage.name(),
+                    cmds.run(cmds.Stage, context, s.modified))
                 action.setShortcut(hotkeys.STAGE_SELECTION)
                 menu.addAction(icons.cola(), N_('Launch git-cola'),
                                cmds.run(cmds.OpenRepo,

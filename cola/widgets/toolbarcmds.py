@@ -20,7 +20,6 @@ from ..widgets import stash
 COMMANDS = {
     'Others::LaunchEditor': {
         'title': 'Launch Editor',
-        'context': False,
         'action': cmds.run(cmds.LaunchEditor),
         'icon': 'edit'
     },
@@ -171,10 +170,8 @@ COMMANDS = {
         'action': search.search,
         'icon': 'search'
     },
-    # TODO convert ActionButtons::stage() into a StageSelected command
     'Commit::Stage': {
         'title': 'Stage',
-        'context': False,
         'action': cmds.run(cmds.StageOrUnstage),
         'icon': 'add'
     },
@@ -185,7 +182,6 @@ COMMANDS = {
     },
     'Commit::StageAll': {
         'title': 'Stage All Untracked',
-        'context': False,
         'action': cmds.run(cmds.StageUntracked),
         'icon': None
     },

@@ -151,7 +151,8 @@ class RepoTreeView(standard.TreeView):
         self.action_stage = qtutils.add_action_with_status_tip(
                 self, cmds.StageOrUnstage.name(),
                 N_('Stage/unstage selected paths for commit'),
-                cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
+                cmds.run(cmds.StageOrUnstage, context),
+                hotkeys.STAGE_SELECTION)
 
         self.action_untrack = qtutils.add_action_with_status_tip(
                 self, N_('Untrack Selected'),
@@ -185,7 +186,7 @@ class RepoTreeView(standard.TreeView):
         self.action_editor = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchEditor.name(),
                 N_('Edit selected paths'),
-                cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
+                cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT)
 
         self.action_refresh = common.refresh_action(context, self)
 

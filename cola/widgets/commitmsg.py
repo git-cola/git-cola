@@ -60,9 +60,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
-        self.launch_editor = actions.launch_editor(self)
-        self.stage_or_unstage = actions.stage_or_unstage(self)
+        self.launch_editor = actions.launch_editor(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
+        self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
@@ -431,6 +431,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             Interaction.information(N_('Missing Commit Message'), error_msg)
             return
 
+        context = self.context
         msg = self.commit_message(raw=False)
 
         # we either need to have something staged, or be merging
@@ -451,7 +452,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             else:
                 Interaction.information(N_('Nothing to commit'), error_msg)
                 return
-            cmds.do(cmds.StageModified)
+            cmds.do(cmds.StageModified, context)
 
         # Warn that amending published commits is generally bad
         amend = get(self.amend_action)

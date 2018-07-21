@@ -34,7 +34,7 @@ def edit_action(context, parent, *keys):
     action = qtutils.add_action_with_status_tip(
             parent, cmds.LaunchEditor.name(),
             N_('Edit selected paths'),
-            cmds.run(cmds.LaunchEditor), hotkeys.EDIT, *keys)
+            cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT, *keys)
     action.setIcon(icons.edit())
     return action
 

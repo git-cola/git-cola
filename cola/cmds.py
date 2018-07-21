@@ -2103,15 +2103,15 @@ def should_stage_conflicts(path):
                                default=False, cancel_text=cancel_text)
 
 
-class Stage(ModelCommand):
+class Stage(ContextCommand):
     """Stage a set of paths."""
 
     @staticmethod
     def name():
         return N_('Stage')
 
-    def __init__(self, paths):
-        super(Stage, self).__init__()  # TODO context
+    def __init__(self, context, paths):
+        super(Stage, self).__init__(context)
         self.paths = paths
 
     def do(self):
@@ -2172,8 +2172,8 @@ class StageCarefully(Stage):
     When no paths are specified, the command does nothing.
 
     """
-    def __init__(self):
-        super(StageCarefully, self).__init__(None)
+    def __init__(self, context):
+        super(StageCarefully, self).__init__(context, None)
         self.init_paths()
 
     def init_paths(self):
@@ -2185,7 +2185,7 @@ class StageCarefully(Stage):
 
     def do(self):
         if self.ok_to_run():
-            return Stage.do(self)
+            return super(StageCarefully, self).do()
         else:
             return (0, '', '')
 
@@ -2224,7 +2224,7 @@ class StageUntracked(StageCarefully):
         self.paths = self.model.untracked
 
 
-class StageOrUnstage(CommandMixin):
+class StageOrUnstage(ContextCommand):
     """If the selection is staged, unstage it, otherwise stage"""
 
     @staticmethod
@@ -2232,9 +2232,9 @@ class StageOrUnstage(CommandMixin):
         return N_('Stage / Unstage')
 
     def do(self):
-        s = selection.selection()
+        s = self.selection.selection()
         if s.staged:
-            do(Unstage, s.staged)
+            do(Unstage, self.context, s.staged)
 
         unstaged = []
         unmerged = check_conflicts(s.unmerged)
@@ -2245,7 +2245,7 @@ class StageOrUnstage(CommandMixin):
         if s.untracked:
             unstaged.extend(s.untracked)
         if unstaged:
-            do(Stage, unstaged)
+            do(Stage, self.context, unstaged)
 
 
 class Tag(ModelCommand):
@@ -2340,6 +2340,18 @@ def unstage_all(model):
     Interaction.command(N_('Error'), 'git reset', status, out, err)
     model.update_file_status()
     return (status, out, err)
+
+
+class StageSelected(ContextCommand):
+    """Stage selected files, or all files if no selection exists."""
+
+    def do(self):
+        context = self.context
+        paths = self.selection.unstaged
+        if paths:
+            do(Stage, context, paths)
+        elif self.cfg.get('cola.safemode', False):
+            do(StageModified, context)
 
 
 class UnstageSelected(Unstage):

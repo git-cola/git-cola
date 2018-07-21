@@ -1,6 +1,6 @@
 """The "Actions" widget"""
 from __future__ import division, absolute_import, unicode_literals
-import functools
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -9,7 +9,6 @@ from .. import cmds
 from .. import qtutils
 from ..i18n import N_
 from ..models import main
-from ..models.selection import selection_model
 from ..widgets import defs
 from ..widgets import remote
 from ..widgets import stash
@@ -75,24 +74,15 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.fetch_button, remote.fetch)
         connect_button(self.push_button, remote.push)
         connect_button(self.pull_button, remote.pull)
-        connect_button(self.stash_button, functools.partial(stash.view, context))
-        connect_button(self.stage_button, self.stage)
+        connect_button(self.stash_button, partial(stash.view, context))
+        connect_button(self.stage_button,
+            cmds.run(cmds.StageSelected, context))
         connect_button(self.unstage_button, self.unstage)
-
-    def stage(self):
-        """Stage selected files, or all files if no selection exists."""
-        paths = selection_model().unstaged
-        if not paths:
-            model = main.model()
-            if model.cfg.get('cola.safemode', False):
-                return
-            cmds.do(cmds.StageModified)
-        else:
-            cmds.do(cmds.Stage, paths)
 
     def unstage(self):
         """Unstage selected files, or all files if no selection exists."""
-        paths = selection_model().staged
+        context = self.context
+        paths = context.selection.staged
         context = self.context
         if not paths:
             cmds.do(cmds.UnstageAll, context)

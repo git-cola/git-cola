@@ -3,6 +3,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import functools
 import os
+import functools
 from functools import partial
 
 from qtpy import QtCore
@@ -174,12 +175,12 @@ class MainView(standard.MainWindow):
 
         self.stage_modified_action = add_action(
             self, N_('Stage Changed Files To Commit'),
-            cmds.run(cmds.StageModified), hotkeys.STAGE_MODIFIED)
+            cmds.run(cmds.StageModified, context), hotkeys.STAGE_MODIFIED)
         self.stage_modified_action.setIcon(icons.add())
 
         self.stage_untracked_action = add_action(
             self, N_('Stage All Untracked'),
-            cmds.run(cmds.StageUntracked), hotkeys.STAGE_UNTRACKED)
+            cmds.run(cmds.StageUntracked, context), hotkeys.STAGE_UNTRACKED)
         self.stage_untracked_action.setIcon(icons.add())
 
         self.apply_patches_action = add_action(
@@ -262,9 +263,8 @@ class MainView(standard.MainWindow):
             self, N_('Open in New Window...'), guicmds.open_repo_in_new_window)
         self.open_repo_new_action.setIcon(icons.folder())
 
-        stash_view = functools.partial(stash.view, context)
         self.stash_action = add_action(
-            self, N_('Stash...'), stash_view, hotkeys.STASH)
+            self, N_('Stash...'), partial(stash.view, context), hotkeys.STASH)
 
         self.reset_branch_head_action = add_action(
             self, N_('Reset Branch Head'), guicmds.reset_branch_head)

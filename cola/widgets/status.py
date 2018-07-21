@@ -2,6 +2,7 @@ from __future__ import division, absolute_import, unicode_literals
 import functools
 import itertools
 import os
+from functools import partial
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -157,7 +158,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.launch_difftool_action.setIcon(icons.diff())
 
         self.launch_editor_action = actions.launch_editor(
-            self, *hotkeys.ACCEPT)
+            context, self, *hotkeys.ACCEPT)
 
         if not utils.is_win32():
             self.default_app_action = common.default_app_action(
@@ -378,13 +379,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 if idx == self.idx_staged:
                     cmds.do(cmds.UnstageAll, context)
                 elif idx == self.idx_modified:
-                    cmds.do(cmds.StageModified)
+                    cmds.do(cmds.StageModified, context)
                 elif idx == self.idx_untracked:
-                    cmds.do(cmds.StageUntracked)
+                    cmds.do(cmds.StageUntracked, context)
                 else:
                     pass  # Do nothing for unmerged items, by design
                 return
-        cmds.do(cmds.StageOrUnstage)
+        cmds.do(cmds.StageOrUnstage, context)
 
     def staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
@@ -610,24 +611,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
 
     def _create_header_context_menu(self, menu, idx):
+        context = self.context
         if idx == self.idx_staged:
             menu.addAction(icons.remove(), N_('Unstage All'),
-                           cmds.run(cmds.UnstageAll, self.context))
+                           cmds.run(cmds.UnstageAll, context))
             return menu
         elif idx == self.idx_unmerged:
             action = menu.addAction(icons.add(), cmds.StageUnmerged.name(),
-                                    cmds.run(cmds.StageUnmerged))
+                                    cmds.run(cmds.StageUnmerged, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
         elif idx == self.idx_modified:
             action = menu.addAction(icons.add(), cmds.StageModified.name(),
-                                    cmds.run(cmds.StageModified))
+                                    cmds.run(cmds.StageModified, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
 
         elif idx == self.idx_untracked:
             action = menu.addAction(icons.add(), cmds.StageUntracked.name(),
-                                    cmds.run(cmds.StageUntracked))
+                                    cmds.run(cmds.StageUntracked, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
             return menu
 
@@ -635,10 +637,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if s.staged[0] in self.m.submodules:
             return self._create_staged_submodule_context_menu(menu, s)
 
+        context = self.context
         if self.m.unstageable():
             action = menu.addAction(
                 icons.remove(), N_('Unstage Selected'),
-                cmds.run(cmds.Unstage, self.context, self.staged()))
+                cmds.run(cmds.Unstage, context, self.staged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.launch_editor_action)
@@ -658,23 +661,26 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return menu
 
     def _create_staged_submodule_context_menu(self, menu, s):
+        context = self.context
         menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo,
                                 core.abspath(s.staged[0])))
 
         action = menu.addAction(
             icons.remove(), N_('Unstage Selected'),
-            cmds.run(cmds.Unstage, self.context, self.staged()))
+            cmds.run(cmds.Unstage, context, self.staged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.view_history_action)
         return menu
 
     def _create_unmerged_context_menu(self, menu, s):
+        context = self.context
         menu.addAction(self.launch_difftool_action)
 
-        action = menu.addAction(icons.add(), N_('Stage Selected'),
-                                cmds.run(cmds.Stage, self.unstaged()))
+        action = menu.addAction(
+            icons.add(), N_('Stage Selected'),
+            cmds.run(cmds.Stage, context, self.unstaged()))
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.launch_editor_action)
@@ -683,14 +689,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return menu
 
     def _create_unstaged_context_menu(self, menu, s):
+        context = self.context
         modified_submodule = (s.modified and
                               s.modified[0] in self.m.submodules)
         if modified_submodule:
             return self._create_modified_submodule_context_menu(menu, s)
 
         if self.m.stageable():
-            action = menu.addAction(icons.add(), N_('Stage Selected'),
-                                    cmds.run(cmds.Stage, self.unstaged()))
+            action = menu.addAction(
+                icons.add(), N_('Stage Selected'),
+                cmds.run(cmds.Stage, context, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         if not self.selection_model.is_empty():
@@ -733,13 +741,15 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return menu
 
     def _create_modified_submodule_context_menu(self, menu, s):
+        context = self.context
         menu.addAction(icons.cola(), N_('Launch git-cola'),
                        cmds.run(cmds.OpenRepo, core.abspath(s.modified[0])))
 
         if self.m.stageable():
             menu.addSeparator()
-            action = menu.addAction(icons.add(), N_('Stage Selected'),
-                                    cmds.run(cmds.Stage, self.unstaged()))
+            action = menu.addAction(
+                icons.add(), N_('Stage Selected'),
+                cmds.run(cmds.Stage, context, self.unstaged()))
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.view_history_action)
@@ -891,10 +901,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def double_clicked(self, item, idx):
         """Called when an item is double-clicked in the repo status tree."""
-        cmds.do(cmds.StageOrUnstage)
+        cmds.do(cmds.StageOrUnstage, self.context)
 
     def show_selection(self):
         """Show the selected item."""
+        context = self.context
         self.scroll_to_item(self.currentItem())
         # Sync the selection model
         selected = self.selection()
@@ -921,7 +932,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 # self.idx_unmerged: cmds.UnmergedSummary,
                 self.idx_untracked: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
-            cmds.do(cls, self.context)
+            cmds.do(cls, context)
             return
 
         staged = category == self.idx_staged
