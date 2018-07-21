@@ -1,7 +1,7 @@
 """Provides widgets related to branches"""
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import re
+from functools import partial
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -30,9 +30,7 @@ NAME_TAGS_BRANCH = N_('Tags')
 
 
 def defer_fn(parent, title, fn, *args, **kwargs):
-    partial = functools.partial(fn, *args, **kwargs)
-    action = qtutils.add_action(parent, title, partial)
-    return action
+    return qtutils.add_action(parent, title, partial(fn, *args, **kwargs))
 
 
 def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, fn):
