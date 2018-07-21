@@ -1797,11 +1797,11 @@ class Refresh(ContextCommand):
         self.fsmonitor.refresh()
 
 
-class RefreshConfig(CommandMixin):
+class RefreshConfig(ContextCommand):
     """Refresh the git config cache"""
 
     def do(self):
-        gitcfg.current().update()
+        self.cfg.update()
 
 
 class RevertEditsCommand(ConfirmAction):
