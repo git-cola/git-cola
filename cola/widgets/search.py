@@ -100,9 +100,9 @@ class SearchWidget(standard.Dialog):
         self.init_size(parent=parent)
 
 
-def search():
+def search(context):
     """Return a callback to handle various search actions."""
-    return search_commits(qtutils.active_window())
+    return search_commits(context, qtutils.active_window())
 
 
 class SearchEngine(object):
@@ -199,8 +199,9 @@ class DateRangeSearch(SearchEngine):
 
 class Search(SearchWidget):
 
-    def __init__(self, model, parent):
+    def __init__(self, context, model, parent):
         SearchWidget.__init__(self, parent)
+        self.context = context
         self.model = model
 
         self.EXPR = N_('Search by Expression')
@@ -346,8 +347,8 @@ class Search(SearchWidget):
             Interaction.log_status(*git.cherry_pick(revision))
 
 
-def search_commits(parent):
+def search_commits(context, parent):
     opts = SearchOptions()
-    widget = Search(opts, parent)
+    widget = Search(context, opts, parent)
     widget.show()
     return widget

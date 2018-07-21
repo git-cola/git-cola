@@ -288,7 +288,7 @@ class MainView(standard.MainWindow):
             self, N_('Visualize All Branches...'),
             cmds.run(cmds.VisualizeAll, context))
         self.search_commits_action = add_action(
-            self, N_('Search...'), search.search)
+            self, N_('Search...'), partial(search.search, context))
 
         self.browse_branch_action = add_action(
             self, N_('Browse Current Branch...'),

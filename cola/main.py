@@ -497,7 +497,7 @@ def cmd_remote(args):
 def cmd_search(args):
     from .widgets.search import search
     context = app.application_init(args)
-    view = search()
+    view = search(context)
     return app.application_start(context, view)
 
 

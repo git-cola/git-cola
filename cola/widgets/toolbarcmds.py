@@ -166,7 +166,6 @@ COMMANDS = {
     },
     'Actions::Search': {
         'title': 'Search...',
-        'context': False,
         'action': search.search,
         'icon': 'search'
     },
