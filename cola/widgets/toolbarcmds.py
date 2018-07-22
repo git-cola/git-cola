@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 from .. import cmds
 from .. import guicmds
+from ..widgets import archive
 from ..widgets import browse
 from ..widgets import compare
 from ..widgets import createbranch
@@ -25,32 +26,27 @@ COMMANDS = {
     },
     'Others::RevertUnstagedEdits': {
         'title': 'Revert Unstaged Edits...',
-        'context': False,
         'action': cmds.run(cmds.RevertUnstagedEdits),
         'icon': 'undo'
     },
     'File::NewRepo': {
         'title': 'New Repository...',
-        'context': False,
         'action': guicmds.open_new_repo,
         'icon': 'new'
     },
     'File::OpenRepo': {
         'title': 'Open...',
-        'context': False,
         'action': guicmds.open_repo,
         'icon': 'folder'
     },
     'File::OpenRepoNewWindow': {
         'title': 'Open in New Window...',
-        'context': False,
         'action': guicmds.open_repo_in_new_window,
         'icon': 'folder'
     },
     # 'File::CloneRepo': {
     #     'title': 'Clone...',
-    #     'context': False,
-    #     'action': lambda: app().activeWindow().clone_repo(),
+    #     'action': guicmds.spawn_clone,
     #     'icon': 'repo'
     # },
     'File::Refresh': {
@@ -60,61 +56,51 @@ COMMANDS = {
     },
     'File::FindFiles': {
         'title': 'Find Files',
-        'context': False,
         'action': finder.finder,
         'icon': 'zoom_in'
     },
     'File::EditRemotes': {
         'title': 'Edit Remotes...',
-        'context': False,
         'action': editremotes.editor,
         'icon': None
     },
     'File::RecentModified': {
         'title': 'Recently Modified Files...',
-        'context': False,
         'action': recent.browse_recent_files,
         'icon': None
     },
     'File::ApplyPatches': {
         'title': 'Apply Patches...',
-        'context': False,
         'action': patch.apply_patches,
         'icon': None
     },
     'File::ExportPatches': {
         'title': 'Export Patches...',
-        'context': False,
         'action': guicmds.export_patches,
         'icon': None
     },
     # 'File::SaveAsTarZip': {
     #     'title': 'Save As Tarball/Zip...',
-    #     'context': False,
-    #     'action': lambda: app().activeWindow().save_archive(),
+    #     'action': archive.save_archive,
     #     'icon': 'file_zip'
     # },
     # 'File::Preferences': {
     #     'title': 'Preferences',
-    #     'context': False,
-    #     'action': lambda: app().activeWindow().preferences(),
+    #     'action': prefs.preferences,
     #     'icon': 'configure'
     # },
     'Actions::Fetch': {
         'title': 'Fetch...',
-        'context': False,
         'action': remote.fetch,
         'icon': None
     },
     'Actions::Pull': {
         'title': 'Pull...',
-        'context': False,
         'action': remote.pull,
         'icon': 'pull'
     },
     'Actions::Push': {
         'title': 'Push...',
-        'context': False,
         'action': remote.push,
         'icon': 'push'
     },
@@ -125,37 +111,31 @@ COMMANDS = {
     },
     'Actions::CreateTag': {
         'title': 'Create Tag...',
-        'context': False,
         'action': createtag.create_tag,
         'icon': 'tag'
     },
     'Actions::CherryPick': {
         'title': 'Cherry-Pick...',
-        'context': False,
         'action': guicmds.cherry_pick,
         'icon': None
     },
     'Actions::Merge': {
         'title': 'Merge...',
-        'context': False,
         'action': merge.local_merge,
         'icon': 'merge'
     },
     'Actions::AbortMerge': {
         'title': 'Abort Merge...',
-        'context': False,
         'action': cmds.run(cmds.AbortMerge),
         'icon': None
     },
     'Actions::ResetBranchHead': {
         'title': 'Reset Branch Head',
-        'context': False,
         'action': guicmds.reset_branch_head,
         'icon': None
     },
     'Actions::ResetWorktree': {
         'title': 'Reset Worktree',
-        'context': False,
         'action': guicmds.reset_worktree,
         'icon': None
     },

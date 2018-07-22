@@ -49,16 +49,16 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         # Actions
         self.signoff_action = qtutils.add_action(
-            self, cmds.SignOff.name(),
-            cmds.run(cmds.SignOff, self.context), hotkeys.SIGNOFF)
+            self, cmds.SignOff.name(), cmds.run(cmds.SignOff, context),
+            hotkeys.SIGNOFF)
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
-        self.commit_action = qtutils.add_action(self,
-                                                N_('Commit@@verb'),
-                                                self.commit, hotkeys.COMMIT)
+        self.commit_action = qtutils.add_action(
+            self, N_('Commit@@verb'), self.commit, hotkeys.COMMIT)
         self.commit_action.setIcon(icons.commit())
         self.commit_action.setToolTip(N_('Commit staged changes'))
-        self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
+        self.clear_action = qtutils.add_action(
+            self, N_('Clear...'), self.clear)
 
         self.launch_editor = actions.launch_editor(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
@@ -419,6 +419,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
+        context = self.context
         if not bool(get(self.summary)):
             # Describe a good commit message
             error_msg = N_(
@@ -431,7 +432,6 @@ class CommitMessageEditor(QtWidgets.QWidget):
             Interaction.information(N_('Missing Commit Message'), error_msg)
             return
 
-        context = self.context
         msg = self.commit_message(raw=False)
 
         # we either need to have something staged, or be merging
@@ -467,7 +467,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             return
         no_verify = get(self.bypass_commit_hooks_action)
         sign = get(self.sign_action)
-        cmds.do(cmds.Commit, amend, msg, sign, no_verify=no_verify)
+        cmds.do(cmds.Commit, context, amend, msg, sign, no_verify=no_verify)
         self.bypass_commit_hooks_action.setChecked(False)
 
     def build_fixup_menu(self):
@@ -482,6 +482,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
                                 self.choose_commit_message)
 
     def build_commits_menu(self, cmd, menu, chooser, prefix=''):
+        context = self.context
         ctx = dag.DAG('HEAD', 6)
         commits = dag.RepoReader(ctx)
 
@@ -492,7 +493,6 @@ class CommitMessageEditor(QtWidgets.QWidget):
                 continue
 
         menu.clear()
-        context = self.context
         for c in menu_commits:
             menu.addAction(prefix + c.summary, cmds.run(cmd, context, c.oid))
 
@@ -501,13 +501,14 @@ class CommitMessageEditor(QtWidgets.QWidget):
             menu.addAction(N_('More...'), chooser)
 
     def choose_commit(self, cmd):
+        context = self.context
         revs, summaries = gitcmds.log_helper()
-        oids = select_commits(N_('Select Commit'), revs, summaries,
-                              multiselect=False)
+        oids = select_commits(
+            context, N_('Select Commit'), revs, summaries, multiselect=False)
         if not oids:
             return
         oid = oids[0]
-        cmds.do(cmd, self.context, oid)
+        cmds.do(cmd, context, oid)
 
     def choose_commit_message(self):
         self.choose_commit(cmds.LoadCommitMessageFromOID)

@@ -12,19 +12,19 @@ from . import defs
 from .standard import Dialog
 
 
-def gitignore_view():
+def gitignore_view(context):
     """Launches a gitignore dialog
     """
-    view = AddToGitIgnore(parent=qtutils.active_window())
+    view = AddToGitIgnore(context, parent=qtutils.active_window())
     view.show()
-    view.raise_()
     return view
 
 
 class AddToGitIgnore(Dialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         Dialog.__init__(self, parent=parent)
+        self.context = context
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle(N_('Add to .gitignore'))
@@ -90,5 +90,6 @@ class AddToGitIgnore(Dialog):
         self.reject()
 
     def apply(self):
-        cmds.do(cmds.Ignore, self.edit_filename.text().split(';'))
+        context = self.context
+        cmds.do(cmds.Ignore, context, self.edit_filename.text().split(';'))
         self.accept()

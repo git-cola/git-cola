@@ -126,10 +126,12 @@ class ViewerMixin(object):
         self.diff_commits.emit(clicked_oid, selected_oid)
 
     def cherry_pick(self):
-        self.with_oid(lambda oid: cmds.do(cmds.CherryPick, [oid]))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.CherryPick, context, [oid]))
 
     def revert(self):
-        self.with_oid(lambda oid: cmds.do(cmds.Revert, oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.Revert, context, oid))
 
     def copy_to_clipboard(self):
         self.with_oid(lambda oid: qtutils.set_clipboard(oid))
@@ -140,7 +142,8 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: create_new_branch(revision=oid))
 
     def create_tag(self):
-        self.with_oid(lambda oid: createtag.create_tag(ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: createtag.create_tag(context, ref=oid))
 
     def create_tarball(self):
         self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
@@ -158,19 +161,26 @@ class ViewerMixin(object):
                                  dir_diff=True))
 
     def reset_branch_head(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid:
+            cmds.do(cmds.ResetBranchHead, context, ref=oid))
 
     def reset_worktree(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid:
+            cmds.do(cmds.ResetWorktree, context, ref=oid))
 
     def reset_merge(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, context, ref=oid))
 
     def reset_soft(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, context, ref=oid))
 
     def reset_hard(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, context, ref=oid))
 
     def checkout_detached(self):
         context = self.context
@@ -465,9 +475,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         items = self.selectedItems()
         if not items:
             return
+        context = self.context
         oids = [item.commit.oid for item in reversed(items)]
         all_oids = [c.oid for c in self.commits]
-        cmds.do(cmds.FormatPatch, oids, all_oids)
+        cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -527,9 +538,9 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.treewidget = CommitTreeWidget(context, notifier, self)
-        self.filewidget = filelist.FileWidget(notifier, self)
         self.diffwidget = diff.DiffWidget(context, notifier, self,
                                           is_commit=True)
+        self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, notifier, self)
 
         self.proxy = FocusRedirectProxy(self.treewidget,
@@ -1420,10 +1431,11 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         items = self.selected_items()
         if not items:
             return
+        context = self.context
         selected_commits = self.sort_by_generation([n.commit for n in items])
         oids = [c.oid for c in selected_commits]
         all_oids = [c.oid for c in self.commits]
-        cmds.do(cmds.FormatPatch, oids, all_oids)
+        cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""

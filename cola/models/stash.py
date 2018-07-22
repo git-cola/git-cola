@@ -72,6 +72,7 @@ class ApplyStash(cmds.ContextCommand):
             cmdargs = core.list2cmdline(args)
             Interaction.command_error(
                 title, 'git stash ' + cmdargs, status, out, err)
+        self.model.update_status()
 
 
 class DropStash(cmds.ContextCommand):
@@ -111,6 +112,8 @@ class SaveStash(cmds.ContextCommand):
             cmdargs = core.list2cmdline(args)
             Interaction.command_error(
                 title, 'git stash ' + cmdargs, status, out, err)
+
+        self.model.update_status()
 
 
 class StashIndex(cmds.ContextCommand):
@@ -189,6 +192,8 @@ class StashIndex(cmds.ContextCommand):
             git.reset()
         else:
             stash_error('apply', status, out, err)
+
+        self.model.update_status()
 
 
 def stash_error(cmd, status, out, err):

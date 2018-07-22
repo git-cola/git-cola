@@ -24,17 +24,18 @@ from . import standard
 from . import text
 
 
-def finder(paths=None):
+def finder(context, paths=None):
     """Prompt and use 'git grep' to find the content."""
-    widget = new_finder(paths=paths, parent=qtutils.active_window())
+    parent = qtutils.active_window()
+    widget = new_finder(context, paths=paths, parent=parent)
     widget.show()
     widget.raise_()
     return widget
 
 
-def new_finder(paths=None, parent=None):
+def new_finder(context, paths=None, parent=None):
     """Create a finder widget"""
-    widget = Finder(parent=parent)
+    widget = Finder(context, parent=parent)
     widget.search_for(paths or '')
     return widget
 
@@ -101,8 +102,9 @@ class FindFilesThread(QtCore.QThread):
 class Finder(standard.Dialog):
     """File Finder dialog"""
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
+        self.context = context
         self.setWindowTitle(N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -201,12 +203,14 @@ class Finder(standard.Dialog):
         self.refresh_button.setEnabled(True)
 
     def edit(self):
+        context = self.context
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.Edit, paths, background_editor=True)
+        cmds.do(cmds.Edit, context, paths, background_editor=True)
 
     def open_default(self):
+        context = self.context
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.OpenDefaultApp, paths)
+        cmds.do(cmds.OpenDefaultApp, context, paths)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())

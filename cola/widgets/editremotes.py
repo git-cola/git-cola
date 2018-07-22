@@ -23,23 +23,23 @@ from . import standard
 from . import text
 
 
-def editor(run=True):
-    view = RemoteEditor(parent=qtutils.active_window())
+def editor(context, run=True):
+    view = RemoteEditor(context, parent=qtutils.active_window())
     if run:
         view.show()
-        view.raise_()
         view.exec_()
     return view
 
 
 class RemoteEditor(standard.Dialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Edit Remotes'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
+        self.context = context
         self.current_name = ''
         self.current_url = ''
 
@@ -73,7 +73,7 @@ class RemoteEditor(standard.Dialog):
         height = metrics.height() * 13
         self.info.setMinimumWidth(width)
         self.info.setMinimumHeight(height)
-        self.info_thread = RemoteInfoThread(self)
+        self.info_thread = RemoteInfoThread(context, self)
 
         icon = icons.add()
         tooltip = N_('Add new remote git repository')
@@ -154,6 +154,7 @@ class RemoteEditor(standard.Dialog):
     def save(self):
         if not self.changed:
             return
+        context = self.context
         name = self.editor.name
         url = self.editor.url
         name_changed = name and name != self.current_name
@@ -166,12 +167,13 @@ class RemoteEditor(standard.Dialog):
 
         # Run the corresponding command
         if name_changed and url_changed:
-            name_ok, url_ok = cmds.do(cmds.RemoteEdit, old_name, name, url)
+            name_ok, url_ok = cmds.do(
+                cmds.RemoteEdit, context, old_name, name, url)
         elif name_changed:
-            result = cmds.do(cmds.RemoteRename, old_name, name)
+            result = cmds.do(cmds.RemoteRename, context, old_name, name)
             name_ok = result[0]
         elif url_changed:
-            result = cmds.do(cmds.RemoteSetURL, name, url)
+            result = cmds.do(cmds.RemoteSetURL, context, name, url)
             url_ok = result[0]
 
         # Update state if the change succeeded
@@ -224,6 +226,7 @@ class RemoteEditor(standard.Dialog):
                 item.setSelected(True)
 
     def refresh(self, select=True):
+        git = self.context.git
         remotes = git.remote()[STDOUT].splitlines()
         self.remotes.blockSignals(True)  # ignore selection change signals
         self.remotes.clear()
@@ -249,14 +252,14 @@ class RemoteEditor(standard.Dialog):
                         item.setSelected(True)
 
     def add(self):
-        if add_remote(self):
+        if add_remote(self.context, self):
             self.refresh()
 
     def delete(self):
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if not remote:
             return
-        cmds.do(cmds.RemoteRemove, remote)
+        cmds.do(cmds.RemoteRemove, self.context, remote)
         self.refresh(select=False)
 
     def remote_item_renamed(self, item):
@@ -272,7 +275,9 @@ class RemoteEditor(standard.Dialog):
         if not new_name:
             item.setText(old_name)
             return
-        ok, status, out, err = cmds.do(cmds.RemoteRename, old_name, new_name)
+        context = self.context
+        ok, status, out, err = cmds.do(
+            cmds.RemoteRename, context, old_name, new_name)
         if ok and status == 0:
             self.remote_list[idx] = new_name
             self.activate_remote(new_name)
@@ -308,16 +313,15 @@ class RemoteEditor(standard.Dialog):
 
 
 
-def add_remote(parent, name='', url='',
-               readonly_url=False):
+def add_remote(context, parent, name='', url='', readonly_url=False):
     """Bring up the "Add Remote" dialog"""
-    widget = AddRemoteDialog(parent, readonly_url=readonly_url)
+    widget = AddRemoteDialog(context, parent, readonly_url=readonly_url)
     if name:
         widget.name = name
     if url:
         widget.url = url
     if widget.run():
-        cmds.do(cmds.RemoteAdd, widget.name, widget.url)
+        cmds.do(cmds.RemoteAdd, context, widget.name, widget.url)
         result = True
     else:
         result = False
@@ -334,14 +338,16 @@ def restore_focus(focus):
 class RemoteInfoThread(QtCore.QThread):
     result = Signal(object)
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.remote = None
 
     def run(self):
         remote = self.remote
         if remote is None:
             return
+        git = self.context.git
         status, out, err = git.remote('show', remote)
         # This call takes a long time and we may have selected a
         # different remote...
@@ -353,10 +359,11 @@ class RemoteInfoThread(QtCore.QThread):
 
 class AddRemoteDialog(QtWidgets.QDialog):
 
-    def __init__(self, parent, readonly_url=False):
+    def __init__(self, context, parent, readonly_url=False):
         super(AddRemoteDialog, self).__init__(parent)
-
-        self.setWindowModality(Qt.WindowModal)
+        self.context = context
+        if parent:
+            self.setWindowModality(Qt.WindowModal)
 
         self.widget = RemoteWidget(self, readonly_url=readonly_url)
         self.add_button = qtutils.create_button(
@@ -390,6 +397,12 @@ class AddRemoteDialog(QtWidgets.QDialog):
         return self.exec_() == QtWidgets.QDialog.Accepted
 
 
+def lineedit(hint):
+    widget = text.HintedLineEdit(hint)
+    metrics = QtGui.QFontMetrics(widget.font())
+    widget.setMinimumWidth(metrics.width('M' * 32))
+    return widget
+
 
 class RemoteWidget(QtWidgets.QWidget):
 
@@ -402,12 +415,6 @@ class RemoteWidget(QtWidgets.QWidget):
     def __init__(self, parent, readonly_url=False):
         super(RemoteWidget, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
-
-        def lineedit(hint):
-            widget = text.HintedLineEdit(hint)
-            metrics = QtGui.QFontMetrics(widget.font())
-            widget.setMinimumWidth(metrics.width('_' * 32))
-            return widget
 
         self.setWindowTitle(N_('Add remote'))
         self.remote_name = lineedit(N_('Name for the new remote'))
@@ -444,7 +451,8 @@ class RemoteWidget(QtWidgets.QWidget):
         self.valid.emit(bool(name) and bool(url))
 
     def open_repo(self):
+        git = self.context.git
         repo = qtutils.opendir_dialog(
             N_('Open Git Repository...'), core.getcwd())
-        if repo and git.is_git_dir(repo):
+        if repo and git.is_git_repository(repo):
             self.url = repo

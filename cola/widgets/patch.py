@@ -15,16 +15,16 @@ from .standard import DraggableTreeWidget
 from . import defs
 
 
-def apply_patches():
+def apply_patches(context):
     parent = qtutils.active_window()
-    dlg = new_apply_patches(parent=parent)
+    dlg = new_apply_patches(context, parent=parent)
     dlg.show()
     dlg.raise_()
     return dlg
 
 
-def new_apply_patches(patches=None, parent=None):
-    dlg = ApplyPatches(parent=parent)
+def new_apply_patches(context, patches=None, parent=None):
+    dlg = ApplyPatches(context, parent=parent)
     if patches:
         dlg.add_paths(patches)
     return dlg
@@ -61,8 +61,9 @@ def get_patches_from_dir(path):
 
 class ApplyPatches(Dialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         super(ApplyPatches, self).__init__(parent=parent)
+        self.context = context
         self.setWindowTitle(N_('Apply Patches'))
         self.setAcceptDrops(True)
         if parent is not None:
@@ -126,8 +127,9 @@ class ApplyPatches(Dialog):
         items = self.tree.items()
         if not items:
             return
+        context = self.context
         patches = [i.data(0, Qt.UserRole) for i in items]
-        cmds.do(cmds.ApplyPatches, patches)
+        cmds.do(cmds.ApplyPatches, context, patches)
         self.accept()
 
     def add_files(self):

@@ -148,7 +148,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.revert_unstaged_edits_action = qtutils.add_action(
             self, cmds.RevertUnstagedEdits.name(),
-            cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
+            cmds.run(cmds.RevertUnstagedEdits, context), hotkeys.REVERT)
         self.revert_unstaged_edits_action.setIcon(icons.undo())
 
         self.launch_difftool_action = qtutils.add_action(
@@ -161,10 +161,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         if not utils.is_win32():
             self.default_app_action = common.default_app_action(
-                self, self.selected_group)
+                context, self, self.selected_group)
 
             self.parent_dir_action = common.parent_dir_action(
-                self, self.selected_group)
+                context, self, self.selected_group)
 
             self.terminal_action = common.terminal_action(
                 context, self, self.selected_group)
@@ -659,10 +659,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_staged_submodule_context_menu(self, menu, s):
         context = self.context
+        path = core.abspath(s.staged[0])
         menu.addAction(icons.cola(), N_('Launch git-cola'),
-                       cmds.run(cmds.OpenRepo,
-                                core.abspath(s.staged[0])))
-
+                       cmds.run(cmds.OpenRepo, context, path))
         action = menu.addAction(
             icons.remove(), N_('Unstage Selected'),
             cmds.run(cmds.Unstage, context, self.staged()))
@@ -730,7 +729,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
             menu.addAction(icons.edit(), N_('Add to .gitignore'),
-                           gitignore.gitignore_view)
+                           partial(gitignore.gitignore_view, self.context))
 
         if not self.selection_model.is_empty():
             menu.addAction(self.view_history_action)
@@ -739,8 +738,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_modified_submodule_context_menu(self, menu, s):
         context = self.context
+        path = core.abspath(s.modified[0])
         menu.addAction(icons.cola(), N_('Launch git-cola'),
-                       cmds.run(cmds.OpenRepo, core.abspath(s.modified[0])))
+            cmds.run(cmds.OpenRepo, context, path))
 
         if self.m.stageable():
             menu.addSeparator()
@@ -753,10 +753,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return menu
 
     def _delete_untracked_files(self):
-        cmds.do(cmds.Delete, self.untracked())
+        cmds.do(cmds.Delete, self.context, self.untracked())
 
     def _trash_untracked_files(self):
-        cmds.do(cmds.MoveToTrash, self.untracked())
+        cmds.do(cmds.MoveToTrash, self.context, self.untracked())
 
     def selected_path(self):
         s = self.single_selection()
@@ -913,9 +913,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         selected_indexes = self.selected_indexes()
         if not selected_indexes:
             if self.m.amending():
-                cmds.do(cmds.SetDiffText, '')
+                cmds.do(cmds.SetDiffText, context, '')
             else:
-                cmds.do(cmds.ResetMode)
+                cmds.do(cmds.ResetMode, context)
             return
 
         # A header item e.g. 'Staged', 'Modified', etc.
@@ -955,16 +955,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Images are diffed differently
         if image:
-            cmds.do(cmds.DiffImage, path, deleted,
+            cmds.do(cmds.DiffImage, context, path, deleted,
                     staged, modified, unmerged, untracked)
         elif staged:
-            cmds.do(cmds.DiffStaged, path, deleted=deleted)
+            cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
         elif modified:
-            cmds.do(cmds.Diff, path, deleted=deleted)
+            cmds.do(cmds.Diff, context, path, deleted=deleted)
         elif unmerged:
-            cmds.do(cmds.Diff, path)
+            cmds.do(cmds.Diff, context, path)
         elif untracked:
-            cmds.do(cmds.ShowUntracked, path)
+            cmds.do(cmds.ShowUntracked, context, path)
 
     def move_up(self):
         idx = self.selected_idx()
@@ -1020,12 +1020,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
 def view_blame(context):
     """Signal that we should view blame for paths."""
-    cmds.do(cmds.BlamePaths, selection.union(context.selection))
+    cmds.do(cmds.BlamePaths, context, selection.union(context.selection))
 
 
 def view_history(context):
     """Signal that we should view history for paths."""
-    cmds.do(cmds.VisualizePaths, selection.union(context.selection))
+    cmds.do(cmds.VisualizePaths, context, selection.union(context.selection))
 
 
 def copy_path(context, absolute=True):

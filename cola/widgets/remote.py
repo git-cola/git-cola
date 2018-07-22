@@ -25,33 +25,33 @@ PUSH = 'PUSH'
 PULL = 'PULL'
 
 
-def fetch():
+def fetch(context):
     """Fetch from remote repositories"""
-    return run(Fetch)
+    return run(context, Fetch)
 
 
-def push():
+def push(context):
     """Push to remote repositories"""
-    return run(Push)
+    return run(context, Push)
 
 
-def pull():
+def pull(context):
     """Pull from remote repositories"""
-    return run(Pull)
+    return run(context, Pull)
 
 
-def run(RemoteDialog):
+def run(context, RemoteDialog):
     """Launches fetch/push/pull dialogs."""
     # Copy global stuff over to speedup startup
     model = main.MainModel()
-    global_model = main.model()
+    global_model = context.model
     model.currentbranch = global_model.currentbranch
     model.local_branches = global_model.local_branches
     model.remote_branches = global_model.remote_branches
     model.tags = global_model.tags
     model.remotes = global_model.remotes
     parent = qtutils.active_window()
-    view = RemoteDialog(model, parent=parent)
+    view = RemoteDialog(context, model, parent=parent)
     view.show()
     return view
 
@@ -114,10 +114,11 @@ class ActionTask(qtutils.Task):
 class RemoteActionDialog(standard.Dialog):
     """Interface for performing remote operations"""
 
-    def __init__(self, model, action, title, parent=None, icon=None):
+    def __init__(self, context, model, action, title, parent=None, icon=None):
         """Customize the dialog based on the remote action"""
-
         standard.Dialog.__init__(self, parent=parent)
+
+        self.context = context
         self.model = model
         self.action = action
         self.filtered_remote_branches = []
@@ -606,9 +607,10 @@ class RemoteActionDialog(standard.Dialog):
 class Fetch(RemoteActionDialog):
     """Fetch from remote repositories"""
 
-    def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, FETCH, N_('Fetch'),
-                                    parent=parent, icon=icons.repo())
+    def __init__(self, context, model, parent=None):
+        super(Fetch, self).__init__(
+            context, model, FETCH, N_('Fetch'),
+            parent=parent, icon=icons.repo())
 
     def export_state(self):
         """Export persistent settings"""
@@ -630,9 +632,9 @@ class Fetch(RemoteActionDialog):
 class Push(RemoteActionDialog):
     """Push to remote repositories"""
 
-    def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PUSH, N_('Push'),
-                                    parent=parent, icon=icons.push())
+    def __init__(self, context, model, parent=None):
+        super(Push, self).__init__(
+            context, model, PUSH, N_('Push'), parent=parent, icon=icons.push())
 
     def export_state(self):
         """Export persistent settings"""
@@ -656,9 +658,9 @@ class Push(RemoteActionDialog):
 class Pull(RemoteActionDialog):
     """Pull from remote repositories"""
 
-    def __init__(self, model, parent=None):
-        RemoteActionDialog.__init__(self, model, PULL, N_('Pull'),
-                                    parent=parent, icon=icons.pull())
+    def __init__(self, context, model, parent=None):
+        super(Pull, self).__init__(
+            context, model, PULL, N_('Pull'), parent=parent, icon=icons.pull())
 
     def apply_state(self, state):
         """Apply persistent settings"""

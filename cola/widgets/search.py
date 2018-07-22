@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 
 from ..i18n import N_
 from ..interaction import Interaction
-from ..git import git
 from ..git import STDOUT
 from ..qtutils import connect_button
 from ..qtutils import create_toolbutton
@@ -38,8 +37,10 @@ class SearchOptions(object):
 
 class SearchWidget(standard.Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent)
+
+        self.context = context
         self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtWidgets.QComboBox()
@@ -68,7 +69,7 @@ class SearchWidget(standard.Dialog):
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
         self.commit_list.setSelectionMode(selection_mode)
 
-        self.commit_text = diff.DiffTextEdit(self, whitespace=False)
+        self.commit_text = diff.DiffTextEdit(context, self, whitespace=False)
 
         self.button_export = qtutils.create_button(text=N_('Export Patches'),
                                                    icon=icons.diff())
@@ -106,7 +107,8 @@ def search(context):
 
 
 class SearchEngine(object):
-    def __init__(self, model):
+    def __init__(self, context, model):
+        self.context = context
         self.model = model
 
     def rev_args(self):
@@ -129,6 +131,7 @@ class SearchEngine(object):
         return len(self.model.query) > 1
 
     def revisions(self, *args, **kwargs):
+        git = self.context.git
         revlist = git.log(*args, **kwargs)[STDOUT]
         return gitcmds.parse_rev_list(revlist)
 
@@ -176,6 +179,7 @@ class CommitterSearch(SearchEngine):
 class DiffSearch(SearchEngine):
 
     def results(self):
+        git = self.context.git
         query, kwargs = self.common_args()
         return gitcmds.parse_rev_list(
             git.log('-S'+query, all=True, **kwargs)[STDOUT])
@@ -200,8 +204,13 @@ class DateRangeSearch(SearchEngine):
 class Search(SearchWidget):
 
     def __init__(self, context, model, parent):
-        SearchWidget.__init__(self, parent)
-        self.context = context
+        """
+        Search diffs and commit logs
+
+        :param model: SearchOptions instance
+
+        """
+        SearchWidget.__init__(self, context, parent)
         self.model = model
 
         self.EXPR = N_('Search by Expression')
@@ -289,7 +298,7 @@ class Search(SearchWidget):
         self.model.start_date = get(self.start_date)
         self.model.end_date = get(self.end_date)
 
-        self.results = engineclass(self.model).search()
+        self.results = engineclass(self.context, self.model).search()
         if self.results:
             self.display_results()
         else:
@@ -342,6 +351,7 @@ class Search(SearchWidget):
                                                             revision))
 
     def cherry_pick(self):
+        git = self.context.git
         revision = self.selected_revision()
         if revision is not None:
             Interaction.log_status(*git.cherry_pick(revision))

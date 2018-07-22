@@ -11,7 +11,6 @@ from ..compat import odict
 from ..compat import unichr
 from ..i18n import N_
 from ..interaction import Interaction
-from ..models import main
 from ..widgets import defs
 from ..widgets import standard
 from ..qtutils import get
@@ -65,7 +64,7 @@ class AsyncGitActionTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QWidget):
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
         tooltip = N_('Toggle the branches filter')
@@ -73,7 +72,7 @@ class BranchesWidget(QtWidgets.QWidget):
         self.filter_button = qtutils.create_action_button(tooltip=tooltip,
                                                           icon=icon)
 
-        self.tree = BranchesTreeWidget(parent=self)
+        self.tree = BranchesTreeWidget(context, parent=self)
         self.filter_widget = BranchesFilterWidget(self.tree)
         self.filter_widget.hide()
 
@@ -101,16 +100,17 @@ class BranchesWidget(QtWidgets.QWidget):
 class BranchesTreeWidget(standard.TreeWidget):
     updated = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent)
+
+        self.context =  context
+        self.main_model = model = context.model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
         self.setAlternatingRowColors(False)
         self.setColumnCount(1)
         self.setExpandsOnDoubleClick(False)
-
-        self.main_model = model = main.model()
 
         self.tree_helper = BranchesTreeHelper()
         self.git_helper = GitHelper(model.git)
@@ -303,9 +303,10 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def set_upstream(self, branch, remote_branch):
         """Configure the upstream for a branch"""
-        remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
-        if remote and branch_name:
-            cmds.do(cmds.SetUpstreamBranch, branch, remote, branch_name)
+        context = self.context
+        remote, r_branch = gitcmds.parse_remote_branch(remote_branch)
+        if remote and r_branch:
+            cmds.do(cmds.SetUpstreamBranch, context, branch, remote, r_branch)
 
     def save_tree_state(self):
         states = {}
@@ -366,7 +367,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         if task.refresh_tree:
             self.refresh()
         if task.update_remotes:
-            model = main.model()
+            model = self.main_model
             model.update_remotes()
 
     def push_action(self):

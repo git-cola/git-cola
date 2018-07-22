@@ -5,8 +5,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..cmds import do
-from ..git import git
 from ..i18n import N_
 from ..qtutils import diff_font
 from ..utils import Group
@@ -48,12 +46,12 @@ def parse_grep_line(line):
     return result
 
 
-def goto_grep(line):
+def goto_grep(context, line):
     """Called when Search -> Grep's right-click 'goto' action."""
     parsed_line = parse_grep_line(line)
     if parsed_line:
         filename, line_number, contents = parsed_line
-        do(cmds.Edit, [filename],
+        cmds.do(cmds.Edit, context, [filename],
             line_number=line_number, background_editor=True)
 
 
@@ -62,8 +60,9 @@ class GrepThread(QtCore.QThread):
 
     result = Signal(object, object, object)
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.query = None
         self.shell = False
         self.regexp_mode = '--basic-regexp'
@@ -71,6 +70,7 @@ class GrepThread(QtCore.QThread):
     def run(self):
         if self.query is None:
             return
+        git = self.context.git
         query = self.query
         if self.shell:
             args = utils.shell_split(query)
@@ -112,20 +112,18 @@ class Grep(Dialog):
         combo.addItems(items)
         combo.setCurrentIndex(0)
         combo.setEditable(False)
-        combo.setItemData(
-                0,
-                N_('Search using a POSIX basic regular expression'),
-                Qt.ToolTipRole)
-        combo.setItemData(
-                1,
-                N_('Search using a POSIX extended regular expression'),
-                Qt.ToolTipRole)
-        combo.setItemData(2, N_('Search for a fixed string'), Qt.ToolTipRole)
+
+        tooltip0 = N_('Search using a POSIX basic regular expression')
+        tooltip1 = N_('Search using a POSIX extended regular expression')
+        tooltip2 = N_('Search for a fixed string')
+        combo.setItemData(0, tooltip0, Qt.ToolTipRole)
+        combo.setItemData(1, tooltip1, Qt.ToolTipRole)
+        combo.setItemData(2, tooltip2, Qt.ToolTipRole)
         combo.setItemData(0, '--basic-regexp', Qt.UserRole)
         combo.setItemData(1, '--extended-regexp', Qt.UserRole)
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
-        self.result_txt = GrepTextView(N_('grep result...'), self)
+        self.result_txt = GrepTextView(context, N_('grep result...'), self)
 
         self.preview_txt = PreviewTextView(self)
         self.preview_txt.setFocusProxy(self.result_txt)
@@ -169,7 +167,7 @@ class Grep(Dialog):
                                        self.bottom_layout)
         self.setLayout(self.mainlayout)
 
-        thread = self.worker_thread = GrepThread(self)
+        thread = self.worker_thread = GrepThread(context, self)
         thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
         self.input_txt.textChanged.connect(lambda s: self.search())
@@ -277,7 +275,7 @@ class Grep(Dialog):
 
     def edit(self):
         """Launch an editor on the currently selected line"""
-        goto_grep(self.result_txt.selected_line()),
+        goto_grep(self.context, self.result_txt.selected_line()),
 
     def export_state(self):
         """Export persistent settings"""
@@ -298,9 +296,9 @@ class Grep(Dialog):
 class GrepTextView(VimHintedPlainTextEdit):
     """A text view with hotkeys for launching editors"""
 
-    def __init__(self, hint, parent):
+    def __init__(self, context, hint, parent):
         VimHintedPlainTextEdit.__init__(self, hint, parent=parent)
-
+        self.context = context
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)
 
@@ -311,7 +309,7 @@ class GrepTextView(VimHintedPlainTextEdit):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def edit(self):
-        goto_grep(self.selected_line())
+        goto_grep(self.context, self.selected_line())
 
 
 class PreviewTask(qtutils.Task):

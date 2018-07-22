@@ -14,20 +14,21 @@ from .diff import DiffTextEdit
 from .standard import Dialog
 
 
-def select_commits(title, revs, summaries, multiselect=True):
+def select_commits(context, title, revs, summaries, multiselect=True):
     """Use the SelectCommits to select commits from a list."""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommits(model, parent, title, multiselect=multiselect)
-
+    dialog = SelectCommits(
+        context, model, parent, title, multiselect=multiselect)
     return dialog.select_commits()
 
 
-def select_commits_and_output(title, revs, summaries, multiselect=True):
+def select_commits_and_output(context, title, revs, summaries,
+                              multiselect=True):
     """Use the SelectCommitsAndOutput to select commits from a list and output path."""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommitsAndOutput(model, parent, title,
+    dialog = SelectCommitsAndOutput(context, model, parent, title,
                                     multiselect=multiselect)
     return dialog.select_commits_and_output()
 
@@ -40,9 +41,10 @@ class Model(object):
 
 class SelectCommits(Dialog):
 
-    def __init__(self, model,
+    def __init__(self, context, model,
                  parent=None, title=None, multiselect=True, syntax=True):
         Dialog.__init__(self, parent)
+        self.context = context
         self.model = model
         if title:
             self.setWindowTitle(title)
@@ -55,7 +57,7 @@ class SelectCommits(Dialog):
         commits.setSelectionMode(mode)
         commits.setAlternatingRowColors(True)
 
-        self.commit_text = DiffTextEdit(self, whitespace=False)
+        self.commit_text = DiffTextEdit(context, self, whitespace=False)
 
         self.label = QtWidgets.QLabel()
         self.label.setText(N_('Revision Expression:'))
@@ -133,9 +135,10 @@ class SelectCommits(Dialog):
 
 class SelectCommitsAndOutput(SelectCommits):
 
-    def __init__(self, model, parent=None, title=None, multiselect=True,
-                 syntax=True):
-        SelectCommits.__init__(self, model, parent, title, multiselect, syntax)
+    def __init__(self, context, model, parent=None,
+                 title=None, multiselect=True, syntax=True):
+        SelectCommits.__init__(
+            self, context, model, parent, title, multiselect, syntax)
 
         self.output_dir = 'output'
         self.select_output = qtutils.create_button(tooltip=N_('Select output dir'),

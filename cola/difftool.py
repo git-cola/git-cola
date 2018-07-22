@@ -181,4 +181,4 @@ class Difftool(standard.Dialog):
 
     def edit(self):
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.Edit, paths)
+        cmds.do(cmds.Edit, self.context, paths)

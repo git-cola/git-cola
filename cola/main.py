@@ -325,16 +325,16 @@ def cmd_about(args):
 def cmd_am(args):
     from .widgets.patch import new_apply_patches
     context = app.application_init(args)
-    view = new_apply_patches(patches=args.patches)
+    view = new_apply_patches(context, patches=args.patches)
     return app.application_start(context, view)
 
 
 def cmd_archive(args):
-    from .widgets.archive import Archive
+    from .widgets import archive
     context = app.application_init(args, update=True)
     if args.ref is None:
         args.ref = context.model.currentbranch
-    view = Archive(args.ref)
+    view = archive.Archive(context, args.ref)
     return app.application_start(context, view)
 
 
@@ -356,20 +356,20 @@ def cmd_browse(args):
 def cmd_clone(args):
     from .widgets import clone
     context = app.application_init(args)
-    view = clone.prompt_for_clone(show=False, settings=args.settings)
+    view = clone.prompt_for_clone(context, show=False, settings=args.settings)
     return app.application_start(context, view)
 
 
 def cmd_config(args):
     from .widgets.prefs import preferences
     context = app.application_init(args)
-    view = preferences()
+    view = preferences(context)
     return app.application_start(context, view)
 
 
 def cmd_dag(args):
-    context = app.application_init(args)
     from .widgets import dag
+    context = app.application_init(args)
     # cola.main() uses parse_args(), unlike dag.main() which uses
     # parse_known_args(), thus we aren't able to automatically forward
     # all unknown arguments.  Special-case support for "--all" since it's
@@ -381,8 +381,8 @@ def cmd_dag(args):
 
 
 def cmd_diff(args):
-    context = app.application_init(args)
     from .difftool import diff_expression
+    context = app.application_init(args)
     expr = core.list2cmdline(args.args)
     view = diff_expression(context, None, expr, create_widget=True)
     return app.application_start(context, view)
@@ -391,33 +391,33 @@ def cmd_diff(args):
 def cmd_fetch(args):
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
-    context = app.application_init(args)
     from .widgets import remote
+    context = app.application_init(args)
     context.model.update_status()
-    view = remote.fetch()
+    view = remote.fetch(context)
     return app.application_start(context, view)
 
 
 def cmd_find(args):
-    context = app.application_init(args)
     from .widgets import finder
+    context = app.application_init(args)
     paths = core.list2cmdline(args.paths)
-    view = finder.finder(paths=paths)
+    view = finder.finder(context, paths=paths)
     return app.application_start(context, view)
 
 
 def cmd_grep(args):
-    context = app.application_init(args)
     from .widgets import grep
+    context = app.application_init(args)
     text = core.list2cmdline(args.args)
     view = grep.new_grep(context, text=text, parent=None)
     return app.application_start(context, view)
 
 
 def cmd_merge(args):
-    context = app.application_init(args, update=True)
     from .widgets.merge import Merge
-    view = Merge(context.cfg, context.model, parent=None, ref=args.ref)
+    context = app.application_init(args, update=True)
+    view = Merge(context, parent=None, ref=args.ref)
     return app.application_start(context, view)
 
 
@@ -430,7 +430,7 @@ def cmd_version(args):
 def cmd_pull(args):
     from .widgets import remote
     context = app.application_init(args, update=True)
-    view = remote.pull()
+    view = remote.pull(context)
     if args.rebase:
         view.set_rebase(True)
     return app.application_start(context, view)
@@ -439,7 +439,7 @@ def cmd_pull(args):
 def cmd_push(args):
     from .widgets import remote
     context = app.application_init(args, update=True)
-    view = remote.push()
+    view = remote.push(context)
     return app.application_start(context, view)
 
 
@@ -476,21 +476,22 @@ def cmd_rebase(args):
             'upstream': args.upstream,
             'branch': args.branch,
     }
-    status, out, err = cmds.do(cmds.Rebase, **kwargs)
+    context = app.application_init(args)
+    status, out, err = cmds.do(cmds.Rebase, context, **kwargs)
     return status
 
 
 def cmd_recent(args):
     from .widgets import recent
     context = app.application_init(args)
-    view = recent.browse_recent_files()
+    view = recent.browse_recent_files(context)
     return app.application_start(context, view)
 
 
 def cmd_remote(args):
     from .widgets import editremotes
     context = app.application_init(args)
-    view = editremotes.editor(run=False)
+    view = editremotes.editor(context, run=False)
     return app.application_start(context, view)
 
 
@@ -511,8 +512,8 @@ def cmd_stash(args):
 def cmd_tag(args):
     from .widgets.createtag import new_create_tag
     context = app.application_init(args)
-    view = new_create_tag(name=args.name, ref=args.ref, sign=args.sign,
-                          settings=args.settings)
+    view = new_create_tag(context, name=args.name, ref=args.ref,
+        sign=args.sign, settings=args.settings)
     return app.application_start(context, view)
 
 

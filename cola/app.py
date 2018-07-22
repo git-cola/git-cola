@@ -355,8 +355,6 @@ def application_init(args, update=False):
     selection_model = selection.selection_model()  # TODO non-singleton
     fsmon = fsmonitor.current()
 
-    # TODO switch all commands and widgets to use the context to access
-    # objects instead of using singleton accessor functions.
     context = ApplicationContext(
         args, app, cfg, gitcmd, timer, selection_model, fsmon)
 
@@ -465,7 +463,7 @@ def new_model(context, repo, prompt=False, settings=None):
         # If we've gotten into this loop then that means that neither the
         # current directory nor the default repository were available.
         # Prompt the user for a repository.
-        startup_dlg = startup.StartupDialog(qtutils.active_window(),
+        startup_dlg = startup.StartupDialog(context, qtutils.active_window(),
                                             settings=settings)
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
