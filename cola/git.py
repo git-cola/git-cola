@@ -56,6 +56,10 @@ def is_git_worktree(d):
     return is_git_dir(join(d, '.git'))
 
 
+def is_git_repository(path):
+    return is_git_worktree(path) or is_git_dir(path)
+
+
 def read_git_file(path):
     """Read the path from a .git-file
 
@@ -153,6 +157,9 @@ class Git(object):
         self._git_cwd = None  #: The working directory used by execute()
         self._valid = {}  #: Store the result of is_git_dir() for performance
         self.set_worktree(core.getcwd())
+
+    def is_git_repository(self, path):
+        return is_git_repository(path)
 
     def getcwd(self):
         return self._git_cwd
