@@ -57,6 +57,7 @@ class CommandMixin(object):
 
 
 class ContextCommand(CommandMixin):
+    """Base class for commands that operate on a context"""
 
     def __init__(self, context):
         self.context = context
@@ -69,6 +70,7 @@ class ContextCommand(CommandMixin):
 
 class EditContext(ContextCommand):
     """Commands that mutate the main model diff data"""
+    UNDOABLE = True
 
     def __init__(self, context):
         """Common edit operations on the main model"""
@@ -99,6 +101,7 @@ class EditContext(ContextCommand):
         self.model.set_diff_type(self.old_diff_type)
 
 class ConfirmAction(CommandMixin):
+    """Confirm an action before running it"""
 
     def ok_to_run(self):
         return True
@@ -267,6 +270,7 @@ class AmendMode(EditContext):
 
 
 class AnnexAdd(ContextCommand):
+    """Add to Git Annex"""
 
     def __init__(self, context):
         super(AnnexAdd, self).__init__(context)
@@ -279,6 +283,7 @@ class AnnexAdd(ContextCommand):
 
 
 class AnnexInit(ModelCommand):
+    """Initialize Git Annex"""
 
     def do(self):
         git = self.model.git
@@ -289,6 +294,7 @@ class AnnexInit(ModelCommand):
 
 
 class LFSTrack(ContextCommand):
+    """Add a file to git lfs"""
 
     def __init__(self, context):
         super(LFSTrack, self).__init__(context)
@@ -304,6 +310,7 @@ class LFSTrack(ContextCommand):
 
 
 class LFSInstall(ModelCommand):
+    """Initialize git lfs"""
 
     def do(self):
         git = self.model.git
@@ -314,6 +321,7 @@ class LFSInstall(ModelCommand):
 
 
 class ApplyDiffSelection(ModelCommand):
+    """Apply the selected diff to the worktree or index"""
 
     def __init__(self, first_line_idx, last_line_idx, has_selection,
                  reverse, apply_to_worktree):
