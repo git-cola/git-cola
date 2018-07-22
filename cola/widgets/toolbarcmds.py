@@ -147,7 +147,7 @@ COMMANDS = {
         'action': cmds.run(cmds.AbortMerge),
         'icon': None
     },
-    'Actions::ResetBrachHead': {
+    'Actions::ResetBranchHead': {
         'title': 'Reset Branch Head',
         'context': False,
         'action': guicmds.reset_branch_head,

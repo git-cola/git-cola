@@ -37,7 +37,7 @@ TREE_LAYOUT = {
         'Actions::CherryPick',
         'Actions::Merge',
         'Actions::AbortMerge',
-        'Actions::ResetBrachHead',
+        'Actions::ResetBranchHead',
         'Actions::ResetWorktree',
         'Actions::Grep',
         'Actions::Search'

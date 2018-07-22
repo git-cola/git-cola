@@ -55,7 +55,7 @@ class CmdsTestCase(unittest.TestCase):
         context = mock.Mock()
         model = context.model
 
-        cmd = cmds.EditContext(context)
+        cmd = cmds.EditModel(context)
         cmd.new_diff_text = 'test_diff_text'
         cmd.new_diff_type = 'test_diff_type'
         cmd.new_mode = 'test_mode'
