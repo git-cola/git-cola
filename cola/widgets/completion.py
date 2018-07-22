@@ -515,7 +515,7 @@ class GitCompletionModel(CompletionModel):
 
     def __init__(self, parent):
         CompletionModel.__init__(self, parent)
-        self.main_model = model = main.model()
+        self.main_model = model = main.model()  # TODO context
         msg = model.message_updated
         model.add_observer(msg, self.emit_model_updated)
 

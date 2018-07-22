@@ -49,6 +49,7 @@ class CreateTag(standard.Dialog):
         standard.Dialog.__init__(self, parent=parent)
 
         self.context = context
+        self.model = model = context.model
         self.opts = opts
 
         self.setWindowTitle(N_('Create Tag'))
@@ -62,7 +63,8 @@ class CreateTag(standard.Dialog):
         self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), parent=self)
         self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
-        qtutils.add_completer(self.tag_name, main.model().tags)
+
+        qtutils.add_completer(self.tag_name, model.tags)
 
         # Sign Tag
         self.sign_label = QtWidgets.QLabel(self)

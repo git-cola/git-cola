@@ -46,7 +46,7 @@ class StatusWidget(QtWidgets.QWidget):
         icon = icons.ellipsis()
         self.filter_button = qtutils.create_action_button(tooltip=tooltip,
                                                           icon=icon)
-        self.filter_widget = StatusFilterWidget()
+        self.filter_widget = StatusFilterWidget(context)
         self.filter_widget.hide()
         self.tree = StatusTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
@@ -238,7 +238,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        self.m = main.model()
+        self.m = context.model
         self.m.add_observer(self.m.message_about_to_update,
                             self.about_to_update.emit)
         self.m.add_observer(self.m.message_updated, self.updated.emit)
@@ -1082,9 +1082,9 @@ def show_help():
 
 class StatusFilterWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.main_model = main.model()
+        self.main_model = context.model
 
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)

@@ -75,7 +75,7 @@ class CreateThread(QtCore.QThread):
             self.command.emit(status, out, err)
             results.append(('checkout', status, out, err))
 
-        main.model().update_status()
+        model.update_status()
         self.result.emit(results)
 
 

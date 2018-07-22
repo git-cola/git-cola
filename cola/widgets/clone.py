@@ -34,6 +34,7 @@ class Clone(standard.Dialog):
     def __init__(self, context, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
+        self.model = context.model
 
         self.setWindowTitle(N_('Clone Repository'))
         if parent is not None:
@@ -119,7 +120,7 @@ class Clone(standard.Dialog):
 
         # Prompt the user for a directory to use as the parent directory
         msg = N_('Select a parent directory for the new clone')
-        dirname = qtutils.opendir_dialog(msg, main.model().getcwd())
+        dirname = qtutils.opendir_dialog(msg, self.model.getcwd())
         if not dirname:
             return
         count = 1
