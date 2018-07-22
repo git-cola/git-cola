@@ -93,7 +93,10 @@ def find_git_directory(curpath):
     paths = Paths(git_dir=core.getenv('GIT_DIR'),
                   worktree=core.getenv('GIT_WORK_TREE'),
                   git_file=None)
+    return find_git_paths(curpath, paths)
 
+
+def find_git_paths(curpath, paths):
     ceiling_dirs = set()
     ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
     if ceiling:
