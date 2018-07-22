@@ -362,8 +362,6 @@ def application_init(args, update=False):
 
     model = new_model(context, args.repo,
                       prompt=args.prompt, settings=args.settings)
-    context.model = model
-
     app.set_context(context)  # inject the context
 
     if update:
@@ -451,7 +449,7 @@ def new_application(args):
 
 def new_model(context, repo, prompt=False, settings=None):
     # TODO model = main.MainModel(context=context)
-    model = main.model()  # TODO non-singleton
+    context.model = model = main.model()  # TODO non-singleton
     valid = False
     if not prompt:
         valid = model.set_worktree(repo)
