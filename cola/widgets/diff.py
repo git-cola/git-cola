@@ -844,7 +844,7 @@ class DiffEditor(DiffTextEdit):
 
 class DiffWidget(QtWidgets.QWidget):
 
-    def __init__(self, notifier, context, parent, is_commit=False):
+    def __init__(self, context, notifier, parent, is_commit=False):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.context = context

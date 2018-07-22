@@ -162,7 +162,7 @@ class Editor(QtWidgets.QWidget):
         self.cancel_action = core.getenv('GIT_XBASE_CANCEL_ACTION', 'abort')
 
         self.notifier = notifier = observable.Observable()
-        self.diff = diff.DiffWidget(notifier, context, self)
+        self.diff = diff.DiffWidget(context, notifier, self)
         self.tree = RebaseTreeWidget(notifier, comment_char, self)
         self.setFocusProxy(self.tree)
 
