@@ -112,6 +112,7 @@ class RepoTreeView(standard.TreeView):
         standard.TreeView.__init__(self, parent)
 
         self.context = context
+        self.selection = context.selection
         self.saved_selection = []
         self.saved_current_path = None
         self.saved_open_folders = set()
@@ -415,7 +416,7 @@ class RepoTreeView(standard.TreeView):
             else:
                 staged.append(path)
         # Push the new selection into the model.
-        selection_model().set_selection(state)
+        self.selection.set_selection(state)
         return paths
 
     def selectionChanged(self, old, new):
