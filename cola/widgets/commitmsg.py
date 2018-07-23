@@ -21,7 +21,6 @@ from ..gitcmds import commit_message_path
 from ..i18n import N_
 from ..models import dag
 from ..models import prefs
-from ..models import selection
 from ..qtutils import get
 from ..utils import Group
 from . import defs
@@ -182,9 +181,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
         qtutils.add_action(self.summary, N_('Move Down'),
                            self.summary_cursor_down, hotkeys.DOWN)
 
-        self.selection_model = selection_model = selection.selection_model()
-        selection_model.add_observer(selection_model.message_selection_changed,
-                                     self.updated.emit)
+        self.selection = selection = context.selection
+        selection.add_observer(
+            selection.message_selection_changed, self.updated.emit)
 
         self.model.add_observer(self.model.message_commit_message_changed,
                                 self.commit_message_changed.emit)
