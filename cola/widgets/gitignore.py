@@ -7,7 +7,6 @@ from qtpy import QtWidgets
 from .. import cmds
 from .. import qtutils
 from ..i18n import N_
-from ..models.selection import selection_model
 from . import defs
 from .standard import Dialog
 
@@ -25,6 +24,7 @@ class AddToGitIgnore(Dialog):
     def __init__(self, context, parent=None):
         Dialog.__init__(self, parent=parent)
         self.context = context
+        self.selection = context.selection
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
         self.setWindowTitle(N_('Add to .gitignore'))
@@ -83,7 +83,7 @@ class AddToGitIgnore(Dialog):
         self.edit_filename.setDisabled(False)
 
     def check_filename(self):
-        self.edit_filename.setText('/' + ';/'.join(selection_model().untracked))
+        self.edit_filename.setText('/' + ';/'.join(self.selection.untracked))
         self.edit_filename.setDisabled(True)
 
     def close(self):
