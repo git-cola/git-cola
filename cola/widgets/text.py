@@ -12,7 +12,6 @@ from ..qtutils import get
 from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
-from ..models import prefs
 from . import defs
 
 
