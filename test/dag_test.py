@@ -58,3 +58,20 @@ class DAGTestCase(helper.GitRepositoryTestCase):
             core.readline.return_value = LOG_LINES[idx+1]
 
             self.assertEqual(commits[idx], commit.oid)
+
+    @mock.patch('cola.models.dag.core')
+    def test_repo_reader_parents(self, core):
+        parents = [
+            [],
+            ['ad454b189fe5785af397fd6067cf103268b6626e'],
+            ['1ba04ad185cf9f04c56c8482e9a73ef1bd35c695'],
+            ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
+            ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
+            ['e3f5a2d0248de6197d6e0e63c901810b8a9af2f8'],
+            ['f4fb8fd5baaa55d9b41faca79be289bb4407281e'],
+        ]
+        core.readline.return_value = LOG_LINES[0]
+        for idx, commit in enumerate(self.reader.get()):
+            core.readline.return_value = LOG_LINES[idx+1]
+
+            self.assertEqual(parents[idx], [p.oid for p in commit.parents])
