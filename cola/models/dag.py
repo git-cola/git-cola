@@ -212,7 +212,7 @@ class Commit(object):
         }
 
     def __repr__(self):
-        return json.dumps(self.data(), sort_keys=True, indent=4)
+        return json.dumps(self.data(), sort_keys=True, indent=4, default=list)
 
     def is_fork(self):
         ''' Returns True if the node is a fork'''
