@@ -4,7 +4,6 @@ import os
 import sys
 
 from cola import core
-from cola import gitcfg
 
 __copyright__ = """
 2012 Peter Norvig (http://norvig.com/spell-correct.html)
@@ -62,7 +61,11 @@ class NorvigSpellCheck(object):
         self.propernames = propernames
         self.words = collections.defaultdict(lambda: 1)
         self.extra_words = set()
+        self.dictionary = None
         self.initialized = False
+
+    def set_dictionary(self, dictionary):
+        self.dictionary = dictionary
 
     def init(self):
         if self.initialized:
@@ -89,9 +92,7 @@ class NorvigSpellCheck(object):
         words = self.dictwords
         cracklib = self.cracklib
         propernames = self.propernames
-
-        cfg = gitcfg.current()
-        cfg_dictionary = cfg.get('cola.dictionary', None)
+        cfg_dictionary = self.dictionary
 
         if cracklib and os.path.exists(cracklib):
             paths.append((cracklib, True))

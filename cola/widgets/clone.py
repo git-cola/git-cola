@@ -18,12 +18,11 @@ from . import standard
 from . import text
 
 
-def prompt_for_clone(show=True, settings=None):
+def prompt_for_clone(context, show=True, settings=None):
     """Presents a GUI for cloning a repository"""
-    view = Clone(settings=settings, parent=qtutils.active_window())
+    view = Clone(context, settings=settings, parent=qtutils.active_window())
     if show:
         view.show()
-        view.raise_()
     return view
 
 
@@ -32,8 +31,10 @@ class Clone(standard.Dialog):
     # Signal binding for returning the input data
     result = QtCore.Signal(object, object, bool, bool)
 
-    def __init__(self, settings=None, parent=None):
+    def __init__(self, context, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
+        self.context = context
+        self.model = context.model
 
         self.setWindowTitle(N_('Clone Repository'))
         if parent is not None:
@@ -94,7 +95,7 @@ class Clone(standard.Dialog):
         url = get(self.url)
         url = utils.expandpath(url)
         if not url:
-            return None
+            return
         try:
             # Pick a suitable basename by parsing the URL
             newurl = url.replace('\\', '/').rstrip('/')
@@ -115,13 +116,13 @@ class Clone(standard.Dialog):
                     N_('Error Cloning'),
                     N_('Could not parse Git URL: "%s"') % url)
             Interaction.log(N_('Could not parse Git URL: "%s"') % url)
-            return None
+            return
 
         # Prompt the user for a directory to use as the parent directory
         msg = N_('Select a parent directory for the new clone')
-        dirname = qtutils.opendir_dialog(msg, main.model().getcwd())
+        dirname = qtutils.opendir_dialog(msg, self.model.getcwd())
         if not dirname:
-            return None
+            return
         count = 1
         destdir = os.path.join(dirname, default)
         olddestdir = destdir

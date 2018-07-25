@@ -1,8 +1,12 @@
 """Covers interfaces used by the browser (git cola browse)"""
 from __future__ import absolute_import, division, unicode_literals
 
+import mock
+
 from cola import core
 from cola import gitcmds
+from cola import git
+from cola import gitcfg
 from cola.models.main import MainModel
 
 from test import helper
@@ -13,13 +17,13 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self, commit=False)
-        self.model = MainModel(cwd=core.getcwd())
+        self.model = MainModel(self.context, cwd=core.getcwd())
 
     def test_stage_paths_untracked(self):
         """Test stage_paths() with an untracked file."""
         core.makedirs('foo/bar')
         self.touch('foo/bar/baz')
-        gitcmds.add(['foo'])
+        gitcmds.add(self.context, ['foo'])
         self.model.update_file_status()
 
         self.assertTrue('foo/bar/baz' in self.model.staged)
@@ -31,7 +35,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
         self.commit_files()
         self.write_file('A', 'change')
         self.git('add', 'A')
-        gitcmds.unstage_paths(['A'])
+        gitcmds.unstage_paths(self.context, ['A'])
         self.model.update_status()
 
         self.assertTrue('A' not in self.model.staged)
@@ -39,7 +43,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def test_unstage_paths_init(self):
         """Test unstage_paths() on the root commit."""
-        gitcmds.unstage_paths(['A'])
+        gitcmds.unstage_paths(self.context, ['A'])
         self.model.update_status()
 
         self.assertTrue('A' not in self.model.staged)
@@ -51,7 +55,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
         core.makedirs('foo/bar')
         self.touch('foo/bar/baz')
         self.git('add', 'foo/bar/baz')
-        gitcmds.unstage_paths(['foo'])
+        gitcmds.unstage_paths(self.context, ['foo'])
         self.model.update_status()
 
         self.assertTrue('foo/bar/baz' in self.model.untracked)

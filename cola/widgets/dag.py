@@ -3,6 +3,7 @@ import collections
 import itertools
 import math
 import re
+from functools import partial
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -13,6 +14,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -35,7 +37,7 @@ from . import filelist
 from . import standard
 
 
-def git_dag(context, args=None, settings=None, existing_view=None, show=False):
+def git_dag(context, args=None, settings=None, existing_view=None, show=True):
     """Return a pre-populated git DAG widget."""
     model = context.model
     branch = model.currentbranch
@@ -125,52 +127,65 @@ class ViewerMixin(object):
         self.diff_commits.emit(clicked_oid, selected_oid)
 
     def cherry_pick(self):
-        self.with_oid(lambda oid: cmds.do(cmds.CherryPick, [oid]))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.CherryPick, context, [oid]))
 
     def revert(self):
-        self.with_oid(lambda oid: cmds.do(cmds.Revert, oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.Revert, context, oid))
 
     def copy_to_clipboard(self):
         self.with_oid(lambda oid: qtutils.set_clipboard(oid))
 
     def create_branch(self):
-        self.with_oid(lambda oid: createbranch.create_new_branch(revision=oid))
+        context = self.context
+        create_new_branch = partial(createbranch.create_new_branch, context)
+        self.with_oid(lambda oid: create_new_branch(revision=oid))
 
     def create_tag(self):
-        self.with_oid(lambda oid: createtag.create_tag(ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: createtag.create_tag(context, ref=oid))
 
     def create_tarball(self):
         self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
 
     def show_diff(self):
+        context = self.context
         self.with_oid(lambda oid:
-                difftool.diff_expression(self, oid + '^!',
-                                         hide_expr=False, focus_tree=True,
-                                         context=self.context))
+                difftool.diff_expression(context, self, oid + '^!',
+                                         hide_expr=False, focus_tree=True))
 
     def show_dir_diff(self):
+        context = self.context
         self.with_oid(lambda oid:
-                cmds.difftool_launch(left=oid, left_take_magic=True,
-                                     dir_diff=True,
-                                     context=self.context))
+            cmds.difftool_launch(context, left=oid, left_take_magic=True,
+                                 dir_diff=True))
 
     def reset_branch_head(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid:
+            cmds.do(cmds.ResetBranchHead, context, ref=oid))
 
     def reset_worktree(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid:
+            cmds.do(cmds.ResetWorktree, context, ref=oid))
 
     def reset_merge(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, context, ref=oid))
 
     def reset_soft(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, context, ref=oid))
 
     def reset_hard(self):
-        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, ref=oid))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.ResetHard, context, ref=oid))
 
     def checkout_detached(self):
-        self.with_oid(lambda oid: cmds.do(cmds.Checkout, [oid]))
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.Checkout, context, [oid]))
 
     def save_blob_dialog(self):
         context = self.context
@@ -461,9 +476,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         items = self.selectedItems()
         if not items:
             return
+        context = self.context
         oids = [item.commit.oid for item in reversed(items)]
         all_oids = [c.oid for c in self.commits]
-        cmds.do(cmds.FormatPatch, oids, all_oids)
+        cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     # Qt overrides
     def contextMenuEvent(self, event):
@@ -501,7 +517,7 @@ class GitDAG(standard.MainWindow):
         self.force_refresh = False
 
         self.thread = None
-        self.revtext = completion.GitLogLineEdit()
+        self.revtext = completion.GitLogLineEdit(context)
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
@@ -523,8 +539,10 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.treewidget = CommitTreeWidget(context, notifier, self)
-        self.diffwidget = diff.DiffWidget(notifier, context, self, is_commit=True)
-        self.filewidget = filelist.FileWidget(notifier, self)
+        self.diffwidget = diff.DiffWidget(context, notifier, self,
+                                          is_commit=True)
+        self.diffwidget.set_tabwidth(prefs.tabwidth(context))
+        self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, notifier, self)
 
         self.proxy = FocusRedirectProxy(self.treewidget,
@@ -623,6 +641,7 @@ class GitDAG(standard.MainWindow):
         self.set_params(params)
 
     def set_params(self, params):
+        context = self.context
         self.params = params
 
         # Update fields affected by model
@@ -632,7 +651,8 @@ class GitDAG(standard.MainWindow):
 
         if self.thread is not None:
             self.thread.stop()
-        self.thread = ReaderThread(params, self)
+
+        self.thread = ReaderThread(context, params, self)
 
         thread = self.thread
         thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
@@ -692,13 +712,14 @@ class GitDAG(standard.MainWindow):
         """Unconditionally refresh the DAG"""
         # self.force_refresh triggers an Unconditional redraw
         self.force_refresh = True
-        cmds.do(cmds.Refresh)
+        cmds.do(cmds.Refresh, self.context)
         self.force_refresh = False
 
     def display(self):
         """Update the view when the Git refs change"""
         ref = get(self.revtext)
         count = get(self.maxresults)
+        context = self.context
         model = self.model
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
@@ -714,7 +735,7 @@ class GitDAG(standard.MainWindow):
         # triggered when new branches and tags are created.
         refs = set(model.local_branches + model.remote_branches + model.tags)
         argv = utils.shell_split(ref or 'HEAD')
-        oids = gitcmds.parse_refs(argv)
+        oids = gitcmds.parse_refs(context, argv)
         update = (self.force_refresh
                   or count != self.old_count
                   or oids != self.old_oids
@@ -780,10 +801,9 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, a, b):
         paths = self.params.paths()
         if paths:
-            cmds.difftool_launch(left=a, right=b, paths=paths,
-                                 context=self.context)
+            cmds.difftool_launch(self.context, left=a, right=b, paths=paths)
         else:
-            difftool.diff_commits(self, a, b, context=self.context)
+            difftool.diff_commits(self.context, self, a, b)
 
     # Qt overrides
     def closeEvent(self, event):
@@ -802,9 +822,8 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        cmds.difftool_launch(left=bottom, left_take_parent=True,
-                             right=top, paths=files,
-                             context=self.context)
+        cmds.difftool_launch(self.context, left=bottom, left_take_parent=True,
+                             right=top, paths=files)
 
     def grab_file(self, filename):
         """Save the selected file from the filelist widget"""
@@ -819,8 +838,9 @@ class ReaderThread(QtCore.QThread):
     end = Signal()
     status = Signal(object)
 
-    def __init__(self, params, parent):
+    def __init__(self, context, params, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.params = params
         self._abort = False
         self._stop = False
@@ -828,7 +848,8 @@ class ReaderThread(QtCore.QThread):
         self._condition = QtCore.QWaitCondition()
 
     def run(self):
-        repo = dag.RepoReader(self.params)
+        context = self.context
+        repo = dag.RepoReader(context, self.params)
         repo.reset()
         self.begin.emit()
         commits = []
@@ -1417,10 +1438,11 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         items = self.selected_items()
         if not items:
             return
+        context = self.context
         selected_commits = self.sort_by_generation([n.commit for n in items])
         oids = [c.oid for c in selected_commits]
         all_oids = [c.oid for c in self.commits]
-        cmds.do(cmds.FormatPatch, oids, all_oids)
+        cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     def select_parent(self):
         """Select the parent with the newest generation number"""

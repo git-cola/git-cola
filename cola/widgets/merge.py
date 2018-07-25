@@ -16,11 +16,9 @@ from . import standard
 from . import defs
 
 
-def local_merge():
+def local_merge(context):
     """Provides a dialog for merging branches"""
-    model = main.model()
-    cfg = gitcfg.current()
-    view = Merge(cfg, model, qtutils.active_window())
+    view = Merge(context, qtutils.active_window())
     view.show()
     view.raise_()
     return view
@@ -29,10 +27,11 @@ def local_merge():
 class Merge(standard.Dialog):
     """Provides a dialog for merging branches."""
 
-    def __init__(self, cfg, model, parent=None, ref=None):
+    def __init__(self, context, parent=None, ref=None):
         standard.Dialog.__init__(self, parent=parent)
-        self.cfg = cfg
-        self.model = model
+        self.context = context
+        self.cfg = context.cfg
+        self.model = context.model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -41,7 +40,7 @@ class Merge(standard.Dialog):
         self.revision_label = QtWidgets.QLabel()
         self.revision_label.setText(N_('Revision to Merge'))
 
-        self.revision = completion.GitRefLineEdit()
+        self.revision = completion.GitRefLineEdit(context)
         self.revision.setToolTip(N_('Revision to Merge'))
         if ref:
             self.revision.set_value(ref)
@@ -188,7 +187,7 @@ class Merge(standard.Dialog):
                 N_('No Revision Specified'),
                 N_('You must specify a revision to view.'))
             return
-        cmds.do(cmds.VisualizeRevision, revision)
+        cmds.do(cmds.VisualizeRevision, self.context, revision)
 
     def merge_revision(self):
         """Merge the selected revision/branch"""
@@ -203,7 +202,8 @@ class Merge(standard.Dialog):
         no_commit = not get(self.checkbox_commit)
         squash = get(self.checkbox_squash)
         sign = get(self.checkbox_sign)
-        cmds.do(cmds.Merge, revision, no_commit, squash, noff, sign)
+        context = self.context
+        cmds.do(cmds.Merge, context, revision, no_commit, squash, noff, sign)
         self.accept()
 
     def export_state(self):

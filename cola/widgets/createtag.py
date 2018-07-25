@@ -17,18 +17,18 @@ from . import text
 from ..models import main
 
 
-def new_create_tag(name='', ref='', sign=False, settings=None, parent=None):
+def new_create_tag(context, name='', ref='', sign=False,
+                   settings=None, parent=None):
     """Entry point for external callers."""
     opts = TagOptions(name, ref, sign)
-    view = CreateTag(opts, settings=settings, parent=parent)
+    view = CreateTag(context, opts, settings=settings, parent=parent)
     return view
 
 
-def create_tag(name='', ref='', sign=False, settings=None):
+def create_tag(context, name='', ref='', sign=False, settings=None):
     """Entry point for external callers."""
-    view = new_create_tag(name=name, ref=ref, sign=sign,
-                          settings=settings,
-                          parent=qtutils.active_window())
+    view = new_create_tag(context, name=name, ref=ref, sign=sign,
+                          settings=settings, parent=qtutils.active_window())
     view.show()
     view.raise_()
     return view
@@ -45,9 +45,11 @@ class TagOptions(object):
 
 class CreateTag(standard.Dialog):
 
-    def __init__(self, opts, settings=None, parent=None):
+    def __init__(self, context, opts, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
+        self.context = context
+        self.model = model = context.model
         self.opts = opts
 
         self.setWindowTitle(N_('Create Tag'))
@@ -61,7 +63,8 @@ class CreateTag(standard.Dialog):
         self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), parent=self)
         self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
-        qtutils.add_completer(self.tag_name, main.model().tags)
+
+        qtutils.add_completer(self.tag_name, model.tags)
 
         # Sign Tag
         self.sign_label = QtWidgets.QLabel(self)
@@ -80,7 +83,7 @@ class CreateTag(standard.Dialog):
         self.rev_label = QtWidgets.QLabel(self)
         self.rev_label.setText(N_('Revision'))
 
-        self.revision = completion.GitRefLineEdit()
+        self.revision = completion.GitRefLineEdit(context)
         self.revision.setText(self.opts.ref)
         self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
         # Buttons
@@ -114,27 +117,13 @@ class CreateTag(standard.Dialog):
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
 
+        context = self.context
         revision = get(self.revision)
         tag_name = get(self.tag_name)
         tag_msg = get(self.tag_msg)
         sign_tag = get(self.sign_tag)
 
-        if not revision:
-            Interaction.critical(
-                N_('Missing Revision'),
-                N_('Please specify a revision to tag.'))
-            return
-        if not tag_name:
-            Interaction.critical(
-                N_('Missing Name'),
-                N_('Please specify a name for the new tag.'))
-            return
-
-        status, out, err = cmds.do(cmds.Tag, tag_name, revision,
-                                   sign=sign_tag, message=tag_msg)
-        if status == 0:
-            Interaction.information(
-                N_('Tag Created'),
-                N_('Created a new tag named "%s"') % tag_name,
-                details=tag_msg or None)
+        ok = cmds.do(cmds.Tag, context, tag_name, revision,
+            sign=sign_tag, message=tag_msg)
+        if ok:
             self.close()

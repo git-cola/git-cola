@@ -20,6 +20,19 @@ def get_stripped(widget):
     return widget.get().strip()
 
 
+class LineEditStyle(QtWidgets.QProxyStyle):
+
+    def __init__(self, widget):
+        super(LineEditStyle, self).__init__(widget.style())
+        self.widget = widget
+
+    def pixelMetric(self, metric, option, widget):
+        if metric == QtWidgets.QStyle.PM_TextCursorWidth:
+            font = self.widget.font()
+            return QtGui.QFontMetrics(font).width('M')
+        return super(LineEditStyle, self).pixelMetric(metric, option, widget)
+
+
 class LineEdit(QtWidgets.QLineEdit):
 
     cursor_changed = Signal(int, int)
@@ -34,6 +47,8 @@ class LineEdit(QtWidgets.QLineEdit):
 
         if clear_button and hasattr(self, 'setClearButtonEnabled'):
             self.setClearButtonEnabled(True)
+
+        self.setStyle(LineEditStyle(self))
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -91,7 +106,6 @@ class BaseTextEditExtension(QtCore.QObject):
         widget.setMinimumSize(QtCore.QSize(1, 1))
         widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
         widget.setLineWrapMode(widget.NoWrap)
-        widget.setCursorWidth(defs.cursor_width)
         if self._readonly:
             widget.setReadOnly(True)
             widget.setAcceptDrops(False)
@@ -213,6 +227,12 @@ class BaseTextEditExtension(QtCore.QObject):
         """Enable word wrapping"""
         pass
 
+    def set_font(self, font):
+        # Update cursor width
+        metrics = QtGui.QFontMetrics(font)
+        width = metrics.width('M')
+        self.widget.setCursorWidth(width)
+
 
 class PlainTextEditExtension(BaseTextEditExtension):
 
@@ -275,6 +295,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             return
         return super(PlainTextEdit, self).wheelEvent(event)
 
+    def setFont(self, font):
+        super(PlainTextEdit, self).setFont(font)
+        self.ext.set_font(font)
+
 
 class TextEditExtension(BaseTextEditExtension):
 
@@ -303,6 +327,7 @@ class TextEdit(QtWidgets.QTextEdit):
         QtWidgets.QTextEdit.__init__(self, parent)
         self.ext = TextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
+        self.expandtab = False
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -327,6 +352,13 @@ class TextEdit(QtWidgets.QTextEdit):
     def set_linebreak(self, brk):
         self.ext.set_linebreak(brk)
 
+    def set_expandtab(self, value):
+        self.expandtab = value
+
+    def setFont(self, font):
+        super(TextEdit, self).setFont(font)
+        self.ext.set_font(font)
+
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
         super(TextEdit, self).mousePressEvent(event)
@@ -339,7 +371,7 @@ class TextEdit(QtWidgets.QTextEdit):
         return super(TextEdit, self).wheelEvent(event)
 
     def should_expandtab(self, event):
-        return event.key() == Qt.Key_Tab and prefs.expandtab()
+        return event.key() == Qt.Key_Tab and self.expandtab
 
     def expandtab(self):
         tabwidth = max(self.ext.tabwidth(), 1)
@@ -391,7 +423,6 @@ class TextEditCursorPosition(object):
 
 def setup_mono_font(widget):
     widget.setFont(qtutils.diff_font())
-    widget.set_tabwidth(prefs.tabwidth())
 
 
 class MonoTextEdit(PlainTextEdit):
@@ -825,8 +856,8 @@ class LineNumbers(TextDecorator):
 
     def width_hint(self):
         document = self.editor.document()
-        digits = int(math.log(max(1, document.blockCount()), 10))
-        return defs.margin + self.fontMetrics().width('0') * (digits + 2)
+        digits = int(math.log(max(1, document.blockCount()), 10)) + 2
+        return defs.large_margin + self.fontMetrics().width('0') * digits
 
     def set_highlighted(self, line_number):
         """Set the line to highlight"""
@@ -836,11 +867,11 @@ class LineNumbers(TextDecorator):
         """Paint the line number"""
         QPalette = QtGui.QPalette
         painter = QtGui.QPainter(self)
-        palette = self.palette()
+        editor = self.editor
+        palette = editor.palette()
 
         painter.fillRect(event.rect(), palette.color(QPalette.Base))
 
-        editor = self.editor
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
         current_block_number = max(0, self.editor.textCursor().blockNumber())
@@ -848,9 +879,9 @@ class LineNumbers(TextDecorator):
         event_rect_bottom = event.rect().bottom()
 
         highlight = palette.color(QPalette.Highlight)
+        highlighted_text = palette.color(QPalette.HighlightedText)
         window = palette.color(QPalette.Window)
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
-        painter.setPen(disabled)
 
         while block.isValid():
             block_geom = editor.blockBoundingGeometry(block)
@@ -863,13 +894,13 @@ class LineNumbers(TextDecorator):
             if block_number == self.highlight_line:
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
-            elif block_number == current_block_number:
-                painter.fillRect(rect.x(), rect.y(),
-                                 width, rect.height(), window)
+                painter.setPen(highlighted_text)
+            else:
+                painter.setPen(disabled)
 
             number = '%s' % (block_number + 1)
             painter.drawText(rect.x(), rect.y(),
-                             self.width() - (defs.margin * 2),
+                             self.width() - defs.large_margin,
                              rect.height(),
                              Qt.AlignRight | Qt.AlignVCenter,
                              number)

@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
+
+import mock
 
 from cola import gitcfg
 
@@ -11,7 +12,7 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.gitcmds module."""
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.config = gitcfg.current()
+        self.config = gitcfg.create(self.context)
         self.config.reset()
 
     def test_string(self):
@@ -65,7 +66,7 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
 
     def assert_color(self, expect, git_value, key='test', default=None):
         self.git('config', 'cola.color.%s' % key, git_value)
-        gitcfg.current().reset()
+        self.config.reset()
         actual = self.config.color(key, None)
         self.assertEqual(expect, actual)
 

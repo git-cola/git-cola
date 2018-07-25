@@ -14,7 +14,6 @@ from qtpy.QtWidgets import QAction
 from qtpy.QtWidgets import QApplication
 
 from .. import qtutils
-from .. import gitcfg
 from .. import spellcheck
 from ..i18n import N_
 from .text import HintedTextEdit
@@ -28,6 +27,9 @@ class SpellCheckTextEdit(HintedTextEdit):
         # Default dictionary based on the current locale.
         self.spellcheck = spellcheck.NorvigSpellCheck()
         self.highlighter = Highlighter(self.document(), self.spellcheck)
+
+    def set_dictionary(self, dictionary):
+        self.spellcheck.set_dictionary(dictionary)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:

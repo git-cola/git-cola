@@ -13,6 +13,7 @@ import unittest
 import yaml
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from cola import app
 from cola import core
 from cola import git
 from cola import gitcmds
@@ -111,9 +112,9 @@ def parse_slug(url):
     return ''
 
 
-def guess_slug(remote):
+def guess_slug(context, remote):
     key = 'remote.%s.url' % remote
-    url = gitcfg.current().get(key)
+    url = context.cfg.get(key)
 
     default_slug = 'git-cola/git-cola'
     if url:
@@ -124,16 +125,20 @@ def guess_slug(remote):
     return slug
 
 
-def get_slug(args):
+def get_slug(context, args):
     if args.slug:
         slug = args.slug
     else:
-        slug = guess_slug(args.remote)
+        slug = guess_slug(context, args.remote)
     return slug
 
 
-def get_current_branch():
-    return gitcmds.current_branch()
+def new_context(args):
+    """Create top-level ApplicationContext objects"""
+    context = ApplicationContext(args)
+    context.git = git.create()
+    context.cfg = gitcfg.create(context)
+    return context
 
 
 def setup_environment(args, language, version):
@@ -142,6 +147,8 @@ def setup_environment(args, language, version):
     repo = git.Git()
     if not repo.is_valid():
         error('%s is not a Git repository' % core.getcwd())
+
+    context = new_context(args)
 
     version_var = 'TRAVIS_%s_VERSION' % language.upper()
     env.setdefault(version_var, version)
@@ -157,7 +164,7 @@ def setup_environment(args, language, version):
     env.setdefault('RAILS_ENV', 'test')
     env.setdefault('RACK_ENV', 'test')
     env.setdefault('MERB_ENV', 'test')
-    env.setdefault('TRAVIS_BRANCH', gitcmds.current_branch())
+    env.setdefault('TRAVIS_BRANCH', gitcmds.current_branch(context))
     env.setdefault('TRAVIS_BUILD_DIR', core.getcwd())
     env.setdefault('TRAVIS_BUILD_ID', '1')
     env.setdefault('TRAVIS_BUILD_NUMBER', '1')
@@ -167,7 +174,7 @@ def setup_environment(args, language, version):
     env.setdefault('TRAVIS_JOB_NUMBER', '1.1')
     env.setdefault('TRAVIS_PULL_REQUEST', 'false')
     env.setdefault('TRAVIS_SECURE_ENV_VARS', 'false')
-    env.setdefault('TRAVIS_REPO_SLUG', get_slug(args))
+    env.setdefault('TRAVIS_REPO_SLUG', get_slug(context, args))
     env.setdefault('TRAVIS_OS_NAME', get_platform(sys.platform))
     env.setdefault('TRAVIS_TAG', '')
 

@@ -825,9 +825,10 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     return button
 
 
-def mimedata_from_paths(paths):
+def mimedata_from_paths(context, paths):
     """Return mimedata with a list of absolute path URLs"""
 
+    cfg = context.cfg
     abspaths = [core.abspath(path) for path in paths]
     urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
 
@@ -842,7 +843,7 @@ def mimedata_from_paths(paths):
     # e.g. terminator, prefer utf-8, so allow cola.dragencoding
     # to override the default.
     paths_text = core.list2cmdline(abspaths)
-    encoding = gitcfg.current().get('cola.dragencoding', 'utf-16')
+    encoding = cfg.get('cola.dragencoding', 'utf-16')
     moz_text = core.encode(paths_text, encoding=encoding)
     mimedata.setData('text/x-moz-url', moz_text)
 

@@ -1,5 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
-import functools
+from functools import partial
 
 from qtpy import QtGui
 from qtpy.QtCore import Qt
@@ -37,7 +37,7 @@ TREE_LAYOUT = {
         'Actions::CherryPick',
         'Actions::Merge',
         'Actions::AbortMerge',
-        'Actions::ResetBrachHead',
+        'Actions::ResetBranchHead',
         'Actions::ResetWorktree',
         'Actions::Grep',
         'Actions::Search'
@@ -198,7 +198,7 @@ class ToolBar(QtWidgets.QToolBar):
             callback = command['action']
             use_context = command.get('context', True)
             if use_context:
-                callback = functools.partial(callback, self.context)
+                callback = partial(callback, self.context)
 
             icon = None
             command_icon = command.get('icon', None)
@@ -218,8 +218,7 @@ class ToolBar(QtWidgets.QToolBar):
 
     def contextMenuEvent(self, event):
         menu = QtWidgets.QMenu()
-        menu.addAction(N_('Configure toolbar'),
-            functools.partial(configure, self))
+        menu.addAction(N_('Configure toolbar'), partial(configure, self))
         menu.addAction(N_('Delete toolbar'), self.delete_toolbar)
 
         menu.exec_(event.globalPos())

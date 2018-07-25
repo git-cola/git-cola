@@ -9,10 +9,8 @@ from binascii import unhexlify
 from os.path import join
 
 from . import core
-from . import git
 from . import observable
 from .compat import int_types
-from .decorators import memoize
 from .git import STDOUT
 from .compat import ustr
 
@@ -24,18 +22,27 @@ _USER_XDG_CONFIG = core.expanduser(
              'git', 'config'))
 
 
-@memoize
-def current():
+_cfg = None  # TODO remove singleton
+
+def current(context=None):
     """Return the GitConfig singleton."""
-    return GitConfig()
+    global _cfg
+    if _cfg is None:
+        _cfg = create(context)
+    return _cfg
 
 
-def _stat_info():
+def create(context):
+    """Create GitConfig instances"""
+    return GitConfig(context)
+
+
+def _stat_info(git):
     # Try /etc/gitconfig as a fallback for the system config
     paths = [('system', '/etc/gitconfig'),
              ('user', _USER_XDG_CONFIG),
              ('user', _USER_CONFIG)]
-    config = git.current().git_path('config')
+    config = git.git_path('config')
     if config:
         paths.append(('repo', config))
 
@@ -48,12 +55,14 @@ def _stat_info():
     return statinfo
 
 
-def _cache_key():
+def _cache_key(git):
     # Try /etc/gitconfig as a fallback for the system config
-    paths = ['/etc/gitconfig',
-             _USER_XDG_CONFIG,
-             _USER_CONFIG]
-    config = git.current().git_path('config')
+    paths = [
+        '/etc/gitconfig',
+        _USER_XDG_CONFIG,
+        _USER_CONFIG,
+    ]
+    config = git.git_path('config')
     if config:
         paths.append(config)
 
@@ -110,9 +119,9 @@ class GitConfig(observable.Observable):
     message_repo_config_changed = 'repo_config_changed'
     message_updated = 'updated'
 
-    def __init__(self):
+    def __init__(self, context):
         observable.Observable.__init__(self)
-        self.git = git.current()
+        self.git = context.git
         self._map = {}
         self._system = {}
         self._user = {}
@@ -160,7 +169,7 @@ class GitConfig(observable.Observable):
 
         """
         # Try the git config in git's installation prefix
-        statinfo = _stat_info()
+        statinfo = _stat_info(self.git)
         self._configs = [x[1] for x in statinfo]
         self._config_files = {}
         for (cat, path, mtime) in statinfo:
@@ -173,7 +182,7 @@ class GitConfig(observable.Observable):
         Updates the cache and returns False when the cache does not match.
 
         """
-        cache_key = _cache_key()
+        cache_key = _cache_key(self.git)
         if self._cache_key is None or cache_key != self._cache_key:
             self._cache_key = cache_key
             return False

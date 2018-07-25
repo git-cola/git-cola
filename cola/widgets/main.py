@@ -1,8 +1,8 @@
 """This view provides the main git-cola user interface.
 """
 from __future__ import division, absolute_import, unicode_literals
-import functools
 import os
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -21,7 +21,6 @@ from .. import cmds
 from .. import core
 from .. import guicmds
 from .. import git
-from .. import gitcfg
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -68,10 +67,11 @@ class MainView(standard.MainWindow):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.context = context
+        self.git = context.git
         self.dag = None
         self.model = model = context.model
         self.settings = settings
-        self.prefs_model = prefs_model = prefs.PreferencesModel()
+        self.prefs_model = prefs_model = prefs.PreferencesModel(context)
         self.toolbar_state = toolbar.ToolBarState(context, self)
 
         # The widget version is used by import/export_state().
@@ -79,7 +79,7 @@ class MainView(standard.MainWindow):
         self.widget_version = 2
 
         create_dock = qtutils.create_dock
-        cfg = gitcfg.current()
+        cfg = context.cfg
         self.browser_dockable = cfg.get('cola.browserdockable')
         if self.browser_dockable:
             browser = browse.worktree_browser(context, parent=self,
@@ -94,24 +94,26 @@ class MainView(standard.MainWindow):
         # "Repository Status" widget
         self.statusdock = create_dock(N_('Status'), self,
             fn=lambda dock:
-                status.StatusWidget(dock.titleBarWidget(), dock, context))
+                status.StatusWidget(context, dock.titleBarWidget(), dock))
         self.statuswidget = self.statusdock.widget()
 
         # "Switch Repository" widgets
         self.bookmarksdock = create_dock(
-            N_('Favorites'), self, fn=lambda dock: bookmarks.bookmark(dock))
+            N_('Favorites'), self,
+            fn=lambda dock: bookmarks.bookmark(context, dock))
         bookmarkswidget = self.bookmarksdock.widget()
         qtutils.hide_dock(self.bookmarksdock)
 
         self.recentdock = create_dock(
-            N_('Recent'), self, fn=lambda dock: bookmarks.recent(dock))
+            N_('Recent'), self,
+            fn=lambda dock: bookmarks.recent(context, dock))
         recentwidget = self.recentdock.widget()
         qtutils.hide_dock(self.recentdock)
         bookmarkswidget.connect_to(recentwidget)
 
         # "Branch" widgets
-        self.branchdock = create_dock(N_('Branches'), self,
-            fn=lambda dock: branch.BranchesWidget(dock))
+        self.branchdock = create_dock(
+            N_('Branches'), self, fn=partial(branch.BranchesWidget, context))
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
         titlebar.add_corner_widget(self.branchwidget.filter_button)
@@ -128,7 +130,7 @@ class MainView(standard.MainWindow):
         width = fm.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
-        editor = commitmsg.CommitMessageEditor(self, context)
+        editor = commitmsg.CommitMessageEditor(context, self)
         self.commiteditor = editor
         self.commitdock = create_dock(N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
@@ -154,60 +156,67 @@ class MainView(standard.MainWindow):
         add_action_bool = qtutils.add_action_bool
 
         self.commit_amend_action = add_action_bool(
-            self, N_('Amend Last Commit'), cmds.run(cmds.AmendMode), False)
+            self, N_('Amend Last Commit'),
+            partial(cmds.do, cmds.AmendMode, context), False)
         self.commit_amend_action.setShortcut(hotkeys.AMEND)
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
         self.unstage_all_action = add_action(
-            self, N_('Unstage All'), cmds.run(cmds.UnstageAll))
+            self, N_('Unstage All'), cmds.run(cmds.UnstageAll, context))
         self.unstage_all_action.setIcon(icons.remove())
 
         self.unstage_selected_action = add_action(
-            self, N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected))
+            self, N_('Unstage From Commit'),
+            cmds.run(cmds.UnstageSelected, context))
         self.unstage_selected_action.setIcon(icons.remove())
 
         self.show_diffstat_action = add_action(
-            self, N_('Diffstat'), cmds.run(cmds.Diffstat), hotkeys.DIFFSTAT)
+            self, N_('Diffstat'), cmds.run(cmds.Diffstat, context),
+            hotkeys.DIFFSTAT)
 
         self.stage_modified_action = add_action(
             self, N_('Stage Changed Files To Commit'),
-            cmds.run(cmds.StageModified), hotkeys.STAGE_MODIFIED)
+            cmds.run(cmds.StageModified, context), hotkeys.STAGE_MODIFIED)
         self.stage_modified_action.setIcon(icons.add())
 
         self.stage_untracked_action = add_action(
             self, N_('Stage All Untracked'),
-            cmds.run(cmds.StageUntracked), hotkeys.STAGE_UNTRACKED)
+            cmds.run(cmds.StageUntracked, context), hotkeys.STAGE_UNTRACKED)
         self.stage_untracked_action.setIcon(icons.add())
 
         self.apply_patches_action = add_action(
-            self, N_('Apply Patches...'), patch.apply_patches)
+            self, N_('Apply Patches...'),
+            partial(patch.apply_patches, context))
 
         self.export_patches_action = add_action(
-            self, N_('Export Patches...'), guicmds.export_patches,
-            hotkeys.EXPORT)
+            self, N_('Export Patches...'),
+            partial(guicmds.export_patches, context), hotkeys.EXPORT)
 
         self.new_repository_action = add_action(
-            self, N_('New Repository...'), guicmds.open_new_repo)
+            self, N_('New Repository...'),
+            partial(guicmds.open_new_repo, context))
         self.new_repository_action.setIcon(icons.new())
 
         self.new_bare_repository_action = add_action(
-            self, N_('New Bare Repository...'), guicmds.new_bare_repo)
+            self, N_('New Bare Repository...'),
+            partial(guicmds.new_bare_repo, context))
         self.new_bare_repository_action.setIcon(icons.new())
 
+        prefs_fn = partial(
+            prefs_widget.preferences, context, parent=self, model=prefs_model)
         self.preferences_action = add_action(
-            self, N_('Preferences'), self.preferences,
-            QtGui.QKeySequence.Preferences)
+            self, N_('Preferences'), prefs_fn, QtGui.QKeySequence.Preferences)
 
         self.edit_remotes_action = add_action(
-            self, N_('Edit Remotes...'), editremotes.editor)
+            self, N_('Edit Remotes...'), partial(editremotes.editor, context))
 
         self.rescan_action = add_action(
-            self, cmds.Refresh.name(), cmds.run(cmds.Refresh),
+            self, cmds.Refresh.name(), cmds.run(cmds.Refresh, context),
             *hotkeys.REFRESH_HOTKEYS)
         self.rescan_action.setIcon(icons.sync())
 
         self.find_files_action = add_action(
-            self, N_('Find Files'), finder.finder,
+            self, N_('Find Files'), partial(finder.finder, context),
             hotkeys.FINDER, hotkeys.FINDER_SECONDARY)
         self.find_files_action.setIcon(icons.zoom_in())
 
@@ -216,59 +225,65 @@ class MainView(standard.MainWindow):
             recent.browse_recent_files, hotkeys.EDIT_SECONDARY)
 
         self.cherry_pick_action = add_action(
-            self, N_('Cherry-Pick...'), guicmds.cherry_pick,
+            self, N_('Cherry-Pick...'), partial(guicmds.cherry_pick, context),
             hotkeys.CHERRY_PICK)
 
         self.load_commitmsg_action = add_action(
-            self, N_('Load Commit Message...'), guicmds.load_commitmsg)
+            self, N_('Load Commit Message...'),
+            partial(guicmds.load_commitmsg, context))
 
         self.prepare_commitmsg_hook_action = add_action(
             self, N_('Prepare Commit Message'),
-            cmds.run(cmds.PrepareCommitMessageHook),
+            cmds.run(cmds.PrepareCommitMessageHook, context),
             hotkeys.PREPARE_COMMIT_MESSAGE)
 
         self.save_tarball_action = add_action(
-            self, N_('Save As Tarball/Zip...'), self.save_archive)
+            self, N_('Save As Tarball/Zip...'),
+            partial(archive.save_archive, context, self))
 
         self.quit_action = add_action(
             self, N_('Quit'), self.close, hotkeys.QUIT)
 
         self.grep_action = add_action(
-            self, N_('Grep'), grep.grep, hotkeys.GREP)
+            self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP)
 
         self.merge_local_action = add_action(
             self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
 
         self.merge_abort_action = add_action(
-            self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge))
+            self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context))
 
         self.fetch_action = add_action(
-            self, N_('Fetch...'), remote.fetch, hotkeys.FETCH)
+            self, N_('Fetch...'), partial(remote.fetch, context),
+            hotkeys.FETCH)
         self.push_action = add_action(
-            self, N_('Push...'), remote.push, hotkeys.PUSH)
+            self, N_('Push...'), partial(remote.push, context), hotkeys.PUSH)
         self.pull_action = add_action(
-            self, N_('Pull...'), remote.pull, hotkeys.PULL)
+            self, N_('Pull...'), partial(remote.pull, context), hotkeys.PULL)
 
         self.open_repo_action = add_action(
-            self, N_('Open...'), guicmds.open_repo, hotkeys.OPEN)
+            self, N_('Open...'),
+            partial(guicmds.open_repo, context), hotkeys.OPEN)
         self.open_repo_action.setIcon(icons.folder())
 
         self.open_repo_new_action = add_action(
-            self, N_('Open in New Window...'), guicmds.open_repo_in_new_window)
+            self, N_('Open in New Window...'),
+            partial(guicmds.open_repo_in_new_window, context))
         self.open_repo_new_action.setIcon(icons.folder())
 
-        stash_view = functools.partial(stash.view, context)
         self.stash_action = add_action(
-            self, N_('Stash...'), stash_view, hotkeys.STASH)
+            self, N_('Stash...'), partial(stash.view, context), hotkeys.STASH)
 
         self.reset_branch_head_action = add_action(
-            self, N_('Reset Branch Head'), guicmds.reset_branch_head)
+            self, N_('Reset Branch Head'),
+            partial(guicmds.reset_branch_head, context))
 
         self.reset_worktree_action = add_action(
-            self, N_('Reset Worktree'), guicmds.reset_worktree)
+            self, N_('Reset Worktree'),
+            partial(guicmds.reset_worktree, context))
 
         self.clone_repo_action = add_action(
-            self, N_('Clone...'), self.clone_repo)
+            self, N_('Clone...'), partial(guicmds.spawn_clone, context))
         self.clone_repo_action.setIcon(icons.repo())
 
         self.help_docs_action = add_action(
@@ -286,75 +301,82 @@ class MainView(standard.MainWindow):
             self, N_('Visualize All Branches...'),
             cmds.run(cmds.VisualizeAll, context))
         self.search_commits_action = add_action(
-            self, N_('Search...'), search.search)
+            self, N_('Search...'), partial(search.search, context))
 
         self.browse_branch_action = add_action(
             self, N_('Browse Current Branch...'),
-            lambda: guicmds.browse_current(context))
+            partial(guicmds.browse_current, context))
         self.browse_other_branch_action = add_action(
             self, N_('Browse Other Branch...'),
-            lambda: guicmds.browse_other(context))
+            partial(guicmds.browse_other, context))
         self.load_commitmsg_template_action = add_action(
             self, N_('Get Commit Message Template'),
-            cmds.run(cmds.LoadCommitMessageFromTemplate))
+            cmds.run(cmds.LoadCommitMessageFromTemplate, context))
         self.help_about_action = add_action(
-            self, N_('About'), about.about_dialog)
+            self, N_('About'), partial(about.about_dialog, context))
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'),
-            lambda: guicmds.diff_expression(context=context))
+            partial(guicmds.diff_expression, context))
         self.branch_compare_action = add_action(
-            self, N_('Branches...'), compare.compare_branches)
+            self, N_('Branches...'),
+            partial(compare.compare_branches, context))
 
         self.create_tag_action = add_action(
             self, N_('Create Tag...'),
-            lambda: createtag.create_tag(settings=settings))
+            partial(createtag.create_tag, context, settings=settings))
 
         self.create_branch_action = add_action(
             self, N_('Create...'),
-            lambda: createbranch.create_new_branch(settings=settings),
+            partial(createbranch.create_new_branch, context,
+                    settings=settings),
             hotkeys.BRANCH)
         self.create_branch_action.setIcon(icons.branch())
 
         self.delete_branch_action = add_action(
-            self, N_('Delete...'), guicmds.delete_branch)
+            self, N_('Delete...'),
+            partial(guicmds.delete_branch, context))
 
         self.delete_remote_branch_action = add_action(
-            self, N_('Delete Remote Branch...'), guicmds.delete_remote_branch)
+            self, N_('Delete Remote Branch...'),
+            partial(guicmds.delete_remote_branch, context))
 
         self.rename_branch_action = add_action(
-            self, N_('Rename Branch...'), guicmds.rename_branch)
+            self, N_('Rename Branch...'),
+            partial(guicmds.rename_branch, context))
 
         self.checkout_branch_action = add_action(
-            self, N_('Checkout...'), guicmds.checkout_branch, hotkeys.CHECKOUT)
+            self, N_('Checkout...'),
+            partial(guicmds.checkout_branch, context),
+            hotkeys.CHECKOUT)
         self.branch_review_action = add_action(
             self, N_('Review...'),
-            functools.partial(guicmds.review_branch, context=context))
+            partial(guicmds.review_branch, context))
 
         self.browse_action = add_action(
             self, N_('File Browser...'),
-            lambda: browse.worktree_browser(context))
+            partial(browse.worktree_browser, context))
         self.browse_action.setIcon(icons.cola())
 
         self.dag_action = add_action(self, N_('DAG...'), self.git_dag)
         self.dag_action.setIcon(icons.cola())
 
         self.rebase_start_action = add_action(
-            self, N_('Start Interactive Rebase...'), self.rebase_start,
-            hotkeys.REBASE_START_AND_CONTINUE)
+            self, N_('Start Interactive Rebase...'),
+            cmds.run(cmds.Rebase, context), hotkeys.REBASE_START_AND_CONTINUE)
 
         self.rebase_edit_todo_action = add_action(
-            self, N_('Edit...'), cmds.rebase_edit_todo)
+            self, N_('Edit...'), cmds.run(cmds.RebaseEditTodo, context))
 
         self.rebase_continue_action = add_action(
-            self, N_('Continue'), cmds.rebase_continue,
+            self, N_('Continue'), cmds.run(cmds.RebaseContinue, context),
             hotkeys.REBASE_START_AND_CONTINUE)
 
         self.rebase_skip_action = add_action(
-            self, N_('Skip Current Patch'), cmds.rebase_skip)
+            self, N_('Skip Current Patch'), cmds.run(cmds.RebaseSkip, context))
 
         self.rebase_abort_action = add_action(
-            self, N_('Abort'), cmds.rebase_abort)
+            self, N_('Abort'), cmds.run(cmds.RebaseAbort, context))
 
         # For "Start Rebase" only, reverse the first argument to setEnabled()
         # so that we can operate on it as a group.
@@ -371,10 +393,11 @@ class MainView(standard.MainWindow):
                                         self.rebase_abort_action)
 
         self.annex_init_action = qtutils.add_action(
-                self, N_('Initialize Git Annex'), cmds.run(cmds.AnnexInit))
+            self, N_('Initialize Git Annex'),
+            cmds.run(cmds.AnnexInit, context))
 
         self.lfs_init_action = qtutils.add_action(
-                self, N_('Initialize Git LFS'), cmds.run(cmds.LFSInstall))
+            self, N_('Initialize Git LFS'), cmds.run(cmds.LFSInstall, context))
 
         self.lock_layout_action = add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False)
@@ -578,7 +601,8 @@ class MainView(standard.MainWindow):
         QtCore.QTimer.singleShot(0, self.initialize)
 
     def initialize(self):
-        git_version = version.git_version_str()
+        context = self.context
+        git_version = version.git_version_str(context)
         if git_version:
             ok = True
             Interaction.log(git_version + '\n' +
@@ -634,7 +658,7 @@ class MainView(standard.MainWindow):
 
         menu.addSeparator()
         menu_action = menu.addAction(N_('Add Toolbar'),
-            functools.partial(toolbar.add_toolbar, self.context, self))
+            partial(toolbar.add_toolbar, self.context, self))
         menu_action.setIcon(icons.add())
 
         dockwidgets = [
@@ -669,13 +693,14 @@ class MainView(standard.MainWindow):
         settings.load()
         recent = settings.recent
         cmd = cmds.OpenRepo
+        context = self.context
         menu = self.open_recent_menu
         menu.clear()
         for r in recent:
             name = r['name']
             directory = r['path']
             text = '%s %s %s' % (name, unichr(0x2192), directory)
-            menu.addAction(text, cmds.run(cmd, directory))
+            menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
     mode = property(lambda self: self.model.mode)
@@ -694,6 +719,9 @@ class MainView(standard.MainWindow):
             # variable-tab-width setting
             self.diffeditor.set_tabwidth(value)
             self.commiteditor.set_tabwidth(value)
+
+        elif config == prefs.EXPANDTAB:
+            self.commiteditor.set_expandtab(value)
 
         elif config == prefs.LINEBREAK:
             # enables automatic line breaks
@@ -717,17 +745,18 @@ class MainView(standard.MainWindow):
         context.runtask.start(task)
 
     def get_config_actions(self):
-        actions = cfgactions.get_config_actions()
+        actions = cfgactions.get_config_actions(self.context)
         self.config_actions_changed.emit(actions)
 
     def _install_config_actions(self, names_and_shortcuts):
         """Install .gitconfig-defined actions"""
         if not names_and_shortcuts:
             return
+        context = self.context
         menu = self.actions_menu
         menu.addSeparator()
         for (name, shortcut) in names_and_shortcuts:
-            callback = cmds.run(cmds.RunConfigAction, name)
+            callback = cmds.run(cmds.RunConfigAction, context, name)
             menu_action = menu.addAction(name, callback)
             if shortcut:
                 menu_action.setShortcut(shortcut)
@@ -790,7 +819,7 @@ class MainView(standard.MainWindow):
             alert_text = ''
 
         if self.model.cfg.get(prefs.SHOW_PATH, True):
-            path_text = self.model.git.worktree()
+            path_text = self.git.worktree()
         else:
             path_text = ''
 
@@ -810,7 +839,7 @@ class MainView(standard.MainWindow):
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
-        hook = gitcmds.prepare_commit_message_hook()
+        hook = gitcmds.prepare_commit_message_hook(self.context)
         enabled = os.path.exists(hook)
         self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
@@ -891,17 +920,8 @@ class MainView(standard.MainWindow):
                            lambda: focus_dock(self.diffdock),
                            hotkeys.FOCUS_DIFF)
 
-    def preferences(self):
-        return prefs_widget.preferences(model=self.prefs_model, parent=self)
-
     def git_dag(self):
-        view = self.dag = dag.git_dag(self.context, existing_view=self.dag)
-        view.show()
-        view.raise_()
-
-    def save_archive(self):
-        oid = self.model.git.rev_parse('HEAD')[git.STDOUT]
-        archive.show_save_dialog(oid, parent=self)
+        self.dag = dag.git_dag(self.context, existing_view=self.dag)
 
     def show_cursor_position(self, rows, cols):
         display = '%02d:%02d' % (rows, cols)
@@ -936,27 +956,22 @@ class MainView(standard.MainWindow):
         self.position_label.setText(css + div)
 
     def rebase_start(self):
-        cfg = gitcfg.current()
+        context = self.context
+        cfg = context.cfg
         if not cfg.get('rebase.autostash', False):
             if self.model.staged or self.model.unmerged or self.model.modified:
                 Interaction.information(
                         N_('Unable to rebase'),
                         N_('You cannot rebase with uncommitted changes.'))
                 return
-        upstream = guicmds.choose_ref(N_('Select New Upstream'),
-                                      N_('Interactive Rebase'),
-                                      default='@{upstream}')
+        upstream = guicmds.choose_ref(
+            context, N_('Select New Upstream'), N_('Interactive Rebase'),
+            default='@{upstream}')
         if not upstream:
             return
         self.model.is_rebasing = True
         self.refresh()
-        cmds.do(cmds.Rebase, upstream=upstream)
-
-    def clone_repo(self):
-        progress = standard.ProgressDialog('', '', self)
-        guicmds.clone_repo(self, self.context.runtask, progress,
-                           guicmds.report_clone_repo_errors, True)
-
+        cmds.do(cmds.Rebase, context, upstream=upstream)
 
 
 class FocusProxy(object):

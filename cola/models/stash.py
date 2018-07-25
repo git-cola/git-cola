@@ -72,6 +72,7 @@ class ApplyStash(cmds.ContextCommand):
             cmdargs = core.list2cmdline(args)
             Interaction.command_error(
                 title, 'git stash ' + cmdargs, status, out, err)
+        self.model.update_status()
 
 
 class DropStash(cmds.ContextCommand):
@@ -112,6 +113,8 @@ class SaveStash(cmds.ContextCommand):
             Interaction.command_error(
                 title, 'git stash ' + cmdargs, status, out, err)
 
+        self.model.update_status()
+
 
 class StashIndex(cmds.ContextCommand):
     """Stash the index away"""
@@ -122,10 +125,11 @@ class StashIndex(cmds.ContextCommand):
 
     def do(self):
         # Manually create a stash representing the index state
+        context = self.context
         git = self.git
         name = self.stash_name
-        branch = gitcmds.current_branch()
-        head = gitcmds.rev_parse('HEAD')
+        branch = gitcmds.current_branch(context)
+        head = gitcmds.rev_parse(context, 'HEAD')
         message = 'On %s: %s' % (branch, name)
 
         # Get the message used for the "index" commit
@@ -189,6 +193,8 @@ class StashIndex(cmds.ContextCommand):
             git.reset()
         else:
             stash_error('apply', status, out, err)
+
+        self.model.update_status()
 
 
 def stash_error(cmd, status, out, err):

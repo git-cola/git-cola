@@ -6,23 +6,18 @@ from __future__ import division, absolute_import, unicode_literals
 import os
 
 from .. import core
-from .. import git
 from .. import gitcmds
-from .. import gitcfg
 from ..compat import ustr
-from ..decorators import memoize
 from ..git import STDOUT
 from ..interaction import Interaction
 from ..i18n import N_
 from ..observable import Observable
-from .selection import selection_model
 from . import prefs
 
 
-@memoize
-def model():
-    """Returns the main model singleton"""
-    return MainModel()
+def create(context):
+    """Create the repository status model"""
+    return MainModel(context)
 
 
 class MainModel(Observable):
@@ -62,17 +57,14 @@ class MainModel(Observable):
             lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    def __init__(self, cwd=None, context=None):
-        """Reads git repository settings and sets several methods
-        so that they refer to the git module.  This object
-        encapsulates cola's interaction with git."""
+    def __init__(self, context, cwd=None):
+        """Interface to the main repository status"""
         Observable.__init__(self)
 
-        # Initialize the git command object
-        self.git = context and context.git or git.current()
-        self.cfg = context and context.cfg or gitcfg.current()
-        self.selection = context and context.selection or selection_model()
-        # TODO make context required
+        self.context = context
+        self.git = context.git
+        self.cfg = context.cfg
+        self.selection = context.selection
 
         self.initialized = False
         self.annex = False
@@ -248,11 +240,11 @@ class MainModel(Observable):
             self.emit_updated()
 
     def _update_files(self, update_index=False):
-        display_untracked = prefs.display_untracked()
-        state = gitcmds.worktree_state(head=self.head,
-                                       update_index=update_index,
-                                       display_untracked=display_untracked,
-                                       paths=self.filter_paths)
+        context = self.context
+        display_untracked = prefs.display_untracked(context)
+        state = gitcmds.worktree_state(
+            context, head=self.head, update_index=update_index,
+            display_untracked=display_untracked, paths=self.filter_paths)
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
@@ -282,10 +274,12 @@ class MainModel(Observable):
 
     def _update_branch_heads(self):
         # Set these early since they are used to calculate 'upstream_changed'.
-        self.currentbranch = gitcmds.current_branch()
+        self.currentbranch = gitcmds.current_branch(self.context)
 
     def _update_branches_and_tags(self):
-        local_branches, remote_branches, tags = gitcmds.all_refs(split=True)
+        context = self.context
+        local_branches, remote_branches, tags = gitcmds.all_refs(
+            context, split=True)
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
@@ -307,7 +301,8 @@ class MainModel(Observable):
         if self.amending():
             return
         # Check if there's a message file in .git/
-        merge_msg_path = gitcmds.merge_message_path()
+        context = self.context
+        merge_msg_path = gitcmds.merge_message_path(context)
         if merge_msg_path:
             msg = core.read(merge_msg_path)
             if msg != self._auto_commitmsg:
@@ -338,7 +333,7 @@ class MainModel(Observable):
 
     def remote_url(self, name, action):
         push = action == 'push'
-        return gitcmds.remote_url(name, push=push)
+        return gitcmds.remote_url(self.context, name, push=push)
 
     def fetch(self, remote, **opts):
         return run_remote_action(self.git.fetch, remote, **opts)
@@ -386,7 +381,9 @@ class MainModel(Observable):
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
 
     def untrack_paths(self, paths):
-        status, out, err = gitcmds.untrack_paths(paths, head=self.head)
+        context = self.context
+        head = self.head
+        status, out, err = gitcmds.untrack_paths(context, paths, head=head)
         self.update_file_status()
         return status, out, err
 

@@ -24,17 +24,18 @@ from . import standard
 from . import text
 
 
-def finder(paths=None):
+def finder(context, paths=None):
     """Prompt and use 'git grep' to find the content."""
-    widget = new_finder(paths=paths, parent=qtutils.active_window())
+    parent = qtutils.active_window()
+    widget = new_finder(context, paths=paths, parent=parent)
     widget.show()
     widget.raise_()
     return widget
 
 
-def new_finder(paths=None, parent=None):
+def new_finder(context, paths=None, parent=None):
     """Create a finder widget"""
-    widget = Finder(parent=parent)
+    widget = Finder(context, parent=parent)
     widget.search_for(paths or '')
     return widget
 
@@ -81,17 +82,19 @@ class FindFilesThread(QtCore.QThread):
 
     result = Signal(object)
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.query = None
 
     def run(self):
+        context = self.context
         query = self.query
         if query is None:
             args = []
         else:
             args = [add_wildcards(arg) for arg in utils.shell_split(query)]
-        filenames = gitcmds.tracked_files(*args)
+        filenames = gitcmds.tracked_files(context, *args)
         if query == self.query:
             self.result.emit(filenames)
         else:
@@ -101,15 +104,17 @@ class FindFilesThread(QtCore.QThread):
 class Finder(standard.Dialog):
     """File Finder dialog"""
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
+        self.context = context
         self.setWindowTitle(N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
-        self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
+        self.input_txt = completion.GitTrackedLineEdit(
+            context, hint=N_('<path> ...'))
 
         self.tree = filetree.FileTree(parent=self)
 
@@ -151,7 +156,7 @@ class Finder(standard.Dialog):
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.input_txt)
 
-        thread = self.worker_thread = FindFilesThread(self)
+        thread = self.worker_thread = FindFilesThread(context, self)
         thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
         self.input_txt.textChanged.connect(lambda s: self.search())
@@ -201,12 +206,14 @@ class Finder(standard.Dialog):
         self.refresh_button.setEnabled(True)
 
     def edit(self):
+        context = self.context
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.Edit, paths, background_editor=True)
+        cmds.do(cmds.Edit, context, paths, background_editor=True)
 
     def open_default(self):
+        context = self.context
         paths = self.tree.selected_filenames()
-        cmds.do(cmds.OpenDefaultApp, paths)
+        cmds.do(cmds.OpenDefaultApp, context, paths)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())

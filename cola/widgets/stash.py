@@ -43,7 +43,7 @@ class StashView(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.stash_list = standard.ListWidget(parent=self)
-        self.stash_text = diff.DiffTextEdit(self)
+        self.stash_text = diff.DiffTextEdit(context, self)
 
         self.button_apply = qtutils.create_button(
             text=N_('Apply'),
@@ -185,9 +185,9 @@ class StashView(standard.Dialog):
         selection = self.selected_stash()
         if not selection:
             return
+        context = self.context
         index = get(self.keep_index)
-        cmds.do(stash.ApplyStash, self.context, selection, index, pop)
-        cmds.do(cmds.Rescan, self.context)
+        cmds.do(stash.ApplyStash, context, selection, index, pop)
         QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_save(self):
@@ -209,14 +209,13 @@ class StashView(standard.Dialog):
                 N_('Error: Stash exists'),
                 N_('A stash named "%s" already exists') % stash_name)
             return
-
+        context = self.context
         keep_index = get(self.keep_index)
         stash_index = get(self.stash_index)
         if stash_index:
-            cmds.do(stash.StashIndex, self.context, stash_name)
+            cmds.do(stash.StashIndex, context, stash_name)
         else:
-            cmds.do(stash.SaveStash, self.context, stash_name, keep_index)
-        cmds.do(cmds.Rescan, self.context)
+            cmds.do(stash.SaveStash, context, stash_name, keep_index)
         QtCore.QTimer.singleShot(1, lambda: self.accept())
 
     def stash_drop(self):

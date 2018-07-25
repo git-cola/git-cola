@@ -6,6 +6,8 @@ import unittest
 import subprocess
 import tempfile
 
+import mock
+
 from cola import core
 from cola import git
 from cola import gitcfg
@@ -77,8 +79,10 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.initialize_repo()
         if commit:
             self.commit_files()
-        git.current().set_worktree(core.getcwd())
-        gitcfg.current().reset()
+        self.context = context = mock.Mock()
+        context.git = git.create()
+        context.git.set_worktree(core.getcwd())
+        context.cfg = gitcfg.create(context)
         gitcmds.reset()
 
     def git(self, *args):

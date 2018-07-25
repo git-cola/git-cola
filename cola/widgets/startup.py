@@ -24,8 +24,9 @@ from . import standard
 class StartupDialog(standard.Dialog):
     """Provides a GUI to Open or Clone a git repository."""
 
-    def __init__(self, parent=None, settings=None):
+    def __init__(self, context, parent=None, settings=None):
         standard.Dialog.__init__(self, parent)
+        self.context = context
         self.setWindowTitle(N_('git-cola'))
 
         # Top-most large icon
@@ -146,8 +147,8 @@ class StartupDialog(standard.Dialog):
 
     def clone_repo(self):
         progress = standard.ProgressDialog('', '', self)
-        guicmds.clone_repo(self, self.runtask, progress,
-                           self.clone_repo_done, False)
+        guicmds.clone_repo(self.context, self, self.runtask, progress,
+            self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
         if task.cmd and task.cmd.status == 0:
@@ -157,7 +158,8 @@ class StartupDialog(standard.Dialog):
             guicmds.report_clone_repo_errors(task)
 
     def new_repo(self):
-        repodir = guicmds.new_repo()
+        context = self.context
+        repodir = guicmds.new_repo(context)
         if repodir:
             self.repodir = repodir
             self.accept()

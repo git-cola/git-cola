@@ -73,6 +73,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.setColumnCount(len(Columns.ALL))
 
         self.context = context
+        self.model = model = context.model
         self.entries = {}
         cfg = context.cfg
         self.turbo = cfg.get('cola.turbo', False)
@@ -84,16 +85,17 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         self.model_updated.connect(self.refresh, type=Qt.QueuedConnection)
 
-        model = main.model()
+        model = context.model
         model.add_observer(model.message_updated, self._model_updated)
 
         self.file_icon = icons.file_text()
         self.dir_icon = icons.directory()
 
     def mimeData(self, indexes):
+        context = self.context
         paths = qtutils.paths_from_indexes(self, indexes,
                                            item_type=GitRepoNameItem.TYPE)
-        return qtutils.mimedata_from_paths(paths)
+        return qtutils.mimedata_from_paths(context, paths)
 
     def mimeTypes(self):
         return qtutils.path_mimetypes()
@@ -216,7 +218,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         return utils.add_parents(files)
 
     def get_files(self):
-        model = main.model()
+        model = self.model
         return set(model.staged + model.unstaged)
 
     def _model_updated(self):
@@ -254,15 +256,18 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def update_entry(self, path):
         if self.turbo or path not in self.entries:
             return  # entry doesn't currently exist
-        task = GitRepoInfoTask(self._parent, path, self.default_author)
+        context = self.context
+        task = GitRepoInfoTask(
+            context, self._parent, path, self.default_author)
         self._runtask.start(task)
 
 
 class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
-    def __init__(self, parent, path, default_author):
+    def __init__(self, context, parent, path, default_author):
         qtutils.Task.__init__(self, parent)
+        self.context = context
         self.path = path
         self._parent = parent
         self._default_author = default_author
@@ -274,12 +279,11 @@ class GitRepoInfoTask(qtutils.Task):
         Supported keys are 'date', 'message', and 'author'
 
         """
+        git = self.context.git
         if not self._data:
-            log_line = main.model().git.log('-1', '--', self.path,
-                                            no_color=True,
-                                            pretty=r'format:%ar%x01%s%x01%an',
-                                            _readonly=True
-                                            )[STDOUT]
+            log_line = git.log(
+                '-1', '--', self.path, no_color=True,
+                pretty=r'format:%ar%x01%s%x01%an', _readonly=True)[STDOUT]
             if log_line:
                 log_line = log_line
                 date, message, author = log_line.split(chr(0x01), 2)
@@ -315,8 +319,7 @@ class GitRepoInfoTask(qtutils.Task):
 
     def status(self):
         """Return the status for the entry's path."""
-
-        model = main.model()
+        model = self.context.model
         unmerged = utils.add_parents(model.unmerged)
         modified = utils.add_parents(model.modified)
         staged = utils.add_parents(model.staged)

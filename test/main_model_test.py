@@ -14,7 +14,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
 
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
-        self.model = main.MainModel(cwd=core.getcwd())
+        self.model = main.MainModel(self.context, cwd=core.getcwd())
 
     def test_project(self):
         """Test the 'project' attribute."""

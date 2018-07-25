@@ -9,7 +9,6 @@ from qtpy import QtWidgets
 from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
-from ..models.selection import selection_model
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import browse
@@ -112,6 +111,7 @@ class RepoTreeView(standard.TreeView):
         standard.TreeView.__init__(self, parent)
 
         self.context = context
+        self.selection = context.selection
         self.saved_selection = []
         self.saved_current_path = None
         self.saved_open_folders = set()
@@ -151,7 +151,8 @@ class RepoTreeView(standard.TreeView):
         self.action_stage = qtutils.add_action_with_status_tip(
                 self, cmds.StageOrUnstage.name(),
                 N_('Stage/unstage selected paths for commit'),
-                cmds.run(cmds.StageOrUnstage), hotkeys.STAGE_SELECTION)
+                cmds.run(cmds.StageOrUnstage, context),
+                hotkeys.STAGE_SELECTION)
 
         self.action_untrack = qtutils.add_action_with_status_tip(
                 self, N_('Untrack Selected'),
@@ -165,7 +166,7 @@ class RepoTreeView(standard.TreeView):
         self.action_difftool = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchDifftool.name(),
                 N_('Launch git-difftool on the current path'),
-                cmds.run(cmds.LaunchDifftool), hotkeys.DIFF)
+                cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
 
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
                 self, N_('Diff Against Predecessor...'),
@@ -175,29 +176,29 @@ class RepoTreeView(standard.TreeView):
         self.action_revert_unstaged = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUnstagedEdits.name(),
                 N_('Revert unstaged changes to selected paths'),
-                cmds.run(cmds.RevertUnstagedEdits), hotkeys.REVERT)
+                cmds.run(cmds.RevertUnstagedEdits, context), hotkeys.REVERT)
 
         self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
                 self, cmds.RevertUncommittedEdits.name(),
                 N_('Revert uncommitted changes to selected paths'),
-                cmds.run(cmds.RevertUncommittedEdits), hotkeys.UNDO)
+                cmds.run(cmds.RevertUncommittedEdits, context), hotkeys.UNDO)
 
         self.action_editor = qtutils.add_action_with_status_tip(
                 self, cmds.LaunchEditor.name(),
                 N_('Edit selected paths'),
-                cmds.run(cmds.LaunchEditor), hotkeys.EDIT)
+                cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT)
 
-        self.action_refresh = common.refresh_action(self)
+        self.action_refresh = common.refresh_action(context, self)
 
         if not utils.is_win32():
             self.action_default_app = common.default_app_action(
-                    self, self.selected_paths)
+                context, self, self.selected_paths)
 
             self.action_parent_dir = common.parent_dir_action(
-                    self, self.selected_paths)
+                context, self, self.selected_paths)
 
             self.action_terminal = common.terminal_action(
-                    self, self.selected_paths)
+                context, self, self.selected_paths)
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
         self.size_columns()
@@ -207,6 +208,8 @@ class RepoTreeView(standard.TreeView):
         # Remember open folders so that we can restore them when refreshing
         item = self.name_item_from_index(index)
         self.saved_open_folders.add(item.path)
+        context = self.context
+        context = self.context
         self.size_columns()
 
         # update information about a directory as it is expanded
@@ -412,7 +415,7 @@ class RepoTreeView(standard.TreeView):
             else:
                 staged.append(path)
         # Push the new selection into the model.
-        selection_model().set_selection(state)
+        self.selection.set_selection(state)
         return paths
 
     def selectionChanged(self, old, new):
@@ -424,11 +427,12 @@ class RepoTreeView(standard.TreeView):
         return result
 
     def update_diff(self):
+        context = self.context
+        model = context.model
         paths = self.sync_selection()
         if paths and self.model().path_is_interesting(paths[0]):
-            model = self.context.model
             cached = paths[0] in model.staged
-            cmds.do(cmds.Diff, paths[0], cached)
+            cmds.do(cmds.Diff, context, paths[0], cached)
 
     def set_model(self, model):
         """Set the concrete QAbstractItemModel instance."""
@@ -489,27 +493,32 @@ class RepoTreeView(standard.TreeView):
     def view_history(self):
         """Launch the configured history browser path-limited to entries."""
         paths = self.selected_paths()
-        cmds.do(cmds.VisualizePaths, paths)
+        cmds.do(cmds.VisualizePaths, self.context, paths)
 
     def untrack_selected(self):
         """untrack selected paths."""
-        cmds.do(cmds.Untrack, self.selected_tracked_paths())
+        context = self.context
+        cmds.do(cmds.Untrack, context, self.selected_tracked_paths())
 
     def rename_selected(self):
         """untrack selected paths."""
-        cmds.do(cmds.Rename, self.selected_tracked_paths())
+        context = self.context
+        cmds.do(cmds.Rename, context, self.selected_tracked_paths())
 
     def diff_predecessor(self):
         """Diff paths against previous versions."""
+        context = self.context
         paths = self.selected_tracked_paths()
         args = ['--'] + paths
-        revs, summaries = gitcmds.log_helper(all=False, extra_args=args)
-        commits = select_commits(N_('Select Previous Version'),
-                                 revs, summaries, multiselect=False)
+        revs, summaries = gitcmds.log_helper(
+            context, all=False, extra_args=args)
+        commits = select_commits(
+            context, N_('Select Previous Version'), revs, summaries,
+            multiselect=False)
         if not commits:
             return
         commit = commits[0]
-        cmds.difftool_launch(left=commit, paths=paths)
+        cmds.difftool_launch(context, left=commit, paths=paths)
 
     def current_path(self):
         """Return the path for the current item."""
@@ -768,8 +777,8 @@ class GitTreeModel(GitFileTreeModel):
     def _initialize(self):
         """Iterate over git-ls-tree and create GitTreeItems."""
         git = self.context.git
-        status, out, err = git.ls_tree('--full-tree', '-r', '-t', '-z',
-                                       self.ref)
+        status, out, err = git.ls_tree(
+            '--full-tree', '-r', '-t', '-z', self.ref)
         if status != 0:
             Interaction.log_status(status, out, err)
             return

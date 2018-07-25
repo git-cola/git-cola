@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 
 from ..i18n import N_
 from ..interaction import Interaction
-from ..git import git
 from ..git import STDOUT
 from ..qtutils import connect_button
 from ..qtutils import create_toolbutton
@@ -38,8 +37,10 @@ class SearchOptions(object):
 
 class SearchWidget(standard.Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent)
+
+        self.context = context
         self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtWidgets.QComboBox()
@@ -68,7 +69,7 @@ class SearchWidget(standard.Dialog):
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
         self.commit_list.setSelectionMode(selection_mode)
 
-        self.commit_text = diff.DiffTextEdit(self, whitespace=False)
+        self.commit_text = diff.DiffTextEdit(context, self, whitespace=False)
 
         self.button_export = qtutils.create_button(text=N_('Export Patches'),
                                                    icon=icons.diff())
@@ -100,13 +101,14 @@ class SearchWidget(standard.Dialog):
         self.init_size(parent=parent)
 
 
-def search():
+def search(context):
     """Return a callback to handle various search actions."""
-    return search_commits(qtutils.active_window())
+    return search_commits(context, qtutils.active_window())
 
 
 class SearchEngine(object):
-    def __init__(self, model):
+    def __init__(self, context, model):
+        self.context = context
         self.model = model
 
     def rev_args(self):
@@ -129,6 +131,7 @@ class SearchEngine(object):
         return len(self.model.query) > 1
 
     def revisions(self, *args, **kwargs):
+        git = self.context.git
         revlist = git.log(*args, **kwargs)[STDOUT]
         return gitcmds.parse_rev_list(revlist)
 
@@ -141,7 +144,7 @@ class RevisionSearch(SearchEngine):
     def results(self):
         query, opts = self.common_args()
         args = utils.shell_split(query)
-        return self.revisions(all=True, *args, **opts)
+        return self.revisions(*args, **opts)
 
 
 class PathSearch(SearchEngine):
@@ -176,6 +179,7 @@ class CommitterSearch(SearchEngine):
 class DiffSearch(SearchEngine):
 
     def results(self):
+        git = self.context.git
         query, kwargs = self.common_args()
         return gitcmds.parse_rev_list(
             git.log('-S'+query, all=True, **kwargs)[STDOUT])
@@ -199,8 +203,14 @@ class DateRangeSearch(SearchEngine):
 
 class Search(SearchWidget):
 
-    def __init__(self, model, parent):
-        SearchWidget.__init__(self, parent)
+    def __init__(self, context, model, parent):
+        """
+        Search diffs and commit logs
+
+        :param model: SearchOptions instance
+
+        """
+        SearchWidget.__init__(self, context, parent)
         self.model = model
 
         self.EXPR = N_('Search by Expression')
@@ -288,7 +298,7 @@ class Search(SearchWidget):
         self.model.start_date = get(self.start_date)
         self.model.end_date = get(self.end_date)
 
-        self.results = engineclass(self.model).search()
+        self.results = engineclass(self.context, self.model).search()
         if self.results:
             self.display_results()
         else:
@@ -326,35 +336,31 @@ class Search(SearchWidget):
             return result[0]
 
     def display(self, *args):
+        context = self.context
         revision = self.selected_revision()
         if revision is None:
             self.commit_text.setText('')
         else:
             qtutils.set_clipboard(revision)
-            diff_text = gitcmds.commit_diff(revision)
+            diff_text = gitcmds.commit_diff(context, revision)
             self.commit_text.setText(diff_text)
 
     def export_patch(self):
+        context = self.context
         revision = self.selected_revision()
         if revision is not None:
-            Interaction.log_status(*gitcmds.export_patchset(revision,
-                                                            revision))
+            Interaction.log_status(*gitcmds.export_patchset(
+                context, revision, revision))
 
     def cherry_pick(self):
+        git = self.context.git
         revision = self.selected_revision()
         if revision is not None:
             Interaction.log_status(*git.cherry_pick(revision))
 
 
-def search_commits(parent):
+def search_commits(context, parent):
     opts = SearchOptions()
-    widget = Search(opts, parent)
+    widget = Search(context, opts, parent)
     widget.show()
     return widget
-
-
-if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
-    widget = Search()
-    widget.show()
-    app.exec_()
