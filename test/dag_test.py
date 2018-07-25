@@ -75,3 +75,16 @@ class DAGTestCase(helper.GitRepositoryTestCase):
             core.readline.return_value = LOG_LINES[idx+1]
 
             self.assertEqual(parents[idx], [p.oid for p in commit.parents])
+
+    @mock.patch('cola.models.dag.core')
+    def test_repo_reader_contract(self, core):
+        core.exists.return_value = True
+        core.readline.return_value = LOG_LINES[0]
+
+        for idx, commit in enumerate(self.reader.get()):
+            core.readline.return_value = LOG_LINES[idx+1]
+
+        core.start_command.assert_called()
+        call_args = core.start_command.call_args
+        self.assertTrue('log.abbrevCommit=false' in call_args[0][0])
+        self.assertTrue('log.showSignature=false' in call_args[0][0])
