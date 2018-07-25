@@ -119,7 +119,7 @@ class Settings(object):
     def rename_bookmark(self, path, name, new_name):
         return self.rename_entry(self.bookmarks, path, name, new_name)
 
-    def add_recent(self, path):
+    def add_recent(self, path, max_recent):
         try:
             index = [recent['path'] for recent in self.recent].index(path)
             entry = self.recent.pop(index)
@@ -129,8 +129,7 @@ class Settings(object):
                 'path': path,
             }
         self.recent.insert(0, entry)
-
-        if len(self.recent) >= prefs.maxrecent():
+        if len(self.recent) >= max_recent:
             self.recent.pop()
 
     def remove_recent(self, path):

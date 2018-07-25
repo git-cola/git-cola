@@ -56,7 +56,7 @@ class Difftool(standard.Dialog):
         self.setWindowTitle(title)
         self.setWindowModality(Qt.WindowModal)
 
-        self.expr = completion.GitRefLineEdit(parent=self)
+        self.expr = completion.GitRefLineEdit(context, parent=self)
         if expr is not None:
             self.expr.setText(expr)
 
@@ -145,10 +145,11 @@ class Difftool(standard.Dialog):
         self.refresh_filenames()
 
     def refresh_filenames(self):
+        context = self.context
         if self.a and self.b is None:
-            filenames = gitcmds.diff_index_filenames(self.a)
+            filenames = gitcmds.diff_index_filenames(context, self.a)
         else:
-            filenames = gitcmds.diff(self.diff_arg)
+            filenames = gitcmds.diff(context, self.diff_arg)
         self.tree.set_filenames(filenames, select=True)
 
     def tree_selection_changed(self):

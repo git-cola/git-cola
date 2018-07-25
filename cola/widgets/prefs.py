@@ -15,7 +15,7 @@ from . import standard
 
 def preferences(context, model=None, parent=None):
     if model is None:
-        model = prefs.PreferencesModel()
+        model = prefs.PreferencesModel(context)
     view = PreferencesView(context, model, parent=parent)
     view.show()
     view.raise_()

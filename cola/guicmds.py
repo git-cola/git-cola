@@ -10,7 +10,6 @@ from . import gitcmds
 from . import icons
 from . import qtutils
 from . import utils
-from . import git
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
@@ -36,7 +35,8 @@ def delete_branch(context):
 def delete_remote_branch(context):
     """Launch the 'Delete Remote Branch' dialog."""
     remote_branch = choose_remote_branch(
-        N_('Delete Remote Branch'), N_('Delete'), icon=icons.discard())
+        context, N_('Delete Remote Branch'), N_('Delete'),
+        icon=icons.discard())
     if not remote_branch:
         return
     remote, branch = gitcmds.parse_remote_branch(remote_branch)
@@ -46,14 +46,14 @@ def delete_remote_branch(context):
 
 def browse_current(context):
     """Launch the 'Browse Current Branch' dialog."""
-    branch = gitcmds.current_branch()
+    branch = gitcmds.current_branch(context)
     BrowseBranch.browse(context, branch)
 
 
 def browse_other(context):
     """Prompt for a branch and inspect content at that point in time."""
     # Prompt for a branch to browse
-    branch = choose_ref(N_('Browse Commits...'), N_('Browse'))
+    branch = choose_ref(context, N_('Browse Commits...'), N_('Browse'))
     if not branch:
         return
     BrowseBranch.browse(context, branch)
@@ -70,7 +70,7 @@ def checkout_branch(context):
 
 def cherry_pick(context):
     """Launch the 'Cherry-Pick' dialog."""
-    revs, summaries = gitcmds.log_helper(all=True)
+    revs, summaries = gitcmds.log_helper(context, all=True)
     commits = select_commits(
         context, N_('Cherry-Pick Commit'), revs, summaries, multiselect=False)
     if not commits:
@@ -160,7 +160,7 @@ def prompt_for_new_bare_repo():
 
 def export_patches(context):
     """Run 'git format-patch' on a list of commits."""
-    revs, summaries = gitcmds.log_helper()
+    revs, summaries = gitcmds.log_helper(context)
     to_export_and_output = select_commits_and_output(
         context, N_('Export Patches'), revs, summaries)
     if not to_export_and_output['to_export']:
@@ -174,8 +174,8 @@ def export_patches(context):
 
 def diff_expression(context):
     """Diff using an arbitrary expression."""
-    tracked = gitcmds.tracked_branch()
-    current = gitcmds.current_branch()
+    tracked = gitcmds.tracked_branch(context)
+    current = gitcmds.current_branch(context)
     if tracked and current:
         ref = tracked + '..' + current
     else:
@@ -211,38 +211,38 @@ def load_commitmsg(context):
         cmds.do(cmds.LoadCommitMessageFromFile, context, filename)
 
 
-def choose_from_dialog(get, title, button_text, default, icon=None):
+def choose_from_dialog(get, context, title, button_text, default, icon=None):
     parent = qtutils.active_window()
-    return get(title, button_text, parent, default=default, icon=icon)
+    return get(context, title, button_text, parent, default=default, icon=icon)
 
 
-def choose_ref(title, button_text, default=None, icon=None):
+def choose_ref(context, title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitRefDialog.get,
-                              title, button_text, default, icon=icon)
+                              context, title, button_text, default, icon=icon)
 
 
 def choose_branch(context, title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitBranchDialog.get,
-                              title, button_text, default, icon=icon)
+                              context, title, button_text, default, icon=icon)
 
 
 def choose_potential_branch(context, title, button_text,
                             default=None, icon=None):
     return choose_from_dialog(completion.GitCheckoutBranchDialog.get,
-                              title, button_text, default, icon=icon)
+                              context, title, button_text, default, icon=icon)
 
 
-def choose_remote_branch(title, button_text, default=None, icon=None):
+def choose_remote_branch(context, title, button_text, default=None, icon=None):
     return choose_from_dialog(completion.GitRemoteBranchDialog.get,
-                              title, button_text, default, icon=icon)
+                              context, title, button_text, default, icon=icon)
 
 
 def review_branch(context):
     """Diff against an arbitrary revision, branch, tag, etc."""
-    branch = choose_ref(N_('Select Branch to Review'), N_('Review'))
+    branch = choose_ref(context, N_('Select Branch to Review'), N_('Review'))
     if not branch:
         return
-    merge_base = gitcmds.merge_base_parent(branch)
+    merge_base = gitcmds.merge_base_parent(context, branch)
     difftool.diff_commits(context, qtutils.active_window(), merge_base, branch)
 
 
@@ -301,7 +301,7 @@ def report_clone_repo_errors(task):
     status = cmd.status
     out = cmd.out
     err = cmd.err
-    title = N_('Error: could not clone "%s"') % task.cmd.url
+    title = N_('Error: could not clone "%s"') % cmd.url
     Interaction.command(title, 'git clone', status, out, err)
 
 
@@ -318,12 +318,14 @@ def rename_branch(context):
 
 
 def reset_branch_head(context):
-    ref = choose_ref(N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
+    ref = choose_ref(
+        context, N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
     if ref:
         cmds.do(cmds.ResetBranchHead, context, ref)
 
 
 def reset_worktree(context):
-    ref = choose_ref(N_('Reset Worktree'), N_('Reset'))
+    ref = choose_ref(
+        context, N_('Reset Worktree'), N_('Reset'))
     if ref:
         cmds.do(cmds.ResetWorktree, context, ref)

@@ -10,7 +10,6 @@ from qtpy.QtCore import Signal
 from .. import cmds
 from .. import core
 from .. import git
-from .. import gitcfg
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
@@ -163,8 +162,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.clear_default_repo_action.setEnabled(False)
 
     def refresh(self):
+        context = self.context
         settings = self.settings
-        builder = BuildItem()
+        builder = BuildItem(context)
 
         # bookmarks
         if self.style == BOOKMARKS:
@@ -174,7 +174,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             entries = settings.recent
 
         items = [builder.get(entry['path'], entry['name']) for entry in entries]
-        if self.style == BOOKMARKS and prefs.sort_bookmarks():
+        if self.style == BOOKMARKS and prefs.sort_bookmarks(context):
             items.sort(key=lambda x: x.name)
 
         self.clear()
@@ -333,10 +333,10 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
 class BuildItem(object):
 
-    def __init__(self):
+    def __init__(self, context):
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()
-        cfg = gitcfg.current()
+        cfg = context.cfg
         self.default_repo = cfg.get('cola.defaultrepo')
 
     def get(self, path, name):

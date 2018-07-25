@@ -303,6 +303,7 @@ class TextEdit(QtWidgets.QTextEdit):
         QtWidgets.QTextEdit.__init__(self, parent)
         self.ext = TextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
+        self.expandtab = False
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -327,6 +328,9 @@ class TextEdit(QtWidgets.QTextEdit):
     def set_linebreak(self, brk):
         self.ext.set_linebreak(brk)
 
+    def set_expandtab(self, value):
+        self.expandtab = value
+
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
         super(TextEdit, self).mousePressEvent(event)
@@ -339,7 +343,7 @@ class TextEdit(QtWidgets.QTextEdit):
         return super(TextEdit, self).wheelEvent(event)
 
     def should_expandtab(self, event):
-        return event.key() == Qt.Key_Tab and prefs.expandtab()
+        return event.key() == Qt.Key_Tab and self.expandtab
 
     def expandtab(self):
         tabwidth = max(self.ext.tabwidth(), 1)
@@ -391,7 +395,6 @@ class TextEditCursorPosition(object):
 
 def setup_mono_font(widget):
     widget.setFont(qtutils.diff_font())
-    widget.set_tabwidth(prefs.tabwidth())
 
 
 class MonoTextEdit(PlainTextEdit):

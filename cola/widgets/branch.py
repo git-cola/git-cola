@@ -172,6 +172,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def contextMenuEvent(self, event):
         """Build and execute the context menu"""
+        context = self.context
         selected = self.selected_item()
         root = self.tree_helper.get_root(selected)
 
@@ -202,7 +203,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             # local branch
             if NAME_LOCAL_BRANCH == root.name:
 
-                remote = gitcmds.tracked_branch(full_name)
+                remote = gitcmds.tracked_branch(context, full_name)
                 if remote is not None:
                     menu.addSeparator()
 
@@ -246,6 +247,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def build_upstream_menu(self, menu):
         """Build the "Set Upstream Branch" sub-menu"""
+        context = self.context
         model = self.main_model
         current_branch = model.currentbranch
         selected_item = self.selected_item()
@@ -257,8 +259,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         other_branches = []
 
         if selected_branch:
-            remote = gitcmds.upstream_remote(selected_branch)
-            upstream = gitcmds.tracked_branch(branch=selected_branch)
+            remote = gitcmds.upstream_remote(context, selected_branch)
+            upstream = gitcmds.tracked_branch(context, branch=selected_branch)
 
         if not remote and 'origin' in model.remotes:
             remote = 'origin'
@@ -321,15 +323,17 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.tree_helper.load_state(item, states[item.name])
 
     def update_select_branch(self):
-        item = self.tree_helper.find_child(
-            self.topLevelItem(0), self.current_branch)
+        context = self.context
+        current_branch = self.current_branch
+        top_item = self.topLevelItem(0)
+        item = self.tree_helper.find_child(top_item, current_branch)
+
         if item is not None:
             self.tree_helper.expand_from_item(item)
             item.setIcon(0, icons.star())
 
-            tracked_branch = gitcmds.tracked_branch(self.current_branch)
-
-            if self.current_branch is not None and tracked_branch is not None:
+            tracked_branch = gitcmds.tracked_branch(context, current_branch)
+            if current_branch and tracked_branch:
                 status = {'ahead': 0, 'behind': 0}
                 status_str = ''
 
@@ -371,8 +375,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             model.update_remotes()
 
     def push_action(self):
+        context = self.context
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
-        remote_branch = gitcmds.tracked_branch(branch)
+        remote_branch = gitcmds.tracked_branch(context, branch)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
@@ -390,8 +395,9 @@ class BranchesTreeWidget(standard.TreeWidget):
                                   refresh_tree=True)
 
     def pull_action(self):
+        context = self.context
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
-        remote_branch = gitcmds.tracked_branch(branch)
+        remote_branch = gitcmds.tracked_branch(context, branch)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:

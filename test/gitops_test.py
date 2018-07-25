@@ -22,7 +22,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
         self.write_file('B', 'B')
         self.git('add', 'A', 'B')
 
-        model = MainModel(cwd=core.getcwd())
+        model = MainModel(self.context, cwd=core.getcwd())
         model.git.commit(m='commit test')
         log = self.git('log', '--pretty=oneline')
 
@@ -31,7 +31,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
     def test_git_config(self):
         """Test cola.git.config()"""
         self.git('config', 'section.key', 'value')
-        model = MainModel(cwd=core.getcwd())
+        model = MainModel(self.context, cwd=core.getcwd())
         value = model.git.config('section.key', get=True)
         self.assertEqual(value, (0, 'value', ''))
 

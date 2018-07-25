@@ -397,18 +397,13 @@ def _print_win32_git_hint():
     core.stderr("error: unable to execute 'git'" + hint)
 
 
-@memoize
-def current():
-    """Return the Git singleton"""
+def create():
+    """Create Git instances
+
+    >>> git = create()
+    >>> status, out, err = git.version()
+    >>> 'git' == out[:3].lower()
+    True
+
+    """
     return Git()
-
-
-git = current()
-"""
-Git command singleton
-
->>> git = current()
->>> 'git' == git.version()[0][:3].lower()
-True
-
-"""

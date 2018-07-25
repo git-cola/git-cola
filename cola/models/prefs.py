@@ -3,7 +3,6 @@ from __future__ import division, absolute_import, unicode_literals
 import sys
 
 from .. import core
-from .. import gitcfg
 from .. import observable
 from .. import utils
 
@@ -42,30 +41,30 @@ def default_blame_viewer():
     return 'git gui blame'
 
 
-def blame_viewer():
+def blame_viewer(context):
     default = default_blame_viewer()
-    return gitcfg.current().get(BLAME_VIEWER, default=default)
+    return context.cfg.get(BLAME_VIEWER, default=default)
 
 
-def bold_headers():
-    return gitcfg.current().get(BOLD_HEADERS, default=False)
+def bold_headers(context):
+    return context.cfg.get(BOLD_HEADERS, default=False)
 
 
-def check_conflicts():
-    return gitcfg.current().get(CHECKCONFLICTS, default=True)
+def check_conflicts(context):
+    return context.cfg.get(CHECKCONFLICTS, default=True)
 
 
-def display_untracked():
-    return gitcfg.current().get(DISPLAY_UNTRACKED, default=True)
+def display_untracked(context):
+    return context.cfg.get(DISPLAY_UNTRACKED, default=True)
 
 
-def editor():
-    app = gitcfg.current().get(EDITOR, default='gvim')
+def editor(context):
+    app = context.cfg.get(EDITOR, default='gvim')
     return _remap_editor(app)
 
 
-def background_editor():
-    app = gitcfg.current().get(BACKGROUND_EDITOR, default=editor())
+def background_editor(context):
+    app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
 
 
@@ -73,8 +72,8 @@ def _remap_editor(app):
     return {'vim': 'gvim -f'}.get(app, app)
 
 
-def comment_char():
-    return gitcfg.current().get(COMMENT_CHAR, default='#')
+def comment_char(context):
+    return context.cfg.get(COMMENT_CHAR, default='#')
 
 
 def default_history_browser():
@@ -94,45 +93,49 @@ def default_history_browser():
     return default
 
 
-def history_browser():
+def history_browser(context):
     default = default_history_browser()
-    return gitcfg.current().get(HISTORY_BROWSER, default=default)
+    return context.cfg.get(HISTORY_BROWSER, default=default)
 
 
-def linebreak():
-    return gitcfg.current().get(LINEBREAK, default=True)
+def linebreak(context):
+    return context.cfg.get(LINEBREAK, default=True)
 
 
-def maxrecent():
-    return gitcfg.current().get(MAXRECENT, default=8)
+def maxrecent(context):
+    value = 8
+    if context:
+        value = context.cfg.get(MAXRECENT, default=value)
+    return value
 
 
-def spellcheck():
-    return gitcfg.current().get(SPELL_CHECK, default=False)
+def spellcheck(context):
+    return context.cfg.get(SPELL_CHECK, default=False)
 
 
-def expandtab():
-    return gitcfg.current().get(EXPANDTAB, default=False)
+def expandtab(context):
+    return context.cfg.get(EXPANDTAB, default=False)
 
 
-def sort_bookmarks():
-    return gitcfg.current().get(SORT_BOOKMARKS, default=True)
+def sort_bookmarks(context):
+    return context.cfg.get(SORT_BOOKMARKS, default=True)
 
 
-def tabwidth():
-    return gitcfg.current().get(TABWIDTH, default=8)
+def tabwidth(context):
+    return context.cfg.get(TABWIDTH, default=8)
 
 
-def textwidth():
-    return gitcfg.current().get(TEXTWIDTH, default=72)
+def textwidth(context):
+    return context.cfg.get(TEXTWIDTH, default=72)
 
 
 class PreferencesModel(observable.Observable):
     message_config_updated = 'config_updated'
 
-    def __init__(self):
+    def __init__(self, context):
         observable.Observable.__init__(self)
-        self.config = gitcfg.current()
+        self.context = context
+        self.config = context.cfg
 
     def set_config(self, source, config, value):
         if source == 'repo':

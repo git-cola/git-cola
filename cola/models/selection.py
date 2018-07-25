@@ -4,36 +4,17 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 
 from ..observable import Observable
-from ..decorators import memoize
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
 
-@memoize
-def selection_model():
-    """Provides access to a static SelectionModel instance."""
+def create():
+    """Create a SelectionModel"""
     return SelectionModel()
 
 
-def selection():
-    """Return the current selection."""
-    return selection_model().selection()
-
-
-def single_selection():
-    """Scan across staged, modified, etc. and return a single item."""
-    return selection_model().single_selection()
-
-
-def selected_group():
-    return selection_model().group()
-
-
-def filename():
-    return selection_model().filename()
-
-
 def pick(s):
+    """Choose the first list from stage, unmerged, modified, untracked"""
     if s.staged:
         files = s.staged
     elif s.unmerged:
@@ -108,6 +89,7 @@ class SelectionModel(Observable):
                      self.modified, self.untracked)
 
     def single_selection(self):
+        """Scan across staged, modified, etc. and return a single item."""
         st = None
         m = None
         um = None
@@ -132,3 +114,10 @@ class SelectionModel(Observable):
     def group(self):
         """A list of selected files in various states of being"""
         return pick(self.selection())
+
+    def pick(self, selection):
+        return pick(selection)
+
+    def union(self):
+        """Return the union of all selected items in a sorted list"""
+        return union(self)

@@ -19,9 +19,9 @@ from .. import version
 from . import defs
 
 
-def about_dialog():
+def about_dialog(context):
     """Launches the Help -> About dialog"""
-    view = AboutView(qtutils.active_window())
+    view = AboutView(context, qtutils.active_window())
     view.show()
     return view
 
@@ -61,9 +61,10 @@ class ExpandingTabWidget(QtWidgets.QTabWidget):
 class AboutView(QtWidgets.QDialog):
     """Provides the git-cola 'About' dialog"""
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
 
+        self.context = context
         self.setWindowTitle(N_('About git-cola'))
         self.setWindowModality(Qt.WindowModal)
 
@@ -83,7 +84,7 @@ class AboutView(QtWidgets.QDialog):
         self.logo_text_label.setFont(font)
 
         self.text = qtutils.textbrowser(text=copyright_text())
-        self.version = qtutils.textbrowser(text=version_text())
+        self.version = qtutils.textbrowser(text=version_text(context))
         self.authors = qtutils.textbrowser(text=authors_text())
         self.translators = qtutils.textbrowser(text=translators_text())
 
@@ -138,8 +139,8 @@ If not, see http://www.gnu.org/licenses/.
 """
 
 
-def version_text():
-    git_version = version.git_version()
+def version_text(context):
+    git_version = version.git_version(context)
     cola_version = version.version()
     build_version = version.build_version()
     python_path = sys.executable

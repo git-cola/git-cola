@@ -41,8 +41,8 @@ class CompareBranchesDialog(standard.Dialog):
 
         self.setWindowTitle(N_('Branch Diff Viewer'))
 
-        self.remote_branches = gitcmds.branch_list(remote=True)
-        self.local_branches = gitcmds.branch_list(remote=False)
+        self.remote_branches = gitcmds.branch_list(context, remote=True)
+        self.local_branches = gitcmds.branch_list(context, remote=False)
 
         self.top_widget = QtWidgets.QWidget()
         self.bottom_widget = QtWidgets.QWidget()
@@ -163,10 +163,11 @@ class CompareBranchesDialog(standard.Dialog):
         self.start = left_item
         self.end = right_item
 
+        context = self.context
         if len(self.diff_arg) == 1:
-            files = gitcmds.diff_index_filenames(self.diff_arg[0])
+            files = gitcmds.diff_index_filenames(context, self.diff_arg[0])
         else:
-            files = gitcmds.diff_filenames(*self.diff_arg)
+            files = gitcmds.diff_filenames(context, *self.diff_arg)
 
         self.set_diff_files(files)
 
@@ -179,20 +180,21 @@ class CompareBranchesDialog(standard.Dialog):
     def remote_ref(self, branch):
         """Returns the remote ref for 'git diff [local] [remote]'
         """
+        context = self.context
         if branch == self.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
-            branch = gitcmds.current_branch()
-            tracked_branch = gitcmds.tracked_branch()
+            branch = gitcmds.current_branch(context)
+            tracked_branch = gitcmds.tracked_branch(context)
             if tracked_branch:
-                return gitcmds.merge_base(branch, tracked_branch)
+                return gitcmds.merge_base(context, branch, tracked_branch)
             else:
-                remote_branches = gitcmds.branch_list(remote=True)
+                remote_branches = gitcmds.branch_list(context, remote=True)
                 remote_branch = 'origin/%s' % branch
                 if remote_branch in remote_branches:
-                    return gitcmds.merge_base(branch, remote_branch)
+                    return gitcmds.merge_base(context, branch, remote_branch)
 
                 elif 'origin/master' in remote_branches:
-                    return gitcmds.merge_base(branch, 'origin/master')
+                    return gitcmds.merge_base(context, branch, 'origin/master')
                 else:
                     return 'HEAD'
         else:

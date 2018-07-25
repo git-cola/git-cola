@@ -9,7 +9,6 @@ if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(1, srcdir)
 
-from .git import git
 from .git import STDOUT
 from .decorators import memoize
 from ._version import VERSION
@@ -68,9 +67,9 @@ def check(key, ver):
     return check_version(get(key), ver)
 
 
-def check_git(key):
+def check_git(context, key):
     """Checks if Git has a specific feature"""
-    return check(key, git_version())
+    return check(key, git_version(context))
 
 
 def version_to_list(version):
@@ -87,15 +86,16 @@ def version_to_list(version):
 
 
 @memoize
-def git_version_str():
+def git_version_str(context):
     """Returns the current GIT version"""
+    git = context.git
     return git.version()[STDOUT].strip()
 
 
 @memoize
-def git_version():
+def git_version(context):
     """Returns the current GIT version"""
-    parts = git_version_str().split()
+    parts = git_version_str(context).split()
     if parts and len(parts) >= 3:
         return parts[2]
     else:

@@ -33,8 +33,9 @@ class UpdateFileListThread(QtCore.QThread):
         self.count = count
 
     def run(self):
+        context = self.context
         ref = 'HEAD~%d' % self.count
-        filenames = gitcmds.diff_index_filenames(ref)
+        filenames = gitcmds.diff_index_filenames(context, ref)
         self.result.emit(filenames)
 
 

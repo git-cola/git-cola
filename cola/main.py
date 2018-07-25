@@ -318,7 +318,7 @@ def start_cola(context, view):
 def cmd_about(args):
     from .widgets import about
     context = app.application_init(args)
-    view = about.about_dialog()
+    view = about.about_dialog(context)
     return app.application_start(context, view)
 
 

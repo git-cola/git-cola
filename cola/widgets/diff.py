@@ -901,10 +901,14 @@ class DiffWidget(QtWidgets.QWidget):
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
 
+    def set_tabwidth(self, width):
+        self.diff.set_tabwidth(width)
+
     def set_diff_oid(self, oid, filename=None):
+        context = self.context
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
-        task = DiffInfoTask(oid, filename, self)
+        task = DiffInfoTask(context, oid, filename, self)
         self.context.runtask.start(task, result=self.diff.set_diff)
 
     def commits_selected(self, commits):
@@ -993,10 +997,13 @@ class TextLabel(QtWidgets.QLabel):
 
 class DiffInfoTask(qtutils.Task):
 
-    def __init__(self, oid, filename, parent):
+    def __init__(self, context, oid, filename, parent):
         qtutils.Task.__init__(self, parent)
+        self.context = context
         self.oid = oid
         self.filename = filename
 
     def task(self):
-        return gitcmds.diff_info(self.oid, filename=self.filename)
+        context = self.context
+        oid = self.oid
+        return gitcmds.diff_info(context, oid, filename=self.filename)

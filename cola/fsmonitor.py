@@ -12,7 +12,6 @@ from threading import Lock
 
 from . import utils
 from . import version
-from .decorators import memoize
 
 AVAILABLE = None
 
@@ -38,10 +37,8 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from . import core
-from . import gitcfg
 from . import gitcmds
 from .compat import bchr
-from .git import git
 from .i18n import N_
 from .interaction import Interaction
 
@@ -51,15 +48,16 @@ class _Monitor(QtCore.QObject):
     files_changed = Signal()
     config_changed = Signal()
 
-    def __init__(self, thread_class):
+    def __init__(self, context, thread_class):
         QtCore.QObject.__init__(self)
+        self.context = context
         self._thread_class = thread_class
         self._thread = None
 
     def start(self):
         if self._thread_class is not None:
             assert self._thread is None
-            self._thread = self._thread_class(self)
+            self._thread = self._thread_class(self.context, self)
             self._thread.start()
 
     def stop(self):
@@ -80,11 +78,12 @@ class _BaseThread(QtCore.QThread):
     #: modifications into a single signal.
     _NOTIFICATION_DELAY = 888
 
-    def __init__(self, monitor):
+    def __init__(self, context, monitor):
         QtCore.QThread.__init__(self)
+        self.context = context
         self._monitor = monitor
         self._running = True
-        self._use_check_ignore = version.check_git('check-ignore')
+        self._use_check_ignore = version.check_git(context, 'check-ignore')
         self._force_notify = False
         self._force_config = False
         self._file_paths = set()
@@ -160,8 +159,9 @@ if AVAILABLE == 'inotify':
                 inotify.IN_ONLYDIR
         )
 
-        def __init__(self, monitor):
-            _BaseThread.__init__(self, monitor)
+        def __init__(self, context, monitor):
+            _BaseThread.__init__(self, context, monitor)
+            git = context.git
             worktree = git.worktree()
             if worktree is not None:
                 worktree = core.abspath(worktree)
@@ -239,33 +239,37 @@ if AVAILABLE == 'inotify':
 
         def refresh(self):
             with self._lock:
-                if self._inotify_fd is None:
-                    return
-                try:
-                    if self._worktree is not None:
-                        tracked_dirs = set(
-                                os.path.dirname(os.path.join(self._worktree,
-                                                             path))
-                                for path in gitcmds.tracked_files())
-                        self._refresh_watches(tracked_dirs,
-                                              self._worktree_wd_to_path_map,
-                                              self._worktree_path_to_wd_map)
-                    git_dirs = set()
-                    git_dirs.add(self._git_dir)
-                    for dirpath, dirnames, filenames in core.walk(
-                            os.path.join(self._git_dir, 'refs')):
-                        git_dirs.add(dirpath)
-                    self._refresh_watches(git_dirs,
-                                          self._git_dir_wd_to_path_map,
-                                          self._git_dir_path_to_wd_map)
-                    self._git_dir_wd = \
-                            self._git_dir_path_to_wd_map.get(self._git_dir)
-                except OSError as e:
-                    if e.errno == errno.ENOSPC:
-                        self._log_out_of_wds_message()
-                        self._running = False
-                    else:
-                        raise
+                self._refresh()
+
+        def _refresh(self):
+            if self._inotify_fd is None:
+                return
+            context = self.context
+            try:
+                if self._worktree is not None:
+                    tracked_dirs = set(
+                            os.path.dirname(os.path.join(self._worktree,
+                                                         path))
+                            for path in gitcmds.tracked_files(context))
+                    self._refresh_watches(tracked_dirs,
+                                          self._worktree_wd_to_path_map,
+                                          self._worktree_path_to_wd_map)
+                git_dirs = set()
+                git_dirs.add(self._git_dir)
+                for dirpath, dirnames, filenames in core.walk(
+                        os.path.join(self._git_dir, 'refs')):
+                    git_dirs.add(dirpath)
+                self._refresh_watches(git_dirs,
+                                      self._git_dir_wd_to_path_map,
+                                      self._git_dir_path_to_wd_map)
+                self._git_dir_wd = \
+                        self._git_dir_path_to_wd_map.get(self._git_dir)
+            except OSError as e:
+                if e.errno == errno.ENOSPC:
+                    self._log_out_of_wds_message()
+                    self._running = False
+                else:
+                    raise
 
         def _refresh_watches(self, paths_to_watch, wd_to_path_map,
                              path_to_wd_map):
@@ -401,8 +405,9 @@ if AVAILABLE == 'pywin32':
                   win32con.FILE_NOTIFY_CHANGE_LAST_WRITE |
                   win32con.FILE_NOTIFY_CHANGE_SECURITY)
 
-        def __init__(self, monitor):
-            _BaseThread.__init__(self, monitor)
+        def __init__(self, context, monitor):
+            _BaseThread.__init__(self, context, monitor)
+            git = context.git
             worktree = git.worktree()
             if worktree is not None:
                 worktree = self._transform_path(core.abspath(worktree))
@@ -508,14 +513,9 @@ if AVAILABLE == 'pywin32':
             self.wait()
 
 
-@memoize
-def current():
-    return _create_instance()
-
-
-def _create_instance():
+def create(context):
     thread_class = None
-    cfg = gitcfg.current()
+    cfg = context.cfg
     if not cfg.get('cola.inotify', default=True):
         msg = N_('File system change monitoring: disabled because'
                  ' "cola.inotify" is false.\n')
@@ -533,4 +533,4 @@ def _create_instance():
             msg = N_('File system change monitoring: disabled because libc'
                      ' does not support the inotify system calls.\n')
             Interaction.log(msg)
-    return _Monitor(thread_class)
+    return _Monitor(context, thread_class)

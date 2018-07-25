@@ -336,19 +336,21 @@ class Search(SearchWidget):
             return result[0]
 
     def display(self, *args):
+        context = self.context
         revision = self.selected_revision()
         if revision is None:
             self.commit_text.setText('')
         else:
             qtutils.set_clipboard(revision)
-            diff_text = gitcmds.commit_diff(revision)
+            diff_text = gitcmds.commit_diff(context, revision)
             self.commit_text.setText(diff_text)
 
     def export_patch(self):
+        context = self.context
         revision = self.selected_revision()
         if revision is not None:
-            Interaction.log_status(*gitcmds.export_patchset(revision,
-                                                            revision))
+            Interaction.log_status(*gitcmds.export_patchset(
+                context, revision, revision))
 
     def cherry_pick(self):
         git = self.context.git

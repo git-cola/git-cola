@@ -125,10 +125,11 @@ class StashIndex(cmds.ContextCommand):
 
     def do(self):
         # Manually create a stash representing the index state
+        context = self.context
         git = self.git
         name = self.stash_name
-        branch = gitcmds.current_branch()
-        head = gitcmds.rev_parse('HEAD')
+        branch = gitcmds.current_branch(context)
+        head = gitcmds.rev_parse(context, 'HEAD')
         message = 'On %s: %s' % (branch, name)
 
         # Get the message used for the "index" commit

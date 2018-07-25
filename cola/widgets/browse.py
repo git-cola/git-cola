@@ -9,7 +9,6 @@ from qtpy import QtWidgets
 from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
-from ..models.selection import selection_model
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import browse
@@ -511,14 +510,15 @@ class RepoTreeView(standard.TreeView):
         context = self.context
         paths = self.selected_tracked_paths()
         args = ['--'] + paths
-        revs, summaries = gitcmds.log_helper(all=False, extra_args=args)
+        revs, summaries = gitcmds.log_helper(
+            context, all=False, extra_args=args)
         commits = select_commits(
             context, N_('Select Previous Version'), revs, summaries,
             multiselect=False)
         if not commits:
             return
         commit = commits[0]
-        cmds.difftool_launch(self.context, left=commit, paths=paths)
+        cmds.difftool_launch(context, left=commit, paths=paths)
 
     def current_path(self):
         """Return the path for the current item."""
@@ -777,8 +777,8 @@ class GitTreeModel(GitFileTreeModel):
     def _initialize(self):
         """Iterate over git-ls-tree and create GitTreeItems."""
         git = self.context.git
-        status, out, err = git.ls_tree('--full-tree', '-r', '-t', '-z',
-                                       self.ref)
+        status, out, err = git.ls_tree(
+            '--full-tree', '-r', '-t', '-z', self.ref)
         if status != 0:
             Interaction.log_status(status, out, err)
             return

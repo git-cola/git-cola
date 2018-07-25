@@ -86,10 +86,11 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.summary.menu_actions.extend(menu_actions)
 
         cfg = context.cfg
-        self.summary_validator = MessageValidator(cfg, parent=self.summary)
+        self.summary_validator = MessageValidator(context, parent=self.summary)
         self.summary.setValidator(self.summary_validator)
 
         self.description = CommitMessageTextEdit()
+        self.description.set_dictionary(cfg.get('cola.dictionary', None))
         self.description.menu_actions.extend(menu_actions)
 
         commit_button_tooltip = N_('Commit staged changes\n'
@@ -134,7 +135,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.check_spelling_action = self.actions_menu.addAction(
                 N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
-        spellcheck = prefs.spellcheck()
+        spellcheck = prefs.spellcheck(context)
         self.check_spelling_action.setChecked(spellcheck)
         self.toggle_check_spelling(spellcheck)
 
@@ -142,7 +143,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.autowrap_action = self.actions_menu.addAction(
                 N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
-        self.autowrap_action.setChecked(prefs.linebreak())
+        self.autowrap_action.setChecked(prefs.linebreak(context))
 
         # Commit message
         self.actions_menu.addSeparator()
@@ -203,13 +204,14 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         self.commit_group.setEnabled(False)
 
-        self.set_tabwidth(prefs.tabwidth())
-        self.set_textwidth(prefs.textwidth())
-        self.set_linebreak(prefs.linebreak())
+        self.set_expandtab(prefs.expandtab(context))
+        self.set_tabwidth(prefs.tabwidth(context))
+        self.set_textwidth(prefs.textwidth(context))
+        self.set_linebreak(prefs.linebreak(context))
 
         # Loading message
         commit_msg = ''
-        commit_msg_path = commit_message_path()
+        commit_msg_path = commit_message_path(context)
         if commit_msg_path:
             commit_msg = core.read(commit_msg_path)
         model.set_commitmsg(commit_msg)
@@ -388,6 +390,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         self.update_actions()
 
+    def set_expandtab(self, value):
+        self.description.set_expandtab(value)
+
     def set_tabwidth(self, width):
         self._tabwidth = width
         self.description.set_tabwidth(width)
@@ -482,8 +487,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def build_commits_menu(self, cmd, menu, chooser, prefix=''):
         context = self.context
-        ctx = dag.DAG('HEAD', 6)
-        commits = dag.RepoReader(ctx)
+        params = dag.DAG('HEAD', 6)
+        commits = dag.RepoReader(context, params)
 
         menu_commits = []
         for idx, c in enumerate(commits.get()):
@@ -501,7 +506,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
     def choose_commit(self, cmd):
         context = self.context
-        revs, summaries = gitcmds.log_helper()
+        revs, summaries = gitcmds.log_helper(context)
         oids = select_commits(
             context, N_('Select Commit'), revs, summaries, multiselect=False)
         if not oids:
@@ -550,10 +555,11 @@ class MessageValidator(QtGui.QValidator):
 
     config_updated = Signal()
 
-    def __init__(self, cfg, parent=None):
+    def __init__(self, context, parent=None):
         super(MessageValidator, self).__init__(parent)
+        self.context = context
         self._comment_char = None
-        self._cfg = cfg
+        self._cfg = cfg = context.cfg
         self.refresh()
         self.config_updated.connect(self.refresh, type=Qt.QueuedConnection)
         cfg.add_observer(cfg.message_updated, self.emit_config_updated)
@@ -567,7 +573,7 @@ class MessageValidator(QtGui.QValidator):
 
     def refresh(self):
         """Update comment char in response to config changes"""
-        self._comment_char = prefs.comment_char()
+        self._comment_char = prefs.comment_char(self.context)
 
     def validate(self, string, idx):
         """Scrub whitespace and validate the commit message"""

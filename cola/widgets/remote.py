@@ -43,7 +43,7 @@ def pull(context):
 def run(context, RemoteDialog):
     """Launches fetch/push/pull dialogs."""
     # Copy global stuff over to speedup startup
-    model = main.MainModel()
+    model = main.MainModel(context)
     global_model = context.model
     model.currentbranch = global_model.currentbranch
     model.local_branches = global_model.local_branches
@@ -268,7 +268,7 @@ class RemoteActionDialog(standard.Dialog):
             self.top_layout, self.options_layout)
         self.setLayout(self.main_layout)
 
-        default_remote = gitcmds.upstream_remote() or 'origin'
+        default_remote = gitcmds.upstream_remote(context) or 'origin'
 
         remotes = self.model.remotes
         if default_remote in remotes:
@@ -428,7 +428,8 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_to(selection, self.selected_remotes)
 
     def set_remote_to(self, remote, selected_remotes):
-        all_branches = gitcmds.branch_list(remote=True)
+        context = self.context
+        all_branches = gitcmds.branch_list(context, remote=True)
         branches = []
         patterns = []
         for remote in selected_remotes:

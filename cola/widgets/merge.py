@@ -40,7 +40,7 @@ class Merge(standard.Dialog):
         self.revision_label = QtWidgets.QLabel()
         self.revision_label.setText(N_('Revision to Merge'))
 
-        self.revision = completion.GitRefLineEdit()
+        self.revision = completion.GitRefLineEdit(context)
         self.revision.setToolTip(N_('Revision to Merge'))
         if ref:
             self.revision.set_value(ref)

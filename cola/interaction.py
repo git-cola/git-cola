@@ -99,11 +99,11 @@ class Interaction(object):
         return status, out, err
 
     @classmethod
-    def confirm_config_action(cls, name, opts):
-        return cls.confirm(N_('Run %s?') % name,
-                           N_('Run the "%s" command?') % name,
-                           '',
-                           ok_text=N_('Run'))
+    def confirm_config_action(cls, context, name, opts):
+        return cls.confirm(
+            N_('Run %s?') % name,
+            N_('Run the "%s" command?') % name, '',
+            ok_text=N_('Run'))
 
     @classmethod
     def log_status(cls, status, out, err=None):

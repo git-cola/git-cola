@@ -98,7 +98,7 @@ class CreateBranchDialog(Dialog):
         self.branch_name_label = QtWidgets.QLabel()
         self.branch_name_label.setText(N_('Branch Name'))
 
-        self.branch_name = completion.GitCreateBranchLineEdit()
+        self.branch_name = completion.GitCreateBranchLineEdit(context)
         self.branch_validator = completion.BranchValidator(
             model.git, parent=self.branch_name)
         self.branch_name.setValidator(self.branch_validator)
@@ -106,8 +106,8 @@ class CreateBranchDialog(Dialog):
         self.rev_label = QtWidgets.QLabel()
         self.rev_label.setText(N_('Starting Revision'))
 
-        self.revision = completion.GitRefLineEdit()
-        current = gitcmds.current_branch()
+        self.revision = completion.GitRefLineEdit(context)
+        current = gitcmds.current_branch(context)
         if current:
             self.revision.setText(current)
 
@@ -221,12 +221,13 @@ class CreateBranchDialog(Dialog):
 
     def create_branch(self):
         """Creates a branch; called by the "Create Branch" button"""
+        context = self.context
         self.getopts()
         revision = self.opts.revision
         branch = self.opts.branch
         no_update = get(self.no_update_radio)
         ffwd_only = get(self.ffwd_only_radio)
-        existing_branches = gitcmds.branch_list()
+        existing_branches = gitcmds.branch_list(context)
         check_branch = False
 
         if not branch or not revision:
@@ -241,7 +242,7 @@ class CreateBranchDialog(Dialog):
                 Interaction.critical(N_('Branch Exists'), msg)
                 return
             # Whether we should prompt the user for lost commits
-            commits = gitcmds.rev_list_range(revision, branch)
+            commits = gitcmds.rev_list_range(context, revision, branch)
             check_branch = bool(commits)
 
         if check_branch:

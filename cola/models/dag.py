@@ -3,7 +3,6 @@ import json
 
 from .. import core
 from .. import utils
-from ..git import git
 from ..observable import Observable
 
 # put summary at the end b/c it can contain
@@ -225,9 +224,10 @@ class Commit(object):
 
 class RepoReader(object):
 
-    def __init__(self, params, git=git):
+    def __init__(self, context, params):
+        self.context = context
         self.params = params
-        self.git = git
+        self.git = context.git
         self._proc = None
         self._objects = {}
         self._cmd = ['git',

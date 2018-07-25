@@ -8,7 +8,6 @@ from .. import cmds
 from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
-from ..git import git
 from .standard import TreeWidget
 from .diff import COMMITS_SELECTED
 from .diff import FILES_SELECTED
@@ -53,6 +52,7 @@ class FileWidget(TreeWidget):
     def commits_selected(self, commits):
         if not commits:
             return
+        git = self.context.git
         commit = commits[0]
         oid = commit.oid
         status, out, err = git.show(oid, z=True, numstat=True,

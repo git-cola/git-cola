@@ -114,6 +114,7 @@ class SelectCommits(Dialog):
         return self.selected_commits()
 
     def commit_oid_selected(self):
+        context = self.context
         oid = self.selected_commit()
         selected = oid is not None
         self.select_button.setEnabled(selected)
@@ -124,7 +125,7 @@ class SelectCommits(Dialog):
         self.revision.setText(oid)
         self.revision.selectAll()
         # Display the oid's commit
-        commit_diff = gitcmds.commit_diff(oid)
+        commit_diff = gitcmds.commit_diff(context, oid)
         self.commit_text.setText(commit_diff)
 
     def commit_oid_double_clicked(self, item):

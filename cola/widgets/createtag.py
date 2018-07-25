@@ -83,7 +83,7 @@ class CreateTag(standard.Dialog):
         self.rev_label = QtWidgets.QLabel(self)
         self.rev_label.setText(N_('Revision'))
 
-        self.revision = completion.GitRefLineEdit()
+        self.revision = completion.GitRefLineEdit(context)
         self.revision.setText(self.opts.ref)
         self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
         # Buttons

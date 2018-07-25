@@ -7,7 +7,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..git import git
 from ..git import STDOUT
 from ..i18n import N_
 from ..qtutils import get
@@ -292,7 +291,7 @@ class RemoteEditor(standard.Dialog):
         self.activate_remote(remote)
 
     def activate_remote(self, name, gather_info=True):
-        url = gitcmds.remote_url(name)
+        url = gitcmds.remote_url(self.context, name)
         self.current_name = name
         self.current_url = url
 

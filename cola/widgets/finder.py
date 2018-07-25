@@ -82,17 +82,19 @@ class FindFilesThread(QtCore.QThread):
 
     result = Signal(object)
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.query = None
 
     def run(self):
+        context = self.context
         query = self.query
         if query is None:
             args = []
         else:
             args = [add_wildcards(arg) for arg in utils.shell_split(query)]
-        filenames = gitcmds.tracked_files(*args)
+        filenames = gitcmds.tracked_files(context, *args)
         if query == self.query:
             self.result.emit(filenames)
         else:
@@ -111,7 +113,8 @@ class Finder(standard.Dialog):
 
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
-        self.input_txt = completion.GitTrackedLineEdit(hint=N_('<path> ...'))
+        self.input_txt = completion.GitTrackedLineEdit(
+            context, hint=N_('<path> ...'))
 
         self.tree = filetree.FileTree(parent=self)
 
@@ -153,7 +156,7 @@ class Finder(standard.Dialog):
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.input_txt)
 
-        thread = self.worker_thread = FindFilesThread(self)
+        thread = self.worker_thread = FindFilesThread(context, self)
         thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
         self.input_txt.textChanged.connect(lambda s: self.search())

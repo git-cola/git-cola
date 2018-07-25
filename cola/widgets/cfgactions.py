@@ -23,13 +23,13 @@ def install():
     Interaction.confirm_config_action = staticmethod(confirm_config_action)
 
 
-def get_config_actions():
-    cfg = gitcfg.current()
+def get_config_actions(context):
+    cfg = context.cfg
     return cfg.get_guitool_names_and_shortcuts()
 
 
-def confirm_config_action(name, opts):
-    dlg = ActionDialog(qtutils.active_window(), name, opts)
+def confirm_config_action(context, name, opts):
+    dlg = ActionDialog(context, qtutils.active_window(), name, opts)
     dlg.show()
     if dlg.exec_() != QtWidgets.QDialog.Accepted:
         return False
@@ -174,8 +174,9 @@ class ActionDialog(standard.Dialog):
 
     VALUES = {}
 
-    def __init__(self, parent, name, opts):
+    def __init__(self, context, parent, name, opts):
         standard.Dialog.__init__(self, parent)
+        self.context = context
         self.action_name = name
         self.opts = opts
 
@@ -217,16 +218,16 @@ class ActionDialog(standard.Dialog):
             self.argslabel.hide()
 
         revs = (
-            (N_('Local Branch'), gitcmds.branch_list(remote=False)),
-            (N_('Tracking Branch'), gitcmds.branch_list(remote=True)),
-            (N_('Tag'), gitcmds.tag_list()),
+            (N_('Local Branch'), gitcmds.branch_list(context, remote=False)),
+            (N_('Tracking Branch'), gitcmds.branch_list(context, remote=True)),
+            (N_('Tag'), gitcmds.tag_list(context)),
         )
 
         if 'revprompt' not in opts or opts.get('revprompt') is True:
             revprompt = N_('Revision')
         else:
             revprompt = opts.get('revprompt')
-        self.revselect = RevisionSelector(self, revs)
+        self.revselect = RevisionSelector(context, self, revs)
         self.revselect.set_revision_label(revprompt)
 
         if not opts.get('revprompt'):
@@ -268,14 +269,15 @@ class ActionDialog(standard.Dialog):
 
 class RevisionSelector(QtWidgets.QWidget):
 
-    def __init__(self, parent, revs):
+    def __init__(self, context, parent, revs):
         QtWidgets.QWidget.__init__(self, parent)
 
+        self.context = context
         self._revs = revs
         self._revdict = dict(revs)
 
         self._rev_label = QtWidgets.QLabel(self)
-        self._revision = completion.GitRefLineEdit(parent=self)
+        self._revision = completion.GitRefLineEdit(context, parent=self)
 
         # Create the radio buttons
         radio_btns = []

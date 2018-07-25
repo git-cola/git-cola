@@ -249,8 +249,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.itemExpanded.connect(lambda x: self.update_column_widths())
 
     def add_toplevel_item(self, txt, icon, hide=False):
+        context = self.context
         font = self.font()
-        if prefs.bold_headers():
+        if prefs.bold_headers(context):
             font.setBold(True)
         else:
             font.setItalic(True)
@@ -259,7 +260,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         item.setFont(0, font)
         item.setText(0, txt)
         item.setIcon(0, icon)
-        if prefs.bold_headers():
+        if prefs.bold_headers(context):
             item.setBackground(0, self.palette().midlight())
         if hide:
             item.setHidden(True)
@@ -809,7 +810,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def selected_group(self):
         """A list of selected files in various states of being"""
-        return selection.pick(self.selection())
+        return self.selection_model.pick(self.selection())
 
     def selected_idx(self):
         c = self.contents()
@@ -1011,8 +1012,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
+        context = self.context
         paths = qtutils.paths_from_items(items, item_filter=self._item_filter)
-        return qtutils.mimedata_from_paths(paths)
+        return qtutils.mimedata_from_paths(context, paths)
 
     def mimeTypes(self):
         return qtutils.path_mimetypes()
@@ -1020,12 +1022,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
 def view_blame(context):
     """Signal that we should view blame for paths."""
-    cmds.do(cmds.BlamePaths, context, selection.union(context.selection))
+    cmds.do(cmds.BlamePaths, context, context.selection.union())
 
 
 def view_history(context):
     """Signal that we should view history for paths."""
-    cmds.do(cmds.VisualizePaths, context, selection.union(context.selection))
+    cmds.do(cmds.VisualizePaths, context, context.selection.union())
 
 
 def copy_path(context, absolute=True):
@@ -1087,7 +1089,8 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self.main_model = context.model
 
         hint = N_('Filter paths...')
-        self.text = completion.GitStatusFilterLineEdit(hint=hint, parent=self)
+        self.text = completion.GitStatusFilterLineEdit(
+            context, hint=hint, parent=self)
         self.text.setToolTip(hint)
         self.setFocusProxy(self.text)
         self._filter = None

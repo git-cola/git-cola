@@ -22,7 +22,6 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import main
 from .models import prefs
-from .models import selection
 
 
 class UsageError(Exception):
@@ -149,7 +148,7 @@ class AbortMerge(ConfirmAction):
                                    default=False, icon=icons.undo())
 
     def action(self):
-        status, out, err = gitcmds.abort_merge()
+        status, out, err = gitcmds.abort_merge(self.context)
         self.model.update_file_status()
         return status, out, err
 
@@ -181,7 +180,7 @@ class AmendMode(EditModel):
 
         if self.amending:
             self.new_mode = self.model.mode_amend
-            self.new_commitmsg = gitcmds.prev_commitmsg()
+            self.new_commitmsg = gitcmds.prev_commitmsg(context)
             AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
@@ -282,6 +281,7 @@ class ApplyDiffSelection(ContextCommand):
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
+        context = self.context
         cfg = self.context.cfg
         diff_text = self.model.diff_text
 
@@ -305,9 +305,10 @@ class ApplyDiffSelection(ContextCommand):
         try:
             core.write(tmp_file, patch, encoding=encoding)
             if self.apply_to_worktree:
-                status, out, err = gitcmds.apply_diff_to_worktree(tmp_file)
+                status, out, err = gitcmds.apply_diff_to_worktree(
+                    context, tmp_file)
             else:
-                status, out, err = gitcmds.apply_diff(tmp_file)
+                status, out, err = gitcmds.apply_diff(context, tmp_file)
         finally:
             core.unlink(tmp_file)
 
@@ -404,7 +405,7 @@ class BlamePaths(ContextCommand):
 
     def __init__(self, context, paths):
         super(BlamePaths, self).__init__(context)
-        viewer = utils.shell_split(prefs.blame_viewer())
+        viewer = utils.shell_split(prefs.blame_viewer(context))
         self.argv = viewer + list(paths)
 
     def do(self):
@@ -575,7 +576,8 @@ class Commit(ResetMode):
 
     def do(self):
         # Create the commit message file
-        comment_char = prefs.comment_char()
+        context = self.context
+        comment_char = prefs.comment_char(context)
         msg = self.strip_comments(self.msg, comment_char=comment_char)
         tmp_file = utils.tmp_filename('commit-message')
         try:
@@ -987,6 +989,7 @@ class DiffImage(EditModel):
         super(DiffImage, self).do()
 
     def staged_images(self):
+        context = self.context
         git = self.git
         cfg = self.cfg
         head = self.model.head
@@ -1007,12 +1010,12 @@ class DiffImage(EditModel):
                 # First, check if we can get a pre-image from git-annex
                 annex_image = None
                 if annex:
-                    annex_image = gitcmds.annex_path(
-                        head, filename, config=cfg)
+                    annex_image = gitcmds.annex_path(context, head, filename)
                 if annex_image:
                     images.append((annex_image, False))  # git annex HEAD
                 else:
-                    image = gitcmds.write_blob_path(head, old_oid, filename)
+                    image = gitcmds.write_blob_path(
+                        context, head, old_oid, filename)
                     if image:
                         images.append((image, True))
 
@@ -1027,13 +1030,14 @@ class DiffImage(EditModel):
                             found_in_annex = True
 
                 if not found_in_annex:
-                    image = gitcmds.write_blob(new_oid, filename)
+                    image = gitcmds.write_blob(context, new_oid, filename)
                     if image:
                         images.append((image, True))
 
         return images
 
     def unmerged_images(self):
+        context = self.context
         git = self.git
         cfg = self.cfg
         head = self.model.head
@@ -1048,8 +1052,7 @@ class DiffImage(EditModel):
         if annex:  # Attempt to find files in git-annex
             annex_images = []
             for merge_head in merge_heads:
-                image = gitcmds.annex_path(
-                    merge_head, filename, config=cfg)
+                image = gitcmds.annex_path(context, merge_head, filename)
                 if image:
                     annex_images.append((image, False))
             if annex_images:
@@ -1090,7 +1093,7 @@ class DiffImage(EditModel):
                         merge_head = 'HEAD'
                     if oid != gitcmds.MISSING_BLOB_OID:
                         image = gitcmds.write_blob_path(
-                            merge_head, oid, filename)
+                            context, merge_head, oid, filename)
                         if image:
                             images.append((image, True))
 
@@ -1098,6 +1101,7 @@ class DiffImage(EditModel):
         return images
 
     def modified_images(self):
+        context = self.context
         git = self.git
         cfg = self.cfg
         head = self.model.head
@@ -1107,7 +1111,7 @@ class DiffImage(EditModel):
         images = []
         annex_image = None
         if annex:  # Check for a pre-image from git-annex
-            annex_image = gitcmds.annex_path(head, filename, config=cfg)
+            annex_image = gitcmds.annex_path(context, head, filename)
         if annex_image:
             images.append((annex_image, False))  # git annex HEAD
         else:
@@ -1116,7 +1120,8 @@ class DiffImage(EditModel):
             if len(parts) > 3:
                 oid = parts[2]
                 if oid != gitcmds.MISSING_BLOB_OID:
-                    image = gitcmds.write_blob_path(head, oid, filename)
+                    image = gitcmds.write_blob_path(
+                        context, head, oid, filename)
                     if image:
                         images.append((image, True))  # HEAD
 
@@ -1135,7 +1140,8 @@ class Diff(EditModel):
         self.new_filename = filename
         self.new_mode = self.model.mode_worktree
         self.new_diff_text = gitcmds.diff_helper(
-            filename=filename, cached=cached, deleted=deleted, **opts)
+            self.context, filename=filename, cached=cached,
+            deleted=deleted, **opts)
         self.new_diff_type = 'text'
 
 
@@ -1203,15 +1209,16 @@ class Edit(ContextCommand):
         self.background_editor = background_editor
 
     def do(self):
+        context = self.context
         if not self.filenames:
             return
         filename = self.filenames[0]
         if not core.exists(filename):
             return
         if self.background_editor:
-            editor = prefs.background_editor()
+            editor = prefs.background_editor(context)
         else:
-            editor = prefs.editor()
+            editor = prefs.editor(context)
         opts = []
 
         if self.line_number is None:
@@ -1250,8 +1257,9 @@ class FormatPatch(ContextCommand):
         self.output = output
 
     def do(self):
-        status, out, err = gitcmds.format_patchsets(self.to_export, self.revs,
-                                                    self.output)
+        context = self.context
+        status, out, err = gitcmds.format_patchsets(
+            context, self.to_export, self.revs, self.output)
         Interaction.log_status(status, out, err)
 
 
@@ -1362,7 +1370,7 @@ class LoadCommitMessageFromOID(ContextCommand):
         super(LoadCommitMessageFromOID, self).__init__(context)
         self.oid = oid
         self.old_commitmsg = self.model.commitmsg
-        self.new_commitmsg = prefix + gitcmds.prev_commitmsg(oid)
+        self.new_commitmsg = prefix + gitcmds.prev_commitmsg(context, oid)
 
     def do(self):
         self.model.set_commitmsg(self.new_commitmsg)
@@ -1383,7 +1391,7 @@ class PrepareCommitMessageHook(ContextCommand):
     def get_message(self):
 
         title = N_('Error running prepare-commitmsg hook')
-        hook = gitcmds.prepare_commit_message_hook()
+        hook = gitcmds.prepare_commit_message_hook(self.context)
 
         if os.path.exists(hook):
             filename = self.model.save_commitmsg()
@@ -1598,9 +1606,9 @@ def sequence_editor():
 
 class GitXBaseContext(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self, context, **kwargs):
         self.env = {
-            'GIT_EDITOR': prefs.editor(),
+            'GIT_EDITOR': prefs.editor(context),
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
             'GIT_XBASE_CANCEL_ACTION': 'save',
         }
@@ -1658,6 +1666,7 @@ class Rebase(ContextCommand):
         args, kwargs = self.prepare_arguments()
         upstream_title = self.upstream or '@{upstream}'
         with GitXBaseContext(
+                self.context,
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
                 GIT_XBASE_ACTION=N_('Rebase')):
                 # TODO this blocks the user interface window for the duration
@@ -1679,6 +1688,7 @@ class RebaseEditTodo(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
+                self.context,
                 GIT_XBASE_TITLE=N_('Edit Rebase'),
                 GIT_XBASE_ACTION=N_('Save')):
             status, out, err = self.git.rebase(edit_todo=True)
@@ -1692,6 +1702,7 @@ class RebaseContinue(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
+                self.context,
                 GIT_XBASE_TITLE=N_('Rebase'),
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.git.rebase('--continue')
@@ -1705,6 +1716,7 @@ class RebaseSkip(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
+                self.context,
                 GIT_XBASE_TITLE=N_('Rebase'),
                 GIT_XBASE_ACTION=N_('Rebase')):
             status, out, err = self.git.rebase(skip=True)
@@ -1762,7 +1774,7 @@ class RevertEditsCommand(ConfirmAction):
 
     def checkout_args(self):
         args = []
-        s = selection.selection()
+        s = self.selection.selection()
         if self.checkout_from_head():
             args.append(self.model.head)
         args.append('--')
@@ -1792,7 +1804,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
     def checkout_from_head(self):
         # If we are amending and a modified file is selected
         # then we should include "HEAD^" on the command-line.
-        selected = selection.selection()
+        selected = self.selection.selection()
         return not selected.staged and self.model.amending()
 
     def confirm(self):
@@ -1841,6 +1853,7 @@ class RunConfigAction(ContextCommand):
                 pass
         rev = None
         args = None
+        context = self.context
         cfg = self.cfg
         opts = cfg.get_guitool_opts(self.action_name)
         cmd = opts.get('cmd')
@@ -1852,7 +1865,7 @@ class RunConfigAction(ContextCommand):
             opts['prompt'] = prompt
 
         if opts.get('needsfile'):
-            filename = selection.filename()
+            filename = self.selection.filename()
             if not filename:
                 Interaction.information(
                         N_('Please select a file'),
@@ -1864,7 +1877,7 @@ class RunConfigAction(ContextCommand):
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
-                ok = Interaction.confirm_config_action(cmd, opts)
+                ok = Interaction.confirm_config_action(context, cmd, opts)
                 if not ok:
                     return False
                 rev = opts.get('revision')
@@ -2000,13 +2013,13 @@ class SignOff(ContextCommand):
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 
-def check_conflicts(unmerged):
+def check_conflicts(context, unmerged):
     """Check paths for conflicts
 
     Conflicting files can be filtered out one-by-one.
 
     """
-    if prefs.check_conflicts():
+    if prefs.check_conflicts(context):
         unmerged = [path for path in unmerged if is_conflict_free(path)]
     return unmerged
 
@@ -2064,6 +2077,7 @@ class Stage(ContextCommand):
 
     def stage_paths(self):
         """Stages add/removals to git."""
+        context = self.context
         paths = self.paths
         if not paths:
             if self.model.cfg.get('cola.safemode', False):
@@ -2086,13 +2100,13 @@ class Stage(ContextCommand):
 
         # `git add -u` doesn't work on untracked files
         if add:
-            status, out, err = gitcmds.add(add)
+            status, out, err = gitcmds.add(context, add)
             Interaction.command(N_('Error'), 'git add', status, out, err)
 
         # If a path doesn't exist then that means it should be removed
         # from the index.   We use `git add -u` for that.
         if remove:
-            status, out, err = gitcmds.add(remove, u=True)
+            status, out, err = gitcmds.add(context, remove, u=True)
             Interaction.command(N_('Error'), 'git add -u', status, out, err)
 
         self.model.update_files(emit=True)
@@ -2153,7 +2167,7 @@ class StageUnmerged(StageCarefully):
         return N_('Stage Unmerged')
 
     def init_paths(self):
-        self.paths = check_conflicts(self.model.unmerged)
+        self.paths = check_conflicts(self.context, self.model.unmerged)
 
 
 class StageUntracked(StageCarefully):
@@ -2180,7 +2194,7 @@ class StageOrUnstage(ContextCommand):
             do(Unstage, self.context, s.staged)
 
         unstaged = []
-        unmerged = check_conflicts(s.unmerged)
+        unmerged = check_conflicts(self.context, s.unmerged)
         if unmerged:
             unstaged.extend(unmerged)
         if s.modified:
@@ -2282,11 +2296,12 @@ class Unstage(ContextCommand):
         self.unstage_paths()
 
     def unstage_paths(self):
+        context = self.context
         paths = self.paths
         head = self.model.head
         if not paths:
-            return unstage_all(self.model)
-        status, out, err = gitcmds.unstage_paths(paths, head=head)
+            return unstage_all(context)
+        status, out, err = gitcmds.unstage_paths(context, paths, head=head)
         Interaction.command(N_('Error'), 'git reset', status, out, err)
         self.model.update_file_status()
 
@@ -2295,12 +2310,13 @@ class UnstageAll(ContextCommand):
     """Unstage all files; resets the index."""
 
     def do(self):
-        return unstage_all(self.model)
+        return unstage_all(self.context)
 
 
-def unstage_all(model):
+def unstage_all(context):
     """Unstage all files, even while amending"""
-    git = model.git
+    model = context.model
+    git = context.git
     head = model.head
     status, out, err = git.reset(head, '--', '.')
     Interaction.command(N_('Error'), 'git reset', status, out, err)
@@ -2324,7 +2340,7 @@ class UnstageSelected(Unstage):
     """Unstage selected files."""
 
     def __init__(self, context):
-        staged = context.selection.staged
+        staged = self.selection.staged
         super(UnstageSelected, self).__init__(context, staged)
 
 
@@ -2364,7 +2380,8 @@ class VisualizeAll(ContextCommand):
     """Visualize all branches."""
 
     def do(self):
-        browser = utils.shell_split(prefs.history_browser())
+        context = self.context
+        browser = utils.shell_split(prefs.history_browser(context))
         launch_history_browser(browser + ['--all'])
 
 
@@ -2372,7 +2389,8 @@ class VisualizeCurrent(ContextCommand):
     """Visualize all branches."""
 
     def do(self):
-        browser = utils.shell_split(prefs.history_browser())
+        context = self.context
+        browser = utils.shell_split(prefs.history_browser(context))
         launch_history_browser(browser + [self.model.currentbranch] + ['--'])
 
 
@@ -2381,7 +2399,8 @@ class VisualizePaths(ContextCommand):
 
     def __init__(self, context, paths):
         super(VisualizePaths, self).__init__(context)
-        browser = utils.shell_split(prefs.history_browser())
+        context = self.context
+        browser = utils.shell_split(prefs.history_browser(context))
         if paths:
             self.argv = browser + ['--'] + list(paths)
         else:
@@ -2400,7 +2419,8 @@ class VisualizeRevision(ContextCommand):
         self.paths = paths
 
     def do(self):
-        argv = utils.shell_split(prefs.history_browser())
+        context = self.context
+        argv = utils.shell_split(prefs.history_browser(context))
         if self.revision:
             argv.append(self.revision)
         if self.paths:
@@ -2454,7 +2474,7 @@ def do(cls, *args, **opts):
 def difftool_run(context):
     """Start a default difftool session"""
     selection = context.selection
-    files = selection.selected_group()
+    files = selection.group()
     if not files:
         return
     s = selection.selection()

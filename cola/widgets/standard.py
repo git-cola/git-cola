@@ -12,8 +12,8 @@ from qtpy.QtWidgets import QDockWidget
 from ..i18n import N_
 from ..interaction import Interaction
 from ..settings import Settings, mklist
+from ..models import prefs
 from .. import core
-from .. import gitcfg
 from .. import hotkeys
 from .. import icons
 from .. import qtcompat
@@ -61,8 +61,12 @@ class WidgetMixin(object):
         return self.__class__.__name__.lower()
 
     def save_state(self, settings=None):
-        cfg = gitcfg.current()
-        if cfg.get('cola.savewindowsettings', default=True):
+        save = True
+        context = getattr(self, 'context', None)
+        if context:
+            cfg = context.cfg
+            save = cfg.get('cola.savewindowsettings', default=True)
+        if save:
             if settings is None:
                 settings = Settings()
                 settings.load()
@@ -159,9 +163,10 @@ class MainWindowMixin(WidgetMixin):
 
     def save_settings(self, settings=None):
         if settings is None:
+            context = getattr(self, 'context', None)
             settings = Settings()
             settings.load()
-            settings.add_recent(core.getcwd())
+            settings.add_recent(core.getcwd(), prefs.maxrecent(context))
         return WidgetMixin.save_settings(self, settings=settings)
 
     def apply_state(self, state):

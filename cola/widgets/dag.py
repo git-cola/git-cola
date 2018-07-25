@@ -14,6 +14,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -516,7 +517,7 @@ class GitDAG(standard.MainWindow):
         self.force_refresh = False
 
         self.thread = None
-        self.revtext = completion.GitLogLineEdit()
+        self.revtext = completion.GitLogLineEdit(context)
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
@@ -540,6 +541,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget = CommitTreeWidget(context, notifier, self)
         self.diffwidget = diff.DiffWidget(context, notifier, self,
                                           is_commit=True)
+        self.diffwidget.set_tabwidth(prefs.tabwidth(context))
         self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, notifier, self)
 
@@ -639,6 +641,7 @@ class GitDAG(standard.MainWindow):
         self.set_params(params)
 
     def set_params(self, params):
+        context = self.context
         self.params = params
 
         # Update fields affected by model
@@ -648,7 +651,8 @@ class GitDAG(standard.MainWindow):
 
         if self.thread is not None:
             self.thread.stop()
-        self.thread = ReaderThread(params, self)
+
+        self.thread = ReaderThread(context, params, self)
 
         thread = self.thread
         thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
@@ -715,6 +719,7 @@ class GitDAG(standard.MainWindow):
         """Update the view when the Git refs change"""
         ref = get(self.revtext)
         count = get(self.maxresults)
+        context = self.context
         model = self.model
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
@@ -730,7 +735,7 @@ class GitDAG(standard.MainWindow):
         # triggered when new branches and tags are created.
         refs = set(model.local_branches + model.remote_branches + model.tags)
         argv = utils.shell_split(ref or 'HEAD')
-        oids = gitcmds.parse_refs(argv)
+        oids = gitcmds.parse_refs(context, argv)
         update = (self.force_refresh
                   or count != self.old_count
                   or oids != self.old_oids
@@ -833,8 +838,9 @@ class ReaderThread(QtCore.QThread):
     end = Signal()
     status = Signal(object)
 
-    def __init__(self, params, parent):
+    def __init__(self, context, params, parent):
         QtCore.QThread.__init__(self, parent)
+        self.context = context
         self.params = params
         self._abort = False
         self._stop = False
@@ -842,7 +848,8 @@ class ReaderThread(QtCore.QThread):
         self._condition = QtCore.QWaitCondition()
 
     def run(self):
-        repo = dag.RepoReader(self.params)
+        context = self.context
+        repo = dag.RepoReader(context, self.params)
         repo.reset()
         self.begin.emit()
         commits = []

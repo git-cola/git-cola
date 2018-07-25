@@ -158,12 +158,12 @@ class Editor(QtWidgets.QWidget):
         self.status = 1
         self.context = context
         self.filename = filename
-        self.comment_char = comment_char = prefs.comment_char()
+        self.comment_char = comment_char = prefs.comment_char(context)
         self.cancel_action = core.getenv('GIT_XBASE_CANCEL_ACTION', 'abort')
 
         self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(context, notifier, self)
-        self.tree = RebaseTreeWidget(notifier, comment_char, self)
+        self.tree = RebaseTreeWidget(context, notifier, comment_char, self)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -295,8 +295,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     external_diff = Signal()
     move_rows = Signal(object, object)
 
-    def __init__(self, notifier, comment_char, parent=None):
+    def __init__(self, context, notifier, comment_char, parent=None):
         super(RebaseTreeWidget, self).__init__(parent=parent)
+        self.context = context
         self.notifier = notifier
         self.comment_char = comment_char
         # header
@@ -404,9 +405,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         item = self.selected_item()
         if item is None or not item.is_commit():
             return
+        context = self.context
         oid = item.oid
-        ctx = dag.DAG(oid, 2)
-        repo = dag.RepoReader(ctx)
+        params = dag.DAG(oid, 2)
+        repo = dag.RepoReader(context, params)
         commits = []
         for c in repo.get():
             commits.append(c)

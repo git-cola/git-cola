@@ -71,7 +71,7 @@ class MainView(standard.MainWindow):
         self.dag = None
         self.model = model = context.model
         self.settings = settings
-        self.prefs_model = prefs_model = prefs.PreferencesModel()
+        self.prefs_model = prefs_model = prefs.PreferencesModel(context)
         self.toolbar_state = toolbar.ToolBarState(context, self)
 
         # The widget version is used by import/export_state().
@@ -313,7 +313,7 @@ class MainView(standard.MainWindow):
             self, N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate, context))
         self.help_about_action = add_action(
-            self, N_('About'), about.about_dialog)
+            self, N_('About'), partial(about.about_dialog, context))
 
         self.diff_expression_action = add_action(
             self, N_('Expression...'),
@@ -601,7 +601,8 @@ class MainView(standard.MainWindow):
         QtCore.QTimer.singleShot(0, self.initialize)
 
     def initialize(self):
-        git_version = version.git_version_str()
+        context = self.context
+        git_version = version.git_version_str(context)
         if git_version:
             ok = True
             Interaction.log(git_version + '\n' +
@@ -719,6 +720,9 @@ class MainView(standard.MainWindow):
             self.diffeditor.set_tabwidth(value)
             self.commiteditor.set_tabwidth(value)
 
+        elif config == prefs.EXPANDTAB:
+            self.commiteditor.set_expandtab(value)
+
         elif config == prefs.LINEBREAK:
             # enables automatic line breaks
             self.commiteditor.set_linebreak(value)
@@ -741,7 +745,7 @@ class MainView(standard.MainWindow):
         context.runtask.start(task)
 
     def get_config_actions(self):
-        actions = cfgactions.get_config_actions()
+        actions = cfgactions.get_config_actions(self.context)
         self.config_actions_changed.emit(actions)
 
     def _install_config_actions(self, names_and_shortcuts):
@@ -835,7 +839,7 @@ class MainView(standard.MainWindow):
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
-        hook = gitcmds.prepare_commit_message_hook()
+        hook = gitcmds.prepare_commit_message_hook(self.context)
         enabled = os.path.exists(hook)
         self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
@@ -960,9 +964,9 @@ class MainView(standard.MainWindow):
                         N_('Unable to rebase'),
                         N_('You cannot rebase with uncommitted changes.'))
                 return
-        upstream = guicmds.choose_ref(N_('Select New Upstream'),
-                                      N_('Interactive Rebase'),
-                                      default='@{upstream}')
+        upstream = guicmds.choose_ref(
+            context, N_('Select New Upstream'), N_('Interactive Rebase'),
+            default='@{upstream}')
         if not upstream:
             return
         self.model.is_rebasing = True
