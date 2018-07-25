@@ -289,13 +289,11 @@ class DiffLineNumbers(TextDecorator):
 
             rect = block_geom.translated(content_offset).toRect()
             if block_number == self.highlight_line:
-                painter.setPen(highlight_text)
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
+                painter.setPen(highlight_text)
+            else:
                 painter.setPen(disabled)
-            elif block_number == current_block_number:
-                painter.fillRect(rect.x(), rect.y(),
-                                 width, rect.height(), window)
 
             line = lines[block_number]
             if len(line) == 2:
