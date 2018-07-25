@@ -828,8 +828,8 @@ class LineNumbers(TextDecorator):
 
     def width_hint(self):
         document = self.editor.document()
-        digits = int(math.log(max(1, document.blockCount()), 10))
-        return defs.margin + self.fontMetrics().width('0') * (digits + 2)
+        digits = int(math.log(max(1, document.blockCount()), 10)) + 2
+        return defs.large_margin + self.fontMetrics().width('0') * digits
 
     def set_highlighted(self, line_number):
         """Set the line to highlight"""
@@ -839,11 +839,11 @@ class LineNumbers(TextDecorator):
         """Paint the line number"""
         QPalette = QtGui.QPalette
         painter = QtGui.QPainter(self)
-        palette = self.palette()
+        editor = self.editor
+        palette = editor.palette()
 
         painter.fillRect(event.rect(), palette.color(QPalette.Base))
 
-        editor = self.editor
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
         current_block_number = max(0, self.editor.textCursor().blockNumber())
@@ -851,9 +851,9 @@ class LineNumbers(TextDecorator):
         event_rect_bottom = event.rect().bottom()
 
         highlight = palette.color(QPalette.Highlight)
+        highlighted_text = palette.color(QPalette.HighlightedText)
         window = palette.color(QPalette.Window)
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
-        painter.setPen(disabled)
 
         while block.isValid():
             block_geom = editor.blockBoundingGeometry(block)
@@ -866,13 +866,13 @@ class LineNumbers(TextDecorator):
             if block_number == self.highlight_line:
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
-            elif block_number == current_block_number:
-                painter.fillRect(rect.x(), rect.y(),
-                                 width, rect.height(), window)
+                painter.setPen(highlighted_text)
+            else:
+                painter.setPen(disabled)
 
             number = '%s' % (block_number + 1)
             painter.drawText(rect.x(), rect.y(),
-                             self.width() - (defs.margin * 2),
+                             self.width() - defs.large_margin,
                              rect.height(),
                              Qt.AlignRight | Qt.AlignVCenter,
                              number)
