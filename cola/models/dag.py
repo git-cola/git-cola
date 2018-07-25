@@ -8,7 +8,7 @@ from ..observable import Observable
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
-logfmt = 'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
+logfmt = r'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
 logsep = chr(0x01)
 
 
@@ -230,7 +230,10 @@ class RepoReader(object):
         self.git = git
         self._proc = None
         self._objects = {}
-        self._cmd = ['git', 'log',
+        self._cmd = ['git',
+                     '-c', 'log.abbrevCommit=false',
+                     '-c', 'log.showSignature=false',
+                     'log',
                      '--topo-order',
                      '--reverse',
                      '--decorate=full',
