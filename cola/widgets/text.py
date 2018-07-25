@@ -20,6 +20,19 @@ def get_stripped(widget):
     return widget.get().strip()
 
 
+class LineEditStyle(QtWidgets.QProxyStyle):
+
+    def __init__(self, widget):
+        super(LineEditStyle, self).__init__(widget.style())
+        self.widget = widget
+
+    def pixelMetric(self, metric, option, widget):
+        if metric == QtWidgets.QStyle.PM_TextCursorWidth:
+            font = self.widget.font()
+            return QtGui.QFontMetrics(font).width('M')
+        return super(LineEditStyle, self).pixelMetric(metric, option, widget)
+
+
 class LineEdit(QtWidgets.QLineEdit):
 
     cursor_changed = Signal(int, int)
@@ -34,6 +47,8 @@ class LineEdit(QtWidgets.QLineEdit):
 
         if clear_button and hasattr(self, 'setClearButtonEnabled'):
             self.setClearButtonEnabled(True)
+
+        self.setStyle(LineEditStyle(self))
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -91,7 +106,6 @@ class BaseTextEditExtension(QtCore.QObject):
         widget.setMinimumSize(QtCore.QSize(1, 1))
         widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
         widget.setLineWrapMode(widget.NoWrap)
-        widget.setCursorWidth(defs.cursor_width)
         if self._readonly:
             widget.setReadOnly(True)
             widget.setAcceptDrops(False)
@@ -213,6 +227,12 @@ class BaseTextEditExtension(QtCore.QObject):
         """Enable word wrapping"""
         pass
 
+    def set_font(self, font):
+        # Update cursor width
+        metrics = QtGui.QFontMetrics(font)
+        width = metrics.width('M')
+        self.widget.setCursorWidth(width)
+
 
 class PlainTextEditExtension(BaseTextEditExtension):
 
@@ -275,6 +295,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             return
         return super(PlainTextEdit, self).wheelEvent(event)
 
+    def setFont(self, font):
+        super(PlainTextEdit, self).setFont(font)
+        self.ext.set_font(font)
+
 
 class TextEditExtension(BaseTextEditExtension):
 
@@ -330,6 +354,10 @@ class TextEdit(QtWidgets.QTextEdit):
 
     def set_expandtab(self, value):
         self.expandtab = value
+
+    def setFont(self, font):
+        super(TextEdit, self).setFont(font)
+        self.ext.set_font(font)
 
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
