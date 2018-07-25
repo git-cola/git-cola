@@ -19,7 +19,27 @@ def get_stripped(widget):
     return widget.get().strip()
 
 
-class LineEditStyle(QtWidgets.QProxyStyle):
+# PyQt4 does not provide QProxyStyle -- this is a drop-in replacement
+class ProxyStyle(QtWidgets.QCommonStyle):
+
+    OVERRIDES = set()
+
+    def __init__(self, style):
+        super(ProxyStyle, self).__init__()
+        for name, value in style.__dict__.items():
+            if name not in self.OVERRIDES:
+                setattr(self, name, value)
+
+
+if hasattr(QtWidgets, 'QProxyStyle'):
+    BaseProxyStyle = QtWidgets.QProxyStyle
+else:
+    BaseProxyStyle = ProxyStyle
+
+
+class LineEditStyle(BaseProxyStyle):
+
+    OVERRIDES = set(['pixelMetric'])
 
     def __init__(self, widget):
         super(LineEditStyle, self).__init__(widget.style())
