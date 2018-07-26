@@ -275,7 +275,7 @@ class CreateBranchDialog(Dialog):
 
         title = N_('Create Branch')
         label = N_('Updating')
-        self.progress = ProgressDialog(context, title, label, self)
+        self.progress = ProgressDialog(title, label, self)
         self.progress.show()
         self.thread.start()
 

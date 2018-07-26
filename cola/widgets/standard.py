@@ -614,7 +614,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
     A thread is spawned to animate the progress label text.
 
     """
-    def __init__(self, context, title, label, parent):
+    def __init__(self, title, label, parent):
         QtWidgets.QProgressDialog.__init__(self, parent)
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -622,7 +622,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
         self.setRange(0, 0)
         self.setMinimumDuration(0)
         self.setCancelButton(None)
-        self.setFont(qtutils.diff_font(context))
+        self.setFont(qtutils.default_monospace_font())
         self.thread = ProgressAnimationThread(label, self)
         self.thread.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
@@ -736,7 +736,7 @@ class MessageBox(Dialog):
     to workaround, so we use a simple custom dialog instead.
 
     """
-    def __init__(self, context, parent=None, title='', text='',
+    def __init__(self, parent=None, title='', text='',
                  info='', details='', logo=None, default=False,
                  ok_icon=None, ok_text='', cancel_text=None, cancel_icon=None):
 
@@ -789,7 +789,7 @@ class MessageBox(Dialog):
         self.details_text.setReadOnly(True)
         self.details_text.hide()
         if details:
-            self.details_text.setFont(qtutils.diff_font(context))
+            self.details_text.setFont(qtutils.default_monospace_font())
             self.details_text.setPlainText(details)
         else:
             self.button_toggle_details.hide()
@@ -861,14 +861,13 @@ def confirm(title, text, informative_text, ok_text,
     cancel_text = cancel_text or N_('Cancel')
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
 
-    msgbox = MessageBox(
-        None, parent=qtutils.active_window(),
+    mbox = MessageBox(parent=qtutils.active_window(),
         title=title, text=text, info=informative_text,
         ok_text=ok_text, ok_icon=icon,
         cancel_text=cancel_text, cancel_icon=cancel_icon,
         logo=logo, default=default)
 
-    return msgbox.run() == msgbox.Accepted
+    return mbox.run() == msgbox.Accepted
 
 
 def critical(title, message=None, details=None):
@@ -876,8 +875,7 @@ def critical(title, message=None, details=None):
     if message is None:
         message = title
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxCritical)
-    mbox = MessageBox(
-        None, parent=qtutils.active_window(),
+    mbox = MessageBox(parent=qtutils.active_window(),
         title=title, text=message, details=details, logo=logo)
     mbox.run()
 
@@ -893,11 +891,8 @@ def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
-    mbox = MessageBox(
-        None, parent=qtutils.active_window(),
-        title=title, text=message,
-        info=informative_text,
-        details=details,
+    mbox = MessageBox(parent=qtutils.active_window(), title=title,
+        text=message, info=informative_text, details=details,
         logo=icons.cola())
     mbox.run()
 
@@ -907,8 +902,7 @@ def question(title, text, default=True):
     Passing "default=False" will make "No" the default choice."""
     parent = qtutils.active_window()
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
-    msgbox = MessageBox(
-        None, parent=parent, title=title, text=text,
+    msgbox = MessageBox(parent=parent, title=title, text=text,
         default=default, logo=logo, ok_text=N_('Yes'), cancel_text=N_('No'))
     return msgbox.run() == msgbox.Accepted
 

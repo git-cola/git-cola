@@ -271,7 +271,7 @@ class CloneTask(qtutils.Task):
 def spawn_clone(context):
     """Clone a repository and spawn a new git-cola instance"""
     parent = qtutils.active_window()
-    progress = standard.ProgressDialog(context, '', '', parent)
+    progress = standard.ProgressDialog('', '', parent)
     clone_repo(context, parent, context.runtask, progress,
                report_clone_repo_errors, True)
 
