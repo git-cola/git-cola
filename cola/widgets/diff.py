@@ -141,7 +141,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             context, self.document(),
             is_commit=is_commit, whitespace=whitespace)
         if numbers:
-            self.numbers = DiffLineNumbers(self)
+            self.numbers = DiffLineNumbers(context, self)
             self.numbers.hide()
         else:
             self.numbers = None
@@ -199,14 +199,14 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
 class DiffLineNumbers(TextDecorator):
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         TextDecorator.__init__(self, parent)
         self.highlight_line = -1
         self.lines = None
         self.parser = diffparse.DiffLines()
         self.formatter = diffparse.FormatDigits()
 
-        self.setFont(qtutils.diff_font())
+        self.setFont(qtutils.diff_font(context))
         self._char_width = self.fontMetrics().width('0')
 
         QPalette = QtGui.QPalette

@@ -6,7 +6,6 @@ from qtpy import QtWidgets
 
 from ..i18n import N_
 from ..models import prefs
-from ..qtutils import diff_font
 from .. import cmds
 from .. import qtutils
 from . import defs
@@ -214,9 +213,9 @@ class SettingsFormWidget(FormWidget):
 
     def update_from_config(self):
         FormWidget.update_from_config(self)
-
+        context = self.context
         block = self.fixed_font.blockSignals(True)
-        font = diff_font()
+        font = qtutils.diff_font(context)
         self.fixed_font.setCurrentFont(font)
         self.fixed_font.blockSignals(block)
 

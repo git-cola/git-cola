@@ -129,7 +129,7 @@ class RemoteActionDialog(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.runtask = qtutils.RunTask(parent=self)
-        self.progress = ProgressDialog(title, N_('Updating'), self)
+        self.progress = ProgressDialog(context, title, N_('Updating'), self)
 
         self.local_label = QtWidgets.QLabel()
         self.local_label.setText(N_('Local Branch'))

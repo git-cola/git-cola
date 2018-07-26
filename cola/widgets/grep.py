@@ -6,7 +6,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..i18n import N_
-from ..qtutils import diff_font
 from ..utils import Group
 from .. import cmds
 from .. import core
@@ -102,7 +101,7 @@ class Grep(Dialog):
                 self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
 
         self.input_label = QtWidgets.QLabel('git grep')
-        self.input_label.setFont(diff_font())
+        self.input_label.setFont(qtutils.diff_font(context))
 
         self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
 

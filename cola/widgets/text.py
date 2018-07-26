@@ -441,7 +441,7 @@ class TextEditCursorPosition(object):
 
 
 def setup_mono_font(widget):
-    widget.setFont(qtutils.diff_font())
+    widget.setFont(qtutils.diff_font(None))
 
 
 class MonoTextEdit(PlainTextEdit):
@@ -785,16 +785,16 @@ class HintedLineEdit(LineEdit):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        self.setFont(qtutils.diff_font())
+        self.setFont(qtutils.diff_font(None))
         self.textChanged.connect(lambda text: self.hint.refresh())
 
 
-def text_dialog(text, title):
+def text_dialog(context, text, title):
     """Show a wall of text in a dialog"""
     parent = qtutils.active_window()
 
     label = QtWidgets.QLabel(parent)
-    label.setFont(qtutils.diff_font())
+    label.setFont(qtutils.diff_font(context))
     label.setText(text)
     label.setMargin(defs.large_margin)
     text_flags = Qt.TextSelectableByKeyboard | Qt.TextSelectableByMouse

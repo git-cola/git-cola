@@ -584,15 +584,19 @@ def default_monospace_font():
     return font
 
 
-def diff_font_str():
-    font_str = gitcfg.current().get(prefs.FONTDIFF)
-    if font_str is None:
+def diff_font_str(context):
+    if context:
+        cfg = context.cfg
+    else:
+        cfg = gitcfg.current()
+    font_str = cfg.get(prefs.FONTDIFF)
+    if not font_str:
         font_str = default_monospace_font().toString()
     return font_str
 
 
-def diff_font():
-    return font(diff_font_str())
+def diff_font(context):
+    return font(diff_font_str(context))
 
 
 def font(string):

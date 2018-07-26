@@ -218,7 +218,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         # Allow tab to jump from the summary to the description
         self.setTabOrder(self.summary, self.description)
-        self.setFont(qtutils.diff_font())
+        self.setFont(qtutils.diff_font(context))
         self.setFocusProxy(self.summary)
 
         cfg.add_observer(cfg.message_user_config_changed, self.config_changed)

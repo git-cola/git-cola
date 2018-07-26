@@ -4,6 +4,7 @@ import os
 import sys
 import re
 from argparse import ArgumentParser
+from functools import partial
 
 def setup_environment():
     path = os.path
@@ -115,7 +116,8 @@ class XBaseWindow(standard.MainWindow):
         self.setWindowTitle(title)
 
         self.show_help_action = qtutils.add_action(
-            self, N_('Show Help'), show_help, hotkeys.QUESTION)
+            self, N_('Show Help'), partial(show_help, context),
+            hotkeys.QUESTION)
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -208,7 +210,7 @@ class Editor(QtWidgets.QWidget):
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
-        qtutils.connect_button(self.help_button, show_help)
+        qtutils.connect_button(self.help_button, partial(show_help, context))
         qtutils.connect_button(self.cancel_button, self.cancel)
 
     def start(self):
@@ -611,7 +613,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.combo.validate.emit()
 
 
-def show_help():
+def show_help(context):
     help_text = N_("""
 Commands
 --------
@@ -648,7 +650,7 @@ ctrl+q     = cancel and abort the rebase
 ctrl+d     = launch difftool
 """)
     title = N_('Help - git-xbase')
-    return text.text_dialog(help_text, title)
+    return text.text_dialog(context, help_text, title)
 
 
 if __name__ == '__main__':

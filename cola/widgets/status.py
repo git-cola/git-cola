@@ -198,7 +198,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_basename_action.setIcon(icons.copy())
 
         self.copy_customize_action = qtutils.add_action(
-                self, N_('Customize...'), lambda: customize_copy_actions(self))
+                self, N_('Customize...'),
+                partial(customize_copy_actions, context, self))
         self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
@@ -1066,7 +1067,7 @@ def copy_format(context, fmt):
     qtutils.set_clipboard(fmt % values)
 
 
-def show_help():
+def show_help(context):
     help_text = N_(r"""
         Format String Variables
         -----------------------
@@ -1079,7 +1080,7 @@ def show_help():
            %(ext)s  =  file extension
 """)
     title = N_('Help - Custom Copy Actions')
-    return text.text_dialog(help_text, title)
+    return text.text_dialog(context, help_text, title)
 
 
 class StatusFilterWidget(QtWidgets.QWidget):
@@ -1113,17 +1114,16 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self.main_model.update_path_filter(paths)
 
 
-def customize_copy_actions(parent):
+def customize_copy_actions(context, parent):
     """Customize copy actions"""
-    dialog = CustomizeCopyActions(parent)
+    dialog = CustomizeCopyActions(context, parent)
     dialog.show()
-    dialog.raise_()
     dialog.exec_()
 
 
 class CustomizeCopyActions(standard.Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Custom Copy Actions'))
 
@@ -1158,6 +1158,7 @@ class CustomizeCopyActions(standard.Dialog):
                               self.table, self.buttons)
         self.setLayout(layout)
 
+        show_help = partial(show_help, context)
         qtutils.connect_button(self.add_button, self.add)
         qtutils.connect_button(self.remove_button, self.remove)
         qtutils.connect_button(self.show_help_button, show_help)

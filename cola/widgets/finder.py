@@ -1,6 +1,7 @@
 """File finder widgets"""
 from __future__ import division, absolute_import, unicode_literals
 import os
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -58,7 +59,7 @@ def add_wildcards(arg):
     return arg
 
 
-def show_help():
+def show_help(context):
     """Show the help page"""
     help_text = N_("""
 Keyboard Shortcuts
@@ -74,7 +75,7 @@ The up and down arrows change focus between the text entry field
 and the results.
 """)
     title = N_('Help - Find Files')
-    return text.text_dialog(help_text, title)
+    return text.text_dialog(context, help_text, title)
 
 
 class FindFilesThread(QtCore.QThread):
@@ -172,6 +173,7 @@ class Finder(standard.Dialog):
         qtutils.add_action(self, 'Focus Input', self.focus_input,
                            hotkeys.FOCUS, hotkeys.FINDER)
 
+        show_help = partial(show_help, context)
         self.show_help_action = qtutils.add_action(
                 self, N_('Show Help'), show_help, hotkeys.QUESTION)
 

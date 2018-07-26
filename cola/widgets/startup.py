@@ -146,8 +146,9 @@ class StartupDialog(standard.Dialog):
             self.accept()
 
     def clone_repo(self):
-        progress = standard.ProgressDialog('', '', self)
-        guicmds.clone_repo(self.context, self, self.runtask, progress,
+        context = self.context
+        progress = standard.ProgressDialog(context, '', '', self)
+        guicmds.clone_repo(context, self, self.runtask, progress,
             self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
