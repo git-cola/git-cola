@@ -867,7 +867,7 @@ def confirm(title, text, informative_text, ok_text,
         cancel_text=cancel_text, cancel_icon=cancel_icon,
         logo=logo, default=default)
 
-    return mbox.run() == msgbox.Accepted
+    return mbox.run() == mbox.Accepted
 
 
 def critical(title, message=None, details=None):
