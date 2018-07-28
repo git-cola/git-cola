@@ -137,7 +137,7 @@ class MainView(standard.MainWindow):
         titlebar.add_corner_widget(self.position_label)
 
         # "Console" widget
-        self.logwidget = log.LogWidget()
+        self.logwidget = log.LogWidget(context)
         self.logdock = create_dock(N_('Console'), self, widget=self.logwidget)
         qtutils.hide_dock(self.logdock)
 
@@ -248,7 +248,8 @@ class MainView(standard.MainWindow):
             self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP)
 
         self.merge_local_action = add_action(
-            self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
+            self, N_('Merge...'), partial(merge.local_merge, context),
+            hotkeys.MERGE)
 
         self.merge_abort_action = add_action(
             self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context))

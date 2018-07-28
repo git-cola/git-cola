@@ -81,7 +81,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         ]
 
         # Widgets
-        self.summary = CommitSummaryLineEdit()
+        self.summary = CommitSummaryLineEdit(context)
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
 
@@ -89,7 +89,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         self.summary_validator = MessageValidator(context, parent=self.summary)
         self.summary.setValidator(self.summary_validator)
 
-        self.description = CommitMessageTextEdit()
+        self.description = CommitMessageTextEdit(context, parent=self)
         self.description.set_dictionary(cfg.get('cola.dictionary', None))
         self.description.menu_actions.extend(menu_actions)
 
@@ -589,9 +589,9 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
     cursor = Signal(int, int)
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         hint = N_('Commit summary')
-        HintedLineEdit.__init__(self, hint, parent=parent)
+        HintedLineEdit.__init__(self, context, hint, parent=parent)
         self.menu_actions = []
 
     def build_menu(self):
@@ -607,9 +607,9 @@ class CommitSummaryLineEdit(HintedLineEdit):
 class CommitMessageTextEdit(SpellCheckTextEdit):
     leave = Signal()
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         hint = N_('Extended description...')
-        SpellCheckTextEdit.__init__(self, hint, parent)
+        SpellCheckTextEdit.__init__(self, context, hint, parent)
         self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(

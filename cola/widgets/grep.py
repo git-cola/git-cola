@@ -103,7 +103,8 @@ class Grep(Dialog):
         self.input_label = QtWidgets.QLabel('git grep')
         self.input_label.setFont(qtutils.diff_font(context))
 
-        self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
+        self.input_txt = HintedLineEdit(
+            context, N_('command-line arguments'), parent=self)
 
         self.regexp_combo = combo = QtWidgets.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
@@ -123,8 +124,7 @@ class Grep(Dialog):
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
         self.result_txt = GrepTextView(context, N_('grep result...'), self)
-
-        self.preview_txt = PreviewTextView(self)
+        self.preview_txt = PreviewTextView(context, self)
         self.preview_txt.setFocusProxy(self.result_txt)
 
         self.edit_button = qtutils.edit_button(default=True)
@@ -296,7 +296,7 @@ class GrepTextView(VimHintedPlainTextEdit):
     """A text view with hotkeys for launching editors"""
 
     def __init__(self, context, hint, parent):
-        VimHintedPlainTextEdit.__init__(self, hint, parent=parent)
+        VimHintedPlainTextEdit.__init__(self, context, hint, parent=parent)
         self.context = context
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)
@@ -332,8 +332,8 @@ class PreviewTask(qtutils.Task):
 class PreviewTextView(VimTextBrowser):
     """Preview window for file contents"""
 
-    def __init__(self, parent):
-        VimTextBrowser.__init__(self, parent)
+    def __init__(self, context, parent):
+        VimTextBrowser.__init__(self, context, parent)
         self.filename = None
         self.content = None
         self.runtask = qtutils.RunTask(parent=self)

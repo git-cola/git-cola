@@ -42,14 +42,15 @@ class RemoteEditor(standard.Dialog):
         self.current_name = ''
         self.current_url = ''
 
-        self.default_hint = N_('Edit remotes by selecting them from the list')
+        hint = N_('Edit remotes by selecting them from the list')
+        self.default_hint = hint
 
         self.remote_list = []
         self.remotes = QtWidgets.QListWidget()
         self.remotes.setToolTip(N_(
             'Remote git repositories - double-click to rename'))
 
-        self.editor = RemoteWidget(self)
+        self.editor = RemoteWidget(context, self)
 
         self.save_button = qtutils.create_button(
             text=N_('Save'), icon=icons.save(), default=True)
@@ -63,7 +64,8 @@ class RemoteEditor(standard.Dialog):
             '\n'
             'Remotes can be renamed by selecting one from the list\n'
             'and pressing "enter", or by double-clicking.')
-        self.info = text.VimHintedPlainTextEdit(self.default_hint, parent=self)
+        hint = self.default_hint
+        self.info = text.VimHintedPlainTextEdit(context, hint, parent=self)
         self.info.setToolTip(tooltip)
 
         font = self.info.font()
@@ -364,7 +366,8 @@ class AddRemoteDialog(QtWidgets.QDialog):
         if parent:
             self.setWindowModality(Qt.WindowModal)
 
-        self.widget = RemoteWidget(self, readonly_url=readonly_url)
+        self.context = context
+        self.widget = RemoteWidget(context, self, readonly_url=readonly_url)
         self.add_button = qtutils.create_button(
             text=N_('Add Remote'), icon=icons.ok(), enabled=False)
         self.close_button = qtutils.close_button()
@@ -396,9 +399,9 @@ class AddRemoteDialog(QtWidgets.QDialog):
         return self.exec_() == QtWidgets.QDialog.Accepted
 
 
-def lineedit(hint):
-    widget = text.HintedLineEdit(hint)
-    metrics = QtGui.QFontMetrics(widget.font())
+def lineedit(context, hint):
+    widget = text.HintedLineEdit(context, hint)
+    metrics = widget.fontMetrics()
     widget.setMinimumWidth(metrics.width('M' * 32))
     return widget
 
@@ -411,13 +414,13 @@ class RemoteWidget(QtWidgets.QWidget):
                    lambda self, value: self.remote_url.set_value(value))
     valid = Signal(bool)
 
-    def __init__(self, parent, readonly_url=False):
+    def __init__(self, context, parent, readonly_url=False):
         super(RemoteWidget, self).__init__(parent)
         self.setWindowModality(Qt.WindowModal)
-
+        self.context = context
         self.setWindowTitle(N_('Add remote'))
-        self.remote_name = lineedit(N_('Name for the new remote'))
-        self.remote_url = lineedit('git://git.example.com/repo.git')
+        self.remote_name = lineedit(context, N_('Name for the new remote'))
+        self.remote_url = lineedit(context, 'git://git.example.com/repo.git')
         self.open_button = qtutils.create_button(
             text=N_('Open...'), icon=icons.folder(),
             tooltip=N_('Select repository'))

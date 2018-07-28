@@ -60,7 +60,7 @@ class CreateTag(standard.Dialog):
         self.tag_name_label = QtWidgets.QLabel(self)
         self.tag_name_label.setText(N_('Name'))
 
-        self.tag_name = text.HintedLineEdit(N_('vX.Y.Z'), parent=self)
+        self.tag_name = text.HintedLineEdit(context, N_('vX.Y.Z'), parent=self)
         self.tag_name.set_value(opts.name)
         self.tag_name.setToolTip(N_('Specifies the tag name'))
 

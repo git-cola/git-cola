@@ -43,7 +43,7 @@ class Clone(standard.Dialog):
         # Repository location
         self.url_label = QtWidgets.QLabel(N_('URL'))
         hint = 'git://git.example.com/repo.git'
-        self.url = text.HintedLineEdit(hint, parent=self)
+        self.url = text.HintedLineEdit(context, hint, parent=self)
         self.url.setToolTip(N_('Path or URL to clone (Env. $VARS okay)'))
 
         # Initialize submodules

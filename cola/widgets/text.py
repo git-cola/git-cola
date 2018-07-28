@@ -440,15 +440,11 @@ class TextEditCursorPosition(object):
         widget.setTextCursor(cursor)
 
 
-def setup_mono_font(widget):
-    widget.setFont(qtutils.diff_font(None))
-
-
 class MonoTextEdit(PlainTextEdit):
 
-    def __init__(self, parent=None, readonly=False):
+    def __init__(self, context, parent=None, readonly=False):
         PlainTextEdit.__init__(self, parent=parent, readonly=readonly)
-        setup_mono_font(self)
+        self.setFont(qtutils.diff_font(context))
 
 
 def get_value_hinted(widget):
@@ -597,13 +593,13 @@ class HintWidget(QtCore.QObject):
 class HintedPlainTextEdit(PlainTextEdit):
     """A hinted plain text edit"""
 
-    def __init__(self, hint, parent=None, readonly=False):
+    def __init__(self, context, hint, parent=None, readonly=False):
         PlainTextEdit.__init__(self, parent=parent,
                                get_value=get_value_hinted,
                                readonly=readonly)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        setup_mono_font(self)
+        self.setFont(qtutils.diff_font(context))
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
 
@@ -618,14 +614,14 @@ class HintedPlainTextEdit(PlainTextEdit):
 class HintedTextEdit(TextEdit):
     """A hinted text edit"""
 
-    def __init__(self, hint, parent=None, readonly=False):
+    def __init__(self, context, hint, parent=None, readonly=False):
         TextEdit.__init__(self, parent=parent,
                           get_value=get_value_hinted, readonly=readonly)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        setup_mono_font(self)
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
+        self.setFont(qtutils.diff_font(context))
 
     def set_value(self, value, block=False):
         """Set the widget text or enable hint mode when empty"""
@@ -742,8 +738,9 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
     Base = HintedPlainTextEdit
     Mixin = VimMixin
 
-    def __init__(self, hint, parent=None):
-        HintedPlainTextEdit.__init__(self, hint, parent=parent, readonly=True)
+    def __init__(self, context, hint, parent=None):
+        HintedPlainTextEdit.__init__(
+            self, context, hint, parent=parent, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -765,8 +762,8 @@ class VimTextEdit(MonoTextEdit):
     Base = MonoTextEdit
     Mixin = VimMixin
 
-    def __init__(self, parent=None):
-        MonoTextEdit.__init__(self, parent=None, readonly=True)
+    def __init__(self, context, parent=None):
+        MonoTextEdit.__init__(self, context, parent=None, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -781,11 +778,11 @@ class VimTextEdit(MonoTextEdit):
 
 class HintedLineEdit(LineEdit):
 
-    def __init__(self, hint, parent=None):
+    def __init__(self, context, hint, parent=None):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        self.setFont(qtutils.diff_font(None))
+        self.setFont(qtutils.diff_font(context))
         self.textChanged.connect(lambda text: self.hint.refresh())
 
 
@@ -819,8 +816,8 @@ def text_dialog(context, text, title):
 class VimTextBrowser(VimTextEdit):
     """Text viewer with line number annotations"""
 
-    def __init__(self, parent=None, readonly=False):
-        VimTextEdit.__init__(self, parent=parent)
+    def __init__(self, context, parent=None, readonly=False):
+        VimTextEdit.__init__(self, context, parent=parent)
         self.numbers = LineNumbers(self)
 
     def resizeEvent(self, event):

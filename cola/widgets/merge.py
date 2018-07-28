@@ -30,8 +30,8 @@ class Merge(standard.Dialog):
     def __init__(self, context, parent=None, ref=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
-        self.cfg = context.cfg
-        self.model = context.model
+        self.cfg = cfg = context.cfg
+        self.model = model = context.model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 

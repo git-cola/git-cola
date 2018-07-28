@@ -21,8 +21,8 @@ from .text import HintedTextEdit
 
 class SpellCheckTextEdit(HintedTextEdit):
 
-    def __init__(self, hint, parent=None):
-        HintedTextEdit.__init__(self, hint, parent)
+    def __init__(self, context, hint, parent=None):
+        HintedTextEdit.__init__(self, context, hint, parent)
 
         # Default dictionary based on the current locale.
         self.spellcheck = spellcheck.NorvigSpellCheck()
@@ -122,17 +122,3 @@ class SpellAction(QAction):
 
     def correct(self):
         self.result.emit(self.text())
-
-
-def main(args=sys.argv):
-    app = QApplication(args)
-
-    widget = SpellCheckTextEdit('Type here')
-    widget.show()
-    widget.raise_()
-
-    return app.exec_()
-
-
-if __name__ == '__main__':
-    sys.exit(main())
