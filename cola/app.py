@@ -356,7 +356,7 @@ def new_context(args):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.git = git.create()
-    context.cfg = gitcfg.current(context=context)  # TODO non-singleton
+    context.cfg = gitcfg.create(context)
     context.fsmonitor = fsmonitor.create(context)
     context.selection = selection.create()
     context.model = main.create(context)

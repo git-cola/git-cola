@@ -22,16 +22,6 @@ _USER_XDG_CONFIG = core.expanduser(
              'git', 'config'))
 
 
-_cfg = None  # TODO remove singleton
-
-def current(context=None):
-    """Return the GitConfig singleton."""
-    global _cfg
-    if _cfg is None:
-        _cfg = create(context)
-    return _cfg
-
-
 def create(context):
     """Create GitConfig instances"""
     return GitConfig(context)
