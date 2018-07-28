@@ -297,7 +297,7 @@ class GrepTextView(VimHintedPlainTextEdit):
     """A text view with hotkeys for launching editors"""
 
     def __init__(self, context, hint, parent):
-        VimHintedPlainTextEdit.__init__(self, hint, parent=parent)
+        VimHintedPlainTextEdit.__init__(self, context, hint, parent=parent)
         self.context = context
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)

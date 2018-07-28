@@ -597,13 +597,13 @@ class HintWidget(QtCore.QObject):
 class HintedPlainTextEdit(PlainTextEdit):
     """A hinted plain text edit"""
 
-    def __init__(self, hint, parent=None, readonly=False):
+    def __init__(self, context, hint, parent=None, readonly=False):
         PlainTextEdit.__init__(self, parent=parent,
                                get_value=get_value_hinted,
                                readonly=readonly)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        setup_mono_font(self)
+        self.setFont(qtutils.diff_font(context))
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
 
@@ -618,14 +618,14 @@ class HintedPlainTextEdit(PlainTextEdit):
 class HintedTextEdit(TextEdit):
     """A hinted text edit"""
 
-    def __init__(self, hint, parent=None, readonly=False):
+    def __init__(self, context, hint, parent=None, readonly=False):
         TextEdit.__init__(self, parent=parent,
                           get_value=get_value_hinted, readonly=readonly)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        setup_mono_font(self)
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
+        self.setFont(qtutils.diff_font(context))
 
     def set_value(self, value, block=False):
         """Set the widget text or enable hint mode when empty"""
@@ -742,8 +742,9 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
     Base = HintedPlainTextEdit
     Mixin = VimMixin
 
-    def __init__(self, hint, parent=None):
-        HintedPlainTextEdit.__init__(self, hint, parent=parent, readonly=True)
+    def __init__(self, context, hint, parent=None):
+        HintedPlainTextEdit.__init__(
+            self, context, hint, parent=parent, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
