@@ -80,25 +80,30 @@ def diff_filenames(context, *args):
     return _parse_diff_filenames(out)
 
 
-def listdir(dirname):
-    """Get the contents of a directory
+def listdir(context, dirname, ref='HEAD'):
+    """Get the contents of a directory according to Git
 
-    Scan the filesystem while categorizing directories and files.
+    Query Git for the content of a directory, taking ignored
+    files into account.
 
     """
     dirs = []
     files = []
 
-    for relpath in os.listdir(dirname):
-        if relpath == '.git':
-            continue
-        if dirname == './':
-            path = relpath
+    # first, parse git ls-tree to get the tracked files
+    # in a list of (type, path) tuples
+    entries = ls_tree(context, dirname, ref=ref)
+    for entry in entries:
+        if entry[0][0] == 't':  # tree
+            dirs.append(entry[1])
         else:
-            path = dirname + relpath
+            files.append(entry[1])
 
-        if os.path.isdir(path):
-            dirs.append(path)
+    # gather untracked files
+    untracked = untracked_files(context, paths=[dirname], directory=True)
+    for path in untracked:
+        if path.endswith('/'):
+            dirs.append(path[:-1])
         else:
             files.append(path)
 

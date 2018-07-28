@@ -182,7 +182,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def populate_dir(self, parent, path):
         """Populate a subtree"""
-        dirs, paths = gitcmds.listdir(path)
+        context = self.context
+        dirs, paths = gitcmds.listdir(context, path)
 
         # Insert directories before file paths
         for dirname in dirs:
