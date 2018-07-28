@@ -440,15 +440,11 @@ class TextEditCursorPosition(object):
         widget.setTextCursor(cursor)
 
 
-def setup_mono_font(widget):
-    widget.setFont(qtutils.diff_font(None))
-
-
 class MonoTextEdit(PlainTextEdit):
 
-    def __init__(self, parent=None, readonly=False):
+    def __init__(self, context, parent=None, readonly=False):
         PlainTextEdit.__init__(self, parent=parent, readonly=readonly)
-        setup_mono_font(self)
+        self.setFont(qtutils.diff_font(context))
 
 
 def get_value_hinted(widget):
@@ -766,8 +762,8 @@ class VimTextEdit(MonoTextEdit):
     Base = MonoTextEdit
     Mixin = VimMixin
 
-    def __init__(self, parent=None):
-        MonoTextEdit.__init__(self, parent=None, readonly=True)
+    def __init__(self, context, parent=None):
+        MonoTextEdit.__init__(self, context, parent=None, readonly=True)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -820,8 +816,8 @@ def text_dialog(context, text, title):
 class VimTextBrowser(VimTextEdit):
     """Text viewer with line number annotations"""
 
-    def __init__(self, parent=None, readonly=False):
-        VimTextEdit.__init__(self, parent=parent)
+    def __init__(self, context, parent=None, readonly=False):
+        VimTextEdit.__init__(self, context, parent=parent)
         self.numbers = LineNumbers(self)
 
     def resizeEvent(self, event):

@@ -124,8 +124,7 @@ class Grep(Dialog):
         combo.setItemData(2, '--fixed-strings', Qt.UserRole)
 
         self.result_txt = GrepTextView(context, N_('grep result...'), self)
-
-        self.preview_txt = PreviewTextView(self)
+        self.preview_txt = PreviewTextView(context, self)
         self.preview_txt.setFocusProxy(self.result_txt)
 
         self.edit_button = qtutils.edit_button(default=True)
@@ -333,8 +332,8 @@ class PreviewTask(qtutils.Task):
 class PreviewTextView(VimTextBrowser):
     """Preview window for file contents"""
 
-    def __init__(self, parent):
-        VimTextBrowser.__init__(self, parent)
+    def __init__(self, context, parent):
+        VimTextBrowser.__init__(self, context, parent)
         self.filename = None
         self.content = None
         self.runtask = qtutils.RunTask(parent=self)

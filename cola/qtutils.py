@@ -585,10 +585,7 @@ def default_monospace_font():
 
 
 def diff_font_str(context):
-    if context:
-        cfg = context.cfg
-    else:
-        cfg = gitcfg.current()
+    cfg = context.cfg
     font_str = cfg.get(prefs.FONTDIFF)
     if not font_str:
         font_str = default_monospace_font().toString()

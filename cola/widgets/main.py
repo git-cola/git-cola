@@ -137,7 +137,7 @@ class MainView(standard.MainWindow):
         titlebar.add_corner_widget(self.position_label)
 
         # "Console" widget
-        self.logwidget = log.LogWidget()
+        self.logwidget = log.LogWidget(context)
         self.logdock = create_dock(N_('Console'), self, widget=self.logwidget)
         qtutils.hide_dock(self.logdock)
 
