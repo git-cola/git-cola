@@ -173,9 +173,9 @@ class Finder(standard.Dialog):
         qtutils.add_action(self, 'Focus Input', self.focus_input,
                            hotkeys.FOCUS, hotkeys.FINDER)
 
-        show_help = partial(show_help, context)
         self.show_help_action = qtutils.add_action(
-                self, N_('Show Help'), show_help, hotkeys.QUESTION)
+                self, N_('Show Help'), partial(show_help, context),
+                hotkeys.QUESTION)
 
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.open_default_button, self.open_default)

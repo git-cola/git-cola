@@ -1158,10 +1158,10 @@ class CustomizeCopyActions(standard.Dialog):
                               self.table, self.buttons)
         self.setLayout(layout)
 
-        show_help = partial(show_help, context)
         qtutils.connect_button(self.add_button, self.add)
         qtutils.connect_button(self.remove_button, self.remove)
-        qtutils.connect_button(self.show_help_button, show_help)
+        qtutils.connect_button(
+            self.show_help_button, partial(show_help, context))
         qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.save_button, self.save)
         qtutils.add_close_action(self)
