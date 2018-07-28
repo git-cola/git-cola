@@ -88,7 +88,7 @@ class CompletionLineEdit(text.HintedLineEdit):
     }
 
     def __init__(self, context, model_factory, hint='', parent=None):
-        text.HintedLineEdit.__init__(self, hint, parent=parent)
+        text.HintedLineEdit.__init__(self, context, hint, parent=parent)
         # Tracks when the completion popup was active during key events
 
         self.context = context
@@ -251,11 +251,11 @@ class CompletionLineEdit(text.HintedLineEdit):
         if event_type == QtCore.QEvent.Hide:
             self.close_popup()
 
-        return text.HintedLineEdit.event(self, event)
+        return super(CompletionLineEdit, self).event(event)
 
     def keyPressEvent(self, event):
         """Process completion and navigation events"""
-        text.HintedLineEdit.keyPressEvent(self, event)
+        super(CompletionLineEdit, self).keyPressEvent(event)
         visible = self.popup().isVisible()
 
         # Hide the popup when the field is empty

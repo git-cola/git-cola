@@ -81,7 +81,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         ]
 
         # Widgets
-        self.summary = CommitSummaryLineEdit()
+        self.summary = CommitSummaryLineEdit(context)
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
 
@@ -589,9 +589,9 @@ class CommitSummaryLineEdit(HintedLineEdit):
 
     cursor = Signal(int, int)
 
-    def __init__(self, parent=None):
+    def __init__(self, context, parent=None):
         hint = N_('Commit summary')
-        HintedLineEdit.__init__(self, hint, parent=parent)
+        HintedLineEdit.__init__(self, context, hint, parent=parent)
         self.menu_actions = []
 
     def build_menu(self):

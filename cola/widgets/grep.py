@@ -103,7 +103,8 @@ class Grep(Dialog):
         self.input_label = QtWidgets.QLabel('git grep')
         self.input_label.setFont(qtutils.diff_font(context))
 
-        self.input_txt = HintedLineEdit(N_('command-line arguments'), self)
+        self.input_txt = HintedLineEdit(
+            context, N_('command-line arguments'), parent=self)
 
         self.regexp_combo = combo = QtWidgets.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))

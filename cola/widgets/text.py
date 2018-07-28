@@ -781,11 +781,11 @@ class VimTextEdit(MonoTextEdit):
 
 class HintedLineEdit(LineEdit):
 
-    def __init__(self, hint, parent=None):
+    def __init__(self, context, hint, parent=None):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        self.setFont(qtutils.diff_font(None))
+        self.setFont(qtutils.diff_font(context))
         self.textChanged.connect(lambda text: self.hint.refresh())
 
 
