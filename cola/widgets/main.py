@@ -248,7 +248,8 @@ class MainView(standard.MainWindow):
             self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP)
 
         self.merge_local_action = add_action(
-            self, N_('Merge...'), merge.local_merge, hotkeys.MERGE)
+            self, N_('Merge...'), partial(merge.local_merge, context),
+            hotkeys.MERGE)
 
         self.merge_abort_action = add_action(
             self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context))
