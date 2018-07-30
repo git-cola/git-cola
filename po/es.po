@@ -5,14 +5,14 @@
 #
 #
 # Pilar Molina Lopez <pilarmolinalopez@gmail.com>, 2014.
-# victorhck <victorhck@openmailbox.org>, 2018.
+# victorhck <victorhck@mailbox.org>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
 "PO-Revision-Date: 2018-07-30 10:56+0100\n"
-"Last-Translator: victorhck <victorhck@openmailbox.org>\n"
+"Last-Translator: victorhck <victorhck@mailbox.org>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
