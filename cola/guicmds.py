@@ -329,3 +329,8 @@ def reset_worktree(context):
         context, N_('Reset Worktree'), N_('Reset'))
     if ref:
         cmds.do(cmds.ResetWorktree, context, ref)
+
+
+def install():
+    """Install the GUI-model interaction hooks"""
+    Interaction.choose_ref = staticmethod(choose_ref)

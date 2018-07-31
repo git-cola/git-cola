@@ -956,24 +956,6 @@ class MainView(standard.MainWindow):
         div = ('<div class="%s">%s</div>' % (cls, display))
         self.position_label.setText(css + div)
 
-    def rebase_start(self):
-        context = self.context
-        cfg = context.cfg
-        if not cfg.get('rebase.autostash', False):
-            if self.model.staged or self.model.unmerged or self.model.modified:
-                Interaction.information(
-                        N_('Unable to rebase'),
-                        N_('You cannot rebase with uncommitted changes.'))
-                return
-        upstream = guicmds.choose_ref(
-            context, N_('Select New Upstream'), N_('Interactive Rebase'),
-            default='@{upstream}')
-        if not upstream:
-            return
-        self.model.is_rebasing = True
-        self.refresh()
-        cmds.do(cmds.Rebase, context, upstream=upstream)
-
 
 class FocusProxy(object):
     """Proxy over child widgets and operate on the focused widget"""

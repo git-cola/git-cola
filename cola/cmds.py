@@ -1640,7 +1640,7 @@ class Rebase(ContextCommand):
         self.branch = branch
         self.kwargs = kwargs
 
-    def prepare_arguments(self):
+    def prepare_arguments(self, upstream):
         args = []
         kwargs = {}
 
@@ -1654,8 +1654,8 @@ class Rebase(ContextCommand):
         kwargs['autosquash'] = self.kwargs.get('autosquash', True)
         kwargs.update(self.kwargs)
 
-        if self.upstream:
-            args.append(self.upstream)
+        if upstream:
+            args.append(upstream)
         if self.branch:
             args.append(self.branch)
 
@@ -1663,8 +1663,28 @@ class Rebase(ContextCommand):
 
     def do(self):
         (status, out, err) = (1, '', '')
-        args, kwargs = self.prepare_arguments()
-        upstream_title = self.upstream or '@{upstream}'
+        context = self.context
+        cfg = self.cfg
+        model = self.model
+
+        if not cfg.get('rebase.autostash', False):
+            if model.staged or model.unmerged or model.modified:
+                Interaction.information(
+                        N_('Unable to rebase'),
+                        N_('You cannot rebase with uncommitted changes.'))
+                return status, out, err
+
+        upstream = self.upstream or Interaction.choose_ref(
+            context, N_('Select New Upstream'), N_('Interactive Rebase'),
+            default='@{upstream}')
+        if not upstream:
+            return status, out, err
+
+        self.model.is_rebasing = True
+        self.model.emit_updated()
+
+        args, kwargs = self.prepare_arguments(upstream)
+        upstream_title = upstream or '@{upstream}'
         with GitXBaseContext(
                 self.context,
                 GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,

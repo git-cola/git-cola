@@ -41,6 +41,7 @@ from . import compat
 from . import fsmonitor
 from . import git
 from . import gitcfg
+from . import guicmds
 from . import icons
 from . import i18n
 from . import qtcompat
@@ -153,6 +154,7 @@ class ColaApplication(object):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
+        guicmds.install()
         standard.install()
         icons.install(icon_themes or get_icon_themes(context))
 
