@@ -29,8 +29,8 @@ def create_new_branch(context, revision='', settings=None):
 
 
 class CreateOpts(object):
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, context):
+        self.context = context
         self.reset = False
         self.track = False
         self.fetch = True
@@ -53,25 +53,26 @@ class CreateThread(QtCore.QThread):
         reset = self.opts.reset
         checkout = self.opts.checkout
         track = self.opts.track
-        model = self.opts.model
+        context = self.opts.context
+        git = context.git
+        model = context.model
         results = []
         status = 0
 
         if track and '/' in revision:
             remote = revision.split('/', 1)[0]
-            status, out, err = model.git.fetch(remote)
+            status, out, err = git.fetch(remote)
             self.command.emit(status, out, err)
             results.append(('fetch', status, out, err))
 
         if status == 0:
-            status, out, err = model.create_branch(branch, revision,
-                                                   force=reset,
-                                                   track=track)
+            status, out, err = model.create_branch(
+                branch, revision, force=reset, track=track)
             self.command.emit(status, out, err)
 
         results.append(('branch', status, out, err))
         if status == 0 and checkout:
-            status, out, err = model.git.checkout(branch)
+            status, out, err = git.checkout(branch)
             self.command.emit(status, out, err)
             results.append(('checkout', status, out, err))
 
@@ -90,7 +91,7 @@ class CreateBranchDialog(Dialog):
 
         self.context = context
         self.model = context.model
-        self.opts = CreateOpts(model)
+        self.opts = CreateOpts(context)
         self.thread = CreateThread(self.opts, self)
 
         self.progress = None
@@ -100,7 +101,7 @@ class CreateBranchDialog(Dialog):
 
         self.branch_name = completion.GitCreateBranchLineEdit(context)
         self.branch_validator = completion.BranchValidator(
-            model.git, parent=self.branch_name)
+            context.git, parent=self.branch_name)
         self.branch_name.setValidator(self.branch_validator)
 
         self.rev_label = QtWidgets.QLabel()
