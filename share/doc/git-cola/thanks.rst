@@ -178,6 +178,7 @@ Thanks
 * Vaibhav Sagar
 * Vaiz
 * Ved Vyas
+* Victorhck
 * Ville Skyttä
 * Virgil Dupras
 * Vitor Lobo
