@@ -126,3 +126,8 @@ class Interaction(object):
     @staticmethod
     def async_command(title, command, runtask):
         pass
+
+    @classmethod
+    def choose_ref(cls, context, title, button_text, default=None, icon=None):
+        cls.information(title, button_text)
+        return sys.stdin.readline().strip() or default
