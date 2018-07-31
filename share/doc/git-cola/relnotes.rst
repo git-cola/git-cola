@@ -68,6 +68,10 @@ Translations
 
   https://github.com/git-cola/git-cola/pull/813
 
+* Update Spanish translation
+
+  https://github.com/git-cola/git-cola/pull/862
+
 Packaging
 ---------
 * The Makefile is now resilient to DESTDIR and prefix containing whitespace.
