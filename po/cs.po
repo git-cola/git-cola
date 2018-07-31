@@ -1918,9 +1918,6 @@ msgstr "Vybrat zápis"
 msgid "Select Directory..."
 msgstr "Vybrat složku..."
 
-msgid "Select File"
-msgstr "Vybrat soubor"
-
 msgid "Select New Upstream"
 msgstr "Vybrat nový upstream"
 
@@ -1941,10 +1938,6 @@ msgstr "Vybrat Repozitář..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Vybrat nadřazenou složku pro nový klon"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr ""
 
 msgid "Select manually..."
 msgstr "Vybrat ručně..."
@@ -2436,3 +2429,6 @@ msgstr "rrrr-mm-dd"
 
 #~ msgid "Rename remote?"
 #~ msgstr "Přejmenovat vzdálenou?"
+
+#~ msgid "Select File"
+#~ msgstr "Vybrat soubor"

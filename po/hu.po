@@ -2057,10 +2057,6 @@ msgid "Select Directory..."
 msgstr "Git repó"
 
 #, fuzzy
-msgid "Select File"
-msgstr "Mindent kiválaszt"
-
-#, fuzzy
 msgid "Select New Upstream"
 msgstr "Kiválaszt"
 
@@ -2083,10 +2079,6 @@ msgstr "Git repó"
 
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "Brancek törlése innen: %s"
 
 #, fuzzy
 msgid "Select manually..."
@@ -3329,6 +3321,14 @@ msgstr ""
 
 #~ msgid "Running miga..."
 #~ msgstr "A miga futtatása..."
+
+#, fuzzy
+#~ msgid "Select File"
+#~ msgstr "Mindent kiválaszt"
+
+#, fuzzy
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Brancek törlése innen: %s"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Megosztott (Leggyorsabb, nem ajánlott, nincs mentés)"

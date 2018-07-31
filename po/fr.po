@@ -1973,9 +1973,6 @@ msgstr "Sélectionner commit"
 msgid "Select Directory..."
 msgstr "Sélectionner le dépôt"
 
-msgid "Select File"
-msgstr "Sélectionner le fichier"
-
 msgid "Select New Upstream"
 msgstr "Sélectionner une nouvelle source"
 
@@ -1996,10 +1993,6 @@ msgstr "Sélectionner le dépôt"
 
 msgid "Select a parent directory for the new clone"
 msgstr "Sélectionner un répertoire parent pour le nouveau clonage"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Sélectionner le fichier à partir de « %s »"
 
 msgid "Select manually..."
 msgstr "Sélectionner manuellement"
@@ -3219,6 +3212,12 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Inverser les modifications dans ces %i fichiers ?"
+
+#~ msgid "Select File"
+#~ msgstr "Sélectionner le fichier"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Sélectionner le fichier à partir de « %s »"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Partagé (le plus rapide, non recommandé, pas de sauvegarde)"

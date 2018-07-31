@@ -1997,9 +1997,6 @@ msgstr "Selecionar Commit"
 msgid "Select Directory..."
 msgstr "Selecionar Repositório"
 
-msgid "Select File"
-msgstr "Selecionar Arquivo"
-
 msgid "Select New Upstream"
 msgstr "Selecionar Novo Upstream"
 
@@ -2020,10 +2017,6 @@ msgstr "Selecionar Repositório"
 
 msgid "Select a parent directory for the new clone"
 msgstr "Selecionar um diretório pai para o novo clone"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Selecione um arquivo de \"%s\""
 
 msgid "Select manually..."
 msgstr "Selecione manualmente"
@@ -2591,6 +2584,12 @@ msgstr ""
 
 #~ msgid "Rename remote?"
 #~ msgstr "Renomear Remoto?"
+
+#~ msgid "Select File"
+#~ msgstr "Selecionar Arquivo"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Selecione um arquivo de \"%s\""
 
 #~ msgid "Updating..."
 #~ msgstr "Atualização..."

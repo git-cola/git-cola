@@ -2056,10 +2056,6 @@ msgid "Select Directory..."
 msgstr "Gitarkiv"
 
 #, fuzzy
-msgid "Select File"
-msgstr "Markera alla"
-
-#, fuzzy
 msgid "Select New Upstream"
 msgstr "Välj"
 
@@ -2082,10 +2078,6 @@ msgstr "Gitarkiv"
 
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "Tar bort grenar från %s"
 
 #, fuzzy
 msgid "Select manually..."
@@ -3296,6 +3288,14 @@ msgstr ""
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Återställ ändringarna i dessa %i filer?"
+
+#, fuzzy
+#~ msgid "Select File"
+#~ msgstr "Markera alla"
+
+#, fuzzy
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Tar bort grenar från %s"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Delad (snabbast, rekommenderas ej, ingen säkerhetskopia)"

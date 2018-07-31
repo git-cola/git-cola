@@ -1977,9 +1977,6 @@ msgstr "Вибрати коміт"
 msgid "Select Directory..."
 msgstr "Вибрати репозиторій..."
 
-msgid "Select File"
-msgstr "Вибрати файл"
-
 msgid "Select New Upstream"
 msgstr "Вибрати нове віддалене джерело"
 
@@ -2000,10 +1997,6 @@ msgstr "Вибрати репозиторій..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Виберіть батьківський каталог для нового клонування"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Вибрати файл з \"%s\""
 
 msgid "Select manually..."
 msgstr "Вибрати вручну..."
@@ -2551,6 +2544,12 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Rename remote?"
 #~ msgstr "Перейменувати віддалений репозиторій?"
+
+#~ msgid "Select File"
+#~ msgstr "Вибрати файл"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Вибрати файл з \"%s\""
 
 #~ msgid "git clone returned exit code %s"
 #~ msgstr "git clone завершилась з кодом %s"

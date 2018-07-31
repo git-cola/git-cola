@@ -2003,9 +2003,6 @@ msgstr "Wählen Sie einen Commit aus"
 msgid "Select Directory..."
 msgstr "Verzeichnis wählen..."
 
-msgid "Select File"
-msgstr "Wähle Datei aus"
-
 msgid "Select New Upstream"
 msgstr "Neuen Upstream auswählen"
 
@@ -2026,10 +2023,6 @@ msgstr "Repository wählen..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Wählen Sie das übergeordnete Verzeichnis für den Klon"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Datei von \"%s\" auswählen"
 
 msgid "Select manually..."
 msgstr "Selbst auswählen..."
@@ -3262,6 +3255,12 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Änderungen in den gewählten %i Dateien verwerfen?"
+
+#~ msgid "Select File"
+#~ msgstr "Wähle Datei aus"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Datei von \"%s\" auswählen"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Verknüpft (schnell, nicht empfohlen, kein Backup)"

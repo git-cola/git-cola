@@ -2057,10 +2057,6 @@ msgid "Select Directory..."
 msgstr "Archivio Git"
 
 #, fuzzy
-msgid "Select File"
-msgstr "Seleziona tutto"
-
-#, fuzzy
 msgid "Select New Upstream"
 msgstr "Seleziona"
 
@@ -2083,10 +2079,6 @@ msgstr "Archivio Git"
 
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "Cancellazione rami da %s"
 
 #, fuzzy
 msgid "Select manually..."
@@ -3293,6 +3285,14 @@ msgstr ""
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Annullare le modifiche in questi %i file?"
+
+#, fuzzy
+#~ msgid "Select File"
+#~ msgstr "Seleziona tutto"
+
+#, fuzzy
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Cancellazione rami da %s"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Shared (il più veloce, non raccomandato, nessun backup)"

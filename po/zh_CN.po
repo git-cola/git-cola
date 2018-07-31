@@ -1954,9 +1954,6 @@ msgstr "选择提交"
 msgid "Select Directory..."
 msgstr "选择版本库..."
 
-msgid "Select File"
-msgstr "选择文件"
-
 msgid "Select New Upstream"
 msgstr "选择上游项目"
 
@@ -1977,10 +1974,6 @@ msgstr "选择版本库..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "为新克隆选择上级文件夹"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "从“%s”中选择文件"
 
 msgid "Select manually..."
 msgstr "手动选择..."
@@ -3196,6 +3189,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "撤销这些 (%i个) 文件的改动?"
+
+#~ msgid "Select File"
+#~ msgstr "选择文件"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "从“%s”中选择文件"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共享方式 (最快, 不推荐, 不做备份)"

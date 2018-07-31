@@ -1966,9 +1966,6 @@ msgstr "Select Commit"
 msgid "Select Directory..."
 msgstr "Select Repository..."
 
-msgid "Select File"
-msgstr "Select File"
-
 msgid "Select New Upstream"
 msgstr "Select New Upstream"
 
@@ -1989,10 +1986,6 @@ msgstr "Select Repository..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Select a parent directory for the new clone"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Select file from \"%s\""
 
 msgid "Select manually..."
 msgstr "Select manually..."
@@ -2570,6 +2563,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Rename remote?"
 #~ msgstr "Uzaktakini yeniden adlandır?"
+
+#~ msgid "Select File"
+#~ msgstr "Select File"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Select file from \"%s\""
 
 #~ msgid "Staging Area"
 #~ msgstr "Staging Area"

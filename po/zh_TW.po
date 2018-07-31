@@ -1994,9 +1994,6 @@ msgstr "選取修訂版提交"
 msgid "Select Directory..."
 msgstr "選擇目錄……"
 
-msgid "Select File"
-msgstr "選取檔案"
-
 msgid "Select New Upstream"
 msgstr "選擇新的上游版本"
 
@@ -2017,10 +2014,6 @@ msgstr "選擇版控庫……"
 
 msgid "Select a parent directory for the new clone"
 msgstr "選取新克隆的 Git 版控庫要放置的目錄"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "於「%s」中選取檔案"
 
 msgid "Select manually..."
 msgstr "手動選取……"
@@ -3230,6 +3223,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "撤銷這些 (%i個) 文件的改動?"
+
+#~ msgid "Select File"
+#~ msgstr "選取檔案"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "於「%s」中選取檔案"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共享方式 (最快, 不推薦, 不做備份)"

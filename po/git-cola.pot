@@ -1821,9 +1821,6 @@ msgstr ""
 msgid "Select Directory..."
 msgstr ""
 
-msgid "Select File"
-msgstr ""
-
 msgid "Select New Upstream"
 msgstr ""
 
@@ -1843,10 +1840,6 @@ msgid "Select Repository..."
 msgstr ""
 
 msgid "Select a parent directory for the new clone"
-msgstr ""
-
-#, python-format
-msgid "Select file from \"%s\""
 msgstr ""
 
 msgid "Select manually..."

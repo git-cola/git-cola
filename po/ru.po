@@ -1968,9 +1968,6 @@ msgstr "Выбрать коммит"
 msgid "Select Directory..."
 msgstr "Выбрать репозиторий..."
 
-msgid "Select File"
-msgstr "Выбрать файл"
-
 #, fuzzy
 msgid "Select New Upstream"
 msgstr "Выбрать"
@@ -1992,10 +1989,6 @@ msgstr "Выбрать репозиторий..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Выберите родительский каталог для новой копии"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Выбрать файл из \"%s\""
 
 msgid "Select manually..."
 msgstr "Выбрать вручную..."
@@ -3217,6 +3210,12 @@ msgstr ""
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Отменить изменения в %i файле(-ах)?"
+
+#~ msgid "Select File"
+#~ msgstr "Выбрать файл"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Выбрать файл из \"%s\""
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Общий (Самый быстрый, не рекомендуется, без резервной копии)"

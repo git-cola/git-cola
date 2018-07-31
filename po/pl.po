@@ -1957,9 +1957,6 @@ msgstr "Wybierz wdrożenie"
 msgid "Select Directory..."
 msgstr "Wybierz repozytorium..."
 
-msgid "Select File"
-msgstr "Wybierz plik"
-
 msgid "Select New Upstream"
 msgstr "Wybierz nowe źródło odgórne"
 
@@ -1980,10 +1977,6 @@ msgstr "Wybierz repozytorium..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Wybierz katalog nadrzędny do sklonowania"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Wybierz plik z \"%s\""
 
 msgid "Select manually..."
 msgstr "Wybierz ręcznie..."
@@ -2552,6 +2545,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Rename remote?"
 #~ msgstr "Zmienić nazwę zdalnego repozytorium?"
+
+#~ msgid "Select File"
+#~ msgstr "Wybierz plik"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Wybierz plik z \"%s\""
 
 #~ msgid "Staging Area"
 #~ msgstr "Punkt zbiorczy"

@@ -1964,9 +1964,6 @@ msgstr "Pilih Commit"
 msgid "Select Directory..."
 msgstr "Pilih Repository..."
 
-msgid "Select File"
-msgstr "Pilih Berkas"
-
 msgid "Select New Upstream"
 msgstr "Pilih Upstream Baru"
 
@@ -1987,10 +1984,6 @@ msgstr "Pilih Repository..."
 
 msgid "Select a parent directory for the new clone"
 msgstr "Pilih direktori di atasnya untuk klon baru"
-
-#, python-format
-msgid "Select file from \"%s\""
-msgstr "Pilih berkas dari \"%s\""
 
 msgid "Select manually..."
 msgstr "Pilih secara manual..."
@@ -2601,6 +2594,12 @@ msgstr "dd-MM-yyyy"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Kembalikan Perubahan Tak Tercommit..."
+
+#~ msgid "Select File"
+#~ msgstr "Pilih Berkas"
+
+#~ msgid "Select file from \"%s\""
+#~ msgstr "Pilih berkas dari \"%s\""
 
 #~ msgid "Staging Area"
 #~ msgstr "Area Stagnan"

@@ -2057,10 +2057,6 @@ msgid "Select Directory..."
 msgstr "GIT リポジトリ"
 
 #, fuzzy
-msgid "Select File"
-msgstr "全て選択"
-
-#, fuzzy
 msgid "Select New Upstream"
 msgstr "選択"
 
@@ -2083,10 +2079,6 @@ msgstr "GIT リポジトリ"
 
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy, python-format
-msgid "Select file from \"%s\""
-msgstr "%s からブランチを削除しています。"
 
 #, fuzzy
 msgid "Select manually..."
@@ -3292,6 +3284,14 @@ msgstr ""
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "これら %i 個のファイルにした変更を元に戻しますか？"
+
+#, fuzzy
+#~ msgid "Select File"
+#~ msgstr "全て選択"
+
+#, fuzzy
+#~ msgid "Select file from \"%s\""
+#~ msgstr "%s からブランチを削除しています。"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共有(最高速・非推奨・バックアップ無し)"
