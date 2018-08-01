@@ -71,9 +71,9 @@ class ActionButtons(QFlowLayoutWidget):
 
         # Add callbacks
         connect_button(self.refresh_button, cmds.run(cmds.Refresh, context))
-        connect_button(self.fetch_button, remote.fetch)
-        connect_button(self.push_button, remote.push)
-        connect_button(self.pull_button, remote.pull)
+        connect_button(self.fetch_button, partial(remote.fetch, context))
+        connect_button(self.push_button, partial(remote.push, context))
+        connect_button(self.pull_button, partial(remote.pull, context))
         connect_button(self.stash_button, partial(stash.view, context))
         connect_button(self.stage_button,
             cmds.run(cmds.StageSelected, context))
