@@ -141,6 +141,7 @@ Thanks
 * Paul Hildebrandt
 * Paul Weingardt
 * Paulo Fidalgo
+* Pavel Borecki
 * Pavel Rehak
 * Peter Dave Hello
 * Peter Júnoš
