@@ -195,10 +195,7 @@ class ToolBar(QtWidgets.QToolBar):
         if child in tree_items and child in self.commands:
             command = self.commands[child]
             title = N_(command['title'])
-            callback = command['action']
-            use_context = command.get('context', True)
-            if use_context:
-                callback = partial(callback, self.context)
+            callback = partial(command['action'], self.context)
 
             icon = None
             command_icon = command.get('icon', None)
