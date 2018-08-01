@@ -1016,7 +1016,7 @@ msgstr "Chyba při odstraňování vzdálené \"%s\""
 
 #, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
-msgstr "Chyba při přejmenovávání „%(name)s\“ na „%(new_name)s“"
+msgstr "Chyba při přejmenovávání „%(name)s“ na „%(new_name)s“"
 
 msgid "Error running prepare-commitmsg hook"
 msgstr "Chyba spouštění háčku prepare-commitmsg"
@@ -2297,7 +2297,7 @@ msgstr "Nelze přeskládat"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
-msgstr "Nedaří se nastavit URL pro „%(name)s\“ na „%(url)s“"
+msgstr "Nedaří se nastavit URL pro „%(name)s“ na „%(url)s“"
 
 msgid "Undo"
 msgstr "Zpět"
