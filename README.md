@@ -147,6 +147,13 @@ The platform-specific installation methods below use the native
 package manager.  You should use one of these so that all of *git-cola*'s
 dependencies are installed.
 
+Distutils is used by the `Makefile` via `setup.py` to install *git-cola* and
+its launcher scripts.  distutils replaces the `#!/usr/bin/env python` lines in
+scripts with the full path to python at build time, which can be undesirable
+when the runtime python is not the same as the build-time python.  To disable
+the replacement of the `#!/usr/bin/env python` lines, pass `USE_ENV_PYTHON=1`
+to `make`.
+
 ## LINUX
 
 Linux is it! Your distro has probably already packaged git-cola.

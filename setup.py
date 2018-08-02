@@ -1,32 +1,41 @@
 #!/usr/bin/env python
-"""git-cola installer
-
-NOTE: This script is not typically invoked directly; use the Makefile
-targets instead.
-
-"""
-
+# git-cola installer
+# usage: use the Makefile instead of invoking this script directly.
 from __future__ import absolute_import, division, unicode_literals
-
-# Hacktastic hack to fix python's stupid ascii default encoding, which
-# breaks inside distutils when installing from utf-8 paths.
+import os
+import re
 import sys
-try:
+
+from glob import glob
+from distutils.command import build_scripts
+from distutils.core import setup
+
+from extras import cmdclass
+
+# Hack: prevent python2's ascii default encoding from breaking inside
+# distutils when installing from utf-8 paths.
+if sys.version_info[0] < 3:
     # pylint: disable=reload-builtin
     reload(sys)
     # pylint: disable=no-member
     sys.setdefaultencoding('utf-8')
-except NameError:  # Python3
-    pass
 
-import os
-from glob import glob
-from distutils.core import setup
+# Prevent distuils from changing "#!/usr/bin/env python" when
+# --use-env-python is specified.
+try:
+    sys.argv.remove('--use-env-python')
+    use_env_python = True
+except ValueError:
+    use_env_python = False
+if use_env_python:
+    build_scripts.first_line_re = re.compile('^should not match$')
 
-# Look for modules in the root
-srcdir = os.path.dirname(os.path.abspath(__file__))
-
-from extras import cmdclass
+# Disable vendoring of qtpy and friends by passing --no-vendor-libs
+try:
+    sys.argv.remove('--no-vendor-libs')
+    vendor_libs = False
+except ValueError:
+    vendor_libs = not os.getenv('GIT_COLA_NO_VENDOR_LIBS', '')
 
 here = os.path.dirname(__file__)
 version = os.path.join(here, 'cola', '_version.py')
@@ -37,8 +46,6 @@ version = scope['VERSION']
 
 def main():
     """Runs distutils.setup()"""
-    vendor_libs = should_vendor_libs()
-
     scripts = [
         'bin/git-cola',
         'bin/git-dag',
@@ -58,19 +65,10 @@ def main():
           scripts=scripts,
           cmdclass=cmdclass,
           platforms='any',
-          data_files=_data_files(vendor_libs))
+          data_files=_data_files())
 
 
-def should_vendor_libs():
-    """Return True if we should include vendored libraries"""
-    vendor_libs = not os.getenv('GIT_COLA_NO_VENDOR_LIBS', '')
-    if '--no-vendor-libs' in sys.argv:
-        sys.argv.remove('--no-vendor-libs')
-        vendor_libs = False
-    return vendor_libs
-
-
-def _data_files(vendor_libs):
+def _data_files():
     """Return the list of data files"""
     data = [
         _app_path('share/git-cola/bin', '*'),

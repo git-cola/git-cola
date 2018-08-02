@@ -18,6 +18,10 @@ all::
 # ------------
 # make prefix=<path> install
 # DESTDIR is also supported.
+#
+# To disable distutil's replacement of "#!/usr/bin/env python" with
+# the path to the build environment's python, pass USE_ENV_PYTHON=1
+# when invoking make.
 
 # The external commands used by this Makefile are...
 CTAGS = ctags
@@ -65,10 +69,10 @@ endif
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
-bindir = "$(prefix)"/bin
-datadir = "$(prefix)"/share/git-cola
+bindir = $(prefix)/bin
+datadir = $(prefix)/share/git-cola
 coladir = $(datadir)/lib
-hicolordir = "$(prefix)"/share/icons/hicolor/scalable/apps
+hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
 # DESTDIR =
 
 cola_base := git-cola
@@ -76,21 +80,29 @@ cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
 cola_version = $(shell $(PYTHON) bin/git-cola version --brief)
 cola_dist := $(cola_base)-$(cola_version)
+
 SETUP ?= $(PYTHON) setup.py
-setup_args += --prefix="$(prefix)"
-setup_args += --force
-setup_args += --install-scripts=$(bindir)
-setup_args += --record=build/MANIFEST
-setup_args += --install-lib=$(coladir)
+
+build_args += build
+ifdef USE_ENV_PYTHON
+    build_args += --use-env-python
+endif
+
+install_args += install
+install_args += --prefix="$(prefix)"
+install_args += --force
+install_args += --install-scripts="$(bindir)"
+install_args += --record=build/MANIFEST
+install_args += --install-lib="$(coladir)"
 ifdef DESTDIR
-    setup_args += --root="$(DESTDIR)"
+    install_args += --root="$(DESTDIR)"
     export DESTDIR
 endif
 export prefix
 
 # If NO_VENDOR_LIBS is specified on the command line then pass it to setup.py
 ifdef NO_VENDOR_LIBS
-    setup_args += --no-vendor-libs
+    install_args += --no-vendor-libs
 endif
 
 PYTHON_DIRS = cola
@@ -115,15 +127,16 @@ build_version:
 .PHONY: build_version
 
 build: build_version
-	$(SETUP) $(VERBOSE) build
+	$(SETUP) $(QUIET) $(VERBOSE) $(build_args)
 .PHONY: build
 
 install: all
-	$(SETUP) $(QUIET) install $(setup_args)
-	$(MKDIR_P) "$(DESTDIR)"$(hicolordir)
-	$(LN_S) $(datadir)/icons/git-cola.svg "$(DESTDIR)"$(hicolordir)/git-cola.svg
-	$(LN_S) git-cola "$(DESTDIR)"$(bindir)/cola
-	$(RM_R) "$(DESTDIR)"$(coladir)/git_cola*
+	$(SETUP) $(QUIET) $(VERBOSE) $(install_args)
+	$(MKDIR_P) "$(DESTDIR)$(hicolordir)"
+	$(LN_S) "$(datadir)/icons/git-cola.svg" \
+		"$(DESTDIR)$(hicolordir)/git-cola.svg"
+	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
+	$(RM_R) "$(DESTDIR)$(coladir)/git_cola"*
 	$(RM_R) git_cola.egg-info
 .PHONY: install
 
@@ -158,31 +171,31 @@ install-man:
 .PHONY: install-man
 
 uninstall:
-	$(RM) "$(DESTDIR)""$(prefix)"/bin/git-cola
-	$(RM) "$(DESTDIR)""$(prefix)"/bin/git-dag
-	$(RM) "$(DESTDIR)""$(prefix)"/bin/cola
-	$(RM) "$(DESTDIR)""$(prefix)"/share/applications/git-cola.desktop
-	$(RM) "$(DESTDIR)""$(prefix)"/share/applications/git-cola-folder-handler.desktop
-	$(RM) "$(DESTDIR)""$(prefix)"/share/applications/git-dag.desktop
-	$(RM) "$(DESTDIR)""$(prefix)"/share/appdata/git-dag.appdata.xml
-	$(RM) "$(DESTDIR)""$(prefix)"/share/appdata/git-cola.appdata.xml
-	$(RM) "$(DESTDIR)""$(prefix)"/share/icons/hicolor/scalable/apps/git-cola.svg
-	$(RM_R) "$(DESTDIR)""$(prefix)"/share/doc/git-cola
-	$(RM_R) "$(DESTDIR)""$(prefix)"/share/git-cola
-	$(RM) "$(DESTDIR)""$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/applications 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/appdata 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/doc 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/locale/*/LC_MESSAGES 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/locale/* 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/locale 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/icons/hicolor/scalable/apps 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/icons/hicolor/scalable 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/icons/hicolor 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share/icons 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/share 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)"/bin 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)""$(prefix)" 2>/dev/null
+	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
+	$(RM) "$(DESTDIR)$(prefix)"/bin/git-dag
+	$(RM) "$(DESTDIR)$(prefix)"/bin/cola
+	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola.desktop
+	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola-folder-handler.desktop
+	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-dag.desktop
+	$(RM) "$(DESTDIR)$(prefix)"/share/appdata/git-dag.appdata.xml
+	$(RM) "$(DESTDIR)$(prefix)"/share/appdata/git-cola.appdata.xml
+	$(RM) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps/git-cola.svg
+	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
+	$(RM_R) "$(DESTDIR)$(prefix)"/share/git-cola
+	$(RM) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/applications 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/appdata 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/doc 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/* 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/share 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)"/bin 2>/dev/null
+	-$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null
 .PHONY: uninstall
 
 test: all

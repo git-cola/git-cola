@@ -74,6 +74,11 @@ Translations
 
 Packaging
 ---------
+* The original `#!/usr/bin/env python` shebang lines can now be
+  retained by passing `USE_ENV_PYTHON=1` to `make` when installing.
+
+  https://github.com/git-cola/git-cola/issues/850
+
 * The Makefile is now resilient to DESTDIR and prefix containing whitespace.
 
   https://github.com/git-cola/git-cola/pull/858
