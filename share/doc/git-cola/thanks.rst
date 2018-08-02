@@ -85,6 +85,7 @@ Thanks
 * Johannes Löhnert
 * Johann Schmitz
 * Jordan Bedwell
+* Josh Noe
 * Josh Taylor
 * Justin Lecher
 * Kai Krakow

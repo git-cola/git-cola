@@ -845,7 +845,7 @@ class MessageBox(Dialog):
         key = event.key()
         if key == Qt.Key_Y:
             QtCore.QTimer.singleShot(0, self.accept)
-        elif key in (Qt.Key_N, Qt.Key_Q, Qt.Key_C):
+        elif key in (Qt.Key_N, Qt.Key_Q):
             QtCore.QTimer.singleShot(0, self.reject)
         return Dialog.keyPressEvent(self, event)
 

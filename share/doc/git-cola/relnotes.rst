@@ -86,6 +86,12 @@ Packaging
 
 Fixes
 -----
+* The "C" key no longer closes the message dialogs, for example the
+  one that is shown when a commit fails its pre-commit hooks.
+  This allows "Ctrl+C" copy to work, rather than closing the dialog.
+
+  https://github.com/git-cola/git-cola/issues/734
+
 * Dock widgets sizes are now properly saved and restored when the main
   window is maximized.
 
