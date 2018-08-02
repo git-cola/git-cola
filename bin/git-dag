@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- python-mode -*-
 """git-dag: An advanced git DAG visualizer
 """
 
