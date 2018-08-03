@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-07-30 10:56+0100\n"
+"PO-Revision-Date: 2018-08-03 12:09+0100\n"
 "Last-Translator: victorhck <victorhck@mailbox.org>\n"
-"Language-Team: Spanish <kde-l10n-es@kde.org>\n"
+"Language-Team: Spanish <>\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Arrastre y suelte o use el botón <strong>Añadir</strong> para añadir\n"
+"                Arrastre y suelte o use el botón <strong>Añadir</strong> para"
+" añadir\n"
 "                parches a la lista\n"
 "            </p>\n"
 "            "
@@ -55,7 +56,8 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or updating\n"
+"            We invite you to participate in translation by adding or"
+" updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -66,7 +68,8 @@ msgstr ""
 "\n"
 "        <br>\n"
 "            Git Cola ha sido traducida a diferentes idiomas gracias\n"
-"            a la ayuda de diferentes personas que se enumeran a continuación.\n"
+"            a la ayuda de diferentes personas que se enumeran a"
+" continuación.\n"
 "\n"
 "        <br>\n"
 "        <p>\n"
@@ -80,7 +83,8 @@ msgstr ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            Le invitamos a participar en la traducción añadiendo o actualizando\n"
+"            Le invitamos a participar en la traducción añadiendo o"
+" actualizando\n"
 "            una traducción y abriendo un \"pull request\".\n"
 "        </p>\n"
 "\n"
@@ -198,7 +202,8 @@ msgstr ""
 "edit = usar commit, pero parar al modificar\n"
 "squash = usar el commit, pero unirlo a un commit previo\n"
 "fixup = como \"squash\", pero descartando el mensaje de registro del commit\n"
-"exec = ejecutar un comando (el resto de la línea) utilizando la línea de comandos\n"
+"exec = ejecutar un comando (el resto de la línea) utilizando la línea de"
+" comandos\n"
 "\n"
 "Estas líneas pueden ser re-ordenadas; son ejecutadas de arriba abajo.\n"
 "\n"
@@ -249,7 +254,8 @@ msgstr ""
 "Ctrl + L    = Llevar el foco al campo para introducir texto\n"
 "?           = Mostrar ayuda\n"
 "\n"
-"Las flechas hacia arriba y hacia abajo cambian el foco entre los campos para introducir texto\n"
+"Las flechas hacia arriba y hacia abajo cambian el foco entre los campos para"
+" introducir texto\n"
 "y los resultados.\n"
 
 msgid " - DAG"
@@ -276,7 +282,7 @@ msgstr "\"%s\" ya existe"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" ya existe, Cola creará una nueva carpeta"
+msgstr "\"%s\" ya existe, cola creará una nueva carpeta"
 
 #, python-format
 msgid "\"%s\" requires a selected file."
@@ -307,7 +313,7 @@ msgstr "Hace %d minutos"
 
 #, python-format
 msgid "%d patch(es) applied."
-msgstr "%d parche(s) aplicados."
+msgstr "%d parche(s) aplicado(s)."
 
 #, python-format
 msgid "%d skipped"
@@ -348,7 +354,7 @@ msgid "&File"
 msgstr "&Archivo"
 
 msgid "(Amending)"
-msgstr "(modificando)"
+msgstr "(Corrigiendo)"
 
 msgid "*** Branch Point ***"
 msgstr "*** Punto de la rama ***"
@@ -413,7 +419,8 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"Cancelar el \"merge\" actual causará que *TODOS* los cambios que no se haya hecho un commit se perderán.\n"
+"Cancelar el \"merge\" actual causará que *TODOS* los cambios que no se haya"
+" hecho un commit se perderán.\n"
 "No es posible recuperar los cambios en los que no se haya hecho un commit."
 
 msgid "Aborting the current merge?"
@@ -503,11 +510,19 @@ msgstr "Edad"
 msgid "All Repositories"
 msgstr "Todos los repositorios"
 
-msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
-msgstr "Permitir actualizaciones \"non-fast-forward\". Utilizar \"force\" puede causar que el repositorio remoto pierda los commits, utilizar con cuidado"
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
+" repository to lose commits; use it with care"
+msgstr ""
+"Permitir actualizaciones \"non-fast-forward\". Utilizar \"force\" puede"
+" causar que el repositorio remoto pierda los commits, utilizar con cuidado"
 
-msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr "Siempre utilizar un \"merge commit\" cuando este habilitado, incluso cuando el \"merge\" es una actualización \"fast-forward\""
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a"
+" fast-forward update"
+msgstr ""
+"Siempre utilizar un \"merge commit\" cuando este habilitado, incluso cuando"
+" el \"merge\" es una actualización \"fast-forward\""
 
 msgid "Amend"
 msgstr "Corregir"
@@ -534,7 +549,9 @@ msgstr ""
 msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
-msgstr "Una etiqueta sin firmar, de poca entidad será creada. ¿Crear una etiqueta sin firmar?"
+msgstr ""
+"Una etiqueta sin firmar, de poca entidad será creada.\n"
+"¿Crear una etiqueta sin firmar?"
 
 msgid "Apply"
 msgstr "Aplicar"
@@ -576,8 +593,11 @@ msgstr ""
 msgid "Blame..."
 msgstr "Cerrar..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
-msgstr "Fuente en negrita con fondo negro en vez de cabeceras en cursiva (se necesita reiniciar)"
+msgid ""
+"Bold with dark background font instead of italic headers (restart required)"
+msgstr ""
+"Fuente en negrita con fondo negro en vez de cabeceras en cursiva (se necesita"
+" reiniciar)"
 
 msgid "Branch"
 msgstr "Rama"
@@ -639,7 +659,7 @@ msgid "Browsing %s"
 msgstr "Navegado por %s"
 
 msgid "Bypass Commit Hooks"
-msgstr ""
+msgstr "Evitar Commit Hooks"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -660,7 +680,8 @@ msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "No se pudo ejecutar \"%s\": por favor, configure un navegador de historial"
+msgstr ""
+"No se pudo ejecutar \"%s\": por favor, configure un navegador de historial"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
@@ -752,7 +773,7 @@ msgid "Commit failed"
 msgstr "Commit fallido"
 
 msgid "Commit staged changes"
-msgstr "Hace un commit de los cambios en \"stage\""
+msgstr "Hacer un commit de los cambios en \"stage\""
 
 msgid ""
 "Commit staged changes\n"
@@ -764,8 +785,12 @@ msgstr ""
 msgid "Commit summary"
 msgstr "Sumario de commit"
 
-msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr "Hacer un commit del merge sin no hay conflictos. Desmarcar para dejar el merge sin commit"
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
+" uncommitted"
+msgstr ""
+"Hacer un commit del merge sin no hay conflictos. Desmarcar para dejar el"
+" merge sin commit"
 
 msgid "Commit@@verb"
 msgstr "Commit@@verb"
@@ -835,7 +860,9 @@ msgid "Create Unsigned Tag"
 msgstr "Crear etiqueta sin firmar"
 
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "Crear un \"merge commit\" incluso cuando el \"merge\" se resuelva como un \"fast-forward\""
+msgstr ""
+"Crear un \"merge commit\" incluso cuando el \"merge\" se resuelva como un"
+" \"fast-forward\""
 
 msgid "Create a new remote branch?"
 msgstr "¿Desea crear una nueva rama remota?"
@@ -936,37 +963,37 @@ msgstr "Detectar Conflict Markers"
 
 msgid "Detect conflict markers in unmerged files"
 msgstr ""
+"Detectar conflicto en marcadores en archivos en los que no se haya hecho merge"
 
 msgid "Developer"
-msgstr ""
+msgstr "Desarrollador"
 
 msgid "Diff"
 msgstr "Diferencia"
 
 msgid "Diff Against Predecessor..."
-msgstr ""
+msgstr "Diferencia respecto del predecesor..."
 
 msgid "Diff Options"
-msgstr ""
+msgstr "Opciones al mostrar las diferencias"
 
 msgid "Diff Tool"
-msgstr "Herramienta de Diff"
+msgstr "Herramienta de diferencias (Diff)"
 
 msgid "Diff selected -> this"
-msgstr "Diferencia de seleccionada -> esta"
+msgstr "Diferencia seleccionada -> esta"
 
 msgid "Diff this -> selected"
-msgstr "Diferencia de esta -> seleccionada"
+msgstr "Comprobar diferencias en esta -> seleccionada"
 
 msgid "Diffstat"
-msgstr ""
+msgstr "Mostrar diferencias (Diffstat)"
 
-#, fuzzy
 msgid "Difftool"
-msgstr "Herramienta de Diff"
+msgstr "Herramienta Diff"
 
 msgid "Directory Exists"
-msgstr "El Directorio ya Existe"
+msgstr "La carpeta ya existe"
 
 msgid "Display Untracked Files"
 msgstr "Mostrar ficheros sin seguimiento"
@@ -975,117 +1002,114 @@ msgid "Documentation"
 msgstr "Documentación"
 
 msgid "Drop"
-msgstr ""
+msgstr "Abandonar"
 
 msgid "Drop Stash"
-msgstr ""
+msgstr "Abandonar Stash"
 
 msgid "Drop Stash?"
-msgstr ""
+msgstr "¿Abandonar Stash?"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr ""
+msgstr "¿Abandonar el Stash \"%s\"?"
 
 msgid "Drop the selected stash"
-msgstr ""
+msgstr "Abandonar el Stash seleccionado"
 
 #, fuzzy
 msgid "Edit"
 msgstr "Editar"
 
 msgid "Edit Rebase"
-msgstr ""
+msgstr "Editar Rebase"
 
 msgid "Edit Remotes"
-msgstr "Editar Repositorios Remotos"
+msgstr "Editar repositorios remotos"
 
 msgid "Edit Remotes..."
-msgstr "Editar Repositorios Remotos..."
+msgstr "Editar repositorios remotos..."
 
 msgid "Edit remotes by selecting them from the list"
-msgstr ""
+msgstr "Editr repositorios remotos seleccionándolos de la lista"
 
 msgid "Edit selected paths"
-msgstr ""
+msgstr "Editar rutas seleccionadas"
 
 msgid "Edit..."
 msgstr "Editar..."
 
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 msgid "Email Address"
-msgstr "Email"
+msgstr "Dirección de correo electrónico"
 
 msgid "Email contributor"
-msgstr ""
+msgstr "Dirección de correo electrónico del colaborador"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Habilitado"
 
-#, fuzzy
 msgid "Enter New Branch Name"
-msgstr "Nombre de la Rama"
+msgstr "Introducir el nombre de la rama"
 
-#, fuzzy
 msgid "Enter a name for the new bare repo"
-msgstr "Nombre para el nuevo repositorio remoto"
+msgstr "Introducir el nombre para el nuevo repositorio remoto básico"
 
 msgid "Enter a name for the stash"
-msgstr ""
+msgstr "Introducir el nombre para el Stash"
 
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 msgid "Error Cloning"
-msgstr "Error al Crear Copia Local"
+msgstr "Error al clonar"
 
 msgid "Error Creating Branch"
-msgstr "Error al Crear Rama"
+msgstr "Error al crear rama"
 
 msgid "Error Creating Repository"
-msgstr "Error al Crear Repositorio"
+msgstr "Error al crear repositorio"
 
 msgid "Error Deleting Remote Branch"
-msgstr "Error al Eliminar Rama Remota"
+msgstr "Error al eliminar rama remota"
 
 msgid "Error Editing File"
-msgstr "Error al Editar Archivo"
+msgstr "Error al editar el archivo"
 
 msgid "Error Launching Blame Viewer"
-msgstr ""
+msgstr "Error al arrancar el Blame Viewer"
 
 msgid "Error Launching History Browser"
-msgstr ""
+msgstr "Error al arrancar el navegador del historial"
 
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Error al crear el repositorio remoto \"%s\""
 
-#, fuzzy
 msgid "Error creating stash"
-msgstr "Error al Crear Rama"
+msgstr "Error al Crear Stash"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "Error al eliminar el repositorio remoto \"%s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
-msgstr "Etiquetando \"%(revision)s\" como \"%(name)s\""
+msgstr "Error al renombrar \"%(name)s\" a \"%(new_name)s\""
 
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
 msgid "Error: Cannot find commit template"
-msgstr ""
+msgstr "Error: No se pudo encontrar la plantilla para el commit"
 
 msgid "Error: Stash exists"
-msgstr ""
+msgstr "Error: ya existe el Stash"
 
 msgid "Error: Unconfigured commit template"
-msgstr ""
+msgstr "Error: Plantilla para el commit no configurada"
 
 #, python-format
 msgid "Error: could not clone \"%s\""
@@ -1097,155 +1121,169 @@ msgstr "Error: no se pudo crear la etiqueta \"%s\""
 
 #, python-format
 msgid "Executing action %s"
-msgstr ""
+msgstr "Ejecutando la acción %s"
 
 msgid "Expand all"
 msgstr "Expandir todo"
 
 msgid "Export Patches"
-msgstr "Exportar Parches"
+msgstr "Exportar parches"
 
 msgid "Export Patches..."
-msgstr "Exportar Parches..."
+msgstr "Exportar parches..."
 
 msgid "Expression..."
 msgstr "Expresión..."
 
 msgid "Extended Regexp"
-msgstr ""
+msgstr "Extender Regexp"
 
 msgid "Extended description..."
 msgstr "Descripción extendida..."
 
 msgid "Fast Forward Only"
-msgstr ""
+msgstr "Sólo Fast Forward"
 
 msgid "Fast-forward only"
-msgstr ""
+msgstr "Sólo Fast-forward"
 
-#, fuzzy
 msgid "Favorite repositories"
-msgstr "Todos los Repositorios"
+msgstr "Repositorios favoritos"
 
 msgid "Favorites"
 msgstr "Favoritos"
 
 msgid "Fetch"
-msgstr ""
+msgstr "Extraer (Fetch)"
 
 msgid "Fetch Tracking Branch"
-msgstr ""
+msgstr "Extraer (Fetch) la rama en seguimiento"
 
 msgid "Fetch..."
-msgstr ""
+msgstr "Extraer (Fetch)..."
 
 msgid "File Browser..."
-msgstr "Navegador de Archivos..."
+msgstr "Navegador de archivos..."
 
 msgid "File Differences"
-msgstr ""
+msgstr "Diferencias de archivos"
 
 msgid "File Saved"
-msgstr "Archivo Guardado"
+msgstr "Archivo guardado"
 
 #, python-format
 msgid "File saved to \"%s\""
 msgstr "Archivo guardado en \"%s\""
 
-#, fuzzy
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "inotify está desactivado porque \"cola.inotify\" es FALSO\n"
-
-msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr ""
-
-msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
+"Supervisión del cambio del sistema de archivo: está desactivada porque"
+" \"cola.inotify\" es falso\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"File system change monitoring: disabled because libc does not support the"
+" inotify system calls.\n"
 msgstr ""
+"Supervisión del cambio del sistema de archivo: está desactivada porque libc"
+" no es compatible con el sistema de llamadas de inotify.\n"
 
-#, fuzzy
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+"Supervisión del cambio del sistema de archivo: está desactivada porque"
+" pywin32 no está instalada.\n"
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number"
+" of inotify watches was reached.  You may be able to increase the limit on"
+" the number of watches by running:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
+msgstr ""
+"Supervisión del cambio del sistema de archivo: está desactivada porque el"
+" límite del número total de los seguimientos que hace inotify se ha"
+" alcanzado. Debería incrementar el número del límite de seguimientos que se"
+" pueden ejecutar:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
+
 msgid "File system change monitoring: enabled.\n"
-msgstr "Notificación de archivo activada.\n"
+msgstr "Supervisión del cambio del sistema de archivo: activada.\n"
 
 msgid "Filename"
-msgstr ""
+msgstr "Nombre de archivo"
 
 msgid "Files"
 msgstr "Archivos"
 
-#, fuzzy
 msgid "Filter branches..."
-msgstr "Navegador de Archivos..."
+msgstr "Filtrar ramas..."
 
-#, fuzzy
 msgid "Filter paths..."
-msgstr "Navegador de Archivos..."
+msgstr "Filtrar rutas..."
 
-#, fuzzy
 msgid "Find Files"
-msgstr "Archivos"
+msgstr "Encontrar archivos"
 
 msgid "Fixed String"
-msgstr ""
+msgstr "Cadena fijada"
 
 msgid "Fixed-Width Font"
-msgstr "Fuente de Ancho Fijo"
+msgstr "Fijar ancho de fuente"
 
 msgid "Fixup"
-msgstr ""
+msgstr "Arreglar"
 
 msgid "Fixup Previous Commit"
-msgstr ""
+msgstr "Arreglar un Commit previo"
 
 msgid "Font Size"
-msgstr "Tamaño de Fuente"
+msgstr "Tamaño de fuente"
 
 msgid "Force"
-msgstr ""
+msgstr "Forzar"
 
 msgid "Force Fetch"
-msgstr ""
+msgstr "Forzar extracción (Fetch)"
 
 msgid "Force Fetch?"
-msgstr ""
+msgstr "¿Forzar extracción (Fetch)?"
 
 msgid "Force Push"
-msgstr ""
+msgstr "Forzar Push"
 
 msgid "Force Push?"
-msgstr ""
+msgstr "¿Forzar Push?"
 
 #, python-format
 msgid "Force fetching from %s?"
-msgstr ""
+msgstr "¿Forzar extracción desde %s?"
 
 #, python-format
 msgid "Force push to %s?"
-msgstr ""
+msgstr "¿Forzar Push a %s?"
 
 msgid "Format String"
-msgstr ""
+msgstr "Formato de cadena"
 
 msgid "French translation"
-msgstr ""
+msgstr "Traducción al Francés"
 
 msgid "GPG-sign the merge commit"
-msgstr ""
+msgstr "Firmar mediante GPG el Merge Commit"
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
 msgstr "Runiendo información para \"%s\"..."
 
 msgid "German translation"
-msgstr ""
+msgstr "Traducción al Alemán"
 
 msgid "Get Commit Message Template"
-msgstr "Aplicar Plantilla de Mensaje de Commit"
+msgstr "Aplicar plantilla de mensaje de Commit"
 
 msgid "Go Down"
 msgstr "Bajar"
@@ -1254,37 +1292,37 @@ msgid "Go Up"
 msgstr "Subir"
 
 msgid "Grab File..."
-msgstr ""
+msgstr "Tomar archivo..."
 
 msgid "Graph"
-msgstr ""
+msgstr "Gráfico"
 
 msgid "Grep"
-msgstr ""
+msgstr "Grep"
 
 msgid "Have you rebased/pulled lately?"
-msgstr ""
+msgstr "¿Ha realizado un rebase/pull recientemente?"
 
 msgid "Help"
 msgstr "Ayuda"
 
 msgid "Help - Custom Copy Actions"
-msgstr ""
+msgstr "Ayuda - Acciones de copiado personalizadas"
 
 msgid "Help - Find Files"
-msgstr ""
+msgstr "Ayuda - Encontrar archivos"
 
 msgid "Help - git-xbase"
-msgstr ""
+msgstr "Ayuda - git-xbase"
 
 msgid "Hide Details.."
-msgstr ""
+msgstr "Ocultar detalles..."
 
 msgid "History Browser"
-msgstr "Herramienta de Historial"
+msgstr "Navegador de historial"
 
 msgid "Hungarian translation"
-msgstr ""
+msgstr "Traducción al Húngaro"
 
 msgid "Ignore all whitespace"
 msgstr "Ignorar todos los espacios en blanco"
@@ -1296,35 +1334,34 @@ msgid "Ignore changes in whitespace at EOL"
 msgstr "Ignorar cambios de espacios en blanco en EOL"
 
 msgid "Ignore custom pattern"
-msgstr ""
+msgstr "Ignorar patrón personalizado"
 
-#, fuzzy
 msgid "Ignore exact filename"
-msgstr "Ignorar todos los espacios en blanco"
+msgstr "Ignorar el nombre de archivo exacto"
 
 msgid "Ignore filename or pattern"
-msgstr ""
+msgstr "Ignorar nombre de archivo o patrón"
 
 msgid "Include tags "
 msgstr "Incluir etiquetas "
 
 msgid "Indonesian translation"
-msgstr ""
+msgstr "Traducción al Indonesio"
 
 msgid "Initialize Git Annex"
-msgstr ""
+msgstr "Inicializar Git Annex"
 
 msgid "Initialize Git LFS"
-msgstr ""
+msgstr "Inicializar Git LFS"
 
 msgid "Inititalize submodules"
-msgstr ""
+msgstr "Inicializar submódulos"
 
 msgid "Insert spaces instead of tabs"
-msgstr ""
+msgstr "Insertar espacios en vez de tabulaciones"
 
 msgid "Interactive Rebase"
-msgstr ""
+msgstr "Rebase interactivo"
 
 msgid "Invalid Revision"
 msgstr "Revisión inválida"
@@ -1333,17 +1370,16 @@ msgid "Keep *.orig Merge Backups"
 msgstr "Conservar Merge Backups *.orig"
 
 msgid "Keep Index"
-msgstr ""
+msgstr "Mantener Index"
 
 msgid "Keyboard Shortcuts"
-msgstr "Atajos de Teclado"
+msgstr "Atajos de teclado"
 
 msgid "Launch Diff Tool"
-msgstr "Abrir Herramienta de Comparación"
+msgstr "Ejecutar la herramienta de comparación"
 
-#, fuzzy
 msgid "Launch Directory Diff Tool"
-msgstr "Abrir Herramienta de Comparación"
+msgstr "Ejecutar la herramienta de comparación de carpetas"
 
 msgid "Launch Editor"
 msgstr "Abrir Editor"
@@ -1355,65 +1391,67 @@ msgid ""
 "Launch external diff tool\n"
 "Shortcut: Ctrl+D"
 msgstr ""
+"Abrir una herramienta de diferencias externa\n"
+"Atajo de teclado: Ctrl+D"
 
 msgid "Launch git-cola"
 msgstr "Ejecutar git-cola"
 
 msgid "Launch git-difftool against previous versions"
-msgstr ""
+msgstr "Ejecutar git-difftool en versiones previas"
 
 msgid "Launch git-difftool on the current path"
-msgstr ""
+msgstr "Ejecutar git-difftool en la ruta actual"
 
 msgid "Load Commit Message"
-msgstr ""
+msgstr "Cargar el mensaje del Commit"
 
 msgid "Load Commit Message..."
-msgstr "Cargar Mensaje de Commit..."
+msgstr "Cargar el mensaje del Commit..."
 
 msgid "Load Previous Commit Message"
-msgstr ""
+msgstr "Cargar un mensaje del Commit previo"
 
 msgid "Loading..."
-msgstr ""
+msgstr "Cargando..."
 
 msgid "Local"
-msgstr ""
+msgstr "Local"
 
 msgid "Local Branch"
-msgstr "Rama Local"
+msgstr "Rama local"
 
 msgid "Local branch"
 msgstr "Rama local"
 
 msgid "Lock Layout"
-msgstr "Bloquear Paneles"
+msgstr "Bloquear paneles"
 
 msgid "Log"
-msgstr ""
+msgstr "Registro"
 
 msgid "Maintainer (since 2007) and developer"
-msgstr ""
+msgstr "Responsable (desde 2007) y desarrollador"
 
 msgid "Merge"
-msgstr ""
+msgstr "Merge"
 
 #, python-format
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
+msgstr "Merge \"%(revision)s\" con \"%(branch)s\""
 
 msgid "Merge Tool"
 msgstr "Herramienta Merge"
 
 msgid "Merge Verbosity"
-msgstr "Verbosidad de Merge"
+msgstr "Mostrar mensajes de salida de Merge"
 
 msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
+msgstr "Falló Merge. Se necesita resolver los conflictos."
 
 #, python-format
 msgid "Merge into \"%s\""
-msgstr ""
+msgstr "Merge en \"%s\""
 
 #, fuzzy
 msgid "Merge into current branch"
@@ -1708,7 +1746,9 @@ msgstr ""
 msgid "Refresh"
 msgstr "Refrescar"
 
-msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge"
+" can be resolved as a fast-forward"
 msgstr ""
 
 msgid "Remote"
@@ -1772,7 +1812,8 @@ msgstr "Rama Remota"
 
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
+msgstr ""
+"Desea renombrar el repositorio remoto \"%(current)s\" como \"%(new)s\"?"
 
 #, fuzzy
 msgid "Rename selected paths"
@@ -2487,7 +2528,8 @@ msgid "exit code %s"
 msgstr ""
 
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr ""
 
 #, python-format
