@@ -138,37 +138,29 @@ install: all
 	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
 	$(RM_R) "$(DESTDIR)$(coladir)/git_cola"*
 	$(RM_R) git_cola.egg-info
-.PHONY: install
 
 # Maintainer's dist target
 dist:
 	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
 		$(GZIP) -f -9 - >$(cola_dist).tar.gz
-.PHONY: dist
 
 doc:
 	$(MAKE) -C share/doc/git-cola all
-.PHONY: doc
 
 html:
 	$(MAKE) -C share/doc/git-cola html
-.PHONY: html
 
 man:
 	$(MAKE) -C share/doc/git-cola man
-.PHONY: man
 
 install-doc:
 	$(MAKE) -C share/doc/git-cola install
-.PHONY: install-doc
 
 install-html:
 	$(MAKE) -C share/doc/git-cola install-html
-.PHONY: install-html
 
 install-man:
 	$(MAKE) -C share/doc/git-cola install-man
-.PHONY: install-man
 
 uninstall:
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
@@ -196,30 +188,24 @@ uninstall:
 	-$(RMDIR) "$(DESTDIR)$(prefix)"/share 2>/dev/null
 	-$(RMDIR) "$(DESTDIR)$(prefix)"/bin 2>/dev/null
 	-$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null
-.PHONY: uninstall
 
 test: all
 	$(PYTEST) $(PYTEST_FLAGS) $(PYTHON_DIRS)
-.PHONY: test
 
 coverage:
 	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(PYTHON_DIRS)
-.PHONY: coverage
 
 clean:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
-.PHONY: clean
 
 tags:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
-.PHONY: tags
 
 # Update i18n files
 i18n: pot mo
-.PHONY: i18n
 
 pot:
 	$(SETUP) build_pot --build-dir=po --no-lang
@@ -236,7 +222,8 @@ mo:
 git-cola.app:
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app)/Contents/Resources
-	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
+	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo \
+	$(cola_app)/Contents
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
@@ -244,7 +231,6 @@ git-cola.app:
 
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
-.PHONY: app-tarball
 
 # Preview the markdown using "make README.html"
 %.html: %.md
@@ -252,24 +238,20 @@ app-tarball: git-cola.app
 
 flake8:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(PYTHON_DIRS)
-.PHONY: flake8
 
 pylint3k:
-	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
-.PHONY: pylint3k
+	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) \
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
 pylint:
-	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
-.PHONY: pylint
+	$(PYLINT) $(PYLINT_FLAGS) $(flags) \
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
 pylint-check:
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
-.PHONY: pylint-check
 
 requirements:
 	$(PIP) install --requirement requirements/requirements.txt
-.PHONY: requirements
 
 requirements-dev:
 	$(PIP) install --requirement requirements/requirements-dev.txt
-.PHONY: requirements-dev
