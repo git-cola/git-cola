@@ -205,7 +205,9 @@ tags:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
 
 # Update i18n files
-i18n: pot mo
+i18n:: pot
+i18n:: po
+i18n:: mo
 
 pot:
 	$(SETUP) build_pot --build-dir=po --no-lang
