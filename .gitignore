@@ -10,6 +10,7 @@
 /local
 /Meta
 /pynsist_pkgs
+/.pytest_cache
 /README.html
 /share/locale
 /test/tmp
