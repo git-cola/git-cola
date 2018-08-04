@@ -198,6 +198,7 @@ coverage:
 
 clean:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
+	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | xargs -0 rm -rf
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
