@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2018-08-03 12:09+0100\n"
+"PO-Revision-Date: 2018-08-04 14:27+0100\n"
 "Last-Translator: victorhck <victorhck@mailbox.org>\n"
 "Language-Team: Spanish <>\n"
 "Language: es_ES\n"
@@ -1453,33 +1453,32 @@ msgstr "Falló Merge. Se necesita resolver los conflictos."
 msgid "Merge into \"%s\""
 msgstr "Merge en \"%s\""
 
-#, fuzzy
 msgid "Merge into current branch"
-msgstr "Explorar Rama Actual..."
+msgstr "Merge en la rama actual"
 
 msgid "Merge..."
-msgstr ""
+msgstr "Merge..."
 
 msgid "Merging"
-msgstr ""
+msgstr "Uniendo"
 
 msgid "Message"
 msgstr "Mensaje"
 
 msgid "Missing Commit Message"
-msgstr ""
+msgstr "Mensaje de commit ausente"
 
 msgid "Missing Data"
-msgstr "Datos Incompletos"
+msgstr "Datos ausentes"
 
 msgid "Missing Name"
-msgstr ""
+msgstr "Nombre ausente"
 
 msgid "Missing Revision"
-msgstr ""
+msgstr "Revisión ausente"
 
 msgid "Missing Tag Message"
-msgstr ""
+msgstr "Mensaje de etiqueta ausente"
 
 msgid "Modified"
 msgstr "Modificado"
@@ -1494,7 +1493,7 @@ msgid "Move Up"
 msgstr "Subir"
 
 msgid "Move files to trash"
-msgstr ""
+msgstr "Mover los archivos a la papelera"
 
 msgid "Name"
 msgstr "Nombre"
@@ -1502,57 +1501,60 @@ msgstr "Nombre"
 msgid "Name for the new remote"
 msgstr "Nombre para el nuevo repositorio remoto"
 
-#, fuzzy
 msgid "New Bare Repository..."
-msgstr "Nuevo Repositorio..."
+msgstr "Nuevo repositorio..."
 
 msgid "New Repository..."
-msgstr "Nuevo Repositorio..."
+msgstr "Nuevo repositorio..."
 
 msgid "New..."
 msgstr "Nuevo..."
 
-#, fuzzy
 msgid "Next File"
-msgstr "Seleccionar Archivo"
+msgstr "Archivo siguiente"
 
 msgid "No"
-msgstr ""
+msgstr "No"
 
 msgid "No Revision Specified"
-msgstr ""
+msgstr "No se ha especificado una revisión"
 
 msgid ""
 "No changes to commit.\n"
 "\n"
 "You must stage at least 1 file before you can commit."
 msgstr ""
+"Sin cambios para hacer commit.\n"
+"\n"
+"Debe realizar al menos un cambio antes de poder hacer un commit."
 
 msgid "No commits exist in this branch."
-msgstr ""
+msgstr "No existen commits en esta rama."
 
 msgid "No fast forward"
-msgstr ""
+msgstr "Sin \"fast forward\""
 
 msgid "No fast-forward"
-msgstr ""
+msgstr "Sin \"fast-forward\""
 
 msgid "No repository selected."
 msgstr "Ningún repositorio ha sido seleccionado."
 
 msgid "Non-fast-forward fetch overwrites local history!"
-msgstr ""
+msgstr "¡Ningún \"fast-forward\" sobreescribe el historial local!"
 
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
+"¡Ningún \"fast-forward\" sobreescribe el historial publicado!\n"
+"(¿Ha ejecutado \"pull\" primero?)"
 
 msgid "Nothing to commit"
-msgstr ""
+msgstr "Nada para hace commit"
 
 msgid "Nothing to do"
-msgstr ""
+msgstr "Nada que hacer"
 
 msgid "Number of Diff Context Lines"
 msgstr "Numero de lineas de contexto Diff"
@@ -1564,78 +1566,81 @@ msgid "Open Git Repository..."
 msgstr "Abrir Repositorio Git..."
 
 msgid "Open Parent Directory"
-msgstr "Abrir Directorio Padre"
+msgstr "Abrir carpeta padre"
 
 msgid "Open Recent"
-msgstr "Abrir Recientes"
+msgstr "Abrir recientes"
 
 msgid "Open Using Default Application"
-msgstr "Abrir Usando Aplicación por Defecto"
+msgstr "Abrir utilizando la aplicación predeterminada"
 
 msgid "Open in New Window"
-msgstr "Abrir en una Ventana Nueva"
+msgstr "Abrir en una ventana nueva"
 
 msgid "Open in New Window..."
-msgstr "Abrir en una Ventana Nueva..."
+msgstr "Abrir en una ventana nueva..."
 
 msgid "Open..."
 msgstr "Abrir..."
 
-#, fuzzy
 msgid "Other branches"
-msgstr "Navegador de Archivos..."
+msgstr "Otras ramas"
 
 msgid "Overwrite"
-msgstr "Sobreescribir"
+msgstr "Sobrescribir"
 
 #, python-format
 msgid "Overwrite \"%s\"?"
-msgstr "Desea sobreescribir \"%s\"?"
+msgstr "¿Desea sobrescribir \"%s\"?"
 
 msgid "Overwrite File?"
-msgstr "Desea sobreescribir el archivo?"
+msgstr "¿Desea sobrescribir el archivo?"
 
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
-msgstr ""
+msgstr "PATCH %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
 "Queries with spaces will require \"double quotes\"."
 msgstr ""
+"Analizar los argumentos utilizando la línea de comandos.\n"
+"Las consultas con espacios requerirán \"comillas dobles\". "
 
 msgid "Partially Staged"
-msgstr ""
+msgstr "En \"Stage\" parcialmente"
 
 msgid "Paste"
-msgstr ""
+msgstr "Pegar"
 
 msgid "Patch(es) Applied"
-msgstr ""
+msgstr "Parche(s) aplicado(s)"
 
 msgid "Path"
-msgstr ""
+msgstr "Ruta"
 
 msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Ruta o URL a Clonar (Env. $VARS okay)"
+msgstr "Ruta o URL a clonar (Env. $VARS okay)"
 
 msgid "Pick"
-msgstr ""
+msgstr "Escoger"
 
 msgid "Pixel XOR"
-msgstr ""
+msgstr "Pixel XOR"
 
 msgid "Please provide both a branch name and revision expression."
 msgstr ""
+"Por favor proporcione tanto el nombre de la rama como la expresión de la"
+" revisión."
 
 msgid "Please select a file"
 msgstr "Por favor, seleccione un archivo"
 
 msgid "Please specify a name for the new tag."
-msgstr "Por favor, especifique un nombre para la nueva etiqueta"
+msgstr "Por favor, especifique un nombre para la nueva etiqueta."
 
 msgid "Please specify a revision to tag."
-msgstr ""
+msgstr "Por favor, especifique una revisión para etiquetar."
 
 msgid ""
 "Please supply a commit message.\n"
@@ -1646,15 +1651,22 @@ msgid ""
 "- Second line: Blank\n"
 "- Remaining lines: Describe why this change is good.\n"
 msgstr ""
+"Por favor, proporciones un mensaje para el commit.\n"
+"\n"
+"Un buen mensaje de commit tiene el siguiente formato:\n"
+"\n"
+"- Primera línea: Describa en una línea lo que ha realizado.\n"
+"- Segunda línea: En blanco.\n"
+"- Las líneas restantes: Describa porque este cambio es apropiado.\n"
 
 msgid "Point the current branch head to a new commit?"
-msgstr ""
+msgstr "¿Apuntar la el comienzo de la rama actual a un nuevo commit?"
 
 msgid "Polish translation"
-msgstr ""
+msgstr "Traducción al Polaco"
 
 msgid "Pop"
-msgstr ""
+msgstr "Pop"
 
 msgid "Preferences"
 msgstr "Preferencias"
@@ -1662,86 +1674,82 @@ msgstr "Preferencias"
 msgid "Prefix"
 msgstr "Prefijo"
 
-#, fuzzy
 msgid "Prepare Commit Message"
-msgstr "Cargar Mensaje de Commit..."
+msgstr "Cargar mensaje de commit"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
-msgstr ""
+msgstr "Evitar el \"Stage\" de todos los archivos cuando nada es seleccionado"
 
 msgid "Previous File"
-msgstr ""
+msgstr "Archivo anterior"
 
 msgid "Prompt on creation"
-msgstr ""
+msgstr "Solicitud de creación"
 
-#, fuzzy
 msgid "Prompt when pushing creates new remote branches"
-msgstr "Desea crear una nueva rama remota?"
+msgstr ""
+"Solicitar que al hacer \"push\" cree nuevas ramas en el repositorio remoto"
 
 msgid "Prune "
-msgstr ""
+msgstr "Prune "
 
 msgid "Pull"
-msgstr ""
+msgstr "Pull"
 
 msgid "Pull..."
-msgstr ""
+msgstr "Pull..."
 
 msgid "Push"
-msgstr ""
+msgstr "Push"
 
 msgid "Push..."
-msgstr ""
+msgstr "Push..."
 
 msgid "Quit"
 msgstr "Salir"
 
 msgid "Rebase"
-msgstr ""
+msgstr "Rebase"
 
 #, python-format
 msgid "Rebase onto %s"
-msgstr ""
+msgstr "Rebase en %s"
 
 msgid "Rebase stopped"
-msgstr ""
+msgstr "Rebase detenido"
 
 msgid "Rebase the current branch instead of merging"
-msgstr ""
+msgstr "Hacer \"rebase\" de la rama actual en vez de unirlas (merge)"
 
 msgid "Rebasing"
-msgstr ""
+msgstr "Rebasing"
 
-#, fuzzy
 msgid "Recent"
-msgstr "Abrir Recientes"
+msgstr "Reciente"
 
-#, fuzzy
 msgid "Recent repositories"
-msgstr "Todos los Repositorios"
+msgstr "Repositorios recientes"
 
-#, fuzzy
 msgid "Recent repository count"
-msgstr "Todos los Repositorios"
+msgstr "Enumerar los repositorios recientes"
 
 msgid "Recently Modified Files"
-msgstr "Archivos Modificados Recientemente"
+msgstr "Archivos modificados recientemente"
 
 msgid "Recently Modified Files..."
-msgstr "Archivos Modificados Recientemente..."
+msgstr "Archivos modificados recientemente..."
 
 msgid "Recovering a dropped stash is not possible."
-msgstr ""
+msgstr "No es posible recuperar un \"stash\" eliminado."
 
 msgid "Recovering lost commits may not be easy."
-msgstr ""
+msgstr "Recuperar \"commits\" perdidos puede que no sea sencillo."
 
 msgid "Redo"
-msgstr ""
+msgstr "Rehacer"
 
 msgid "Reduce commit history to minimum"
-msgstr ""
+msgstr "Reducir el historial de \"commit\" al mínimo"
 
 msgid "Refresh"
 msgstr "Refrescar"
