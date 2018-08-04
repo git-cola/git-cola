@@ -247,7 +247,7 @@ pylint:
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) \
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
-pylint-check:
+check:
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
 
 requirements:
