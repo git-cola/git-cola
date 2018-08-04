@@ -252,7 +252,9 @@ pylint:
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
 check:
+	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
+	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 
 format:
 	$(YAPF) --in-place $(flags) $(file)
