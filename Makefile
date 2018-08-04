@@ -42,6 +42,7 @@ RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
 TAR = tar
+YAPF = yapf
 
 # Flags
 # -----
@@ -251,6 +252,9 @@ pylint:
 
 check:
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
+
+format:
+	$(YAPF) --in-place $(flags) $(file)
 
 requirements:
 	$(PIP) install --requirement requirements/requirements.txt
