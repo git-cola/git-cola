@@ -68,7 +68,6 @@ FLAKE8_FLAGS = $(VERBOSE)
 FLAKE8_FLAGS += --max-line-length=80
 FLAKE8_FLAGS += --format=pylint
 FLAKE8_FLAGS += --doctests
-FLAKE8_FLAGS += --statistics
 
 PYLINT_FLAGS = --rcfile=.pylintrc
 PYLINT_FLAGS += --score=no
