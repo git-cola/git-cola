@@ -58,14 +58,19 @@ ifdef V
 else
     QUIET = --quiet
 endif
-PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE) --doctest-modules
-FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
+
+PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
+PYTEST_FLAGS += --doctest-modules
+
+FLAKE8_FLAGS = $(VERBOSE)
+FLAKE8_FLAGS += --max-line-length=80
+FLAKE8_FLAGS += --format=pylint
+FLAKE8_FLAGS += --doctests
+FLAKE8_FLAGS += --statistics
+
 PYLINT_FLAGS = --rcfile=.pylintrc
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
-endif
-ifdef flags
-    PYTEST_FLAGS += $(flags)
 endif
 
 # These values can be overridden on the command-line or via config.mak
@@ -191,10 +196,10 @@ uninstall:
 	-$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null
 
 test: all
-	$(PYTEST) $(PYTEST_FLAGS) $(PYTHON_DIRS)
+	$(PYTEST) $(PYTEST_FLAGS) $(flags) $(PYTHON_DIRS)
 
 coverage:
-	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(PYTHON_DIRS)
+	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(flags) $(PYTHON_DIRS)
 
 clean:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
@@ -252,9 +257,9 @@ pylint:
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
 check:
-	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(file)
-	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(file)
 
 format:
 	$(YAPF) --in-place $(flags) $(file)
