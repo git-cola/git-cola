@@ -1,3 +1,4 @@
+"""Editor commands"""
 from __future__ import division, absolute_import, unicode_literals
 import os
 import re
@@ -20,7 +21,6 @@ from .diffparse import DiffParser
 from .git import STDOUT
 from .i18n import N_
 from .interaction import Interaction
-from .models import main
 from .models import prefs
 
 
@@ -39,6 +39,7 @@ class Command(object):
 
     @staticmethod
     def name():
+        """Return the command's name"""
         return '(undefined)'
 
     @classmethod
@@ -47,9 +48,11 @@ class Command(object):
         return cls.UNDOABLE
 
     def do(self):
+        """Execute the command"""
         pass
 
     def undo(self):
+        """Undo the command"""
         pass
 
 
@@ -102,24 +105,31 @@ class ConfirmAction(ContextCommand):
     """Confirm an action before running it"""
 
     def ok_to_run(self):
+        """Return True when the command is ok to run"""
         return True
 
     def confirm(self):
+        """Prompt for confirmation"""
         return True
 
     def action(self):
+        """Run the command and return (status, out, err)"""
         return (-1, '', '')
 
     def success(self):
+        """Callback run on success"""
         pass
 
     def command(self):
+        """Command name, for error messages"""
         return 'git'
 
     def error_message(self):
+        """Command error message"""
         return ''
 
     def do(self):
+        """Prompt for confirmation before running a command"""
         status = -1
         out = err = ''
         ok = self.ok_to_run() and self.confirm()
@@ -141,8 +151,8 @@ class AbortMerge(ConfirmAction):
         title = N_('Abort Merge...')
         question = N_('Aborting the current merge?')
         info = N_('Aborting the current merge will cause '
-                     '*ALL* uncommitted changes to be lost.\n'
-                     'Recovering uncommitted changes is not possible.')
+                  '*ALL* uncommitted changes to be lost.\n'
+                  'Recovering uncommitted changes is not possible.')
         ok_txt = N_('Abort Merge')
         return Interaction.confirm(title, question, info, ok_txt,
                                    default=False, icon=icons.undo())
@@ -196,15 +206,15 @@ class AmendMode(EditModel):
 
     def do(self):
         """Leave/enter amend mode."""
-        """Attempt to enter amend mode.  Do not allow this when merging."""
+        # Attempt to enter amend mode.  Do not allow this when merging.
         if self.amending:
             if self.model.is_merging:
                 self.skip = True
                 self.model.set_mode(self.old_mode)
                 Interaction.information(
-                        N_('Cannot Amend'),
-                        N_('You are in the middle of a merge.\n'
-                           'Cannot amend while merging.'))
+                    N_('Cannot Amend'),
+                    N_('You are in the middle of a merge.\n'
+                       'Cannot amend while merging.'))
                 return
         self.skip = False
         super(AmendMode, self).do()
@@ -317,6 +327,7 @@ class ApplyDiffSelection(ContextCommand):
 
 
 class ApplyPatches(ContextCommand):
+    """Apply patches using the "git am" command"""
 
     def __init__(self, context, patches):
         super(ApplyPatches, self).__init__(context)
@@ -348,12 +359,13 @@ class ApplyPatches(ContextCommand):
 
         basenames = '\n'.join([os.path.basename(p) for p in self.patches])
         Interaction.information(
-                N_('Patch(es) Applied'),
-                (N_('%d patch(es) applied.') +
-                 '\n\n%s') % (len(self.patches), basenames))
+            N_('Patch(es) Applied'),
+            (N_('%d patch(es) applied.') +
+             '\n\n%s') % (len(self.patches), basenames))
 
 
 class Archive(ContextCommand):
+    """"Export archives using the "git archive" command"""
 
     def __init__(self, context, ref, fmt, prefix, filename):
         super(Archive, self).__init__(context)
@@ -411,11 +423,11 @@ class BlamePaths(ContextCommand):
     def do(self):
         try:
             core.fork(self.argv)
-        except Exception as e:
+        except OSError as e:
             _, details = utils.format_exception(e)
             title = N_('Error Launching Blame Viewer')
-            msg = (N_('Cannot exec "%s": please configure a blame viewer') %
-                   ' '.join(self.argv))
+            msg = (N_('Cannot exec "%s": please configure a blame viewer')
+                   % ' '.join(self.argv))
             Interaction.critical(title, message=msg, details=details)
 
 
@@ -468,6 +480,7 @@ class ResetMode(EditModel):
 
 
 class ResetCommand(ConfirmAction):
+    """Reset state using the "git reset" command"""
 
     def __init__(self, context, ref):
         super(ResetCommand, self).__init__(context)
@@ -486,10 +499,10 @@ class ResetCommand(ConfirmAction):
         self.model.update_file_status()
 
     def confirm(self):
-        raise NotImplemented('confirm() must be overridden')
+        raise NotImplementedError('confirm() must be overridden')
 
     def reset(self):
-        raise NotImplemented('reset() must be overridden')
+        raise NotImplementedError('reset() must be overridden')
 
 
 class ResetBranchHead(ResetCommand):
@@ -808,13 +821,12 @@ class RemoveFiles(ContextCommand):
                 try:
                     remove(filename)
                     rescan = True
-                except:
+                except OSError:
                     bad_filenames.append(filename)
 
         if bad_filenames:
             Interaction.information(
-                    N_('Error'),
-                    N_('Deleting "%s" failed') % file_summary(files))
+                N_('Error'), N_('Deleting "%s" failed') % file_summary(files))
 
         if rescan:
             self.model.update_file_status()
@@ -837,11 +849,9 @@ class Delete(RemoveFiles):
         info_txt = N_('Delete %d file(s)?') % len(files)
         ok_txt = N_('Delete Files')
 
-        if not Interaction.confirm(title, msg, info_txt, ok_txt,
-                                   default=True, icon=icons.remove()):
-            return
-
-        return super(Delete, self).do()
+        if Interaction.confirm(title, msg, info_txt, ok_txt,
+                               default=True, icon=icons.remove()):
+            super(Delete, self).do()
 
 
 class MoveToTrash(RemoveFiles):
@@ -936,7 +946,6 @@ class DeleteRemoteBranch(ContextCommand):
                 % dict(branch=self.branch, remote=self.remote))
 
 
-
 def get_mode(model, staged, modified, unmerged, untracked):
     if staged:
         mode = model.mode_index
@@ -959,7 +968,7 @@ class DiffImage(EditModel):
         self.new_diff_text = ''
         self.new_diff_type = 'image'
         self.new_mode = get_mode(
-                self.model, staged, modified, unmerged, untracked)
+            self.model, staged, modified, unmerged, untracked)
         self.staged = staged
         self.modified = modified
         self.unmerged = unmerged
@@ -968,11 +977,7 @@ class DiffImage(EditModel):
         self.annex = self.cfg.is_annex()
 
     def do(self):
-        cfg = self.cfg
-        git = self.git
-        head = self.model.head
         filename = self.new_filename
-        annex = self.annex
 
         if self.staged:
             images = self.staged_images()
@@ -991,7 +996,6 @@ class DiffImage(EditModel):
     def staged_images(self):
         context = self.context
         git = self.git
-        cfg = self.cfg
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
@@ -1022,7 +1026,7 @@ class DiffImage(EditModel):
             if new_oid != gitcmds.MISSING_BLOB_OID:
                 found_in_annex = False
                 if annex and core.islink(filename):
-                    status, out, err = git.annex('status', '--', filename)
+                    status, out, _ = git.annex('status', '--', filename)
                     if status == 0:
                         details = out.split(' ')
                         if details and details[0] == 'A':  # newly added file
@@ -1039,7 +1043,6 @@ class DiffImage(EditModel):
     def unmerged_images(self):
         context = self.context
         git = self.git
-        cfg = self.cfg
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
@@ -1047,7 +1050,7 @@ class DiffImage(EditModel):
         candidate_merge_heads = ('HEAD', 'CHERRY_HEAD', 'MERGE_HEAD')
         merge_heads = [
             merge_head for merge_head in candidate_merge_heads
-                if core.exists(git.git_path(merge_head))]
+            if core.exists(git.git_path(merge_head))]
 
         if annex:  # Attempt to find files in git-annex
             annex_images = []
@@ -1103,7 +1106,6 @@ class DiffImage(EditModel):
     def modified_images(self):
         context = self.context
         git = self.git
-        cfg = self.cfg
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
@@ -1226,10 +1228,10 @@ class Edit(ContextCommand):
         else:
             # Single-file w/ line-numbers (likely from grep)
             editor_opts = {
-                    '*vim*': [filename, '+'+self.line_number],
-                    '*emacs*': ['+'+self.line_number, filename],
-                    '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
-                    '*notepad++*': ['-n'+self.line_number, filename],
+                '*vim*': [filename, '+'+self.line_number],
+                '*emacs*': ['+'+self.line_number, filename],
+                '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
+                '*notepad++*': ['-n'+self.line_number, filename],
             }
 
             opts = self.filenames
@@ -1240,7 +1242,7 @@ class Edit(ContextCommand):
 
         try:
             core.fork(utils.shell_split(editor) + opts)
-        except Exception as e:
+        except (OSError, ValueError) as e:
             message = (N_('Cannot exec "%s": please configure your editor')
                        % editor)
             _, details = utils.format_exception(e)
@@ -1355,10 +1357,10 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
     def do(self):
         if self.path is None:
             raise UsageError(
-                    N_('Error: Unconfigured commit template'),
-                    N_('A commit template has not been configured.\n'
-                       'Use "git config" to define "commit.template"\n'
-                       'so that it points to a commit template.'))
+                N_('Error: Unconfigured commit template'),
+                N_('A commit template has not been configured.\n'
+                   'Use "git config" to define "commit.template"\n'
+                   'so that it points to a commit template.'))
         return LoadCommitMessageFromFile.do(self)
 
 
@@ -1670,8 +1672,8 @@ class Rebase(ContextCommand):
         if not cfg.get('rebase.autostash', False):
             if model.staged or model.unmerged or model.modified:
                 Interaction.information(
-                        N_('Unable to rebase'),
-                        N_('You cannot rebase with uncommitted changes.'))
+                    N_('Unable to rebase'),
+                    N_('You cannot rebase with uncommitted changes.'))
                 return status, out, err
 
         upstream = self.upstream or Interaction.choose_ref(
@@ -1686,16 +1688,17 @@ class Rebase(ContextCommand):
         args, kwargs = self.prepare_arguments(upstream)
         upstream_title = upstream or '@{upstream}'
         with GitXBaseContext(
-                self.context,
-                GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
-                GIT_XBASE_ACTION=N_('Rebase')):
-                # TODO this blocks the user interface window for the duration
-                # of git-xbase's invocation. We would need to implement
-                # signals for QProcess and continue running the main thread.
-                # alternatively we could hide the main window while rebasing.
-                # that doesn't require as much effort.
-                status, out, err = self.git.rebase(
-                    *args, _no_win32_startupinfo=True, **kwargs)
+            self.context,
+            GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
+            GIT_XBASE_ACTION=N_('Rebase')
+        ):
+            # TODO this blocks the user interface window for the duration
+            # of git-xbase's invocation. We would need to implement
+            # signals for QProcess and continue running the main thread.
+            # alternatively we could hide the main window while rebasing.
+            # that doesn't require as much effort.
+            status, out, err = self.git.rebase(
+                *args, _no_win32_startupinfo=True, **kwargs)
         self.model.update_status()
         if err.strip() != 'Nothing to do':
             title = N_('Rebase stopped')
@@ -1708,9 +1711,10 @@ class RebaseEditTodo(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
-                self.context,
-                GIT_XBASE_TITLE=N_('Edit Rebase'),
-                GIT_XBASE_ACTION=N_('Save')):
+            self.context,
+            GIT_XBASE_TITLE=N_('Edit Rebase'),
+            GIT_XBASE_ACTION=N_('Save')
+        ):
             status, out, err = self.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
@@ -1722,9 +1726,10 @@ class RebaseContinue(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
-                self.context,
-                GIT_XBASE_TITLE=N_('Rebase'),
-                GIT_XBASE_ACTION=N_('Rebase')):
+            self.context,
+            GIT_XBASE_TITLE=N_('Rebase'),
+            GIT_XBASE_ACTION=N_('Rebase')
+        ):
             status, out, err = self.git.rebase('--continue')
         Interaction.log_status(status, out, err)
         self.model.update_status()
@@ -1736,9 +1741,10 @@ class RebaseSkip(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
         with GitXBaseContext(
-                self.context,
-                GIT_XBASE_TITLE=N_('Rebase'),
-                GIT_XBASE_ACTION=N_('Rebase')):
+            self.context,
+            GIT_XBASE_TITLE=N_('Rebase'),
+            GIT_XBASE_ACTION=N_('Rebase')
+        ):
             status, out, err = self.git.rebase(skip=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
@@ -1848,6 +1854,7 @@ class RevertUncommittedEdits(RevertEditsCommand):
         return True
 
     def confirm(self):
+        """Prompt for reverting changes"""
         title = N_('Revert Uncommitted Changes?')
         text = N_(
             'This operation removes uncommitted edits from selected files.\n'
@@ -1866,6 +1873,7 @@ class RunConfigAction(ContextCommand):
         self.action_name = action_name
 
     def do(self):
+        """Run the user-configured action"""
         for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
             try:
                 compat.unsetenv(env)
@@ -1888,8 +1896,8 @@ class RunConfigAction(ContextCommand):
             filename = self.selection.filename()
             if not filename:
                 Interaction.information(
-                        N_('Please select a file'),
-                        N_('"%s" requires a selected file.') % cmd)
+                    N_('Please select a file'),
+                    N_('"%s" requires a selected file.') % cmd)
                 return False
             dirname = utils.dirname(filename, current_dir='.')
             compat.setenv('FILENAME', filename)
@@ -1913,7 +1921,7 @@ class RunConfigAction(ContextCommand):
             title = os.path.expandvars(opts.get('title'))
             prompt = os.path.expandvars(opts.get('prompt'))
             if not Interaction.question(title, prompt):
-                return
+                return False
         if rev:
             compat.setenv('REVISION', rev)
         if args:
@@ -1936,10 +1944,11 @@ class RunConfigAction(ContextCommand):
         title = N_('Error')
         Interaction.command(title, cmd, status, out, err)
 
-        return status
+        return status == 0
 
 
 class SetDefaultRepo(ContextCommand):
+    """Set the default repository"""
 
     def __init__(self, context, repo):
         super(SetDefaultRepo, self).__init__(context)
@@ -1950,6 +1959,7 @@ class SetDefaultRepo(ContextCommand):
 
 
 class SetDiffText(EditModel):
+    """Set the diff text"""
     UNDOABLE = True
 
     def __init__(self, context, text):
@@ -1959,6 +1969,7 @@ class SetDiffText(EditModel):
 
 
 class SetUpstreamBranch(ContextCommand):
+    """Set the upstream branch"""
 
     def __init__(self, context, branch, remote, remote_branch):
         super(SetUpstreamBranch, self).__init__(context)
@@ -1986,12 +1997,13 @@ class ShowUntracked(EditModel):
         self.new_diff_type = 'text'
 
     def read(self, filename):
+        """Read file contents"""
         cfg = self.cfg
         size = cfg.get('cola.readsize', 2048)
         try:
             result = core.read(filename, size=size,
                                encoding=core.ENCODING, errors='ignore')
-        except:
+        except (IOError, OSError):
             result = ''
 
         if len(result) == size:
@@ -2000,6 +2012,7 @@ class ShowUntracked(EditModel):
 
 
 class SignOff(ContextCommand):
+    """Append a signoff to the commit message"""
     UNDOABLE = True
 
     @staticmethod
@@ -2011,6 +2024,7 @@ class SignOff(ContextCommand):
         self.old_commitmsg = self.model.commitmsg
 
     def do(self):
+        """Add a signoff to the commit message"""
         signoff = self.signoff()
         if signoff in self.model.commitmsg:
             return
@@ -2018,9 +2032,11 @@ class SignOff(ContextCommand):
         self.model.set_commitmsg(msg + '\n' + signoff)
 
     def undo(self):
+        """Restore the commit message"""
         self.model.set_commitmsg(self.old_commitmsg)
 
     def signoff(self):
+        """Generate the signoff string"""
         try:
             import pwd
             user = pwd.getpwuid(os.getuid()).pw_name
@@ -2053,10 +2069,7 @@ def is_conflict_free(path):
             for line in f:
                 line = core.decode(line, errors='ignore')
                 if rgx.match(line):
-                    if should_stage_conflicts(path):
-                        return True
-                    else:
-                        return False
+                    return should_stage_conflicts(path)
     except IOError:
         # We can't read this file ~ we may be staging a removal
         pass
@@ -2102,8 +2115,7 @@ class Stage(ContextCommand):
         if not paths:
             if self.model.cfg.get('cola.safemode', False):
                 return (0, '', '')
-            else:
-                return self.stage_all()
+            return self.stage_all()
 
         add = []
         remove = []
@@ -2133,6 +2145,7 @@ class Stage(ContextCommand):
         return status, out, err
 
     def stage_all(self):
+        """Stage all files"""
         status, out, err = self.git.add(v=True, u=True)
         Interaction.command(N_('Error'), 'git add -u', status, out, err)
         self.model.update_file_status()
@@ -2154,6 +2167,7 @@ class StageCarefully(Stage):
         self.init_paths()
 
     def init_paths(self):
+        """Initialize path data"""
         pass
 
     def ok_to_run(self):
@@ -2161,11 +2175,10 @@ class StageCarefully(Stage):
         return self.paths or not self.model.unmerged
 
     def do(self):
+        """Stage files when ok_to_run() return True"""
         if self.ok_to_run():
             return super(StageCarefully, self).do()
-        else:
-            return (0, '', '')
-
+        return (0, '', '')
 
 
 class StageModified(StageCarefully):
@@ -2311,19 +2324,19 @@ class Unstage(ContextCommand):
         self.paths = paths
 
     def do(self):
-        msg = N_('Unstaging: %s') % (', '.join(self.paths))
-        Interaction.log(msg)
-        self.unstage_paths()
-
-    def unstage_paths(self):
+        """Unstage paths"""
         context = self.context
-        paths = self.paths
         head = self.model.head
+        paths = self.paths
+
+        msg = N_('Unstaging: %s') % (', '.join(paths))
+        Interaction.log(msg)
         if not paths:
             return unstage_all(context)
         status, out, err = gitcmds.unstage_paths(context, paths, head=head)
         Interaction.command(N_('Error'), 'git reset', status, out, err)
         self.model.update_file_status()
+        return (status, out, err)
 
 
 class UnstageAll(ContextCommand):
@@ -2384,7 +2397,7 @@ class UntrackedSummary(EditModel):
     def __init__(self, context):
         super(UntrackedSummary, self).__init__(context)
         untracked = self.model.untracked
-        suffix = len(untracked) > 1 and 's' or ''
+        suffix = 's' if untracked else ''
         io = StringIO()
         io.write('# %s untracked file%s\n' % (len(untracked), suffix))
         if untracked:
@@ -2450,9 +2463,10 @@ class VisualizeRevision(ContextCommand):
 
 
 def launch_history_browser(argv):
+    """Launch the configured history browser"""
     try:
         core.fork(argv)
-    except Exception as e:
+    except OSError as e:
         _, details = utils.format_exception(e)
         title = N_('Error Launching History Browser')
         msg = (N_('Cannot exec "%s": please configure a history browser') %
@@ -2469,6 +2483,7 @@ def run(cls, *args, **opts):
 
     """
     def runner(*local_args, **local_opts):
+        """Closure return by run() which runs the command"""
         if args or opts:
             do(cls, *args, **opts)
         else:
@@ -2482,11 +2497,11 @@ def do(cls, *args, **opts):
     try:
         cmd = cls(*args, **opts)
         return cmd.do()
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         msg, details = utils.format_exception(e)
         if hasattr(cls, '__name__'):
             msg = ('%s exception:\n%s'
-                    % (cls.__name__, msg))
+                   % (cls.__name__, msg))
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 
@@ -2534,9 +2549,8 @@ def difftool_launch(context, left=None, right=None, paths=None,
 
     if left:
         if left_take_parent or left_take_magic:
-            suffix = left_take_magic and '^!' or '~'
+            suffix = '^!' if left_take_magic else '~'
             # Check root commit (no parents and thus cannot execute '~')
-            model = context.model
             git = context.git
             status, out, err = git.rev_list(left, parents=True, n=1)
             Interaction.log_status(status, out, err)
