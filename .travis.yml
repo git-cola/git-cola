@@ -12,7 +12,7 @@ before_install:
   # Update APT cache data since it may outdated
   - sudo apt-get -qq update
   # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install -y git rsync gettext
+  - sudo apt-get install -y git rsync gettext python-sphinx
   # Git test setup
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
