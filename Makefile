@@ -3,16 +3,22 @@ all::
 
 # Development
 # -----------
-# make test     # unit tests
-# make doc      # build docs
-# make flake8   # style check
-# make pyint3k  # python2/3 compatibility checks
-# make pylint   # full pylint check
-#               # TODO pylint config, tox, yapf, others?
+# make V=1                      # increases verbosity
+# make test                     # run tests, use flags=-x to fail fast
+# make test V=2                 # increase test verbosity
+# make doc                      # build docs
+# make flake8                   # style check
+# make pyint3k                  # python2/3 compatibility checks
+# make pylint                   # pylint, use color=1 to color output
+# make check file=<filename>    # run python checks on filename
+# make format file=<filename>   # run the yapf python formatter on filename
+#
 # Release Prep
 # ------------
 # make pot      # update main translation template
 # make po       # merge translations
+# make mo       # generate message files
+# make i18n     # all three of the above
 #
 # Installation
 # ------------
@@ -22,7 +28,7 @@ all::
 # To disable distutil's replacement of "#!/usr/bin/env python" with
 # the path to the build environment's python, pass USE_ENV_PYTHON=1
 # when invoking make.
-
+#
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
@@ -42,13 +48,10 @@ RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
 TAR = tar
+YAPF = yapf
 
 # Flags
 # -----
-# "make V=1" increases verbosity
-# "make test V=2" increases test verbosity
-# "make pylint color=1" enables colorized pylint output
-# "make test flags={-x,--exitfirst}" exits on the first test failure
 ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
@@ -57,14 +60,20 @@ ifdef V
 else
     QUIET = --quiet
 endif
-PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE) --doctest-modules
-FLAKE8_FLAGS = --max-line-length=80 --statistics --doctests --format=pylint
+
+PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
+PYTEST_FLAGS += --doctest-modules
+
+FLAKE8_FLAGS = $(VERBOSE)
+FLAKE8_FLAGS += --max-line-length=80
+FLAKE8_FLAGS += --format=pylint
+FLAKE8_FLAGS += --doctests
+FLAKE8_FLAGS += --statistics
+
 PYLINT_FLAGS = --rcfile=.pylintrc
+PYLINT_FLAGS += --score=no
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
-endif
-ifdef flags
-    PYTEST_FLAGS += $(flags)
 endif
 
 # These values can be overridden on the command-line or via config.mak
@@ -138,37 +147,29 @@ install: all
 	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
 	$(RM_R) "$(DESTDIR)$(coladir)/git_cola"*
 	$(RM_R) git_cola.egg-info
-.PHONY: install
 
 # Maintainer's dist target
 dist:
 	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
 		$(GZIP) -f -9 - >$(cola_dist).tar.gz
-.PHONY: dist
 
 doc:
 	$(MAKE) -C share/doc/git-cola all
-.PHONY: doc
 
 html:
 	$(MAKE) -C share/doc/git-cola html
-.PHONY: html
 
 man:
 	$(MAKE) -C share/doc/git-cola man
-.PHONY: man
 
 install-doc:
 	$(MAKE) -C share/doc/git-cola install
-.PHONY: install-doc
 
 install-html:
 	$(MAKE) -C share/doc/git-cola install-html
-.PHONY: install-html
 
 install-man:
 	$(MAKE) -C share/doc/git-cola install-man
-.PHONY: install-man
 
 uninstall:
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
@@ -196,30 +197,27 @@ uninstall:
 	-$(RMDIR) "$(DESTDIR)$(prefix)"/share 2>/dev/null
 	-$(RMDIR) "$(DESTDIR)$(prefix)"/bin 2>/dev/null
 	-$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null
-.PHONY: uninstall
 
 test: all
-	$(PYTEST) $(PYTEST_FLAGS) $(PYTHON_DIRS)
-.PHONY: test
+	$(PYTEST) $(PYTEST_FLAGS) $(flags) $(PYTHON_DIRS)
 
 coverage:
-	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(PYTHON_DIRS)
-.PHONY: coverage
+	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(flags) $(PYTHON_DIRS)
 
 clean:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | xargs -0 rm -f
+	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | xargs -0 rm -rf
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
-.PHONY: clean
 
 tags:
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | xargs -0 $(CTAGS) -f tags
-.PHONY: tags
 
 # Update i18n files
-i18n: pot mo
-.PHONY: i18n
+i18n:: pot
+i18n:: po
+i18n:: mo
 
 pot:
 	$(SETUP) build_pot --build-dir=po --no-lang
@@ -236,7 +234,8 @@ mo:
 git-cola.app:
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app)/Contents/Resources
-	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
+	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo \
+	$(cola_app)/Contents
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
@@ -244,7 +243,6 @@ git-cola.app:
 
 app-tarball: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
-.PHONY: app-tarball
 
 # Preview the markdown using "make README.html"
 %.html: %.md
@@ -252,24 +250,25 @@ app-tarball: git-cola.app
 
 flake8:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(PYTHON_DIRS)
-.PHONY: flake8
 
 pylint3k:
-	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
-.PHONY: pylint3k
+	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) \
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
 pylint:
-	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
-.PHONY: pylint
+	$(PYLINT) $(PYLINT_FLAGS) $(flags) \
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 
-pylint-check:
-	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
-.PHONY: pylint-check
+check:
+	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
+
+format:
+	$(YAPF) --in-place $(flags) $(file)
 
 requirements:
 	$(PIP) install --requirement requirements/requirements.txt
-.PHONY: requirements
 
 requirements-dev:
 	$(PIP) install --requirement requirements/requirements-dev.txt
-.PHONY: requirements-dev

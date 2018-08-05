@@ -70,7 +70,7 @@ class Interaction(object):
 
     @classmethod
     def confirm(cls, title, text, informative_text, ok_text,
-                icon=None, default=True):
+                icon=None, default=True, cancel_text=None):
 
         cls.information(title, message=text,
                         informative_text=informative_text)

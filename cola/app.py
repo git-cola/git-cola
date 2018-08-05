@@ -1,5 +1,6 @@
 """Provides the main() routine and ColaApplication"""
 from __future__ import division, absolute_import, unicode_literals
+from functools import partial
 import argparse
 import os
 import signal
@@ -10,16 +11,17 @@ __copyright__ = """
 Copyright (C) 2007-2017 David Aguilar and contributors
 """
 
-from . import core
 try:
     from qtpy import QtCore
 except ImportError:
-    errmsg = """
-Sorry, you do not seem to have PyQt5, Pyside, or PyQt4 installed.
-Please install it before using git-cola, e.g.:
-    $ sudo apt-get install python-qt4
-"""
-    core.error(errmsg)
+    sys.stderr.write("""
+You do not seem to have PyQt5, PySide, or PyQt4 installed.
+Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
+
+    sudo apt-get install python-pyqt5 python-pyqt5.qtwebkit
+
+""")
+    sys.exit(1)
 
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -52,6 +54,7 @@ from . import version
 
 
 def setup_environment():
+    """Set environment variables to control git's behavior"""
     # Allow Ctrl-C to exit
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -164,6 +167,7 @@ class ColaApplication(object):
         self._install_style()
 
     def _install_style(self):
+        """Generate and apply a stylesheet to the app"""
         palette = self._app.palette()
         window = palette.color(QtGui.QPalette.Window)
         highlight = palette.color(QtGui.QPalette.Highlight)
@@ -233,10 +237,11 @@ class ColaApplication(object):
                        radio_size=defs.checkbox))
 
     def activeWindow(self):
-        """Wrap activeWindow()"""
+        """QApplication::activeWindow() pass-through"""
         return self._app.activeWindow()
 
     def desktop(self):
+        """QApplication::desktop() pass-through"""
         return self._app.desktop()
 
     def start(self):
@@ -260,27 +265,29 @@ class ColaApplication(object):
         # https://bugreports.qt.io/browse/QTBUG-52988
         try:
             del self._app
-        except:
+        except (AttributeError, RuntimeError):
             pass
         self._app = None
 
     def exit(self, status):
+        """QApplication::exit(status) pass-through"""
         return self._app.exit(status)
 
 
 class ColaQApplication(QtWidgets.QApplication):
+    """QApplication implementation for handling custom events"""
 
     def __init__(self, context, argv):
         super(ColaQApplication, self).__init__(argv)
         self.context = context
 
     def event(self, e):
+        """Respond to focus events for the cola.refreshonfocus feature"""
         if e.type() == QtCore.QEvent.ApplicationActivate:
             context = self.context
             if context:
                 cfg = context.cfg
-                git = context.git
-                if (git.is_valid()
+                if (context.git.is_valid()
                         and cfg.get('cola.refreshonfocus', default=False)):
                     cmds.do(cmds.Refresh, context)
         return super(ColaQApplication, self).event(e)
@@ -300,6 +307,7 @@ class ColaQApplication(QtWidgets.QApplication):
 
 
 def process_args(args):
+    """Process and verify command-line arguments"""
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
         version.print_version()
@@ -321,6 +329,7 @@ def process_args(args):
 
 
 def restore_session(args):
+    """Load a session based on the window-manager provided arguments"""
     # args.settings is provided when restoring from a session.
     args.settings = None
     if args.session is None:
@@ -393,18 +402,19 @@ def application_start(context, view):
                            start=default_start, stop=default_stop)
 
 
-def default_start(context, view):
+def default_start(context, _view):
     """Scan for the first time"""
     QtCore.QTimer.singleShot(0, startup_message)
     QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(context, view):
+def default_stop(_context, _view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
 
 def add_common_arguments(parser):
+    """Add command arguments to the ArgumentParser"""
     # We also accept 'git cola version'
     parser.add_argument('--version', default=False, action='store_true',
                         help='print version number')
@@ -432,7 +442,7 @@ def add_common_arguments(parser):
 
 
 def new_application(context, args):
-    # Initialize the app
+    """Create a new ColaApplication"""
     return ColaApplication(context, sys.argv, icon_themes=args.icon_themes)
 
 
@@ -470,14 +480,13 @@ def async_update(context):
     git-cola should startup as quickly as possible.
 
     """
-    def update_status():
-        context.model.update_status(update_index=True)
-
+    update_status = partial(context.model.update_status, update_index=True)
     task = qtutils.SimpleTask(context.view, update_status)
     context.runtask.start(task)
 
 
 def startup_message():
+    """Print debug startup messages"""
     trace = git.GIT_COLA_TRACE
     if trace == '2' or trace == 'trace':
         msg1 = 'info: debug level 2: trace mode enabled'
@@ -498,24 +507,29 @@ class Timer(object):
         self._data = {}
 
     def start(self, key):
+        """Start a timer"""
         now = time.time()
         self._data[key] = [now, now]
 
     def stop(self, key):
+        """Stop a timer and return its elapsed time"""
         entry = self._data[key]
         entry[1] = time.time()
         return self.elapsed(key)
 
     def elapsed(self, key):
+        """Return the elapsed time for a timer"""
         entry = self._data[key]
         return entry[1] - entry[0]
 
     def display(self, key):
+        """Display a timer"""
         elapsed = self.elapsed(key)
         sys.stdout.write('%s: %.5fs\n' % (key, elapsed))
 
 
 class ApplicationContext(object):
+    """Context for performing operations on Git and related data models"""
 
     def __init__(self, args):
         self.args = args
@@ -530,16 +544,17 @@ class ApplicationContext(object):
         self.view = None  # QWidget
 
     def set_view(self, view):
+        """Initialize view-specific members"""
         self.view = view
         self.runtask = qtutils.RunTask(parent=view)
 
 
-def winmain(main, *argv):
+def winmain(main_fn, *argv):
     """Find Git and launch main(argv)"""
     git_path = find_git()
     if git_path:
         prepend_path(git_path)
-    return main(*argv)
+    return main_fn(*argv)
 
 
 def find_git():
@@ -569,7 +584,7 @@ def find_git():
 
 
 def prepend_path(path):
-    # Adds git to the PATH.  This is needed on Windows.
+    """Adds git to the PATH.  This is needed on Windows."""
     path = core.decode(path)
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     if path not in path_entries:
