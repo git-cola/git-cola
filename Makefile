@@ -261,8 +261,8 @@ pylint:
 
 check:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
-	$(PYLINT) $(PYLINT_FLAGS) $(flags) $(file)
-	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
+	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
 
 format:
 	$(YAPF) --in-place $(flags) $(file)
