@@ -209,7 +209,8 @@ class OrderedDict(dict):
         try:
             if not self:
                 return '%s()' % (self.__class__.__name__,)
-            return '%s(%r)' % (self.__class__.__name__, self.items())
+            items = list(self.items())
+            return '%s(%r)' % (self.__class__.__name__, items)
         finally:
             del _repr_running[call_key]
 
@@ -247,7 +248,8 @@ class OrderedDict(dict):
 
         '''
         if isinstance(other, OrderedDict):
-            return len(self)==len(other) and self.items() == other.items()
+            return (len(self) == len(other)
+                    and list(self.items()) == list(other.items()))
         return dict.__eq__(self, other)
 
     def __ne__(self, other):
