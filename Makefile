@@ -3,16 +3,22 @@ all::
 
 # Development
 # -----------
-# make test     # unit tests
-# make doc      # build docs
-# make flake8   # style check
-# make pyint3k  # python2/3 compatibility checks
-# make pylint   # full pylint check
-#               # TODO pylint config, tox, yapf, others?
+# make V=1                      # increases verbosity
+# make test                     # run tests, use flags=-x to fail fast
+# make test V=2                 # increase test verbosity
+# make doc                      # build docs
+# make flake8                   # style check
+# make pyint3k                  # python2/3 compatibility checks
+# make pylint                   # pylint, use color=1 to color output
+# make check file=<filename>    # run python checks on filename
+# make format file=<filename>   # run the yapf python formatter on filename
+#
 # Release Prep
 # ------------
 # make pot      # update main translation template
 # make po       # merge translations
+# make mo       # generate message files
+# make i18n     # all three of the above
 #
 # Installation
 # ------------
@@ -22,7 +28,7 @@ all::
 # To disable distutil's replacement of "#!/usr/bin/env python" with
 # the path to the build environment's python, pass USE_ENV_PYTHON=1
 # when invoking make.
-
+#
 # The external commands used by this Makefile are...
 CTAGS = ctags
 CP = cp
@@ -46,12 +52,6 @@ YAPF = yapf
 
 # Flags
 # -----
-# "make V=1" increases verbosity
-# "make test V=2" increases test verbosity
-# "make pylint color=1" enables colorized pylint output
-# "make test flags={-x,--exitfirst}" exits on the first test failure
-# "make check color=1 file=<filename>" runs python checks on filename
-# "make format file=<filename>" runs the yapf python formatter on filename
 ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
