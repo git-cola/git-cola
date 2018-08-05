@@ -258,7 +258,7 @@ class LFSTrack(ContextCommand):
     def __init__(self, context):
         super(LFSTrack, self).__init__(context)
         self.filename = self.selection.filename()
-        self.stage_cmd = Stage([self.filename])
+        self.stage_cmd = Stage(context, [self.filename])
 
     def do(self):
         status, out, err = self.git.lfs('track', self.filename)
@@ -663,7 +663,7 @@ class RemoteCommand(ConfirmAction):
 class RemoteAdd(RemoteCommand):
 
     def __init__(self, context, remote, url):
-        super(RemoteAdd, self).__init__(context, name)
+        super(RemoteAdd, self).__init__(context, remote)
         self.url = url
 
     def action(self):
