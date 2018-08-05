@@ -36,9 +36,6 @@ install:
   - make -j4
   - make install
   - cd ../../..
-  # Pylint
-  - pip install astroid==1.4.3
-  - pip install pylint==1.5.2
   # Build dependencies
   - make requirements
   # Test dependencies
@@ -46,8 +43,8 @@ install:
 
 script:
   - make all
+  - make test V=2
   # Sphinx requires Python 2.7 or 3.4+
   - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make doc
-  - make test V=2
-  # pylint 1.4 uses python2.7+ syntax so skip pylint on python2.6
+  # pylint uses python2.7+ syntax
   - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint3k
