@@ -50,6 +50,8 @@ YAPF = yapf
 # "make test V=2" increases test verbosity
 # "make pylint color=1" enables colorized pylint output
 # "make test flags={-x,--exitfirst}" exits on the first test failure
+# "make check color=1 file=<filename>" runs python checks on filename
+# "make format file=<filename>" runs the yapf python formatter on filename
 ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
