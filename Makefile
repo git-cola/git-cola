@@ -71,7 +71,6 @@ FLAKE8_FLAGS += --doctests
 FLAKE8_FLAGS += --statistics
 
 PYLINT_FLAGS = --rcfile=.pylintrc
-PYLINT_FLAGS += --reports=no
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
 endif
