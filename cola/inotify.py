@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import ctypes
 import ctypes.util
 import errno
@@ -31,6 +30,7 @@ class inotify_event(ctypes.Structure):
         ('cookie', ctypes.c_uint32),
         ('len', ctypes.c_uint32),
     ]
+
 
 MAX_EVENT_SIZE = ctypes.sizeof(inotify_event) + NAME_MAX + 1
 

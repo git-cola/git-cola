@@ -1,12 +1,10 @@
 """Launcher and command line interface to git-cola"""
 from __future__ import absolute_import, division, unicode_literals
 import argparse
-import os
 import sys
 
 from . import app
 from . import cmds
-from . import compat
 from . import core
 
 
@@ -82,6 +80,7 @@ def add_cola_command(subparser):
 
 def add_about_command(parent):
     add_command(parent, 'about', 'about git-cola', cmd_about)
+
 
 def add_am_command(parent):
     parser = add_command(parent, 'am', 'apply patches using "git am"', cmd_am)
@@ -250,6 +249,7 @@ def add_rebase_command(subparser):
                              '"git checkout <branch>" before doing anything '
                              'else when <branch> is specified')
 
+
 def add_recent_command(subparser):
     add_command(subparser, 'recent', 'edit recent files', cmd_recent)
 
@@ -306,8 +306,8 @@ def cmd_cola(args):
     if args.perf:
         context.timer.display('view')
 
-    return app.application_run(context, view,
-        start=start_cola, stop=app.default_stop)
+    return app.application_run(
+        context, view, start=start_cola, stop=app.default_stop)
 
 
 def start_cola(context, view):
@@ -445,39 +445,39 @@ def cmd_push(args):
 
 def cmd_rebase(args):
     kwargs = {
-            'verbose': args.verbose,
-            'quiet': args.quiet,
-            'autostash': args.autostash,
-            'fork_point': args.fork_point,
-            'onto': args.onto,
-            'preserve_merges': args.preserve_merges,
-            'strategy': args.strategy,
-            'no_ff': args.no_ff,
-            'merge': args.merge,
-            'exec': getattr(args, 'exec', None),  # python keyword
-            'keep_empty': args.keep_empty,
-            'force_rebase': args.force_rebase,
-            'strategy_option': args.strategy_option,
-            'stat': args.stat,
-            'no_stat': args.no_stat,
-            'verify': args.verify,
-            'rerere_autoupdate': args.rerere_autoupdate,
-            'root': args.root,
-            'autosquash': args.autosquash,
-            'committer_date_is_author_date': args.committer_date_is_author_date,
-            'ignore_date': args.ignore_date,
-            'whitespace': args.whitespace,
-            'ignore_whitespace': args.ignore_whitespace,
-            'C': args.context_lines,
-            'continue': getattr(args, 'continue', False),  # python keyword
-            'abort': args.abort,
-            'skip': args.skip,
-            'edit_todo': args.edit_todo,
-            'upstream': args.upstream,
-            'branch': args.branch,
+        'verbose': args.verbose,
+        'quiet': args.quiet,
+        'autostash': args.autostash,
+        'fork_point': args.fork_point,
+        'onto': args.onto,
+        'preserve_merges': args.preserve_merges,
+        'strategy': args.strategy,
+        'no_ff': args.no_ff,
+        'merge': args.merge,
+        'exec': getattr(args, 'exec', None),  # python keyword
+        'keep_empty': args.keep_empty,
+        'force_rebase': args.force_rebase,
+        'strategy_option': args.strategy_option,
+        'stat': args.stat,
+        'no_stat': args.no_stat,
+        'verify': args.verify,
+        'rerere_autoupdate': args.rerere_autoupdate,
+        'root': args.root,
+        'autosquash': args.autosquash,
+        'committer_date_is_author_date': args.committer_date_is_author_date,
+        'ignore_date': args.ignore_date,
+        'whitespace': args.whitespace,
+        'ignore_whitespace': args.ignore_whitespace,
+        'C': args.context_lines,
+        'continue': getattr(args, 'continue', False),  # python keyword
+        'abort': args.abort,
+        'skip': args.skip,
+        'edit_todo': args.edit_todo,
+        'upstream': args.upstream,
+        'branch': args.branch,
     }
     context = app.application_init(args)
-    status, out, err = cmds.do(cmds.Rebase, context, **kwargs)
+    status, _, _ = cmds.do(cmds.Rebase, context, **kwargs)
     return status
 
 
@@ -512,8 +512,9 @@ def cmd_stash(args):
 def cmd_tag(args):
     from .widgets.createtag import new_create_tag
     context = app.application_init(args)
-    view = new_create_tag(context, name=args.name, ref=args.ref,
-        sign=args.sign, settings=args.settings)
+    view = new_create_tag(
+        context, name=args.name, ref=args.ref, sign=args.sign,
+        settings=args.settings)
     return app.application_start(context, view)
 
 
