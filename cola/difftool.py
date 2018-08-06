@@ -157,7 +157,7 @@ class Difftool(standard.Dialog):
         self.diff_button.setEnabled(has_selection)
         self.diff_all_button.setEnabled(has_selection)
 
-    def tree_double_clicked(self, item, column):
+    def tree_double_clicked(self, item, _column):
         path = self.tree.filename_from_item(item)
         left, right = self._left_right_args()
         cmds.difftool_launch(
