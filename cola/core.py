@@ -352,14 +352,14 @@ def xopen(path, mode='r', encoding=None):
     return open(mkpath(path, encoding=encoding), mode)
 
 
-def stdout(msg, linesep='\n'):
+def print_stdout(msg, linesep='\n'):
     msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding=ENCODING)
     sys.stdout.write(msg)
 
 
-def stderr(msg, linesep='\n'):
+def print_stderr(msg, linesep='\n'):
     msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding=ENCODING)
@@ -367,7 +367,7 @@ def stderr(msg, linesep='\n'):
 
 
 def error(msg, status=EXIT_FAILURE, linesep='\n'):
-    stderr(msg, linesep=linesep)
+    print_stderr(msg, linesep=linesep)
     sys.exit(status)
 
 

@@ -279,12 +279,13 @@ class Git(object):
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
-                core.stderr("%s -> %d: '%s' '%s'" %
-                            (' '.join(command), status, out, err))
+                core.print_stderr(
+                    "%s -> %d: '%s' '%s'"
+                    % (' '.join(command), status, out, err))
             else:
-                core.stderr("%s -> %d" % (' '.join(command), status))
+                core.print_stderr("%s -> %d" % (' '.join(command), status))
         elif cola_trace:
-            core.stderr(' '.join(command))
+            core.print_stderr(' '.join(command))
 
         # Allow access to the command's status code
         return (status, out, err)
@@ -394,7 +395,7 @@ def win32_git_error_hint():
 @memoize
 def _print_win32_git_hint():
     hint = '\n' + win32_git_error_hint() + '\n'
-    core.stderr("error: unable to execute 'git'" + hint)
+    core.print_stderr("error: unable to execute 'git'" + hint)
 
 
 def create():
