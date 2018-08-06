@@ -24,12 +24,12 @@ KNOWN_FILE_MIME_TYPES = [
 ]
 
 KNOWN_FILE_EXTENSIONS = {
-    '.java':    'file-code.svg',
     '.groovy':  'file-code.svg',
-    '.cpp':     'file-code.svg',
-    '.c':       'file-code.svg',
-    '.h':       'file-code.svg',
-    '.cxx':     'file-code.svg',
+    '.c': 'file-code.svg',
+    '.cpp': 'file-code.svg',
+    '.cxx': 'file-code.svg',
+    '.h': 'file-code.svg',
+    '.java': 'file-code.svg',
 }
 
 
@@ -67,7 +67,7 @@ def from_theme(name, fallback=None):
 
     """
     if hasattr(QtGui.QIcon, 'fromTheme'):
-        base, ext = os.path.splitext(name)
+        base, _ = os.path.splitext(name)
         if fallback:
             qicon = QtGui.QIcon.fromTheme(base, icon(fallback))
         else:
@@ -94,12 +94,12 @@ def from_filename(filename):
     return from_name(name_from_basename(basename))
 
 
-def mkicon(icon, default=None):
-    if icon is None and default is not None:
-        icon = default()
-    elif icon and isinstance(icon, (str, ustr)):
-        icon = QtGui.QIcon(icon)
-    return icon
+def mkicon(value, default=None):
+    if value is None and default is not None:
+        value = default()
+    elif value and isinstance(value, (str, ustr)):
+        value = QtGui.QIcon(value)
+    return value
 
 
 def from_style(key):
@@ -108,10 +108,10 @@ def from_style(key):
     return style.standardIcon(key)
 
 
-def status(filename, deleted, staged, untracked):
+def status(filename, deleted, is_staged, untracked):
     if deleted:
         icon_name = 'circle-slash-red.svg'
-    elif staged:
+    elif is_staged:
         icon_name = 'staged.svg'
     elif untracked:
         icon_name = 'question-plain.svg'
