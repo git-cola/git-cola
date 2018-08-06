@@ -19,8 +19,8 @@ from .compat import PY3
 from .compat import WIN32
 
 # /usr/include/stdlib.h
-#define EXIT_SUCCESS    0   /* Successful exit status.  */
-#define EXIT_FAILURE    1   /* Failing exit status.  */
+# #define EXIT_SUCCESS    0   /* Successful exit status.  */
+# #define EXIT_FAILURE    1   /* Failing exit status.  */
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
@@ -84,16 +84,15 @@ def decode(value, encoding=None, errors='strict'):
         else:
             encoding_tests = itertools.chain([encoding], _encoding_tests)
 
-        for encoding in encoding_tests:
+        for enc in encoding_tests:
             try:
-                decoded = value.decode(encoding, errors)
-                result = UStr(decoded, encoding)
+                decoded = value.decode(enc, errors)
+                result = UStr(decoded, enc)
                 break
             except ValueError:
                 pass
 
         if result is None:
-            encoding = ENCODING
             decoded = value.decode(ENCODING, errors='ignore')
             result = UStr(decoded, ENCODING)
 
@@ -234,7 +233,7 @@ def communicate(proc):
     return proc.communicate()
 
 
-def run_command(cmd, encoding=None, *args, **kwargs):
+def run_command(cmd, *args, **kwargs):
     """Run the given command to completion, and return its results.
 
     This provides a simpler interface to the subprocess module.
@@ -242,6 +241,7 @@ def run_command(cmd, encoding=None, *args, **kwargs):
     The other arguments are passed on to start_command().
 
     """
+    encoding = kwargs.pop('encoding', None)
     process = start_command(cmd, *args, **kwargs)
     (output, errors) = communicate(process)
     output = decode(output, encoding=encoding)
@@ -389,7 +389,6 @@ else:
     getcwd = os.getcwd
 
 
-
 # NOTE: find_executable() is originally from the stdlib, but starting with
 # python3.7 the stdlib no longer bundles distutils.
 def _find_executable(executable, path=None):
@@ -402,7 +401,7 @@ def _find_executable(executable, path=None):
         path = os.environ['PATH']
 
     paths = path.split(os.pathsep)
-    base, ext = os.path.splitext(executable)
+    _, ext = os.path.splitext(executable)
 
     if (sys.platform == 'win32') and (ext != '.exe'):
         executable = executable + '.exe'
@@ -414,8 +413,8 @@ def _find_executable(executable, path=None):
                 # the file exists, we have a shot at spawn working
                 return f
         return None
-    else:
-        return executable
+
+    return executable
 
 
 if PY2:
