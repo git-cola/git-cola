@@ -30,15 +30,13 @@ def _parse_range_str(range_str):
     if ',' in range_str:
         begin, end = range_str.split(',', 1)
         return int(begin), int(end)
-    else:
-        return int(range_str), 1
+    return int(range_str), 1
 
 
 def _format_range(start, count):
     if count == 1:
         return str(start)
-    else:
-        return '%d,%d' % (start, count)
+    return '%d,%d' % (start, count)
 
 
 def _format_hunk_header(old_start, old_count, new_start, new_count,
@@ -126,11 +124,10 @@ class DiffLines(object):
 
     def parse(self, diff_text):
         lines = []
-        INITIAL_STATE = 0
         DIFF_STATE = 1
-        state = INITIAL_STATE
+        state = INITIAL_STATE = 0
         merge = self.merge = False
-        NO_NEWLINE = '\\ No newline at end of file'
+        NO_NEWLINE = r'\ No newline at end of file'
 
         old = self.old.reset()
         new = self.new.reset()
@@ -209,24 +206,24 @@ class FormatDigits(object):
         self._dash = dash or compat.unichr(0xb7)
         self._empty = empty or ' '
 
-    def set_digits(self, digits):
-        self.fmt = ('%%0%dd' % digits)
-        self.empty = (self._empty * digits)
-        self.dash = (self._dash * digits)
+    def set_digits(self, value):
+        self.fmt = ('%%0%dd' % value)
+        self.empty = (self._empty * value)
+        self.dash = (self._dash * value)
 
     def value(self, old, new):
         old_str = self._format(old)
         new_str = self._format(new)
-        return ('%s %s' % (old_str, new_str))
+        return '%s %s' % (old_str, new_str)
 
     def merge_value(self, old, base, new):
         old_str = self._format(old)
         base_str = self._format(base)
         new_str = self._format(new)
-        return ('%s %s %s' % (old_str, base_str, new_str))
+        return '%s %s %s' % (old_str, base_str, new_str)
 
     def number(self, value):
-        return (self.fmt % value)
+        return self.fmt % value
 
     def _format(self, value):
         if value == self.DASH:
@@ -288,7 +285,7 @@ class DiffParser(object):
                     elif line_type == DELETION:
                         line_type = ADDITION
 
-                if not (first_line_idx <= line_idx <= last_line_idx):
+                if not first_line_idx <= line_idx <= last_line_idx:
                     if line_type == ADDITION:
                         # Skip additions that are not selected.
                         prev_skipped = True
@@ -334,15 +331,15 @@ class DiffParser(object):
         # so return None.
         if len(lines) == 2:
             return None
-        else:
-            return ''.join(lines)
+        return ''.join(lines)
 
     def generate_hunk_patch(self, line_idx, reverse=False):
         """Return a patch containing the hunk for the specified line only"""
-        if not self.hunks:
-            return None
+        hunk = None
         for hunk in self.hunks:
             if line_idx <= hunk.last_line_idx:
                 break
+        if hunk is None:
+            return None
         return self.generate_patch(hunk.first_line_idx, hunk.last_line_idx,
                                    reverse=reverse)
