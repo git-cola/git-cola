@@ -14,22 +14,32 @@ from .decorators import memoize
 
 
 KNOWN_FILE_MIME_TYPES = [
-    ('text',    'file-code.svg'),
-    ('image',   'file-media.svg'),
-    ('python',  'file-code.svg'),
-    ('ruby',    'file-code.svg'),
-    ('shell',   'file-code.svg'),
-    ('perl',    'file-code.svg'),
-    ('octet',   'file-binary.svg'),
+    ('text', 'file-code.svg'),
+    ('image', 'file-media.svg'),
+    ('octet', 'file-binary.svg'),
 ]
 
 KNOWN_FILE_EXTENSIONS = {
-    '.groovy':  'file-code.svg',
+    '.bash': 'file-code.svg',
     '.c': 'file-code.svg',
     '.cpp': 'file-code.svg',
+    '.css': 'file-code.svg',
     '.cxx': 'file-code.svg',
     '.h': 'file-code.svg',
+    '.hpp': 'file-code.svg',
+    '.hs': 'file-code.svg',
+    '.html': 'file-code.svg',
     '.java': 'file-code.svg',
+    '.js': 'file-code.svg',
+    '.ksh': 'file-code.svg',
+    '.lisp': 'file-code.svg',
+    '.perl': 'file-code.svg',
+    '.pl': 'file-code.svg',
+    '.py': 'file-code.svg',
+    '.rb': 'file-code.svg',
+    '.rs': 'file-code.svg',
+    '.sh': 'file-code.svg',
+    '.zsh': 'file-code.svg',
 }
 
 
