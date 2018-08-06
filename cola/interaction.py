@@ -55,9 +55,9 @@ class Interaction(object):
         scope['title'] = title
         scope['title_dashes'] = '-' * len(title)
         scope['message'] = message
-        scope['details'] = details and ('\n' + details) or ''
+        scope['details'] = ('\n' + details) if details else ''
         scope['informative_text'] = (
-                informative_text and ('\n' + informative_text) or '')
+            ('\n' + informative_text) if informative_text else '')
         sys.stdout.write("""
 %(title)s
 %(title_dashes)s
@@ -71,6 +71,9 @@ class Interaction(object):
     @classmethod
     def confirm(cls, title, text, informative_text, ok_text,
                 icon=None, default=True, cancel_text=None):
+
+        cancel_text = cancel_text or 'Cancel'
+        icon = icon or '?'
 
         cls.information(title, message=text,
                         informative_text=informative_text)
@@ -93,13 +96,14 @@ class Interaction(object):
 
     @classmethod
     def run_command(cls, title, cmd):
+        cls.log('# ' + title)
         cls.log('$ ' + core.list2cmdline(cmd))
         status, out, err = core.run_command(cmd)
         cls.log_status(status, out, err)
         return status, out, err
 
     @classmethod
-    def confirm_config_action(cls, context, name, opts):
+    def confirm_config_action(cls, _context, name, _opts):
         return cls.confirm(
             N_('Run %s?') % name,
             N_('Run the "%s" command?') % name, '',
@@ -107,10 +111,10 @@ class Interaction(object):
 
     @classmethod
     def log_status(cls, status, out, err=None):
-        msg = (
-           (out and (out + '\n') or '') +
-           (err and (err + '\n') or ''))
+        msg = (((out + '\n') if out else '') +
+               ((err + '\n') if err else ''))
         cls.log(msg)
+        cls.log('exit status %s' % status)
 
     @classmethod
     def log(cls, message):
@@ -128,6 +132,7 @@ class Interaction(object):
         pass
 
     @classmethod
-    def choose_ref(cls, context, title, button_text, default=None, icon=None):
+    def choose_ref(cls, _context, title, button_text, default=None, icon=None):
+        icon = icon or '?'
         cls.information(title, button_text)
         return sys.stdin.readline().strip() or default
