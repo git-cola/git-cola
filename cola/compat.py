@@ -1,17 +1,18 @@
+# pylint: disable=unused-import,redefined-builtin
 from __future__ import absolute_import, division, unicode_literals
 import os
 import sys
 try:
-    import urllib2 as parse
+    import urllib2 as parse  # noqa
 except ImportError:
     # Python 3
-    from urllib import parse
+    from urllib import parse  # noqa
 
 try:
     # Python 2.7+
-    from collections import OrderedDict as odict
+    from collections import OrderedDict as odict  # noqa
 except ImportError:
-    from .ordered_dict import OrderedDict as odict
+    from .ordered_dict import OrderedDict as odict  # noqa
 
 
 PY2 = sys.version_info[0] == 2
@@ -23,11 +24,9 @@ ENCODING = 'utf-8'
 
 if PY3:
     def bstr(x, encoding=ENCODING):
-        # pylint: disable=bytes-builtin
         return bytes(x, encoding=encoding)
 
 elif PY26_PLUS:
-    # pylint: disable=bytes-builtin
     bstr = bytes
 else:
     # Python <= 2.5
@@ -45,10 +44,11 @@ else:
     bchr = chr
     maxsize = 2 ** 31
     # pylint: disable=unicode-builtin
-    ustr = unicode
+    ustr = unicode  # noqa
     # pylint: disable=unichr-builtin
     unichr = unichr
-    int_types = (int, long)  # pylint: disable=long-builtin
+    # pylint: disable=long-builtin
+    int_types = (int, long)  # noqa
 
 
 def setenv(key, value):
@@ -67,7 +67,7 @@ def unsetenv(key):
     """Compatibility wrapper for unsetting environment variables"""
     try:
         del os.environ[key]
-    except:
+    except KeyError:
         pass
     if hasattr(os, 'unsetenv'):
         os.unsetenv(key)

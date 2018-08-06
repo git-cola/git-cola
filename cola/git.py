@@ -1,11 +1,10 @@
 from __future__ import division, absolute_import, unicode_literals
+from functools import partial
 import errno
 import os
-import sys
+from os.path import join
 import subprocess
 import threading
-from functools import partial
-from os.path import join
 
 from . import core
 from .compat import int_types
@@ -35,9 +34,9 @@ def is_git_dir(git_dir):
 
         if (core.isdir(git_dir) and
                 (core.isdir(join(git_dir, 'objects')) and
-                    core.isdir(join(git_dir, 'refs'))) or
+                 core.isdir(join(git_dir, 'refs'))) or
                 (core.isfile(join(git_dir, 'gitdir')) and
-                    core.isfile(join(git_dir, 'commondir')))):
+                 core.isfile(join(git_dir, 'commondir')))):
 
             result = (core.isfile(headref) or
                       (core.islink(headref) and
@@ -49,7 +48,7 @@ def is_git_dir(git_dir):
 
 
 def is_git_file(f):
-    return core.isfile(f) and '.git' == os.path.basename(f)
+    return core.isfile(f) and os.path.basename(f) == '.git'
 
 
 def is_git_worktree(d):
@@ -262,9 +261,9 @@ class Git(object):
             INDEX_LOCK.acquire()
         try:
             status, out, err = core.run_command(
-                    command, cwd=_cwd, encoding=_encoding,
-                    stdin=_stdin, stdout=_stdout, stderr=_stderr,
-                    no_win32_startupinfo=_no_win32_startupinfo, **extra)
+                command, cwd=_cwd, encoding=_encoding,
+                stdin=_stdin, stdout=_stdout, stderr=_stderr,
+                no_win32_startupinfo=_no_win32_startupinfo, **extra)
         finally:
             # Let the next thread in
             if not _readonly:
@@ -279,12 +278,13 @@ class Git(object):
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
-                core.stderr("%s -> %d: '%s' '%s'" %
-                            (' '.join(command), status, out, err))
+                core.print_stderr(
+                    "%s -> %d: '%s' '%s'"
+                    % (' '.join(command), status, out, err))
             else:
-                core.stderr("%s -> %d" % (' '.join(command), status))
+                core.print_stderr("%s -> %d" % (' '.join(command), status))
         elif cola_trace:
-            core.stderr(' '.join(command))
+            core.print_stderr(' '.join(command))
 
         # Allow access to the command's status code
         return (status, out, err)
@@ -294,16 +294,16 @@ class Git(object):
         # otherwise they'll end up in args, which is bad.
         _kwargs = dict(_cwd=self._git_cwd)
         execute_kwargs = (
-                '_cwd',
-                '_decode',
-                '_encoding',
-                '_stdin',
-                '_stdout',
-                '_stderr',
-                '_raw',
-                '_readonly',
-                '_no_win32_startupinfo',
-                )
+            '_cwd',
+            '_decode',
+            '_encoding',
+            '_stdin',
+            '_stdout',
+            '_stderr',
+            '_raw',
+            '_readonly',
+            '_no_win32_startupinfo',
+        )
 
         for kwarg in execute_kwargs:
             if kwarg in kwargs:
@@ -336,7 +336,7 @@ def _git_is_installed():
     # scenario. On UNIX we have ENAMETOOLONG but that doesn't exist on
     # Windows.
     try:
-        status, out, err = Git.execute([GIT, '--version'])
+        status, _, _ = Git.execute([GIT, '--version'])
         result = status == 0
     except OSError:
         result = False
@@ -394,7 +394,7 @@ def win32_git_error_hint():
 @memoize
 def _print_win32_git_hint():
     hint = '\n' + win32_git_error_hint() + '\n'
-    core.stderr("error: unable to execute 'git'" + hint)
+    core.print_stderr("error: unable to execute 'git'" + hint)
 
 
 def create():

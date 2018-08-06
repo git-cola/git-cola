@@ -1,6 +1,5 @@
 """i18n and l10n support for git-cola"""
 from __future__ import division, absolute_import, unicode_literals
-
 import gettext as _gettext
 import os
 import sys
@@ -40,6 +39,7 @@ def N_(s):
 
 
 def install(locale):
+    # pylint: disable=global-statement
     global _translation
     if sys.platform == 'win32':
         _check_win32_locale()
@@ -55,6 +55,7 @@ def install(locale):
 
 
 def uninstall():
+    # pylint: disable=global-statement
     global _translation
     _translation = _null_translation
 
@@ -70,7 +71,7 @@ def _install_custom_language():
         return
     try:
         lang = core.read(lang_file).strip()
-    except:
+    except (OSError, IOError):
         return
     if lang:
         compat.setenv('LANGUAGE', lang)

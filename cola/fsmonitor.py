@@ -1,17 +1,28 @@
 # Copyright (C) 2008-2017 David Aguilar
 # Copyright (C) 2015 Daniel Harding
-"""Provides a filesystem monitor for Linux (via inotify) and for Windows
-(via pywin32 and the ReadDirectoryChanges function)"""
-from __future__ import division, absolute_import, unicode_literals
+"""Filesystem monitor for Linux and Windows
 
+Linux monitoring uses using inotify.
+Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
+
+"""
+from __future__ import division, absolute_import, unicode_literals
 import errno
 import os
 import os.path
 import select
 from threading import Lock
 
+from qtpy import QtCore
+from qtpy.QtCore import Signal
+
 from . import utils
+from . import core
+from . import gitcmds
 from . import version
+from .compat import bchr
+from .i18n import N_
+from .interaction import Interaction
 
 AVAILABLE = None
 
@@ -32,15 +43,6 @@ elif utils.is_linux():
         pass
     else:
         AVAILABLE = 'inotify'
-
-from qtpy import QtCore
-from qtpy.QtCore import Signal
-
-from . import core
-from . import gitcmds
-from .compat import bchr
-from .i18n import N_
-from .interaction import Interaction
 
 
 class _Monitor(QtCore.QObject):
@@ -109,7 +111,7 @@ class _BaseThread(QtCore.QThread):
                                        '--non-matching', '-z', '--stdin'])
             path_list = bchr(0).join(core.encode(path)
                                      for path in self._file_paths)
-            out, err = proc.communicate(path_list)
+            out, _ = proc.communicate(path_list)
             if proc.returncode:
                 do_notify = True
             else:
@@ -145,18 +147,18 @@ if AVAILABLE == 'inotify':
 
     class _InotifyThread(_BaseThread):
         _TRIGGER_MASK = (
-                inotify.IN_ATTRIB |
-                inotify.IN_CLOSE_WRITE |
-                inotify.IN_CREATE |
-                inotify.IN_DELETE |
-                inotify.IN_MODIFY |
-                inotify.IN_MOVED_FROM |
-                inotify.IN_MOVED_TO
+            inotify.IN_ATTRIB |
+            inotify.IN_CLOSE_WRITE |
+            inotify.IN_CREATE |
+            inotify.IN_DELETE |
+            inotify.IN_MODIFY |
+            inotify.IN_MOVED_FROM |
+            inotify.IN_MOVED_TO
         )
         _ADD_MASK = (
-                _TRIGGER_MASK |
-                inotify.IN_EXCL_UNLINK |
-                inotify.IN_ONLYDIR
+            _TRIGGER_MASK |
+            inotify.IN_EXCL_UNLINK |
+            inotify.IN_ONLYDIR
         )
 
         def __init__(self, context, monitor):
@@ -223,7 +225,7 @@ if AVAILABLE == 'inotify':
                         elif not events:
                             self.notify()
                         else:
-                            for fd, event in events:
+                            for (fd, _) in events:
                                 if fd == self._inotify_fd:
                                     self._handle_events()
             finally:
@@ -247,23 +249,22 @@ if AVAILABLE == 'inotify':
             context = self.context
             try:
                 if self._worktree is not None:
-                    tracked_dirs = set(
-                            os.path.dirname(os.path.join(self._worktree,
-                                                         path))
-                            for path in gitcmds.tracked_files(context))
+                    tracked_dirs = set([
+                        os.path.dirname(os.path.join(self._worktree, path))
+                        for path in gitcmds.tracked_files(context)])
                     self._refresh_watches(tracked_dirs,
                                           self._worktree_wd_to_path_map,
                                           self._worktree_path_to_wd_map)
                 git_dirs = set()
                 git_dirs.add(self._git_dir)
-                for dirpath, dirnames, filenames in core.walk(
+                for dirpath, _, _ in core.walk(
                         os.path.join(self._git_dir, 'refs')):
                     git_dirs.add(dirpath)
                 self._refresh_watches(git_dirs,
                                       self._git_dir_wd_to_path_map,
                                       self._git_dir_path_to_wd_map)
                 self._git_dir_wd = \
-                        self._git_dir_path_to_wd_map.get(self._git_dir)
+                    self._git_dir_path_to_wd_map.get(self._git_dir)
             except OSError as e:
                 if e.errno == errno.ENOSPC:
                     self._log_out_of_wds_message()
@@ -328,11 +329,11 @@ if AVAILABLE == 'inotify':
                 elif name == 'config':
                     self._force_config = True
             elif (wd in self._git_dir_wd_to_path_map
-                    and not core.decode(name).endswith('.lock')):
+                  and not core.decode(name).endswith('.lock')):
                 self._force_notify = True
 
         def _handle_events(self):
-            for wd, mask, cookie, name in \
+            for wd, mask, _, name in \
                     inotify.read_events(self._inotify_fd):
                 if not self._force_notify:
                     self._check_event(wd, mask, name)
@@ -357,21 +358,21 @@ if AVAILABLE == 'pywin32':
 
             try:
                 self.handle = win32file.CreateFileW(
-                        path,
-                        0x0001,  # FILE_LIST_DIRECTORY
-                        win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
-                        None,
-                        win32con.OPEN_EXISTING,
-                        win32con.FILE_FLAG_BACKUP_SEMANTICS |
-                        win32con.FILE_FLAG_OVERLAPPED,
-                        None)
+                    path,
+                    0x0001,  # FILE_LIST_DIRECTORY
+                    win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
+                    None,
+                    win32con.OPEN_EXISTING,
+                    win32con.FILE_FLAG_BACKUP_SEMANTICS |
+                    win32con.FILE_FLAG_OVERLAPPED,
+                    None)
 
                 self.buffer = win32file.AllocateReadBuffer(8192)
                 self.event = win32event.CreateEvent(None, True, False, None)
                 self.overlapped = pywintypes.OVERLAPPED()
                 self.overlapped.hEvent = self.event
                 self._start()
-            except:
+            except Exception:
                 self.close()
                 raise
 
@@ -474,21 +475,20 @@ if AVAILABLE == 'pywin32':
 
         def _handle_results(self):
             if self._worktree_watch is not None:
-                for action, path in self._worktree_watch.read():
+                for _, path in self._worktree_watch.read():
                     if not self._running:
                         break
                     if self._force_notify:
                         continue
                     path = self._worktree + '/' + self._transform_path(path)
                     if (path != self._git_dir
-                        and not path.startswith(self._git_dir + '/')
-                        and not os.path.isdir(path)
-                       ):
+                            and not path.startswith(self._git_dir + '/')
+                            and not os.path.isdir(path)):
                         if self._use_check_ignore:
                             self._file_paths.add(path)
                         else:
                             self._force_notify = True
-            for action, path in self._git_dir_watch.read():
+            for _, path in self._git_dir_watch.read():
                 if not self._running:
                     break
                 if self._force_notify:
@@ -500,9 +500,8 @@ if AVAILABLE == 'pywin32':
                     self._force_config = True
                     continue
                 if (path == 'head'
-                    or path == 'index'
-                    or path.startswith('refs/')
-                   ):
+                        or path == 'index'
+                        or path.startswith('refs/')):
                     self._force_notify = True
 
         def stop(self):

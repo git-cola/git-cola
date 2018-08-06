@@ -3,15 +3,16 @@ all::
 
 # Development
 # -----------
-# make V=1                      # increases verbosity
-# make test                     # run tests, use flags=-x to fail fast
-# make test V=2                 # increase test verbosity
+# make V=1                      # generate files; V=1 increases verbosity
+# make test [flags=...]         # run tests; flags=-x fails fast
+# make test V=2                 # V=2 increases test verbosity
 # make doc                      # build docs
-# make flake8                   # style check
-# make pyint3k                  # python2/3 compatibility checks
-# make pylint                   # pylint, use color=1 to color output
-# make check file=<filename>    # run python checks on filename
-# make format file=<filename>   # run the yapf python formatter on filename
+# make flake8                   # python style checks
+# make pylint [color=1]         # run pylint; color=1 colorizes output
+# make pylint3k [color=1]       # run python2+3 compatibility checks
+# make check file=<filename>    # run precommit checks on <filename>
+# make format file=<filename>   # run the yapf python formatter on <filename>
+# make precommit [color=1]      # run test, doc, flake8, pylint3k, and pylint
 #
 # Release Prep
 # ------------
@@ -262,6 +263,14 @@ check:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
+
+# Pre-commit checks
+precommit:: all
+precommit:: doc
+precommit:: test
+precommit:: flake8
+precommit:: pylint3k
+precommit:: pylint
 
 format:
 	$(YAPF) --in-place $(flags) $(file)

@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 import argparse
-import os
 import sys
 
 from cola import app
@@ -14,6 +13,7 @@ def main(argv=None):
 
 
 def winmain():
+    """Windows git-dag entrypoint"""
     return app.winmain(main)
 
 

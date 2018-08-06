@@ -73,7 +73,7 @@ def get_platform(platform):
 
 
 def print_error(msg):
-    core.stderr('error: %s' % msg)
+    core.print_stderr('error: %s' % msg)
 
 
 def error(msg):
@@ -469,7 +469,7 @@ class RunCommands(object):
                 self.eval_input(action)
             return
         else:
-            print('error: %s: unknown command')
+            print_error('%s: unknown command' % answer)
             self.print_help()
 
 

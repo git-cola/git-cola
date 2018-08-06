@@ -22,14 +22,14 @@ class Interaction(object):
     @classmethod
     def command_error(cls, title, cmd, status, out, err):
         """Display an error message for a failed command"""
-        core.stderr(title)
-        core.stderr('-' * len(title))
-        core.stderr(cls.format_command_status(cmd, status))
-        core.stdout('')
+        core.print_stderr(title)
+        core.print_stderr('-' * len(title))
+        core.print_stderr(cls.format_command_status(cmd, status))
+        core.print_stdout('')
         if out:
-            core.stdout(out)
+            core.print_stdout(out)
         if err:
-            core.stderr(err)
+            core.print_stderr(err)
 
     @staticmethod
     def format_command_status(cmd, status):
@@ -115,7 +115,7 @@ class Interaction(object):
     @classmethod
     def log(cls, message):
         if cls.VERBOSE:
-            core.stdout(message)
+            core.print_stdout(message)
 
     @classmethod
     def save_as(cls, filename, title):
