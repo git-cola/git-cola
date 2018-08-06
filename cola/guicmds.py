@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
-import re
 from functools import partial
 
 from . import cmds
@@ -9,10 +8,8 @@ from . import difftool
 from . import gitcmds
 from . import icons
 from . import qtutils
-from . import utils
 from .i18n import N_
 from .interaction import Interaction
-from .models import main
 from .widgets import clone
 from .widgets import completion
 from .widgets import editremotes
@@ -98,10 +95,10 @@ def new_repo(context):
     status, out, err = git.init(path)
     if status == 0:
         return path
-    else:
-        title = N_('Error Creating Repository')
-        Interaction.command_error(title, 'git init', status, out, err)
-        return None
+
+    title = N_('Error Creating Repository')
+    Interaction.command_error(title, 'git init', status, out, err)
+    return None
 
 
 def open_new_repo(context):
@@ -122,12 +119,13 @@ def new_bare_repo(context):
         return result
     # Add a new remote pointing to the bare repo
     parent = qtutils.active_window()
-    if editremotes.add_remote(context, parent,
-            name=os.path.basename(repo), url=repo, readonly_url=True):
+    add_remote = editremotes.add_remote(
+        context, parent, name=os.path.basename(repo),
+        url=repo, readonly_url=True)
+    if add_remote:
         result = repo
 
     return result
-
 
 
 def prompt_for_new_bare_repo():
@@ -144,14 +142,14 @@ def prompt_for_new_bare_repo():
             N_('Enter a name for the new bare repo'),
             title=N_('New Bare Repository...'),
             text=default)
-        if not name:
+        if not name or not ok:
             return None
         if not name.endswith('.git'):
             name += '.git'
         repo = os.path.join(path, name)
         if core.isdir(repo):
             Interaction.critical(
-                    N_('Error'), N_('"%s" already exists') % repo)
+                N_('Error'), N_('"%s" already exists') % repo)
         else:
             bare_repo = repo
 
@@ -279,8 +277,8 @@ def spawn_clone(context):
 def clone_repo(context, parent, runtask, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
     fn = partial(context, clone_repository, parent, runtask,
-            progress, finish, spawn)
-    prompt = clone.prompt_for_clone()
+                 progress, finish, spawn)
+    prompt = clone.prompt_for_clone(context)
     prompt.result.connect(fn)
 
 
