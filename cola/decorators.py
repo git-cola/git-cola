@@ -17,20 +17,20 @@ def decorator(caller, func=None):
     if func is None:
         # return a decorator
         @functools.wraps(caller)
-        def _decorator(f, *args, **opts):
+        def _decorator(f, *dummy_args, **dummy_opts):
             @functools.wraps(f)
             def _caller(*args, **opts):
                 return caller(f, *args, **opts)
             return _caller
         _decorator.func = caller
         return _decorator
-    else:
-        # return a decorated function
-        @functools.wraps(func)
-        def _decorated(*args, **opts):
-            return caller(func, *args, **opts)
-        _decorated.func = func
-        return _decorated
+
+    # return a decorated function
+    @functools.wraps(func)
+    def _decorated(*args, **opts):
+        return caller(func, *args, **opts)
+    _decorated.func = func
+    return _decorated
 
 
 def memoize(func):
