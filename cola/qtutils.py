@@ -11,7 +11,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from . import core
-from . import gitcfg
 from . import hotkeys
 from . import icons
 from . import utils
@@ -48,9 +47,9 @@ def connect_button(button, fn):
     button.clicked.connect(lambda *args, **kwargs: fn())
 
 
-def connect_checkbox(checkbox, fn):
+def connect_checkbox(widget, fn):
     """Connect a checkbox to a function taking bool"""
-    checkbox.clicked.connect(lambda *args, **kwargs: fn(get(checkbox)))
+    widget.clicked.connect(lambda *args, **kwargs: fn(get(checkbox)))
 
 
 def connect_released(button, fn):
@@ -255,8 +254,7 @@ def prompt(msg, title=None, text='', parent=None):
     if parent is None:
         parent = active_window()
     result = QtWidgets.QInputDialog.getText(
-            parent, title, msg,
-            QtWidgets.QLineEdit.Normal, text)
+        parent, title, msg, QtWidgets.QLineEdit.Normal, text)
     return (result[0], result[1])
 
 
@@ -289,7 +287,7 @@ def prompt_n(msg, inputs):
         lineedit = QtWidgets.QLineEdit()
         # Enable the OK button only when all fields have been populated
         lineedit.textChanged.connect(
-                lambda x: ok_b.setEnabled(all(get_values())))
+            lambda x: ok_b.setEnabled(all(get_values())))
         if value:
             lineedit.setText(value)
         form_widgets.append((name, lineedit))
@@ -335,7 +333,7 @@ def paths_from_indexes(model, indexes,
     return paths_from_items(items, item_type=item_type, item_filter=item_filter)
 
 
-def _true_filter(x):
+def _true_filter(_x):
     return True
 
 
@@ -381,9 +379,10 @@ def selected_item(list_widget, items):
     widget_item = widget_items[0]
     row = list_widget.row(widget_item)
     if row < len(items):
-        return items[row]
+        item = items[row]
     else:
-        return None
+        item = None
+    return item
 
 
 def selected_items(list_widget, items):
@@ -453,6 +452,7 @@ def set_clipboard(text):
     persist_clipboard()
 
 
+# pylint: disable=line-too-long
 def persist_clipboard():
     """Persist the clipboard
 
@@ -463,7 +463,7 @@ def persist_clipboard():
 
     C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
 
-    """
+    """  # noqa
     clipboard = QtWidgets.QApplication.clipboard()
     event = QtCore.QEvent(QtCore.QEvent.Clipboard)
     QtWidgets.QApplication.sendEvent(clipboard, event)
@@ -576,12 +576,13 @@ def default_size(parent, width, height, use_parent_height=True):
 
 
 def default_monospace_font():
-    font = QtGui.QFont()
-    family = 'Monospace'
     if utils.is_darwin():
         family = 'Monaco'
-    font.setFamily(family)
-    return font
+    else:
+        family = 'Monospace'
+    mfont = QtGui.QFont()
+    mfont.setFamily(family)
+    return mfont
 
 
 def diff_font_str(context):
@@ -597,9 +598,9 @@ def diff_font(context):
 
 
 def font(string):
-    font = QtGui.QFont()
-    font.fromString(string)
-    return font
+    qfont = QtGui.QFont()
+    qfont.fromString(string)
+    return qfont
 
 
 def create_button(text='', layout=None, tooltip=None, icon=None,
@@ -705,9 +706,9 @@ class DockTitleBarWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self.setAutoFillBackground(True)
         self.label = qlabel = QtWidgets.QLabel(title, self)
-        font = qlabel.font()
-        font.setBold(True)
-        qlabel.setFont(font)
+        qfont = qlabel.font()
+        qfont.setBold(True)
+        qlabel.setFont(qfont)
         qlabel.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
@@ -796,7 +797,8 @@ class DebouncingMenu(QtWidgets.QMenu):
         self.created_at = utils.epoch_millis()
 
     def mouseReleaseEvent(self, event):
-        if (utils.epoch_millis() - self.created_at) > DebouncingMenu.threshold_ms:
+        threshold = DebouncingMenu.threshold_ms
+        if (utils.epoch_millis() - self.created_at) > threshold:
             QtWidgets.QMenu.mouseReleaseEvent(self, event)
 
 
@@ -826,9 +828,19 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     return button
 
 
+# pylint: disable=line-too-long
 def mimedata_from_paths(context, paths):
-    """Return mimedata with a list of absolute path URLs"""
+    """Return mimedata with a list of absolute path URLs
 
+    The text/x-moz-list format is always included by Qt, and doing
+    mimedata.removeFormat('text/x-moz-url') has no effect.
+    C.f. http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
+
+    gnome-terminal expects utf-16 encoded text, but other terminals,
+    e.g. terminator, prefer utf-8, so allow cola.dragencoding
+    to override the default.
+
+    """  # noqa
     cfg = context.cfg
     abspaths = [core.abspath(path) for path in paths]
     urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
@@ -836,13 +848,6 @@ def mimedata_from_paths(context, paths):
     mimedata = QtCore.QMimeData()
     mimedata.setUrls(urls)
 
-    # The text/x-moz-list format is always included by Qt, and doing
-    # mimedata.removeFormat('text/x-moz-url') has no effect.
-    # C.f. http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
-    #
-    # gnome-terminal expects utf-16 encoded text, but other terminals,
-    # e.g. terminator, prefer utf-8, so allow cola.dragencoding
-    # to override the default.
     paths_text = core.list2cmdline(abspaths)
     encoding = cfg.get('cola.dragencoding', 'utf-16')
     moz_text = core.encode(paths_text, encoding=encoding)
@@ -888,7 +893,7 @@ class Task(QtCore.QRunnable):
     def __init__(self, parent):
         QtCore.QRunnable.__init__(self)
 
-        self.channel = Channel()
+        self.channel = Channel(parent)
         self.result = None
         self.setAutoDelete(False)
 
@@ -944,7 +949,7 @@ class RunTask(QtCore.QObject):
         task_id = id(task)
         try:
             self.tasks.remove(task)
-        except:
+        except ValueError:
             pass
         try:
             progress, finish, result = self.task_details[task_id]
