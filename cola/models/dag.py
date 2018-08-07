@@ -125,10 +125,10 @@ class Commit(object):
         details = after_oid.split(sep, 5)
         (parents, tags, author, authdate, email, summary) = details
 
-        self.summary = summary and summary or ''
-        self.author = author and author or ''
-        self.authdate = authdate or ''
-        self.email = email and email or ''
+        self.summary = summary if summary else ''
+        self.author = author if author else ''
+        self.authdate = authdate if authdate else ''
+        self.email = email if email else ''
 
         if parents:
             generation = None
@@ -171,18 +171,18 @@ class Commit(object):
         # Porcelain commands. These are not meant to be parsed by scripts, but
         # the users still may want to be aware of the changes:
         #
-        #  * Output from "git log --decorate" (and "%d" format specifier used in
-        #    the userformat "--format=<string>" parameter "git log" family of
-        #    command takes) used to list "HEAD" just like other tips of branch
-        #    names, separated with a comma in between.  E.g.
+        # * Output from "git log --decorate" (and "%d" format specifier used in
+        #   the userformat "--format=<string>" parameter "git log" family of
+        #   command takes) used to list "HEAD" just like other tips of branch
+        #   names, separated with a comma in between.  E.g.
         #
         #      $ git log --decorate -1 master
         #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD, master)
         #      ...
         #
-        #    This release updates the output slightly when HEAD refers to the tip
-        #    of a branch whose name is also shown in the output.  The above is
-        #    shown as:
+        # This release updates the output slightly when HEAD refers to the tip
+        # of a branch whose name is also shown in the output.  The above is
+        # shown as:
         #
         #      $ git log --decorate -1 master
         #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD -> master)
@@ -228,6 +228,7 @@ class RepoReader(object):
         self.context = context
         self.params = params
         self.git = context.git
+        self.returncode = 0
         self._proc = None
         self._objects = {}
         self._cmd = ['git',
