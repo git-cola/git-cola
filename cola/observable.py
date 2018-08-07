@@ -16,7 +16,7 @@ class Observable(object):
 
     def remove_observer(self, observer):
         """Remove an observer."""
-        for message, observers in self.observers.items():
+        for _, observers in self.observers.items():
             if observer in observers:
                 observers.remove(observer)
 
