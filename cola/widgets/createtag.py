@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -8,13 +7,11 @@ from .. import cmds
 from .. import icons
 from .. import qtutils
 from ..i18n import N_
-from ..interaction import Interaction
 from ..qtutils import get
 from . import defs
 from . import completion
 from . import standard
 from . import text
-from ..models import main
 
 
 def new_create_tag(context, name='', ref='', sign=False,
@@ -54,7 +51,7 @@ class CreateTag(standard.Dialog):
 
         self.setWindowTitle(N_('Create Tag'))
         if parent is not None:
-            self.setWindowModality(QtCore.Qt.WindowModal)
+            self.setWindowModality(Qt.WindowModal)
 
         # Tag label
         self.tag_name_label = QtWidgets.QLabel(self)
@@ -125,6 +122,6 @@ class CreateTag(standard.Dialog):
         sign_tag = get(self.sign_tag)
 
         ok = cmds.do(cmds.Tag, context, tag_name, revision,
-            sign=sign_tag, message=tag_msg)
+                     sign=sign_tag, message=tag_msg)
         if ok:
             self.close()
