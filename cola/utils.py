@@ -105,12 +105,13 @@ def grep(pattern, items, squash=True):
             matched.append(subitems)
 
     if isdict:
-        return matchdict
+        result = matchdict
+    elif squash and len(matched) == 1:
+        result = matched[0]
     else:
-        if squash and len(matched) == 1:
-            return matched[0]
-        else:
-            return matched
+        result = matched
+
+    return result
 
 
 def basename(path):
@@ -157,6 +158,7 @@ def join(*paths):
 
     """
     return '/'.join(paths)
+
 
 def pathset(path):
     """Return all of the path components for the specified path
@@ -344,8 +346,8 @@ def slice_fn(input_items, map_fn):
 
 class seq(object):
 
-    def __init__(self, seq):
-        self.seq = seq
+    def __init__(self, sequence):
+        self.seq = sequence
 
     def index(self, item, default=-1):
         try:
