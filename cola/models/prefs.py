@@ -147,9 +147,10 @@ class PreferencesModel(observable.Observable):
 
     def get_config(self, source, config):
         if source == 'repo':
-            return self.config.get_repo(config)
+            value = self.config.get_repo(config)
         else:
-            return self.config.get(config)
+            value = self.config.get(config)
+        return value
 
 
 class SetConfig(object):
