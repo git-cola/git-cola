@@ -8,32 +8,33 @@ import sys
 from . import core
 from . import git
 from . import resources
-from .models import prefs
 
 
 def mkdict(obj):
     """Transform None and non-dicts into dicts"""
     if isinstance(obj, dict):
-        return obj
+        value = obj
     else:
-        return {}
+        value = {}
+    return value
 
 
 def mklist(obj):
     """Transform None and non-lists into lists"""
     if isinstance(obj, list):
-        return obj
+        value = obj
     elif isinstance(obj, tuple):
-        return list(obj)
+        value = list(obj)
     else:
-        return []
+        value = []
+    return value
 
 
 def read_json(path):
     try:
         with core.xopen(path, 'rt') as fp:
             return mkdict(json.load(fp))
-    except:  # bad path or json
+    except (ValueError, TypeError, OSError, IOError):  # bad path or json
         return {}
 
 
@@ -44,7 +45,7 @@ def write_json(values, path):
             core.makedirs(parent)
         with core.xopen(path, 'wt') as fp:
             json.dump(values, fp, indent=4)
-    except:
+    except (ValueError, TypeError, OSError, IOError):
         sys.stderr.write('git-cola: error writing "%s"\n' % path)
 
 
@@ -58,10 +59,10 @@ class Settings(object):
     def __init__(self, verify=git.is_git_worktree):
         """Load existing settings if they exist"""
         self.values = {
-                'bookmarks': [],
-                'gui_state': {},
-                'recent': [],
-                'copy_formats': [],
+            'bookmarks': [],
+            'gui_state': {},
+            'recent': [],
+            'copy_formats': [],
         }
         self.verify = verify
 
@@ -76,7 +77,7 @@ class Settings(object):
         for bookmark in missing_bookmarks:
             try:
                 self.bookmarks.remove(bookmark)
-            except:
+            except ValueError:
                 pass
 
         for recent in self.recent:
@@ -86,7 +87,7 @@ class Settings(object):
         for recent in missing_recent:
             try:
                 self.recent.remove(recent)
-            except:
+            except ValueError:
                 pass
 
     def add_bookmark(self, path, name):
@@ -135,7 +136,9 @@ class Settings(object):
     def remove_recent(self, path):
         """Removes an item from the recent items list"""
         try:
-            index = [recent.get('path', '') for recent in self.recent].index(path)
+            index = [
+                recent.get('path', '') for recent in self.recent
+            ].index(path)
         except ValueError:
             return
         try:
@@ -162,12 +165,12 @@ class Settings(object):
         # Upgrade bookmarks to the new dict-based bookmarks format.
         if self.bookmarks and not isinstance(self.bookmarks[0], dict):
             bookmarks = [dict(name=os.path.basename(path), path=path)
-                            for path in self.bookmarks]
+                         for path in self.bookmarks]
             self.values['bookmarks'] = bookmarks
 
         if self.recent and not isinstance(self.recent[0], dict):
             recent = [dict(name=os.path.basename(path), path=path)
-                        for path in self.recent]
+                      for path in self.recent]
             self.values['recent'] = recent
 
     def asdict(self):
@@ -227,7 +230,7 @@ class Session(Settings):
             self.values.update(read_json(path))
             try:
                 os.unlink(path)
-            except:
+            except (OSError, ValueError):
                 pass
             return True
         return False

@@ -178,8 +178,8 @@ class StashIndex(cmds.ContextCommand):
         # changes.  The diff from stash->HEAD is a reverse diff of the stash.
         patch = utils.tmp_filename('stash')
         with core.xopen(patch, mode='wb') as patch_fd:
-            status, out, err = git.diff_tree('refs/stash', 'HEAD', '--',
-                binary=True, _stdout=patch_fd)
+            status, out, err = git.diff_tree(
+                'refs/stash', 'HEAD', '--', binary=True, _stdout=patch_fd)
             if status != 0:
                 stash_error('diff-tree', status, out, err)
                 return

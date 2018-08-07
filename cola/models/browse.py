@@ -14,7 +14,6 @@ from .. import utils
 from .. import qtutils
 from ..git import STDOUT
 from ..i18n import N_
-from ..models import main
 
 
 class Columns(object):
@@ -126,7 +125,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
             if create:
                 column = self.create_column
                 row = self.entries[path] = [
-                        column(c, path, is_dir) for c in Columns.ALL]
+                    column(c, path, is_dir) for c in Columns.ALL]
             else:
                 row = None
         return row
@@ -204,8 +203,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
         """Ensure that all parent directory entries exist"""
         sub_parent = parent
         parent_dir = utils.dirname(dirname)
-        for dirname in utils.pathset(parent_dir):
-            sub_parent = self.add_directory(sub_parent, dirname)
+        for path in utils.pathset(parent_dir):
+            sub_parent = self.add_directory(sub_parent, path)
         return sub_parent
 
     def path_is_interesting(self, path):
@@ -233,7 +232,6 @@ class GitRepoModel(QtGui.QStandardItemModel):
         new_paths = self.get_paths(files=new_files)
 
         if new_files != old_files or not old_paths:
-            selected = self._parent.selected_paths()
             self.clear()
             self._initialize()
             self.restore.emit()
@@ -307,7 +305,7 @@ class GitRepoInfoTask(qtutils.Task):
         """
         try:
             st = core.stat(self.path)
-        except:
+        except OSError:
             return N_('%d minutes ago') % 0
         elapsed = time.time() - st.st_mtime
         minutes = int(elapsed / 60)

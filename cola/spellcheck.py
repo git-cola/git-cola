@@ -1,7 +1,6 @@
 from __future__ import division, absolute_import, unicode_literals
 import collections
 import os
-import sys
 
 from cola import core
 
@@ -51,11 +50,9 @@ def correct(word, words):
 
 class NorvigSpellCheck(object):
 
-    def __init__(self,
-            words='/usr/share/dict/words',
-            cracklib='/usr/share/dict/cracklib-small',
-            propernames='/usr/share/dict/propernames'):
-
+    def __init__(self, words='/usr/share/dict/words',
+                 cracklib='/usr/share/dict/cracklib-small',
+                 propernames='/usr/share/dict/propernames'):
         self.dictwords = words
         self.cracklib = cracklib
         self.propernames = propernames

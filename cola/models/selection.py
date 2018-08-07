@@ -107,9 +107,10 @@ class SelectionModel(Observable):
     def filename(self):
         paths = [p for p in self.single_selection() if p is not None]
         if paths:
-            return paths[0]
+            filename = paths[0]
         else:
-            return None
+            filename = None
+        return filename
 
     def group(self):
         """A list of selected files in various states of being"""

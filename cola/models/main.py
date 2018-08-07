@@ -7,10 +7,7 @@ import os
 
 from .. import core
 from .. import gitcmds
-from ..compat import ustr
 from ..git import STDOUT
-from ..interaction import Interaction
-from ..i18n import N_
 from ..observable import Observable
 from . import prefs
 
@@ -54,7 +51,7 @@ class MainModel(Observable):
     modes_unstageable = set((mode_amend, mode_index))
 
     unstaged = property(
-            lambda self: self.modified + self.unmerged + self.untracked)
+        lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
     def __init__(self, context, cwd=None):
@@ -117,7 +114,7 @@ class MainModel(Observable):
         return self.mode in self.modes_stageable
 
     def all_branches(self):
-        return (self.local_branches + self.remote_branches)
+        return self.local_branches + self.remote_branches
 
     def set_worktree(self, worktree):
         self.git.set_worktree(worktree)
@@ -158,7 +155,7 @@ class MainModel(Observable):
             if not msg.endswith('\n'):
                 msg += '\n'
             core.write(path, msg)
-        except:
+        except (OSError, IOError):
             pass
         return path
 
@@ -354,7 +351,7 @@ class MainModel(Observable):
         """
         return self.git.branch(name, base, track=track, force=force)
 
-    def cherry_pick_list(self, revs, **kwargs):
+    def cherry_pick_list(self, revs):
         """Cherry-picks each revision into the current branch.
         Returns a list of command output strings (1 per cherry pick)"""
         if not revs:
@@ -373,8 +370,7 @@ class MainModel(Observable):
         topad = num-len(pstr)
         if topad > 0:
             return pstr + ' '*topad
-        else:
-            return pstr
+        return pstr
 
     def is_commit_published(self):
         """Return True if the latest commit exists in any remote branch"""

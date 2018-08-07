@@ -1,7 +1,6 @@
 # Copyright (C) 2007-2018 David Aguilar and contributors
 """Provide git-cola's version number"""
 from __future__ import division, absolute_import, unicode_literals
-
 import os
 import sys
 
@@ -9,12 +8,12 @@ if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(1, srcdir)
 
-from .git import STDOUT
-from .decorators import memoize
-from ._version import VERSION
+from .git import STDOUT  # noqa
+from .decorators import memoize  # noqa
+from ._version import VERSION  # noqa
 try:
     from ._build_version import BUILD_VERSION
-except:
+except ImportError:
     BUILD_VERSION = ''
 
 # minimum version requirements
@@ -72,11 +71,11 @@ def check_git(context, key):
     return check(key, git_version(context))
 
 
-def version_to_list(version):
+def version_to_list(value):
     """Convert a version string to a list of numbers or strings
     """
     ver_list = []
-    for p in version.split('.'):
+    for p in value.split('.'):
         try:
             n = int(p)
         except ValueError:
@@ -97,10 +96,11 @@ def git_version(context):
     """Returns the current GIT version"""
     parts = git_version_str(context).split()
     if parts and len(parts) >= 3:
-        return parts[2]
+        result = parts[2]
     else:
         # minimum supported version
-        return '1.6.3'
+        result = '1.6.3'
+    return result
 
 
 def cola_version(build=False):
