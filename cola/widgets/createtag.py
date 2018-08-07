@@ -77,7 +77,8 @@ class CreateTag(standard.Dialog):
         self.tag_msg_label = QtWidgets.QLabel(self)
         self.tag_msg_label.setText(N_('Message'))
 
-        self.tag_msg = text.HintedPlainTextEdit(N_('Tag message...'), self)
+        self.tag_msg = text.HintedPlainTextEdit(
+            context, N_('Tag message...'), self)
         self.tag_msg.setToolTip(N_('Specifies the tag message'))
         # Revision
         self.rev_label = QtWidgets.QLabel(self)
