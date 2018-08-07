@@ -72,6 +72,8 @@ Translations
 
   https://github.com/git-cola/git-cola/pull/862
 
+  https://github.com/git-cola/git-cola/pull/867
+
 Packaging
 ---------
 * The original `#!/usr/bin/env python` shebang lines can now be
