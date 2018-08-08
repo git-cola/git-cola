@@ -123,9 +123,9 @@ class SearchEngine(object):
         return (self.model.query, self.rev_args())
 
     def search(self):
-        if not self.validate():
-            return
-        return self.results()
+        if self.validate():
+            return self.results()
+        return []
 
     def validate(self):
         return len(self.model.query) > 1
@@ -220,6 +220,7 @@ class Search(SearchWidget):
         self.AUTHOR = N_('Search Authors')
         self.COMMITTER = N_('Search Committers')
         self.DATE_RANGE = N_('Search Date Range')
+        self.results = []
 
         # Each search type is handled by a distinct SearchEngine subclass
         self.engines = {
@@ -242,7 +243,7 @@ class Search(SearchWidget):
         connect_button(self.button_cherrypick, self.cherry_pick)
         connect_button(self.button_close, self.accept)
 
-        self.mode_combo.currentIndexChanged[int].connect(self.mode_changed)
+        self.mode_combo.currentIndexChanged.connect(self.mode_changed)
         self.commit_list.itemSelectionChanged.connect(self.display)
 
         self.set_start_date(mkdate(time.time()-(87640*31)))
@@ -251,7 +252,7 @@ class Search(SearchWidget):
 
         self.query.setFocus()
 
-    def mode_changed(self, idx):
+    def mode_changed(self, _idx):
         mode = self.mode()
         self.update_shown_widgets(mode)
         if mode == self.PATH:
@@ -290,6 +291,7 @@ class Search(SearchWidget):
     def mode(self):
         return self.mode_combo.currentText()
 
+    # pylint: disable=unused-argument
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
         self.model.query = get(self.query)
@@ -330,11 +332,9 @@ class Search(SearchWidget):
 
     def selected_revision(self):
         result = qtutils.selected_item(self.commit_list, self.results)
-        if result is None:
-            return None
-        else:
-            return result[0]
+        return result[0] if result else None
 
+    # pylint: disable=unused-argument
     def display(self, *args):
         context = self.context
         revision = self.selected_revision()
