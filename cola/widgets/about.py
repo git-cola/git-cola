@@ -163,6 +163,18 @@ def version_text(context):
     else:
         build_version = ''
 
+    scope = dict(
+        cola_version=cola_version,
+        build_version=build_version,
+        git_version=git_version,
+        platform_version=platform_version,
+        pyqt_api_name=pyqt_api_name,
+        pyqt_api_version=pyqt_api_version,
+        python_path=python_path,
+        python_version=python_version,
+        qt_version=qt_version,
+        qtpy_version=qtpy_version)
+
     return N_("""
         <br>
             Git Cola version %(cola_version)s %(build_version)s
@@ -174,7 +186,7 @@ def version_text(context):
             <li> QtPy %(qtpy_version)s
             <li> %(pyqt_api_name)s %(pyqt_api_version)s
         </ul>
-    """) % locals()
+    """) % scope
 
 
 def link(url, text, palette=None):
@@ -183,13 +195,15 @@ def link(url, text, palette=None):
 
     color = palette.color(QtGui.QPalette.Foreground)
     rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+    scope = dict(rgb=rgb, text=text, url=url)
 
-    return ("""
+    return """
         <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
             href="%(url)s">
             %(text)s
         </a>
-    """ % locals())
+    """ % scope
+
 
 def mailto(email, text, palette):
     return link('mailto:%s' % email, text, palette) + '<br>'
@@ -213,12 +227,13 @@ def render_authors(authors):
 
 def contributors_text(authors, prelude='', epilogue=''):
     author_text = render_authors(authors)
+    scope = dict(author_text=author_text, epilogue=epilogue, prelude=prelude)
 
-    return '''
+    return """
         %(prelude)s
         %(author_text)s
         %(epilogue)s
-    ''' % locals()
+    """ % scope
 
 
 def authors_text():
@@ -322,11 +337,12 @@ def authors_text():
     )
     bug_url = 'https://github.com/git-cola/git-cola/issues'
     bug_link = link(bug_url, bug_url)
-    prelude = N_('''
+    scope = dict(bug_link=bug_link)
+    prelude = N_("""
         <br>
         Please use %(bug_link)s to report issues.
         <br>
-    ''') % locals()
+    """) % scope
 
     return contributors_text(authors, prelude=prelude)
 
@@ -334,7 +350,6 @@ def authors_text():
 def translators_text():
     palette = QtGui.QPalette()
     contact = N_('Email contributor')
-    email = lambda addr: mailto(addr, contact, palette)
 
     translators = (
         # See the `generate-about` script in the "todo" branch.
@@ -388,8 +403,9 @@ def translators_text():
 
     bug_url = 'https://github.com/git-cola/git-cola/issues'
     bug_link = link(bug_url, bug_url)
+    scope = dict(bug_link=bug_link)
 
-    prelude = N_('''
+    prelude = N_("""
         <br>
             Git Cola has been translated into different languages thanks
             to the help of the individuals listed below.
@@ -412,7 +428,7 @@ def translators_text():
 
         <br>
 
-    ''') % locals()
+    """) % scope
     return contributors_text(translators, prelude=prelude)
 
 
