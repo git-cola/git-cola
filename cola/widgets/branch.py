@@ -7,7 +7,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..compat import odict
-from ..compat import unichr as uchr
+from ..compat import uchr
 from ..i18n import N_
 from ..interaction import Interaction
 from ..widgets import defs

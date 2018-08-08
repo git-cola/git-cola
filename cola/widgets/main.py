@@ -10,7 +10,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..compat import unichr as uchr
+from ..compat import uchr
 from ..compat import WIN32
 from ..i18n import N_
 from ..interaction import Interaction
