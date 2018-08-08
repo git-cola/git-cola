@@ -16,11 +16,12 @@ def main(argv=None):
     # when none has been specified.  We fake it by injecting
     # 'cola' into the command-line so that parse_args()
     # routes them to the 'cola' parser by default.
+    help_commands = core.encode('--help-commands')
+    args = [core.encode(arg) for arg in argv]
     if (len(argv) < 1 or
-            argv[0].startswith('-') and
-            '--help-commands' not in argv):
+            argv[0].startswith('-') and help_commands not in args):
         argv.insert(0, 'cola')
-    elif '--help-commands' in argv:
+    elif help_commands in argv:
         argv.append('--help')
     args = parse_args(argv)
     return args.func(args)
