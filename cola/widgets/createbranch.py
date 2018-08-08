@@ -7,7 +7,6 @@ from qtpy.QtCore import Signal
 
 from ..i18n import N_
 from ..interaction import Interaction
-from ..models import main
 from ..qtutils import get
 from .. import gitcmds
 from .. import icons
@@ -287,16 +286,17 @@ class CreateBranchDialog(Dialog):
         self.progress.hide()
         del self.progress
 
-        for (cmd, status, out, err) in results:
+        for (cmd, status, _, _) in results:
             if status != 0:
                 Interaction.critical(
-                        N_('Error Creating Branch'),
-                        (N_('"%(command)s" returned exit status "%(status)d"') %
-                         dict(command='git '+cmd, status=status)))
+                    N_('Error Creating Branch'),
+                    (N_('"%(command)s" returned exit status "%(status)d"')
+                     % dict(command='git '+cmd, status=status)))
                 return
 
         self.accept()
 
+    # pylint: disable=unused-argument
     def branch_item_changed(self, *rest):
         """This callback is called when the branch selection changes"""
         # When the branch selection changes then we should update
@@ -327,8 +327,11 @@ class CreateBranchDialog(Dialog):
         """Get the list of items for populating the branch root list.
         """
         if get(self.local_radio):
-            return self.model.local_branches
+            value = self.model.local_branches
         elif get(self.remote_radio):
-            return self.model.remote_branches
+            value = self.model.remote_branches
         elif get(self.tag_radio):
-            return self.model.tags
+            value = self.model.tags
+        else:
+            value = []
+        return value
