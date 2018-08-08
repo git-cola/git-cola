@@ -12,9 +12,8 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from .. import utils
-from ..models import main
 from . import defs
-from . import text
+from .text import HintedLineEdit
 
 
 class ValidateRegex(object):
@@ -54,7 +53,7 @@ class BranchValidator(QtGui.QValidator):
         """Scrub and validate the user-supplied input"""
         state, string, idx = self._validate.validate(string, idx)
         if string:  # Allow empty strings
-            status, out, err = self._git.check_ref_format(string, branch=True)
+            status, _, _ = self._git.check_ref_format(string, branch=True)
             if status != 0:
                 # The intermediate string, when deleting characters, might
                 # end in a name that is invalid to Git, but we must allow it
@@ -66,7 +65,7 @@ class BranchValidator(QtGui.QValidator):
         return (state, string, idx)
 
 
-class CompletionLineEdit(text.HintedLineEdit):
+class CompletionLineEdit(HintedLineEdit):
     """A lineedit with advanced completion abilities"""
 
     activated = Signal()
@@ -81,14 +80,14 @@ class CompletionLineEdit(text.HintedLineEdit):
 
     # Navigation keys trigger signals that widgets can use for customization
     NAVIGATION_KEYS = {
-            Qt.Key_Return: 'enter',
-            Qt.Key_Enter: 'enter',
-            Qt.Key_Up: 'up',
-            Qt.Key_Down: 'down',
+        Qt.Key_Return: 'enter',
+        Qt.Key_Enter: 'enter',
+        Qt.Key_Up: 'up',
+        Qt.Key_Down: 'down',
     }
 
     def __init__(self, context, model_factory, hint='', parent=None):
-        text.HintedLineEdit.__init__(self, context, hint, parent=parent)
+        HintedLineEdit.__init__(self, context, hint, parent=parent)
         # Tracks when the completion popup was active during key events
 
         self.context = context
@@ -115,6 +114,7 @@ class CompletionLineEdit(text.HintedLineEdit):
     def __del__(self):
         self.dispose()
 
+    # pylint: disable=unused-argument
     def dispose(self, *args):
         self._completer.dispose()
 
@@ -318,10 +318,9 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
         self.case_sensitive = False
 
         self.doc = QtGui.QTextDocument()
-        try:
+        # older PyQt4 does not have setDocumentMargin
+        if hasattr(self.doc, 'setDocumentMargin'):
             self.doc.setDocumentMargin(0)
-        except:  # older PyQt4
-            pass
 
     def set_highlight_text(self, text, case_sensitive):
         """Sets the text that will be made bold when displayed"""
@@ -331,8 +330,8 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
     def paint(self, painter, option, index):
         """Overloaded Qt method for custom painting of a model index"""
         if not self.highlight_text:
-            return QtWidgets.QStyledItemDelegate.paint(self, painter,
-                                                       option, index)
+            QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
+            return
         text = index.data()
         if self.case_sensitive:
             html = text.replace(self.highlight_text,
@@ -359,7 +358,7 @@ class HighlightDelegate(QtWidgets.QStyledItemDelegate):
         ctx = QtGui.QAbstractTextDocumentLayout.PaintContext()
 
         # Highlighting text if item is selected
-        if (params.state & QtWidgets.QStyle.State_Selected):
+        if params.state & QtWidgets.QStyle.State_Selected:
             color = params.palette.color(QtGui.QPalette.Active,
                                          QtGui.QPalette.HighlightedText)
             ctx.palette.setColor(QtGui.QPalette.Text, color)
@@ -416,6 +415,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         if not self.update_thread.isRunning():
             self.update_thread.start()
 
+    # pylint: disable=unused-argument
     def gather_matches(self, case_sensitive):
         return ((), (), set())
 
@@ -759,7 +759,7 @@ class GitDialog(QtWidgets.QDialog):
     def text(self):
         return self.lineedit.text()
 
-    def text_changed(self, txt):
+    def text_changed(self, _txt):
         self.ok_button.setEnabled(bool(self.text()))
 
     def set_text(self, ref):
@@ -787,8 +787,7 @@ class GitDialog(QtWidgets.QDialog):
 
         if dlg.exec_() == cls.Accepted:
             return dlg.text()
-        else:
-            return None
+        return None
 
 
 class GitRefDialog(GitDialog):
@@ -802,7 +801,7 @@ class GitCheckoutBranchDialog(GitDialog):
 
     def __init__(self, context, title, text, parent, icon=None):
         GitDialog.__init__(self, GitCheckoutBranchLineEdit,
-            context, title, text, parent, icon=icon)
+                           context, title, text, parent, icon=icon)
 
 
 class GitBranchDialog(GitDialog):
@@ -816,4 +815,4 @@ class GitRemoteBranchDialog(GitDialog):
 
     def __init__(self, context, title, text, parent, icon=None):
         GitDialog.__init__(self, GitRemoteBranchLineEdit,
-            context, title, text, parent, icon=icon)
+                           context, title, text, parent, icon=icon)
