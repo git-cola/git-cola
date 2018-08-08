@@ -39,14 +39,14 @@ if PY3:
     int_types = (int,)
     maxsize = sys.maxsize
     ustr = str
-    unichr = chr
+    uchr = chr
 else:
     bchr = chr
     maxsize = 2 ** 31
     # pylint: disable=unicode-builtin
     ustr = unicode  # noqa
     # pylint: disable=unichr-builtin
-    unichr = unichr
+    uchr = unichr  # noqa
     # pylint: disable=long-builtin
     int_types = (int, long)  # noqa
 

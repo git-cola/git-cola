@@ -128,7 +128,7 @@ class RecentFiles(standard.Dialog):
         self.update_thread.count = get(self.count)
         self.update_thread.start()
 
-    def count_changed(self, value):
+    def count_changed(self, _value):
         self.refresh_button.setEnabled(True)
 
     def tree_selection_changed(self):

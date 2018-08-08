@@ -203,7 +203,7 @@ class FormatDigits(object):
         self.fmt = ''
         self.empty = ''
         self.dash = ''
-        self._dash = dash or compat.unichr(0xb7)
+        self._dash = dash or compat.uchr(0xb7)
         self._empty = empty or ' '
 
     def set_digits(self, value):

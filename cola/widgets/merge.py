@@ -5,10 +5,8 @@ from qtpy.QtCore import Qt
 
 from ..i18n import N_
 from ..interaction import Interaction
-from ..models import main
 from ..qtutils import get
 from .. import cmds
-from .. import gitcfg
 from .. import icons
 from .. import qtutils
 from . import completion
@@ -127,7 +125,7 @@ class Merge(standard.Dialog):
         self.update_title()
         self.update_revisions()
 
-    def update_title(self, dummy_txt=None):
+    def update_title(self, _txt=None):
         branch = self.model.currentbranch
         revision = self.revision.text()
         if revision:

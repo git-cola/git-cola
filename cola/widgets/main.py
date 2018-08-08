@@ -10,7 +10,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..compat import unichr
+from ..compat import uchr
 from ..compat import WIN32
 from ..i18n import N_
 from ..interaction import Interaction
@@ -88,14 +88,15 @@ class MainView(standard.MainWindow):
             self.browserdock = create_dock(N_('Browser'), self, widget=browser)
 
         # "Actions" widget
-        self.actionsdock = create_dock(N_('Actions'), self,
-            widget=action.ActionButtons(context, self))
+        self.actionsdock = create_dock(
+            N_('Actions'), self, widget=action.ActionButtons(context, self))
         qtutils.hide_dock(self.actionsdock)
 
         # "Repository Status" widget
-        self.statusdock = create_dock(N_('Status'), self,
-            fn=lambda dock:
-                status.StatusWidget(context, dock.titleBarWidget(), dock))
+        self.statusdock = create_dock(
+            N_('Status'), self,
+            fn=lambda dock: status.StatusWidget(
+                context, dock.titleBarWidget(), dock))
         self.statuswidget = self.statusdock.widget()
 
         # "Switch Repository" widgets
@@ -143,7 +144,8 @@ class MainView(standard.MainWindow):
         qtutils.hide_dock(self.logdock)
 
         # "Diff Viewer" widget
-        self.diffdock = create_dock(N_('Diff'), self,
+        self.diffdock = create_dock(
+            N_('Diff'), self,
             fn=lambda dock: diff.Viewer(context, parent=dock))
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
@@ -385,9 +387,8 @@ class MainView(standard.MainWindow):
         # so that we can operate on it as a group.
         # We can do this because can_rebase == not is_rebasing
         self.rebase_start_action_proxy = utils.Proxy(
-                self.rebase_start_action,
-                setEnabled=lambda x:
-                    self.rebase_start_action.setEnabled(not x))
+            self.rebase_start_action,
+            setEnabled=lambda x: self.rebase_start_action.setEnabled(not x))
 
         self.rebase_group = utils.Group(self.rebase_start_action_proxy,
                                         self.rebase_edit_todo_action,
@@ -466,7 +467,7 @@ class MainView(standard.MainWindow):
         add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
         edit_menu.addSeparator()
         add_action(edit_menu, N_('Select All'), edit_proxy.selectAll,
-            hotkeys.SELECT_ALL)
+                   hotkeys.SELECT_ALL)
         edit_menu.addSeparator()
 
         commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
@@ -568,7 +569,6 @@ class MainView(standard.MainWindow):
         self.addDockWidget(bottom, self.logdock)
         self.tabifyDockWidget(self.actionsdock, self.logdock)
 
-
         # Listen for model notifications
         model.add_observer(model.message_updated, self.updated.emit)
         model.add_observer(model.message_mode_changed,
@@ -660,8 +660,9 @@ class MainView(standard.MainWindow):
             menu.addAction(menu_action)
 
         menu.addSeparator()
-        menu_action = menu.addAction(N_('Add Toolbar'),
-            partial(toolbar.add_toolbar, self.context, self))
+        context = self.context
+        menu_action = menu.addAction(
+            N_('Add Toolbar'), partial(toolbar.add_toolbar, context, self))
         menu_action.setIcon(icons.add())
 
         dockwidgets = [
@@ -694,21 +695,20 @@ class MainView(standard.MainWindow):
     def build_recent_menu(self):
         settings = Settings()
         settings.load()
-        recent = settings.recent
         cmd = cmds.OpenRepo
         context = self.context
         menu = self.open_recent_menu
         menu.clear()
-        for r in recent:
-            name = r['name']
-            directory = r['path']
-            text = '%s %s %s' % (name, unichr(0x2192), directory)
+        for entry in settings.recent:
+            name = entry['name']
+            directory = entry['path']
+            text = '%s %s %s' % (name, uchr(0x2192), directory)
             menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
     mode = property(lambda self: self.model.mode)
 
-    def _config_updated(self, source, config, value):
+    def _config_updated(self, _source, config, value):
         if config == prefs.FONTDIFF:
             # The diff font
             font = QtGui.QFont()
@@ -766,14 +766,14 @@ class MainView(standard.MainWindow):
 
     def refresh(self):
         """Update the title with the current branch and directory name."""
-        branch = self.model.currentbranch
+        curbranch = self.model.currentbranch
         curdir = core.getcwd()
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
 
         msg = N_('Repository: %s') % curdir
         msg += '\n'
-        msg += N_('Branch: %s') % branch
+        msg += N_('Branch: %s') % curbranch
 
         if is_rebasing:
             msg += '\n\n'
@@ -802,11 +802,11 @@ class MainView(standard.MainWindow):
         alerts = []
 
         project = self.model.project
-        branch = self.model.currentbranch
+        curbranch = self.model.currentbranch
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
-        prefix = unichr(0xab)
-        suffix = unichr(0xbb)
+        prefix = uchr(0xab)
+        suffix = uchr(0xbb)
 
         if is_rebasing:
             alerts.append(N_('Rebasing'))
@@ -826,7 +826,7 @@ class MainView(standard.MainWindow):
         else:
             path_text = ''
 
-        title = '%s: %s %s%s' % (project, branch, alert_text, path_text)
+        title = '%s: %s %s%s' % (project, curbranch, alert_text, path_text)
         self.setWindowTitle(title)
 
     def update_actions(self):

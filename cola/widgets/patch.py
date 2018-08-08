@@ -53,7 +53,7 @@ def get_patches_from_mimedata(mimedata):
 def get_patches_from_dir(path):
     """Find patches in a subdirectory"""
     patches = []
-    for root, subdirs, files in core.walk(path):
+    for root, _, files in core.walk(path):
         for name in [f for f in files if f.endswith('.patch')]:
             patches.append(core.decode(os.path.join(root, name)))
     return patches
@@ -84,24 +84,24 @@ class ApplyPatches(Dialog):
         self.tree.setHeaderHidden(True)
 
         self.add_button = qtutils.create_toolbutton(
-                text=N_('Add'), icon=icons.add(),
-                tooltip=N_('Add patches (+)'))
+            text=N_('Add'), icon=icons.add(),
+            tooltip=N_('Add patches (+)'))
 
         self.remove_button = qtutils.create_toolbutton(
-                text=N_('Remove'), icon=icons.remove(),
-                tooltip=N_('Remove selected (Delete)'))
+            text=N_('Remove'), icon=icons.remove(),
+            tooltip=N_('Remove selected (Delete)'))
 
         self.apply_button = qtutils.create_button(
-                text=N_('Apply'), icon=icons.ok())
+            text=N_('Apply'), icon=icons.ok())
 
         self.close_button = qtutils.close_button()
 
         self.add_action = qtutils.add_action(
-                self, N_('Add'), self.add_files, hotkeys.ADD_ITEM)
+            self, N_('Add'), self.add_files, hotkeys.ADD_ITEM)
 
         self.remove_action = qtutils.add_action(
-                self, N_('Remove'), self.tree.remove_selected,
-                hotkeys.DELETE, hotkeys.BACKSPACE, hotkeys.REMOVE_ITEM)
+            self, N_('Remove'), self.tree.remove_selected,
+            hotkeys.DELETE, hotkeys.BACKSPACE, hotkeys.REMOVE_ITEM)
 
         self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.add_button, self.remove_button,

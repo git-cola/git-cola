@@ -3,7 +3,7 @@ import unittest
 
 from cola import i18n
 from cola.i18n import N_
-from cola.compat import unichr
+from cola.compat import uchr
 
 
 class ColaI18nTestCase(unittest.TestCase):
@@ -16,8 +16,8 @@ class ColaI18nTestCase(unittest.TestCase):
         """Test that strings with @@noun are translated
         """
         i18n.install('ja_JP')
-        expect = (unichr(0x30b3) + unichr(0x30df) +
-                  unichr(0x30c3) + unichr(0x30c8))
+        expect = (uchr(0x30b3) + uchr(0x30df) +
+                  uchr(0x30c3) + uchr(0x30c8))
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 

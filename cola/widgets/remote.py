@@ -427,14 +427,13 @@ class RemoteActionDialog(standard.Dialog):
                                                        self.model.remotes)
         self.set_remote_to(selection, self.selected_remotes)
 
-    def set_remote_to(self, remote, selected_remotes):
+    def set_remote_to(self, _remote, selected_remotes):
         context = self.context
         all_branches = gitcmds.branch_list(context, remote=True)
         branches = []
         patterns = []
-        for remote in selected_remotes:
-            pat = remote + '/*'
-            patterns.append(pat)
+        for remote_name in selected_remotes:
+            patterns.append(remote_name + '/*')
 
         for branch in all_branches:
             for pat in patterns:
@@ -503,7 +502,7 @@ class RemoteActionDialog(standard.Dialog):
 
     # Actions
 
-    def push_to_all(self, dummy_remote, *args, **kwargs):
+    def push_to_all(self, _remote, *args, **kwargs):
         """Push to all selected remotes"""
         selected_remotes = self.selected_remotes
         all_results = None

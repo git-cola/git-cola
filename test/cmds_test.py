@@ -10,7 +10,7 @@ except ImportError:
 
 from cola import cmds
 from cola import app
-from cola.compat import unichr
+from cola.compat import uchr
 
 
 class CmdsTestCase(unittest.TestCase):
@@ -28,8 +28,8 @@ class CmdsTestCase(unittest.TestCase):
     def test_Commit_strip_comments_unicode(self):
         """Ensure that unicode is preserved in stripped commit messages"""
 
-        msg = unichr(0x1234) + '\n\n#comment\nbody'
-        expect = unichr(0x1234) + '\n\nbody\n'
+        msg = uchr(0x1234) + '\n\n#comment\nbody'
+        expect = uchr(0x1234) + '\n\nbody\n'
         actual = cmds.Commit.strip_comments(msg)
         self.assertEqual(expect, actual)
 
