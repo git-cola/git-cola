@@ -357,8 +357,11 @@ def cmd_browse(args):
 def cmd_clone(args):
     from .widgets import clone
     context = app.application_init(args)
-    view = clone.prompt_for_clone(context, show=False, settings=args.settings)
-    return app.application_start(context, view)
+    view = clone.clone(context, settings=args.settings)
+    context.set_view(view)
+    result = 0 if view.exec_() == view.Accepted else 1
+    app.default_stop(context, view)
+    return result
 
 
 def cmd_config(args):

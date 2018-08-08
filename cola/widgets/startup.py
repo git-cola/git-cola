@@ -17,6 +17,7 @@ from .. import guicmds
 from .. import icons
 from .. import qtutils
 from .. import version
+from . import clone
 from . import defs
 from . import standard
 
@@ -40,7 +41,10 @@ class StartupDialog(standard.Dialog):
         self.logo_text_label.setAlignment(Qt.AlignCenter)
 
         self.repodir = None
-        self.runtask = qtutils.RunTask(parent=self)
+        if context.runtask:
+            self.runtask = context.runtask
+        else:
+            self.runtask = context.runtask = qtutils.RunTask(parent=self)
 
         self.new_button = qtutils.create_button(
                 text=N_('New...'), icon=icons.new())
@@ -147,16 +151,17 @@ class StartupDialog(standard.Dialog):
 
     def clone_repo(self):
         context = self.context
+        settings = self.settings
         progress = standard.ProgressDialog('', '', self)
-        guicmds.clone_repo(context, self, self.runtask, progress,
-            self.clone_repo_done, False)
+        clone.clone_repo(context, self, True, settings, progress,
+                         self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
         if task.cmd and task.cmd.status == 0:
             self.repodir = task.destdir
             self.accept()
         else:
-            guicmds.report_clone_repo_errors(task)
+            clone.task_finished(task)
 
     def new_repo(self):
         context = self.context

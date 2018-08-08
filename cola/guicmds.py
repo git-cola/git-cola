@@ -10,7 +10,6 @@ from . import icons
 from . import qtutils
 from .i18n import N_
 from .interaction import Interaction
-from .widgets import clone
 from .widgets import completion
 from .widgets import editremotes
 from .widgets import standard
@@ -242,65 +241,6 @@ def review_branch(context):
         return
     merge_base = gitcmds.merge_base_parent(context, branch)
     difftool.diff_commits(context, qtutils.active_window(), merge_base, branch)
-
-
-class CloneTask(qtutils.Task):
-    """Clones a Git repository"""
-
-    def __init__(self, context, url, destdir, submodules,
-                 shallow, spawn, parent):
-        qtutils.Task.__init__(self, parent)
-        self.context = context
-        self.url = url
-        self.destdir = destdir
-        self.submodules = submodules
-        self.shallow = shallow
-        self.spawn = spawn
-        self.cmd = None
-
-    def task(self):
-        """Runs the model action and captures the result"""
-        self.cmd = cmds.do(
-            cmds.Clone, self.context, self.url, self.destdir,
-            self.submodules, self.shallow, spawn=self.spawn)
-        return self.cmd
-
-
-def spawn_clone(context):
-    """Clone a repository and spawn a new git-cola instance"""
-    parent = qtutils.active_window()
-    progress = standard.ProgressDialog('', '', parent)
-    clone_repo(context, parent, context.runtask, progress,
-               report_clone_repo_errors, True)
-
-
-def clone_repo(context, parent, runtask, progress, finish, spawn):
-    """Clone a repository asynchronously with progress animation"""
-    fn = partial(context, clone_repository, parent, runtask,
-                 progress, finish, spawn)
-    prompt = clone.prompt_for_clone(context)
-    prompt.result.connect(fn)
-
-
-def clone_repository(context, parent, runtask, progress, finish, spawn,
-                     url, destdir, submodules, shallow):
-    # Use a thread to update in the background
-    progress.set_details(N_('Clone Repository'),
-                         N_('Cloning repository at %s') % url)
-    task = CloneTask(context, url, destdir, submodules, shallow, spawn, parent)
-    runtask.start(task, finish=finish, progress=progress)
-
-
-def report_clone_repo_errors(task):
-    """Report errors from the clone task if they exist"""
-    cmd = task.cmd
-    if cmd is None:
-        return
-    status = cmd.status
-    out = cmd.out
-    err = cmd.err
-    title = N_('Error: could not clone "%s"') % cmd.url
-    Interaction.command(title, 'git clone', status, out, err)
 
 
 def rename_branch(context):
