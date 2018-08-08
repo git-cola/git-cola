@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 import itertools
 import math
-import re
 from functools import partial
 
 from qtpy.QtCore import Qt
@@ -42,7 +41,7 @@ def git_dag(context, args=None, settings=None, existing_view=None, show=True):
     model = context.model
     branch = model.currentbranch
     # disambiguate between branch names and filenames by using '--'
-    branch_doubledash = branch and (branch + ' --') or ''
+    branch_doubledash = (branch + ' --') if branch else ''
     params = dag.DAG(branch_doubledash, 1000)
     params.set_arguments(args)
 
@@ -135,7 +134,7 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: cmds.do(cmds.Revert, context, oid))
 
     def copy_to_clipboard(self):
-        self.with_oid(lambda oid: qtutils.set_clipboard(oid))
+        self.with_oid(qtutils.set_clipboard)
 
     def create_branch(self):
         context = self.context
@@ -154,24 +153,26 @@ class ViewerMixin(object):
     def show_diff(self):
         context = self.context
         self.with_oid(lambda oid:
-                difftool.diff_expression(context, self, oid + '^!',
-                                         hide_expr=False, focus_tree=True))
+                      difftool.diff_expression(context, self, oid + '^!',
+                                               hide_expr=False,
+                                               focus_tree=True))
 
     def show_dir_diff(self):
         context = self.context
         self.with_oid(lambda oid:
-            cmds.difftool_launch(context, left=oid, left_take_magic=True,
-                                 dir_diff=True))
+                      cmds.difftool_launch(context, left=oid,
+                                           left_take_magic=True,
+                                           dir_diff=True))
 
     def reset_branch_head(self):
         context = self.context
         self.with_oid(lambda oid:
-            cmds.do(cmds.ResetBranchHead, context, ref=oid))
+                      cmds.do(cmds.ResetBranchHead, context, ref=oid))
 
     def reset_worktree(self):
         context = self.context
         self.with_oid(lambda oid:
-            cmds.do(cmds.ResetWorktree, context, ref=oid))
+                      cmds.do(cmds.ResetWorktree, context, ref=oid))
 
     def reset_merge(self):
         context = self.context
@@ -406,7 +407,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     def goto(self, finder):
         items = self.selected_items()
-        item = items and items[0] or None
+        item = items[0] if items else None
         if item is None:
             return
         found = finder(item)
@@ -441,7 +442,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not oids:
             return
         self.clearSelection()
-        for idx, oid in enumerate(oids):
+        for oid in oids:
             try:
                 item = self.oidmap[oid]
             except KeyError:
@@ -523,13 +524,13 @@ class GitDAG(standard.MainWindow):
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
-                tooltip=N_('Zoom Out'), icon=icons.zoom_out())
+            tooltip=N_('Zoom Out'), icon=icons.zoom_out())
 
         self.zoom_in = qtutils.create_action_button(
-                tooltip=N_('Zoom In'), icon=icons.zoom_in())
+            tooltip=N_('Zoom In'), icon=icons.zoom_in())
 
         self.zoom_to_fit = qtutils.create_action_button(
-                tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best())
+            tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best())
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
@@ -573,9 +574,8 @@ class GitDAG(standard.MainWindow):
         self.diff_dock.setWidget(self.diffwidget)
 
         self.graph_controls_layout = qtutils.hbox(
-                defs.no_margin, defs.button_spacing,
-                self.zoom_out, self.zoom_in, self.zoom_to_fit,
-                defs.spacing)
+            defs.no_margin, defs.button_spacing,
+            self.zoom_out, self.zoom_in, self.zoom_to_fit, defs.spacing)
 
         self.graph_controls_widget = QtWidgets.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
@@ -586,10 +586,10 @@ class GitDAG(standard.MainWindow):
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
         self.lock_layout_action = qtutils.add_action_bool(
-                self, N_('Lock Layout'), self.set_lock_layout, False)
+            self, N_('Lock Layout'), self.set_lock_layout, False)
 
         self.refresh_action = qtutils.add_action(
-                self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
+            self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
 
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
@@ -692,7 +692,7 @@ class GitDAG(standard.MainWindow):
             count = state['count']
             if self.params.overridden('count'):
                 count = self.params.count
-        except:
+        except (KeyError, TypeError, ValueError, AttributeError):
             count = self.params.count
             result = False
         self.params.set_count(count)
@@ -701,7 +701,7 @@ class GitDAG(standard.MainWindow):
         try:
             log_state = state['log']
         except (KeyError, ValueError):
-            log_state  = None
+            log_state = None
         if log_state:
             self.treewidget.apply_state(log_state)
 
@@ -921,6 +921,7 @@ class Edge(QtWidgets.QGraphicsItem):
         self.setZValue(-2)
 
         self.recompute_bound()
+        self.path = None
         self.path_valid = False
 
         # Choose a new color for new branch edges
@@ -1015,7 +1016,7 @@ class Edge(QtWidgets.QGraphicsItem):
         self.path = path
         self.path_valid = True
 
-    def paint(self, painter, option, widget):
+    def paint(self, painter, _option, _widget):
         if not self.path_valid:
             self.recompute_path()
         painter.setPen(self.pen)
@@ -1027,23 +1028,23 @@ class EdgeColor(object):
 
     current_color_index = 0
     colors = [
-                QtGui.QColor(Qt.red),
-                QtGui.QColor(Qt.green),
-                QtGui.QColor(Qt.blue),
-                QtGui.QColor(Qt.black),
-                QtGui.QColor(Qt.darkRed),
-                QtGui.QColor(Qt.darkGreen),
-                QtGui.QColor(Qt.darkBlue),
-                QtGui.QColor(Qt.cyan),
-                QtGui.QColor(Qt.magenta),
-                # Orange; Qt.yellow is too low-contrast
-                qtutils.rgba(0xff, 0x66, 0x00),
-                QtGui.QColor(Qt.gray),
-                QtGui.QColor(Qt.darkCyan),
-                QtGui.QColor(Qt.darkMagenta),
-                QtGui.QColor(Qt.darkYellow),
-                QtGui.QColor(Qt.darkGray),
-             ]
+        QtGui.QColor(Qt.red),
+        QtGui.QColor(Qt.green),
+        QtGui.QColor(Qt.blue),
+        QtGui.QColor(Qt.black),
+        QtGui.QColor(Qt.darkRed),
+        QtGui.QColor(Qt.darkGreen),
+        QtGui.QColor(Qt.darkBlue),
+        QtGui.QColor(Qt.cyan),
+        QtGui.QColor(Qt.magenta),
+        # Orange; Qt.yellow is too low-contrast
+        qtutils.rgba(0xff, 0x66, 0x00),
+        QtGui.QColor(Qt.gray),
+        QtGui.QColor(Qt.darkCyan),
+        QtGui.QColor(Qt.darkMagenta),
+        QtGui.QColor(Qt.darkYellow),
+        QtGui.QColor(Qt.darkGray),
+        ]
 
     @classmethod
     def cycle(cls):
@@ -1103,6 +1104,7 @@ class Commit(QtWidgets.QGraphicsItem):
 
         self.commit = commit
         self.notifier = notifier
+        self.selected = False
 
         self.setZValue(0)
         self.setFlag(selectable)
@@ -1164,8 +1166,7 @@ class Commit(QtWidgets.QGraphicsItem):
     def shape(self):
         return self.item_shape
 
-    def paint(self, painter, option, widget,
-              cache=Cache):
+    def paint(self, painter, option, _widget):
 
         # Do not draw outside the exposed rect
         painter.setClipRect(option.exposedRect)
@@ -1199,7 +1200,7 @@ class Label(QtWidgets.QGraphicsItem):
 
     item_type = QtWidgets.QGraphicsItem.UserType + 3
 
-    head_color=QtGui.QColor(Qt.green)
+    head_color = QtGui.QColor(Qt.green)
     other_color = QtGui.QColor(Qt.white)
     remote_color = QtGui.QColor(Qt.yellow)
 
@@ -1255,7 +1256,7 @@ class Label(QtWidgets.QGraphicsItem):
 
         return item_shape.boundingRect()
 
-    def paint(self, painter, option, widget, cache=Cache):
+    def paint(self, painter, _option, _widget, cache=Cache):
         # Draw tags and branches
         font = cache.label_font()
         painter.setFont(font)
@@ -1295,7 +1296,7 @@ class Label(QtWidgets.QGraphicsItem):
                 painter.setBrush(self.other_color)
 
             text_rect = painter.boundingRect(
-                    QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
+                QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
             box_rect = text_rect.adjusted(-offset, -offset, offset, offset)
 
             painter.drawRoundedRect(box_rect, border, border)
@@ -1322,12 +1323,18 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         Commit.selected_outline_color = highlight.darker()
 
         self.context = context
+        self.columns = {}
         self.selection_list = []
         self.menu_actions = None
         self.notifier = notifier
         self.commits = []
         self.items = {}
+        self.mouse_start = [0, 0]
         self.saved_matrix = self.transform()
+        self.max_column = 0
+        self.min_column = 0
+        self.frontier = {}
+        self.tagged_cells = set()
 
         self.x_start = 24
         self.x_min = 24
@@ -1457,7 +1464,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         selected_item.setSelected(False)
         parent_item.setSelected(True)
         self.ensureVisible(
-                parent_item.mapRectToScene(parent_item.boundingRect()))
+            parent_item.mapRectToScene(parent_item.boundingRect()))
 
     def select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
@@ -1721,75 +1728,73 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         for edge in invalid_edges:
             edge.commits_were_invalidated()
 
-    """Commit node layout technique
-
-    Nodes are aligned by a mesh. Columns and rows are distributed using
-algorithms described below.
-
-    Row assignment algorithm
-
-    The algorithm aims consequent.
-    1. A commit should be above all its parents.
-    2. No commit should be at right side of a commit with a tag in same row.
-This prevents overlapping of tag labels with commits and other labels.
-    3. Commit density should be maximized.
-
-    The algorithm requires that all parents of a commit were assigned column.
-Nodes must be traversed in generation ascend order. This guarantees that all
-parents of a commit were assigned row. So, the algorithm may operate in course
-of column assignment algorithm.
-
-   Row assignment uses frontier. A frontier is a dictionary that contains
-minimum available row index for each column. It propagates during the
-algorithm. Set of cells with tags is also maintained to meet second aim.
-
-    Initialization is performed by reset_rows method. Each new column should
-be declared using declare_column method. Getting row for a cell is implemented
-in alloc_cell method. Frontier must be propagated for any child of fork
-commit which occupies different column. This meets first aim.
-
-    Column assignment algorithm
-
-    The algorithm traverses nodes in generation ascend order. This guarantees
-that a node will be visited after all its parents.
-
-    The set of occupied columns are maintained during work. Initially it is
-empty and no node occupied a column. Empty columns are allocated on demand.
-Free index for column being allocated is searched in following way.
-    1. Start from desired column and look towards graph center (0 column).
-    2. Start from center and look in both directions simultaneously.
-Desired column is defaulted to 0. Fork node should set desired column for
-children equal to its one. This prevents branch from jumping too far from
-its fork.
-
-    Initialization is performed by reset_columns method. Column allocation is
-implemented in alloc_column method. Initialization and main loop are in
-recompute_grid method. The method also embeds row assignment algorithm by
-implementation.
-
-    Actions for each node are follow.
-    1. If the node was not assigned a column then it is assigned empty one.
-    2. Allocate row.
-    3. Allocate columns for children.
-    If a child have a column assigned then it should no be overridden. One of
-children is assigned same column as the node. If the node is a fork then the
-child is chosen in generation descent order. This is a heuristic and it only
-affects resulting appearance of the graph. Other children are assigned empty
-columns in same order. It is the heuristic too.
-    4. If no child occupies column of the node then leave it.
-    It is possible in consequent situations.
-    4.1 The node is a leaf.
-    4.2 The node is a fork and all its children are already assigned side
-column. It is possible if all the children are merges.
-    4.3 Single node child is a merge that is already assigned a column.
-    5. Propagate frontier with respect to this node.
-    Each frontier entry corresponding to column occupied by any node's child
-must be gather than node row index. This meets first aim of the row assignment
-algorithm.
-    Note that frontier of child that occupies same row was propagated during
-step 2. Hence, it must be propagated for children on side columns.
-
-    """
+# Commit node layout technique
+#
+# Nodes are aligned by a mesh. Columns and rows are distributed using
+# algorithms described below.
+#
+# Row assignment algorithm
+#
+# The algorithm aims consequent.
+#     1. A commit should be above all its parents.
+#     2. No commit should be at right side of a commit with a tag in same row.
+# This prevents overlapping of tag labels with commits and other labels.
+#     3. Commit density should be maximized.
+#
+#     The algorithm requires that all parents of a commit were assigned column.
+# Nodes must be traversed in generation ascend order. This guarantees that all
+# parents of a commit were assigned row. So, the algorithm may operate in
+# course of column assignment algorithm.
+#
+#    Row assignment uses frontier. A frontier is a dictionary that contains
+# minimum available row index for each column. It propagates during the
+# algorithm. Set of cells with tags is also maintained to meet second aim.
+#
+#    Initialization is performed by reset_rows method. Each new column should
+# be declared using declare_column method. Getting row for a cell is
+# implemented in alloc_cell method. Frontier must be propagated for any child
+# of fork commit which occupies different column. This meets first aim.
+#
+# Column assignment algorithm
+#
+#     The algorithm traverses nodes in generation ascend order. This guarantees
+# that a node will be visited after all its parents.
+#
+#     The set of occupied columns are maintained during work. Initially it is
+# empty and no node occupied a column. Empty columns are allocated on demand.
+# Free index for column being allocated is searched in following way.
+#     1. Start from desired column and look towards graph center (0 column).
+#     2. Start from center and look in both directions simultaneously.
+# Desired column is defaulted to 0. Fork node should set desired column for
+# children equal to its one. This prevents branch from jumping too far from
+# its fork.
+#
+#     Initialization is performed by reset_columns method. Column allocation is
+# implemented in alloc_column method. Initialization and main loop are in
+# recompute_grid method. The method also embeds row assignment algorithm by
+# implementation.
+#
+# Actions for each node are follow.
+#     1. If the node was not assigned a column then it is assigned empty one.
+#     2. Allocate row.
+#     3. Allocate columns for children.
+#     If a child have a column assigned then it should no be overridden. One of
+# children is assigned same column as the node. If the node is a fork then the
+# child is chosen in generation descent order. This is a heuristic and it only
+# affects resulting appearance of the graph. Other children are assigned empty
+# columns in same order. It is the heuristic too.
+#     4. If no child occupies column of the node then leave it.
+#     It is possible in consequent situations.
+#     4.1 The node is a leaf.
+#     4.2 The node is a fork and all its children are already assigned side
+# column. It is possible if all the children are merges.
+#     4.3 Single node child is a merge that is already assigned a column.
+#     5. Propagate frontier with respect to this node.
+#     Each frontier entry corresponding to column occupied by any node's child
+# must be gather than node row index. This meets first aim of the row
+# assignment algorithm.
+#     Note that frontier of child that occupies same row was propagated during
+# step 2. Hence, it must be propagated for children on side columns.
 
     def reset_columns(self):
         # Some children of displayed commits might not be accounted in
@@ -1854,7 +1859,7 @@ step 2. Hence, it must be propagated for children on side columns.
             # First commit must be assigned 0 row.
             self.frontier[column] = 0
 
-    def alloc_column(self, column = 0):
+    def alloc_column(self, column=0):
         columns = self.columns
         # First, look for free column by moving from desired column to graph
         # center (column 0).

@@ -35,6 +35,7 @@ from . import bookmarks
 from . import branch
 from . import browse
 from . import cfgactions
+from . import clone
 from . import commitmsg
 from . import compare
 from . import createbranch
@@ -284,7 +285,8 @@ class MainView(standard.MainWindow):
             partial(guicmds.reset_worktree, context))
 
         self.clone_repo_action = add_action(
-            self, N_('Clone...'), partial(guicmds.spawn_clone, context))
+            self, N_('Clone...'),
+            partial(clone.clone, context, settings=settings))
         self.clone_repo_action.setIcon(icons.repo())
 
         self.help_docs_action = add_action(

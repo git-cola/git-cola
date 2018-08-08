@@ -8,7 +8,7 @@ from .. import qtutils
 from .. import utils
 
 
-def cmd_action(parent, cmd, context, fn, *hotkeys):
+def cmd_action(parent, cmd, context, fn, *keys):
     """Wrap a standard Command object in a QAction
 
     This function assumes that :func:`fn()` takes no arguments,
@@ -17,7 +17,7 @@ def cmd_action(parent, cmd, context, fn, *hotkeys):
 
     """
     return qtutils.add_action(
-        parent, cmd.name(), lambda: cmds.do(cmd, context, fn()), *hotkeys)
+        parent, cmd.name(), lambda: cmds.do(cmd, context, fn()), *keys)
 
 
 def default_app_action(context, parent, fn):
@@ -31,9 +31,9 @@ def default_app_action(context, parent, fn):
 def edit_action(context, parent, *keys):
     """Launch an editor -> QAction"""
     action = qtutils.add_action_with_status_tip(
-            parent, cmds.LaunchEditor.name(),
-            N_('Edit selected paths'),
-            cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT, *keys)
+        parent, cmds.LaunchEditor.name(),
+        N_('Edit selected paths'),
+        cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT, *keys)
     action.setIcon(icons.edit())
     return action
 
@@ -56,5 +56,6 @@ def refresh_action(context, parent):
 def terminal_action(context, parent, fn):
     """Launch a terminal -> QAction"""
     action = cmd_action(parent, cmds.LaunchTerminal, context,
-        lambda: utils.select_directory(fn()), hotkeys.TERMINAL)
+                        lambda: utils.select_directory(fn()),
+                        hotkeys.TERMINAL)
     return action

@@ -8,8 +8,9 @@ try:
 except ValueError:
     scale_factor = 1.0
 
-def scale(value, scale_factor=scale_factor):
-    return int(value * scale_factor)
+
+def scale(value, factor=scale_factor):
+    return int(value * factor)
 
 
 no_margin = 0

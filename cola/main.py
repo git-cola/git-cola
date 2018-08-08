@@ -16,11 +16,12 @@ def main(argv=None):
     # when none has been specified.  We fake it by injecting
     # 'cola' into the command-line so that parse_args()
     # routes them to the 'cola' parser by default.
+    help_commands = core.encode('--help-commands')
+    args = [core.encode(arg) for arg in argv]
     if (len(argv) < 1 or
-            argv[0].startswith('-') and
-            '--help-commands' not in argv):
+            argv[0].startswith('-') and help_commands not in args):
         argv.insert(0, 'cola')
-    elif '--help-commands' in argv:
+    elif help_commands in argv:
         argv.append('--help')
     args = parse_args(argv)
     return args.func(args)
@@ -356,8 +357,11 @@ def cmd_browse(args):
 def cmd_clone(args):
     from .widgets import clone
     context = app.application_init(args)
-    view = clone.prompt_for_clone(context, show=False, settings=args.settings)
-    return app.application_start(context, view)
+    view = clone.clone(context, settings=args.settings)
+    context.set_view(view)
+    result = 0 if view.exec_() == view.Accepted else 1
+    app.default_stop(context, view)
+    return result
 
 
 def cmd_config(args):
