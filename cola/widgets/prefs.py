@@ -53,9 +53,9 @@ class FormWidget(QtWidgets.QWidget):
 
         elif isinstance(widget, QtWidgets.QLineEdit):
             widget.editingFinished.connect(
-                    self._text_config_changed(config, widget))
+                self._text_config_changed(config, widget))
             widget.returnPressed.connect(
-                    self._text_config_changed(config, widget))
+                self._text_config_changed(config, widget))
 
     def _int_config_changed(self, config):
         def runner(value):
