@@ -5,27 +5,27 @@
 # imageview.py was originally based on the pyqimageview:
 # https://github.com/nevion/pyqimageview/
 #
-#The MIT License (MIT)
+# The MIT License (MIT)
 #
-#Copyright (c) 2014 Jason Newton <nevion@gmail.com>
+# Copyright (c) 2014 Jason Newton <nevion@gmail.com>
 #
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#The above copyright notice and this permission notice shall be included in all
-#copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 from __future__ import absolute_import, division, unicode_literals
 
@@ -70,20 +70,23 @@ class ImageView(QtWidgets.QGraphicsView):
         self.first_show_occured = False
         self.last_scene_roi = None
         self.start_drag = QtCore.QPoint()
+        self.checkerboard = None
 
         CHECK_MEDIUM = 8
         CHECK_GRAY = 0x80
         CHECK_LIGHT = 0xcc
         check_pattern = QtGui.QImage(CHECK_MEDIUM * 2, CHECK_MEDIUM * 2,
-                                    QtGui.QImage.Format_RGB888)
+                                     QtGui.QImage.Format_RGB888)
         color_gray = QtGui.QColor(CHECK_GRAY, CHECK_GRAY, CHECK_GRAY)
         color_light = QtGui.QColor(CHECK_LIGHT, CHECK_LIGHT, CHECK_LIGHT)
         painter = QtGui.QPainter(check_pattern)
         painter.fillRect(0, 0, CHECK_MEDIUM, CHECK_MEDIUM, color_gray)
-        painter.fillRect(CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM,
-                         color_gray)
-        painter.fillRect(0, CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM, color_light)
-        painter.fillRect(CHECK_MEDIUM, 0, CHECK_MEDIUM, CHECK_MEDIUM, color_light)
+        painter.fillRect(CHECK_MEDIUM, CHECK_MEDIUM, CHECK_MEDIUM,
+                         CHECK_MEDIUM, color_gray)
+        painter.fillRect(0, CHECK_MEDIUM, CHECK_MEDIUM,
+                         CHECK_MEDIUM, color_light)
+        painter.fillRect(CHECK_MEDIUM, 0, CHECK_MEDIUM,
+                         CHECK_MEDIUM, color_light)
         self.check_pattern = check_pattern
         self.check_brush = QtGui.QBrush(check_pattern)
 
@@ -121,7 +124,6 @@ class ImageView(QtWidgets.QGraphicsView):
                 else:
                     raise TypeError(image)
             elif image.ndim == 2:
-                image_rgb = np.dstack((image, image, image))
                 if image_format is None:
                     image_format = QtGui.QImage.Format_RGB888
                 q_image = QtGui.QImage(image.data, image.shape[1],
@@ -138,13 +140,13 @@ class ImageView(QtWidgets.QGraphicsView):
             raise TypeError(image)
 
         if pixmap.hasAlpha():
-            image_with_check = QtGui.QImage(pixmap.width(), pixmap.height(),
-                                 QtGui.QImage.Format_ARGB32)
-            self.image_with_check = image_with_check
-            painter = QtGui.QPainter(image_with_check)
-            painter.fillRect(image_with_check.rect(), self.check_brush)
+            checkerboard = QtGui.QImage(pixmap.width(), pixmap.height(),
+                                        QtGui.QImage.Format_ARGB32)
+            self.checkerboard = checkerboard
+            painter = QtGui.QPainter(checkerboard)
+            painter.fillRect(checkerboard.rect(), self.check_brush)
             painter.drawPixmap(0, 0, pixmap)
-            pixmap = QtGui.QPixmap.fromImage(image_with_check)
+            pixmap = QtGui.QPixmap.fromImage(checkerboard)
 
         self.graphics_pixmap.setPixmap(pixmap)
         self.update_scene_rect()
@@ -152,7 +154,7 @@ class ImageView(QtWidgets.QGraphicsView):
         self.graphics_pixmap.update()
         self.image_changed.emit()
 
-    #image property alias
+    # image property alias
     @property
     def image(self):
         return self.pixmap
@@ -180,7 +182,6 @@ class ImageView(QtWidgets.QGraphicsView):
         self.update()
 
     def zoomROICentered(self, p, zoom_level_delta):
-        pixmap = self.graphics_pixmap.pixmap()
         roi = self.current_scene_ROI
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_scalef = 1
@@ -204,7 +205,6 @@ class ImageView(QtWidgets.QGraphicsView):
         self.update()
 
     def zoomROITo(self, p, zoom_level_delta):
-        pixmap = self.graphics_pixmap.pixmap()
         roi = self.current_scene_ROI
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_topleft = roi.topLeft()
@@ -244,12 +244,12 @@ class ImageView(QtWidgets.QGraphicsView):
         button = event.button()
         modifier = event.modifiers()
 
-        #pan
+        # pan
         if modifier == Qt.ControlModifier and button == Qt.LeftButton:
             self.start_drag = event.pos()
             self.panning = True
 
-        #initiate/show ROI selection
+        # initiate/show ROI selection
         if modifier == Qt.ShiftModifier and button == Qt.LeftButton:
             self.start_drag = event.pos()
             if self.rubberband is None:
@@ -261,21 +261,18 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def mouseMoveEvent(self, event):
         super(ImageView, self).mouseMoveEvent(event)
-        #update selection display
+        # update selection display
         if self.rubberband is not None:
             self.rubberband.setGeometry(
                 QtCore.QRect(self.start_drag, event.pos()).normalized())
 
         if self.panning:
-            scene_end_drag = self.mapToScene(event.pos())
             end_drag = event.pos()
             pan_vector = end_drag - self.start_drag
             scene2view = self.transform()
-            #skip shear
+            # skip shear
             sx = scene2view.m11()
             sy = scene2view.m22()
-            dx = scene2view.dx()
-            dy = scene2view.dy()
             scene_pan_x = pan_vector.x() / sx
             scene_pan_y = pan_vector.y() / sy
             scene_pan_vector = QtCore.QPointF(scene_pan_x, scene_pan_y)
@@ -283,8 +280,10 @@ class ImageView(QtWidgets.QGraphicsView):
             top_left = roi.topLeft()
             new_top_left = top_left - scene_pan_vector
             scene_rect = self.sceneRect()
-            new_top_left.setX(clamp(new_top_left.x(), scene_rect.left(), scene_rect.right()))
-            new_top_left.setY(clamp(new_top_left.y(), scene_rect.top(), scene_rect.bottom()))
+            new_top_left.setX(clamp(new_top_left.x(),
+                                    scene_rect.left(), scene_rect.right()))
+            new_top_left.setY(clamp(new_top_left.y(),
+                                    scene_rect.top(), scene_rect.bottom()))
             nroi = QtCore.QRectF(new_top_left, roi.size())
             self.fitInView(nroi, Qt.KeepAspectRatio)
             self.start_drag = end_drag
@@ -292,11 +291,11 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def mouseReleaseEvent(self, event):
         super(ImageView, self).mouseReleaseEvent(event)
-        #consume rubber band selection
+        # consume rubber band selection
         if self.rubberband is not None:
             self.rubberband.hide()
 
-            #set view to ROI
+            # set view to ROI
             rect = self.rubberband.geometry().normalized()
 
             if rect.width() > 5 and rect.height() > 5:
@@ -313,7 +312,7 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def wheelEvent(self, event):
         delta = qtcompat.wheel_delta(event)
-        #adjust zoom
+        # adjust zoom
         if abs(delta) > 0:
             scene_pos = self.mapToScene(event.pos())
             if delta >= 0:
@@ -327,7 +326,7 @@ class ImageView(QtWidgets.QGraphicsView):
         self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
         self.update()
 
-    #override arbitrary and unwanted margins:
+    # override arbitrary and unwanted margins:
     # https://bugreports.qt.io/browse/QTBUG-42331 - based on QT sources
     def fitInView(self, rect, flags=Qt.IgnoreAspectRatio):
         if self.scene() is None or not rect or rect.isNull():
@@ -351,7 +350,6 @@ class AppImageView(ImageView):
 
     def __init__(self, parent=None):
         ImageView.__init__(self, parent=parent)
-        scene = self.scene()
         self.main_widget = None
 
     def mousePressEvent(self, event):
@@ -407,7 +405,7 @@ class ImageViewerWindow(QtWidgets.QMainWindow):
         self.update_view()
         self.image_view.reset()
 
-    def hideEvent(self, event):
+    def hideEvent(self, _event):
         QtWidgets.QMainWindow.hide(self)
 
     def update_view(self):
@@ -419,17 +417,17 @@ class ImageViewerWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         key = event.key()
-        modifier = event.modifiers()
-        global main_loop_type
+        global main_loop_type  # pylint: disable=global-statement
         if key == Qt.Key_Escape:
             if main_loop_type == 'qt':
                 QtWidgets.QApplication.quit()
             elif main_loop_type == 'ipython':
                 self.hide()
-                #import IPython
-                #IPython.get_ipython().ask_exit()
+                # import IPython
+                # IPython.get_ipython().ask_exit()
 
 
+# pylint: disable=unused-argument
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
     sys.stderr.write('\r')
@@ -457,7 +455,7 @@ def main():
     window.show()
 
     if opts.interactive:
-        global main_loop_type
+        global main_loop_type  # pylint: disable=global-statement
         main_loop_type = 'ipython'
         from IPython import start_ipython
         start_ipython(user_ns=dict(globals(), **locals()), argv=[])
