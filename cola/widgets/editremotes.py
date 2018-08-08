@@ -105,7 +105,8 @@ class RemoteEditor(standard.Dialog):
         width = self._top_layout.width()
         self._top_layout.setSizes([width//4, width*3//4])
 
-        self._button_layout = qtutils.hbox(defs.margin, defs.spacing,
+        self._button_layout = qtutils.hbox(
+            defs.margin, defs.spacing,
             self.add_button,
             self.delete_button,
             self.refresh_button,
@@ -158,13 +159,14 @@ class RemoteEditor(standard.Dialog):
         context = self.context
         name = self.editor.name
         url = self.editor.url
-        name_changed = name and name != self.current_name
-        url_changed = url and url != self.current_url
+        old_url = self.current_url
+        old_name = self.current_name
+
+        name_changed = name and name != old_name
+        url_changed = url and url != old_url
         focus = self.focusWidget()
 
         name_ok = url_ok = False
-        old_url = self.current_url
-        old_name = self.current_name
 
         # Run the corresponding command
         if name_changed and url_changed:
@@ -234,7 +236,7 @@ class RemoteEditor(standard.Dialog):
         self.remotes.addItems(remotes)
         self.remote_list = remotes
 
-        for idx, r in enumerate(remotes):
+        for idx in range(len(remotes)):
             item = self.remotes.item(idx)
             item.setFlags(item.flags() | Qt.ItemIsEditable)
 
@@ -277,7 +279,7 @@ class RemoteEditor(standard.Dialog):
             item.setText(old_name)
             return
         context = self.context
-        ok, status, out, err = cmds.do(
+        ok, status, _, _ = cmds.do(
             cmds.RemoteRename, context, old_name, new_name)
         if ok and status == 0:
             self.remote_list[idx] = new_name
@@ -311,7 +313,6 @@ class RemoteEditor(standard.Dialog):
 
         self.info_thread.remote = name
         self.info_thread.start()
-
 
 
 def add_remote(context, parent, name='', url='', readonly_url=False):
@@ -349,7 +350,7 @@ class RemoteInfoThread(QtCore.QThread):
         if remote is None:
             return
         git = self.context.git
-        status, out, err = git.remote('show', remote)
+        _, out, err = git.remote('show', remote)
         # This call takes a long time and we may have selected a
         # different remote...
         if remote == self.remote:
@@ -447,7 +448,7 @@ class RemoteWidget(QtWidgets.QWidget):
             self.remote_url.setReadOnly(True)
             self.open_button.setEnabled(False)
 
-    def validate(self, dummy_text):
+    def validate(self, _text):
         name = self.name
         url = self.url
         self.valid.emit(bool(name) and bool(url))

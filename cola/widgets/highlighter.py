@@ -4,7 +4,6 @@ from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 
-
 have_pygments = True
 try:
     from pygments.styles import get_style_by_name
@@ -46,42 +45,40 @@ def highlight_document(edit, filename):
         else:
             parent_format = base_format
 
-        format = QtGui.QTextCharFormat(parent_format)
-        font = format.font()
+        fmt = QtGui.QTextCharFormat(parent_format)
+        font = fmt.font()
         if style.styles_token(token):
             tstyle = style.style_for_token(token)
             if tstyle['color']:
-                format.setForeground(QtGui.QColor('#' + tstyle['color']))
+                fmt.setForeground(QtGui.QColor('#' + tstyle['color']))
             if tstyle['bold']:
                 font.setWeight(QtGui.QFont.Bold)
             if tstyle['italic']:
                 font.setItalic(True)
             if tstyle['underline']:
-                format.setFontUnderline(True)
+                fmt.setFontUnderline(True)
             if tstyle['bgcolor']:
-                format.setBackground(QtGui.QColor('#' + tstyle['bgcolor']))
-            # No way to set this for a QTextCharFormat
-            # if tstyle['border']: format.
-        token_formats[token] = format
-        return format
+                fmt.setBackground(QtGui.QColor('#' + tstyle['bgcolor']))
+        token_formats[token] = fmt
+        return fmt
 
     text = doc.toPlainText()
 
     block_count = 0
     block = doc.firstBlock()
-    assert(isinstance(block, QtGui.QTextBlock))
+    assert isinstance(block, QtGui.QTextBlock)
     block_pos = 0
     block_len = block.length()
     block_formats = []
 
     for token, ttext in lex(text, lexer):
         format_len = len(ttext)
-        format = get_token_format(token)
+        fmt = get_token_format(token)
         while format_len > 0:
             format_range = QtGui.QTextLayout.FormatRange()
             format_range.start = block_pos
             format_range.length = min(format_len, block_len)
-            format_range.format = format
+            format_range.format = fmt
             block_formats.append(format_range)
             block_len -= format_range.length
             format_len -= format_range.length
