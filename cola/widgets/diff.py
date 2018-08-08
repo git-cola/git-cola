@@ -178,7 +178,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             scrollbar.setValue(scrollvalue)
         self.scrollvalue = None
 
-
     def set_loading_message(self):
         self.hint.set_value('+++ ' + N_('Loading...'))
         self.set_value('')
@@ -194,7 +193,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.set_value(diff)
 
         self.restore_scrollbar()
-
 
 
 class DiffLineNumbers(TextDecorator):
@@ -263,13 +261,11 @@ class DiffLineNumbers(TextDecorator):
         editor = self.editor
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
-        current_block_number = max(0, editor.textCursor().blockNumber())
         width = self.width()
         event_rect_bottom = event.rect().bottom()
 
         highlight = self._highlight
         highlight_text = self._highlight_text
-        window = self._window
         disabled = self._disabled
 
         fmt = self.formatter
@@ -489,7 +485,7 @@ class Viewer(QtWidgets.QWidget):
 
 def create_image(width, height):
     size = QtCore.QSize(width, height)
-    image =  QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
+    image = QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
     image.fill(Qt.transparent)
     return image
 
@@ -535,7 +531,7 @@ class Options(QtWidgets.QWidget):
             tooltip=N_('Diff Options'), icon=icons.configure())
         qtutils.hide_button_menu_indicator(options)
 
-        self.image_mode = mode = qtutils.combo([
+        self.image_mode = qtutils.combo([
             N_('Side by side'),
             N_('Diff'),
             N_('XOR'),
@@ -563,7 +559,8 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.show_line_numbers)
         menu.addAction(self.function_context)
 
-        layout = qtutils.hbox(defs.no_margin, defs.no_spacing,
+        layout = qtutils.hbox(
+            defs.no_margin, defs.no_spacing,
             self.image_mode, defs.button_spacing, self.zoom_mode, options)
         self.setLayout(layout)
 
@@ -709,7 +706,7 @@ class DiffEditor(DiffTextEdit):
                     cmds.run(cmds.Unstage, context, s.staged))
                 action.setShortcut(hotkeys.STAGE_SELECTION)
                 menu.addAction(icons.cola(), N_('Launch git-cola'),
-                    cmds.run(cmds.OpenRepo, context, path))
+                               cmds.run(cmds.OpenRepo, context, path))
             elif item not in model.staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
@@ -839,8 +836,8 @@ class DiffEditor(DiffTextEdit):
         context = self.context
         first_line_idx, last_line_idx = self.selected_lines()
         cmds.do(cmds.ApplyDiffSelection, context,
-            first_line_idx, last_line_idx,
-            self.has_selection(), reverse, apply_to_worktree)
+                first_line_idx, last_line_idx,
+                self.has_selection(), reverse, apply_to_worktree)
 
 
 class DiffWidget(QtWidgets.QWidget):
@@ -849,6 +846,7 @@ class DiffWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.context = context
+        self.oid = 'HEAD'
 
         author_font = QtGui.QFont(self.font())
         author_font.setPointSize(int(author_font.pointSize() * 1.1))
@@ -920,9 +918,9 @@ class DiffWidget(QtWidgets.QWidget):
         author = commit.author or ''
 
         template_args = {
-                'author': author,
-                'email': email,
-                'summary': summary
+            'author': author,
+            'email': email,
+            'summary': summary
         }
 
         author_text = ("""%(author)s &lt;"""

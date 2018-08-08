@@ -314,7 +314,7 @@ max-args=12
 ignored-argument-names=_.*
 
 # Maximum number of locals for function / method body
-max-locals=24
+max-locals=32
 
 # Maximum number of return / yield for function / method body
 max-returns=6
