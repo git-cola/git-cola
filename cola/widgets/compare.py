@@ -38,6 +38,10 @@ class CompareBranchesDialog(standard.Dialog):
         self.BRANCH_POINT = N_('*** Branch Point ***')
         self.SANDBOX = N_('*** Sandbox ***')
         self.LOCAL = N_('Local')
+        self.diff_arg = ()
+        self.use_sandbox = False
+        self.start = None
+        self.end = None
 
         self.setWindowTitle(N_('Branch Diff Viewer'))
 
@@ -72,19 +76,19 @@ class CompareBranchesDialog(standard.Dialog):
         self.diff_files.headerItem().setText(0, N_('File Differences'))
 
         self.top_grid_layout = qtutils.grid(
-                defs.no_margin, defs.spacing,
-                (self.left_combo, 0, 0, 1, 1),
-                (self.left_list, 1, 0, 1, 1),
-                (self.right_combo, 0, 1, 1, 1),
-                (self.right_list, 1, 1, 1, 1))
+            defs.no_margin, defs.spacing,
+            (self.left_combo, 0, 0, 1, 1),
+            (self.left_list, 1, 0, 1, 1),
+            (self.right_combo, 0, 1, 1, 1),
+            (self.right_list, 1, 1, 1, 1))
         self.top_widget.setLayout(self.top_grid_layout)
 
         self.bottom_grid_layout = qtutils.grid(
-                defs.no_margin, defs.button_spacing,
-                (self.diff_files, 0, 0, 1, 4),
-                (self.button_spacer, 1, 1, 1, 1),
-                (self.button_close, 1, 0, 1, 1),
-                (self.button_compare, 1, 3, 1, 1))
+            defs.no_margin, defs.button_spacing,
+            (self.diff_files, 0, 0, 1, 4),
+            (self.button_spacer, 1, 1, 1, 1),
+            (self.button_close, 1, 0, 1, 1),
+            (self.button_compare, 1, 3, 1, 1))
         self.bottom_widget.setLayout(self.bottom_grid_layout)
 
         self.splitter = qtutils.splitter(Qt.Vertical,
@@ -99,9 +103,9 @@ class CompareBranchesDialog(standard.Dialog):
 
         self.diff_files.itemDoubleClicked.connect(self.compare)
         self.left_combo.currentIndexChanged.connect(
-                lambda x: self.update_combo_boxes(left=True))
+            lambda x: self.update_combo_boxes(left=True))
         self.right_combo.currentIndexChanged.connect(
-                lambda x: self.update_combo_boxes(left=False))
+            lambda x: self.update_combo_boxes(left=False))
 
         self.left_list.itemSelectionChanged.connect(self.update_diff_files)
         self.right_list.itemSelectionChanged.connect(self.update_diff_files)
@@ -135,7 +139,7 @@ class CompareBranchesDialog(standard.Dialog):
             right_item = None
         return (left_item, right_item)
 
-    def update_diff_files(self, *rest):
+    def update_diff_files(self, *dummy_rest):
         """Updates the list of files whenever the selection changes"""
         # Left and Right refer to the comparison pair (l,r)
         left_item, right_item = self.selection()
@@ -193,10 +197,10 @@ class CompareBranchesDialog(standard.Dialog):
                 if remote_branch in remote_branches:
                     return gitcmds.merge_base(context, branch, remote_branch)
 
-                elif 'origin/master' in remote_branches:
+                if 'origin/master' in remote_branches:
                     return gitcmds.merge_base(context, branch, 'origin/master')
-                else:
-                    return 'HEAD'
+
+                return 'HEAD'
         else:
             # Compare against the remote branch
             return branch
@@ -230,7 +234,7 @@ class CompareBranchesDialog(standard.Dialog):
             widget.setCurrentItem(item)
             item.setSelected(True)
 
-    def compare(self, *args):
+    def compare(self, *dummy_args):
         """Shows the diff for a specific file
         """
         tree_widget = self.diff_files
