@@ -49,9 +49,9 @@ def goto_grep(context, line):
     """Called when Search -> Grep's right-click 'goto' action."""
     parsed_line = parse_grep_line(line)
     if parsed_line:
-        filename, line_number, contents = parsed_line
+        filename, line_number, _ = parsed_line
         cmds.do(cmds.Edit, context, [filename],
-            line_number=line_number, background_editor=True)
+                line_number=line_number, background_editor=True)
 
 
 class GrepThread(QtCore.QThread):
@@ -95,10 +95,10 @@ class Grep(Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.edit_action = qtutils.add_action(
-                self, N_('Edit'), self.edit, hotkeys.EDIT)
+            self, N_('Edit'), self.edit, hotkeys.EDIT)
 
         self.refresh_action = qtutils.add_action(
-                self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
+            self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
 
         self.input_label = QtWidgets.QLabel('git grep')
         self.input_label.setFont(qtutils.diff_font(context))
@@ -269,12 +269,12 @@ class Grep(Dialog):
         """Update the file preview window"""
         parsed_line = parse_grep_line(self.result_txt.selected_line())
         if parsed_line:
-            filename, line_number, content = parsed_line
+            filename, line_number, _ = parsed_line
             self.preview_txt.preview(filename, line_number)
 
     def edit(self):
         """Launch an editor on the currently selected line"""
-        goto_grep(self.context, self.result_txt.selected_line()),
+        goto_grep(self.context, self.result_txt.selected_line())
 
     def export_state(self):
         """Export persistent settings"""
@@ -287,7 +287,7 @@ class Grep(Dialog):
         result = super(Grep, self).apply_state(state)
         try:
             self.splitter.setSizes(state['sizes'])
-        except:
+        except (AttributeError, KeyError, ValueError, TypeError):
             result = False
         return result
 
@@ -350,7 +350,7 @@ class PreviewTextView(VimTextBrowser):
     def clear(self):
         self.filename = ''
         self.content = ''
-        super(VimTextBrowser, self).clear()
+        super(PreviewTextView, self).clear()
 
     def show_preview(self, task):
         """Show the results of the asynchronous file read"""
