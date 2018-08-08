@@ -1,6 +1,5 @@
 """Provides widgets related to branches"""
 from __future__ import division, absolute_import, unicode_literals
-import re
 from functools import partial
 
 from qtpy import QtWidgets
@@ -8,7 +7,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..compat import odict
-from ..compat import unichr
+from ..compat import unichr as uchr
 from ..i18n import N_
 from ..interaction import Interaction
 from ..widgets import defs
@@ -103,7 +102,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent)
 
-        self.context =  context
+        self.context = context
         self.main_model = model = context.model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
@@ -249,7 +248,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         """Build the "Set Upstream Branch" sub-menu"""
         context = self.context
         model = self.main_model
-        current_branch = model.currentbranch
         selected_item = self.selected_item()
         selected_branch = self.tree_helper.get_full_name(selected_item, SLASH)
         remote = None
@@ -291,8 +289,9 @@ class BranchesTreeWidget(standard.TreeWidget):
         current_remote = remote
 
         for branch in branches:
-            current_remote = add_branch_to_menu(menu, selected_branch,
-                branch, current_remote, upstream, self.set_upstream)
+            current_remote = add_branch_to_menu(
+                menu, selected_branch, branch, current_remote,
+                upstream, self.set_upstream)
 
         # This list could be longer so we tuck it away in a sub-menu.
         # Selecting a branch from the non-default remote is less common.
@@ -300,8 +299,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             menu.addSeparator()
             sub_menu = menu.addMenu(N_('Other branches'))
             for branch in other_branches:
-                current_remote = add_branch_to_menu(sub_menu, selected_branch,
-                    branch, current_remote, upstream, self.set_upstream)
+                current_remote = add_branch_to_menu(
+                    sub_menu, selected_branch, branch,
+                    current_remote, upstream, self.set_upstream)
 
     def set_upstream(self, branch, remote_branch):
         """Configure the upstream for a branch"""
@@ -346,10 +346,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                 status['behind'] = len(log[1].splitlines())
 
                 if status['ahead'] > 0:
-                    status_str += '%s%s' % (unichr(0x2191), status['ahead'])
+                    status_str += '%s%s' % (uchr(0x2191), status['ahead'])
 
                 if status['behind'] > 0:
-                    status_str += '  %s%s' % (unichr(0x2193), status['behind'])
+                    status_str += '  %s%s' % (uchr(0x2193), status['behind'])
 
                 if status_str:
                     item.setText(0, '%s\t%s' % (item.text(0), status_str))
@@ -422,8 +422,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             if remote:
                 remote, branch_name = gitcmds.parse_remote_branch(branch)
                 if remote and branch_name:
-                    self.git_action_async('delete_remote',
-                        [remote, branch_name], update_remotes=True)
+                    self.git_action_async(
+                        'delete_remote', [remote, branch_name],
+                        update_remotes=True)
             else:
                 self.git_action_async('delete_local', [branch])
 
@@ -441,7 +442,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def checkout_new_branch_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
         if branch != self.current_branch:
-            remote, new_branch = gitcmds.parse_remote_branch(branch)
+            _, new_branch = gitcmds.parse_remote_branch(branch)
             self.git_action_async('checkout', ['-b', new_branch, branch])
 
 
@@ -557,7 +558,7 @@ class BranchesTreeHelper(object):
 
     def load_state(self, item, state):
         """Load expanded items from a dict"""
-        if len(state.keys()) > 0:
+        if state.keys():
             item.setExpanded(True)
 
         for i in range(item.childCount()):
@@ -641,7 +642,8 @@ class BranchesFilterWidget(QtWidgets.QWidget):
             self._apply_bold(text, True)
 
     def _apply_bold(self, text, value):
-        children = self.tree.findItems(text, Qt.MatchContains | Qt.MatchRecursive)
+        match = Qt.MatchContains | Qt.MatchRecursive
+        children = self.tree.findItems(text, match)
 
         for child in children:
             if child.childCount() == 0:

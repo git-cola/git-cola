@@ -6,7 +6,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from .. import core
-from .. import gitcfg
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -68,6 +67,7 @@ class GitCommandWidget(standard.Dialog):
         self.exitstatus = 0
         self.out = ''
         self.err = ''
+        self.command = []
 
         # Create the text browser
         self.output_text = QtWidgets.QTextBrowser(self)
