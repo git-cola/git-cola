@@ -57,7 +57,7 @@ class ExpandableGroupBox(QtWidgets.QGroupBox):
             self.set_expanded(not self.is_expanded)
         QtWidgets.QGroupBox.mouseReleaseEvent(self, event)
 
-    def paintEvent(self, event):
+    def paintEvent(self, _event):
         painter = QtWidgets.QStylePainter(self)
         option = QtWidgets.QStyleOptionGroupBox()
         self.initStyleOption(option)
