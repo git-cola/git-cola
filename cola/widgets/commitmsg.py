@@ -1,5 +1,4 @@
 from __future__ import division, absolute_import, unicode_literals
-import re
 from functools import partial
 
 from qtpy import QtCore
@@ -113,27 +112,27 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         # Amend checkbox
         self.amend_action = self.actions_menu.addAction(
-                N_('Amend Last Commit'))
+            N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
         self.amend_action.setShortcut(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
         # Bypass hooks
         self.bypass_commit_hooks_action = self.actions_menu.addAction(
-                N_('Bypass Commit Hooks'))
+            N_('Bypass Commit Hooks'))
         self.bypass_commit_hooks_action.setCheckable(True)
         self.bypass_commit_hooks_action.setChecked(False)
 
         # Sign commits
         self.sign_action = self.actions_menu.addAction(
-                N_('Create Signed Commit'))
+            N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
         signcommits = cfg.get('cola.signcommits', default=False)
         self.sign_action.setChecked(signcommits)
 
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(
-                N_('Check Spelling'))
+            N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
         spellcheck = prefs.spellcheck(context)
         self.check_spelling_action.setChecked(spellcheck)
@@ -141,18 +140,18 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         # Line wrapping
         self.autowrap_action = self.actions_menu.addAction(
-                N_('Auto-Wrap Lines'))
+            N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
         self.autowrap_action.setChecked(prefs.linebreak(context))
 
         # Commit message
         self.actions_menu.addSeparator()
         self.load_commitmsg_menu = self.actions_menu.addMenu(
-                N_('Load Previous Commit Message'))
+            N_('Load Previous Commit Message'))
         self.load_commitmsg_menu.aboutToShow.connect(self.build_commitmsg_menu)
 
         self.fixup_commit_menu = self.actions_menu.addMenu(
-                N_('Fixup Previous Commit'))
+            N_('Fixup Previous Commit'))
         self.fixup_commit_menu.aboutToShow.connect(self.build_fixup_menu)
 
         self.toplayout = qtutils.hbox(defs.no_margin, defs.spacing,
@@ -194,8 +193,8 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         self.summary.cursor_changed.connect(self.cursor_changed.emit)
         self.description.cursor_changed.connect(
-                # description starts at line 2
-                lambda row, col: self.cursor_changed.emit(row + 2, col))
+            # description starts at line 2
+            lambda row, col: self.cursor_changed.emit(row + 2, col))
 
         self.summary.textChanged.connect(self.commit_summary_changed)
         self.description.textChanged.connect(self._commit_message_changed)
@@ -277,12 +276,11 @@ class CommitMessageEditor(QtWidgets.QWidget):
             description = self.formatted_description()
         if summary and description:
             return summary + '\n\n' + description
-        elif summary:
+        if summary:
             return summary
-        elif description:
+        if description:
             return '\n\n' + description
-        else:
-            return ''
+        return ''
 
     def formatted_description(self):
         text = get(self.description)
@@ -311,7 +309,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
             self.description.set_value(description)
         self._commit_message_changed()
 
-    def _commit_message_changed(self, value=None):
+    def _commit_message_changed(self, _value=None):
         """Update the model when values change"""
         message = self.commit_message()
         self.model.set_commitmsg(message, notify=False)
@@ -438,9 +436,9 @@ class CommitMessageEditor(QtWidgets.QWidget):
 
         msg = self.commit_message(raw=False)
 
-        # we either need to have something staged, or be merging
-        # (if there was a merge conflict resolved, there may not be anything to stage,
-        #  but we still need to commit to complete the merge)
+        # We either need to have something staged, or be merging.
+        # If there was a merge conflict resolved, there may not be anything
+        # to stage, but we still need to commit to complete the merge.
         if not (self.model.staged or self.model.is_merging):
             error_msg = N_(
                 'No changes to commit.\n\n'
@@ -461,7 +459,7 @@ class CommitMessageEditor(QtWidgets.QWidget):
         # Warn that amending published commits is generally bad
         amend = get(self.amend_action)
         if (amend and self.model.is_commit_published() and
-            not Interaction.confirm(
+                not Interaction.confirm(
                     N_('Rewrite Published Commit?'),
                     N_('This commit has already been published.\n'
                        'This operation will rewrite published history.\n'
@@ -613,10 +611,10 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(
-                self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE)
+            self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE)
 
     def build_menu(self):
-        menu, spell_menu = self.context_menu()
+        menu, _ = self.context_menu()
         add_menu_actions(menu, self.menu_actions)
         return menu
 
