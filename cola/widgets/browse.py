@@ -40,7 +40,7 @@ def worktree_browser(context, parent=None, update=True,
 
 def save_path(context, path, model):
     """Choose an output filename based on the selected path"""
-    filename = qtutils.save_as(model.filename)
+    filename = qtutils.save_as(path)
     if filename:
         model.filename = filename
         cmds.do(SaveBlob, context, model)
@@ -144,49 +144,48 @@ class RepoTreeView(standard.TreeView):
         self.index_about_to_change.connect(self.sync_selection, type=queued)
 
         self.action_history = qtutils.add_action_with_status_tip(
-                self, N_('View History...'),
-                N_('View history for selected paths'),
-                self.view_history, hotkeys.HISTORY)
+            self, N_('View History...'),
+            N_('View history for selected paths'),
+            self.view_history, hotkeys.HISTORY)
 
         self.action_stage = qtutils.add_action_with_status_tip(
-                self, cmds.StageOrUnstage.name(),
-                N_('Stage/unstage selected paths for commit'),
-                cmds.run(cmds.StageOrUnstage, context),
-                hotkeys.STAGE_SELECTION)
+            self, cmds.StageOrUnstage.name(),
+            N_('Stage/unstage selected paths for commit'),
+            cmds.run(cmds.StageOrUnstage, context),
+            hotkeys.STAGE_SELECTION)
 
         self.action_untrack = qtutils.add_action_with_status_tip(
-                self, N_('Untrack Selected'),
-                N_('Stop tracking paths'),
-                self.untrack_selected)
+            self, N_('Untrack Selected'), N_('Stop tracking paths'),
+            self.untrack_selected)
 
         self.action_rename = qtutils.add_action_with_status_tip(
-                self, N_('Rename'), N_('Rename selected paths'),
-                self.rename_selected)
+            self, N_('Rename'), N_('Rename selected paths'),
+            self.rename_selected)
 
         self.action_difftool = qtutils.add_action_with_status_tip(
-                self, cmds.LaunchDifftool.name(),
-                N_('Launch git-difftool on the current path'),
-                cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
+            self, cmds.LaunchDifftool.name(),
+            N_('Launch git-difftool on the current path'),
+            cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
 
         self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
-                self, N_('Diff Against Predecessor...'),
-                N_('Launch git-difftool against previous versions'),
-                self.diff_predecessor, hotkeys.DIFF_SECONDARY)
+            self, N_('Diff Against Predecessor...'),
+            N_('Launch git-difftool against previous versions'),
+            self.diff_predecessor, hotkeys.DIFF_SECONDARY)
 
         self.action_revert_unstaged = qtutils.add_action_with_status_tip(
-                self, cmds.RevertUnstagedEdits.name(),
-                N_('Revert unstaged changes to selected paths'),
-                cmds.run(cmds.RevertUnstagedEdits, context), hotkeys.REVERT)
+            self, cmds.RevertUnstagedEdits.name(),
+            N_('Revert unstaged changes to selected paths'),
+            cmds.run(cmds.RevertUnstagedEdits, context), hotkeys.REVERT)
 
         self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
-                self, cmds.RevertUncommittedEdits.name(),
-                N_('Revert uncommitted changes to selected paths'),
-                cmds.run(cmds.RevertUncommittedEdits, context), hotkeys.UNDO)
+            self, cmds.RevertUncommittedEdits.name(),
+            N_('Revert uncommitted changes to selected paths'),
+            cmds.run(cmds.RevertUncommittedEdits, context), hotkeys.UNDO)
 
         self.action_editor = qtutils.add_action_with_status_tip(
-                self, cmds.LaunchEditor.name(),
-                N_('Edit selected paths'),
-                cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT)
+            self, cmds.LaunchEditor.name(),
+            N_('Edit selected paths'),
+            cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT)
 
         self.action_refresh = common.refresh_action(context, self)
 
@@ -208,8 +207,6 @@ class RepoTreeView(standard.TreeView):
         # Remember open folders so that we can restore them when refreshing
         item = self.name_item_from_index(index)
         self.saved_open_folders.add(item.path)
-        context = self.context
-        context = self.context
         self.size_columns()
 
         # update information about a directory as it is expanded
@@ -548,7 +545,7 @@ class SaveBlob(cmds.ContextCommand):
         model = self.browse_model
         ref = '%s:%s' % (model.ref, model.relpath)
         with core.xopen(model.filename, 'wb') as fp:
-            status, out, err = git.show(ref, _stdout=fp)
+            status, _, _ = git.show(ref, _stdout=fp)
 
         msg = (N_('Saved "%(filename)s" from "%(ref)s" to "%(destination)s"') %
                dict(filename=model.relpath,
@@ -557,8 +554,8 @@ class SaveBlob(cmds.ContextCommand):
         Interaction.log_status(status, msg, '')
 
         Interaction.information(
-                N_('File Saved'),
-                N_('File saved to "%s"') % model.filename)
+            N_('File Saved'),
+            N_('File saved to "%s"') % model.filename)
 
 
 class BrowseBranch(standard.Dialog):
