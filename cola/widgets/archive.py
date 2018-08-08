@@ -77,8 +77,8 @@ class ExpandableGroupBox(QtWidgets.QGroupBox):
 
 
 def save_archive(context):
-    oid = context.git.rev_parse('HEAD')[git.STDOUT]
-    show_save_dialog(oid, parent=qtutils.active_window())
+    oid = context.git.rev_parse('HEAD')[STDOUT]
+    show_save_dialog(context, oid, parent=qtutils.active_window())
 
 
 def show_save_dialog(context, oid, parent=None):
@@ -167,7 +167,7 @@ class Archive(Dialog):
         # connections
         self.filetext.textChanged.connect(self.filetext_changed)
         self.prefix_text.textChanged.connect(self.prefix_text_changed)
-        self.format_combo.currentIndexChanged[int].connect(self.update_format)
+        self.format_combo.currentIndexChanged.connect(self.update_format)
         self.prefix_group.expanded.connect(self.prefix_group_expanded)
         self.accepted.connect(self.archive_saved)
 

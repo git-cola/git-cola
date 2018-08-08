@@ -147,7 +147,9 @@ class ViewerMixin(object):
         self.with_oid(lambda oid: createtag.create_tag(context, ref=oid))
 
     def create_tarball(self):
-        self.with_oid(lambda oid: archive.show_save_dialog(oid, parent=self))
+        context = self.context
+        self.with_oid(
+            lambda oid: archive.show_save_dialog(context, oid, parent=self))
 
     def show_diff(self):
         context = self.context
