@@ -8,7 +8,6 @@ from qtpy import QtWidgets
 from .. import cmds
 from .. import qtutils
 from ..i18n import N_
-from ..models import main
 from ..widgets import defs
 from ..widgets import remote
 from ..widgets import stash
@@ -75,8 +74,7 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.push_button, partial(remote.push, context))
         connect_button(self.pull_button, partial(remote.pull, context))
         connect_button(self.stash_button, partial(stash.view, context))
-        connect_button(self.stage_button,
-            cmds.run(cmds.StageSelected, context))
+        connect_button(self.stage_button, cmds.run(cmds.StageSelected, context))
         connect_button(self.unstage_button, self.unstage)
 
     def unstage(self):
