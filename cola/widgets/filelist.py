@@ -55,8 +55,8 @@ class FileWidget(TreeWidget):
         git = self.context.git
         commit = commits[0]
         oid = commit.oid
-        status, out, err = git.show(oid, z=True, numstat=True,
-                                    oneline=True, no_renames=True)
+        status, out, _ = git.show(oid, z=True, numstat=True,
+                                  oneline=True, no_renames=True)
         if status == 0:
             paths = [f for f in out.rstrip('\0').split('\0') if f]
             if paths:
