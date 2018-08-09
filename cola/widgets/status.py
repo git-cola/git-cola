@@ -183,7 +183,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.copy_relpath_action = qtutils.add_action(
             self, N_('Copy Relative Path to Clipboard'),
-            copy_relpath, hotkeys.CUT)
+            partial(copy_relpath, context), hotkeys.CUT)
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_action = qtutils.add_action(
@@ -1031,9 +1031,9 @@ def copy_path(context, absolute=True):
     qtutils.copy_path(filename, absolute=absolute)
 
 
-def copy_relpath():
+def copy_relpath(context):
     """Copy a selected relative path to the clipboard"""
-    copy_path(absolute=False)
+    copy_path(context, absolute=False)
 
 
 def copy_basename(context):
