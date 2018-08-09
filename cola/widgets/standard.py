@@ -177,15 +177,14 @@ class MainWindowMixin(WidgetMixin):
         else:
             from_base64 = QtCore.QByteArray.fromBase64
             result = self.restoreState(
-                    from_base64(core.encode(windowstate)),
-                    self.widget_version) and result
+                from_base64(core.encode(windowstate)),
+                self.widget_version) and result
 
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
         self.update_dockwidget_tooltips()
 
         return result
-
 
     def set_lock_layout(self, lock_layout):
         self.lock_layout = lock_layout
@@ -861,9 +860,9 @@ def confirm(title, text, informative_text, ok_text,
     cancel_text = cancel_text or N_('Cancel')
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
 
-    mbox = MessageBox(parent=qtutils.active_window(),
-        title=title, text=text, info=informative_text,
-        ok_text=ok_text, ok_icon=icon,
+    mbox = MessageBox(
+        parent=qtutils.active_window(), title=title, text=text,
+        info=informative_text, ok_text=ok_text, ok_icon=icon,
         cancel_text=cancel_text, cancel_icon=cancel_icon,
         logo=logo, default=default)
 
@@ -875,8 +874,9 @@ def critical(title, message=None, details=None):
     if message is None:
         message = title
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxCritical)
-    mbox = MessageBox(parent=qtutils.active_window(),
-        title=title, text=message, details=details, logo=logo)
+    mbox = MessageBox(
+        parent=qtutils.active_window(), title=title, text=message,
+        details=details, logo=logo)
     mbox.run()
 
 
@@ -891,9 +891,9 @@ def information(title, message=None, details=None, informative_text=None):
     """Show information with the provided title and message."""
     if message is None:
         message = title
-    mbox = MessageBox(parent=qtutils.active_window(), title=title,
-        text=message, info=informative_text, details=details,
-        logo=icons.cola())
+    mbox = MessageBox(
+        parent=qtutils.active_window(), title=title, text=message,
+        info=informative_text, details=details, logo=icons.cola())
     mbox.run()
 
 
@@ -902,8 +902,9 @@ def question(title, text, default=True):
     Passing "default=False" will make "No" the default choice."""
     parent = qtutils.active_window()
     logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
-    msgbox = MessageBox(parent=parent, title=title, text=text,
-        default=default, logo=logo, ok_text=N_('Yes'), cancel_text=N_('No'))
+    msgbox = MessageBox(
+        parent=parent, title=title, text=text, default=default, logo=logo,
+        ok_text=N_('Yes'), cancel_text=N_('No'))
     return msgbox.run() == msgbox.Accepted
 
 
