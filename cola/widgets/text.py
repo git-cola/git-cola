@@ -346,7 +346,7 @@ class TextEdit(QtWidgets.QTextEdit):
         QtWidgets.QTextEdit.__init__(self, parent)
         self.ext = TextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
-        self.expandtab = False
+        self.expandtab_enabled = False
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -372,7 +372,7 @@ class TextEdit(QtWidgets.QTextEdit):
         self.ext.set_linebreak(brk)
 
     def set_expandtab(self, value):
-        self.expandtab = value
+        self.expandtab_enabled = value
 
     def setFont(self, font):
         super(TextEdit, self).setFont(font)
@@ -390,7 +390,7 @@ class TextEdit(QtWidgets.QTextEdit):
         super(TextEdit, self).wheelEvent(event)
 
     def should_expandtab(self, event):
-        return event.key() == Qt.Key_Tab and self.expandtab
+        return event.key() == Qt.Key_Tab and self.expandtab_enabled
 
     def expandtab(self):
         tabwidth = max(self.ext.tabwidth(), 1)
