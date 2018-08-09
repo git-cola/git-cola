@@ -78,7 +78,7 @@ TREE_LAYOUT = {
 
 def configure(toolbar, parent=None):
     """Launches the Toolbar configure dialog"""
-    view = ToolbarView(toolbar, qtutils.active_window())
+    view = ToolbarView(toolbar, parent if parent else qtutils.active_window())
     view.show()
     return view
 
@@ -270,41 +270,42 @@ class ToolbarView(standard.Dialog):
         self.remove_item = qtutils.create_button(N_('Remove Element'))
         checked = toolbar.show_icons()
         checkbox_text = N_('Show icon? (if available)')
-        self.show_icon = qtutils.checkbox(checkbox_text, checkbox_text, checked)
+        self.show_icon = qtutils.checkbox(
+            checkbox_text, checkbox_text, checked)
         self.apply_button = qtutils.ok_button(N_('Apply'))
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
         self.right_actions = qtutils.hbox(
-                defs.no_margin, defs.spacing,
-                self.add_separator,
-                self.remove_item)
+            defs.no_margin, defs.spacing,
+            self.add_separator,
+            self.remove_item)
         self.name_layout = qtutils.hbox(
-                defs.no_margin, defs.spacing,
-                self.text_toolbar_name,
-                self.toolbar_name)
+            defs.no_margin, defs.spacing,
+            self.text_toolbar_name,
+            self.toolbar_name)
         self.left_layout = qtutils.vbox(
-                defs.no_margin, defs.spacing,
-                self.left_list)
+            defs.no_margin, defs.spacing,
+            self.left_list)
         self.right_layout = qtutils.vbox(
-                defs.no_margin, defs.spacing,
-                self.right_list,
-                self.right_actions)
+            defs.no_margin, defs.spacing,
+            self.right_list,
+            self.right_actions)
         self.top_layout = qtutils.hbox(
-                defs.no_margin, defs.spacing,
-                self.left_layout,
-                self.right_layout)
+            defs.no_margin, defs.spacing,
+            self.left_layout,
+            self.right_layout)
         self.actions_layout = qtutils.hbox(
-                defs.no_margin, defs.spacing,
-                self.show_icon,
-                qtutils.STRETCH,
-                self.close_button,
-                self.apply_button)
+            defs.no_margin, defs.spacing,
+            self.show_icon,
+            qtutils.STRETCH,
+            self.close_button,
+            self.apply_button)
         self.main_layout = qtutils.vbox(
-                defs.margin, defs.spacing,
-                self.name_layout,
-                self.top_layout,
-                self.actions_layout)
+            defs.margin, defs.spacing,
+            self.name_layout,
+            self.top_layout,
+            self.actions_layout)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_separator, self.add_separator_action)
@@ -324,21 +325,24 @@ class ToolbarView(standard.Dialog):
                 self.add_separator_action()
             else:
                 command = self.toolbar.commands[data['child']]
-                self.right_list.add_item(command['title'], data, command['icon'])
+                title = command['title']
+                icon = command['icon']
+                self.right_list.add_item(title, data, icon)
 
     def load_left_items(self):
-        def current_children(actions):
-            result = []
-            for action in actions:
-                data = action.data()
-                if data['child'] != self.toolbar.SEPARATOR:
-                    result.append(data['child'])
 
-            return result
+        # def current_children(actions):
+        #     result = []
+        #     for action in actions:
+        #         data = action.data()
+        #         if data['child'] != self.toolbar.SEPARATOR:
+        #             result.append(data['child'])
+
+        #     return result
 
         for parent in self.toolbar.tree_layout:
             top = self.left_list.insert_top(parent)
-            current_items = current_children(self.toolbar.actions())
+            # current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
                 command = self.toolbar.commands[item]
                 child = self.left_list.create_child(parent, item,
