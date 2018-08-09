@@ -1,4 +1,5 @@
 """Text widgets"""
+# pylint: disable=unexpected-keyword-arg
 from __future__ import division, absolute_import, unicode_literals
 import math
 
@@ -201,12 +202,12 @@ class BaseTextEditExtension(QtCore.QObject):
         cursor = self.widget.textCursor()
         offset = min(cursor.position(), len(contents)-1)
         while (offset >= 1 and
-                contents[offset-1] and
-                contents[offset-1] != '\n'):
+               contents[offset-1] and
+               contents[offset-1] != '\n'):
             offset -= 1
         data = contents[offset:]
         if '\n' in data:
-            line, rest = data.split('\n', 1)
+            line, _ = data.split('\n', 1)
         else:
             line = data
         return line
@@ -230,7 +231,7 @@ class BaseTextEditExtension(QtCore.QObject):
         if event.button() == Qt.RightButton:
             if not widget.textCursor().hasSelection():
                 cursor = widget.cursorForPosition(event.pos())
-                widget.setTextCursor(widget.cursorForPosition(event.pos()))
+                widget.setTextCursor(cursor)
 
     # For extension by sub-classes
 
@@ -312,7 +313,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         if event.modifiers() & Qt.ControlModifier:
             event.ignore()
             return
-        return super(PlainTextEdit, self).wheelEvent(event)
+        super(PlainTextEdit, self).wheelEvent(event)
 
     def setFont(self, font):
         super(PlainTextEdit, self).setFont(font)
@@ -334,7 +335,6 @@ class TextEditExtension(BaseTextEditExtension):
 
     def set_textwidth(self, width):
         self.widget.setLineWrapColumnOrWidth(width)
-
 
 
 class TextEdit(QtWidgets.QTextEdit):
@@ -387,7 +387,7 @@ class TextEdit(QtWidgets.QTextEdit):
         if event.modifiers() & Qt.ControlModifier:
             event.ignore()
             return
-        return super(TextEdit, self).wheelEvent(event)
+        super(TextEdit, self).wheelEvent(event)
 
     def should_expandtab(self, event):
         return event.key() == Qt.Key_Tab and self.expandtab
@@ -452,8 +452,7 @@ def get_value_hinted(widget):
     hint = get(widget.hint)
     if text == hint:
         return ''
-    else:
-        return text
+    return text
 
 
 class HintWidget(QtCore.QObject):
@@ -507,7 +506,7 @@ class HintWidget(QtCore.QObject):
         """ % env
 
     def init(self):
-        """Defer initialization to avoid circular dependencies during construction"""
+        """Defered initialization"""
         if self.modern:
             self.widget().setPlaceholderText(self.value())
         else:
@@ -567,7 +566,7 @@ class HintWidget(QtCore.QObject):
             style = self._default_style
         self._widget.setStyleSheet(style)
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, _obj, event):
         """Enable/disable hint-mode when focus changes"""
         etype = event.type()
         if etype == QtCore.QEvent.FocusIn:
@@ -762,8 +761,8 @@ class VimTextEdit(MonoTextEdit):
     Base = MonoTextEdit
     Mixin = VimMixin
 
-    def __init__(self, context, parent=None):
-        MonoTextEdit.__init__(self, context, parent=None, readonly=True)
+    def __init__(self, context, parent=None, readonly=True):
+        MonoTextEdit.__init__(self, context, parent=None, readonly=readonly)
         self._mixin = self.Mixin(self)
 
     def move(self, direction, select=False, n=1):
@@ -816,8 +815,8 @@ def text_dialog(context, text, title):
 class VimTextBrowser(VimTextEdit):
     """Text viewer with line number annotations"""
 
-    def __init__(self, context, parent=None, readonly=False):
-        VimTextEdit.__init__(self, context, parent=parent)
+    def __init__(self, context, parent=None, readonly=True):
+        VimTextEdit.__init__(self, context, parent=parent, readonly=readonly)
         self.numbers = LineNumbers(self)
 
     def resizeEvent(self, event):
@@ -890,13 +889,11 @@ class LineNumbers(TextDecorator):
 
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
-        current_block_number = max(0, self.editor.textCursor().blockNumber())
         width = self.width()
         event_rect_bottom = event.rect().bottom()
 
         highlight = palette.color(QPalette.Highlight)
         highlighted_text = palette.color(QPalette.HighlightedText)
-        window = palette.color(QPalette.Window)
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
 
         while block.isValid():
@@ -906,7 +903,7 @@ class LineNumbers(TextDecorator):
                 break
 
             rect = block_geom.translated(content_offset).toRect()
-            block_number = block.blockNumber();
+            block_number = block.blockNumber()
             if block_number == self.highlight_line:
                 painter.fillRect(rect.x(), rect.y(),
                                  width, rect.height(), highlight)
