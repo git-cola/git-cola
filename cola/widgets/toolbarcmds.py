@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 from .. import cmds
 from .. import guicmds
-from ..widgets import archive
+# from ..widgets import archive
 from ..widgets import browse
 from ..widgets import compare
 from ..widgets import createbranch
