@@ -1,22 +1,18 @@
 """Covers interfaces used by the browser (git cola browse)"""
 from __future__ import absolute_import, division, unicode_literals
 
-import mock
+from test import helper
 
 from cola import core
 from cola import gitcmds
-from cola import git
-from cola import gitcfg
 from cola.models.main import MainModel
-
-from test import helper
 
 
 class ClassicModelTestCase(helper.GitRepositoryTestCase):
     """Tests interfaces used by the browser (git cola browse)"""
 
-    def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self, commit=False)
+    def setUp(self, commit=False):
+        helper.GitRepositoryTestCase.setUp(self, commit=commit)
         self.model = MainModel(self.context, cwd=core.getcwd())
 
     def test_stage_paths_untracked(self):

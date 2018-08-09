@@ -47,11 +47,11 @@ class StartupDialog(standard.Dialog):
             self.runtask = context.runtask = qtutils.RunTask(parent=self)
 
         self.new_button = qtutils.create_button(
-                text=N_('New...'), icon=icons.new())
+            text=N_('New...'), icon=icons.new())
         self.open_button = qtutils.create_button(
-                text=N_('Open...'), icon=icons.folder())
+            text=N_('Open...'), icon=icons.folder())
         self.clone_button = qtutils.create_button(
-                text=N_('Clone...'), icon=icons.cola())
+            text=N_('Clone...'), icon=icons.cola())
         self.close_button = qtutils.close_button()
 
         if settings is None:
@@ -66,7 +66,6 @@ class StartupDialog(standard.Dialog):
         item = QtGui.QStandardItem(N_('Select manually...'))
         item.setEditable(False)
         self.bookmarks_model.appendRow(item)
-
 
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
         bookmarks = [i['path'] for i in settings.bookmarks]
@@ -171,7 +170,7 @@ class StartupDialog(standard.Dialog):
             self.accept()
 
     def open_bookmark(self, index):
-        if(index.row() == 0):
+        if index.row() == 0:
             self.open_repo()
         else:
             self.repodir = self.bookmarks_model.data(index)
@@ -180,6 +179,6 @@ class StartupDialog(standard.Dialog):
 
     def get_selected_bookmark(self):
         selected = self.bookmarks.selectedIndexes()
-        if(len(selected) > 0 and selected[0].row() != 0):
+        if selected and selected[0].row() != 0:
             return self.bookmarks_model.data(selected[0])
         return None

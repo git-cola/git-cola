@@ -25,7 +25,7 @@ def select_commits(context, title, revs, summaries, multiselect=True):
 
 def select_commits_and_output(context, title, revs, summaries,
                               multiselect=True):
-    """Use the SelectCommitsAndOutput to select commits from a list and output path."""
+    """Select commits from a list and output path"""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
     dialog = SelectCommitsAndOutput(context, model, parent, title,
@@ -34,6 +34,7 @@ def select_commits_and_output(context, title, revs, summaries,
 
 
 class Model(object):
+
     def __init__(self, revs, summaries):
         self.revisions = revs
         self.summaries = summaries
@@ -42,7 +43,7 @@ class Model(object):
 class SelectCommits(Dialog):
 
     def __init__(self, context, model,
-                 parent=None, title=None, multiselect=True, syntax=True):
+                 parent=None, title=None, multiselect=True):
         Dialog.__init__(self, parent)
         self.context = context
         self.model = model
@@ -128,7 +129,7 @@ class SelectCommits(Dialog):
         commit_diff = gitcmds.commit_diff(context, oid)
         self.commit_text.setText(commit_diff)
 
-    def commit_oid_double_clicked(self, item):
+    def commit_oid_double_clicked(self, _item):
         oid = self.selected_commit()
         if oid:
             self.accept()
@@ -136,14 +137,14 @@ class SelectCommits(Dialog):
 
 class SelectCommitsAndOutput(SelectCommits):
 
-    def __init__(self, context, model, parent=None,
-                 title=None, multiselect=True, syntax=True):
+    def __init__(self, context, model,
+                 parent=None, title=None, multiselect=True):
         SelectCommits.__init__(
-            self, context, model, parent, title, multiselect, syntax)
+            self, context, model, parent, title, multiselect)
 
         self.output_dir = 'output'
-        self.select_output = qtutils.create_button(tooltip=N_('Select output dir'),
-                                                   icon=folder())
+        self.select_output = qtutils.create_button(
+            tooltip=N_('Select output dir'), icon=folder())
         self.output_text = QtWidgets.QLineEdit()
         self.output_text.setReadOnly(True)
         self.output_text.setText(self.output_dir)
