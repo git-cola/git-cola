@@ -67,11 +67,12 @@ class StashView(standard.Dialog):
 
         self.button_close = qtutils.close_button()
 
-        self.keep_index = qtutils.checkbox(text=N_('Keep Index'), checked=True,
+        self.keep_index = qtutils.checkbox(
+            text=N_('Keep Index'), checked=True,
             tooltip=N_('Stash unstaged changes only, keeping staged changes'))
 
-        self.stash_index = qtutils.checkbox(text=N_('Stash Index'),
-            tooltip=N_('Stash staged changes only'))
+        self.stash_index = qtutils.checkbox(
+            text=N_('Stash Index'), tooltip=N_('Stash staged changes only'))
 
         # Arrange layouts
         self.splitter = qtutils.splitter(Qt.Horizontal,
@@ -188,7 +189,7 @@ class StashView(standard.Dialog):
         context = self.context
         index = get(self.keep_index)
         cmds.do(stash.ApplyStash, context, selection, index, pop)
-        QtCore.QTimer.singleShot(1, lambda: self.accept())
+        QtCore.QTimer.singleShot(1, self.accept)
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -216,7 +217,7 @@ class StashView(standard.Dialog):
             cmds.do(stash.StashIndex, context, stash_name)
         else:
             cmds.do(stash.SaveStash, context, stash_name, keep_index)
-        QtCore.QTimer.singleShot(1, lambda: self.accept())
+        QtCore.QTimer.singleShot(1, self.accept)
 
     def stash_drop(self):
         """Drops the currently selected stash
@@ -253,6 +254,6 @@ class StashView(standard.Dialog):
         self.stash_index.setChecked(stash_index)
         try:
             self.splitter.setSizes(state['sizes'])
-        except:
+        except (KeyError, ValueError, AttributeError):
             pass
         return result
