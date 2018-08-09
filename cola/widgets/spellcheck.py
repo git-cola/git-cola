@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from __future__ import division, absolute_import, unicode_literals
 import re
-import sys
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QEvent
@@ -11,7 +10,6 @@ from qtpy.QtGui import QSyntaxHighlighter
 from qtpy.QtGui import QTextCharFormat
 from qtpy.QtGui import QTextCursor
 from qtpy.QtWidgets import QAction
-from qtpy.QtWidgets import QApplication
 
 from .. import qtutils
 from .. import spellcheck
@@ -64,14 +62,14 @@ class SpellCheckTextEdit(HintedTextEdit):
                     spell_menu.addAction(action)
                 # Only add the spelling suggests to the menu if there are
                 # suggestions.
-                if len(spell_menu.actions()) > 0:
+                if spell_menu.actions():
                     popup_menu.addSeparator()
                     popup_menu.addMenu(spell_menu)
 
         return popup_menu, spell_menu
 
     def contextMenuEvent(self, event):
-        popup_menu, _spell_menu = self.context_menu()
+        popup_menu, _ = self.context_menu()
         popup_menu.exec_(self.mapToGlobal(event.pos()))
 
     def correct(self, word):
