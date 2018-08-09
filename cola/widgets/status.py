@@ -9,7 +9,6 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 
 from ..i18n import N_
-from ..models import main
 from ..models import prefs
 from ..models import selection
 from ..widgets import gitignore
@@ -198,8 +197,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_basename_action.setIcon(icons.copy())
 
         self.copy_customize_action = qtutils.add_action(
-                self, N_('Customize...'),
-                partial(customize_copy_actions, context, self))
+            self, N_('Customize...'),
+            partial(customize_copy_actions, context, self))
         self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
@@ -320,7 +319,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             reselect = selection_info[3]
             try:
                 item = old[idx]
-            except:
+            except IndexError:
                 return
             if item in new:
                 reselect(item, current=True)
@@ -601,36 +600,31 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             fmt = entry.get('format', '')
             if name and fmt:
                 action = copy_menu.addAction(
-                    name, lambda fmt=fmt: copy_format(context, fmt))
+                    name, partial(copy_format, context, fmt))
                 action.setIcon(copy_icon)
                 action.setEnabled(enabled)
 
         copy_menu.addSeparator()
         copy_menu.addAction(self.copy_customize_action)
 
-
     def _create_header_context_menu(self, menu, idx):
         context = self.context
         if idx == self.idx_staged:
             menu.addAction(icons.remove(), N_('Unstage All'),
                            cmds.run(cmds.UnstageAll, context))
-            return menu
         elif idx == self.idx_unmerged:
             action = menu.addAction(icons.add(), cmds.StageUnmerged.name(),
                                     cmds.run(cmds.StageUnmerged, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
-            return menu
         elif idx == self.idx_modified:
             action = menu.addAction(icons.add(), cmds.StageModified.name(),
                                     cmds.run(cmds.StageModified, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
-            return menu
-
         elif idx == self.idx_untracked:
             action = menu.addAction(icons.add(), cmds.StageUntracked.name(),
                                     cmds.run(cmds.StageUntracked, context))
             action.setShortcut(hotkeys.STAGE_SELECTION)
-            return menu
+        return menu
 
     def _create_staged_context_menu(self, menu, s):
         if s.staged[0] in self.m.submodules:
@@ -672,7 +666,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(self.view_history_action)
         return menu
 
-    def _create_unmerged_context_menu(self, menu, s):
+    def _create_unmerged_context_menu(self, menu, _s):
         context = self.context
         menu.addAction(self.launch_difftool_action)
 
@@ -742,7 +736,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         context = self.context
         path = core.abspath(s.modified[0])
         menu.addAction(icons.cola(), N_('Launch git-cola'),
-            cmds.run(cmds.OpenRepo, context, path))
+                       cmds.run(cmds.OpenRepo, context, path))
 
         if self.m.stageable():
             menu.addSeparator()
@@ -818,7 +812,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         s = self.single_selection()
         offset = 0
         for content, sel in zip(c, s):
-            if len(content) == 0:
+            if not content:
                 continue
             if sel is not None:
                 return offset + content.index(sel)
@@ -834,7 +828,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             (c.untracked, self.idx_untracked),
         ]
         for content, toplevel_idx in to_try:
-            if len(content) == 0:
+            if not content:
                 continue
             if idx < len(content):
                 parent = self.topLevelItem(toplevel_idx)
@@ -898,7 +892,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         item = self.topLevelItem(idx)
         return qtutils.tree_selection_items(item)
 
-    def double_clicked(self, item, idx):
+    def double_clicked(self, _item, _idx):
         """Called when an item is double-clicked in the repo status tree."""
         cmds.do(cmds.StageOrUnstage, self.context)
 
@@ -949,7 +943,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             item = self.unstaged_items()[0]
         else:
             item = None  # this shouldn't happen
-        assert(item is not None)
+        assert item is not None
 
         path = item.path
         deleted = item.deleted
@@ -1044,7 +1038,7 @@ def copy_relpath():
 
 def copy_basename(context):
     filename = os.path.basename(context.selection.filename())
-    basename, ext = os.path.splitext(filename)
+    basename, _ = os.path.splitext(filename)
     qtutils.copy_path(basename, absolute=False)
 
 
@@ -1099,18 +1093,18 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
-        text = self.text
-        text.changed.connect(self.apply_filter)
-        text.cleared.connect(self.apply_filter)
-        text.enter.connect(self.apply_filter)
-        text.editingFinished.connect(self.apply_filter)
+        widget = self.text
+        widget.changed.connect(self.apply_filter)
+        widget.cleared.connect(self.apply_filter)
+        widget.enter.connect(self.apply_filter)
+        widget.editingFinished.connect(self.apply_filter)
 
     def apply_filter(self):
-        text = get(self.text)
-        if text == self._filter:
+        value = get(self.text)
+        if value == self._filter:
             return
-        self._filter = text
-        paths = utils.shell_split(text)
+        self._filter = value
+        paths = utils.shell_split(value)
         self.main_model.update_path_filter(paths)
 
 
@@ -1194,7 +1188,7 @@ class CustomizeCopyActions(standard.Dialog):
 
     def apply_state(self, state):
         result = super(CustomizeCopyActions, self).apply_state(state)
-        standard.apply_header_columns(self.table, state) and result
+        standard.apply_header_columns(self.table, state)
         return result
 
     def add(self):
