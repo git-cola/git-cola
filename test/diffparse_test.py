@@ -1,69 +1,68 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
+
+from test import helper
 
 from cola import core
 from cola import diffparse
-
-from test import helper
 
 
 class ParseDiffTestCase(unittest.TestCase):
 
     def test_diff(self):
         fixture_path = helper.fixture('diff.txt')
-        parser = diffparse.DiffParser('cola/diffparse.py',
-                                      core.read(fixture_path))
+        parser = diffparse.DiffParser(
+            'cola/diffparse.py', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(len(hunks), 3)
         self.assertEqual(hunks[0].first_line_idx, 0)
         self.assertEqual(len(hunks[0].lines), 23)
         self.assertEqual(
-                hunks[0].lines[0],
-                '@@ -6,10 +6,21 @@ from cola import gitcmds\n')
+            hunks[0].lines[0],
+            '@@ -6,10 +6,21 @@ from cola import gitcmds\n')
         self.assertEqual(
-                hunks[0].lines[1],
-                ' from cola import gitcfg\n')
+            hunks[0].lines[1],
+            ' from cola import gitcfg\n')
         self.assertEqual(hunks[0].lines[2], ' \n')
         self.assertEqual(hunks[0].lines[3], ' \n')
         self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):\n')
         self.assertEqual(
-                hunks[0].lines[-1],
-                r"         self._header_start_re = re.compile('^@@ -(\d+)"
-                r" \+(\d+),(\d+) @@.*')"
-                '\n')
+            hunks[0].lines[-1],
+            r"         self._header_start_re = re.compile('^@@ -(\d+)"
+            r" \+(\d+),(\d+) @@.*')"
+            '\n')
 
         self.assertEqual(hunks[1].first_line_idx, 23)
         self.assertEqual(len(hunks[1].lines), 18)
         self.assertEqual(
-                hunks[1].lines[0],
-                '@@ -29,13 +40,11 @@ class DiffParser(object):\n')
+            hunks[1].lines[0],
+            '@@ -29,13 +40,11 @@ class DiffParser(object):\n')
         self.assertEqual(
-                hunks[1].lines[1],
-                '         self.diff_sel = []\n')
+            hunks[1].lines[1],
+            '         self.diff_sel = []\n')
         self.assertEqual(
-                hunks[1].lines[2],
-                '         self.selected = []\n')
+            hunks[1].lines[2],
+            '         self.selected = []\n')
         self.assertEqual(
-                hunks[1].lines[3],
-                '         self.filename = filename\n')
+            hunks[1].lines[3],
+            '         self.filename = filename\n')
         self.assertEqual(
-                hunks[1].lines[4],
-                '+        self.diff_source = diff_source or DiffSource()\n')
+            hunks[1].lines[4],
+            '+        self.diff_source = diff_source or DiffSource()\n')
         self.assertEqual(
-                hunks[1].lines[-1],
-                '         self.header = header\n')
+            hunks[1].lines[-1],
+            '         self.header = header\n')
 
         self.assertEqual(hunks[2].first_line_idx, 41)
         self.assertEqual(len(hunks[2].lines), 16)
         self.assertEqual(
-                hunks[2].lines[0],
-                '@@ -43,11 +52,10 @@ class DiffParser(object):\n')
+            hunks[2].lines[0],
+            '@@ -43,11 +52,10 @@ class DiffParser(object):\n')
         self.assertEqual(
-                hunks[2].lines[-1],
-                '         """Writes a new diff corresponding to the user\'s'
-                ' selection."""\n')
+            hunks[2].lines[-1],
+            '         """Writes a new diff corresponding to the user\'s'
+            ' selection."""\n')
 
     def test_diff_at_start(self):
         fixture_path = helper.fixture('diff-start.txt')
@@ -99,8 +98,8 @@ class ParseDiffTestCase(unittest.TestCase):
 
         self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@\n')
         self.assertEqual(
-                hunks[-1].lines[-1],
-                "+module.exports = require('./build/Release/rijndael');\n")
+            hunks[-1].lines[-1],
+            "+module.exports = require('./build/Release/rijndael');\n")
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 39)
         self.assertEqual(hunks[0].new_start, 1)
@@ -267,6 +266,7 @@ class DiffLinesTestCase(unittest.TestCase):
         self.assertEqual(lines[3][1], parser.EMPTY)
         self.assertEqual(lines[3][2], 3)
 
+
 class FormatDiffLinesTestCase(unittest.TestCase):
 
     def test_format_basic(self):
@@ -330,17 +330,17 @@ class FormatDiffLinesTestCase(unittest.TestCase):
 class ParseRangeStrTestCase(unittest.TestCase):
 
     def test_parse_range_str(self):
-        start, count = diffparse._parse_range_str('1,2')
+        start, count = diffparse.parse_range_str('1,2')
         self.assertEqual(start, 1)
         self.assertEqual(count, 2)
 
     def test_parse_range_str_single_line(self):
-        start, count = diffparse._parse_range_str('2')
+        start, count = diffparse.parse_range_str('2')
         self.assertEqual(start, 2)
         self.assertEqual(count, 1)
 
     def test_parse_range_str_empty(self):
-        start, count = diffparse._parse_range_str('0,0')
+        start, count = diffparse.parse_range_str('0,0')
         self.assertEqual(start, 0)
         self.assertEqual(count, 0)
 

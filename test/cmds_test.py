@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from __future__ import absolute_import, division, unicode_literals
 import unittest
 try:
@@ -7,9 +6,7 @@ try:
 except ImportError:
     import mock
 
-
 from cola import cmds
-from cola import app
 from cola.compat import uchr
 
 

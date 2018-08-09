@@ -26,7 +26,7 @@ class _DiffHunk(object):
         return self.first_line_idx + len(self.lines) - 1
 
 
-def _parse_range_str(range_str):
+def parse_range_str(range_str):
     if ',' in range_str:
         begin, end = range_str.split(',', 1)
         return int(begin), int(end)
@@ -51,8 +51,8 @@ def _parse_diff(diff_text):
     for line_idx, line in enumerate(diff_text.split('\n')):
         match = _HUNK_HEADER_RE.match(line)
         if match:
-            old_start, old_count = _parse_range_str(match.group(1))
-            new_start, new_count = _parse_range_str(match.group(2))
+            old_start, old_count = parse_range_str(match.group(1))
+            new_start, new_count = parse_range_str(match.group(2))
             heading = match.group(3)
             hunks.append(_DiffHunk(old_start, old_count,
                                    new_start, new_count,
@@ -90,7 +90,7 @@ class Counter(object):
 
     def parse(self, range_str):
         """Parse a diff range and setup internal state"""
-        start, count = _parse_range_str(range_str)
+        start, count = parse_range_str(range_str)
         self.value = start
         self.max_value = max(start + count, self.max_value)
 

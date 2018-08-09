@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
-
 try:
     from unittest.mock import MagicMock
 except ImportError:
@@ -24,11 +22,11 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.group_branches(branches, '/')
-        self.assertEqual({'top_1':
-                              {'child_1': {'child_1_2': {}, 'child_1_1': {}},
-                               'child_2': {'child_2_1': {'child_2_1_2': {},
-                                                         'child_2_1_1': {}}}}},
-                         result)
+        inner_child = {'child_2_1_2': {}, 'child_2_1_1': {}}
+        self.assertEqual(
+            {'top_1': {
+                'child_1': {'child_1_2': {}, 'child_1_1': {}},
+                'child_2': {'child_2_1': inner_child}}}, result)
 
     def test_should_create_a_valid_top_item_on_create_top_level_item(self):
         """Test the create_top_level_item function."""
@@ -116,6 +114,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
         return {'top': top, 'child_1': child_1, 'sub_child_2_1': sub_child_2_1,
                 'sub_child_2_2': sub_child_2_2}
+
 
 if __name__ == '__main__':
     unittest.main()
