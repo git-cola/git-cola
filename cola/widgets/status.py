@@ -54,9 +54,8 @@ class StatusWidget(QtWidgets.QWidget):
                                         self.filter_widget, self.tree)
         self.setLayout(self.main_layout)
 
-        self.toggle_action = qtutils.add_action(self, tooltip,
-                                                self.toggle_filter,
-                                                hotkeys.FILTER)
+        self.toggle_action = qtutils.add_action(
+            self, tooltip, self.toggle_filter, hotkeys.FILTER)
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
@@ -95,6 +94,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
     about_to_update = Signal()
     updated = Signal()
+    diff_text_changed = Signal()
 
     # Item categories
     idx_header = -1
@@ -137,6 +137,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
+        self.was_visible = True
         self.expanded_items = set()
 
         self.image_formats = qtutils.ImageFormats()
@@ -237,16 +238,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         about_to_update = self._about_to_update
         self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self.diff_text_changed.connect(
+            self.make_current_item_visible, type=Qt.QueuedConnection)
 
         self.m = context.model
         self.m.add_observer(self.m.message_about_to_update,
                             self.about_to_update.emit)
         self.m.add_observer(self.m.message_updated, self.updated.emit)
+        self.m.add_observer(self.m.message_diff_text_changed,
+                            self.diff_text_changed.emit)
 
         self.itemSelectionChanged.connect(self.show_selection)
         self.itemDoubleClicked.connect(self.double_clicked)
         self.itemCollapsed.connect(lambda x: self.update_column_widths())
         self.itemExpanded.connect(lambda x: self.update_column_widths())
+
+    def make_current_item_visible(self):
+        item = self.currentItem()
+        if item:
+            self.scroll_to_item(item)
 
     def add_toplevel_item(self, txt, icon, hide=False):
         context = self.context
