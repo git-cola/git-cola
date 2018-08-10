@@ -1,6 +1,5 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
-from functools import partial
 
 from . import cmds
 from . import core
@@ -12,7 +11,6 @@ from .i18n import N_
 from .interaction import Interaction
 from .widgets import completion
 from .widgets import editremotes
-from .widgets import standard
 from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output

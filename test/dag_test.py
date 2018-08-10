@@ -2,11 +2,10 @@
 """Tests DAG functionality"""
 from __future__ import absolute_import, division, unicode_literals
 
-from test import helper
-
 import mock
-
 from cola.models import dag
+
+from . import helper
 
 
 LOG_LINES = """
@@ -22,8 +21,8 @@ f4fb8fd5baaa55d9b41faca79be289bb4407281e^Ae3f5a2d0248de6197d6e0e63c901810b8a9af2
 
 class DAGTestCase(helper.GitRepositoryTestCase):
 
-    def setUp(self, commit=False):
-        helper.GitRepositoryTestCase.setUp(self, commit=commit)
+    def setUp(self):
+        helper.GitRepositoryTestCase.setUp(self)
         self.params = dag.DAG('HEAD', 1000)
         self.reader = dag.RepoReader(self.context, self.params)
 

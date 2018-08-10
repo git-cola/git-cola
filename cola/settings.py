@@ -50,7 +50,7 @@ def write_json(values, path):
 
 
 class Settings(object):
-    _file = resources.config_home('settings')
+    config_path = resources.config_home('settings')
     bookmarks = property(lambda self: mklist(self.values['bookmarks']))
     gui_state = property(lambda self: mkdict(self.values['gui_state']))
     recent = property(lambda self: mklist(self.values['recent']))
@@ -150,7 +150,7 @@ class Settings(object):
         return self.rename_entry(self.recent, path, name, new_name)
 
     def path(self):
-        return self._file
+        return self.config_path
 
     def save(self):
         write_json(self.values, self.path())

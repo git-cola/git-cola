@@ -597,7 +597,7 @@ class DiffEditor(DiffTextEdit):
     down = Signal()
     options_changed = Signal()
     updated = Signal()
-    diff_text_changed = Signal(object)
+    diff_text_updated = Signal(object)
 
     def __init__(self, context, options, parent):
         DiffTextEdit.__init__(self, context, parent, numbers=True)
@@ -623,9 +623,9 @@ class DiffEditor(DiffTextEdit):
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
 
-        diff_text_changed = model.message_diff_text_changed
-        model.add_observer(diff_text_changed, self.diff_text_changed.emit)
-        self.diff_text_changed.connect(self.set_diff, type=Qt.QueuedConnection)
+        diff_text_updated = model.message_diff_text_updated
+        model.add_observer(diff_text_updated, self.diff_text_updated.emit)
+        self.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
         selection_model.add_observer(
             selection_model.message_selection_changed, self.updated.emit)

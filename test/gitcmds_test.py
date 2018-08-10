@@ -1,19 +1,14 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import unittest
 
 from cola import gitcmds
-from cola import gitcfg
 
-from test import helper
+from . import helper
 
 
 class GitCmdsTestCase(helper.GitRepositoryTestCase):
     """Tests the cola.gitcmds module."""
-    def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self)
-        self.config = self.context.cfg
 
     def test_currentbranch(self):
         """Test current_branch()."""
@@ -22,6 +17,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
     def test_branch_list_local(self):
         """Test branch_list(remote=False)."""
         context = self.context
+        self.commit_files()
         expect = ['master']
         actual = gitcmds.branch_list(context, remote=False)
         self.assertEqual(expect, actual)
@@ -33,13 +29,14 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         actual = gitcmds.branch_list(context, remote=True)
         self.assertEqual(expect, actual)
 
-        self.git('remote', 'add', 'origin', '.')
-        self.git('fetch', 'origin')
+        self.commit_files()
+        self.run_git('remote', 'add', 'origin', '.')
+        self.run_git('fetch', 'origin')
         expect = ['origin/master']
         actual = gitcmds.branch_list(context, remote=True)
         self.assertEqual(expect, actual)
 
-        self.git('remote', 'rm', 'origin')
+        self.run_git('remote', 'rm', 'origin')
         expect = []
         actual = gitcmds.branch_list(context, remote=True)
         self.assertEqual(expect, actual)
@@ -48,26 +45,26 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test getting the configured upstream remote"""
         context = self.context
         self.assertEqual(gitcmds.upstream_remote(context), None)
-        self.git('config', 'branch.master.remote', 'test')
-        self.config.reset()
+        self.run_git('config', 'branch.master.remote', 'test')
+        self.cfg.reset()
         self.assertEqual(gitcmds.upstream_remote(context), 'test')
 
     def test_tracked_branch(self):
         """Test tracked_branch()."""
         context = self.context
         self.assertEqual(gitcmds.tracked_branch(context), None)
-        self.git('config', 'branch.master.remote', 'test')
-        self.git('config', 'branch.master.merge', 'refs/heads/master')
-        self.config.reset()
+        self.run_git('config', 'branch.master.remote', 'test')
+        self.run_git('config', 'branch.master.merge', 'refs/heads/master')
+        self.cfg.reset()
         self.assertEqual(gitcmds.tracked_branch(context), 'test/master')
 
     def test_tracked_branch_other(self):
         """Test tracked_branch('other')."""
         context = self.context
         self.assertEqual(gitcmds.tracked_branch(context, 'other'), None)
-        self.git('config', 'branch.other.remote', 'test')
-        self.git('config', 'branch.other.merge', 'refs/heads/other/branch')
-        self.config.reset()
+        self.run_git('config', 'branch.other.remote', 'test')
+        self.run_git('config', 'branch.other.merge', 'refs/heads/other/branch')
+        self.cfg.reset()
         self.assertEqual(gitcmds.tracked_branch(context, 'other'),
                          'test/other/branch')
 
@@ -89,9 +86,10 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
     def test_tag_list(self):
         """Test tag_list()."""
         context = self.context
-        self.git('tag', 'a')
-        self.git('tag', 'b')
-        self.git('tag', 'c')
+        self.commit_files()
+        self.run_git('tag', 'a')
+        self.run_git('tag', 'b')
+        self.run_git('tag', 'c')
         self.assertEqual(gitcmds.tag_list(context), ['c', 'b', 'a'])
 
     def test_merge_message_path(self):
@@ -110,14 +108,15 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(gitcmds.merge_message_path(context), None)
 
     def test_all_refs(self):
-        self.git('branch', 'a')
-        self.git('branch', 'b')
-        self.git('branch', 'c')
-        self.git('tag', 'd')
-        self.git('tag', 'e')
-        self.git('tag', 'f')
-        self.git('remote', 'add', 'origin', '.')
-        self.git('fetch', 'origin')
+        self.commit_files()
+        self.run_git('branch', 'a')
+        self.run_git('branch', 'b')
+        self.run_git('branch', 'c')
+        self.run_git('tag', 'd')
+        self.run_git('tag', 'e')
+        self.run_git('tag', 'f')
+        self.run_git('remote', 'add', 'origin', '.')
+        self.run_git('fetch', 'origin')
         refs = gitcmds.all_refs(self.context)
         self.assertEqual(refs,
                          ['a', 'b', 'c', 'master',
@@ -125,14 +124,15 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
                           'f', 'e', 'd'])
 
     def test_all_refs_split(self):
-        self.git('branch', 'a')
-        self.git('branch', 'b')
-        self.git('branch', 'c')
-        self.git('tag', 'd')
-        self.git('tag', 'e')
-        self.git('tag', 'f')
-        self.git('remote', 'add', 'origin', '.')
-        self.git('fetch', 'origin')
+        self.commit_files()
+        self.run_git('branch', 'a')
+        self.run_git('branch', 'b')
+        self.run_git('branch', 'c')
+        self.run_git('tag', 'd')
+        self.run_git('tag', 'e')
+        self.run_git('tag', 'f')
+        self.run_git('remote', 'add', 'origin', '.')
+        self.run_git('fetch', 'origin')
         local, remote, tags = gitcmds.all_refs(self.context, split=True)
         self.assertEqual(local, ['a', 'b', 'c', 'master'])
         self.assertEqual(remote,

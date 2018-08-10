@@ -26,6 +26,7 @@ class MainModel(Observable):
     message_about_to_update = 'about_to_update'
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
+    message_diff_text_updated = 'diff_text_updated'
     message_diff_type_changed = 'diff_type_changed'
     message_filename_changed = 'filename_changed'
     message_images_changed = 'images_changed'
@@ -161,8 +162,11 @@ class MainModel(Observable):
 
     def set_diff_text(self, txt):
         """Update the text displayed in the diff editor"""
+        changed = txt != self.diff_text
         self.diff_text = txt
-        self.notify_observers(self.message_diff_text_changed, txt)
+        self.notify_observers(self.message_diff_text_updated, txt)
+        if changed:
+            self.notify_observers(self.message_diff_text_changed)
 
     def set_diff_type(self, diff_type):  # text, image
         """Set the diff type to either text or image"""
@@ -378,8 +382,7 @@ class MainModel(Observable):
 
     def untrack_paths(self, paths):
         context = self.context
-        head = self.head
-        status, out, err = gitcmds.untrack_paths(context, paths, head=head)
+        status, out, err = gitcmds.untrack_paths(context, paths)
         self.update_file_status()
         return status, out, err
 

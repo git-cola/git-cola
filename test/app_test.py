@@ -3,9 +3,9 @@ from __future__ import absolute_import, division, unicode_literals
 import argparse
 import unittest
 
-from test.helper import run_unittest
-
 from cola import app
+
+from .helper import run_unittest
 
 
 class AppTestCase(unittest.TestCase):
