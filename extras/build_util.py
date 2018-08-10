@@ -1,7 +1,7 @@
 def encode(string):
     try:
         result = string.encode('utf-8')
-    except:
+    except (ValueError, UnicodeEncodeError):
         result = string
     return result
 
