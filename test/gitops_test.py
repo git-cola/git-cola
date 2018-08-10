@@ -1,38 +1,28 @@
 #!/usr/bin/env python
 """Tests basic git operations: commit, log, config"""
-
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
 
-from cola import core
-from cola.models.main import MainModel
-
-from test import helper
+from . import helper
 
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
-
-    def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self, commit=False)
 
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
         self.write_file('A', 'A')
         self.write_file('B', 'B')
-        self.git('add', 'A', 'B')
+        self.run_git('add', 'A', 'B')
 
-        model = MainModel(self.context, cwd=core.getcwd())
-        model.git.commit(m='commit test')
-        log = self.git('log', '--pretty=oneline')
+        self.git.commit(m='initial commit')
+        log = self.run_git('log', '--pretty=oneline')
 
         self.assertEqual(len(log.splitlines()), 1)
 
     def test_git_config(self):
         """Test cola.git.config()"""
-        self.git('config', 'section.key', 'value')
-        model = MainModel(self.context, cwd=core.getcwd())
-        value = model.git.config('section.key', get=True)
+        self.run_git('config', 'section.key', 'value')
+        value = self.git.config('section.key', get=True)
         self.assertEqual(value, (0, 'value', ''))
 
 

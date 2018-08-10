@@ -5,14 +5,14 @@ import os
 
 from cola.settings import Settings
 
-from test import helper
+from . import helper
 
 
 class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
 
     def setUp(self):
-        Settings._file = self._file = helper.tmp_path('settings')
+        Settings.config_path = self._file = helper.tmp_path('settings')
         self.settings = self.new_settings()
 
     def tearDown(self):

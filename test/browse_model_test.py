@@ -1,19 +1,15 @@
 """Covers interfaces used by the browser (git cola browse)"""
 from __future__ import absolute_import, division, unicode_literals
 
-from test import helper
-
 from cola import core
 from cola import gitcmds
 from cola.models.main import MainModel
 
+from . import helper
+
 
 class ClassicModelTestCase(helper.GitRepositoryTestCase):
     """Tests interfaces used by the browser (git cola browse)"""
-
-    def setUp(self, commit=False):
-        helper.GitRepositoryTestCase.setUp(self, commit=commit)
-        self.model = MainModel(self.context, cwd=core.getcwd())
 
     def test_stage_paths_untracked(self):
         """Test stage_paths() with an untracked file."""
@@ -30,7 +26,7 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
         """Test a simple usage of unstage_paths()."""
         self.commit_files()
         self.write_file('A', 'change')
-        self.git('add', 'A')
+        self.run_git('add', 'A')
         gitcmds.unstage_paths(self.context, ['A'])
         self.model.update_status()
 
@@ -47,10 +43,10 @@ class ClassicModelTestCase(helper.GitRepositoryTestCase):
 
     def test_unstage_paths_subdir(self):
         """Test unstage_paths() in a subdirectory."""
-        self.git('commit', '-m', 'initial commit')
+        self.run_git('commit', '-m', 'initial commit')
         core.makedirs('foo/bar')
         self.touch('foo/bar/baz')
-        self.git('add', 'foo/bar/baz')
+        self.run_git('add', 'foo/bar/baz')
         gitcmds.unstage_paths(self.context, ['foo'])
         self.model.update_status()
 
