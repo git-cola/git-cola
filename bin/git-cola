@@ -47,6 +47,8 @@ def setup_environment():
     else:
         # Install tree
         sys.path.insert(1, install_lib)
+
+
 setup_environment()
 
 
