@@ -131,6 +131,7 @@ Thanks
 * Nick Todd
 * Nicolas Dietrich
 * Nikos Roussos
+* Noel Grandin
 * ochristi
 * Oliver Haessler
 * OmegaPhil (Omega Weapon)
