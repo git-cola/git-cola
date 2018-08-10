@@ -6,7 +6,6 @@ import re
 from io import StringIO
 
 from . import core
-from . import gitcfg
 from . import utils
 from . import version
 from .git import STDOUT
@@ -26,9 +25,9 @@ class InvalidRepositoryError(Exception):
 
 def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
-    add = context.git.add
+    fn = context.git.add
     return utils.slice_fn(
-        items, lambda paths: add('--', force=True, verbose=True, u=u, *paths))
+        items, lambda paths: fn('--', force=True, verbose=True, u=u, *paths))
 
 
 def apply_diff(context, filename):
@@ -127,8 +126,7 @@ def diff(context, args):
 def _parse_diff_filenames(out):
     if out:
         return out[:-1].split('\0')
-    else:
-        return []
+    return []
 
 
 def tracked_files(context, *args):
@@ -137,8 +135,7 @@ def tracked_files(context, *args):
     out = git.ls_files('--', *args, z=True)[STDOUT]
     if out:
         return sorted(out[:-1].split('\0'))
-    else:
-        return []
+    return []
 
 
 def all_files(context, *args):
@@ -174,7 +171,7 @@ def current_branch(context):
         # OSError means we can't use the stat cache
         key = 0
 
-    status, data, err = git.rev_parse('HEAD', symbolic_full_name=True)
+    status, data, _ = git.rev_parse('HEAD', symbolic_full_name=True)
     if status != 0:
         # git init -- read .git/HEAD.  We could do this unconditionally...
         data = _read_git_head(context, head)
@@ -220,8 +217,7 @@ def branch_list(context, remote=False):
     """
     if remote:
         return for_each_ref_basename(context, 'refs/remotes')
-    else:
-        return for_each_ref_basename(context, 'refs/heads')
+    return for_each_ref_basename(context, 'refs/heads')
 
 
 def _version_sort(context):
@@ -236,11 +232,12 @@ def for_each_ref_basename(context, refs):
     """Return refs starting with 'refs'."""
     git = context.git
     sort = _version_sort(context)
-    status, out, err = git.for_each_ref(refs, format='%(refname)',
-                                        sort=sort, _readonly=True)
+    _, out, _ = git.for_each_ref(refs, format='%(refname)',
+                                 sort=sort, _readonly=True)
     output = out.splitlines()
     non_heads = [x for x in output if not x.endswith('/HEAD')]
-    return list(map(lambda x: x[len(refs) + 1:], non_heads))
+    offset = len(refs) + 1
+    return [x[offset:] for x in non_heads]
 
 
 def _triple(x, y):
@@ -258,8 +255,8 @@ def all_refs(context, split=False):
              triple('refs/heads', local_branches),
              triple('refs/remotes', remote_branches))
     sort = _version_sort(context)
-    status, out, err = git.for_each_ref(format='%(refname)',
-                                        sort=sort, _readonly=True)
+    _, out, _ = git.for_each_ref(format='%(refname)',
+                                 sort=sort, _readonly=True)
     for ref in out.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
@@ -268,8 +265,7 @@ def all_refs(context, split=False):
     tags.reverse()
     if split:
         return local_branches, remote_branches, tags
-    else:
-        return local_branches + remote_branches + tags
+    return local_branches + remote_branches + tags
 
 
 def tracked_branch(context, branch=None):
@@ -375,14 +371,13 @@ def oid_diff(context, oid, filename=None):
     args = [oid + '~', oid]
     opts = common_diff_opts(context)
     _add_filename(args, filename)
-    status, out, err = git.diff(*args, **opts)
+    status, out, _ = git.diff(*args, **opts)
     if status != 0:
         # We probably don't have "$oid~" because this is the root commit.
         # "git show" is clever enough to handle the root commit.
         args = [oid + '^!']
         _add_filename(args, filename)
-        status, out, err = git.show(pretty='format:', _readonly=True,
-                                    *args, **opts)
+        _, out, _ = git.show(pretty='format:', _readonly=True, *args, **opts)
         out = out.lstrip()
     return out
 
@@ -421,30 +416,28 @@ def diff_helper(context, commit=None, ref=None, endref=None, filename=None,
             argv.append(filename)
             encoding = cfg.file_encoding(filename)
 
-    status, out, err = git.diff(
+    status, out, _ = git.diff(
         R=reverse, M=True, cached=cached, _encoding=encoding,
         *argv, **common_diff_opts(context))
     if status != 0:
         # git init
         if with_diff_header:
             return ('', '')
-        else:
-            return ''
+        return ''
 
-    result = extract_diff_header(status, deleted,
+    result = extract_diff_header(deleted,
                                  with_diff_header, suppress_header, out)
     return core.UStr(result, out.encoding)
 
 
-def extract_diff_header(status, deleted,
+def extract_diff_header(deleted,
                         with_diff_header, suppress_header, diffoutput):
     """Split a diff into a header section and payload section"""
 
     if diffoutput.startswith('Submodule'):
         if with_diff_header:
             return ('', diffoutput)
-        else:
-            return diffoutput
+        return diffoutput
 
     start = False
     del_tag = 'deleted file mode '
@@ -453,7 +446,7 @@ def extract_diff_header(status, deleted,
     headers = StringIO()
 
     for line in diffoutput.split('\n'):
-        if not start and '@@' == line[:2] and '@@' in line[2:]:
+        if not start and line[:2] == '@@' and '@@' in line[2:]:
             start = True
         if start or (deleted and del_tag in line):
             output.write(line + '\n')
@@ -471,8 +464,7 @@ def extract_diff_header(status, deleted,
 
     if with_diff_header:
         return (headers_text, output_text)
-    else:
-        return output_text
+    return output_text
 
 
 def format_patchsets(context, to_export, revs, output='patches'):
@@ -495,7 +487,7 @@ def format_patchsets(context, to_export, revs, output='patches'):
     patchset_idx = 0
 
     # Group the patches into continuous sets
-    for idx, rev in enumerate(to_export[1:]):
+    for rev in to_export[1:]:
         # Limit the search to the current neighborhood for efficiency
         try:
             master_idx = revs[cur_master_idx:].index(rev)
@@ -535,8 +527,8 @@ def export_patchset(context, start, end, output='patches', **kwargs):
 # TODO Unused?
 def reset_paths(context, items):
     """Run "git reset" while preventing argument overflow"""
-    reset = context.git.reset
-    status, out, err = utils.slice_fn(items, lambda paths: reset('--', *paths))
+    fn = context.git.reset
+    status, out, err = utils.slice_fn(items, lambda paths: fn('--', *paths))
     return (status, out, err)
 
 
@@ -546,12 +538,11 @@ def unstage_paths(context, args, head='HEAD'):
     if status == 128:
         # handle git init: we have to use 'git rm --cached'
         # detect this condition by checking if the file is still staged
-        return untrack_paths(context, args, head=head)
-    else:
-        return (status, out, err)
+        return untrack_paths(context, args)
+    return (status, out, err)
 
 
-def untrack_paths(context, args, head='HEAD'):
+def untrack_paths(context, args):
     if not args:
         return (-1, N_('Nothing to do'), '')
     git = context.git
@@ -622,11 +613,11 @@ def diff_index(context, head, cached=True, paths=None):
     if paths is None:
         paths = []
     args = [head, '--'] + paths
-    status, out, err = git.diff_index(cached=cached, z=True, *args)
+    status, out, _ = git.diff_index(cached=cached, z=True, *args)
     if status != 0:
         # handle git init
         args[0] = EMPTY_TREE_OID
-        status, out, err = git.diff_index(cached=cached, z=True, *args)
+        status, out, _ = git.diff_index(cached=cached, z=True, *args)
 
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
@@ -650,7 +641,7 @@ def diff_worktree(context, paths=None):
     if paths is None:
         paths = []
     args = ['--'] + paths
-    status, out, err = git.diff_files(z=True, *args)
+    status, out, _ = git.diff_files(z=True, *args)
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
@@ -688,6 +679,7 @@ def merge_base_parent(context, branch):
 def parse_ls_tree(context, rev):
     """Return a list of (mode, type, oid, path) tuples."""
     output = []
+    git = context.git
     lines = git.ls_tree(rev, r=True, _readonly=True)[STDOUT].splitlines()
     regex = re.compile(r'^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
     for line in lines:
@@ -706,7 +698,7 @@ def ls_tree(context, path, ref='HEAD'):
     """Return a parsed git ls-tree result for a single directory"""
     git = context.git
     result = []
-    status, out, err = git.ls_tree(ref, '--', path, z=True, full_tree=True)
+    status, out, _ = git.ls_tree(ref, '--', path, z=True, full_tree=True)
     if status == 0 and out:
         for line in out[:-1].split('\0'):
             # .....6 ...4 ......................................40
@@ -719,6 +711,7 @@ def ls_tree(context, path, ref='HEAD'):
             result.append((objtype, relpath))
 
     return result
+
 
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
@@ -736,6 +729,7 @@ def parse_rev_list(raw_revs):
     return revs
 
 
+# pylint: disable=redefined-builtin
 def log_helper(context, all=False, extra_args=None):
     """Return parallel arrays containing oids and summaries."""
     revs = []
@@ -814,7 +808,7 @@ def strip_remote(remotes, remote_branch):
 def parse_refs(context, argv):
     """Parse command-line arguments into object IDs"""
     git = context.git
-    status, out, err = git.rev_parse(*argv)
+    status, out, _ = git.rev_parse(*argv)
     if status == 0:
         oids = [oid for oid in out.splitlines() if oid]
     else:
@@ -832,7 +826,7 @@ def prev_commitmsg(context, *args):
 def rev_parse(context, name):
     """Call git rev-parse and return the output"""
     git = context.git
-    status, out, err = git.rev_parse(name)
+    status, out, _ = git.rev_parse(name)
     if status == 0:
         result = out.strip()
     else:
@@ -849,8 +843,7 @@ def write_blob(context, oid, filename):
     """
     if version.check_git(context, 'cat-file-filters-path'):
         return cat_file_to_path(context, filename, oid)
-    else:
-        return cat_file_blob(context, filename, oid)
+    return cat_file_blob(context, filename, oid)
 
 
 def cat_file_blob(context, filename, oid):
@@ -886,8 +879,7 @@ def write_blob_path(context, head, oid, filename):
     """Use write_blob() when modern git is available"""
     if version.check_git(context, 'cat-file-filters-path'):
         return write_blob(context, oid, filename)
-    else:
-        return cat_file_blob(context, filename, head + ':' + filename)
+    return cat_file_blob(context, filename, head + ':' + filename)
 
 
 def annex_path(context, head, filename):
@@ -898,7 +890,7 @@ def annex_path(context, head, filename):
 
     # unfortunately there's no way to filter this down to a single path
     # so we just have to scan all reported paths
-    status, out, err = git.annex('findref', '--json', head)
+    status, out, _ = git.annex('findref', '--json', head)
     if status == 0:
         for line in out.splitlines():
             info = json.loads(line)
@@ -912,7 +904,7 @@ def annex_path(context, head, filename):
                 break
     key = annex_info.get('key', '')
     if key:
-        status, out, err = git.annex('contentlocation', key)
+        status, out, _ = git.annex('contentlocation', key)
         if status == 0 and os.path.exists(out):
             path = out
 

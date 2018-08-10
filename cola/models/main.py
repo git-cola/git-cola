@@ -378,8 +378,7 @@ class MainModel(Observable):
 
     def untrack_paths(self, paths):
         context = self.context
-        head = self.head
-        status, out, err = gitcmds.untrack_paths(context, paths, head=head)
+        status, out, err = gitcmds.untrack_paths(context, paths)
         self.update_file_status()
         return status, out, err
 
