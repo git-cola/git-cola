@@ -16,7 +16,7 @@ from extras import cmdclass
 # distutils when installing from utf-8 paths.
 if sys.version_info[0] < 3:
     # pylint: disable=reload-builtin
-    reload(sys)
+    reload(sys)  # noqa
     # pylint: disable=no-member
     sys.setdefaultencoding('utf-8')
 

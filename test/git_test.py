@@ -1,9 +1,7 @@
-    #!/usr/bin/env python
+#!/usr/bin/env python
 """Tests various operations using the cola.git module
 """
 from __future__ import absolute_import, division, unicode_literals
-import os
-import time
 import unittest
 
 try:
@@ -12,7 +10,6 @@ except ImportError:
     from mock import patch
 
 from cola import git
-from cola.compat import WIN32
 from cola.git import STDOUT
 
 

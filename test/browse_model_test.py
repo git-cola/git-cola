@@ -3,7 +3,6 @@ from __future__ import absolute_import, division, unicode_literals
 
 from cola import core
 from cola import gitcmds
-from cola.models.main import MainModel
 
 from . import helper
 
