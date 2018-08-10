@@ -47,8 +47,8 @@ script:
   # Sphinx requires Python 2.7 or 3.4+
   - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make doc
   # pylint uses python2.7+ syntax
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || pylint --version
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make pylint3k
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || flake8 --version
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make flake8
+  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || pylint --version
+  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint
+  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint3k
+  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || flake8 --version
+  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make flake8
