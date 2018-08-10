@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+# flake8: noqa
 from __future__ import absolute_import, division, unicode_literals
 import os
 import sys
 import re
 from argparse import ArgumentParser
 from functools import partial
+
 
 def setup_environment():
     path = os.path
@@ -27,16 +29,17 @@ def setup_environment():
     if modules:
         sys.path.insert(1, modules)
 
+
 setup_environment()
 
-from cola import app
-
+from cola import app  # prints a message if Qt cannot be found
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+# pylint: disable=ungrouped-imports
 from cola import core
 from cola import difftool
 from cola import hotkeys
@@ -59,7 +62,7 @@ FIXUP = 'fixup'
 SQUASH = 'squash'
 EXEC = 'exec'
 COMMANDS = (PICK, REWORD, EDIT, FIXUP, SQUASH,)
-COMMAND_IDX = dict([(cmd, idx) for idx, cmd in enumerate(COMMANDS)])
+COMMAND_IDX = dict([(cmd_, idx_) for idx_, cmd_ in enumerate(COMMANDS)])
 ABBREV = {
     'p': PICK,
     'r': REWORD,
@@ -79,7 +82,7 @@ def main():
     return view.status
 
 
-def stop(context, view):
+def stop(_context, _view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
@@ -142,7 +145,7 @@ class XBaseWindow(standard.MainWindow):
         editor.exit.connect(self.exit)
         editor.setFocus()
 
-    def start(self, context, view):
+    def start(self, _context, _view):
         self.editor.start()
 
     def exit(self, status):
@@ -278,7 +281,7 @@ class Editor(QtWidgets.QWidget):
         try:
             core.write(self.filename, string)
             status = 0
-        except Exception as e:
+        except (OSError, IOError, ValueError) as e:
             msg, details = utils.format_exception(e)
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
@@ -303,11 +306,13 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.notifier = notifier
         self.comment_char = comment_char
         # header
-        self.setHeaderLabels([N_('#'),
-                              N_('Enabled'),
-                              N_('Command'),
-                              N_('SHA-1'),
-                              N_('Summary')])
+        self.setHeaderLabels([
+            N_('#'),
+            N_('Enabled'),
+            N_('Command'),
+            N_('SHA-1'),
+            N_('Summary'),
+        ])
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)
 
@@ -332,23 +337,23 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             *hotkeys.REBASE_REWORD)
 
         self.action_edit = qtutils.add_action(
-                self, N_('Edit'), lambda: self.set_selected_to(EDIT),
-                *hotkeys.REBASE_EDIT)
+            self, N_('Edit'), lambda: self.set_selected_to(EDIT),
+            *hotkeys.REBASE_EDIT)
 
         self.action_fixup = qtutils.add_action(
-                self, N_('Fixup'), lambda: self.set_selected_to(FIXUP),
-                *hotkeys.REBASE_FIXUP)
+            self, N_('Fixup'), lambda: self.set_selected_to(FIXUP),
+            *hotkeys.REBASE_FIXUP)
 
         self.action_squash = qtutils.add_action(
-                self, N_('Squash'), lambda: self.set_selected_to(SQUASH),
-                *hotkeys.REBASE_SQUASH)
+            self, N_('Squash'), lambda: self.set_selected_to(SQUASH),
+            *hotkeys.REBASE_SQUASH)
 
         self.action_shift_down = qtutils.add_action(
-                self, N_('Shift Down'), self.shift_down,
-                hotkeys.MOVE_DOWN_TERTIARY)
+            self, N_('Shift Down'), self.shift_down,
+            hotkeys.MOVE_DOWN_TERTIARY)
 
         self.action_shift_up = qtutils.add_action(
-                self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
+            self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
 
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.selection_changed)
@@ -576,7 +581,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         else:
             comment = self.comment_char + ' '
         if self.is_exec():
-            return ('%s%s %s' % (comment, self.command, self.cmdexec))
+            return '%s%s %s' % (comment, self.command, self.cmdexec)
         return ('%s%s %s %s' %
                 (comment, self.command, self.oid, self.summary))
 
