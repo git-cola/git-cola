@@ -1,5 +1,6 @@
 """build_pot command for setup.py"""
 # pylint: disable=attribute-defined-outside-init
+# pylint: disable=no-name-in-module,import-error
 from __future__ import absolute_import, division, unicode_literals
 import os
 import glob
