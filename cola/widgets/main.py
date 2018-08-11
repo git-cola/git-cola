@@ -225,7 +225,8 @@ class MainView(standard.MainWindow):
 
         self.browse_recently_modified_action = add_action(
             self, N_('Recently Modified Files...'),
-            recent.browse_recent_files, hotkeys.EDIT_SECONDARY)
+            partial(recent.browse_recent_files, context),
+            hotkeys.EDIT_SECONDARY)
 
         self.cherry_pick_action = add_action(
             self, N_('Cherry-Pick...'), partial(guicmds.cherry_pick, context),
