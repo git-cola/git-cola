@@ -2500,8 +2500,7 @@ def do(cls, *args, **opts):
     except Exception as e:  # pylint: disable=broad-except
         msg, details = utils.format_exception(e)
         if hasattr(cls, '__name__'):
-            msg = ('%s exception:\n%s'
-                   % (cls.__name__, msg))
+            msg = ('%s exception:\n%s' % (cls.__name__, msg))
         Interaction.critical(N_('Error'), message=msg, details=details)
         return None
 
