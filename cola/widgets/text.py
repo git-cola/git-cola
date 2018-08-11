@@ -33,7 +33,7 @@ class ProxyStyle(QtWidgets.QCommonStyle):
 
 
 if hasattr(QtWidgets, 'QProxyStyle'):
-    BaseProxyStyle = QtWidgets.QProxyStyle
+    BaseProxyStyle = QtWidgets.QProxyStyle  # pylint: disable=no-member
 else:
     BaseProxyStyle = ProxyStyle
 

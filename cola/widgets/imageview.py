@@ -437,8 +437,6 @@ def sigint_handler(*args):
 def main():
     parser = argparse.ArgumentParser(description='image viewer')
     parser.add_argument('image', help='path to the image')
-    parser.add_argument('--interactive', '-i', action='store_true',
-                        help='start an interactive shell')
     opts = parser.parse_args()
 
     input_image = opts.image
@@ -453,14 +451,7 @@ def main():
         pass
     window = ImageViewerWindow(image, input_image)
     window.show()
-
-    if opts.interactive:
-        global main_loop_type  # pylint: disable=global-statement
-        main_loop_type = 'ipython'
-        from IPython import start_ipython
-        start_ipython(user_ns=dict(globals(), **locals()), argv=[])
-    else:
-        app.exec_()
+    app.exec_()
 
 
 if __name__ == '__main__':
