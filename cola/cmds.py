@@ -1485,8 +1485,8 @@ class OpenParentDir(OpenDefaultApp):
     def name():
         return N_('Open Parent Directory')
 
-    def __init__(self, filenames):
-        OpenDefaultApp.__init__(self, filenames)
+    def __init__(self, context, filenames):
+        OpenDefaultApp.__init__(self, context, filenames)
 
     def do(self):
         if not self.filenames:
