@@ -4,8 +4,8 @@
 # pylint: disable=import-error,no-name-in-module
 from __future__ import absolute_import, division, unicode_literals
 from glob import glob
-import distutils.command.build_scripts as build_scripts
-import distutils.core.setup as setup
+from distutils.command import build_scripts
+from distutils.core import setup
 import os
 import re
 import sys
