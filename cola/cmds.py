@@ -360,8 +360,8 @@ class ApplyPatches(ContextCommand):
         basenames = '\n'.join([os.path.basename(p) for p in self.patches])
         Interaction.information(
             N_('Patch(es) Applied'),
-            (N_('%d patch(es) applied.') +
-             '\n\n%s') % (len(self.patches), basenames))
+            (N_('%d patch(es) applied.') + '\n\n%s')
+            % (len(self.patches), basenames))
 
 
 class Archive(ContextCommand):
