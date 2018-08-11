@@ -3,14 +3,12 @@
 # This file is distributed under the same license as the git-cola package.
 # しらいし ななこ <nanako3@bluebottle.com>, 2007.
 #
-#, fuzzy
 msgid ""
-msgstr ""
-"Project-Id-Version: git-cola VERSION\n"
+msgstr "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
 "PO-Revision-Date: 2008-03-15 20:12+0900\n"
-"Last-Translator: しらいし ななこ <nanako3@bluebottle.com>\n"
+"Last-Translator: fu7mu4 <fu7mu4@gmail.com>\n"
 "Language-Team: Japanese\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +22,12 @@ msgid ""
 "                patches to the list\n"
 "            </p>\n"
 "            "
-msgstr ""
+msgstr "\n"
+"            <p>\n"
+"                ドラッグ&ドロップまたは<strong>追加</strong>ボタンを押して追加します。\n"
+"                リストにパッチを適用する\n"
+"            </p>\n"
+"            "
 
 #, python-format
 msgid ""
@@ -52,7 +55,30 @@ msgid ""
 "        <br>\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n"
+"        <br>\n"
+"            Git Cola は様々な言語に翻訳されてきました。\n"
+"            以下のリストの皆さまに感謝します。\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            翻訳はおおよそです。もし間違いがあった場合、\n"
+"            Githubに課題を作成して知らせてください。:\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            私たちはあなたに翻訳を追加したり翻訳を更新したりしていただきたいです。\n"
+"            そしてプルリクエストを送っていただきたいです。\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
 
 #, python-format
 msgid ""
@@ -68,7 +94,18 @@ msgid ""
 "            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
 "        </ul>\n"
 "    "
-msgstr ""
+msgstr "\n"
+"        <br>\n"
+"            Git Cola のバージョンは %(cola_version)s、 %(build_version)sの\n"
+"        <ul>\n"
+"            <li> %(platform_version)sです。\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -77,7 +114,11 @@ msgid ""
 "        Please use %(bug_link)s to report issues.\n"
 "        <br>\n"
 "    "
-msgstr ""
+msgstr "\n"
+"        <br>\n"
+"        %(bug_link)s を使って課題を報告してください。\n"
+"        <br>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -91,7 +132,16 @@ msgid ""
 "      %(filename)s  =  file basename\n"
 "      %(basename)s  =  file basename without extension\n"
 "           %(ext)s  =  file extension\n"
-msgstr ""
+msgstr "\n"
+"        フォーマットストリング変数\n"
+"        -----------------------\n"
+"          %(path)s  =  ファイルへの相対パス\n"
+"       %(abspath)s  =  ファイルへの絶対パス\n"
+"       %(dirname)s  =  ディレクトリへの相対パス\n"
+"    %(absdirname)s  =  ディレクトリへの絶対パス\n"
+"      %(filename)s  =  ファイルのベース名\n"
+"      %(basename)s  =  ファイルのベース名(拡張子なし)\n"
+"           %(ext)s  =  ファイルの拡張子\n"
 
 msgid ""
 "\n"
@@ -128,7 +178,40 @@ msgid ""
 "ctrl+enter = accept changes and rebase\n"
 "ctrl+q     = cancel and abort the rebase\n"
 "ctrl+d     = launch difftool\n"
-msgstr ""
+msgstr "\n"
+"コマンド\n"
+"--------\n"
+"pick = コミットを使う。\n"
+"reword = コミットを使う、がしかしコミットメッセージを編集する。\n"
+"edit = コミットを使う、が修正のために停止する。\n"
+"squash = コミットを使う、が以前のコミットと混ぜ合わせる。\n"
+"fixup = \"squash\"に似ているが、コミットログのメッセージを破棄する。\n"
+"exec = シェルを使って、(行の残り部分の)コマンドを実行する。\n"
+"\n"
+"これらの行は並べ直すことができます。これは上から下に実行します。\n"
+"\n"
+"もし1行を無効にした場合、そのコミットはなくなります。\n"
+"\n"
+"しかし、もし全てを無効にした場合、そのrebaseは中止になります。\n"
+"\n"
+"キーボードショートカット\n"
+"------------------\n"
+"?= ヘルプの表示\n"
+"j = 下に移動\n"
+"k = 上に移動\n"
+"J = shift row down\n"
+"K = shift row up\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacebar = 有効化の切り替え\n"
+"\n"
+"ctrl+enter = 変更を受け入れて、rebaseする\n"
+"ctrl+q     = rebaseをキャンセルして、rebaseを中止する。\n"
+"ctrl+d     = diffツールの起動\n"
 
 msgid ""
 "\n"
@@ -143,69 +226,78 @@ msgid ""
 "\n"
 "The up and down arrows change focus between the text entry field\n"
 "and the results.\n"
-msgstr ""
+msgstr "\n"
+"キーボードショートカット\n"
+"------------------\n"
+"J, Down     = 下に移動\n"
+"K, Up       = 上に移動\n"
+"Enter       = 選択ファイルの編集\n"
+"Spacebar    = デフォルトのアプリケーションでファイルを開く\n"
+"Ctrl + L    = テキスト項目にフォーカスを移動する\n"
+"?= ヘルプを表示する\n"
+"\n"
+"カーソルの上下でテキスト項目と結果の間でフォーカスを変更する。\n"
 
 msgid " - DAG"
-msgstr ""
+msgstr " - DAG"
 
-#, fuzzy
 msgid " commits ago"
-msgstr "マージコミットメッセージ:"
+msgstr " 前にコミット"
 
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
-msgstr ""
+msgstr "\"%(branch)s\" は \"%(remote)s\" から削除されています。"
 
 #, python-format
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr ""
+msgstr "\"%(command)s\" は修了状態として \"%(status)d\" を返しました。"
 
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr ""
+msgstr "\"%(command)s\" は修了状態として %(status)d を返しました。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" already exists"
-msgstr "'%s'というブランチは既に存在します。"
+msgstr "\"%s\" ブランチは既に存在します。"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr ""
+msgstr "\"%s\" は既に存在しています。git colaは新しいディレクトリを作成してします。"
 
 #, python-format
 msgid "\"%s\" requires a selected file."
-msgstr ""
+msgstr "\"%s\" は選択したファイルを要求します。"
 
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
-msgstr ""
+msgstr "%(project)s: %(branch)s - ブラウズ"
 
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
-msgstr ""
+msgstr "%(project)s: %(ref)s - DAG"
 
 #, python-format
 msgid "%d days ago"
-msgstr ""
+msgstr "%d 日前"
 
 #, python-format
 msgid "%d hours ago"
-msgstr ""
+msgstr "%d 時間前"
 
 #, python-format
 msgid "%d minutes ago"
-msgstr ""
+msgstr "%d 分前"
 
 #, python-format
 msgid "%d patch(es) applied."
-msgstr ""
+msgstr "%d パッチを適用しました。"
 
 #, python-format
 msgid "%d skipped"
-msgstr ""
+msgstr "%d スキップしました。"
 
 #, python-format
 msgid ""
@@ -213,150 +305,141 @@ msgid ""
 "\n"
 "You should probably skip this file.\n"
 "Stage it anyways?"
-msgstr ""
+msgstr "%s マージに衝突があることがわかりました。\n"
+"\n"
+"このファイルはおそらくスキップすべきです。\n"
+"これをステージングしますか？"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s is not a Git repository."
-msgstr "GIT リポジトリ"
+msgstr "%s は Gitのリポジトリではありません。"
 
 #, python-format
 msgid "%s will be removed from your bookmarks."
-msgstr ""
+msgstr "%s をあなたのブックマークから削除します。"
 
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr ""
+msgstr "%s をあなたの最近のリポジトリリストから削除します。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "%s: No such file or directory."
-msgstr "致命的: パス %s が stat できません。そのようなファイルやディレクトリはありません"
+msgstr "%s: そのようなファイルやディレクトリはありません。"
 
 msgid "&Edit"
-msgstr "編集"
+msgstr "&E編集"
 
-#, fuzzy
 msgid "&File"
-msgstr "ファイル:"
+msgstr "&Fファイル"
 
 msgid "(Amending)"
-msgstr ""
+msgstr "(訂正)"
 
 msgid "*** Branch Point ***"
-msgstr ""
+msgstr "*** ブランチポイント ***"
 
 msgid "*** Sandbox ***"
-msgstr ""
+msgstr "*** サンドボックス ***"
 
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 msgid "25%"
-msgstr ""
+msgstr "25%"
 
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 msgid "800%"
-msgstr ""
+msgstr "800%"
 
 msgid "<path> ..."
-msgstr ""
+msgstr "<パス> ..."
 
 msgid ""
 "A commit template has not been configured.\n"
 "Use \"git config\" to define \"commit.template\"\n"
 "so that it points to a commit template."
-msgstr ""
+msgstr "コミットテンプレートは変更できません。\n"
+"\"git config\" を使って、\"commit.template\"を定義してください。\n"
+"これはコミットテンプレートを指定します。"
 
 #, python-format
 msgid "A hook must be provided at \"%s\""
-msgstr ""
+msgstr "フックが\"%s\"で提供されなければなりません。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "ファイル '%s' は既に存在します。"
+msgstr "\"%s\" という名前のstashは既に存在します。"
 
-#, fuzzy
 msgid "Abort"
-msgstr "中断しています"
+msgstr "中止しています。"
 
-#, fuzzy
 msgid "Abort Action"
-msgstr "中断しています"
+msgstr "アクションを中止しています。"
 
-#, fuzzy
 msgid "Abort Merge"
-msgstr "マージ中止…"
+msgstr "マージを中止しています。"
 
 msgid "Abort Merge..."
 msgstr "マージ中止…"
 
 msgid "Abort the action?"
-msgstr ""
+msgstr "このアクションを中止しますか？"
 
-#, fuzzy
 msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
-msgstr ""
-"マージを中断しますか？\n"
-"\n"
-"現在のマージを中断すると、コミットしていない全ての変更が失われます。\n"
-"\n"
-"マージを中断してよろしいですか？"
+msgstr "現在のマージを中止すると、コミットしていない *全て* の変更を失います。\n"
+"コミットしていない変更を戻すことはできません。"
 
 msgid "Aborting the current merge?"
-msgstr ""
+msgstr "現在のマージを中止しますか？"
 
-#, fuzzy
 msgid "About"
-msgstr "%s について"
+msgstr "About"
 
 msgid "About git-cola"
-msgstr ""
+msgstr "git-colaについて"
 
 msgid "Accept"
-msgstr ""
+msgstr "受け入れ"
 
 msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
-msgstr ""
+msgstr "変更を受け入れてrebaseします。\n"
+"ショートカット: Ctrl+Enter"
 
-#, fuzzy
 msgid "Action Name"
-msgstr "オプション"
+msgstr "アクション名"
 
-#, fuzzy
 msgid "Actions"
-msgstr "オプション"
+msgstr "アクション"
 
-#, fuzzy
 msgid "Actions..."
-msgstr "オプション…"
+msgstr "アクション..."
 
 msgid "Add"
-msgstr ""
+msgstr "追加"
 
-#, fuzzy
 msgid "Add Favorite"
-msgstr "リモート"
+msgstr "お気に入りの追加"
 
-#, fuzzy
 msgid "Add Remote"
-msgstr "リモート"
+msgstr "リモートの追加"
 
 msgid "Add Separator"
-msgstr ""
+msgstr "セパレータの追加"
 
 msgid "Add Toolbar"
-msgstr ""
+msgstr "ツールバーの追加"
 
 msgid ""
 "Add and remove remote repositories using the \n"
@@ -364,117 +447,113 @@ msgid ""
 "\n"
 "Remotes can be renamed by selecting one from the list\n"
 "and pressing \"enter\", or by double-clicking."
-msgstr ""
+msgstr "リモートリポジトリの追加や削除するには\n"
+"左側のAdd(+) または Delete(-) ボタンを使用します。\n"
+"\n"
+"リモートリポジトリの名前を変更するには、リストから選択して\n"
+"\"enter\"を入力する、またはダブルクリックします。"
 
-#, fuzzy
 msgid "Add new remote git repository"
-msgstr "Git リポジトリではありません: %s"
+msgstr "新しいgitのリモートリポジトリを追加します。"
 
 msgid "Add patches (+)"
-msgstr ""
+msgstr "パッチを追加 (+)"
 
-#, fuzzy
 msgid "Add remote"
-msgstr "リモート"
+msgstr "リモートを追加"
 
 msgid "Add to .gitignore"
-msgstr ""
+msgstr ".gitignoreに追加"
 
 msgid "Add to Git Annex"
-msgstr ""
+msgstr "Git Annexに追加"
 
 msgid "Add to Git LFS"
-msgstr ""
+msgstr "Git LFSに追加"
 
-#, fuzzy
 msgid "Additions"
-msgstr "オプション"
+msgstr "追加"
 
 msgid "Advanced"
-msgstr ""
+msgstr "拡張"
 
 msgid "Age"
-msgstr ""
+msgstr "年齢"
 
-#, fuzzy
 msgid "All Repositories"
-msgstr "大域（全てのリポジトリ）"
+msgstr "全てのリポジトリ"
 
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
-msgstr ""
+msgstr "ファストフォワードではない更新を許可します。\"force\" はリモートリポジトリでコミットを失う可能性があります。使用には注意してください。"
 
 msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr ""
+msgstr "可能な場合には常にマージコミットを作成するする、たとえそのマージがファーストフォワードアップデートだった場合でもでも作成する。"
 
 msgid "Amend"
-msgstr ""
+msgstr "訂正"
 
-#, fuzzy
 msgid "Amend Commit"
-msgstr "最新コミットを訂正"
+msgstr "コミットの訂正"
 
 msgid "Amend Last Commit"
 msgstr "最新コミットを訂正"
 
 msgid "Amend the published commit?"
-msgstr ""
+msgstr "発行済のコミットを訂正しますか？"
 
 msgid "Amending"
-msgstr ""
+msgstr "訂正中"
 
 msgid ""
 "An action is still running.\n"
 "Terminating it could result in data loss."
-msgstr ""
+msgstr "アクション継続中です。\n"
+"中断は結果としてデータを失うことがありえます。"
 
 msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
-msgstr ""
+msgstr "署名のない、軽量のタグを代わりにに作成します。\n"
+"署名なしタグを作成しますか？"
 
-#, fuzzy
 msgid "Apply"
-msgstr "りんご"
+msgstr "適用"
 
 msgid "Apply Patches"
-msgstr ""
+msgstr "パッチの適用"
 
 msgid "Apply Patches..."
-msgstr ""
+msgstr "パッチの適用..."
 
 msgid "Apply and drop the selected stash (git stash pop)"
 msgstr ""
 
 msgid "Apply the selected stash"
-msgstr ""
+msgstr "選択したスタッシュを適用する"
 
 msgid "Arguments"
-msgstr ""
+msgstr "引数"
 
 msgid "Attach"
-msgstr ""
+msgstr "アタッチ"
 
-#, fuzzy
 msgid "Author"
-msgstr "作者:"
+msgstr "著者"
 
-#, fuzzy
 msgid "Authors"
-msgstr "作者:"
+msgstr "著者"
 
 msgid "Auto-Wrap Lines"
-msgstr ""
+msgstr "自動行折り返し"
 
 msgid "Basic Regexp"
-msgstr ""
+msgstr "基本正規表現"
 
-#, fuzzy
 msgid "Blame Viewer"
-msgstr "ファイルピューワ"
+msgstr "責任者ビューアー"
 
-#, fuzzy
 msgid "Blame..."
-msgstr "名前変更…"
+msgstr "責任者..."
 
 msgid "Bold with dark background font instead of italic headers (restart required)"
 msgstr ""
@@ -486,67 +565,59 @@ msgstr "ブランチ"
 msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
-msgstr ""
+msgstr "\"%(branch)s\" は \"%(remote)s\" に存在していません。\n"
+"新しいリモートブランチを作成し、公開します。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Branch \"%s\" already exists."
-msgstr "'%s'というブランチは既に存在します。"
+msgstr "\"%s\" ブランチは既に存在します。"
 
 msgid "Branch Diff Viewer"
-msgstr ""
+msgstr "ブランチ差分ビューアー"
 
-#, fuzzy
 msgid "Branch Exists"
-msgstr "ブランチ"
+msgstr "ブランチの存在"
 
 msgid "Branch Name"
 msgstr "ブランチ名"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Branch: %s"
 msgstr "ブランチ: %s"
 
-#, fuzzy
 msgid "Branches"
 msgstr "ブランチ"
 
-#, fuzzy
 msgid "Branches..."
-msgstr "ブランチ"
+msgstr "ブランチ..."
 
 msgid "Brazilian translation"
-msgstr ""
+msgstr "ブラジル語翻訳"
 
-#, fuzzy
 msgid "Browse"
 msgstr "ブラウズ"
 
-#, fuzzy
 msgid "Browse Commits..."
-msgstr "ブラウズ"
+msgstr "コミットのブラウズ..."
 
-#, fuzzy
 msgid "Browse Current Branch..."
-msgstr "現在のブランチのファイルを見る"
+msgstr "現在ブランチのブラウズ..."
 
-#, fuzzy
 msgid "Browse Other Branch..."
-msgstr "ブランチのファイルを見る…"
+msgstr "その他のブランチのブラウズ..."
 
-#, fuzzy
 msgid "Browse..."
-msgstr "ブラウズ"
+msgstr "ブラウズ..."
 
-#, fuzzy
 msgid "Browser"
-msgstr "ブラウズ"
+msgstr "ブラウザー"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Browsing %s"
-msgstr "コミットに %s を加えています"
+msgstr "%s のブラウズ"
 
 msgid "Bypass Commit Hooks"
-msgstr ""
+msgstr "コミットフックの回避"
 
 msgid "Cancel"
 msgstr "中止"
@@ -554,32 +625,32 @@ msgstr "中止"
 msgid ""
 "Cancel rebase\n"
 "Shortcut: Ctrl+Q"
-msgstr ""
+msgstr "rebaseの中止\n"
+"ショートカット: Ctrl+Q: Ctrl+Q"
 
-#, fuzzy
 msgid "Cannot Amend"
-msgstr "アイコンが書けません:"
+msgstr "訂正不可"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr ""
+msgstr "\"%s\"を実行できません。責任者ビューアーを設定してください。"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr ""
+msgstr "\"%s\"を実行できません。履歴ビューアーを設定してください。"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
-msgstr ""
+msgstr "\"%s\"を実行できません。エディタを設定してください。"
 
 msgid "Changed Upstream"
-msgstr ""
+msgstr "変更したアップストリーム"
 
 msgid "Check Spelling"
-msgstr ""
+msgstr "スペルチェック"
 
 msgid "Check spelling"
-msgstr ""
+msgstr "スペルチェック"
 
 msgid "Checkout"
 msgstr "チェックアウト"
@@ -590,122 +661,105 @@ msgstr "作成してすぐチェックアウト"
 msgid "Checkout Branch"
 msgstr "ブランチをチェックアウト"
 
-#, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "ブランチをチェックアウト"
+msgstr "デタッチしたHEADをチェックアウト"
 
-#, fuzzy
 msgid "Checkout as new branch"
-msgstr "ブランチをチェックアウト"
+msgstr "新しいブランチとしてチェックアウト"
 
 msgid "Checkout..."
-msgstr "チェックアウト"
+msgstr "チェックアウト..."
 
 msgid "Cherry Pick"
-msgstr ""
+msgstr "チェリーピック"
 
-#, fuzzy
 msgid "Cherry-Pick Commit"
-msgstr "コミットをコピー"
+msgstr "チェリーピックコミット"
 
-#, fuzzy
 msgid "Cherry-Pick..."
-msgstr "チェックアウト"
+msgstr "チェリーピック..."
 
-#, fuzzy
 msgid "Choose Paths"
-msgstr "%s を選択"
+msgstr "パスの選択"
 
 msgid "Choose the \"git grep\" regular expression mode"
-msgstr ""
+msgstr "\"git grep\" 正規表現モードを選択する"
 
-#, fuzzy
 msgid "Clear Default Repository"
-msgstr "新しいリポジトリを作る"
+msgstr "デフォルトリポジトリをクリアする"
 
-#, fuzzy
 msgid "Clear commit message"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットメッセージをクリアする"
 
-#, fuzzy
 msgid "Clear commit message?"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットメッセージをクリアしますか？"
 
-#, fuzzy
 msgid "Clear..."
-msgstr "複製…"
+msgstr "クリア..."
 
 msgid "Clone"
-msgstr "複製"
+msgstr "Clone"
 
-#, fuzzy
 msgid "Clone Repository"
-msgstr "既存リポジトリを複製する"
+msgstr "リポジトリのClone"
 
 msgid "Clone..."
-msgstr "複製…"
+msgstr "Clone…"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Cloning repository at %s"
-msgstr "既存リポジトリを複製する"
+msgstr "リポジトリのClone中: %s"
 
 msgid "Close"
 msgstr "閉じる"
 
-#, fuzzy
 msgid "Close..."
-msgstr "複製…"
+msgstr "閉じ作業中..."
 
-#, fuzzy
 msgid "Collapse all"
-msgstr "閉じる"
+msgstr "全てCollapse"
 
-#, fuzzy
 msgid "Command"
-msgstr "コミット:"
+msgstr "コマンド"
 
-#, fuzzy
 msgid "Commit"
-msgstr "コミット:"
+msgstr "コミット"
 
-#, fuzzy
 msgid "Commit failed"
-msgstr "コミットに失敗しました。"
+msgstr "コミット失敗"
 
-#, fuzzy
 msgid "Commit staged changes"
-msgstr "変更点をコミット中・・・"
+msgstr "ステージした変更をコミット"
 
 msgid ""
 "Commit staged changes\n"
 "Shortcut: Ctrl+Enter"
-msgstr ""
+msgstr "ステージした変更をコミット\n"
+"ショートカット: Ctrl+Enter"
 
-#, fuzzy
 msgid "Commit summary"
-msgstr "コミットメッセージ:"
+msgstr "コミットサマリー"
 
 msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr ""
+msgstr "衝突のない場合のみこのマージをコミットUncheck to leave the merge uncommitted"
 
 msgid "Commit@@verb"
 msgstr "コミット"
 
 msgid "Compare"
-msgstr ""
+msgstr "比較"
 
 msgid "Compare All"
-msgstr ""
+msgstr "全て比較"
 
 msgid "Configure the remote branch as the the new upstream"
-msgstr ""
+msgstr "新しいアップストリームとしてリモートブランチを設定する"
 
 msgid "Configure toolbar"
-msgstr ""
+msgstr "ツールバーの設定"
 
-#, fuzzy
 msgid "Console"
-msgstr "閉じる"
+msgstr "コンソール"
 
 msgid "Continue"
 msgstr "続行"
@@ -714,190 +768,165 @@ msgid "Copy"
 msgstr "コピー"
 
 msgid "Copy Basename to Clipboard"
-msgstr ""
+msgstr "ベースネームをクリップボードにコピー"
 
 msgid "Copy Leading Path to Clipboard"
-msgstr ""
+msgstr "リーディングパスをクリップボードにコピー"
 
 msgid "Copy Path to Clipboard"
-msgstr ""
+msgstr "パスをクリップボードにコピー"
 
 msgid "Copy Relative Path to Clipboard"
-msgstr ""
+msgstr "相対パスをクリップボードにコピー"
 
-#, fuzzy
 msgid "Copy SHA-1"
-msgstr "全てコピー"
+msgstr "SHA-1をコピー"
 
-#, fuzzy
 msgid "Copy..."
-msgstr "コピー"
+msgstr "コピー中..."
 
 #, python-format
 msgid "Could not parse Git URL: \"%s\""
-msgstr ""
+msgstr "Git URL \"%s\"がパースできません。"
 
 msgid "Create Branch"
 msgstr "ブランチを作成"
 
-#, fuzzy
 msgid "Create Patch"
-msgstr "ブランチを作成"
+msgstr "パッチを作成"
 
-#, fuzzy
 msgid "Create Remote Branch"
-msgstr "リモート・ブランチを削除"
+msgstr "リモートブランチを作成"
 
-#, fuzzy
 msgid "Create Signed Commit"
-msgstr "コミット %s を作成しました: %s"
+msgstr "署名されたコミットの作成"
 
-#, fuzzy
 msgid "Create Tag"
-msgstr "作成"
+msgstr "タグの作成"
 
-#, fuzzy
 msgid "Create Tag..."
-msgstr "作成…"
+msgstr "タグの作成中..."
 
 msgid "Create Unsigned Tag"
-msgstr ""
+msgstr "書名のないタグの作成"
 
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
+msgstr "マージコミットを作成するそれがファーストフォワードとしてマージされる可能性がある"
 
-#, fuzzy
 msgid "Create a new remote branch?"
-msgstr "ブランチを新規作成"
+msgstr "リモートブランチを作成しますか？"
 
 msgid "Create..."
 msgstr "作成…"
 
 #, python-format
 msgid "Created a new tag named \"%s\""
-msgstr ""
+msgstr "新しく作成したタグ \"%s\" "
 
-#, fuzzy
 msgid "Current Repository"
-msgstr "新しいリポジトリを作る"
+msgstr "現在のリポジトリ"
 
 msgid "Custom Copy Actions"
-msgstr ""
+msgstr "コピーアクションをカスタム"
 
-#, fuzzy
 msgid "Customize..."
-msgstr "複製…"
+msgstr "カスタマイズ中..."
 
 msgid "Cut"
 msgstr "切り取り"
 
 msgid "Czech translation"
-msgstr ""
+msgstr "チェコ語翻訳"
 
 msgid "DAG..."
-msgstr ""
+msgstr "DAG中..."
 
 msgid "Date, Time"
-msgstr ""
+msgstr "日時"
 
 msgid "Delete"
 msgstr "削除"
 
 #, python-format
 msgid "Delete %d file(s)?"
-msgstr ""
+msgstr "%d のfileを削除しますか？"
 
-#, fuzzy
 msgid "Delete Bookmark"
-msgstr "ブランチ削除"
+msgstr "ブックマークの削除"
 
-#, fuzzy
 msgid "Delete Bookmark?"
-msgstr "ブランチ削除"
+msgstr "ブックマークを削除しますか？"
 
 msgid "Delete Branch"
 msgstr "ブランチ削除"
 
-#, fuzzy
 msgid "Delete Files"
-msgstr "削除"
+msgstr "ファイルの削除"
 
-#, fuzzy
 msgid "Delete Files..."
-msgstr "削除…"
+msgstr "ファイルを削除中..."
 
-#, fuzzy
 msgid "Delete Files?"
-msgstr "削除"
+msgstr "ファイルを削除しますか？"
 
-#, fuzzy
 msgid "Delete Remote"
-msgstr "リモート・ブランチを削除"
+msgstr "リモートの削除"
 
-#, fuzzy
 msgid "Delete Remote Branch"
-msgstr "リモート・ブランチを削除"
+msgstr "リモートブランチの削除"
 
-#, fuzzy
 msgid "Delete Remote Branch..."
-msgstr "リモート・ブランチを削除"
+msgstr "リモートブランチの削除中..."
 
-#, fuzzy
 msgid "Delete remote"
-msgstr "リモート・ブランチを削除"
+msgstr "リモートの削除"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Delete remote \"%s\""
-msgstr "リモート・ブランチを削除"
+msgstr "リモート \"%s\"の削除"
 
-#, fuzzy
 msgid "Delete remote?"
-msgstr "リモート・ブランチを削除"
+msgstr "リモートを削除しますか？"
 
-#, fuzzy
 msgid "Delete selected branch?"
-msgstr "リモート・ブランチを削除"
+msgstr "選択したブランチを削除しますか?"
 
-#, fuzzy
 msgid "Delete toolbar"
-msgstr "ブランチ削除"
+msgstr "ツールバーの削除"
 
 msgid "Delete..."
-msgstr "削除…"
+msgstr "削除中…"
 
 #, python-format
 msgid "Deleting \"%s\" failed"
-msgstr ""
+msgstr "\"%s\"の削除に失敗しました。"
 
-#, fuzzy
 msgid "Deletions"
 msgstr "削除"
 
-#, fuzzy
 msgid "Detach"
-msgstr "ブランチ削除"
+msgstr "デタッチ"
 
 msgid "Detect Conflict Markers"
-msgstr ""
+msgstr "衝突マーカーをデタッチ"
 
 msgid "Detect conflict markers in unmerged files"
-msgstr ""
+msgstr "マージされていない衝突マーカーの検出"
 
 msgid "Developer"
-msgstr ""
+msgstr "開発者"
 
 msgid "Diff"
-msgstr ""
+msgstr "差分"
 
 msgid "Diff Against Predecessor..."
-msgstr ""
+msgstr "前任者との差分..."
 
-#, fuzzy
 msgid "Diff Options"
-msgstr "オプション"
+msgstr "diffツールオプション"
 
 msgid "Diff Tool"
-msgstr ""
+msgstr "差分ツール"
 
 msgid "Diff selected -> this"
 msgstr ""
@@ -906,615 +935,552 @@ msgid "Diff this -> selected"
 msgstr ""
 
 msgid "Diffstat"
-msgstr ""
+msgstr "差分状態"
 
-#, fuzzy
 msgid "Difftool"
-msgstr "オプション"
+msgstr "差分ツール"
 
-#, fuzzy
 msgid "Directory Exists"
-msgstr "ディレクトリ:"
+msgstr "ディレクトリの存在"
 
 msgid "Display Untracked Files"
-msgstr ""
+msgstr "未トラックファイルの表示"
 
-#, fuzzy
 msgid "Documentation"
-msgstr "オンライン・ドキュメント"
+msgstr "ドキュメント"
 
 msgid "Drop"
-msgstr ""
+msgstr "ドロップ"
 
 msgid "Drop Stash"
-msgstr ""
+msgstr "スタッシュのドロップ"
 
 msgid "Drop Stash?"
-msgstr ""
+msgstr "ドロップをスタッシュしますか？"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr ""
+msgstr "\"%s\" スタッシュをドロップしますか？"
 
 msgid "Drop the selected stash"
-msgstr ""
+msgstr "選択したスタッシュをドロップします。"
 
-#, fuzzy
 msgid "Edit"
 msgstr "編集"
 
-#, fuzzy
 msgid "Edit Rebase"
-msgstr "リセット"
+msgstr "リベースを編集"
 
-#, fuzzy
 msgid "Edit Remotes"
-msgstr "リモート"
+msgstr "リモートを編集"
 
 msgid "Edit Remotes..."
-msgstr ""
+msgstr "リモートを編集中..."
 
 msgid "Edit remotes by selecting them from the list"
-msgstr ""
+msgstr "リストから選択してリモートを編集する"
 
 msgid "Edit selected paths"
-msgstr ""
+msgstr "選択したパスを編集する"
 
-#, fuzzy
 msgid "Edit..."
-msgstr "編集"
+msgstr "編集中..."
 
-#, fuzzy
 msgid "Editor"
-msgstr "編集"
+msgstr "エディタ"
 
 msgid "Email Address"
-msgstr "電子メールアドレス"
+msgstr "メールアドレス"
 
 msgid "Email contributor"
-msgstr ""
+msgstr "メールコントリビュータ"
 
 msgid "Enabled"
-msgstr ""
+msgstr "有効"
 
-#, fuzzy
 msgid "Enter New Branch Name"
-msgstr "ブランチ名"
+msgstr "新しいブランチ名を入力する"
 
 msgid "Enter a name for the new bare repo"
-msgstr ""
+msgstr "新しいbaraリポジトリの名前を入力する"
 
 msgid "Enter a name for the stash"
-msgstr ""
+msgstr "スタッシュの名前を入力する"
 
-#, fuzzy
 msgid "Error"
 msgstr "エラー"
 
-#, fuzzy
 msgid "Error Cloning"
-msgstr "ファイルを読む際のエラーです:"
+msgstr "クローン中のエラー"
 
-#, fuzzy
 msgid "Error Creating Branch"
-msgstr "ブランチを作成"
+msgstr "ブランチ作成エラー"
 
-#, fuzzy
 msgid "Error Creating Repository"
-msgstr "新しいリポジトリを作る"
+msgstr "リポジトリ作成エラー"
 
-#, fuzzy
 msgid "Error Deleting Remote Branch"
-msgstr "ブランチを作成"
+msgstr "リモートブランチ削除エラー"
 
-#, fuzzy
 msgid "Error Editing File"
-msgstr "diff を読む際のエラーです:"
+msgstr "ファイル編集エラー"
 
-#, fuzzy
 msgid "Error Launching Blame Viewer"
-msgstr "ファイル・ブラウザ"
+msgstr "責任者ビューア起動エラー"
 
-#, fuzzy
 msgid "Error Launching History Browser"
-msgstr "ファイル・ブラウザ"
+msgstr "履歴ブラウザ起動エラー"
 
 #, python-format
 msgid "Error creating remote \"%s\""
-msgstr ""
+msgstr "リモート \"%s\"作成エラー"
 
-#, fuzzy
 msgid "Error creating stash"
-msgstr "ブランチを作成"
+msgstr "スタッシュ作成エラー"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
-msgstr ""
+msgstr "リモート \"%s\" 削除エラー"
 
 #, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
-msgstr ""
+msgstr "\"%(name)s\" から \"%(new_name)s\" の名前変更エラー"
 
-#, fuzzy
 msgid "Error running prepare-commitmsg hook"
-msgstr "コミット前フックを実行中・・・"
+msgstr "コミットメッセージ前フック実行エラー"
 
 msgid "Error: Cannot find commit template"
-msgstr ""
+msgstr "エラー:コミットテンプレートが見つかりません。"
 
 msgid "Error: Stash exists"
-msgstr ""
+msgstr "エラー:スタッシュの存在"
 
 msgid "Error: Unconfigured commit template"
-msgstr ""
+msgstr "エラー:コミットテンプレートが設定されていない"
 
 #, python-format
 msgid "Error: could not clone \"%s\""
-msgstr ""
+msgstr "エラー:  \"%s\" が cloneできない"
 
 #, python-format
 msgid "Error: could not create tag \"%s\""
-msgstr ""
+msgstr "エラー: tag \"%s\" が作成できない"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Executing action %s"
-msgstr "辞書を %s に巻き戻します"
+msgstr "アクション %s の実行中"
 
 msgid "Expand all"
-msgstr ""
+msgstr "全て展開"
 
 msgid "Export Patches"
-msgstr ""
+msgstr "パッチのエクスポート"
 
 msgid "Export Patches..."
-msgstr ""
+msgstr "パッチのエクスポート中..."
 
-#, fuzzy
 msgid "Expression..."
-msgstr "オプション…"
+msgstr "表現..."
 
 msgid "Extended Regexp"
-msgstr ""
+msgstr "拡張正規表現"
 
 msgid "Extended description..."
-msgstr ""
+msgstr "拡張記述..."
 
 msgid "Fast Forward Only"
-msgstr "早送りのみ"
+msgstr "ファーストフードのみ"
 
-#, fuzzy
 msgid "Fast-forward only"
-msgstr "早送りのみ"
+msgstr "ファーストフードのみ"
 
-#, fuzzy
 msgid "Favorite repositories"
-msgstr "最近使ったリポジトリ"
+msgstr "よく使うリポジトリ"
 
 msgid "Favorites"
-msgstr ""
+msgstr "よく使う"
 
-#, fuzzy
 msgid "Fetch"
-msgstr "リセット…"
+msgstr "取得"
 
 msgid "Fetch Tracking Branch"
-msgstr "トラッキング・ブランチをフェッチ"
+msgstr "トラッキング・ブランチを取得"
 
-#, fuzzy
 msgid "Fetch..."
-msgstr "リセット…"
+msgstr "取得中..."
 
-#, fuzzy
 msgid "File Browser..."
-msgstr "ブラウズ"
+msgstr "ファイルブラウザ..."
 
-#, fuzzy
 msgid "File Differences"
-msgstr "設定"
+msgstr "ファイル差分"
 
 msgid "File Saved"
-msgstr ""
+msgstr "保存したファイル"
 
 #, python-format
 msgid "File saved to \"%s\""
-msgstr ""
+msgstr "ファイルを \"%s\" へ保存"
 
 msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr ""
+msgstr "ファイルシステム変更監視: \"cola.inotify\"がfalseであるため、無効です。\n"
 
 msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
-msgstr ""
+msgstr "ファイルシステム変更監視: libcがinotifyシステムコールをサポートしていないため、無効です。\n"
 
 msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
+msgstr "ファイルシステム変更監視: pywin32がインストールされていないため、無効です。\n"
 
 msgid ""
 "File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
 "\n"
 "    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
-msgstr ""
+msgstr "ファイルシステム変更監視: inotify 監視の総数が上限に到達したため無効です。inotifyの監視の総数の上限を増加させるには以下のように実行します。:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 
-#, fuzzy
 msgid "File system change monitoring: enabled.\n"
-msgstr "ファイル変更時刻を信頼する\n"
+msgstr "ファイルシステム変更監視: 有効です。\n"
 
-#, fuzzy
 msgid "Filename"
-msgstr "名前変更"
+msgstr "ファイル名"
 
-#, fuzzy
 msgid "Files"
-msgstr "ファイル:"
+msgstr "ファイル"
 
-#, fuzzy
 msgid "Filter branches..."
-msgstr "リセット…"
+msgstr "ブランチのフィルタ..."
 
-#, fuzzy
 msgid "Filter paths..."
-msgstr "リセット…"
+msgstr "パスのフィルタ..."
 
-#, fuzzy
 msgid "Find Files"
-msgstr "ファイル:"
+msgstr "ファイルの検索"
 
 msgid "Fixed String"
-msgstr ""
+msgstr "固定文字列"
 
 msgid "Fixed-Width Font"
-msgstr ""
+msgstr "固定幅フォント"
 
 msgid "Fixup"
-msgstr ""
+msgstr "修正"
 
-#, fuzzy
 msgid "Fixup Previous Commit"
-msgstr "マージコミットメッセージ:"
+msgstr "以前のコミットを修正"
 
 msgid "Font Size"
-msgstr "フォントの大きさ"
+msgstr "フォントサイズ"
 
 msgid "Force"
-msgstr ""
+msgstr "強制"
 
 msgid "Force Fetch"
-msgstr ""
+msgstr "強制フェッチ"
 
 msgid "Force Fetch?"
-msgstr ""
+msgstr "強制フェッチしますか?"
 
 msgid "Force Push"
-msgstr ""
+msgstr "強制プッシュ"
 
 msgid "Force Push?"
-msgstr ""
+msgstr "強制プッシュしますか？"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Force fetching from %s?"
-msgstr "%s から %s をフェッチしています"
+msgstr "%sから強制フェッチしますか?"
 
 #, python-format
 msgid "Force push to %s?"
-msgstr ""
+msgstr "%sへ強制プッシュしますか?"
 
 msgid "Format String"
-msgstr ""
+msgstr "フォーマットストリング"
 
 msgid "French translation"
-msgstr ""
+msgstr "フランス語翻訳"
 
 msgid "GPG-sign the merge commit"
-msgstr ""
+msgstr "マージコミットのGPG署名"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Gathering info for \"%s\"..."
-msgstr "%s の変更点をロード中…"
+msgstr "\"%s\"の情報を収集..."
 
 msgid "German translation"
-msgstr ""
+msgstr "ドイツ語翻訳"
 
-#, fuzzy
 msgid "Get Commit Message Template"
-msgstr "コミットメッセージのテキスト幅"
+msgstr "コミットメッセージのテンプレートを取得"
 
 msgid "Go Down"
-msgstr ""
+msgstr "下に移動"
 
 msgid "Go Up"
-msgstr ""
+msgstr "上に移動"
 
 msgid "Grab File..."
-msgstr ""
+msgstr "ファイルのGrab..."
 
 msgid "Graph"
-msgstr ""
+msgstr "グラフ"
 
 msgid "Grep"
-msgstr ""
+msgstr "Grep"
 
 msgid "Have you rebased/pulled lately?"
-msgstr ""
+msgstr "最近rebaseまたはpullを実行しましたか?"
 
 msgid "Help"
 msgstr "ヘルプ"
 
 msgid "Help - Custom Copy Actions"
-msgstr ""
+msgstr "ヘルプ - カスタムコピーアクション"
 
 msgid "Help - Find Files"
-msgstr ""
+msgstr "ヘルプ - ファイルの捜索"
 
 msgid "Help - git-xbase"
-msgstr ""
+msgstr "ヘルプ - git-xbase"
 
 msgid "Hide Details.."
-msgstr ""
+msgstr "詳細を隠す。"
 
-#, fuzzy
 msgid "History Browser"
-msgstr "ファイル・ブラウザ"
+msgstr "履歴ブラウザ"
 
 msgid "Hungarian translation"
-msgstr ""
+msgstr "ハンガリー語翻訳"
 
 msgid "Ignore all whitespace"
-msgstr ""
+msgstr "全ての空白文字を無視する"
 
 msgid "Ignore changes in amount of whitespace"
-msgstr ""
+msgstr "変更の空白文字を無視する"
 
 msgid "Ignore changes in whitespace at EOL"
-msgstr ""
+msgstr "変更の、改行などの行末空白文字を無視する"
 
 msgid "Ignore custom pattern"
-msgstr ""
+msgstr "カスタムパターンで無視を指定する"
 
 msgid "Ignore exact filename"
-msgstr ""
+msgstr "厳密に指定したファイル名で無視を指定する"
 
 msgid "Ignore filename or pattern"
-msgstr ""
+msgstr "ファイル名またはパターンで無視を指定する"
 
-#, fuzzy
 msgid "Include tags "
-msgstr "タグを含める"
+msgstr "タグを含める "
 
 msgid "Indonesian translation"
-msgstr ""
+msgstr "インドネシア語翻訳"
 
-#, fuzzy
 msgid "Initialize Git Annex"
-msgstr "初期化しています…"
+msgstr "Git Annexを初期化する"
 
-#, fuzzy
 msgid "Initialize Git LFS"
-msgstr "初期化しています…"
+msgstr "Git LFSを初期化する"
 
 msgid "Inititalize submodules"
-msgstr ""
+msgstr "サブモジュールを初期化する"
 
 msgid "Insert spaces instead of tabs"
-msgstr ""
+msgstr "タブではなく空白スペースを挿入する"
 
 msgid "Interactive Rebase"
 msgstr ""
 
-#, fuzzy
 msgid "Invalid Revision"
-msgstr "無効なリビジョン: %s"
+msgstr "無効なリビジョン"
 
 msgid "Keep *.orig Merge Backups"
-msgstr ""
+msgstr "*.orig マージバックアップを保持"
 
 msgid "Keep Index"
-msgstr ""
+msgstr "インデックスを保持"
 
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "キーボードショートカット"
 
 msgid "Launch Diff Tool"
-msgstr ""
+msgstr "差分ツールを起動"
 
 msgid "Launch Directory Diff Tool"
-msgstr ""
+msgstr "ディレクトリ差分ツールを起動"
 
 msgid "Launch Editor"
-msgstr ""
+msgstr "エディタを起動"
 
 msgid "Launch Terminal"
-msgstr ""
+msgstr "ターミナルを起動"
 
 msgid ""
 "Launch external diff tool\n"
 "Shortcut: Ctrl+D"
-msgstr ""
+msgstr "外部差分ツールを起動\n"
+"ショートカット: Ctrl+D"
 
 msgid "Launch git-cola"
-msgstr ""
+msgstr "git-colaを起動"
 
 msgid "Launch git-difftool against previous versions"
-msgstr ""
+msgstr "git差分ツールを以前のバージョンに対して起動"
 
 msgid "Launch git-difftool on the current path"
-msgstr ""
+msgstr "git差分ツールを現在のパスに対して起動"
 
-#, fuzzy
 msgid "Load Commit Message"
-msgstr "コミットメッセージ:"
+msgstr "コミットメッセージをロード"
 
-#, fuzzy
 msgid "Load Commit Message..."
-msgstr "コミットメッセージ:"
+msgstr "コミットメッセージをロード中"
 
-#, fuzzy
 msgid "Load Previous Commit Message"
-msgstr "マージコミットメッセージ:"
+msgstr "以前のコミットメッセージをロード"
 
-#, fuzzy
 msgid "Loading..."
-msgstr "%s をロード中…"
+msgstr "ロード中..."
 
 msgid "Local"
-msgstr ""
+msgstr "ローカル"
 
 msgid "Local Branch"
-msgstr "ローカル・ブランチ"
+msgstr "ローカルブランチ"
 
-#, fuzzy
 msgid "Local branch"
-msgstr "ローカル・ブランチ"
+msgstr "ローカルブランチ"
 
 msgid "Lock Layout"
-msgstr ""
+msgstr "レイアウトのロック"
 
 msgid "Log"
-msgstr ""
+msgstr "ログ"
 
 msgid "Maintainer (since 2007) and developer"
-msgstr ""
+msgstr "2007年からのメンテナーと開発者"
 
 msgid "Merge"
 msgstr "マージ"
 
 #, python-format
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
-msgstr ""
+msgstr "\"%(revision)s\" を \"%(branch)s\" にマージ"
 
-#, fuzzy
 msgid "Merge Tool"
-msgstr "マージ"
+msgstr "マージツール"
 
 msgid "Merge Verbosity"
 msgstr "マージの冗長度"
 
 msgid "Merge failed.  Conflict resolution is required."
-msgstr "マージが失敗しました。衝突の解決が必要です。"
+msgstr "マージ失敗衝突の解明が必要です。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Merge into \"%s\""
-msgstr "%s にマージ"
+msgstr "\"%s\"へのマージ"
 
-#, fuzzy
 msgid "Merge into current branch"
-msgstr "現在のブランチのファイルを見る"
+msgstr "現在のブランチへマージ"
 
-#, fuzzy
 msgid "Merge..."
-msgstr "マージ"
+msgstr "マージ中..."
 
-#, fuzzy
 msgid "Merging"
-msgstr "マージ"
+msgstr "マージ中"
 
-#, fuzzy
 msgid "Message"
-msgstr "マージ"
+msgstr "メッセージ"
 
-#, fuzzy
 msgid "Missing Commit Message"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットメッセージの喪失"
 
-#, fuzzy
 msgid "Missing Data"
-msgstr "ファイル無し"
+msgstr "データの喪失"
 
-#, fuzzy
 msgid "Missing Name"
-msgstr "ファイル無し"
+msgstr "名前の喪失"
 
-#, fuzzy
 msgid "Missing Revision"
-msgstr "初期リビジョン"
+msgstr "リビジョンの喪失"
 
-#, fuzzy
 msgid "Missing Tag Message"
-msgstr "マージするリビジョン"
+msgstr "タグメッセージの喪失"
 
-#, fuzzy
 msgid "Modified"
-msgstr "変更無し"
+msgstr "修正"
 
-#, fuzzy
 msgid "More..."
-msgstr "複製…"
+msgstr "以上..."
 
 msgid "Move Down"
-msgstr ""
+msgstr "下に移動"
 
 msgid "Move Up"
-msgstr ""
+msgstr "上に移動"
 
 msgid "Move files to trash"
-msgstr ""
+msgstr "ファイルをゴミ箱に移動"
 
-#, fuzzy
 msgid "Name"
-msgstr "名前:"
+msgstr "名前"
 
 msgid "Name for the new remote"
-msgstr ""
+msgstr "新しいリモートの名前"
 
-#, fuzzy
 msgid "New Bare Repository..."
-msgstr "GIT リポジトリ"
+msgstr "新しい Bare リポジトリ..."
 
-#, fuzzy
 msgid "New Repository..."
-msgstr "GIT リポジトリ"
+msgstr "新しいリポジトリ..."
 
 msgid "New..."
 msgstr "新規…"
 
-#, fuzzy
 msgid "Next File"
-msgstr "全て選択"
+msgstr "次のファイル"
 
 msgid "No"
 msgstr "いいえ"
 
-#, fuzzy
 msgid "No Revision Specified"
-msgstr "リビジョンが未選択です。"
+msgstr "指定リビジョンがありません"
 
-#, fuzzy
 msgid ""
 "No changes to commit.\n"
 "\n"
 "You must stage at least 1 file before you can commit."
-msgstr ""
-"コミットする変更がありません。\n"
+msgstr "コミットする変更がありません\n"
 "\n"
-"最低一つの変更をコミット予定に加えてからコミットして下さい。"
+"コミットする前に少なくとも1ファイルをステージしなければなりません。"
 
 msgid "No commits exist in this branch."
-msgstr ""
+msgstr "このブランチにコミットはありません。"
 
-#, fuzzy
 msgid "No fast forward"
-msgstr "早送りのみ"
+msgstr "ファーストフォワードがありません"
 
-#, fuzzy
 msgid "No fast-forward"
-msgstr "早送りのみ"
+msgstr "ファーストフォワードがありません"
 
 msgid "No repository selected."
 msgstr "リポジトリが選択されていません。"
 
 msgid "Non-fast-forward fetch overwrites local history!"
-msgstr ""
+msgstr "ファーストフォワードではないフェッチはローカルの履歴を上書きします！"
 
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
-msgstr ""
+msgstr "ファーストフォワードではないフェッチは発行した履歴を上書きします！\n"
+"(pullを先に行いますか?)"
 
-#, fuzzy
 msgid "Nothing to commit"
-msgstr "コミットする変更がありません。"
+msgstr "コミットするものはありません。"
 
-#, fuzzy
 msgid "Nothing to do"
-msgstr "%s から複製する内容はありません"
+msgstr "すべきことはありません"
 
 msgid "Number of Diff Context Lines"
 msgstr "diff の文脈行数"
@@ -1522,88 +1488,82 @@ msgstr "diff の文脈行数"
 msgid "Open"
 msgstr "開く"
 
-#, fuzzy
 msgid "Open Git Repository..."
-msgstr "既存リポジトリを開く"
+msgstr "Git リポジトリを開く..."
 
-#, fuzzy
 msgid "Open Parent Directory"
-msgstr "最近使ったリポジトリを開く"
+msgstr "親ディレクトリを開く"
 
-#, fuzzy
 msgid "Open Recent"
-msgstr "最近使ったリポジトリを開く"
+msgstr "最近のものを開く"
 
 msgid "Open Using Default Application"
-msgstr ""
+msgstr "デフォルトのアプリケーションで開く"
 
 msgid "Open in New Window"
-msgstr ""
+msgstr "新しいウィンドウで開く"
 
-#, fuzzy
 msgid "Open in New Window..."
-msgstr "既存リポジトリを開く"
+msgstr "新しいウィンドウで開いています..."
 
 msgid "Open..."
 msgstr "開く…"
 
-#, fuzzy
 msgid "Other branches"
-msgstr "リセット…"
+msgstr "その他のブランチ"
 
 msgid "Overwrite"
-msgstr ""
+msgstr "上書き"
 
 #, python-format
 msgid "Overwrite \"%s\"?"
-msgstr ""
+msgstr "\"%s\"を上書きしますか?"
 
 msgid "Overwrite File?"
-msgstr ""
+msgstr "ファイルを上書きしますか?"
 
 #, python-format
 msgid "PATCH %(current)d/%(count)d"
-msgstr ""
+msgstr "PATCH %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
 "Queries with spaces will require \"double quotes\"."
-msgstr ""
+msgstr "シェルで引数をパースします。\n"
+"空白文字のあるクエリは二重引用符で囲む必要があります。"
 
 msgid "Partially Staged"
-msgstr ""
+msgstr "部分ステージ"
 
 msgid "Paste"
 msgstr "貼り付け"
 
 msgid "Patch(es) Applied"
-msgstr ""
+msgstr "パッチの適用"
 
 msgid "Path"
-msgstr ""
+msgstr "パス"
 
 msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr ""
+msgstr "CloneのパスやURL(環境変数は解釈できる)"
 
 msgid "Pick"
-msgstr ""
+msgstr "ピック"
 
 msgid "Pixel XOR"
-msgstr ""
+msgstr "Pixel XOR"
 
 msgid "Please provide both a branch name and revision expression."
-msgstr ""
+msgstr "ブランチ名とリビジョン表現を両方を提供してください。"
 
-#, fuzzy
 msgid "Please select a file"
-msgstr "トラッキング・ブランチを選択して下さい。"
+msgstr "ファイルを選択してください"
 
 msgid "Please specify a name for the new tag."
-msgstr ""
+msgstr "新しいタグの名前を指定してください。"
 
-#, fuzzy
 msgid "Please specify a revision to tag."
-msgstr "名前を変更するブランチを選んで下さい。"
+msgstr "タグをつけるためのリビジョンを指定してください。"
 
 msgid ""
 "Please supply a commit message.\n"
@@ -1613,58 +1573,52 @@ msgid ""
 "- First line: Describe in one sentence what you did.\n"
 "- Second line: Blank\n"
 "- Remaining lines: Describe why this change is good.\n"
-msgstr ""
-"コミット・メッセージを入力して下さい。\n"
+msgstr "コミットメッセージを提供してください。\n"
 "\n"
-"正しいコミット・メッセージは:\n"
+"良いコミットメッセージは次のフォーマットを持ちます。:\n"
 "\n"
-"- 第１行: 何をしたか、を１行で要約。\n"
-"- 第２行: 空白\n"
-"- 残りの行: なぜ、この変更が良い変更か、の説明。\n"
+"- 1行目: 1行であなたがしたことを説明します。\n"
+"- 2行目: 空行\n"
+"- 3行目以降: あなたがした変更の理由を説明します。\n"
 
 msgid "Point the current branch head to a new commit?"
-msgstr ""
+msgstr "現在のブランチのheadを新しいコミットに指定しますか?"
 
 msgid "Polish translation"
-msgstr ""
+msgstr "ポーランド語翻訳"
 
 msgid "Pop"
-msgstr ""
+msgstr "Pop"
 
 msgid "Preferences"
 msgstr "設定"
 
 msgid "Prefix"
-msgstr ""
+msgstr "prefix"
 
-#, fuzzy
 msgid "Prepare Commit Message"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットメッセージの準備"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
-msgstr ""
+msgstr "何も選択されていないとき、全てのファイルをステージングしないようにする"
 
 msgid "Previous File"
-msgstr ""
+msgstr "以前ののファイル"
 
 msgid "Prompt on creation"
 msgstr ""
 
-#, fuzzy
 msgid "Prompt when pushing creates new remote branches"
-msgstr "ブランチを新規作成"
+msgstr ""
 
-#, fuzzy
 msgid "Prune "
-msgstr "から刈込む…"
+msgstr "Prune "
 
-#, fuzzy
 msgid "Pull"
-msgstr "プッシュ…"
+msgstr "プル"
 
-#, fuzzy
 msgid "Pull..."
-msgstr "プッシュ…"
+msgstr "プル..."
 
 msgid "Push"
 msgstr "プッシュ"
@@ -1675,47 +1629,39 @@ msgstr "プッシュ…"
 msgid "Quit"
 msgstr "終了"
 
-#, fuzzy
 msgid "Rebase"
-msgstr "リセット"
+msgstr "Rebase"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rebase onto %s"
-msgstr "リセット"
+msgstr "%s にrebase"
 
-#, fuzzy
 msgid "Rebase stopped"
-msgstr "リセット"
+msgstr "停止したrebase"
 
 msgid "Rebase the current branch instead of merging"
-msgstr ""
+msgstr "マージの代わりに現在ブランチをrebase"
 
-#, fuzzy
 msgid "Rebasing"
-msgstr "リセット"
+msgstr "rebase中"
 
-#, fuzzy
 msgid "Recent"
-msgstr "リセット"
+msgstr "最近"
 
-#, fuzzy
 msgid "Recent repositories"
-msgstr "最近使ったリポジトリ"
+msgstr "最近のリポジトリ"
 
-#, fuzzy
 msgid "Recent repository count"
-msgstr "最近使ったリポジトリ"
+msgstr "最近のリポジトリ数"
 
 msgid "Recently Modified Files"
-msgstr ""
+msgstr "最近の修正ファイル"
 
-#, fuzzy
 msgid "Recently Modified Files..."
-msgstr "変更されたファイルをスキャンしています…"
+msgstr "最近の修正ファイル..."
 
-#, fuzzy
 msgid "Recovering a dropped stash is not possible."
-msgstr "失なわれたコミットを回復するのは簡単ではありません。"
+msgstr "ドロップしたスタッシュの回復をはできません。"
 
 msgid "Recovering lost commits may not be easy."
 msgstr "失なわれたコミットを回復するのは簡単ではありません。"
@@ -1724,7 +1670,7 @@ msgid "Redo"
 msgstr "やり直し"
 
 msgid "Reduce commit history to minimum"
-msgstr ""
+msgstr "コミット履歴を最小に減らす"
 
 msgid "Refresh"
 msgstr "再読み込み"
@@ -1735,76 +1681,64 @@ msgstr ""
 msgid "Remote"
 msgstr "リモート"
 
-#, fuzzy
 msgid "Remote Branch"
-msgstr "ブランチの名前変更"
+msgstr "リモートブランチ"
 
-#, fuzzy
 msgid "Remote Branch Deleted"
-msgstr "ブランチの名前変更"
+msgstr "リモートブランチ削除"
 
 msgid "Remote git repositories - double-click to rename"
-msgstr ""
+msgstr "リモートgitリポジトリ - ダブルクリックして名前の変更"
 
-#, fuzzy
 msgid "Remove"
-msgstr "リモート"
+msgstr "削除"
 
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr ""
+msgstr "最近のリストから %s を削除しますか?"
 
-#, fuzzy
 msgid "Remove Element"
-msgstr "リモート"
+msgstr "要素の削除"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr ""
+msgstr "リモートリポジトリ上に今は存在するしないブランチのリモートトラッキングを削除する"
 
-#, fuzzy
 msgid "Remove selected (Delete)"
-msgstr "ブランチの名前変更"
+msgstr "選択したものを削除 (Delete)"
 
 msgid "Rename"
 msgstr "名前変更"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rename \"%s\""
-msgstr "名前変更"
+msgstr "\"%s\" の名前を変更"
 
-#, fuzzy
 msgid "Rename Branch"
 msgstr "ブランチの名前変更"
 
-#, fuzzy
 msgid "Rename Branch..."
-msgstr "ブランチの名前変更"
+msgstr "ブランチの名前変更中..."
 
-#, fuzzy
 msgid "Rename Existing Branch"
-msgstr "既存のブランチを更新:"
+msgstr "存在するブランチの名前変更"
 
-#, fuzzy
 msgid "Rename Remote"
-msgstr "リモート"
+msgstr "リモートの名前変更"
 
-#, fuzzy
 msgid "Rename Repository"
-msgstr "既存リポジトリを複製する"
+msgstr "リポジトリの名前変更"
 
-#, fuzzy
 msgid "Rename branch"
 msgstr "ブランチの名前変更"
 
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr ""
+msgstr "リモートの\"%(current)s\" を \"%(new)s\" と名前を変更しますか?"
 
-#, fuzzy
 msgid "Rename selected paths"
-msgstr "ブランチの名前変更"
+msgstr "選択したパスの名前を変更"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Repository: %s"
 msgstr "リポジトリ: %s"
 
@@ -1813,56 +1747,47 @@ msgstr "リセット"
 
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr ""
+msgstr "ブランチの \"%(branch)s\" を \"%(revision)s\" リビジョンにリセットしますか？"
 
-#, fuzzy
 msgid "Reset Branch"
-msgstr "ブランチ削除"
+msgstr "ブランチのリセット"
 
-#, fuzzy
 msgid "Reset Branch Head"
-msgstr "ブランチ削除"
+msgstr "ブランチをHeadにリセット"
 
-#, fuzzy
 msgid "Reset Branch?"
-msgstr "ブランチ削除"
+msgstr "ブランチをリセットしますか?"
 
-#, fuzzy
 msgid "Reset Hard"
-msgstr "ブランチ削除"
+msgstr "ハードリセット"
 
-#, fuzzy
 msgid "Reset Merge"
-msgstr "マージするリビジョン"
+msgstr "マージリセット"
 
-#, fuzzy
 msgid "Reset Soft"
-msgstr "リセット"
+msgstr "ソフトリセット"
 
 msgid "Reset Worktree"
-msgstr ""
+msgstr "ワークツリーをリセット"
 
-#, fuzzy
 msgid "Reset hard?"
-msgstr "ブランチ削除"
+msgstr "ハードリセットをしますか?"
 
-#, fuzzy
 msgid "Reset merge?"
-msgstr "ブランチ削除"
+msgstr " マージリセットをしますか?"
 
-#, fuzzy
 msgid "Reset soft?"
-msgstr "'%s' をリセットしますか？"
+msgstr "ソフトリセットをしますか?"
 
 msgid "Reset worktree?"
-msgstr ""
+msgstr "ワークツリーをリセットしますか?"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr "'%s' を '%s' にリセットすると、以下のコミットが失なわれます:"
+msgstr "\"%(branch)s\" ブランチを \"%(revision)s\" リビジョンにリセットするとコミットが失われます。"
 
 msgid "Revert"
-msgstr ""
+msgstr "リバート"
 
 msgid "Revert Diff Hunk"
 msgstr ""
@@ -1879,29 +1804,23 @@ msgstr ""
 msgid "Revert Selected Lines..."
 msgstr ""
 
-#, fuzzy
 msgid "Revert Selected Lines?"
-msgstr "ファイル %s にした変更を元に戻しますか？"
+msgstr ""
 
-#, fuzzy
 msgid "Revert Uncommitted Changes"
-msgstr "変更を元に戻す"
+msgstr ""
 
-#, fuzzy
 msgid "Revert Uncommitted Changes?"
-msgstr "変更を元に戻す"
+msgstr ""
 
-#, fuzzy
 msgid "Revert Uncommitted Edits..."
-msgstr "変更を元に戻す"
+msgstr ""
 
-#, fuzzy
 msgid "Revert Unstaged Changes"
-msgstr "コミット予定に入っていない変更"
+msgstr ""
 
-#, fuzzy
 msgid "Revert Unstaged Changes?"
-msgstr "コミット予定に入っていない変更"
+msgstr ""
 
 msgid "Revert Unstaged Edits..."
 msgstr ""
@@ -1909,30 +1828,26 @@ msgstr ""
 msgid "Revert the uncommitted changes?"
 msgstr ""
 
-#, fuzzy
 msgid "Revert the unstaged changes?"
-msgstr "コミット予定に入っていない変更"
-
-#, fuzzy
-msgid "Revert uncommitted changes to selected paths"
-msgstr "ファイル %s にした変更を元に戻しますか？"
-
-#, fuzzy
-msgid "Revert unstaged changes to selected paths"
-msgstr "ファイル %s にした変更を元に戻しますか？"
-
-msgid "Review"
 msgstr ""
 
-#, fuzzy
+msgid "Revert uncommitted changes to selected paths"
+msgstr ""
+
+msgid "Revert unstaged changes to selected paths"
+msgstr ""
+
+msgid "Review"
+msgstr "レビュー"
+
 msgid "Review..."
-msgstr "リセット…"
+msgstr "レビュー..."
 
 msgid "Revision"
 msgstr "リビジョン"
 
 msgid "Revision Expression:"
-msgstr "リビジョン式:"
+msgstr "リビジョン表現:"
 
 msgid "Revision to Merge"
 msgstr "マージするリビジョン"
@@ -1941,98 +1856,93 @@ msgid "Reword"
 msgstr ""
 
 msgid "Rewrite Published Commit?"
-msgstr ""
+msgstr "発行ずみコミットを書き直しますか?"
 
 msgid "Run"
-msgstr ""
+msgstr "実行"
 
 #, python-format
 msgid "Run \"%s\"?"
-msgstr ""
+msgstr "\"%s\"を実行しますか？"
 
 #, python-format
 msgid "Run %s?"
-msgstr ""
+msgstr "%sを実行しますか？"
 
 #, python-format
 msgid "Run the \"%s\" command?"
-msgstr ""
+msgstr "\"%s\"コマンドを実行しますか？"
 
 #, python-format
 msgid "Running command: %s"
-msgstr ""
+msgstr "コマンド %s を実行中..."
 
 msgid "Russian translation"
-msgstr ""
+msgstr "ロシア語翻訳"
 
-#, fuzzy
 msgid "SHA-1"
-msgstr "全てコピー"
+msgstr "SHA-1"
 
 msgid "Safe Mode"
-msgstr ""
+msgstr "セーフモード"
 
 msgid "Save"
 msgstr "保存"
 
 msgid "Save Archive"
-msgstr ""
+msgstr "アーカイブ保存"
 
 msgid "Save As Tarball/Zip..."
-msgstr ""
+msgstr "Tarball/Zip形式で保存する"
 
 msgid "Save GUI Settings"
-msgstr ""
+msgstr "GUI設定を保存する"
 
 msgid "Save Stash"
-msgstr ""
+msgstr "スタッシュを保存する"
 
 msgid "Save modified state to new stash"
-msgstr ""
+msgstr "修正した状態を新しいスタッシュで保存する"
 
 #, python-format
 msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
-msgstr ""
+msgstr "\"%(ref)s\" から \"%(destination)s\" に \"%(filename)s\" を保存する"
 
 msgid "Search"
-msgstr ""
+msgstr "検索"
 
 msgid "Search Authors"
-msgstr ""
+msgstr "著者を検索"
 
-#, fuzzy
 msgid "Search Commit Messages"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットメッセージを検索"
 
-#, fuzzy
 msgid "Search Committers"
-msgstr "コミット者:"
+msgstr "コミッターを検索"
 
 msgid "Search Date Range"
-msgstr ""
+msgstr "検索日時の範囲"
 
 msgid "Search Diffs"
-msgstr ""
+msgstr "差分検索"
 
-#, fuzzy
 msgid "Search by Expression"
-msgstr "リビジョン式:"
+msgstr "表現による検索"
 
 msgid "Search by Path"
-msgstr ""
+msgstr "パスによる検索"
 
 msgid "Search for a fixed string"
-msgstr ""
+msgstr "固定文字列検索"
 
 msgid "Search using a POSIX basic regular expression"
-msgstr ""
+msgstr "POSIX基本正規表現検索"
 
 msgid "Search using a POSIX extended regular expression"
-msgstr ""
+msgstr "POSIX拡張正規表現検索"
 
-#, fuzzy
 msgid "Search..."
-msgstr "起動中…"
+msgstr "検索中..."
 
 msgid "Select"
 msgstr "選択"
@@ -2040,84 +1950,68 @@ msgstr "選択"
 msgid "Select All"
 msgstr "全て選択"
 
-#, fuzzy
 msgid "Select Branch to Review"
-msgstr "ブランチ削除"
+msgstr "レビュー対象のブランチを選択"
 
-#, fuzzy
 msgid "Select Child"
-msgstr "全て選択"
+msgstr "子を選択"
 
-#, fuzzy
 msgid "Select Commit"
-msgstr "マージコミットメッセージ:"
+msgstr "コミットを選択"
 
-#, fuzzy
 msgid "Select Directory..."
-msgstr "GIT リポジトリ"
+msgstr "ディレクトリを選択..."
 
-#, fuzzy
 msgid "Select New Upstream"
-msgstr "選択"
+msgstr "新しいアップストリームを選択"
 
 msgid "Select Newest Child"
-msgstr ""
+msgstr "最新の子を選択"
 
 msgid "Select Oldest Parent"
-msgstr ""
+msgstr "最古の親を選択"
 
-#, fuzzy
 msgid "Select Parent"
-msgstr "選択"
+msgstr "親を選択"
 
 msgid "Select Previous Version"
-msgstr ""
+msgstr "以前のバージョンを選択"
 
-#, fuzzy
 msgid "Select Repository..."
-msgstr "GIT リポジトリ"
+msgstr "リポジトリを選択..."
 
 msgid "Select a parent directory for the new clone"
-msgstr ""
+msgstr "新しいクローン用に親ディレクトリを選択"
 
-#, fuzzy
 msgid "Select manually..."
-msgstr "全て選択"
+msgstr "マニュアルで選択..."
 
-#, fuzzy
 msgid "Select output dir"
-msgstr "マージコミットメッセージ:"
+msgstr "出力ディレクトリを選択"
 
-#, fuzzy
 msgid "Select output directory"
-msgstr "GIT リポジトリ"
+msgstr "出力ディレクトリを選択"
 
-#, fuzzy
 msgid "Select patch file(s)..."
-msgstr "削除…"
+msgstr "パッチファイルを選択..."
 
-#, fuzzy
 msgid "Select repository"
-msgstr "GIT リポジトリ"
+msgstr "リポジトリを選択"
 
-#, fuzzy
 msgid "Set Default Repository"
-msgstr "GIT リポジトリ"
+msgstr "デフォルトリポジトリを設定"
 
-#, fuzzy
 msgid "Set Upstream Branch"
-msgstr "選択"
+msgstr "アップストリームブランチを設定"
 
-#, fuzzy
 msgid "Set upstream"
-msgstr "選択"
+msgstr "アップストリームを設定"
 
-#, fuzzy
 msgid "Settings"
-msgstr "起動中…"
+msgstr "設定"
 
 msgid "Shell arguments"
-msgstr ""
+msgstr "シェル引数"
 
 msgid "Shift Down"
 msgstr ""
@@ -2126,42 +2020,40 @@ msgid "Shift Up"
 msgstr ""
 
 msgid "Shortcuts"
-msgstr ""
+msgstr "ショートカット"
 
-#, fuzzy
 msgid "Show Details..."
-msgstr "削除…"
+msgstr "詳細の表示..."
 
 msgid "Show Diffstat After Merge"
 msgstr "マージ後に diffstat を表示"
 
 msgid "Show Full Paths in the Window Title"
-msgstr ""
+msgstr "ウィンドウタイトルにフルパスを表示"
 
-#, fuzzy
 msgid "Show Help"
-msgstr "ヘルプ"
+msgstr "ヘルプの表示"
 
 msgid "Show History"
-msgstr ""
+msgstr "履歴の表示"
 
 msgid ""
 "Show help\n"
 "Shortcut: ?"
-msgstr ""
+msgstr "ヘルプの表示\n"
+"ショートカット: ?"
 
 msgid "Show icon? (if available)"
-msgstr ""
+msgstr "アイコンを表示しますか？(可能な場合)"
 
 msgid "Show line numbers"
-msgstr ""
+msgstr "行数の表示"
 
 msgid "Show whole surrounding functions of changes"
-msgstr ""
+msgstr "変更を含む関数全体を表示"
 
-#, fuzzy
 msgid "Showing changes since"
-msgstr "%s へ変更をプッシュしています"
+msgstr ""
 
 msgid "Side by side"
 msgstr ""
@@ -2169,288 +2061,269 @@ msgstr ""
 msgid "Sign Off"
 msgstr "署名"
 
-#, fuzzy
 msgid "Sign Tag"
-msgstr "署名"
+msgstr "署名されたタグ"
 
-#, fuzzy
 msgid "Sign off on this commit"
-msgstr "コミット予定済"
+msgstr "このコミットの署名をOFFにする"
 
 msgid "Simplified Chinese translation"
-msgstr ""
+msgstr "中国語翻訳(簡体字)"
 
 msgid "Skip"
-msgstr ""
+msgstr "スキップ"
 
-#, fuzzy
 msgid "Skip Current Patch"
-msgstr "ブランチを作成"
+msgstr "現在のパスをスキップ"
 
 msgid "Sort bookmarks alphabetically"
-msgstr ""
+msgstr "ブックマークをアルファベット順にソート"
 
 msgid "Spanish translation"
-msgstr ""
+msgstr "スペイン語翻訳"
 
 msgid "Specifies the SHA-1 to tag"
-msgstr ""
+msgstr "タグにSHA-1を指定する"
 
 msgid "Specifies the tag message"
-msgstr ""
+msgstr "タグメッセージを指定する"
 
 msgid "Specifies the tag name"
-msgstr ""
+msgstr "タグ名を指定する"
 
-#, fuzzy
 msgid "Spelling Suggestions"
-msgstr "提案なし"
+msgstr "スペルの提案"
 
-#, fuzzy
 msgid "Squash"
-msgstr "プッシュ"
+msgstr "スカッシュ"
 
 msgid "Squash the merged commits into a single commit"
-msgstr ""
+msgstr "複数のマージコミットを一つのコミットにまとめる(スカッシュ)"
 
-#, fuzzy
 msgid "Stage"
-msgstr "保存"
+msgstr "ステージ"
 
-#, fuzzy
 msgid "Stage / Unstage"
-msgstr "変更をコミット予定に入れる"
+msgstr "ステージ / ステージ解除"
 
 msgid "Stage All Untracked"
-msgstr ""
+msgstr "全てのトラックしていないものをステージする"
 
 msgid "Stage Changed Files To Commit"
-msgstr "変更されたファイルをコミット予定"
+msgstr "コミットするために変更されたファイルをステージする"
 
-#, fuzzy
 msgid "Stage Diff Hunk"
-msgstr "初期リビジョン"
+msgstr ""
 
 msgid "Stage Modified"
 msgstr ""
 
-#, fuzzy
 msgid "Stage Selected"
-msgstr "選択"
+msgstr ""
 
-#, fuzzy
 msgid "Stage Selected Lines"
-msgstr "コミット予定に入っていない変更"
+msgstr ""
 
-#, fuzzy
 msgid "Stage Unmerged"
-msgstr "変更をコミット予定に入れる"
+msgstr ""
 
-#, fuzzy
 msgid "Stage Untracked"
-msgstr "変更をコミット予定に入れる"
+msgstr ""
 
-#, fuzzy
 msgid "Stage and Commit"
-msgstr "コミット予定する"
+msgstr ""
 
-#, fuzzy
 msgid "Stage and commit?"
-msgstr "コミット予定済"
+msgstr ""
 
-#, fuzzy
 msgid "Stage conflicts"
-msgstr "コミット予定済"
+msgstr ""
 
-#, fuzzy
 msgid "Stage conflicts?"
-msgstr "コミット予定済"
+msgstr ""
 
-#, fuzzy
 msgid "Stage/unstage selected paths for commit"
-msgstr "コミット予定済"
+msgstr ""
 
-#, fuzzy
 msgid "Staged"
-msgstr "変更をコミット予定に入れる"
+msgstr "ステージ済"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Staging: %s"
-msgstr "%s をスキャンしています…"
+msgstr "%s をステージしています…"
 
 msgid "Start Interactive Rebase..."
-msgstr ""
+msgstr "インタラクティブリベースを開始する..."
 
 msgid "Starting Revision"
 msgstr "初期リビジョン"
 
 msgid "Stash"
-msgstr ""
+msgstr "スタッシュ"
 
-#, fuzzy
 msgid "Stash Index"
-msgstr "索引エラー"
+msgstr "インデックスのスタッシュ"
 
-#, fuzzy
 msgid "Stash staged changes only"
-msgstr "変更点をコミット中・・・"
+msgstr "ステージされた変更のみをスタッシュ"
 
-#, fuzzy
 msgid "Stash unstaged changes only, keeping staged changes"
-msgstr "ファイル %s にした変更を元に戻しますか？"
+msgstr "ステージされていない変更のみをスタッシュ、ステージされた変更を維持"
 
-#, fuzzy
 msgid "Stash..."
-msgstr "プッシュ…"
+msgstr "スタッシュ中..."
 
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 msgid "Stop tracking paths"
-msgstr ""
+msgstr "パスのトラッキングを中止する"
 
 msgid "Summarize Merge Commits"
 msgstr "マージコミットの要約"
 
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 msgid "Summary:"
-msgstr ""
+msgstr "要約:"
 
 msgid "Tab Width"
-msgstr ""
+msgstr "タグ幅"
 
 msgid "Tag"
 msgstr "タグ"
 
-#, fuzzy
 msgid "Tag Created"
-msgstr "作成"
+msgstr "作成されたタグ"
 
 msgid "Tag message..."
-msgstr ""
+msgstr "タグメッセージ..."
 
 msgid "Tag-signing was requested but the tag message is empty."
-msgstr ""
+msgstr "タグの署名が要求されていますが、タグメッセージが空です。"
 
 msgid "Tags"
-msgstr ""
+msgstr "タグ"
 
 msgid "Text Width"
-msgstr ""
+msgstr "テキスト幅"
 
 msgid "The branch will be no longer available."
-msgstr ""
+msgstr "このブランチはもう利用できません。"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr ""
+msgstr "このブランチは\"git reset --hard %s\"でリセットする。"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr ""
+msgstr "このブランチは\"git reset --merge %s\"でリセットする。"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr ""
+msgstr "このブランチは\"git reset --mixed %s\"でリセットする。"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr ""
+msgstr "このブランチは\"git reset --soft %s\"でリセットする。"
 
-#, fuzzy
 msgid "The commit message will be cleared."
-msgstr "コミットメッセージのテキスト幅"
+msgstr "このコミットメッセージはクリアされました。"
 
 #, python-format
 msgid "The file \"%s\" exists and will be overwritten."
-msgstr ""
+msgstr "このファイル \"%s\"は存在します。そんため上書きされます。"
 
 msgid "The following files will be deleted:"
-msgstr ""
+msgstr "以下のファイルは削除されます。:"
 
-#, fuzzy
 msgid "The revision expression cannot be empty."
-msgstr "リビジョン式が空です。"
+msgstr "このリビジョン表記を空にできません。"
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr ""
+msgstr "このワークツリーは\"git reset --keep %s\"でリセットする。"
 
 msgid "This cannot be undone.  Clear commit message?"
-msgstr ""
+msgstr "ジレは元に戻せません。コミットメッセージをクリアしますか？"
 
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
-msgstr ""
+msgstr "このコミットは既に発行済みです。\n"
+"この操作は、発行済履歴を上書きします。\n"
+"この操作は、あなたが望んだ操作ではない可能性が高いです。"
 
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
-msgstr ""
+msgstr "この操作は、コミットしていない変更をドロップします。\n"
+"これらの変更は回復できません。"
 
 msgid ""
 "This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
-msgstr ""
+msgstr "この操作は、選択されたファイルのコミットされていない編集を削除します。\n"
+"これらの変更は回復できません。"
 
 msgid ""
 "This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
-msgstr ""
+msgstr "この操作は、選択されたファイルのステージされていない編集を削除します。\n"
+"これらの変更は回復できません。"
 
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
-msgstr ""
+msgstr "このリポジトリは現在リベースされています。\n"
+"衝突を解決し、変更をコミットして実行します。:\n"
+"    Rebase > Continue"
 
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
-msgstr ""
+msgstr "このリポジトリはマージの中間です。\n"
+"衝突を解決し、変更をコミットします。:"
 
 msgid "Toggle Enabled"
-msgstr ""
+msgstr "有効に切り替えます。"
 
 msgid "Toggle the branches filter"
-msgstr ""
+msgstr "ブランチフィルタを切り替えます"
 
 msgid "Toggle the paths filter"
-msgstr ""
+msgstr "パスフィルタを切り替えます"
 
 msgid "Tracking Branch"
-msgstr "トラッキング・ブランチ"
+msgstr "トラッキングブランチ"
 
-#, fuzzy
 msgid "Tracking branch"
-msgstr "トラッキング・ブランチ"
+msgstr "トラッキングブランチ"
 
 msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
+msgstr "伝統的中国語(台湾)翻訳"
 
 msgid "Translators"
-msgstr ""
+msgstr "翻訳者"
 
 msgid "Turkish translation"
-msgstr ""
+msgstr "トルコ語翻訳"
 
 msgid "URL"
 msgstr "URL"
 
-#, fuzzy, python-format
+#, python-format
 msgid "URL: %s"
-msgstr "URL:"
+msgstr "URL: %s"
 
 msgid "Ukranian translation"
-msgstr ""
+msgstr "ウクライナ語翻訳"
 
-#, fuzzy
 msgid "Unable to rebase"
-msgstr "%s を掃除できません"
+msgstr "リベースできません"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
@@ -2459,154 +2332,145 @@ msgstr ""
 msgid "Undo"
 msgstr "元に戻す"
 
-#, fuzzy
 msgid "Unmerged"
-msgstr "マージ"
+msgstr "マージされていない"
 
-#, fuzzy
 msgid "Unstage"
-msgstr "コミット予定に入っていない変更"
+msgstr "ステージされていない"
 
 msgid "Unstage All"
-msgstr ""
+msgstr "全てのステージを解除"
 
 msgid "Unstage Diff Hunk"
 msgstr ""
 
 msgid "Unstage From Commit"
-msgstr "コミットから降ろす"
+msgstr "コミットからステージを解除する"
 
 msgid "Unstage Selected"
-msgstr ""
+msgstr "選択をステージ解除"
 
-#, fuzzy
 msgid "Unstage Selected Lines"
-msgstr "コミット予定に入っていない変更"
+msgstr "選択行をステージ解除する"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Unstaging: %s"
-msgstr "コミットから '%s' を降ろす"
+msgstr "ステージ解除: %s"
 
 msgid "Untrack Selected"
-msgstr ""
+msgstr "選択のトラック解除する"
 
-#, fuzzy
 msgid "Untracked"
-msgstr "管理外、コミット未予定"
+msgstr "トラック解除済み"
 
 #, python-format
 msgid "Untracking: %s"
-msgstr ""
+msgstr "トラック解除中:%s"
 
 msgid "Update Existing Branch:"
 msgstr "既存のブランチを更新:"
 
-#, fuzzy
 msgid "Updating"
-msgstr "起動中…"
+msgstr "更新"
 
 msgid "User Name"
 msgstr "ユーザ名"
 
-#, fuzzy
 msgid "Version"
-msgstr "リビジョン"
+msgstr "バージョン"
 
 msgid "View"
-msgstr ""
+msgstr "ビュー"
 
 msgid "View History..."
-msgstr ""
+msgstr "ビュー履歴..."
 
-#, fuzzy
 msgid "View history for selected paths"
-msgstr "ファイル %s にした変更を元に戻しますか？"
+msgstr "選択パスのビュー履歴"
 
 msgid "Visualize"
 msgstr "可視化"
 
-#, fuzzy
 msgid "Visualize All Branches..."
-msgstr "全てのブランチの履歴を見る"
+msgstr "全てのブランチを可視化"
 
-#, fuzzy
 msgid "Visualize Current Branch..."
-msgstr "現在のブランチの履歴を見る"
+msgstr "現在ブランチを可視化"
 
 msgid "Whether to sign the tag (git tag -s)"
-msgstr ""
+msgstr "タグで署名した場所 (git tag -s)"
 
 msgid "Would you like to stage and commit all modified files?"
-msgstr ""
+msgstr "全ての修正したファイルを、ステージしてコミットしますか？"
 
 msgid "XOR"
-msgstr ""
+msgstr "XOR"
 
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
-msgstr ""
+msgstr "マージ中です。\n"
+"マージ中は訂正できません。"
 
-#, fuzzy
 msgid "You cannot rebase with uncommitted changes."
-msgstr "変更を元に戻す"
+msgstr "コミットされていない変更をリベースできません。"
 
 msgid "You must specify a revision to merge."
-msgstr ""
+msgstr "マージするリビジョンを指定してください。"
 
 msgid "You must specify a revision to view."
-msgstr ""
+msgstr "表示するリビジョンを指定してください。"
 
 msgid "Zoom In"
-msgstr ""
+msgstr "ズームイン"
 
 msgid "Zoom Out"
-msgstr ""
+msgstr "ズームあうと"
 
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "表示幅に合わせてズーム"
 
 msgid "command-line arguments"
-msgstr ""
+msgstr "コマンドライン引数"
 
 msgid "error: unable to execute git"
-msgstr ""
+msgstr "エラー: gitを実行できません。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "exit code %s"
-msgstr "%s を取得"
+msgstr "終了コード %s"
 
 #, python-format
 msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr ""
+msgstr "致命的: \"%s\" はディレクトリではありません。正しいパスを--repo <path>で指定してください。"
 
 #, python-format
 msgid "git cola version %s"
-msgstr ""
+msgstr "git cola バージョン %s"
 
 msgid "git-cola"
-msgstr ""
+msgstr "git-cola"
 
 msgid "git-cola diff"
-msgstr ""
+msgstr "git-cola diff"
 
 msgid "grep result..."
-msgstr ""
+msgstr "grep 結果..."
 
 msgid "hotkeys.html"
-msgstr ""
+msgstr "hotkeys.html"
 
 msgid "unknown"
-msgstr ""
+msgstr "不明"
 
 msgid "vX.Y.Z"
-msgstr ""
+msgstr "vX.Y.Z"
 
 msgid "yyyy-MM-dd"
-msgstr ""
+msgstr "yyyy-MM-dd"
 
 #~ msgid ""
 #~ "\n"
@@ -2698,7 +2562,6 @@ msgstr ""
 #~ msgid "Branch '%s' does not exist."
 #~ msgstr "ブランチ'%s'は存在しません。"
 
-#, fuzzy
 #~ msgid "Branch created"
 #~ msgstr "ブランチ名"
 
@@ -2708,7 +2571,6 @@ msgstr ""
 #~ msgid "Browse Branch Files"
 #~ msgstr "現在のブランチのファイルを見る"
 
-#, fuzzy
 #~ msgid "Browse Revision..."
 #~ msgstr "リビジョン"
 
@@ -2793,7 +2655,6 @@ msgstr ""
 #~ msgid "Commit declined by pre-commit hook."
 #~ msgstr "コミット前フックがコミットを拒否しました"
 
-#, fuzzy
 #~ msgid "Commit failed: %s"
 #~ msgstr "コミットに失敗しました。"
 
@@ -2818,7 +2679,6 @@ msgstr ""
 #~ msgid "Create Desktop Icon"
 #~ msgstr "デスクトップ・アイコンを作る"
 
-#, fuzzy
 #~ msgid "Created commit: %s"
 #~ msgstr "コミット %s を作成しました: %s"
 
@@ -2864,11 +2724,9 @@ msgstr ""
 #~ msgid "Do Nothing"
 #~ msgstr "何もしない"
 
-#, fuzzy
 #~ msgid "Enter Git Repository"
 #~ msgstr "GIT リポジトリ"
 
-#, fuzzy
 #~ msgid "Error %s"
 #~ msgstr "エラー"
 
@@ -2921,7 +2779,6 @@ msgstr ""
 #~ msgid "Failed to update '%s'."
 #~ msgstr "'%s' の更新に失敗しました。"
 
-#, fuzzy
 #~ msgid "Fast Forward Only "
 #~ msgstr "早送りのみ"
 
@@ -3164,7 +3021,6 @@ msgstr ""
 #~ msgid "Packed objects waiting for pruning"
 #~ msgstr "パックに存在するので捨てて良いオブジェクトの数"
 
-#, fuzzy
 #~ msgid "Path to git repository"
 #~ msgstr "Git リポジトリではありません: %s"
 
@@ -3217,11 +3073,9 @@ msgstr ""
 #~ msgid "Ready."
 #~ msgstr "準備完了"
 
-#, fuzzy
 #~ msgid "Rebase Branch"
 #~ msgstr "ブランチの名前変更"
 
-#, fuzzy
 #~ msgid "Rebase..."
 #~ msgstr "リセット…"
 
@@ -3246,14 +3100,12 @@ msgstr ""
 #~ msgid "Refreshing file status..."
 #~ msgstr "ファイル状態を更新しています…"
 
-#, fuzzy
 #~ msgid "Remote Branches"
 #~ msgstr "ブランチの名前変更"
 
 #~ msgid "Remote:"
 #~ msgstr "リモート:"
 
-#, fuzzy
 #~ msgid "Rename remote?"
 #~ msgstr "リモート"
 
@@ -3285,11 +3137,9 @@ msgstr ""
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "これら %i 個のファイルにした変更を元に戻しますか？"
 
-#, fuzzy
 #~ msgid "Select File"
 #~ msgstr "全て選択"
 
-#, fuzzy
 #~ msgid "Select file from \"%s\""
 #~ msgstr "%s からブランチを削除しています。"
 
@@ -3335,7 +3185,6 @@ msgstr ""
 #~ msgid "Staged for removal, still present"
 #~ msgstr "削除予定済、ファイル未削除"
 
-#, fuzzy
 #~ msgid "Staging Area"
 #~ msgstr "%s をスキャンしています…"
 
@@ -3479,7 +3328,6 @@ msgstr ""
 #~ msgid "Updating working directory to '%s'..."
 #~ msgstr "作業ディレクトリを '%s' に更新しています…"
 
-#, fuzzy
 #~ msgid "Updating..."
 #~ msgstr "起動中…"
 
