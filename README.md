@@ -320,14 +320,21 @@ The following commands should be run during development:
     # Run the unit tests
     $ make test
 
-    # Check for pylint warnings.  All new code must pass 100%.
-    $ make pylint3k
+    # Check for pylint and flake8 warnings
+    $ make precommit
+
+    # Run tests against multiple python interpretors using tox
+    $ make tox
 
 The test suite can be found in the [test](test) directory.
 
 The tests are setup to run automatically when code is pushed using
 [Travis CI](https://travis-ci.org/git-cola/git-cola).
 Checkout the [Travis config file](.travis.yml) for more details.
+
+Auto-format `po/*.po` files before committing when updating translations:
+
+    $ make po
 
 When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
 
