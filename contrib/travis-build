@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-
-from __future__  import absolute_import, division, unicode_literals
-
+# flake8: noqa
+from __future__ import absolute_import, division, unicode_literals
+from __future__ import print_function
 import argparse
 import json
 import os
@@ -86,21 +86,21 @@ def parse_slug(url):
         url = url[:-len('.git')]
 
     github_prefixes = (
-            'https://github.com/',
-            'git://github.com/',
-            'git@github.com:',
+        'https://github.com/',
+        'git://github.com/',
+        'git@github.com:',
     )
     for prefix in github_prefixes:
         if url.startswith(prefix):
             return url[len(prefix):]
 
     patterns = (
-            # ssh+git://user:password@host/slug
-            r'^ssh\+git://[^@]+:[^@]+@[^@/]+/([^:]+)$',
-            # ssh+git://user@host/slug
-            r'^ssh\+git://[^@]+@[^@]+?/([^:]+)$',
-            # user@host:slug (no ports, etc
-            r'^[^@]+@[^@]+:([^:]+)$',
+        # ssh+git://user:password@host/slug
+        r'^ssh\+git://[^@]+:[^@]+@[^@/]+/([^:]+)$',
+        # ssh+git://user@host/slug
+        r'^ssh\+git://[^@]+@[^@]+?/([^:]+)$',
+        # user@host:slug (no ports, etc
+        r'^[^@]+@[^@]+:([^:]+)$',
     )
     for pattern in patterns:
         rgx = re.compile(pattern)
@@ -215,6 +215,7 @@ def expandvars(path, environ=None):
         return path
     if environ is None:
         environ = os.environ.copy()
+    # pylint: disable=protected-access
     try:
         expandvars_re = expandvars._re_cache
     except AttributeError:
@@ -397,9 +398,8 @@ class RunCommands(object):
 
     def run_command(self, cmd):
         environ = self.state.environ
-        status, out, err = core.run_command(cmd, env=environ, shell=True,
-                                            stdin=None, stdout=None,
-                                            stderr=None)
+        status, _, _ = core.run_command(cmd, env=environ, shell=True,
+                                        stdin=None, stdout=None, stderr=None)
         expanded = self.expandvars(cmd)
         print('The command "%s" exited with %d.' % (expanded, status))
         if status != 0:
@@ -417,64 +417,63 @@ class RunCommands(object):
         first = words[0]
 
         # Multi-command, e.g. "5s" skips 5 commands
-        rgx = re.compile('^(\d+)(.*)$')
+        rgx = re.compile(r'^(\d+)(.*)$')
 
         if answer in ('f', 'j', 'n', 'N', 'next', 'no', 's', 'skip'):
             self.goto_next()
-            return
 
         elif answer in ('b', 'k', 'p', 'back', 'prev'):
             self.goto_prev()
-            return
 
         elif answer in ('r', 'y', 'Y', 'yes', 'run'):
             self.run_current_command()
             self.goto_next()
-            return
+
         elif answer in ('rw', 'rewind'):
             self.rewind()
-            return
+
         elif answer in ('ff', 'last', 'end'):
             self.fast_forward()
-            return
+
         elif answer in ('ls', 'list'):
             self.list_commands()
-            return
+
         elif answer in ('shell',):
             self.run_shell(default_shell())
-            return
+
         elif answer in ('bash', 'sh', 'zsh', 'ash', 'dash', 'ksh', 'csh'):
             self.run_shell(answer)
-            return
+
         elif answer in ('st', 'status'):
             self.show_status()
-            return
+
         elif answer in ('pwd',):
             print(os.getcwd())
-            return
+
         elif answer in ('env',):
             print_environment(self.state.env)
-            return
+
         elif answer in ('environ',):
             print_environment(self.state.environ)
-            return
+
         elif first in ('g', 'go', 'goto'):
             self.goto(int(words[1]))
+
         elif first in ('cd', 'chdir'):
             self.chdir(self.expandvars(words[1]))
+
         elif answer in ('h', 'help', '?'):
             self.print_help()
-            return
+
         elif answer in ('q', 'quit'):
             self.quit()
-            return
+
         elif rgx.match(answer):
             match = rgx.match(answer)
             count = match.group(1)
             action = match.group(2)
-            for i in range(int(count)):
+            for _ in range(int(count)):
                 self.eval_input(action)
-            return
         else:
             print_error('%s: unknown command' % answer)
             self.print_help()
@@ -537,6 +536,7 @@ def build_version(args, data, language, version):
                       verbose=args.verbose,
                       version=version)
 
+        # pylint: disable=no-member
         if state.verbose:
             print_environment(environ)
 
