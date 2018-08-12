@@ -13,7 +13,6 @@ import unittest
 import yaml
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from cola import app
 from cola import core
 from cola import git
 from cola import gitcmds
@@ -131,6 +130,14 @@ def get_slug(context, args):
     else:
         slug = guess_slug(context, args.remote)
     return slug
+
+
+class ApplicationContext(object):
+
+    def __init__(self, args):
+        self.args = args
+        self.git = None
+        self.cfg = None
 
 
 def new_context(args):
