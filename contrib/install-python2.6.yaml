@@ -22,8 +22,8 @@ install:
   - cd Python-2.6.9
   # Debian sid disabled SSLv3
   - sed -i -e "s,SSL_CTX_new(SSLv3_method()),NULL," Modules/_ssl.c
-  - ./configure --prefix="$(readlink -f ../../python2.6)"
-  - echo "_ssl _ssl.c -DUSE_SSL -I/usr/include/openssl -lssl -lcrypto" >Modules/Setup.local
+  - ./configure --prefix="$(readlink -f ../../python2.6)" --enable-unicode=ucs4
+  - echo "_ssl _ssl.c -DUSE_SSL -DOPENSSL_NO_SSL2 -DOPENSSL_NO_EGD -I/usr/include/openssl -lssl -lcrypto" >Modules/Setup.local
   - echo "crypt cryptmodule.c -lcrypt" >>Modules/Setup.local
   - echo "_md5 md5module.c md5.c" >>Modules/Setup.local
   - echo "_sha shamodule.c" >>Modules/Setup.local
@@ -35,16 +35,21 @@ install:
   - make install
   - cd ..
   # setuptools
-  - wget "https://pypi.python.org/packages/source/s/setuptools/setuptools-19.4.zip"
-  - unzip -o setuptools-19.4.zip
-  - cd setuptools-19.4
+  - wget "https://pypi.python.org/packages/source/s/setuptools/setuptools-19.3.zip"
+  - unzip -o setuptools-19.3.zip
+  - cd setuptools-19.3
   - python setup.py install
   - cd ..
   # pip, virtualenv
-  - easy_install pip
+  - easy_install 'pip<10.0'
   - pip install virtualenv
   # for travis-build
   - cd ../..
-  - ./local/python2.6/bin/virtualenv env26
+  - ./local/python2.6/bin/virtualenv --no-pip --no-setuptools --no-wheel env26
+  - cd local/sandbox/setuptools-19.3
+  - ../../../env26/bin/python setup.py install
+  - cd ../../..
+  - ./env26/bin/easy_install 'pip<10.0'
+  - ./env26/bin/pip install argparse
   - ./env26/bin/pip install pyyaml
-  - ./env26/bin/pip install nose
+  - ./env26/bin/pip install pytest
