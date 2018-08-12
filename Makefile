@@ -49,6 +49,7 @@ RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
 TAR = tar
+TOX ?= tox
 YAPF = yapf
 
 # Flags
@@ -57,24 +58,30 @@ ifdef V
     VERBOSE = --verbose
     ifeq ($(V),2)
         TEST_VERBOSE = --verbose
+        VERBOSE_SHORT = -vv
+    else
+        VERBOSE_SHORT = -v
     endif
 else
     QUIET = --quiet
 endif
-
-PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
-PYTEST_FLAGS += --doctest-modules
 
 FLAKE8_FLAGS = $(VERBOSE)
 FLAKE8_FLAGS += --max-line-length=80
 FLAKE8_FLAGS += --format=pylint
 FLAKE8_FLAGS += --doctests
 
+PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
+PYTEST_FLAGS += --doctest-modules
+
+TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
+
 PYLINT_FLAGS = --rcfile=.pylintrc
 PYLINT_FLAGS += --score=no
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
 endif
+
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -280,3 +287,6 @@ requirements:
 
 requirements-dev:
 	$(PIP) install --requirement requirements/requirements-dev.txt
+
+tox:
+	$(TOX) $(TOX_FLAGS) $(flags)

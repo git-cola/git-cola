@@ -7,6 +7,7 @@
 /dist
 /env*
 /git-cola.app
+/git_cola.egg-info
 /local
 /Meta
 /pynsist_pkgs
@@ -15,6 +16,7 @@
 /share/locale
 /test/tmp
 /tags
+/.tox
 __pycache__
 .DS_Store
 .noseids
