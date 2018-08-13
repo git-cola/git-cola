@@ -1,9 +1,7 @@
-setuptools < 37; python_version == '2.6'
 flake8
 mock
 pbr
-pylint >= 1.9; python_version > '2.6'
+pylint >= 1.9
 PyYAML
-pytest; python_version > '2.6'
-pytest < 3.3; python_version == '2.6'
+pytest
 pytest-cov
