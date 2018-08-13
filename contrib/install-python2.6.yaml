@@ -3,7 +3,7 @@ python:
   - "2.6"
 
 env:
-  - PATH="$PWD/local/python2.6/bin":"$PATH"
+  - CC="gcc-4.8 -fPIC" CXX="g++-4.8 -fPIC" PATH="$PWD/local/python2.6/bin":"$PATH"
 
 before_install:
   - sudo apt-get install -y libreadline-gplv2-dev
