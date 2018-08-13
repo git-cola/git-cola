@@ -1,41 +1,32 @@
 # Travis CI(http://travis-ci.org) configuration file
 language: python
 python:
-  - "2.6"
   - "2.7"
-#  - "3.2" Sphinx depends on Pygments, which only supports Python 3.3+
-#  - "3.3" dotless pytest not available
   - "3.4"
+#  https://docs.travis-ci.com/user/languages/python/
+#  We use apt to avoid having to build PyQt ourselves, so that means
+#  we can only use the default python versions available in Ubuntu.
+#  For Trusty, that's 2.7.6 and 3.4.3.
+virtualenv:
+  system_site_packages: true
 
 # git and python are pre-installed
 before_install:
   # Update APT cache data since it may outdated
   - sudo apt-get -qq update
   # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install -y git rsync gettext python-sphinx
+  - sudo apt-get install -y git rsync gettext
+  # Runtime dependencies
+  - sudo apt-get install -y python-qt4
+  - sudo apt-get install -y python3-pyqt5
+  # Build/test dependencies
+  - sudo apt-get install -y python-sphinx python3-sphinx
+  - sudo apt-get install -y pylint
   # Git test setup
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
 
 install:
-  # SIP
-  - mkdir -p local/sandbox
-  - cd local/sandbox
-  - wget "https://src.fedoraproject.org/repo/extras/sip/sip-4.18.1.tar.gz/9d664c33e8d0eabf1238a7ff44a399e9/sip-4.18.1.tar.gz"
-  - tar xzf sip-4.18.1.tar.gz
-  - cd sip-4.18.1
-  - python configure.py --incdir="$(python -c 'import sys; print(sys.prefix)')"/include/python"$PYTHON_VERSION"
-  - make -j4
-  - make install
-  - cd ..
-  # PyQt4
-  - wget "https://src.fedoraproject.org/repo/pkgs/PyQt4/PyQt-x11-gpl-4.11.4.tar.gz/2fe8265b2ae2fc593241c2c84d09d481/PyQt-x11-gpl-4.11.4.tar.gz"
-  - tar xzf PyQt-x11-gpl-4.11.4.tar.gz
-  - cd PyQt-x11-gpl-4.11.4
-  - python configure.py --confirm-license --no-designer-plugin --no-qsci-api --no-timestamp
-  - make -j4
-  - make install
-  - cd ../../..
   # Build dependencies
   - make requirements
   # Test dependencies
@@ -44,11 +35,9 @@ install:
 script:
   - make all
   - make test V=2
-  # Sphinx requires Python 2.7 or 3.4+
-  - test "2.6" = "$TRAVIS_PYTHON_VERSION" || make doc
-  # pylint uses python2.7+ syntax
-  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || pylint --version
+  - make doc
+  - pylint --version
   - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint
-  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint3k
-  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || flake8 --version
-  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make flake8
+  - make pylint3k
+  - flake8 --version
+  - make flake8
