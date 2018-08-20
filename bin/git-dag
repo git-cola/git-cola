@@ -4,6 +4,7 @@
 
 from __future__ import division, absolute_import, unicode_literals
 import os
+from os.path import abspath, dirname, join, realpath
 import sys
 
 
@@ -24,13 +25,9 @@ GNU General Public License for more details.
 
 def setup_environment():
     """Provides access to the cola modules"""
+
     # Try to detect where it is run from and set prefix and the search path.
     # It is assumed that the user installed Cola using the --prefix= option
-    abspath = os.path.abspath
-    dirname = os.path.dirname
-    realpath = os.path.realpath
-    join = os.path.join
-
     python2 = sys.version_info[0] == 2
     prefix = dirname(dirname(realpath(abspath(__file__))))
 
