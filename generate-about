@@ -104,7 +104,7 @@ def main():
             current_snippet = snippet
 
         name_q = quote(name)
-        core.stdout(current_snippet % locals())
+        core.print_stdout(current_snippet % locals())
 
     return 0
 
@@ -129,7 +129,7 @@ def quote(name):
 
 def git_error(name, args, status, out, err):
     if out:
-        core.stdout(out, linesep='')
+        core.print_stdout(out, linesep='')
     core.error('error: git %s %s returned exit status %s\n%s'
                % (name, ' '.join(args), status, err),
                status=status)
