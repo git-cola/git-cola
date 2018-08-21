@@ -75,6 +75,7 @@ Thanks
 * Jan Šilhan
 * Jan Tumanov
 * jakubklos77
+* Jakub Szymański
 * Jakub Wilk
 * James Geiger
 * Javier Rodriguez Cuevas
