@@ -23,7 +23,7 @@ def usage(args):
 
 
 def error(msg):
-    core.stderr('error: %s' % msg)
+    core.print_stderr('error: %s' % msg)
     sys.exit(1)
 
 
@@ -174,9 +174,9 @@ def get_release(args):
     details = release_details(args)
     when_undef(details).error('could not identify %s' % args.version)
     if args.show_id:
-        core.stdout(str(details['id']))
+        core.print_stdout(str(details['id']))
     else:
-        core.stdout(json.dumps(details, indent=4, sort_keys=True))
+        core.print_stdout(json.dumps(details, indent=4, sort_keys=True))
     return 0
 
 
@@ -204,12 +204,12 @@ def upload_file(args):
     cmd.append('@' + filename)
     cmd.append(url)
 
-    core.stdout('$ ' + subprocess.list2cmdline(cmd))
+    core.print_stdout('$ ' + subprocess.list2cmdline(cmd))
     status, out, err = core.run_command(cmd)
     if out:
-        core.stdout(out)
+        core.print_stdout(out)
     if err:
-        core.stderr(err)
+        core.print_stderr(err)
     return status
 
 # helpers
@@ -221,7 +221,7 @@ def beautify(jsonstr):
         return jsonstr
 
 
-def print_response(resp, printer=core.stdout):
+def print_response(resp, printer=core.print_stdout):
     printer('/* %s */' % resp.status_code)
     printer(beautify(resp.text))
 
@@ -254,7 +254,7 @@ def release_details(args):
     api = github.GithubAPI()
     resp = api.get('/repos/%s/%s/releases' % (args.user, args.repo))
     if resp.status_code != 200:
-        print_response(resp, printer=core.stderr)
+        print_response(resp, printer=core.print_stderr)
         return None
     releases = json.loads(resp.text)
     for release in releases:
