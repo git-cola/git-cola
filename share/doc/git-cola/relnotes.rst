@@ -176,6 +176,10 @@ Development
 * The code base has been thoroughly sanitized using `pylint`, and
   travis is now running pylint over the entire project.
 
+* Miscellaneous improvements and code improvements.
+
+  https://github.com/git-cola/git-cola/issues/874
+
 .. _v3.1:
 
 git-cola v3.1
