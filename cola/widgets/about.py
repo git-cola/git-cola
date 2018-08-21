@@ -304,6 +304,7 @@ def authors_text():
         dict(name='Ilya Tumaykin', title=N_('Developer')),
         dict(name='Iulian Udrea', title=N_('Developer')),
         dict(name='Jake Biesinger', title=N_('Developer')),
+        dict(name='Jakub Szymański', title=N_('Developer')),
         dict(name='Jamie Pate', title=N_('Developer')),
         dict(name='Jean-Francois Dagenais', title=N_('Developer')),
         dict(name='Karthik Manamcheri', title=N_('Developer')),
