@@ -2,6 +2,7 @@
 ./Meta/update-qtpy ~/src/python/qtpy
 ./Meta/set-version vA.B
 ./Meta/tag
-# git cola push
-./Meta/release --all
+git cola push
+vx env36 ./Meta/release --all
+vim ../git-cola.github.io/_config.yaml
 ./Meta/github.io.sh
