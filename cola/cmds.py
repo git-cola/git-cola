@@ -19,6 +19,8 @@ from . import resources
 from . import utils
 from .diffparse import DiffParser
 from .git import STDOUT
+from .git import EMPTY_TREE_OID
+from .git import MISSING_BLOB_OID
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
@@ -1010,7 +1012,7 @@ class DiffImage(EditModel):
                 old_oid = parts[2]
                 new_oid = parts[3]
 
-            if old_oid != gitcmds.MISSING_BLOB_OID:
+            if old_oid != MISSING_BLOB_OID:
                 # First, check if we can get a pre-image from git-annex
                 annex_image = None
                 if annex:
@@ -1023,7 +1025,7 @@ class DiffImage(EditModel):
                     if image:
                         images.append((image, True))
 
-            if new_oid != gitcmds.MISSING_BLOB_OID:
+            if new_oid != MISSING_BLOB_OID:
                 found_in_annex = False
                 if annex and core.islink(filename):
                     status, out, _ = git.annex('status', '--', filename)
@@ -1094,7 +1096,7 @@ class DiffImage(EditModel):
                         merge_head = merge_heads[i]
                     except IndexError:
                         merge_head = 'HEAD'
-                    if oid != gitcmds.MISSING_BLOB_OID:
+                    if oid != MISSING_BLOB_OID:
                         image = gitcmds.write_blob_path(
                             context, merge_head, oid, filename)
                         if image:
@@ -1121,7 +1123,7 @@ class DiffImage(EditModel):
             parts = worktree.split(' ')
             if len(parts) > 3:
                 oid = parts[2]
-                if oid != gitcmds.MISSING_BLOB_OID:
+                if oid != MISSING_BLOB_OID:
                     image = gitcmds.write_blob_path(
                         context, head, oid, filename)
                     if image:
@@ -2561,9 +2563,8 @@ def difftool_launch(context, left=None, right=None, paths=None,
                 left += suffix
             else:
                 # No parent, assume it's the root commit, so we have to diff
-                # against the empty tree.  Git's empty tree is a built-in
-                # constant object name.
-                left = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+                # against the empty tree.
+                left = EMPTY_TREE_OID
                 if not right and left_take_magic:
                     right = left
         difftool_args.append(left)

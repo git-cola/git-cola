@@ -14,12 +14,25 @@ from .decorators import memoize
 from .interaction import Interaction
 
 
-INDEX_LOCK = threading.Lock()
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
 GIT = core.getenv('GIT_COLA_GIT', 'git')
 STATUS = 0
 STDOUT = 1
 STDERR = 2
+
+# Object ID / SHA1-related constants
+# Git's empty tree is a built-in constant object name.
+EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+# Git's diff machinery returns zeroes for modified files whose content exists
+# in the worktree only.
+MISSING_BLOB_OID = '0000000000000000000000000000000000000000'
+# Git's SHA-1 object IDs are 40 characters  long.
+# This will need to change when Git moves away from SHA-1.
+# When that happens we'll have to detect and update this at runtime in
+# order to support both old and new git.
+OID_LENGTH = 40
+
+_index_lock = threading.Lock()
 
 
 def dashify(s):
@@ -258,7 +271,7 @@ class Git(object):
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
         if not _readonly:
-            INDEX_LOCK.acquire()
+            _index_lock.acquire()
         try:
             status, out, err = core.run_command(
                 command, cwd=_cwd, encoding=_encoding,
@@ -267,7 +280,7 @@ class Git(object):
         finally:
             # Let the next thread in
             if not _readonly:
-                INDEX_LOCK.release()
+                _index_lock.release()
 
         if not _raw and out is not None:
             out = core.UStr(out.rstrip('\n'), out.encoding)

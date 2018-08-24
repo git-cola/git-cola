@@ -9,14 +9,11 @@ from . import core
 from . import utils
 from . import version
 from .git import STDOUT
+from .git import EMPTY_TREE_OID
+from .git import OID_LENGTH
 from .i18n import N_
 from .interaction import Interaction
 
-
-# Object ID / SHA1-related constants
-MISSING_BLOB_OID = '0000000000000000000000000000000000000000'
-EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
-OID_LENGTH = 40
 
 
 class InvalidRepositoryError(Exception):
@@ -700,14 +697,16 @@ def ls_tree(context, path, ref='HEAD'):
     result = []
     status, out, _ = git.ls_tree(ref, '--', path, z=True, full_tree=True)
     if status == 0 and out:
+        path_offset = 6 + 1 + 4 + 1 + OID_LENGTH + 1
         for line in out[:-1].split('\0'):
+            #       1    1                                        1
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
             # 0..... 7... 12......................................	53
-            # path offset = 6 + 1 + 4 + 1 + 40 + 1 = 53
+            # path_offset = 6 + 1 + 4 + 1 + OID_LENGTH(40) + 1
             objtype = line[7:11]
-            relpath = line[53:]
+            relpath = line[path_offset:]
             result.append((objtype, relpath))
 
     return result
