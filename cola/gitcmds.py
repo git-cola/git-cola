@@ -15,7 +15,6 @@ from .i18n import N_
 from .interaction import Interaction
 
 
-
 class InvalidRepositoryError(Exception):
     pass
 
