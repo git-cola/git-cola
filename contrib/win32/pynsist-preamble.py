@@ -1,4 +1,5 @@
 # TODO pynsist commands call it "installdir", entry points call it "scriptdir"
+import os
 try:
     installdir = scriptdir
 except NameError:
