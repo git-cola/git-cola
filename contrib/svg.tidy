@@ -1,0 +1,14 @@
+// Config file for [HTML Tidy](html-tidy.org) to properly format SVG markup
+// The main goal is to split elements attributes to separate lines, useful in comparing in diffs
+// Documentation: http://api.html-tidy.org/tidy/tidylib_api_next/tidy_config.html
+// Credit goes to [blalasaadri](https://stackoverflow.com/users/2382246/blalasaadri), who asks the question and find the solution themself.
+// https://stackoverflow.com/questions/25447006/adding-line-breaks-between-attributes
+input-xml: yes
+output-xml: yes
+add-xml-decl: yes
+
+indent: auto
+indent-attributes: yes
+indent-spaces: 4
+
+hide-comments: yes
