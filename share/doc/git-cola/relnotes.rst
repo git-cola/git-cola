@@ -14,6 +14,18 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.3:
+
+git-cola v3.3 (unreleased)
+==========================
+
+Development
+-----------
+* The logo was run through `tidy` to give it a consistent style.
+  Some technical issues with the logo were improved.
+
+  https://github.com/git-cola/git-cola/issues/877
+
 .. _v3.2:
 
 git-cola v3.2
