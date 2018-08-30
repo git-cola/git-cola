@@ -271,7 +271,7 @@ app-tarball: git-cola.app
 	$(MARKDOWN) $< >$@
 
 flake8:
-	$(FLAKE8) $(FLAKE8_FLAGS) .
+	$(FLAKE8) $(FLAKE8_FLAGS) --exclude=./qtpy .
 .PHONY: flake8
 
 pylint3k:
