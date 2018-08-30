@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import os
+import sys
 
 # Add the cola source directory to sys.path
 abspath = os.path.abspath(os.path.realpath(__file__))
