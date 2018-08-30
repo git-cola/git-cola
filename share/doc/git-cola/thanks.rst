@@ -28,6 +28,7 @@ Thanks
 * Bert Jacobs
 * birgersp
 * 林博仁 (Buo-ren Lin)
+* cclaus
 * Charles 101
 * Christian Jann
 * Christopher Meng
