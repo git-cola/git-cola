@@ -271,7 +271,7 @@ app-tarball: git-cola.app
 	$(MARKDOWN) $< >$@
 
 flake8:
-	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(PYTHON_DIRS)
+	$(FLAKE8) $(FLAKE8_FLAGS) .
 .PHONY: flake8
 
 pylint3k:
