@@ -26,6 +26,12 @@ Development
 
   https://github.com/git-cola/git-cola/issues/877
 
+Packaging
+---------
+* The Windows installer's wrapper scripts were missing an import.
+
+  https://github.com/git-cola/git-cola/issues/878
+
 .. _v3.2:
 
 git-cola v3.2
