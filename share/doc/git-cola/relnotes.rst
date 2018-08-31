@@ -26,6 +26,14 @@ Development
 
   https://github.com/git-cola/git-cola/issues/877
 
+* The entire codebase is now checked by `flake8`, rather than just
+  the module and test directories.  This catches things like
+  the pynsist installer scripts.
+
+  https://github.com/git-cola/git-cola/issues/882
+
+  https://github.com/git-cola/git-cola/pull/879
+
 Packaging
 ---------
 * The Windows installer's wrapper scripts were missing an import.
