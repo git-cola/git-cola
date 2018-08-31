@@ -175,10 +175,6 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
     emerge git-cola
 
-### opensuse
-
-Use the [one-click install link](http://software.opensuse.org/package/git-cola).
-
 
 ## MAC OS X
 
