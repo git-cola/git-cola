@@ -126,7 +126,6 @@ PYTHON_DIRS += test
 
 ALL_PYTHON_DIRS = $(PYTHON_DIRS)
 ALL_PYTHON_DIRS += extras
-ALL_PYTHON_DIRS += contrib/win32
 
 PYTHON_SOURCES = bin/git-cola
 PYTHON_SOURCES += bin/git-dag
@@ -272,7 +271,8 @@ app-tarball: git-cola.app
 	$(MARKDOWN) $< >$@
 
 flake8:
-	$(FLAKE8) $(FLAKE8_FLAGS) $(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
+	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS) contrib/win32
 .PHONY: flake8
 
 pylint3k:
