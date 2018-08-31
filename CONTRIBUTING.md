@@ -5,6 +5,10 @@ to this software.
 
 ## Make separate commits for logically separate changes.
 
+## Run the pre-commit checks before committing
+
+* `make precommit`
+
 ## Be picky about whitespace
 
 This project is very picky about code style.
