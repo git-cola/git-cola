@@ -161,7 +161,7 @@ If not, please file a bug against your distribution ;-)
 
 ### arch
 
-    yaourt -S git-cola
+Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
 ### debian, ubuntu
 
