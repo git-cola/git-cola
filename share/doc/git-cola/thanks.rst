@@ -51,6 +51,7 @@ Thanks
 * Drugoy
 * Efimov Vasily
 * Eric Drechsel
+* Erop @EgZvor
 * Erwan Bousse
 * Fabio Coatti
 * Filip Danilović
