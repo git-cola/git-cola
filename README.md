@@ -37,16 +37,16 @@ New releases are available on the
 
 [git-cola on github](https://github.com/git-cola/git-cola)
 
-[git-cola google group](http://groups.google.com/group/git-cola/)
+[git-cola google group](https://groups.google.com/group/git-cola/)
 
 
 # NUTRITIONAL FACTS
 
 ## ACTIVE INGREDIENTS
 
-* [git](http://git-scm.com/) 1.6.3 or newer.
+* [git](https://git-scm.com/) 1.6.3 or newer.
 
-* [Python](http://python.org/) 2.6 or newer (Python 2+3 compatible).
+* [Python](https://python.org/) 2.6 or newer (Python 2+3 compatible).
 
 * [QtPy](https://github.com/spyder-ide/qtpy) 1.1.0 or newer.
 
@@ -178,7 +178,7 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
 ## MAC OS X
 
-[Homebrew](http://brew.sh/) is the easiest way to install
+[Homebrew](https://brew.sh/) is the easiest way to install
 git-cola's *Qt4* and *PyQt4* dependencies.  We will use Homebrew to install
 the git-cola recipe, but build our own .app bundle from source.
 
@@ -361,7 +361,7 @@ find python.  For example:
 
 Windows installers are built using
 
-* [Pynsist](http://pynsist.readthedocs.io/en/latest/).
+* [Pynsist](https://pynsist.readthedocs.io/en/latest/).
 
 * [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
