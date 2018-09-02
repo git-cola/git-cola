@@ -30,6 +30,8 @@ Development
   the module and test directories.  This catches things like
   the pynsist installer scripts.
 
+  https://github.com/git-cola/git-cola/issues/884
+
   https://github.com/git-cola/git-cola/issues/882
 
   https://github.com/git-cola/git-cola/pull/879
