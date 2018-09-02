@@ -272,7 +272,7 @@ app-tarball: git-cola.app
 
 flake8:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
-	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS) contrib/win32
+	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS) contrib share
 .PHONY: flake8
 
 pylint3k:
