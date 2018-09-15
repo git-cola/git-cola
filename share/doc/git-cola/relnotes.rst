@@ -27,6 +27,12 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/889
 
+Fixes
+-----
+* Spelling and grammar fixes.
+
+  https://github.com/git-cola/git-cola/pull/891
+
 Development
 -----------
 * The logo was run through `tidy` to give it a consistent style.
