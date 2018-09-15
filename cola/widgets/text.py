@@ -20,39 +20,6 @@ def get_stripped(widget):
     return widget.get().strip()
 
 
-# PyQt4 does not provide QProxyStyle -- this is a drop-in replacement
-class ProxyStyle(QtWidgets.QCommonStyle):
-
-    OVERRIDES = set()
-
-    def __init__(self, style):
-        super(ProxyStyle, self).__init__()
-        for name, value in style.__dict__.items():
-            if name not in self.OVERRIDES:
-                setattr(self, name, value)
-
-
-if hasattr(QtWidgets, 'QProxyStyle'):
-    BaseProxyStyle = QtWidgets.QProxyStyle  # pylint: disable=no-member
-else:
-    BaseProxyStyle = ProxyStyle
-
-
-class LineEditStyle(BaseProxyStyle):
-
-    OVERRIDES = set(['pixelMetric'])
-
-    def __init__(self, widget):
-        super(LineEditStyle, self).__init__(widget.style())
-        self.widget = widget
-
-    def pixelMetric(self, metric, option, widget):
-        if metric == QtWidgets.QStyle.PM_TextCursorWidth:
-            font = self.widget.font()
-            return QtGui.QFontMetrics(font).width('M')
-        return super(LineEditStyle, self).pixelMetric(metric, option, widget)
-
-
 class LineEdit(QtWidgets.QLineEdit):
 
     cursor_changed = Signal(int, int)
@@ -67,8 +34,6 @@ class LineEdit(QtWidgets.QLineEdit):
 
         if clear_button and hasattr(self, 'setClearButtonEnabled'):
             self.setClearButtonEnabled(True)
-
-        self.setStyle(LineEditStyle(self))
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -247,12 +212,6 @@ class BaseTextEditExtension(QtCore.QObject):
         """Enable word wrapping"""
         pass
 
-    def set_font(self, font):
-        # Update cursor width
-        metrics = QtGui.QFontMetrics(font)
-        width = metrics.width('M')
-        self.widget.setCursorWidth(width)
-
 
 class PlainTextEditExtension(BaseTextEditExtension):
 
@@ -315,10 +274,6 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             return
         super(PlainTextEdit, self).wheelEvent(event)
 
-    def setFont(self, font):
-        super(PlainTextEdit, self).setFont(font)
-        self.ext.set_font(font)
-
 
 class TextEditExtension(BaseTextEditExtension):
 
@@ -373,10 +328,6 @@ class TextEdit(QtWidgets.QTextEdit):
 
     def set_expandtab(self, value):
         self.expandtab_enabled = value
-
-    def setFont(self, font):
-        super(TextEdit, self).setFont(font)
-        self.ext.set_font(font)
 
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)

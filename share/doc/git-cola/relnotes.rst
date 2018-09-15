@@ -19,6 +19,14 @@ Clone the git-cola repo to get the latest development version:
 git-cola v3.3 (unreleased)
 ==========================
 
+Usability, bells and whistles
+-----------------------------
+* Text entry widgets switched to using a block cursor in `v3.2`.
+  This has been reverted to the original line cursor for consistency
+  with other applications and user expectations.
+
+  https://github.com/git-cola/git-cola/issues/889
+
 Development
 -----------
 * The logo was run through `tidy` to give it a consistent style.
