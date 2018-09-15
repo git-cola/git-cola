@@ -377,7 +377,7 @@ Will produce::
             - foo
 
 Current branch will display a star icon. If current branch has commits
-ahead/behind it will display an up/down arrow with it's number.
+ahead/behind it will display an up/down arrow with its number.
 
 Actions
 -------
