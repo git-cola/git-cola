@@ -9,7 +9,7 @@ from .i18n import N_
 
 
 def cmd_action(widget, cmd, context, icon, *shortcuts):
-    """Wrap an generic ContextCommand in a QAction"""
+    """Wrap a generic ContextCommand in a QAction"""
     action = qtutils.add_action(widget, cmd.name(), cmds.run(cmd, context),
                                 *shortcuts)
     action.setIcon(icon)
