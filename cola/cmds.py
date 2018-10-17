@@ -1234,6 +1234,7 @@ class Edit(ContextCommand):
                 '*emacs*': ['+'+self.line_number, filename],
                 '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
                 '*notepad++*': ['-n'+self.line_number, filename],
+                '*subl*': [filename + ':' + self.line_number],
             }
 
             opts = self.filenames
