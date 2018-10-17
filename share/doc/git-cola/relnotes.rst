@@ -27,6 +27,11 @@ Usability, bells and whistles
 
   https://github.com/git-cola/git-cola/issues/889
 
+* The "edit at line" feature, used by the "Grep" tool, now supports
+  the Sublime text editor.
+
+  https://github.com/git-cola/git-cola/pull/894
+
 Fixes
 -----
 * Spelling and grammar fixes.
