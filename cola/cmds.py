@@ -1324,11 +1324,34 @@ class LaunchEditor(Edit):
     def name():
         return N_('Launch Editor')
 
-    def __init__(self, context):
+    def __init__(self, context, widget=None):
         s = context.selection.selection()
         filenames = s.staged + s.unmerged + s.modified + s.untracked
+        line_number = None
+
+        if widget and hasattr(widget, 'numbers'):
+            highlight_line = widget.numbers.highlight_line
+            lines = widget.numbers.lines
+
+            if lines and highlight_line >= 0:
+                # Find the next valid line
+                for i in range(highlight_line, len(lines)):
+                    # take the "new" line number: last value in tuple
+                    newfile_line = lines[i][-1]
+                    if newfile_line > 0:
+                        line_number = str(newfile_line)
+                        break
+                else:
+                    # Find the previous valid line
+                    for i in range(highlight_line - 1, -1, -1):
+                        # take the "new" line number: last value in tuple
+                        newfile_line = lines[i][-1]
+                        if newfile_line > 0:
+                            line_number = str(newfile_line)
+                            break
+
         super(LaunchEditor, self).__init__(
-            context, filenames, background_editor=True)
+            context, filenames, background_editor=True, line_number=line_number)
 
 
 class LoadCommitMessageFromFile(ContextCommand):

@@ -19,8 +19,11 @@ def cmd_action(widget, cmd, context, icon, *shortcuts):
 def launch_editor(context, widget, *shortcuts):
     """Create a QAction to launch an editor"""
     icon = icons.edit()
-    return cmd_action(widget, cmds.LaunchEditor, context, icon, hotkeys.EDIT,
-                      *shortcuts)
+    cmd = cmds.LaunchEditor
+    action = qtutils.add_action(widget, cmd.name(), cmds.run(cmd, context, widget),
+                                *shortcuts)
+    action.setIcon(icon)
+    return action
 
 
 def launch_difftool(context, widget):
