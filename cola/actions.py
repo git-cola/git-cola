@@ -20,7 +20,8 @@ def launch_editor(context, widget, *shortcuts):
     """Create a QAction to launch an editor"""
     icon = icons.edit()
     cmd = cmds.LaunchEditor
-    action = qtutils.add_action(widget, cmd.name(), cmds.run(cmd, context, widget),
+    action = qtutils.add_action(widget, cmd.name(),
+                                cmds.run(cmd, context, widget),
                                 *shortcuts)
     action.setIcon(icon)
     return action

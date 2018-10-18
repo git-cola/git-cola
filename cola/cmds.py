@@ -1351,7 +1351,9 @@ class LaunchEditor(Edit):
                             break
 
         super(LaunchEditor, self).__init__(
-            context, filenames, background_editor=True, line_number=line_number)
+            context, filenames, background_editor=True,
+            line_number=line_number
+        )
 
 
 class LoadCommitMessageFromFile(ContextCommand):
