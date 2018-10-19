@@ -578,7 +578,7 @@ msgstr ""
 msgid "Blame..."
 msgstr "Cerrar..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold on dark headers instead of italic (restart required)"
 msgstr "Fuente en negrita con fondo negro en vez de cabeceras en cursiva (se necesita reiniciar)"
 
 msgid "Branch"

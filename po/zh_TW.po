@@ -577,7 +577,7 @@ msgstr "指謫(blame)查看器"
 msgid "Blame..."
 msgstr "指摘(Blame)..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold on dark headers instead of italic (restart required)"
 msgstr "標題用帶深色底色的粗體而非斜體（需要重新啟動應用軟體設定才會生效）"
 
 msgid "Branch"

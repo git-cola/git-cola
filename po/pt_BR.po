@@ -570,7 +570,7 @@ msgstr "Visualizador de Blame"
 msgid "Blame..."
 msgstr "Blame..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold on dark headers instead of italic (restart required)"
 msgstr "Fonte em negrito com o fundo escuro em vez de cabeçalhos em itálico (necessita reiniciar)"
 
 msgid "Branch"

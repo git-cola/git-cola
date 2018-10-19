@@ -493,7 +493,7 @@ msgstr "Przeglądarka autorów"
 msgid "Blame..."
 msgstr "Przejrzyj autorów..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold on dark headers instead of italic (restart required)"
 msgstr "Czcionka pogrubiona z ciemnym tłem zamiast pochylonych nagłówków (wymagane ponowne uruchomienie)"
 
 msgid "Branch"

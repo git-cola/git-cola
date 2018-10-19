@@ -183,8 +183,8 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Insert spaces instead of tabs'), self.expandtab)
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
-        self.add_row(N_('Bold with dark background font instead of italic '
-                        'headers (restart required)'), self.bold_headers)
+        self.add_row(N_('Bold on dark headers instead of italic '
+                        '(restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
 

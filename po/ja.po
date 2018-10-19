@@ -570,7 +570,7 @@ msgstr "責任者ビューアー"
 msgid "Blame..."
 msgstr "責任者..."
 
-msgid "Bold with dark background font instead of italic headers (restart required)"
+msgid "Bold on dark headers instead of italic (restart required)"
 msgstr ""
 
 msgid "Branch"
