@@ -848,8 +848,6 @@ class Delete(RemoveFiles):
         if not files:
             return
 
-        wrap = textwrap.TextWrapper()
-
         title = N_('Delete Files?')
         msg = N_('The following files will be deleted:') + '\n\n'
         msg += file_summary(files)
