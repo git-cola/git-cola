@@ -177,6 +177,7 @@ Thanks
 * Thiemo van Engelen
 * Thomas Kiley
 * Thomas Kluyver
+* Thomas Thorne
 * Tim Schumacher
 * Trevor Alexander
 * Ugo Riboni
