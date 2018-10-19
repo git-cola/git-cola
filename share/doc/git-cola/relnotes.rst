@@ -34,6 +34,10 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The Diff Editor was not honoring the configured tab width on startup.
+
+  https://github.com/git-cola/git-cola/issues/900
+
 * The "Delete Files" feature was creating an unreadable display when
   many files were selected.  Word-wrap the list of files so that the
   display stays within a sensible size.

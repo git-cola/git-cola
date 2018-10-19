@@ -9,6 +9,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..models import prefs
 from ..qtutils import get
 from .. import hotkeys
 from .. import qtutils
@@ -550,6 +551,7 @@ class HintedPlainTextEdit(PlainTextEdit):
         self.hint = HintWidget(self, hint)
         self.hint.init()
         self.setFont(qtutils.diff_font(context))
+        self.set_tabwidth(prefs.tabwidth(context))
         # Refresh palettes when text changes
         self.textChanged.connect(self.hint.refresh)
 
