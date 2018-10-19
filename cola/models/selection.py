@@ -58,12 +58,14 @@ class SelectionModel(Observable):
         self.unmerged = []
         self.modified = []
         self.untracked = []
+        self.line_number = None
 
     def reset(self):
         self.staged = []
         self.unmerged = []
         self.modified = []
         self.untracked = []
+        self.line_number = None
 
     def is_empty(self):
         return not(bool(self.staged or self.unmerged or
