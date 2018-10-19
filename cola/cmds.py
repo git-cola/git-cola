@@ -1230,11 +1230,11 @@ class Edit(ContextCommand):
         else:
             # Single-file w/ line-numbers (likely from grep)
             editor_opts = {
-                '*vim*': [filename, '+'+self.line_number],
-                '*emacs*': ['+'+self.line_number, filename],
+                '*vim*': [filename, '+%s' % self.line_number],
+                '*emacs*': ['+%s' % self.line_number, filename],
                 '*textpad*': ['%s(%s,0)' % (filename, self.line_number)],
-                '*notepad++*': ['-n'+self.line_number, filename],
-                '*subl*': [filename + ':' + self.line_number],
+                '*notepad++*': ['-n%s' % self.line_number, filename],
+                '*subl*': ['%s:%s' % (filename, self.line_number)],
             }
 
             opts = self.filenames
