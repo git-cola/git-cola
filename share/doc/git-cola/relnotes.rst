@@ -34,6 +34,12 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The "Delete Files" feature was creating an unreadable display when
+  many files were selected.  Word-wrap the list of files so that the
+  display stays within a sensible size.
+
+  https://github.com/git-cola/git-cola/issues/895
+
 * Spelling and grammar fixes.
 
   https://github.com/git-cola/git-cola/pull/891

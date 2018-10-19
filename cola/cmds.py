@@ -16,6 +16,7 @@ from . import core
 from . import gitcmds
 from . import icons
 from . import resources
+from . import textwrap
 from . import utils
 from .diffparse import DiffParser
 from .git import STDOUT
@@ -648,7 +649,8 @@ def file_summary(files):
     txt = core.list2cmdline(files)
     if len(txt) > 768:
         txt = txt[:768].rstrip() + '...'
-    return txt
+    wrap = textwrap.TextWrapper()
+    return '\n'.join(wrap.wrap(txt))
 
 
 class RemoteCommand(ConfirmAction):
@@ -828,7 +830,8 @@ class RemoveFiles(ContextCommand):
 
         if bad_filenames:
             Interaction.information(
-                N_('Error'), N_('Deleting "%s" failed') % file_summary(files))
+                N_('Error'),
+                N_('Deleting "%s" failed') % file_summary(bad_filenames))
 
         if rescan:
             self.model.update_file_status()
@@ -844,6 +847,8 @@ class Delete(RemoveFiles):
         files = self.filenames
         if not files:
             return
+
+        wrap = textwrap.TextWrapper()
 
         title = N_('Delete Files?')
         msg = N_('The following files will be deleted:') + '\n\n'
