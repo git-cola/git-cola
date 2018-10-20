@@ -646,6 +646,8 @@ class DiffEditor(DiffTextEdit):
         selection_model.add_observer(
             selection_model.message_selection_changed, self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        # Update the selection model when the cursor changes
+        self.cursorPositionChanged.connect(self._update_line_number)
 
     def refresh(self):
         enabled = False
@@ -855,8 +857,7 @@ class DiffEditor(DiffTextEdit):
                 first_line_idx, last_line_idx,
                 self.has_selection(), reverse, apply_to_worktree)
 
-    def _cursor_changed(self):
-        super(DiffEditor, self)._cursor_changed()
+    def _update_line_number(self):
         self.selection_model.line_number = self.numbers.current_line()
 
 
