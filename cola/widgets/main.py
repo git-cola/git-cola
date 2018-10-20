@@ -720,7 +720,11 @@ class MainView(standard.MainWindow):
             self.commiteditor.setFont(font)
 
         elif config == prefs.TABWIDTH:
-            # variable-tab-width setting
+            # This can be set locally or globally, so we have to use the
+            # effective value otherwise we'll update when we shouldn't.
+            # For example, if this value is overridden locally, and the
+            # global value is tweaked, we should not update.
+            value = prefs.tabwidth(self.context)
             self.diffeditor.set_tabwidth(value)
             self.commiteditor.set_tabwidth(value)
 
@@ -735,7 +739,8 @@ class MainView(standard.MainWindow):
             self.bookmarksdock.widget().reload_bookmarks()
 
         elif config == prefs.TEXTWIDTH:
-            # text width used for line wrapping
+            # Use the effective value for the same reason as tabwidth.
+            value = prefs.textwidth(self.context)
             self.commiteditor.set_textwidth(value)
 
         elif config == prefs.SHOW_PATH:
