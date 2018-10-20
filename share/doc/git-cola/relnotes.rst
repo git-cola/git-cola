@@ -21,6 +21,11 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* Running "Launch Editor" from the diff editor now opens the editor at the
+  current line.
+
+  https://github.com/git-cola/git-cola/pull/898
+
 * The textwidth and tabwidth configuration values can now be set
   per-repository, rather than globally only.
 
