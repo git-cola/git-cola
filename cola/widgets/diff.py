@@ -250,7 +250,7 @@ class DiffLineNumbers(TextDecorator):
         """Set the line to highlight"""
         self.highlight_line = line_number
 
-    def newfile_line(self):
+    def current_line(self):
         if self.lines and self.highlight_line >= 0:
             # Find the next valid line
             for i in range(self.highlight_line, len(self.lines)):
@@ -857,7 +857,7 @@ class DiffEditor(DiffTextEdit):
 
     def _cursor_changed(self):
         super(DiffEditor, self)._cursor_changed()
-        self.selection_model.line_number = self.numbers.newfile_line()
+        self.selection_model.line_number = self.numbers.current_line()
 
 
 class DiffWidget(QtWidgets.QWidget):
