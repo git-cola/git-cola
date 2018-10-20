@@ -631,8 +631,8 @@ class DiffEditor(DiffTextEdit):
             self, 'Revert', self.revert_selection, hotkeys.REVERT)
         self.action_revert_selection.setIcon(icons.undo())
 
-        self.launch_editor = actions.launch_editor(context, self,
-                                                   *hotkeys.ACCEPT)
+        self.launch_editor = actions.launch_editor_at_line(
+            context, self, *hotkeys.ACCEPT)
         self.launch_difftool = actions.launch_difftool(context, self)
         self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
@@ -859,6 +859,7 @@ class DiffEditor(DiffTextEdit):
                 self.has_selection(), reverse, apply_to_worktree)
 
     def _update_line_number(self):
+        """Update the selection model when the cursor changes"""
         self.selection_model.line_number = self.numbers.current_line()
 
 

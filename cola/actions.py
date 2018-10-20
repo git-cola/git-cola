@@ -23,6 +23,13 @@ def launch_editor(context, widget, *shortcuts):
                       *shortcuts)
 
 
+def launch_editor_at_line(context, widget, *shortcuts):
+    """Create a QAction to launch an editor"""
+    icon = icons.edit()
+    return cmd_action(widget, cmds.LaunchEditorAtLine, context, icon,
+                      hotkeys.EDIT, *shortcuts)
+
+
 def launch_difftool(context, widget):
     """Create a QAction to launch git-difftool(1)"""
     icon = icons.diff()
