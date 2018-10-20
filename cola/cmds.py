@@ -1326,7 +1326,9 @@ class LaunchEditor(Edit):
         s = context.selection.selection()
         filenames = s.staged + s.unmerged + s.modified + s.untracked
         super(LaunchEditor, self).__init__(
-            context, filenames, background_editor=True)
+            context, filenames, background_editor=True,
+            line_number=context.selection.line_number
+        )
 
 
 class LoadCommitMessageFromFile(ContextCommand):

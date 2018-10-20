@@ -250,6 +250,23 @@ class DiffLineNumbers(TextDecorator):
         """Set the line to highlight"""
         self.highlight_line = line_number
 
+    def current_line(self):
+        if self.lines and self.highlight_line >= 0:
+            # Find the next valid line
+            for line in self.lines[self.highlight_line:]:
+                # take the "new" line number: last value in tuple
+                line_number = line[-1]
+                if line_number > 0:
+                    return line_number
+
+            # Find the previous valid line
+            for line in self.lines[self.highlight_line-1::-1]:
+                # take the "new" line number: last value in tuple
+                line_number = line[-1]
+                if line_number > 0:
+                    return line_number
+        return None
+
     def paintEvent(self, event):
         """Paint the line number"""
         if not self.lines:
@@ -630,6 +647,8 @@ class DiffEditor(DiffTextEdit):
         selection_model.add_observer(
             selection_model.message_selection_changed, self.updated.emit)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        # Update the selection model when the cursor changes
+        self.cursorPositionChanged.connect(self._update_line_number)
 
     def refresh(self):
         enabled = False
@@ -838,6 +857,9 @@ class DiffEditor(DiffTextEdit):
         cmds.do(cmds.ApplyDiffSelection, context,
                 first_line_idx, last_line_idx,
                 self.has_selection(), reverse, apply_to_worktree)
+
+    def _update_line_number(self):
+        self.selection_model.line_number = self.numbers.current_line()
 
 
 class DiffWidget(QtWidgets.QWidget):
