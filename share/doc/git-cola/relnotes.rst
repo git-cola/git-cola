@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The textwidth and tabwidth configuration values can now be set
+  per-repository, rather than globally only.
+
 * Text entry widgets switched to using a block cursor in `v3.2`.
   This has been reverted to the original line cursor for consistency
   with other applications and user expectations.
