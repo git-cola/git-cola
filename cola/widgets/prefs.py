@@ -4,12 +4,13 @@ import os
 from qtpy import QtCore
 from qtpy import QtWidgets
 
-from ..i18n import N_
-from ..models import prefs
-from .. import cmds
-from .. import qtutils
 from . import defs
 from . import standard
+from .. import cmds
+from .. import qtutils
+from ..i18n import N_
+from ..models import prefs
+from ..models.prefs import Defaults
 
 
 def preferences(context, model=None, parent=None):
@@ -103,9 +104,8 @@ class RepoFormWidget(FormWidget):
         self.name = QtWidgets.QLineEdit()
         self.email = QtWidgets.QLineEdit()
 
-        self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
         self.diff_context = standard.SpinBox(value=5, mini=2, maxi=9995)
-
+        self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
         self.merge_summary = qtutils.checkbox(checked=True)
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
@@ -130,16 +130,20 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Safe Mode'), self.safe_mode)
 
         self.set_config({
-            prefs.CHECKCONFLICTS: (self.check_conflicts, True),
-            prefs.DIFFCONTEXT: (self.diff_context, 5),
-            prefs.DISPLAY_UNTRACKED: (self.display_untracked, True),
+            prefs.CHECKCONFLICTS:
+                (self.check_conflicts, Defaults.check_conflicts),
+            prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
+            prefs.DISPLAY_UNTRACKED:
+                (self.display_untracked, Defaults.display_untracked),
             prefs.USER_NAME: (self.name, ''),
             prefs.USER_EMAIL: (self.email, ''),
-            prefs.MERGE_DIFFSTAT: (self.merge_diffstat, True),
-            prefs.MERGE_SUMMARY: (self.merge_summary, True),
-            prefs.MERGE_VERBOSITY: (self.merge_verbosity, 5),
-            prefs.SAFE_MODE: (self.safe_mode, False),
-            prefs.SHOW_PATH: (self.show_path, True),
+            prefs.MERGE_DIFFSTAT:
+                (self.merge_diffstat, Defaults.merge_diffstat),
+            prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
+            prefs.MERGE_VERBOSITY:
+                (self.merge_verbosity, Defaults.merge_verbosity),
+            prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
+            prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
         })
 
 
@@ -165,7 +169,7 @@ class SettingsFormWidget(FormWidget):
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()
-        self.save_gui_settings = qtutils.checkbox()
+        self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
 
@@ -185,27 +189,32 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Bold on dark headers instead of italic '
                         '(restart required)'), self.bold_headers)
-        self.add_row(N_('Save GUI Settings'), self.save_gui_settings)
+        self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
 
         self.set_config({
-            prefs.SAVEWINDOWSETTINGS: (self.save_gui_settings, True),
             prefs.TABWIDTH: (self.tabwidth, 8),
             prefs.EXPANDTAB: (self.expandtab, False),
-            prefs.TEXTWIDTH: (self.textwidth, 72),
-            prefs.LINEBREAK: (self.linebreak, True),
-            prefs.MAXRECENT: (self.maxrecent, 8),
-            prefs.SORT_BOOKMARKS: (self.sort_bookmarks, True),
-            prefs.BOLD_HEADERS: (self.bold_headers, False),
-            prefs.DIFFTOOL: (self.difftool, 'xxdiff'),
-            prefs.EDITOR: (self.editor, os.getenv('VISUAL', 'gvim')),
-            prefs.HISTORY_BROWSER: (self.historybrowser,
-                                    prefs.default_history_browser()),
-            prefs.BLAME_VIEWER: (self.blameviewer,
-                                 prefs.default_blame_viewer()),
-            prefs.MERGE_KEEPBACKUP: (self.keep_merge_backups, True),
-            prefs.MERGETOOL: (self.mergetool, 'xxdiff'),
-            prefs.SPELL_CHECK: (self.check_spelling, False),
+            prefs.SAVEWINDOWSETTINGS:
+                (self.save_window_settings, Defaults.save_window_settings),
+            prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
+            prefs.EXPANDTAB: (self.expandtab, Defaults.expandtab),
+            prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
+            prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
+            prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
+            prefs.SORT_BOOKMARKS:
+                (self.sort_bookmarks, Defaults.sort_bookmarks),
+            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
+            prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
+            prefs.EDITOR:
+                (self.editor, os.getenv('VISUAL', Defaults.editor)),
+            prefs.HISTORY_BROWSER:
+                (self.historybrowser, prefs.default_history_browser()),
+            prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
+            prefs.MERGE_KEEPBACKUP:
+                (self.keep_merge_backups, Defaults.merge_keep_backup),
+            prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+            prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)

@@ -37,29 +37,55 @@ SHOW_PATH = 'cola.showpath'
 SPELL_CHECK = 'cola.spellcheck'
 
 
-def default_blame_viewer():
-    return 'git gui blame'
+class Defaults(object):
+    """Read-only class for holding defaults that get overridden"""
+    # These should match Git's defaults for git-defined values.
+    blame_viewer = 'git gui blame'
+    bold_headers = False
+    check_conflicts = True
+    comment_char = '#'
+    display_untracked = True
+    diff_context = 5
+    difftool = 'xxdiff'
+    editor = 'gvim'
+    expandtab = False
+    history_browser = 'gitk'
+    linebreak = True
+    maxrecent = 8
+    mergetool = difftool
+    merge_diffstat = True
+    merge_keep_backup = True
+    merge_summary = True
+    merge_verbosity = 4
+    save_window_settings = True
+    safe_mode = False
+    show_path = True
+    sort_bookmarks = True
+    spellcheck = False
+    tabwidth = 8
+    textwidth = 72
 
 
 def blame_viewer(context):
-    default = default_blame_viewer()
+    default = Defaults.blame_viewer
     return context.cfg.get(BLAME_VIEWER, default=default)
 
 
 def bold_headers(context):
-    return context.cfg.get(BOLD_HEADERS, default=False)
+    return context.cfg.get(BOLD_HEADERS, default=Defaults.bold_headers)
 
 
 def check_conflicts(context):
-    return context.cfg.get(CHECKCONFLICTS, default=True)
+    return context.cfg.get(CHECKCONFLICTS, default=Defaults.check_conflicts)
 
 
 def display_untracked(context):
-    return context.cfg.get(DISPLAY_UNTRACKED, default=True)
+    return context.cfg.get(DISPLAY_UNTRACKED,
+                           default=Defaults.display_untracked)
 
 
 def editor(context):
-    app = context.cfg.get(EDITOR, default='gvim')
+    app = context.cfg.get(EDITOR, default=Defaults.editor)
     return _remap_editor(app)
 
 
@@ -73,7 +99,7 @@ def _remap_editor(app):
 
 
 def comment_char(context):
-    return context.cfg.get(COMMENT_CHAR, default='#')
+    return context.cfg.get(COMMENT_CHAR, default=Defaults.comment_char)
 
 
 def default_history_browser():
@@ -89,7 +115,7 @@ def default_history_browser():
         default = core.list2cmdline(argv)
     else:
         # The `gitk` script can be launched as-is on unix
-        default = 'gitk'
+        default = Defaults.history_browser
     return default
 
 
@@ -99,34 +125,34 @@ def history_browser(context):
 
 
 def linebreak(context):
-    return context.cfg.get(LINEBREAK, default=True)
+    return context.cfg.get(LINEBREAK, default=Defaults.linebreak)
 
 
 def maxrecent(context):
-    value = 8
+    value = Defaults.maxrecent
     if context:
         value = context.cfg.get(MAXRECENT, default=value)
     return value
 
 
 def spellcheck(context):
-    return context.cfg.get(SPELL_CHECK, default=False)
+    return context.cfg.get(SPELL_CHECK, default=Defaults.spellcheck)
 
 
 def expandtab(context):
-    return context.cfg.get(EXPANDTAB, default=False)
+    return context.cfg.get(EXPANDTAB, default=Defaults.expandtab)
 
 
 def sort_bookmarks(context):
-    return context.cfg.get(SORT_BOOKMARKS, default=True)
+    return context.cfg.get(SORT_BOOKMARKS, default=Defaults.sort_bookmarks)
 
 
 def tabwidth(context):
-    return context.cfg.get(TABWIDTH, default=8)
+    return context.cfg.get(TABWIDTH, default=Defaults.tabwidth)
 
 
 def textwidth(context):
-    return context.cfg.get(TEXTWIDTH, default=72)
+    return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
 
 
 class PreferencesModel(observable.Observable):
