@@ -253,18 +253,19 @@ class DiffLineNumbers(TextDecorator):
     def current_line(self):
         if self.lines and self.highlight_line >= 0:
             # Find the next valid line
-            for i in range(self.highlight_line, len(self.lines)):
+            for line in self.lines[self.highlight_line:]:
                 # take the "new" line number: last value in tuple
-                line_number = self.lines[i][-1]
+                line_number = line[-1]
                 if line_number > 0:
                     return line_number
 
             # Find the previous valid line
-            for i in range(self.highlight_line - 1, -1, -1):
+            for line in self.lines[self.highlight_line-1::-1]:
                 # take the "new" line number: last value in tuple
-                line_number = self.lines[i][-1]
+                line_number = line[-1]
                 if line_number > 0:
                     return line_number
+        return None
 
     def paintEvent(self, event):
         """Paint the line number"""
