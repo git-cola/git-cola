@@ -89,6 +89,9 @@ class StatusWidget(QtWidgets.QWidget):
     def move_down(self):
         self.tree.move_down()
 
+    def select_header(self):
+        self.tree.select_header()
+
 
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
@@ -971,6 +974,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cmds.do(cmds.Diff, context, path)
         elif untracked:
             cmds.do(cmds.ShowUntracked, context, path)
+
+    def select_header(self):
+        """Select an active header, which triggers a diffstat"""
+        for idx in (self.idx_staged, self.idx_unmerged,
+                    self.idx_modified, self.idx_untracked):
+            item = self.topLevelItem(idx)
+            if item.childCount() > 0:
+                self.clearSelection()
+                self.setCurrentItem(item)
+                return
 
     def move_up(self):
         idx = self.selected_idx()

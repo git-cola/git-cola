@@ -21,6 +21,12 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The "Alt+D" diffstat hotkey now selects the staged/modified/etc.
+  header in the Status widget, which shows the totality of everything
+  that will be committed.
+
+  https://github.com/git-cola/git-cola/issues/771
+
 * Running "Launch Editor" from the diff editor now opens the editor at the
   current line.
 

@@ -174,7 +174,7 @@ class MainView(standard.MainWindow):
         self.unstage_selected_action.setIcon(icons.remove())
 
         self.show_diffstat_action = add_action(
-            self, N_('Diffstat'), cmds.run(cmds.Diffstat, context),
+            self, N_('Diffstat'), self.statuswidget.select_header,
             hotkeys.DIFFSTAT)
 
         self.stage_modified_action = add_action(
