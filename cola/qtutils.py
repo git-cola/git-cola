@@ -902,6 +902,7 @@ class Task(QtCore.QRunnable):
         self.channel.result.emit(self.result)
         self.channel.finished.emit(self)
 
+    # pylint: disable=no-self-use
     def task(self):
         return None
 

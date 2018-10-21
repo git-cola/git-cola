@@ -1031,6 +1031,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         paths = qtutils.paths_from_items(items, item_filter=_item_filter)
         return qtutils.mimedata_from_paths(context, paths)
 
+    # pylint: disable=no-self-use
     def mimeTypes(self):
         return qtutils.path_mimetypes()
 

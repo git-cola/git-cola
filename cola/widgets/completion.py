@@ -416,7 +416,7 @@ class CompletionModel(QtGui.QStandardItemModel):
         if not self.update_thread.isRunning():
             self.update_thread.start()
 
-    # pylint: disable=unused-argument
+    # pylint: disable=unused-argument,no-self-use
     def gather_matches(self, case_sensitive):
         return ((), (), set())
 
@@ -533,6 +533,7 @@ class GitCompletionModel(CompletionModel):
         except RuntimeError:  # C++ object has been deleted
             self.dispose()
 
+    # pylint: disable=no-self-use
     def matches(self):
         return []
 
@@ -623,6 +624,7 @@ class GitPathCompletionModel(GitCompletionModel):
     def __init__(self, context, parent):
         GitCompletionModel.__init__(self, context, parent)
 
+    # pylint: disable=no-self-use
     def candidate_paths(self):
         return []
 
