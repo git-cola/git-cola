@@ -242,7 +242,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         self.diff_text_changed.connect(
-            self.make_current_item_visible, type=Qt.QueuedConnection)
+            self._make_current_item_visible, type=Qt.QueuedConnection)
 
         self.m = context.model
         self.m.add_observer(self.m.message_about_to_update,
@@ -252,11 +252,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                             self.diff_text_changed.emit)
 
         self.itemSelectionChanged.connect(self.show_selection)
-        self.itemDoubleClicked.connect(self.double_clicked)
-        self.itemCollapsed.connect(lambda x: self.update_column_widths())
-        self.itemExpanded.connect(lambda x: self.update_column_widths())
+        self.itemDoubleClicked.connect(self._double_clicked)
+        self.itemCollapsed.connect(lambda x: self._update_column_widths())
+        self.itemExpanded.connect(lambda x: self._update_column_widths())
 
-    def make_current_item_visible(self):
+    def _make_current_item_visible(self):
         item = self.currentItem()
         if item:
             self.scroll_to_item(item)
@@ -278,7 +278,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if hide:
             item.setHidden(True)
 
-    def restore_selection(self):
+    def _restore_selection(self):
         if not self.old_selection or not self.old_contents:
             return
         old_c = self.old_contents
@@ -368,7 +368,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                         reselect(j, current=True)
                         return
 
-    def restore_scrollbars(self):
+    def _restore_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll and self.old_vscroll is not None:
             vscroll.setValue(self.old_vscroll)
@@ -471,12 +471,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.set_modified(self.m.modified)
         self.set_unmerged(self.m.unmerged)
         self.set_untracked(self.m.untracked)
-        self.update_column_widths()
-        self.update_actions()
-        self.restore_selection()
-        self.restore_scrollbars()
+        self._update_column_widths()
+        self._update_actions()
+        self._restore_selection()
+        self._restore_scrollbars()
 
-    def update_actions(self, selected=None):
+    def _update_actions(self, selected=None):
         if selected is None:
             selected = self.selection_model.selection()
         can_revert_edits = bool(selected.staged or selected.modified)
@@ -527,7 +527,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.expand_items(idx, items)
         self.blockSignals(False)
 
-    def update_column_widths(self):
+    def _update_column_widths(self):
         self.resizeColumnToContents(0)
 
     def expand_items(self, idx, items):
@@ -548,10 +548,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def contextMenuEvent(self, event):
         """Create context menus for the repo status tree."""
-        menu = self.create_context_menu()
+        menu = self._create_context_menu()
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def create_context_menu(self):
+    def _create_context_menu(self):
         """Set up the status menu for the repo status tree."""
         s = self.selection()
         menu = qtutils.create_menu('Status', self)
@@ -905,7 +905,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         item = self.topLevelItem(idx)
         return qtutils.tree_selection_items(item)
 
-    def double_clicked(self, _item, _idx):
+    def _double_clicked(self, _item, _idx):
         """Called when an item is double-clicked in the repo status tree."""
         cmds.do(cmds.StageOrUnstage, self.context)
 
@@ -917,7 +917,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         selected = self.selection()
         selection_model = self.selection_model
         selection_model.set_selection(selected)
-        self.update_actions(selected=selected)
+        self._update_actions(selected=selected)
 
         selected_indexes = self.selected_indexes()
         if not selected_indexes:
