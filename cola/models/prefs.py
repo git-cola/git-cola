@@ -5,6 +5,7 @@ import sys
 from .. import core
 from .. import observable
 from .. import utils
+from ..cmd import Command
 
 
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
@@ -179,7 +180,10 @@ class PreferencesModel(observable.Observable):
         return value
 
 
-class SetConfig(object):
+class SetConfig(Command):
+    """Store a gitconfig value"""
+
+    UNDOABLE = True
 
     def __init__(self, model, source, config, value):
         self.source = source
@@ -187,9 +191,6 @@ class SetConfig(object):
         self.value = value
         self.old_value = None
         self.model = model
-
-    def is_undoable(self):
-        return True
 
     def do(self):
         self.old_value = self.model.get_config(self.source, self.config)
