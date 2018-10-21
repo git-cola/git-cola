@@ -8,29 +8,30 @@ from cola.settings import Settings
 from . import helper
 
 
+def new_settings(**kwargs):
+    settings = Settings(**kwargs)
+    settings.load()
+    return settings
+
+
 class SettingsTestCase(unittest.TestCase):
     """Tests the cola.settings module"""
 
     def setUp(self):
         Settings.config_path = self._file = helper.tmp_path('settings')
-        self.settings = self.new_settings()
+        self.settings = new_settings()
 
     def tearDown(self):
         if os.path.exists(self._file):
             os.remove(self._file)
 
-    def new_settings(self, **kwargs):
-        settings = Settings(**kwargs)
-        settings.load()
-        return settings
-
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
-        settings = self.new_settings()
+        settings = new_settings()
         settings.gui_state['test-gui'] = {'foo': 'bar'}
         settings.save()
 
-        settings = self.new_settings()
+        settings = new_settings()
         state = settings.gui_state.get('test-gui', {})
         self.assertTrue('foo' in state)
         self.assertEqual(state['foo'], 'bar')
@@ -47,11 +48,11 @@ class SettingsTestCase(unittest.TestCase):
         def mock_verify(path):
             return path == bookmark['path']
 
-        settings = self.new_settings()
+        settings = new_settings()
         settings.add_bookmark(bookmark['path'], bookmark['name'])
         settings.save()
 
-        settings = self.new_settings(verify=mock_verify)
+        settings = new_settings(verify=mock_verify)
 
         bookmarks = settings.bookmarks
         self.assertEqual(len(settings.bookmarks), 1)
@@ -65,17 +66,17 @@ class SettingsTestCase(unittest.TestCase):
     def test_bookmarks_removes_missing_entries(self):
         """Test that missing entries are removed after a reload"""
         bookmark = {'path': '/tmp/this/does/not/exist', 'name': 'notexist'}
-        settings = self.new_settings()
+        settings = new_settings()
         settings.add_bookmark(bookmark['path'], bookmark['name'])
         settings.save()
 
-        settings = self.new_settings()
+        settings = new_settings()
         bookmarks = settings.bookmarks
         self.assertEqual(len(settings.bookmarks), 0)
         self.assertFalse(bookmark in bookmarks)
 
     def test_rename_bookmark(self):
-        settings = self.new_settings()
+        settings = new_settings()
         settings.add_bookmark('/tmp/repo', 'a')
         settings.add_bookmark('/tmp/repo', 'b')
         settings.add_bookmark('/tmp/repo', 'c')

@@ -48,7 +48,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_a_valid_top_item_on_get_root(self):
         """Test the get_root function."""
-        items = self._create_top_item()
+        items = _create_top_item()
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.get_root(items['child_1'])
@@ -59,7 +59,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_a_valid_branch_name_on_get_full_name(self):
         """Test the get_full_name function."""
-        items = self._create_top_item()
+        items = _create_top_item()
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.get_full_name(items['child_1'], '/')
@@ -70,7 +70,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_a_valid_child_on_find_child(self):
         """Test the find_child function."""
-        items = self._create_top_item()
+        items = _create_top_item()
         tree_helper = BranchesTreeHelper()
 
         child = tree_helper.find_child(items['top'], 'child_1')
@@ -81,7 +81,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_empty_state_on_save_state(self):
         """Test the save_state function."""
-        top = self._create_item('top', False)
+        top = _create_item('top', False)
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.save_state(top)
@@ -89,31 +89,32 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
 
     def test_should_return_a_valid_state_on_save_state(self):
         """Test the save_state function."""
-        items = self._create_top_item()
+        items = _create_top_item()
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.save_state(items['top'])
         self.assertEqual({'top': {'child_1': {}, 'child_2': {
             'sub_child_2_1': {}, 'sub_child_2_2': {}}}}, result)
 
-    def _create_item(self, name, expanded):
-        item = BranchTreeWidgetItem(name)
-        item.isExpanded = MagicMock(return_value=expanded)
 
-        return item
+def _create_top_item():
+    top = _create_item('top', True)
+    child_1 = _create_item('child_1', False)
+    child_2 = _create_item('child_2', True)
+    sub_child_2_1 = _create_item('sub_child_2_1', False)
+    sub_child_2_2 = _create_item('sub_child_2_2', False)
 
-    def _create_top_item(self):
-        top = self._create_item('top', True)
-        child_1 = self._create_item('child_1', False)
-        child_2 = self._create_item('child_2', True)
-        sub_child_2_1 = self._create_item('sub_child_2_1', False)
-        sub_child_2_2 = self._create_item('sub_child_2_2', False)
+    child_2.addChildren([sub_child_2_1, sub_child_2_2])
+    top.addChildren([child_1, child_2])
 
-        child_2.addChildren([sub_child_2_1, sub_child_2_2])
-        top.addChildren([child_1, child_2])
+    return {'top': top, 'child_1': child_1, 'sub_child_2_1': sub_child_2_1,
+            'sub_child_2_2': sub_child_2_2}
 
-        return {'top': top, 'child_1': child_1, 'sub_child_2_1': sub_child_2_1,
-                'sub_child_2_2': sub_child_2_2}
+
+def _create_item(name, expanded):
+    item = BranchTreeWidgetItem(name)
+    item.isExpanded = MagicMock(return_value=expanded)
+    return item
 
 
 if __name__ == '__main__':

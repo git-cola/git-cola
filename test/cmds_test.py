@@ -63,6 +63,7 @@ class CmdsTestCase(unittest.TestCase):
         model.set_diff_type.assert_called_once_with('test_diff_type')
         model.set_mode.assert_called_once_with('test_mode')
         model.set_filename.assert_called_once_with('test_filename')
+        self.assertEqual(model.set_filename.call_count, 1)
 
 
 if __name__ == '__main__':
