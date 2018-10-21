@@ -59,7 +59,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=fixme,wrong-import-position,invalid-name,missing-docstring,too-many-instance-attributes,too-many-ancestors
+disable=fixme,wrong-import-position,invalid-name,missing-docstring,too-many-instance-attributes
 
 [REPORTS]
 
@@ -326,7 +326,7 @@ max-branches=24
 max-statements=300
 
 # Maximum number of parents for a class (see R0901).
-max-parents=7
+max-parents=9
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=7
