@@ -48,20 +48,6 @@ class build_pot(Command):
                 "You can't use options "
                 "--lang=XXX and --no-lang in the same time.")
 
-    def _force_LF(self, src, dst=None):
-        f = open(src, 'rU')
-        try:
-            content = f.read()
-        finally:
-            f.close()
-        if dst is None:
-            dst = src
-        f = open(dst, 'wb')
-        try:
-            f.write(build_util.encode(content))
-        finally:
-            f.close()
-
     def run(self):
         """Run xgettext for project sources"""
         # project name based on `name` argument in setup() call
@@ -93,7 +79,7 @@ class build_pot(Command):
         cmd.extend(glob.glob('cola/*/*.py'))
         self.spawn(cmd)
 
-        self._force_LF(fullname)
+        _force_LF(fullname)
         # regenerate english PO
         if self.english:
             log.info('Regenerating English PO file...')
@@ -127,5 +113,20 @@ class build_pot(Command):
                 po, fullname])
             # force LF line-endings
             log.info('%s --> %s' % (new_po, po))
-            self._force_LF(new_po, po)
+            _force_LF(new_po, po)
             os.unlink(new_po)
+
+
+def _force_LF(src, dst=None):
+    f = open(src, 'rU')
+    try:
+        content = f.read()
+    finally:
+        f.close()
+    if dst is None:
+        dst = src
+    f = open(dst, 'wb')
+    try:
+        f.write(build_util.encode(content))
+    finally:
+        f.close()
