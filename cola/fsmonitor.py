@@ -423,15 +423,6 @@ if AVAILABLE == 'pywin32':
         def _transform_path(path):
             return path.replace('\\', '/').lower()
 
-        def _read_watch(self, watch):
-            if win32event.WaitForSingleObject(watch.event, 0) \
-                    == win32event.WAIT_TIMEOUT:
-                nbytes = 0
-            else:
-                nbytes = win32file.GetOverlappedResult(watch.handle,
-                                                       watch.overlapped, False)
-            return win32file.FILE_NOTIFY_INFORMATION(watch.buffer, nbytes)
-
         def run(self):
             try:
                 with self._stop_event_lock:

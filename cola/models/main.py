@@ -370,12 +370,6 @@ class MainModel(Observable):
             errs.append(err)
         return (status, '\n'.join(outs), '\n'.join(errs))
 
-    def pad(self, pstr, num=22):
-        topad = num-len(pstr)
-        if topad > 0:
-            return pstr + ' '*topad
-        return pstr
-
     def is_commit_published(self):
         """Return True if the latest commit exists in any remote branch"""
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
