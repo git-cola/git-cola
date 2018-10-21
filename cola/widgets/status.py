@@ -818,7 +818,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def selected_group(self):
         """A list of selected files in various states of being"""
-        return self.selection_model.pick(self.selection())
+        return selection.pick(self.selection())
 
     def selected_idx(self):
         c = self.contents()
@@ -1025,17 +1025,18 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         else:
             self.select_by_index(0)
 
-    def _item_filter(self, item):
-        return not item.deleted and core.exists(item.path)
-
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
         context = self.context
-        paths = qtutils.paths_from_items(items, item_filter=self._item_filter)
+        paths = qtutils.paths_from_items(items, item_filter=_item_filter)
         return qtutils.mimedata_from_paths(context, paths)
 
     def mimeTypes(self):
         return qtutils.path_mimetypes()
+
+
+def _item_filter(item):
+    return not item.deleted and core.exists(item.path)
 
 
 def view_blame(context):

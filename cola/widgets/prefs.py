@@ -84,17 +84,18 @@ class FormWidget(QtWidgets.QWidget):
             value = getter(config)
             if value is None:
                 value = self.defaults[config]
-            self.set_widget_value(widget, value)
+            set_widget_value(widget, value)
 
-    def set_widget_value(self, widget, value):
-        widget.blockSignals(True)
-        if isinstance(widget, QtWidgets.QSpinBox):
-            widget.setValue(value)
-        elif isinstance(widget, QtWidgets.QLineEdit):
-            widget.setText(value)
-        elif isinstance(widget, QtWidgets.QCheckBox):
-            widget.setChecked(value)
-        widget.blockSignals(False)
+
+def set_widget_value(widget, value):
+    widget.blockSignals(True)
+    if isinstance(widget, QtWidgets.QSpinBox):
+        widget.setValue(value)
+    elif isinstance(widget, QtWidgets.QLineEdit):
+        widget.setText(value)
+    elif isinstance(widget, QtWidgets.QCheckBox):
+        widget.setChecked(value)
+    widget.blockSignals(False)
 
 
 class RepoFormWidget(FormWidget):

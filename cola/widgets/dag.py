@@ -1160,8 +1160,8 @@ class Commit(QtWidgets.QGraphicsItem):
     def type(self):
         return self.item_type
 
-    def boundingRect(self, rect=item_bbox):
-        return rect
+    def boundingRect(self):
+        return self.item_bbox
 
     def shape(self):
         return self.item_shape
@@ -1448,7 +1448,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if not items:
             return
         context = self.context
-        selected_commits = self.sort_by_generation([n.commit for n in items])
+        selected_commits = sort_by_generation([n.commit for n in items])
         oids = [c.oid for c in selected_commits]
         all_oids = [c.oid for c in self.commits]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
@@ -1941,7 +1941,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.reset_columns()
         self.reset_rows()
 
-        for node in self.sort_by_generation(list(self.commits)):
+        for node in sort_by_generation(list(self.commits)):
             if node.column is None:
                 # Node is either root or its parent is not in items. The last
                 # happens when tree loading is in progress. Allocate new
@@ -2013,12 +2013,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         return positions
 
-    def sort_by_generation(self, commits):
-        if len(commits) < 2:
-            return commits
-        commits.sort(key=lambda x: x.generation)
-        return commits
-
     # Qt overrides
     def contextMenuEvent(self, event):
         self.context_menu_event(event)
@@ -2084,6 +2078,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             xratio = yratio = max(xratio, yratio)
         self.scale(xratio, yratio)
         self.centerOn(rect.center())
+
+
+def sort_by_generation(commits):
+    if len(commits) < 2:
+        return commits
+    commits.sort(key=lambda x: x.generation)
+    return commits
 
 
 # Glossary

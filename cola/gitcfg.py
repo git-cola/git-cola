@@ -341,18 +341,11 @@ class GitConfig(observable.Observable):
     def get_user_or_system(self, key, default=None):
         return self._get(self._user_or_system, key, default)
 
-    def python_to_git(self, value):
-        if isinstance(value, bool):
-            return 'true' if value else 'false'
-        if isinstance(value, int_types):
-            return ustr(value)
-        return value
-
     def set_user(self, key, value):
         if value in (None, ''):
             self.git.config('--global', key, unset=True)
         else:
-            self.git.config('--global', key, self.python_to_git(value))
+            self.git.config('--global', key, python_to_git(value))
         self.update()
         msg = self.message_user_config_changed
         self.notify_observers(msg, key, value)
@@ -361,7 +354,7 @@ class GitConfig(observable.Observable):
         if value in (None, ''):
             self.git.config(key, unset=True)
         else:
-            self.git.config(key, self.python_to_git(value))
+            self.git.config(key, python_to_git(value))
         self.update()
         msg = self.message_repo_config_changed
         self.notify_observers(msg, key, value)
@@ -461,3 +454,11 @@ class GitConfig(observable.Observable):
         except (struct.error, TypeError):
             r, g, b = struct.unpack(struct_layout, unhex(default))
         return (r, g, b)
+
+
+def python_to_git(value):
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    if isinstance(value, int_types):
+        return ustr(value)
+    return value

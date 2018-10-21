@@ -31,9 +31,6 @@ class FileTree(standard.TreeWidget):
         if select and items:
             items[0].setSelected(True)
 
-    def filename_from_item(self, item):
-        return item.data(0, QtCore.Qt.UserRole)
-
     def has_selection(self):
         return bool(self.selectedItems())
 
@@ -41,5 +38,8 @@ class FileTree(standard.TreeWidget):
         items = self.selectedItems()
         if not items:
             return []
-        filename_from_item = self.filename_from_item
         return [filename_from_item(i) for i in items]
+
+
+def filename_from_item(item):
+    return item.data(0, QtCore.Qt.UserRole)

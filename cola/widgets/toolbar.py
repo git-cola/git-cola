@@ -345,9 +345,8 @@ class ToolbarView(standard.Dialog):
             # current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
                 command = self.toolbar.commands[item]
-                child = self.left_list.create_child(parent, item,
-                                                    command['title'],
-                                                    command['icon'])
+                child = create_child(parent, item,
+                                     command['title'], command['icon'])
                 top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
@@ -469,18 +468,8 @@ class ToolbarTreeWidget(standard.TreeView):
 
         self.setModel(QtGui.QStandardItemModel())
 
-    def create_item(self, name, data):
-        item = QtGui.QStandardItem()
-
-        item.setEditable(False)
-        item.setDragEnabled(True)
-        item.setText(N_(name))
-        item.setData(data, Qt.UserRole)
-
-        return item
-
     def insert_top(self, title):
-        item = self.create_item(title, title)
+        item = create_item(title, title)
         item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
 
         self.model().insertRow(0, item)
@@ -488,12 +477,24 @@ class ToolbarTreeWidget(standard.TreeView):
 
         return item
 
-    def create_child(self, parent, child, title, icon_text=None):
-        data = {'parent': parent, 'child': child}
-        item = self.create_item(title, data)
 
-        if icon_text is not None:
-            icon = getattr(icons, icon_text, None)
-            item.setIcon(icon())
+def create_child(parent, child, title, icon_text=None):
+    data = {'parent': parent, 'child': child}
+    item = create_item(title, data)
 
-        return item
+    if icon_text is not None:
+        icon = getattr(icons, icon_text, None)
+        item.setIcon(icon())
+
+    return item
+
+
+def create_item(name, data):
+    item = QtGui.QStandardItem()
+
+    item.setEditable(False)
+    item.setDragEnabled(True)
+    item.setText(N_(name))
+    item.setData(data, Qt.UserRole)
+
+    return item

@@ -65,6 +65,10 @@ class BranchValidator(QtGui.QValidator):
         return (state, string, idx)
 
 
+def _is_case_sensitive(text):
+    return bool([char for char in text if char.isupper()])
+
+
 class CompletionLineEdit(HintedLineEdit):
     """A lineedit with advanced completion abilities"""
 
@@ -134,16 +138,13 @@ class CompletionLineEdit(HintedLineEdit):
         """Return the completer's popup"""
         return self._completer.popup()
 
-    def _is_case_sensitive(self, text):
-        return bool([char for char in text if char.isupper()])
-
     def _text_changed(self, full_text):
         match_text = self._last_word()
         self._do_text_changed(full_text, match_text)
         self.complete_last_word()
 
     def _do_text_changed(self, full_text, match_text):
-        case_sensitive = self._is_case_sensitive(match_text)
+        case_sensitive = _is_case_sensitive(match_text)
         if case_sensitive:
             self._completer.setCaseSensitivity(Qt.CaseSensitive)
         else:
@@ -153,7 +154,7 @@ class CompletionLineEdit(HintedLineEdit):
 
     def update_matches(self):
         text = self._last_word()
-        case_sensitive = self._is_case_sensitive(text)
+        case_sensitive = _is_case_sensitive(text)
         self._completer.setCompletionPrefix(text)
         self._completer.model().update_matches(case_sensitive)
 

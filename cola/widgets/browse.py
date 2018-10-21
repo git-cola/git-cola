@@ -709,13 +709,13 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
         except KeyError:
             parent = dir_entries[dirname] = self.create_dir_entry(dirname)
 
-        row_items = self.create_row(path, False)
+        row_items = create_row(path, False)
         parent.appendRow(row_items)
 
     def add_directory(self, parent, path):
         """Add a directory entry to the model."""
         # Create model items
-        row_items = self.create_row(path, True)
+        row_items = create_row(path, True)
 
         try:
             parent_path = parent.path
@@ -733,10 +733,6 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
         self.dir_entries[path] = row_items[0]
 
         return row_items[0]
-
-    def create_row(self, path, is_dir):
-        """Return a list of items representing a row."""
-        return [GitTreeItem(path, is_dir)]
 
     def create_dir_entry(self, dirname):
         """
@@ -761,6 +757,11 @@ class GitFileTreeModel(QtGui.QStandardItemModel):
                 parent = self_add_directory(grandparent, path)
                 dir_entries[path] = parent
         return parent
+
+
+def create_row(path, is_dir):
+    """Return a list of items representing a row."""
+    return [GitTreeItem(path, is_dir)]
 
 
 class GitTreeModel(GitFileTreeModel):

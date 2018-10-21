@@ -202,7 +202,8 @@ class CreateBranchDialog(Dialog):
         branches.itemSelectionChanged.connect(self.branch_item_changed)
 
         thread = self.thread
-        thread.command.connect(self.thread_command, type=Qt.QueuedConnection)
+        thread.command.connect(Interaction.log_status,
+                               type=Qt.QueuedConnection)
         thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
 
         self.init_size(settings=settings, parent=parent)
@@ -278,9 +279,6 @@ class CreateBranchDialog(Dialog):
         self.progress = ProgressDialog(title, label, self)
         self.progress.show()
         self.thread.start()
-
-    def thread_command(self, status, out, err):
-        Interaction.log_status(status, out, err)
 
     def thread_result(self, results):
         self.progress.hide()

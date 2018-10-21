@@ -104,21 +104,8 @@ class Settings(object):
         except ValueError:
             pass
 
-    def rename_entry(self, entries, path, name, new_name):
-        entry = {'name': name, 'path': path}
-        try:
-            index = entries.index(entry)
-        except ValueError:
-            return False
-
-        if all([item['name'] != new_name for item in entries]):
-            entries[index]['name'] = new_name
-            return True
-
-        return False
-
     def rename_bookmark(self, path, name, new_name):
-        return self.rename_entry(self.bookmarks, path, name, new_name)
+        return rename_entry(self.bookmarks, path, name, new_name)
 
     def add_recent(self, path, max_recent):
         try:
@@ -147,7 +134,7 @@ class Settings(object):
             return
 
     def rename_recent(self, path, name, new_name):
-        return self.rename_entry(self.recent, path, name, new_name)
+        return rename_entry(self.recent, path, name, new_name)
 
     def path(self):
         return self.config_path
@@ -207,6 +194,20 @@ class Settings(object):
         except KeyError:
             state = self.gui_state[gui.name()] = {}
         return state
+
+
+def rename_entry(entries, path, name, new_name):
+    entry = {'name': name, 'path': path}
+    try:
+        index = entries.index(entry)
+    except ValueError:
+        return False
+
+    if all([item['name'] != new_name for item in entries]):
+        entries[index]['name'] = new_name
+        return True
+
+    return False
 
 
 class Session(Settings):

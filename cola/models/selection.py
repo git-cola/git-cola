@@ -118,9 +118,6 @@ class SelectionModel(Observable):
         """A list of selected files in various states of being"""
         return pick(self.selection())
 
-    def pick(self, selection):
-        return pick(selection)
-
     def union(self):
         """Return the union of all selected items in a sorted list"""
         return union(self)

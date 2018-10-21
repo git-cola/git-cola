@@ -264,16 +264,10 @@ class Search(SearchWidget):
         widget.addItems(commits)
 
     def set_start_date(self, datestr):
-        self.set_date(self.start_date, datestr)
+        set_date(self.start_date, datestr)
 
     def set_end_date(self, datestr):
-        self.set_date(self.end_date, datestr)
-
-    def set_date(self, widget, datestr):
-        fmt = Qt.ISODate
-        date = QtCore.QDate.fromString(datestr, fmt)
-        if date:
-            widget.setDate(date)
+        set_date(self.end_date, datestr)
 
     def set_mode(self, mode):
         idx = self.modes.index(mode)
@@ -357,6 +351,13 @@ class Search(SearchWidget):
         revision = self.selected_revision()
         if revision is not None:
             Interaction.log_status(*git.cherry_pick(revision))
+
+
+def set_date(widget, datestr):
+    fmt = Qt.ISODate
+    date = QtCore.QDate.fromString(datestr, fmt)
+    if date:
+        widget.setDate(date)
 
 
 def search_commits(context, parent):

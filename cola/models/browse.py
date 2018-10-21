@@ -123,22 +123,12 @@ class GitRepoModel(QtGui.QStandardItemModel):
             row = self.entries[path]
         except KeyError:
             if create:
-                column = self.create_column
+                column = create_column
                 row = self.entries[path] = [
                     column(c, path, is_dir) for c in Columns.ALL]
             else:
                 row = None
         return row
-
-    def create_column(self, col, path, is_dir):
-        """Creates a StandardItem for use in a treeview cell."""
-        # GitRepoNameItem is the only one that returns a custom type()
-        # and is used to infer selections.
-        if col == Columns.NAME:
-            item = GitRepoNameItem(path, is_dir)
-        else:
-            item = GitRepoItem(path)
-        return item
 
     def populate(self, item):
         self.populate_dir(item, item.path + '/')
@@ -259,6 +249,17 @@ class GitRepoModel(QtGui.QStandardItemModel):
         task = GitRepoInfoTask(
             context, self._parent, path, self.default_author)
         self._runtask.start(task)
+
+
+def create_column(col, path, is_dir):
+    """Creates a StandardItem for use in a treeview cell."""
+    # GitRepoNameItem is the only one that returns a custom type()
+    # and is used to infer selections.
+    if col == Columns.NAME:
+        item = GitRepoNameItem(path, is_dir)
+    else:
+        item = GitRepoItem(path)
+    return item
 
 
 class GitRepoInfoTask(qtutils.Task):
@@ -414,7 +415,7 @@ class GitRepoNameItem(GitRepoItem):
         which paths are selected.
 
         """
-        return GitRepoNameItem.TYPE
+        return self.TYPE
 
     def hasChildren(self):
         return self.is_dir
