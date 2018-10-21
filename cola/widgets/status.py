@@ -70,10 +70,8 @@ class StatusWidget(QtWidgets.QWidget):
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
-        QtCore.QTimer.singleShot(1, self.restore_size)
-
-    def restore_size(self):
-        self.setMaximumWidth(2 ** 13)
+        QtCore.QTimer.singleShot(
+            1, lambda: self.setMaximumWidth(2 ** 13))
 
     def refresh(self):
         self.tree.show_selection()
@@ -129,10 +127,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         ok = icons.ok()
         compare = icons.compare()
         question = icons.question()
-        self.add_toplevel_item(N_('Staged'), ok, hide=True)
-        self.add_toplevel_item(N_('Unmerged'), compare, hide=True)
-        self.add_toplevel_item(N_('Modified'), compare, hide=True)
-        self.add_toplevel_item(N_('Untracked'), question, hide=True)
+        self._add_toplevel_item(N_('Staged'), ok, hide=True)
+        self._add_toplevel_item(N_('Unmerged'), compare, hide=True)
+        self._add_toplevel_item(N_('Modified'), compare, hide=True)
+        self._add_toplevel_item(N_('Untracked'), question, hide=True)
 
         # Used to restore the selection
         self.old_vscroll = None
@@ -146,7 +144,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.image_formats = qtutils.ImageFormats()
 
         self.process_selection_action = qtutils.add_action(
-            self, cmds.StageOrUnstage.name(), self.stage_selection,
+            self, cmds.StageOrUnstage.name(), self._stage_selection,
             hotkeys.STAGE_SELECTION)
 
         self.revert_unstaged_edits_action = qtutils.add_action(
@@ -261,7 +259,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if item:
             self.scroll_to_item(item)
 
-    def add_toplevel_item(self, txt, icon, hide=False):
+    def _add_toplevel_item(self, txt, icon, hide=False):
         context = self.context
         font = self.font()
         if prefs.bold_headers(context):
@@ -294,10 +292,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 item.setSelected(True)
             return select
 
-        select_staged = mkselect(new_c.staged, self.staged_item)
-        select_unmerged = mkselect(new_c.unmerged, self.unmerged_item)
-        select_modified = mkselect(new_c.modified, self.modified_item)
-        select_untracked = mkselect(new_c.untracked, self.untracked_item)
+        select_staged = mkselect(new_c.staged, self._staged_item)
+        select_unmerged = mkselect(new_c.unmerged, self._unmerged_item)
+        select_modified = mkselect(new_c.modified, self._modified_item)
+        select_untracked = mkselect(new_c.untracked, self._untracked_item)
 
         saved_selection = [
             (set(new_c.staged), old_c.staged, set(old_s.staged),
@@ -379,7 +377,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             hscroll.setValue(self.old_hscroll)
             self.old_hscroll = None
 
-    def stage_selection(self):
+    def _stage_selection(self):
         """Stage or unstage files according to the selection"""
         context = self.context
         selected_indexes = self.selected_indexes()
@@ -398,19 +396,19 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 return
         cmds.do(cmds.StageOrUnstage, context)
 
-    def staged_item(self, itemidx):
+    def _staged_item(self, itemidx):
         return self._subtree_item(self.idx_staged, itemidx)
 
-    def modified_item(self, itemidx):
+    def _modified_item(self, itemidx):
         return self._subtree_item(self.idx_modified, itemidx)
 
-    def unmerged_item(self, itemidx):
+    def _unmerged_item(self, itemidx):
         return self._subtree_item(self.idx_unmerged, itemidx)
 
-    def untracked_item(self, itemidx):
+    def _untracked_item(self, itemidx):
         return self._subtree_item(self.idx_untracked, itemidx)
 
-    def unstaged_item(self, itemidx):
+    def _unstaged_item(self, itemidx):
         # is it modified?
         item = self.topLevelItem(self.idx_modified)
         count = item.childCount()
@@ -434,10 +432,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return parent.child(itemidx)
 
     def _about_to_update(self):
-        self.save_scrollbars()
-        self.save_selection()
+        self._save_scrollbars()
+        self._save_selection()
 
-    def save_scrollbars(self):
+    def _save_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll:
             self.old_vscroll = get(vscroll)
@@ -461,16 +459,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             entry = (self.idx_header, idx.row())
         return entry
 
-    def save_selection(self):
+    def _save_selection(self):
         self.old_contents = self.contents()
         self.old_selection = self.selection()
         self.old_current_item = self.current_item()
 
     def refresh(self):
-        self.set_staged(self.m.staged)
-        self.set_modified(self.m.modified)
-        self.set_unmerged(self.m.unmerged)
-        self.set_untracked(self.m.untracked)
+        self._set_staged(self.m.staged)
+        self._set_modified(self.m.modified)
+        self._set_unmerged(self.m.unmerged)
+        self._set_untracked(self.m.untracked)
         self._update_column_widths()
         self._update_actions()
         self._restore_selection()
@@ -482,23 +480,23 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         can_revert_edits = bool(selected.staged or selected.modified)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
-    def set_staged(self, items):
+    def _set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         self._set_subtree(items, self.idx_staged, staged=True,
                           deleted_set=self.m.staged_deleted)
 
-    def set_modified(self, items):
+    def _set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
         self._set_subtree(items, self.idx_modified,
                           deleted_set=self.m.unstaged_deleted)
 
-    def set_unmerged(self, items):
+    def _set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
         deleted_set = set([path for path in items if not core.exists(path)])
         self._set_subtree(items, self.idx_unmerged,
                           deleted_set=deleted_set)
 
-    def set_untracked(self, items):
+    def _set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
         self._set_subtree(items, self.idx_untracked, untracked=True)
 
@@ -524,13 +522,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                                                deleted=deleted,
                                                untracked=untracked)
             parent.addChild(treeitem)
-        self.expand_items(idx, items)
+        self._expand_items(idx, items)
         self.blockSignals(False)
 
     def _update_column_widths(self):
         self.resizeColumnToContents(0)
 
-    def expand_items(self, idx, items):
+    def _expand_items(self, idx, items):
         """Expand the top-level category "folder" once and only once."""
         # Don't do this if items is empty; this makes it so that we
         # don't add the top-level index into the expanded_items set

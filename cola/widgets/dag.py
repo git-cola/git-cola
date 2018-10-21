@@ -394,8 +394,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
     def showEvent(self, event):
         """Override QWidget::showEvent() to size columns when we are shown"""
         if self._adjust_columns:
-            self.adjust_columns()
             self._adjust_columns = False
+            width = self.width()
+            two_thirds = (width * 2) // 3
+            one_sixth = width // 6
+
+            self.setColumnWidth(0, two_thirds)
+            self.setColumnWidth(1, one_sixth)
+            self.setColumnWidth(2, one_sixth)
         return standard.TreeWidget.showEvent(self, event)
 
     # ViewerMixin
@@ -449,15 +455,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
                 continue
             self.scrollToItem(item)
             item.setSelected(True)
-
-    def adjust_columns(self):
-        width = self.width()
-        two_thirds = (width * 2) // 3
-        one_sixth = width // 6
-
-        self.setColumnWidth(0, two_thirds)
-        self.setColumnWidth(1, one_sixth)
-        self.setColumnWidth(2, one_sixth)
 
     def clear(self):
         QtWidgets.QTreeWidget.clear(self)
@@ -1368,16 +1365,16 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                            self.zoom_to_fit, hotkeys.FIT)
 
         qtutils.add_action(self, N_('Select Parent'),
-                           self.select_parent, hotkeys.MOVE_DOWN_TERTIARY)
+                           self._select_parent, hotkeys.MOVE_DOWN_TERTIARY)
 
         qtutils.add_action(self, N_('Select Oldest Parent'),
-                           self.select_oldest_parent, hotkeys.MOVE_DOWN)
+                           self._select_oldest_parent, hotkeys.MOVE_DOWN)
 
         qtutils.add_action(self, N_('Select Child'),
-                           self.select_child, hotkeys.MOVE_UP_TERTIARY)
+                           self._select_child, hotkeys.MOVE_UP_TERTIARY)
 
         qtutils.add_action(self, N_('Select Newest Child'),
-                           self.select_newest_child, hotkeys.MOVE_UP)
+                           self._select_newest_child, hotkeys.MOVE_UP)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
@@ -1420,7 +1417,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             item_rect = item.sceneTransform().mapRect(item.boundingRect())
             self.ensureVisible(item_rect)
 
-    def get_item_by_generation(self, commits, criteria_fn):
+    def _get_item_by_generation(self, commits, criteria_fn):
         """Return the item for the commit matching criteria"""
         if not commits:
             return None
@@ -1435,13 +1432,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         except KeyError:
             return None
 
-    def oldest_item(self, commits):
+    def _oldest_item(self, commits):
         """Return the item for the commit with the oldest generation number"""
-        return self.get_item_by_generation(commits, lambda a, b: a > b)
+        return self._get_item_by_generation(commits, lambda a, b: a > b)
 
-    def newest_item(self, commits):
+    def _newest_item(self, commits):
         """Return the item for the commit with the newest generation number"""
-        return self.get_item_by_generation(commits, lambda a, b: a < b)
+        return self._get_item_by_generation(commits, lambda a, b: a < b)
 
     def create_patch(self):
         items = self.selected_items()
@@ -1453,12 +1450,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         all_oids = [c.oid for c in self.commits]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
-    def select_parent(self):
+    def _select_parent(self):
         """Select the parent with the newest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
             return
-        parent_item = self.newest_item(selected_item.commit.parents)
+        parent_item = self._newest_item(selected_item.commit.parents)
         if parent_item is None:
             return
         selected_item.setSelected(False)
@@ -1466,12 +1463,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.ensureVisible(
             parent_item.mapRectToScene(parent_item.boundingRect()))
 
-    def select_oldest_parent(self):
+    def _select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
             return
-        parent_item = self.oldest_item(selected_item.commit.parents)
+        parent_item = self._oldest_item(selected_item.commit.parents)
         if parent_item is None:
             return
         selected_item.setSelected(False)
@@ -1479,12 +1476,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         scene_rect = parent_item.mapRectToScene(parent_item.boundingRect())
         self.ensureVisible(scene_rect)
 
-    def select_child(self):
+    def _select_child(self):
         """Select the child with the oldest generation number"""
         selected_item = self.selected_item()
         if selected_item is None:
             return
-        child_item = self.oldest_item(selected_item.commit.children)
+        child_item = self._oldest_item(selected_item.commit.children)
         if child_item is None:
             return
         selected_item.setSelected(False)
@@ -1492,7 +1489,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         scene_rect = child_item.mapRectToScene(child_item.boundingRect())
         self.ensureVisible(scene_rect)
 
-    def select_newest_child(self):
+    def _select_newest_child(self):
         """Select the Nth child with the newest generation number (N > 1)"""
         selected_item = self.selected_item()
         if selected_item is None:
@@ -1501,7 +1498,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             children = selected_item.commit.children[1:]
         else:
             children = selected_item.commit.children
-        child_item = self.newest_item(children)
+        child_item = self._newest_item(children)
         if child_item is None:
             return
         selected_item.setSelected(False)
