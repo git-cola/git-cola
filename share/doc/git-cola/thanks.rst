@@ -26,7 +26,7 @@ Thanks
 * Benedict Lee
 * Benoît Nouyrigat
 * Bert Jacobs
-* birgersp
+* Birger Skogeng Pedersen
 * 林博仁 (Buo-ren Lin)
 * cclaus
 * Charles 101
