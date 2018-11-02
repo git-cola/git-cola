@@ -175,6 +175,11 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
     emerge git-cola
 
+## Ubuntu
+
+The default version on 18.04 is older and is missing features and enhancements.
+Use this [PPA](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
+maintained by @pavreh to get a newer version.
 
 ## MAC OS X
 
