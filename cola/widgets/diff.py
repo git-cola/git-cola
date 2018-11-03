@@ -928,7 +928,7 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
         task = DiffInfoTask(context, oid, filename, self)
-        self.context.runtask.start(task, result=self.diff.set_diff)
+        self.context.runtask.start(task, result=self.set_diff)
 
     def commits_selected(self, commits):
         if len(commits) != 1:
@@ -940,6 +940,9 @@ class DiffWidget(QtWidgets.QWidget):
         summary = commit.summary or ''
         author = commit.author or ''
 
+
+    def set_diff(self, diff):
+        self.diff.set_diff(diff)
         template_args = {
             'author': author,
             'email': email,
