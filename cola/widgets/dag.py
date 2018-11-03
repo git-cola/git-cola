@@ -13,7 +13,6 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
-from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
