@@ -41,6 +41,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     DIFF_FILE_HEADER_STATE = 2
     DIFF_STATE = 3
     SUBMODULE_STATE = 4
+    END_STATE = 5
 
     DIFF_FILE_HEADER_START_RGX = re.compile(r'diff --git a/.* b/.*')
     DIFF_HUNK_HEADER_RGX = re.compile(r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|'
@@ -88,6 +89,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         diffstat_state = self.DIFFSTAT_STATE
         diff_file_header_state = self.DIFF_FILE_HEADER_STATE
         submodule_state = self.SUBMODULE_STATE
+        end_state = self.END_STATE
 
         diff_file_header_start_rgx = self.DIFF_FILE_HEADER_START_RGX
         diff_hunk_header_rgx = self.DIFF_HUNK_HEADER_RGX
@@ -136,7 +138,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
             elif diff_hunk_header_rgx.match(text):
                 self.setFormat(0, len(text), bold_diff_header_fmt)
             elif text.startswith('-'):
-                self.setFormat(0, len(text), self.diff_remove_fmt)
+                if text == '-- ':
+                    state = end_state
+                else:
+                    self.setFormat(0, len(text), diff_remove_fmt)
             elif text.startswith('+'):
                 self.setFormat(0, len(text), diff_add_fmt)
                 if self.whitespace:
