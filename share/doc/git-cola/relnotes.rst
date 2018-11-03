@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The "Apply Patch" `git cola am` dialog now includes a diff viewer
+  to display the contents of the selected patch.
+
 * The "Alt+D" diffstat hotkey now selects the staged/modified/etc.
   header in the Status widget, which shows the totality of everything
   that will be committed.

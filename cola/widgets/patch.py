@@ -1,18 +1,22 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
+import re
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from ..i18n import N_
+from ..qtutils import get
 from .. import core
 from .. import cmds
 from .. import hotkeys
+from .. import observable
 from .. import icons
 from .. import qtutils
 from .standard import Dialog
 from .standard import DraggableTreeWidget
 from . import defs
+from . import diff
 
 
 def apply_patches(context):
@@ -82,6 +86,11 @@ class ApplyPatches(Dialog):
 
         self.tree = PatchTreeWidget(parent=self)
         self.tree.setHeaderHidden(True)
+        self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
+
+        self.notifier = notifier = observable.Observable()
+        self.diffwidget = diff.DiffWidget(context, notifier, self,
+                                          is_commit=True)
 
         self.add_button = qtutils.create_toolbutton(
             text=N_('Add'), icon=icons.add(),
@@ -111,8 +120,11 @@ class ApplyPatches(Dialog):
                                           self.close_button, qtutils.STRETCH,
                                           self.apply_button)
 
+        self.splitter = qtutils.splitter(Qt.Vertical,
+                                         self.tree, self.diffwidget)
+
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.top_layout, self.tree,
+                                        self.top_layout, self.splitter,
                                         self.bottom_layout)
         self.setLayout(self.main_layout)
 
@@ -139,7 +151,7 @@ class ApplyPatches(Dialog):
         if not files:
             return
         self.curdir = os.path.dirname(files[0])
-        self.add_paths([os.path.relpath(f) for f in files])
+        self.add_paths([core.relpath(f) for f in files])
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
@@ -158,6 +170,34 @@ class ApplyPatches(Dialog):
 
     def add_paths(self, paths):
         self.tree.add_paths(paths)
+
+    def _tree_selection_changed(self):
+        items = self.tree.selected_items()
+        if not items:
+            return
+        item = items[-1]  # take the last item
+        path = item.data(0, Qt.UserRole)
+        if not core.exists(path):
+            return
+        commit = parse_patch(path)
+        self.diffwidget.set_details(commit.oid, commit.author, commit.email,
+                                    commit.date, commit.summary)
+        self.diffwidget.set_diff(commit.diff)
+
+    def export_state(self):
+        """Export persistent settings"""
+        state = super(ApplyPatches, self).export_state()
+        state['sizes'] = get(self.splitter)
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super(ApplyPatches, self).apply_state(state)
+        try:
+            self.splitter.setSizes(state['sizes'])
+        except (AttributeError, KeyError, ValueError, TypeError):
+            pass
+        return result
 
 
 class PatchTreeWidget(DraggableTreeWidget):
@@ -184,3 +224,57 @@ class PatchTreeWidget(DraggableTreeWidget):
         rows = [idx.row() for idx in idxs]
         for row in reversed(sorted(rows)):
             self.invisibleRootItem().takeChild(row)
+
+
+class Commit(object):
+    """Container for commit details"""
+
+    def __init__(self):
+        self.content = ''
+        self.author = ''
+        self.email = ''
+        self.oid = ''
+        self.summary = ''
+        self.diff = ''
+        self.date = ''
+
+
+def parse_patch(path):
+    content = core.read(path)
+    commit = Commit()
+    parse(content, commit)
+    return commit
+
+
+def parse(content, commit):
+    """Parse commit details from a patch"""
+    from_rgx = re.compile(r'^From (?P<oid>[a-f0-9]{40}) .*$')
+    author_rgx = re.compile('^From: (?P<author>[^<]+) <(?P<email>[^>]+)>$')
+    date_rgx = re.compile('^Date: (?P<date>.*)$')
+    subject_rgx = re.compile('^Subject: (?P<summary>.*)$')
+
+    commit.content = content
+
+    lines = content.splitlines()
+    for idx, line in enumerate(lines):
+        match = from_rgx.match(line)
+        if match:
+            commit.oid = match.group('oid')
+            continue
+
+        match = author_rgx.match(line)
+        if match:
+            commit.author = match.group('author')
+            commit.email = match.group('email')
+            continue
+
+        match = date_rgx.match(line)
+        if match:
+            commit.date = match.group('date')
+            continue
+
+        match = subject_rgx.match(line)
+        if match:
+            commit.summary = match.group('summary')
+            commit.diff = '\n'.join(lines[idx + 1:])
+            break
