@@ -249,9 +249,9 @@ def parse_patch(path):
 def parse(content, commit):
     """Parse commit details from a patch"""
     from_rgx = re.compile(r'^From (?P<oid>[a-f0-9]{40}) .*$')
-    author_rgx = re.compile('^From: (?P<author>[^<]+) <(?P<email>[^>]+)>$')
-    date_rgx = re.compile('^Date: (?P<date>.*)$')
-    subject_rgx = re.compile('^Subject: (?P<summary>.*)$')
+    author_rgx = re.compile(r'^From: (?P<author>[^<]+) <(?P<email>[^>]+)>$')
+    date_rgx = re.compile(r'^Date: (?P<date>.*)$')
+    subject_rgx = re.compile(r'^Subject: (?P<summary>.*)$')
 
     commit.content = content
 
