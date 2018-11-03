@@ -10,6 +10,7 @@ from qtpy.QtCore import Signal
 
 from ..i18n import N_
 from ..interaction import Interaction
+from ..models import prefs
 from ..qtutils import get
 from .. import actions
 from .. import cmds
@@ -919,6 +920,7 @@ class DiffWidget(QtWidgets.QWidget):
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
+        self.set_tabwidth(prefs.tabwidth(context))
 
     def set_tabwidth(self, width):
         self.diff.set_tabwidth(width)

@@ -541,7 +541,6 @@ class GitDAG(standard.MainWindow):
         self.treewidget = CommitTreeWidget(context, notifier, self)
         self.diffwidget = diff.DiffWidget(context, notifier, self,
                                           is_commit=True)
-        self.diffwidget.set_tabwidth(prefs.tabwidth(context))
         self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, notifier, self)
 
