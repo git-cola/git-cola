@@ -81,53 +81,69 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     def highlightBlock(self, text):
         if not self.enabled or not text:
             return
+        # Aliases for quick local access
+        initial_state = self.INITIAL_STATE
+        default_state = self.DEFAULT_STATE
+        diff_state = self.DIFF_STATE
+        diffstat_state = self.DIFFSTAT_STATE
+        diff_file_header_state = self.DIFF_FILE_HEADER_STATE
+        submodule_state = self.SUBMODULE_STATE
+
+        diff_file_header_start_rgx = self.DIFF_FILE_HEADER_START_RGX
+        diff_hunk_header_rgx = self.DIFF_HUNK_HEADER_RGX
+        bad_whitespace_rgx = self.BAD_WHITESPACE_RGX
+
+        diff_header_fmt = self.diff_header_fmt
+        bold_diff_header_fmt = self.bold_diff_header_fmt
+        diff_add_fmt = self.diff_add_fmt
+        diff_remove_fmt = self.diff_remove_fmt
+        bad_whitespace_fmt = self.bad_whitespace_fmt
 
         state = self.previousBlockState()
-        if state == self.INITIAL_STATE:
+        if state == initial_state:
             if text.startswith('Submodule '):
-                state = self.SUBMODULE_STATE
+                state = submodule_state
             elif text.startswith('diff --git '):
-                state = self.DIFFSTAT_STATE
+                state = diffstat_state
             elif self.is_commit:
-                state = self.DEFAULT_STATE
+                state = default_state
             else:
-                state = self.DIFFSTAT_STATE
+                state = diffstat_state
 
-        if state == self.DIFFSTAT_STATE:
-            if self.DIFF_FILE_HEADER_START_RGX.match(text):
-                state = self.DIFF_FILE_HEADER_STATE
-                self.setFormat(0, len(text), self.diff_header_fmt)
-            elif self.DIFF_HUNK_HEADER_RGX.match(text):
-                state = self.DIFF_STATE
-                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+        if state == diffstat_state:
+            if diff_file_header_start_rgx.match(text):
+                state = diff_file_header_state
+                self.setFormat(0, len(text), diff_header_fmt)
+            elif diff_hunk_header_rgx.match(text):
+                state = diff_state
+                self.setFormat(0, len(text), bold_diff_header_fmt)
             elif '|' in text:
                 i = text.index('|')
-                self.setFormat(0, i, self.bold_diff_header_fmt)
-                self.setFormat(i, len(text) - i, self.diff_header_fmt)
+                self.setFormat(0, i, bold_diff_header_fmt)
+                self.setFormat(i, len(text) - i, diff_header_fmt)
             else:
-                self.setFormat(0, len(text), self.diff_header_fmt)
-        elif state == self.DIFF_FILE_HEADER_STATE:
-            if self.DIFF_HUNK_HEADER_RGX.match(text):
-                state = self.DIFF_STATE
-                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+                self.setFormat(0, len(text), diff_header_fmt)
+        elif state == diff_file_header_state:
+            if diff_hunk_header_rgx.match(text):
+                state = diff_state
+                self.setFormat(0, len(text), bold_diff_header_fmt)
             else:
-                self.setFormat(0, len(text), self.diff_header_fmt)
-        elif state == self.DIFF_STATE:
-            if self.DIFF_FILE_HEADER_START_RGX.match(text):
-                state = self.DIFF_FILE_HEADER_STATE
-                self.setFormat(0, len(text), self.diff_header_fmt)
-            elif self.DIFF_HUNK_HEADER_RGX.match(text):
-                self.setFormat(0, len(text), self.bold_diff_header_fmt)
+                self.setFormat(0, len(text), diff_header_fmt)
+        elif state == diff_state:
+            if diff_file_header_start_rgx.match(text):
+                state = diff_file_header_state
+                self.setFormat(0, len(text), diff_header_fmt)
+            elif diff_hunk_header_rgx.match(text):
+                self.setFormat(0, len(text), bold_diff_header_fmt)
             elif text.startswith('-'):
                 self.setFormat(0, len(text), self.diff_remove_fmt)
             elif text.startswith('+'):
-                self.setFormat(0, len(text), self.diff_add_fmt)
+                self.setFormat(0, len(text), diff_add_fmt)
                 if self.whitespace:
-                    m = self.BAD_WHITESPACE_RGX.search(text)
+                    m = bad_whitespace_rgx.search(text)
                     if m is not None:
                         i = m.start()
-                        self.setFormat(i, len(text) - i,
-                                       self.bad_whitespace_fmt)
+                        self.setFormat(i, len(text) - i, bad_whitespace_fmt)
 
         self.setCurrentBlockState(state)
 
