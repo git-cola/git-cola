@@ -890,6 +890,12 @@ class DiffWidget(QtWidgets.QWidget):
         self.author_label.setAlignment(Qt.AlignBottom)
         self.author_label.elide()
 
+        self.date_label = TextLabel()
+        self.date_label.setTextFormat(Qt.PlainText)
+        self.date_label.setSizePolicy(policy)
+        self.date_label.setAlignment(Qt.AlignTop)
+        self.date_label.hide()
+
         self.summary_label = TextLabel()
         self.summary_label.setTextFormat(Qt.PlainText)
         self.summary_label.setFont(summary_font)
@@ -907,8 +913,8 @@ class DiffWidget(QtWidgets.QWidget):
             context, self, is_commit=is_commit, whitespace=False)
 
         self.info_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
-                                        self.author_label, self.summary_label,
-                                        self.oid_label)
+                                        self.author_label, self.date_label,
+                                        self.summary_label, self.oid_label)
 
         self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                         self.gravatar_label, self.info_layout)
@@ -936,32 +942,34 @@ class DiffWidget(QtWidgets.QWidget):
         if len(commits) != 1:
             return
         commit = commits[0]
-        self.oid = commit.oid
-
+        oid = self.oid = commit.oid
         email = commit.email or ''
         summary = commit.summary or ''
         author = commit.author or ''
 
+        self.set_details(oid, author, email, '', summary)
+        self.set_diff_oid(oid)
 
     def set_diff(self, diff):
         self.diff.set_diff(diff)
+
+    def set_details(self, oid, author, email, date, summary):
         template_args = {
             'author': author,
             'email': email,
             'summary': summary
         }
-
         author_text = ("""%(author)s &lt;"""
                        """<a href="mailto:%(email)s">"""
                        """%(email)s</a>&gt;"""
                        % template_args)
-
         author_template = '%(author)s <%(email)s>' % template_args
+
+        self.date_label.set_text(date)
+        self.date_label.setVisible(bool(date))
+        self.oid_label.set_text(oid)
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
-        self.oid_label.set_text(self.oid)
-
-        self.set_diff_oid(self.oid)
         self.gravatar_label.set_email(email)
 
     def files_selected(self, filenames):
