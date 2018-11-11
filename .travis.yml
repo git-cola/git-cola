@@ -15,8 +15,8 @@ addons:
     packages:
       # Build dependencies, not needed at runtime
       # git and python are pre-installed according to Debian control file from
-      # Ubuntu 12.04.  Install for both python2 and python3 to allow testing
-      # against both versions.  Users only need one variant installed.
+      # Ubuntu 14.04 (trusty).  Install python2 and python3 packages to allow
+      # testing against both versions.  Users only need one variant installed.
       - gettext
       - python-sphinx
       - python3-sphinx
@@ -24,8 +24,6 @@ addons:
       # Runtime dependencies
       - python-qt4
       - python3-pyqt5
-      # Test dependencies
-      - pylint
 
 before_install:
   # Git test setup
@@ -33,15 +31,16 @@ before_install:
   - git config --global user.email git-cola@localhost.localdomain
 
 install:
-  # Build dependencies
-  - make requirements
   # Test dependencies
   - make requirements-dev
+  # Build translations
+  - make all
+  # Build documentation
+  - make doc
 
 script:
-  - make all
+  # Run tests
   - make test V=2
-  - make doc
   - pylint --version
   # Only run the full pylint tests on python2.7
   - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint
