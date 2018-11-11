@@ -204,40 +204,41 @@ if AVAILABLE == 'inotify':
                 self.refresh()
 
                 self._log_enabled_message()
-
-                while self._running:
-                    if self._pending:
-                        timeout = self._NOTIFICATION_DELAY
-                    else:
-                        timeout = None
-                    try:
-                        events = poll_obj.poll(timeout)
-                    except OSError as e:
-                        if e.errno == errno.EINTR:
-                            continue
-                        else:
-                            raise
-                    except select.error:
-                        continue
-                    else:
-                        if not self._running:
-                            break
-                        elif not events:
-                            self.notify()
-                        else:
-                            for (fd, _) in events:
-                                if fd == self._inotify_fd:
-                                    self._handle_events()
+                self._process_events(poll_obj)
             finally:
-                with self._lock:
-                    if self._inotify_fd is not None:
-                        os.close(self._inotify_fd)
-                        self._inotify_fd = None
-                    if self._pipe_r is not None:
-                        os.close(self._pipe_r)
-                        self._pipe_r = None
-                        os.close(self._pipe_w)
-                        self._pipe_w = None
+                self._close_fds()
+
+        def _process_events(self, poll_obj):
+            while self._running:
+                if self._pending:
+                    timeout = self._NOTIFICATION_DELAY
+                else:
+                    timeout = None
+                try:
+                    events = poll_obj.poll(timeout)
+                # pylint: disable=duplicate-except
+                except (OSError, select.error):
+                    continue
+                else:
+                    if not self._running:
+                        break
+                    elif not events:
+                        self.notify()
+                    else:
+                        for (fd, _) in events:
+                            if fd == self._inotify_fd:
+                                self._handle_events()
+
+        def _close_fds(self):
+            with self._lock:
+                if self._inotify_fd is not None:
+                    os.close(self._inotify_fd)
+                    self._inotify_fd = None
+                if self._pipe_r is not None:
+                    os.close(self._pipe_r)
+                    self._pipe_r = None
+                    os.close(self._pipe_w)
+                    self._pipe_w = None
 
         def refresh(self):
             with self._lock:
@@ -324,7 +325,7 @@ if AVAILABLE == 'inotify':
                     self._force_notify = True
             elif wd == self._git_dir_wd:
                 name = core.decode(name)
-                if name == 'HEAD' or name == 'index':
+                if name in ('HEAD', 'index'):
                     self._force_notify = True
                 elif name == 'config':
                     self._force_config = True
