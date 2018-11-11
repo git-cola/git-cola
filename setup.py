@@ -15,7 +15,7 @@ from extras import cmdclass
 # Hack: prevent python2's ascii default encoding from breaking inside
 # distutils when installing from utf-8 paths.
 if sys.version_info[0] < 3:
-    # pylint: disable=reload-builtin
+    # pylint: disable=reload-builtin,undefined-variable
     reload(sys)  # noqa
     # pylint: disable=no-member
     sys.setdefaultencoding('utf-8')

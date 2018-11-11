@@ -33,7 +33,7 @@ def run_unittest(suite):
 # handler, adapted from <http://stackoverflow.com/a/1889686/357338>, works
 # around this by changing such files to be writable and then re-trying.
 def remove_readonly(func, path, _exc_info):
-    if func == os.remove and not os.access(path, os.W_OK):
+    if func is os.remove and not os.access(path, os.W_OK):
         os.chmod(path, stat.S_IWRITE)
         func(path)
     else:

@@ -246,9 +246,6 @@ class OrderedDict(dict):
             d[key] = value
         return d
 
-    def __hash__(self):
-        return dict.__hash__(self)
-
     def __eq__(self, other):
         '''od.__eq__(y) <==> od==y.  Comparison to another OD is order-sensitive
         while comparison to a regular mapping is order-insensitive.

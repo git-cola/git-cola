@@ -16,6 +16,7 @@ def decorator(caller, func=None):
     """
     if func is None:
         # return a decorator
+        # pylint: disable=unused-argument
         @functools.wraps(caller)
         def _decorator(f, *dummy_args, **dummy_opts):
             @functools.wraps(f)
@@ -73,12 +74,8 @@ def interruptable(func, *args, **opts):
     while True:
         try:
             result = func(*args, **opts)
-        except IOError as e:
+        except (IOError, OSError) as e:
             if e.errno == errno.EINTR:
-                continue
-            raise e
-        except OSError as e:
-            if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
             raise e
         else:

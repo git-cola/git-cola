@@ -243,7 +243,7 @@ class GitCommandTest(unittest.TestCase):
     def test_version(self):
         """Test running 'git version'"""
         version = self.git.version()[STDOUT]
-        self.failUnless(version.startswith('git version'))
+        self.assertTrue(version.startswith('git version'))
 
     def test_stdout(self):
         """Test overflowing the stdout buffer"""

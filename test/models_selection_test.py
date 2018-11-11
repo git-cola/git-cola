@@ -3,7 +3,7 @@ import unittest
 
 import mock
 
-import cola.models.selection as selection
+from cola.models import selection
 
 
 class SelectionTestCase(unittest.TestCase):

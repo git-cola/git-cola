@@ -337,7 +337,7 @@ class RemoteActionDialog(standard.Dialog):
         """Set sensible initial defaults"""
         # Default to "git fetch origin master"
         action = self.action
-        if action == FETCH or action == PULL:
+        if action in (FETCH, PULL):
             self.local_branch.setText('')
             self.remote_branch.setText('')
             return

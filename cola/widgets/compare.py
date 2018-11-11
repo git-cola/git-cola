@@ -101,7 +101,7 @@ class CompareBranchesDialog(standard.Dialog):
         connect_button(self.button_close, self.accept)
         connect_button(self.button_compare, self.compare)
 
-        self.diff_files.itemDoubleClicked.connect(self.compare)
+        self.diff_files.itemDoubleClicked.connect(lambda _: self.compare())
         self.left_combo.currentIndexChanged.connect(
             lambda x: self.update_combo_boxes(left=True))
         self.right_combo.currentIndexChanged.connect(
@@ -139,7 +139,7 @@ class CompareBranchesDialog(standard.Dialog):
             right_item = None
         return (left_item, right_item)
 
-    def update_diff_files(self, *dummy_rest):
+    def update_diff_files(self):
         """Updates the list of files whenever the selection changes"""
         # Left and Right refer to the comparison pair (l,r)
         left_item, right_item = self.selection()
@@ -234,7 +234,7 @@ class CompareBranchesDialog(standard.Dialog):
             widget.setCurrentItem(item)
             item.setSelected(True)
 
-    def compare(self, *dummy_args):
+    def compare(self):
         """Shows the diff for a specific file
         """
         tree_widget = self.diff_files

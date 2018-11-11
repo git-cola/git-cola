@@ -400,9 +400,7 @@ class GitConfig(observable.Observable):
         header = '%s: encoding: ' % path
         if out.startswith(header):
             encoding = out[len(header):].strip()
-            if (encoding != 'unspecified' and
-                    encoding != 'unset' and
-                    encoding != 'set'):
+            if encoding not in ('unspecified', 'unset', 'set'):
                 return encoding
         return None
 

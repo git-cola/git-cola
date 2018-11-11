@@ -112,4 +112,3 @@ class NorvigSpellCheck(object):
                             yield word.title()
             except IOError:
                 pass
-        return

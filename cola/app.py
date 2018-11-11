@@ -488,7 +488,7 @@ def async_update(context):
 def startup_message():
     """Print debug startup messages"""
     trace = git.GIT_COLA_TRACE
-    if trace == '2' or trace == 'trace':
+    if trace in ('2', 'trace'):
         msg1 = 'info: debug level 2: trace mode enabled'
         msg2 = 'info: set GIT_COLA_TRACE=1 for less-verbose output'
         Interaction.log(msg1)

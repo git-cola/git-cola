@@ -18,7 +18,7 @@ def main(argv=None):
     # routes them to the 'cola' parser by default.
     help_commands = core.encode('--help-commands')
     args = [core.encode(arg) for arg in argv]
-    if (len(argv) < 1 or
+    if (not argv or
             argv[0].startswith('-') and help_commands not in args):
         argv.insert(0, 'cola')
     elif help_commands in argv:

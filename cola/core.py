@@ -382,6 +382,7 @@ exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
 if PY2:
     if hasattr(os, 'getcwdu'):
+        # pylint: disable=no-member
         getcwd = os.getcwdu
     else:
         getcwd = decorate(decode, os.getcwd)

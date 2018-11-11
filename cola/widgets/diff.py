@@ -798,8 +798,7 @@ class DiffEditor(DiffTextEdit):
         """setPlainText(str) while retaining scrollbar positions"""
         model = self.model
         mode = model.mode
-        highlight = (mode != model.mode_none and
-                     mode != model.mode_untracked)
+        highlight = mode not in (model.mode_none, model.mode_untracked)
         self.highlighter.set_enabled(highlight)
 
         scrollbar = self.verticalScrollBar()
