@@ -10,7 +10,18 @@ python:
 virtualenv:
   system_site_packages: true
 
+matrix:
+  include:
+    - os: osx
+      language: generic
+      env: PATH="/usr/local/opt/sphinx-doc/bin:$PATH"
+
 addons:
+  homebrew:
+    packages:
+      - sphinx-doc
+      - pyqt
+      - python
   apt:
     packages:
       # Build dependencies, not needed at runtime
