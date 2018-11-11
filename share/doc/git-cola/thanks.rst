@@ -171,6 +171,7 @@ Thanks
 * Stanisław Halik
 * Stefan Naewe
 * Steffen Prohaska
+* Stephen Groat
 * Sven Claussner
 * Szymon Judasz
 * Taylor Braun-Jones
