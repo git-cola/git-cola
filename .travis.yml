@@ -10,18 +10,22 @@ python:
 virtualenv:
   system_site_packages: true
 
-# git and python are pre-installed
+addons:
+  apt:
+    packages:
+      # git and python are pre-installed
+      # according to Debian control file from Ubuntu 12.04
+      - rsync
+      - gettext
+      # Runtime dependencies
+      - python-qt4
+      - python3-pyqt5
+      # Build/test dependencies
+      - python-sphinx
+      - python3-sphinx
+      - pylint
+
 before_install:
-  # Update APT cache data since it may outdated
-  - sudo apt-get -qq update
-  # according to Debian control file from Ubuntu 12.04
-  - sudo apt-get install -y git rsync gettext
-  # Runtime dependencies
-  - sudo apt-get install -y python-qt4
-  - sudo apt-get install -y python3-pyqt5
-  # Build/test dependencies
-  - sudo apt-get install -y python-sphinx python3-sphinx
-  - sudo apt-get install -y pylint
   # Git test setup
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
