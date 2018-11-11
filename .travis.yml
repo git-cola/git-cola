@@ -13,16 +13,18 @@ virtualenv:
 addons:
   apt:
     packages:
-      # git and python are pre-installed
-      # according to Debian control file from Ubuntu 12.04
-      - rsync
+      # Build dependencies, not needed at runtime
+      # git and python are pre-installed according to Debian control file from
+      # Ubuntu 12.04.  Install for both python2 and python3 to allow testing
+      # against both versions.  Users only need one variant installed.
       - gettext
+      - python-sphinx
+      - python3-sphinx
+      - rsync
       # Runtime dependencies
       - python-qt4
       - python3-pyqt5
-      # Build/test dependencies
-      - python-sphinx
-      - python3-sphinx
+      # Test dependencies
       - pylint
 
 before_install:
@@ -41,6 +43,7 @@ script:
   - make test V=2
   - make doc
   - pylint --version
+  # Only run the full pylint tests on python2.7
   - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint
   - make pylint3k
   - flake8 --version
