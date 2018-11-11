@@ -42,8 +42,7 @@ script:
   # Run tests
   - make test V=2
   - pylint --version
-  # Only run the full pylint tests on python2.7
-  - test "2.7" != "$TRAVIS_PYTHON_VERSION" || make pylint
+  - make pylint
   - make pylint3k
   - flake8 --version
   - make flake8
