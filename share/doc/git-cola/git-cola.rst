@@ -612,22 +612,31 @@ Defaults to `false`.
 cola.color.text
 ---------------
 The default diff text color, in hexadecimal #RRGGBB notation.
-Defaults to "#030303".
+Defaults to "#030303"::
+
+    git config cola.color.text '#030303'
 
 cola.color.add
 --------------
 The default diff "add" background color, in hexadecimal #RRGGBB notation.
-Defaults to "#d2ffe4".
+Defaults to "#d2ffe4"::
+
+
+    git config cola.color.add '#d2ffe4'
 
 cola.color.remove
 -----------------
 The default diff "remove" background color, in hexadecimal #RRGGBB notation.
-Defaults to "#fee0e4".
+Defaults to "#fee0e4"::
+
+    git config cola.color.remove '#fee0e4'
 
 cola.color.header
 -----------------
 The default diff header text color, in hexadecimal #RRGGBB notation.
-Defaults to "#bbbbbb".
+Defaults to "#bbbbbb"::
+
+    git config cola.color.header '#bbbbbb'
 
 gui.diffcontext
 ---------------
