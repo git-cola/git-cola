@@ -621,7 +621,6 @@ cola.color.add
 The default diff "add" background color, in hexadecimal #RRGGBB notation.
 Defaults to "#d2ffe4"::
 
-
     git config cola.color.add '#d2ffe4'
 
 cola.color.remove
