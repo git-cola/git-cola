@@ -321,8 +321,8 @@ The following commands should be run during development:
     # Run the unit tests
     $ make test
 
-    # Check for pylint and flake8 warnings
-    $ make precommit
+    # Run tests and longer-running pylint and flake8 checks
+    $ make check
 
     # Run tests against multiple python interpretors using tox
     $ make tox

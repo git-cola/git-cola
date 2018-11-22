@@ -10,9 +10,9 @@ all::
 # make flake8                   # python style checks
 # make pylint [color=1]         # run pylint; color=1 colorizes output
 # make pylint3k [color=1]       # run python2+3 compatibility checks
-# make check file=<filename>    # run precommit checks on <filename>
 # make format file=<filename>   # run the yapf python formatter on <filename>
-# make precommit [color=1]      # run test, doc, flake8, pylint3k, and pylint
+# make check [color=1]          # run test, doc, flake8, pylint3k, and pylint
+# make check file=<filename>    # run checks on <filename>
 #
 # Release Prep
 # ------------
@@ -285,20 +285,21 @@ pylint:
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint
 
+# Pre-commit checks
+ifdef file
 check:
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
+else
+check:: all
+check:: test
+check:: doc
+check:: flake8
+check:: pylint3k
+check:: pylint
+endif
 .PHONY: check
-
-# Pre-commit checks
-precommit:: all
-precommit:: doc
-precommit:: test
-precommit:: flake8
-precommit:: pylint3k
-precommit:: pylint
-.PHONY: precommit
 
 format:
 	$(YAPF) --in-place $(flags) $(file)

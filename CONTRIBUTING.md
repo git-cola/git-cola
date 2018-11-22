@@ -7,7 +7,7 @@ to this software.
 
 ## Run the pre-commit checks before committing
 
-* `make precommit`
+* `make check`
 
 ## Be picky about whitespace
 
