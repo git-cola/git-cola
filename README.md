@@ -337,7 +337,8 @@ Auto-format `po/*.po` files before committing when updating translations:
 
     $ make po
 
-When submitting patches, consult the [contributing guidelines](CONTRIBUTING.md).
+When submitting patches, consult the
+[contributing guidelines](CONTRIBUTING.md).
 
 # WINDOWS (continued)
 
