@@ -309,30 +309,18 @@ class ApplyPatches(ContextCommand):
         self.patches = patches
 
     def do(self):
-        git = self.git
-        diff_text = ''
-        num_patches = len(self.patches)
-        orig_head = git.rev_parse('HEAD')[STDOUT]
-
-        for idx, patch in enumerate(self.patches):
-            status, out, err = git.am(patch)
-            # Log the git-am command
-            Interaction.log_status(status, out, err)
-
-            if num_patches > 1:
-                diff = git.diff('HEAD^!', stat=True)[STDOUT]
-                diff_text += (N_('PATCH %(current)d/%(count)d') %
-                              dict(current=idx+1, count=num_patches))
-                diff_text += ' - %s:\n%s\n\n' % (os.path.basename(patch), diff)
-
-        diff_text += N_('Summary:') + '\n'
-        diff_text += git.diff(orig_head, stat=True)[STDOUT]
+        status, out, err = self.git.am('-3', *self.patches)
+        Interaction.log_status(status, out, err)
 
         # Display a diffstat
-        self.model.set_diff_text(diff_text)
         self.model.update_file_status()
 
-        basenames = '\n'.join([os.path.basename(p) for p in self.patches])
+        patch_basenames = [os.path.basename(p) for p in self.patches]
+        if len(patch_basenames) > 25:
+            patch_basenames = patch_basenames[:25]
+            patch_basenames.append('...')
+
+        basenames = '\n'.join(patch_basenames)
         Interaction.information(
             N_('Patch(es) Applied'),
             (N_('%d patch(es) applied.') + '\n\n%s')
