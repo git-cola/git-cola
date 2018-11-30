@@ -129,6 +129,40 @@ class ParseDiffTestCase(unittest.TestCase):
                          '-first\n'
                          '-second\n')
 
+    def test_diff_file_removal(self):
+        diff_text = """\
+deleted file mode 100755
+@@ -1,1 +0,0 @@
+-#!/bin/sh
+"""
+        parser = diffparse.DiffParser('deleted.txt', diff_text)
+        self.assertEqual(1, len(parser.hunks))
+
+        # Selecting the first two lines generate no diff
+        expect = None
+        actual = parser.generate_patch(0, 1)
+        self.assertEqual(expect, actual)
+
+        # Selecting the last line should generate a line removal
+        expect = """\
+--- a/deleted.txt
++++ b/deleted.txt
+@@ -1 +0,0 @@
+-#!/bin/sh
+"""
+        actual = parser.generate_patch(1, 2)
+        self.assertEqual(expect, actual)
+
+        # All three lines should map to the same hunk diff
+        actual = parser.generate_hunk_patch(0)
+        self.assertEqual(expect, actual)
+
+        actual = parser.generate_hunk_patch(1)
+        self.assertEqual(expect, actual)
+
+        actual = parser.generate_hunk_patch(2)
+        self.assertEqual(expect, actual)
+
 
 class DiffLinesTestCase(unittest.TestCase):
 

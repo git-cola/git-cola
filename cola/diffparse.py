@@ -57,11 +57,7 @@ def _parse_diff(diff_text):
             hunks.append(_DiffHunk(old_start, old_count,
                                    new_start, new_count,
                                    heading, line_idx, lines=[line + '\n']))
-        elif not hunks:
-            # first line of the diff is not a header line
-            errmsg = 'Malformed diff?: %s' % diff_text
-            raise AssertionError(errmsg)
-        elif line:
+        elif line and hunks:
             hunks[-1].lines.append(line + '\n')
     return hunks
 
