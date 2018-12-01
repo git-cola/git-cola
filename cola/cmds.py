@@ -91,7 +91,7 @@ class ConfirmAction(ContextCommand):
     # pylint: disable=no-self-use
     def success(self):
         """Callback run on success"""
-        pass
+        return
 
     # pylint: disable=no-self-use
     def command(self):
@@ -2141,9 +2141,10 @@ class StageCarefully(Stage):
         super(StageCarefully, self).__init__(context, None)
         self.init_paths()
 
+    # pylint: disable=no-self-use
     def init_paths(self):
         """Initialize path data"""
-        pass
+        return
 
     def ok_to_run(self):
         """Prevent catch-all "git add -u" from adding unmerged files"""

@@ -201,17 +201,20 @@ class BaseTextEditExtension(QtCore.QObject):
 
     # For extension by sub-classes
 
+    # pylint: disable=no-self-use
     def init(self):
         """Called during init for class-specific settings"""
-        pass
+        return
 
+    # pylint: disable=no-self-use,unused-argument
     def set_textwidth(self, width):
         """Set the text width"""
-        pass
+        return
 
+    # pylint: disable=no-self-use,unused-argument
     def set_linebreak(self, brk):
         """Enable word wrapping"""
-        pass
+        return
 
 
 class PlainTextEditExtension(BaseTextEditExtension):

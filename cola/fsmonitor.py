@@ -94,9 +94,10 @@ class _BaseThread(QtCore.QThread):
     def _pending(self):
         return self._force_notify or self._file_paths or self._force_config
 
+    # pylint: disable=no-self-use
     def refresh(self):
         """Do any housekeeping necessary in response to repository changes."""
-        pass
+        return
 
     def notify(self):
         """Notifies all observers"""
@@ -286,9 +287,8 @@ if AVAILABLE == 'inotify':
                         # This error can occur if the target of the wd was
                         # removed on the filesystem before we call
                         # inotify.rm_watch() so ignore it.
-                        pass
-                    else:
-                        raise
+                        continue
+                    raise e
             for path in paths_to_watch - watched_paths:
                 try:
                     wd = inotify.add_watch(self._inotify_fd, core.encode(path),
@@ -302,9 +302,8 @@ if AVAILABLE == 'inotify':
                         # directory referenced by path was replaced with a file
                         # before the call to inotify.add_watch().  Therefore we
                         # simply ignore them.
-                        pass
-                    else:
-                        raise
+                        continue
+                    raise e
                 else:
                     wd_to_path_map[wd] = path
                     path_to_wd_map[path] = wd
