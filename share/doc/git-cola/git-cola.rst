@@ -688,6 +688,14 @@ Read the section on `cola.icontheme` above for more details.
 
 GIT_COLA_SCALE
 --------------
+.. Important:: `GIT_COLA_SCALE` should not be used with newer versions of Qt.
+
+    Set `QT_AUTO_SCREEN_SCALE_FACTOR` to `1` and Qt will automatically
+    scale the interface to the correct size based on the display DPI.
+
+    See the `Qt High DPI documentation <https://doc.qt.io/qt-5/highdpi.html>`_
+    for more details.
+
 `git cola` can be made to scale its interface for HiDPI displays.
 When defined, `git cola` will scale icons, radioboxes, and checkboxes
 according to the scale factor.  The default value is `1`.
