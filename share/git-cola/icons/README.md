@@ -67,15 +67,15 @@ x.svg
 Copyright (C) 2012-2015 GitHub
 License: [MIT](http://choosealicense.com/licenses/mit/)
 
-Feathericons
-------------
-The following files are from the
-[feather](https://github.com/feathericons/feather) icon set:
+Gnome Adwaita Icons
+-------------------
+The following files are from the Gnome project's
+[Adwaita icon theme](https://github.com/GNOME/adwaita-icon-theme):
 
-git-commit.svg
+document-save-symbolic.svg
 
-Copyright (c) 2013-2017 Cole Bemis
-License: [MIT](https://github.com/feathericons/feather/blob/master/LICENSE)
+Copyright (C) The Gnome Project
+License: [LGPL](https://github.com/GNOME/adwaita-icon-theme/blob/master/COPYING_LGPL)
 
 Gnome High Contrast Icons
 -------------------------

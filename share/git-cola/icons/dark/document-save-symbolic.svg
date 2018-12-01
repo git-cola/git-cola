@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+    <g fill="#ffffff">
+        <path d="M4.49 8.994a.5.5 0 0 0-.406.229l-1 1.5a.5.5 0 1 0 .832.554l1-1.5a.5.5 0 0 0-.426-.783zm7.004 0a.5.5 0 0 0-.41.783l1 1.5a.5.5 0 1 0 .832-.554l-1-1.5a.5.5 0 0 0-.422-.229z" style="line-height:normal;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#fff;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;marker:none" color="#bebebe" font-weight="400" font-family="sans-serif" white-space="normal" overflow="visible"/>
+        <path d="M7 1v5.563L5.719 5.28A1.015 1.015 0 0 0 5 5H4v1c0 .265.093.53.281.719l3 3 .282.281h.875l.28-.281 3-3C11.908 6.53 12 6.265 12 6V5h-1c-.265 0-.53.093-.719.281L9 6.563V1z" style="line-height:normal;-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration-line:none;text-transform:none;marker:none" color="#fff" font-weight="400" font-family="Bitstream Vera Sans" overflow="visible"/>
+        <path d="M3 11v4h10v-4zm3.344 1.438a.651.651 0 0 1 .062 0c.291-.056.6.203.594.5V13h2v-.063a.52.52 0 0 1 .5-.507.52.52 0 0 1 .5.507V13c0 .545-.455 1-1 1H7c-.545 0-1-.455-1-1v-.063a.515.515 0 0 1 .344-.5z" style="marker:none" color="#fff" overflow="visible" fill-rule="evenodd"/>
+    </g>
+</svg>
