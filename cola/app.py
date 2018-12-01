@@ -127,6 +127,20 @@ def setup_environment():
     # have a chance to explain our merges.
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
+    # Gnome3 on Debian has XDG_SESSION_TYPE=wayland and
+    # XDG_CURRENT_DESKTOP=GNOME, which Qt warns about at startup:
+    #
+    #   Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome.
+    #   Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
+    #
+    # This annoying, so we silence the warning.
+    # We'll need to keep this hack here until a future version of Qt provides
+    # Qt Wayland widgets that are usable in gnome-shell.
+    # Cf. https://bugreports.qt.io/browse/QTBUG-68619
+    if (core.getenv('XDG_CURRENT_DESKTOP', '') == 'GNOME'
+            and core.getenv('XDG_SESSION_TYPE', '') == 'wayland'):
+        compat.unsetenv('XDG_SESSION_TYPE')
+
 
 def get_icon_themes(context):
     """Return the default icon theme names"""
