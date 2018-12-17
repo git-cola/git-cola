@@ -519,7 +519,8 @@ class HintWidget(QtCore.QObject):
             style = self._hint_style
         else:
             style = self._default_style
-        self._widget.setStyleSheet(style)
+        QtCore.QTimer.singleShot(
+            0, lambda: self._widget.setStyleSheet(style))
 
     def eventFilter(self, _obj, event):
         """Enable/disable hint-mode when focus changes"""
