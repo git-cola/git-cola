@@ -704,6 +704,7 @@ class GitDAG(standard.MainWindow):
 
     def model_updated(self):
         self.display()
+        self.update_window_title()
 
     def refresh(self):
         """Unconditionally refresh the DAG"""
