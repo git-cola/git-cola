@@ -2438,6 +2438,37 @@ class VisualizeRevision(ContextCommand):
         launch_history_browser(argv)
 
 
+class SubmoduleUpdate(ConfirmAction):
+    """Update specified submodule"""
+
+    def __init__(self, context, path):
+        super(SubmoduleUpdate, self).__init__(context)
+        self.path = path
+
+    def confirm(self):
+        title = N_('Update Submodule...')
+        question = N_('Update this submodule?')
+        info = N_('The submodule will be updated using\n'
+                  '"%s"' % self.command())
+        ok_txt = N_('Update Submodule')
+        return Interaction.confirm(title, question, info, ok_txt,
+                                   default=False, icon=icons.pull())
+
+    def action(self):
+        context = self.context
+        return context.git.submodule('update', '--', self.path)
+
+    def success(self):
+        self.model.update_file_status()
+
+    def error_message(self):
+        return N_('Error updating submodule %s' % self.path)
+
+    def command(self):
+        command = 'git submodule update -- %s'
+        return command % self.path
+
+
 def launch_history_browser(argv):
     """Launch the configured history browser"""
     try:
