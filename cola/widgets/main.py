@@ -258,6 +258,10 @@ class MainView(standard.MainWindow):
         self.merge_abort_action = add_action(
             self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context))
 
+        self.update_submodules_action = add_action(
+            self, N_('Update All Submodules...'),
+            cmds.run(cmds.SubmodulesUpdate, context))
+
         self.fetch_action = add_action(
             self, N_('Fetch...'), partial(remote.fetch, context),
             hotkeys.FETCH)
@@ -484,6 +488,8 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.cherry_pick_action)
         self.actions_menu.addAction(self.merge_local_action)
         self.actions_menu.addAction(self.merge_abort_action)
+        self.actions_menu.addSeparator()
+        self.actions_menu.addAction(self.update_submodules_action)
         self.actions_menu.addSeparator()
         self.actions_reset_menu = self.actions_menu.addMenu(N_('Reset'))
         self.actions_reset_menu.addAction(self.reset_branch_head_action)

@@ -37,6 +37,7 @@ TREE_LAYOUT = {
         'Actions::CherryPick',
         'Actions::Merge',
         'Actions::AbortMerge',
+        'Actions::UpdateSubmodules',
         'Actions::ResetBranchHead',
         'Actions::ResetWorktree',
         'Actions::Grep',

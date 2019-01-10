@@ -2469,6 +2469,32 @@ class SubmoduleUpdate(ConfirmAction):
         return command % self.path
 
 
+class SubmodulesUpdate(ConfirmAction):
+    """Update all submodules"""
+
+    def confirm(self):
+        title = N_('Update submodules...')
+        question = N_('Update all submodules?')
+        info = N_('All submodules will be updated using\n'
+                  '"%s"' % self.command())
+        ok_txt = N_('Update Submodules')
+        return Interaction.confirm(title, question, info, ok_txt,
+                                   default=False, icon=icons.pull())
+
+    def action(self):
+        context = self.context
+        return context.git.submodule('update')
+
+    def success(self):
+        self.model.update_file_status()
+
+    def error_message(self):
+        return N_('Error updating submodules')
+
+    def command(self):
+        return 'git submodule update'
+
+
 def launch_history_browser(argv):
     """Launch the configured history browser"""
     try:
