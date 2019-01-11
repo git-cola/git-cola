@@ -129,6 +129,11 @@ COMMANDS = {
         'action': cmds.run(cmds.AbortMerge),
         'icon': None
     },
+    'Actions::UpdateSubmodules': {
+        'title': 'Update All Submodules...',
+        'action': cmds.run(cmds.SubmodulesUpdate),
+        'icon': None
+    },
     'Actions::ResetBranchHead': {
         'title': 'Reset Branch Head',
         'action': guicmds.reset_branch_head,

@@ -667,8 +667,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _create_staged_submodule_context_menu(self, menu, s):
         context = self.context
         path = core.abspath(s.staged[0])
-        menu.addAction(icons.cola(), N_('Launch git-cola'),
-                       cmds.run(cmds.OpenRepo, context, path))
+        if len(self.staged()) == 1:
+            menu.addAction(icons.cola(), N_('Launch git-cola'),
+                           cmds.run(cmds.OpenRepo, context, path))
+            menu.addSeparator()
         action = menu.addAction(
             icons.remove(), N_('Unstage Selected'),
             cmds.run(cmds.Unstage, context, self.staged()))
@@ -746,8 +748,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _create_modified_submodule_context_menu(self, menu, s):
         context = self.context
         path = core.abspath(s.modified[0])
-        menu.addAction(icons.cola(), N_('Launch git-cola'),
-                       cmds.run(cmds.OpenRepo, context, path))
+        if len(self.unstaged()) == 1:
+            menu.addAction(icons.cola(), N_('Launch git-cola'),
+                           cmds.run(cmds.OpenRepo, context, path))
+            menu.addAction(icons.pull(), N_('Update this submodule'),
+                           cmds.run(cmds.SubmoduleUpdate, context, path))
+            menu.addSeparator()
 
         if self.m.stageable():
             menu.addSeparator()
