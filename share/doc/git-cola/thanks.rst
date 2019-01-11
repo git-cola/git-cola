@@ -117,6 +117,7 @@ Thanks
 * Maicon D. Filippsen
 * Marcin Mielniczuk
 * Marco Costalba
+* Mariusz Jaskółka
 * Markus Heidelberg
 * Martin Konecny
 * Matěj Šmíd
