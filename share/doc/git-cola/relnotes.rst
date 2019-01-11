@@ -21,6 +21,11 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* New submodule menu helpers for updating all submodules.
+
+* The status widget can now update submodules.
+  (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
+
 * The "Apply Patch" `git cola am` dialog now includes a diff viewer
   to display the contents of the selected patch.
 
