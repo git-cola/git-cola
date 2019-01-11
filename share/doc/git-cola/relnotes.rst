@@ -36,7 +36,6 @@ Usability, bells and whistles
 
 * Running "Launch Editor" from the diff editor now opens the editor at the
   current line.
-
   (`#898 <https://github.com/git-cola/git-cola/pull/898>`_)
 
 * The textwidth and tabwidth configuration values can now be set
