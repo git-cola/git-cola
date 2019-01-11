@@ -3,5 +3,5 @@ mock
 pbr
 pylint >= 1.9
 PyYAML
-pytest
+pytest >= 3.6
 pytest-cov
