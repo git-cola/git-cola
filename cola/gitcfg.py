@@ -9,6 +9,7 @@ import struct
 
 from . import core
 from . import observable
+from . import utils
 from .compat import int_types
 from .git import STDOUT
 from .compat import ustr
@@ -434,14 +435,28 @@ class GitConfig(observable.Observable):
         if not term:
             # find a suitable default terminal
             term = 'xterm -e'  # for mac osx
-            candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
-            for basename in candidates:
-                if core.exists('/usr/bin/%s' % basename):
-                    if basename == 'gnome-terminal':
-                        term = '%s --' % basename
-                    else:
-                        term = '%s -e' % basename
-                    break
+            if utils.is_win32():
+                # Try to find Git's sh.exe directory in
+                # one of the typical locations
+                pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
+                pf32 = os.environ.get('ProgramFiles(x86)',
+                                      'C:\\Program Files (x86)')
+                pf64 = os.environ.get('ProgramW6432', 'C:\\Program Files')
+
+                for p in [pf64, pf32, pf, 'C:\\']:
+                    candidate = os.path.join(p, 'Git\\bin\\sh.exe')
+                    if os.path.isfile(candidate):
+                        return candidate
+                return None
+            else:
+                candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
+                for basename in candidates:
+                    if core.exists('/usr/bin/%s' % basename):
+                        if basename == 'gnome-terminal':
+                            term = '%s --' % basename
+                        else:
+                            term = '%s -e' % basename
+                        break
         return term
 
     def color(self, key, default):
