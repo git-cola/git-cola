@@ -27,13 +27,12 @@ Usability, bells and whistles
 * The "Alt+D" diffstat hotkey now selects the staged/modified/etc.
   header in the Status widget, which shows the totality of everything
   that will be committed.
-
-  https://github.com/git-cola/git-cola/issues/771
+  (`#771 <https://github.com/git-cola/git-cola/issues/771>`_)
 
 * Running "Launch Editor" from the diff editor now opens the editor at the
   current line.
 
-  https://github.com/git-cola/git-cola/pull/898
+  (`#898 <https://github.com/git-cola/git-cola/pull/898>`_)
 
 * The textwidth and tabwidth configuration values can now be set
   per-repository, rather than globally only.
@@ -41,52 +40,42 @@ Usability, bells and whistles
 * Text entry widgets switched to using a block cursor in `v3.2`.
   This has been reverted to the original line cursor for consistency
   with other applications and user expectations.
-
-  https://github.com/git-cola/git-cola/issues/889
+  (`#889 <https://github.com/git-cola/git-cola/issues/889>`_)
 
 * The "edit at line" feature, used by the "Grep" tool, now supports
   the Sublime text editor.
-
-  https://github.com/git-cola/git-cola/pull/894
+  (`#894 <https://github.com/git-cola/git-cola/pull/894>`_)
 
 Fixes
 -----
 * The Diff Editor was not honoring the configured tab width on startup.
-
-  https://github.com/git-cola/git-cola/issues/900
+  (`#900 <https://github.com/git-cola/git-cola/issues/900>`_)
 
 * The "Delete Files" feature was creating an unreadable display when
   many files were selected.  Word-wrap the list of files so that the
   display stays within a sensible size.
-
-  https://github.com/git-cola/git-cola/issues/895
+  (`#895 <https://github.com/git-cola/git-cola/issues/895>`_)
 
 * Spelling and grammar fixes.
-
-  https://github.com/git-cola/git-cola/pull/891
+  (`#891 <https://github.com/git-cola/git-cola/pull/891>`_)
 
 Development
 -----------
 * The logo was run through `tidy` to give it a consistent style.
   Some technical issues with the logo were improved.
-
-  https://github.com/git-cola/git-cola/issues/877
+  (`#877 <https://github.com/git-cola/git-cola/issues/877>`_)
 
 * The entire codebase is now checked by `flake8`, rather than just
   the module and test directories.  This catches things like
   the pynsist installer scripts.
-
-  https://github.com/git-cola/git-cola/issues/884
-
-  https://github.com/git-cola/git-cola/issues/882
-
-  https://github.com/git-cola/git-cola/pull/879
+  (`#884 <https://github.com/git-cola/git-cola/issues/884>`_)
+  (`#882 <https://github.com/git-cola/git-cola/issues/882>`_)
+  (`#879 <https://github.com/git-cola/git-cola/pull/879>`_)
 
 Packaging
 ---------
 * The Windows installer's wrapper scripts were missing an import.
-
-  https://github.com/git-cola/git-cola/issues/878
+  (`#878 <https://github.com/git-cola/git-cola/issues/878>`_)
 
 .. _v3.2:
 
@@ -96,106 +85,83 @@ git-cola v3.2
 Usability, bells and whistles
 -----------------------------
 * The `git cola dag` DAG window now supports `git revert`.
-
-  https://github.com/git-cola/git-cola/issues/843
+  (`#843 <https://github.com/git-cola/git-cola/issues/843>`_)
 
 * `git stash pop` is now supported by the stash dialog.
-
-  https://github.com/git-cola/git-cola/issues/844
+  (`#844 <https://github.com/git-cola/git-cola/issues/844>`_)
 
 * The status widget now ensures that each item is visible when selection
   changes.  Previously, if you scrolled to the right to see the name of
   a long filename, and then selected a short filename above it, the widget
   may not have shown the short filename in the viewport.  We now ensure
   that the filenames are visible when the selection changes.
-
-  https://github.com/git-cola/git-cola/pull/828
+  (`#828 <https://github.com/git-cola/git-cola/pull/828>`_)
 
 * The `git xbase` rebase editor no longer displays an error when
   cancelling an interactive rebase.
-
-  https://github.com/git-cola/git-cola/issues/814
+  (`#814 <https://github.com/git-cola/git-cola/issues/814>`_)
 
 * The dialog shown when renaming remotes has been simplified.
-
-  https://github.com/git-cola/git-cola/pull/840
-
-  https://github.com/git-cola/git-cola/issues/838
+  (`#840 <https://github.com/git-cola/git-cola/pull/840>`_)
+  (`#838 <https://github.com/git-cola/git-cola/issues/838>`_)
 
 * The help dialog in the `git-xbase` Rebase editor is now scrollable.
-
-  https://github.com/git-cola/git-cola/issues/855
+  (`#855 <https://github.com/git-cola/git-cola/issues/855>`_)
 
 Translations
 ------------
 * Updated Brazilian translation
-
-  https://github.com/git-cola/git-cola/pull/845
+  (`#845 <https://github.com/git-cola/git-cola/pull/845>`_)
 
 * Updated Czech translation
-
-  https://github.com/git-cola/git-cola/pull/854
-
-  https://github.com/git-cola/git-cola/pull/853
-
-  https://github.com/git-cola/git-cola/pull/835
-
-  https://github.com/git-cola/git-cola/pull/813
+  (`#854 <https://github.com/git-cola/git-cola/pull/854>`_)
+  (`#853 <https://github.com/git-cola/git-cola/pull/853>`_)
+  (`#835 <https://github.com/git-cola/git-cola/pull/835>`_)
+  (`#813 <https://github.com/git-cola/git-cola/pull/813>`_)
 
 * Update Spanish translation
-
-  https://github.com/git-cola/git-cola/pull/862
-
-  https://github.com/git-cola/git-cola/pull/867
+  (`#862 <https://github.com/git-cola/git-cola/pull/862>`_)
+  (`#867 <https://github.com/git-cola/git-cola/pull/867>`_)
 
 Packaging
 ---------
 * The original `#!/usr/bin/env python` shebang lines can now be
   retained by passing `USE_ENV_PYTHON=1` to `make` when installing.
-
-  https://github.com/git-cola/git-cola/issues/850
+  (`#850 <https://github.com/git-cola/git-cola/issues/850>`_)
 
 * The Makefile is now resilient to DESTDIR and prefix containing whitespace.
-
-  https://github.com/git-cola/git-cola/pull/858
+  (`#858 <https://github.com/git-cola/git-cola/pull/858>`_)
 
 * The vendored `qtpy` library was updated to `v1.4.2`.
 
 * `python3-distutils` is needed to build cola on Debian.
-
-  https://github.com/git-cola/git-cola/issues/837
+  (`#837 <https://github.com/git-cola/git-cola/issues/837>`_)
 
 Fixes
 -----
 * The "C" key no longer closes the message dialogs, for example the
   one that is shown when a commit fails its pre-commit hooks.
   This allows "Ctrl+C" copy to work, rather than closing the dialog.
-
-  https://github.com/git-cola/git-cola/issues/734
+  (`#734 <https://github.com/git-cola/git-cola/issues/734>`_)
 
 * Dock widgets sizes are now properly saved and restored when the main
   window is maximized.
-
-  https://github.com/git-cola/git-cola/issues/848
+  (`#848 <https://github.com/git-cola/git-cola/issues/848>`_)
 
 * The spellcheck feature was broken under Python3.
-
-  https://github.com/git-cola/git-cola/issues/857
+  (`#857 <https://github.com/git-cola/git-cola/issues/857>`_)
 
 * A regression when saving stashes was fixed.
-
-  https://github.com/git-cola/git-cola/issues/847
+  (`#847 <https://github.com/git-cola/git-cola/issues/847>`_)
 
 * Diffing image files was not updating the available context menus,
   which prevented the "Stage" action from being present in the menu.
-
-  https://github.com/git-cola/git-cola/issues/841
+  (`#841 <https://github.com/git-cola/git-cola/issues/841>`_)
 
 * `git cola` now detects when `git lfs uninstall` has been run.  This allows
   you to re-initialize "Git LFS" in an existing repository where it had been
   previously uninstalled.
-
-  https://github.com/git-cola/git-cola/issues/842
+  (`#842 <https://github.com/git-cola/git-cola/issues/842>`_)
 
 * Custom color values that did not contain any hexadecimal digits in the
   `a-f` range were being converted into integers by the config reader.  This
@@ -209,41 +175,33 @@ Fixes
     [cola "color"]
         text = "#0a0303"
 
-  https://github.com/git-cola/git-cola/pull/836
-
-  https://github.com/git-cola/git-cola/issues/849
+  (`#836 <https://github.com/git-cola/git-cola/pull/836>`_)
+  (`#849 <https://github.com/git-cola/git-cola/issues/849>`_)
 
 * We now display an error message graphically when `Git` is not installed.
   Previously, the message went to stderr only.
-
-  https://github.com/git-cola/git-cola/issues/830
+  (`#830 <https://github.com/git-cola/git-cola/issues/830>`_)
 
 * Changing diff options was causing resulting in an exception.
-
-  https://github.com/git-cola/git-cola/issues/833
-
-  https://github.com/git-cola/git-cola/pull/834
+  (`#833 <https://github.com/git-cola/git-cola/issues/833>`_)
+  (`#834 <https://github.com/git-cola/git-cola/pull/834>`_)
 
 * The DAG window now updates itself when branches and tags are created.
-
-  https://github.com/git-cola/git-cola/issues/814
+  (`#814 <https://github.com/git-cola/git-cola/issues/814>`_)
 
 * The user's `$PATH` environment variable can now contain utf-8
   encoded paths.  Previously, launching external commands could
   lead to tracebacks.
-
-  https://github.com/git-cola/git-cola/issues/807
+  (`#807 <https://github.com/git-cola/git-cola/issues/807>`_)
 
 * Git Cola development sandboxes can now be stored on utf-8 encoded
   filesystem paths.  Previously, the interactive rebase feature
   could be broken when running in that environment.
-
-  https://github.com/git-cola/git-cola/issues/825
+  (`#825 <https://github.com/git-cola/git-cola/issues/825>`_)
 
 * The log window now uses an ISO-8601 timestamp, which
   avoids localized output in the log window.
-
-  https://github.com/git-cola/git-cola/issues/817
+  (`#817 <https://github.com/git-cola/git-cola/issues/817>`_)
 
 Development
 -----------
@@ -251,8 +209,7 @@ Development
   travis is now running pylint over the entire project.
 
 * Miscellaneous improvements and code improvements.
-
-  https://github.com/git-cola/git-cola/issues/874
+  (`#874 <https://github.com/git-cola/git-cola/issues/874>`_)
 
 .. _v3.1:
 
@@ -262,15 +219,12 @@ git-cola v3.1
 Usability, bells and whistles
 -----------------------------
 * The "Browser" widget learned to rename files using "git mv".
-
-  https://github.com/git-cola/git-cola/issues/239
+  (`#239 <https://github.com/git-cola/git-cola/issues/239>`_)
 
 * The "Diff" widget learned to diff images.  Side-by-side and pixel diff
   modes allow you to inspect changes to common images formats.
-
-  https://github.com/git-cola/git-cola/issues/444
-
-  https://github.com/git-cola/git-cola/pull/803
+  (`#444 <https://github.com/git-cola/git-cola/issues/444>`_)
+  (`#803 <https://github.com/git-cola/git-cola/pull/803>`_)
 
 * Git LFS and Git Annex are natively supported by the image diff viewer.
 
@@ -284,8 +238,7 @@ Usability, bells and whistles
 
 * The "Stash" tool learned to stash staged changes only.  Select the
   "Stage Index" option and only staged changes will be stashed away.
-
-  https://github.com/git-cola/git-cola/issues/413
+  (`#413 <https://github.com/git-cola/git-cola/issues/413>`_)
 
 * The "Stash" tool learned to use vim-like navigation keyboard shortcuts,
   shows error messages when things go wrong, and now saves the "Stash Index"
@@ -295,8 +248,7 @@ Usability, bells and whistles
   diff, status, recent, or favorites widgets, based on which widget has focus.
 
 * The "File" and "Edit" menu can now be activated using `Alt-{f,e}` hotkeys.
-
-  https://github.com/git-cola/git-cola/issues/759
+  (`#759 <https://github.com/git-cola/git-cola/issues/759>`_)
 
 * It was easy to accidentally trigger the first action in the `Status` tool's
   context menu when using a quick right-click to bring up the menu.
@@ -304,51 +256,40 @@ Usability, bells and whistles
   triggered unless enough time has passed.  This prevents accidental
   activation of the first item (typically "Stage" or "Unstage") without
   burdening common use cases.
-
-  https://github.com/git-cola/git-cola/pull/755
-
-  https://github.com/git-cola/git-cola/issues/643
+  (`#755 <https://github.com/git-cola/git-cola/pull/755>`_)
+  (`#643 <https://github.com/git-cola/git-cola/issues/643>`_)
 
 * The "Ctrl+S" hotkey now works for the header items in the Status tool.
   Selected the "Modified" header item and activating the "Stage" hotkey,
   for example, will stage all modified files.  This works for the "Staged",
   "Modified", and "Untracked" headers.  This is not enabled for the
   "Unmerged" header by design.
-
-  https://github.com/git-cola/git-cola/issues/772
+  (`#772 <https://github.com/git-cola/git-cola/issues/772>`_)
 
 * The list of "Recent" repositories previously capped the number of
   repositories shown to 8 repositories.  This can be set to a higher
   value by setting the `cola.maxrecent` configuration variable.
-
-  https://github.com/git-cola/git-cola/issues/752
+  (`#752 <https://github.com/git-cola/git-cola/issues/752>`_)
 
 * The "Create Branch" dialog now prevents invalid branch names.
-
-  https://github.com/git-cola/git-cola/issues/765
+  (`#765 <https://github.com/git-cola/git-cola/issues/765>`_)
 
 * Updated Turkish translation.
-
-  https://github.com/git-cola/git-cola/pull/756
+  (`#756 <https://github.com/git-cola/git-cola/pull/756>`_)
 
 * Updated Ukrainian translation.
-
-  https://github.com/git-cola/git-cola/pull/753
+  (`#753 <https://github.com/git-cola/git-cola/pull/753>`_)
 
 * Updated German translation.
-
-  https://github.com/git-cola/git-cola/pull/802
+  (`#802 <https://github.com/git-cola/git-cola/pull/802>`_)
 
 * Updated Czech translation
-
-  https://github.com/git-cola/git-cola/pull/792
-
-  https://github.com/git-cola/git-cola/pull/806
+  (`#792 <https://github.com/git-cola/git-cola/pull/792>`_)
+  (`#806 <https://github.com/git-cola/git-cola/pull/806>`_)
 
 * The window title can be configured to not display the absolute path of the
   repository.
-
-  https://github.com/git-cola/git-cola/issues/775
+  (`#775 <https://github.com/git-cola/git-cola/issues/775>`_)
 
 * The "Edit Remotes" editor learned to edit remote URLS.
 
@@ -365,8 +306,7 @@ Packaging
 
 * The macOS installation was made simpler for better compatibility with
   Homebrew.
-
-  https://github.com/git-cola/git-cola/issues/636
+  (`#636 <https://github.com/git-cola/git-cola/issues/636>`_)
 
 * The Windows installer is now much simpler.  Git Cola now bundles
   Python and PyQt5, so users need only install the "Git for Windows"
@@ -376,27 +316,22 @@ Fixes
 -----
 * Uninitialized difftool errors will now be displayed graphically.
   They were previously going to the shell.
-
-  https://github.com/git-cola/git-cola/issues/457
+  (`#457 <https://github.com/git-cola/git-cola/issues/457>`_)
 
 * Translations marked "fuzzy" will no longer be used when translating strings.
-
-  https://github.com/git-cola/git-cola/issues/782
+  (`#782 <https://github.com/git-cola/git-cola/issues/782>`_)
 
 * Deleted unmerged files will now correctly use a deleted icon.
-
-  https://github.com/git-cola/git-cola/issues/479
+  (`#479 <https://github.com/git-cola/git-cola/issues/479>`_)
 
 * The `Ctrl+C` "Copy" hotkey on the diff viewer has been fixed.
-
-  https://github.com/git-cola/git-cola/issues/767
+  (`#767 <https://github.com/git-cola/git-cola/issues/767>`_)
 
 * The "Create Tag" dialog did not correctly handle the case when a signed
   tag is requested, but no message is provided, and the user chooses to
   create an unannotated tag instead.  This convenience fallback will now
   properly create an unsigned, unannotated tag.
-
-  https://github.com/git-cola/git-cola/issues/696
+  (`#696 <https://github.com/git-cola/git-cola/issues/696>`_)
 
 * `.gitconfig` and `.git/config` values editable by the Preferences dialog
   (aka `git cola config`) will now get unset when set to an empty value.
@@ -404,27 +339,22 @@ Fixes
   followed by a subsequent emptying of that field, would previously result in
   an empty string getting stored in the config.  This has been fixed so that
   the value will now get unset in the config instead.
-
-  https://github.com/git-cola/git-cola/issues/406
+  (`#406 <https://github.com/git-cola/git-cola/issues/406>`_)
 
 * Spelling and typofixes.
-
-  https://github.com/git-cola/git-cola/pull/748
+  (`#748 <https://github.com/git-cola/git-cola/pull/748>`_)
 
 * `core.commentChar` is now honored when set in the local repository
   `.git/config`.
-
-  https://github.com/git-cola/git-cola/issues/766
+  (`#766 <https://github.com/git-cola/git-cola/issues/766>`_)
 
 * The log window was using a format string that did not display
   correctly in all locales.  A locale-aware format is now used.
-
-  https://github.com/git-cola/git-cola/pull/800
+  (`#800 <https://github.com/git-cola/git-cola/pull/800>`_)
 
 * The dialog displayed when prompting for a reference could sometimes
   lose focus.
-
-  https://github.com/git-cola/git-cola/pull/804
+  (`#804 <https://github.com/git-cola/git-cola/pull/804>`_)
 
 .. _v3.0:
 
@@ -434,22 +364,16 @@ git-cola v3.0
 Usability, bells and whistles
 -----------------------------
 * Updated Simplified Chinese translation.
-
-  https://github.com/git-cola/git-cola/pull/726
+  (`#726 <https://github.com/git-cola/git-cola/pull/726>`_)
 
 * Updated Ukrainian translation.
-
-  https://github.com/git-cola/git-cola/pull/723
+  (`#723 <https://github.com/git-cola/git-cola/pull/723>`_)
 
 * New Czech translation.
-
-  https://github.com/git-cola/git-cola/pull/736
-
-  https://github.com/git-cola/git-cola/pull/737
-
-  https://github.com/git-cola/git-cola/pull/740
-
-  https://github.com/git-cola/git-cola/pull/743
+  (`#736 <https://github.com/git-cola/git-cola/pull/736>`_)
+  (`#737 <https://github.com/git-cola/git-cola/pull/737>`_)
+  (`#740 <https://github.com/git-cola/git-cola/pull/740>`_)
+  (`#743 <https://github.com/git-cola/git-cola/pull/743>`_)
 
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
@@ -463,25 +387,21 @@ Usability, bells and whistles
 
 * The "Copy SHA-1" hotkey is now `Alt + Ctrl + C`, to avoid clobbering the
   ability to copy text from the DAG window.
-
-  https://github.com/git-cola/git-cola/pull/705
+  (`#705 <https://github.com/git-cola/git-cola/pull/705>`_)
 
 * The "Prepare Commit Message" action can now be invoked via the
   `Ctrl+Shift+Return` shortcut.
-
-  https://github.com/git-cola/git-cola/pull/707
+  (`#707 <https://github.com/git-cola/git-cola/pull/707>`_)
 
 * The `Branches` pane now has a filter field that highlights branches whose
   names match the string entered into its text field.
-
-  https://github.com/git-cola/git-cola/pull/713
+  (`#713 <https://github.com/git-cola/git-cola/pull/713>`_)
 
 * Actions that are triggered in response to button presses were being
   triggered when the button was pressed, rather than when it was released,
   which was a usability flaw.  All buttons now respond when clicked
   rather than when pressed.
-
-  https://github.com/git-cola/git-cola/pull/715
+  (`#715 <https://github.com/git-cola/git-cola/pull/715>`_)
 
 * The DAG window will now only refresh when object IDs change.
   Previously, the DAG would redraw itself in response to inotify events,
@@ -490,49 +410,38 @@ Usability, bells and whistles
   corresponding to its query input changes.  Furthermore, when redrawing, the
   scrollbar positions are retained to minimize disruption to the viewport
   contents.
-
-  https://github.com/git-cola/git-cola/issues/620
-
-  https://github.com/git-cola/git-cola/issues/724
+  (`#620 <https://github.com/git-cola/git-cola/issues/620>`_)
+  (`#724 <https://github.com/git-cola/git-cola/issues/724>`_)
 
 * The "About" dialog now includes the SHA-1 where Git Cola was built.
-
-  https://github.com/git-cola/git-cola/issues/530
+  (`#530 <https://github.com/git-cola/git-cola/issues/530>`_)
 
 * The "Status" widget now has "Copy Leading Path to Clipboard" and
   "Copy Basename to Clipboard" actions.
-
-  https://github.com/git-cola/git-cola/issues/435
-
-  https://github.com/git-cola/git-cola/issues/436
+  (`#435 <https://github.com/git-cola/git-cola/issues/435>`_)
+  (`#436 <https://github.com/git-cola/git-cola/issues/436>`_)
 
 * The "Status" widget now supports custom "Copy ... to Clipboard" actions.
-
-  https://github.com/git-cola/git-cola/issues/437
+  (`#437 <https://github.com/git-cola/git-cola/issues/437>`_)
 
 * The main menu now has an "Edit" menu.
-
-  https://github.com/git-cola/git-cola/issues/725
+  (`#725 <https://github.com/git-cola/git-cola/issues/725>`_)
 
 * `git dag` learned to checkout commits into a detached HEAD state.
-
-  https://github.com/git-cola/git-cola/issues/698
+  (`#698 <https://github.com/git-cola/git-cola/issues/698>`_)
 
 * The `status` widget's context menus now omit actions selection-dependent
   actions when no file is selected.
-
-  https://github.com/git-cola/git-cola/pull/731
+  (`#731 <https://github.com/git-cola/git-cola/pull/731>`_)
 
 * The startup dialog now focuses the repository list so that repositories
   can be selected with the keyboard without mouse intervention.
-
-  https://github.com/git-cola/git-cola/issues/741
+  (`#741 <https://github.com/git-cola/git-cola/issues/741>`_)
 
 Fixes
 -----
 * `git dag` now prevents nodes from overlapping in more situations.
-
-  https://github.com/git-cola/git-cola/pull/689
+  (`#689 <https://github.com/git-cola/git-cola/pull/689>`_)
 
 * Adding untracked Git submodule repo directories previously ran
   `git add submodule/` but we now call `git add submodule` without
@@ -540,62 +449,49 @@ Fixes
   submodule (which is possibly a `git` bug).  By working around the
   buggy behavior we allow users to recover by issuing the appropriate
   `git submodule add` command to properly register the submodule.
-
-  https://github.com/git-cola/git-cola/pull/681
+  (`#681 <https://github.com/git-cola/git-cola/pull/681>`_)
 
 * We now avoid `git for-each-ref --sort=version:refname` on versions
   of `git` older than `v2.7.0`.  Previously we only avoided it for
   versions older than `v2.0.0`, which was a mistake.
-
-  https://github.com/git-cola/git-cola/pull/686
+  (`#686 <https://github.com/git-cola/git-cola/pull/686>`_)
 
 * The error message displayed when `git` is not installed has been fixed.
-
-  https://github.com/git-cola/git-cola/pull/686
+  (`#686 <https://github.com/git-cola/git-cola/pull/686>`_)
 
 * Adding new remotes was silently broken.
-
-  https://github.com/git-cola/git-cola/issues/684
-
-  https://github.com/git-cola/git-cola/pull/685
+  (`#684 <https://github.com/git-cola/git-cola/issues/684>`_)
+  (`#685 <https://github.com/git-cola/git-cola/pull/685>`_)
 
 * The repo selection dialog had errors during startup when the
   `cola.refreshonfocus` feature was enabled, as reported on Ubuntu 16.04.
-
-  https://github.com/git-cola/git-cola/issues/690
+  (`#690 <https://github.com/git-cola/git-cola/issues/690>`_)
 
 * Restored support for PyQt 4.6 (Centos 6.8)
-
-  https://github.com/git-cola/git-cola/issues/692
+  (`#692 <https://github.com/git-cola/git-cola/issues/692>`_)
 
 * Switching repositories now resets the "Amend Mode" and other settings
   when switching.
-
-  https://github.com/git-cola/git-cola/issues/710
+  (`#710 <https://github.com/git-cola/git-cola/issues/710>`_)
 
 * `git rebase` error messages now displayed when rebasing fails or stops
   via the standalone `git cola rebase` front-end.
-
-  https://github.com/git-cola/git-cola/issues/721
+  (`#721 <https://github.com/git-cola/git-cola/issues/721>`_)
 
 * `git cola` learned to stage broken symlinks.
-
-  https://github.com/git-cola/git-cola/issues/727
+  (`#727 <https://github.com/git-cola/git-cola/issues/727>`_)
 
 * The "View History" feature in the `Browser` tool was fixed, and now
   disambiguates between refs and paths.
-
-  https://github.com/git-cola/git-cola/issues/732
+  (`#732 <https://github.com/git-cola/git-cola/issues/732>`_)
 
 * The diff editor now has better support for files with CRLF `\r\n`
   line endings.
-
-  https://github.com/git-cola/git-cola/issues/730
+  (`#730 <https://github.com/git-cola/git-cola/issues/730>`_)
 
 * `cola.inotify` in a repo-local config is now honored
   when `git cola` is launched from a desktop entry (`git cola --prompt`).
-
-  https://github.com/git-cola/git-cola/issues/695
+  (`#695 <https://github.com/git-cola/git-cola/issues/695>`_)
 
 .. _v2.11:
 
@@ -605,10 +501,8 @@ git-cola v2.11
 Usability, bells and whistles
 -----------------------------
 * New Ukrainian translation.
-
-  https://github.com/git-cola/git-cola/pull/670
-
-  https://github.com/git-cola/git-cola/pull/672
+  (`#670 <https://github.com/git-cola/git-cola/pull/670>`_)
+  (`#672 <https://github.com/git-cola/git-cola/pull/672>`_)
 
 * New and improved French translations.
 
@@ -619,33 +513,25 @@ Usability, bells and whistles
   activated either by setting the `GIT_COLA_ICON_THEME` environment variable
   to `dark`, by configuring `cola.icontheme` to `dark`, or by specifying
   `--icon-theme=dark` on the command line.
-
-  https://github.com/git-cola/git-cola/pull/638
+  (`#638 <https://github.com/git-cola/git-cola/pull/638>`_)
 
 * Autocompletion was added to the `Fetch`, `Push`, and `Pull` dialogs.
 
 * The commit message editor now remembers the "Spellcheck" setting
   after exiting.
-
-  https://github.com/git-cola/git-cola/pull/645
+  (`#645 <https://github.com/git-cola/git-cola/pull/645>`_)
 
 * `git dag` now uses an improved algorithm for laying out the graph,
   which avoids collisions under certain graph configurations, and
   avoids overlapping tag with commits.
-
-  https://github.com/git-cola/git-cola/pull/648
-
-  https://github.com/git-cola/git-cola/pull/651
-
-  https://github.com/git-cola/git-cola/pull/654
-
-  https://github.com/git-cola/git-cola/pull/656
-
-  https://github.com/git-cola/git-cola/pull/659
+  (`#648 <https://github.com/git-cola/git-cola/pull/648>`_)
+  (`#651 <https://github.com/git-cola/git-cola/pull/651>`_)
+  (`#654 <https://github.com/git-cola/git-cola/pull/654>`_)
+  (`#656 <https://github.com/git-cola/git-cola/pull/656>`_)
+  (`#659 <https://github.com/git-cola/git-cola/pull/659>`_)
 
 * `git dag` now remembers its column sizes across sessions.
-
-  https://github.com/git-cola/git-cola/issues/674
+  (`#674 <https://github.com/git-cola/git-cola/issues/674>`_)
 
 * `Grep` now shows a preview of the selected file's content in a split window
   below the grep results.
@@ -655,18 +541,15 @@ Usability, bells and whistles
 * `Edit Remotes` now remembers its window settings after exiting.
 
 * `Diff` now has an option to display line numbers in the editor.
-
-  https://github.com/git-cola/git-cola/issues/136
+  (`#136 <https://github.com/git-cola/git-cola/issues/136>`_)
 
 * `Amend Last Commit` can now be triggered via the `Commit` menu in addition
   to the commit message editor's options.
-
-  https://github.com/git-cola/git-cola/issues/640
+  (`#640 <https://github.com/git-cola/git-cola/issues/640>`_)
 
 * The `File Browser` tool was made much faster and can now operate on
   much larger repositories.
-
-  https://github.com/git-cola/git-cola/issues/499
+  (`#499 <https://github.com/git-cola/git-cola/issues/499>`_)
 
 * A new "turbo" mode was added that allows you to opt-out of operations
   that can slow `git cola` on large repositories.  The turbo mode is
@@ -675,14 +558,12 @@ Usability, bells and whistles
   details in the `File Browser` widget.
 
 * A new GitIgnore dialog allows adding custom gitignore patterns.
-
-  https://github.com/git-cola/git-cola/pull/653
+  (`#653 <https://github.com/git-cola/git-cola/pull/653>`_)
 
 * The spellchecker in `git cola` can now use an additional dictionary
   by configuring `cola.dictionary` to the path to a file containing
   a newline-separated list of words.
-
-  https://github.com/git-cola/git-cola/issues/663
+  (`#663 <https://github.com/git-cola/git-cola/issues/663>`_)
 
 * The stash, export patches, diff, and gitignore dialogs now remember
   their window sizes.
@@ -691,10 +572,8 @@ Usability, bells and whistles
   edited files.
 
 * The `Fetch` dialog now allows pruning remote branches.
-
-  https://github.com/git-cola/git-cola/issues/639
-
-  https://github.com/git-cola/git-cola/pull/680
+  (`#639 <https://github.com/git-cola/git-cola/issues/639>`_)
+  (`#680 <https://github.com/git-cola/git-cola/pull/680>`_)
 
 Fixes
 -----
@@ -703,38 +582,32 @@ Fixes
   `/usr/share/dict/words` provided on older distributions.
   This makes the spellchecker compatible with Arch, which does not provide
   a `words` symlink like Debian.
-
-  https://github.com/git-cola/git-cola/issues/663
+  (`#663 <https://github.com/git-cola/git-cola/issues/663>`_)
 
 * Properly handle the case where an existing file is untracked using
   the File Browser.
 
 * Fix a quirk where the "Create Branch" dialog sometimes required clicking
   twice on the radio buttons.
-
-  https://github.com/git-cola/git-cola/pull/662
+  (`#662 <https://github.com/git-cola/git-cola/pull/662>`_)
 
 * Fixed a focus issue to ensure that "Push", "Fetch", and "Pull" can
   be executed with the press of a single enter key after being shown.
-
-  https://github.com/git-cola/git-cola/issues/661
+  (`#661 <https://github.com/git-cola/git-cola/issues/661>`_)
 
 * Committing is now allowed in when resolving a merge results in no
   changes.  This state was previously prevented by the commit message editor,
   which prevented users from resolving merges that result in no changes.
-
-  https://github.com/git-cola/git-cola/pull/679
+  (`#679 <https://github.com/git-cola/git-cola/pull/679>`_)
 
 * The filesystem monitor would sometimes emit backtraces when directories
   are modified.  This has been fixed.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=1438522
+  (`bz #1438522 <https://bugzilla.redhat.com/show_bug.cgi?id=1438522>`_)
 
 * Absolute paths are now returned when querying for `.git`-relative paths
   from within a submodule, which uses `.git`-files.
   This fixes launching `git cola` from within a subdirectory of a submodule.
-
-  https://github.com/git-cola/git-cola/pull/675
+  (`#675 <https://github.com/git-cola/git-cola/pull/675>`_)
 
 .. _v2.10:
 
@@ -748,8 +621,7 @@ Usability, bells and whistles
   as Git's `prepare-commit-message` hook.  The default path to this hook
   can be overridden by setting the `cola.prepareCommitMessageHook`
   configuration variable.
-
-  http://git-cola.readthedocs.io/en/latest/git-cola.html#prepare-commit-message
+  (`Documentation <https://git-cola.readthedocs.io/en/latest/git-cola.html#prepare-commit-message>`_)
 
 * `git cola diff` (and the corresponding `Diff` menu actions) can now
   launch difftool with the standard `Ctrl+D` hotkey.  The `Ctrl+E` hotkey was
@@ -760,32 +632,26 @@ Usability, bells and whistles
 Fixes
 -----
 * `git cola` now works when installed in non-ascii, utf8-encoded paths.
-
-  https://github.com/git-cola/git-cola/issues/629
+  (`#629 <https://github.com/git-cola/git-cola/issues/629>`_)
 
 * Styling issues that caused black backgrounds in various widgets when using
   PyQ5 on Mac OS X have been fixed.
-
-  https://github.com/git-cola/git-cola/issues/624
+  (`#624 <https://github.com/git-cola/git-cola/issues/624>`_)
 
 * The "Open Recent" menu action was broken and has been fixed.
-
-  https://github.com/git-cola/git-cola/issues/634
+  (`#634 <https://github.com/git-cola/git-cola/issues/634>`_)
 
 * Exiting `git cola` with a maximized main window would hang when reopened
   on Linux.
-
-  https://github.com/git-cola/git-cola/issues/641
+  (`#641 <https://github.com/git-cola/git-cola/issues/641>`_)
 
 Packaging
 ---------
 * `appdata.xml` files are now provided at
   `share/appdata/git-cola.xml` and `share/appdata/git-dag.xml`
   for use by the Linux software gallery.
-
-  https://people.freedesktop.org/~hughsient/appdata/
-
-  https://github.com/git-cola/git-cola/pull/627
+  (`#627 <https://github.com/git-cola/git-cola/pull/627>`_)
+  (`Appdata <https://people.freedesktop.org/~hughsient/appdata/>`_)
 
 .. _v2.9.1:
 
@@ -795,8 +661,7 @@ git-cola v2.9.1
 Fixes
 -----
 * The "Open Recent" menu was updated to new bookmarks format.
-
-  https://github.com/git-cola/git-cola/issues/628
+  (`#628 <https://github.com/git-cola/git-cola/issues/628>`_)
 
 .. _v2.9:
 
@@ -806,36 +671,29 @@ git-cola v2.9
 Usability, bells and whistles
 -----------------------------
 * New Polish translation thanks to Łukasz Wojniłowicz
-
-  https://github.com/git-cola/git-cola/pull/598
+  (`#598 <https://github.com/git-cola/git-cola/pull/598>`_)
 
 * The `Bypass Commit Hooks` feature now disables itself automatically
   when a new commit is created.  The new behavior turns the option into a
   single-use flag, which helps prevent users from accidentally leaving it
   active longer than intended.
-
-  https://github.com/git-cola/git-cola/pull/595
+  (`#595 <https://github.com/git-cola/git-cola/pull/595>`_)
 
 * `git dag` learned to launch an external diff viewer on selected commits.
   The standard `Ctrl+D` shortcut can be used to view diffs.
-
-  https://github.com/git-cola/git-cola/issues/468
+  (`#468 <https://github.com/git-cola/git-cola/issues/468>`_)
 
 * `git dag` learned to launch directory diffs via `git difftool --dir-diff`.
   The `Ctrl+Shift+D` shortcut launches difftool in directory-diff mode.
-
-  https://github.com/git-cola/git-cola/issues/468
+  (`#468 <https://github.com/git-cola/git-cola/issues/468>`_)
 
 * Items in the "Favorites" list can now be renamed, which makes it
   easier to differentiate between several checkouts of the same repository.
-
-  https://github.com/git-cola/git-cola/issues/599
-
-  https://github.com/git-cola/git-cola/pull/601
+  (`#599 <https://github.com/git-cola/git-cola/issues/599>`_)
+  (`#601 <https://github.com/git-cola/git-cola/pull/601>`_)
 
 * The startup screen now includes a logo and `git cola` version information.
-
-  https://github.com/git-cola/git-cola/issues/526
+  (`#526 <https://github.com/git-cola/git-cola/issues/526>`_)
 
 * The `About` page was revamped to contain multiple tabs.  A new tab was added
   that provides details about `git cola`''s dependencies.  New tabs were also
@@ -847,17 +705,14 @@ Usability, bells and whistles
   `git pull` are now accessible via `git cola pull`.
 
 * Doing a forced push no longer requires selecting the remote branch.
-
-  https://github.com/git-cola/git-cola/pull/618
+  (`#618 <https://github.com/git-cola/git-cola/pull/618>`_)
 
 * `git cola push` now has an option to suppress the prompt that is shown
   when pushing would create new remote branches.
-
-  https://github.com/git-cola/git-cola/issues/605
+  (`#605 <https://github.com/git-cola/git-cola/issues/605>`_)
 
 * `git dag` now shows commit messages in a more readable color.
-
-  https://github.com/git-cola/git-cola/issues/574
+  (`#574 <https://github.com/git-cola/git-cola/issues/574>`_)
 
 * `git cola browse` and the `status` widget learned to launch the OS-specified
   default action for a file.  When used on directories via `git cola browse`,
@@ -869,36 +724,28 @@ Usability, bells and whistles
 Fixes
 -----
 * `git cola browse` was not updating when expanding items.
-
-  https://github.com/git-cola/git-cola/issues/588
+  (`#588 <https://github.com/git-cola/git-cola/issues/588>`_)
 
 * Typofixes in comments, naming, and strings have been applied.
-
-  https://github.com/git-cola/git-cola/pull/593
+  (`#593 <https://github.com/git-cola/git-cola/pull/593>`_)
 
 * The inotify and win32 filesystem monitoring no longer refreshes
   when updates are made to ignored files.
-
-  https://github.com/git-cola/git-cola/issues/517
-
-  https://github.com/git-cola/git-cola/issues/516
+  (`#517 <https://github.com/git-cola/git-cola/issues/517>`_)
+  (`#516 <https://github.com/git-cola/git-cola/issues/516>`_)
 
 * The `Refresh` button on the actions panel no longer raises an
   exception when using PyQt5.
-
-  https://github.com/git-cola/git-cola/issues/604
+  (`#604 <https://github.com/git-cola/git-cola/issues/604>`_)
 
 * Fixed a typo in the inotify backend that is triggered when files are removed.
-
-  https://github.com/git-cola/git-cola/issues/607
+  (`#607 <https://github.com/git-cola/git-cola/issues/607>`_)
 
 * Fixed a typo when recovering from a failed attempt to open a repository.
-
-  https://github.com/git-cola/git-cola/issues/606
+  (`#606 <https://github.com/git-cola/git-cola/issues/606>`_)
 
 * `git dag` now properly updates itself when launched from the menubar.
-
-  https://github.com/git-cola/git-cola/pull/613
+  (`#613 <https://github.com/git-cola/git-cola/pull/613>`_)
 
 * If git-cola is invoked on Windows using `start pythonw git-cola`,
   a console window will briefly flash on the screen each time
@@ -909,15 +756,13 @@ Fixes
 
 * The `Save` button in `git dag`'s "Grab File..." feature now properly
   prompts for a filename when saving files.
-
-  https://github.com/git-cola/git-cola/pull/617
+  (`#617 <https://github.com/git-cola/git-cola/pull/617>`_)
 
 Development
 -----------
 * The `qtpy` symlink in the source tree has been removed to allow for easier
   development on Windows.
-
-  https://github.com/git-cola/git-cola/issues/626
+  (`#626 <https://github.com/git-cola/git-cola/issues/626>`_)
 
 .. _v2.8:
 
@@ -927,19 +772,16 @@ git-cola v2.8
 Usability, bells and whistles
 -----------------------------
 * `git cola push` learned to configure upstream branches.
-
-  https://github.com/git-cola/git-cola/issues/563
+  (`#563 <https://github.com/git-cola/git-cola/issues/563>`_)
 
 Fixes
 -----
 * The diffstat view is now properly updated when notifications are
   received via inotify filesystem monitoring.
-
-  https://github.com/git-cola/git-cola/issues/577
+  (`#577 <https://github.com/git-cola/git-cola/issues/577>`_)
 
 * Python3 with PyQt5 had a bug that prevented `git cola` from starting.
-
-  https://github.com/git-cola/git-cola/pull/589
+  (`#589 <https://github.com/git-cola/git-cola/pull/589>`_)
 
 .. _v2.7:
 
@@ -953,20 +795,17 @@ Fixes
   were operated upon with `LC_ALL=C` set in the environment, unicode errors
   would occur when using `python2`.  `git cola` was made more robust and will
   now operate correctly within this environment.
-
-  https://github.com/git-cola/git-cola/issues/581
+  (`#581 <https://github.com/git-cola/git-cola/issues/581>`_)
 
 * Support for the `GIT_WORK_TREE` environment variable was fixed.
-
-  https://github.com/git-cola/git-cola/pull/582
+  (`#582 <https://github.com/git-cola/git-cola/pull/582>`_)
 
 Development
 -----------
 
 * The `unittest.mock` module is now used instead of the original `mock` module
   when running the `git cola` test suite using Python3.
-
-  https://github.com/git-cola/git-cola/issues/569
+  (`#569 <https://github.com/git-cola/git-cola/issues/569>`_)
 
 Packaging
 ---------
@@ -976,8 +815,7 @@ Packaging
   library is available.  Users are not required to upgrade at this time,
   but *PyQt5* support can be enabled anytime by making its python
   modules available.
-
-  https://github.com/git-cola/git-cola/issues/232
+  (`#232 <https://github.com/git-cola/git-cola/issues/232>`_)
 
   *NOTE*: We do not yet recommend using *PyQt5* because there are known
   exit-on-segfault bugs in *Qt5* that have not yet been addressed.
@@ -1006,39 +844,32 @@ Usability, bells and whistles
 * A new "Reset" sub-menu provides access to running "git reset --mixed"
   when resetting branch heads and "git reset  --merge" when resetting
   worktrees.
-
-  https://github.com/git-cola/git-cola/issues/542
+  (`#542 <https://github.com/git-cola/git-cola/issues/542>`_)
 
 * `git cola` now supports linked worktrees, i.e. worktrees created by
   `git worktree`.
-
-  https://github.com/git-cola/git-cola/issues/554
+  (`#554 <https://github.com/git-cola/git-cola/issues/554>`_)
 
 Fixes
 -----
 
 * Diff highlighting is now robust to the user having
   diff.supressBlankEmpty=true in their git config.
-
-  https://github.com/git-cola/git-cola/issues/541
+  (`#541 <https://github.com/git-cola/git-cola/issues/541>`_)
 
 * The filesystem monitor now properly handles repositories that use
   `.git`-files, e.g. when using submodules.
-
-  https://github.com/git-cola/git-cola/issues/545
-
-  https://github.com/git-cola/git-cola/pulls/546
+  (`#545 <https://github.com/git-cola/git-cola/issues/545>`_)
+  (`#546 <https://github.com/git-cola/git-cola/pulls/546>`_)
 
 * Per-repository git configuration is now properly detected when launching
   `git cola` from an application launcher.
-
-  https://github.com/git-cola/git-cola/issues/548
+  (`#548 <https://github.com/git-cola/git-cola/issues/548>`_)
 
 * `git cola` now cleans up after itself immediately to avoid leaving behind
   empty `/tmp/git-cola-XXXXXX` directories when the user uses `Ctrl+C`
   to quit the app.
-
-  https://github.com/git-cola/git-cola/issues/566
+  (`#566 <https://github.com/git-cola/git-cola/issues/566>`_)
 
 Packaging
 ---------
@@ -1047,8 +878,7 @@ Packaging
   paths.  Previously, Python's stdlib would throw an encoding error during
   installation.  We workaround the stdlib by forcing python2 to use utf-8,
   thus fixing assumptions in the stdlib library code.
-
-  https://github.com/git-cola/git-cola/issues/551
+  (`#551 <https://github.com/git-cola/git-cola/issues/551>`_)
 
 .. _v2.5:
 
@@ -1060,50 +890,39 @@ Usability, bells and whistles
 
 * The icon for untracked files was adjusted to better differentiate
   between files and the "Untracked" header.
-
-  https://github.com/git-cola/git-cola/issues/509
+  (`#509 <https://github.com/git-cola/git-cola/issues/509>`_)
 
 * Ctrl+O was added as a hotkey for opening repositories.
-
-  https://github.com/git-cola/git-cola/pull/507
+  (`#507 <https://github.com/git-cola/git-cola/pull/507>`_)
 
 * `git dag` now uses consistent edge colors across updates.
-
-  https://github.com/git-cola/git-cola/issues/512
+  (`#512 <https://github.com/git-cola/git-cola/issues/512>`_)
 
 * `git cola`'s Bookmarks widget can now be used to set a "Default Repository".
   Under the hood, we set the `cola.defaultrepo` configuration variable.
   The default repository is used whenever `git cola` is launched outside of
   a Git repository.  When unset, or when set to a bogus value, `git cola`
   will prompt for a repository, as it previously did.
-
-  https://github.com/git-cola/git-cola/issues/513
+  (`#513 <https://github.com/git-cola/git-cola/issues/513>`_)
 
 * `git cola`'s Russian and Spanish translations were improved
   thanks to Vaiz and Zeioth.
-
-  https://github.com/git-cola/git-cola/pull/514
-
-  https://github.com/git-cola/git-cola/pull/515
-
-  https://github.com/git-cola/git-cola/pull/523
+  (`#514 <https://github.com/git-cola/git-cola/pull/514>`_)
+  (`#515 <https://github.com/git-cola/git-cola/pull/515>`_)
+  (`#523 <https://github.com/git-cola/git-cola/pull/523>`_)
 
 * `git cola` was translated to Turkish thanks to Barış ÇELİK.
-
-  https://github.com/git-cola/git-cola/pull/520
+  (`#520 <https://github.com/git-cola/git-cola/pull/520>`_)
 
 * The status view now supports launching `git gui blame`.  It can be
   configured to use a different command by setting `cola.blameviewer`.
-
-  https://github.com/git-cola/git-cola/pull/521
+  (`#521 <https://github.com/git-cola/git-cola/pull/521>`_)
 
 * `git dag` now allows selecting non-contiguous ranges in the log widget.
-
-  https://github.com/git-cola/git-cola/issues/468
+  (`#468 <https://github.com/git-cola/git-cola/issues/468>`_)
 
 * Any font can now be chosen for the diff editor, not just monospace fonts.
-
-  https://github.com/git-cola/git-cola/issues/525
+  (`#525 <https://github.com/git-cola/git-cola/issues/525>`_)
 
 Fixes
 -----
@@ -1112,24 +931,20 @@ Fixes
   `git mergetool` to resolve merges.  These terminals require that the command
   to execute is shell-quoted and passed as a single string argument to `-e`
   rather than as additional command line arguments.
-
-  https://github.com/git-cola/git-cola/issues/524
+  (`#524 <https://github.com/git-cola/git-cola/issues/524>`_)
 
 * Fixed a unicode problem when formatting the error message that is shown
   when `gitk` is not installed.  We now handle unicode data in tracebacks
   generated by python itself.
-
-  https://github.com/git-cola/git-cola/issues/528
+  (`#528 <https://github.com/git-cola/git-cola/issues/528>`_)
 
 * The `New repository` feature was fixed.
-
-  https://github.com/git-cola/git-cola/pull/533
+  (`#533 <https://github.com/git-cola/git-cola/pull/533>`_)
 
 * We now use omit the extended description when creating "fixup!" commits,
   for consistency with the Git CLI.  We now include only the one-line summary
   in the final commit message.
-
-  https://github.com/git-cola/git-cola/issues/522
+  (`#522 <https://github.com/git-cola/git-cola/issues/522>`_)
 
 .. _v2.4:
 
@@ -1146,15 +961,13 @@ Usability, bells and whistles
 * `git dag` now supports the standard editor, difftool, and history hotkeys.
   It is now possible to invoke these actions from file widget's context
   menu and through the standard hotkeys.
-
-  https://github.com/git-cola/git-cola/pull/473
+  (`#473 <https://github.com/git-cola/git-cola/pull/473>`_)
 
 * The `Status` tool also learned about the history hotkey.
   Additionally, the `Alt-{j,k}` aliases are also supported in the `Status`
   tool for consistency with the other tools where the non-Alt hotkeys are not
   available.
-
-  https://github.com/git-cola/git-cola/pull/488
+  (`#488 <https://github.com/git-cola/git-cola/pull/488>`_)
 
 * The `File Browser` tool now has better default column sizes,
   and remembers its window size and placement.
@@ -1174,21 +987,18 @@ Usability, bells and whistles
   head state.  Additionally, the checkout dialog also offers completion for
   remote branches that have not yet been checked out, which makes it easier to
   create a local tracking branch by just completing for that potential name.
-
-  https://github.com/git-cola/git-cola/issues/390
+  (`#390 <https://github.com/git-cola/git-cola/issues/390>`_)
 
 * The "create branch" and "create tag" dialogs now save and restore their
   window settings.
 
 * The "status" widget can now be configured to use a bold font with a darker
   background for the header items.
-
-  https://github.com/git-cola/git-cola/pull/506
+  (`#506 <https://github.com/git-cola/git-cola/pull/506>`_)
 
 * The "status" widget now remembers its horizontol scrollbar position across
   updates.  This is helpful when working on projects with long paths.
-
-  https://github.com/git-cola/git-cola/issues/494
+  (`#494 <https://github.com/git-cola/git-cola/issues/494>`_)
 
 Fixes
 -----
@@ -1196,35 +1006,27 @@ Fixes
 * When using *Git for Windows*, a `git` window would appear
   when running *Windows 8*.  We now pass additional flags to
   `subprocess.Popen` to prevent a `git` window from appearing.
-
-  https://github.com/git-cola/git-cola/issues/477
-
-  https://github.com/git-cola/git-cola/pull/486
+  (`#477 <https://github.com/git-cola/git-cola/issues/477>`_)
+  (`#486 <https://github.com/git-cola/git-cola/pull/486>`_)
 
 * Launching difftool with `.PY` in `$PATHEXT` on Windows was fixed.
-
-  https://github.com/git-cola/git-cola/issues/492
+  (`#492 <https://github.com/git-cola/git-cola/issues/492>`_)
 
 * Creating a local branch tracking a remote branch that contains
   slashes in its name is now properly handled.
-
-  https://github.com/git-cola/git-cola/issues/496
+  (`#496 <https://github.com/git-cola/git-cola/issues/496>`_)
 
 * The "Browse Other Branch" feature was broken by Python3, and is now fixed.
-
-  https://github.com/git-cola/git-cola/issues/501
+  (`#501 <https://github.com/git-cola/git-cola/issues/501>`_)
 
 * We now avoid `long` for better Python3 compatibility.
-
-  https://github.com/git-cola/git-cola/issues/502
+  (`#502 <https://github.com/git-cola/git-cola/issues/502>`_)
 
 * We now use Git's default merge message when merging branches.
-
-  https://github.com/git-cola/git-cola/issues/508
+  (`#508 <https://github.com/git-cola/git-cola/issues/508>`_)
 
 * Miscellaneous fixes
-
-  https://github.com/git-cola/git-cola/pull/485
+  (`#485 <https://github.com/git-cola/git-cola/pull/485>`_)
 
 Packaging
 ---------
@@ -1244,37 +1046,30 @@ Usability, bells and whistles
 -----------------------------
 
 * The Interactive Rebase feature now works on Windows!
-
-  https://github.com/git-cola/git-cola/issues/463
+  (`#463 <https://github.com/git-cola/git-cola/issues/463>`_)
 
 * The `diff` editor now understands vim-style `hjkl` navigation hotkeys.
-
-  https://github.com/git-cola/git-cola/issues/476
+  (`#476 <https://github.com/git-cola/git-cola/issues/476>`_)
 
 * `Alt-{j,k}` navigation hotkeys were added to allow changing to the
   next/previous file from the diff and commit editors.
 
 * The `Rename branch` menu action is now disabled in empty repositories.
-
-  https://github.com/git-cola/git-cola/pull/475
-
-  https://github.com/git-cola/git-cola/issues/459
+  (`#475 <https://github.com/git-cola/git-cola/pull/475>`_)
+  (`#459 <https://github.com/git-cola/git-cola/issues/459>`_)
 
 * `git cola` now checks unmerged files for conflict markers before
   staging them.  This feature can be disabled in the preferences.
-
-  https://github.com/git-cola/git-cola/issues/464
+  (`#464 <https://github.com/git-cola/git-cola/issues/464>`_)
 
 * `git dag` now remembers which commits were selected when refreshing
   so that it can restore the selection afterwards.
-
-  https://github.com/git-cola/git-cola/issues/480
+  (`#480 <https://github.com/git-cola/git-cola/issues/480>`_)
 
 * "Launch Editor", "Launch Difftool", "Stage/Unstage",
   and "Move Up/Down" hotkeys now work when the commit message
   editor has focus.
-
-  https://github.com/git-cola/git-cola/issues/453
+  (`#453 <https://github.com/git-cola/git-cola/issues/453>`_)
 
 * The diff editor now supports the `Ctrl+u` hotkey for reverting
   diff hunks and selected lines.
@@ -1284,29 +1079,24 @@ Usability, bells and whistles
   the configured character for comments.  This allows having
   commit messages that start with `#` when `core.commentChar`
   is configured to its non-default value.
-
-  https://github.com/git-cola/git-cola/issues/446
+  (`#446 <https://github.com/git-cola/git-cola/issues/446>`_)
 
 Fixes
 -----
 
 * Diff syntax highlighting was improved to handle more edge cases
   and false positives.
-
-  https://github.com/git-cola/git-cola/pull/467
+  (`#467 <https://github.com/git-cola/git-cola/pull/467>`_)
 
 * Setting commands in the interactive rebase editor was fixed.
-
-  https://github.com/git-cola/git-cola/issues/472
+  (`#472 <https://github.com/git-cola/git-cola/issues/472>`_)
 
 * git-cola no longer clobbers the Ctrl+Backspace text editing shortcut
   in the commit message editor.
-
-  https://github.com/git-cola/git-cola/issues/453
+  (`#453 <https://github.com/git-cola/git-cola/issues/453>`_)
 
 * The copy/paste clipboard now persists after `git cola` exits.
-
-  https://github.com/git-cola/git-cola/issues/484
+  (`#484 <https://github.com/git-cola/git-cola/issues/484>`_)
 
 .. _v2.2.1:
 
@@ -1338,8 +1128,7 @@ Usability, bells and whistles
 * Traditional Chinese (Taiwan) translation updates.
 
 * The system theme's icons are now used wherever possible.
-
-  https://github.com/git-cola/git-cola/pull/458
+  (`#458 <https://github.com/git-cola/git-cola/pull/458>`_)
 
 Fixes
 -----
@@ -1355,19 +1144,15 @@ Fixes
   pushing changes.  The hang happens when `git` prompts the user for a
   password using the terminal, but the user never sees the prompt.  `setsid()`
   detaches the terminal, which ensures that the askpass helpers are used.
-
-  https://github.com/git-cola/git-cola/issues/218
-
-  https://github.com/git-cola/git-cola/issues/262
-
-  https://github.com/git-cola/git-cola/issues/377
+  (`#218 <https://github.com/git-cola/git-cola/issues/218>`_)
+  (`#262 <https://github.com/git-cola/git-cola/issues/262>`_)
+  (`#377 <https://github.com/git-cola/git-cola/issues/377>`_)
 
 * `git dag`'s file list tool was updated to properly handle unicode paths.
 
 * `gnome-terminal` is no longer used by default when `cola.terminal` is unset.
   It is broken, as was detailed in #456.
-
-  https://github.com/git-cola/git-cola/issues/456
+  (`#456 <https://github.com/git-cola/git-cola/issues/456>`_)
 
 * The interactive rebase feature was not always setting `$GIT_EDITOR`
   to the value of `gui.editor`, thus there could be instances where rebase
@@ -1376,8 +1161,7 @@ Fixes
   We now set the `$GIT_EDITOR` environment variable when performing the
   "Continue", "Skip", and "Edit Todo" rebase actions so that the correct
   editor is used during the rebase.
-
-  https://github.com/git-cola/git-cola/issues/445
+  (`#445 <https://github.com/git-cola/git-cola/issues/445>`_)
 
 Packaging
 ---------
@@ -1399,13 +1183,11 @@ Usability, bells and whistles
 * The commit message editor now allows you to bypass commit hooks by selecting
   the "Bypass Commit Hooks" option.  This is equivalent to passing the
   `--no-verify` option to `git commit`.
-
-  https://github.com/git-cola/git-cola/issues/357
+  (`#357 <https://github.com/git-cola/git-cola/issues/357>`_)
 
 * We now prevent the "Delete Files" action from creating a dialog that does
   not fit on screen.
-
-  https://github.com/git-cola/git-cola/issues/378
+  (`#378 <https://github.com/git-cola/git-cola/issues/378>`_)
 
 * `git xbase` learned to edit rebase instruction sheets that contain
   `exec` commands.
@@ -1421,8 +1203,7 @@ Fixes
 -----
 * `git cola` will now allow starting an interactive rebase with a dirty
   worktree when `rebase.autostash` is set.
-
-  https://github.com/git-cola/git-cola/issues/360
+  (`#360 <https://github.com/git-cola/git-cola/issues/360>`_)
 
 .. _v2.1.1:
 
@@ -1457,34 +1238,27 @@ git-cola v2.1.0
 Usability, bells and whistles
 -----------------------------
 * `git dag` now forwards all unknown arguments along to `git log`.
-
-  https://github.com/git-cola/git-cola/issues/389
+  (`#389 <https://github.com/git-cola/git-cola/issues/389>`_)
 
 * Line-by-line interactive staging was made more robust.
-
-  https://github.com/git-cola/git-cola/pull/399
+  (`#399 <https://github.com/git-cola/git-cola/pull/399>`_)
 
 * "Bookmarks" was renamed to "Favorites".
-
-  https://github.com/git-cola/git-cola/issues/392
+  (`#392 <https://github.com/git-cola/git-cola/issues/392>`_)
 
 * Untracked files are now displayed using a unique icon.
-
-  https://github.com/git-cola/git-cola/pull/388
+  (`#388 <https://github.com/git-cola/git-cola/pull/388>`_)
 
 Fixes
 -----
 * `git dag` was triggering a traceback on Fedora when parsing Git logs.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=1181686
+  (`bz #181676 <https://bugzilla.redhat.com/show_bug.cgi?id=1181686>`_)
 
 * inotify expects unicode paths on Python3.
-
-  https://github.com/git-cola/git-cola/pull/393
+  (`#393 <https://github.com/git-cola/git-cola/pull/393>`_)
 
 * Untracked files are now assumed to be utf-8 encoded.
-
-  https://github.com/git-cola/git-cola/issues/401
+  (`#401 <https://github.com/git-cola/git-cola/issues/401>`_)
 
 .. _v2.0.8:
 
@@ -1493,27 +1267,22 @@ git-cola v2.0.8
 Usability, bells and whistles
 -----------------------------
 * `git cola` can now create GPG-signed commits and merges.
-
-  https://github.com/git-cola/git-cola/issues/149
-
   See the documentation for details about setting up a GPG agent.
+  (`#149 <https://github.com/git-cola/git-cola/issues/149>`_)
 
 * The status widget learned to copy relative paths when `Ctrl+x` is pressed.
-
-  https://github.com/git-cola/git-cola/issues/358
+  (`#358 <https://github.com/git-cola/git-cola/issues/358>`_)
 
 * Custom GUI actions can now define their own keyboard shortcuts by
   setting `guitool.$name.shortcut` to a string understood by Qt's
   `QAction::setShortcut()` API, e.g. `Alt+X`.
-
-  See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+  See the
+  `Qt docs <http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2>`_
   for more details about the supported values.
 
 * `git cola` learned to rename branches.
-
-  https://github.com/git-cola/git-cola/pull/364
-
-  https://github.com/git-cola/git-cola/issues/278
+  (`#364 <https://github.com/git-cola/git-cola/pull/364>`_)
+  (`#278 <https://github.com/git-cola/git-cola/issues/278>`_)
 
 * `git dag` now has a "Show history" context menu which can be used to filter
   history using the selected paths.
@@ -1521,27 +1290,23 @@ Usability, bells and whistles
 Fixes
 -----
 * `sphinxtogithub.py` was fixed for Python3.
-
-  https://github.com/git-cola/git-cola/pull/353
+  (`#353 <https://github.com/git-cola/git-cola/pull/353>`_)
 
 * The commit that changed how we read remotes from `git remote`
   to parsing `git config` was reverted since it created problems
   for some users.
 
 * Fixed a crash when using the `rebase edit` feature.
-
-  https://github.com/git-cola/git-cola/issues/351
+  (`#351 <https://github.com/git-cola/git-cola/issues/351>`_)
 
 * Better drag-and-drop behavior when dropping into gnome-terminal.
-
-  https://github.com/git-cola/git-cola/issues/373
+  (`#373 <https://github.com/git-cola/git-cola/issues/373>`_)
 
 Packaging
 ---------
 * The `git-cola-folder-handler.desktop` file handler was fixed
   to pass validation by `desktop-file-validate`.
-
-  https://github.com/git-cola/git-cola/issues/356
+  (`#356 <https://github.com/git-cola/git-cola/issues/356>`_)
 
 * The `git.svg` icon was renamed to `git-cola.svg`, and `git cola` was taught
   to prefer icons from the desktop theme when available.
@@ -1555,8 +1320,7 @@ Usability, bells and whistles
 * New hotkey: `Ctrl+Shift+M` merges branches.
 
 * New hotkey: `Ctrl+R` refreshes the DAG viewer.
-
-  https://github.com/git-cola/git-cola/issues/347
+  (`#347 <https://github.com/git-cola/git-cola/issues/347>`_)
 
 Fixes
 -----
@@ -1565,8 +1329,7 @@ Fixes
   is a Git porcelain and should not be used by scripts.
 
 * Avoid "C++ object has been deleted" errors from PyQt4.
-
-  https://github.com/git-cola/git-cola/issues/346
+  (`#346 <https://github.com/git-cola/git-cola/issues/346>`_)
 
 Packaging
 ---------
@@ -1582,50 +1345,40 @@ Usability, bells and whistles
 
 * The status and browse widgets now allow drag-and-drop into
   external applications.
-
-  https://github.com/git-cola/git-cola/issues/335
+  (`#335 <https://github.com/git-cola/git-cola/issues/335>`_)
 
 * We now show a progress bar when cloning repositories.
-
-  https://github.com/git-cola/git-cola/issues/312
+  (`#312 <https://github.com/git-cola/git-cola/issues/312>`_)
 
 * The bookmarks widget was simplified to not need a
   separate dialog.
-
-  https://github.com/git-cola/git-cola/issues/289
+  (`#289 <https://github.com/git-cola/git-cola/issues/289>`_)
 
 * Updated Traditional Chinese translation.
 
 * We now display a warning when trying to rebase with uncommitted changes.
-
-  https://github.com/git-cola/git-cola/issues/338
+  (`#338 <https://github.com/git-cola/git-cola/issues/338>`_)
 
 * The status widget learned to filter paths.
   `Ctrl+Shift+S` toggles the filter widget.
-
-  https://github.com/git-cola/git-cola/issues/337
-
-  https://github.com/git-cola/git-cola/pull/339
+  (`#337 <https://github.com/git-cola/git-cola/issues/337>`_)
+  (`#339 <https://github.com/git-cola/git-cola/pull/339>`_)
 
 * The status widget learned to move files to the trash
   when the `send2trash <https://github.com/hsoft/send2trash>`_
   module is installed.
-
-  https://github.com/git-cola/git-cola/issues/341
+  (`#341 <https://github.com/git-cola/git-cola/issues/341>`_)
 
 * "Recent repositories" is now a dedicated widget.
-
-  https://github.com/git-cola/git-cola/issues/342
+  (`#342 <https://github.com/git-cola/git-cola/issues/342>`_)
 
 * New Spanish translation thanks to Pilar Molina Lopez.
-
-  https://github.com/git-cola/git-cola/pull/344
+  (`#344 <https://github.com/git-cola/git-cola/pull/344>`_)
 
 Fixes
 -----
 * Newly added remotes are now properly seen by the fetch/push/pull dialogs.
-
-  https://github.com/git-cola/git-cola/issues/343
+  (`#343 <https://github.com/git-cola/git-cola/issues/343>`_)
 
 .. _v2.0.5:
 
@@ -1644,16 +1397,13 @@ Usability, bells and whistles
 
 * Fetch/Push/Pull dialogs now use the configured remote of the current
   branch by default.
-
-  https://github.com/git-cola/git-cola/pull/324
+  (`#324 <https://github.com/git-cola/git-cola/pull/324>`_)
 
 Fixes
 -----
 * We now use `os.getcwd()` on Python3.
-
-  https://github.com/git-cola/git-cola/pull/316
-
-  https://github.com/git-cola/git-cola/pull/326
+  (`#316 <https://github.com/git-cola/git-cola/pull/316>`_)
+  (`#326 <https://github.com/git-cola/git-cola/pull/326>`_)
 
 * The `Ctrl+P` hotkey was overloaded to both "push" and "cherry-pick",
   so "cherry-pick" was moved to `Ctrl+Shift+C`.
@@ -1662,12 +1412,10 @@ Fixes
 
 * "Diff Region" is now referred to as "Diff Hunk" for consistency
   with common terminology from diff/patch tools.
-
-  https://github.com/git-cola/git-cola/issues/328
+  (`#328 <https://github.com/git-cola/git-cola/issues/328>`_)
 
 * git-cola's test suite is now portable to MS Windows.
-
-  https://github.com/git-cola/git-cola/pull/332
+  (`#332 <https://github.com/git-cola/git-cola/pull/332>`_)
 
 .. _v2.0.4:
 
@@ -1677,51 +1425,38 @@ Usability, bells and whistles
 -----------------------------
 * We now handle the case when inotify `add_watch()` fails
   and display instructions on how to increase the number of watches.
-
-  https://github.com/git-cola/git-cola/issues/263
+  (`#263 <https://github.com/git-cola/git-cola/issues/263>`_)
 
 * New and improved zh_TW localization thanks to Ｖ字龍(Vdragon).
-
-  https://github.com/git-cola/git-cola/pull/265
-
-  https://github.com/git-cola/git-cola/pull/267
-
-  https://github.com/git-cola/git-cola/pull/268
-
-  https://github.com/git-cola/git-cola/issues/269
-
-  https://github.com/git-cola/git-cola/pull/270
-
-  https://github.com/git-cola/git-cola/pull/271
-
-  https://github.com/git-cola/git-cola/pull/272
+  (`#265 <https://github.com/git-cola/git-cola/pull/265>`_)
+  (`#267 <https://github.com/git-cola/git-cola/pull/267>`_)
+  (`#268 <https://github.com/git-cola/git-cola/pull/268>`_)
+  (`#269 <https://github.com/git-cola/git-cola/issues/269>`_)
+  (`#270 <https://github.com/git-cola/git-cola/pull/270>`_)
+  (`#271 <https://github.com/git-cola/git-cola/pull/271>`_)
+  (`#272 <https://github.com/git-cola/git-cola/pull/272>`_)
 
 * New hotkeys: `Ctrl+F` for fetch, `Ctrl+P` for push,
   and `Ctrl+Shift+P` for pull.
 
 * The bookmarks widget's context menu actions were made clearer.
-
-  https://github.com/git-cola/git-cola/issues/281
+  (`#281 <https://github.com/git-cola/git-cola/issues/281>`_)
 
 * The term "Staging Area" is used consistently in the UI
   to allow for better localization.
-
-  https://github.com/git-cola/git-cola/issues/283
+  (`#283 <https://github.com/git-cola/git-cola/issues/283>`_)
 
 * The "Section" term is now referred to as "Diff Region"
   in the UI.
-
-  https://github.com/git-cola/git-cola/issues/297
+  (`#297 <https://github.com/git-cola/git-cola/issues/297>`_)
 
 * The localization documentation related to the LANGUAGE
   environment variable was improved.
-
-  https://github.com/git-cola/git-cola/pull/293
+  (`#293 <https://github.com/git-cola/git-cola/pull/293>`_)
 
 * The "Actions" panel now contains tooltips for each button
   in case the button labels gets truncated by Qt.
-
-  https://github.com/git-cola/git-cola/issues/292
+  (`#292 <https://github.com/git-cola/git-cola/issues/292>`_)
 
 * Custom `git config`-defined actions can now be run in the
   background by setting `guitool.<name>.background` to `true`.
@@ -1733,55 +1468,39 @@ Fixes
 
 * We now pickup `user.email`, `cola.tabwidth`, and similar settings
   when defined in /etc/gitconfig.
-
-  https://github.com/git-cola/git-cola/issues/259
+  (`#259 <https://github.com/git-cola/git-cola/issues/259>`_)
 
 * Better support for unicode paths when using inotify.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=1104181
+  (`bz #1104181 <https://bugzilla.redhat.com/show_bug.cgi?id=1104181>`_)
 
 * Unicode fixes for non-ascii locales.
-
-  https://github.com/git-cola/git-cola/issues/266
-
-  https://github.com/git-cola/git-cola/issues/273
-
-  https://github.com/git-cola/git-cola/issues/276
-
-  https://github.com/git-cola/git-cola/issues/282
-
-  https://github.com/git-cola/git-cola/issues/298
-
-  https://github.com/git-cola/git-cola/issues/302
-
-  https://github.com/git-cola/git-cola/issues/303
-
-  https://github.com/git-cola/git-cola/issues/305
+  (`#266 <https://github.com/git-cola/git-cola/issues/266>`_)
+  (`#273 <https://github.com/git-cola/git-cola/issues/273>`_)
+  (`#276 <https://github.com/git-cola/git-cola/issues/276>`_)
+  (`#282 <https://github.com/git-cola/git-cola/issues/282>`_)
+  (`#298 <https://github.com/git-cola/git-cola/issues/298>`_)
+  (`#302 <https://github.com/git-cola/git-cola/issues/302>`_)
+  (`#303 <https://github.com/git-cola/git-cola/issues/303>`_)
+  (`#305 <https://github.com/git-cola/git-cola/issues/305>`_)
 
 * Viewing history from the file browser was fixed for Python3.
-
-  https://github.com/git-cola/git-cola/issues/274
+  (`#274 <https://github.com/git-cola/git-cola/issues/274>`_)
 
 * setup.py was fixed to install the `*.rst` documentation.
-
-  https://github.com/git-cola/git-cola/issues/279
+  (`#279 <https://github.com/git-cola/git-cola/issues/279>`_)
 
 * Patch export was fixed for Python3.
-
-  https://github.com/git-cola/git-cola/issues/290
+  (`#290 <https://github.com/git-cola/git-cola/issues/290>`_)
 
 * Fixed adding a bookmark with trailing slashes.
-
-  https://github.com/git-cola/git-cola/pull/295
+  (`#295 <https://github.com/git-cola/git-cola/pull/295>`_)
 
 * The default `git dag` layout is now setup so that its widgets
   can be freely resized on Linux.
-
-  https://github.com/git-cola/git-cola/issues/299
+  (`#299 <https://github.com/git-cola/git-cola/issues/299>`_)
 
 * Invalid tag names are now reported when creating tags.
-
-  https://github.com/git-cola/git-cola/pull/296
+  (`#296 <https://github.com/git-cola/git-cola/pull/296>`_)
 
 .. _v2.0.3:
 
@@ -1790,46 +1509,36 @@ git-cola v2.0.3
 Usability, bells and whistles
 -----------------------------
 * `git cola` no longer prompts after successfully creating a new branch.
-
-  https://github.com/git-cola/git-cola/pull/251
+  (`#251 <https://github.com/git-cola/git-cola/pull/251>`_)
 
 * Hitting enter on simple dialogs now accepts them.
-
-  https://github.com/git-cola/git-cola/pull/255
+  (`#255 <https://github.com/git-cola/git-cola/pull/255>`_)
 
 Fixes
 -----
 * `git dag` no longer relies on `sys.maxint`, which is
   not available in Python3.
-
-  https://github.com/git-cola/git-cola/issues/249
+  (`#249 <https://github.com/git-cola/git-cola/issues/249>`_)
 
 * Python3-related fixes.
-
-  https://github.com/git-cola/git-cola/pull/254
+  (`#254 <https://github.com/git-cola/git-cola/pull/254>`_)
 
 * Python3-on-Windows-related fixes.
-
-  https://github.com/git-cola/git-cola/pull/250
-
-  https://github.com/git-cola/git-cola/pull/252
-
-  https://github.com/git-cola/git-cola/pull/253
+  (`#250 <https://github.com/git-cola/git-cola/pull/250>`_)
+  (`#252 <https://github.com/git-cola/git-cola/pull/252>`_)
+  (`#253 <https://github.com/git-cola/git-cola/pull/253>`_)
 
 * Switching repositories using the bookmarks widget was not
   refreshing the inotify watcher.
-
-  https://github.com/git-cola/git-cola/pull/256
+  (`#256 <https://github.com/git-cola/git-cola/pull/256>`_)
 
 * Special commit messages trailers (e.g. "Acked-by:") are now special-cased to
   fix word wrapping lines that start with "foo:".
-
-  https://github.com/git-cola/git-cola/issues/257
+  (`#257 <https://github.com/git-cola/git-cola/issues/257>`_)
 
 * `git dag` sometimes left behind selection artifacts.
   We now refresh the view to avoid them.
-
-  https://github.com/git-cola/git-cola/issues/204
+  (`#204 <https://github.com/git-cola/git-cola/issues/204>`_)
 
 .. _v2.0.2:
 
@@ -1838,17 +1547,14 @@ git-cola v2.0.2
 Usability, bells and whistles
 -----------------------------
 * Better inotify support for file creation and deletion.
-
-  https://github.com/git-cola/git-cola/issues/240
+  (`#240 <https://github.com/git-cola/git-cola/issues/240>`_)
 
 * `git cola` now supports the X11 Session Management Protocol
   and remembers its state across logout/reboot.
-
-  https://github.com/git-cola/git-cola/issues/164
+  (`#164 <https://github.com/git-cola/git-cola/issues/164>`_)
 
 * `git cola` has a new icon.
-
-  https://github.com/git-cola/git-cola/issues/190
+  (`#190 <https://github.com/git-cola/git-cola/issues/190>`_)
 
 Packaging
 ---------
@@ -1862,12 +1568,10 @@ Fixes
   error in Python 2.
 
 * Commit message line-wrapping was made to better match the GUI editor.
-
-  https://github.com/git-cola/git-cola/issues/242
+  (`#242 <https://github.com/git-cola/git-cola/issues/242>`_)
 
 * Better support for Python3 on Windows
-
-  https://github.com/git-cola/git-cola/issues/246
+  (`#246 <https://github.com/git-cola/git-cola/issues/246>`_)
 
 Packaging
 ---------
@@ -1882,26 +1586,21 @@ Usability, bells and whistles
 -----------------------------
 * Some context menu actions are now hidden when selected
   files do not exist.
-
-  https://github.com/git-cola/git-cola/issues/238
+  (`#238 <https://github.com/git-cola/git-cola/issues/238>`_)
 
 Fixes
 -----
 * The build-git-cola.sh contrib script was improved.
-
-  https://github.com/git-cola/git-cola/pull/235
+  (`#235 <https://github.com/git-cola/git-cola/pull/235>`_)
 
 * Non-ascii worktrees work properly again.
-
-  https://github.com/git-cola/git-cola/issues/234
+  (`#234 <https://github.com/git-cola/git-cola/issues/234>`_)
 
 * The browser now guards itself against missing files.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=1071378
+  (`bz #1041378 <https://bugzilla.redhat.com/show_bug.cgi?id=1071378>`_)
 
 * Saving widget state now works under Python3.
-
-  https://github.com/git-cola/git-cola/pull/236
+  (`#236 <https://github.com/git-cola/git-cola/pull/236>`_)
 
 .. _v2.0.0:
 
@@ -1910,8 +1609,7 @@ git-cola v2.0.0
 Portability
 -----------
 * git-cola now runs on Python 3 thanks to Virgil Dupras.
-
-  https://github.com/git-cola/git-cola/pull/233
+  (`#233 <https://github.com/git-cola/git-cola/pull/233>`_)
 
 * Python 2.6, 2.7, and 3.2+ are now supported.
   Python 2.5 is no longer supported.
@@ -1919,16 +1617,13 @@ Portability
 Fixes
 -----
 * i18n test fixes thanks to Virgil Dupras.
-
-  https://github.com/git-cola/git-cola/pull/231
+  (`#231 <https://github.com/git-cola/git-cola/pull/231>`_)
 
 * git-cola.app build fixes thanks to Maicon D. Filippsen.
-
-  https://github.com/git-cola/git-cola/pull/230
+  (`#230 <https://github.com/git-cola/git-cola/pull/230>`_)
 
 * Lots of pylint improvements thanks to Alex Chernetz.
-
-  https://github.com/git-cola/git-cola/pull/229
+  (`#229 <https://github.com/git-cola/git-cola/pull/229>`_)
 
 .. _v1.9.4:
 
@@ -1940,8 +1635,7 @@ Usability, bells and whistles
 
 * There is now a dedicated dialog for applying patches.
   See the ``File -> Apply Patches`` menu item.
-
-  https://github.com/git-cola/git-cola/issues/215
+  (`#215 <https://github.com/git-cola/git-cola/issues/215>`_)
 
 * A new `git cola am` sub-command was added for applying patches.
 
@@ -1950,8 +1644,7 @@ Fixes
 * Fixed a typo that caused inotify events to be silently ignored.
 
 * Fixed the sys.path setup for Mac OS X (Homebrew).
-
-  https://github.com/git-cola/git-cola/issues/221
+  (`#221 <https://github.com/git-cola/git-cola/issues/221>`_)
 
 * Lots of pylint fixes thanks to Alex Chernetz.
 
@@ -1962,24 +1655,20 @@ git-cola v1.9.3
 Usability, bells and whistles
 -----------------------------
 * `git cola --amend` now starts the editor in `amend` mode.
-
-  https://github.com/git-cola/git-cola/issues/187
+  (`#187 <https://github.com/git-cola/git-cola/issues/187>`_)
 
 * Multiple lines of text can now be pasted into the `summary` field.
   All text beyond the first newline will be automatically moved to the
   `extended description` field.
-
-  https://github.com/git-cola/git-cola/issues/212
+  (`#212 <https://github.com/git-cola/git-cola/issues/212>`_)
 
 Fixes
 -----
 * Stray whitespace in `.git` files is now ignored.
-
-  https://github.com/git-cola/git-cola/issues/213
+  (`#213 <https://github.com/git-cola/git-cola/issues/213>`_)
 
 * Fix "known incorrect sRGB profile" in `staged-item.png`.
-
-  http://comments.gmane.org/gmane.linux.gentoo.devel/85066
+  (`Thread <http://comments.gmane.org/gmane.linux.gentoo.devel/85066>`_)
 
 .. _v1.9.2:
 
@@ -1988,8 +1677,7 @@ git-cola v1.9.2
 Fixes
 -----
 * Fix a traceback when `git push` fails.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=1034778
+  (`bz #1034778 <https://bugzilla.redhat.com/show_bug.cgi?id=1034778>`_)
 
 Packaging
 ---------
@@ -1999,8 +1687,7 @@ Packaging
 
 * The translation file for Simplified Chinese was renamed
   to `zh_CN.po`.
-
-  https://github.com/git-cola/git-cola/issues/209
+  (`#209 <https://github.com/git-cola/git-cola/issues/209>`_)
 
 .. _v1.9.1:
 
@@ -2028,20 +1715,17 @@ Usability, bells and whistles
   is provided at `$prefix/share/git-cola/bin/git-xbase`.
   This script can be used standalone by setting the `$GIT_SEQUENCE_EDITOR`
   before running `git rebase --interactive`.
-
-  https://github.com/git-cola/git-cola/issues/1
+  (`#1 <https://github.com/git-cola/git-cola/issues/1>`_)
 
 * Fixup commit messages can now be loaded from the commit message editor.
 
 * Tool widgets can be locked in place by using the "Tools/Lock Layout"
   menu action.
-
-  https://github.com/git-cola/git-cola/issues/202
+  (`#202 <https://github.com/git-cola/git-cola/issues/202>`_)
 
 * You can now push to several remotes simultaneously by selecting
   multiple remotes in the "Push" dialog.
-
-  https://github.com/git-cola/git-cola/issues/148
+  (`#148 <https://github.com/git-cola/git-cola/issues/148>`_)
 
 * The `grep` tool learned to search using three different modes:
   basic regular expressions (default), extended regular expressions,
@@ -2064,21 +1748,17 @@ git-cola v1.8.5
 Usability, bells and whistles
 -----------------------------
 * We now detect when the editor or history browser are misconfigured.
-
-  https://github.com/git-cola/git-cola/issues/197
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=886826
+  (`#197 <https://github.com/git-cola/git-cola/issues/197>`_)
+  (`bz #886826 <https://bugzilla.redhat.com/show_bug.cgi?id=886826>`_)
 
 * Display of untracked files can be disabled from the Preferences dialog
   or by setting the `gui.displayuntracked` configuration variable to `false`.
-
-  http://thread.gmane.org/gmane.comp.version-control.git/232683
+  (`Thread <https://public-inbox.org/git/20130821032913.GA6092@wheezy.local/>`_)
 
 Fixes
 -----
 * Unicode stash names are now supported
-
-  https://github.com/git-cola/git-cola/issues/198
+  (`#198 <https://github.com/git-cola/git-cola/issues/198>`_)
 
 * The diffs produced when reverting workspace changes were made more robust.
 
@@ -2131,8 +1811,7 @@ Fixes
 * Some edge cases were fixed when applying partial/selected diffs.
 
 * The diff viewer is now properly cleared when refreshing.
-
-  https://github.com/git-cola/git-cola/issues/194
+  (`#194 <https://github.com/git-cola/git-cola/issues/194>`_)
 
 .. _v1.8.3:
 
@@ -2144,46 +1823,38 @@ Usability, bells and whistles
   used to set "git diff" options.  This can be used to
   ignore whitespace changes or to show a change with its
   surrounding function as context.
-
-  https://github.com/git-cola/git-cola/issues/150
+  (`#150 <https://github.com/git-cola/git-cola/issues/150>`_)
 
 * `git cola` now remembers your commit message and will restore it
   when `git cola` is restarted.
-
-  https://github.com/git-cola/git-cola/pull/175
+  (`#175 <https://github.com/git-cola/git-cola/pull/175>`_)
 
 * `Ctrl+M` can now be used to toggle the "Amend last commit"
   checkbox in the commit message editor.
-
-  https://github.com/git-cola/git-cola/pull/161
+  (`#161 <https://github.com/git-cola/git-cola/pull/161>`_)
 
 * Deleting remote branches can now be done from the "Branch" menu.
-
-  https://github.com/git-cola/git-cola/issues/152
+  (`#152 <https://github.com/git-cola/git-cola/issues/152>`_)
 
 * The commit message editor now has a built-in spell checker.
 
 Fixes
 -----
 * We now avoid invoking external diffs when showing diffstats.
-
-  https://github.com/git-cola/git-cola/pull/163
+  (`#163 <https://github.com/git-cola/git-cola/pull/163>`_)
 
 * The `Status` tool learned to reselect files when refreshing.
-
-  https://github.com/git-cola/git-cola/issues/165
+  (`#165 <https://github.com/git-cola/git-cola/issues/165>`_)
 
 * `git cola` now remembers whether it has been maximized and will restore the
   maximized state when `git cola` is restarted.
-
-  https://github.com/git-cola/git-cola/issues/172
+  (`#172 <https://github.com/git-cola/git-cola/issues/172>`_)
 
 * Performance is now vastly improved when staging hundreds or
   thousands of files.
 
 * `git cola` was not correctly saving repo-specific configuration.
-
-  https://github.com/git-cola/git-cola/issues/174
+  (`#174 <https://github.com/git-cola/git-cola/issues/174>`_)
 
 * Fix a UnicodeDecode in sphinxtogithub when building from source.
 
@@ -2195,8 +1866,7 @@ Usability, bells and whistles
 -----------------------------
 * We now automatically remove missing repositories from the
   "Select Repository" dialog.
-
-  https://github.com/git-cola/git-cola/issues/145
+  (`#145 <https://github.com/git-cola/git-cola/issues/145>`_)
 
 * A new `git cola diff` sub-command was added for diffing changed files.
 
@@ -2207,16 +1877,13 @@ Fixes
   process.  The auto-refresh causes it to lose the currently selected text,
   which is not wanted.  We now avoid this problem by saving and restoring
   the selection when refreshing the editor.
-
-  https://github.com/git-cola/git-cola/issues/155
+  (`#155 <https://github.com/git-cola/git-cola/issues/155>`_)
 
 * More strings have been marked for l10n.
-
-  https://github.com/git-cola/git-cola/issues/157
+  (`#157 <https://github.com/git-cola/git-cola/issues/157>`_)
 
 * Fixed the Alt+D Diffstat shortcut.
-
-  https://github.com/git-cola/git-cola/issues/159
+  (`#159 <https://github.com/git-cola/git-cola/issues/159>`_)
 
 Fixes
 -----
@@ -2230,8 +1897,7 @@ Fixes
 
   Additionally, `git cola` learned to echo the errors
   reported by `git clone` when it fails.
-
-  https://github.com/git-cola/git-cola/issues/156
+  (`#156 <https://github.com/git-cola/git-cola/issues/156>`_)
 
 .. _v1.8.1:
 
@@ -2249,11 +1915,8 @@ Usability, bells and whistles
 * git-cola can now be told to use an alternative language.
   For example, if the native language is German and we want git-cola to
   use English then we can create a `~/.config/git-cola/language` file with
-  "en" as its contents:
-
-  $ echo en >~/.config/git-cola/language
-
-  https://github.com/git-cola/git-cola/issues/140
+  "en" as its contents: ``echo en >~/.config/git-cola/language``
+  (`#140 <https://github.com/git-cola/git-cola/issues/140>`_)
 
 * A new `git cola merge` sub-command was added for merging branches.
 
@@ -2262,13 +1925,11 @@ Usability, bells and whistles
 Fixes
 -----
 * Autocomplete issues on KDE
-
-  https://github.com/git-cola/git-cola/issues/144
+  (`#144 <https://github.com/git-cola/git-cola/issues/144>`_)
 
 * The "recently opened repositories" startup dialog did not
   display itself in the absence of bookmarks.
-
-  https://github.com/git-cola/git-cola/issues/139
+  (`#139 <https://github.com/git-cola/git-cola/issues/139>`_)
 
 .. _v1.8.0:
 
@@ -2282,19 +1943,16 @@ Usability, bells and whistles
   properly accept them.  This must be enabled by settings
   `cola.fileattributes` to true, as it incurs a small performance
   penalty.
-
-  https://github.com/git-cola/git-cola/issues/96
+  (`#96 <https://github.com/git-cola/git-cola/issues/96>`_)
 
 * `git cola` now wraps commit messages at 72 columns automatically.
   This is configurable using the `cola.linebreak` variable to enable/disable
   the feature, and `cola.textwidth` to configure the limit.
-
-  https://github.com/git-cola/git-cola/issues/133
+  (`#133 <https://github.com/git-cola/git-cola/issues/133>`_)
 
 * A new "Open Recent" sub-menu was added to the "File" menu.
   This makes it easy to open a recently-edited repository.
-
-  https://github.com/git-cola/git-cola/issues/135
+  (`#135 <https://github.com/git-cola/git-cola/issues/135>`_)
 
 * We now show a preview for untracked files when they are clicked
   using the `Status` tool.
@@ -2344,8 +2002,7 @@ Fixes
   `Ctrl-c` or the "Copy" context-menu action can be used instead.
 * The repository monitoring feature on Windows learned to ignore
   changes within the ".git" directory.  Thanks to Andreas Sommer.
-
-  https://github.com/git-cola/git-cola/issues/120
+  (`#120 <https://github.com/git-cola/git-cola/issues/120>`_)
 
 .. _v1.7.6:
 
@@ -2510,8 +2167,7 @@ Fixes
 -----
 * Avoid updating the index when responding to inotify events.
   This avoids interfering with operations such as `git rebase --interactive`.
-
-  https://github.com/git-cola/git-cola/issues/99
+  (`#99 <https://github.com/git-cola/git-cola/issues/99>`_)
 
 Packaging
 ---------
@@ -2533,8 +2189,7 @@ git-cola v1.7.1.1
 Fixes
 -----
 * Further enhanced the staging/unstaging behavior in the status widget.
-
-  https://github.com/git-cola/git-cola/issues/97
+  (`#97 <https://github.com/git-cola/git-cola/issues/97>`_)
 
 * Unmerged files are no longer listed as modified.
 
@@ -2555,8 +2210,7 @@ git-cola v1.7.1
 Usability, bells and whistles
 -----------------------------
 * Refined the staging/unstaging behavior for code reviews.
-
-  https://github.com/git-cola/git-cola/issues/97
+  (`#97 <https://github.com/git-cola/git-cola/issues/97>`_)
 
 * Added more styling and icons to menus and buttons.
 
@@ -2597,24 +2251,19 @@ Usability, bells and whistles
 * Added instant-preview to the `git stash` widget.
 
 * A simpler preferences editor is used to edit `git config` values.
-
-  https://github.com/git-cola/git-cola/issues/90
-
-  https://github.com/git-cola/git-cola/issues/89
+  (`#90 <https://github.com/git-cola/git-cola/issues/90>`_)
+  (`#89 <https://github.com/git-cola/git-cola/issues/89>`_)
 
 * Previous commit messages can be re-loaded from the message editor.
-
-  https://github.com/git-cola/git-cola/issues/33
+  (`#33 <https://github.com/git-cola/git-cola/issues/33>`_)
 
 Fixes
 -----
 * Display commits with no file changes.
-
-  https://github.com/git-cola/git-cola/issues/82
+  (`#82 <https://github.com/git-cola/git-cola/issues/82>`_)
 
 * Improved the diff editor's copy/paste behavior
-
-  https://github.com/git-cola/git-cola/issues/90
+  (`#90 <https://github.com/git-cola/git-cola/issues/90>`_)
 
 Packaging
 ---------
@@ -2648,16 +2297,13 @@ Usability, bells and whistles
 Fixes
 -----
 * Files can be unstaged when amending.
-
-  https://github.com/git-cola/git-cola/issues/82
+  (`#82 <https://github.com/git-cola/git-cola/issues/82>`_)
 
 * Show the configured remote.$remote.pushurl in the GUI
-
-  https://github.com/git-cola/git-cola/issues/83
+  (`#83 <https://github.com/git-cola/git-cola/issues/83>`_)
 
 * Removed usage of the "user" module.
-
-  https://github.com/git-cola/git-cola/issues/86
+  (`#86 <https://github.com/git-cola/git-cola/issues/86>`_)
 
 * Avoids an extra `git update-index` call during startup.
 
@@ -2669,8 +2315,7 @@ git-cola v1.4.3.4
 Usability, bells and whistles
 -----------------------------
 * We now provide better feedback when `git push` fails.
-
-  https://github.com/git-cola/git-cola/issues/69
+  (`#69 <https://github.com/git-cola/git-cola/issues/69>`_)
 
 * The Fetch, Push, and Pull dialogs now give better feedback
   when interacting with remotes.  The dialogs are modal and
@@ -2722,12 +2367,8 @@ Fixes
 
 * Fix unicode errors when home or repository directories contain
   unicode characters.
-
-  https://github.com/git-cola/git-cola/issues/74
-
-  Redhat's bugzilla #694806
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=694806
+  (`#74 <https://github.com/git-cola/git-cola/issues/74>`_)
+  (`bz #694806 <https://bugzilla.redhat.com/show_bug.cgi?id=694806>`_)
 
 .. _v1.4.3.1:
 
@@ -2736,8 +2377,7 @@ git-cola v1.4.3.1
 Usability, bells and whistles
 -----------------------------
 * The `cola classic` tool can be now configured to be dockable.
-
-  https://github.com/git-cola/git-cola/issues/56
+  (`#56 <https://github.com/git-cola/git-cola/issues/56>`_)
 
 * The `cola classic` tool now uses visual sigils to indicate a file's status.
   The idea and icons were provided by Uri Okrent.
@@ -2758,12 +2398,8 @@ Fixes
 -----
 * Fixed a stacktrace when trying to use "Get Commit Message Template"
   with an unconfigured "commit.template" git config variable.
-
-  https://github.com/git-cola/git-cola/issues/72
-
-  This bug originated in Redhat's bugzilla #675721 via a Fedora user.
-
-  https://bugzilla.redhat.com/show_bug.cgi?id=675721
+  (`bz #67521 <https://bugzilla.redhat.com/show_bug.cgi?id=675721>`_)
+  (`#72 <https://github.com/git-cola/git-cola/issues/72>`_)
 
 * Properly raise the main window on Mac OS X.
 
@@ -2790,8 +2426,7 @@ Fixes
 
 * Guard against 'diff.external' configuration by always
   calling 'git diff' with the '--no-ext-diff' option.
-
-  https://github.com/git-cola/git-cola/issues/67
+  (`#67 <https://github.com/git-cola/git-cola/issues/67>`_)
 
 * Respect 'gui.diffcontext' so that cola's diff display
   shows the correct number of context lines.
@@ -2808,8 +2443,7 @@ Packaging
 * git-cola.app is now a tiny download because it no longer
   contains Qt and PyQt.  These libraries are provided as a
   separate download.
-
-  http://code.google.com/p/git-cola/downloads/list
+  (`Link <http://code.google.com/p/git-cola/downloads/list>`_)
 
 .. _v1.4.2.5:
 
@@ -2826,8 +2460,7 @@ Fixes
 -----
 * Fixed the disappearing actions buttons on PyQt 4.7.4
   as reported by Arch and Ubuntu 10.10.
-
-  https://github.com/git-cola/git-cola/issues/62
+  (`#62 <https://github.com/git-cola/git-cola/issues/62>`_)
 
 * Fixed mouse interaction with the status widget where some
   items could not be de-selected.
@@ -2860,24 +2493,20 @@ git-cola v1.4.2.3
 Usability, bells and whistles
 -----------------------------
 * Allow un/staging by right-clicking top-level items
-
-  https://github.com/git-cola/git-cola/issues/57
+  (`#57 <https://github.com/git-cola/git-cola/issues/57>`_)
 
 * Running 'commit' with no staged changes prompts to allow
   staging all files.
-
-  https://github.com/git-cola/git-cola/issues/55
+  (`#55 <https://github.com/git-cola/git-cola/issues/55>`_)
 
 * Fetch, Push, and Pull are now available via the menus
-
-  https://github.com/git-cola/git-cola/issues/58
+  (`#58 <https://github.com/git-cola/git-cola/issues/58>`_)
 
 Fixes
 -----
 * Simplified the actions widget to work around a regression
   in PyQt4 4.7.4.
-
-  https://github.com/git-cola/git-cola/issues/62
+  (`#62 <https://github.com/git-cola/git-cola/issues/62>`_)
 
 .. _v1.4.2.2:
 
@@ -2891,8 +2520,7 @@ Fixes
 -----
 * Added '...' indicators to the buttons for
   'Fetch...', 'Push...', 'Pull...', and 'Stash...'.
-
-  https://github.com/git-cola/git-cola/issues/51
+  (`#51 <https://github.com/git-cola/git-cola/issues/51>`_)
 
 * Fixed a hang-on-exit bug in the cola-provided
   'ssh-askpass' implementation.
@@ -2904,8 +2532,7 @@ git-cola v1.4.2.1
 Usability, bells and whistles
 -----------------------------
 * Staging and unstaging is faster.
-
-  https://github.com/git-cola/git-cola/issues/48
+  (`#48 <https://github.com/git-cola/git-cola/issues/48>`_)
 
 * `git dag` reads history in a background thread.
 
@@ -2926,69 +2553,73 @@ git-cola v1.4.2
 Usability, bells and whistles
 -----------------------------
 * Added support for the configurable ``guitool.<tool>.*``
-  actions as described in ``git-config(1)``.
-
-  https://github.com/git-cola/git-cola/issues/44
-
-  http://schacon.github.com/git/git-config.html
+  actions as described in the ``git config`` documentation.
+  (`git-config(1) <https://git-scm.com/docs/git-config>`_)
+  (`#44 <https://github.com/git-cola/git-cola/issues/44>`_)
 
   This makes it possible to add new actions to `git cola`
   by simply editing ``~/.gitconfig``.  This implements the
   same guitool support as `git gui`.
+
 * Introduced a stat cache to speed up `git config` and
   repository status checks.
+
 * Added Alt-key shortcuts to the main `git cola` interface.
+
 * The `Actions` dock widget switches between a horizontal
   and vertical layout when resized.
+
 * We now use ``git diff --submodule`` for submodules
   (used when git >= 1.6.6).
+
 * The context menu for modified submodules includes an option
   to launch `git cola`.
-
-  https://github.com/git-cola/git-cola/issues/17
+  (`#17 <https://github.com/git-cola/git-cola/issues/17>`_)
 
 * Prefer ``$VISUAL`` over ``$EDITOR`` when both are defined.
   These are used to set a default editor in lieu of `core.editor`
   configuration.
+
 * Force the editor to be ``gvim`` when we see ``vim``.
   This prevents us from launching an editor in the (typically
   unattached) parent terminal and creating zombie editors
   that cannot be easily killed.
+
 * Selections are remembered and restored across updates.
   This makes the `partial-staging` workflow easier since the
   diff view will show the updated diff after staging.
+
 * Show the path to the current repository in a tooltip
   over the commit message editor.
-
-  https://github.com/git-cola/git-cola/issues/45
+  (`#45 <https://github.com/git-cola/git-cola/issues/45>`_)
 
 * Log internal ``git`` commands when ``GIT_COLA_TRACE`` is defined.
-
-  https://github.com/git-cola/git-cola/issues/39
+  (`#39 <https://github.com/git-cola/git-cola/issues/39>`_)
 
 Fixes
 -----
 * Improved backwards compatibility for Python 2.4.
+
 * `Review mode` can now review the current branch; it no longer
   requires you to checkout the branch into which the reviewed
   branch will be merged.
+
 * Guard against `color.ui = always` configuration when using
   `git log` by passing ``--no-color``.
+
 * ``yes`` and ``no`` are now supported as valid booleans
   by the `git config` parser.
-* Better defaults are used for `fetch`, `push`, and `pull`..
 
-  https://github.com/git-cola/git-cola/issues/43
+* Better defaults are used for `fetch`, `push`, and `pull`..
+  (`#43 <https://github.com/git-cola/git-cola/issues/43>`_)
 
 Packaging
 ---------
 * Removed colon (`:`) from the applilcation name on Windows
-
-  https://github.com/git-cola/git-cola/issues/41
+  (`#41 <https://github.com/git-cola/git-cola/issues/41>`_)
 
 * Fixed bugs with the Windows installer
-
-  https://github.com/git-cola/git-cola/issues/40
+  (`#40 <https://github.com/git-cola/git-cola/issues/40>`_)
 
 * Added a more standard i18n infrastructure.  The install
   tree now has the common ``share/locale/$lang/LC_MESSAGES/git-cola.mo``
@@ -3012,11 +2643,15 @@ Usability, bells and whistles
 * It is now possible to checkout from the index as well
   as from `HEAD`.  This corresponds to the
   `Removed Unstaged Changes` action in the `Repository Status` tool.
+
 * The `remote` dialogs (fetch, push, pull) are now slightly
   larger by default.
+
 * Bookmarks can be selected when `git cola` is run outside of a git repository.
+
 * Added more user documentation.  We now include many links to
   external git resources.
+
 * Added `git dag` to the available tools.
   `git dag` is a node-based DAG history browser.
   It doesn't do much yet, but it's been merged so that we can start
@@ -3026,9 +2661,12 @@ Fixes
 -----
 * Fixed a missing ``import`` when showing `right-click` actions
   for unmerged files in the `Repository Status` tool.
+
 * ``git update-index --refresh`` is no longer run every time
   ``git cola version`` is run.
+
 * Don't try to watch non-existent directories when using `inotify`.
+
 * Use ``git rev-parse --symbolic-full-name`` plumbing to find
   the name of the current branch.
 
@@ -3039,13 +2677,16 @@ Packaging
   customizations such as changes to the `prefix` variable
   to be stored in a file so that custom settings do not need to
   be specified every time on the command-line.
+
 * The build scripts no longer require a ``.git`` directory to
   generate the ``builtin_version.py`` module.  The release tarballs
   now include a ``version`` file at the root of the project which
   is used in lieu of having the git repository available.
   This allows for ``make clean && make`` to function outside of
   a git repository.
+
 * Added maintainer's ``make dist`` target to the ``Makefile``.
+
 * The built-in `simplejson` and `jsonpickle` libraries can be
   excluded from ``make install`` by specifying the ``standalone=true``
   `make` variable.  For example, ``make standalone=true install``.
@@ -3060,6 +2701,7 @@ Usability, bells and whistles
 -----------------------------
 * We now use patience diff by default when it is available via
   `git diff --patience`.
+
 * Allow closing the `cola classic` tool with `Ctrl+W`.
 
 Fixes
@@ -3069,6 +2711,7 @@ Fixes
 Packaging
 ---------
 * Don't include `simplejson` in MANIFEST.in.
+
 * Update desktop entry to read `Cola Git GUI`.
 
 
@@ -3083,17 +2726,14 @@ front, further work was done towards modularizing the code base.
 Usability, bells and whistles
 -----------------------------
 * Dragging and dropping patches invokes `git am`
-
-  https://github.com/git-cola/git-cola/issues/3
+  (`#3 <https://github.com/git-cola/git-cola/issues/3>`_)
 
 * A dialog to allow opening or cloning a repository
   is presented when `git cola` is launched outside of a git repository.
-
-  https://github.com/git-cola/git-cola/issues/22
+  (`#22 <https://github.com/git-cola/git-cola/issues/22>`_)
 
 * Warn when `push` is used to create a new branch
-
-  https://github.com/git-cola/git-cola/issues/35
+  (`#35 <https://github.com/git-cola/git-cola/issues/35>`_)
 
 * Optimized startup time by removing several calls to `git`.
 
@@ -3105,8 +2745,11 @@ Portability
 Developer
 ---------
 * `cola.gitcmds` was added to factor out git command-line utilities
+
 * `cola.gitcfg` was added for interacting with `git config`
+
 * `cola.models.browser` was added to factor out repobrowser data
+
 * Added more tests
 
 
@@ -3117,7 +2760,9 @@ git-cola v1.4.0.5
 Fixes
 -----
 * Fix launching external applications on Windows
+
 * Ensure that the `amend` checkbox is unchecked when switching modes
+
 * Update the status tree when amending commits
 
 
@@ -3146,12 +2791,10 @@ git-cola v1.4.0.2
 Fixes
 -----
 * Added missing 'Exit Diff Mode' button for 'Diff Expression' mode
-
-  https://github.com/git-cola/git-cola/issues/31
+  (`#31 <https://github.com/git-cola/git-cola/issues/31>`_)
 
 * Fix a bug when initializing fonts on Windows
-
-  https://github.com/git-cola/git-cola/issues/32
+  (`#32 <https://github.com/git-cola/git-cola/issues/32>`_)
 
 
 .. _v1.4.0.1:
@@ -3161,17 +2804,15 @@ git-cola v1.4.0.1
 Fixes
 -----
 * Keep entries in sorted order in the `cola classic` tool
-* Fix staging untracked files
 
-  https://github.com/git-cola/git-cola/issues/27
+* Fix staging untracked files
+  (`#27 <https://github.com/git-cola/git-cola/issues/27>`_)
 
 * Fix the `show` command in the Stash dialog
-
-  https://github.com/git-cola/git-cola/issues/29
+  (`#29 <https://github.com/git-cola/git-cola/issues/29>`_)
 
 * Fix a typo when loading merge commit messages
-
-  https://github.com/git-cola/git-cola/issues/30
+  (`#30 <https://github.com/git-cola/git-cola/issues/30>`_)
 
 
 .. _v1.4.0:
@@ -3186,30 +2827,45 @@ various cola widgets.
 Usability, bells and whistles
 -----------------------------
 * New GUI is flexible and user-configurable
+
 * Individual widgets can be detached and rearranged arbitrarily
+
 * Add an interface for creating tags
+
 * Provide a fallback `SSH_ASKPASS` implementation to prompt for
   SSH passwords on fetch/push/pull
+
 * The commit message editor displays the current row/column and
   warns when lines get too long
+
 * The `cola classic` tool displays upstream changes
+
 * `git cola --classic` launches `cola classic` in standalone mode
+
 * Provide more information in log messages
 
 Fixes
 -----
 * Inherit the window manager's font settings
+
 * Miscellaneous PyQt4 bug fixes and workarounds
 
 Developer
 ---------
 * Removed all usage of Qt Designer `.ui` files
+
 * Simpler model/view architecture
+
 * Selection is now shared across tools
+
 * Centralized notifications are used to keep views in sync
+
 * The `cola.git` command class was made thread-safe
+
 * Less coupling between model and view actions
+
 * The status view was rewritten to use the MVC architecture
+
 * Added more documentation and tests
 
 
@@ -3220,24 +2876,31 @@ git-cola v1.3.9
 Usability, bells and whistles
 -----------------------------
 * Added a `cola classic` tool for browsing the entire repository
+
 * Handle diff expressions with spaces
+
 * Handle renamed files
 
 Portability
 -----------
 * Handle carat `^` characters in diff expressions on Windows
+
 * Worked around a PyQt 4.5/4.6 QThreadPool bug
 
 Documentation
 -------------
 * Added a keyboard shortcuts reference page
+
 * Added developer API documentation
 
 Fixes
 -----
 * Fix the diff expression used when reviewing branches
+
 * Fix a bug when pushing branches
+
 * Fix X11 warnings at startup
+
 * Fix more interrupted system calls on Mac OS X
 
 
@@ -3248,22 +2911,30 @@ git-cola v1.3.8
 Usability, bells and whistles
 -----------------------------
 * Fresh and tasty SVG logos
+
 * Added `Branch Review` mode for reviewing topic branches
+
 * Added diff modes for diffing between tags, branches,
   or arbitrary `git diff` expressions
+
 * The push dialog selects the current branch by default.
   This is in preparation for `git 1.7.0` where unconfigured `git push`
   will refuse to push when run without specifying the remote name
   and branch.  See the `git` release notes for more information
+
 * Support `open` and `clone` commands on Windows
+
 * Allow saving cola UI layouts
+
 * Re-enabled `double-click-to-stage` for unmerged entries.
   Disabling it for unmerged items was inconsistent, though safer.
+
 * Show diffs when navigating the status tree with the keyboard
 
 Packaging
 ---------
 * Worked around `pyuic4` bugs in the `setup.py` build script
+
 * Added Mac OSX application bundles to the download page
 
 
@@ -3274,22 +2945,26 @@ git-cola v1.3.7
 Subsystems
 ----------
 * `git difftool` became an official git command in `git 1.6.3`.
+
 * `git difftool` learned `--no-prompt` / `-y` and a corresponding
   `difftool.prompt` configuration variable
 
 Usability, bells and whistles
 -----------------------------
 * Warn when `non-fast-forward` is used with fetch, push or pull
+
 * Allow `Ctrl+C` to exit cola when run from the command line
 
 Fixes
 -----
 * Support Unicode font names
+
 * Handle interrupted system calls
 
 Developer
 ---------
 * `PEP-8`-ified more of the cola code base
+
 * Added more tests
 
 Packaging
@@ -3307,19 +2982,28 @@ git-cola v1.3.6
 Subsystems
 ----------
 * Added support for Kompare in `git difftool`
+
 * Added a separate configuration namespace for `git difftool`
+
 * Added the `diff.tool` configuration variable to define the default diff tool
 
 Usability, bells and whistles
 -----------------------------
 * The stash dialog allows passing the `--keep-index` option to `git stash`
+
 * Amending a published commit warns at commit time
+
 * Simplified the file-across-revisions comparison dialog
+
 * `origin` is selected by default in fetch/push/pull
+
 * Removed the search field from the log widget
+
 * The log window moved into a drawer widget at the bottom of the UI
+
 * Log window display can be configured with
   `cola.showoutput` = `{never, always, errors}`.  `errors` is the default.
+
 * `NOTE` -- `cola.showoutput` was removed with the GUI rewrite in 1.4.0.
 
 Developer
@@ -3329,5 +3013,6 @@ Developer
 Packaging
 ---------
 * Added a Windows/msysGit installer
+
 * Included private versions of `simplejson` and `jsonpickle`
   for ease of installation and development
