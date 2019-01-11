@@ -91,9 +91,9 @@ class BranchesWidget(QtWidgets.QWidget):
         shown = not self.filter_widget.isVisible()
         self.filter_widget.setVisible(shown)
         if shown:
-            self.filter_widget.setFocus(True)
+            self.filter_widget.setFocus()
         else:
-            self.tree.setFocus(True)
+            self.tree.setFocus()
 
 
 class BranchesTreeWidget(standard.TreeWidget):

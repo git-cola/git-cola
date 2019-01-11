@@ -118,7 +118,7 @@ class Merge(standard.Dialog):
         self.update_all()
 
         self.init_size(parent=parent)
-        self.revision.setFocus(True)
+        self.revision.setFocus()
 
     def update_all(self):
         """Set the branch name for the window title and label."""

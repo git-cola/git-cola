@@ -779,10 +779,10 @@ class MessageBox(Dialog):
 
         if default:
             self.button_ok.setDefault(True)
-            self.button_ok.setFocus(True)
+            self.button_ok.setFocus()
         else:
             self.button_close.setDefault(True)
-            self.button_close.setFocus(True)
+            self.button_close.setFocus()
 
         self.details_text = QtWidgets.QPlainTextEdit()
         self.details_text.setReadOnly(True)
