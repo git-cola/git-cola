@@ -71,6 +71,7 @@ Fixes
   (`#895 <https://github.com/git-cola/git-cola/issues/895>`_)
 
 * Spelling and grammar fixes.
+  (`#915 <https://github.com/git-cola/git-cola/pull/915>`_)
   (`#891 <https://github.com/git-cola/git-cola/pull/891>`_)
 
 Development
