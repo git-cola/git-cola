@@ -21,7 +21,8 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
-* New submodule menu helpers for updating all submodules.
+* New menu actions for updating all submodules.
+  (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
 
 * The status widget can now update submodules.
   (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
@@ -114,16 +115,16 @@ Usability, bells and whistles
 
 Translations
 ------------
-* Updated Brazilian translation
+* Updated Brazilian translation.
   (`#845 <https://github.com/git-cola/git-cola/pull/845>`_)
 
-* Updated Czech translation
+* Updated Czech translation.
   (`#854 <https://github.com/git-cola/git-cola/pull/854>`_)
   (`#853 <https://github.com/git-cola/git-cola/pull/853>`_)
   (`#835 <https://github.com/git-cola/git-cola/pull/835>`_)
   (`#813 <https://github.com/git-cola/git-cola/pull/813>`_)
 
-* Update Spanish translation
+* Update Spanish translation.
   (`#862 <https://github.com/git-cola/git-cola/pull/862>`_)
   (`#867 <https://github.com/git-cola/git-cola/pull/867>`_)
 
