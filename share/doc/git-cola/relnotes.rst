@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The "Open Terminal" action now launches a Git Bash shell on Windows.
+  (`#913 <https://github.com/git-cola/git-cola/pull/913>`_)
+
 * New menu actions for updating all submodules.
   (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
 
