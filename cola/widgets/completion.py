@@ -757,7 +757,7 @@ class GitDialog(QtWidgets.QDialog):
         qtutils.connect_button(self.close_button, self.reject)
 
         self.setFocusProxy(self.lineedit)
-        self.lineedit.setFocus(True)
+        self.lineedit.setFocus()
 
     def text(self):
         return self.lineedit.text()
@@ -784,7 +784,7 @@ class GitDialog(QtWidgets.QDialog):
             dlg.lineedit.popup().move(mapped.x(), mapped.y())
             dlg.lineedit.popup().show()
             dlg.lineedit.refresh()
-            dlg.lineedit.setFocus(True)
+            dlg.lineedit.setFocus()
 
         QtCore.QTimer().singleShot(100, show_popup)
 

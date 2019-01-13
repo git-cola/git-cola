@@ -52,10 +52,10 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
         tree_helper = BranchesTreeHelper()
 
         result = tree_helper.get_root(items['child_1'])
-        self.assertEqual(items['top'], result)
+        self.assertTrue(items['top'] is result)
 
         result = tree_helper.get_root(items['sub_child_2_1'])
-        self.assertEqual(items['top'], result)
+        self.assertTrue(items['top'] is result)
 
     def test_should_return_a_valid_branch_name_on_get_full_name(self):
         """Test the get_full_name function."""
