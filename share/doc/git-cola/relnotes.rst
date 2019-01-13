@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* Updated Japanese translation.
+  (`#914 <https://github.com/git-cola/git-cola/pull/914>`_)
+
 * The "Open Terminal" action now launches a Git Bash shell on Windows.
   (`#913 <https://github.com/git-cola/git-cola/pull/913>`_)
 
