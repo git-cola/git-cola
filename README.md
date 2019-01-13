@@ -324,7 +324,7 @@ The following commands should be run during development:
     # Run tests and longer-running pylint and flake8 checks
     $ make check
 
-    # Run tests against multiple python interpretors using tox
+    # Run tests against multiple python interpreters using tox
     $ make tox
 
 The test suite can be found in the [test](test) directory.
