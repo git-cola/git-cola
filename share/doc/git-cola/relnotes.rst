@@ -53,6 +53,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Improve compatibility when using PySide2.
+  (`#912 <https://github.com/git-cola/git-cola/pull/912>`_)
+
 * The Diff Editor was not honoring the configured tab width on startup.
   (`#900 <https://github.com/git-cola/git-cola/issues/900>`_)
 
