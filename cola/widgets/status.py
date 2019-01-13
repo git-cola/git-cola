@@ -167,8 +167,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self.parent_dir_action = common.parent_dir_action(
                 context, self, self.selected_group)
 
-            self.terminal_action = common.terminal_action(
-                context, self, self.selected_group)
+        self.terminal_action = common.terminal_action(
+            context, self, self.selected_group)
 
         self.up_action = qtutils.add_action(
             self, N_('Move Up'), self.move_up,
@@ -573,6 +573,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if not self.selection_model.is_empty():
                 menu.addAction(self.default_app_action)
                 menu.addAction(self.parent_dir_action)
+
+        if self.terminal_action is not None:
             menu.addAction(self.terminal_action)
 
         self._add_copy_actions(menu)
