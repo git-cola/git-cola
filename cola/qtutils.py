@@ -700,10 +700,10 @@ def _checkbox(cls, text, tooltip, checked):
     return widget
 
 
-class DockTitleBarWidget(QtWidgets.QWidget):
+class DockTitleBarWidget(QtWidgets.QFrame):
 
     def __init__(self, parent, title, stretch=True):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
         self.label = qlabel = QtWidgets.QLabel(title, self)
         qfont = qlabel.font()
@@ -765,6 +765,8 @@ def create_dock(title, parent, stretch=True, widget=None, fn=None):
         parent.dockwidgets.append(dock)
     if fn:
         widget = fn(dock)
+        assert isinstance(widget, QtWidgets.QFrame),\
+            "Docked widget has to be a QFrame"
     if widget:
         dock.setWidget(widget)
     return dock

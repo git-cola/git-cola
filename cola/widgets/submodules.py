@@ -14,10 +14,10 @@ from ..widgets import defs
 from ..widgets import standard
 
 
-class SubmodulesWidget(QtWidgets.QWidget):
+class SubmodulesWidget(QtWidgets.QFrame):
 
     def __init__(self, context, parent):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self.setToolTip(N_('Submodules'))
 
         self.tree = SubmodulesTreeWidget(context, parent=self)

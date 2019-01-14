@@ -496,6 +496,12 @@ class Dialog(WidgetMixin, QtWidgets.QDialog):
             flags = self.windowFlags() & ~help_hint
             self.setWindowFlags(flags)
 
+    def setLayout(self, layout):
+        frame = QtWidgets.QFrame(self)
+        frame.setLayout(layout)
+        main_layout = qtutils.vbox(0, 0, frame)
+        self.Base.setLayout(self, main_layout)
+
     def accept(self):
         self.save_settings()
         return self.Base.accept(self)

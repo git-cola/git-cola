@@ -345,7 +345,7 @@ class DiffLineNumbers(TextDecorator):
             block = block.next()  # pylint: disable=next-method-called
 
 
-class Viewer(QtWidgets.QWidget):
+class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
     images_changed = Signal(object)
