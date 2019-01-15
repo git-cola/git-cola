@@ -91,9 +91,9 @@ class BranchesWidget(QtWidgets.QWidget):
         shown = not self.filter_widget.isVisible()
         self.filter_widget.setVisible(shown)
         if shown:
-            self.filter_widget.setFocus(True)
+            self.filter_widget.setFocus()
         else:
-            self.tree.setFocus(True)
+            self.tree.setFocus()
 
 
 class BranchesTreeWidget(standard.TreeWidget):
@@ -173,6 +173,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         """Build and execute the context menu"""
         context = self.context
         selected = self.selected_item()
+        if not selected:
+            return
         root = self.tree_helper.get_root(selected)
 
         if selected.childCount() > 0 or not root:

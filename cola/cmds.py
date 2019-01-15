@@ -1265,15 +1265,26 @@ class LaunchTerminal(ContextCommand):
     def name():
         return N_('Launch Terminal')
 
+    @staticmethod
+    def is_available(context):
+        return context.cfg.terminal() is not None
+
     def __init__(self, context, path):
         super(LaunchTerminal, self).__init__(context)
         self.path = path
 
     def do(self):
-        cmd = self.cfg.terminal()
-        argv = utils.shell_split(cmd)
-        argv.append(os.getenv('SHELL', '/bin/sh'))
-        core.fork(argv, cwd=self.path)
+        cmd = self.context.cfg.terminal()
+        if cmd is None:
+            return
+        if utils.is_win32():
+            argv = ['start', '', cmd, '--login']
+            shell = True
+        else:
+            argv = utils.shell_split(cmd)
+            argv.append(os.getenv('SHELL', '/bin/sh'))
+            shell = False
+        core.fork(argv, cwd=self.path, shell=shell)
 
 
 class LaunchEditor(Edit):

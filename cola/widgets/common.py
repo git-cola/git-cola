@@ -55,7 +55,9 @@ def refresh_action(context, parent):
 
 def terminal_action(context, parent, fn):
     """Launch a terminal -> QAction"""
-    action = cmd_action(parent, cmds.LaunchTerminal, context,
-                        lambda: utils.select_directory(fn()),
-                        hotkeys.TERMINAL)
+    action = None
+    if cmds.LaunchTerminal.is_available(context):
+        action = cmd_action(parent, cmds.LaunchTerminal, context,
+                            lambda: utils.select_directory(fn()),
+                            hotkeys.TERMINAL)
     return action

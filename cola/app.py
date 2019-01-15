@@ -589,7 +589,8 @@ def find_git():
     # Try to find Git's bin/ directory in one of the typical locations
     pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
     pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
-    for p in [pf32, pf, 'C:\\']:
+    pf64 = os.environ.get('ProgramW6432', 'C:\\Program Files')
+    for p in [pf64, pf32, pf, 'C:\\']:
         candidate = os.path.join(p, 'Git\\bin')
         if os.path.isdir(candidate):
             return candidate

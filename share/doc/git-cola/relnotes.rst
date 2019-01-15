@@ -21,7 +21,14 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
-* New submodule menu helpers for updating all submodules.
+* Updated Japanese translation.
+  (`#914 <https://github.com/git-cola/git-cola/pull/914>`_)
+
+* The "Open Terminal" action now launches a Git Bash shell on Windows.
+  (`#913 <https://github.com/git-cola/git-cola/pull/913>`_)
+
+* New menu actions for updating all submodules.
+  (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
 
 * The status widget can now update submodules.
   (`#911 <https://github.com/git-cola/git-cola/pull/911>`_)
@@ -52,6 +59,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Improve compatibility when using PySide2.
+  (`#912 <https://github.com/git-cola/git-cola/pull/912>`_)
+
 * The Diff Editor was not honoring the configured tab width on startup.
   (`#900 <https://github.com/git-cola/git-cola/issues/900>`_)
 
@@ -61,6 +71,7 @@ Fixes
   (`#895 <https://github.com/git-cola/git-cola/issues/895>`_)
 
 * Spelling and grammar fixes.
+  (`#915 <https://github.com/git-cola/git-cola/pull/915>`_)
   (`#891 <https://github.com/git-cola/git-cola/pull/891>`_)
 
 Development
@@ -114,16 +125,16 @@ Usability, bells and whistles
 
 Translations
 ------------
-* Updated Brazilian translation
+* Updated Brazilian translation.
   (`#845 <https://github.com/git-cola/git-cola/pull/845>`_)
 
-* Updated Czech translation
+* Updated Czech translation.
   (`#854 <https://github.com/git-cola/git-cola/pull/854>`_)
   (`#853 <https://github.com/git-cola/git-cola/pull/853>`_)
   (`#835 <https://github.com/git-cola/git-cola/pull/835>`_)
   (`#813 <https://github.com/git-cola/git-cola/pull/813>`_)
 
-* Update Spanish translation
+* Update Spanish translation.
   (`#862 <https://github.com/git-cola/git-cola/pull/862>`_)
   (`#867 <https://github.com/git-cola/git-cola/pull/867>`_)
 

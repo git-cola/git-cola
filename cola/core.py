@@ -253,13 +253,13 @@ def run_command(cmd, *args, **kwargs):
 
 
 @interruptable
-def _fork_posix(args, cwd=None):
+def _fork_posix(args, cwd=None, shell=False):
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
-    return subprocess.Popen(encoded_args, cwd=cwd).pid
+    return subprocess.Popen(encoded_args, cwd=cwd, shell=shell).pid
 
 
-def _fork_win32(args, cwd=None):
+def _fork_win32(args, cwd=None, shell=False):
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. wow.
     if args[0] == 'git-dag':
@@ -274,7 +274,8 @@ def _fork_win32(args, cwd=None):
         argv = [encode(arg) for arg in args]
 
     DETACHED_PROCESS = 0x00000008  # Amazing!
-    return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS).pid
+    return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS,
+                            shell=shell).pid
 
 
 def _win32_find_exe(exe):
