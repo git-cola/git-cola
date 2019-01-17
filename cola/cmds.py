@@ -1518,6 +1518,17 @@ class OpenRepo(EditModel):
             self.model.set_worktree(old_repo)
 
 
+class OpenParentRepo(OpenRepo):
+
+    def __init__(self, context):
+        status, path, _ = context.git.rev_parse(
+            show_superproject_working_tree=True)
+        if status == 0 and path:
+            super(OpenParentRepo, self).__init__(context, path)
+        else:
+            super(OpenParentRepo, self).__init__(context, '')
+
+
 class Clone(ContextCommand):
     """Clones a repository and optionally spawns a new cola session."""
 
