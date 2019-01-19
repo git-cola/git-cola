@@ -42,7 +42,8 @@ class SubmodulesWidget(QtWidgets.QWidget):
         titlebar.add_corner_widget(self.corner_widget)
 
         # Connections
-        qtutils.connect_button(self.refresh_button, self.tree.refresh_command)
+        qtutils.connect_button(self.refresh_button,
+                               context.model.update_submodules_list)
         qtutils.connect_button(self.open_parent_button,
                                cmds.run(cmds.OpenParentRepo, context))
 
@@ -58,18 +59,14 @@ class SubmodulesTreeWidget(standard.TreeWidget):
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
-        # model
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_updated, self.updated.emit)
         # UI
         self._active = False
         self.list_helper = BuildItem()
         self.itemDoubleClicked.connect(self.tree_double_clicked)
-
-    def refresh_command(self):
-        # TODO how to monitor changes of submodules?
-        self.main_model._update_submodules_list()
-        self.refresh()
+        # Connections
+        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        model.add_observer(model.message_submodules_changed,
+                           self.updated.emit)
 
     def refresh(self):
         if not self._active:

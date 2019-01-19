@@ -226,8 +226,8 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
-        self._update_submodules_list()
         self.update_config()
+        self.update_submodules_list()
         self.emit_updated()
 
     def update_config(self, emit=False, reset=False):
@@ -318,7 +318,7 @@ class MainModel(Observable):
             self._auto_commitmsg = ''
             self.set_commitmsg(self._prev_commitmsg)
 
-    def _update_submodules_list(self):
+    def update_submodules_list(self):
         self.submodules_list = gitcmds.list_submodule(self.context)
         self.notify_observers(self.message_submodules_changed)
 
