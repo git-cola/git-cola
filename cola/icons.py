@@ -232,6 +232,10 @@ def merge():
     return icon('git-merge.svg')
 
 
+def modified():
+    return icon('modified.svg')
+
+
 def modified_name():
     return name_from_basename('modified.svg')
 
