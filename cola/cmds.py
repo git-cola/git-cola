@@ -18,6 +18,7 @@ from . import icons
 from . import resources
 from . import textwrap
 from . import utils
+from . import version
 from .cmd import ContextCommand
 from .diffparse import DiffParser
 from .git import STDOUT
@@ -1521,12 +1522,15 @@ class OpenRepo(EditModel):
 class OpenParentRepo(OpenRepo):
 
     def __init__(self, context):
-        status, path, _ = context.git.rev_parse(
-            show_superproject_working_tree=True)
-        if status == 0 and path:
-            super(OpenParentRepo, self).__init__(context, path)
-        else:
-            super(OpenParentRepo, self).__init__(context, '')
+        path = ''
+        if version.check_git(context, 'show-superproject-working-tree'):
+            status, out, _ = context.git.rev_parse(
+                show_superproject_working_tree=True)
+            if status == 0:
+                path = out
+        if not path:
+            path = os.path.dirname(core.getcwd())
+        super(OpenParentRepo, self).__init__(context, path)
 
 
 class Clone(ContextCommand):
