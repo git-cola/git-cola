@@ -9,7 +9,6 @@ from .. import cmds
 from .. import core
 from .. import qtutils
 from .. import icons
-from .. import version
 from ..i18n import N_
 from ..widgets import defs
 from ..widgets import standard
@@ -19,33 +18,33 @@ class SubmodulesWidget(QtWidgets.QWidget):
 
     def __init__(self, context, parent):
         QtWidgets.QWidget.__init__(self, parent)
-
         self.setToolTip(N_('Submodules'))
-        # main
+
         self.tree = SubmodulesTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
-        self.main_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing, self.tree)
+
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.main_layout)
-        # button
-        # TODO better icons
+
+        # Titlebar buttons
         self.refresh_button = qtutils.create_action_button(
                 tooltip=N_('Refresh'), icon=icons.sync())
-        qtutils.connect_button(self.refresh_button, self.tree.refresh_command)
+
         self.open_parent_button = qtutils.create_action_button(
-                tooltip=N_('Open Parent'), icon=icons.push())
-        qtutils.connect_button(self.open_parent_button,
-                               lambda: cmds.do(cmds.OpenParentRepo, context))
-        if not version.check_git(context, 'show-superproject-working-tree'):
-            self.open_parent_button.setVisible(False)
+                tooltip=N_('Open Parent'), icon=icons.repo())
+
         self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
                                           self.open_parent_button,
                                           self.refresh_button)
         self.corner_widget = QtWidgets.QWidget(self)
         self.corner_widget.setLayout(self.button_layout)
-        # titlebar
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
+
+        # Connections
+        qtutils.connect_button(self.refresh_button, self.tree.refresh_command)
+        qtutils.connect_button(self.open_parent_button,
+                               cmds.run(cmds.OpenParentRepo, context))
 
 
 class SubmodulesTreeWidget(standard.TreeWidget):
@@ -97,10 +96,9 @@ class BuildItem(object):
 
     def __init__(self):
         self.state_folder_map = {}
-        # TODO better icons
         self.state_folder_map[''] = icons.folder()
-        self.state_folder_map['+'] = icons.new()
-        self.state_folder_map['-'] = icons.close()
+        self.state_folder_map['+'] = icons.staged()
+        self.state_folder_map['-'] = icons.modified()
         self.state_folder_map['U'] = icons.merge()
 
     def get(self, entry):
