@@ -32,6 +32,7 @@ class MainModel(Observable):
     message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
+    message_submodules_changed = 'message_submodules_changed'
     message_updated = 'updated'
 
     # States
@@ -319,6 +320,7 @@ class MainModel(Observable):
 
     def _update_submodules_list(self):
         self.submodules_list = gitcmds.list_submodule(self.context)
+        self.notify_observers(self.message_submodules_changed)
 
     def update_remotes(self):
         self._update_remotes()
