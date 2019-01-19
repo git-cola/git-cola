@@ -579,9 +579,17 @@ class MainView(standard.MainWindow):
         if self.browser_dockable:
             self.addDockWidget(top, self.browserdock)
             self.tabifyDockWidget(self.browserdock, self.commitdock)
-        self.addDockWidget(top, self.bookmarksdock)
+
         self.addDockWidget(top, self.branchdock)
+        self.addDockWidget(top, self.submodulesdock)
+        self.addDockWidget(top, self.bookmarksdock)
         self.addDockWidget(top, self.recentdock)
+
+        self.tabifyDockWidget(self.branchdock, self.submodulesdock)
+        self.tabifyDockWidget(self.submodulesdock, self.bookmarksdock)
+        self.tabifyDockWidget(self.bookmarksdock, self.recentdock)
+        self.branchdock.raise_()
+
         self.addDockWidget(bottom, self.diffdock)
         self.addDockWidget(bottom, self.actionsdock)
         self.addDockWidget(bottom, self.logdock)
