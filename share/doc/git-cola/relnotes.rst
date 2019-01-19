@@ -1683,7 +1683,8 @@ Fixes
   (`#213 <https://github.com/git-cola/git-cola/issues/213>`_)
 
 * Fix "known incorrect sRGB profile" in `staged-item.png`.
-  (`Thread <http://comments.gmane.org/gmane.linux.gentoo.devel/85066>`_)
+  (`gentoo-devel message #85066
+  <http://comments.gmane.org/gmane.linux.gentoo.devel/85066>`_)
 
 .. _v1.9.2:
 
@@ -1768,7 +1769,8 @@ Usability, bells and whistles
 
 * Display of untracked files can be disabled from the Preferences dialog
   or by setting the `gui.displayuntracked` configuration variable to `false`.
-  (`Thread <https://public-inbox.org/git/20130821032913.GA6092@wheezy.local/>`_)
+  (`Git Mailing List on 2013-08-21
+  <https://public-inbox.org/git/20130821032913.GA6092@wheezy.local/>`_)
 
 Fixes
 -----
