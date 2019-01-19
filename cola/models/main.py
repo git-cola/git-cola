@@ -93,6 +93,7 @@ class MainModel(Observable):
         self.staged_deleted = set()
         self.unstaged_deleted = set()
         self.submodules = set()
+        self.submodules_list = []
 
         self.local_branches = []
         self.remote_branches = []
@@ -224,6 +225,7 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_branch_heads()
         self._update_commitmsg()
+        self._update_submodules_list()
         self.update_config()
         self.emit_updated()
 
@@ -314,6 +316,9 @@ class MainModel(Observable):
         elif self._auto_commitmsg and self._auto_commitmsg == self.commitmsg:
             self._auto_commitmsg = ''
             self.set_commitmsg(self._prev_commitmsg)
+
+    def _update_submodules_list(self):
+        self.submodules_list = gitcmds.list_submodule(self.context)
 
     def update_remotes(self):
         self._update_remotes()

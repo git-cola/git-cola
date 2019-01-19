@@ -33,6 +33,7 @@ from . import action
 from . import archive
 from . import bookmarks
 from . import branch
+from . import submodules
 from . import browse
 from . import cfgactions
 from . import clone
@@ -119,6 +120,12 @@ class MainView(standard.MainWindow):
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
         titlebar.add_corner_widget(self.branchwidget.filter_button)
+
+        # "Submodule" widgets
+        self.submodulesdock = create_dock(
+            N_('Submodules'), self,
+            fn=partial(submodules.SubmodulesWidget, context))
+        self.submoduleswidget = self.submodulesdock.widget()
 
         # "Commit Message Editor" widget
         self.position_label = QtWidgets.QLabel()
@@ -684,7 +691,8 @@ class MainView(standard.MainWindow):
             self.actionsdock,
             self.bookmarksdock,
             self.recentdock,
-            self.branchdock
+            self.branchdock,
+            self.submodulesdock
         ]
         if self.browser_dockable:
             dockwidgets.append(self.browserdock)
@@ -900,7 +908,8 @@ class MainView(standard.MainWindow):
             (optkey + '+4', self.actionsdock),
             (optkey + '+5', self.bookmarksdock),
             (optkey + '+6', self.recentdock),
-            (optkey + '+7', self.branchdock)
+            (optkey + '+7', self.branchdock),
+            (optkey + '+8', self.submodulesdock)
         )
         for shortcut, dockwidget in dockwidgets:
             # Associate the action with the shortcut

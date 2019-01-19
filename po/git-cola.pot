@@ -1357,6 +1357,9 @@ msgstr ""
 msgid "Open Git Repository..."
 msgstr ""
 
+msgid "Open Parent"
+msgstr ""
+
 msgid "Open Parent Directory"
 msgstr ""
 
@@ -2035,6 +2038,9 @@ msgid "Status"
 msgstr ""
 
 msgid "Stop tracking paths"
+msgstr ""
+
+msgid "Submodules"
 msgstr ""
 
 msgid "Summarize Merge Commits"
