@@ -21,6 +21,10 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The new `Submodules` widget makes it easy to interact with submodules.
+  Additionally, submodules can now be updated using the `Status` widget.
+  (`#916 <https://github.com/git-cola/git-cola/pull/916>`_)
+
 * Updated Japanese translation.
   (`#914 <https://github.com/git-cola/git-cola/pull/914>`_)
 
