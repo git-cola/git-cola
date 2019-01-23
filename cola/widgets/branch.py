@@ -124,6 +124,9 @@ class BranchesTreeWidget(standard.TreeWidget):
         # Expand items when they are clicked
         self.clicked.connect(self._toggle_expanded)
 
+        # Checkout branch when double clicked
+        self.doubleClicked.connect(self.checkout_action)
+
     def refresh(self):
         if not self._active:
             return
