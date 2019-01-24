@@ -1514,6 +1514,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if selected:
             items.extend(selected)
 
+        self.setSceneRect(self.scene().itemsBoundingRect())
         self.fit_view_to_items(items)
 
     def zoom_to_fit(self):
