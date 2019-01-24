@@ -16,6 +16,7 @@ Thanks
 * Andreas Sommer
 * Andrew Chen
 * Andrej Kvasnica
+* Arthur Coelho
 * Audrius Karabanovas
 * balping
 * Barış ÇELİK
