@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* The `Branches` widget now checks out branches when double-clicked.
+  (`#920 <https://github.com/git-cola/git-cola/pull/920>`_)
+
 * The new `Submodules` widget makes it easy to interact with submodules.
   Additionally, submodules can now be updated using the `Status` widget.
   (`#916 <https://github.com/git-cola/git-cola/pull/916>`_)
