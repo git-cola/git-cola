@@ -993,10 +993,8 @@ class Edge(QtWidgets.QGraphicsItem):
             # If the dest is at the left of the source, then we
             # need to reverse some values
             if self.source.x() > self.dest.x():
-                point5 = QPointF(point4.x(), point4.y() + connector_length)
-                point6 = QPointF(point5.x() + arc_rect, point5.y() + arc_rect)
-                point3 = QPointF(self.source.x() - arc_rect, point6.y())
-                point2 = QPointF(self.source.x(), point3.y() + arc_rect)
+                point3 = QPointF(point2.x() - arc_rect, point3.y())
+                point6 = QPointF(point5.x() + arc_rect, point6.y())
 
                 span_angle_arc1 = 90
 
@@ -1516,6 +1514,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if selected:
             items.extend(selected)
 
+        self.setSceneRect(self.scene().itemsBoundingRect())
         self.fit_view_to_items(items)
 
     def zoom_to_fit(self):
