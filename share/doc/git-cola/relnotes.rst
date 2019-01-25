@@ -21,6 +21,9 @@ git-cola v3.3 (unreleased)
 
 Usability, bells and whistles
 -----------------------------
+* `git dag` improved how it renders parent commits.
+  (`#921 <https://github.com/git-cola/git-cola/pull/921>`_)
+
 * The `Branches` widget now checks out branches when double-clicked.
   (`#920 <https://github.com/git-cola/git-cola/pull/920>`_)
 
