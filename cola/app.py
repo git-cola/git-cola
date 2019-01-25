@@ -23,7 +23,6 @@ Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
 """)
     sys.exit(1)
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -33,7 +32,6 @@ from .interaction import Interaction
 from .models import main
 from .models import selection
 from .widgets import cfgactions
-from .widgets import defs
 from .widgets import standard
 from .widgets import startup
 from .settings import Session
@@ -49,6 +47,7 @@ from . import i18n
 from . import qtcompat
 from . import qtutils
 from . import resources
+from . import themes
 from . import utils
 from . import version
 
@@ -144,20 +143,20 @@ def setup_environment():
 
 def get_icon_themes(context):
     """Return the default icon theme names"""
-    themes = []
+    result = []
 
     icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
     if icon_themes_env:
-        themes.extend([x for x in icon_themes_env.split(':') if x])
+        result.extend([x for x in icon_themes_env.split(':') if x])
 
     icon_themes_cfg = context.cfg.get_all('cola.icontheme')
     if icon_themes_cfg:
-        themes.extend(icon_themes_cfg)
+        result.extend(icon_themes_cfg)
 
-    if not themes:
-        themes.append('light')
+    if not result:
+        result.append('light')
 
-    return themes
+    return result
 
 
 # style note: we use camelCase here since we're masquerading a Qt class
@@ -182,73 +181,9 @@ class ColaApplication(object):
 
     def _install_style(self):
         """Generate and apply a stylesheet to the app"""
-        palette = self._app.palette()
-        window = palette.color(QtGui.QPalette.Window)
-        highlight = palette.color(QtGui.QPalette.Highlight)
-        shadow = palette.color(QtGui.QPalette.Shadow)
-        base = palette.color(QtGui.QPalette.Base)
-
-        window_rgb = qtutils.rgb_css(window)
-        highlight_rgb = qtutils.rgb_css(highlight)
-        shadow_rgb = qtutils.rgb_css(shadow)
-        base_rgb = qtutils.rgb_css(base)
-
-        self._app.setStyleSheet("""
-            QCheckBox::indicator {
-                width: %(checkbox_size)spx;
-                height: %(checkbox_size)spx;
-            }
-            QCheckBox::indicator::unchecked {
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-            QCheckBox::indicator::checked {
-                image: url(%(checkbox_icon)s);
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-
-            QRadioButton::indicator {
-                width: %(radio_size)spx;
-                height: %(radio_size)spx;
-            }
-            QRadioButton::indicator::unchecked {
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-            QRadioButton::indicator::checked {
-                image: url(%(radio_icon)s);
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-
-            QSplitter::handle:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            QMainWindow::separator {
-                background: %(window_rgb)s;
-                width: %(separator)spx;
-                height: %(separator)spx;
-            }
-            QMainWindow::separator:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            """ % dict(separator=defs.separator,
-                       window_rgb=window_rgb,
-                       highlight_rgb=highlight_rgb,
-                       shadow_rgb=shadow_rgb,
-                       base_rgb=base_rgb,
-                       checkbox_border=defs.border,
-                       checkbox_icon=icons.check_name(),
-                       checkbox_size=defs.checkbox,
-                       radio_border=defs.radio_border,
-                       radio_icon=icons.dot_name(),
-                       radio_radius=defs.checkbox//2,
-                       radio_size=defs.checkbox))
+        theme_str = self.context.cfg.get('cola.theme', default='default')
+        theme = themes.find_theme(theme_str)
+        self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
 
     def activeWindow(self):
         """QApplication::activeWindow() pass-through"""
