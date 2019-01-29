@@ -256,20 +256,19 @@ See "WINDOWS (continued)" below for more details.
 
 # GOODIES
 
-*git-cola* ships with an interactive rebase editor called *git-xbase*.
-*git-xbase* can be used to reorder and choose commits and is typically
-launched through the *git-cola*'s "Rebase" menu.
+*git cola* ships with an interactive rebase editor called *git-xbase*.
+*git-xbase* is used to reorder and choose commits when rebasing.
+Start an interactive rebase through the "Rebase" menu, or through the
+*git cola rebase* sub-command to start the *git-xbase* editor:
 
-*git-xbase* can also be launched independently of the main *git-cola* interface
-by telling `git rebase` to use it as its editor:
+    git cola rebase origin/master
+
+*git-xbase* can be launched independently of *git cola* by telling
+`git rebase` to use it as its editor through the `GIT_SEQUENCE_EDITOR`
+enviironment variable:
 
     env GIT_SEQUENCE_EDITOR="$PWD/share/git-cola/bin/git-xbase" \
     git rebase -i origin/master
-
-The quickest way to launch *git-xbase* is via the *git cola rebase*
-sub-command (as well as various other sub-commands):
-
-    git cola rebase origin/master
 
 # COMMAND-LINE TOOLS
 
