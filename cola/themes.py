@@ -1,5 +1,5 @@
 """Provides themes generator"""
-from __future__ import absolute_import
+from __future__ import absolute_import, division, unicode_literals
 
 from qtpy import QtGui
 
@@ -34,12 +34,12 @@ class Theme(object):
 
     def build_style_sheet(self, app_palette):
         if self.style_sheet == EStylesheet.FLAT:
-            return self.__style_sheet_flat()
+            return self.style_sheet_flat()
         else:
-            return Theme.__style_sheet_default(app_palette)
+            return self.style_sheet_default(app_palette)
 
     @staticmethod
-    def __style_sheet_default(palette):
+    def style_sheet_default(palette):
         window = palette.color(QtGui.QPalette.Window)
         highlight = palette.color(QtGui.QPalette.Highlight)
         shadow = palette.color(QtGui.QPalette.Shadow)
@@ -107,7 +107,7 @@ class Theme(object):
                        radio_radius=defs.checkbox//2,
                        radio_size=defs.checkbox)
 
-    def __style_sheet_flat(self):
+    def style_sheet_flat(self):
         main_color = self.main_color
         color = QtGui.QColor(main_color)
         color_rgb = qtutils.rgb_css(color)
@@ -442,24 +442,24 @@ class Theme(object):
 
 def get_all_themes():
     return [
-        Theme("default", N_("Default"), False,
+        Theme('default', N_('Default'), False,
               EStylesheet.DEFAULT, None),
-        Theme("flat_light_blue", N_("Flat light blue"),
-              False, EStylesheet.FLAT, "#637fd9"),
-        Theme("flat_light_red", N_("Flat light red"),
-              False, EStylesheet.FLAT, "#cc5452"),
-        Theme("flat_light_grey", N_("Flat light grey"),
-              False, EStylesheet.FLAT, "#404454"),
-        Theme("flat_light_green", N_("Flat light green"),
-              False, EStylesheet.FLAT, "#9bc562"),
-        Theme("flat_dark_blue", N_("Flat dark blue"),
-              True, EStylesheet.FLAT, "#637fd9"),
-        Theme("flat_dark_red", N_("Flat dark red"),
-              True, EStylesheet.FLAT, "#cc5452"),
-        Theme("flat_dark_grey", N_("Flat dark grey"),
-              True, EStylesheet.FLAT, "#aaaaaa"),
-        Theme("flat_dark_green", N_("Flat dark green"),
-              True, EStylesheet.FLAT, "#9bc562")
+        Theme('flat_light_blue', N_('Flat light blue'),
+              False, EStylesheet.FLAT, '#637fd9'),
+        Theme('flat_light_red', N_('Flat light red'),
+              False, EStylesheet.FLAT, '#cc5452'),
+        Theme('flat_light_grey', N_('Flat light grey'),
+              False, EStylesheet.FLAT, '#404454'),
+        Theme('flat_light_green', N_('Flat light green'),
+              False, EStylesheet.FLAT, '#9bc562'),
+        Theme('flat_dark_blue', N_('Flat dark blue'),
+              True, EStylesheet.FLAT, '#637fd9'),
+        Theme('flat_dark_red', N_('Flat dark red'),
+              True, EStylesheet.FLAT, '#cc5452'),
+        Theme('flat_dark_grey', N_('Flat dark grey'),
+              True, EStylesheet.FLAT, '#aaaaaa'),
+        Theme('flat_dark_green', N_('Flat dark green'),
+              True, EStylesheet.FLAT, '#9bc562')
     ]
 
 
