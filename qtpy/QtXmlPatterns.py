@@ -5,20 +5,18 @@
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
 # -----------------------------------------------------------------------------
-"""Provides QtOpenGL classes and functions."""
+"""Provides QtXmlPatterns classes and functions."""
 
 # Local imports
-from . import PYQT4, PYQT5, PYSIDE, PYSIDE2, PythonQtError
+from . import PYQT4, PYSIDE2, PYQT5, PYSIDE, PythonQtError
 
 if PYQT5:
-    from PyQt5.QtOpenGL import *
+    from PyQt5.QtXmlPatterns import *
 elif PYSIDE2:
-    from PySide2.QtOpenGL import *
+    from PySide2.QtXmlPatterns import *
 elif PYQT4:
-    from PyQt4.QtOpenGL import *
+    from PyQt4.QtXmlPatterns import *
 elif PYSIDE:
-    from PySide.QtOpenGL import *
+    from PySide.QtXmlPatterns import *
 else:
     raise PythonQtError('No Qt bindings could be found')
-
-del PYQT4, PYQT5, PYSIDE, PYSIDE2

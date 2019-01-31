@@ -20,14 +20,22 @@ if PYQT5:
     from PyQt5.QtCore import pyqtProperty as Property
     from PyQt5.QtCore import QT_VERSION_STR as __version__
 
+    # For issue #153
+    from PyQt5.QtCore import QDateTime
+    QDateTime.toPython = QDateTime.toPyDateTime
+
     # Those are imported from `import *`
     del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
 elif PYSIDE2:
     from PySide2.QtCore import *
+
     try:  # may be limited to PySide-5.11a1 only 
         from PySide2.QtGui import QStringListModel
     except:
         pass
+
+    import PySide2.QtCore
+    __version__ = PySide2.QtCore.__version__
 elif PYQT4:
     from PyQt4.QtCore import *
     # Those are things we inherited from Spyder that fix crazy crashes under
