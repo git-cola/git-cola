@@ -132,8 +132,7 @@ class Theme(object):
                 color: %(grayed)s;
             }
             QDockWidget > QFrame {
-                margin: 0 2px 2px 2px;
-                min-height: 40px;
+                margin: 0px 0px 0px 0px;
             }
             QPlainTextEdit, QLineEdit, QTextEdit, QAbstractItemView,
             QAbstractSpinBox {
