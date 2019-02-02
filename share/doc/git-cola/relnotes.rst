@@ -69,6 +69,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Launching external programs has been improved on Windows.
+  (`#925 <https://github.com/git-cola/git-cola/pull/925>`_)
+
 * Improve compatibility when using PySide2.
   (`#912 <https://github.com/git-cola/git-cola/pull/912>`_)
 
@@ -99,6 +102,8 @@ Development
 
 Packaging
 ---------
+* The vendored `qtpy` library was updated to `v1.6`.
+
 * The Windows installer's wrapper scripts were missing an import.
   (`#878 <https://github.com/git-cola/git-cola/issues/878>`_)
 
