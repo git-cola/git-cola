@@ -265,7 +265,9 @@ def _fork_win32(args, cwd=None, shell=False):
     if args[0] == 'git-dag':
         # win32 can't exec python scripts
         args = [sys.executable] + args
-    args[0] = _win32_find_exe(args[0])
+
+    if not shell:
+        args[0] = _win32_find_exe(args[0])
 
     if PY3:
         # see comment in start_command()
