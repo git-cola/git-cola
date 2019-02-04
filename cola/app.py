@@ -184,6 +184,7 @@ class ColaApplication(object):
         theme_str = self.context.cfg.get('cola.theme', default='default')
         theme = themes.find_theme(theme_str)
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
+        self._app.setPalette(theme.build_palette(self._app.palette()))
 
     def activeWindow(self):
         """QApplication::activeWindow() pass-through"""

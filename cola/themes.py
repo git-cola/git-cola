@@ -14,14 +14,6 @@ class EStylesheet(object):
     FLAT = 2
 
 
-def normalize(val, min_v=0, max_v=1):
-    if val < min_v:
-        return min_v
-    if val > max_v:
-        return max_v
-    return val
-
-
 class Theme(object):
 
     def __init__(self, name, hr_name, is_dark,
@@ -37,6 +29,25 @@ class Theme(object):
             return self.style_sheet_flat()
         else:
             return self.style_sheet_default(app_palette)
+
+    def build_palette(self, app_palette):
+        QPalette = QtGui.QPalette
+        palette_dark = app_palette.color(QPalette.Base).lightnessF() < 0.5
+
+        if palette_dark and self.is_dark:
+            return app_palette
+        if not palette_dark and not self.is_dark:
+            return app_palette
+        if self.is_dark:
+            bg_color = QtGui.QColor("#202025")
+        else:
+            bg_color = QtGui.QColor("#edeef3")
+
+        txt_color = QtGui.QColor("#777")
+        palette = QPalette(bg_color)
+        palette.setColor(QPalette.Base, bg_color)
+        palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
+        return palette
 
     @staticmethod
     def style_sheet_default(palette):
@@ -118,36 +129,42 @@ class Theme(object):
             grayed = '#06080a'
             button_text = '#000000'
             field_text = '#d0d0d0'
-            d = QtGui.QColor.fromHslF(
-                color.hslHueF(),
-                color.hslSaturationF()*0.6,
-                normalize(color.lightnessF()*1.2)
-            )
-            darker_rgb = qtutils.rgb_css(d)
-            w = QtGui.QColor.fromHslF(
+            darker = qtutils.hsl_css(
                 color.hslHueF(),
                 color.hslSaturationF()*0.3,
-                color.lightnessF()*0.6
+                color.lightnessF()*1.3
             )
-            lighter_rgb = qtutils.rgb_css(w)
+            lighter = qtutils.hsl_css(
+                color.hslHueF(),
+                color.hslSaturationF()*0.4,
+                color.lightnessF()*0.55
+            )
+            focus = qtutils.hsl_css(
+                color.hslHueF(),
+                color.hslSaturationF() * 3,
+                0.09
+            )
         else:
             background = '#edeef3'
             field = '#ffffff'
             grayed = '#a2a2b0'
             button_text = '#ffffff'
             field_text = '#000000'
-            d = QtGui.QColor.fromHslF(
+            darker = qtutils.hsl_css(
                 color.hslHueF(),
                 color.hslSaturationF(),
-                color.lightnessF()*0.5
+                color.lightnessF()*0.4
             )
-            darker_rgb = qtutils.rgb_css(d)
-            w = QtGui.QColor.fromHslF(
+            lighter = qtutils.hsl_css(
                 color.hslHueF(),
-                normalize(color.hslSaturationF()*1.5),
-                normalize(color.lightnessF()*1.5)
+                color.hslSaturationF()*2,
+                0.92
             )
-            lighter_rgb = qtutils.rgb_css(w)
+            focus = qtutils.hsl_css(
+                color.hslHueF(),
+                color.hslSaturationF(),
+                color.lightnessF()
+            )
 
         return """
             /* regular widgets */
@@ -161,15 +178,24 @@ class Theme(object):
                 spacing: 2px;
             }
             QDockWidget > QFrame {
-                margin: 0 8px 2px 8px;
+                margin: 0 2px 2px 2px;
                 min-height: 40px;
             }
             QPlainTextEdit, QLineEdit, QTextEdit, QAbstractItemView,
             QStackedWidget, QAbstractSpinBox {
                 background-color: %(field)s;
-                border-color: %(darker)s;
+                border-color: %(grayed)s;
                 border-style: solid;
                 border-width: 1px;
+            }
+            QAbstractItemView::item:selected {
+                background-color: %(lighter)s;
+            }
+            QAbstractItemView::item:hover {
+                background-color: %(lighter)s;
+            }
+            QWidget:focus {
+                border-color: %(focus)s;
             }
             QStackedWidget QFrame {
                 border-width: 0;
@@ -189,15 +215,17 @@ class Theme(object):
                 min-width: 55px;
                 padding: 4px 5px;
             }
-            QPushButton[flat="true"] {
+            QPushButton[flat="true"], QToolButton {
                 background-color: transparent;
-                padding: 5px 0;
                 border-radius: 0px;
             }
-            QPushButton:hover {
+            QPushButton[flat="true"] {
+                margin-bottom: 10px;
+            }
+            QPushButton:hover, QToolButton:hover {
                background-color: %(darker)s;
             }
-            QPushButton:pressed {
+            QPushButton[flat="false"]:pressed, QToolButton:pressed {
                 background-color: %(darker)s;
                 margin: 1px 1px 2px 1px;
             }
@@ -222,10 +250,10 @@ class Theme(object):
                 background: transparent;
             }
             QMenuBar::item:selected {
-                background: %(lighter)s;
+                background: %(button)s;
             }
             QMenuBar::item:pressed {
-                background: %(lighter)s;
+                background: %(button)s;
             }
             QMenu {
                 background-color: %(field)s;
@@ -237,15 +265,17 @@ class Theme(object):
 
             /* combo box */
             QComboBox {
-                background-color: %(button)s;
-                color: %(button_text)s;
-                border-radius: 2px;
-                border-width: 0;
+                background-color: %(field)s;
+                border-color: %(grayed)s;
+                border-style: solid;
+                color: %(field_text)s;
+                border-radius: 0px;
+                border-width: 1px;
                 margin-bottom: 1px;
                 padding: 0 5px;
             }
             QComboBox::drop-down {
-                border-color: %(button_text)s %(button)s %(button)s %(button)s;
+                border-color: %(field_text)s %(field)s %(field)s %(field)s;
                 border-style: solid;
                 subcontrol-position: right;
                 border-width: 4px 3px 0 3px;
@@ -253,8 +283,8 @@ class Theme(object):
                 margin-right: 5px;
                 width: 0;
             }
-            QComboBox QFrame {
-                border-width: 0;
+            QComboBox::drop-down:hover {
+                border-color: %(button)s %(field)s %(field)s %(field)s;
             }
             QComboBox:item {
                 background-color: %(button)s;
@@ -293,6 +323,9 @@ class Theme(object):
             QScrollBar::add-line, QScrollBar::sub-line {
                 background: %(background)s;
                 subcontrol-origin: margin;
+            }
+            QScrollBar::sub-line:horizontal { /*required by a buggy Qt version*/
+                subcontrol-position: left;
             }
             QScrollBar::add-line:hover, QScrollBar::sub-line:hover {
                 background: %(button)s;
@@ -426,17 +459,48 @@ class Theme(object):
 
             /* dialogs */
             QDialog > QFrame {
-                margin: 6px 6px 6px 6px;
+                margin: 2px 2px 2px 2px;
+            }
+
+            /* headers */
+            QHeaderView {
+                color: %(field_text)s;
+                border-style: solid;
+                border-width: 0 0 1px 0;
+                border-color: %(grayed)s;
+            }
+            QHeaderView::section {
+                border-style: solid;
+                border-right: 1px solid %(grayed)s;
+                background-color: %(background)s;
+                color: %(field_text)s;
+                padding-left: 4px;
+            }
+
+            /* headers */
+            QHeaderView {
+                color: %(field_text)s;
+                border-style: solid;
+                border-width: 0 0 1px 0;
+                border-color: %(grayed)s;
+            }
+            QHeaderView::section {
+                border-style: solid;
+                border-right: 1px solid %(grayed)s;
+                background-color: %(background)s;
+                color: %(field_text)s;
+                padding-left: 4px;
             }
 
             """ % dict(background=background,
                        field=field,
                        button=color_rgb,
-                       darker=darker_rgb,
-                       lighter=lighter_rgb,
+                       darker=darker,
+                       lighter=lighter,
                        grayed=grayed,
                        button_text=button_text,
-                       field_text=field_text
+                       field_text=field_text,
+                       focus=focus
                        )
 
 
@@ -444,22 +508,22 @@ def get_all_themes():
     return [
         Theme('default', N_('Default'), False,
               EStylesheet.DEFAULT, None),
-        Theme('flat_light_blue', N_('Flat light blue'),
-              False, EStylesheet.FLAT, '#637fd9'),
-        Theme('flat_light_red', N_('Flat light red'),
+        Theme('flat-light-blue', N_('Flat light blue'),
+              False, EStylesheet.FLAT, '#5271cc'),
+        Theme('flat-light-red', N_('Flat light red'),
               False, EStylesheet.FLAT, '#cc5452'),
-        Theme('flat_light_grey', N_('Flat light grey'),
-              False, EStylesheet.FLAT, '#404454'),
-        Theme('flat_light_green', N_('Flat light green'),
-              False, EStylesheet.FLAT, '#9bc562'),
-        Theme('flat_dark_blue', N_('Flat dark blue'),
-              True, EStylesheet.FLAT, '#637fd9'),
-        Theme('flat_dark_red', N_('Flat dark red'),
+        Theme('flat-light-grey', N_('Flat light grey'),
+              False, EStylesheet.FLAT, '#707478'),
+        Theme('flat-light-green', N_('Flat light green'),
+              False, EStylesheet.FLAT, '#42a65c'),
+        Theme('flat-dark-blue', N_('Flat dark blue'),
+              True, EStylesheet.FLAT, '#5271cc'),
+        Theme('flat-dark-red', N_('Flat dark red'),
               True, EStylesheet.FLAT, '#cc5452'),
-        Theme('flat_dark_grey', N_('Flat dark grey'),
+        Theme('flat-dark-grey', N_('Flat dark grey'),
               True, EStylesheet.FLAT, '#aaaaaa'),
-        Theme('flat_dark_green', N_('Flat dark green'),
-              True, EStylesheet.FLAT, '#9bc562')
+        Theme('flat-dark-green', N_('Flat dark green'),
+              True, EStylesheet.FLAT, '#42a65c')
     ]
 
 
