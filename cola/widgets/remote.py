@@ -264,7 +264,7 @@ class RemoteActionDialog(standard.Dialog):
         self.top_layout = qtutils.hbox(defs.no_margin, defs.spacing, *widgets)
 
         self.main_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing,
+            defs.margin, defs.spacing,
             self.top_layout, self.options_layout)
         self.setLayout(self.main_layout)
 
