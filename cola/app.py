@@ -166,7 +166,8 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, context, argv, locale=None, icon_themes=None):
+    def __init__(self, context, argv, locale=None,
+                 icon_themes=None, gui_theme=None):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -177,11 +178,12 @@ class ColaApplication(object):
         self.context = context
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
-        self._install_style()
+        self._install_style(gui_theme)
 
-    def _install_style(self):
+    def _install_style(self, theme_str):
         """Generate and apply a stylesheet to the app"""
-        theme_str = self.context.cfg.get('cola.theme', default='default')
+        if theme_str is None:
+            theme_str = self.context.cfg.get('cola.theme', default='default')
         theme = themes.find_theme(theme_str)
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
         self._app.setPalette(theme.build_palette(self._app.palette()))
@@ -390,10 +392,18 @@ def add_common_arguments(parser):
     parser.add_argument('--perf', action='store_true', default=False,
                         help=argparse.SUPPRESS)
 
+    # Specify the GUI theme
+    parser.add_argument('--theme', metavar='<name>', default=None,
+                        help='specify an GUI theme name')
+
 
 def new_application(context, args):
     """Create a new ColaApplication"""
-    return ColaApplication(context, sys.argv, icon_themes=args.icon_themes)
+    return ColaApplication(context,
+                           sys.argv,
+                           icon_themes=args.icon_themes,
+                           gui_theme=args.theme
+                           )
 
 
 def new_worktree(context, repo, prompt, settings):
