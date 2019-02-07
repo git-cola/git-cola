@@ -3,6 +3,7 @@ from __future__ import division, absolute_import, unicode_literals
 import sys
 
 from .. import core
+from .. import hidpi
 from .. import observable
 from .. import utils
 from ..cmd import Command
@@ -36,6 +37,8 @@ USER_NAME = 'user.name'
 SAFE_MODE = 'cola.safemode'
 SHOW_PATH = 'cola.showpath'
 SPELL_CHECK = 'cola.spellcheck'
+THEME = 'cola.theme'
+HIDPI = 'cola.hidpi'
 
 
 class Defaults(object):
@@ -65,6 +68,8 @@ class Defaults(object):
     spellcheck = False
     tabwidth = 8
     textwidth = 72
+    theme = 'default'
+    hidpi = hidpi.EChoice.AUTO
 
 
 def blame_viewer(context):

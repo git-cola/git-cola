@@ -42,6 +42,7 @@ from . import fsmonitor
 from . import git
 from . import gitcfg
 from . import guicmds
+from . import hidpi
 from . import icons
 from . import i18n
 from . import qtcompat
@@ -176,6 +177,7 @@ class ColaApplication(object):
         icons.install(icon_themes or get_icon_themes(context))
 
         self.context = context
+        self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
         self._install_style(gui_theme)
@@ -187,6 +189,11 @@ class ColaApplication(object):
         theme = themes.find_theme(theme_str)
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
         self._app.setPalette(theme.build_palette(self._app.palette()))
+
+    def _install_hidpi_config(self):
+        """Sets QT HIDPI scalling (requires Qt 5.6)"""
+        value = self.context.cfg.get('cola.hidpi', default=hidpi.EChoice.AUTO)
+        hidpi.apply_choice(value)
 
     def activeWindow(self):
         """QApplication::activeWindow() pass-through"""

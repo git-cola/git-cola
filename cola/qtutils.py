@@ -230,6 +230,14 @@ def combo(items, editable=False, parent=None):
     return ComboBox(editable=editable, items=items, parent=parent)
 
 
+def combo_mapped(items, editable=False, parent=None):
+    """Create a readonly (by default) combobox from a list of items"""
+    widget = ComboBox(editable=editable, parent=parent)
+    for item in items:
+        widget.addItem(item, items[item])
+    return widget
+
+
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""
     widget = QtWidgets.QTextBrowser()

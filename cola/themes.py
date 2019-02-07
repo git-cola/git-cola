@@ -177,6 +177,10 @@ class Theme(object):
                 show-decoration-selected: 1;
                 spacing: 2px;
             }
+            QWidget:disabled {
+                border-color: %(grayed)s;
+                color: %(grayed)s;
+            }
             QDockWidget > QFrame {
                 margin: 0 2px 2px 2px;
                 min-height: 40px;
@@ -525,6 +529,15 @@ def get_all_themes():
         Theme('flat-dark-green', N_('Flat dark green'),
               True, EStylesheet.FLAT, '#42a65c')
     ]
+
+
+def themes_map():
+    result = dict()
+    items = get_all_themes()
+    for item in items:
+        result[item.hr_name] = item.name
+
+    return result
 
 
 def find_theme(name):

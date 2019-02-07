@@ -495,6 +495,14 @@ cola.fontdiff
 -------------
 Specifies the font to use for `git cola`'s diff display.
 
+cola.hidpi
+-------------
+Specifies the High DPI displays scale factor. Set `0` to automatically scaled.
+Setting value between 0 and 1 is undefined.
+This option requires at least Qt 5.6 to work.
+See `Qt QT_SCALE_FACTOR documentation <https://doc.qt.io/qt-5/highdpi.html>`_
+for more information.
+
 cola.icontheme
 --------------
 Specifies the icon themes to use throughout `git cola`. The theme specified
@@ -716,6 +724,7 @@ GIT_COLA_SCALE
 
     Set `QT_AUTO_SCREEN_SCALE_FACTOR` to `1` and Qt will automatically
     scale the interface to the correct size based on the display DPI.
+    This option is also available by setting `cola.hidpi` configuration.
 
     See the `Qt High DPI documentation <https://doc.qt.io/qt-5/highdpi.html>`_
     for more details.
