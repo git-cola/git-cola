@@ -23,7 +23,6 @@ Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
 """)
     sys.exit(1)
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -33,7 +32,6 @@ from .interaction import Interaction
 from .models import main
 from .models import selection
 from .widgets import cfgactions
-from .widgets import defs
 from .widgets import standard
 from .widgets import startup
 from .settings import Session
@@ -44,11 +42,13 @@ from . import fsmonitor
 from . import git
 from . import gitcfg
 from . import guicmds
+from . import hidpi
 from . import icons
 from . import i18n
 from . import qtcompat
 from . import qtutils
 from . import resources
+from . import themes
 from . import utils
 from . import version
 
@@ -144,20 +144,20 @@ def setup_environment():
 
 def get_icon_themes(context):
     """Return the default icon theme names"""
-    themes = []
+    result = []
 
     icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
     if icon_themes_env:
-        themes.extend([x for x in icon_themes_env.split(':') if x])
+        result.extend([x for x in icon_themes_env.split(':') if x])
 
     icon_themes_cfg = context.cfg.get_all('cola.icontheme')
     if icon_themes_cfg:
-        themes.extend(icon_themes_cfg)
+        result.extend(icon_themes_cfg)
 
-    if not themes:
-        themes.append('light')
+    if not result:
+        result.append('light')
 
-    return themes
+    return result
 
 
 # style note: we use camelCase here since we're masquerading a Qt class
@@ -167,7 +167,8 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, context, argv, locale=None, icon_themes=None):
+    def __init__(self, context, argv, locale=None,
+                 icon_themes=None, gui_theme=None):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -176,79 +177,23 @@ class ColaApplication(object):
         icons.install(icon_themes or get_icon_themes(context))
 
         self.context = context
+        self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
-        self._install_style()
+        self._install_style(gui_theme)
 
-    def _install_style(self):
+    def _install_style(self, theme_str):
         """Generate and apply a stylesheet to the app"""
-        palette = self._app.palette()
-        window = palette.color(QtGui.QPalette.Window)
-        highlight = palette.color(QtGui.QPalette.Highlight)
-        shadow = palette.color(QtGui.QPalette.Shadow)
-        base = palette.color(QtGui.QPalette.Base)
+        if theme_str is None:
+            theme_str = self.context.cfg.get('cola.theme', default='default')
+        theme = themes.find_theme(theme_str)
+        self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
+        self._app.setPalette(theme.build_palette(self._app.palette()))
 
-        window_rgb = qtutils.rgb_css(window)
-        highlight_rgb = qtutils.rgb_css(highlight)
-        shadow_rgb = qtutils.rgb_css(shadow)
-        base_rgb = qtutils.rgb_css(base)
-
-        self._app.setStyleSheet("""
-            QCheckBox::indicator {
-                width: %(checkbox_size)spx;
-                height: %(checkbox_size)spx;
-            }
-            QCheckBox::indicator::unchecked {
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-            QCheckBox::indicator::checked {
-                image: url(%(checkbox_icon)s);
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-
-            QRadioButton::indicator {
-                width: %(radio_size)spx;
-                height: %(radio_size)spx;
-            }
-            QRadioButton::indicator::unchecked {
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-            QRadioButton::indicator::checked {
-                image: url(%(radio_icon)s);
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-
-            QSplitter::handle:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            QMainWindow::separator {
-                background: %(window_rgb)s;
-                width: %(separator)spx;
-                height: %(separator)spx;
-            }
-            QMainWindow::separator:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            """ % dict(separator=defs.separator,
-                       window_rgb=window_rgb,
-                       highlight_rgb=highlight_rgb,
-                       shadow_rgb=shadow_rgb,
-                       base_rgb=base_rgb,
-                       checkbox_border=defs.border,
-                       checkbox_icon=icons.check_name(),
-                       checkbox_size=defs.checkbox,
-                       radio_border=defs.radio_border,
-                       radio_icon=icons.dot_name(),
-                       radio_radius=defs.checkbox//2,
-                       radio_size=defs.checkbox))
+    def _install_hidpi_config(self):
+        """Sets QT HIDPI scalling (requires Qt 5.6)"""
+        value = self.context.cfg.get('cola.hidpi', default=hidpi.EChoice.AUTO)
+        hidpi.apply_choice(value)
 
     def activeWindow(self):
         """QApplication::activeWindow() pass-through"""
@@ -454,10 +399,18 @@ def add_common_arguments(parser):
     parser.add_argument('--perf', action='store_true', default=False,
                         help=argparse.SUPPRESS)
 
+    # Specify the GUI theme
+    parser.add_argument('--theme', metavar='<name>', default=None,
+                        help='specify an GUI theme name')
+
 
 def new_application(context, args):
     """Create a new ColaApplication"""
-    return ColaApplication(context, sys.argv, icon_themes=args.icon_themes)
+    return ColaApplication(context,
+                           sys.argv,
+                           icon_themes=args.icon_themes,
+                           gui_theme=args.theme
+                           )
 
 
 def new_worktree(context, repo, prompt, settings):

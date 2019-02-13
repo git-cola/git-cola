@@ -28,7 +28,7 @@ from . import defs
 from . import text
 
 
-class StatusWidget(QtWidgets.QWidget):
+class StatusWidget(QtWidgets.QFrame):
     """
     Provides a git-status-like repository widget.
 
@@ -38,7 +38,7 @@ class StatusWidget(QtWidgets.QWidget):
     """
 
     def __init__(self, context, titlebar, parent):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self.context = context
 
         tooltip = N_('Toggle the paths filter')

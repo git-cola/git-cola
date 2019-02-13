@@ -7,7 +7,9 @@ from qtpy import QtWidgets
 from . import defs
 from . import standard
 from .. import cmds
+from .. import hidpi
 from .. import qtutils
+from .. import themes
 from ..i18n import N_
 from ..models import prefs
 from ..models.prefs import Defaults
@@ -58,6 +60,10 @@ class FormWidget(QtWidgets.QWidget):
             widget.returnPressed.connect(
                 self._text_config_changed(config, widget))
 
+        elif isinstance(widget, QtWidgets.QComboBox):
+            widget.currentIndexChanged.connect(
+                self._item_config_changed(config, widget))
+
     def _int_config_changed(self, config):
         def runner(value):
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
@@ -71,6 +77,12 @@ class FormWidget(QtWidgets.QWidget):
     def _text_config_changed(self, config, widget):
         def runner():
             value = widget.text()
+            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+        return runner
+
+    def _item_config_changed(self, config, widget):
+        def runner():
+            value = widget.currentData()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
@@ -95,6 +107,9 @@ def set_widget_value(widget, value):
         widget.setText(value)
     elif isinstance(widget, QtWidgets.QCheckBox):
         widget.setChecked(value)
+    elif isinstance(widget, QtWidgets.QComboBox):
+        index = widget.findData(value)
+        widget.setCurrentIndex(index)
     widget.blockSignals(False)
 
 
@@ -247,6 +262,30 @@ class SettingsFormWidget(FormWidget):
                 'user', prefs.FONTDIFF, font.toString())
 
 
+class AppearanceFormWidget(FormWidget):
+
+    def __init__(self, context, model, parent):
+        FormWidget.__init__(self, context, model, parent)
+
+        self.theme = qtutils.combo_mapped(themes.themes_map(), False)
+        self.high_dpi = qtutils.combo_mapped(hidpi.choices_map(), False)
+        self.high_dpi.setEnabled(hidpi.is_supported())
+
+        self.add_row(N_('GUI theme'), self.theme)
+        self.add_row(N_('High DPI'), self.high_dpi)
+        self.add_row('<br/><b>' +
+                     N_("Appearance preferences requires application restart")
+                     + '</b>', None)
+
+        self.set_config({
+            prefs.THEME: (self.theme, Defaults.theme),
+            prefs.HIDPI: (self.high_dpi, Defaults.hidpi)
+        })
+
+    def update_from_config(self):
+        FormWidget.update_from_config(self)
+
+
 class PreferencesView(standard.Dialog):
 
     def __init__(self, context, model, parent=None):
@@ -263,15 +302,18 @@ class PreferencesView(standard.Dialog):
         self.tab_bar.addTab(N_('All Repositories'))
         self.tab_bar.addTab(N_('Current Repository'))
         self.tab_bar.addTab(N_('Settings'))
+        self.tab_bar.addTab(N_('Appearance'))
 
         self.user_form = RepoFormWidget(context, model, self, source='user')
         self.repo_form = RepoFormWidget(context, model, self, source='repo')
         self.options_form = SettingsFormWidget(context, model, self)
+        self.appearance = AppearanceFormWidget(context, model, self)
 
         self.stack_widget = QtWidgets.QStackedWidget()
         self.stack_widget.addWidget(self.user_form)
         self.stack_widget.addWidget(self.repo_form)
         self.stack_widget.addWidget(self.options_form)
+        self.stack_widget.addWidget(self.appearance)
 
         self.close_button = qtutils.close_button()
 

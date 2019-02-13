@@ -62,9 +62,9 @@ class AsyncGitActionTask(qtutils.Task):
         return git_action(*self.args, **self.kwarg)
 
 
-class BranchesWidget(QtWidgets.QWidget):
+class BranchesWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
 
         tooltip = N_('Toggle the branches filter')
         icon = icons.ellipsis()

@@ -13,12 +13,12 @@ from . import defs
 from .text import VimTextEdit
 
 
-class LogWidget(QtWidgets.QWidget):
+class LogWidget(QtWidgets.QFrame):
     """A simple dialog to display command logs."""
     channel = Signal(object)
 
     def __init__(self, context, parent=None, output=None):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
 
         self.output_text = VimTextEdit(context, parent=self)
         self.highlighter = LogSyntaxHighlighter(self.output_text.document())

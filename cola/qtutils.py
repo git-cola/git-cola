@@ -230,6 +230,14 @@ def combo(items, editable=False, parent=None):
     return ComboBox(editable=editable, items=items, parent=parent)
 
 
+def combo_mapped(items, editable=False, parent=None):
+    """Create a readonly (by default) combobox from a list of items"""
+    widget = ComboBox(editable=editable, parent=parent)
+    for item in items:
+        widget.addItem(item, items[item])
+    return widget
+
+
 def textbrowser(text=None):
     """Create a QTextBrowser for the specified text"""
     widget = QtWidgets.QTextBrowser()
@@ -700,10 +708,10 @@ def _checkbox(cls, text, tooltip, checked):
     return widget
 
 
-class DockTitleBarWidget(QtWidgets.QWidget):
+class DockTitleBarWidget(QtWidgets.QFrame):
 
     def __init__(self, parent, title, stretch=True):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
         self.label = qlabel = QtWidgets.QLabel(title, self)
         qfont = qlabel.font()
@@ -765,6 +773,8 @@ def create_dock(title, parent, stretch=True, widget=None, fn=None):
         parent.dockwidgets.append(dock)
     if fn:
         widget = fn(dock)
+        assert isinstance(widget, QtWidgets.QFrame),\
+            "Docked widget has to be a QFrame"
     if widget:
         dock.setWidget(widget)
     return dock
@@ -994,6 +1004,18 @@ def rgb_css(color):
 def rgb_hex(color):
     """Convert a QColor into a hex aabbcc string"""
     return '%02x%02x%02x' % (color.red(), color.green(), color.blue())
+
+
+def hsl(h, s, l):
+    return QtGui.QColor.fromHslF(
+        utils.clamp(h, 0.0, 1.0),
+        utils.clamp(s, 0.0, 1.0),
+        utils.clamp(l, 0.0, 1.0)
+    )
+
+
+def hsl_css(h, s, l):
+    return rgb_css(hsl(h, s, l))
 
 
 def make_format(fg=None, bg=None, bold=False):

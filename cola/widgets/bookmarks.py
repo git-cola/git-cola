@@ -34,10 +34,10 @@ def recent(context, parent):
     return BookmarksWidget(context, RECENT_REPOS, parent=parent)
 
 
-class BookmarksWidget(QtWidgets.QWidget):
+class BookmarksWidget(QtWidgets.QFrame):
 
     def __init__(self, context, style=BOOKMARKS, parent=None):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
 
         self.style = style
         self.settings = Settings()

@@ -60,9 +60,15 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
         header = qtutils.rgb_hex(disabled)
 
+        dark = palette.color(QPalette.Base).lightnessF() < 0.5
+
         self.color_text = qtutils.RGB(cfg.color('text', '030303'))
-        self.color_add = qtutils.RGB(cfg.color('add', 'd2ffe4'))
-        self.color_remove = qtutils.RGB(cfg.color('remove', 'fee0e4'))
+        self.color_add = qtutils.RGB(
+            cfg.color('add', '77aa77' if dark else 'd2ffe4')
+        )
+        self.color_remove = qtutils.RGB(
+            cfg.color('remove', 'aa7777' if dark else 'fee0e4')
+        )
         self.color_header = qtutils.RGB(cfg.color('header', header))
 
         self.diff_header_fmt = qtutils.make_format(fg=self.color_header)
@@ -304,6 +310,7 @@ class DiffLineNumbers(TextDecorator):
         event_rect_bottom = event.rect().bottom()
 
         highlight = self._highlight
+        highlight.setAlphaF(0.3)
         highlight_text = self._highlight_text
         disabled = self._disabled
 
@@ -345,7 +352,7 @@ class DiffLineNumbers(TextDecorator):
             block = block.next()  # pylint: disable=next-method-called
 
 
-class Viewer(QtWidgets.QWidget):
+class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
     images_changed = Signal(object)

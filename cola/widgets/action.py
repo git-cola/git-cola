@@ -15,13 +15,13 @@ from ..qtutils import create_button
 from ..qtutils import connect_button
 
 
-class QFlowLayoutWidget(QtWidgets.QWidget):
+class QFlowLayoutWidget(QtWidgets.QFrame):
 
     _horizontal = QtWidgets.QBoxLayout.LeftToRight
     _vertical = QtWidgets.QBoxLayout.TopToBottom
 
     def __init__(self, parent):
-        QtWidgets.QWidget.__init__(self, parent)
+        QtWidgets.QFrame.__init__(self, parent)
         self._direction = self._vertical
         self._layout = layout = QtWidgets.QBoxLayout(self._direction)
         layout.setSpacing(defs.spacing)
