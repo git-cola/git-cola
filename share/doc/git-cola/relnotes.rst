@@ -14,6 +14,22 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.4:
+
+git-cola v3.4
+=============
+
+Usability, bells and whistles
+-----------------------------
+* `git cola` now includes configurable GUI themes that can be used to style
+  the user interface.  Enable the new themes by configuring `cola.theme`
+  in the preferences window.  See the
+  `cola.theme documentation <https://git-cola.readthedocs.io/en/latest/git-cola.html#cola-theme>`_
+  for more details.  (`#924 <https://github.com/git-cola/git-cola/pull/924>`_)
+
+* `git cola` now has built-in support for HiDPI displays by enabling
+  Qt's 5.6's `QT_AUTO_SCREEN_SCALE_FACTOR` feature.
+
 .. _v3.3:
 
 git-cola v3.3
