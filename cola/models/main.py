@@ -96,6 +96,7 @@ class MainModel(Observable):
         self.submodules = set()
         self.submodules_list = []
 
+        self._refs_sort_key = 'version:refname'
         self.local_branches = []
         self.remote_branches = []
         self.tags = []
@@ -283,7 +284,7 @@ class MainModel(Observable):
     def _update_branches_and_tags(self):
         context = self.context
         local_branches, remote_branches, tags = gitcmds.all_refs(
-            context, split=True)
+            context, split=True, sort_key=self._refs_sort_key)
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
@@ -392,6 +393,17 @@ class MainModel(Observable):
         if self.directory:
             return self.directory
         return core.getcwd()
+
+    @property
+    def refs_sort_key(self):
+        return self._refs_sort_key
+
+    @refs_sort_key.setter
+    def refs_sort_key(self, val):
+        if val == self._refs_sort_key:
+            return
+        self._refs_sort_key = val
+        self._update_branches_and_tags()
 
 
 # Helpers
