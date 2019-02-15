@@ -112,6 +112,9 @@ class BranchesWidget(QtWidgets.QFrame):
         keys = tuple(self.order_icons)
         next_i = (keys.index(self.model.refs_sort_key) + 1) % len(keys)
         self.model.refs_sort_key = keys[next_i]
+        self.refresh()
+
+    def refresh(self):
         self.sort_order_button.setIcon(
             self.order_icons[self.model.refs_sort_key])
         self.tree.refresh()
