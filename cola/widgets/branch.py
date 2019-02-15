@@ -71,6 +71,17 @@ class BranchesWidget(QtWidgets.QFrame):
         self.filter_button = qtutils.create_action_button(tooltip=tooltip,
                                                           icon=icon)
 
+        self.order_icons = odict((
+            ('version:refname', icons.a_z_order()),
+            ('-committerdate', icons.last_first_order())
+        ))
+        self.model = context.model
+
+        tooltip_order = N_('Toggle references sorting order')
+        icon = self.order_icons[context.model.refs_sort_key]
+        self.sort_order_button = qtutils.create_action_button(
+            tooltip=tooltip_order, icon=icon)
+
         self.tree = BranchesTreeWidget(context, parent=self)
         self.filter_widget = BranchesFilterWidget(self.tree)
         self.filter_widget.hide()
@@ -87,6 +98,8 @@ class BranchesWidget(QtWidgets.QFrame):
                                                 hotkeys.FILTER)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
 
+        qtutils.connect_button(self.sort_order_button, self.toggle_sort_order)
+
     def toggle_filter(self):
         shown = not self.filter_widget.isVisible()
         self.filter_widget.setVisible(shown)
@@ -94,6 +107,14 @@ class BranchesWidget(QtWidgets.QFrame):
             self.filter_widget.setFocus()
         else:
             self.tree.setFocus()
+
+    def toggle_sort_order(self):
+        keys = tuple(self.order_icons)
+        next_i = (keys.index(self.model.refs_sort_key) + 1) % len(keys)
+        self.model.refs_sort_key = keys[next_i]
+        self.sort_order_button.setIcon(
+            self.order_icons[self.model.refs_sort_key])
+        self.tree.refresh()
 
 
 class BranchesTreeWidget(standard.TreeWidget):

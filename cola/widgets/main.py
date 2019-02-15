@@ -120,6 +120,7 @@ class MainView(standard.MainWindow):
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
         titlebar.add_corner_widget(self.branchwidget.filter_button)
+        titlebar.add_corner_widget(self.branchwidget.sort_order_button)
 
         # "Submodule" widgets
         self.submodulesdock = create_dock(
