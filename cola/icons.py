@@ -334,3 +334,11 @@ def zoom_in():
 
 def zoom_out():
     return icon('zoom-out.svg')
+
+
+def a_z_order():
+    return icon('a-z-order.svg')
+
+
+def last_first_order():
+    return icon("last-first-order.svg")
