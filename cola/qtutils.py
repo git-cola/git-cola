@@ -217,12 +217,28 @@ class ComboBox(QtWidgets.QComboBox):
     def __init__(self, items=None, editable=False, parent=None):
         super(ComboBox, self).__init__(parent)
         self.setEditable(editable)
+        self.item_data = []
         if items:
             self.addItems(items)
+            self.item_data.extend(items)
 
     def set_index(self, idx):
         idx = utils.clamp(idx, 0, self.count()-1)
         self.setCurrentIndex(idx)
+
+    def add_item(self, label, data):
+        self.addItem(label)
+        self.item_data.append(data)
+
+    def current_data(self):
+        return self.item_data[self.currentIndex()]
+
+    def set_value(self, value):
+        try:
+            index = self.item_data.index(value)
+        except ValueError:
+            index = 0
+        self.setCurrentIndex(index)
 
 
 def combo(items, editable=False, parent=None):
@@ -230,11 +246,11 @@ def combo(items, editable=False, parent=None):
     return ComboBox(editable=editable, items=items, parent=parent)
 
 
-def combo_mapped(items, editable=False, parent=None):
+def combo_mapped(data, editable=False, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
     widget = ComboBox(editable=editable, parent=parent)
-    for item in items:
-        widget.addItem(item, items[item])
+    for (k, v) in sorted(data.items()):
+        widget.add_item(k, v)
     return widget
 
 

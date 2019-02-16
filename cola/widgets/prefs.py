@@ -60,7 +60,7 @@ class FormWidget(QtWidgets.QWidget):
             widget.returnPressed.connect(
                 self._text_config_changed(config, widget))
 
-        elif isinstance(widget, QtWidgets.QComboBox):
+        elif isinstance(widget, qtutils.ComboBox):
             widget.currentIndexChanged.connect(
                 self._item_config_changed(config, widget))
 
@@ -82,7 +82,7 @@ class FormWidget(QtWidgets.QWidget):
 
     def _item_config_changed(self, config, widget):
         def runner():
-            value = widget.currentData()
+            value = widget.current_data()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
         return runner
 
@@ -107,9 +107,8 @@ def set_widget_value(widget, value):
         widget.setText(value)
     elif isinstance(widget, QtWidgets.QCheckBox):
         widget.setChecked(value)
-    elif isinstance(widget, QtWidgets.QComboBox):
-        index = widget.findData(value)
-        widget.setCurrentIndex(index)
+    elif isinstance(widget, qtutils.ComboBox):
+        widget.set_value(value)
     widget.blockSignals(False)
 
 
@@ -267,8 +266,8 @@ class AppearanceFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
 
-        self.theme = qtutils.combo_mapped(themes.themes_map(), False)
-        self.high_dpi = qtutils.combo_mapped(hidpi.choices_map(), False)
+        self.theme = qtutils.combo_mapped(themes.themes_map())
+        self.high_dpi = qtutils.combo_mapped(hidpi.choices_map())
         self.high_dpi.setEnabled(hidpi.is_supported())
 
         self.add_row(N_('GUI theme'), self.theme)
@@ -281,9 +280,6 @@ class AppearanceFormWidget(FormWidget):
             prefs.THEME: (self.theme, Defaults.theme),
             prefs.HIDPI: (self.high_dpi, Defaults.hidpi)
         })
-
-    def update_from_config(self):
-        FormWidget.update_from_config(self)
 
 
 class PreferencesView(standard.Dialog):
