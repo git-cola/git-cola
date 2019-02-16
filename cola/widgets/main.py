@@ -884,8 +884,8 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['toolbars'] = self.toolbar_state.export_state()
+        state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
-        state['refs_sort_key'] = self.model.refs_sort_key
 
         return state
 
@@ -901,9 +901,8 @@ class MainView(standard.MainWindow):
         toolbars = state.get('toolbars', [])
         self.toolbar_state.apply_state(toolbars)
 
-        if 'refs_sort_key' in state:
-            self.model.refs_sort_key = state['refs_sort_key']
-            self.branchwidget.refresh()
+        sort_key = state.get('ref_sort', 0)
+        self.model.set_ref_sort(sort_key)
 
         diff_ok = self.diffviewer.apply_state(state)
         return base_ok and diff_ok

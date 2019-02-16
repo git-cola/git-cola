@@ -65,23 +65,22 @@ class AsyncGitActionTask(qtutils.Task):
 class BranchesWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
+        self.model = model = context.model
 
         tooltip = N_('Toggle the branches filter')
         icon = icons.ellipsis()
-        self.filter_button = qtutils.create_action_button(tooltip=tooltip,
-                                                          icon=icon)
+        self.filter_button = qtutils.create_action_button(
+            tooltip=tooltip, icon=icon)
 
-        self.order_icons = odict((
-            ('version:refname', icons.a_z_order()),
-            ('-committerdate', icons.last_first_order())
-        ))
-        self.model = context.model
-
+        self.order_icons = (
+            icons.alphabetical(),
+            icons.reverse_chronological(),
+        )
         tooltip_order = N_(
             'Set the sort order for branches and tags.\n'
             'Toggle between date-based and version-name-based sorting.'
         )
-        icon = self.order_icons[context.model.refs_sort_key]
+        icon = self.order_icon(model.ref_sort)
         self.sort_order_button = qtutils.create_action_button(
             tooltip=tooltip_order, icon=icon)
 
@@ -100,8 +99,9 @@ class BranchesWidget(QtWidgets.QFrame):
                                                 self.toggle_filter,
                                                 hotkeys.FILTER)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
-
-        qtutils.connect_button(self.sort_order_button, self.toggle_sort_order)
+        qtutils.connect_button(
+            self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context))
+        model.add_observer(model.message_ref_sort_changed, self.refresh)
 
     def toggle_filter(self):
         shown = not self.filter_widget.isVisible()
@@ -111,15 +111,12 @@ class BranchesWidget(QtWidgets.QFrame):
         else:
             self.tree.setFocus()
 
-    def toggle_sort_order(self):
-        keys = tuple(self.order_icons)
-        next_i = (keys.index(self.model.refs_sort_key) + 1) % len(keys)
-        self.model.refs_sort_key = keys[next_i]
-        self.refresh()
+    def order_icon(self, idx):
+        return self.order_icons[idx % len(self.order_icons)]
 
     def refresh(self):
-        self.sort_order_button.setIcon(
-            self.order_icons[self.model.refs_sort_key])
+        icon = self.order_icon(self.model.ref_sort)
+        self.sort_order_button.setIcon(icon)
         self.tree.refresh()
 
 

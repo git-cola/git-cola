@@ -136,7 +136,7 @@ def add():
     return from_theme('list-add', fallback='plus.svg')
 
 
-def a_z_order():
+def alphabetical():
     return icon('a-z-order.svg')
 
 
@@ -232,10 +232,6 @@ def fold():
     return icon('fold.svg')
 
 
-def last_first_order():
-    return icon('last-first-order.svg')
-
-
 def merge():
     return icon('git-merge.svg')
 
@@ -282,6 +278,10 @@ def remove():
 
 def repo():
     return icon('repo.svg')
+
+
+def reverse_chronological():
+    return icon('last-first-order.svg')
 
 
 def save():

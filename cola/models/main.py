@@ -32,6 +32,7 @@ class MainModel(Observable):
     message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
+    message_ref_sort_changed = 'ref_sort_changed'
     message_submodules_changed = 'message_submodules_changed'
     message_updated = 'updated'
 
@@ -96,7 +97,7 @@ class MainModel(Observable):
         self.submodules = set()
         self.submodules_list = []
 
-        self._refs_sort_key = 'version:refname'
+        self.ref_sort = 0  # (0: version, 1:reverse-chrono)
         self.local_branches = []
         self.remote_branches = []
         self.tags = []
@@ -283,8 +284,13 @@ class MainModel(Observable):
 
     def _update_branches_and_tags(self):
         context = self.context
+        sort_types = (
+            'version:refname',
+            '-committerdate',
+        )
+        sort_key = sort_types[self.ref_sort]
         local_branches, remote_branches, tags = gitcmds.all_refs(
-            context, split=True, sort_key=self._refs_sort_key)
+            context, split=True, sort_key=sort_key)
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
@@ -394,16 +400,17 @@ class MainModel(Observable):
             return self.directory
         return core.getcwd()
 
-    @property
-    def refs_sort_key(self):
-        return self._refs_sort_key
+    def cycle_ref_sort(self):
+        """Choose the next ref sort type (version, reverse-chronological)"""
+        self.set_ref_sort(self.ref_sort + 1)
 
-    @refs_sort_key.setter
-    def refs_sort_key(self, val):
-        if val == self._refs_sort_key:
+    def set_ref_sort(self, raw_value):
+        value = raw_value % 2  # Currently two sort types
+        if value == self.ref_sort:
             return
-        self._refs_sort_key = val
+        self.ref_sort = value
         self._update_branches_and_tags()
+        self.notify_observers(self.message_ref_sort_changed)
 
 
 # Helpers
