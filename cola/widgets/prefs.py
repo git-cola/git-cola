@@ -270,9 +270,10 @@ class AppearanceFormWidget(FormWidget):
         self.high_dpi = qtutils.combo_mapped(hidpi.choices_map())
         self.high_dpi.setEnabled(hidpi.is_supported())
 
-        label = QtWidgets.QLabel('<b>' +
-                N_('Appearance settings require an application restart')
-                + '</b>')
+        label = QtWidgets.QLabel(
+            '<b>'
+            + N_('Appearance settings require an application restart')
+            + '</b>')
         self.add_row('<br/><br/>', label)
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('High DPI'), self.high_dpi)

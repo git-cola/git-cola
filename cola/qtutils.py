@@ -226,8 +226,8 @@ class ComboBox(QtWidgets.QComboBox):
         idx = utils.clamp(idx, 0, self.count()-1)
         self.setCurrentIndex(idx)
 
-    def add_item(self, label, data):
-        self.addItem(label)
+    def add_item(self, text, data):
+        self.addItem(text)
         self.item_data.append(data)
 
     def current_data(self):
