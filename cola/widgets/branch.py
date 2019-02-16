@@ -77,7 +77,10 @@ class BranchesWidget(QtWidgets.QFrame):
         ))
         self.model = context.model
 
-        tooltip_order = N_('Toggle references sorting order')
+        tooltip_order = N_(
+            'Set the sort order for branches and tags.\n'
+            'Toggle between date-based and version-name-based sorting.'
+        )
         icon = self.order_icons[context.model.refs_sort_key]
         self.sort_order_button = qtutils.create_action_button(
             tooltip=tooltip_order, icon=icon)
