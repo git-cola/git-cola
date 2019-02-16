@@ -136,6 +136,10 @@ def add():
     return from_theme('list-add', fallback='plus.svg')
 
 
+def a_z_order():
+    return icon('a-z-order.svg')
+
+
 def branch():
     return icon('git-branch.svg')
 
@@ -226,6 +230,10 @@ def file_zip():
 
 def fold():
     return icon('fold.svg')
+
+
+def last_first_order():
+    return icon('last-first-order.svg')
 
 
 def merge():
@@ -334,11 +342,3 @@ def zoom_in():
 
 def zoom_out():
     return icon('zoom-out.svg')
-
-
-def a_z_order():
-    return icon('a-z-order.svg')
-
-
-def last_first_order():
-    return icon("last-first-order.svg")
