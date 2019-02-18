@@ -4,6 +4,7 @@ import os
 
 from qtpy.QtCore import QT_VERSION
 
+from . import compat
 from .i18n import N_
 
 
@@ -20,11 +21,11 @@ def is_supported():
 
 def apply_choice(value):
     if value == EChoice.AUTO:
-        os.environ['QT_AUTO_SCREEN_SCALE_FACTOR'] = '1'
-        os.environ.pop('QT_SCALE_FACTOR', None)
+        compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
+        compat.unsetenv('QT_SCALE_FACTOR')
     else:
-        os.environ.pop('QT_AUTO_SCREEN_SCALE_FACTOR', None)
-        os.environ['QT_SCALE_FACTOR'] = str(value)
+        compat.unsetenv('QT_AUTO_SCREEN_SCALE_FACTOR')
+        compat.setenv('QT_SCALE_FACTOR', str(value))
 
 
 def choices_map():
