@@ -1,6 +1,5 @@
 """Provides High DPI support by wrapping Qt options"""
 from __future__ import absolute_import, division, unicode_literals
-import os
 
 from qtpy.QtCore import QT_VERSION
 
