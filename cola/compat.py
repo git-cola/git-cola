@@ -65,9 +65,6 @@ def setenv(key, value):
 
 def unsetenv(key):
     """Compatibility wrapper for unsetting environment variables"""
-    try:
-        del os.environ[key]
-    except KeyError:
-        pass
+    os.environ.pop(key, None)
     if hasattr(os, 'unsetenv'):
         os.unsetenv(key)
