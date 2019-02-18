@@ -29,9 +29,9 @@ def apply_choice(value):
 
 
 def choices_map():
-    result = dict()
-    result[N_('Auto')] = EChoice.AUTO
-    result[N_('x 1')] = EChoice.TIMES_1
-    result[N_('x 1.5')] = EChoice.TIMES_1_5
-    result[N_('x 2')] = EChoice.TIMES_2
-    return result
+    return (
+        (N_('Auto'), EChoice.AUTO),
+        (N_('x 1'), EChoice.TIMES_1),
+        (N_('x 1.5'), EChoice.TIMES_1_5),
+        (N_('x 2'), EChoice.TIMES_2),
+    )

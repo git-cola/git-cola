@@ -533,12 +533,8 @@ def get_all_themes():
 
 def themes_map():
     """Return a dictionary mapping display names to theme names"""
-    result = dict()
     items = get_all_themes()
-    for item in items:
-        result[item.hr_name] = item.name
-
-    return result
+    return [(item.hr_name, item.name) for item in items]
 
 
 def find_theme(name):

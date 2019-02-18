@@ -249,7 +249,7 @@ def combo(items, editable=False, parent=None):
 def combo_mapped(data, editable=False, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
     widget = ComboBox(editable=editable, parent=parent)
-    for (k, v) in sorted(data.items()):
+    for (k, v) in data:
         widget.add_item(k, v)
     return widget
 
