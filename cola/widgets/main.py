@@ -120,6 +120,7 @@ class MainView(standard.MainWindow):
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
         titlebar.add_corner_widget(self.branchwidget.filter_button)
+        titlebar.add_corner_widget(self.branchwidget.sort_order_button)
 
         # "Submodule" widgets
         self.submodulesdock = create_dock(
@@ -883,6 +884,7 @@ class MainView(standard.MainWindow):
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['toolbars'] = self.toolbar_state.export_state()
+        state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
 
         return state
@@ -898,6 +900,9 @@ class MainView(standard.MainWindow):
 
         toolbars = state.get('toolbars', [])
         self.toolbar_state.apply_state(toolbars)
+
+        sort_key = state.get('ref_sort', 0)
+        self.model.set_ref_sort(sort_key)
 
         diff_ok = self.diffviewer.apply_state(state)
         return base_ok and diff_ok

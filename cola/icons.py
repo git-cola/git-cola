@@ -136,6 +136,10 @@ def add():
     return from_theme('list-add', fallback='plus.svg')
 
 
+def alphabetical():
+    return icon('a-z-order.svg')
+
+
 def branch():
     return icon('git-branch.svg')
 
@@ -274,6 +278,10 @@ def remove():
 
 def repo():
     return icon('repo.svg')
+
+
+def reverse_chronological():
+    return icon('last-first-order.svg')
 
 
 def save():

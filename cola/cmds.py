@@ -586,6 +586,12 @@ class Commit(ResetMode):
         return msg
 
 
+class CycleReferenceSort(ContextCommand):
+    """Choose the next reference sort type"""
+    def do(self):
+        self.model.cycle_ref_sort()
+
+
 class Ignore(ContextCommand):
     """Add files to .gitignore"""
 

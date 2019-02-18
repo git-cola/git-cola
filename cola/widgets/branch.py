@@ -65,11 +65,24 @@ class AsyncGitActionTask(qtutils.Task):
 class BranchesWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
+        self.model = model = context.model
 
         tooltip = N_('Toggle the branches filter')
         icon = icons.ellipsis()
-        self.filter_button = qtutils.create_action_button(tooltip=tooltip,
-                                                          icon=icon)
+        self.filter_button = qtutils.create_action_button(
+            tooltip=tooltip, icon=icon)
+
+        self.order_icons = (
+            icons.alphabetical(),
+            icons.reverse_chronological(),
+        )
+        tooltip_order = N_(
+            'Set the sort order for branches and tags.\n'
+            'Toggle between date-based and version-name-based sorting.'
+        )
+        icon = self.order_icon(model.ref_sort)
+        self.sort_order_button = qtutils.create_action_button(
+            tooltip=tooltip_order, icon=icon)
 
         self.tree = BranchesTreeWidget(context, parent=self)
         self.filter_widget = BranchesFilterWidget(self.tree)
@@ -86,6 +99,9 @@ class BranchesWidget(QtWidgets.QFrame):
                                                 self.toggle_filter,
                                                 hotkeys.FILTER)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
+        qtutils.connect_button(
+            self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context))
+        model.add_observer(model.message_ref_sort_changed, self.refresh)
 
     def toggle_filter(self):
         shown = not self.filter_widget.isVisible()
@@ -94,6 +110,14 @@ class BranchesWidget(QtWidgets.QFrame):
             self.filter_widget.setFocus()
         else:
             self.tree.setFocus()
+
+    def order_icon(self, idx):
+        return self.order_icons[idx % len(self.order_icons)]
+
+    def refresh(self):
+        icon = self.order_icon(self.model.ref_sort)
+        self.sort_order_button.setIcon(icon)
+        self.tree.refresh()
 
 
 class BranchesTreeWidget(standard.TreeWidget):
