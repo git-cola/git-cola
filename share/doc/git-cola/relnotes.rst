@@ -21,6 +21,9 @@ git-cola v3.4
 
 Usability, bells and whistles
 -----------------------------
+* The `Branches` widget can now sort branches by their most recent commit.
+  (`#930 <https://github.com/git-cola/git-cola/pull/930>`_)
+
 * `git cola` now includes configurable GUI themes that can be used to style
   the user interface.  Enable the new themes by configuring `cola.theme`
   in the preferences window.  See the
