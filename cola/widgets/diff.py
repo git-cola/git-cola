@@ -575,7 +575,6 @@ class Options(QtWidgets.QWidget):
 
         self.options = options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure())
-        qtutils.hide_button_menu_indicator(options)
 
         self.image_mode = qtutils.combo([
             N_('Side by side'),

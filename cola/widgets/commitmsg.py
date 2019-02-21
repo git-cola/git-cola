@@ -103,8 +103,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.actions_button = qtutils.create_toolbutton(
             icon=icons.configure(), tooltip=N_('Actions...'))
         self.actions_button.setMenu(self.actions_menu)
-        self.actions_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
-        qtutils.hide_button_menu_indicator(self.actions_button)
 
         self.actions_menu.addAction(self.signoff_action)
         self.actions_menu.addAction(self.commit_action)

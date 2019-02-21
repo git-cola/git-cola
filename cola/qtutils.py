@@ -649,11 +649,29 @@ def create_button(text='', layout=None, tooltip=None, icon=None,
     return button
 
 
-def create_action_button(tooltip=None, icon=None):
-    button = QtWidgets.QPushButton()
+def tool_button():
+    """Create a flat border-less button"""
+    button = QtWidgets.QToolButton()
+    button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
     button.setCursor(Qt.PointingHandCursor)
     button.setFocusPolicy(Qt.NoFocus)
-    button.setFlat(True)
+    button.setStyleSheet("""
+        /* No borders */
+        QToolButton {
+            border: 0;
+            border-style: none;
+        }
+        /* Hide the menu indicator */
+        QToolButton::menu-indicator {
+            image: none;
+        }
+    """)
+    return button
+
+
+def create_action_button(tooltip=None, icon=None):
+    """Create a small toolbutton for use in dock title widgets"""
+    button = tool_button()
     if tooltip is not None:
         button.setToolTip(tooltip)
     if icon is not None:
@@ -682,24 +700,6 @@ def edit_button(enabled=True, default=False):
 def refresh_button(enabled=True, default=False):
     return create_button(text=N_('Refresh'), icon=icons.sync(),
                          enabled=enabled, default=default)
-
-
-def hide_button_menu_indicator(button):
-    """Hide the menu indicator icon on buttons"""
-
-    name = button.__class__.__name__
-    stylesheet = """
-        %(name)s::menu-indicator {
-            image: none;
-        }
-    """
-    if name == 'QPushButton':
-        stylesheet += """
-            %(name)s {
-                border-style: none;
-            }
-        """
-    button.setStyleSheet(stylesheet % dict(name=name))
 
 
 def checkbox(text='', tooltip='', checked=None):
@@ -836,11 +836,7 @@ def add_menu(title, parent):
 
 
 def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
-    button = QtWidgets.QToolButton()
-    button.setAutoRaise(True)
-    button.setAutoFillBackground(True)
-    button.setCursor(Qt.PointingHandCursor)
-    button.setFocusPolicy(Qt.NoFocus)
+    button = tool_button()
     if icon is not None:
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
