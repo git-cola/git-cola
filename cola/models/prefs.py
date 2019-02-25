@@ -30,6 +30,8 @@ MERGETOOL = 'merge.tool'
 EXPANDTAB = 'cola.expandtab'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
+STATUS_CHILD_INDENTATION = 'cola.statuschildindentation'
+STATUS_SHOW_TOTALS = 'cola.statusshowtotals'
 TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
@@ -70,6 +72,8 @@ class Defaults(object):
     textwidth = 72
     theme = 'default'
     hidpi = hidpi.EChoice.AUTO
+    status_child_indentation = False
+    status_show_totals = False
 
 
 def blame_viewer(context):
@@ -159,6 +163,16 @@ def tabwidth(context):
 
 def textwidth(context):
     return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
+
+
+def status_child_indentation(context):
+    return context.cfg.get(STATUS_CHILD_INDENTATION,
+                           default=Defaults.status_child_indentation)
+
+
+def status_show_totals(context):
+    return context.cfg.get(STATUS_SHOW_TOTALS,
+                           default=Defaults.status_show_totals)
 
 
 class PreferencesModel(observable.Observable):

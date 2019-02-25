@@ -120,9 +120,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.setUniformRowHeights(True)
         self.setAnimated(True)
         self.setRootIsDecorated(False)
-        self.setIndentation(0)
         self.setDragEnabled(True)
         self.setAutoScroll(False)
+
+        if not prefs.status_child_indentation(context):
+            self.setIndentation(0)
 
         ok = icons.ok()
         compare = icons.compare()
@@ -524,6 +526,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             parent.addChild(treeitem)
         self._expand_items(idx, items)
         self.blockSignals(False)
+        if prefs.status_show_totals(self.context):
+            parent.setText(0, '%s (%s)' % (parent.text(0).split()[0], len(items)))
 
     def _update_column_widths(self):
         self.resizeColumnToContents(0)

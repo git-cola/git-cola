@@ -193,6 +193,8 @@ class SettingsFormWidget(FormWidget):
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
+        self.status_child_indentation = qtutils.checkbox()
+        self.status_show_totals = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -210,6 +212,10 @@ class SettingsFormWidget(FormWidget):
                         '(restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
+        self.add_row(N_('Indentation on Status widget '
+                        '(restart required)'), self.status_child_indentation)
+        self.add_row(N_('Headers with count on Status widget '
+                        '(restart required)'), self.status_show_totals)
 
         self.set_config({
             prefs.SAVEWINDOWSETTINGS:
@@ -232,6 +238,10 @@ class SettingsFormWidget(FormWidget):
                 (self.keep_merge_backups, Defaults.merge_keep_backup),
             prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
+            prefs.STATUS_CHILD_INDENTATION:
+                (self.status_child_indentation, Defaults.status_child_indentation),
+            prefs.STATUS_SHOW_TOTALS:
+                (self.status_show_totals, Defaults.status_show_totals)
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
