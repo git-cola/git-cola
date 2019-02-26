@@ -527,7 +527,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self._expand_items(idx, items)
         self.blockSignals(False)
         if prefs.status_show_totals(self.context):
-            parent.setText(0, '%s (%s)' % (parent.text(0).split()[0], len(items)))
+            parent_title = parent.text(0).split()[0]
+            parent.setText(0, '%s (%s)' % (parent_title, len(items)))
 
     def _update_column_widths(self):
         self.resizeColumnToContents(0)
