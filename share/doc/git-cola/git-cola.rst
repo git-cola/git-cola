@@ -590,6 +590,16 @@ cola.signcommits
 `git cola` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
+cola.statusindent
+-----------------
+Set to `true` to indent files in Status widget and shows information like a
+tree. Defaults to `false`.
+
+cola.statusshowtotals
+---------------------
+Set to `true` to show the number of files next to the title in each category in
+status widget. Defaults to `false`.
+
 cola.tabwidth
 -------------
 The number of columns occupied by a tab character.  Defaults to 8.
