@@ -30,7 +30,7 @@ MERGETOOL = 'merge.tool'
 EXPANDTAB = 'cola.expandtab'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
-STATUS_REMOVE_INDENTATION = 'cola.statusremoveindentation'
+STATUS_INDENT = 'cola.statusindent'
 STATUS_SHOW_TOTALS = 'cola.statusshowtotals'
 TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
@@ -72,7 +72,7 @@ class Defaults(object):
     textwidth = 72
     theme = 'default'
     hidpi = hidpi.EChoice.AUTO
-    status_remove_indentation = True
+    status_indent = False
     status_show_totals = False
 
 
@@ -165,9 +165,8 @@ def textwidth(context):
     return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
 
 
-def status_remove_indentation(context):
-    return context.cfg.get(STATUS_REMOVE_INDENTATION,
-                           default=Defaults.status_remove_indentation)
+def status_indent(context):
+    return context.cfg.get(STATUS_INDENT, default=Defaults.status_indent)
 
 
 def status_show_totals(context):

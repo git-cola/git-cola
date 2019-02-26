@@ -123,7 +123,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.setDragEnabled(True)
         self.setAutoScroll(False)
 
-        if prefs.status_remove_indentation(context):
+        if not prefs.status_indent(context):
             self.setIndentation(0)
 
         ok = icons.ok()

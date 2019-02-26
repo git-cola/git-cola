@@ -193,7 +193,7 @@ class SettingsFormWidget(FormWidget):
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
-        self.status_indentation = qtutils.checkbox()
+        self.status_indent = qtutils.checkbox()
         self.status_show_totals = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
@@ -212,8 +212,8 @@ class SettingsFormWidget(FormWidget):
                         '(restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
-        self.add_row(N_('Remove indentation on Status widget '
-                        '(restart required)'), self.status_indentation)
+        self.add_row(N_('Indentation on Status widget '
+                        '(restart required)'), self.status_indent)
         self.add_row(N_('Headers with count on Status widget '
                         '(restart required)'), self.status_show_totals)
 
@@ -238,8 +238,7 @@ class SettingsFormWidget(FormWidget):
                 (self.keep_merge_backups, Defaults.merge_keep_backup),
             prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
-            prefs.STATUS_REMOVE_INDENTATION:
-                (self.status_indentation, Defaults.status_remove_indentation),
+            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
             prefs.STATUS_SHOW_TOTALS:
                 (self.status_show_totals, Defaults.status_show_totals)
         })
