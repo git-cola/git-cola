@@ -30,6 +30,8 @@ MERGETOOL = 'merge.tool'
 EXPANDTAB = 'cola.expandtab'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
+STATUS_INDENT = 'cola.statusindent'
+STATUS_SHOW_TOTALS = 'cola.statusshowtotals'
 TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
@@ -70,6 +72,8 @@ class Defaults(object):
     textwidth = 72
     theme = 'default'
     hidpi = hidpi.EChoice.AUTO
+    status_indent = False
+    status_show_totals = False
 
 
 def blame_viewer(context):
@@ -159,6 +163,15 @@ def tabwidth(context):
 
 def textwidth(context):
     return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
+
+
+def status_indent(context):
+    return context.cfg.get(STATUS_INDENT, default=Defaults.status_indent)
+
+
+def status_show_totals(context):
+    return context.cfg.get(STATUS_SHOW_TOTALS,
+                           default=Defaults.status_show_totals)
 
 
 class PreferencesModel(observable.Observable):
