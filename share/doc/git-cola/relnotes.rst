@@ -21,6 +21,10 @@ git-cola v3.4
 
 Usability, bells and whistles
 -----------------------------
+* The `Status` widget learned to optionally display file counts in its
+  category headers, and indent the files displayed in each category.
+  (`#931 <https://github.com/git-cola/git-cola/pull/931>`_)
+
 * The `Branches` widget can now sort branches by their most recent commit.
   (`#930 <https://github.com/git-cola/git-cola/pull/930>`_)
 
