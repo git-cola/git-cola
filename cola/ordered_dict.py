@@ -160,7 +160,7 @@ class OrderedDict(dict):
         if len(args) > 2:
             raise TypeError('update() takes at most 2 positional '
                             'arguments (%d given)' % (len(args),))
-        elif not args:
+        if not args:
             raise TypeError('update() takes at least 1 argument (0 given)')
         self = args[0]
         # Make progressively weaker assumptions about "other"
