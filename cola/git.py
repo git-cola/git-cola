@@ -324,7 +324,12 @@ class Git(object):
                 _kwargs[kwarg] = kwargs.pop(kwarg)
 
         # Prepare the argument list
-        git_args = [GIT, '-c', 'diff.suppressBlankEmpty=false', dashify(cmd)]
+        git_args = [
+            GIT,
+            '-c', 'diff.suppressBlankEmpty=false',
+            '-c', 'log.showSignature=false',
+            dashify(cmd),
+        ]
         opt_args = transform_kwargs(**kwargs)
         call = git_args + opt_args
         call.extend(args)
