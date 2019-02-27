@@ -212,9 +212,9 @@ class SettingsFormWidget(FormWidget):
                         '(restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
-        self.add_row(N_('Indentation on Status widget '
+        self.add_row(N_('Indent Status paths '
                         '(restart required)'), self.status_indent)
-        self.add_row(N_('Headers with count on Status widget '
+        self.add_row(N_('Show file counts in Status titles '
                         '(restart required)'), self.status_show_totals)
 
         self.set_config({

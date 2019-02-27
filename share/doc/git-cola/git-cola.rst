@@ -592,13 +592,14 @@ See the section below on setting up GPG for more details.
 
 cola.statusindent
 -----------------
-Set to `true` to indent files in Status widget and shows information like a
-tree. Defaults to `false`.
+Set to `true` to indent files in the Status widget.  Files in the `Staged`,
+`Modified`, etc. categories will be grouped in a tree-like structure.
+Defaults to `false`.
 
 cola.statusshowtotals
 ---------------------
-Set to `true` to show the number of files next to the title in each category in
-status widget. Defaults to `false`.
+Set to `true` to display files counts in the Status widget's category titles.
+Defaults to `false`.
 
 cola.tabwidth
 -------------
