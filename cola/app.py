@@ -239,6 +239,9 @@ class ColaQApplication(QtWidgets.QApplication):
     def __init__(self, context, argv):
         super(ColaQApplication, self).__init__(argv)
         self.context = context
+        # Make icons sharp in HiDPI screen
+        if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+            self.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
     def event(self, e):
         """Respond to focus events for the cola.refreshonfocus feature"""
