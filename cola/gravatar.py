@@ -111,6 +111,8 @@ class GravatarLabel(QtWidgets.QLabel):
             self.pixmaps[email] = pixmap
 
     def set_pixmap_from_response(self):
+        if self.response is None:
+            self.response = self._default_pixmap_bytes()
         pixmap = QtGui.QPixmap()
         pixmap.loadFromData(self.response)
         self.setPixmap(pixmap)
