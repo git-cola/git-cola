@@ -419,6 +419,12 @@ msgstr "Возраст"
 msgid "All Repositories"
 msgstr "Все репозитории"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -454,6 +460,12 @@ msgstr ""
 "Будет создан неподписанный, легкий тег.\n"
 "Создать неподписанный тег??"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Применить"
 
@@ -482,6 +494,9 @@ msgstr "Автор"
 #, fuzzy
 msgid "Authors"
 msgstr "Автор"
+
+msgid "Auto"
+msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Авто перенос строчек"
@@ -804,6 +819,10 @@ msgstr ""
 msgid "Date, Time"
 msgstr "Дата, Время"
 
+#, fuzzy
+msgid "Default"
+msgstr "Восстановить настройки по умолчанию"
+
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1018,6 +1037,14 @@ msgstr "Добавить тег \"%(revision)s\" к \"%(name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr "Вызов программы поддержки репозитория pre-commit..."
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Не удалось создать внешную ветвь \"%s\""
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Ошибка редактирования файла"
+
 msgid "Error: Cannot find commit template"
 msgstr "Ошибка: Не получается найти шаблон коммита"
 
@@ -1139,6 +1166,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Исправить предыдущий коммит"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Размер шрифта"
 
@@ -1174,6 +1225,9 @@ msgid "French translation"
 msgstr ""
 
 msgid "GPG-sign the merge commit"
+msgstr ""
+
+msgid "GUI theme"
 msgstr ""
 
 #, python-format
@@ -1219,6 +1273,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Просмотрщик истории"
 
@@ -1246,6 +1303,9 @@ msgstr ""
 
 msgid "Include tags "
 msgstr "Включая теги"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1472,6 +1532,10 @@ msgstr "Открыть"
 msgid "Open Git Repository..."
 msgstr "Открыть Git репозиторий..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Открыть последний"
+
 msgid "Open Parent Directory"
 msgstr "Открыть родительский каталог"
 
@@ -1503,10 +1567,6 @@ msgstr "Перезаписать \"%s\"?"
 
 msgid "Overwrite File?"
 msgstr "Перезаписать файл?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr ""
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2017,6 +2077,11 @@ msgstr "Выбрать репозиторий..."
 msgid "Set Upstream Branch"
 msgstr "Выбрать"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 #, fuzzy
 msgid "Set upstream"
 msgstr "Выбрать"
@@ -2052,6 +2117,9 @@ msgstr "Показать справку"
 #, fuzzy
 msgid "Show History"
 msgstr "Показать историю"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2200,14 +2268,14 @@ msgstr "Статус"
 msgid "Stop tracking paths"
 msgstr ""
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr ""
 
 msgid "Summary"
 msgstr "Описание"
-
-msgid "Summary:"
-msgstr "Описание:"
 
 msgid "Tab Width"
 msgstr "Ширина табов"
@@ -2261,6 +2329,12 @@ msgstr "Следующие файлы будут удалены:"
 
 msgid "The revision expression cannot be empty."
 msgstr "Поле версии не может быть пустым."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2396,8 +2470,33 @@ msgstr "Не добавлены в контроль версий"
 msgid "Untracking: %s"
 msgstr "Не добавлено в контроль версий: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Обновить имеющуюся ветвь:"
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "Обновлено"
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Обновление"
@@ -2498,6 +2597,15 @@ msgid "unknown"
 msgstr "неизвестно"
 
 msgid "vX.Y.Z"
+msgstr ""
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
 msgstr ""
 
 msgid "yyyy-MM-dd"
@@ -3205,9 +3313,6 @@ msgstr ""
 #~ "\n"
 #~ "Продолжить?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "Восстановить настройки по умолчанию"
-
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Отменить изменения в %i файле(-ах)?"
 
@@ -3279,6 +3384,9 @@ msgstr ""
 
 #~ msgid "Success"
 #~ msgstr "Процесс успешно завершен"
+
+#~ msgid "Summary:"
+#~ msgstr "Описание:"
 
 #~ msgid "The 'master' branch has not been initialized."
 #~ msgstr "Не инициализирована ветвь 'master'."
@@ -3398,9 +3506,6 @@ msgstr ""
 
 #~ msgid "Unsupported spell checker"
 #~ msgstr "Неподдерживаемая программа проверки правописания"
-
-#~ msgid "Updated"
-#~ msgstr "Обновлено"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "Не удалось обновить индекс Git. Состояние репозитория будетперечитано автоматически."

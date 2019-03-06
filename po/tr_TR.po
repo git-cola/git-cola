@@ -420,6 +420,12 @@ msgstr "Yaş"
 msgid "All Repositories"
 msgstr "Tüm Depolar"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -455,6 +461,12 @@ msgstr ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Apply"
 
@@ -483,6 +495,9 @@ msgstr "Author"
 #, fuzzy
 msgid "Authors"
 msgstr "Author"
+
+msgid "Auto"
+msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Auto-Wrap Lines"
@@ -804,6 +819,9 @@ msgstr "DAG..."
 msgid "Date, Time"
 msgstr "Date, Time"
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr "Sil"
 
@@ -1017,6 +1035,14 @@ msgstr "Tagging \"%(revision)s\" as \"%(name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Uzak \"%s\" oluşturulurken hata"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Dosyayı Düzenlemede Hata"
+
 msgid "Error: Cannot find commit template"
 msgstr "Hata: İşleme şablonu bulunamadı"
 
@@ -1139,6 +1165,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Fixup Previous Commit"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Font Size"
 
@@ -1175,6 +1225,9 @@ msgstr ""
 
 msgid "GPG-sign the merge commit"
 msgstr "GPG-sign the merge commit"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1219,6 +1272,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Geçmiş Görüntüleyici"
 
@@ -1246,6 +1302,9 @@ msgstr ""
 
 msgid "Include tags "
 msgstr "Include tags "
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1471,6 +1530,10 @@ msgstr "Open"
 msgid "Open Git Repository..."
 msgstr "Open Git Repository..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Open Recent"
+
 msgid "Open Parent Directory"
 msgstr "Üst Klasörü Aç"
 
@@ -1502,10 +1565,6 @@ msgstr "Overwrite \"%s\"?"
 
 msgid "Overwrite File?"
 msgstr "Overwrite File?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr ""
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2014,6 +2073,11 @@ msgstr "Select Repository..."
 msgid "Set Upstream Branch"
 msgstr "Select New Upstream"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 #, fuzzy
 msgid "Set upstream"
 msgstr "Select New Upstream"
@@ -2049,6 +2113,9 @@ msgstr "Yardımı Göster"
 #, fuzzy
 msgid "Show History"
 msgstr "Show history"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2196,14 +2263,14 @@ msgstr "Durum"
 msgid "Stop tracking paths"
 msgstr "Stop tracking paths"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Summarize Merge Commits"
 
 msgid "Summary"
 msgstr "Summary"
-
-msgid "Summary:"
-msgstr "Özet:"
 
 msgid "Tab Width"
 msgstr "Tab Width"
@@ -2257,6 +2324,12 @@ msgstr "Aşağıdaki satırlar silinecek:"
 
 msgid "The revision expression cannot be empty."
 msgstr "The revision expression cannot be empty."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2392,8 +2465,32 @@ msgstr "Takip Edilmemiş"
 msgid "Untracking: %s"
 msgstr "Untracking: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Update Existing Branch:"
+
+msgid "Update Submodule"
+msgstr ""
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Updating"
@@ -2496,6 +2593,15 @@ msgstr "unknown"
 msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
 
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
+
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
 
@@ -2572,6 +2678,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Staging Area"
 #~ msgstr "Staging Area"
+
+#~ msgid "Summary:"
+#~ msgstr "Özet:"
 
 #~ msgid ""
 #~ "This PyQt4 does not include QtWebKit.\n"

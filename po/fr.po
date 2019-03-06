@@ -439,6 +439,12 @@ msgstr "Age"
 msgid "All Repositories"
 msgstr "Tous les dépôts"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr "Autoriser les mises à jour non rapides. Utiliser « force » peut provoquer des pertes de commit au niveau du dépôt distant : utilisez le avec précaution"
 
@@ -474,6 +480,12 @@ msgstr ""
 "Un marqueur non signé et léger sera créé à la place.\n"
 "Créer un tag non signé ?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -501,6 +513,9 @@ msgstr "Auteur"
 
 msgid "Authors"
 msgstr "Auteurs"
+
+msgid "Auto"
+msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Retour à la ligne automatique"
@@ -817,6 +832,10 @@ msgstr "DAG..."
 msgid "Date, Time"
 msgstr "Date, heure"
 
+#, fuzzy
+msgid "Default"
+msgstr "Remettre les valeurs par défaut"
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1029,6 +1048,14 @@ msgstr "Marquage de « %(revision)s » sous « %(name)s »"
 msgid "Error running prepare-commitmsg hook"
 msgstr "Appel du programme externe d'avant commit..."
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Erreur lors de la création de la branche distante « %s »"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Erreur lors de la modification du fichier"
+
 msgid "Error: Cannot find commit template"
 msgstr "Erreur : impossible de trouver un modèle de commit"
 
@@ -1151,6 +1178,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Réparer le commit précédent"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Taille de police"
 
@@ -1187,6 +1238,9 @@ msgstr "Traduction allemande"
 
 msgid "GPG-sign the merge commit"
 msgstr "GPG-signer le commit fusionné"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1231,6 +1285,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Navigateur de l'historique"
 
@@ -1259,6 +1316,9 @@ msgstr ""
 
 msgid "Include tags "
 msgstr "Inclure les marques"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr "Traduction indonésienne"
@@ -1482,6 +1542,10 @@ msgstr "Ouvrir"
 msgid "Open Git Repository..."
 msgstr "Ouvrir le dépôt Git..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Ouvrir récent"
+
 msgid "Open Parent Directory"
 msgstr "Ouvrir le répertoire parent"
 
@@ -1513,10 +1577,6 @@ msgstr "Écraser « %s » ?"
 
 msgid "Overwrite File?"
 msgstr "Écraser le fichier ?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "PATCH %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2020,6 +2080,11 @@ msgstr "Modifier le dépôt par défaut"
 msgid "Set Upstream Branch"
 msgstr "Modifier la source"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "Modifier la source"
 
@@ -2053,6 +2118,9 @@ msgstr "Afficher l'aide"
 
 msgid "Show History"
 msgstr "Afficher l'historique"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2201,14 +2269,14 @@ msgstr "Statut"
 msgid "Stop tracking paths"
 msgstr "Stopper le suivi des chemins"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Résumer les commits de fusion"
 
 msgid "Summary"
 msgstr "Résumé"
-
-msgid "Summary:"
-msgstr "Résumé :"
 
 msgid "Tab Width"
 msgstr "Largeur de l'onglet"
@@ -2262,6 +2330,12 @@ msgstr "Les fichiers suivants seront effacés :"
 
 msgid "The revision expression cannot be empty."
 msgstr "L'expression de révision est vide."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, fuzzy, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2398,8 +2472,33 @@ msgstr "Non suivi"
 msgid "Untracking: %s"
 msgstr "Démarquage de %s du commit"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Mettre à jour branche existante :"
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "Misa à jour"
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Mise à jour"
@@ -2500,6 +2599,15 @@ msgstr "inconnu"
 
 msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "dd/MM/yyyy"
@@ -3088,6 +3196,9 @@ msgstr "dd/MM/yyyy"
 #~ msgid "Output: %s"
 #~ msgstr "Sortie : %s"
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "PATCH %(current)d/%(count)d"
+
 #~ msgid "Packed objects waiting for pruning"
 #~ msgstr "Objets empaquetés attendant d'être supprimés"
 
@@ -3207,9 +3318,6 @@ msgstr "dd/MM/yyyy"
 #~ "\n"
 #~ "Réinitialiser quand même les modifications courantes ?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "Remettre les valeurs par défaut"
-
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Inverser les modifications dans ces %i fichiers ?"
 
@@ -3281,6 +3389,9 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Success"
 #~ msgstr "Succès"
+
+#~ msgid "Summary:"
+#~ msgstr "Résumé :"
 
 #~ msgid "The 'master' branch has not been initialized."
 #~ msgstr "Cette branche 'master' n'a pas été initialisée."
@@ -3394,9 +3505,6 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Unsupported spell checker"
 #~ msgstr "Vérificateur d'orthographe non supporté"
-
-#~ msgid "Updated"
-#~ msgstr "Misa à jour"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "Le pré-commit a échoué. Une resynchronisation va être lancée automatiquement."

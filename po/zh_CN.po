@@ -437,6 +437,12 @@ msgstr "修改时间"
 msgid "All Repositories"
 msgstr "全部版本库"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -472,6 +478,12 @@ msgstr ""
 "一个无签名的轻量标签会取而代之.\n"
 "创建无签名标签吗?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "应用"
 
@@ -499,6 +511,9 @@ msgstr "作者"
 
 msgid "Authors"
 msgstr "作者"
+
+msgid "Auto"
+msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "自动换行"
@@ -813,6 +828,10 @@ msgstr "历史视图..."
 msgid "Date, Time"
 msgstr "日期, 时间"
 
+#, fuzzy
+msgid "Default"
+msgstr "恢复默认值"
+
 msgid "Delete"
 msgstr "删除"
 
@@ -1022,6 +1041,14 @@ msgstr "标记  \"%(revision)s\" 为 \"%(name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "创建远端 \"%s\" 出错"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "编辑文件出错"
+
 msgid "Error: Cannot find commit template"
 msgstr "错误:无法找到提交模板"
 
@@ -1140,6 +1167,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "修正前一次提交"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "字体大小"
 
@@ -1175,6 +1226,9 @@ msgstr "法语翻译"
 
 msgid "GPG-sign the merge commit"
 msgstr "GPG 签名合并提交"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1219,6 +1273,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "历史浏览器"
 
@@ -1246,6 +1303,9 @@ msgstr "忽略文件名或匹配模式"
 
 msgid "Include tags "
 msgstr "包含标签 "
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr "印尼语翻译"
@@ -1468,6 +1528,10 @@ msgstr "打开"
 msgid "Open Git Repository..."
 msgstr "打开已有版本库..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "打开最近版本库"
+
 msgid "Open Parent Directory"
 msgstr "打开上级目录"
 
@@ -1499,10 +1563,6 @@ msgstr "覆盖 \"%s\" 吗?"
 
 msgid "Overwrite File?"
 msgstr "覆盖文件吗?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "补丁 %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2000,6 +2060,11 @@ msgstr "选择默认版本库"
 msgid "Set Upstream Branch"
 msgstr "设置上游"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "设置上游"
 
@@ -2033,6 +2098,9 @@ msgstr "显示帮助"
 
 msgid "Show History"
 msgstr "显示历史"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2181,14 +2249,14 @@ msgstr "状态"
 msgid "Stop tracking paths"
 msgstr "停止跟踪路径"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "概述合并提交"
 
 msgid "Summary"
 msgstr "概要"
-
-msgid "Summary:"
-msgstr "概要:"
 
 msgid "Tab Width"
 msgstr "Tab 宽度"
@@ -2242,6 +2310,12 @@ msgstr "如下文件会被删除:"
 
 msgid "The revision expression cannot be empty."
 msgstr "版本表达式不能为空."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2376,8 +2450,33 @@ msgstr "未跟踪"
 msgid "Untracking: %s"
 msgstr "跟踪: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "更新已有分支:"
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "已更新"
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "更新"
@@ -2478,6 +2577,15 @@ msgstr "未知"
 
 msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
@@ -3058,6 +3166,9 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Output: %s"
 #~ msgstr "输出: %s"
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "补丁 %(current)d/%(count)d"
+
 #~ msgid "Packed objects waiting for pruning"
 #~ msgstr "压缩对象等待清理"
 
@@ -3181,9 +3292,6 @@ msgstr "yyyy-MM-dd"
 #~ "\n"
 #~ "是否要继续复位当前的改动?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "恢复默认值"
-
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "撤销未提交修改..."
 
@@ -3246,6 +3354,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Success"
 #~ msgstr "成功"
+
+#~ msgid "Summary:"
+#~ msgstr "概要:"
 
 #~ msgid "The 'master' branch has not been initialized."
 #~ msgstr "'master'分支尚未初始化."
@@ -3357,9 +3468,6 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Unstage Hunk From Commit"
 #~ msgstr "从提交中撤除修改块"
-
-#~ msgid "Updated"
-#~ msgstr "已更新"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "更新 Git 缓存(Index)失败, 重新扫描将自动开始以重新同步 git-gui."

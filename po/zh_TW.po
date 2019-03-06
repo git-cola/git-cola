@@ -503,6 +503,12 @@ msgstr "建立時間"
 msgid "All Repositories"
 msgstr "所有的版控庫"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr "允許非快速前移式更新。使用「強制」可能會造成遠端版控庫遺失修訂版提交；請小心使用"
 
@@ -538,6 +544,12 @@ msgstr ""
 "一個無簽名的，輕量的標籤將會被建立。\n"
 "要建立此無簽名的標籤嗎？"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "套用"
 
@@ -564,6 +576,9 @@ msgstr "作者"
 
 msgid "Authors"
 msgstr "作者群"
+
+msgid "Auto"
+msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "自動折行"
@@ -871,6 +886,10 @@ msgstr "有向無環圖(DAG)……"
 msgid "Date, Time"
 msgstr "時間，日期"
 
+#, fuzzy
+msgid "Default"
+msgstr "恢復默認值"
+
 msgid "Delete"
 msgstr "移除"
 
@@ -1076,6 +1095,14 @@ msgstr "將「%(name)s」更名為「%(new_name)s」時發生錯誤"
 msgid "Error running prepare-commitmsg hook"
 msgstr "執行 prepare-commitmsg 掛勾程式時發生錯誤"
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "建立「%s」遠端分支時發生錯誤"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "編輯檔案發生錯誤"
+
 msgid "Error: Cannot find commit template"
 msgstr "錯誤：無法找到修訂版提交範本"
 
@@ -1197,6 +1224,30 @@ msgstr "修理"
 msgid "Fixup Previous Commit"
 msgstr "修理先前的修訂版提交"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "字體大小"
 
@@ -1231,6 +1282,9 @@ msgstr "法語翻譯"
 
 msgid "GPG-sign the merge commit"
 msgstr "用 GPG 簽署合併修訂版提交"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1275,6 +1329,9 @@ msgstr "尋求幫助 - git-xbase"
 msgid "Hide Details.."
 msgstr "隱藏詳細資訊……"
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "變更紀錄瀏覽器"
 
@@ -1301,6 +1358,9 @@ msgstr "忽略檔案名稱或是式樣"
 
 msgid "Include tags "
 msgstr "包含標籤 "
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr "印度尼西亞語翻譯"
@@ -1522,6 +1582,10 @@ msgstr "開啟"
 msgid "Open Git Repository..."
 msgstr "開啟一個 Git 版控庫……"
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "打開最近使用的版控庫"
+
 msgid "Open Parent Directory"
 msgstr "開啟上一層目錄"
 
@@ -1552,10 +1616,6 @@ msgstr "要覆寫「%s」嗎？"
 
 msgid "Overwrite File?"
 msgstr "要覆寫檔案嗎？"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "正在套用 %(current)d/%(count)d 修正"
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2037,6 +2097,11 @@ msgstr "設定預設版控庫"
 msgid "Set Upstream Branch"
 msgstr "設為上游追蹤分支"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "設為上游追蹤分支"
 
@@ -2069,6 +2134,9 @@ msgstr "顯示幫助訊息"
 
 msgid "Show History"
 msgstr "檢視變更紀錄"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2213,14 +2281,14 @@ msgstr "狀態"
 msgid "Stop tracking paths"
 msgstr "停止追蹤路徑"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "概述合併進來的內容提交(commit)"
 
 msgid "Summary"
 msgstr "總結"
-
-msgid "Summary:"
-msgstr "總結："
 
 msgid "Tab Width"
 msgstr "Tab 字元的顯示寬度"
@@ -2274,6 +2342,12 @@ msgstr "下列檔案將會被移除："
 
 msgid "The revision expression cannot be empty."
 msgstr "修訂版表達式不可以是空的。"
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2407,8 +2481,37 @@ msgstr "未納入版本追蹤"
 msgid "Untracking: %s"
 msgstr "正在將「%s」移出新修訂版準備區域"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "是否更新既有分支："
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "已更新"
+
+msgid "Update Submodule..."
+msgstr ""
+
+#, fuzzy
+msgid "Update Submodules"
+msgstr "初始化子模組"
+
+#, fuzzy
+msgid "Update all submodules?"
+msgstr "初始化子模組"
+
+#, fuzzy
+msgid "Update submodules..."
+msgstr "初始化子模組"
+
+#, fuzzy
+msgid "Update this submodule"
+msgstr "初始化子模組"
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "正在更新"
@@ -2509,6 +2612,15 @@ msgstr "未知使用者"
 
 msgid "vX.Y.Z"
 msgstr "X.Y.Z版本"
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
@@ -3090,6 +3202,9 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Output: %s"
 #~ msgstr "輸出：%s"
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "正在套用 %(current)d/%(count)d 修正"
+
 #~ msgid "Packed objects waiting for pruning"
 #~ msgstr "壓縮對象等待清理"
 
@@ -3216,9 +3331,6 @@ msgstr "yyyy-MM-dd"
 #~ "\n"
 #~ "是否要繼續復位當前的改動?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "恢復默認值"
-
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "撤銷尚未建立修訂版提交的內容變動"
 
@@ -3281,6 +3393,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Success"
 #~ msgstr "成功"
+
+#~ msgid "Summary:"
+#~ msgstr "總結："
 
 #~ msgid "The 'master' branch has not been initialized."
 #~ msgstr "'master'分支尚未初始化."
@@ -3392,9 +3507,6 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Unstage Hunk From Commit"
 #~ msgstr "從提交中撤除修改塊"
-
-#~ msgid "Updated"
-#~ msgstr "已更新"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "更新 Git 緩存(Index)失敗, 重新掃瞄將自動開始以重新同步 git-gui."
