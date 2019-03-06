@@ -165,6 +165,10 @@ use to translate `git-cola`.
 
 Untranslatted strings are denoted by an empty "" string.
 
+The `.mo` files have to be regenerated after each change by running:
+
+    make mo
+
 Alternate translations can be tested by setting `$LANG` when running, e.g.
 
     env LANG=zh_TW ./bin/git-cola
