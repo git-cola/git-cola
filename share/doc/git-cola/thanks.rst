@@ -87,6 +87,7 @@ Thanks
 * jfessard
 * JiCiT
 * Jimmy M. Coleman
+* Joachim Lusiardi
 * Johannes Löhnert
 * Johann Schmitz
 * Jordan Bedwell
