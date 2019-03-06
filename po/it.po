@@ -476,7 +476,7 @@ msgstr "Mostra file"
 msgid "Blame..."
 msgstr "Rinomina"
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"

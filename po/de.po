@@ -582,8 +582,8 @@ msgstr "Verantwortlichkeitsbetrachter"
 msgid "Blame..."
 msgstr "Verantwortlichkeit..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Fettschrift mit dunklem Hintergrund verwenden anstelle von schräg geschriebenen Überschriften (Neustart erforderlich)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Fettschrift mit dunklem Hintergrund verwenden anstelle von schräg geschriebenen Überschriften"
 
 msgid "Branch"
 msgstr "Branch"

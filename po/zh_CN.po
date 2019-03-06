@@ -512,8 +512,8 @@ msgstr "问责查看器"
 msgid "Blame..."
 msgstr "问责..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "暗色背景粗体字体而斜体头部 (需要重启)"
+msgid "Bold on dark headers instead of italic"
+msgstr "暗色背景粗体字体而斜体头部"
 
 msgid "Branch"
 msgstr "分支"

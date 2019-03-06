@@ -476,7 +476,7 @@ msgstr "Fájl néző"
 msgid "Blame..."
 msgstr "Átnevezés..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"

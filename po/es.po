@@ -578,8 +578,8 @@ msgstr ""
 msgid "Blame..."
 msgstr "Cerrar..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Fuente en negrita con fondo negro en vez de cabeceras en cursiva (se necesita reiniciar)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Fuente en negrita con fondo negro en vez de cabeceras en cursiva"
 
 msgid "Branch"
 msgstr "Rama"

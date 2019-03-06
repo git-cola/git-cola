@@ -498,7 +498,7 @@ msgstr "Branch Diff Viewer"
 msgid "Blame..."
 msgstr "Close..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"

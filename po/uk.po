@@ -531,8 +531,8 @@ msgstr "Переглядач анотацій (blame)"
 msgid "Blame..."
 msgstr "Анотувати (blame)..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Напівжирний з темним фоном шрифт замість заголовків курсивом (потрібне перезавантаження)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Напівжирний з темним фоном шрифт замість заголовків курсивом"
 
 msgid "Branch"
 msgstr "Гілка"

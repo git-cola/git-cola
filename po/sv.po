@@ -475,7 +475,7 @@ msgstr "Filvisare"
 msgid "Blame..."
 msgstr "Byt namn..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"

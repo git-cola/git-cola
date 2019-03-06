@@ -497,7 +497,7 @@ msgstr "Просмотр файла"
 msgid "Blame..."
 msgstr "Переименовать..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"

@@ -514,8 +514,8 @@ msgstr "Visionneur de fichier"
 msgid "Blame..."
 msgstr "Visionner..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Police en gras avec fond sombre au lieu d'en-têtes italiques (redémarrage nécessaire)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Police en gras avec fond sombre au lieu d'en-têtes italiques"
 
 msgid "Branch"
 msgstr "Branche"
