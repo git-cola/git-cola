@@ -41,6 +41,15 @@ Usability, bells and whistles
   icons have been updated to look sharp when displayed in HiDPI.
   (`#932 <https://github.com/git-cola/git-cola/pull/932>`_)
 
+Fixes
+-----
+* `git cola` has been updated to work with newer versions of `gnome-terminal`
+  and no longer shell-quotes its arguments when launching `gnome-terminal`.
+  The `cola.terminalshellquote` configuration variable can be set to `true` to
+  get the old behavior, or to handle other terminals that take the command to run
+  as a single string instead of as arguments to `execv()`.
+  (`#935 <https://github.com/git-cola/git-cola/pull/935>`_)
+
 Development
 -----------
 * The contribution guidelines for contributors has been updated to mention

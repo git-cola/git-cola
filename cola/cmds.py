@@ -1254,13 +1254,21 @@ class LaunchDifftool(ContextCommand):
                 cfg = self.cfg
                 cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
+
+                terminal - os.path.basename(argv[0])
+                shellquote_terms = set(['xfce4-terminal'])
+                shellquote_default = terminal in shellquote_terms
+
                 mergetool = ['git', 'mergetool', '--no-prompt', '--']
                 mergetool.extend(paths)
-                needs_shellquote = set(['gnome-terminal', 'xfce4-terminal'])
-                if os.path.basename(argv[0]) in needs_shellquote:
+                needs_shellquote = cfg.get(
+                    'cola.terminalshellquote', shellquote_default)
+
+                if needs_shellquote:
                     argv.append(core.list2cmdline(mergetool))
                 else:
                     argv.extend(mergetool)
+
                 core.fork(argv)
         else:
             difftool_run(self.context)
