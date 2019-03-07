@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-14 07:38+0200\n"
-"PO-Revision-Date: 2018-04-14 08:23+0200\n"
+"PO-Revision-Date: 2019-03-07 07:18+0100\n"
 "Last-Translator: Kai Krakow <kai@kaishome.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -563,7 +563,6 @@ msgstr "Patches anwenden"
 msgid "Apply Patches..."
 msgstr "Patches anwenden..."
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
 msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
 
@@ -2323,21 +2322,21 @@ msgstr "Textbreite"
 msgid "The branch will be no longer available."
 msgstr "Der Branch wird nicht mehr verfügbar sein."
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --hard %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --merge %s\""
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --soft %s\""
 
 msgid "The commit message will be cleared."
 msgstr "Die Commit-Beschreibung wird geleert."
@@ -2360,7 +2359,7 @@ msgstr ""
 
 #, fuzzy, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --merge %s\""
+msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --keep %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Dies kann nicht rückgängig gemacht werden. Commit-Beschreibung leeren?"
