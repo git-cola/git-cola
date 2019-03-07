@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-14 07:38+0200\n"
-"PO-Revision-Date: 2018-04-14 08:23+0200\n"
+"PO-Revision-Date: 2019-03-07 07:18+0100\n"
 "Last-Translator: Kai Krakow <kai@kaishome.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -551,7 +551,6 @@ msgstr "Patches anwenden"
 msgid "Apply Patches..."
 msgstr "Patches anwenden..."
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
 msgstr "Die ausgewählte Ablage in den Arbeitsbereich zurück übernehmen"
 
@@ -1555,10 +1554,6 @@ msgstr "Möchten Sie die Datei\"%s\" überschreiben?"
 msgid "Overwrite File?"
 msgstr "Möchten Sie die Datei überschreiben?"
 
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "PATCH %(current)d/%(count)d"
-
 msgid ""
 "Parse arguments using a shell.\n"
 "Queries with spaces will require \"double quotes\"."
@@ -2228,9 +2223,6 @@ msgstr "Zusammenfassung beim Zusammenführen anzeigen"
 msgid "Summary"
 msgstr "Zusammenfassung"
 
-msgid "Summary:"
-msgstr "Zusammenfassung:"
-
 msgid "Tab Width"
 msgstr "Tabulatorweite"
 
@@ -2255,21 +2247,21 @@ msgstr "Textbreite"
 msgid "The branch will be no longer available."
 msgstr "Der Branch wird nicht mehr verfügbar sein."
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --hard %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --merge %s\""
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
+msgstr "Der Branch wird zurückgesetzt mit \"git reset --soft %s\""
 
 msgid "The commit message will be cleared."
 msgstr "Die Commit-Beschreibung wird geleert."
@@ -2284,9 +2276,9 @@ msgstr "Die folgenden Zeilen werden gleich gelöscht:"
 msgid "The revision expression cannot be empty."
 msgstr "Der Ausdruck darf nicht leer sein."
 
-#, fuzzy, python-format
+#, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --merge %s\""
+msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --keep %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Dies kann nicht rückgängig gemacht werden. Commit-Beschreibung leeren?"
@@ -3123,6 +3115,9 @@ msgstr "dd.MM.yyyy"
 #~ msgid "Output: %s"
 #~ msgstr "Ausgabe: \"%s\""
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "PATCH %(current)d/%(count)d"
+
 #~ msgid "Packed objects waiting for pruning"
 #~ msgstr "Komprimierte Objekte, die zum Aufräumen vorgesehen sind"
 
@@ -3246,9 +3241,6 @@ msgstr "dd.MM.yyyy"
 #~ "Wenn Sie zurücksetzen, gehen alle noch nicht eingetragenen Änderungen verloren.\n"
 #~ "\n"
 #~ "Änderungen jetzt zurücksetzen?"
-
-#~ msgid "Restore Defaults"
-#~ msgstr "Voreinstellungen wiederherstellen"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Nicht versionierte Änderungen verwerfen"
@@ -3451,9 +3443,6 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Unsupported spell checker"
 #~ msgstr "Rechtschreibprüfungsprogramm nicht unterstützt"
-
-#~ msgid "Updated"
-#~ msgstr "Aktualisiert"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "Das Aktualisieren der Git-Bereitstellung ist fehlgeschlagen. Eine allgemeine Git-Aktualisierung wird jetzt gestartet, um git-gui wieder mit git zu synchronisieren."
