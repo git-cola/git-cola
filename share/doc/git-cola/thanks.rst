@@ -14,8 +14,9 @@ Thanks
 * anderben
 * Andreas Schnederle-Wagner
 * Andreas Sommer
-* Andrew Chen
 * Andrej Kvasnica
+* Andrew Chen
+* Andrew Hemming
 * Arthur Coelho
 * Audrius Karabanovas
 * balping
