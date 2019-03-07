@@ -1255,7 +1255,7 @@ class LaunchDifftool(ContextCommand):
                 cmd = cfg.terminal()
                 argv = utils.shell_split(cmd)
 
-                terminal - os.path.basename(argv[0])
+                terminal = os.path.basename(argv[0])
                 shellquote_terms = set(['xfce4-terminal'])
                 shellquote_default = terminal in shellquote_terms
 
