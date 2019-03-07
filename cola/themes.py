@@ -136,14 +136,10 @@ class Theme(object):
             )
             lighter = qtutils.hsl_css(
                 color.hslHueF(),
-                color.hslSaturationF()*0.4,
-                color.lightnessF()*0.55
+                color.hslSaturationF()*0.7,
+                color.lightnessF()*0.6
             )
-            focus = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF() * 3,
-                0.09
-            )
+            focus = color_rgb
         else:
             background = '#edeef3'
             field = '#ffffff'
@@ -160,11 +156,7 @@ class Theme(object):
                 color.hslSaturationF()*2,
                 0.92
             )
-            focus = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF(),
-                color.lightnessF()
-            )
+            focus = color_rgb
 
         return """
             /* regular widgets */
