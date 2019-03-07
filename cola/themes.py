@@ -300,6 +300,15 @@ class Theme(object):
                 color: %(button_text)s;
             }
 
+            /* MainWindow separator */
+            QMainWindow::separator {
+                width: %(separator)spx;
+                height: %(separator)spx;
+            }
+            QMainWindow::separator:hover {
+                background: %(focus)s;
+            }
+
             /* scroll bar */
             QScrollBar {
                 background-color: %(field)s;
@@ -499,8 +508,8 @@ class Theme(object):
                        grayed=grayed,
                        button_text=button_text,
                        field_text=field_text,
-                       focus=focus
-                       )
+                       separator=defs.separator,
+                       focus=focus)
 
 
 def get_all_themes():
