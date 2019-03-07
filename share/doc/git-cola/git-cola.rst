@@ -612,8 +612,34 @@ The command to use when launching commands within a graphical terminal.
 `cola.terminal` defaults to `xterm -e` when unset.
 e.g. when opening a shell, `git cola` will run `xterm -e $SHELL`.
 
+`git cola` has built-in support for `xterm`, `gnome-terminal`, `konsole`.
 If either `gnome-terminal`, `xfce4-terminal`, or `konsole` are installed
 then they will be preferred over `xterm` when `cola.terminal` is unset.
+
+The table below shows the built-in values that are used for the respective
+terminal.  You can force the use of a specific terminal by configuring cola
+accordingly.
+
+cola.terminalshellquote
+-----------------------
+Some terminal require that the command string get passed as a string.
+For example, ``xfce4-terminal -e "git difftool"`` requires shellquoting,
+whereas ``gnome-terminal -- git difftool`` does not.
+
+You should not need to set this variable for the built-in terminals
+cola knows about -- it will behave correctly without configuration.
+For example, when unconfigured, cola already knows that xfce4-terminal
+requires shellquoting.
+
+This configuration variable is for custom terminals outside of the builtin set.
+The table below shows the builtin configuration.
+
+    Terminal            cola.terminal           cola.terminalshellquote
+    --------            -------------           -----------------------
+    gnome-terminal      gnome-terminal --       false
+    konsole             konsole -e              false
+    xfce4-terminal      xfce4-terminal -e       true
+    xterm               xterm -e                false
 
 cola.textwidth
 --------------
