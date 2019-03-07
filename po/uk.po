@@ -456,6 +456,12 @@ msgstr "Вік"
 msgid "All Repositories"
 msgstr "Всі репозиторіїї"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr "Дозволити оновлення без перемотки. Використання \"примусу\" може призвести до того, що віддалений репозиторій втратить коміти; використовйте це з обережністю"
 
@@ -491,6 +497,12 @@ msgstr ""
 "Замість цього буде створено легкий непідписаний теґ.\n"
 "Створити непідписаний теґ?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -519,6 +531,9 @@ msgstr "Автор"
 msgid "Authors"
 msgstr "Автори"
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr "Авто-перенос рядків"
 
@@ -531,8 +546,8 @@ msgstr "Переглядач анотацій (blame)"
 msgid "Blame..."
 msgstr "Анотувати (blame)..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Напівжирний з темним фоном шрифт замість заголовків курсивом (потрібне перезавантаження)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Напівжирний з темним фоном шрифт замість заголовків курсивом"
 
 msgid "Branch"
 msgstr "Гілка"
@@ -833,6 +848,9 @@ msgstr "Граф (DAG)..."
 msgid "Date, Time"
 msgstr "Дата, час"
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr "Видалити"
 
@@ -1043,6 +1061,14 @@ msgstr "Позначення \"%(revision)s\" як \"%(name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr "Помилка застосування prepare-commitmsg гака (hook)"
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Не вдалось створити віддалений репозиторій \"%s\""
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Помилка редагування файла"
+
 msgid "Error: Cannot find commit template"
 msgstr "Помилка: Не вдається знайти шаблон коміту"
 
@@ -1164,6 +1190,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Виправити попередній коміт"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Розмір шрифта"
 
@@ -1199,6 +1249,9 @@ msgstr "Французький переклад"
 
 msgid "GPG-sign the merge commit"
 msgstr "Підписати-GPG коміт злиття"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1243,6 +1296,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Переглядач історії"
 
@@ -1271,6 +1327,9 @@ msgstr "Ігнорувати ім'я файлу або шаблон"
 
 msgid "Include tags "
 msgstr "Включити теґ"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr "Індонезійський переклад"
@@ -1491,6 +1550,10 @@ msgstr "Відкрити"
 msgid "Open Git Repository..."
 msgstr "Відкрити Git репозиторій..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Відкрити останній"
+
 msgid "Open Parent Directory"
 msgstr "Відкрити батьківський каталог"
 
@@ -1522,10 +1585,6 @@ msgstr "Перезаписати \"%s\"?"
 
 msgid "Overwrite File?"
 msgstr "Перезаписати файл?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "Латка %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2023,6 +2082,11 @@ msgstr "Встановити репозиторій за замовчуванн�
 msgid "Set Upstream Branch"
 msgstr "Встановити віддалене джерело"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "Встановити віддалене джерело"
 
@@ -2056,6 +2120,9 @@ msgstr "Показати допомогу"
 
 msgid "Show History"
 msgstr "Показати історію"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2204,14 +2271,14 @@ msgstr "Статус"
 msgid "Stop tracking paths"
 msgstr "Перестати відслідковувати виділене"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Підсумувати коміти злиття"
 
 msgid "Summary"
 msgstr "Опис"
-
-msgid "Summary:"
-msgstr "Підсумок:"
 
 msgid "Tab Width"
 msgstr "Ширина табуляції"
@@ -2265,6 +2332,12 @@ msgstr "Наступні файли будуть видалені:"
 
 msgid "The revision expression cannot be empty."
 msgstr "Поле ревізії не може бути порожнім."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, fuzzy, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2399,8 +2472,32 @@ msgstr "Не відслідковується"
 msgid "Untracking: %s"
 msgstr "Видалення зі списку файлів, що відслідковуються: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Оновити існуючу гілку:"
+
+msgid "Update Submodule"
+msgstr ""
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Оновлення"
@@ -2502,6 +2599,15 @@ msgstr "невідомий"
 msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
 
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
+
 msgid "yyyy-MM-dd"
 msgstr "рррр-ММ-дд"
 
@@ -2542,6 +2648,9 @@ msgstr "рррр-ММ-дд"
 #~ msgid "Output: %s"
 #~ msgstr "Вивід: %s"
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "Латка %(current)d/%(count)d"
+
 #~ msgid "Rename remote?"
 #~ msgstr "Перейменувати віддалений репозиторій?"
 
@@ -2550,6 +2659,9 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Вибрати файл з \"%s\""
+
+#~ msgid "Summary:"
+#~ msgstr "Підсумок:"
 
 #~ msgid "git clone returned exit code %s"
 #~ msgstr "git clone завершилась з кодом %s"

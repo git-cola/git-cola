@@ -37,6 +37,16 @@ Usability, bells and whistles
 * `git cola` now has built-in support for HiDPI displays by enabling
   Qt's 5.6's `QT_AUTO_SCREEN_SCALE_FACTOR` feature.
 
+* `git cola` now uses HiDPI pixmaps when rendering icons, and the builtin
+  icons have been updated to look sharp when displayed in HiDPI.
+  (`#932 <https://github.com/git-cola/git-cola/pull/932>`_)
+
+Development
+-----------
+* The contribution guidelines for contributors has been updated to mention
+  how to regenerate the `*.mo` message files.
+  (`#934 <https://github.com/git-cola/git-cola/pull/934>`_)
+
 .. _v3.3:
 
 git-cola v3.3

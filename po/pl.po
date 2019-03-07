@@ -417,6 +417,12 @@ msgstr "Wiek"
 msgid "All Repositories"
 msgstr "Wszystkie repozytoria"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -452,6 +458,12 @@ msgstr ""
 "Zamiast tego zostanie utworzony niepodpisany, lekki znacznik.\n"
 "Czy utworzyć niepodpisany znacznik?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Zastosuj"
 
@@ -481,6 +493,9 @@ msgstr "Autor"
 msgid "Authors"
 msgstr "Autor"
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr "Zawijaj wiersze"
 
@@ -493,8 +508,8 @@ msgstr "Przeglądarka autorów"
 msgid "Blame..."
 msgstr "Przejrzyj autorów..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Czcionka pogrubiona z ciemnym tłem zamiast pochylonych nagłówków (wymagane ponowne uruchomienie)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Czcionka pogrubiona z ciemnym tłem zamiast pochylonych nagłówków"
 
 msgid "Branch"
 msgstr "Gałąź"
@@ -798,6 +813,9 @@ msgstr "DAG..."
 msgid "Date, Time"
 msgstr "Data, czas"
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr "Usuń"
 
@@ -1009,6 +1027,14 @@ msgstr "Znaczenie \"%(revision)s\" jako \"%(name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Błąd podczas tworzenia zdalnego repozytorium \"%s\""
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Błąd edytowania pliku"
+
 msgid "Error: Cannot find commit template"
 msgstr "Błąd: Nie można znaleźć szablonu wdrożenia"
 
@@ -1132,6 +1158,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Poprawka do wcześniejszego wdrożenia"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Rozmiar czcionki"
 
@@ -1168,6 +1218,9 @@ msgstr ""
 
 msgid "GPG-sign the merge commit"
 msgstr "Podpisz-GPG scalane wdrożenie"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1212,6 +1265,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Przeglądarka historii"
 
@@ -1239,6 +1295,9 @@ msgstr ""
 
 msgid "Include tags "
 msgstr "Uwzględnij znaczniki"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1462,6 +1521,10 @@ msgstr "Otwórz"
 msgid "Open Git Repository..."
 msgstr "Otwórz repozytorium Git..."
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Otwórz z ostatnich"
+
 msgid "Open Parent Directory"
 msgstr "Otwórz katalog nadrzędny"
 
@@ -1493,10 +1556,6 @@ msgstr "Zastąpić \"%s\"?"
 
 msgid "Overwrite File?"
 msgstr "Zastąpić plik?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr "ŁATA %(current)d/%(count)d"
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2004,6 +2063,11 @@ msgstr "Ustaw domyślne repozytorium"
 msgid "Set Upstream Branch"
 msgstr "Ustaw źródło odgórne"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "Ustaw źródło odgórne"
 
@@ -2037,6 +2101,9 @@ msgstr "Pokaż pomoc"
 
 msgid "Show History"
 msgstr "Pokaż historię"
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2184,14 +2251,14 @@ msgstr "Stan"
 msgid "Stop tracking paths"
 msgstr "Zaprzestań zarządzanie ścieżką/ścieżkami"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Podsumuj wdrożenia scalające"
 
 msgid "Summary"
 msgstr "Nazwa"
-
-msgid "Summary:"
-msgstr "Nazwa:"
 
 msgid "Tab Width"
 msgstr "Szerokość tabulacji"
@@ -2245,6 +2312,12 @@ msgstr "Zostaną usunięte następujące pliki:"
 
 msgid "The revision expression cannot be empty."
 msgstr "Wyrażenie wydania nie może być puste."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, fuzzy, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2380,8 +2453,32 @@ msgstr "Niezarządzane"
 msgid "Untracking: %s"
 msgstr "Nie zarządzaj: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Uaktualnij bieżącą gałąź:"
+
+msgid "Update Submodule"
+msgstr ""
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Uaktualnianie"
@@ -2484,6 +2581,15 @@ msgstr "nieznany"
 msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
 
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
+
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
 
@@ -2536,6 +2642,9 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Output: %s"
 #~ msgstr "Wynik: %s"
 
+#~ msgid "PATCH %(current)d/%(count)d"
+#~ msgstr "ŁATA %(current)d/%(count)d"
+
 #~ msgid "Path to git repository"
 #~ msgstr "Ścieżka do repozytorium git"
 
@@ -2554,6 +2663,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Staging Area"
 #~ msgstr "Punkt zbiorczy"
+
+#~ msgid "Summary:"
+#~ msgstr "Nazwa:"
 
 #~ msgid ""
 #~ "This PyQt4 does not include QtWebKit.\n"

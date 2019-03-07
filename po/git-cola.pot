@@ -360,6 +360,12 @@ msgstr ""
 msgid "All Repositories"
 msgstr ""
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -391,6 +397,12 @@ msgid ""
 "Create an unsigned tag?"
 msgstr ""
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr ""
 
@@ -418,6 +430,9 @@ msgstr ""
 msgid "Authors"
 msgstr ""
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr ""
 
@@ -430,7 +445,7 @@ msgstr ""
 msgid "Blame..."
 msgstr ""
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"
@@ -716,6 +731,9 @@ msgstr ""
 msgid "Date, Time"
 msgstr ""
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr ""
 
@@ -921,6 +939,13 @@ msgstr ""
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
+#, python-format
+msgid "Error updating submodule %s"
+msgstr ""
+
+msgid "Error updating submodules"
+msgstr ""
+
 msgid "Error: Cannot find commit template"
 msgstr ""
 
@@ -1039,6 +1064,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr ""
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr ""
 
@@ -1072,6 +1121,9 @@ msgid "French translation"
 msgstr ""
 
 msgid "GPG-sign the merge commit"
+msgstr ""
+
+msgid "GUI theme"
 msgstr ""
 
 #, python-format
@@ -1117,6 +1169,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr ""
 
@@ -1142,6 +1197,9 @@ msgid "Ignore filename or pattern"
 msgstr ""
 
 msgid "Include tags "
+msgstr ""
+
+msgid "Indent Status paths"
 msgstr ""
 
 msgid "Indonesian translation"
@@ -1389,10 +1447,6 @@ msgid "Overwrite \"%s\"?"
 msgstr ""
 
 msgid "Overwrite File?"
-msgstr ""
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
 msgid ""
@@ -1866,6 +1920,11 @@ msgstr ""
 msgid "Set Upstream Branch"
 msgstr ""
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr ""
 
@@ -1897,6 +1956,9 @@ msgid "Show Help"
 msgstr ""
 
 msgid "Show History"
+msgstr ""
+
+msgid "Show file counts in Status titles"
 msgstr ""
 
 msgid ""
@@ -2049,9 +2111,6 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-msgid "Summary:"
-msgstr ""
-
 msgid "Tab Width"
 msgstr ""
 
@@ -2103,6 +2162,12 @@ msgid "The following files will be deleted:"
 msgstr ""
 
 msgid "The revision expression cannot be empty."
+msgstr ""
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
 msgstr ""
 
 #, python-format
@@ -2223,7 +2288,31 @@ msgstr ""
 msgid "Untracking: %s"
 msgstr ""
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
+msgstr ""
+
+msgid "Update Submodule"
+msgstr ""
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
 msgstr ""
 
 msgid "Updating"
@@ -2322,6 +2411,15 @@ msgid "unknown"
 msgstr ""
 
 msgid "vX.Y.Z"
+msgstr ""
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
 msgstr ""
 
 msgid "yyyy-MM-dd"

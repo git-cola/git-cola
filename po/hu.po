@@ -400,6 +400,12 @@ msgstr ""
 msgid "All Repositories"
 msgstr "Globális (minden repó)"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -432,6 +438,12 @@ msgid ""
 "Create an unsigned tag?"
 msgstr ""
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 #, fuzzy
 msgid "Apply"
 msgstr "Apple"
@@ -462,6 +474,9 @@ msgstr "Szerző:"
 msgid "Authors"
 msgstr "Szerző:"
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr ""
 
@@ -476,7 +491,7 @@ msgstr "Fájl néző"
 msgid "Blame..."
 msgstr "Átnevezés..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"
@@ -800,6 +815,10 @@ msgstr ""
 msgid "Date, Time"
 msgstr ""
 
+#, fuzzy
+msgid "Default"
+msgstr "Alapértelmezés visszaállítása"
+
 msgid "Delete"
 msgstr "Törlés"
 
@@ -1039,6 +1058,14 @@ msgstr ""
 msgid "Error running prepare-commitmsg hook"
 msgstr "A pre-commit hurok meghívása..."
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Hiba a diff betöltése közben:"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Hiba a diff betöltése közben:"
+
 msgid "Error: Cannot find commit template"
 msgstr ""
 
@@ -1171,6 +1198,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Merge commit üzenet:"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Font méret"
 
@@ -1204,6 +1255,9 @@ msgid "French translation"
 msgstr ""
 
 msgid "GPG-sign the merge commit"
+msgstr ""
+
+msgid "GUI theme"
 msgstr ""
 
 #, fuzzy, python-format
@@ -1250,6 +1304,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 #, fuzzy
 msgid "History Browser"
 msgstr "Fájl böngésző"
@@ -1278,6 +1335,9 @@ msgstr ""
 #, fuzzy
 msgid "Include tags "
 msgstr "Tageket is"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1527,6 +1587,10 @@ msgid "Open Git Repository..."
 msgstr "Létező könyvtár megnyitása"
 
 #, fuzzy
+msgid "Open Parent"
+msgstr "Legutóbbi repók megnyitása:"
+
+#, fuzzy
 msgid "Open Parent Directory"
 msgstr "Legutóbbi repók megnyitása:"
 
@@ -1559,10 +1623,6 @@ msgid "Overwrite \"%s\"?"
 msgstr ""
 
 msgid "Overwrite File?"
-msgstr ""
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
 msgid ""
@@ -2108,6 +2168,11 @@ msgstr "Git repó"
 msgid "Set Upstream Branch"
 msgstr "Kiválaszt"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 #, fuzzy
 msgid "Set upstream"
 msgstr "Kiválaszt"
@@ -2143,6 +2208,9 @@ msgid "Show Help"
 msgstr "Segítség"
 
 msgid "Show History"
+msgstr ""
+
+msgid "Show file counts in Status titles"
 msgstr ""
 
 msgid ""
@@ -2309,13 +2377,13 @@ msgstr ""
 msgid "Stop tracking paths"
 msgstr ""
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "A merge commitok összegzése"
 
 msgid "Summary"
-msgstr ""
-
-msgid "Summary:"
 msgstr ""
 
 msgid "Tab Width"
@@ -2373,6 +2441,12 @@ msgstr ""
 #, fuzzy
 msgid "The revision expression cannot be empty."
 msgstr "A revízió kifejezés üres."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2498,8 +2572,33 @@ msgstr "Nem követett, nem kiválasztott"
 msgid "Untracking: %s"
 msgstr ""
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Létező branch frissítése"
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "Frissítve"
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 #, fuzzy
 msgid "Updating"
@@ -2603,6 +2702,15 @@ msgid "unknown"
 msgstr ""
 
 msgid "vX.Y.Z"
+msgstr ""
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
 msgstr ""
 
 msgid "yyyy-MM-dd"
@@ -3313,9 +3421,6 @@ msgstr ""
 #~ "\n"
 #~ "Folytatjuk a jelenlegi módosítások visszavonását?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "Alapértelmezés visszaállítása"
-
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Visszaállítja a változtatásokat ebben e %i fájlban?"
 
@@ -3508,9 +3613,6 @@ msgstr ""
 
 #~ msgid "Unsupported spell checker"
 #~ msgstr "Nem támogatott helyesírás-ellenőrző"
-
-#~ msgid "Updated"
-#~ msgstr "Frissítve"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "A Git index frissítése sikertelen volt.  Egy újraolvasás automatikusan elindult, hogy a git-gui újra szinkonban legyen."

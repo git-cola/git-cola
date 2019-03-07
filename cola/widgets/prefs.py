@@ -189,12 +189,9 @@ class SettingsFormWidget(FormWidget):
         self.linebreak = qtutils.checkbox()
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
-        self.bold_headers = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
-        self.status_indent = qtutils.checkbox()
-        self.status_show_totals = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -208,14 +205,8 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Insert spaces instead of tabs'), self.expandtab)
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
-        self.add_row(N_('Bold on dark headers instead of italic '
-                        '(restart required)'), self.bold_headers)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
-        self.add_row(N_('Indent Status paths '
-                        '(restart required)'), self.status_indent)
-        self.add_row(N_('Show file counts in Status titles '
-                        '(restart required)'), self.status_show_totals)
 
         self.set_config({
             prefs.SAVEWINDOWSETTINGS:
@@ -227,7 +218,6 @@ class SettingsFormWidget(FormWidget):
             prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
             prefs.SORT_BOOKMARKS:
                 (self.sort_bookmarks, Defaults.sort_bookmarks),
-            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
             prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
             prefs.EDITOR:
                 (self.editor, os.getenv('VISUAL', Defaults.editor)),
@@ -238,9 +228,6 @@ class SettingsFormWidget(FormWidget):
                 (self.keep_merge_backups, Defaults.merge_keep_backup),
             prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
-            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
-            prefs.STATUS_SHOW_TOTALS:
-                (self.status_show_totals, Defaults.status_show_totals)
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
@@ -278,19 +265,44 @@ class AppearanceFormWidget(FormWidget):
         self.theme = qtutils.combo_mapped(themes.themes_map())
         self.high_dpi = qtutils.combo_mapped(hidpi.choices_map())
         self.high_dpi.setEnabled(hidpi.is_supported())
+        self.bold_headers = qtutils.checkbox()
+        self.status_show_totals = qtutils.checkbox()
+        self.status_indent = qtutils.checkbox()
 
-        label = QtWidgets.QLabel(
-            '<b>'
-            + N_('Appearance settings require an application restart')
-            + '</b>')
-        self.add_row('<br/><br/>', label)
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('High DPI'), self.high_dpi)
+        self.add_row(N_('Bold on dark headers instead of italic'),
+                     self.bold_headers)
+        self.add_row(N_('Show file counts in Status titles'),
+                     self.status_show_totals)
+        self.add_row(N_('Indent Status paths'), self.status_indent)
 
         self.set_config({
+            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
+            prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
+            prefs.STATUS_SHOW_TOTALS:
+                (self.status_show_totals, Defaults.status_show_totals),
+            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
             prefs.THEME: (self.theme, Defaults.theme),
-            prefs.HIDPI: (self.high_dpi, Defaults.hidpi)
         })
+
+
+class AppearanceWidget(QtWidgets.QWidget):
+
+    def __init__(self, form, parent):
+        QtWidgets.QWidget.__init__(self, parent)
+        self.form = form
+        self.label = QtWidgets.QLabel(
+            '<center><b>'
+            + N_('Appearance settings require an application restart')
+            + '</b></center>')
+        layout = qtutils.vbox(defs.margin, defs.spacing,
+                              self.form, defs.spacing * 4, self.label,
+                              qtutils.STRETCH)
+        self.setLayout(layout)
+
+    def update_from_config(self):
+        self.form.update_from_config()
 
 
 class PreferencesView(standard.Dialog):
@@ -314,7 +326,8 @@ class PreferencesView(standard.Dialog):
         self.user_form = RepoFormWidget(context, model, self, source='user')
         self.repo_form = RepoFormWidget(context, model, self, source='repo')
         self.options_form = SettingsFormWidget(context, model, self)
-        self.appearance = AppearanceFormWidget(context, model, self)
+        self.appearance_form = AppearanceFormWidget(context, model, self)
+        self.appearance = AppearanceWidget(self.appearance_form, self)
 
         self.stack_widget = QtWidgets.QStackedWidget()
         self.stack_widget.addWidget(self.user_form)

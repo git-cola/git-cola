@@ -39,6 +39,7 @@ class GravatarLabel(QtWidgets.QLabel):
         self.timeout = 0
         self.imgsize = defs.medium_icon
         self.pixmaps = {}
+        self._default_pixmap_bytes = None
 
         self.network = QtNetwork.QNetworkAccessManager()
         self.network.finished.connect(self.network_finished)
@@ -62,13 +63,17 @@ class GravatarLabel(QtWidgets.QLabel):
         self.network.get(QtNetwork.QNetworkRequest(QtCore.QUrl(url)))
 
     def default_pixmap_as_bytes(self):
-        xres = self.imgsize
-        pixmap = icons.cola().pixmap(xres)
-        byte_array = QtCore.QByteArray()
-        buf = QtCore.QBuffer(byte_array)
-        buf.open(QtCore.QIODevice.WriteOnly)
-        pixmap.save(buf, 'PNG')
-        buf.close()
+        if self._default_pixmap_bytes is None:
+            xres = self.imgsize
+            pixmap = icons.cola().pixmap(xres)
+            byte_array = QtCore.QByteArray()
+            buf = QtCore.QBuffer(byte_array)
+            buf.open(QtCore.QIODevice.WriteOnly)
+            pixmap.save(buf, 'PNG')
+            buf.close()
+            self._default_pixmap_bytes = byte_array
+        else:
+            byte_array = self._default_pixmap_bytes
         return byte_array
 
     def network_finished(self, reply):
@@ -106,6 +111,8 @@ class GravatarLabel(QtWidgets.QLabel):
             self.pixmaps[email] = pixmap
 
     def set_pixmap_from_response(self):
+        if self.response is None:
+            self.response = self._default_pixmap_bytes()
         pixmap = QtGui.QPixmap()
         pixmap.loadFromData(self.response)
         self.setPixmap(pixmap)

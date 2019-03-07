@@ -496,6 +496,12 @@ msgstr "Idade"
 msgid "All Repositories"
 msgstr "Todos os Repositórios"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr "Permitir atualizações non-fast-forward.  Usando \"force\" pode fazer com que o repositório perca commits; use com cuidado."
 
@@ -531,6 +537,12 @@ msgstr ""
 "Uma tag leve e não assinada será criada.\n"
 "Criar uma tag não assinada?"
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -558,6 +570,9 @@ msgstr "Autor"
 msgid "Authors"
 msgstr "Autores"
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr "Auto-Quebra de Linhas"
 
@@ -570,8 +585,8 @@ msgstr "Visualizador de Blame"
 msgid "Blame..."
 msgstr "Blame..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
-msgstr "Fonte em negrito com o fundo escuro em vez de cabeçalhos em itálico (necessita reiniciar)"
+msgid "Bold on dark headers instead of italic"
+msgstr "Fonte em negrito com o fundo escuro em vez de cabeçalhos em itálico"
 
 msgid "Branch"
 msgstr "Branch"
@@ -863,6 +878,9 @@ msgstr "Visualizar o histórico..."
 msgid "Date, Time"
 msgstr "Data, Tempo"
 
+msgid "Default"
+msgstr ""
+
 msgid "Delete"
 msgstr "Deletar"
 
@@ -1070,6 +1088,14 @@ msgstr "Erro renomeando \"%(name)s\" para \"%(new_name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr "Erro executando prepare-commitmsg hook"
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Erro criando o remoto \"%s\""
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Erro Editando Arquivo"
+
 msgid "Error: Cannot find commit template"
 msgstr "Erro: Não foi possível encontrar o template do commit"
 
@@ -1192,6 +1218,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Fixup Commit Anterior"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Tamanho de Fonte"
 
@@ -1226,6 +1276,9 @@ msgstr ""
 
 msgid "GPG-sign the merge commit"
 msgstr "Assinar com GPG o Commit de Merge"
+
+msgid "GUI theme"
+msgstr ""
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1270,6 +1323,9 @@ msgstr "Ajuda - git-xbase"
 msgid "Hide Details.."
 msgstr "Esconder Detalhes..."
 
+msgid "High DPI"
+msgstr ""
+
 msgid "History Browser"
 msgstr "Navegador de Histórico"
 
@@ -1296,6 +1352,9 @@ msgstr "Ignorar nome do arquivo ou padrão"
 
 msgid "Include tags "
 msgstr "Incluir tags"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1519,6 +1578,10 @@ msgstr "Abrir"
 msgid "Open Git Repository..."
 msgstr "Abrir o Repositório Git"
 
+#, fuzzy
+msgid "Open Parent"
+msgstr "Aberto Recentemente"
+
 msgid "Open Parent Directory"
 msgstr "Abrir Pasta Pai"
 
@@ -1550,10 +1613,6 @@ msgstr "Sobrescrever \"%s\"?"
 
 msgid "Overwrite File?"
 msgstr "Sobrescrever Arquivo?"
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
-msgstr ""
 
 msgid ""
 "Parse arguments using a shell.\n"
@@ -2041,6 +2100,11 @@ msgstr "Definir Repositório Padrão"
 msgid "Set Upstream Branch"
 msgstr "Definir Branch Upstream"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 msgid "Set upstream"
 msgstr "Definir Upstream"
 
@@ -2075,6 +2139,9 @@ msgstr "Ajuda"
 #, fuzzy
 msgid "Show History"
 msgstr "Ver Histórico..."
+
+msgid "Show file counts in Status titles"
+msgstr ""
 
 msgid ""
 "Show help\n"
@@ -2220,14 +2287,14 @@ msgstr ""
 msgid "Stop tracking paths"
 msgstr "Parar rastreamento de caminhos"
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Resumir os Commits de Merge"
 
 msgid "Summary"
 msgstr "Sumário"
-
-msgid "Summary:"
-msgstr "Sumário:"
 
 msgid "Tab Width"
 msgstr "Largura da Aba"
@@ -2282,6 +2349,12 @@ msgstr "Os arquivos a seguir serão apagados:"
 
 msgid "The revision expression cannot be empty."
 msgstr "A revisão da expressão não pode ser vazia"
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2415,8 +2488,36 @@ msgstr "Não rastreado"
 msgid "Untracking: %s"
 msgstr "Removendo rastreio: %s"
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Atualizar Branch Existente:"
+
+msgid "Update Submodule"
+msgstr ""
+
+msgid "Update Submodule..."
+msgstr ""
+
+#, fuzzy
+msgid "Update Submodules"
+msgstr "Inicializar submodulos"
+
+#, fuzzy
+msgid "Update all submodules?"
+msgstr "Inicializar submodulos"
+
+#, fuzzy
+msgid "Update submodules..."
+msgstr "Inicializar submodulos"
+
+#, fuzzy
+msgid "Update this submodule"
+msgstr "Inicializar submodulos"
+
+msgid "Update this submodule?"
+msgstr ""
 
 msgid "Updating"
 msgstr "Atualizando"
@@ -2518,6 +2619,15 @@ msgstr "desconhecido"
 msgid "vX.Y.Z"
 msgstr ""
 
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
+msgstr ""
+
 msgid "yyyy-MM-dd"
 msgstr ""
 
@@ -2590,6 +2700,9 @@ msgstr ""
 
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Selecione um arquivo de \"%s\""
+
+#~ msgid "Summary:"
+#~ msgstr "Sumário:"
 
 #~ msgid "Updating..."
 #~ msgstr "Atualização..."

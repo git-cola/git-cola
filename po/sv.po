@@ -399,6 +399,12 @@ msgstr ""
 msgid "All Repositories"
 msgstr "Globalt (alla arkiv)"
 
+#, python-format
+msgid ""
+"All submodules will be updated using\n"
+"\"%s\""
+msgstr ""
+
 msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
 msgstr ""
 
@@ -431,6 +437,12 @@ msgid ""
 "Create an unsigned tag?"
 msgstr ""
 
+msgid "Appearance"
+msgstr ""
+
+msgid "Appearance settings require an application restart"
+msgstr ""
+
 #, fuzzy
 msgid "Apply"
 msgstr "Äpple"
@@ -461,6 +473,9 @@ msgstr "Författare:"
 msgid "Authors"
 msgstr "Författare:"
 
+msgid "Auto"
+msgstr ""
+
 msgid "Auto-Wrap Lines"
 msgstr ""
 
@@ -475,7 +490,7 @@ msgstr "Filvisare"
 msgid "Blame..."
 msgstr "Byt namn..."
 
-msgid "Bold on dark headers instead of italic (restart required)"
+msgid "Bold on dark headers instead of italic"
 msgstr ""
 
 msgid "Branch"
@@ -799,6 +814,10 @@ msgstr ""
 msgid "Date, Time"
 msgstr ""
 
+#, fuzzy
+msgid "Default"
+msgstr "Återställ standardvärden"
+
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -1038,6 +1057,14 @@ msgstr ""
 msgid "Error running prepare-commitmsg hook"
 msgstr "Anropar krok före incheckning..."
 
+#, fuzzy, python-format
+msgid "Error updating submodule %s"
+msgstr "Fel vid inläsning av differens:"
+
+#, fuzzy
+msgid "Error updating submodules"
+msgstr "Fel vid inläsning av differens:"
+
 msgid "Error: Cannot find commit template"
 msgstr ""
 
@@ -1170,6 +1197,30 @@ msgstr ""
 msgid "Fixup Previous Commit"
 msgstr "Incheckningsmeddelande för sammanslagning:"
 
+msgid "Flat dark blue"
+msgstr ""
+
+msgid "Flat dark green"
+msgstr ""
+
+msgid "Flat dark grey"
+msgstr ""
+
+msgid "Flat dark red"
+msgstr ""
+
+msgid "Flat light blue"
+msgstr ""
+
+msgid "Flat light green"
+msgstr ""
+
+msgid "Flat light grey"
+msgstr ""
+
+msgid "Flat light red"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Storlek"
 
@@ -1203,6 +1254,9 @@ msgid "French translation"
 msgstr ""
 
 msgid "GPG-sign the merge commit"
+msgstr ""
+
+msgid "GUI theme"
 msgstr ""
 
 #, fuzzy, python-format
@@ -1249,6 +1303,9 @@ msgstr ""
 msgid "Hide Details.."
 msgstr ""
 
+msgid "High DPI"
+msgstr ""
+
 #, fuzzy
 msgid "History Browser"
 msgstr "Filbläddrare"
@@ -1277,6 +1334,9 @@ msgstr ""
 #, fuzzy
 msgid "Include tags "
 msgstr "Ta med taggar"
+
+msgid "Indent Status paths"
+msgstr ""
 
 msgid "Indonesian translation"
 msgstr ""
@@ -1526,6 +1586,10 @@ msgid "Open Git Repository..."
 msgstr "Öppna befintligt arkiv"
 
 #, fuzzy
+msgid "Open Parent"
+msgstr "Öppna tidigare arkiv:"
+
+#, fuzzy
 msgid "Open Parent Directory"
 msgstr "Öppna tidigare arkiv:"
 
@@ -1558,10 +1622,6 @@ msgid "Overwrite \"%s\"?"
 msgstr ""
 
 msgid "Overwrite File?"
-msgstr ""
-
-#, python-format
-msgid "PATCH %(current)d/%(count)d"
 msgstr ""
 
 msgid ""
@@ -2107,6 +2167,11 @@ msgstr "Gitarkiv"
 msgid "Set Upstream Branch"
 msgstr "Välj"
 
+msgid ""
+"Set the sort order for branches and tags.\n"
+"Toggle between date-based and version-name-based sorting."
+msgstr ""
+
 #, fuzzy
 msgid "Set upstream"
 msgstr "Välj"
@@ -2142,6 +2207,9 @@ msgid "Show Help"
 msgstr "Hjälp"
 
 msgid "Show History"
+msgstr ""
+
+msgid "Show file counts in Status titles"
 msgstr ""
 
 msgid ""
@@ -2308,13 +2376,13 @@ msgstr ""
 msgid "Stop tracking paths"
 msgstr ""
 
+msgid "Submodules"
+msgstr ""
+
 msgid "Summarize Merge Commits"
 msgstr "Summera sammanslagningsincheckningar"
 
 msgid "Summary"
-msgstr ""
-
-msgid "Summary:"
 msgstr ""
 
 msgid "Tab Width"
@@ -2372,6 +2440,12 @@ msgstr ""
 #, fuzzy
 msgid "The revision expression cannot be empty."
 msgstr "Revisionsuttrycket är tomt."
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
@@ -2497,8 +2571,33 @@ msgstr "Ej spårade, ej köade"
 msgid "Untracking: %s"
 msgstr ""
 
+msgid "Update All Submodules..."
+msgstr ""
+
 msgid "Update Existing Branch:"
 msgstr "Uppdatera befintlig gren:"
+
+#, fuzzy
+msgid "Update Submodule"
+msgstr "Uppdaterad"
+
+msgid "Update Submodule..."
+msgstr ""
+
+msgid "Update Submodules"
+msgstr ""
+
+msgid "Update all submodules?"
+msgstr ""
+
+msgid "Update submodules..."
+msgstr ""
+
+msgid "Update this submodule"
+msgstr ""
+
+msgid "Update this submodule?"
+msgstr ""
 
 #, fuzzy
 msgid "Updating"
@@ -2602,6 +2701,15 @@ msgid "unknown"
 msgstr ""
 
 msgid "vX.Y.Z"
+msgstr ""
+
+msgid "x 1"
+msgstr ""
+
+msgid "x 1.5"
+msgstr ""
+
+msgid "x 2"
 msgstr ""
 
 msgid "yyyy-MM-dd"
@@ -3283,9 +3391,6 @@ msgstr ""
 #~ "\n"
 #~ "Gå vidare med att återställa de aktuella ändringarna?"
 
-#~ msgid "Restore Defaults"
-#~ msgstr "Återställ standardvärden"
-
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Återställ ändringarna i dessa %i filer?"
 
@@ -3473,9 +3578,6 @@ msgstr ""
 
 #~ msgid "Unsupported spell checker"
 #~ msgstr "Stavningskontrollprogrammet stöds inte"
-
-#~ msgid "Updated"
-#~ msgstr "Uppdaterad"
 
 #~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
 #~ msgstr "Misslyckades med att uppdatera Gitindexet. En omsökning kommer att startas automatiskt för att synkronisera om git-gui."
