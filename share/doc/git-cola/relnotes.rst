@@ -21,6 +21,9 @@ git-cola v3.4
 
 Usability, bells and whistles
 -----------------------------
+* Updated German translation.
+  (`#936 <https://github.com/git-cola/git-cola/pull/936>`_)
+
 * The `Status` widget learned to optionally display file counts in its
   category headers, and indent the files displayed in each category.
   (`#931 <https://github.com/git-cola/git-cola/pull/931>`_)
