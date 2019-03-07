@@ -169,6 +169,15 @@ class Theme(object):
                 show-decoration-selected: 1;
                 spacing: 2px;
             }
+
+            /* Focused widths get a thin border */
+            QTreeView:focus, QListView:focus,
+            QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+                border-width: 2px;
+                border-style: solid;
+                border-color: %(focus)s;
+            }
+
             QWidget:disabled {
                 border-color: %(grayed)s;
                 color: %(grayed)s;
@@ -189,12 +198,6 @@ class Theme(object):
             }
             QAbstractItemView::item:hover {
                 background-color: %(lighter)s;
-            }
-            QWidget:focus {
-                border-color: %(focus)s;
-            }
-            QStackedWidget QFrame {
-                border-width: 0;
             }
             QLabel {
                 color: %(darker)s;
