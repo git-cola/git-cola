@@ -173,7 +173,7 @@ class Theme(object):
             /* Focused widths get a thin border */
             QTreeView:focus, QListView:focus,
             QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
-                border-width: 2px;
+                border-width: 1px;
                 border-style: solid;
                 border-color: %(focus)s;
             }
