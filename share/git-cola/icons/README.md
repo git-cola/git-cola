@@ -1,5 +1,26 @@
-Git Cola Icons
---------------
+# Git Cola Icons
+
+## Guidelines
+
+1. Size: 22x22px (the default action icon size of KDE and GNOME)
+2. Margin: 1px (20x20px drawing area)
+3. Colors: #000000 black, #ffffff white, #cc0000 red, #00dd26 green, #1961ff blue
+
+## Copyright
+
+### New icons
+
+The following icons are created/re-created by [Guo Yunhe](https://guoyunhe.me/):
+
+- a-z-order.svg
+- check.svg
+- circle-slash-red.svg
+- circle-slash.svg
+- desktop-download.svg
+- diff.svg
+
+### Original icons
+
 The following icons are based on the based on the original .png icon designs
 for git-cola's File Browser by Uri Okrent.
 
@@ -14,8 +35,8 @@ Copyright (C) 2015-2017 David Aguilar and contributors
 License: MIT
 
 
-Git Logo
---------
+### Git Logo
+
 Git Logo by Jason Long is licensed under the
 Creative Commons Attribution 3.0 Unported License.
 http://git-scm.com/downloads/logos
@@ -23,8 +44,8 @@ http://git-scm.com/downloads/logos
 git-cola.svg is based on the original Git Logo.
 
 
-Octicons
---------
+### Octicons
+
 The following files are from Github's
 [octicons](https://github.com/github/octicons) icon set:
 
@@ -67,8 +88,8 @@ x.svg
 Copyright (C) 2012-2015 GitHub
 License: [MIT](http://choosealicense.com/licenses/mit/)
 
-Gnome Adwaita Icons
--------------------
+### Gnome Adwaita Icons
+
 The following files are from the Gnome project's
 [Adwaita icon theme](https://github.com/GNOME/adwaita-icon-theme):
 
@@ -77,8 +98,8 @@ document-save-symbolic.svg
 Copyright (C) The Gnome Project
 License: [LGPL](https://github.com/GNOME/adwaita-icon-theme/blob/master/COPYING_LGPL)
 
-Gnome High Contrast Icons
--------------------------
+### Gnome High Contrast Icons
+
 The following files are from the Gnome High Contrast Icon set:
 
 zoom-fit-best.svg
@@ -88,8 +109,7 @@ zoom-out.svg
 License: LGPL v2+
 
 
-Flaticon.com Icons
-------------------
+### Flaticon.com Icons
 
 The following files are designed by Freepik from http://www.flaticons.com/
 
@@ -105,8 +125,7 @@ edit-copy.svg
 License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
 
-Google Icons
-------------
+### Google Icons
 
 The following files are by Google:
 
