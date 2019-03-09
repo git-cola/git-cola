@@ -139,7 +139,11 @@ class Theme(object):
                 color.hslSaturationF()*0.7,
                 color.lightnessF()*0.6
             )
-            focus = color_rgb
+            focus = qtutils.hsl_css(
+                color.hslHueF(),
+                color.hslSaturationF()*0.7,
+                color.lightnessF()*0.7
+            )
         else:
             background = '#edeef3'
             field = '#ffffff'
@@ -187,7 +191,7 @@ class Theme(object):
                 min-height: 40px;
             }
             QPlainTextEdit, QLineEdit, QTextEdit, QAbstractItemView,
-            QStackedWidget, QAbstractSpinBox {
+            QAbstractSpinBox {
                 background-color: %(field)s;
                 border-color: %(grayed)s;
                 border-style: solid;
@@ -202,6 +206,9 @@ class Theme(object):
             QLabel {
                 color: %(darker)s;
                 background-color: transparent;
+            }
+            DockTitleBarWidget {
+                padding-bottom: 4px;
             }
 
             /* buttons */
