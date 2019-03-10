@@ -62,7 +62,7 @@ class Defaults(object):
     merge_diffstat = True
     merge_keep_backup = True
     merge_summary = True
-    merge_verbosity = 4
+    merge_verbosity = 2
     save_window_settings = True
     safe_mode = False
     show_path = True
