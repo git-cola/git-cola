@@ -10,6 +10,7 @@ from .. import cmds
 from .. import hidpi
 from .. import qtutils
 from .. import themes
+from ..compat import ustr
 from ..i18n import N_
 from ..models import prefs
 from ..models.prefs import Defaults
@@ -262,8 +263,8 @@ class AppearanceFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
 
-        self.theme = qtutils.combo_mapped(themes.themes_map())
-        self.high_dpi = qtutils.combo_mapped(hidpi.choices_map())
+        self.theme = qtutils.combo_mapped(themes.options())
+        self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
         self.high_dpi.setEnabled(hidpi.is_supported())
         self.bold_headers = qtutils.checkbox()
         self.status_show_totals = qtutils.checkbox()

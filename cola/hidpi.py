@@ -19,15 +19,16 @@ def is_supported():
 
 
 def apply_choice(value):
+    value = compat.ustr(value)
     if value == EChoice.AUTO:
         compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
         compat.unsetenv('QT_SCALE_FACTOR')
     else:
         compat.unsetenv('QT_AUTO_SCREEN_SCALE_FACTOR')
-        compat.setenv('QT_SCALE_FACTOR', str(value))
+        compat.setenv('QT_SCALE_FACTOR', value)
 
 
-def choices_map():
+def options():
     return (
         (N_('Auto'), EChoice.AUTO),
         (N_('x 1'), EChoice.TIMES_1),

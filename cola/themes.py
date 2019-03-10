@@ -542,7 +542,7 @@ def get_all_themes():
     ]
 
 
-def themes_map():
+def options():
     """Return a dictionary mapping display names to theme names"""
     items = get_all_themes()
     return [(item.hr_name, item.name) for item in items]

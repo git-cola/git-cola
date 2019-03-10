@@ -214,9 +214,10 @@ def label(text=None, align=None, fmt=None, selectable=True):
 class ComboBox(QtWidgets.QComboBox):
     """Custom read-only combobox with a convenient API"""
 
-    def __init__(self, items=None, editable=False, parent=None):
+    def __init__(self, items=None, editable=False, parent=None, transform=None):
         super(ComboBox, self).__init__(parent)
         self.setEditable(editable)
+        self.transform = transform
         self.item_data = []
         if items:
             self.addItems(items)
@@ -234,6 +235,8 @@ class ComboBox(QtWidgets.QComboBox):
         return self.item_data[self.currentIndex()]
 
     def set_value(self, value):
+        if self.transform:
+            value = self.transform(value)
         try:
             index = self.item_data.index(value)
         except ValueError:
@@ -246,9 +249,9 @@ def combo(items, editable=False, parent=None):
     return ComboBox(editable=editable, items=items, parent=parent)
 
 
-def combo_mapped(data, editable=False, parent=None):
+def combo_mapped(data, editable=False, transform=None, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
-    widget = ComboBox(editable=editable, parent=parent)
+    widget = ComboBox(editable=editable, transform=transform, parent=parent)
     for (k, v) in data:
         widget.add_item(k, v)
     return widget
