@@ -703,6 +703,11 @@ class SpinBox(QtWidgets.QSpinBox):
         if value is not None:
             self.setValue(value)
 
+        font = self.font()
+        metrics = QtGui.QFontMetrics(font)
+        width = max(self.minimumWidth(), metrics.width('XXXXXX'))
+        self.setMinimumWidth(width)
+
 
 def export_header_columns(widget, state):
     """Save QHeaderView column sizes"""
