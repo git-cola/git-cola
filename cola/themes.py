@@ -408,6 +408,8 @@ class Theme(object):
 
             /* check box */
             QCheckBox {
+                spacing: 8px;
+                margin: 4px;
                 background-color: transparent;
             }
             QCheckBox::indicator {
