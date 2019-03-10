@@ -115,8 +115,8 @@ class Theme(object):
                        checkbox_size=defs.checkbox,
                        radio_border=defs.radio_border,
                        radio_icon=icons.dot_name(),
-                       radio_radius=defs.checkbox//2,
-                       radio_size=defs.checkbox)
+                       radio_radius=defs.radio//2,
+                       radio_size=defs.radio)
 
     def style_sheet_flat(self):
         main_color = self.main_color

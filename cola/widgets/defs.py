@@ -34,7 +34,8 @@ huge_icon = scale(192)
 max_size = scale(4096)
 
 border = max(1, scale(0.5))
-checkbox = scale(12)
+checkbox = scale(18)
+radio = scale(22)
 
 logo_text = 24
 
