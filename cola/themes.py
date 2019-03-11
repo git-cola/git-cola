@@ -417,7 +417,6 @@ class Theme(object):
                 border-color: %(darker)s;
                 border-style: solid;
                 subcontrol-position: left;
-                border-radius: 2px;
                 border-width: 1px;
                 height: 13px;
                 width: 13px;
@@ -436,6 +435,16 @@ class Theme(object):
             }
             QCheckBox::indicator:checked:pressed {
                 background-color: %(field)s;
+            }
+
+            /* radio checkbox */
+            QRadioButton {
+                spacing: 8px;
+                margin: 4px;
+            }
+            QRadioButton::indicator {
+                height: 0.75em;
+                width: 0.75em;
             }
 
             /* progress bar */
