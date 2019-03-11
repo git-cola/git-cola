@@ -71,7 +71,7 @@ class Defaults(object):
     tabwidth = 8
     textwidth = 72
     theme = 'default'
-    hidpi = hidpi.EChoice.AUTO
+    hidpi = hidpi.Option.AUTO
     status_indent = False
     status_show_totals = False
 

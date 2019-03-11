@@ -192,7 +192,7 @@ class ColaApplication(object):
 
     def _install_hidpi_config(self):
         """Sets QT HIDPI scalling (requires Qt 5.6)"""
-        value = self.context.cfg.get('cola.hidpi', default=hidpi.EChoice.AUTO)
+        value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
 
     def activeWindow(self):
