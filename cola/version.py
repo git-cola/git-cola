@@ -33,6 +33,8 @@ _versions = {
     # new: git cat-file --filters --path=<path> SHA1
     # old: git cat-file --filters blob SHA1:<path>
     'cat-file-filters-path': '2.11.0',
+    # Qt support for QT_AUTO_SCREEN_SCALE_FACTOR and QT_SCALE_FACTOR
+    'qt-hidpi-scale': '5.6.0',
     # git rev-parse --show-superproject-working-tree was added in 2.13.0
     'show-superproject-working-tree': '2.13.0',
 }

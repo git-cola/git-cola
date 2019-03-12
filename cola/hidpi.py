@@ -1,10 +1,11 @@
 """Provides High DPI support by wrapping Qt options"""
 from __future__ import absolute_import, division, unicode_literals
 
-from qtpy.QtCore import QT_VERSION
+from qtpy import QtCore
 
-from . import compat
 from .i18n import N_
+from . import compat
+from . import version
 
 
 class Option(object):
@@ -15,7 +16,7 @@ class Option(object):
 
 
 def is_supported():
-    return QT_VERSION >= 0x050600
+    return version.check('qt-hidpi-scale', QtCore.__version__)
 
 
 def apply_choice(value):

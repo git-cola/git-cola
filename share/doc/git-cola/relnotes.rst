@@ -39,6 +39,7 @@ Usability, bells and whistles
 
 * `git cola` now has built-in support for HiDPI displays by enabling
   Qt's 5.6's `QT_AUTO_SCREEN_SCALE_FACTOR` feature.
+  (`#938 <https://github.com/git-cola/git-cola/issues/938>`_)
 
 * `git cola` now uses HiDPI pixmaps when rendering icons, and the builtin
   icons have been updated to look sharp when displayed in HiDPI.
