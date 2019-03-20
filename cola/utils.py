@@ -12,6 +12,7 @@ import time
 import traceback
 
 from . import core
+from . import compat
 
 random.seed(hash(time.time()))
 
@@ -213,21 +214,34 @@ def tablength(word, tabwidth):
     return len(word.replace('\t', '')) + word.count('\t') * tabwidth
 
 
-def _shell_split(s):
-    """Split string apart into utf-8 encoded words using shell syntax"""
+def _shell_split_py2(s):
+    """Python2 requires bytes inputs to shlex.split().  Returns [unicode]"""
     try:
-        return shlex.split(core.encode(s))
+        result = shlex.split(core.encode(s))
     except ValueError:
-        return [core.encode(s)]
+        result = core.encode(s).strip().split()
+    # Decode to unicode strings
+    return [core.decode(arg) for arg in result]
 
 
-if sys.version_info[0] == 3:
-    # In Python 3, we don't need the encode/decode dance
-    shell_split = shlex.split
-else:
-    def shell_split(s):
-        """Returns a unicode list instead of encoded strings"""
-        return [core.decode(arg) for arg in _shell_split(s)]
+def _shell_split_py3(s):
+    """Python3 requires unicode inputs to shlex.split().  Converts to unicode"""
+    try:
+        result = shlex.split(s)
+    except ValueError:
+        result = core.decode(s).strip().split()
+    # Already unicode
+    return result
+
+
+def shell_split(s):
+    if compat.PY2:
+        # Encode before calling split()
+        values = _shell_split_py2(s)
+    else:
+        # Python3 does not need the encode/decode dance
+        values = _shell_split_py3(s)
+    return values
 
 
 def tmp_filename(label, suffix=''):

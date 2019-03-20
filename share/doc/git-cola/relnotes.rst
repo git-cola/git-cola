@@ -54,6 +54,11 @@ Fixes
   as a single string instead of as arguments to `execv()`.
   (`#935 <https://github.com/git-cola/git-cola/pull/935>`_)
 
+* `git dag` now properly handles arbitrary input on Python3.
+  Previously, an exception would be raised when entering `--grep=xxx` where
+  `xxx` is a quoted string with a missing end-quote.
+  (`#941 <https://github.com/git-cola/git-cola/pull/941>`_)
+
 Development
 -----------
 * The contribution guidelines for contributors has been updated to mention
