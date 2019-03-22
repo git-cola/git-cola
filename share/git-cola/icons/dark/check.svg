@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="check.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,25 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1033"
-     inkscape:window-height="472"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="982.77966"
-     inkscape:cy="512"
-     inkscape:window-x="146"
-     inkscape:window-y="359"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:zoom="41.7193"
+     inkscape:cx="8.2881358"
+     inkscape:cy="12.627119"
+     inkscape:window-x="0"
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true" />
   <path
-     d="M768 320L256 832 0 576l96-96 160 160 416-416 96 96z"
+     d="M 21,4.15789 7.66666,21 1,12.57895 3.5,9.42105 7.66666,14.68421 18.5,1 Z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02926831"
+     inkscape:connector-curvature="0" />
 </svg>

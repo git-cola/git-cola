@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="896"
+   height="22"
+   width="22.000002"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="telescope.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,25 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="448"
-     inkscape:cy="512"
+     inkscape:zoom="41.7193"
+     inkscape:cx="9.3838368"
+     inkscape:cy="12.83126"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true" />
   <path
-     d="M512 576l192 384h-64L512 704v320h-64V640L320 960h-64l128-320 128-64zM448 0h-64v64h64V0zM320 192h-64v64h64v-64zM128 64H64v64h64V64zM40 576c-14 10-18 28-10 43l35 59c8 15 26 20 41 13l89-42-74-128-81 55z m505-345L174 484l79 137 405-194-113-196z m270 82l-94-161c-9-16-30-21-46-11l-77 53 118 205 85-41c17-8 23-28 14-45z"
+     d="m 13.255457,12.25 4.84089,7.5 h -1.61363 l -3.22726,-5 V 21 h -1.61363 v -7.5 l -3.2272604,6.25 h -1.61363 L 10.028197,13.5 Z M 11.641827,1 h -1.61363 v 1.25 h 1.61363 z M 8.4145666,4.75 h -1.61363 V 6 h 1.61363 z m -4.84089,-2.5 h -1.61363 V 3.5 h 1.61363 z m -2.21874,10 c -0.35299,0.19531 -0.45384001,0.54687 -0.25213,0.83984 l 0.88245,1.15235 c 0.2017,0.29297 0.65554,0.39062 1.03373,0.2539 l 2.24396,-0.82031 -1.86576,-2.5 z m 12.7325504,-6.73828 -9.3540204,4.9414 1.99183,2.67579 10.2112504,-3.78907 z m 6.8075,1.60156 -2.37002,-3.14453 c -0.22692,-0.3125 -0.75639,-0.41016 -1.1598,-0.21484 l -1.94139,1.03515 2.97513,4.00391 2.1431,-0.80078 c 0.42862,-0.15625 0.5799,-0.54688 0.35298,-0.87891 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02219101"
+     inkscape:connector-curvature="0" />
 </svg>

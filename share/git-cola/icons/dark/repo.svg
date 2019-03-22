@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="repo.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="384"
-     inkscape:cy="512"
+     inkscape:zoom="29.5"
+     inkscape:cx="4.9452987"
+     inkscape:cy="7.5624397"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false" />
   <path
-     d="M256 576h-64v-64h64v64z m0-192h-64v64h64v-64z m0-128h-64v64h64v-64z m0-128h-64v64h64v-64z m512-64v768c0 35-29 64-64 64H384v128l-96-96-96 96V896H64c-35 0-64-29-64-64V64C0 29 29 0 64 0h640c35 0 64 29 64 64z m-64 640H64v128h128v-64h192v64h320V704z m0-640H128v576h576V64z"
+     d="M 7.66667,12.25 H 6 V 11 h 1.66667 z m 0,-3.75 H 6 v 1.25 h 1.66667 z m 0,-2.5 H 6 v 1.25 h 1.66667 z m 0,-2.5 H 6 V 4.75 H 7.66667 Z M 21,2.25 v 15 c 0,0.68359 -0.75521,1.25 -1.66667,1.25 H 11 V 21 L 8.5,19.125 6,21 V 18.5 H 2.66667 C 1.75521,18.5 1,17.93359 1,17.25 v -15 C 1,1.56641 1.75521,1 2.66667,1 H 19.33333 C 20.24479,1 21,1.56641 21,2.25 Z m -1.66667,12.5 H 2.66667 v 2.5 H 6 V 16 h 5 v 1.25 h 8.33333 z m 0,-12.5 h -15 V 13.5 h 15 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02255275"
+     inkscape:connector-curvature="0" />
 </svg>

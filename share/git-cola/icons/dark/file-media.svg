@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="file-media.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -45,9 +46,16 @@
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
   <path
-     d="M384 320h128v128H384V320z m384-32v608c0 35-29 64-64 64H64c-35 0-64-29-64-64V128c0-35 29-64 64-64h480l224 224z m-64 32L512 128H64v704l192-320 128 256 128-128 192 192V320z"
+     d="m 11,6.71429 h 3.33333 V 9.57143 H 11 Z M 21,6 V 19.57143 C 21,20.35268 20.24479,21 19.33333,21 H 2.66667 C 1.75521,21 1,20.35268 1,19.57143 V 2.42857 C 1,1.64732 1.75521,1 2.66667,1 h 12.5 z m -1.66667,0.71429 -5,-4.28572 H 2.66667 V 18.14286 L 7.66667,11 11,16.71429 l 3.33333,-2.85715 5,4.28572 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.0241099"
+     inkscape:connector-curvature="0" />
 </svg>

@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="896"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="unfold.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="448"
-     inkscape:cy="512"
+     inkscape:zoom="29.5"
+     inkscape:cx="0.0859375"
+     inkscape:cy="8.9571961"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false" />
   <path
-     d="M736 544l160 160c0 35-29 64-64 64H576v-64h224L672 576H224L96 704h224v64H64c-35 0-64-29-64-64l160-160L0 384c0-35 29-64 64-64h256v64H96l128 128h448l128-128H576v-64h256c35 0 64 29 64 64L736 544z m-352-96h128V256h128L448 64 256 256h128v192z m128 192H384v192H256l192 192 192-192H512V640z"
+     d="M 17.42857,11 21,14.33333 c 0,0.72917 -0.64732,1.33334 -1.42857,1.33334 h -5.71429 v -1.33334 h 5 L 16,11.66667 H 6 l -2.85714,2.66666 h 5 v 1.33334 H 2.42857 C 1.64732,15.66667 1,15.0625 1,14.33333 L 4.57143,11 1,7.66667 C 1,6.9375 1.64732,6.33333 2.42857,6.33333 h 5.71429 v 1.33334 h -5 L 6,10.33333 h 10 l 2.85714,-2.66666 h -5 V 6.33333 h 5.71429 C 20.35268,6.33333 21,6.9375 21,7.66667 Z M 9.57143,9 h 2.85714 V 5 h 2.85714 L 11,1 6.71429,5 h 2.85714 z m 2.85714,4 H 9.57143 v 4 H 6.71429 L 11,21 15.28571,17 h -2.85714 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02156455"
+     inkscape:connector-curvature="0" />
 </svg>

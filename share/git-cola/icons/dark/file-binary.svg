@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="file-binary.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="384"
-     inkscape:cy="512"
+     inkscape:zoom="20.85965"
+     inkscape:cx="-15.683491"
+     inkscape:cy="6.969379"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:showpageshadow="false" />
   <path
-     d="M0 960V64h576l192 192v704H0zM704 320L512 128H64v768h640V320zM320 512H128V256h192V512zM256 320h-64v128h64V320zM256 768h64v64H128v-64h64V640h-64v-64h128V768zM512 448h64v64H384v-64h64V320h-64v-64h128V448zM576 832H384V576h192V832zM512 640h-64v128h64V640z"
+     d="M 1,21 V 1 h 15 l 5,4.28571 V 21 Z m 18.33333,-14.28571 -5,-4.28572 H 2.66667 V 19.57143 H 19.33333 Z M 9.33333,11 h -5 V 5.28571 h 5 z M 7.66667,6.71429 H 6 v 2.85714 h 1.66667 z m 0,10 h 1.66666 v 1.42857 h -5 V 16.71429 H 6 V 13.85714 H 4.33333 V 12.42857 H 7.66667 Z M 14.33333,9.57143 H 16 V 11 H 11 V 9.57143 h 1.66667 V 6.71429 H 11 V 5.28571 h 3.33333 z M 16,18.14286 h -5 v -5.71429 h 5 z m -1.66667,-4.28572 h -1.66666 v 2.85715 h 1.66666 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.0241099"
+     inkscape:connector-curvature="0" />
 </svg>

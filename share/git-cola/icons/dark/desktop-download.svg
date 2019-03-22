@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="1024"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="desktop-download.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,25 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="512"
-     inkscape:cy="512"
+     inkscape:zoom="14.75"
+     inkscape:cx="34.864408"
+     inkscape:cy="-1.4745761"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true" />
   <path
-     d="M256 384h192V0h128v384h192L512 640 256 384z m704-256H704v64h256v512H64V192h256v-64H64c-35 0-64 29-64 64v576c0 35 29 64 64 64h342c-16 39-55 89-150 128h512c-95-39-134-89-150-128h342c35 0 64-29 64-64V192c0-35-29-64-64-64z"
+     d="M 6,9 H 9.75 V 1 h 2.5 V 9 H 16 l -5,5.33333 z M 19.75,3.666667 h -5 V 5 h 5 V 15.66667 H 2.25 V 5 h 5 V 3.666667 h -5 C 1.566406,3.666667 1,4.270833 1,5 v 12 c 0,0.72917 0.566406,1.33333 1.25,1.33333 H 8.92969 C 8.61719,19.14583 7.85547,20.1875 6,21 H 16 C 14.14453,20.1875 13.38281,19.14583 13.07031,18.33333 H 19.75 C 20.43359,18.33333 21,17.72917 21,17 V 5 C 21,4.270833 20.43359,3.666667 19.75,3.666667 Z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02017179"
+     inkscape:connector-curvature="0" />
 </svg>

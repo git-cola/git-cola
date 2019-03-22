@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="896"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="fold.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -45,9 +46,16 @@
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
   <path
-     d="M448 576l192 192H512v192H384V768H256l192-192z m192-384H512V0H384v192H256l192 192 192-192z m256 128c0-35-29-64-64-64H672l-64 64h192L672 448H224L96 320h192l-64-64H64c-35 0-64 29-64 64l160 160L0 640c0 35 29 64 64 64h160l64-64H96l128-128h448l128 128H608l64 64h160c35 0 64-29 64-64L736 480l160-160z"
+     d="m 11,13 4.28571,4 h -2.85714 v 4 H 9.57143 V 17 H 6.71429 Z M 15.28571,5 H 12.42857 V 1 H 9.57143 V 5 H 6.71429 L 11,9 Z M 21,7.66667 C 21,6.9375 20.35268,6.33333 19.57143,6.33333 H 16 l -1.42857,1.33334 h 4.28571 L 16,10.33333 H 6 L 3.14286,7.66667 H 7.42857 L 6,6.33333 H 2.42857 C 1.64732,6.33333 1,6.9375 1,7.66667 L 4.57143,11 1,14.33333 c 0,0.72917 0.64732,1.33334 1.42857,1.33334 H 6 L 7.42857,14.33333 H 3.14286 L 6,11.66667 h 10 l 2.85714,2.66666 H 14.57143 L 16,15.66667 h 3.57143 C 20.35268,15.66667 21,15.0625 21,14.33333 L 17.42857,11 Z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02156455"
+     inkscape:connector-curvature="0" />
 </svg>

@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="1024"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="eye.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="512"
-     inkscape:cy="512"
+     inkscape:zoom="29.5"
+     inkscape:cx="11"
+     inkscape:cy="11"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false"
+     fit-margin-top="4"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="4" />
   <path
-     d="M516 128C192 128 0 512 0 512s192 384 516 384c316 0 508-384 508-384S832 128 516 128z m-4 640c-141 0-256-114-256-256 0-141 115-256 256-256 142 0 256 115 256 256 0 142-114 256-256 256z m128-256c0 71-57 128-128 128s-128-57-128-128 57-128 128-128 128 57 128 128z"
+     d="M 11.07812,4 C 4.75,4 1,11 1,11 1,11 4.75,18 11.07812,18 17.25,18 21,11 21,11 21,11 17.25,4 11.07812,4 Z M 11,15.66667 C 8.24609,15.66667 6,13.58854 6,11 6,8.42968 8.24609,6.33333 11,6.33333 c 2.77344,0 5,2.09635 5,4.66667 0,2.58854 -2.22656,4.66667 -5,4.66667 z M 13.5,11 c 0,1.29427 -1.11328,2.33333 -2.5,2.33333 -1.38672,0 -2.5,-1.03906 -2.5,-2.33333 0,-1.29427 1.11328,-2.33333 2.5,-2.33333 1.38672,0 2.5,1.03906 2.5,2.33333 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.01886899"
+     inkscape:connector-curvature="0" />
 </svg>

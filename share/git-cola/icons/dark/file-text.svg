@@ -7,12 +7,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="file-text.svg">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="file-text.svg"
+   viewBox="0 0 2.2 2.2">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -21,6 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +37,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="384"
-     inkscape:cy="512"
+     inkscape:zoom="45.254834"
+     inkscape:cx="10.704451"
+     inkscape:cy="11.913791"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     scale-x="1e-05"
+     inkscape:pagecheckerboard="true"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
   <path
-     d="M384 320H128v-64h256v64zM128 512h448v-64H128v64z m0 128h448v-64H128v64z m0 128h448v-64H128v64z m640-480v608c0 35-29 64-64 64H64c-35 0-64-29-64-64V128c0-35 29-64 64-64h480l224 224z m-64 32L512 128H64v768h640V320z"
+     d="M 1.1,0.67143 H 0.43333 V 0.52857 H 1.1 Z M 0.43333,1.1 H 1.6 V 0.95714 H 0.43333 Z m 0,0.28571 H 1.6 V 1.24286 H 0.43333 Z m 0,0.28572 H 1.6 V 1.52857 H 0.43333 Z M 2.1,0.6 V 1.95714 C 2.1,2.03524 2.0245,2.1 1.93333,2.1 H 0.26667 C 0.17552,2.1 0.1,2.03527 0.1,1.95714 V 0.24286 C 0.1,0.16473 0.17552,0.1 0.26667,0.1 h 1.25 z m -0.16667,0.0714 -0.5,-0.42857 H 0.26667 v 1.71428 h 1.66666 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.00241099"
+     inkscape:connector-curvature="0" />
 </svg>

@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="768"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="ellipsis.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="384"
-     inkscape:cy="512"
+     inkscape:zoom="11.313709"
+     inkscape:cx="-18.992905"
+     inkscape:cy="14.63969"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="6"
+     fit-margin-top="6" />
   <path
-     d="M704 320H64c-35 0-64 29-64 64v256c0 35 29 64 64 64h640c35 0 64-29 64-64V384c0-35-29-64-64-64zM256 576H128V448h128v128z m192 0H320V448h128v128z m192 0H512V448h128v128z"
+     d="M 19.33333,6 H 2.66667 C 1.75521,6 1,6.75521 1,7.66667 v 6.66666 C 1,15.24479 1.75521,16 2.66667,16 H 19.33333 C 20.24479,16 21,15.24479 21,14.33333 V 7.66667 C 21,6.75521 20.24479,6 19.33333,6 Z M 7.66667,12.66667 H 4.33333 V 9.33333 h 3.33334 z m 5,0 H 9.33333 V 9.33333 h 3.33334 z m 5,0 H 14.33333 V 9.33333 h 3.33334 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02604167"
+     inkscape:connector-curvature="0" />
 </svg>

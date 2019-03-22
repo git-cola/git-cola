@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="896"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="pencil.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,25 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="448"
-     inkscape:cy="512"
+     inkscape:zoom="20.85965"
+     inkscape:cx="23.227678"
+     inkscape:cy="13.63979"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     inkscape:pagecheckerboard="true" />
   <path
-     d="M0 768v192h192l512-512-192-192L0 768z m192 128H64V768h64v64h64v64z m659-595l-83 83-192-192 83-83c25-25 65-25 90 0l102 102c25 25 25 65 0 90z"
+     d="M 1,16.58494 V 21 H 5.41506 L 17.18856,9.2265 12.7735,4.81144 Z m 4.41506,2.94337 H 2.47169 v -2.94337 h 1.47168 v 1.47169 H 5.41506 Z M 20.56884,5.84622 18.66025,7.75481 14.24519,3.33975 16.15378,1.43116 c 0.57488,-0.57488 1.49468,-0.57488 2.06956,0 l 2.3455,2.3455 c 0.57488,0.57488 0.57488,1.49468 0,2.06956 z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.02299511"
+     inkscape:connector-curvature="0" />
 </svg>

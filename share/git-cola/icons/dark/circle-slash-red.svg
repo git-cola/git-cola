@@ -7,12 +7,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="896"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="circle-slash.svg">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="circle-slash-red.svg">
   <metadata
      id="metadata10">
     <rdf:RDF>
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,24 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1633"
-     inkscape:window-height="1082"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="-523.9322"
-     inkscape:cy="470.77966"
+     inkscape:zoom="29.5"
+     inkscape:cx="-8.7398647"
+     inkscape:cy="12.701472"
      inkscape:window-x="0"
-     inkscape:window-y="49"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
   <path
-     d="M448 64C201 64 0 265 0 512s201 448 448 448 448-201 448-448S695 64 448 64z m0 83c83 0 160 28 222 75L158 734c-47-62-75-139-75-222 0-201 164-365 365-365z m0 730c-83 0-160-28-222-75l512-512c47 62 75 139 75 222 0 201-164 365-365 365z"
+     d="M 11,1 C 5.486607,1 1,5.486607 1,11 1,16.513393 5.486607,21 11,21 16.513393,21 21,16.513393 21,11 21,5.486607 16.513393,1 11,1 Z m 0,1.852679 c 1.852679,0 3.571429,0.625 4.955357,1.674107 L 4.526786,15.955357 C 3.477679,14.571429 2.852679,12.852679 2.852679,11 2.852679,6.513393 6.513393,2.852679 11,2.852679 Z m 0,16.294642 c -1.852679,0 -3.571429,-0.625 -4.955357,-1.674107 L 17.473214,6.044643 C 18.522321,7.428571 19.147321,9.147321 19.147321,11 c 0,4.486607 -3.660714,8.147321 -8.147321,8.147321 z"
      id="path4"
-     style="fill:#cc0000;fill-opacity:1" />
+     style="fill:#cc0000;fill-opacity:1;stroke-width:0.02232143"
+     inkscape:connector-curvature="0" />
 </svg>

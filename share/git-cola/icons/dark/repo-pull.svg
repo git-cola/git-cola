@@ -7,11 +7,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   height="1024"
-   width="1024"
+   height="22"
+   width="22"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="repo-pull.svg">
   <metadata
      id="metadata10">
@@ -21,6 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -35,19 +36,26 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="716"
-     inkscape:window-height="480"
+     inkscape:window-width="3200"
+     inkscape:window-height="1671"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="0.23046875"
-     inkscape:cx="-32.542373"
-     inkscape:cy="512"
+     inkscape:zoom="29.5"
+     inkscape:cx="21.689727"
+     inkscape:cy="14.98956"
      inkscape:window-x="0"
-     inkscape:window-y="27"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:window-y="55"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     inkscape:pagecheckerboard="true"
+     inkscape:showpageshadow="false"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1" />
   <path
-     d="M832 512V384H448V256h384V128l192 192-192 192zM256 128h-64v64h64v-64z m448 320h64v384c0 35-29 64-64 64H384v128l-96-96-96 96V896H64c-35 0-64-29-64-64V64C0 29 29 0 64 0h640c35 0 64 29 64 64v128h-64V64H128v576h576V448z m0 256H64v128h128v-64h192v64h320V704zM256 384h-64v64h64v-64z m0-128h-64v64h64v-64z m-64 320h64v-64h-64v64z"
+     d="M 17.25,11 V 8.5 H 9.75 V 6 h 7.5 V 3.5 L 21,7.25 Z M 6,3.5 H 4.75 V 4.75 H 6 Z m 8.75,6.25 H 16 v 7.5 c 0,0.68359 -0.56641,1.25 -1.25,1.25 H 8.5 V 21 L 6.625,19.125 4.75,21 V 18.5 H 2.25 C 1.56641,18.5 1,17.93359 1,17.25 v -15 C 1,1.56641 1.56641,1 2.25,1 h 12.5 C 15.43359,1 16,1.56641 16,2.25 v 2.5 H 14.75 V 2.25 H 3.5 V 13.5 h 11.25 z m 0,5 H 2.25 v 2.5 h 2.5 V 16 H 8.5 v 1.25 h 6.25 z M 6,8.5 H 4.75 V 9.75 H 6 Z M 6,6 H 4.75 V 7.25 H 6 Z M 4.75,12.25 H 6 V 11 H 4.75 Z"
      id="path4"
-     style="fill:#ffffff;fill-opacity:1" />
+     style="fill:#ffffff;fill-opacity:1;stroke-width:0.01953125"
+     inkscape:connector-curvature="0" />
 </svg>
