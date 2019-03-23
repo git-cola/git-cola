@@ -1504,15 +1504,16 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.ensureVisible(scene_rect)
 
     def set_initial_view(self):
-        self_commits = self.commits
         self_items = self.items
 
-        commits = self_commits[-7:]
-        items = [self_items[c.oid] for c in commits]
-
+        items = []
         selected = self.selected_items()
         if selected:
             items.extend(selected)
+
+        if not selected and self.commits:
+            commit = self.commits[-1]
+            items.append(self.items[commit.oid])
 
         self.setSceneRect(self.scene().itemsBoundingRect())
         self.fit_view_to_items(items)
