@@ -1,81 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="22"
-   height="22"
-   version="1.1"
-   id="svg3833"
-   sodipodi:docname="document-save-symbolic.svg"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)">
-  <metadata
-     id="metadata3839">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <defs
-     id="defs3837" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="3200"
-     inkscape:window-height="1671"
-     id="namedview3835"
-     showgrid="false"
-     fit-margin-top="1"
-     fit-margin-left="1"
-     fit-margin-right="1"
-     fit-margin-bottom="1"
-     inkscape:pagecheckerboard="true"
-     inkscape:showpageshadow="false"
-     inkscape:zoom="14.75"
-     inkscape:cx="-25.644068"
-     inkscape:cy="10.457627"
-     inkscape:window-x="0"
-     inkscape:window-y="55"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg3833" />
-  <g
-     id="g3831"
-     transform="matrix(1.9967546,0,0,1.4285714,-4.9740367,-0.4285714)"
-     style="fill:#ffffff">
+<svg width="22" height="22" version="1.1" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1.9967546,0,0,1.4285714,-4.9740367,-0.4285714)">
     <path
        d="M 4.49,8.994 A 0.5,0.5 0 0 0 4.084,9.223 l -1,1.5 a 0.5,0.5 0 1 0 0.832,0.554 l 1,-1.5 A 0.5,0.5 0 0 0 4.49,8.994 Z m 7.004,0 a 0.5,0.5 0 0 0 -0.41,0.783 l 1,1.5 a 0.5,0.5 0 1 0 0.832,-0.554 l -1,-1.5 A 0.5,0.5 0 0 0 11.494,8.994 Z"
-       style="color:#bebebe;font-weight:400;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#ffffff;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;overflow:visible;isolation:auto;mix-blend-mode:normal;marker:none"
-       font-weight="400"
-       overflow="visible"
-       id="path3825"
-       inkscape:connector-curvature="0" />
+       fill="#ffffff" />
     <path
        d="M 7,1 V 6.563 L 5.719,5.28 A 1.015,1.015 0 0 0 5,5 H 4 v 1 c 0,0.265 0.093,0.53 0.281,0.719 l 3,3 L 7.563,10 h 0.875 l 0.28,-0.281 3,-3 C 11.908,6.53 12,6.265 12,6 V 5 H 11 C 10.735,5 10.47,5.093 10.281,5.281 L 9,6.563 V 1 Z"
-       style="color:#ffffff;font-weight:400;line-height:normal;font-family:'Bitstream Vera Sans';-inkscape-font-specification:'Bitstream Vera Sans';text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-transform:none;overflow:visible;marker:none"
-       font-weight="400"
-       overflow="visible"
-       id="path3827"
-       inkscape:connector-curvature="0" />
+       fill="#ffffff" />
     <path
        d="m 3,11 v 4 h 10 v -4 z m 3.344,1.438 a 0.651,0.651 0 0 1 0.062,0 c 0.291,-0.056 0.6,0.203 0.594,0.5 V 13 H 9 V 12.937 A 0.52,0.52 0 0 1 9.5,12.43 0.52,0.52 0 0 1 10,12.937 V 13 c 0,0.545 -0.455,1 -1,1 H 7 C 6.455,14 6,13.545 6,13 v -0.063 a 0.515,0.515 0 0 1 0.344,-0.5 z"
-       style="color:#ffffff;overflow:visible;fill-rule:evenodd;marker:none"
-       overflow="visible"
-       id="path3829"
-       inkscape:connector-curvature="0" />
+       fill="#ffffff" />
   </g>
 </svg>

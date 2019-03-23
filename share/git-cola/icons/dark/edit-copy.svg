@@ -1,62 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   id="Capa_1"
-   x="0px"
-   y="0px"
-   width="22"
-   height="22"
-   viewBox="0 0 22 22"
-   xml:space="preserve"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="edit-copy.svg"><metadata
-     id="metadata15"><rdf:RDF><cc:Work
-         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
-     id="defs13" /><sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="3200"
-     inkscape:window-height="1671"
-     id="namedview11"
-     showgrid="false"
-     inkscape:zoom="34.902421"
-     inkscape:cx="11"
-     inkscape:cy="11.000001"
-     inkscape:window-x="0"
-     inkscape:window-y="55"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="Capa_1"
-     fit-margin-top="1"
-     fit-margin-left="-1"
-     fit-margin-right="1"
-     fit-margin-bottom="1"
-     inkscape:pagecheckerboard="true"
-     inkscape:showpageshadow="false" /><g
-     id="g3"
-     style="fill:#ffffff;fill-opacity:1"
-     transform="matrix(0.03267974,0,0,0.03267974,1,1)"><g
-       id="g5"
-       style="fill:#ffffff;fill-opacity:1"><polygon
-         points="612,0 128.842,0 128.842,96.632 161.053,96.632 161.053,32.21 579.789,32.21 579.789,450.947 515.368,450.947 515.368,483.158 612,483.158 "
-         id="polygon7"
-         style="fill:#ffffff;fill-opacity:1" /><path
-         d="M 0,134.189 V 606.653 C 0,609.616 2.963,612 6.635,612 H 476.49 c 3.704,0 6.668,-2.384 6.668,-5.347 V 134.189 c 0,-2.963 -2.964,-5.347 -6.636,-5.347 H 6.635 C 2.963,128.842 0,131.226 0,134.189 Z m 32.21,26.864 H 450.947 V 579.789 H 32.21 Z"
-         id="path9"
-         style="fill:#ffffff;fill-opacity:1"
-         inkscape:connector-curvature="0" /></g></g></svg>
+<svg width="22" height="22" version="1.1" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#ffffff"
+     d="m 5,4 c 0,0 0,0 1,0 0,-1 0,-2 0,-2 4,0 9,0 14,0 0,4 0,9 0,14 -1,0 -2,0 -2,0 0,0 0,1 0,1 1,0 2,0 3,0 0,-5 0,-11 0,-16 -5,0 -11,0 -16,0 0,1 0,2 0,3 z"/>
+  <path fill="#ffffff"
+     d="m 1,5 c 0,5 0,10 0,16 0,0 1,0 1,0 5,0 10,0 15,0 0,0 0,-1 0,-1 0,-5 0,-10 0,-15 C 17,5 16,5 16,5 11,5 6,5 1,5 1,5 1,5 1,5 Z m 1,1 c 5,0 10,0 14,0 0,5 0,10 0,14 -5,0 -10,0 -14,0 0,-5 0,-10 0,-14 z"/>
+</svg>

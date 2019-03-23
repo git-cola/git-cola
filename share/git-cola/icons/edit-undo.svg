@@ -1,43 +1,6 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="497.25px" height="497.25px" viewBox="0 0 497.25 497.25" style="enable-background:new 0 0 497.25 497.25;"
-	 xml:space="preserve">
-<g>
-	<g id="undo">
-		<path d="M248.625,89.25V0l-127.5,127.5l127.5,127.5V140.25c84.15,0,153,68.85,153,153c0,84.15-68.85,153-153,153
-			c-84.15,0-153-68.85-153-153h-51c0,112.2,91.8,204,204,204s204-91.8,204-204S360.825,89.25,248.625,89.25z"/>
-	</g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="22" height="22" viewBox="0 0 22 22">
+<g transform="matrix(0.04901961,0,0,0.04022122,-1.1875001,1)">
+  <path d="M 248.625,89.25 V 0 l -127.5,127.5 127.5,127.5 V 140.25 c 84.15,0 153,68.85 153,153 0,84.15 -68.85,153 -153,153 -84.15,0 -153,-68.85 -153,-153 h -51 c 0,112.2 91.8,204 204,204 112.2,0 204,-91.8 204,-204 0,-112.2 -91.8,-204 -204,-204 z"
+    fill="#000000"/>
 </g>
 </svg>
