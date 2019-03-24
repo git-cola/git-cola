@@ -1504,8 +1504,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.ensureVisible(scene_rect)
 
     def set_initial_view(self):
-        self_items = self.items
-
         items = []
         selected = self.selected_items()
         if selected:
