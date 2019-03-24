@@ -399,7 +399,11 @@ class RemoteActionDialog(standard.Dialog):
         return result
 
     def set_selected_remotes(self, remotes):
-        """Set the list of selected remotes"""
+        """Set the list of selected remotes
+
+        Return True if all remotes were found and selected.
+
+        """
         # Invalid remote names are ignored.
         # This handles a remote going away between sessions.
         # The selection is unchanged when none of the specified remotes exist.
@@ -408,11 +412,10 @@ class RemoteActionDialog(standard.Dialog):
             if remote in self.model.remotes:
                 found = True
                 break
-        # Only clear the selection if none of the remotes exist
         if found:
+            # Only clear the selection if the specified remotes exist
             self.remotes.clearSelection()
-            for remote in remotes:
-                self.select_remote_by_name(remote)
+            found = all([self.select_remote_by_name(x) for x in remotes])
         return found
 
     def select_local_branch(self, idx):
