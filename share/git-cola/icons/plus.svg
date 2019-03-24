@@ -1,3 +1,4 @@
-<svg height="1024" width="768" xmlns="http://www.w3.org/2000/svg">
-  <path d="M768 576H448v320H320V576H0V448h320V128h128v320h320v128z" />
+<svg width="22" height="22" version="1.1" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+<path d="M 21,13 H 13 V 21 H 9 V 13 H 1 V 9 H 9 V 1 h 4 V 9 H 21 Z"
+  fill="#000000"/>
 </svg>
