@@ -23,6 +23,9 @@ _versions = {
     # git difftool moved out of contrib in git 1.6.3
     'git': '1.6.3',
     'python': '2.6',
+    # new: git cat-file --filters --path=<path> SHA1
+    # old: git cat-file --filters blob SHA1:<path>
+    'cat-file-filters-path': '2.11.0',
     # git diff --submodule was introduced in 1.6.6
     'diff-submodule': '1.6.6',
     # git check-ignore was introduced in 1.8.2, but did not follow the same
@@ -32,9 +35,6 @@ _versions = {
     'force-with-lease': '1.8.5',
     # git for-each-ref --sort=version:refname
     'version-sort': '2.7.0',
-    # new: git cat-file --filters --path=<path> SHA1
-    # old: git cat-file --filters blob SHA1:<path>
-    'cat-file-filters-path': '2.11.0',
     # Qt support for QT_AUTO_SCREEN_SCALE_FACTOR and QT_SCALE_FACTOR
     'qt-hidpi-scale': '5.6.0',
     # git rev-parse --show-superproject-working-tree was added in 2.13.0
