@@ -47,6 +47,11 @@ Usability, bells and whistles
 
 Fixes
 -----
+* `git cola`'s "Revert Unstaged Edits" previously checked out from "HEAD^",
+  when in "Amend" mode, and removing staged changes.  This behavior has been
+  changed to always checkout from the index, which avoids data loss.
+  (`#947 <https://github.com/git-cola/git-cola/issues/947>`_)
+
 * `git cola` has been updated to work with newer versions of `gnome-terminal`
   and no longer shell-quotes its arguments when launching `gnome-terminal`.
   The `cola.terminalshellquote` configuration variable can be set to `true` to

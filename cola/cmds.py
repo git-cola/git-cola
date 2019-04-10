@@ -1843,10 +1843,9 @@ class RevertUnstagedEdits(RevertEditsCommand):
         return N_('Revert Unstaged Edits...')
 
     def checkout_from_head(self):
-        # If we are amending and a modified file is selected
-        # then we should include "HEAD^" on the command-line.
-        selected = self.selection.selection()
-        return not selected.staged and self.model.amending()
+        # Being in amend mode should not affect the behavior of this command.
+        # The only sensible thing to do is to checkout from the index.
+        return False
 
     def confirm(self):
         title = N_('Revert Unstaged Changes?')
