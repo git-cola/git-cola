@@ -3,7 +3,10 @@ from __future__ import absolute_import, division, unicode_literals
 import os
 import unittest
 
+import mock
+
 from cola import core
+from cola import git
 from cola.models import main
 
 from . import helper
@@ -77,6 +80,8 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
 class RemoteArgsTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.context = context = mock.Mock()
+        context.git = git.create()
         self.remote = 'server'
         self.local_branch = 'local'
         self.remote_branch = 'remote'
@@ -84,7 +89,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_fetch(self):
         # Fetch
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              local_branch=self.local_branch,
                              remote_branch=self.remote_branch)
 
@@ -96,7 +101,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_fetch_tags(self):
         # Fetch tags
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              tags=True,
                              local_branch=self.local_branch,
                              remote_branch=self.remote_branch)
@@ -109,7 +114,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_pull(self):
         # Pull
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              pull=True,
                              local_branch='',
                              remote_branch=self.remote_branch)
@@ -122,7 +127,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_pull_rebase(self):
         # Rebasing pull
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              pull=True,
                              rebase=True,
                              local_branch='',
@@ -136,7 +141,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_push(self):
         # Push, swap local and remote
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              local_branch=self.remote_branch,
                              remote_branch=self.local_branch)
 
@@ -148,7 +153,7 @@ class RemoteArgsTestCase(unittest.TestCase):
     def test_remote_args_push_tags(self):
         # Push, swap local and remote
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              tags=True,
                              local_branch=self.remote_branch,
                              remote_branch=self.local_branch)
@@ -160,7 +165,7 @@ class RemoteArgsTestCase(unittest.TestCase):
 
     def test_remote_args_push_same_remote_and_local(self):
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              tags=True,
                              local_branch=self.local_branch,
                              remote_branch=self.local_branch,
@@ -173,7 +178,7 @@ class RemoteArgsTestCase(unittest.TestCase):
 
     def test_remote_args_push_set_upstream(self):
         (args, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              tags=True,
                              local_branch=self.local_branch,
                              remote_branch=self.local_branch,
@@ -188,7 +193,7 @@ class RemoteArgsTestCase(unittest.TestCase):
 
     def test_remote_args_rebase_only(self):
         (_, kwargs) = \
-            main.remote_args(self.remote,
+            main.remote_args(self.context, self.remote,
                              pull=True,
                              rebase=True,
                              ff_only=True)
@@ -201,7 +206,7 @@ class RemoteArgsTestCase(unittest.TestCase):
             return (args, kwargs)
 
         (args, kwargs) = \
-            main.run_remote_action(passthrough,
+            main.run_remote_action(self.context, passthrough,
                                    self.remote,
                                    local_branch=self.local_branch,
                                    remote_branch=self.remote_branch)

@@ -28,6 +28,8 @@ _versions = {
     # git check-ignore was introduced in 1.8.2, but did not follow the same
     # rules as git add and git status until 1.8.5
     'check-ignore': '1.8.5',
+    # git push --force-with-lease
+    'force-with-lease': '1.8.5',
     # git for-each-ref --sort=version:refname
     'version-sort': '2.7.0',
     # new: git cat-file --filters --path=<path> SHA1

@@ -21,6 +21,10 @@ git-cola v3.4
 
 Usability, bells and whistles
 -----------------------------
+* The "Push" action now uses "git push --force-with-lease" when using
+  the "Force" option with Git v1.8.5 and newer.
+  (`#946 <https://github.com/git-cola/git-cola/issues/946>`_)
+
 * Updated German translation.
   (`#936 <https://github.com/git-cola/git-cola/pull/936>`_)
 

@@ -7,6 +7,7 @@ import os
 
 from .. import core
 from .. import gitcmds
+from .. import version
 from ..git import STDOUT
 from ..observable import Observable
 from . import prefs
@@ -351,16 +352,18 @@ class MainModel(Observable):
         return gitcmds.remote_url(self.context, name, push=push)
 
     def fetch(self, remote, **opts):
-        return run_remote_action(self.git.fetch, remote, **opts)
+        return run_remote_action(self.context, self.git.fetch, remote, **opts)
 
     def push(self, remote, remote_branch='', local_branch='', **opts):
         # Swap the branches in push mode (reverse of fetch)
         opts.update(dict(local_branch=remote_branch,
                          remote_branch=local_branch))
-        return run_remote_action(self.git.push, remote, push=True, **opts)
+        return run_remote_action(self.context, self.git.push, remote,
+                                 push=True, **opts)
 
     def pull(self, remote, **opts):
-        return run_remote_action(self.git.pull, remote, pull=True, **opts)
+        return run_remote_action(self.context, self.git.pull, remote,
+                                 pull=True, **opts)
 
     def create_branch(self, name, base, track=False, force=False):
         """Create a branch named 'name' from revision 'base'
@@ -414,7 +417,8 @@ class MainModel(Observable):
 
 
 # Helpers
-def remote_args(remote,
+# pylint: disable=too-many-arguments
+def remote_args(context, remote,
                 local_branch='',
                 remote_branch='',
                 ff_only=False,
@@ -444,7 +448,11 @@ def remote_args(remote,
         elif no_ff:
             kwargs['no_ff'] = True
     elif force:
-        kwargs['force'] = True
+        # pylint: disable=simplifiable-if-statement
+        if push and version.check_git(context, 'force-with-lease'):
+            kwargs['force_with_lease'] = True
+        else:
+            kwargs['force'] = True
 
     if push and set_upstream:
         kwargs['set_upstream'] = True
@@ -473,6 +481,6 @@ def refspec_arg(local_branch, remote_branch, pull, push):
     return what
 
 
-def run_remote_action(action, remote, **kwargs):
-    args, kwargs = remote_args(remote, **kwargs)
+def run_remote_action(context, action, remote, **kwargs):
+    args, kwargs = remote_args(context, remote, **kwargs)
     return action(*args, **kwargs)
