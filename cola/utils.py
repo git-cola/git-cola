@@ -21,7 +21,7 @@ def asint(obj, default=0):
     """Make any value into an int, even if the cast fails"""
     try:
         value = int(obj)
-    except TypeError:
+    except (TypeError, ValueError):
         value = default
     return value
 
