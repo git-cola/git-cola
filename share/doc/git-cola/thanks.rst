@@ -132,6 +132,7 @@ Thanks
 * Mickael Albertus
 * Mike Hanson
 * MikHulk
+* Mikołaj Milej
 * Minarto Margoliono
 * Mosaab Alzoubi
 * Myz
