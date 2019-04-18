@@ -64,7 +64,7 @@ msgstr ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            A tradução é aproximada. Se você achar um erro,,\n"
+"            A tradução é aproximada. Se você achar um erro,\n"
 "            por favor nos avise abrindo um issue no Github:\n"
 "        </p>\n"
 "\n"
@@ -538,10 +538,10 @@ msgstr ""
 "Criar uma tag não assinada?"
 
 msgid "Appearance"
-msgstr ""
+msgstr "Aparência"
 
 msgid "Appearance settings require an application restart"
-msgstr ""
+msgstr "A alteração de aparência necessita reiniciar a aplicação"
 
 msgid "Apply"
 msgstr "Aplicar"
@@ -879,7 +879,7 @@ msgid "Date, Time"
 msgstr "Data, Tempo"
 
 msgid "Default"
-msgstr ""
+msgstr "Padrão"
 
 msgid "Delete"
 msgstr "Deletar"
@@ -1366,7 +1366,7 @@ msgid "Initialize Git LFS"
 msgstr "Inicializar Git LFS"
 
 msgid "Inititalize submodules"
-msgstr "Inicializar submodulos"
+msgstr "Inicializar submódulos"
 
 msgid "Insert spaces instead of tabs"
 msgstr "Inserir espaços em vez de tabs"
@@ -1681,7 +1681,7 @@ msgid "Pop"
 msgstr ""
 
 msgid "Preferences"
-msgstr "Preferencias"
+msgstr "Preferências"
 
 msgid "Prefix"
 msgstr "Prefixo"
@@ -2288,7 +2288,7 @@ msgid "Stop tracking paths"
 msgstr "Parar rastreamento de caminhos"
 
 msgid "Submodules"
-msgstr ""
+msgstr "Submódulos"
 
 msgid "Summarize Merge Commits"
 msgstr "Resumir os Commits de Merge"
@@ -2502,22 +2502,22 @@ msgstr ""
 
 #, fuzzy
 msgid "Update Submodules"
-msgstr "Inicializar submodulos"
+msgstr "Inicializar Submódulos"
 
 #, fuzzy
 msgid "Update all submodules?"
-msgstr "Inicializar submodulos"
+msgstr "Inicializar submódulos"
 
 #, fuzzy
 msgid "Update submodules..."
-msgstr "Inicializar submodulos"
+msgstr "Inicializar submódulos"
 
 #, fuzzy
 msgid "Update this submodule"
-msgstr "Inicializar submodulos"
+msgstr "Inicializar submódulos"
 
 msgid "Update this submodule?"
-msgstr ""
+msgstr "Atualizar este submódulo?"
 
 msgid "Updating"
 msgstr "Atualizando"
