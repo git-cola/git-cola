@@ -164,6 +164,7 @@ Thanks
 * Radek Novacek
 * Radek Postołowicz
 * Rafael Nascimento
+* Rafael Reuber
 * Raghavendra Karunanidhi
 * Rainer Müller
 * Robbert Korving
