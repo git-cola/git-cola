@@ -295,7 +295,7 @@ class AppearanceWidget(QtWidgets.QWidget):
         self.form = form
         self.label = QtWidgets.QLabel(
             '<center><b>'
-            + N_('Appearance settings require an application restart')
+            + N_('Restart the application after changing appearance settings.')
             + '</b></center>')
         layout = qtutils.vbox(defs.margin, defs.spacing,
                               self.form, defs.spacing * 4, self.label,
