@@ -547,9 +547,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "套用"
 
@@ -1878,6 +1875,9 @@ msgstr "要重設工作目錄樹嗎？"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "重置「%(branch)s」分支到「%(revision)s」修訂版將導致修訂版提交的丟失。"
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr "撤銷修訂版提交"

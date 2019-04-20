@@ -440,9 +440,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 #, fuzzy
 msgid "Apply"
 msgstr "Äpple"
@@ -1919,6 +1916,9 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Om du återställer \"%s\" till \"%s\" går följande incheckningar förlorade:"
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""

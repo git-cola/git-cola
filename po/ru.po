@@ -463,9 +463,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "Применить"
 
@@ -1846,6 +1843,9 @@ msgstr ""
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Сброс \"%(branch)s\" в \"%(revision)s\" приведет к потере коммитов."
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""

@@ -461,9 +461,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "Zastosuj"
 
@@ -1834,6 +1831,9 @@ msgstr "Wyzerować drzewo robocze?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""

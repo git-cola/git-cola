@@ -500,9 +500,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -1856,6 +1853,9 @@ msgstr "Скинути робоче дерево?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""

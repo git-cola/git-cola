@@ -540,9 +540,6 @@ msgstr ""
 msgid "Appearance"
 msgstr "Aparência"
 
-msgid "Appearance settings require an application restart"
-msgstr "A alteração de aparência necessita reiniciar a aplicação"
-
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -1877,6 +1874,9 @@ msgstr "Resetar Worktree?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetar \"%(branch)s\" para \"%(revision)s\" irá perder commits."
+
+msgid "Restart the application after changing appearance settings."
+msgstr "A alteração de aparência necessita reiniciar a aplicação."
 
 msgid "Revert"
 msgstr "Reverter"

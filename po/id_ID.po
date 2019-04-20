@@ -443,9 +443,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "Terapkan"
 
@@ -1840,6 +1837,9 @@ msgstr ""
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""

@@ -540,9 +540,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "適用"
 
@@ -1869,6 +1866,9 @@ msgstr "ワークツリーをリセットしますか?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "\"%(branch)s\" ブランチを \"%(revision)s\" リビジョンにリセットするとコミットが失われます。"
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr "リバート"

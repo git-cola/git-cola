@@ -494,9 +494,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 msgid "Apply"
 msgstr "Aplikovat"
 
@@ -1812,6 +1809,9 @@ msgstr "Resetovat pracovní strom?"
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetováním „%(branch)s“ do „%(revision)s“ se ztratí zápisy."
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr "Vrátit"

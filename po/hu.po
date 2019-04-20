@@ -441,9 +441,6 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-msgid "Appearance settings require an application restart"
-msgstr ""
-
 #, fuzzy
 msgid "Apply"
 msgstr "Apple"
@@ -1920,6 +1917,9 @@ msgstr ""
 #, fuzzy, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "A(z) '%s' -> '%s' visszaállítás a következő commitok elvesztését jelenti:"
+
+msgid "Restart the application after changing appearance settings."
+msgstr ""
 
 msgid "Revert"
 msgstr ""
