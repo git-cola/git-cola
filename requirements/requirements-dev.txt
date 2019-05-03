@@ -1,7 +1,12 @@
+# Documentation
 Sphinx
+
+# Test
 flake8
 mock
 pbr
+
+# Check
 pylint >= 1.9
 PyYAML
 pytest >= 3.6
