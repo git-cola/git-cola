@@ -1,0 +1,4 @@
+# Maintainer packages
+
+## Windows installer
+pynsist
