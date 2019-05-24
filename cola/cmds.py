@@ -379,8 +379,14 @@ class Checkout(EditModel):
 class BlamePaths(ContextCommand):
     """Blame view for paths."""
 
-    def __init__(self, context, paths):
+    @staticmethod
+    def name():
+        return N_('Blame...')
+
+    def __init__(self, context, paths=None):
         super(BlamePaths, self).__init__(context)
+        if not paths:
+            paths = context.selection.union()
         viewer = utils.shell_split(prefs.blame_viewer(context))
         self.argv = viewer + list(paths)
 

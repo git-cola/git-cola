@@ -1053,7 +1053,7 @@ def _item_filter(item):
 
 def view_blame(context):
     """Signal that we should view blame for paths."""
-    cmds.do(cmds.BlamePaths, context, context.selection.union())
+    cmds.do(cmds.BlamePaths, context)
 
 
 def view_history(context):
