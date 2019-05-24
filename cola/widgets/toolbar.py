@@ -25,6 +25,7 @@ TREE_LAYOUT = {
         'File::Refresh',
         'File::EditRemotes',
         'File::RecentModified',
+        'File::SaveAsTarZip',
         'File::ApplyPatches',
         'File::ExportPatches',
     ],
