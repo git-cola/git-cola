@@ -251,7 +251,7 @@ class MainView(standard.MainWindow):
 
         self.save_tarball_action = add_action(
             self, N_('Save As Tarball/Zip...'),
-            partial(archive.save_archive, context, self))
+            partial(archive.save_archive, context))
 
         self.quit_action = add_action(
             self, N_('Quit'), self.close, hotkeys.QUIT)
