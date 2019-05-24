@@ -21,6 +21,9 @@ git-cola v3.4
 
 Usability, bells and whistles
 -----------------------------
+* The file browser now includes "Blame" in its context menu.
+  (`#953 <https://github.com/git-cola/git-cola/issues/953>`_)
+
 * The "Push" action now uses "git push --force-with-lease" when using
   the "Force" option with Git v1.8.5 and newer.
   (`#946 <https://github.com/git-cola/git-cola/issues/946>`_)

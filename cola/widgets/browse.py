@@ -187,6 +187,10 @@ class RepoTreeView(standard.TreeView):
             N_('Edit selected paths'),
             cmds.run(cmds.LaunchEditor, context), hotkeys.EDIT)
 
+        self.action_blame = qtutils.add_action_with_status_tip(
+            self, cmds.BlamePaths.name(), N_('Blame selected paths'),
+            cmds.run(cmds.BlamePaths, context))
+
         self.action_refresh = common.refresh_action(context, self)
 
         if not utils.is_win32():
@@ -369,6 +373,7 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_history)
         menu.addAction(self.action_difftool)
         menu.addAction(self.action_difftool_predecessor)
+        menu.addAction(self.action_blame)
         menu.addSeparator()
         menu.addAction(self.action_revert_unstaged)
         menu.addAction(self.action_revert_uncommitted)
