@@ -169,6 +169,7 @@ Thanks
 * Raghavendra Karunanidhi
 * Rainer Müller
 * Robbert Korving
+* Robert Pollak
 * Rolando Espinoza La fuente
 * Rustam Safin
 * Samsul Ma'arif
