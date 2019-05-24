@@ -63,8 +63,8 @@ packages::
 """
 
 import os
+import platform
 import sys
-import warnings
 
 # Version of QtPy
 from ._version import __version__
@@ -98,6 +98,9 @@ PYSIDE_API = ['pyside']
 # Names of the expected PySide2 api
 PYSIDE2_API = ['pyside2']
 
+# Detecting if a binding was specified by the user
+binding_specified = QT_API in os.environ
+
 # Setting a default value for QT_API
 os.environ.setdefault(QT_API, 'pyqt5')
 
@@ -111,13 +114,13 @@ PYQT4 = PYSIDE = PYSIDE2 = False
 
 
 if 'PyQt5' in sys.modules:
-    API = 'pyqt5'
+    API = initial_api if initial_api in PYQT5_API else 'pyqt5'
 elif 'PySide2' in sys.modules:
-    API = 'pyside2'
+    API = initial_api if initial_api in PYSIDE2_API else 'pyside2'
 elif 'PyQt4' in sys.modules:
-    API = 'pyqt4'
+    API = initial_api if initial_api in PYQT4_API else 'pyqt4'
 elif 'PySide' in sys.modules:
-    API = 'pyside'
+    API = initial_api if initial_api in PYSIDE_API else 'pyside'
 
 
 if API in PYQT5_API:
@@ -173,6 +176,7 @@ if API in PYSIDE_API:
         PYSIDE = True
     except ImportError:
         raise PythonQtError('No Qt bindings could be found')
+
 
 API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
             'pyside': 'PySide', 'pyside2':'PySide2'}[API]

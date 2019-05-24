@@ -21,8 +21,9 @@ from __future__ import print_function
 import sys
 import os
 
-PY2 = sys.version[0] == '2'
-PY3 = sys.version[0] == '3'
+PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
+PY33 = PY3 and sys.version_info[1] >= 3
 
 
 # =============================================================================
@@ -73,7 +74,10 @@ else:
     from sys import maxsize
     import io
     import pickle
-    from collections import MutableMapping
+    if PY33:
+        from collections.abc import MutableMapping
+    else:
+        from collections import MutableMapping
     import _thread
     import reprlib
 
@@ -255,7 +259,3 @@ else:
 def qbytearray_to_str(qba):
     """Convert QByteArray object to str in a way compatible with Python 2/3"""
     return str(bytes(qba.toHex().data()).decode())
-
-
-if __name__ == '__main__':
-    pass
