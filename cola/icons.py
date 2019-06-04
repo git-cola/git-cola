@@ -11,6 +11,7 @@ from . import qtcompat
 from . import resources
 from .compat import ustr
 from .decorators import memoize
+from .i18n import N_
 
 
 KNOWN_FILE_MIME_TYPES = [
@@ -47,6 +48,14 @@ def install(icon_themes):
     for theme in icon_themes:
         icon_dir = resources.icon_dir(theme)
         qtcompat.add_search_path('icons', icon_dir)
+
+
+def icon_themes():
+    return (
+        (N_('Default'), 'default'),
+        (N_('Dark Theme'), 'dark'),
+        (N_('Light Theme'), 'light'),
+    )
 
 
 def name_from_basename(basename):

@@ -8,6 +8,7 @@ from . import defs
 from . import standard
 from .. import cmds
 from .. import hidpi
+from .. import icons
 from .. import qtutils
 from .. import themes
 from ..compat import ustr
@@ -262,7 +263,7 @@ class AppearanceFormWidget(FormWidget):
 
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
-
+        # Theme selectors
         self.theme = qtutils.combo_mapped(themes.options())
         self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
 
@@ -276,6 +277,7 @@ class AppearanceFormWidget(FormWidget):
         self.status_indent = qtutils.checkbox()
 
         self.add_row(N_('GUI theme'), self.theme)
+        self.add_row(N_('Icon theme'), self.icon_theme)
         self.add_row(N_('High DPI'), self.high_dpi)
         self.add_row(N_('Bold on dark headers instead of italic'),
                      self.bold_headers)
@@ -290,6 +292,7 @@ class AppearanceFormWidget(FormWidget):
                 (self.status_show_totals, Defaults.status_show_totals),
             prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
             prefs.THEME: (self.theme, Defaults.theme),
+            prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
         })
 
 

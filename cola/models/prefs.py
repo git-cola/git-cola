@@ -20,6 +20,7 @@ DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
 FONTDIFF = 'cola.fontdiff'
 HISTORY_BROWSER = 'gui.historybrowser'
+ICON_THEME = 'cola.icontheme'
 LINEBREAK = 'cola.linebreak'
 MAXRECENT = 'cola.maxrecent'
 MERGE_DIFFSTAT = 'merge.diffstat'
@@ -56,6 +57,7 @@ class Defaults(object):
     editor = 'gvim'
     expandtab = False
     history_browser = 'gitk'
+    icon_theme = 'default'
     linebreak = True
     maxrecent = 8
     mergetool = difftool
