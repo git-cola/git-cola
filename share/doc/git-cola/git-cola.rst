@@ -516,12 +516,12 @@ suitable for a dark window manager theme, will be used.
 
 If set to an absolute directory path then icons in that directory will be used.
 This value can be set to multiple values using,
-`git config --add cola.icontheme $theme`.
+``git config --add cola.icontheme $theme``.
 
 This setting can be overridden by the `GIT_COLA_ICON_THEME` environment
 variable, which can specify multiple themes using a colon-separated value.
 
-The icon theme can also be specified by passing `--icon-theme=<theme>` on the
+The icon theme can also be specified by passing ``--icon-theme=<theme>`` on the
 command line, once for each icon theme, in the order that they should be
 searched.  This can be used to override a subset of the icons, and fallback
 to the built-in icons for the remainder.
@@ -667,7 +667,7 @@ most native but may look noticeable differently on various systems. The flat
 themes on the other hand should look similar (but not identical) on various
 systems.
 
-The GUI theme can also be specified by passing `--theme=<name>` on the
+The GUI theme can also be specified by passing ``--theme=<name>`` on the
 command line.
 
 cola.turbo
@@ -951,7 +951,7 @@ If you see the following output::
 
 Then the daemon is already running, and you do not need to start it yourself.
 
-If it is not running, eval the output of `gpg-agent --daemon` in your shell
+If it is not running, eval the output of ``gpg-agent --daemon`` in your shell
 prior to launching `git cola`.::
 
     eval $(gpg-agent --daemon)
