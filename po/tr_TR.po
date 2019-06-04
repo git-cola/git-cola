@@ -507,6 +507,10 @@ msgid "Blame Viewer"
 msgstr "Branch Diff Viewer"
 
 #, fuzzy
+msgid "Blame selected paths"
+msgstr "Edit selected paths"
+
+#, fuzzy
 msgid "Blame..."
 msgstr "Close..."
 
@@ -812,6 +816,9 @@ msgstr ""
 
 msgid "DAG..."
 msgstr "DAG..."
+
+msgid "Dark Theme"
+msgstr ""
 
 msgid "Date, Time"
 msgstr "Date, Time"
@@ -1278,6 +1285,9 @@ msgstr "Geçmiş Görüntüleyici"
 msgid "Hungarian translation"
 msgstr ""
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "Ignore all whitespace"
 
@@ -1361,6 +1371,9 @@ msgstr "Launch git-difftool against previous versions."
 #, fuzzy
 msgid "Launch git-difftool on the current path"
 msgstr "Launch git-difftool on the current path."
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Load Commit Message"

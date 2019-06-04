@@ -485,6 +485,10 @@ msgid "Blame Viewer"
 msgstr "Mostra file"
 
 #, fuzzy
+msgid "Blame selected paths"
+msgstr "Rinomina ramo"
+
+#, fuzzy
 msgid "Blame..."
 msgstr "Rinomina"
 
@@ -807,6 +811,9 @@ msgid "Czech translation"
 msgstr ""
 
 msgid "DAG..."
+msgstr ""
+
+msgid "Dark Theme"
 msgstr ""
 
 msgid "Date, Time"
@@ -1311,6 +1318,9 @@ msgstr "File browser"
 msgid "Hungarian translation"
 msgstr ""
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr ""
 
@@ -1393,6 +1403,9 @@ msgid "Launch git-difftool against previous versions"
 msgstr ""
 
 msgid "Launch git-difftool on the current path"
+msgstr ""
+
+msgid "Light Theme"
 msgstr ""
 
 #, fuzzy

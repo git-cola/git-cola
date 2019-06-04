@@ -533,6 +533,9 @@ msgstr "Základní regul. výraz"
 msgid "Blame Viewer"
 msgstr ""
 
+msgid "Blame selected paths"
+msgstr ""
+
 msgid "Blame..."
 msgstr "Blame…"
 
@@ -825,6 +828,9 @@ msgstr "Český překlad"
 msgid "DAG..."
 msgstr "DAG…"
 
+msgid "Dark Theme"
+msgstr ""
+
 msgid "Date, Time"
 msgstr "Datum, čas"
 
@@ -1036,13 +1042,12 @@ msgstr "Chyba při přejmenovávání „%(name)s“ na „%(new_name)s“"
 msgid "Error running prepare-commitmsg hook"
 msgstr "Chyba spouštění háčku prepare-commitmsg"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error updating submodule %s"
-msgstr "Chyba při vytváření vzdálené \"%s\""
+msgstr ""
 
-#, fuzzy
 msgid "Error updating submodules"
-msgstr "Chyba při úpravě souboru"
+msgstr ""
 
 msgid "Error: Cannot find commit template"
 msgstr "Chyba: nedaří se nalézt šablonu nahrání"
@@ -1276,6 +1281,9 @@ msgstr "Prohlížeč historie"
 msgid "Hungarian translation"
 msgstr "Maďarský překlad"
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "Ignorovat všechny mezery"
 
@@ -1357,6 +1365,9 @@ msgstr "Spustit git-difftool proti předchozím verzím"
 
 msgid "Launch git-difftool on the current path"
 msgstr "Spustit git-difftool na stávajícím umístění"
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Nahrát zprávu zápisu"
@@ -1520,9 +1531,8 @@ msgstr "Otevřít"
 msgid "Open Git Repository..."
 msgstr "Otevřít Git repozitář…"
 
-#, fuzzy
 msgid "Open Parent"
-msgstr "Otevřít nedávné"
+msgstr ""
 
 msgid "Open Parent Directory"
 msgstr "Otevřít nadřazenou složku"
@@ -2422,21 +2432,17 @@ msgstr ""
 msgid "Update Submodule..."
 msgstr ""
 
-#, fuzzy
 msgid "Update Submodules"
-msgstr "Inicializovat dílčí moduly"
+msgstr ""
 
-#, fuzzy
 msgid "Update all submodules?"
-msgstr "Inicializovat dílčí moduly"
+msgstr ""
 
-#, fuzzy
 msgid "Update submodules..."
-msgstr "Inicializovat dílčí moduly"
+msgstr ""
 
-#, fuzzy
 msgid "Update this submodule"
-msgstr "Inicializovat dílčí moduly"
+msgstr ""
 
 msgid "Update this submodule?"
 msgstr ""

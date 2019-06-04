@@ -586,6 +586,10 @@ msgstr "基本正規表達式"
 msgid "Blame Viewer"
 msgstr "指謫(blame)查看器"
 
+#, fuzzy
+msgid "Blame selected paths"
+msgstr "重新命名選取的路徑"
+
 msgid "Blame..."
 msgstr "指摘(Blame)..."
 
@@ -879,6 +883,9 @@ msgstr "捷克語翻譯"
 
 msgid "DAG..."
 msgstr "有向無環圖(DAG)……"
+
+msgid "Dark Theme"
+msgstr ""
 
 msgid "Date, Time"
 msgstr "時間，日期"
@@ -1335,6 +1342,9 @@ msgstr "變更紀錄瀏覽器"
 msgid "Hungarian translation"
 msgstr "匈牙利語翻譯"
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "忽略所有的空白"
 
@@ -1416,6 +1426,9 @@ msgstr "對先前的版本啟動 git-difftool"
 
 msgid "Launch git-difftool on the current path"
 msgstr "在當前路徑中啟動 git-difftool"
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "自檔案載入修訂版提交訊息"

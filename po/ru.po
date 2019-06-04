@@ -506,6 +506,10 @@ msgid "Blame Viewer"
 msgstr "Просмотр файла"
 
 #, fuzzy
+msgid "Blame selected paths"
+msgstr "Редактировать выбранный путь(и)"
+
+#, fuzzy
 msgid "Blame..."
 msgstr "Переименовать..."
 
@@ -811,6 +815,9 @@ msgid "Czech translation"
 msgstr ""
 
 msgid "DAG..."
+msgstr ""
+
+msgid "Dark Theme"
 msgstr ""
 
 msgid "Date, Time"
@@ -1279,6 +1286,9 @@ msgstr "Просмотрщик истории"
 msgid "Hungarian translation"
 msgstr ""
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "Игнорировать все пробелы"
 
@@ -1364,6 +1374,9 @@ msgstr "Сравнить c помощью git-difftool с предыдущей �
 #, fuzzy
 msgid "Launch git-difftool on the current path"
 msgstr "Запустить git-difftool по выбранному пути"
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Загрузить комментарий к коммиту"

@@ -523,6 +523,10 @@ msgstr "Regexp basic"
 msgid "Blame Viewer"
 msgstr "Visionneur de fichier"
 
+#, fuzzy
+msgid "Blame selected paths"
+msgstr "Éditer les chemins sélectionnés"
+
 msgid "Blame..."
 msgstr "Visionner..."
 
@@ -825,6 +829,9 @@ msgstr "Traduction allemande"
 
 msgid "DAG..."
 msgstr "DAG..."
+
+msgid "Dark Theme"
+msgstr ""
 
 msgid "Date, Time"
 msgstr "Date, heure"
@@ -1292,6 +1299,9 @@ msgstr "Navigateur de l'historique"
 msgid "Hungarian translation"
 msgstr "Traduction russe"
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "Ignorer tous les espaces blancs"
 
@@ -1374,6 +1384,9 @@ msgstr "Lancer git-difftool par rapport aux versions précédentes"
 
 msgid "Launch git-difftool on the current path"
 msgstr "Lancer git-difftool sur le chemin actuel"
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Charger le message de commit"

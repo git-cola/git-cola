@@ -484,6 +484,10 @@ msgid "Blame Viewer"
 msgstr "Filvisare"
 
 #, fuzzy
+msgid "Blame selected paths"
+msgstr "Byt namn på gren"
+
+#, fuzzy
 msgid "Blame..."
 msgstr "Byt namn..."
 
@@ -806,6 +810,9 @@ msgid "Czech translation"
 msgstr ""
 
 msgid "DAG..."
+msgstr ""
+
+msgid "Dark Theme"
 msgstr ""
 
 msgid "Date, Time"
@@ -1310,6 +1317,9 @@ msgstr "Filbläddrare"
 msgid "Hungarian translation"
 msgstr ""
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr ""
 
@@ -1392,6 +1402,9 @@ msgid "Launch git-difftool against previous versions"
 msgstr ""
 
 msgid "Launch git-difftool on the current path"
+msgstr ""
+
+msgid "Light Theme"
 msgstr ""
 
 #, fuzzy

@@ -486,6 +486,10 @@ msgid "Blame Viewer"
 msgstr "Penampil Diff Cabang"
 
 #, fuzzy
+msgid "Blame selected paths"
+msgstr "Sunting lokasi terpilih"
+
+#, fuzzy
 msgid "Blame..."
 msgstr "Tutup..."
 
@@ -796,6 +800,9 @@ msgstr ""
 
 msgid "DAG..."
 msgstr "DAG..."
+
+msgid "Dark Theme"
+msgstr ""
 
 msgid "Date, Time"
 msgstr "Tanggal, Waktu"
@@ -1268,6 +1275,9 @@ msgstr "Penjelajah Histori"
 msgid "Hungarian translation"
 msgstr ""
 
+msgid "Icon theme"
+msgstr ""
+
 msgid "Ignore all whitespace"
 msgstr "Abaikan semua spasi"
 
@@ -1351,6 +1361,9 @@ msgstr "Jalankan git-difftool pada versi sebelumnya."
 #, fuzzy
 msgid "Launch git-difftool on the current path"
 msgstr "Jalankan git-difftool pada lokasi saat ini."
+
+msgid "Light Theme"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Muat Pesan Commit"
