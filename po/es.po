@@ -586,13 +586,11 @@ msgstr "Regexp básico"
 msgid "Blame Viewer"
 msgstr ""
 
-#, fuzzy
 msgid "Blame selected paths"
-msgstr "Renombrar las rutas seleccionadas"
+msgstr ""
 
-#, fuzzy
 msgid "Blame..."
-msgstr "Cerrar..."
+msgstr ""
 
 msgid "Bold on dark headers instead of italic"
 msgstr "Fuente en negrita con fondo negro en vez de cabeceras en cursiva"
@@ -672,9 +670,9 @@ msgstr ""
 msgid "Cannot Amend"
 msgstr "No se puede corregir"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
+msgstr ""
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
@@ -1013,7 +1011,6 @@ msgstr "¿Abandonar el Stash \"%s\"?"
 msgid "Drop the selected stash"
 msgstr "Abandonar el Stash seleccionado"
 
-#, fuzzy
 msgid "Edit"
 msgstr "Editar"
 
@@ -1098,13 +1095,12 @@ msgstr "Error al renombrar \"%(name)s\" a \"%(new_name)s\""
 msgid "Error running prepare-commitmsg hook"
 msgstr ""
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error updating submodule %s"
-msgstr "Error al crear el repositorio remoto \"%s\""
+msgstr "Error al crear el archivo %s"
 
-#, fuzzy
 msgid "Error updating submodules"
-msgstr "Error al editar el archivo"
+msgstr ""
 
 msgid "Error: Cannot find commit template"
 msgstr "Error: No se pudo encontrar la plantilla para el commit"
@@ -1591,9 +1587,8 @@ msgstr "Abrir"
 msgid "Open Git Repository..."
 msgstr "Abrir Repositorio Git..."
 
-#, fuzzy
 msgid "Open Parent"
-msgstr "Abrir recientes"
+msgstr ""
 
 msgid "Open Parent Directory"
 msgstr "Abrir carpeta padre"
@@ -2505,21 +2500,17 @@ msgstr ""
 msgid "Update Submodule..."
 msgstr ""
 
-#, fuzzy
 msgid "Update Submodules"
-msgstr "Inicializar submódulos"
+msgstr ""
 
-#, fuzzy
 msgid "Update all submodules?"
-msgstr "Inicializar submódulos"
+msgstr ""
 
-#, fuzzy
 msgid "Update submodules..."
-msgstr "Inicializar submódulos"
+msgstr ""
 
-#, fuzzy
 msgid "Update this submodule"
-msgstr "Inicializar submódulos"
+msgstr ""
 
 msgid "Update this submodule?"
 msgstr ""
@@ -2635,83 +2626,3 @@ msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "aaaa-MM-dd"
-
-#~ msgid "Bookmarks"
-#~ msgstr "Favoritos"
-
-#~ msgid "Bookmarks..."
-#~ msgstr "Favoritos..."
-
-#, fuzzy
-#~ msgid "Error %s"
-#~ msgstr "Errores: %s"
-
-#~ msgid "Errors: %s"
-#~ msgstr "Errores: %s"
-
-#, fuzzy
-#~ msgid "Local Branches"
-#~ msgstr "Rama Local"
-
-#, fuzzy
-#~ msgid "On Debian-based systems try: sudo apt-get install python-pyinotify"
-#~ msgstr "En sistemas Debian intente: sudo apt-get install python-pyinotify"
-
-#~ msgid "Options"
-#~ msgstr "Opciones"
-
-#~ msgid ""
-#~ "Output:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Resultado:\n"
-#~ "%s"
-
-#~ msgid "Output: %s"
-#~ msgstr "Resultado: %s"
-
-#~ msgid "PATCH %(current)d/%(count)d"
-#~ msgstr "PATCH %(current)d/%(count)d"
-
-#, fuzzy
-#~ msgid "Remote Branches"
-#~ msgstr "Rama Remota"
-
-#~ msgid "Rename remote?"
-#~ msgstr "Desea renombrar el repositorio remoto?"
-
-#~ msgid "Select File"
-#~ msgstr "Seleccionar Archivo"
-
-#~ msgid "Select file from \"%s\""
-#~ msgstr "Seleccionar archivo de \"%s\""
-
-#~ msgid "Summary:"
-#~ msgstr "Resumen:"
-
-#~ msgid ""
-#~ "This PyQt4 does not include QtWebKit.\n"
-#~ "The keyboard shortcuts feature is unavailable."
-#~ msgstr ""
-#~ "Este PyQt4 no incluye QtWebKit.\n"
-#~ "Los atajos de teclado no están disponibles."
-
-#~ msgid "Updating..."
-#~ msgstr "Actualizando..."
-
-#~ msgid ""
-#~ "file notification: disabled\n"
-#~ "Note: install pywin32 to enable.\n"
-#~ msgstr ""
-#~ "Notificación de archivo: desactivada\n"
-#~ "Nota: instale pywin32 para activarla.\n"
-
-#~ msgid "inotify enabled."
-#~ msgstr "inotify activado."
-
-#~ msgid ""
-#~ "inotify: disabled\n"
-#~ "Note: install python-pyinotify to enable inotify.\n"
-#~ msgstr ""
-#~ "inotify: desactivado\n"
-#~ "Nota: instale python-pyinotify para activarlo.\n"
