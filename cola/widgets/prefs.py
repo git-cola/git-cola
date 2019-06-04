@@ -264,6 +264,11 @@ class AppearanceFormWidget(FormWidget):
         FormWidget.__init__(self, context, model, parent)
 
         self.theme = qtutils.combo_mapped(themes.options())
+        self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
+
+        # The transform to ustr is needed because the config reader will convert
+        # "0", "1", and "2" into integers.  The "1.5" value, though, is
+        # parsed as a string, so the transform is effectively a no-op.
         self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
         self.high_dpi.setEnabled(hidpi.is_supported())
         self.bold_headers = qtutils.checkbox()
