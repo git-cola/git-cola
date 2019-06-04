@@ -670,6 +670,17 @@ systems.
 The GUI theme can also be specified by passing ``--theme=<name>`` on the
 command line.
 
+On Linux, you may want Qt to use the theme configured using the ``qt5ct``
+Qt5 configuration tool.  You can do this by exporting `QT_QPA_PLATFORMTHEME`
+in your `~/.bash_profile` to a value of ``qt5ct``::
+
+    # Use the style configured using the qt5ct tool
+    QT_QPA_PLATFORMTHEME=qt5ct
+    export QT_QPA_PLATFORMTHEME
+
+This only work with the `default` theme.  The other themes replace the color
+palette with a specific configuration.
+
 cola.turbo
 ----------
 Set to `true` to enables "turbo" mode.  "Turbo" mode disables some
