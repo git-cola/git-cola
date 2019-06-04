@@ -39,11 +39,11 @@ class Theme(object):
         if not palette_dark and not self.is_dark:
             return app_palette
         if self.is_dark:
-            bg_color = QtGui.QColor("#202025")
+            bg_color = QtGui.QColor('#202025')
         else:
-            bg_color = QtGui.QColor("#edeef3")
+            bg_color = QtGui.QColor('#edeef3')
 
-        txt_color = QtGui.QColor("#777")
+        txt_color = QtGui.QColor('#777')
         palette = QPalette(bg_color)
         palette.setColor(QPalette.Base, bg_color)
         palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
