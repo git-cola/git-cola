@@ -42,6 +42,7 @@ Thanks
 * Daniel King
 * Dave Thomas
 * David Aguilar
+* David Fernandez
 * David LeGare
 * David Martínez Martí
 * Dawid Drozd
