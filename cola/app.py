@@ -188,7 +188,8 @@ class ColaApplication(object):
             theme_str = self.context.cfg.get('cola.theme', default='default')
         theme = themes.find_theme(theme_str)
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
-        self._app.setPalette(theme.build_palette(self._app.palette()))
+        if theme_str != 'default':
+            self._app.setPalette(theme.build_palette(self._app.palette()))
 
     def _install_hidpi_config(self):
         """Sets QT HIDPI scalling (requires Qt 5.6)"""
