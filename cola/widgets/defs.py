@@ -26,7 +26,7 @@ handle_width = scale(4)
 button_spacing = scale(12)
 tool_button_height = scale(28)
 
-small_icon = scale(16)
+small_icon = scale(12)
 medium_icon = scale(48)
 large_icon = scale(96)
 huge_icon = scale(192)
@@ -34,7 +34,7 @@ huge_icon = scale(192)
 max_size = scale(4096)
 
 border = max(1, scale(0.5))
-checkbox = scale(18)
+checkbox = scale(12)
 radio = scale(22)
 
 logo_text = 24
