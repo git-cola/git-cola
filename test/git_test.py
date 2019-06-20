@@ -197,7 +197,7 @@ class GitModuleTestCase(unittest.TestCase):
         self.assertTrue(is_git_dir.called)
         self.assertEqual(git_dir, paths.git_dir)
         self.assertEqual(None, paths.git_file)
-        self.assertEqual(None, paths.worktree)
+        self.assertEqual(worktree, paths.worktree)
 
     @patch('cola.core.getenv')
     @patch('cola.git.is_git_dir')
