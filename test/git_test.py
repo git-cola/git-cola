@@ -173,6 +173,81 @@ class GitModuleTestCase(unittest.TestCase):
         self.assertTrue(git.is_git_dir('/foo/.git/worktrees/foo'))
         self.assertTrue(git.is_git_dir('/foo/.git'))
 
+    @patch('cola.core.getenv')
+    @patch('cola.git.is_git_dir')
+    def test_find_git_worktree_from_GIT_DIR(self, is_git_dir, getenv):
+        git_dir = '/repo/.git'
+        worktree = '/repo'
+        is_git_dir.return_value = True
+        getenv.side_effect = lambda x: x == 'GIT_DIR' and '/repo/.git' or None
+
+        paths = git.find_git_directory(git_dir)
+        self.assertTrue(is_git_dir.called)
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
+    @patch('cola.git.is_git_dir')
+    def test_finds_no_worktree_from_bare_repo(self, is_git_dir):
+        git_dir = '/repos/bare.git'
+        worktree = None
+        is_git_dir.return_value = True
+
+        paths = git.find_git_directory(git_dir)
+        self.assertTrue(is_git_dir.called)
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(None, paths.worktree)
+
+    @patch('cola.core.getenv')
+    @patch('cola.git.is_git_dir')
+    def test_find_git_directory_uses_GIT_WORK_TREE(self, is_git_dir, getenv):
+        git_dir = '/repo/worktree/.git'
+        worktree = '/repo/worktree'
+
+        def is_git_dir_fn(path):
+            return path == git_dir
+
+        is_git_dir.side_effect = is_git_dir_fn
+
+        def getenv_fn(name):
+            if name == 'GIT_WORK_TREE':
+                return worktree
+            return None
+
+        getenv.side_effect = getenv_fn
+
+        paths = git.find_git_directory(worktree)
+        self.assertTrue(is_git_dir.called)
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
+    @patch('cola.core.getenv')
+    @patch('cola.git.is_git_dir')
+    def test_uses_cwd_for_worktree_with_GIT_DIR(self, is_git_dir, getenv):
+        git_dir = '/repo/.yadm/repo.git'
+        worktree = '/repo'
+
+        def getenv_fn(name):
+            if name == 'GIT_DIR':
+                return git_dir
+            return None
+
+        getenv.side_effect = getenv_fn
+
+        def is_git_dir_fn(path):
+            return path == git_dir
+
+        is_git_dir.side_effect = is_git_dir_fn
+
+        paths = git.find_git_directory(worktree)
+        self.assertTrue(is_git_dir.called)
+        self.assertTrue(getenv.called)
+        self.assertEqual(git_dir, paths.git_dir)
+        self.assertEqual(None, paths.git_file)
+        self.assertEqual(worktree, paths.worktree)
+
 
 class GitCommandTest(unittest.TestCase):
     """Runs tests using a git.Git instance"""
