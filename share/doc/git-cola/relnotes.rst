@@ -14,6 +14,14 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.5:
+
+Fixes
+-----
+* Launching `git cola` from within a directory that has since been deleted
+  would previously result in a traceback, and is now robustly handled.
+  (`#961 <https://github.com/git-cola/git-cola/issues/961>`_)
+
 .. _v3.4:
 
 git-cola v3.4
