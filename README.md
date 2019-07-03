@@ -24,7 +24,7 @@ Screenshots are available on the
 
 ## DOWNLOAD
 
-    apt-get install git-cola
+    apt install git-cola
 
 New releases are available on the
 [git-cola download page](https://git-cola.github.io/downloads.html).
@@ -165,7 +165,7 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
 ### debian, ubuntu
 
-    apt-get install git-cola
+    apt install git-cola
 
 ### fedora
 
