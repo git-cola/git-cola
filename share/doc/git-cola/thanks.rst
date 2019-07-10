@@ -169,6 +169,7 @@ Thanks
 * Rafael Reuber
 * Raghavendra Karunanidhi
 * Rainer Müller
+* Ricardo J. Barberis
 * Robbert Korving
 * Robert Pollak
 * Rolando Espinoza La fuente
