@@ -175,6 +175,10 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
     emerge git-cola
 
+### slackware
+
+Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
+
 ## Ubuntu
 
 The default version on 18.04 is older and is missing features and enhancements.
