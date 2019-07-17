@@ -8,6 +8,7 @@ from cola.widgets.dag import git_dag
 
 def main(argv=None):
     """Run git-dag"""
+    app.initialize()
     args = parse_args(argv=argv)
     return args.func(args)
 

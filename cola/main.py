@@ -9,6 +9,7 @@ from . import core
 
 
 def main(argv=None):
+    app.initialize()
     if argv is None:
         argv = sys.argv[1:]
     # we're using argparse with subparser, but argparse

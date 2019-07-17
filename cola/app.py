@@ -471,6 +471,23 @@ def startup_message():
         Interaction.log(msg2)
 
 
+def initialize():
+    """System-level initialization"""
+    # The current directory may have been deleted while we are still
+    # in that directory.  We rectify this situation by walking up the
+    # directory tree and retrying.
+    #
+    # This is needed because  because Python throws exceptions in lots of
+    # stdlib functions when in this situation, e.g. os.path.abspath() and
+    # os.path.realpath(), so it's simpler to mitigate the damage by changing
+    # the current directory to one that actually exists.
+    while True:
+        try:
+            return core.getcwd()
+        except OSError:
+            os.chdir('..')
+
+
 class Timer(object):
     """Simple performance timer"""
 

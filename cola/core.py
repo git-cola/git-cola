@@ -383,34 +383,14 @@ abspath = wrap(mkpath, os.path.abspath, decorator=decode)
 chdir = wrap(mkpath, os.chdir)
 exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
-
-# getcwd
 if PY2:
     if hasattr(os, 'getcwdu'):
         # pylint: disable=no-member
-        _getcwd = os.getcwdu
+        getcwd = os.getcwdu
     else:
-        _getcwd = decorate(decode, os.getcwd)
+        getcwd = decorate(decode, os.getcwd)
 else:
-    _getcwd = os.getcwd
-
-
-def getcwd():
-    """Failsafe version of getcwd() that always returns a directory"""
-    # The current directory may have been deleted while we are still
-    # in that directory.  We rectify this situation by walking up the
-    # directory tree and retrying.
-    #
-    # Another approach would be to return getenv('PWD', '/') but that
-    # is not robust because Python throws exceptions in lots of other
-    # stdlib functions, e.g. os.path.abspath() and os.path.realpath(),
-    # so it's simpler to mitigate the damage by changing the current
-    # directory to one that actually exists.
-    try:
-        return _getcwd()
-    except OSError:
-        os.chdir('..')
-        return getcwd()
+    getcwd = os.getcwd
 
 
 # NOTE: find_executable() is originally from the stdlib, but starting with
