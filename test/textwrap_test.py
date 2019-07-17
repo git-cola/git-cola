@@ -195,5 +195,6 @@ Link: This also avoids word-wrap
         actual = textwrap.word_wrap(text, 8, 22)
         self.assertEqual(expect, actual)
 
+
 if __name__ == '__main__':
     unittest.main()
