@@ -161,6 +161,39 @@ Link: This also avoids word-wrap
         actual = textwrap.word_wrap(text, 8, 4)
         self.assertEqual(expect, actual)
 
+    def test_triplets(self):
+        text = 'xx0 xx1 xx2 xx3 xx4 xx5 xx6 xx7 xx8 xx9 xxa xxb'
+
+        expect = (
+            'xx0 xx1 xx2 xx3 xx4 xx5 xx6\n'
+            'xx7 xx8 xx9 xxa xxb'
+        )
+        actual = textwrap.word_wrap(text, 8, 27)
+        self.assertEqual(expect, actual)
+
+        expect = (
+            'xx0 xx1 xx2 xx3 xx4 xx5\n'
+            'xx6 xx7 xx8 xx9 xxa xxb'
+        )
+        actual = textwrap.word_wrap(text, 8, 26)
+        self.assertEqual(expect, actual)
+
+        actual = textwrap.word_wrap(text, 8, 25)
+        self.assertEqual(expect, actual)
+
+        actual = textwrap.word_wrap(text, 8, 24)
+        self.assertEqual(expect, actual)
+
+        actual = textwrap.word_wrap(text, 8, 23)
+        self.assertEqual(expect, actual)
+
+        expect = (
+            'xx0 xx1 xx2 xx3 xx4\n'
+            'xx5 xx6 xx7 xx8 xx9\n'
+            'xxa xxb'
+        )
+        actual = textwrap.word_wrap(text, 8, 22)
+        self.assertEqual(expect, actual)
 
 if __name__ == '__main__':
     unittest.main()
