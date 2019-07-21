@@ -182,6 +182,7 @@ Thanks
 * Stanisław Halik
 * Stefan Naewe
 * Steffen Prohaska
+* Stéphane Cerveau
 * Stephen Groat
 * Sven Claussner
 * Szymon Judasz
