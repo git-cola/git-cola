@@ -779,13 +779,6 @@ class MessageBox(Dialog):
         else:
             self.button_ok.hide()
 
-        if default:
-            self.button_ok.setDefault(True)
-            self.button_ok.setFocus()
-        else:
-            self.button_close.setDefault(True)
-            self.button_close.setFocus()
-
         self.details_text = QtWidgets.QPlainTextEdit()
         self.details_text.setReadOnly(True)
         if details:
@@ -815,6 +808,13 @@ class MessageBox(Dialog):
         self.main_layout.setStretchFactor(self.details_text, 2)
         self.setLayout(self.main_layout)
 
+        if default:
+            self.button_ok.setDefault(True)
+            self.button_ok.setFocus()
+        else:
+            self.button_close.setDefault(True)
+            self.button_close.setFocus()
+
         qtutils.connect_button(self.button_ok, self.accept)
         qtutils.connect_button(self.button_close, self.reject)
         self.init_state(None, self.set_initial_size)
@@ -831,6 +831,13 @@ class MessageBox(Dialog):
             QtCore.QTimer.singleShot(0, self.accept)
         elif key in (Qt.Key_N, Qt.Key_Q):
             QtCore.QTimer.singleShot(0, self.reject)
+        elif key == Qt.Key_Tab:
+            if self.button_ok.isVisible():
+                if self.focusWidget() == self.button_close:
+                    self.button_ok.setFocus()
+                else:
+                    self.button_close.setFocus()
+                return
         return Dialog.keyPressEvent(self, event)
 
     def run(self):

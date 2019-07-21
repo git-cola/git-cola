@@ -18,6 +18,11 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* Confirmation dialogs can now focus buttons using the Tab key.
+  Previously, the "Y" and "N" keys could be used to confirm or deny
+  using the keyboard, but "Tab" is more familiar.
+  (`#965 <https://github.com/git-cola/git-cola/issues/965>`_)
+
 * Error dialogs (for example, when a commit hook fails) will now always
   show the details.  The details were previously hidden behind a toggle.
   (`#968 <https://github.com/git-cola/git-cola/issues/968>`_)
