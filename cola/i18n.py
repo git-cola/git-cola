@@ -20,8 +20,7 @@ def gettext(s):
         _translation.ugettext = _translation.gettext
         txt = _translation.gettext(s)
     txt = core.decode(txt)
-    if txt[-6:-4] == '@@':  # handle @@verb / @@noun
-        txt = txt[:-6]
+    txt = txt.replace('@@verb', '').replace('@@noun', '')  # handle @@verb / @@noun
     return txt
 
 
