@@ -19,7 +19,8 @@ def gettext(s):
         # Python 3 compat
         _translation.ugettext = _translation.gettext
         txt = _translation.gettext(s)
-    txt = txt.replace('@@verb', '').replace('@@noun', '')  # handle @@verb / @@noun
+    # handle @@verb / @@noun
+    txt = txt.replace('@@verb', '').replace('@@noun', '')
     return txt
 
 
