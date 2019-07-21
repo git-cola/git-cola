@@ -18,6 +18,12 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* Qt HiDPI settings are overriden by the `git cola` HiDPI appearance settings.
+  These overrides can now be disabled by selecting the "Disable" mode.
+  This allows users to control Qt's HiDPI settings through environment
+  variables.
+  (`#963 <https://github.com/git-cola/git-cola/issues/963>`_)
+
 * Confirmation dialogs can now focus buttons using the Tab key.
   Previously, the "Y" and "N" keys could be used to confirm or deny
   using the keyboard, but "Tab" is more familiar.
