@@ -16,6 +16,12 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v3.5:
 
+Usability, bells and whistles
+-----------------------------
+* Error dialogs (for example, when a commit hook fails) will now always
+  show the details.  The details were previously hidden behind a toggle.
+  (`#968 <https://github.com/git-cola/git-cola/issues/968>`_)
+
 Fixes
 -----
 * Non-unicode results from the `gettext` library are more robustly handled.
