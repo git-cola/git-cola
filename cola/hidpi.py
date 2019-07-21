@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, unicode_literals
 from qtpy import QtCore
 
 from .i18n import N_
+from . import core
 from . import compat
 from . import version
 
@@ -23,8 +24,12 @@ def is_supported():
 def apply_choice(value):
     value = compat.ustr(value)
     if value == Option.AUTO:
-        compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
-        compat.unsetenv('QT_SCALE_FACTOR')
+        # Do not override the configuration when either of these
+        # two environment variables are defined.
+        if (not core.getenv('QT_AUTO_SCREEN_SCALE_FACTOR')
+                and not core.getenv('QT_SCALE_FACTOR')):
+            compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
+            compat.unsetenv('QT_SCALE_FACTOR')
     elif value in (Option.TIMES_1, Option.TIMES_1_5, Option.TIMES_2):
         compat.unsetenv('QT_AUTO_SCREEN_SCALE_FACTOR')
         compat.setenv('QT_SCALE_FACTOR', value)
