@@ -343,6 +343,27 @@ Auto-format `po/*.po` files before committing when updating translations:
 When submitting patches, consult the
 [contributing guidelines](CONTRIBUTING.md).
 
+## SOURCE INSTALL
+
+For Linux/Unix-like environments with symlinks, an easy way to use the latest
+`git cola` is to keep a clone of the repository and symlink it into your
+`~/bin` directory.  If `$HOME/bin` is not already in your `$PATH` you can
+add these two lines to the bottom of your `~/.bashrc` to make the linked
+tools available.
+
+        PATH="$HOME/bin":"$PATH"
+        export PATH
+
+Then, install git-cola by linking it into your `~/bin`:
+
+        mkdir -p ~/src ~/bin
+        git clone git://github.com/git-cola/git-cola.git ~/src/git-cola
+        (cd ~/bin &&
+         ln -s ../src/git-cola/bin/git-cola &&
+         ln -s ../src/git-cola/bin/git-dag)
+
+You should then get the latest `git cola` in your shell.
+
 # WINDOWS (continued)
 
 ## Development
