@@ -787,7 +787,6 @@ class MessageBox(Dialog):
         else:
             self.details_text.hide()
 
-
         self.info_layout = qtutils.vbox(
             defs.large_margin, defs.button_spacing,
             self.text_label, self.info_label, qtutils.STRETCH)
@@ -833,12 +832,13 @@ class MessageBox(Dialog):
             QtCore.QTimer.singleShot(0, self.reject)
         elif key == Qt.Key_Tab:
             if self.button_ok.isVisible():
+                event.accept()
                 if self.focusWidget() == self.button_close:
                     self.button_ok.setFocus()
                 else:
                     self.button_close.setFocus()
                 return
-        return Dialog.keyPressEvent(self, event)
+        Dialog.keyPressEvent(self, event)
 
     def run(self):
         self.show()
