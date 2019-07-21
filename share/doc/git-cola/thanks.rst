@@ -89,6 +89,7 @@ Thanks
 * jfessard
 * JiCiT
 * Jimmy M. Coleman
+* Joachim Jablon
 * Joachim Lusiardi
 * Johannes Löhnert
 * Johann Schmitz
