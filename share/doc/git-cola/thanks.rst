@@ -206,6 +206,7 @@ Thanks
 * Virgil Dupras
 * Vitor Lobo
 * v.paritskiy
+* waterzch
 * Wolfgang Ocker
 * wsdfhjxc
 * Xie Hua Liang (xieofxie)
