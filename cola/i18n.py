@@ -19,6 +19,7 @@ def gettext(s):
         # Python 3 compat
         _translation.ugettext = _translation.gettext
         txt = _translation.gettext(s)
+    txt = core.decode(txt)
     if txt[-6:-4] == '@@':  # handle @@verb / @@noun
         txt = txt[:-6]
     return txt

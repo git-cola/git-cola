@@ -18,6 +18,9 @@ Clone the git-cola repo to get the latest development version:
 
 Fixes
 -----
+* Non-unicode results from the `gettext` library are more robustly handled.
+  (`#969 <https://github.com/git-cola/git-cola/issues/969>`_)
+
 * Launching `git cola` from within a directory that has since been deleted
   would previously result in a traceback, and is now robustly handled.
   (`#961 <https://github.com/git-cola/git-cola/issues/961>`_)
