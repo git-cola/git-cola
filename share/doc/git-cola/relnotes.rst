@@ -35,6 +35,11 @@ Usability, bells and whistles
   show the details.  The details were previously hidden behind a toggle.
   (`#968 <https://github.com/git-cola/git-cola/issues/968>`_)
 
+Translations
+------------
+* Updated Simplified Chinese translation.
+  (`#950 <https://github.com/git-cola/git-cola/pull/950>`_)
+
 Fixes
 -----
 * Non-unicode results from the `gettext` library are more robustly handled.
