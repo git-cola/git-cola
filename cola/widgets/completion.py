@@ -7,6 +7,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from ..models import prefs
 from .. import core
 from .. import gitcmds
 from .. import icons
@@ -676,8 +677,12 @@ class GitLogCompletionModel(GitRefCompletionModel):
         GitRefCompletionModel.__init__(self, context, parent)
         self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
         self._paths = []
+        self._model = context.model
 
     def gather_paths(self):
+        if not self._model.cfg.get(prefs.AUTOCOMPLETE_PATHS, True):
+            self._paths = []
+            return
         context = self.context
         self._paths = gitcmds.tracked_files(context)
 
