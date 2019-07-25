@@ -175,6 +175,10 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
     emerge git-cola
 
+### opensuse, sle
+
+    zypper install git-cola
+
 ### slackware
 
 Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
