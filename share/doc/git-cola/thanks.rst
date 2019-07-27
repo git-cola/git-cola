@@ -178,6 +178,7 @@ Thanks
 * Samsul Ma'arif
 * Sebastian Brass
 * Sergey Leschina
+* Shun Sakai
 * Srinivasa Nallapati
 * Stan Angeloff
 * Stanisław Halik
