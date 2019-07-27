@@ -2,14 +2,15 @@
 # Copyright (C) 2007 Shawn Pearce at el.
 # This file is distributed under the same license as the git-cola package.
 # しらいし ななこ <nanako3@bluebottle.com>, 2007.
+# Shun Sakai <sorairolake@protonmail.ch>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2008-03-15 20:12+0900\n"
-"Last-Translator: fu7mu4 <fu7mu4@gmail.com>\n"
+"PO-Revision-Date: 2019-07-27 13:24+0900\n"
+"Last-Translator: Shun Sakai <sorairolake@protonmail.ch>\n"
 "Language-Team: Japanese\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -258,11 +259,11 @@ msgstr "\"%(branch)s\" は \"%(remote)s\" から削除されています。"
 
 #, python-format
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr "\"%(command)s\" は修了状態として \"%(status)d\" を返しました。"
+msgstr "\"%(command)s\" は終了ステータスとして \"%(status)d\" を返しました。"
 
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" は修了状態として %(status)d を返しました。"
+msgstr "\"%(command)s\" は終了ステータスとして %(status)d を返しました。"
 
 #, python-format
 msgid "\"%s\" already exists"
@@ -538,7 +539,7 @@ msgstr ""
 "署名なしタグを作成しますか？"
 
 msgid "Appearance"
-msgstr ""
+msgstr "外観"
 
 msgid "Apply"
 msgstr "適用"
@@ -568,7 +569,7 @@ msgid "Authors"
 msgstr "著者"
 
 msgid "Auto"
-msgstr ""
+msgstr "自動"
 
 msgid "Auto-Wrap Lines"
 msgstr "自動行折り返し"
@@ -876,7 +877,7 @@ msgid "DAG..."
 msgstr "DAG中..."
 
 msgid "Dark Theme"
-msgstr ""
+msgstr "ダークテーマ"
 
 msgid "Date, Time"
 msgstr "日時"
@@ -1279,7 +1280,7 @@ msgid "GPG-sign the merge commit"
 msgstr "マージコミットのGPG署名"
 
 msgid "GUI theme"
-msgstr ""
+msgstr "GUIテーマ"
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
@@ -1325,7 +1326,7 @@ msgid "Hide Details.."
 msgstr "詳細を隠す。"
 
 msgid "High DPI"
-msgstr ""
+msgstr "高DPI"
 
 msgid "History Browser"
 msgstr "履歴ブラウザ"
@@ -1334,7 +1335,7 @@ msgid "Hungarian translation"
 msgstr "ハンガリー語翻訳"
 
 msgid "Icon theme"
-msgstr ""
+msgstr "アイコンテーマ"
 
 msgid "Ignore all whitespace"
 msgstr "全ての空白文字を無視する"
@@ -1419,7 +1420,7 @@ msgid "Launch git-difftool on the current path"
 msgstr "git差分ツールを現在のパスに対して起動"
 
 msgid "Light Theme"
-msgstr ""
+msgstr "ライトテーマ"
 
 msgid "Load Commit Message"
 msgstr "コミットメッセージをロード"
@@ -1953,7 +1954,7 @@ msgid "Reword"
 msgstr "書き直し"
 
 msgid "Rewrite Published Commit?"
-msgstr "発行ずみコミットを書き直しますか?"
+msgstr "発行済コミットを書き直しますか?"
 
 msgid "Run"
 msgstr "実行"
@@ -2286,7 +2287,7 @@ msgid "Stop tracking paths"
 msgstr "パスのトラッキングを中止する"
 
 msgid "Submodules"
-msgstr ""
+msgstr "サブモジュール"
 
 msgid "Summarize Merge Commits"
 msgstr "マージコミットの要約"
@@ -2576,7 +2577,7 @@ msgid "Zoom In"
 msgstr "ズームイン"
 
 msgid "Zoom Out"
-msgstr "ズームあうと"
+msgstr "ズームアウト"
 
 msgid "Zoom to Fit"
 msgstr "表示幅に合わせてズーム"
