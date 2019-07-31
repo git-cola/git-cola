@@ -177,6 +177,7 @@ Thanks
 * Rustam Safin
 * Samsul Ma'arif
 * Sebastian Brass
+* Sebastian Oliva
 * Sergey Leschina
 * Shun Sakai
 * Srinivasa Nallapati
