@@ -44,9 +44,7 @@ def install(locale):
     if sys.platform == 'win32':
         _check_win32_locale()
     if locale:
-        compat.setenv('LANGUAGE', locale)
-        compat.setenv('LANG', locale)
-        compat.setenv('LC_MESSAGES', locale)
+        _set_language(locale)
     _install_custom_language()
     _gettext.textdomain('messages')
     _translation = _gettext.translation('git-cola',
@@ -70,11 +68,18 @@ def _install_custom_language():
     if not core.exists(lang_file):
         return
     try:
-        lang = core.read(lang_file).strip()
+        locale = core.read(lang_file).strip()
     except (OSError, IOError):
         return
-    if lang:
-        compat.setenv('LANGUAGE', lang)
+    if locale:
+        _set_language(locale)
+
+
+def _set_language(locale):
+    compat.setenv('LANGUAGE', locale)
+    compat.setenv('LANG', locale)
+    compat.setenv('LC_ALL', locale)
+    compat.setenv('LC_MESSAGES', locale)
 
 
 def _check_win32_locale():
