@@ -271,16 +271,21 @@ app-tarball: git-cola.app
 	$(MARKDOWN) $< >$@
 
 flake8:
+	$(FLAKE8) --version
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS) contrib
 .PHONY: flake8
 
-pylint3k:
+pylint-version:
+	$(PYLINT) --version
+.PHONY: pylint-version
+
+pylint3k: pylint-version
 	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) \
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint3k
 
-pylint:
+pylint: pylint-version
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) \
 	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
 .PHONY: pylint

@@ -35,14 +35,7 @@ install:
   - make requirements-dev
   # Build translations
   - make all
-  # Build documentation
-  - make doc
 
 script:
-  # Run tests
-  - make test V=2
-  - pylint --version
-  - make pylint
-  - make pylint3k
-  - flake8 --version
-  - make flake8
+  # Run tests and static analysis checks
+  - make check V=2
