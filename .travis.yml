@@ -1,34 +1,27 @@
 # Travis CI(http://travis-ci.org) configuration file
+#  https://docs.travis-ci.com/user/languages/python/
 language: python
+dist: bionic
+sudo: required
 python:
   - "2.7"
-  - "3.4"
-#  https://docs.travis-ci.com/user/languages/python/
-#  We use apt to avoid having to build PyQt ourselves, so that means
-#  we can only use the default python versions available in Ubuntu.
-#  For Trusty, that's 2.7.6 and 3.4.3.
+  - "3.6"
 virtualenv:
   system_site_packages: true
-
-addons:
-  apt:
-    packages:
-      # Build dependencies, not needed at runtime
-      # git and python are pre-installed according to Debian control file from
-      # Ubuntu 14.04 (trusty).  Install python2 and python3 packages to allow
-      # testing against both versions.  Users only need one variant installed.
-      - gettext
-      - python-sphinx
-      - python3-sphinx
-      - rsync
-      # Runtime dependencies
-      - python-qt4
-      - python3-pyqt5
 
 before_install:
   # Git test setup
   - git config --global user.name "Git Cola"
   - git config --global user.email git-cola@localhost.localdomain
+  - sudo apt update
+  # Build dependencies
+  - sudo apt install -y gettext
+  - sudo apt install -y rsync
+  - sudo apt install -y python-sphinx
+  - sudo apt install -y python3-sphinx
+  # Runtime dependencies
+  - sudo apt install -y python-pyqt5
+  - sudo apt install -y python3-pyqt5
 
 install:
   # Test dependencies
