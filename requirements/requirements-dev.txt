@@ -7,7 +7,8 @@ mock
 pbr
 
 # Check
-pylint >= 1.9
+pylint<2.0.0; python_version < '3.0'
+pylint>=2.2.0; python_version >= '3.0'
 PyYAML
-pytest >= 3.6
+pytest>=3.6
 pytest-cov
