@@ -46,6 +46,9 @@ Translations
 
 Fixes
 -----
+* Non-ascii unicode byte strings are more robustly handled by the log widget.
+  (`#977 <https://github.com/git-cola/git-cola/issues/977>`_)
+
 * Non-unicode results from the `gettext` library are more robustly handled.
   (`#969 <https://github.com/git-cola/git-cola/issues/969>`_)
 
