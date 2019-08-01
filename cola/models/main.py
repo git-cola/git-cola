@@ -227,7 +227,6 @@ class MainModel(Observable):
         self._update_files(update_index=update_index)
         self._update_remotes()
         self._update_branches_and_tags()
-        self._update_branch_heads()
         self._update_commitmsg()
         self.update_config()
         self.update_submodules_list()
@@ -279,10 +278,6 @@ class MainModel(Observable):
     def _update_remotes(self):
         self.remotes = self.git.remote()[STDOUT].splitlines()
 
-    def _update_branch_heads(self):
-        # Set these early since they are used to calculate 'upstream_changed'.
-        self.currentbranch = gitcmds.current_branch(self.context)
-
     def _update_branches_and_tags(self):
         context = self.context
         sort_types = (
@@ -295,6 +290,8 @@ class MainModel(Observable):
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
+        # Set these early since they are used to calculate 'upstream_changed'.
+        self.currentbranch = gitcmds.current_branch(self.context)
 
     def _update_merge_rebase_status(self):
         merge_head = self.git.git_path('MERGE_HEAD')
@@ -343,7 +340,6 @@ class MainModel(Observable):
         status, out, err = self.git.branch(branch, new_branch, M=True)
         self.emit_about_to_update()
         self._update_branches_and_tags()
-        self._update_branch_heads()
         self.emit_updated()
         return status, out, err
 
