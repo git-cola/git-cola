@@ -46,6 +46,10 @@ Translations
 
 Fixes
 -----
+* The "Branches" widget did not always update itself when deleting branches
+  (for example, when inotify is disabled or unavailable).
+  (`#978 <https://github.com/git-cola/git-cola/issues/978>`_)
+
 * Non-ascii unicode byte strings are more robustly handled by the log widget.
   (`#977 <https://github.com/git-cola/git-cola/issues/977>`_)
 
