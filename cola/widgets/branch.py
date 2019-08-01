@@ -438,28 +438,21 @@ class BranchesTreeWidget(standard.TreeWidget):
                     'pull', [remote, branch_name], refresh_tree=True)
 
     def delete_action(self):
-        title = N_('Delete Branch')
-        question = N_('Delete selected branch?')
-        info = N_('The branch will be no longer available.')
-        ok_btn = N_('Delete Branch')
-
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        if branch == self.current_branch:
+            return
 
-        if (branch != self.current_branch and
-                Interaction.confirm(title, question, info, ok_btn)):
-            remote = False
-            root = self.tree_helper.get_root(self.selected_item())
-            if NAME_REMOTE_BRANCH == root.name:
-                remote = True
+        remote = False
+        root = self.tree_helper.get_root(self.selected_item())
+        if NAME_REMOTE_BRANCH == root.name:
+            remote = True
 
-            if remote:
-                remote, branch_name = gitcmds.parse_remote_branch(branch)
-                if remote and branch_name:
-                    self.git_action_async(
-                        'delete_remote', [remote, branch_name],
-                        update_remotes=True)
-            else:
-                self.git_action_async('delete_local', [branch])
+        if remote:
+            remote, branch = gitcmds.parse_remote_branch(branch)
+            if remote and branch:
+                cmds.do(cmds.DeleteRemoteBranch, self.context, remote, branch)
+        else:
+            cmds.do(cmds.DeleteBranch, self.context, branch)
 
     def merge_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
@@ -625,12 +618,6 @@ class GitHelper(object):
 
     def pull(self, remote, branch):
         return self.git.pull(remote, branch, no_ff=True, verbose=True)
-
-    def delete_remote(self, remote, branch):
-        return self.git.push(remote, branch, delete=True)
-
-    def delete_local(self, branch):
-        return self.git.branch(branch, D=True)
 
     def merge(self, branch):
         return self.git.merge(branch, no_commit=True)
