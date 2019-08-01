@@ -841,16 +841,30 @@ class MoveToTrash(RemoveFiles):
         super(MoveToTrash, self).__init__(context, send2trash, filenames)
 
 
-class DeleteBranch(ContextCommand):
+class DeleteBranch(ConfirmAction):
     """Delete a git branch."""
 
     def __init__(self, context, branch):
         super(DeleteBranch, self).__init__(context)
         self.branch = branch
 
-    def do(self):
-        status, out, err = self.model.delete_branch(self.branch)
-        Interaction.log_status(status, out, err)
+    def confirm(self):
+        title = N_('Delete Branch')
+        question = N_('Delete branch "%s"?') % self.branch
+        info = N_('The branch will be no longer available.')
+        ok_txt = N_('Delete Branch')
+        return Interaction.confirm(title, question, info, ok_txt,
+                                   default=True, icon=icons.discard())
+
+    def action(self):
+        return self.model.delete_branch(self.branch)
+
+    def error_message(self):
+        return N_('Error deleting branch "%s"' % self.branch)
+
+    def command(self):
+        command = 'git branch -D %s'
+        return command % self.branch
 
 
 class Rename(ContextCommand):
@@ -903,25 +917,29 @@ class RenameBranch(ContextCommand):
         Interaction.log_status(status, out, err)
 
 
-class DeleteRemoteBranch(ContextCommand):
+class DeleteRemoteBranch(DeleteBranch):
     """Delete a remote git branch."""
 
     def __init__(self, context, remote, branch):
-        super(DeleteRemoteBranch, self).__init__(context)
+        super(DeleteRemoteBranch, self).__init__(context, branch)
         self.remote = remote
-        self.branch = branch
 
-    def do(self):
-        status, out, err = self.git.push(self.remote, self.branch, delete=True)
+    def action(self):
+        return self.git.push(self.remote, self.branch, delete=True)
+
+    def success(self):
         self.model.update_status()
+        Interaction.information(
+            N_('Remote Branch Deleted'),
+            N_('"%(branch)s" has been deleted from "%(remote)s".')
+            % dict(branch=self.branch, remote=self.remote))
 
-        title = N_('Error Deleting Remote Branch')
-        Interaction.command(title, 'git push', status, out, err)
-        if status == 0:
-            Interaction.information(
-                N_('Remote Branch Deleted'),
-                N_('"%(branch)s" has been deleted from "%(remote)s".')
-                % dict(branch=self.branch, remote=self.remote))
+    def error_message(self):
+        return N_('Error Deleting Remote Branch')
+
+    def command(self):
+        command = 'git push --delete %s %s'
+        return command % (self.remote, self.branch)
 
 
 def get_mode(model, staged, modified, unmerged, untracked):
