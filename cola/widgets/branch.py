@@ -63,6 +63,8 @@ class AsyncGitActionTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QFrame):
+    updated = Signal()
+
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
         self.model = model = context.model
@@ -101,7 +103,9 @@ class BranchesWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.filter_button, self.toggle_filter)
         qtutils.connect_button(
             self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context))
-        model.add_observer(model.message_ref_sort_changed, self.refresh)
+
+        self.updated.connect(self.refresh, Qt.QueuedConnection)
+        model.add_observer(model.message_refs_updated, self.updated.emit)
 
     def toggle_filter(self):
         shown = not self.filter_widget.isVisible()
