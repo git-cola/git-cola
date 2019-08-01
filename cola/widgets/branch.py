@@ -136,7 +136,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setExpandsOnDoubleClick(False)
 
         self.tree_helper = BranchesTreeHelper()
-        self.git_helper = GitHelper(model.git)
+        self.git_helper = GitHelper(context)
         self.current_branch = None
 
         self.runtask = qtutils.RunTask(parent=self)
@@ -609,8 +609,9 @@ class BranchesTreeHelper(object):
 
 class GitHelper(object):
 
-    def __init__(self, git):
-        self.git = git
+    def __init__(self, context):
+        self.context = context
+        self.git = context.git
 
     def log(self, origin):
         return self.git.log(origin, oneline=True)
