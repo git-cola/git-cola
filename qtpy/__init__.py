@@ -174,8 +174,8 @@ if API in PYSIDE_API:
         PYQT_VERSION = None
         PYQT5 = PYSIDE2 = False
         PYSIDE = True
-    except ImportError:
-        raise PythonQtError('No Qt bindings could be found')
+    except ImportError as err:
+        raise PythonQtError('No Qt bindings could be found (%s)' % err)
 
 
 API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
