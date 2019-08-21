@@ -20,8 +20,8 @@ class StashModel(observable.Observable):
         if not model.initialized:
             model.update_status()
 
-    def stash_list(self):
-        return self.git.stash('list')[STDOUT].splitlines()
+    def stash_list(self, *args):
+        return self.git.stash('list', *args)[STDOUT].splitlines()
 
     def is_staged(self):
         return bool(self.model.staged)
@@ -32,11 +32,14 @@ class StashModel(observable.Observable):
 
     def stash_info(self, revids=False, names=False):
         """Parses "git stash list" and returns a list of stashes."""
-        stashes = self.stash_list()
-        revids = [s[:s.index(':')] for s in stashes]
-        names = [s.split(': ', 2)[-1] for s in stashes]
+        stashes = self.stash_list('--format=%gd/%aD/%s')
+        split_stashes = [s.split('/', 3) for s in stashes]
+        stashes = ['{0}: {1}'.format(s[0], s[2]) for s in split_stashes]
+        revids = [s[0] for s in split_stashes]
+        author_dates = [s[1] for s in split_stashes]
+        names = [s[2] for s in split_stashes]
 
-        return stashes, revids, names
+        return stashes, revids, author_dates, names
 
     def stash_diff(self, rev):
         git = self.git
