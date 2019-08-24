@@ -160,7 +160,7 @@ class StashView(standard.Dialog):
     def update_from_model(self):
         """Initiates git queries on the model and updates the view
         """
-        stashes, revids, names = self.model.stash_info()
+        stashes, revids, author_dates, names = self.model.stash_info()
         self.stashes = stashes
         self.revids = revids
         self.names = names
@@ -168,6 +168,8 @@ class StashView(standard.Dialog):
         self.stash_list.clear()
         self.stash_list.addItems(self.stashes)
         if self.stash_list.count() > 0:
+            for i in range(self.stash_list.count()):
+                self.stash_list.item(i).setToolTip(author_dates[i])
             item = self.stash_list.item(0)
             self.stash_list.setCurrentItem(item)
 
