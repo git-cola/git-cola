@@ -32,8 +32,8 @@ class StashModel(observable.Observable):
 
     def stash_info(self, revids=False, names=False):
         """Parses "git stash list" and returns a list of stashes."""
-        stashes = self.stash_list('--format=%gd/%aD/%s')
-        split_stashes = [s.split('/', 3) for s in stashes]
+        stashes = self.stash_list(r'--format=%gd/%aD/%s')
+        split_stashes = [s.split('/', 3) for s in stashes if s]
         stashes = ['{0}: {1}'.format(s[0], s[2]) for s in split_stashes]
         revids = [s[0] for s in split_stashes]
         author_dates = [s[1] for s in split_stashes]
