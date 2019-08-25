@@ -204,8 +204,9 @@ if AVAILABLE == 'inotify':
 
                 self.refresh()
 
-                self._log_enabled_message()
-                self._process_events(poll_obj)
+                if self._running:
+                    self._log_enabled_message()
+                    self._process_events(poll_obj)
             finally:
                 self._close_fds()
 
