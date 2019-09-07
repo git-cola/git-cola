@@ -1,12 +1,12 @@
 """The only file where icon filenames are mentioned"""
 
 from __future__ import absolute_import, division, unicode_literals
-import mimetypes
 import os
 
 from qtpy import QtGui
 from qtpy import QtWidgets
 
+from . import core
 from . import qtcompat
 from . import resources
 from .compat import ustr
@@ -98,7 +98,7 @@ def from_theme(name, fallback=None):
 
 def basename_from_filename(filename):
     """Returns an icon name based on the filename"""
-    mimetype = mimetypes.guess_type(filename)[0]
+    mimetype = core.guess_mimetype(filename)
     if mimetype is not None:
         mimetype = mimetype.lower()
         for filetype, icon_name in KNOWN_FILE_MIME_TYPES:

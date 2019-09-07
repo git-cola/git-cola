@@ -5,12 +5,13 @@ e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
 from __future__ import division, absolute_import, unicode_literals
-import os
 import functools
-import sys
 import itertools
+import mimetypes
+import os
 import platform
 import subprocess
+import sys
 
 from .decorators import interruptable
 from .compat import ustr
@@ -349,6 +350,18 @@ def decorate(decorator, fn):
 
 def getenv(name, default=None):
     return decode(os.getenv(name, default))
+
+
+def guess_mimetype(filename):
+    """Robustly guess a filename's mimetype"""
+    mimetype = None
+    try:
+        mimetype = mimetypes.guess_type(filename)[0]
+    except UnicodeEncodeError:
+        mimetype = mimetypes.guess_type(encode(filename))[0]
+    except TypeError:
+        mimetype = mimetypes.guess_type(decode(filename))[0]
+    return mimetype
 
 
 def xopen(path, mode='r', encoding=None):

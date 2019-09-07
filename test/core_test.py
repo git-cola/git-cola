@@ -51,6 +51,15 @@ class CoreColaUnicodeTestCase(unittest.TestCase):
         actual = core.decode(content)
         self.assertEqual(actual.encoding, 'iso-8859-15')
 
+    def test_guess_mimetype(self):
+        value = '字龍.txt'
+        expect = 'text/plain'
+        actual = core.guess_mimetype(value)
+        self.assertEqual(expect, actual)
+        # This function is robust to bytes vs. unicode
+        actual = core.guess_mimetype(core.encode(value))
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
