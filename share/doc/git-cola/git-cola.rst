@@ -451,6 +451,12 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
+cola.autocompletepaths
+----------------------
+Set to `false` to disable auto-completion of filenames in completion widgets.
+This can speed up operations when working in large repositories.
+Defaults to `true`.
+
 cola.blameviewer
 ----------------
 The command used to blame files.  Defaults to `git gui blame`.
