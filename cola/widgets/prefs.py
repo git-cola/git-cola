@@ -136,6 +136,9 @@ class RepoFormWidget(FormWidget):
         tooltip = N_(
             'Prevent "Stage" from staging all files when nothing is selected')
         self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
+        tooltip = N_('Autocomplete paths like in Log')
+        self.autocomplete_paths = qtutils.checkbox(
+            checked=True, tooltip=tooltip)
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
@@ -149,6 +152,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Safe Mode'), self.safe_mode)
+        self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
 
         self.set_config({
             prefs.CHECKCONFLICTS:
@@ -164,6 +168,8 @@ class RepoFormWidget(FormWidget):
             prefs.MERGE_VERBOSITY:
                 (self.merge_verbosity, Defaults.merge_verbosity),
             prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
+            prefs.AUTOCOMPLETE_PATHS: (
+                self.autocomplete_paths, Defaults.autocomplete_paths),
             prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
             prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
             prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),

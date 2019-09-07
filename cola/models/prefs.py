@@ -38,6 +38,7 @@ TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 SAFE_MODE = 'cola.safemode'
+AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
 SHOW_PATH = 'cola.showpath'
 SPELL_CHECK = 'cola.spellcheck'
 THEME = 'cola.theme'
@@ -67,6 +68,7 @@ class Defaults(object):
     merge_verbosity = 2
     save_window_settings = True
     safe_mode = False
+    autocomplete_paths = True
     show_path = True
     sort_bookmarks = True
     spellcheck = False
