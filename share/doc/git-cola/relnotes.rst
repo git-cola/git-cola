@@ -18,6 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* Auto-completion for filenames can now be disabled.  This speeds up
+  revision completion when working in large repositories with many files.
+  (`#981 <https://github.com/git-cola/git-cola/pull/981>`_)
+
 * The Stash dialog now shows the stash date as a tooltip when hovering
   over a stashed change.
   (`#982 <https://github.com/git-cola/git-cola/pull/982>`_)
