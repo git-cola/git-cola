@@ -136,7 +136,7 @@ class RepoFormWidget(FormWidget):
         tooltip = N_(
             'Prevent "Stage" from staging all files when nothing is selected')
         self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
-        tooltip = N_('Autocomplete paths like in Log')
+        tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(
             checked=True, tooltip=tooltip)
 
