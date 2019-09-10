@@ -54,6 +54,10 @@ Translations
 
 Fixes
 -----
+* The filesystem monitor no longer logs that it has been enabled after the
+  inotify watch limit is reached on Linux.
+  (`#984 <https://github.com/git-cola/git-cola/pull/984>`_)
+
 * Better unicode robustness.
   (`#990 <https://github.com/git-cola/git-cola/issues/990>`_)
 
