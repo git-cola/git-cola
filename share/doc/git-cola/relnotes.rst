@@ -60,6 +60,7 @@ Fixes
 
 * Better unicode robustness.
   (`#990 <https://github.com/git-cola/git-cola/issues/990>`_)
+  (`#910 <https://github.com/git-cola/git-cola/issues/991>`_)
 
 * The "Branches" widget did not always update itself when deleting branches
   (for example, when inotify is disabled or unavailable).

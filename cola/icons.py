@@ -10,7 +10,6 @@ from . import core
 from . import qtcompat
 from . import resources
 from .compat import ustr
-from .decorators import memoize
 from .i18n import N_
 
 
@@ -67,7 +66,6 @@ def name_from_basename(basename):
     return 'icons:' + basename
 
 
-@memoize
 def from_name(name):
     """Return a QIcon from an absolute filename or "icons:basename.svg" name"""
     return QtGui.QIcon(name)
@@ -78,7 +76,6 @@ def icon(basename):
     return from_name(name_from_basename(basename))
 
 
-@memoize
 def from_theme(name, fallback=None):
     """Grab an icon from the current theme with a fallback
 
