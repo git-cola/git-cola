@@ -14,6 +14,13 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.6:
+
+Fixes
+-----
+* The branches widget now refreshes its display when changing branhces.
+  (`#992 <https://github.com/git-cola/git-cola/pull/992>`_)
+
 .. _v3.5:
 
 Usability, bells and whistles

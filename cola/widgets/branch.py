@@ -46,15 +46,12 @@ def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, fn):
 class AsyncGitActionTask(qtutils.Task):
     """Run git action asynchronously"""
 
-    def __init__(self, parent, git_helper, action, args, kwarg,
-                 refresh_tree, update_remotes):
+    def __init__(self, parent, git_helper, action, args, kwarg):
         qtutils.Task.__init__(self, parent)
         self.git_helper = git_helper
         self.action = action
         self.args = args
         self.kwarg = kwarg
-        self.refresh_tree = refresh_tree
-        self.update_remotes = update_remotes
 
     def task(self):
         """Runs action and captures the result"""
@@ -387,12 +384,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                 if status_str:
                     item.setText(0, '%s\t%s' % (item.text(0), status_str))
 
-    def git_action_async(self, action, args, kwarg=None, refresh_tree=False,
-                         update_remotes=False):
+    def git_action_async(self, action, args, kwarg=None):
         if kwarg is None:
             kwarg = {}
-        task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg,
-                                  refresh_tree, update_remotes)
+        task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg)
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self)
         self.runtask.start(task, progress=progress,
@@ -401,11 +396,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_completed(self, task):
         status, out, err = task.result
         self.git_helper.show_result(task.action, status, out, err)
-        if task.refresh_tree:
-            self.refresh()
-        if task.update_remotes:
-            model = self.main_model
-            model.update_remotes()
+        self.main_model.update_refs()
 
     def push_action(self):
         context = self.context
@@ -424,8 +415,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_('Enter New Branch Name'),
             title=N_('Rename branch'), text=branch)
         if new_branch[1] is True and new_branch[0]:
-            self.git_action_async('rename', [branch, new_branch[0]],
-                                  refresh_tree=True)
+            self.git_action_async('rename', [branch, new_branch[0]])
 
     def pull_action(self):
         context = self.context
@@ -434,8 +424,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
-                self.git_action_async(
-                    'pull', [remote, branch_name], refresh_tree=True)
+                self.git_action_async('pull', [remote, branch_name])
 
     def delete_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
@@ -458,7 +447,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
 
         if branch != self.current_branch:
-            self.git_action_async('merge', [branch], refresh_tree=True)
+            self.git_action_async('merge', [branch])
 
     def checkout_action(self):
         branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)

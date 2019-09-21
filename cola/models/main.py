@@ -332,6 +332,10 @@ class MainModel(Observable):
         self._update_remotes()
         self._update_branches_and_tags()
 
+    def update_refs(self):
+        """Update tag and branch names"""
+        self._update_branches_and_tags()
+
     def delete_branch(self, branch):
         status, out, err = self.git.branch(branch, D=True)
         self._update_branches_and_tags()
