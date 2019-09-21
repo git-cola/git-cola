@@ -393,7 +393,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             kwarg = {}
         task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg,
                                   refresh_tree, update_remotes)
-        progress = standard.ProgressDialog(
+        progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self)
         self.runtask.start(task, progress=progress,
                            finish=self.git_action_completed)

@@ -15,7 +15,6 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from .. import utils
-from .standard import ProgressDialog
 from . import defs
 from . import standard
 
@@ -129,7 +128,7 @@ class RemoteActionDialog(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
 
         self.runtask = qtutils.RunTask(parent=self)
-        self.progress = ProgressDialog(title, N_('Updating'), self)
+        self.progress = standard.progress(title, N_('Updating'), self)
 
         self.local_label = QtWidgets.QLabel()
         self.local_label.setText(N_('Local Branch'))

@@ -22,7 +22,7 @@ from . import text
 def clone(context, spawn=True, show=True, settings=None, parent=None):
     """Clone a repository and spawn a new git-cola instance"""
     parent = qtutils.active_window()
-    progress = standard.ProgressDialog('', '', parent)
+    progress = standard.progress('', '', parent)
     return clone_repo(context, parent, show, settings,
                       progress, task_finished, spawn)
 

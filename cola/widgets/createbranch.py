@@ -11,10 +11,9 @@ from ..qtutils import get
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
-from .standard import Dialog
-from .standard import ProgressDialog
 from . import defs
 from . import completion
+from . import standard
 
 
 def create_new_branch(context, revision='', settings=None):
@@ -79,11 +78,11 @@ class CreateThread(QtCore.QThread):
         self.result.emit(results)
 
 
-class CreateBranchDialog(Dialog):
+class CreateBranchDialog(standard.Dialog):
     """A dialog for creating branches."""
 
     def __init__(self, context, settings=None, parent=None):
-        Dialog.__init__(self, parent=parent)
+        standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Create Branch'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
@@ -276,7 +275,7 @@ class CreateBranchDialog(Dialog):
 
         title = N_('Create Branch')
         label = N_('Updating')
-        self.progress = ProgressDialog(title, label, self)
+        self.progress = standard.progress(title, label, self)
         self.progress.show()
         self.thread.start()
 

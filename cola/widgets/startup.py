@@ -151,7 +151,7 @@ class StartupDialog(standard.Dialog):
     def clone_repo(self):
         context = self.context
         settings = self.settings
-        progress = standard.ProgressDialog('', '', self)
+        progress = standard.progress('', '', self)
         clone.clone_repo(context, self, True, settings, progress,
                          self.clone_repo_done, False)
 
