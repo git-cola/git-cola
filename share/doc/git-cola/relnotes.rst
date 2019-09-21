@@ -76,6 +76,10 @@ Fixes
   would previously result in a traceback, and is now robustly handled.
   (`#961 <https://github.com/git-cola/git-cola/issues/961>`_)
 
+Packaging
+---------
+* The vendored `qtpy` library was updated to `v1.9`.
+
 .. _v3.4:
 
 git-cola v3.4
