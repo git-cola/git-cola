@@ -889,6 +889,11 @@ def information(title, message=None, details=None, informative_text=None):
     mbox.run()
 
 
+def progress(title, text, parent):
+    """Create a new ProgressDialog"""
+    return ProgressDialog(title, text, parent)
+
+
 def question(title, text, default=True):
     """Launches a QMessageBox question with the provided title and message.
     Passing "default=False" will make "No" the default choice."""
