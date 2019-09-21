@@ -62,9 +62,11 @@ packages::
 
 """
 
+from distutils.version import LooseVersion
 import os
 import platform
 import sys
+import warnings
 
 # Version of QtPy
 from ._version import __version__
@@ -112,15 +114,17 @@ is_old_pyqt = is_pyqt46 = False
 PYQT5 = True
 PYQT4 = PYSIDE = PYSIDE2 = False
 
-
-if 'PyQt5' in sys.modules:
-    API = initial_api if initial_api in PYQT5_API else 'pyqt5'
-elif 'PySide2' in sys.modules:
-    API = initial_api if initial_api in PYSIDE2_API else 'pyside2'
-elif 'PyQt4' in sys.modules:
-    API = initial_api if initial_api in PYQT4_API else 'pyqt4'
-elif 'PySide' in sys.modules:
-    API = initial_api if initial_api in PYSIDE_API else 'pyside'
+# When `FORCE_QT_API` is set, we disregard
+# any previously imported python bindings.
+if os.environ.get('FORCE_QT_API') is not None:
+    if 'PyQt5' in sys.modules:
+        API = initial_api if initial_api in PYQT5_API else 'pyqt5'
+    elif 'PySide2' in sys.modules:
+        API = initial_api if initial_api in PYSIDE2_API else 'pyside2'
+    elif 'PyQt4' in sys.modules:
+        API = initial_api if initial_api in PYQT4_API else 'pyqt4'
+    elif 'PySide' in sys.modules:
+        API = initial_api if initial_api in PYSIDE_API else 'pyside'
 
 
 if API in PYQT5_API:
@@ -128,6 +132,23 @@ if API in PYQT5_API:
         from PyQt5.QtCore import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
         from PyQt5.QtCore import QT_VERSION_STR as QT_VERSION  # analysis:ignore
         PYSIDE_VERSION = None
+
+        if sys.platform == 'darwin':
+            macos_version = LooseVersion(platform.mac_ver()[0])
+            if macos_version < LooseVersion('10.10'):
+                if LooseVersion(QT_VERSION) >= LooseVersion('5.9'):
+                    raise PythonQtError("Qt 5.9 or higher only works in "
+                                        "macOS 10.10 or higher. Your "
+                                        "program will fail in this "
+                                        "system.")
+            elif macos_version < LooseVersion('10.11'):
+                if LooseVersion(QT_VERSION) >= LooseVersion('5.11'):
+                    raise PythonQtError("Qt 5.11 or higher only works in "
+                                        "macOS 10.11 or higher. Your "
+                                        "program will fail in this "
+                                        "system.")
+
+            del macos_version
     except ImportError:
         API = os.environ['QT_API'] = 'pyside2'
 
@@ -139,6 +160,17 @@ if API in PYSIDE2_API:
         PYQT_VERSION = None
         PYQT5 = False
         PYSIDE2 = True
+
+        if sys.platform == 'darwin':
+            macos_version = LooseVersion(platform.mac_ver()[0])
+            if macos_version < LooseVersion('10.11'):
+                if LooseVersion(QT_VERSION) >= LooseVersion('5.11'):
+                    raise PythonQtError("Qt 5.11 or higher only works in "
+                                        "macOS 10.11 or higher. Your "
+                                        "program will fail in this "
+                                        "system.")
+
+            del macos_version
     except ImportError:
         API = os.environ['QT_API'] = 'pyqt'
 
@@ -177,6 +209,11 @@ if API in PYSIDE_API:
     except ImportError:
         raise PythonQtError('No Qt bindings could be found')
 
+# If a correct API name is passed to QT_API and it could not be found,
+# switches to another and informs through the warning
+if API != initial_api and binding_specified:
+    warnings.warn('Selected binding "{}" could not be found, '
+                  'using "{}"'.format(initial_api, API), RuntimeWarning)
 
 API_NAME = {'pyqt5': 'PyQt5', 'pyqt': 'PyQt4', 'pyqt4': 'PyQt4',
             'pyside': 'PySide', 'pyside2':'PySide2'}[API]
