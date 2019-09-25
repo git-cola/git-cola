@@ -11,6 +11,7 @@ import re
 import sys
 
 from extras import cmdclass
+from extras import build_helpers
 
 # Hack: prevent python2's ascii default encoding from breaking inside
 # distutils when installing from utf-8 paths.
@@ -28,7 +29,7 @@ try:
 except ValueError:
     use_env_python = False
 if use_env_python:
-    build_scripts.first_line_re = re.compile('^should not match$')
+    build_scripts.first_line_re = re.compile(r'^should not match$')
 
 # Disable vendoring of qtpy and friends by passing --no-vendor-libs
 try:
@@ -53,6 +54,13 @@ def main():
 
     if sys.platform == 'win32':
         scripts.append('contrib/win32/cola')
+
+    # Helper scripts are installed to share/git-cola/bin and are visible to
+    # git-cola only.  Adding scripts to build_helpers.scripts will make them
+    # available for #! updating.
+    build_helpers.helpers = [
+        'share/git-cola/bin/git-xbase',
+    ]
 
     setup(name='git-cola',
           version=version,

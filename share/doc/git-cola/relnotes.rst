@@ -21,6 +21,12 @@ Fixes
 * The branches widget now refreshes its display when changing branhces.
   (`#992 <https://github.com/git-cola/git-cola/pull/992>`_)
 
+Packaging
+---------
+* The `share/git-cola/bin/git-xbase` script will now have its `#!` lines
+  updated during installation.
+  (`#991 <https://github.com/git-cola/git-cola/pull/991>`_)
+
 .. _v3.5:
 
 Usability, bells and whistles
