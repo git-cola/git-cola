@@ -30,6 +30,7 @@ Thanks
 * Benoît Nouyrigat
 * Bert Jacobs
 * Birger Skogeng Pedersen
+* Björn Ketelaars
 * 林博仁 (Buo-ren Lin)
 * cclaus
 * Charles 101
