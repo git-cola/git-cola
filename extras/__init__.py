@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, unicode_literals
-from distutils.command import build, install
+from distutils.command.build import build
+from distutils.command.install import install
 
 from extras.build_helpers import build_helpers
 from extras.build_mo import build_mo
@@ -14,5 +15,8 @@ cmdclass = {
     'install_helpers': install_helpers,
 }
 
-build.build.sub_commands.append(('build_helpers', lambda self: True))
-install.install.sub_commands.append(('install_helpers', lambda self: True))
+
+build.sub_commands.insert(0, ('build_mo', None))
+build.sub_commands.append(('build_helpers', None))
+
+install.sub_commands.append(('install_helpers', None))

@@ -109,6 +109,3 @@ class build_mo(Command):
             if self.force or newer(po, mo):
                 log.info('Compile: %s -> %s' % (po, mo))
                 self.spawn(['msgfmt', '--output-file', mo, po])
-
-
-build.sub_commands.insert(0, ('build_mo', None))
