@@ -74,7 +74,7 @@ FLAKE8_FLAGS += --doctests
 PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
 PYTEST_FLAGS += --doctest-modules
 uname_S := $(shell uname -s)
-ifeq ($(uname_S),Darwin)
+ifneq ($(uname_S),Linux)
     PYTEST_FLAGS += --ignore=cola/inotify.py
 endif
 
