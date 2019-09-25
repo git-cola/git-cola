@@ -4,7 +4,6 @@
 from __future__ import absolute_import, division, unicode_literals
 import os
 import re
-from distutils.command.build import build
 from distutils.core import Command
 from distutils.dep_util import newer
 from distutils.spawn import find_executable
