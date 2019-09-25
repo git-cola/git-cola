@@ -11,7 +11,7 @@ from cola import icons
 class IconTestCase(unittest.TestCase):
 
     def test_from_filename_unicode(self):
-        filename = compat.uchr(0x400) + '.odt'
+        filename = compat.uchr(0x400) + '.py'
         expect = 'file-code.svg'
         actual = icons.basename_from_filename(filename)
         self.assertEqual(expect, actual)

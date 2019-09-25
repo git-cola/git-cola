@@ -27,6 +27,11 @@ Packaging
   updated during installation.
   (`#991 <https://github.com/git-cola/git-cola/pull/991>`_)
 
+Development
+-----------
+* The unit tests were made more platform-independent.
+  (`#993 <https://github.com/git-cola/git-cola/pull/993>`_)
+
 .. _v3.5:
 
 Usability, bells and whistles
