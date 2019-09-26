@@ -1,3 +1,4 @@
+# pylint: disable=import-error,no-name-in-module
 from __future__ import absolute_import, division, unicode_literals
 from distutils.command.build import build
 from distutils.command.install import install

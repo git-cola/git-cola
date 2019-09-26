@@ -1,5 +1,6 @@
 """install_helpers command for setup.py"""
 # pylint: disable=attribute-defined-outside-init
+# pylint: disable=import-error,no-name-in-module
 from __future__ import absolute_import, division, unicode_literals
 from distutils.command.install_scripts import install_scripts
 import os
