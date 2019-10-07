@@ -330,22 +330,22 @@ class MainModel(Observable):
 
     def update_remotes(self):
         self._update_remotes()
-        self._update_branches_and_tags()
+        self.update_refs()
 
     def update_refs(self):
         """Update tag and branch names"""
+        self.emit_about_to_update()
         self._update_branches_and_tags()
+        self.emit_updated()
 
     def delete_branch(self, branch):
         status, out, err = self.git.branch(branch, D=True)
-        self._update_branches_and_tags()
+        self.update_refs()
         return status, out, err
 
     def rename_branch(self, branch, new_branch):
         status, out, err = self.git.branch(branch, new_branch, M=True)
-        self.emit_about_to_update()
-        self._update_branches_and_tags()
-        self.emit_updated()
+        self.update_refs()
         return status, out, err
 
     def remote_url(self, name, action):
@@ -353,18 +353,26 @@ class MainModel(Observable):
         return gitcmds.remote_url(self.context, name, push=push)
 
     def fetch(self, remote, **opts):
-        return run_remote_action(self.context, self.git.fetch, remote, **opts)
+        result = run_remote_action(self.context, self.git.fetch, remote, **opts)
+        self.update_refs()
+        return result
 
     def push(self, remote, remote_branch='', local_branch='', **opts):
         # Swap the branches in push mode (reverse of fetch)
         opts.update(dict(local_branch=remote_branch,
                          remote_branch=local_branch))
-        return run_remote_action(self.context, self.git.push, remote,
-                                 push=True, **opts)
+        result = run_remote_action(
+            self.context, self.git.push, remote, push=True, **opts)
+        self.update_refs()
+        return result
 
     def pull(self, remote, **opts):
-        return run_remote_action(self.context, self.git.pull, remote,
-                                 pull=True, **opts)
+        result = run_remote_action(
+            self.context, self.git.pull, remote, pull=True, **opts)
+        # Pull can result in merge conflicts
+        self.update_refs()
+        self.update_files(update_index=False, emit=True)
+        return result
 
     def create_branch(self, name, base, track=False, force=False):
         """Create a branch named 'name' from revision 'base'
@@ -413,7 +421,7 @@ class MainModel(Observable):
         if value == self.ref_sort:
             return
         self.ref_sort = value
-        self._update_branches_and_tags()
+        self.update_refs()
 
 
 # Helpers
