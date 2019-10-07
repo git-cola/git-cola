@@ -349,7 +349,7 @@ class MainModel(Observable):
         return status, out, err
 
     def remote_url(self, name, action):
-        push = action == 'push'
+        push = action == 'PUSH'
         return gitcmds.remote_url(self.context, name, push=push)
 
     def fetch(self, remote, **opts):
