@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 
 from ..i18n import N_
 from ..interaction import Interaction
-from ..models import main
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import gitcmds
@@ -126,16 +125,16 @@ class RemoteActionDialog(standard.Dialog):
         self.local_label.setText(N_('Local Branch'))
 
         self.local_branch = QtWidgets.QLineEdit()
-        qtutils.add_completer(self.local_branch, self.model.local_branches)
+        qtutils.add_completer(self.local_branch, model.local_branches)
 
         self.local_branches = QtWidgets.QListWidget()
-        self.local_branches.addItems(self.model.local_branches)
+        self.local_branches.addItems(model.local_branches)
 
         self.remote_label = QtWidgets.QLabel()
         self.remote_label.setText(N_('Remote'))
 
         self.remote_name = QtWidgets.QLineEdit()
-        qtutils.add_completer(self.remote_name, self.model.remotes)
+        qtutils.add_completer(self.remote_name, model.remotes)
         self.remote_name.editingFinished.connect(self.remote_name_edited)
         self.remote_name.textEdited.connect(lambda x: self.remote_name_edited())
 
@@ -143,17 +142,17 @@ class RemoteActionDialog(standard.Dialog):
         if action == PUSH:
             mode = QtWidgets.QAbstractItemView.ExtendedSelection
             self.remotes.setSelectionMode(mode)
-        self.remotes.addItems(self.model.remotes)
+        self.remotes.addItems(model.remotes)
 
         self.remote_branch_label = QtWidgets.QLabel()
         self.remote_branch_label.setText(N_('Remote Branch'))
 
         self.remote_branch = QtWidgets.QLineEdit()
-        remote_branches = strip_remotes(self.model.remote_branches)
+        remote_branches = strip_remotes(model.remote_branches)
         qtutils.add_completer(self.remote_branch, remote_branches)
 
         self.remote_branches = QtWidgets.QListWidget()
-        self.remote_branches.addItems(self.model.remote_branches)
+        self.remote_branches.addItems(model.remote_branches)
 
         text = N_('Prompt on creation')
         tooltip = N_('Prompt when pushing creates new remote branches')
@@ -261,7 +260,7 @@ class RemoteActionDialog(standard.Dialog):
 
         default_remote = gitcmds.upstream_remote(context) or 'origin'
 
-        remotes = self.model.remotes
+        remotes = model.remotes
         if default_remote in remotes:
             idx = remotes.index(default_remote)
             if self.select_remote(idx):
