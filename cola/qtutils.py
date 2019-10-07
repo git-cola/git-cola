@@ -658,17 +658,25 @@ def tool_button():
     button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
     button.setCursor(Qt.PointingHandCursor)
     button.setFocusPolicy(Qt.NoFocus)
+    # Highlight colors
+    palette = QtGui.QPalette()
+    highlight = palette.color(QtGui.QPalette.Highlight)
+    highlight_rgb = rgb_css(highlight)
+
     button.setStyleSheet("""
         /* No borders */
         QToolButton {
-            border: 0;
-            border-style: none;
+            border: none;
+            background-color: none;
         }
         /* Hide the menu indicator */
         QToolButton::menu-indicator {
             image: none;
         }
-    """)
+        QToolButton:hover {
+            border: %(border)spx solid %(highlight_rgb)s;
+        }
+    """ % dict(border=defs.border, highlight_rgb=highlight_rgb))
     return button
 
 

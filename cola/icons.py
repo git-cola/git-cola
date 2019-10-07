@@ -171,7 +171,7 @@ def compare():
 
 
 def configure():
-    return from_theme('configure', fallback='gear.svg')
+    return icon('gear.svg')
 
 
 def copy():
