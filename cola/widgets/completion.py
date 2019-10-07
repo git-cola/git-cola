@@ -522,6 +522,7 @@ class GitCompletionModel(CompletionModel):
         self.context = context
         model = context.model
         model.add_observer(model.message_updated, self.emit_model_updated)
+        self.destroyed.connect(self.dispose)
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(self.match_text, self.matches(), case_sensitive,
@@ -548,6 +549,8 @@ class GitRefCompletionModel(GitCompletionModel):
 
     def __init__(self, context, parent):
         GitCompletionModel.__init__(self, context, parent)
+        model = context.model
+        model.add_observer(model.message_refs_updated, self.emit_model_updated)
 
     def matches(self):
         model = self.context.model
