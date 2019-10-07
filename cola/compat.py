@@ -8,12 +8,6 @@ except ImportError:
     # Python 3
     from urllib import parse  # noqa
 
-try:
-    # Python 2.7+
-    from collections import OrderedDict as odict  # noqa
-except ImportError:
-    from .ordered_dict import OrderedDict as odict  # noqa
-
 
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] >= 3
