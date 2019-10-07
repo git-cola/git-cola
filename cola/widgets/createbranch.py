@@ -332,3 +332,7 @@ class CreateBranchDialog(standard.Dialog):
         else:
             value = []
         return value
+
+    def dispose(self):
+        self.branch_name.dispose()
+        self.revision.dispose()
