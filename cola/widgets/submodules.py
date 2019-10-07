@@ -54,8 +54,8 @@ class SubmodulesTreeWidget(standard.TreeWidget):
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
 
+        model = context.model
         self.context = context
-        self.main_model = model = context.model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -72,10 +72,11 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         if not self._active:
             return
 
-        items = [self.list_helper.get(entry) for entry in
-                 self.main_model.submodules_list]
+        submodules = self.context.model.submodules_list
+        items = [self.list_helper.get(entry) for entry in submodules]
         self.clear()
-        self.addTopLevelItems(items)
+        if items:
+            self.addTopLevelItems(items)
 
     def showEvent(self, event):
         """Defer updating widgets until the widget is visible"""
