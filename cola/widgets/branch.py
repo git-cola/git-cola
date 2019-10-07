@@ -120,8 +120,8 @@ class BranchesTreeWidget(standard.TreeWidget):
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent)
 
+        model = context.model
         self.context = context
-        self.main_model = model = context.model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -148,7 +148,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def refresh(self):
         if not self._active:
             return
-        model = self.main_model
+        model = self.context.model
         self.current_branch = model.currentbranch
 
         states = self.save_tree_state()
@@ -265,7 +265,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def build_upstream_menu(self, menu):
         """Build the "Set Upstream Branch" sub-menu"""
         context = self.context
-        model = self.main_model
+        model = context.model
         selected_branch = self.selected_refname()
         remote = None
         upstream = None
@@ -383,7 +383,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_completed(self, task):
         status, out, err = task.result
         self.git_helper.show_result(task.action, status, out, err)
-        self.main_model.update_refs()
+        self.context.model.update_refs()
 
     def push_action(self):
         context = self.context
