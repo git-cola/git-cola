@@ -1117,7 +1117,7 @@ class StatusFilterWidget(QtWidgets.QWidget):
 
     def __init__(self, context, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.main_model = context.model
+        self.context = context
 
         hint = N_('Filter paths...')
         self.text = completion.GitStatusFilterLineEdit(
@@ -1141,7 +1141,7 @@ class StatusFilterWidget(QtWidgets.QWidget):
             return
         self._filter = value
         paths = utils.shell_split(value)
-        self.main_model.update_path_filter(paths)
+        self.context.model.update_path_filter(paths)
 
 
 def customize_copy_actions(context, parent):
