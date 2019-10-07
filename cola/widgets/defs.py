@@ -20,10 +20,11 @@ large_margin = scale(12)
 
 no_spacing = 0
 spacing = scale(4)
+titlebar_spacing = scale(8)
+button_spacing = scale(12)
 
 cursor_width = scale(2)
 handle_width = scale(4)
-button_spacing = scale(12)
 tool_button_height = scale(28)
 
 small_icon = scale(12)

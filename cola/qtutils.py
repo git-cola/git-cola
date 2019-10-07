@@ -751,7 +751,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         else:
             separator = SKIPPED
 
-        self.main_layout = hbox(defs.small_margin, defs.spacing,
+        self.main_layout = hbox(defs.small_margin, defs.titlebar_spacing,
                                 qlabel, separator, self.corner_layout,
                                 self.toggle_button, self.close_button)
         self.setLayout(self.main_layout)
