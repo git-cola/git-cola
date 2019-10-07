@@ -498,18 +498,26 @@ class Dialog(WidgetMixin, QtWidgets.QDialog):
 
     def accept(self):
         self.save_settings()
+        self.dispose()
         return self.Base.accept(self)
 
     def reject(self):
         self.save_settings()
+        self.dispose()
         return self.Base.reject(self)
+
+    def dispose(self):
+        """Extension method for model deregistration in sub-classes"""
+        pass
 
     def close(self):
         """save_settings() is handled by accept() and reject()"""
+        self.dispose()
         self.Base.close(self)
 
     def closeEvent(self, event):
         """save_settings() is handled by accept() and reject()"""
+        self.dispose()
         self.Base.closeEvent(self, event)
 
 
