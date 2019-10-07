@@ -21,7 +21,7 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
                     'top_1/child_2/child_2_1/child_2_1_2']
         tree_helper = BranchesTreeHelper()
 
-        result = tree_helper.group_branches(branches, '/')
+        result = tree_helper.group_branches(branches)
         inner_child = {'child_2_1_2': {}, 'child_2_1_1': {}}
         self.assertEqual(
             {'top_1': {
@@ -62,10 +62,10 @@ class BranchesTreeHelperTestCase(unittest.TestCase):
         items = _create_top_item()
         tree_helper = BranchesTreeHelper()
 
-        result = tree_helper.get_full_name(items['child_1'], '/')
+        result = tree_helper.get_full_name(items['child_1'])
         self.assertEqual('child_1', result)
 
-        result = tree_helper.get_full_name(items['sub_child_2_2'], '/')
+        result = tree_helper.get_full_name(items['sub_child_2_2'])
         self.assertEqual('child_2/sub_child_2_2', result)
 
     def test_should_return_a_valid_child_on_find_child(self):

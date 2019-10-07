@@ -21,12 +21,6 @@ from .. import qtutils
 from .text import LineEdit
 
 
-SLASH = '/'
-NAME_LOCAL_BRANCH = N_('Local')
-NAME_REMOTE_BRANCH = N_('Remote')
-NAME_TAGS_BRANCH = N_('Tags')
-
-
 def defer_fn(parent, title, fn, *args, **kwargs):
     return qtutils.add_action(parent, title, partial(fn, *args, **kwargs))
 
@@ -160,25 +154,21 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         states = self.save_tree_state()
 
-        local_dict = self.tree_helper.group_branches(
-            model.local_branches, SLASH)
-
-        remote_dict = self.tree_helper.group_branches(
-            model.remote_branches, SLASH)
-
-        tags_dict = self.tree_helper.group_branches(model.tags, SLASH)
+        local_dict = self.tree_helper.group_branches(model.local_branches)
+        remote_dict = self.tree_helper.group_branches(model.remote_branches)
+        tags_dict = self.tree_helper.group_branches(model.tags)
 
         ellipsis = icons.ellipsis()
         local = self.tree_helper.create_top_level_item(
-            NAME_LOCAL_BRANCH, local_dict,
+            N_('Local'), local_dict,
             icon=icons.branch(), ellipsis=ellipsis)
 
         remote = self.tree_helper.create_top_level_item(
-            NAME_REMOTE_BRANCH, remote_dict,
+            N_('Remote'), remote_dict,
             icon=icons.branch(), ellipsis=ellipsis)
 
         tags = self.tree_helper.create_top_level_item(
-            NAME_TAGS_BRANCH, tags_dict,
+            N_('Tags'), tags_dict,
             icon=icons.tag(), ellipsis=ellipsis)
 
         self.clear()
@@ -208,7 +198,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         if selected.childCount() > 0 or not root:
             return
 
-        full_name = self.tree_helper.get_full_name(selected, SLASH)
+        full_name = self.tree_helper.get_full_name(selected)
         menu = qtutils.create_menu(N_('Actions'), self)
 
         # all branches except current the current branch
@@ -216,7 +206,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             menu.addAction(qtutils.add_action(
                 menu, N_('Checkout'), self.checkout_action))
             # remote branch
-            if NAME_REMOTE_BRANCH == root.name:
+            if root.name == N_('Remote'):
                 label = N_('Checkout as new branch')
                 action = self.checkout_new_branch_action
                 menu.addAction(qtutils.add_action(menu, label, action))
@@ -228,9 +218,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             menu.addAction(merge_menu_action)
 
         # local and remote branch
-        if NAME_TAGS_BRANCH != root.name:
+        if root.name != N_('Tags'):
             # local branch
-            if NAME_LOCAL_BRANCH == root.name:
+            if root.name == N_('Local'):
 
                 remote = gitcmds.tracked_branch(context, full_name)
                 if remote is not None:
@@ -256,7 +246,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             # not current branch
             if full_name != self.current_branch:
                 delete_label = N_('Delete Branch')
-                if NAME_REMOTE_BRANCH == root.name:
+                if root.name == N_('Remote'):
                     delete_label = N_('Delete Remote Branch')
 
                 delete_menu_action = qtutils.add_action(
@@ -267,7 +257,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 menu.addAction(delete_menu_action)
 
         # manage upstreams for local branches
-        if root.name == NAME_LOCAL_BRANCH:
+        if root.name == N_('Local'):
             upstream_menu = menu.addMenu(N_('Set Upstream Branch'))
             upstream_menu.setIcon(icons.branch())
             self.build_upstream_menu(upstream_menu)
@@ -279,7 +269,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         context = self.context
         model = self.main_model
         selected_item = self.selected_item()
-        selected_branch = self.tree_helper.get_full_name(selected_item, SLASH)
+        selected_branch = self.tree_helper.get_full_name(selected_item)
         remote = None
         upstream = None
 
@@ -400,7 +390,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def push_action(self):
         context = self.context
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         remote_branch = gitcmds.tracked_branch(context, branch)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
@@ -410,7 +400,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.git_action_async('push', [remote, branch_name])
 
     def rename_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         new_branch = qtutils.prompt(
             N_('Enter New Branch Name'),
             title=N_('Rename branch'), text=branch)
@@ -419,7 +409,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def pull_action(self):
         context = self.context
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         remote_branch = gitcmds.tracked_branch(context, branch)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
@@ -427,13 +417,13 @@ class BranchesTreeWidget(standard.TreeWidget):
                 self.git_action_async('pull', [remote, branch_name])
 
     def delete_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         if branch == self.current_branch:
             return
 
         remote = False
         root = self.tree_helper.get_root(self.selected_item())
-        if NAME_REMOTE_BRANCH == root.name:
+        if root.name == N_('Remote'):
             remote = True
 
         if remote:
@@ -444,18 +434,18 @@ class BranchesTreeWidget(standard.TreeWidget):
             cmds.do(cmds.DeleteBranch, self.context, branch)
 
     def merge_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
 
         if branch != self.current_branch:
             self.git_action_async('merge', [branch])
 
     def checkout_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         if branch != self.current_branch:
             self.git_action_async('checkout', [branch])
 
     def checkout_new_branch_action(self):
-        branch = self.tree_helper.get_full_name(self.selected_item(), SLASH)
+        branch = self.tree_helper.get_full_name(self.selected_item())
         if branch != self.current_branch:
             _, new_branch = gitcmds.parse_remote_branch(branch)
             self.git_action_async('checkout', ['-b', new_branch, branch])
@@ -483,14 +473,14 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
 class BranchesTreeHelper(object):
     @staticmethod
-    def group_branches(list_branches, separator_char):
+    def group_branches(list_branches):
         """Convert a list of delimited strings to a nested tree dict"""
         result = odict()
+        sep = '/'
         for item in list_branches:
             tree = result
-            for part in item.split(separator_char):
+            for part in item.split(sep):
                 tree = tree.setdefault(part, odict())
-
         return result
 
     @staticmethod
@@ -530,9 +520,8 @@ class BranchesTreeHelper(object):
         return parents[len(parents) - 1]
 
     @staticmethod
-    def get_full_name(item, join_char):
-        """Returns item full name generated by iterating over
-        parents and joining their names with 'join_char'"""
+    def get_full_name(item):
+        """Calculate the item's absolute full name"""
         parents = [item.name]
         parent = item.parent()
 
@@ -540,9 +529,9 @@ class BranchesTreeHelper(object):
             parents.append(parent.name)
             parent = parent.parent()
 
-        result = join_char.join(reversed(parents))
+        result = '/'.join(reversed(parents))
 
-        return result[result.find(join_char) + 1:]
+        return result[result.find('/') + 1:]
 
     @staticmethod
     def expand_from_item(item):
@@ -559,7 +548,7 @@ class BranchesTreeHelper(object):
 
         for i in range(top_level_item.childCount()):
             child = top_level_item.child(i)
-            full_name = self.get_full_name(child, SLASH)
+            full_name = self.get_full_name(child)
 
             if full_name == name:
                 result = child
