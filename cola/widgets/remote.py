@@ -116,16 +116,15 @@ class RemoteActionDialog(standard.Dialog):
     def __init__(self, context, model, action, title, parent=None, icon=None):
         """Customize the dialog based on the remote action"""
         standard.Dialog.__init__(self, parent=parent)
+        self.setWindowTitle(title)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         self.context = context
         self.model = model
         self.action = action
         self.filtered_remote_branches = []
         self.selected_remotes = []
-
-        self.setWindowTitle(title)
-        if parent is not None:
-            self.setWindowModality(Qt.WindowModal)
 
         self.runtask = qtutils.RunTask(parent=self)
         self.progress = standard.progress(title, N_('Updating'), self)
