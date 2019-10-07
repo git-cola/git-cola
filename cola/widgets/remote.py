@@ -42,15 +42,8 @@ def pull(context):
 def run(context, RemoteDialog):
     """Launches fetch/push/pull dialogs."""
     # Copy global stuff over to speedup startup
-    model = main.MainModel(context)
-    global_model = context.model
-    model.currentbranch = global_model.currentbranch
-    model.local_branches = global_model.local_branches
-    model.remote_branches = global_model.remote_branches
-    model.tags = global_model.tags
-    model.remotes = global_model.remotes
     parent = qtutils.active_window()
-    view = RemoteDialog(context, model, parent=parent)
+    view = RemoteDialog(context, parent=parent)
     view.show()
     return view
 

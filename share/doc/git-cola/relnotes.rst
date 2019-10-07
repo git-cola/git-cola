@@ -18,7 +18,11 @@ Clone the git-cola repo to get the latest development version:
 
 Fixes
 -----
-* The branches widget now refreshes its display when changing branhces.
+* Fetch, push, and pull operations will now refresh the model and display when
+  operations complete.
+  (`#996 <https://github.com/git-cola/git-cola/issues/996>`_)
+
+* The branches widget now refreshes its display when changing branches.
   (`#992 <https://github.com/git-cola/git-cola/pull/992>`_)
 
 Packaging
