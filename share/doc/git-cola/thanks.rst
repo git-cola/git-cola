@@ -198,6 +198,7 @@ Thanks
 * Thomas Kluyver
 * Thomas Thorne
 * Tom Dobbelaere
+* Tim Brown
 * Tim Schumacher
 * Trevor Alexander
 * Ugo Riboni
