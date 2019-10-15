@@ -728,10 +728,11 @@ class MainView(standard.MainWindow):
         menu = self.open_recent_menu
         menu.clear()
         for entry in settings.recent:
-            name = entry['name']
             directory = entry['path']
-            text = '%s %s %s' % (name, uchr(0x2192), directory)
-            menu.addAction(text, cmds.run(cmd, context, directory))
+            if self.git.worktree() != directory:
+                name = entry['name']
+                text = '%s %s %s' % (name, uchr(0x2192), directory)
+                menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
     mode = property(lambda self: self.model.mode)
