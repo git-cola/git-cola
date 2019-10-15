@@ -150,6 +150,9 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.copy_action = qtutils.add_action(
             self, N_('Copy'), self.copy, hotkeys.COPY)
 
+        self.delete_action = qtutils.add_action(
+            self, N_('Delete'), self.delete_bookmark)
+
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.item_selection_changed)
         self.itemDoubleClicked.connect(self.tree_double_clicked)
@@ -160,7 +163,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
                                         self.launch_editor_action,
                                         self.launch_terminal_action,
                                         self.open_default_action,
-                                        self.rename_repo_action)
+                                        self.rename_repo_action,
+                                        self.delete_action)
         self.action_group.setEnabled(False)
         self.set_default_repo_action.setEnabled(False)
         self.clear_default_repo_action.setEnabled(False)
@@ -201,6 +205,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
         else:
             menu.addAction(self.set_default_repo_action)
         menu.addAction(self.rename_repo_action)
+        menu.addSeparator()
+        menu.addAction(self.delete_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def item_changed(self, item, _index):
