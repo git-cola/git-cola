@@ -727,12 +727,15 @@ class MainView(standard.MainWindow):
         context = self.context
         menu = self.open_recent_menu
         menu.clear()
+        worktree = self.git.worktree()
         for entry in settings.recent:
             directory = entry['path']
-            if self.git.worktree() != directory:
-                name = entry['name']
-                text = '%s %s %s' % (name, uchr(0x2192), directory)
-                menu.addAction(text, cmds.run(cmd, context, directory))
+            if directory == worktree:
+                # Omit the current worktree from the "Open Recent" menu.
+                continue
+            name = entry['name']
+            text = '%s %s %s' % (name, uchr(0x2192), directory)
+            menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
     mode = property(lambda self: self.model.mode)
