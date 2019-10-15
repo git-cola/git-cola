@@ -16,6 +16,11 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v3.6:
 
+Usability, bells and whistles
+-----------------------------
+* The current repository is no longer listed in the "File/Open Recent" menu.
+  (`#998 <https://github.com/git-cola/git-cola/pull/998>`_)
+
 Fixes
 -----
 * Fetch, push, and pull operations will now refresh the model and display when
