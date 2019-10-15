@@ -27,6 +27,7 @@ from .git import MISSING_BLOB_OID
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
+from .settings import Settings
 
 
 class UsageError(Exception):
@@ -1552,6 +1553,10 @@ class OpenRepo(EditModel):
             self.fsmonitor.start()
             self.model.update_status()
             self.model.set_commitmsg(self.new_commitmsg)
+            settings = Settings()
+            settings.load()
+            settings.add_recent(self.repo_path, prefs.maxrecent(self.context))
+            settings.save()
             super(OpenRepo, self).do()
         else:
             self.model.set_worktree(old_repo)

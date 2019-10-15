@@ -36,6 +36,7 @@ class MainModel(Observable):
     message_submodules_changed = 'message_submodules_changed'
     message_refs_updated = 'message_refs_updated'
     message_updated = 'updated'
+    message_worktree_changed = 'message_worktree_changed'
 
     # States
     mode_none = 'none'  # Default: nothing's happened, do nothing
@@ -131,6 +132,7 @@ class MainModel(Observable):
             self.set_directory(cwd)
             core.chdir(cwd)
             self.update_config(reset=True)
+            self.notify_observers(self.message_worktree_changed)
         return is_valid
 
     def is_git_lfs_enabled(self):
