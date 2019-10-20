@@ -256,7 +256,9 @@ class RemoteEditor(standard.Dialog):
 
     def add(self):
         if add_remote(self.context, self):
-            self.refresh()
+            self.refresh(select=False)
+            # Newly added remote will be last; select it
+            self.select_remote(len(self.remote_list) - 1)
 
     def delete(self):
         remote = qtutils.selected_item(self.remotes, self.remote_list)
