@@ -104,6 +104,7 @@ def disable_rename(_path, _name, _new_name):
 
 class BookmarksTreeWidget(standard.TreeWidget):
     default_changed = Signal()
+    worktree_changed = Signal()
 
     def __init__(self, context, style, settings, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
@@ -169,6 +170,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.set_default_repo_action.setEnabled(False)
         self.clear_default_repo_action.setEnabled(False)
 
+        # Connections
+        if style == RECENT_REPOS:
+            self.worktree_changed.connect(self.refresh,
+                                          type=Qt.QueuedConnection)
+            context.model.add_observer(context.model.message_worktree_changed,
+                                       self.worktree_changed.emit)
+
     def refresh(self):
         context = self.context
         settings = self.settings
@@ -179,6 +187,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             entries = settings.bookmarks
         # recent items
         elif self.style == RECENT_REPOS:
+            settings.reload_recent()
             entries = settings.recent
 
         items = [builder.get(entry['path'], entry['name']) for entry in entries]
