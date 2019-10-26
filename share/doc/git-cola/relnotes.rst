@@ -18,6 +18,9 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The bookmarks tool now has a "Delete" option in its right-click menu.
+  (`#999 <https://github.com/git-cola/git-cola/pull/999>`_)
+
 * The current repository is no longer listed in the "File/Open Recent" menu.
   (`#998 <https://github.com/git-cola/git-cola/pull/998>`_)
 
