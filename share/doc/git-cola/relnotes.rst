@@ -18,6 +18,9 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* New remotes are now selected when they are added in the "Edit Remotes" tool.
+  (`#1002 <https://github.com/git-cola/git-cola/pull/1002>`_)
+
 * The "Recent" repositories list is now saved to disk when opening a
   repository.  Previously, this list was only updated when exiting the app.
   (`#1001 <https://github.com/git-cola/git-cola/pull/1001>`_)
