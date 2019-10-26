@@ -18,6 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The "Recent" repositories list is now saved to disk when opening a
+  repository.  Previously, this list was only updated when exiting the app.
+  (`#1001 <https://github.com/git-cola/git-cola/pull/1001>`_)
+
 * The bookmarks tool now has a "Delete" option in its right-click menu.
   (`#999 <https://github.com/git-cola/git-cola/pull/999>`_)
 
