@@ -25,6 +25,13 @@ Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
+try:
+    # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
+    # imported before QApplication is constructed.
+    from qtpy import QtWebEngineWidgets
+except ImportError:
+    # QtWebEngineWidgets / QtWebKit is not available -- no big deal.
+    pass
 
 # Import cola modules
 from .i18n import N_
