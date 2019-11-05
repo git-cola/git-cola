@@ -445,11 +445,11 @@ def show_shortcuts():
     html = core.read(hotkeys_html)
 
     parent = qtutils.active_window()
-    widget = QtWidgets.QDialog()
+    widget = QtWidgets.QDialog(parent)
     widget.setWindowModality(Qt.WindowModal)
     widget.setWindowTitle(N_('Shortcuts'))
 
-    web = QtWebEngineWidgets.QWebEngineView(parent)
+    web = QtWebEngineWidgets.QWebEngineView()
     web.setHtml(html)
 
     layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
