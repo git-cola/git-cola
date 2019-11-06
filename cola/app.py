@@ -1,4 +1,5 @@
 """Provides the main() routine and ColaApplication"""
+# pylint: disable=unused-import
 from __future__ import division, absolute_import, unicode_literals
 from functools import partial
 import argparse
@@ -28,7 +29,7 @@ from qtpy.QtCore import Qt
 try:
     # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
     # imported before QApplication is constructed.
-    from qtpy import QtWebEngineWidgets
+    from qtpy import QtWebEngineWidgets  # noqa
 except ImportError:
     # QtWebEngineWidgets / QtWebKit is not available -- no big deal.
     pass

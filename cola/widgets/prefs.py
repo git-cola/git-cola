@@ -238,6 +238,7 @@ class SettingsFormWidget(FormWidget):
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
         })
 
+        # pylint: disable=no-member
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
         self.font_size.valueChanged.connect(self.font_size_changed)
 
@@ -360,6 +361,7 @@ class PreferencesView(standard.Dialog):
                                         self.button_layout)
         self.setLayout(self.main_layout)
 
+        # pylint: disable=no-member
         self.tab_bar.currentChanged.connect(self.stack_widget.setCurrentIndex)
         self.stack_widget.currentChanged.connect(self.update_widget)
 

@@ -95,6 +95,7 @@ class StashView(standard.Dialog):
         self.setLayout(self.main_layt)
         self.splitter.setSizes([self.width()//3, self.width()*2//3])
 
+        # pylint: disable=no-member
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
 
         qtutils.connect_button(self.button_save, self.stash_save)

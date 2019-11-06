@@ -113,6 +113,7 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
 
+        # pylint: disable=no-member
         self.bookmarks.activated.connect(self.open_bookmark)
 
         self.init_state(settings, self.resize_widget)

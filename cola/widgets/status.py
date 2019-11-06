@@ -91,6 +91,7 @@ class StatusWidget(QtWidgets.QFrame):
         self.tree.select_header()
 
 
+# pylint: disable=too-many-ancestors
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
     about_to_update = Signal()
@@ -250,7 +251,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.m.add_observer(self.m.message_updated, self.updated.emit)
         self.m.add_observer(self.m.message_diff_text_changed,
                             self.diff_text_changed.emit)
-
+        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.show_selection)
         self.itemDoubleClicked.connect(self._double_clicked)
         self.itemCollapsed.connect(lambda x: self._update_column_widths())
@@ -1130,6 +1131,7 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self.setLayout(self.main_layout)
 
         widget = self.text
+        # pylint: disable=no-member
         widget.changed.connect(self.apply_filter)
         widget.cleared.connect(self.apply_filter)
         widget.enter.connect(self.apply_filter)
@@ -1195,6 +1197,7 @@ class CustomizeCopyActions(standard.Dialog):
         qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.save_button, self.save)
         qtutils.add_close_action(self)
+        # pylint: disable=no-member
         self.table.itemSelectionChanged.connect(self.table_selection_changed)
 
         self.init_size(parent=parent)

@@ -410,6 +410,7 @@ class DraggableListMixin(object):
         return items
 
 
+# pylint: disable=too-many-ancestors
 class DraggableListWidget(QtWidgets.QListWidget):
     Mixin = DraggableListMixin
 
@@ -454,6 +455,7 @@ class DraggableListWidget(QtWidgets.QListWidget):
         return self._mixin.get_items()
 
 
+# pylint: disable=too-many-ancestors
 class ToolbarTreeWidget(standard.TreeView):
 
     def __init__(self, parent):

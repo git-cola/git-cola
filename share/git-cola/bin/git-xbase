@@ -297,6 +297,7 @@ class Editor(QtWidgets.QWidget):
                                  hide_expr=True)
 
 
+# pylint: disable=too-many-ancestors
 class RebaseTreeWidget(standard.DraggableTreeWidget):
     external_diff = Signal()
     move_rows = Signal(object, object)
@@ -356,6 +357,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.action_shift_up = qtutils.add_action(
             self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
 
+        # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.selection_changed)
         self.move_rows.connect(self.move)
@@ -564,6 +566,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         combo.setEnabled(self.is_commit())
 
         signal = combo.currentIndexChanged
+        # pylint: disable=no-member
         signal.connect(lambda x: self.set_command_and_validate(combo))
         combo.validate.connect(parent.validate)
 

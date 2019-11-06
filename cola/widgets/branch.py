@@ -114,6 +114,7 @@ class BranchesWidget(QtWidgets.QFrame):
         self.tree.refresh()
 
 
+# pylint: disable=too-many-ancestors
 class BranchesTreeWidget(standard.TreeWidget):
     updated = Signal()
 
@@ -140,6 +141,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         model.add_observer(model.message_updated, self.updated.emit)
 
         # Expand items when they are clicked
+        # pylint: disable=no-member
         self.clicked.connect(self._toggle_expanded)
 
         # Checkout branch when double clicked
@@ -700,6 +702,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.setLayout(self.main_layout)
 
         text = self.text
+        # pylint: disable=no-member
         text.textChanged.connect(self.apply_filter)
         self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
 

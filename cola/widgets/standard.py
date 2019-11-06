@@ -207,6 +207,7 @@ class MainWindowMixin(WidgetMixin):
             widget.titleBarWidget().update_tooltips()
 
 
+# pylint: disable=too-many-ancestors
 class ListWidget(QtWidgets.QListWidget):
     """QListWidget with vim j/k navigation hotkeys"""
 
@@ -530,6 +531,7 @@ class MainWindow(MainWindowMixin, QtWidgets.QMainWindow):
         MainWindowMixin.__init__(self)
 
 
+# pylint: disable=too-many-ancestors
 class TreeView(QtWidgets.QTreeView):
     Mixin = TreeMixin
 
@@ -563,6 +565,7 @@ class TreeView(QtWidgets.QTreeView):
         return self._mixin.set_column_widths(widths)
 
 
+# pylint: disable=too-many-ancestors
 class TreeWidget(QtWidgets.QTreeWidget):
     Mixin = TreeMixin
 
@@ -596,6 +599,7 @@ class TreeWidget(QtWidgets.QTreeWidget):
         return self._mixin.set_column_widths(widths)
 
 
+# pylint: disable=too-many-ancestors
 class DraggableTreeWidget(TreeWidget):
     Mixin = DraggableTreeMixin
     items_moved = Signal(object)

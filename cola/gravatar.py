@@ -42,6 +42,7 @@ class GravatarLabel(QtWidgets.QLabel):
         self._default_pixmap_bytes = None
 
         self.network = QtNetwork.QNetworkAccessManager()
+        # pylint: disable=no-member
         self.network.finished.connect(self.network_finished)
 
     def set_email(self, email):

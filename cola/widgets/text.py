@@ -557,6 +557,7 @@ class HintedPlainTextEdit(PlainTextEdit):
         self.setFont(qtutils.diff_font(context))
         self.set_tabwidth(prefs.tabwidth(context))
         # Refresh palettes when text changes
+        # pylint: disable=no-member
         self.textChanged.connect(self.hint.refresh)
 
     def set_value(self, value, block=False):
@@ -576,6 +577,7 @@ class HintedTextEdit(TextEdit):
         self.hint = HintWidget(self, hint)
         self.hint.init()
         # Refresh palettes when text changes
+        # pylint: disable=no-member
         self.textChanged.connect(self.hint.refresh)
         self.setFont(qtutils.diff_font(context))
 
@@ -685,6 +687,7 @@ class VimMixin(object):
         return self.Base.keyPressEvent(widget, event)
 
 
+# pylint: disable=too-many-ancestors
 class VimHintedPlainTextEdit(HintedPlainTextEdit):
     """HintedPlainTextEdit with vim hotkeys
 
@@ -709,6 +712,7 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
         return self._mixin.keyPressEvent(event)
 
 
+# pylint: disable=too-many-ancestors
 class VimTextEdit(MonoTextEdit):
     """Text viewer with vim-like hotkeys
 
@@ -739,6 +743,7 @@ class HintedLineEdit(LineEdit):
         self.hint = HintWidget(self, hint)
         self.hint.init()
         self.setFont(qtutils.diff_font(context))
+        # pylint: disable=no-member
         self.textChanged.connect(lambda text: self.hint.refresh())
 
 

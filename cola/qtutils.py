@@ -313,6 +313,7 @@ def prompt_n(msg, inputs):
     for name, value in inputs:
         lineedit = QtWidgets.QLineEdit()
         # Enable the OK button only when all fields have been populated
+        # pylint: disable=no-member
         lineedit.textChanged.connect(
             lambda x: ok_b.setEnabled(all(get_values())))
         if value:

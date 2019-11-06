@@ -159,6 +159,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.setCurrentBlockState(state)
 
 
+# pylint: disable=too-many-ancestors
 class DiffTextEdit(VimHintedPlainTextEdit):
 
     def __init__(self, context, parent,
@@ -174,7 +175,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         else:
             self.numbers = None
         self.scrollvalue = None
-
+        # pylint: disable=no-member
         self.cursorPositionChanged.connect(self._cursor_changed)
 
     def _cursor_changed(self):
@@ -381,6 +382,7 @@ class Viewer(QtWidgets.QFrame):
         # Observe images
         images_msg = model.message_images_changed
         model.add_observer(images_msg, self.images_changed.emit)
+        # pylint: disable=no-member
         self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
 
         # Observe the diff type
@@ -636,6 +638,7 @@ class Options(QtWidgets.QWidget):
         self.widget.update_options()
 
 
+# pylint: disable=too-many-ancestors
 class DiffEditor(DiffTextEdit):
 
     up = Signal()
@@ -674,6 +677,7 @@ class DiffEditor(DiffTextEdit):
 
         selection_model.add_observer(
             selection_model.message_selection_changed, self.updated.emit)
+        # pylint: disable=no-member
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         # Update the selection model when the cursor changes
         self.cursorPositionChanged.connect(self._update_line_number)

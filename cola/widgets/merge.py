@@ -101,6 +101,7 @@ class Merge(standard.Dialog):
         self.setLayout(self.mainlayt)
 
         # Signal/slot connections
+        # pylint: disable=no-member
         self.revision.textChanged.connect(self.update_title)
         self.revision.enter.connect(self.merge_revision)
         self.revisions.itemSelectionChanged.connect(self.revision_selected)

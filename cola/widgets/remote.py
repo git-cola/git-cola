@@ -135,6 +135,7 @@ class RemoteActionDialog(standard.Dialog):
 
         self.remote_name = QtWidgets.QLineEdit()
         qtutils.add_completer(self.remote_name, model.remotes)
+        # pylint: disable=no-member
         self.remote_name.editingFinished.connect(self.remote_name_edited)
         self.remote_name.textEdited.connect(lambda x: self.remote_name_edited())
 
@@ -274,6 +275,7 @@ class RemoteActionDialog(standard.Dialog):
         self.set_field_defaults()
 
         # Setup signals and slots
+        # pylint: disable=no-member
         self.remotes.itemSelectionChanged.connect(self.update_remotes)
 
         local = self.local_branches

@@ -137,6 +137,7 @@ class Clone(standard.Dialog):
 
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.ok_button, self.prepare_to_clone)
+        # pylint: disable=no-member
         self.url.textChanged.connect(lambda x: self.update_actions())
 
         self.init_state(settings, self.resize, 720, 200)

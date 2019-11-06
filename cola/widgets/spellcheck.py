@@ -17,6 +17,7 @@ from ..i18n import N_
 from .text import HintedTextEdit
 
 
+# pylint: disable=too-many-ancestors
 class SpellCheckTextEdit(HintedTextEdit):
 
     def __init__(self, context, hint, parent=None):
@@ -116,6 +117,7 @@ class SpellAction(QAction):
 
     def __init__(self, *args):
         QAction.__init__(self, *args)
+        # pylint: disable=no-member
         self.triggered.connect(self.correct)
 
     def correct(self):

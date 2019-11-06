@@ -83,6 +83,7 @@ class SelectCommits(Dialog):
                                         self.splitter, self.input_layout)
         self.setLayout(self.main_layout)
 
+        # pylint: disable=no-member
         commits.itemSelectionChanged.connect(self.commit_oid_selected)
         commits.itemDoubleClicked.connect(self.commit_oid_double_clicked)
 

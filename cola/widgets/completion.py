@@ -110,6 +110,7 @@ class CompletionLineEdit(HintedLineEdit):
         self._delegate = HighlightDelegate(self)
         completer.popup().setItemDelegate(self._delegate)
 
+        # pylint: disable=no-member
         self.textChanged.connect(self._text_changed)
         self._completer.activated.connect(self.choose_completion)
         self._completion_model.updated.connect(self._completions_updated,
@@ -522,6 +523,7 @@ class GitCompletionModel(CompletionModel):
         self.context = context
         model = context.model
         model.add_observer(model.message_updated, self.emit_model_updated)
+        # pylint: disable=no-member
         self.destroyed.connect(self.dispose)
 
     def gather_matches(self, case_sensitive):

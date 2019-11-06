@@ -331,6 +331,7 @@ class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
+# pylint: disable=too-many-ancestors
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     diff_commits = Signal(object, object)
@@ -361,7 +362,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT)
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
-
+        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
 
     def export_state(self):
@@ -620,6 +621,7 @@ class GitDAG(standard.MainWindow):
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
 
+        # pylint: disable=no-member
         self.maxresults.editingFinished.connect(self.display)
 
         self.revtext.textChanged.connect(self.text_changed)
@@ -1298,6 +1300,7 @@ class Label(QtWidgets.QGraphicsItem):
             current_width += text_rect.width() + spacing
 
 
+# pylint: disable=too-many-ancestors
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     diff_commits = Signal(object, object)

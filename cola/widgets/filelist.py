@@ -16,6 +16,7 @@ HISTORIES_SELECTED = 'HISTORIES_SELECTED'
 DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
 
+# pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
 
     grab_file = Signal(object)
@@ -42,6 +43,7 @@ class FileWidget(TreeWidget):
         self.grab_file_action = qtutils.add_action(
             self, N_('Grab File...'), self._grab_file)
 
+        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
 
     def selection_changed(self):

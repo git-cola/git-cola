@@ -243,6 +243,7 @@ class Search(SearchWidget):
         connect_button(self.button_cherrypick, self.cherry_pick)
         connect_button(self.button_close, self.accept)
 
+        # pylint: disable=no-member
         self.mode_combo.currentIndexChanged.connect(self.mode_changed)
         self.commit_list.itemSelectionChanged.connect(self.display)
 

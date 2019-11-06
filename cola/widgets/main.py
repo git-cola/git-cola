@@ -557,6 +557,7 @@ class MainView(standard.MainWindow):
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
+        # pylint: disable=no-member
         self.view_menu.aboutToShow.connect(
             lambda: self.build_view_menu(self.view_menu))
         self.setup_dockwidget_view_menu()

@@ -194,6 +194,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             # description starts at line 2
             lambda row, col: self.cursor_changed.emit(row + 2, col))
 
+        # pylint: disable=no-member
         self.summary.textChanged.connect(self.commit_summary_changed)
         self.description.textChanged.connect(self._commit_message_changed)
         self.description.leave.connect(self.focus_summary)
@@ -557,6 +558,7 @@ class MessageValidator(QtGui.QValidator):
         self._comment_char = None
         self._cfg = cfg = context.cfg
         self.refresh()
+        # pylint: disable=no-member
         self.config_updated.connect(self.refresh, type=Qt.QueuedConnection)
         cfg.add_observer(cfg.message_updated, self.emit_config_updated)
         self.destroyed.connect(self.teardown)
@@ -600,6 +602,7 @@ class CommitSummaryLineEdit(HintedLineEdit):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
+# pylint: disable=too-many-ancestors
 class CommitMessageTextEdit(SpellCheckTextEdit):
     leave = Signal()
 

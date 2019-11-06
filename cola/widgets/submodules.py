@@ -48,6 +48,7 @@ class SubmodulesWidget(QtWidgets.QFrame):
                                cmds.run(cmds.OpenParentRepo, context))
 
 
+# pylint: disable=too-many-ancestors
 class SubmodulesTreeWidget(standard.TreeWidget):
     updated = Signal()
 
@@ -62,8 +63,9 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         # UI
         self._active = False
         self.list_helper = BuildItem()
-        self.itemDoubleClicked.connect(self.tree_double_clicked)
         # Connections
+        # pylint: disable=no-member
+        self.itemDoubleClicked.connect(self.tree_double_clicked)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         model.add_observer(model.message_submodules_changed,
                            self.updated.emit)

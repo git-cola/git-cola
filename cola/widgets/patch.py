@@ -86,6 +86,7 @@ class ApplyPatches(Dialog):
 
         self.tree = PatchTreeWidget(parent=self)
         self.tree.setHeaderHidden(True)
+        # pylint: disable=no-member
         self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
 
         self.notifier = notifier = observable.Observable()
@@ -200,6 +201,7 @@ class ApplyPatches(Dialog):
         return result
 
 
+# pylint: disable=too-many-ancestors
 class PatchTreeWidget(DraggableTreeWidget):
 
     def add_paths(self, paths):

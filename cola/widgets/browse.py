@@ -101,6 +101,7 @@ class Browser(standard.Widget):
         self.setWindowTitle(title)
 
 
+# pylint: disable=too-many-ancestors
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
@@ -129,11 +130,10 @@ class RepoTreeView(standard.TreeView):
         model.add_observer(model.message_about_to_update,
                            self.emit_about_to_update)
         model.add_observer(model.message_updated, self.emit_update)
-
+        # pylint: disable=no-member
         self.about_to_update.connect(self.save_selection,
                                      type=Qt.QueuedConnection)
         self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
-
         self.expanded.connect(self.index_expanded)
 
         self.collapsed.connect(lambda idx: self.size_columns())
@@ -651,6 +651,7 @@ class BrowseBranch(standard.Dialog):
         self.save.setEnabled(bool(filenames))
 
 
+# pylint: disable=too-many-ancestors
 class GitTreeWidget(standard.TreeView):
 
     selection_changed = Signal()
@@ -659,6 +660,7 @@ class GitTreeWidget(standard.TreeView):
     def __init__(self, parent=None):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
+        # pylint: disable=no-member
         self.doubleClicked.connect(self.double_clicked)
 
     def double_clicked(self, index):
