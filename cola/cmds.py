@@ -600,22 +600,28 @@ class CycleReferenceSort(ContextCommand):
 
 
 class Ignore(ContextCommand):
-    """Add files to .gitignore"""
+    """Add files to an exclusion file"""
 
-    def __init__(self, context, filenames):
+    def __init__(self, context, filenames, local=False):
         super(Ignore, self).__init__(context)
         self.filenames = list(filenames)
+        self.local = local
 
     def do(self):
         if not self.filenames:
             return
         new_additions = '\n'.join(self.filenames) + '\n'
         for_status = new_additions
-        if core.exists('.gitignore'):
-            current_list = core.read('.gitignore')
+        if self.local:
+            filename = os.path.join('.git', 'info', 'exclude')
+        else:
+            filename = '.gitignore'
+        if core.exists(filename):
+            current_list = core.read(filename)
             new_additions = current_list.rstrip() + '\n' + new_additions
-        core.write('.gitignore', new_additions)
-        Interaction.log_status(0, 'Added to .gitignore:\n%s' % for_status, '')
+        core.write(filename, new_additions)
+        Interaction.log_status(0, 'Added to %s:\n%s' % (filename, for_status),
+                               '')
         self.model.update_file_status()
 
 

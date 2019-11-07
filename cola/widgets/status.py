@@ -745,7 +745,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
-            menu.addAction(icons.edit(), N_('Add to .gitignore'),
+            menu.addAction(icons.edit(), N_('Ignore...'),
                            partial(gitignore.gitignore_view, self.context))
 
         if not self.selection_model.is_empty():
