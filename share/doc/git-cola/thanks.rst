@@ -28,6 +28,7 @@ Thanks
 * Ben Boeckel
 * Ben Cole
 * Benedict Lee
+* Benjamin Somers
 * Benoît Nouyrigat
 * Bert Jacobs
 * Birger Skogeng Pedersen
