@@ -70,6 +70,7 @@ Thanks
 * Glen Mailer
 * Guillaume de Bure
 * Guo Yunhe
+* Gyuris Gellért
 * Harro Verton
 * Hannes @kannes
 * Igor Galarraga
