@@ -20,7 +20,8 @@ Usability, bells and whistles
 -----------------------------
 * Files can now be ignored in either the project's `.gitignore`, or in the
   repository's private local `.git/info/exclude` ignore file.
-  (`#1000 <https://github.com/git-cola/git-cola/pull/1000>`_)
+  (`#1006 <https://github.com/git-cola/git-cola/pull/1006>`_)
+  (`#1000 <https://github.com/git-cola/git-cola/issues/1000>`_)
 
 * New remotes are now selected when they are added in the "Edit Remotes" tool.
   (`#1002 <https://github.com/git-cola/git-cola/pull/1002>`_)
