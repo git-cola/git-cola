@@ -27,7 +27,7 @@ class AddToGitIgnore(Dialog):
         self.selection = context.selection
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
-        self.setWindowTitle(N_('Add to .gitignore'))
+        self.setWindowTitle(N_('Add to exclusions'))
 
         # Create text
         self.text_description = QtWidgets.QLabel()
@@ -45,9 +45,21 @@ class AddToGitIgnore(Dialog):
         self.radio_filename = qtutils.radio(text=N_('Ignore exact filename'),
                                             checked=True)
         self.radio_pattern = qtutils.radio(text=N_('Ignore custom pattern'))
+        self.name_radio_group = qtutils.buttongroup(self.radio_filename,
+                                                    self.radio_pattern)
+        self.name_radio_layt = qtutils.vbox(defs.no_margin, defs.spacing,
+                                            self.radio_filename,
+                                            self.radio_pattern)
 
-        self.radio_layt = qtutils.vbox(defs.no_margin, defs.spacing,
-                                       self.radio_filename, self.radio_pattern)
+        self.radio_in_repo = qtutils.radio(text=N_('Add to .gitignore'),
+                                           checked=True)
+        self.radio_local = qtutils.radio(text=N_('Add to local '
+                                                 '.git/info/exclude'))
+        self.location_radio_group = qtutils.buttongroup(self.radio_in_repo,
+                                                        self.radio_local)
+        self.location_radio_layt = qtutils.vbox(defs.no_margin, defs.spacing,
+                                                self.radio_in_repo,
+                                                self.radio_local)
 
         # Create buttons
         self.button_apply = qtutils.ok_button(text=N_('Add'))
@@ -59,9 +71,11 @@ class AddToGitIgnore(Dialog):
 
         # Layout
         self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.radio_layt,
+                                        self.name_radio_layt,
                                         defs.button_spacing,
                                         self.filename_layt,
+                                        defs.button_spacing,
+                                        self.location_radio_layt,
                                         qtutils.STRETCH,
                                         self.btn_layt)
         self.setLayout(self.main_layout)
@@ -91,5 +105,6 @@ class AddToGitIgnore(Dialog):
 
     def apply(self):
         context = self.context
-        cmds.do(cmds.Ignore, context, self.edit_filename.text().split(';'))
+        cmds.do(cmds.Ignore, context, self.edit_filename.text().split(';'),
+                self.radio_local.isChecked())
         self.accept()
