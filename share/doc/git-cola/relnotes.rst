@@ -18,6 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* Files can now be ignored in either the project's `.gitignore`, or in the
+  repository's private local `.git/info/exclude` ignore file.
+  (`#1000 <https://github.com/git-cola/git-cola/pull/1000>`_)
+
 * New remotes are now selected when they are added in the "Edit Remotes" tool.
   (`#1002 <https://github.com/git-cola/git-cola/pull/1002>`_)
 
@@ -33,6 +37,9 @@ Usability, bells and whistles
 
 Translations
 ------------
+* Updated Hungarian translation.
+  (`#1005 <https://github.com/git-cola/git-cola/pull/1005>`_)
+
 * Updated Turkish translation.
   (`#1003 <https://github.com/git-cola/git-cola/pull/1003>`_)
 
