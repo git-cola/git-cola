@@ -152,6 +152,13 @@ class MainWindowMixin(WidgetMixin):
         self.lock_layout = False
         self.widget_version = 0
         qtcompat.set_common_dock_options(self)
+        self.default_state = None
+
+    def init_state(self, settings, callback, *args, **kwargs):
+        """Save the initial state before calling the parent initializer"""
+        self.default_state = self.saveState(self.widget_version)
+        super(MainWindowMixin, self).init_state(settings, callback, *args,
+                                                **kwargs)
 
     def export_state(self):
         """Exports data for save/restore"""
@@ -185,6 +192,9 @@ class MainWindowMixin(WidgetMixin):
         self.update_dockwidget_tooltips()
 
         return result
+
+    def reset_layout(self):
+        self.restoreState(self.default_state, self.widget_version)
 
     def set_lock_layout(self, lock_layout):
         self.lock_layout = lock_layout

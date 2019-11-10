@@ -419,6 +419,9 @@ class MainView(standard.MainWindow):
         self.lock_layout_action = add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False)
 
+        self.reset_layout_action = add_action(
+            self, N_('Reset Layout'), self.reset_layout)
+
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
         self.setMenuBar(self.menubar)
@@ -714,6 +717,7 @@ class MainView(standard.MainWindow):
 
         menu.addSeparator()
         menu.addAction(self.lock_layout_action)
+        menu.addAction(self.reset_layout_action)
 
         return menu
 
