@@ -574,7 +574,12 @@ class Commit(ResetMode):
             core.unlink(tmp_file)
         if status == 0:
             super(Commit, self).do()
-            self.model.set_commitmsg(self.new_commitmsg)
+            #  Check if template should be automatically loaded
+            if context.cfg.get(prefs.AUTOTEMPLATE):
+                template_loader = LoadCommitMessageFromTemplate(context)
+                template_loader.do()
+            else:
+                self.model.set_commitmsg(self.new_commitmsg)
 
         title = N_('Commit failed')
         Interaction.command(title, 'git commit', status, out, err)
