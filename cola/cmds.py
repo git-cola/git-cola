@@ -574,7 +574,6 @@ class Commit(ResetMode):
             core.unlink(tmp_file)
         if status == 0:
             super(Commit, self).do()
-            #  Check if template should be automatically loaded
             if context.cfg.get(prefs.AUTOTEMPLATE):
                 template_loader = LoadCommitMessageFromTemplate(context)
                 template_loader.do()
