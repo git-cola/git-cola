@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env tclsh
 # Tcl ignores the next line -*- tcl -*- \
 exec wish "$0" -- "$@"
 
