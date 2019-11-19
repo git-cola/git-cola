@@ -6,6 +6,7 @@ Thanks
 * Aaron Wolf
 * Adam Lesperance
 * Adrien be
+* Adil
 * AJ Bagwell
 * akontsevich
 * Alex Chernetz
