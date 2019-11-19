@@ -214,6 +214,7 @@ Thanks
 * Vaibhav Sagar
 * Vaiz
 * Ved Vyas
+* Victor Nepveu
 * Victorhck
 * Ville Skyttä
 * Virgil Dupras
