@@ -47,6 +47,9 @@ Translations
 
 Fixes
 -----
+* Better support for Python 3.8's line buffering modes.
+  (`#1014 <https://github.com/git-cola/git-cola/pull/1014>`_)
+
 * The default `ssh-askpass` script now uses a more generic `#!` shebang line.
   (`#1012 <https://github.com/git-cola/git-cola/pull/1012>`_)
 
