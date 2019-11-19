@@ -188,6 +188,7 @@ Thanks
 * Sebastian Oliva
 * Sergey Leschina
 * Shun Sakai
+* Simon Peeters
 * Srinivasa Nallapati
 * Stan Angeloff
 * Stanisław Halik
