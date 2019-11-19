@@ -18,6 +18,11 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* Commit message templates can now be loaded automatically by setting
+  ``git config cola.autoloadcommittemplate true``.
+  (`#1013 <https://github.com/git-cola/git-cola/pull/1013>`_)
+  (`#735 <https://github.com/git-cola/git-cola/pull/735>`_)
+
 * The UI layout can now be reset back to its initial state by selecting
   the "Reset Layout" action.  This reverts the layout to the same state
   as when the app first launched.
