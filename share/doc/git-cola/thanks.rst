@@ -62,6 +62,7 @@ Thanks
 * Erop @EgZvor
 * Erwan Bousse
 * Fabio Coatti
+* Felipe Morales
 * Filip Danilović
 * fu7mu4
 * Garoe Dorta
