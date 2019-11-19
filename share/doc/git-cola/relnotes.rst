@@ -47,6 +47,9 @@ Translations
 
 Fixes
 -----
+* The default `ssh-askpass` script now uses a more generic `#!` shebang line.
+  (`#1012 <https://github.com/git-cola/git-cola/pull/1012>`_)
+
 * Fetch, push, and pull operations will now refresh the model and display when
   operations complete.
   (`#996 <https://github.com/git-cola/git-cola/issues/996>`_)
