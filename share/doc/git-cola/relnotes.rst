@@ -18,6 +18,12 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The UI layout can now be reset back to its initial state by selecting
+  the "Reset Layout" action.  This reverts the layout to the same state
+  as when the app first launched.
+  (`#1008 <https://github.com/git-cola/git-cola/pull/1008>`_)
+  (`#994 <https://github.com/git-cola/git-cola/issues/994>`_)
+
 * Files can now be ignored in either the project's `.gitignore`, or in the
   repository's private local `.git/info/exclude` ignore file.
   (`#1006 <https://github.com/git-cola/git-cola/pull/1006>`_)
