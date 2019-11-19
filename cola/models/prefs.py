@@ -9,7 +9,7 @@ from .. import utils
 from ..cmd import Command
 
 
-AUTOTEMPLATE = "cola.autoloadcommittemplate"
+AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
 BOLD_HEADERS = 'cola.boldheaders'
