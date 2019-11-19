@@ -43,6 +43,7 @@ Translations
 
 * Updated Turkish translation.
   (`#1003 <https://github.com/git-cola/git-cola/pull/1003>`_)
+  (`#1011 <https://github.com/git-cola/git-cola/pull/1011>`_)
 
 Fixes
 -----
