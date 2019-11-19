@@ -30,10 +30,15 @@ def main():
     if args.translators:
         default_title = 'Translation'
         titles = {
+            'adlgrbz': 'Turkish translation',
             'balping': 'Hungarian translation',
             'Barış ÇELİK': 'Turkish translation',
+            '林博仁(Buo-ren Lin)': 'Traditional Chinese (Taiwan) translation',
+            'fu7mu4': 'Japanese translation',
             'Guo Yunhe': 'Simplified Chinese translation',
+            'Gyuris Gellért': 'Hungarian translation',
             'Igor Kopach': 'Ukranian translation',
+            'Joachim Lusiardi': 'German translation',
             'Mickael Albertus': 'French translation',
             'Minarto Margoliono': 'Indonesian translation',
             'Louis Rousseau': 'French translation',
@@ -44,7 +49,10 @@ def main():
             'Peter Dave Hello': 'Traditional Chinese (Taiwan) translation',
             'Pilar Molina Lopez': 'Spanish translation',
             'Rafael Nascimento': 'Brazilian translation',
+            'Rafael Reuber': 'Brazilian translation',
+            'Sabri Ünal': 'Turkish translation',
             "Samsul Ma'arif": 'Indonesian translation',
+            'Shun Sakai': 'Japanese translation',
             'Sven Claussner': 'German translation',
             'Vaiz': 'Russian translation',
             'Ｖ字龍(Vdragon)': 'Traditional Chinese (Taiwan) translation',
