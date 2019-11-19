@@ -208,7 +208,10 @@ def start_command(cmd, cwd=None, add_env=None,
             CREATE_NO_WINDOW = 0x08000000
             extra['creationflags'] = CREATE_NO_WINDOW
 
-    return subprocess.Popen(cmd, bufsize=1, stdin=stdin, stdout=stdout,
+    # Use line buffering when in text/universal_newlines mode,
+    # otherwise use the system default buffer size.
+    bufsize = 1 if universal_newlines else -1
+    return subprocess.Popen(cmd, bufsize=bufsize, stdin=stdin, stdout=stdout,
                             stderr=stderr, cwd=cwd, env=env,
                             universal_newlines=universal_newlines, **extra)
 
