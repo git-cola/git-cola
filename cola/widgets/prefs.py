@@ -124,6 +124,7 @@ class RepoFormWidget(FormWidget):
         self.diff_context = standard.SpinBox(value=5, mini=2, maxi=9995)
         self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
         self.merge_summary = qtutils.checkbox(checked=True)
+        self.autotemplate = qtutils.checkbox(checked=False)
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
@@ -147,6 +148,8 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
+        self.add_row(N_('Automatically Load Commit Message Template'),
+                     self.autotemplate)
         self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
@@ -155,6 +158,8 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
 
         self.set_config({
+            prefs.AUTOTEMPLATE:
+                (self.autotemplate, Defaults.autotemplate),
             prefs.CHECKCONFLICTS:
                 (self.check_conflicts, Defaults.check_conflicts),
             prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),

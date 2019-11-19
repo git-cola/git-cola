@@ -451,6 +451,13 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
+cola.autoloadCommitTemplate 
+---------------------------
+Set to `true` to automatically load the commit template in the commit message editor
+If the commit.template variable has not been configured, raise the corresponding error.
+Defaults to `false`
+
+
 cola.autocompletepaths
 ----------------------
 Set to `false` to disable auto-completion of filenames in completion widgets.
