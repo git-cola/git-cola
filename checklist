@@ -5,6 +5,6 @@ make check
 # remove any (BETA) markers from the release notes
 ./Meta/tag
 git cola push
-vx env36 ./Meta/release --all
+vx env37 ./Meta/release --all
 vim ../git-cola.github.io/_config.yaml
 ./Meta/github.io.sh
