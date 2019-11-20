@@ -266,6 +266,22 @@ def textbrowser(text=None):
     return widget
 
 
+def link(url, text, palette=None):
+    if palette is None:
+        palette = QtGui.QPalette()
+
+    color = palette.color(QtGui.QPalette.Foreground)
+    rgb_values = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+    scope = dict(rgb=rgb_values, text=text, url=url)
+
+    return """
+        <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
+            href="%(url)s">
+            %(text)s
+        </a>
+    """ % scope
+
+
 def add_completer(widget, items):
     """Add simple completion to a widget"""
     completer = QtWidgets.QCompleter(items, widget)

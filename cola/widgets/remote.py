@@ -16,6 +16,7 @@ from .. import qtutils
 from .. import utils
 from . import defs
 from . import standard
+from . import remotemessage
 
 
 FETCH = 'FETCH'
@@ -597,7 +598,8 @@ class RemoteActionDialog(standard.Dialog):
         task = ActionTask(self, model_action, remote, kwargs)
         self.runtask.start(task,
                            progress=self.progress,
-                           finish=self.action_completed)
+                           finish=self.action_completed,
+                           result=remotemessage.with_context(self.context))
 
     def action_completed(self, task):
         """Grab the results of the action and finish up"""
