@@ -3,21 +3,22 @@
 # This file is distributed under the same license as the git-cola package.
 # Miklos Vajna <vmiklos@frugalware.org>, 2007
 # Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>, 2019.
+# Meskó Balázs <mesko.balazs@fsf.hu>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola 3.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2019-11-06 21:18+0100\n"
-"Last-Translator: Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>\n"
+"PO-Revision-Date: 2019-11-22 19:01+0100\n"
+"Last-Translator: Meskó Balázs <mesko.balazs@fsf.hu>\n"
 "Language-Team: Hungarian <gellert.gyuris@ujevangelizacio.hu>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 3.34.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.4\n"
 
 msgid ""
 "\n"
@@ -29,9 +30,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                A foltok listához való hozzáadása fogd és vidd módszerrel "
-"végezhető el\n"
-"                vagy a <strong>Hozzáadás</strong> gombbal\n"
+"                A foltok listához való hozzáadása fogd és vidd módszerrel,\n"
+"                vagy a <strong>Hozzáadás</strong> gombbal végezhető el\n"
 "            </p>\n"
 "            "
 
@@ -71,7 +71,7 @@ msgstr ""
 "        <br>\n"
 "        <p>\n"
 "            A fordítás megközelítő. Hiba felfedezése esetén, kérjük vegyen "
-"fel egy hibajegyet a Github-on.\n"
+"fel egy hibajegyet a GitHubon.\n"
 "        </p>\n"
 "\n"
 "        <p>\n"
@@ -82,8 +82,8 @@ msgstr ""
 "        <p>\n"
 "            Kérjük, vegyen részt a fordításban egy új fordítás hozzáadásával "
 "vagy egy \n"
-"            meglévő frissítésével, valamint egy lekérési kérés (pull "
-"request) nyitásával.\n"
+"            meglévő frissítésével, valamint egy beolvasztási kérés "
+"nyitásával.\n"
 "        </p>\n"
 "\n"
 "        <br>\n"
@@ -128,7 +128,7 @@ msgid ""
 msgstr ""
 "\n"
 "        <br>\n"
-"        Kérjük, ezen a linken jelentse a hibákat: %(bug_link)s\n"
+"        Kérjük, itt jelentse a hibákat: %(bug_link)s.\n"
 "        <br>\n"
 "    "
 
@@ -153,7 +153,7 @@ msgstr ""
 "       %(dirname)s  =  mappa relatív útvonala\n"
 "    %(absdirname)s  =  mappa abszolút útvonala\n"
 "      %(filename)s  =  fájl alapnév\n"
-"      %(basename)s  =  fájl alapnév a kierjesztése nélkül\n"
+"      %(basename)s  =  fájl alapnév, kiterjesztés nélkül\n"
 "           %(ext)s  =  fájl kiterjesztése\n"
 
 msgid ""
@@ -196,26 +196,26 @@ msgstr ""
 "Parancsok\n"
 "---------\n"
 "pick = véglegesítés felhasználása\n"
-"reword = véglegesítés felhasználása a véglegesítő üzenet szerkesztésével\n"
+"reword = véglegesítés felhasználása, de a véglegesítési üzenet "
+"szerkesztésével\n"
 "edit = véglegesítés felhasználása, de a javítás leállítása\n"
-"squash = véglegesítés felhasználása és az előző véglegesítésbe való "
-"olvasztása\n"
+"squash = véglegesítés felhasználása, és beolvasztás az előző véglegesítésbe\n"
 "fixup = mint a „squash”, de a véglegesítési naplóüzenet elvetése\n"
-"exec = parancs futtatása (a sor maradékát illetően) parancsértelmezőben\n"
+"exec = parancs (a sor hátralévő része) futtatása parancsértelmezőben\n"
 "\n"
-"A sorok újrarendezhetőek; fentről lefelé lesznek végrehajtva.\n"
+"A sorok újrarendezhetők; fentről lefelé lesznek végrehajtva.\n"
 "\n"
 "Egy sor letiltása itt a VÉGLEGESÍTÉS ELVESZTÉSÉT jelenti.\n"
 "\n"
-"Azonban, minden letiltása az újralapozás megszakításához vezet.\n"
+"Azonban, az összes letiltása az újraalapozás megszakításához vezet.\n"
 "\n"
 "Gyorsbillentyűk\n"
 "------------------\n"
 "? = súgó megjelenítése\n"
 "j = mozgatás lefelé\n"
 "k = mozgatás felfelé\n"
-"J = sor süllyesztése\n"
-"K = sor emelése\n"
+"J = sor lefelé mozgatása\n"
+"K = sor felfelé mozgatása\n"
 "\n"
 "1, p = pick\n"
 "2, r = reword\n"
@@ -225,7 +225,7 @@ msgstr ""
 "szóköz = átváltás engedélyezése\n"
 "\n"
 "ctrl+enter = módosítások elfogadása és újraalapozás\n"
-"ctrl+q     = mégsem és az újralapozás megszakítása\n"
+"ctrl+q     = mégse és az újraalapozás megszakítása\n"
 "ctrl+d     = összehasonlító eszköz indítása\n"
 
 msgid ""
@@ -249,17 +249,17 @@ msgstr ""
 "K, Felfelé  = Mozgatás felfelé\n"
 "Enter       = Kijelölt fájlok szerkesztése\n"
 "Szóköz      = Fájl megnyitása az alapértelmezett alkalmazással\n"
-"Ctrl + L    = Szövegelem-mező fókuszba helyezése\n"
+"Ctrl + L    = Szövegelemmező fókuszba helyezése\n"
 "?           = Súgó megjelenítése\n"
 "\n"
-"A felfelé és lefelé billentyűk módosítják a szövegelem-mezők közti \n"
+"A felfelé és lefelé billentyűk módosítják a szövegelem-mezők közti\n"
 "fókuszt, valamint az eredményeket.\n"
 
 msgid " - DAG"
 msgstr " - DAG"
 
 msgid " commits ago"
-msgstr " véglegesítés ennyivel ezelőtt"
+msgstr " véglegesítéssel ezelőtt"
 
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
@@ -276,22 +276,22 @@ msgstr "A(z) „%(command)s” ezzel a kilépési állapottal tért vissza: %(st
 
 #, python-format
 msgid "\"%s\" already exists"
-msgstr "Az ág már létezik: „%s”"
+msgstr "A(z) „%s” már létezik"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "„%s” már létezik, ezért a cola új mappát hoz létre"
+msgstr "A(z) „%s” már létezik, ezért a cola új mappát hoz létre"
 
 #, python-format
 msgid "\"%s\" requires a selected file."
-msgstr "„%s” kijelölt fájlt igényel."
+msgstr "A(z) „%s” kijelölt fájlt igényel."
 
 msgid "#"
 msgstr "#"
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
-msgstr "%(project)s: %(branch)s – böngészés"
+msgstr "%(project)s: %(branch)s – tallózás"
 
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
@@ -324,26 +324,26 @@ msgid ""
 "You should probably skip this file.\n"
 "Stage it anyways?"
 msgstr ""
-"Úgy tűnik beolvasztási ütközéseket tartalmaz: %s\n"
+"Úgy tűnik, hogy a(z) %s beolvasztási ütközéseket tartalmaz.\n"
 "\n"
 "Valószínűleg ki kellene hagyni ezt a fájlt.\n"
 "Biztosan kiszemelésre kerüljön?"
 
 #, python-format
 msgid "%s is not a Git repository."
-msgstr "%s nem egy git tároló."
+msgstr "A(z) %s nem git tároló."
 
 #, python-format
 msgid "%s will be removed from your bookmarks."
-msgstr "%s el lesz távolítva a könyvjelzők közül."
+msgstr "A(z) %s el lesz távolítva a könyvjelzők közül."
 
 #, python-format
 msgid "%s will be removed from your recent repositories."
-msgstr "%s el lesz távolítva a legutóbbi tárolókból."
+msgstr "A(z) %s el lesz távolítva a legutóbbi tárolókból."
 
 #, python-format
 msgid "%s: No such file or directory."
-msgstr "%s: Nincs ilyen fájl vagy mappa."
+msgstr "%s: Nincs ilyen fájl vagy könyvtár."
 
 msgid "&Edit"
 msgstr "Sz&erkesztés"
@@ -387,8 +387,8 @@ msgid ""
 "so that it points to a commit template."
 msgstr ""
 "A véglegesítési sablon nem lett még beállítva.\n"
-"A „git config” alkalmazásával lehet a „commit.template”-et\n"
-"létrehozni, hogy az egy véglegesítési sablonra mutasson."
+"A „git config” használatával hozható létre a „commit.template”,\n"
+"hogy az egy véglegesítési sablonra mutasson."
 
 #, python-format
 msgid "A hook must be provided at \"%s\""
@@ -396,7 +396,7 @@ msgstr "Egy hurkot kell létrehozni itt: „%s”"
 
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "Ilyen nevű félretett változat már létezik: „%s”"
+msgstr "Már létezik egy ilyen nevű félretett változat: „%s”"
 
 msgid "Abort"
 msgstr "Megszakítás"
@@ -411,7 +411,7 @@ msgid "Abort Merge..."
 msgstr "Beolvasztás megszakítása…"
 
 msgid "Abort the action?"
-msgstr "Művelet megszakítása?"
+msgstr "Megszakítja a műveletet?"
 
 msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
@@ -422,7 +422,7 @@ msgstr ""
 "A nem véglegesített módosítások helyreállítása nem lehetséges."
 
 msgid "Aborting the current merge?"
-msgstr "Megszakítható a jelenlegi beolvasztás?"
+msgstr "Megszakítja a jelenlegi beolvasztást?"
 
 msgid "About"
 msgstr "Névjegy"
@@ -474,7 +474,7 @@ msgstr ""
 "A bal oldali hozzáadás(+) és törlés(-) gombokkal lehet\n"
 "hozzáadni és törölni távoli tárolókat.\n"
 "\n"
-"A távoli tárolók átnevezhetőek a listából való kijelöléssel\n"
+"A távoli tárolók átnevezhetők a listából való kijelöléssel\n"
 "majd az Enter lenyomásával vagy dupla kattintással."
 
 msgid "Add new remote git repository"
@@ -490,7 +490,7 @@ msgid "Add to .gitignore"
 msgstr "Hozzáadás a .gitignore-hoz"
 
 msgid "Add to Git Annex"
-msgstr "Hozzáadás a Git Annex-hez"
+msgstr "Hozzáadás a Git Annexhez"
 
 msgid "Add to Git LFS"
 msgstr "Hozzáadás a Git LFS-hez"
@@ -499,7 +499,7 @@ msgid "Additions"
 msgstr "Kiegészítések"
 
 msgid "Advanced"
-msgstr "Fejlett"
+msgstr "Speciális"
 
 msgid "Age"
 msgstr "Kor"
@@ -539,7 +539,7 @@ msgid "Amend Last Commit"
 msgstr "Utolsó véglegesítés javítása"
 
 msgid "Amend the published commit?"
-msgstr "Javítható a publikált véglegesítés?"
+msgstr "Javítja a közzétett véglegesítést?"
 
 msgid "Amending"
 msgstr "Javítás"
@@ -577,7 +577,7 @@ msgid "Apply the selected stash"
 msgstr "Kijelölt félretett változat alkalmazása"
 
 msgid "Arguments"
-msgstr "Argumentum"
+msgstr "Argumentumok"
 
 msgid "Attach"
 msgstr "Csatolás"
@@ -592,19 +592,19 @@ msgid "Auto"
 msgstr "Automatikus"
 
 msgid "Auto-Wrap Lines"
-msgstr "Sorok automatikus törése"
+msgstr "Sorok automatikus tördelése"
 
 msgid "Basic Regexp"
-msgstr "Alapszintű Regexp"
+msgstr "Egyszerű regexp"
 
 msgid "Blame Viewer"
-msgstr "Gyanúsító megjelenítő"
+msgstr "Hibáztatás megjelenítő"
 
 msgid "Blame selected paths"
-msgstr "Kijelölt útvonalak gyanúsítása"
+msgstr "Kijelölt útvonalak hibáztatása"
 
 msgid "Blame..."
-msgstr "Gyanúsítás…"
+msgstr "Hibáztatás…"
 
 msgid "Bold on dark headers instead of italic"
 msgstr "Félkövéren szedett és sötét fejlécek a dőlt helyett"
@@ -618,11 +618,11 @@ msgid ""
 "A new remote branch will be published."
 msgstr ""
 "A(z) „%(branch)s” nem létezik itt: „%(remote)s”.\n"
-"Új távoli ág lesz publikálva."
+"Új távoli ág lesz közzétéve."
 
 #, python-format
 msgid "Branch \"%s\" already exists."
-msgstr "Az ág már létezik: „%s”."
+msgstr "A(z) „%s” ág már létezik."
 
 msgid "Branch Diff Viewer"
 msgstr "Ág-összehasonlító megjelenítő"
@@ -641,35 +641,35 @@ msgid "Branches"
 msgstr "Ágak"
 
 msgid "Branches..."
-msgstr "Ágak (branches)…"
+msgstr "Ágak…"
 
 msgid "Brazilian translation"
 msgstr "Brazil fordítás"
 
 msgid "Browse"
-msgstr "Böngészés"
+msgstr "Tallózás"
 
 msgid "Browse Commits..."
-msgstr "Véglegesítések böngészése…"
+msgstr "Véglegesítések tallózása…"
 
 msgid "Browse Current Branch..."
-msgstr "Jelenlegi ág böngészése…"
+msgstr "Jelenlegi ág tallózása…"
 
 msgid "Browse Other Branch..."
-msgstr "Egyéb ágak böngészése…"
+msgstr "Egyéb ágak tallózása…"
 
 msgid "Browse..."
-msgstr "Böngészés…"
+msgstr "Tallózás…"
 
 msgid "Browser"
 msgstr "Böngésző"
 
 #, python-format
 msgid "Browsing %s"
-msgstr "%s böngészése"
+msgstr "%s tallózása"
 
 msgid "Bypass Commit Hooks"
-msgstr "Véglegesítő hurok megkerülése "
+msgstr "Véglegesítési hurkok kikerülése"
 
 msgid "Cancel"
 msgstr "Mégse"
@@ -682,25 +682,25 @@ msgstr ""
 "Gyorsbillentyű: Ctrl+Q"
 
 msgid "Cannot Amend"
-msgstr "Javítás nem lehetséges"
+msgstr "A javítás nem lehetséges"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "„%s” nem futtatható. Be kell állítani gyanúsító megjelenítőt"
+msgstr "A(z) „%s” nem futtatható: állítson be egy hibáztatás megjelenítőt"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "„%s” nem futtatható. Be kell állítani a történetböngészőt"
+msgstr "A(z) „%s” nem futtatható: állítson be egy történetböngészőt"
 
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "„%s” nem futtatható. Be kell állítani szerkesztőt"
+msgstr "A(z) „%s” nem futtatható: állítsa be a szerkesztőjét"
 
 msgid "Changed Upstream"
-msgstr "Módosulva a távoli tárolóban"
+msgstr "Módosítva a távoli tárolóban"
 
 msgid "Check Spelling"
-msgstr "Helyesírás ellenőrzése"
+msgstr "Helyesírás-ellenőrzés"
 
 msgid "Check spelling"
 msgstr "Helyesírás-ellenőrzés"
@@ -718,25 +718,25 @@ msgid "Checkout Detached HEAD"
 msgstr "Átváltás a leválasztott FEJ-re"
 
 msgid "Checkout as new branch"
-msgstr "Átváltás új elágazásként"
+msgstr "Átváltás új ágként"
 
 msgid "Checkout..."
-msgstr "Átváltás (checkout)…"
+msgstr "Átváltás…"
 
 msgid "Cherry Pick"
-msgstr "Kimazsolázás"
+msgstr "Mazsolázás"
 
 msgid "Cherry-Pick Commit"
-msgstr "Kimazsolázó véglegesítés"
+msgstr "Mazsolázó véglegesítés"
 
 msgid "Cherry-Pick..."
-msgstr "Kimazsolázás (cherry-pick)…"
+msgstr "Mazsolázás…"
 
 msgid "Choose Paths"
-msgstr "Útvonalak kijelölése"
+msgstr "Válasszon útvonalakat"
 
 msgid "Choose the \"git grep\" regular expression mode"
-msgstr "„git grep” reguláris kifejezés módjának kijelölése"
+msgstr "Válassza ki a „git grep” reguláris kifejezés módját"
 
 msgid "Clear Default Repository"
 msgstr "Alapértelmezett tároló tisztítása"
@@ -745,19 +745,19 @@ msgid "Clear commit message"
 msgstr "Véglegesítő üzenet tisztítása"
 
 msgid "Clear commit message?"
-msgstr "Megtisztítható a véglegesítő üzenet?"
+msgstr "Tisztítja a véglegesítő üzenetet?"
 
 msgid "Clear..."
 msgstr "Tisztítás…"
 
 msgid "Clone"
-msgstr "Bezárás"
+msgstr "Klónozás"
 
 msgid "Clone Repository"
 msgstr "Tároló klónozása"
 
 msgid "Clone..."
-msgstr "Klónozás..."
+msgstr "Klónozás…"
 
 #, python-format
 msgid "Cloning repository at %s"
@@ -776,7 +776,7 @@ msgid "Command"
 msgstr "Parancs"
 
 msgid "Commit"
-msgstr "Véglegesítés (commit)"
+msgstr "Véglegesítés"
 
 msgid "Commit failed"
 msgstr "Véglegesítés sikertelen"
@@ -792,7 +792,7 @@ msgstr ""
 "Gyorsbillentyű: Ctrl+Enter"
 
 msgid "Commit summary"
-msgstr "Véglegesítés összegzés"
+msgstr "Véglegesítés összegzése"
 
 msgid ""
 "Commit the merge if there are no conflicts.  Uncheck to leave the merge "
@@ -874,10 +874,10 @@ msgstr ""
 "előrepörgetett lenne"
 
 msgid "Create a new remote branch?"
-msgstr "Létrehozható az új távoli ág?"
+msgstr "Létrehozza az új távoli ágat?"
 
 msgid "Create..."
-msgstr "Létrehozás..."
+msgstr "Létrehozás…"
 
 #, python-format
 msgid "Created a new tag named \"%s\""
@@ -915,13 +915,13 @@ msgstr "Törlés"
 
 #, python-format
 msgid "Delete %d file(s)?"
-msgstr "%d fájl törölhető?"
+msgstr "Törli a(z) %d fájlt?"
 
 msgid "Delete Bookmark"
 msgstr "Könyvjelző törlése"
 
 msgid "Delete Bookmark?"
-msgstr "Könyvjelző törölhető?"
+msgstr "Törli a könyvjelzőt?"
 
 msgid "Delete Branch"
 msgstr "Ág törlése"
@@ -933,7 +933,7 @@ msgid "Delete Files..."
 msgstr "Fájlok törlése…"
 
 msgid "Delete Files?"
-msgstr "Fájlok törölhetőek?"
+msgstr "Törli a fájlokat?"
 
 msgid "Delete Remote"
 msgstr "Távoli törlése"
@@ -949,23 +949,23 @@ msgstr "Távoli törlése"
 
 #, python-format
 msgid "Delete remote \"%s\""
-msgstr "Távoli „%s” törlése"
+msgstr "„%s” távoli törlése"
 
 msgid "Delete remote?"
-msgstr "Távoli törölhető?"
+msgstr "Törli a távolit?"
 
 msgid "Delete selected branch?"
-msgstr "Törölhető a kijelölt ág?"
+msgstr "Törli a kijelölt ágat?"
 
 msgid "Delete toolbar"
 msgstr "Eszköztár törlése"
 
 msgid "Delete..."
-msgstr "Törlés..."
+msgstr "Törlés…"
 
 #, python-format
 msgid "Deleting \"%s\" failed"
-msgstr "„%s” törlése meghiúsult"
+msgstr "„%s” törlése sikertelen"
 
 msgid "Deletions"
 msgstr "Törlések"
@@ -986,7 +986,7 @@ msgid "Diff"
 msgstr "Összehasonlítás"
 
 msgid "Diff Against Predecessor..."
-msgstr "Összehasonlítás az előddel"
+msgstr "Összehasonlítás az előddel…"
 
 msgid "Diff Options"
 msgstr "Összehasonlítási lehetőségek"
@@ -1001,13 +1001,13 @@ msgid "Diff this -> selected"
 msgstr "Ez összehasonlítása → a kijelölttel"
 
 msgid "Diffstat"
-msgstr "Diffstat"
+msgstr "Összehasonlítási statisztika"
 
 msgid "Difftool"
-msgstr "Összehasonlító"
+msgstr "Összehasonlító eszköz"
 
 msgid "Directory Exists"
-msgstr "Mappa létezik"
+msgstr "Könyvtár létezik"
 
 msgid "Display Untracked Files"
 msgstr "Nem követett fájlok megjelenítése"
@@ -1022,11 +1022,11 @@ msgid "Drop Stash"
 msgstr "Félretett változat eldobása"
 
 msgid "Drop Stash?"
-msgstr "Eldobató a félretett változat?"
+msgstr "Eldobja a félrerakott változatot?"
 
 #, python-format
 msgid "Drop the \"%s\" stash?"
-msgstr "Eldobható ez a félretett változat: „%s”?"
+msgstr "Eldobja a(z) „%s” félretett változatot?"
 
 msgid "Drop the selected stash"
 msgstr "Kijelölt félretett változat eldobása"
@@ -1035,13 +1035,13 @@ msgid "Edit"
 msgstr "Szerkesztés"
 
 msgid "Edit Rebase"
-msgstr "Újralapozás szerkesztése"
+msgstr "Újraalapozás szerkesztése"
 
 msgid "Edit Remotes"
-msgstr "Távoli szerkesztése"
+msgstr "Távolik szerkesztése"
 
 msgid "Edit Remotes..."
-msgstr "Távoli szerkesztése…"
+msgstr "Távolik szerkesztése…"
 
 msgid "Edit remotes by selecting them from the list"
 msgstr "Távoli szerkesztése a listából való kijelöléssel"
@@ -1056,10 +1056,10 @@ msgid "Editor"
 msgstr "Szerkesztő"
 
 msgid "Email Address"
-msgstr "Email címek"
+msgstr "E-mail cím"
 
 msgid "Email contributor"
-msgstr "Email hozzájáruló"
+msgstr "E-mail közreműködő"
 
 msgid "Enabled"
 msgstr "Engedélyezett"
@@ -1071,25 +1071,25 @@ msgid "Enter a name for the new bare repo"
 msgstr "Adja meg az új csupasz tároló nevét"
 
 msgid "Enter a name for the stash"
-msgstr "Adjon meg egy nevet a félretevéshez"
+msgstr "Adjon meg egy nevet a félrerakáshoz"
 
 msgid "Error"
 msgstr "Hiba"
 
 msgid "Error Cloning"
-msgstr "Hiba a klónozás közben"
+msgstr "Hiba a klónozáskor"
 
 msgid "Error Creating Branch"
-msgstr "Hiba az ág létrehozása közben"
+msgstr "Hiba az ág létrehozásakor"
 
 msgid "Error Creating Repository"
-msgstr "Hiba a tároló létrehozása közben"
+msgstr "Hiba a tároló létrehozásakor"
 
 msgid "Error Deleting Remote Branch"
-msgstr "Hiba a távoli ág törlése közben"
+msgstr "Hiba a távoli ág törlésekor"
 
 msgid "Error Editing File"
-msgstr "Hiba a fájl szerkesztése közben"
+msgstr "Hiba a fájl szerkesztésekor"
 
 msgid "Error Launching Blame Viewer"
 msgstr "Hiba a gyanúsító megjelenítő indítása közben"
@@ -1099,25 +1099,25 @@ msgstr "Hiba a történetböngésző indításakor"
 
 #, python-format
 msgid "Error creating remote \"%s\""
-msgstr "Hiba a távoli létrehozásakor: „%s”"
+msgstr "Hiba a(z) „%s” távoli létrehozásakor"
 
 msgid "Error creating stash"
-msgstr "Hiba a félretett változat létrehozása közben"
+msgstr "Hiba a félretett változat létrehozásakor"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
-msgstr "Hiba a távoli törlésekor: „%s”"
+msgstr "Hiba a(z) „%s” távoli törlésekor"
 
 #, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
 msgstr "Hiba az átnevezéskor: „%(name)s” → „%(new_name)s”"
 
 msgid "Error running prepare-commitmsg hook"
-msgstr "Hiba a prepare-commitmsg hurok futtatása közben"
+msgstr "Hiba a prepare-commitmsg hurok futtatásakor"
 
 #, python-format
 msgid "Error updating submodule %s"
-msgstr "Hiba az almodul frissítésekor: %s"
+msgstr "Hiba a(z) %s almodul frissítésekor"
 
 msgid "Error updating submodules"
 msgstr "Hiba az almodulok frissítésekor"
@@ -1129,22 +1129,22 @@ msgid "Error: Stash exists"
 msgstr "Hiba: A félretett változat már létezik"
 
 msgid "Error: Unconfigured commit template"
-msgstr "Hiba: Nincs beállított véglegesítési sablon "
+msgstr "Hiba: Nincs beállítva véglegesítési sablon"
 
 #, python-format
 msgid "Error: could not clone \"%s\""
-msgstr "Hiba: Nem klónozható: „%s”"
+msgstr "Hiba: A(z) „%s” nem klónozható"
 
 #, python-format
 msgid "Error: could not create tag \"%s\""
-msgstr "Hiba: A címke nem hozható létre: „%s”"
+msgstr "Hiba: A(z) „%s” címke nem hozható létre"
 
 #, python-format
 msgid "Executing action %s"
 msgstr "Művelet végrehajtása: %s"
 
 msgid "Expand all"
-msgstr "Összes kinyitása"
+msgstr "Összes kibontása"
 
 msgid "Export Patches"
 msgstr "Foltok exportálása"
@@ -1156,16 +1156,16 @@ msgid "Expression..."
 msgstr "Kifejezés…"
 
 msgid "Extended Regexp"
-msgstr "Részletes Regexp"
+msgstr "Bővített regexp"
 
 msgid "Extended description..."
-msgstr "Részletes leírás…"
+msgstr "Bővített leírás…"
 
 msgid "Fast Forward Only"
 msgstr "Csak előrepörgetés"
 
 msgid "Fast-forward only"
-msgstr "Csak előrepörgetés (fast-forward)"
+msgstr "Csak előrepörgetés"
 
 msgid "Favorite repositories"
 msgstr "Kedvenc tárolók"
@@ -1177,10 +1177,10 @@ msgid "Fetch"
 msgstr "Letöltés"
 
 msgid "Fetch Tracking Branch"
-msgstr "Követő ág letöltése"
+msgstr "Követett ág letöltése"
 
 msgid "Fetch..."
-msgstr "Letöltés (fetch)…"
+msgstr "Letöltés…"
 
 msgid "File Browser..."
 msgstr "Fájlböngésző…"
@@ -1242,13 +1242,13 @@ msgid "Filter branches..."
 msgstr "Ágak szűrése…"
 
 msgid "Filter paths..."
-msgstr "Útvonalak szűrése..."
+msgstr "Útvonalak szűrése…"
 
 msgid "Find Files"
 msgstr "Fájlok keresése"
 
 msgid "Fixed String"
-msgstr "Rögzített szöveg\t"
+msgstr "Rögzített szöveg"
 
 msgid "Fixed-Width Font"
 msgstr "Rögzített szélességű betűkészlet"
@@ -1284,7 +1284,7 @@ msgid "Flat light red"
 msgstr "Lapos világos vörös"
 
 msgid "Font Size"
-msgstr "Betűkészlet mérete"
+msgstr "Betűméret"
 
 msgid "Force"
 msgstr "Kényszerítés"
@@ -1293,21 +1293,21 @@ msgid "Force Fetch"
 msgstr "Letöltés kényszerítése"
 
 msgid "Force Fetch?"
-msgstr "Kényszeríthető a letöltés?"
+msgstr "Kényszeríti a letöltést?"
 
 msgid "Force Push"
 msgstr "Felküldés kényszerítése"
 
 msgid "Force Push?"
-msgstr "Kényszeríthető a felküldés?"
+msgstr "Kényszeríti a felküldést?"
 
 #, python-format
 msgid "Force fetching from %s?"
-msgstr "Kényszeríthető a letöltés innen: %s?"
+msgstr "Kényszeríti a letöltést innen: %s?"
 
 #, python-format
 msgid "Force push to %s?"
-msgstr "Kényszeríthető a felküldés ide: %s?"
+msgstr "Kényszeríti a felküldést ide: %s?"
 
 msgid "Format String"
 msgstr "Formázó karakterlánc"
@@ -1347,7 +1347,7 @@ msgid "Grep"
 msgstr "Grep"
 
 msgid "Have you rebased/pulled lately?"
-msgstr "Nemrég újra lett alapozva, ill. le lett kérve?"
+msgstr "Újraalapozott vagy lekért nemrégiben?"
 
 msgid "Help"
 msgstr "Súgó"
@@ -1404,19 +1404,19 @@ msgid "Indonesian translation"
 msgstr "Indonéz fordítás"
 
 msgid "Initialize Git Annex"
-msgstr "Git Annex indítása"
+msgstr "Git Annex előkészítése"
 
 msgid "Initialize Git LFS"
-msgstr "Git LFS indítása"
+msgstr "Git LFS előkészítése"
 
 msgid "Inititalize submodules"
-msgstr "Almodulok indítása"
+msgstr "Almodulok előkészítése"
 
 msgid "Insert spaces instead of tabs"
 msgstr "Szóközök a tabulátorok helyett"
 
 msgid "Interactive Rebase"
-msgstr "Interaktív újralapozás"
+msgstr "Interaktív újraalapozás"
 
 msgid "Invalid Revision"
 msgstr "Érvénytelen revízió"
@@ -1431,10 +1431,10 @@ msgid "Keyboard Shortcuts"
 msgstr "Gyorsbillentyűk"
 
 msgid "Launch Diff Tool"
-msgstr "Összehasonlító (diff) eszköz indítása"
+msgstr "Összehasonlító eszköz indítása"
 
 msgid "Launch Directory Diff Tool"
-msgstr "Mappa-összehasonlító eszköz indítása"
+msgstr "Könyvtár-összehasonlító eszköz indítása"
 
 msgid "Launch Editor"
 msgstr "Szerkesztő indítása"
@@ -1453,7 +1453,7 @@ msgid "Launch git-cola"
 msgstr "git-cola indítása"
 
 msgid "Launch git-difftool against previous versions"
-msgstr "git-difftool indítása előző verzión"
+msgstr "git-difftool indítása az előző verzión"
 
 msgid "Launch git-difftool on the current path"
 msgstr "git-difftool indítása a jelenlegi útvonalon"
@@ -1515,7 +1515,7 @@ msgid "Merge into current branch"
 msgstr "Beolvasztás a jelenlegi ágba"
 
 msgid "Merge..."
-msgstr "Beolvasztás (merge)…"
+msgstr "Beolvasztás…"
 
 msgid "Merging"
 msgstr "Beolvasztás"
@@ -1524,7 +1524,7 @@ msgid "Message"
 msgstr "Üzenet"
 
 msgid "Missing Commit Message"
-msgstr "Hiányzó véglegesítő üzenet"
+msgstr "Hiányzó véglegesítési üzenet"
 
 msgid "Missing Data"
 msgstr "Hiányzó adat"
@@ -1545,10 +1545,10 @@ msgid "More..."
 msgstr "További…"
 
 msgid "Move Down"
-msgstr "Lefelé mozgatás"
+msgstr "Mozgatás lefelé"
 
 msgid "Move Up"
-msgstr "Felfelé mozgatás"
+msgstr "Mozgatás felfelé"
 
 msgid "Move files to trash"
 msgstr "Fájlok kukába dobása"
@@ -1575,7 +1575,7 @@ msgid "No"
 msgstr "Nem"
 
 msgid "No Revision Specified"
-msgstr "Nincs megadott revízió"
+msgstr "Nincs revízió megadva"
 
 msgid ""
 "No changes to commit.\n"
@@ -1596,7 +1596,7 @@ msgid "No fast-forward"
 msgstr "Nincs előrepörgetés"
 
 msgid "No repository selected."
-msgstr "Nincs kijelölt tároló."
+msgstr "Nincs tároló kiválasztva."
 
 msgid "Non-fast-forward fetch overwrites local history!"
 msgstr "A nem előrepörgetett letöltés felülírja a helyi történetet!"
@@ -1605,11 +1605,11 @@ msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
 msgstr ""
-"A nem előrepörgetett felküldés felülírja a publikus történetet!\n"
-"(Történt előbb lekérés?)"
+"A nem előrepörgetett felküldés felülírja a közzétett történetet!\n"
+"(Csinált előtte lekérést?)"
 
 msgid "Nothing to commit"
-msgstr "Nincs semmi véglegesíthető változás"
+msgstr "Nincs véglegesíthető változás"
 
 msgid "Nothing to do"
 msgstr "Nincs teendő"
@@ -1627,7 +1627,7 @@ msgid "Open Parent"
 msgstr "Szülő megnyitása"
 
 msgid "Open Parent Directory"
-msgstr "Szülő mappa megnyitása"
+msgstr "Szülő könyvtár megnyitása"
 
 msgid "Open Recent"
 msgstr "Legutóbbiak megnyitása"
@@ -1642,7 +1642,7 @@ msgid "Open in New Window..."
 msgstr "Megnyitás új ablakban…"
 
 msgid "Open..."
-msgstr "Megnyitás..."
+msgstr "Megnyitás…"
 
 msgid "Other branches"
 msgstr "Egyéb ágak"
@@ -1652,17 +1652,18 @@ msgstr "Felülírás"
 
 #, python-format
 msgid "Overwrite \"%s\"?"
-msgstr "„%s” felülírható?"
+msgstr "Felülírja: „%s”?"
 
 msgid "Overwrite File?"
-msgstr "A fájl felülírható?"
+msgstr "Felülírja a fájlt?"
 
 msgid ""
 "Parse arguments using a shell.\n"
 "Queries with spaces will require \"double quotes\"."
 msgstr ""
 "Argumentumok feldolgozása parancsértelmezővel.\n"
-"A szóközökkel rendelkező lekéréseket \"dupla idézőjelekkel\" kell levédeni."
+"A szóközökkel rendelkező lekérdezéseket \"dupla idézőjelekkel\" kell "
+"levédeni."
 
 msgid "Partially Staged"
 msgstr "Részlegesen kiszemelve"
@@ -1692,7 +1693,7 @@ msgid "Please select a file"
 msgstr "Jelöljön ki egy fájlt"
 
 msgid "Please specify a name for the new tag."
-msgstr "Adjon meg nevet az új címke számára."
+msgstr "Adjon meg egy nevet az új címke számára."
 
 msgid "Please specify a revision to tag."
 msgstr "Jelöljön ki egy megcímkézendő revíziót."
@@ -1706,16 +1707,16 @@ msgid ""
 "- Second line: Blank\n"
 "- Remaining lines: Describe why this change is good.\n"
 msgstr ""
-"Pótolja a véglegesítő üzenetet.\n"
+"Adjon meg egy véglegesítési üzenetet.\n"
 "\n"
 "Egy jó véglegesítő üzenet formátuma:\n"
 "\n"
-"- Első sor: Egy mondat arról, hogy mit csináltunk.\n"
+"- Első sor: Egy mondat arról, hogy mit csinált.\n"
 "- Második sor: Üres\n"
 "- A többi sor: Leírás arról, hogy miért jó ez a változtatás.\n"
 
 msgid "Point the current branch head to a new commit?"
-msgstr "A jelenlegi ág feje legyen az új véglegesítésre állítva?"
+msgstr "A jelenlegi ág fejét az új véglegesítésre állítja?"
 
 msgid "Polish translation"
 msgstr "Lengyel fordítás"
@@ -1730,12 +1731,12 @@ msgid "Prefix"
 msgstr "Előtag"
 
 msgid "Prepare Commit Message"
-msgstr "Véglegesítő üzenet előkészítése"
+msgstr "Véglegesítési üzenet előkészítése"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
 msgstr ""
-"Minden fájl kiszemelésének megakadályozása a „kiszemelés” számára, ha semmi "
-"sincs kijelölve"
+"Az összes fájl kiszemelésének megakadályozása a „kiszemelés” számára, ha "
+"semmi sincs kijelölve"
 
 msgid "Previous File"
 msgstr "Előző fájl"
@@ -1753,19 +1754,19 @@ msgid "Pull"
 msgstr "Lekérés"
 
 msgid "Pull..."
-msgstr "Lekérés (pull)…"
+msgstr "Lekérés…"
 
 msgid "Push"
 msgstr "Felküldés"
 
 msgid "Push..."
-msgstr "Felküldés (push)…"
+msgstr "Felküldés…"
 
 msgid "Quit"
 msgstr "Kilépés"
 
 msgid "Rebase"
-msgstr "Újraalapozás (rebase)"
+msgstr "Újraalapozás"
 
 #, python-format
 msgid "Rebase onto %s"
@@ -1775,7 +1776,7 @@ msgid "Rebase stopped"
 msgstr "Újraalapozás leállítva"
 
 msgid "Rebase the current branch instead of merging"
-msgstr "Újralapozás – beolvasztás helyett – a jelenlegi ágra "
+msgstr "Újraalapozás – beolvasztás helyett – a jelenlegi ágra"
 
 msgid "Rebasing"
 msgstr "Újraalapozás"
@@ -1805,7 +1806,7 @@ msgid "Redo"
 msgstr "Mégis"
 
 msgid "Reduce commit history to minimum"
-msgstr "Véglegesítő üzenetek történetének minimalizálása"
+msgstr "Véglegesítési üzenetek történetének minimalizálása"
 
 msgid "Refresh"
 msgstr "Frissítés"
@@ -1814,7 +1815,7 @@ msgid ""
 "Refuse to merge unless the current HEAD is already up-to-date or the merge "
 "can be resolved as a fast-forward"
 msgstr ""
-"A beolvasztás visszautasítása, kivéve, ha a jelenlegi FEJ már friss vagy a "
+"A beolvasztás visszautasítása, kivéve, ha a jelenlegi FEJ már friss, vagy a "
 "beolvasztást előrepörgetéssel lehet végezni"
 
 msgid "Remote"
@@ -1827,23 +1828,23 @@ msgid "Remote Branch Deleted"
 msgstr "Távoli ág törölve"
 
 msgid "Remote git repositories - double-click to rename"
-msgstr "Távoli git tárolók – dupla kattintással átnevezhető"
+msgstr "Távoli git tárolók – dupla kattintás az átnevezéshez"
 
 msgid "Remove"
 msgstr "Eltávolítás"
 
 #, python-format
 msgid "Remove %s from the recent list?"
-msgstr "%s eltávolítható a legutóbbiak listájáról?"
+msgstr "Eltávolítja a legutóbbiak listájáról: %s?"
 
 msgid "Remove Element"
 msgstr "Elem eltávolítása"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr "Távoli követő ágak eltávolítása, melyek már a távolin nem léteznek"
+msgstr "Távoli követett ágak eltávolítása, melyek már nem léteznek a távolin"
 
 msgid "Remove selected (Delete)"
-msgstr "Kijelöltek eltávolítása (Törlése)"
+msgstr "Kijelöltek eltávolítása (Törlés)"
 
 msgid "Rename"
 msgstr "Átnevezés"
@@ -1868,11 +1869,11 @@ msgid "Rename Repository"
 msgstr "Tároló átnevezése"
 
 msgid "Rename branch"
-msgstr "Ág átevezése"
+msgstr "Ág átnevezése"
 
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "A(z) „%(current)s” átnevezhető erre: „%(new)s”?"
+msgstr "Átnevezi a(z) „%(current)s” távolit erre: „%(new)s”?"
 
 msgid "Rename selected paths"
 msgstr "Kijelölt útvonalak átnevezése"
@@ -1882,11 +1883,11 @@ msgid "Repository: %s"
 msgstr "Tároló: %s"
 
 msgid "Reset"
-msgstr "Visszaállítás (reset)"
+msgstr "Visszaállítás"
 
 #, python-format
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
-msgstr "„%(branch)s” visszaállítható erre: „%(revision)s”?"
+msgstr "Visszaállítja a(z) „%(branch)s” ágat erre: „%(revision)s”?"
 
 msgid "Reset Branch"
 msgstr "Ág visszaállítása"
@@ -1895,31 +1896,31 @@ msgid "Reset Branch Head"
 msgstr "Ág fejének visszaállítása"
 
 msgid "Reset Branch?"
-msgstr "Visszaállítható az ág?"
+msgstr "Visszaállítja az ágat?"
 
 msgid "Reset Hard"
-msgstr "Teljes visszaállítás (hard reset)"
+msgstr "Teljes visszaállítás"
 
 msgid "Reset Merge"
-msgstr "Visszaállításos beolvasztás"
+msgstr "Beolvasztás visszaállítása"
 
 msgid "Reset Soft"
-msgstr "Nyugodt (soft) visszaállítás"
+msgstr "Nyugodt visszaállítás"
 
 msgid "Reset Worktree"
 msgstr "Munkafa visszaállítása"
 
 msgid "Reset hard?"
-msgstr "Indítható a teljes visszaállítás?"
+msgstr "Elindítja a teljes visszaállítást?"
 
 msgid "Reset merge?"
-msgstr "Visszaállítható a beolvasztás?"
+msgstr "Elindítja a beolvasztás visszaállítását?"
 
 msgid "Reset soft?"
-msgstr "Indítható a nyugodt visszaállítás?"
+msgstr "Elindítja a nyugodt visszaállítást?"
 
 msgid "Reset worktree?"
-msgstr "Indítható a munkafa visszaállítása?"
+msgstr "Elindítja a munkafa visszaállítását?"
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
@@ -1928,7 +1929,7 @@ msgstr ""
 "véglegesítések elvesztéséhez vezet."
 
 msgid "Restart the application after changing appearance settings."
-msgstr "A módosítások az alkalmazás újraindítása után lépnek életbe."
+msgstr "A megjelenési beállítások módosítása után indítsa újra az alkalmazást."
 
 msgid "Revert"
 msgstr "Visszavonás"
@@ -1940,7 +1941,7 @@ msgid "Revert Diff Hunk..."
 msgstr "Összehasonlítási egység visszavonása…"
 
 msgid "Revert Diff Hunk?"
-msgstr "Visszavonhatóak az összehasonítási egységek?"
+msgstr "Visszavonja az összehasonítási egységeket?"
 
 msgid "Revert Selected Lines"
 msgstr "Kijelölt sorok visszavonása"
@@ -1949,13 +1950,13 @@ msgid "Revert Selected Lines..."
 msgstr "Kijelölt sorok visszavonása…"
 
 msgid "Revert Selected Lines?"
-msgstr "Visszavonhatóak a kijelölt sorok?"
+msgstr "Visszavonja a kijelölt sorokat?"
 
 msgid "Revert Uncommitted Changes"
 msgstr "Nem véglegesített módosítások visszavonása"
 
 msgid "Revert Uncommitted Changes?"
-msgstr "Visszavonhatóak a nem véglegesített módosítások?"
+msgstr "Visszavonja a nem véglegesített módosításokat?"
 
 msgid "Revert Uncommitted Edits..."
 msgstr "Nem véglegesített szerkesztések visszavonása…"
@@ -1964,16 +1965,16 @@ msgid "Revert Unstaged Changes"
 msgstr "Elengedett módosítások visszavonása"
 
 msgid "Revert Unstaged Changes?"
-msgstr "Visszavonhatóak az elengedett módosítások?"
+msgstr "Visszavonja az elengedett módosításokat?"
 
 msgid "Revert Unstaged Edits..."
 msgstr "Elengedett szerkesztések visszavonása…"
 
 msgid "Revert the uncommitted changes?"
-msgstr "Visszavonhatóak a nem véglegesített módosítások?"
+msgstr "Visszavonja a nem véglegesített módosításokat?"
 
 msgid "Revert the unstaged changes?"
-msgstr "Visszavonhatóak az elengedett módosítások?"
+msgstr "Visszavonja az elengedett módosításokat?"
 
 msgid "Revert uncommitted changes to selected paths"
 msgstr "Nem véglegesített módosítások visszavonása a kijelölt útvonalakon"
@@ -2000,22 +2001,22 @@ msgid "Reword"
 msgstr "Átfogalmazás"
 
 msgid "Rewrite Published Commit?"
-msgstr "Újraírható a publikus véglegesítés?"
+msgstr "Újraírja a közzétett véglegesítést?"
 
 msgid "Run"
 msgstr "Futtatás"
 
 #, python-format
 msgid "Run \"%s\"?"
-msgstr "„%s” futtatható?"
+msgstr "Futtatja ezt: „%s”?"
 
 #, python-format
 msgid "Run %s?"
-msgstr "%s futtatható?"
+msgstr "Futtatja ezt: %s?"
 
 #, python-format
 msgid "Run the \"%s\" command?"
-msgstr "Futtatható a(z) „%s” parancs?"
+msgstr "Futtatja a(z) „%s” parancsot?"
 
 #, python-format
 msgid "Running command: %s"
@@ -2028,7 +2029,7 @@ msgid "SHA-1"
 msgstr "SHA-1"
 
 msgid "Safe Mode"
-msgstr "Biztonsági mód"
+msgstr "Biztonságos mód"
 
 msgid "Save"
 msgstr "Mentés"
@@ -2037,7 +2038,7 @@ msgid "Save Archive"
 msgstr "Mentés archívumként"
 
 msgid "Save As Tarball/Zip..."
-msgstr "Mentés tar-archívumként/zip-ként…"
+msgstr "Mentés tar-archívumként/zipként…"
 
 msgid "Save GUI Settings"
 msgstr "Felhasználói felület beállításainak mentése"
@@ -2060,7 +2061,7 @@ msgid "Search Authors"
 msgstr "Szerzők keresése"
 
 msgid "Search Commit Messages"
-msgstr "Véglegesítő üzenetek keresése"
+msgstr "Véglegesítési üzenetek keresése"
 
 msgid "Search Committers"
 msgstr "Véglegesítők keresése"
@@ -2078,19 +2079,19 @@ msgid "Search by Path"
 msgstr "Keresés útvonal alapján"
 
 msgid "Search for a fixed string"
-msgstr "Keresés fix szövegre "
+msgstr "Keresés rögzített szövegre"
 
 msgid "Search using a POSIX basic regular expression"
 msgstr "Keresés POSIX alapszintű reguláris kifejezéssel"
 
 msgid "Search using a POSIX extended regular expression"
-msgstr "Keresés POSIX részletes reguláris kifejezéssel"
+msgstr "Keresés POSIX bővített reguláris kifejezéssel"
 
 msgid "Search..."
 msgstr "Keresés…"
 
 msgid "Select"
-msgstr "Kiválaszt"
+msgstr "Kijelölés"
 
 msgid "Select All"
 msgstr "Összes kijelölése"
@@ -2105,7 +2106,7 @@ msgid "Select Commit"
 msgstr "Véglegesítés kijelölése"
 
 msgid "Select Directory..."
-msgstr "Mappa kijelölése…"
+msgstr "Könyvtár kijelölése…"
 
 msgid "Select New Upstream"
 msgstr "Új távoli tároló kijelölése"
@@ -2126,16 +2127,16 @@ msgid "Select Repository..."
 msgstr "Tároló kijelölése…"
 
 msgid "Select a parent directory for the new clone"
-msgstr "Szülő mappa kijelölése az új klón számára"
+msgstr "Válasszon szülő mappát az új klón számára"
 
 msgid "Select manually..."
 msgstr "Kézi kijelölés…"
 
 msgid "Select output dir"
-msgstr "Kimeneti mappa kijelölése"
+msgstr "Kimeneti könyvtár kijelölése"
 
 msgid "Select output directory"
-msgstr "Kimeneti mappa kijelölése"
+msgstr "Kimeneti könyvtár kijelölése"
 
 msgid "Select patch file(s)..."
 msgstr "Foltfájl(ok) kijelölése…"
@@ -2144,10 +2145,10 @@ msgid "Select repository"
 msgstr "Tároló kijelölése"
 
 msgid "Set Default Repository"
-msgstr "Alapértelmezett tároló kijelölése"
+msgstr "Alapértelmezett tároló beállítása"
 
 msgid "Set Upstream Branch"
-msgstr "Beállítási távoli tároló ágként "
+msgstr "Távoli tároló ág beállítása"
 
 msgid ""
 "Set the sort order for branches and tags.\n"
@@ -2166,10 +2167,10 @@ msgid "Shell arguments"
 msgstr "Parancsértelmező argumentumai"
 
 msgid "Shift Down"
-msgstr "Süllyesztés"
+msgstr "Mozgatás lefelé"
 
 msgid "Shift Up"
-msgstr "Emelés"
+msgstr "Mozgatás felfelé"
 
 msgid "Shortcuts"
 msgstr "Gyorsbillentyűk"
@@ -2190,7 +2191,7 @@ msgid "Show History"
 msgstr "Történet megjelenítése"
 
 msgid "Show file counts in Status titles"
-msgstr "Fájlok számának megjelentése a státuscímekben"
+msgstr "Fájlok számának megjelentése az állapotcímekben"
 
 msgid ""
 "Show help\n"
@@ -2200,7 +2201,7 @@ msgstr ""
 "Gyorsbillentyű: ?"
 
 msgid "Show icon? (if available)"
-msgstr "Ikonok megjelenítése (ha vannak)?"
+msgstr "Megjeleníti az ikonokat (ha vannak)?"
 
 msgid "Show line numbers"
 msgstr "Sorok számának megjelenítése"
@@ -2221,7 +2222,7 @@ msgid "Sign Tag"
 msgstr "Címke aláírása"
 
 msgid "Sign off on this commit"
-msgstr "Aláírás ezzel a véglegesítéssel"
+msgstr "A véglegesítés aláírása"
 
 msgid "Simplified Chinese translation"
 msgstr "Egyszerűsített kínai fordítás"
@@ -2233,34 +2234,34 @@ msgid "Skip Current Patch"
 msgstr "Jelenlegi folt kihagyása"
 
 msgid "Sort bookmarks alphabetically"
-msgstr "Könyvjelzők ábécébe rendezése "
+msgstr "Könyvjelzők rendezése ábécésorrendben"
 
 msgid "Spanish translation"
 msgstr "Spanyol fordítás"
 
 msgid "Specifies the SHA-1 to tag"
-msgstr "Az SHA-1 meghatározása a címke számára"
+msgstr "Megadja a címke SHA-1 értékét"
 
 msgid "Specifies the tag message"
-msgstr "Címkeüzenet meghatározása"
+msgstr "Megadja a címkeüzenetet"
 
 msgid "Specifies the tag name"
-msgstr "Címke nevének meghatározása"
+msgstr "Megadja a címke nevét"
 
 msgid "Spelling Suggestions"
 msgstr "Helyesírási javaslatok"
 
 msgid "Squash"
-msgstr "Összepréselés (squash)"
+msgstr "Összevonás"
 
 msgid "Squash the merged commits into a single commit"
-msgstr "Az beolvasztott véglegesítések összepréselése egyetlen véglegesítésbe"
+msgstr "Az beolvasztott véglegesítések összevonása egyetlen véglegesítésbe"
 
 msgid "Stage"
-msgstr "Kiszemelés (stage)"
+msgstr "Kiszemelés"
 
 msgid "Stage / Unstage"
-msgstr "Kiszemelés/elengedés (stage/unstage)"
+msgstr "Kiszemelés/elengedés"
 
 msgid "Stage All Untracked"
 msgstr "Minden nem követett változás kiszemelése"
@@ -2275,7 +2276,7 @@ msgid "Stage Modified"
 msgstr "Módosítottak kiszemelése"
 
 msgid "Stage Selected"
-msgstr "Kijelöltek kiszemelése (stage)"
+msgstr "Kijelöltek kiszemelése"
 
 msgid "Stage Selected Lines"
 msgstr "Kijelölt sorok kiszemelése"
@@ -2290,16 +2291,16 @@ msgid "Stage and Commit"
 msgstr "Kiszemelés és véglegesítés"
 
 msgid "Stage and commit?"
-msgstr "Kiszelhetőek és véglegesíthetőek?"
+msgstr "Kiszemeli és véglegesíti?"
 
 msgid "Stage conflicts"
 msgstr "Ütközések kiszemelése"
 
 msgid "Stage conflicts?"
-msgstr "Kiszemelhetőek az ütközések?"
+msgstr "Kiszemeli az ütközéseket?"
 
 msgid "Stage/unstage selected paths for commit"
-msgstr "A kijelölt útvonalak kijelölés, ill. elengedése véglegesítésre"
+msgstr "A kijelölt útvonalak kijelölése/elengedése véglegesítésre"
 
 msgid "Staged"
 msgstr "Kiszemelve"
@@ -2309,27 +2310,27 @@ msgid "Staging: %s"
 msgstr "Kiszemelés: %s"
 
 msgid "Start Interactive Rebase..."
-msgstr "Interaktív újralapozás indítása…"
+msgstr "Interaktív újraalapozás indítása…"
 
 msgid "Starting Revision"
 msgstr "A következő revíziótól"
 
 msgid "Stash"
-msgstr "Félretevés"
+msgstr "Félrerakás"
 
 msgid "Stash Index"
-msgstr "Félretevési jegyzék"
+msgstr "Félrerakási jegyzék"
 
 msgid "Stash staged changes only"
-msgstr "Csak a kiszemelt módosítások félretevése"
+msgstr "Csak a kiszemelt módosítások félrerakása"
 
 msgid "Stash unstaged changes only, keeping staged changes"
 msgstr ""
-"Csak az elengedett módosítások félretevése, a kiszemelt módosítások "
+"Csak az elengedett módosítások félrerakása, a kiszemelt módosítások "
 "megtartása"
 
 msgid "Stash..."
-msgstr "Félretevés (stash)…"
+msgstr "Félrerakás…"
 
 msgid "Status"
 msgstr "Állapot"
@@ -2372,26 +2373,26 @@ msgstr "Az ág nem lesz többé elérhető."
 
 #, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Az ág visszaáll ezzel a paranccsal: „git reset --hard %s”"
+msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --hard %s”"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Az ág visszaáll ezzel a paranccsal: „git reset --merge %s”"
+msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --merge %s”"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr "Az ág visszaáll ezzel a paranccsal: „git reset --mixed %s”"
+msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --mixed %s”"
 
 #, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "Az ág visszaáll ezzel a paranccsal: „git reset --soft %s”"
+msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --soft %s”"
 
 msgid "The commit message will be cleared."
-msgstr "A véglegesítő üzenet meg lett tisztítva."
+msgstr "A véglegesítési üzenet meg lett tisztítva."
 
 #, python-format
 msgid "The file \"%s\" exists and will be overwritten."
-msgstr "A fájl létezik és felül lesz írva: „%s”"
+msgstr "A(z) „%s” fájl létezik és felül lesz írva."
 
 msgid "The following files will be deleted:"
 msgstr "A következő fájlok törölve lesznek:"
@@ -2412,15 +2413,15 @@ msgid "The worktree will be reset using \"git reset --keep %s\""
 msgstr "A munkafa visszaáll ezzel a paranccsal: „git reset --keep %s”"
 
 msgid "This cannot be undone.  Clear commit message?"
-msgstr "Ez nem visszavonható. Legyen megtisztítva a véglegesítő üzenet?"
+msgstr "Ez nem vonható vissza. Megtisztítja a véglegesítési üzenetet?"
 
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
 "You probably don't want to do this."
 msgstr ""
-"A véglegesítés már publikus.\n"
-"Ez a művelet felülírja a publikus történetet.\n"
+"A véglegesítés már közzé lett téve.\n"
+"Ez a művelet felülírja a közzétett történetet.\n"
 "Valószínűleg nem ezt akarja tenni."
 
 msgid ""
@@ -2428,7 +2429,7 @@ msgid ""
 "These changes cannot be recovered."
 msgstr ""
 "Ez a művelet kidobja a nem véglegesített módosításokat.\n"
-"Ezek a módosítások nem visszaállíthatóak."
+"Ezek a módosítások nem állíthatók vissza."
 
 msgid ""
 "This operation removes uncommitted edits from selected files.\n"
@@ -2436,14 +2437,14 @@ msgid ""
 msgstr ""
 "Ez a művelet eltávolítja a nem véglegesített szerkesztések a kijelölt "
 "fájlokban.\n"
-"Ezek a módosítások nem visszaállíthatóak."
+"Ezek a módosítások nem állíthatók vissza."
 
 msgid ""
 "This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
 "Ez a művelet eltávolítja az elengedett szerkesztéseket a kijelölt fájlokon.\n"
-"Ezek a módosításokat nem lehet helyreállítani."
+"Ezek a módosítások nem állíthatók vissza."
 
 msgid ""
 "This repository is currently being rebased.\n"
@@ -2458,7 +2459,7 @@ msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
 msgstr ""
-"A tároló épp egy beolvasztás közepén áll.\n"
+"A tároló épp egy beolvasztás alatt áll.\n"
 "Oldja fel az ütközéseket és véglegesítse a változásokat."
 
 msgid "Toggle Enabled"
@@ -2471,10 +2472,10 @@ msgid "Toggle the paths filter"
 msgstr "Útvonalszűrő átváltása"
 
 msgid "Tracking Branch"
-msgstr "Követő ág"
+msgstr "Követett ág"
 
 msgid "Tracking branch"
-msgstr "Követő ág"
+msgstr "Követett ágak"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Tradicionális kínai (Tajvan) fordítás"
@@ -2500,7 +2501,7 @@ msgstr "Nem lehet újraalapozni"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
-msgstr "„%(name)s” számára az URL nem beállítható: „%(url)s”"
+msgstr "Nem állítható be URL a(z) „%(name)s” számára: „%(url)s”"
 
 msgid "Undo"
 msgstr "Visszavonás"
@@ -2509,7 +2510,7 @@ msgid "Unmerged"
 msgstr "Nem beolvasztottak"
 
 msgid "Unstage"
-msgstr "Elengedés (unstage)"
+msgstr "Elengedés"
 
 msgid "Unstage All"
 msgstr "Összes elengedése"
@@ -2544,7 +2545,7 @@ msgid "Update All Submodules..."
 msgstr "Összes almodul frissítése…"
 
 msgid "Update Existing Branch:"
-msgstr "Létező ág frissítése"
+msgstr "Létező ág frissítése:"
 
 msgid "Update Submodule"
 msgstr "Almodul frissítése"
@@ -2553,10 +2554,10 @@ msgid "Update Submodule..."
 msgstr "Almodul frissítése…"
 
 msgid "Update Submodules"
-msgstr "Almodulok frissítése…"
+msgstr "Almodulok frissítése"
 
 msgid "Update all submodules?"
-msgstr "Frissíthető az összes almodul?"
+msgstr "Frissíti az összes almodult?"
 
 msgid "Update submodules..."
 msgstr "Almodulok frissítése…"
@@ -2565,7 +2566,7 @@ msgid "Update this submodule"
 msgstr "Ezen almodul frissítése"
 
 msgid "Update this submodule?"
-msgstr "Frissíthető ez az almodul?"
+msgstr "Frissíti ezt az almodult?"
 
 msgid "Updating"
 msgstr "Frissítés"
@@ -2595,10 +2596,10 @@ msgid "Visualize Current Branch..."
 msgstr "Jelenlegi ág vizualizálása…"
 
 msgid "Whether to sign the tag (git tag -s)"
-msgstr "Címke esetleges aláírása (git tag -s)"
+msgstr "Aláírásra kerüljön-e a címke (git tag -s)"
 
 msgid "Would you like to stage and commit all modified files?"
-msgstr "Valóban kiszemelhető és véglegesíthető minden módosított fájl?"
+msgstr "Valóban kiszemeli és véglegesíti az összes módosított fájlt?"
 
 msgid "XOR"
 msgstr "Logikai kizáró vagy"
@@ -2620,7 +2621,7 @@ msgid "You must specify a revision to merge."
 msgstr "Meg kell adni egy revíziót a beolvasztáshoz."
 
 msgid "You must specify a revision to view."
-msgstr "Meg kell adni egy megjelenítendő revíziót."
+msgstr "Meg kell adni egy revíziót a megjelenítéshez."
 
 msgid "Zoom In"
 msgstr "Nagyítás"
@@ -2635,7 +2636,7 @@ msgid "command-line arguments"
 msgstr "parancssori argumentumok"
 
 msgid "error: unable to execute git"
-msgstr "hiba: a git nem végrehajtható"
+msgstr "hiba: a git nem hajtható végre"
 
 #, python-format
 msgid "exit code %s"
@@ -2645,7 +2646,7 @@ msgstr "%s kilépési kód"
 msgid ""
 "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr ""
-"végzetes: „%s” nem mappa. Helyes útvonalat kell megadni: --repo <path>."
+"végzetes: „%s” nem könyvtár. Adjon meg egy helyes útvonalat: --repo <path>."
 
 #, python-format
 msgid "git cola version %s"
@@ -2680,1067 +2681,3 @@ msgstr "×2"
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "A good replacement for %s\n"
-#~ "is placing values for the user.name and\n"
-#~ "user.email settings into your personal\n"
-#~ "~/.gitconfig file.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Egy jó helyettesítés a(z) %s számára\n"
-#~ "a user.name és user.email beállítások\n"
-#~ "elhelyezése a személyes\n"
-#~ "~/.gitconfig fájlba.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is due to a known issue with the\n"
-#~ "Tcl binary distributed by Cygwin."
-#~ msgstr ""
-#~ "\n"
-#~ "Ez a Cygwin által terjesztett Tcl binárisban\n"
-#~ "lévő ismert hiba miatt van."
-
-#~ msgid "%s ... %*i of %*i %s (%3i%%)"
-#~ msgstr "%s ... %*i / %*i %s (%3i%%)"
-
-#~ msgid "%s Repository"
-#~ msgstr "%s Repó"
-
-#~ msgid "%s of %s"
-#~ msgstr "%s / %s"
-
-#~ msgid "'%s' is not an acceptable branch name."
-#~ msgstr "A(z) '%s' nem egy elfogadható branch név."
-
-#~ msgid "* Binary file (not showing content)."
-#~ msgstr "* Bináris fájl (tartalom elrejtése)."
-
-#~ msgid "A branch is required for 'Merged Into'."
-#~ msgstr "Egy branch szükséges a 'Merge-ölt a következőbe'-hez."
-
-#~ msgid ""
-#~ "Abort commit?\n"
-#~ "\n"
-#~ "Aborting the current commit will cause *ALL* uncommitted changes to be "
-#~ "lost.\n"
-#~ "\n"
-#~ "Continue with aborting the current commit?"
-#~ msgstr ""
-#~ "Megszakítjuk a commitot?\n"
-#~ "\n"
-#~ "A jelenlegi commit megszakítása *MINDEN* nem commitolt változtatás "
-#~ "elvesztését jelenti.\n"
-#~ "\n"
-#~ "Folytatjuk a jelenlegi commit megszakítását?"
-
-#~ msgid "Abort completed.  Ready."
-#~ msgstr "A megkeszakítás befejeződött. Kész."
-
-#~ msgid "Abort failed."
-#~ msgstr "A félbeszakítás nem sikerült."
-
-#~ msgid "Aborted checkout of '%s' (file level merging is required)."
-#~ msgstr "A(z) '%s' checkoutja megszakítva (fájlszintű merge-ölés szükséges)."
-
-#~ msgid "Aborting... please wait..."
-#~ msgstr "Megszakítás... várjunk..."
-
-#~ msgid "Add Existing"
-#~ msgstr "Létező hozzáadása"
-
-#~ msgid "Add Existing To Commit"
-#~ msgstr "Hozzáadás létező commithoz"
-
-#~ msgid "Add To Commit"
-#~ msgstr "Hozzáadás a commithoz"
-
-#~ msgid "Always (Do not perform merge checks)"
-#~ msgstr "Mindig (Ne végezzen merge vizsgálatokat)"
-
-#~ msgid "Always (Do not perform merge test.)"
-#~ msgstr "Mindig (Ne legyen merge teszt.)"
-
-#~ msgid "Amended Commit Message:"
-#~ msgstr "Javító commit üzenet:"
-
-#~ msgid "Amended Initial Commit Message:"
-#~ msgstr "Kezdeti javító commit üzenet:"
-
-#~ msgid "Amended Merge Commit Message:"
-#~ msgstr "Javító merge commit üzenet:"
-
-#~ msgid "Annotation complete."
-#~ msgstr "Az annotáció kész."
-
-#~ msgid "Any unstaged changes will be permanently lost by the revert."
-#~ msgstr ""
-#~ "Minden nem kiválasztott változtatás el fog veszni ezáltal a visszaállítás "
-#~ "által."
-
-#~ msgid "Apply/Reverse Hunk"
-#~ msgstr "Hunk alkalmazása/visszaállítása"
-
-#~ msgid "Arbitrary URL:"
-#~ msgstr "Tetszőleges URL:"
-
-#~ msgid ""
-#~ "Branch '%s' already exists.\n"
-#~ "\n"
-#~ "It cannot fast-forward to %s.\n"
-#~ "A merge is required."
-#~ msgstr ""
-#~ "A(z) '%s' branch már létezik.\n"
-#~ "\n"
-#~ "Nem lehet fast-forwardolni a következőhöz: %s.\n"
-#~ "Egy merge szükséges."
-
-#~ msgid "Branch '%s' does not exist."
-#~ msgstr "A(z) '%s' branch nem létezik."
-
-#, fuzzy
-#~ msgid "Branch created"
-#~ msgstr "Branch neve"
-
-#~ msgid "Browse %s's Files"
-#~ msgstr "A(z) %s branch fájljainak böngészése"
-
-#~ msgid "Browse Branch Files"
-#~ msgstr "A branch fájljainak böngészése"
-
-#, fuzzy
-#~ msgid "Browse Revision..."
-#~ msgstr "Revízió"
-
-#~ msgid "Calling commit-msg hook..."
-#~ msgstr "A commit-msg hurok meghívása..."
-
-#~ msgid ""
-#~ "Cannot abort while amending.\n"
-#~ "\n"
-#~ "You must finish amending this commit.\n"
-#~ msgstr ""
-#~ "A commit javítás közben megszakítva.\n"
-#~ "\n"
-#~ "Be kell fejeznünk ennek a commitnak a javítását.\n"
-
-#~ msgid ""
-#~ "Cannot amend while merging.\n"
-#~ "\n"
-#~ "You are currently in the middle of a merge that has not been fully "
-#~ "completed.  You cannot amend the prior commit unless you first abort the "
-#~ "current merge activity.\n"
-#~ msgstr ""
-#~ "Nem lehet javítani merge alatt.\n"
-#~ "\n"
-#~ "A jelenlegi merge még nem teljesen fejeződött be. Csak akkor javíthat egy "
-#~ "előbbi commitot, hogyha megszakítja a jelenlegi merge folyamatot.\n"
-
-#~ msgid "Cannot determine HEAD.  See console output for details."
-#~ msgstr ""
-#~ "Nem sikerült megállapítani a HEAD-et.  Bővebben a konzolos kimenetben."
-
-#~ msgid "Cannot fetch branches and objects.  See console output for details."
-#~ msgstr ""
-#~ "Nem sikerült letölteni a branch-eket és az objektumokat.  Bővebben a "
-#~ "konzolos kimenetben."
-
-#~ msgid "Cannot fetch tags.  See console output for details."
-#~ msgstr "Nem sikerült letölteni a tageket.  Bővebben a konzolos kimenetben."
-
-#~ msgid "Cannot find git in PATH."
-#~ msgstr "A git nem található a PATH-ban."
-
-#~ msgid "Cannot find the git directory:"
-#~ msgstr "Nem található a git könyvtár:"
-
-#~ msgid ""
-#~ "Cannot merge while amending.\n"
-#~ "\n"
-#~ "You must finish amending this commit before starting any type of merge.\n"
-#~ msgstr ""
-#~ "Javítás közben nem lehetséges a merge.\n"
-#~ "\n"
-#~ "Egyszer be kell fejezni ennek a commitnak a javítását, majd kezdődhet egy "
-#~ "merge.\n"
-
-#~ msgid "Cannot move to top of working directory:"
-#~ msgstr "Nem lehet a munkakönyvtár tetejére lépni:"
-
-#~ msgid "Cannot parse Git version string:"
-#~ msgstr "Nem értelmezhető a Git verzió sztring:"
-
-#~ msgid "Cannot resolve %s as a commit."
-#~ msgstr "Nem sikerült felöldani a(z) %s objektumot commitként."
-
-#~ msgid "Cannot use funny .git directory:"
-#~ msgstr "Nem használható vicces .git könyvtár:"
-
-#~ msgid "Cannot write shortcut:"
-#~ msgstr "Nem sikerült írni a gyorsbillentyűt:"
-
-#~ msgid "Change Font"
-#~ msgstr "Betűtípus megváltoztatása"
-
-#~ msgid "Checked out '%s'."
-#~ msgstr "'%s' kifejtve."
-
-#~ msgid "Clone Type:"
-#~ msgstr "Másolás típusa:"
-
-#~ msgid "Clone failed."
-#~ msgstr "A másolás nem sikerült."
-
-#~ msgid "Cloning from %s"
-#~ msgstr "Másolás innen: %s"
-
-#~ msgid "Commit %s appears to be corrupt"
-#~ msgstr "A(z) %s commit sérültnek tűnik"
-
-#~ msgid "Commit declined by commit-msg hook."
-#~ msgstr "A commiot megakadályozta a commit-msg hurok."
-
-#~ msgid "Commit declined by pre-commit hook."
-#~ msgstr "A commitot megakadályozta a pre-commit hurok. "
-
-#, fuzzy
-#~ msgid "Commit failed: %s"
-#~ msgstr "A commit nem sikerült."
-
-#~ msgid "Commit@@noun"
-#~ msgstr "Commit@@főnév"
-
-#~ msgid "Compress Database"
-#~ msgstr "Adatbázis tömörítése"
-
-#~ msgid "Compressing the object database"
-#~ msgstr "Az objektum adatbázis tömörítése"
-
-#~ msgid "Copied Or Moved Here By:"
-#~ msgstr "Ide másolta vagy helyezte:"
-
-#~ msgid "Copying objects"
-#~ msgstr "Objektumok másolása"
-
-#~ msgid "Counting objects"
-#~ msgstr "Objektumok számolása"
-
-#~ msgid "Create Desktop Icon"
-#~ msgstr "Asztal ikon létrehozása"
-
-#, fuzzy
-#~ msgid "Created commit: %s"
-#~ msgstr "Létrejött a %s commit: %s"
-
-#~ msgid "Creating working directory"
-#~ msgstr "Munkakönyvtár létrehozása"
-
-#~ msgid "Current Branch:"
-#~ msgstr "Jelenlegi branch:"
-
-#~ msgid "Database Statistics"
-#~ msgstr "Adatbázis statisztikák"
-
-#~ msgid "Decrease Font Size"
-#~ msgstr "Font méret csökkentése"
-
-#~ msgid "Delete Local Branch"
-#~ msgstr "Helyi branch törlése"
-
-#~ msgid "Delete Only If"
-#~ msgstr "Törlés csak akkor ha"
-
-#~ msgid "Delete Only If Merged Into"
-#~ msgstr "Csak már merge-ölt törlése"
-
-#~ msgid "Destination Repository"
-#~ msgstr "Cél repó"
-
-#~ msgid "Detach From Local Branch"
-#~ msgstr "Helyi branch leválasztása"
-
-#~ msgid "Diff/Console Font"
-#~ msgstr "Diff/konzol betűtípus"
-
-#~ msgid "Directory %s already exists."
-#~ msgstr "A(z) '%s' könyvtár már létezik."
-
-#~ msgid "Disk space used by loose objects"
-#~ msgstr "Elveszett objektumok által elfoglalt lemezterület"
-
-#~ msgid "Disk space used by packed objects"
-#~ msgstr "A csomagolt objektumok által használt lemezterület"
-
-#~ msgid "Do Nothing"
-#~ msgstr "Ne csináljunk semmit"
-
-#, fuzzy
-#~ msgid "Enter Git Repository"
-#~ msgstr "Git repó"
-
-#, fuzzy
-#~ msgid "Error %s"
-#~ msgstr "hiba"
-
-#~ msgid "Error loading commit data for amend:"
-#~ msgstr "Hiba a javítandó commit adat betöltése közben:"
-
-#~ msgid "Error: Command Failed"
-#~ msgstr "Hiba: a parancs sikertelen"
-
-#~ msgid "Failed to completely save options:"
-#~ msgstr "Nem sikerült teljesen elmenteni a beállításokat:"
-
-#~ msgid "Failed to configure origin"
-#~ msgstr "Nem sikerült beállítani az origint"
-
-#~ msgid "Failed to create repository %s:"
-#~ msgstr "Nem sikerült letrehozni a(z) %s repót:"
-
-#~ msgid ""
-#~ "Failed to delete branches:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nem sikerült törölni a következő brancheket:\n"
-#~ "%s"
-
-#~ msgid "Failed to open repository %s:"
-#~ msgstr "Nem sikerült megnyitni a(z) %s repót:"
-
-#~ msgid "Failed to rename '%s'."
-#~ msgstr "Nem sikerült átnevezni: '%s'."
-
-#~ msgid ""
-#~ "Failed to set current branch.\n"
-#~ "\n"
-#~ "This working directory is only partially switched.  We successfully "
-#~ "updated your files, but failed to update an internal Git file.\n"
-#~ "\n"
-#~ "This should not have occurred.  %s will now close and give up."
-#~ msgstr ""
-#~ "Nem sikerült beállítani a jelenlegi branchet.\n"
-#~ "\n"
-#~ "A munkakönyvtár csak részben váltott át.  A fájlok sikeresen frissítve "
-#~ "lettek, de nem sikerült frissíteni egy belső Git fájlt.\n"
-#~ "\n"
-#~ "Ennek nem szabad megtörténnie.  A(z) %s most kilép és feladja."
-
-#~ msgid "Failed to stage selected hunk."
-#~ msgstr "Nem sikerült kiválasztani a hunkot."
-
-#~ msgid "Failed to unstage selected hunk."
-#~ msgstr "Nem visszavonni a hunk kiválasztását."
-
-#~ msgid "Failed to update '%s'."
-#~ msgstr "Nem sikerült frissíteni a következőt: '%s'."
-
-#, fuzzy
-#~ msgid "Fast Forward Only "
-#~ msgstr "Csak fast forward"
-
-# tcl-format
-#~ msgid "Fetch from"
-#~ msgstr "Letöltés innen"
-
-#~ msgid "Fetching new changes from %s"
-#~ msgstr "Új változások letöltése innen: %s"
-
-#~ msgid "File level merge required."
-#~ msgstr "Fájlszintű merge-ölés szükséges."
-
-#~ msgid "Font Example"
-#~ msgstr "Font példa"
-
-#~ msgid "Font Family"
-#~ msgstr "Font család"
-
-#~ msgid "Force overwrite existing branch (may discard changes)"
-#~ msgstr ""
-#~ "Létező branch felülírásának erőltetése (lehet, hogy el fog dobni "
-#~ "változtatásokat)"
-
-#~ msgid "From Repository"
-#~ msgstr "Forrás repó"
-
-#~ msgid "Full Copy (Slower, Redundant Backup)"
-#~ msgstr "Teljes másolás (Lassabb, redundáns biztonsági mentés)"
-
-#~ msgid "Garbage files"
-#~ msgstr "Hulladék fájlok"
-
-#~ msgid "Git Gui"
-#~ msgstr "Git Gui"
-
-#~ msgid "Git Repository (subproject)"
-#~ msgstr "Git repó (alprojekt)"
-
-#~ msgid "Git directory not found:"
-#~ msgstr "A Git könyvtár nem található:"
-
-#~ msgid ""
-#~ "Git version cannot be determined.\n"
-#~ "\n"
-#~ "%s claims it is version '%s'.\n"
-#~ "\n"
-#~ "%s requires at least Git 1.5.0 or later.\n"
-#~ "\n"
-#~ "Assume '%s' is version 1.5.0?\n"
-#~ msgstr ""
-#~ "Nem állípítható meg a Git verziója.\n"
-#~ "\n"
-#~ "A(z) %s szerint a verzió '%s'.\n"
-#~ "\n"
-#~ "A(z) %s a Git 1.5.0 vagy későbbi verzióját igényli.\n"
-#~ "\n"
-#~ "Feltételezhetjük, hogy a(z) '%s' verziója legalább 1.5.0?\n"
-
-#~ msgid "Hardlinks are unavailable.  Falling back to copying."
-#~ msgstr "Nem érhetőek el hardlinkek.  Másolás használata."
-
-#~ msgid "In File:"
-#~ msgstr "Ebben a fájlban:"
-
-#~ msgid "Increase Font Size"
-#~ msgstr "Fönt méret növelése"
-
-#~ msgid "Initial Commit Message:"
-#~ msgstr "Kezdeti commit üzenet:"
-
-#~ msgid "Initial file checkout failed."
-#~ msgstr "A kezdeti fájl-kibontás sikertelen."
-
-#~ msgid "Invalid GIT_COMMITTER_IDENT:"
-#~ msgstr "Érvénytelen GIT_COMMITTER_IDENT:"
-
-#~ msgid "Invalid date from Git: %s"
-#~ msgstr "Érvénytelen dátum a Git-től: %s"
-
-#~ msgid "Invalid font specified in %s:"
-#~ msgstr "Érvénytelen font lett megadva itt: %s:"
-
-#~ msgid "Invalid spell checking configuration"
-#~ msgstr "Érvénytelen a helyesírás-ellenőrző beállítása"
-
-#~ msgid "KiB"
-#~ msgstr "KiB"
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before a merge can be performed.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Az utolsó keresési állapot nem egyezik meg a repó állapotával.\n"
-#~ "\n"
-#~ "Egy másik Git program módosította ezt a repót az utolsó keresés óta. Egy "
-#~ "újrakeresés mindenképpen szükséges mielőtt a jelenlegi branchet "
-#~ "módosítani lehetne.\n"
-#~ "\n"
-#~ "Az újrakeresés most automatikusan el fog indulni.\n"
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before another commit can be created.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Az utolsó keresési állapot nem egyezik meg a repó állapotával.\n"
-#~ "\n"
-#~ "Egy másik Git program módosította ezt a repót az utolsó keresés óta. Egy "
-#~ "újrakeresés mindenképpen szükséges mielőtt a jelenlegi branchet "
-#~ "módosítani lehetne.\n"
-#~ "\n"
-#~ "Az újrakeresés most automatikusan el fog indulni.\n"
-
-#~ msgid ""
-#~ "Last scanned state does not match repository state.\n"
-#~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A "
-#~ "rescan must be performed before the current branch can be changed.\n"
-#~ "\n"
-#~ "The rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Az utolsó keresési állapot nem egyezik meg a repó állpotával.\n"
-#~ "\n"
-#~ "Egy másik Git program módosította ezt a repót az utolsó keresés óta. Egy "
-#~ "újrakeresés mindenképpen szükséges mielőtt a jelenlegi branchet "
-#~ "módosítani lehetne.\n"
-#~ "\n"
-#~ "Az újrakeresés most automatikusan el fog indulni.\n"
-
-#~ msgid "Linking objects"
-#~ msgstr "Objektumok összefűzése"
-
-#~ msgid "Loading annotation..."
-#~ msgstr "Az annotáció betöltése..."
-
-#~ msgid "Loading copy/move tracking annotations..."
-#~ msgstr "A másolást/átnevezést követő annotációk betöltése..."
-
-#~ msgid "Loading original location annotations..."
-#~ msgstr "Az eredeti hely annotációk betöltése..."
-
-#~ msgid "Local Branches"
-#~ msgstr "Helyi branchek"
-
-#~ msgid "Local Merge..."
-#~ msgstr "Helyi merge..."
-
-#~ msgid "Location %s already exists."
-#~ msgstr "A(z) '%s' hely már létezik."
-
-#~ msgid "Main Font"
-#~ msgstr "Fő betűtípus"
-
-#~ msgid "Match Tracking Branch Name"
-#~ msgstr "Egyeztetendő követési branch név"
-
-#~ msgid "Match Tracking Branches"
-#~ msgstr "A követő branchek egyeztetése"
-
-#~ msgid "Merge completed successfully."
-#~ msgstr "A merge sikeresen befejeződött."
-
-#~ msgid "Merge strategy '%s' not supported."
-#~ msgstr "A(z) '%s' merge strategy nem támogatott."
-
-#~ msgid "Merged Into:"
-#~ msgstr "Merge-ölt a következőbe:"
-
-#~ msgid "Merging %s and %s..."
-#~ msgstr "A(z) %s és a(z) %s merge-ölése..."
-
-#~ msgid "Modified, not staged"
-#~ msgstr "Módosított, de nem kiválasztott"
-
-#~ msgid "New Branch Name Template"
-#~ msgstr "Új branch név sablon"
-
-#~ msgid "New Commit"
-#~ msgstr "Új commit"
-
-#~ msgid "New Name:"
-#~ msgstr "Új név:"
-
-#~ msgid ""
-#~ "No changes to commit.\n"
-#~ "\n"
-#~ "No files were modified by this commit and it was not a merge commit.\n"
-#~ "\n"
-#~ "A rescan will be automatically started now.\n"
-#~ msgstr ""
-#~ "Nincs commitolandó változtatás.\n"
-#~ "\n"
-#~ "Egyetlen fájlt se módosított ez a commit és merge commit se volt.\n"
-#~ "\n"
-#~ "Az újrakeresés most automatikusan el fog indulni.\n"
-
-#~ msgid "No default branch obtained."
-#~ msgstr "Nincs alapértelmezett branch."
-
-#~ msgid ""
-#~ "No differences detected.\n"
-#~ "\n"
-#~ "%s has no changes.\n"
-#~ "\n"
-#~ "The modification date of this file was updated by another application, "
-#~ "but the content within the file was not changed.\n"
-#~ "\n"
-#~ "A rescan will be automatically started to find other files which may have "
-#~ "the same state."
-#~ msgstr ""
-#~ "Nincsenek változások.\n"
-#~ "\n"
-#~ "A(z) %s módosítatlan.\n"
-#~ "\n"
-#~ "A fájl módosítási dátumát frissítette egy másik alkalmazás, de a fájl "
-#~ "tartalma változatlan.\n"
-#~ "\n"
-#~ "Egy újrakeresés fog indulni a hasonló állapotú fájlok megtalálása "
-#~ "érdekében."
-
-#~ msgid "No working directory"
-#~ msgstr "Nincs munkakönyvtár"
-
-#~ msgid "Not connected to aspell"
-#~ msgstr "Nincs kapcsolat az aspellhez"
-
-#~ msgid "Number of loose objects"
-#~ msgstr "Elvesztett objektumok száma"
-
-#~ msgid "Number of packed objects"
-#~ msgstr "Csomagolt objektumok számra"
-
-#~ msgid "Number of packs"
-#~ msgstr "Csomagok száma"
-
-#~ msgid ""
-#~ "One or more of the merge tests failed because you have not fetched the "
-#~ "necessary commits.  Try fetching from %s first."
-#~ msgstr ""
-#~ "Egy vagy több merge teszt hibát jelzett, mivel nem töltöttük le a "
-#~ "megfelelő commitokat. Próbáljunk meg letölteni a következőből: %s először."
-
-#~ msgid "Options"
-#~ msgstr "Opciók"
-
-#~ msgid "Original File:"
-#~ msgstr "Eredeti fájl:"
-
-#~ msgid "Originally By:"
-#~ msgstr "Eredeti szerző:"
-
-#~ msgid "Packed objects waiting for pruning"
-#~ msgstr "Eltávolításra váró csomagolt objektumok számra"
-
-#, fuzzy
-#~ msgid "Path to git repository"
-#~ msgstr "Nem Git repó: %s"
-
-#~ msgid "Please select one or more branches to delete."
-#~ msgstr "Válasszunk ki egy vagy több branchet törlésre."
-
-#~ msgid "Please supply a branch name."
-#~ msgstr "Adjunk megy egy branch nevet."
-
-#~ msgid "Portions staged for commit"
-#~ msgstr "Részek kiválasztva commitolásra"
-
-#~ msgid ""
-#~ "Possible environment issues exist.\n"
-#~ "\n"
-#~ "The following environment variables are probably\n"
-#~ "going to be ignored by any Git subprocess run\n"
-#~ "by %s:\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Lehetséges, hogy környezeti problémák vannak.\n"
-#~ "\n"
-#~ "A következő környezeti változók valószínűleg\n"
-#~ "figyelmen kívül lesznek hagyva a(z) %s által\n"
-#~ "indított folyamatok által:\n"
-#~ "\n"
-
-#~ msgid "Preferences..."
-#~ msgstr "Beállítások..."
-
-#~ msgid "Prune Tracking Branches During Fetch"
-#~ msgstr "A követő branchek eltávolítása letöltés alatt"
-
-#~ msgid "Pruning tracking branches deleted from %s"
-#~ msgstr "A %s repóból törölt követő branchek törlése"
-
-#~ msgid "Push Branches"
-#~ msgstr "Branchek pusholása"
-
-#~ msgid "Push to"
-#~ msgstr "Push ide"
-
-#~ msgid "Pushing %s %s to %s"
-#~ msgstr "Pusholás: %s %s, ide: %s"
-
-#~ msgid "Reading %s..."
-#~ msgstr "A(z) %s olvasása..."
-
-#~ msgid "Ready to commit."
-#~ msgstr "Commitolásra kész."
-
-#~ msgid "Ready."
-#~ msgstr "Kész."
-
-#, fuzzy
-#~ msgid "Rebase Branch"
-#~ msgstr "Branch átnevezése"
-
-#, fuzzy
-#~ msgid "Rebase..."
-#~ msgstr "Visszaállítás..."
-
-#~ msgid ""
-#~ "Recovering deleted branches is difficult.\n"
-#~ "\n"
-#~ "Delete the selected branches?"
-#~ msgstr ""
-#~ "A törölt branchek visszaállítása nehéz.\n"
-#~ "\n"
-#~ "Töröljük a kiválasztott brancheket?"
-
-#~ msgid ""
-#~ "Recovering deleted branches is difficult. \n"
-#~ "\n"
-#~ " Delete the selected branches?"
-#~ msgstr ""
-#~ "A törölt branchek visszaállítása bonyolult. \n"
-#~ "\n"
-#~ " Biztosan törli a kiválasztott brancheket?"
-
-#~ msgid "Refreshing file status..."
-#~ msgstr "A fájlok státuszának frissítése..."
-
-#, fuzzy
-#~ msgid "Remote Branches"
-#~ msgstr "Branch átnevezése"
-
-#~ msgid "Remote:"
-#~ msgstr "Távoli:"
-
-#, fuzzy
-#~ msgid "Rename remote?"
-#~ msgstr "Távoli"
-
-#~ msgid "Repository"
-#~ msgstr "Repó"
-
-#~ msgid "Requires merge resolution"
-#~ msgstr "Merge feloldás szükséges"
-
-#~ msgid "Rescan"
-#~ msgstr "Keresés újra"
-
-#~ msgid ""
-#~ "Reset changes?\n"
-#~ "\n"
-#~ "Resetting the changes will cause *ALL* uncommitted changes to be lost.\n"
-#~ "\n"
-#~ "Continue with resetting the current changes?"
-#~ msgstr ""
-#~ "Visszavonjuk a módosításokat?\n"
-#~ "\n"
-#~ "A módosítások visszavonása *MINDEN* nem commitolt változtatás elvesztését "
-#~ "jelenti.\n"
-#~ "\n"
-#~ "Folytatjuk a jelenlegi módosítások visszavonását?"
-
-#~ msgid "Revert changes in these %i files?"
-#~ msgstr "Visszaállítja a változtatásokat ebben e %i fájlban?"
-
-#~ msgid "Running miga..."
-#~ msgstr "A miga futtatása..."
-
-#, fuzzy
-#~ msgid "Select File"
-#~ msgstr "Mindent kiválaszt"
-
-#, fuzzy
-#~ msgid "Select file from \"%s\""
-#~ msgstr "Brancek törlése innen: %s"
-
-#~ msgid "Shared (Fastest, Not Recommended, No Backup)"
-#~ msgstr "Megosztott (Leggyorsabb, nem ajánlott, nincs mentés)"
-
-#~ msgid "Shared only available for local repository."
-#~ msgstr "A megosztott csak helyi repókra érhető el."
-
-#~ msgid "Show Less Context"
-#~ msgstr "Kevesebb környezet mutatása"
-
-#~ msgid "Show More Context"
-#~ msgstr "Több környezet mutatása"
-
-#~ msgid "Source Branches"
-#~ msgstr "Forrás branchek"
-
-#~ msgid "Spell Checker Failed"
-#~ msgstr "A helyesírás-ellenőrzés sikertelen"
-
-#~ msgid "Spell checker silently failed on startup"
-#~ msgstr "A helyesírás-ellenőrő indítása sikertelen"
-
-#~ msgid "Spell checking is unavailable"
-#~ msgstr "A helyesírás-ellenőrzés nem elérhető"
-
-#~ msgid "Spelling Dictionary:"
-#~ msgstr "Helyesírás-ellenőrző szótár:"
-
-#~ msgid "Stage Hunk For Commit"
-#~ msgstr "Hunk kiválasztása commitba"
-
-#~ msgid "Staged Changes (Will Commit)"
-#~ msgstr "Kiválasztott változtatások (commitolva lesz)"
-
-#~ msgid "Staged for commit, missing"
-#~ msgstr "Kiválasztva commitolásra, hiányzó"
-
-#~ msgid "Staged for removal"
-#~ msgstr "Kiválasztva eltávolításra"
-
-#~ msgid "Staged for removal, still present"
-#~ msgstr "Kiválasztva eltávolításra, jelenleg is elérhető"
-
-#, fuzzy
-#~ msgid "Staging Area"
-#~ msgstr "Keresés itt: %s..."
-
-#~ msgid "Staging area (index) is already locked."
-#~ msgstr "A kiválasztási terület (index) már zárolva van."
-
-#~ msgid "Standard (Fast, Semi-Redundant, Hardlinks)"
-#~ msgstr "Általános (Gyors, félig-redundáns, hardlinkek)"
-
-#~ msgid "Standard only available for local repository."
-#~ msgstr "A standard csak helyi repókra érhető el."
-
-#~ msgid "Starting gitk... please wait..."
-#~ msgstr "A gitk indítása... várjunk..."
-
-#~ msgid "Staying on branch '%s'."
-#~ msgstr "Jelenleg a(z) '%s' branchen."
-
-#~ msgid "Success"
-#~ msgstr "Siker"
-
-#~ msgid "The 'master' branch has not been initialized."
-#~ msgstr "A 'master' branch nincs inicializálva."
-
-#~ msgid "The following branches are not completely merged into %s:"
-#~ msgstr "A következő branchek nem teljesen lettek merge-ölve ebbe: %s:"
-
-#~ msgid ""
-#~ "The following branches are not completely merged into %s:\n"
-#~ "\n"
-#~ " - %s"
-#~ msgstr ""
-#~ "A következő branchek nem teljesen lettek merge-ölve ebbe: %s:\n"
-#~ " - %s"
-
-#~ msgid ""
-#~ "There is nothing to amend.\n"
-#~ "\n"
-#~ "You are about to create the initial commit.  There is no commit before "
-#~ "this to amend.\n"
-#~ msgstr ""
-#~ "Nincs semmi javítanivaló.\n"
-#~ "\n"
-#~ "Az első commit létrehozása előtt nincs semmilyen commit amit javitani "
-#~ "lehetne.\n"
-
-#~ msgid "This Detached Checkout"
-#~ msgstr "Ez a leválasztott checkout"
-
-#~ msgid ""
-#~ "This is example text.\n"
-#~ "If you like this text, it can be your font."
-#~ msgstr ""
-#~ "Ez egy példa szöveg.\n"
-#~ "Ha ez megfelel, ez lehet a betűtípus."
-
-#~ msgid ""
-#~ "This repository currently has approximately %i loose objects.\n"
-#~ "\n"
-#~ "To maintain optimal performance it is strongly recommended that you "
-#~ "compress the database when more than %i loose objects exist.\n"
-#~ "\n"
-#~ "Compress the database now?"
-#~ msgstr ""
-#~ "Ennek a repónak jelenleg %i különálló objektuma van.\n"
-#~ "\n"
-#~ "Az optimális teljesítményhez erősen ajánlott az adatbázis tömörítése, ha "
-#~ "több mint %i objektum létezik.\n"
-#~ "\n"
-#~ "Lehet most tömöríteni az adatbázist?"
-
-#~ msgid "Tracking branch %s is not a branch in the remote repository."
-#~ msgstr "A(z) %s követő branch nem branch a távoli repóban."
-
-#~ msgid "Transfer Options"
-#~ msgstr "Átviteli opciók"
-
-#~ msgid "Unable to copy object: %s"
-#~ msgstr "Nem sikerült másolni az objektumot: %s"
-
-#~ msgid "Unable to copy objects/info/alternates: %s"
-#~ msgstr "Nem sikerült másolni az objects/info/alternates-t: %s"
-
-#~ msgid "Unable to display %s"
-#~ msgstr "Nem lehet megjeleníteni a következőt: %s"
-
-#~ msgid "Unable to hardlink object: %s"
-#~ msgstr "Nem sikerült hardlinkelni az objektumot: %s"
-
-#~ msgid "Unable to obtain your identity:"
-#~ msgstr "Nem sikerült megállapítani az azonosítót:"
-
-#~ msgid ""
-#~ "Unable to start gitk:\n"
-#~ "\n"
-#~ "%s does not exist"
-#~ msgstr ""
-#~ "A gitk indítása sikertelen:\n"
-#~ "\n"
-#~ "A(z) %s nem létezik"
-
-#~ msgid "Unable to unlock the index."
-#~ msgstr "Nem sikerült az index zárolásának feloldása."
-
-#~ msgid "Unexpected EOF from spell checker"
-#~ msgstr "Nem várt EOF a helyesírás-ellenőrzőtől"
-
-#~ msgid ""
-#~ "Unknown file state %s detected.\n"
-#~ "\n"
-#~ "File %s cannot be committed by this program.\n"
-#~ msgstr ""
-#~ "Ismeretlen fájl típus %s érzékelve.\n"
-#~ "\n"
-#~ "A(z) %s fájlt nem tudja ez a program commitolni.\n"
-
-#~ msgid "Unlock Index"
-#~ msgstr "Index zárolásának feloldása"
-
-#~ msgid ""
-#~ "Unmerged files cannot be committed.\n"
-#~ "\n"
-#~ "File %s has merge conflicts.  You must resolve them and stage the file "
-#~ "before committing.\n"
-#~ msgstr ""
-#~ "Nem commitolhatunk fájlokat merge előtt.\n"
-#~ "\n"
-#~ "A(z) %s fájlban ütközések vannak. Egyszer azokat ki kell javítani, majd "
-#~ "hozzá ki kell választani a fájlt mielőtt commitolni lehetne.\n"
-
-#~ msgid "Unrecognized spell checker"
-#~ msgstr "Ismeretlen helyesírás-ellenőrző"
-
-#~ msgid "Unstage Hunk From Commit"
-#~ msgstr "Hunk törlése commitból"
-
-#~ msgid "Unstaged Changes (Will Not Be Committed)"
-#~ msgstr "Nem kiválasztott változtatások (nem lesz commitolva)"
-
-#~ msgid "Unsupported spell checker"
-#~ msgstr "Nem támogatott helyesírás-ellenőrző"
-
-#~ msgid ""
-#~ "Updating the Git index failed.  A rescan will be automatically started to "
-#~ "resynchronize git-gui."
-#~ msgstr ""
-#~ "A Git index frissítése sikertelen volt.  Egy újraolvasás automatikusan "
-#~ "elindult, hogy a git-gui újra szinkonban legyen."
-
-#~ msgid "Updating working directory to '%s'..."
-#~ msgstr "A munkkönyvtár frissiítése a következőre: '%s'..."
-
-#, fuzzy
-#~ msgid "Updating..."
-#~ msgstr "Indítás..."
-
-#~ msgid "Use thin pack (for slow network connections)"
-#~ msgstr "Vékony csomagok használata (lassú hálózati kapcsolatok számára)"
-
-#~ msgid "Verify Database"
-#~ msgstr "Adatbázis ellenőrzése"
-
-#~ msgid "Verifying the object database with fsck-objects"
-#~ msgstr "Az objektum adatbázis ellenőrzése az fsck-objects használatával"
-
-#~ msgid "Visualize %s's History"
-#~ msgstr "A(z) %s branch történetének vizualizálása"
-
-#~ msgid "Working... please wait..."
-#~ msgstr "Munka folyamatban.. Várjunk..."
-
-#~ msgid ""
-#~ "You are in the middle of a change.\n"
-#~ "\n"
-#~ "File %s is modified.\n"
-#~ "\n"
-#~ "You should complete the current commit before starting a merge.  Doing so "
-#~ "will help you abort a failed merge, should the need arise.\n"
-#~ msgstr ""
-#~ "Jelenleg egy változtatás közben vagyunk.\n"
-#~ "\n"
-#~ "A(z) %s fájl megváltozott.\n"
-#~ "\n"
-#~ "Először be kell fejeznünk a jelenlegi commitot, hogy elkezdhessünk egy "
-#~ "merge-t. Ez segíteni fog, hogy félbeszakíthassunk egy merge-t.\n"
-
-#~ msgid ""
-#~ "You are in the middle of a conflicted merge.\n"
-#~ "\n"
-#~ "File %s has merge conflicts.\n"
-#~ "\n"
-#~ "You must resolve them, stage the file, and commit to complete the current "
-#~ "merge.  Only then can you begin another merge.\n"
-#~ msgstr ""
-#~ "Jelenleg egy ütközés feloldása közben vagyunk.\n"
-#~ "\n"
-#~ "A(z) %s fájlban ütközések vannak.\n"
-#~ "\n"
-#~ "Fel kell oldanunk őket, kiválasztani a fájlt, és commitolni hogy "
-#~ "befejezzük a jelenlegi merge-t. Csak ezután kezdhetünk el egy újabbat.\n"
-
-#~ msgid ""
-#~ "You are no longer on a local branch.\n"
-#~ "\n"
-#~ "If you wanted to be on a branch, create one now starting from 'This "
-#~ "Detached Checkout'."
-#~ msgstr ""
-#~ "Már nem egy helyi branchen vagyunk.\n"
-#~ "\n"
-#~ "Ha egy branchen szeretnénk lenni, hozzunk létre egyet az 'Ez a "
-#~ "leválasztott checkout'-ból."
-
-#~ msgid "You must correct the above errors before committing."
-#~ msgstr "Ki kell javítanunk a fenti hibákat commit előtt."
-
-#~ msgid "[Up To Parent]"
-#~ msgstr "[Fel a szülőhöz]"
-
-#~ msgid "buckets"
-#~ msgstr "vödrök"
-
-#~ msgid "commit-tree failed:"
-#~ msgstr "a commit-tree sikertelen:"
-
-#~ msgid "fatal: Cannot resolve %s"
-#~ msgstr "végzetes: Nem lehet feloldani a következőt: %s"
-
-#~ msgid "files"
-#~ msgstr "fájl"
-
-#~ msgid "files checked out"
-#~ msgstr "fájl frissítve"
-
-#~ msgid "files reset"
-#~ msgstr "fájl visszaállítva"
-
-#~ msgid "git-gui - a graphical user interface for Git."
-#~ msgstr "git-gui - egy grafikus felület a Githez."
-
-#~ msgid "git-gui: fatal error"
-#~ msgstr "git-gui: végzetes hiba"
-
-#~ msgid "lines annotated"
-#~ msgstr "sor annotálva"
-
-#~ msgid "objects"
-#~ msgstr "objektum"
-
-#~ msgid "pt."
-#~ msgstr "pt."
-
-#~ msgid "push %s"
-#~ msgstr "%s push-olása"
-
-#~ msgid "remote prune %s"
-#~ msgstr "a(z) %s távoli törlése"
-
-#~ msgid "update-ref failed:"
-#~ msgstr "az update-ref sikertelen:"
-
-#~ msgid "warning"
-#~ msgstr "figyelmeztetés"
-
-#~ msgid "warning: Tcl does not support encoding '%s'."
-#~ msgstr "figyelmeztetés: a Tcl nem támogatja a(z) '%s' kódolást."
-
-#~ msgid "write-tree failed:"
-#~ msgstr "a write-tree sikertelen:"
