@@ -20,6 +20,11 @@ def to_link(url):
     return qtutils.link(url, url)
 
 
+def escape(string):
+    """Escapes all occurrences of '<' and '>'"""
+    return string.replace('<', '&lt;').replace('>', '&gt;')
+
+
 def format_raw(string, start, end, offset=0):
     """Replace a part of a string and transform it to a link"""
     chars = list(string)
@@ -39,15 +44,17 @@ def format_links(string):
 
 def show(context, message):
     """Display a window if the remote sent a message"""
-    message_lines = message.split('\n')
+    message_lines = escape(message).split('\n')
     # Get lines starting with 'remote: '
     remote_lines = [line[8:] for line in message_lines
                     if line.startswith('remote: ')]
     if remote_lines:
-        # Transform new lines to HTML '<br>'
-        remote_message = '<br>'.join(remote_lines)
+        # Transform new lines to HTML '<br>' and render all white spaces
+        remote_message = '<body style="white-space: pre">' + \
+                             '<br>'.join(remote_lines) + \
+                         '</body>'
         view = RemoteMessage(context, format_links(remote_message),
-                             parent=qtutils.active_window())
+                             parent=context.view)
         view.show()
 
 
@@ -84,4 +91,4 @@ class RemoteMessage(standard.Dialog):
 
         qtutils.connect_button(self.close_button, self.close)
 
-        self.resize(defs.scale(600), defs.scale(400))
+        self.resize(defs.scale(720), defs.scale(400))
