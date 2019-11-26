@@ -51,6 +51,7 @@ Translations
 ------------
 * Updated Hungarian translation.
   (`#1005 <https://github.com/git-cola/git-cola/pull/1005>`_)
+  (`#1018 <https://github.com/git-cola/git-cola/pull/1018>`_)
 
 * Updated Turkish translation.
   (`#1003 <https://github.com/git-cola/git-cola/pull/1003>`_)
