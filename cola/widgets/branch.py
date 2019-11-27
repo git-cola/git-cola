@@ -400,7 +400,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def rename_action(self):
         branch = self.selected_refname()
-        ok, new_branch = qtutils.prompt(
+        new_branch, ok = qtutils.prompt(
             N_('Enter New Branch Name'),
             title=N_('Rename branch'), text=branch)
         if ok and new_branch:
