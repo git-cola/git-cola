@@ -18,6 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The remote editor is much faster since it no longer queries
+  remotes, and uses the cached information instead.
+  (`#986 <https://github.com/git-cola/git-cola/issues/986>`_)
+
 * Commit message templates can now be loaded automatically by setting
   ``git config cola.autoloadcommittemplate true``.
   (`#1013 <https://github.com/git-cola/git-cola/pull/1013>`_)
