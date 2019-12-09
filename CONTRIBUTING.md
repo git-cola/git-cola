@@ -163,7 +163,7 @@ To regenerate `git-cola.pot` and update `.po` files with new strings run:
 This will update `.po` files with untranslated strings which translators can
 use to translate `git-cola`.
 
-Untranslatted strings are denoted by an empty "" string.
+Untranslated strings are denoted by an empty "" string.
 
 The `.mo` files have to be regenerated after each change by running:
 
