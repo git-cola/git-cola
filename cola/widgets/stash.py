@@ -1,7 +1,6 @@
 """Widgets for manipulating git stashes"""
 from __future__ import division, absolute_import, unicode_literals
 
-from qtpy import QtCore
 from qtpy.QtCore import Qt
 
 from ..i18n import N_
@@ -217,7 +216,7 @@ class StashView(standard.Dialog):
         context = self.context
         index = get(self.keep_index)
         cmds.do(stash.ApplyStash, context, selection, index, pop)
-        QtCore.QTimer.singleShot(1, self.accept)
+        self.update_from_model()
 
     def stash_save(self):
         """Saves the worktree in a stash
@@ -231,11 +230,6 @@ class StashView(standard.Dialog):
             parent=self)
         if not ok or not stash_name:
             return
-        if stash_name in self.names:
-            Interaction.critical(
-                N_('Error: Stash exists'),
-                N_('A stash named "%s" already exists') % stash_name)
-            return
         context = self.context
         keep_index = get(self.keep_index)
         stash_index = get(self.stash_index)
@@ -243,7 +237,7 @@ class StashView(standard.Dialog):
             cmds.do(stash.StashIndex, context, stash_name)
         else:
             cmds.do(stash.SaveStash, context, stash_name, keep_index)
-        QtCore.QTimer.singleShot(1, self.accept)
+        self.update_from_model()
 
     def stash_drop(self):
         """Drops the currently selected stash
