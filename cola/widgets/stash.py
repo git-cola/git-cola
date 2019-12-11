@@ -45,6 +45,11 @@ class StashView(standard.Dialog):
         self.stash_list = standard.ListWidget(parent=self)
         self.stash_text = diff.DiffTextEdit(context, self)
 
+        self.button_rename = qtutils.create_button(
+            text=N_('Rename'),
+            tooltip=N_('Rename the selected stash'),
+            icon=icons.edit())
+
         self.button_apply = qtutils.create_button(
             text=N_('Apply'),
             tooltip=N_('Apply the selected stash'),
@@ -86,6 +91,7 @@ class StashView(standard.Dialog):
             self.stash_index,
             self.keep_index,
             self.button_save,
+            self.button_rename,
             self.button_apply,
             self.button_pop,
             self.button_drop)
@@ -99,6 +105,7 @@ class StashView(standard.Dialog):
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
 
         qtutils.connect_button(self.button_save, self.stash_save)
+        qtutils.connect_button(self.button_rename, self.stash_rename)
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_pop, self.stash_pop)
         qtutils.connect_button(self.button_drop, self.stash_drop)
@@ -154,6 +161,7 @@ class StashView(standard.Dialog):
         self.stash_index.setEnabled(is_staged)
         self.keep_index.setEnabled(is_changed)
         self.button_save.setEnabled(is_changed)
+        self.button_rename.setEnabled(is_selected)
         self.button_apply.setEnabled(is_selected)
         self.button_drop.setEnabled(is_selected)
         self.button_pop.setEnabled(is_selected)
@@ -179,6 +187,24 @@ class StashView(standard.Dialog):
         is_staged = self.model.is_staged()
         if get(self.stash_index) and not is_staged:
             self.stash_index.setChecked(False)
+
+    def stash_rename(self):
+        """Renames the currently selected stash
+        """
+        selection = self.selected_stash()
+        name = self.selected_name()
+        new_name, ok = qtutils.prompt(
+            N_('Enter a new name for the stash'), text=name,
+            title=N_('Rename Stash'), parent=self)
+        if not ok or not new_name:
+            return
+        if new_name == name:
+            Interaction.information(
+                N_('No change made'), N_('The stash has not been renamed'))
+            return
+        context = self.context
+        cmds.do(stash.RenameStash, context, selection, new_name)
+        self.update_from_model()
 
     def stash_pop(self):
         self.stash_apply(pop=True)
