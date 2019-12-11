@@ -107,9 +107,9 @@ class SaveStash(cmds.ContextCommand):
 
     def do(self):
         if self.keep_index:
-            args = ['save', '--keep-index', self.stash_name]
+            args = ['push', '--keep-index', '-m', self.stash_name]
         else:
-            args = ['save', self.stash_name]
+            args = ['push', '-m', self.stash_name]
         status, out, err = self.git.stash(*args)
         if status == 0:
             Interaction.log_status(status, out, err)
