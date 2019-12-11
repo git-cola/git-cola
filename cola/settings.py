@@ -117,7 +117,7 @@ class Settings(object):
                 'path': path,
             }
         self.recent.insert(0, entry)
-        if len(self.recent) >= max_recent:
+        if len(self.recent) > max_recent:
             self.recent.pop()
 
     def remove_recent(self, path):
