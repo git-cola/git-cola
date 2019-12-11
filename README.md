@@ -229,7 +229,7 @@ provide the `PyQt5` modules for `python3` only.  You have to use
 
 If you upgrade using `brew` then it is recommended that you re-install
 *git-cola*'s dependencies when upgrading.  Re-installing ensures that the
-Python modules provided by Homebrew will be properly set up.
+Python modules provided by Homebrew will be properly setup.
 
 This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
 Homebrew now bundles its own Python3 installation instead of using the
@@ -336,7 +336,7 @@ The following commands should be run during development:
 
 The test suite can be found in the [test](test) directory.
 
-The tests are set up to run automatically when code is pushed using
+The tests are setup to run automatically when code is pushed using
 [Travis CI](https://travis-ci.org/git-cola/git-cola).
 Checkout the [Travis config file](.travis.yml) for more details.
 
@@ -401,7 +401,7 @@ Windows installers are built using
 
 To build the installer using *Pynsist* run:
 
-    ./contrib/win32/run-pynsist.sh
+   ./contrib/win32/run-pynsist.sh
 
 This will generate an installer in `build/nsis/`.
 
@@ -414,7 +414,7 @@ older version of *git-cola*.
 launched as-is on Windows because `gitk` is a shell script.
 
 If you are configured to use `gitk`, then change your configuration to
-go through Git's `sh.exe` on Windows.  Similarly, we must go through
+go through Git's `sh.exe` on Windows.  Similarly,we must go through
 `python.exe` if we want to use `git-dag`.
 
 If you want to use *gitk* as your history browser open the
