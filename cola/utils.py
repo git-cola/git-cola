@@ -197,13 +197,6 @@ def strip_prefix(prefix, string):
     return string[len(prefix):]
 
 
-def sanitize(s):
-    """Removes shell metacharacters from a string."""
-    for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
-        s = s.replace(c, '_')
-    return s
-
-
 def tablength(word, tabwidth):
     """Return length of a word taking tabs into account
 

@@ -11,7 +11,6 @@ from ..qtutils import get
 from .. import cmds
 from .. import icons
 from .. import qtutils
-from .. import utils
 from . import defs
 from . import diff
 from . import standard
@@ -232,8 +231,6 @@ class StashView(standard.Dialog):
             parent=self)
         if not ok or not stash_name:
             return
-        # Sanitize the stash name
-        stash_name = utils.sanitize(stash_name)
         if stash_name in self.names:
             Interaction.critical(
                 N_('Error: Stash exists'),
