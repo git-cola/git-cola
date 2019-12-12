@@ -216,6 +216,7 @@ Thanks
 * Vaibhav Sagar
 * Vaiz
 * Ved Vyas
+* Victor Gambier
 * Victor Nepveu
 * Victorhck
 * Ville Skyttä
