@@ -14,6 +14,16 @@ Clone the git-cola repo to get the latest development version:
 
 ``git clone git://github.com/git-cola/git-cola.git``
 
+.. _v3.7:
+
+Fixes
+-----
+* The "revert" action in the DAG and other tools now uses
+  ``git revert --no-edit``, which avoids launching an editor
+  when reverting the commit.  Use `Ctrl+m` in the commit message
+  editor after reverting a commit to rewrite its commit message.
+  (`#1020 <https://github.com/git-cola/git-cola/issues/1020>`_)
+
 .. _v3.6:
 
 Usability, bells and whistles

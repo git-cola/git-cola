@@ -431,7 +431,7 @@ class Revert(ContextCommand):
         self.oid = oid
 
     def do(self):
-        self.git.revert(self.oid)
+        self.git.revert(self.oid, no_edit=True)
         self.model.update_file_status()
 
 
