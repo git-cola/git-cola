@@ -18,6 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Fixes
 -----
+* The "Recent Repositories" limit was off by one, and now correctly
+  remembers the configured number of repositories in the menu.
+  (`#1024 <https://github.com/git-cola/git-cola/pull/1024>`_)
+
 * The "revert" action in the DAG and other tools now uses
   ``git revert --no-edit``, which avoids launching an editor
   when reverting the commit.  Use `Ctrl+m` in the commit message
