@@ -160,7 +160,7 @@ class RepoFormWidget(FormWidget):
         self.set_config({
             prefs.AUTOTEMPLATE:
                 (self.autotemplate, Defaults.autotemplate),
-            prefs.CHECKCONFLICTS:
+            prefs.CHECK_CONFLICTS:
                 (self.check_conflicts, Defaults.check_conflicts),
             prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
             prefs.DISPLAY_UNTRACKED:

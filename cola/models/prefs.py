@@ -13,7 +13,7 @@ AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
 BOLD_HEADERS = 'cola.boldheaders'
-CHECKCONFLICTS = 'cola.checkconflicts'
+CHECK_CONFLICTS = 'cola.checkconflicts'
 COMMENT_CHAR = 'core.commentchar'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
@@ -91,7 +91,7 @@ def bold_headers(context):
 
 
 def check_conflicts(context):
-    return context.cfg.get(CHECKCONFLICTS, default=Defaults.check_conflicts)
+    return context.cfg.get(CHECK_CONFLICTS, default=Defaults.check_conflicts)
 
 
 def display_untracked(context):
