@@ -31,6 +31,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Typos in various documentation files have been fixed.
+  (`#1025 <https://github.com/git-cola/git-cola/pull/1025>`_)
+
 * The "Recent Repositories" limit was off by one, and now correctly
   remembers the configured number of repositories in the menu.
   (`#1024 <https://github.com/git-cola/git-cola/pull/1024>`_)
