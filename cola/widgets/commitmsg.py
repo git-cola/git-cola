@@ -52,7 +52,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
         self.commit_action = qtutils.add_action(
-            self, N_('Commit@@verb'), self.commit, hotkeys.COMMIT)
+            self, N_('Commit@@verb'), self.commit, hotkeys.APPLY)
         self.commit_action.setIcon(icons.commit())
         self.commit_action.setToolTip(N_('Commit staged changes'))
         self.clear_action = qtutils.add_action(
