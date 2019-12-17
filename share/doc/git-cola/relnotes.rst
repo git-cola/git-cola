@@ -18,9 +18,10 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
-* Stashes can now be applied using the `Ctrl + Enter` hotkey when inside
-  the stash dialog.  This enables a keyboard-centric mouse-free workflow
-  when using the stash dialog.
+* Stashes can now be applied using the `Ctrl + Enter` hotkey, popped with the
+  `Ctrl + Backspace` hotkey, and dropped with the `Ctrl + Shift + Backspace`
+  hotkey when inside the stash dialog.  This enables a keyboard-centric
+  mouse-free workflow when using the stash dialog.
 
 * When amending a commit, `git cola` will check whether the commit has been
   published to a remote branch using ``git branch -r --contains HEAD``.

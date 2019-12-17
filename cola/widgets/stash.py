@@ -99,6 +99,12 @@ class StashView(standard.Dialog):
         # Apply stash with Ctrl+Enter
         self.apply_action = qtutils.add_action(
             self, N_('Apply'), self.stash_apply, hotkeys.APPLY)
+        # Pop stash with Ctrl+Backspace
+        self.pop_action = qtutils.add_action(
+            self, N_('Pop'), self.stash_pop, hotkeys.DELETE_FILE_SECONDARY)
+        # Drop stash with Ctrl+Shift+Backspace
+        self.drop_action = qtutils.add_action(
+            self, N_('Pop'), self.stash_drop, hotkeys.DELETE_FILE)
 
         # pylint: disable=no-member
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
@@ -162,6 +168,8 @@ class StashView(standard.Dialog):
 
         is_selected = bool(self.selected_stash())
         self.apply_action.setEnabled(is_selected)
+        self.drop_action.setEnabled(is_selected)
+        self.pop_action.setEnabled(is_selected)
         self.button_apply.setEnabled(is_selected)
         self.button_drop.setEnabled(is_selected)
         self.button_pop.setEnabled(is_selected)
