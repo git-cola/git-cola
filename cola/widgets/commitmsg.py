@@ -457,7 +457,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         # Warn that amending published commits is generally bad
         amend = get(self.amend_action)
-        if (amend and self.model.is_commit_published() and
+        check_published = prefs.check_published_commits(context)
+        if (amend and check_published and self.model.is_commit_published() and
                 not Interaction.confirm(
                     N_('Rewrite Published Commit?'),
                     N_('This commit has already been published.\n'

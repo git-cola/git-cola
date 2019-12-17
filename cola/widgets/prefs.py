@@ -137,8 +137,13 @@ class RepoFormWidget(FormWidget):
         tooltip = N_(
             'Prevent "Stage" from staging all files when nothing is selected')
         self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
+
         tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(
+            checked=True, tooltip=tooltip)
+
+        tooltip = N_('Check whether a commit has been published when amending')
+        self.check_published_commits = qtutils.checkbox(
             checked=True, tooltip=tooltip)
 
         self.add_row(N_('User Name'), self.name)
@@ -156,12 +161,17 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
+        self.add_row(N_('Check Published Commits when Amending'),
+                     self.check_published_commits)
 
         self.set_config({
             prefs.AUTOTEMPLATE:
                 (self.autotemplate, Defaults.autotemplate),
-            prefs.CHECKCONFLICTS:
+            prefs.CHECK_CONFLICTS:
                 (self.check_conflicts, Defaults.check_conflicts),
+            prefs.CHECK_PUBLISHED_COMMITS: (
+                self.check_published_commits,
+                Defaults.check_published_commits),
             prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
             prefs.DISPLAY_UNTRACKED:
                 (self.display_untracked, Defaults.display_untracked),

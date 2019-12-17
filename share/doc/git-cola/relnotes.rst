@@ -16,6 +16,19 @@ Clone the git-cola repo to get the latest development version:
 
 .. _v3.7:
 
+Usability, bells and whistles
+-----------------------------
+* When amending a commit, `git cola` will check whether the commit has been
+  published to a remote branch using ``git branch --contains HEAD``.
+  This command can be slow when operating on a repository with lots of
+  remote branches, and thus slows things down when amending commits.
+  A new `cola.checkpublishedcommits` configuration variable allows you
+  to opt-out of this check, which can improve performance significantly
+  when amending a commit.  The settings widget exposes this variable as,
+  "Check Published Commits when Amending".
+  (`#1021 <https://github.com/git-cola/git-cola/issues/1021>`_)
+  (`#1027 <https://github.com/git-cola/git-cola/pull/1027>`_)
+
 Fixes
 -----
 * The "Recent Repositories" limit was off by one, and now correctly
