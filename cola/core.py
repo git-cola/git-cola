@@ -362,7 +362,7 @@ def guess_mimetype(filename):
         mimetype = mimetypes.guess_type(filename)[0]
     except UnicodeEncodeError:
         mimetype = mimetypes.guess_type(encode(filename))[0]
-    except TypeError:
+    except (TypeError, ValueError):
         mimetype = mimetypes.guess_type(decode(filename))[0]
     return mimetype
 
