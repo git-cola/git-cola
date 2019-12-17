@@ -9,6 +9,7 @@ from ..interaction import Interaction
 from ..models import stash
 from ..qtutils import get
 from .. import cmds
+from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import utils
@@ -95,6 +96,10 @@ class StashView(standard.Dialog):
         self.setLayout(self.main_layt)
         self.splitter.setSizes([self.width()//3, self.width()*2//3])
 
+        # Apply stash with Ctrl+Enter
+        self.apply_action = qtutils.add_action(
+            self, N_('Apply'), self.stash_apply, hotkeys.APPLY)
+
         # pylint: disable=no-member
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
 
@@ -149,11 +154,14 @@ class StashView(standard.Dialog):
 
     def update_actions(self):
         is_staged = self.model.is_staged()
-        is_changed = self.model.is_changed()
-        is_selected = bool(self.selected_stash())
         self.stash_index.setEnabled(is_staged)
+
+        is_changed = self.model.is_changed()
         self.keep_index.setEnabled(is_changed)
         self.button_save.setEnabled(is_changed)
+
+        is_selected = bool(self.selected_stash())
+        self.apply_action.setEnabled(is_selected)
         self.button_apply.setEnabled(is_selected)
         self.button_drop.setEnabled(is_selected)
         self.button_pop.setEnabled(is_selected)
