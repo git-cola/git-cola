@@ -92,6 +92,7 @@ Thanks
 * Jakub Szymański
 * Jakub Wilk
 * James Geiger
+* Jason Newton
 * Javier Rodriguez Cuevas
 * Jeff Dagenais
 * Jérôme Carretero
