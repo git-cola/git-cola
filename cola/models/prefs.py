@@ -14,6 +14,7 @@ BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
 BOLD_HEADERS = 'cola.boldheaders'
 CHECK_CONFLICTS = 'cola.checkconflicts'
+CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
 COMMENT_CHAR = 'core.commentchar'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
@@ -52,6 +53,7 @@ class Defaults(object):
     blame_viewer = 'git gui blame'
     bold_headers = False
     check_conflicts = True
+    check_published_commits = True
     comment_char = '#'
     display_untracked = True
     diff_context = 5
@@ -95,6 +97,12 @@ def bold_headers(context):
 def check_conflicts(context):
     """Should we check for merge conflict markers in unmerged files?"""
     return context.cfg.get(CHECK_CONFLICTS, default=Defaults.check_conflicts)
+
+
+def check_published_commits(context):
+    """Should we check for published commits when amending?"""
+    return context.cfg.get(
+        CHECK_PUBLISHED_COMMITS, default=Defaults.check_published_commits)
 
 
 def display_untracked(context):
