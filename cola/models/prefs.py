@@ -82,42 +82,52 @@ class Defaults(object):
 
 
 def blame_viewer(context):
+    """Return the configured "blame" viewer"""
     default = Defaults.blame_viewer
     return context.cfg.get(BLAME_VIEWER, default=default)
 
 
 def bold_headers(context):
+    """Should we bold the Status column headers?"""
     return context.cfg.get(BOLD_HEADERS, default=Defaults.bold_headers)
 
 
 def check_conflicts(context):
+    """Should we check for merge conflict markers in unmerged files?"""
     return context.cfg.get(CHECK_CONFLICTS, default=Defaults.check_conflicts)
 
 
 def display_untracked(context):
+    """Should we display untracked files?"""
     return context.cfg.get(DISPLAY_UNTRACKED,
                            default=Defaults.display_untracked)
 
 
 def editor(context):
+    """Return the configured editor"""
     app = context.cfg.get(EDITOR, default=Defaults.editor)
     return _remap_editor(app)
 
 
 def background_editor(context):
+    """Return the configured non-blocking background editor"""
     app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
 
 
 def _remap_editor(app):
+    """Remap a configured editorinto a visual editor name"""
+    # We do this for vim users because this configuration is convenient.
     return {'vim': 'gvim -f'}.get(app, app)
 
 
 def comment_char(context):
+    """Return the configured git commit comment character"""
     return context.cfg.get(COMMENT_CHAR, default=Defaults.comment_char)
 
 
 def default_history_browser():
+    """Return the default history browser (e.g. git-dag, gitk)"""
     if utils.is_win32():
         # On Windows, a sensible default is "python git-cola dag"
         # which is different than `gitk` below, but is preferred
@@ -135,15 +145,18 @@ def default_history_browser():
 
 
 def history_browser(context):
+    """Return the configured history browser"""
     default = default_history_browser()
     return context.cfg.get(HISTORY_BROWSER, default=default)
 
 
 def linebreak(context):
+    """Should we word-wrap lines in the commit message editor?"""
     return context.cfg.get(LINEBREAK, default=Defaults.linebreak)
 
 
 def maxrecent(context):
+    """Return the configured maximum number of Recent Repositories"""
     value = Defaults.maxrecent
     if context:
         value = context.cfg.get(MAXRECENT, default=value)
@@ -151,35 +164,43 @@ def maxrecent(context):
 
 
 def spellcheck(context):
+    """Should we spellcheck commit messages?"""
     return context.cfg.get(SPELL_CHECK, default=Defaults.spellcheck)
 
 
 def expandtab(context):
+    """Should we expand tabs in commit messages?"""
     return context.cfg.get(EXPANDTAB, default=Defaults.expandtab)
 
 
 def sort_bookmarks(context):
+    """Should we sort bookmarks by name?"""
     return context.cfg.get(SORT_BOOKMARKS, default=Defaults.sort_bookmarks)
 
 
 def tabwidth(context):
+    """Return the configured tab width in the commit message editor"""
     return context.cfg.get(TABWIDTH, default=Defaults.tabwidth)
 
 
 def textwidth(context):
+    """Return the configured text width for word wrapping commit messages"""
     return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
 
 
 def status_indent(context):
+    """Should we indent items in the status widget?"""
     return context.cfg.get(STATUS_INDENT, default=Defaults.status_indent)
 
 
 def status_show_totals(context):
+    """Should we display count totals in the status widget headers?"""
     return context.cfg.get(STATUS_SHOW_TOTALS,
                            default=Defaults.status_show_totals)
 
 
 class PreferencesModel(observable.Observable):
+    """Interact with repo-local and user-global git config preferences"""
     message_config_updated = 'config_updated'
 
     def __init__(self, context):
@@ -188,6 +209,7 @@ class PreferencesModel(observable.Observable):
         self.config = context.cfg
 
     def set_config(self, source, config, value):
+        """Set a configuration value"""
         if source == 'repo':
             self.config.set_repo(config, value)
         else:
@@ -196,6 +218,7 @@ class PreferencesModel(observable.Observable):
         self.notify_observers(message, source, config, value)
 
     def get_config(self, source, config):
+        """Get a configured value"""
         if source == 'repo':
             value = self.config.get_repo(config)
         else:
@@ -216,10 +239,12 @@ class SetConfig(Command):
         self.model = model
 
     def do(self):
+        """Modify the model and store the updated configuration"""
         self.old_value = self.model.get_config(self.source, self.config)
         self.model.set_config(self.source, self.config, self.value)
 
     def undo(self):
+        """Restore the configuration change to its original value"""
         if self.old_value is None:
             return
         self.model.set_config(self.source, self.config, self.old_value)
