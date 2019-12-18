@@ -27,9 +27,9 @@ entry .e -textvariable answer -width 50
 pack .e -side top -fill x -padx 10 -pady 10
 
 if {!$yesno} {
-  if {"Password" in $prompt}{
-    .e configure -show "*"
-  }
+	if {"Password" in $prompt}{
+		.e configure -show "*"
+	}
 }
 
 frame .b
