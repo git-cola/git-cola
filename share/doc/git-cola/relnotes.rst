@@ -35,6 +35,10 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The inotify filesystem monitor now handles
+  `OSError: [Errno 24] Too many open files` errors by disabling inotify.
+  (`#1015 <https://github.com/git-cola/git-cola/issues/1015>`_)
+
 * Typos in various documentation files have been fixed.
   (`#1025 <https://github.com/git-cola/git-cola/pull/1025>`_)
 

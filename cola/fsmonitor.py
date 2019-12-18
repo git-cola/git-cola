@@ -195,7 +195,14 @@ if AVAILABLE == 'inotify':
         def run(self):
             try:
                 with self._lock:
-                    self._inotify_fd = inotify.init()
+                    try:
+                        self._inotify_fd = inotify.init()
+                    except OSError as e:
+                        self._inotify_fd = None
+                        self._running = False
+                        if e.errno == errno.EMFILE:
+                            self._log_out_of_wds_message()
+                        return
                     self._pipe_r, self._pipe_w = os.pipe()
 
                 poll_obj = select.poll()
@@ -269,7 +276,7 @@ if AVAILABLE == 'inotify':
                 self._git_dir_wd = \
                     self._git_dir_path_to_wd_map.get(self._git_dir)
             except OSError as e:
-                if e.errno == errno.ENOSPC:
+                if e.errno in (errno.ENOSPC, errno.EMFILE):
                     self._log_out_of_wds_message()
                     self._running = False
                 else:
