@@ -142,6 +142,7 @@ Thanks
 * Michael Geddes
 * Michael Homer
 * Mickael Albertus
+* Miguel Boekhold
 * Mike Hanson
 * MikHulk
 * Mikołaj Milej
