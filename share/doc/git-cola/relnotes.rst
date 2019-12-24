@@ -18,6 +18,12 @@ Clone the git-cola repo to get the latest development version:
 
 Usability, bells and whistles
 -----------------------------
+* The fallback `ssh-askpass` script, which provides the Username/Password
+  login dialog when performing remote operations, previously presented both
+  the username and password input fields with ``***`` asterisks.
+  The dialog now uses asterisks for the password field only.
+  (`#1026 <https://github.com/git-cola/git-cola/pull/1026>`_)
+
 * Stashes can now be applied using the `Ctrl + Enter` hotkey, popped with the
   `Ctrl + Backspace` hotkey, and dropped with the `Ctrl + Shift + Backspace`
   hotkey when inside the stash dialog.  This enables a keyboard-centric
