@@ -47,7 +47,7 @@ def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
     fn = context.git.add
     return utils.slice_fn(
-        items, lambda paths: fn('--', force=True, verbose=True, u=u, *paths))
+        items, lambda paths: fn('--', verbose=True, u=u, *paths))
 
 
 def apply_diff(context, filename):
