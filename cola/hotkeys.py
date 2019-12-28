@@ -74,7 +74,6 @@ DELETE_FILE_SECONDARY = hotkey(Qt.CTRL + Qt.Key_Backspace)
 PREFERENCES = hotkey(Qt.CTRL + Qt.Key_Comma)
 END_OF_LINE = hotkey(Qt.Key_Dollar)
 DOWN = hotkey(Qt.Key_Down)
-ENTER = hotkey(Qt.Key_Enter)
 ZOOM_OUT = hotkey(Qt.Key_Minus)
 REMOVE_ITEM = hotkey(Qt.Key_Minus)
 ADD_ITEM = hotkey(Qt.Key_Plus)
@@ -82,6 +81,7 @@ ZOOM_IN = hotkey(Qt.Key_Plus)
 ZOOM_IN_SECONDARY = hotkey(Qt.Key_Equal)
 
 QUESTION = hotkey(Qt.Key_Question)
+ENTER = hotkey(Qt.Key_Enter)
 RETURN = hotkey(Qt.Key_Return)
 ACCEPT = (ENTER, RETURN)
 COMMIT = hotkey(Qt.CTRL + Qt.Key_Return)
@@ -93,6 +93,7 @@ UP = hotkey(Qt.Key_Up)
 
 CTRL_RETURN = hotkey(Qt.CTRL + Qt.Key_Return)
 CTRL_ENTER = hotkey(Qt.CTRL + Qt.Key_Enter)
+CTRL_ACCEPT = (CTRL_ENTER, CTRL_RETURN)
 
 # Rebase
 REBASE_START_AND_CONTINUE = hotkey(Qt.ALT + Qt.Key_R)

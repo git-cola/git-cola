@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 
 from ..observable import Observable
+from ..enums.file_nodes import Node, Untracked, Modified
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
@@ -42,6 +43,17 @@ def _filter(a, b):
             a.pop(last - idx)
 
 
+Selection = collections.namedtuple(
+    'Selection',
+    [
+        'staged',
+        'unmerged',
+        'modified',
+        'untracked',
+    ]
+)
+
+
 class SelectionModel(Observable):
     """Provides information about selected file paths."""
     # Notification message sent out when selection changes
@@ -78,6 +90,35 @@ class SelectionModel(Observable):
         self.modified = s.modified
         self.untracked = s.untracked
         self.notify_observers(self.message_selection_changed)
+
+    def set_selection_from_node(self, node : Node):
+        if node.is_staged:
+            self.set_selection(
+                Selection(
+                    [node.full_path],
+                    [],
+                    [],
+                    [],
+                )
+            )
+        elif isinstance(node, Modified): # and not staged
+            self.set_selection(
+                Selection(
+                    [],
+                    [],
+                    [node.full_path],
+                    [],
+                )
+            )
+        elif isinstance(node, Untracked): # and not staged
+            self.set_selection(
+                Selection(
+                    [],
+                    [],
+                    [],
+                    [node.full_path],
+                )
+            )
 
     def update(self, other):
         _filter(self.staged, other.staged)

@@ -23,7 +23,7 @@ def cmd_action(parent, cmd, context, fn, *keys):
 def default_app_action(context, parent, fn):
     """Open paths with the OS-default app -> QAction"""
     action = cmd_action(parent, cmds.OpenDefaultApp, context, fn,
-                        hotkeys.PRIMARY_ACTION)
+                        *hotkeys.CTRL_ACCEPT)
     action.setIcon(icons.default_app())
     return action
 

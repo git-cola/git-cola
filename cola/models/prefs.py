@@ -77,8 +77,8 @@ class Defaults(object):
     textwidth = 72
     theme = 'default'
     hidpi = hidpi.Option.AUTO
-    status_indent = False
-    status_show_totals = False
+    status_indent = True
+    status_show_totals = True
 
 
 def blame_viewer(context):

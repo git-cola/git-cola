@@ -7,6 +7,7 @@ import os
 import signal
 import sys
 import time
+import typing
 
 __copyright__ = """
 Copyright (C) 2007-2017 David Aguilar and contributors
@@ -529,18 +530,20 @@ class ApplicationContext(object):
 
     def __init__(self, args):
         self.args = args
-        self.app = None  # ColaApplication
-        self.git = None  # git.Git
-        self.cfg = None  # gitcfg.GitConfig
-        self.model = None  # main.MainModel
-        self.timer = None  # Timer
-        self.runtask = None  # qtutils.RunTask
-        self.selection = None  # selection.SelectionModel
+        self.app = None  # type: typing.Optional[ColaApplication]
+        self.git = None  # type: typing.Optional[git.Git]
+        self.cfg = None  # type: typing.Optional[gitcfg.GitConfig]
+        self.model = None  # type: typing.Optional[main.MainModel]
+        self.timer = None  # type: typing.Optional[Timer]
+        self.runtask = None  # type: typing.Optional[qtutils.RunTask]
+        self.selection = None  # type: typing.Optional[selection.SelectionModel]
         self.fsmonitor = None  # fsmonitor
-        self.view = None  # QWidget
+        self.view = None  # type: typing.Optional[QtWidgets.QWidget]
 
     def set_view(self, view):
-        """Initialize view-specific members"""
+        """Initialize view-specific members
+        :type view: QtWidgets.QWidget
+        """
         self.view = view
         self.runtask = qtutils.RunTask(parent=view)
 

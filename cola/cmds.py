@@ -21,14 +21,14 @@ from . import utils
 from . import version
 from .cmd import ContextCommand
 from .diffparse import DiffParser
-from .git import STDOUT
+from .enums.file_nodes import Node, Folder, Untracked, Modified, Deleted
 from .git import EMPTY_TREE_OID
 from .git import MISSING_BLOB_OID
+from .git import STDOUT
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
 from .settings import Settings
-
 
 class UsageError(Exception):
     """Exception class for usage errors."""
@@ -1162,8 +1162,13 @@ class Diffstat(EditModel):
         cfg = self.cfg
         diff_context = cfg.get('diff.context', 3)
         diff = self.git.diff(
-            self.model.head, unified=diff_context, no_ext_diff=True,
-            no_color=True, M=True, stat=True)[STDOUT]
+            self.model.head,
+            unified=diff_context,
+            no_ext_diff=True,
+            no_color=True,
+            M=True,
+            stat=True
+        )[STDOUT]
         self.new_diff_text = diff
         self.new_diff_type = 'text'
         self.new_mode = self.model.mode_diffstat
@@ -1307,6 +1312,56 @@ class LaunchDifftool(ContextCommand):
                 core.fork(argv)
         else:
             difftool_run(self.context)
+
+
+class LaunchDifftoolUnmergedDirect(ContextCommand):
+
+    def __init__(self, context, node : Node):
+        super().__init__(context)
+        self.node = node
+
+    @staticmethod
+    def name():
+        return N_('Launch Diff Tool')
+
+    def do(self):
+        paths = [self.node.full_path]
+        if utils.is_win32():
+            core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
+        else:
+            cfg = self.cfg
+            cmd = cfg.terminal()
+            argv = utils.shell_split(cmd)
+
+            terminal = os.path.basename(argv[0])
+            shellquote_terms = set(['xfce4-terminal'])
+            shellquote_default = terminal in shellquote_terms
+
+            mergetool = ['git', 'mergetool', '--no-prompt', '--']
+            mergetool.extend(paths)
+            needs_shellquote = cfg.get(
+                'cola.terminalshellquote', shellquote_default)
+
+            if needs_shellquote:
+                argv.append(core.list2cmdline(mergetool))
+            else:
+                argv.extend(mergetool)
+
+            core.fork(argv)
+
+
+class LaunchDifftoolDirect(ContextCommand):
+
+    def __init__(self, context, node : Node):
+        super().__init__(context)
+        self.node = node
+
+    @staticmethod
+    def name():
+        return N_('Launch Diff Tool')
+
+    def do(self):
+        difftool_run_direct(self.context, self.node)
 
 
 class LaunchTerminal(ContextCommand):
@@ -1923,6 +1978,76 @@ class RevertUncommittedEdits(RevertEditsCommand):
                                    default=True, icon=self.icon)
 
 
+class RevertEditsCommandDirect(ConfirmAction):
+
+    def __init__(self, context, node : Node):
+        super().__init__(context)
+        self.node = node
+
+    # pylint: disable=no-self-use
+    def checkout_from_head(self):
+        return False
+
+    def checkout_args(self):
+        args = []
+        if self.checkout_from_head():
+            args.append(self.model.head)
+        args.append('--')
+
+        args.append(self.node.full_path)
+        return args
+
+    def action(self):
+        checkout_args = self.checkout_args()
+        return self.git.checkout(*checkout_args)
+
+    def success(self):
+        self.model.update_file_status()
+
+
+class RevertUnstagedEditsDirect(RevertEditsCommandDirect):
+
+    @staticmethod
+    def name():
+        return N_('Revert Unstaged Edits...')
+
+    def checkout_from_head(self):
+        # Being in amend mode should not affect the behavior of this command.
+        # The only sensible thing to do is to checkout from the index.
+        return False
+
+    def confirm(self):
+        title = N_('Revert Unstaged Changes?')
+        text = N_(
+            'This operation removes unstaged edits from selected files.\n'
+            'These changes cannot be recovered.')
+        info = N_('Revert the unstaged changes?')
+        ok_text = N_('Revert Unstaged Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+            default=True, icon=icons.undo())
+
+
+class RevertUncommittedEditsDirect(RevertEditsCommandDirect):
+
+    @staticmethod
+    def name():
+        return N_('Revert Uncommitted Edits...')
+
+    def checkout_from_head(self):
+        return True
+
+    def confirm(self):
+        """Prompt for reverting changes"""
+        title = N_('Revert Uncommitted Changes?')
+        text = N_(
+            'This operation removes uncommitted edits from selected files.\n'
+            'These changes cannot be recovered.')
+        info = N_('Revert the uncommitted changes?')
+        ok_text = N_('Revert Uncommitted Changes')
+        return Interaction.confirm(title, text, info, ok_text,
+            default=True, icon=icons.undo())
+
+
 class RunConfigAction(ContextCommand):
     """Run a user-configured action, typically from the "Tools" menu"""
 
@@ -2148,6 +2273,59 @@ def should_stage_conflicts(path):
     cancel_text = N_('Skip')
     return Interaction.confirm(title, msg, info, ok_text,
                                default=False, cancel_text=cancel_text)
+
+
+class StageHinted(ContextCommand):
+    """Stage a set of paths while bypassing many sniffing steps because of explicit hinting"""
+
+    @staticmethod
+    def name():
+        return N_('Stage')
+
+    def __init__(self, context, paths, hints):
+        super().__init__(context)
+        self.paths = paths
+        self.hints = hints
+        self.paths_with_hints = dict(zip(paths, hints))
+
+    def do(self):
+        msg = N_('Staging: %s') % (', '.join(self.paths))
+        Interaction.log(msg)
+        return self.stage_paths()
+
+    def stage_paths(self):
+        """Stages add/removals to git."""
+
+        context = self.context
+        paths_with_hints = self.paths_with_hints
+
+        add = []
+        add_u = []
+
+        mm = {
+            Deleted: add_u,
+            Folder: add,
+            Modified: add_u,
+            Untracked: add,
+        }
+
+        for path, node_type in paths_with_hints.items():
+            mm[node_type].append(path)
+
+        self.model.emit_about_to_update()
+
+        # `git add -u` doesn't work on untracked files
+        if add:
+            status, out, err = gitcmds.add(context, add)
+            Interaction.command(N_('Error'), 'git add', status, out, err)
+
+        # If a path doesn't exist then that means it should be removed
+        # from the index.   We use `git add -u` for that.
+        if add_u:
+            status, out, err = gitcmds.add(context, add_u, u=True)
+            Interaction.command(N_('Error'), 'git add -u', status, out, err)
+
+        self.model.update_files(emit=True)
 
 
 class Stage(ContextCommand):
@@ -2405,6 +2583,36 @@ class UnstageAll(ContextCommand):
         return unstage_all(self.context)
 
 
+class UnstageHinted(ContextCommand):
+    """Unstage all files; resets the index."""
+
+    @staticmethod
+    def name():
+        return N_('Unstage')
+
+    def __init__(self, context, paths, hints):
+        super().__init__(context)
+        self.paths = paths
+        self.hints = hints
+        self.paths_with_hints = dict(zip(paths, hints))
+
+    def do(self):
+        msg = N_('Unstaging: %s') % (', '.join(self.paths))
+        Interaction.log(msg)
+        return self.unstage_paths()
+
+    def unstage_paths(self):
+        """Stages add/removals to git."""
+
+        context = self.context
+        head = self.model.head
+        paths = self.paths
+
+        status, out, err = gitcmds.unstage_paths(context, paths, head=head)
+        Interaction.command(N_('Error'), 'git reset', status, out, err)
+        self.model.update_file_status()
+
+
 def unstage_all(context):
     """Unstage all files, even while amending"""
     model = context.model
@@ -2632,24 +2840,34 @@ def difftool_run(context):
     difftool_launch_with_head(context, files, bool(s.staged), head)
 
 
-def difftool_launch_with_head(context, filenames, staged, head):
+def difftool_run_direct(context, node):
+    """Start a default difftool session"""
+    difftool_launch_with_head(
+        context,
+        [node.full_path],
+        node.is_staged,
+        context.model.head
+    )
+
+
+def difftool_launch_with_head(context, filenames, is_staged, head):
     """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
     else:
         left = head
-    difftool_launch(context, left=left, staged=staged, paths=filenames)
+    difftool_launch(context, left=left, is_staged=is_staged, paths=filenames)
 
 
 def difftool_launch(context, left=None, right=None, paths=None,
-                    staged=False, dir_diff=False,
+                    is_staged=False, dir_diff=False,
                     left_take_magic=False, left_take_parent=False):
     """Launches 'git difftool' with given parameters
 
     :param left: first argument to difftool
     :param right: second argument to difftool_args
     :param paths: paths to diff
-    :param staged: activate `git difftool --staged`
+    :param is_staged: activate `git difftool --staged`
     :param dir_diff: activate `git difftool --dir-diff`
     :param left_take_magic: whether to append the magic ^! diff expression
     :param left_take_parent: whether to append the first-parent ~ for diffing
@@ -2657,7 +2875,7 @@ def difftool_launch(context, left=None, right=None, paths=None,
     """
 
     difftool_args = ['git', 'difftool', '--no-prompt']
-    if staged:
+    if is_staged:
         difftool_args.append('--cached')
     if dir_diff:
         difftool_args.append('--dir-diff')

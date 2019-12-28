@@ -109,7 +109,7 @@ class Difftool(standard.Dialog):
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
         qtutils.add_action(self, 'Diff All', lambda: self.diff(dir_diff=True),
-                           hotkeys.CTRL_ENTER, hotkeys.CTRL_RETURN)
+            *hotkeys.CTRL_ACCEPT)
         qtutils.add_close_action(self)
 
         self.init_state(None, self.resize_widget, parent)

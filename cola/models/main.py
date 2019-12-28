@@ -4,10 +4,14 @@
 from __future__ import division, absolute_import, unicode_literals
 
 import os
+import typing
 
 from .. import core
 from .. import gitcmds
 from .. import version
+if typing.TYPE_CHECKING:
+    # workaround an ugly circluar depend
+    from ..app import ApplicationContext
 from ..git import STDOUT
 from ..observable import Observable
 from . import prefs
@@ -59,8 +63,16 @@ class MainModel(Observable):
         lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
+    locals_staged = None # type: dict
+    locals_unstaged = None # type: dict
+    submodules_staged = None # type: dict
+    submodules_unstaged = None # type: dict
+
     def __init__(self, context, cwd=None):
-        """Interface to the main repository status"""
+        """Interface to the main repository status
+
+        :type context: ApplicationContext
+        """
         Observable.__init__(self)
 
         self.context = context
@@ -250,25 +262,62 @@ class MainModel(Observable):
     def _update_files(self, update_index=False):
         context = self.context
         display_untracked = prefs.display_untracked(context)
-        state = gitcmds.worktree_state(
-            context, head=self.head, update_index=update_index,
-            display_untracked=display_untracked, paths=self.filter_paths)
-        self.staged = state.get('staged', [])
-        self.modified = state.get('modified', [])
-        self.unmerged = state.get('unmerged', [])
-        self.untracked = state.get('untracked', [])
-        self.upstream_changed = state.get('upstream_changed', [])
-        self.staged_deleted = state.get('staged_deleted', set())
-        self.unstaged_deleted = state.get('unstaged_deleted', set())
-        self.submodules = state.get('submodules', set())
+        (
+            self.locals_unstaged,
+            self.locals_staged,
+            self.submodules_unstaged,
+            self.submodules_staged
+        ) = gitcmds.worktree_state(
+            context,
+            head=self.head,
+            update_index=update_index,
+            display_untracked=display_untracked,
+            paths=self.filter_paths
+        )
 
-        selection = self.selection
-        if self.is_empty():
-            selection.reset()
-        else:
-            selection.update(self)
-        if selection.is_empty():
-            self.set_diff_text('')
+        # backward compat:
+
+        SM = gitcmds.StatusMarkers
+        modified_status_markers = [
+            SM.modified,
+            SM.renamed,
+            SM.type_changed
+        ]
+        self.staged = list(sorted(set([
+            v
+            for k, group in self.locals_staged.items()
+            for v in group
+            if k != SM.deleted
+        ])))
+        self.modified = list(sorted(set([
+            v
+            for marker in modified_status_markers
+            for group in self.locals_unstaged[marker]
+            for v in group
+        ])))
+        self.unmerged = list(sorted(set(self.locals_staged[SM.unmerged] + self.locals_unstaged[SM.unmerged])))
+        self.untracked = list(sorted(self.locals_unstaged[SM.untracked]))
+        self.upstream_changed = [] # TODO
+        self.staged_deleted = set(self.locals_staged[SM.deleted])
+        self.unstaged_deleted = set(self.locals_unstaged[SM.deleted])
+        self.submodules = set([
+            v
+            for group in self.submodules_staged.values()
+            for v in group
+        ] + [
+            v
+            for group in self.submodules_unstaged.values()
+            for v in group
+        ])
+
+        # TODO?
+        # selection = self.selection
+        # if self.is_empty():
+        #     selection.reset()
+        # else:
+        #     selection.update(self)
+        # if selection.is_empty():
+        #     self.set_diff_text('')
 
     def is_empty(self):
         return not(bool(self.staged or self.modified or

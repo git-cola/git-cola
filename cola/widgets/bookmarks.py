@@ -141,7 +141,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         self.open_default_action = qtutils.add_action(
             self, cmds.OpenDefaultApp.name(), self.open_default,
-            hotkeys.PRIMARY_ACTION)
+            *hotkeys.CTRL_ACCEPT)
 
         self.launch_editor_action = qtutils.add_action(
             self, cmds.Edit.name(), self.launch_editor, hotkeys.EDIT)

@@ -95,10 +95,14 @@ class MainView(standard.MainWindow):
 
         # "Repository Status" widget
         self.statusdock = create_dock(
-            N_('Status'), self,
+            N_('Status'),
+            self,
             fn=lambda dock: status.StatusWidget(
-                context, dock.titleBarWidget(), dock))
-        self.statuswidget = self.statusdock.widget()
+                context,
+                dock
+            )
+        )
+        self.statuswidget = self.statusdock.widget() # type: status.StatusWidget
 
         # "Switch Repository" widgets
         self.bookmarksdock = create_dock(
@@ -180,10 +184,6 @@ class MainView(standard.MainWindow):
             self, N_('Unstage From Commit'),
             cmds.run(cmds.UnstageSelected, context))
         self.unstage_selected_action.setIcon(icons.remove())
-
-        self.show_diffstat_action = add_action(
-            self, N_('Diffstat'), self.statuswidget.select_header,
-            hotkeys.DIFFSTAT)
 
         self.stage_modified_action = add_action(
             self, N_('Stage Changed Files To Commit'),
@@ -530,7 +530,6 @@ class MainView(standard.MainWindow):
         self.diff_menu.addAction(self.diff_expression_action)
         self.diff_menu.addAction(self.branch_compare_action)
         self.diff_menu.addSeparator()
-        self.diff_menu.addAction(self.show_diffstat_action)
 
         # Branch Menu
         self.branch_menu = add_menu(N_('Branch'), self.menubar)
@@ -616,11 +615,6 @@ class MainView(standard.MainWindow):
         self.commiteditor.cursor_changed.connect(self.show_cursor_position)
 
         self.diffeditor.options_changed.connect(self.statuswidget.refresh)
-        self.diffeditor.up.connect(self.statuswidget.move_up)
-        self.diffeditor.down.connect(self.statuswidget.move_down)
-
-        self.commiteditor.up.connect(self.statuswidget.move_up)
-        self.commiteditor.down.connect(self.statuswidget.move_down)
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
@@ -890,8 +884,6 @@ class MainView(standard.MainWindow):
 
     def export_state(self):
         state = standard.MainWindow.export_state(self)
-        show_status_filter = self.statuswidget.filter_widget.isVisible()
-        state['show_status_filter'] = show_status_filter
         state['toolbars'] = self.toolbar_state.export_state()
         state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
@@ -903,9 +895,6 @@ class MainView(standard.MainWindow):
         base_ok = standard.MainWindow.apply_state(self, state)
         lock_layout = state.get('lock_layout', False)
         self.lock_layout_action.setChecked(lock_layout)
-
-        show_status_filter = state.get('show_status_filter', False)
-        self.statuswidget.filter_widget.setVisible(show_status_filter)
 
         toolbars = state.get('toolbars', [])
         self.toolbar_state.apply_state(toolbars)

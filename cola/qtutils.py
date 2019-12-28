@@ -553,17 +553,6 @@ def set_items(widget, items):
     add_items(widget, items)
 
 
-def create_treeitem(filename, staged=False, deleted=False, untracked=False):
-    """Given a filename, return a TreeWidgetItem for a status widget
-
-    "staged", "deleted, and "untracked" control which icon is used.
-
-    """
-    icon_name = icons.status(filename, deleted, staged, untracked)
-    return TreeWidgetItem(filename, icons.name_from_basename(icon_name),
-                          deleted=deleted)
-
-
 def add_close_action(widget):
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'),

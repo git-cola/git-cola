@@ -1,8 +1,11 @@
 """Git commands and queries for Git"""
 from __future__ import division, absolute_import, unicode_literals
+import collections
+import enum
 import json
 import os
 import re
+import typing
 from io import StringIO
 
 from . import core
@@ -17,6 +20,27 @@ from .interaction import Interaction
 
 class InvalidRepositoryError(Exception):
     pass
+
+
+class StatusMarkers(str, enum.Enum):
+    """
+    See output of `man git diff-index --help`
+
+    (Note that %% indicators are chopped off from M, C, R markers by our git output parser.
+     Only the letter is kept.)
+    """
+
+    added = 'A' # addition of a file
+    copied = 'C' # copy of a file into a new one
+    deleted = 'D' # deletion of a file
+    modified = 'M' # modification of the contents or mode of a file
+    renamed = 'R' # renaming of a file
+    type_changed = 'T' # change in the type of the file
+    unmerged = 'U' # file is unmerged (you must complete the merge before it can be committed)
+    unknown = 'X' # "unknown" change type (most probably a bug, please report it)
+
+    # ours:
+    untracked = 'untracked'
 
 
 def add(context, items, u=False):
@@ -547,48 +571,96 @@ def untrack_paths(context, args):
 
 def worktree_state(context, head='HEAD', update_index=False,
                    display_untracked=True, paths=None):
-    """Return a dict of files in various states of being
-
-    :rtype: dict, keys are staged, unstaged, untracked, unmerged,
-            changed_upstream, and submodule.
-
-    """
-    git = context.git
+    git  = context.git
     if update_index:
         git.update_index(refresh=True)
 
-    staged, unmerged, staged_deleted, staged_submods = diff_index(
-        context, head, paths=paths)
-    modified, unstaged_deleted, modified_submods = diff_worktree(
-        context, paths)
+    staged_locals, staged_submodules = diff_index_map(context, head, paths=paths)
+    locals, submodules = diff_worktree_map(context, paths)
     if display_untracked:
         untracked = untracked_files(context, paths=paths)
+        if untracked:
+            locals[StatusMarkers.untracked] = untracked
+
+    return locals, staged_locals, submodules, staged_submodules
+
+
+def _parse_raw_diff_non_z(out):
+    """
+    Parser for `git diff-*` command output
+
+    An output line is formatted this way:
+
+        1. a colon.
+        2. mode for "src"; 000000 if creation or unmerged.
+        3. a space.
+        4. mode for "dst"; 000000 if deletion or unmerged.
+        5. a space.
+        6. sha1 for "src"; 0{40} if creation or unmerged.
+        7. a space.
+        8. sha1 for "dst"; 0{40} if creation, unmerged or "look at work tree".
+        9. a space.
+       10. status, followed by optional "score" number.
+       11. a tab or a NUL when -z option is used.
+       12. path for "src"
+       13. a tab or a NUL when -z option is used; only exists for C or R.
+       14. path for "dst"; only exists for C or R.
+       15. an LF or a NUL when -z option is used, to terminate the record.
+
+    Examples:
+       in-place edit:
+        :100644 100644 bcd1234 0123456 M[##]\tfile0
+
+       copy-edit:
+        :100644 100644 abcd123 1234567 C68\tfile1\tfile2
+
+       rename-edit:
+        :100644 100644 abcd123 1234567 R86\tfile1\tfile3
+
+       create:
+        :000000 100644 0000000 1234567 A\tfile4
+
+       delete:
+        :100644 000000 1234567 0000000 D\tfile5
+
+       unmerged:
+        :000000 000000 0000000 0000000 U\tfile6
+
+    Possible status letters are:
+
+       •   A: addition of a file
+       •   C: copy of a file into a new one
+       •   D: deletion of a file
+       •   M: modification of the contents or mode of a file
+       •   R: renaming of a file
+       •   T: change in the type of the file
+       •   U: file is unmerged (you must complete the merge before it can be committed)
+       •   X: "unknown" change type (most probably a bug, please report it)
+
+       Status letters C and R are always followed by a score (denoting the percentage of similarity between the source and
+       target of the move or copy). Status letter M may be followed by a score (denoting the percentage of dissimilarity)
+       for file rewrites.
+
+    :param out:
+    :return:
+    """
+    if '\r' in out:
+        line_separator = '\r\n'
     else:
-        untracked = []
+        line_separator = '\n'
 
-    # Remove unmerged paths from the modified list
-    if unmerged:
-        unmerged_set = set(unmerged)
-        modified = [path for path in modified if path not in unmerged_set]
-
-    # Look for upstream modified files if this is a tracking branch
-    upstream_changed = diff_upstream(context, head)
-
-    # Keep stuff sorted
-    staged.sort()
-    modified.sort()
-    unmerged.sort()
-    untracked.sort()
-    upstream_changed.sort()
-
-    return {'staged': staged,
-            'modified': modified,
-            'unmerged': unmerged,
-            'untracked': untracked,
-            'upstream_changed': upstream_changed,
-            'staged_deleted': staged_deleted,
-            'unstaged_deleted': unstaged_deleted,
-            'submodules': staged_submods | modified_submods}
+    while out:
+        try:
+            line, out = out.split(line_separator, 1)
+        except ValueError:
+            line = out
+            out = None
+        info, filenames = line.split('\t', 1)
+        info_parts = info.split(' ')
+        status = info_parts[-1][0] # last in array, then picking first char in string
+        path = filenames.split('\t')[-1]
+        is_submodule = ('160000' in info[1:14])
+        yield (path, status, is_submodule)
 
 
 def _parse_raw_diff(out):
@@ -597,6 +669,33 @@ def _parse_raw_diff(out):
         status = info[-1]
         is_submodule = ('160000' in info[1:14])
         yield (path, status, is_submodule)
+
+
+def diff_index_map(context, head, cached=True, paths=None):
+    git = context.git
+
+    if paths is None:
+        paths = []
+    args = [head, '--'] + paths
+    # Do not use -z. Output is variable length.
+    # we rely on LF for each line for reliable parsing of lines.
+    # -z's \null terminator is ambiguous in cases of C and R markers (double file name)
+    status, out, _ = git.diff_index(cached=cached, *args)
+    if status != 0:
+        # handle git init
+        args[0] = EMPTY_TREE_OID
+        status, out, _ = git.diff_index(cached=cached, *args)
+
+    submodules = collections.defaultdict(list)
+    locals = collections.defaultdict(list)
+
+    for path, status, is_submodule in _parse_raw_diff_non_z(out):
+        if is_submodule:
+            submodules[status].append(path)
+        else:
+            locals[status].append(path)
+
+    return locals, submodules
 
 
 def diff_index(context, head, cached=True, paths=None):
@@ -626,6 +725,29 @@ def diff_index(context, head, cached=True, paths=None):
             unmerged.append(path)
 
     return staged, unmerged, deleted, submodules
+
+
+def diff_worktree_map(context, paths=None):
+    git = context.git
+
+    if paths is None:
+        paths = []
+    args = ['--'] + paths
+    # Do not use -z. Output is variable length.
+    # we rely on LF for each line for reliable parsing of lines.
+    # -z's \null terminator is ambiguous in cases of C and R markers (double file name)
+    status, out, _ = git.diff_files(*args)
+
+    submodules = collections.defaultdict(list)
+    locals = collections.defaultdict(list)
+
+    for path, status, is_submodule in _parse_raw_diff_non_z(out):
+        if is_submodule:
+            submodules[status].append(path)
+        else:
+            locals[status].append(path)
+
+    return locals, submodules
 
 
 def diff_worktree(context, paths=None):
