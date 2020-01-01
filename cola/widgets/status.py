@@ -2,7 +2,6 @@ from __future__ import division, absolute_import, unicode_literals
 import os
 import typing
 from collections import defaultdict
-from contextlib import AbstractContextManager
 from enum import IntEnum
 from functools import partial
 
@@ -140,7 +139,7 @@ class ItemData(IntEnum):
         return item.data(0, data_type)
 
 
-def NodeFromItem(item : QtWidgets.QTreeWidgetItem):
+def NodeFromItem(item):
     try:
         return ItemData.get_data(item, ItemData.node_type)(
             ItemData.get_data(item, ItemData.name),
@@ -151,10 +150,9 @@ def NodeFromItem(item : QtWidgets.QTreeWidgetItem):
         return None
 
 
-def render_tree(tree:typing.Union[Folder, typing.Dict], selected_node:Node, parent:QtWidgets.QTreeWidgetItem):
+def render_tree(tree, selected_node, parent):
 
     stats = defaultdict(int)
-    node : Node
     selected_item = None
 
     # sort folders first
@@ -188,11 +186,22 @@ def render_tree(tree:typing.Union[Folder, typing.Dict], selected_node:Node, pare
             label_parts = []
             for state, state_value in sub_stats.items():
                 stats[state] += state_value
-                label_parts.append(f"{state_value}{_file_states_labels[state]}")
-            node_label = f"{_file_states_labels[Folder]} {node.name}  ({' '.join(label_parts)})"
+                label_parts.append(
+                    '%s%s' % (
+                        state_value,
+                        _file_states_labels[state]
+                    )
+                )
+            node_label = '%s %s (%s)' % (
+                _file_states_labels[Folder],
+                node.name,
+                ' '.join(label_parts),
+            )
         else:
             stats[node_type] += 1
-            node_label = f"{_file_states_labels[node_type]} {node.name}"
+            node_label = '%s %s' % (
+                _file_states_labels[node_type], node.name,
+            )
 
         i.setText(FIRST, node_label)
 
@@ -216,23 +225,6 @@ def render_tree(tree:typing.Union[Folder, typing.Dict], selected_node:Node, pare
     return stats, selected_item
 
 
-class BlockSignals(AbstractContextManager):
-
-    def __init__(self, *widgets : QtWidgets.QTreeWidget):
-        self._widgets = widgets # type: typing.List[QtWidgets.QTreeWidget]
-        self._original_values = []
-
-    def __enter__(self):
-        w : QtWidgets.QTreeWidget
-        for w in self._widgets:
-            self._original_values.append(w.signalsBlocked())
-            w.blockSignals(True)
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        for w in reversed(self._widgets):
-            w.blockSignals(self._original_values.pop(-1))
-
-
 def _fold_into_tree(full_path, tree, T, **params):
     path_parts = full_path.split('/') # not OS-adapted. Git always uses '/'
     file_name = path_parts.pop(-1)
@@ -248,14 +240,8 @@ def _fold_into_tree(full_path, tree, T, **params):
 FileTreeDict = typing.Dict[str, Node]
 
 
-def _full_path_list_to_dict(
-    items : typing.List[str],
-    T : typing.Type[Node],
-    tree_data : FileTreeDict = None,
-    **params
-) -> FileTreeDict:
-
-    tree_data = {} if tree_data is None else tree_data
+def _full_path_list_to_dict(items, T, tree_data=None, **params):
+    tree_data = tree_data or {}
 
     for full_path in items:
         _fold_into_tree(
@@ -284,7 +270,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     idx_end = 4
 
     # stores instance of Node subclass of element we need to select on next refresh
-    selected_node : Node = None
+    selected_node = None
 
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
@@ -460,7 +446,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return None
 
     # @QtCore.pyqtSlot(QtWidgets.QTreeWidgetItem, int)
-    def _handle_item_changed(self, item : QtWidgets.QTreeWidgetItem, column_index : int):
+    def _handle_item_changed(self, item, column_index):
         """
         Hanlder for events when line item is changed.
         In our case, because the only change action possible is check/uncheck
@@ -481,7 +467,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         elif is_staged is True and not is_checked:
             self._unstage_full_path(full_path, node_type)
 
-    def _handle_item_activated(self, item : QtWidgets.QTreeWidgetItem, column_index : int):
+    def _handle_item_activated(self, item, column_index):
         is_staged = ItemData.get_data(item, ItemData.is_staged)
         full_path = ItemData.get_data(item, ItemData.full_path)
         node_type = ItemData.get_data(item, ItemData.node_type)
@@ -512,7 +498,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         node = NodeFromItem(item)
         if isinstance(node, File):
             self._update_actions(node)
-            s : selection.SelectionModel = self.context.selection
+            s = self.context.selection
             s.set_selection_from_node(node)
             self._show_diff_for_selection(node)
 
@@ -602,20 +588,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self._update_column_widths()
         self._restore_scrollbars()
 
-    def _update_actions(self, node: Node):
+    def _update_actions(self, node):
         can_revert_edits = (not node.is_staged) and isinstance(node, File)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
-    def _set_subtree(
-        self,
-        items : FileTreeDict,
-        top_item_index : int,
-    ):
+    def _set_subtree(self, items, top_item_index):
         """Add a list of items to a treewidget item."""
 
         # show_totals = prefs.status_show_totals(self.context)
 
-        with BlockSignals(self):
+        with qtutils.BlockSignals(self):
             parent = self.topLevelItem(top_item_index)
 
             # sip v4.14.7 and below leak memory in parent.takeChildren()
@@ -661,7 +643,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         return menu
 
-    def _add_copy_actions(self, menu, node: Node):
+    def _add_copy_actions(self, menu, node):
         """Add the "Copy" sub-menu"""
 
         enabled = isinstance(node, File)
@@ -722,7 +704,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             action.setShortcut(hotkeys.STAGE_SELECTION)
         return menu
 
-    def _create_staged_context_menu(self, menu, node : Node):
+    def _create_staged_context_menu(self, menu, node):
         # TODO
         # if s.staged[0] in self.m.submodules:
         #     return self._create_staged_submodule_context_menu(menu, s)
@@ -771,7 +753,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(self.view_history_action)
         return menu
 
-    def _create_unmerged_context_menu(self, menu, node: Node):
+    def _create_unmerged_context_menu(self, menu, node):
         context = self.context
         menu.addAction(
             icons.add(),
@@ -791,7 +773,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(self.view_blame_action)
         return menu
 
-    def _create_unstaged_context_menu(self, menu, node : Node):
+    def _create_unstaged_context_menu(self, menu, node):
         context = self.context
 
         # TODO
@@ -887,7 +869,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if hscroll is not None:
             hscrollbar.setValue(hscroll)
 
-    def _show_diff_for_selection(self, node : Node):
+    def _show_diff_for_selection(self, node):
         # self.show_selection()  # original handler
         context = self.context
 
@@ -920,7 +902,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Images are diffed differently
         if image:
-            s : selection.SelectionModel = context.selection
+            s = context.selection
             cmds.do(
                 cmds.DiffImage,
                 context,

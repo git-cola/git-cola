@@ -1316,8 +1316,8 @@ class LaunchDifftool(ContextCommand):
 
 class LaunchDifftoolUnmergedDirect(ContextCommand):
 
-    def __init__(self, context, node : Node):
-        super().__init__(context)
+    def __init__(self, context, node):
+        super(LaunchDifftoolUnmergedDirect, self).__init__(context)
         self.node = node
 
     @staticmethod
@@ -1352,8 +1352,8 @@ class LaunchDifftoolUnmergedDirect(ContextCommand):
 
 class LaunchDifftoolDirect(ContextCommand):
 
-    def __init__(self, context, node : Node):
-        super().__init__(context)
+    def __init__(self, context, node):
+        super(LaunchDifftoolDirect, self).__init__(context)
         self.node = node
 
     @staticmethod
@@ -1980,8 +1980,8 @@ class RevertUncommittedEdits(RevertEditsCommand):
 
 class RevertEditsCommandDirect(ConfirmAction):
 
-    def __init__(self, context, node : Node):
-        super().__init__(context)
+    def __init__(self, context, node):
+        super(RevertEditsCommandDirect, self).__init__(context)
         self.node = node
 
     # pylint: disable=no-self-use
@@ -2283,7 +2283,7 @@ class StageHinted(ContextCommand):
         return N_('Stage')
 
     def __init__(self, context, paths, hints):
-        super().__init__(context)
+        super(StageHinted, self).__init__(context)
         self.paths = paths
         self.hints = hints
         self.paths_with_hints = dict(zip(paths, hints))
@@ -2591,7 +2591,7 @@ class UnstageHinted(ContextCommand):
         return N_('Unstage')
 
     def __init__(self, context, paths, hints):
-        super().__init__(context)
+        super(UnstageHinted, self).__init__(context)
         self.paths = paths
         self.hints = hints
         self.paths_with_hints = dict(zip(paths, hints))

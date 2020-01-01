@@ -91,7 +91,7 @@ class SelectionModel(Observable):
         self.untracked = s.untracked
         self.notify_observers(self.message_selection_changed)
 
-    def set_selection_from_node(self, node : Node):
+    def set_selection_from_node(self, node):
         if node.is_staged:
             self.set_selection(
                 Selection(

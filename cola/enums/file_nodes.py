@@ -1,16 +1,21 @@
+from __future__ import absolute_import, division, unicode_literals
 
-class Node:
-    name : str = 'Not Set'
-    full_path : str = None
-    is_staged : bool = None
+
+class Node(object):
+    name = 'Not Set'
+    full_path = None
+    is_staged = None
 
     def __init__(self, name, **params):
-        self.__dict__.update(params, name = name)
+        self.__dict__.update(params, name=name)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}={self.name}>"
+        return '<%s=%s>' % (
+            self.__class__.__name__,
+            self.name,
+        )
 
-    def __eq__(self, other : "Node"):
+    def __eq__(self, other):
         return (
             self.full_path == other.full_path and
             self.is_staged == other.is_staged and
@@ -24,7 +29,11 @@ class Folder(Node, dict):
             str(ch)
             for ch in self.values()
         ]
-        return f"<{self.__class__.__name__}={self.name} [{', '.join(chs)}]>"
+        return '<%s=%s [%s]>' % (
+            self.__class__.__name__,
+            self.name,
+            ', '.join(chs),
+        )
 
 
 class File(Node):

@@ -1,3 +1,4 @@
+# encoding: utf-8
 """Git commands and queries for Git"""
 from __future__ import division, absolute_import, unicode_literals
 import collections
