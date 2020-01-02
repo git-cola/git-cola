@@ -3,6 +3,8 @@
 """
 from __future__ import division, absolute_import, unicode_literals
 
+import collections
+import itertools
 import os
 import typing
 
@@ -63,10 +65,12 @@ class MainModel(Observable):
         lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    locals_staged = None # type: dict
-    locals_unstaged = None # type: dict
-    submodules_staged = None # type: dict
-    submodules_unstaged = None # type: dict
+    # each is a defaultdict where keys are Git-native diff-* status character
+    # and value is a list of paths in that status.
+    locals_staged = None # type: typing.DefaultDict[str,typing.List[str]]
+    locals_unstaged = None # type: typing.DefaultDict[str,typing.List[str]]
+    submodules_staged = None # type: typing.DefaultDict[str,typing.List[str]]
+    submodules_unstaged = None # type: typing.DefaultDict[str,typing.List[str]]
 
     def __init__(self, context, cwd=None):
         """Interface to the main repository status
@@ -95,6 +99,7 @@ class MainModel(Observable):
         self.project = ''
         self.remotes = []
         self.filter_paths = None
+        self._filter_string = ''
         self.images = []
 
         self.commitmsg = ''  # current commit message
@@ -110,6 +115,11 @@ class MainModel(Observable):
         self.unstaged_deleted = set()
         self.submodules = set()
         self.submodules_list = []
+
+        self.locals_staged = collections.defaultdict(list)
+        self.locals_unstaged = collections.defaultdict(list)
+        self.submodules_staged = collections.defaultdict(list)
+        self.submodules_unstaged = collections.defaultdict(list)
 
         self.ref_sort = 0  # (0: version, 1:reverse-chrono)
         self.local_branches = []
@@ -223,6 +233,15 @@ class MainModel(Observable):
         self.filter_paths = filter_paths
         self.update_file_status()
 
+    @property
+    def filter_string(self):
+        return self._filter_string
+
+    @filter_string.setter
+    def filter_string(self, filter_string):
+        self._filter_string = filter_string
+        self.emit_updated()
+
     def emit_about_to_update(self):
         self.notify_observers(self.message_about_to_update)
 
@@ -262,6 +281,7 @@ class MainModel(Observable):
     def _update_files(self, update_index=False):
         context = self.context
         display_untracked = prefs.display_untracked(context)
+
         (
             self.locals_unstaged,
             self.locals_staged,
@@ -272,7 +292,7 @@ class MainModel(Observable):
             head=self.head,
             update_index=update_index,
             display_untracked=display_untracked,
-            paths=self.filter_paths
+            # paths=self.filter_paths # obsolete. filter is fragment/regex now. rethink
         )
 
         # backward compat:
@@ -320,8 +340,23 @@ class MainModel(Observable):
         #     self.set_diff_text('')
 
     def is_empty(self):
-        return not(bool(self.staged or self.modified or
-                        self.unmerged or self.untracked))
+        return not(any(itertools.chain(
+            self.locals_staged.values(),
+            self.locals_unstaged.values(),
+            self.submodules_staged.values(),
+            self.submodules_unstaged.values()
+        )))
+        # return not(bool(self.staged or self.modified or
+        #                 self.unmerged or self.untracked))
+
+    @property
+    def all_paths(self):
+        return set(itertools.chain.from_iterable(itertools.chain(
+            self.locals_staged.values(),
+            self.locals_unstaged.values(),
+            self.submodules_staged.values(),
+            self.submodules_unstaged.values()
+        )))
 
     def is_empty_repository(self):
         return not self.local_branches

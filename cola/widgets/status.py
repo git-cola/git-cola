@@ -82,15 +82,27 @@ class StatusWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
         self.context = context
+        self.filter_widget = filter_widget = StatusFilterWidget(context, parent=self)
         self.tree = StatusTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
 
         self.main_layout = qtutils.vbox(
             defs.no_margin,
             defs.no_spacing,
+            self.filter_widget,
             self.tree
         )
         self.setLayout(self.main_layout)
+
+        self.toggle_action = qtutils.add_action(
+            self,
+            '(filter)',
+            filter_widget.setFocus,
+            hotkeys.FILTER
+        )
+
+    def setPrimaryFocus(self):
+        self.tree.setFocus()
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
@@ -123,6 +135,7 @@ class ItemData(IntEnum):
     """
     # (Don't confuse with QTreeWidgetItem Type value which denotes context menu differences)
     full_path = QtWidgets.QTreeWidgetItem.UserType + 3
+    is_filtered = QtWidgets.QTreeWidgetItem.UserType + 6
     is_staged = QtWidgets.QTreeWidgetItem.UserType + 4
     label = QtWidgets.QTreeWidgetItem.UserType + 1
     name = QtWidgets.QTreeWidgetItem.UserType + 2
@@ -180,6 +193,7 @@ def render_tree(tree, parent, flags):
     node = None # type: Node
     focused_node = flags.focused_node
     focused_item = None
+    view_filtered = flags.view_filtered
 
     # sort folders first
     nodes = sorted([
@@ -227,9 +241,15 @@ def render_tree(tree, parent, flags):
                 ' '.join(label_parts),
             )
 
-            # if filtered:
-                # i.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
-                # check_state = _qt_check_states[Uncertainty]
+            if view_filtered is True:
+                # Actions on folders like `git add path/to/folder`
+                # in context of filtered view (where you don't see everything inside the folder)
+                # is super ambiguous.
+                # Disabling check(staging)-ability of Folders in filtered views.
+                i.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                check_state = _qt_check_states[Uncertain]
+                # for use in context menu, maybe...
+                ItemData.set_data(i, ItemData.is_filtered, True)
         else:
             stats[node_type] += 1
             node_label = '%s %s' % (
@@ -601,9 +621,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         staged_tree = {}
         unstaged_tree = {}
 
-        path_filter = ''
+        path_filter = m.filter_string.strip()
         view_filtered = not bool(not path_filter or path_filter == '.*')
-        match_path = re.compile(path_filter.strip()).search
+        match_path = re.compile(path_filter).search
 
         types_visible = _known_node_types
 
@@ -1068,30 +1088,38 @@ class StatusFilterWidget(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
 
-        hint = N_('Filter paths...')
+        hint = '\U0001F50E'
         self.text = completion.GitStatusFilterLineEdit(
             context, hint=hint, parent=self)
-        self.text.setToolTip(hint)
+        self.text.setToolTip('(filter fragment or regex)')
+
         self.setFocusProxy(self.text)
         self._filter = None
 
-        self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
+        self.main_layout = qtutils.hbox(defs.small_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
         widget = self.text
         # pylint: disable=no-member
+        widget.setClearButtonEnabled(True)
         widget.changed.connect(self.apply_filter)
         widget.cleared.connect(self.apply_filter)
         widget.enter.connect(self.apply_filter)
         widget.editingFinished.connect(self.apply_filter)
+
+        self.esc_action = qtutils.add_action(
+            self,
+            None,
+            parent.setPrimaryFocus,
+            hotkeys.ESC,
+        )
 
     def apply_filter(self):
         value = get(self.text)
         if value == self._filter:
             return
         self._filter = value
-        paths = utils.shell_split(value)
-        self.context.model.update_path_filter(paths)
+        self.context.model.filter_string = value
 
 
 def customize_copy_actions(context, parent):

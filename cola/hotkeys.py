@@ -9,6 +9,7 @@ def hotkey(seq):
 
 
 # A-G
+ESC = hotkey(Qt.Key_Escape)
 STAGE_MODIFIED = hotkey(Qt.ALT + Qt.Key_A)
 WORD_LEFT = hotkey(Qt.Key_B)
 BLAME = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_B)
@@ -23,8 +24,8 @@ EDIT = hotkey(Qt.CTRL + Qt.Key_E)
 EDIT_SECONDARY = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_E)
 EXPORT = hotkey(Qt.ALT + Qt.SHIFT + Qt.Key_E)
 FIT = hotkey(Qt.Key_F)
-FETCH = hotkey(Qt.CTRL + Qt.Key_F)
-FILTER = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_F)
+FETCH = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_F)
+FILTER = hotkey(Qt.CTRL + Qt.Key_F)
 GREP = hotkey(Qt.CTRL + Qt.Key_G)
 # H-P
 MOVE_LEFT = hotkey(Qt.Key_H)

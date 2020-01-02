@@ -624,40 +624,41 @@ class GitRemoteBranchCompletionModel(GitCompletionModel):
         return model.remote_branches
 
 
-class GitPathCompletionModel(GitCompletionModel):
-    """Base class for path completion"""
-
-    def __init__(self, context, parent):
-        GitCompletionModel.__init__(self, context, parent)
-
-    # pylint: disable=no-self-use
-    def candidate_paths(self):
-        return []
-
-    def gather_matches(self, case_sensitive):
-        paths, dirs = filter_path_matches(self.match_text,
-                                          self.candidate_paths(),
-                                          case_sensitive)
-        return ((), paths, dirs)
-
-
-class GitStatusFilterCompletionModel(GitPathCompletionModel):
+class GitStatusFilterCompletionModel(GitCompletionModel):
     """Completer for modified files and folders for status filtering"""
 
-    def __init__(self, context, parent):
-        GitPathCompletionModel.__init__(self, context, parent)
+    def gather_matches(self, case_sensitive):
+        match_text = self.match_text
 
-    def candidate_paths(self):
-        model = self.context.model
-        return (model.staged + model.unmerged +
-                model.modified + model.untracked)
+        files = self.context.model.all_paths
+        files_and_dirs = utils.add_parents(files)
+        dirs = files_and_dirs.difference(files)
+
+        matched_paths = filter_matches(match_text, files_and_dirs, case_sensitive)
+        return (None, matched_paths, dirs)
+
+    def apply_matches(self, match_tuple):
+        matched_refs, matched_paths, dirs = match_tuple
+        QStandardItem = QtGui.QStandardItem
+
+        items = [
+            QStandardItem(path)
+            for path in matched_paths
+        ]
+
+        try:
+            self.clear()
+            self.invisibleRootItem().appendRows(items)
+            self.updated.emit()
+        except RuntimeError:  # C++ object has been deleted
+            pass
 
 
-class GitTrackedCompletionModel(GitPathCompletionModel):
+class GitTrackedCompletionModel(GitCompletionModel):
     """Completer for tracked files and folders"""
 
     def __init__(self, context, parent):
-        GitPathCompletionModel.__init__(self, context, parent)
+        super().__init__(self, context, parent)
         self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
         self._paths = []
 

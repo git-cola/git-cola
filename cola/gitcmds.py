@@ -572,7 +572,7 @@ def untrack_paths(context, args):
 
 def worktree_state(context, head='HEAD', update_index=False,
                    display_untracked=True, paths=None):
-    git  = context.git
+    git = context.git
     if update_index:
         git.update_index(refresh=True)
 
