@@ -144,6 +144,20 @@ class MainView(standard.MainWindow):
         width = fm.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
+        # Diff View intentionally moved in front of CommitMessage View
+        # and after Status Tree widget to allow tab / shift+tab StatusTree <> Diff View
+        # "Diff Viewer" widget
+        self.diffdock = create_dock(
+            N_('Diff'),
+            self,
+            fn=lambda dock: diff.Viewer(context, parent=dock)
+        )
+        self.diffviewer = self.diffdock.widget()
+        self.diffviewer.set_diff_type(self.model.diff_type)
+        self.diffeditor = self.diffviewer.text
+        titlebar = self.diffdock.titleBarWidget()
+        titlebar.add_corner_widget(self.diffviewer.options)
+
         editor = commitmsg.CommitMessageEditor(context, self)
         self.commiteditor = editor
         self.commitdock = create_dock(N_('Commit'), self, widget=editor)
@@ -155,20 +169,16 @@ class MainView(standard.MainWindow):
         self.logdock = create_dock(N_('Console'), self, widget=self.logwidget)
         qtutils.hide_dock(self.logdock)
 
-        # "Diff Viewer" widget
-        self.diffdock = create_dock(
-            N_('Diff'), self,
-            fn=lambda dock: diff.Viewer(context, parent=dock))
-        self.diffviewer = self.diffdock.widget()
-        self.diffviewer.set_diff_type(self.model.diff_type)
-
-        self.diffeditor = self.diffviewer.text
-        titlebar = self.diffdock.titleBarWidget()
-        titlebar.add_corner_widget(self.diffviewer.options)
-
         # All Actions
         add_action = qtutils.add_action
         add_action_bool = qtutils.add_action_bool
+
+        # Easy way to jump from any other view to commit UI
+        # Not a way to commit by global shortcut.
+        self.commit_focus = add_action(
+            self, N_('Commit view focus'),
+            self.commiteditor.setFocus,
+            hotkeys.COMMIT_VIEW)
 
         self.commit_amend_action = add_action_bool(
             self, N_('Amend Last Commit'),
@@ -237,8 +247,7 @@ class MainView(standard.MainWindow):
             hotkeys.EDIT_SECONDARY)
 
         self.cherry_pick_action = add_action(
-            self, N_('Cherry-Pick...'), partial(guicmds.cherry_pick, context),
-            hotkeys.CHERRY_PICK)
+            self, N_('Cherry-Pick...'), partial(guicmds.cherry_pick, context))
 
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'),
