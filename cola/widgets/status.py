@@ -22,10 +22,12 @@ from .. import icons
 from .. import qtutils
 from .. import settings
 from .. import utils
-from ..enums.file_nodes import Node, Folder, Untracked, Modified, Deleted, File, Unmerged
 from ..i18n import N_
 from ..models import prefs
 from ..models import selection
+from ..models.file_nodes import (
+    Node, Folder, Untracked, Modified, Deleted, File, Unmerged
+)
 from ..models.main import MainModel
 from ..qtutils import get
 from ..widgets import gitignore

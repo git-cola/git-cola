@@ -21,12 +21,12 @@ from . import utils
 from . import version
 from .cmd import ContextCommand
 from .diffparse import DiffParser
-from .enums.file_nodes import Node, Folder, Untracked, Modified, Deleted
 from .git import EMPTY_TREE_OID
 from .git import MISSING_BLOB_OID
 from .git import STDOUT
 from .i18n import N_
 from .interaction import Interaction
+from .models.file_nodes import Node, Folder, Untracked, Modified, Deleted
 from .models import prefs
 from .settings import Settings
 

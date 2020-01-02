@@ -4,7 +4,7 @@ from __future__ import division, absolute_import, unicode_literals
 import collections
 
 from ..observable import Observable
-from ..enums.file_nodes import Node, Untracked, Modified
+from .file_nodes import Node, Untracked, Modified
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
