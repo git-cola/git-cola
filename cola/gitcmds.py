@@ -583,6 +583,14 @@ def worktree_state(context, head='HEAD', update_index=False,
         if untracked:
             locals[StatusMarkers.untracked] = untracked
 
+    # special cases:
+    # - `diff-files` Unmerged files reported twice. Remove "M"
+    #   git diff-files
+    #   :000000 100644 0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 U	a.txt
+    #   :100644 100644 ad941a7fef12bc097008a29543448f06fbfcd0c6 0000000000000000000000000000000000000000 M	a.txt
+    locals[StatusMarkers.modified] = list(set(locals[StatusMarkers.modified]) - set(locals[StatusMarkers.unmerged]))
+    submodules[StatusMarkers.modified] = list(set(submodules[StatusMarkers.modified]) - set(submodules[StatusMarkers.unmerged]))
+
     return locals, staged_locals, submodules, staged_submodules
 
 

@@ -1,7 +1,8 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
+import re
 import typing
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from enum import IntEnum
 from functools import partial
 
@@ -42,6 +43,10 @@ class NotSet:
     pass
 
 
+class Uncertain:
+    pass
+
+
 _git_status_node_type_map = {
     gitcmds.StatusMarkers.added: Untracked, # staged new file
     gitcmds.StatusMarkers.copied: Untracked, # staged copy of another file
@@ -52,6 +57,16 @@ _git_status_node_type_map = {
     gitcmds.StatusMarkers.unknown: Untracked,
     gitcmds.StatusMarkers.unmerged: Unmerged,
     gitcmds.StatusMarkers.untracked: Untracked, # never staged
+} # type: typing.Dict[gitcmds.StatusMarkers, typing.Type[Node]]
+
+_known_node_types = set(_git_status_node_type_map.values())
+
+_node_type_label = {
+    Modified: '\u270e',
+    Untracked: '\u2795',
+    Deleted: '\u2796',
+    Folder: '\U0001F4C2',
+    Unmerged: '\U0001F525'
 }
 
 
@@ -86,22 +101,13 @@ class StatusWidget(QtWidgets.QFrame):
         # self.tree.show_selection()
         print('GUTTED TreeWidget.refresh() is called. Prune!')
 
-_file_states_labels = {
-    Modified: '\u270e',
-    Untracked: '\u2795',
-    Deleted: '\u2796',
-    Folder: '\U0001F4C2'
-}
-
-_folder_icon = QtGui.QIcon.fromTheme('folder')
-_file_icon = QtGui.QIcon.fromTheme('text-x-generic')
 
 _qt_check_states = {
     True: QtCore.Qt.Checked,
     False: QtCore.Qt.Unchecked,
+    Uncertain: QtCore.Qt.PartiallyChecked,
     NotSet: NotSet
 }
-
 _qt_check_states_reversed = {
     v: k
     for k, v in _qt_check_states.items()
@@ -152,10 +158,28 @@ def NodeFromItem(item):
         return None
 
 
-def render_tree(tree, selected_node, parent):
+
+RenderFlags = namedtuple(
+    'RenderFlags',
+    [
+        'view_filtered',
+        'focused_node', # type: Node
+    ]
+)
+
+
+def render_tree(tree, parent, flags):
+    """
+    :param typing.Union[Folder, typing.Dict] tree:
+    :param QtWidgets.QTreeWidgetItem parent:
+    :param RenderFlags flags:
+    :return:
+    """
 
     stats = defaultdict(int)
-    selected_item = None
+    node = None # type: Node
+    focused_node = flags.focused_node
+    focused_item = None
 
     # sort folders first
     nodes = sorted([
@@ -173,16 +197,19 @@ def render_tree(tree, selected_node, parent):
 
         i = QtWidgets.QTreeWidgetItem(parent)
 
+        # item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsSelectable );
+        # item->setCheckState(0, Qt::Checked );
+
         if node_type is Folder:
-            sub_stats, sub_selected_item = render_tree(node, selected_node, i)
-            selected_item = selected_item or sub_selected_item
+            sub_stats, sub_focused_item = render_tree(node, i, flags)
+            focused_item = focused_item or sub_focused_item
 
             # expand only if:
             # 1. number of *direct* children is less than COLLAPSE_CHILDREN OR
             # 2. selected_item is in children tree
             i.setExpanded(bool(
                 len(node) < COLLAPSE_CHILDREN or
-                sub_selected_item
+                focused_item
             ))
 
             label_parts = []
@@ -191,18 +218,22 @@ def render_tree(tree, selected_node, parent):
                 label_parts.append(
                     '%s%s' % (
                         state_value,
-                        _file_states_labels[state]
+                        _node_type_label[state]
                     )
                 )
             node_label = '%s %s (%s)' % (
-                _file_states_labels[Folder],
+                _node_type_label[Folder],
                 node.name,
                 ' '.join(label_parts),
             )
+
+            # if filtered:
+                # i.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                # check_state = _qt_check_states[Uncertainty]
         else:
             stats[node_type] += 1
             node_label = '%s %s' % (
-                _file_states_labels[node_type], node.name,
+                _node_type_label[node_type], node.name,
             )
 
         i.setText(FIRST, node_label)
@@ -213,18 +244,17 @@ def render_tree(tree, selected_node, parent):
         if check_state is NotSet:
             pass
         else:
-            i.setCheckState(0, check_state)
+            i.setCheckState(FIRST, check_state)
 
         ItemData.set_data(i, ItemData.full_path, node.full_path)
         ItemData.set_data(i, ItemData.is_staged, node.is_staged)
         ItemData.set_data(i, ItemData.node_type, node_type)
         ItemData.set_data(i, ItemData.name, node.name)
 
-        if selected_node is not None and selected_item is None and selected_node == node:
-            selected_item = i
-            selected_node = None # to turn off futher searches
+        if focused_node and focused_item is None and focused_node == node:
+            focused_item = i
 
-    return stats, selected_item
+    return stats, focused_item
 
 
 def _fold_into_tree(full_path, tree, T, **params):
@@ -242,8 +272,15 @@ def _fold_into_tree(full_path, tree, T, **params):
 FileTreeDict = typing.Dict[str, Node]
 
 
-def _full_path_list_to_dict(items, T, tree_data=None, **params):
-    tree_data = tree_data or {}
+def _full_path_list_to_dict(items, T, tree_data, **params):
+    """
+
+    :param typing.List[str] items:
+    :param typing.Type[Node] T:
+    :param typing.Dict[str, Node] tree_data:
+    :param params:
+    :return:
+    """
 
     for full_path in items:
         _fold_into_tree(
@@ -272,7 +309,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     idx_end = 4
 
     # stores instance of Node subclass of element we need to select on next refresh
-    selected_node = None
+    focused_node = None # type: Node
 
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
@@ -461,7 +498,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         next_item = self._determine_next_focus(item)
         if next_item:
-            self.selected_node = NodeFromItem(next_item)
+            self.focused_node = NodeFromItem(next_item)
             self.setCurrentItem(next_item)
 
         if is_staged is False and is_checked:
@@ -476,7 +513,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         next_item = self._determine_next_focus(item)
         if next_item:
-            self.selected_node = NodeFromItem(next_item)
+            self.focused_node = NodeFromItem(next_item)
             self.setCurrentItem(next_item)
 
         if is_staged is False:
@@ -554,37 +591,57 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _save_selection(self):
         item = self.currentItem()
         if item:
-            self.selected_node = NodeFromItem(item)
+            self.focused_node = NodeFromItem(item)
 
     def refresh(self):
         m = self.m
         staged = m.locals_staged or {}
         unstaged = m.locals_unstaged or {}
 
-        staged_dict = {}
-        unstaged_dict = {}
+        staged_tree = {}
+        unstaged_tree = {}
+
+        path_filter = ''
+        view_filtered = not bool(not path_filter or path_filter == '.*')
+        match_path = re.compile(path_filter.strip()).search
+
+        types_visible = _known_node_types
 
         for marker, node_type in _git_status_node_type_map.items():
-            staged_dict = _full_path_list_to_dict(
-                staged.get(marker, []),
-                node_type,
-                staged_dict,
-                is_staged = True
-            )
-            unstaged_dict = _full_path_list_to_dict(
-                unstaged.get(marker, []),
-                node_type,
-                unstaged_dict,
-                is_staged = False
-            )
+            if node_type not in types_visible:
+                continue
+
+            mm = [
+                # src, dst, is_staged=
+                (staged, staged_tree, True),
+                (unstaged, unstaged_tree, False)
+            ]
+
+            for src, dst, is_staged in mm:
+                paths = src.get(marker, [])
+                filtered_paths = filter(match_path, paths)
+
+                _full_path_list_to_dict(
+                    filtered_paths,
+                    node_type,
+                    dst,
+                    is_staged = is_staged
+                )
+
+        flags = RenderFlags(
+            view_filtered=view_filtered,
+            focused_node=self.focused_node
+        )
 
         self._set_subtree(
-            staged_dict,
-            self.idx_staged
+            staged_tree,
+            self.idx_staged,
+            flags
         )
         self._set_subtree(
-            unstaged_dict,
-            self.idx_unstaged
+            unstaged_tree,
+            self.idx_unstaged,
+            flags
         )
 
         self._update_column_widths()
@@ -594,8 +651,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         can_revert_edits = (not node.is_staged) and isinstance(node, File)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
-    def _set_subtree(self, items, top_item_index):
-        """Add a list of items to a treewidget item."""
+    def _set_subtree(self, items, top_item_index, flags):
+        """
+        :param FileTreeDict items:
+        :param int top_item_index:
+        :param RenderFlags flags:
+        :return:
+        """
 
         # show_totals = prefs.status_show_totals(self.context)
 
@@ -608,7 +670,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             #     pass
             parent.takeChildren()
 
-            stats, selected_item = render_tree(items, self.selected_node, parent)
+            stats, selected_item = render_tree(items, parent, flags)
 
             if selected_item:
                 # selected_item.setExpanded(True)
@@ -915,14 +977,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 s.unmerged,
                 s.untracked
             )
-        elif node.is_staged:
+        elif node.is_staged and node_type != Unmerged:
+            # unmerged is serviced by cmds.Diff
             cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
         elif node_type is Untracked:
             cmds.do(cmds.ShowUntracked, context, path)
-        elif node_type in (Modified, Deleted):
+        elif issubclass(node_type, File):
             cmds.do(cmds.Diff, context, path, deleted=deleted)
-        # elif unmerged:
-        #     cmds.do(cmds.Diff, context, path)
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
