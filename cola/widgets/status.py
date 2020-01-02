@@ -47,6 +47,10 @@ class Uncertain:
     pass
 
 
+class SectionHeader(Node):
+    pass
+
+
 _git_status_node_type_map = {
     gitcmds.StatusMarkers.added: Untracked, # staged new file
     gitcmds.StatusMarkers.copied: Untracked, # staged copy of another file
@@ -352,8 +356,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if not prefs.status_indent(context):
             self.setIndentation(0)
 
-        self._add_toplevel_item(N_(STAGED), icons.ok(), hide=False)
-        self._add_toplevel_item(N_(UNSTAGED), icons.question(), hide=False)
+        self._add_toplevel_item(N_(STAGED), icons.ok(), True)
+        self._add_toplevel_item(N_(UNSTAGED), icons.question(), False)
 
         # Used to restore the selection
         self.old_vscroll = None
@@ -364,16 +368,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.image_formats = qtutils.ImageFormats()
 
-        self.revert_unstaged_edits_action = qtutils.add_action(
-            self,
-            cmds.RevertUnstagedEdits.name(),
-            cmds.run(
-                cmds.RevertUnstagedEdits,
-                context
-            ),
-            hotkeys.REVERT
-        )
-        self.revert_unstaged_edits_action.setIcon(icons.undo())
+        # self.revert_unstaged_edits_action = qtutils.add_action(
+        #     self,
+        #     cmds.RevertUnstagedEdits.name(),
+        #     cmds.run(
+        #         cmds.RevertUnstagedEdits,
+        #         context
+        #     ),
+        #     hotkeys.REVERT
+        # )
+        # self.revert_unstaged_edits_action.setIcon(icons.undo())
 
         self.launch_difftool_action = qtutils.add_action(
             self,
@@ -527,19 +531,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self._unstage_full_path(full_path, node_type)
 
     def _handle_item_activated(self, item, column_index):
-        is_staged = ItemData.get_data(item, ItemData.is_staged)
-        full_path = ItemData.get_data(item, ItemData.full_path)
-        node_type = ItemData.get_data(item, ItemData.node_type)
-
-        next_item = self._determine_next_focus(item)
-        if next_item:
-            self.focused_node = NodeFromItem(next_item)
-            self.setCurrentItem(next_item)
-
-        if is_staged is False:
-            self._stage_full_path(full_path, node_type)
-        elif is_staged is True:
-            self._unstage_full_path(full_path, node_type)
+        """
+        :param QtWidgets.QTreeWidgetItem item:
+        :param int column_index:
+        :return:
+        """
+        if isinstance(item, File):
+            self.focus_diff_view()
 
     # @QtCore.pyqtSlot(QtWidgets.QTreeWidgetItem, QtWidgets.QTreeWidgetItem)
     def _handle_item_focused(self, item, prior_item):
@@ -556,8 +554,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         node = NodeFromItem(item)
         if isinstance(node, File):
-            self._update_actions(node)
-            s = self.context.selection
+            s = self.context.selection # type: selection.SelectionModel
             s.set_selection_from_node(node)
             self._show_diff_for_selection(node)
 
@@ -566,7 +563,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if item:
             self.scroll_to_item(item)
 
-    def _add_toplevel_item(self, txt, icon, hide=False):
+    def _add_toplevel_item(self, txt, icon, is_staged=None):
         context = self.context
         font = self.font()
         if prefs.bold_headers(context):
@@ -580,9 +577,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         item.setIcon(0, icon)
         if prefs.bold_headers(context):
             item.setBackground(0, self.palette().midlight())
-        if hide:
-            item.setHidden(True)
         item.setExpanded(True)
+
+        ItemData.set_data(item, ItemData.name, txt)
+        ItemData.set_data(item, ItemData.full_path, txt)
+        ItemData.set_data(item, ItemData.node_type, SectionHeader)
+        ItemData.set_data(item, ItemData.is_staged, is_staged)
 
     def _restore_scrollbars(self):
         vscroll = self.verticalScrollBar()
@@ -666,10 +666,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self._update_column_widths()
         self._restore_scrollbars()
-
-    def _update_actions(self, node):
-        can_revert_edits = (not node.is_staged) and isinstance(node, File)
-        self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
     def _set_subtree(self, items, top_item_index, flags):
         """
@@ -957,32 +953,36 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # self.show_selection()  # original handler
         context = self.context
 
-        # TODO
-        # if False:
+        # TODO: figure out what this is about
+        if node is None:
+            return
         #     if self.m.amending():
         #         cmds.do(cmds.SetDiffText, context, '')
         #     else:
         #         cmds.do(cmds.ResetMode, context)
         #     return
 
-        # TODO
-        # # A header item e.g. 'Staged', 'Modified', etc.
-        # header = category == self.idx_header
-        # if header:
-        #     cls = {
-        #         self.idx_staged: cmds.DiffStagedSummary,
-        #         self.idx_modified: cmds.Diffstat,
-        #         # TODO implement UnmergedSummary
-        #         # self.idx_unmerged: cmds.UnmergedSummary,
-        #         self.idx_untracked: cmds.UntrackedSummary,
-        #     }.get(idx, cmds.Diffstat)
-        #     cmds.do(cls, context)
-        #     return
+        if isinstance(node, SectionHeader):
+            if node.is_staged:
+                cmds.do(cmds.DiffStagedSummary, context)
+            else:
+                cmds.do(cmds.Diffstat, context)
+            return
+
+        if isinstance(node, Folder):
+        #     if node.is_staged:
+        #         cmds.do(cmds.DiffStaged, context, node.full_path)
+        #     else:
+        #         cmds.do(cmds.Diff, context, node.full_path)
+            return
+
+        if not isinstance(node, File):
+            return
 
         path = node.full_path
         node_type = type(node)
         deleted = node_type is Deleted
-        image = self.image_formats.ok(path)
+        image = issubclass(node_type, File) and self.image_formats.ok(path)
 
         # Images are diffed differently
         if image:
