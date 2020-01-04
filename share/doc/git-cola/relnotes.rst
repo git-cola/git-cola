@@ -39,6 +39,11 @@ Usability, bells and whistles
   (`#1021 <https://github.com/git-cola/git-cola/issues/1021>`_)
   (`#1027 <https://github.com/git-cola/git-cola/pull/1027>`_)
 
+Translations
+------------
+* Updated Polish translation.
+  (`#1033 <https://github.com/git-cola/git-cola/pull/1033>`_)
+
 Fixes
 -----
 * The inotify filesystem monitor now handles
