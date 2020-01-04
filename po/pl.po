@@ -1,21 +1,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2016.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2016, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2016-09-10 17:28+0100\n"
+"PO-Revision-Date: 2020-01-03 11:23+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10"
+" || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 19.07.70\n"
 
 msgid ""
 "\n"
@@ -27,7 +28,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby dodać\n"
+"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby"
+" dodać\n"
 "                łaty do listy\n"
 "            </p>\n"
 "            "
@@ -51,7 +53,8 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or updating\n"
+"            We invite you to participate in translation by adding or"
+" updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -59,6 +62,31 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola została przetłumaczona na wiele języków dzięki\n"
+"            pomocy osób wymienionych poniżej.\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Tłumaczenie jest przybliżone.  Jeśli znajdziesz błąd,\n"
+"            daj nam znać, zakładając błąd na Github:\n"
+"        </p>\n"
+"\n"
+"        <p>\n"
+"            %(bug_link)s\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"        <p>\n"
+"            Zachęcamy do udziału w tłumaczeniu, poprzez dodawanie lub\n"
+"            uaktualnianie tłumaczenia, a następnie utworzeniu prośby o"
+" wciągnięcie.\n"
+"        </p>\n"
+"\n"
+"        <br>\n"
+"\n"
+"    "
 
 #, python-format
 msgid ""
@@ -75,6 +103,18 @@ msgid ""
 "        </ul>\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"            Git Cola w wersji %(cola_version)s %(build_version)s\n"
+"        <ul>\n"
+"            <li> %(platform_version)s\n"
+"            <li> Python (%(python_path)s) %(python_version)s\n"
+"            <li> Git %(git_version)s\n"
+"            <li> Qt %(qt_version)s\n"
+"            <li> QtPy %(qtpy_version)s\n"
+"            <li> %(pyqt_api_name)s %(pyqt_api_version)s\n"
+"        </ul>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -84,6 +124,11 @@ msgid ""
 "        <br>\n"
 "    "
 msgstr ""
+"\n"
+"        <br>\n"
+"        Użyj %(bug_link)s do zgłaszania błędów.\n"
+"        <br>\n"
+"    "
 
 #, python-format
 msgid ""
@@ -98,6 +143,16 @@ msgid ""
 "      %(basename)s  =  file basename without extension\n"
 "           %(ext)s  =  file extension\n"
 msgstr ""
+"\n"
+"        Zmienne do formatowania ciągu znaków\n"
+"        -----------------------\n"
+"          %(path)s  =  względna ścieżka do pliku\n"
+"       %(abspath)s  =  bezwzględna ścieżka do pliku\n"
+"       %(dirname)s  =  względna ścieżka do katalogu\n"
+"    %(absdirname)s  =  bezwzględna ścieżka do katalogu\n"
+"      %(filename)s  =  nazwa pliku\n"
+"      %(basename)s  =  nazwa pliku bez jego rozszerzenia\n"
+"           %(ext)s  =  rozszerzenie pliku\n"
 
 msgid ""
 "\n"
@@ -135,6 +190,40 @@ msgid ""
 "ctrl+q     = cancel and abort the rebase\n"
 "ctrl+d     = launch difftool\n"
 msgstr ""
+"\n"
+"Polecenia\n"
+"--------\n"
+"pick = użyj wdrożenia\n"
+"reword = użyj wdrożenia, lecz zmień jego opis\n"
+"edit = użyj wdrożenia, lecz zatrzymaj się na uzupełnienie wdrożenia\n"
+"squash = użyj wdrożenia, lecz złącz je z poprzednim\n"
+"fixup = tak jak \"squash\", lecz z porzuceniem tego opis wdrożenia\n"
+"exec = wykonaj polecenie (reszta wiersza) przy użyciu powłoki\n"
+"\n"
+"Można zmienić kolejność tych wierszy; będą one wykonywane od góry do dołu.\n"
+"\n"
+"Po wyłączeniu wiersza tutaj, to TO WDROŻENIE ZOSTANIE UTRACONE.\n"
+"\n"
+"Jednakże, po wyłączeniu wszystkiego, to zmiana podstawy zostanie przerwana.\n"
+"\n"
+"Skróty klawiszowe\n"
+"------------------\n"
+"? = pokaż pomoc\n"
+"j = przesuń w dół\n"
+"k = przesuń w górę\n"
+"J = przesuń wiersz w dół\n"
+"K = przesuń wiersz w górę\n"
+"\n"
+"1, p = pick\n"
+"2, r = reword\n"
+"3, e = edit\n"
+"4, f = fixup\n"
+"5, s = squash\n"
+"spacja = uwzględnij/nie uwzględniaj\n"
+"\n"
+"ctrl+enter = przyjmij zmiany i zmień podstawę\n"
+"ctrl+q     = zaniechaj i przerwij zmianę podstawę\n"
+"ctrl+d     = wywołaj narzędzie różnicy\n"
 
 msgid ""
 "\n"
@@ -155,7 +244,7 @@ msgstr ""
 "------------------\n"
 "J, Strzałka w dół     = Przejdź w dół\n"
 "K, Strzałka w górę       = Przejdź w górę\n"
-"Enter       = Edytuj wybrany plik\n"
+"Enter       = Zmień wybrany plik\n"
 "Spacja    = Otwórz plik przy użyciu domyślnej aplikacji\n"
 "Ctrl + L    = Uaktywnij pole wprowadzania tekstu\n"
 "?           = Pokaż pomoc\n"
@@ -181,9 +270,9 @@ msgstr "\"%(command)s\" zwróciło kod wyjścia \"%(status)d\""
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr "\"%(command)s\" zwróciło kod wyjścia %(status)d"
 
-#, fuzzy, python-format
+#, python-format
 msgid "\"%s\" already exists"
-msgstr "Gałąź \"%s\" już istnieje."
+msgstr "\"%s\" już istnieje"
 
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
@@ -194,7 +283,7 @@ msgid "\"%s\" requires a selected file."
 msgstr "\"%s\" wymaga wybrania pliku."
 
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
@@ -268,22 +357,22 @@ msgid "*** Sandbox ***"
 msgstr "*** Piaskownica ***"
 
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 msgid "25%"
-msgstr ""
+msgstr "25%"
 
 msgid "400%"
-msgstr ""
+msgstr "400%"
 
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 msgid "800%"
-msgstr ""
+msgstr "800%"
 
 msgid "<path> ..."
 msgstr "<ścieżka> ..."
@@ -299,7 +388,7 @@ msgstr ""
 
 #, python-format
 msgid "A hook must be provided at \"%s\""
-msgstr ""
+msgstr "Należy podać haczyk w \"%s\""
 
 #, python-format
 msgid "A stash named \"%s\" already exists"
@@ -324,7 +413,8 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych zmian.\n"
+"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych"
+" zmian.\n"
 "Przywrócenie niewdrożonych zmian będzie niemożliwe."
 
 msgid "Aborting the current merge?"
@@ -337,19 +427,17 @@ msgid "About git-cola"
 msgstr "O git-cola"
 
 msgid "Accept"
-msgstr ""
+msgstr "Przyjmij"
 
-#, fuzzy
 msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"Wdroż zebrane zmiany\n"
+"Przyjmij zmiany i zmień podstawę\n"
 "Skrót: Ctrl+Enter"
 
-#, fuzzy
 msgid "Action Name"
-msgstr "Działania"
+msgstr "Nazwa działania"
 
 msgid "Actions"
 msgstr "Działania"
@@ -360,18 +448,17 @@ msgstr "Działania..."
 msgid "Add"
 msgstr "Dodaj"
 
-#, fuzzy
 msgid "Add Favorite"
-msgstr "Ulubione"
+msgstr "Dodaj ulubione"
 
 msgid "Add Remote"
 msgstr "Dodaj zdalne repozytorium"
 
 msgid "Add Separator"
-msgstr ""
+msgstr "Dodaj oddzielacz"
 
 msgid "Add Toolbar"
-msgstr ""
+msgstr "Dodaj pasek narzędzi"
 
 msgid ""
 "Add and remove remote repositories using the \n"
@@ -380,8 +467,8 @@ msgid ""
 "Remotes can be renamed by selecting one from the list\n"
 "and pressing \"enter\", or by double-clicking."
 msgstr ""
-"Dodawaj i usuwaj zdalne repozytoria przy użyciu \n"
-"przycisków Dodaj(+) i Usuń(-) po lewej stronie.\n"
+"Dodaj lub usuń zdalne repozytorium przy użyciu \n"
+"przycisku Dodaj(+) lub Usuń(-) po lewej stronie.\n"
 "\n"
 "Nazwy repozytoriów zdalnych można zmienić zaznaczając je na wykazie\n"
 "i naciskając \"enter\" lub klikając dwukrotnie."
@@ -398,12 +485,11 @@ msgstr "Dodaj zdalne repozytorium"
 msgid "Add to .gitignore"
 msgstr "Dodaj do .gitignore"
 
-#, fuzzy
 msgid "Add to Git Annex"
-msgstr "Dodaj do .gitignore"
+msgstr "Dodaj do Git Annex"
 
 msgid "Add to Git LFS"
-msgstr ""
+msgstr "Dodaj do Git LFS"
 
 msgid "Additions"
 msgstr "Dodano"
@@ -422,12 +508,22 @@ msgid ""
 "All submodules will be updated using\n"
 "\"%s\""
 msgstr ""
+"Wszystkie podmoduły zostaną uaktualnione przy użyciu\n"
+"\"%s\""
 
-msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
+" repository to lose commits; use it with care"
 msgstr ""
+"Zezwól na uaktualnienia nie będące przewinięciem do przodu.  Użycie \"wymuś\""
+" może spowodować, że zdalne repozytoria zgubią wdrożenia; używaj z rozwagą"
 
-msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr "Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na przewinięciu do przodu"
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a"
+" fast-forward update"
+msgstr ""
+"Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na"
+" przewinięciu do przodu"
 
 msgid "Amend"
 msgstr "Uzupełnij"
@@ -459,7 +555,7 @@ msgstr ""
 "Czy utworzyć niepodpisany znacznik?"
 
 msgid "Appearance"
-msgstr ""
+msgstr "Wygląd"
 
 msgid "Apply"
 msgstr "Zastosuj"
@@ -470,9 +566,8 @@ msgstr "Stosowanie łat"
 msgid "Apply Patches..."
 msgstr "Zastosuj łaty..."
 
-#, fuzzy
 msgid "Apply and drop the selected stash (git stash pop)"
-msgstr "Zastosuj wybraną przechowalnię"
+msgstr "Zastosuj i porzuć wybraną przechowalnię (git stash pop)"
 
 msgid "Apply the selected stash"
 msgstr "Zastosuj wybraną przechowalnię"
@@ -486,12 +581,11 @@ msgstr "Dołącz"
 msgid "Author"
 msgstr "Autor"
 
-#, fuzzy
 msgid "Authors"
-msgstr "Autor"
+msgstr "Autorzy"
 
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 msgid "Auto-Wrap Lines"
 msgstr "Zawijaj wiersze"
@@ -502,15 +596,14 @@ msgstr "Podstawowe wyrażenie regularne"
 msgid "Blame Viewer"
 msgstr "Przeglądarka autorów"
 
-#, fuzzy
 msgid "Blame selected paths"
-msgstr "Edytuj wybraną ścieżkę/ścieżki"
+msgstr "Obwiń wybrane ścieżki"
 
 msgid "Blame..."
 msgstr "Przejrzyj autorów..."
 
 msgid "Bold on dark headers instead of italic"
-msgstr "Czcionka pogrubiona z ciemnym tłem zamiast pochylonych nagłówków"
+msgstr "Wytłuść czcionkę zamiast ją pochylać na ciemnych nagłówkach"
 
 msgid "Branch"
 msgstr "Gałąź"
@@ -540,27 +633,26 @@ msgstr "Nazwa gałęzi"
 msgid "Branch: %s"
 msgstr "Gałąź: %s"
 
-#, fuzzy
 msgid "Branches"
-msgstr "Gałąź"
+msgstr "Gałęzie"
 
 msgid "Branches..."
 msgstr "Pomiędzy gałęziami..."
 
 msgid "Brazilian translation"
-msgstr ""
+msgstr "Tłumaczenie na brazylijski"
 
 msgid "Browse"
 msgstr "Przeglądaj"
 
 msgid "Browse Commits..."
-msgstr "Przeglądaj wdrożenia..."
+msgstr "Przejrzyj wdrożenia..."
 
 msgid "Browse Current Branch..."
-msgstr "Przeglądaj bieżącą gałąź..."
+msgstr "Przejrzyj bieżącą gałąź..."
 
 msgid "Browse Other Branch..."
-msgstr "Przeglądaj inną gałąź..."
+msgstr "Przejrzyj inną gałąź..."
 
 msgid "Browse..."
 msgstr "Przeglądaj..."
@@ -573,17 +665,16 @@ msgid "Browsing %s"
 msgstr "Przeglądanie %s"
 
 msgid "Bypass Commit Hooks"
-msgstr "Pomiń sprawdzanie wdrożenia"
+msgstr "Pomiń wykonywanie haczyków"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Zaniechaj"
 
-#, fuzzy
 msgid ""
 "Cancel rebase\n"
 "Shortcut: Ctrl+Q"
 msgstr ""
-"Wdroż zebrane zmiany\n"
+"Zaniechaj zmieniania podstawy\n"
 "Skrót: Ctrl+Enter"
 
 msgid "Cannot Amend"
@@ -605,11 +696,10 @@ msgid "Changed Upstream"
 msgstr "Zmienione w źródle odgórnym"
 
 msgid "Check Spelling"
-msgstr "Sprawdzanie pisowni"
+msgstr "Sprawdź pisownię"
 
-#, fuzzy
 msgid "Check spelling"
-msgstr "Sprawdzanie pisowni"
+msgstr "Sprawdź pisownię"
 
 msgid "Checkout"
 msgstr "Przełącz"
@@ -620,13 +710,11 @@ msgstr "Przełącz po utworzeniu"
 msgid "Checkout Branch"
 msgstr "Przełącz na gałąź"
 
-#, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "Przełącz na gałąź"
+msgstr "Przełącz na odłączony HEAD"
 
-#, fuzzy
 msgid "Checkout as new branch"
-msgstr "Przełącz na gałąź"
+msgstr "Przełącz jako nowa gałąź"
 
 msgid "Checkout..."
 msgstr "Przełącz..."
@@ -658,19 +746,18 @@ msgstr "Wyczyścić opis wdrożenia?"
 msgid "Clear..."
 msgstr "Wyczyść..."
 
-#, fuzzy
 msgid "Clone"
-msgstr "Sklonuj..."
+msgstr "Pobierz"
 
 msgid "Clone Repository"
-msgstr "Sklonuj repozytorium"
+msgstr "Pobieranie repozytorium"
 
 msgid "Clone..."
-msgstr "Sklonuj..."
+msgstr "Pobierz..."
 
 #, python-format
 msgid "Cloning repository at %s"
-msgstr "Klonowanie repozytorium o adresie %s"
+msgstr "Pobieranie repozytorium o adresie %s"
 
 msgid "Close"
 msgstr "Zamknij"
@@ -681,9 +768,8 @@ msgstr "Zamknij..."
 msgid "Collapse all"
 msgstr "Zwiń wszystko"
 
-#, fuzzy
 msgid "Command"
-msgstr "Wdrożenie"
+msgstr "Polecenie"
 
 msgid "Commit"
 msgstr "Wdrożenie"
@@ -704,8 +790,12 @@ msgstr ""
 msgid "Commit summary"
 msgstr "Nazwa wdrożenia"
 
-msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr "Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić scalenie niewdrożonym"
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
+" uncommitted"
+msgstr ""
+"Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić"
+" scalenie niewdrożonym"
 
 msgid "Commit@@verb"
 msgstr "Wdroż@@verb"
@@ -713,45 +803,41 @@ msgstr "Wdroż@@verb"
 msgid "Compare"
 msgstr "Porównaj"
 
-#, fuzzy
 msgid "Compare All"
-msgstr "Porównaj"
+msgstr "Porównaj wszystkie"
 
 msgid "Configure the remote branch as the the new upstream"
-msgstr "Ustaw zdalną gałąź jako nowe źródło odgórne"
+msgstr "Ustaw zdalną gałąź jako nową gałąź odgórną"
 
 msgid "Configure toolbar"
-msgstr ""
+msgstr "Ustawienia paska narzędzi"
 
 msgid "Console"
 msgstr "Konsola"
 
 msgid "Continue"
-msgstr "Kontynuuj"
+msgstr "Dalej"
 
 msgid "Copy"
-msgstr "Kopiuj"
+msgstr "Skopiuj "
 
-#, fuzzy
 msgid "Copy Basename to Clipboard"
-msgstr "Kopiuj ścieżkę do schowka"
+msgstr "Skopiuj nazwę pliku do schowka"
 
-#, fuzzy
 msgid "Copy Leading Path to Clipboard"
-msgstr "Kopiuj względną ścieżkę do schowka"
+msgstr "Skopiuj ścieżkę katalogu do schowka"
 
 msgid "Copy Path to Clipboard"
-msgstr "Kopiuj ścieżkę do schowka"
+msgstr "Skopiuj ścieżkę do schowka"
 
 msgid "Copy Relative Path to Clipboard"
-msgstr "Kopiuj względną ścieżkę do schowka"
+msgstr "Skopiuj względną ścieżkę do schowka"
 
 msgid "Copy SHA-1"
-msgstr "Kopiuj SHA-1"
+msgstr "Skopiuj SHA-1"
 
-#, fuzzy
 msgid "Copy..."
-msgstr "Kopiuj"
+msgstr "Skopiuj..."
 
 #, python-format
 msgid "Could not parse Git URL: \"%s\""
@@ -778,9 +864,10 @@ msgstr "Utwórz znacznik..."
 msgid "Create Unsigned Tag"
 msgstr "Utwórz niepodpisany znacznik"
 
-#, fuzzy
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na przewinięciu do przodu"
+msgstr ""
+"Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na przewinięciu"
+" do przodu"
 
 msgid "Create a new remote branch?"
 msgstr "Czy utworzyć nową zdalną gałąź?"
@@ -796,29 +883,28 @@ msgid "Current Repository"
 msgstr "Bieżące repozytorium"
 
 msgid "Custom Copy Actions"
-msgstr ""
+msgstr "Własne działania kopiowania"
 
-#, fuzzy
 msgid "Customize..."
-msgstr "Zamknij..."
+msgstr "Dostosuj..."
 
 msgid "Cut"
-msgstr ""
+msgstr "Wytnij"
 
 msgid "Czech translation"
-msgstr ""
+msgstr "Tłumaczenie na czeski"
 
 msgid "DAG..."
 msgstr "DAG..."
 
 msgid "Dark Theme"
-msgstr ""
+msgstr "Ciemne"
 
 msgid "Date, Time"
 msgstr "Data, czas"
 
 msgid "Default"
-msgstr ""
+msgstr "Domyślne"
 
 msgid "Delete"
 msgstr "Usuń"
@@ -846,13 +932,13 @@ msgid "Delete Files?"
 msgstr "Usunąć pliki?"
 
 msgid "Delete Remote"
-msgstr "Usuń zdalne repozytorium"
+msgstr "Usuń zdalną gałąź"
 
 msgid "Delete Remote Branch"
 msgstr "Usuń zdalną gałąź"
 
 msgid "Delete Remote Branch..."
-msgstr "Usuń zdalne repozytorium..."
+msgstr "Usuń zdalną gałąź..."
 
 msgid "Delete remote"
 msgstr "Usuń zdalne repozytorium"
@@ -864,13 +950,11 @@ msgstr "Usuń zdalne repozytorium \"%s\""
 msgid "Delete remote?"
 msgstr "Usunąć zdalne repozytorium?"
 
-#, fuzzy
 msgid "Delete selected branch?"
-msgstr "Usuń zdalną gałąź"
+msgstr "Usunąć zdalną gałąź?"
 
-#, fuzzy
 msgid "Delete toolbar"
-msgstr "Usuń zakładkę"
+msgstr "Usuń pasek narzędzi"
 
 msgid "Delete..."
 msgstr "Usuń..."
@@ -892,7 +976,7 @@ msgid "Detect conflict markers in unmerged files"
 msgstr "Wykryj znaczniki sprzeczności w niescalonych plikach"
 
 msgid "Developer"
-msgstr ""
+msgstr "Programista"
 
 msgid "Diff"
 msgstr "Różnica"
@@ -915,7 +999,6 @@ msgstr "Różnica tego wzgl. zaznaczenia"
 msgid "Diffstat"
 msgstr "Statystyka różnicy"
 
-#, fuzzy
 msgid "Difftool"
 msgstr "Narzędzie różnicy"
 
@@ -944,27 +1027,26 @@ msgstr "Porzucić przechowalnię \"%s\"?"
 msgid "Drop the selected stash"
 msgstr "Porzuć wybraną przechowalnię"
 
-#, fuzzy
 msgid "Edit"
-msgstr "&Edycja"
+msgstr "Zmień"
 
 msgid "Edit Rebase"
-msgstr "Edytuj przebazowanie"
+msgstr "Ustawienia zmiany podstawy"
 
 msgid "Edit Remotes"
-msgstr "Edytuj zdalne repozytoria"
+msgstr "Zmień zdalne repozytoria"
 
 msgid "Edit Remotes..."
-msgstr "Edytuj zdalne repozytoria..."
+msgstr "Zmień zdalne repozytoria..."
 
 msgid "Edit remotes by selecting them from the list"
-msgstr ""
+msgstr "Zmień repozytoria zdalne poprzez wybranie ich z wykazu"
 
 msgid "Edit selected paths"
-msgstr "Edytuj wybraną ścieżkę/ścieżki"
+msgstr "Zmień wybraną ścieżkę/ścieżki"
 
 msgid "Edit..."
-msgstr "Edytuj..."
+msgstr "Ustawienia..."
 
 msgid "Editor"
 msgstr "Edytor"
@@ -973,17 +1055,16 @@ msgid "Email Address"
 msgstr "Adres email"
 
 msgid "Email contributor"
-msgstr ""
+msgstr "Napisz do współtwórcy"
 
 msgid "Enabled"
-msgstr ""
+msgstr "Uwzględnione"
 
 msgid "Enter New Branch Name"
 msgstr "Podaj nazwę nowej gałęzi"
 
-#, fuzzy
 msgid "Enter a name for the new bare repo"
-msgstr "Podaj nazwę dla przechowalni"
+msgstr "Wpisz nazwę do założenia nowego repozytorium"
 
 msgid "Enter a name for the stash"
 msgstr "Podaj nazwę dla przechowalni"
@@ -992,7 +1073,7 @@ msgid "Error"
 msgstr "Błąd"
 
 msgid "Error Cloning"
-msgstr "Błąd klonowania"
+msgstr "Błąd pobierania"
 
 msgid "Error Creating Branch"
 msgstr "Błąd tworzenia gałęzi"
@@ -1016,28 +1097,26 @@ msgstr "Błąd uruchamiania przeglądarki historii"
 msgid "Error creating remote \"%s\""
 msgstr "Błąd podczas tworzenia zdalnego repozytorium \"%s\""
 
-#, fuzzy
 msgid "Error creating stash"
-msgstr "Błąd tworzenia gałęzi"
+msgstr "Błąd tworzenia przechowalni"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "Błąd usuwania zdalnego repozytorium \"%s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
-msgstr "Znaczenie \"%(revision)s\" jako \"%(name)s\""
+msgstr "Nie udało się przemianować \"%(name)s\" na \"%(new_name)s\""
 
 msgid "Error running prepare-commitmsg hook"
-msgstr ""
+msgstr "Nie udało się wykonać haczyka prepare-commitmsg"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Error updating submodule %s"
-msgstr "Błąd podczas tworzenia zdalnego repozytorium \"%s\""
+msgstr "Nie udało się uaktualnić podmodułu\"%s\""
 
-#, fuzzy
 msgid "Error updating submodules"
-msgstr "Błąd edytowania pliku"
+msgstr "Nie udało się uaktualnić podmodułów"
 
 msgid "Error: Cannot find commit template"
 msgstr "Błąd: Nie można znaleźć szablonu wdrożenia"
@@ -1050,7 +1129,7 @@ msgstr "Błąd: Nieustawiony szablon wdrożenia"
 
 #, python-format
 msgid "Error: could not clone \"%s\""
-msgstr "Błąd: nie można sklonować \"%s\""
+msgstr "Błąd: nie można pobrać \"%s\""
 
 #, python-format
 msgid "Error: could not create tag \"%s\""
@@ -1058,7 +1137,7 @@ msgstr "Błąd: nie można utworzyć znacznika \"%s\""
 
 #, python-format
 msgid "Executing action %s"
-msgstr ""
+msgstr "Wykonywanie działania %s"
 
 msgid "Expand all"
 msgstr "Rozwiń wszystko"
@@ -1070,20 +1149,19 @@ msgid "Export Patches..."
 msgstr "Eksportuj łaty..."
 
 msgid "Expression..."
-msgstr "Jako wyrażenie..."
+msgstr "Pomiędzy wyrażeniami wdrożeń..."
 
 msgid "Extended Regexp"
 msgstr "Rozszerzone wyrażenie regularne"
 
 msgid "Extended description..."
-msgstr "Rozszerzony opis..."
+msgstr "Rozbudowany opis..."
 
 msgid "Fast Forward Only"
 msgstr "Tylko przewinięcie do przodu"
 
-#, fuzzy
 msgid "Fast-forward only"
-msgstr "Tylko przewinięcie do przodu"
+msgstr "Tylko przewiń do przodu"
 
 msgid "Favorite repositories"
 msgstr "Ulubione repozytoria"
@@ -1113,23 +1191,38 @@ msgstr "Zapisano plik"
 msgid "File saved to \"%s\""
 msgstr "Plik zapisano w \"%s\""
 
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest false.\n"
-
-msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań systemowych inotify.\n"
-
-msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest"
+" false.\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"File system change monitoring: disabled because libc does not support the"
+" inotify system calls.\n"
 msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę wykonując:\n"
+"Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań"
+" systemowych inotify.\n"
+
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number"
+" of inotify watches was reached.  You may be able to increase the limit on"
+" the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę"
+" całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę"
+" wykonując:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
 
 msgid "File system change monitoring: enabled.\n"
 msgstr "Monitorowanie zmiany systemu plików: włączone.\n"
@@ -1140,9 +1233,8 @@ msgstr "Nazwa pliku"
 msgid "Files"
 msgstr "Pliki"
 
-#, fuzzy
 msgid "Filter branches..."
-msgstr "Odfiltruj ścieżki..."
+msgstr "Odfiltruj gałęzie..."
 
 msgid "Filter paths..."
 msgstr "Odfiltruj ścieżki..."
@@ -1157,41 +1249,40 @@ msgid "Fixed-Width Font"
 msgstr "Czcionka o stałej szerokości"
 
 msgid "Fixup"
-msgstr ""
+msgstr "Popraw"
 
 msgid "Fixup Previous Commit"
-msgstr "Poprawka do wcześniejszego wdrożenia"
+msgstr "Popraw wcześniejsze wdrożenie"
 
 msgid "Flat dark blue"
-msgstr ""
+msgstr "Płaski, ciemny, niebieski"
 
 msgid "Flat dark green"
-msgstr ""
+msgstr "Płaski, ciemny, zielony"
 
 msgid "Flat dark grey"
-msgstr ""
+msgstr "Płaski, ciemny, szary"
 
 msgid "Flat dark red"
-msgstr ""
+msgstr "Płaski, ciemny, czerwony"
 
 msgid "Flat light blue"
-msgstr ""
+msgstr "Płaski, jasny, niebieski"
 
 msgid "Flat light green"
-msgstr ""
+msgstr "Płaski, jasny, zielony"
 
 msgid "Flat light grey"
-msgstr ""
+msgstr "Płaski, jasny, szary"
 
 msgid "Flat light red"
-msgstr ""
+msgstr "Płaski, jasny, czerwony"
 
 msgid "Font Size"
 msgstr "Rozmiar czcionki"
 
-#, fuzzy
 msgid "Force"
-msgstr "Wymuś wypchnięcie"
+msgstr "Wymuś"
 
 msgid "Force Fetch"
 msgstr "Wymuś pobranie"
@@ -1213,25 +1304,24 @@ msgstr "Wymusić pobranie z %s?"
 msgid "Force push to %s?"
 msgstr "Wymusić wypchnięcie do %s?"
 
-#, fuzzy
 msgid "Format String"
-msgstr "Stały ciąg znaków"
+msgstr "Sformatowany ciąg znaków"
 
 msgid "French translation"
-msgstr ""
+msgstr "Tłumaczenie na francuski"
 
 msgid "GPG-sign the merge commit"
 msgstr "Podpisz-GPG scalane wdrożenie"
 
 msgid "GUI theme"
-msgstr ""
+msgstr "Ogólny wygląd"
 
 #, python-format
 msgid "Gathering info for \"%s\"..."
 msgstr "Zbieranie informacji dla \"%s\"..."
 
 msgid "German translation"
-msgstr ""
+msgstr "Tłumaczenie na niemiecki"
 
 msgid "Get Commit Message Template"
 msgstr "Pobierz szablon opisu wdrożenia"
@@ -1252,34 +1342,34 @@ msgid "Grep"
 msgstr "Wyszukaj (grep)"
 
 msgid "Have you rebased/pulled lately?"
-msgstr "Czy ostatnio przebazowałeś/zaciągnąłeś?"
+msgstr "Czy ostatnio zmieniłeś podstawę/zaciągnąłeś?"
 
 msgid "Help"
 msgstr "Pomoc"
 
 msgid "Help - Custom Copy Actions"
-msgstr ""
+msgstr "Pomoc - Własne działania kopiowania"
 
 msgid "Help - Find Files"
 msgstr "Pomoc - Znajdź pliki"
 
 msgid "Help - git-xbase"
-msgstr ""
+msgstr "Pomoc - git-xbase"
 
 msgid "Hide Details.."
-msgstr ""
+msgstr "Ukryj szczegóły..."
 
 msgid "High DPI"
-msgstr ""
+msgstr "Wysokie DPI"
 
 msgid "History Browser"
 msgstr "Przeglądarka historii"
 
 msgid "Hungarian translation"
-msgstr ""
+msgstr "Tłumaczenie na węgierski"
 
 msgid "Icon theme"
-msgstr ""
+msgstr "Zestaw ikon"
 
 msgid "Ignore all whitespace"
 msgstr "Pomiń wszystkie białe znaki"
@@ -1291,38 +1381,37 @@ msgid "Ignore changes in whitespace at EOL"
 msgstr "Pomiń zmiany w białych znakach na końcu wiersza"
 
 msgid "Ignore custom pattern"
-msgstr ""
+msgstr "Pomiń własny wzorzec"
 
-#, fuzzy
 msgid "Ignore exact filename"
-msgstr "Pomiń wszystkie białe znaki"
+msgstr "Pomiń dokładne nazwy plików"
 
 msgid "Ignore filename or pattern"
-msgstr ""
+msgstr "Pomiń nazwy plików lub wzorce"
 
 msgid "Include tags "
 msgstr "Uwzględnij znaczniki"
 
 msgid "Indent Status paths"
-msgstr ""
+msgstr "Wetnij ścieżki w oknie stanu"
 
 msgid "Indonesian translation"
-msgstr ""
+msgstr "Tłumaczenie na indonezyjski"
 
 msgid "Initialize Git Annex"
-msgstr ""
+msgstr "Przygotuj Git Annex"
 
 msgid "Initialize Git LFS"
-msgstr ""
+msgstr "Przygotuj Git LFS"
 
 msgid "Inititalize submodules"
-msgstr ""
+msgstr "Przygotuj podmoduły"
 
 msgid "Insert spaces instead of tabs"
-msgstr ""
+msgstr "Wstaw odstępy zamiast tabulatorów"
 
 msgid "Interactive Rebase"
-msgstr "Interaktywne przebazowanie"
+msgstr "Zmień podstawę interaktywnie"
 
 msgid "Invalid Revision"
 msgstr "Nieprawidłowe wydanie"
@@ -1339,34 +1428,33 @@ msgstr "Skróty klawiszowe"
 msgid "Launch Diff Tool"
 msgstr "Wywołaj narzędzie różnicy"
 
-#, fuzzy
 msgid "Launch Directory Diff Tool"
-msgstr "Wywołaj narzędzie różnicy"
+msgstr "Wywołaj narzędzie różnicy na katalogu"
 
 msgid "Launch Editor"
 msgstr "Otwórz w edytorze"
 
 msgid "Launch Terminal"
-msgstr "Uruchom terminal"
+msgstr "Otwórz terminal"
 
 msgid ""
 "Launch external diff tool\n"
 "Shortcut: Ctrl+D"
 msgstr ""
+"Wywołaj zewnętrzne narzędzie różnicy\n"
+"Skrót: Ctrl+D"
 
 msgid "Launch git-cola"
 msgstr "Uruchom git-cola"
 
-#, fuzzy
 msgid "Launch git-difftool against previous versions"
-msgstr "Uruchom git-difftool względem poprzednich wersji."
+msgstr "Uruchom git-difftool względem poprzednich wersji"
 
-#, fuzzy
 msgid "Launch git-difftool on the current path"
-msgstr "Uruchom git-difftool dla bieżącej ścieżki."
+msgstr "Uruchom git-difftool dla bieżącej ścieżki"
 
 msgid "Light Theme"
-msgstr ""
+msgstr "Jasne"
 
 msgid "Load Commit Message"
 msgstr "Wczytaj opis wdrożenia"
@@ -1381,7 +1469,7 @@ msgid "Loading..."
 msgstr "Wczytywanie..."
 
 msgid "Local"
-msgstr "Lokalna"
+msgstr "Lokalne repozytorium"
 
 msgid "Local Branch"
 msgstr "Lokalna gałąź"
@@ -1396,7 +1484,7 @@ msgid "Log"
 msgstr "Dziennik"
 
 msgid "Maintainer (since 2007) and developer"
-msgstr ""
+msgstr "Opiekun (od 2007) i programista"
 
 msgid "Merge"
 msgstr "Scal"
@@ -1412,15 +1500,14 @@ msgid "Merge Verbosity"
 msgstr "Szczegółowość scalania"
 
 msgid "Merge failed.  Conflict resolution is required."
-msgstr ""
+msgstr "Nie udało się scalić. Wymagane jest rozwiązanie sprzeczności."
 
 #, python-format
 msgid "Merge into \"%s\""
 msgstr "Scal z \"%s\""
 
-#, fuzzy
 msgid "Merge into current branch"
-msgstr "Przeglądaj bieżącą gałąź..."
+msgstr "Scal z bieżącą gałęzią"
 
 msgid "Merge..."
 msgstr "Scal..."
@@ -1467,9 +1554,8 @@ msgstr "Nazwa"
 msgid "Name for the new remote"
 msgstr "Nazwa nowego zdalnego repozytorium"
 
-#, fuzzy
 msgid "New Bare Repository..."
-msgstr "Nowe repozytorium..."
+msgstr "Nowe repozytorium bez drzewa pracy..."
 
 msgid "New Repository..."
 msgstr "Nowe repozytorium..."
@@ -1499,11 +1585,10 @@ msgid "No commits exist in this branch."
 msgstr "Brak wdrożeń w tej gałęzi."
 
 msgid "No fast forward"
-msgstr "Bez przewijania do przodu"
+msgstr "Nie przewijaj do przodu"
 
-#, fuzzy
 msgid "No fast-forward"
-msgstr "Bez przewijania do przodu"
+msgstr "Nie przewijaj do przodu"
 
 msgid "No repository selected."
 msgstr "Nie wybrano repozytorium."
@@ -1514,7 +1599,8 @@ msgstr "Pobranie bez przewinięcia do przodu zastępuje lokalną historię!"
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
-msgstr "Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
+msgstr ""
+"Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
 
 msgid "Nothing to commit"
 msgstr "Nie ma nic do wdrożenia"
@@ -1523,7 +1609,7 @@ msgid "Nothing to do"
 msgstr "Nie ma nic do zrobienia"
 
 msgid "Number of Diff Context Lines"
-msgstr "Liczba wierszy kontekstu różnicy"
+msgstr "Liczba wierszy otoczenia różnicy"
 
 msgid "Open"
 msgstr "Otwórz"
@@ -1531,9 +1617,8 @@ msgstr "Otwórz"
 msgid "Open Git Repository..."
 msgstr "Otwórz repozytorium Git..."
 
-#, fuzzy
 msgid "Open Parent"
-msgstr "Otwórz z ostatnich"
+msgstr "Otwórz nadrzędny"
 
 msgid "Open Parent Directory"
 msgstr "Otwórz katalog nadrzędny"
@@ -1553,9 +1638,8 @@ msgstr "Otwórz w nowym oknie..."
 msgid "Open..."
 msgstr "Otwórz..."
 
-#, fuzzy
 msgid "Other branches"
-msgstr "Odfiltruj ścieżki..."
+msgstr "Inne gałęzie"
 
 msgid "Overwrite"
 msgstr "Zastąp"
@@ -1575,25 +1659,25 @@ msgstr ""
 "Zapytania z odstępami będą wymagać cudzysłowów."
 
 msgid "Partially Staged"
-msgstr "Częściowo zebrany"
+msgstr "Częściowo dobrany"
 
 msgid "Paste"
-msgstr ""
+msgstr "Wklej"
 
 msgid "Patch(es) Applied"
 msgstr "Zastosowano łatę/łaty"
 
 msgid "Path"
-msgstr ""
+msgstr "Ścieżka"
 
 msgid "Path or URL to clone (Env. $VARS okay)"
-msgstr "Ścieżka lub adres URL do sklonowania (Zm. środowiskowe $VARS są OK)"
+msgstr "Ścieżka lub adres URL do pobrania (Zm. środowiskowe $VARS są OK)"
 
 msgid "Pick"
-msgstr ""
+msgstr "Użyj"
 
 msgid "Pixel XOR"
-msgstr ""
+msgstr "Pixel XOR"
 
 msgid "Please provide both a branch name and revision expression."
 msgstr "Podaj zarówno nazwę gałęzi jak i wyrażenie wydania."
@@ -1628,10 +1712,10 @@ msgid "Point the current branch head to a new commit?"
 msgstr "Ustawić HEAD bieżącej gałęzi na nowe wdrożenie?"
 
 msgid "Polish translation"
-msgstr ""
+msgstr "Tłumaczenie na polski"
 
 msgid "Pop"
-msgstr ""
+msgstr "Pobierz"
 
 msgid "Preferences"
 msgstr "Ustawienia"
@@ -1639,25 +1723,24 @@ msgstr "Ustawienia"
 msgid "Prefix"
 msgstr "Przedrostek"
 
-#, fuzzy
 msgid "Prepare Commit Message"
-msgstr "Wyszukaj opisu wdrożenia"
+msgstr "Przygotuj opis wdrożenia"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
 msgstr ""
+"Uniemożliw dobranie wszystkich plików, gdy nie jest zaznaczony żaden plik"
 
 msgid "Previous File"
 msgstr "Poprzedni plik"
 
 msgid "Prompt on creation"
-msgstr ""
+msgstr "Zapytaj przed stworzeniem"
 
-#, fuzzy
 msgid "Prompt when pushing creates new remote branches"
-msgstr "Czy utworzyć nową zdalną gałąź?"
+msgstr "Zapytaj, gdy wypchnięcie miałoby utworzyć nową zdalną gałąź"
 
 msgid "Prune "
-msgstr ""
+msgstr "Przytnij "
 
 msgid "Pull"
 msgstr "Zaciągnij"
@@ -1675,22 +1758,20 @@ msgid "Quit"
 msgstr "Wyjdź"
 
 msgid "Rebase"
-msgstr "Przebazuj"
+msgstr "Zmień podstawę"
 
 #, python-format
 msgid "Rebase onto %s"
-msgstr "Przebazowanie na %s"
+msgstr "Zmień podstawę na %s"
 
-#, fuzzy
 msgid "Rebase stopped"
-msgstr "Przebazowanie"
+msgstr "Zatrzymano zmianę podstawy"
 
-#, fuzzy
 msgid "Rebase the current branch instead of merging"
-msgstr "Ustawić HEAD bieżącej gałęzi na nowe wdrożenie?"
+msgstr "Zmień podstawę bieżącej gałęzi zamiast scalić"
 
 msgid "Rebasing"
-msgstr "Zmienianie bazy"
+msgstr "Zmiana podstawy"
 
 msgid "Recent"
 msgstr "Ostatnie"
@@ -1698,9 +1779,8 @@ msgstr "Ostatnie"
 msgid "Recent repositories"
 msgstr "Ostatnie repozytoria"
 
-#, fuzzy
 msgid "Recent repository count"
-msgstr "Ostatnie repozytoria"
+msgstr "Liczba ostatnich repozytoriów"
 
 msgid "Recently Modified Files"
 msgstr "Ostatnio zmienone pliki"
@@ -1715,16 +1795,20 @@ msgid "Recovering lost commits may not be easy."
 msgstr "Przywrócenie utraconych wdrożeń może nie być łatwe."
 
 msgid "Redo"
-msgstr ""
+msgstr "Przywróć"
 
 msgid "Reduce commit history to minimum"
-msgstr ""
+msgstr "Pomiń historię wdrożeń"
 
 msgid "Refresh"
 msgstr "Odśwież"
 
-msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge"
+" can be resolved as a fast-forward"
 msgstr ""
+"Odmów scalenia do chwili uaktualnienia bieżącego HEAD lub rozwiązania "
+"scalenia poprzez przewinięcie do przodu."
 
 msgid "Remote"
 msgstr "Zdalne repozytorium"
@@ -1736,7 +1820,7 @@ msgid "Remote Branch Deleted"
 msgstr "Usunięto zdalną gałąź"
 
 msgid "Remote git repositories - double-click to rename"
-msgstr "Zdalne repozytoria git - kliknij dwukrotnie, aby zmienić nazwę"
+msgstr "Zdalne repozytoria git - kliknij dwukrotnie, aby przemianować"
 
 msgid "Remove"
 msgstr "Usuń"
@@ -1745,51 +1829,46 @@ msgstr "Usuń"
 msgid "Remove %s from the recent list?"
 msgstr "Usunąć %s z listy ostatnich?"
 
-#, fuzzy
 msgid "Remove Element"
-msgstr "Usuń"
+msgstr "Usuń element"
 
 msgid "Remove remote-tracking branches that no longer exist on the remote"
-msgstr ""
+msgstr "Usuń gałęzie zdalne, które już nie istnieją w repozytorium zdalnym"
 
 msgid "Remove selected (Delete)"
 msgstr "Usuń wybrane (Usuń)"
 
 msgid "Rename"
-msgstr "Zmień nazwę"
+msgstr "Przemianuj "
 
-#, fuzzy, python-format
+#, python-format
 msgid "Rename \"%s\""
-msgstr "Zmień nazwę"
+msgstr "Przemianuj \"%s\""
 
-#, fuzzy
 msgid "Rename Branch"
-msgstr "Zmień nazwę gałęzi..."
+msgstr "Przemianuj gałąź"
 
 msgid "Rename Branch..."
-msgstr "Zmień nazwę gałęzi..."
+msgstr "Przemianuj gałąź..."
 
 msgid "Rename Existing Branch"
-msgstr "Zmień nazwę istniejącej gałęzi"
+msgstr "Przemianuj istniejącą gałąź"
 
 msgid "Rename Remote"
-msgstr "Zmień nazwę zdalnego repozytorium"
+msgstr "Przemianuj zdalne repozytorium"
 
-#, fuzzy
 msgid "Rename Repository"
-msgstr "Sklonuj repozytorium"
+msgstr "Przemianuj repozytorium"
 
-#, fuzzy
 msgid "Rename branch"
-msgstr "Zmień nazwę gałęzi..."
+msgstr "Przemianuj gałąź"
 
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
-msgstr "Zmień nazwę zdalnego repozytorium z \"%(current)s\" na \"%(new)s\"?"
+msgstr "Przemianuj zdalne repozytorium z \"%(current)s\" na \"%(new)s\"?"
 
-#, fuzzy
 msgid "Rename selected paths"
-msgstr "Edytuj wybraną ścieżkę/ścieżki"
+msgstr "Przemianuj wybrane ścieżki"
 
 #, python-format
 msgid "Repository: %s"
@@ -1811,45 +1890,40 @@ msgstr "Wyzeruj HEAD gałęzi"
 msgid "Reset Branch?"
 msgstr "Wyzerować gałąź?"
 
-#, fuzzy
 msgid "Reset Hard"
-msgstr "Wyzeruj HEAD gałęzi"
+msgstr "Wyzeruj twardo"
 
-#, fuzzy
 msgid "Reset Merge"
-msgstr "Wydanie do scalenia"
+msgstr "Wyzeruj ze scaleniem"
 
-#, fuzzy
 msgid "Reset Soft"
-msgstr "Wyzeruj drzewo robocze"
+msgstr "Wyzeruj miękko"
 
 msgid "Reset Worktree"
-msgstr "Wyzeruj drzewo robocze"
+msgstr "Wyzeruj drzewo pracy"
 
-#, fuzzy
 msgid "Reset hard?"
-msgstr "Wyzerować gałąź?"
+msgstr "Wyzerować twardo?"
 
-#, fuzzy
 msgid "Reset merge?"
-msgstr "Wyzerować drzewo robocze?"
+msgstr "Wyzerować ze scaleniem?"
 
-#, fuzzy
 msgid "Reset soft?"
-msgstr "Wyzerować drzewo robocze?"
+msgstr "Wyzerować miękko?"
 
 msgid "Reset worktree?"
-msgstr "Wyzerować drzewo robocze?"
+msgstr "Wyzerować drzewo pracy?"
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr "Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
+msgstr ""
+"Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
 
 msgid "Restart the application after changing appearance settings."
-msgstr ""
+msgstr "Uruchom aplikację ponownie po zmianie ustawień wyglądu."
 
 msgid "Revert"
-msgstr ""
+msgstr "Wycofaj"
 
 msgid "Revert Diff Hunk"
 msgstr "Wycofaj kawałek różnicy"
@@ -1893,16 +1967,14 @@ msgstr "Wycofać niewdrożone zmiany?"
 msgid "Revert the unstaged changes?"
 msgstr "Wycofać odłożone zmiany?"
 
-#, fuzzy
 msgid "Revert uncommitted changes to selected paths"
-msgstr "Wycofaj niewdrożone zmiany w wybranych ścieżkach."
+msgstr "Wycofaj niewdrożone zmiany w wybranych ścieżkach"
 
-#, fuzzy
 msgid "Revert unstaged changes to selected paths"
-msgstr "Wycofaj niezebrane zmiany w wybranych ścieżkach."
+msgstr "Wycofaj niezebrane zmiany w wybranych ścieżkach"
 
 msgid "Review"
-msgstr "Przegląd"
+msgstr "Przejrzyj"
 
 msgid "Review..."
 msgstr "Przejrzyj..."
@@ -1917,7 +1989,7 @@ msgid "Revision to Merge"
 msgstr "Wydanie do scalenia"
 
 msgid "Reword"
-msgstr ""
+msgstr "Zmień opis"
 
 msgid "Rewrite Published Commit?"
 msgstr "Zmienić opublikowane wdrożenie?"
@@ -1942,15 +2014,13 @@ msgid "Running command: %s"
 msgstr "Wykonywanie polecenia: %s"
 
 msgid "Russian translation"
-msgstr ""
+msgstr "Tłumaczenie na rosyjski"
 
-#, fuzzy
 msgid "SHA-1"
-msgstr "Kopiuj SHA-1"
+msgstr "SHA-1"
 
-#, fuzzy
 msgid "Safe Mode"
-msgstr "Dobierz zmienone"
+msgstr "Tryb bezpieczny"
 
 msgid "Save"
 msgstr "Zachowaj"
@@ -1959,10 +2029,10 @@ msgid "Save Archive"
 msgstr "Zapisz archiwum"
 
 msgid "Save As Tarball/Zip..."
-msgstr "Zapisz jako Tarball/Zip..."
+msgstr "Zapisz jako tarball/zip..."
 
 msgid "Save GUI Settings"
-msgstr "Zapisz ustawienia GUI"
+msgstr "Zachowaj ustawienia interfejsu"
 
 msgid "Save Stash"
 msgstr "Zachowaj przechowalnię"
@@ -2025,12 +2095,11 @@ msgstr "Wybierz potomnego"
 msgid "Select Commit"
 msgstr "Wybierz wdrożenie"
 
-#, fuzzy
 msgid "Select Directory..."
-msgstr "Wybierz repozytorium..."
+msgstr "Wybierz katalog..."
 
 msgid "Select New Upstream"
-msgstr "Wybierz nowe źródło odgórne"
+msgstr "Wybierz nową gałąź odgórną"
 
 msgid "Select Newest Child"
 msgstr "Wybierz najnowszego potomnego"
@@ -2048,41 +2117,38 @@ msgid "Select Repository..."
 msgstr "Wybierz repozytorium..."
 
 msgid "Select a parent directory for the new clone"
-msgstr "Wybierz katalog nadrzędny do sklonowania"
+msgstr "Wybierz katalog nadrzędny do pobrania"
 
 msgid "Select manually..."
 msgstr "Wybierz ręcznie..."
 
-#, fuzzy
 msgid "Select output dir"
-msgstr "Wybierz wdrożenie"
+msgstr "Wybierz katalog do wyników"
 
-#, fuzzy
 msgid "Select output directory"
-msgstr "Wybierz repozytorium..."
+msgstr "Wybierz katalog do wyników"
 
-#, fuzzy
 msgid "Select patch file(s)..."
 msgstr "Wybierz plik(i) łat(y)..."
 
-#, fuzzy
 msgid "Select repository"
-msgstr "Wybierz repozytorium..."
+msgstr "Wybierz repozytorium"
 
 msgid "Set Default Repository"
 msgstr "Ustaw domyślne repozytorium"
 
-#, fuzzy
 msgid "Set Upstream Branch"
-msgstr "Ustaw źródło odgórne"
+msgstr "Ustaw gałąź odgórną"
 
 msgid ""
 "Set the sort order for branches and tags.\n"
 "Toggle between date-based and version-name-based sorting."
 msgstr ""
+"Ustaw porządek szeregowania dla gałęzi i znaczników.\n"
+"Przełącz pomiędzy szeregowaniem wg daty oraz nazwy wersji."
 
 msgid "Set upstream"
-msgstr "Ustaw źródło odgórne"
+msgstr "Zapamiętaj gałąź odgórną"
 
 msgid "Settings"
 msgstr "Ustawienia"
@@ -2091,23 +2157,22 @@ msgid "Shell arguments"
 msgstr "Argumenty powłoki"
 
 msgid "Shift Down"
-msgstr ""
+msgstr "Przesuń w dół"
 
 msgid "Shift Up"
-msgstr ""
+msgstr "Przesuń w górę"
 
 msgid "Shortcuts"
 msgstr "Skróty"
 
-#, fuzzy
 msgid "Show Details..."
-msgstr "Usuń plik(i)..."
+msgstr "Pokaż szczegóły..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Pokaż statystykę różnicy po scaleniu"
 
 msgid "Show Full Paths in the Window Title"
-msgstr ""
+msgstr "Pokaż pełne ścieżki w nazwie okna"
 
 msgid "Show Help"
 msgstr "Pokaż pomoc"
@@ -2116,7 +2181,7 @@ msgid "Show History"
 msgstr "Pokaż historię"
 
 msgid "Show file counts in Status titles"
-msgstr ""
+msgstr "Pokaż liczbę plików w oknie stanu"
 
 msgid ""
 "Show help\n"
@@ -2126,10 +2191,10 @@ msgstr ""
 "Skrót: ?"
 
 msgid "Show icon? (if available)"
-msgstr ""
+msgstr "Pokazać ikonę? (jeśli dostępna)"
 
 msgid "Show line numbers"
-msgstr ""
+msgstr "Pokaż numery wierszy"
 
 msgid "Show whole surrounding functions of changes"
 msgstr "Pokaż całe funkcje otaczające przy zmianach"
@@ -2138,7 +2203,7 @@ msgid "Showing changes since"
 msgstr "Wyświetlanie zmian od"
 
 msgid "Side by side"
-msgstr ""
+msgstr "Obok siebie"
 
 msgid "Sign Off"
 msgstr "Podpisz się"
@@ -2150,19 +2215,19 @@ msgid "Sign off on this commit"
 msgstr "Podpisz się na tym wdrożeniu"
 
 msgid "Simplified Chinese translation"
-msgstr ""
+msgstr "Tłumaczenie na uproszczony chiński"
 
 msgid "Skip"
 msgstr "Pomiń"
 
 msgid "Skip Current Patch"
-msgstr "Pomiń obecną łatę"
+msgstr "Pomiń bieżącą łatę"
 
 msgid "Sort bookmarks alphabetically"
 msgstr "Uszereguj zakładki alfabetycznie"
 
 msgid "Spanish translation"
-msgstr ""
+msgstr "Tłumaczenie na hiszpański"
 
 msgid "Specifies the SHA-1 to tag"
 msgstr "Jest SHA-1 znacznika"
@@ -2174,7 +2239,7 @@ msgid "Specifies the tag name"
 msgstr "Jest nazwą znacznika"
 
 msgid "Spelling Suggestions"
-msgstr "Sprawdzanie pisowni"
+msgstr "Sprawdź pisownię"
 
 msgid "Squash"
 msgstr "Złącz"
@@ -2192,7 +2257,7 @@ msgid "Stage All Untracked"
 msgstr "Dobierz wszystkie niezarządzane"
 
 msgid "Stage Changed Files To Commit"
-msgstr "Dobierz zmienione pliki do wdrożenia"
+msgstr "Dobierz wszystkie zmienione"
 
 msgid "Stage Diff Hunk"
 msgstr "Dobierz kawałek różnicy"
@@ -2235,7 +2300,7 @@ msgid "Staging: %s"
 msgstr "Dobieranie: %s"
 
 msgid "Start Interactive Rebase..."
-msgstr "Interaktywne przebazowanie..."
+msgstr "Zmień podstawę interaktywnie..."
 
 msgid "Starting Revision"
 msgstr "Rozpoczynanie wydania"
@@ -2243,17 +2308,14 @@ msgstr "Rozpoczynanie wydania"
 msgid "Stash"
 msgstr "Przechowalnia"
 
-#, fuzzy
 msgid "Stash Index"
-msgstr "Przechowalnia"
+msgstr "Przechowaj indeks"
 
-#, fuzzy
 msgid "Stash staged changes only"
-msgstr "Wdroż dobrane zmiany"
+msgstr "Przechowaj tylko dobrane zmiany"
 
-#, fuzzy
 msgid "Stash unstaged changes only, keeping staged changes"
-msgstr "Wycofaj niezebrane zmiany w wybranych ścieżkach."
+msgstr "Przechowaj tylko niedobrane zmiany, nie dotykając dobranych zmian"
 
 msgid "Stash..."
 msgstr "Przechowaj..."
@@ -2265,7 +2327,7 @@ msgid "Stop tracking paths"
 msgstr "Zaprzestań zarządzanie ścieżką/ścieżkami"
 
 msgid "Submodules"
-msgstr ""
+msgstr "Podmoduły"
 
 msgid "Summarize Merge Commits"
 msgstr "Podsumuj wdrożenia scalające"
@@ -2289,29 +2351,29 @@ msgid "Tag-signing was requested but the tag message is empty."
 msgstr "Zażądano podpisania znacznika, lecz opis znacznika jest pusty."
 
 msgid "Tags"
-msgstr ""
+msgstr "Znaczniki"
 
 msgid "Text Width"
 msgstr "Szerokość tekstu"
 
 msgid "The branch will be no longer available."
-msgstr ""
+msgstr "Po tym gałąź stanie się niedostępna."
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --hard %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --merge %s\""
 
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
+msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --soft %s\""
 
 msgid "The commit message will be cleared."
 msgstr "Opis wdrożenia zostanie wyczyszczony."
@@ -2331,10 +2393,12 @@ msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
+"Ten podmoduł zostanie uaktualniony przy użyciu\n"
+"\"%s\""
 
-#, fuzzy, python-format
+#, python-format
 msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Drzewo robocze zostanie wyzerowane przy użyciu \"git reset --merge %s\""
+msgstr "Drzewo z pracą zostanie wyzerowane przy użyciu \"git reset --keep %s\""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Nie będzie można tego wycofać. Czy wyczyścić opis wdrożenia?"
@@ -2348,7 +2412,6 @@ msgstr ""
 "Działanie to zmieni opublikowaną historię.\n"
 "Prawdopodobnie nie chcesz tego."
 
-#, fuzzy
 msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
@@ -2375,9 +2438,9 @@ msgid ""
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
-"Repozytorium jest przebazowywane.\n"
+"W repozytorium następuje zmiana podstawy .\n"
 "Wyjaśnij sprzeczności, wdroż zmiany i wykonaj:\n"
-"    Zmiana bazy > Kontynuuj"
+"    Zmiana podstawy > Dalej"
 
 msgid ""
 "This repository is in the middle of a merge.\n"
@@ -2387,11 +2450,10 @@ msgstr ""
 "Wyjaśnij sprzeczności i wdroż zmiany."
 
 msgid "Toggle Enabled"
-msgstr ""
+msgstr "Uwzględnij/nie uwzględniaj"
 
-#, fuzzy
 msgid "Toggle the branches filter"
-msgstr "Przełącz filtr ścieżek"
+msgstr "Przełącz filtr gałęzi"
 
 msgid "Toggle the paths filter"
 msgstr "Przełącz filtr ścieżek"
@@ -2403,13 +2465,13 @@ msgid "Tracking branch"
 msgstr "Odgórna gałąź"
 
 msgid "Traditional Chinese (Taiwan) translation"
-msgstr ""
+msgstr "Tłumaczenia na tradycyjny chiński (Tajwan)"
 
 msgid "Translators"
-msgstr ""
+msgstr "Tłumacze"
 
 msgid "Turkish translation"
-msgstr ""
+msgstr "Tłumaczenie na turecki"
 
 msgid "URL"
 msgstr "Adres URL"
@@ -2419,17 +2481,17 @@ msgid "URL: %s"
 msgstr "Adres URL: %s"
 
 msgid "Ukranian translation"
-msgstr ""
+msgstr "Tłumaczenie na ukraiński"
 
 msgid "Unable to rebase"
-msgstr "Nie można przebazować"
+msgstr "Nie można zmienić podstawy"
 
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
-msgstr ""
+msgstr "Nie można ustawić URL dla \"%(name)s\" na \"%(url)s\""
 
 msgid "Undo"
-msgstr ""
+msgstr "Cofnij"
 
 msgid "Unmerged"
 msgstr "Niescalone"
@@ -2467,31 +2529,31 @@ msgid "Untracking: %s"
 msgstr "Nie zarządzaj: %s"
 
 msgid "Update All Submodules..."
-msgstr ""
+msgstr "Uaktualnij wszystkie podmoduły..."
 
 msgid "Update Existing Branch:"
 msgstr "Uaktualnij bieżącą gałąź:"
 
 msgid "Update Submodule"
-msgstr ""
+msgstr "Uaktualnij podmoduł"
 
 msgid "Update Submodule..."
-msgstr ""
+msgstr "Uaktualnij podmoduł..."
 
 msgid "Update Submodules"
-msgstr ""
+msgstr "Uaktualnij podmoduły"
 
 msgid "Update all submodules?"
-msgstr ""
+msgstr "Uaktualnić wszystkie podmoduły?"
 
 msgid "Update submodules..."
-msgstr ""
+msgstr "Uaktualnij podmoduły..."
 
 msgid "Update this submodule"
-msgstr ""
+msgstr "Uaktualnij ten podmoduł"
 
 msgid "Update this submodule?"
-msgstr ""
+msgstr "Uaktualnić ten podmoduł?"
 
 msgid "Updating"
 msgstr "Uaktualnianie"
@@ -2499,9 +2561,8 @@ msgstr "Uaktualnianie"
 msgid "User Name"
 msgstr "Nazwa użytkownika"
 
-#, fuzzy
 msgid "Version"
-msgstr "Wydanie"
+msgstr "Wersja"
 
 msgid "View"
 msgstr "Widok"
@@ -2528,10 +2589,10 @@ msgid "Would you like to stage and commit all modified files?"
 msgstr "Czy chcesz zebrać i wdrożyć wszystkie zmienione pliki?"
 
 msgid "XOR"
-msgstr ""
+msgstr "XOR"
 
 msgid "Yes"
-msgstr ""
+msgstr "Tak"
 
 msgid ""
 "You are in the middle of a merge.\n"
@@ -2541,7 +2602,7 @@ msgstr ""
 "Nie można uzupełniać w trakcie scalania."
 
 msgid "You cannot rebase with uncommitted changes."
-msgstr "Nie można przebazować, gdy masz niewdrożone zmiany."
+msgstr "Nie można zmienić podstawy, gdy masz niewdrożone zmiany."
 
 msgid "You must specify a revision to merge."
 msgstr "Musisz podać wydanie do scalenia."
@@ -2550,27 +2611,29 @@ msgid "You must specify a revision to view."
 msgstr "Musisz podać wydanie do obejrzenia."
 
 msgid "Zoom In"
-msgstr "Zbliż"
+msgstr "Powiększ"
 
 msgid "Zoom Out"
-msgstr "Oddal"
+msgstr "Pomniejsz"
 
 msgid "Zoom to Fit"
-msgstr "Dopasuj"
+msgstr "Zmieść"
 
 msgid "command-line arguments"
 msgstr "argumenty wiersza poleceń"
 
 msgid "error: unable to execute git"
-msgstr ""
+msgstr "błąd: nie można uruchomić git"
 
 #, python-format
 msgid "exit code %s"
 msgstr "kod wyjścia %s"
 
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr ""
+"krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
 
 #, python-format
 msgid "git cola version %s"
@@ -2580,7 +2643,7 @@ msgid "git-cola"
 msgstr "git-cola"
 
 msgid "git-cola diff"
-msgstr "różnica git-cola"
+msgstr "Różnica git-cola"
 
 msgid "grep result..."
 msgstr "wyszukaj w wynikach..."
@@ -2595,13 +2658,13 @@ msgid "vX.Y.Z"
 msgstr "vX.Y.Z"
 
 msgid "x 1"
-msgstr ""
+msgstr "x 1"
 
 msgid "x 1.5"
-msgstr ""
+msgstr "x 1.5"
 
 msgid "x 2"
-msgstr ""
+msgstr "x 2"
 
 msgid "yyyy-MM-dd"
 msgstr "yyyy-MM-dd"
