@@ -214,6 +214,7 @@ class SettingsFormWidget(FormWidget):
         self.sort_bookmarks = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
+        self.svg_plain_text = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
@@ -230,6 +231,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
+        self.add_row(N_('Compare SVG files in plain text'), self.svg_plain_text)
 
         self.set_config({
             prefs.SAVEWINDOWSETTINGS:
@@ -251,6 +253,7 @@ class SettingsFormWidget(FormWidget):
                 (self.keep_merge_backups, Defaults.merge_keep_backup),
             prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
+            prefs.SVG_PLAIN_TEXT: (self.svg_plain_text, Defaults.svg_plain_text)
         })
 
         # pylint: disable=no-member
