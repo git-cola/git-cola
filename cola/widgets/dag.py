@@ -13,6 +13,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -514,6 +515,7 @@ class GitDAG(standard.MainWindow):
         self.old_refs = set()
         self.old_oids = None
         self.old_count = 0
+        self.old_directory = None
         self.force_refresh = False
 
         self.thread = None
@@ -625,8 +627,8 @@ class GitDAG(standard.MainWindow):
         self.maxresults.editingFinished.connect(self.display)
 
         self.revtext.textChanged.connect(self.text_changed)
-        self.revtext.activated.connect(self.display)
-        self.revtext.enter.connect(self.display)
+        self.revtext.activated.connect(self.text_change_finished)
+        self.revtext.enter.connect(self.text_change_finished)
         self.revtext.down.connect(self.focus_tree)
 
         # The model is updated in another thread so use
@@ -668,6 +670,10 @@ class GitDAG(standard.MainWindow):
     def text_changed(self, txt):
         self.params.ref = txt
         self.update_window_title()
+
+    def text_change_finished(self):
+        self.model.cfg.set_repo(prefs.REPOLOG_PATHS, get(self.revtext))
+        self.display()
 
     def update_window_title(self):
         project = self.model.project
@@ -721,6 +727,15 @@ class GitDAG(standard.MainWindow):
         count = get(self.maxresults)
         context = self.context
         model = self.model
+        # Test if called from changing directory
+        directory = model.directory
+        if directory != self.old_directory:
+            ref = self.model.cfg.get_repo(prefs.REPOLOG_PATHS)
+            if ref is None:
+                branch = model.currentbranch
+                ref = (branch + ' --') if branch else ''
+                self.model.cfg.set_repo(prefs.REPOLOG_PATHS, ref)
+            self.revtext.setText(ref)
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
         # whenever inotify sends update events, which hurts usability.
@@ -749,6 +764,7 @@ class GitDAG(standard.MainWindow):
         self.old_oids = oids
         self.old_count = count
         self.old_refs = refs
+        self.old_directory = directory
 
     def commits_selected(self, commits):
         if commits:
