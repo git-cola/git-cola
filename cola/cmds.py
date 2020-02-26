@@ -2044,6 +2044,13 @@ class SetUpstreamBranch(ContextCommand):
         cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
 
 
+def clean_nonprintable(s):
+    res = ""
+    for c in s:
+        res += c if ord(c) >= 32 or c == '\n' else '.'
+    return res
+
+
 class ShowUntracked(EditModel):
     """Show an untracked file."""
 
@@ -2059,14 +2066,22 @@ class ShowUntracked(EditModel):
         cfg = self.cfg
         size = cfg.get('cola.readsize', 2048)
         try:
-            result = core.read(filename, size=size,
-                               encoding=core.ENCODING, errors='ignore')
+            result = core.read(filename, size=size, encoding='bytes')
         except (IOError, OSError):
             result = ''
 
-        if len(result) == size:
-            result += '...'
-        return result
+        truncated = len(result) == size
+
+        encoding = cfg.file_encoding(filename) or core.ENCODING
+        try:
+            text_result = result.decode(encoding)
+        except UnicodeError:
+            text_result = clean_nonprintable(result.decode('ascii',
+                                                           errors='replace'))
+
+        if truncated:
+            text_result += '...'
+        return text_result
 
 
 class SignOff(ContextCommand):
