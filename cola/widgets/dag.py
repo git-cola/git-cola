@@ -1961,8 +1961,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                         # Note that frontier is propagated in course of
                         # alloc_cell.
                         break
-                    else:
-                        self.propagate_frontier(child.column, node.row + 1)
+                    self.propagate_frontier(child.column, node.row + 1)
                 else:
                     # No child occupies same column.
                     self.leave_column(node.column)
