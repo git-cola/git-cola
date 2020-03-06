@@ -2044,11 +2044,31 @@ class SetUpstreamBranch(ContextCommand):
         cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
 
 
-def clean_nonprintable(s):
-    res = ""
-    for c in s:
-        res += c if ord(c) >= 32 or c == '\n' else '.'
-    return res
+def format_hex(data):
+    HEXDIGITS = '0123456789ABCDEF'
+
+    def hexbyte(v):
+        return HEXDIGITS[v >> 4] + HEXDIGITS[v & 0xF]
+
+    result = ''
+    offset = 0
+    while offset < len(data):
+        result += '%04u |' % offset
+        textpart = ''
+        for i in range(0, 16):
+            if i > 0 and i % 4 == 0:
+                result += ' '
+            if offset < len(data):
+                v = data[offset]
+                result += ' ' + hexbyte(v)
+                textpart += chr(v) if 32 <= v < 127 else '.'
+                offset += 1
+            else:
+                result += '   '
+                textpart += ' '
+        result += ' | ' + textpart + ' |\n'
+
+    return result
 
 
 class ShowUntracked(EditModel):
@@ -2076,8 +2096,7 @@ class ShowUntracked(EditModel):
         try:
             text_result = result.decode(encoding)
         except UnicodeError:
-            text_result = clean_nonprintable(result.decode('ascii',
-                                                           errors='replace'))
+            text_result = format_hex(result)
 
         if truncated:
             text_result += '...'
