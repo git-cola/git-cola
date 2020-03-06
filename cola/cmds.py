@@ -2096,7 +2096,7 @@ class SignOff(ContextCommand):
     def signoff(self):
         """Generate the signoff string"""
         try:
-            import pwd  # pylint: disable=import-outside-toplevel
+            import pwd  # pylint: disable=all
             user = pwd.getpwuid(os.getuid()).pw_name
         except ImportError:
             user = os.getenv('USER', N_('unknown'))
