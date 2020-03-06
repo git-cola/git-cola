@@ -494,7 +494,6 @@ def format_patchsets(context, to_export, revs, output='patches'):
         if master_idx == cur_master_idx + 1:
             patches_to_export[patchset_idx].append(rev)
             cur_master_idx += 1
-            continue
         else:
             patches_to_export.append([rev])
             cur_master_idx = master_idx

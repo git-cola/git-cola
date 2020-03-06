@@ -286,7 +286,6 @@ class GitRepoInfoTask(qtutils.Task):
                 '-1', '--', self.path, no_color=True,
                 pretty=r'format:%ar%x01%s%x01%an', _readonly=True)[STDOUT]
             if log_line:
-                log_line = log_line
                 date, message, author = log_line.split(chr(0x01), 2)
                 self._data['date'] = date
                 self._data['message'] = message

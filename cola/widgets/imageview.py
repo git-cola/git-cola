@@ -445,6 +445,7 @@ def main():
 
     app = QtWidgets.QApplication(sys.argv)
     try:
+        # pylint: disable=import-outside-toplevel
         import signal
         signal.signal(signal.SIGINT, sigint_handler)
     except ImportError:

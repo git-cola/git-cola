@@ -88,9 +88,9 @@ def _check_win32_locale():
             break
     else:
         lang = None
-        import locale
+        import locale  # pylint: disable=import-outside-toplevel
         try:
-            import ctypes
+            import ctypes  # pylint: disable=import-outside-toplevel
         except ImportError:
             # use only user's default locale
             lang = locale.getdefaultlocale()[0]

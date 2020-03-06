@@ -286,7 +286,7 @@ class DiffParser(object):
                         # Skip additions that are not selected.
                         prev_skipped = True
                         continue
-                    elif line_type == DELETION:
+                    if line_type == DELETION:
                         # Change deletions that are not selected to context.
                         line_type = CONTEXT
                 if line_type == NO_NEWLINE and prev_skipped:

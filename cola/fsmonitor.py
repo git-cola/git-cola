@@ -231,7 +231,7 @@ if AVAILABLE == 'inotify':
                 else:
                     if not self._running:
                         break
-                    elif not events:
+                    if not events:
                         self.notify()
                     else:
                         for (fd, _) in events:
@@ -458,7 +458,7 @@ if AVAILABLE == 'pywin32':
                                                            timeout)
                     if not self._running:
                         break
-                    elif rc == win32event.WAIT_TIMEOUT:
+                    if rc == win32event.WAIT_TIMEOUT:
                         self.notify()
                     else:
                         self._handle_results()
