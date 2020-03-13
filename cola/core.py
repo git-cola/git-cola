@@ -78,6 +78,8 @@ def decode(value, encoding=None, errors='strict'):
         result = None
     elif isinstance(value, ustr):
         result = UStr(value, ENCODING)
+    elif encoding == 'bytes':
+        result = value
     else:
         result = None
         if encoding is None:

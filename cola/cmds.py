@@ -2044,6 +2044,33 @@ class SetUpstreamBranch(ContextCommand):
         cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
 
 
+def format_hex(data):
+    HEXDIGITS = '0123456789ABCDEF'
+
+    def hexbyte(v):
+        return HEXDIGITS[v >> 4] + HEXDIGITS[v & 0xF]
+
+    result = ''
+    offset = 0
+    while offset < len(data):
+        result += '%04u |' % offset
+        textpart = ''
+        for i in range(0, 16):
+            if i > 0 and i % 4 == 0:
+                result += ' '
+            if offset < len(data):
+                v = data[offset]
+                result += ' ' + hexbyte(v)
+                textpart += chr(v) if 32 <= v < 127 else '.'
+                offset += 1
+            else:
+                result += '   '
+                textpart += ' '
+        result += ' | ' + textpart + ' |\n'
+
+    return result
+
+
 class ShowUntracked(EditModel):
     """Show an untracked file."""
 
@@ -2059,14 +2086,21 @@ class ShowUntracked(EditModel):
         cfg = self.cfg
         size = cfg.get('cola.readsize', 2048)
         try:
-            result = core.read(filename, size=size,
-                               encoding=core.ENCODING, errors='ignore')
+            result = core.read(filename, size=size, encoding='bytes')
         except (IOError, OSError):
             result = ''
 
-        if len(result) == size:
-            result += '...'
-        return result
+        truncated = len(result) == size
+
+        encoding = cfg.file_encoding(filename) or core.ENCODING
+        try:
+            text_result = result.decode(encoding)
+        except UnicodeError:
+            text_result = format_hex(result)
+
+        if truncated:
+            text_result += '...'
+        return text_result
 
 
 class SignOff(ContextCommand):
