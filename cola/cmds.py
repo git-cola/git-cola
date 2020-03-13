@@ -2045,11 +2045,8 @@ class SetUpstreamBranch(ContextCommand):
 
 
 def format_hex(data):
-    HEXDIGITS = '0123456789ABCDEF'
-
-    def hexbyte(v):
-        return HEXDIGITS[v >> 4] + HEXDIGITS[v & 0xF]
-
+    """Translate binary data into a hex dump"""
+    hexdigits = '0123456789ABCDEF'
     result = ''
     offset = 0
     while offset < len(data):
@@ -2060,7 +2057,7 @@ def format_hex(data):
                 result += ' '
             if offset < len(data):
                 v = data[offset]
-                result += ' ' + hexbyte(v)
+                result += ' ' + hexdigits[v >> 4] + hexdigits[v & 0xf]
                 textpart += chr(v) if 32 <= v < 127 else '.'
                 offset += 1
             else:
