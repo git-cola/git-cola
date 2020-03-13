@@ -53,6 +53,16 @@ class ColaI18nTestCase(unittest.TestCase):
         actual = N_('Random')
         self.assertEqual(expect, actual)
 
+    def test_translate_push_pull_french(self):
+        i18n.install('fr_FR')
+        expect = 'Tirer'
+        actual = N_('Pull')
+        self.assertEqual(expect, actual)
+
+        expect = 'Pousser'
+        actual = N_('Push')
+        self.assertEqual(expect, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
