@@ -62,3 +62,23 @@ def unsetenv(key):
     os.environ.pop(key, None)
     if hasattr(os, 'unsetenv'):
         os.unsetenv(key)
+
+
+def no_op(value):
+    """Return the value as-is"""
+    return value
+
+
+def byte_offset_to_int_converter():
+    """Return a function to convert byte string offsets into ints
+
+    Indexing into python3 bytes returns ints, Python2 returns str.
+    Thus, on Python2 we need to use `ord()` to convert the byte into
+    an integration.  It's already an int on Python3, so we use no_op there.
+
+    """
+    if PY2:
+        result = ord
+    else:
+        result = no_op
+    return result

@@ -71,6 +71,15 @@ class UStr(ustr):
         return obj
 
 
+def decode_maybe(value, encoding, errors='strict'):
+    """Decode a value when the "decode" method exists"""
+    if hasattr(value, 'decode'):
+        result = value.decode(encoding, errors=errors)
+    else:
+        result = value
+    return result
+
+
 def decode(value, encoding=None, errors='strict'):
     """decode(encoded_string) returns an unencoded unicode string
     """

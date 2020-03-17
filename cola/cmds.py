@@ -2049,6 +2049,7 @@ def format_hex(data):
     hexdigits = '0123456789ABCDEF'
     result = ''
     offset = 0
+    byte_offset_to_int = compat.byte_offset_to_int_converter()
     while offset < len(data):
         result += '%04u |' % offset
         textpart = ''
@@ -2056,7 +2057,7 @@ def format_hex(data):
             if i > 0 and i % 4 == 0:
                 result += ' '
             if offset < len(data):
-                v = data[offset]
+                v = byte_offset_to_int(data[offset])
                 result += ' ' + hexdigits[v >> 4] + hexdigits[v & 0xf]
                 textpart += chr(v) if 32 <= v < 127 else '.'
                 offset += 1
@@ -2091,7 +2092,7 @@ class ShowUntracked(EditModel):
 
         encoding = cfg.file_encoding(filename) or core.ENCODING
         try:
-            text_result = result.decode(encoding)
+            text_result = core.decode_maybe(result, encoding)
         except UnicodeError:
             text_result = format_hex(result)
 
