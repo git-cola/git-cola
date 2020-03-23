@@ -160,7 +160,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
         self.launch_difftool_action.setIcon(icons.diff())
 
-        self.launch_editor_action = actions.launch_editor(
+        self.launch_editor_action = actions.launch_editor_at_line(
             context, self, *hotkeys.ACCEPT)
 
         if not utils.is_win32():

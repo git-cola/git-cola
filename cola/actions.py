@@ -24,7 +24,7 @@ def launch_editor(context, widget, *shortcuts):
 
 
 def launch_editor_at_line(context, widget, *shortcuts):
-    """Create a QAction to launch an editor"""
+    """Create a QAction to launch an editor at the current line"""
     icon = icons.edit()
     return cmd_action(widget, cmds.LaunchEditorAtLine, context, icon,
                       hotkeys.EDIT, *shortcuts)
