@@ -663,7 +663,7 @@ class DiffEditor(DiffTextEdit):
         self.action_revert_selection.setIcon(icons.undo())
 
         self.launch_editor = actions.launch_editor_at_line(
-            context, self, *hotkeys.ACCEPT)
+            context, self, hotkeys.EDIT_SHORT, *hotkeys.ACCEPT)
         self.launch_difftool = actions.launch_difftool(context, self)
         self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
