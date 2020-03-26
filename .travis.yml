@@ -26,4 +26,4 @@ install:
 
 script:
   # Tests and static analysis checks
-  - tox -v --skip-missing-interpreters -e "py{27,36},pylint{2,36}"
+  - tox -v --develop --skip-missing-interpreters -e "py{27,36},pylint{2,36}"
