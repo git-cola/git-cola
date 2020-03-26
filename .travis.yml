@@ -25,5 +25,5 @@ install:
   - make all
 
 script:
-  # Run tests and static analysis checks
-  - make tox-check TOX_ENVS="py{27,36},pylint{2,36}" flags="-- V=2"
+  # Tests and static analysis checks
+  - tox -v --skip-missing-interpreters -e "py{27,36},pylint{2,36}"
