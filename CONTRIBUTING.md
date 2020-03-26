@@ -9,6 +9,12 @@ to this software.
 
 * `make check`
 
+## Write tests
+
+When adding new features or fixing defects, extend the unit tests to
+cover the new behavior.  See the `tests/` directory for examples.
+Find an appropriate test suite and extend it whenever possible.
+
 ## Be picky about whitespace
 
 This project is very picky about code style.
