@@ -51,6 +51,7 @@ from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
 from cola.widgets import defs
+from cola.widgets import filelist
 from cola.widgets import diff
 from cola.widgets import standard
 from cola.widgets import text
@@ -169,6 +170,7 @@ class Editor(QtWidgets.QWidget):
         self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(context, notifier, self)
         self.tree = RebaseTreeWidget(context, notifier, comment_char, self)
+        self.filewidget = filelist.FileWidget(context, notifier, self)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -192,7 +194,10 @@ class Editor(QtWidgets.QWidget):
             text=N_('Cancel'), tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
             icon=icons.close())
 
-        splitter = qtutils.splitter(Qt.Vertical, self.tree, self.diff)
+        diff_splitter = qtutils.splitter(Qt.Horizontal,
+                                         self.filewidget, self.diff)
+        tree_splitter = qtutils.splitter(Qt.Vertical,
+                                         self.tree, diff_splitter)
 
         controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.cancel_button,
@@ -201,7 +206,7 @@ class Editor(QtWidgets.QWidget):
                                        self.extdiff_button,
                                        self.rebase_button)
         layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                              splitter, controls_layout)
+                              tree_splitter, controls_layout)
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
