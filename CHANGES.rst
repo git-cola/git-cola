@@ -5,6 +5,10 @@ v3.7
 
 Usability, bells and whistles
 -----------------------------
+* The ``git-xbase`` rebase editor now includes a file list for filtering
+  the changes displayed in the diff view.
+  (`#1051 <https://github.com/git-cola/git-cola/pull/1051>`_)
+
 * The fallback `ssh-askpass` script, which provides the Username/Password
   login dialog when performing remote operations, previously presented both
   the username and password input fields with ``***`` asterisks.
