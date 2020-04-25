@@ -194,10 +194,9 @@ class Editor(QtWidgets.QWidget):
             text=N_('Cancel'), tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
             icon=icons.close())
 
-        diff_splitter = qtutils.splitter(Qt.Horizontal,
-                                         self.filewidget, self.diff)
-        tree_splitter = qtutils.splitter(Qt.Vertical,
-                                         self.tree, diff_splitter)
+        top = qtutils.splitter( Qt.Horizontal, self.tree, self.filewidget)
+
+        main_split = qtutils.splitter(Qt.Vertical, top, self.diff)
 
         controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.cancel_button,
@@ -206,7 +205,7 @@ class Editor(QtWidgets.QWidget):
                                        self.extdiff_button,
                                        self.rebase_button)
         layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                              tree_splitter, controls_layout)
+                              main_split, controls_layout)
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
