@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <metadata_license>CC0-1.0</metadata_license>
   <id>git-dag.desktop</id>
-  <metadata>
-    <value key="X-Merge-With-Parent">git-cola.desktop</value>
-  </metadata>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Git DAG</name>
+  <description>
+    <p>
+      git-dag is an advanced git DAG visualizer
+    </p>
+  </description>
+  <url type="homepage">https://git-cola.github.io/</url>
 </component>
