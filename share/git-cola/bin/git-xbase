@@ -195,8 +195,10 @@ class Editor(QtWidgets.QWidget):
             icon=icons.close())
 
         top = qtutils.splitter( Qt.Horizontal, self.tree, self.filewidget)
+        top.setSizes([75, 25])
 
         main_split = qtutils.splitter(Qt.Vertical, top, self.diff)
+        main_split.setSizes([25, 75])
 
         controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
                                        self.cancel_button,
