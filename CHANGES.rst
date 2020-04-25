@@ -33,6 +33,9 @@ Translations
 
 Fixes
 -----
+* ``git-dag.appdata.xml`` was updated to allow network access for author icons.
+  (`#1050 <https://github.com/git-cola/git-cola/pull/1050>`_)
+
 * The inotify filesystem monitor now handles
   `OSError: [Errno 24] Too many open files` errors by disabling inotify.
   (`#1015 <https://github.com/git-cola/git-cola/issues/1015>`_)
