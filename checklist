@@ -6,5 +6,5 @@ make check
 ./Meta/tag
 git cola push
 vx env37 ./Meta/release --all
-vim ../git-cola.github.io/_config.yaml
+vim github.io/_config.yaml
 ./Meta/github.io.sh
