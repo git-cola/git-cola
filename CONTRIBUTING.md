@@ -22,6 +22,8 @@ The style here is the standard Python PEP-8 style:
 
 http://www.python.org/dev/peps/pep-0008/
 
+* Use the `make format` command to format the source code using `black`.
+
 * Follow the same style as the existing code.
 
 * Use 4-space indents.

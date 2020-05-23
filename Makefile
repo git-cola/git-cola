@@ -10,7 +10,7 @@ all::
 # make flake8                   # python style checks
 # make pylint [color=1]         # run pylint; color=1 colorizes output
 # make pylint3k [color=1]       # run python2+3 compatibility checks
-# make format file=<filename>   # run the yapf python formatter on <filename>
+# make format                   # run the black python formatter
 # make check [color=1]          # run test, doc, flake8, pylint3k, and pylint
 # make check file=<filename>    # run checks on <filename>
 #
@@ -31,10 +31,12 @@ all::
 # when invoking make.
 #
 # The external commands used by this Makefile are...
+BLACK = black
 CTAGS = ctags
 CP = cp
 FIND = find
 FLAKE8 = flake8
+GREP = grep
 GIT = git
 GZIP = gzip
 LN = ln
@@ -49,7 +51,6 @@ RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
 TAR = tar
-YAPF = yapf
 TOX = tox
 XARGS = xargs
 
@@ -68,9 +69,6 @@ else
 endif
 
 FLAKE8_FLAGS = $(VERBOSE)
-FLAKE8_FLAGS += --max-line-length=80
-FLAKE8_FLAGS += --format=pylint
-FLAKE8_FLAGS += --doctests
 
 PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
 PYTEST_FLAGS += --doctest-modules
@@ -310,9 +308,12 @@ check:: pylint3k
 check:: pylint
 endif
 
-format:
-	$(YAPF) --in-place $(flags) $(file)
 .PHONY: format
+format:
+	$(GIT) ls-files -- '*.py' | \
+	$(GREP) -v ^qtpy | \
+	$(XARGS) $(BLACK) --skip-string-normalization
+	$(BLACK) --skip-string-normalization $(PYTHON_SOURCES)
 
 .PHONY: requirements
 requirements:
