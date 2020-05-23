@@ -58,12 +58,14 @@ class UStr(ustr):
     byte sequences.
 
     """
+
     def __new__(cls, string, encoding):
 
         if isinstance(string, UStr):
             if encoding != string.encoding:
-                raise ValueError('Encoding conflict: %s vs. %s'
-                                 % (string.encoding, encoding))
+                raise ValueError(
+                    'Encoding conflict: %s vs. %s' % (string.encoding, encoding)
+                )
             string = ustr(string)
 
         obj = ustr.__new__(cls, string)
@@ -167,13 +169,17 @@ def readline(fh, encoding=None):
 
 
 @interruptable
-def start_command(cmd, cwd=None, add_env=None,
-                  universal_newlines=False,
-                  stdin=subprocess.PIPE,
-                  stdout=subprocess.PIPE,
-                  no_win32_startupinfo=False,
-                  stderr=subprocess.PIPE,
-                  **extra):
+def start_command(
+    cmd,
+    cwd=None,
+    add_env=None,
+    universal_newlines=False,
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    no_win32_startupinfo=False,
+    stderr=subprocess.PIPE,
+    **extra
+):
     """Start the given command, and return a subprocess object.
 
     This provides a simpler interface to the subprocess module.
@@ -222,9 +228,17 @@ def start_command(cmd, cwd=None, add_env=None,
     # Use line buffering when in text/universal_newlines mode,
     # otherwise use the system default buffer size.
     bufsize = 1 if universal_newlines else -1
-    return subprocess.Popen(cmd, bufsize=bufsize, stdin=stdin, stdout=stdout,
-                            stderr=stderr, cwd=cwd, env=env,
-                            universal_newlines=universal_newlines, **extra)
+    return subprocess.Popen(
+        cmd,
+        bufsize=bufsize,
+        stdin=stdin,
+        stdout=stdout,
+        stderr=stderr,
+        cwd=cwd,
+        env=env,
+        universal_newlines=universal_newlines,
+        **extra
+    )
 
 
 def prep_for_subprocess(cmd, shell=False):
@@ -262,9 +276,7 @@ def run_command(cmd, *args, **kwargs):
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
     exit_code = process.returncode
-    return (exit_code,
-            output or UStr('', ENCODING),
-            errors or UStr('', ENCODING))
+    return (exit_code, output or UStr('', ENCODING), errors or UStr('', ENCODING))
 
 
 @interruptable
@@ -291,8 +303,9 @@ def _fork_win32(args, cwd=None, shell=False):
         argv = [encode(arg) for arg in args]
 
     DETACHED_PROCESS = 0x00000008  # Amazing!
-    return subprocess.Popen(argv, cwd=cwd, creationflags=DETACHED_PROCESS,
-                            shell=shell).pid
+    return subprocess.Popen(
+        argv, cwd=cwd, creationflags=DETACHED_PROCESS, shell=shell
+    ).pid
 
 
 def _win32_find_exe(exe):
@@ -312,8 +325,7 @@ def _win32_find_exe(exe):
     # extensions specified in PATHEXT
     if '.' not in exe:
         extensions = getenv('PATHEXT', '').split(os.pathsep)
-        candidates.extend([(exe + ext) for ext in extensions
-                           if ext.startswith('.')])
+        candidates.extend([(exe + ext) for ext in extensions if ext.startswith('.')])
     # search the current directory first
     for candidate in candidates:
         if exists(candidate):
@@ -356,9 +368,11 @@ def wrap(action, fn, decorator=None):
 
 def decorate(decorator, fn):
     """Decorate the result of `fn` with `action`"""
+
     @functools.wraps(fn)
     def decorated(*args, **kwargs):
         return decorator(fn(*args, **kwargs))
+
     return decorated
 
 

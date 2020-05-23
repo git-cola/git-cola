@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import absolute_import, division, unicode_literals
 import unittest
+
 try:
     from unittest.mock import MagicMock
 except ImportError:
@@ -54,16 +55,23 @@ class BranchesTestCase(unittest.TestCase):
 
     def test_create_name_dict(self):
         """Test transforming unix path-like names into a nested dict"""
-        branches = ['top_1/child_1/child_1_1',
-                    'top_1/child_1/child_1_2',
-                    'top_1/child_2/child_2_1/child_2_1_1',
-                    'top_1/child_2/child_2_1/child_2_1_2']
+        branches = [
+            'top_1/child_1/child_1_1',
+            'top_1/child_1/child_1_2',
+            'top_1/child_2/child_2_1/child_2_1_1',
+            'top_1/child_2/child_2_1/child_2_1_2',
+        ]
         result = branch.create_name_dict(branches)
         inner_child = {'child_2_1_2': {}, 'child_2_1_1': {}}
         self.assertEqual(
-            {'top_1': {
-                'child_1': {'child_1_2': {}, 'child_1_1': {}},
-                'child_2': {'child_2_1': inner_child}}}, result)
+            {
+                'top_1': {
+                    'child_1': {'child_1_2': {}, 'child_1_1': {}},
+                    'child_2': {'child_2_1': inner_child},
+                }
+            },
+            result,
+        )
 
     def test_create_toplevel_item(self):
         names = [
@@ -124,24 +132,33 @@ class BranchesTestCase(unittest.TestCase):
         items = _create_top_item()
         tree_helper = branch.BranchesTreeHelper()
         result = tree_helper.save_state(items['top'])
-        self.assertEqual({'top': {'child_1': {}, 'child_2': {
-            'sub_child_2_1': {}, 'sub_child_2_2': {}}}}, result)
+        self.assertEqual(
+            {
+                'top': {
+                    'child_1': {},
+                    'child_2': {'sub_child_2_1': {}, 'sub_child_2_2': {}},
+                }
+            },
+            result,
+        )
 
 
 def _create_top_item():
     top = _create_item('top', None, True)
     child_1 = _create_item('child_1', 'child_1', False)
     child_2 = _create_item('child_2', None, True)
-    sub_child_2_1 = _create_item(
-        'sub_child_2_1', 'child_2/sub_child_2_1', False)
-    sub_child_2_2 = _create_item(
-        'sub_child_2_2', 'child_2/sub_child_2_2', False)
+    sub_child_2_1 = _create_item('sub_child_2_1', 'child_2/sub_child_2_1', False)
+    sub_child_2_2 = _create_item('sub_child_2_2', 'child_2/sub_child_2_2', False)
 
     child_2.addChildren([sub_child_2_1, sub_child_2_2])
     top.addChildren([child_1, child_2])
 
-    return {'top': top, 'child_1': child_1, 'sub_child_2_1': sub_child_2_1,
-            'sub_child_2_2': sub_child_2_2}
+    return {
+        'top': top,
+        'child_1': child_1,
+        'sub_child_2_1': sub_child_2_1,
+        'sub_child_2_2': sub_child_2_2,
+    }
 
 
 def _create_item(name, refname, expanded):

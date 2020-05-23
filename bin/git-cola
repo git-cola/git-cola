@@ -7,7 +7,6 @@ import os
 from os.path import abspath, dirname, join, realpath
 import sys
 
-
 __copyright__ = """
 Copyright (C) 2007-2020 David Aguilar and contributors
 
@@ -48,7 +47,7 @@ def setup_environment():
 
 setup_environment()
 
-
 if __name__ == '__main__':
     from cola.main import main
+
     sys.exit(main())

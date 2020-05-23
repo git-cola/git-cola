@@ -18,8 +18,9 @@ from . import standard
 
 def create_new_branch(context, revision='', settings=None):
     """Launches a dialog for creating a new branch"""
-    view = CreateBranchDialog(context, settings=settings,
-                              parent=qtutils.active_window())
+    view = CreateBranchDialog(
+        context, settings=settings, parent=qtutils.active_window()
+    )
     if revision:
         view.set_revision(revision)
     view.show()
@@ -65,7 +66,8 @@ class CreateThread(QtCore.QThread):
 
         if status == 0:
             status, out, err = model.create_branch(
-                branch, revision, force=reset, track=track)
+                branch, revision, force=reset, track=track
+            )
             self.command.emit(status, out, err)
 
         results.append(('branch', status, out, err))
@@ -99,7 +101,8 @@ class CreateBranchDialog(standard.Dialog):
 
         self.branch_name = completion.GitCreateBranchLineEdit(context)
         self.branch_validator = completion.BranchValidator(
-            context.git, parent=self.branch_name)
+            context.git, parent=self.branch_name
+        )
         self.branch_name.setValidator(self.branch_validator)
 
         self.rev_label = QtWidgets.QLabel()
@@ -120,8 +123,7 @@ class CreateBranchDialog(standard.Dialog):
         self.update_existing_label.setText(N_('Update Existing Branch:'))
 
         self.no_update_radio = qtutils.radio(text=N_('No'))
-        self.ffwd_only_radio = qtutils.radio(text=N_('Fast Forward Only'),
-                                             checked=True)
+        self.ffwd_only_radio = qtutils.radio(text=N_('Fast Forward Only'), checked=True)
         self.reset_radio = qtutils.radio(text=N_('Reset'))
 
         text = N_('Fetch Tracking Branch')
@@ -131,63 +133,80 @@ class CreateBranchDialog(standard.Dialog):
         self.checkout_checkbox = qtutils.checkbox(text=text, checked=True)
 
         icon = icons.branch()
-        self.create_button = qtutils.create_button(text=N_('Create Branch'),
-                                                   icon=icon, default=True)
+        self.create_button = qtutils.create_button(
+            text=N_('Create Branch'), icon=icon, default=True
+        )
         self.close_button = qtutils.close_button()
 
-        self.options_checkbox_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                                    self.fetch_checkbox,
-                                                    self.checkout_checkbox,
-                                                    qtutils.STRETCH)
+        self.options_checkbox_layout = qtutils.hbox(
+            defs.margin,
+            defs.spacing,
+            self.fetch_checkbox,
+            self.checkout_checkbox,
+            qtutils.STRETCH,
+        )
 
-        self.branch_name_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                               self.branch_name_label,
-                                               self.branch_name)
+        self.branch_name_layout = qtutils.hbox(
+            defs.margin, defs.spacing, self.branch_name_label, self.branch_name
+        )
 
-        self.rev_radio_group = qtutils.buttongroup(self.local_radio,
-                                                   self.remote_radio,
-                                                   self.tag_radio)
+        self.rev_radio_group = qtutils.buttongroup(
+            self.local_radio, self.remote_radio, self.tag_radio
+        )
 
-        self.rev_radio_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                             self.local_radio,
-                                             self.remote_radio,
-                                             self.tag_radio,
-                                             qtutils.STRETCH)
+        self.rev_radio_layout = qtutils.hbox(
+            defs.margin,
+            defs.spacing,
+            self.local_radio,
+            self.remote_radio,
+            self.tag_radio,
+            qtutils.STRETCH,
+        )
 
-        self.rev_start_textinput_layout = qtutils.hbox(defs.no_margin,
-                                                       defs.spacing,
-                                                       self.rev_label,
-                                                       defs.spacing,
-                                                       self.revision)
+        self.rev_start_textinput_layout = qtutils.hbox(
+            defs.no_margin, defs.spacing, self.rev_label, defs.spacing, self.revision
+        )
 
-        self.rev_start_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                             self.rev_radio_layout,
-                                             self.branch_list,
-                                             self.rev_start_textinput_layout)
+        self.rev_start_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.spacing,
+            self.rev_radio_layout,
+            self.branch_list,
+            self.rev_start_textinput_layout,
+        )
 
-        self.options_radio_group = qtutils.buttongroup(self.no_update_radio,
-                                                       self.ffwd_only_radio,
-                                                       self.reset_radio)
+        self.options_radio_group = qtutils.buttongroup(
+            self.no_update_radio, self.ffwd_only_radio, self.reset_radio
+        )
 
-        self.options_radio_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                                 self.update_existing_label,
-                                                 self.no_update_radio,
-                                                 self.ffwd_only_radio,
-                                                 self.reset_radio,
-                                                 qtutils.STRETCH)
+        self.options_radio_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.update_existing_label,
+            self.no_update_radio,
+            self.ffwd_only_radio,
+            self.reset_radio,
+            qtutils.STRETCH,
+        )
 
-        self.buttons_layout = qtutils.hbox(defs.margin, defs.spacing,
-                                           self.close_button,
-                                           qtutils.STRETCH,
-                                           self.create_button)
+        self.buttons_layout = qtutils.hbox(
+            defs.margin,
+            defs.spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.create_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.branch_name_layout,
-                                        self.rev_start_layout,
-                                        defs.button_spacing,
-                                        self.options_radio_layout,
-                                        self.options_checkbox_layout,
-                                        self.buttons_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.branch_name_layout,
+            self.rev_start_layout,
+            defs.button_spacing,
+            self.options_radio_layout,
+            self.options_checkbox_layout,
+            self.buttons_layout,
+        )
         self.setLayout(self.main_layout)
 
         qtutils.add_close_action(self)
@@ -202,8 +221,7 @@ class CreateBranchDialog(standard.Dialog):
         branches.itemSelectionChanged.connect(self.branch_item_changed)
 
         thread = self.thread
-        thread.command.connect(Interaction.log_status,
-                               type=Qt.QueuedConnection)
+        thread.command.connect(Interaction.log_status, type=Qt.QueuedConnection)
         thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
 
         self.init_size(settings=settings, parent=parent)
@@ -234,8 +252,8 @@ class CreateBranchDialog(standard.Dialog):
         if not branch or not revision:
             Interaction.critical(
                 N_('Missing Data'),
-                N_('Please provide both a branch '
-                   'name and revision expression.'))
+                N_('Please provide both a branch ' 'name and revision expression.'),
+            )
             return
         if branch in existing_branches:
             if no_update:
@@ -247,15 +265,15 @@ class CreateBranchDialog(standard.Dialog):
             check_branch = bool(commits)
 
         if check_branch:
-            msg = (N_('Resetting "%(branch)s" to "%(revision)s" '
-                      'will lose commits.') %
-                   dict(branch=branch, revision=revision))
+            msg = N_(
+                'Resetting "%(branch)s" to "%(revision)s" ' 'will lose commits.'
+            ) % dict(branch=branch, revision=revision)
             if ffwd_only:
                 Interaction.critical(N_('Branch Exists'), msg)
                 return
             lines = [msg]
             for idx, commit in enumerate(commits):
-                subject = commit[1][0:min(len(commit[1]), 16)]
+                subject = commit[1][0 : min(len(commit[1]), 16)]
                 if len(subject) < len(commit[1]):
                     subject += '...'
                 lines.append('\t' + commit[0][:8] + '\t' + subject)
@@ -266,12 +284,18 @@ class CreateBranchDialog(standard.Dialog):
             line = N_('Recovering lost commits may not be easy.')
             lines.append(line)
 
-            info_text = (N_('Reset "%(branch)s" to "%(revision)s"?') %
-                         dict(branch=branch, revision=revision))
+            info_text = N_('Reset "%(branch)s" to "%(revision)s"?') % dict(
+                branch=branch, revision=revision
+            )
 
             if not Interaction.confirm(
-                    N_('Reset Branch?'), '\n'.join(lines), info_text,
-                    N_('Reset Branch'), default=False, icon=icons.undo()):
+                N_('Reset Branch?'),
+                '\n'.join(lines),
+                info_text,
+                N_('Reset Branch'),
+                default=False,
+                icon=icons.undo(),
+            ):
                 return
 
         title = N_('Create Branch')
@@ -288,8 +312,11 @@ class CreateBranchDialog(standard.Dialog):
             if status != 0:
                 Interaction.critical(
                     N_('Error Creating Branch'),
-                    (N_('"%(command)s" returned exit status "%(status)d"')
-                     % dict(command='git '+cmd, status=status)))
+                    (
+                        N_('"%(command)s" returned exit status "%(status)d"')
+                        % dict(command='git ' + cmd, status=status)
+                    ),
+                )
                 return
 
         self.accept()

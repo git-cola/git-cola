@@ -11,7 +11,6 @@ from ..interaction import Interaction
 
 
 class StashModel(observable.Observable):
-
     def __init__(self, context):
         observable.Observable.__init__(self)
         self.context = context
@@ -49,7 +48,6 @@ class StashModel(observable.Observable):
 
 
 class ApplyStash(cmds.ContextCommand):
-
     def __init__(self, context, stash_index, index, pop):
         super(ApplyStash, self).__init__(context)
         self.stash_ref = 'refs/' + stash_index
@@ -73,13 +71,11 @@ class ApplyStash(cmds.ContextCommand):
         else:
             title = N_('Error')
             cmdargs = core.list2cmdline(args)
-            Interaction.command_error(
-                title, 'git stash ' + cmdargs, status, out, err)
+            Interaction.command_error(title, 'git stash ' + cmdargs, status, out, err)
         self.model.update_status()
 
 
 class DropStash(cmds.ContextCommand):
-
     def __init__(self, context, stash_index):
         super(DropStash, self).__init__(context)
         self.stash_ref = 'refs/' + stash_index
@@ -92,11 +88,11 @@ class DropStash(cmds.ContextCommand):
         else:
             title = N_('Error')
             Interaction.command_error(
-                title, 'git stash drop ' + self.stash_ref, status, out, err)
+                title, 'git stash drop ' + self.stash_ref, status, out, err
+            )
 
 
 class SaveStash(cmds.ContextCommand):
-
     def __init__(self, context, stash_name, keep_index):
         super(SaveStash, self).__init__(context)
         self.stash_name = stash_name
@@ -113,8 +109,7 @@ class SaveStash(cmds.ContextCommand):
         else:
             title = N_('Error')
             cmdargs = core.list2cmdline(args)
-            Interaction.command_error(
-                title, 'git stash ' + cmdargs, status, out, err)
+            Interaction.command_error(title, 'git stash ' + cmdargs, status, out, err)
 
         self.model.update_status()
 
@@ -150,9 +145,8 @@ class StashIndex(cmds.ContextCommand):
         index_tree = out.strip()
 
         status, out, err = git.commit_tree(
-            '-m', 'index on %s: %s' % (branch, head_msg),
-            '-p', head,
-            index_tree)
+            '-m', 'index on %s: %s' % (branch, head_msg), '-p', head, index_tree
+        )
         if status != 0:
             stash_error('commit-tree', status, out, err)
             return
@@ -160,9 +154,8 @@ class StashIndex(cmds.ContextCommand):
 
         # Create a commit representing the worktree
         status, out, err = git.commit_tree(
-            '-p', head, '-p', index_commit,
-            '-m', message,
-            index_tree)
+            '-p', head, '-p', index_commit, '-m', message, index_tree
+        )
         if status != 0:
             stash_error('commit-tree', status, out, err)
             return
@@ -170,7 +163,8 @@ class StashIndex(cmds.ContextCommand):
 
         # Record the stash entry
         status, out, err = git.update_ref(
-            '-m', message, 'refs/stash', worktree_commit, create_reflog=True)
+            '-m', message, 'refs/stash', worktree_commit, create_reflog=True
+        )
         if status != 0:
             stash_error('update-ref', status, out, err)
             return
@@ -182,7 +176,8 @@ class StashIndex(cmds.ContextCommand):
         patch = utils.tmp_filename('stash')
         with core.xopen(patch, mode='wb') as patch_fd:
             status, out, err = git.diff_tree(
-                'refs/stash', 'HEAD', '--', binary=True, _stdout=patch_fd)
+                'refs/stash', 'HEAD', '--', binary=True, _stdout=patch_fd
+            )
             if status != 0:
                 stash_error('diff-tree', status, out, err)
                 return

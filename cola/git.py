@@ -45,15 +45,21 @@ def is_git_dir(git_dir):
     if git_dir:
         headref = join(git_dir, 'HEAD')
 
-        if (core.isdir(git_dir) and
-                (core.isdir(join(git_dir, 'objects')) and
-                 core.isdir(join(git_dir, 'refs'))) or
-                (core.isfile(join(git_dir, 'gitdir')) and
-                 core.isfile(join(git_dir, 'commondir')))):
+        if (
+            core.isdir(git_dir)
+            and (
+                core.isdir(join(git_dir, 'objects'))
+                and core.isdir(join(git_dir, 'refs'))
+            )
+            or (
+                core.isfile(join(git_dir, 'gitdir'))
+                and core.isfile(join(git_dir, 'commondir'))
+            )
+        ):
 
-            result = (core.isfile(headref) or
-                      (core.islink(headref) and
-                       core.readlink(headref).startswith('refs/')))
+            result = core.isfile(headref) or (
+                core.islink(headref) and core.readlink(headref).startswith('refs/')
+            )
         else:
             result = is_git_file(git_dir)
 
@@ -83,7 +89,7 @@ def read_git_file(path):
         header = 'gitdir: '
         data = core.read(path).strip()
         if data.startswith(header):
-            result = data[len(header):]
+            result = data[len(header) :]
             if result and not os.path.isabs(result):
                 path_folder = os.path.dirname(path)
                 repo_relative = join(path_folder, result)
@@ -94,8 +100,7 @@ def read_git_file(path):
 class Paths(object):
     """Git repository paths of interest"""
 
-    def __init__(self, git_dir=None, git_file=None,
-                 worktree=None, common_dir=None):
+    def __init__(self, git_dir=None, git_file=None, worktree=None, common_dir=None):
         if git_dir and not is_git_dir(git_dir):
             git_dir = None
         self.git_dir = git_dir
@@ -168,14 +173,16 @@ def find_git_directory(path):
     """Perform Git repository discovery
 
     """
-    return Paths(git_dir=core.getenv('GIT_DIR'),
-                 worktree=core.getenv('GIT_WORK_TREE')).get(path)
+    return Paths(
+        git_dir=core.getenv('GIT_DIR'), worktree=core.getenv('GIT_WORK_TREE')
+    ).get(path)
 
 
 class Git(object):
     """
     The Git class manages communication with the Git binary
     """
+
     def __init__(self):
         self.paths = Paths()
 
@@ -237,16 +244,18 @@ class Git(object):
         return git_cmd
 
     @staticmethod
-    def execute(command,
-                _cwd=None,
-                _decode=True,
-                _encoding=None,
-                _raw=False,
-                _stdin=None,
-                _stderr=subprocess.PIPE,
-                _stdout=subprocess.PIPE,
-                _readonly=False,
-                _no_win32_startupinfo=False):
+    def execute(
+        command,
+        _cwd=None,
+        _decode=True,
+        _encoding=None,
+        _raw=False,
+        _stdin=None,
+        _stderr=subprocess.PIPE,
+        _stdout=subprocess.PIPE,
+        _readonly=False,
+        _no_win32_startupinfo=False,
+    ):
         """
         Execute a command and returns its output
 
@@ -278,9 +287,15 @@ class Git(object):
             _index_lock.acquire()
         try:
             status, out, err = core.run_command(
-                command, cwd=_cwd, encoding=_encoding,
-                stdin=_stdin, stdout=_stdout, stderr=_stderr,
-                no_win32_startupinfo=_no_win32_startupinfo, **extra)
+                command,
+                cwd=_cwd,
+                encoding=_encoding,
+                stdin=_stdin,
+                stdout=_stdout,
+                stderr=_stderr,
+                no_win32_startupinfo=_no_win32_startupinfo,
+                **extra
+            )
         finally:
             # Let the next thread in
             if not _readonly:
@@ -296,8 +311,8 @@ class Git(object):
         elif cola_trace == 'full':
             if out or err:
                 core.print_stderr(
-                    "%s -> %d: '%s' '%s'"
-                    % (' '.join(command), status, out, err))
+                    "%s -> %d: '%s' '%s'" % (' '.join(command), status, out, err)
+                )
             else:
                 core.print_stderr("%s -> %d" % (' '.join(command), status))
         elif cola_trace:
@@ -329,8 +344,10 @@ class Git(object):
         # Prepare the argument list
         git_args = [
             GIT,
-            '-c', 'diff.suppressBlankEmpty=false',
-            '-c', 'log.showSignature=false',
+            '-c',
+            'diff.suppressBlankEmpty=false',
+            '-c',
+            'log.showSignature=false',
             dashify(cmd),
         ]
         opt_args = transform_kwargs(**kwargs)
@@ -410,7 +427,8 @@ def win32_git_error_hint():
         'and git-cola will add the specified location to your $PATH\n'
         'automatically when starting cola:\n'
         '\n'
-        r'C:\Tools\Git\bin')
+        r'C:\Tools\Git\bin'
+    )
 
 
 @memoize

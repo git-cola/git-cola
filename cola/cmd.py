@@ -4,6 +4,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 class Command(object):
     """Mixin interface for commands"""
+
     UNDOABLE = False
 
     @staticmethod

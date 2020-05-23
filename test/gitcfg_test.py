@@ -63,8 +63,8 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(expect, actual)
 
     def test_color_rrggbb(self):
-        self.assert_color((0xaa, 0xbb, 0xcc), 'aabbcc')
-        self.assert_color((0xaa, 0xbb, 0xcc), '#aabbcc')
+        self.assert_color((0xAA, 0xBB, 0xCC), 'aabbcc')
+        self.assert_color((0xAA, 0xBB, 0xCC), '#aabbcc')
 
     def test_color_int(self):
         self.assert_color((0x10, 0x20, 0x30), '102030')

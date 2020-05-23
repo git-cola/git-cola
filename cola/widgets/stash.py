@@ -30,7 +30,6 @@ def view(context, show=True):
 
 
 class StashView(standard.Dialog):
-
     def __init__(self, context, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
@@ -47,41 +46,47 @@ class StashView(standard.Dialog):
         self.stash_text = diff.DiffTextEdit(context, self)
 
         self.button_apply = qtutils.create_button(
-            text=N_('Apply'),
-            tooltip=N_('Apply the selected stash'),
-            icon=icons.ok())
+            text=N_('Apply'), tooltip=N_('Apply the selected stash'), icon=icons.ok()
+        )
 
         self.button_save = qtutils.create_button(
             text=N_('Save'),
             tooltip=N_('Save modified state to new stash'),
-            icon=icons.save(), default=True)
+            icon=icons.save(),
+            default=True,
+        )
 
         self.button_drop = qtutils.create_button(
-            text=N_('Drop'),
-            tooltip=N_('Drop the selected stash'),
-            icon=icons.discard())
+            text=N_('Drop'), tooltip=N_('Drop the selected stash'), icon=icons.discard()
+        )
 
         self.button_pop = qtutils.create_button(
             text=N_('Pop'),
             tooltip=N_('Apply and drop the selected stash (git stash pop)'),
-            icon=icons.discard())
+            icon=icons.discard(),
+        )
 
         self.button_close = qtutils.close_button()
 
         self.keep_index = qtutils.checkbox(
-            text=N_('Keep Index'), checked=True,
-            tooltip=N_('Stash unstaged changes only, keeping staged changes'))
+            text=N_('Keep Index'),
+            checked=True,
+            tooltip=N_('Stash unstaged changes only, keeping staged changes'),
+        )
 
         self.stash_index = qtutils.checkbox(
-            text=N_('Stash Index'), tooltip=N_('Stash staged changes only'))
+            text=N_('Stash Index'), tooltip=N_('Stash staged changes only')
+        )
 
         # Arrange layouts
-        self.splitter = qtutils.splitter(Qt.Horizontal,
-                                         self.stash_list, self.stash_text)
+        self.splitter = qtutils.splitter(
+            Qt.Horizontal, self.stash_list, self.stash_text
+        )
         self.splitter.setChildrenCollapsible(False)
 
         self.btn_layt = qtutils.hbox(
-            defs.no_margin, defs.button_spacing,
+            defs.no_margin,
+            defs.button_spacing,
             self.button_close,
             qtutils.STRETCH,
             self.stash_index,
@@ -89,22 +94,27 @@ class StashView(standard.Dialog):
             self.button_save,
             self.button_apply,
             self.button_pop,
-            self.button_drop)
+            self.button_drop,
+        )
 
-        self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
-                                      self.splitter, self.btn_layt)
+        self.main_layt = qtutils.vbox(
+            defs.margin, defs.spacing, self.splitter, self.btn_layt
+        )
         self.setLayout(self.main_layt)
-        self.splitter.setSizes([self.width()//3, self.width()*2//3])
+        self.splitter.setSizes([self.width() // 3, self.width() * 2 // 3])
 
         # Apply stash with Ctrl+Enter
         self.apply_action = qtutils.add_action(
-            self, N_('Apply'), self.stash_apply, hotkeys.APPLY)
+            self, N_('Apply'), self.stash_apply, hotkeys.APPLY
+        )
         # Pop stash with Ctrl+Backspace
         self.pop_action = qtutils.add_action(
-            self, N_('Pop'), self.stash_pop, hotkeys.DELETE_FILE_SECONDARY)
+            self, N_('Pop'), self.stash_pop, hotkeys.DELETE_FILE_SECONDARY
+        )
         # Drop stash with Ctrl+Shift+Backspace
         self.drop_action = qtutils.add_action(
-            self, N_('Pop'), self.stash_drop, hotkeys.DELETE_FILE)
+            self, N_('Pop'), self.stash_drop, hotkeys.DELETE_FILE
+        )
 
         # pylint: disable=no-member
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
@@ -218,8 +228,8 @@ class StashView(standard.Dialog):
 
         """
         stash_name, ok = qtutils.prompt(
-            N_('Enter a name for the stash'), title=N_('Save Stash'),
-            parent=self)
+            N_('Enter a name for the stash'), title=N_('Save Stash'), parent=self
+        )
         if not ok or not stash_name:
             return
         # Sanitize the stash name
@@ -227,7 +237,8 @@ class StashView(standard.Dialog):
         if stash_name in self.names:
             Interaction.critical(
                 N_('Error: Stash exists'),
-                N_('A stash named "%s" already exists') % stash_name)
+                N_('A stash named "%s" already exists') % stash_name,
+            )
             return
         context = self.context
         keep_index = get(self.keep_index)
@@ -246,11 +257,13 @@ class StashView(standard.Dialog):
         if not selection:
             return
         if not Interaction.confirm(
-                N_('Drop Stash?'),
-                N_('Recovering a dropped stash is not possible.'),
-                N_('Drop the "%s" stash?') % name,
-                N_('Drop Stash'),
-                default=True, icon=icons.discard()):
+            N_('Drop Stash?'),
+            N_('Recovering a dropped stash is not possible.'),
+            N_('Drop the "%s" stash?') % name,
+            N_('Drop Stash'),
+            default=True,
+            icon=icons.discard(),
+        ):
             return
         cmds.do(stash.DropStash, self.context, selection)
         self.update_from_model()

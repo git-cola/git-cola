@@ -28,8 +28,7 @@ def edits1(word):
 
 
 def known_edits2(word, words):
-    return set(e2 for e1 in edits1(word)
-               for e2 in edits1(e1) if e2 in words)
+    return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in words)
 
 
 def known(word, words):
@@ -37,9 +36,12 @@ def known(word, words):
 
 
 def suggest(word, words):
-    candidates = (known([word], words) or
-                  known(edits1(word), words) or
-                  known_edits2(word, words) or [word])
+    candidates = (
+        known([word], words)
+        or known(edits1(word), words)
+        or known_edits2(word, words)
+        or [word]
+    )
     return candidates
 
 
@@ -49,10 +51,12 @@ def correct(word, words):
 
 
 class NorvigSpellCheck(object):
-
-    def __init__(self, words='/usr/share/dict/words',
-                 cracklib='/usr/share/dict/cracklib-small',
-                 propernames='/usr/share/dict/propernames'):
+    def __init__(
+        self,
+        words='/usr/share/dict/words',
+        cracklib='/usr/share/dict/cracklib-small',
+        propernames='/usr/share/dict/propernames',
+    ):
         self.dictwords = words
         self.cracklib = cracklib
         self.propernames = propernames

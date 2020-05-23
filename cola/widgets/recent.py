@@ -40,7 +40,6 @@ class UpdateFileListThread(QtCore.QThread):
 
 
 class RecentFiles(standard.Dialog):
-
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
@@ -51,8 +50,9 @@ class RecentFiles(standard.Dialog):
         count = 8
         self.update_thread = UpdateFileListThread(context, count)
 
-        self.count = standard.SpinBox(value=count, maxi=10000,
-                                      suffix=N_(' commits ago'))
+        self.count = standard.SpinBox(
+            value=count, maxi=10000, suffix=N_(' commits ago')
+        )
 
         self.count_label = QtWidgets.QLabel()
         self.count_label.setText(N_('Showing changes since'))
@@ -63,29 +63,39 @@ class RecentFiles(standard.Dialog):
         self.tree_model = GitFileTreeModel(self)
         self.tree.setModel(self.tree_model)
 
-        self.expand_button = qtutils.create_button(text=N_('Expand all'),
-                                                   icon=icons.unfold())
+        self.expand_button = qtutils.create_button(
+            text=N_('Expand all'), icon=icons.unfold()
+        )
 
-        self.collapse_button = qtutils.create_button(text=N_('Collapse all'),
-                                                     icon=icons.fold())
+        self.collapse_button = qtutils.create_button(
+            text=N_('Collapse all'), icon=icons.fold()
+        )
 
         self.edit_button = qtutils.edit_button(enabled=False, default=True)
         self.close_button = qtutils.close_button()
 
-        self.top_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                       self.count_label, self.count,
-                                       qtutils.STRETCH, self.refresh_button)
+        self.top_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.count_label,
+            self.count,
+            qtutils.STRETCH,
+            self.refresh_button,
+        )
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.close_button,
-                                          qtutils.STRETCH,
-                                          self.expand_button,
-                                          self.collapse_button,
-                                          self.edit_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.expand_button,
+            self.collapse_button,
+            self.edit_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.top_layout, self.tree,
-                                        self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin, defs.spacing, self.top_layout, self.tree, self.button_layout
+        )
         self.setLayout(self.main_layout)
 
         # pylint: disable=no-member

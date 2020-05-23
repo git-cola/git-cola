@@ -15,9 +15,9 @@ class EStylesheet(object):
 
 
 class Theme(object):
-
-    def __init__(self, name, hr_name, is_dark,
-                 style_sheet=EStylesheet.DEFAULT, main_color=None):
+    def __init__(
+        self, name, hr_name, is_dark, style_sheet=EStylesheet.DEFAULT, main_color=None
+    ):
         self.name = name
         self.hr_name = hr_name
         self.is_dark = is_dark
@@ -105,18 +105,20 @@ class Theme(object):
                 background: %(highlight_rgb)s;
             }
 
-            """ % dict(separator=defs.separator,
-                       window_rgb=window_rgb,
-                       highlight_rgb=highlight_rgb,
-                       shadow_rgb=shadow_rgb,
-                       base_rgb=base_rgb,
-                       checkbox_border=defs.border,
-                       checkbox_icon=icons.check_name(),
-                       checkbox_size=defs.checkbox,
-                       radio_border=defs.radio_border,
-                       radio_icon=icons.dot_name(),
-                       radio_radius=defs.radio//2,
-                       radio_size=defs.radio)
+            """ % dict(
+            separator=defs.separator,
+            window_rgb=window_rgb,
+            highlight_rgb=highlight_rgb,
+            shadow_rgb=shadow_rgb,
+            base_rgb=base_rgb,
+            checkbox_border=defs.border,
+            checkbox_icon=icons.check_name(),
+            checkbox_size=defs.checkbox,
+            radio_border=defs.radio_border,
+            radio_icon=icons.dot_name(),
+            radio_radius=defs.radio // 2,
+            radio_size=defs.radio,
+        )
 
     def style_sheet_flat(self):
         main_color = self.main_color
@@ -130,19 +132,13 @@ class Theme(object):
             button_text = '#000000'
             field_text = '#d0d0d0'
             darker = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF()*0.3,
-                color.lightnessF()*1.3
+                color.hslHueF(), color.hslSaturationF() * 0.3, color.lightnessF() * 1.3
             )
             lighter = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF()*0.7,
-                color.lightnessF()*0.6
+                color.hslHueF(), color.hslSaturationF() * 0.7, color.lightnessF() * 0.6
             )
             focus = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF()*0.7,
-                color.lightnessF()*0.7
+                color.hslHueF(), color.hslSaturationF() * 0.7, color.lightnessF() * 0.7
             )
         else:
             background = '#edeef3'
@@ -151,15 +147,9 @@ class Theme(object):
             button_text = '#ffffff'
             field_text = '#000000'
             darker = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF(),
-                color.lightnessF()*0.4
+                color.hslHueF(), color.hslSaturationF(), color.lightnessF() * 0.4
             )
-            lighter = qtutils.hsl_css(
-                color.hslHueF(),
-                color.hslSaturationF()*2,
-                0.92
-            )
+            lighter = qtutils.hsl_css(color.hslHueF(), color.hslSaturationF() * 2, 0.92)
             focus = color_rgb
 
         return """
@@ -518,38 +508,49 @@ class Theme(object):
                 padding-left: 4px;
             }
 
-            """ % dict(background=background,
-                       field=field,
-                       button=color_rgb,
-                       darker=darker,
-                       lighter=lighter,
-                       grayed=grayed,
-                       button_text=button_text,
-                       field_text=field_text,
-                       separator=defs.separator,
-                       focus=focus)
+            """ % dict(
+            background=background,
+            field=field,
+            button=color_rgb,
+            darker=darker,
+            lighter=lighter,
+            grayed=grayed,
+            button_text=button_text,
+            field_text=field_text,
+            separator=defs.separator,
+            focus=focus,
+        )
 
 
 def get_all_themes():
     return [
-        Theme('default', N_('Default'), False,
-              EStylesheet.DEFAULT, None),
-        Theme('flat-light-blue', N_('Flat light blue'),
-              False, EStylesheet.FLAT, '#5271cc'),
-        Theme('flat-light-red', N_('Flat light red'),
-              False, EStylesheet.FLAT, '#cc5452'),
-        Theme('flat-light-grey', N_('Flat light grey'),
-              False, EStylesheet.FLAT, '#707478'),
-        Theme('flat-light-green', N_('Flat light green'),
-              False, EStylesheet.FLAT, '#42a65c'),
-        Theme('flat-dark-blue', N_('Flat dark blue'),
-              True, EStylesheet.FLAT, '#5271cc'),
-        Theme('flat-dark-red', N_('Flat dark red'),
-              True, EStylesheet.FLAT, '#cc5452'),
-        Theme('flat-dark-grey', N_('Flat dark grey'),
-              True, EStylesheet.FLAT, '#aaaaaa'),
-        Theme('flat-dark-green', N_('Flat dark green'),
-              True, EStylesheet.FLAT, '#42a65c')
+        Theme('default', N_('Default'), False, EStylesheet.DEFAULT, None),
+        Theme(
+            'flat-light-blue', N_('Flat light blue'), False, EStylesheet.FLAT, '#5271cc'
+        ),
+        Theme(
+            'flat-light-red', N_('Flat light red'), False, EStylesheet.FLAT, '#cc5452'
+        ),
+        Theme(
+            'flat-light-grey', N_('Flat light grey'), False, EStylesheet.FLAT, '#707478'
+        ),
+        Theme(
+            'flat-light-green',
+            N_('Flat light green'),
+            False,
+            EStylesheet.FLAT,
+            '#42a65c',
+        ),
+        Theme(
+            'flat-dark-blue', N_('Flat dark blue'), True, EStylesheet.FLAT, '#5271cc'
+        ),
+        Theme('flat-dark-red', N_('Flat dark red'), True, EStylesheet.FLAT, '#cc5452'),
+        Theme(
+            'flat-dark-grey', N_('Flat dark grey'), True, EStylesheet.FLAT, '#aaaaaa'
+        ),
+        Theme(
+            'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
+        ),
     ]
 
 

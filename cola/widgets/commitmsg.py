@@ -47,16 +47,16 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         # Actions
         self.signoff_action = qtutils.add_action(
-            self, cmds.SignOff.name(), cmds.run(cmds.SignOff, context),
-            hotkeys.SIGNOFF)
+            self, cmds.SignOff.name(), cmds.run(cmds.SignOff, context), hotkeys.SIGNOFF
+        )
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
         self.commit_action = qtutils.add_action(
-            self, N_('Commit@@verb'), self.commit, hotkeys.APPLY)
+            self, N_('Commit@@verb'), self.commit, hotkeys.APPLY
+        )
         self.commit_action.setIcon(icons.commit())
         self.commit_action.setToolTip(N_('Commit staged changes'))
-        self.clear_action = qtutils.add_action(
-            self, N_('Clear...'), self.clear)
+        self.clear_action = qtutils.add_action(self, N_('Clear...'), self.clear)
 
         self.launch_editor = actions.launch_editor_at_line(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
@@ -92,16 +92,16 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.description.set_dictionary(cfg.get('cola.dictionary', None))
         self.description.menu_actions.extend(menu_actions)
 
-        commit_button_tooltip = N_('Commit staged changes\n'
-                                   'Shortcut: Ctrl+Enter')
+        commit_button_tooltip = N_('Commit staged changes\n' 'Shortcut: Ctrl+Enter')
         self.commit_button = qtutils.create_button(
-            text=N_('Commit@@verb'), tooltip=commit_button_tooltip,
-            icon=icons.commit())
+            text=N_('Commit@@verb'), tooltip=commit_button_tooltip, icon=icons.commit()
+        )
         self.commit_group = Group(self.commit_action, self.commit_button)
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
         self.actions_button = qtutils.create_toolbutton(
-            icon=icons.configure(), tooltip=N_('Actions...'))
+            icon=icons.configure(), tooltip=N_('Actions...')
+        )
         self.actions_button.setMenu(self.actions_menu)
 
         self.actions_menu.addAction(self.signoff_action)
@@ -109,90 +109,99 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.actions_menu.addSeparator()
 
         # Amend checkbox
-        self.amend_action = self.actions_menu.addAction(
-            N_('Amend Last Commit'))
+        self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
         self.amend_action.setCheckable(True)
         self.amend_action.setShortcut(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
         # Bypass hooks
         self.bypass_commit_hooks_action = self.actions_menu.addAction(
-            N_('Bypass Commit Hooks'))
+            N_('Bypass Commit Hooks')
+        )
         self.bypass_commit_hooks_action.setCheckable(True)
         self.bypass_commit_hooks_action.setChecked(False)
 
         # Sign commits
-        self.sign_action = self.actions_menu.addAction(
-            N_('Create Signed Commit'))
+        self.sign_action = self.actions_menu.addAction(N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
         signcommits = cfg.get('cola.signcommits', default=False)
         self.sign_action.setChecked(signcommits)
 
         # Spell checker
-        self.check_spelling_action = self.actions_menu.addAction(
-            N_('Check Spelling'))
+        self.check_spelling_action = self.actions_menu.addAction(N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
         spellcheck = prefs.spellcheck(context)
         self.check_spelling_action.setChecked(spellcheck)
         self.toggle_check_spelling(spellcheck)
 
         # Line wrapping
-        self.autowrap_action = self.actions_menu.addAction(
-            N_('Auto-Wrap Lines'))
+        self.autowrap_action = self.actions_menu.addAction(N_('Auto-Wrap Lines'))
         self.autowrap_action.setCheckable(True)
         self.autowrap_action.setChecked(prefs.linebreak(context))
 
         # Commit message
         self.actions_menu.addSeparator()
         self.load_commitmsg_menu = self.actions_menu.addMenu(
-            N_('Load Previous Commit Message'))
+            N_('Load Previous Commit Message')
+        )
         self.load_commitmsg_menu.aboutToShow.connect(self.build_commitmsg_menu)
 
-        self.fixup_commit_menu = self.actions_menu.addMenu(
-            N_('Fixup Previous Commit'))
+        self.fixup_commit_menu = self.actions_menu.addMenu(N_('Fixup Previous Commit'))
         self.fixup_commit_menu.aboutToShow.connect(self.build_fixup_menu)
 
-        self.toplayout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                      self.actions_button, self.summary,
-                                      self.commit_button)
-        self.toplayout.setContentsMargins(defs.margin, defs.no_margin,
-                                          defs.no_margin, defs.no_margin)
+        self.toplayout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.actions_button,
+            self.summary,
+            self.commit_button,
+        )
+        self.toplayout.setContentsMargins(
+            defs.margin, defs.no_margin, defs.no_margin, defs.no_margin
+        )
 
-        self.mainlayout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                       self.toplayout, self.description)
+        self.mainlayout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.toplayout, self.description
+        )
         self.setLayout(self.mainlayout)
 
         qtutils.connect_button(self.commit_button, self.commit)
 
         # Broadcast the amend mode
         qtutils.connect_action_bool(
-            self.amend_action, partial(cmds.run(cmds.AmendMode), context))
-        qtutils.connect_action_bool(self.check_spelling_action,
-                                    self.toggle_check_spelling)
+            self.amend_action, partial(cmds.run(cmds.AmendMode), context)
+        )
+        qtutils.connect_action_bool(
+            self.check_spelling_action, self.toggle_check_spelling
+        )
 
         # Handle the one-off autowrapping
         qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 
-        qtutils.add_action(self.summary, N_('Move Down'),
-                           self.focus_description, *hotkeys.ACCEPT)
+        qtutils.add_action(
+            self.summary, N_('Move Down'), self.focus_description, *hotkeys.ACCEPT
+        )
 
-        qtutils.add_action(self.summary, N_('Move Down'),
-                           self.summary_cursor_down, hotkeys.DOWN)
+        qtutils.add_action(
+            self.summary, N_('Move Down'), self.summary_cursor_down, hotkeys.DOWN
+        )
 
         self.selection = selection = context.selection
-        selection.add_observer(
-            selection.message_selection_changed, self.updated.emit)
+        selection.add_observer(selection.message_selection_changed, self.updated.emit)
 
-        self.model.add_observer(self.model.message_commit_message_changed,
-                                self.commit_message_changed.emit)
+        self.model.add_observer(
+            self.model.message_commit_message_changed, self.commit_message_changed.emit
+        )
 
-        self.commit_message_changed.connect(self.set_commit_message,
-                                            type=Qt.QueuedConnection)
+        self.commit_message_changed.connect(
+            self.set_commit_message, type=Qt.QueuedConnection
+        )
 
         self.summary.cursor_changed.connect(self.cursor_changed.emit)
         self.description.cursor_changed.connect(
             # description starts at line 2
-            lambda row, col: self.cursor_changed.emit(row + 2, col))
+            lambda row, col: self.cursor_changed.emit(row + 2, col)
+        )
 
         # pylint: disable=no-member
         self.summary.textChanged.connect(self.commit_summary_changed)
@@ -317,10 +326,13 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
     def clear(self):
         if not Interaction.confirm(
-                N_('Clear commit message?'),
-                N_('The commit message will be cleared.'),
-                N_('This cannot be undone.  Clear commit message?'),
-                N_('Clear commit message'), default=True, icon=icons.discard()):
+            N_('Clear commit message?'),
+            N_('The commit message will be cleared.'),
+            N_('This cannot be undone.  Clear commit message?'),
+            N_('Clear commit message'),
+            default=True,
+            icon=icons.discard(),
+        ):
             return
         self.model.set_commitmsg('')
 
@@ -412,7 +424,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
     def set_mode(self, mode):
         can_amend = not self.model.is_merging
-        checked = (mode == self.model.mode_amend)
+        checked = mode == self.model.mode_amend
         blocksignals = self.amend_action.blockSignals(True)
         self.amend_action.setEnabled(can_amend)
         self.amend_action.setChecked(checked)
@@ -428,7 +440,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
                 'A good commit message has the following format:\n\n'
                 '- First line: Describe in one sentence what you did.\n'
                 '- Second line: Blank\n'
-                '- Remaining lines: Describe why this change is good.\n')
+                '- Remaining lines: Describe why this change is good.\n'
+            )
             Interaction.log(error_msg)
             Interaction.information(N_('Missing Commit Message'), error_msg)
             return
@@ -441,14 +454,20 @@ class CommitMessageEditor(QtWidgets.QFrame):
         if not (self.model.staged or self.model.is_merging):
             error_msg = N_(
                 'No changes to commit.\n\n'
-                'You must stage at least 1 file before you can commit.')
+                'You must stage at least 1 file before you can commit.'
+            )
             if self.model.modified:
-                informative_text = N_('Would you like to stage and '
-                                      'commit all modified files?')
+                informative_text = N_(
+                    'Would you like to stage and ' 'commit all modified files?'
+                )
                 if not Interaction.confirm(
-                        N_('Stage and commit?'), error_msg, informative_text,
-                        N_('Stage and Commit'),
-                        default=True, icon=icons.save()):
+                    N_('Stage and commit?'),
+                    error_msg,
+                    informative_text,
+                    N_('Stage and Commit'),
+                    default=True,
+                    icon=icons.save(),
+                ):
                     return
             else:
                 Interaction.information(N_('Nothing to commit'), error_msg)
@@ -458,14 +477,23 @@ class CommitMessageEditor(QtWidgets.QFrame):
         # Warn that amending published commits is generally bad
         amend = get(self.amend_action)
         check_published = prefs.check_published_commits(context)
-        if (amend and check_published and self.model.is_commit_published() and
-                not Interaction.confirm(
-                    N_('Rewrite Published Commit?'),
-                    N_('This commit has already been published.\n'
-                       'This operation will rewrite published history.\n'
-                       'You probably don\'t want to do this.'),
-                    N_('Amend the published commit?'),
-                    N_('Amend Commit'), default=False, icon=icons.save())):
+        if (
+            amend
+            and check_published
+            and self.model.is_commit_published()
+            and not Interaction.confirm(
+                N_('Rewrite Published Commit?'),
+                N_(
+                    'This commit has already been published.\n'
+                    'This operation will rewrite published history.\n'
+                    'You probably don\'t want to do this.'
+                ),
+                N_('Amend the published commit?'),
+                N_('Amend Commit'),
+                default=False,
+                icon=icons.save(),
+            )
+        ):
             return
         no_verify = get(self.bypass_commit_hooks_action)
         sign = get(self.sign_action)
@@ -473,15 +501,19 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.bypass_commit_hooks_action.setChecked(False)
 
     def build_fixup_menu(self):
-        self.build_commits_menu(cmds.LoadFixupMessage,
-                                self.fixup_commit_menu,
-                                self.choose_fixup_commit,
-                                prefix='fixup! ')
+        self.build_commits_menu(
+            cmds.LoadFixupMessage,
+            self.fixup_commit_menu,
+            self.choose_fixup_commit,
+            prefix='fixup! ',
+        )
 
     def build_commitmsg_menu(self):
-        self.build_commits_menu(cmds.LoadCommitMessageFromOID,
-                                self.load_commitmsg_menu,
-                                self.choose_commit_message)
+        self.build_commits_menu(
+            cmds.LoadCommitMessageFromOID,
+            self.load_commitmsg_menu,
+            self.choose_commit_message,
+        )
 
     def build_commits_menu(self, cmd, menu, chooser, prefix=''):
         context = self.context
@@ -506,7 +538,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
         context = self.context
         revs, summaries = gitcmds.log_helper(context)
         oids = select_commits(
-            context, N_('Select Commit'), revs, summaries, multiselect=False)
+            context, N_('Select Commit'), revs, summaries, multiselect=False
+        )
         if not oids:
             return
         oid = oids[0]
@@ -613,7 +646,8 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(
-            self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE)
+            self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE
+        )
 
     def build_menu(self):
         menu, _ = self.context_menu()

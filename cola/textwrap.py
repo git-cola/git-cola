@@ -40,9 +40,10 @@ class TextWrapper(object):
     #   Hello/ /there/ /--/ /you/ /goof-/ball,/ /use/ /the/ /-b/ /option!
     # (after stripping out empty strings).
     wordsep_re = re.compile(
-        r'(\s+|'                                  # any whitespace
-        r'[^\s\w]*\w+[^0-9\W]-(?=\w+[^0-9\W])|'   # hyphenated words
-        r'(?<=[\w\!\"\'\&\.\,\?])-{2,}(?=\w))')   # em-dash
+        r'(\s+|'  # any whitespace
+        r'[^\s\w]*\w+[^0-9\W]-(?=\w+[^0-9\W])|'  # hyphenated words
+        r'(?<=[\w\!\"\'\&\.\,\?])-{2,}(?=\w))'
+    )  # em-dash
 
     # This less funky little regex just split on recognized spaces. E.g.
     #   "Hello there -- you goof-ball, use the -b option!"
@@ -50,11 +51,9 @@ class TextWrapper(object):
     #   Hello/ /there/ /--/ /you/ /goof-ball,/ /use/ /the/ /-b/ /option!/
     wordsep_simple_re = re.compile(r'(\s+)')
 
-    def __init__(self,
-                 width=70,
-                 tabwidth=8,
-                 break_on_hyphens=False,
-                 drop_whitespace=True):
+    def __init__(
+        self, width=70, tabwidth=8, break_on_hyphens=False, drop_whitespace=True
+    ):
         self.width = width
         self.tabwidth = tabwidth
         self.break_on_hyphens = break_on_hyphens
@@ -64,8 +63,7 @@ class TextWrapper(object):
         # backwards compatibility because it's rather common to monkey-patch
         # the TextWrapper class' wordsep_re attribute.
         self.wordsep_re_uni = re.compile(self.wordsep_re.pattern, re.U)
-        self.wordsep_simple_re_uni = re.compile(
-            self.wordsep_simple_re.pattern, re.U)
+        self.wordsep_simple_re_uni = re.compile(self.wordsep_simple_re.pattern, re.U)
 
     def _split(self, text):
         """_split(text : string) -> [string]
@@ -149,8 +147,12 @@ class TextWrapper(object):
                     cur_line.append(chunks.pop())
 
             # Avoid whitespace at the beginining of split lines
-            if (linebreak and self.drop_whitespace and
-                    cur_line and is_blank(cur_line[0])):
+            if (
+                linebreak
+                and self.drop_whitespace
+                and cur_line
+                and is_blank(cur_line[0])
+            ):
                 cur_line.pop(0)
 
             # If the last chunk on this line is all a space, drop it.
@@ -246,12 +248,15 @@ def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
         r'With-suggestions-by'
         r'):)'
         r'|([Cc]\.\s*[Ff]\.\s+)'
-        r')')
+        r')'
+    )
 
-    w = TextWrapper(width=limit,
-                    tabwidth=tabwidth,
-                    break_on_hyphens=break_on_hyphens,
-                    drop_whitespace=True)
+    w = TextWrapper(
+        width=limit,
+        tabwidth=tabwidth,
+        break_on_hyphens=break_on_hyphens,
+        drop_whitespace=True,
+    )
 
     for line in text.split('\n'):
         if special_tag_rgx.match(line):

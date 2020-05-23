@@ -15,7 +15,6 @@ from ..widgets import standard
 
 
 class SubmodulesWidget(QtWidgets.QFrame):
-
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
         self.setToolTip(N_('Submodules'))
@@ -28,24 +27,28 @@ class SubmodulesWidget(QtWidgets.QFrame):
 
         # Titlebar buttons
         self.refresh_button = qtutils.create_action_button(
-                tooltip=N_('Refresh'), icon=icons.sync())
+            tooltip=N_('Refresh'), icon=icons.sync()
+        )
 
         self.open_parent_button = qtutils.create_action_button(
-                tooltip=N_('Open Parent'), icon=icons.repo())
+            tooltip=N_('Open Parent'), icon=icons.repo()
+        )
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.open_parent_button,
-                                          self.refresh_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin, defs.spacing, self.open_parent_button, self.refresh_button
+        )
         self.corner_widget = QtWidgets.QWidget(self)
         self.corner_widget.setLayout(self.button_layout)
         titlebar = parent.titleBarWidget()
         titlebar.add_corner_widget(self.corner_widget)
 
         # Connections
-        qtutils.connect_button(self.refresh_button,
-                               context.model.update_submodules_list)
-        qtutils.connect_button(self.open_parent_button,
-                               cmds.run(cmds.OpenParentRepo, context))
+        qtutils.connect_button(
+            self.refresh_button, context.model.update_submodules_list
+        )
+        qtutils.connect_button(
+            self.open_parent_button, cmds.run(cmds.OpenParentRepo, context)
+        )
 
 
 # pylint: disable=too-many-ancestors
@@ -67,8 +70,7 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         # pylint: disable=no-member
         self.itemDoubleClicked.connect(self.tree_double_clicked)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_submodules_changed,
-                           self.updated.emit)
+        model.add_observer(model.message_submodules_changed, self.updated.emit)
 
     def refresh(self):
         if not self._active:
@@ -93,7 +95,6 @@ class SubmodulesTreeWidget(standard.TreeWidget):
 
 
 class BuildItem(object):
-
     def __init__(self):
         self.state_folder_map = {}
         self.state_folder_map[''] = icons.folder()
@@ -114,7 +115,6 @@ class BuildItem(object):
 
 
 class SubmodulesTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, name, path, tip, icon):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path

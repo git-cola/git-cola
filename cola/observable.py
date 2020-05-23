@@ -5,6 +5,7 @@ from __future__ import division, absolute_import, unicode_literals
 
 class Observable(object):
     """Handles subject/observer notifications."""
+
     def __init__(self):
         self.notification_enabled = True
         self.observers = {}

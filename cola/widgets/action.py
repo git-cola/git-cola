@@ -27,8 +27,9 @@ class QFlowLayoutWidget(QtWidgets.QFrame):
         layout.setSpacing(defs.spacing)
         qtutils.set_margin(layout, defs.margin)
         self.setLayout(layout)
-        policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,
-                                       QtWidgets.QSizePolicy.Minimum)
+        policy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum
+        )
         self.setSizePolicy(policy)
         self.setMinimumSize(QtCore.QSize(1, 1))
         self.aspect_ratio = 0.8
@@ -52,7 +53,6 @@ def tooltip_button(text, layout):
 
 
 class ActionButtons(QFlowLayoutWidget):
-
     def __init__(self, context, parent=None):
         QFlowLayoutWidget.__init__(self, parent)
         layout = self.layout()

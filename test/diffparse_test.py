@@ -8,22 +8,18 @@ from . import helper
 
 
 class ParseDiffTestCase(unittest.TestCase):
-
     def test_diff(self):
         fixture_path = helper.fixture('diff.txt')
-        parser = diffparse.DiffParser(
-            'cola/diffparse.py', core.read(fixture_path))
+        parser = diffparse.DiffParser('cola/diffparse.py', core.read(fixture_path))
         hunks = parser.hunks
 
         self.assertEqual(len(hunks), 3)
         self.assertEqual(hunks[0].first_line_idx, 0)
         self.assertEqual(len(hunks[0].lines), 23)
         self.assertEqual(
-            hunks[0].lines[0],
-            '@@ -6,10 +6,21 @@ from cola import gitcmds\n')
-        self.assertEqual(
-            hunks[0].lines[1],
-            ' from cola import gitcfg\n')
+            hunks[0].lines[0], '@@ -6,10 +6,21 @@ from cola import gitcmds\n'
+        )
+        self.assertEqual(hunks[0].lines[1], ' from cola import gitcfg\n')
         self.assertEqual(hunks[0].lines[2], ' \n')
         self.assertEqual(hunks[0].lines[3], ' \n')
         self.assertEqual(hunks[0].lines[4], '+class DiffSource(object):\n')
@@ -31,38 +27,33 @@ class ParseDiffTestCase(unittest.TestCase):
             hunks[0].lines[-1],
             r"         self._header_start_re = re.compile('^@@ -(\d+)"
             r" \+(\d+),(\d+) @@.*')"
-            '\n')
+            '\n',
+        )
 
         self.assertEqual(hunks[1].first_line_idx, 23)
         self.assertEqual(len(hunks[1].lines), 18)
         self.assertEqual(
-            hunks[1].lines[0],
-            '@@ -29,13 +40,11 @@ class DiffParser(object):\n')
-        self.assertEqual(
-            hunks[1].lines[1],
-            '         self.diff_sel = []\n')
-        self.assertEqual(
-            hunks[1].lines[2],
-            '         self.selected = []\n')
-        self.assertEqual(
-            hunks[1].lines[3],
-            '         self.filename = filename\n')
+            hunks[1].lines[0], '@@ -29,13 +40,11 @@ class DiffParser(object):\n'
+        )
+        self.assertEqual(hunks[1].lines[1], '         self.diff_sel = []\n')
+        self.assertEqual(hunks[1].lines[2], '         self.selected = []\n')
+        self.assertEqual(hunks[1].lines[3], '         self.filename = filename\n')
         self.assertEqual(
             hunks[1].lines[4],
-            '+        self.diff_source = diff_source or DiffSource()\n')
-        self.assertEqual(
-            hunks[1].lines[-1],
-            '         self.header = header\n')
+            '+        self.diff_source = diff_source or DiffSource()\n',
+        )
+        self.assertEqual(hunks[1].lines[-1], '         self.header = header\n')
 
         self.assertEqual(hunks[2].first_line_idx, 41)
         self.assertEqual(len(hunks[2].lines), 16)
         self.assertEqual(
-            hunks[2].lines[0],
-            '@@ -43,11 +52,10 @@ class DiffParser(object):\n')
+            hunks[2].lines[0], '@@ -43,11 +52,10 @@ class DiffParser(object):\n'
+        )
         self.assertEqual(
             hunks[2].lines[-1],
             '         """Writes a new diff corresponding to the user\'s'
-            ' selection."""\n')
+            ' selection."""\n',
+        )
 
     def test_diff_at_start(self):
         fixture_path = helper.fixture('diff-start.txt')
@@ -75,21 +66,25 @@ class ParseDiffTestCase(unittest.TestCase):
         self.assertEqual(hunks[0].old_count, 1)
         self.assertEqual(hunks[0].new_start, 1)
         self.assertEqual(hunks[0].new_count, 4)
-        self.assertEqual(parser.generate_patch(1, 3),
-                         '--- a/foo bar/a\n'
-                         '+++ b/foo bar/a\n'
-                         '@@ -1 +1,3 @@\n'
-                         ' bar\n'
-                         '+a\n'
-                         '+b\n')
-        self.assertEqual(parser.generate_patch(0, 4),
-                         '--- a/foo bar/a\n'
-                         '+++ b/foo bar/a\n'
-                         '@@ -1 +1,4 @@\n'
-                         ' bar\n'
-                         '+a\n'
-                         '+b\n'
-                         '+c\n')
+        self.assertEqual(
+            parser.generate_patch(1, 3),
+            '--- a/foo bar/a\n'
+            '+++ b/foo bar/a\n'
+            '@@ -1 +1,3 @@\n'
+            ' bar\n'
+            '+a\n'
+            '+b\n',
+        )
+        self.assertEqual(
+            parser.generate_patch(0, 4),
+            '--- a/foo bar/a\n'
+            '+++ b/foo bar/a\n'
+            '@@ -1 +1,4 @@\n'
+            ' bar\n'
+            '+a\n'
+            '+b\n'
+            '+c\n',
+        )
 
     def test_diff_at_end(self):
         fixture_path = helper.fixture('diff-end.txt')
@@ -99,7 +94,8 @@ class ParseDiffTestCase(unittest.TestCase):
         self.assertEqual(hunks[0].lines[0], '@@ -1,39 +1 @@\n')
         self.assertEqual(
             hunks[-1].lines[-1],
-            "+module.exports = require('./build/Release/rijndael');\n")
+            "+module.exports = require('./build/Release/rijndael');\n",
+        )
         self.assertEqual(hunks[0].old_start, 1)
         self.assertEqual(hunks[0].old_count, 39)
         self.assertEqual(hunks[0].new_start, 1)
@@ -116,18 +112,22 @@ class ParseDiffTestCase(unittest.TestCase):
         self.assertEqual(hunks[0].old_count, 2)
         self.assertEqual(hunks[0].new_start, 0)
         self.assertEqual(hunks[0].new_count, 0)
-        self.assertEqual(parser.generate_patch(1, 1),
-                         '--- a/filename\n'
-                         '+++ b/filename\n'
-                         '@@ -1,2 +1 @@\n'
-                         '-first\n'
-                         ' second\n')
-        self.assertEqual(parser.generate_patch(0, 2),
-                         '--- a/filename\n'
-                         '+++ b/filename\n'
-                         '@@ -1,2 +0,0 @@\n'
-                         '-first\n'
-                         '-second\n')
+        self.assertEqual(
+            parser.generate_patch(1, 1),
+            '--- a/filename\n'
+            '+++ b/filename\n'
+            '@@ -1,2 +1 @@\n'
+            '-first\n'
+            ' second\n',
+        )
+        self.assertEqual(
+            parser.generate_patch(0, 2),
+            '--- a/filename\n'
+            '+++ b/filename\n'
+            '@@ -1,2 +0,0 @@\n'
+            '-first\n'
+            '-second\n',
+        )
 
     def test_diff_file_removal(self):
         diff_text = """\
@@ -165,7 +165,6 @@ deleted file mode 100755
 
 
 class DiffLinesTestCase(unittest.TestCase):
-
     def setUp(self):
         self.parser = diffparse.DiffLines()
         fixture_path = helper.fixture('diff.txt')
@@ -194,8 +193,8 @@ class DiffLinesTestCase(unittest.TestCase):
         current_old = 6
         current_new = 6
         for i in range(count):
-            self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], current_old + i)
+            self.assertEqual(lines[line + i][1], current_new + i)
         line += count
         current_old += count
         current_new += count
@@ -203,8 +202,8 @@ class DiffLinesTestCase(unittest.TestCase):
         # 10 lines of new text
         count = 10
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.EMPTY)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], parser.EMPTY)
+            self.assertEqual(lines[line + i][1], current_new + i)
 
         line += count
         current_new += count
@@ -212,8 +211,8 @@ class DiffLinesTestCase(unittest.TestCase):
         # 3 more lines of context
         count = 3
         for i in range(count):
-            self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], current_old + i)
+            self.assertEqual(lines[line + i][1], current_new + i)
         line += count
         current_new += count
         current_old += count
@@ -221,24 +220,24 @@ class DiffLinesTestCase(unittest.TestCase):
         # 1 line of removal
         count = 1
         for i in range(count):
-            self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], parser.EMPTY)
+            self.assertEqual(lines[line + i][0], current_old + i)
+            self.assertEqual(lines[line + i][1], parser.EMPTY)
         line += count
         current_old += count
 
         # 2 lines of addition
         count = 2
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.EMPTY)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], parser.EMPTY)
+            self.assertEqual(lines[line + i][1], current_new + i)
         line += count
         current_new += count
 
         # 3 more lines of context
         count = 3
         for i in range(count):
-            self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], current_old + i)
+            self.assertEqual(lines[line + i][1], current_new + i)
         line += count
         current_new += count
         current_old += count
@@ -246,8 +245,8 @@ class DiffLinesTestCase(unittest.TestCase):
         # 1 line of header
         count = 1
         for i in range(count):
-            self.assertEqual(lines[line+i][0], parser.DASH)
-            self.assertEqual(lines[line+i][1], parser.DASH)
+            self.assertEqual(lines[line + i][0], parser.DASH)
+            self.assertEqual(lines[line + i][1], parser.DASH)
         line += count
 
         # 3 more lines of context
@@ -255,8 +254,8 @@ class DiffLinesTestCase(unittest.TestCase):
         current_new = 40
         count = 3
         for i in range(count):
-            self.assertEqual(lines[line+i][0], current_old+i)
-            self.assertEqual(lines[line+i][1], current_new+i)
+            self.assertEqual(lines[line + i][0], current_old + i)
+            self.assertEqual(lines[line + i][1], current_new + i)
         line += count
         current_new += count
         current_old += count
@@ -302,7 +301,6 @@ class DiffLinesTestCase(unittest.TestCase):
 
 
 class FormatDiffLinesTestCase(unittest.TestCase):
-
     def test_format_basic(self):
         fmt = diffparse.FormatDigits()
         fmt.set_digits(2)
@@ -362,7 +360,6 @@ class FormatDiffLinesTestCase(unittest.TestCase):
 
 
 class ParseRangeStrTestCase(unittest.TestCase):
-
     def test_parse_range_str(self):
         start, count = diffparse.parse_range_str('1,2')
         self.assertEqual(start, 1)

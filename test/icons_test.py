@@ -9,7 +9,6 @@ from cola import icons
 
 
 class IconTestCase(unittest.TestCase):
-
     def test_from_filename_unicode(self):
         filename = compat.uchr(0x400) + '.py'
         expect = 'file-code.svg'

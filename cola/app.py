@@ -15,17 +15,20 @@ Copyright (C) 2007-2017 David Aguilar and contributors
 try:
     from qtpy import QtCore
 except ImportError:
-    sys.stderr.write("""
+    sys.stderr.write(
+        """
 You do not seem to have PyQt5, PySide, or PyQt4 installed.
 Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
 
     sudo apt-get install python-pyqt5 python-pyqt5.qtwebkit
 
-""")
+"""
+    )
     sys.exit(1)
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
+
 try:
     # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
     # imported before QApplication is constructed.
@@ -145,8 +148,10 @@ def setup_environment():
     # We'll need to keep this hack here until a future version of Qt provides
     # Qt Wayland widgets that are usable in gnome-shell.
     # Cf. https://bugreports.qt.io/browse/QTBUG-68619
-    if (core.getenv('XDG_CURRENT_DESKTOP', '') == 'GNOME'
-            and core.getenv('XDG_SESSION_TYPE', '') == 'wayland'):
+    if (
+        core.getenv('XDG_CURRENT_DESKTOP', '') == 'GNOME'
+        and core.getenv('XDG_SESSION_TYPE', '') == 'wayland'
+    ):
         compat.unsetenv('XDG_SESSION_TYPE')
 
 
@@ -175,8 +180,7 @@ class ColaApplication(object):
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, context, argv, locale=None,
-                 icon_themes=None, gui_theme=None):
+    def __init__(self, context, argv, locale=None, icon_themes=None, gui_theme=None):
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -218,9 +222,11 @@ class ColaApplication(object):
         context = self.context
         monitor = context.fsmonitor
         monitor.files_changed.connect(
-            cmds.run(cmds.Refresh, context), type=Qt.QueuedConnection)
+            cmds.run(cmds.Refresh, context), type=Qt.QueuedConnection
+        )
         monitor.config_changed.connect(
-            cmds.run(cmds.RefreshConfig, context), type=Qt.QueuedConnection)
+            cmds.run(cmds.RefreshConfig, context), type=Qt.QueuedConnection
+        )
         # Start the filesystem monitor thread
         monitor.start()
         return self._app.exec_()
@@ -258,8 +264,9 @@ class ColaQApplication(QtWidgets.QApplication):
             context = self.context
             if context:
                 cfg = context.cfg
-                if (context.git.is_valid()
-                        and cfg.get('cola.refreshonfocus', default=False)):
+                if context.git.is_valid() and cfg.get(
+                    'cola.refreshonfocus', default=False
+                ):
                     cmds.do(cmds.Refresh, context)
         return super(ColaQApplication, self).event(e)
 
@@ -290,11 +297,16 @@ def process_args(args):
     # Bail out if --repo is not a directory
     repo = core.decode(args.repo)
     if repo.startswith('file:'):
-        repo = repo[len('file:'):]
+        repo = repo[len('file:') :]
     repo = core.realpath(repo)
     if not core.isdir(repo):
-        errmsg = N_('fatal: "%s" is not a directory.  '
-                    'Please specify a correct --repo <path>.') % repo
+        errmsg = (
+            N_(
+                'fatal: "%s" is not a directory.  '
+                'Please specify a correct --repo <path>.'
+            )
+            % repo
+        )
         core.print_stderr(errmsg)
         sys.exit(core.EXIT_USAGE)
 
@@ -369,8 +381,7 @@ def application_run(context, view, start=None, stop=None):
 def application_start(context, view):
     """Show the GUI and start the main event loop"""
     # Store the view for session management
-    return application_run(context, view,
-                           start=default_start, stop=default_stop)
+    return application_run(context, view, start=default_start, stop=default_stop)
 
 
 def default_start(context, _view):
@@ -387,42 +398,55 @@ def default_stop(_context, _view):
 def add_common_arguments(parser):
     """Add command arguments to the ArgumentParser"""
     # We also accept 'git cola version'
-    parser.add_argument('--version', default=False, action='store_true',
-                        help='print version number')
+    parser.add_argument(
+        '--version', default=False, action='store_true', help='print version number'
+    )
 
     # Specifies a git repository to open
-    parser.add_argument('-r', '--repo', metavar='<repo>', default=core.getcwd(),
-                        help='open the specified git repository')
+    parser.add_argument(
+        '-r',
+        '--repo',
+        metavar='<repo>',
+        default=core.getcwd(),
+        help='open the specified git repository',
+    )
 
     # Specifies that we should prompt for a repository at startup
-    parser.add_argument('--prompt', action='store_true', default=False,
-                        help='prompt for a repository')
+    parser.add_argument(
+        '--prompt', action='store_true', default=False, help='prompt for a repository'
+    )
 
     # Specify the icon theme
-    parser.add_argument('--icon-theme', metavar='<theme>',
-                        dest='icon_themes', action='append', default=[],
-                        help='specify an icon theme (name or directory)')
+    parser.add_argument(
+        '--icon-theme',
+        metavar='<theme>',
+        dest='icon_themes',
+        action='append',
+        default=[],
+        help='specify an icon theme (name or directory)',
+    )
 
     # Resume an X Session Management session
-    parser.add_argument('-session', metavar='<session>', default=None,
-                        help=argparse.SUPPRESS)
+    parser.add_argument(
+        '-session', metavar='<session>', default=None, help=argparse.SUPPRESS
+    )
 
     # Enable timing information
-    parser.add_argument('--perf', action='store_true', default=False,
-                        help=argparse.SUPPRESS)
+    parser.add_argument(
+        '--perf', action='store_true', default=False, help=argparse.SUPPRESS
+    )
 
     # Specify the GUI theme
-    parser.add_argument('--theme', metavar='<name>', default=None,
-                        help='specify an GUI theme name')
+    parser.add_argument(
+        '--theme', metavar='<name>', default=None, help='specify an GUI theme name'
+    )
 
 
 def new_application(context, args):
     """Create a new ColaApplication"""
-    return ColaApplication(context,
-                           sys.argv,
-                           icon_themes=args.icon_themes,
-                           gui_theme=args.theme
-                           )
+    return ColaApplication(
+        context, sys.argv, icon_themes=args.icon_themes, gui_theme=args.theme
+    )
 
 
 def new_worktree(context, repo, prompt, settings):
@@ -561,8 +585,9 @@ def find_git():
     # If the user wants to use a Git/bin/ directory from a non-standard
     # directory then they can write its location into
     # ~/.config/git-cola/git-bindir
-    git_bindir = os.path.expanduser(os.path.join('~', '.config', 'git-cola',
-                                                 'git-bindir'))
+    git_bindir = os.path.expanduser(
+        os.path.join('~', '.config', 'git-cola', 'git-bindir')
+    )
     if core.exists(git_bindir):
         custom_path = core.read(git_bindir).strip()
         if custom_path and core.exists(custom_path):

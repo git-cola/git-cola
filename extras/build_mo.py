@@ -49,8 +49,7 @@ class build_mo(Command):
             self.source_dir = 'po'
         if self.lang is None:
             if self.prj_name:
-                re_po = re.compile(
-                    r'^(?:%s-)?([a-zA-Z_]+)\.po$' % self.prj_name)
+                re_po = re.compile(r'^(?:%s-)?([a-zA-Z_]+)\.po$' % self.prj_name)
             else:
                 re_po = re.compile(r'^([a-zA-Z_]+)\.po$')
             self.lang = []
@@ -82,14 +81,19 @@ class build_mo(Command):
                     en_po = '%s-en.po' % self.prj_name
                 else:
                     en_po = 'en.po'
-                self.spawn([
-                    'msginit',
-                    '--no-translator',
-                    '--no-wrap',
-                    '--locale', 'en',
-                    '--input', os.path.join(self.source_dir, pot),
-                    '--output-file', os.path.join(self.source_dir, en_po),
-                    ])
+                self.spawn(
+                    [
+                        'msginit',
+                        '--no-translator',
+                        '--no-wrap',
+                        '--locale',
+                        'en',
+                        '--input',
+                        os.path.join(self.source_dir, pot),
+                        '--output-file',
+                        os.path.join(self.source_dir, en_po),
+                    ]
+                )
 
         basename = self.output_base
         if not basename.endswith('.mo'):

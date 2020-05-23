@@ -14,10 +14,7 @@ from .toolbarcmds import COMMANDS
 from . import defs
 
 TREE_LAYOUT = {
-    'Others': [
-        'Others::LaunchEditor',
-        'Others::RevertUnstagedEdits'
-    ],
+    'Others': ['Others::LaunchEditor', 'Others::RevertUnstagedEdits'],
     'File': [
         'File::NewRepo',
         'File::OpenRepo',
@@ -42,7 +39,7 @@ TREE_LAYOUT = {
         'Actions::ResetBranchHead',
         'Actions::ResetWorktree',
         'Actions::Grep',
-        'Actions::Search'
+        'Actions::Search',
     ],
     'Commit@@verb': [
         'Commit::Stage',
@@ -53,12 +50,7 @@ TREE_LAYOUT = {
         'Commit::LoadCommitMessage',
         'Commit::GetCommitMessageTemplate',
     ],
-    'Diff': [
-        'Diff::Difftool',
-        'Diff::Expression',
-        'Diff::Branches',
-        'Diff::Diffstat'
-    ],
+    'Diff': ['Diff::Difftool', 'Diff::Expression', 'Diff::Branches', 'Diff::Diffstat'],
     'Branch': [
         'Branch::Review',
         'Branch::Create',
@@ -69,12 +61,9 @@ TREE_LAYOUT = {
         'Branch::BrowseCurrent',
         'Branch::BrowseOther',
         'Branch::VisualizeCurrent',
-        'Branch::VisualizeAll'
+        'Branch::VisualizeAll',
     ],
-    'View': [
-        'View::DAG',
-        'View::FileBrowser',
-    ]
+    'View': ['View::DAG', 'View::FileBrowser'],
 }
 
 
@@ -138,19 +127,21 @@ class ToolBarState(object):
                 continue  # filter out removed toolbars
             items = [x.data() for x in toolbar.actions()]
 
-            result.append({
-                'name': toolbar.windowTitle(),
-                'area': encode_toolbar_area(toolbar_area),
-                'break': widget.toolBarBreak(toolbar),
-                'float': toolbar.isFloating(),
-                'x': toolbar.pos().x(),
-                'y': toolbar.pos().y(),
-                'width': toolbar.width(),
-                'height': toolbar.height(),
-                'show_icons': toolbar.show_icons(),
-                'visible': toolbar.isVisible(),
-                'items': items,
-                })
+            result.append(
+                {
+                    'name': toolbar.windowTitle(),
+                    'area': encode_toolbar_area(toolbar_area),
+                    'break': widget.toolBarBreak(toolbar),
+                    'float': toolbar.isFloating(),
+                    'x': toolbar.pos().x(),
+                    'y': toolbar.pos().y(),
+                    'width': toolbar.width(),
+                    'height': toolbar.height(),
+                    'show_icons': toolbar.show_icons(),
+                    'visible': toolbar.isVisible(),
+                    'items': items,
+                }
+            )
 
         return result
 
@@ -255,6 +246,7 @@ def decode_toolbar_area(string):
 
 class ToolbarView(standard.Dialog):
     """Provides the git-cola 'ToolBar' configure dialog"""
+
     SEPARATOR_TEXT = '----------------------------'
 
     def __init__(self, toolbar, parent=None):
@@ -272,42 +264,39 @@ class ToolbarView(standard.Dialog):
         self.remove_item = qtutils.create_button(N_('Remove Element'))
         checked = toolbar.show_icons()
         checkbox_text = N_('Show icon? (if available)')
-        self.show_icon = qtutils.checkbox(
-            checkbox_text, checkbox_text, checked)
+        self.show_icon = qtutils.checkbox(checkbox_text, checkbox_text, checked)
         self.apply_button = qtutils.ok_button(N_('Apply'))
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
         self.right_actions = qtutils.hbox(
-            defs.no_margin, defs.spacing,
-            self.add_separator,
-            self.remove_item)
+            defs.no_margin, defs.spacing, self.add_separator, self.remove_item
+        )
         self.name_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing,
-            self.text_toolbar_name,
-            self.toolbar_name)
-        self.left_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing,
-            self.left_list)
+            defs.no_margin, defs.spacing, self.text_toolbar_name, self.toolbar_name
+        )
+        self.left_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.left_list)
         self.right_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing,
-            self.right_list,
-            self.right_actions)
+            defs.no_margin, defs.spacing, self.right_list, self.right_actions
+        )
         self.top_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing,
-            self.left_layout,
-            self.right_layout)
+            defs.no_margin, defs.spacing, self.left_layout, self.right_layout
+        )
         self.actions_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing,
+            defs.no_margin,
+            defs.spacing,
             self.show_icon,
             qtutils.STRETCH,
             self.close_button,
-            self.apply_button)
+            self.apply_button,
+        )
         self.main_layout = qtutils.vbox(
-            defs.margin, defs.spacing,
+            defs.margin,
+            defs.spacing,
             self.name_layout,
             self.top_layout,
-            self.actions_layout)
+            self.actions_layout,
+        )
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_separator, self.add_separator_action)
@@ -347,8 +336,7 @@ class ToolbarView(standard.Dialog):
             # current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
                 command = self.toolbar.commands[item]
-                child = create_child(parent, item,
-                                     command['title'], command['icon'])
+                child = create_child(parent, item, command['title'], command['icon'])
                 top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
@@ -457,7 +445,6 @@ class DraggableListWidget(QtWidgets.QListWidget):
 
 # pylint: disable=too-many-ancestors
 class ToolbarTreeWidget(standard.TreeView):
-
     def __init__(self, parent):
         standard.TreeView.__init__(self, parent)
 

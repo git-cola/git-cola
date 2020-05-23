@@ -19,8 +19,7 @@ from .widgets.selectcommits import select_commits_and_output
 def delete_branch(context):
     """Launch the 'Delete Branch' dialog."""
     icon = icons.discard()
-    branch = choose_branch(
-        context, N_('Delete Branch'), N_('Delete'), icon=icon)
+    branch = choose_branch(context, N_('Delete Branch'), N_('Delete'), icon=icon)
     if not branch:
         return
     cmds.do(cmds.DeleteBranch, context, branch)
@@ -29,8 +28,8 @@ def delete_branch(context):
 def delete_remote_branch(context):
     """Launch the 'Delete Remote Branch' dialog."""
     remote_branch = choose_remote_branch(
-        context, N_('Delete Remote Branch'), N_('Delete'),
-        icon=icons.discard())
+        context, N_('Delete Remote Branch'), N_('Delete'), icon=icons.discard()
+    )
     if not remote_branch:
         return
     remote, branch = gitcmds.parse_remote_branch(remote_branch)
@@ -55,8 +54,7 @@ def browse_other(context):
 
 def checkout_branch(context):
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_potential_branch(
-        context, N_('Checkout Branch'), N_('Checkout'))
+    branch = choose_potential_branch(context, N_('Checkout Branch'), N_('Checkout'))
     if not branch:
         return
     cmds.do(cmds.CheckoutBranch, context, branch)
@@ -66,7 +64,8 @@ def cherry_pick(context):
     """Launch the 'Cherry-Pick' dialog."""
     revs, summaries = gitcmds.log_helper(context, all=True)
     commits = select_commits(
-        context, N_('Cherry-Pick Commit'), revs, summaries, multiselect=False)
+        context, N_('Cherry-Pick Commit'), revs, summaries, multiselect=False
+    )
     if not commits:
         return
     cmds.do(cmds.CherryPick, context, commits)
@@ -117,8 +116,8 @@ def new_bare_repo(context):
     # Add a new remote pointing to the bare repo
     parent = qtutils.active_window()
     add_remote = editremotes.add_remote(
-        context, parent, name=os.path.basename(repo),
-        url=repo, readonly_url=True)
+        context, parent, name=os.path.basename(repo), url=repo, readonly_url=True
+    )
     if add_remote:
         result = repo
 
@@ -138,15 +137,15 @@ def prompt_for_new_bare_repo():
         name, ok = qtutils.prompt(
             N_('Enter a name for the new bare repo'),
             title=N_('New Bare Repository...'),
-            text=default)
+            text=default,
+        )
         if not name or not ok:
             return None
         if not name.endswith('.git'):
             name += '.git'
         repo = os.path.join(path, name)
         if core.isdir(repo):
-            Interaction.critical(
-                N_('Error'), N_('"%s" already exists') % repo)
+            Interaction.critical(N_('Error'), N_('"%s" already exists') % repo)
         else:
             bare_repo = repo
 
@@ -157,14 +156,18 @@ def export_patches(context):
     """Run 'git format-patch' on a list of commits."""
     revs, summaries = gitcmds.log_helper(context)
     to_export_and_output = select_commits_and_output(
-        context, N_('Export Patches'), revs, summaries)
+        context, N_('Export Patches'), revs, summaries
+    )
     if not to_export_and_output['to_export']:
         return
 
     cmds.do(
-        cmds.FormatPatch, context,
-        reversed(to_export_and_output['to_export']), reversed(revs),
-        to_export_and_output['output'])
+        cmds.FormatPatch,
+        context,
+        reversed(to_export_and_output['to_export']),
+        reversed(revs),
+        to_export_and_output['output'],
+    )
 
 
 def diff_expression(context):
@@ -180,8 +183,7 @@ def diff_expression(context):
 
 def open_repo(context):
     model = context.model
-    dirname = qtutils.opendir_dialog(
-        N_('Open Git Repository...'), model.getcwd())
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'), model.getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenRepo, context, dirname)
@@ -190,8 +192,7 @@ def open_repo(context):
 def open_repo_in_new_window(context):
     """Spawn a new cola session."""
     model = context.model
-    dirname = qtutils.opendir_dialog(
-        N_('Open Git Repository...'), model.getcwd())
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'), model.getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenNewRepo, context, dirname)
@@ -200,8 +201,7 @@ def open_repo_in_new_window(context):
 def load_commitmsg(context):
     """Load a commit message from a file."""
     model = context.model
-    filename = qtutils.open_file(
-        N_('Load Commit Message'), directory=model.getcwd())
+    filename = qtutils.open_file(N_('Load Commit Message'), directory=model.getcwd())
     if filename:
         cmds.do(cmds.LoadCommitMessageFromFile, context, filename)
 
@@ -212,24 +212,37 @@ def choose_from_dialog(get, context, title, button_text, default, icon=None):
 
 
 def choose_ref(context, title, button_text, default=None, icon=None):
-    return choose_from_dialog(completion.GitRefDialog.get,
-                              context, title, button_text, default, icon=icon)
+    return choose_from_dialog(
+        completion.GitRefDialog.get, context, title, button_text, default, icon=icon
+    )
 
 
 def choose_branch(context, title, button_text, default=None, icon=None):
-    return choose_from_dialog(completion.GitBranchDialog.get,
-                              context, title, button_text, default, icon=icon)
+    return choose_from_dialog(
+        completion.GitBranchDialog.get, context, title, button_text, default, icon=icon
+    )
 
 
-def choose_potential_branch(context, title, button_text,
-                            default=None, icon=None):
-    return choose_from_dialog(completion.GitCheckoutBranchDialog.get,
-                              context, title, button_text, default, icon=icon)
+def choose_potential_branch(context, title, button_text, default=None, icon=None):
+    return choose_from_dialog(
+        completion.GitCheckoutBranchDialog.get,
+        context,
+        title,
+        button_text,
+        default,
+        icon=icon,
+    )
 
 
 def choose_remote_branch(context, title, button_text, default=None, icon=None):
-    return choose_from_dialog(completion.GitRemoteBranchDialog.get,
-                              context, title, button_text, default, icon=icon)
+    return choose_from_dialog(
+        completion.GitRemoteBranchDialog.get,
+        context,
+        title,
+        button_text,
+        default,
+        icon=icon,
+    )
 
 
 def review_branch(context):
@@ -246,23 +259,20 @@ def rename_branch(context):
     branch = choose_branch(context, N_('Rename Existing Branch'), N_('Select'))
     if not branch:
         return
-    new_branch = choose_branch(
-        context, N_('Enter New Branch Name'), N_('Rename'))
+    new_branch = choose_branch(context, N_('Enter New Branch Name'), N_('Rename'))
     if not new_branch:
         return
     cmds.do(cmds.RenameBranch, context, branch, new_branch)
 
 
 def reset_branch_head(context):
-    ref = choose_ref(
-        context, N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
+    ref = choose_ref(context, N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
     if ref:
         cmds.do(cmds.ResetBranchHead, context, ref)
 
 
 def reset_worktree(context):
-    ref = choose_ref(
-        context, N_('Reset Worktree'), N_('Reset'))
+    ref = choose_ref(context, N_('Reset Worktree'), N_('Reset'))
     if ref:
         cmds.do(cmds.ResetWorktree, context, ref)
 

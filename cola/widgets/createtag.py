@@ -14,8 +14,7 @@ from . import standard
 from . import text
 
 
-def new_create_tag(context, name='', ref='', sign=False,
-                   settings=None, parent=None):
+def new_create_tag(context, name='', ref='', sign=False, settings=None, parent=None):
     """Entry point for external callers."""
     opts = TagOptions(name, ref, sign)
     view = CreateTag(context, opts, settings=settings, parent=parent)
@@ -24,8 +23,14 @@ def new_create_tag(context, name='', ref='', sign=False,
 
 def create_tag(context, name='', ref='', sign=False, settings=None):
     """Entry point for external callers."""
-    view = new_create_tag(context, name=name, ref=ref, sign=sign,
-                          settings=settings, parent=qtutils.active_window())
+    view = new_create_tag(
+        context,
+        name=name,
+        ref=ref,
+        sign=sign,
+        settings=settings,
+        parent=qtutils.active_window(),
+    )
     view.show()
     view.raise_()
     return view
@@ -41,7 +46,6 @@ class TagOptions(object):
 
 
 class CreateTag(standard.Dialog):
-
     def __init__(self, context, opts, settings=None, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
@@ -74,8 +78,7 @@ class CreateTag(standard.Dialog):
         self.tag_msg_label = QtWidgets.QLabel(self)
         self.tag_msg_label.setText(N_('Message'))
 
-        self.tag_msg = text.HintedPlainTextEdit(
-            context, N_('Tag message...'), self)
+        self.tag_msg = text.HintedPlainTextEdit(context, N_('Tag message...'), self)
         self.tag_msg.setToolTip(N_('Specifies the tag message'))
         # Revision
         self.rev_label = QtWidgets.QLabel(self)
@@ -85,32 +88,38 @@ class CreateTag(standard.Dialog):
         self.revision.setText(self.opts.ref)
         self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
         # Buttons
-        self.create_button = qtutils.create_button(text=N_('Create Tag'),
-                                                   icon=icons.tag(),
-                                                   default=True)
+        self.create_button = qtutils.create_button(
+            text=N_('Create Tag'), icon=icons.tag(), default=True
+        )
         self.close_button = qtutils.close_button()
 
         # Form layout for inputs
-        self.input_layout = qtutils.form(defs.margin, defs.spacing,
-                                         (self.tag_name_label, self.tag_name),
-                                         (self.tag_msg_label, self.tag_msg),
-                                         (self.rev_label, self.revision),
-                                         (self.sign_label, self.sign_tag))
+        self.input_layout = qtutils.form(
+            defs.margin,
+            defs.spacing,
+            (self.tag_name_label, self.tag_name),
+            (self.tag_msg_label, self.tag_msg),
+            (self.rev_label, self.revision),
+            (self.sign_label, self.sign_tag),
+        )
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.close_button,
-                                          qtutils.STRETCH,
-                                          self.create_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.create_button,
+        )
 
-        self.main_layt = qtutils.vbox(defs.margin, defs.spacing,
-                                      self.input_layout, self.button_layout)
+        self.main_layt = qtutils.vbox(
+            defs.margin, defs.spacing, self.input_layout, self.button_layout
+        )
         self.setLayout(self.main_layt)
 
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_tag)
 
-        self.init_state(settings, self.resize,
-                        defs.scale(720), defs.scale(210))
+        self.init_state(settings, self.resize, defs.scale(720), defs.scale(210))
 
     def create_tag(self):
         """Verifies inputs and emits a notifier tag message."""
@@ -121,7 +130,8 @@ class CreateTag(standard.Dialog):
         tag_msg = get(self.tag_msg)
         sign_tag = get(self.sign_tag)
 
-        ok = cmds.do(cmds.Tag, context, tag_name, revision,
-                     sign=sign_tag, message=tag_msg)
+        ok = cmds.do(
+            cmds.Tag, context, tag_name, revision, sign=sign_tag, message=tag_msg
+        )
         if ok:
             self.close()

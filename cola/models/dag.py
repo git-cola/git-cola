@@ -28,15 +28,12 @@ class CommitFactory(object):
             commit = cls.commits[oid]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
-            cls.root_generation = max(commit.generation,
-                                      cls.root_generation)
+            cls.root_generation = max(commit.generation, cls.root_generation)
         except KeyError:
-            commit = Commit(oid=oid,
-                            log_entry=log_entry)
+            commit = Commit(oid=oid, log_entry=log_entry)
             if not log_entry:
                 cls.root_generation += 1
-                commit.generation = max(commit.generation,
-                                        cls.root_generation)
+                commit.generation = max(commit.generation, cls.root_generation)
             cls.commits[oid] = commit
         return commit
 
@@ -82,7 +79,7 @@ class DAG(Observable):
     def paths(self):
         all_refs = utils.shell_split(self.ref)
         if '--' in all_refs:
-            all_refs = all_refs[all_refs.index('--'):]
+            all_refs = all_refs[all_refs.index('--') :]
 
         return [p for p in all_refs if p and core.exists(p)]
 
@@ -90,18 +87,20 @@ class DAG(Observable):
 class Commit(object):
     root_generation = 0
 
-    __slots__ = ('oid',
-                 'summary',
-                 'parents',
-                 'children',
-                 'tags',
-                 'author',
-                 'authdate',
-                 'email',
-                 'generation',
-                 'column',
-                 'row',
-                 'parsed')
+    __slots__ = (
+        'oid',
+        'summary',
+        'parents',
+        'children',
+        'tags',
+        'author',
+        'authdate',
+        'email',
+        'generation',
+        'column',
+        'row',
+        'parsed',
+    )
 
     def __init__(self, oid=None, log_entry=None):
         self.oid = oid
@@ -136,9 +135,9 @@ class Commit(object):
                 parent = CommitFactory.new(oid=parent_oid)
                 parent.children.append(self)
                 if generation is None:
-                    generation = parent.generation+1
+                    generation = parent.generation + 1
                 self.parents.append(parent)
-                generation = max(parent.generation+1, generation)
+                generation = max(parent.generation + 1, generation)
             self.generation = generation
 
         if tags:
@@ -193,7 +192,7 @@ class Commit(object):
         head_arrow = 'HEAD -> '
         if tag.startswith(head_arrow):
             self.tags.add('HEAD')
-            self.add_label(tag[len(head_arrow):])
+            self.add_label(tag[len(head_arrow) :])
         else:
             self.tags.add(tag)
 
@@ -223,7 +222,6 @@ class Commit(object):
 
 
 class RepoReader(object):
-
     def __init__(self, context, params):
         self.context = context
         self.params = params
@@ -231,14 +229,18 @@ class RepoReader(object):
         self.returncode = 0
         self._proc = None
         self._objects = {}
-        self._cmd = ['git',
-                     '-c', 'log.abbrevCommit=false',
-                     '-c', 'log.showSignature=false',
-                     'log',
-                     '--topo-order',
-                     '--reverse',
-                     '--decorate=full',
-                     '--pretty='+logfmt]
+        self._cmd = [
+            'git',
+            '-c',
+            'log.abbrevCommit=false',
+            '-c',
+            'log.showSignature=false',
+            'log',
+            '--topo-order',
+            '--reverse',
+            '--decorate=full',
+            '--pretty=' + logfmt,
+        ]
         self._cached = False
         """Indicates that all data has been read"""
         self._topo_list = []

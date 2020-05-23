@@ -18,32 +18,28 @@ def select_commits(context, title, revs, summaries, multiselect=True):
     """Use the SelectCommits to select commits from a list."""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommits(
-        context, model, parent, title, multiselect=multiselect)
+    dialog = SelectCommits(context, model, parent, title, multiselect=multiselect)
     return dialog.select_commits()
 
 
-def select_commits_and_output(context, title, revs, summaries,
-                              multiselect=True):
+def select_commits_and_output(context, title, revs, summaries, multiselect=True):
     """Select commits from a list and output path"""
     model = Model(revs, summaries)
     parent = qtutils.active_window()
-    dialog = SelectCommitsAndOutput(context, model, parent, title,
-                                    multiselect=multiselect)
+    dialog = SelectCommitsAndOutput(
+        context, model, parent, title, multiselect=multiselect
+    )
     return dialog.select_commits_and_output()
 
 
 class Model(object):
-
     def __init__(self, revs, summaries):
         self.revisions = revs
         self.summaries = summaries
 
 
 class SelectCommits(Dialog):
-
-    def __init__(self, context, model,
-                 parent=None, title=None, multiselect=True):
+    def __init__(self, context, model, parent=None, title=None, multiselect=True):
         Dialog.__init__(self, parent)
         self.context = context
         self.model = model
@@ -69,18 +65,22 @@ class SelectCommits(Dialog):
         self.close_button = qtutils.close_button()
 
         # Make the list widget slightly larger
-        self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.commits, self.commit_text)
+        self.splitter = qtutils.splitter(Qt.Vertical, self.commits, self.commit_text)
         self.splitter.setSizes([100, 150])
 
-        self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                         self.close_button,
-                                         qtutils.STRETCH,
-                                         self.label, self.revision,
-                                         self.select_button)
+        self.input_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.label,
+            self.revision,
+            self.select_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.margin,
-                                        self.splitter, self.input_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin, defs.margin, self.splitter, self.input_layout
+        )
         self.setLayout(self.main_layout)
 
         # pylint: disable=no-member
@@ -137,22 +137,20 @@ class SelectCommits(Dialog):
 
 
 class SelectCommitsAndOutput(SelectCommits):
-
-    def __init__(self, context, model,
-                 parent=None, title=None, multiselect=True):
-        SelectCommits.__init__(
-            self, context, model, parent, title, multiselect)
+    def __init__(self, context, model, parent=None, title=None, multiselect=True):
+        SelectCommits.__init__(self, context, model, parent, title, multiselect)
 
         self.output_dir = 'output'
         self.select_output = qtutils.create_button(
-            tooltip=N_('Select output dir'), icon=folder())
+            tooltip=N_('Select output dir'), icon=folder()
+        )
         self.output_text = QtWidgets.QLineEdit()
         self.output_text.setReadOnly(True)
         self.output_text.setText(self.output_dir)
 
-        output_layout = qtutils.hbox(defs.no_margin, defs.no_spacing,
-                                     self.select_output,
-                                     self.output_text)
+        output_layout = qtutils.hbox(
+            defs.no_margin, defs.no_spacing, self.select_output, self.output_text
+        )
 
         self.input_layout.insertLayout(1, output_layout)
         qtutils.connect_button(self.select_output, self.show_output_dialog)
@@ -164,8 +162,9 @@ class SelectCommitsAndOutput(SelectCommits):
         return {'to_export': to_export, 'output': output}
 
     def show_output_dialog(self):
-        self.output_dir = qtutils.opendir_dialog(N_('Select output directory'),
-                                                 self.output_dir)
+        self.output_dir = qtutils.opendir_dialog(
+            N_('Select output directory'), self.output_dir
+        )
         if not self.output_dir:
             return
 

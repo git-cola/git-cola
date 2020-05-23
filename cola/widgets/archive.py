@@ -91,7 +91,6 @@ def show_save_dialog(context, oid, parent=None):
 
 
 class Archive(Dialog):
-
     def __init__(self, context, ref, shortref=None, parent=None):
         Dialog.__init__(self, parent=parent)
         self.context = context
@@ -123,9 +122,9 @@ class Archive(Dialog):
         self.format_combo = qtutils.combo(self.format_strings)
 
         self.close_button = qtutils.close_button()
-        self.save_button = qtutils.create_button(text=N_('Save'),
-                                                 icon=icons.save(),
-                                                 default=True)
+        self.save_button = qtutils.create_button(
+            text=N_('Save'), icon=icons.save(), default=True
+        )
         self.prefix_label = QtWidgets.QLabel()
         self.prefix_label.setText(N_('Prefix'))
         self.prefix_text = LineEdit()
@@ -135,22 +134,32 @@ class Archive(Dialog):
         self.prefix_group.setTitle(N_('Advanced'))
 
         # layouts
-        self.filelayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                     self.browse, self.filetext,
-                                     self.format_combo)
+        self.filelayt = qtutils.hbox(
+            defs.no_margin, defs.spacing, self.browse, self.filetext, self.format_combo
+        )
 
-        self.prefixlayt = qtutils.hbox(defs.margin, defs.spacing,
-                                       self.prefix_label, self.prefix_text)
+        self.prefixlayt = qtutils.hbox(
+            defs.margin, defs.spacing, self.prefix_label, self.prefix_text
+        )
         self.prefix_group.setLayout(self.prefixlayt)
         self.prefix_group.set_expanded(False)
 
-        self.btnlayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                    self.close_button, qtutils.STRETCH,
-                                    self.save_button)
+        self.btnlayt = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.save_button,
+        )
 
-        self.mainlayt = qtutils.vbox(defs.margin, defs.no_spacing,
-                                     self.filelayt, self.prefix_group,
-                                     qtutils.STRETCH, self.btnlayt)
+        self.mainlayt = qtutils.vbox(
+            defs.margin,
+            defs.no_spacing,
+            self.filelayt,
+            self.prefix_group,
+            qtutils.STRETCH,
+            self.btnlayt,
+        )
         self.setLayout(self.mainlayt)
 
         # initial setup; done before connecting to avoid
@@ -187,7 +196,8 @@ class Archive(Dialog):
 
         cmds.do(cmds.Archive, context, ref, fmt, prefix, filename)
         Interaction.information(
-            N_('File Saved'), N_('File saved to "%s"') % self.filename)
+            N_('File Saved'), N_('File saved to "%s"') % self.filename
+        )
 
     def save_archive(self):
         filename = self.filename
@@ -199,8 +209,8 @@ class Archive(Dialog):
             info_txt = N_('Overwrite "%s"?') % filename
             ok_txt = N_('Overwrite')
             if not Interaction.confirm(
-                    title, msg, info_txt, ok_txt,
-                    default=False, icon=icons.save()):
+                title, msg, info_txt, ok_txt, default=False, icon=icons.save()
+            ):
                 return
         self.accept()
 
@@ -222,9 +232,9 @@ class Archive(Dialog):
 
     def strip_exts(self, text):
         for format_string in self.format_strings:
-            ext = '.'+format_string
+            ext = '.' + format_string
             if text.endswith(ext):
-                return text[:-len(ext)]
+                return text[: -len(ext)]
         return text
 
     def update_format(self, idx):

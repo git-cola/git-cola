@@ -27,7 +27,6 @@ def preferences(context, model=None, parent=None):
 
 
 class FormWidget(QtWidgets.QWidget):
-
     def __init__(self, context, model, parent, source='user'):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
@@ -57,35 +56,38 @@ class FormWidget(QtWidgets.QWidget):
             widget.toggled.connect(self._bool_config_changed(config))
 
         elif isinstance(widget, QtWidgets.QLineEdit):
-            widget.editingFinished.connect(
-                self._text_config_changed(config, widget))
-            widget.returnPressed.connect(
-                self._text_config_changed(config, widget))
+            widget.editingFinished.connect(self._text_config_changed(config, widget))
+            widget.returnPressed.connect(self._text_config_changed(config, widget))
 
         elif isinstance(widget, qtutils.ComboBox):
             widget.currentIndexChanged.connect(
-                self._item_config_changed(config, widget))
+                self._item_config_changed(config, widget)
+            )
 
     def _int_config_changed(self, config):
         def runner(value):
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+
         return runner
 
     def _bool_config_changed(self, config):
         def runner(value):
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+
         return runner
 
     def _text_config_changed(self, config, widget):
         def runner():
             value = widget.text()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+
         return runner
 
     def _item_config_changed(self, config, widget):
         def runner():
             value = widget.current_data()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+
         return runner
 
     def update_from_config(self):
@@ -115,7 +117,6 @@ def set_widget_value(widget, value):
 
 
 class RepoFormWidget(FormWidget):
-
     def __init__(self, context, model, parent, source):
         FormWidget.__init__(self, context, model, parent, source=source)
         self.name = QtWidgets.QLineEdit()
@@ -134,17 +135,14 @@ class RepoFormWidget(FormWidget):
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
 
-        tooltip = N_(
-            'Prevent "Stage" from staging all files when nothing is selected')
+        tooltip = N_('Prevent "Stage" from staging all files when nothing is selected')
         self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
 
         tooltip = N_('Enable path autocompletion in tools')
-        self.autocomplete_paths = qtutils.checkbox(
-            checked=True, tooltip=tooltip)
+        self.autocomplete_paths = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         tooltip = N_('Check whether a commit has been published when amending')
-        self.check_published_commits = qtutils.checkbox(
-            checked=True, tooltip=tooltip)
+        self.check_published_commits = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
@@ -153,46 +151,50 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
-        self.add_row(N_('Automatically Load Commit Message Template'),
-                     self.autotemplate)
+        self.add_row(
+            N_('Automatically Load Commit Message Template'), self.autotemplate
+        )
         self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
-        self.add_row(N_('Check Published Commits when Amending'),
-                     self.check_published_commits)
+        self.add_row(
+            N_('Check Published Commits when Amending'), self.check_published_commits
+        )
 
-        self.set_config({
-            prefs.AUTOTEMPLATE:
-                (self.autotemplate, Defaults.autotemplate),
-            prefs.CHECK_CONFLICTS:
-                (self.check_conflicts, Defaults.check_conflicts),
-            prefs.CHECK_PUBLISHED_COMMITS: (
-                self.check_published_commits,
-                Defaults.check_published_commits),
-            prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
-            prefs.DISPLAY_UNTRACKED:
-                (self.display_untracked, Defaults.display_untracked),
-            prefs.USER_NAME: (self.name, ''),
-            prefs.USER_EMAIL: (self.email, ''),
-            prefs.MERGE_DIFFSTAT:
-                (self.merge_diffstat, Defaults.merge_diffstat),
-            prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
-            prefs.MERGE_VERBOSITY:
-                (self.merge_verbosity, Defaults.merge_verbosity),
-            prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
-            prefs.AUTOCOMPLETE_PATHS: (
-                self.autocomplete_paths, Defaults.autocomplete_paths),
-            prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
-            prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
-            prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
-        })
+        self.set_config(
+            {
+                prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
+                prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
+                prefs.CHECK_PUBLISHED_COMMITS: (
+                    self.check_published_commits,
+                    Defaults.check_published_commits,
+                ),
+                prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
+                prefs.DISPLAY_UNTRACKED: (
+                    self.display_untracked,
+                    Defaults.display_untracked,
+                ),
+                prefs.USER_NAME: (self.name, ''),
+                prefs.USER_EMAIL: (self.email, ''),
+                prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
+                prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
+                prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),
+                prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
+                prefs.AUTOCOMPLETE_PATHS: (
+                    self.autocomplete_paths,
+                    Defaults.autocomplete_paths,
+                ),
+                prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
+                prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
+                prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
+            }
+        )
 
 
 class SettingsFormWidget(FormWidget):
-
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
 
@@ -231,27 +233,33 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Check spelling'), self.check_spelling)
 
-        self.set_config({
-            prefs.SAVEWINDOWSETTINGS:
-                (self.save_window_settings, Defaults.save_window_settings),
-            prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
-            prefs.EXPANDTAB: (self.expandtab, Defaults.expandtab),
-            prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
-            prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
-            prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
-            prefs.SORT_BOOKMARKS:
-                (self.sort_bookmarks, Defaults.sort_bookmarks),
-            prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
-            prefs.EDITOR:
-                (self.editor, os.getenv('VISUAL', Defaults.editor)),
-            prefs.HISTORY_BROWSER:
-                (self.historybrowser, prefs.default_history_browser()),
-            prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
-            prefs.MERGE_KEEPBACKUP:
-                (self.keep_merge_backups, Defaults.merge_keep_backup),
-            prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
-            prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
-        })
+        self.set_config(
+            {
+                prefs.SAVEWINDOWSETTINGS: (
+                    self.save_window_settings,
+                    Defaults.save_window_settings,
+                ),
+                prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
+                prefs.EXPANDTAB: (self.expandtab, Defaults.expandtab),
+                prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
+                prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
+                prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
+                prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
+                prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
+                prefs.EDITOR: (self.editor, os.getenv('VISUAL', Defaults.editor)),
+                prefs.HISTORY_BROWSER: (
+                    self.historybrowser,
+                    prefs.default_history_browser(),
+                ),
+                prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
+                prefs.MERGE_KEEPBACKUP: (
+                    self.keep_merge_backups,
+                    Defaults.merge_keep_backup,
+                ),
+                prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+                prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
+            }
+        )
 
         # pylint: disable=no-member
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
@@ -273,16 +281,13 @@ class SettingsFormWidget(FormWidget):
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
-        cmds.do(prefs.SetConfig, self.model,
-                'user', prefs.FONTDIFF, font.toString())
+        cmds.do(prefs.SetConfig, self.model, 'user', prefs.FONTDIFF, font.toString())
 
     def current_font_changed(self, font):
-        cmds.do(prefs.SetConfig, self.model,
-                'user', prefs.FONTDIFF, font.toString())
+        cmds.do(prefs.SetConfig, self.model, 'user', prefs.FONTDIFF, font.toString())
 
 
 class AppearanceFormWidget(FormWidget):
-
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
         # Theme selectors
@@ -301,35 +306,42 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('Icon theme'), self.icon_theme)
         self.add_row(N_('High DPI'), self.high_dpi)
-        self.add_row(N_('Bold on dark headers instead of italic'),
-                     self.bold_headers)
-        self.add_row(N_('Show file counts in Status titles'),
-                     self.status_show_totals)
+        self.add_row(N_('Bold on dark headers instead of italic'), self.bold_headers)
+        self.add_row(N_('Show file counts in Status titles'), self.status_show_totals)
         self.add_row(N_('Indent Status paths'), self.status_indent)
 
-        self.set_config({
-            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
-            prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
-            prefs.STATUS_SHOW_TOTALS:
-                (self.status_show_totals, Defaults.status_show_totals),
-            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
-            prefs.THEME: (self.theme, Defaults.theme),
-            prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
-        })
+        self.set_config(
+            {
+                prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
+                prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
+                prefs.STATUS_SHOW_TOTALS: (
+                    self.status_show_totals,
+                    Defaults.status_show_totals,
+                ),
+                prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
+                prefs.THEME: (self.theme, Defaults.theme),
+                prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
+            }
+        )
 
 
 class AppearanceWidget(QtWidgets.QWidget):
-
     def __init__(self, form, parent):
         QtWidgets.QWidget.__init__(self, parent)
         self.form = form
         self.label = QtWidgets.QLabel(
             '<center><b>'
             + N_('Restart the application after changing appearance settings.')
-            + '</b></center>')
-        layout = qtutils.vbox(defs.margin, defs.spacing,
-                              self.form, defs.spacing * 4, self.label,
-                              qtutils.STRETCH)
+            + '</b></center>'
+        )
+        layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.form,
+            defs.spacing * 4,
+            self.label,
+            qtutils.STRETCH,
+        )
         self.setLayout(layout)
 
     def update_from_config(self):
@@ -337,7 +349,6 @@ class AppearanceWidget(QtWidgets.QWidget):
 
 
 class PreferencesView(standard.Dialog):
-
     def __init__(self, context, model, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
@@ -368,12 +379,17 @@ class PreferencesView(standard.Dialog):
 
         self.close_button = qtutils.close_button()
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          qtutils.STRETCH, self.close_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin, defs.spacing, qtutils.STRETCH, self.close_button
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.tab_bar, self.stack_widget,
-                                        self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.tab_bar,
+            self.stack_widget,
+            self.button_layout,
+        )
         self.setLayout(self.main_layout)
 
         # pylint: disable=no-member

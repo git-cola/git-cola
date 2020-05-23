@@ -50,54 +50,83 @@ class Merge(standard.Dialog):
         self.revisions = QtWidgets.QListWidget()
         self.revisions.setAlternatingRowColors(True)
 
-        self.button_viz = qtutils.create_button(text=N_('Visualize'),
-                                                icon=icons.visualize())
+        self.button_viz = qtutils.create_button(
+            text=N_('Visualize'), icon=icons.visualize()
+        )
 
         tooltip = N_('Squash the merged commits into a single commit')
-        self.checkbox_squash = qtutils.checkbox(text=N_('Squash'),
-                                                tooltip=tooltip)
+        self.checkbox_squash = qtutils.checkbox(text=N_('Squash'), tooltip=tooltip)
 
-        tooltip = N_('Always create a merge commit when enabled, '
-                     'even when the merge is a fast-forward update')
-        self.checkbox_noff = qtutils.checkbox(text=N_('No fast forward'),
-                                              tooltip=tooltip, checked=False)
+        tooltip = N_(
+            'Always create a merge commit when enabled, '
+            'even when the merge is a fast-forward update'
+        )
+        self.checkbox_noff = qtutils.checkbox(
+            text=N_('No fast forward'), tooltip=tooltip, checked=False
+        )
         self.checkbox_noff_state = False
 
-        tooltip = N_('Commit the merge if there are no conflicts.  '
-                     'Uncheck to leave the merge uncommitted')
-        self.checkbox_commit = qtutils.checkbox(text=N_('Commit'),
-                                                tooltip=tooltip, checked=True)
+        tooltip = N_(
+            'Commit the merge if there are no conflicts.  '
+            'Uncheck to leave the merge uncommitted'
+        )
+        self.checkbox_commit = qtutils.checkbox(
+            text=N_('Commit'), tooltip=tooltip, checked=True
+        )
         self.checkbox_commit_state = True
 
         text = N_('Create Signed Commit')
         checked = cfg.get('cola.signcommits', False)
         tooltip = N_('GPG-sign the merge commit')
-        self.checkbox_sign = qtutils.checkbox(text=text, checked=checked,
-                                              tooltip=tooltip)
+        self.checkbox_sign = qtutils.checkbox(
+            text=text, checked=checked, tooltip=tooltip
+        )
         self.button_close = qtutils.close_button()
 
         icon = icons.merge()
-        self.button_merge = qtutils.create_button(text=N_('Merge'), icon=icon,
-                                                  default=True)
+        self.button_merge = qtutils.create_button(
+            text=N_('Merge'), icon=icon, default=True
+        )
 
         # Layouts
-        self.revlayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                    self.revision_label, self.revision,
-                                    qtutils.STRETCH, self.title_label)
+        self.revlayt = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.revision_label,
+            self.revision,
+            qtutils.STRETCH,
+            self.title_label,
+        )
 
-        self.radiolayt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                      self.radio_local, self.radio_remote,
-                                      self.radio_tag)
+        self.radiolayt = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.radio_local,
+            self.radio_remote,
+            self.radio_tag,
+        )
 
-        self.buttonlayt = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.button_close, qtutils.STRETCH,
-                                       self.checkbox_squash, self.checkbox_noff,
-                                       self.checkbox_commit, self.checkbox_sign,
-                                       self.button_viz, self.button_merge)
+        self.buttonlayt = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.button_close,
+            qtutils.STRETCH,
+            self.checkbox_squash,
+            self.checkbox_noff,
+            self.checkbox_commit,
+            self.checkbox_sign,
+            self.button_viz,
+            self.button_merge,
+        )
 
-        self.mainlayt = qtutils.vbox(defs.margin, defs.spacing,
-                                     self.radiolayt, self.revisions,
-                                     self.revlayt, self.buttonlayt)
+        self.mainlayt = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.radiolayt,
+            self.revisions,
+            self.revlayt,
+            self.buttonlayt,
+        )
         self.setLayout(self.mainlayt)
 
         # Signal/slot connections
@@ -130,8 +159,9 @@ class Merge(standard.Dialog):
         branch = self.model.currentbranch
         revision = self.revision.text()
         if revision:
-            txt = (N_('Merge "%(revision)s" into "%(branch)s"') %
-                   dict(revision=revision, branch=branch))
+            txt = N_('Merge "%(revision)s" into "%(branch)s"') % dict(
+                revision=revision, branch=branch
+            )
         else:
             txt = N_('Merge into "%s"') % branch
         self.button_merge.setEnabled(bool(revision))
@@ -183,8 +213,8 @@ class Merge(standard.Dialog):
         revision = self.revision.text()
         if not revision:
             Interaction.information(
-                N_('No Revision Specified'),
-                N_('You must specify a revision to view.'))
+                N_('No Revision Specified'), N_('You must specify a revision to view.')
+            )
             return
         cmds.do(cmds.VisualizeRevision, self.context, revision)
 
@@ -193,8 +223,8 @@ class Merge(standard.Dialog):
         revision = self.revision.text()
         if not revision:
             Interaction.information(
-                N_('No Revision Specified'),
-                N_('You must specify a revision to merge.'))
+                N_('No Revision Specified'), N_('You must specify a revision to merge.')
+            )
             return
 
         noff = get(self.checkbox_noff)

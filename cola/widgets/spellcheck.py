@@ -19,7 +19,6 @@ from .text import HintedTextEdit
 
 # pylint: disable=too-many-ancestors
 class SpellCheckTextEdit(HintedTextEdit):
-
     def __init__(self, context, hint, parent=None):
         HintedTextEdit.__init__(self, context, hint, parent)
 
@@ -34,11 +33,13 @@ class SpellCheckTextEdit(HintedTextEdit):
         if event.button() == Qt.RightButton:
             # Rewrite the mouse event to a left button event so the cursor is
             # moved to the location of the pointer.
-            event = QMouseEvent(QEvent.MouseButtonPress,
-                                event.pos(),
-                                Qt.LeftButton,
-                                Qt.LeftButton,
-                                Qt.NoModifier)
+            event = QMouseEvent(
+                QEvent.MouseButtonPress,
+                event.pos(),
+                Qt.LeftButton,
+                Qt.LeftButton,
+                Qt.NoModifier,
+            )
         HintedTextEdit.mousePressEvent(self, event)
 
     def context_menu(self):
@@ -106,13 +107,15 @@ class Highlighter(QSyntaxHighlighter):
 
         for word_object in re.finditer(self.WORDS, text):
             if not self.spellcheck.check(word_object.group()):
-                self.setFormat(word_object.start(),
-                               word_object.end() - word_object.start(), fmt)
+                self.setFormat(
+                    word_object.start(), word_object.end() - word_object.start(), fmt
+                )
 
 
 class SpellAction(QAction):
     """QAction that returns the text in a signal.
     """
+
     result = Signal(object)
 
     def __init__(self, *args):

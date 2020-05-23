@@ -194,7 +194,7 @@ def strip_prefix(prefix, string):
     """Return string, without the prefix. Blow up if string doesn't
     start with prefix."""
     assert string.startswith(prefix)
-    return string[len(prefix):]
+    return string[len(prefix) :]
 
 
 def sanitize(s):
@@ -246,7 +246,7 @@ def shell_split(s):
 
 def tmp_filename(label, suffix=''):
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
-    fd = tempfile.NamedTemporaryFile(prefix=label+'-', suffix=suffix)
+    fd = tempfile.NamedTemporaryFile(prefix=label + '-', suffix=suffix)
     fd.close()
     return fd.name
 
@@ -287,10 +287,12 @@ class Group(object):
 
     def __getattr__(self, name):
         """Return a function that relays calls to the group"""
+
         def relay(*args, **kwargs):
             for member in self._members:
                 method = getattr(member, name)
                 method(*args, **kwargs)
+
         setattr(self, name, relay)
         return relay
 
@@ -359,7 +361,6 @@ def slice_fn(input_items, map_fn):
 
 
 class seq(object):
-
     def __init__(self, sequence):
         self.seq = sequence
 

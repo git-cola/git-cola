@@ -52,4 +52,5 @@ setup_environment()
 
 if __name__ == '__main__':
     from cola import dag
+
     sys.exit(dag.main())

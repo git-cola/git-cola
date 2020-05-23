@@ -44,13 +44,13 @@ def _filter(a, b):
 
 class SelectionModel(Observable):
     """Provides information about selected file paths."""
+
     # Notification message sent out when selection changes
     message_selection_changed = 'selection_changed'
 
     # These properties wrap the individual selection items
     # to provide higher-level pseudo-selections.
-    unstaged = property(lambda self:
-                        self.unmerged + self.modified + self.untracked)
+    unstaged = property(lambda self: self.unmerged + self.modified + self.untracked)
 
     def __init__(self):
         Observable.__init__(self)
@@ -68,8 +68,9 @@ class SelectionModel(Observable):
         self.line_number = None
 
     def is_empty(self):
-        return not(bool(self.staged or self.unmerged or
-                        self.modified or self.untracked))
+        return not (
+            bool(self.staged or self.unmerged or self.modified or self.untracked)
+        )
 
     def set_selection(self, s):
         """Set the new selection."""
@@ -87,8 +88,7 @@ class SelectionModel(Observable):
         self.notify_observers(self.message_selection_changed)
 
     def selection(self):
-        return State(self.staged, self.unmerged,
-                     self.modified, self.untracked)
+        return State(self.staged, self.unmerged, self.modified, self.untracked)
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""

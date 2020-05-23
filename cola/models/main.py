@@ -20,6 +20,7 @@ def create(context):
 
 class MainModel(Observable):
     """Repository status model"""
+
     # TODO this class can probably be split apart into a DiffModel,
     # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
 
@@ -55,8 +56,7 @@ class MainModel(Observable):
     # Modes where we can partially unstage files
     modes_unstageable = set((mode_amend, mode_index))
 
-    unstaged = property(
-        lambda self: self.modified + self.unmerged + self.untracked)
+    unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
     def __init__(self, context, cwd=None):
@@ -146,9 +146,13 @@ class MainModel(Observable):
         lfs_filter = self.cfg.get('filter.lfs.clean', default=False)
         lfs_dir = lfs_filter and self.git.git_path('lfs')
         lfs_hook = lfs_filter and self.git.git_path('hooks', 'post-merge')
-        return (lfs_filter
-                and lfs_dir and core.exists(lfs_dir)
-                and lfs_hook and core.exists(lfs_hook))
+        return (
+            lfs_filter
+            and lfs_dir
+            and core.exists(lfs_dir)
+            and lfs_hook
+            and core.exists(lfs_hook)
+        )
 
     def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
@@ -251,8 +255,12 @@ class MainModel(Observable):
         context = self.context
         display_untracked = prefs.display_untracked(context)
         state = gitcmds.worktree_state(
-            context, head=self.head, update_index=update_index,
-            display_untracked=display_untracked, paths=self.filter_paths)
+            context,
+            head=self.head,
+            update_index=update_index,
+            display_untracked=display_untracked,
+            paths=self.filter_paths,
+        )
         self.staged = state.get('staged', [])
         self.modified = state.get('modified', [])
         self.unmerged = state.get('unmerged', [])
@@ -271,8 +279,9 @@ class MainModel(Observable):
             self.set_diff_text('')
 
     def is_empty(self):
-        return not(bool(self.staged or self.modified or
-                        self.unmerged or self.untracked))
+        return not (
+            bool(self.staged or self.modified or self.unmerged or self.untracked)
+        )
 
     def is_empty_repository(self):
         return not self.local_branches
@@ -288,7 +297,8 @@ class MainModel(Observable):
         )
         sort_key = sort_types[self.ref_sort]
         local_branches, remote_branches, tags = gitcmds.all_refs(
-            context, split=True, sort_key=sort_key)
+            context, split=True, sort_key=sort_key
+        )
         self.local_branches = local_branches
         self.remote_branches = remote_branches
         self.tags = tags
@@ -361,16 +371,17 @@ class MainModel(Observable):
 
     def push(self, remote, remote_branch='', local_branch='', **opts):
         # Swap the branches in push mode (reverse of fetch)
-        opts.update(dict(local_branch=remote_branch,
-                         remote_branch=local_branch))
+        opts.update(dict(local_branch=remote_branch, remote_branch=local_branch))
         result = run_remote_action(
-            self.context, self.git.push, remote, push=True, **opts)
+            self.context, self.git.push, remote, push=True, **opts
+        )
         self.update_refs()
         return result
 
     def pull(self, remote, **opts):
         result = run_remote_action(
-            self.context, self.git.pull, remote, pull=True, **opts)
+            self.context, self.git.pull, remote, pull=True, **opts
+        )
         # Pull can result in merge conflicts
         self.update_refs()
         self.update_files(update_index=False, emit=True)
@@ -428,18 +439,21 @@ class MainModel(Observable):
 
 # Helpers
 # pylint: disable=too-many-arguments
-def remote_args(context, remote,
-                local_branch='',
-                remote_branch='',
-                ff_only=False,
-                force=False,
-                no_ff=False,
-                tags=False,
-                rebase=False,
-                pull=False,
-                push=False,
-                set_upstream=False,
-                prune=False):
+def remote_args(
+    context,
+    remote,
+    local_branch='',
+    remote_branch='',
+    ff_only=False,
+    force=False,
+    no_ff=False,
+    tags=False,
+    rebase=False,
+    pull=False,
+    push=False,
+    set_upstream=False,
+    prune=False,
+):
     """Return arguments for git fetch/push/pull"""
 
     args = [remote]

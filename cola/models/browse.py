@@ -31,13 +31,9 @@ class Columns(object):
 
     @classmethod
     def init(cls):
-        cls.TEXT.extend([
-            N_('Name'),
-            N_('Status'),
-            N_('Message'),
-            N_('Author'),
-            N_('Age'),
-        ])
+        cls.TEXT.extend(
+            [N_('Name'), N_('Status'), N_('Message'), N_('Author'), N_('Age')]
+        )
 
     @classmethod
     def text_values(cls):
@@ -92,8 +88,9 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def mimeData(self, indexes):
         context = self.context
-        paths = qtutils.paths_from_indexes(self, indexes,
-                                           item_type=GitRepoNameItem.TYPE)
+        paths = qtutils.paths_from_indexes(
+            self, indexes, item_type=GitRepoNameItem.TYPE
+        )
         return qtutils.mimedata_from_paths(context, paths)
 
     # pylint: disable=no-self-use
@@ -126,7 +123,8 @@ class GitRepoModel(QtGui.QStandardItemModel):
             if create:
                 column = create_column
                 row = self.entries[path] = [
-                    column(c, path, is_dir) for c in Columns.ALL]
+                    column(c, path, is_dir) for c in Columns.ALL
+                ]
             else:
                 row = None
         return row
@@ -247,8 +245,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         if self.turbo or path not in self.entries:
             return  # entry doesn't currently exist
         context = self.context
-        task = GitRepoInfoTask(
-            context, self._parent, path, self.default_author)
+        task = GitRepoInfoTask(context, self._parent, path, self.default_author)
         self._runtask.start(task)
 
 
@@ -283,8 +280,13 @@ class GitRepoInfoTask(qtutils.Task):
         git = self.context.git
         if not self._data:
             log_line = git.log(
-                '-1', '--', self.path, no_color=True,
-                pretty=r'format:%ar%x01%s%x01%an', _readonly=True)[STDOUT]
+                '-1',
+                '--',
+                self.path,
+                no_color=True,
+                pretty=r'format:%ar%x01%s%x01%an',
+                _readonly=True,
+            )[STDOUT]
             if log_line:
                 date, message, author = log_line.split(chr(0x01), 2)
                 self._data['date'] = date
@@ -361,6 +363,7 @@ class GitRepoInfoTask(qtutils.Task):
 
 class GitRepoInfoEvent(QtCore.QEvent):
     """Transport mechanism for communicating from a GitRepoInfoTask."""
+
     # Custom event type
     TYPE = QtCore.QEvent.Type(QtCore.QEvent.registerEventType())
 
@@ -380,6 +383,7 @@ class GitRepoItem(QtGui.QStandardItem):
     One is created for each column -- Name, Status, Age, etc.
 
     """
+
     def __init__(self, path):
         QtGui.QStandardItem.__init__(self)
         self.path = path
@@ -398,6 +402,7 @@ class GitRepoItem(QtGui.QStandardItem):
 
 class GitRepoNameItem(GitRepoItem):
     """Subclass GitRepoItem to provide a custom type()."""
+
     TYPE = QtGui.QStandardItem.ItemType(QtGui.QStandardItem.UserType + 1)
 
     def __init__(self, path, is_dir):

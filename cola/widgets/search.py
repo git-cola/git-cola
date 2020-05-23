@@ -27,7 +27,6 @@ def mkdate(timespec):
 
 
 class SearchOptions(object):
-
     def __init__(self):
         self.query = ''
         self.max_count = 500
@@ -36,7 +35,6 @@ class SearchOptions(object):
 
 
 class SearchWidget(standard.Dialog):
-
     def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent)
 
@@ -44,8 +42,9 @@ class SearchWidget(standard.Dialog):
         self.setWindowTitle(N_('Search'))
 
         self.mode_combo = QtWidgets.QComboBox()
-        self.browse_button = create_toolbutton(icon=icons.folder(),
-                                               tooltip=N_('Browse...'))
+        self.browse_button = create_toolbutton(
+            icon=icons.folder(), tooltip=N_('Browse...')
+        )
         self.query = QtWidgets.QLineEdit()
 
         self.start_date = QtWidgets.QDateEdit()
@@ -59,8 +58,9 @@ class SearchWidget(standard.Dialog):
         self.end_date.setDisplayFormat(N_('yyyy-MM-dd'))
 
         icon = icons.search()
-        self.search_button = qtutils.create_button(text=N_('Search'),
-                                                   icon=icon, default=True)
+        self.search_button = qtutils.create_button(
+            text=N_('Search'), icon=icon, default=True
+        )
         self.max_count = standard.SpinBox(value=500, mini=5, maxi=9995, step=5)
 
         self.commit_list = QtWidgets.QListWidget()
@@ -71,31 +71,48 @@ class SearchWidget(standard.Dialog):
 
         self.commit_text = diff.DiffTextEdit(context, self, whitespace=False)
 
-        self.button_export = qtutils.create_button(text=N_('Export Patches'),
-                                                   icon=icons.diff())
+        self.button_export = qtutils.create_button(
+            text=N_('Export Patches'), icon=icons.diff()
+        )
 
-        self.button_cherrypick = qtutils.create_button(text=N_('Cherry Pick'),
-                                                       icon=icons.save())
+        self.button_cherrypick = qtutils.create_button(
+            text=N_('Cherry Pick'), icon=icons.save()
+        )
         self.button_close = qtutils.close_button()
 
-        self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.query, self.start_date,
-                                       self.end_date, self.browse_button,
-                                       self.search_button, qtutils.STRETCH,
-                                       self.mode_combo, self.max_count)
+        self.top_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.query,
+            self.start_date,
+            self.end_date,
+            self.browse_button,
+            self.search_button,
+            qtutils.STRETCH,
+            self.mode_combo,
+            self.max_count,
+        )
 
-        self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.commit_list, self.commit_text)
+        self.splitter = qtutils.splitter(
+            Qt.Vertical, self.commit_list, self.commit_text
+        )
 
-        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.button_close,
-                                          qtutils.STRETCH,
-                                          self.button_export,
-                                          self.button_cherrypick)
+        self.bottom_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.button_close,
+            qtutils.STRETCH,
+            self.button_export,
+            self.button_cherrypick,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.top_layout, self.splitter,
-                                        self.bottom_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.top_layout,
+            self.splitter,
+            self.bottom_layout,
+        )
         self.setLayout(self.main_layout)
 
         self.init_size(parent=parent)
@@ -140,7 +157,6 @@ class SearchEngine(object):
 
 
 class RevisionSearch(SearchEngine):
-
     def results(self):
         query, opts = self.common_args()
         args = utils.shell_split(query)
@@ -148,7 +164,6 @@ class RevisionSearch(SearchEngine):
 
 
 class PathSearch(SearchEngine):
-
     def results(self):
         query, args = self.common_args()
         paths = ['--'] + utils.shell_split(query)
@@ -156,37 +171,31 @@ class PathSearch(SearchEngine):
 
 
 class MessageSearch(SearchEngine):
-
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, grep=query, **kwargs)
 
 
 class AuthorSearch(SearchEngine):
-
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, author=query, **kwargs)
 
 
 class CommitterSearch(SearchEngine):
-
     def results(self):
         query, kwargs = self.common_args()
         return self.revisions(all=True, committer=query, **kwargs)
 
 
 class DiffSearch(SearchEngine):
-
     def results(self):
         git = self.context.git
         query, kwargs = self.common_args()
-        return gitcmds.parse_rev_list(
-            git.log('-S'+query, all=True, **kwargs)[STDOUT])
+        return gitcmds.parse_rev_list(git.log('-S' + query, all=True, **kwargs)[STDOUT])
 
 
 class DateRangeSearch(SearchEngine):
-
     def validate(self):
         return self.model.start_date < self.model.end_date
 
@@ -194,15 +203,12 @@ class DateRangeSearch(SearchEngine):
         kwargs = self.rev_args()
         start_date = self.model.start_date
         end_date = self.model.end_date
-        return self.revisions(date='iso',
-                              all=True,
-                              after=start_date,
-                              before=end_date,
-                              **kwargs)
+        return self.revisions(
+            date='iso', all=True, after=start_date, before=end_date, **kwargs
+        )
 
 
 class Search(SearchWidget):
-
     def __init__(self, context, model, parent):
         """
         Search diffs and commit logs
@@ -233,8 +239,15 @@ class Search(SearchWidget):
             self.DATE_RANGE: DateRangeSearch,
         }
 
-        self.modes = (self.EXPR, self.PATH, self.DATE_RANGE,
-                      self.DIFF, self.MESSAGE, self.AUTHOR, self.COMMITTER)
+        self.modes = (
+            self.EXPR,
+            self.PATH,
+            self.DATE_RANGE,
+            self.DIFF,
+            self.MESSAGE,
+            self.AUTHOR,
+            self.COMMITTER,
+        )
         self.mode_combo.addItems(self.modes)
 
         connect_button(self.search_button, self.search_callback)
@@ -247,8 +260,8 @@ class Search(SearchWidget):
         self.mode_combo.currentIndexChanged.connect(self.mode_changed)
         self.commit_list.itemSelectionChanged.connect(self.display)
 
-        self.set_start_date(mkdate(time.time()-(87640*31)))
-        self.set_end_date(mkdate(time.time()+87640))
+        self.set_start_date(mkdate(time.time() - (87640 * 31)))
+        self.set_end_date(mkdate(time.time() + 87640))
         self.set_mode(self.EXPR)
 
         self.query.setFocus()
@@ -344,8 +357,9 @@ class Search(SearchWidget):
         context = self.context
         revision = self.selected_revision()
         if revision is not None:
-            Interaction.log_status(*gitcmds.export_patchset(
-                context, revision, revision))
+            Interaction.log_status(
+                *gitcmds.export_patchset(context, revision, revision)
+            )
 
     def cherry_pick(self):
         git = self.context.git

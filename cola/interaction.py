@@ -36,8 +36,9 @@ class Interaction(object):
 
     @staticmethod
     def format_command_status(cmd, status):
-        return (N_('"%(command)s" returned exit status %(status)d') %
-                dict(command=cmd, status=status))
+        return N_('"%(command)s" returned exit status %(status)d') % dict(
+            command=cmd, status=status
+        )
 
     @staticmethod
     def format_out_err(out, err):
@@ -50,8 +51,7 @@ class Interaction(object):
         return details
 
     @staticmethod
-    def information(title,
-                    message=None, details=None, informative_text=None):
+    def information(title, message=None, details=None, informative_text=None):
         if message is None:
             message = title
         scope = {}
@@ -60,11 +60,15 @@ class Interaction(object):
         scope['message'] = message
         scope['details'] = ('\n' + details) if details else ''
         scope['informative_text'] = (
-            ('\n' + informative_text) if informative_text else '')
-        sys.stdout.write("""
+            ('\n' + informative_text) if informative_text else ''
+        )
+        sys.stdout.write(
+            """
 %(title)s
 %(title_dashes)s
-%(message)s%(informative_text)s%(details)s\n""" % scope)
+%(message)s%(informative_text)s%(details)s\n"""
+            % scope
+        )
 
     @classmethod
     def critical(cls, title, message=None, details=None):
@@ -72,14 +76,21 @@ class Interaction(object):
         cls.information(title, message=message, details=details)
 
     @classmethod
-    def confirm(cls, title, text, informative_text, ok_text,
-                icon=None, default=True, cancel_text=None):
+    def confirm(
+        cls,
+        title,
+        text,
+        informative_text,
+        ok_text,
+        icon=None,
+        default=True,
+        cancel_text=None,
+    ):
 
         cancel_text = cancel_text or 'Cancel'
         icon = icon or '?'
 
-        cls.information(title, message=text,
-                        informative_text=informative_text)
+        cls.information(title, message=text, informative_text=informative_text)
         if default:
             prompt = '%s? [Y/n] ' % ok_text
         else:
@@ -94,8 +105,7 @@ class Interaction(object):
 
     @classmethod
     def question(cls, title, message, default=True):
-        return cls.confirm(title, message, '',
-                           ok_text=N_('Continue'), default=default)
+        return cls.confirm(title, message, '', ok_text=N_('Continue'), default=default)
 
     @classmethod
     def run_command(cls, title, cmd):
@@ -109,13 +119,14 @@ class Interaction(object):
     def confirm_config_action(cls, _context, name, _opts):
         return cls.confirm(
             N_('Run %s?') % name,
-            N_('Run the "%s" command?') % name, '',
-            ok_text=N_('Run'))
+            N_('Run the "%s" command?') % name,
+            '',
+            ok_text=N_('Run'),
+        )
 
     @classmethod
     def log_status(cls, status, out, err=None):
-        msg = (((out + '\n') if out else '') +
-               ((err + '\n') if err else ''))
+        msg = ((out + '\n') if out else '') + ((err + '\n') if err else '')
         cls.log(msg)
         cls.log('exit status %s' % status)
 

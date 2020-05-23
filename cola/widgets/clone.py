@@ -23,8 +23,7 @@ def clone(context, spawn=True, show=True, settings=None, parent=None):
     """Clone a repository and spawn a new git-cola instance"""
     parent = qtutils.active_window()
     progress = standard.progress('', '', parent)
-    return clone_repo(context, parent, show, settings,
-                      progress, task_finished, spawn)
+    return clone_repo(context, parent, show, settings, progress, task_finished, spawn)
 
 
 def clone_repo(context, parent, show, settings, progress, finish, spawn):
@@ -55,12 +54,12 @@ def task_finished(task):
     Interaction.command(title, 'git clone', status, out, err)
 
 
-def start_clone_task(context, parent, progress, finish, spawn, url, destdir,
-                     submodules, shallow):
+def start_clone_task(
+    context, parent, progress, finish, spawn, url, destdir, submodules, shallow
+):
     # Use a thread to update in the background
     runtask = context.runtask
-    progress.set_details(N_('Clone Repository'),
-                         N_('Cloning repository at %s') % url)
+    progress.set_details(N_('Clone Repository'), N_('Cloning repository at %s') % url)
     task = CloneTask(context, url, destdir, submodules, shallow, spawn, parent)
     runtask.start(task, finish=finish, progress=progress)
 
@@ -68,8 +67,7 @@ def start_clone_task(context, parent, progress, finish, spawn, url, destdir,
 class CloneTask(qtutils.Task):
     """Clones a Git repository"""
 
-    def __init__(self, context, url, destdir, submodules,
-                 shallow, spawn, parent):
+    def __init__(self, context, url, destdir, submodules, shallow, spawn, parent):
         qtutils.Task.__init__(self, parent)
         self.context = context
         self.url = url
@@ -82,8 +80,14 @@ class CloneTask(qtutils.Task):
     def task(self):
         """Runs the model action and captures the result"""
         self.cmd = cmds.do(
-            cmds.Clone, self.context, self.url, self.destdir,
-            self.submodules, self.shallow, spawn=self.spawn)
+            cmds.Clone,
+            self.context,
+            self.url,
+            self.destdir,
+            self.submodules,
+            self.shallow,
+            spawn=self.spawn,
+        )
         return self.cmd
 
 
@@ -109,30 +113,39 @@ class Clone(standard.Dialog):
 
         # Initialize submodules
         self.submodules = qtutils.checkbox(
-            text=N_('Inititalize submodules'), checked=False)
+            text=N_('Inititalize submodules'), checked=False
+        )
 
         # Reduce commit history
         self.shallow = qtutils.checkbox(
-            text=N_('Reduce commit history to minimum'), checked=False)
+            text=N_('Reduce commit history to minimum'), checked=False
+        )
 
         # Buttons
         self.ok_button = qtutils.create_button(
-            text=N_('Clone'), icon=icons.ok(), default=True)
+            text=N_('Clone'), icon=icons.ok(), default=True
+        )
         self.close_button = qtutils.close_button()
 
         # Form layout for inputs
         self.input_layout = qtutils.form(
-            defs.no_margin, defs.button_spacing,
-            (self.url_label, self.url))
+            defs.no_margin, defs.button_spacing, (self.url_label, self.url)
+        )
 
         self.button_layout = qtutils.hbox(
-            defs.margin, defs.spacing,
-            self.submodules, defs.button_spacing,
-            self.shallow, qtutils.STRETCH,
-            self.ok_button, self.close_button)
+            defs.margin,
+            defs.spacing,
+            self.submodules,
+            defs.button_spacing,
+            self.shallow,
+            qtutils.STRETCH,
+            self.ok_button,
+            self.close_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.input_layout, self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin, defs.spacing, self.input_layout, self.button_layout
+        )
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.close_button, self.close)
@@ -175,8 +188,8 @@ class Clone(standard.Dialog):
             default = os.path.basename(core.getcwd())
         if not default:
             Interaction.information(
-                N_('Error Cloning'),
-                N_('Could not parse Git URL: "%s"') % url)
+                N_('Error Cloning'), N_('Could not parse Git URL: "%s"') % url
+            )
             Interaction.log(N_('Could not parse Git URL: "%s"') % url)
             return
 
@@ -190,9 +203,7 @@ class Clone(standard.Dialog):
         olddestdir = destdir
         if core.exists(destdir):
             # An existing path can be specified
-            msg = (
-                N_('"%s" already exists, cola will create a new directory')
-                % destdir)
+            msg = N_('"%s" already exists, cola will create a new directory') % destdir
             Interaction.information(N_('Directory Exists'), msg)
 
         # Make sure the new destdir doesn't exist

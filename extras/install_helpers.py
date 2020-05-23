@@ -25,11 +25,9 @@ class install_helpers(install_scripts):
             ('force', 'force'),
             ('skip_build', 'skip_build_helpers'),
         )
-        self.build_dir = os.path.join(
-            'build', 'helpers-%s.%s' % sys.version_info[:2])
+        self.build_dir = os.path.join('build', 'helpers-%s.%s' % sys.version_info[:2])
         self.install_prefix = os.path.dirname(self.install_scripts_dir)
-        self.install_dir = os.path.join(
-            self.install_prefix, 'share', 'git-cola', 'bin')
+        self.install_dir = os.path.join(self.install_prefix, 'share', 'git-cola', 'bin')
         self.skip_build = True
 
     def run(self):

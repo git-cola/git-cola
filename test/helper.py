@@ -41,7 +41,6 @@ def remove_readonly(func, path, _exc_info):
 
 
 class TmpPathTestCase(unittest.TestCase):
-
     def setUp(self):
         self._testdir = tempfile.mkdtemp('_cola_test')
         os.chdir(self._testdir)

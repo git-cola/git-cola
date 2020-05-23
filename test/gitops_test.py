@@ -7,7 +7,6 @@ from . import helper
 
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
-
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
         self.write_file('A', 'A')

@@ -10,9 +10,9 @@ _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
 
 class _DiffHunk(object):
-
-    def __init__(self, old_start, old_count, new_start, new_count, heading,
-                 first_line_idx, lines):
+    def __init__(
+        self, old_start, old_count, new_start, new_count, heading, first_line_idx, lines
+    ):
         self.old_start = old_start
         self.old_count = old_count
         self.new_start = new_start
@@ -39,11 +39,12 @@ def _format_range(start, count):
     return '%d,%d' % (start, count)
 
 
-def _format_hunk_header(old_start, old_count, new_start, new_count,
-                        heading=''):
-    return ('@@ -%s +%s @@%s\n'
-            % (_format_range(old_start, old_count),
-               _format_range(new_start, new_count), heading))
+def _format_hunk_header(old_start, old_count, new_start, new_count, heading=''):
+    return '@@ -%s +%s @@%s\n' % (
+        _format_range(old_start, old_count),
+        _format_range(new_start, new_count),
+        heading,
+    )
 
 
 def _parse_diff(diff_text):
@@ -54,9 +55,17 @@ def _parse_diff(diff_text):
             old_start, old_count = parse_range_str(match.group(1))
             new_start, new_count = parse_range_str(match.group(2))
             heading = match.group(3)
-            hunks.append(_DiffHunk(old_start, old_count,
-                                   new_start, new_count,
-                                   heading, line_idx, lines=[line + '\n']))
+            hunks.append(
+                _DiffHunk(
+                    old_start,
+                    old_count,
+                    new_start,
+                    new_count,
+                    heading,
+                    line_idx,
+                    lines=[line + '\n'],
+                )
+            )
         elif line and hunks:
             hunks[-1].lines.append(line + '\n')
     return hunks
@@ -115,8 +124,14 @@ class DiffLines(object):
         self.theirs = Counter()
 
     def digits(self):
-        return digits(max(self.old.max_value, self.new.max_value,
-                          self.ours.max_value, self.theirs.max_value))
+        return digits(
+            max(
+                self.old.max_value,
+                self.new.max_value,
+                self.ours.max_value,
+                self.theirs.max_value,
+            )
+        )
 
     def parse(self, diff_text):
         lines = []
@@ -199,13 +214,13 @@ class FormatDigits(object):
         self.fmt = ''
         self.empty = ''
         self.dash = ''
-        self._dash = dash or compat.uchr(0xb7)
+        self._dash = dash or compat.uchr(0xB7)
         self._empty = empty or ' '
 
     def set_digits(self, value):
-        self.fmt = ('%%0%dd' % value)
-        self.empty = (self._empty * value)
-        self.dash = (self._dash * value)
+        self.fmt = '%%0%dd' % value
+        self.empty = self._empty * value
+        self.dash = self._dash * value
 
     def value(self, old, new):
         old_str = self._format(old)
@@ -243,8 +258,7 @@ class DiffParser(object):
         self.filename = filename
         self.hunks = _parse_diff(diff_text)
 
-    def generate_patch(self, first_line_idx, last_line_idx,
-                       reverse=False):
+    def generate_patch(self, first_line_idx, last_line_idx, reverse=False):
         """Return a patch containing a subset of the diff"""
 
         ADDITION = '+'
@@ -252,8 +266,7 @@ class DiffParser(object):
         CONTEXT = ' '
         NO_NEWLINE = '\\'
 
-        lines = ['--- a/%s\n' % self.filename,
-                 '+++ b/%s\n' % self.filename]
+        lines = ['--- a/%s\n' % self.filename, '+++ b/%s\n' % self.filename]
 
         start_offset = 0
 
@@ -271,8 +284,9 @@ class DiffParser(object):
             counts = defaultdict(int)
             filtered_lines = []
 
-            for line_idx, line in enumerate(hunk.lines[1:],
-                                            start=hunk.first_line_idx + 1):
+            for line_idx, line in enumerate(
+                hunk.lines[1:], start=hunk.first_line_idx + 1
+            ):
                 line_type, line_content = line[:1], line[1:]
 
                 if reverse:
@@ -318,9 +332,11 @@ class DiffParser(object):
 
             start_offset += counts[ADDITION] - counts[DELETION]
 
-            lines.append(_format_hunk_header(old_start, old_count,
-                                             new_start, new_count,
-                                             hunk.heading))
+            lines.append(
+                _format_hunk_header(
+                    old_start, old_count, new_start, new_count, hunk.heading
+                )
+            )
             lines.extend(filtered_lines)
 
         # If there are only two lines, that means we did not include any hunks,
@@ -337,5 +353,6 @@ class DiffParser(object):
                 break
         if hunk is None:
             return None
-        return self.generate_patch(hunk.first_line_idx, hunk.last_line_idx,
-                                   reverse=reverse)
+        return self.generate_patch(
+            hunk.first_line_idx, hunk.last_line_idx, reverse=reverse
+        )

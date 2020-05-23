@@ -18,8 +18,8 @@ BUILTIN_READER = os.environ.get('GIT_COLA_BUILTIN_CONFIG_READER', False)
 
 _USER_CONFIG = core.expanduser(join('~', '.gitconfig'))
 _USER_XDG_CONFIG = core.expanduser(
-    join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')),
-         'git', 'config'))
+    join(core.getenv('XDG_CONFIG_HOME', join('~', '.config')), 'git', 'config')
+)
 
 
 def create(context):
@@ -29,9 +29,11 @@ def create(context):
 
 def _stat_info(git):
     # Try /etc/gitconfig as a fallback for the system config
-    paths = [('system', '/etc/gitconfig'),
-             ('user', _USER_XDG_CONFIG),
-             ('user', _USER_CONFIG)]
+    paths = [
+        ('system', '/etc/gitconfig'),
+        ('user', _USER_XDG_CONFIG),
+        ('user', _USER_CONFIG),
+    ]
     config = git.git_path('config')
     if config:
         paths.append(('repo', config))
@@ -186,16 +188,13 @@ class GitConfig(observable.Observable):
         self.reset_values()
 
         if 'system' in self._config_files:
-            self._system.update(
-                self.read_config(self._config_files['system']))
+            self._system.update(self.read_config(self._config_files['system']))
 
         if 'user' in self._config_files:
-            self._user.update(
-                self.read_config(self._config_files['user']))
+            self._user.update(self.read_config(self._config_files['user']))
 
         if 'repo' in self._config_files:
-            self._repo.update(
-                self.read_config(self._config_files['repo']))
+            self._repo.update(self.read_config(self._config_files['repo']))
 
         for dct in (self._system, self._user):
             self._user_or_system.update(dct)
@@ -311,8 +310,7 @@ class GitConfig(observable.Observable):
 
         """
         result = []
-        status, out, _ = self.git.config(
-            key, z=True, get_all=True, show_origin=True)
+        status, out, _ = self.git.config(key, z=True, get_all=True, show_origin=True)
         if status == 0:
             current_source = ''
             current_result = []
@@ -379,8 +377,9 @@ class GitConfig(observable.Observable):
         return self.get('gui.encoding', default=None)
 
     def is_per_file_attrs_enabled(self):
-        return self.get('cola.fileattributes',
-                        fn=lambda: os.path.exists('.gitattributes'))
+        return self.get(
+            'cola.fileattributes', fn=lambda: os.path.exists('.gitattributes')
+        )
 
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
@@ -389,8 +388,7 @@ class GitConfig(observable.Observable):
         try:
             value = cache[path]
         except KeyError:
-            value = cache[path] = (self._file_encoding(path) or
-                                   self.gui_encoding())
+            value = cache[path] = self._file_encoding(path) or self.gui_encoding()
         return value
 
     def _file_encoding(self, path):
@@ -400,7 +398,7 @@ class GitConfig(observable.Observable):
             return None
         header = '%s: encoding: ' % path
         if out.startswith(header):
-            encoding = out[len(header):].strip()
+            encoding = out[len(header) :].strip()
             if encoding not in ('unspecified', 'unset', 'set'):
                 return encoding
         return None
@@ -414,21 +412,18 @@ class GitConfig(observable.Observable):
         """
         prefix = len('guitool.%s.' % name)
         guitools = self.find('guitool.%s.*' % name)
-        return dict([(key[prefix:], value)
-                     for (key, value) in guitools.items()])
+        return dict([(key[prefix:], value) for (key, value) in guitools.items()])
 
     def get_guitool_names(self):
         guitools = self.find('guitool.*.cmd')
         prefix = len('guitool.')
         suffix = len('.cmd')
-        return sorted([name[prefix:-suffix]
-                       for (name, _) in guitools.items()])
+        return sorted([name[prefix:-suffix] for (name, _) in guitools.items()])
 
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
         names = self.get_guitool_names()
-        return [(name, self.get('guitool.%s.shortcut' % name))
-                for name in names]
+        return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
 
     def terminal(self):
         term = self.get('cola.terminal', default=None)
@@ -439,8 +434,7 @@ class GitConfig(observable.Observable):
                 # Try to find Git's sh.exe directory in
                 # one of the typical locations
                 pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
-                pf32 = os.environ.get('ProgramFiles(x86)',
-                                      'C:\\Program Files (x86)')
+                pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
                 pf64 = os.environ.get('ProgramW6432', 'C:\\Program Files')
 
                 for p in [pf64, pf32, pf, 'C:\\']:

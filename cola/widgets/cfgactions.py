@@ -79,16 +79,17 @@ class GitCommandWidget(standard.Dialog):
 
         # Create abort / close buttons
         # Start with abort disabled - will be enabled when the process is run.
-        self.button_abort = qtutils.create_button(text=N_('Abort'),
-                                                  enabled=False)
+        self.button_abort = qtutils.create_button(text=N_('Abort'), enabled=False)
         self.button_close = qtutils.close_button()
 
         # Put them in a horizontal layout at the bottom.
         self.button_box = QtWidgets.QDialogButtonBox(self)
-        self.button_box.addButton(self.button_abort,
-                                  QtWidgets.QDialogButtonBox.RejectRole)
-        self.button_box.addButton(self.button_close,
-                                  QtWidgets.QDialogButtonBox.AcceptRole)
+        self.button_box.addButton(
+            self.button_abort, QtWidgets.QDialogButtonBox.RejectRole
+        )
+        self.button_box.addButton(
+            self.button_close, QtWidgets.QDialogButtonBox.AcceptRole
+        )
 
         # Connect the signals to the process
         # pylint: disable=no-member
@@ -100,8 +101,9 @@ class GitCommandWidget(standard.Dialog):
         qtutils.connect_button(self.button_abort, self.abort)
         qtutils.connect_button(self.button_close, self.close)
 
-        self._layout = qtutils.vbox(defs.margin, defs.spacing,
-                                    self.output_text, self.button_box)
+        self._layout = qtutils.vbox(
+            defs.margin, defs.spacing, self.output_text, self.button_box
+        )
         self.setLayout(self._layout)
 
         self.resize(720, 420)
@@ -145,12 +147,15 @@ class GitCommandWidget(standard.Dialog):
         if self.proc.state() != QtCore.QProcess.NotRunning:
             # The process is still running, make sure we really want to abort.
             title = N_('Abort Action')
-            msg = N_('An action is still running.\n'
-                     'Terminating it could result in data loss.')
+            msg = N_(
+                'An action is still running.\n'
+                'Terminating it could result in data loss.'
+            )
             info_text = N_('Abort the action?')
             ok_text = N_('Abort Action')
-            if Interaction.confirm(title, msg, info_text, ok_text,
-                                   default=False, icon=icons.close()):
+            if Interaction.confirm(
+                title, msg, info_text, ok_text, default=False, icon=icons.close()
+            ):
                 self.abort()
                 event.accept()
             else:
@@ -236,18 +241,26 @@ class ActionDialog(standard.Dialog):
 
         # Close/Run buttons
         self.closebtn = qtutils.close_button()
-        self.runbtn = qtutils.create_button(text=N_('Run'), default=True,
-                                            icon=icons.ok())
+        self.runbtn = qtutils.create_button(
+            text=N_('Run'), default=True, icon=icons.ok()
+        )
 
-        self.argslayt = qtutils.hbox(defs.margin, defs.spacing,
-                                     self.argslabel, self.argstxt)
+        self.argslayt = qtutils.hbox(
+            defs.margin, defs.spacing, self.argslabel, self.argstxt
+        )
 
-        self.btnlayt = qtutils.hbox(defs.margin, defs.spacing, qtutils.STRETCH,
-                                    self.closebtn, self.runbtn)
+        self.btnlayt = qtutils.hbox(
+            defs.margin, defs.spacing, qtutils.STRETCH, self.closebtn, self.runbtn
+        )
 
-        self.layt = qtutils.vbox(defs.margin, defs.spacing,
-                                 self.prompt, self.argslayt,
-                                 self.revselect, self.btnlayt)
+        self.layt = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.prompt,
+            self.argslayt,
+            self.revselect,
+            self.btnlayt,
+        )
         self.setLayout(self.layt)
 
         # pylint: disable=no-member
@@ -270,7 +283,6 @@ class ActionDialog(standard.Dialog):
 
 
 class RevisionSelector(QtWidgets.QWidget):
-
     def __init__(self, context, parent, revs):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -297,15 +309,19 @@ class RevisionSelector(QtWidgets.QWidget):
         self._radio_btns[label].setChecked(True)
         qtutils.set_items(self._rev_list, rev_list)
 
-        self._rev_layt = qtutils.hbox(defs.no_margin, defs.spacing,
-                                      self._rev_label, self._revision)
+        self._rev_layt = qtutils.hbox(
+            defs.no_margin, defs.spacing, self._rev_label, self._revision
+        )
 
-        self._radio_layt = qtutils.hbox(defs.margin, defs.spacing,
-                                        *radio_btns)
+        self._radio_layt = qtutils.hbox(defs.margin, defs.spacing, *radio_btns)
 
-        self._layt = qtutils.vbox(defs.no_margin, defs.spacing,
-                                  self._rev_layt, self._radio_layt,
-                                  self._rev_list)
+        self._layt = qtutils.vbox(
+            defs.no_margin,
+            defs.spacing,
+            self._rev_layt,
+            self._radio_layt,
+            self._rev_list,
+        )
         self.setLayout(self._layt)
 
         # pylint: disable=no-member

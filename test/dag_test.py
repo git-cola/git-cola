@@ -16,11 +16,16 @@ fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2^A1ba04ad185cf9f04c56c8482e9a73ef1bd35c6
 e3f5a2d0248de6197d6e0e63c901810b8a9af2f8^Afa5ad6c38be603e2ffd1f9b722a3a5c675f63de2^A^ADavid Aguilar^AMon Dec 3 02:36:06 2007 -0800^Adavvid@gmail.com^AMerged qlistwidgets into master.
 f4fb8fd5baaa55d9b41faca79be289bb4407281e^Ae3f5a2d0248de6197d6e0e63c901810b8a9af2f8^A^ADavid Aguilar^ATue Dec 4 03:14:56 2007 -0800^Adavvid@gmail.com^ASquashed commit of the following:
 23e7eab4ba2c94e3155f5d261c693ccac1342eb9^Af4fb8fd5baaa55d9b41faca79be289bb4407281e^A^ADavid Aguilar^AThu Dec 6 18:59:20 2007 -0800^Adavvid@gmail.com^AMerged diffdisplay into master
-""".strip().replace('^A', chr(0x01)).split('\n') + ['']  # noqa
+""".strip().replace(  # noqa
+    '^A', chr(0x01)
+).split(
+    '\n'
+) + [
+    ''
+]  # noqa
 
 
 class DAGTestCase(helper.GitRepositoryTestCase):
-
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
         self.params = dag.DAG('HEAD', 1000)
@@ -33,7 +38,7 @@ class DAGTestCase(helper.GitRepositoryTestCase):
 
         core.readline.return_value = LOG_LINES[0]
         for idx, _ in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx+1]
+            core.readline.return_value = LOG_LINES[idx + 1]
             actual += 1
 
         self.assertEqual(expect, actual)
@@ -51,7 +56,7 @@ class DAGTestCase(helper.GitRepositoryTestCase):
         ]
         core.readline.return_value = LOG_LINES[0]
         for idx, commit in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx+1]
+            core.readline.return_value = LOG_LINES[idx + 1]
 
             self.assertEqual(commits[idx], commit.oid)
 
@@ -68,7 +73,7 @@ class DAGTestCase(helper.GitRepositoryTestCase):
         ]
         core.readline.return_value = LOG_LINES[0]
         for idx, commit in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx+1]
+            core.readline.return_value = LOG_LINES[idx + 1]
 
             self.assertEqual(parents[idx], [p.oid for p in commit.parents])
 
@@ -78,7 +83,7 @@ class DAGTestCase(helper.GitRepositoryTestCase):
         core.readline.return_value = LOG_LINES[0]
 
         for idx, _ in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx+1]
+            core.readline.return_value = LOG_LINES[idx + 1]
 
         core.start_command.assert_called()
         call_args = core.start_command.call_args

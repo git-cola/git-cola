@@ -7,7 +7,6 @@ from cola.models import selection
 
 
 class SelectionTestCase(unittest.TestCase):
-
     def test_union(self):
         t = mock.Mock()
         t.staged = ['a']

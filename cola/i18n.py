@@ -47,9 +47,9 @@ def install(locale):
         _set_language(locale)
     _install_custom_language()
     _gettext.textdomain('messages')
-    _translation = _gettext.translation('git-cola',
-                                        localedir=_get_locale_dir(),
-                                        fallback=True)
+    _translation = _gettext.translation(
+        'git-cola', localedir=_get_locale_dir(), fallback=True
+    )
 
 
 def uninstall():
@@ -89,6 +89,7 @@ def _check_win32_locale():
     else:
         lang = None
         import locale  # pylint: disable=all
+
         try:
             import ctypes  # pylint: disable=all
         except ImportError:

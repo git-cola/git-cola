@@ -15,6 +15,7 @@ from .text import VimTextEdit
 
 class LogWidget(QtWidgets.QFrame):
     """A simple dialog to display command logs."""
+
     channel = Signal(object)
 
     def __init__(self, context, parent=None, output=None):
@@ -24,8 +25,7 @@ class LogWidget(QtWidgets.QFrame):
         self.highlighter = LogSyntaxHighlighter(self.output_text.document())
         if output:
             self.set_output(output)
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.output_text)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.output_text)
         self.setLayout(self.main_layout)
         self.channel.connect(self.append, type=Qt.QueuedConnection)
 

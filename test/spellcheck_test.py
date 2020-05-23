@@ -9,7 +9,6 @@ from . import helper
 
 
 class TestCase(unittest.TestCase):
-
     def test_spellcheck_generator(self):
         check = spellcheck.NorvigSpellCheck()
         self.assert_spellcheck(check)

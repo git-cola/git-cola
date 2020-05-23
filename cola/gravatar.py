@@ -16,7 +16,6 @@ from .widgets import defs
 
 
 class Gravatar(object):
-
     @staticmethod
     def url_for_email(email, imgsize):
         email_hash = core.decode(hashlib.md5(core.encode(email)).hexdigest())
@@ -30,7 +29,6 @@ class Gravatar(object):
 
 
 class GravatarLabel(QtWidgets.QLabel):
-
     def __init__(self, parent=None):
         QtWidgets.QLabel.__init__(self, parent)
 
@@ -49,8 +47,7 @@ class GravatarLabel(QtWidgets.QLabel):
         if email in self.pixmaps:
             self.setPixmap(self.pixmaps[email])
             return
-        if (self.timeout > 0 and
-                (int(time.time()) - self.timeout) < (5 * 60)):
+        if self.timeout > 0 and (int(time.time()) - self.timeout) < (5 * 60):
             self.set_pixmap_from_response()
             return
         if email == self.email and self.response is not None:

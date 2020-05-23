@@ -50,8 +50,13 @@ def goto_grep(context, line):
     parsed_line = parse_grep_line(line)
     if parsed_line:
         filename, line_number, _ = parsed_line
-        cmds.do(cmds.Edit, context, [filename],
-                line_number=line_number, background_editor=True)
+        cmds.do(
+            cmds.Edit,
+            context,
+            [filename],
+            line_number=line_number,
+            background_editor=True,
+        )
 
 
 class GrepThread(QtCore.QThread):
@@ -94,17 +99,18 @@ class Grep(Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.edit_action = qtutils.add_action(
-            self, N_('Edit'), self.edit, hotkeys.EDIT)
+        self.edit_action = qtutils.add_action(self, N_('Edit'), self.edit, hotkeys.EDIT)
 
         self.refresh_action = qtutils.add_action(
-            self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS)
+            self, N_('Refresh'), self.search, *hotkeys.REFRESH_HOTKEYS
+        )
 
         self.input_label = QtWidgets.QLabel('git grep')
         self.input_label.setFont(qtutils.diff_font(context))
 
         self.input_txt = HintedLineEdit(
-            context, N_('command-line arguments'), parent=self)
+            context, N_('command-line arguments'), parent=self
+        )
 
         self.regexp_combo = combo = QtWidgets.QComboBox()
         combo.setToolTip(N_('Choose the "git grep" regular expression mode'))
@@ -134,10 +140,13 @@ class Grep(Dialog):
         qtutils.button_action(self.refresh_button, self.refresh_action)
 
         text = N_('Shell arguments')
-        tooltip = N_('Parse arguments using a shell.\n'
-                     'Queries with spaces will require "double quotes".')
-        self.shell_checkbox = qtutils.checkbox(text=text, tooltip=tooltip,
-                                               checked=False)
+        tooltip = N_(
+            'Parse arguments using a shell.\n'
+            'Queries with spaces will require "double quotes".'
+        )
+        self.shell_checkbox = qtutils.checkbox(
+            text=text, tooltip=tooltip, checked=False
+        )
         self.close_button = qtutils.close_button()
 
         self.refresh_group = Group(self.refresh_action, self.refresh_button)
@@ -146,24 +155,33 @@ class Grep(Dialog):
         self.edit_group = Group(self.edit_action, self.edit_button)
         self.edit_group.setEnabled(False)
 
-        self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                         self.input_label, self.input_txt,
-                                         self.regexp_combo)
+        self.input_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.input_label,
+            self.input_txt,
+            self.regexp_combo,
+        )
 
-        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.close_button,
-                                          qtutils.STRETCH,
-                                          self.shell_checkbox,
-                                          self.refresh_button,
-                                          self.edit_button)
+        self.bottom_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.shell_checkbox,
+            self.refresh_button,
+            self.edit_button,
+        )
 
-        self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.result_txt, self.preview_txt)
+        self.splitter = qtutils.splitter(Qt.Vertical, self.result_txt, self.preview_txt)
 
-        self.mainlayout = qtutils.vbox(defs.margin, defs.no_spacing,
-                                       self.input_layout,
-                                       self.splitter,
-                                       self.bottom_layout)
+        self.mainlayout = qtutils.vbox(
+            defs.margin,
+            defs.no_spacing,
+            self.input_layout,
+            self.splitter,
+            self.bottom_layout,
+        )
         self.setLayout(self.mainlayout)
 
         thread = self.worker_thread = GrepThread(context, self)
@@ -175,8 +193,13 @@ class Grep(Dialog):
         self.result_txt.leave.connect(self.input_txt.setFocus)
         self.result_txt.cursorPositionChanged.connect(self.update_preview)
 
-        qtutils.add_action(self.input_txt, 'Focus Results', self.focus_results,
-                           hotkeys.DOWN, *hotkeys.ACCEPT)
+        qtutils.add_action(
+            self.input_txt,
+            'Focus Results',
+            self.focus_results,
+            hotkeys.DOWN,
+            *hotkeys.ACCEPT
+        )
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
 
         qtutils.connect_toggle(self.shell_checkbox, lambda x: self.search())

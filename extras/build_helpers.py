@@ -18,7 +18,6 @@ class build_helpers(build_scripts):
         """Set variables to copy/edit files to build/helpers-x.y"""
         build_scripts.finalize_options(self)
 
-        self.build_dir = os.path.join(
-            'build', 'helpers-%s.%s' % sys.version_info[:2])
+        self.build_dir = os.path.join('build', 'helpers-%s.%s' % sys.version_info[:2])
 
         self.scripts = self.helpers

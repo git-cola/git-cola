@@ -11,6 +11,7 @@ if __name__ == '__main__':
 from .git import STDOUT  # noqa
 from .decorators import memoize  # noqa
 from ._version import VERSION  # noqa
+
 try:
     from ._build_version import BUILD_VERSION
 except ImportError:

@@ -61,8 +61,7 @@ class BranchesWidget(QtWidgets.QFrame):
 
         tooltip = N_('Toggle the branches filter')
         icon = icons.ellipsis()
-        self.filter_button = qtutils.create_action_button(
-            tooltip=tooltip, icon=icon)
+        self.filter_button = qtutils.create_action_button(tooltip=tooltip, icon=icon)
 
         self.order_icons = (
             icons.alphabetical(),
@@ -74,7 +73,8 @@ class BranchesWidget(QtWidgets.QFrame):
         )
         icon = self.order_icon(model.ref_sort)
         self.sort_order_button = qtutils.create_action_button(
-            tooltip=tooltip_order, icon=icon)
+            tooltip=tooltip_order, icon=icon
+        )
 
         self.tree = BranchesTreeWidget(context, parent=self)
         self.filter_widget = BranchesFilterWidget(self.tree)
@@ -83,16 +83,18 @@ class BranchesWidget(QtWidgets.QFrame):
         self.setFocusProxy(self.tree)
         self.setToolTip(N_('Branches'))
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.filter_widget, self.tree)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.filter_widget, self.tree
+        )
         self.setLayout(self.main_layout)
 
-        self.toggle_action = qtutils.add_action(self, tooltip,
-                                                self.toggle_filter,
-                                                hotkeys.FILTER)
+        self.toggle_action = qtutils.add_action(
+            self, tooltip, self.toggle_filter, hotkeys.FILTER
+        )
         qtutils.connect_button(self.filter_button, self.toggle_filter)
         qtutils.connect_button(
-            self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context))
+            self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context)
+        )
 
         self.updated.connect(self.refresh, Qt.QueuedConnection)
         model.add_observer(model.message_refs_updated, self.updated.emit)
@@ -158,18 +160,17 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         local_tree = create_tree_entries(model.local_branches)
         local_tree.basename = N_('Local')
-        local = create_toplevel_item(
-            local_tree, icon=icons.branch(), ellipsis=ellipsis)
+        local = create_toplevel_item(local_tree, icon=icons.branch(), ellipsis=ellipsis)
 
         remote_tree = create_tree_entries(model.remote_branches)
         remote_tree.basename = N_('Remote')
         remote = create_toplevel_item(
-            remote_tree, icon=icons.branch(), ellipsis=ellipsis)
+            remote_tree, icon=icons.branch(), ellipsis=ellipsis
+        )
 
         tags_tree = create_tree_entries(model.tags)
         tags_tree.basename = N_('Tags')
-        tags = create_toplevel_item(
-            tags_tree, icon=icons.tag(), ellipsis=ellipsis)
+        tags = create_toplevel_item(tags_tree, icon=icons.tag(), ellipsis=ellipsis)
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -203,8 +204,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         # all branches except current the current branch
         if full_name != self.current_branch:
-            menu.addAction(qtutils.add_action(
-                menu, N_('Checkout'), self.checkout_action))
+            menu.addAction(
+                qtutils.add_action(menu, N_('Checkout'), self.checkout_action)
+            )
             # remote branch
             if root.name == N_('Remote'):
                 label = N_('Checkout as new branch')
@@ -212,7 +214,8 @@ class BranchesTreeWidget(standard.TreeWidget):
                 menu.addAction(qtutils.add_action(menu, label, action))
 
             merge_menu_action = qtutils.add_action(
-                menu, N_('Merge into current branch'), self.merge_action)
+                menu, N_('Merge into current branch'), self.merge_action
+            )
             merge_menu_action.setIcon(icons.merge())
 
             menu.addAction(merge_menu_action)
@@ -227,17 +230,20 @@ class BranchesTreeWidget(standard.TreeWidget):
                     menu.addSeparator()
 
                     pull_menu_action = qtutils.add_action(
-                        menu, N_('Pull'), self.pull_action)
+                        menu, N_('Pull'), self.pull_action
+                    )
                     pull_menu_action.setIcon(icons.pull())
                     menu.addAction(pull_menu_action)
 
                     push_menu_action = qtutils.add_action(
-                        menu, N_('Push'), self.push_action)
+                        menu, N_('Push'), self.push_action
+                    )
                     push_menu_action.setIcon(icons.push())
                     menu.addAction(push_menu_action)
 
                 rename_menu_action = qtutils.add_action(
-                    menu, N_('Rename Branch'), self.rename_action)
+                    menu, N_('Rename Branch'), self.rename_action
+                )
                 rename_menu_action.setIcon(icons.edit())
 
                 menu.addSeparator()
@@ -250,7 +256,8 @@ class BranchesTreeWidget(standard.TreeWidget):
                     delete_label = N_('Delete Remote Branch')
 
                 delete_menu_action = qtutils.add_action(
-                    menu, delete_label, self.delete_action)
+                    menu, delete_label, self.delete_action
+                )
                 delete_menu_action.setIcon(icons.discard())
 
                 menu.addSeparator()
@@ -309,8 +316,13 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         for branch in branches:
             current_remote = add_branch_to_menu(
-                menu, selected_branch, branch, current_remote,
-                upstream, self.set_upstream)
+                menu,
+                selected_branch,
+                branch,
+                current_remote,
+                upstream,
+                self.set_upstream,
+            )
 
         # This list could be longer so we tuck it away in a sub-menu.
         # Selecting a branch from the non-default remote is less common.
@@ -319,8 +331,13 @@ class BranchesTreeWidget(standard.TreeWidget):
             sub_menu = menu.addMenu(N_('Other branches'))
             for branch in other_branches:
                 current_remote = add_branch_to_menu(
-                    sub_menu, selected_branch, branch,
-                    current_remote, upstream, self.set_upstream)
+                    sub_menu,
+                    selected_branch,
+                    branch,
+                    current_remote,
+                    upstream,
+                    self.set_upstream,
+                )
 
     def set_upstream(self, branch, remote_branch):
         """Configure the upstream for a branch"""
@@ -378,9 +395,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             kwarg = {}
         task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg)
         progress = standard.progress(
-            N_('Executing action %s') % action, N_('Updating'), self)
-        self.runtask.start(task, progress=progress,
-                           finish=self.git_action_completed)
+            N_('Executing action %s') % action, N_('Updating'), self
+        )
+        self.runtask.start(task, progress=progress, finish=self.git_action_completed)
 
     def git_action_completed(self, task):
         status, out, err = task.result
@@ -401,8 +418,8 @@ class BranchesTreeWidget(standard.TreeWidget):
     def rename_action(self):
         branch = self.selected_refname()
         new_branch, ok = qtutils.prompt(
-            N_('Enter New Branch Name'),
-            title=N_('Rename branch'), text=branch)
+            N_('Enter New Branch Name'), title=N_('Rename branch'), text=branch
+        )
         if ok and new_branch:
             self.git_action_async('rename', [branch, new_branch])
 
@@ -455,7 +472,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, name, refname=None, icon=None):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.name = name
@@ -484,6 +500,7 @@ class TreeEntry(object):
     defined.
 
     """
+
     def __init__(self, basename, refname, children):
         self.basename = basename
         self.refname = refname
@@ -583,10 +600,8 @@ def create_tree_items(entries, icon=None, ellipsis=None):
     """Create children items for a tree item"""
     result = []
     for tree in entries:
-        item = BranchTreeWidgetItem(
-            tree.basename, refname=tree.refname, icon=icon)
-        children = create_tree_items(
-            tree.children, icon=icon, ellipsis=ellipsis)
+        item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon)
+        children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis)
         if children:
             item.addChildren(children)
             if ellipsis is not None:
@@ -633,7 +648,6 @@ def get_toplevel_item(item):
 
 
 class BranchesTreeHelper(object):
-
     def load_state(self, item, state):
         """Load expanded items from a dict"""
         if state.keys():
@@ -657,7 +671,6 @@ class BranchesTreeHelper(object):
 
 
 class GitHelper(object):
-
     def __init__(self, context):
         self.context = context
         self.git = context.git

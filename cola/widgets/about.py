@@ -43,7 +43,6 @@ class ExpandingTabBar(QtWidgets.QTabBar):
 
 
 class ExpandingTabWidget(QtWidgets.QTabWidget):
-
     def __init__(self, parent=None):
         super(ExpandingTabWidget, self).__init__(parent)
         self.setTabBar(ExpandingTabBar(self))
@@ -97,17 +96,25 @@ class AboutView(QtWidgets.QDialog):
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
 
-        self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                        self.logo_label, self.logo_text_label,
-                                        qtutils.STRETCH)
+        self.logo_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.logo_label,
+            self.logo_text_label,
+            qtutils.STRETCH,
+        )
 
-        self.button_layout = qtutils.hbox(defs.spacing, defs.margin,
-                                          qtutils.STRETCH, self.close_button)
+        self.button_layout = qtutils.hbox(
+            defs.spacing, defs.margin, qtutils.STRETCH, self.close_button
+        )
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.logo_layout,
-                                        self.tabs,
-                                        self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.spacing,
+            self.logo_layout,
+            self.tabs,
+            self.button_layout,
+        )
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.close_button, self.accept)
@@ -173,9 +180,12 @@ def version_text(context):
         python_path=python_path,
         python_version=python_version,
         qt_version=qt_version,
-        qtpy_version=qtpy_version)
+        qtpy_version=qtpy_version,
+    )
 
-    return N_("""
+    return (
+        N_(
+            """
         <br>
             Git Cola version %(cola_version)s %(build_version)s
         <ul>
@@ -186,7 +196,10 @@ def version_text(context):
             <li> QtPy %(qtpy_version)s
             <li> %(pyqt_api_name)s %(pyqt_api_version)s
         </ul>
-    """) % scope
+    """
+        )
+        % scope
+    )
 
 
 def link(url, text, palette=None):
@@ -197,12 +210,15 @@ def link(url, text, palette=None):
     rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
     scope = dict(rgb=rgb, text=text, url=url)
 
-    return """
+    return (
+        """
         <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
             href="%(url)s">
             %(text)s
         </a>
-    """ % scope
+    """
+        % scope
+    )
 
 
 def mailto(email, text, palette):
@@ -214,13 +230,19 @@ def render_authors(authors):
     for x in authors:
         x.setdefault('email', '')
 
-    entries = [("""
+    entries = [
+        (
+            """
         <p>
             <strong>%(name)s</strong><br>
             <em>%(title)s</em><br>
             %(email)s
         </p>
-    """ % author) for author in authors]
+    """
+            % author
+        )
+        for author in authors
+    ]
 
     return ''.join(entries)
 
@@ -229,11 +251,14 @@ def contributors_text(authors, prelude='', epilogue=''):
     author_text = render_authors(authors)
     scope = dict(author_text=author_text, epilogue=epilogue, prelude=prelude)
 
-    return """
+    return (
+        """
         %(prelude)s
         %(author_text)s
         %(epilogue)s
-    """ % scope
+    """
+        % scope
+    )
 
 
 def authors_text():
@@ -246,12 +271,17 @@ def authors_text():
         # email address in the about screen.
         # See the `generate-about` script in the "todo" branch.
         # vim :read! ./Meta/generate-about
-        dict(name='David Aguilar',
-             title=N_('Maintainer (since 2007) and developer'),
-             email=mailto('davvid@gmail.com', contact, palette)),
+        dict(
+            name='David Aguilar',
+            title=N_('Maintainer (since 2007) and developer'),
+            email=mailto('davvid@gmail.com', contact, palette),
+        ),
         dict(name='Daniel Harding', title=N_('Developer')),
-        dict(name='Ｖ字龍(Vdragon)', title=N_('Developer'),
-             email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
+        dict(
+            name='Ｖ字龍(Vdragon)',
+            title=N_('Developer'),
+            email=mailto('Vdragon.Taiwan@gmail.com', contact, palette),
+        ),
         dict(name='Efimov Vasily', title=N_('Developer')),
         dict(name='Guillaume de Bure', title=N_('Developer')),
         dict(name='Javier Rodriguez Cuevas', title=N_('Developer')),
@@ -354,11 +384,16 @@ def authors_text():
     bug_url = 'https://github.com/git-cola/git-cola/issues'
     bug_link = link(bug_url, bug_url)
     scope = dict(bug_link=bug_link)
-    prelude = N_("""
+    prelude = (
+        N_(
+            """
         <br>
         Please use %(bug_link)s to report issues.
         <br>
-    """) % scope
+    """
+        )
+        % scope
+    )
 
     return contributors_text(authors, prelude=prelude)
 
@@ -370,74 +405,55 @@ def translators_text():
     translators = (
         # See the `generate-about` script in the "todo" branch.
         # vim :read! ./Meta/generate-about --translators
-        dict(name='Ｖ字龍(Vdragon)',
-             title=N_('Traditional Chinese (Taiwan) translation'),
-             email=mailto('Vdragon.Taiwan@gmail.com', contact, palette)),
-        dict(name='Pavel Rehak',
-             title=N_('Czech translation')),
-        dict(name='Victorhck',
-             title=N_('Spanish translation')),
-        dict(name='Vitor Lobo',
-             title=N_('Brazilian translation')),
-        dict(name='Zhang Han',
-             title=N_('Simplified Chinese translation')),
-        dict(name='Igor Kopach',
-             title=N_('Ukranian translation')),
-        dict(name='Barış ÇELİK',
-             title=N_('Turkish translation')),
-        dict(name='Guo Yunhe',
-             title=N_('Simplified Chinese translation')),
-        dict(name='Minarto Margoliono',
-             title=N_('Indonesian translation')),
-        dict(name='Rafael Nascimento',
-             title=N_('Brazilian translation')),
-        dict(name='Shun Sakai',
-             title=N_('Japanese translation')),
-        dict(name='Sven Claussner',
-             title=N_('German translation')),
-        dict(name='Vaiz',
-             title=N_('Russian translation')),
-        dict(name='adlgrbz',
-             title=N_('Turkish translation')),
-        dict(name='fu7mu4',
-             title=N_('Japanese translation')),
-        dict(name='Gyuris Gellért',
-             title=N_('Hungarian translation')),
-        dict(name='Joachim Lusiardi',
-             title=N_('German translation')),
-        dict(name='Kai Krakow',
-             title=N_('German translation')),
-        dict(name='Louis Rousseau',
-             title=N_('French translation')),
-        dict(name='Mickael Albertus',
-             title=N_('French translation')),
-        dict(name='Peter Dave Hello',
-             title=N_('Traditional Chinese (Taiwan) translation')),
-        dict(name='Pilar Molina Lopez',
-             title=N_('Spanish translation')),
-        dict(name='Rafael Reuber',
-             title=N_('Brazilian translation')),
-        dict(name='Sabri Ünal',
-             title=N_('Turkish translation')),
-        dict(name="Samsul Ma'arif",
-             title=N_('Indonesian translation')),
-        dict(name='Zeioth',
-             title=N_('Spanish translation')),
-        dict(name='balping',
-             title=N_('Hungarian translation')),
-        dict(name='p-bo',
-             title=N_('Czech translation')),
-        dict(name='Łukasz Wojniłowicz',
-             title=N_('Polish translation')),
-        dict(name='林博仁(Buo-ren Lin)',
-             title=N_('Traditional Chinese (Taiwan) translation')),
+        dict(
+            name='Ｖ字龍(Vdragon)',
+            title=N_('Traditional Chinese (Taiwan) translation'),
+            email=mailto('Vdragon.Taiwan@gmail.com', contact, palette),
+        ),
+        dict(name='Pavel Rehak', title=N_('Czech translation')),
+        dict(name='Victorhck', title=N_('Spanish translation')),
+        dict(name='Vitor Lobo', title=N_('Brazilian translation')),
+        dict(name='Zhang Han', title=N_('Simplified Chinese translation')),
+        dict(name='Igor Kopach', title=N_('Ukranian translation')),
+        dict(name='Barış ÇELİK', title=N_('Turkish translation')),
+        dict(name='Guo Yunhe', title=N_('Simplified Chinese translation')),
+        dict(name='Minarto Margoliono', title=N_('Indonesian translation')),
+        dict(name='Rafael Nascimento', title=N_('Brazilian translation')),
+        dict(name='Shun Sakai', title=N_('Japanese translation')),
+        dict(name='Sven Claussner', title=N_('German translation')),
+        dict(name='Vaiz', title=N_('Russian translation')),
+        dict(name='adlgrbz', title=N_('Turkish translation')),
+        dict(name='fu7mu4', title=N_('Japanese translation')),
+        dict(name='Gyuris Gellért', title=N_('Hungarian translation')),
+        dict(name='Joachim Lusiardi', title=N_('German translation')),
+        dict(name='Kai Krakow', title=N_('German translation')),
+        dict(name='Louis Rousseau', title=N_('French translation')),
+        dict(name='Mickael Albertus', title=N_('French translation')),
+        dict(
+            name='Peter Dave Hello',
+            title=N_('Traditional Chinese (Taiwan) translation'),
+        ),
+        dict(name='Pilar Molina Lopez', title=N_('Spanish translation')),
+        dict(name='Rafael Reuber', title=N_('Brazilian translation')),
+        dict(name='Sabri Ünal', title=N_('Turkish translation')),
+        dict(name="Samsul Ma'arif", title=N_('Indonesian translation')),
+        dict(name='Zeioth', title=N_('Spanish translation')),
+        dict(name='balping', title=N_('Hungarian translation')),
+        dict(name='p-bo', title=N_('Czech translation')),
+        dict(name='Łukasz Wojniłowicz', title=N_('Polish translation')),
+        dict(
+            name='林博仁(Buo-ren Lin)',
+            title=N_('Traditional Chinese (Taiwan) translation'),
+        ),
     )
 
     bug_url = 'https://github.com/git-cola/git-cola/issues'
     bug_link = link(bug_url, bug_url)
     scope = dict(bug_link=bug_link)
 
-    prelude = N_("""
+    prelude = (
+        N_(
+            """
         <br>
             Git Cola has been translated into different languages thanks
             to the help of the individuals listed below.
@@ -460,7 +476,10 @@ def translators_text():
 
         <br>
 
-    """) % scope
+    """
+        )
+        % scope
+    )
     return contributors_text(translators, prelude=prelude)
 
 
@@ -486,7 +505,8 @@ def show_shortcuts():
     layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
     widget.setLayout(layout)
     widget.resize(800, min(parent.height(), 600))
-    qtutils.add_action(widget, N_('Close'), widget.accept,
-                       hotkeys.QUESTION, *hotkeys.ACCEPT)
+    qtutils.add_action(
+        widget, N_('Close'), widget.accept, hotkeys.QUESTION, *hotkeys.ACCEPT
+    )
     widget.show()
     widget.exec_()

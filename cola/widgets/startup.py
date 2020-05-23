@@ -46,12 +46,13 @@ class StartupDialog(standard.Dialog):
         else:
             self.runtask = context.runtask = qtutils.RunTask(parent=self)
 
-        self.new_button = qtutils.create_button(
-            text=N_('New...'), icon=icons.new())
+        self.new_button = qtutils.create_button(text=N_('New...'), icon=icons.new())
         self.open_button = qtutils.create_button(
-            text=N_('Open...'), icon=icons.folder())
+            text=N_('Open...'), icon=icons.folder()
+        )
         self.clone_button = qtutils.create_button(
-            text=N_('Clone...'), icon=icons.cola())
+            text=N_('Clone...'), icon=icons.cola()
+        )
         self.close_button = qtutils.close_button()
 
         if settings is None:
@@ -88,24 +89,36 @@ class StartupDialog(standard.Dialog):
         self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setModel(self.bookmarks_model)
 
-        self.logo_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.logo_label,
-                                        self.logo_text_label,
-                                        defs.button_spacing,
-                                        qtutils.STRETCH)
+        self.logo_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.spacing,
+            self.logo_label,
+            self.logo_text_label,
+            defs.button_spacing,
+            qtutils.STRETCH,
+        )
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.open_button, self.clone_button,
-                                          self.new_button, qtutils.STRETCH,
-                                          self.close_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.open_button,
+            self.clone_button,
+            self.new_button,
+            qtutils.STRETCH,
+            self.close_button,
+        )
 
-        self.center_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.logo_layout, self.bookmarks)
+        self.center_layout = qtutils.hbox(
+            defs.no_margin, defs.button_spacing, self.logo_layout, self.bookmarks
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.bookmarks_label,
-                                        self.center_layout,
-                                        self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.bookmarks_label,
+            self.center_layout,
+            self.button_layout,
+        )
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.open_button, self.open_repo)
@@ -122,8 +135,12 @@ class StartupDialog(standard.Dialog):
 
     def resize_widget(self):
         screen = QtWidgets.QApplication.instance().desktop()
-        self.setGeometry(screen.width() // 4, screen.height() // 4,
-                         screen.width() // 2, screen.height() // 2)
+        self.setGeometry(
+            screen.width() // 4,
+            screen.height() // 4,
+            screen.width() // 2,
+            screen.height() // 2,
+        )
 
     def find_git_repo(self):
         """
@@ -144,8 +161,9 @@ class StartupDialog(standard.Dialog):
     def open_repo(self):
         self.repodir = self.get_selected_bookmark()
         if not self.repodir:
-            self.repodir = qtutils.opendir_dialog(N_('Open Git Repository...'),
-                                                  core.getcwd())
+            self.repodir = qtutils.opendir_dialog(
+                N_('Open Git Repository...'), core.getcwd()
+            )
         if self.repodir:
             self.accept()
 
@@ -153,8 +171,9 @@ class StartupDialog(standard.Dialog):
         context = self.context
         settings = self.settings
         progress = standard.progress('', '', self)
-        clone.clone_repo(context, self, True, settings, progress,
-                         self.clone_repo_done, False)
+        clone.clone_repo(
+            context, self, True, settings, progress, self.clone_repo_done, False
+        )
 
     def clone_repo_done(self, task):
         if task.cmd and task.cmd.status == 0:

@@ -62,18 +62,20 @@ def main():
         'share/git-cola/bin/git-xbase',
     ]
 
-    setup(name='git-cola',
-          version=version,
-          description='The highly caffeinated git GUI',
-          long_description='A sleek and powerful git GUI',
-          license='GPLv2',
-          author='David Aguilar',
-          author_email='davvid@gmail.com',
-          url='https://git-cola.github.io/',
-          scripts=scripts,
-          cmdclass=cmdclass,
-          platforms='any',
-          data_files=_data_files())
+    setup(
+        name='git-cola',
+        version=version,
+        description='The highly caffeinated git GUI',
+        long_description='A sleek and powerful git GUI',
+        license='GPLv2',
+        author='David Aguilar',
+        author_email='davvid@gmail.com',
+        url='https://git-cola.github.io/',
+        scripts=scripts,
+        cmdclass=cmdclass,
+        platforms='any',
+        data_files=_data_files(),
+    )
 
 
 def _data_files():
@@ -94,13 +96,14 @@ def _data_files():
     ]
 
     if vendor_libs:
-        data.extend([
-            _package('qtpy'),
-            _package('qtpy._patch'),
-        ])
+        data.extend([_package('qtpy'), _package('qtpy._patch')])
 
-    data.extend([_app_path(localedir, 'git-cola.mo')
-                 for localedir in glob('share/locale/*/LC_MESSAGES')])
+    data.extend(
+        [
+            _app_path(localedir, 'git-cola.mo')
+            for localedir in glob('share/locale/*/LC_MESSAGES')
+        ]
+    )
     return data
 
 

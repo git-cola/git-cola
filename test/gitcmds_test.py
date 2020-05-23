@@ -65,8 +65,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('config', 'branch.other.remote', 'test')
         self.run_git('config', 'branch.other.merge', 'refs/heads/other/branch')
         self.cfg.reset()
-        self.assertEqual(gitcmds.tracked_branch(context, 'other'),
-                         'test/other/branch')
+        self.assertEqual(gitcmds.tracked_branch(context, 'other'), 'test/other/branch')
 
     def test_untracked_files(self):
         """Test untracked_files()."""
@@ -96,14 +95,17 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test merge_message_path()."""
         context = self.context
         self.touch('.git/SQUASH_MSG')
-        self.assertEqual(gitcmds.merge_message_path(context),
-                         os.path.abspath('.git/SQUASH_MSG'))
+        self.assertEqual(
+            gitcmds.merge_message_path(context), os.path.abspath('.git/SQUASH_MSG')
+        )
         self.touch('.git/MERGE_MSG')
-        self.assertEqual(gitcmds.merge_message_path(context),
-                         os.path.abspath('.git/MERGE_MSG'))
+        self.assertEqual(
+            gitcmds.merge_message_path(context), os.path.abspath('.git/MERGE_MSG')
+        )
         os.unlink(gitcmds.merge_message_path(context))
-        self.assertEqual(gitcmds.merge_message_path(context),
-                         os.path.abspath('.git/SQUASH_MSG'))
+        self.assertEqual(
+            gitcmds.merge_message_path(context), os.path.abspath('.git/SQUASH_MSG')
+        )
         os.unlink(gitcmds.merge_message_path(context))
         self.assertEqual(gitcmds.merge_message_path(context), None)
 
@@ -118,10 +120,22 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('remote', 'add', 'origin', '.')
         self.run_git('fetch', 'origin')
         refs = gitcmds.all_refs(self.context)
-        self.assertEqual(refs,
-                         ['a', 'b', 'c', 'master',
-                          'origin/a', 'origin/b', 'origin/c', 'origin/master',
-                          'f', 'e', 'd'])
+        self.assertEqual(
+            refs,
+            [
+                'a',
+                'b',
+                'c',
+                'master',
+                'origin/a',
+                'origin/b',
+                'origin/c',
+                'origin/master',
+                'f',
+                'e',
+                'd',
+            ],
+        )
 
     def test_all_refs_split(self):
         self.commit_files()
@@ -135,8 +149,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('fetch', 'origin')
         local, remote, tags = gitcmds.all_refs(self.context, split=True)
         self.assertEqual(local, ['a', 'b', 'c', 'master'])
-        self.assertEqual(remote,
-                         ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
+        self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
         self.assertEqual(tags, ['f', 'e', 'd'])
 
 

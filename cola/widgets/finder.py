@@ -61,7 +61,8 @@ def add_wildcards(arg):
 
 def show_help(context):
     """Show the help page"""
-    help_text = N_("""
+    help_text = N_(
+        """
 Keyboard Shortcuts
 ------------------
 J, Down     = Move Down
@@ -73,7 +74,8 @@ Ctrl + L    = Focus Text Entry Field
 
 The up and down arrows change focus between the text entry field
 and the results.
-""")
+"""
+    )
     title = N_('Help - Find Files')
     return text.text_dialog(context, help_text, title)
 
@@ -114,8 +116,7 @@ class Finder(standard.Dialog):
 
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
-        self.input_txt = completion.GitTrackedLineEdit(
-            context, hint=N_('<path> ...'))
+        self.input_txt = completion.GitTrackedLineEdit(context, hint=N_('<path> ...'))
 
         self.tree = filetree.FileTree(parent=self)
 
@@ -134,26 +135,33 @@ class Finder(standard.Dialog):
         self.refresh_button.setShortcut(hotkeys.REFRESH)
 
         self.help_button = qtutils.create_button(
-            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'),
-            icon=icons.question())
+            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'), icon=icons.question()
+        )
 
         self.close_button = qtutils.close_button()
 
-        self.input_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                         self.input_label, self.input_txt)
+        self.input_layout = qtutils.hbox(
+            defs.no_margin, defs.button_spacing, self.input_label, self.input_txt
+        )
 
-        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.close_button,
-                                          qtutils.STRETCH,
-                                          self.help_button,
-                                          self.refresh_button,
-                                          self.open_default_button,
-                                          self.edit_button)
+        self.bottom_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.help_button,
+            self.refresh_button,
+            self.open_default_button,
+            self.edit_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.no_spacing,
-                                        self.input_layout,
-                                        self.tree,
-                                        self.bottom_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.no_spacing,
+            self.input_layout,
+            self.tree,
+            self.bottom_layout,
+        )
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.input_txt)
 
@@ -171,12 +179,13 @@ class Finder(standard.Dialog):
         self.tree.up.connect(self.focus_input)
         self.tree.space.connect(self.open_default)
 
-        qtutils.add_action(self, 'Focus Input', self.focus_input,
-                           hotkeys.FOCUS, hotkeys.FINDER)
+        qtutils.add_action(
+            self, 'Focus Input', self.focus_input, hotkeys.FOCUS, hotkeys.FINDER
+        )
 
         self.show_help_action = qtutils.add_action(
-            self, N_('Show Help'), partial(show_help, context),
-            hotkeys.QUESTION)
+            self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
+        )
 
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.open_default_button, self.open_default)

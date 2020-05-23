@@ -32,24 +32,27 @@ class FileWidget(TreeWidget):
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         self.show_history_action = qtutils.add_action(
-            self, N_('Show History'), self.show_history, hotkeys.HISTORY)
+            self, N_('Show History'), self.show_history, hotkeys.HISTORY
+        )
 
         self.launch_difftool_action = qtutils.add_action(
-            self, N_('Launch Diff Tool'), self.show_diff)
+            self, N_('Launch Diff Tool'), self.show_diff
+        )
 
         self.launch_editor_action = qtutils.add_action(
-            self, N_('Launch Editor'), self.edit_paths, hotkeys.EDIT)
+            self, N_('Launch Editor'), self.edit_paths, hotkeys.EDIT
+        )
 
         self.grab_file_action = qtutils.add_action(
-            self, N_('Grab File...'), self._grab_file)
+            self, N_('Grab File...'), self._grab_file
+        )
 
         # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
 
     def selection_changed(self):
         items = self.selected_items()
-        self.notifier.notify_observers(
-            FILES_SELECTED, [i.path for i in items])
+        self.notifier.notify_observers(FILES_SELECTED, [i.path for i in items])
 
     def commits_selected(self, commits):
         if not commits:
@@ -57,8 +60,9 @@ class FileWidget(TreeWidget):
         git = self.context.git
         commit = commits[0]
         oid = commit.oid
-        status, out, _ = git.show(oid, z=True, numstat=True,
-                                  oneline=True, no_renames=True)
+        status, out, _ = git.show(
+            oid, z=True, numstat=True, oneline=True, no_renames=True
+        )
         if status == 0:
             paths = [f for f in out.rstrip('\0').split('\0') if f]
             if paths:
@@ -79,7 +83,7 @@ class FileWidget(TreeWidget):
 
     def adjust_columns(self, size, old_size):
         if size.isValid() and old_size.isValid():
-            width = (self.columnWidth(0) + size.width() - old_size.width())
+            width = self.columnWidth(0) + size.width() - old_size.width()
             self.setColumnWidth(0, width)
         else:
             width = self.width()
@@ -123,7 +127,6 @@ class FileWidget(TreeWidget):
 
 
 class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, file_log, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         texts = file_log.split('\t')

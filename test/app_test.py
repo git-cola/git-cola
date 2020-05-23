@@ -9,7 +9,6 @@ from .helper import run_unittest
 
 
 class AppTestCase(unittest.TestCase):
-
     def test_setup_environment(self):
         # If the function doesn't throw an exception we are happy.
         self.assertTrue(hasattr(app, 'setup_environment'))

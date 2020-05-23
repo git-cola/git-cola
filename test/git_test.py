@@ -14,7 +14,6 @@ from cola.git import STDOUT
 
 
 class GitModuleTestCase(unittest.TestCase):
-
     @patch('cola.git.is_git_dir')
     def test_find_git_dir_None(self, is_git_dir):
 
@@ -48,16 +47,18 @@ class GitModuleTestCase(unittest.TestCase):
 
         self.assertEqual(8, is_git_dir.call_count)
         kwargs = {}
-        is_git_dir.assert_has_calls([
-            (('/does/not/exist',), kwargs),
-            (('/does/not/exist/.git',), kwargs),
-            (('/does/not',), kwargs),
-            (('/does/not/.git',), kwargs),
-            (('/does',), kwargs),
-            (('/does/.git',), kwargs),
-            (('/',), kwargs),
-            (('/.git',), kwargs),
-        ])
+        is_git_dir.assert_has_calls(
+            [
+                (('/does/not/exist',), kwargs),
+                (('/does/not/exist/.git',), kwargs),
+                (('/does/not',), kwargs),
+                (('/does/not/.git',), kwargs),
+                (('/does',), kwargs),
+                (('/does/.git',), kwargs),
+                (('/',), kwargs),
+                (('/.git',), kwargs),
+            ]
+        )
 
     @patch('cola.git.is_git_dir')
     def test_find_git_dir_found_right_away(self, is_git_dir):
@@ -87,10 +88,7 @@ class GitModuleTestCase(unittest.TestCase):
     @patch('cola.git.read_git_file')
     @patch('cola.git.is_git_file')
     @patch('cola.git.is_git_dir')
-    def test_find_git_honors_git_files(self,
-                                       is_git_dir,
-                                       is_git_file,
-                                       read_git_file):
+    def test_find_git_honors_git_files(self, is_git_dir, is_git_file, read_git_file):
         git_file = '/the/root/.git'
         worktree = '/the/root'
         git_dir = '/super/module/.git/modules/root'
@@ -107,14 +105,16 @@ class GitModuleTestCase(unittest.TestCase):
 
         kwargs = {}
         self.assertEqual(6, is_git_dir.call_count)
-        is_git_dir.assert_has_calls([
-            (('/the/root/sub/dir',), kwargs),
-            (('/the/root/sub/dir/.git',), kwargs),
-            (('/the/root/sub',), kwargs),
-            (('/the/root/sub/.git',), kwargs),
-            (('/the/root',), kwargs),
-            (('/the/root/.git',), kwargs),
-        ])
+        is_git_dir.assert_has_calls(
+            [
+                (('/the/root/sub/dir',), kwargs),
+                (('/the/root/sub/dir/.git',), kwargs),
+                (('/the/root/sub',), kwargs),
+                (('/the/root/sub/.git',), kwargs),
+                (('/the/root',), kwargs),
+                (('/the/root/.git',), kwargs),
+            ]
+        )
         read_git_file.assert_called_once_with('/the/root/.git')
 
     @patch('cola.core.getenv')
@@ -140,32 +140,38 @@ class GitModuleTestCase(unittest.TestCase):
 
         self.assertEqual(4, is_git_dir.call_count)
         kwargs = {}
-        is_git_dir.assert_has_calls([
-            (('/ceiling/sub/dir',), kwargs),
-            (('/ceiling/sub/dir/.git',), kwargs),
-            (('/ceiling/sub',), kwargs),
-            (('/ceiling/sub/.git',), kwargs),
-        ])
+        is_git_dir.assert_has_calls(
+            [
+                (('/ceiling/sub/dir',), kwargs),
+                (('/ceiling/sub/dir/.git',), kwargs),
+                (('/ceiling/sub',), kwargs),
+                (('/ceiling/sub/.git',), kwargs),
+            ]
+        )
 
     @patch('cola.core.islink')
     @patch('cola.core.isdir')
     @patch('cola.core.isfile')
     def test_is_git_dir_finds_linked_repository(self, isfile, isdir, islink):
-        dirs = set([
-            '/foo',
-            '/foo/.git',
-            '/foo/.git/refs',
-            '/foo/.git/objects',
-            '/foo/.git/worktrees',
-            '/foo/.git/worktrees/foo',
-        ])
-        files = set([
-            '/foo/.git/HEAD',
-            '/foo/.git/worktrees/foo/HEAD',
-            '/foo/.git/worktrees/foo/index',
-            '/foo/.git/worktrees/foo/commondir',
-            '/foo/.git/worktrees/foo/gitdir',
-        ])
+        dirs = set(
+            [
+                '/foo',
+                '/foo/.git',
+                '/foo/.git/refs',
+                '/foo/.git/objects',
+                '/foo/.git/worktrees',
+                '/foo/.git/worktrees/foo',
+            ]
+        )
+        files = set(
+            [
+                '/foo/.git/HEAD',
+                '/foo/.git/worktrees/foo/HEAD',
+                '/foo/.git/worktrees/foo/index',
+                '/foo/.git/worktrees/foo/commondir',
+                '/foo/.git/worktrees/foo/gitdir',
+            ]
+        )
         islink.return_value = False
         isfile.side_effect = lambda x: x in files
         isdir.side_effect = lambda x: x in dirs
@@ -323,9 +329,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stdout(self):
         """Test overflowing the stdout buffer"""
         # Write to stdout only
-        code = ('import sys;'
-                's = "\\0" * (1024 * 16 + 1);'
-                'sys.stdout.write(s);')
+        code = 'import sys;' 's = "\\0" * (1024 * 16 + 1);' 'sys.stdout.write(s);'
         status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 1024 * 16 + 1)
@@ -334,9 +338,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stderr(self):
         """Test that stderr is seen"""
         # Write to stderr and capture it
-        code = ('import sys;'
-                's = "\\0" * (1024 * 16 + 1);'
-                'sys.stderr.write(s);')
+        code = 'import sys;' 's = "\\0" * (1024 * 16 + 1);' 'sys.stderr.write(s);'
         status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 0)
@@ -345,10 +347,12 @@ class GitCommandTest(unittest.TestCase):
     def test_stdout_and_stderr(self):
         """Test ignoring stderr when stdout+stderr are provided (v2)"""
         # Write to stdout and stderr but only capture stdout
-        code = ('import sys;'
-                's = "\\0" * (1024 * 16 + 1);'
-                'sys.stdout.write(s);'
-                'sys.stderr.write(s);')
+        code = (
+            'import sys;'
+            's = "\\0" * (1024 * 16 + 1);'
+            'sys.stdout.write(s);'
+            'sys.stderr.write(s);'
+        )
         status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 1024 * 16 + 1)
@@ -357,10 +361,12 @@ class GitCommandTest(unittest.TestCase):
     def test_it_doesnt_deadlock(self):
         """Test that we don't deadlock with both stderr and stdout"""
         # 16k+1 bytes to exhaust any output buffers
-        code = ('import sys;'
-                's = "\\0" * (1024 * 16 + 1);'
-                'sys.stderr.write(s);'
-                'sys.stdout.write(s);')
+        code = (
+            'import sys;'
+            's = "\\0" * (1024 * 16 + 1);'
+            'sys.stderr.write(s);'
+            'sys.stdout.write(s);'
+        )
         status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
         self.assertEqual(status, 0)
         self.assertEqual(out, '\0' * (1024 * 16 + 1))

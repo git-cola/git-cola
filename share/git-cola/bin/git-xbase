@@ -62,7 +62,13 @@ EDIT = 'edit'
 FIXUP = 'fixup'
 SQUASH = 'squash'
 EXEC = 'exec'
-COMMANDS = (PICK, REWORD, EDIT, FIXUP, SQUASH,)
+COMMANDS = (
+    PICK,
+    REWORD,
+    EDIT,
+    FIXUP,
+    SQUASH,
+)
 COMMAND_IDX = dict([(cmd_, idx_) for idx_, cmd_ in enumerate(COMMANDS)])
 ABBREV = {
     'p': PICK,
@@ -90,8 +96,9 @@ def stop(_context, _view):
 
 def parse_args():
     parser = ArgumentParser()
-    parser.add_argument('filename', metavar='<filename>',
-                        help='git-rebase-todo file to edit')
+    parser.add_argument(
+        'filename', metavar='<filename>', help='git-rebase-todo file to edit'
+    )
     app.add_common_arguments(parser)
     return parser.parse_args()
 
@@ -109,7 +116,6 @@ def unabbrev(cmd):
 
 
 class XBaseWindow(standard.MainWindow):
-
     def __init__(self, context, settings=None, parent=None):
         super(XBaseWindow, self).__init__(parent)
         self.context = context
@@ -120,8 +126,8 @@ class XBaseWindow(standard.MainWindow):
         self.setWindowTitle(title)
 
         self.show_help_action = qtutils.add_action(
-            self, N_('Show Help'), partial(show_help, context),
-            hotkeys.QUESTION)
+            self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
+        )
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
@@ -175,24 +181,26 @@ class Editor(QtWidgets.QWidget):
 
         self.rebase_button = qtutils.create_button(
             text=core.getenv('GIT_XBASE_ACTION', N_('Rebase')),
-            tooltip=N_('Accept changes and rebase\n'
-                       'Shortcut: Ctrl+Enter'),
+            tooltip=N_('Accept changes and rebase\n' 'Shortcut: Ctrl+Enter'),
             icon=icons.ok(),
-            default=True)
+            default=True,
+        )
 
         self.extdiff_button = qtutils.create_button(
             text=N_('Launch Diff Tool'),
-            tooltip=N_('Launch external diff tool\n'
-                       'Shortcut: Ctrl+D'))
+            tooltip=N_('Launch external diff tool\n' 'Shortcut: Ctrl+D'),
+        )
         self.extdiff_button.setEnabled(False)
 
         self.help_button = qtutils.create_button(
-            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'),
-            icon=icons.question())
+            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'), icon=icons.question()
+        )
 
         self.cancel_button = qtutils.create_button(
-            text=N_('Cancel'), tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
-            icon=icons.close())
+            text=N_('Cancel'),
+            tooltip=N_('Cancel rebase\nShortcut: Ctrl+Q'),
+            icon=icons.close(),
+        )
 
         top = qtutils.splitter(Qt.Horizontal, self.tree, self.filewidget)
         top.setSizes([75, 25])
@@ -200,19 +208,21 @@ class Editor(QtWidgets.QWidget):
         main_split = qtutils.splitter(Qt.Vertical, top, self.diff)
         main_split.setSizes([25, 75])
 
-        controls_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.cancel_button,
-                                       qtutils.STRETCH,
-                                       self.help_button,
-                                       self.extdiff_button,
-                                       self.rebase_button)
-        layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                              main_split, controls_layout)
+        controls_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.cancel_button,
+            qtutils.STRETCH,
+            self.help_button,
+            self.extdiff_button,
+            self.rebase_button,
+        )
+        layout = qtutils.vbox(defs.no_margin, defs.spacing, main_split, controls_layout)
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
-            self, N_('Rebase'), self.rebase,
-            hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER)
+            self, N_('Rebase'), self.rebase, hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER
+        )
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
         self.tree.external_diff.connect(self.external_diff)
@@ -234,14 +244,18 @@ class Editor(QtWidgets.QWidget):
     def parse_sequencer_instructions(self, insns):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
-        exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$'
-                              % re_comment_char)
+        exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$' % re_comment_char)
         # The upper bound of 40 below must match git.OID_LENGTH.
         # We'll have to update this to the new hash length when that happens.
-        pick_rgx = re.compile((r'^\s*(%s)?\s*'
-                               r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                               r'\s+([0-9a-f]{7,40})'
-                               r'\s+(.+)$') % re_comment_char)
+        pick_rgx = re.compile(
+            (
+                r'^\s*(%s)?\s*'
+                r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                r'\s+([0-9a-f]{7,40})'
+                r'\s+(.+)$'
+            )
+            % re_comment_char
+        )
         for line in insns.splitlines():
             match = pick_rgx.match(line)
             if match:
@@ -249,8 +263,7 @@ class Editor(QtWidgets.QWidget):
                 command = unabbrev(match.group(2))
                 oid = match.group(3)
                 summary = match.group(4)
-                self.tree.add_item(idx, enabled, command,
-                                   oid=oid, summary=summary)
+                self.tree.add_item(idx, enabled, command, oid=oid, summary=summary)
                 idx += 1
                 continue
             match = exec_rgx.match(line)
@@ -299,8 +312,7 @@ class Editor(QtWidgets.QWidget):
         if not items:
             return
         item = items[0]
-        difftool.diff_expression(self.context, self, item.oid + '^!',
-                                 hide_expr=True)
+        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
 
 
 # pylint: disable=too-many-ancestors
@@ -314,54 +326,61 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.notifier = notifier
         self.comment_char = comment_char
         # header
-        self.setHeaderLabels([
-            N_('#'),
-            N_('Enabled'),
-            N_('Command'),
-            N_('SHA-1'),
-            N_('Summary'),
-        ])
+        self.setHeaderLabels(
+            [N_('#'), N_('Enabled'), N_('Command'), N_('SHA-1'), N_('Summary'),]
+        )
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)
 
         # actions
         self.copy_oid_action = qtutils.add_action(
-            self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy)
+            self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy
+        )
 
         self.external_diff_action = qtutils.add_action(
-            self, N_('Launch Diff Tool'), self.external_diff.emit,
-            hotkeys.DIFF)
+            self, N_('Launch Diff Tool'), self.external_diff.emit, hotkeys.DIFF
+        )
 
         self.toggle_enabled_action = qtutils.add_action(
-            self, N_('Toggle Enabled'), self.toggle_enabled,
-            hotkeys.PRIMARY_ACTION)
+            self, N_('Toggle Enabled'), self.toggle_enabled, hotkeys.PRIMARY_ACTION
+        )
 
         self.action_pick = qtutils.add_action(
-            self, N_('Pick'), lambda: self.set_selected_to(PICK),
-            *hotkeys.REBASE_PICK)
+            self, N_('Pick'), lambda: self.set_selected_to(PICK), *hotkeys.REBASE_PICK
+        )
 
         self.action_reword = qtutils.add_action(
-            self, N_('Reword'), lambda: self.set_selected_to(REWORD),
-            *hotkeys.REBASE_REWORD)
+            self,
+            N_('Reword'),
+            lambda: self.set_selected_to(REWORD),
+            *hotkeys.REBASE_REWORD
+        )
 
         self.action_edit = qtutils.add_action(
-            self, N_('Edit'), lambda: self.set_selected_to(EDIT),
-            *hotkeys.REBASE_EDIT)
+            self, N_('Edit'), lambda: self.set_selected_to(EDIT), *hotkeys.REBASE_EDIT
+        )
 
         self.action_fixup = qtutils.add_action(
-            self, N_('Fixup'), lambda: self.set_selected_to(FIXUP),
-            *hotkeys.REBASE_FIXUP)
+            self,
+            N_('Fixup'),
+            lambda: self.set_selected_to(FIXUP),
+            *hotkeys.REBASE_FIXUP
+        )
 
         self.action_squash = qtutils.add_action(
-            self, N_('Squash'), lambda: self.set_selected_to(SQUASH),
-            *hotkeys.REBASE_SQUASH)
+            self,
+            N_('Squash'),
+            lambda: self.set_selected_to(SQUASH),
+            *hotkeys.REBASE_SQUASH
+        )
 
         self.action_shift_down = qtutils.add_action(
-            self, N_('Shift Down'), self.shift_down,
-            hotkeys.MOVE_DOWN_TERTIARY)
+            self, N_('Shift Down'), self.shift_down, hotkeys.MOVE_DOWN_TERTIARY
+        )
 
         self.action_shift_up = qtutils.add_action(
-            self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY)
+            self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY
+        )
 
         # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
@@ -369,12 +388,17 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.move_rows.connect(self.move)
         self.items_moved.connect(self.decorate)
 
-    def add_item(self, idx, enabled, command,
-                 oid='', summary='', cmdexec=''):
+    def add_item(self, idx, enabled, command, oid='', summary='', cmdexec=''):
         comment_char = self.comment_char
-        item = RebaseTreeWidgetItem(idx, enabled, command,
-                                    oid=oid, summary=summary,
-                                    cmdexec=cmdexec, comment_char=comment_char)
+        item = RebaseTreeWidgetItem(
+            idx,
+            enabled,
+            command,
+            oid=oid,
+            summary=summary,
+            cmdexec=cmdexec,
+            comment_char=comment_char,
+        )
         self.invisibleRootItem().addChild(item)
 
     def decorate(self, items):
@@ -514,9 +538,17 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     COMMAND_COLUMN = 2
     OID_LENGTH = 7
 
-    def __init__(self, idx, enabled, command,
-                 oid='', summary='', cmdexec='', comment_char='#',
-                 parent=None):
+    def __init__(
+        self,
+        idx,
+        enabled,
+        command,
+        oid='',
+        summary='',
+        cmdexec='',
+        comment_char='#',
+        parent=None,
+    ):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.combo = None
         self.command = command
@@ -554,9 +586,14 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return self.oid
 
     def copy(self):
-        return self.__class__(self.idx, self.is_enabled(), self.command,
-                              oid=self.oid, summary=self.summary,
-                              cmdexec=self.cmdexec)
+        return self.__class__(
+            self.idx,
+            self.is_enabled(),
+            self.command,
+            oid=self.oid,
+            summary=self.summary,
+            cmdexec=self.cmdexec,
+        )
 
     def decorate(self, parent):
         if self.is_exec():
@@ -592,15 +629,13 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             comment = self.comment_char + ' '
         if self.is_exec():
             return '%s%s %s' % (comment, self.command, self.cmdexec)
-        return ('%s%s %s %s' %
-                (comment, self.command, self.oid, self.summary))
+        return '%s%s %s %s' % (comment, self.command, self.oid, self.summary)
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
 
     def set_enabled(self, enabled):
-        self.setCheckState(self.ENABLED_COLUMN,
-                           enabled and Qt.Checked or Qt.Unchecked)
+        self.setCheckState(self.ENABLED_COLUMN, enabled and Qt.Checked or Qt.Unchecked)
 
     def toggle_enabled(self):
         self.set_enabled(not self.is_enabled())
@@ -629,7 +664,8 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
 
 def show_help(context):
-    help_text = N_("""
+    help_text = N_(
+        """
 Commands
 --------
 pick = use commit
@@ -663,7 +699,8 @@ spacebar = toggle enabled
 ctrl+enter = accept changes and rebase
 ctrl+q     = cancel and abort the rebase
 ctrl+d     = launch difftool
-""")
+"""
+    )
     title = N_('Help - git-xbase')
     return text.text_dialog(context, help_text, title)
 

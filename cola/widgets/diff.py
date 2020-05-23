@@ -44,8 +44,9 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     END_STATE = 5
 
     DIFF_FILE_HEADER_START_RGX = re.compile(r'diff --git a/.* b/.*')
-    DIFF_HUNK_HEADER_RGX = re.compile(r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|'
-                                      r'(?:@@@ (?:-[0-9,]+ ){2}\+[0-9,]+ @@@)')
+    DIFF_HUNK_HEADER_RGX = re.compile(
+        r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|' r'(?:@@@ (?:-[0-9,]+ ){2}\+[0-9,]+ @@@)'
+    )
     BAD_WHITESPACE_RGX = re.compile(r'\s+$')
 
     def __init__(self, context, doc, whitespace=True, is_commit=False):
@@ -63,22 +64,19 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         dark = palette.color(QPalette.Base).lightnessF() < 0.5
 
         self.color_text = qtutils.RGB(cfg.color('text', '030303'))
-        self.color_add = qtutils.RGB(
-            cfg.color('add', '77aa77' if dark else 'd2ffe4')
-        )
+        self.color_add = qtutils.RGB(cfg.color('add', '77aa77' if dark else 'd2ffe4'))
         self.color_remove = qtutils.RGB(
             cfg.color('remove', 'aa7777' if dark else 'fee0e4')
         )
         self.color_header = qtutils.RGB(cfg.color('header', header))
 
         self.diff_header_fmt = qtutils.make_format(fg=self.color_header)
-        self.bold_diff_header_fmt = qtutils.make_format(
-            fg=self.color_header, bold=True)
+        self.bold_diff_header_fmt = qtutils.make_format(fg=self.color_header, bold=True)
 
-        self.diff_add_fmt = qtutils.make_format(
-            fg=self.color_text, bg=self.color_add)
+        self.diff_add_fmt = qtutils.make_format(fg=self.color_text, bg=self.color_add)
         self.diff_remove_fmt = qtutils.make_format(
-            fg=self.color_text, bg=self.color_remove)
+            fg=self.color_text, bg=self.color_remove
+        )
         self.bad_whitespace_fmt = qtutils.make_format(bg=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
 
@@ -161,14 +159,14 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
 # pylint: disable=too-many-ancestors
 class DiffTextEdit(VimHintedPlainTextEdit):
-
-    def __init__(self, context, parent,
-                 is_commit=False, whitespace=True, numbers=False):
+    def __init__(
+        self, context, parent, is_commit=False, whitespace=True, numbers=False
+    ):
         VimHintedPlainTextEdit.__init__(self, context, '', parent=parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(
-            context, self.document(),
-            is_commit=is_commit, whitespace=whitespace)
+            context, self.document(), is_commit=is_commit, whitespace=whitespace
+        )
         if numbers:
             self.numbers = DiffLineNumbers(context, self)
             self.numbers.hide()
@@ -225,7 +223,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
 
 class DiffLineNumbers(TextDecorator):
-
     def __init__(self, context, parent):
         TextDecorator.__init__(self, parent)
         self.highlight_line = -1
@@ -282,14 +279,14 @@ class DiffLineNumbers(TextDecorator):
     def current_line(self):
         if self.lines and self.highlight_line >= 0:
             # Find the next valid line
-            for line in self.lines[self.highlight_line:]:
+            for line in self.lines[self.highlight_line :]:
                 # take the "new" line number: last value in tuple
                 line_number = line[-1]
                 if line_number > 0:
                     return line_number
 
             # Find the previous valid line
-            for line in self.lines[self.highlight_line-1::-1]:
+            for line in self.lines[self.highlight_line - 1 :: -1]:
                 # take the "new" line number: last value in tuple
                 line_number = line[-1]
                 if line_number > 0:
@@ -332,8 +329,7 @@ class DiffLineNumbers(TextDecorator):
 
             rect = block_geom.translated(content_offset).toRect()
             if block_number == self.highlight_line:
-                painter.fillRect(rect.x(), rect.y(),
-                                 width, rect.height(), highlight)
+                painter.fillRect(rect.x(), rect.y(), width, rect.height(), highlight)
                 painter.setPen(highlight_text)
             else:
                 painter.setPen(disabled)
@@ -346,9 +342,14 @@ class DiffLineNumbers(TextDecorator):
                 old, base, new = line
                 text = fmt.merge_value(old, base, new)
 
-            painter.drawText(rect.x(), rect.y(),
-                             self.width() - (defs.margin * 2), rect.height(),
-                             Qt.AlignRight | Qt.AlignVCenter, text)
+            painter.drawText(
+                rect.x(),
+                rect.y(),
+                self.width() - (defs.margin * 2),
+                rect.height(),
+                Qt.AlignRight | Qt.AlignVCenter,
+                text,
+            )
 
             block = block.next()  # pylint: disable=next-method-called
 
@@ -375,8 +376,7 @@ class Viewer(QtWidgets.QFrame):
         stack.addWidget(self.text)
         stack.addWidget(self.image)
 
-        self.main_layout = qtutils.vbox(
-            defs.no_margin, defs.no_spacing, self.stack)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing, self.stack)
         self.setLayout(self.main_layout)
 
         # Observe images
@@ -561,29 +561,28 @@ class Options(QtWidgets.QWidget):
         super(Options, self).__init__(parent)
         self.widget = parent
         self.ignore_space_at_eol = self.add_option(
-            N_('Ignore changes in whitespace at EOL'))
+            N_('Ignore changes in whitespace at EOL')
+        )
 
         self.ignore_space_change = self.add_option(
-            N_('Ignore changes in amount of whitespace'))
+            N_('Ignore changes in amount of whitespace')
+        )
 
-        self.ignore_all_space = self.add_option(
-            N_('Ignore all whitespace'))
+        self.ignore_all_space = self.add_option(N_('Ignore all whitespace'))
 
         self.function_context = self.add_option(
-            N_('Show whole surrounding functions of changes'))
+            N_('Show whole surrounding functions of changes')
+        )
 
-        self.show_line_numbers = self.add_option(
-            N_('Show line numbers'))
+        self.show_line_numbers = self.add_option(N_('Show line numbers'))
 
         self.options = options = qtutils.create_action_button(
-            tooltip=N_('Diff Options'), icon=icons.configure())
+            tooltip=N_('Diff Options'), icon=icons.configure()
+        )
 
-        self.image_mode = qtutils.combo([
-            N_('Side by side'),
-            N_('Diff'),
-            N_('XOR'),
-            N_('Pixel XOR'),
-        ])
+        self.image_mode = qtutils.combo(
+            [N_('Side by side'), N_('Diff'), N_('XOR'), N_('Pixel XOR')]
+        )
 
         self.zoom_factors = (
             (N_('Zoom to Fit'), 0.0),
@@ -607,8 +606,13 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.function_context)
 
         layout = qtutils.hbox(
-            defs.no_margin, defs.no_spacing,
-            self.image_mode, defs.button_spacing, self.zoom_mode, options)
+            defs.no_margin,
+            defs.no_spacing,
+            self.image_mode,
+            defs.button_spacing,
+            self.zoom_mode,
+            options,
+        )
         self.setLayout(layout)
 
         self.image_mode.setFocusPolicy(Qt.NoFocus)
@@ -634,7 +638,8 @@ class Options(QtWidgets.QWidget):
         all_space = get(self.ignore_all_space)
         function_context = get(self.function_context)
         gitcmds.update_diff_overrides(
-            space_at_eol, space_change, all_space, function_context)
+            space_at_eol, space_change, all_space, function_context
+        )
         self.widget.update_options()
 
 
@@ -656,14 +661,17 @@ class DiffEditor(DiffTextEdit):
         # "Diff Options" tool menu
         self.options = options
         self.action_apply_selection = qtutils.add_action(
-            self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF)
+            self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF
+        )
 
         self.action_revert_selection = qtutils.add_action(
-            self, 'Revert', self.revert_selection, hotkeys.REVERT)
+            self, 'Revert', self.revert_selection, hotkeys.REVERT
+        )
         self.action_revert_selection.setIcon(icons.undo())
 
         self.launch_editor = actions.launch_editor_at_line(
-            context, self, hotkeys.EDIT_SHORT, *hotkeys.ACCEPT)
+            context, self, hotkeys.EDIT_SHORT, *hotkeys.ACCEPT
+        )
         self.launch_difftool = actions.launch_difftool(context, self)
         self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
@@ -676,7 +684,8 @@ class DiffEditor(DiffTextEdit):
         self.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
         selection_model.add_observer(
-            selection_model.message_selection_changed, self.updated.emit)
+            selection_model.message_selection_changed, self.updated.emit
+        )
         # pylint: disable=no-member
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         # Update the selection model when the cursor changes
@@ -727,11 +736,16 @@ class DiffEditor(DiffTextEdit):
             if item in model.submodules:
                 path = core.abspath(item)
                 action = menu.addAction(
-                    icons.add(), cmds.Stage.name(),
-                    cmds.run(cmds.Stage, context, s.modified))
+                    icons.add(),
+                    cmds.Stage.name(),
+                    cmds.run(cmds.Stage, context, s.modified),
+                )
                 action.setShortcut(hotkeys.STAGE_SELECTION)
-                menu.addAction(icons.cola(), N_('Launch git-cola'),
-                               cmds.run(cmds.OpenRepo, context, path))
+                menu.addAction(
+                    icons.cola(),
+                    N_('Launch git-cola'),
+                    cmds.run(cmds.OpenRepo, context, path),
+                )
             elif item not in model.unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
@@ -753,11 +767,16 @@ class DiffEditor(DiffTextEdit):
             if item in model.submodules:
                 path = core.abspath(item)
                 action = menu.addAction(
-                    icons.remove(), cmds.Unstage.name(),
-                    cmds.run(cmds.Unstage, context, s.staged))
+                    icons.remove(),
+                    cmds.Unstage.name(),
+                    cmds.run(cmds.Unstage, context, s.staged),
+                )
                 action.setShortcut(hotkeys.STAGE_SELECTION)
-                menu.addAction(icons.cola(), N_('Launch git-cola'),
-                               cmds.run(cmds.OpenRepo, context, path))
+                menu.addAction(
+                    icons.cola(),
+                    N_('Launch git-cola'),
+                    cmds.run(cmds.OpenRepo, context, path),
+                )
             elif item not in model.staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
@@ -788,8 +807,7 @@ class DiffEditor(DiffTextEdit):
         action = menu.addAction(icons.copy(), N_('Copy'), self.copy)
         action.setShortcut(QtGui.QKeySequence.Copy)
 
-        action = menu.addAction(icons.select_all(), N_('Select All'),
-                                self.selectAll)
+        action = menu.addAction(icons.select_all(), N_('Select All'), self.selectAll)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -871,11 +889,16 @@ class DiffEditor(DiffTextEdit):
             ok_text = N_('Revert Diff Hunk')
 
         if not Interaction.confirm(
-                title,
-                N_('This operation drops uncommitted changes.\n'
-                   'These changes cannot be recovered.'),
-                N_('Revert the uncommitted changes?'),
-                ok_text, default=True, icon=icons.undo()):
+            title,
+            N_(
+                'This operation drops uncommitted changes.\n'
+                'These changes cannot be recovered.'
+            ),
+            N_('Revert the uncommitted changes?'),
+            ok_text,
+            default=True,
+            icon=icons.undo(),
+        ):
             return
         self.process_diff_selection(reverse=True, apply_to_worktree=True)
 
@@ -885,9 +908,15 @@ class DiffEditor(DiffTextEdit):
             return
         context = self.context
         first_line_idx, last_line_idx = self.selected_lines()
-        cmds.do(cmds.ApplyDiffSelection, context,
-                first_line_idx, last_line_idx,
-                self.has_selection(), reverse, apply_to_worktree)
+        cmds.do(
+            cmds.ApplyDiffSelection,
+            context,
+            first_line_idx,
+            last_line_idx,
+            self.has_selection(),
+            reverse,
+            apply_to_worktree,
+        )
 
     def _update_line_number(self):
         """Update the selection model when the cursor changes"""
@@ -895,7 +924,6 @@ class DiffEditor(DiffTextEdit):
 
 
 class DiffWidget(QtWidgets.QWidget):
-
     def __init__(self, context, notifier, parent, is_commit=False):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -908,8 +936,9 @@ class DiffWidget(QtWidgets.QWidget):
         summary_font = QtGui.QFont(author_font)
         summary_font.setWeight(QtGui.QFont.Bold)
 
-        policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding,
-                                       QtWidgets.QSizePolicy.Minimum)
+        policy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
+        )
 
         self.gravatar_label = gravatar.GravatarLabel()
 
@@ -939,19 +968,25 @@ class DiffWidget(QtWidgets.QWidget):
         self.oid_label.setAlignment(Qt.AlignTop)
         self.oid_label.elide()
 
-        self.diff = DiffTextEdit(
-            context, self, is_commit=is_commit, whitespace=False)
+        self.diff = DiffTextEdit(context, self, is_commit=is_commit, whitespace=False)
 
-        self.info_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
-                                        self.author_label, self.date_label,
-                                        self.summary_label, self.oid_label)
+        self.info_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.no_spacing,
+            self.author_label,
+            self.date_label,
+            self.summary_label,
+            self.oid_label,
+        )
 
-        self.logo_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                        self.gravatar_label, self.info_layout)
+        self.logo_layout = qtutils.hbox(
+            defs.no_margin, defs.button_spacing, self.gravatar_label, self.info_layout
+        )
         self.logo_layout.setContentsMargins(defs.margin, 0, defs.margin, 0)
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing,
-                                        self.logo_layout, self.diff)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.logo_layout, self.diff
+        )
         self.setLayout(self.main_layout)
 
         notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
@@ -984,15 +1019,12 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.set_diff(diff)
 
     def set_details(self, oid, author, email, date, summary):
-        template_args = {
-            'author': author,
-            'email': email,
-            'summary': summary
-        }
-        author_text = ("""%(author)s &lt;"""
-                       """<a href="mailto:%(email)s">"""
-                       """%(email)s</a>&gt;"""
-                       % template_args)
+        template_args = {'author': author, 'email': email, 'summary': summary}
+        author_text = (
+            """%(author)s &lt;"""
+            """<a href="mailto:%(email)s">"""
+            """%(email)s</a>&gt;""" % template_args
+        )
         author_template = '%(author)s <%(email)s>' % template_args
 
         self.date_label.set_text(date)
@@ -1009,11 +1041,11 @@ class DiffWidget(QtWidgets.QWidget):
 
 
 class TextLabel(QtWidgets.QLabel):
-
     def __init__(self, parent=None):
         QtWidgets.QLabel.__init__(self, parent)
-        self.setTextInteractionFlags(Qt.TextSelectableByMouse |
-                                     Qt.LinksAccessibleByMouse)
+        self.setTextInteractionFlags(
+            Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
+        )
         self._display = ''
         self._template = ''
         self._text = ''
@@ -1038,8 +1070,7 @@ class TextLabel(QtWidgets.QLabel):
         self._display = self._text
         if not self._elide:
             return
-        text = self._metrics.elidedText(self._template,
-                                        Qt.ElideRight, width-2)
+        text = self._metrics.elidedText(self._template, Qt.ElideRight, width - 2)
         if text != self._template:
             self._display = text
 
@@ -1058,7 +1089,6 @@ class TextLabel(QtWidgets.QLabel):
 
 
 class DiffInfoTask(qtutils.Task):
-
     def __init__(self, context, oid, filename, parent):
         qtutils.Task.__init__(self, parent)
         self.context = context

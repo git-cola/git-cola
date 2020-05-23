@@ -43,19 +43,20 @@ class StatusWidget(QtWidgets.QFrame):
 
         tooltip = N_('Toggle the paths filter')
         icon = icons.ellipsis()
-        self.filter_button = qtutils.create_action_button(tooltip=tooltip,
-                                                          icon=icon)
+        self.filter_button = qtutils.create_action_button(tooltip=tooltip, icon=icon)
         self.filter_widget = StatusFilterWidget(context)
         self.filter_widget.hide()
         self.tree = StatusTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing,
-                                        self.filter_widget, self.tree)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.no_spacing, self.filter_widget, self.tree
+        )
         self.setLayout(self.main_layout)
 
         self.toggle_action = qtutils.add_action(
-            self, tooltip, self.toggle_filter, hotkeys.FILTER)
+            self, tooltip, self.toggle_filter, hotkeys.FILTER
+        )
 
         titlebar.add_corner_widget(self.filter_button)
         qtutils.connect_button(self.filter_button, self.toggle_filter)
@@ -70,8 +71,7 @@ class StatusWidget(QtWidgets.QFrame):
 
     def set_initial_size(self):
         self.setMaximumWidth(222)
-        QtCore.QTimer.singleShot(
-            1, lambda: self.setMaximumWidth(2 ** 13))
+        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
 
     def refresh(self):
         self.tree.show_selection()
@@ -147,78 +147,109 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.image_formats = qtutils.ImageFormats()
 
         self.process_selection_action = qtutils.add_action(
-            self, cmds.StageOrUnstage.name(), self._stage_selection,
-            hotkeys.STAGE_SELECTION)
+            self,
+            cmds.StageOrUnstage.name(),
+            self._stage_selection,
+            hotkeys.STAGE_SELECTION,
+        )
 
         self.revert_unstaged_edits_action = qtutils.add_action(
-            self, cmds.RevertUnstagedEdits.name(),
-            cmds.run(cmds.RevertUnstagedEdits, context), hotkeys.REVERT)
+            self,
+            cmds.RevertUnstagedEdits.name(),
+            cmds.run(cmds.RevertUnstagedEdits, context),
+            hotkeys.REVERT,
+        )
         self.revert_unstaged_edits_action.setIcon(icons.undo())
 
         self.launch_difftool_action = qtutils.add_action(
-            self, cmds.LaunchDifftool.name(),
-            cmds.run(cmds.LaunchDifftool, context), hotkeys.DIFF)
+            self,
+            cmds.LaunchDifftool.name(),
+            cmds.run(cmds.LaunchDifftool, context),
+            hotkeys.DIFF,
+        )
         self.launch_difftool_action.setIcon(icons.diff())
 
         self.launch_editor_action = actions.launch_editor_at_line(
-            context, self, *hotkeys.ACCEPT)
+            context, self, *hotkeys.ACCEPT
+        )
 
         if not utils.is_win32():
             self.default_app_action = common.default_app_action(
-                context, self, self.selected_group)
+                context, self, self.selected_group
+            )
 
             self.parent_dir_action = common.parent_dir_action(
-                context, self, self.selected_group)
+                context, self, self.selected_group
+            )
 
         self.terminal_action = common.terminal_action(
-            context, self, self.selected_group)
+            context, self, self.selected_group
+        )
 
         self.up_action = qtutils.add_action(
-            self, N_('Move Up'), self.move_up,
-            hotkeys.MOVE_UP, hotkeys.MOVE_UP_SECONDARY)
+            self,
+            N_('Move Up'),
+            self.move_up,
+            hotkeys.MOVE_UP,
+            hotkeys.MOVE_UP_SECONDARY,
+        )
 
         self.down_action = qtutils.add_action(
-            self, N_('Move Down'), self.move_down,
-            hotkeys.MOVE_DOWN, hotkeys.MOVE_DOWN_SECONDARY)
+            self,
+            N_('Move Down'),
+            self.move_down,
+            hotkeys.MOVE_DOWN,
+            hotkeys.MOVE_DOWN_SECONDARY,
+        )
 
         self.copy_path_action = qtutils.add_action(
-            self, N_('Copy Path to Clipboard'),
-            partial(copy_path, context), hotkeys.COPY)
+            self,
+            N_('Copy Path to Clipboard'),
+            partial(copy_path, context),
+            hotkeys.COPY,
+        )
         self.copy_path_action.setIcon(icons.copy())
 
         self.copy_relpath_action = qtutils.add_action(
-            self, N_('Copy Relative Path to Clipboard'),
-            partial(copy_relpath, context), hotkeys.CUT)
+            self,
+            N_('Copy Relative Path to Clipboard'),
+            partial(copy_relpath, context),
+            hotkeys.CUT,
+        )
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_action = qtutils.add_action(
-            self, N_('Copy Leading Path to Clipboard'),
-            partial(copy_leading_path, context))
+            self,
+            N_('Copy Leading Path to Clipboard'),
+            partial(copy_leading_path, context),
+        )
         self.copy_leading_path_action.setIcon(icons.copy())
 
         self.copy_basename_action = qtutils.add_action(
-            self, N_('Copy Basename to Clipboard'),
-            partial(copy_basename, context))
+            self, N_('Copy Basename to Clipboard'), partial(copy_basename, context)
+        )
         self.copy_basename_action.setIcon(icons.copy())
 
         self.copy_customize_action = qtutils.add_action(
-            self, N_('Customize...'),
-            partial(customize_copy_actions, context, self))
+            self, N_('Customize...'), partial(customize_copy_actions, context, self)
+        )
         self.copy_customize_action.setIcon(icons.configure())
 
         self.view_history_action = qtutils.add_action(
-            self, N_('View History...'), partial(view_history, context),
-            hotkeys.HISTORY)
+            self, N_('View History...'), partial(view_history, context), hotkeys.HISTORY
+        )
 
         self.view_blame_action = qtutils.add_action(
-            self, N_('Blame...'),
-            partial(view_blame, context), hotkeys.BLAME)
+            self, N_('Blame...'), partial(view_blame, context), hotkeys.BLAME
+        )
 
         self.annex_add_action = qtutils.add_action(
-            self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd, context))
+            self, N_('Add to Git Annex'), cmds.run(cmds.AnnexAdd, context)
+        )
 
         self.lfs_track_action = qtutils.add_action(
-            self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack, context))
+            self, N_('Add to Git LFS'), cmds.run(cmds.LFSTrack, context)
+        )
 
         # MoveToTrash and Delete use the same shortcut.
         # We will only bind one of them, depending on whether or not the
@@ -226,8 +257,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # is bound to MoveToTrash, otherwise it is bound to Delete.
         if cmds.MoveToTrash.AVAILABLE:
             self.move_to_trash_action = qtutils.add_action(
-                self, N_('Move files to trash'),
-                self._trash_untracked_files, hotkeys.TRASH)
+                self,
+                N_('Move files to trash'),
+                self._trash_untracked_files,
+                hotkeys.TRASH,
+            )
             self.move_to_trash_action.setIcon(icons.discard())
             delete_shortcut = hotkeys.DELETE_FILE
         else:
@@ -235,22 +269,23 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             delete_shortcut = hotkeys.DELETE_FILE_SECONDARY
 
         self.delete_untracked_files_action = qtutils.add_action(
-            self, N_('Delete Files...'),
-            self._delete_untracked_files, delete_shortcut)
+            self, N_('Delete Files...'), self._delete_untracked_files, delete_shortcut
+        )
         self.delete_untracked_files_action.setIcon(icons.discard())
 
         about_to_update = self._about_to_update
         self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         self.diff_text_changed.connect(
-            self._make_current_item_visible, type=Qt.QueuedConnection)
+            self._make_current_item_visible, type=Qt.QueuedConnection
+        )
 
         self.m = context.model
-        self.m.add_observer(self.m.message_about_to_update,
-                            self.about_to_update.emit)
+        self.m.add_observer(self.m.message_about_to_update, self.about_to_update.emit)
         self.m.add_observer(self.m.message_updated, self.updated.emit)
-        self.m.add_observer(self.m.message_diff_text_changed,
-                            self.diff_text_changed.emit)
+        self.m.add_observer(
+            self.m.message_diff_text_changed, self.diff_text_changed.emit
+        )
         # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.show_selection)
         self.itemDoubleClicked.connect(self._double_clicked)
@@ -293,6 +328,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 if current:
                     self.setCurrentItem(item)
                 item.setSelected(True)
+
             return select
 
         select_staged = mkselect(new_c.staged, self._staged_item)
@@ -301,17 +337,15 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         select_untracked = mkselect(new_c.untracked, self._untracked_item)
 
         saved_selection = [
-            (set(new_c.staged), old_c.staged, set(old_s.staged),
-             select_staged),
-
-            (set(new_c.unmerged), old_c.unmerged, set(old_s.unmerged),
-             select_unmerged),
-
-            (set(new_c.modified), old_c.modified, set(old_s.modified),
-             select_modified),
-
-            (set(new_c.untracked), old_c.untracked, set(old_s.untracked),
-             select_untracked),
+            (set(new_c.staged), old_c.staged, set(old_s.staged), select_staged),
+            (set(new_c.unmerged), old_c.unmerged, set(old_s.unmerged), select_unmerged),
+            (set(new_c.modified), old_c.modified, set(old_s.modified), select_modified),
+            (
+                set(new_c.untracked),
+                old_c.untracked,
+                set(old_s.untracked),
+                select_untracked,
+            ),
         ]
 
         # Restore the current item
@@ -364,7 +398,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 # The item no longer exists in this list so search for
                 # its nearest neighbors and select them instead.
                 idx = old.index(item)
-                for j in itertools.chain(old[idx+1:], reversed(old[:idx])):
+                for j in itertools.chain(old[idx + 1 :], reversed(old[:idx])):
                     if j in new:
                         reselect(j, current=True)
                         return
@@ -485,29 +519,37 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
-        self._set_subtree(items, self.idx_staged, N_('Staged'), staged=True,
-                          deleted_set=self.m.staged_deleted)
+        self._set_subtree(
+            items,
+            self.idx_staged,
+            N_('Staged'),
+            staged=True,
+            deleted_set=self.m.staged_deleted,
+        )
 
     def _set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
-        self._set_subtree(items, self.idx_modified, N_('Modified'),
-                          deleted_set=self.m.unstaged_deleted)
+        self._set_subtree(
+            items,
+            self.idx_modified,
+            N_('Modified'),
+            deleted_set=self.m.unstaged_deleted,
+        )
 
     def _set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
         deleted_set = set([path for path in items if not core.exists(path)])
-        self._set_subtree(items, self.idx_unmerged, N_('Unmerged'),
-                          deleted_set=deleted_set)
+        self._set_subtree(
+            items, self.idx_unmerged, N_('Unmerged'), deleted_set=deleted_set
+        )
 
     def _set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
-        self._set_subtree(items, self.idx_untracked, N_('Untracked'),
-                          untracked=True)
+        self._set_subtree(items, self.idx_untracked, N_('Untracked'), untracked=True)
 
-    def _set_subtree(self, items, idx, parent_title,
-                     staged=False,
-                     untracked=False,
-                     deleted_set=None):
+    def _set_subtree(
+        self, items, idx, parent_title, staged=False, untracked=False, deleted_set=None
+    ):
         """Add a list of items to a treewidget item."""
         self.blockSignals(True)
         parent = self.topLevelItem(idx)
@@ -520,11 +562,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             pass
 
         for item in items:
-            deleted = (deleted_set is not None and item in deleted_set)
-            treeitem = qtutils.create_treeitem(item,
-                                               staged=staged,
-                                               deleted=deleted,
-                                               untracked=untracked)
+            deleted = deleted_set is not None and item in deleted_set
+            treeitem = qtutils.create_treeitem(
+                item, staged=staged, deleted=deleted, untracked=untracked
+            )
             parent.addChild(treeitem)
         self._expand_items(idx, items)
         self.blockSignals(False)
@@ -618,8 +659,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             name = entry.get('name', '')
             fmt = entry.get('format', '')
             if name and fmt:
-                action = copy_menu.addAction(
-                    name, partial(copy_format, context, fmt))
+                action = copy_menu.addAction(name, partial(copy_format, context, fmt))
                 action.setIcon(copy_icon)
                 action.setEnabled(enabled)
 
@@ -629,19 +669,29 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _create_header_context_menu(self, menu, idx):
         context = self.context
         if idx == self.idx_staged:
-            menu.addAction(icons.remove(), N_('Unstage All'),
-                           cmds.run(cmds.UnstageAll, context))
+            menu.addAction(
+                icons.remove(), N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
+            )
         elif idx == self.idx_unmerged:
-            action = menu.addAction(icons.add(), cmds.StageUnmerged.name(),
-                                    cmds.run(cmds.StageUnmerged, context))
+            action = menu.addAction(
+                icons.add(),
+                cmds.StageUnmerged.name(),
+                cmds.run(cmds.StageUnmerged, context),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
         elif idx == self.idx_modified:
-            action = menu.addAction(icons.add(), cmds.StageModified.name(),
-                                    cmds.run(cmds.StageModified, context))
+            action = menu.addAction(
+                icons.add(),
+                cmds.StageModified.name(),
+                cmds.run(cmds.StageModified, context),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
         elif idx == self.idx_untracked:
-            action = menu.addAction(icons.add(), cmds.StageUntracked.name(),
-                                    cmds.run(cmds.StageUntracked, context))
+            action = menu.addAction(
+                icons.add(),
+                cmds.StageUntracked.name(),
+                cmds.run(cmds.StageUntracked, context),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
         return menu
 
@@ -652,15 +702,18 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         context = self.context
         if self.m.unstageable():
             action = menu.addAction(
-                icons.remove(), N_('Unstage Selected'),
-                cmds.run(cmds.Unstage, context, self.staged()))
+                icons.remove(),
+                N_('Unstage Selected'),
+                cmds.run(cmds.Unstage, context, self.staged()),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.launch_editor_action)
 
         # Do all of the selected items exist?
-        all_exist = all(i not in self.m.staged_deleted and core.exists(i)
-                        for i in self.staged())
+        all_exist = all(
+            i not in self.m.staged_deleted and core.exists(i) for i in self.staged()
+        )
 
         if all_exist:
             menu.addAction(self.launch_difftool_action)
@@ -676,12 +729,17 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         context = self.context
         path = core.abspath(s.staged[0])
         if len(self.staged()) == 1:
-            menu.addAction(icons.cola(), N_('Launch git-cola'),
-                           cmds.run(cmds.OpenRepo, context, path))
+            menu.addAction(
+                icons.cola(),
+                N_('Launch git-cola'),
+                cmds.run(cmds.OpenRepo, context, path),
+            )
             menu.addSeparator()
         action = menu.addAction(
-            icons.remove(), N_('Unstage Selected'),
-            cmds.run(cmds.Unstage, context, self.staged()))
+            icons.remove(),
+            N_('Unstage Selected'),
+            cmds.run(cmds.Unstage, context, self.staged()),
+        )
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.view_history_action)
@@ -692,8 +750,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(self.launch_difftool_action)
 
         action = menu.addAction(
-            icons.add(), N_('Stage Selected'),
-            cmds.run(cmds.Stage, context, self.unstaged()))
+            icons.add(),
+            N_('Stage Selected'),
+            cmds.run(cmds.Stage, context, self.unstaged()),
+        )
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.launch_editor_action)
@@ -703,23 +763,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_unstaged_context_menu(self, menu, s):
         context = self.context
-        modified_submodule = (s.modified and
-                              s.modified[0] in self.m.submodules)
+        modified_submodule = s.modified and s.modified[0] in self.m.submodules
         if modified_submodule:
             return self._create_modified_submodule_context_menu(menu, s)
 
         if self.m.stageable():
             action = menu.addAction(
-                icons.add(), N_('Stage Selected'),
-                cmds.run(cmds.Stage, context, self.unstaged()))
+                icons.add(),
+                N_('Stage Selected'),
+                cmds.run(cmds.Stage, context, self.unstaged()),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         if not self.selection_model.is_empty():
             menu.addAction(self.launch_editor_action)
 
         # Do all of the selected items exist?
-        all_exist = all(i not in self.m.unstaged_deleted and core.exists(i)
-                        for i in self.staged())
+        all_exist = all(
+            i not in self.m.unstaged_deleted and core.exists(i) for i in self.staged()
+        )
 
         if all_exist and s.modified and self.m.stageable():
             menu.addAction(self.launch_difftool_action)
@@ -745,8 +807,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 menu.addAction(self.move_to_trash_action)
             menu.addAction(self.delete_untracked_files_action)
             menu.addSeparator()
-            menu.addAction(icons.edit(), N_('Ignore...'),
-                           partial(gitignore.gitignore_view, self.context))
+            menu.addAction(
+                icons.edit(),
+                N_('Ignore...'),
+                partial(gitignore.gitignore_view, self.context),
+            )
 
         if not self.selection_model.is_empty():
             menu.addAction(self.view_history_action)
@@ -757,17 +822,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         context = self.context
         path = core.abspath(s.modified[0])
         if len(self.unstaged()) == 1:
-            menu.addAction(icons.cola(), N_('Launch git-cola'),
-                           cmds.run(cmds.OpenRepo, context, path))
-            menu.addAction(icons.pull(), N_('Update this submodule'),
-                           cmds.run(cmds.SubmoduleUpdate, context, path))
+            menu.addAction(
+                icons.cola(),
+                N_('Launch git-cola'),
+                cmds.run(cmds.OpenRepo, context, path),
+            )
+            menu.addAction(
+                icons.pull(),
+                N_('Update this submodule'),
+                cmds.run(cmds.SubmoduleUpdate, context, path),
+            )
             menu.addSeparator()
 
         if self.m.stageable():
             menu.addSeparator()
             action = menu.addAction(
-                icons.add(), N_('Stage Selected'),
-                cmds.run(cmds.Stage, context, self.unstaged()))
+                icons.add(),
+                N_('Stage Selected'),
+                cmds.run(cmds.Stage, context, self.unstaged()),
+            )
             action.setShortcut(hotkeys.STAGE_SELECTION)
 
         menu.addAction(self.view_history_action)
@@ -817,12 +890,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def selection(self):
         """Return the current selection in the repo status tree."""
-        return selection.State(self.staged(), self.unmerged(),
-                               self.modified(), self.untracked())
+        return selection.State(
+            self.staged(), self.unmerged(), self.modified(), self.untracked()
+        )
 
     def contents(self):
-        return selection.State(self.m.staged, self.m.unmerged,
-                               self.m.modified, self.m.untracked)
+        return selection.State(
+            self.m.staged, self.m.unmerged, self.m.modified, self.m.untracked
+        )
 
     def all_files(self):
         c = self.contents()
@@ -897,8 +972,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return self._subtree_selection_items(self.idx_staged)
 
     def unstaged_items(self):
-        return (self.unmerged_items() + self.modified_items() +
-                self.untracked_items())
+        return self.unmerged_items() + self.modified_items() + self.untracked_items()
 
     def modified_items(self):
         return self._subtree_selection_items(self.idx_modified)
@@ -976,8 +1050,16 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Images are diffed differently
         if image:
-            cmds.do(cmds.DiffImage, context, path, deleted,
-                    staged, modified, unmerged, untracked)
+            cmds.do(
+                cmds.DiffImage,
+                context,
+                path,
+                deleted,
+                staged,
+                modified,
+                unmerged,
+                untracked,
+            )
         elif staged:
             cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
         elif modified:
@@ -989,8 +1071,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def select_header(self):
         """Select an active header, which triggers a diffstat"""
-        for idx in (self.idx_staged, self.idx_unmerged,
-                    self.idx_modified, self.idx_untracked):
+        for idx in (
+            self.idx_staged,
+            self.idx_unmerged,
+            self.idx_modified,
+            self.idx_untracked,
+        ):
             item = self.topLevelItem(idx)
             if item.childCount() > 0:
                 self.clearSelection()
@@ -1093,13 +1179,13 @@ def copy_format(context, fmt):
     values['absdirname'] = os.path.dirname(abspath)
     values['dirname'] = os.path.dirname(path)
     values['filename'] = os.path.basename(path)
-    values['basename'], values['ext'] = (
-        os.path.splitext(os.path.basename(path)))
+    values['basename'], values['ext'] = os.path.splitext(os.path.basename(path))
     qtutils.set_clipboard(fmt % values)
 
 
 def show_help(context):
-    help_text = N_(r"""
+    help_text = N_(
+        r"""
         Format String Variables
         -----------------------
           %(path)s  =  relative file path
@@ -1109,20 +1195,19 @@ def show_help(context):
       %(filename)s  =  file basename
       %(basename)s  =  file basename without extension
            %(ext)s  =  file extension
-""")
+"""
+    )
     title = N_('Help - Custom Copy Actions')
     return text.text_dialog(context, help_text, title)
 
 
 class StatusFilterWidget(QtWidgets.QWidget):
-
     def __init__(self, context, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
 
         hint = N_('Filter paths...')
-        self.text = completion.GitStatusFilterLineEdit(
-            context, hint=hint, parent=self)
+        self.text = completion.GitStatusFilterLineEdit(context, hint=hint, parent=self)
         self.text.setToolTip(hint)
         self.setFocusProxy(self.text)
         self._filter = None
@@ -1154,17 +1239,13 @@ def customize_copy_actions(context, parent):
 
 
 class CustomizeCopyActions(standard.Dialog):
-
     def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Custom Copy Actions'))
 
         self.table = QtWidgets.QTableWidget(self)
         self.table.setColumnCount(2)
-        self.table.setHorizontalHeaderLabels([
-            N_('Action Name'),
-            N_('Format String'),
-        ])
+        self.table.setHorizontalHeaderLabels([N_('Action Name'), N_('Format String')])
         self.table.setSortingEnabled(False)
         self.table.verticalHeader().hide()
         self.table.horizontalHeader().setStretchLastSection(True)
@@ -1178,22 +1259,23 @@ class CustomizeCopyActions(standard.Dialog):
         self.close_button = qtutils.close_button()
         self.save_button = qtutils.ok_button(N_('Save'))
 
-        self.buttons = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                    self.add_button,
-                                    self.remove_button,
-                                    self.show_help_button,
-                                    qtutils.STRETCH,
-                                    self.close_button,
-                                    self.save_button)
+        self.buttons = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.add_button,
+            self.remove_button,
+            self.show_help_button,
+            qtutils.STRETCH,
+            self.close_button,
+            self.save_button,
+        )
 
-        layout = qtutils.vbox(defs.margin, defs.spacing,
-                              self.table, self.buttons)
+        layout = qtutils.vbox(defs.margin, defs.spacing, self.table, self.buttons)
         self.setLayout(layout)
 
         qtutils.connect_button(self.add_button, self.add)
         qtutils.connect_button(self.remove_button, self.remove)
-        qtutils.connect_button(
-            self.show_help_button, partial(show_help, context))
+        qtutils.connect_button(self.show_help_button, partial(show_help, context))
         qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.save_button, self.save)
         qtutils.add_close_action(self)

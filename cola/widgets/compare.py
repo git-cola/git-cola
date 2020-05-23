@@ -15,7 +15,6 @@ from . import standard
 
 
 class FileItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, path, icon):
         QtWidgets.QTreeWidgetItem.__init__(self, [path])
         self.path = path
@@ -30,7 +29,6 @@ def compare_branches(context):
 
 
 class CompareBranchesDialog(standard.Dialog):
-
     def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
 
@@ -68,34 +66,39 @@ class CompareBranchesDialog(standard.Dialog):
         Minimum = QtWidgets.QSizePolicy.Minimum
         self.button_spacer = QtWidgets.QSpacerItem(1, 1, Expanding, Minimum)
 
-        self.button_compare = qtutils.create_button(text=N_('Compare'),
-                                                    icon=icons.diff())
+        self.button_compare = qtutils.create_button(
+            text=N_('Compare'), icon=icons.diff()
+        )
         self.button_close = qtutils.close_button()
 
         self.diff_files = standard.TreeWidget()
         self.diff_files.headerItem().setText(0, N_('File Differences'))
 
         self.top_grid_layout = qtutils.grid(
-            defs.no_margin, defs.spacing,
+            defs.no_margin,
+            defs.spacing,
             (self.left_combo, 0, 0, 1, 1),
             (self.left_list, 1, 0, 1, 1),
             (self.right_combo, 0, 1, 1, 1),
-            (self.right_list, 1, 1, 1, 1))
+            (self.right_list, 1, 1, 1, 1),
+        )
         self.top_widget.setLayout(self.top_grid_layout)
 
         self.bottom_grid_layout = qtutils.grid(
-            defs.no_margin, defs.button_spacing,
+            defs.no_margin,
+            defs.button_spacing,
             (self.diff_files, 0, 0, 1, 4),
             (self.button_spacer, 1, 1, 1, 1),
             (self.button_close, 1, 0, 1, 1),
-            (self.button_compare, 1, 3, 1, 1))
+            (self.button_compare, 1, 3, 1, 1),
+        )
         self.bottom_widget.setLayout(self.bottom_grid_layout)
 
-        self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.top_widget, self.bottom_widget)
+        self.splitter = qtutils.splitter(
+            Qt.Vertical, self.top_widget, self.bottom_widget
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.splitter)
+        self.main_layout = qtutils.vbox(defs.margin, defs.spacing, self.splitter)
         self.setLayout(self.main_layout)
 
         connect_button(self.button_close, self.accept)
@@ -104,9 +107,11 @@ class CompareBranchesDialog(standard.Dialog):
         # pylint: disable=no-member
         self.diff_files.itemDoubleClicked.connect(lambda _: self.compare())
         self.left_combo.currentIndexChanged.connect(
-            lambda x: self.update_combo_boxes(left=True))
+            lambda x: self.update_combo_boxes(left=True)
+        )
         self.right_combo.currentIndexChanged.connect(
-            lambda x: self.update_combo_boxes(left=False))
+            lambda x: self.update_combo_boxes(left=False)
+        )
 
         self.left_list.itemSelectionChanged.connect(self.update_diff_files)
         self.right_list.itemSelectionChanged.connect(self.update_diff_files)
@@ -144,8 +149,7 @@ class CompareBranchesDialog(standard.Dialog):
         """Updates the list of files whenever the selection changes"""
         # Left and Right refer to the comparison pair (l,r)
         left_item, right_item = self.selection()
-        if (not left_item or not right_item or
-                left_item == right_item):
+        if not left_item or not right_item or left_item == right_item:
             self.set_diff_files([])
             return
         left_item = self.remote_ref(left_item)
@@ -224,9 +228,9 @@ class CompareBranchesDialog(standard.Dialog):
         # sandbox as a valid choice.  If we're looking at
         # "remote" stuff then also include the branch point.
         if which == self.LOCAL:
-            new_list = ([self.SANDBOX] + self.local_branches)
+            new_list = [self.SANDBOX] + self.local_branches
         else:
-            new_list = ([self.BRANCH_POINT] + self.remote_branches)
+            new_list = [self.BRANCH_POINT] + self.remote_branches
 
         widget.clear()
         widget.addItems(new_list)

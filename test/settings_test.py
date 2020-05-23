@@ -42,8 +42,7 @@ class SettingsTestCase(unittest.TestCase):
         # We automatically purge missing entries so we mock-out
         # git.is_git_worktree() so that this bookmark is kept.
 
-        bookmark = {'path': '/tmp/python/thinks/this/exists',
-                    'name': 'exists'}
+        bookmark = {'path': '/tmp/python/thinks/this/exists', 'name': 'exists'}
 
         def mock_verify(path):
             return path == bookmark['path']

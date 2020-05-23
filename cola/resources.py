@@ -40,8 +40,7 @@ def html_docs():
     """Return the path to the cola html documentation."""
     # html/index.html only exists after the install-docs target is run.
     # Fallback to the source tree and lastly git-cola.rst.
-    paths_to_try = (('html', 'index.html'),
-                    ('_build', 'html', 'index.html'))
+    paths_to_try = (('html', 'index.html'), ('_build', 'html', 'index.html'))
     for paths in paths_to_try:
         docdir = doc(*paths)
         if core.exists(docdir):
@@ -88,6 +87,7 @@ def icon_dir(theme):
 
 
 def config_home(*args):
-    config = core.getenv('XDG_CONFIG_HOME',
-                         os.path.join(core.expanduser('~'), '.config'))
+    config = core.getenv(
+        'XDG_CONFIG_HOME', os.path.join(core.expanduser('~'), '.config')
+    )
     return os.path.join(config, 'git-cola', *args)

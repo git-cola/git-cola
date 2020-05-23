@@ -36,9 +36,11 @@ def new_apply_patches(context, patches=None, parent=None):
 
 def get_patches_from_paths(paths):
     paths = [core.decode(p) for p in paths]
-    patches = [p for p in paths
-               if core.isfile(p) and
-               (p.endswith('.patch') or p.endswith('.mbox'))]
+    patches = [
+        p
+        for p in paths
+        if core.isfile(p) and (p.endswith('.patch') or p.endswith('.mbox'))
+    ]
     dirs = [p for p in paths if core.isdir(p)]
     dirs.sort()
     for d in dirs:
@@ -64,7 +66,6 @@ def get_patches_from_dir(path):
 
 
 class ApplyPatches(Dialog):
-
     def __init__(self, context, parent=None):
         super(ApplyPatches, self).__init__(parent=parent)
         self.context = context
@@ -77,12 +78,16 @@ class ApplyPatches(Dialog):
         self.inner_drag = False
 
         self.usage = QtWidgets.QLabel()
-        self.usage.setText(N_("""
+        self.usage.setText(
+            N_(
+                """
             <p>
                 Drag and drop or use the <strong>Add</strong> button to add
                 patches to the list
             </p>
-            """))
+            """
+            )
+        )
 
         self.tree = PatchTreeWidget(parent=self)
         self.tree.setHeaderHidden(True)
@@ -90,43 +95,61 @@ class ApplyPatches(Dialog):
         self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
 
         self.notifier = notifier = observable.Observable()
-        self.diffwidget = diff.DiffWidget(context, notifier, self,
-                                          is_commit=True)
+        self.diffwidget = diff.DiffWidget(context, notifier, self, is_commit=True)
 
         self.add_button = qtutils.create_toolbutton(
-            text=N_('Add'), icon=icons.add(),
-            tooltip=N_('Add patches (+)'))
+            text=N_('Add'), icon=icons.add(), tooltip=N_('Add patches (+)')
+        )
 
         self.remove_button = qtutils.create_toolbutton(
-            text=N_('Remove'), icon=icons.remove(),
-            tooltip=N_('Remove selected (Delete)'))
+            text=N_('Remove'),
+            icon=icons.remove(),
+            tooltip=N_('Remove selected (Delete)'),
+        )
 
-        self.apply_button = qtutils.create_button(
-            text=N_('Apply'), icon=icons.ok())
+        self.apply_button = qtutils.create_button(text=N_('Apply'), icon=icons.ok())
 
         self.close_button = qtutils.close_button()
 
         self.add_action = qtutils.add_action(
-            self, N_('Add'), self.add_files, hotkeys.ADD_ITEM)
+            self, N_('Add'), self.add_files, hotkeys.ADD_ITEM
+        )
 
         self.remove_action = qtutils.add_action(
-            self, N_('Remove'), self.tree.remove_selected,
-            hotkeys.DELETE, hotkeys.BACKSPACE, hotkeys.REMOVE_ITEM)
+            self,
+            N_('Remove'),
+            self.tree.remove_selected,
+            hotkeys.DELETE,
+            hotkeys.BACKSPACE,
+            hotkeys.REMOVE_ITEM,
+        )
 
-        self.top_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                       self.add_button, self.remove_button,
-                                       qtutils.STRETCH, self.usage)
+        self.top_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.add_button,
+            self.remove_button,
+            qtutils.STRETCH,
+            self.usage,
+        )
 
-        self.bottom_layout = qtutils.hbox(defs.no_margin, defs.button_spacing,
-                                          self.close_button, qtutils.STRETCH,
-                                          self.apply_button)
+        self.bottom_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.apply_button,
+        )
 
-        self.splitter = qtutils.splitter(Qt.Vertical,
-                                         self.tree, self.diffwidget)
+        self.splitter = qtutils.splitter(Qt.Vertical, self.tree, self.diffwidget)
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.top_layout, self.splitter,
-                                        self.bottom_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin,
+            defs.spacing,
+            self.top_layout,
+            self.splitter,
+            self.bottom_layout,
+        )
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.add_button, self.add_files)
@@ -146,9 +169,11 @@ class ApplyPatches(Dialog):
         self.accept()
 
     def add_files(self):
-        files = qtutils.open_files(N_('Select patch file(s)...'),
-                                   directory=self.curdir,
-                                   filters='Patches (*.patch *.mbox)')
+        files = qtutils.open_files(
+            N_('Select patch file(s)...'),
+            directory=self.curdir,
+            filters='Patches (*.patch *.mbox)',
+        )
         if not files:
             return
         self.curdir = os.path.dirname(files[0])
@@ -181,8 +206,9 @@ class ApplyPatches(Dialog):
         if not core.exists(path):
             return
         commit = parse_patch(path)
-        self.diffwidget.set_details(commit.oid, commit.author, commit.email,
-                                    commit.date, commit.summary)
+        self.diffwidget.set_details(
+            commit.oid, commit.author, commit.email, commit.date, commit.summary
+        )
         self.diffwidget.set_diff(commit.diff)
 
     def export_state(self):
@@ -203,7 +229,6 @@ class ApplyPatches(Dialog):
 
 # pylint: disable=too-many-ancestors
 class PatchTreeWidget(DraggableTreeWidget):
-
     def add_paths(self, paths):
         patches = get_patches_from_paths(paths)
         if not patches:
@@ -278,5 +303,5 @@ def parse(content, commit):
         match = subject_rgx.match(line)
         if match:
             commit.summary = match.group('summary')
-            commit.diff = '\n'.join(lines[idx + 1:])
+            commit.diff = '\n'.join(lines[idx + 1 :])
             break

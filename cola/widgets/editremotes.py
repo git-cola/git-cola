@@ -31,7 +31,6 @@ def editor(context, run=True):
 
 
 class RemoteEditor(standard.Dialog):
-
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Edit Remotes'))
@@ -47,23 +46,25 @@ class RemoteEditor(standard.Dialog):
 
         self.remote_list = []
         self.remotes = QtWidgets.QListWidget()
-        self.remotes.setToolTip(N_(
-            'Remote git repositories - double-click to rename'))
+        self.remotes.setToolTip(N_('Remote git repositories - double-click to rename'))
 
         self.editor = RemoteWidget(context, self)
 
         self.save_button = qtutils.create_button(
-            text=N_('Save'), icon=icons.save(), default=True)
+            text=N_('Save'), icon=icons.save(), default=True
+        )
 
         self.reset_button = qtutils.create_button(
-            text=N_('Reset'), icon=icons.discard())
+            text=N_('Reset'), icon=icons.discard()
+        )
 
         tooltip = N_(
             'Add and remove remote repositories using the \n'
             'Add(+) and Delete(-) buttons on the left-hand side.\n'
             '\n'
             'Remotes can be renamed by selecting one from the list\n'
-            'and pressing "enter", or by double-clicking.')
+            'and pressing "enter", or by double-clicking.'
+        )
         hint = self.default_hint
         self.info = text.VimHintedPlainTextEdit(context, hint, parent=self)
         self.info.setToolTip(tooltip)
@@ -81,41 +82,46 @@ class RemoteEditor(standard.Dialog):
         self.add_button = qtutils.create_toolbutton(icon=icon, tooltip=tooltip)
 
         self.refresh_button = qtutils.create_toolbutton(
-            icon=icons.sync(), tooltip=N_('Refresh'))
+            icon=icons.sync(), tooltip=N_('Refresh')
+        )
         self.delete_button = qtutils.create_toolbutton(
-            icon=icons.remove(), tooltip=N_('Delete remote'))
+            icon=icons.remove(), tooltip=N_('Delete remote')
+        )
         self.close_button = qtutils.close_button()
 
         self._edit_button_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing,
-            self.save_button, self.reset_button)
+            defs.no_margin, defs.spacing, self.save_button, self.reset_button
+        )
 
         self._edit_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing,
-            self.editor, self._edit_button_layout)
+            defs.no_margin, defs.spacing, self.editor, self._edit_button_layout
+        )
 
         self._display_layout = qtutils.vbox(
-            defs.no_margin, defs.spacing,
-            self._edit_layout, self.info)
+            defs.no_margin, defs.spacing, self._edit_layout, self.info
+        )
         self._display_widget = QtWidgets.QWidget(self)
         self._display_widget.setLayout(self._display_layout)
 
         self._top_layout = qtutils.splitter(
-            Qt.Horizontal, self.remotes, self._display_widget)
+            Qt.Horizontal, self.remotes, self._display_widget
+        )
         width = self._top_layout.width()
-        self._top_layout.setSizes([width//4, width*3//4])
+        self._top_layout.setSizes([width // 4, width * 3 // 4])
 
         self._button_layout = qtutils.hbox(
-            defs.margin, defs.spacing,
+            defs.margin,
+            defs.spacing,
             self.add_button,
             self.delete_button,
             self.refresh_button,
             qtutils.STRETCH,
-            self.close_button)
+            self.close_button,
+        )
 
-        self._layout = qtutils.vbox(defs.margin, defs.spacing,
-                                    self._top_layout,
-                                    self._button_layout)
+        self._layout = qtutils.vbox(
+            defs.margin, defs.spacing, self._top_layout, self._button_layout
+        )
         self.setLayout(self._layout)
 
         qtutils.connect_button(self.add_button, self.add)
@@ -171,8 +177,7 @@ class RemoteEditor(standard.Dialog):
 
         # Run the corresponding command
         if name_changed and url_changed:
-            name_ok, url_ok = cmds.do(
-                cmds.RemoteEdit, context, old_name, name, url)
+            name_ok, url_ok = cmds.do(cmds.RemoteEdit, context, old_name, name, url)
         elif name_changed:
             result = cmds.do(cmds.RemoteRename, context, old_name, name)
             name_ok = result[0]
@@ -282,8 +287,7 @@ class RemoteEditor(standard.Dialog):
             item.setText(old_name)
             return
         context = self.context
-        ok, status, _, _ = cmds.do(
-            cmds.RemoteRename, context, old_name, new_name)
+        ok, status, _, _ = cmds.do(cmds.RemoteRename, context, old_name, new_name)
         if ok and status == 0:
             self.remote_list[idx] = new_name
             self.activate_remote(new_name)
@@ -358,7 +362,6 @@ class RemoteInfoThread(QtCore.QThread):
 
 
 class AddRemoteDialog(QtWidgets.QDialog):
-
     def __init__(self, context, parent, readonly_url=False):
         super(AddRemoteDialog, self).__init__(parent)
         self.context = context
@@ -368,15 +371,21 @@ class AddRemoteDialog(QtWidgets.QDialog):
         self.context = context
         self.widget = RemoteWidget(context, self, readonly_url=readonly_url)
         self.add_button = qtutils.create_button(
-            text=N_('Add Remote'), icon=icons.ok(), enabled=False)
+            text=N_('Add Remote'), icon=icons.ok(), enabled=False
+        )
         self.close_button = qtutils.close_button()
 
         self._button_layout = qtutils.hbox(
-            defs.no_margin, defs.button_spacing,
-            qtutils.STRETCH, self.close_button, self.add_button)
+            defs.no_margin,
+            defs.button_spacing,
+            qtutils.STRETCH,
+            self.close_button,
+            self.add_button,
+        )
 
         self._layout = qtutils.vbox(
-            defs.margin, defs.spacing, self.widget, self._button_layout)
+            defs.margin, defs.spacing, self.widget, self._button_layout
+        )
         self.setLayout(self._layout)
 
         self.widget.valid.connect(self.add_button.setEnabled)
@@ -407,10 +416,14 @@ def lineedit(context, hint):
 
 class RemoteWidget(QtWidgets.QWidget):
 
-    name = property(lambda self: get(self.remote_name),
-                    lambda self, value: self.remote_name.set_value(value))
-    url = property(lambda self: get(self.remote_url),
-                   lambda self, value: self.remote_url.set_value(value))
+    name = property(
+        lambda self: get(self.remote_name),
+        lambda self, value: self.remote_name.set_value(value),
+    )
+    url = property(
+        lambda self: get(self.remote_url),
+        lambda self, value: self.remote_url.set_value(value),
+    )
     valid = Signal(bool)
 
     def __init__(self, context, parent, readonly_url=False):
@@ -421,19 +434,22 @@ class RemoteWidget(QtWidgets.QWidget):
         self.remote_name = lineedit(context, N_('Name for the new remote'))
         self.remote_url = lineedit(context, 'git://git.example.com/repo.git')
         self.open_button = qtutils.create_button(
-            text=N_('Open...'), icon=icons.folder(),
-            tooltip=N_('Select repository'))
+            text=N_('Open...'), icon=icons.folder(), tooltip=N_('Select repository')
+        )
 
         self.url_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing,
-            self.remote_url, self.open_button)
+            defs.no_margin, defs.spacing, self.remote_url, self.open_button
+        )
 
         validate_remote = completion.RemoteValidator(self.remote_name)
         self.remote_name.setValidator(validate_remote)
 
-        self._form = qtutils.form(defs.margin, defs.spacing,
-                                  (N_('Name'), self.remote_name),
-                                  (N_('URL'), self.url_layout))
+        self._form = qtutils.form(
+            defs.margin,
+            defs.spacing,
+            (N_('Name'), self.remote_name),
+            (N_('URL'), self.url_layout),
+        )
 
         self._layout = qtutils.vbox(defs.margin, defs.spacing, self._form)
         self.setLayout(self._layout)
@@ -454,7 +470,6 @@ class RemoteWidget(QtWidgets.QWidget):
 
     def open_repo(self):
         git = self.context.git
-        repo = qtutils.opendir_dialog(
-            N_('Open Git Repository...'), core.getcwd())
+        repo = qtutils.opendir_dialog(N_('Open Git Repository...'), core.getcwd())
         if repo and git.is_git_repository(repo):
             self.url = repo

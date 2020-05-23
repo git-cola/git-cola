@@ -31,11 +31,16 @@ def parse_args(argv=None):
     parser.set_defaults(func=cmd_dag)
 
     app.add_common_arguments(parser)
-    parser.add_argument('-c', '--count', '--max-count', metavar='<count>',
-                        type=int, default=1000,
-                        help='number of commits to display')
-    parser.add_argument('args', nargs='*', metavar='<args>',
-                        help='git log arguments')
+    parser.add_argument(
+        '-c',
+        '--count',
+        '--max-count',
+        metavar='<count>',
+        type=int,
+        default=1000,
+        help='number of commits to display',
+    )
+    parser.add_argument('args', nargs='*', metavar='<args>', help='git log arguments')
     args, rest = parser.parse_known_args(args=argv)
     if rest:
         # splice unknown arguments to the beginning ~

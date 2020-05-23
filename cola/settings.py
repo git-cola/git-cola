@@ -123,9 +123,7 @@ class Settings(object):
     def remove_recent(self, path):
         """Removes an item from the recent items list"""
         try:
-            index = [
-                recent.get('path', '') for recent in self.recent
-            ].index(path)
+            index = [recent.get('path', '') for recent in self.recent].index(path)
         except ValueError:
             return
         try:
@@ -151,13 +149,15 @@ class Settings(object):
         """Upgrade git-cola settings"""
         # Upgrade bookmarks to the new dict-based bookmarks format.
         if self.bookmarks and not isinstance(self.bookmarks[0], dict):
-            bookmarks = [dict(name=os.path.basename(path), path=path)
-                         for path in self.bookmarks]
+            bookmarks = [
+                dict(name=os.path.basename(path), path=path) for path in self.bookmarks
+            ]
             self.values['bookmarks'] = bookmarks
 
         if self.recent and not isinstance(self.recent[0], dict):
-            recent = [dict(name=os.path.basename(path), path=path)
-                      for path in self.recent]
+            recent = [
+                dict(name=os.path.basename(path), path=path) for path in self.recent
+            ]
             self.values['recent'] = recent
 
     def asdict(self):

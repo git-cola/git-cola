@@ -24,12 +24,13 @@ def diff_commits(context, parent, a, b):
     return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
-def diff_expression(context, parent, expr,
-                    create_widget=False, hide_expr=False, focus_tree=False):
+def diff_expression(
+    context, parent, expr, create_widget=False, hide_expr=False, focus_tree=False
+):
     """Show a diff dialog for diff expressions"""
-    dlg = Difftool(context, parent,
-                   expr=expr, hide_expr=hide_expr,
-                   focus_tree=focus_tree)
+    dlg = Difftool(
+        context, parent, expr=expr, hide_expr=hide_expr, focus_tree=focus_tree
+    )
     if create_widget:
         return dlg
     dlg.show()
@@ -38,9 +39,17 @@ def diff_expression(context, parent, expr,
 
 
 class Difftool(standard.Dialog):
-
-    def __init__(self, context, parent, a=None, b=None, expr=None, title=None,
-                 hide_expr=False, focus_tree=False):
+    def __init__(
+        self,
+        context,
+        parent,
+        a=None,
+        b=None,
+        expr=None,
+        title=None,
+        hide_expr=False,
+        focus_tree=False,
+    ):
         """Show files with differences and launch difftool"""
 
         standard.Dialog.__init__(self, parent=parent)
@@ -65,29 +74,32 @@ class Difftool(standard.Dialog):
 
         self.tree = filetree.FileTree(parent=self)
 
-        self.diff_button = qtutils.create_button(text=N_('Compare'),
-                                                 icon=icons.diff(),
-                                                 enabled=False,
-                                                 default=True)
+        self.diff_button = qtutils.create_button(
+            text=N_('Compare'), icon=icons.diff(), enabled=False, default=True
+        )
         self.diff_button.setShortcut(hotkeys.DIFF)
 
-        self.diff_all_button = qtutils.create_button(text=N_('Compare All'),
-                                                     icon=icons.diff())
+        self.diff_all_button = qtutils.create_button(
+            text=N_('Compare All'), icon=icons.diff()
+        )
         self.edit_button = qtutils.edit_button()
         self.edit_button.setShortcut(hotkeys.EDIT)
 
         self.close_button = qtutils.close_button()
 
-        self.button_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                          self.close_button,
-                                          qtutils.STRETCH,
-                                          self.edit_button,
-                                          self.diff_all_button,
-                                          self.diff_button)
+        self.button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.close_button,
+            qtutils.STRETCH,
+            self.edit_button,
+            self.diff_all_button,
+            self.diff_button,
+        )
 
-        self.main_layout = qtutils.vbox(defs.margin, defs.spacing,
-                                        self.expr, self.tree,
-                                        self.button_layout)
+        self.main_layout = qtutils.vbox(
+            defs.margin, defs.spacing, self.expr, self.tree, self.button_layout
+        )
         self.setLayout(self.main_layout)
 
         # pylint: disable=no-member
@@ -102,14 +114,18 @@ class Difftool(standard.Dialog):
         self.expr.enter.connect(self.focus_tree)
 
         qtutils.connect_button(self.diff_button, self.diff)
-        qtutils.connect_button(self.diff_all_button,
-                               lambda: self.diff(dir_diff=True))
+        qtutils.connect_button(self.diff_all_button, lambda: self.diff(dir_diff=True))
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.close_button, self.close)
 
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
-        qtutils.add_action(self, 'Diff All', lambda: self.diff(dir_diff=True),
-                           hotkeys.CTRL_ENTER, hotkeys.CTRL_RETURN)
+        qtutils.add_action(
+            self,
+            'Diff All',
+            lambda: self.diff(dir_diff=True),
+            hotkeys.CTRL_ENTER,
+            hotkeys.CTRL_RETURN,
+        )
         qtutils.add_close_action(self)
 
         self.init_state(None, self.resize_widget, parent)
@@ -161,14 +177,14 @@ class Difftool(standard.Dialog):
     def tree_double_clicked(self, item, _column):
         path = filetree.filename_from_item(item)
         left, right = self._left_right_args()
-        cmds.difftool_launch(
-            self.context, left=left, right=right, paths=[path])
+        cmds.difftool_launch(self.context, left=left, right=right, paths=[path])
 
     def diff(self, dir_diff=False):
         paths = self.tree.selected_filenames()
         left, right = self._left_right_args()
-        cmds.difftool_launch(self.context, left=left, right=right, paths=paths,
-                             dir_diff=dir_diff)
+        cmds.difftool_launch(
+            self.context, left=left, right=right, paths=paths, dir_diff=dir_diff
+        )
 
     def _left_right_args(self):
         if self.diff_arg:

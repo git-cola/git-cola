@@ -26,8 +26,9 @@ def apply_choice(value):
     if value == Option.AUTO:
         # Do not override the configuration when either of these
         # two environment variables are defined.
-        if (not core.getenv('QT_AUTO_SCREEN_SCALE_FACTOR')
-                and not core.getenv('QT_SCALE_FACTOR')):
+        if not core.getenv('QT_AUTO_SCREEN_SCALE_FACTOR') and not core.getenv(
+            'QT_SCALE_FACTOR'
+        ):
             compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
             compat.unsetenv('QT_SCALE_FACTOR')
     elif value in (Option.TIMES_1, Option.TIMES_1_5, Option.TIMES_2):

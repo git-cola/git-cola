@@ -48,6 +48,7 @@ USER_NAME = 'user.name'
 
 class Defaults(object):
     """Read-only class for holding defaults that get overridden"""
+
     # These should match Git's defaults for git-defined values.
     autotemplate = False
     blame_viewer = 'git gui blame'
@@ -102,13 +103,13 @@ def check_conflicts(context):
 def check_published_commits(context):
     """Should we check for published commits when amending?"""
     return context.cfg.get(
-        CHECK_PUBLISHED_COMMITS, default=Defaults.check_published_commits)
+        CHECK_PUBLISHED_COMMITS, default=Defaults.check_published_commits
+    )
 
 
 def display_untracked(context):
     """Should we display untracked files?"""
-    return context.cfg.get(DISPLAY_UNTRACKED,
-                           default=Defaults.display_untracked)
+    return context.cfg.get(DISPLAY_UNTRACKED, default=Defaults.display_untracked)
 
 
 def editor(context):
@@ -203,12 +204,12 @@ def status_indent(context):
 
 def status_show_totals(context):
     """Should we display count totals in the status widget headers?"""
-    return context.cfg.get(STATUS_SHOW_TOTALS,
-                           default=Defaults.status_show_totals)
+    return context.cfg.get(STATUS_SHOW_TOTALS, default=Defaults.status_show_totals)
 
 
 class PreferencesModel(observable.Observable):
     """Interact with repo-local and user-global git config preferences"""
+
     message_config_updated = 'config_updated'
 
     def __init__(self, context):

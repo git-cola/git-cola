@@ -65,8 +65,7 @@ class FocusRedirectProxy(object):
         self.default = widgets[0]
 
     def __getattr__(self, name):
-        return (lambda *args, **kwargs:
-                self._forward_action(name, *args, **kwargs))
+        return lambda *args, **kwargs: self._forward_action(name, *args, **kwargs)
 
     def _forward_action(self, name, *args, **kwargs):
         """Forward the captured action to the focused or default widget"""
@@ -146,32 +145,31 @@ class ViewerMixin(object):
 
     def create_tarball(self):
         context = self.context
-        self.with_oid(
-            lambda oid: archive.show_save_dialog(context, oid, parent=self))
+        self.with_oid(lambda oid: archive.show_save_dialog(context, oid, parent=self))
 
     def show_diff(self):
         context = self.context
-        self.with_oid(lambda oid:
-                      difftool.diff_expression(context, self, oid + '^!',
-                                               hide_expr=False,
-                                               focus_tree=True))
+        self.with_oid(
+            lambda oid: difftool.diff_expression(
+                context, self, oid + '^!', hide_expr=False, focus_tree=True
+            )
+        )
 
     def show_dir_diff(self):
         context = self.context
-        self.with_oid(lambda oid:
-                      cmds.difftool_launch(context, left=oid,
-                                           left_take_magic=True,
-                                           dir_diff=True))
+        self.with_oid(
+            lambda oid: cmds.difftool_launch(
+                context, left=oid, left_take_magic=True, dir_diff=True
+            )
+        )
 
     def reset_branch_head(self):
         context = self.context
-        self.with_oid(lambda oid:
-                      cmds.do(cmds.ResetBranchHead, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, context, ref=oid))
 
     def reset_worktree(self):
         context = self.context
-        self.with_oid(lambda oid:
-                      cmds.do(cmds.ResetWorktree, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, context, ref=oid))
 
     def reset_merge(self):
         context = self.context
@@ -203,8 +201,9 @@ class ViewerMixin(object):
 
         has_single_selection = len(selected_items) == 1
         has_selection = bool(selected_items)
-        can_diff = bool(commit and has_single_selection and
-                        commit is not selected_items[0].commit)
+        can_diff = bool(
+            commit and has_single_selection and commit is not selected_items[0].commit
+        )
 
         if can_diff:
             self.selected = selected_items[0].commit
@@ -263,66 +262,65 @@ class ViewerMixin(object):
 
 def viewer_actions(widget):
     return {
-        'diff_this_selected':
-        qtutils.add_action(widget, N_('Diff this -> selected'),
-                           widget.proxy.diff_this_selected),
-        'diff_selected_this':
-        qtutils.add_action(widget, N_('Diff selected -> this'),
-                           widget.proxy.diff_selected_this),
-        'create_branch':
-        qtutils.add_action(widget, N_('Create Branch'),
-                           widget.proxy.create_branch),
-        'create_patch':
-        qtutils.add_action(widget, N_('Create Patch'),
-                           widget.proxy.create_patch),
-        'create_tag':
-        qtutils.add_action(widget, N_('Create Tag'),
-                           widget.proxy.create_tag),
-        'create_tarball':
-        qtutils.add_action(widget, N_('Save As Tarball/Zip...'),
-                           widget.proxy.create_tarball),
-        'cherry_pick':
-        qtutils.add_action(widget, N_('Cherry Pick'),
-                           widget.proxy.cherry_pick),
-        'revert':
-        qtutils.add_action(widget, N_('Revert'),
-                           widget.proxy.revert),
-        'diff_commit':
-        qtutils.add_action(widget, N_('Launch Diff Tool'),
-                           widget.proxy.show_diff, hotkeys.DIFF),
-        'diff_commit_all':
-        qtutils.add_action(widget, N_('Launch Directory Diff Tool'),
-                           widget.proxy.show_dir_diff, hotkeys.DIFF_SECONDARY),
-        'checkout_detached':
-        qtutils.add_action(widget, N_('Checkout Detached HEAD'),
-                           widget.proxy.checkout_detached),
-        'reset_branch_head':
-        qtutils.add_action(widget, N_('Reset Branch Head'),
-                           widget.proxy.reset_branch_head),
-        'reset_worktree':
-        qtutils.add_action(widget, N_('Reset Worktree'),
-                           widget.proxy.reset_worktree),
-        'reset_merge':
-        qtutils.add_action(widget, N_('Reset Merge'),
-                           widget.proxy.reset_merge),
-        'reset_soft':
-        qtutils.add_action(widget, N_('Reset Soft'),
-                           widget.proxy.reset_soft),
-        'reset_hard':
-        qtutils.add_action(widget, N_('Reset Hard'),
-                           widget.proxy.reset_hard),
-        'save_blob':
-        qtutils.add_action(widget, N_('Grab File...'),
-                           widget.proxy.save_blob_dialog),
-        'copy':
-        qtutils.add_action(widget, N_('Copy SHA-1'),
-                           widget.proxy.copy_to_clipboard,
-                           hotkeys.COPY_SHA1),
+        'diff_this_selected': qtutils.add_action(
+            widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+        ),
+        'diff_selected_this': qtutils.add_action(
+            widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+        ),
+        'create_branch': qtutils.add_action(
+            widget, N_('Create Branch'), widget.proxy.create_branch
+        ),
+        'create_patch': qtutils.add_action(
+            widget, N_('Create Patch'), widget.proxy.create_patch
+        ),
+        'create_tag': qtutils.add_action(
+            widget, N_('Create Tag'), widget.proxy.create_tag
+        ),
+        'create_tarball': qtutils.add_action(
+            widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+        ),
+        'cherry_pick': qtutils.add_action(
+            widget, N_('Cherry Pick'), widget.proxy.cherry_pick
+        ),
+        'revert': qtutils.add_action(widget, N_('Revert'), widget.proxy.revert),
+        'diff_commit': qtutils.add_action(
+            widget, N_('Launch Diff Tool'), widget.proxy.show_diff, hotkeys.DIFF
+        ),
+        'diff_commit_all': qtutils.add_action(
+            widget,
+            N_('Launch Directory Diff Tool'),
+            widget.proxy.show_dir_diff,
+            hotkeys.DIFF_SECONDARY,
+        ),
+        'checkout_detached': qtutils.add_action(
+            widget, N_('Checkout Detached HEAD'), widget.proxy.checkout_detached
+        ),
+        'reset_branch_head': qtutils.add_action(
+            widget, N_('Reset Branch Head'), widget.proxy.reset_branch_head
+        ),
+        'reset_worktree': qtutils.add_action(
+            widget, N_('Reset Worktree'), widget.proxy.reset_worktree
+        ),
+        'reset_merge': qtutils.add_action(
+            widget, N_('Reset Merge'), widget.proxy.reset_merge
+        ),
+        'reset_soft': qtutils.add_action(
+            widget, N_('Reset Soft'), widget.proxy.reset_soft
+        ),
+        'reset_hard': qtutils.add_action(
+            widget, N_('Reset Hard'), widget.proxy.reset_hard
+        ),
+        'save_blob': qtutils.add_action(
+            widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+        ),
+        'copy': qtutils.add_action(
+            widget, N_('Copy SHA-1'), widget.proxy.copy_to_clipboard, hotkeys.COPY_SHA1
+        ),
     }
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, commit, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.commit = commit
@@ -353,13 +351,16 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self._adjust_columns = False
 
         self.action_up = qtutils.add_action(
-            self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP)
+            self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP
+        )
 
         self.action_down = qtutils.add_action(
-            self, N_('Go Down'), self.go_down, hotkeys.MOVE_DOWN)
+            self, N_('Go Down'), self.go_down, hotkeys.MOVE_DOWN
+        )
 
         self.zoom_to_fit_action = qtutils.add_action(
-            self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT)
+            self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT
+        )
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
         # pylint: disable=no-member
@@ -434,8 +435,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not items:
             return
         self.set_selecting(True)
-        self.notifier.notify_observers(diff.COMMITS_SELECTED,
-                                       [i.commit for i in items])
+        self.notifier.notify_observers(diff.COMMITS_SELECTED, [i.commit for i in items])
         self.set_selecting(False)
 
     def commits_selected(self, commits):
@@ -494,6 +494,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
 class GitDAG(standard.MainWindow):
     """The git-dag widget."""
+
     updated = Signal()
 
     def __init__(self, context, params, parent=None, settings=None):
@@ -521,39 +522,40 @@ class GitDAG(standard.MainWindow):
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(
-            tooltip=N_('Zoom Out'), icon=icons.zoom_out())
+            tooltip=N_('Zoom Out'), icon=icons.zoom_out()
+        )
 
         self.zoom_in = qtutils.create_action_button(
-            tooltip=N_('Zoom In'), icon=icons.zoom_in())
+            tooltip=N_('Zoom In'), icon=icons.zoom_in()
+        )
 
         self.zoom_to_fit = qtutils.create_action_button(
-            tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best())
+            tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best()
+        )
 
         self.notifier = notifier = observable.Observable()
         self.notifier.refs_updated = refs_updated = 'refs_updated'
         self.notifier.add_observer(refs_updated, self.display)
-        self.notifier.add_observer(filelist.HISTORIES_SELECTED,
-                                   self.histories_selected)
-        self.notifier.add_observer(filelist.DIFFTOOL_SELECTED,
-                                   self.difftool_selected)
+        self.notifier.add_observer(filelist.HISTORIES_SELECTED, self.histories_selected)
+        self.notifier.add_observer(filelist.DIFFTOOL_SELECTED, self.difftool_selected)
         self.notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
         self.treewidget = CommitTreeWidget(context, notifier, self)
-        self.diffwidget = diff.DiffWidget(context, notifier, self,
-                                          is_commit=True)
+        self.diffwidget = diff.DiffWidget(context, notifier, self, is_commit=True)
         self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, notifier, self)
 
-        self.proxy = FocusRedirectProxy(self.treewidget,
-                                        self.graphview,
-                                        self.filewidget)
+        self.proxy = FocusRedirectProxy(
+            self.treewidget, self.graphview, self.filewidget
+        )
 
         self.viewer_actions = actions = viewer_actions(self)
         self.treewidget.menu_actions = actions
         self.graphview.menu_actions = actions
 
-        self.controls_layout = qtutils.hbox(defs.no_margin, defs.spacing,
-                                            self.revtext, self.maxresults)
+        self.controls_layout = qtutils.hbox(
+            defs.no_margin, defs.spacing, self.revtext, self.maxresults
+        )
 
         self.controls_widget = QtWidgets.QWidget()
         self.controls_widget.setLayout(self.controls_layout)
@@ -570,8 +572,13 @@ class GitDAG(standard.MainWindow):
         self.diff_dock.setWidget(self.diffwidget)
 
         self.graph_controls_layout = qtutils.hbox(
-            defs.no_margin, defs.button_spacing,
-            self.zoom_out, self.zoom_in, self.zoom_to_fit, defs.spacing)
+            defs.no_margin,
+            defs.button_spacing,
+            self.zoom_out,
+            self.zoom_in,
+            self.zoom_to_fit,
+            defs.spacing,
+        )
 
         self.graph_controls_widget = QtWidgets.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
@@ -582,10 +589,12 @@ class GitDAG(standard.MainWindow):
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
         self.lock_layout_action = qtutils.add_action_bool(
-            self, N_('Lock Layout'), self.set_lock_layout, False)
+            self, N_('Lock Layout'), self.set_lock_layout, False
+        )
 
         self.refresh_action = qtutils.add_action(
-            self, N_('Refresh'), self.refresh, hotkeys.REFRESH)
+            self, N_('Refresh'), self.refresh, hotkeys.REFRESH
+        )
 
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
@@ -613,8 +622,7 @@ class GitDAG(standard.MainWindow):
 
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
-        qtutils.connect_button(self.zoom_to_fit,
-                               self.graphview.zoom_to_fit)
+        qtutils.connect_button(self.zoom_to_fit, self.graphview.zoom_to_fit)
 
         self.treewidget.zoom_to_fit.connect(self.graphview.zoom_to_fit)
         self.treewidget.diff_commits.connect(self.diff_commits)
@@ -672,8 +680,10 @@ class GitDAG(standard.MainWindow):
     def update_window_title(self):
         project = self.model.project
         if self.params.ref:
-            self.setWindowTitle(N_('%(project)s: %(ref)s - DAG')
-                                % dict(project=project, ref=self.params.ref))
+            self.setWindowTitle(
+                N_('%(project)s: %(ref)s - DAG')
+                % dict(project=project, ref=self.params.ref)
+            )
         else:
             self.setWindowTitle(project + N_(' - DAG'))
 
@@ -736,10 +746,12 @@ class GitDAG(standard.MainWindow):
         refs = set(model.local_branches + model.remote_branches + model.tags)
         argv = utils.shell_split(ref or 'HEAD')
         oids = gitcmds.parse_refs(context, argv)
-        update = (self.force_refresh
-                  or count != self.old_count
-                  or oids != self.old_oids
-                  or refs != self.old_refs)
+        update = (
+            self.force_refresh
+            or count != self.old_count
+            or oids != self.old_oids
+            or refs != self.old_refs
+        )
         if update:
             self.thread.stop()
             self.params.set_ref(ref)
@@ -822,8 +834,9 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        cmds.difftool_launch(self.context, left=bottom, left_take_parent=True,
-                             right=top, paths=files)
+        cmds.difftool_launch(
+            self.context, left=bottom, left_take_parent=True, right=top, paths=files
+        )
 
     def grab_file(self, filename):
         """Save the selected file from the filelist widget"""
@@ -1002,11 +1015,9 @@ class Edge(QtWidgets.QGraphicsItem):
 
             path.moveTo(point1)
             path.lineTo(point2)
-            path.arcTo(QRectF(point2, point3),
-                       start_angle_arc1, span_angle_arc1)
+            path.arcTo(QRectF(point2, point3), start_angle_arc1, span_angle_arc1)
             path.lineTo(point6)
-            path.arcTo(QRectF(point6, point5),
-                       start_angle_arc2, span_angle_arc2)
+            path.arcTo(QRectF(point6, point5), start_angle_arc2, span_angle_arc2)
             path.lineTo(point4)
 
         self.path = path
@@ -1034,13 +1045,13 @@ class EdgeColor(object):
         QtGui.QColor(Qt.cyan),
         QtGui.QColor(Qt.magenta),
         # Orange; Qt.yellow is too low-contrast
-        qtutils.rgba(0xff, 0x66, 0x00),
+        qtutils.rgba(0xFF, 0x66, 0x00),
         QtGui.QColor(Qt.gray),
         QtGui.QColor(Qt.darkCyan),
         QtGui.QColor(Qt.darkMagenta),
         QtGui.QColor(Qt.darkYellow),
         QtGui.QColor(Qt.darkGray),
-        ]
+    ]
 
     @classmethod
     def cycle(cls):
@@ -1065,16 +1076,18 @@ class Commit(QtWidgets.QGraphicsItem):
     merge_radius = 18.0
 
     item_shape = QtGui.QPainterPath()
-    item_shape.addRect(commit_radius/-2.0,
-                       commit_radius/-2.0,
-                       commit_radius, commit_radius)
+    item_shape.addRect(
+        commit_radius / -2.0, commit_radius / -2.0, commit_radius, commit_radius
+    )
     item_bbox = item_shape.boundingRect()
 
     inner_rect = QtGui.QPainterPath()
-    inner_rect.addRect(commit_radius/-2.0 + 2.0,
-                       commit_radius/-2.0 + 2.0,
-                       commit_radius - 4.0,
-                       commit_radius - 4.0)
+    inner_rect.addRect(
+        commit_radius / -2.0 + 2.0,
+        commit_radius / -2.0 + 2.0,
+        commit_radius - 4.0,
+        commit_radius - 4.0,
+    )
     inner_rect = inner_rect.boundingRect()
 
     commit_color = QtGui.QColor(Qt.white)
@@ -1088,13 +1101,16 @@ class Commit(QtWidgets.QGraphicsItem):
     commit_pen.setWidth(1.0)
     commit_pen.setColor(outline_color)
 
-    def __init__(self, commit,
-                 notifier,
-                 selectable=QtWidgets.QGraphicsItem.ItemIsSelectable,
-                 cursor=Qt.PointingHandCursor,
-                 xpos=commit_radius/2.0 + 1.0,
-                 cached_commit_color=commit_color,
-                 cached_merge_color=merge_color):
+    def __init__(
+        self,
+        commit,
+        notifier,
+        selectable=QtWidgets.QGraphicsItem.ItemIsSelectable,
+        cursor=Qt.PointingHandCursor,
+        xpos=commit_radius / 2.0 + 1.0,
+        cached_commit_color=commit_color,
+        cached_merge_color=merge_color,
+    ):
 
         QtWidgets.QGraphicsItem.__init__(self)
 
@@ -1110,7 +1126,7 @@ class Commit(QtWidgets.QGraphicsItem):
         if commit.tags:
             self.label = label = Label(commit)
             label.setParentItem(self)
-            label.setPos(xpos + 1, -self.commit_radius/2.0)
+            label.setPos(xpos + 1, -self.commit_radius / 2.0)
         else:
             self.label = None
 
@@ -1184,9 +1200,7 @@ class Commit(QtWidgets.QGraphicsItem):
 
     def mouseReleaseEvent(self, event):
         QtWidgets.QGraphicsItem.mouseReleaseEvent(self, event)
-        if (not self.dragged and
-                self.selected and
-                event.button() == Qt.LeftButton):
+        if not self.dragged and self.selected and event.button() == Qt.LeftButton:
             return
         self.pressed = False
         self.dragged = False
@@ -1292,7 +1306,8 @@ class Label(QtWidgets.QGraphicsItem):
                 painter.setBrush(self.other_color)
 
             text_rect = painter.boundingRect(
-                QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag)
+                QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag
+            )
             box_rect = text_rect.adjusted(-offset, -offset, offset, offset)
 
             painter.drawRoundedRect(box_rect, border, border)
@@ -1305,8 +1320,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     diff_commits = Signal(object, object)
 
-    x_adjust = int(Commit.commit_radius*4/3)
-    y_adjust = int(Commit.commit_radius*4/3)
+    x_adjust = int(Commit.commit_radius * 4 / 3)
+    y_adjust = int(Commit.commit_radius * 4 / 3)
 
     x_off = -18
     y_off = -24
@@ -1355,26 +1370,36 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
         self.setBackgroundBrush(QtGui.QColor(Qt.white))
 
-        qtutils.add_action(self, N_('Zoom In'), self.zoom_in,
-                           hotkeys.ZOOM_IN, hotkeys.ZOOM_IN_SECONDARY)
+        qtutils.add_action(
+            self,
+            N_('Zoom In'),
+            self.zoom_in,
+            hotkeys.ZOOM_IN,
+            hotkeys.ZOOM_IN_SECONDARY,
+        )
 
-        qtutils.add_action(self, N_('Zoom Out'), self.zoom_out,
-                           hotkeys.ZOOM_OUT)
+        qtutils.add_action(self, N_('Zoom Out'), self.zoom_out, hotkeys.ZOOM_OUT)
 
-        qtutils.add_action(self, N_('Zoom to Fit'),
-                           self.zoom_to_fit, hotkeys.FIT)
+        qtutils.add_action(self, N_('Zoom to Fit'), self.zoom_to_fit, hotkeys.FIT)
 
-        qtutils.add_action(self, N_('Select Parent'),
-                           self._select_parent, hotkeys.MOVE_DOWN_TERTIARY)
+        qtutils.add_action(
+            self, N_('Select Parent'), self._select_parent, hotkeys.MOVE_DOWN_TERTIARY
+        )
 
-        qtutils.add_action(self, N_('Select Oldest Parent'),
-                           self._select_oldest_parent, hotkeys.MOVE_DOWN)
+        qtutils.add_action(
+            self,
+            N_('Select Oldest Parent'),
+            self._select_oldest_parent,
+            hotkeys.MOVE_DOWN,
+        )
 
-        qtutils.add_action(self, N_('Select Child'),
-                           self._select_child, hotkeys.MOVE_UP_TERTIARY)
+        qtutils.add_action(
+            self, N_('Select Child'), self._select_child, hotkeys.MOVE_UP_TERTIARY
+        )
 
-        qtutils.add_action(self, N_('Select Newest Child'),
-                           self._select_newest_child, hotkeys.MOVE_UP)
+        qtutils.add_action(
+            self, N_('Select Newest Child'), self._select_newest_child, hotkeys.MOVE_UP
+        )
 
         notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
 
@@ -1396,7 +1421,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.scale_view(1.5)
 
     def zoom_out(self):
-        self.scale_view(1.0/1.5)
+        self.scale_view(1.0 / 1.5)
 
     def commits_selected(self, commits):
         if self.selecting:
@@ -1423,8 +1448,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             return None
         generation = None
         for commit in commits:
-            if (generation is None or
-                    criteria_fn(generation, commit.generation)):
+            if generation is None or criteria_fn(generation, commit.generation):
                 oid = commit.oid
                 generation = commit.generation
         try:
@@ -1460,8 +1484,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             return
         selected_item.setSelected(False)
         parent_item.setSelected(True)
-        self.ensureVisible(
-            parent_item.mapRectToScene(parent_item.boundingRect()))
+        self.ensureVisible(parent_item.mapRectToScene(parent_item.boundingRect()))
 
     def _select_oldest_parent(self):
         """Select the parent with the oldest generation number"""
@@ -1541,18 +1564,16 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 y_min = min(y_min, y)
                 y_max = max(y_max, y)
 
-            rect = QtCore.QRectF(x_min, y_min,
-                                 abs(x_max - x_min),
-                                 abs(y_max - y_min))
+            rect = QtCore.QRectF(x_min, y_min, abs(x_max - x_min), abs(y_max - y_min))
 
         x_adjust = abs(GraphView.x_adjust)
         y_adjust = abs(GraphView.y_adjust)
 
-        count = max(2.0, 10.0 - len(items)/2.0)
+        count = max(2.0, 10.0 - len(items) / 2.0)
         y_offset = int(y_adjust * count)
         x_offset = int(x_adjust * count)
-        rect.setX(rect.x() - x_offset//2)
-        rect.setY(rect.y() - y_adjust//2)
+        rect.setX(rect.x() - x_offset // 2)
+        rect.setY(rect.y() - y_adjust // 2)
         rect.setHeight(rect.height() + y_offset)
         rect.setWidth(rect.width() + x_offset)
 
@@ -1611,11 +1632,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def wheel_zoom(self, event):
         """Handle mouse wheel zooming."""
         delta = qtcompat.wheel_delta(event)
-        zoom = math.pow(2.0, delta/512.0)
-        factor = (self.transform()
-                  .scale(zoom, zoom)
-                  .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
-                  .width())
+        zoom = math.pow(2.0, delta / 512.0)
+        factor = (
+            self.transform()
+            .scale(zoom, zoom)
+            .mapRect(QtCore.QRectF(0.0, 0.0, 1.0, 1.0))
+            .width()
+        )
         if factor < 0.014 or factor > 42.0:
             return
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
@@ -1633,10 +1656,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setTransform(matrix)
 
     def scale_view(self, scale):
-        factor = (self.transform()
-                  .scale(scale, scale)
-                  .mapRect(QtCore.QRectF(0, 0, 1, 1))
-                  .width())
+        factor = (
+            self.transform()
+            .scale(scale, scale)
+            .mapRect(QtCore.QRectF(0, 0, 1, 1))
+            .width()
+        )
         if factor < 0.07 or factor > 100.0:
             return
         self.zoom = scale
@@ -1651,7 +1676,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             distance = value - min_
             nonzero_range = range_ > 0.1
             if nonzero_range:
-                scrolloffset = distance/range_
+                scrolloffset = distance / range_
             else:
                 adjust_scrollbars = False
 
@@ -1725,73 +1750,73 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         for edge in invalid_edges:
             edge.commits_were_invalidated()
 
-# Commit node layout technique
-#
-# Nodes are aligned by a mesh. Columns and rows are distributed using
-# algorithms described below.
-#
-# Row assignment algorithm
-#
-# The algorithm aims consequent.
-#     1. A commit should be above all its parents.
-#     2. No commit should be at right side of a commit with a tag in same row.
-# This prevents overlapping of tag labels with commits and other labels.
-#     3. Commit density should be maximized.
-#
-#     The algorithm requires that all parents of a commit were assigned column.
-# Nodes must be traversed in generation ascend order. This guarantees that all
-# parents of a commit were assigned row. So, the algorithm may operate in
-# course of column assignment algorithm.
-#
-#    Row assignment uses frontier. A frontier is a dictionary that contains
-# minimum available row index for each column. It propagates during the
-# algorithm. Set of cells with tags is also maintained to meet second aim.
-#
-#    Initialization is performed by reset_rows method. Each new column should
-# be declared using declare_column method. Getting row for a cell is
-# implemented in alloc_cell method. Frontier must be propagated for any child
-# of fork commit which occupies different column. This meets first aim.
-#
-# Column assignment algorithm
-#
-#     The algorithm traverses nodes in generation ascend order. This guarantees
-# that a node will be visited after all its parents.
-#
-#     The set of occupied columns are maintained during work. Initially it is
-# empty and no node occupied a column. Empty columns are allocated on demand.
-# Free index for column being allocated is searched in following way.
-#     1. Start from desired column and look towards graph center (0 column).
-#     2. Start from center and look in both directions simultaneously.
-# Desired column is defaulted to 0. Fork node should set desired column for
-# children equal to its one. This prevents branch from jumping too far from
-# its fork.
-#
-#     Initialization is performed by reset_columns method. Column allocation is
-# implemented in alloc_column method. Initialization and main loop are in
-# recompute_grid method. The method also embeds row assignment algorithm by
-# implementation.
-#
-# Actions for each node are follow.
-#     1. If the node was not assigned a column then it is assigned empty one.
-#     2. Allocate row.
-#     3. Allocate columns for children.
-#     If a child have a column assigned then it should no be overridden. One of
-# children is assigned same column as the node. If the node is a fork then the
-# child is chosen in generation descent order. This is a heuristic and it only
-# affects resulting appearance of the graph. Other children are assigned empty
-# columns in same order. It is the heuristic too.
-#     4. If no child occupies column of the node then leave it.
-#     It is possible in consequent situations.
-#     4.1 The node is a leaf.
-#     4.2 The node is a fork and all its children are already assigned side
-# column. It is possible if all the children are merges.
-#     4.3 Single node child is a merge that is already assigned a column.
-#     5. Propagate frontier with respect to this node.
-#     Each frontier entry corresponding to column occupied by any node's child
-# must be gather than node row index. This meets first aim of the row
-# assignment algorithm.
-#     Note that frontier of child that occupies same row was propagated during
-# step 2. Hence, it must be propagated for children on side columns.
+    # Commit node layout technique
+    #
+    # Nodes are aligned by a mesh. Columns and rows are distributed using
+    # algorithms described below.
+    #
+    # Row assignment algorithm
+    #
+    # The algorithm aims consequent.
+    #     1. A commit should be above all its parents.
+    #     2. No commit should be at right side of a commit with a tag in same row.
+    # This prevents overlapping of tag labels with commits and other labels.
+    #     3. Commit density should be maximized.
+    #
+    #     The algorithm requires that all parents of a commit were assigned column.
+    # Nodes must be traversed in generation ascend order. This guarantees that all
+    # parents of a commit were assigned row. So, the algorithm may operate in
+    # course of column assignment algorithm.
+    #
+    #    Row assignment uses frontier. A frontier is a dictionary that contains
+    # minimum available row index for each column. It propagates during the
+    # algorithm. Set of cells with tags is also maintained to meet second aim.
+    #
+    #    Initialization is performed by reset_rows method. Each new column should
+    # be declared using declare_column method. Getting row for a cell is
+    # implemented in alloc_cell method. Frontier must be propagated for any child
+    # of fork commit which occupies different column. This meets first aim.
+    #
+    # Column assignment algorithm
+    #
+    #     The algorithm traverses nodes in generation ascend order. This guarantees
+    # that a node will be visited after all its parents.
+    #
+    #     The set of occupied columns are maintained during work. Initially it is
+    # empty and no node occupied a column. Empty columns are allocated on demand.
+    # Free index for column being allocated is searched in following way.
+    #     1. Start from desired column and look towards graph center (0 column).
+    #     2. Start from center and look in both directions simultaneously.
+    # Desired column is defaulted to 0. Fork node should set desired column for
+    # children equal to its one. This prevents branch from jumping too far from
+    # its fork.
+    #
+    #     Initialization is performed by reset_columns method. Column allocation is
+    # implemented in alloc_column method. Initialization and main loop are in
+    # recompute_grid method. The method also embeds row assignment algorithm by
+    # implementation.
+    #
+    # Actions for each node are follow.
+    #     1. If the node was not assigned a column then it is assigned empty one.
+    #     2. Allocate row.
+    #     3. Allocate columns for children.
+    #     If a child have a column assigned then it should no be overridden. One of
+    # children is assigned same column as the node. If the node is a fork then the
+    # child is chosen in generation descent order. This is a heuristic and it only
+    # affects resulting appearance of the graph. Other children are assigned empty
+    # columns in same order. It is the heuristic too.
+    #     4. If no child occupies column of the node then leave it.
+    #     It is possible in consequent situations.
+    #     4.1 The node is a leaf.
+    #     4.2 The node is a fork and all its children are already assigned side
+    # column. It is possible if all the children are merges.
+    #     4.3 Single node child is a merge that is already assigned a column.
+    #     5. Propagate frontier with respect to this node.
+    #     Each frontier entry corresponding to column occupied by any node's child
+    # must be gather than node row index. This meets first aim of the row
+    # assignment algorithm.
+    #     Note that frontier of child that occupies same row was propagated during
+    # step 2. Hence, it must be propagated for children on side columns.
 
     def reset_columns(self):
         # Some children of displayed commits might not be accounted in
@@ -1950,9 +1975,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             # Allocate columns for children which are still without one. Also
             # propagate frontier for children.
             if node.is_fork():
-                sorted_children = sorted(node.children,
-                                         key=lambda c: c.generation,
-                                         reverse=True)
+                sorted_children = sorted(
+                    node.children, key=lambda c: c.generation, reverse=True
+                )
                 citer = iter(sorted_children)
                 for child in citer:
                     if child.column is None:
@@ -2063,7 +2088,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if self.scene() is None or rect.isNull():
             return
         unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
-        self.scale(1.0/unity.width(), 1.0/unity.height())
+        self.scale(1.0 / unity.width(), 1.0 / unity.height())
         view_rect = self.viewport().rect()
         scene_rect = self.transform().mapRect(rect)
         xratio = view_rect.width() / scene_rect.width()
