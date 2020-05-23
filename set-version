@@ -20,6 +20,7 @@ def main():
     # Old workflow: updated relnotes.rst with the latest relnotes/vX.Y.rst
     #RelnotesVersion(version).update()
     RelnotesStableVersion(version).update()
+    os.system('git diff')
 
     return 0
 
