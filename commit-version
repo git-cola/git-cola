@@ -1,0 +1,5 @@
+#!/bin/sh
+version=$(./bin/git-cola version --brief)
+tag="v$version"
+git add -u &&
+exec git commit -sm"git-cola $tag"

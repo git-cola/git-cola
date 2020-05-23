@@ -2,6 +2,7 @@
 ./Meta/update-qtpy ~/src/python/qtpy
 make check
 ./Meta/set-version vA.B
+./Meta/commit-version
 # remove any (BETA) markers from the release notes
 ./Meta/tag
 git cola push
