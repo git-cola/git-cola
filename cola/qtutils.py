@@ -1041,14 +1041,14 @@ def rgb_hex(color):
     return '%02x%02x%02x' % (color.red(), color.green(), color.blue())
 
 
-def hsl(h, s, l):
+def hsl(h, s, light):
     return QtGui.QColor.fromHslF(
-        utils.clamp(h, 0.0, 1.0), utils.clamp(s, 0.0, 1.0), utils.clamp(l, 0.0, 1.0)
+        utils.clamp(h, 0.0, 1.0), utils.clamp(s, 0.0, 1.0), utils.clamp(light, 0.0, 1.0)
     )
 
 
-def hsl_css(h, s, l):
-    return rgb_css(hsl(h, s, l))
+def hsl_css(h, s, light):
+    return rgb_css(hsl(h, s, light))
 
 
 def make_format(fg=None, bg=None, bold=False):
