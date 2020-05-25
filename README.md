@@ -358,14 +358,15 @@ You should then get the latest `git cola` in your shell.
 
 ## PACKAGING NOTES
 
-Git Cola by installs its modules into the default Python site-packages directory
-(eg.  `lib/python2.7/site-packages`), and in its own private `share/git-cola/lib`
+Git Cola installs its modules into the default Python site-packages directory
+(eg. `lib/python2.7/site-packages`), and in its own private `share/git-cola/lib`
 area by default.  The private modules are redundant and not needed when cola's modules
 have been installed into the site-packages directory.
 
 Git Cola will prefer its private modules when the `share/git-cola/lib` directory
 exists, but they are not required to exist.  This directory is optional, and can
-be safely removed if the cola modules have been installed into site-pacakges.
+be safely removed if the cola modules have been installed into site-pacakges
+and are importable through the default `sys.path`.
 
 To suppress the installation of the private (redundant) `share/git-cola/lib/cola`
 package, specify `make NO_PRIVATE_LIBS=1 ...` when invoking `make`,
