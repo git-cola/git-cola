@@ -558,9 +558,8 @@ def create_treeitem(filename, staged=False, deleted=False, untracked=False):
 
     """
     icon_name = icons.status(filename, deleted, staged, untracked)
-    return TreeWidgetItem(
-        filename, icons.name_from_basename(icon_name), deleted=deleted
-    )
+    icon = icons.name_from_basename(icon_name)
+    return TreeWidgetItem(filename, icon, deleted=deleted)
 
 
 def add_close_action(widget):
