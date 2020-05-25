@@ -56,8 +56,8 @@ New releases are available on the
 
 * [Sphinx](http://sphinx-doc.org/) for building the documentation.
 
-*git-cola* uses *QtPy*, so you can choose between *PyQt4*, *PyQt5*, and
-*PySide* by setting the `QT_API` environment variable to `pyqt4`, `pyqt5` or
+git-cola uses QtPy, so you can choose between PyQt4, PyQt5, and
+PySide by setting the `QT_API` environment variable to `pyqt4`, `pyqt5` or
 `pyside` as desired.  `qtpy` defaults to `pyqt5` and falls back to `pyqt4`
 if `pyqt5` is not installed.
 
@@ -73,12 +73,12 @@ Any of the following Python Qt libraries must be installed:
   1.1.0 or newer
 
 Set `QT_API=pyqt4` in your environment if you have both
-versions of *PyQt* installed and want to ensure that PyQt4 is used.
+versions of PyQt installed and want to ensure that PyQt4 is used.
 
-*NOTE*: *git-cola* includes a vendored copy of its *QtPy* dependency.
+NOTE: git-cola includes a vendored copy of its QtPy dependency.
 
-We provide a copy of the `qtpy` module when installing *git-cola* so that you
-are not required to install *QtPy* separately.  If you'd like to provide your
+We provide a copy of the `qtpy` module when installing git-cola so that you
+are not required to install QtPy separately.  If you'd like to provide your
 own `qtpy` module, for example from the `python-qtpy` Debian package, then use
 `make NO_VENDOR_LIBS=1 ...` when invoking `make`, or export
 `GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
@@ -90,7 +90,7 @@ requirement, but not needed at runtime.
 
 ## ADDITIVES
 
-*git-cola* enables additional features when the following
+git-cola enables additional features when the following
 Python modules are installed.
 
 [send2trash](https://github.com/hsoft/send2trash) enables cross-platform
@@ -100,8 +100,8 @@ Python modules are installed.
 
 ## RUN FROM SOURCE
 
-You don't need to install *git-cola* to run it.
-Running *git-cola* from its source tree is the easiest
+You don't need to install git-cola to run it.
+Running git-cola from its source tree is the easiest
 way to try the latest version.
 
     git clone git://github.com/git-cola/git-cola.git
@@ -109,8 +109,8 @@ way to try the latest version.
     ./bin/git-cola
     ./bin/git-dag
 
-Having *git-cola*'s *bin/* directory in your path allows you to run
-*git cola* like a regular built-in Git command:
+Having git-cola's `bin/` directory in your path allows you to run
+`git cola` like a regular built-in Git command:
 
     # Replace "$PWD/bin" with the path to git-cola's bin/ directory
     PATH="$PWD/bin":"$PATH"
@@ -119,7 +119,7 @@ Having *git-cola*'s *bin/* directory in your path allows you to run
     git cola
     git dag
 
-The instructions below assume that you have *git-cola* present in your
+The instructions below assume that you have git-cola present in your
 `$PATH`.  Replace "git cola" with "./bin/git-cola" as needed if you'd like to
 just run it in-place.
 
@@ -137,17 +137,17 @@ just run it in-place.
 
 # INSTALLATION
 
-Normally you can just do "make install" to install *git-cola*
+Normally you can just do "make install" to install git-cola
 in your `$HOME` directory (`$HOME/bin`, `$HOME/share`, etc).
 If you want to do a global install you can do
 
     make prefix=/usr install
 
 The platform-specific installation methods below use the native
-package manager.  You should use one of these so that all of *git-cola*'s
+package manager.  You should use one of these so that all of git-cola's
 dependencies are installed.
 
-Distutils is used by the `Makefile` via `setup.py` to install *git-cola* and
+Distutils is used by the `Makefile` via `setup.py` to install git-cola and
 its launcher scripts.  distutils replaces the `#!/usr/bin/env python` lines in
 scripts with the full path to python at build time, which can be undesirable
 when the runtime python is not the same as the build-time python.  To disable
@@ -192,7 +192,7 @@ maintained by @pavreh to get a newer version.
 ## MAC OS X
 
 [Homebrew](https://brew.sh/) is the easiest way to install
-git-cola's *Qt4* and *PyQt4* dependencies.  We will use Homebrew to install
+git-cola's Qt4 and PyQt4 dependencies.  We will use Homebrew to install
 the git-cola recipe, but build our own .app bundle from source.
 
 [Sphinx](http://sphinx-doc.org/latest/install.html) is used to build the
@@ -217,7 +217,7 @@ Once brew has installed git-cola you can:
         git-cola.app
    ```
 
-3. Copy it to _/Applications_
+3. Copy it to /Applications
 
     `rm -fr /Applications/git-cola.app && cp -r git-cola.app /Applications`
 
@@ -228,7 +228,7 @@ provide the `PyQt5` modules for `python3` only.  You have to use
 ### UPGRADING USING HOMEBREW
 
 If you upgrade using `brew` then it is recommended that you re-install
-*git-cola*'s dependencies when upgrading.  Re-installing ensures that the
+git-cola's dependencies when upgrading.  Re-installing ensures that the
 Python modules provided by Homebrew will be properly set up.
 
 This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
@@ -249,7 +249,7 @@ system-provided default Python.
 
 ## WINDOWS INSTALLATION
 
-**IMPORTANT** If you have a 64-bit machine, install the 64-bit versions only.
+IMPORTANT If you have a 64-bit machine, install the 64-bit versions only.
 Do not mix 32-bit and 64-bit versions.
 
 Download and install the following:
@@ -258,20 +258,20 @@ Download and install the following:
 
 * [Git Cola](https://github.com/git-cola/git-cola/releases)
 
-Once these are installed you can run *git cola* from the Start menu.
+Once these are installed you can run Git Cola from the Start menu.
 
 See "WINDOWS (continued)" below for more details.
 
 # GOODIES
 
-*git cola* ships with an interactive rebase editor called *git-xbase*.
-*git-xbase* is used to reorder and choose commits when rebasing.
+git cola ships with an interactive rebase editor called git-xbase.
+git-xbase is used to reorder and choose commits when rebasing.
 Start an interactive rebase through the "Rebase" menu, or through the
-*git cola rebase* sub-command to start the *git-xbase* editor:
+git cola rebase sub-command to start the git-xbase editor:
 
     git cola rebase origin/master
 
-*git-xbase* can be launched independently of *git cola* by telling
+git-xbase can be launched independently of git cola by telling
 `git rebase` to use it as its editor through the `GIT_SEQUENCE_EDITOR`
 enviironment variable:
 
@@ -280,8 +280,8 @@ enviironment variable:
 
 # COMMAND-LINE TOOLS
 
-The *git-cola* command exposes various sub-commands that allow you to quickly
-launch tools that are available from within the *git-cola* interface.
+The git-cola command exposes various sub-commands that allow you to quickly
+launch tools that are available from within the git-cola interface.
 For example, `./bin/git-cola find` launches the file finder,
 and `./bin/git-cola grep` launches the grep tool.
 
@@ -372,7 +372,7 @@ You should then get the latest `git cola` in your shell.
 
 ## Development
 
-In order to develop *git cola* on Windows you will need to install
+In order to develop Git Cola on Windows you will need to install
 Python3 and pip.  Install PyQt5 using `pip install PyQt5`
 to make the PyQt5 bindings available to Python.
 
@@ -399,7 +399,7 @@ Windows installers are built using
 
 * [NSIS](http://nsis.sourceforge.net/Main_Page) is also needed.
 
-To build the installer using *Pynsist* run:
+To build the installer using Pynsist run:
 
     ./contrib/win32/run-pynsist.sh
 
@@ -408,7 +408,7 @@ This will generate an installer in `build/nsis/`.
 ## WINDOWS HISTORY BROWSER CONFIGURATION UPGRADE
 
 You may need to configure your history browser if you are upgrading from an
-older version of *git-cola*.
+older version of Git Cola.
 
 `gitk` was originally the default history browser, but `gitk` cannot be
 launched as-is on Windows because `gitk` is a shell script.
@@ -417,10 +417,10 @@ If you are configured to use `gitk`, then change your configuration to
 go through Git's `sh.exe` on Windows.  Similarly, we must go through
 `python.exe` if we want to use `git-dag`.
 
-If you want to use *gitk* as your history browser open the
-*Preferences* screen and change the history browser command to:
+If you want to use gitk as your history browser open the
+Preferences screen and change the history browser command to:
 
     "C:/Program Files/Git/bin/sh.exe" --login -i C:/Git/bin/gitk
 
-*git-dag* became the default history browser on Windows in `v2.3`, so new
+git-dag became the default history browser on Windows in `v2.3`, so new
 users should not need to configure anything.
