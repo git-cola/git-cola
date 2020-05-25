@@ -194,6 +194,7 @@ install-man:
 .PHONY: uninstall
 uninstall:
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
+	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola-sequence-editor
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-dag
 	$(RM) "$(DESTDIR)$(prefix)"/bin/cola
 	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola.desktop
@@ -205,7 +206,8 @@ uninstall:
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/git-cola
 	$(RM) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
-	$(RM_R) "$(DESTDIR)$(pythondir)"/cola*
+	$(RM_R) "$(DESTDIR)$(pythondir)"/git_cola-*
+	$(RM_R) "$(DESTDIR)$(pythondir)"/cola
 	$(RMDIR) -p "$(DESTDIR)$(pythondir)" 2>/dev/null || true
 	$(RMDIR) "$(DESTDIR)$(prefix)"/share/applications 2>/dev/null || true
 	$(RMDIR) "$(DESTDIR)$(prefix)"/share/appdata 2>/dev/null || true

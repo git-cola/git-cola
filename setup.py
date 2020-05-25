@@ -67,7 +67,7 @@ def main():
     packages = [str('cola'), str('cola.models'), str('cola.widgets')]
 
     setup(
-        name='cola',
+        name='git-cola',
         version=version,
         description='The highly caffeinated git GUI',
         long_description='A sleek and powerful git GUI',
