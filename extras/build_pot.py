@@ -118,6 +118,7 @@ class build_pot(Command):
                     'msgmerge',
                     '--no-location',
                     '--no-wrap',
+                    '--no-fuzzy-matching',
                     '--sort-output',
                     '--output-file',
                     new_po,
