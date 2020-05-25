@@ -1208,7 +1208,7 @@ msgstr ""
 msgid "Help - Find Files"
 msgstr "Yardım - Dosyaları Ara"
 
-msgid "Help - git-xbase"
+msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
 msgid "Hide Details.."

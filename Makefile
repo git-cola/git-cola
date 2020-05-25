@@ -135,8 +135,8 @@ ALL_PYTHON_DIRS = $(PYTHON_DIRS)
 ALL_PYTHON_DIRS += extras
 
 PYTHON_SOURCES = bin/git-cola
+PYTHON_SOURCES += bin/git-cola-sequence-editor
 PYTHON_SOURCES += bin/git-dag
-PYTHON_SOURCES += share/git-cola/bin/git-xbase
 PYTHON_SOURCES += setup.py
 
 # User customizations

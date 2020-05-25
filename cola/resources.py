@@ -2,6 +2,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
 from os.path import dirname
+import sys
 import webbrowser
 
 from . import core
@@ -32,6 +33,12 @@ else:
 def prefix(*args):
     """Return a path relative to cola's installation prefix"""
     return os.path.join(_prefix, *args)
+
+
+def command(name):
+    """Return a command sibling to the main program"""
+    bindir = os.path.dirname(sys.argv[0])
+    return os.path.join(bindir, name)
 
 
 def doc(*args):

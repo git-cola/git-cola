@@ -1685,8 +1685,8 @@ def unix_path(path, is_win32=utils.is_win32):
 
 
 def sequence_editor():
-    """Return a GIT_SEQUENCE_EDITOR environment value that enables git-xbase"""
-    xbase = unix_path(resources.share('bin', 'git-xbase'))
+    """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
+    xbase = unix_path(resources.command('git-cola-sequence-editor'))
     editor = core.list2cmdline([unix_path(sys.executable), xbase])
     return editor
 
@@ -1780,10 +1780,10 @@ class Rebase(ContextCommand):
             GIT_XBASE_ACTION=N_('Rebase'),
         ):
             # TODO this blocks the user interface window for the duration
-            # of git-xbase's invocation. We would need to implement
+            # of git-cola-sequence-editor. We would need to implement
             # signals for QProcess and continue running the main thread.
-            # alternatively we could hide the main window while rebasing.
-            # that doesn't require as much effort.
+            # Alternatively, we can hide the main window while rebasing.
+            # That doesn't require as much effort.
             status, out, err = self.git.rebase(
                 *args, _no_win32_startupinfo=True, **kwargs
             )

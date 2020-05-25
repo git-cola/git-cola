@@ -12,6 +12,12 @@ Packaging
   ``share/git-cola/lib/cola`` modules when building cola.
   (`#181 <https://github.com/git-cola/git-cola/issues/181>`_)
 
+* Git Cola's rebase / sequence editor, formerly known as ``git-xbase`` and
+  installed as ``share/git-cola/bin/git-xbase``, has been renamed to
+  ``git-cola-sequence-editor`` and is now installed into the default
+  ``bin/git-cola-sequence-editor`` executable location to enable external
+  reuse of this general-purpose tool.
+
 .. _v3.7:
 
 v3.7

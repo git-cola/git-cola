@@ -1353,8 +1353,8 @@ msgstr "Pomoc - Własne działania kopiowania"
 msgid "Help - Find Files"
 msgstr "Pomoc - Znajdź pliki"
 
-msgid "Help - git-xbase"
-msgstr "Pomoc - git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "Pomoc - git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "Ukryj szczegóły..."

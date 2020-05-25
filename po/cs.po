@@ -1266,8 +1266,8 @@ msgstr "Nápověda – uživatelské akce kopírování"
 msgid "Help - Find Files"
 msgstr "Nápověda – najít soubory"
 
-msgid "Help - git-xbase"
-msgstr "Nápověda – git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "Nápověda – git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "Skrýt podrobnosti…"

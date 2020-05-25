@@ -1320,8 +1320,8 @@ msgstr "ヘルプ - カスタムコピーアクション"
 msgid "Help - Find Files"
 msgstr "ヘルプ - ファイルの捜索"
 
-msgid "Help - git-xbase"
-msgstr "ヘルプ - git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "ヘルプ - git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "詳細を隠す。"

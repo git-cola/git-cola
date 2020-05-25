@@ -1358,8 +1358,8 @@ msgstr "Súgó – Egyéni másolási műveletek"
 msgid "Help - Find Files"
 msgstr "Súgó – Fájlok keresése"
 
-msgid "Help - git-xbase"
-msgstr "Súgó – git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "Súgó – git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "Részletek elrejtése…"

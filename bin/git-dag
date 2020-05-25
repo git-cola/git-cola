@@ -2,7 +2,6 @@
 """git-dag: An advanced Git DAG history visualizer"""
 from __future__ import division, absolute_import, unicode_literals
 import os
-from os.path import abspath, dirname, join, realpath
 import sys
 
 
@@ -23,20 +22,17 @@ GNU General Public License for more details.
 
 def setup_environment():
     """Provide access to the cola modules"""
-    # Try to detect where it is run from and set prefix and the search path.
-    # It is assumed that the user installed Cola using the --prefix= option
-    python2 = sys.version_info[0] == 2
-    prefix = dirname(dirname(realpath(abspath(__file__))))
-    # Look for modules in the source or install trees
-    if python2:
-        install_lib = join(prefix, str('share'), str('git-cola'), str('lib'))
-    else:
-        install_lib = join(prefix, 'share', 'git-cola', 'lib')
-    # Use the neutral installation if it exists.  If this doesn't exist
-    # the it is assumed that packagers have arranged for the our modules to be
-    # present in sys.path through python's site-packages directory.
+    abspath = os.path.abspath(__file__)
+    prefix = os.path.dirname(os.path.dirname(os.path.realpath(abspath)))
+    install_lib = os.path.join(prefix, str('share'), str('git-cola'), str('lib'))
+    win_pkgs = os.path.join(prefix, str('pkgs'))
+    # Use the private modules from share/git-cola/lib when they exist.
+    # It is assumed that that our modules to be present in sys.path through python's
+    # site-packages directory when the private modules do not exist.
     if os.path.exists(install_lib):
         sys.path.insert(1, install_lib)
+    elif os.path.exists(win_pkgs):
+        sys.path.insert(1, win_pkgs)
 
 
 if __name__ == '__main__':

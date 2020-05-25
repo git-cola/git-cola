@@ -1321,8 +1321,8 @@ msgstr "Ajuda - Ações de Copia Customizadas"
 msgid "Help - Find Files"
 msgstr "Ajuda - Procurar Arquivos"
 
-msgid "Help - git-xbase"
-msgstr "Ajuda - git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "Ajuda - git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "Esconder Detalhes..."
