@@ -29,7 +29,10 @@ class MainModel(Observable):
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
     message_diff_text_updated = 'diff_text_updated'
+    # "diff_type" {text,image} represents the diff viewer mode.
     message_diff_type_changed = 'diff_type_changed'
+    # "file_type" {text,image} represents the selected file type.
+    message_file_type_changed = 'file_type_changed'
     message_filename_changed = 'filename_changed'
     message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
@@ -74,6 +77,7 @@ class MainModel(Observable):
         self.head = 'HEAD'
         self.diff_text = ''
         self.diff_type = 'text'  # text, image
+        self.file_type = 'text'  # text, image
         self.mode = self.mode_none
         self.filename = None
         self.is_merging = False
@@ -181,8 +185,17 @@ class MainModel(Observable):
 
     def set_diff_type(self, diff_type):  # text, image
         """Set the diff type to either text or image"""
+        changed = diff_type != self.diff_type
         self.diff_type = diff_type
-        self.notify_observers(self.message_diff_type_changed, diff_type)
+        if changed:
+            self.notify_observers(self.message_diff_type_changed, diff_type)
+
+    def set_file_type(self, file_type):  # text, image
+        """Set the file type to either text or image"""
+        changed = file_type != self.file_type
+        self.file_type = file_type
+        if changed:
+            self.notify_observers(self.message_file_type_changed, file_type)
 
     def set_images(self, images):
         """Update the images shown in the preview pane"""

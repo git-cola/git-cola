@@ -52,11 +52,13 @@ class EditModel(ContextCommand):
         self.old_filename = self.model.filename
         self.old_mode = self.model.mode
         self.old_diff_type = self.model.diff_type
+        self.old_file_type = self.model.file_type
 
         self.new_diff_text = self.old_diff_text
         self.new_filename = self.old_filename
         self.new_mode = self.old_mode
         self.new_diff_type = self.old_diff_type
+        self.new_file_type = self.old_file_type
 
     def do(self):
         """Perform the operation."""
@@ -64,6 +66,7 @@ class EditModel(ContextCommand):
         self.model.set_mode(self.new_mode)
         self.model.set_diff_text(self.new_diff_text)
         self.model.set_diff_type(self.new_diff_type)
+        self.model.set_file_type(self.new_file_type)
 
     def undo(self):
         """Undo the operation."""
@@ -71,6 +74,7 @@ class EditModel(ContextCommand):
         self.model.set_mode(self.old_mode)
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_diff_type(self.old_diff_type)
+        self.model.set_file_type(self.old_file_type)
 
 
 class ConfirmAction(ContextCommand):
@@ -381,6 +385,7 @@ class Checkout(EditModel):
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
 
     def do(self):
         super(Checkout, self).do()
@@ -458,6 +463,7 @@ class ResetMode(EditModel):
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
         self.new_filename = ''
 
     def do(self):
@@ -978,6 +984,24 @@ def get_mode(model, staged, modified, unmerged, untracked):
     return mode
 
 
+class DiffText(EditModel):
+    """Set the diff type to text"""
+    def __init__(self, context):
+        super(DiffText, self).__init__(context)
+        self.new_file_type = 'text'
+        self.new_diff_type = 'text'
+
+
+class ToggleDiffType(EditModel):
+    """Toggle the diff type between image and text"""
+    def __init__(self, context):
+        super(ToggleDiffType, self).__init__(context)
+        if self.old_diff_type == 'image':
+            self.new_diff_type = 'text'
+        else:
+            self.new_diff_type = 'image'
+
+
 class DiffImage(EditModel):
     def __init__(
         self, context, filename, deleted, staged, modified, unmerged, untracked
@@ -985,8 +1009,8 @@ class DiffImage(EditModel):
         super(DiffImage, self).__init__(context)
 
         self.new_filename = filename
-        self.new_diff_text = ''
         self.new_diff_type = 'image'
+        self.new_file_type = 'image'
         self.new_mode = get_mode(self.model, staged, modified, unmerged, untracked)
         self.staged = staged
         self.modified = modified
@@ -1163,7 +1187,6 @@ class Diff(EditModel):
         self.new_diff_text = gitcmds.diff_helper(
             self.context, filename=filename, cached=cached, deleted=deleted, **opts
         )
-        self.new_diff_type = 'text'
 
 
 class Diffstat(EditModel):
@@ -1183,6 +1206,7 @@ class Diffstat(EditModel):
         )[STDOUT]
         self.new_diff_text = diff
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
         self.new_mode = self.model.mode_diffstat
 
 
@@ -1209,6 +1233,7 @@ class DiffStagedSummary(EditModel):
         )[STDOUT]
         self.new_diff_text = diff
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
         self.new_mode = self.model.mode_index
 
 
@@ -1579,6 +1604,7 @@ class OpenRepo(EditModel):
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
         self.new_commitmsg = ''
         self.new_filename = ''
 
@@ -1904,6 +1930,7 @@ class RevertEditsCommand(ConfirmAction):
         return self.git.checkout(*checkout_args)
 
     def success(self):
+        self.model.set_diff_type('text')
         self.model.update_file_status()
 
 
@@ -2055,6 +2082,7 @@ class SetDiffText(EditModel):
         super(SetDiffText, self).__init__(context)
         self.new_diff_text = text
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
 
 
 class SetUpstreamBranch(ContextCommand):
@@ -2109,6 +2137,7 @@ class ShowUntracked(EditModel):
         self.new_mode = self.model.mode_untracked
         self.new_diff_text = self.read(filename)
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
 
     def read(self, filename):
         """Read file contents"""
@@ -2541,6 +2570,7 @@ class UntrackedSummary(EditModel):
                 io.write('/' + u + '\n')
         self.new_diff_text = io.getvalue()
         self.new_diff_type = 'text'
+        self.new_file_type = 'text'
         self.new_mode = self.model.mode_untracked
 
 

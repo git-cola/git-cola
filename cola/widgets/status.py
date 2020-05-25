@@ -1048,7 +1048,19 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         deleted = item.deleted
         image = self.image_formats.ok(path)
 
-        # Images are diffed differently
+        # Update the diff text
+        if staged:
+            cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
+        elif modified:
+            cmds.do(cmds.Diff, context, path, deleted=deleted)
+        elif unmerged:
+            cmds.do(cmds.Diff, context, path)
+        elif untracked:
+            cmds.do(cmds.ShowUntracked, context, path)
+
+        # Images are diffed differently.
+        # DiffImage transitions the diff mode to image.
+        # DiffText transitions the diff mode to text.
         if image:
             cmds.do(
                 cmds.DiffImage,
@@ -1060,14 +1072,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 unmerged,
                 untracked,
             )
-        elif staged:
-            cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
-        elif modified:
-            cmds.do(cmds.Diff, context, path, deleted=deleted)
-        elif unmerged:
-            cmds.do(cmds.Diff, context, path)
-        elif untracked:
-            cmds.do(cmds.ShowUntracked, context, path)
+        else:
+            cmds.do(cmds.DiffText, context)
 
     def select_header(self):
         """Select an active header, which triggers a diffstat"""

@@ -358,7 +358,8 @@ class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
     images_changed = Signal(object)
-    type_changed = Signal(object)
+    diff_type_changed = Signal(object)
+    file_type_changed = Signal(object)
 
     def __init__(self, context, parent=None):
         super(Viewer, self).__init__(parent)
@@ -387,8 +388,13 @@ class Viewer(QtWidgets.QFrame):
 
         # Observe the diff type
         diff_type_msg = model.message_diff_type_changed
-        model.add_observer(diff_type_msg, self.type_changed.emit)
-        self.type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
+        model.add_observer(diff_type_msg, self.diff_type_changed.emit)
+        self.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
+
+        # Observe the file type
+        file_type_msg = model.message_file_type_changed
+        model.add_observer(file_type_msg, self.file_type_changed.emit)
+        self.file_type_changed.connect(self.set_file_type, type=Qt.QueuedConnection)
 
         # Observe the image mode combo box
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
@@ -415,12 +421,18 @@ class Viewer(QtWidgets.QFrame):
 
     def set_diff_type(self, diff_type):
         """Manage the image and text diff views when selection changes"""
+        # The "diff type" is whether the diff viewer is displaying an image.
         self.options.set_diff_type(diff_type)
         if diff_type == 'image':
             self.stack.setCurrentWidget(self.image)
             self.render()
         else:
             self.stack.setCurrentWidget(self.text)
+
+    def set_file_type(self, file_type):
+        """Manage the diff options when the file type changes"""
+        # The "file type" is whether the file itself is an image.
+        self.options.set_file_type(file_type)
 
     def update_options(self):
         self.text.update_options()
@@ -559,6 +571,7 @@ class Options(QtWidgets.QWidget):
 
     def __init__(self, parent):
         super(Options, self).__init__(parent)
+        # Create widgets
         self.widget = parent
         self.ignore_space_at_eol = self.add_option(
             N_('Ignore changes in whitespace at EOL')
@@ -576,9 +589,14 @@ class Options(QtWidgets.QWidget):
 
         self.show_line_numbers = self.add_option(N_('Show line numbers'))
 
-        self.options = options = qtutils.create_action_button(
+        self.options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure()
         )
+
+        self.toggle_image_diff = qtutils.create_action_button(
+            tooltip=N_('Toggle image diff'), icon=icons.visualize()
+        )
+        self.toggle_image_diff.hide()
 
         self.image_mode = qtutils.combo(
             [N_('Side by side'), N_('Diff'), N_('XOR'), N_('Pixel XOR')]
@@ -596,29 +614,35 @@ class Options(QtWidgets.QWidget):
         zoom_modes = [factor[0] for factor in self.zoom_factors]
         self.zoom_mode = qtutils.combo(zoom_modes, parent=self)
 
-        self.menu = menu = qtutils.create_menu(N_('Diff Options'), options)
-        options.setMenu(menu)
-
+        self.menu = menu = qtutils.create_menu(N_('Diff Options'), self.options)
+        self.options.setMenu(menu)
         menu.addAction(self.ignore_space_at_eol)
         menu.addAction(self.ignore_space_change)
         menu.addAction(self.ignore_all_space)
         menu.addAction(self.show_line_numbers)
         menu.addAction(self.function_context)
 
+        # Layouts
         layout = qtutils.hbox(
             defs.no_margin,
-            defs.no_spacing,
-            self.image_mode,
             defs.button_spacing,
+            self.image_mode,
             self.zoom_mode,
-            options,
+            self.options,
+            self.toggle_image_diff,
         )
         self.setLayout(layout)
 
+        # Policies
         self.image_mode.setFocusPolicy(Qt.NoFocus)
         self.zoom_mode.setFocusPolicy(Qt.NoFocus)
         self.options.setFocusPolicy(Qt.NoFocus)
+        self.toggle_image_diff.setFocusPolicy(Qt.NoFocus)
         self.setFocusPolicy(Qt.NoFocus)
+
+    def set_file_type(self, file_type):
+        is_image = file_type == 'image'
+        self.toggle_image_diff.setVisible(is_image)
 
     def set_diff_type(self, diff_type):
         is_text = diff_type == 'text'
@@ -626,6 +650,10 @@ class Options(QtWidgets.QWidget):
         self.options.setVisible(is_text)
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
+        if is_image:
+            self.toggle_image_diff.setIcon(icons.diff())
+        else:
+            self.toggle_image_diff.setIcon(icons.visualize())
 
     def add_option(self, title):
         action = qtutils.add_action(self, title, self.update_options)
@@ -690,6 +718,11 @@ class DiffEditor(DiffTextEdit):
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         # Update the selection model when the cursor changes
         self.cursorPositionChanged.connect(self._update_line_number)
+
+        qtutils.connect_button(options.toggle_image_diff, self.toggle_diff_type)
+
+    def toggle_diff_type(self):
+        cmds.do(cmds.ToggleDiffType, self.context)
 
     def refresh(self):
         enabled = False
