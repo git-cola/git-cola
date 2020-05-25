@@ -1691,12 +1691,14 @@ def sequence_editor():
     return editor
 
 
-class GitXBaseContext(object):
+class SequenceEditorEnvironment(object):
+    """Set environment variables to enable git-cola-sequence-editor"""
+
     def __init__(self, context, **kwargs):
         self.env = {
             'GIT_EDITOR': prefs.editor(context),
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
-            'GIT_XBASE_CANCEL_ACTION': 'save',
+            'GIT_COLA_SEQ_EDITOR_CANCEL_ACTION': 'save',
         }
         self.env.update(kwargs)
 
@@ -1774,10 +1776,10 @@ class Rebase(ContextCommand):
 
         args, kwargs = self.prepare_arguments(upstream)
         upstream_title = upstream or '@{upstream}'
-        with GitXBaseContext(
+        with SequenceEditorEnvironment(
             self.context,
-            GIT_XBASE_TITLE=N_('Rebase onto %s') % upstream_title,
-            GIT_XBASE_ACTION=N_('Rebase'),
+            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             # TODO this blocks the user interface window for the duration
             # of git-cola-sequence-editor. We would need to implement
@@ -1797,8 +1799,10 @@ class Rebase(ContextCommand):
 class RebaseEditTodo(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
-        with GitXBaseContext(
-            self.context, GIT_XBASE_TITLE=N_('Edit Rebase'), GIT_XBASE_ACTION=N_('Save')
+        with SequenceEditorEnvironment(
+            self.context,
+            GIT_COLA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Save')
         ):
             status, out, err = self.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
@@ -1809,8 +1813,10 @@ class RebaseEditTodo(ContextCommand):
 class RebaseContinue(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
-        with GitXBaseContext(
-            self.context, GIT_XBASE_TITLE=N_('Rebase'), GIT_XBASE_ACTION=N_('Rebase')
+        with SequenceEditorEnvironment(
+            self.context,
+            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase')
         ):
             status, out, err = self.git.rebase('--continue')
         Interaction.log_status(status, out, err)
@@ -1821,8 +1827,10 @@ class RebaseContinue(ContextCommand):
 class RebaseSkip(ContextCommand):
     def do(self):
         (status, out, err) = (1, '', '')
-        with GitXBaseContext(
-            self.context, GIT_XBASE_TITLE=N_('Rebase'), GIT_XBASE_ACTION=N_('Rebase')
+        with SequenceEditorEnvironment(
+            self.context,
+            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase')
         ):
             status, out, err = self.git.rebase(skip=True)
         Interaction.log_status(status, out, err)
