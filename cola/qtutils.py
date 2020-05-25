@@ -558,9 +558,8 @@ def create_treeitem(filename, staged=False, deleted=False, untracked=False):
 
     """
     icon_name = icons.status(filename, deleted, staged, untracked)
-    return TreeWidgetItem(
-        filename, icons.name_from_basename(icon_name), deleted=deleted
-    )
+    icon = icons.name_from_basename(icon_name)
+    return TreeWidgetItem(filename, icon, deleted=deleted)
 
 
 def add_close_action(widget):
@@ -861,7 +860,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     button = tool_button()
     if icon is not None:
         button.setIcon(icon)
-        button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
+        button.setIconSize(QtCore.QSize(defs.default_icon, defs.default_icon))
     if text is not None:
         button.setText(' ' + text)
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)

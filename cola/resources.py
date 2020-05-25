@@ -2,6 +2,7 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
 from os.path import dirname
+import sys
 import webbrowser
 
 from . import core
@@ -10,8 +11,11 @@ from . import core
 # Default git-cola icon theme
 _default_icon_theme = 'light'
 
-_modpath = core.abspath(__file__)
-if os.path.join('share', 'git-cola', 'lib') in _modpath:
+_modpath = core.abspath(core.realpath(__file__))
+if (
+    os.path.join('share', 'git-cola', 'lib') in _modpath
+    or os.path.join('site-packages', 'cola') in _modpath
+):
     # this is the release tree
     # __file__ = '$prefix/share/git-cola/lib/cola/__file__.py'
     _lib_dir = dirname(dirname(_modpath))
@@ -29,6 +33,12 @@ else:
 def prefix(*args):
     """Return a path relative to cola's installation prefix"""
     return os.path.join(_prefix, *args)
+
+
+def command(name):
+    """Return a command sibling to the main program"""
+    bindir = os.path.dirname(sys.argv[0])
+    return os.path.join(bindir, name)
 
 
 def doc(*args):

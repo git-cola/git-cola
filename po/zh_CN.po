@@ -1268,8 +1268,8 @@ msgstr "帮助 - 自定义复制操作"
 msgid "Help - Find Files"
 msgstr "帮助 - 查找文件"
 
-msgid "Help - git-xbase"
-msgstr "帮助 - git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "帮助 - git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr "隐藏细节.."

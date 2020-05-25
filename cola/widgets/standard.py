@@ -50,7 +50,8 @@ class WidgetMixin(object):
             shown = self.isVisible()
             # earlier show() fools Windows focus stealing prevention. the main
             # window is blocked for the duration of "git rebase" and we don't
-            # want to present a blocked window with git-xbase hidden somewhere.
+            # want to present a blocked window with git-cola-sequence-editor
+            # hidden somewhere.
             self.show()
             self.setWindowState(Qt.WindowMaximized)
             if not shown:

@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-"""git-cola: The highly caffeinated Git GUI
-"""
-
+"""git-cola: The highly caffeinated Git GUI"""
 from __future__ import division, absolute_import, unicode_literals
 import os
-from os.path import abspath, dirname, join, realpath
 import sys
+
 
 __copyright__ = """
 Copyright (C) 2007-2020 David Aguilar and contributors
@@ -23,31 +21,22 @@ GNU General Public License for more details.
 
 
 def setup_environment():
-    """Provides access to the cola modules"""
-
-    # Try to detect where it is run from and set prefix and the search path.
-    # It is assumed that the user installed Cola using the --prefix= option
-    python2 = sys.version_info[0] == 2
-    prefix = dirname(dirname(realpath(abspath(__file__))))
-    # Look for modules in the source or install trees
-    if python2:
-        cola_mod = join(prefix, str('cola'), str('__init__.py'))
-        install_lib = join(prefix, str('share'), str('git-cola'), str('lib'))
-    else:
-        cola_mod = join(prefix, 'cola', '__init__.py')
-        install_lib = join(prefix, 'share', 'git-cola', 'lib')
-
-    if os.path.exists(cola_mod):
-        # Source tree
-        sys.path.insert(1, prefix)
-    else:
-        # Install tree
+    """Provide access to the cola modules"""
+    abspath = os.path.abspath(__file__)
+    prefix = os.path.dirname(os.path.dirname(os.path.realpath(abspath)))
+    install_lib = os.path.join(prefix, str('share'), str('git-cola'), str('lib'))
+    win_pkgs = os.path.join(prefix, str('pkgs'))
+    # Use the private modules from share/git-cola/lib when they exist.
+    # It is assumed that that our modules to be present in sys.path through python's
+    # site-packages directory when the private modules do not exist.
+    if os.path.exists(install_lib):
         sys.path.insert(1, install_lib)
+    elif os.path.exists(win_pkgs):
+        sys.path.insert(1, win_pkgs)
 
-
-setup_environment()
 
 if __name__ == '__main__':
+    setup_environment()
     from cola.main import main
 
     sys.exit(main())

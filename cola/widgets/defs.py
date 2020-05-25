@@ -27,6 +27,7 @@ cursor_width = scale(2)
 handle_width = scale(4)
 tool_button_height = scale(28)
 
+default_icon = scale(16)
 small_icon = scale(12)
 medium_icon = scale(48)
 large_icon = scale(96)

@@ -1271,7 +1271,7 @@ msgstr ""
 msgid "Help - Find Files"
 msgstr "Помощь - Поиск файлов"
 
-msgid "Help - git-xbase"
+msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
 msgid "Hide Details.."

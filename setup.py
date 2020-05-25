@@ -11,7 +11,6 @@ import re
 import sys
 
 from extras import cmdclass
-from extras import build_helpers
 
 # Hack: prevent python2's ascii default encoding from breaking inside
 # distutils when installing from utf-8 paths.
@@ -31,7 +30,16 @@ except ValueError:
 if use_env_python:
     build_scripts.first_line_re = re.compile(r'^should not match$')
 
-# Disable vendoring of qtpy and friends by passing --no-vendor-libs
+# Disable installation of the private cola package by passing --no-private-libs or
+# by setting GIT_COLA_NO_PRIVATE_LIBS=1 in th environment.
+try:
+    sys.argv.remove('--no-private-libs')
+    private_libs = False
+except ValueError:
+    private_libs = not os.getenv('GIT_COLA_NO_PRIVATE_LIBS', '')
+
+# Disable vendoring of qtpy and friends by passing --no-vendor-libs to setup.py or
+# by setting GIT_COLA_NO_VENDOR_LIBS=1 in the environment.
 try:
     sys.argv.remove('--no-vendor-libs')
     vendor_libs = False
@@ -49,21 +57,17 @@ def main():
     """Runs distutils.setup()"""
     scripts = [
         'bin/git-cola',
+        'bin/git-cola-sequence-editor',
         'bin/git-dag',
     ]
 
     if sys.platform == 'win32':
         scripts.append('contrib/win32/cola')
 
-    # Helper scripts are installed to share/git-cola/bin and are visible to
-    # git-cola only.  Adding scripts to build_helpers.scripts will make them
-    # available for #! updating.
-    build_helpers.helpers = [
-        'share/git-cola/bin/git-xbase',
-    ]
+    packages = [str('cola'), str('cola.models'), str('cola.widgets')]
 
     setup(
-        name='git-cola',
+        name='cola',
         version=version,
         description='The highly caffeinated git GUI',
         long_description='A sleek and powerful git GUI',
@@ -73,6 +77,7 @@ def main():
         url='https://git-cola.github.io/',
         scripts=scripts,
         cmdclass=cmdclass,
+        packages=packages,
         platforms='any',
         data_files=_data_files(),
     )
@@ -90,10 +95,12 @@ def _data_files():
         _app_path('share/applications', '*.desktop'),
         _app_path('share/doc/git-cola', '*.rst'),
         _app_path('share/doc/git-cola', '*.html'),
-        _package('cola'),
-        _package('cola.models'),
-        _package('cola.widgets'),
     ]
+
+    if private_libs:
+        data.extend(
+            [_package('cola'), _package('cola.models'), _package('cola.widgets')]
+        )
 
     if vendor_libs:
         data.extend([_package('qtpy'), _package('qtpy._patch')])

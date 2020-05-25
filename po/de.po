@@ -1327,8 +1327,8 @@ msgstr "Hilfe - Benutzerdefinierte Kopier-Befehle"
 msgid "Help - Find Files"
 msgstr "Hilfe - Dateien suchen"
 
-msgid "Help - git-xbase"
-msgstr "Hilfe - git-xbase"
+msgid "Help - git-cola-sequence-editor"
+msgstr "Hilfe - git-cola-sequence-editor"
 
 msgid "Hide Details.."
 msgstr ""

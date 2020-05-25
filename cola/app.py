@@ -362,9 +362,7 @@ def new_context(args):
 
 def application_run(context, view, start=None, stop=None):
     """Run the application main loop"""
-    context.set_view(view)
-    view.show()
-
+    initialize_view(context, view)
     # Startup callbacks
     if start:
         start(context, view)
@@ -376,6 +374,14 @@ def application_run(context, view, start=None, stop=None):
     context.app.stop()
 
     return result
+
+
+def initialize_view(context, view):
+    """Register the main widget and display it"""
+    context.set_view(view)
+    view.show()
+    if sys.platform == 'darwin':
+        view.raise_()
 
 
 def application_start(context, view):

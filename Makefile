@@ -91,7 +91,9 @@ endif
 prefix = $(HOME)
 bindir = $(prefix)/bin
 datadir = $(prefix)/share/git-cola
-coladir = $(datadir)/lib
+python_lib := $(shell $(PYTHON) -c \
+    'import distutils.sysconfig as sc; print(sc.get_python_lib(prefix=""))')
+pythondir = $(prefix)/$(python_lib)
 hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
 # DESTDIR =
 
@@ -113,14 +115,15 @@ install_args += --prefix="$(prefix)"
 install_args += --force
 install_args += --install-scripts="$(bindir)"
 install_args += --record=build/MANIFEST
-install_args += --install-lib="$(coladir)"
 ifdef DESTDIR
     install_args += --root="$(DESTDIR)"
     export DESTDIR
 endif
 export prefix
 
-# If NO_VENDOR_LIBS is specified on the command line then pass it to setup.py
+ifdef NO_PRIVATE_LIBS
+    install_args += --no-private-libs
+endif
 ifdef NO_VENDOR_LIBS
     install_args += --no-vendor-libs
 endif
@@ -132,8 +135,8 @@ ALL_PYTHON_DIRS = $(PYTHON_DIRS)
 ALL_PYTHON_DIRS += extras
 
 PYTHON_SOURCES = bin/git-cola
+PYTHON_SOURCES += bin/git-cola-sequence-editor
 PYTHON_SOURCES += bin/git-dag
-PYTHON_SOURCES += share/git-cola/bin/git-xbase
 PYTHON_SOURCES += setup.py
 
 # User customizations
@@ -157,8 +160,6 @@ install: all
 	$(LN_S) "$(datadir)/icons/git-cola.svg" \
 		"$(DESTDIR)$(hicolordir)/git-cola.svg"
 	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
-	$(RM_R) "$(DESTDIR)$(coladir)/git_cola"*
-	$(RM_R) git_cola.egg-info
 
 # Maintainer's dist target
 .PHONY: dist
@@ -204,19 +205,21 @@ uninstall:
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/git-cola
 	$(RM) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/applications 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/appdata 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/doc 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/* 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/share 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)"/bin 2>/dev/null
-	-$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null
+	$(RM_R) "$(DESTDIR)$(pythondir)"/cola*
+	$(RMDIR) -p "$(DESTDIR)$(pythondir)" 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/applications 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/appdata 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/doc 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale/* 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/locale 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons/hicolor 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share/icons 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/share 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)"/bin 2>/dev/null || true
+	$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null || true
 
 .PHONY: test
 test: all
