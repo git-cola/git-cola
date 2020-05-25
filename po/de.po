@@ -13,10 +13,10 @@ msgstr ""
 "PO-Revision-Date: 2019-03-07 07:18+0100\n"
 "Last-Translator: Kai Krakow <kai@kaishome.de>\n"
 "Language-Team: German\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -495,6 +495,12 @@ msgstr "Zu Git Annex hinzufügen"
 msgid "Add to Git LFS"
 msgstr "Zu Git LFS hinzufügen"
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Hinzufügungen"
 
@@ -583,6 +589,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Zeilen automatisch umbrechen"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Einfacher regulärer Ausdruck"
@@ -689,11 +701,17 @@ msgstr "\"%s\" nach nicht ausgeführt werden: Bitte einen Editor konfigurieren"
 msgid "Changed Upstream"
 msgstr "In Upstream geändert"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Rechtschreibung prüfen"
 
 msgid "Check spelling"
 msgstr "Rechtschreibung prüfen"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Umstellen"
@@ -928,6 +946,10 @@ msgstr "Externen Branch löschen"
 msgid "Delete Remote Branch..."
 msgstr "Externen Branch löschen..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Externe Referenz löschen"
 
@@ -937,9 +959,6 @@ msgstr "Externe Referenz \"%s\" löschen"
 
 msgid "Delete remote?"
 msgstr "Externe Referenz löschen?"
-
-msgid "Delete selected branch?"
-msgstr "Gewählten Branch löschen?"
 
 msgid "Delete toolbar"
 msgstr "Werkzeugleiste löschen"
@@ -993,6 +1012,9 @@ msgstr "Diff-Werkzeug"
 msgid "Directory Exists"
 msgstr "Verzeichnis existiert"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Nicht verfolgte Dateien anzeigen"
 
@@ -1045,6 +1067,9 @@ msgstr "E-Mail-Adresse"
 msgid "Email contributor"
 msgstr "E-Mail an Beitragenden"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr "Aktiviert"
 
@@ -1087,6 +1112,10 @@ msgstr "Fehler beim erstellen der externen Referenz \"%s\""
 
 msgid "Error creating stash"
 msgstr "Fehler beim Erstellen der Ablage"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1330,9 +1359,6 @@ msgstr "Hilfe - Dateien suchen"
 msgid "Help - git-cola-sequence-editor"
 msgstr "Hilfe - git-cola-sequence-editor"
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1363,6 +1389,9 @@ msgstr "Exakten Dateinamen ignorieren"
 msgid "Ignore filename or pattern"
 msgstr "Dateiname oder Muster ignorieren"
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Übernehmen der Tags "
 
@@ -1389,6 +1418,9 @@ msgstr "Interaktiver Rebase"
 
 msgid "Invalid Revision"
 msgstr "Unzulässige Revision"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Sicherheitskopie beim Zusammenführen anlegen (Datei.orig)"
@@ -1861,6 +1893,9 @@ msgstr "Branch zurücksetzen?"
 msgid "Reset Hard"
 msgstr ""
 
+msgid "Reset Layout"
+msgstr ""
+
 msgid "Reset Merge"
 msgstr ""
 
@@ -2129,9 +2164,6 @@ msgstr "Nach oben schieben"
 
 msgid "Shortcuts"
 msgstr "Tastenkürzel"
-
-msgid "Show Details..."
-msgstr ""
 
 msgid "Show Diffstat After Merge"
 msgstr "Vergleichsstatistik nach Zusammenführen anzeigen"
@@ -2610,6 +2642,9 @@ msgstr "Ergebnis von grep..."
 msgid "hotkeys.html"
 msgstr "hotkeys_de.html"
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "unbekannt"
 
@@ -2882,6 +2917,9 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Delete Only If Merged Into"
 #~ msgstr "Nur löschen, wenn zusammengeführt nach"
+
+#~ msgid "Delete selected branch?"
+#~ msgstr "Gewählten Branch löschen?"
 
 #~ msgid "Destination Repository"
 #~ msgstr "Ziel-Projektarchiv"
@@ -3320,9 +3358,6 @@ msgstr "dd.MM.yyyy"
 #~ msgid "Refreshing file status..."
 #~ msgstr "Dateistatus aktualisieren..."
 
-#~ msgid "Remote Branches"
-#~ msgstr ""
-
 #~ msgid "Remote:"
 #~ msgstr "Anderes Archiv:"
 
@@ -3407,9 +3442,6 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Staged for removal, still present"
 #~ msgstr "Bereitgestellt zum Löschen, trotzdem vorhanden"
-
-#~ msgid "Staging Area"
-#~ msgstr ""
 
 #~ msgid "Staging area (index) is already locked."
 #~ msgstr "Bereitstellung (»index«) ist zur Bearbeitung gesperrt (»locked«)."

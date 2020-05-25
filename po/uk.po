@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2017-08-30 08:16+0200\n"
 "Last-Translator: Igor Kopach <ikopach@ukr.net>\n"
 "Language-Team: Ukrainian\n"
-"Language: uk_UA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: uk_UA\n"
 
 msgid ""
 "\n"
@@ -444,6 +444,12 @@ msgstr "Додати до .gitignore"
 msgid "Add to Git LFS"
 msgstr ""
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Додано"
 
@@ -533,6 +539,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Авто-перенос рядків"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Базовий регулярний вираз"
@@ -641,11 +653,17 @@ msgstr "Не вдалось виконати \"%s\": будь ласка, нал
 msgid "Changed Upstream"
 msgstr "Змінено в віддаленому джерелі"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Перевірити правопис"
 
 msgid "Check spelling"
 msgstr "Перевірити правопис"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Переключитись"
@@ -889,6 +907,10 @@ msgstr "Видалити віддалену гілку"
 msgid "Delete Remote Branch..."
 msgstr "Видалити віддалену гілку..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Видалити віддалений репозиторій"
 
@@ -898,9 +920,6 @@ msgstr "Видалити віддалений репозиторій \"%s\""
 
 msgid "Delete remote?"
 msgstr "Видалити віддалений репозиторій?"
-
-msgid "Delete selected branch?"
-msgstr "Видалити виділену гілку?"
 
 #, fuzzy
 msgid "Delete toolbar"
@@ -956,6 +975,9 @@ msgstr "Інструмент порівняння"
 msgid "Directory Exists"
 msgstr "Каталог існує"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Показати файли, що не відслідковуються"
 
@@ -1009,6 +1031,9 @@ msgstr "Адреса електронної пошти"
 msgid "Email contributor"
 msgstr "Електронна пошта учасника"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr ""
 
@@ -1053,6 +1078,10 @@ msgstr "Не вдалось створити віддалений репозит
 #, fuzzy
 msgid "Error creating stash"
 msgstr "Помилка при створенні гілки"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1297,9 +1326,6 @@ msgstr "Допомога - Пошук файлів"
 msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1332,6 +1358,9 @@ msgstr "Ігнорувати точне ім'я файлу"
 msgid "Ignore filename or pattern"
 msgstr "Ігнорувати ім'я файлу або шаблон"
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Включити теґ"
 
@@ -1358,6 +1387,9 @@ msgstr "Інтерактивне переміщення"
 
 msgid "Invalid Revision"
 msgstr "Неправильна ревізія"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Зберігати резервні копії *.orig файлів після злиття"
@@ -1837,6 +1869,9 @@ msgstr "Скинути гілку?"
 msgid "Reset Hard"
 msgstr "Скинути HEAD гілки"
 
+msgid "Reset Layout"
+msgstr ""
+
 #, fuzzy
 msgid "Reset Merge"
 msgstr "Ревізія для злиття"
@@ -2117,10 +2152,6 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Поєднання клавіш"
-
-#, fuzzy
-msgid "Show Details..."
-msgstr "Видалити файли..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Показати список різниць після злиття"
@@ -2606,6 +2637,9 @@ msgstr "шукати в результатах..."
 msgid "hotkeys.html"
 msgstr ""
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "невідомий"
 
@@ -2638,6 +2672,9 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Created commit: %s"
 #~ msgstr "Створено коміт: %s"
+
+#~ msgid "Delete selected branch?"
+#~ msgstr "Видалити виділену гілку?"
 
 #~ msgid "Error %s"
 #~ msgstr "Помилка %s"
@@ -2672,6 +2709,10 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Вибрати файл з \"%s\""
+
+#, fuzzy
+#~ msgid "Show Details..."
+#~ msgstr "Видалити файли..."
 
 #~ msgid "Summary:"
 #~ msgstr "Підсумок:"

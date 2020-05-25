@@ -14,10 +14,10 @@ msgstr ""
 "PO-Revision-Date: 2018-08-04 18:02+0100\n"
 "Last-Translator: victorhck <victorhck@mailbox.org>\n"
 "Language-Team: Spanish <>\n"
-"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 2.0\n"
 
@@ -491,6 +491,12 @@ msgstr "Añadir a Git Annex"
 msgid "Add to Git LFS"
 msgstr "Añadir a Git LFS"
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Adiciones"
 
@@ -579,6 +585,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Salto de línea automático"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Regexp básico"
@@ -685,11 +697,17 @@ msgstr "No se pudo ejecutar \"%s\": por favor, configure su editor"
 msgid "Changed Upstream"
 msgstr "Cambiado aguas arriba (upstream)"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Comprobar ortografía"
 
 msgid "Check spelling"
 msgstr "Comprobar ortografía"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Checkout"
@@ -924,6 +942,10 @@ msgstr "Eliminar rama remota"
 msgid "Delete Remote Branch..."
 msgstr "Eliminar rama remota..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Eliminar repositorio remoto"
 
@@ -933,9 +955,6 @@ msgstr "Eliminar repositorio remoto \"%s\""
 
 msgid "Delete remote?"
 msgstr "¿Desea eliminar el repositorio remoto?"
-
-msgid "Delete selected branch?"
-msgstr "¿Desea eliminar la rama seleccionada?"
 
 msgid "Delete toolbar"
 msgstr "Eliminar barra de herramientas"
@@ -989,6 +1008,9 @@ msgstr "Herramienta Diff"
 msgid "Directory Exists"
 msgstr "La carpeta ya existe"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Mostrar ficheros sin seguimiento"
 
@@ -1041,6 +1063,9 @@ msgstr "Dirección de correo electrónico"
 msgid "Email contributor"
 msgstr "Dirección de correo electrónico del colaborador"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr "Habilitado"
 
@@ -1083,6 +1108,10 @@ msgstr "Error al crear el repositorio remoto \"%s\""
 
 msgid "Error creating stash"
 msgstr "Error al Crear Stash"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1325,9 +1354,6 @@ msgstr "Ayuda - Encontrar archivos"
 msgid "Help - git-cola-sequence-editor"
 msgstr "Ayuda - git-cola-sequence-editor"
 
-msgid "Hide Details.."
-msgstr "Ocultar detalles..."
-
 msgid "High DPI"
 msgstr ""
 
@@ -1358,6 +1384,9 @@ msgstr "Ignorar el nombre de archivo exacto"
 msgid "Ignore filename or pattern"
 msgstr "Ignorar nombre de archivo o patrón"
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Incluir etiquetas "
 
@@ -1384,6 +1413,9 @@ msgstr "Rebase interactivo"
 
 msgid "Invalid Revision"
 msgstr "Revisión inválida"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Conservar Merge Backups *.orig"
@@ -1858,6 +1890,9 @@ msgstr "¿Reiniciar rama?"
 msgid "Reset Hard"
 msgstr "Reinicio duro (hard)"
 
+msgid "Reset Layout"
+msgstr ""
+
 msgid "Reset Merge"
 msgstr "Reiniciar \"merge\""
 
@@ -2126,9 +2161,6 @@ msgstr "Desplazar hacia arriba"
 
 msgid "Shortcuts"
 msgstr "Atajos"
-
-msgid "Show Details..."
-msgstr "Mostrar detalles..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostrar \"Diffstat\" tras hacer \"merge\""
@@ -2609,6 +2641,9 @@ msgstr "resultados de grep..."
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "desconocido"
 
@@ -2626,3 +2661,12 @@ msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "aaaa-MM-dd"
+
+#~ msgid "Delete selected branch?"
+#~ msgstr "¿Desea eliminar la rama seleccionada?"
+
+#~ msgid "Hide Details.."
+#~ msgstr "Ocultar detalles..."
+
+#~ msgid "Show Details..."
+#~ msgstr "Mostrar detalles..."

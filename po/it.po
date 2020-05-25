@@ -12,10 +12,10 @@ msgstr ""
 "PO-Revision-Date: 2008-03-12 22:12+0100\n"
 "Last-Translator: David Aguilar <davvid@gmail.com>\n"
 "Language-Team: Italian\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 
 msgid ""
 "\n"
@@ -386,6 +386,12 @@ msgstr ""
 msgid "Add to Git LFS"
 msgstr ""
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 #, fuzzy
 msgid "Additions"
 msgstr "Opzioni"
@@ -475,6 +481,12 @@ msgid "Auto"
 msgstr ""
 
 msgid "Auto-Wrap Lines"
+msgstr ""
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
 msgstr ""
 
 msgid "Basic Regexp"
@@ -591,10 +603,16 @@ msgstr ""
 msgid "Changed Upstream"
 msgstr ""
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr ""
 
 msgid "Check spelling"
+msgstr ""
+
+msgid "Check whether a commit has been published when amending"
 msgstr ""
 
 msgid "Checkout"
@@ -865,6 +883,10 @@ msgstr "Cancella ramo remoto"
 msgid "Delete Remote Branch..."
 msgstr "Cancella ramo remoto"
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 #, fuzzy
 msgid "Delete remote"
 msgstr "Cancella ramo remoto"
@@ -875,10 +897,6 @@ msgstr "Cancella ramo remoto"
 
 #, fuzzy
 msgid "Delete remote?"
-msgstr "Cancella ramo remoto"
-
-#, fuzzy
-msgid "Delete selected branch?"
 msgstr "Cancella ramo remoto"
 
 #, fuzzy
@@ -939,6 +957,9 @@ msgstr "Opzioni"
 msgid "Directory Exists"
 msgstr "Directory:"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr ""
 
@@ -997,6 +1018,9 @@ msgstr "Indirizzo Email"
 msgid "Email contributor"
 msgstr ""
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr ""
 
@@ -1049,6 +1073,10 @@ msgstr ""
 #, fuzzy
 msgid "Error creating stash"
 msgstr "Crea ramo"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1305,9 +1333,6 @@ msgstr ""
 msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1337,6 +1362,9 @@ msgid "Ignore exact filename"
 msgstr ""
 
 msgid "Ignore filename or pattern"
+msgstr ""
+
+msgid "Ignore..."
 msgstr ""
 
 #, fuzzy
@@ -1369,6 +1397,9 @@ msgstr ""
 #, fuzzy
 msgid "Invalid Revision"
 msgstr "Revisione non valida: %s"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr ""
@@ -1901,6 +1932,9 @@ msgstr "Elimina ramo"
 msgid "Reset Hard"
 msgstr "Elimina ramo"
 
+msgid "Reset Layout"
+msgstr ""
+
 #, fuzzy
 msgid "Reset Merge"
 msgstr "Revisione da fondere"
@@ -2205,10 +2239,6 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr ""
-
-#, fuzzy
-msgid "Show Details..."
-msgstr "Elimina..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostra statistiche delle differenze dopo la fusione"
@@ -2711,6 +2741,9 @@ msgstr ""
 msgid "hotkeys.html"
 msgstr ""
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr ""
 
@@ -2964,6 +2997,10 @@ msgstr ""
 
 #~ msgid "Delete Only If Merged Into"
 #~ msgstr "Cancella solo se fuso con un altro ramo"
+
+#, fuzzy
+#~ msgid "Delete selected branch?"
+#~ msgstr "Cancella ramo remoto"
 
 #~ msgid "Destination Repository"
 #~ msgstr "Archivio di destinazione"
@@ -3417,6 +3454,10 @@ msgstr ""
 
 #~ msgid "Shared only available for local repository."
 #~ msgstr "Shared è disponibile solo per archivi locali."
+
+#, fuzzy
+#~ msgid "Show Details..."
+#~ msgstr "Elimina..."
 
 #~ msgid "Show Less Context"
 #~ msgstr "Mostra meno contesto"

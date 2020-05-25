@@ -9,10 +9,10 @@ msgstr ""
 "PO-Revision-Date: 2018-06-25 12:37-0300\n"
 "Last-Translator: Rafael Nascimento <rafaeln.dev@gmail.com>\n"
 "Language-Team: Brazillian <LL@li.org>\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "X-Generator: Poedit 2.0.8\n"
 
 msgid ""
@@ -484,6 +484,12 @@ msgstr "Adicionar ao Git Annex"
 msgid "Add to Git LFS"
 msgstr "Adicionar ao Git LFS"
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Adições"
 
@@ -572,6 +578,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Auto-Quebra de Linhas"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Regexp Básico"
@@ -679,11 +691,17 @@ msgstr "Não é possível executar \"%s\": por favor configure seu editor"
 msgid "Changed Upstream"
 msgstr "Upstream Modificado"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Verificar Ortografia"
 
 msgid "Check spelling"
 msgstr "Verificar ortografia"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Checkout"
@@ -919,6 +937,10 @@ msgstr "Remover Branch Remoto"
 msgid "Delete Remote Branch..."
 msgstr "Remover Branch Remoto..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Deletar Repositórios Remotos"
 
@@ -928,9 +950,6 @@ msgstr "Remover remoto \"%s\""
 
 msgid "Delete remote?"
 msgstr "Remover remoto?"
-
-msgid "Delete selected branch?"
-msgstr "Remover branch selecionada?"
 
 msgid "Delete toolbar"
 msgstr "Remover barra de ferramentas"
@@ -985,6 +1004,9 @@ msgstr "Ferramenta de Comparação"
 msgid "Directory Exists"
 msgstr "Diretório Existe"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Exibir Arquivos não Controlados"
 
@@ -1038,6 +1060,9 @@ msgstr "Endereço de Email"
 msgid "Email contributor"
 msgstr "Email do Contribuidor"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr "Habilitado"
 
@@ -1080,6 +1105,10 @@ msgstr "Erro criando o remoto \"%s\""
 
 msgid "Error creating stash"
 msgstr "Erro ao criar o stash"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1324,9 +1353,6 @@ msgstr "Ajuda - Procurar Arquivos"
 msgid "Help - git-cola-sequence-editor"
 msgstr "Ajuda - git-cola-sequence-editor"
 
-msgid "Hide Details.."
-msgstr "Esconder Detalhes..."
-
 msgid "High DPI"
 msgstr ""
 
@@ -1357,6 +1383,9 @@ msgstr "Ignorar nome exato do arquivo"
 msgid "Ignore filename or pattern"
 msgstr "Ignorar nome do arquivo ou padrão"
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Incluir tags"
 
@@ -1383,6 +1412,9 @@ msgstr "Rebase Interativo"
 
 msgid "Invalid Revision"
 msgstr "Revisão Inválida"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Manter *.orig na Mesclagem de Backups"
@@ -1863,6 +1895,9 @@ msgstr "Resetar Branch?"
 msgid "Reset Hard"
 msgstr "Resetar Hard"
 
+msgid "Reset Layout"
+msgstr ""
+
 msgid "Reset Merge"
 msgstr "Resetar Merge"
 
@@ -2135,9 +2170,6 @@ msgstr "Shift Para Cima"
 
 msgid "Shortcuts"
 msgstr "Atalhos"
-
-msgid "Show Details..."
-msgstr "Mostrar Detalhes..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Mostrar o Status de Comparação após Mesclagem"
@@ -2626,6 +2658,9 @@ msgstr "resultados do grep..."
 msgid "hotkeys.html"
 msgstr ""
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "desconhecido"
 
@@ -2659,6 +2694,9 @@ msgstr ""
 #~ msgid "Created commit: %s"
 #~ msgstr "Confirmação Criada: %s"
 
+#~ msgid "Delete selected branch?"
+#~ msgstr "Remover branch selecionada?"
+
 #~ msgid "Enter Git Repository"
 #~ msgstr "Entrar no Repositório Git"
 
@@ -2674,6 +2712,9 @@ msgstr ""
 
 #~ msgid "Fast Forward Only "
 #~ msgstr "Avançar Rapidamente"
+
+#~ msgid "Hide Details.."
+#~ msgstr "Esconder Detalhes..."
 
 #, fuzzy
 #~ msgid "Local Branches"
@@ -2713,6 +2754,9 @@ msgstr ""
 
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Selecione um arquivo de \"%s\""
+
+#~ msgid "Show Details..."
+#~ msgstr "Mostrar Detalhes..."
 
 #~ msgid "Summary:"
 #~ msgstr "Sumário:"

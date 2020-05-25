@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2008-03-14 07:23+0100\n"
 "Last-Translator: Peter Karlsson <peter@softwolves.pp.se>\n"
 "Language-Team: Swedish\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 
 msgid ""
 "\n"
@@ -385,6 +385,12 @@ msgstr ""
 msgid "Add to Git LFS"
 msgstr ""
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 #, fuzzy
 msgid "Additions"
 msgstr "Alternativ"
@@ -474,6 +480,12 @@ msgid "Auto"
 msgstr ""
 
 msgid "Auto-Wrap Lines"
+msgstr ""
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
 msgstr ""
 
 msgid "Basic Regexp"
@@ -590,10 +602,16 @@ msgstr ""
 msgid "Changed Upstream"
 msgstr ""
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr ""
 
 msgid "Check spelling"
+msgstr ""
+
+msgid "Check whether a commit has been published when amending"
 msgstr ""
 
 msgid "Checkout"
@@ -864,6 +882,10 @@ msgstr "Ta bort fjärrgren"
 msgid "Delete Remote Branch..."
 msgstr "Ta bort fjärrgren"
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 #, fuzzy
 msgid "Delete remote"
 msgstr "Ta bort fjärrgren"
@@ -874,10 +896,6 @@ msgstr "Ta bort fjärrgren"
 
 #, fuzzy
 msgid "Delete remote?"
-msgstr "Ta bort fjärrgren"
-
-#, fuzzy
-msgid "Delete selected branch?"
 msgstr "Ta bort fjärrgren"
 
 #, fuzzy
@@ -938,6 +956,9 @@ msgstr "Alternativ"
 msgid "Directory Exists"
 msgstr "Katalog:"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr ""
 
@@ -996,6 +1017,9 @@ msgstr "E-postadress"
 msgid "Email contributor"
 msgstr ""
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr ""
 
@@ -1048,6 +1072,10 @@ msgstr ""
 #, fuzzy
 msgid "Error creating stash"
 msgstr "Skapa gren"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1304,9 +1332,6 @@ msgstr ""
 msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1336,6 +1361,9 @@ msgid "Ignore exact filename"
 msgstr ""
 
 msgid "Ignore filename or pattern"
+msgstr ""
+
+msgid "Ignore..."
 msgstr ""
 
 #, fuzzy
@@ -1368,6 +1396,9 @@ msgstr ""
 #, fuzzy
 msgid "Invalid Revision"
 msgstr "Ogiltig revision: %s"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr ""
@@ -1900,6 +1931,9 @@ msgstr "Ta bort gren"
 msgid "Reset Hard"
 msgstr "Ta bort gren"
 
+msgid "Reset Layout"
+msgstr ""
+
 #, fuzzy
 msgid "Reset Merge"
 msgstr "Revisioner att slå ihop"
@@ -2204,10 +2238,6 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr ""
-
-#, fuzzy
-msgid "Show Details..."
-msgstr "Ta bort..."
 
 msgid "Show Diffstat After Merge"
 msgstr "Visa diffstatistik efter sammanslagning"
@@ -2710,6 +2740,9 @@ msgstr ""
 msgid "hotkeys.html"
 msgstr ""
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr ""
 
@@ -2964,6 +2997,10 @@ msgstr ""
 
 #~ msgid "Delete Only If Merged Into"
 #~ msgstr "Ta bara bort om sammanslagen med"
+
+#, fuzzy
+#~ msgid "Delete selected branch?"
+#~ msgstr "Ta bort fjärrgren"
 
 #~ msgid "Destination Repository"
 #~ msgstr "Destinationsarkiv"
@@ -3420,6 +3457,10 @@ msgstr ""
 
 #~ msgid "Shared only available for local repository."
 #~ msgstr "Delat är endast tillgängligt för lokala arkiv."
+
+#, fuzzy
+#~ msgid "Show Details..."
+#~ msgstr "Ta bort..."
 
 #~ msgid "Show Less Context"
 #~ msgstr "Visa mindre sammanhang"

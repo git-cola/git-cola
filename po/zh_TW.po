@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2018-08-30 13:29+0800\n"
 "Last-Translator: 林博仁(Buo-ren, Lin) <Buo.Ren.Lin@gmail.com>\n"
 "Language-Team: Chinese l10n <chinese-l10n@googlegroups.com>\n"
-"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
 
 msgid ""
@@ -491,6 +491,12 @@ msgstr "新增到 Git Annex"
 msgid "Add to Git LFS"
 msgstr "新增到 Git LFS"
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "新增行數"
 
@@ -579,6 +585,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "自動折行"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "基本正規表達式"
@@ -686,11 +698,17 @@ msgstr "無法執行「%s」：請設定您慣用的文字編輯器"
 msgid "Changed Upstream"
 msgstr "在上游被變更"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "檢查拼字問題"
 
 msgid "Check spelling"
 msgstr "檢查拼字問題"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "取出"
@@ -928,6 +946,10 @@ msgstr "移除遠端分支"
 msgid "Delete Remote Branch..."
 msgstr "移除遠端分支……"
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "移除遠端版控庫"
 
@@ -937,9 +959,6 @@ msgstr "移除「%s」遠端版控庫"
 
 msgid "Delete remote?"
 msgstr "要移除遠端版控庫嗎？"
-
-msgid "Delete selected branch?"
-msgstr "要移除選取的分支嗎？"
 
 msgid "Delete toolbar"
 msgstr "刪除工具列"
@@ -993,6 +1012,9 @@ msgstr "內容差異檢視器"
 msgid "Directory Exists"
 msgstr "目錄已存在"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "顯示未納入版本追蹤的檔案"
 
@@ -1045,6 +1067,9 @@ msgstr "電子郵件地址"
 msgid "Email contributor"
 msgstr "寄電子郵件給這位貢獻者"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr "啟用"
 
@@ -1087,6 +1112,10 @@ msgstr "建立「%s」遠端分支時發生錯誤"
 
 msgid "Error creating stash"
 msgstr "建立新的珍藏項目時發生錯誤"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1330,9 +1359,6 @@ msgstr "尋求幫助 - 尋找檔案"
 msgid "Help - git-cola-sequence-editor"
 msgstr "尋求幫助 - git-cola-sequence-editor"
 
-msgid "Hide Details.."
-msgstr "隱藏詳細資訊……"
-
 msgid "High DPI"
 msgstr ""
 
@@ -1363,6 +1389,9 @@ msgstr "忽略完全一致的檔名"
 msgid "Ignore filename or pattern"
 msgstr "忽略檔案名稱或是式樣"
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "包含標籤 "
 
@@ -1389,6 +1418,9 @@ msgstr "互動式變更基底"
 
 msgid "Invalid Revision"
 msgstr "無效的修訂版"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "保留 *.orig merge 備份檔"
@@ -1864,6 +1896,9 @@ msgstr "要重設分支嗎？"
 msgid "Reset Hard"
 msgstr "硬式重設"
 
+msgid "Reset Layout"
+msgstr ""
+
 msgid "Reset Merge"
 msgstr "合併式重設"
 
@@ -2132,9 +2167,6 @@ msgstr "往上平移"
 
 msgid "Shortcuts"
 msgstr "鍵盤快捷鍵"
-
-msgid "Show Details..."
-msgstr "顯示詳細資訊……"
 
 msgid "Show Diffstat After Merge"
 msgstr "在合併後顯示內容差異"
@@ -2620,6 +2652,9 @@ msgstr "搜尋結果……"
 msgid "hotkeys.html"
 msgstr "hotkeys_zh_TW.html"
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "未知使用者"
 
@@ -2877,6 +2912,9 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Delete Only If Merged Into"
 #~ msgstr "僅在合併後刪除"
 
+#~ msgid "Delete selected branch?"
+#~ msgstr "要移除選取的分支嗎？"
+
 #~ msgid "Destination Repository"
 #~ msgstr "目標版本庫"
 
@@ -3022,6 +3060,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Hardlinks are unavailable.  Falling back to copying."
 #~ msgstr "硬連接不可用. 使用複製."
+
+#~ msgid "Hide Details.."
+#~ msgstr "隱藏詳細資訊……"
 
 #~ msgid "In File:"
 #~ msgstr "在文件:"
@@ -3361,6 +3402,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Shared only available for local repository."
 #~ msgstr "共享方式僅當是本地版本庫時有效."
+
+#~ msgid "Show Details..."
+#~ msgstr "顯示詳細資訊……"
 
 #~ msgid "Show Less Context"
 #~ msgstr "顯示更少上下文"

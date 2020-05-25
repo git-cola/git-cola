@@ -14,10 +14,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-28 20:59+0100\n"
 "Last-Translator: Mickael Albertus <mickael.albertus@gmail.com>\n"
 "Language-Team: français <>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Generator: Gtranslator 2.91.7\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
@@ -419,6 +419,12 @@ msgstr "Ajouter à Git Annex"
 msgid "Add to Git LFS"
 msgstr "Ajouter à Git LFS"
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Ajouts"
 
@@ -507,6 +513,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Retour à la ligne automatique"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Regexp basic"
@@ -611,8 +623,17 @@ msgstr "Impossible d'exécuter « %s » : veuillez configurer votre éditeur
 msgid "Changed Upstream"
 msgstr "Source modifiée"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Vérifier l'orthographe"
+
+msgid "Check spelling"
+msgstr ""
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Emprunter"
@@ -847,6 +868,10 @@ msgstr "Supprimer branche distante"
 msgid "Delete Remote Branch..."
 msgstr "Supprimer branche distante..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Supprimer élément distant"
 
@@ -856,9 +881,6 @@ msgstr "Supprimer la branche distante « %s »"
 
 msgid "Delete remote?"
 msgstr "Supprimer la branche distante ?"
-
-msgid "Delete selected branch?"
-msgstr ""
 
 msgid "Delete toolbar"
 msgstr ""
@@ -912,6 +934,9 @@ msgstr ""
 msgid "Directory Exists"
 msgstr "Répertoire existant"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Afficher les fichiers non suivis"
 
@@ -964,6 +989,9 @@ msgstr "Adresse email"
 msgid "Email contributor"
 msgstr "Courriels des contributeurs"
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr ""
 
@@ -1005,6 +1033,10 @@ msgid "Error creating remote \"%s\""
 msgstr "Erreur lors de la création de la branche distante « %s »"
 
 msgid "Error creating stash"
+msgstr ""
+
+#, python-format
+msgid "Error deleting branch \"%s\""
 msgstr ""
 
 #, python-format
@@ -1248,9 +1280,6 @@ msgstr "Aide - Trouver des fichiers"
 msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1281,6 +1310,9 @@ msgstr ""
 msgid "Ignore filename or pattern"
 msgstr ""
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Inclure les marques"
 
@@ -1307,6 +1339,9 @@ msgstr "Rétablissement interactif"
 
 msgid "Invalid Revision"
 msgstr "Révision invalide"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Conserver les sauvegardes de fusion *.orig"
@@ -1779,6 +1814,9 @@ msgstr "Réinitialiser la branche ?"
 msgid "Reset Hard"
 msgstr ""
 
+msgid "Reset Layout"
+msgstr ""
+
 msgid "Reset Merge"
 msgstr ""
 
@@ -2047,9 +2085,6 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Raccourcis"
-
-msgid "Show Details..."
-msgstr ""
 
 msgid "Show Diffstat After Merge"
 msgstr "Montrer statistiques de diff après fusion"
@@ -2529,6 +2564,9 @@ msgstr "Résultat de grep..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
+
+msgid "title"
+msgstr ""
 
 msgid "unknown"
 msgstr "inconnu"

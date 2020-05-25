@@ -11,10 +11,10 @@ msgstr ""
 "PO-Revision-Date: 2014-06-30 14:21+0700\n"
 "Last-Translator: Samsul Ma'arif <mail@samsul.web.id>\n"
 "Language-Team: Indonesian\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: id\n"
 
 msgid ""
 "\n"
@@ -387,6 +387,12 @@ msgstr "Tambahkan ke .gitignore"
 msgid "Add to Git LFS"
 msgstr ""
 
+msgid "Add to exclusions"
+msgstr ""
+
+msgid "Add to local .git/info/exclude"
+msgstr ""
+
 msgid "Additions"
 msgstr "Penambahan"
 
@@ -477,6 +483,12 @@ msgstr ""
 
 msgid "Auto-Wrap Lines"
 msgstr "Auto-Wrap Baris"
+
+msgid "Autocomplete Paths"
+msgstr ""
+
+msgid "Automatically Load Commit Message Template"
+msgstr ""
 
 msgid "Basic Regexp"
 msgstr "Regexp Dasar"
@@ -588,12 +600,18 @@ msgstr "Tidak dapat mengeksekusi \"%s\": silahkan konfigurasi editor Anda"
 msgid "Changed Upstream"
 msgstr "Ubah Upstream"
 
+msgid "Check Published Commits when Amending"
+msgstr ""
+
 msgid "Check Spelling"
 msgstr "Periksa Ejaan"
 
 #, fuzzy
 msgid "Check spelling"
 msgstr "Periksa Ejaan"
+
+msgid "Check whether a commit has been published when amending"
+msgstr ""
 
 msgid "Checkout"
 msgstr "Checkout"
@@ -846,6 +864,10 @@ msgstr "Hapus Cabang Hulu"
 msgid "Delete Remote Branch..."
 msgstr "Hapus Cabang Hulu..."
 
+#, python-format
+msgid "Delete branch \"%s\"?"
+msgstr ""
+
 msgid "Delete remote"
 msgstr "Hapus hulu"
 
@@ -855,10 +877,6 @@ msgstr "Hapus hulu \"%s\""
 
 msgid "Delete remote?"
 msgstr "Hapus hulu?"
-
-#, fuzzy
-msgid "Delete selected branch?"
-msgstr "Hapus Cabang Hulu"
 
 #, fuzzy
 msgid "Delete toolbar"
@@ -914,6 +932,9 @@ msgstr "Alat Diff"
 msgid "Directory Exists"
 msgstr "Direktori Sudah Ada"
 
+msgid "Disable"
+msgstr ""
+
 msgid "Display Untracked Files"
 msgstr "Tampilkan Berkas Tak Terlacak"
 
@@ -967,6 +988,9 @@ msgstr "Alamat Email"
 msgid "Email contributor"
 msgstr ""
 
+msgid "Enable path autocompletion in tools"
+msgstr ""
+
 msgid "Enabled"
 msgstr ""
 
@@ -1013,6 +1037,10 @@ msgstr "Error membuat hulu \"%s\""
 #, fuzzy
 msgid "Error creating stash"
 msgstr "Erroe Membuat Cabang"
+
+#, python-format
+msgid "Error deleting branch \"%s\""
+msgstr ""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1263,9 +1291,6 @@ msgstr ""
 msgid "Help - git-cola-sequence-editor"
 msgstr ""
 
-msgid "Hide Details.."
-msgstr ""
-
 msgid "High DPI"
 msgstr ""
 
@@ -1297,6 +1322,9 @@ msgstr "Abaikan semua spasi"
 msgid "Ignore filename or pattern"
 msgstr ""
 
+msgid "Ignore..."
+msgstr ""
+
 msgid "Include tags "
 msgstr "Sertakan tag "
 
@@ -1323,6 +1351,9 @@ msgstr "rebase Interaktif"
 
 msgid "Invalid Revision"
 msgstr "Revisi Salah"
+
+msgid "Japanese translation"
+msgstr ""
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Biarkan *.orig Merge Backup"
@@ -1821,6 +1852,9 @@ msgstr "Atur Ulang Cabang?"
 msgid "Reset Hard"
 msgstr "Atur Ulang Cabang"
 
+msgid "Reset Layout"
+msgstr ""
+
 #, fuzzy
 msgid "Reset Merge"
 msgstr "Revisi untuk Dimerge"
@@ -2107,10 +2141,6 @@ msgstr ""
 
 msgid "Shortcuts"
 msgstr "Pintasan"
-
-#, fuzzy
-msgid "Show Details..."
-msgstr "Hapus Berkas...?"
 
 msgid "Show Diffstat After Merge"
 msgstr "Tampilkan Diffstat setelah Merge"
@@ -2603,6 +2633,9 @@ msgstr "hasil grep..."
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
 
+msgid "title"
+msgstr ""
+
 msgid "unknown"
 msgstr "tidak diketahui"
 
@@ -2645,6 +2678,10 @@ msgstr "dd-MM-yyyy"
 
 #~ msgid "Created commit: %s"
 #~ msgstr "Buat commit: %s"
+
+#, fuzzy
+#~ msgid "Delete selected branch?"
+#~ msgstr "Hapus Cabang Hulu"
 
 #~ msgid "Enter Git Repository"
 #~ msgstr "Masukkan Repositori Git"
@@ -2722,6 +2759,10 @@ msgstr "dd-MM-yyyy"
 
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Pilih berkas dari \"%s\""
+
+#, fuzzy
+#~ msgid "Show Details..."
+#~ msgstr "Hapus Berkas...?"
 
 #~ msgid "Staging Area"
 #~ msgstr "Area Stagnan"
