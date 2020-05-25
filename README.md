@@ -75,19 +75,6 @@ Any of the following Python Qt libraries must be installed:
 Set `QT_API=pyqt4` in your environment if you have both
 versions of PyQt installed and want to ensure that PyQt4 is used.
 
-NOTE: git-cola includes a vendored copy of its QtPy dependency.
-
-We provide a copy of the `qtpy` module when installing git-cola so that you
-are not required to install QtPy separately.  If you'd like to provide your
-own `qtpy` module, for example from the `python-qtpy` Debian package, then use
-`make NO_VENDOR_LIBS=1 ...` when invoking `make`, or export
-`GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
-
-Python3 users on debian will need to install `python3-distutils` in order
-to run the Makefile's installation steps.  `distutils` is a Python build
-requirement, but not needed at runtime.
-
-
 ## ADDITIVES
 
 git-cola enables additional features when the following
@@ -367,6 +354,37 @@ Then, install git-cola by linking it into your `~/bin`:
          ln -s ../src/git-cola/bin/git-dag)
 
 You should then get the latest `git cola` in your shell.
+
+
+## PACKAGING NOTES
+
+Git Cola by installs its modules into the default Python site-packages directory
+(eg.  `lib/python2.7/site-packages`), and in its own private `share/git-cola/lib`
+area by default.  The private modules are redundant and not needed when cola's modules
+have been installed into the site-packages directory.
+
+Git Cola will prefer its private modules when the `share/git-cola/lib` directory
+exists, but they are not required to exist.  This directory is optional, and can
+be safely removed if the cola modules have been installed into site-pacakges.
+
+To suppress the installation of the private (redundant) `share/git-cola/lib/cola`
+package, specify `make NO_PRIVATE_LIBS=1 ...` when invoking `make`,
+or export `GIT_COLA_NO_PRIVATE_LIBS=1` into the build enviornment.
+
+    make NO_PRIVATE_LIBS=1 ...
+
+Git Cola installs a vendored copy of its QtPy dependency by default.
+Git Cola provides a copy of the `qtpy` module in its private modules area
+when installing Git Cola so that you are not required to install QtPy separately.
+If you'd like to provide your own `qtpy` module, for example from the `python-qtpy`
+Debian package, then specify `make NO_VENDOR_LIBS=1 ...` when invoking `make`,
+or export `GIT_COLA_NO_VENDOR_LIBS=1` into the build environment.
+
+    make NO_VENDOR_LIBS=1 ...
+
+Python3 users on debian will need to install `python3-distutils` in order
+to run the Makefile's installation steps.  `distutils` is a Python build
+requirement, but not needed at runtime.
 
 # WINDOWS (continued)
 

@@ -1,3 +1,17 @@
+.. _v3.8:
+
+v3.8
+====
+
+Packaging
+---------
+* The ``cola`` modules are now installed into the Python ``site-packages``
+  directory by default.  This allows distributions to package ``git-cola`` for
+  multiple versions of Python.  See the PACKAGING NOTES section in the README
+  for details about suppressing the installation of the private
+  ``share/git-cola/lib/cola`` modules when building cola.
+  (`#181 <https://github.com/git-cola/git-cola/issues/181>`_)
+
 .. _v3.7:
 
 v3.7

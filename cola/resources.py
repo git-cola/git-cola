@@ -10,8 +10,11 @@ from . import core
 # Default git-cola icon theme
 _default_icon_theme = 'light'
 
-_modpath = core.abspath(__file__)
-if os.path.join('share', 'git-cola', 'lib') in _modpath:
+_modpath = core.abspath(core.realpath(__file__))
+if (
+    os.path.join('share', 'git-cola', 'lib') in _modpath
+    or os.path.join('site-packages', 'cola') in _modpath
+):
     # this is the release tree
     # __file__ = '$prefix/share/git-cola/lib/cola/__file__.py'
     _lib_dir = dirname(dirname(_modpath))
