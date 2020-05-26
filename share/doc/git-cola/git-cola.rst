@@ -539,6 +539,13 @@ command line, once for each icon theme, in the order that they should be
 searched.  This can be used to override a subset of the icons, and fallback
 to the built-in icons for the remainder.
 
+cola.imagediff.<extension>
+--------------------------
+Enable image diffs for the specified file extension.  For example, configuring
+`git config --global cola.imagediff.svg false` will disable use of the visual
+image diff for `.svg` files in all repos until is is explicitly toggled on.
+Defaults to `true`.
+
 cola.inotify
 ------------
 Set to `false` to disable file system change monitoring.  Defaults to `true`,

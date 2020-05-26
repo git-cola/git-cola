@@ -3,6 +3,14 @@
 v3.8
 ====
 
+Usability, bells and whistles
+-----------------------------
+* The image diff viewer can now be toggled between text and image modes.
+  This is helpful when, for example, diffing .svg files where it can be useful
+  to see diffs in both an image and text representation.
+  (`#859 <https://github.com/git-cola/git-cola/issues/859>`_)
+  (`#1035 <https://github.com/git-cola/git-cola/pull/1035>`_)
+
 Packaging
 ---------
 * The ``cola`` modules are now installed into the Python ``site-packages``

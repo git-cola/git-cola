@@ -26,6 +26,7 @@ from .git import EMPTY_TREE_OID
 from .git import MISSING_BLOB_OID
 from .i18n import N_
 from .interaction import Interaction
+from .models import main
 from .models import prefs
 from .settings import Settings
 
@@ -384,8 +385,8 @@ class Checkout(EditModel):
         self.argv = argv
         self.checkout_branch = checkout_branch
         self.new_diff_text = ''
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
 
     def do(self):
         super(Checkout, self).do()
@@ -462,8 +463,8 @@ class ResetMode(EditModel):
         super(ResetMode, self).__init__(context)
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
         self.new_filename = ''
 
     def do(self):
@@ -988,18 +989,28 @@ class DiffText(EditModel):
     """Set the diff type to text"""
     def __init__(self, context):
         super(DiffText, self).__init__(context)
-        self.new_file_type = 'text'
-        self.new_diff_type = 'text'
+        self.new_file_type = main.Types.TEXT
+        self.new_diff_type = main.Types.TEXT
 
 
 class ToggleDiffType(EditModel):
     """Toggle the diff type between image and text"""
+
     def __init__(self, context):
         super(ToggleDiffType, self).__init__(context)
-        if self.old_diff_type == 'image':
-            self.new_diff_type = 'text'
+
+        if self.old_diff_type == main.Types.IMAGE:
+            self.new_diff_type = main.Types.TEXT
+            value = False
         else:
-            self.new_diff_type = 'image'
+            self.new_diff_type = main.Types.IMAGE
+            value = True
+
+        filename = self.old_filename
+        _, ext = os.path.splitext(filename)
+        if ext.startswith('.'):
+            cfg = 'cola.imagediff' + ext
+            self.cfg.set_repo(cfg, value)
 
 
 class DiffImage(EditModel):
@@ -1009,8 +1020,8 @@ class DiffImage(EditModel):
         super(DiffImage, self).__init__(context)
 
         self.new_filename = filename
-        self.new_diff_type = 'image'
-        self.new_file_type = 'image'
+        self.new_diff_type = self.get_diff_type(filename)
+        self.new_file_type = main.Types.IMAGE
         self.new_mode = get_mode(self.model, staged, modified, unmerged, untracked)
         self.staged = staged
         self.modified = modified
@@ -1018,6 +1029,20 @@ class DiffImage(EditModel):
         self.untracked = untracked
         self.deleted = deleted
         self.annex = self.cfg.is_annex()
+
+    def get_diff_type(self, filename):
+        """Query the diff type to use based on cola.imagediff.<extension>"""
+        _, ext = os.path.splitext(filename)
+        if ext.startswith('.'):
+            # Check eg. "cola.imagediff.svg" to see if we should imagediff.
+            cfg = 'cola.imagediff' + ext
+            if self.cfg.get(cfg, True):
+                result = main.Types.IMAGE
+            else:
+                result = main.Types.TEXT
+        else:
+            result = main.Types.IMAGE
+        return result
 
     def do(self):
         filename = self.new_filename
@@ -1205,8 +1230,8 @@ class Diffstat(EditModel):
             stat=True,
         )[STDOUT]
         self.new_diff_text = diff
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
         self.new_mode = self.model.mode_diffstat
 
 
@@ -1232,8 +1257,8 @@ class DiffStagedSummary(EditModel):
             M=True,
         )[STDOUT]
         self.new_diff_text = diff
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
         self.new_mode = self.model.mode_index
 
 
@@ -1603,8 +1628,8 @@ class OpenRepo(EditModel):
         self.repo_path = repo_path
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
         self.new_commitmsg = ''
         self.new_filename = ''
 
@@ -1930,7 +1955,7 @@ class RevertEditsCommand(ConfirmAction):
         return self.git.checkout(*checkout_args)
 
     def success(self):
-        self.model.set_diff_type('text')
+        self.model.set_diff_type(main.Types.TEXT)
         self.model.update_file_status()
 
 
@@ -2081,8 +2106,8 @@ class SetDiffText(EditModel):
     def __init__(self, context, text):
         super(SetDiffText, self).__init__(context)
         self.new_diff_text = text
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
 
 
 class SetUpstreamBranch(ContextCommand):
@@ -2136,8 +2161,8 @@ class ShowUntracked(EditModel):
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
         self.new_diff_text = self.read(filename)
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
 
     def read(self, filename):
         """Read file contents"""
@@ -2569,8 +2594,8 @@ class UntrackedSummary(EditModel):
             for u in untracked:
                 io.write('/' + u + '\n')
         self.new_diff_text = io.getvalue()
-        self.new_diff_type = 'text'
-        self.new_file_type = 'text'
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
         self.new_mode = self.model.mode_untracked
 
 

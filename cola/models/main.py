@@ -18,6 +18,7 @@ def create(context):
     return MainModel(context)
 
 
+# pylint: disable=too-many-public-methods
 class MainModel(Observable):
     """Repository status model"""
 
@@ -76,8 +77,8 @@ class MainModel(Observable):
         self.lfs = False
         self.head = 'HEAD'
         self.diff_text = ''
-        self.diff_type = 'text'  # text, image
-        self.file_type = 'text'  # text, image
+        self.diff_type = Types.TEXT
+        self.file_type = Types.TEXT
         self.mode = self.mode_none
         self.filename = None
         self.is_merging = False
@@ -448,6 +449,12 @@ class MainModel(Observable):
             return
         self.ref_sort = value
         self.update_refs()
+
+
+class Types(object):
+    """File types (used for image diff modes)"""
+    IMAGE = 'image'
+    TEXT = 'text'
 
 
 # Helpers

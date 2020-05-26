@@ -10,6 +10,7 @@ from qtpy.QtCore import Signal
 
 from ..i18n import N_
 from ..interaction import Interaction
+from ..models import main
 from ..models import prefs
 from ..qtutils import get
 from .. import actions
@@ -423,7 +424,7 @@ class Viewer(QtWidgets.QFrame):
         """Manage the image and text diff views when selection changes"""
         # The "diff type" is whether the diff viewer is displaying an image.
         self.options.set_diff_type(diff_type)
-        if diff_type == 'image':
+        if diff_type == main.Types.IMAGE:
             self.stack.setCurrentWidget(self.image)
             self.render()
         else:
@@ -641,12 +642,12 @@ class Options(QtWidgets.QWidget):
         self.setFocusPolicy(Qt.NoFocus)
 
     def set_file_type(self, file_type):
-        is_image = file_type == 'image'
+        is_image = file_type == main.Types.IMAGE
         self.toggle_image_diff.setVisible(is_image)
 
     def set_diff_type(self, diff_type):
-        is_text = diff_type == 'text'
-        is_image = diff_type == 'image'
+        is_text = diff_type == main.Types.TEXT
+        is_image = diff_type == main.Types.IMAGE
         self.options.setVisible(is_text)
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
