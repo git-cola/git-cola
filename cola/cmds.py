@@ -987,6 +987,7 @@ def get_mode(model, staged, modified, unmerged, untracked):
 
 class DiffText(EditModel):
     """Set the diff type to text"""
+
     def __init__(self, context):
         super(DiffText, self).__init__(context)
         self.new_file_type = main.Types.TEXT
@@ -1853,7 +1854,7 @@ class RebaseEditTodo(ContextCommand):
         with SequenceEditorEnvironment(
             self.context,
             GIT_COLA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Save')
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Save'),
         ):
             status, out, err = self.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
@@ -1867,7 +1868,7 @@ class RebaseContinue(ContextCommand):
         with SequenceEditorEnvironment(
             self.context,
             GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase')
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase('--continue')
         Interaction.log_status(status, out, err)
@@ -1881,7 +1882,7 @@ class RebaseSkip(ContextCommand):
         with SequenceEditorEnvironment(
             self.context,
             GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase')
+            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase(skip=True)
         Interaction.log_status(status, out, err)

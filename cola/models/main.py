@@ -453,6 +453,7 @@ class MainModel(Observable):
 
 class Types(object):
     """File types (used for image diff modes)"""
+
     IMAGE = 'image'
     TEXT = 'text'
 
