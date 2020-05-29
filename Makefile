@@ -317,8 +317,8 @@ endif
 format:
 	$(GIT) ls-files -- '*.py' | \
 	$(GREP) -v ^qtpy | \
-	$(XARGS) $(BLACK) --skip-string-normalization
-	$(BLACK) --skip-string-normalization $(PYTHON_SOURCES)
+	$(XARGS) $(BLACK) --skip-string-normalization --target-version=py27
+	$(BLACK) --skip-string-normalization --target-version=py27 $(PYTHON_SOURCES)
 
 .PHONY: requirements
 requirements:
