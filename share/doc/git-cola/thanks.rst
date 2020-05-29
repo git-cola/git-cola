@@ -124,6 +124,7 @@ Thanks
 * Luca Ottaviano
 * Łukasz Wojniłowicz
 * Luke Bakken
+* Luke Horwell
 * Maarten Nieber
 * Maaaks
 * Maciej Filipiak
