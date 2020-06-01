@@ -994,20 +994,25 @@ class DiffText(EditModel):
         self.new_diff_type = main.Types.TEXT
 
 
-class ToggleDiffType(EditModel):
+class ToggleDiffType(ContextCommand):
     """Toggle the diff type between image and text"""
 
     def __init__(self, context):
         super(ToggleDiffType, self).__init__(context)
-
-        if self.old_diff_type == main.Types.IMAGE:
+        if self.model.diff_type == main.Types.IMAGE:
             self.new_diff_type = main.Types.TEXT
-            value = False
+            self.new_value = False
         else:
             self.new_diff_type = main.Types.IMAGE
-            value = True
+            self.new_value = True
 
-        filename = self.old_filename
+    def do(self):
+        diff_type = self.new_diff_type
+        value = self.new_value
+
+        self.model.set_diff_type(diff_type)
+
+        filename = self.model.filename
         _, ext = os.path.splitext(filename)
         if ext.startswith('.'):
             cfg = 'cola.imagediff' + ext
