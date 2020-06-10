@@ -2,23 +2,23 @@
 # Copyright (C) 2007 THE git-cola'S Miklos Vajna at el.
 # This file is distributed under the same license as the git-cola package.
 # Miklos Vajna <vmiklos@frugalware.org>, 2007
-# Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>, 2019.
 # Meskó Balázs <mesko.balazs@fsf.hu>, 2019.
+# Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>, 2019-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: git-cola 3.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2019-11-22 19:01+0100\n"
-"Last-Translator: Meskó Balázs <mesko.balazs@fsf.hu>\n"
+"PO-Revision-Date: 2020-06-06 18:20+0200\n"
+"Last-Translator: Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>\n"
 "Language-Team: Hungarian <gellert.gyuris@ujevangelizacio.hu>\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 3.36.0\n"
 
 msgid ""
 "\n"
@@ -488,10 +488,10 @@ msgid "Add to Git LFS"
 msgstr "Hozzáadás a Git LFS-hez"
 
 msgid "Add to exclusions"
-msgstr ""
+msgstr "Hozzáadás a kizárásokhoz"
 
 msgid "Add to local .git/info/exclude"
-msgstr ""
+msgstr "Hozzáadás a helyi .git/info/exclude-hoz"
 
 msgid "Additions"
 msgstr "Kiegészítések"
@@ -585,10 +585,10 @@ msgid "Auto-Wrap Lines"
 msgstr "Sorok automatikus tördelése"
 
 msgid "Autocomplete Paths"
-msgstr ""
+msgstr "Útvonalak automatikus kiegészítése"
 
 msgid "Automatically Load Commit Message Template"
-msgstr ""
+msgstr "Véglegesítő üzenetsablon automatikus betöltése"
 
 msgid "Basic Regexp"
 msgstr "Egyszerű regexp"
@@ -696,7 +696,7 @@ msgid "Changed Upstream"
 msgstr "Módosítva a távoli tárolóban"
 
 msgid "Check Published Commits when Amending"
-msgstr ""
+msgstr "Közzétett véglegesítések ellenőrzése javítás alatt"
 
 msgid "Check Spelling"
 msgstr "Helyesírás-ellenőrzés"
@@ -705,7 +705,7 @@ msgid "Check spelling"
 msgstr "Helyesírás-ellenőrzés"
 
 msgid "Check whether a commit has been published when amending"
-msgstr ""
+msgstr "Javítás közben ellenőrizze, hogy a véglegesítések közzé lettek-e téve"
 
 msgid "Checkout"
 msgstr "Átváltás"
@@ -942,7 +942,7 @@ msgstr "Távoli ág törlése…"
 
 #, python-format
 msgid "Delete branch \"%s\"?"
-msgstr ""
+msgstr "Törli az ágat: „%s”?"
 
 msgid "Delete remote"
 msgstr "Távoli törlése"
@@ -1007,7 +1007,7 @@ msgid "Directory Exists"
 msgstr "Könyvtár létezik"
 
 msgid "Disable"
-msgstr ""
+msgstr "Letiltás"
 
 msgid "Display Untracked Files"
 msgstr "Nem követett fájlok megjelenítése"
@@ -1062,7 +1062,7 @@ msgid "Email contributor"
 msgstr "E-mail közreműködő"
 
 msgid "Enable path autocompletion in tools"
-msgstr ""
+msgstr "Útvonalak automatikus kiegészítésének engedélyezése az eszközökben"
 
 msgid "Enabled"
 msgstr "Engedélyezett"
@@ -1109,7 +1109,7 @@ msgstr "Hiba a félretett változat létrehozásakor"
 
 #, python-format
 msgid "Error deleting branch \"%s\""
-msgstr ""
+msgstr "Hiba az ág törlésekor: „%s”"
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1383,7 +1383,7 @@ msgid "Ignore filename or pattern"
 msgstr "Fájlnév vagy minta mellőzése"
 
 msgid "Ignore..."
-msgstr ""
+msgstr "Mellőz…"
 
 msgid "Include tags "
 msgstr "Címkéket is"
@@ -1413,7 +1413,7 @@ msgid "Invalid Revision"
 msgstr "Érvénytelen revízió"
 
 msgid "Japanese translation"
-msgstr ""
+msgstr "Japán fordítás"
 
 msgid "Keep *.orig Merge Backups"
 msgstr "Beolvasztási *.orig biztonsági tartalék megtartása"
@@ -1889,7 +1889,7 @@ msgid "Reset Hard"
 msgstr "Teljes visszaállítás"
 
 msgid "Reset Layout"
-msgstr ""
+msgstr "Elrendezés visszaállítása"
 
 msgid "Reset Merge"
 msgstr "Beolvasztás visszaállítása"
@@ -2644,7 +2644,7 @@ msgid "hotkeys.html"
 msgstr "hotkeys.html"
 
 msgid "title"
-msgstr ""
+msgstr "cím"
 
 msgid "unknown"
 msgstr "ismeretlen"
