@@ -11,6 +11,11 @@ Usability, bells and whistles
   (`#859 <https://github.com/git-cola/git-cola/issues/859>`_)
   (`#1035 <https://github.com/git-cola/git-cola/pull/1035>`_)
 
+Translations
+------------
+* Updated Hungarian translation.
+  (`#1067 <https://github.com/git-cola/git-cola/pull/1067>`_)
+
 Packaging
 ---------
 * The ``cola`` modules are now installed into the Python ``site-packages``
