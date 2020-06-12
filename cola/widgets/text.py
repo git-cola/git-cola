@@ -591,6 +591,15 @@ class HintedTextEdit(TextEdit):
             self.hint.enable(True)
 
 
+def anchor_mode(select):
+    """Return the QTextCursor mode to keep/discard the cursor selection"""
+    if select:
+        mode = QtGui.QTextCursor.KeepAnchor
+    else:
+        mode = QtGui.QTextCursor.MoveAnchor
+    return mode
+
+
 # The vim-like read-only text view
 
 
@@ -611,17 +620,24 @@ class VimMixin(object):
         self.add_navigation('EndOfLine', hotkeys.END_OF_LINE)
 
         qtutils.add_action(
-            widget,
-            'PageUp',
-            lambda: widget.page(-widget.height() // 2),
-            hotkeys.SECONDARY_ACTION,
+            widget, 'PageUp', widget.page_up, hotkeys.SECONDARY_ACTION, hotkeys.UP
         )
-
+        qtutils.add_action(
+            widget, 'PageDown', widget.page_down, hotkeys.PRIMARY_ACTION, hotkeys.DOWN
+        )
         qtutils.add_action(
             widget,
-            'PageDown',
-            lambda: widget.page(widget.height() // 2),
-            hotkeys.PRIMARY_ACTION,
+            'SelectPageUp',
+            lambda: widget.page_up(select=True),
+            hotkeys.SELECT_BACK,
+            hotkeys.SELECT_UP,
+        )
+        qtutils.add_action(
+            widget,
+            'SelectPageDown',
+            lambda: widget.page_down(select=True),
+            hotkeys.SELECT_FORWARD,
+            hotkeys.SELECT_DOWN,
         )
 
     def add_navigation(self, name, hotkey, shift=None):
@@ -637,22 +653,31 @@ class VimMixin(object):
     def move(self, direction, select=False, n=1):
         widget = self.widget
         cursor = widget.textCursor()
-        if select:
-            mode = QtGui.QTextCursor.KeepAnchor
-        else:
-            mode = QtGui.QTextCursor.MoveAnchor
-        for i in range(n):
+        mode = anchor_mode(select)
+        for _ in range(n):
             if cursor.movePosition(direction, mode, 1):
                 self.set_text_cursor(cursor)
 
-    def page(self, offset):
+    def page(self, offset, select=False):
         widget = self.widget
         rect = widget.cursorRect()
         x = rect.x()
         y = rect.y() + offset
         new_cursor = widget.cursorForPosition(QtCore.QPoint(x, y))
         if new_cursor is not None:
-            self.set_text_cursor(new_cursor)
+            cursor = widget.textCursor()
+            mode = anchor_mode(select)
+            cursor.setPosition(new_cursor.position(), mode)
+
+            self.set_text_cursor(cursor)
+
+    def page_down(self, select=False):
+        widget = self.widget
+        widget.page(widget.height() // 2, select=select)
+
+    def page_up(self, select=False):
+        widget = self.widget
+        widget.page(-widget.height() // 2, select=select)
 
     def set_text_cursor(self, cursor):
         widget = self.widget
@@ -684,10 +709,8 @@ class VimMixin(object):
                 # The cursor is in the middle of the first line of text.
                 # We can't go up ~ jump to the beginning of the line.
                 # Select the text if shift is pressed.
-                if event.modifiers() & Qt.ShiftModifier:
-                    mode = QtGui.QTextCursor.KeepAnchor
-                else:
-                    mode = QtGui.QTextCursor.MoveAnchor
+                select = event.modifiers() & Qt.ShiftModifier
+                mode = anchor_mode(select)
                 cursor.movePosition(QtGui.QTextCursor.StartOfLine, mode)
                 widget.setTextCursor(cursor)
 
@@ -712,8 +735,14 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
     def move(self, direction, select=False, n=1):
         return self._mixin.page(direction, select=select, n=n)
 
-    def page(self, offset):
-        return self._mixin.page(offset)
+    def page(self, offset, select=False):
+        return self._mixin.page(offset, select=select)
+
+    def page_up(self, select=False):
+        return self._mixin.page_up(select=select)
+
+    def page_down(self, select=False):
+        return self._mixin.page_down(select=select)
 
     def keyPressEvent(self, event):
         return self._mixin.keyPressEvent(event)
@@ -737,8 +766,14 @@ class VimTextEdit(MonoTextEdit):
     def move(self, direction, select=False, n=1):
         return self._mixin.page(direction, select=select, n=n)
 
-    def page(self, offset):
-        return self._mixin.page(offset)
+    def page(self, offset, select=False):
+        return self._mixin.page(offset, select=select)
+
+    def page_up(self, select=False):
+        return self._mixin.page_up(select=select)
+
+    def page_down(self, select=False):
+        return self._mixin.page_down(select=select)
 
     def keyPressEvent(self, event):
         return self._mixin.keyPressEvent(event)

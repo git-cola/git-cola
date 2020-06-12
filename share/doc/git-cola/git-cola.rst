@@ -136,7 +136,28 @@ KEYBOARD SHORTCUTS
 ==================
 `git cola` has many useful keyboard shortcuts.
 
-You can see the available shortcuts by pressing the ``?`` key,
+Many of `git cola`'s editors understand vim-style hotkeys, eg. `{h,j,k,l}`
+for navigating in the diff, status, grep, and file browser widgets.
+
+`{d,u}` move down/up one half page at a time (similar to vim's `ctrl-{d,u}`).
+The `space` and `shift-space` hotkeys are mapped to the same operations.
+
+`Shift-{j,k,d,u,f,b,page-up,page-down,left,right,up,down}` can be be used in
+the diff editor to select lines while navigating.
+
+`s` is a useful hotkey in the diff editor.  It stages/unstages the current
+selection when a selection is present.  When nothing is selected, the
+diff hunk at the current text cursor position is staged.  This makes it very
+easy to review changes by selecting good hunks with `s` while navigating down
+and over hunks that are not going to be staged.
+
+`Ctrl-u` in the diff editor reverts unstaged edits, and respects the
+selection.  This is useful for selectively reverted edits from the worktree.
+This same hotkey reverts the entire file when used from the status tool.
+
+`Ctrl-s` in the diff editor and status tools stages/unstages the entire file.
+
+You can see the available shortcuts by pressing pressing the ``?`` key,
 choosing ``Help -> Keyboard shortcuts`` from the main menu,
 or by consulting the `git cola keyboard shortcuts reference <https://git-cola.github.io/share/doc/git-cola/hotkeys.html>`_.
 
@@ -144,7 +165,7 @@ TOOLS
 =====
 The `git cola` interface is composed of various cooperating tools.
 Double-clicking a tool opens it in its own subwindow.
-Dragging it around moves and places it within the window.
+Dragging it around moves and places it within the main window.
 
 Tools can be hidden and rearranged however you like.
 `git cola` carefully remembers your window layout and restores
