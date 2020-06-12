@@ -631,7 +631,7 @@ class VimMixin(object):
         qtutils.add_action(widget, name, lambda: self.move(direction), hotkey)
         if shift:
             qtutils.add_action(
-                widget, 'Shift' + name, lambda: self.move(direction, True), shift
+                widget, 'Shift' + name, lambda: self.move(direction, select=True), shift
             )
 
     def move(self, direction, select=False, n=1):
@@ -641,8 +641,9 @@ class VimMixin(object):
             mode = QtGui.QTextCursor.KeepAnchor
         else:
             mode = QtGui.QTextCursor.MoveAnchor
-        if cursor.movePosition(direction, mode, n):
-            self.set_text_cursor(cursor)
+        for i in range(n):
+            if cursor.movePosition(direction, mode, 1):
+                self.set_text_cursor(cursor)
 
     def page(self, offset):
         widget = self.widget
