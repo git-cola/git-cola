@@ -26,10 +26,25 @@ pack .m -side top -fill x -padx 20 -pady 20 -expand 1
 entry .e -textvariable answer -width 50
 pack .e -side top -fill x -padx 10 -pady 10
 
-if {!$yesno} {
-	if {"Password" in $prompt} {
+proc on_hide_input_changed {args} {
+	global hide_input
+	if {$hide_input} {
 		.e configure -show "*"
+	} else {
+		.e configure -show ""
 	}
+}
+trace add variable hide_input write "on_hide_input_changed"
+
+set hide_input 0
+
+if {!$yesno} {
+	if {"Password" in $prompt || "passphrase" in $prompt} {
+		set hide_input 1
+	}
+
+	checkbutton .cb_hide -text "Hide input" -variable hide_input
+	pack .cb_hide -side top -anchor nw
 }
 
 frame .b
