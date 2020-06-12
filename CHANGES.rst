@@ -11,6 +11,10 @@ Usability, bells and whistles
   (`#859 <https://github.com/git-cola/git-cola/issues/859>`_)
   (`#1035 <https://github.com/git-cola/git-cola/pull/1035>`_)
 
+* The default `ssh-askpass` username + password dialog included with Git Cola
+  can now toggle between showing and masking the password input field.
+  (`#1069 <https://github.com/git-cola/git-cola/pull/1069>`_)
+
 Translations
 ------------
 * Updated Hungarian translation.
