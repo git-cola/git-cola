@@ -4,8 +4,8 @@ from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 
 
-def hotkey(seq):
-    return QKeySequence(seq)
+def hotkey(*seq):
+    return QKeySequence(*seq)
 
 
 # A-G
@@ -26,6 +26,8 @@ EXPORT = hotkey(Qt.ALT + Qt.SHIFT + Qt.Key_E)
 FIT = hotkey(Qt.Key_F)
 FETCH = hotkey(Qt.CTRL + Qt.Key_F)
 FILTER = hotkey(Qt.CTRL + Qt.SHIFT + Qt.Key_F)
+GOTO_END = hotkey(Qt.SHIFT + Qt.Key_G)
+GOTO_START = hotkey(Qt.Key_G, Qt.Key_G)  # gg
 GREP = hotkey(Qt.CTRL + Qt.Key_G)
 # H-P
 MOVE_LEFT = hotkey(Qt.Key_H)

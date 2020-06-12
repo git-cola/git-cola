@@ -599,12 +599,14 @@ class VimMixin(object):
         self.widget = widget
         self.Base = widget.Base
         # Common vim/unix-ish keyboard actions
+        self.add_navigation('End', hotkeys.GOTO_END)
         self.add_navigation('Up', hotkeys.MOVE_UP, shift=hotkeys.MOVE_UP_SHIFT)
         self.add_navigation('Down', hotkeys.MOVE_DOWN, shift=hotkeys.MOVE_DOWN_SHIFT)
         self.add_navigation('Left', hotkeys.MOVE_LEFT, shift=hotkeys.MOVE_LEFT_SHIFT)
         self.add_navigation('Right', hotkeys.MOVE_RIGHT, shift=hotkeys.MOVE_RIGHT_SHIFT)
         self.add_navigation('WordLeft', hotkeys.WORD_LEFT)
         self.add_navigation('WordRight', hotkeys.WORD_RIGHT)
+        self.add_navigation('Start', hotkeys.GOTO_START)
         self.add_navigation('StartOfLine', hotkeys.START_OF_LINE)
         self.add_navigation('EndOfLine', hotkeys.END_OF_LINE)
 
