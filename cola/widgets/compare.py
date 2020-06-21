@@ -202,6 +202,9 @@ class CompareBranchesDialog(standard.Dialog):
                 if remote_branch in remote_branches:
                     return gitcmds.merge_base(context, branch, remote_branch)
 
+                if 'origin/main' in remote_branches:
+                    return gitcmds.merge_base(context, branch, 'origin/main')
+
                 if 'origin/master' in remote_branches:
                     return gitcmds.merge_base(context, branch, 'origin/master')
 

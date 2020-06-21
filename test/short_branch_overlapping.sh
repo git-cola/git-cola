@@ -58,9 +58,10 @@ mkdir "$folder"
 cd "$folder"
 
 git init
+git symbolic-ref HEAD refs/heads/main
 
 # Tags are used to get difference between row and generation values.
-# Branches master & b2 occupied 2 rows per generation because of tags.
+# Branches main & b2 occupied 2 rows per generation because of tags.
 # Branches b0 is at the left of tags. Therefore, b0 uses 1 row per generation.
 # The same is for b1 too. The b1 is short but tag 'b1' cannot be placed
 # right at the row the branch ends, because the tags at the right were already

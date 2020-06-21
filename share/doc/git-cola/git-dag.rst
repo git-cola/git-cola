@@ -36,8 +36,8 @@ Log Options
 ===========
 The `Log` prompt allows you to pass arguments to `git log`.
 This can be used to filter the displayed history, for example
-entering `master -- Makefile` will display only commits on the
-`master` branch that touch the `Makefile`.
+entering `main -- Makefile` will display only commits on the
+`main` branch that touch the `Makefile`.
 
 CONTEXT-MENU ACTIONS
 ====================

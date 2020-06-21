@@ -177,7 +177,7 @@ def diff_expression(context):
     if tracked and current:
         ref = tracked + '..' + current
     else:
-        ref = 'origin/master..'
+        ref = '@{upstream}..'
     difftool.diff_expression(context, qtutils.active_window(), ref)
 
 

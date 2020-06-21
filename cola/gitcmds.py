@@ -183,9 +183,9 @@ def current_branch(context):
     return data
 
 
-def _read_git_head(context, head, default='master'):
+def _read_git_head(context, head, default='main'):
     """Pure-python .git/HEAD reader"""
-    # Common .git/HEAD "ref: refs/heads/master" files
+    # Common .git/HEAD "ref: refs/heads/main" files
     git = context.git
     islink = core.islink(head)
     if core.isfile(head) and not islink:
@@ -498,7 +498,7 @@ def format_patchsets(context, to_export, revs, output='patches'):
     errs = []
 
     cur_rev = to_export[0]
-    cur_master_idx = revs.index(cur_rev)
+    cur_rev_idx = revs.index(cur_rev)
 
     patches_to_export = [[cur_rev]]
     patchset_idx = 0
@@ -507,17 +507,17 @@ def format_patchsets(context, to_export, revs, output='patches'):
     for rev in to_export[1:]:
         # Limit the search to the current neighborhood for efficiency
         try:
-            master_idx = revs[cur_master_idx:].index(rev)
-            master_idx += cur_master_idx
+            rev_idx = revs[cur_rev_idx:].index(rev)
+            rev_idx += cur_rev_idx
         except ValueError:
-            master_idx = revs.index(rev)
+            rev_idx = revs.index(rev)
 
-        if master_idx == cur_master_idx + 1:
+        if rev_idx == cur_rev_idx + 1:
             patches_to_export[patchset_idx].append(rev)
-            cur_master_idx += 1
+            cur_rev_idx += 1
         else:
             patches_to_export.append([rev])
-            cur_master_idx = master_idx
+            cur_rev_idx = rev_idx
             patchset_idx += 1
 
     # Export each patchsets

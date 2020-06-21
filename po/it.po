@@ -3517,8 +3517,8 @@ msgstr ""
 #~ msgid "Success"
 #~ msgstr "Successo"
 
-#~ msgid "The 'master' branch has not been initialized."
-#~ msgstr "Il ramo 'master' non è stato inizializzato."
+#~ msgid "The 'main' branch has not been initialized."
+#~ msgstr "Il ramo 'main' non è stato inizializzato."
 
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "I rami seguenti non sono stati fusi completamente in %s:"

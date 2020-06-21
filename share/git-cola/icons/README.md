@@ -102,7 +102,7 @@ The following files are from the Gnome project's
 document-save-symbolic.svg
 
 Copyright (C) The Gnome Project
-License: [LGPL](https://github.com/GNOME/adwaita-icon-theme/blob/master/COPYING_LGPL)
+License: [LGPL](https://github.com/GNOME/adwaita-icon-theme/blob/mainline/COPYING_LGPL)
 
 ### Gnome High Contrast Icons
 

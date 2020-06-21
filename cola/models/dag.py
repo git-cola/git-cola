@@ -175,16 +175,16 @@ class Commit(object):
         #   command takes) used to list "HEAD" just like other tips of branch
         #   names, separated with a comma in between.  E.g.
         #
-        #      $ git log --decorate -1 master
-        #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD, master)
+        #      $ git log --decorate -1 main
+        #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD, main)
         #      ...
         #
         # This release updates the output slightly when HEAD refers to the tip
         # of a branch whose name is also shown in the output.  The above is
         # shown as:
         #
-        #      $ git log --decorate -1 master
-        #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD -> master)
+        #      $ git log --decorate -1 main
+        #      commit bdb0f6788fa5e3cacc4315e9ff318a27b2676ff4 (HEAD -> main)
         #      ...
         #
         # C.f. http://thread.gmane.org/gmane.linux.kernel/1931234

@@ -3442,8 +3442,8 @@ msgstr ""
 #~ msgid "Summary:"
 #~ msgstr "Описание:"
 
-#~ msgid "The 'master' branch has not been initialized."
-#~ msgstr "Не инициализирована ветвь 'master'."
+#~ msgid "The 'main' branch has not been initialized."
+#~ msgstr "Не инициализирована ветвь 'main'."
 
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "Следующие ветви объединены с %s не полностью:"

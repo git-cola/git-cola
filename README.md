@@ -33,7 +33,7 @@ New releases are available on the
 
     git clone git://github.com/git-cola/git-cola.git
 
-[![git-cola build status](https://api.travis-ci.org/git-cola/git-cola.svg?branch=master)](https://travis-ci.org/git-cola/git-cola)
+[![git-cola build status](https://api.travis-ci.org/git-cola/git-cola.svg?branch=main)](https://travis-ci.org/git-cola/git-cola)
 
 [git-cola on github](https://github.com/git-cola/git-cola)
 
@@ -256,14 +256,14 @@ git cola ships with an interactive rebase editor called `git-cola-sequence-edito
 Start an interactive rebase through the "Rebase" menu, or through the
 `git cola rebase` sub-command to use the `git-cola-sequence-editor`:
 
-    git cola rebase origin/master
+    git cola rebase origin/main
 
 git-cola-sequence-editor can be launched independently of git cola by telling
 `git rebase` to use it as its editor through the `GIT_SEQUENCE_EDITOR`
 enviironment variable:
 
     env GIT_SEQUENCE_EDITOR="$PWD/bin/git-cola-sequence-editor" \
-    git rebase -i origin/master
+    git rebase -i origin/main
 
 # COMMAND-LINE TOOLS
 

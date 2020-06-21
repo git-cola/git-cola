@@ -12,13 +12,13 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
 
     def test_currentbranch(self):
         """Test current_branch()."""
-        self.assertEqual(gitcmds.current_branch(self.context), 'master')
+        self.assertEqual(gitcmds.current_branch(self.context), 'main')
 
     def test_branch_list_local(self):
         """Test branch_list(remote=False)."""
         context = self.context
         self.commit_files()
-        expect = ['master']
+        expect = ['main']
         actual = gitcmds.branch_list(context, remote=False)
         self.assertEqual(expect, actual)
 
@@ -32,7 +32,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.commit_files()
         self.run_git('remote', 'add', 'origin', '.')
         self.run_git('fetch', 'origin')
-        expect = ['origin/master']
+        expect = ['origin/main']
         actual = gitcmds.branch_list(context, remote=True)
         self.assertEqual(expect, actual)
 
@@ -45,7 +45,7 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test getting the configured upstream remote"""
         context = self.context
         self.assertEqual(gitcmds.upstream_remote(context), None)
-        self.run_git('config', 'branch.master.remote', 'test')
+        self.run_git('config', 'branch.main.remote', 'test')
         self.cfg.reset()
         self.assertEqual(gitcmds.upstream_remote(context), 'test')
 
@@ -53,10 +53,10 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         """Test tracked_branch()."""
         context = self.context
         self.assertEqual(gitcmds.tracked_branch(context), None)
-        self.run_git('config', 'branch.master.remote', 'test')
-        self.run_git('config', 'branch.master.merge', 'refs/heads/master')
+        self.run_git('config', 'branch.main.remote', 'test')
+        self.run_git('config', 'branch.main.merge', 'refs/heads/main')
         self.cfg.reset()
-        self.assertEqual(gitcmds.tracked_branch(context), 'test/master')
+        self.assertEqual(gitcmds.tracked_branch(context), 'test/main')
 
     def test_tracked_branch_other(self):
         """Test tracked_branch('other')."""
@@ -126,11 +126,11 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
                 'a',
                 'b',
                 'c',
-                'master',
+                'main',
                 'origin/a',
                 'origin/b',
                 'origin/c',
-                'origin/master',
+                'origin/main',
                 'f',
                 'e',
                 'd',
@@ -148,8 +148,8 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('remote', 'add', 'origin', '.')
         self.run_git('fetch', 'origin')
         local, remote, tags = gitcmds.all_refs(self.context, split=True)
-        self.assertEqual(local, ['a', 'b', 'c', 'master'])
-        self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/master'])
+        self.assertEqual(local, ['a', 'b', 'c', 'main'])
+        self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/main'])
         self.assertEqual(tags, ['f', 'e', 'd'])
 
 

@@ -83,7 +83,7 @@ def uncheck(value, *checkboxes):
 def strip_remotes(remote_branches):
     """Strip the <remote>/ prefixes from branches
 
-    e.g. "origin/master" becomes "master".
+    e.g. "origin/main" becomes "main".
 
     """
     branches = [utils.strip_one(branch) for branch in remote_branches]
@@ -345,7 +345,7 @@ class RemoteActionDialog(standard.Dialog):
 
     def set_field_defaults(self):
         """Set sensible initial defaults"""
-        # Default to "git fetch origin master"
+        # Default to "git fetch origin main"
         action = self.action
         if action in (FETCH, PULL):
             self.local_branch.setText('')

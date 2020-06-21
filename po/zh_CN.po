@@ -3384,8 +3384,8 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Summary:"
 #~ msgstr "概要:"
 
-#~ msgid "The 'master' branch has not been initialized."
-#~ msgstr "'master'分支尚未初始化."
+#~ msgid "The 'main' branch has not been initialized."
+#~ msgstr "'main'分支尚未初始化."
 
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "下列分支没有完全被合并到 %s:"

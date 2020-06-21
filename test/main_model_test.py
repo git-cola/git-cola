@@ -25,7 +25,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         """Test the 'local_branches' attribute."""
         self.commit_files()
         self.model.update_status()
-        self.assertEqual(self.model.local_branches, ['master'])
+        self.assertEqual(self.model.local_branches, ['main'])
 
     def test_remote_branches(self):
         """Test the 'remote_branches' attribute."""
@@ -36,7 +36,7 @@ class MainModelTestCase(helper.GitRepositoryTestCase):
         self.run_git('remote', 'add', 'origin', '.')
         self.run_git('fetch', 'origin')
         self.model.update_status()
-        self.assertEqual(self.model.remote_branches, ['origin/master'])
+        self.assertEqual(self.model.remote_branches, ['origin/main'])
 
     def test_modified(self):
         """Test the 'modified' attribute."""
