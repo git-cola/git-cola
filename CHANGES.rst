@@ -35,6 +35,11 @@ Packaging
   ``bin/git-cola-sequence-editor`` executable location to enable external
   reuse of this general-purpose tool.
 
+* A workaround used by the pynsist installer preamble script was obsoleted by
+  `takluyver/pynsist#149 <https://github.com/takluyver/pynsist/pull/149>`_
+  and has now been removed.
+  (`#1073 <https://github.com/git-cola/git-cola/pull/1073>`_)
+
 .. _v3.7:
 
 v3.7
