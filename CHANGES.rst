@@ -5,6 +5,9 @@ v3.8
 
 Usability, bells and whistles
 -----------------------------
+* The submodules widget can now be used to add submodules.
+  (`#534 <https://github.com/git-cola/git-cola/issues/534>`_)
+
 * The image diff viewer can now be toggled between text and image modes.
   This is helpful when, for example, diffing .svg files where it can be useful
   to see diffs in both an image and text representation.

@@ -307,6 +307,11 @@ class MainView(standard.MainWindow):
             cmds.run(cmds.SubmodulesUpdate, context),
         )
 
+        self.add_submodule_action = add_action(
+            self, N_('Add Submodule...'),
+            partial(submodules.add_submodule, context, parent=self)
+        )
+
         self.fetch_action = add_action(
             self, N_('Fetch...'), partial(remote.fetch, context), hotkeys.FETCH
         )
@@ -582,6 +587,7 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.merge_abort_action)
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.update_submodules_action)
+        self.actions_menu.addAction(self.add_submodule_action)
         self.actions_menu.addSeparator()
         self.actions_reset_menu = self.actions_menu.addMenu(N_('Reset'))
         self.actions_reset_menu.addAction(self.reset_branch_head_action)
