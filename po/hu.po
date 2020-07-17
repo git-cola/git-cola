@@ -13,10 +13,10 @@ msgstr ""
 "PO-Revision-Date: 2020-06-06 18:20+0200\n"
 "Last-Translator: Gyuris Gellért <gellert.gyuris@ujevangelizacio.hu>\n"
 "Language-Team: Hungarian <gellert.gyuris@ujevangelizacio.hu>\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "X-Generator: Gtranslator 3.36.0\n"
 
@@ -453,6 +453,12 @@ msgstr "Távoli hozzáadása"
 msgid "Add Separator"
 msgstr "Elválasztó hozzáadása"
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr "Eszköztár hozzáadása"
 
@@ -477,6 +483,9 @@ msgstr "Foltok hozzáadása (+)"
 
 msgid "Add remote"
 msgstr "Távoli hozzáadása"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "Hozzáadás a .gitignore-hoz"
@@ -628,6 +637,9 @@ msgstr "Létező ág"
 
 msgid "Branch Name"
 msgstr "Ág neve"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -872,6 +884,9 @@ msgstr "Beolvasztásos véglegesítést hoz létre akkor is, ha a beolvasztás e
 msgid "Create a new remote branch?"
 msgstr "Létrehozza az új távoli ágat?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "Létrehozás…"
 
@@ -966,6 +981,9 @@ msgstr "„%s” törlése sikertelen"
 
 msgid "Deletions"
 msgstr "Törlések"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "Leválasztás"
@@ -1799,6 +1817,15 @@ msgstr "Mégis"
 msgid "Reduce commit history to minimum"
 msgstr "Véglegesítési üzenetek történetének minimalizálása"
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "Frissítés"
 
@@ -2320,6 +2347,15 @@ msgstr "Állapot"
 msgid "Stop tracking paths"
 msgstr "Útvonalak követésének leállítása"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr "Almodulok"
 
@@ -2381,6 +2417,12 @@ msgstr "A következő fájlok törölve lesznek:"
 
 msgid "The revision expression cannot be empty."
 msgstr "A revíziókifejezés nem lehet üres."
+
+#, python-format
+msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2446,6 +2488,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr "Engedélyezés átváltása"
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "Elágazásszűrő átváltása"
 
@@ -2460,6 +2505,9 @@ msgstr "Követett ágak"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Tradicionális kínai (Tajvan) fordítás"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "Fordítók"
@@ -2637,11 +2685,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "git-cola diff"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "grep eredmény…"
 
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr "cím"

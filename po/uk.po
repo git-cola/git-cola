@@ -409,6 +409,12 @@ msgstr "Додати віддалений репозиторій"
 msgid "Add Separator"
 msgstr ""
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr ""
 
@@ -433,6 +439,9 @@ msgstr "Додати латки (+)"
 
 msgid "Add remote"
 msgstr "Додати віддалений репозиторій"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "Додати до .gitignore"
@@ -585,6 +594,9 @@ msgstr "Гілка існує"
 
 msgid "Branch Name"
 msgstr "Назва гілки"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -837,6 +849,9 @@ msgstr "Створити коміт злиття навіть якщо злит�
 msgid "Create a new remote branch?"
 msgstr "Створити нову віддалену гілку?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "Створити..."
 
@@ -934,6 +949,9 @@ msgstr "Не вдалось видалити \"%s\""
 
 msgid "Deletions"
 msgstr "Видалено"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "Відкріпити"
@@ -1778,6 +1796,15 @@ msgstr ""
 msgid "Reduce commit history to minimum"
 msgstr ""
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "Оновити"
 
@@ -2315,6 +2342,15 @@ msgstr "Статус"
 msgid "Stop tracking paths"
 msgstr "Перестати відслідковувати виділене"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr ""
 
@@ -2379,6 +2415,12 @@ msgstr "Поле ревізії не може бути порожнім."
 
 #, python-format
 msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
+
+#, python-format
+msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
@@ -2440,6 +2482,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr ""
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "Перемкнути фільтр гілок"
 
@@ -2454,6 +2499,9 @@ msgstr "Гілка, що відстежується"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Традиційний китайський (Тайвань) переклад"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "Перекладачі"
@@ -2631,10 +2679,16 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "Різниця git-cola"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "шукати в результатах..."
 
 msgid "hotkeys.html"
+msgstr ""
+
+msgid "path/to/submodule"
 msgstr ""
 
 msgid "title"

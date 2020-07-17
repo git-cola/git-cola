@@ -452,6 +452,12 @@ msgstr "Dodaj zdalne repozytorium"
 msgid "Add Separator"
 msgstr "Dodaj oddzielacz"
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr "Dodaj pasek narzędzi"
 
@@ -476,6 +482,9 @@ msgstr "Dodaj łaty (+)"
 
 msgid "Add remote"
 msgstr "Dodaj zdalne repozytorium"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "Dodaj do .gitignore"
@@ -627,6 +636,9 @@ msgstr "Gałąź istnieje"
 
 msgid "Branch Name"
 msgstr "Nazwa gałęzi"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -871,6 +883,9 @@ msgstr "Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na prze
 msgid "Create a new remote branch?"
 msgstr "Czy utworzyć nową zdalną gałąź?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "Utwórz..."
 
@@ -965,6 +980,9 @@ msgstr "Nie udało się usunąć \"%s\""
 
 msgid "Deletions"
 msgstr "Usunięto"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "Odłącz"
@@ -1796,6 +1814,15 @@ msgstr "Przywróć"
 msgid "Reduce commit history to minimum"
 msgstr "Pomiń historię wdrożeń"
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "Odśwież"
 
@@ -2317,6 +2344,15 @@ msgstr "Stan"
 msgid "Stop tracking paths"
 msgstr "Zaprzestań zarządzanie ścieżką/ścieżkami"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr "Podmoduły"
 
@@ -2378,6 +2414,12 @@ msgstr "Zostaną usunięte następujące pliki:"
 
 msgid "The revision expression cannot be empty."
 msgstr "Wyrażenie wydania nie może być puste."
+
+#, python-format
+msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid ""
@@ -2443,6 +2485,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr "Uwzględnij/nie uwzględniaj"
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "Przełącz filtr gałęzi"
 
@@ -2457,6 +2502,9 @@ msgstr "Odgórna gałąź"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Tłumaczenia na tradycyjny chiński (Tajwan)"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "Tłumacze"
@@ -2634,11 +2682,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "Różnica git-cola"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "wyszukaj w wynikach..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr ""

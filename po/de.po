@@ -461,6 +461,12 @@ msgstr "Hinzufügen"
 msgid "Add Separator"
 msgstr "Trenner hinzufügen"
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr "Werkzeugleiste hinzufügen"
 
@@ -485,6 +491,9 @@ msgstr "Patches hinzufügen (+)"
 
 msgid "Add remote"
 msgstr "Externe Referenz hinzufügen"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "Zu .gitignore hinzufügen"
@@ -634,6 +643,9 @@ msgstr "Branch existiert"
 
 msgid "Branch Name"
 msgstr "Branch-Name"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -878,6 +890,9 @@ msgstr "Merge-Commit erstellen, selbst wenn der Merge mit schnellem Vorspulen au
 msgid "Create a new remote branch?"
 msgstr "Neuen externen Branch erstellen?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "Neu..."
 
@@ -972,6 +987,9 @@ msgstr "Löschen von \"%s\" fehlgeschlagen"
 
 msgid "Deletions"
 msgstr "Löschungen"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "Loslösen"
@@ -1804,6 +1822,15 @@ msgstr "Wiederholen"
 msgid "Reduce commit history to minimum"
 msgstr "Commit-Verlauf auf ein Minimum reduzieren"
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "Ansicht aktualisieren"
 
@@ -2323,6 +2350,15 @@ msgstr "Zustand"
 msgid "Stop tracking paths"
 msgstr "Versionskontrolle für den ausgewählten Pfad beenden"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr ""
 
@@ -2387,6 +2423,12 @@ msgstr "Der Ausdruck darf nicht leer sein."
 
 #, python-format
 msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
+
+#, python-format
+msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
@@ -2447,6 +2489,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr "Aktivierung umschalten"
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "Branch-Filter umschalten"
 
@@ -2461,6 +2506,9 @@ msgstr "Nachverfolgtem Branch"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Traditionell-Chinesische (Taiwan) Übersetzung"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "Übersetzer"
@@ -2636,11 +2684,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "git-cola diff"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "Ergebnis von grep..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys_de.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr ""

@@ -452,6 +452,12 @@ msgstr "リモートの追加"
 msgid "Add Separator"
 msgstr "セパレータの追加"
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr "ツールバーの追加"
 
@@ -476,6 +482,9 @@ msgstr "パッチを追加 (+)"
 
 msgid "Add remote"
 msgstr "リモートを追加"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr ".gitignoreに追加"
@@ -626,6 +635,9 @@ msgstr "ブランチの存在"
 
 msgid "Branch Name"
 msgstr "ブランチ名"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -870,6 +882,9 @@ msgstr "マージコミットを作成するそれがファーストフォワー
 msgid "Create a new remote branch?"
 msgstr "リモートブランチを作成しますか？"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "作成…"
 
@@ -965,6 +980,9 @@ msgstr "\"%s\"の削除に失敗しました。"
 
 msgid "Deletions"
 msgstr "削除"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "デタッチ"
@@ -1800,6 +1818,15 @@ msgstr "やり直し"
 msgid "Reduce commit history to minimum"
 msgstr "コミット履歴を最小に減らす"
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "再読み込み"
 
@@ -2319,6 +2346,15 @@ msgstr "ステータス"
 msgid "Stop tracking paths"
 msgstr "パスのトラッキングを中止する"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr "サブモジュール"
 
@@ -2383,6 +2419,12 @@ msgstr "このリビジョン表記を空にできません。"
 
 #, python-format
 msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
+
+#, python-format
+msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
@@ -2443,6 +2485,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr "有効に切り替えます。"
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "ブランチフィルタを切り替えます"
 
@@ -2457,6 +2502,9 @@ msgstr "トラッキングブランチ"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "伝統的中国語(台湾)翻訳"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "翻訳者"
@@ -2639,11 +2687,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "git-cola diff"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "grep 結果..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr ""

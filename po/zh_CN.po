@@ -388,6 +388,12 @@ msgstr "添加远程"
 msgid "Add Separator"
 msgstr "添加分隔符"
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr "添加工具栏"
 
@@ -412,6 +418,9 @@ msgstr "添加补丁 (+)"
 
 msgid "Add remote"
 msgstr "添加远程"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "添加至 .gitignore"
@@ -562,6 +571,9 @@ msgstr "分支已存在"
 
 msgid "Branch Name"
 msgstr "分支名"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -808,6 +820,9 @@ msgstr "启用时总是在合并时创建一个提交,即使是快进合并方�
 msgid "Create a new remote branch?"
 msgstr "创建远程分支吗?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "新建..."
 
@@ -902,6 +917,9 @@ msgstr "删除 \"%s\" 失败"
 
 msgid "Deletions"
 msgstr "删除内容"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "分离"
@@ -1735,6 +1753,15 @@ msgstr "重做"
 msgid "Reduce commit history to minimum"
 msgstr "尽量减少提交历史"
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "刷新"
 
@@ -2264,6 +2291,15 @@ msgstr "状态"
 msgid "Stop tracking paths"
 msgstr "停止跟踪路径"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr "子模块"
 
@@ -2328,6 +2364,12 @@ msgstr "版本表达式不能为空."
 
 #, python-format
 msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
+
+#, python-format
+msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
@@ -2389,6 +2431,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr "切换已启用"
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr "切换分支过滤器"
 
@@ -2403,6 +2448,9 @@ msgstr "跟踪分支"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "繁体中文 (台湾) 翻译"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "翻译者"
@@ -2580,11 +2628,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "git-cola 比较差异"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "筛选结果..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys_zh_CN.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr ""

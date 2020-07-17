@@ -385,6 +385,12 @@ msgstr "Ajouter un élément distant"
 msgid "Add Separator"
 msgstr ""
 
+msgid "Add Submodule"
+msgstr ""
+
+msgid "Add Submodule..."
+msgstr ""
+
 msgid "Add Toolbar"
 msgstr ""
 
@@ -409,6 +415,9 @@ msgstr "Ajouter les patchs (+)"
 
 msgid "Add remote"
 msgstr "Ajouter un élément distant"
+
+msgid "Add this submodule?"
+msgstr ""
 
 msgid "Add to .gitignore"
 msgstr "Ajouter à .gitignore"
@@ -558,6 +567,9 @@ msgstr "La branche existe"
 
 msgid "Branch Name"
 msgstr "Nom de branche"
+
+msgid "Branch name"
+msgstr ""
 
 #, python-format
 msgid "Branch: %s"
@@ -800,6 +812,9 @@ msgstr "Créer un commit fusionné même quand la fusion se résout rapidement"
 msgid "Create a new remote branch?"
 msgstr "Créer nouvelle branche distante ?"
 
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr ""
+
 msgid "Create..."
 msgstr "Créer..."
 
@@ -894,6 +909,9 @@ msgstr "Suppression de « %s » a échoué"
 
 msgid "Deletions"
 msgstr "Suppressions"
+
+msgid "Depth"
+msgstr ""
 
 msgid "Detach"
 msgstr "Détacher"
@@ -1725,6 +1743,15 @@ msgstr "Refaire"
 msgid "Reduce commit history to minimum"
 msgstr ""
 
+msgid "Reference Repository"
+msgstr ""
+
+msgid "Reference URL"
+msgstr ""
+
+msgid "Reference repository to use when cloning (optional)"
+msgstr ""
+
 msgid "Refresh"
 msgstr "Rafraichir"
 
@@ -2244,6 +2271,15 @@ msgstr "Statut"
 msgid "Stop tracking paths"
 msgstr "Stopper le suivi des chemins"
 
+msgid "Submodule URL (can be relative, ex: ../repo.git)"
+msgstr ""
+
+msgid "Submodule branch to track (optional)"
+msgstr ""
+
+msgid "Submodule path within the current repository (optional)"
+msgstr ""
+
 msgid "Submodules"
 msgstr ""
 
@@ -2308,6 +2344,12 @@ msgstr "L'expression de révision est vide."
 
 #, python-format
 msgid ""
+"The submodule will be added using\n"
+"\"%s\""
+msgstr ""
+
+#, python-format
+msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
@@ -2368,6 +2410,9 @@ msgstr ""
 msgid "Toggle Enabled"
 msgstr ""
 
+msgid "Toggle image diff"
+msgstr ""
+
 msgid "Toggle the branches filter"
 msgstr ""
 
@@ -2382,6 +2427,9 @@ msgstr "Suivi de branche"
 
 msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Traduction chinois traditionnel (Taïwan)"
+
+msgid "Translation"
+msgstr ""
 
 msgid "Translators"
 msgstr "Traducteurs"
@@ -2559,11 +2607,17 @@ msgstr "git-cola"
 msgid "git-cola diff"
 msgstr "git-cola diff"
 
+msgid "git://git.example.com/repo.git"
+msgstr ""
+
 msgid "grep result..."
 msgstr "Résultat de grep..."
 
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
+
+msgid "path/to/submodule"
+msgstr ""
 
 msgid "title"
 msgstr ""
