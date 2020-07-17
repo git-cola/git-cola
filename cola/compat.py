@@ -48,6 +48,8 @@ else:
     # pylint: disable=long-builtin
     int_types = (int, long)  # noqa
 
+# Qt's max 32-bit signed integer range (-2147483648 to 2147483647)
+maxint = (2 ** 31) - 1
 
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables
