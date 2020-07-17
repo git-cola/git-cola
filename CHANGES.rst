@@ -20,6 +20,9 @@ Usability, bells and whistles
 
 Translations
 ------------
+* Updated Polish translation.
+  (`#1076 <https://github.com/git-cola/git-cola/pull/1076>`_)
+
 * Updated Hungarian translation.
   (`#1067 <https://github.com/git-cola/git-cola/pull/1067>`_)
 
