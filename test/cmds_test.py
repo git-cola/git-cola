@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Test the cmds module"""
 from __future__ import absolute_import, division, unicode_literals
+
 try:
     from unittest.mock import Mock, patch
 except ImportError:

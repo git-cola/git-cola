@@ -796,9 +796,7 @@ class HintedLineEdit(HintedDefaultLineEdit):
     """A monospace line edit with hint text"""
 
     def __init__(self, context, hint, tooltip=None, parent=None):
-        super(HintedLineEdit, self).__init__(
-            hint, tooltip=tooltip, parent=parent
-        )
+        super(HintedLineEdit, self).__init__(hint, tooltip=tooltip, parent=parent)
         self.setFont(qtutils.diff_font(context))
 
 

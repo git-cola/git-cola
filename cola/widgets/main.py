@@ -308,8 +308,9 @@ class MainView(standard.MainWindow):
         )
 
         self.add_submodule_action = add_action(
-            self, N_('Add Submodule...'),
-            partial(submodules.add_submodule, context, parent=self)
+            self,
+            N_('Add Submodule...'),
+            partial(submodules.add_submodule, context, parent=self),
         )
 
         self.fetch_action = add_action(

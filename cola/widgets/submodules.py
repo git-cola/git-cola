@@ -26,7 +26,6 @@ def add_submodule(context, parent):
 
 
 class SubmodulesWidget(QtWidgets.QFrame):
-
     def __init__(self, context, parent):
         super(SubmodulesWidget, self).__init__(parent)
         self.context = context
@@ -55,7 +54,7 @@ class SubmodulesWidget(QtWidgets.QFrame):
             defs.spacing,
             self.add_button,
             self.open_parent_button,
-            self.refresh_button
+            self.refresh_button,
         )
         self.corner_widget = QtWidgets.QWidget(self)
         self.corner_widget.setLayout(self.button_layout)
@@ -92,18 +91,25 @@ class AddSubmodule(standard.Dialog):
 
         hint = N_('Branch name')
         tooltip = N_('Submodule branch to track (optional)')
-        self.branch_text = text.HintedDefaultLineEdit(hint, tooltip=tooltip, parent=self)
+        self.branch_text = text.HintedDefaultLineEdit(
+            hint, tooltip=tooltip, parent=self
+        )
 
         self.depth_spinbox = standard.SpinBox(
-            mini=0, maxi=compat.maxint, value=0, parent=self)
+            mini=0, maxi=compat.maxint, value=0, parent=self
+        )
         self.depth_spinbox.setToolTip(
-            N_('Create a shallow clone with history truncated to the '
-                'specified number of revisions.  0 performs a full clone.')
+            N_(
+                'Create a shallow clone with history truncated to the '
+                'specified number of revisions.  0 performs a full clone.'
+            )
         )
 
         hint = N_('Reference URL')
         tooltip = N_('Reference repository to use when cloning (optional)')
-        self.reference_text = text.HintedDefaultLineEdit(hint, tooltip=tooltip, parent=self)
+        self.reference_text = text.HintedDefaultLineEdit(
+            hint, tooltip=tooltip, parent=self
+        )
 
         self.add_button = qtutils.ok_button(N_('Add Submodule'), enabled=False)
         self.close_button = qtutils.close_button()
@@ -122,14 +128,11 @@ class AddSubmodule(standard.Dialog):
             defs.button_spacing,
             qtutils.STRETCH,
             self.add_button,
-            self.close_button
+            self.close_button,
         )
 
         self.main_layout = qtutils.vbox(
-            defs.large_margin,
-            defs.spacing,
-            self.form_layout,
-            self.button_layout
+            defs.large_margin, defs.spacing, self.form_layout, self.button_layout
         )
         self.setLayout(self.main_layout)
         self.init_size(parent=qtutils.active_window())
@@ -150,7 +153,7 @@ class AddSubmodule(standard.Dialog):
             self.path_text.value(),
             self.branch_text.value(),
             self.depth_spinbox.value(),
-            self.reference_text.value()
+            self.reference_text.value(),
         )
 
 

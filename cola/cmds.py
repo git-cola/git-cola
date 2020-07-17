@@ -2674,9 +2674,7 @@ class SubmoduleAdd(ConfirmAction):
         question = N_('Add this submodule?')
         info = N_('The submodule will be added using\n' '"%s"' % self.command())
         ok_txt = N_('Add Submodule')
-        return Interaction.confirm(
-            title, question, info, ok_txt, icon=icons.ok()
-        )
+        return Interaction.confirm(title, question, info, ok_txt, icon=icons.ok())
 
     def action(self):
         context = self.context
