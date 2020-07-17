@@ -2,9 +2,9 @@
 """Test the cmds module"""
 from __future__ import absolute_import, division, unicode_literals
 try:
-    from unittest import mock
+    from unittest.mock import Mock, patch
 except ImportError:
-    import mock
+    from mock import Mock, patch
 
 import pytest
 
@@ -52,7 +52,7 @@ def test_unix_path_is_a_noop_on_sane_platforms():
 
 
 def test_context_edit_command():
-    context = mock.Mock()
+    context = Mock()
     model = context.model
 
     cmd = cmds.EditModel(context)
@@ -67,6 +67,56 @@ def test_context_edit_command():
     model.set_mode.assert_called_once_with('test_mode')
     model.set_filename.assert_called_once_with('test_filename')
     assert model.set_filename.call_count == 1
+
+
+@patch('cola.interaction.Interaction.confirm')
+def test_submodule_add(confirm):
+    # "git submodule" should not be called if the answer is "no"
+    context = Mock()
+    url = 'url'
+    path = ''
+    reference = ''
+    branch = ''
+    depth = 0
+    cmd = cmds.SubmoduleAdd(context, url, path, branch, depth, reference)
+
+    confirm.return_value = False
+    cmd.do()
+    assert not context.git.submodule.called
+
+    expect = ['--', 'url']
+    actual = cmd.get_args()
+    assert expect == actual
+
+    cmd.path = 'path'
+    expect = ['--', 'url', 'path']
+    actual = cmd.get_args()
+    assert expect == actual
+
+    cmd.reference = 'ref'
+    expect = ['--reference', 'ref', '--', 'url', 'path']
+    actual = cmd.get_args()
+    assert expect == actual
+
+    cmd.branch = 'branch'
+    expect = ['--branch', 'branch', '--reference', 'ref', '--', 'url', 'path']
+    actual = cmd.get_args()
+    assert expect == actual
+
+    cmd.reference = ''
+    cmd.branch = ''
+    cmd.depth = 1
+    expect = ['--depth', '1', '--', 'url', 'path']
+    actual = cmd.get_args()
+    assert expect == actual
+
+    # Run the command and assert that "git submodule" was called.
+    confirm.return_value = True
+    context.git.submodule.return_value = (0, '', '')
+    cmd.do()
+    context.git.submodule.assert_called_once_with('add', *expect)
+    assert context.model.update_file_status.called
+    assert context.model.update_submodules_list.called
 
 
 if __name__ == '__main__':

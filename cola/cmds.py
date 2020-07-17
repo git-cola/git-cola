@@ -2658,6 +2658,58 @@ class VisualizeRevision(ContextCommand):
         launch_history_browser(argv)
 
 
+class SubmoduleAdd(ConfirmAction):
+    """Add specified submodules"""
+
+    def __init__(self, context, url, path, branch, depth, reference):
+        super(SubmoduleAdd, self).__init__(context)
+        self.url = url
+        self.path = path
+        self.branch = branch
+        self.depth = depth
+        self.reference = reference
+
+    def confirm(self):
+        title = N_('Add Submodule...')
+        question = N_('Add this submodule?')
+        info = N_('The submodule will be added using\n' '"%s"' % self.command())
+        ok_txt = N_('Add Submodule')
+        return Interaction.confirm(
+            title, question, info, ok_txt, icon=icons.ok()
+        )
+
+    def action(self):
+        context = self.context
+        args = self.get_args()
+        return context.git.submodule('add', *args)
+
+    def success(self):
+        self.model.update_file_status()
+        self.model.update_submodules_list()
+
+    def error_message(self):
+        return N_('Error updating submodule %s' % self.path)
+
+    def command(self):
+        cmd = ['git', 'submodule', 'add']
+        cmd.extend(self.get_args())
+        return core.list2cmdline(cmd)
+
+    def get_args(self):
+        cmd = []
+        if self.branch:
+            cmd.extend(['--branch', self.branch])
+        if self.reference:
+            cmd.extend(['--reference', self.reference])
+        if self.depth:
+            cmd.extend(['--depth', '%d' % self.depth])
+        cmd.append('--')
+        cmd.append(self.url)
+        if self.path:
+            cmd.append(self.path)
+        return cmd
+
+
 class SubmoduleUpdate(ConfirmAction):
     """Update specified submodule"""
 
