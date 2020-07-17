@@ -779,14 +779,27 @@ class VimTextEdit(MonoTextEdit):
         return self._mixin.keyPressEvent(event)
 
 
-class HintedLineEdit(LineEdit):
-    def __init__(self, context, hint, parent=None):
+class HintedDefaultLineEdit(LineEdit):
+    """A line edit with hint text"""
+
+    def __init__(self, hint, tooltip=None, parent=None):
         LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
+        if tooltip:
+            self.setToolTip(tooltip)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        self.setFont(qtutils.diff_font(context))
         # pylint: disable=no-member
         self.textChanged.connect(lambda text: self.hint.refresh())
+
+
+class HintedLineEdit(HintedDefaultLineEdit):
+    """A monospace line edit with hint text"""
+
+    def __init__(self, context, hint, tooltip=None, parent=None):
+        super(HintedLineEdit, self).__init__(
+            hint, tooltip=tooltip, parent=parent
+        )
+        self.setFont(qtutils.diff_font(context))
 
 
 def text_dialog(context, text, title):
