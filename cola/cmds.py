@@ -2694,18 +2694,17 @@ class SubmoduleAdd(ConfirmAction):
         return core.list2cmdline(cmd)
 
     def get_args(self):
-        cmd = []
+        args = []
         if self.branch:
-            cmd.extend(['--branch', self.branch])
+            args.extend(['--branch', self.branch])
         if self.reference:
-            cmd.extend(['--reference', self.reference])
+            args.extend(['--reference', self.reference])
         if self.depth:
-            cmd.extend(['--depth', '%d' % self.depth])
-        cmd.append('--')
-        cmd.append(self.url)
+            args.extend(['--depth', '%d' % self.depth])
+        args.extend(['--', self.url])
         if self.path:
-            cmd.append(self.path)
-        return cmd
+            args.append(self.path)
+        return args
 
 
 class SubmoduleUpdate(ConfirmAction):
