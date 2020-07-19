@@ -2725,7 +2725,8 @@ class SubmoduleUpdate(ConfirmAction):
 
     def action(self):
         context = self.context
-        return context.git.submodule('update', '--', self.path)
+        args = self.get_args()
+        return context.git.submodule(*args)
 
     def success(self):
         self.model.update_file_status()
@@ -2734,8 +2735,16 @@ class SubmoduleUpdate(ConfirmAction):
         return N_('Error updating submodule %s' % self.path)
 
     def command(self):
-        command = 'git submodule update -- %s'
-        return command % self.path
+        cmd = ['git', 'submodule']
+        cmd.extend(self.get_args())
+        return core.list2cmdline(cmd)
+
+    def get_args(self):
+        cmd = ['update']
+        if version.check_git(self.context, 'submodule-update-recursive'):
+            cmd.append('--recursive')
+        cmd.extend(['--', self.path])
+        return cmd
 
 
 class SubmodulesUpdate(ConfirmAction):
@@ -2752,7 +2761,8 @@ class SubmodulesUpdate(ConfirmAction):
 
     def action(self):
         context = self.context
-        return context.git.submodule('update')
+        args = self.get_args()
+        return context.git.submodule(*args)
 
     def success(self):
         self.model.update_file_status()
@@ -2761,7 +2771,15 @@ class SubmodulesUpdate(ConfirmAction):
         return N_('Error updating submodules')
 
     def command(self):
-        return 'git submodule update'
+        cmd = ['git', 'submodule']
+        cmd.extend(self.get_args())
+        return core.list2cmdline(cmd)
+
+    def get_args(self):
+        cmd = ['update']
+        if version.check_git(self.context, 'submodule-update-recursive'):
+            cmd.append('--recursive')
+        return cmd
 
 
 def launch_history_browser(argv):

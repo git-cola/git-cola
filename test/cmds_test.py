@@ -120,5 +120,72 @@ def test_submodule_add(confirm):
     assert context.model.update_submodules_list.called
 
 
+@patch('cola.version.check_git')
+@patch('cola.interaction.Interaction.confirm')
+def test_submodule_update(confirm, check_git):
+    context = Mock()
+    path = 'sub/path'
+    update_path_cmd = cmds.SubmoduleUpdate(context, path)
+    update_all_cmd = cmds.SubmodulesUpdate(context)
+
+    # Nothing is called when confirm() returns False.
+    confirm.return_value = False
+
+    update_path_cmd.do()
+    assert not context.git.submodule.called
+
+    update_all_cmd.do()
+    assert not context.git.submodule.called
+
+    # Confirm command execution.
+    confirm.return_value = True
+
+    # Test the old command-line arguments first
+    check_git.return_value = False
+
+    expect = ['update', '--', 'sub/path']
+    actual = update_path_cmd.get_args()
+    assert expect == actual
+
+    context.model.update_file_status = Mock()
+    context.git.submodule = Mock(return_value=(0, '', ''))
+    update_path_cmd.do()
+    context.git.submodule.assert_called_once_with(*expect)
+    assert context.model.update_file_status.called
+
+    expect = ['update']
+    actual = update_all_cmd.get_args()
+    assert expect == actual
+
+    context.model.update_file_status = Mock()
+    context.git.submodule = Mock(return_value=(0, '', ''))
+    update_all_cmd.do()
+    context.git.submodule.assert_called_once_with(*expect)
+    assert context.model.update_file_status.called
+
+    # Test the new command-line arguments (git v1.6.5+)
+    check_git.return_value = True
+
+    expect = ['update', '--recursive', '--', 'sub/path']
+    actual = update_path_cmd.get_args()
+    assert expect == actual
+
+    context.model.update_file_status = Mock()
+    context.git.submodule = Mock(return_value=(0, '', ''))
+    update_path_cmd.do()
+    context.git.submodule.assert_called_once_with(*expect)
+    assert context.model.update_file_status.called
+
+    expect = ['update', '--recursive']
+    actual = update_all_cmd.get_args()
+    assert expect == actual
+
+    context.model.update_file_status = Mock()
+    context.git.submodule = Mock(return_value=(0, '', ''))
+    update_all_cmd.do()
+    context.git.submodule.assert_called_once_with(*expect)
+    assert context.model.update_file_status.called
+
+
 if __name__ == '__main__':
     pytest.main([__file__])
