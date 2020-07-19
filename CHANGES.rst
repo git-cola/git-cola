@@ -6,6 +6,7 @@ v3.8
 Usability, bells and whistles
 -----------------------------
 * The submodules widget can now be used to add submodules.
+  Submodules are now updated recursively.
   (`#534 <https://github.com/git-cola/git-cola/issues/534>`_)
 
 * The image diff viewer can now be toggled between text and image modes.
