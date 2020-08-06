@@ -47,6 +47,11 @@ Packaging
   and has now been removed.
   (`#1073 <https://github.com/git-cola/git-cola/pull/1073>`_)
 
+Fixes
+-----
+* `git dag` now uses integer widths when initializing its brushes.
+  (`#1080 <https://github.com/git-cola/git-cola/pull/1080>`_)
+
 .. _v3.7:
 
 v3.7
