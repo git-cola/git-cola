@@ -93,10 +93,12 @@ def strip_remotes(remote_branches):
 def get_default_remote(context):
     """Get the name of the default remote to use for pushing.
 
-    e.g. 'origin', or whatever remote the branch is set to track
+    This will be the remote the branch is set to track, if it is set. If it
+    is not, remote.pushDefault will be used (or origin if not set)
 
     """
-    return gitcmds.upstream_remote(context) or 'origin'
+    upstream_remote = gitcmds.upstream_remote(context)
+    return upstream_remote or context.cfg.get('remote.pushDefault', default='origin')
 
 
 class ActionTask(qtutils.Task):
