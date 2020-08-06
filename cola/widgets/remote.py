@@ -90,6 +90,15 @@ def strip_remotes(remote_branches):
     return [branch for branch in branches if branch != 'HEAD']
 
 
+def get_default_remote(context):
+    """Get the name of the default remote to use for pushing.
+
+    e.g. 'origin', or whatever remote the branch is set to track
+
+    """
+    return gitcmds.upstream_remote(context) or 'origin'
+
+
 class ActionTask(qtutils.Task):
     """Run actions asynchronously"""
 
@@ -273,7 +282,7 @@ class RemoteActionDialog(standard.Dialog):
         )
         self.setLayout(self.main_layout)
 
-        default_remote = gitcmds.upstream_remote(context) or 'origin'
+        default_remote = get_default_remote(context)
 
         remotes = model.remotes
         if default_remote in remotes:
