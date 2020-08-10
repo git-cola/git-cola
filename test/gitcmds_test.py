@@ -3,6 +3,7 @@ import os
 import unittest
 
 from cola import gitcmds
+from cola.widgets.remote import get_default_remote
 
 from . import helper
 
@@ -48,6 +49,27 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('config', 'branch.main.remote', 'test')
         self.cfg.reset()
         self.assertEqual(gitcmds.upstream_remote(context), 'test')
+
+    def test_default_push(self):
+        """Test getting what default branch to push to"""
+        context = self.context
+
+        # no default push, no remote branch configured
+        self.assertEqual(get_default_remote(context), 'origin')
+
+        # default push set, no remote branch configured
+        self.run_git('config', 'remote.pushDefault', 'test')
+        self.cfg.reset()
+        self.assertEqual(get_default_remote(context), 'test')
+
+        # default push set, default remote branch configured
+        self.run_git('config', 'branch.main.remote', 'test2')
+        self.cfg.reset()
+        self.assertEqual(get_default_remote(context), 'test2')
+
+        # default push set, default remote branch configured, on different branch
+        self.run_git('checkout', '-b', 'other-branch')
+        self.assertEqual(get_default_remote(context), 'test')
 
     def test_tracked_branch(self):
         """Test tracked_branch()."""
