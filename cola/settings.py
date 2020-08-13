@@ -67,9 +67,11 @@ class Settings(object):
         self.verify = verify
 
     def remove_missing(self):
-        missing_bookmarks = []
-        missing_recent = []
+        self.remove_missing_bookmarks()
+        self.remove_missing_recent()
 
+    def remove_missing_bookmarks(self):
+        missing_bookmarks = []
         for bookmark in self.bookmarks:
             if not self.verify(bookmark['path']):
                 missing_bookmarks.append(bookmark)
@@ -80,6 +82,8 @@ class Settings(object):
             except ValueError:
                 pass
 
+    def remove_missing_recent(self):
+        missing_recent = []
         for recent in self.recent:
             if not self.verify(recent['path']):
                 missing_recent.append(recent)
