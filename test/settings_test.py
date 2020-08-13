@@ -64,9 +64,11 @@ class SettingsTestCase(unittest.TestCase):
 
     def test_bookmarks_removes_missing_entries(self):
         """Test that missing entries are removed after a reload"""
-        bookmark = {'path': '/tmp/this/does/not/exist', 'name': 'notexist'}
-        settings = new_settings()
+        # verify returns False so all entries will be removed.
+        bookmark = {'path': '.', 'name': 'does-not-exist'}
+        settings = new_settings(verify=lambda x: False)
         settings.add_bookmark(bookmark['path'], bookmark['name'])
+        settings.remove_missing_bookmarks()
         settings.save()
 
         settings = new_settings()

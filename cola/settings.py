@@ -147,7 +147,6 @@ class Settings(object):
     def load(self):
         self.values.update(self.asdict())
         self.upgrade_settings()
-        self.remove_missing()
 
     def upgrade_settings(self):
         """Upgrade git-cola settings"""
