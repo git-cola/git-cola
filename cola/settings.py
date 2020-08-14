@@ -66,11 +66,8 @@ class Settings(object):
         }
         self.verify = verify
 
-    def remove_missing(self):
-        self.remove_missing_bookmarks()
-        self.remove_missing_recent()
-
     def remove_missing_bookmarks(self):
+        """Remove "favorites" bookmarks that no longer exist"""
         missing_bookmarks = []
         for bookmark in self.bookmarks:
             if not self.verify(bookmark['path']):
@@ -83,6 +80,7 @@ class Settings(object):
                 pass
 
     def remove_missing_recent(self):
+        """Remove "recent" repositories that no longer exist"""
         missing_recent = []
         for recent in self.recent:
             if not self.verify(recent['path']):

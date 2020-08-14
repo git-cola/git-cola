@@ -165,6 +165,13 @@ class BookmarksTreeWidget(standard.TreeWidget):
             self, N_('Delete'), self.delete_bookmark
         )
 
+        self.remove_missing_action = qtutils.add_action(
+            self, N_('Prune Missing Entries'), self.remove_missing
+        )
+        self.remove_missing_action.setToolTip(
+            N_('Remove stale entries for repositories that no longer exist')
+        )
+
         # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.item_selection_changed)
@@ -229,6 +236,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.rename_repo_action)
         menu.addSeparator()
         menu.addAction(self.delete_action)
+        menu.addAction(self.remove_missing_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def item_changed(self, item, _index):
@@ -358,6 +366,16 @@ class BookmarksTreeWidget(standard.TreeWidget):
         ok, _, _, _ = cmds.do(cmd, context, item.path, item.name, icon=icons.discard())
         if ok:
             self.refresh()
+
+    def remove_missing(self):
+        """Remove missing entries from the favorites/recent file list"""
+        settings = self.context.settings
+        if self.style == BOOKMARKS:
+            settings.remove_missing_bookmarks()
+        elif self.style == RECENT_REPOS:
+            settings.remove_missing_recent()
+        self.refresh()
+
 
 
 class BuildItem(object):
