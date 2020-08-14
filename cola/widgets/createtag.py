@@ -14,21 +14,20 @@ from . import standard
 from . import text
 
 
-def new_create_tag(context, name='', ref='', sign=False, settings=None, parent=None):
+def new_create_tag(context, name='', ref='', sign=False, parent=None):
     """Entry point for external callers."""
     opts = TagOptions(name, ref, sign)
-    view = CreateTag(context, opts, settings=settings, parent=parent)
+    view = CreateTag(context, opts, parent=parent)
     return view
 
 
-def create_tag(context, name='', ref='', sign=False, settings=None):
+def create_tag(context, name='', ref='', sign=False):
     """Entry point for external callers."""
     view = new_create_tag(
         context,
         name=name,
         ref=ref,
         sign=sign,
-        settings=settings,
         parent=qtutils.active_window(),
     )
     view.show()
@@ -46,7 +45,7 @@ class TagOptions(object):
 
 
 class CreateTag(standard.Dialog):
-    def __init__(self, context, opts, settings=None, parent=None):
+    def __init__(self, context, opts, parent=None):
         standard.Dialog.__init__(self, parent=parent)
 
         self.context = context
@@ -119,6 +118,7 @@ class CreateTag(standard.Dialog):
         qtutils.connect_button(self.close_button, self.close)
         qtutils.connect_button(self.create_button, self.create_tag)
 
+        settings = context.settings
         self.init_state(settings, self.resize, defs.scale(720), defs.scale(210))
 
     def create_tag(self):

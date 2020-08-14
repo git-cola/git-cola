@@ -647,9 +647,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         copy_menu.addAction(self.copy_leading_path_action)
         copy_menu.addAction(self.copy_basename_action)
 
-        current_settings = settings.Settings()
-        current_settings.load()
-
+        current_settings = settings.Settings.read()
         copy_formats = current_settings.copy_formats
         if copy_formats:
             copy_menu.addSeparator()
@@ -1245,10 +1243,12 @@ def customize_copy_actions(context, parent):
 
 
 class CustomizeCopyActions(standard.Dialog):
+
     def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Custom Copy Actions'))
 
+        self.context = context
         self.table = QtWidgets.QTableWidget(self)
         self.table.setColumnCount(2)
         self.table.setHorizontalHeaderLabels([N_('Action Name'), N_('Format String')])
@@ -1290,14 +1290,14 @@ class CustomizeCopyActions(standard.Dialog):
 
         self.init_size(parent=parent)
 
-        self.settings = settings.Settings()
         QtCore.QTimer.singleShot(0, self.reload_settings)
 
     def reload_settings(self):
         # Called once after the GUI is initialized
-        self.settings.load()
+        settings = self.context.settings
+        settings.load()
         table = self.table
-        for entry in self.settings.copy_formats:
+        for entry in settings.copy_formats:
             name_string = entry.get('name', '')
             format_string = entry.get('format', '')
             if name_string and format_string:
@@ -1354,11 +1354,12 @@ class CustomizeCopyActions(standard.Dialog):
                 }
                 copy_formats.append(entry)
 
-        while self.settings.copy_formats:
-            self.settings.copy_formats.pop()
+        settings = self.context.settings
+        while settings.copy_formats:
+            settings.copy_formats.pop()
 
-        self.settings.copy_formats.extend(copy_formats)
-        self.settings.save()
+        settings.copy_formats.extend(copy_formats)
+        settings.save()
 
         self.accept()
 

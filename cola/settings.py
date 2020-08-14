@@ -144,9 +144,17 @@ class Settings(object):
     def save(self):
         write_json(self.values, self.path())
 
-    def load(self):
-        self.values.update(self.asdict())
+    def load(self, path=None):
+        self.values.update(self.asdict(path=path))
         self.upgrade_settings()
+        return True
+
+    @staticmethod
+    def read(verify=git.is_git_worktree):
+        """Load settings from disk"""
+        settings = Settings(verify=verify)
+        settings.load()
+        return settings
 
     def upgrade_settings(self):
         """Upgrade git-cola settings"""
@@ -163,8 +171,9 @@ class Settings(object):
             ]
             self.values['recent'] = recent
 
-    def asdict(self):
-        path = self.path()
+    def asdict(self, path=None):
+        if not path:
+            path = self.path()
         if core.exists(path):
             return read_json(path)
         # We couldn't find ~/.config/git-cola, try ~/.cola
@@ -179,10 +188,6 @@ class Settings(object):
                 except KeyError:
                     pass
         return values
-
-    def reload_recent(self):
-        values = self.asdict()
-        self.values['recent'] = mklist(values.get('recent', []))
 
     def save_gui_state(self, gui):
         """Saves settings for a cola view"""
@@ -208,13 +213,25 @@ def rename_entry(entries, path, name, new_name):
 
     if all([item['name'] != new_name for item in entries]):
         entries[index]['name'] = new_name
-        return True
-
-    return False
+        result = True
+    else:
+        result = False
+    return result
 
 
 class Session(Settings):
-    """Store per-session settings"""
+    """Store per-session settings
+
+    XDG sessions are created by the QApplication::commitData() callback.
+    These sessions are stored once, and loaded once.  They are deleted once
+    loaded.  The behavior of path() is such that it forgets its session path()
+    and behaves like a return Settings object after the session has been
+    loaded once.
+
+    Once the session is loaded, it is removed and further calls to save()
+    will save to the usual $XDG_CONFIG_HOME/git-cola/settings location.
+
+    """
 
     _sessions_dir = resources.config_home('sessions')
 
@@ -224,17 +241,58 @@ class Session(Settings):
         Settings.__init__(self)
         self.session_id = session_id
         self.values.update({'repo': repo})
+        self.expired = False
 
-    def path(self):
+    def session_path(self):
+        """The session-specific session file"""
         return os.path.join(self._sessions_dir, self.session_id)
 
-    def load(self):
-        path = self.path()
-        if core.exists(path):
-            self.values.update(read_json(path))
-            try:
-                os.unlink(path)
-            except (OSError, ValueError):
-                pass
-            return True
-        return False
+    def path(self):
+        base_path = super(Session, self).path()
+        if self.expired:
+            path = base_path
+        else:
+            path = self.session_path()
+            if not os.path.exists(path):
+                path = base_path
+        return path
+
+    def load(self, path=None):
+        """Load the session and expire it for future loads
+
+        The session should be loaded only once.  We remove the session file
+        when it's loaded, and set the session to be expired.  This results in
+        future calls to load() and save() using the default Settings path
+        rather than the session-specific path.
+
+        The use case for sessions is when the user logs out with apps running.
+        We will restore their state, and if they then shutdown, it'll be just
+        like a normal shutdown and settings will be stored to
+        ~/.config/git-cola/settings instead of the session path.
+
+        This is accomplished by "expiring" the session after it has
+        been loaded initially.
+
+        """
+        result = super(Session, self).load(path=path)
+        # This is the initial load, so expire the session and remove the
+        # session state file.  Future calls will be equivalent to
+        # Settings.load().
+        if not self.expired:
+            self.expired = True
+            path = self.session_path()
+            if core.exists(path):
+                try:
+                    os.unlink(path)
+                except (OSError, ValueError):
+                    pass
+                return True
+            return False
+
+        return result
+
+    def update(self):
+        """Reload settings from the base settings path"""
+        # This method does not expire the session.
+        path = super(Session, self).path()
+        return super(Session, self).load(path=path)

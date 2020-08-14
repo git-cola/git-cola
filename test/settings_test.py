@@ -1,17 +1,10 @@
 from __future__ import absolute_import, division, unicode_literals
-
-import unittest
 import os
+import unittest
 
 from cola.settings import Settings
 
 from . import helper
-
-
-def new_settings(**kwargs):
-    settings = Settings(**kwargs)
-    settings.load()
-    return settings
 
 
 class SettingsTestCase(unittest.TestCase):
@@ -19,7 +12,7 @@ class SettingsTestCase(unittest.TestCase):
 
     def setUp(self):
         Settings.config_path = self._file = helper.tmp_path('settings')
-        self.settings = new_settings()
+        self.settings = Settings.read()
 
     def tearDown(self):
         if os.path.exists(self._file):
@@ -27,11 +20,11 @@ class SettingsTestCase(unittest.TestCase):
 
     def test_gui_save_restore(self):
         """Test saving and restoring gui state"""
-        settings = new_settings()
+        settings = Settings.read()
         settings.gui_state['test-gui'] = {'foo': 'bar'}
         settings.save()
 
-        settings = new_settings()
+        settings = Settings.read()
         state = settings.gui_state.get('test-gui', {})
         self.assertTrue('foo' in state)
         self.assertEqual(state['foo'], 'bar')
@@ -47,11 +40,11 @@ class SettingsTestCase(unittest.TestCase):
         def mock_verify(path):
             return path == bookmark['path']
 
-        settings = new_settings()
+        settings = Settings.read()
         settings.add_bookmark(bookmark['path'], bookmark['name'])
         settings.save()
 
-        settings = new_settings(verify=mock_verify)
+        settings = Settings.read(verify=mock_verify)
 
         bookmarks = settings.bookmarks
         self.assertEqual(len(settings.bookmarks), 1)
@@ -66,18 +59,18 @@ class SettingsTestCase(unittest.TestCase):
         """Test that missing entries are removed after a reload"""
         # verify returns False so all entries will be removed.
         bookmark = {'path': '.', 'name': 'does-not-exist'}
-        settings = new_settings(verify=lambda x: False)
+        settings = Settings.read(verify=lambda x: False)
         settings.add_bookmark(bookmark['path'], bookmark['name'])
         settings.remove_missing_bookmarks()
         settings.save()
 
-        settings = new_settings()
+        settings = Settings.read()
         bookmarks = settings.bookmarks
         self.assertEqual(len(settings.bookmarks), 0)
         self.assertFalse(bookmark in bookmarks)
 
     def test_rename_bookmark(self):
-        settings = new_settings()
+        settings = Settings.read()
         settings.add_bookmark('/tmp/repo', 'a')
         settings.add_bookmark('/tmp/repo', 'b')
         settings.add_bookmark('/tmp/repo', 'c')

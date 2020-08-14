@@ -124,7 +124,9 @@ def unabbrev(cmd):
 
 
 class MainWindow(standard.MainWindow):
-    def __init__(self, context, settings=None, parent=None):
+    """The main git-cola application window"""
+
+    def __init__(self, context, parent=None):
         super(MainWindow, self).__init__(parent)
         self.context = context
         self.status = 1
@@ -143,7 +145,7 @@ class MainWindow(standard.MainWindow):
         self.setMenuBar(self.menubar)
 
         qtutils.add_close_action(self)
-        self.init_state(settings, self.init_window_size)
+        self.init_state(context.settings, self.init_window_size)
 
     def init_window_size(self):
         """Set the window size on the first initial view"""

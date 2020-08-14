@@ -17,7 +17,6 @@ from .. import utils
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import prefs
-from ..settings import Settings
 from ..widgets import defs
 from ..widgets import standard
 
@@ -38,9 +37,9 @@ class BookmarksWidget(QtWidgets.QFrame):
     def __init__(self, context, style=BOOKMARKS, parent=None):
         QtWidgets.QFrame.__init__(self, parent)
 
+        self.context = context
         self.style = style
-        self.settings = Settings()
-        self.tree = BookmarksTreeWidget(context, style, self.settings, parent=self)
+        self.tree = BookmarksTreeWidget(context, style, parent=self)
 
         self.add_button = qtutils.create_action_button(
             tooltip=N_('Add'), icon=icons.add()
@@ -92,7 +91,6 @@ class BookmarksWidget(QtWidgets.QFrame):
 
     def reload_bookmarks(self):
         # Called once after the GUI is initialized
-        self.settings.load()
         self.tree.refresh()
 
     def tree_item_selection_changed(self):
@@ -113,11 +111,10 @@ class BookmarksTreeWidget(standard.TreeWidget):
     default_changed = Signal()
     worktree_changed = Signal()
 
-    def __init__(self, context, style, settings, parent=None):
+    def __init__(self, context, style, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
         self.context = context
         self.style = style
-        self.settings = settings
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -196,7 +193,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
     def refresh(self):
         context = self.context
-        settings = self.settings
+        settings = context.settings
         builder = BuildItem(context)
 
         # bookmarks
@@ -204,7 +201,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
             entries = settings.bookmarks
         # recent items
         elif self.style == RECENT_REPOS:
-            settings.reload_recent()
             entries = settings.recent
 
         items = [builder.get(entry['path'], entry['name']) for entry in entries]
@@ -239,14 +235,15 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.rename_entry(item, item.text(0))
 
     def rename_entry(self, item, new_name):
+        settings = self.context.settings
         if self.style == BOOKMARKS:
-            rename = self.settings.rename_bookmark
+            rename = settings.rename_bookmark
         elif self.style == RECENT_REPOS:
-            rename = self.settings.rename_recent
+            rename = settings.rename_recent
         else:
             rename = disable_rename
         if rename(item.path, item.name, new_name):
-            self.settings.save()
+            settings.save()
             item.name = new_name
         else:
             item.setText(0, item.name)
@@ -338,8 +335,10 @@ class BookmarksTreeWidget(standard.TreeWidget):
         name, path = values
         normpath = utils.expandpath(path)
         if git.is_git_worktree(normpath):
-            self.settings.add_bookmark(normpath, name)
-            self.settings.save()
+            settings = self.context.settings
+            settings.load()
+            settings.add_bookmark(normpath, name)
+            settings.save()
             self.refresh()
         else:
             Interaction.critical(N_('Error'), N_('%s is not a Git repository.') % path)
@@ -356,9 +355,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
             cmd = cmds.RemoveRecent
         else:
             return
-        ok, _, _, _ = cmds.do(
-            cmd, context, self.settings, item.path, item.name, icon=icons.discard()
-        )
+        ok, _, _, _ = cmds.do(cmd, context, item.path, item.name, icon=icons.discard())
         if ok:
             self.refresh()
 
@@ -380,6 +377,7 @@ class BuildItem(object):
 
 
 class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+
     def __init__(self, path, name, icon, is_default):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path

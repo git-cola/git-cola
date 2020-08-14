@@ -25,9 +25,9 @@ from . import defs
 from . import standard
 
 
-def worktree_browser(context, parent=None, update=True, settings=None, show=True):
+def worktree_browser(context, parent=None, update=True, show=True):
     """Create a new worktree browser"""
-    view = Browser(context, parent, update=update, settings=settings)
+    view = Browser(context, parent, update=update)
     model = GitRepoModel(context, view.tree)
     view.set_model(model)
     if update:
@@ -55,9 +55,8 @@ class Browser(standard.Widget):
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
-    def __init__(self, context, parent, update=True, settings=None):
+    def __init__(self, context, parent, update=True):
         standard.Widget.__init__(self, parent)
-        self.settings = settings
         self.tree = RepoTreeView(context, self)
         self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
@@ -71,7 +70,7 @@ class Browser(standard.Widget):
         if update:
             self.model_updated()
 
-        self.init_state(settings, self.resize, 720, 420)
+        self.init_state(context.settings, self.resize, 720, 420)
 
     def set_model(self, model):
         """Set the model"""

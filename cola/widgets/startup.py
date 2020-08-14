@@ -11,7 +11,6 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
-from ..settings import Settings
 from .. import core
 from .. import guicmds
 from .. import icons
@@ -25,7 +24,7 @@ from . import standard
 class StartupDialog(standard.Dialog):
     """Provides a GUI to Open or Clone a git repository."""
 
-    def __init__(self, context, parent=None, settings=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.context = context
         self.setWindowTitle(N_('git-cola'))
@@ -55,11 +54,6 @@ class StartupDialog(standard.Dialog):
         )
         self.close_button = qtutils.close_button()
 
-        if settings is None:
-            settings = Settings()
-        settings.load()
-        self.settings = settings
-
         self.bookmarks_label = qtutils.label(text=N_('Select Repository...'))
         self.bookmarks_label.setAlignment(Qt.AlignCenter)
         self.bookmarks_model = QtGui.QStandardItemModel()
@@ -69,6 +63,7 @@ class StartupDialog(standard.Dialog):
         self.bookmarks_model.appendRow(item)
 
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
+        settings = context.settings
         bookmarks = [i['path'] for i in settings.bookmarks]
         recent = [i['path'] for i in settings.recent]
         all_repos = bookmarks + recent
@@ -169,10 +164,9 @@ class StartupDialog(standard.Dialog):
 
     def clone_repo(self):
         context = self.context
-        settings = self.settings
         progress = standard.progress('', '', self)
         clone.clone_repo(
-            context, self, True, settings, progress, self.clone_repo_done, False
+            context, self, True, progress, self.clone_repo_done, False
         )
 
     def clone_repo_done(self, task):

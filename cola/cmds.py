@@ -28,7 +28,6 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import main
 from .models import prefs
-from .settings import Settings
 
 
 class UsageError(Exception):
@@ -764,18 +763,20 @@ class RemoteEdit(ContextCommand):
 
 
 class RemoveFromSettings(ConfirmAction):
-    def __init__(self, context, settings, repo, entry, icon=None):
+
+    def __init__(self, context, repo, entry, icon=None):
         super(RemoveFromSettings, self).__init__(context)
-        self.settings = settings
+        self.context = context
         self.repo = repo
         self.entry = entry
         self.icon = icon
 
     def success(self):
-        self.settings.save()
+        self.context.settings.save()
 
 
 class RemoveBookmark(RemoveFromSettings):
+
     def confirm(self):
         entry = self.entry
         title = msg = N_('Delete Bookmark?')
@@ -784,7 +785,7 @@ class RemoveBookmark(RemoveFromSettings):
         return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
 
     def action(self):
-        self.settings.remove_bookmark(self.repo, self.entry)
+        self.context.settings.remove_bookmark(self.repo, self.entry)
         return (0, '', '')
 
 
@@ -797,7 +798,7 @@ class RemoveRecent(RemoveFromSettings):
         return Interaction.confirm(title, msg, info, ok_text, icon=self.icon)
 
     def action(self):
-        self.settings.remove_recent(self.repo)
+        self.context.settings.remove_recent(self.repo)
         return (0, '', '')
 
 
@@ -1651,7 +1652,7 @@ class OpenRepo(EditModel):
                 template_loader.do()
             else:
                 self.model.set_commitmsg(self.new_commitmsg)
-            settings = Settings()
+            settings = context.settings
             settings.load()
             settings.add_recent(self.repo_path, prefs.maxrecent(self.context))
             settings.save()

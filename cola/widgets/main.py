@@ -16,7 +16,6 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import prefs
 from ..qtutils import get
-from ..settings import Settings
 from .. import cmds
 from .. import core
 from .. import guicmds
@@ -64,7 +63,7 @@ class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
     updated = Signal()
 
-    def __init__(self, context, parent=None, settings=None):
+    def __init__(self, context, parent=None):
         standard.MainWindow.__init__(self, parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
@@ -72,7 +71,6 @@ class MainView(standard.MainWindow):
         self.git = context.git
         self.dag = None
         self.model = model = context.model
-        self.settings = settings
         self.prefs_model = prefs_model = prefs.PreferencesModel(context)
         self.toolbar_state = toolbar.ToolBarState(context, self)
 
@@ -348,7 +346,7 @@ class MainView(standard.MainWindow):
         )
 
         self.clone_repo_action = add_action(
-            self, N_('Clone...'), partial(clone.clone, context, settings=settings)
+            self, N_('Clone...'), partial(clone.clone, context)
         )
         self.clone_repo_action.setIcon(icons.repo())
 
@@ -402,13 +400,13 @@ class MainView(standard.MainWindow):
         self.create_tag_action = add_action(
             self,
             N_('Create Tag...'),
-            partial(createtag.create_tag, context, settings=settings),
+            partial(createtag.create_tag, context),
         )
 
         self.create_branch_action = add_action(
             self,
             N_('Create...'),
-            partial(createbranch.create_new_branch, context, settings=settings),
+            partial(createbranch.create_new_branch, context),
             hotkeys.BRANCH,
         )
         self.create_branch_action.setIcon(icons.branch())
@@ -714,7 +712,7 @@ class MainView(standard.MainWindow):
         self.config_actions_changed.connect(
             self._install_config_actions, type=Qt.QueuedConnection
         )
-        self.init_state(settings, self.set_initial_size)
+        self.init_state(context.settings, self.set_initial_size)
 
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
@@ -816,13 +814,14 @@ class MainView(standard.MainWindow):
         menu.exec_(event.globalPos())
 
     def build_recent_menu(self):
-        settings = Settings()
-        settings.load()
         cmd = cmds.OpenRepo
         context = self.context
+        settings = context.settings
+        settings.load()
         menu = self.open_recent_menu
         menu.clear()
-        worktree = self.git.worktree()
+        worktree = context.git.worktree()
+
         for entry in settings.recent:
             directory = entry['path']
             if directory == worktree:
