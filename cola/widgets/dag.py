@@ -35,7 +35,7 @@ from . import filelist
 from . import standard
 
 
-def git_dag(context, args=None, settings=None, existing_view=None, show=True):
+def git_dag(context, args=None, existing_view=None, show=True):
     """Return a pre-populated git DAG widget."""
     model = context.model
     branch = model.currentbranch
@@ -45,7 +45,7 @@ def git_dag(context, args=None, settings=None, existing_view=None, show=True):
     params.set_arguments(args)
 
     if existing_view is None:
-        view = GitDAG(context, params, settings=settings)
+        view = GitDAG(context, params)
     else:
         view = existing_view
         view.set_params(params)
@@ -497,7 +497,7 @@ class GitDAG(standard.MainWindow):
 
     updated = Signal()
 
-    def __init__(self, context, params, parent=None, settings=None):
+    def __init__(self, context, params, parent=None):
         super(GitDAG, self).__init__(parent)
 
         self.setMinimumSize(420, 420)
@@ -507,7 +507,6 @@ class GitDAG(standard.MainWindow):
         self.context = context
         self.params = params
         self.model = context.model
-        self.settings = settings
 
         self.commits = {}
         self.commit_list = []
@@ -618,7 +617,7 @@ class GitDAG(standard.MainWindow):
         self.addDockWidget(right, self.file_dock)
 
         # Also re-loads dag.* from the saved state
-        self.init_state(settings, self.resize_to_desktop)
+        self.init_state(context.settings, self.resize_to_desktop)
 
         qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)

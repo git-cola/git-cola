@@ -46,6 +46,7 @@ from .widgets import cfgactions
 from .widgets import standard
 from .widgets import startup
 from .settings import Session
+from .settings import Settings
 from . import cmds
 from . import core
 from . import compat
@@ -281,6 +282,7 @@ class ColaQApplication(QtWidgets.QApplication):
         skey = session_mgr.sessionKey()
         session_id = '%s_%s' % (sid, skey)
         session = Session(session_id, repo=core.getcwd())
+        session.update()
         view.save_state(settings=session)
 
 
@@ -335,7 +337,7 @@ def application_init(args, update=False):
     timer = context.timer
     timer.start('init')
 
-    new_worktree(context, args.repo, args.prompt, args.settings)
+    new_worktree(context, args.repo, args.prompt)
 
     if update:
         context.model.update_status()
@@ -349,6 +351,7 @@ def application_init(args, update=False):
 def new_context(args):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
+    context.settings = args.settings or Settings.read()
     context.git = git.create()
     context.cfg = gitcfg.create(context)
     context.fsmonitor = fsmonitor.create(context)
@@ -455,7 +458,7 @@ def new_application(context, args):
     )
 
 
-def new_worktree(context, repo, prompt, settings):
+def new_worktree(context, repo, prompt):
     """Find a Git repository, or prompt for one when not found"""
     model = context.model
     cfg = context.cfg
@@ -476,7 +479,7 @@ def new_worktree(context, repo, prompt, settings):
         # If we've gotten into this loop then that means that neither the
         # current directory nor the default repository were available.
         # Prompt the user for a repository.
-        startup_dlg = startup.StartupDialog(context, parent, settings=settings)
+        startup_dlg = startup.StartupDialog(context, parent)
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
             sys.exit(core.EXIT_NOINPUT)
@@ -565,6 +568,7 @@ class ApplicationContext(object):
         self.model = None  # main.MainModel
         self.timer = None  # Timer
         self.runtask = None  # qtutils.RunTask
+        self.settings = None  # settings.Settings
         self.selection = None  # selection.SelectionModel
         self.fsmonitor = None  # fsmonitor
         self.view = None  # QWidget

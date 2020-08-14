@@ -19,24 +19,24 @@ from . import standard
 from . import text
 
 
-def clone(context, spawn=True, show=True, settings=None, parent=None):
+def clone(context, spawn=True, show=True, parent=None):
     """Clone a repository and spawn a new git-cola instance"""
     parent = qtutils.active_window()
     progress = standard.progress('', '', parent)
-    return clone_repo(context, parent, show, settings, progress, task_finished, spawn)
+    return clone_repo(context, parent, show, progress, task_finished, spawn)
 
 
-def clone_repo(context, parent, show, settings, progress, finish, spawn):
+def clone_repo(context, parent, show, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
     fn = partial(start_clone_task, context, parent, progress, finish, spawn)
-    prompt = prompt_for_clone(context, show=show, settings=settings)
+    prompt = prompt_for_clone(context, show=show)
     prompt.result.connect(fn)
     return prompt
 
 
-def prompt_for_clone(context, show=True, settings=None):
+def prompt_for_clone(context, show=True):
     """Presents a GUI for cloning a repository"""
-    view = Clone(context, settings=settings, parent=qtutils.active_window())
+    view = Clone(context, parent=qtutils.active_window())
     if show:
         view.show()
     return view
@@ -96,7 +96,7 @@ class Clone(standard.Dialog):
     # Signal binding for returning the input data
     result = QtCore.Signal(object, object, bool, bool)
 
-    def __init__(self, context, settings=None, parent=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
         self.model = context.model
@@ -153,7 +153,7 @@ class Clone(standard.Dialog):
         # pylint: disable=no-member
         self.url.textChanged.connect(lambda x: self.update_actions())
 
-        self.init_state(settings, self.resize, 720, 200)
+        self.init_state(context.settings, self.resize, 720, 200)
         self.update_actions()
 
     def update_actions(self):

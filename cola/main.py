@@ -449,7 +449,7 @@ def cmd_cola(args):
     context = app.application_init(args)
 
     context.timer.start('view')
-    view = MainView(context, settings=args.settings)
+    view = MainView(context)
     if args.amend:
         cmds.do(cmds.AmendMode, context, amend=True)
 
@@ -498,7 +498,7 @@ def cmd_branch(args):
     from .widgets.createbranch import create_new_branch  # pylint: disable=all
 
     context = app.application_init(args, update=True)
-    view = create_new_branch(context, settings=args.settings)
+    view = create_new_branch(context)
     return app.application_start(context, view)
 
 
@@ -506,7 +506,7 @@ def cmd_browse(args):
     from .widgets.browse import worktree_browser  # pylint: disable=all
 
     context = app.application_init(args)
-    view = worktree_browser(context, show=False, update=False, settings=args.settings)
+    view = worktree_browser(context, show=False, update=False)
     return app.application_start(context, view)
 
 
@@ -514,7 +514,7 @@ def cmd_clone(args):
     from .widgets import clone  # pylint: disable=all
 
     context = app.application_init(args)
-    view = clone.clone(context, settings=args.settings)
+    view = clone.clone(context)
     context.set_view(view)
     result = 0 if view.exec_() == view.Accepted else 1
     app.default_stop(context, view)
@@ -539,7 +539,7 @@ def cmd_dag(args):
     # used by the history viewer command on Windows.
     if args.show_all:
         args.args.insert(0, '--all')
-    view = dag.git_dag(context, args=args, settings=args.settings, show=False)
+    view = dag.git_dag(context, args=args, show=False)
     return app.application_start(context, view)
 
 
@@ -688,9 +688,7 @@ def cmd_tag(args):
     from .widgets.createtag import new_create_tag  # pylint: disable=all
 
     context = app.application_init(args)
-    view = new_create_tag(
-        context, name=args.name, ref=args.ref, sign=args.sign, settings=args.settings
-    )
+    view = new_create_tag(context, name=args.name, ref=args.ref, sign=args.sign)
     return app.application_start(context, view)
 
 

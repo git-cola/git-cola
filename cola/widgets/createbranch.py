@@ -16,11 +16,9 @@ from . import completion
 from . import standard
 
 
-def create_new_branch(context, revision='', settings=None):
+def create_new_branch(context, revision=''):
     """Launches a dialog for creating a new branch"""
-    view = CreateBranchDialog(
-        context, settings=settings, parent=qtutils.active_window()
-    )
+    view = CreateBranchDialog(context, parent=qtutils.active_window())
     if revision:
         view.set_revision(revision)
     view.show()
@@ -83,7 +81,7 @@ class CreateThread(QtCore.QThread):
 class CreateBranchDialog(standard.Dialog):
     """A dialog for creating branches."""
 
-    def __init__(self, context, settings=None, parent=None):
+    def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Create Branch'))
         if parent is not None:
@@ -224,7 +222,7 @@ class CreateBranchDialog(standard.Dialog):
         thread.command.connect(Interaction.log_status, type=Qt.QueuedConnection)
         thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
 
-        self.init_size(settings=settings, parent=parent)
+        self.init_size(settings=context.settings, parent=parent)
         self.display_model()
 
     def set_revision(self, revision):
