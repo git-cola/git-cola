@@ -29,6 +29,11 @@ Translations
 
 Packaging
 ---------
+* The `share/appdata` AppStream data was renamed to `share/metainfo`
+  in accordance with `AppStream standard changes from 2016
+  <https://github.com/ximion/appstream/blob/master/NEWS#L1363>`_.
+  (`#1079 <https://github.com/git-cola/git-cola/pull/1079>`_)
+
 * The ``cola`` modules are now installed into the Python ``site-packages``
   directory by default.  This allows distributions to package ``git-cola`` for
   multiple versions of Python.  See the PACKAGING NOTES section in the README
