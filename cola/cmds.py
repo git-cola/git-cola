@@ -1652,7 +1652,7 @@ class OpenRepo(EditModel):
                 template_loader.do()
             else:
                 self.model.set_commitmsg(self.new_commitmsg)
-            settings = context.settings
+            settings = self.context.settings
             settings.load()
             settings.add_recent(self.repo_path, prefs.maxrecent(self.context))
             settings.save()

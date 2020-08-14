@@ -14,13 +14,13 @@ from ..models import selection
 from ..widgets import gitignore
 from ..widgets import standard
 from ..qtutils import get
+from ..settings import Settings
 from .. import actions
 from .. import cmds
 from .. import core
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
-from .. import settings
 from .. import utils
 from . import common
 from . import completion
@@ -647,8 +647,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         copy_menu.addAction(self.copy_leading_path_action)
         copy_menu.addAction(self.copy_basename_action)
 
-        current_settings = settings.Settings.read()
-        copy_formats = current_settings.copy_formats
+        settings = Settings.read()
+        copy_formats = settings.copy_formats
         if copy_formats:
             copy_menu.addSeparator()
 

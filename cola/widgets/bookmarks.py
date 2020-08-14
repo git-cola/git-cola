@@ -377,7 +377,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.refresh()
 
 
-
 class BuildItem(object):
     def __init__(self, context):
         self.star_icon = icons.star()
