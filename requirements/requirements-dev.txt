@@ -10,3 +10,5 @@ PyYAML
 pytest>=3.6
 pytest-cov
 Sphinx
+sphinx-rtd-theme==0.4.3; python_version < '3.0'
+sphinx-rtd-theme; python_version >= '3.0'
