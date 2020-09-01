@@ -14,7 +14,7 @@ RSYNC_FLAGS = -r --delete --delete-excluded
 RSYNC_FLAGS += --exclude=.buildinfo --exclude=.gitignore
 RSYNC_CMD = $(RSYNC) $(RSYNC_FLAGS)
 
-SPHINXOPTS =
+SPHINXOPTS = -a
 SPHINXBUILD = sphinx-build
 PAPER =
 
