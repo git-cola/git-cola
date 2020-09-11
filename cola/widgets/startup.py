@@ -69,7 +69,7 @@ class StartupDialog(standard.Dialog):
         all_repos = bookmarks + recent
 
         added = set()
-        for repo in sorted(all_repos, key=lambda repo: repo['path'].lower()):
+        for repo in all_repos:
             if repo['path'] in added:
                 continue
             added.add(repo['path'])
