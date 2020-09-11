@@ -7,6 +7,7 @@ found at startup.
 from __future__ import division, absolute_import, unicode_literals
 
 from qtpy.QtCore import Qt
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 
@@ -54,35 +55,42 @@ class StartupDialog(standard.Dialog):
         )
         self.close_button = qtutils.close_button()
 
-        self.bookmarks_label = qtutils.label(text=N_('Select Repository...'))
-        self.bookmarks_label.setAlignment(Qt.AlignCenter)
         self.bookmarks_model = QtGui.QStandardItemModel()
 
-        item = QtGui.QStandardItem(N_('Select manually...'))
+        item = QtGui.QStandardItem(N_('Open...'))
         item.setEditable(False)
+        item.setIcon(icons.open_directory())
         self.bookmarks_model.appendRow(item)
 
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
         settings = context.settings
-        bookmarks = [i['path'] for i in settings.bookmarks]
-        recent = [i['path'] for i in settings.recent]
+        bookmarks = settings.bookmarks
+        recent = settings.recent
         all_repos = bookmarks + recent
 
         added = set()
-        for repo in sorted(all_repos, key=lambda x: x.lower()):
-            if repo in added:
+        for repo in sorted(all_repos, key=lambda repo: repo['path'].lower()):
+            if repo['path'] in added:
                 continue
-            added.add(repo)
-            item = QtGui.QStandardItem(repo)
+            added.add(repo['path'])
+            item = QtGui.QStandardItem(repo['name'])
             item.setEditable(False)
+            item.setData(repo['path'], Qt.UserRole)
+            item.setIcon(icons.directory())
+            item.setToolTip(repo['path'])
             self.bookmarks_model.appendRow(item)
 
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
 
         self.bookmarks = QtWidgets.QListView()
         self.bookmarks.setSelectionMode(selection_mode)
-        self.bookmarks.setAlternatingRowColors(True)
         self.bookmarks.setModel(self.bookmarks_model)
+        self.bookmarks.setViewMode(QtWidgets.QListView.IconMode)
+        self.bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
+        self.bookmarks.setGridSize(QtCore.QSize(defs.large_icon, defs.large_icon))
+        self.bookmarks.setIconSize(QtCore.QSize(defs.medium_icon, defs.medium_icon))
+        self.bookmarks.setDragEnabled(False)
+        self.bookmarks.setWordWrap(True)
 
         self.logo_layout = qtutils.vbox(
             defs.no_margin,
@@ -103,17 +111,10 @@ class StartupDialog(standard.Dialog):
             self.close_button,
         )
 
-        self.center_layout = qtutils.hbox(
-            defs.no_margin, defs.button_spacing, self.logo_layout, self.bookmarks
-        )
-
-        self.main_layout = qtutils.vbox(
-            defs.margin,
-            defs.spacing,
-            self.bookmarks_label,
-            self.center_layout,
-            self.button_layout,
-        )
+        self.main_layout = qtutils.grid(defs.margin, defs.spacing)
+        self.main_layout.addWidget(self.bookmarks, 1, 2)
+        self.main_layout.addItem(self.logo_layout, 1, 1)
+        self.main_layout.addItem(self.button_layout, 2, 1, columnSpan=2)
         self.setLayout(self.main_layout)
 
         qtutils.connect_button(self.open_button, self.open_repo)
@@ -187,12 +188,12 @@ class StartupDialog(standard.Dialog):
         if index.row() == 0:
             self.open_repo()
         else:
-            self.repodir = self.bookmarks_model.data(index)
+            self.repodir = self.bookmarks_model.data(index, Qt.UserRole)
             if self.repodir:
                 self.accept()
 
     def get_selected_bookmark(self):
         selected = self.bookmarks.selectedIndexes()
         if selected and selected[0].row() != 0:
-            return self.bookmarks_model.data(selected[0])
+            return self.bookmarks_model.data(selected[0], Qt.UserRole)
         return None
