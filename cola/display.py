@@ -4,14 +4,14 @@ import collections
 import os
 
 
-def shorten_paths(paths):
+def shorten_paths(source_paths):
     """Shorten a sequence of paths into unique strings for display"""
     result = {}
     # Start by assuming that all paths are in conflict.
     # On each iteration we will collect all the path suffixes, move the newly
     # unique entries to the result, and repeat until no conflicts remain.
     count = 0
-    conflicts = list(paths)
+    conflicts = list(source_paths)
     in_conflict = True
     while in_conflict:
         count += 1
@@ -47,5 +47,3 @@ def path_suffix(path, count):
     """Return `count` number of trailing path components"""
     components = path.split(os.sep)[-count:]
     return os.sep.join(components)
-
-

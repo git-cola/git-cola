@@ -136,9 +136,8 @@ class AddSubmodule(standard.Dialog):
         )
         self.setLayout(self.main_layout)
         self.init_size(parent=qtutils.active_window())
-
+        # pylint: disable=no-member
         self.url_text.textChanged.connect(lambda x: self._update_widgets())
-
         qtutils.connect_button(self.add_button, self.accept)
         qtutils.connect_button(self.close_button, self.close)
 
