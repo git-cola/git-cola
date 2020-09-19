@@ -661,6 +661,13 @@ cola.signcommits
 `git cola` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
+cola.startupmode
+----------------
+Control how the list of repositories is displayed in the startup dialog.
+Set to `list` to view the list of repositories as a list, or `folder` to view
+the list of repositories as a collection of folder icons.
+Defaults to `list`.
+
 cola.statusindent
 -----------------
 Set to `true` to indent files in the Status widget.  Files in the `Staged`,

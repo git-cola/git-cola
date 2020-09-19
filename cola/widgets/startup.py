@@ -63,6 +63,12 @@ class StartupDialog(standard.Dialog):
         item.setIcon(icons.open_directory())
         self.bookmarks_model.appendRow(item)
 
+        # The tab bar allows choosing between Folder and List mode
+        self.tab_bar = QtWidgets.QTabBar()
+        self.tab_bar.setMovable(False)
+        self.tab_bar.addTab(icons.directory(), N_('Folder'))
+        self.tab_bar.addTab(icons.file_text(), N_('List'))
+
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
         settings = context.settings
         bookmarks = settings.bookmarks
@@ -88,16 +94,22 @@ class StartupDialog(standard.Dialog):
             self.bookmarks_model.appendRow(item)
 
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
-
         self.bookmarks = bookmarks = QtWidgets.QListView()
         bookmarks.setSelectionMode(selection_mode)
         bookmarks.setModel(self.bookmarks_model)
         bookmarks.setViewMode(QtWidgets.QListView.IconMode)
         bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
-        bookmarks.setGridSize(QtCore.QSize(defs.large_icon, defs.large_icon))
-        bookmarks.setIconSize(QtCore.QSize(defs.medium_icon, defs.medium_icon))
+        bookmarks.setGridSize(make_size(defs.large_icon))
+        bookmarks.setIconSize(make_size(defs.medium_icon))
         bookmarks.setDragEnabled(False)
         bookmarks.setWordWrap(True)
+
+        self.tab_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.no_spacing,
+            self.tab_bar,
+            self.bookmarks
+        )
 
         self.logo_layout = qtutils.vbox(
             defs.no_margin,
@@ -119,8 +131,8 @@ class StartupDialog(standard.Dialog):
         )
 
         self.main_layout = qtutils.grid(defs.margin, defs.spacing)
-        self.main_layout.addWidget(self.bookmarks, 1, 2)
         self.main_layout.addItem(self.logo_layout, 1, 1)
+        self.main_layout.addItem(self.tab_layout, 1, 2)
         self.main_layout.addItem(self.button_layout, 2, 1, columnSpan=2)
         self.setLayout(self.main_layout)
 
@@ -130,11 +142,35 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.close_button, self.reject)
 
         # pylint: disable=no-member
+        self.tab_bar.currentChanged.connect(self.tab_changed)
         self.bookmarks.activated.connect(self.open_bookmark)
 
         self.init_state(settings, self.resize_widget)
         self.setFocusProxy(self.bookmarks)
         self.bookmarks.setFocus()
+
+        # Update the list mode
+        list_mode = context.cfg.get('cola.startupmode', default='folder')
+        self.list_mode = list_mode
+        if list_mode == 'list':
+            self.tab_bar.setCurrentIndex(1)
+
+    def tab_changed(self, idx):
+        bookmarks = self.bookmarks
+        if idx == 0:
+            bookmarks.setViewMode(QtWidgets.QListView.IconMode)
+            bookmarks.setIconSize(make_size(defs.medium_icon))
+            bookmarks.setGridSize(make_size(defs.large_icon))
+            list_mode = 'folder'
+        else:
+            bookmarks.setViewMode(QtWidgets.QListView.ListMode)
+            bookmarks.setIconSize(make_size(defs.default_icon))
+            bookmarks.setGridSize(QtCore.QSize())
+            list_mode = 'list'
+
+        if list_mode != self.list_mode:
+            self.list_mode = list_mode
+            self.context.cfg.set_user('cola.startupmode', list_mode)
 
     def resize_widget(self):
         screen = QtWidgets.QApplication.instance().desktop()
@@ -204,3 +240,8 @@ class StartupDialog(standard.Dialog):
         if selected and selected[0].row() != 0:
             return self.bookmarks_model.data(selected[0], Qt.UserRole)
         return None
+
+
+def make_size(size):
+    """Construct a QSize from a single value"""
+    return QtCore.QSize(size, size)
