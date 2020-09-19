@@ -13,6 +13,7 @@ from qtpy import QtWidgets
 
 from ..i18n import N_
 from .. import core
+from .. import display
 from .. import guicmds
 from .. import icons
 from .. import qtutils
@@ -68,29 +69,35 @@ class StartupDialog(standard.Dialog):
         recent = settings.recent
         all_repos = bookmarks + recent
 
+        paths = set([repo['path'] for repo in all_repos])
+        short_paths = display.shorten_paths(paths)
+
         added = set()
         for repo in all_repos:
-            if repo['path'] in added:
+            path = repo['path']
+            if path in added:
                 continue
-            added.add(repo['path'])
-            item = QtGui.QStandardItem(repo['name'])
+            added.add(path)
+
+            name = repo['name']
+            item = QtGui.QStandardItem(short_paths.get(path, name))
             item.setEditable(False)
-            item.setData(repo['path'], Qt.UserRole)
+            item.setData(path, Qt.UserRole)
             item.setIcon(icons.directory())
-            item.setToolTip(repo['path'])
+            item.setToolTip(path)
             self.bookmarks_model.appendRow(item)
 
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
 
-        self.bookmarks = QtWidgets.QListView()
-        self.bookmarks.setSelectionMode(selection_mode)
-        self.bookmarks.setModel(self.bookmarks_model)
-        self.bookmarks.setViewMode(QtWidgets.QListView.IconMode)
-        self.bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
-        self.bookmarks.setGridSize(QtCore.QSize(defs.large_icon, defs.large_icon))
-        self.bookmarks.setIconSize(QtCore.QSize(defs.medium_icon, defs.medium_icon))
-        self.bookmarks.setDragEnabled(False)
-        self.bookmarks.setWordWrap(True)
+        self.bookmarks = bookmarks = QtWidgets.QListView()
+        bookmarks.setSelectionMode(selection_mode)
+        bookmarks.setModel(self.bookmarks_model)
+        bookmarks.setViewMode(QtWidgets.QListView.IconMode)
+        bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
+        bookmarks.setGridSize(QtCore.QSize(defs.large_icon, defs.large_icon))
+        bookmarks.setIconSize(QtCore.QSize(defs.medium_icon, defs.medium_icon))
+        bookmarks.setDragEnabled(False)
+        bookmarks.setWordWrap(True)
 
         self.logo_layout = qtutils.vbox(
             defs.no_margin,
