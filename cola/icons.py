@@ -137,6 +137,9 @@ def status(filename, deleted, is_staged, untracked):
 
 # Icons creators and SVG file references
 
+def three_bars():
+    return icon('three-bars.svg')
+
 
 def add():
     return from_theme('list-add', fallback='plus.svg')
@@ -197,7 +200,6 @@ def discard():
 # folder vs directory: directory is opaque, folder is just an outline
 # directory is used for the File Browser, where more contrast with the file
 # icons are needed.
-
 
 def folder():
     return icon('folder.svg')

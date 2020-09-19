@@ -87,6 +87,7 @@ star.svg
 sync.svg
 tag.svg
 telescope.svg
+three-bars.svg
 trashcan.svg
 unfold.svg
 x.svg
