@@ -67,7 +67,7 @@ class StartupDialog(standard.Dialog):
         self.tab_bar = QtWidgets.QTabBar()
         self.tab_bar.setMovable(False)
         self.tab_bar.addTab(icons.directory(), N_('Folder'))
-        self.tab_bar.addTab(icons.file_text(), N_('List'))
+        self.tab_bar.addTab(icons.three_bars(), N_('List'))
 
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
         settings = context.settings
