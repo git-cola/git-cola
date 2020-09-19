@@ -75,6 +75,8 @@ class StartupDialog(standard.Dialog):
         recent = settings.recent
         all_repos = bookmarks + recent
 
+        directory_icon = icons.directory()
+        user_role = Qt.UserRole
         paths = set([repo['path'] for repo in all_repos])
         short_paths = display.shorten_paths(paths)
 
@@ -88,8 +90,8 @@ class StartupDialog(standard.Dialog):
             name = repo['name']
             item = QtGui.QStandardItem(short_paths.get(path, name))
             item.setEditable(False)
-            item.setData(path, Qt.UserRole)
-            item.setIcon(icons.directory())
+            item.setData(path, user_role)
+            item.setIcon(directory_icon)
             item.setToolTip(path)
             self.bookmarks_model.appendRow(item)
 
