@@ -24,5 +24,12 @@ def test_shorten_paths():
     assert actual[paths[5]] == '/lib/src'
 
 
+def test_normalize_path():
+    path = r'C:\games\doom2'
+    expect = 'C:/games/doom2'
+    actual = display.normalize_path(path)
+    assert expect == actual
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

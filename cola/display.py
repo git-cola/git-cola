@@ -1,7 +1,6 @@
 """Display models and utility functions"""
 from __future__ import division, absolute_import, unicode_literals
 import collections
-import os
 
 
 def shorten_paths(source_paths):

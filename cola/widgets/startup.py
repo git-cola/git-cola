@@ -78,14 +78,14 @@ class StartupDialog(standard.Dialog):
 
         directory_icon = icons.directory()
         user_role = Qt.UserRole
-        normalize_path = display.normalize_path
-        paths = set([normalize_path(repo['path']) for repo in all_repos])
+        normalize = display.normalize_path
+        paths = set([normalize(repo['path']) for repo in all_repos])
         short_paths = display.shorten_paths(paths)
         self.short_paths = short_paths
 
         added = set()
         for repo in all_repos:
-            path = normalize_path(repo['path'])
+            path = normalize(repo['path'])
             if path in added:
                 continue
             added.add(path)

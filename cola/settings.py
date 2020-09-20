@@ -6,6 +6,7 @@ import os
 import sys
 
 from . import core
+from . import display
 from . import git
 from . import resources
 
@@ -94,13 +95,13 @@ class Settings(object):
 
     def add_bookmark(self, path, name):
         """Adds a bookmark to the saved settings"""
-        bookmark = {'path': path, 'name': name}
+        bookmark = {'path': display.normalize_path(path), 'name': name}
         if bookmark not in self.bookmarks:
             self.bookmarks.append(bookmark)
 
     def remove_bookmark(self, path, name):
         """Remove a bookmark"""
-        bookmark = {'path': path, 'name': name}
+        bookmark = {'path': display.normalize_path(path), 'name': name}
         try:
             self.bookmarks.remove(bookmark)
         except ValueError:
@@ -110,8 +111,12 @@ class Settings(object):
         return rename_entry(self.bookmarks, path, name, new_name)
 
     def add_recent(self, path, max_recent):
+        normalize = display.normalize_path
+        path = normalize(path)
         try:
-            index = [recent['path'] for recent in self.recent].index(path)
+            index = [
+                normalize(recent['path']) for recent in self.recent
+            ].index(path)
             entry = self.recent.pop(index)
         except (IndexError, ValueError):
             entry = {
@@ -124,8 +129,13 @@ class Settings(object):
 
     def remove_recent(self, path):
         """Removes an item from the recent items list"""
+        normalize = display.normalize_path
+        path = normalize(path)
         try:
-            index = [recent.get('path', '') for recent in self.recent].index(path)
+            index = [
+                normalize_path(recent.get('path', ''))
+                for recent in self.recent
+            ].index(path)
         except ValueError:
             return
         try:
@@ -157,15 +167,18 @@ class Settings(object):
     def upgrade_settings(self):
         """Upgrade git-cola settings"""
         # Upgrade bookmarks to the new dict-based bookmarks format.
+        normalize = display.normalize_path
         if self.bookmarks and not isinstance(self.bookmarks[0], dict):
             bookmarks = [
-                dict(name=os.path.basename(path), path=path) for path in self.bookmarks
+                dict(name=os.path.basename(path), path=normalize(path))
+                for path in self.bookmarks
             ]
             self.values['bookmarks'] = bookmarks
 
         if self.recent and not isinstance(self.recent[0], dict):
             recent = [
-                dict(name=os.path.basename(path), path=path) for path in self.recent
+                dict(name=os.path.basename(path), path=normalize(path))
+                for path in self.recent
             ]
             self.values['recent'] = recent
 
@@ -179,12 +192,17 @@ class Settings(object):
         path = os.path.join(core.expanduser('~'), '.cola')
         if core.exists(path):
             json_values = read_json(path)
-            # Keep only the entries we care about
             for key in self.values:
                 try:
                     values[key] = json_values[key]
                 except KeyError:
                     pass
+        # Ensure that all stored bookmarks use normalized paths ("/" only).
+        normalize = display.normalize_path
+        for entry in values.get('bookmarks', []):
+            entry['path'] = normalize(entry['path'])
+        for entry in values.get('recent', []):
+            entry['path'] = normalize(entry['path'])
         return values
 
     def save_gui_state(self, gui):
@@ -203,6 +221,8 @@ class Settings(object):
 
 
 def rename_entry(entries, path, name, new_name):
+    normalize = display.normalize_path
+    path = normalize(path)
     entry = {'name': name, 'path': path}
     try:
         index = entries.index(entry)
