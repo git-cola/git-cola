@@ -45,5 +45,11 @@ def shorten_paths(source_paths):
 
 def path_suffix(path, count):
     """Return `count` number of trailing path components"""
-    components = path.split(os.sep)[-count:]
-    return os.sep.join(components)
+    path = normalize_path(path)
+    components = path.split('/')[-count:]
+    return '/'.join(components)
+
+
+def normalize_path(path):
+    """Normalize a path so that only "/" is used as a separator"""
+    return path.replace('\\', '/')

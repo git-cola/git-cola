@@ -57,6 +57,7 @@ class StartupDialog(standard.Dialog):
         self.close_button = qtutils.close_button()
 
         self.bookmarks_model = QtGui.QStandardItemModel()
+        self.items = items = []
 
         item = QtGui.QStandardItem(N_('Open...'))
         item.setEditable(False)
@@ -77,23 +78,25 @@ class StartupDialog(standard.Dialog):
 
         directory_icon = icons.directory()
         user_role = Qt.UserRole
-        paths = set([repo['path'] for repo in all_repos])
+        normalize_path = display.normalize_path
+        paths = set([normalize_path(repo['path']) for repo in all_repos])
         short_paths = display.shorten_paths(paths)
+        self.short_paths = short_paths
 
         added = set()
         for repo in all_repos:
-            path = repo['path']
+            path = normalize_path(repo['path'])
             if path in added:
                 continue
             added.add(path)
 
-            name = repo['name']
-            item = QtGui.QStandardItem(short_paths.get(path, name))
+            item = QtGui.QStandardItem(path)
             item.setEditable(False)
             item.setData(path, user_role)
             item.setIcon(directory_icon)
             item.setToolTip(path)
             self.bookmarks_model.appendRow(item)
+            self.items.append(item)
 
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
         self.bookmarks = bookmarks = QtWidgets.QListView()
@@ -164,11 +167,17 @@ class StartupDialog(standard.Dialog):
             bookmarks.setIconSize(make_size(defs.medium_icon))
             bookmarks.setGridSize(make_size(defs.large_icon))
             list_mode = 'folder'
+            for item in self.items:
+                path = item.data(Qt.UserRole)
+                item.setText(self.short_paths.get(path, path))
         else:
             bookmarks.setViewMode(QtWidgets.QListView.ListMode)
             bookmarks.setIconSize(make_size(defs.default_icon))
             bookmarks.setGridSize(QtCore.QSize())
             list_mode = 'list'
+            for item in self.items:
+                path = item.data(Qt.UserRole)
+                item.setText(path)
 
         if list_mode != self.list_mode:
             self.list_mode = list_mode
