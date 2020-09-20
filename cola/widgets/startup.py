@@ -56,13 +56,13 @@ class StartupDialog(standard.Dialog):
         )
         self.close_button = qtutils.close_button()
 
-        self.bookmarks_model = QtGui.QStandardItemModel()
+        self.bookmarks_model = bookmarks_model = QtGui.QStandardItemModel()
         self.items = items = []
 
         item = QtGui.QStandardItem(N_('Open...'))
         item.setEditable(False)
         item.setIcon(icons.open_directory())
-        self.bookmarks_model.appendRow(item)
+        bookmarks_model.appendRow(item)
 
         # The tab bar allows choosing between Folder and List mode
         self.tab_bar = QtWidgets.QTabBar()
@@ -95,13 +95,13 @@ class StartupDialog(standard.Dialog):
             item.setData(path, user_role)
             item.setIcon(directory_icon)
             item.setToolTip(path)
-            self.bookmarks_model.appendRow(item)
-            self.items.append(item)
+            bookmarks_model.appendRow(item)
+            items.append(item)
 
         selection_mode = QtWidgets.QAbstractItemView.SingleSelection
         self.bookmarks = bookmarks = QtWidgets.QListView()
         bookmarks.setSelectionMode(selection_mode)
-        bookmarks.setModel(self.bookmarks_model)
+        bookmarks.setModel(bookmarks_model)
         bookmarks.setViewMode(QtWidgets.QListView.IconMode)
         bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
         bookmarks.setGridSize(make_size(defs.large_icon))
