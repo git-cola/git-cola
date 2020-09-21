@@ -133,7 +133,7 @@ class Settings(object):
         path = normalize(path)
         try:
             index = [
-                normalize_path(recent.get('path', ''))
+                normalize(recent.get('path', ''))
                 for recent in self.recent
             ].index(path)
         except ValueError:
