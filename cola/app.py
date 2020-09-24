@@ -483,7 +483,25 @@ def new_worktree(context, repo, prompt):
         gitdir = startup_dlg.find_git_repo()
         if not gitdir:
             sys.exit(core.EXIT_NOINPUT)
+
+        if not core.exists(os.path.join(gitdir, '.git')):
+            offer_to_create_repo(context, gitdir)
+            valid = model.set_worktree(gitdir)
+            continue
+
         valid = model.set_worktree(gitdir)
+
+
+def offer_to_create_repo(context, gitdir):
+    """Offer to create a new repo"""
+    title = N_('Repository Not Found')
+    text = N_('%s is not a Git repository.') % gitdir
+    informative_text = N_('Create a new repository at that location?')
+    if standard.confirm(title, text, informative_text, N_('Create')):
+        status, out, err = context.git.init(gitdir)
+        title = N_('Error Creating Repository')
+        if status != 0:
+            Interaction.command_error(title, 'git init', status, out, err)
 
 
 def async_update(context):
