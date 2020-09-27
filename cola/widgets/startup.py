@@ -244,8 +244,31 @@ class StartupDialog(standard.Dialog):
             self.open_repo()
         else:
             self.repodir = self.bookmarks_model.data(index, Qt.UserRole)
-            if self.repodir:
-                self.accept()
+            if not self.repodir:
+                return
+            if not core.exists(self.repodir):
+                self.handle_broken_repo(index)
+                return
+            self.accept()
+
+    def handle_broken_repo(self, index):
+        settings = self.context.settings
+        all_repos = settings.bookmarks + settings.recent
+        repodir = self.bookmarks_model.data(index, Qt.UserRole)
+
+        repo = next(repo for repo in all_repos if repo['path'] == repodir)
+        title = N_('Repository Not Found')
+        text = N_('%s could not be opened. Remove from bookmarks?') \
+            % repo['path']
+        logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxWarning)
+        if standard.question(title, text, N_('Remove'), logo=logo):
+            self.context.settings.remove_bookmark(repo['path'], repo['name'])
+            self.context.settings.remove_recent(repo['path'])
+            self.context.settings.save()
+
+            item = self.bookmarks_model.item(index.row())
+            self.items.remove(item)
+            self.bookmarks_model.removeRow(index.row())
 
     def get_selected_bookmark(self):
         selected = self.bookmarks.selectedIndexes()

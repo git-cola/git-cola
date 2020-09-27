@@ -973,11 +973,12 @@ def progress(title, text, parent):
     return ProgressDialog(title, text, parent)
 
 
-def question(title, text, default=True):
+def question(title, text, default=True, logo=None):
     """Launches a QMessageBox question with the provided title and message.
     Passing "default=False" will make "No" the default choice."""
     parent = qtutils.active_window()
-    logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
+    if logo is None:
+        logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxQuestion)
     msgbox = MessageBox(
         parent=parent,
         title=title,
