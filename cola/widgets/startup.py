@@ -95,6 +95,7 @@ class StartupDialog(standard.Dialog):
             item.setData(path, user_role)
             item.setIcon(directory_icon)
             item.setToolTip(path)
+            item.setText(self.short_paths.get(path, path))
             bookmarks_model.appendRow(item)
             items.append(item)
 
