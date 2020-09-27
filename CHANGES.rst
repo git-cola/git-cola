@@ -1,3 +1,18 @@
+.. _v3.9:
+
+v3.9
+====
+
+Usability, bells and whistles
+-----------------------------
+* The startup dialog now detects when Recent and Favorite repositories no
+  longer exist on disk, and offers to remove these entries when selected.
+  (`#1089 <https://github.com/git-cola/git-cola/pull/1089>`_)
+
+* The startup dialog now includes a simpler and more condensed folder view
+  that can be used for selecting Favorites and Recent repositories.
+  (`#1086 <https://github.com/git-cola/git-cola/pull/1086>`_)
+
 .. _v3.8:
 
 v3.8
