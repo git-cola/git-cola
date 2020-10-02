@@ -482,7 +482,7 @@ msgid "Add remote"
 msgstr "Adicionar remoto"
 
 msgid "Add this submodule?"
-msgstr ""
+msgstr "Adicionar este submódulo?"
 
 msgid "Add to .gitignore"
 msgstr "Adicionar ao .gitignore"
@@ -583,16 +583,16 @@ msgid "Authors"
 msgstr "Autores"
 
 msgid "Auto"
-msgstr ""
+msgstr "Automático"
 
 msgid "Auto-Wrap Lines"
 msgstr "Auto-Quebra de Linhas"
 
 msgid "Autocomplete Paths"
-msgstr ""
+msgstr "Autocompletar Caminhos"
 
 msgid "Automatically Load Commit Message Template"
-msgstr ""
+msgstr "Carregar template de mensagens de commit automaticamente"
 
 msgid "Basic Regexp"
 msgstr "Regexp Básico"
@@ -635,7 +635,7 @@ msgid "Branch Name"
 msgstr "Nome do Branch"
 
 msgid "Branch name"
-msgstr ""
+msgstr "Nome do Branch"
 
 #, python-format
 msgid "Branch: %s"
@@ -704,7 +704,7 @@ msgid "Changed Upstream"
 msgstr "Upstream Modificado"
 
 msgid "Check Published Commits when Amending"
-msgstr ""
+msgstr "Verificar commits publicados em Amending"
 
 msgid "Check Spelling"
 msgstr "Verificar Ortografia"
@@ -734,13 +734,13 @@ msgid "Checkout..."
 msgstr "Checkout..."
 
 msgid "Cherry Pick"
-msgstr ""
+msgstr "Cherry Pick"
 
 msgid "Cherry-Pick Commit"
-msgstr ""
+msgstr "Cherry-Pick Commit"
 
 msgid "Cherry-Pick..."
-msgstr ""
+msgstr "Cherry-Pick..."
 
 msgid "Choose Paths"
 msgstr "Escolha os caminhos"
@@ -809,7 +809,7 @@ msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge u
 msgstr "Commit o merge se não houver conflitos. Desmarque para deixar o merge sem commit."
 
 msgid "Commit@@verb"
-msgstr ""
+msgstr "Commit@@verbo"
 
 msgid "Compare"
 msgstr "Comparar"
@@ -824,7 +824,7 @@ msgid "Configure toolbar"
 msgstr "Configurar Barra de Ferramentas"
 
 msgid "Console"
-msgstr ""
+msgstr "Console"
 
 msgid "Continue"
 msgstr "Continuar"
@@ -910,7 +910,7 @@ msgid "DAG..."
 msgstr "Visualizar o histórico..."
 
 msgid "Dark Theme"
-msgstr ""
+msgstr "Tema Escuro"
 
 msgid "Date, Time"
 msgstr "Data, Tempo"
@@ -954,7 +954,7 @@ msgstr "Remover Branch Remoto..."
 
 #, python-format
 msgid "Delete branch \"%s\"?"
-msgstr ""
+msgstr "Remover branch \"%s\"?"
 
 msgid "Delete remote"
 msgstr "Deletar Repositórios Remotos"
@@ -1070,7 +1070,7 @@ msgid "Edit..."
 msgstr "Editar..."
 
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 msgid "Email Address"
 msgstr "Endereço de Email"
@@ -1079,7 +1079,7 @@ msgid "Email contributor"
 msgstr "Email do Contribuidor"
 
 msgid "Enable path autocompletion in tools"
-msgstr ""
+msgstr "Habilitar autocomplete de caminhos em ferramentas"
 
 msgid "Enabled"
 msgstr "Habilitado"
@@ -1126,7 +1126,7 @@ msgstr "Erro ao criar o stash"
 
 #, python-format
 msgid "Error deleting branch \"%s\""
-msgstr ""
+msgstr "Erro ao remover branch \"%s\""
 
 #, python-format
 msgid "Error deleting remote \"%s\""
@@ -1205,7 +1205,7 @@ msgid "Fetch Tracking Branch"
 msgstr ""
 
 msgid "Fetch..."
-msgstr ""
+msgstr "Fetch..."
 
 msgid "File Browser..."
 msgstr "Navegador de Arquivos..."
@@ -1270,28 +1270,28 @@ msgid "Fixup Previous Commit"
 msgstr "Fixup Commit Anterior"
 
 msgid "Flat dark blue"
-msgstr ""
+msgstr "Flat dark blue"
 
 msgid "Flat dark green"
-msgstr ""
+msgstr "Flat dark green"
 
 msgid "Flat dark grey"
-msgstr ""
+msgstr "Flat dark grey"
 
 msgid "Flat dark red"
-msgstr ""
+msgstr "Flat dark red"
 
 msgid "Flat light blue"
-msgstr ""
+msgstr "Flat light blue"
 
 msgid "Flat light green"
-msgstr ""
+msgstr "Flat light green"
 
 msgid "Flat light grey"
-msgstr ""
+msgstr "Flat light grey"
 
 msgid "Flat light red"
-msgstr ""
+msgstr "Flat light red"
 
 msgid "Font Size"
 msgstr "Tamanho de Fonte"
@@ -1323,7 +1323,7 @@ msgid "Format String"
 msgstr "Formatar String"
 
 msgid "French translation"
-msgstr ""
+msgstr "Tradução francesa"
 
 msgid "GPG-sign the merge commit"
 msgstr "Assinar com GPG o Commit de Merge"
@@ -1336,7 +1336,7 @@ msgid "Gathering info for \"%s\"..."
 msgstr "Reunindo Informação de \"%s\"..."
 
 msgid "German translation"
-msgstr ""
+msgstr "Tradução alemã"
 
 msgid "Get Commit Message Template"
 msgstr "Obter Template da Mensagem do Commit"
@@ -1354,7 +1354,7 @@ msgid "Graph"
 msgstr "Gráfico"
 
 msgid "Grep"
-msgstr ""
+msgstr "Grep"
 
 msgid "Have you rebased/pulled lately?"
 msgstr "Você tem usado rebase/pull recentemente?"
@@ -1372,7 +1372,7 @@ msgid "Help - git-cola-sequence-editor"
 msgstr "Ajuda - git-cola-sequence-editor"
 
 msgid "High DPI"
-msgstr ""
+msgstr "DPI Alto"
 
 msgid "History Browser"
 msgstr "Navegador de Histórico"
@@ -1402,7 +1402,7 @@ msgid "Ignore filename or pattern"
 msgstr "Ignorar nome do arquivo ou padrão"
 
 msgid "Ignore..."
-msgstr ""
+msgstr "Ignorar..."
 
 msgid "Include tags "
 msgstr "Incluir tags"
@@ -1781,7 +1781,7 @@ msgid "Quit"
 msgstr "Sair"
 
 msgid "Rebase"
-msgstr ""
+msgstr "Rebase"
 
 #, python-format
 msgid "Rebase onto %s"
@@ -1794,7 +1794,7 @@ msgid "Rebase the current branch instead of merging"
 msgstr "Rebase o branch atual em vez de merge"
 
 msgid "Rebasing"
-msgstr ""
+msgstr "Rebasing"
 
 msgid "Recent"
 msgstr "Recente"
@@ -2046,7 +2046,7 @@ msgid "Running command: %s"
 msgstr "Executando o comando: %s"
 
 msgid "Russian translation"
-msgstr ""
+msgstr "Tradução russa"
 
 msgid "SHA-1"
 msgstr "SHA-1"
@@ -2213,7 +2213,7 @@ msgid "Show History"
 msgstr "Ver Histórico..."
 
 msgid "Show file counts in Status titles"
-msgstr ""
+msgstr "Exibe número de arquivos no título de status"
 
 msgid ""
 "Show help\n"
@@ -2259,7 +2259,7 @@ msgid "Sort bookmarks alphabetically"
 msgstr "Ordenar favoritos alfabeticamente"
 
 msgid "Spanish translation"
-msgstr ""
+msgstr "Trandução espanhola"
 
 msgid "Specifies the SHA-1 to tag"
 msgstr "Especificar o SHA-1 para a Tag"
@@ -2274,13 +2274,13 @@ msgid "Spelling Suggestions"
 msgstr "Sugestões de Ortografia"
 
 msgid "Squash"
-msgstr ""
+msgstr "Squash"
 
 msgid "Squash the merged commits into a single commit"
 msgstr "Unir os commits mesclados em um commit único"
 
 msgid "Stage"
-msgstr ""
+msgstr "Estágio"
 
 msgid "Stage / Unstage"
 msgstr "Estágio / Sem estágio "
@@ -2339,7 +2339,7 @@ msgid "Starting Revision"
 msgstr "Iniciar Revisão"
 
 msgid "Stash"
-msgstr ""
+msgstr "Stash"
 
 msgid "Stash Index"
 msgstr "Stash Índice"
