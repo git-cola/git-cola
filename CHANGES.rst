@@ -13,6 +13,11 @@ Usability, bells and whistles
   that can be used for selecting Favorites and Recent repositories.
   (`#1086 <https://github.com/git-cola/git-cola/pull/1086>`_)
 
+Translations
+------------
+* Updated Brazilian translation.
+  (`#1091 <https://github.com/git-cola/git-cola/pull/1091>`_)
+
 .. _v3.8:
 
 v3.8
