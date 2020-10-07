@@ -196,6 +196,10 @@ msgid ""
 msgstr ""
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr ""
 
@@ -703,7 +707,14 @@ msgid "Copy..."
 msgstr ""
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
+msgstr ""
+
+msgid "Create"
 msgstr ""
 
 msgid "Create Branch"
@@ -731,6 +742,9 @@ msgid "Create a merge commit even when the merge resolves as a fast-forward"
 msgstr ""
 
 msgid "Create a new remote branch?"
+msgstr ""
+
+msgid "Create a new repository at that location?"
 msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
@@ -967,6 +981,9 @@ msgstr ""
 msgid "Error Launching History Browser"
 msgstr ""
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr ""
@@ -1136,6 +1153,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1315,6 +1335,9 @@ msgid "Launch git-difftool on the current path"
 msgstr ""
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1589,6 +1612,9 @@ msgstr ""
 msgid "Prune "
 msgstr ""
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr ""
 
@@ -1690,6 +1716,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr ""
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr ""
 
@@ -1720,6 +1749,9 @@ msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr ""
 
 msgid "Rename selected paths"
+msgstr ""
+
+msgid "Repository Not Found"
 msgstr ""
 
 #, python-format
@@ -1967,13 +1999,7 @@ msgstr ""
 msgid "Select Previous Version"
 msgstr ""
 
-msgid "Select Repository..."
-msgstr ""
-
 msgid "Select a parent directory for the new clone"
-msgstr ""
-
-msgid "Select manually..."
 msgstr ""
 
 msgid "Select output dir"

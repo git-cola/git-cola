@@ -214,6 +214,10 @@ msgid ""
 "Stage it anyways?"
 msgstr ""
 
+#, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "%s is not a Git repository."
 msgstr "Gitarkiv"
@@ -779,7 +783,14 @@ msgid "Copy..."
 msgstr "Kopiera"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
+msgstr ""
+
+msgid "Create"
 msgstr ""
 
 msgid "Create Branch"
@@ -814,6 +825,9 @@ msgstr ""
 #, fuzzy
 msgid "Create a new remote branch?"
 msgstr "Skapa ny gren"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1083,6 +1097,9 @@ msgstr "Filbläddrare"
 msgid "Error Launching History Browser"
 msgstr "Filbläddrare"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr ""
@@ -1271,6 +1288,9 @@ msgstr ""
 msgid "Flat light red"
 msgstr ""
 
+msgid "Folder"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Storlek"
 
@@ -1454,6 +1474,9 @@ msgid "Launch git-difftool on the current path"
 msgstr ""
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 #, fuzzy
@@ -1776,6 +1799,9 @@ msgstr "Skapa ny gren"
 msgid "Prune "
 msgstr "Ta bort från"
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 #, fuzzy
 msgid "Pull"
 msgstr "Sänd..."
@@ -1892,6 +1918,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Byt namn på gren"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Byt namn"
 
@@ -1930,6 +1959,9 @@ msgstr ""
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Byt namn på gren"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, fuzzy, python-format
 msgid "Repository: %s"
@@ -2206,16 +2238,8 @@ msgstr "Välj"
 msgid "Select Previous Version"
 msgstr ""
 
-#, fuzzy
-msgid "Select Repository..."
-msgstr "Gitarkiv"
-
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy
-msgid "Select manually..."
-msgstr "Markera alla"
 
 #, fuzzy
 msgid "Select output dir"
@@ -3503,8 +3527,16 @@ msgstr ""
 #~ msgstr "Markera alla"
 
 #, fuzzy
+#~ msgid "Select Repository..."
+#~ msgstr "Gitarkiv"
+
+#, fuzzy
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Tar bort grenar från %s"
+
+#, fuzzy
+#~ msgid "Select manually..."
+#~ msgstr "Markera alla"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Delad (snabbast, rekommenderas ej, ingen säkerhetskopia)"

@@ -323,6 +323,10 @@ msgstr ""
 "Biztosan kiszemelésre kerüljön?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "A(z) %s nem git tároló."
 
@@ -854,8 +858,15 @@ msgid "Copy..."
 msgstr "Másolás…"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Nem lehet feldolgozni a git URL-t: „%s”"
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Ág létrehozása"
@@ -883,6 +894,9 @@ msgstr "Beolvasztásos véglegesítést hoz létre akkor is, ha a beolvasztás e
 
 msgid "Create a new remote branch?"
 msgstr "Létrehozza az új távoli ágat?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1118,6 +1132,9 @@ msgstr "Hiba a gyanúsító megjelenítő indítása közben"
 msgid "Error Launching History Browser"
 msgstr "Hiba a történetböngésző indításakor"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Hiba a(z) „%s” távoli létrehozásakor"
@@ -1291,6 +1308,9 @@ msgstr "Lapos világosszürke"
 
 msgid "Flat light red"
 msgstr "Lapos világos vörös"
+
+msgid "Folder"
+msgstr ""
 
 msgid "Font Size"
 msgstr "Betűméret"
@@ -1472,6 +1492,9 @@ msgstr "git-difftool indítása a jelenlegi útvonalon"
 
 msgid "Light Theme"
 msgstr "Világos téma"
+
+msgid "List"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Véglegesítő üzenet betöltése"
@@ -1759,6 +1782,9 @@ msgstr "Kérdés, ha a felküldés új távoli ágat hozna létre"
 msgid "Prune "
 msgstr "Tisztogatás"
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Lekérés"
 
@@ -1860,6 +1886,9 @@ msgstr "Távoli követett ágak eltávolítása, melyek már nem léteznek a tá
 msgid "Remove selected (Delete)"
 msgstr "Kijelöltek eltávolítása (Törlés)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Átnevezés"
 
@@ -1891,6 +1920,9 @@ msgstr "Átnevezi a(z) „%(current)s” távolit erre: „%(new)s”?"
 
 msgid "Rename selected paths"
 msgstr "Kijelölt útvonalak átnevezése"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2137,14 +2169,8 @@ msgstr "Szülő kijelölése"
 msgid "Select Previous Version"
 msgstr "Előző verzió kijelölése"
 
-msgid "Select Repository..."
-msgstr "Tároló kijelölése…"
-
 msgid "Select a parent directory for the new clone"
 msgstr "Válasszon szülő mappát az új klón számára"
-
-msgid "Select manually..."
-msgstr "Kézi kijelölés…"
 
 msgid "Select output dir"
 msgstr "Kimeneti könyvtár kijelölése"
@@ -2723,6 +2749,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Hide Details.."
 #~ msgstr "Részletek elrejtése…"
+
+#~ msgid "Select Repository..."
+#~ msgstr "Tároló kijelölése…"
+
+#~ msgid "Select manually..."
+#~ msgstr "Kézi kijelölés…"
 
 #~ msgid "Show Details..."
 #~ msgstr "Részletek megjelenítése…"

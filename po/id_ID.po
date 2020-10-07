@@ -219,6 +219,10 @@ msgid ""
 "Stage it anyways?"
 msgstr ""
 
+#, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "%s is not a Git repository."
 msgstr "Masukkan Repositori Git"
@@ -774,8 +778,15 @@ msgid "Copy..."
 msgstr "Salin"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Tidak dapat mengurai URL Git: \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Buat Cabang"
@@ -804,6 +815,9 @@ msgstr ""
 
 msgid "Create a new remote branch?"
 msgstr "Buat cabang baru di hulu?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1048,6 +1062,9 @@ msgstr "Errot Menjalankan Peramban Histori"
 msgid "Error Launching History Browser"
 msgstr "Errot Menjalankan Peramban Histori"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Error membuat hulu \"%s\""
@@ -1227,6 +1244,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1412,6 +1432,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Jalankan git-difftool pada lokasi saat ini."
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1709,6 +1732,9 @@ msgstr "Buat cabang baru di hulu?"
 msgid "Prune "
 msgstr ""
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 #, fuzzy
 msgid "Pull"
 msgstr "Tarik..."
@@ -1816,6 +1842,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Hapus yang terpilih (Hapus)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Ganti nama"
 
@@ -1853,6 +1882,9 @@ msgstr "Ganti nama hulu \"%(current)s\" ke \"%(new)s\"?"
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Sunting lokasi terpilih"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2112,14 +2144,8 @@ msgstr "Pilih Indukan"
 msgid "Select Previous Version"
 msgstr "Pilih Versi Sebelumnya"
 
-msgid "Select Repository..."
-msgstr "Pilih Repository..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "Pilih direktori di atasnya untuk klon baru"
-
-msgid "Select manually..."
-msgstr "Pilih secara manual..."
 
 #, fuzzy
 msgid "Select output dir"
@@ -2811,8 +2837,14 @@ msgstr "dd-MM-yyyy"
 #~ msgid "Select File"
 #~ msgstr "Pilih Berkas"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Pilih Repository..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Pilih berkas dari \"%s\""
+
+#~ msgid "Select manually..."
+#~ msgstr "Pilih secara manual..."
 
 #, fuzzy
 #~ msgid "Show Details..."

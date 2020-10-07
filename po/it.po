@@ -215,6 +215,10 @@ msgid ""
 "Stage it anyways?"
 msgstr ""
 
+#, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "%s is not a Git repository."
 msgstr "Archivio Git"
@@ -780,7 +784,14 @@ msgid "Copy..."
 msgstr "Copia"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
+msgstr ""
+
+msgid "Create"
 msgstr ""
 
 msgid "Create Branch"
@@ -815,6 +826,9 @@ msgstr ""
 #, fuzzy
 msgid "Create a new remote branch?"
 msgstr "Crea nuovo ramo"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1084,6 +1098,9 @@ msgstr "File browser"
 msgid "Error Launching History Browser"
 msgstr "File browser"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr ""
@@ -1272,6 +1289,9 @@ msgstr ""
 msgid "Flat light red"
 msgstr ""
 
+msgid "Folder"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Dimensione caratteri"
 
@@ -1455,6 +1475,9 @@ msgid "Launch git-difftool on the current path"
 msgstr ""
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 #, fuzzy
@@ -1777,6 +1800,9 @@ msgstr "Crea nuovo ramo"
 msgid "Prune "
 msgstr "Effettua potatura da"
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 #, fuzzy
 msgid "Pull"
 msgstr "Propaga..."
@@ -1893,6 +1919,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Rinomina ramo"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Rinomina"
 
@@ -1931,6 +1960,9 @@ msgstr ""
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Rinomina ramo"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, fuzzy, python-format
 msgid "Repository: %s"
@@ -2207,16 +2239,8 @@ msgstr "Seleziona"
 msgid "Select Previous Version"
 msgstr ""
 
-#, fuzzy
-msgid "Select Repository..."
-msgstr "Archivio Git"
-
 msgid "Select a parent directory for the new clone"
 msgstr ""
-
-#, fuzzy
-msgid "Select manually..."
-msgstr "Seleziona tutto"
 
 #, fuzzy
 msgid "Select output dir"
@@ -3500,8 +3524,16 @@ msgstr ""
 #~ msgstr "Seleziona tutto"
 
 #, fuzzy
+#~ msgid "Select Repository..."
+#~ msgstr "Archivio Git"
+
+#, fuzzy
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Cancellazione rami da %s"
+
+#, fuzzy
+#~ msgid "Select manually..."
+#~ msgstr "Seleziona tutto"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Shared (il più veloce, non raccomandato, nessun backup)"

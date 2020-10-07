@@ -319,6 +319,10 @@ msgstr ""
 "Você provavelmente deveria pular este arquivo.\n"
 "Selecionar o arquivo de qualquer forma?"
 
+#, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
 #, fuzzy, python-format
 msgid "%s is not a Git repository."
 msgstr "Entrar no Repositório Git"
@@ -851,8 +855,15 @@ msgid "Copy..."
 msgstr "Copiar..."
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Não foi possível analisar o URL do Git \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Criar Branch"
@@ -880,6 +891,9 @@ msgstr "Criar um commit de merge mesmo se o merge resultar em fast-foward"
 
 msgid "Create a new remote branch?"
 msgstr "Criar um novo branch remoto?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1117,6 +1131,9 @@ msgstr "Erro Lançando o Visualizador de Blame"
 msgid "Error Launching History Browser"
 msgstr "Erro Lançando o Visualizador de Histórico"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Erro criando o remoto \"%s\""
@@ -1292,6 +1309,9 @@ msgstr "Flat light grey"
 
 msgid "Flat light red"
 msgstr "Flat light red"
+
+msgid "Folder"
+msgstr ""
 
 msgid "Font Size"
 msgstr "Tamanho de Fonte"
@@ -1472,6 +1492,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Iniciar git-difftool no caminho atual"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1764,6 +1787,9 @@ msgstr "Perguntar quando push criar novo branch"
 msgid "Prune "
 msgstr ""
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 #, fuzzy
 msgid "Pull"
 msgstr "Puxar..."
@@ -1866,6 +1892,9 @@ msgstr "Remover rastreamento remoto de branchs que não existem mais no remoto "
 msgid "Remove selected (Delete)"
 msgstr "Remover selecionado"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Renomear"
 
@@ -1898,6 +1927,9 @@ msgstr "Renomear remoto de \"%(current)s\" para \"%(new)s\"?"
 
 msgid "Rename selected paths"
 msgstr "Renomear caminhos selecionados"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2146,14 +2178,8 @@ msgstr "Selecionar Pai"
 msgid "Select Previous Version"
 msgstr "Selecionar Versão Anterior"
 
-msgid "Select Repository..."
-msgstr "Selecionar Repositório"
-
 msgid "Select a parent directory for the new clone"
 msgstr "Selecionar um diretório pai para o novo clone"
-
-msgid "Select manually..."
-msgstr "Selecione manualmente"
 
 msgid "Select output dir"
 msgstr "Selecionar pasta de saída"
@@ -2806,8 +2832,14 @@ msgstr ""
 #~ msgid "Select File"
 #~ msgstr "Selecionar Arquivo"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Selecionar Repositório"
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Selecione um arquivo de \"%s\""
+
+#~ msgid "Select manually..."
+#~ msgstr "Selecione manualmente"
 
 #~ msgid "Show Details..."
 #~ msgstr "Mostrar Detalhes..."

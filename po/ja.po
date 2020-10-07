@@ -322,6 +322,10 @@ msgstr ""
 "これをステージングしますか？"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s は Gitのリポジトリではありません。"
 
@@ -852,8 +856,15 @@ msgid "Copy..."
 msgstr "コピー中..."
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Git URL \"%s\"がパースできません。"
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "ブランチを作成"
@@ -881,6 +892,9 @@ msgstr "マージコミットを作成するそれがファーストフォワー
 
 msgid "Create a new remote branch?"
 msgstr "リモートブランチを作成しますか？"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1117,6 +1131,9 @@ msgstr "責任者ビューア起動エラー"
 msgid "Error Launching History Browser"
 msgstr "履歴ブラウザ起動エラー"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "リモート \"%s\"作成エラー"
@@ -1290,6 +1307,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1472,6 +1492,9 @@ msgstr "git差分ツールを現在のパスに対して起動"
 
 msgid "Light Theme"
 msgstr "ライトテーマ"
+
+msgid "List"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "コミットメッセージをロード"
@@ -1760,6 +1783,9 @@ msgstr "新規のリモートブランチを作成するプッシュ時のプロ
 msgid "Prune "
 msgstr "Prune "
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "プル"
 
@@ -1861,6 +1887,9 @@ msgstr "リモートリポジトリ上に今は存在するしないブランチ
 msgid "Remove selected (Delete)"
 msgstr "選択したものを削除 (Delete)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "名前変更"
 
@@ -1892,6 +1921,9 @@ msgstr "リモートの\"%(current)s\" を \"%(new)s\" と名前を変更しま�
 
 msgid "Rename selected paths"
 msgstr "選択したパスの名前を変更"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2138,14 +2170,8 @@ msgstr "親を選択"
 msgid "Select Previous Version"
 msgstr "以前のバージョンを選択"
 
-msgid "Select Repository..."
-msgstr "リポジトリを選択..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "新しいクローン用に親ディレクトリを選択"
-
-msgid "Select manually..."
-msgstr "マニュアルで選択..."
 
 msgid "Select output dir"
 msgstr "出力ディレクトリを選択"
@@ -3394,8 +3420,14 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Select File"
 #~ msgstr "全て選択"
 
+#~ msgid "Select Repository..."
+#~ msgstr "リポジトリを選択..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "%s からブランチを削除しています。"
+
+#~ msgid "Select manually..."
+#~ msgstr "マニュアルで選択..."
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共有(最高速・非推奨・バックアップ無し)"

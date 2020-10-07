@@ -239,6 +239,10 @@ msgstr ""
 "Зафиксировать в любом случае?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s не является git репозиторием."
 
@@ -790,8 +794,15 @@ msgid "Copy..."
 msgstr "Копировать"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Неполучилось разобрать Git URL: \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Создать ветвь"
@@ -820,6 +831,9 @@ msgstr "Если эта опция активна, то даже при слия
 
 msgid "Create a new remote branch?"
 msgstr "Создать новую внешнюю ветвь?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1063,6 +1077,9 @@ msgstr "Ошибка запуска Просмотрщика истории"
 msgid "Error Launching History Browser"
 msgstr "Ошибка запуска Просмотрщика истории"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Не удалось создать внешную ветвь \"%s\""
@@ -1238,6 +1255,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1425,6 +1445,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Запустить git-difftool по выбранному пути"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1720,6 +1743,9 @@ msgstr "Создать новую внешнюю ветвь?"
 msgid "Prune "
 msgstr "Чистка"
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Получить (pull)"
 
@@ -1824,6 +1850,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Удалить выбранное (Delete)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Переименовать"
 
@@ -1859,6 +1888,9 @@ msgstr "Переименовать внешнюю ветвь \"%(current)s\" н�
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Редактировать выбранный путь(и)"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2118,14 +2150,8 @@ msgstr "Выбрать родителя"
 msgid "Select Previous Version"
 msgstr "Выбрать предыдущую версию"
 
-msgid "Select Repository..."
-msgstr "Выбрать репозиторий..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "Выберите родительский каталог для новой копии"
-
-msgid "Select manually..."
-msgstr "Выбрать вручную..."
 
 #, fuzzy
 msgid "Select output dir"
@@ -3423,8 +3449,14 @@ msgstr ""
 #~ msgid "Select File"
 #~ msgstr "Выбрать файл"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Выбрать репозиторий..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Выбрать файл из \"%s\""
+
+#~ msgid "Select manually..."
+#~ msgstr "Выбрать вручную..."
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Общий (Самый быстрый, не рекомендуется, без резервной копии)"

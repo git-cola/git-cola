@@ -327,6 +327,10 @@ msgstr ""
 "無論如何都要將它移入新修訂版準備區域嗎？"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s 不是一個 Git 版控庫。"
 
@@ -859,8 +863,15 @@ msgid "Copy..."
 msgstr "複製……"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "無法分析 Git URL：「%s」"
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "建立一個新的分支"
@@ -888,6 +899,9 @@ msgstr "就算該合併是一個快速前移式合併也總是建立一個合併
 
 msgid "Create a new remote branch?"
 msgstr "要建立新的遠端分支嗎？"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1124,6 +1138,9 @@ msgstr "啟動指謫(Blame)檢視器時發生錯誤"
 msgid "Error Launching History Browser"
 msgstr "無法啟動變動紀錄瀏覽器"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "建立「%s」遠端分支時發生錯誤"
@@ -1297,6 +1314,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1478,6 +1498,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "在當前路徑中啟動 git-difftool"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1767,6 +1790,9 @@ msgstr "在建立新的遠端分支時提示使用者"
 msgid "Prune "
 msgstr "清除(prune) "
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "自遠端分支撈取並合併(pull)"
 
@@ -1868,6 +1894,9 @@ msgstr "移除不再存在於遠端板控庫上的遠端追蹤分支"
 msgid "Remove selected (Delete)"
 msgstr "移除被選取的項目（刪除）"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "重新命名"
 
@@ -1899,6 +1928,9 @@ msgstr "要將「%(current)s」遠端版控庫改名為「%(new)s」嗎？"
 
 msgid "Rename selected paths"
 msgstr "重新命名選取的路徑"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2145,14 +2177,8 @@ msgstr "選取"
 msgid "Select Previous Version"
 msgstr "選擇先前版本"
 
-msgid "Select Repository..."
-msgstr "選擇版控庫……"
-
 msgid "Select a parent directory for the new clone"
 msgstr "選取新克隆的 Git 版控庫要放置的目錄"
-
-msgid "Select manually..."
-msgstr "手動選取……"
 
 msgid "Select output dir"
 msgstr "選取輸出目錄"
@@ -3448,8 +3474,14 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Select File"
 #~ msgstr "選取檔案"
 
+#~ msgid "Select Repository..."
+#~ msgstr "選擇版控庫……"
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "於「%s」中選取檔案"
+
+#~ msgid "Select manually..."
+#~ msgstr "手動選取……"
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共享方式 (最快, 不推薦, 不做備份)"

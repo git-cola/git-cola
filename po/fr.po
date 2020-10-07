@@ -257,6 +257,10 @@ msgstr ""
 "Le commiter malgré tout ?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s n'est pas un dépôt Git"
 
@@ -782,8 +786,15 @@ msgid "Copy..."
 msgstr "Copier..."
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Impossible d'analyser l'URL Git : « %s »"
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Créer branche"
@@ -811,6 +822,9 @@ msgstr "Créer un commit fusionné même quand la fusion se résout rapidement"
 
 msgid "Create a new remote branch?"
 msgstr "Créer nouvelle branche distante ?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1046,6 +1060,9 @@ msgstr "Erreur lors de l'ouverture du visionneur de fichier"
 msgid "Error Launching History Browser"
 msgstr "Erreur lors de l'ouverture de l'historique"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Erreur lors de la création de la branche distante « %s »"
@@ -1218,6 +1235,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1397,6 +1417,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Lancer git-difftool sur le chemin actuel"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1685,6 +1708,9 @@ msgstr "Confirmation lorsque la poussée créé des nouvelles branches distantes
 msgid "Prune "
 msgstr ""
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Tirer"
 
@@ -1786,6 +1812,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Supprimer la sélection"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Renommer"
 
@@ -1816,6 +1845,9 @@ msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "Renommage de la branche distante « %(current)s » en « %(new)s » ?"
 
 msgid "Rename selected paths"
+msgstr ""
+
+msgid "Repository Not Found"
 msgstr ""
 
 #, python-format
@@ -2063,14 +2095,8 @@ msgstr "Sélectionner un parent"
 msgid "Select Previous Version"
 msgstr "Sélectionner la version précédente"
 
-msgid "Select Repository..."
-msgstr "Sélectionner le dépôt"
-
 msgid "Select a parent directory for the new clone"
 msgstr "Sélectionner un répertoire parent pour le nouveau clonage"
-
-msgid "Select manually..."
-msgstr "Sélectionner manuellement"
 
 msgid "Select output dir"
 msgstr ""
@@ -2639,3 +2665,9 @@ msgstr ""
 
 msgid "yyyy-MM-dd"
 msgstr "dd/MM/yyyy"
+
+#~ msgid "Select Repository..."
+#~ msgstr "Sélectionner le dépôt"
+
+#~ msgid "Select manually..."
+#~ msgstr "Sélectionner manuellement"

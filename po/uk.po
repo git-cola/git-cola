@@ -277,6 +277,10 @@ msgstr ""
 "Проіндексувати в будь-якому випадку?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s не є репозиторієм Git."
 
@@ -819,8 +823,15 @@ msgid "Copy..."
 msgstr "Скопіювати"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Не вдалось розпізнати Git URL: \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Створити гілку"
@@ -848,6 +859,9 @@ msgstr "Створити коміт злиття навіть якщо злит�
 
 msgid "Create a new remote branch?"
 msgstr "Створити нову віддалену гілку?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1089,6 +1103,9 @@ msgstr "Помилка запуску переглядача анотацій (b
 msgid "Error Launching History Browser"
 msgstr "Помилка запуску браузера історії"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Не вдалось створити віддалений репозиторій \"%s\""
@@ -1263,6 +1280,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1445,6 +1465,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Запустити git-difftool для поточного шляху"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1736,6 +1759,9 @@ msgstr "Підказати коли надсилаются новостворе�
 msgid "Prune "
 msgstr ""
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Стягнути"
 
@@ -1839,6 +1865,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Видалити виділене (Видалити)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Перейменувати"
 
@@ -1871,6 +1900,9 @@ msgstr "Перейменувати віддалений репозиторій \
 #, fuzzy
 msgid "Rename selected paths"
 msgstr "Редагувати вибрані шляхи"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2126,14 +2158,8 @@ msgstr "Вибрати предка"
 msgid "Select Previous Version"
 msgstr "Вибрати попередню версію"
 
-msgid "Select Repository..."
-msgstr "Вибрати репозиторій..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "Виберіть батьківський каталог для нового клонування"
-
-msgid "Select manually..."
-msgstr "Вибрати вручну..."
 
 #, fuzzy
 msgid "Select output dir"
@@ -2761,8 +2787,14 @@ msgstr "рррр-ММ-дд"
 #~ msgid "Select File"
 #~ msgstr "Вибрати файл"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Вибрати репозиторій..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Вибрати файл з \"%s\""
+
+#~ msgid "Select manually..."
+#~ msgstr "Вибрати вручну..."
 
 #, fuzzy
 #~ msgid "Show Details..."

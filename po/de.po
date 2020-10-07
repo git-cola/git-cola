@@ -331,6 +331,10 @@ msgstr ""
 "Trotzdem vormerken?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s ist kein Git-Repository."
 
@@ -860,8 +864,15 @@ msgid "Copy..."
 msgstr "Kopieren..."
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "URL konnte nicht ausgewertet werden: \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Branch erstellen"
@@ -889,6 +900,9 @@ msgstr "Merge-Commit erstellen, selbst wenn der Merge mit schnellem Vorspulen au
 
 msgid "Create a new remote branch?"
 msgstr "Neuen externen Branch erstellen?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1124,6 +1138,9 @@ msgstr "Fehler beim Starten der Verantwortlichkeitansicht"
 msgid "Error Launching History Browser"
 msgstr "Fehler beim Starten der Verlaufsansicht"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Fehler beim erstellen der externen Referenz \"%s\""
@@ -1297,6 +1314,9 @@ msgid "Flat light grey"
 msgstr ""
 
 msgid "Flat light red"
+msgstr ""
+
+msgid "Folder"
 msgstr ""
 
 msgid "Font Size"
@@ -1478,6 +1498,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "Gegenwärtigen Pfad im Vergleichswerkzeug öffnen"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1764,6 +1787,9 @@ msgstr "Bestätigen, falls das Versenden neue Remote-Branches erzeugt"
 msgid "Prune "
 msgstr "Aufräumen von "
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Holen und zusammenführen"
 
@@ -1865,6 +1891,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "Auswahl entfernen (löschen)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Umbenennen"
 
@@ -1896,6 +1925,9 @@ msgstr "Externe Referenz \"%(current)s\" umbenennen zu \"%(new)s\"?"
 
 msgid "Rename selected paths"
 msgstr "Ausgewählten Pfad umbenennen"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2142,14 +2174,8 @@ msgstr "Vorgänger Auswählen"
 msgid "Select Previous Version"
 msgstr "Vorherige Version auswählen"
 
-msgid "Select Repository..."
-msgstr "Repository wählen..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "Wählen Sie das übergeordnete Verzeichnis für den Klon"
-
-msgid "Select manually..."
-msgstr "Selbst auswählen..."
 
 msgid "Select output dir"
 msgstr "Ausgabe-Verzeichnis wählen"
@@ -3452,8 +3478,14 @@ msgstr "dd.MM.yyyy"
 #~ msgid "Select File"
 #~ msgstr "Wähle Datei aus"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Repository wählen..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Datei von \"%s\" auswählen"
+
+#~ msgid "Select manually..."
+#~ msgstr "Selbst auswählen..."
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "Verknüpft (schnell, nicht empfohlen, kein Backup)"

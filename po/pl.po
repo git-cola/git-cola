@@ -322,6 +322,10 @@ msgstr ""
 "Czy dobrać go mimo tego?"
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s nie jest repozytorium Git."
 
@@ -853,8 +857,15 @@ msgid "Copy..."
 msgstr "Skopiuj..."
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Nie można przetworzyć adresu URL Gita: \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "Utwórz gałąź"
@@ -882,6 +893,9 @@ msgstr "Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na prze
 
 msgid "Create a new remote branch?"
 msgstr "Czy utworzyć nową zdalną gałąź?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1117,6 +1131,9 @@ msgstr "Błąd uruchamiania przeglądarki autorów"
 msgid "Error Launching History Browser"
 msgstr "Błąd uruchamiania przeglądarki historii"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "Błąd podczas tworzenia zdalnego repozytorium \"%s\""
@@ -1290,6 +1307,9 @@ msgstr "Płaski, jasny, szary"
 
 msgid "Flat light red"
 msgstr "Płaski, jasny, czerwony"
+
+msgid "Folder"
+msgstr ""
 
 msgid "Font Size"
 msgstr "Rozmiar czcionki"
@@ -1471,6 +1491,9 @@ msgstr "Uruchom git-difftool dla bieżącej ścieżki"
 
 msgid "Light Theme"
 msgstr "Jasne"
+
+msgid "List"
+msgstr ""
 
 msgid "Load Commit Message"
 msgstr "Wczytaj opis wdrożenia"
@@ -1756,6 +1779,9 @@ msgstr "Zapytaj, gdy wypchnięcie miałoby utworzyć nową zdalną gałąź"
 msgid "Prune "
 msgstr "Przytnij "
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "Zaciągnij"
 
@@ -1857,6 +1883,9 @@ msgstr "Usuń gałęzie zdalne, które już nie istnieją w repozytorium zdalnym
 msgid "Remove selected (Delete)"
 msgstr "Usuń wybrane (Usuń)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "Przemianuj "
 
@@ -1888,6 +1917,9 @@ msgstr "Przemianuj zdalne repozytorium z \"%(current)s\" na \"%(new)s\"?"
 
 msgid "Rename selected paths"
 msgstr "Przemianuj wybrane ścieżki"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2134,14 +2166,8 @@ msgstr "Wybierz przodka"
 msgid "Select Previous Version"
 msgstr "Wybierz poprzednią wersję"
 
-msgid "Select Repository..."
-msgstr "Wybierz repozytorium..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "Wybierz katalog nadrzędny do pobrania"
-
-msgid "Select manually..."
-msgstr "Wybierz ręcznie..."
 
 msgid "Select output dir"
 msgstr "Wybierz katalog do wyników"
@@ -2786,8 +2812,14 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Select File"
 #~ msgstr "Wybierz plik"
 
+#~ msgid "Select Repository..."
+#~ msgstr "Wybierz repozytorium..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "Wybierz plik z \"%s\""
+
+#~ msgid "Select manually..."
+#~ msgstr "Wybierz ręcznie..."
 
 #~ msgid "Show Details..."
 #~ msgstr "Pokaż szczegóły..."

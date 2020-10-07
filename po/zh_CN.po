@@ -258,6 +258,10 @@ msgid ""
 msgstr ""
 
 #, python-format
+msgid "%s could not be opened. Remove from bookmarks?"
+msgstr ""
+
+#, python-format
 msgid "%s is not a Git repository."
 msgstr "%s 不是 Git 版本库。"
 
@@ -789,8 +793,15 @@ msgid "Copy..."
 msgstr "复制"
 
 #, python-format
+msgid "Could not open %s."
+msgstr ""
+
+#, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "无法解析 URL \"%s\""
+
+msgid "Create"
+msgstr ""
 
 msgid "Create Branch"
 msgstr "创建分支"
@@ -819,6 +830,9 @@ msgstr "启用时总是在合并时创建一个提交,即使是快进合并方�
 
 msgid "Create a new remote branch?"
 msgstr "创建远程分支吗?"
+
+msgid "Create a new repository at that location?"
+msgstr ""
 
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
@@ -1055,6 +1069,9 @@ msgstr "启动问责查看器出错"
 msgid "Error Launching History Browser"
 msgstr "启动历史浏览器出错"
 
+msgid "Error Opening Repository"
+msgstr ""
+
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "创建远程 \"%s\" 出错"
@@ -1225,6 +1242,9 @@ msgstr "扁平浅灰"
 
 msgid "Flat light red"
 msgstr "扁平浅红"
+
+msgid "Folder"
+msgstr ""
 
 msgid "Font Size"
 msgstr "字体大小"
@@ -1407,6 +1427,9 @@ msgid "Launch git-difftool on the current path"
 msgstr "在当前路径运行 git-difftool"
 
 msgid "Light Theme"
+msgstr ""
+
+msgid "List"
 msgstr ""
 
 msgid "Load Commit Message"
@@ -1695,6 +1718,9 @@ msgstr "推送创建远程分支时提醒"
 msgid "Prune "
 msgstr "从..清除(prune) "
 
+msgid "Prune Missing Entries"
+msgstr ""
+
 msgid "Pull"
 msgstr "拉取"
 
@@ -1796,6 +1822,9 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "移除所选 (删除)"
 
+msgid "Remove stale entries for repositories that no longer exist"
+msgstr ""
+
 msgid "Rename"
 msgstr "重命名"
 
@@ -1827,6 +1856,9 @@ msgstr "重命名远程 \"%(current)s\" 为 \"%(new)s\"?"
 
 msgid "Rename selected paths"
 msgstr "重命名所选路径"
+
+msgid "Repository Not Found"
+msgstr ""
 
 #, python-format
 msgid "Repository: %s"
@@ -2079,14 +2111,8 @@ msgstr "选择父项目"
 msgid "Select Previous Version"
 msgstr "选择之前版本"
 
-msgid "Select Repository..."
-msgstr "选择版本库..."
-
 msgid "Select a parent directory for the new clone"
 msgstr "为新克隆选择上级文件夹"
-
-msgid "Select manually..."
-msgstr "手动选择..."
 
 msgid "Select output dir"
 msgstr "选择输出目录"
@@ -3378,8 +3404,14 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Select File"
 #~ msgstr "选择文件"
 
+#~ msgid "Select Repository..."
+#~ msgstr "选择版本库..."
+
 #~ msgid "Select file from \"%s\""
 #~ msgstr "从“%s”中选择文件"
+
+#~ msgid "Select manually..."
+#~ msgstr "手动选择..."
 
 #~ msgid "Shared (Fastest, Not Recommended, No Backup)"
 #~ msgstr "共享方式 (最快, 不推荐, 不做备份)"
