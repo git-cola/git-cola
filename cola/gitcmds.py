@@ -545,17 +545,17 @@ def export_patchset(context, start, end, output='patches', **kwargs):
     return git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
 
-# TODO Unused?
-def reset_paths(context, items):
+def reset_paths(context, head, items):
     """Run "git reset" while preventing argument overflow"""
+    items = list(set(items))
     fn = context.git.reset
-    status, out, err = utils.slice_fn(items, lambda paths: fn('--', *paths))
+    status, out, err = utils.slice_fn(items, lambda paths: fn(head, '--', *paths))
     return (status, out, err)
 
 
 def unstage_paths(context, args, head='HEAD'):
     git = context.git
-    status, out, err = git.reset(head, '--', *set(args))
+    status, out, err = reset_paths(context, head, args)
     if status == 128:
         # handle git init: we have to use 'git rm --cached'
         # detect this condition by checking if the file is still staged
