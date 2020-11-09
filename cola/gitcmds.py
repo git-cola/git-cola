@@ -554,7 +554,7 @@ def reset_paths(context, head, items):
 
 
 def unstage_paths(context, args, head='HEAD'):
-    git = context.git
+    """Unstage paths while accounting for git init"""
     status, out, err = reset_paths(context, head, args)
     if status == 128:
         # handle git init: we have to use 'git rm --cached'
