@@ -15,6 +15,9 @@ Usability, bells and whistles
 
 Translations
 ------------
+* Update Japanese translation.
+  (`#1098 <https://github.com/git-cola/git-cola/pull/1098>`_)
+
 * Updated Brazilian translation.
   (`#1091 <https://github.com/git-cola/git-cola/pull/1091>`_)
 
