@@ -21,6 +21,11 @@ Translations
 * Updated Brazilian translation.
   (`#1091 <https://github.com/git-cola/git-cola/pull/1091>`_)
 
+Packaging
+---------
+* The ``--use-env-python`` option for ``setup.py`` is now Python3 compatible.
+  (`#1102 <https://github.com/git-cola/git-cola/issues/1102>`_)
+
 .. _v3.8:
 
 v3.8

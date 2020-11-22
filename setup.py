@@ -28,7 +28,14 @@ try:
 except ValueError:
     use_env_python = False
 if use_env_python:
-    build_scripts.first_line_re = re.compile(r'^should not match$')
+    if sys.version_info[0] < 3:
+        # Python2 accepts the r'' unicode literal.
+        pattern = re.compile(r'^should not match$')
+    else:
+        # Python3 reads files as bytes and requires that the regex pattern is
+        # specified as bytes.
+        pattern = re.compile(b'^should not match$')
+    build_scripts.first_line_re = pattern
 
 # Disable installation of the private cola package by passing --no-private-libs or
 # by setting GIT_COLA_NO_PRIVATE_LIBS=1 in th environment.
