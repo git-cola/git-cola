@@ -53,6 +53,7 @@ Thanks
 * David Fernandez
 * David LeGare
 * David Martínez Martí
+* David Roman
 * Dawid Drozd
 * Dennis Gilmore
 * deniz1a
