@@ -170,6 +170,13 @@ Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
 
 Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
 
+### FreeBSD
+
+    # install from official binary packages
+    pkg install -r FreeBSD devel/git-cola
+    # build from source
+    cd /usr/ports/devel/git-cola && make clean install
+
 ## Ubuntu
 
 The default version on 18.04 is older and is missing features and enhancements.
