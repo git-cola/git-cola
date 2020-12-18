@@ -48,6 +48,7 @@ Thanks
 * Daniel Jay Haskin
 * Daniel Harding
 * Daniel King
+* Dave Cottlehuber
 * Dave Thomas
 * David Aguilar
 * David Fernandez
