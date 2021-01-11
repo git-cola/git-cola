@@ -1,21 +1,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2016, 2020.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2016, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2020-07-11 09:04+0200\n"
+"PO-Revision-Date: 2021-01-02 20:57+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 20.07.70\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10"
+" || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 20.08.1\n"
 
 msgid ""
 "\n"
@@ -27,7 +28,8 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby dodać\n"
+"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby"
+" dodać\n"
 "                łaty do listy\n"
 "            </p>\n"
 "            "
@@ -51,7 +53,8 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or updating\n"
+"            We invite you to participate in translation by adding or"
+" updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -77,7 +80,8 @@ msgstr ""
 "        <br>\n"
 "        <p>\n"
 "            Zachęcamy do udziału w tłumaczeniu, poprzez dodawanie lub\n"
-"            uaktualnianie tłumaczenia, a następnie utworzeniu prośby o wciągnięcie.\n"
+"            uaktualnianie tłumaczenia, a następnie utworzeniu prośby o"
+" wciągnięcie.\n"
 "        </p>\n"
 "\n"
 "        <br>\n"
@@ -323,7 +327,7 @@ msgstr ""
 
 #, python-format
 msgid "%s could not be opened. Remove from bookmarks?"
-msgstr ""
+msgstr "Nie można otworzyć %s. Czy usunąć z zakładek?"
 
 #, python-format
 msgid "%s is not a Git repository."
@@ -413,7 +417,8 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych zmian.\n"
+"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych"
+" zmian.\n"
 "Przywrócenie niewdrożonych zmian będzie niemożliwe."
 
 msgid "Aborting the current merge?"
@@ -457,10 +462,10 @@ msgid "Add Separator"
 msgstr "Dodaj oddzielacz"
 
 msgid "Add Submodule"
-msgstr ""
+msgstr "Dodaj podmoduł"
 
 msgid "Add Submodule..."
-msgstr ""
+msgstr "Dodaj podmoduł..."
 
 msgid "Add Toolbar"
 msgstr "Dodaj pasek narzędzi"
@@ -488,7 +493,7 @@ msgid "Add remote"
 msgstr "Dodaj zdalne repozytorium"
 
 msgid "Add this submodule?"
-msgstr ""
+msgstr "Czy dodać ten podmoduł?"
 
 msgid "Add to .gitignore"
 msgstr "Dodaj do .gitignore"
@@ -525,11 +530,19 @@ msgstr ""
 "Wszystkie podmoduły zostaną uaktualnione przy użyciu\n"
 "\"%s\""
 
-msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
-msgstr "Zezwól na uaktualnienia nie będące przewinięciem do przodu.  Użycie \"wymuś\" może spowodować, że zdalne repozytoria zgubią wdrożenia; używaj z rozwagą"
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
+" repository to lose commits; use it with care"
+msgstr ""
+"Zezwól na uaktualnienia nie będące przewinięciem do przodu.  Użycie \"wymuś\""
+" może spowodować, że zdalne repozytoria zgubią wdrożenia; używaj z rozwagą"
 
-msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr "Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na przewinięciu do przodu"
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a"
+" fast-forward update"
+msgstr ""
+"Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na"
+" przewinięciu do przodu"
 
 msgid "Amend"
 msgstr "Uzupełnij"
@@ -642,7 +655,7 @@ msgid "Branch Name"
 msgstr "Nazwa gałęzi"
 
 msgid "Branch name"
-msgstr ""
+msgstr "Nazwa gałęzi"
 
 #, python-format
 msgid "Branch: %s"
@@ -711,7 +724,7 @@ msgid "Changed Upstream"
 msgstr "Zmienione w źródle odgórnym"
 
 msgid "Check Published Commits when Amending"
-msgstr "Sprawdź publikację wdrożenia przed jego uzupełniania"
+msgstr "Uzupełniając wdrożenie, sprawdź jego opublikowanie"
 
 msgid "Check Spelling"
 msgstr "Sprawdź pisownię"
@@ -720,7 +733,8 @@ msgid "Check spelling"
 msgstr "Sprawdź pisownię"
 
 msgid "Check whether a commit has been published when amending"
-msgstr "Sprawdź, czy wdrożenie zostało już opublikowane, przed jego uzupełnieniem"
+msgstr ""
+"Sprawdź, czy wdrożenie zostało już opublikowane, przed jego uzupełnieniem"
 
 msgid "Checkout"
 msgstr "Przełącz"
@@ -811,8 +825,12 @@ msgstr ""
 msgid "Commit summary"
 msgstr "Nazwa wdrożenia"
 
-msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr "Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić scalenie niewdrożonym"
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
+" uncommitted"
+msgstr ""
+"Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić"
+" scalenie niewdrożonym"
 
 msgid "Commit@@verb"
 msgstr "Wdroż@@verb"
@@ -858,14 +876,14 @@ msgstr "Skopiuj..."
 
 #, python-format
 msgid "Could not open %s."
-msgstr ""
+msgstr "Nie można otworzyć %s."
 
 #, python-format
 msgid "Could not parse Git URL: \"%s\""
 msgstr "Nie można przetworzyć adresu URL Gita: \"%s\""
 
 msgid "Create"
-msgstr ""
+msgstr "Utwórz"
 
 msgid "Create Branch"
 msgstr "Utwórz gałąź"
@@ -889,16 +907,22 @@ msgid "Create Unsigned Tag"
 msgstr "Utwórz niepodpisany znacznik"
 
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na przewinięciu do przodu"
+msgstr ""
+"Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na przewinięciu"
+" do przodu"
 
 msgid "Create a new remote branch?"
 msgstr "Czy utworzyć nową zdalną gałąź?"
 
 msgid "Create a new repository at that location?"
-msgstr ""
+msgstr "Czy utworzyć nowe repozytorium w tym miejscu?"
 
-msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgid ""
+"Create a shallow clone with history truncated to the specified number of"
+" revisions.  0 performs a full clone."
 msgstr ""
+"Pobierz płytko z historią przyciętą do danej liczby wydań. 0 wykonuje pobiera"
+" z całą historią."
 
 msgid "Create..."
 msgstr "Utwórz..."
@@ -996,7 +1020,7 @@ msgid "Deletions"
 msgstr "Usunięto"
 
 msgid "Depth"
-msgstr ""
+msgstr "Głębokość"
 
 msgid "Detach"
 msgstr "Odłącz"
@@ -1132,7 +1156,7 @@ msgid "Error Launching History Browser"
 msgstr "Błąd uruchamiania przeglądarki historii"
 
 msgid "Error Opening Repository"
-msgstr ""
+msgstr "Błąd otwierania repozytorium"
 
 #, python-format
 msgid "Error creating remote \"%s\""
@@ -1236,23 +1260,38 @@ msgstr "Zapisano plik"
 msgid "File saved to \"%s\""
 msgstr "Plik zapisano w \"%s\""
 
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest false.\n"
-
-msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań systemowych inotify.\n"
-
-msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest"
+" false.\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
-"\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"File system change monitoring: disabled because libc does not support the"
+" inotify system calls.\n"
 msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę wykonując:\n"
+"Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań"
+" systemowych inotify.\n"
+
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
+
+msgid ""
+"File system change monitoring: disabled because the limit on the total number"
+" of inotify watches was reached.  You may be able to increase the limit on"
+" the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
+msgstr ""
+"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę"
+" całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę"
+" wykonując:\n"
+"\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
+" sudo sysctl -p\n"
 
 msgid "File system change monitoring: enabled.\n"
 msgstr "Monitorowanie zmiany systemu plików: włączone.\n"
@@ -1309,7 +1348,7 @@ msgid "Flat light red"
 msgstr "Płaski, jasny, czerwony"
 
 msgid "Folder"
-msgstr ""
+msgstr "Katalog"
 
 msgid "Font Size"
 msgstr "Rozmiar czcionki"
@@ -1456,7 +1495,7 @@ msgid "Keep *.orig Merge Backups"
 msgstr "Zachowaj kopie zapasowe *.orig po scalaniu"
 
 msgid "Keep Index"
-msgstr "Zachowaj indeks"
+msgstr "Pozostaw indeks"
 
 msgid "Keyboard Shortcuts"
 msgstr "Skróty klawiszowe"
@@ -1493,7 +1532,7 @@ msgid "Light Theme"
 msgstr "Jasne"
 
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 msgid "Load Commit Message"
 msgstr "Wczytaj opis wdrożenia"
@@ -1638,7 +1677,8 @@ msgstr "Pobranie bez przewinięcia do przodu zastępuje lokalną historię!"
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
-msgstr "Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
+msgstr ""
+"Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
 
 msgid "Nothing to commit"
 msgstr "Nie ma nic do wdrożenia"
@@ -1765,7 +1805,8 @@ msgid "Prepare Commit Message"
 msgstr "Przygotuj opis wdrożenia"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
-msgstr "Uniemożliw dobranie wszystkich plików, gdy nie jest zaznaczony żaden plik"
+msgstr ""
+"Uniemożliw dobranie wszystkich plików, gdy nie jest zaznaczony żaden plik"
 
 msgid "Previous File"
 msgstr "Poprzedni plik"
@@ -1780,7 +1821,7 @@ msgid "Prune "
 msgstr "Przytnij "
 
 msgid "Prune Missing Entries"
-msgstr ""
+msgstr "Przytnij brakujące wpisy"
 
 msgid "Pull"
 msgstr "Zaciągnij"
@@ -1841,19 +1882,23 @@ msgid "Reduce commit history to minimum"
 msgstr "Pomiń historię wdrożeń"
 
 msgid "Reference Repository"
-msgstr ""
+msgstr "Repozytorium odniesienia"
 
 msgid "Reference URL"
-msgstr ""
+msgstr "Adres URL odniesienia"
 
 msgid "Reference repository to use when cloning (optional)"
-msgstr ""
+msgstr "Repozytorium odniesienia, używane podczas pobierania (niewymagane)"
 
 msgid "Refresh"
 msgstr "Odśwież"
 
-msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
-msgstr "Odmów scalenia do chwili uaktualnienia bieżącego HEAD lub rozwiązania scalenia poprzez przewinięcie do przodu."
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge"
+" can be resolved as a fast-forward"
+msgstr ""
+"Odmów scalenia do chwili uaktualnienia bieżącego HEAD lub rozwiązania"
+" scalenia poprzez przewinięcie do przodu."
 
 msgid "Remote"
 msgstr "Zdalne repozytorium"
@@ -1884,7 +1929,7 @@ msgid "Remove selected (Delete)"
 msgstr "Usuń wybrane (Usuń)"
 
 msgid "Remove stale entries for repositories that no longer exist"
-msgstr ""
+msgstr "Usuń zawisłe wpisy dla repozytoriów, które już nie istnieją"
 
 msgid "Rename"
 msgstr "Przemianuj "
@@ -1919,7 +1964,7 @@ msgid "Rename selected paths"
 msgstr "Przemianuj wybrane ścieżki"
 
 msgid "Repository Not Found"
-msgstr ""
+msgstr "Nie znaleziono repozytorium"
 
 #, python-format
 msgid "Repository: %s"
@@ -1970,7 +2015,8 @@ msgstr "Wyzerować drzewo pracy?"
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr "Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
+msgstr ""
+"Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
 
 msgid "Restart the application after changing appearance settings."
 msgstr "Uruchom aplikację ponownie po zmianie ustawień wyglądu."
@@ -2076,7 +2122,7 @@ msgid "Safe Mode"
 msgstr "Tryb bezpieczny"
 
 msgid "Save"
-msgstr "Zachowaj"
+msgstr "Przechowaj"
 
 msgid "Save Archive"
 msgstr "Zapisz archiwum"
@@ -2371,13 +2417,13 @@ msgid "Stop tracking paths"
 msgstr "Zaprzestań zarządzanie ścieżką/ścieżkami"
 
 msgid "Submodule URL (can be relative, ex: ../repo.git)"
-msgstr ""
+msgstr "Adres URL podmodułu (może być względny, np.: ../repo.git)"
 
 msgid "Submodule branch to track (optional)"
-msgstr ""
+msgstr "Gałąź podmodułu do śledzenia (niewymagane)"
 
 msgid "Submodule path within the current repository (optional)"
-msgstr ""
+msgstr "Ścieżka podmodułu z bieżącym repozytorium (niewymagane)"
 
 msgid "Submodules"
 msgstr "Podmoduły"
@@ -2446,6 +2492,8 @@ msgid ""
 "The submodule will be added using\n"
 "\"%s\""
 msgstr ""
+"Zostanie dodany podmoduł przy użyciu\n"
+"\"%s\""
 
 #, python-format
 msgid ""
@@ -2512,7 +2560,7 @@ msgid "Toggle Enabled"
 msgstr "Uwzględnij/nie uwzględniaj"
 
 msgid "Toggle image diff"
-msgstr ""
+msgstr "Przełącz różnicę obrazu"
 
 msgid "Toggle the branches filter"
 msgstr "Przełącz filtr gałęzi"
@@ -2530,7 +2578,7 @@ msgid "Traditional Chinese (Taiwan) translation"
 msgstr "Tłumaczenia na tradycyjny chiński (Tajwan)"
 
 msgid "Translation"
-msgstr ""
+msgstr "Tłumaczenie"
 
 msgid "Translators"
 msgstr "Tłumacze"
@@ -2695,8 +2743,10 @@ msgid "exit code %s"
 msgstr "kod wyjścia %s"
 
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr ""
+"krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
 
 #, python-format
 msgid "git cola version %s"
@@ -2709,7 +2759,7 @@ msgid "git-cola diff"
 msgstr "Różnica git-cola"
 
 msgid "git://git.example.com/repo.git"
-msgstr ""
+msgstr "git://git.example.com/repo.git"
 
 msgid "grep result..."
 msgstr "wyszukaj w wynikach..."
@@ -2718,7 +2768,7 @@ msgid "hotkeys.html"
 msgstr "hotkeys.html"
 
 msgid "path/to/submodule"
-msgstr ""
+msgstr "ściezka/do/podmodułu"
 
 msgid "title"
 msgstr "tytuł"
