@@ -214,6 +214,7 @@ Thanks
 * Thomas Thorne
 * Tom Dobbelaere
 * Tim Brown
+* Tim Gates
 * Tim Schumacher
 * Trevor Alexander
 * Ugo Riboni
