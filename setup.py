@@ -20,7 +20,7 @@ if sys.version_info[0] < 3:
     # pylint: disable=no-member
     sys.setdefaultencoding('utf-8')
 
-# Prevent distuils from changing "#!/usr/bin/env python" when
+# Prevent distutils from changing "#!/usr/bin/env python" when
 # --use-env-python is specified.
 try:
     sys.argv.remove('--use-env-python')
