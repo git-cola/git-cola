@@ -36,8 +36,6 @@ TREE_LAYOUT = {
         'Actions::Merge',
         'Actions::AbortMerge',
         'Actions::UpdateSubmodules',
-        'Actions::ResetBranchHead',
-        'Actions::ResetWorktree',
         'Actions::Grep',
         'Actions::Search',
     ],
@@ -62,6 +60,13 @@ TREE_LAYOUT = {
         'Branch::BrowseOther',
         'Branch::VisualizeCurrent',
         'Branch::VisualizeAll',
+    ],
+    'Reset': [
+        'Commit::UnstageAll',
+        'Actions::ResetSoft',
+        'Actions::ResetMixed',
+        'Actions::ResetKeep',
+        'Actions::ResetHard',
     ],
     'View': ['View::DAG', 'View::FileBrowser'],
 }

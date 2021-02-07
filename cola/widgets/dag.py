@@ -163,13 +163,13 @@ class ViewerMixin(object):
             )
         )
 
-    def reset_branch_head(self):
+    def reset_mixed(self):
         context = self.context
-        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetMixed, context, ref=oid))
 
-    def reset_worktree(self):
+    def reset_keep(self):
         context = self.context
-        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetKeep, context, ref=oid))
 
     def reset_merge(self):
         context = self.context
@@ -222,8 +222,8 @@ class ViewerMixin(object):
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection)
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
-        self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
-        self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['reset_mixed'].setEnabled(has_single_selection)
+        self.menu_actions['reset_keep'].setEnabled(has_single_selection)
         self.menu_actions['reset_merge'].setEnabled(has_single_selection)
         self.menu_actions['reset_soft'].setEnabled(has_single_selection)
         self.menu_actions['reset_hard'].setEnabled(has_single_selection)
@@ -247,11 +247,11 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['create_tarball'])
         menu.addSeparator()
         reset_menu = menu.addMenu(N_('Reset'))
-        reset_menu.addAction(self.menu_actions['reset_branch_head'])
-        reset_menu.addAction(self.menu_actions['reset_worktree'])
-        reset_menu.addSeparator()
-        reset_menu.addAction(self.menu_actions['reset_merge'])
         reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_mixed'])
+        reset_menu.addSeparator()
+        reset_menu.addAction(self.menu_actions['reset_keep'])
+        reset_menu.addAction(self.menu_actions['reset_merge'])
         reset_menu.addAction(self.menu_actions['reset_hard'])
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
@@ -336,20 +336,39 @@ def viewer_actions(widget):
             widget, N_('Checkout Detached HEAD'),
             widget.proxy.checkout_detached
         ),
-        'reset_branch_head': qtutils.add_action(
-            widget, N_('Reset Branch Head'), widget.proxy.reset_branch_head
+        'reset_soft': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Reset Branch (Soft)'), widget.proxy.reset_soft
+            )
         ),
-        'reset_worktree': qtutils.add_action(
-            widget, N_('Reset Worktree'), widget.proxy.reset_worktree
+        'reset_mixed': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Reset Branch and Stage (Mixed)'),
+                widget.proxy.reset_mixed
+            )
         ),
-        'reset_merge': qtutils.add_action(
-            widget, N_('Reset Merge'), widget.proxy.reset_merge
+        'reset_keep': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Restore Worktree and Reset All (Keep Unstaged Edits)'),
+                widget.proxy.reset_keep
+            )
         ),
-        'reset_soft': qtutils.add_action(
-            widget, N_('Reset Soft'), widget.proxy.reset_soft
+        'reset_merge': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Restore Worktree and Reset All (Merge)'),
+                widget.proxy.reset_merge
+            )
         ),
-        'reset_hard': qtutils.add_action(
-            widget, N_('Reset Hard'), widget.proxy.reset_hard
+        'reset_hard': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Restore Worktree and Reset All (Hard)'),
+                widget.proxy.reset_hard
+            )
         ),
         'save_blob': set_icon(
             icons.save(),

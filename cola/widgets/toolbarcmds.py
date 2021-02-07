@@ -118,14 +118,24 @@ COMMANDS = {
         'action': cmds.run(cmds.SubmodulesUpdate),
         'icon': None,
     },
-    'Actions::ResetBranchHead': {
-        'title': 'Reset Branch Head',
-        'action': guicmds.reset_branch_head,
+    'Actions::ResetSoft': {
+        'title': 'Reset Branch (Soft)',
+        'action': guicmds.reset_soft,
         'icon': None,
     },
-    'Actions::ResetWorktree': {
-        'title': 'Reset Worktree',
-        'action': guicmds.reset_worktree,
+    'Actions::ResetMixed': {
+        'title': 'Reset Branch and Stage (Mixed)',
+        'action': guicmds.reset_mixed,
+        'icon': None,
+    },
+    'Actions::ResetKeep': {
+        'title': 'Restore Worktree and Reset All (Keep Unstaged Changes)',
+        'action': guicmds.reset_keep,
+        'icon': None,
+    },
+    'Actions::ResetHard': {
+        'title': 'Restore Worktre and Reset All (Hard)',
+        'action': guicmds.reset_hard,
         'icon': None,
     },
     'Actions::Grep': {'title': 'Grep', 'action': grep.grep, 'icon': None},

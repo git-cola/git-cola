@@ -366,13 +366,35 @@ class MainView(standard.MainWindow):
         )
         self.stash_action.setIcon(icons.commit())
 
-        self.reset_branch_head_action = add_action(
-            self, N_('Reset Branch Head'), partial(guicmds.reset_branch_head, context)
+        self.reset_soft_action = add_action(
+            self, N_('Reset Branch (Soft)'),
+            partial(guicmds.reset_soft, context)
         )
+        self.reset_soft_action.setIcon(icons.style_dialog_reset())
 
-        self.reset_worktree_action = add_action(
-            self, N_('Reset Worktree'), partial(guicmds.reset_worktree, context)
+        self.reset_mixed_action = add_action(
+            self, N_('Reset Branch and Stage (Mixed)'),
+            partial(guicmds.reset_mixed, context)
         )
+        self.reset_mixed_action.setIcon(icons.style_dialog_reset())
+
+        self.reset_keep_action = add_action(
+            self, N_('Restore Worktree and Reset All (Keep Unstaged Changes)'),
+            partial(guicmds.reset_keep, context)
+        )
+        self.reset_keep_action.setIcon(icons.style_dialog_reset())
+
+        self.reset_merge_action = add_action(
+            self, N_('Restore Worktree and Reset All (Merge)'),
+            partial(guicmds.reset_merge, context)
+        )
+        self.reset_merge_action.setIcon(icons.style_dialog_reset())
+
+        self.reset_hard_action = add_action(
+            self, N_('Restore Worktree and Reset All (Hard)'),
+            partial(guicmds.reset_hard, context)
+        )
+        self.reset_hard_action.setIcon(icons.style_dialog_reset())
 
         self.clone_repo_action = add_action(
             self, N_('Clone...'), partial(clone.clone, context)
@@ -685,10 +707,14 @@ class MainView(standard.MainWindow):
 
         # Reset menu
         self.reset_menu = add_menu(N_('Reset'), self.menubar)
+        self.reset_menu.addAction(self.unstage_all_action)
         self.reset_menu.addAction(self.undo_commit_action)
         self.reset_menu.addSeparator()
-        self.reset_menu.addAction(self.reset_branch_head_action)
-        self.reset_menu.addAction(self.reset_worktree_action)
+        self.reset_menu.addAction(self.reset_soft_action)
+        self.reset_menu.addAction(self.reset_mixed_action)
+        self.reset_menu.addSeparator()
+        self.reset_menu.addAction(self.reset_keep_action)
+        self.reset_menu.addAction(self.reset_merge_action)
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
