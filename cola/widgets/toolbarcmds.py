@@ -138,7 +138,11 @@ COMMANDS = {
         'action': guicmds.reset_hard,
         'icon': None,
     },
-    'Actions::Grep': {'title': 'Grep', 'action': grep.grep, 'icon': None},
+    'Actions::Grep': {
+        'title': 'Grep',
+        'action': grep.grep,
+        'icon': 'search',
+    },
     'Actions::Search': {
         'title': 'Search...',
         'action': search.search,
@@ -153,6 +157,11 @@ COMMANDS = {
         'title': 'Amend Last Commit',
         'action': cmds.run(cmds.AmendMode),
         'icon': None,
+    },
+    'Commit::UndoLastCommit': {
+        'title': 'Undo Last Commit',
+        'action': cmds.run(cmds.UndoLastCommit),
+        'icon': 'style_dialog_discard',
     },
     'Commit::StageAll': {
         'title': 'Stage All Untracked',

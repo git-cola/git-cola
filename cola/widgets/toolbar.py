@@ -42,6 +42,7 @@ TREE_LAYOUT = {
     'Commit@@verb': [
         'Commit::Stage',
         'Commit::AmendLast',
+        'Commit::UndoLastCommit',
         'Commit::StageAll',
         'Commit::UnstageAll',
         'Commit::Unstage',
@@ -62,6 +63,7 @@ TREE_LAYOUT = {
         'Branch::VisualizeAll',
     ],
     'Reset': [
+        'Commit::UndoLastCommit',
         'Commit::UnstageAll',
         'Actions::ResetSoft',
         'Actions::ResetMixed',
