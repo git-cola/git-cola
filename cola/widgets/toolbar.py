@@ -36,14 +36,13 @@ TREE_LAYOUT = {
         'Actions::Merge',
         'Actions::AbortMerge',
         'Actions::UpdateSubmodules',
-        'Actions::ResetBranchHead',
-        'Actions::ResetWorktree',
         'Actions::Grep',
         'Actions::Search',
     ],
     'Commit@@verb': [
         'Commit::Stage',
         'Commit::AmendLast',
+        'Commit::UndoLastCommit',
         'Commit::StageAll',
         'Commit::UnstageAll',
         'Commit::Unstage',
@@ -63,13 +62,24 @@ TREE_LAYOUT = {
         'Branch::VisualizeCurrent',
         'Branch::VisualizeAll',
     ],
+    'Reset': [
+        'Commit::UndoLastCommit',
+        'Commit::UnstageAll',
+        'Actions::ResetSoft',
+        'Actions::ResetMixed',
+        'Actions::RestoreWorktree',
+        'Actions::ResetKeep',
+        'Actions::ResetHard',
+    ],
     'View': ['View::DAG', 'View::FileBrowser'],
 }
 
 
 def configure(toolbar, parent=None):
     """Launches the Toolbar configure dialog"""
-    view = ToolbarView(toolbar, parent if parent else qtutils.active_window())
+    if not parent:
+        parent = qtutils.active_window()
+    view = ToolbarView(toolbar, parent)
     view.show()
     return view
 
@@ -203,6 +213,11 @@ class ToolBar(QtWidgets.QToolBar):
 
             toolbar_action.setData(data)
 
+            tooltip = command.get('tooltip', None)
+            if tooltip:
+                toolbar_action.setToolTip('%s\n%s' % (title, tooltip))
+
+
     def delete_toolbar(self):
         self.parent().removeToolBar(self)
 
@@ -310,33 +325,36 @@ class ToolbarView(standard.Dialog):
         self.init_size(parent=parent)
 
     def load_right_items(self):
+        commands = self.toolbar.commands
         for action in self.toolbar.actions():
             data = action.data()
             if data['child'] == self.toolbar.SEPARATOR:
                 self.add_separator_action()
             else:
-                command = self.toolbar.commands[data['child']]
+                try:
+                    child_data = data['child']
+                    command = commands[child_data]
+                except KeyError:
+                    pass
                 title = command['title']
-                icon = command['icon']
-                self.right_list.add_item(title, data, icon)
+                icon = command.get('icon', None)
+                tooltip = command.get('tooltip', None)
+                self.right_list.add_item(title, tooltip, data, icon)
 
     def load_left_items(self):
-
-        # def current_children(actions):
-        #     result = []
-        #     for action in actions:
-        #         data = action.data()
-        #         if data['child'] != self.toolbar.SEPARATOR:
-        #             result.append(data['child'])
-
-        #     return result
-
+        commands = self.toolbar.commands
         for parent in self.toolbar.tree_layout:
             top = self.left_list.insert_top(parent)
-            # current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
-                command = self.toolbar.commands[item]
-                child = create_child(parent, item, command['title'], command['icon'])
+                try:
+                    command = commands[item]
+                except KeyError:
+                    pass
+                icon = command.get('icon', None)
+                tooltip = command.get('tooltip', None)
+                child = create_child(
+                    parent, item, command['title'], tooltip, icon
+                )
                 top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
@@ -428,14 +446,16 @@ class DraggableListWidget(QtWidgets.QListWidget):
 
         self.addItem(item)
 
-    def add_item(self, title, data, icon_text=None):
+    def add_item(self, title, tooltip, data, icon):
         item = QtWidgets.QListWidgetItem()
         item.setText(N_(title))
         item.setData(Qt.UserRole, data)
+        if tooltip:
+            item.setToolTip(tooltip)
 
-        if icon_text is not None:
-            icon = getattr(icons, icon_text, None)
-            item.setIcon(icon())
+        if icon:
+            icon_func = getattr(icons, icon)
+            item.setIcon(icon_func())
 
         self.addItem(item)
 
@@ -469,13 +489,14 @@ class ToolbarTreeWidget(standard.TreeView):
         return item
 
 
-def create_child(parent, child, title, icon_text=None):
+def create_child(parent, child, title, tooltip, icon):
     data = {'parent': parent, 'child': child}
     item = create_item(title, data)
-
-    if icon_text is not None:
-        icon = getattr(icons, icon_text, None)
-        item.setIcon(icon())
+    if tooltip:
+        item.setToolTip(tooltip)
+    if icon:
+        icon_func = getattr(icons, icon, None)
+        item.setIcon(icon_func())
 
     return item
 

@@ -497,26 +497,34 @@ class ResetCommand(ConfirmAction):
         raise NotImplementedError('reset() must be overridden')
 
 
-class ResetBranchHead(ResetCommand):
+class ResetMixed(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The branch will be reset using "git reset --mixed %s"')
+        return tooltip % ref
+
     def confirm(self):
-        title = N_('Reset Branch')
+        title = N_('Reset Branch and Stage (Mixed)')
         question = N_('Point the current branch head to a new commit?')
-        info = N_('The branch will be reset using "git reset --mixed %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset Branch')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         return self.git.reset(self.ref, '--', mixed=True)
 
 
-class ResetWorktree(ResetCommand):
+class ResetKeep(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --keep %s"')
+        return tooltip % ref
+
     def confirm(self):
-        title = N_('Reset Worktree')
-        question = N_('Reset worktree?')
-        info = N_('The worktree will be reset using "git reset --keep %s"')
-        ok_text = N_('Reset Worktree')
-        info = info % self.ref
+        title = N_('Restore Worktree and Reset All (Keep Unstaged Changes)')
+        question = N_('Restore worktree, reset, and preserve unstaged edits?')
+        info = self.tooltip(self.ref)
+        ok_text = N_('Reset and Restore')
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -524,12 +532,16 @@ class ResetWorktree(ResetCommand):
 
 
 class ResetMerge(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --merge %s"')
+        return tooltip % ref
+
     def confirm(self):
-        title = N_('Reset Merge')
-        question = N_('Reset merge?')
-        info = N_('The branch will be reset using "git reset --merge %s"')
-        ok_text = N_('Reset Merge')
-        info = info % self.ref
+        title = N_('Restore Worktree and Reset All (Merge)')
+        question = N_('Reset Worktree and Reset All?')
+        info = self.tooltip(self.ref)
+        ok_text = N_('Reset and Restore')
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -537,12 +549,16 @@ class ResetMerge(ResetCommand):
 
 
 class ResetSoft(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The branch will be reset using "git reset --soft %s"')
+        return tooltip % ref
+
     def confirm(self):
-        title = N_('Reset Soft')
-        question = N_('Reset soft?')
-        info = N_('The branch will be reset using "git reset --soft %s"')
-        ok_text = N_('Reset Soft')
-        info = info % self.ref
+        title = N_('Reset Branch (Soft)')
+        question = N_('Reset branch?')
+        info = self.tooltip(self.ref)
+        ok_text = N_('Reset Branch')
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -550,16 +566,87 @@ class ResetSoft(ResetCommand):
 
 
 class ResetHard(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --hard %s"')
+        return tooltip % ref
+
     def confirm(self):
-        title = N_('Reset Hard')
-        question = N_('Reset hard?')
-        info = N_('The branch will be reset using "git reset --hard %s"')
-        ok_text = N_('Reset Hard')
-        info = info % self.ref
+        title = N_('Restore Worktree and Reset All (Hard)')
+        question = N_('Restore Worktree and Reset All?')
+        info = self.tooltip(self.ref)
+        ok_text = N_('Reset and Restore')
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
         return self.git.reset(self.ref, '--', hard=True)
+
+
+class RestoreWorktree(ConfirmAction):
+    """Reset the worktree using the "git read-tree" command"""
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_(
+            'The worktree will be restored using "git read-tree --reset -u %s"'
+        )
+        return tooltip % ref
+
+    def __init__(self, context, ref):
+        super(RestoreWorktree, self).__init__(context)
+        self.ref = ref
+
+    def action(self):
+        return self.git.read_tree(self.ref, reset=True, u=True)
+
+    def command(self):
+        return 'git read-tree --reset -u %s' % self.ref
+
+    def error_message(self):
+        return N_('Error')
+
+    def success(self):
+        self.model.update_file_status()
+
+    def confirm(self):
+        title = N_('Restore Worktree')
+        question = N_('Restore Worktree to %s?') % self.ref
+        info = self.tooltip(self.ref)
+        ok_text = N_('Restore Worktree')
+        return Interaction.confirm(title, question, info, ok_text)
+
+
+class UndoLastCommit(ResetCommand):
+    """Undo the last commit"""
+    # NOTE: this is the similar to ResetSoft() with an additional check for
+    # published commits and different messages.
+    def __init__(self, context):
+        super(UndoLastCommit, self).__init__(context, 'HEAD^')
+
+    def confirm(self):
+        check_published = prefs.check_published_commits(self.context)
+        if check_published and self.model.is_commit_published():
+            return Interaction.confirm(
+                N_('Rewrite Published Commit?'),
+                N_(
+                    'This commit has already been published.\n'
+                    'This operation will rewrite published history.\n'
+                    'You probably don\'t want to do this.'
+                ),
+                N_('Undo the published commit?'),
+                N_('Undo Last Commit'),
+                default=False,
+                icon=icons.save(),
+            )
+
+        title = N_('Undo Last Commit')
+        question = N_('Undo last commit?')
+        info = N_('The branch will be reset using "git reset --soft %s"')
+        ok_text = N_('Undo Last Commit')
+        info_text = info % self.ref
+        return Interaction.confirm(title, question, info_text, ok_text)
+
+    def reset(self):
+        return self.git.reset('HEAD^', '--', soft=True)
 
 
 class Commit(ResetMode):

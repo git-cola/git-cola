@@ -265,16 +265,51 @@ def rename_branch(context):
     cmds.do(cmds.RenameBranch, context, branch, new_branch)
 
 
-def reset_branch_head(context):
-    ref = choose_ref(context, N_('Reset Branch Head'), N_('Reset'), default='HEAD^')
+def reset_soft(context):
+    title = N_('Reset Branch (Soft)')
+    ok_text = N_('Reset Branch')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
     if ref:
-        cmds.do(cmds.ResetBranchHead, context, ref)
+        cmds.do(cmds.ResetSoft, context, ref)
 
 
-def reset_worktree(context):
-    ref = choose_ref(context, N_('Reset Worktree'), N_('Reset'))
+def reset_mixed(context):
+    title = N_('Reset Branch and Stage (Mixed)')
+    ok_text = N_('Reset')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
     if ref:
-        cmds.do(cmds.ResetWorktree, context, ref)
+        cmds.do(cmds.ResetMixed, context, ref)
+
+
+def reset_keep(context):
+    title = N_('Reset All (Keep Unstaged Changes)')
+    ref = choose_ref(context, title, N_('Reset and Restore'))
+    if ref:
+        cmds.do(cmds.ResetKeep, context, ref)
+
+
+def reset_merge(context):
+    title = N_('Restore Worktree and Reset All (Merge)')
+    ok_text = N_('Reset and Restore')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    if ref:
+        cmds.do(cmds.ResetMerge, context, ref)
+
+
+def reset_hard(context):
+    title = N_('Restore Worktree and Reset All (Hard)')
+    ok_text = N_('Reset and Restore')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    if ref:
+        cmds.do(cmds.ResetHard, context, ref)
+
+
+def restore_worktree(context):
+    title = N_('Restore Worktree')
+    ok_text = N_('Restore Worktree')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    if ref:
+        cmds.do(cmds.RestoreWorktree, context, ref)
 
 
 def install():

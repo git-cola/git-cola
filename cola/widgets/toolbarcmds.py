@@ -118,17 +118,41 @@ COMMANDS = {
         'action': cmds.run(cmds.SubmodulesUpdate),
         'icon': None,
     },
-    'Actions::ResetBranchHead': {
-        'title': 'Reset Branch Head',
-        'action': guicmds.reset_branch_head,
-        'icon': None,
+    'Actions::ResetSoft': {
+        'title': 'Reset Branch (Soft)',
+        'action': guicmds.reset_soft,
+        'icon': 'style_dialog_reset',
+        'tooltip': cmds.ResetSoft.tooltip('<commit>'),
     },
-    'Actions::ResetWorktree': {
-        'title': 'Reset Worktree',
-        'action': guicmds.reset_worktree,
-        'icon': None,
+    'Actions::ResetMixed': {
+        'title': 'Reset Branch and Stage (Mixed)',
+        'action': guicmds.reset_mixed,
+        'icon': 'style_dialog_reset',
+        'tooltip': cmds.ResetMixed.tooltip('<commit>'),
     },
-    'Actions::Grep': {'title': 'Grep', 'action': grep.grep, 'icon': None},
+    'Actions::RestoreWorktree': {
+        'title': 'Restore Worktree',
+        'action': guicmds.restore_worktree,
+        'icon': 'edit',
+        'tooltip': cmds.RestoreWorktree.tooltip('<commit>'),
+    },
+    'Actions::ResetKeep': {
+        'title': 'Restore Worktree and Reset All (Keep Unstaged Changes)',
+        'action': guicmds.reset_keep,
+        'icon': 'style_dialog_reset',
+        'tooltip': cmds.ResetKeep.tooltip('<commit>'),
+    },
+    'Actions::ResetHard': {
+        'title': 'Restore Worktre and Reset All (Hard)',
+        'action': guicmds.reset_hard,
+        'icon': 'style_dialog_reset',
+        'tooltip': cmds.ResetHard.tooltip('<commit>'),
+    },
+    'Actions::Grep': {
+        'title': 'Grep',
+        'action': grep.grep,
+        'icon': 'search',
+    },
     'Actions::Search': {
         'title': 'Search...',
         'action': search.search,
@@ -142,17 +166,21 @@ COMMANDS = {
     'Commit::AmendLast': {
         'title': 'Amend Last Commit',
         'action': cmds.run(cmds.AmendMode),
-        'icon': None,
+        'icon': 'edit',
+    },
+    'Commit::UndoLastCommit': {
+        'title': 'Undo Last Commit',
+        'action': cmds.run(cmds.UndoLastCommit),
+        'icon': 'style_dialog_discard',
     },
     'Commit::StageAll': {
         'title': 'Stage All Untracked',
         'action': cmds.run(cmds.StageUntracked),
-        'icon': None,
     },
     'Commit::UnstageAll': {
         'title': 'Unstage All',
         'action': cmds.run(cmds.UnstageAll),
-        'icon': None,
+        'icon': 'remove',
     },
     'Commit::Unstage': {
         'title': 'Unstage',
@@ -162,12 +190,10 @@ COMMANDS = {
     'Commit::LoadCommitMessage': {
         'title': 'Load Commit Message...',
         'action': guicmds.load_commitmsg,
-        'icon': None,
     },
     'Commit::GetCommitMessageTemplate': {
         'title': 'Get Commit Message Template',
         'action': cmds.run(cmds.LoadCommitMessageFromTemplate),
-        'icon': None,
     },
     'Diff::Difftool': {
         'title': 'Launch Diff tool',

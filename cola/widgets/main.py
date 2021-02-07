@@ -174,6 +174,7 @@ class MainView(standard.MainWindow):
             partial(cmds.do, cmds.AmendMode, context),
             False,
         )
+        self.commit_amend_action.setIcon(icons.edit())
         self.commit_amend_action.setShortcut(hotkeys.AMEND)
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
@@ -181,6 +182,12 @@ class MainView(standard.MainWindow):
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
         )
         self.unstage_all_action.setIcon(icons.remove())
+
+        self.undo_commit_action = add_action(
+            self, N_('Undo Last Commit'),
+            cmds.run(cmds.UndoLastCommit, context)
+        )
+        self.undo_commit_action.setIcon(icons.style_dialog_discard())
 
         self.unstage_selected_action = add_action(
             self, N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected, context)
@@ -190,6 +197,7 @@ class MainView(standard.MainWindow):
         self.show_diffstat_action = add_action(
             self, N_('Diffstat'), self.statuswidget.select_header, hotkeys.DIFFSTAT
         )
+        self.show_diffstat_action.setIcon(icons.diff())
 
         self.stage_modified_action = add_action(
             self,
@@ -210,6 +218,7 @@ class MainView(standard.MainWindow):
         self.apply_patches_action = add_action(
             self, N_('Apply Patches...'), partial(patch.apply_patches, context)
         )
+        self.apply_patches_action.setIcon(icons.style_dialog_apply())
 
         self.export_patches_action = add_action(
             self,
@@ -217,6 +226,7 @@ class MainView(standard.MainWindow):
             partial(guicmds.export_patches, context),
             hotkeys.EXPORT,
         )
+        self.export_patches_action.setIcon(icons.save())
 
         self.new_repository_action = add_action(
             self, N_('New Repository...'), partial(guicmds.open_new_repo, context)
@@ -238,6 +248,7 @@ class MainView(standard.MainWindow):
         self.edit_remotes_action = add_action(
             self, N_('Edit Remotes...'), partial(editremotes.editor, context)
         )
+        self.edit_remotes_action.setIcon(icons.edit())
 
         self.rescan_action = add_action(
             self,
@@ -262,6 +273,7 @@ class MainView(standard.MainWindow):
             partial(recent.browse_recent_files, context),
             hotkeys.EDIT_SECONDARY,
         )
+        self.browse_recently_modified_action.setIcon(icons.edit())
 
         self.cherry_pick_action = add_action(
             self,
@@ -269,9 +281,12 @@ class MainView(standard.MainWindow):
             partial(guicmds.cherry_pick, context),
             hotkeys.CHERRY_PICK,
         )
+        self.cherry_pick_action.setIcon(icons.style_dialog_apply())
 
         self.load_commitmsg_action = add_action(
-            self, N_('Load Commit Message...'), partial(guicmds.load_commitmsg, context)
+            self,
+            N_('Load Commit Message...'),
+            partial(guicmds.load_commitmsg, context)
         )
 
         self.prepare_commitmsg_hook_action = add_action(
@@ -282,44 +297,57 @@ class MainView(standard.MainWindow):
         )
 
         self.save_tarball_action = add_action(
-            self, N_('Save As Tarball/Zip...'), partial(archive.save_archive, context)
+            self,
+            N_('Save As Tarball/Zip...'),
+            partial(archive.save_archive, context)
         )
+        self.save_tarball_action.setIcon(icons.file_zip())
 
         self.quit_action = add_action(self, N_('Quit'), self.close, hotkeys.QUIT)
 
         self.grep_action = add_action(
             self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP
         )
+        self.grep_action.setIcon(icons.search())
 
         self.merge_local_action = add_action(
             self, N_('Merge...'), partial(merge.local_merge, context), hotkeys.MERGE
         )
+        self.merge_local_action.setIcon(icons.merge())
 
         self.merge_abort_action = add_action(
             self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context)
         )
+        self.merge_abort_action.setIcon(icons.style_dialog_reset())
 
         self.update_submodules_action = add_action(
             self,
             N_('Update All Submodules...'),
             cmds.run(cmds.SubmodulesUpdate, context),
         )
+        self.update_submodules_action.setIcon(icons.sync())
 
         self.add_submodule_action = add_action(
             self,
             N_('Add Submodule...'),
             partial(submodules.add_submodule, context, parent=self),
         )
+        self.add_submodule_action.setIcon(icons.add())
 
         self.fetch_action = add_action(
             self, N_('Fetch...'), partial(remote.fetch, context), hotkeys.FETCH
         )
+        self.fetch_action.setIcon(icons.download())
+
         self.push_action = add_action(
             self, N_('Push...'), partial(remote.push, context), hotkeys.PUSH
         )
+        self.push_action.setIcon(icons.push())
+
         self.pull_action = add_action(
             self, N_('Pull...'), partial(remote.pull, context), hotkeys.PULL
         )
+        self.pull_action.setIcon(icons.pull())
 
         self.open_repo_action = add_action(
             self, N_('Open...'), partial(guicmds.open_repo, context), hotkeys.OPEN
@@ -336,13 +364,50 @@ class MainView(standard.MainWindow):
         self.stash_action = add_action(
             self, N_('Stash...'), partial(stash.view, context), hotkeys.STASH
         )
+        self.stash_action.setIcon(icons.commit())
 
-        self.reset_branch_head_action = add_action(
-            self, N_('Reset Branch Head'), partial(guicmds.reset_branch_head, context)
+        self.reset_soft_action = add_action(
+            self, N_('Reset Branch (Soft)'),
+            partial(guicmds.reset_soft, context)
         )
+        self.reset_soft_action.setIcon(icons.style_dialog_reset())
+        self.reset_soft_action.setToolTip(cmds.ResetSoft.tooltip('<commit>'))
 
-        self.reset_worktree_action = add_action(
-            self, N_('Reset Worktree'), partial(guicmds.reset_worktree, context)
+        self.reset_mixed_action = add_action(
+            self, N_('Reset Branch and Stage (Mixed)'),
+            partial(guicmds.reset_mixed, context)
+        )
+        self.reset_mixed_action.setIcon(icons.style_dialog_reset())
+        self.reset_mixed_action.setToolTip(cmds.ResetMixed.tooltip('<commit>'))
+
+        self.reset_keep_action = add_action(
+            self, N_('Restore Worktree and Reset All (Keep Unstaged Changes)'),
+            partial(guicmds.reset_keep, context)
+        )
+        self.reset_keep_action.setIcon(icons.style_dialog_reset())
+        self.reset_keep_action.setToolTip(cmds.ResetKeep.tooltip('<commit>'))
+
+        self.reset_merge_action = add_action(
+            self, N_('Restore Worktree and Reset All (Merge)'),
+            partial(guicmds.reset_merge, context)
+        )
+        self.reset_merge_action.setIcon(icons.style_dialog_reset())
+        self.reset_merge_action.setToolTip(cmds.ResetMerge.tooltip('<commit>'))
+
+        self.reset_hard_action = add_action(
+            self, N_('Restore Worktree and Reset All (Hard)'),
+            partial(guicmds.reset_hard, context)
+        )
+        self.reset_hard_action.setIcon(icons.style_dialog_reset())
+        self.reset_hard_action.setToolTip(cmds.ResetHard.tooltip('<commit>'))
+
+        self.restore_worktree_action = add_action(
+            self, N_('Restore Worktree'),
+            partial(guicmds.restore_worktree, context)
+        )
+        self.restore_worktree_action.setIcon(icons.edit())
+        self.restore_worktree_action.setToolTip(
+            cmds.RestoreWorktree.tooltip('<commit>')
         )
 
         self.clone_repo_action = add_action(
@@ -366,12 +431,17 @@ class MainView(standard.MainWindow):
             N_('Visualize Current Branch...'),
             cmds.run(cmds.VisualizeCurrent, context),
         )
+        self.visualize_current_action.setIcon(icons.visualize())
+
         self.visualize_all_action = add_action(
             self, N_('Visualize All Branches...'), cmds.run(cmds.VisualizeAll, context)
         )
+        self.visualize_all_action.setIcon(icons.visualize())
+
         self.search_commits_action = add_action(
             self, N_('Search...'), partial(search.search, context)
         )
+        self.search_commits_action.setIcon(icons.search())
 
         self.browse_branch_action = add_action(
             self,
@@ -393,15 +463,19 @@ class MainView(standard.MainWindow):
         self.diff_expression_action = add_action(
             self, N_('Expression...'), partial(guicmds.diff_expression, context)
         )
+        self.diff_expression_action.setIcon(icons.compare())
+
         self.branch_compare_action = add_action(
             self, N_('Branches...'), partial(compare.compare_branches, context)
         )
+        self.branch_compare_action.setIcon(icons.compare())
 
         self.create_tag_action = add_action(
             self,
             N_('Create Tag...'),
             partial(createtag.create_tag, context),
         )
+        self.create_tag_action.setIcon(icons.tag())
 
         self.create_branch_action = add_action(
             self,
@@ -414,16 +488,19 @@ class MainView(standard.MainWindow):
         self.delete_branch_action = add_action(
             self, N_('Delete...'), partial(guicmds.delete_branch, context)
         )
+        self.delete_branch_action.setIcon(icons.discard())
 
         self.delete_remote_branch_action = add_action(
             self,
             N_('Delete Remote Branch...'),
             partial(guicmds.delete_remote_branch, context),
         )
+        self.delete_remote_branch_action.setIcon(icons.discard())
 
         self.rename_branch_action = add_action(
             self, N_('Rename Branch...'), partial(guicmds.rename_branch, context)
         )
+        self.rename_branch_action.setIcon(icons.edit())
 
         self.checkout_branch_action = add_action(
             self,
@@ -434,6 +511,7 @@ class MainView(standard.MainWindow):
         self.branch_review_action = add_action(
             self, N_('Review...'), partial(guicmds.review_branch, context)
         )
+        self.branch_review_action.setIcon(icons.compare())
 
         self.browse_action = add_action(
             self, N_('File Browser...'), partial(browse.worktree_browser, context)
@@ -588,10 +666,6 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.update_submodules_action)
         self.actions_menu.addAction(self.add_submodule_action)
         self.actions_menu.addSeparator()
-        self.actions_reset_menu = self.actions_menu.addMenu(N_('Reset'))
-        self.actions_reset_menu.addAction(self.reset_branch_head_action)
-        self.actions_reset_menu.addAction(self.reset_worktree_action)
-        self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.grep_action)
         self.actions_menu.addAction(self.search_commits_action)
 
@@ -600,6 +674,7 @@ class MainView(standard.MainWindow):
         self.commit_menu.setTitle(N_('Commit@@verb'))
         self.commit_menu.addAction(self.commiteditor.commit_action)
         self.commit_menu.addAction(self.commit_amend_action)
+        self.commit_menu.addAction(self.undo_commit_action)
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
@@ -635,7 +710,7 @@ class MainView(standard.MainWindow):
         self.branch_menu.addAction(self.visualize_all_action)
 
         # Rebase menu
-        self.rebase_menu = add_menu(N_('Rebase'), self.actions_menu)
+        self.rebase_menu = add_menu(N_('Rebase'), self.menubar)
         self.rebase_menu.addAction(self.rebase_start_action)
         self.rebase_menu.addAction(self.rebase_edit_todo_action)
         self.rebase_menu.addSeparator()
@@ -643,6 +718,19 @@ class MainView(standard.MainWindow):
         self.rebase_menu.addAction(self.rebase_skip_action)
         self.rebase_menu.addSeparator()
         self.rebase_menu.addAction(self.rebase_abort_action)
+
+        # Reset menu
+        self.reset_menu = add_menu(N_('Reset'), self.menubar)
+        self.reset_menu.addAction(self.unstage_all_action)
+        self.reset_menu.addAction(self.undo_commit_action)
+        self.reset_menu.addSeparator()
+        self.reset_menu.addAction(self.reset_soft_action)
+        self.reset_menu.addAction(self.reset_mixed_action)
+        self.reset_menu.addAction(self.restore_worktree_action)
+        self.reset_menu.addSeparator()
+        self.reset_menu.addAction(self.reset_keep_action)
+        self.reset_menu.addAction(self.reset_merge_action)
+        self.reset_menu.addAction(self.reset_hard_action)
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)

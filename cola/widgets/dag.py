@@ -163,13 +163,13 @@ class ViewerMixin(object):
             )
         )
 
-    def reset_branch_head(self):
+    def reset_mixed(self):
         context = self.context
-        self.with_oid(lambda oid: cmds.do(cmds.ResetBranchHead, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetMixed, context, ref=oid))
 
-    def reset_worktree(self):
+    def reset_keep(self):
         context = self.context
-        self.with_oid(lambda oid: cmds.do(cmds.ResetWorktree, context, ref=oid))
+        self.with_oid(lambda oid: cmds.do(cmds.ResetKeep, context, ref=oid))
 
     def reset_merge(self):
         context = self.context
@@ -182,6 +182,10 @@ class ViewerMixin(object):
     def reset_hard(self):
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetHard, context, ref=oid))
+
+    def restore_worktree(self):
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.RestoreWorktree, context, ref=oid))
 
     def checkout_detached(self):
         context = self.context
@@ -222,11 +226,12 @@ class ViewerMixin(object):
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection)
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
-        self.menu_actions['reset_branch_head'].setEnabled(has_single_selection)
-        self.menu_actions['reset_worktree'].setEnabled(has_single_selection)
+        self.menu_actions['reset_mixed'].setEnabled(has_single_selection)
+        self.menu_actions['reset_keep'].setEnabled(has_single_selection)
         self.menu_actions['reset_merge'].setEnabled(has_single_selection)
         self.menu_actions['reset_soft'].setEnabled(has_single_selection)
         self.menu_actions['reset_hard'].setEnabled(has_single_selection)
+        self.menu_actions['restore_worktree'].setEnabled(has_single_selection)
         self.menu_actions['revert'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
@@ -247,11 +252,12 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['create_tarball'])
         menu.addSeparator()
         reset_menu = menu.addMenu(N_('Reset'))
-        reset_menu.addAction(self.menu_actions['reset_branch_head'])
-        reset_menu.addAction(self.menu_actions['reset_worktree'])
-        reset_menu.addSeparator()
-        reset_menu.addAction(self.menu_actions['reset_merge'])
         reset_menu.addAction(self.menu_actions['reset_soft'])
+        reset_menu.addAction(self.menu_actions['reset_mixed'])
+        reset_menu.addAction(self.menu_actions['restore_worktree'])
+        reset_menu.addSeparator()
+        reset_menu.addAction(self.menu_actions['reset_keep'])
+        reset_menu.addAction(self.menu_actions['reset_merge'])
         reset_menu.addAction(self.menu_actions['reset_hard'])
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
@@ -260,62 +266,140 @@ class ViewerMixin(object):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
+def set_icon(icon, action):
+    """"Set the icon for an action and return the action"""
+    action.setIcon(icon)
+    return action
+
+
 def viewer_actions(widget):
     return {
-        'diff_this_selected': qtutils.add_action(
-            widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+        'diff_this_selected': set_icon(
+            icons.compare(),
+            qtutils.add_action(
+                widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+            )
         ),
-        'diff_selected_this': qtutils.add_action(
-            widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+        'diff_selected_this': set_icon(
+            icons.compare(),
+            qtutils.add_action(
+                widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+            )
         ),
-        'create_branch': qtutils.add_action(
-            widget, N_('Create Branch'), widget.proxy.create_branch
+        'create_branch': set_icon(
+            icons.branch(),
+            qtutils.add_action(
+                widget, N_('Create Branch'), widget.proxy.create_branch
+            )
         ),
-        'create_patch': qtutils.add_action(
-            widget, N_('Create Patch'), widget.proxy.create_patch
+        'create_patch': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget, N_('Create Patch'), widget.proxy.create_patch
+            )
         ),
-        'create_tag': qtutils.add_action(
-            widget, N_('Create Tag'), widget.proxy.create_tag
+        'create_tag': set_icon(
+            icons.tag(),
+            qtutils.add_action(
+                widget, N_('Create Tag'), widget.proxy.create_tag
+            )
         ),
-        'create_tarball': qtutils.add_action(
-            widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+        'create_tarball': set_icon(
+            icons.file_zip(),
+            qtutils.add_action(
+                widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+            )
         ),
-        'cherry_pick': qtutils.add_action(
-            widget, N_('Cherry Pick'), widget.proxy.cherry_pick
+        'cherry_pick': set_icon(
+            icons.style_dialog_apply(),
+            qtutils.add_action(
+                widget, N_('Cherry Pick'), widget.proxy.cherry_pick
+            )
         ),
-        'revert': qtutils.add_action(widget, N_('Revert'), widget.proxy.revert),
-        'diff_commit': qtutils.add_action(
-            widget, N_('Launch Diff Tool'), widget.proxy.show_diff, hotkeys.DIFF
+        'revert': set_icon(
+            icons.undo(),
+            qtutils.add_action(widget, N_('Revert'), widget.proxy.revert)
         ),
-        'diff_commit_all': qtutils.add_action(
-            widget,
-            N_('Launch Directory Diff Tool'),
-            widget.proxy.show_dir_diff,
-            hotkeys.DIFF_SECONDARY,
+        'diff_commit': set_icon(
+            icons.diff(),
+            qtutils.add_action(
+                widget,
+                N_('Launch Diff Tool'),
+                widget.proxy.show_diff,
+                hotkeys.DIFF
+            )
+        ),
+        'diff_commit_all': set_icon(
+            icons.diff(),
+            qtutils.add_action(
+                widget,
+                N_('Launch Directory Diff Tool'),
+                widget.proxy.show_dir_diff,
+                hotkeys.DIFF_SECONDARY
+            )
         ),
         'checkout_detached': qtutils.add_action(
-            widget, N_('Checkout Detached HEAD'), widget.proxy.checkout_detached
+            widget, N_('Checkout Detached HEAD'),
+            widget.proxy.checkout_detached
         ),
-        'reset_branch_head': qtutils.add_action(
-            widget, N_('Reset Branch Head'), widget.proxy.reset_branch_head
+        'reset_soft': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget, N_('Reset Branch (Soft)'), widget.proxy.reset_soft
+            )
         ),
-        'reset_worktree': qtutils.add_action(
-            widget, N_('Reset Worktree'), widget.proxy.reset_worktree
+        'reset_mixed': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget,
+                N_('Reset Branch and Stage (Mixed)'),
+                widget.proxy.reset_mixed
+            )
         ),
-        'reset_merge': qtutils.add_action(
-            widget, N_('Reset Merge'), widget.proxy.reset_merge
+        'reset_keep': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget,
+                N_('Restore Worktree and Reset All (Keep Unstaged Edits)'),
+                widget.proxy.reset_keep
+            )
         ),
-        'reset_soft': qtutils.add_action(
-            widget, N_('Reset Soft'), widget.proxy.reset_soft
+        'reset_merge': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget,
+                N_('Restore Worktree and Reset All (Merge)'),
+                widget.proxy.reset_merge
+            )
         ),
-        'reset_hard': qtutils.add_action(
-            widget, N_('Reset Hard'), widget.proxy.reset_hard
+        'reset_hard': set_icon(
+            icons.style_dialog_reset(),
+            qtutils.add_action(
+                widget,
+                N_('Restore Worktree and Reset All (Hard)'),
+                widget.proxy.reset_hard
+            )
         ),
-        'save_blob': qtutils.add_action(
-            widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+        'restore_worktree': set_icon(
+            icons.edit(),
+            qtutils.add_action(
+                widget, N_('Restore Worktree'), widget.proxy.restore_worktree
+            )
         ),
-        'copy': qtutils.add_action(
-            widget, N_('Copy SHA-1'), widget.proxy.copy_to_clipboard, hotkeys.COPY_SHA1
+        'save_blob': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+            )
+        ),
+        'copy': set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                widget,
+                N_('Copy SHA-1'),
+                widget.proxy.copy_to_clipboard,
+                hotkeys.COPY_SHA1
+            )
         ),
     }
 

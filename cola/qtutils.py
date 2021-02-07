@@ -842,6 +842,8 @@ class DebouncingMenu(QtWidgets.QMenu):
     def __init__(self, title, parent):
         QtWidgets.QMenu.__init__(self, title, parent)
         self.created_at = utils.epoch_millis()
+        if hasattr(self, 'setToolTipsVisible'):
+            self.setToolTipsVisible(True)
 
     def mouseReleaseEvent(self, event):
         threshold = DebouncingMenu.threshold_ms
@@ -852,7 +854,10 @@ class DebouncingMenu(QtWidgets.QMenu):
 def add_menu(title, parent):
     """Create a menu and set its title."""
     menu = create_menu(title, parent)
-    parent.addAction(menu.menuAction())
+    if hasattr(parent, 'addMenu'):
+        parent.addMenu(menu)
+    else:
+        parent.addAction(menu.menuAction())
     return menu
 
 
