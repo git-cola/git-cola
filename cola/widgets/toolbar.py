@@ -76,7 +76,9 @@ TREE_LAYOUT = {
 
 def configure(toolbar, parent=None):
     """Launches the Toolbar configure dialog"""
-    view = ToolbarView(toolbar, parent if parent else qtutils.active_window())
+    if not parent:
+        parent = qtutils.active_window()
+    view = ToolbarView(toolbar, parent)
     view.show()
     return view
 
