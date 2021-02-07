@@ -329,6 +329,18 @@ def undo():
     return from_theme('edit-undo', fallback='edit-undo.svg')
 
 
+def style_dialog_apply():
+    return from_style(QtWidgets.QStyle.SP_DialogApplyButton)
+
+
+def style_dialog_discard():
+    return from_style(QtWidgets.QStyle.SP_DialogDiscardButton)
+
+
+def style_dialog_reset():
+    return from_style(QtWidgets.QStyle.SP_DialogResetButton)
+
+
 def unfold():
     return icon('unfold.svg')
 
