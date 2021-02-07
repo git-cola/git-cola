@@ -498,12 +498,16 @@ class ResetCommand(ConfirmAction):
 
 
 class ResetMixed(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The branch will be reset using "git reset --mixed %s"')
+        return tooltip % ref
+
     def confirm(self):
         title = N_('Reset Branch and Stage (Mixed)')
         question = N_('Point the current branch head to a new commit?')
-        info = N_('The branch will be reset using "git reset --mixed %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset Branch')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -511,12 +515,16 @@ class ResetMixed(ResetCommand):
 
 
 class ResetKeep(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --keep %s"')
+        return tooltip % ref
+
     def confirm(self):
         title = N_('Restore Worktree and Reset All (Keep Unstaged Changes)')
         question = N_('Restore worktree, reset, and preserve unstaged edits?')
-        info = N_('The repository will be reset using "git reset --keep %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset and Restore')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -524,12 +532,16 @@ class ResetKeep(ResetCommand):
 
 
 class ResetMerge(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --merge %s"')
+        return tooltip % ref
+
     def confirm(self):
         title = N_('Restore Worktree and Reset All (Merge)')
         question = N_('Reset Worktree and Reset All?')
-        info = N_('The repository will be reset using "git reset --merge %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset and Restore')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -537,12 +549,16 @@ class ResetMerge(ResetCommand):
 
 
 class ResetSoft(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The branch will be reset using "git reset --soft %s"')
+        return tooltip % ref
+
     def confirm(self):
         title = N_('Reset Branch (Soft)')
         question = N_('Reset branch?')
-        info = N_('The branch will be reset using "git reset --soft %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset Branch')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
@@ -550,12 +566,16 @@ class ResetSoft(ResetCommand):
 
 
 class ResetHard(ResetCommand):
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_('The repository will be reset using "git reset --hard %s"')
+        return tooltip % ref
+
     def confirm(self):
         title = N_('Restore Worktree and Reset All (Hard)')
         question = N_('Restore Worktree and Reset All?')
-        info = N_('The repository will be reset using "git reset --hard %s"')
+        info = self.tooltip(self.ref)
         ok_text = N_('Reset and Restore')
-        info = info % self.ref
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):

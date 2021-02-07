@@ -371,30 +371,35 @@ class MainView(standard.MainWindow):
             partial(guicmds.reset_soft, context)
         )
         self.reset_soft_action.setIcon(icons.style_dialog_reset())
+        self.reset_soft_action.setToolTip(cmds.ResetSoft.tooltip('<commit>'))
 
         self.reset_mixed_action = add_action(
             self, N_('Reset Branch and Stage (Mixed)'),
             partial(guicmds.reset_mixed, context)
         )
         self.reset_mixed_action.setIcon(icons.style_dialog_reset())
+        self.reset_mixed_action.setToolTip(cmds.ResetMixed.tooltip('<commit>'))
 
         self.reset_keep_action = add_action(
             self, N_('Restore Worktree and Reset All (Keep Unstaged Changes)'),
             partial(guicmds.reset_keep, context)
         )
         self.reset_keep_action.setIcon(icons.style_dialog_reset())
+        self.reset_keep_action.setToolTip(cmds.ResetKeep.tooltip('<commit>'))
 
         self.reset_merge_action = add_action(
             self, N_('Restore Worktree and Reset All (Merge)'),
             partial(guicmds.reset_merge, context)
         )
         self.reset_merge_action.setIcon(icons.style_dialog_reset())
+        self.reset_merge_action.setToolTip(cmds.ResetMerge.tooltip('<commit>'))
 
         self.reset_hard_action = add_action(
             self, N_('Restore Worktree and Reset All (Hard)'),
             partial(guicmds.reset_hard, context)
         )
         self.reset_hard_action.setIcon(icons.style_dialog_reset())
+        self.reset_hard_action.setToolTip(cmds.ResetHard.tooltip('<commit>'))
 
         self.clone_repo_action = add_action(
             self, N_('Clone...'), partial(clone.clone, context)
