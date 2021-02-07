@@ -13,6 +13,9 @@ Usability, bells and whistles
   that can be used for selecting Favorites and Recent repositories.
   (`#1086 <https://github.com/git-cola/git-cola/pull/1086>`_)
 
+* The "Commit" menu now includes an "Undo Last Commit" action.
+  (`#890 <https://github.com/git-cola/git-cola/issues/890>`_)
+
 Translations
 ------------
 * Updated Polish translation.

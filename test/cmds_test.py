@@ -187,5 +187,47 @@ def test_submodule_update(confirm, check_git):
     assert context.model.update_file_status.called
 
 
+@patch('cola.cmds.Interaction')
+@patch('cola.cmds.prefs')
+def test_undo_last_commit_confirms_action(prefs, interaction):
+    """Test the behavior around confirmation of UndoLastCommit actions"""
+    context = Mock()
+    context.model = Mock()
+    # First, test what happens when the commit is published and we say "yes".
+    prefs.check_published_commits = Mock(return_value=True)
+    context.model.is_commit_published = Mock(return_value=True)
+    interaction.confirm = Mock(return_value=True)
+
+    cmd = cmds.UndoLastCommit(context)
+    assert cmd.confirm()
+    context.model.is_commit_published.assert_called_once()
+    interaction.confirm.assert_called_once()
+
+    # Now, test what happens when we say "no".
+    interaction.confirm = Mock(return_value=False)
+    assert not cmd.confirm()
+    interaction.confirm.assert_called_once()
+
+    # Now check what happens when the commit is published but our preferences
+    # say to not check for published commits.
+    prefs.check_published_commits = Mock(return_value=False)
+    context.model.is_commit_published = Mock(return_value=True)
+    interaction.confirm = Mock(return_value=True)
+
+    assert cmd.confirm()
+    context.model.is_commit_published.assert_not_called()
+    interaction.confirm.assert_called_once()
+
+    # Lastly, check what when the commit is not published and we do check
+    # for published commits.
+    prefs.check_published_commits = Mock(return_value=True)
+    context.model.is_commit_published = Mock(return_value=False)
+    interaction.confirm = Mock(return_value=True)
+
+    assert cmd.confirm()
+    context.model.is_commit_published.assert_called_once()
+    interaction.confirm.assert_called_once()
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

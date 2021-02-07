@@ -562,6 +562,40 @@ class ResetHard(ResetCommand):
         return self.git.reset(self.ref, '--', hard=True)
 
 
+class UndoLastCommit(ResetCommand):
+    """Undo the last commit"""
+    # NOTE: this is the similar to ResetSoft() with an additional check for
+    # published commits and different messages.
+    def __init__(self, context):
+        super(UndoLastCommit, self).__init__(context, 'HEAD^')
+
+    def confirm(self):
+        check_published = prefs.check_published_commits(self.context)
+        if check_published and self.model.is_commit_published():
+            return Interaction.confirm(
+                N_('Rewrite Published Commit?'),
+                N_(
+                    'This commit has already been published.\n'
+                    'This operation will rewrite published history.\n'
+                    'You probably don\'t want to do this.'
+                ),
+                N_('Undo the published commit?'),
+                N_('Undo Last Commit'),
+                default=False,
+                icon=icons.save(),
+            )
+
+        title = N_('Undo Last Commit')
+        question = N_('Undo last commit?')
+        info = N_('The branch will be reset using "git reset --soft %s"')
+        ok_text = N_('Undo Last Commit')
+        info_text = info % self.ref
+        return Interaction.confirm(title, question, info_text, ok_text)
+
+    def reset(self):
+        return self.git.reset('HEAD^', '--', soft=True)
+
+
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 

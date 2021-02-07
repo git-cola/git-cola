@@ -600,6 +600,8 @@ class MainView(standard.MainWindow):
         self.commit_menu.setTitle(N_('Commit@@verb'))
         self.commit_menu.addAction(self.commiteditor.commit_action)
         self.commit_menu.addAction(self.commit_amend_action)
+        self.commit_menu.addAction(
+            N_('Undo Last Commit'), cmds.run(cmds.UndoLastCommit, context))
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
