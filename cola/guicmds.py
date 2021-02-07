@@ -304,6 +304,14 @@ def reset_hard(context):
         cmds.do(cmds.ResetHard, context, ref)
 
 
+def restore_worktree(context):
+    title = N_('Restore Worktree')
+    ok_text = N_('Restore Worktree')
+    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    if ref:
+        cmds.do(cmds.RestoreWorktree, context, ref)
+
+
 def install():
     """Install the GUI-model interaction hooks"""
     Interaction.choose_ref = staticmethod(choose_ref)

@@ -401,6 +401,15 @@ class MainView(standard.MainWindow):
         self.reset_hard_action.setIcon(icons.style_dialog_reset())
         self.reset_hard_action.setToolTip(cmds.ResetHard.tooltip('<commit>'))
 
+        self.restore_worktree_action = add_action(
+            self, N_('Restore Worktree'),
+            partial(guicmds.restore_worktree, context)
+        )
+        self.restore_worktree_action.setIcon(icons.edit())
+        self.restore_worktree_action.setToolTip(
+            cmds.RestoreWorktree.tooltip('<commit>')
+        )
+
         self.clone_repo_action = add_action(
             self, N_('Clone...'), partial(clone.clone, context)
         )
@@ -717,6 +726,7 @@ class MainView(standard.MainWindow):
         self.reset_menu.addSeparator()
         self.reset_menu.addAction(self.reset_soft_action)
         self.reset_menu.addAction(self.reset_mixed_action)
+        self.reset_menu.addAction(self.restore_worktree_action)
         self.reset_menu.addSeparator()
         self.reset_menu.addAction(self.reset_keep_action)
         self.reset_menu.addAction(self.reset_merge_action)

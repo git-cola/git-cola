@@ -130,6 +130,12 @@ COMMANDS = {
         'icon': 'style_dialog_reset',
         'tooltip': cmds.ResetMixed.tooltip('<commit>'),
     },
+    'Actions::RestoreWorktree': {
+        'title': 'Restore Worktree',
+        'action': guicmds.restore_worktree,
+        'icon': 'edit',
+        'tooltip': cmds.RestoreWorktree.tooltip('<commit>'),
+    },
     'Actions::ResetKeep': {
         'title': 'Restore Worktree and Reset All (Keep Unstaged Changes)',
         'action': guicmds.reset_keep,

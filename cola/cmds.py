@@ -582,6 +582,39 @@ class ResetHard(ResetCommand):
         return self.git.reset(self.ref, '--', hard=True)
 
 
+class RestoreWorktree(ConfirmAction):
+    """Reset the worktree using the "git read-tree" command"""
+    @staticmethod
+    def tooltip(ref):
+        tooltip = N_(
+            'The worktree will be restored using "git read-tree --reset -u %s"'
+        )
+        return tooltip % ref
+
+    def __init__(self, context, ref):
+        super(RestoreWorktree, self).__init__(context)
+        self.ref = ref
+
+    def action(self):
+        return self.git.read_tree(self.ref, reset=True, u=True)
+
+    def command(self):
+        return 'git read-tree --reset -u %s' % self.ref
+
+    def error_message(self):
+        return N_('Error')
+
+    def success(self):
+        self.model.update_file_status()
+
+    def confirm(self):
+        title = N_('Restore Worktree')
+        question = N_('Restore Worktree to %s?') % self.ref
+        info = self.tooltip(self.ref)
+        ok_text = N_('Restore Worktree')
+        return Interaction.confirm(title, question, info, ok_text)
+
+
 class UndoLastCommit(ResetCommand):
     """Undo the last commit"""
     # NOTE: this is the similar to ResetSoft() with an additional check for

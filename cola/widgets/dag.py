@@ -183,6 +183,10 @@ class ViewerMixin(object):
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetHard, context, ref=oid))
 
+    def restore_worktree(self):
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.RestoreWorktree, context, ref=oid))
+
     def checkout_detached(self):
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.Checkout, context, [oid]))
@@ -227,6 +231,7 @@ class ViewerMixin(object):
         self.menu_actions['reset_merge'].setEnabled(has_single_selection)
         self.menu_actions['reset_soft'].setEnabled(has_single_selection)
         self.menu_actions['reset_hard'].setEnabled(has_single_selection)
+        self.menu_actions['restore_worktree'].setEnabled(has_single_selection)
         self.menu_actions['revert'].setEnabled(has_single_selection)
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
@@ -249,6 +254,7 @@ class ViewerMixin(object):
         reset_menu = menu.addMenu(N_('Reset'))
         reset_menu.addAction(self.menu_actions['reset_soft'])
         reset_menu.addAction(self.menu_actions['reset_mixed'])
+        reset_menu.addAction(self.menu_actions['restore_worktree'])
         reset_menu.addSeparator()
         reset_menu.addAction(self.menu_actions['reset_keep'])
         reset_menu.addAction(self.menu_actions['reset_merge'])
@@ -345,29 +351,39 @@ def viewer_actions(widget):
         'reset_mixed': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Reset Branch and Stage (Mixed)'),
+                widget,
+                N_('Reset Branch and Stage (Mixed)'),
                 widget.proxy.reset_mixed
             )
         ),
         'reset_keep': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Restore Worktree and Reset All (Keep Unstaged Edits)'),
+                widget,
+                N_('Restore Worktree and Reset All (Keep Unstaged Edits)'),
                 widget.proxy.reset_keep
             )
         ),
         'reset_merge': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Restore Worktree and Reset All (Merge)'),
+                widget,
+                N_('Restore Worktree and Reset All (Merge)'),
                 widget.proxy.reset_merge
             )
         ),
         'reset_hard': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Restore Worktree and Reset All (Hard)'),
+                widget,
+                N_('Restore Worktree and Reset All (Hard)'),
                 widget.proxy.reset_hard
+            )
+        ),
+        'restore_worktree': set_icon(
+            icons.edit(),
+            qtutils.add_action(
+                widget, N_('Restore Worktree'), widget.proxy.restore_worktree
             )
         ),
         'save_blob': set_icon(

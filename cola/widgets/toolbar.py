@@ -67,6 +67,7 @@ TREE_LAYOUT = {
         'Commit::UnstageAll',
         'Actions::ResetSoft',
         'Actions::ResetMixed',
+        'Actions::RestoreWorktree',
         'Actions::ResetKeep',
         'Actions::ResetHard',
     ],
