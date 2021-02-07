@@ -310,32 +310,30 @@ class ToolbarView(standard.Dialog):
         self.init_size(parent=parent)
 
     def load_right_items(self):
+        commands = self.toolbar.commands
         for action in self.toolbar.actions():
             data = action.data()
             if data['child'] == self.toolbar.SEPARATOR:
                 self.add_separator_action()
             else:
-                command = self.toolbar.commands[data['child']]
+                try:
+                    child_data = data['child']
+                    command = commands[child_data]
+                except KeyError:
+                    pass
                 title = command['title']
                 icon = command['icon']
                 self.right_list.add_item(title, data, icon)
 
     def load_left_items(self):
-
-        # def current_children(actions):
-        #     result = []
-        #     for action in actions:
-        #         data = action.data()
-        #         if data['child'] != self.toolbar.SEPARATOR:
-        #             result.append(data['child'])
-
-        #     return result
-
+        commands = self.toolbar.commands
         for parent in self.toolbar.tree_layout:
             top = self.left_list.insert_top(parent)
-            # current_items = current_children(self.toolbar.actions())
             for item in self.toolbar.tree_layout[parent]:
-                command = self.toolbar.commands[item]
+                try:
+                    command = commands[item]
+                except KeyError:
+                    pass
                 child = create_child(parent, item, command['title'], command['icon'])
                 top.appendRow(child)
 
