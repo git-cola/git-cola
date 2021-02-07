@@ -212,6 +212,11 @@ class ToolBar(QtWidgets.QToolBar):
 
             toolbar_action.setData(data)
 
+            tooltip = command.get('tooltip', None)
+            if tooltip:
+                toolbar_action.setToolTip('%s\n%s' % (title, tooltip))
+
+
     def delete_toolbar(self):
         self.parent().removeToolBar(self)
 
@@ -331,8 +336,9 @@ class ToolbarView(standard.Dialog):
                 except KeyError:
                     pass
                 title = command['title']
-                icon = command['icon']
-                self.right_list.add_item(title, data, icon)
+                icon = command.get('icon', None)
+                tooltip = command.get('tooltip', None)
+                self.right_list.add_item(title, tooltip, data, icon)
 
     def load_left_items(self):
         commands = self.toolbar.commands
@@ -343,7 +349,11 @@ class ToolbarView(standard.Dialog):
                     command = commands[item]
                 except KeyError:
                     pass
-                child = create_child(parent, item, command['title'], command['icon'])
+                icon = command.get('icon', None)
+                tooltip = command.get('tooltip', None)
+                child = create_child(
+                    parent, item, command['title'], tooltip, icon
+                )
                 top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)
@@ -435,14 +445,16 @@ class DraggableListWidget(QtWidgets.QListWidget):
 
         self.addItem(item)
 
-    def add_item(self, title, data, icon_text=None):
+    def add_item(self, title, tooltip, data, icon):
         item = QtWidgets.QListWidgetItem()
         item.setText(N_(title))
         item.setData(Qt.UserRole, data)
+        if tooltip:
+            item.setToolTip(tooltip)
 
-        if icon_text is not None:
-            icon = getattr(icons, icon_text, None)
-            item.setIcon(icon())
+        if icon:
+            icon_func = getattr(icons, icon)
+            item.setIcon(icon_func())
 
         self.addItem(item)
 
@@ -476,13 +488,14 @@ class ToolbarTreeWidget(standard.TreeView):
         return item
 
 
-def create_child(parent, child, title, icon_text=None):
+def create_child(parent, child, title, tooltip, icon):
     data = {'parent': parent, 'child': child}
     item = create_item(title, data)
-
-    if icon_text is not None:
-        icon = getattr(icons, icon_text, None)
-        item.setIcon(icon())
+    if tooltip:
+        item.setToolTip(tooltip)
+    if icon:
+        icon_func = getattr(icons, icon, None)
+        item.setIcon(icon_func())
 
     return item
 
