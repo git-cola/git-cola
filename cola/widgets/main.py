@@ -588,10 +588,6 @@ class MainView(standard.MainWindow):
         self.actions_menu.addAction(self.update_submodules_action)
         self.actions_menu.addAction(self.add_submodule_action)
         self.actions_menu.addSeparator()
-        self.actions_reset_menu = self.actions_menu.addMenu(N_('Reset'))
-        self.actions_reset_menu.addAction(self.reset_branch_head_action)
-        self.actions_reset_menu.addAction(self.reset_worktree_action)
-        self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.grep_action)
         self.actions_menu.addAction(self.search_commits_action)
 
@@ -637,7 +633,7 @@ class MainView(standard.MainWindow):
         self.branch_menu.addAction(self.visualize_all_action)
 
         # Rebase menu
-        self.rebase_menu = add_menu(N_('Rebase'), self.actions_menu)
+        self.rebase_menu = add_menu(N_('Rebase'), self.menubar)
         self.rebase_menu.addAction(self.rebase_start_action)
         self.rebase_menu.addAction(self.rebase_edit_todo_action)
         self.rebase_menu.addSeparator()
@@ -645,6 +641,14 @@ class MainView(standard.MainWindow):
         self.rebase_menu.addAction(self.rebase_skip_action)
         self.rebase_menu.addSeparator()
         self.rebase_menu.addAction(self.rebase_abort_action)
+
+        # Reset menu
+        self.reset_menu = add_menu(N_('Reset'), self.menubar)
+        self.reset_menu.addAction(
+            N_('Undo Last Commit'), cmds.run(cmds.UndoLastCommit, context))
+        self.reset_menu.addSeparator()
+        self.reset_menu.addAction(self.reset_branch_head_action)
+        self.reset_menu.addAction(self.reset_worktree_action)
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
