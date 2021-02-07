@@ -720,6 +720,7 @@ class MainView(standard.MainWindow):
         self.reset_menu.addSeparator()
         self.reset_menu.addAction(self.reset_keep_action)
         self.reset_menu.addAction(self.reset_merge_action)
+        self.reset_menu.addAction(self.reset_hard_action)
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
