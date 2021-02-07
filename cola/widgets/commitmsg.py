@@ -49,6 +49,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.signoff_action = qtutils.add_action(
             self, cmds.SignOff.name(), cmds.run(cmds.SignOff, context), hotkeys.SIGNOFF
         )
+        self.signoff_action.setIcon(icons.style_dialog_apply())
         self.signoff_action.setToolTip(N_('Sign off on this commit'))
 
         self.commit_action = qtutils.add_action(
@@ -110,6 +111,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         # Amend checkbox
         self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
+        self.amend_action.setIcon(icons.edit())
         self.amend_action.setCheckable(True)
         self.amend_action.setShortcut(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)

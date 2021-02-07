@@ -260,41 +260,81 @@ class ViewerMixin(object):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
+def set_icon(icon, action):
+    """"Set the icon for an action and return the action"""
+    action.setIcon(icon)
+    return action
+
+
 def viewer_actions(widget):
     return {
-        'diff_this_selected': qtutils.add_action(
-            widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+        'diff_this_selected': set_icon(
+            icons.compare(),
+            qtutils.add_action(
+                widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+            )
         ),
-        'diff_selected_this': qtutils.add_action(
-            widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+        'diff_selected_this': set_icon(
+            icons.compare(),
+            qtutils.add_action(
+                widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+            )
         ),
-        'create_branch': qtutils.add_action(
-            widget, N_('Create Branch'), widget.proxy.create_branch
+        'create_branch': set_icon(
+            icons.branch(),
+            qtutils.add_action(
+                widget, N_('Create Branch'), widget.proxy.create_branch
+            )
         ),
-        'create_patch': qtutils.add_action(
-            widget, N_('Create Patch'), widget.proxy.create_patch
+        'create_patch': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget, N_('Create Patch'), widget.proxy.create_patch
+            )
         ),
-        'create_tag': qtutils.add_action(
-            widget, N_('Create Tag'), widget.proxy.create_tag
+        'create_tag': set_icon(
+            icons.tag(),
+            qtutils.add_action(
+                widget, N_('Create Tag'), widget.proxy.create_tag
+            )
         ),
-        'create_tarball': qtutils.add_action(
-            widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+        'create_tarball': set_icon(
+            icons.file_zip(),
+            qtutils.add_action(
+                widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+            )
         ),
-        'cherry_pick': qtutils.add_action(
-            widget, N_('Cherry Pick'), widget.proxy.cherry_pick
+        'cherry_pick': set_icon(
+            icons.style_dialog_apply(),
+            qtutils.add_action(
+                widget, N_('Cherry Pick'), widget.proxy.cherry_pick
+            )
         ),
-        'revert': qtutils.add_action(widget, N_('Revert'), widget.proxy.revert),
-        'diff_commit': qtutils.add_action(
-            widget, N_('Launch Diff Tool'), widget.proxy.show_diff, hotkeys.DIFF
+        'revert': set_icon(
+            icons.undo(),
+            qtutils.add_action(widget, N_('Revert'), widget.proxy.revert)
         ),
-        'diff_commit_all': qtutils.add_action(
-            widget,
-            N_('Launch Directory Diff Tool'),
-            widget.proxy.show_dir_diff,
-            hotkeys.DIFF_SECONDARY,
+        'diff_commit': set_icon(
+            icons.diff(),
+            qtutils.add_action(
+                widget,
+                N_('Launch Diff Tool'),
+                widget.proxy.show_diff,
+                hotkeys.DIFF
+            )
+        ),
+        'diff_commit_all': set_icon(
+            icons.diff(),
+            qtutils.add_action(
+                widget,
+                N_('Launch Directory Diff Tool'),
+                widget.proxy.show_dir_diff,
+                hotkeys.DIFF_SECONDARY
+            )
         ),
         'checkout_detached': qtutils.add_action(
-            widget, N_('Checkout Detached HEAD'), widget.proxy.checkout_detached
+            widget, N_('Checkout Detached HEAD'),
+            widget.proxy.checkout_detached
         ),
         'reset_branch_head': qtutils.add_action(
             widget, N_('Reset Branch Head'), widget.proxy.reset_branch_head
@@ -311,11 +351,20 @@ def viewer_actions(widget):
         'reset_hard': qtutils.add_action(
             widget, N_('Reset Hard'), widget.proxy.reset_hard
         ),
-        'save_blob': qtutils.add_action(
-            widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+        'save_blob': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+            )
         ),
-        'copy': qtutils.add_action(
-            widget, N_('Copy SHA-1'), widget.proxy.copy_to_clipboard, hotkeys.COPY_SHA1
+        'copy': set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                widget,
+                N_('Copy SHA-1'),
+                widget.proxy.copy_to_clipboard,
+                hotkeys.COPY_SHA1
+            )
         ),
     }
 
