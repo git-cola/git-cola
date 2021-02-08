@@ -64,6 +64,7 @@ class MainView(standard.MainWindow):
     updated = Signal()
 
     def __init__(self, context, parent=None):
+        # pylint: disable=too-many-statements
         standard.MainWindow.__init__(self, parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
