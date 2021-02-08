@@ -16,8 +16,9 @@ Usability, bells and whistles
 * The "Commit" menu now includes an "Undo Last Commit" action.
   (`#890 <https://github.com/git-cola/git-cola/issues/890>`_)
 
-* The "Reset" menu was revamped to expose all of Git's reset modes alongside
-  a new "Restore Worktree" action that updates the worktree using "git read-tree".
+* The "Reset" menu was revamped to expose all of Git's reset modes alongside a
+  new "Restore Worktree" action that updates the worktree using "git read-tree".
+  (`#890 <https://github.com/git-cola/git-cola/issues/890>`_)
 
 Translations
 ------------
