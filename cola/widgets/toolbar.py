@@ -217,7 +217,6 @@ class ToolBar(QtWidgets.QToolBar):
             if tooltip:
                 toolbar_action.setToolTip('%s\n%s' % (title, tooltip))
 
-
     def delete_toolbar(self):
         self.parent().removeToolBar(self)
 
