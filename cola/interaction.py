@@ -69,6 +69,7 @@ class Interaction(object):
 %(message)s%(informative_text)s%(details)s\n"""
             % scope
         )
+        sys.stdout.flush()
 
     @classmethod
     def critical(cls, title, message=None, details=None):
@@ -96,6 +97,7 @@ class Interaction(object):
         else:
             prompt = '%s? [y/N] ' % ok_text
         sys.stdout.write(prompt)
+        sys.stdout.flush()
         answer = sys.stdin.readline().strip()
         if answer:
             result = answer.lower().startswith('y')
