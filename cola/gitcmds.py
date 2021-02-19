@@ -734,7 +734,14 @@ def parse_ls_tree(context, rev):
             objtype = match.group(2)
             oid = match.group(3)
             filename = match.group(4)
-            output.append((mode, objtype, oid, filename,))
+            output.append(
+                (
+                    mode,
+                    objtype,
+                    oid,
+                    filename,
+                )
+            )
     return output
 
 
@@ -772,7 +779,12 @@ def parse_rev_list(raw_revs):
         if match:
             rev_id = match.group(1)
             summary = match.group(2)
-            revs.append((rev_id, summary,))
+            revs.append(
+                (
+                    rev_id,
+                    summary,
+                )
+            )
     return revs
 
 

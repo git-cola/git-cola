@@ -55,8 +55,7 @@ class LineEdit(QtWidgets.QLineEdit):
 
 
 class LineEditCursorPosition(object):
-    """Translate cursorPositionChanged(int,int) into cursorPosition(int,int)
-    """
+    """Translate cursorPositionChanged(int,int) into cursorPosition(int,int)"""
 
     def __init__(self, widget, row):
         self._widget = widget

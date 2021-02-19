@@ -341,14 +341,12 @@ class CreateBranchDialog(standard.Dialog):
         self.branch_name.set_value(branch)
 
     def display_model(self):
-        """Sets the branch list to the available branches
-        """
+        """Sets the branch list to the available branches"""
         branches = self.branch_sources()
         qtutils.set_items(self.branch_list, branches)
 
     def branch_sources(self):
-        """Get the list of items for populating the branch root list.
-        """
+        """Get the list of items for populating the branch root list."""
         if get(self.local_radio):
             value = self.model.local_branches
         elif get(self.remote_radio):

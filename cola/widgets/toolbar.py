@@ -351,9 +351,7 @@ class ToolbarView(standard.Dialog):
                     pass
                 icon = command.get('icon', None)
                 tooltip = command.get('tooltip', None)
-                child = create_child(
-                    parent, item, command['title'], tooltip, icon
-                )
+                child = create_child(parent, item, command['title'], tooltip, icon)
                 top.appendRow(child)
 
             top.sortChildren(0, Qt.AscendingOrder)

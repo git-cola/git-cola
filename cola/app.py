@@ -326,8 +326,7 @@ def restore_session(args):
 
 
 def application_init(args, update=False):
-    """Parses the command-line arguments and starts git-cola
-    """
+    """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
@@ -491,8 +490,9 @@ def new_worktree(context, repo, prompt):
 
         valid = model.set_worktree(gitdir)
         if not valid:
-            standard.critical(N_('Error Opening Repository'),
-                              N_('Could not open %s.' % gitdir))
+            standard.critical(
+                N_('Error Opening Repository'), N_('Could not open %s.' % gitdir)
+            )
 
 
 def offer_to_create_repo(context, gitdir):

@@ -62,8 +62,7 @@ def build_version():
 
 @memoize
 def check_version(min_ver, ver):
-    """Check whether ver is greater or equal to min_ver
-    """
+    """Check whether ver is greater or equal to min_ver"""
     min_ver_list = version_to_list(min_ver)
     ver_list = version_to_list(ver)
     return min_ver_list <= ver_list
@@ -81,8 +80,7 @@ def check_git(context, key):
 
 
 def version_to_list(value):
-    """Convert a version string to a list of numbers or strings
-    """
+    """Convert a version string to a list of numbers or strings"""
     ver_list = []
     for p in value.split('.'):
         try:

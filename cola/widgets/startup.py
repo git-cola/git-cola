@@ -111,10 +111,7 @@ class StartupDialog(standard.Dialog):
         bookmarks.setWordWrap(True)
 
         self.tab_layout = qtutils.vbox(
-            defs.no_margin,
-            defs.no_spacing,
-            self.tab_bar,
-            self.bookmarks
+            defs.no_margin, defs.no_spacing, self.tab_bar, self.bookmarks
         )
 
         self.logo_layout = qtutils.vbox(
@@ -221,9 +218,7 @@ class StartupDialog(standard.Dialog):
     def clone_repo(self):
         context = self.context
         progress = standard.progress('', '', self)
-        clone.clone_repo(
-            context, self, True, progress, self.clone_repo_done, False
-        )
+        clone.clone_repo(context, self, True, progress, self.clone_repo_done, False)
 
     def clone_repo_done(self, task):
         if task.cmd and task.cmd.status == 0:
@@ -258,8 +253,7 @@ class StartupDialog(standard.Dialog):
 
         repo = next(repo for repo in all_repos if repo['path'] == repodir)
         title = N_('Repository Not Found')
-        text = N_('%s could not be opened. Remove from bookmarks?') \
-            % repo['path']
+        text = N_('%s could not be opened. Remove from bookmarks?') % repo['path']
         logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxWarning)
         if standard.question(title, text, N_('Remove'), logo=logo):
             self.context.settings.remove_bookmark(repo['path'], repo['name'])

@@ -83,8 +83,7 @@ def decode_maybe(value, encoding, errors='strict'):
 
 
 def decode(value, encoding=None, errors='strict'):
-    """decode(encoded_string) returns an unencoded unicode string
-    """
+    """decode(encoded_string) returns an unencoded unicode string"""
     if value is None:
         result = None
     elif isinstance(value, ustr):
@@ -114,8 +113,7 @@ def decode(value, encoding=None, errors='strict'):
 
 
 def encode(string, encoding=None):
-    """encode(unencoded_string) returns a string encoded in utf-8
-    """
+    """encode(unencoded_string) returns a string encoded in utf-8"""
     if not isinstance(string, ustr):
         return string
     return string.encode(encoding or ENCODING, 'replace')

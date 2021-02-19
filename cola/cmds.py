@@ -584,6 +584,7 @@ class ResetHard(ResetCommand):
 
 class RestoreWorktree(ConfirmAction):
     """Reset the worktree using the "git read-tree" command"""
+
     @staticmethod
     def tooltip(ref):
         tooltip = N_(
@@ -617,6 +618,7 @@ class RestoreWorktree(ConfirmAction):
 
 class UndoLastCommit(ResetCommand):
     """Undo the last commit"""
+
     # NOTE: this is the similar to ResetSoft() with an additional check for
     # published commits and different messages.
     def __init__(self, context):
@@ -850,7 +852,6 @@ class RemoteEdit(ContextCommand):
 
 
 class RemoveFromSettings(ConfirmAction):
-
     def __init__(self, context, repo, entry, icon=None):
         super(RemoveFromSettings, self).__init__(context)
         self.context = context
@@ -863,7 +864,6 @@ class RemoveFromSettings(ConfirmAction):
 
 
 class RemoveBookmark(RemoveFromSettings):
-
     def confirm(self):
         entry = self.entry
         title = msg = N_('Delete Bookmark?')
@@ -1587,8 +1587,7 @@ class LoadCommitMessageFromOID(ContextCommand):
 
 
 class PrepareCommitMessageHook(ContextCommand):
-    """Use the cola-prepare-commit-msg hook to prepare the commit message
-    """
+    """Use the cola-prepare-commit-msg hook to prepare the commit message"""
 
     UNDOABLE = True
 
@@ -1817,8 +1816,7 @@ class NewBareRepo(ContextCommand):
 
 
 def unix_path(path, is_win32=utils.is_win32):
-    """Git for Windows requires unix paths, so force them here
-    """
+    """Git for Windows requires unix paths, so force them here"""
     if is_win32():
         path = path.replace('\\', '/')
         first = path[0]
@@ -2332,8 +2330,7 @@ def check_conflicts(context, unmerged):
 
 
 def is_conflict_free(path):
-    """Return True if `path` contains no conflict markers
-    """
+    """Return True if `path` contains no conflict markers"""
     rgx = re.compile(r'^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>) ')
     try:
         with core.xopen(path, 'r') as f:

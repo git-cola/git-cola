@@ -113,8 +113,7 @@ class Highlighter(QSyntaxHighlighter):
 
 
 class SpellAction(QAction):
-    """QAction that returns the text in a signal.
-    """
+    """QAction that returns the text in a signal."""
 
     result = Signal(object)
 

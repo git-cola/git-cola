@@ -187,8 +187,7 @@ class CompareBranchesDialog(standard.Dialog):
         self.diff_files.addTopLevelItems([mk(f, icon) for f in files])
 
     def remote_ref(self, branch):
-        """Returns the remote ref for 'git diff [local] [remote]'
-        """
+        """Returns the remote ref for 'git diff [local] [remote]'"""
         context = self.context
         if branch == self.BRANCH_POINT:
             # Compare against the branch point so find the merge-base
@@ -243,8 +242,7 @@ class CompareBranchesDialog(standard.Dialog):
             item.setSelected(True)
 
     def compare(self):
-        """Shows the diff for a specific file
-        """
+        """Shows the diff for a specific file"""
         tree_widget = self.diff_files
         item = tree_widget.currentItem()
         if item and item.isSelected():

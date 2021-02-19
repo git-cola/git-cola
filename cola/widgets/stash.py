@@ -19,8 +19,7 @@ from . import standard
 
 
 def view(context, show=True):
-    """Launches a stash dialog using the provided model + view
-    """
+    """Launches a stash dialog using the provided model + view"""
     model = stash.StashModel(context)
     stash_view = StashView(context, model, parent=qtutils.active_window())
     if show:
@@ -148,8 +147,7 @@ class StashView(standard.Dialog):
             self.stash_index.setChecked(False)
 
     def selected_stash(self):
-        """Returns the stash name of the currently selected stash
-        """
+        """Returns the stash name of the currently selected stash"""
         list_widget = self.stash_list
         stash_list = self.revids
         return qtutils.selected_item(list_widget, stash_list)
@@ -185,8 +183,7 @@ class StashView(standard.Dialog):
         self.button_pop.setEnabled(is_selected)
 
     def update_from_model(self):
-        """Initiates git queries on the model and updates the view
-        """
+        """Initiates git queries on the model and updates the view"""
         stashes, revids, author_dates, names = self.model.stash_info()
         self.stashes = stashes
         self.revids = revids
@@ -210,8 +207,7 @@ class StashView(standard.Dialog):
         self.stash_apply(pop=True)
 
     def stash_apply(self, pop=False):
-        """Applies the currently selected stash
-        """
+        """Applies the currently selected stash"""
         selection = self.selected_stash()
         if not selection:
             return
@@ -250,8 +246,7 @@ class StashView(standard.Dialog):
         QtCore.QTimer.singleShot(1, self.accept)
 
     def stash_drop(self):
-        """Drops the currently selected stash
-        """
+        """Drops the currently selected stash"""
         selection = self.selected_stash()
         name = self.selected_name()
         if not selection:

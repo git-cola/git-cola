@@ -11,8 +11,7 @@ class CompatTestCase(unittest.TestCase):
     """Tests the compat module"""
 
     def test_setenv(self):
-        """Test the core.decode function
-        """
+        """Test the core.decode function"""
         key = 'COLA_UNICODE_TEST'
         value = '字龍'
         compat.setenv(key, value)

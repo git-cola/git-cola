@@ -148,16 +148,12 @@ def dirname(path, current_dir=''):
 
 
 def splitpath(path):
-    """Split paths using '/' regardless of platform
-
-    """
+    """Split paths using '/' regardless of platform"""
     return path.split('/')
 
 
 def join(*paths):
-    """Join paths using '/' regardless of platform
-
-    """
+    """Join paths using '/' regardless of platform"""
     return '/'.join(paths)
 
 

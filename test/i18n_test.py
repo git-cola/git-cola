@@ -13,40 +13,35 @@ class ColaI18nTestCase(unittest.TestCase):
         i18n.uninstall()
 
     def test_translates_noun(self):
-        """Test that strings with @@noun are translated
-        """
+        """Test that strings with @@noun are translated"""
         i18n.install('ja_JP')
         expect = uchr(0x30B3) + uchr(0x30DF) + uchr(0x30C3) + uchr(0x30C8)
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
     def test_translates_verb(self):
-        """Test that strings with @@verb are translated
-        """
+        """Test that strings with @@verb are translated"""
         i18n.install('de_DE')
         expect = 'Commit aufnehmen'
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
     def test_translates_english_noun(self):
-        """Test that English strings with @@noun are properly handled
-        """
+        """Test that English strings with @@noun are properly handled"""
         i18n.install('en_US.UTF-8')
         expect = 'Commit'
         actual = N_('Commit@@noun')
         self.assertEqual(expect, actual)
 
     def test_translates_english_verb(self):
-        """Test that English strings with @@verb are properly handled
-        """
+        """Test that English strings with @@verb are properly handled"""
         i18n.install('en_US.UTF-8')
         expect = 'Commit'
         actual = N_('Commit@@verb')
         self.assertEqual(expect, actual)
 
     def test_translates_random_english(self):
-        """Test that random English strings are passed through as-is
-        """
+        """Test that random English strings are passed through as-is"""
         i18n.install('en_US.UTF-8')
         expect = 'Random'
         actual = N_('Random')

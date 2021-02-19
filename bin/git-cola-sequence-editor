@@ -337,7 +337,13 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.comment_char = comment_char
         # header
         self.setHeaderLabels(
-            [N_('#'), N_('Enabled'), N_('Command'), N_('SHA-1'), N_('Summary'),]
+            [
+                N_('#'),
+                N_('Enabled'),
+                N_('Command'),
+                N_('SHA-1'),
+                N_('Summary'),
+            ]
         )
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)

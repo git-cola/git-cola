@@ -170,9 +170,7 @@ class Paths(object):
 
 
 def find_git_directory(path):
-    """Perform Git repository discovery
-
-    """
+    """Perform Git repository discovery"""
     return Paths(
         git_dir=core.getenv('GIT_DIR'), worktree=core.getenv('GIT_WORK_TREE')
     ).get(path)

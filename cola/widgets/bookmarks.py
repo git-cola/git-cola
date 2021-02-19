@@ -394,7 +394,6 @@ class BuildItem(object):
 
 
 class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     def __init__(self, path, name, icon, is_default):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.path = path

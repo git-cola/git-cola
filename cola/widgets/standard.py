@@ -143,7 +143,6 @@ class WidgetMixin(object):
 
 
 class MainWindowMixin(WidgetMixin):
-
     def __init__(self):
         WidgetMixin.__init__(self)
         # Dockwidget options
@@ -682,9 +681,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
 
 
 class ProgressAnimationThread(QtCore.QThread):
-    """Emits a pseudo-animated text stream for progress bars
-
-    """
+    """Emits a pseudo-animated text stream for progress bars"""
 
     updated = Signal(object)
 

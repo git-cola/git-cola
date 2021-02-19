@@ -12,8 +12,7 @@ from .standard import Dialog
 
 
 def gitignore_view(context):
-    """Launches a gitignore dialog
-    """
+    """Launches a gitignore dialog"""
     view = AddToGitIgnore(context, parent=qtutils.active_window())
     view.show()
     return view

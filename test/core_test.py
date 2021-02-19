@@ -9,20 +9,17 @@ from . import helper
 
 
 class CoreColaUnicodeTestCase(unittest.TestCase):
-    """Tests the cola.core module's unicode handling
-    """
+    """Tests the cola.core module's unicode handling"""
 
     def test_core_decode(self):
-        """Test the core.decode function
-        """
+        """Test the core.decode function"""
         filename = helper.fixture('unicode.txt')
         expect = core.decode(core.encode('unicøde'))
         actual = core.read(filename).strip()
         self.assertEqual(expect, actual)
 
     def test_core_encode(self):
-        """Test the core.encode function
-        """
+        """Test the core.encode function"""
         filename = helper.fixture('unicode.txt')
         expect = core.encode('unicøde')
         actual = core.encode(core.read(filename).strip())
