@@ -56,7 +56,8 @@ except ValueError:
 here = os.path.dirname(__file__)
 version = os.path.join(here, 'cola', '_version.py')
 scope = {}
-exec(open(version).read(), scope)  # pylint: disable=exec-used
+# flake8: noqa
+exec (open(version).read(), scope)  # pylint: disable=exec-used
 version = scope['VERSION']
 
 

@@ -9,6 +9,8 @@ pylint==2.3.1; python_version >= '3.0'
 PyYAML
 pytest>=3.6
 pytest-cov
+pytest-flake8
+pytest-black-multipy
 Sphinx
 sphinx-rtd-theme==0.4.3; python_version < '3.0'
 sphinx-rtd-theme; python_version >= '3.0'
