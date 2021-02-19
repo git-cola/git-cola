@@ -14,8 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10"
-" || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Lokalize 20.08.1\n"
 
 msgid ""
@@ -28,8 +27,7 @@ msgid ""
 msgstr ""
 "\n"
 "            <p>\n"
-"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby"
-" dodać\n"
+"                Przeciągnij i upuść lub naciśnij <strong>Dodaj</strong>, aby dodać\n"
 "                łaty do listy\n"
 "            </p>\n"
 "            "
@@ -53,8 +51,7 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or"
-" updating\n"
+"            We invite you to participate in translation by adding or updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -80,8 +77,7 @@ msgstr ""
 "        <br>\n"
 "        <p>\n"
 "            Zachęcamy do udziału w tłumaczeniu, poprzez dodawanie lub\n"
-"            uaktualnianie tłumaczenia, a następnie utworzeniu prośby o"
-" wciągnięcie.\n"
+"            uaktualnianie tłumaczenia, a następnie utworzeniu prośby o wciągnięcie.\n"
 "        </p>\n"
 "\n"
 "        <br>\n"
@@ -417,8 +413,7 @@ msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych"
-" zmian.\n"
+"Przerwanie obecnego scalania spowoduje utratę *WSZYSTKICH* niewdrożonych zmian.\n"
 "Przywrócenie niewdrożonych zmian będzie niemożliwe."
 
 msgid "Aborting the current merge?"
@@ -530,19 +525,11 @@ msgstr ""
 "Wszystkie podmoduły zostaną uaktualnione przy użyciu\n"
 "\"%s\""
 
-msgid ""
-"Allow non-fast-forward updates.  Using \"force\" can cause the remote"
-" repository to lose commits; use it with care"
-msgstr ""
-"Zezwól na uaktualnienia nie będące przewinięciem do przodu.  Użycie \"wymuś\""
-" może spowodować, że zdalne repozytoria zgubią wdrożenia; używaj z rozwagą"
+msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
+msgstr "Zezwól na uaktualnienia nie będące przewinięciem do przodu.  Użycie \"wymuś\" może spowodować, że zdalne repozytoria zgubią wdrożenia; używaj z rozwagą"
 
-msgid ""
-"Always create a merge commit when enabled, even when the merge is a"
-" fast-forward update"
-msgstr ""
-"Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na"
-" przewinięciu do przodu"
+msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
+msgstr "Zawsze twórz wdrożenie scalania, gdy włączone, nawet gdy scalanie polega na przewinięciu do przodu"
 
 msgid "Amend"
 msgstr "Uzupełnij"
@@ -733,8 +720,7 @@ msgid "Check spelling"
 msgstr "Sprawdź pisownię"
 
 msgid "Check whether a commit has been published when amending"
-msgstr ""
-"Sprawdź, czy wdrożenie zostało już opublikowane, przed jego uzupełnieniem"
+msgstr "Sprawdź, czy wdrożenie zostało już opublikowane, przed jego uzupełnieniem"
 
 msgid "Checkout"
 msgstr "Przełącz"
@@ -825,12 +811,8 @@ msgstr ""
 msgid "Commit summary"
 msgstr "Nazwa wdrożenia"
 
-msgid ""
-"Commit the merge if there are no conflicts.  Uncheck to leave the merge"
-" uncommitted"
-msgstr ""
-"Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić"
-" scalenie niewdrożonym"
+msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
+msgstr "Wdroż scalenie, jeśli brak sprzeczności.  Odznacz pole, aby pozostawić scalenie niewdrożonym"
 
 msgid "Commit@@verb"
 msgstr "Wdroż@@verb"
@@ -907,9 +889,7 @@ msgid "Create Unsigned Tag"
 msgstr "Utwórz niepodpisany znacznik"
 
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr ""
-"Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na przewinięciu"
-" do przodu"
+msgstr "Utwórz wdrożenie scalania, nawet gdy scalanie będzie polegać na przewinięciu do przodu"
 
 msgid "Create a new remote branch?"
 msgstr "Czy utworzyć nową zdalną gałąź?"
@@ -917,12 +897,8 @@ msgstr "Czy utworzyć nową zdalną gałąź?"
 msgid "Create a new repository at that location?"
 msgstr "Czy utworzyć nowe repozytorium w tym miejscu?"
 
-msgid ""
-"Create a shallow clone with history truncated to the specified number of"
-" revisions.  0 performs a full clone."
-msgstr ""
-"Pobierz płytko z historią przyciętą do danej liczby wydań. 0 wykonuje pobiera"
-" z całą historią."
+msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgstr "Pobierz płytko z historią przyciętą do danej liczby wydań. 0 wykonuje pobiera z całą historią."
 
 msgid "Create..."
 msgstr "Utwórz..."
@@ -1260,38 +1236,23 @@ msgstr "Zapisano plik"
 msgid "File saved to \"%s\""
 msgstr "Plik zapisano w \"%s\""
 
-msgid ""
-"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest"
-" false.\n"
+msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo \"cola.inotify\" jest false.\n"
+
+msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań systemowych inotify.\n"
+
+msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgstr "Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
 
 msgid ""
-"File system change monitoring: disabled because libc does not support the"
-" inotify system calls.\n"
-msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo libc nie obsługuje wywołań"
-" systemowych inotify.\n"
-
-msgid ""
-"File system change monitoring: disabled because pywin32 is not installed.\n"
-msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo nie wgrano pywin32.\n"
-
-msgid ""
-"File system change monitoring: disabled because the limit on the total number"
-" of inotify watches was reached.  You may be able to increase the limit on"
-" the number of watches by running:\n"
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
-" sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 msgstr ""
-"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę"
-" całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę"
-" wykonując:\n"
+"Monitorowanie zmiany systemu plików: wyłączone, bo osiągnięto górną granicę całkowitej liczby obserwowanych inotify. Możesz zwiększyć tę granicę wykonując:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf &&"
-" sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 
 msgid "File system change monitoring: enabled.\n"
 msgstr "Monitorowanie zmiany systemu plików: włączone.\n"
@@ -1677,8 +1638,7 @@ msgstr "Pobranie bez przewinięcia do przodu zastępuje lokalną historię!"
 msgid ""
 "Non-fast-forward push overwrites published history!\n"
 "(Did you pull first?)"
-msgstr ""
-"Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
+msgstr "Wypchnięcie bez przewinięcia do przodu zastępuje opublikowaną historię!"
 
 msgid "Nothing to commit"
 msgstr "Nie ma nic do wdrożenia"
@@ -1805,8 +1765,7 @@ msgid "Prepare Commit Message"
 msgstr "Przygotuj opis wdrożenia"
 
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
-msgstr ""
-"Uniemożliw dobranie wszystkich plików, gdy nie jest zaznaczony żaden plik"
+msgstr "Uniemożliw dobranie wszystkich plików, gdy nie jest zaznaczony żaden plik"
 
 msgid "Previous File"
 msgstr "Poprzedni plik"
@@ -1893,12 +1852,8 @@ msgstr "Repozytorium odniesienia, używane podczas pobierania (niewymagane)"
 msgid "Refresh"
 msgstr "Odśwież"
 
-msgid ""
-"Refuse to merge unless the current HEAD is already up-to-date or the merge"
-" can be resolved as a fast-forward"
-msgstr ""
-"Odmów scalenia do chwili uaktualnienia bieżącego HEAD lub rozwiązania"
-" scalenia poprzez przewinięcie do przodu."
+msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgstr "Odmów scalenia do chwili uaktualnienia bieżącego HEAD lub rozwiązania scalenia poprzez przewinięcie do przodu."
 
 msgid "Remote"
 msgstr "Zdalne repozytorium"
@@ -1977,49 +1932,64 @@ msgstr "Wyzeruj"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Wyzerować \"%(branch)s\" do \"%(revision)s\"?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Wyzeruj gałąź"
 
-msgid "Reset Branch Head"
-msgstr "Wyzeruj HEAD gałęzi"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Wyzerować gałąź?"
 
-msgid "Reset Hard"
-msgstr "Wyzeruj twardo"
-
 msgid "Reset Layout"
 msgstr "Wyzeruj układ"
 
-msgid "Reset Merge"
-msgstr "Wyzeruj ze scaleniem"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-msgid "Reset Soft"
-msgstr "Wyzeruj miękko"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Wyzeruj drzewo pracy"
-
-msgid "Reset hard?"
-msgstr "Wyzerować twardo?"
-
-msgid "Reset merge?"
-msgstr "Wyzerować ze scaleniem?"
-
-msgid "Reset soft?"
-msgstr "Wyzerować miękko?"
-
-msgid "Reset worktree?"
-msgstr "Wyzerować drzewo pracy?"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
-msgstr ""
-"Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
+msgstr "Wyzerowanie \"%(branch)s\" do \"%(revision)s\" spowoduje utratę wdrożeń."
 
 msgid "Restart the application after changing appearance settings."
 msgstr "Uruchom aplikację ponownie po zmianie ustawień wyglądu."
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
+msgstr ""
 
 msgid "Revert"
 msgstr "Wycofaj"
@@ -2459,14 +2429,6 @@ msgid "The branch will be no longer available."
 msgstr "Po tym gałąź stanie się niedostępna."
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --hard %s\""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --merge %s\""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --mixed %s\""
 
@@ -2483,6 +2445,18 @@ msgstr "Plik %s już istnieje i zostanie zastąpiony."
 
 msgid "The following files will be deleted:"
 msgstr "Zostaną usunięte następujące pliki:"
+
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
 
 msgid "The revision expression cannot be empty."
 msgstr "Wyrażenie wydania nie może być puste."
@@ -2504,8 +2478,8 @@ msgstr ""
 "\"%s\""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Drzewo z pracą zostanie wyzerowane przy użyciu \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Nie będzie można tego wycofać. Czy wyczyścić opis wdrożenia?"
@@ -2605,6 +2579,15 @@ msgstr "Nie można ustawić URL dla \"%(name)s\" na \"%(url)s\""
 
 msgid "Undo"
 msgstr "Cofnij"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "Niescalone"
@@ -2743,10 +2726,8 @@ msgid "exit code %s"
 msgstr "kod wyjścia %s"
 
 #, python-format
-msgid ""
-"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr ""
-"krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
+msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgstr "krytyczny: \"%s\" nie jest katalogiem. Podaj poprawne --repo <ścieżka>."
 
 #, python-format
 msgid "git cola version %s"
@@ -2859,6 +2840,33 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Rename remote?"
 #~ msgstr "Zmienić nazwę zdalnego repozytorium?"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Wyzeruj HEAD gałęzi"
+
+#~ msgid "Reset Hard"
+#~ msgstr "Wyzeruj twardo"
+
+#~ msgid "Reset Merge"
+#~ msgstr "Wyzeruj ze scaleniem"
+
+#~ msgid "Reset Soft"
+#~ msgstr "Wyzeruj miękko"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Wyzeruj drzewo pracy"
+
+#~ msgid "Reset hard?"
+#~ msgstr "Wyzerować twardo?"
+
+#~ msgid "Reset merge?"
+#~ msgstr "Wyzerować ze scaleniem?"
+
+#~ msgid "Reset soft?"
+#~ msgstr "Wyzerować miękko?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Wyzerować drzewo pracy?"
+
 #~ msgid "Select File"
 #~ msgstr "Wybierz plik"
 
@@ -2879,6 +2887,15 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Summary:"
 #~ msgstr "Nazwa:"
+
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --hard %s\""
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "Gałąź zostanie wyzerowana przy użyciu \"git reset --merge %s\""
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "Drzewo z pracą zostanie wyzerowane przy użyciu \"git reset --keep %s\""
 
 #~ msgid ""
 #~ "This PyQt4 does not include QtWebKit.\n"

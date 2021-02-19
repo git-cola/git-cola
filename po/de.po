@@ -1940,47 +1940,63 @@ msgstr "Zurücksetzen"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Möchten Sie \"%(branch)s\" auf \"%(revision)s\" zurücksetzen?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Branch zurücksetzen"
 
-msgid "Reset Branch Head"
-msgstr "Branch-Head zurücksetzen"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Branch zurücksetzen?"
 
-msgid "Reset Hard"
-msgstr ""
-
 msgid "Reset Layout"
 msgstr ""
 
-msgid "Reset Merge"
+msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-msgid "Reset Soft"
+msgid "Reset and Restore"
 msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Arbeitsbaum zurücksetzen"
-
-msgid "Reset hard?"
+msgid "Reset branch?"
 msgstr ""
-
-msgid "Reset merge?"
-msgstr ""
-
-msgid "Reset soft?"
-msgstr ""
-
-msgid "Reset worktree?"
-msgstr "Arbeitsbaum zurücksetzen?"
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Das Zurücksetzen von \"%(branch)s\" nach \"%(revision)s\" verwirft Commits."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2419,14 +2435,6 @@ msgid "The branch will be no longer available."
 msgstr "Der Branch wird nicht mehr verfügbar sein."
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --hard %s\""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Der Branch wird zurückgesetzt mit \"git reset --merge %s\""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Der Branch wird zurückgesetzt mit \"git reset --mixed %s\""
 
@@ -2444,6 +2452,18 @@ msgstr "Die Datei \"%s\" existiert bereits und wird überschrieben."
 msgid "The following files will be deleted:"
 msgstr "Die folgenden Zeilen werden gleich gelöscht:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "Der Ausdruck darf nicht leer sein."
 
@@ -2460,8 +2480,8 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Dies kann nicht rückgängig gemacht werden. Commit-Beschreibung leeren?"
@@ -2561,6 +2581,15 @@ msgstr "Kann URL für \"%(name)s\" nicht auf \"%(url)s\" setzen"
 
 msgid "Undo"
 msgstr "Rückgängig"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "Nicht zusammengeführt"
@@ -3456,6 +3485,12 @@ msgstr "dd.MM.yyyy"
 #~ msgid "Rescan"
 #~ msgstr "Ansicht aktualisieren"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Branch-Head zurücksetzen"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Arbeitsbaum zurücksetzen"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3468,6 +3503,9 @@ msgstr "dd.MM.yyyy"
 #~ "Wenn Sie zurücksetzen, gehen alle noch nicht eingetragenen Änderungen verloren.\n"
 #~ "\n"
 #~ "Änderungen jetzt zurücksetzen?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Arbeitsbaum zurücksetzen?"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Nicht versionierte Änderungen verwerfen"
@@ -3556,6 +3594,12 @@ msgstr "dd.MM.yyyy"
 #~ msgid "The 'main' branch has not been initialized."
 #~ msgstr "Der »main«-Zweig wurde noch nicht initialisiert."
 
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "Der Branch wird zurückgesetzt mit \"git reset --hard %s\""
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "Der Branch wird zurückgesetzt mit \"git reset --merge %s\""
+
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "Folgende Zweige sind noch nicht mit »%s« zusammengeführt:"
 
@@ -3567,6 +3611,9 @@ msgstr "dd.MM.yyyy"
 #~ "Folgende Zweige sind noch nicht mit »%s« zusammengeführt:\n"
 #~ "\n"
 #~ " - %s"
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "Der Arbeitsbaum wird zurückgesetzt mit \"git reset --keep %s\""
 
 #~ msgid ""
 #~ "There is nothing to amend.\n"

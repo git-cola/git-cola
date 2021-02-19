@@ -1942,41 +1942,32 @@ msgstr "Resetar"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Resetar \"%(branch)s\" to \"%(revision)s\"?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Resetar Branch"
 
-msgid "Reset Branch Head"
-msgstr "Resetar Head do Branch"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Resetar Branch?"
 
-msgid "Reset Hard"
-msgstr "Resetar Hard"
-
 msgid "Reset Layout"
 msgstr ""
 
-msgid "Reset Merge"
-msgstr "Resetar Merge"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-msgid "Reset Soft"
-msgstr "Resetar Soft"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Resetar Worktree"
-
-msgid "Reset hard?"
-msgstr "Resetar hard?"
-
-msgid "Reset merge?"
-msgstr "Resetar merge?"
-
-msgid "Reset soft?"
-msgstr "Resetar soft?"
-
-msgid "Reset worktree?"
-msgstr "Resetar Worktree?"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
@@ -1984,6 +1975,31 @@ msgstr "Resetar \"%(branch)s\" para \"%(revision)s\" irá perder commits."
 
 msgid "Restart the application after changing appearance settings."
 msgstr "A alteração de aparência necessita reiniciar a aplicação."
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
+msgstr ""
 
 msgid "Revert"
 msgstr "Reverter"
@@ -2428,14 +2444,6 @@ msgid "The branch will be no longer available."
 msgstr "O branch não ficará mais disponível"
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "O branch será resetado usando \"git reset --hard %s\""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "O branch será resetado usando \"git reset --merge %s\""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "O branch será resetado usando \"git reset --mixed %s\""
 
@@ -2454,6 +2462,18 @@ msgstr "O arquivo \"%s\" existe e será sobrescrito."
 msgid "The following files will be deleted:"
 msgstr "Os arquivos a seguir serão apagados:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "A revisão da expressão não pode ser vazia"
 
@@ -2470,8 +2490,8 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "O worktree será resetado usando \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Isso não pode ser feito. Limpar mensagem do commit ?"
@@ -2571,6 +2591,15 @@ msgstr "Incapaz de modificar a URL de \"%(name)s\" para \"%(url)s\""
 
 msgid "Undo"
 msgstr "Desfazer"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr ""
@@ -2829,6 +2858,33 @@ msgstr ""
 #~ msgid "Rename remote?"
 #~ msgstr "Renomear Remoto?"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Resetar Head do Branch"
+
+#~ msgid "Reset Hard"
+#~ msgstr "Resetar Hard"
+
+#~ msgid "Reset Merge"
+#~ msgstr "Resetar Merge"
+
+#~ msgid "Reset Soft"
+#~ msgstr "Resetar Soft"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Resetar Worktree"
+
+#~ msgid "Reset hard?"
+#~ msgstr "Resetar hard?"
+
+#~ msgid "Reset merge?"
+#~ msgstr "Resetar merge?"
+
+#~ msgid "Reset soft?"
+#~ msgstr "Resetar soft?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Resetar Worktree?"
+
 #~ msgid "Select File"
 #~ msgstr "Selecionar Arquivo"
 
@@ -2846,6 +2902,15 @@ msgstr ""
 
 #~ msgid "Summary:"
 #~ msgstr "Sumário:"
+
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "O branch será resetado usando \"git reset --hard %s\""
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "O branch será resetado usando \"git reset --merge %s\""
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "O worktree será resetado usando \"git reset --keep %s\""
 
 #~ msgid "Updating..."
 #~ msgstr "Atualização..."

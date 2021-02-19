@@ -1903,47 +1903,31 @@ msgstr "Сброс"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Сбросить (reset) \"%(branch)s\" к \"%(revision)s\"?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Сбросить (reset) ветвь"
 
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Сбросить (reset) ветвь"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Сбросить (reset) ветвь?"
 
-#, fuzzy
-msgid "Reset Hard"
-msgstr "Сбросить (reset) ветвь"
-
 msgid "Reset Layout"
 msgstr ""
 
-#, fuzzy
-msgid "Reset Merge"
-msgstr "Версия для объединения"
-
-#, fuzzy
-msgid "Reset Soft"
-msgstr "Сброс"
-
-msgid "Reset Worktree"
+msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-#, fuzzy
-msgid "Reset hard?"
-msgstr "Сбросить (reset) ветвь?"
+msgid "Reset and Restore"
+msgstr ""
 
-#, fuzzy
-msgid "Reset merge?"
-msgstr "Сбросить (reset) ветвь?"
-
-#, fuzzy
-msgid "Reset soft?"
-msgstr "Сбросить '%s'?"
-
-msgid "Reset worktree?"
+msgid "Reset branch?"
 msgstr ""
 
 #, python-format
@@ -1951,6 +1935,31 @@ msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Сброс \"%(branch)s\" в \"%(revision)s\" приведет к потере коммитов."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2407,14 +2416,6 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr ""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr ""
 
@@ -2432,6 +2433,18 @@ msgstr "Файл \"%s\" существует и будет перезаписа�
 msgid "The following files will be deleted:"
 msgstr "Следующие файлы будут удалены:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "Поле версии не может быть пустым."
 
@@ -2448,7 +2461,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2551,6 +2564,15 @@ msgstr ""
 
 msgid "Undo"
 msgstr "Отменить"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "Не объединено"
@@ -3430,6 +3452,22 @@ msgstr ""
 #~ msgid "Rescan"
 #~ msgstr "Перечитать"
 
+#, fuzzy
+#~ msgid "Reset Branch Head"
+#~ msgstr "Сбросить (reset) ветвь"
+
+#, fuzzy
+#~ msgid "Reset Hard"
+#~ msgstr "Сбросить (reset) ветвь"
+
+#, fuzzy
+#~ msgid "Reset Merge"
+#~ msgstr "Версия для объединения"
+
+#, fuzzy
+#~ msgid "Reset Soft"
+#~ msgstr "Сброс"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3442,6 +3480,18 @@ msgstr ""
 #~ "Прерывание объединения приведет к потере *ВСЕХ* несохраненных изменений.\n"
 #~ "\n"
 #~ "Продолжить?"
+
+#, fuzzy
+#~ msgid "Reset hard?"
+#~ msgstr "Сбросить (reset) ветвь?"
+
+#, fuzzy
+#~ msgid "Reset merge?"
+#~ msgstr "Сбросить (reset) ветвь?"
+
+#, fuzzy
+#~ msgid "Reset soft?"
+#~ msgstr "Сбросить '%s'?"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Отменить изменения в %i файле(-ах)?"

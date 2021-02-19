@@ -1915,53 +1915,63 @@ msgstr "Скинути"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Скинути \"%(branch)s\" до \"%(revision)s\"?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Скинути гілку"
 
-msgid "Reset Branch Head"
-msgstr "Скинути HEAD гілки"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Скинути гілку?"
 
-#, fuzzy
-msgid "Reset Hard"
-msgstr "Скинути HEAD гілки"
-
 msgid "Reset Layout"
 msgstr ""
 
-#, fuzzy
-msgid "Reset Merge"
-msgstr "Ревізія для злиття"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-#, fuzzy
-msgid "Reset Soft"
-msgstr "Скинути робоче дерево"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Скинути робоче дерево"
-
-#, fuzzy
-msgid "Reset hard?"
-msgstr "Скинути гілку?"
-
-#, fuzzy
-msgid "Reset merge?"
-msgstr "Скинути робоче дерево?"
-
-#, fuzzy
-msgid "Reset soft?"
-msgstr "Скинути робоче дерево?"
-
-msgid "Reset worktree?"
-msgstr "Скинути робоче дерево?"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2410,14 +2420,6 @@ msgstr "Ширина тексту"
 msgid "The branch will be no longer available."
 msgstr "Гілка не буде більше доступна."
 
-#, fuzzy, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
-
-#, fuzzy, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
-
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
@@ -2436,6 +2438,18 @@ msgstr "Файл \"%s\" вже існує і буде перезаписаний
 msgid "The following files will be deleted:"
 msgstr "Наступні файли будуть видалені:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "Поле ревізії не може бути порожнім."
 
@@ -2451,9 +2465,9 @@ msgid ""
 "\"%s\""
 msgstr ""
 
-#, fuzzy, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
+#, python-format
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Це неможливо буде відмінити. Очистити повідомлення коміту?"
@@ -2553,6 +2567,15 @@ msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
 msgstr ""
 
 msgid "Undo"
+msgstr ""
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
 msgstr ""
 
 msgid "Unmerged"
@@ -2784,6 +2807,39 @@ msgstr "рррр-ММ-дд"
 #~ msgid "Rename remote?"
 #~ msgstr "Перейменувати віддалений репозиторій?"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Скинути HEAD гілки"
+
+#, fuzzy
+#~ msgid "Reset Hard"
+#~ msgstr "Скинути HEAD гілки"
+
+#, fuzzy
+#~ msgid "Reset Merge"
+#~ msgstr "Ревізія для злиття"
+
+#, fuzzy
+#~ msgid "Reset Soft"
+#~ msgstr "Скинути робоче дерево"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Скинути робоче дерево"
+
+#, fuzzy
+#~ msgid "Reset hard?"
+#~ msgstr "Скинути гілку?"
+
+#, fuzzy
+#~ msgid "Reset merge?"
+#~ msgstr "Скинути робоче дерево?"
+
+#, fuzzy
+#~ msgid "Reset soft?"
+#~ msgstr "Скинути робоче дерево?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Скинути робоче дерево?"
+
 #~ msgid "Select File"
 #~ msgstr "Вибрати файл"
 
@@ -2802,6 +2858,18 @@ msgstr "рррр-ММ-дд"
 
 #~ msgid "Summary:"
 #~ msgstr "Підсумок:"
+
+#, fuzzy
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+#, fuzzy
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "Глку буде скинуто, використовуючи \"git reset --mixed %s\""
+
+#, fuzzy
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "Робче дерево буде скинуто, використовуючи \"git reset --merge %s\""
 
 #~ msgid "git clone returned exit code %s"
 #~ msgstr "git clone завершилась з кодом %s"

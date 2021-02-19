@@ -1861,47 +1861,63 @@ msgstr "Réinitialiser"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Réinitialiser « %(branch)s » vers « %(revision)s » ?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Réinitialiser la branche"
 
-msgid "Reset Branch Head"
-msgstr "Supprimer la branche principale"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Réinitialiser la branche ?"
 
-msgid "Reset Hard"
-msgstr ""
-
 msgid "Reset Layout"
 msgstr ""
 
-msgid "Reset Merge"
+msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-msgid "Reset Soft"
+msgid "Reset and Restore"
 msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Réinitialiser l'arbre de travail"
-
-msgid "Reset hard?"
+msgid "Reset branch?"
 msgstr ""
-
-msgid "Reset merge?"
-msgstr ""
-
-msgid "Reset soft?"
-msgstr ""
-
-msgid "Reset worktree?"
-msgstr "Réinitialiser l'arbre de travail ?"
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Réinitialiser « %s » à « %s » va faire perdre les commits."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2340,14 +2356,6 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "La branche sera réinitialisée en utilisant « git reset --hard %s »"
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "La branche sera réinitialisée en utilisant « git reset --merge %s »"
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "La branche sera réinitialisée en utilisant « git reset --mixed %s »"
 
@@ -2365,6 +2373,18 @@ msgstr "Le fichier « %s » existe et sera écrasé."
 msgid "The following files will be deleted:"
 msgstr "Les fichiers suivants seront effacés :"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "L'expression de révision est vide."
 
@@ -2381,8 +2401,8 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "Cet arbre de travail sera réinitialisé en utilisant « git reset --keep %s »"
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Cela ne peut pas être annulé. Effacer le message de commit ?"
@@ -2482,6 +2502,15 @@ msgstr ""
 
 msgid "Undo"
 msgstr "Défaire"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "Non fusionné"
@@ -2666,8 +2695,26 @@ msgstr ""
 msgid "yyyy-MM-dd"
 msgstr "dd/MM/yyyy"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Supprimer la branche principale"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Réinitialiser l'arbre de travail"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Réinitialiser l'arbre de travail ?"
+
 #~ msgid "Select Repository..."
 #~ msgstr "Sélectionner le dépôt"
 
 #~ msgid "Select manually..."
 #~ msgstr "Sélectionner manuellement"
+
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "La branche sera réinitialisée en utilisant « git reset --hard %s »"
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "La branche sera réinitialisée en utilisant « git reset --merge %s »"
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "Cet arbre de travail sera réinitialisé en utilisant « git reset --keep %s »"

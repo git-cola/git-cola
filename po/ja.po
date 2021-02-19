@@ -1936,41 +1936,32 @@ msgstr "リセット"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "ブランチの \"%(branch)s\" を \"%(revision)s\" リビジョンにリセットしますか？"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "ブランチのリセット"
 
-msgid "Reset Branch Head"
-msgstr "ブランチをHeadにリセット"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "ブランチをリセットしますか?"
 
-msgid "Reset Hard"
-msgstr "ハードリセット"
-
 msgid "Reset Layout"
 msgstr "レイアウトのリセット"
 
-msgid "Reset Merge"
-msgstr "マージリセット"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-msgid "Reset Soft"
-msgstr "ソフトリセット"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "ワークツリーをリセット"
-
-msgid "Reset hard?"
-msgstr "ハードリセットをしますか?"
-
-msgid "Reset merge?"
-msgstr " マージリセットをしますか?"
-
-msgid "Reset soft?"
-msgstr "ソフトリセットをしますか?"
-
-msgid "Reset worktree?"
-msgstr "ワークツリーをリセットしますか?"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
@@ -1978,6 +1969,31 @@ msgstr "\"%(branch)s\" ブランチを \"%(revision)s\" リビジョンにリセ
 
 msgid "Restart the application after changing appearance settings."
 msgstr "外観の設定を変更後にこのアプリケーションを再起動します。"
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
+msgstr ""
 
 msgid "Revert"
 msgstr "リバート"
@@ -2417,14 +2433,6 @@ msgid "The branch will be no longer available."
 msgstr "このブランチはもう利用できません。"
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "このブランチは\"git reset --hard %s\"でリセットする。"
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "このブランチは\"git reset --merge %s\"でリセットする。"
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "このブランチは\"git reset --mixed %s\"でリセットする。"
 
@@ -2441,6 +2449,18 @@ msgstr "このファイル \"%s\"は存在します。そんため上書きさ�
 
 msgid "The following files will be deleted:"
 msgstr "以下のファイルは削除されます。:"
+
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
 
 msgid "The revision expression cannot be empty."
 msgstr "このリビジョン表記を空にできません。"
@@ -2462,8 +2482,8 @@ msgstr ""
 "更新"
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "このワークツリーは\"git reset --keep %s\"でリセットする。"
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "これは元に戻せません。コミットメッセージをクリアしますか？"
@@ -2563,6 +2583,15 @@ msgstr "URLの\"%(name)s\" を \"%(url)s\" に設定できません。"
 
 msgid "Undo"
 msgstr "元に戻す"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "マージされていない"
@@ -3407,6 +3436,21 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Rescan"
 #~ msgstr "再スキャン"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "ブランチをHeadにリセット"
+
+#~ msgid "Reset Hard"
+#~ msgstr "ハードリセット"
+
+#~ msgid "Reset Merge"
+#~ msgstr "マージリセット"
+
+#~ msgid "Reset Soft"
+#~ msgstr "ソフトリセット"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "ワークツリーをリセット"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3419,6 +3463,18 @@ msgstr "yyyy-MM-dd"
 #~ "変更点をリセットすると、コミットしていない全ての変更が失われます。\n"
 #~ "\n"
 #~ "リセットしてよろしいですか？"
+
+#~ msgid "Reset hard?"
+#~ msgstr "ハードリセットをしますか?"
+
+#~ msgid "Reset merge?"
+#~ msgstr " マージリセットをしますか?"
+
+#~ msgid "Reset soft?"
+#~ msgstr "ソフトリセットをしますか?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "ワークツリーをリセットしますか?"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "これら %i 個のファイルにした変更を元に戻しますか？"
@@ -3507,6 +3563,12 @@ msgstr "yyyy-MM-dd"
 #~ msgid "The 'main' branch has not been initialized."
 #~ msgstr "'main' ブランチが初期化されていません"
 
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "このブランチは\"git reset --hard %s\"でリセットする。"
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "このブランチは\"git reset --merge %s\"でリセットする。"
+
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "以下のブランチは %s に完全にマージされていません:"
 
@@ -3518,6 +3580,9 @@ msgstr "yyyy-MM-dd"
 #~ "以下のブランチは %s に完全にマージされていません:\n"
 #~ "\n"
 #~ " - %s"
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "このワークツリーは\"git reset --keep %s\"でリセットする。"
 
 #~ msgid ""
 #~ "There is nothing to amend.\n"

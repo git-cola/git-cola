@@ -1943,47 +1943,63 @@ msgstr "重設"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "要重設「%(branch)s」分支到 「%(revision)s」修訂版嗎？"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "重設分支"
 
-msgid "Reset Branch Head"
-msgstr "重設分支 Head"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "要重設分支嗎？"
 
-msgid "Reset Hard"
-msgstr "硬式重設"
-
 msgid "Reset Layout"
 msgstr ""
 
-msgid "Reset Merge"
-msgstr "合併式重設"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-msgid "Reset Soft"
-msgstr "軟式重設"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "重設工作目錄樹"
-
-msgid "Reset hard?"
-msgstr "要進行硬式重設嗎？"
-
-msgid "Reset merge?"
-msgstr "要進行合併式重設嗎？"
-
-msgid "Reset soft?"
-msgstr "要進行軟式重設嗎？"
-
-msgid "Reset worktree?"
-msgstr "要重設工作目錄樹嗎？"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "重置「%(branch)s」分支到「%(revision)s」修訂版將導致修訂版提交的丟失。"
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2422,14 +2438,6 @@ msgid "The branch will be no longer available."
 msgstr "此分支將不再存在。"
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "這個分支將會被用「git reset --hard %s」命令重設"
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "這個分支將會被用「git reset --merge %s」命令重設"
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "這個分支將會被用「git reset --mixed %s」命令重設"
 
@@ -2447,6 +2455,18 @@ msgstr "檔案「%s」已存在且將會被覆寫。"
 msgid "The following files will be deleted:"
 msgstr "下列檔案將會被移除："
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "修訂版表達式不可以是空的。"
 
@@ -2463,8 +2483,8 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "工作目錄樹將被用「git reset --keep %s」命令重設"
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "此操作將無法復原。要清除提交訊息嗎？"
@@ -2564,6 +2584,15 @@ msgstr "無法將「%(name)s」的 URL 設定為 %(url)s"
 
 msgid "Undo"
 msgstr "撤銷"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "尚未合併"
@@ -3452,6 +3481,21 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Rescan"
 #~ msgstr "重新掃瞄"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "重設分支 Head"
+
+#~ msgid "Reset Hard"
+#~ msgstr "硬式重設"
+
+#~ msgid "Reset Merge"
+#~ msgstr "合併式重設"
+
+#~ msgid "Reset Soft"
+#~ msgstr "軟式重設"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "重設工作目錄樹"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3464,6 +3508,18 @@ msgstr "yyyy-MM-dd"
 #~ "復位當前的改動將導致 *所有* 未提交的改動丟失.\n"
 #~ "\n"
 #~ "是否要繼續復位當前的改動?"
+
+#~ msgid "Reset hard?"
+#~ msgstr "要進行硬式重設嗎？"
+
+#~ msgid "Reset merge?"
+#~ msgstr "要進行合併式重設嗎？"
+
+#~ msgid "Reset soft?"
+#~ msgstr "要進行軟式重設嗎？"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "要重設工作目錄樹嗎？"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "撤銷尚未建立修訂版提交的內容變動"
@@ -3543,6 +3599,12 @@ msgstr "yyyy-MM-dd"
 #~ msgid "The 'main' branch has not been initialized."
 #~ msgstr "'main'分支尚未初始化."
 
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "這個分支將會被用「git reset --hard %s」命令重設"
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "這個分支將會被用「git reset --merge %s」命令重設"
+
 #~ msgid "The following branches are not completely merged into %s:"
 #~ msgstr "下列分支沒有完全被合併到 %s:"
 
@@ -3554,6 +3616,9 @@ msgstr "yyyy-MM-dd"
 #~ "下列分支沒有被全部合併到 %s 中:\n"
 #~ "\n"
 #~ " - %s"
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "工作目錄樹將被用「git reset --keep %s」命令重設"
 
 #~ msgid ""
 #~ "There is nothing to amend.\n"

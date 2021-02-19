@@ -1935,41 +1935,32 @@ msgstr "Visszaállítás"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Visszaállítja a(z) „%(branch)s” ágat erre: „%(revision)s”?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Ág visszaállítása"
 
-msgid "Reset Branch Head"
-msgstr "Ág fejének visszaállítása"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Visszaállítja az ágat?"
 
-msgid "Reset Hard"
-msgstr "Teljes visszaállítás"
-
 msgid "Reset Layout"
 msgstr "Elrendezés visszaállítása"
 
-msgid "Reset Merge"
-msgstr "Beolvasztás visszaállítása"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-msgid "Reset Soft"
-msgstr "Nyugodt visszaállítás"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "Munkafa visszaállítása"
-
-msgid "Reset hard?"
-msgstr "Elindítja a teljes visszaállítást?"
-
-msgid "Reset merge?"
-msgstr "Elindítja a beolvasztás visszaállítását?"
-
-msgid "Reset soft?"
-msgstr "Elindítja a nyugodt visszaállítást?"
-
-msgid "Reset worktree?"
-msgstr "Elindítja a munkafa visszaállítását?"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
@@ -1977,6 +1968,31 @@ msgstr "A(z) „%(branch)s” visszaállítása a(z) „%(revision)s” revízi�
 
 msgid "Restart the application after changing appearance settings."
 msgstr "A megjelenési beállítások módosítása után indítsa újra az alkalmazást."
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
+msgstr ""
 
 msgid "Revert"
 msgstr "Visszavonás"
@@ -2416,14 +2432,6 @@ msgid "The branch will be no longer available."
 msgstr "Az ág nem lesz többé elérhető."
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --hard %s”"
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --merge %s”"
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --mixed %s”"
 
@@ -2440,6 +2448,18 @@ msgstr "A(z) „%s” fájl létezik és felül lesz írva."
 
 msgid "The following files will be deleted:"
 msgstr "A következő fájlok törölve lesznek:"
+
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
 
 msgid "The revision expression cannot be empty."
 msgstr "A revíziókifejezés nem lehet üres."
@@ -2459,8 +2479,8 @@ msgstr ""
 "„%s”"
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
-msgstr "A munkafa visszaáll ezzel a paranccsal: „git reset --keep %s”"
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
+msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "Ez nem vonható vissza. Megtisztítja a véglegesítési üzenetet?"
@@ -2560,6 +2580,15 @@ msgstr "Nem állítható be URL a(z) „%(name)s” számára: „%(url)s”"
 
 msgid "Undo"
 msgstr "Visszavonás"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "Nem beolvasztottak"
@@ -2750,6 +2779,33 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Hide Details.."
 #~ msgstr "Részletek elrejtése…"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "Ág fejének visszaállítása"
+
+#~ msgid "Reset Hard"
+#~ msgstr "Teljes visszaállítás"
+
+#~ msgid "Reset Merge"
+#~ msgstr "Beolvasztás visszaállítása"
+
+#~ msgid "Reset Soft"
+#~ msgstr "Nyugodt visszaállítás"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "Munkafa visszaállítása"
+
+#~ msgid "Reset hard?"
+#~ msgstr "Elindítja a teljes visszaállítást?"
+
+#~ msgid "Reset merge?"
+#~ msgstr "Elindítja a beolvasztás visszaállítását?"
+
+#~ msgid "Reset soft?"
+#~ msgstr "Elindítja a nyugodt visszaállítást?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "Elindítja a munkafa visszaállítását?"
+
 #~ msgid "Select Repository..."
 #~ msgstr "Tároló kijelölése…"
 
@@ -2758,3 +2814,12 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Show Details..."
 #~ msgstr "Részletek megjelenítése…"
+
+#~ msgid "The branch will be reset using \"git reset --hard %s\""
+#~ msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --hard %s”"
+
+#~ msgid "The branch will be reset using \"git reset --merge %s\""
+#~ msgstr "Az ág visszaállítása ezzel a paranccsal: „git reset --merge %s”"
+
+#~ msgid "The worktree will be reset using \"git reset --keep %s\""
+#~ msgstr "A munkafa visszaáll ezzel a paranccsal: „git reset --keep %s”"

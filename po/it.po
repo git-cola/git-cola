@@ -1975,49 +1975,33 @@ msgstr "Ripristina"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr ""
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 #, fuzzy
 msgid "Reset Branch"
 msgstr "Elimina ramo"
 
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Elimina ramo"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 #, fuzzy
 msgid "Reset Branch?"
 msgstr "Elimina ramo"
 
-#, fuzzy
-msgid "Reset Hard"
-msgstr "Elimina ramo"
-
 msgid "Reset Layout"
 msgstr ""
 
-#, fuzzy
-msgid "Reset Merge"
-msgstr "Revisione da fondere"
-
-#, fuzzy
-msgid "Reset Soft"
-msgstr "Ripristina"
-
-msgid "Reset Worktree"
+msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-#, fuzzy
-msgid "Reset hard?"
-msgstr "Elimina ramo"
+msgid "Reset and Restore"
+msgstr ""
 
-#, fuzzy
-msgid "Reset merge?"
-msgstr "Elimina ramo"
-
-#, fuzzy
-msgid "Reset soft?"
-msgstr "Ripristinare '%s'?"
-
-msgid "Reset worktree?"
+msgid "Reset branch?"
 msgstr ""
 
 #, fuzzy, python-format
@@ -2025,6 +2009,31 @@ msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Ripristinare '%s' a '%s' comporterà la perdita delle seguenti revisioni:"
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2515,14 +2524,6 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr ""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr ""
 
@@ -2539,6 +2540,18 @@ msgid "The file \"%s\" exists and will be overwritten."
 msgstr ""
 
 msgid "The following files will be deleted:"
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
 msgstr ""
 
 #, fuzzy
@@ -2558,7 +2571,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2647,6 +2660,15 @@ msgstr ""
 
 msgid "Undo"
 msgstr "Annulla"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 #, fuzzy
 msgid "Unmerged"
@@ -3503,6 +3525,22 @@ msgstr ""
 #~ msgid "Rescan"
 #~ msgstr "Analizza nuovamente"
 
+#, fuzzy
+#~ msgid "Reset Branch Head"
+#~ msgstr "Elimina ramo"
+
+#, fuzzy
+#~ msgid "Reset Hard"
+#~ msgstr "Elimina ramo"
+
+#, fuzzy
+#~ msgid "Reset Merge"
+#~ msgstr "Revisione da fondere"
+
+#, fuzzy
+#~ msgid "Reset Soft"
+#~ msgstr "Ripristina"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3515,6 +3553,18 @@ msgstr ""
 #~ "L'annullamento delle modifiche causerà la perdita di *TUTTE* le modifiche non ancora presenti nell'archivio.\n"
 #~ "\n"
 #~ "Continuare con l'annullamento delle modifiche attuali?"
+
+#, fuzzy
+#~ msgid "Reset hard?"
+#~ msgstr "Elimina ramo"
+
+#, fuzzy
+#~ msgid "Reset merge?"
+#~ msgstr "Elimina ramo"
+
+#, fuzzy
+#~ msgid "Reset soft?"
+#~ msgstr "Ripristinare '%s'?"
 
 #~ msgid "Revert changes in these %i files?"
 #~ msgstr "Annullare le modifiche in questi %i file?"

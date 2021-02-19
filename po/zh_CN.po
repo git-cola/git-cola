@@ -1871,53 +1871,63 @@ msgstr "复位"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "复位分支 \"%(branch)s\" 到 \"%(revision)s\" 吗?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "重置分支"
 
-msgid "Reset Branch Head"
-msgstr "复位分支头"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "重置分支吗?"
 
-#, fuzzy
-msgid "Reset Hard"
-msgstr "复位分支头"
-
 msgid "Reset Layout"
 msgstr ""
 
-#, fuzzy
-msgid "Reset Merge"
-msgstr "要合并的版本"
+msgid "Reset Worktree and Reset All?"
+msgstr ""
 
-#, fuzzy
-msgid "Reset Soft"
-msgstr "重置工作树"
+msgid "Reset and Restore"
+msgstr ""
 
-msgid "Reset Worktree"
-msgstr "重置工作树"
-
-#, fuzzy
-msgid "Reset hard?"
-msgstr "重置分支吗?"
-
-#, fuzzy
-msgid "Reset merge?"
-msgstr "要重置工作树吗？"
-
-#, fuzzy
-msgid "Reset soft?"
-msgstr "复位 '%s'?"
-
-msgid "Reset worktree?"
-msgstr "要重置工作树吗？"
+msgid "Reset branch?"
+msgstr ""
 
 #, python-format
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "复位 \"%(branch)s\" to \"%(revision)s\" 将丢失提交."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2360,14 +2370,6 @@ msgid "The branch will be no longer available."
 msgstr "分支已不可用。"
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr ""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr ""
 
@@ -2385,6 +2387,18 @@ msgstr "文件 \"%s\" 已存在,将被覆盖."
 msgid "The following files will be deleted:"
 msgstr "如下文件会被删除:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "版本表达式不能为空."
 
@@ -2401,7 +2415,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2503,6 +2517,15 @@ msgstr ""
 
 msgid "Undo"
 msgstr "撤销"
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
+msgstr ""
 
 msgid "Unmerged"
 msgstr "未合并"
@@ -3382,6 +3405,24 @@ msgstr "yyyy-MM-dd"
 #~ msgid "Rescan"
 #~ msgstr "重新扫描"
 
+#~ msgid "Reset Branch Head"
+#~ msgstr "复位分支头"
+
+#, fuzzy
+#~ msgid "Reset Hard"
+#~ msgstr "复位分支头"
+
+#, fuzzy
+#~ msgid "Reset Merge"
+#~ msgstr "要合并的版本"
+
+#, fuzzy
+#~ msgid "Reset Soft"
+#~ msgstr "重置工作树"
+
+#~ msgid "Reset Worktree"
+#~ msgstr "重置工作树"
+
 #~ msgid ""
 #~ "Reset changes?\n"
 #~ "\n"
@@ -3394,6 +3435,21 @@ msgstr "yyyy-MM-dd"
 #~ "复位当前的改动将导致 *所有* 未提交的改动丢失.\n"
 #~ "\n"
 #~ "是否要继续复位当前的改动?"
+
+#, fuzzy
+#~ msgid "Reset hard?"
+#~ msgstr "重置分支吗?"
+
+#, fuzzy
+#~ msgid "Reset merge?"
+#~ msgstr "要重置工作树吗？"
+
+#, fuzzy
+#~ msgid "Reset soft?"
+#~ msgstr "复位 '%s'?"
+
+#~ msgid "Reset worktree?"
+#~ msgstr "要重置工作树吗？"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "撤销未提交修改..."

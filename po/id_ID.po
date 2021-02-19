@@ -1897,47 +1897,31 @@ msgstr "Reset"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "Atur Ulang \"%(branch)s\" ke \"%(revision)s\"?"
 
+msgid "Reset All (Keep Unstaged Changes)"
+msgstr ""
+
 msgid "Reset Branch"
 msgstr "Atur Ulang Cabang"
 
-#, fuzzy
-msgid "Reset Branch Head"
-msgstr "Atur Ulang Cabang"
+msgid "Reset Branch (Soft)"
+msgstr ""
+
+msgid "Reset Branch and Stage (Mixed)"
+msgstr ""
 
 msgid "Reset Branch?"
 msgstr "Atur Ulang Cabang?"
 
-#, fuzzy
-msgid "Reset Hard"
-msgstr "Atur Ulang Cabang"
-
 msgid "Reset Layout"
 msgstr ""
 
-#, fuzzy
-msgid "Reset Merge"
-msgstr "Revisi untuk Dimerge"
-
-#, fuzzy
-msgid "Reset Soft"
-msgstr "Reset"
-
-msgid "Reset Worktree"
+msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-#, fuzzy
-msgid "Reset hard?"
-msgstr "Atur Ulang Cabang?"
+msgid "Reset and Restore"
+msgstr ""
 
-#, fuzzy
-msgid "Reset merge?"
-msgstr "Atur Ulang Cabang?"
-
-#, fuzzy
-msgid "Reset soft?"
-msgstr "Reset"
-
-msgid "Reset worktree?"
+msgid "Reset branch?"
 msgstr ""
 
 #, python-format
@@ -1945,6 +1929,31 @@ msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Mengatur ulang \"%(branch)s\" ke \"%(revision)s\" akan menghilangkan commit."
 
 msgid "Restart the application after changing appearance settings."
+msgstr ""
+
+msgid "Restore Worktree"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Hard)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All (Merge)"
+msgstr ""
+
+msgid "Restore Worktree and Reset All?"
+msgstr ""
+
+#, python-format
+msgid "Restore Worktree to %s?"
+msgstr ""
+
+msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
 msgid "Revert"
@@ -2402,14 +2411,6 @@ msgid "The branch will be no longer available."
 msgstr ""
 
 #, python-format
-msgid "The branch will be reset using \"git reset --hard %s\""
-msgstr ""
-
-#, python-format
-msgid "The branch will be reset using \"git reset --merge %s\""
-msgstr ""
-
-#, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr ""
 
@@ -2428,6 +2429,18 @@ msgstr "Berkas \"%s\" sudah ada dan akan ditimpa."
 msgid "The following files will be deleted:"
 msgstr "Berkas berikut akan dihapus:"
 
+#, python-format
+msgid "The repository will be reset using \"git reset --hard %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --keep %s\""
+msgstr ""
+
+#, python-format
+msgid "The repository will be reset using \"git reset --merge %s\""
+msgstr ""
+
 msgid "The revision expression cannot be empty."
 msgstr "Ekspresi revisi tidak boleh kosong."
 
@@ -2444,7 +2457,7 @@ msgid ""
 msgstr ""
 
 #, python-format
-msgid "The worktree will be reset using \"git reset --keep %s\""
+msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr ""
 
 msgid "This cannot be undone.  Clear commit message?"
@@ -2545,6 +2558,15 @@ msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
 msgstr ""
 
 msgid "Undo"
+msgstr ""
+
+msgid "Undo Last Commit"
+msgstr ""
+
+msgid "Undo last commit?"
+msgstr ""
+
+msgid "Undo the published commit?"
 msgstr ""
 
 msgid "Unmerged"
@@ -2830,6 +2852,34 @@ msgstr "dd-MM-yyyy"
 
 #~ msgid "Rename remote?"
 #~ msgstr "Ganti nama hulu?"
+
+#, fuzzy
+#~ msgid "Reset Branch Head"
+#~ msgstr "Atur Ulang Cabang"
+
+#, fuzzy
+#~ msgid "Reset Hard"
+#~ msgstr "Atur Ulang Cabang"
+
+#, fuzzy
+#~ msgid "Reset Merge"
+#~ msgstr "Revisi untuk Dimerge"
+
+#, fuzzy
+#~ msgid "Reset Soft"
+#~ msgstr "Reset"
+
+#, fuzzy
+#~ msgid "Reset hard?"
+#~ msgstr "Atur Ulang Cabang?"
+
+#, fuzzy
+#~ msgid "Reset merge?"
+#~ msgstr "Atur Ulang Cabang?"
+
+#, fuzzy
+#~ msgid "Reset soft?"
+#~ msgstr "Reset"
 
 #~ msgid "Revert Uncommitted Changes..."
 #~ msgstr "Kembalikan Perubahan Tak Tercommit..."
