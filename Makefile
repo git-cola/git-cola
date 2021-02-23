@@ -77,7 +77,7 @@ ifneq ($(uname_S),Linux)
 endif
 
 TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
-TOX_ENVS ?= py{27,36,37,38,39},pylint{2,36,37}
+TOX_ENVS ?= py{27,36,37,38,39,lint}
 
 PYLINT_FLAGS = --rcfile=.pylintrc
 PYLINT_FLAGS += --score=no

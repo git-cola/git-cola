@@ -36,5 +36,5 @@ before_script:
   - pip install tox tox-venv
 
 script:
-  # Tests and static analysis checks
-  - tox -v --develop --skip-missing-interpreters -e "py{27,36},pylint{2,36}"
+  - tox
+  - tox -e pylint
