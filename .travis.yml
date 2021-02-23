@@ -1,8 +1,16 @@
 # Travis CI(http://travis-ci.org) configuration file
 #  https://docs.travis-ci.com/user/languages/python/
-language: generic
+language: python
 dist: bionic
-sudo: required
+
+python:
+- 2.7
+- 3.6
+- 3.7
+- 3.8
+- &latest_py3 3.9
+
+cache: pip
 
 before_install:
   # Git test setup
@@ -18,11 +26,14 @@ before_install:
   - sudo apt install -y python-pyqt5
   - sudo apt install -y python3-pyqt5
   # Test dependencies
-  - sudo apt install -y tox
+  - sudo apt install -y python3-venv
 
 install:
   # Build translations
   - make all
+
+before_script:
+  - pip install tox tox-venv
 
 script:
   # Tests and static analysis checks
