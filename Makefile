@@ -31,7 +31,6 @@ all::
 # when invoking make.
 #
 # The external commands used by this Makefile are...
-AWK = awk
 BLACK = black
 CTAGS = ctags
 CP = cp
@@ -51,7 +50,6 @@ PYTEST = $(PYTHON) -B -m pytest
 RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
-SED = sed
 TAR = tar
 TOX = tox
 XARGS = xargs
@@ -102,7 +100,9 @@ cola_base := git-cola
 cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
 
-cola_version := $(shell $(AWK) '{print $$3}' ./cola/_version.py | $(SED) -e "s/'//g")
+# Read $(VERSION) from cola/_version.py and strip quotes.
+include cola/_version.py
+cola_version := $(subst ',,$(VERSION))
 cola_dist := $(cola_base)-$(cola_version)
 
 SETUP ?= $(PYTHON) setup.py
