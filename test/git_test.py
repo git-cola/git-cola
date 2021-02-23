@@ -338,7 +338,7 @@ class GitCommandTest(unittest.TestCase):
     def test_stderr(self):
         """Test that stderr is seen"""
         # Write to stderr and capture it
-        code = r'import sys; = "\0" * (1024 * 16 + 1);sys.stderr.write(s);'
+        code = r'import sys;s = "\0" * (1024 * 16 + 1);sys.stderr.write(s);'
         status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
         self.assertEqual(status, 0)
         self.assertEqual(len(out), 0)
