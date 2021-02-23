@@ -31,6 +31,7 @@ all::
 # when invoking make.
 #
 # The external commands used by this Makefile are...
+AWK = awk
 BLACK = black
 CTAGS = ctags
 CP = cp
@@ -50,6 +51,7 @@ PYTEST = $(PYTHON) -B -m pytest
 RM = rm -f
 RM_R = rm -fr
 RMDIR = rmdir
+SED = sed
 TAR = tar
 TOX = tox
 XARGS = xargs
@@ -99,7 +101,8 @@ hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
 cola_base := git-cola
 cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
-cola_version = $(shell $(PYTHON) bin/git-cola version --brief)
+
+cola_version := $(shell $(AWK) '{print $$3}' ./cola/_version.py | $(SED) -e "s/'//g")
 cola_dist := $(cola_base)-$(cola_version)
 
 SETUP ?= $(PYTHON) setup.py
@@ -159,12 +162,6 @@ install: all
 	$(LN_S) "$(datadir)/icons/git-cola.svg" \
 		"$(DESTDIR)$(hicolordir)/git-cola.svg"
 	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
-
-# Maintainer's dist target
-.PHONY: dist
-dist:
-	$(GIT) archive --format=tar --prefix=$(cola_dist)/ HEAD^{tree} | \
-		$(GZIP) -f -9 - >$(cola_dist).tar.gz
 
 .PHONY: doc
 doc:
