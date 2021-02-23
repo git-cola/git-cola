@@ -10,6 +10,7 @@ import os
 import re
 import sys
 
+sys.path.insert(1, os.path.dirname(__file__))
 from extras import cmdclass
 
 # Hack: prevent python2's ascii default encoding from breaking inside
@@ -53,12 +54,14 @@ try:
 except ValueError:
     vendor_libs = not os.getenv('GIT_COLA_NO_VENDOR_LIBS', '')
 
+# fmt: off
 here = os.path.dirname(__file__)
 version = os.path.join(here, 'cola', '_version.py')
 scope = {}
 # flake8: noqa
-exec (open(version).read(), scope)  # pylint: disable=exec-used
+exec(open(version).read(), scope)  # pylint: disable=exec-used
 version = scope['VERSION']
+# fmt: on
 
 
 def main():

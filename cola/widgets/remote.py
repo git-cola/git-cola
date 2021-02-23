@@ -440,7 +440,7 @@ class RemoteActionDialog(standard.Dialog):
         if found:
             # Only clear the selection if the specified remotes exist
             self.remotes.clearSelection()
-            found = all([self.select_remote_by_name(x) for x in remotes])
+            found = all(self.select_remote_by_name(x) for x in remotes)
         return found
 
     def select_local_branch(self, idx):

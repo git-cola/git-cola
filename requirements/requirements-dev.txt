@@ -1,11 +1,10 @@
-astroid==2.2.5; python_version >= '3.0'
-astroid==1.6.5; python_version < '3.0'
-enum34==1.1.6; python_version < '3.0'
+astroid==1.6.5; python_version == '2.7'
+enum34==1.1.6; python_version < '3.4'
 flake8
 mock
 pbr
-pylint==1.9.4; python_version < '3.0'
-pylint==2.3.1; python_version >= '3.0'
+pylint==1.9.4; python_version == '2.7'
+pylint==2.7.0; python_version >= '3.6'
 PyYAML
 pytest>=3.6
 pytest-cov

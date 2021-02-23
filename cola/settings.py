@@ -226,7 +226,7 @@ def rename_entry(entries, path, name, new_name):
     except ValueError:
         return False
 
-    if all([item['name'] != new_name for item in entries]):
+    if all(item['name'] != new_name for item in entries):
         entries[index]['name'] = new_name
         result = True
     else:
