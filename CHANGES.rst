@@ -1,3 +1,14 @@
+.. _v3.10:
+
+v3.10
+=====
+
+Usability, bells and whistles
+-----------------------------
+* Git Cola now honors `core.hooksPath` for configuring custom Git hooks,
+  which was introduced in Git v2.9.
+  (`#1118 <https://github.com/git-cola/git-cola/issues/1118>`_)
+
 .. _v3.9:
 
 v3.9

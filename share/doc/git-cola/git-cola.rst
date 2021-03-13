@@ -795,6 +795,9 @@ set are ignored.
 By default the hooks directory is ``$GIT_DIR/hooks``, but that can
 be changed via the ``core.hooksPath`` configuration variable
 
+The ``cola-prepare-commit-msg`` hook functionality and Cola's Git LFS
+detection honors this configuration.
+
 Please see the `git hooks documentation <https://git-scm.com/docs/githooks>`_
 for more details.
 

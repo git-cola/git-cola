@@ -834,8 +834,9 @@ def merge_message_path(context):
 
 
 def prepare_commit_message_hook(context):
-    default_hook = context.git.git_path('hooks', 'cola-prepare-commit-msg')
+    """Run the cola.preparecommitmessagehook to prepare the commit message"""
     config = context.cfg
+    default_hook = config.hooks_path('cola-prepare-commit-msg')
     return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
