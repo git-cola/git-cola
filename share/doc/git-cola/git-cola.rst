@@ -786,6 +786,18 @@ Defaults to "#bbbbbb"::
 
     git config cola.color.header '#bbbbbb'
 
+core.hooksPath
+--------------
+Hooks are programs you can place in a hooks directory to trigger actions at
+certain points in git’s execution. Hooks that don’t have the executable bit
+set are ignored.
+
+By default the hooks directory is ``$GIT_DIR/hooks``, but that can
+be changed via the ``core.hooksPath`` configuration variable
+
+Please see the `git hooks documentation <https://git-scm.com/docs/githooks>`_
+for more details.
+
 gui.diffcontext
 ---------------
 The number of diff context lines to display.

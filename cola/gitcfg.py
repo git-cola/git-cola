@@ -462,6 +462,15 @@ class GitConfig(observable.Observable):
             r, g, b = struct.unpack(struct_layout, unhex(default))
         return (r, g, b)
 
+    def hooks(self, *paths):
+        """Return the path to the git hooks directory"""
+        gitdir_hooks = self.git.git_path('hooks')
+        return self.get('core.hookspath', default=gitdir_hooks)
+
+    def hooks_path(self, *paths):
+        """Return a path from within the git hooks directory"""
+        return os.path.join(self.hooks(), *paths)
+
 
 def python_to_git(value):
     if isinstance(value, bool):
