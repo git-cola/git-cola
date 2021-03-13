@@ -97,6 +97,30 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         opts = self.cfg.get_guitool_opts('Meow Cat')
         self.assertEqual(opts['cmd'], 'cat hello')
 
+    def test_hooks(self):
+        self.run_git('config', 'core.hooksPath', '/test/hooks')
+        expect = '/test/hooks'
+        actual = self.cfg.hooks()
+        assert expect == actual
+
+    def test_hooks_lowercase(self):
+        self.run_git('config', 'core.hookspath', '/test/hooks-lowercase')
+        expect = '/test/hooks-lowercase'
+        actual = self.cfg.hooks()
+        assert expect == actual
+
+    def test_hooks_path(self):
+        self.run_git('config', 'core.hooksPath', '/test/hooks')
+        expect = '/test/hooks/example'
+        actual = self.cfg.hooks_path('example')
+        assert expect == actual
+
+    def test_hooks_path_lowercase(self):
+        self.run_git('config', 'core.hookspath', '/test/hooks-lowercase')
+        expect = '/test/hooks-lowercase/example'
+        actual = self.cfg.hooks_path('example')
+        assert expect == actual
+
 
 if __name__ == '__main__':
     unittest.main()

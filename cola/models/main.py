@@ -150,7 +150,7 @@ class MainModel(Observable):
         """
         lfs_filter = self.cfg.get('filter.lfs.clean', default=False)
         lfs_dir = lfs_filter and self.git.git_path('lfs')
-        lfs_hook = lfs_filter and self.git.git_path('hooks', 'post-merge')
+        lfs_hook = lfs_filter and self.cfg.hooks_path('post-merge')
         return (
             lfs_filter
             and lfs_dir
