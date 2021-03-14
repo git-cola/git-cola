@@ -133,11 +133,8 @@ class build_pot(Command):
 
 
 def _force_LF(src, dst=None):
-    f = open(src, 'rU')
-    try:
-        content = f.read()
-    finally:
-        f.close()
+    with open(src, 'rb') as f:
+        content = f.read().decode('utf-8')
     if dst is None:
         dst = src
     f = open(dst, 'wb')
