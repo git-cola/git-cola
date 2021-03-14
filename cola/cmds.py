@@ -2490,6 +2490,31 @@ class StageUntracked(StageCarefully):
         self.paths = self.model.untracked
 
 
+class StageModifiedAndUntracked(StageCarefully):
+    """Stage all untracked files."""
+
+    @staticmethod
+    def name():
+        return N_('Stage Modified and Untracked')
+
+    def init_paths(self):
+        self.paths = self.model.modified + self.model.untracked
+
+
+class StageOrUnstageAll(ContextCommand):
+    """If the selection is staged, unstage it, otherwise stage"""
+    @staticmethod
+    def name():
+        return N_('Stage / Unstage All')
+
+    def do(self):
+        if self.model.staged:
+            do(Unstage, self.context, self.model.staged)
+        else:
+            unstaged = self.model.modified + self.model.untracked
+            do(Stage, self.context, unstaged)
+
+
 class StageOrUnstage(ContextCommand):
     """If the selection is staged, unstage it, otherwise stage"""
 

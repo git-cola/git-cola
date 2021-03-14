@@ -33,7 +33,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
     cursor_changed = Signal(int, int)
     down = Signal()
     up = Signal()
-    updated = Signal()
 
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
@@ -61,7 +60,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         self.launch_editor = actions.launch_editor_at_line(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
-        self.stage_or_unstage = actions.stage_or_unstage(context, self)
 
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
@@ -74,7 +72,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             None,
             self.launch_editor,
             self.launch_difftool,
-            self.stage_or_unstage,
             None,
             self.move_up,
             self.move_down,
@@ -188,9 +185,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.summary, N_('Move Down'), self.summary_cursor_down, hotkeys.DOWN
         )
 
-        self.selection = selection = context.selection
-        selection.add_observer(selection.message_selection_changed, self.updated.emit)
-
         self.model.add_observer(
             self.model.message_commit_message_changed, self.commit_message_changed.emit
         )
@@ -209,7 +203,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.textChanged.connect(self.commit_summary_changed)
         self.description.textChanged.connect(self._commit_message_changed)
         self.description.leave.connect(self.focus_summary)
-        self.updated.connect(self.refresh)
 
         self.commit_group.setEnabled(False)
 
@@ -239,15 +232,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             return
         self.check_spelling_action.setChecked(value)
         self.toggle_check_spelling(value)
-
-    def refresh(self):
-        enabled = self.model.stageable() or self.model.unstageable()
-        if self.model.stageable():
-            text = N_('Stage')
-        else:
-            text = N_('Unstage')
-        self.stage_or_unstage.setEnabled(enabled)
-        self.stage_or_unstage.setText(text)
 
     def set_initial_size(self):
         self.setMaximumHeight(133)

@@ -152,6 +152,15 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self._stage_selection,
             hotkeys.STAGE_SELECTION,
         )
+        self.process_selection_action.setIcon(icons.add())
+
+        self.stage_or_unstage_all_action = qtutils.add_action(
+            self,
+            cmds.StageOrUnstageAll.name(),
+            cmds.run(cmds.StageOrUnstageAll, self.context),
+            hotkeys.STAGE_ALL,
+        )
+        self.stage_or_unstage_all_action.setIcon(icons.add())
 
         self.revert_unstaged_edits_action = qtutils.add_action(
             self,
@@ -418,19 +427,46 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         """Stage or unstage files according to the selection"""
         context = self.context
         selected_indexes = self.selected_indexes()
-        if selected_indexes:
-            category, idx = selected_indexes[0]
-            # A header item e.g. 'Staged', 'Modified', etc.
-            if category == self.idx_header:
-                if idx == self.idx_staged:
-                    cmds.do(cmds.UnstageAll, context)
-                elif idx == self.idx_modified:
-                    cmds.do(cmds.StageModified, context)
-                elif idx == self.idx_untracked:
-                    cmds.do(cmds.StageUntracked, context)
-                else:
-                    pass  # Do nothing for unmerged items, by design
-                return
+        is_header = any(
+            [category == self.idx_header for (category, idx) in selected_indexes]
+        )
+        if is_header:
+            is_staged = any([
+                idx == self.idx_staged and category == self.idx_header
+                for (category, idx) in selected_indexes
+            ])
+            is_modified = any(
+                idx == self.idx_modified and category == self.idx_header
+                for (category, idx) in selected_indexes
+            )
+            is_untracked = any(
+                idx == self.idx_untracked and category == self.idx_header
+                for (category, idx) in selected_indexes
+            )
+            # A header item: 'Staged', 'Modified' or 'Untracked'.
+            if is_staged:
+                # If we have the staged header selected then the only sensible
+                # thing to do is to unstage everything and nothing else, even
+                # if the modified or untracked headers are selected.
+                cmds.do(cmds.UnstageAll, context)
+                return  # Everything was unstaged. There's nothing more to be done.
+            elif is_modified and is_untracked:
+                # If both modified and untracked headers are selected then
+                # stage everything.
+                cmds.do(cmds.StageModifiedAndUntracked, context)
+                return  # Nothing more to do.
+            # At this point we may stage all modified and untracked, and then
+            # possibly a subset of the other category (eg. all modified and
+            # some untracked).  We don't return here so that StageOrUnstage
+            # gets a chance to run below.
+            elif is_modified:
+                cmds.do(cmds.StageModified, context)
+            elif is_untracked:
+                cmds.do(cmds.StageUntracked, context)
+            else:
+                # Do nothing for unmerged items, by design
+                pass
+        # Now handle individual files
         cmds.do(cmds.StageOrUnstage, context)
 
     def _staged_item(self, itemidx):

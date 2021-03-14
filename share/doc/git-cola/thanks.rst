@@ -161,6 +161,7 @@ Thanks
 * Nikos Roussos
 * Noel Grandin
 * NotSqrt
+* nyanpasu64
 * ochristi
 * Oliver Haessler
 * OmegaPhil (Omega Weapon)
