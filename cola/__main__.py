@@ -6,9 +6,7 @@ Usage:
     python -m cola
 
 """
-
 from __future__ import absolute_import, division, unicode_literals
-
 
 from cola import main
 
@@ -18,5 +16,5 @@ def run():
     main.main()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()
