@@ -7,6 +7,9 @@ Usage:
 
 """
 
+from __future__ import absolute_import, division, unicode_literals
+
+
 from cola import main
 
 
