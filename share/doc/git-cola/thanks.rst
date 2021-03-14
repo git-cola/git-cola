@@ -69,6 +69,7 @@ Thanks
 * Fabio Coatti
 * Felipe Morales
 * Filip Danilović
+* Floris Lambrechts
 * fu7mu4
 * Garoe Dorta
 * Geoffrey van Wyk
