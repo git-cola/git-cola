@@ -96,6 +96,12 @@ way to try the latest version.
     ./bin/git-cola
     ./bin/git-dag
 
+You can also start `cola` as a Python module if Python can find it.
+
+    cd git-cola
+    python -m cola
+    python -m cola dag
+
 Having git-cola's `bin/` directory in your path allows you to run
 `git cola` like a regular built-in Git command:
 
