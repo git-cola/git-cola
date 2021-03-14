@@ -2511,7 +2511,10 @@ class StageOrUnstageAll(ContextCommand):
         if self.model.staged:
             do(Unstage, self.context, self.model.staged)
         else:
-            unstaged = self.model.modified + self.model.untracked
+            if self.cfg.get('cola.safemode', False):
+                unstaged = self.model.modified
+            else:
+                unstaged = self.model.modified + self.model.untracked
             do(Stage, self.context, unstaged)
 
 
