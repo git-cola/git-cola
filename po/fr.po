@@ -2240,6 +2240,9 @@ msgstr "Commit"
 msgid "Stage / Unstage"
 msgstr "Pré-commité/non pré-commité"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Commiter tous les fichiers non suivis"
 
@@ -2251,6 +2254,9 @@ msgstr "Commiter section de différences"
 
 msgid "Stage Modified"
 msgstr "Pré-commit modifié"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Pré-commiter sélection"

@@ -2322,6 +2322,9 @@ msgstr "移動到新修訂版準備區域"
 msgid "Stage / Unstage"
 msgstr "移入／移出新修訂版準備區域"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "將所有尚未追蹤其版本的項目移動到新修訂版準備區域"
 
@@ -2333,6 +2336,9 @@ msgstr "將此內容差異區塊移入新修訂版準備區域"
 
 msgid "Stage Modified"
 msgstr "將已變更的項目移入新修訂版準備區域"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "將被選取的項目移入新修訂版準備區域"

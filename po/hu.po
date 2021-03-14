@@ -2316,6 +2316,9 @@ msgstr "Kiszemelés"
 msgid "Stage / Unstage"
 msgstr "Kiszemelés/elengedés"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Minden nem követett változás kiszemelése"
 
@@ -2327,6 +2330,9 @@ msgstr "Összehasonlítási egység kiszemelése"
 
 msgid "Stage Modified"
 msgstr "Módosítottak kiszemelése"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Kijelöltek kiszemelése"

@@ -2253,6 +2253,9 @@ msgstr "Připravit k zapsání"
 msgid "Stage / Unstage"
 msgstr "Připravit k zapsání / zrušit přípravu"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Připravit všechny nesledované"
 
@@ -2264,6 +2267,9 @@ msgstr "Připravit k zapsání komplex rozdílů"
 
 msgid "Stage Modified"
 msgstr "Změněné připravit k zapsání"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Vybrané připravit k zapsání"

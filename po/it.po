@@ -2392,6 +2392,9 @@ msgstr "Salva"
 msgid "Stage / Unstage"
 msgstr "Prepara modificati"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr ""
 
@@ -2403,6 +2406,9 @@ msgid "Stage Diff Hunk"
 msgstr "Revisione iniziale"
 
 msgid "Stage Modified"
+msgstr ""
+
+msgid "Stage Modified and Untracked"
 msgstr ""
 
 #, fuzzy

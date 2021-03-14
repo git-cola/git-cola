@@ -2302,6 +2302,9 @@ msgstr "Проіндексувати"
 msgid "Stage / Unstage"
 msgstr "Проіндексувати / Видалити з проіндексованого"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Проіндексувати всі непроіндексовані файли"
 
@@ -2313,6 +2316,9 @@ msgstr "Додати частину різниці до проіндексова
 
 msgid "Stage Modified"
 msgstr "Проіндексувати зміни"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Додати виділене до проіндексованого"

@@ -2319,6 +2319,9 @@ msgstr "Änderung vormerken"
 msgid "Stage / Unstage"
 msgstr "Vormerken/Nicht vormerken"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Alle neuen Dateien vormerken"
 
@@ -2330,6 +2333,9 @@ msgstr "Änderungen am Abschnitt vormerken"
 
 msgid "Stage Modified"
 msgstr "Vermerke Änderung"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Auswahl vormerken"

@@ -2327,6 +2327,9 @@ msgstr "Estágio"
 msgid "Stage / Unstage"
 msgstr "Estágio / Sem estágio "
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Stage todos Untracked"
 
@@ -2338,6 +2341,9 @@ msgstr "Reverter pedaço do Diff"
 
 msgid "Stage Modified"
 msgstr "Stage Modificado"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Stage Selecionado"

@@ -2313,6 +2313,9 @@ msgstr "Dobierz"
 msgid "Stage / Unstage"
 msgstr "Dobierz / odłóż"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Dobierz wszystkie niezarządzane"
 
@@ -2324,6 +2327,9 @@ msgstr "Dobierz kawałek różnicy"
 
 msgid "Stage Modified"
 msgstr "Dobierz zmienone"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Dobierz zaznaczone"

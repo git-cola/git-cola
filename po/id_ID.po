@@ -2288,6 +2288,9 @@ msgstr "Stage"
 msgid "Stage / Unstage"
 msgstr "Stage / Unstage"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Stage Semua yang tak terlacak"
 
@@ -2299,6 +2302,9 @@ msgstr "Stage Area Diff"
 
 msgid "Stage Modified"
 msgstr "Stage Berubah"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Stage Terpilih"

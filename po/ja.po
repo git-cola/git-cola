@@ -2317,6 +2317,9 @@ msgstr "ステージ"
 msgid "Stage / Unstage"
 msgstr "ステージ / ステージ解除"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "全てのトラックしていないものをステージする"
 
@@ -2328,6 +2331,9 @@ msgstr "差分のステージング"
 
 msgid "Stage Modified"
 msgstr "修正のステージング"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "選択分のステージング"

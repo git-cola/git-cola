@@ -2391,6 +2391,9 @@ msgstr "Spara"
 msgid "Stage / Unstage"
 msgstr "Köa ändrade"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr ""
 
@@ -2402,6 +2405,9 @@ msgid "Stage Diff Hunk"
 msgstr "Inledande revision"
 
 msgid "Stage Modified"
+msgstr ""
+
+msgid "Stage Modified and Untracked"
 msgstr ""
 
 #, fuzzy

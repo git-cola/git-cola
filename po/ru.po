@@ -2297,6 +2297,9 @@ msgstr "Добавить к коммиту"
 msgid "Stage / Unstage"
 msgstr "Добавить / Убрать"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "Добавить к коммиту все неотслеживемые файлы"
 
@@ -2308,6 +2311,9 @@ msgstr "Добавить эту часть к коммиту"
 
 msgid "Stage Modified"
 msgstr "Добавить к коммиту измененые файлы"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "Добавить к коммиту"

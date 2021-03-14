@@ -2252,6 +2252,9 @@ msgstr "缓存"
 msgid "Stage / Unstage"
 msgstr "缓存 / 取消缓存"
 
+msgid "Stage / Unstage All"
+msgstr ""
+
 msgid "Stage All Untracked"
 msgstr "缓存所有未跟踪项目"
 
@@ -2263,6 +2266,9 @@ msgstr "缓存差异区域"
 
 msgid "Stage Modified"
 msgstr "缓存已修改的文件"
+
+msgid "Stage Modified and Untracked"
+msgstr ""
 
 msgid "Stage Selected"
 msgstr "缓存已选项目"
