@@ -428,13 +428,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         context = self.context
         selected_indexes = self.selected_indexes()
         is_header = any(
-            [category == self.idx_header for (category, idx) in selected_indexes]
+            category == self.idx_header for (category, idx) in selected_indexes
         )
         if is_header:
-            is_staged = any([
+            is_staged = any(
                 idx == self.idx_staged and category == self.idx_header
                 for (category, idx) in selected_indexes
-            ])
+            )
             is_modified = any(
                 idx == self.idx_modified and category == self.idx_header
                 for (category, idx) in selected_indexes
