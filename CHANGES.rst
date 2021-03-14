@@ -9,6 +9,15 @@ Usability, bells and whistles
   which was introduced in Git v2.9.
   (`#1118 <https://github.com/git-cola/git-cola/issues/1118>`_)
 
+* A new `Ctrl + Shift + S` hotkey was added for staging/unstaging all
+  files, both modified and untracked.
+
+* The `Status` tool now supports `Ctrl + A` for selecting all files and
+  it behaves more predictably when performing operations when multiple
+  categories of files are selected (eg. when both modified and untracked
+  header items are selected).
+  (`#1117 <https://github.com/git-cola/git-cola/issues/1117>`_)
+
 .. _v3.9:
 
 v3.9

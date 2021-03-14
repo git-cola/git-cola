@@ -674,6 +674,8 @@ class MainView(standard.MainWindow):
         self.commit_menu.addAction(self.commit_amend_action)
         self.commit_menu.addAction(self.undo_commit_action)
         self.commit_menu.addSeparator()
+        self.commit_menu.addAction(self.statuswidget.tree.process_selection_action)
+        self.commit_menu.addAction(self.statuswidget.tree.stage_or_unstage_all_action)
         self.commit_menu.addAction(self.stage_modified_action)
         self.commit_menu.addAction(self.stage_untracked_action)
         self.commit_menu.addSeparator()

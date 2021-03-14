@@ -152,6 +152,15 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self._stage_selection,
             hotkeys.STAGE_SELECTION,
         )
+        self.process_selection_action.setIcon(icons.add())
+
+        self.stage_or_unstage_all_action = qtutils.add_action(
+            self,
+            cmds.StageOrUnstageAll.name(),
+            cmds.run(cmds.StageOrUnstageAll, self.context),
+            hotkeys.STAGE_ALL,
+        )
+        self.stage_or_unstage_all_action.setIcon(icons.add())
 
         self.revert_unstaged_edits_action = qtutils.add_action(
             self,
