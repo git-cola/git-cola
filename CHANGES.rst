@@ -18,6 +18,11 @@ Usability, bells and whistles
   header items are selected).
   (`#1117 <https://github.com/git-cola/git-cola/issues/1117>`_)
 
+Development
+-----------
+* Git Cola can now be started as a Python module.
+  (`#1119 <https://github.com/git-cola/git-cola/pull/1119>`_)
+
 .. _v3.9:
 
 v3.9
