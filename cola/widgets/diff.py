@@ -589,6 +589,7 @@ class Options(QtWidgets.QWidget):
         )
 
         self.show_line_numbers = self.add_option(N_('Show line numbers'))
+        self.enable_word_wrap = self.add_option(N_('Enable Word Wrapping'))
 
         self.options = qtutils.create_action_button(
             tooltip=N_('Diff Options'), icon=icons.configure()
@@ -621,6 +622,7 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.ignore_space_change)
         menu.addAction(self.ignore_all_space)
         menu.addAction(self.show_line_numbers)
+        menu.addAction(self.enable_word_wrap)
         menu.addAction(self.function_context)
 
         # Layouts
@@ -689,6 +691,12 @@ class DiffEditor(DiffTextEdit):
 
         # "Diff Options" tool menu
         self.options = options
+
+        #Enabling Word Wrapping by default  Enabling Word Wrapping by default  Enabling Word Wrapping by default Enabling Word Wrapping by default  Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default 
+        self.setWordWrapMode(QtGui.QTextOption.WordWrap)
+        self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
+        self.options.enable_word_wrap.setChecked(True)
+
         self.action_apply_selection = qtutils.add_action(
             self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF
         )
@@ -745,8 +753,19 @@ class DiffEditor(DiffTextEdit):
         """Return True if we should show line numbers"""
         return get(self.options.show_line_numbers)
 
+    def is_enable_word_wrapping_checked(self):
+        return get(self.options.enable_word_wrap)
+
     def update_options(self):
         self.numbers.setVisible(self.show_line_numbers())
+        if(self.is_enable_word_wrapping_checked()):
+            self.setWordWrapMode(QtGui.QTextOption.WordWrap)
+            self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
+            self.options.enable_word_wrap.setChecked(True)
+        else:
+            self.setWordWrapMode(QtGui.QTextOption.NoWrap)
+            self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
+            self.options.enable_word_wrap.setChecked(False)
         self.options_changed.emit()
 
     # Qt overrides
