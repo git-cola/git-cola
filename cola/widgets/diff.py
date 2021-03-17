@@ -692,7 +692,7 @@ class DiffEditor(DiffTextEdit):
         # "Diff Options" tool menu
         self.options = options
 
-        #Enabling Word Wrapping by default  Enabling Word Wrapping by default  Enabling Word Wrapping by default Enabling Word Wrapping by default  Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default Enabling Word Wrapping by default 
+        # Enabling Word Wrapping by default
         self.setWordWrapMode(QtGui.QTextOption.WordWrap)
         self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
         self.options.enable_word_wrap.setChecked(True)
@@ -758,7 +758,7 @@ class DiffEditor(DiffTextEdit):
 
     def update_options(self):
         self.numbers.setVisible(self.show_line_numbers())
-        if(self.is_enable_word_wrapping_checked()):
+        if self.is_enable_word_wrapping_checked():
             self.setWordWrapMode(QtGui.QTextOption.WordWrap)
             self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
             self.options.enable_word_wrap.setChecked(True)
