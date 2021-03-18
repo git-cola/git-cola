@@ -5,7 +5,7 @@ Thanks
 * Aaron Cook
 * Aaron Malpas
 * Aaron Wolf
-* abid1998
+* Abid Ahmad
 * Adam Lesperance
 * Adrien be
 * Adil
