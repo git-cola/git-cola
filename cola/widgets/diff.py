@@ -637,9 +637,11 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.ignore_space_at_eol)
         menu.addAction(self.ignore_space_change)
         menu.addAction(self.ignore_all_space)
-        menu.addAction(self.show_line_numbers)
-        menu.addAction(self.enable_word_wrapping)
+        menu.addSeparator()
         menu.addAction(self.function_context)
+        menu.addAction(self.show_line_numbers)
+        menu.addSeparator()
+        menu.addAction(self.enable_word_wrapping)
 
         # Layouts
         layout = qtutils.hbox(
