@@ -231,10 +231,17 @@ If you upgrade using `brew` then it is recommended that you re-install
 git-cola's dependencies when upgrading.  Re-installing ensures that the
 Python modules provided by Homebrew will be properly set up.
 
+A quick fix when upgrading to newer versions of XCode or macOS is to
+reinstall pyqt5.
+
+    brew reinstall pyqt@5
+
 This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
 Homebrew now bundles its own Python3 installation instead of using the
 system-provided default Python.
 
+If the "brew reinstall" command above does not work then re-installing from
+scratch using the instructions below should get things back in shape.
 
     # update homebrew
     brew update
