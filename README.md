@@ -236,6 +236,10 @@ reinstall pyqt5.
 
     brew reinstall pyqt@5
 
+You may also need to relink your pyqt installation:
+
+    brew link pyqt@5
+
 This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
 Homebrew now bundles its own Python3 installation instead of using the
 system-provided default Python.
