@@ -412,7 +412,7 @@ class Viewer(QtWidgets.QFrame):
 
     def apply_state(self, state):
         diff_numbers = bool(state.get('show_diff_line_numbers', False))
-        self.enable_line_numbers(diff_numbers, update=True)
+        self.set_line_numbers(diff_numbers, update=True)
 
         image_mode = utils.asint(state.get('image_diff_mode', 0))
         self.options.image_mode.set_index(image_mode)
@@ -421,7 +421,7 @@ class Viewer(QtWidgets.QFrame):
         self.options.zoom_mode.set_index(zoom_mode)
 
         word_wrap = bool(state.get('word_wrap', True))
-        self.enable_word_wrapping(word_wrap, update=True)
+        self.set_word_wrapping(word_wrap, update=True)
         return True
 
     def set_diff_type(self, diff_type):
@@ -439,16 +439,17 @@ class Viewer(QtWidgets.QFrame):
         # The "file type" is whether the file itself is an image.
         self.options.set_file_type(file_type)
 
-    def update_options(self):
-        self.text.update_options()
+    def set_options(self):
+        """Emit a signal indicating that options have changed"""
+        self.text.set_options()
 
-    def enable_line_numbers(self, enabled, update=False):
+    def set_line_numbers(self, enabled, update=False):
         """Enable/disable line numbers in the text widget"""
-        self.text.enable_line_numbers(enabled, update=update)
+        self.text.set_line_numbers(enabled, update=update)
 
-    def enable_word_wrapping(self, enabled, update=False):
+    def set_word_wrapping(self, enabled, update=False):
         """Enable/disable word wrapping in the text widget"""
-        self.text.enable_word_wrapping(enabled, update=update)
+        self.text.set_word_wrapping(enabled, update=update)
 
     def reset(self):
         self.image.pixmap = QtGui.QPixmap()
@@ -601,10 +602,10 @@ class Options(QtWidgets.QWidget):
         )
 
         self.show_line_numbers = qtutils.add_action_bool(
-            self, N_('Show line numbers'), self.update_show_line_numbers, True
+            self, N_('Show line numbers'), self.set_line_numbers, True
         )
         self.enable_word_wrapping = qtutils.add_action_bool(
-            self, N_('Enable word wrapping'), self.update_word_wrapping, True
+            self, N_('Enable word wrapping'), self.set_word_wrapping, True
         )
 
         self.options = qtutils.create_action_button(
@@ -679,12 +680,12 @@ class Options(QtWidgets.QWidget):
             self.toggle_image_diff.setIcon(icons.visualize())
 
     def add_option(self, title):
-        """Add a diff option which calls update_options() on change"""
-        action = qtutils.add_action(self, title, self.update_options)
+        """Add a diff option which calls set_options() on change"""
+        action = qtutils.add_action(self, title, self.set_options)
         action.setCheckable(True)
         return action
 
-    def update_options(self):
+    def set_options(self):
         """Update diff options in response to UI events"""
         space_at_eol = get(self.ignore_space_at_eol)
         space_change = get(self.ignore_space_change)
@@ -693,14 +694,14 @@ class Options(QtWidgets.QWidget):
         gitcmds.update_diff_overrides(
             space_at_eol, space_change, all_space, function_context
         )
-        self.widget.update_options()
+        self.widget.set_options()
 
-    def update_show_line_numbers(self, value):
-        self.widget.enable_line_numbers(value, update=False)
+    def set_line_numbers(self, value):
+        self.widget.set_line_numbers(value, update=False)
 
-    def update_word_wrapping(self, value):
+    def set_word_wrapping(self, value):
         """Respond to Qt action callbacks"""
-        self.widget.enable_word_wrapping(value, update=False)
+        self.widget.set_word_wrapping(value, update=False)
 
 
 # pylint: disable=too-many-ancestors
@@ -768,7 +769,7 @@ class DiffEditor(DiffTextEdit):
                 enabled = True
         self.action_revert_selection.setEnabled(enabled)
 
-    def enable_line_numbers(self, enabled, update=False):
+    def set_line_numbers(self, enabled, update=False):
         """Enable/disable the diff line number display"""
         self.numbers.setVisible(enabled)
         if update:
@@ -779,7 +780,7 @@ class DiffEditor(DiffTextEdit):
         # correctly displaying the line numbers widget until the text scrolls.
         self.set_value(self.value())
 
-    def enable_word_wrapping(self, enabled, update=False):
+    def set_word_wrapping(self, enabled, update=False):
         """Enable/disable word wrapping"""
         if update:
             signals = self.options.enable_word_wrapping.blockSignals(True)
@@ -792,7 +793,7 @@ class DiffEditor(DiffTextEdit):
             self.setWordWrapMode(QtGui.QTextOption.NoWrap)
             self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
 
-    def update_options(self):
+    def set_options(self):
         self.options_changed.emit()
 
     # Qt overrides
