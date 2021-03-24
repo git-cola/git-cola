@@ -78,7 +78,7 @@ class SelectCommits(Dialog):
 
         self.input_layout = qtutils.hbox(
             defs.no_margin,
-            defs.no_spacing,
+            defs.spacing,
             self.search_label,
             self.search,
             qtutils.STRETCH,
