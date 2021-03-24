@@ -9,6 +9,7 @@ from .. import qtutils
 from ..i18n import N_
 from ..icons import folder
 from ..interaction import Interaction
+from . import completion
 from . import defs
 from .diff import DiffTextEdit
 from .standard import Dialog
@@ -56,13 +57,20 @@ class SelectCommits(Dialog):
 
         self.commit_text = DiffTextEdit(context, self, whitespace=False)
 
-        self.label = QtWidgets.QLabel()
-        self.label.setText(N_('Revision Expression:'))
-        self.revision = QtWidgets.QLineEdit()
+        self.revision_label = QtWidgets.QLabel()
+        self.revision_label.setText(N_('Revision Expression:'))
+        self.revision = completion.GitRefLineEdit(context)
         self.revision.setReadOnly(True)
 
+        self.search_label = QtWidgets.QLabel()
+        self.search_label.setText(N_('Search:'))
+        self.search = QtWidgets.QLineEdit()
+        self.search.setReadOnly(False)
+
+        # pylint: disable=no-member
+        self.search.textChanged.connect(self.search_list)
+
         self.select_button = qtutils.ok_button(N_('Select'), enabled=False)
-        self.close_button = qtutils.close_button()
 
         # Make the list widget slightly larger
         self.splitter = qtutils.splitter(Qt.Vertical, self.commits, self.commit_text)
@@ -70,16 +78,17 @@ class SelectCommits(Dialog):
 
         self.input_layout = qtutils.hbox(
             defs.no_margin,
-            defs.button_spacing,
-            self.close_button,
+            defs.spacing,
+            self.search_label,
+            self.search,
             qtutils.STRETCH,
-            self.label,
+            self.revision_label,
             self.revision,
             self.select_button,
         )
 
         self.main_layout = qtutils.vbox(
-            defs.margin, defs.margin, self.splitter, self.input_layout
+            defs.margin, defs.margin, self.input_layout, self.splitter
         )
         self.setLayout(self.main_layout)
 
@@ -88,7 +97,6 @@ class SelectCommits(Dialog):
         commits.itemDoubleClicked.connect(self.commit_oid_double_clicked)
 
         qtutils.connect_button(self.select_button, self.accept)
-        qtutils.connect_button(self.close_button, self.reject)
 
         self.init_state(None, self.resize_widget, parent)
 
@@ -134,6 +142,14 @@ class SelectCommits(Dialog):
         oid = self.selected_commit()
         if oid:
             self.accept()
+
+    def search_list(self, text):
+        if text:
+            for i in range(self.commits.count()):
+                self.commits.item(i).setHidden(True)
+        search_items = self.commits.findItems(text, Qt.MatchContains)
+        for items in search_items:
+            items.setHidden(False)
 
 
 class SelectCommitsAndOutput(SelectCommits):

@@ -5,6 +5,9 @@ v3.10
 
 Usability, bells and whistles
 -----------------------------
+* The dialog for selecting commits now support filtering.
+  (`#1121 <https://github.com/git-cola/git-cola/pull/1121>`_)
+
 * The diff editor now wraps long lines by default. The diff options
   menu can be used to enable/disable line wrapping.
   (`#1123 <https://github.com/git-cola/git-cola/pull/1123>`_)
