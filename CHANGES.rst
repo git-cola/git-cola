@@ -5,6 +5,9 @@ v3.10
 
 Usability, bells and whistles
 -----------------------------
+* The dialog for selecting commits now support filtering.
+  (`#1121 <https://github.com/git-cola/git-cola/pull/1121>`_)
+
 * Git Cola now honors `core.hooksPath` for configuring custom Git hooks,
   which was introduced in Git v2.9.
   (`#1118 <https://github.com/git-cola/git-cola/issues/1118>`_)
