@@ -185,9 +185,9 @@ Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
 
 ## Ubuntu
 
-The default version on 18.04 is older and is missing features and enhancements.
-Use this [PPA](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
-maintained by @pavreh to get a newer version.
+See https://packages.ubuntu.com/search?keywords=git-cola for the versions that
+are available by default. There was a [PPA](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
+maintained by @pavreh, but it has not been update for a while.
 
 ## MAC OS X
 
