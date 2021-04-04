@@ -25,6 +25,7 @@ Thanks
 * armandg
 * Arthur Coelho
 * Audrius Karabanovas
+* Axel Heider
 * Balázs Meskó
 * balping
 * Barış ÇELİK
