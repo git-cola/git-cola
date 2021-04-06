@@ -412,6 +412,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                         reselect(j, current=True)
                         return
 
+        # No item was selected, select (topmost) header
+        self.select_header()
+
     def _restore_scrollbars(self):
         vscroll = self.verticalScrollBar()
         if vscroll and self.old_vscroll is not None:
