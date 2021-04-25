@@ -69,6 +69,7 @@ Thanks
 * Erop @EgZvor
 * Erwan Bousse
 * Fabio Coatti
+* Fang Pengfei
 * Felipe Morales
 * Filip Danilović
 * Floris Lambrechts
