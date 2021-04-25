@@ -25,6 +25,11 @@ Usability, bells and whistles
   header items are selected).
   (`#1117 <https://github.com/git-cola/git-cola/issues/1117>`_)
 
+Fixes
+-----
+* `git cola --help-commands` was updated for newer versions of argparse.
+  (`#1133 <https://github.com/git-cola/git-cola/issues/1133>`_)
+
 Development
 -----------
 * Git Cola can now be started as a Python module.

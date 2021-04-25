@@ -33,8 +33,12 @@ def winmain():
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
-    subparser = parser.add_subparsers(title='valid commands')
+    # Newer versions of argpares (Python 3.8+) emit an error message for
+    # "--help-commands" unless we register the flag on the main parser.
+    add_help_options(parser)
+    parser.set_defaults(func=lambda _: parser.print_help())
 
+    subparser = parser.add_subparsers(title='valid commands')
     add_cola_command(subparser)
     add_about_command(subparser)
     add_am_command(subparser)
@@ -62,6 +66,16 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 
+def add_help_options(parser):
+    """Add the --help-commands flag to the parser"""
+    parser.add_argument(
+        '--help-commands',
+        default=False,
+        action='store_true',
+        help='show available sub-commands',
+    )
+
+
 def add_command(parent, name, description, func):
     parser = parent.add_parser(str(name), help=description)
     parser.set_defaults(func=func)
@@ -74,12 +88,7 @@ def add_cola_command(subparser):
     parser.add_argument(
         '--amend', default=False, action='store_true', help='start in amend mode'
     )
-    parser.add_argument(
-        '--help-commands',
-        default=False,
-        action='store_true',
-        help='show available sub-commands',
-    )
+    add_help_options(parser)
     parser.add_argument(
         '--status-filter', '-s', metavar='<path>', default='', help='status path filter'
     )
