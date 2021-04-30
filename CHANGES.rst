@@ -25,6 +25,11 @@ Usability, bells and whistles
   header items are selected).
   (`#1117 <https://github.com/git-cola/git-cola/issues/1117>`_)
 
+Translations
+------------
+* Updated Hungarian translation.
+  (`#1135 <https://github.com/git-cola/git-cola/pull/1135>`_)
+
 Fixes
 -----
 * `git cola --help-commands` was updated for newer versions of argparse.
