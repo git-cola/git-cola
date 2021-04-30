@@ -475,7 +475,8 @@ def set_clipboard(text):
         return
     clipboard = QtWidgets.QApplication.clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
-    clipboard.setText(text, QtGui.QClipboard.Selection)
+    if not utils.is_darwin() and not utils.is_windows():
+        clipboard.setText(text, QtGui.QClipboard.Selection)
     persist_clipboard()
 
 
