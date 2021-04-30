@@ -218,8 +218,8 @@ class ActionDialog(standard.Dialog):
             except KeyError:
                 pass
         else:
-            self.argslabel.setMinimumSize(1, 1)
-            self.argstxt.setMinimumSize(1, 1)
+            self.argslabel.setMinimumSize(10, 10)
+            self.argstxt.setMinimumSize(10, 10)
             self.argstxt.hide()
             self.argslabel.hide()
 

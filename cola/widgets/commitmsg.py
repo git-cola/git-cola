@@ -694,7 +694,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
     def setFont(self, font):
         SpellCheckTextEdit.setFont(self, font)
         fm = self.fontMetrics()
-        self.setMinimumSize(QtCore.QSize(1, fm.height() * 2))
+        self.setMinimumSize(QtCore.QSize(fm.width('MMMM'), fm.height() * 2))
 
 
 def add_menu_actions(menu, menu_actions):

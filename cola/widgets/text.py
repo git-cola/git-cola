@@ -88,7 +88,7 @@ class BaseTextEditExtension(QtCore.QObject):
 
     def _init_flags(self):
         widget = self.widget
-        widget.setMinimumSize(QtCore.QSize(1, 1))
+        widget.setMinimumSize(QtCore.QSize(10, 10))
         widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
         widget.setLineWrapMode(widget.NoWrap)
         if self._readonly:

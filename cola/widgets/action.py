@@ -31,7 +31,7 @@ class QFlowLayoutWidget(QtWidgets.QFrame):
             QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum
         )
         self.setSizePolicy(policy)
-        self.setMinimumSize(QtCore.QSize(1, 1))
+        self.setMinimumSize(QtCore.QSize(10, 10))
         self.aspect_ratio = 0.8
 
     def resizeEvent(self, event):
