@@ -10,6 +10,7 @@ import struct
 from . import core
 from . import observable
 from . import utils
+from . import version
 from .compat import int_types
 from .git import STDOUT
 from .compat import ustr
@@ -123,6 +124,7 @@ class GitConfig(observable.Observable):
         self._cache_key = None
         self._configs = []
         self._config_files = {}
+        self._context = context
         self._attr_cache = {}
         self._find_config_files()
 
@@ -211,7 +213,10 @@ class GitConfig(observable.Observable):
             return self._read_config_file(path)
 
         dest = {}
-        args = ('--null', '--file', path, '--list')
+        if version.check_git(self._context, 'config-includes'):
+            args = ('--null', '--file', path, '--list', '--includes')
+        else:
+            args = ('--null', '--file', path, '--list')
         config_lines = self.git.config(*args)[STDOUT].split('\0')
         for line in config_lines:
             if not line:
