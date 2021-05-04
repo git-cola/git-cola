@@ -211,7 +211,7 @@ class GitConfig(observable.Observable):
             return self._read_config_file(path)
 
         dest = {}
-        args = ('--null', '--file', path, '--list')
+        args = ('--null', '--file', path, '--list', '--includes')
         config_lines = self.git.config(*args)[STDOUT].split('\0')
         for line in config_lines:
             if not line:
