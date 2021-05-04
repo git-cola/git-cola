@@ -22,7 +22,8 @@ _versions = {
     # git diff learned --patience in 1.6.2
     # git mergetool learned --no-prompt in 1.6.2
     # git difftool moved out of contrib in git 1.6.3
-    'git': '1.6.3',
+    # git include.path pseudo-variable was introduced in 1.7.10
+    'git': '1.7.10',
     'python': '2.6',
     # new: git cat-file --filters --path=<path> SHA1
     # old: git cat-file --filters blob SHA1:<path>
