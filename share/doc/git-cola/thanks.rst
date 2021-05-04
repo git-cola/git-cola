@@ -159,6 +159,7 @@ Thanks
 * Muhammad Bashir Al-Noimi
 * Myz
 * Naraesk
+* Nanda Lopes
 * Niel Buys
 * Nick Todd
 * Nicolas Dietrich
