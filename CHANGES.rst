@@ -5,6 +5,11 @@ v3.10
 
 Usability, bells and whistles
 -----------------------------
+* The git config reader now supports the `include.path` directive
+  for including config files.
+  (`#1136 <https://github.com/git-cola/git-cola/issues/1136>`_)
+  (`#1137 <https://github.com/git-cola/git-cola/pull/1137>`_)
+
 * The dialog for selecting commits now support filtering.
   (`#1121 <https://github.com/git-cola/git-cola/pull/1121>`_)
 
