@@ -185,9 +185,11 @@ Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
 
 ## Ubuntu
 
-See https://packages.ubuntu.com/search?keywords=git-cola for the versions that
-are available by default. There was a [PPA](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
-maintained by @pavreh, but it has not been update for a while.
+[See here](https://packages.ubuntu.com/search?keywords=git-cola) for the
+versions that are available in Ubuntu's repositories.
+
+There was a [PPA by @pavreh](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
+but it has not been updated for a while.
 
 ## MAC OS X
 
