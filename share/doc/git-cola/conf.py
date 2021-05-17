@@ -59,6 +59,10 @@ man_pages = [
     ('git-dag', 'git-dag', 'The sleek and powerful Git history browser', authors, '1'),
 ]
 
+# Sphinx 4.0 creates sub-directories for each man section.
+# Disable this feature for consistency across Sphinx versions.
+man_make_section_directory = False
+
 latex_documents = [
     (
         'index',

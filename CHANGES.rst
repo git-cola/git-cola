@@ -37,6 +37,9 @@ Translations
 
 Fixes
 -----
+* `make install-man` was updated to support Sphinx 4.0.
+  (`#1141 <https://github.com/git-cola/git-cola/issues/1141>`_)
+
 * `git cola --help-commands` was updated for newer versions of argparse.
   (`#1133 <https://github.com/git-cola/git-cola/issues/1133>`_)
 
