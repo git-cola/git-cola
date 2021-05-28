@@ -60,6 +60,7 @@ Thanks
 * Dawid Drozd
 * Dennis Gilmore
 * deniz1a
+* Dmitriy Bogdanov
 * Dmitry Kann
 * Dmitry Pashkevich
 * Doug Hoskisson
