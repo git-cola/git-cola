@@ -96,6 +96,8 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.run_git('symbolic-ref', 'HEAD', 'refs/heads/main')
         self.run_git('config', '--local', 'user.name', 'Your Name')
         self.run_git('config', '--local', 'user.email', 'you@example.com')
+        self.run_git('config', '--local', 'commit.gpgsign', 'false')
+        self.run_git('config', '--local', 'tag.gpgsign', 'false')
         self.touch('A', 'B')
         self.run_git('add', 'A', 'B')
 
