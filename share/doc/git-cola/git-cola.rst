@@ -1063,6 +1063,17 @@ installation.  e.g.::
 
     C:/Tools/Git/bin
 
+SSH Agents for Key-based Authentication
+---------------------------------------
+You may need to setup ssh-agent in order to use SSH key-based authentication
+on Windows. It has been reported that starting OpenSSH agent in
+Windows Services and adding the key using Powershell are necessary in order
+to get things working.
+
+Please see the following links for more details.
+
+https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
+
 LINKS
 =====
 
