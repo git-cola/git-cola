@@ -39,6 +39,7 @@ Thanks
 * Bert Jacobs
 * Birger Skogeng Pedersen
 * Björn Ketelaars
+* Bob van der Linden
 * 林博仁 (Buo-ren Lin)
 * cclaus
 * Charles 101
