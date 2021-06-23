@@ -1830,7 +1830,10 @@ def unix_path(path, is_win32=utils.is_win32):
 def sequence_editor():
     """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
     xbase = unix_path(resources.command('git-cola-sequence-editor'))
-    editor = core.list2cmdline([xbase])
+    if utils.is_win32():
+        editor = core.list2cmdline([unix_path(sys.executable), xbase])
+    else:
+        editor = core.list2cmdline([xbase])
     return editor
 
 
