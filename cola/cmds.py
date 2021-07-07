@@ -2255,7 +2255,9 @@ class ShowUntracked(EditModel):
         super(ShowUntracked, self).__init__(context)
         self.new_filename = filename
         self.new_mode = self.model.mode_untracked
-        self.new_diff_text = self.read(filename)
+        self.new_diff_text = gitcmds.diff_helper(
+            self.context, filename=filename, cached=False, untracked=True
+        )
         self.new_diff_type = main.Types.TEXT
         self.new_file_type = main.Types.TEXT
 

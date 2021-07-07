@@ -406,6 +406,7 @@ def diff_helper(
     with_diff_header=False,
     suppress_header=True,
     reverse=False,
+    untracked=False,
 ):
     "Invokes git diff on a filepath."
     git = context.git
@@ -422,7 +423,11 @@ def diff_helper(
         argv.append(head)
 
     encoding = None
-    if filename:
+    if untracked:
+        argv.append('--no-index')
+        argv.append(os.devnull)
+        argv.append(filename)
+    elif filename:
         argv.append('--')
         if isinstance(filename, (list, tuple)):
             argv.extend(filename)
@@ -438,7 +443,16 @@ def diff_helper(
         *argv,
         **common_diff_opts(context)
     )
-    if status != 0:
+
+    if untracked:
+        # Diff will return 1 when comparing untracked file and it has change,
+        # therefore we will check for diff header from output to differentiate
+        # from actual error such as file not found
+        success = (status == 1 and "new file mode" in out)
+    else:
+        success = status == 0
+
+    if not success:
         # git init
         if with_diff_header:
             return ('', '')

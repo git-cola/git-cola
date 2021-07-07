@@ -762,10 +762,11 @@ class DiffEditor(DiffTextEdit):
         enabled = False
         s = self.selection_model.selection()
         model = self.model
-        if s.modified and model.stageable():
-            if s.modified[0] in model.submodules:
+        if model.stageable():
+            item = s.modified[0] if s.modified else None
+            if item in model.submodules:
                 pass
-            elif s.modified[0] not in model.unstaged_deleted:
+            elif item not in model.unstaged_deleted:
                 enabled = True
         self.action_revert_selection.setEnabled(enabled)
 
@@ -812,8 +813,8 @@ class DiffEditor(DiffTextEdit):
                 self.stage_or_unstage.setText(N_('Unstage'))
             menu.addAction(self.stage_or_unstage)
 
-        if s.modified and model.stageable():
-            item = s.modified[0]
+        if model.stageable():
+            item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 path = core.abspath(item)
                 action = menu.addAction(
@@ -953,8 +954,7 @@ class DiffEditor(DiffTextEdit):
 
     def apply_selection(self):
         model = self.model
-        s = self.selection_model.single_selection()
-        if model.stageable() and s.modified:
+        if model.stageable():
             self.process_diff_selection()
         elif model.unstageable():
             self.process_diff_selection(reverse=True)
