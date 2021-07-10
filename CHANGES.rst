@@ -1,5 +1,8 @@
 .. _v3.11:
 
+v3.11
+=====
+
 Usability, bells and whistles
 -----------------------------
 * The diff editor can now stage selected lines for untracked files.
