@@ -217,6 +217,7 @@ class SettingsFormWidget(FormWidget):
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
         self.expandtab = qtutils.checkbox()
+        self.resize_browser_columns = qtutils.checkbox(checked=False)
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -231,6 +232,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
+        self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
         self.add_row(N_('Check spelling'), self.check_spelling)
 
         self.set_config(
@@ -257,6 +259,10 @@ class SettingsFormWidget(FormWidget):
                     Defaults.merge_keep_backup,
                 ),
                 prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+                prefs.RESIZE_BROWSER_COLUMNS: (
+                    self.resize_browser_columns,
+                    Defaults.resize_browser_columns,
+                ),
                 prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
             }
         )

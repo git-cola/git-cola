@@ -32,6 +32,7 @@ MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
+RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
 SAFE_MODE = 'cola.safemode'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
 SHOW_PATH = 'cola.showpath'
@@ -70,6 +71,7 @@ class Defaults(object):
     merge_keep_backup = True
     merge_summary = True
     merge_verbosity = 2
+    resize_browser_columns = False
     save_window_settings = True
     safe_mode = False
     autocomplete_paths = True

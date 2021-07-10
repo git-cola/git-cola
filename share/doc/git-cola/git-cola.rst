@@ -645,6 +645,11 @@ cola.readsize
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
 
+cola.resizebrowsercolumns
+-------------------------
+`git cola` will automatically resize the file browser columns as folders are
+expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
+
 cola.safemode
 -------------
 The "Stage" button in the `git cola` Actions panel stages all files when it is

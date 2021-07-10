@@ -115,6 +115,7 @@ class RepoTreeView(standard.TreeView):
         self.saved_current_path = None
         self.saved_open_folders = set()
         self.restoring_selection = False
+        self._columns_sized = False
 
         self.info_event_type = browse.GitRepoInfoEvent.TYPE
 
@@ -229,7 +230,7 @@ class RepoTreeView(standard.TreeView):
         )
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')
-        self.size_columns()
+        self.size_columns(force=True)
 
     def index_expanded(self, index):
         """Update information about a directory as it is expanded."""
@@ -260,8 +261,12 @@ class RepoTreeView(standard.TreeView):
     def refresh(self):
         self.model().refresh()
 
-    def size_columns(self):
+    def size_columns(self, force=False):
         """Set the column widths."""
+        cfg = self.context.cfg
+        should_resize = cfg.get('cola.resizebrowsercolumns', default=False)
+        if not force and not should_resize:
+            return
         self.resizeColumnToContents(0)
         self.resizeColumnToContents(1)
         self.resizeColumnToContents(2)
@@ -343,7 +348,13 @@ class RepoTreeView(standard.TreeView):
 
         self.restoring_selection = False
 
-        self.size_columns()
+        # Resize the columns once when cola.resizebrowsercolumns is False.
+        # This provides a good initial size since we will not be resizing
+        # the columns during expand/collapse.
+        if not self._columns_sized:
+            self._columns_sized = True
+            self.size_columns(force=True)
+
         self.update_diff()
 
     def event(self, ev):
