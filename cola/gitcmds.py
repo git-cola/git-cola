@@ -444,13 +444,17 @@ def diff_helper(
         **common_diff_opts(context)
     )
 
-    if untracked:
-        # Diff will return 1 when comparing untracked file and it has change,
-        # therefore we will check for diff header from output to differentiate
-        # from actual error such as file not found
-        success = (status == 1 and "new file mode" in out)
-    else:
-        success = status == 0
+    success = status == 0
+
+    # Diff will return 1 when comparing untracked file and it has change,
+    # therefore we will check for diff header from output to differentiate
+    # from actual error such as file not found.
+    if untracked and status == 1:
+        try:
+            first, second, _ = out.split('\n', 2)
+        except ValueError:
+            second = ''
+        success = second.startswith('new file mode ')
 
     if not success:
         # git init
