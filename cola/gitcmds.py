@@ -393,6 +393,7 @@ def diff_info(context, oid, filename=None):
     return decoded + oid_diff(context, oid, filename=filename)
 
 
+# pylint: disable=too-many-arguments
 def diff_helper(
     context,
     commit=None,
@@ -451,7 +452,7 @@ def diff_helper(
     # from actual error such as file not found.
     if untracked and status == 1:
         try:
-            first, second, _ = out.split('\n', 2)
+            _, second, _ = out.split('\n', 2)
         except ValueError:
             second = ''
         success = second.startswith('new file mode ')
