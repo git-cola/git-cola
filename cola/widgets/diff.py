@@ -954,7 +954,8 @@ class DiffEditor(DiffTextEdit):
 
     def apply_selection(self):
         model = self.model
-        if model.stageable():
+        s = self.selection_model.single_selection()
+        if model.stageable() and (s.modified or s.untracked):
             self.process_diff_selection()
         elif model.unstageable():
             self.process_diff_selection(reverse=True)
