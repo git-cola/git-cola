@@ -37,6 +37,8 @@ Translations
 
 Fixes
 -----
+* The "Interactive Rebase" feature was updated to work with Windows.
+
 * `make install-man` was updated to support Sphinx 4.0.
   (`#1141 <https://github.com/git-cola/git-cola/issues/1141>`_)
 
