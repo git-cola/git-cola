@@ -2,10 +2,10 @@
 from __future__ import division, absolute_import, unicode_literals
 import os
 from os.path import dirname
-import sys
 import webbrowser
 
 from . import core
+from . import compat
 
 
 # Default git-cola icon theme
@@ -36,9 +36,18 @@ def prefix(*args):
 
 
 def command(name):
-    """Return a command sibling to the main program"""
-    bindir = os.path.dirname(sys.argv[0])
-    return os.path.join(bindir, name)
+    """Return a command from the bin/ directory"""
+    if compat.WIN32:
+        # Check for "${name}.exe" on Windows.
+        path = prefix('bin', name)
+        exe_path = prefix('bin', '%s.exe' % name)
+        if core.exists(exe_path):
+            result = exe_path
+        else:
+            result = path
+    else:
+        path = prefix('bin', name)
+    return result
 
 
 def doc(*args):
