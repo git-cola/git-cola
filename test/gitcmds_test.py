@@ -174,6 +174,29 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.assertEqual(remote, ['origin/a', 'origin/b', 'origin/c', 'origin/main'])
         self.assertEqual(tags, ['f', 'e', 'd'])
 
+    def test_binary_files(self):
+        # Create a binary file and ensure that it's detected as binary.
+        with open('binary-file.txt', 'wb') as f:
+            f.write(b'hello\0world\n')
+        assert gitcmds.is_binary(self.context, 'binary-file.txt')
+
+        # Create a text file and ensure that it's not detected as binary.
+        with open('text-file.txt', 'w') as f:
+            f.write('hello world\n')
+        assert not gitcmds.is_binary(self.context, 'text-file.txt')
+
+        # Create a .gitattributes file and mark text-file.txt as binary.
+        self.cfg.reset()
+        with open('.gitattributes', 'w') as f:
+            f.write('text-file.txt binary\n')
+        assert gitcmds.is_binary(self.context, 'text-file.txt')
+
+        # Remove the "binary" attribute using "-binary" from binary-file.txt.
+        # Ensure that we do not flag this file as binary.
+        with open('.gitattributes', 'w') as f:
+            f.write('binary-file.txt -binary\n')
+        assert not gitcmds.is_binary(self.context, 'binary-file.txt')
+
 
 if __name__ == '__main__':
     unittest.main()

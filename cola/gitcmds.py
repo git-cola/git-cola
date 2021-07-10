@@ -982,3 +982,17 @@ def annex_path(context, head, filename):
             path = out
 
     return path
+
+
+def is_binary(context, filename):
+    cfg_is_binary = context.cfg.is_binary(filename)
+    if cfg_is_binary is not None:
+        return cfg_is_binary
+    # This is the same heuristic as xdiff-interface.c:buffer_is_binary().
+    size = 8000
+    try:
+        result = core.read(filename, size=size, encoding='bytes')
+    except (IOError, OSError):
+        result = b''
+
+    return b'\0' in result
