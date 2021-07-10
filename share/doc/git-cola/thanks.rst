@@ -60,6 +60,7 @@ Thanks
 * David Roman
 * Dawid Drozd
 * Dennis Gilmore
+* Demodian
 * deniz1a
 * Dmitriy Bogdanov
 * Dmitry Kann
