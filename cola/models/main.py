@@ -48,6 +48,7 @@ class MainModel(Observable):
     mode_worktree = 'worktree'  # Comparing index to worktree
     mode_diffstat = 'diffstat'  # Showing a diffstat
     mode_untracked = 'untracked'  # Dealing with an untracked file
+    mode_untracked_diff = 'untracked-diff'  # Diffing an untracked file
     mode_index = 'index'  # Comparing index to last commit
     mode_amend = 'amend'  # Amending a commit
 
@@ -55,7 +56,7 @@ class MainModel(Observable):
     modes_undoable = set((mode_amend, mode_index, mode_worktree))
 
     # Modes where we can partially stage files
-    modes_stageable = set((mode_amend, mode_worktree, mode_untracked))
+    modes_stageable = set((mode_amend, mode_worktree, mode_untracked_diff))
 
     # Modes where we can partially unstage files
     modes_unstageable = set((mode_amend, mode_index))

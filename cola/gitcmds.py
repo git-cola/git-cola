@@ -406,6 +406,7 @@ def diff_helper(
     with_diff_header=False,
     suppress_header=True,
     reverse=False,
+    untracked=False,
 ):
     "Invokes git diff on a filepath."
     git = context.git
@@ -422,7 +423,11 @@ def diff_helper(
         argv.append(head)
 
     encoding = None
-    if filename:
+    if untracked:
+        argv.append('--no-index')
+        argv.append(os.devnull)
+        argv.append(filename)
+    elif filename:
         argv.append('--')
         if isinstance(filename, (list, tuple)):
             argv.extend(filename)
@@ -438,7 +443,20 @@ def diff_helper(
         *argv,
         **common_diff_opts(context)
     )
-    if status != 0:
+
+    success = status == 0
+
+    # Diff will return 1 when comparing untracked file and it has change,
+    # therefore we will check for diff header from output to differentiate
+    # from actual error such as file not found.
+    if untracked and status == 1:
+        try:
+            first, second, _ = out.split('\n', 2)
+        except ValueError:
+            second = ''
+        success = second.startswith('new file mode ')
+
+    if not success:
         # git init
         if with_diff_header:
             return ('', '')
@@ -968,3 +986,17 @@ def annex_path(context, head, filename):
             path = out
 
     return path
+
+
+def is_binary(context, filename):
+    cfg_is_binary = context.cfg.is_binary(filename)
+    if cfg_is_binary is not None:
+        return cfg_is_binary
+    # This is the same heuristic as xdiff-interface.c:buffer_is_binary().
+    size = 8000
+    try:
+        result = core.read(filename, size=size, encoding='bytes')
+    except (IOError, OSError):
+        result = b''
+
+    return b'\0' in result

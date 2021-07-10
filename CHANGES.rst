@@ -1,3 +1,13 @@
+.. _v3.11:
+
+Usability, bells and whistles
+-----------------------------
+* The diff editor can now stage selected lines for untracked files.
+  Git Cola will detect when a file is untracked and will allow you to
+  partially stage it, just like existing tracked files.
+  (`#1146 <https://github.com/git-cola/git-cola/pull/1146>`_)
+  (`#1084 <https://github.com/git-cola/git-cola/issues/1084>`_)
+
 .. _v3.10:
 
 v3.10
