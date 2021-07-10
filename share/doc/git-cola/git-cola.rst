@@ -549,9 +549,18 @@ Defaults to `false`.
 
 cola.fileattributes
 -------------------
-Enables per-file gitattributes encoding support when set to `true`.
+Enables per-file gitattributes encoding and binary file support.
 This tells `git cola` to honor the configured encoding when displaying
 and applying diffs.
+
+A `.gitattributes` file can set the ``binary`` attribute in order to force
+specific untracked paths to be treated as binary files when diffing.
+Binary files are displayed using a hexdump display.
+
+.. sourcecode:: sh
+
+   # Treat *.exr files as binary files.
+   *.exr binary
 
 cola.fontdiff
 -------------
