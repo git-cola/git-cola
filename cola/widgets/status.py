@@ -324,20 +324,32 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             item.setHidden(True)
 
     def _restore_selection(self):
+        """Apply the old selection to the newly updated items"""
+        # This function is called after a new set of items have been added to
+        # the per-category file lists. Its purpose is to either restore the
+        # existing selection or to create a new intuitive selection based on
+        # a combination of the old items, the old selection and the new items.
         if not self.old_selection or not self.old_contents:
             return
+        # The old set of categorized files.
         old_c = self.old_contents
+        # The old selection.
         old_s = self.old_selection
+        # The current/new set of categorized files.
         new_c = self.contents()
 
         def mkselect(lst, widget_getter):
+            """Return a closure to select items in the specified category"""
             def select(item, current=False):
+                """Select the widget item based on the list index"""
+                # The item lists and widget indexes have a 1:1 correspondence.
+                # Lookup the item filename in the list and use that index to
+                # retrieve the widget item and select it.
                 idx = lst.index(item)
                 item = widget_getter(idx)
                 if current:
                     self.setCurrentItem(item)
                 item.setSelected(True)
-
             return select
 
         select_staged = mkselect(new_c.staged, self._staged_item)
@@ -363,10 +375,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if category == self.idx_header:
                 item = self.invisibleRootItem().child(idx)
                 if item is not None:
-                    self.blockSignals(True)
-                    self.setCurrentItem(item)
-                    item.setSelected(True)
-                    self.blockSignals(False)
+                    with qtutils.BlockSignals(self):
+                        self.setCurrentItem(item)
+                        item.setSelected(True)
                     self.show_selection()
                 return
             # Reselect the current item
@@ -385,13 +396,24 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # When reselecting we only care that the items are selected;
         # we do not need to rerun the callbacks which were triggered
         # above.  Block signals to skip the callbacks.
-        self.blockSignals(True)
-        for (new, old, sel, reselect) in saved_selection:
-            for item in sel:
-                if item in new:
-                    reselect(item, current=False)
-        self.blockSignals(False)
 
+        with qtutils.BlockSignals(self):
+            for (new, old, sel, reselect) in saved_selection:
+                for item in sel:
+                    if item in new:
+                        reselect(item, current=False)
+
+        # The status widget is used to interactively work your way down the
+        # list of Staged, Unmerged, Modified and Untracked items and perform
+        # an operation on them.
+        #
+        # For Staged items we intend to work our way down the list of Staged
+        # items while we unstage each item. For every other category we work
+        # our way down the list of {Unmerged,Modified,Untracked} items while
+        # we stage each item.
+        #
+        # The following block of code implements the behavior of selecting
+        # the next item based on the previous selection.
         for (new, old, sel, reselect) in saved_selection:
             # When modified is staged, select the next modified item
             # When unmerged is staged, select the next unmerged item
@@ -524,7 +546,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         current = self.currentItem()
         if not current:
             return None
-        idx = self.indexFromItem(current, 0)
+        idx = self.indexFromItem(current)
         if idx.parent().isValid():
             parent_idx = idx.parent()
             entry = (parent_idx.row(), idx.row())
@@ -555,39 +577,44 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
-        self._set_subtree(
-            items,
-            self.idx_staged,
-            N_('Staged'),
-            staged=True,
-            deleted_set=self.m.staged_deleted,
-        )
+        with qtutils.BlockSignals(self):
+            self._set_subtree(
+                items,
+                self.idx_staged,
+                N_('Staged'),
+                staged=True,
+                deleted_set=self.m.staged_deleted,
+            )
 
     def _set_modified(self, items):
         """Adds items to the 'Modified' subtree."""
-        self._set_subtree(
-            items,
-            self.idx_modified,
-            N_('Modified'),
-            deleted_set=self.m.unstaged_deleted,
-        )
+        with qtutils.BlockSignals(self):
+            self._set_subtree(
+                items,
+                self.idx_modified,
+                N_('Modified'),
+                deleted_set=self.m.unstaged_deleted,
+            )
 
     def _set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
         deleted_set = set([path for path in items if not core.exists(path)])
-        self._set_subtree(
-            items, self.idx_unmerged, N_('Unmerged'), deleted_set=deleted_set
-        )
+        with qtutils.BlockSignals(self):
+            self._set_subtree(
+                items, self.idx_unmerged, N_('Unmerged'), deleted_set=deleted_set
+            )
 
     def _set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
-        self._set_subtree(items, self.idx_untracked, N_('Untracked'), untracked=True)
+        with qtutils.BlockSignals(self):
+            self._set_subtree(
+                items, self.idx_untracked, N_('Untracked'), untracked=True
+            )
 
     def _set_subtree(
         self, items, idx, parent_title, staged=False, untracked=False, deleted_set=None
     ):
         """Add a list of items to a treewidget item."""
-        self.blockSignals(True)
         parent = self.topLevelItem(idx)
         hide = not bool(items)
         parent.setHidden(hide)
@@ -604,7 +631,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             )
             parent.addChild(treeitem)
         self._expand_items(idx, items)
-        self.blockSignals(False)
+
         if prefs.status_show_totals(self.context):
             parent.setText(0, '%s (%s)' % (parent_title, len(items)))
 

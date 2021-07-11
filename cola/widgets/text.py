@@ -45,13 +45,18 @@ class LineEdit(QtWidgets.QLineEdit):
         return self._get_value(self)
 
     def set_value(self, value, block=False):
+        """Update the widget to the specified value"""
         if block:
-            blocksig = self.blockSignals(True)
+            with qtutils.BlockSignals(self):
+                self._set_value(value)
+        else:
+            self._set_value(value)
+
+    def _set_value(self, value):
+        """Implementation helper to update the widget to the specified value"""
         pos = self.cursorPosition()
         self.setText(value)
         self.setCursorPosition(pos)
-        if block:
-            self.blockSignals(blocksig)
 
 
 class LineEditCursorPosition(object):
@@ -109,9 +114,15 @@ class BaseTextEditExtension(QtCore.QObject):
         return self._get_value(self.widget)
 
     def set_value(self, value, block=False):
+        """Update the widget to the specified value"""
         if block:
-            blocksig = self.widget.blockSignals(True)
+            with qtutils.BlockSignals(self):
+                self._set_value(value)
+        else:
+            self._set_value(value)
 
+    def _set_value(self, value):
+        """Implementation helper to update the widget to the specified value"""
         # Save cursor position
         offset, selection_text = self.offset_and_selection()
         old_value = get(self.widget)
@@ -143,9 +154,6 @@ class BaseTextEditExtension(QtCore.QObject):
             cursor = self.widget.textCursor()
             cursor.movePosition(QtGui.QTextCursor.StartOfLine)
             self.widget.setTextCursor(cursor)
-
-        if block:
-            self.widget.blockSignals(blocksig)
 
     def set_cursor_position(self, new_position):
         cursor = self.widget.textCursor()
