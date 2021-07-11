@@ -14,7 +14,7 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
         self.run_git('add', 'A', 'B')
 
         self.git.commit(m='initial commit')
-        log = self.run_git('log', '--pretty=oneline')
+        log = self.run_git('-c', 'log.showsignature=false', 'log', '--pretty=oneline')
 
         self.assertEqual(len(log.splitlines()), 1)
 
