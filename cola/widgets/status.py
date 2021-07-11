@@ -406,12 +406,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # Reselect items that were previously selected and still exist in the
         # current path lists. This handles a common case such as a Ctrl-R
         # refresh which results in the same exact path state.
+        did_reselect = False
 
         with qtutils.BlockSignals(self):
             for (new, old, sel, reselect) in saved_selection:
                 for item in sel:
                     if item in new:
                         reselect(item, current=False)
+                        did_reselect = True
 
         # The status widget is used to interactively work your way down the
         # list of Staged, Unmerged, Modified and Untracked items and perform
@@ -443,6 +445,17 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                     if j in new:
                         reselect(j, current=True)
                         return
+
+        # If we already reselected stuff then there's nothing more to do.
+        if did_reselect:
+            return
+        # If we got this far then nothing was reselected and made current.
+        # Try a few more heuristics that we can use to keep something selected.
+        if self.old_current_item:
+            category, idx = self.old_current_item
+            _transplant_selection_across_sections(
+                category, idx, self.previous_contents, saved_selection
+            )
 
     def _restore_scrollbars(self):
         """Restore scrollbars to the stored values"""
@@ -1438,5 +1451,84 @@ def _apply_toplevel_selection(widget, category, idx):
                 widget.setCurrentItem(item)
                 item.setSelected(True)
             widget.show_selection()
-
     return is_top_level_item
+
+
+def _transplant_selection_across_sections(
+    category, idx, previous_contents, saved_selection
+):
+    """Transplant the selection to a different category"""
+    # This function is used when the selection would otherwise become empty.
+    # Apply heuristics to select the items based on the previous state.
+    if not previous_contents:
+        return
+    staged, unmerged, modified, untracked = saved_selection
+    prev_staged, prev_unmerged, prev_modified, prev_untracked = previous_contents
+
+    # The current set of paths.
+    staged_paths = staged[NEW_PATHS_IDX]
+    unmerged_paths = unmerged[NEW_PATHS_IDX]
+    modified_paths = modified[NEW_PATHS_IDX]
+    untracked_paths = untracked[NEW_PATHS_IDX]
+
+    # These callbacks select a path in the corresponding widget subtree lists.
+    select_staged = staged[SELECT_FN_IDX]
+    select_unmerged = unmerged[SELECT_FN_IDX]
+    select_modified = modified[SELECT_FN_IDX]
+    select_untracked = untracked[SELECT_FN_IDX]
+
+    if category == STAGED_IDX:
+        # Staged files can become Unmerged, Modified or Untracked.
+        # If we previously had a staged file selected then try to select
+        # it in either the Unmerged, Modified or Untracked sections.
+        try:
+            old_path = prev_staged[idx]
+        except IndexError:
+            return
+        if old_path in unmerged_paths:
+            select_unmerged(old_path, current=True)
+        elif old_path in modified_paths:
+            select_modified(old_path, current=True)
+        elif old_path in untracked_paths:
+            select_untracked(old_path, current=True)
+
+    elif category == UNMERGED_IDX:
+        # Unmerged files can become Staged, Modified or Untracked.
+        # If we previously had an unmerged file selected then try to select it in
+        # the Staged, Modified or Untracked sections.
+        try:
+            old_path = prev_unmerged[idx]
+        except IndexError:
+            return
+        if old_path in staged_paths:
+            select_staged(old_path, current=True)
+        elif old_path in modified_paths:
+            select_modified(old_path, current=True)
+        elif old_path in untracked_paths:
+            select_untracked(old_path, current=True)
+
+    elif category == MODIFIED_IDX:
+        # If we previously had a modified file selected then try to select
+        # it in either the Staged or Untracked sections.
+        try:
+            old_path = prev_modified[idx]
+        except IndexError:
+            return
+        if old_path in staged_paths:
+            select_staged(old_path, current=True)
+        elif old_path in untracked_paths:
+            select_untracked(old_path, current=True)
+
+    elif category == UNTRACKED_IDX:
+        # If we previously had an untracked file selected then try to select
+        # it in the Modified or Staged section. Modified is less common, but
+        # it's possible for a file to be untracked and then the user adds and
+        # modifies the file before we've refreshed our state.
+        try:
+            old_path = prev_untracked[idx]
+        except IndexError:
+            return
+        if old_path in modified_paths:
+            select_modified(old_path, current=True)
+        elif old_path in staged_paths:
+            select_staged(old_path, current=True)
