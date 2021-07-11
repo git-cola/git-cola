@@ -149,6 +149,7 @@ Thanks
 * Matěj Šmíd
 * Matthew Levine
 * Matthias Mailänder
+* Max Harmathy
 * Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
