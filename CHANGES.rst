@@ -11,6 +11,15 @@ Usability, bells and whistles
   (`#1146 <https://github.com/git-cola/git-cola/pull/1146>`_)
   (`#1084 <https://github.com/git-cola/git-cola/issues/1084>`_)
 
+.. _v3.10.1:
+
+v3.10.1
+=======
+
+Fixes
+-----
+* Patch release to fix a typo in the Interactive Rebase feature.
+
 .. _v3.10:
 
 v3.10
