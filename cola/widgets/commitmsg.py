@@ -399,9 +399,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def set_linebreak(self, brk):
         self._linebreak = brk
         self.description.set_linebreak(brk)
-        blocksignals = self.autowrap_action.blockSignals(True)
-        self.autowrap_action.setChecked(brk)
-        self.autowrap_action.blockSignals(blocksignals)
+        with qtutils.BlockSignals(self.autowrap_action):
+            self.autowrap_action.setChecked(brk)
 
     def setFont(self, font):
         """Pass the setFont() calls down to the text widgets"""
@@ -411,10 +410,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def set_mode(self, mode):
         can_amend = not self.model.is_merging
         checked = mode == self.model.mode_amend
-        blocksignals = self.amend_action.blockSignals(True)
-        self.amend_action.setEnabled(can_amend)
-        self.amend_action.setChecked(checked)
-        self.amend_action.blockSignals(blocksignals)
+        with qtutils.BlockSignals(self.amend_action):
+            self.amend_action.setEnabled(can_amend)
+            self.amend_action.setChecked(checked)
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""

@@ -104,16 +104,16 @@ class FormWidget(QtWidgets.QWidget):
 
 
 def set_widget_value(widget, value):
-    widget.blockSignals(True)
-    if isinstance(widget, QtWidgets.QSpinBox):
-        widget.setValue(value)
-    elif isinstance(widget, QtWidgets.QLineEdit):
-        widget.setText(value)
-    elif isinstance(widget, QtWidgets.QCheckBox):
-        widget.setChecked(value)
-    elif isinstance(widget, qtutils.ComboBox):
-        widget.set_value(value)
-    widget.blockSignals(False)
+    """Set a value on a widget without emitting notifications"""
+    with qtutils.BlockSignals(widget):
+        if isinstance(widget, QtWidgets.QSpinBox):
+            widget.setValue(value)
+        elif isinstance(widget, QtWidgets.QLineEdit):
+            widget.setText(value)
+        elif isinstance(widget, QtWidgets.QCheckBox):
+            widget.setChecked(value)
+        elif isinstance(widget, qtutils.ComboBox):
+            widget.set_value(value)
 
 
 class RepoFormWidget(FormWidget):
@@ -272,17 +272,17 @@ class SettingsFormWidget(FormWidget):
         self.font_size.valueChanged.connect(self.font_size_changed)
 
     def update_from_config(self):
+        """Update widgets to the current config values"""
         FormWidget.update_from_config(self)
         context = self.context
-        block = self.fixed_font.blockSignals(True)
-        font = qtutils.diff_font(context)
-        self.fixed_font.setCurrentFont(font)
-        self.fixed_font.blockSignals(block)
 
-        block = self.font_size.blockSignals(True)
-        font_size = font.pointSize()
-        self.font_size.setValue(font_size)
-        self.font_size.blockSignals(block)
+        with qtutils.BlockSignals(self.fixed_font):
+            font = qtutils.diff_font(context)
+            self.fixed_font.setCurrentFont(font)
+
+        with qtutils.BlockSignals(self.font_size):
+            font_size = font.pointSize()
+            self.font_size.setValue(font_size)
 
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
