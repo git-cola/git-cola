@@ -1445,13 +1445,43 @@ def _apply_toplevel_selection(widget, category, idx):
     """
     is_top_level_item = category == HEADER_IDX
     if is_top_level_item:
-        item = widget.invisibleRootItem().child(idx)
+        root_item = widget.invisibleRootItem()
+        item = root_item.child(idx)
+
+        if item is not None and item.childCount() == 0:
+            # The item now has no children. Select a different top-level item
+            # corresponding to the previously selected item.
+            if idx == STAGED_IDX:
+                # If "Staged" was previously selected try "Modified" and "Untracked".
+                item = _get_first_item_with_children(
+                    root_item.child(MODIFIED_IDX), root_item.child(UNTRACKED_IDX)
+                )
+            elif idx == UNMERGED_IDX:
+                # If "Unmerged" was previously selected try "Staged".
+                item = _get_first_item_with_children(root_item.child(STAGED_IDX))
+            elif idx == MODIFIED_IDX:
+                # If "Modified" was previously selected try "Staged" or "Untracked".
+                item = _get_first_item_with_children(
+                    root_item.child(STAGED_IDX), root_item.child(UNTRACKED_IDX)
+                )
+            elif idx == UNTRACKED_IDX:
+                # If "Untracked" was previously selected try "Staged".
+                item = _get_first_item_with_children(root_item.child(STAGED_IDX))
+
         if item is not None:
             with qtutils.BlockSignals(widget):
                 widget.setCurrentItem(item)
                 item.setSelected(True)
             widget.show_selection()
     return is_top_level_item
+
+
+def _get_first_item_with_children(*items):
+    """Return the first item that contains child items"""
+    for item in items:
+        if item.childCount() > 0:
+            return item
+    return None
 
 
 def _transplant_selection_across_sections(
