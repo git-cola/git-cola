@@ -110,6 +110,7 @@ class StatusWidget(QtWidgets.QFrame):
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
     about_to_update = Signal()
+    set_previous_contents = Signal(list, list, list, list)
     updated = Signal()
     diff_text_changed = Signal()
 
@@ -148,6 +149,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.old_selection = None
         self.old_contents = None
         self.old_current_item = None
+        self.previous_contents = None
         self.was_visible = True
         self.expanded_items = set()
 
@@ -289,15 +291,24 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.delete_untracked_files_action.setIcon(icons.discard())
 
-        about_to_update = self._about_to_update
-        self.about_to_update.connect(about_to_update, type=Qt.QueuedConnection)
+        self.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
+        self.set_previous_contents.connect(
+            self._set_previous_contents, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         self.diff_text_changed.connect(
             self._make_current_item_visible, type=Qt.QueuedConnection
         )
 
+        # The model is stored as self.m because self.model() is a
+        # QTreeWidgetItem method that returns a QAbstractItemModel.
         self.m = context.model
+        # Forward the previous_contents notification through self.set_previous_contents.
+        self.m.add_observer(
+            self.m.message_previous_contents, self.set_previous_contents.emit
+        )
+        # Forward the about_to_update notification through self.about_to_udpate.
         self.m.add_observer(self.m.message_about_to_update, self.about_to_update.emit)
+        # Foward the updated notification through self.updated.
         self.m.add_observer(self.m.message_updated, self.updated.emit)
         self.m.add_observer(
             self.m.message_diff_text_changed, self.diff_text_changed.emit
@@ -519,6 +530,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _subtree_item(self, idx, itemidx):
         parent = self.topLevelItem(idx)
         return parent.child(itemidx)
+
+    def _set_previous_contents(self, staged, unmerged, modified, untracked):
+        """Callback triggered right before the model changes its contents"""
+        self.previous_contents = selection.State(staged, unmerged, modified, untracked)
 
     def _about_to_update(self):
         self._save_scrollbars()
