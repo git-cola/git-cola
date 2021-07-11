@@ -917,13 +917,15 @@ class BlockSignals(object):
         self.values = {}
 
     def __enter__(self):
+        """Block Qt signals for all of the captured widgets"""
         for w in self.widgets:
-            self.values[w] = w.blockSignals(True)
+            self.values[id(w)] = w.blockSignals(True)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """Restore Qt signals when we exit the scope"""
         for w in self.widgets:
-            w.blockSignals(self.values[w])
+            w.blockSignals(self.values[id(w)])
 
 
 class Channel(QtCore.QObject):
