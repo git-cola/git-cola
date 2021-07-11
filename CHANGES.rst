@@ -1,3 +1,12 @@
+.. _v3.10.1:
+
+v3.10.1
+=======
+
+Fixes
+-----
+* Patch release to fix a typo in the Interactive Rebase feature.
+
 .. _v3.10:
 
 v3.10
