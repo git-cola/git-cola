@@ -1080,3 +1080,60 @@ class ImageFormats(object):
     def ok(self, filename):
         _, ext = os.path.splitext(filename)
         return ext.lower() in self.extensions
+
+
+def set_scrollbar_values(widget, hscroll_value, vscroll_value):
+    """Set scrollbars to the specified values"""
+    hscroll = widget.horizontalScrollBar()
+    if hscroll and hscroll_value is not None:
+        hscroll.setValue(hscroll_value)
+
+    vscroll = widget.verticalScrollBar()
+    if vscroll and vscroll_value is not None:
+        vscroll.setValue(vscroll_value)
+
+
+def get_scrollbar_values(widget):
+    """Return the current (hscroll, vscroll) scrollbar values for a widget"""
+    hscroll = widget.horizontalScrollBar()
+    if hscroll:
+        hscroll_value = get(hscroll)
+    else:
+        hscroll_value = None
+    vscroll = widget.verticalScrollBar()
+    if vscroll:
+        vscroll_value = get(vscroll)
+    else:
+        vscroll_value = None
+    return (hscroll_value, vscroll_value)
+
+
+def scroll_to_item(widget, item):
+    """Scroll to an item while retaining the horizontal scroll position"""
+    hscroll = None
+    hscrollbar = widget.horizontalScrollBar()
+    if hscrollbar:
+        hscroll = get(hscrollbar)
+    widget.scrollToItem(item)
+    if hscroll is not None:
+        hscrollbar.setValue(hscroll)
+
+
+def select_item(widget, item):
+    """Scroll to and make a QTreeWidget item selected and current"""
+    scroll_to_item(widget, item)
+    widget.setCurrentItem(item)
+    item.setSelected(True)
+
+
+def get_selected_values(widget, top_level_idx, values):
+    """Map the selected items under the top-level item to the values list"""
+    # Get the top-level item
+    item = widget.topLevelItem(top_level_idx)
+    return tree_selection(item, values)
+
+
+def get_selected_items(widget, idx):
+    """Return the selected items under the top-level item"""
+    item = widget.topLevelItem(idx)
+    return tree_selection_items(item)

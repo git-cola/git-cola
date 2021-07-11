@@ -28,6 +28,21 @@ from . import defs
 from . import text
 
 
+# Top-level status widget item indexes.
+HEADER_IDX = -1
+STAGED_IDX = 0
+UNMERGED_IDX = 1
+MODIFIED_IDX = 2
+UNTRACKED_IDX = 3
+END_IDX = 4
+
+# Indexes into the saved_selection entries.
+NEW_PATHS_IDX = 0
+OLD_PATHS_IDX = 1
+SELECTION_IDX = 2
+SELECT_FN_IDX = 3
+
+
 class StatusWidget(QtWidgets.QFrame):
     """
     Provides a git-status-like repository widget.
@@ -97,14 +112,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     about_to_update = Signal()
     updated = Signal()
     diff_text_changed = Signal()
-
-    # Item categories
-    idx_header = -1
-    idx_staged = 0
-    idx_unmerged = 1
-    idx_modified = 2
-    idx_untracked = 3
-    idx_end = 4
 
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
@@ -297,14 +304,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.show_selection)
-        self.itemDoubleClicked.connect(self._double_clicked)
+        self.itemDoubleClicked.connect(cmds.run(cmds.StageOrUnstage, self.context))
         self.itemCollapsed.connect(lambda x: self._update_column_widths())
         self.itemExpanded.connect(lambda x: self._update_column_widths())
 
     def _make_current_item_visible(self):
         item = self.currentItem()
         if item:
-            self.scroll_to_item(item)
+            qtutils.scroll_to_item(self, item)
 
     def _add_toplevel_item(self, txt, icon, hide=False):
         context = self.context
@@ -338,24 +345,18 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # The current/new set of categorized files.
         new_c = self.contents()
 
-        def mkselect(lst, widget_getter):
-            """Return a closure to select items in the specified category"""
-            def select(item, current=False):
-                """Select the widget item based on the list index"""
-                # The item lists and widget indexes have a 1:1 correspondence.
-                # Lookup the item filename in the list and use that index to
-                # retrieve the widget item and select it.
-                idx = lst.index(item)
-                item = widget_getter(idx)
-                if current:
-                    self.setCurrentItem(item)
-                item.setSelected(True)
-            return select
-
-        select_staged = mkselect(new_c.staged, self._staged_item)
-        select_unmerged = mkselect(new_c.unmerged, self._unmerged_item)
-        select_modified = mkselect(new_c.modified, self._modified_item)
-        select_untracked = mkselect(new_c.untracked, self._untracked_item)
+        select_staged = partial(
+            _select_item, self, new_c.staged, self._staged_item
+        )
+        select_unmerged = partial(
+            _select_item, self, new_c.unmerged, self._unmerged_item
+        )
+        select_modified = partial(
+            _select_item, self, new_c.modified, self._modified_item
+        )
+        select_untracked = partial(
+            _select_item, self, new_c.untracked, self._untracked_item
+        )
 
         saved_selection = [
             (set(new_c.staged), old_c.staged, set(old_s.staged), select_staged),
@@ -372,30 +373,28 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # Restore the current item
         if self.old_current_item:
             category, idx = self.old_current_item
-            if category == self.idx_header:
-                item = self.invisibleRootItem().child(idx)
-                if item is not None:
-                    with qtutils.BlockSignals(self):
-                        self.setCurrentItem(item)
-                        item.setSelected(True)
-                    self.show_selection()
+            if _apply_toplevel_selection(self, category, idx):
                 return
             # Reselect the current item
             selection_info = saved_selection[category]
-            new = selection_info[0]
-            old = selection_info[1]
-            reselect = selection_info[3]
+            new = selection_info[NEW_PATHS_IDX]
+            old = selection_info[OLD_PATHS_IDX]
+            reselect = selection_info[SELECT_FN_IDX]
             try:
                 item = old[idx]
             except IndexError:
-                return
-            if item in new:
+                item = None
+            if item and item in new:
                 reselect(item, current=True)
 
-        # Restore selection
-        # When reselecting we only care that the items are selected;
-        # we do not need to rerun the callbacks which were triggered
-        # above.  Block signals to skip the callbacks.
+        # Restore previously selected items.
+        # When reselecting in this section we only care that the items are
+        # selected; we do not need to rerun the callbacks which were triggered
+        # above for the current item.  Block signals to skip the callbacks.
+        #
+        # Reselect items that were previously selected and still exist in the
+        # current path lists. This handles a common case such as a Ctrl-R
+        # refresh which results in the same exact path state.
 
         with qtutils.BlockSignals(self):
             for (new, old, sel, reselect) in saved_selection:
@@ -435,34 +434,29 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                         return
 
     def _restore_scrollbars(self):
-        vscroll = self.verticalScrollBar()
-        if vscroll and self.old_vscroll is not None:
-            vscroll.setValue(self.old_vscroll)
-            self.old_vscroll = None
-
-        hscroll = self.horizontalScrollBar()
-        if hscroll and self.old_hscroll is not None:
-            hscroll.setValue(self.old_hscroll)
-            self.old_hscroll = None
+        """Restore scrollbars to the stored values"""
+        qtutils.set_scrollbar_values(self, self.old_hscroll, self.old_vscroll)
+        self.old_hscroll = None
+        self.old_vscroll = None
 
     def _stage_selection(self):
         """Stage or unstage files according to the selection"""
         context = self.context
         selected_indexes = self.selected_indexes()
         is_header = any(
-            category == self.idx_header for (category, idx) in selected_indexes
+            category == HEADER_IDX for (category, idx) in selected_indexes
         )
         if is_header:
             is_staged = any(
-                idx == self.idx_staged and category == self.idx_header
+                idx == STAGED_IDX and category == HEADER_IDX
                 for (category, idx) in selected_indexes
             )
             is_modified = any(
-                idx == self.idx_modified and category == self.idx_header
+                idx == MODIFIED_IDX and category == HEADER_IDX
                 for (category, idx) in selected_indexes
             )
             is_untracked = any(
-                idx == self.idx_untracked and category == self.idx_header
+                idx == UNTRACKED_IDX and category == HEADER_IDX
                 for (category, idx) in selected_indexes
             )
             # A header item: 'Staged', 'Modified' or 'Untracked'.
@@ -492,30 +486,30 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         cmds.do(cmds.StageOrUnstage, context)
 
     def _staged_item(self, itemidx):
-        return self._subtree_item(self.idx_staged, itemidx)
+        return self._subtree_item(STAGED_IDX, itemidx)
 
     def _modified_item(self, itemidx):
-        return self._subtree_item(self.idx_modified, itemidx)
+        return self._subtree_item(MODIFIED_IDX, itemidx)
 
     def _unmerged_item(self, itemidx):
-        return self._subtree_item(self.idx_unmerged, itemidx)
+        return self._subtree_item(UNMERGED_IDX, itemidx)
 
     def _untracked_item(self, itemidx):
-        return self._subtree_item(self.idx_untracked, itemidx)
+        return self._subtree_item(UNTRACKED_IDX, itemidx)
 
     def _unstaged_item(self, itemidx):
         # is it modified?
-        item = self.topLevelItem(self.idx_modified)
+        item = self.topLevelItem(MODIFIED_IDX)
         count = item.childCount()
         if itemidx < count:
             return item.child(itemidx)
         # is it unmerged?
-        item = self.topLevelItem(self.idx_unmerged)
+        item = self.topLevelItem(UNMERGED_IDX)
         count += item.childCount()
         if itemidx < count:
             return item.child(itemidx)
         # is it untracked?
-        item = self.topLevelItem(self.idx_untracked)
+        item = self.topLevelItem(UNTRACKED_IDX)
         count += item.childCount()
         if itemidx < count:
             return item.child(itemidx)
@@ -531,13 +525,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self._save_selection()
 
     def _save_scrollbars(self):
-        vscroll = self.verticalScrollBar()
-        if vscroll:
-            self.old_vscroll = get(vscroll)
-
-        hscroll = self.horizontalScrollBar()
-        if hscroll:
-            self.old_hscroll = get(hscroll)
+        """Store the scrollbar values for later application"""
+        hscroll, vscroll = qtutils.get_scrollbar_values(self)
+        if hscroll is not None:
+            self.old_hscroll = hscroll
+        if vscroll is not None:
+            self.old_vscroll = vscroll
 
     def current_item(self):
         s = self.selected_indexes()
@@ -551,7 +544,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             parent_idx = idx.parent()
             entry = (parent_idx.row(), idx.row())
         else:
-            entry = (self.idx_header, idx.row())
+            entry = (HEADER_IDX, idx.row())
         return entry
 
     def _save_selection(self):
@@ -580,7 +573,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         with qtutils.BlockSignals(self):
             self._set_subtree(
                 items,
-                self.idx_staged,
+                STAGED_IDX,
                 N_('Staged'),
                 staged=True,
                 deleted_set=self.m.staged_deleted,
@@ -591,7 +584,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         with qtutils.BlockSignals(self):
             self._set_subtree(
                 items,
-                self.idx_modified,
+                MODIFIED_IDX,
                 N_('Modified'),
                 deleted_set=self.m.unstaged_deleted,
             )
@@ -601,14 +594,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         deleted_set = set([path for path in items if not core.exists(path)])
         with qtutils.BlockSignals(self):
             self._set_subtree(
-                items, self.idx_unmerged, N_('Unmerged'), deleted_set=deleted_set
+                items, UNMERGED_IDX, N_('Unmerged'), deleted_set=deleted_set
             )
 
     def _set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
         with qtutils.BlockSignals(self):
             self._set_subtree(
-                items, self.idx_untracked, N_('Untracked'), untracked=True
+                items, UNTRACKED_IDX, N_('Untracked'), untracked=True
             )
 
     def _set_subtree(
@@ -667,7 +660,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if selected_indexes:
             category, idx = selected_indexes[0]
             # A header item e.g. 'Staged', 'Modified', etc.
-            if category == self.idx_header:
+            if category == HEADER_IDX:
                 return self._create_header_context_menu(menu, idx)
 
         if s.staged:
@@ -729,25 +722,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_header_context_menu(self, menu, idx):
         context = self.context
-        if idx == self.idx_staged:
+        if idx == STAGED_IDX:
             menu.addAction(
                 icons.remove(), N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
             )
-        elif idx == self.idx_unmerged:
+        elif idx == UNMERGED_IDX:
             action = menu.addAction(
                 icons.add(),
                 cmds.StageUnmerged.name(),
                 cmds.run(cmds.StageUnmerged, context),
             )
             action.setShortcut(hotkeys.STAGE_SELECTION)
-        elif idx == self.idx_modified:
+        elif idx == MODIFIED_IDX:
             action = menu.addAction(
                 icons.add(),
                 cmds.StageModified.name(),
                 cmds.run(cmds.StageModified, context),
             )
             action.setShortcut(hotkeys.STAGE_SELECTION)
-        elif idx == self.idx_untracked:
+        elif idx == UNTRACKED_IDX:
             action = menu.addAction(
                 icons.add(),
                 cmds.StageUntracked.name(),
@@ -945,7 +938,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 parent_idx = idx.parent()
                 entry = (parent_idx.row(), idx.row())
             else:
-                entry = (self.idx_header, idx.row())
+                entry = (HEADER_IDX, idx.row())
             result.append(entry)
         return result
 
@@ -956,11 +949,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
 
     def contents(self):
+        """Return all of the current files in a selection.State container"""
         return selection.State(
             self.m.staged, self.m.unmerged, self.m.modified, self.m.untracked
         )
 
     def all_files(self):
+        """Return all of the current active files as a flast list"""
         c = self.contents()
         return c.staged + c.unmerged + c.modified + c.untracked
 
@@ -983,10 +978,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def select_by_index(self, idx):
         c = self.contents()
         to_try = [
-            (c.staged, self.idx_staged),
-            (c.unmerged, self.idx_unmerged),
-            (c.modified, self.idx_modified),
-            (c.untracked, self.idx_untracked),
+            (c.staged, STAGED_IDX),
+            (c.unmerged, UNMERGED_IDX),
+            (c.modified, MODIFIED_IDX),
+            (c.untracked, UNTRACKED_IDX),
         ]
         for content, toplevel_idx in to_try:
             if not content:
@@ -995,71 +990,44 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 parent = self.topLevelItem(toplevel_idx)
                 item = parent.child(idx)
                 if item is not None:
-                    self.select_item(item)
+                    qtutils.select_item(self, item)
                 return
             idx -= len(content)
 
-    def scroll_to_item(self, item):
-        # First, scroll to the item, but keep the original hscroll
-        hscroll = None
-        hscrollbar = self.horizontalScrollBar()
-        if hscrollbar:
-            hscroll = get(hscrollbar)
-        self.scrollToItem(item)
-        if hscroll is not None:
-            hscrollbar.setValue(hscroll)
-
-    def select_item(self, item):
-        self.scroll_to_item(item)
-        self.setCurrentItem(item)
-        item.setSelected(True)
-
     def staged(self):
-        return self._subtree_selection(self.idx_staged, self.m.staged)
+        return qtutils.get_selected_values(self, STAGED_IDX, self.m.staged)
 
     def unstaged(self):
         return self.unmerged() + self.modified() + self.untracked()
 
     def modified(self):
-        return self._subtree_selection(self.idx_modified, self.m.modified)
+        return qtutils.get_selected_values(self, MODIFIED_IDX, self.m.modified)
 
     def unmerged(self):
-        return self._subtree_selection(self.idx_unmerged, self.m.unmerged)
+        return qtutils.get_selected_values(self, UNMERGED_IDX, self.m.unmerged)
 
     def untracked(self):
-        return self._subtree_selection(self.idx_untracked, self.m.untracked)
+        return qtutils.get_selected_values(self, UNTRACKED_IDX, self.m.untracked)
 
     def staged_items(self):
-        return self._subtree_selection_items(self.idx_staged)
+        return qtutils.get_selected_items(self, STAGED_IDX)
 
     def unstaged_items(self):
         return self.unmerged_items() + self.modified_items() + self.untracked_items()
 
     def modified_items(self):
-        return self._subtree_selection_items(self.idx_modified)
+        return qtutils.get_selected_items(self, MODIFIED_IDX)
 
     def unmerged_items(self):
-        return self._subtree_selection_items(self.idx_unmerged)
+        return qtutils.get_selected_items(self, UNMERGED_IDX)
 
     def untracked_items(self):
-        return self._subtree_selection_items(self.idx_untracked)
-
-    def _subtree_selection(self, idx, items):
-        item = self.topLevelItem(idx)
-        return qtutils.tree_selection(item, items)
-
-    def _subtree_selection_items(self, idx):
-        item = self.topLevelItem(idx)
-        return qtutils.tree_selection_items(item)
-
-    def _double_clicked(self, _item, _idx):
-        """Called when an item is double-clicked in the repo status tree."""
-        cmds.do(cmds.StageOrUnstage, self.context)
+        return qtutils.get_selected_items(self, UNTRACKED_IDX)
 
     def show_selection(self):
         """Show the selected item."""
         context = self.context
-        self.scroll_to_item(self.currentItem())
+        qtutils.scroll_to_item(self, self.currentItem())
         # Sync the selection model
         selected = self.selection()
         selection_model = self.selection_model
@@ -1076,22 +1044,22 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # A header item e.g. 'Staged', 'Modified', etc.
         category, idx = selected_indexes[0]
-        header = category == self.idx_header
+        header = category == HEADER_IDX
         if header:
             cls = {
-                self.idx_staged: cmds.DiffStagedSummary,
-                self.idx_modified: cmds.Diffstat,
+                STAGED_IDX: cmds.DiffStagedSummary,
+                MODIFIED_IDX: cmds.Diffstat,
                 # TODO implement UnmergedSummary
-                # self.idx_unmerged: cmds.UnmergedSummary,
-                self.idx_untracked: cmds.UntrackedSummary,
+                # UNMERGED_IDX: cmds.UnmergedSummary,
+                UNTRACKED_IDX: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
             cmds.do(cls, context)
             return
 
-        staged = category == self.idx_staged
-        modified = category == self.idx_modified
-        unmerged = category == self.idx_unmerged
-        untracked = category == self.idx_untracked
+        staged = category == STAGED_IDX
+        modified = category == MODIFIED_IDX
+        unmerged = category == UNMERGED_IDX
+        untracked = category == UNTRACKED_IDX
 
         if staged:
             item = self.staged_items()[0]
@@ -1139,10 +1107,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def select_header(self):
         """Select an active header, which triggers a diffstat"""
         for idx in (
-            self.idx_staged,
-            self.idx_unmerged,
-            self.idx_modified,
-            self.idx_untracked,
+            STAGED_IDX,
+            UNMERGED_IDX,
+            MODIFIED_IDX,
+            UNTRACKED_IDX,
         ):
             item = self.topLevelItem(idx)
             if item.childCount() > 0:
@@ -1157,10 +1125,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             selected_indexes = self.selected_indexes()
             if selected_indexes:
                 category, toplevel_idx = selected_indexes[0]
-                if category == self.idx_header:
+                if category == HEADER_IDX:
                     item = self.itemAbove(self.topLevelItem(toplevel_idx))
                     if item is not None:
-                        self.select_item(item)
+                        qtutils.select_item(self, item)
                         return
             if all_files:
                 self.select_by_index(len(all_files) - 1)
@@ -1177,10 +1145,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             selected_indexes = self.selected_indexes()
             if selected_indexes:
                 category, toplevel_idx = selected_indexes[0]
-                if category == self.idx_header:
+                if category == HEADER_IDX:
                     item = self.itemBelow(self.topLevelItem(toplevel_idx))
                     if item is not None:
-                        self.select_item(item)
+                        qtutils.select_item(self, item)
                         return
             if all_files:
                 self.select_by_index(0)
@@ -1428,3 +1396,32 @@ class CustomizeCopyActions(standard.Dialog):
     def table_selection_changed(self):
         items = self.table.selectedItems()
         self.remove_button.setEnabled(bool(items))
+
+
+def _select_item(widget, path_list, widget_getter, item, current=False):
+    """Select the widget item based on the list index"""
+    # The path lists and widget indexes have a 1:1 correspondence.
+    # Lookup the item filename in the list and use that index to
+    # retrieve the widget item and select it.
+    idx = path_list.index(item)
+    item = widget_getter(idx)
+    if current:
+        widget.setCurrentItem(item)
+    item.setSelected(True)
+
+
+def _apply_toplevel_selection(widget, category, idx):
+    """Select a top-level "header" item (ex: the Staged parent item)
+
+    Return True when a top-level item is selected.
+    """
+    is_top_level_item = category == HEADER_IDX
+    if is_top_level_item:
+        item = widget.invisibleRootItem().child(idx)
+        if item is not None:
+            with qtutils.BlockSignals(widget):
+                widget.setCurrentItem(item)
+                item.setSelected(True)
+            widget.show_selection()
+
+    return is_top_level_item
