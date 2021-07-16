@@ -16,6 +16,11 @@ Usability, bells and whistles
   (`#1146 <https://github.com/git-cola/git-cola/pull/1146>`_)
   (`#1084 <https://github.com/git-cola/git-cola/issues/1084>`_)
 
+* Diffing of staged files has been implemented for repositories that contain
+  no commits.
+  (`#1149 <https://github.com/git-cola/git-cola/pull/1149>`_)
+  (`#1110 <https://github.com/git-cola/git-cola/issues/1110>`_)
+
 .. _v3.10.1:
 
 v3.10.1
