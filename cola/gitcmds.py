@@ -418,8 +418,14 @@ def diff_helper(
     if ref and endref:
         argv.append('%s..%s' % (ref, endref))
     elif ref:
-        for r in utils.shell_split(ref.strip()):
-            argv.append(r)
+        ref_argvs = utils.shell_split(ref.strip())
+        if len(ref_argvs) > 1:
+            for r in ref_argvs:
+                argv.append(r)
+        elif len(ref_argvs) == 1:
+            has_valid_ref = rev_parse(context, ref) != ref
+            if has_valid_ref:
+                argv.append(ref)
     elif head and amending and cached:
         argv.append(head)
 
