@@ -1,24 +1,35 @@
 """Tests basic git operations: commit, log, config"""
+# pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, unicode_literals
 
 from . import helper
+# NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
+from .helper import run_in_tmpdir
+from .helper import app_context
 
 
-class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
+# These assertions make flake8 happy. It considers them unused imports otherwise.
+assert run_in_tmpdir is not None
+assert app_context is not None
 
-    def test_git_commit(self):
-        """Test running 'git commit' via cola.git"""
-        self.write_file('A', 'A')
-        self.write_file('B', 'B')
-        self.run_git('add', 'A', 'B')
 
-        self.git.commit(m='initial commit')
-        log = self.run_git('-c', 'log.showsignature=false', 'log', '--pretty=oneline')
+def test_git_commit(app_context):
+    """Test running 'git commit' via cola.git"""
+    helper.write_file('A', 'A')
+    helper.write_file('B', 'B')
+    helper.run_git('add', 'A', 'B')
 
-        self.assertEqual(len(log.splitlines()), 1)
+    app_context.git.commit(m='initial commit')
+    log = helper.run_git('-c', 'log.showsignature=false', 'log', '--pretty=oneline')
 
-    def test_git_config(self):
-        """Test cola.git.config()"""
-        self.run_git('config', 'section.key', 'value')
-        value = self.git.config('section.key', get=True)
-        self.assertEqual(value, (0, 'value', ''))
+    expect = 1
+    actual = len(log.splitlines())
+    assert expect == actual
+
+
+def test_git_config(app_context):
+    """Test cola.git.config()"""
+    helper.run_git('config', 'section.key', 'value')
+    expect = (0, 'value', '')
+    actual = app_context.git.config('section.key', get=True)
+    assert expect == actual
