@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import unittest
 
@@ -229,7 +228,3 @@ class RemoteArgsTestCase(unittest.TestCase):
         self.assertTrue(kwargs['verbose'])
         self.assertFalse('tags' in kwargs)
         self.assertFalse('rebase' in kwargs)
-
-
-if __name__ == '__main__':
-    unittest.main()

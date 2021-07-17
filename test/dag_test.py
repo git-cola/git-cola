@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Tests DAG functionality"""
 from __future__ import absolute_import, division, unicode_literals
 
@@ -26,6 +25,7 @@ f4fb8fd5baaa55d9b41faca79be289bb4407281e^Ae3f5a2d0248de6197d6e0e63c901810b8a9af2
 
 
 class DAGTestCase(helper.GitRepositoryTestCase):
+
     def setUp(self):
         helper.GitRepositoryTestCase.setUp(self)
         self.params = dag.DAG('HEAD', 1000)

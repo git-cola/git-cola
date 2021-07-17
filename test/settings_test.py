@@ -80,7 +80,3 @@ class SettingsTestCase(unittest.TestCase):
         expect = ['a', 'test', 'c']
         actual = [i['name'] for i in settings.bookmarks]
         self.assertEqual(expect, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()

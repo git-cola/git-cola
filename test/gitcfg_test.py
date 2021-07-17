@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, unicode_literals
-import unittest
 
 from . import helper
 
@@ -120,7 +119,3 @@ class GitConfigTestCase(helper.GitRepositoryTestCase):
         expect = '/test/hooks-lowercase/example'
         actual = self.cfg.hooks_path('example')
         assert expect == actual
-
-
-if __name__ == '__main__':
-    unittest.main()

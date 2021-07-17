@@ -8,6 +8,7 @@ from . import helper
 
 
 class ParseDiffTestCase(unittest.TestCase):
+
     def test_diff(self):
         fixture_path = helper.fixture('diff.txt')
         parser = diffparse.DiffParser('cola/diffparse.py', core.read(fixture_path))
@@ -374,7 +375,3 @@ class ParseRangeStrTestCase(unittest.TestCase):
         start, count = diffparse.parse_range_str('0,0')
         self.assertEqual(start, 0)
         self.assertEqual(count, 0)
-
-
-if __name__ == '__main__':
-    unittest.main()

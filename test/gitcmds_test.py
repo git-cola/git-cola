@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, unicode_literals
 import os
-import unittest
 
 from cola import gitcmds
 from cola.widgets.remote import get_default_remote
@@ -206,7 +205,3 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         self.run_git('add', 'A')
         actual = gitcmds.diff_helper(self.context, ref='HEAD', cached=True)
         assert '+A change\n' in actual
-
-
-if __name__ == '__main__':
-    unittest.main()

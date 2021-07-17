@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
 from __future__ import absolute_import, division, unicode_literals
-
 import unittest
+
 from cola import textwrap
 
 
@@ -185,7 +183,3 @@ Link: This also avoids word-wrap
         expect = 'xx0 xx1 xx2 xx3 xx4\nxx5 xx6 xx7 xx8 xx9\nxxa xxb'
         actual = textwrap.word_wrap(text, 8, 22)
         self.assertEqual(expect, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()

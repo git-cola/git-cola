@@ -56,7 +56,3 @@ class ColaI18nTestCase(unittest.TestCase):
         expect = 'Pousser'
         actual = N_('Push')
         self.assertEqual(expect, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,12 +1,11 @@
-#!/usr/bin/env python
 """Tests basic git operations: commit, log, config"""
 from __future__ import absolute_import, division, unicode_literals
-import unittest
 
 from . import helper
 
 
 class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
+
     def test_git_commit(self):
         """Test running 'git commit' via cola.git"""
         self.write_file('A', 'A')
@@ -23,7 +22,3 @@ class ColaBasicGitTestCase(helper.GitRepositoryTestCase):
         self.run_git('config', 'section.key', 'value')
         value = self.git.config('section.key', get=True)
         self.assertEqual(value, (0, 'value', ''))
-
-
-if __name__ == '__main__':
-    unittest.main()

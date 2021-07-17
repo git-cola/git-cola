@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Tests various operations using the cola.git module
 """
 from __future__ import absolute_import, division, unicode_literals
@@ -371,7 +370,3 @@ class GitCommandTest(unittest.TestCase):
         self.assertEqual(status, 0)
         self.assertEqual(out, '\0' * (1024 * 16 + 1))
         self.assertEqual(err, '\0' * (1024 * 16 + 1))
-
-
-if __name__ == '__main__':
-    unittest.main()

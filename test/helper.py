@@ -25,10 +25,6 @@ def fixture(*paths):
     return os.path.join(dirname, 'fixtures', *paths)
 
 
-def run_unittest(suite):
-    return unittest.TextTestRunner(verbosity=2).run(suite)
-
-
 # shutil.rmtree() can't remove read-only files on Windows.  This onerror
 # handler, adapted from <http://stackoverflow.com/a/1889686/357338>, works
 # around this by changing such files to be writable and then re-trying.
@@ -41,6 +37,8 @@ def remove_readonly(func, path, _exc_info):
 
 
 class TmpPathTestCase(unittest.TestCase):
+    """Run operations in a temporary directory"""
+
     def setUp(self):
         self._testdir = tempfile.mkdtemp('_cola_test')
         os.chdir(self._testdir)

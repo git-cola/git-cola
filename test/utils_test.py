@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 from __future__ import absolute_import, division, unicode_literals
-
 import os
 import unittest
 
@@ -93,7 +91,3 @@ class ColaUtilsTestCase(unittest.TestCase):
         expect = '.'
         actual = utils.select_directory([filename, '.'])
         self.assertEqual(expect, actual)
-
-
-if __name__ == '__main__':
-    unittest.main()

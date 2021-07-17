@@ -1,6 +1,5 @@
-#!/usr/bin/env python
+"""Tests related to the branches widget"""
 from __future__ import absolute_import, division, unicode_literals
-import unittest
 
 try:
     from unittest.mock import MagicMock
@@ -10,137 +9,212 @@ except ImportError:
 from cola.widgets import branch
 
 
-class BranchesTestCase(unittest.TestCase):
-    """Tests related to the branches widget"""
+def test_create_tree_entries():
+    names = [
+        'abc',
+        'cat/abc',
+        'cat/def',
+        'xyz/xyz',
+    ]
+    root = branch.create_tree_entries(names)
+    expect = 3
+    actual = len(root.children)
+    assert expect == actual
 
-    def test_create_tree_entries(self):
-        names = [
-            'abc',
-            'cat/abc',
-            'cat/def',
-            'xyz/xyz',
-        ]
-        root = branch.create_tree_entries(names)
-        self.assertEqual(3, len(root.children))
-        # 'abc'
-        abc = root.children[0]
-        self.assertEqual('abc', abc.basename)
-        self.assertEqual('abc', abc.refname)
-        self.assertEqual([], abc.children)
-        # 'cat'
-        cat = root.children[1]
-        self.assertEqual('cat', cat.basename)
-        self.assertEqual(None, cat.refname)
-        self.assertEqual(2, len(cat.children))
-        # 'cat/abc'
-        cat_abc = cat.children[0]
-        self.assertEqual('abc', cat_abc.basename)
-        self.assertEqual('cat/abc', cat_abc.refname)
-        self.assertEqual([], cat_abc.children)
-        # 'cat/def'
-        cat_def = cat.children[1]
-        self.assertEqual('def', cat_def.basename)
-        self.assertEqual('cat/def', cat_def.refname)
-        self.assertEqual([], cat_def.children)
-        # 'xyz'
-        xyz = root.children[2]
-        self.assertEqual('xyz', xyz.basename)
-        self.assertEqual(None, xyz.refname)
-        self.assertEqual(1, len(xyz.children))
-        # 'xyz/xyz'
-        xyz_xyz = xyz.children[0]
-        self.assertEqual('xyz', xyz_xyz.basename)
-        self.assertEqual('xyz/xyz', xyz_xyz.refname)
-        self.assertEqual([], xyz_xyz.children)
+    # 'abc'
+    abc = root.children[0]
+    expect = 'abc'
+    actual = abc.basename
+    assert expect == actual
+    expect = 'abc'
+    actual = abc.refname
+    assert expect == actual
+    expect = []
+    actual = abc.children
+    assert expect == actual
 
-    def test_create_name_dict(self):
-        """Test transforming unix path-like names into a nested dict"""
-        branches = [
-            'top_1/child_1/child_1_1',
-            'top_1/child_1/child_1_2',
-            'top_1/child_2/child_2_1/child_2_1_1',
-            'top_1/child_2/child_2_1/child_2_1_2',
-        ]
-        result = branch.create_name_dict(branches)
-        inner_child = {'child_2_1_2': {}, 'child_2_1_1': {}}
-        self.assertEqual(
-            {
-                'top_1': {
-                    'child_1': {'child_1_2': {}, 'child_1_1': {}},
-                    'child_2': {'child_2_1': inner_child},
-                }
-            },
-            result,
-        )
+    # 'cat'
+    cat = root.children[1]
+    expect = 'cat'
+    actual = 'cat'
+    assert expect == actual
+    assert cat.refname is None
+    expect = 2
+    actual = len(cat.children)
+    assert expect == actual
 
-    def test_create_toplevel_item(self):
-        names = [
-            'child_1',
-            'child_2/child_2_1',
-            'child_2/child_2_2',
-        ]
-        tree = branch.create_tree_entries(names)
-        tree.basename = 'top'
-        result = branch.create_toplevel_item(tree)
-        self.assertEqual('top', result.name)
-        self.assertEqual(2, result.childCount())
-        self.assertEqual('child_1', result.child(0).name)
-        self.assertEqual('child_1', result.child(0).refname)
-        self.assertEqual('child_2', result.child(1).name)
-        self.assertEqual(None, result.child(1).refname)
-        self.assertEqual(2, result.child(1).childCount())
-        self.assertEqual('child_2_1', result.child(1).child(0).name)
-        self.assertEqual('child_2_2', result.child(1).child(1).name)
-        self.assertEqual('child_2/child_2_1', result.child(1).child(0).refname)
-        self.assertEqual('child_2/child_2_2', result.child(1).child(1).refname)
+    # 'cat/abc'
+    cat_abc = cat.children[0]
+    expect = 'abc'
+    actual = cat_abc.basename
+    assert expect == actual
+    expect = 'cat/abc'
+    actual = cat_abc.refname
+    assert expect == actual
+    expect = []
+    actual = cat_abc.children
+    assert expect == actual
 
-    def test_get_toplevel_item(self):
-        items = _create_top_item()
-        result = branch.get_toplevel_item(items['child_1'])
-        self.assertTrue(items['top'] is result)
+    # 'cat/def'
+    cat_def = cat.children[1]
+    expect = 'def'
+    actual = cat_def.basename
+    assert expect == actual
+    expect = 'cat/def'
+    actual = cat_def.refname
+    assert expect == actual
+    expect = []
+    actual = cat_def.children
+    assert expect == actual
 
-        result = branch.get_toplevel_item(items['sub_child_2_1'])
-        self.assertTrue(items['top'] is result)
+    # 'xyz'
+    xyz = root.children[2]
+    expect = 'xyz'
+    actual = xyz.basename
+    assert expect == actual
+    assert xyz.refname is None
+    expect = 1
+    actual = len(xyz.children)
+    assert expect == actual
 
-    def test_refname_attribute(self):
-        items = _create_top_item()
+    # 'xyz/xyz'
+    xyz_xyz = xyz.children[0]
+    expect = 'xyz'
+    actual = xyz_xyz.basename
+    assert expect == actual
 
-        result = items['child_1'].refname
-        self.assertEqual('child_1', result)
+    expect = 'xyz/xyz'
+    actual = xyz_xyz.refname
+    assert expect == actual
 
-        result = items['sub_child_2_2'].refname
-        self.assertEqual('child_2/sub_child_2_2', result)
+    expect = []
+    actual = xyz_xyz.children
+    assert expect == actual
 
-    def test_should_return_a_valid_child_on_find_child(self):
-        """Test the find_child function."""
-        items = _create_top_item()
-        child = branch.find_by_refname(items['top'], 'child_1')
-        self.assertEqual('child_1', child.refname)
 
-        child = branch.find_by_refname(items['top'], 'child_2/sub_child_2_2')
-        self.assertEqual('sub_child_2_2', child.name)
+def test_create_name_dict():
+    """Test transforming unix path-like names into a nested dict"""
+    branches = [
+        'top_1/child_1/child_1_1',
+        'top_1/child_1/child_1_2',
+        'top_1/child_2/child_2_1/child_2_1_1',
+        'top_1/child_2/child_2_1/child_2_1_2',
+    ]
+    inner_child = {'child_2_1_2': {}, 'child_2_1_1': {}}
+    expect = {
+        'top_1': {
+            'child_1': {'child_1_2': {}, 'child_1_1': {}},
+            'child_2': {'child_2_1': inner_child},
+        }
+    }
+    actual = branch.create_name_dict(branches)
+    assert expect == actual
 
-    def test_should_return_empty_state_on_save_state(self):
-        """Test the save_state function."""
-        top = _create_item('top', None, False)
-        tree_helper = branch.BranchesTreeHelper()
-        result = tree_helper.save_state(top)
-        self.assertEqual({'top': {}}, result)
 
-    def test_should_return_a_valid_state_on_save_state(self):
-        """Test the save_state function."""
-        items = _create_top_item()
-        tree_helper = branch.BranchesTreeHelper()
-        result = tree_helper.save_state(items['top'])
-        self.assertEqual(
-            {
-                'top': {
-                    'child_1': {},
-                    'child_2': {'sub_child_2_1': {}, 'sub_child_2_2': {}},
-                }
-            },
-            result,
-        )
+def test_create_toplevel_item():
+    names = [
+        'child_1',
+        'child_2/child_2_1',
+        'child_2/child_2_2',
+    ]
+    tree = branch.create_tree_entries(names)
+    tree.basename = 'top'
+    top = branch.create_toplevel_item(tree)
+
+    expect = 'top'
+    actual = top.name
+    assert expect == actual
+
+    expect = 2
+    actual = top.childCount()
+    assert expect == actual
+
+    expect = 'child_1'
+    actual = top.child(0).name
+    assert expect == actual
+
+    expect = 'child_1'
+    actual = top.child(0).refname
+    assert expect == actual
+
+    expect = 'child_2'
+    actual = top.child(1).name
+    assert expect == actual
+
+    assert top.child(1).refname is None
+
+    expect = 2
+    actual = top.child(1).childCount()
+    assert expect == actual
+
+    expect = 'child_2_1'
+    actual = top.child(1).child(0).name
+    assert expect == actual
+
+    expect = 'child_2_2'
+    actual = top.child(1).child(1).name
+    assert expect == actual
+
+    expect = 'child_2/child_2_1'
+    actual = top.child(1).child(0).refname
+    assert expect == actual
+
+    expect = 'child_2/child_2_2'
+    actual = top.child(1).child(1).refname
+    assert expect == actual
+
+
+def test_get_toplevel_item():
+    items = _create_top_item()
+    actual = branch.get_toplevel_item(items['child_1'])
+    assert items['top'] is actual
+
+    actual = branch.get_toplevel_item(items['sub_child_2_1'])
+    assert items['top'] is actual
+
+
+def test_refname_attribute():
+    items = _create_top_item()
+
+    actual = items['child_1'].refname
+    expect = 'child_1'
+    assert expect == actual
+
+    actual = items['sub_child_2_2'].refname
+    expect = 'child_2/sub_child_2_2'
+    assert expect == actual
+
+
+def test_should_return_a_valid_child_on_find_child():
+    """Test the find_child function."""
+    items = _create_top_item()
+    child = branch.find_by_refname(items['top'], 'child_1')
+    assert child.refname == 'child_1'
+
+    child = branch.find_by_refname(items['top'], 'child_2/sub_child_2_2')
+    assert child.name == 'sub_child_2_2'
+
+
+def test_should_return_empty_state_on_save_state():
+    """Test the save_state function."""
+    top = _create_item('top', None, False)
+    tree_helper = branch.BranchesTreeHelper()
+    actual = tree_helper.save_state(top)
+    assert {'top': {}} == actual
+
+
+def test_should_return_a_valid_state_on_save_state():
+    """Test the save_state function."""
+    items = _create_top_item()
+    tree_helper = branch.BranchesTreeHelper()
+    actual = tree_helper.save_state(items['top'])
+    expect = {
+        'top': {
+            'child_1': {},
+            'child_2': {'sub_child_2_1': {}, 'sub_child_2_2': {}},
+        }
+    }
+    assert expect == actual
 
 
 def _create_top_item():
@@ -165,7 +239,3 @@ def _create_item(name, refname, expanded):
     item = branch.BranchTreeWidgetItem(name, refname=refname)
     item.isExpanded = MagicMock(return_value=expanded)
     return item
-
-
-if __name__ == '__main__':
-    unittest.main()

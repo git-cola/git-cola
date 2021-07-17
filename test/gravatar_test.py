@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import absolute_import, division, unicode_literals
 import unittest
 
@@ -19,7 +18,3 @@ class GravatarTestCase(unittest.TestCase):
         actual = gravatar.Gravatar.url_for_email(email, 64)
         self.assertEqual(expect, actual)
         self.assertTrue(isinstance(actual, ustr))
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,7 +1,4 @@
-#!/usr/bin/env python
 from __future__ import absolute_import, division, unicode_literals
-
-import pytest
 
 from cola import display
 
@@ -29,7 +26,3 @@ def test_normalize_path():
     expect = 'C:/games/doom2'
     actual = display.normalize_path(path)
     assert expect == actual
-
-
-if __name__ == '__main__':
-    pytest.main([__file__])

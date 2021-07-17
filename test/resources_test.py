@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, unicode_literals
 
 from mock import patch
-import pytest
 
 from cola import resources
 from . import helper
@@ -38,7 +37,3 @@ def test_command_win32(mock_prefix, mock_compat):
     expect = helper.fixture('bin', 'exe-cmd.exe')
     actual = resources.command('exe-cmd')
     assert expect == actual
-
-
-if __name__ == '__main__':
-    pytest.main([__file__])
