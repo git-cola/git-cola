@@ -418,7 +418,7 @@ def diff_helper(
     if ref and endref:
         argv.append('%s..%s' % (ref, endref))
     elif ref:
-        argv.extend(context, utils.shell_split(ref.strip()))
+        argv.extend(utils.shell_split(ref.strip()))
     elif head and amending and cached:
         argv.append(head)
 

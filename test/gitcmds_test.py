@@ -208,6 +208,14 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
         assert gitcmds.is_valid_ref(self.context, 'test')
         assert gitcmds.is_valid_ref(self.context, 'refs/heads/test')
 
+    def test_diff_helper(self):
+        self.commit_files()
+        with open('A', 'w') as f:
+            f.write('A change\n')
+        self.run_git('add', 'A')
+        actual = gitcmds.diff_helper(self.context, ref='HEAD', cached=True)
+        assert '+A change\n' in actual
+
 
 if __name__ == '__main__':
     unittest.main()
