@@ -1,10 +1,19 @@
 """Tests DAG functionality"""
+# pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, unicode_literals
 
 import mock
+import pytest
+
 from cola.models import dag
 
-from . import helper
+# NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
+from .helper import run_in_tmpdir
+from .helper import app_context
+
+
+assert run_in_tmpdir is not None
+assert app_context is not None
 
 
 LOG_LINES = """
@@ -24,68 +33,77 @@ f4fb8fd5baaa55d9b41faca79be289bb4407281e^Ae3f5a2d0248de6197d6e0e63c901810b8a9af2
 ]  # noqa
 
 
-class DAGTestCase(helper.GitRepositoryTestCase):
+class DAGTestData(object):
+    """Test data provided by the dag_context fixture"""
+    def __init__(self, app_context, head='HEAD', count=1000):
+        self.context = app_context
+        self.params = dag.DAG(head, count)
+        self.reader = dag.RepoReader(app_context, self.params)
 
-    def setUp(self):
-        helper.GitRepositoryTestCase.setUp(self)
-        self.params = dag.DAG('HEAD', 1000)
-        self.reader = dag.RepoReader(self.context, self.params)
 
-    @mock.patch('cola.models.dag.core')
-    def test_repo_reader(self, core):
-        expect = len(LOG_LINES) - 1
-        actual = 0
+@pytest.fixture
+def dag_context(app_context):
+    """Provide DAGTestData for use by tests"""
+    return DAGTestData(app_context)
 
-        core.readline.return_value = LOG_LINES[0]
-        for idx, _ in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx + 1]
-            actual += 1
 
-        self.assertEqual(expect, actual)
+@mock.patch('cola.models.dag.core')
+def test_repo_reader(core, dag_context):
+    expect = len(LOG_LINES) - 1
 
-    @mock.patch('cola.models.dag.core')
-    def test_repo_reader_order(self, core):
-        commits = [
-            'ad454b189fe5785af397fd6067cf103268b6626e',
-            '1ba04ad185cf9f04c56c8482e9a73ef1bd35c695',
-            'fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2',
-            '103766573cd4e6799d3ee792bcd632b92cf7c6c0',
-            'e3f5a2d0248de6197d6e0e63c901810b8a9af2f8',
-            'f4fb8fd5baaa55d9b41faca79be289bb4407281e',
-            '23e7eab4ba2c94e3155f5d261c693ccac1342eb9',
-        ]
-        core.readline.return_value = LOG_LINES[0]
-        for idx, commit in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx + 1]
+    actual = 0
+    core.readline.return_value = LOG_LINES[0]
+    for idx, _ in enumerate(dag_context.reader.get()):
+        core.readline.return_value = LOG_LINES[idx + 1]
+        actual += 1
 
-            self.assertEqual(commits[idx], commit.oid)
+    assert expect == actual
 
-    @mock.patch('cola.models.dag.core')
-    def test_repo_reader_parents(self, core):
-        parents = [
-            [],
-            ['ad454b189fe5785af397fd6067cf103268b6626e'],
-            ['1ba04ad185cf9f04c56c8482e9a73ef1bd35c695'],
-            ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
-            ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
-            ['e3f5a2d0248de6197d6e0e63c901810b8a9af2f8'],
-            ['f4fb8fd5baaa55d9b41faca79be289bb4407281e'],
-        ]
-        core.readline.return_value = LOG_LINES[0]
-        for idx, commit in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx + 1]
 
-            self.assertEqual(parents[idx], [p.oid for p in commit.parents])
+@mock.patch('cola.models.dag.core')
+def test_repo_reader_order(core, dag_context):
+    commits = [
+        'ad454b189fe5785af397fd6067cf103268b6626e',
+        '1ba04ad185cf9f04c56c8482e9a73ef1bd35c695',
+        'fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2',
+        '103766573cd4e6799d3ee792bcd632b92cf7c6c0',
+        'e3f5a2d0248de6197d6e0e63c901810b8a9af2f8',
+        'f4fb8fd5baaa55d9b41faca79be289bb4407281e',
+        '23e7eab4ba2c94e3155f5d261c693ccac1342eb9',
+    ]
+    core.readline.return_value = LOG_LINES[0]
+    for idx, commit in enumerate(dag_context.reader.get()):
+        assert commits[idx] == commit.oid
+        core.readline.return_value = LOG_LINES[idx + 1]
 
-    @mock.patch('cola.models.dag.core')
-    def test_repo_reader_contract(self, core):
-        core.exists.return_value = True
-        core.readline.return_value = LOG_LINES[0]
 
-        for idx, _ in enumerate(self.reader.get()):
-            core.readline.return_value = LOG_LINES[idx + 1]
+@mock.patch('cola.models.dag.core')
+def test_repo_reader_parents(core, dag_context):
+    parents = [
+        [],
+        ['ad454b189fe5785af397fd6067cf103268b6626e'],
+        ['1ba04ad185cf9f04c56c8482e9a73ef1bd35c695'],
+        ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
+        ['fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2'],
+        ['e3f5a2d0248de6197d6e0e63c901810b8a9af2f8'],
+        ['f4fb8fd5baaa55d9b41faca79be289bb4407281e'],
+    ]
+    core.readline.return_value = LOG_LINES[0]
+    for idx, commit in enumerate(dag_context.reader.get()):
+        assert parents[idx] == [p.oid for p in commit.parents]
+        core.readline.return_value = LOG_LINES[idx + 1]
 
-        core.start_command.assert_called()
-        call_args = core.start_command.call_args
-        self.assertTrue('log.abbrevCommit=false' in call_args[0][0])
-        self.assertTrue('log.showSignature=false' in call_args[0][0])
+
+@mock.patch('cola.models.dag.core')
+def test_repo_reader_contract(core, dag_context):
+    core.exists.return_value = True
+    core.readline.return_value = LOG_LINES[0]
+
+    for idx, _ in enumerate(dag_context.reader.get()):
+        core.readline.return_value = LOG_LINES[idx + 1]
+
+    core.start_command.assert_called()
+    call_args = core.start_command.call_args
+
+    assert 'log.abbrevCommit=false' in call_args[0][0]
+    assert 'log.showSignature=false' in call_args[0][0]
