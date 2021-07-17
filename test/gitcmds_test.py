@@ -197,6 +197,17 @@ class GitCmdsTestCase(helper.GitRepositoryTestCase):
             f.write('binary-file.txt -binary\n')
         assert not gitcmds.is_binary(self.context, 'binary-file.txt')
 
+    def test_is_valid_ref(self):
+        """Verify the behavior of is_valid_ref()"""
+        # We are initially in a "git init" state. HEAD must be invalid.
+        assert not gitcmds.is_valid_ref(self.context, 'HEAD')
+        # Create the first commit onto the "test" branch.
+        self.context.git.symbolic_ref('HEAD', 'refs/heads/test')
+        self.git.commit(m='initial commit')
+        assert gitcmds.is_valid_ref(self.context, 'HEAD')
+        assert gitcmds.is_valid_ref(self.context, 'test')
+        assert gitcmds.is_valid_ref(self.context, 'refs/heads/test')
+
 
 if __name__ == '__main__':
     unittest.main()

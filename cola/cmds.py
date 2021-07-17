@@ -1299,7 +1299,7 @@ class Diff(EditModel):
     def __init__(self, context, filename, cached=False, deleted=False):
         super(Diff, self).__init__(context)
         opts = {}
-        if cached:
+        if cached and gitcmds.is_valid_ref(context, context.model.head):
             opts['ref'] = self.model.head
         self.new_filename = filename
         self.new_mode = self.model.mode_worktree

@@ -418,14 +418,7 @@ def diff_helper(
     if ref and endref:
         argv.append('%s..%s' % (ref, endref))
     elif ref:
-        ref_argvs = utils.shell_split(ref.strip())
-        if len(ref_argvs) > 1:
-            for r in ref_argvs:
-                argv.append(r)
-        elif len(ref_argvs) == 1:
-            has_valid_ref = rev_parse(context, ref) != ref
-            if has_valid_ref:
-                argv.append(ref)
+        argv.extend(context, utils.shell_split(ref.strip()))
     elif head and amending and cached:
         argv.append(head)
 
@@ -1007,3 +1000,9 @@ def is_binary(context, filename):
         result = b''
 
     return b'\0' in result
+
+
+def is_valid_ref(context, ref):
+    """Is the provided Git ref a valid refname?"""
+    status, _, _ = context.git.rev_parse(ref, quiet=True, verify=True)
+    return status == 0
