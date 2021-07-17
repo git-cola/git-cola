@@ -1,230 +1,258 @@
+# pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, unicode_literals
 import os
-import unittest
 
 import mock
+import pytest
 
 from cola import core
 from cola import git
 from cola.models import main
 
 from . import helper
+# NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
+from .helper import run_in_tmpdir
+from .helper import app_context
 
 
-class MainModelTestCase(helper.GitRepositoryTestCase):
-    """Tests the MainModel class."""
+# These assertions make flake8 happy. It considers them unused imports otherwise.
+assert run_in_tmpdir is not None
+assert app_context is not None
 
-    def test_project(self):
-        """Test the 'project' attribute."""
-        project = os.path.basename(self.test_path())
-        self.model.set_worktree(core.getcwd())
-        self.assertEqual(self.model.project, project)
-
-    def test_local_branches(self):
-        """Test the 'local_branches' attribute."""
-        self.commit_files()
-        self.model.update_status()
-        self.assertEqual(self.model.local_branches, ['main'])
-
-    def test_remote_branches(self):
-        """Test the 'remote_branches' attribute."""
-        self.model.update_status()
-        self.assertEqual(self.model.remote_branches, [])
-
-        self.commit_files()
-        self.run_git('remote', 'add', 'origin', '.')
-        self.run_git('fetch', 'origin')
-        self.model.update_status()
-        self.assertEqual(self.model.remote_branches, ['origin/main'])
-
-    def test_modified(self):
-        """Test the 'modified' attribute."""
-        self.write_file('A', 'change')
-        self.model.update_status()
-        self.assertEqual(self.model.modified, ['A'])
-
-    def test_unstaged(self):
-        """Test the 'unstaged' attribute."""
-        self.write_file('A', 'change')
-        self.write_file('C', 'C')
-        self.model.update_status()
-        self.assertEqual(self.model.unstaged, ['A', 'C'])
-
-    def test_untracked(self):
-        """Test the 'untracked' attribute."""
-        self.write_file('C', 'C')
-        self.model.update_status()
-        self.assertEqual(self.model.untracked, ['C'])
-
-    def test_remotes(self):
-        """Test the 'remote' attribute."""
-        self.run_git('remote', 'add', 'origin', '.')
-        self.model.update_status()
-        self.assertEqual(self.model.remotes, ['origin'])
-
-    def test_currentbranch(self):
-        """Test the 'currentbranch' attribute."""
-        self.run_git('checkout', '-b', 'test')
-        self.model.update_status()
-        self.assertEqual(self.model.currentbranch, 'test')
-
-    def test_tags(self):
-        """Test the 'tags' attribute."""
-        self.commit_files()
-        self.run_git('tag', 'test')
-        self.model.update_status()
-        self.assertEqual(self.model.tags, ['test'])
+REMOTE = 'server'
+LOCAL_BRANCH = 'local'
+REMOTE_BRANCH = 'remote'
 
 
-class RemoteArgsTestCase(unittest.TestCase):
-    def setUp(self):
-        self.context = context = mock.Mock()
-        context.git = git.create()
-        self.remote = 'server'
-        self.local_branch = 'local'
-        self.remote_branch = 'remote'
+@pytest.fixture
+def mock_context():
+    """Return a Mock context for testing"""
+    context = mock.Mock()
+    context.git = git.create()
+    return context
 
-    def test_remote_args_fetch(self):
-        # Fetch
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            local_branch=self.local_branch,
-            remote_branch=self.remote_branch,
-        )
 
-        self.assertEqual(args, [self.remote, 'remote:local'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertFalse('tags' in kwargs)
-        self.assertFalse('rebase' in kwargs)
+def test_project(app_context):
+    """Test the 'project' attribute."""
+    project = os.path.basename(core.getcwd())
+    app_context.model.set_worktree(core.getcwd())
+    assert app_context.model.project == project
 
-    def test_remote_args_fetch_tags(self):
-        # Fetch tags
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            tags=True,
-            local_branch=self.local_branch,
-            remote_branch=self.remote_branch,
-        )
 
-        self.assertEqual(args, [self.remote, 'remote:local'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertTrue(kwargs['tags'])
-        self.assertFalse('rebase' in kwargs)
+def test_local_branches(app_context):
+    """Test the 'local_branches' attribute."""
+    helper.commit_files()
+    app_context.model.update_status()
+    assert app_context.model.local_branches == ['main']
 
-    def test_remote_args_pull(self):
-        # Pull
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            pull=True,
-            local_branch='',
-            remote_branch=self.remote_branch,
-        )
 
-        self.assertEqual(args, [self.remote, 'remote'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertFalse('rebase' in kwargs)
-        self.assertFalse('tags' in kwargs)
+def test_remote_branches(app_context):
+    """Test the 'remote_branches' attribute."""
+    app_context.model.update_status()
+    assert app_context.model.remote_branches == []
 
-    def test_remote_args_pull_rebase(self):
-        # Rebasing pull
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            pull=True,
-            rebase=True,
-            local_branch='',
-            remote_branch=self.remote_branch,
-        )
+    helper.commit_files()
+    helper.run_git('remote', 'add', 'origin', '.')
+    helper.run_git('fetch', 'origin')
+    app_context.model.update_status()
+    assert app_context.model.remote_branches == ['origin/main']
 
-        self.assertEqual(args, [self.remote, 'remote'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertTrue(kwargs['rebase'])
-        self.assertFalse('tags' in kwargs)
 
-    def test_remote_args_push(self):
-        # Push, swap local and remote
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            local_branch=self.remote_branch,
-            remote_branch=self.local_branch,
-        )
+def test_modified(app_context):
+    """Test the 'modified' attribute."""
+    helper.write_file('A', 'change')
+    app_context.model.update_status()
+    assert app_context.model.modified == ['A']
 
-        self.assertEqual(args, [self.remote, 'local:remote'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertFalse('tags' in kwargs)
-        self.assertFalse('rebase' in kwargs)
 
-    def test_remote_args_push_tags(self):
-        # Push, swap local and remote
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            tags=True,
-            local_branch=self.remote_branch,
-            remote_branch=self.local_branch,
-        )
+def test_unstaged(app_context):
+    """Test the 'unstaged' attribute."""
+    helper.write_file('A', 'change')
+    helper.write_file('C', 'C')
+    app_context.model.update_status()
+    assert app_context.model.unstaged == ['A', 'C']
 
-        self.assertEqual(args, [self.remote, 'local:remote'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertTrue(kwargs['tags'])
-        self.assertFalse('rebase' in kwargs)
 
-    def test_remote_args_push_same_remote_and_local(self):
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            tags=True,
-            local_branch=self.local_branch,
-            remote_branch=self.local_branch,
-            push=True,
-        )
+def test_untracked(app_context):
+    """Test the 'untracked' attribute."""
+    helper.write_file('C', 'C')
+    app_context.model.update_status()
+    assert app_context.model.untracked == ['C']
 
-        self.assertEqual(args, [self.remote, 'local'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertTrue(kwargs['tags'])
-        self.assertFalse('rebase' in kwargs)
 
-    def test_remote_args_push_set_upstream(self):
-        (args, kwargs) = main.remote_args(
-            self.context,
-            self.remote,
-            tags=True,
-            local_branch=self.local_branch,
-            remote_branch=self.local_branch,
-            push=True,
-            set_upstream=True,
-        )
+def test_remotes(app_context):
+    """Test the 'remote' attribute."""
+    helper.run_git('remote', 'add', 'origin', '.')
+    app_context.model.update_status()
+    assert app_context.model.remotes == ['origin']
 
-        self.assertEqual(args, [self.remote, 'local'])
-        self.assertTrue(kwargs['verbose'])
-        self.assertTrue(kwargs['tags'])
-        self.assertTrue(kwargs['set_upstream'])
-        self.assertFalse('rebase' in kwargs)
 
-    def test_remote_args_rebase_only(self):
-        (_, kwargs) = main.remote_args(
-            self.context, self.remote, pull=True, rebase=True, ff_only=True
-        )
-        self.assertTrue(kwargs['rebase'])
-        self.assertFalse('ff_only' in kwargs)
+def test_currentbranch(app_context):
+    """Test the 'currentbranch' attribute."""
+    helper.run_git('checkout', '-b', 'test')
+    app_context.model.update_status()
+    assert app_context.model.currentbranch == 'test'
 
-    def test_run_remote_action(self):
-        def passthrough(*args, **kwargs):
-            return (args, kwargs)
 
-        (args, kwargs) = main.run_remote_action(
-            self.context,
-            passthrough,
-            self.remote,
-            local_branch=self.local_branch,
-            remote_branch=self.remote_branch,
-        )
+def test_tags(app_context):
+    """Test the 'tags' attribute."""
+    helper.commit_files()
+    helper.run_git('tag', 'test')
+    app_context.model.update_status()
+    assert app_context.model.tags == ['test']
 
-        self.assertEqual(args, (self.remote, 'remote:local'))
-        self.assertTrue(kwargs['verbose'])
-        self.assertFalse('tags' in kwargs)
-        self.assertFalse('rebase' in kwargs)
+
+def test_remote_args_fetch(mock_context):
+    # Fetch
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=REMOTE_BRANCH,
+    )
+
+    assert args == [REMOTE, 'remote:local']
+    assert kwargs['verbose']
+    assert 'tags' not in kwargs
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_fetch_tags(mock_context):
+    # Fetch tags
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        tags=True,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=REMOTE_BRANCH,
+    )
+
+    assert args == [REMOTE, 'remote:local']
+    assert kwargs['verbose']
+    assert kwargs['tags']
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_pull(mock_context):
+    # Pull
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        pull=True,
+        local_branch='',
+        remote_branch=REMOTE_BRANCH,
+    )
+
+    assert args == [REMOTE, 'remote']
+    assert kwargs['verbose']
+    assert 'rebase' not in kwargs
+    assert 'tags' not in kwargs
+
+
+def test_remote_args_pull_rebase(mock_context):
+    # Rebasing pull
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        pull=True,
+        rebase=True,
+        local_branch='',
+        remote_branch=REMOTE_BRANCH,
+    )
+
+    assert args == [REMOTE, 'remote']
+    assert kwargs['verbose']
+    assert kwargs['rebase']
+    assert 'tags' not in kwargs
+
+
+def test_remote_args_push(mock_context):
+    # Push, swap local and remote
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        local_branch=REMOTE_BRANCH,
+        remote_branch=LOCAL_BRANCH,
+    )
+
+    assert args == [REMOTE, 'local:remote']
+    assert kwargs['verbose']
+    assert 'tags' not in kwargs
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_push_tags(mock_context):
+    # Push, swap local and remote
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        tags=True,
+        local_branch=REMOTE_BRANCH,
+        remote_branch=LOCAL_BRANCH,
+    )
+
+    assert args == [REMOTE, 'local:remote']
+    assert kwargs['verbose']
+    assert kwargs['tags']
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_push_same_remote_and_local(mock_context):
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        tags=True,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=LOCAL_BRANCH,
+        push=True,
+    )
+
+    assert args == [REMOTE, 'local']
+    assert kwargs['verbose']
+    assert kwargs['tags']
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_push_set_upstream(mock_context):
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        tags=True,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=LOCAL_BRANCH,
+        push=True,
+        set_upstream=True,
+    )
+
+    assert args == [REMOTE, 'local']
+    assert kwargs['verbose']
+    assert kwargs['tags']
+    assert kwargs['set_upstream']
+    assert 'rebase' not in kwargs
+
+
+def test_remote_args_rebase_only(mock_context):
+    (_, kwargs) = main.remote_args(
+        mock_context, REMOTE, pull=True, rebase=True, ff_only=True
+    )
+    assert kwargs['rebase']
+    assert 'ff_only' not in kwargs
+
+
+def test_run_remote_action(mock_context):
+
+    def passthrough(*args, **kwargs):
+        return (args, kwargs)
+
+    (args, kwargs) = main.run_remote_action(
+        mock_context,
+        passthrough,
+        REMOTE,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=REMOTE_BRANCH,
+    )
+
+    assert args == (REMOTE, 'remote:local')
+    assert kwargs['verbose']
+    assert 'tags' not in kwargs
+    assert 'rebase' not in kwargs
