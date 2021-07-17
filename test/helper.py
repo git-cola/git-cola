@@ -6,6 +6,7 @@ import unittest
 import tempfile
 
 import mock
+import pytest
 
 from cola import core
 from cola import git
@@ -36,6 +37,37 @@ def remove_readonly(func, path, _exc_info):
         raise AssertionError('Should not happen')
 
 
+@pytest.fixture
+def run_in_tmpdir():
+    """Run tests in a temporary directory and yield the tmp directory"""
+    tmp_directory = tempfile.mkdtemp('-cola-test')
+    current_directory = os.getcwd()
+    os.chdir(tmp_directory)
+
+    yield tmp_directory
+
+    os.chdir(current_directory)
+    shutil.rmtree(tmp_directory, onerror=remove_readonly)
+
+
+def touch(*paths):
+    """Open and close a file to either create it or update its mtime"""
+    for path in paths:
+        open(path, 'a').close()
+
+
+def write_file(path, content):
+    """Write content to the specified file path"""
+    with open(path, 'w') as f:
+        f.write(content)
+
+
+def append_file(path, content):
+    """Open a file in append mode and write content to it"""
+    with open(path, 'a') as f:
+        f.write(content)
+
+
 class TmpPathTestCase(unittest.TestCase):
     """Run operations in a temporary directory"""
 
@@ -49,23 +81,53 @@ class TmpPathTestCase(unittest.TestCase):
         os.chdir(tmp_path())
         shutil.rmtree(path, onerror=remove_readonly)
 
-    @staticmethod
-    def touch(*paths):
-        for path in paths:
-            open(path, 'a').close()
-
-    @staticmethod
-    def write_file(path, content):
-        with open(path, 'w') as f:
-            f.write(content)
-
-    @staticmethod
-    def append_file(path, content):
-        with open(path, 'a') as f:
-            f.write(content)
-
     def test_path(self, *paths):
         return os.path.join(self._testdir, *paths)
+
+    append_file = staticmethod(append_file)
+
+    touch = staticmethod(touch)
+
+    write_file = staticmethod(write_file)
+
+
+def run_git(*args):
+    """Run git with the specified arguments"""
+    status, out, _ = core.run_command(['git'] + list(args))
+    assert status == 0
+    return out
+
+
+def commit_files():
+    """Commit the current state as the initial commit"""
+    run_git('commit', '-m', 'initial commit')
+
+
+def initialize_repo():
+    """Initialize a git repository in the current directory"""
+    run_git('init')
+    run_git('symbolic-ref', 'HEAD', 'refs/heads/main')
+    run_git('config', '--local', 'user.name', 'Your Name')
+    run_git('config', '--local', 'user.email', 'you@example.com')
+    run_git('config', '--local', 'commit.gpgsign', 'false')
+    run_git('config', '--local', 'tag.gpgsign', 'false')
+    touch('A', 'B')
+    run_git('add', 'A', 'B')
+
+
+@pytest.fixture
+def app_context(run_in_tmpdir):  # pylint: disable=redefined-outer-name,unused-argument
+    """Create a repository in a temporary directory and return its ApplicationContext"""
+    initialize_repo()
+    context = mock.Mock()
+    context.git = git.create()
+    context.git.set_worktree(core.getcwd())
+    context.cfg = gitcfg.create(context)
+    context.model = main.create(context)
+
+    context.cfg.reset()
+    gitcmds.reset()
+    return context
 
 
 class GitRepositoryTestCase(TmpPathTestCase):
@@ -73,7 +135,7 @@ class GitRepositoryTestCase(TmpPathTestCase):
 
     def setUp(self):
         TmpPathTestCase.setUp(self)
-        self.initialize_repo()
+        initialize_repo()
         self.context = context = mock.Mock()
         context.git = git.create()
         context.git.set_worktree(core.getcwd())
@@ -84,20 +146,6 @@ class GitRepositoryTestCase(TmpPathTestCase):
         self.cfg.reset()
         gitcmds.reset()
 
-    def run_git(self, *args):
-        status, out, _ = core.run_command(['git'] + list(args))
-        self.assertEqual(status, 0)
-        return out
+    commit_files = staticmethod(commit_files)
 
-    def initialize_repo(self):
-        self.run_git('init')
-        self.run_git('symbolic-ref', 'HEAD', 'refs/heads/main')
-        self.run_git('config', '--local', 'user.name', 'Your Name')
-        self.run_git('config', '--local', 'user.email', 'you@example.com')
-        self.run_git('config', '--local', 'commit.gpgsign', 'false')
-        self.run_git('config', '--local', 'tag.gpgsign', 'false')
-        self.touch('A', 'B')
-        self.run_git('add', 'A', 'B')
-
-    def commit_files(self):
-        self.run_git('commit', '-m', 'initial commit')
+    run_git = staticmethod(run_git)
