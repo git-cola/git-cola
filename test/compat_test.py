@@ -1,5 +1,5 @@
-"""Tests the compat module"""
 # encoding: utf-8
+"""Tests the compat module"""
 from __future__ import absolute_import, division, unicode_literals
 import os
 

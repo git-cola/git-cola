@@ -2,9 +2,9 @@
 from __future__ import absolute_import, division, unicode_literals
 
 try:
-    from unittest.mock import MagicMock
+    from unittest.mock import Mock
 except ImportError:
-    from mock import MagicMock
+    from mock import Mock
 
 from cola.widgets import branch
 
@@ -237,5 +237,5 @@ def _create_top_item():
 
 def _create_item(name, refname, expanded):
     item = branch.BranchTreeWidgetItem(name, refname=refname)
-    item.isExpanded = MagicMock(return_value=expanded)
+    item.isExpanded = Mock(return_value=expanded)
     return item

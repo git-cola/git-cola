@@ -1,5 +1,5 @@
-"""Tests the cola.core module's unicode handling"""
 # encoding: utf-8
+"""Tests the cola.core module's unicode handling"""
 from __future__ import absolute_import, division, unicode_literals
 
 from cola import core
