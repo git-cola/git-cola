@@ -301,10 +301,11 @@ check:
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
 else
+# NOTE: flake8 is not part of "make check" because the pytest-flake8 plugin runs flake8
+# checks during "make test" via pytest.
 check:: all
 check:: test
 check:: doc
-check:: flake8
 check:: pylint3k
 check:: pylint
 endif
