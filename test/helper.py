@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, unicode_literals
 import os
 import shutil
 import stat
-import unittest
 import tempfile
 
 import pytest
@@ -71,29 +70,6 @@ def append_file(path, content):
         f.write(content)
 
 
-class TmpPathTestCase(unittest.TestCase):
-    """Run operations in a temporary directory"""
-
-    def setUp(self):
-        self._testdir = tempfile.mkdtemp('_cola_test')
-        os.chdir(self._testdir)
-
-    def tearDown(self):
-        """Remove the test directory and return to the tmp root."""
-        path = self._testdir
-        os.chdir(tmp_path())
-        shutil.rmtree(path, onerror=remove_readonly)
-
-    def test_path(self, *paths):
-        return os.path.join(self._testdir, *paths)
-
-    append_file = staticmethod(append_file)
-
-    touch = staticmethod(touch)
-
-    write_file = staticmethod(write_file)
-
-
 def run_git(*args):
     """Run git with the specified arguments"""
     status, out, _ = core.run_command(['git'] + list(args))
@@ -131,24 +107,3 @@ def app_context(run_in_tmpdir):  # pylint: disable=redefined-outer-name,unused-a
     context.cfg.reset()
     gitcmds.reset()
     return context
-
-
-class GitRepositoryTestCase(TmpPathTestCase):
-    """Tests that operate on temporary git repositories."""
-
-    def setUp(self):
-        TmpPathTestCase.setUp(self)
-        initialize_repo()
-        self.context = context = mock.Mock()
-        context.git = git.create()
-        context.git.set_worktree(core.getcwd())
-        context.cfg = gitcfg.create(context)
-        context.model = self.model = main.create(self.context)
-        self.git = context.git
-        self.cfg = context.cfg
-        self.cfg.reset()
-        gitcmds.reset()
-
-    commit_files = staticmethod(commit_files)
-
-    run_git = staticmethod(run_git)
