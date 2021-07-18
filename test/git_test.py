@@ -3,13 +3,10 @@
 # pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, unicode_literals
 
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
-
 from cola import git
 from cola.git import STDOUT
+
+from .helper import patch
 
 
 # 16k+1 bytes to exhaust any output buffers.

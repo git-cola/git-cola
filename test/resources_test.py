@@ -1,9 +1,9 @@
 from __future__ import absolute_import, division, unicode_literals
 
-from mock import patch
-
 from cola import resources
+
 from . import helper
+from .helper import patch
 
 
 @patch('cola.resources.compat')

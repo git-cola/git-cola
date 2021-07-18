@@ -2,7 +2,6 @@
 from __future__ import absolute_import, division, unicode_literals
 import os
 
-import mock
 import pytest
 
 from cola import core
@@ -13,6 +12,7 @@ from . import helper
 # NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
 from .helper import run_in_tmpdir
 from .helper import app_context
+from .helper import Mock
 
 
 # These assertions make flake8 happy. It considers them unused imports otherwise.
@@ -27,7 +27,7 @@ REMOTE_BRANCH = 'remote'
 @pytest.fixture
 def mock_context():
     """Return a Mock context for testing"""
-    context = mock.Mock()
+    context = Mock()
     context.git = git.create()
     return context
 

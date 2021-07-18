@@ -2,7 +2,6 @@
 # pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, unicode_literals
 
-import mock
 import pytest
 
 from cola.models import dag
@@ -10,6 +9,7 @@ from cola.models import dag
 # NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
 from .helper import run_in_tmpdir
 from .helper import app_context
+from .helper import patch
 
 
 assert run_in_tmpdir is not None
@@ -47,7 +47,7 @@ def dag_context(app_context):
     return DAGTestData(app_context)
 
 
-@mock.patch('cola.models.dag.core')
+@patch('cola.models.dag.core')
 def test_repo_reader(core, dag_context):
     expect = len(LOG_LINES) - 1
 
@@ -60,7 +60,7 @@ def test_repo_reader(core, dag_context):
     assert expect == actual
 
 
-@mock.patch('cola.models.dag.core')
+@patch('cola.models.dag.core')
 def test_repo_reader_order(core, dag_context):
     commits = [
         'ad454b189fe5785af397fd6067cf103268b6626e',
@@ -77,7 +77,7 @@ def test_repo_reader_order(core, dag_context):
         core.readline.return_value = LOG_LINES[idx + 1]
 
 
-@mock.patch('cola.models.dag.core')
+@patch('cola.models.dag.core')
 def test_repo_reader_parents(core, dag_context):
     parents = [
         [],
@@ -94,7 +94,7 @@ def test_repo_reader_parents(core, dag_context):
         core.readline.return_value = LOG_LINES[idx + 1]
 
 
-@mock.patch('cola.models.dag.core')
+@patch('cola.models.dag.core')
 def test_repo_reader_contract(core, dag_context):
     core.exists.return_value = True
     core.readline.return_value = LOG_LINES[0]

@@ -1,12 +1,9 @@
 """Tests related to the branches widget"""
 from __future__ import absolute_import, division, unicode_literals
 
-try:
-    from unittest.mock import Mock
-except ImportError:
-    from mock import Mock
-
 from cola.widgets import branch
+
+from .helper import Mock
 
 
 def test_create_tree_entries():

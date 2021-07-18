@@ -5,8 +5,11 @@ import stat
 import unittest
 import tempfile
 
-import mock
 import pytest
+try:
+    from unittest.mock import Mock, patch  # noqa pylint: disable=unused-import
+except ImportError:
+    from mock import Mock, patch  # noqa pylint: disable=unused-import
 
 from cola import core
 from cola import git
@@ -119,7 +122,7 @@ def initialize_repo():
 def app_context(run_in_tmpdir):  # pylint: disable=redefined-outer-name,unused-argument
     """Create a repository in a temporary directory and return its ApplicationContext"""
     initialize_repo()
-    context = mock.Mock()
+    context = Mock()
     context.git = git.create()
     context.git.set_worktree(core.getcwd())
     context.cfg = gitcfg.create(context)

@@ -1,13 +1,10 @@
 """Test the cmds module"""
 from __future__ import absolute_import, division, unicode_literals
 
-try:
-    from unittest.mock import Mock, patch
-except ImportError:
-    from mock import Mock, patch
-
 from cola import cmds
 from cola.compat import uchr
+
+from .helper import Mock, patch
 
 
 def test_Commit_strip_comments():

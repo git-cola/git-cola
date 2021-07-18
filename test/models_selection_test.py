@@ -1,12 +1,12 @@
 from __future__ import absolute_import, division, unicode_literals
 
-import mock
-
 from cola.models import selection
+
+from .helper import Mock
 
 
 def test_union():
-    t = mock.Mock()
+    t = Mock()
     t.staged = ['a']
     t.unmerged = ['a', 'b']
     t.modified = ['b', 'a', 'c']
