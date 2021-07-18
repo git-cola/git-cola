@@ -3,13 +3,10 @@
 from __future__ import absolute_import, division, unicode_literals
 
 from . import helper
-# NOTE: run_in_tmpdir is required by pytest even though it is only used indirectly.
-from .helper import run_in_tmpdir
 from .helper import app_context
 
 
 # These assertions make flake8 happy. It considers them unused imports otherwise.
-assert run_in_tmpdir is not None
 assert app_context is not None
 
 

@@ -39,19 +39,6 @@ def remove_readonly(func, path, _exc_info):
         raise AssertionError('Should not happen')
 
 
-@pytest.fixture
-def run_in_tmpdir():
-    """Run tests in a temporary directory and yield the tmp directory"""
-    tmp_directory = tempfile.mkdtemp('-cola-test')
-    current_directory = os.getcwd()
-    os.chdir(tmp_directory)
-
-    yield tmp_directory
-
-    os.chdir(current_directory)
-    shutil.rmtree(tmp_directory, onerror=remove_readonly)
-
-
 def touch(*paths):
     """Open and close a file to either create it or update its mtime"""
     for path in paths:
@@ -95,8 +82,12 @@ def initialize_repo():
 
 
 @pytest.fixture
-def app_context(run_in_tmpdir):  # pylint: disable=redefined-outer-name,unused-argument
+def app_context():
     """Create a repository in a temporary directory and return its ApplicationContext"""
+    tmp_directory = tempfile.mkdtemp('-cola-test')
+    current_directory = os.getcwd()
+    os.chdir(tmp_directory)
+
     initialize_repo()
     context = Mock()
     context.git = git.create()
@@ -106,4 +97,8 @@ def app_context(run_in_tmpdir):  # pylint: disable=redefined-outer-name,unused-a
 
     context.cfg.reset()
     gitcmds.reset()
-    return context
+
+    yield context
+
+    os.chdir(current_directory)
+    shutil.rmtree(tmp_directory, onerror=remove_readonly)
