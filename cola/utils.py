@@ -1,6 +1,5 @@
-# Copyright (C) 2007-2018 David Aguilar and contributors
-"""This module provides miscellaneous utility functions."""
-from __future__ import division, absolute_import, unicode_literals
+"""Miscellaneous utility functions"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import copy
 import os
 import random

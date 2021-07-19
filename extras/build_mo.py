@@ -1,7 +1,6 @@
 """build_mo command for setup.py"""
-# pylint: disable=attribute-defined-outside-init
-# pylint: disable=no-name-in-module,import-error
-from __future__ import absolute_import, division, unicode_literals
+# pylint: disable=attribute-defined-outside-init,import-error,no-name-in-module
+from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import re
 from distutils.core import Command

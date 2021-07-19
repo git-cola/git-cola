@@ -1,6 +1,5 @@
-# Copyright (C) 2007-2018 David Aguilar and contributors
-"""This module provides the Observable class"""
-from __future__ import division, absolute_import, unicode_literals
+"""The Observable class for decoupled notifications"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 
 class Observable(object):

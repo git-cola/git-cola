@@ -1,10 +1,5 @@
-"""Provides the git-cola startup dialog
-
-The startup dialog is presented when no repositories can be
-found at startup.
-
-"""
-from __future__ import division, absolute_import, unicode_literals
+"""The startup dialog is presented when no repositories can be found at startup"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy.QtCore import Qt
 from qtpy import QtCore

@@ -1,5 +1,5 @@
 """Provides dialogs for comparing branches and commits."""
-from __future__ import division, absolute_import, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt

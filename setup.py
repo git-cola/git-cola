@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-# git-cola installer
 # usage: use the Makefile instead of invoking this script directly.
 # pylint: disable=import-error,no-name-in-module
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 from glob import glob
 from distutils.command import build_scripts
 from distutils.core import setup

@@ -1,5 +1,5 @@
 # pylint: disable=import-error,no-name-in-module
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 from distutils.command.build import build
 
 from extras.build_mo import build_mo

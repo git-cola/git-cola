@@ -1,6 +1,5 @@
-"""This view provides the main git-cola user interface.
-"""
-from __future__ import division, absolute_import, unicode_literals
+"""Main UI for authoring commits and other Git Cola interactions"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 from functools import partial
 

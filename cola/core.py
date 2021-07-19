@@ -4,7 +4,7 @@ The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
-from __future__ import division, absolute_import, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 import functools
 import itertools
 import mimetypes

@@ -1,8 +1,5 @@
-# Copyright (C) 2007-2018 David Aguilar
-"""This module provides the central cola model.
-"""
-from __future__ import division, absolute_import, unicode_literals
-
+"""The central cola model"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from .. import core

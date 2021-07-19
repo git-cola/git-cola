@@ -1,12 +1,8 @@
+"""Run cola as a Python module.
+
+Usage: python -m cola
 """
-Run cola as a Python module.
-
-Usage:
-
-    python -m cola
-
-"""
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from cola import main
 

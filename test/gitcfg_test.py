@@ -1,6 +1,6 @@
-"""Test the cola.gitcmds module."""
+"""Test the cola.gitcfg module."""
 # pylint: disable=redefined-outer-name
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from . import helper
 from .helper import app_context

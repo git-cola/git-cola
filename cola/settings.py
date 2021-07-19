@@ -1,6 +1,5 @@
-"""Save settings, bookmarks, etc.
-"""
-from __future__ import division, absolute_import, unicode_literals
+"""Save settings, bookmarks, etc."""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import json
 import os
 import sys

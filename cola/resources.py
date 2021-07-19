@@ -1,5 +1,5 @@
-"""Provides the prefix() function for finding cola resources"""
-from __future__ import division, absolute_import, unicode_literals
+"""Functions for finding cola resources"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 from os.path import dirname
 import webbrowser

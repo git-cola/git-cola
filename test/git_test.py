@@ -1,7 +1,6 @@
-"""Tests various operations using the cola.git module
-"""
+"""Test the cola.git module"""
 # pylint: disable=redefined-outer-name
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 from cola import git
 from cola.git import STDOUT

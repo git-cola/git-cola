@@ -1,5 +1,5 @@
-"""The "Actions" widget"""
-from __future__ import division, absolute_import, unicode_literals
+"""Actions widget"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 
 from qtpy import QtCore

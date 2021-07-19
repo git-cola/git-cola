@@ -1,6 +1,5 @@
-"""Text wrapping and filling.
-"""
-from __future__ import division, absolute_import, unicode_literals
+"""Text wrapping and filling"""
+from __future__ import absolute_import, division, print_function, unicode_literals
 import re
 
 from .compat import ustr
