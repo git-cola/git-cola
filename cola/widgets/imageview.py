@@ -188,6 +188,8 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def zoomROICentered(self, p, zoom_level_delta):
         roi = self.current_scene_ROI
+        if not roi:
+            return
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_scalef = 1
 
@@ -211,6 +213,8 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def zoomROITo(self, p, zoom_level_delta):
         roi = self.current_scene_ROI
+        if not roi:
+            return
         roi_dims = QtCore.QPointF(roi.width(), roi.height())
         roi_topleft = roi.topLeft()
         roi_scalef = 1.0
