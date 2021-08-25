@@ -21,6 +21,11 @@ Usability, bells and whistles
   (`#1149 <https://github.com/git-cola/git-cola/pull/1149>`_)
   (`#1110 <https://github.com/git-cola/git-cola/issues/1110>`_)
 
+Packaging
+---------
+* The Windows installer was slimmed down by removing unused Qt DLLs.
+  (`#1152 <https://github.com/git-cola/git-cola/pull/1152>`_)
+
 .. _v3.10.1:
 
 v3.10.1
