@@ -21,6 +21,11 @@ Usability, bells and whistles
   (`#1149 <https://github.com/git-cola/git-cola/pull/1149>`_)
   (`#1110 <https://github.com/git-cola/git-cola/issues/1110>`_)
 
+Fixes
+-----
+* The `argparse` usage was adjusted to remain compatible with older Pythons.
+  (`#1155 <https://github.com/git-cola/git-cola/issues/1155>`_)
+
 Packaging
 ---------
 * The Windows installer was slimmed down by removing unused Qt DLLs.

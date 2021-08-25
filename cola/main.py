@@ -33,10 +33,12 @@ def winmain():
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
-    # Newer versions of argpares (Python 3.8+) emit an error message for
+    # Newer versions of argpares (Python 3.6+) emit an error message for
     # "--help-commands" unless we register the flag on the main parser.
-    add_help_options(parser)
-    parser.set_defaults(func=lambda _: parser.print_help())
+    python_version = (sys.version_info[0], sys.version_info[1])
+    if python_version >= (3, 6):
+        add_help_options(parser)
+        parser.set_defaults(func=lambda _: parser.print_help())
 
     subparser = parser.add_subparsers(title='valid commands')
     add_cola_command(subparser)
