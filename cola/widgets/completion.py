@@ -297,7 +297,12 @@ class GatherCompletionsThread(QtCore.QThread):
 
     def dispose(self):
         self.running = False
-        self.wait()
+        try:
+            self.wait()
+        except RuntimeError:
+            # The C++ object may have already been deleted by python while
+            # the application is tearing down. This is fine.
+            pass
 
     def run(self):
         text = None
