@@ -286,7 +286,7 @@ Start an interactive rebase through the "Rebase" menu, or through the
 
 git-cola-sequence-editor can be launched independently of git cola by telling
 `git rebase` to use it as its editor through the `GIT_SEQUENCE_EDITOR`
-enviironment variable:
+environment variable:
 
     env GIT_SEQUENCE_EDITOR="$PWD/bin/git-cola-sequence-editor" \
     git rebase -i origin/main
