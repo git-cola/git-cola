@@ -70,14 +70,13 @@ def _cache_key(git):
 
 def _config_to_python(v):
     """Convert a Git config string into a Python value"""
-
     if v in ('true', 'yes'):
         v = True
     elif v in ('false', 'no'):
         v = False
     else:
         try:
-            v = int(v)
+            v = int(v)  # pylint: disable=redefined-variable-type
         except ValueError:
             pass
     return v
@@ -486,8 +485,10 @@ class GitConfig(observable.Observable):
         value = self.get('cola.color.%s' % key, default=default)
         struct_layout = core.encode('BBB')
         try:
+            # pylint: disable=no-member
             r, g, b = struct.unpack(struct_layout, unhex(value))
         except (struct.error, TypeError):
+            # pylint: disable=no-member
             r, g, b = struct.unpack(struct_layout, unhex(default))
         return (r, g, b)
 

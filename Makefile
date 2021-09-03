@@ -4,7 +4,7 @@ all::
 # Development
 # -----------
 # make V=1                      # generate files; V=1 increases verbosity
-# make test [flags=...]         # run tests; flags=-x fails fast
+# make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
 # make test V=2                 # V=2 increases test verbosity
 # make doc                      # build docs
 # make flake8                   # python style checks
@@ -44,8 +44,8 @@ LN_S = $(LN) -s -f
 MARKDOWN = markdown
 MKDIR_P = mkdir -p
 PIP = pip
-PYLINT = pylint
 PYTHON ?= python
+PYLINT = $(PYTHON) -B -m pylint
 PYTEST = $(PYTHON) -B -m pytest
 RM = rm -f
 RM_R = rm -fr
@@ -79,12 +79,14 @@ endif
 TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
 TOX_ENVS ?= py{27,36,37,38,39,lint}
 
+PYLINT_SCORE_FLAG := $(shell sh -c '$(PYLINT) --score=no --help >/dev/null 2>&1 && echo " --score=no" || true')
 PYLINT_FLAGS = --rcfile=.pylintrc
-PYLINT_FLAGS += --score=no
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
 endif
-
+ifneq ($(PYLINT_SCORE_FLAGSCORE),)
+    PYLINT_FLAGS += $(PYLINT_SCORE_FLAG)
+endif
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)

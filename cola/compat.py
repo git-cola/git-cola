@@ -34,7 +34,6 @@ if PY3:
     def bchr(i):
         return bytes([i])
 
-
     int_types = (int,)
     maxsize = sys.maxsize
     ustr = str
