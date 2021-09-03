@@ -5,6 +5,7 @@ import sys
 
 from . import app
 from . import cmds
+from . import compat
 from . import core
 
 
@@ -33,10 +34,9 @@ def winmain():
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
-    # Newer versions of argpares (Python 3.6+) emit an error message for
+    # Newer versions of argparse (Python 3.6+) emit an error message for
     # "--help-commands" unless we register the flag on the main parser.
-    python_version = (sys.version_info[0], sys.version_info[1])
-    if python_version >= (3, 6):
+    if compat.PY_VERSION >= (3, 6):
         add_help_options(parser)
         parser.set_defaults(func=lambda _: parser.print_help())
 
