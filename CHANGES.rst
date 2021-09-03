@@ -21,6 +21,14 @@ Usability, bells and whistles
   (`#1149 <https://github.com/git-cola/git-cola/pull/1149>`_)
   (`#1110 <https://github.com/git-cola/git-cola/issues/1110>`_)
 
+Security
+--------
+* The `FIPS security mode
+  <https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/FIPS_Mode_-_an_explanation>`_
+  is now supported by Git Cola when running on FIPS-enabled Python
+  (Python 3.9+ or centos8/rhel8's patched Python 3.6).
+  (`#1157 <https://github.com/git-cola/git-cola/issues/1157>`_)
+
 Fixes
 -----
 * The `argparse` usage was adjusted to remain compatible with older Pythons.

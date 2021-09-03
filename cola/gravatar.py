@@ -7,6 +7,7 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy import QtNetwork
 
+from . import compat
 from . import core
 from . import icons
 from .compat import bstr
@@ -18,7 +19,7 @@ from .widgets import defs
 class Gravatar(object):
     @staticmethod
     def url_for_email(email, imgsize):
-        email_hash = core.decode(hashlib.md5(core.encode(email)).hexdigest())
+        email_hash = md5_hexdigest(email)
         # Python2.6 requires byte strings for urllib2.quote() so we have
         # to force
         default_url = 'https://git-cola.github.io/images/git-64x64.jpg'
@@ -26,6 +27,33 @@ class Gravatar(object):
         query = '?s=%d&d=%s' % (imgsize, core.decode(encoded_url))
         url = 'https://gravatar.com/avatar/' + email_hash + query
         return url
+
+
+def md5_hexdigest(value):
+    """Return the md5 hexdigest for a value.
+
+    Used for implementing the gravatar API. Not used for security purposes.
+    """
+    encoded_value = core.encode(value)
+    result = ''
+    try:
+        result = hashlib.md5(encoded_value).hexdigest()
+    except ValueError:
+        pass
+    if not result and compat.PY_VERSION >= (3, 6):
+        try:
+            # pylint: disable=unexpected-keyword-arg
+            result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
+        except ValueError:
+            # https://github.com/git-cola/git-cola/issues/1157
+            #  ValueError: error:060800A3:
+            #   digital envelope routines: EVP_DigestInit_ex: disabled for fips
+            #
+            # Newer versions of Python, including Centos8's patched Python3.6 and
+            # mainline Python 3.9+ have a "usedoforsecurity" parameter which allows us
+            # to continue using hashlib.md5().
+            pass
+    return core.decode(result)
 
 
 class GravatarLabel(QtWidgets.QLabel):
