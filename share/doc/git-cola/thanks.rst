@@ -24,6 +24,7 @@ Thanks
 * Andrew Hemming
 * armandg
 * Arthur Coelho
+* Audrey Yeena Toskin
 * Audrius Karabanovas
 * Axel Heider
 * Balázs Meskó
