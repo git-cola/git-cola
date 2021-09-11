@@ -37,6 +37,7 @@ Thanks
 * Benedict Lee
 * Benjamin Somers
 * Benoît Nouyrigat
+* Bernd K
 * Bert Jacobs
 * Birger Skogeng Pedersen
 * Björn Ketelaars
