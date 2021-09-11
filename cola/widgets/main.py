@@ -85,16 +85,19 @@ class MainView(standard.MainWindow):
             browser = browse.worktree_browser(
                 context, parent=self, show=False, update=False
             )
-            self.browserdock = create_dock(N_('Browser'), self, widget=browser)
+            self.browserdock = create_dock(
+                'Browser', N_('Browser'), self, widget=browser
+            )
 
         # "Actions" widget
         self.actionsdock = create_dock(
-            N_('Actions'), self, widget=action.ActionButtons(context, self)
+            'Actions', N_('Actions'), self, widget=action.ActionButtons(context, self)
         )
         qtutils.hide_dock(self.actionsdock)
 
         # "Repository Status" widget
         self.statusdock = create_dock(
+            'Status',
             N_('Status'),
             self,
             fn=lambda dock: status.StatusWidget(context, dock.titleBarWidget(), dock),
@@ -103,13 +106,19 @@ class MainView(standard.MainWindow):
 
         # "Switch Repository" widgets
         self.bookmarksdock = create_dock(
-            N_('Favorites'), self, fn=lambda dock: bookmarks.bookmark(context, dock)
+            'Favorites',
+            N_('Favorites'),
+            self,
+            fn=lambda dock: bookmarks.bookmark(context, dock)
         )
         bookmarkswidget = self.bookmarksdock.widget()
         qtutils.hide_dock(self.bookmarksdock)
 
         self.recentdock = create_dock(
-            N_('Recent'), self, fn=lambda dock: bookmarks.recent(context, dock)
+            'Recent',
+            N_('Recent'),
+            self,
+            fn=lambda dock: bookmarks.recent(context, dock)
         )
         recentwidget = self.recentdock.widget()
         qtutils.hide_dock(self.recentdock)
@@ -117,7 +126,10 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdock = create_dock(
-            N_('Branches'), self, fn=partial(branch.BranchesWidget, context)
+            'Branches',
+            N_('Branches'),
+            self,
+            fn=partial(branch.BranchesWidget, context)
         )
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
@@ -126,7 +138,10 @@ class MainView(standard.MainWindow):
 
         # "Submodule" widgets
         self.submodulesdock = create_dock(
-            N_('Submodules'), self, fn=partial(submodules.SubmodulesWidget, context)
+            'Submodules',
+            N_('Submodules'),
+            self,
+            fn=partial(submodules.SubmodulesWidget, context)
         )
         self.submoduleswidget = self.submodulesdock.widget()
 
@@ -144,18 +159,20 @@ class MainView(standard.MainWindow):
 
         editor = commitmsg.CommitMessageEditor(context, self)
         self.commiteditor = editor
-        self.commitdock = create_dock(N_('Commit'), self, widget=editor)
+        self.commitdock = create_dock('Commit', N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
         titlebar.add_corner_widget(self.position_label)
 
         # "Console" widget
         self.logwidget = log.LogWidget(context)
-        self.logdock = create_dock(N_('Console'), self, widget=self.logwidget)
+        self.logdock = create_dock(
+            'Console', N_('Console'), self, widget=self.logwidget
+        )
         qtutils.hide_dock(self.logdock)
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(
-            N_('Diff'), self, fn=lambda dock: diff.Viewer(context, parent=dock)
+            'Diff', N_('Diff'), self, fn=lambda dock: diff.Viewer(context, parent=dock)
         )
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)

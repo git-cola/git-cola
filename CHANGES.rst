@@ -34,6 +34,12 @@ Fixes
 * The `argparse` usage was adjusted to remain compatible with older Pythons.
   (`#1155 <https://github.com/git-cola/git-cola/issues/1155>`_)
 
+* The window restoration logic was fixed to properly save/restore settings
+  when different languages are used.
+  (`#1071 <https://github.com/git-cola/git-cola/issues/1071>`_)
+  (`#1161 <https://github.com/git-cola/git-cola/issues/1161>`_)
+  (`#382 <https://github.com/git-cola/git-cola/issues/382>`_)
+
 Packaging
 ---------
 * The Windows installer was slimmed down by removing unused Qt DLLs.
