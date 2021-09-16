@@ -126,7 +126,7 @@ configured.
 when editing files.  `gvim -f -o` uses splits.
 
 `git cola` is {vim, emacs, textpad, notepad++}-aware.
-When you select a line in the `grep` screen and press any of
+When you select a line in the diff or grep screens and press any of
 `Enter`, `Ctrl-e`, or the `Edit` button, you are taken to that exact line.
 
 The editor preference is saved in the `gui.editor` variable using
