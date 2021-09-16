@@ -2,7 +2,7 @@
 # Tcl ignores the next line -*- tcl -*- \
 exec wish "$0" -- "$@"
 
-# This is a trivial implementation of an GIT_ASKPASS / SSH_ASKPASS handler.
+# This is a trivial implementation of a GIT_ASKPASS / SSH_ASKPASS handler.
 # Git-gui uses this script if none are already configured.
 
 package require Tk
