@@ -1095,7 +1095,7 @@ is available in newer versions of Python. These include Python 3.9+ and the
 patched Python 3.6 used by CentOS8/RHEL8 (and possibly others).
 
 Git Cola uses the ``hashlib.md5`` function and adheres to the FIPS security
-mode when avaialble. Git Cola does not use the MD5 value for security purposes.
+mode when available. Git Cola does not use the MD5 value for security purposes.
 MD% is used only for the purposes of implementing the ``cola/gravatar.py``
 Gravatar client.
 

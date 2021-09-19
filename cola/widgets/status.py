@@ -308,7 +308,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         # Forward the about_to_update notification through self.about_to_update.
         self.m.add_observer(self.m.message_about_to_update, self.about_to_update.emit)
-        # Foward the updated notification through self.updated.
+        # Forward the updated notification through self.updated.
         self.m.add_observer(self.m.message_updated, self.updated.emit)
         self.m.add_observer(
             self.m.message_diff_text_changed, self.diff_text_changed.emit

@@ -353,7 +353,7 @@ Usability, bells and whistles
   over a stashed change.
   (`#982 <https://github.com/git-cola/git-cola/pull/982>`_)
 
-* Qt HiDPI settings are overriden by the `git cola` HiDPI appearance settings.
+* Qt HiDPI settings are overridden by the `git cola` HiDPI appearance settings.
   These overrides can now be disabled by selecting the "Disable" mode.
   This allows users to control Qt's HiDPI settings through environment
   variables.  Additionally, the "Auto" mode now detects the presence of

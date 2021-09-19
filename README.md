@@ -391,12 +391,12 @@ have been installed into the site-packages directory.
 
 Git Cola will prefer its private modules when the `share/git-cola/lib` directory
 exists, but they are not required to exist.  This directory is optional, and can
-be safely removed if the cola modules have been installed into site-pacakges
+be safely removed if the cola modules have been installed into site-packages
 and are importable through the default `sys.path`.
 
 To suppress the installation of the private (redundant) `share/git-cola/lib/cola`
 package, specify `make NO_PRIVATE_LIBS=1 ...` when invoking `make`,
-or export `GIT_COLA_NO_PRIVATE_LIBS=1` into the build enviornment.
+or export `GIT_COLA_NO_PRIVATE_LIBS=1` into the build environment.
 
     make NO_PRIVATE_LIBS=1 ...
 
