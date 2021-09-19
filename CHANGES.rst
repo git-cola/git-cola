@@ -21,6 +21,10 @@ Usability, bells and whistles
   (`#1149 <https://github.com/git-cola/git-cola/pull/1149>`_)
   (`#1110 <https://github.com/git-cola/git-cola/issues/1110>`_)
 
+* Documentation improvements and typofixes.
+  (`#1163 <https://github.com/git-cola/git-cola/pull/1163>`_)
+  (`#1164 <https://github.com/git-cola/git-cola/pull/1164>`_)
+
 Security
 --------
 * The `FIPS security mode
