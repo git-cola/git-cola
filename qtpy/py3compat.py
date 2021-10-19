@@ -75,9 +75,9 @@ else:
     import io
     import pickle
     if PY33:
-        from collections.abc import MutableMapping
+        from collections.abc import Callable, MutableMapping
     else:
-        from collections import MutableMapping
+        from collections import Callable, MutableMapping
     import _thread
     import reprlib
 

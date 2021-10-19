@@ -8,7 +8,7 @@
 
 """
 **QtPy** is a shim over the various Python Qt bindings. It is used to write
-Qt binding indenpendent libraries or applications.
+Qt binding independent libraries or applications.
 
 If one of the APIs has already been imported, then it will be used.
 
@@ -70,6 +70,7 @@ import warnings
 
 # Version of QtPy
 from ._version import __version__
+from .py3compat import PY2
 
 
 class PythonQtError(RuntimeError):
@@ -116,7 +117,7 @@ PYQT4 = PYSIDE = PYSIDE2 = False
 
 # When `FORCE_QT_API` is set, we disregard
 # any previously imported python bindings.
-if os.environ.get('FORCE_QT_API') is not None:
+if not os.environ.get('FORCE_QT_API'):
     if 'PyQt5' in sys.modules:
         API = initial_api if initial_api in PYQT5_API else 'pyqt5'
     elif 'PySide2' in sys.modules:
@@ -188,8 +189,13 @@ if API in PYQT4_API:
         except (AttributeError, ValueError):
             # PyQt < v4.6
             pass
-        from PyQt4.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
-        from PyQt4.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
+        try:
+            from PyQt4.Qt import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
+            from PyQt4.Qt import QT_VERSION_STR as QT_VERSION  # analysis:ignore
+        except ImportError:
+            # In PyQt4-sip 4.19.13 PYQT_VERSION_STR and QT_VERSION_STR are in PyQt4.QtCore
+            from PyQt4.QtCore import PYQT_VERSION_STR as PYQT_VERSION  # analysis:ignore
+            from PyQt4.QtCore import QT_VERSION_STR as QT_VERSION  # analysis:ignore
         PYSIDE_VERSION = None
         PYQT5 = False
         PYQT4 = True
@@ -224,3 +230,10 @@ if PYQT4:
         API_NAME += (" (API v{0})".format(sip.getapi('QString')))
     except AttributeError:
         pass
+
+try:
+    # QtDataVisualization backward compatibility (QtDataVisualization vs. QtDatavisualization)
+    # Only available for Qt5 bindings > 5.9 on Windows
+    from . import QtDataVisualization as QtDatavisualization
+except ImportError:
+    pass

@@ -9,11 +9,10 @@ Compatibility functions
 
 from __future__ import print_function
 import sys
-import collections
 
 from . import PYQT4
 from .QtWidgets import QFileDialog
-from .py3compat import is_text_string, to_text_string, TEXT_TYPES
+from .py3compat import Callable, is_text_string, to_text_string, TEXT_TYPES
 
 
 # =============================================================================
@@ -46,7 +45,7 @@ if PYQT4:
         to PyQt API #2 and Pyside (QVariant does not exist)"""
         if PYQT_API_1:
             # PyQt API #1
-            assert isinstance(convfunc, collections.Callable)
+            assert isinstance(convfunc, Callable)
             if convfunc in TEXT_TYPES or convfunc is to_text_string:
                 return convfunc(qobj.toString())
             elif convfunc is bool:

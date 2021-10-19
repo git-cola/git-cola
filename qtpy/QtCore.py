@@ -16,6 +16,7 @@ from . import PYQT5, PYSIDE2, PYQT4, PYSIDE, PythonQtError
 if PYQT5:
     from PyQt5.QtCore import *
     from PyQt5.QtCore import pyqtSignal as Signal
+    from PyQt5.QtCore import pyqtBoundSignal as SignalInstance
     from PyQt5.QtCore import pyqtSlot as Slot
     from PyQt5.QtCore import pyqtProperty as Property
     from PyQt5.QtCore import QT_VERSION_STR as __version__
@@ -25,7 +26,7 @@ if PYQT5:
     QDateTime.toPython = QDateTime.toPyDateTime
 
     # Those are imported from `import *`
-    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
+    del pyqtSignal, pyqtBoundSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR
 elif PYSIDE2:
     from PySide2.QtCore import *
 
@@ -43,6 +44,7 @@ elif PYQT4:
     from PyQt4.QtCore import QCoreApplication
     from PyQt4.QtCore import Qt
     from PyQt4.QtCore import pyqtSignal as Signal
+    from PyQt4.QtCore import pyqtBoundSignal as SignalInstance
     from PyQt4.QtCore import pyqtSlot as Slot
     from PyQt4.QtCore import pyqtProperty as Property
     from PyQt4.QtGui import (QItemSelection, QItemSelectionModel,
@@ -73,7 +75,7 @@ elif PYQT4:
         writableLocation = _QDesktopServices.storageLocation
 
     # Those are imported from `import *`
-    del pyqtSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR, qInstallMsgHandler
+    del pyqtSignal, pyqtBoundSignal, pyqtSlot, pyqtProperty, QT_VERSION_STR, qInstallMsgHandler
 elif PYSIDE:
     from PySide.QtCore import *
     from PySide.QtGui import (QItemSelection, QItemSelectionModel,

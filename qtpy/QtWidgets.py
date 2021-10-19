@@ -26,6 +26,8 @@ elif PYQT4:
     from PyQt4.QtGui import *
     QStyleOptionViewItem = QStyleOptionViewItemV4
     del QStyleOptionViewItemV4
+    QStyleOptionFrame = QStyleOptionFrameV3
+    del QStyleOptionFrameV3
 
     # These objects belong to QtGui
     try:

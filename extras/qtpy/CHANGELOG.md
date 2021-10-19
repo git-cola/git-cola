@@ -1,5 +1,96 @@
 # History of changes
 
+## Version 1.11.2 (2021-09-23)
+
+### Issues Closed
+
+* [Issue 248](https://github.com/spyder-ide/qtpy/issues/248) - Missing QtDataVisualization ([PR 249](https://github.com/spyder-ide/qtpy/pull/249) by [@dalthviz](https://github.com/dalthviz))
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 249](https://github.com/spyder-ide/qtpy/pull/249) - PR: Add handling for QtDataVisualization when missing, by [@dalthviz](https://github.com/dalthviz) ([248](https://github.com/spyder-ide/qtpy/issues/248))
+
+In this release 1 pull request was closed.
+
+
+----
+
+
+## Version 1.11.1 (2021-09-13)
+
+### Issues Closed
+
+* [Issue 245](https://github.com/spyder-ide/qtpy/issues/245) - Importing `qtpy.uic` raises an exception ([PR 246](https://github.com/spyder-ide/qtpy/pull/246) by [@dalthviz](https://github.com/dalthviz))
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 246](https://github.com/spyder-ide/qtpy/pull/246) - PR: Wrap `pysideuic` and `pyside2uic` imports since they could be unavailable, by [@dalthviz](https://github.com/dalthviz) ([245](https://github.com/spyder-ide/qtpy/issues/245))
+* [PR 244](https://github.com/spyder-ide/qtpy/pull/244) - qtpy/tests/test_uic.py: skip if pyside2uic not installed, by [@AndrewAmmerlaan](https://github.com/AndrewAmmerlaan)
+
+In this release 2 pull requests were closed.
+
+
+----
+
+
+## Version 1.11.0 (2021-09-03)
+
+### Issues Closed
+
+* [Issue 201](https://github.com/spyder-ide/qtpy/issues/201) - Missing QWebEngineProfile from QtWebEngineWidgets ([PR 242](https://github.com/spyder-ide/qtpy/pull/242) by [@dalthviz](https://github.com/dalthviz))
+
+In this release 1 issue was closed.
+
+### Pull Requests Merged
+
+* [PR 243](https://github.com/spyder-ide/qtpy/pull/243) - PR: `QtDataVisualization` backward compatibility handling on Windows, by [@dalthviz](https://github.com/dalthviz)
+* [PR 242](https://github.com/spyder-ide/qtpy/pull/242) - PR: Add `QtWebEngineWidgets.QWebEngineProfile` for PyQt5 and PySide2, by [@dalthviz](https://github.com/dalthviz) ([201](https://github.com/spyder-ide/qtpy/issues/201))
+* [PR 228](https://github.com/spyder-ide/qtpy/pull/228) - PR: Rename QtDatavisualization to use uppercase v, by [@antlarr](https://github.com/antlarr)
+* [PR 219](https://github.com/spyder-ide/qtpy/pull/219) - PR: Add support for QStyleOptionFrameV3 from PyQt4, by [@PierreRaybaut](https://github.com/PierreRaybaut)
+* [PR 218](https://github.com/spyder-ide/qtpy/pull/218) - PR: Add QtWinExtras module, by [@phil65](https://github.com/phil65)
+* [PR 209](https://github.com/spyder-ide/qtpy/pull/209) - PR: Add support for QtSerialPort add-on, by [@Stanowczo](https://github.com/Stanowczo)
+* [PR 205](https://github.com/spyder-ide/qtpy/pull/205) - PR: Add support for the QtPositioning module, by [@avalentino](https://github.com/avalentino)
+* [PR 202](https://github.com/spyder-ide/qtpy/pull/202) - PR: Add loadUiType implementation for PySide2, by [@avalentino](https://github.com/avalentino)
+
+In this release 8 pull requests were closed.
+
+
+----
+
+
+## Version 1.10.0 (2021-08-17)
+
+### Issues Closed
+
+* [Issue 238](https://github.com/spyder-ide/qtpy/issues/238) - PySide2 and Python3.9: xml.etree.ElementTree.Element' object has no attribute 'getchildren
+* [Issue 222](https://github.com/spyder-ide/qtpy/issues/222) - Imported modules are not respected
+* [Issue 220](https://github.com/spyder-ide/qtpy/issues/220) - MNT: Stop using ci-helpers in appveyor.yml
+* [Issue 206](https://github.com/spyder-ide/qtpy/issues/206) - DeprecationWarning for getchildren ([PR 224](https://github.com/spyder-ide/qtpy/pull/224) by [@irrcombat](https://github.com/irrcombat))
+* [Issue 198](https://github.com/spyder-ide/qtpy/issues/198) - PyQt4-sip==4.19.13 not supported
+
+In this release 5 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 241](https://github.com/spyder-ide/qtpy/pull/241) - PR: Update setup.py classifiers, by [@dalthviz](https://github.com/dalthviz)
+* [PR 230](https://github.com/spyder-ide/qtpy/pull/230) - PR: Fix imported modules logic if 'FORCE_QT_API' is empty, by [@hiaselhans](https://github.com/hiaselhans)
+* [PR 224](https://github.com/spyder-ide/qtpy/pull/224) - PR: Support python 3.9 `custom_widgets` iteration, by [@irrcombat](https://github.com/irrcombat) ([206](https://github.com/spyder-ide/qtpy/issues/206))
+* [PR 215](https://github.com/spyder-ide/qtpy/pull/215) - PR: Slight typo fix, by [@altendky](https://github.com/altendky)
+* [PR 214](https://github.com/spyder-ide/qtpy/pull/214) - PR: Handle QtCore.SignalInstance/pyqtBoundSignal, by [@altendky](https://github.com/altendky)
+* [PR 208](https://github.com/spyder-ide/qtpy/pull/208) - PR: Move CI to Github Actions, by [@goanpeca](https://github.com/goanpeca)
+* [PR 204](https://github.com/spyder-ide/qtpy/pull/204) - PR: Add Python 3.9 compatibility for `collections.abc` module, by [@tirkarthi](https://github.com/tirkarthi)
+* [PR 199](https://github.com/spyder-ide/qtpy/pull/199) - PR: Add support to PyQt4-sip 4.19.13, by [@milanmatic](https://github.com/milanmatic)
+
+In this release 8 pull requests were closed.
+
+
+----
+
+
 ## Version 1.9.0 (2019-07-23)
 
 ### New features

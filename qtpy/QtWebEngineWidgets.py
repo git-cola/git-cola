@@ -22,6 +22,8 @@ if PYQT5:
         from PyQt5.QtWebEngineWidgets import QWebEnginePage
         from PyQt5.QtWebEngineWidgets import QWebEngineView
         from PyQt5.QtWebEngineWidgets import QWebEngineSettings
+        # Based on the work at https://github.com/spyder-ide/qtpy/pull/203
+        from PyQt5.QtWebEngineWidgets import QWebEngineProfile
     except ImportError:
         from PyQt5.QtWebKitWidgets import QWebPage as QWebEnginePage
         from PyQt5.QtWebKitWidgets import QWebView as QWebEngineView
@@ -31,6 +33,8 @@ elif PYSIDE2:
     from PySide2.QtWebEngineWidgets import QWebEnginePage
     from PySide2.QtWebEngineWidgets import QWebEngineView
     from PySide2.QtWebEngineWidgets import QWebEngineSettings
+    # Based on the work at https://github.com/spyder-ide/qtpy/pull/203
+    from PySide2.QtWebEngineWidgets import QWebEngineProfile
 elif PYQT4:
     from PyQt4.QtWebKit import QWebPage as QWebEnginePage
     from PyQt4.QtWebKit import QWebView as QWebEngineView
