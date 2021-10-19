@@ -1,7 +1,7 @@
-.. _v3.11:
+.. _v3.11.0:
 
-v3.11
-=====
+v3.11.0
+=======
 
 Usability, bells and whistles
 -----------------------------
@@ -43,6 +43,9 @@ Fixes
   (`#1071 <https://github.com/git-cola/git-cola/issues/1071>`_)
   (`#1161 <https://github.com/git-cola/git-cola/issues/1161>`_)
   (`#382 <https://github.com/git-cola/git-cola/issues/382>`_)
+
+* `git dag` no longer passes floats to `QPen::setWidth()` for better compatibility.
+  (`bz #2014950 <https://bugzilla.redhat.com/show_bug.cgi?id=2014950>`_)
 
 Packaging
 ---------

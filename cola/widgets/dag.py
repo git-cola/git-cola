@@ -1232,7 +1232,7 @@ class Commit(QtWidgets.QGraphicsItem):
                     self.brush = self.commit_color
                 color = self.outline_color
             commit_pen = QtGui.QPen()
-            commit_pen.setWidth(1.0)
+            commit_pen.setWidth(1)
             commit_pen.setColor(color)
             self.commit_pen = commit_pen
 
