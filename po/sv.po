@@ -749,7 +749,7 @@ msgstr ""
 msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr ""
 
 #, fuzzy
@@ -928,7 +928,7 @@ msgid "Delete remote?"
 msgstr "Ta bort fjärrgren"
 
 #, fuzzy
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Ta bort gren"
 
 msgid "Delete..."

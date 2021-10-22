@@ -825,7 +825,7 @@ msgstr "全て比較"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "新しいアップストリームとしてリモートブランチを設定する"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "ツールバーの設定"
 
 msgid "Console"
@@ -982,7 +982,7 @@ msgstr "リモート \"%s\"の削除"
 msgid "Delete remote?"
 msgstr "リモートを削除しますか？"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "ツールバーの削除"
 
 msgid "Delete..."

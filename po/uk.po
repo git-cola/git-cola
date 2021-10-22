@@ -789,7 +789,7 @@ msgstr "Порівняти все"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr ""
 
 msgid "Console"
@@ -951,7 +951,7 @@ msgid "Delete remote?"
 msgstr "Видалити віддалений репозиторій?"
 
 #, fuzzy
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Видалити закладку"
 
 msgid "Delete..."

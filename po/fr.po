@@ -755,7 +755,7 @@ msgstr "Tout comparer"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Configurer la branche distante comme la nouvelle source"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr ""
 
 msgid "Console"
@@ -911,7 +911,7 @@ msgstr "Supprimer la branche distante « %s »"
 msgid "Delete remote?"
 msgstr "Supprimer la branche distante ?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr ""
 
 msgid "Delete..."

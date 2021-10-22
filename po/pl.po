@@ -826,7 +826,7 @@ msgstr "Porównaj wszystkie"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Ustaw zdalną gałąź jako nową gałąź odgórną"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "Ustawienia paska narzędzi"
 
 msgid "Console"
@@ -982,7 +982,7 @@ msgstr "Usuń zdalne repozytorium \"%s\""
 msgid "Delete remote?"
 msgstr "Usunąć zdalne repozytorium?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Usuń pasek narzędzi"
 
 msgid "Delete..."

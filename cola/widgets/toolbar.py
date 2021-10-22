@@ -257,8 +257,8 @@ class ToolBar(QtWidgets.QToolBar):
 
     def contextMenuEvent(self, event):
         menu = QtWidgets.QMenu()
-        menu.addAction(N_('Configure toolbar'), partial(configure, self))
-        menu.addAction(N_('Delete toolbar'), self.delete_toolbar)
+        menu.addAction(N_('Configure Toolbar'), partial(configure, self))
+        menu.addAction(N_('Delete Toolbar'), self.delete_toolbar)
 
         menu.exec_(event.globalPos())
 
@@ -300,7 +300,7 @@ class ToolbarView(standard.Dialog):
 
     def __init__(self, toolbar, parent=None):
         standard.Dialog.__init__(self, parent)
-        self.setWindowTitle(N_('Configure toolbar'))
+        self.setWindowTitle(N_('Configure Toolbar'))
 
         self.toolbar = toolbar
         self.toolbar.setToolButtonStyle(Qt.ToolButtonFollowStyle)
