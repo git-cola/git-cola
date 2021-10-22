@@ -62,22 +62,22 @@ COMMANDS = {
     'File::EditRemotes': {
         'title': 'Edit Remotes...',
         'action': editremotes.editor,
-        'icon': None,
+        'icon': 'edit',
     },
     'File::RecentModified': {
         'title': 'Recently Modified Files...',
         'action': recent.browse_recent_files,
-        'icon': None,
+        'icon': 'edit',
     },
     'File::ApplyPatches': {
         'title': 'Apply Patches...',
         'action': patch.apply_patches,
-        'icon': None,
+        'icon': 'diff',
     },
     'File::ExportPatches': {
         'title': 'Export Patches...',
         'action': guicmds.export_patches,
-        'icon': None,
+        'icon': 'save',
     },
     'File::SaveAsTarZip': {
         'title': 'Save As Tarball/Zip...',
@@ -89,10 +89,10 @@ COMMANDS = {
     #     'action': prefs.preferences,
     #     'icon': 'configure'
     # },
-    'Actions::Fetch': {'title': 'Fetch...', 'action': remote.fetch, 'icon': None},
+    'Actions::Fetch': {'title': 'Fetch...', 'action': remote.fetch, 'icon': 'download'},
     'Actions::Pull': {'title': 'Pull...', 'action': remote.pull, 'icon': 'pull'},
     'Actions::Push': {'title': 'Push...', 'action': remote.push, 'icon': 'push'},
-    'Actions::Stash': {'title': 'Stash...', 'action': stash.view, 'icon': None},
+    'Actions::Stash': {'title': 'Stash...', 'action': stash.view, 'icon': 'commit'},
     'Actions::CreateTag': {
         'title': 'Create Tag...',
         'action': createtag.create_tag,
@@ -101,7 +101,7 @@ COMMANDS = {
     'Actions::CherryPick': {
         'title': 'Cherry-Pick...',
         'action': guicmds.cherry_pick,
-        'icon': None,
+        'icon': 'cherry_pick',
     },
     'Actions::Merge': {
         'title': 'Merge...',
@@ -111,12 +111,12 @@ COMMANDS = {
     'Actions::AbortMerge': {
         'title': 'Abort Merge...',
         'action': cmds.run(cmds.AbortMerge),
-        'icon': None,
+        'icon': 'undo',
     },
     'Actions::UpdateSubmodules': {
         'title': 'Update All Submodules...',
         'action': cmds.run(cmds.SubmodulesUpdate),
-        'icon': None,
+        'icon': 'sync',
     },
     'Actions::ResetSoft': {
         'title': 'Reset Branch (Soft)',
@@ -176,6 +176,7 @@ COMMANDS = {
     'Commit::StageAll': {
         'title': 'Stage All Untracked',
         'action': cmds.run(cmds.StageUntracked),
+        'icon': 'add',
     },
     'Commit::UnstageAll': {
         'title': 'Unstage All',
@@ -190,10 +191,12 @@ COMMANDS = {
     'Commit::LoadCommitMessage': {
         'title': 'Load Commit Message...',
         'action': guicmds.load_commitmsg,
+        'icon': 'file_text',
     },
     'Commit::GetCommitMessageTemplate': {
         'title': 'Get Commit Message Template',
         'action': cmds.run(cmds.LoadCommitMessageFromTemplate),
+        'icon': 'style_dialog_apply',
     },
     'Diff::Difftool': {
         'title': 'Launch Diff tool',
@@ -203,67 +206,67 @@ COMMANDS = {
     'Diff::Expression': {
         'title': 'Expression...',
         'action': guicmds.diff_expression,
-        'icon': None,
+        'icon': 'compare',
     },
     'Diff::Branches': {
         'title': 'Branches...',
         'action': compare.compare_branches,
-        'icon': None,
+        'icon': 'compare',
     },
     'Diff::Diffstat': {
         'title': 'Diffstat',
         'action': cmds.run(cmds.Diffstat),
-        'icon': None,
+        'icon': 'diff',
     },
     'Branch::Review': {
         'title': 'Review...',
         'action': guicmds.review_branch,
-        'icon': None,
+        'icon': 'compare',
     },
     'Branch::Create': {
         'title': 'Create...',
         'action': createbranch.create_new_branch,
-        'icon': None,
+        'icon': 'branch',
     },
     'Branch::Checkout': {
         'title': 'Checkout...',
         'action': guicmds.checkout_branch,
-        'icon': None,
+        'icon': 'branch',
     },
     'Branch::Delete': {
         'title': 'Delete...',
         'action': guicmds.delete_branch,
-        'icon': None,
+        'icon': 'discard',
     },
     'Branch::DeleteRemote': {
         'title': 'Delete Remote Branch...',
         'action': guicmds.delete_remote_branch,
-        'icon': None,
+        'icon': 'discard',
     },
     'Branch::Rename': {
         'title': 'Rename Branch...',
         'action': guicmds.rename_branch,
-        'icon': None,
+        'icon': 'edit',
     },
     'Branch::BrowseCurrent': {
         'title': 'Browse Current Branch...',
         'action': guicmds.browse_current,
-        'icon': None,
+        'icon': 'directory',
     },
     'Branch::BrowseOther': {
         'title': 'Browse Other Branch...',
         'action': guicmds.browse_other,
-        'icon': None,
+        'icon': 'directory',
     },
     'Branch::VisualizeCurrent': {
         'title': 'Visualize Current Branch...',
         'action': cmds.run(cmds.VisualizeCurrent),
-        'icon': None,
+        'icon': 'visualize',
     },
     'Branch::VisualizeAll': {
         'title': 'Visualize All Branches...',
         'action': cmds.run(cmds.VisualizeAll),
-        'icon': None,
+        'icon': 'visualize',
     },
     'View::FileBrowser': {
         'title': 'File Browser...',

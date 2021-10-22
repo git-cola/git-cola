@@ -257,8 +257,10 @@ class ToolBar(QtWidgets.QToolBar):
 
     def contextMenuEvent(self, event):
         menu = QtWidgets.QMenu()
-        menu.addAction(N_('Configure Toolbar'), partial(configure, self))
-        menu.addAction(N_('Delete Toolbar'), self.delete_toolbar)
+        tool_config = menu.addAction(N_('Configure Toolbar'), partial(configure, self))
+        tool_config.setIcon(icons.configure())
+        tool_delete = menu.addAction(N_('Delete Toolbar'), self.delete_toolbar)
+        tool_delete.setIcon(icons.remove())
 
         menu.exec_(event.globalPos())
 

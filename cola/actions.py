@@ -52,13 +52,17 @@ def stage_or_unstage(context, widget):
 
 def move_down(widget):
     """Create a QAction to select the next item"""
-    return qtutils.add_action(
+    action = qtutils.add_action(
         widget, N_('Next File'), widget.down.emit, hotkeys.MOVE_DOWN_SECONDARY
     )
+    action.setIcon(icons.move_down())
+    return action
 
 
 def move_up(widget):
     """Create a QAction to select the previous/above item"""
-    return qtutils.add_action(
+    action = qtutils.add_action(
         widget, N_('Previous File'), widget.up.emit, hotkeys.MOVE_UP_SECONDARY
     )
+    action.setIcon(icons.move_up())
+    return action

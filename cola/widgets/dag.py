@@ -305,7 +305,7 @@ def viewer_actions(widget):
             ),
         ),
         'cherry_pick': set_icon(
-            icons.style_dialog_apply(),
+            icons.cherry_pick(),
             qtutils.add_action(widget, N_('Cherry Pick'), widget.proxy.cherry_pick),
         ),
         'revert': set_icon(

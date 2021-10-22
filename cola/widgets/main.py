@@ -234,7 +234,7 @@ class MainView(standard.MainWindow):
         self.apply_patches_action = add_action(
             self, N_('Apply Patches...'), partial(patch.apply_patches, context)
         )
-        self.apply_patches_action.setIcon(icons.style_dialog_apply())
+        self.apply_patches_action.setIcon(icons.diff())
 
         self.export_patches_action = add_action(
             self,
@@ -260,6 +260,7 @@ class MainView(standard.MainWindow):
         self.preferences_action = add_action(
             self, N_('Preferences'), prefs_fn, QtGui.QKeySequence.Preferences
         )
+        self.preferences_action.setIcon(icons.configure())
 
         self.edit_remotes_action = add_action(
             self, N_('Edit Remotes...'), partial(editremotes.editor, context)
@@ -289,7 +290,7 @@ class MainView(standard.MainWindow):
             partial(recent.browse_recent_files, context),
             hotkeys.EDIT_SECONDARY,
         )
-        self.browse_recently_modified_action.setIcon(icons.edit())
+        self.browse_recently_modified_action.setIcon(icons.directory())
 
         self.cherry_pick_action = add_action(
             self,
@@ -297,11 +298,12 @@ class MainView(standard.MainWindow):
             partial(guicmds.cherry_pick, context),
             hotkeys.CHERRY_PICK,
         )
-        self.cherry_pick_action.setIcon(icons.style_dialog_apply())
+        self.cherry_pick_action.setIcon(icons.cherry_pick())
 
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'), partial(guicmds.load_commitmsg, context)
         )
+        self.load_commitmsg_action.setIcon(icons.file_text())
 
         self.prepare_commitmsg_hook_action = add_action(
             self,
@@ -462,14 +464,20 @@ class MainView(standard.MainWindow):
             N_('Browse Current Branch...'),
             partial(guicmds.browse_current, context),
         )
+        self.browse_branch_action.setIcon(icons.directory())
+
         self.browse_other_branch_action = add_action(
             self, N_('Browse Other Branch...'), partial(guicmds.browse_other, context)
         )
+        self.browse_other_branch_action.setIcon(icons.directory())
+
         self.load_commitmsg_template_action = add_action(
             self,
             N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate, context),
         )
+        self.load_commitmsg_template_action.setIcon(icons.style_dialog_apply())
+
         self.help_about_action = add_action(
             self, N_('About'), partial(about.about_dialog, context)
         )
@@ -522,6 +530,8 @@ class MainView(standard.MainWindow):
             partial(guicmds.checkout_branch, context),
             hotkeys.CHECKOUT,
         )
+        self.checkout_branch_action.setIcon(icons.branch())
+
         self.branch_review_action = add_action(
             self, N_('Review...'), partial(guicmds.review_branch, context)
         )
@@ -651,17 +661,24 @@ class MainView(standard.MainWindow):
         edit_proxy.override('selectAll', select_widgets)
 
         edit_menu = self.edit_menu = add_menu(N_('&Edit'), self.menubar)
-        add_action(edit_menu, N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
-        add_action(edit_menu, N_('Redo'), edit_proxy.redo, hotkeys.REDO)
+        undo = add_action(edit_menu, N_('Undo'), edit_proxy.undo, hotkeys.UNDO)
+        undo.setIcon(icons.undo())
+        redo = add_action(edit_menu, N_('Redo'), edit_proxy.redo, hotkeys.REDO)
+        redo.setIcon(icons.redo())
         edit_menu.addSeparator()
-        add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
-        add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
-        add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
-        add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        cut = add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
+        cut.setIcon(icons.cut())
+        copy = add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
+        copy.setIcon(icons.copy())
+        paste = add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
+        paste.setIcon(icons.paste())
+        delete = add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        delete.setIcon(icons.delete())
         edit_menu.addSeparator()
-        add_action(
+        select_all = add_action(
             edit_menu, N_('Select All'), edit_proxy.selectAll, hotkeys.SELECT_ALL
         )
+        select_all.setIcon(icons.select_all())
         edit_menu.addSeparator()
         commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
 

@@ -76,7 +76,7 @@ class SearchWidget(standard.Dialog):
         )
 
         self.button_cherrypick = qtutils.create_button(
-            text=N_('Cherry Pick'), icon=icons.save()
+            text=N_('Cherry Pick'), icon=icons.cherry_pick()
         )
         self.button_close = qtutils.close_button()
 

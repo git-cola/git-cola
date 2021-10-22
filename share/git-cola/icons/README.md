@@ -116,27 +116,18 @@ The following files are from the Gnome High Contrast Icon set:
 License: LGPL v2+
 
 
-### Flaticon.com Icons
-
-The following files are designed by Freepik from http://www.flaticons.com/
-
-- edit-undo.svg
-
-License: [Flatpik Basic License](http://cdn.flaticon.com/license/license.pdf)
-
-
-The following files are by Linh Pham from http://flaticons.com/
-
-- edit-copy.svg
-
-License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
-
-
-### Google Icons
+### Google Material Icons (v2.2)
 
 The following files are by Google:
 
+- arrow-down.svg
+- arrow-up.svg
+- edit-copy.svg
+- edit-cut.svg
+- edit-paste.svg
+- edit-redo.svg
 - edit-select-all.svg
+- edit-undo.svg
 - file-download.svg
 
 License: [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)

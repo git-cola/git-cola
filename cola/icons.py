@@ -158,6 +158,10 @@ def check_name():
     return name_from_basename('check.svg')
 
 
+def cherry_pick():
+    return icon('git-commit.svg')
+
+
 def close():
     return icon('x.svg')
 
@@ -178,8 +182,20 @@ def configure():
     return icon('gear.svg')
 
 
+def cut():
+    return from_theme('edit-cut', fallback='edit-cut.svg')
+
+
 def copy():
-    return from_theme('edit-copy.svg')
+    return from_theme('edit-copy', fallback='edit-copy.svg')
+
+
+def paste():
+    return from_theme('edit-paste', fallback='edit-paste.svg')
+
+
+def delete():
+    return from_theme('edit-delete', fallback='trashcan.svg')
 
 
 def default_app():
@@ -255,6 +271,14 @@ def modified_name():
     return name_from_basename('modified.svg')
 
 
+def move_down():
+    return from_theme('go-previous', fallback='arrow-down.svg')
+
+
+def move_up():
+    return from_theme('go-next', fallback='arrow-up.svg')
+
+
 def new():
     return icon('folder-new.svg')
 
@@ -304,7 +328,7 @@ def search():
 
 
 def select_all():
-    return from_theme('edit-select-all.svg')
+    return from_theme('edit-select-all', fallback='edit-select-all')
 
 
 def staged():
@@ -329,6 +353,10 @@ def tag():
 
 def undo():
     return from_theme('edit-undo', fallback='edit-undo.svg')
+
+
+def redo():
+    return from_theme('edit-redo', fallback='edit-redo.svg')
 
 
 def style_dialog_apply():
