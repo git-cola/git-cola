@@ -881,12 +881,12 @@ class MainView(standard.MainWindow):
             menu_action.setParent(menu)
             menu.addAction(menu_action)
 
-        menu.addSeparator()
         context = self.context
         menu_action = menu.addAction(
-            N_('Add Toolbar'), partial(toolbar.add_toolbar, context, self)
+            N_('New Toolbar'), partial(toolbar.add_toolbar, context, self)
         )
         menu_action.setIcon(icons.add())
+        menu.addSeparator()
 
         dockwidgets = [
             self.logdock,

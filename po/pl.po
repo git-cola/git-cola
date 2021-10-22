@@ -462,7 +462,7 @@ msgstr "Dodaj podmoduł"
 msgid "Add Submodule..."
 msgstr "Dodaj podmoduł..."
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Dodaj pasek narzędzi"
 
 msgid ""

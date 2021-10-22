@@ -414,7 +414,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Přidat nástrojovou lištu"
 
 msgid ""

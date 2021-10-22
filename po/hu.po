@@ -471,7 +471,7 @@ msgstr "Részmodul hozzáadása"
 msgid "Add Submodule..."
 msgstr "Részmodul hozzáadása…"
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Eszköztár hozzáadása"
 
 msgid ""

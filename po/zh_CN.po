@@ -398,7 +398,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "添加工具栏"
 
 msgid ""

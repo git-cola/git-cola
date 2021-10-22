@@ -462,7 +462,7 @@ msgstr "サブモジュールの追加"
 msgid "Add Submodule..."
 msgstr "サブモジュールの追加..."
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "ツールバーの追加"
 
 msgid ""
