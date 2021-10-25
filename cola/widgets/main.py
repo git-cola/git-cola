@@ -282,7 +282,7 @@ class MainView(standard.MainWindow):
             hotkeys.FINDER,
             hotkeys.FINDER_SECONDARY,
         )
-        self.find_files_action.setIcon(icons.zoom_in())
+        self.find_files_action.setIcon(icons.search())
 
         self.browse_recently_modified_action = add_action(
             self,
