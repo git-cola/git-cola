@@ -115,8 +115,8 @@ class ToolBarState(object):
             except KeyError:
                 # Maintain compatibility for toolbars created in git-cola <= 3.11.0
                 if data['show_icons']:
-                    data['toolbar_style'] = ToolBar.STYLE_ICON_ONLY
-                    toolbar.set_toolbar_style(ToolBar.STYLE_ICON_ONLY)
+                    data['toolbar_style'] = ToolBar.STYLE_FOLLOW_SYSTEM
+                    toolbar.set_toolbar_style(ToolBar.STYLE_FOLLOW_SYSTEM)
                 else:
                     data['toolbar_style'] = ToolBar.STYLE_TEXT_ONLY
                     toolbar.set_toolbar_style(ToolBar.STYLE_TEXT_ONLY)
@@ -303,6 +303,7 @@ class ToolbarView(standard.Dialog):
         self.setWindowTitle(N_('Configure toolbar'))
 
         self.toolbar = toolbar
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonFollowStyle)
         self.left_list = ToolbarTreeWidget(self)
         self.right_list = DraggableListWidget(self)
         self.text_toolbar_name = QtWidgets.QLabel()
