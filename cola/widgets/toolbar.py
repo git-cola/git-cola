@@ -202,7 +202,7 @@ class ToolBar(QtWidgets.QToolBar):
             self.STYLE_TEXT_BESIDE_ICON: Qt.ToolButtonTextBesideIcon,
             self.STYLE_TEXT_UNDER_ICON: Qt.ToolButtonTextUnderIcon,
         }
-        default = self.STYLE_FOLLOW_SYSTEM
+        default = Qt.ToolButtonFollowStyle
         return self.setToolButtonStyle(styles_to_qt.get(style_id, default))
 
     def toolbar_style(self):
@@ -213,8 +213,8 @@ class ToolBar(QtWidgets.QToolBar):
             Qt.ToolButtonTextBesideIcon: self.STYLE_TEXT_BESIDE_ICON,
             Qt.ToolButtonTextUnderIcon: self.STYLE_TEXT_UNDER_ICON,
         }
-
-        return styles_to_int.get(self.toolButtonStyle(), Qt.ToolButtonFollowStyle)
+        default = self.STYLE_FOLLOW_SYSTEM
+        return styles_to_int.get(self.toolButtonStyle(), default)
 
     def load_items(self, items):
         for data in items:
