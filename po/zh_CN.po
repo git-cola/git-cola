@@ -398,7 +398,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "添加工具栏"
 
 msgid ""
@@ -761,7 +761,7 @@ msgstr "比较全部"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "将远程分支设为新的上游"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "配置工具栏"
 
 msgid "Console"
@@ -919,7 +919,7 @@ msgstr "删除远程 \"%s\""
 msgid "Delete remote?"
 msgstr "删除远程吗?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "删除工具栏"
 
 msgid "Delete..."

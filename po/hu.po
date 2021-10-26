@@ -471,7 +471,7 @@ msgstr "Részmodul hozzáadása"
 msgid "Add Submodule..."
 msgstr "Részmodul hozzáadása…"
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Eszköztár hozzáadása"
 
 msgid ""
@@ -847,7 +847,7 @@ msgstr "Mind összehasonlítása"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "A távoli ág beállítása új távoli tárolóként"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "Eszköztár beállítása"
 
 msgid "Console"
@@ -1009,7 +1009,7 @@ msgstr "„%s” távoli törlése"
 msgid "Delete remote?"
 msgstr "Törli a távolit?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Eszköztár törlése"
 
 msgid "Delete..."

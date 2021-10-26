@@ -147,7 +147,7 @@ def add():
 
 
 def alphabetical():
-    return icon('a-z-order.svg')
+    return from_theme('view-sort', fallback='a-z-order.svg')
 
 
 def branch():
@@ -156,6 +156,10 @@ def branch():
 
 def check_name():
     return name_from_basename('check.svg')
+
+
+def cherry_pick():
+    return icon('git-commit.svg')
 
 
 def close():
@@ -178,8 +182,20 @@ def configure():
     return icon('gear.svg')
 
 
+def cut():
+    return from_theme('edit-cut', fallback='edit-cut.svg')
+
+
 def copy():
-    return from_theme('edit-copy.svg')
+    return from_theme('edit-copy', fallback='edit-copy.svg')
+
+
+def paste():
+    return from_theme('edit-paste', fallback='edit-paste.svg')
+
+
+def delete():
+    return from_theme('edit-delete', fallback='trashcan.svg')
 
 
 def default_app():
@@ -195,7 +211,7 @@ def download():
 
 
 def discard():
-    return icon('trashcan.svg')
+    return from_theme('delete', fallback='trashcan.svg')
 
 
 # folder vs directory: directory is opaque, folder is just an outline
@@ -204,11 +220,11 @@ def discard():
 
 
 def folder():
-    return icon('folder.svg')
+    return from_theme('folder', fallback='folder.svg')
 
 
 def directory():
-    return icon('file-directory.svg')
+    return from_theme('folder', fallback='file-directory.svg')
 
 
 def diff():
@@ -216,7 +232,7 @@ def diff():
 
 
 def edit():
-    return icon('pencil.svg')
+    return from_theme('document-edit', fallback='pencil.svg')
 
 
 def ellipsis():
@@ -255,16 +271,24 @@ def modified_name():
     return name_from_basename('modified.svg')
 
 
+def move_down():
+    return from_theme('go-previous', fallback='arrow-down.svg')
+
+
+def move_up():
+    return from_theme('go-next', fallback='arrow-up.svg')
+
+
 def new():
-    return icon('folder-new.svg')
+    return from_theme('list-add', fallback='folder-new.svg')
 
 
 def ok():
-    return icon('check.svg')
+    return from_theme('checkmark', fallback='check.svg')
 
 
 def open_directory():
-    return icon('folder.svg')
+    return from_theme('folder', fallback='folder.svg')
 
 
 def partial_name():
@@ -296,15 +320,15 @@ def reverse_chronological():
 
 
 def save():
-    return icon('desktop-download.svg')
+    return from_theme('document-save', fallback='desktop-download.svg')
 
 
 def search():
-    return icon('search.svg')
+    return from_theme('search', fallback='search.svg')
 
 
 def select_all():
-    return from_theme('edit-select-all.svg')
+    return from_theme('edit-select-all', fallback='edit-select-all')
 
 
 def staged():
@@ -329,6 +353,10 @@ def tag():
 
 def undo():
     return from_theme('edit-undo', fallback='edit-undo.svg')
+
+
+def redo():
+    return from_theme('edit-redo', fallback='edit-redo.svg')
 
 
 def style_dialog_apply():
@@ -356,12 +384,12 @@ def upstream_name():
 
 
 def zoom_fit_best():
-    return icon('zoom-fit-best.svg')
+    return from_theme('zoom-fit-best', fallback='zoom-fit-best.svg')
 
 
 def zoom_in():
-    return icon('zoom-in.svg')
+    return from_theme('zoom-in', fallback='zoom-in.svg')
 
 
 def zoom_out():
-    return icon('zoom-out.svg')
+    return from_theme('zoom-out', fallback='zoom-out.svg')

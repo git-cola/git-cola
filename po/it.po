@@ -365,7 +365,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr ""
 
 msgid ""
@@ -750,7 +750,7 @@ msgstr ""
 msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr ""
 
 #, fuzzy
@@ -929,7 +929,7 @@ msgid "Delete remote?"
 msgstr "Cancella ramo remoto"
 
 #, fuzzy
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Elimina ramo"
 
 msgid "Delete..."

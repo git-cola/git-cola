@@ -466,7 +466,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Añadir barra de herramientas"
 
 msgid ""
@@ -829,7 +829,7 @@ msgstr "Comparar todo"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Configurar la rama remota como la nueva \"upstream\""
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "Configurar barra de herramientas"
 
 msgid "Console"
@@ -985,7 +985,7 @@ msgstr "Eliminar repositorio remoto \"%s\""
 msgid "Delete remote?"
 msgstr "¿Desea eliminar el repositorio remoto?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Eliminar barra de herramientas"
 
 msgid "Delete..."

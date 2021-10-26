@@ -414,7 +414,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Přidat nástrojovou lištu"
 
 msgid ""
@@ -776,7 +776,7 @@ msgstr "Porovnat vše"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Nastavit vzdálenou větev jako nový upstream"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "Upravit nástrojovou lištu"
 
 msgid "Console"
@@ -932,7 +932,7 @@ msgstr "Odstranit vzdálený „%s“"
 msgid "Delete remote?"
 msgstr "Odstranit vzdálený?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Odstranit nástrojovou lištu"
 
 msgid "Delete..."

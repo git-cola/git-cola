@@ -467,7 +467,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "新增工具列"
 
 msgid ""
@@ -832,7 +832,7 @@ msgstr "比較全部檔案差異"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "將此遠端分支設為新的上游分支"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "設定工具列"
 
 msgid "Console"
@@ -989,7 +989,7 @@ msgstr "移除「%s」遠端版控庫"
 msgid "Delete remote?"
 msgstr "要移除遠端版控庫嗎？"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "刪除工具列"
 
 msgid "Delete..."

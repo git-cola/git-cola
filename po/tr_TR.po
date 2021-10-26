@@ -355,7 +355,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Araç Çubuğu Ekle"
 
 msgid ""
@@ -702,7 +702,7 @@ msgstr ""
 msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr ""
 
 msgid "Console"
@@ -858,7 +858,7 @@ msgstr "Uzaktakini sil \"%s\""
 msgid "Delete remote?"
 msgstr "Uzaktakini sil?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Araç çubuğunu sil"
 
 msgid "Delete..."

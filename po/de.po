@@ -471,7 +471,7 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
+msgid "New Toolbar"
 msgstr "Werkzeugleiste hinzufügen"
 
 msgid ""
@@ -833,7 +833,7 @@ msgstr "Alle vergleichen"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "Externen Branch als neuen Upstream konfigurieren"
 
-msgid "Configure toolbar"
+msgid "Configure Toolbar"
 msgstr "Werkzeugleiste konfigurieren"
 
 msgid "Console"
@@ -989,7 +989,7 @@ msgstr "Externe Referenz \"%s\" löschen"
 msgid "Delete remote?"
 msgstr "Externe Referenz löschen?"
 
-msgid "Delete toolbar"
+msgid "Delete Toolbar"
 msgstr "Werkzeugleiste löschen"
 
 msgid "Delete..."
