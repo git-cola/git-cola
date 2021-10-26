@@ -1,3 +1,14 @@
+.. _v3.12.0:
+
+v3.12.0
+=======
+
+Usability, bells and whistles
+-----------------------------
+* Toolbars now have a full set of icons. The icons follow the system theme
+  and can be configured to display text, just icons, or text and icons.
+  (`#1171 <https://github.com/git-cola/git-cola/pull/1171>`_)
+
 .. _v3.11.0:
 
 v3.11.0
