@@ -1,0 +1,152 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: 'Build'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # Repository checked out under $GITHUB_WORKSPACE
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+              gettext \
+              python3-sphinx
+
+      - name: Build
+        run: make prefix="build" install
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: git-cola-run${{github.run_number}}-${{runner.os}}
+          path: build/
+
+  test:
+    name: 'Test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # Repository checked out under $GITHUB_WORKSPACE
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+              black \
+              gettext \
+              flake8 \
+              pylint \
+              python-pytest \
+              python3-pytest \
+              python3-pytest-flake8
+
+          # Runtime dependencies (required)
+          sudo apt-get install \
+              python3-pyqt5
+
+          # Runtime dependencies (optional)
+          sudo apt-get install \
+              python3-qtpy \
+              python3-send2trash
+
+      - name: Build Translations
+        run: make i18n
+
+      - name: Run Unit Tests
+        run: |
+          git config --global user.name "Git Cola"
+          git config --global user.email git-cola@localhost
+          make test
+
+      - name: Run Linter
+        run: make pylint color=0
+
+      - name: Check Code Style
+        run: make flake8
+
+      - name: Check Code Formatting
+        # For strict adherence to formatting, run 'black' with --check
+        run: make format
+
+  win32:
+    name: 'Build / win32'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # Repository checked out under $GITHUB_WORKSPACE
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Pip Cache
+        uses: actions/cache@v2
+        with:
+            path: ~\AppData\Local\pip\Cache
+            key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/requirements*.txt') }}
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements/requirements.txt
+          pip install -r requirements/requirements-optional.txt
+          pip install -r requirements/requirements-maint.txt
+          pip install -r requirements/requirements-dev.txt
+          pip install PyQt5
+
+      # Based on: contrib/win32/run-pynsist.sh
+      - name: Build Installer
+        run: |
+          make all
+          make doc
+          make htmldir="$PWD/share/doc/git-cola/html" install-doc
+          pynsist pynsist.cfg
+          rm -r share/doc/git-cola/html
+
+          # Rename executable output
+          cd build\nsis
+          mv git-cola*.exe git-cola-run${{github.run_number}}.exe
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: git-cola-run${{github.run_number}}-${{runner.os}}
+          path: build\nsis\git-cola*.exe
+
+  darwin:
+    name: 'Build / darwin'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # Repository checked out under $GITHUB_WORKSPACE
+
+      - name: Install Dependencies
+        run: |
+          brew install sphinx-doc
+          brew install git-cola
+
+      - name: Build Bundle
+        run: |
+          mkdir build
+          make \
+            PYTHON=$(brew --prefix python3)/bin/python3 \
+            PYTHON_CONFIG=$(brew --prefix python3)/bin/python3-config \
+            SPHINXBUILD=$(brew --prefix sphinx-doc)/bin/sphinx-build \
+            git-cola.app
+          mv git-cola.app build/
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: git-cola-run${{github.run_number}}-${{runner.os}}
+          path: build/

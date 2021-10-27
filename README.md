@@ -33,7 +33,7 @@ New releases are available on the
 
     git clone git://github.com/git-cola/git-cola.git
 
-[![git-cola build status](https://api.travis-ci.org/git-cola/git-cola.svg?branch=main)](https://travis-ci.org/git-cola/git-cola)
+[![git-cola build status](https://github.com/git-cola/git-cola/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/git-cola/git-cola/actions/workflows/main.yml)
 
 [git-cola on github](https://github.com/git-cola/git-cola)
 
@@ -349,9 +349,8 @@ The following commands should be run during development:
 
 The test suite can be found in the [test](test) directory.
 
-The tests are set up to run automatically when code is pushed using
-[Travis CI](https://travis-ci.org/git-cola/git-cola).
-Checkout the [Travis config file](.travis.yml) for more details.
+Commits and pull requests are automatically tested for code quality
+using [GitHub Actions](https://github.com/git-cola/git-cola/actions/workflows/main.yml).
 
 Auto-format `po/*.po` files before committing when updating translations:
 
