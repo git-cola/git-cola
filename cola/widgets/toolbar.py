@@ -189,6 +189,7 @@ class ToolBar(QtWidgets.QToolBar):
         QtWidgets.QToolBar.__init__(self)
         self.setWindowTitle(title)
         self.setObjectName(title)
+        self.setToolButtonStyle(Qt.ToolButtonFollowStyle)
 
         self.context = context
         self.tree_layout = tree_layout
@@ -305,7 +306,6 @@ class ToolbarView(standard.Dialog):
         self.setWindowTitle(N_('Configure Toolbar'))
 
         self.toolbar = toolbar
-        self.toolbar.setToolButtonStyle(Qt.ToolButtonFollowStyle)
         self.left_list = ToolbarTreeWidget(self)
         self.right_list = DraggableListWidget(self)
         self.text_toolbar_name = QtWidgets.QLabel()
