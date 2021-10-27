@@ -168,17 +168,24 @@ class ToolBarState(object):
 
 class ToolBar(QtWidgets.QToolBar):
     SEPARATOR = 'Separator'
-    STYLE_FOLLOW_SYSTEM = 0
-    STYLE_ICON_ONLY = 1
-    STYLE_TEXT_ONLY = 2
-    STYLE_TEXT_BESIDE_ICON = 3
-    STYLE_TEXT_UNDER_ICON = 4
+    STYLE_FOLLOW_SYSTEM = 'follow-system'
+    STYLE_ICON_ONLY = 'icon'
+    STYLE_TEXT_ONLY = 'text'
+    STYLE_TEXT_BESIDE_ICON = 'text-beside-icon'
+    STYLE_TEXT_UNDER_ICON = 'text-under-icon'
     STYLE_NAMES = [
         N_('Follow System Style'),
         N_('Icon Only'),
         N_('Text Only'),
         N_('Text Beside Icon'),
         N_('Text Under Icon'),
+    ]
+    STYLE_SYMBOLS = [
+        STYLE_FOLLOW_SYSTEM,
+        STYLE_ICON_ONLY,
+        STYLE_TEXT_ONLY,
+        STYLE_TEXT_BESIDE_ICON,
+        STYLE_TEXT_UNDER_ICON,
     ]
 
     @staticmethod
@@ -196,7 +203,7 @@ class ToolBar(QtWidgets.QToolBar):
         self.commands = toolbar_commands
 
     def set_toolbar_style(self, style_id):
-        styles_to_qt = {
+        style_to_qt = {
             self.STYLE_FOLLOW_SYSTEM: Qt.ToolButtonFollowStyle,
             self.STYLE_ICON_ONLY: Qt.ToolButtonIconOnly,
             self.STYLE_TEXT_ONLY: Qt.ToolButtonTextOnly,
@@ -204,10 +211,10 @@ class ToolBar(QtWidgets.QToolBar):
             self.STYLE_TEXT_UNDER_ICON: Qt.ToolButtonTextUnderIcon,
         }
         default = Qt.ToolButtonFollowStyle
-        return self.setToolButtonStyle(styles_to_qt.get(style_id, default))
+        return self.setToolButtonStyle(style_to_qt.get(style_id, default))
 
     def toolbar_style(self):
-        styles_to_int = {
+        qt_to_style = {
             Qt.ToolButtonFollowStyle: self.STYLE_FOLLOW_SYSTEM,
             Qt.ToolButtonIconOnly: self.STYLE_ICON_ONLY,
             Qt.ToolButtonTextOnly: self.STYLE_TEXT_ONLY,
@@ -215,7 +222,7 @@ class ToolBar(QtWidgets.QToolBar):
             Qt.ToolButtonTextUnderIcon: self.STYLE_TEXT_UNDER_ICON,
         }
         default = self.STYLE_FOLLOW_SYSTEM
-        return styles_to_int.get(self.toolButtonStyle(), default)
+        return qt_to_style.get(self.toolButtonStyle(), default)
 
     def load_items(self, items):
         for data in items:
@@ -268,32 +275,24 @@ class ToolBar(QtWidgets.QToolBar):
 
 def encode_toolbar_area(toolbar_area):
     """Encode a Qt::ToolBarArea as a string"""
-    if toolbar_area == Qt.LeftToolBarArea:
-        result = 'left'
-    elif toolbar_area == Qt.RightToolBarArea:
-        result = 'right'
-    elif toolbar_area == Qt.TopToolBarArea:
-        result = 'top'
-    elif toolbar_area == Qt.BottomToolBarArea:
-        result = 'bottom'
-    else:  # fallback to "bottom"
-        result = 'bottom'
-    return result
+    default = 'bottom'
+    return {
+        Qt.LeftToolBarArea: 'left',
+        Qt.RightToolBarArea: 'right',
+        Qt.TopToolBarArea: 'top',
+        Qt.BottomToolBarArea: 'bottom',
+    }.get(toolbar_area, default)
 
 
 def decode_toolbar_area(string):
     """Decode an encoded toolbar area string into a Qt::ToolBarArea"""
-    if string == 'left':
-        result = Qt.LeftToolBarArea
-    elif string == 'right':
-        result = Qt.RightToolBarArea
-    elif string == 'top':
-        result = Qt.TopToolBarArea
-    elif string == 'bottom':
-        result = Qt.BottomToolBarArea
-    else:
-        result = Qt.BottomToolBarArea
-    return result
+    default = Qt.BottomToolBarArea
+    return {
+        'left': Qt.LeftToolBarArea,
+        'right': Qt.RightToolBarArea,
+        'top': Qt.TopToolBarArea,
+        'bottom': Qt.BottomToolBarArea,
+    }.get(string, default)
 
 
 class ToolbarView(standard.Dialog):
@@ -318,7 +317,8 @@ class ToolbarView(standard.Dialog):
         self.toolbar_style = QtWidgets.QComboBox()
         for style_name in ToolBar.STYLE_NAMES:
             self.toolbar_style.addItem(style_name)
-        self.toolbar_style.setCurrentIndex(toolbar.toolbar_style())
+        style_idx = get_index_from_style(toolbar.toolbar_style())
+        self.toolbar_style.setCurrentIndex(style_idx)
         self.apply_button = qtutils.ok_button(N_('Apply'))
         self.close_button = qtutils.close_button()
         self.close_button.setDefault(True)
@@ -409,12 +409,23 @@ class ToolbarView(standard.Dialog):
 
     def apply_action(self):
         self.toolbar.clear()
-        self.toolbar.set_toolbar_style(self.toolbar_style.currentIndex())
+        style = get_style_from_index(self.toolbar_style.currentIndex())
+        self.toolbar.set_toolbar_style(style)
         self.toolbar.setWindowTitle(self.toolbar_name.text())
 
         for item in self.right_list.get_items():
             data = item.data(Qt.UserRole)
             self.toolbar.add_action_from_data(data)
+
+
+def get_style_from_index(index):
+    """Return the symbolic toolbar style name for the given (combobox) index"""
+    return ToolBar.STYLE_SYMBOLS[index]
+
+
+def get_index_from_style(style):
+    """Return the toolbar style (combobox) index for the symbolic name"""
+    return ToolBar.STYLE_SYMBOLS.index(style)
 
 
 class DraggableListMixin(object):
