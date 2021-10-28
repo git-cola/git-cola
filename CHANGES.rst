@@ -9,6 +9,11 @@ Usability, bells and whistles
   and can be configured to display text, just icons, or text and icons.
   (`#1171 <https://github.com/git-cola/git-cola/pull/1171>`_)
 
+Development
+-----------
+* Git Cola now uses Github Actions for running its continuous integration tests.
+  (`#1179 <https://github.com/git-cola/git-cola/pull/1179>`_)
+
 .. _v3.11.0:
 
 v3.11.0
