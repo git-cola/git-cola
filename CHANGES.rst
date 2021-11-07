@@ -9,6 +9,10 @@ Usability, bells and whistles
   and can be configured to display text, just icons, or text and icons.
   (`#1171 <https://github.com/git-cola/git-cola/pull/1171>`_)
 
+* The startup dialog will now open the selected repository when the "enter"
+  key is pressed.
+  (`#1162 <https://github.com/git-cola/git-cola/issues/1162>`_)
+
 Fixes
 -----
 * The "Unstage" toolbar action was fixed.
