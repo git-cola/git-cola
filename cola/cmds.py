@@ -2690,7 +2690,7 @@ class UnstageSelected(Unstage):
     """Unstage selected files."""
 
     def __init__(self, context):
-        staged = self.selection.staged
+        staged = context.selection.staged
         super(UnstageSelected, self).__init__(context, staged)
 
 
