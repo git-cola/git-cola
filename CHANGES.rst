@@ -1857,7 +1857,7 @@ v2.0.6
 ======
 Usability, bells and whistles
 -----------------------------
-* Updated Brazillian Portuguese translation.
+* Updated Brazilian Portuguese translation.
 
 * The status and browse widgets now allow drag-and-drop into
   external applications.
@@ -1902,7 +1902,7 @@ v2.0.5
 ======
 Usability, bells and whistles
 -----------------------------
-* New Brazillian Portuguese translation thanks to Vitor Lobo.
+* New Brazilian Portuguese translation thanks to Vitor Lobo.
 
 * New Indonesian translation thanks to Samsul Ma'arif.
 
