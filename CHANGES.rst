@@ -21,6 +21,9 @@ Fixes
 * We now avoid `setWidth(float)` for compatibility with newer Qt versions.
   (`#1183 <https://github.com/git-cola/git-cola/pull/1183>`_)
 
+* Documentation typofixes.
+  (`#1185  <https://github.com/git-cola/git-cola/pull/1185>`_)
+
 Translations
 ------------
 * Updated Polish translation.
