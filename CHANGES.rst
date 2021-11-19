@@ -21,6 +21,11 @@ Fixes
 * We now avoid `setWidth(float)` for compatibility with newer Qt versions.
   (`#1183 <https://github.com/git-cola/git-cola/pull/1183>`_)
 
+Translations
+------------
+* Updated Polish translation.
+  (`#1184  <https://github.com/git-cola/git-cola/pull/1184>`_)
+
 Development
 -----------
 * Git Cola now uses Github Actions for running its continuous integration tests.
