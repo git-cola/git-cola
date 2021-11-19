@@ -46,6 +46,7 @@ Thanks
 * cclaus
 * Charles 101
 * Christian Jann
+* Christoph Erhardt
 * Christopher Meng
 * Clément Pit--Claudel
 * Constantine Grantcharov
