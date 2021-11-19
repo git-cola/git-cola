@@ -456,7 +456,7 @@ same order as is listed in the list.
 When a directory is dropped `git cola` walks the directory
 tree in search of patches.  `git cola` sorts the list of
 patches after they have all been found.  This allows you
-to control the order in which patchs are applied by placing
+to control the order in which patches are applied by placing
 patchsets into alphanumerically-sorted directories.
 
 CUSTOM WINDOW SETTINGS
