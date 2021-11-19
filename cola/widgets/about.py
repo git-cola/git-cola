@@ -36,7 +36,7 @@ class ExpandingTabBar(QtWidgets.QTabBar):
     """
 
     def tabSizeHint(self, tab_index):
-        width = self.parent().width() // max(1, self.count()) - 1
+        width = self.parent().width() // max(2, self.count()) - 1
         size = super(ExpandingTabBar, self).tabSizeHint(tab_index)
         size.setWidth(width)
         return size
