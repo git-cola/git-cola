@@ -18,6 +18,9 @@ Fixes
 * The "Unstage" toolbar action was fixed.
   (`#1178 <https://github.com/git-cola/git-cola/issues/1178>`_)
 
+* We now avoid `setWidth(float)` for compatibility with newer Qt versions.
+  (`#1183 <https://github.com/git-cola/git-cola/pull/1183>`_)
+
 Development
 -----------
 * Git Cola now uses Github Actions for running its continuous integration tests.
