@@ -5,6 +5,12 @@ v3.12.0
 
 Usability, bells and whistles
 -----------------------------
+* The git config guitool action can now be grouped under user-defined menus.
+  This is done by using slash (``/``) delimiters in the action name.
+  Entries before the final slash are treated like submenus inside the
+  top-level ``Actions`` menu.
+  (`#1150 <https://github.com/git-cola/git-cola/issues/1150>`_)
+
 * Toolbars now have a full set of icons. The icons follow the system theme
   and can be configured to display text, just icons, or text and icons.
   (`#1171 <https://github.com/git-cola/git-cola/pull/1171>`_)
@@ -15,6 +21,8 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The vendored qtpy library was patched to retain Python2 compatibility.
+
 * The "Unstage" toolbar action was fixed.
   (`#1178 <https://github.com/git-cola/git-cola/issues/1178>`_)
 
