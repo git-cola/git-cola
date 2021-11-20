@@ -931,6 +931,15 @@ receives the name of the tool as GIT_GUITOOL, the name of the currently
 selected file as FILENAME, and the name of the current branch as CUR_BRANCH
 (if the head is detached, CUR_BRANCH is empty).
 
+If ``<name>`` contains slashes (``/``) then the leading part of the name,
+up until the final slash, is treated like a path of submenus under which the
+actions will be created.
+
+For example, configuring ``guitool.Commands/Util/echo.cmd`` creates a
+``Commands`` menu inside the top-level ``Actions`` menu, a ``Util`` menu
+inside the ``Commands`` menu and an ``echo`` action inside the ``Commands``
+submenu.
+
 guitool.<name>.background
 -------------------------
 Run the command in the background (similar to editing and difftool actions).

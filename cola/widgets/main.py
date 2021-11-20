@@ -831,7 +831,12 @@ class MainView(standard.MainWindow):
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.config_actions_changed.connect(
-            self._install_config_actions, type=Qt.QueuedConnection
+            lambda names_and_shortcuts: _install_config_actions(
+                context,
+                self.actions_menu,
+                names_and_shortcuts,
+            ),
+            type=Qt.QueuedConnection,
         )
         self.init_state(context.settings, self.set_initial_size)
 
@@ -1002,19 +1007,6 @@ class MainView(standard.MainWindow):
     def get_config_actions(self):
         actions = cfgactions.get_config_actions(self.context)
         self.config_actions_changed.emit(actions)
-
-    def _install_config_actions(self, names_and_shortcuts):
-        """Install .gitconfig-defined actions"""
-        if not names_and_shortcuts:
-            return
-        context = self.context
-        menu = self.actions_menu
-        menu.addSeparator()
-        for (name, shortcut) in names_and_shortcuts:
-            callback = cmds.run(cmds.RunConfigAction, context, name)
-            menu_action = menu.addAction(name, callback)
-            if shortcut:
-                menu_action.setShortcut(shortcut)
 
     def refresh(self):
         """Update the title with the current branch and directory name."""
@@ -1285,3 +1277,55 @@ def focus_dock(dockwidget):
         show_dock(dockwidget)
     else:
         dockwidget.toggleViewAction().trigger()
+
+
+def _install_config_actions(context, menu, names_and_shortcuts):
+    """Install .gitconfig-defined actions"""
+    if not names_and_shortcuts:
+        return
+    menu.addSeparator()
+    cache = {}
+    for (name, shortcut) in names_and_shortcuts:
+        sub_menu, action_name = build_menus(name, menu, cache)
+        callback = cmds.run(cmds.RunConfigAction, context, name)
+        menu_action = sub_menu.addAction(action_name, callback)
+        if shortcut:
+            menu_action.setShortcut(shortcut)
+
+
+def build_menus(name, menu, cache):
+    """Create a chain of QMenu entries parented under a root QMenu
+
+    A name of "a/b/c" create a menu chain of menu -> QMenu("a") -> QMenu("b")
+    and returns a tuple of (QMenu("b"), "c").
+
+    :param name: The full entry path, ex: "a/b/c" where "a/b" is the menu chain.
+    :param menu: The root menu under which to create the menu chain.
+    :param cache: A dict cache of previously created menus to avoid duplicates.
+
+    """
+    # NOTE: utils.split() and friends are used instead of os.path.split() because
+    # slash '/' is the only supported "<menu>/name" separator.  Use of os.path.split()
+    # would introduce differences in behavior across platforms.
+
+    # If the menu_path is empty then no parent menus need to be created.
+    # The action will be added to the root menu.
+    menu_path, text = utils.split(name)
+
+    if not menu_path:
+        return (menu, text)
+    # When menu_path contains ex: "a/b" we will create two menus: "a" and "b".
+    # The root menu is the parent of "a" and "a" is the parent of "b".
+    # The menu returned to the caller is "b".
+    #
+    # Loop over the individual menu basenames alongside the full subpath returned by
+    # pathset(). The subpath is a cache key for finding previously created menus.
+    menu_names = utils.splitpath(menu_path)  # ['a', 'b']
+    menu_pathset = utils.pathset(menu_path)  # ['a', 'a/b']
+    for menu_name, menu_id in zip(menu_names, menu_pathset):
+        try:
+            menu = cache[menu_id]
+        except KeyError:
+            menu = cache[menu_id] = menu.addMenu(menu_name)
+
+    return (menu, text)
