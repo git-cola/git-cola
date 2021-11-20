@@ -151,9 +151,40 @@ def splitpath(path):
     return path.split('/')
 
 
+def split(name):
+    """Split a path-like name. Returns tuple "(head, tail)" where "tail" is
+    everything after the final slash. The "head" may be empty.
+
+    This is the same as os.path.split() but only uses '/' as the delimiter.
+
+    >>> split('a/b/c')
+    ('a/b', 'c')
+
+    >>> split('xyz')
+    ('', 'xyz')
+
+    """
+    return (dirname(name), basename(name))
+
+
 def join(*paths):
-    """Join paths using '/' regardless of platform"""
+    """Join paths using '/' regardless of platform
+
+    >>> join('a', 'b', 'c')
+    'a/b/c'
+
+    """
     return '/'.join(paths)
+
+
+def pathjoin(paths):
+    """Join a list of paths using '/' regardless of platform
+
+    >>> pathjoin(['a', 'b', 'c'])
+    'a/b/c'
+
+    """
+    return join(*paths)
 
 
 def pathset(path):
