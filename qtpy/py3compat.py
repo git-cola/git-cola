@@ -46,6 +46,7 @@ NUMERIC_TYPES = tuple(list(INT_TYPES) + [float, complex])
 if PY2:
     # Python 2
     import __builtin__ as builtins
+    from collections import Callable, MutableMapping
     import ConfigParser as configparser
     try:
         import _winreg as winreg
