@@ -210,6 +210,7 @@ Thanks
 * Rustam Safin
 * Sabri Ünal
 * Samsul Ma'arif
+* Sean Allred
 * Sebastian Brass
 * Sebastian Oliva
 * Sergey Leschina
