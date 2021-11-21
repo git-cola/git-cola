@@ -177,6 +177,21 @@ def join(*paths):
     return '/'.join(paths)
 
 
+def normalize_slash(value):
+    """Strip and normalize slashes in a string
+
+    >>> normalize_slashes('///Meow///Cat///')
+    'Meow/Cat'
+
+    """
+    value = value.strip('/')
+    new_value = value.replace('//', '/')
+    while new_value != value:
+        value = new_value
+        new_value = value.replace('//', '/')
+    return value
+
+
 def pathjoin(paths):
     """Join a list of paths using '/' regardless of platform
 

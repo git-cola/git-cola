@@ -1310,7 +1310,7 @@ def build_menus(name, menu, cache):
 
     # If the menu_path is empty then no parent menus need to be created.
     # The action will be added to the root menu.
-    menu_path, text = utils.split(name)
+    menu_path, text = utils.split(utils.normalize_slash(name))
 
     if not menu_path:
         return (menu, text)
