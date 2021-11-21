@@ -180,7 +180,7 @@ def join(*paths):
 def normalize_slash(value):
     """Strip and normalize slashes in a string
 
-    >>> normalize_slashes('///Meow///Cat///')
+    >>> normalize_slash('///Meow///Cat///')
     'Meow/Cat'
 
     """
