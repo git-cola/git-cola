@@ -13,13 +13,13 @@ Usability, bells and whistles
 
 * Toolbars now have a full set of icons. The icons follow the system theme
   and can be configured to display text, just icons, or text and icons.
-  (`#1171 <https://github.com/git-cola/git-cola/pull/1171>`_)
+  (`#1177 <https://github.com/git-cola/git-cola/pull/1177>`_)
 
 * The startup dialog will now open the selected repository when the "enter"
   key is pressed.
   (`#1162 <https://github.com/git-cola/git-cola/issues/1162>`_)
 
-* ``S`` is stages selected lines (in addition to ``s``).
+* ``Shift+S`` will stage selected lines (in addition to ``s``).
   (`#1187 <https://github.com/git-cola/git-cola/issues/1187>`_)
 
 Fixes
