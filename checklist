@@ -1,11 +1,11 @@
 #!/bin/sh
 ./Meta/update-qtpy ~/src/python/qtpy
 make check
-./Meta/set-version vA.B
+./Meta/set-version vA.B.C
 ./Meta/commit-version
 # remove any (BETA) markers from the release notes
 ./Meta/tag
 git cola push
-vx env37 ./Meta/release --all
+vx env39 ./Meta/release --all
 vim github.io/_config.yaml
 ./Meta/github.io.sh
