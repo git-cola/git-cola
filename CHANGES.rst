@@ -1,3 +1,15 @@
+.. _v3.13.0:
+
+v3.13.0
+=======
+
+Fixes
+-----
+
+* Documentation typofixes.
+  (`#1193 <https://github.com/git-cola/git-cola/pull/1193>`_)
+
+
 .. _v3.12.0:
 
 v3.12.0
