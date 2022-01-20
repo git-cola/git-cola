@@ -723,7 +723,11 @@ class DiffEditor(DiffTextEdit):
         self.options = options
 
         self.action_apply_selection = qtutils.add_action(
-            self, 'Apply', self.apply_selection, hotkeys.STAGE_DIFF
+            self,
+            'Apply',
+            self.apply_selection,
+            hotkeys.STAGE_DIFF,
+            hotkeys.STAGE_DIFF_ALT,
         )
 
         self.action_revert_selection = qtutils.add_action(

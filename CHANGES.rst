@@ -19,6 +19,9 @@ Usability, bells and whistles
   key is pressed.
   (`#1162 <https://github.com/git-cola/git-cola/issues/1162>`_)
 
+* ``S`` is stages selected lines (in addition to ``s``).
+  (`#1187 <https://github.com/git-cola/git-cola/issues/1187>`_)
+
 Fixes
 -----
 * The vendored qtpy library was patched to retain Python2 compatibility.
