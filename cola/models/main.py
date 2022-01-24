@@ -29,7 +29,7 @@ class MainModel(Observable):
     previous_contents = Signal(list, list, list, list)
     commit_message_changed = Signal(object)
     diff_text_changed = Signal()
-    message_diff_text_updated = 'diff_text_updated'
+    diff_text_updated = Signal(str)
     # "diff_type" {text,image} represents the diff viewer mode.
     message_diff_type_changed = 'diff_type_changed'
     # "file_type" {text,image} represents the selected file type.
@@ -181,7 +181,7 @@ class MainModel(Observable):
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
-        self.notify_observers(self.message_diff_text_updated, txt)
+        self.diff_text_updated.emit(txt)
         if changed:
             self.diff_text_changed.emit()
 
