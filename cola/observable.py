@@ -1,11 +1,14 @@
 """The Observable class for decoupled notifications"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from qtpy import QtCore
 
-class Observable(object):
+
+class Observable(QtCore.QObject):
     """Handles subject/observer notifications."""
 
     def __init__(self):
+        super(Observable, self).__init__()
         self.notification_enabled = True
         self.observers = {}
 
