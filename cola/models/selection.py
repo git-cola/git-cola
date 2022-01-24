@@ -2,7 +2,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import collections
 
-from ..observable import Observable
+from qtpy import QtCore
+from qtpy.QtCore import Signal
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
@@ -41,18 +42,17 @@ def _filter(a, b):
             a.pop(last - idx)
 
 
-class SelectionModel(Observable):
+class SelectionModel(QtCore.QObject):
     """Provides information about selected file paths."""
 
-    # Notification message sent out when selection changes
-    message_selection_changed = 'selection_changed'
+    selection_changed = Signal()
 
     # These properties wrap the individual selection items
     # to provide higher-level pseudo-selections.
     unstaged = property(lambda self: self.unmerged + self.modified + self.untracked)
 
     def __init__(self):
-        Observable.__init__(self)
+        super(SelectionModel, self).__init__()
         self.staged = []
         self.unmerged = []
         self.modified = []
@@ -77,14 +77,14 @@ class SelectionModel(Observable):
         self.unmerged = s.unmerged
         self.modified = s.modified
         self.untracked = s.untracked
-        self.notify_observers(self.message_selection_changed)
+        self.selection_changed.emit()
 
     def update(self, other):
         _filter(self.staged, other.staged)
         _filter(self.unmerged, other.unmerged)
         _filter(self.modified, other.modified)
         _filter(self.untracked, other.untracked)
-        self.notify_observers(self.message_selection_changed)
+        self.selection_changed.emit()
 
     def selection(self):
         return State(self.staged, self.unmerged, self.modified, self.untracked)

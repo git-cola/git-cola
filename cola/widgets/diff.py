@@ -699,7 +699,6 @@ class DiffEditor(DiffTextEdit):
     up = Signal()
     down = Signal()
     options_changed = Signal()
-    updated = Signal()
 
     def __init__(self, context, options, parent):
         DiffTextEdit.__init__(self, context, parent, numbers=True)
@@ -735,11 +734,9 @@ class DiffEditor(DiffTextEdit):
 
         model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
-        selection_model.add_observer(
-            selection_model.message_selection_changed, self.updated.emit
+        selection_model.selection_changed.connect(
+            self.refresh, type=Qt.QueuedConnection
         )
-        # pylint: disable=no-member
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         # Update the selection model when the cursor changes
         self.cursorPositionChanged.connect(self._update_line_number)
 
