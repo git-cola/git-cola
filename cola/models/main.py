@@ -37,7 +37,7 @@ class MainModel(Observable):
     images_changed = Signal(object)
     mode_changed = Signal(str)
     submodules_changed = Signal()
-    message_refs_updated = 'message_refs_updated'
+    refs_updated = Signal()
     message_updated = 'updated'
     message_worktree_changed = 'message_worktree_changed'
 
@@ -319,7 +319,7 @@ class MainModel(Observable):
         self.tags = tags
         # Set these early since they are used to calculate 'upstream_changed'.
         self.currentbranch = gitcmds.current_branch(self.context)
-        self.notify_observers(self.message_refs_updated)
+        self.refs_updated.emit()
 
     def _update_merge_rebase_status(self):
         merge_head = self.git.git_path('MERGE_HEAD')

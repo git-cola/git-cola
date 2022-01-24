@@ -560,8 +560,7 @@ class GitRefCompletionModel(GitCompletionModel):
 
     def __init__(self, context, parent):
         GitCompletionModel.__init__(self, context, parent)
-        model = context.model
-        model.add_observer(model.message_refs_updated, self.emit_model_updated)
+        context.model.refs_updated.connect(self.model_updated)
 
     def matches(self):
         model = self.context.model
