@@ -529,10 +529,7 @@ class GitCompletionModel(CompletionModel):
     def __init__(self, context, parent):
         CompletionModel.__init__(self, context, parent)
         self.context = context
-        model = context.model
-        model.add_observer(model.message_updated, self.emit_model_updated)
-        # pylint: disable=no-member
-        self.destroyed.connect(self.dispose)
+        context.model.updated.connect(self.model_updated)
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(
@@ -540,19 +537,9 @@ class GitCompletionModel(CompletionModel):
         )
         return (refs, (), set())
 
-    def emit_model_updated(self):
-        try:
-            self.model_updated.emit()
-        except RuntimeError:  # C++ object has been deleted
-            self.dispose()
-
     # pylint: disable=no-self-use
     def matches(self):
         return []
-
-    def dispose(self):
-        super(GitCompletionModel, self).dispose()
-        self.context.model.remove_observer(self.emit_model_updated)
 
 
 class GitRefCompletionModel(GitCompletionModel):

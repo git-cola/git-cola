@@ -60,7 +60,6 @@ class Columns(object):
 class GitRepoModel(QtGui.QStandardItemModel):
     """Provides an interface into a git repository for browsing purposes."""
 
-    model_updated = Signal()
     restore = Signal()
 
     def __init__(self, context, parent):
@@ -68,7 +67,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.setColumnCount(len(Columns.ALL))
 
         self.context = context
-        self.model = model = context.model
+        self.model = context.model
         self.entries = {}
         cfg = context.cfg
         self.turbo = cfg.get('cola.turbo', False)
@@ -78,10 +77,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._interesting_files = set()
         self._runtask = qtutils.RunTask(parent=parent)
 
-        self.model_updated.connect(self.refresh, type=Qt.QueuedConnection)
-
-        model = context.model
-        model.add_observer(model.message_updated, self._model_updated)
+        self.model.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.file_icon = icons.file_text()
         self.dir_icon = icons.directory()
@@ -209,10 +205,6 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def get_files(self):
         model = self.model
         return set(model.staged + model.unstaged)
-
-    def _model_updated(self):
-        """Observes model changes and updates paths accordingly."""
-        self.model_updated.emit()
 
     def refresh(self):
         old_files = self._interesting_files

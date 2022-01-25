@@ -120,7 +120,6 @@ class BranchesTreeWidget(standard.TreeWidget):
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent)
 
-        model = context.model
         self.context = context
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
@@ -137,7 +136,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self._active = False
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_updated, self.updated.emit)
+        context.model.updated.connect(self.updated)
 
         # Expand items when they are clicked
         # pylint: disable=no-member

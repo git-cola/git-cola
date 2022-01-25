@@ -38,7 +38,7 @@ class MainModel(Observable):
     mode_changed = Signal(str)
     submodules_changed = Signal()
     refs_updated = Signal()
-    message_updated = 'updated'
+    updated = Signal()
     message_worktree_changed = 'message_worktree_changed'
 
     # States
@@ -233,7 +233,7 @@ class MainModel(Observable):
         self.about_to_update.emit()
 
     def emit_updated(self):
-        self.notify_observers(self.message_updated)
+        self.updated.emit()
 
     def update_file_status(self, update_index=False):
         self.emit_about_to_update()

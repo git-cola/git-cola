@@ -564,8 +564,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 class GitDAG(standard.MainWindow):
     """The git-dag widget."""
 
-    updated = Signal()
-
     def __init__(self, context, params, parent=None):
         super(GitDAG, self).__init__(parent)
 
@@ -707,8 +705,7 @@ class GitDAG(standard.MainWindow):
 
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
-        self.model.add_observer(self.model.message_updated, self.updated.emit)
-        self.updated.connect(self.model_updated, type=Qt.QueuedConnection)
+        self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
         qtutils.add_action(self, 'Focus', self.focus_input, hotkeys.FOCUS)
         qtutils.add_close_action(self)

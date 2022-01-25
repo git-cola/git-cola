@@ -4,7 +4,6 @@ import os
 from functools import partial
 
 from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
 from qtpy import QtCore
 from qtpy import QtWidgets
 
@@ -108,9 +107,6 @@ class StatusWidget(QtWidgets.QFrame):
 
 # pylint: disable=too-many-ancestors
 class StatusTreeWidget(QtWidgets.QTreeWidget):
-    # Signals
-    updated = Signal()
-
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
 
@@ -288,8 +284,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.delete_untracked_files_action.setIcon(icons.discard())
 
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-
         # The model is stored as self.m because self.model() is a
         # QTreeWidgetItem method that returns a QAbstractItemModel.
         self.m = context.model
@@ -297,8 +291,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self._set_previous_contents, type=Qt.QueuedConnection
         )
         self.m.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
-        # Forward the updated notification through self.updated.
-        self.m.add_observer(self.m.message_updated, self.updated.emit)
+        self.m.updated.connect(self.refresh, type=Qt.QueuedConnection)
         self.m.diff_text_changed.connect(
             self._make_current_item_visible, type=Qt.QueuedConnection
         )
