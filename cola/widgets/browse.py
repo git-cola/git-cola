@@ -106,7 +106,6 @@ class Browser(standard.Widget):
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
-    about_to_update = Signal()
     updated = Signal()
 
     def __init__(self, context, parent):
@@ -129,10 +128,8 @@ class RepoTreeView(standard.TreeView):
 
         # Observe model updates
         model = context.model
-        model.add_observer(model.message_about_to_update, self.emit_about_to_update)
+        model.about_to_update.connect(self.save_selection, type=Qt.QueuedConnection)
         model.add_observer(model.message_updated, self.emit_update)
-        # pylint: disable=no-member
-        self.about_to_update.connect(self.save_selection, type=Qt.QueuedConnection)
         self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
         self.expanded.connect(self.index_expanded)
 
@@ -298,9 +295,6 @@ class RepoTreeView(standard.TreeView):
 
     def emit_update(self):
         self.updated.emit()
-
-    def emit_about_to_update(self):
-        self.about_to_update.emit()
 
     def save_selection(self):
         selection = self.selected_paths()

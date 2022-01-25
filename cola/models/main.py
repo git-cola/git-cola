@@ -2,6 +2,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
+from qtpy.QtCore import Signal
+
 from .. import core
 from .. import gitcmds
 from .. import version
@@ -23,7 +25,7 @@ class MainModel(Observable):
     # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
 
     # Observable messages
-    message_about_to_update = 'about_to_update'
+    about_to_update = Signal()
     message_previous_contents = 'previous_contents'
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
@@ -236,7 +238,7 @@ class MainModel(Observable):
             self.modified,
             self.untracked
         )
-        self.notify_observers(self.message_about_to_update)
+        self.about_to_update.emit()
 
     def emit_updated(self):
         self.notify_observers(self.message_updated)

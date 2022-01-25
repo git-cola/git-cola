@@ -109,7 +109,6 @@ class StatusWidget(QtWidgets.QFrame):
 # pylint: disable=too-many-ancestors
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
-    about_to_update = Signal()
     set_previous_contents = Signal(list, list, list, list)
     updated = Signal()
     diff_text_changed = Signal()
@@ -291,7 +290,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.delete_untracked_files_action.setIcon(icons.discard())
 
-        self.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
         self.set_previous_contents.connect(
             self._set_previous_contents, type=Qt.QueuedConnection)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
@@ -306,8 +304,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.m.add_observer(
             self.m.message_previous_contents, self.set_previous_contents.emit
         )
-        # Forward the about_to_update notification through self.about_to_update.
-        self.m.add_observer(self.m.message_about_to_update, self.about_to_update.emit)
+        self.m.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
         # Forward the updated notification through self.updated.
         self.m.add_observer(self.m.message_updated, self.updated.emit)
         self.m.add_observer(
