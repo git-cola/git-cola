@@ -35,7 +35,7 @@ class MainModel(Observable):
     # "file_type" {text,image} represents the selected file type.
     file_type_changed = Signal(object)
     images_changed = Signal(object)
-    message_mode_changed = 'mode_changed'
+    mode_changed = Signal(str)
     message_submodules_changed = 'message_submodules_changed'
     message_refs_updated = 'message_refs_updated'
     message_updated = 'updated'
@@ -217,7 +217,7 @@ class MainModel(Observable):
             head = 'HEAD'
         self.head = head
         self.mode = mode
-        self.notify_observers(self.message_mode_changed, mode)
+        self.mode_changed.emit(mode)
 
     def update_path_filter(self, filter_paths):
         self.filter_paths = filter_paths

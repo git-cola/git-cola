@@ -808,7 +808,9 @@ class MainView(standard.MainWindow):
 
         # Listen for model notifications
         model.add_observer(model.message_updated, self.updated.emit)
-        model.add_observer(model.message_mode_changed, lambda mode: self.updated.emit())
+        self.model.mode_changed.connect(
+            lambda mode: self.refresh(), type=Qt.QueuedConnection
+        )
 
         prefs_model.add_observer(
             prefs_model.message_config_updated, self._config_updated
