@@ -33,7 +33,7 @@ class MainModel(Observable):
     # "diff_type" {text,image} represents the diff viewer mode.
     diff_type_changed = Signal(object)
     # "file_type" {text,image} represents the selected file type.
-    message_file_type_changed = 'file_type_changed'
+    file_type_changed = Signal(object)
     message_filename_changed = 'filename_changed'
     message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
@@ -197,7 +197,7 @@ class MainModel(Observable):
         changed = file_type != self.file_type
         self.file_type = file_type
         if changed:
-            self.notify_observers(self.message_file_type_changed, file_type)
+            self.file_type_changed.emit(file_type)
 
     def set_images(self, images):
         """Update the images shown in the preview pane"""
