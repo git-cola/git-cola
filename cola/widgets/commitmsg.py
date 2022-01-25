@@ -29,7 +29,6 @@ from .text import HintedLineEdit
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
-    commit_message_changed = Signal(object)
     cursor_changed = Signal(int, int)
     down = Signal()
     up = Signal()
@@ -185,11 +184,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.summary, N_('Move Down'), self.summary_cursor_down, hotkeys.DOWN
         )
 
-        self.model.add_observer(
-            self.model.message_commit_message_changed, self.commit_message_changed.emit
-        )
-
-        self.commit_message_changed.connect(
+        self.model.commit_message_changed.connect(
             self.set_commit_message, type=Qt.QueuedConnection
         )
 

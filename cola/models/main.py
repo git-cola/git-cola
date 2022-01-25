@@ -27,7 +27,7 @@ class MainModel(Observable):
     # Observable messages
     about_to_update = Signal()
     previous_contents = Signal(list, list, list, list)
-    message_commit_message_changed = 'commit_message_changed'
+    commit_message_changed = Signal(object)
     message_diff_text_changed = 'diff_text_changed'
     message_diff_text_updated = 'diff_text_updated'
     # "diff_type" {text,image} represents the diff viewer mode.
@@ -163,7 +163,7 @@ class MainModel(Observable):
     def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
         if notify:
-            self.notify_observers(self.message_commit_message_changed, msg)
+            self.commit_message_changed.emit(msg)
 
     def save_commitmsg(self, msg=None):
         if msg is None:
