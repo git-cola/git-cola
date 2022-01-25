@@ -36,7 +36,7 @@ class MainModel(Observable):
     file_type_changed = Signal(object)
     images_changed = Signal(object)
     mode_changed = Signal(str)
-    message_submodules_changed = 'message_submodules_changed'
+    submodules_changed = Signal()
     message_refs_updated = 'message_refs_updated'
     message_updated = 'updated'
     message_worktree_changed = 'message_worktree_changed'
@@ -353,7 +353,7 @@ class MainModel(Observable):
 
     def update_submodules_list(self):
         self.submodules_list = gitcmds.list_submodule(self.context)
-        self.notify_observers(self.message_submodules_changed)
+        self.submodules_changed.emit()
 
     def update_remotes(self):
         self._update_remotes()
