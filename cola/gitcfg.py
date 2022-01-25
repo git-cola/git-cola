@@ -110,7 +110,7 @@ class GitConfig(observable.Observable):
     """Encapsulate access to git-config values."""
 
     user_config_changed = Signal(str, str)
-    message_repo_config_changed = 'repo_config_changed'
+    repo_config_changed = Signal(str, str)
     message_updated = 'updated'
 
     def __init__(self, context):
@@ -361,8 +361,7 @@ class GitConfig(observable.Observable):
         else:
             self.git.config(key, python_to_git(value))
         self.update()
-        msg = self.message_repo_config_changed
-        self.notify_observers(msg, key, value)
+        self.repo_config_changed.emit(key, value)
 
     def find(self, pat):
         pat = pat.lower()
