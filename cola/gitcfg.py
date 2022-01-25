@@ -7,10 +7,10 @@ from os.path import join
 import re
 import struct
 
+from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from . import core
-from . import observable
 from . import utils
 from . import version
 from .compat import int_types
@@ -106,7 +106,7 @@ def _config_key_value(line, splitchar):
     return k, _config_to_python(v)
 
 
-class GitConfig(observable.Observable):
+class GitConfig(QtCore.QObject):
     """Encapsulate access to git-config values."""
 
     user_config_changed = Signal(str, str)
@@ -114,7 +114,7 @@ class GitConfig(observable.Observable):
     updated = Signal()
 
     def __init__(self, context):
-        observable.Observable.__init__(self)
+        super(GitConfig, self).__init__()
         self.git = context.git
         self._map = {}
         self._system = {}
