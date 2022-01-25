@@ -359,7 +359,6 @@ class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
     images_changed = Signal(object)
-    diff_type_changed = Signal(object)
     file_type_changed = Signal(object)
 
     def __init__(self, context, parent=None):
@@ -388,9 +387,7 @@ class Viewer(QtWidgets.QFrame):
         self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
 
         # Observe the diff type
-        diff_type_msg = model.message_diff_type_changed
-        model.add_observer(diff_type_msg, self.diff_type_changed.emit)
-        self.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
+        model.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
 
         # Observe the file type
         file_type_msg = model.message_file_type_changed

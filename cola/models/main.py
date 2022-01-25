@@ -31,7 +31,7 @@ class MainModel(Observable):
     diff_text_changed = Signal()
     diff_text_updated = Signal(str)
     # "diff_type" {text,image} represents the diff viewer mode.
-    message_diff_type_changed = 'diff_type_changed'
+    diff_type_changed = Signal(object)
     # "file_type" {text,image} represents the selected file type.
     message_file_type_changed = 'file_type_changed'
     message_filename_changed = 'filename_changed'
@@ -190,7 +190,7 @@ class MainModel(Observable):
         changed = diff_type != self.diff_type
         self.diff_type = diff_type
         if changed:
-            self.notify_observers(self.message_diff_type_changed, diff_type)
+            self.diff_type_changed.emit(diff_type)
 
     def set_file_type(self, file_type):  # text, image
         """Set the file type to either text or image"""
