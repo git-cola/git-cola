@@ -26,7 +26,7 @@ class MainModel(Observable):
 
     # Observable messages
     about_to_update = Signal()
-    message_previous_contents = 'previous_contents'
+    previous_contents = Signal(list, list, list, list)
     message_commit_message_changed = 'commit_message_changed'
     message_diff_text_changed = 'diff_text_changed'
     message_diff_text_updated = 'diff_text_updated'
@@ -231,8 +231,7 @@ class MainModel(Observable):
         self.update_file_status()
 
     def emit_about_to_update(self):
-        self.notify_observers(
-            self.message_previous_contents,
+        self.previous_contents.emit(
             self.staged,
             self.unmerged,
             self.modified,
