@@ -2,13 +2,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
+from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .. import core
 from .. import gitcmds
 from .. import version
 from ..git import STDOUT
-from ..observable import Observable
 from . import prefs
 
 
@@ -18,13 +18,13 @@ def create(context):
 
 
 # pylint: disable=too-many-public-methods
-class MainModel(Observable):
+class MainModel(QtCore.QObject):
     """Repository status model"""
 
     # TODO this class can probably be split apart into a DiffModel,
     # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
 
-    # Observable messages
+    # Signals
     about_to_update = Signal()
     previous_contents = Signal(list, list, list, list)
     commit_message_changed = Signal(object)
@@ -64,7 +64,7 @@ class MainModel(Observable):
 
     def __init__(self, context, cwd=None):
         """Interface to the main repository status"""
-        Observable.__init__(self)
+        super(MainModel, self).__init__()
 
         self.context = context
         self.git = context.git
