@@ -563,24 +563,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
 class MessageValidator(QtGui.QValidator):
     """Prevent invalid branch names"""
 
-    config_updated = Signal()
-
     def __init__(self, context, parent=None):
         super(MessageValidator, self).__init__(parent)
         self.context = context
         self._comment_char = None
-        self._cfg = cfg = context.cfg
         self.refresh()
-        # pylint: disable=no-member
-        self.config_updated.connect(self.refresh, type=Qt.QueuedConnection)
-        cfg.add_observer(cfg.message_updated, self.emit_config_updated)
-        self.destroyed.connect(self.teardown)
-
-    def teardown(self):
-        self._cfg.remove_observer(self.emit_config_updated)
-
-    def emit_config_updated(self):
-        self.config_updated.emit()
+        context.cfg.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
     def refresh(self):
         """Update comment char in response to config changes"""

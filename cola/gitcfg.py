@@ -111,7 +111,7 @@ class GitConfig(observable.Observable):
 
     user_config_changed = Signal(str, str)
     repo_config_changed = Signal(str, str)
-    message_updated = 'updated'
+    updated = Signal()
 
     def __init__(self, context):
         observable.Observable.__init__(self)
@@ -206,7 +206,7 @@ class GitConfig(observable.Observable):
         for dct in (self._system, self._user, self._repo):
             self._all.update(dct)
 
-        self.notify_observers(self.message_updated)
+        self.updated.emit()
 
     def read_config(self, path):
         """Return git config data from a path as a dictionary."""
