@@ -110,7 +110,6 @@ class StatusWidget(QtWidgets.QFrame):
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Signals
     updated = Signal()
-    diff_text_changed = Signal()
 
     # Read-only access to the mode state
     mode = property(lambda self: self.m.mode)
@@ -290,9 +289,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.delete_untracked_files_action.setIcon(icons.discard())
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        self.diff_text_changed.connect(
-            self._make_current_item_visible, type=Qt.QueuedConnection
-        )
 
         # The model is stored as self.m because self.model() is a
         # QTreeWidgetItem method that returns a QAbstractItemModel.
@@ -303,8 +299,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.m.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
         # Forward the updated notification through self.updated.
         self.m.add_observer(self.m.message_updated, self.updated.emit)
-        self.m.add_observer(
-            self.m.message_diff_text_changed, self.diff_text_changed.emit
+        self.m.diff_text_changed.connect(
+            self._make_current_item_visible, type=Qt.QueuedConnection
         )
         # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.show_selection)

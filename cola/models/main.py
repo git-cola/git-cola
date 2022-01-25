@@ -28,7 +28,7 @@ class MainModel(Observable):
     about_to_update = Signal()
     previous_contents = Signal(list, list, list, list)
     commit_message_changed = Signal(object)
-    message_diff_text_changed = 'diff_text_changed'
+    diff_text_changed = Signal()
     message_diff_text_updated = 'diff_text_updated'
     # "diff_type" {text,image} represents the diff viewer mode.
     message_diff_type_changed = 'diff_type_changed'
@@ -183,7 +183,7 @@ class MainModel(Observable):
         self.diff_text = txt
         self.notify_observers(self.message_diff_text_updated, txt)
         if changed:
-            self.notify_observers(self.message_diff_text_changed)
+            self.diff_text_changed.emit()
 
     def set_diff_type(self, diff_type):  # text, image
         """Set the diff type to either text or image"""
