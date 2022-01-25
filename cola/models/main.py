@@ -34,7 +34,6 @@ class MainModel(Observable):
     diff_type_changed = Signal(object)
     # "file_type" {text,image} represents the selected file type.
     file_type_changed = Signal(object)
-    message_filename_changed = 'filename_changed'
     message_images_changed = 'images_changed'
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
@@ -206,10 +205,6 @@ class MainModel(Observable):
 
     def set_directory(self, path):
         self.directory = path
-
-    def set_filename(self, filename):
-        self.filename = filename
-        self.notify_observers(self.message_filename_changed, filename)
 
     def set_mode(self, mode):
         if self.amending():

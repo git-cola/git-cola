@@ -62,7 +62,7 @@ class EditModel(ContextCommand):
 
     def do(self):
         """Perform the operation."""
-        self.model.set_filename(self.new_filename)
+        self.model.filename = self.new_filename
         self.model.set_mode(self.new_mode)
         self.model.set_diff_text(self.new_diff_text)
         self.model.set_diff_type(self.new_diff_type)
@@ -70,7 +70,7 @@ class EditModel(ContextCommand):
 
     def undo(self):
         """Undo the operation."""
-        self.model.set_filename(self.old_filename)
+        self.model.filename = self.old_filename
         self.model.set_mode(self.old_mode)
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_diff_type(self.old_diff_type)
