@@ -7,6 +7,8 @@ from os.path import join
 import re
 import struct
 
+from qtpy.QtCore import Signal
+
 from . import core
 from . import observable
 from . import utils
@@ -107,7 +109,7 @@ def _config_key_value(line, splitchar):
 class GitConfig(observable.Observable):
     """Encapsulate access to git-config values."""
 
-    message_user_config_changed = 'user_config_changed'
+    user_config_changed = Signal(str, str)
     message_repo_config_changed = 'repo_config_changed'
     message_updated = 'updated'
 
@@ -351,8 +353,7 @@ class GitConfig(observable.Observable):
         else:
             self.git.config('--global', key, python_to_git(value))
         self.update()
-        msg = self.message_user_config_changed
-        self.notify_observers(msg, key, value)
+        self.user_config_changed.emit(key, value)
 
     def set_repo(self, key, value):
         if value in (None, ''):

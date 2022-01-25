@@ -218,7 +218,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFont(qtutils.diff_font(context))
         self.setFocusProxy(self.summary)
 
-        cfg.add_observer(cfg.message_user_config_changed, self.config_changed)
+        cfg.user_config_changed.connect(self.config_changed)
 
     def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:
