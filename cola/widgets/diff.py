@@ -358,8 +358,6 @@ class DiffLineNumbers(TextDecorator):
 class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
-    images_changed = Signal(object)
-
     def __init__(self, context, parent=None):
         super(Viewer, self).__init__(parent)
 
@@ -380,10 +378,7 @@ class Viewer(QtWidgets.QFrame):
         self.setLayout(self.main_layout)
 
         # Observe images
-        images_msg = model.message_images_changed
-        model.add_observer(images_msg, self.images_changed.emit)
-        # pylint: disable=no-member
-        self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
+        model.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
 
         # Observe the diff type
         model.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)

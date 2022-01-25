@@ -34,7 +34,7 @@ class MainModel(Observable):
     diff_type_changed = Signal(object)
     # "file_type" {text,image} represents the selected file type.
     file_type_changed = Signal(object)
-    message_images_changed = 'images_changed'
+    images_changed = Signal(object)
     message_mode_about_to_change = 'mode_about_to_change'
     message_mode_changed = 'mode_changed'
     message_submodules_changed = 'message_submodules_changed'
@@ -201,7 +201,7 @@ class MainModel(Observable):
     def set_images(self, images):
         """Update the images shown in the preview pane"""
         self.images = images
-        self.notify_observers(self.message_images_changed, images)
+        self.images_changed.emit(images)
 
     def set_directory(self, path):
         self.directory = path
