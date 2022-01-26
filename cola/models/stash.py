@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from .. import cmds
 from .. import core
-from .. import observable
 from .. import gitcmds
 from .. import utils
 from ..i18n import N_
@@ -10,9 +9,8 @@ from ..git import STDOUT
 from ..interaction import Interaction
 
 
-class StashModel(observable.Observable):
+class StashModel(object):
     def __init__(self, context):
-        observable.Observable.__init__(self)
         self.context = context
         self.git = context.git
         self.model = model = context.model
