@@ -20,7 +20,6 @@ from .. import difftool
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
-from .. import observable
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
@@ -599,10 +598,6 @@ class GitDAG(standard.MainWindow):
         self.zoom_to_fit = qtutils.create_action_button(
             tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best()
         )
-
-        self.notifier = notifier = observable.Observable()
-        self.notifier.refs_updated = refs_updated = 'refs_updated'
-        self.notifier.add_observer(refs_updated, self.display)
 
         self.treewidget = CommitTreeWidget(context, self)
         self.diffwidget = diff.DiffWidget(context, self, is_commit=True)
