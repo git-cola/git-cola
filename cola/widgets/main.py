@@ -811,9 +811,7 @@ class MainView(standard.MainWindow):
             lambda mode: self.refresh(), type=Qt.QueuedConnection
         )
 
-        prefs_model.add_observer(
-            prefs_model.message_config_updated, self._config_updated
-        )
+        prefs_model.config_updated.connect(self._config_updated)
 
         # Set a default value
         self.show_cursor_position(1, 0)
