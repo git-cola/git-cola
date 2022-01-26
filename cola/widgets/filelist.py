@@ -9,7 +9,6 @@ from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
 from .standard import TreeWidget
-from .diff import FILES_SELECTED
 
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
 DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
@@ -18,6 +17,7 @@ DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 # pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
 
+    files_selected = Signal(object)
     grab_file = Signal(object)
 
     def __init__(self, context, notifier, parent):
@@ -49,7 +49,7 @@ class FileWidget(TreeWidget):
 
     def selection_changed(self):
         items = self.selected_items()
-        self.notifier.notify_observers(FILES_SELECTED, [i.path for i in items])
+        self.files_selected.emit([i.path for i in items])
 
     def commits_selected(self, commits):
         if not commits:

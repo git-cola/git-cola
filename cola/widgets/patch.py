@@ -10,7 +10,6 @@ from ..qtutils import get
 from .. import core
 from .. import cmds
 from .. import hotkeys
-from .. import observable
 from .. import icons
 from .. import qtutils
 from .standard import Dialog
@@ -94,8 +93,7 @@ class ApplyPatches(Dialog):
         # pylint: disable=no-member
         self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
 
-        self.notifier = notifier = observable.Observable()
-        self.diffwidget = diff.DiffWidget(context, notifier, self, is_commit=True)
+        self.diffwidget = diff.DiffWidget(context, self, is_commit=True)
 
         self.add_button = qtutils.create_toolbutton(
             text=N_('Add'), icon=icons.add(), tooltip=N_('Add patches (+)')

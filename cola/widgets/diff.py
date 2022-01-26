@@ -29,9 +29,6 @@ from . import defs
 from . import imageview
 
 
-FILES_SELECTED = 'FILES_SELECTED'
-
-
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     """Implements the diff syntax highlighting"""
 
@@ -990,7 +987,7 @@ class DiffEditor(DiffTextEdit):
 
 
 class DiffWidget(QtWidgets.QWidget):
-    def __init__(self, context, notifier, parent, is_commit=False):
+    def __init__(self, context, parent, is_commit=False):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.context = context
@@ -1055,7 +1052,6 @@ class DiffWidget(QtWidgets.QWidget):
         )
         self.setLayout(self.main_layout)
 
-        notifier.add_observer(FILES_SELECTED, self.files_selected)
         self.set_tabwidth(prefs.tabwidth(context))
 
     def set_tabwidth(self, width):

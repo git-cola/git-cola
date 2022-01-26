@@ -607,7 +607,7 @@ class GitDAG(standard.MainWindow):
         self.notifier.add_observer(filelist.DIFFTOOL_SELECTED, self.difftool_selected)
 
         self.treewidget = CommitTreeWidget(context, self)
-        self.diffwidget = diff.DiffWidget(context, notifier, self, is_commit=True)
+        self.diffwidget = diff.DiffWidget(context, self, is_commit=True)
         self.filewidget = filelist.FileWidget(context, notifier, self)
         self.graphview = GraphView(context, self)
 
@@ -619,6 +619,8 @@ class GitDAG(standard.MainWindow):
         self.commits_selected.connect(self.filewidget.commits_selected)
         self.commits_selected.connect(self.graphview.select_commits)
         self.commits_selected.connect(self.treewidget.select_commits)
+
+        self.filewidget.files_selected.connect(self.diffwidget.files_selected)
 
         self.proxy = FocusRedirectProxy(
             self.treewidget, self.graphview, self.filewidget

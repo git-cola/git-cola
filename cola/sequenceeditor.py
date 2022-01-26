@@ -155,7 +155,7 @@ class Editor(QtWidgets.QWidget):
         self.cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
         self.notifier = notifier = observable.Observable()
-        self.diff = diff.DiffWidget(context, notifier, self)
+        self.diff = diff.DiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
         self.filewidget = filelist.FileWidget(context, notifier, self)
         self.setFocusProxy(self.tree)
@@ -209,6 +209,8 @@ class Editor(QtWidgets.QWidget):
         self.tree.commits_selected.connect(self.filewidget.commits_selected)
         self.tree.commits_selected.connect(self.diffwidget.commits_selected)
         self.tree.external_diff.connect(self.external_diff)
+
+        self.filewidget.files_selected.connect(self.diffwidget.files_selected)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
