@@ -3,7 +3,6 @@ import json
 
 from .. import core
 from .. import utils
-from ..observable import Observable
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
@@ -38,12 +37,8 @@ class CommitFactory(object):
         return commit
 
 
-class DAG(Observable):
-    ref_updated = 'ref_updated'
-    count_updated = 'count_updated'
-
+class DAG(object):
     def __init__(self, ref, count):
-        Observable.__init__(self)
         self.ref = ref
         self.count = count
         self.overrides = {}
@@ -52,14 +47,12 @@ class DAG(Observable):
         changed = ref != self.ref
         if changed:
             self.ref = ref
-            self.notify_observers(self.ref_updated)
         return changed
 
     def set_count(self, count):
         changed = count != self.count
         if changed:
             self.count = count
-            self.notify_observers(self.count_updated)
         return changed
 
     def set_arguments(self, args):
