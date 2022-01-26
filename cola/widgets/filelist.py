@@ -11,13 +11,13 @@ from ..i18n import N_
 from .standard import TreeWidget
 
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
-DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
 
 # pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
 
     files_selected = Signal(object)
+    difftool_selected = Signal(object)
     grab_file = Signal(object)
 
     def __init__(self, context, notifier, parent):
@@ -105,7 +105,7 @@ class FileWidget(TreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_diff(self):
-        self.notifier.notify_observers(DIFFTOOL_SELECTED, self.selected_paths())
+        self.difftool_selected.emit(self.selected_paths())
 
     def _grab_file(self):
         for path in self.selected_paths():
