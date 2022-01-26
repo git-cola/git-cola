@@ -17,7 +17,6 @@ from cola import core
 from cola import difftool
 from cola import hotkeys
 from cola import icons
-from cola import observable
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -154,10 +153,9 @@ class Editor(QtWidgets.QWidget):
         self.comment_char = comment_char = prefs.comment_char(context)
         self.cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
-        self.notifier = notifier = observable.Observable()
         self.diff = diff.DiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
-        self.filewidget = filelist.FileWidget(context, notifier, self)
+        self.filewidget = filelist.FileWidget(context, self)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
