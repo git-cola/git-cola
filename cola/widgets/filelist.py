@@ -9,7 +9,6 @@ from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
 from .standard import TreeWidget
-from .diff import COMMITS_SELECTED
 from .diff import FILES_SELECTED
 
 HISTORIES_SELECTED = 'HISTORIES_SELECTED'
@@ -28,8 +27,6 @@ class FileWidget(TreeWidget):
 
         labels = [N_('Filename'), N_('Additions'), N_('Deletions')]
         self.setHeaderLabels(labels)
-
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         self.show_history_action = qtutils.add_action(
             self, N_('Show History'), self.show_history, hotkeys.HISTORY

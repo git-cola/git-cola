@@ -29,7 +29,6 @@ from . import defs
 from . import imageview
 
 
-COMMITS_SELECTED = 'COMMITS_SELECTED'
 FILES_SELECTED = 'FILES_SELECTED'
 
 
@@ -1056,7 +1055,6 @@ class DiffWidget(QtWidgets.QWidget):
         )
         self.setLayout(self.main_layout)
 
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
         notifier.add_observer(FILES_SELECTED, self.files_selected)
         self.set_tabwidth(prefs.tabwidth(context))
 
