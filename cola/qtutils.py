@@ -939,10 +939,10 @@ class Task(QtCore.QRunnable):
 
     """
 
-    def __init__(self, parent):
+    def __init__(self):
         QtCore.QRunnable.__init__(self)
 
-        self.channel = Channel(parent)
+        self.channel = Channel()
         self.result = None
         self.setAutoDelete(False)
 
@@ -962,8 +962,8 @@ class Task(QtCore.QRunnable):
 class SimpleTask(Task):
     """Run a simple callable as a task"""
 
-    def __init__(self, parent, fn, *args, **kwargs):
-        Task.__init__(self, parent)
+    def __init__(self, fn, *args, **kwargs):
+        Task.__init__(self)
 
         self.fn = fn
         self.args = args

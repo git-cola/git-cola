@@ -993,8 +993,7 @@ def save_as(filename, title):
 
 
 def async_command(title, cmd, runtask):
-    parent = qtutils.active_window()
-    task = qtutils.SimpleTask(parent, partial(core.run_command, cmd))
+    task = qtutils.SimpleTask(partial(core.run_command, cmd))
     task.connect(partial(async_command_result, title, cmd))
     runtask.start(task)
 

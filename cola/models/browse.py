@@ -264,7 +264,7 @@ class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
     def __init__(self, context, parent, path, default_author):
-        qtutils.Task.__init__(self, parent)
+        qtutils.Task.__init__(self)
         self.context = context
         self.path = path
         self._parent = parent
