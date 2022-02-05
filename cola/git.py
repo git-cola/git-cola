@@ -5,6 +5,7 @@ import os
 from os.path import join
 import subprocess
 import threading
+import time
 
 from . import core
 from .compat import int_types
@@ -279,6 +280,8 @@ class Git(object):
             # process from the console it should fork and call os.setsid().
             extra['preexec_fn'] = os.setsid
 
+        start_time = time.time()
+
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
         if not _readonly:
@@ -299,22 +302,26 @@ class Git(object):
             if not _readonly:
                 _index_lock.release()
 
+        end_time = time.time()
+        elapsed_time = abs(end_time - start_time)
+
         if not _raw and out is not None:
             out = core.UStr(out.rstrip('\n'), out.encoding)
 
         cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
-            msg = 'trace: ' + core.list2cmdline(command)
+            msg = 'trace: %.3fs: %s' % (elapsed_time, core.list2cmdline(command))
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
                 core.print_stderr(
-                    "%s -> %d: '%s' '%s'" % (' '.join(command), status, out, err)
+                    "# %.3fs: %s -> %d: '%s' '%s'"
+                    % (elapsed_time, ' '.join(command), status, out, err)
                 )
             else:
-                core.print_stderr("%s -> %d" % (' '.join(command), status))
+                core.print_stderr('# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status))
         elif cola_trace:
-            core.print_stderr(' '.join(command))
+            core.print_stderr('# %.3fs: %s' % (elapsed_time, ' '.join(command)))
 
         # Allow access to the command's status code
         return (status, out, err)

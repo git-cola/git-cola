@@ -180,7 +180,6 @@ class SubmodulesTreeWidget(standard.TreeWidget):
     def refresh(self):
         if not self._active:
             return
-
         submodules = self.context.model.submodules_list
         items = [self.list_helper.get(entry) for entry in submodules]
         self.clear()
