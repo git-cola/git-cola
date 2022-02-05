@@ -477,6 +477,10 @@ To use icons appropriate for a dark application theme, configure
 ``git config --global cola.icontheme dark`` to use the dark icon theme.
 See :ref:`cola_icontheme` for more details.
 
+On macOS, using the ``default`` theme will automatically inherit "Dark Mode"
+color themes when configured via System Preferences.  You will need to
+configure the dark icon theme as noted above when dark mode is enabled.
+
 On Linux, you may want Qt to follow the Window manager theme by configuring it
 to do so using the ``qt5ct`` Qt5 configuration tool.  Install ``qt5ct`` on
 Debian/Ubuntu systems to make this work.::
@@ -486,15 +490,48 @@ Debian/Ubuntu systems to make this work.::
 Once installed, update your `~/.bash_profile` to activate ``qt5ct``::
 
     # Use the style configured using the qt5ct tool
-    QT_QPA_PLATFORMTHEME=qt5ct
-    export QT_QPA_PLATFORMTHEME
+    export QT_QPA_PLATFORMTHEME=qt5ct
 
 This only work with the `default` theme.  The other themes replace the color
 palette with theme-specific colors.
 
-On macOS, using the ``default`` theme will automatically inherit "Dark Mode"
-color themes when configured via System Preferences.  You will need to
-configure the dark icon theme as noted above when dark mode is enabled.
+Some systems may require that you override `QT_STYLE_OVERRIDE` in order to
+use a dark theme or to better interact with the Desktop environment.
+For example, users on Ubuntu have reported this setting:
+
+    # Override the default theme to adwait-dark
+    export QT_STYLE_OVERRIDE=adwaita-dark
+
+`QT_STYLE_OVERRIDE` may already be set in your Desktop Environment, so check that
+variable for reference if you get unexpected hangs when launching or the default theme
+does not follow the desktop's theme on Linux.
+
+If you don't want to set this variable globally then you can set it when launching
+cola from the command-line:
+
+    QT_STYLE_OVERRIDE=adwaita-dark git cola
+
+The following is a user-contributed custom `git-cola.desktop` file that can be used to
+launch Git Cola with these settings preset for you:
+
+    [Desktop Entry]
+    Name=Git Cola (dark)
+    Comment=The highly caffeinated Git GUI
+    TryExec=git-cola
+    Exec=env QT_STYLE_OVERRIDE=adwaita-dark git-cola --prompt --icon-theme dark
+    Icon=git-cola
+    StartupNotify=true
+    Terminal=false
+    Type=Application
+    Categories=Development;RevisionControl;
+    X-KDE-SubstituteUID=false
+
+You may also want to customize the diff colors when using a dark theme:
+
+    git config --global cola.color.add 86c19f
+    git config --global cola.color.remove c07067
+
+Please see `#760 <https://github.com/git-cola/git-cola/issues/760>`_ for more details.
 
 CONFIGURATION VARIABLES
 =======================
