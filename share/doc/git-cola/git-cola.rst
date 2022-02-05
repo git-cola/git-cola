@@ -497,22 +497,26 @@ palette with theme-specific colors.
 
 Some systems may require that you override `QT_STYLE_OVERRIDE` in order to
 use a dark theme or to better interact with the Desktop environment.
-For example, users on Ubuntu have reported this setting:
+Some systems provide a theme that you can install::
+
+    sudo apt-get install adwaita-qt
+
+You can activate the theme using the following enviornment variable::
 
     # Override the default theme to adwait-dark
     export QT_STYLE_OVERRIDE=adwaita-dark
 
 `QT_STYLE_OVERRIDE` may already be set in your Desktop Environment, so check that
-variable for reference if you get unexpected hangs when launching or the default theme
-does not follow the desktop's theme on Linux.
+variable for reference if you get unexpected hangs when launching `git-cola` or
+when the default theme does not follow the desktop's theme on Linux.
 
 If you don't want to set this variable globally then you can set it when launching
-cola from the command-line:
+cola from the command-line::
 
     QT_STYLE_OVERRIDE=adwaita-dark git cola
 
 The following is a user-contributed custom `git-cola.desktop` file that can be used to
-launch Git Cola with these settings preset for you:
+launch Git Cola with these settings preset for you::
 
     [Desktop Entry]
     Name=Git Cola (dark)
@@ -526,7 +530,7 @@ launch Git Cola with these settings preset for you:
     Categories=Development;RevisionControl;
     X-KDE-SubstituteUID=false
 
-You may also want to customize the diff colors when using a dark theme:
+You may also want to customize the diff colors when using a dark theme::
 
     git config --global cola.color.add 86c19f
     git config --global cola.color.remove c07067
