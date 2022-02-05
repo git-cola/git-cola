@@ -593,6 +593,7 @@ class ApplicationContext(object):
         self.selection = None  # selection.SelectionModel
         self.fsmonitor = None  # fsmonitor
         self.view = None  # QWidget
+        self.browser_windows = []  # list of browse.Browser
 
     def set_view(self, view):
         """Initialize view-specific members"""

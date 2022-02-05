@@ -28,6 +28,9 @@ from . import standard
 def worktree_browser(context, parent=None, update=True, show=True):
     """Create a new worktree browser"""
     view = Browser(context, parent, update=update)
+    if parent is None:
+        context.browser_windows.append(view)
+        view.closed.connect(context.browser_windows.remove)
     model = GitRepoModel(context, view.tree)
     view.set_model(model)
     if update:

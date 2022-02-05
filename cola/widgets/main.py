@@ -885,6 +885,8 @@ class MainView(standard.MainWindow):
         """Save state in the settings"""
         commit_msg = self.commiteditor.commit_message(raw=True)
         self.model.save_commitmsg(msg=commit_msg)
+        for browser in list(self.context.browser_windows):
+            browser.close()
         standard.MainWindow.closeEvent(self, event)
 
     def create_view_menu(self):
