@@ -319,7 +319,9 @@ class Git(object):
                     % (elapsed_time, ' '.join(command), status, out, err)
                 )
             else:
-                core.print_stderr('# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status))
+                core.print_stderr(
+                    '# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status)
+                )
         elif cola_trace:
             core.print_stderr('# %.3fs: %s' % (elapsed_time, ' '.join(command)))
 
