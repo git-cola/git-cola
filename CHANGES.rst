@@ -3,6 +3,13 @@
 v3.13.0
 =======
 
+Usability, bells and whistles
+-----------------------------
+
+* Git Cola now keeps track of child Browser windows and will close all of them when
+  the main window is closed.
+  (`#1200 <https://github.com/git-cola/git-cola/pull/1200>`_)
+
 Fixes
 -----
 
