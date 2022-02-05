@@ -63,13 +63,10 @@ class SubmodulesWidget(QtWidgets.QFrame):
 
         # Connections
         qtutils.connect_button(self.add_button, self.add_submodule)
-        qtutils.connect_button(self.refresh_button, self.refresh)
+        qtutils.connect_button(self.refresh_button, self.tree.update_model.emit)
         qtutils.connect_button(
             self.open_parent_button, cmds.run(cmds.OpenParentRepo, context)
         )
-
-    def refresh(self):
-        self.context.model.update_submodules_list()
 
     def add_submodule(self):
         add_submodule(self.context, self)
@@ -159,6 +156,7 @@ class AddSubmodule(standard.Dialog):
 # pylint: disable=too-many-ancestors
 class SubmodulesTreeWidget(standard.TreeWidget):
     updated = Signal()
+    update_model = Signal()
 
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
@@ -176,6 +174,9 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         self.itemDoubleClicked.connect(self.tree_double_clicked)
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         model.add_observer(model.message_submodules_changed, self.updated.emit)
+        self.update_model.connect(
+            model.update_submodules_list, type=Qt.QueuedConnection
+        )
 
     def refresh(self):
         if not self._active:
@@ -190,7 +191,7 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         """Defer updating widgets until the widget is visible"""
         if not self._active:
             self._active = True
-            self.refresh()
+            self.update_model.emit()
         return super(SubmodulesTreeWidget, self).showEvent(event)
 
     def tree_double_clicked(self, item, _column):

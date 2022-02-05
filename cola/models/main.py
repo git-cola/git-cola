@@ -101,7 +101,7 @@ class MainModel(Observable):
         self.staged_deleted = set()
         self.unstaged_deleted = set()
         self.submodules = set()
-        self.submodules_list = []
+        self.submodules_list = None  # lazy loaded
 
         self.ref_sort = 0  # (0: version, 1:reverse-chrono)
         self.local_branches = []
@@ -245,7 +245,7 @@ class MainModel(Observable):
         self.emit_about_to_update()
         self.update_files(update_index=update_index, emit=True)
 
-    def update_status(self, update_index=False):
+    def update_status(self, update_index=False, reset=False):
         # Give observers a chance to respond
         self.emit_about_to_update()
         self.initialized = True
@@ -255,7 +255,8 @@ class MainModel(Observable):
         self._update_branches_and_tags()
         self._update_commitmsg()
         self.update_config()
-        self.update_submodules_list()
+        if reset:
+            self.update_submodules_list()
         self.emit_updated()
 
     def update_config(self, emit=False, reset=False):

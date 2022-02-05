@@ -1731,7 +1731,7 @@ class OpenRepo(EditModel):
         if self.model.set_worktree(self.repo_path):
             self.fsmonitor.stop()
             self.fsmonitor.start()
-            self.model.update_status()
+            self.model.update_status(reset=True)
             # Check if template should be loaded
             if self.context.cfg.get(prefs.AUTOTEMPLATE):
                 template_loader = LoadCommitMessageFromTemplate(self.context)
