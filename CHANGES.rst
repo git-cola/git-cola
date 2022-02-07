@@ -1,7 +1,19 @@
 .. _v3.13.0:
 
-v3.13.0
-=======
+v4.0.0
+======
+
+Breaking Changes
+----------------
+
+* The build system is now Python3-only. While Git Cola still technically runs under
+  Python2, it is no longer officially supported and may stop working in a future
+  release.
+  (`#1201 <https://github.com/git-cola/git-cola/issues/1201>`_)
+
+* The default `#!/usr/bin/env python` lines in the `git-cola` and `git-dag` wrapper
+  scripts have been updated to use `python3`.
+  (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
 Usability, bells and whistles
 -----------------------------
@@ -15,6 +27,11 @@ Fixes
 
 * Documentation typofixes.
   (`#1193 <https://github.com/git-cola/git-cola/pull/1193>`_)
+
+* Git Cola was revamped to use Qt signals and slots for all of its notifications.
+  This made its notification system more robust.
+  (`#1202 <https://github.com/git-cola/git-cola/pull/1202>`_)
+  (`#1203 <https://github.com/git-cola/git-cola/pull/1203>`_)
 
 
 .. _v3.12.0:
