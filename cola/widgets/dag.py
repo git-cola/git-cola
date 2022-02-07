@@ -1172,7 +1172,6 @@ class Commit(QtWidgets.QGraphicsItem):
     def __init__(
         self,
         commit,
-        notifier,
         selectable=QtWidgets.QGraphicsItem.ItemIsSelectable,
         cursor=Qt.PointingHandCursor,
         xpos=commit_radius / 2.0 + 1.0,
@@ -1183,7 +1182,6 @@ class Commit(QtWidgets.QGraphicsItem):
         QtWidgets.QGraphicsItem.__init__(self)
 
         self.commit = commit
-        self.notifier = notifier
         self.selected = False
 
         self.setZValue(0)
@@ -1208,19 +1206,8 @@ class Commit(QtWidgets.QGraphicsItem):
 
         self.edges = {}
 
-    def blockSignals(self, blocked):
-        """Disable notifications during sections that cause notification loops"""
-        self.notifier.notification_enabled = not blocked
-
     def itemChange(self, change, value):
         if change == QtWidgets.QGraphicsItem.ItemSelectedHasChanged:
-            # Broadcast selection to other widgets
-            selected_items = self.scene().selectedItems()
-            commits = [item.commit for item in selected_items]
-            self.scene().parent().set_selecting(True)
-            self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
-            self.scene().parent().set_selecting(False)
-
             # Cache the pen for use in paint()
             if value:
                 self.brush = self.commit_selected_color
@@ -1432,6 +1419,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         scene.setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
         self.setScene(scene)
 
+        # pylint: disable=no-member
+        scene.selectionChanged.connect(self.selection_changed)
+
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setViewportUpdateMode(self.BoundingRectViewportUpdate)
         self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
@@ -1492,10 +1482,19 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def zoom_out(self):
         self.scale_view(1.0 / 1.5)
 
+    def selection_changed(self):
+        # Broadcast selection to other widgets
+        selected_items = self.scene().selectedItems()
+        commits = [item.commit for item in selected_items]
+        self.set_selecting(True)
+        self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
+        self.set_selecting(False)
+
     def commits_selected(self, commits):
         if self.selecting:
             return
-        self.select([commit.oid for commit in commits])
+        with qtutils.BlockSignals(self.scene()):
+            self.select([commit.oid for commit in commits])
 
     def select(self, oids):
         """Select the item for the oids"""
@@ -1505,8 +1504,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 item = self.items[oid]
             except KeyError:
                 continue
-            with qtutils.BlockSignals(item):
-                item.setSelected(True)
+            item.setSelected(True)
             item_rect = item.sceneTransform().mapRect(item.boundingRect())
             self.ensureVisible(item_rect)
 
@@ -1764,7 +1762,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.commits.extend(commits)
         scene = self.scene()
         for commit in commits:
-            item = Commit(commit, self.notifier)
+            item = Commit(commit)
             self.items[commit.oid] = item
             for ref in commit.tags:
                 self.items[ref] = item
