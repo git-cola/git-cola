@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """git-dag: An advanced Git DAG history visualizer"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
