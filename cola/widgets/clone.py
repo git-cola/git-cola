@@ -19,16 +19,16 @@ from . import standard
 from . import text
 
 
-def clone(context, spawn=True, show=True, parent=None):
+def clone(context, spawn=True, show=True):
     """Clone a repository and spawn a new git-cola instance"""
     parent = qtutils.active_window()
     progress = standard.progress('', '', parent)
-    return clone_repo(context, parent, show, progress, task_finished, spawn)
+    return clone_repo(context, show, progress, task_finished, spawn)
 
 
-def clone_repo(context, parent, show, progress, finish, spawn):
+def clone_repo(context, show, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
-    fn = partial(start_clone_task, context, parent, progress, finish, spawn)
+    fn = partial(start_clone_task, context, progress, finish, spawn)
     prompt = prompt_for_clone(context, show=show)
     prompt.result.connect(fn)
     return prompt
@@ -55,20 +55,20 @@ def task_finished(task):
 
 
 def start_clone_task(
-    context, parent, progress, finish, spawn, url, destdir, submodules, shallow
+    context, progress, finish, spawn, url, destdir, submodules, shallow
 ):
     # Use a thread to update in the background
     runtask = context.runtask
     progress.set_details(N_('Clone Repository'), N_('Cloning repository at %s') % url)
-    task = CloneTask(context, url, destdir, submodules, shallow, spawn, parent)
+    task = CloneTask(context, url, destdir, submodules, shallow, spawn)
     runtask.start(task, finish=finish, progress=progress)
 
 
 class CloneTask(qtutils.Task):
     """Clones a Git repository"""
 
-    def __init__(self, context, url, destdir, submodules, shallow, spawn, parent):
-        qtutils.Task.__init__(self, parent)
+    def __init__(self, context, url, destdir, submodules, shallow, spawn):
+        qtutils.Task.__init__(self)
         self.context = context
         self.url = url
         self.destdir = destdir

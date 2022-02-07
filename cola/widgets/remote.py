@@ -104,8 +104,8 @@ def get_default_remote(context):
 class ActionTask(qtutils.Task):
     """Run actions asynchronously"""
 
-    def __init__(self, parent, model_action, remote, kwargs):
-        qtutils.Task.__init__(self, parent)
+    def __init__(self, model_action, remote, kwargs):
+        qtutils.Task.__init__(self)
         self.model_action = model_action
         self.remote = remote
         self.kwargs = kwargs
@@ -631,7 +631,7 @@ class RemoteActionDialog(standard.Dialog):
         self.buttons.setEnabled(False)
 
         # Use a thread to update in the background
-        task = ActionTask(self, model_action, remote, kwargs)
+        task = ActionTask(model_action, remote, kwargs)
         self.runtask.start(task, progress=self.progress, finish=self.action_completed)
 
     def action_completed(self, task):

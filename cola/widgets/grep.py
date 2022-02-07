@@ -339,8 +339,8 @@ class GrepTextView(VimHintedPlainTextEdit):
 class PreviewTask(qtutils.Task):
     """Asynchronous task for loading file content"""
 
-    def __init__(self, parent, filename, line_number):
-        qtutils.Task.__init__(self, parent)
+    def __init__(self, filename, line_number):
+        qtutils.Task.__init__(self)
 
         self.content = ''
         self.filename = filename
@@ -368,7 +368,7 @@ class PreviewTextView(VimTextBrowser):
         """Preview the a file at the specified line number"""
 
         if filename != self.filename:
-            request = PreviewTask(self, filename, line_number)
+            request = PreviewTask(filename, line_number)
             self.runtask.start(request, finish=self.show_preview)
         else:
             self.scroll_to_line(line_number)

@@ -1084,7 +1084,7 @@ class DiffWidget(QtWidgets.QWidget):
         context = self.context
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
-        task = DiffInfoTask(context, oid, filename, self)
+        task = DiffInfoTask(context, oid, filename)
         self.context.runtask.start(task, result=self.set_diff)
 
     def commits_selected(self, commits):
@@ -1172,8 +1172,8 @@ class TextLabel(QtWidgets.QLabel):
 
 
 class DiffInfoTask(qtutils.Task):
-    def __init__(self, context, oid, filename, parent):
-        qtutils.Task.__init__(self, parent)
+    def __init__(self, context, oid, filename):
+        qtutils.Task.__init__(self)
         self.context = context
         self.oid = oid
         self.filename = filename

@@ -39,8 +39,8 @@ def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, fn):
 class AsyncGitActionTask(qtutils.Task):
     """Run git action asynchronously"""
 
-    def __init__(self, parent, git_helper, action, args, kwarg):
-        qtutils.Task.__init__(self, parent)
+    def __init__(self, git_helper, action, args, kwarg):
+        qtutils.Task.__init__(self)
         self.git_helper = git_helper
         self.action = action
         self.args = args
@@ -393,7 +393,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_async(self, action, args, kwarg=None):
         if kwarg is None:
             kwarg = {}
-        task = AsyncGitActionTask(self, self.git_helper, action, args, kwarg)
+        task = AsyncGitActionTask(self, action, args, kwarg)
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )

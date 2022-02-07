@@ -1003,7 +1003,7 @@ class MainView(standard.MainWindow):
     def start(self, context):
         """Do the expensive "get_config_actions()" call in the background"""
         # Install .git-config-defined actions
-        task = qtutils.SimpleTask(self, self.get_config_actions)
+        task = qtutils.SimpleTask(self.get_config_actions)
         context.runtask.start(task)
 
     def get_config_actions(self):
