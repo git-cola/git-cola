@@ -109,8 +109,8 @@ def _config_key_value(line, splitchar):
 class GitConfig(QtCore.QObject):
     """Encapsulate access to git-config values."""
 
-    user_config_changed = Signal(str, str)
-    repo_config_changed = Signal(str, str)
+    user_config_changed = Signal(str, object)
+    repo_config_changed = Signal(str, object)
     updated = Signal()
 
     def __init__(self, context):
