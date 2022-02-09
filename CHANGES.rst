@@ -32,6 +32,8 @@ Fixes
   This made its notification system more robust.
   (`#1202 <https://github.com/git-cola/git-cola/pull/1202>`_)
   (`#1203 <https://github.com/git-cola/git-cola/pull/1203>`_)
+  (`#1205 <https://github.com/git-cola/git-cola/pull/1205>`_)
+  (`#1206 <https://github.com/git-cola/git-cola/pull/1206>`_)
 
 
 .. _v3.12.0:
