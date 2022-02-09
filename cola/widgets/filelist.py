@@ -9,27 +9,22 @@ from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
 from .standard import TreeWidget
-from .diff import COMMITS_SELECTED
-from .diff import FILES_SELECTED
-
-HISTORIES_SELECTED = 'HISTORIES_SELECTED'
-DIFFTOOL_SELECTED = 'DIFFTOOL_SELECTED'
 
 
 # pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
 
+    files_selected = Signal(object)
+    difftool_selected = Signal(object)
+    histories_selected = Signal(object)
     grab_file = Signal(object)
 
-    def __init__(self, context, notifier, parent):
+    def __init__(self, context, parent):
         TreeWidget.__init__(self, parent)
         self.context = context
-        self.notifier = notifier
 
         labels = [N_('Filename'), N_('Additions'), N_('Deletions')]
         self.setHeaderLabels(labels)
-
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
 
         self.show_history_action = qtutils.add_action(
             self, N_('Show History'), self.show_history, hotkeys.HISTORY
@@ -52,7 +47,7 @@ class FileWidget(TreeWidget):
 
     def selection_changed(self):
         items = self.selected_items()
-        self.notifier.notify_observers(FILES_SELECTED, [i.path for i in items])
+        self.files_selected.emit([i.path for i in items])
 
     def commits_selected(self, commits):
         if not commits:
@@ -108,7 +103,7 @@ class FileWidget(TreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_diff(self):
-        self.notifier.notify_observers(DIFFTOOL_SELECTED, self.selected_paths())
+        self.difftool_selected.emit(self.selected_paths())
 
     def _grab_file(self):
         for path in self.selected_paths():
@@ -123,7 +118,7 @@ class FileWidget(TreeWidget):
     def show_history(self):
         items = self.selected_items()
         paths = [i.path for i in items]
-        self.notifier.notify_observers(HISTORIES_SELECTED, paths)
+        self.histories_selected.emit(paths)
 
 
 class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):

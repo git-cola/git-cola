@@ -2,11 +2,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
+from qtpy import QtCore
+from qtpy.QtCore import Signal
+
 from .. import core
 from .. import gitcmds
 from .. import version
 from ..git import STDOUT
-from ..observable import Observable
 from . import prefs
 
 
@@ -16,30 +18,28 @@ def create(context):
 
 
 # pylint: disable=too-many-public-methods
-class MainModel(Observable):
+class MainModel(QtCore.QObject):
     """Repository status model"""
 
     # TODO this class can probably be split apart into a DiffModel,
     # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
 
-    # Observable messages
-    message_about_to_update = 'about_to_update'
-    message_previous_contents = 'previous_contents'
-    message_commit_message_changed = 'commit_message_changed'
-    message_diff_text_changed = 'diff_text_changed'
-    message_diff_text_updated = 'diff_text_updated'
+    # Signals
+    about_to_update = Signal()
+    previous_contents = Signal(list, list, list, list)
+    commit_message_changed = Signal(object)
+    diff_text_changed = Signal()
+    diff_text_updated = Signal(str)
     # "diff_type" {text,image} represents the diff viewer mode.
-    message_diff_type_changed = 'diff_type_changed'
+    diff_type_changed = Signal(object)
     # "file_type" {text,image} represents the selected file type.
-    message_file_type_changed = 'file_type_changed'
-    message_filename_changed = 'filename_changed'
-    message_images_changed = 'images_changed'
-    message_mode_about_to_change = 'mode_about_to_change'
-    message_mode_changed = 'mode_changed'
-    message_submodules_changed = 'message_submodules_changed'
-    message_refs_updated = 'message_refs_updated'
-    message_updated = 'updated'
-    message_worktree_changed = 'message_worktree_changed'
+    file_type_changed = Signal(object)
+    images_changed = Signal(object)
+    mode_changed = Signal(str)
+    submodules_changed = Signal()
+    refs_updated = Signal()
+    updated = Signal()
+    worktree_changed = Signal()
 
     # States
     mode_none = 'none'  # Default: nothing's happened, do nothing
@@ -64,7 +64,7 @@ class MainModel(Observable):
 
     def __init__(self, context, cwd=None):
         """Interface to the main repository status"""
-        Observable.__init__(self)
+        super(MainModel, self).__init__()
 
         self.context = context
         self.git = context.git
@@ -136,7 +136,7 @@ class MainModel(Observable):
             self.set_directory(cwd)
             core.chdir(cwd)
             self.update_config(reset=True)
-            self.notify_observers(self.message_worktree_changed)
+            self.worktree_changed.emit()
         return is_valid
 
     def is_git_lfs_enabled(self):
@@ -161,7 +161,7 @@ class MainModel(Observable):
     def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
         if notify:
-            self.notify_observers(self.message_commit_message_changed, msg)
+            self.commit_message_changed.emit(msg)
 
     def save_commitmsg(self, msg=None):
         if msg is None:
@@ -179,35 +179,31 @@ class MainModel(Observable):
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
-        self.notify_observers(self.message_diff_text_updated, txt)
+        self.diff_text_updated.emit(txt)
         if changed:
-            self.notify_observers(self.message_diff_text_changed)
+            self.diff_text_changed.emit()
 
     def set_diff_type(self, diff_type):  # text, image
         """Set the diff type to either text or image"""
         changed = diff_type != self.diff_type
         self.diff_type = diff_type
         if changed:
-            self.notify_observers(self.message_diff_type_changed, diff_type)
+            self.diff_type_changed.emit(diff_type)
 
     def set_file_type(self, file_type):  # text, image
         """Set the file type to either text or image"""
         changed = file_type != self.file_type
         self.file_type = file_type
         if changed:
-            self.notify_observers(self.message_file_type_changed, file_type)
+            self.file_type_changed.emit(file_type)
 
     def set_images(self, images):
         """Update the images shown in the preview pane"""
         self.images = images
-        self.notify_observers(self.message_images_changed, images)
+        self.images_changed.emit(images)
 
     def set_directory(self, path):
         self.directory = path
-
-    def set_filename(self, filename):
-        self.filename = filename
-        self.notify_observers(self.message_filename_changed, filename)
 
     def set_mode(self, mode):
         if self.amending():
@@ -219,27 +215,25 @@ class MainModel(Observable):
             head = 'HEAD^'
         else:
             head = 'HEAD'
-        self.notify_observers(self.message_mode_about_to_change, mode)
         self.head = head
         self.mode = mode
-        self.notify_observers(self.message_mode_changed, mode)
+        self.mode_changed.emit(mode)
 
     def update_path_filter(self, filter_paths):
         self.filter_paths = filter_paths
         self.update_file_status()
 
     def emit_about_to_update(self):
-        self.notify_observers(
-            self.message_previous_contents,
+        self.previous_contents.emit(
             self.staged,
             self.unmerged,
             self.modified,
             self.untracked
         )
-        self.notify_observers(self.message_about_to_update)
+        self.about_to_update.emit()
 
     def emit_updated(self):
-        self.notify_observers(self.message_updated)
+        self.updated.emit()
 
     def update_file_status(self, update_index=False):
         self.emit_about_to_update()
@@ -325,7 +319,7 @@ class MainModel(Observable):
         self.tags = tags
         # Set these early since they are used to calculate 'upstream_changed'.
         self.currentbranch = gitcmds.current_branch(self.context)
-        self.notify_observers(self.message_refs_updated)
+        self.refs_updated.emit()
 
     def _update_merge_rebase_status(self):
         merge_head = self.git.git_path('MERGE_HEAD')
@@ -359,7 +353,7 @@ class MainModel(Observable):
 
     def update_submodules_list(self):
         self.submodules_list = gitcmds.list_submodule(self.context)
-        self.notify_observers(self.message_submodules_changed)
+        self.submodules_changed.emit()
 
     def update_remotes(self):
         self._update_remotes()

@@ -52,8 +52,6 @@ def save_path(context, path, model):
 
 
 class Browser(standard.Widget):
-    updated = Signal()
-
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 
@@ -63,14 +61,12 @@ class Browser(standard.Widget):
         self.mainlayout = qtutils.hbox(defs.no_margin, defs.spacing, self.tree)
         self.setLayout(self.mainlayout)
 
-        self.updated.connect(self._updated_callback, type=Qt.QueuedConnection)
-
         self.model = context.model
-        self.model.add_observer(self.model.message_updated, self.model_updated)
+        self.model.updated.connect(self._updated_callback, type=Qt.QueuedConnection)
         if parent is None:
             qtutils.add_close_action(self)
         if update:
-            self.model_updated()
+            self._updated_callback()
 
         self.init_state(context.settings, self.resize, 720, 420)
 
@@ -81,10 +77,6 @@ class Browser(standard.Widget):
     def refresh(self):
         """Refresh the model triggering view updates"""
         self.tree.refresh()
-
-    def model_updated(self):
-        """Update the title with the current branch and directory name."""
-        self.updated.emit()
 
     def _updated_callback(self):
         branch = self.model.currentbranch
@@ -105,9 +97,6 @@ class Browser(standard.Widget):
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
-    about_to_update = Signal()
-    updated = Signal()
-
     def __init__(self, context, parent):
         standard.TreeView.__init__(self, parent)
 
@@ -126,11 +115,8 @@ class RepoTreeView(standard.TreeView):
 
         # Observe model updates
         model = context.model
-        model.add_observer(model.message_about_to_update, self.emit_about_to_update)
-        model.add_observer(model.message_updated, self.emit_update)
-        # pylint: disable=no-member
-        self.about_to_update.connect(self.save_selection, type=Qt.QueuedConnection)
-        self.updated.connect(self.update_actions, type=Qt.QueuedConnection)
+        model.about_to_update.connect(self.save_selection, type=Qt.QueuedConnection)
+        model.updated.connect(self.update_actions, type=Qt.QueuedConnection)
         self.expanded.connect(self.index_expanded)
 
         self.collapsed.connect(lambda idx: self.size_columns())
@@ -292,12 +278,6 @@ class RepoTreeView(standard.TreeView):
             # Filename and others use the actual content
             size = super(RepoTreeView, self).sizeHintForColumn(column)
         return size
-
-    def emit_update(self):
-        self.updated.emit()
-
-    def emit_about_to_update(self):
-        self.about_to_update.emit()
 
     def save_selection(self):
         selection = self.selected_paths()

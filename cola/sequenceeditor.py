@@ -17,7 +17,6 @@ from cola import core
 from cola import difftool
 from cola import hotkeys
 from cola import icons
-from cola import observable
 from cola import qtutils
 from cola import utils
 from cola.i18n import N_
@@ -154,10 +153,9 @@ class Editor(QtWidgets.QWidget):
         self.comment_char = comment_char = prefs.comment_char(context)
         self.cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
-        self.notifier = notifier = observable.Observable()
-        self.diff = diff.DiffWidget(context, notifier, self)
-        self.tree = RebaseTreeWidget(context, notifier, comment_char, self)
-        self.filewidget = filelist.FileWidget(context, notifier, self)
+        self.diff = diff.DiffWidget(context, self)
+        self.tree = RebaseTreeWidget(context, comment_char, self)
+        self.filewidget = filelist.FileWidget(context, self)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -205,8 +203,12 @@ class Editor(QtWidgets.QWidget):
             self, N_('Rebase'), self.rebase, hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER
         )
 
-        notifier.add_observer(diff.COMMITS_SELECTED, self.commits_selected)
+        self.tree.commits_selected.connect(self.commits_selected)
+        self.tree.commits_selected.connect(self.filewidget.commits_selected)
+        self.tree.commits_selected.connect(self.diffwidget.commits_selected)
         self.tree.external_diff.connect(self.external_diff)
+
+        self.filewidget.files_selected.connect(self.diffwidget.files_selected)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
@@ -217,7 +219,7 @@ class Editor(QtWidgets.QWidget):
         insns = core.read(self.filename)
         self.parse_sequencer_instructions(insns)
 
-    # notifier callbacks
+    # signal callbacks
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
 
@@ -298,13 +300,13 @@ class Editor(QtWidgets.QWidget):
 
 # pylint: disable=too-many-ancestors
 class RebaseTreeWidget(standard.DraggableTreeWidget):
+    commits_selected = Signal(object)
     external_diff = Signal()
     move_rows = Signal(object, object)
 
-    def __init__(self, context, notifier, comment_char, parent=None):
+    def __init__(self, context, comment_char, parent):
         super(RebaseTreeWidget, self).__init__(parent=parent)
         self.context = context
-        self.notifier = notifier
         self.comment_char = comment_char
         # header
         self.setHeaderLabels(
@@ -441,7 +443,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             commits.append(c)
         if commits:
             commits = commits[-1:]
-        self.notifier.notify_observers(diff.COMMITS_SELECTED, commits)
+        self.commits_selected.emit(commits)
 
     def toggle_enabled(self):
         item = self.selected_item()

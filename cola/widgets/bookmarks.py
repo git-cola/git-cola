@@ -109,7 +109,6 @@ def disable_rename(_path, _name, _new_name):
 # pylint: disable=too-many-ancestors
 class BookmarksTreeWidget(standard.TreeWidget):
     default_changed = Signal()
-    worktree_changed = Signal()
 
     def __init__(self, context, style, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
@@ -193,9 +192,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
         # Connections
         if style == RECENT_REPOS:
-            self.worktree_changed.connect(self.refresh, type=Qt.QueuedConnection)
-            context.model.add_observer(
-                context.model.message_worktree_changed, self.worktree_changed.emit
+            context.model.worktree_changed.connect(
+                self.refresh, type=Qt.QueuedConnection
             )
 
     def refresh(self):

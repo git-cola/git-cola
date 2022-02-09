@@ -29,10 +29,6 @@ from . import defs
 from . import imageview
 
 
-COMMITS_SELECTED = 'COMMITS_SELECTED'
-FILES_SELECTED = 'FILES_SELECTED'
-
-
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     """Implements the diff syntax highlighting"""
 
@@ -358,10 +354,6 @@ class DiffLineNumbers(TextDecorator):
 class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
 
-    images_changed = Signal(object)
-    diff_type_changed = Signal(object)
-    file_type_changed = Signal(object)
-
     def __init__(self, context, parent=None):
         super(Viewer, self).__init__(parent)
 
@@ -382,20 +374,13 @@ class Viewer(QtWidgets.QFrame):
         self.setLayout(self.main_layout)
 
         # Observe images
-        images_msg = model.message_images_changed
-        model.add_observer(images_msg, self.images_changed.emit)
-        # pylint: disable=no-member
-        self.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
+        model.images_changed.connect(self.set_images, type=Qt.QueuedConnection)
 
         # Observe the diff type
-        diff_type_msg = model.message_diff_type_changed
-        model.add_observer(diff_type_msg, self.diff_type_changed.emit)
-        self.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
+        model.diff_type_changed.connect(self.set_diff_type, type=Qt.QueuedConnection)
 
         # Observe the file type
-        file_type_msg = model.message_file_type_changed
-        model.add_observer(file_type_msg, self.file_type_changed.emit)
-        self.file_type_changed.connect(self.set_file_type, type=Qt.QueuedConnection)
+        model.file_type_changed.connect(self.set_file_type, type=Qt.QueuedConnection)
 
         # Observe the image mode combo box
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
@@ -710,8 +695,6 @@ class DiffEditor(DiffTextEdit):
     up = Signal()
     down = Signal()
     options_changed = Signal()
-    updated = Signal()
-    diff_text_updated = Signal(object)
 
     def __init__(self, context, options, parent):
         DiffTextEdit.__init__(self, context, parent, numbers=True)
@@ -745,15 +728,11 @@ class DiffEditor(DiffTextEdit):
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
 
-        diff_text_updated = model.message_diff_text_updated
-        model.add_observer(diff_text_updated, self.diff_text_updated.emit)
-        self.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
+        model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
-        selection_model.add_observer(
-            selection_model.message_selection_changed, self.updated.emit
+        selection_model.selection_changed.connect(
+            self.refresh, type=Qt.QueuedConnection
         )
-        # pylint: disable=no-member
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         # Update the selection model when the cursor changes
         self.cursorPositionChanged.connect(self._update_line_number)
 
@@ -1008,7 +987,7 @@ class DiffEditor(DiffTextEdit):
 
 
 class DiffWidget(QtWidgets.QWidget):
-    def __init__(self, context, notifier, parent, is_commit=False):
+    def __init__(self, context, parent, is_commit=False):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.context = context
@@ -1073,8 +1052,6 @@ class DiffWidget(QtWidgets.QWidget):
         )
         self.setLayout(self.main_layout)
 
-        notifier.add_observer(COMMITS_SELECTED, self.commits_selected)
-        notifier.add_observer(FILES_SELECTED, self.files_selected)
         self.set_tabwidth(prefs.tabwidth(context))
 
     def set_tabwidth(self, width):

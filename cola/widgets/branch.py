@@ -53,8 +53,6 @@ class AsyncGitActionTask(qtutils.Task):
 
 
 class BranchesWidget(QtWidgets.QFrame):
-    updated = Signal()
-
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
         self.model = model = context.model
@@ -96,8 +94,7 @@ class BranchesWidget(QtWidgets.QFrame):
             self.sort_order_button, cmds.run(cmds.CycleReferenceSort, context)
         )
 
-        self.updated.connect(self.refresh, Qt.QueuedConnection)
-        model.add_observer(model.message_refs_updated, self.updated.emit)
+        model.refs_updated.connect(self.refresh, Qt.QueuedConnection)
 
     def toggle_filter(self):
         shown = not self.filter_widget.isVisible()
@@ -123,7 +120,6 @@ class BranchesTreeWidget(standard.TreeWidget):
     def __init__(self, context, parent=None):
         standard.TreeWidget.__init__(self, parent)
 
-        model = context.model
         self.context = context
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
@@ -140,7 +136,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self._active = False
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_updated, self.updated.emit)
+        context.model.updated.connect(self.updated)
 
         # Expand items when they are clicked
         # pylint: disable=no-member

@@ -1,9 +1,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import sys
 
+from qtpy import QtCore
+from qtpy.QtCore import Signal
+
 from .. import core
 from .. import hidpi
-from .. import observable
 from .. import utils
 from ..cmd import Command
 
@@ -209,13 +211,13 @@ def status_show_totals(context):
     return context.cfg.get(STATUS_SHOW_TOTALS, default=Defaults.status_show_totals)
 
 
-class PreferencesModel(observable.Observable):
+class PreferencesModel(QtCore.QObject):
     """Interact with repo-local and user-global git config preferences"""
 
-    message_config_updated = 'config_updated'
+    config_updated = Signal(str, str, str)
 
     def __init__(self, context):
-        observable.Observable.__init__(self)
+        super(PreferencesModel, self).__init__()
         self.context = context
         self.config = context.cfg
 
@@ -225,8 +227,7 @@ class PreferencesModel(observable.Observable):
             self.config.set_repo(config, value)
         else:
             self.config.set_user(config, value)
-        message = self.message_config_updated
-        self.notify_observers(message, source, config, value)
+        self.config_updated.emit(source, config, value)
 
     def get_config(self, source, config):
         """Get a configured value"""

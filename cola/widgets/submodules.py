@@ -155,7 +155,6 @@ class AddSubmodule(standard.Dialog):
 
 # pylint: disable=too-many-ancestors
 class SubmodulesTreeWidget(standard.TreeWidget):
-    updated = Signal()
     update_model = Signal()
 
     def __init__(self, context, parent=None):
@@ -172,8 +171,7 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         # Connections
         # pylint: disable=no-member
         self.itemDoubleClicked.connect(self.tree_double_clicked)
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        model.add_observer(model.message_submodules_changed, self.updated.emit)
+        model.submodules_changed.connect(self.refresh, type=Qt.QueuedConnection)
         self.update_model.connect(
             model.update_submodules_list, type=Qt.QueuedConnection
         )

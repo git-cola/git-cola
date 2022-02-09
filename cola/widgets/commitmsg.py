@@ -29,7 +29,6 @@ from .text import HintedLineEdit
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
-    commit_message_changed = Signal(object)
     cursor_changed = Signal(int, int)
     down = Signal()
     up = Signal()
@@ -185,11 +184,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.summary, N_('Move Down'), self.summary_cursor_down, hotkeys.DOWN
         )
 
-        self.model.add_observer(
-            self.model.message_commit_message_changed, self.commit_message_changed.emit
-        )
-
-        self.commit_message_changed.connect(
+        self.model.commit_message_changed.connect(
             self.set_commit_message, type=Qt.QueuedConnection
         )
 
@@ -223,7 +218,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFont(qtutils.diff_font(context))
         self.setFocusProxy(self.summary)
 
-        cfg.add_observer(cfg.message_user_config_changed, self.config_changed)
+        cfg.user_config_changed.connect(self.config_changed)
 
     def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:
@@ -568,24 +563,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
 class MessageValidator(QtGui.QValidator):
     """Prevent invalid branch names"""
 
-    config_updated = Signal()
-
     def __init__(self, context, parent=None):
         super(MessageValidator, self).__init__(parent)
         self.context = context
         self._comment_char = None
-        self._cfg = cfg = context.cfg
         self.refresh()
-        # pylint: disable=no-member
-        self.config_updated.connect(self.refresh, type=Qt.QueuedConnection)
-        cfg.add_observer(cfg.message_updated, self.emit_config_updated)
-        self.destroyed.connect(self.teardown)
-
-    def teardown(self):
-        self._cfg.remove_observer(self.emit_config_updated)
-
-    def emit_config_updated(self):
-        self.config_updated.emit()
+        context.cfg.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
     def refresh(self):
         """Update comment char in response to config changes"""

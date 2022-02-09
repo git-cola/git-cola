@@ -29,7 +29,7 @@ class Merge(standard.Dialog):
         standard.Dialog.__init__(self, parent=parent)
         self.context = context
         self.cfg = cfg = context.cfg
-        self.model = model = context.model
+        self.model = context.model
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -144,7 +144,7 @@ class Merge(standard.Dialog):
         qtutils.connect_button(self.button_close, self.reject)
 
         # Observer messages
-        model.add_observer(model.message_updated, self.update_all)
+        self.model.updated.connect(self.update_all)
         self.update_all()
 
         self.init_size(parent=parent)

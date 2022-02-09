@@ -60,7 +60,6 @@ from . import toolbar
 
 class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
-    updated = Signal()
 
     def __init__(self, context, parent=None):
         # pylint: disable=too-many-statements,too-many-locals
@@ -70,7 +69,7 @@ class MainView(standard.MainWindow):
         self.context = context
         self.git = context.git
         self.dag = None
-        self.model = model = context.model
+        self.model = context.model
         self.prefs_model = prefs_model = prefs.PreferencesModel(context)
         self.toolbar_state = toolbar.ToolBarState(context, self)
 
@@ -807,12 +806,12 @@ class MainView(standard.MainWindow):
         self.tabifyDockWidget(self.actionsdock, self.logdock)
 
         # Listen for model notifications
-        model.add_observer(model.message_updated, self.updated.emit)
-        model.add_observer(model.message_mode_changed, lambda mode: self.updated.emit())
-
-        prefs_model.add_observer(
-            prefs_model.message_config_updated, self._config_updated
+        self.model.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self.model.mode_changed.connect(
+            lambda mode: self.refresh(), type=Qt.QueuedConnection
         )
+
+        prefs_model.config_updated.connect(self._config_updated)
 
         # Set a default value
         self.show_cursor_position(1, 0)
@@ -827,8 +826,6 @@ class MainView(standard.MainWindow):
 
         self.commiteditor.up.connect(self.statuswidget.move_up)
         self.commiteditor.down.connect(self.statuswidget.move_down)
-
-        self.updated.connect(self.refresh, type=Qt.QueuedConnection)
 
         self.config_actions_changed.connect(
             lambda names_and_shortcuts: _install_config_actions(

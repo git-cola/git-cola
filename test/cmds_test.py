@@ -58,8 +58,7 @@ def test_context_edit_command():
     model.set_diff_text.assert_called_once_with('test_diff_text')
     model.set_diff_type.assert_called_once_with('test_diff_type')
     model.set_mode.assert_called_once_with('test_mode')
-    model.set_filename.assert_called_once_with('test_filename')
-    assert model.set_filename.call_count == 1
+    assert model.filename == 'test_filename'
 
 
 @patch('cola.interaction.Interaction.confirm')
