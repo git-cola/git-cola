@@ -11,7 +11,6 @@ from ..models.browse import GitRepoNameItem
 from ..models.selection import State
 from ..i18n import N_
 from ..interaction import Interaction
-from ..models import browse
 from .. import cmds
 from .. import core
 from .. import gitcmds
@@ -119,8 +118,6 @@ class RepoTreeView(standard.TreeView):
         self.saved_open_folders = set()
         self.restoring_selection = False
         self._columns_sized = False
-
-        self.info_event_type = browse.GitRepoInfoEvent.TYPE
 
         self.setDragEnabled(True)
         self.setRootIsDecorated(False)
@@ -359,21 +356,6 @@ class RepoTreeView(standard.TreeView):
             self.size_columns(force=True)
 
         self.update_diff()
-
-    def event(self, ev):
-        """Respond to GitRepoInfoEvents"""
-        if ev.type() == self.info_event_type:
-            ev.accept()
-            self.apply_data(ev.data)
-        return super(RepoTreeView, self).event(ev)
-
-    def apply_data(self, data):
-        entry = self.model().get(data[0])
-        if entry:
-            entry[1].set_status(data[1])
-            entry[2].setText(data[2])
-            entry[3].setText(data[3])
-            entry[4].setText(data[4])
 
     def update_actions(self):
         """Enable/disable actions."""
