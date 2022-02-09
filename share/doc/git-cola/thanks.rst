@@ -98,6 +98,7 @@ Thanks
 * Ismael Juma
 * Iulian Udrea
 * Ivar Smolin
+* Jad El Kik
 * Jan @hanksoff
 * Jan Šilhan
 * Jan Tumanov
