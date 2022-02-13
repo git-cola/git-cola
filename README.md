@@ -371,6 +371,18 @@ requirement, but not needed at runtime.
 
 # Windows (Continued)
 
+## Microsoft Visual C++ 2015 Redistributable
+
+Earlier versions of Git Cola may have shipped without `vcruntime140.dll`  and may
+not run on machines that are missing this DLL.
+
+To fix this, download the
+[Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
+and install it
+
+Git Cola v4.0.0 and newer include this DLL and do not require this to be installed
+separately.
+
 ## Development
 
 In order to develop Git Cola on Windows you will need to install
