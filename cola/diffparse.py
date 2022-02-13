@@ -113,7 +113,6 @@ class DiffLines(object):
     DASH = -2
 
     def __init__(self):
-        self.valid = True
         self.merge = False
 
         # diff <old> <new>

@@ -239,13 +239,8 @@ class DiffLineNumbers(TextDecorator):
         self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
 
     def set_diff(self, diff):
-        parser = self.parser
-        lines = parser.parse(diff)
-        if parser.valid:
-            self.lines = lines
-            self.formatter.set_digits(self.parser.digits())
-        else:
-            self.lines = None
+        self.lines = self.parser.parse(diff)
+        self.formatter.set_digits(self.parser.digits())
 
     def set_lines(self, lines):
         self.lines = lines
@@ -262,10 +257,7 @@ class DiffLineNumbers(TextDecorator):
             columns = 2
             extra = 2  # one space in-between, one space after
 
-        if parser.valid:
-            digits = parser.digits() * columns
-        else:
-            digits = 4
+        digits = parser.digits() * columns
 
         return defs.margin + (self._char_width * (digits + extra))
 
