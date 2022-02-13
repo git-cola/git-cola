@@ -35,6 +35,12 @@ Fixes
   (`#1205 <https://github.com/git-cola/git-cola/pull/1205>`_)
   (`#1206 <https://github.com/git-cola/git-cola/pull/1206>`_)
 
+Packaging
+---------
+
+* `vcruntime140.dll` and `msvcp140.dll` are now included in the Windows installation.
+  (`#1207 <https://github.com/git-cola/git-cola/pull/1207>`_)
+
 
 .. _v3.12.0:
 
