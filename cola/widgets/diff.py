@@ -242,9 +242,6 @@ class DiffLineNumbers(TextDecorator):
         self.lines = self.parser.parse(diff)
         self.formatter.set_digits(self.parser.digits())
 
-    def set_lines(self, lines):
-        self.lines = lines
-
     def width_hint(self):
         if not self.isVisible():
             return 0
