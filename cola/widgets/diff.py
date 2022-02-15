@@ -234,6 +234,7 @@ class DiffLineNumbers(TextDecorator):
         self._palette = palette = self.palette()
         self._base = palette.color(QtGui.QPalette.Base)
         self._highlight = palette.color(QPalette.Highlight)
+        self._highlight.setAlphaF(0.3)
         self._highlight_text = palette.color(QPalette.HighlightedText)
         self._window = palette.color(QPalette.Window)
         self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
@@ -291,30 +292,29 @@ class DiffLineNumbers(TextDecorator):
         content_offset = editor.contentOffset()
         block = editor.firstVisibleBlock()
         width = self.width()
+        text_width = width - (defs.margin * 2)
+        text_flags = Qt.AlignRight | Qt.AlignVCenter
         event_rect_bottom = event.rect().bottom()
 
+        highlight_line = self.highlight_line
         highlight = self._highlight
-        highlight.setAlphaF(0.3)
         highlight_text = self._highlight_text
         disabled = self._disabled
 
         fmt = self.formatter
         lines = self.lines
-        num_lines = len(self.lines)
-        painter.setPen(disabled)
-        text = ''
+        num_lines = len(lines)
 
         while block.isValid():
             block_number = block.blockNumber()
             if block_number >= num_lines:
                 break
             block_geom = editor.blockBoundingGeometry(block)
-            block_top = block_geom.translated(content_offset).top()
-            if not block.isVisible() or block_top >= event_rect_bottom:
+            rect = block_geom.translated(content_offset).toRect()
+            if not block.isVisible() or rect.top() >= event_rect_bottom:
                 break
 
-            rect = block_geom.translated(content_offset).toRect()
-            if block_number == self.highlight_line:
+            if block_number == highlight_line:
                 painter.fillRect(rect.x(), rect.y(), width, rect.height(), highlight)
                 painter.setPen(highlight_text)
             else:
@@ -331,9 +331,9 @@ class DiffLineNumbers(TextDecorator):
             painter.drawText(
                 rect.x(),
                 rect.y(),
-                self.width() - (defs.margin * 2),
+                text_width,
                 rect.height(),
-                Qt.AlignRight | Qt.AlignVCenter,
+                text_flags,
                 text,
             )
 
