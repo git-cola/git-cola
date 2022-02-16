@@ -264,10 +264,10 @@ def test_diff_line_count_ranges(difflines_data):
     current_new += count
     current_old += count
 
-    expect_max_old = 54
+    expect_max_old = 53
     assert expect_max_old == parser.old.max_value
 
-    expect_max_new = 62
+    expect_max_new = 61
     assert expect_max_new == parser.new.max_value
 
     assert parser.digits() == 2
@@ -303,6 +303,18 @@ def test_diff_line_for_merge(difflines_data):
     assert lines[3][0] == 2
     assert lines[3][1] == parser.EMPTY
     assert lines[3][2] == 3
+
+
+def test_diff_line_digits(difflines_data):
+    parser = difflines_data.parser
+
+    text = """@@ -1,99 +1,99 @@"""
+    parser.parse(text)
+    assert parser.digits() == 2
+
+    text = """@@ -2,99 +2,99 @@"""
+    parser.parse(text)
+    assert parser.digits() == 3
 
 
 def test_format_basic():

@@ -97,7 +97,7 @@ class Counter(object):
         """Parse a diff range and setup internal state"""
         start, count = parse_range_str(range_str)
         self.value = start
-        self.max_value = max(start + count, self.max_value)
+        self.max_value = max(start + count - 1, self.max_value)
 
     def tick(self, amount=1):
         """Return the current value and increment to the next"""
