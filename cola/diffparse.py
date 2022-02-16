@@ -171,7 +171,7 @@ class DiffLines(object):
             elif not merge and text.startswith('-'):
                 lines.append((old.tick(), self.EMPTY))
             elif merge and text.startswith('- '):
-                lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
+                lines.append((ours.tick(), self.EMPTY, self.EMPTY))
             elif merge and text.startswith(' -'):
                 lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
             elif merge and text.startswith('--'):
