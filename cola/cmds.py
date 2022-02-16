@@ -20,7 +20,6 @@ from . import textwrap
 from . import utils
 from . import version
 from .cmd import ContextCommand
-from .diffparse import DiffParser
 from .git import STDOUT
 from .git import EMPTY_TREE_OID
 from .git import MISSING_BLOB_OID
@@ -325,51 +324,27 @@ class LFSInstall(ContextCommand):
         self.model.update_config(reset=True, emit=True)
 
 
-class ApplyDiffSelection(ContextCommand):
-    """Apply the selected diff to the worktree or index"""
+class ApplyPatch(ContextCommand):
+    """Apply the specfied patch to the worktree or index"""
 
     def __init__(
         self,
         context,
-        first_line_idx,
-        last_line_idx,
-        has_selection,
-        reverse,
+        patch_text,
+        encoding,
         apply_to_worktree,
     ):
-        super(ApplyDiffSelection, self).__init__(context)
-        self.first_line_idx = first_line_idx
-        self.last_line_idx = last_line_idx
-        self.has_selection = has_selection
-        self.reverse = reverse
+        super(ApplyPatch, self).__init__(context)
+        self.patch_text = patch_text
+        self.encoding = encoding
         self.apply_to_worktree = apply_to_worktree
 
     def do(self):
         context = self.context
-        cfg = self.context.cfg
-        diff_text = self.model.diff_text
-
-        parser = DiffParser(self.model.filename, diff_text)
-        if self.has_selection:
-            patch = parser.generate_patch(
-                self.first_line_idx, self.last_line_idx, reverse=self.reverse
-            )
-        else:
-            patch = parser.generate_hunk_patch(
-                self.first_line_idx, reverse=self.reverse
-            )
-        if patch is None:
-            return
-
-        if isinstance(diff_text, core.UStr):
-            # original encoding must prevail
-            encoding = diff_text.encoding
-        else:
-            encoding = cfg.file_encoding(self.model.filename)
 
         tmp_file = utils.tmp_filename('patch')
         try:
-            core.write(tmp_file, patch, encoding=encoding)
+            core.write(tmp_file, self.patch_text, encoding=self.encoding)
             if self.apply_to_worktree:
                 status, out, err = gitcmds.apply_diff_to_worktree(context, tmp_file)
             else:
