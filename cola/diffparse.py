@@ -97,7 +97,7 @@ class Counter(object):
         """Parse a diff range and setup internal state"""
         start, count = parse_range_str(range_str)
         self.value = start
-        self.max_value = max(start + count, self.max_value)
+        self.max_value = max(start + count - 1, self.max_value)
 
     def tick(self, amount=1):
         """Return the current value and increment to the next"""
@@ -113,7 +113,6 @@ class DiffLines(object):
     DASH = -2
 
     def __init__(self):
-        self.valid = True
         self.merge = False
 
         # diff <old> <new>
@@ -172,7 +171,7 @@ class DiffLines(object):
             elif not merge and text.startswith('-'):
                 lines.append((old.tick(), self.EMPTY))
             elif merge and text.startswith('- '):
-                lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
+                lines.append((ours.tick(), self.EMPTY, self.EMPTY))
             elif merge and text.startswith(' -'):
                 lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
             elif merge and text.startswith('--'):
