@@ -25,6 +25,12 @@ Usability, bells and whistles
 Fixes
 -----
 
+* Ensure that secure permissions are used when creating temporary files.
+  (`#1209 <https://github.com/git-cola/git-cola/pull/1209>`_)
+
+* The line numbering in the diff viewer was corrected when displaying merge diffs.
+  (`#1208 <https://github.com/git-cola/git-cola/pull/1208>`_)
+
 * Documentation typofixes.
   (`#1193 <https://github.com/git-cola/git-cola/pull/1193>`_)
 
