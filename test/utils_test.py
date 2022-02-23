@@ -50,14 +50,21 @@ def test_add_parents():
 
 
 def test_tmp_filename_gives_good_file():
-    first = utils.tmp_filename('test')
-    second = utils.tmp_filename('test')
+    try:
+        first = utils.tmp_filename('test')
+        assert core.exists(first)
+        assert os.path.basename(first).startswith('git-cola-test')
+    finally:
+        os.remove(first)
 
-    assert not core.exists(first)
-    assert not core.exists(second)
+    try:
+        second = utils.tmp_filename('test')
+        assert core.exists(second)
+        assert os.path.basename(second).startswith('git-cola-test')
+    finally:
+        os.remove(second)
+
     assert first != second
-    assert os.path.basename(first).startswith('git-cola-test')
-    assert os.path.basename(second).startswith('git-cola-test')
 
 
 def test_strip_one_abspath():
@@ -86,13 +93,19 @@ def test_strip_one_basename():
 
 def test_select_directory():
     filename = utils.tmp_filename('test')
-    expect = os.path.dirname(filename)
-    actual = utils.select_directory([filename])
-    assert expect == actual
+    try:
+        expect = os.path.dirname(filename)
+        actual = utils.select_directory([filename])
+        assert expect == actual
+    finally:
+        os.remove(filename)
 
 
 def test_select_directory_prefers_directories():
     filename = utils.tmp_filename('test')
-    expect = '.'
-    actual = utils.select_directory([filename, '.'])
-    assert expect == actual
+    try:
+        expect = '.'
+        actual = utils.select_directory([filename, '.'])
+        assert expect == actual
+    finally:
+        os.remove(filename)
