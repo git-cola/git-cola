@@ -100,9 +100,9 @@ def setup_environment():
     elif ssh_askpass:
         askpass = ssh_askpass
     elif sys.platform == 'darwin':
-        askpass = resources.share('bin', 'ssh-askpass-darwin')
+        askpass = resources.package_command('ssh-askpass-darwin')
     else:
-        askpass = resources.share('bin', 'ssh-askpass')
+        askpass = resources.package_command('ssh-askpass')
 
     compat.setenv('GIT_ASKPASS', askpass)
     compat.setenv('SSH_ASKPASS', askpass)

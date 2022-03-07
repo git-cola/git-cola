@@ -3,12 +3,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import re
-from distutils.core import Command
-from distutils.dep_util import newer
-from distutils.spawn import find_executable
-from distutils import log
+import shutil
+
+from setuptools import Command
 
 from . import build_util
+from .build_util import newer
+from .build_util import which
 
 
 class build_mo(Command):
@@ -64,22 +65,23 @@ class build_mo(Command):
         if not self.lang:
             return
 
-        if find_executable('msgfmt') is None:
-            log.warn('GNU gettext msgfmt utility not found!')
-            log.warn('Skip compiling po files.')
+        if which('msgfmt') is None:
+            self.warn('GNU gettext msgfmt utility not found!')
+            self.warn('Compilation of .po files has been skipped.')
             return
 
         if 'en' in self.lang:
-            if find_executable('msginit') is None:
-                log.warn('GNU gettext msginit utility not found!')
-                log.warn('Skip creating English PO file.')
+            if which('msginit') is None:
+                self.warn('GNU gettext msginit utility not found!')
+                self.warn('Skip creating English PO file.')
             else:
-                log.info('Creating English PO file...')
+                self.debug_print('Creating English PO file...')
                 pot = (self.prj_name or 'messages') + '.pot'
                 if self.prj_name:
                     en_po = '%s-en.po' % self.prj_name
                 else:
                     en_po = 'en.po'
+                output = os.path.join(self.source_dir, en_po)
                 self.spawn(
                     [
                         'msginit',
@@ -90,7 +92,7 @@ class build_mo(Command):
                         '--input',
                         os.path.join(self.source_dir, pot),
                         '--output-file',
-                        os.path.join(self.source_dir, en_po),
+                        output,
                     ]
                 )
 
@@ -109,5 +111,8 @@ class build_mo(Command):
             self.mkpath(dir_)
             mo = os.path.join(dir_, basename)
             if self.force or newer(po, mo):
-                log.info('Compile: %s -> %s' % (po, mo))
+                self.debug_print('Compile: %s -> %s' % (po, mo))
                 self.spawn(['msgfmt', '--output-file', mo, po])
+
+    def get_outputs(self):
+        return []

@@ -3,9 +3,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import glob
-from distutils import log
-from distutils.core import Command
-from distutils.errors import DistutilsOptionError
+
+from setuptools import Command
 
 from . import build_util
 
@@ -44,7 +43,7 @@ class build_pot(Command):
         if self.lang is not None:
             self.lang = [i.strip() for i in self.lang.split(',') if i.strip()]
         if self.lang and self.no_lang:
-            raise DistutilsOptionError(
+            raise ValueError(
                 "You can't use options " "--lang=XXX and --no-lang in the same time."
             )
 
@@ -57,9 +56,9 @@ class build_pot(Command):
             fullname = os.path.join(self.build_dir, self.output)
         else:
             fullname = self.output
-        log.info('Generate POT file: ' + fullname)
+        self.debug_print('Generate POT file: ' + fullname)
         if not os.path.isdir(self.build_dir):
-            log.info('Make directory: ' + self.build_dir)
+            self.debug_print('Make directory: ' + self.build_dir)
             os.makedirs(self.build_dir)
 
         cmd = [
@@ -84,7 +83,7 @@ class build_pot(Command):
         _force_LF(fullname)
         # regenerate english PO
         if self.english:
-            log.info('Regenerating English PO file...')
+            self.debug_print('Regenerating English PO file...')
             if prj_name:
                 en_po = prj_name + '-' + 'en.po'
             else:
@@ -126,7 +125,7 @@ class build_pot(Command):
                 ]
             )
             # force LF line-endings
-            log.info('%s --> %s' % (new_po, po))
+            self.debug_print('%s --> %s' % (new_po, po))
             _force_LF(new_po, po)
             os.unlink(new_po)
 
@@ -136,8 +135,8 @@ def _force_LF(src, dst=None):
         content = f.read().decode('utf-8')
     if dst is None:
         dst = src
-    f = open(dst, 'wb')
-    try:
-        f.write(build_util.encode(content))
-    finally:
-        f.close()
+    with open(dst, 'wb') as f:
+        try:
+            f.write(build_util.encode(content))
+        except (IOError, ValueError):
+            pass

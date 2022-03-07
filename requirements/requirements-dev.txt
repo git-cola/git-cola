@@ -1,11 +1,15 @@
-# Development packages are used to run the test suite and build documentation
+# Development packages are used to build from source, run the test suite and build documentation
+
+## Build tools
+build; python_version >= '3.0'
+setuptools_scm[toml] >= 3.4.1
+wheel
 
 ## pylint, flake8 checkers are used by "make check".
 astroid==1.6.5; python_version == '2.7'
 enum34==1.1.6; python_version < '3.4'
 flake8
 mock
-pbr
 pylint==1.9.4; python_version == '2.7'
 pylint==2.7.0; python_version >= '3.6'
 PyYAML

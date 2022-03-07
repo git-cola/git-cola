@@ -5,11 +5,13 @@
 /config.mak
 /cola/_build_version.py
 /dist
+/.eggs
 /env*
 /git-cola.app
 /git_cola.egg-info
 /local
 /Meta
+/pip-wheel-metadata
 /pynsist_pkgs
 /.pytest_cache
 /README.html

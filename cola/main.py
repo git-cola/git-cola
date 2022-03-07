@@ -444,9 +444,6 @@ def add_version_command(subparser):
         default=False,
         help='print the version number only',
     )
-    parser.add_argument(
-        '--build', action='store_true', default=False, help='print the build version'
-    )
 
 
 # entry points
@@ -603,7 +600,7 @@ def cmd_merge(args):
 def cmd_version(args):
     from . import version  # pylint: disable=all
 
-    version.print_version(brief=args.brief, build=args.build)
+    version.print_version(brief=args.brief)
     return 0
 
 

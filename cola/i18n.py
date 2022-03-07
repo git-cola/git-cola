@@ -48,7 +48,7 @@ def install(locale):
     _install_custom_language()
     _gettext.textdomain('messages')
     _translation = _gettext.translation(
-        'git-cola', localedir=_get_locale_dir(), fallback=True
+        'git-cola', localedir=resources.locale(), fallback=True
     )
 
 
@@ -56,10 +56,6 @@ def uninstall():
     # pylint: disable=global-statement
     global _translation
     _translation = _null_translation
-
-
-def _get_locale_dir():
-    return resources.prefix('share', 'locale')
 
 
 def _install_custom_language():

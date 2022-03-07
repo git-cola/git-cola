@@ -79,7 +79,7 @@ endif
 TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
 TOX_ENVS ?= py{27,36,37,38,39,lint}
 
-PYLINT_SCORE_FLAG := $(shell sh -c '$(PYLINT) --score=no --help >/dev/null 2>&1 && echo " --score=no" || true')
+PYLINT_SCORE_FLAG := $(shell $(PYLINT) --score=no --help >/dev/null 2>&1 && echo " --score=no" || true)
 PYLINT_FLAGS = --rcfile=.pylintrc
 ifdef color
     PYLINT_FLAGS += --output-format=colorized
@@ -91,11 +91,10 @@ endif
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
 bindir = $(prefix)/bin
-datadir = $(prefix)/share/git-cola
-python_lib := $(shell $(PYTHON) -c \
-    'import distutils.sysconfig as sc; print(sc.get_python_lib(prefix=""))')
-pythondir = $(prefix)/$(python_lib)
-hicolordir = $(prefix)/share/icons/hicolor/scalable/apps
+python_code := "import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))"
+python_version := $(shell $(PYTHON) -c $(python_code))
+python_lib = python$(python_version)/site-packages
+pythondir = $(prefix)/lib/$(python_lib)
 # DESTDIR =
 
 cola_base := git-cola
@@ -115,22 +114,15 @@ ifdef USE_ENV_PYTHON
 endif
 
 install_args += install
-install_args += --prefix="$(prefix)"
-install_args += --force
-install_args += --install-scripts="$(bindir)"
-install_args += --record=build/MANIFEST
 ifdef DESTDIR
-    install_args += --root="$(DESTDIR)"
-    export DESTDIR
+	install_args += --root="$(DESTDIR)"
+	export DESTDIR
 endif
+install_args += --prefix="$(prefix)"
+install_args += --install-scripts="$(bindir)"
+install_args += --single-version-externally-managed
+install_args += --record=build/MANIFEST
 export prefix
-
-ifdef NO_PRIVATE_LIBS
-    install_args += --no-private-libs
-endif
-ifdef NO_VENDOR_LIBS
-    install_args += --no-vendor-libs
-endif
 
 PYTHON_DIRS = cola
 PYTHON_DIRS += test
@@ -138,59 +130,46 @@ PYTHON_DIRS += test
 ALL_PYTHON_DIRS = $(PYTHON_DIRS)
 ALL_PYTHON_DIRS += extras
 
-PYTHON_SOURCES = bin/git-cola
-PYTHON_SOURCES += bin/git-cola-sequence-editor
-PYTHON_SOURCES += bin/git-dag
-PYTHON_SOURCES += setup.py
-
 # User customizations
 -include config.mak
 
 .PHONY: all
 all:: build
 
-.PHONY: build_version
-build_version:
-	@GIT=$(GIT) ./extras/generate-build-version.sh 2>/dev/null || true
-
 .PHONY: build
-build: build_version
+build::
 	$(SETUP) $(QUIET) $(VERBOSE) $(build_args)
 
 .PHONY: install
-install: all
+install:: all
 	$(SETUP) $(QUIET) $(VERBOSE) $(install_args)
-	$(MKDIR_P) "$(DESTDIR)$(hicolordir)"
-	$(LN_S) "$(datadir)/icons/git-cola.svg" \
-		"$(DESTDIR)$(hicolordir)/git-cola.svg"
-	$(LN_S) git-cola "$(DESTDIR)$(bindir)/cola"
 
 .PHONY: doc
-doc:
+doc::
 	$(MAKE) -C share/doc/git-cola all
 
 .PHONY: html
-html:
+html::
 	$(MAKE) -C share/doc/git-cola html
 
 .PHONY: man
-man:
+man::
 	$(MAKE) -C share/doc/git-cola man
 
 .PHONY: install-doc
-install-doc:
+install-doc::
 	$(MAKE) -C share/doc/git-cola install
 
 .PHONY: install-html
-install-html:
+install-html::
 	$(MAKE) -C share/doc/git-cola install-html
 
 .PHONY: install-man
-install-man:
+install-man::
 	$(MAKE) -C share/doc/git-cola install-man
 
 .PHONY: uninstall
-uninstall:
+uninstall::
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola-sequence-editor
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-dag
@@ -222,24 +201,20 @@ uninstall:
 	$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null || true
 
 .PHONY: test
-test: all
+test:: all
 	$(PYTEST) $(PYTEST_FLAGS) $(flags) $(PYTHON_DIRS)
 
 .PHONY: coverage
-coverage:
+coverage::
 	$(PYTEST) $(PYTEST_FLAGS) --cov=cola $(flags) $(PYTHON_DIRS)
 
 .PHONY: clean
-clean:
+clean::
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | $(XARGS) -0 $(RM)
 	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | $(XARGS) -0 $(RM_R)
 	$(RM_R) build dist tags git-cola.app
 	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
-
-.PHONY: tags
-tags:
-	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py' -print0 | $($XARGS) -0 $(CTAGS) -f tags
 
 # Update i18n files
 .PHONY: i18n
@@ -248,19 +223,19 @@ i18n:: po
 i18n:: mo
 
 .PHONY: pot
-pot:
+pot::
 	$(SETUP) build_pot --build-dir=po --no-lang
 
 .PHONY: po
-po:
+po::
 	$(SETUP) build_pot --build-dir=po
 
 .PHONY: mo
-mo:
+mo::
 	$(SETUP) build_mo --force
 
 .PHONY: git-cola.app
-git-cola.app:
+git-cola.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app)/Contents/Resources
 	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo \
@@ -270,7 +245,7 @@ git-cola.app:
 	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
 
 .PHONY: app-tarball
-app-tarball: git-cola.app
+app-tarball:: git-cola.app
 	$(TAR) czf $(cola_dist).app.tar.gz $(cola_app_base)
 
 # Preview the markdown using "make README.html"
@@ -278,27 +253,27 @@ app-tarball: git-cola.app
 	$(MARKDOWN) $< >$@
 
 .PHONY: flake8
-flake8:
+flake8::
 	$(FLAKE8) --version
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
-	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS) contrib
+	$(ALL_PYTHON_DIRS) contrib
 
 .PHONY: pylint3k
-pylint3k:
+pylint3k::
 	$(PYLINT) --version
 	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) \
-	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
+	$(ALL_PYTHON_DIRS)
 
 .PHONY: pylint
-pylint:
+pylint::
 	$(PYLINT) --version
 	$(PYLINT) $(PYLINT_FLAGS) $(flags) \
-	$(PYTHON_SOURCES) $(ALL_PYTHON_DIRS)
+	$(ALL_PYTHON_DIRS)
 
 # Pre-commit checks
 .PHONY: check
 ifdef file
-check:
+check::
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
@@ -313,24 +288,19 @@ check:: pylint
 endif
 
 .PHONY: format
-format:
+format::
 	$(GIT) ls-files -- '*.py' | \
 	$(GREP) -v ^qtpy | \
-	$(XARGS) $(BLACK) --skip-string-normalization --target-version=py27
-	$(BLACK) --skip-string-normalization --target-version=py27 $(PYTHON_SOURCES)
-
-.PHONY: requirements
-requirements:
-	$(PIP) install --requirement requirements/requirements.txt
+	$(XARGS) $(BLACK) --skip-string-normalization
 
 .PHONY: requirements-dev
-requirements-dev:
+requirements-dev::
 	$(PIP) install --requirement requirements/requirements-dev.txt
 
 .PHONY: tox
-tox:
+tox::
 	$(TOX) $(TOX_FLAGS) $(flags)
 
 .PHONY: tox-check
-tox-check:
+tox-check::
 	$(TOX) $(TOX_FLAGS) --parallel auto -e "$(TOX_ENVS)" $(flags)

@@ -15,6 +15,23 @@ Breaking Changes
   scripts have been updated to use `python3`.
   (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
+* The build system was switched to `setuptools` and no longer depends on `distutils`.
+
+* The `git-cola`, `git-dag` and `git-cola-sequence-editor` commands are now installed
+  using setuptools entry points.
+
+* The `bin/` wrapper scripts continue to be provided for convenience but they are not
+  the scripts that get installed.
+
+* The `qtpy` Python package is no longer installed alongside the `cola` Python package.
+
+* The `cola` package is now installed into the standard Python site-packages location.
+
+* The `share/git-cola/lib` private Python modules directory no longer exists.
+
+* The `NO_VENDOR_LIBS` and `NO_PRIVATE_LIBS` Makefile options are no longer necessary.
+
+
 Usability, bells and whistles
 -----------------------------
 
