@@ -419,9 +419,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr ""
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -786,11 +783,11 @@ msgstr "Порівняти"
 msgid "Compare All"
 msgstr "Порівняти все"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
-
 msgid "Configure Toolbar"
 msgstr ""
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Налаштувати віддалену гілку як нове віддалене джерело"
 
 msgid "Console"
 msgstr "Консоль"
@@ -936,6 +933,10 @@ msgstr "Видалити віддалену гілку"
 msgid "Delete Remote Branch..."
 msgstr "Видалити віддалену гілку..."
 
+#, fuzzy
+msgid "Delete Toolbar"
+msgstr "Видалити закладку"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -949,10 +950,6 @@ msgstr "Видалити віддалений репозиторій \"%s\""
 
 msgid "Delete remote?"
 msgstr "Видалити віддалений репозиторій?"
-
-#, fuzzy
-msgid "Delete Toolbar"
-msgstr "Видалити закладку"
 
 msgid "Delete..."
 msgstr "Видалити..."
@@ -1064,6 +1061,9 @@ msgid "Email contributor"
 msgstr "Електронна пошта учасника"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1285,6 +1285,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Розмір шрифта"
 
@@ -1373,6 +1376,9 @@ msgstr "Переглядач історії"
 #, fuzzy
 msgid "Hungarian translation"
 msgstr "Російський переклад"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1574,6 +1580,9 @@ msgstr "Новий репозиторій..."
 
 msgid "New Repository..."
 msgstr "Новий репозиторій..."
+
+msgid "New Toolbar"
+msgstr ""
 
 msgid "New..."
 msgstr "Новий..."
@@ -1946,6 +1955,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Скидання \"%(branch)s\" до \"%(revision)s\" призведе до втрати комітів."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2134,6 +2146,9 @@ msgstr "Шукати, використовуючи розширений регу
 msgid "Search..."
 msgstr "Пошук..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Вибрати"
 
@@ -2237,9 +2252,6 @@ msgid ""
 msgstr ""
 "Показати допомогу\n"
 "Клавіша: ?"
-
-msgid "Show icon? (if available)"
-msgstr ""
 
 msgid "Show line numbers"
 msgstr "Показати нумерацію рядків"
@@ -2420,6 +2432,15 @@ msgstr "Вібувся запит на підписання теґу, але п�
 msgid "Tags"
 msgstr "Теґи"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Ширина тексту"
 
@@ -2536,6 +2557,9 @@ msgstr "Перемкнути фільтр гілок"
 
 msgid "Toggle the paths filter"
 msgstr "Перемкнути фільтр шляхів"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Гілка, що відслідковуються"

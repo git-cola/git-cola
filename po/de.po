@@ -471,9 +471,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "Werkzeugleiste hinzufügen"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -830,11 +827,11 @@ msgstr "Vergleichen"
 msgid "Compare All"
 msgstr "Alle vergleichen"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Externen Branch als neuen Upstream konfigurieren"
-
 msgid "Configure Toolbar"
 msgstr "Werkzeugleiste konfigurieren"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Externen Branch als neuen Upstream konfigurieren"
 
 msgid "Console"
 msgstr "Meldungen"
@@ -975,6 +972,9 @@ msgstr "Externen Branch löschen"
 msgid "Delete Remote Branch..."
 msgstr "Externen Branch löschen..."
 
+msgid "Delete Toolbar"
+msgstr "Werkzeugleiste löschen"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -988,9 +988,6 @@ msgstr "Externe Referenz \"%s\" löschen"
 
 msgid "Delete remote?"
 msgstr "Externe Referenz löschen?"
-
-msgid "Delete Toolbar"
-msgstr "Werkzeugleiste löschen"
 
 msgid "Delete..."
 msgstr "Löschen..."
@@ -1100,6 +1097,9 @@ msgid "Email contributor"
 msgstr "E-Mail an Beitragenden"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1319,6 +1319,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Schriftgröße"
 
@@ -1405,6 +1408,9 @@ msgstr "Werkzeug für die Verlaufsansicht"
 
 msgid "Hungarian translation"
 msgstr "Ungarische Übersetzung"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1606,6 +1612,9 @@ msgstr "Neues kahles Repository..."
 
 msgid "New Repository..."
 msgstr "Neues Repository..."
+
+msgid "New Toolbar"
+msgstr "Werkzeugleiste hinzufügen"
 
 msgid "New..."
 msgstr "Neu..."
@@ -1971,6 +1980,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Das Zurücksetzen von \"%(branch)s\" nach \"%(revision)s\" verwirft Commits."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2157,6 +2169,9 @@ msgstr "Suche mit einer erweiterten POSIX Regular Expression durchführen"
 msgid "Search..."
 msgstr "Suchen..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Auswählen"
 
@@ -2255,9 +2270,6 @@ msgid ""
 msgstr ""
 "Hilfe anzeigen\n"
 "Kurzwahl: ?"
-
-msgid "Show icon? (if available)"
-msgstr "Symbol anzeigen? (falls verfügbar)"
 
 msgid "Show line numbers"
 msgstr "Zeilennummern anzeigen"
@@ -2434,6 +2446,15 @@ msgstr "Eine Tag-Signatur wurde angefordert, aber die Tag-Beschreibung fehlt."
 msgid "Tags"
 msgstr "Tags"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Textbreite"
 
@@ -2549,6 +2570,9 @@ msgstr "Branch-Filter umschalten"
 
 msgid "Toggle the paths filter"
 msgstr "Pfadfilter umschalten"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Nachverfolgter Branch"
@@ -3542,6 +3566,9 @@ msgstr "dd.MM.yyyy"
 
 #~ msgid "Show More Context"
 #~ msgstr "Mehr Zeilen anzeigen"
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "Symbol anzeigen? (falls verfügbar)"
 
 #~ msgid "Source Branches"
 #~ msgstr "Lokale Zweige"

@@ -382,9 +382,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr ""
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -757,10 +754,10 @@ msgstr "Сравнить"
 msgid "Compare All"
 msgstr "Сравнить"
 
-msgid "Configure the remote branch as the the new upstream"
+msgid "Configure Toolbar"
 msgstr ""
 
-msgid "Configure Toolbar"
+msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
 msgid "Console"
@@ -908,6 +905,10 @@ msgstr "Удалить внешнюю ветвь"
 msgid "Delete Remote Branch..."
 msgstr "Удалить внешнюю ветвь..."
 
+#, fuzzy
+msgid "Delete Toolbar"
+msgstr "Удалить закладку"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -921,10 +922,6 @@ msgstr "Удалить внешнюю ветвь \"%s\""
 
 msgid "Delete remote?"
 msgstr "Удалить внешнюю ветвь?"
-
-#, fuzzy
-msgid "Delete Toolbar"
-msgstr "Удалить закладку"
 
 msgid "Delete..."
 msgstr "Удалить..."
@@ -1036,6 +1033,9 @@ msgid "Email contributor"
 msgstr ""
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1260,6 +1260,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Размер шрифта"
 
@@ -1347,6 +1350,9 @@ msgid "History Browser"
 msgstr "Просмотрщик истории"
 
 msgid "Hungarian translation"
+msgstr ""
+
+msgid "Icon Only"
 msgstr ""
 
 msgid "Icon theme"
@@ -1555,6 +1561,9 @@ msgstr "Новый репозиторий..."
 
 msgid "New Repository..."
 msgstr "Новый репозиторий..."
+
+msgid "New Toolbar"
+msgstr ""
 
 msgid "New..."
 msgstr "Новый..."
@@ -1934,6 +1943,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Сброс \"%(branch)s\" в \"%(revision)s\" приведет к потере коммитов."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2124,6 +2136,9 @@ msgstr ""
 msgid "Search..."
 msgstr "Поиск..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Выбрать"
 
@@ -2232,9 +2247,6 @@ msgid ""
 msgstr ""
 "Показать помощь\n"
 "Горячая клавиша: ?"
-
-msgid "Show icon? (if available)"
-msgstr ""
 
 msgid "Show line numbers"
 msgstr ""
@@ -2415,6 +2427,15 @@ msgstr "Требуется подписать тег, но описание те
 msgid "Tags"
 msgstr ""
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Ширина текста"
 
@@ -2532,6 +2553,9 @@ msgstr "Включить фильтр путей"
 
 msgid "Toggle the paths filter"
 msgstr "Включить фильтр путей"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Ветвь слежения"

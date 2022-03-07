@@ -398,9 +398,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "添加工具栏"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -758,11 +755,11 @@ msgstr "比较"
 msgid "Compare All"
 msgstr "比较全部"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "将远程分支设为新的上游"
-
 msgid "Configure Toolbar"
 msgstr "配置工具栏"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "将远程分支设为新的上游"
 
 msgid "Console"
 msgstr "控制台"
@@ -905,6 +902,9 @@ msgstr "删除远程分支"
 msgid "Delete Remote Branch..."
 msgstr "删除远程分支..."
 
+msgid "Delete Toolbar"
+msgstr "删除工具栏"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -918,9 +918,6 @@ msgstr "删除远程 \"%s\""
 
 msgid "Delete remote?"
 msgstr "删除远程吗?"
-
-msgid "Delete Toolbar"
-msgstr "删除工具栏"
 
 msgid "Delete..."
 msgstr "删除..."
@@ -1030,6 +1027,9 @@ msgid "Email contributor"
 msgstr "电子邮件贡献者"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1246,6 +1246,9 @@ msgstr "扁平浅红"
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "字体大小"
 
@@ -1332,6 +1335,9 @@ msgstr "历史浏览器"
 
 msgid "Hungarian translation"
 msgstr "匈牙利语翻译"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1535,6 +1541,9 @@ msgstr "新建空版本库..."
 
 msgid "New Repository..."
 msgstr "新建版本库..."
+
+msgid "New Toolbar"
+msgstr "添加工具栏"
 
 msgid "New..."
 msgstr "新建..."
@@ -1902,6 +1911,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "复位 \"%(branch)s\" to \"%(revision)s\" 将丢失提交."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2088,6 +2100,9 @@ msgstr "使用 POSIX 拓展正则表达式查找"
 msgid "Search..."
 msgstr "查找..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "选择"
 
@@ -2188,9 +2203,6 @@ msgid ""
 msgstr ""
 "显示帮助\n"
 "快捷键: ?"
-
-msgid "Show icon? (if available)"
-msgstr "显示图标？(如果可用)"
 
 msgid "Show line numbers"
 msgstr "显示行号"
@@ -2369,6 +2381,15 @@ msgstr "标签需要签名但其内容为空."
 msgid "Tags"
 msgstr "标签"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "字符宽度"
 
@@ -2485,6 +2506,9 @@ msgstr "切换分支过滤器"
 
 msgid "Toggle the paths filter"
 msgstr "切换路径过滤器开关"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "正跟踪分支"
@@ -3489,6 +3513,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Show More Context"
 #~ msgstr "显示更多上下文"
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "显示图标？(如果可用)"
 
 #~ msgid "Source Branches"
 #~ msgstr "源端分支:"

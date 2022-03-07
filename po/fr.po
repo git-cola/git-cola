@@ -466,9 +466,6 @@ msgstr "Ajouter un sous-module"
 msgid "Add Submodule..."
 msgstr "Ajouter un sous-module..."
 
-msgid "New Toolbar"
-msgstr "Nouvelle barre d'outils"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -827,11 +824,11 @@ msgstr "Comparer"
 msgid "Compare All"
 msgstr "Tout comparer"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Configurer la branche distante comme la nouvelle source"
-
 msgid "Configure Toolbar"
 msgstr "Configurer la barre d'outils"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Configurer la branche distante comme la nouvelle source"
 
 msgid "Console"
 msgstr "Terminal"
@@ -972,6 +969,9 @@ msgstr "Supprimer la branche distante"
 msgid "Delete Remote Branch..."
 msgstr "Supprimer la branche distante..."
 
+msgid "Delete Toolbar"
+msgstr "Supprimer la barre d'outils"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr "Supprimer la branche « %s » ?"
@@ -985,9 +985,6 @@ msgstr "Supprimer la branche distante « %s »"
 
 msgid "Delete remote?"
 msgstr "Supprimer la branche distante ?"
-
-msgid "Delete Toolbar"
-msgstr "Supprimer la barre d'outils"
 
 msgid "Delete..."
 msgstr "Supprimer..."
@@ -1098,6 +1095,9 @@ msgstr "Email des contributeurs"
 
 msgid "Enable path autocompletion in tools"
 msgstr "Activer l’auto-complétion des chemins dans les outils"
+
+msgid "Enable word wrapping"
+msgstr ""
 
 msgid "Enabled"
 msgstr "Activé"
@@ -1250,13 +1250,11 @@ msgid "File system change monitoring: disabled because pywin32 is not installed.
 msgstr "Surveillance du changement de système de fichiers : désactivé car pywin32 n'est pas installé.\n"
 
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the "
-"number of watches by running:\n"
+"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
 "\n"
 "    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 msgstr ""
-"Surveillance  du changement de système de fichiers : désactivé car la limite sur le nombre total d'aperçu inotify a été atteint. Vous devriez être capable "
-"d'augmenter la limite d'aperçu en exécutant :\n"
+"Surveillance  du changement de système de fichiers : désactivé car la limite sur le nombre total d'aperçu inotify a été atteint. Vous devriez être capable d'augmenter la limite d'aperçu en exécutant :\n"
 "\n"
 "    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
 
@@ -1316,6 +1314,9 @@ msgstr "Simple rouge clair"
 
 msgid "Folder"
 msgstr "Répertoire"
+
+msgid "Follow System Style"
+msgstr ""
 
 msgid "Font Size"
 msgstr "Taille de police"
@@ -1403,6 +1404,9 @@ msgstr "Navigateur de l'historique"
 
 msgid "Hungarian translation"
 msgstr "Traduction hongroise"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr "Thème des icônes"
@@ -1604,6 +1608,9 @@ msgstr "Nouveau dépôt vide..."
 
 msgid "New Repository..."
 msgstr "Nouveau dépôt..."
+
+msgid "New Toolbar"
+msgstr "Nouvelle barre d'outils"
 
 msgid "New..."
 msgstr "Nouveau..."
@@ -1971,6 +1978,9 @@ msgstr "Réinitialiser la branche ?"
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Réinitialiser « %(branch)s » à « %(revision)s » perdra les commits."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr "Redémarrez l'application pour appliquer les modifications de l'apparence."
 
@@ -2157,6 +2167,9 @@ msgstr "Rechercher en utilisant une expression régulière approfondie POSIX"
 msgid "Search..."
 msgstr "Rechercher..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Sélectionner"
 
@@ -2257,9 +2270,6 @@ msgid ""
 msgstr ""
 "Afficher l'aide\n"
 "Raccourci : ?"
-
-msgid "Show icon? (if available)"
-msgstr "Afficher l'icône ? (si disponible)"
 
 msgid "Show line numbers"
 msgstr "Afficher le numéro des lignes"
@@ -2436,6 +2446,15 @@ msgstr "La signature du marqueur a été demandée mais le message du marqueur e
 msgid "Tags"
 msgstr "Marqueurs"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Largeur du texte"
 
@@ -2482,6 +2501,12 @@ msgid ""
 msgstr ""
 "Le sous-module va être ajouté avec\n"
 "« %s »"
+
+#, python-format
+msgid ""
+"The submodule will be updated using\n"
+"\"%s\""
+msgstr ""
 
 #, python-format
 msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
@@ -2547,6 +2572,9 @@ msgstr "Dés/activer le filtre des branches"
 
 msgid "Toggle the paths filter"
 msgstr "Dés/activer le filtre des chemins"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Suivi de branche"
@@ -2792,6 +2820,9 @@ msgstr "dd/MM/yyyy"
 
 #~ msgid "Select manually..."
 #~ msgstr "Sélectionner manuellement..."
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "Afficher l'icône ? (si disponible)"
 
 #~ msgid "The branch will be reset using \"git reset --hard %s\""
 #~ msgstr "La branche sera réinitialisée en utilisant « git reset --hard %s »"

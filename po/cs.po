@@ -414,9 +414,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "Přidat nástrojovou lištu"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -773,11 +770,11 @@ msgstr "Porovnat"
 msgid "Compare All"
 msgstr "Porovnat vše"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Nastavit vzdálenou větev jako nový upstream"
-
 msgid "Configure Toolbar"
 msgstr "Upravit nástrojovou lištu"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Nastavit vzdálenou větev jako nový upstream"
 
 msgid "Console"
 msgstr "Konzole"
@@ -918,6 +915,9 @@ msgstr "Smazat vzdálenou větev"
 msgid "Delete Remote Branch..."
 msgstr "Smazat vzdálenou větev…"
 
+msgid "Delete Toolbar"
+msgstr "Odstranit nástrojovou lištu"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -931,9 +931,6 @@ msgstr "Odstranit vzdálený „%s“"
 
 msgid "Delete remote?"
 msgstr "Odstranit vzdálený?"
-
-msgid "Delete Toolbar"
-msgstr "Odstranit nástrojovou lištu"
 
 msgid "Delete..."
 msgstr "Smazat…"
@@ -1043,6 +1040,9 @@ msgid "Email contributor"
 msgstr "Napsat přispěvateli e-mail"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1258,6 +1258,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Velikost písma"
 
@@ -1344,6 +1347,9 @@ msgstr "Prohlížeč historie"
 
 msgid "Hungarian translation"
 msgstr "Maďarský překlad"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1545,6 +1551,9 @@ msgstr "Nový holý repozitář…"
 
 msgid "New Repository..."
 msgstr "Nový repozitář…"
+
+msgid "New Toolbar"
+msgstr "Přidat nástrojovou lištu"
 
 msgid "New..."
 msgstr "Nový…"
@@ -1905,6 +1914,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Resetováním „%(branch)s“ do „%(revision)s“ se ztratí zápisy."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2091,6 +2103,9 @@ msgstr "Hledat s použitím rozšířených POSIX regulárních výrazů"
 msgid "Search..."
 msgstr "Hledat…"
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Vybrat"
 
@@ -2189,9 +2204,6 @@ msgid ""
 msgstr ""
 "Zobrazit nápovědu\n"
 "Zkratka: ?"
-
-msgid "Show icon? (if available)"
-msgstr "Zobrazit ikonu? (je-li dostupná)"
 
 msgid "Show line numbers"
 msgstr "Zobrazit čísla řádků"
@@ -2368,6 +2380,15 @@ msgstr "Byl požadován podpis značky, ale zpráva značky je prázdná."
 msgid "Tags"
 msgstr "Značky"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Šířka textu"
 
@@ -2478,6 +2499,9 @@ msgstr "Zobrazit/skrýt filtr větví"
 
 msgid "Toggle the paths filter"
 msgstr "Zobrazit/skrýt filtr cest"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Sledovaná větev"
@@ -2759,6 +2783,9 @@ msgstr "rrrr-mm-dd"
 
 #~ msgid "Show Details..."
 #~ msgstr "Zobrazit podrobnosti…"
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "Zobrazit ikonu? (je-li dostupná)"
 
 #~ msgid "Summary:"
 #~ msgstr "Shrnutí:"

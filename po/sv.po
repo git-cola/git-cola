@@ -364,9 +364,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr ""
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -746,10 +743,10 @@ msgstr ""
 msgid "Compare All"
 msgstr ""
 
-msgid "Configure the remote branch as the the new upstream"
+msgid "Configure Toolbar"
 msgstr ""
 
-msgid "Configure Toolbar"
+msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
 #, fuzzy
@@ -911,6 +908,10 @@ msgstr "Ta bort fjärrgren"
 msgid "Delete Remote Branch..."
 msgstr "Ta bort fjärrgren"
 
+#, fuzzy
+msgid "Delete Toolbar"
+msgstr "Ta bort gren"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -926,10 +927,6 @@ msgstr "Ta bort fjärrgren"
 #, fuzzy
 msgid "Delete remote?"
 msgstr "Ta bort fjärrgren"
-
-#, fuzzy
-msgid "Delete Toolbar"
-msgstr "Ta bort gren"
 
 msgid "Delete..."
 msgstr "Ta bort..."
@@ -1050,6 +1047,9 @@ msgid "Email contributor"
 msgstr ""
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1291,6 +1291,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Storlek"
 
@@ -1378,6 +1381,9 @@ msgid "History Browser"
 msgstr "Filbläddrare"
 
 msgid "Hungarian translation"
+msgstr ""
+
+msgid "Icon Only"
 msgstr ""
 
 msgid "Icon theme"
@@ -1602,6 +1608,9 @@ msgstr "Gitarkiv"
 #, fuzzy
 msgid "New Repository..."
 msgstr "Gitarkiv"
+
+msgid "New Toolbar"
+msgstr ""
 
 msgid "New..."
 msgstr "Nytt..."
@@ -2007,6 +2016,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Om du återställer \"%s\" till \"%s\" går följande incheckningar förlorade:"
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2208,6 +2220,9 @@ msgstr ""
 msgid "Search..."
 msgstr "Startar..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Välj"
 
@@ -2318,9 +2333,6 @@ msgstr ""
 msgid ""
 "Show help\n"
 "Shortcut: ?"
-msgstr ""
-
-msgid "Show icon? (if available)"
 msgstr ""
 
 msgid "Show line numbers"
@@ -2522,6 +2534,15 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr ""
 
@@ -2624,6 +2645,9 @@ msgid "Toggle the branches filter"
 msgstr ""
 
 msgid "Toggle the paths filter"
+msgstr ""
+
+msgid "Toolbar Style:"
 msgstr ""
 
 msgid "Tracking Branch"

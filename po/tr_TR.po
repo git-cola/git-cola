@@ -355,9 +355,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "Araç Çubuğu Ekle"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -699,10 +696,10 @@ msgstr ""
 msgid "Compare All"
 msgstr ""
 
-msgid "Configure the remote branch as the the new upstream"
+msgid "Configure Toolbar"
 msgstr ""
 
-msgid "Configure Toolbar"
+msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
 msgid "Console"
@@ -844,6 +841,9 @@ msgstr ""
 msgid "Delete Remote Branch..."
 msgstr "Uzaktaki Dalı Sil..."
 
+msgid "Delete Toolbar"
+msgstr "Araç çubuğunu sil"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -857,9 +857,6 @@ msgstr "Uzaktakini sil \"%s\""
 
 msgid "Delete remote?"
 msgstr "Uzaktakini sil?"
-
-msgid "Delete Toolbar"
-msgstr "Araç çubuğunu sil"
 
 msgid "Delete..."
 msgstr "Sil..."
@@ -969,6 +966,9 @@ msgid "Email contributor"
 msgstr ""
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1184,6 +1184,9 @@ msgstr "Düz açık kırmızı"
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Yazı Tipi Boyutu"
 
@@ -1269,6 +1272,9 @@ msgid "History Browser"
 msgstr "Geçmiş Görüntüleyici"
 
 msgid "Hungarian translation"
+msgstr ""
+
+msgid "Icon Only"
 msgstr ""
 
 msgid "Icon theme"
@@ -1469,6 +1475,9 @@ msgstr ""
 
 msgid "New Repository..."
 msgstr "Yeni Depo..."
+
+msgid "New Toolbar"
+msgstr "Araç Çubuğu Ekle"
 
 msgid "New..."
 msgstr "Yeni..."
@@ -1822,6 +1831,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2008,6 +2020,9 @@ msgstr ""
 msgid "Search..."
 msgstr "Arama..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Seç"
 
@@ -2106,9 +2121,6 @@ msgid ""
 msgstr ""
 "Yardımı göster\n"
 "Kısayol: ?"
-
-msgid "Show icon? (if available)"
-msgstr ""
 
 msgid "Show line numbers"
 msgstr ""
@@ -2285,6 +2297,15 @@ msgstr ""
 msgid "Tags"
 msgstr "Etiketler"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Yazı Genişliği"
 
@@ -2385,6 +2406,9 @@ msgid "Toggle the branches filter"
 msgstr ""
 
 msgid "Toggle the paths filter"
+msgstr ""
+
+msgid "Toolbar Style:"
 msgstr ""
 
 msgid "Tracking Branch"

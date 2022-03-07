@@ -462,9 +462,6 @@ msgstr "サブモジュールの追加"
 msgid "Add Submodule..."
 msgstr "サブモジュールの追加..."
 
-msgid "New Toolbar"
-msgstr "ツールバーの追加"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -822,11 +819,11 @@ msgstr "比較"
 msgid "Compare All"
 msgstr "全て比較"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "新しいアップストリームとしてリモートブランチを設定する"
-
 msgid "Configure Toolbar"
 msgstr "ツールバーの設定"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "新しいアップストリームとしてリモートブランチを設定する"
 
 msgid "Console"
 msgstr "コンソール"
@@ -968,6 +965,9 @@ msgstr "リモートブランチの削除"
 msgid "Delete Remote Branch..."
 msgstr "リモートブランチの削除中..."
 
+msgid "Delete Toolbar"
+msgstr "ツールバーの削除"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr "ブランチ \"%s\" を削除しますか?"
@@ -981,9 +981,6 @@ msgstr "リモート \"%s\"の削除"
 
 msgid "Delete remote?"
 msgstr "リモートを削除しますか？"
-
-msgid "Delete Toolbar"
-msgstr "ツールバーの削除"
 
 msgid "Delete..."
 msgstr "削除中…"
@@ -1094,6 +1091,9 @@ msgstr "メールコントリビュータ"
 
 msgid "Enable path autocompletion in tools"
 msgstr "ツールのパス自動補完を有効にする"
+
+msgid "Enable word wrapping"
+msgstr ""
 
 msgid "Enabled"
 msgstr "有効"
@@ -1312,6 +1312,9 @@ msgstr "フラットライトレッド"
 msgid "Folder"
 msgstr "フォルダ"
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "フォントサイズ"
 
@@ -1398,6 +1401,9 @@ msgstr "履歴ブラウザ"
 
 msgid "Hungarian translation"
 msgstr "ハンガリー語翻訳"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr "アイコンテーマ"
@@ -1599,6 +1605,9 @@ msgstr "新しい Bare リポジトリ..."
 
 msgid "New Repository..."
 msgstr "新しいリポジトリ..."
+
+msgid "New Toolbar"
+msgstr "ツールバーの追加"
 
 msgid "New..."
 msgstr "新規…"
@@ -1967,6 +1976,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "\"%(branch)s\" ブランチを \"%(revision)s\" リビジョンにリセットするとコミットが失われます。"
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr "外観の設定を変更後にこのアプリケーションを再起動します。"
 
@@ -2153,6 +2165,9 @@ msgstr "POSIX拡張正規表現検索"
 msgid "Search..."
 msgstr "検索中..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "選択"
 
@@ -2253,9 +2268,6 @@ msgid ""
 msgstr ""
 "ヘルプの表示\n"
 "ショートカット: ?"
-
-msgid "Show icon? (if available)"
-msgstr "アイコンを表示しますか？(可能な場合)"
 
 msgid "Show line numbers"
 msgstr "行数の表示"
@@ -2432,6 +2444,15 @@ msgstr "タグの署名が要求されていますが、タグメッセージが
 msgid "Tags"
 msgstr "タグ"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "テキスト幅"
 
@@ -2551,6 +2572,9 @@ msgstr "ブランチフィルタを切り替えます"
 
 msgid "Toggle the paths filter"
 msgstr "パスフィルタを切り替えます"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "トラッキングブランチ"
@@ -3511,6 +3535,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Show More Context"
 #~ msgstr "文脈を多く"
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "アイコンを表示しますか？(可能な場合)"
 
 #~ msgid "Source Branches"
 #~ msgstr "元のブランチ"

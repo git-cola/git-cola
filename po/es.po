@@ -466,9 +466,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "Añadir barra de herramientas"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -826,11 +823,11 @@ msgstr "Comparar"
 msgid "Compare All"
 msgstr "Comparar todo"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "Configurar la rama remota como la nueva \"upstream\""
-
 msgid "Configure Toolbar"
 msgstr "Configurar barra de herramientas"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "Configurar la rama remota como la nueva \"upstream\""
 
 msgid "Console"
 msgstr "Terminal"
@@ -971,6 +968,9 @@ msgstr "Eliminar rama remota"
 msgid "Delete Remote Branch..."
 msgstr "Eliminar rama remota..."
 
+msgid "Delete Toolbar"
+msgstr "Eliminar barra de herramientas"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -984,9 +984,6 @@ msgstr "Eliminar repositorio remoto \"%s\""
 
 msgid "Delete remote?"
 msgstr "¿Desea eliminar el repositorio remoto?"
-
-msgid "Delete Toolbar"
-msgstr "Eliminar barra de herramientas"
 
 msgid "Delete..."
 msgstr "Eliminar..."
@@ -1096,6 +1093,9 @@ msgid "Email contributor"
 msgstr "Dirección de correo electrónico del colaborador"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1314,6 +1314,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "Tamaño de fuente"
 
@@ -1400,6 +1403,9 @@ msgstr "Navegador de historial"
 
 msgid "Hungarian translation"
 msgstr "Traducción al Húngaro"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1601,6 +1607,9 @@ msgstr "Nuevo repositorio..."
 
 msgid "New Repository..."
 msgstr "Nuevo repositorio..."
+
+msgid "New Toolbar"
+msgstr "Añadir barra de herramientas"
 
 msgid "New..."
 msgstr "Nuevo..."
@@ -1968,6 +1977,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "Reiniciar \"%(branch)s\" a \"%(revision)s\" hara que se pierdan los \"commits\"."
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2154,6 +2166,9 @@ msgstr "Buscar utilizando expresión regular extendida POSIX "
 msgid "Search..."
 msgstr "Buscar..."
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "Seleccionar"
 
@@ -2252,9 +2267,6 @@ msgid ""
 msgstr ""
 "Mostrar ayuda\n"
 "Atajo de teclado: ?"
-
-msgid "Show icon? (if available)"
-msgstr "¿Mostrar icono? (si está disponible)"
 
 msgid "Show line numbers"
 msgstr "Mostrar el número de línea"
@@ -2431,6 +2443,15 @@ msgstr "Se necesitó una firma de la etiqueta pero el mensaje de la etiqueta est
 msgid "Tags"
 msgstr "Etiquetas"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "Ancho del texto"
 
@@ -2546,6 +2567,9 @@ msgstr "Alternar el filtro de las ramas"
 
 msgid "Toggle the paths filter"
 msgstr "Alternar el filtro de las rutas"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "Rama en seguimiento"
@@ -2818,6 +2842,9 @@ msgstr "aaaa-MM-dd"
 
 #~ msgid "Show Details..."
 #~ msgstr "Mostrar detalles..."
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "¿Mostrar icono? (si está disponible)"
 
 #~ msgid "The branch will be reset using \"git reset --hard %s\""
 #~ msgstr "La rama será reiniciada utilizando \"git reset --hard %s\""

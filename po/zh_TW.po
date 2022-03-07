@@ -467,9 +467,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "New Toolbar"
-msgstr "新增工具列"
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -829,11 +826,11 @@ msgstr "比較差異"
 msgid "Compare All"
 msgstr "比較全部檔案差異"
 
-msgid "Configure the remote branch as the the new upstream"
-msgstr "將此遠端分支設為新的上游分支"
-
 msgid "Configure Toolbar"
 msgstr "設定工具列"
+
+msgid "Configure the remote branch as the the new upstream"
+msgstr "將此遠端分支設為新的上游分支"
 
 msgid "Console"
 msgstr "終端機輸出"
@@ -975,6 +972,9 @@ msgstr "移除遠端分支"
 msgid "Delete Remote Branch..."
 msgstr "移除遠端分支……"
 
+msgid "Delete Toolbar"
+msgstr "刪除工具列"
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -988,9 +988,6 @@ msgstr "移除「%s」遠端版控庫"
 
 msgid "Delete remote?"
 msgstr "要移除遠端版控庫嗎？"
-
-msgid "Delete Toolbar"
-msgstr "刪除工具列"
 
 msgid "Delete..."
 msgstr "移除..."
@@ -1100,6 +1097,9 @@ msgid "Email contributor"
 msgstr "寄電子郵件給這位貢獻者"
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1319,6 +1319,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr "字體大小"
 
@@ -1405,6 +1408,9 @@ msgstr "變更紀錄瀏覽器"
 
 msgid "Hungarian translation"
 msgstr "匈牙利語翻譯"
+
+msgid "Icon Only"
+msgstr ""
 
 msgid "Icon theme"
 msgstr ""
@@ -1606,6 +1612,9 @@ msgstr "新的裸裝版控庫(bare repository)……"
 
 msgid "New Repository..."
 msgstr "新版控庫……"
+
+msgid "New Toolbar"
+msgstr "新增工具列"
 
 msgid "New..."
 msgstr "新建……"
@@ -1974,6 +1983,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "重置「%(branch)s」分支到「%(revision)s」修訂版將導致修訂版提交的丟失。"
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -2160,6 +2172,9 @@ msgstr "使用 POSIX 延伸正規表達式來搜尋"
 msgid "Search..."
 msgstr "尋找……"
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr "選擇"
 
@@ -2258,9 +2273,6 @@ msgid ""
 msgstr ""
 "顯示幫助訊息\n"
 "鍵盤快捷鍵：?"
-
-msgid "Show icon? (if available)"
-msgstr "要顯示圖示嗎（如果有）？"
 
 msgid "Show line numbers"
 msgstr "顯示行號"
@@ -2437,6 +2449,15 @@ msgstr "被要求要有標籤簽名但是標籤訊息是空的。"
 msgid "Tags"
 msgstr "標籤"
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr "單行文字寬度限制"
 
@@ -2552,6 +2573,9 @@ msgstr "切換分支過濾器開關"
 
 msgid "Toggle the paths filter"
 msgstr "切換路徑過濾器開關"
+
+msgid "Toolbar Style:"
+msgstr ""
 
 msgid "Tracking Branch"
 msgstr "跟蹤分支"
@@ -3559,6 +3583,9 @@ msgstr "yyyy-MM-dd"
 
 #~ msgid "Show More Context"
 #~ msgstr "顯示更多上下文"
+
+#~ msgid "Show icon? (if available)"
+#~ msgstr "要顯示圖示嗎（如果有）？"
 
 #~ msgid "Source Branches"
 #~ msgstr "源端分支:"

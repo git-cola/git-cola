@@ -329,9 +329,6 @@ msgstr ""
 msgid "Add Submodule..."
 msgstr ""
 
-msgid "Add Toolbar"
-msgstr ""
-
 msgid ""
 "Add and remove remote repositories using the \n"
 "Add(+) and Delete(-) buttons on the left-hand side.\n"
@@ -673,10 +670,10 @@ msgstr ""
 msgid "Compare All"
 msgstr ""
 
-msgid "Configure the remote branch as the the new upstream"
+msgid "Configure Toolbar"
 msgstr ""
 
-msgid "Configure toolbar"
+msgid "Configure the remote branch as the the new upstream"
 msgstr ""
 
 msgid "Console"
@@ -818,6 +815,9 @@ msgstr ""
 msgid "Delete Remote Branch..."
 msgstr ""
 
+msgid "Delete Toolbar"
+msgstr ""
+
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -830,9 +830,6 @@ msgid "Delete remote \"%s\""
 msgstr ""
 
 msgid "Delete remote?"
-msgstr ""
-
-msgid "Delete toolbar"
 msgstr ""
 
 msgid "Delete..."
@@ -943,6 +940,9 @@ msgid "Email contributor"
 msgstr ""
 
 msgid "Enable path autocompletion in tools"
+msgstr ""
+
+msgid "Enable word wrapping"
 msgstr ""
 
 msgid "Enabled"
@@ -1158,6 +1158,9 @@ msgstr ""
 msgid "Folder"
 msgstr ""
 
+msgid "Follow System Style"
+msgstr ""
+
 msgid "Font Size"
 msgstr ""
 
@@ -1243,6 +1246,9 @@ msgid "History Browser"
 msgstr ""
 
 msgid "Hungarian translation"
+msgstr ""
+
+msgid "Icon Only"
 msgstr ""
 
 msgid "Icon theme"
@@ -1442,6 +1448,9 @@ msgid "New Bare Repository..."
 msgstr ""
 
 msgid "New Repository..."
+msgstr ""
+
+msgid "New Toolbar"
 msgstr ""
 
 msgid "New..."
@@ -1796,6 +1805,9 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr ""
 
+msgid "Resize File Browser columns"
+msgstr ""
+
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
@@ -1982,6 +1994,9 @@ msgstr ""
 msgid "Search..."
 msgstr ""
 
+msgid "Search:"
+msgstr ""
+
 msgid "Select"
 msgstr ""
 
@@ -2077,9 +2092,6 @@ msgstr ""
 msgid ""
 "Show help\n"
 "Shortcut: ?"
-msgstr ""
-
-msgid "Show icon? (if available)"
 msgstr ""
 
 msgid "Show line numbers"
@@ -2257,6 +2269,15 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+msgid "Text Beside Icon"
+msgstr ""
+
+msgid "Text Only"
+msgstr ""
+
+msgid "Text Under Icon"
+msgstr ""
+
 msgid "Text Width"
 msgstr ""
 
@@ -2357,6 +2378,9 @@ msgid "Toggle the branches filter"
 msgstr ""
 
 msgid "Toggle the paths filter"
+msgstr ""
+
+msgid "Toolbar Style:"
 msgstr ""
 
 msgid "Tracking Branch"
