@@ -29,9 +29,14 @@ else:
     _prefix = dirname(_package)
 
 
+def get_prefix():
+    """Return the installation prefix"""
+    return _prefix
+
+
 def prefix(*args):
     """Return a path relative to cola's installation prefix"""
-    return os.path.join(_prefix, *args)
+    return os.path.join(get_prefix(), *args)
 
 
 def command(name):
