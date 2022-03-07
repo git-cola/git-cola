@@ -101,7 +101,7 @@ def git_version(context):
     return result
 
 
-def cola_version(build=False):
+def cola_version():
     suffix = version()
     return 'cola version %s' % suffix
 
@@ -110,5 +110,5 @@ def print_version(brief=False):
     if brief:
         msg = version()
     else:
-        msg = cola_version(build=build)
+        msg = cola_version()
     sys.stdout.write('%s\n' % msg)
