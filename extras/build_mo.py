@@ -3,7 +3,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import re
-import shutil
 
 from setuptools import Command
 
@@ -114,5 +113,7 @@ class build_mo(Command):
                 self.debug_print('Compile: %s -> %s' % (po, mo))
                 self.spawn(['msgfmt', '--output-file', mo, po])
 
+    # pylint: disable=no-self-use
     def get_outputs(self):
+        """The output of this command is handled by the install command"""
         return []

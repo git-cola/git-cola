@@ -1,9 +1,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 try:
-    from shutil import which
+    from shutil import which  # pylint: disable=unused-import
 except ImportError:
-    from distutils.spawn import find_executable as which
+    from distutils.spawn import find_executable as which  # pylint: disable=unused-import
 
 
 def encode(string):
