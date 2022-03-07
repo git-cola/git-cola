@@ -21,6 +21,8 @@ pytest-flake8
 pytest-black-multipy
 
 ## Build and install documentation using "make doc" and "make install-doc".
+jaraco.packaging >= 9
+rst.linker >= 1.9
 Sphinx
 sphinx-rtd-theme==0.4.3; python_version < '3.0'
 sphinx-rtd-theme; python_version >= '3.0'
