@@ -297,6 +297,10 @@ format::
 requirements-dev::
 	$(PIP) install --requirement requirements/requirements-dev.txt
 
+.PHONY: requirements-optional
+requirements-optional::
+	$(PIP) install --requirement requirements/requirements-optional.txt
+
 .PHONY: tox
 tox::
 	$(TOX) $(TOX_FLAGS) $(flags)

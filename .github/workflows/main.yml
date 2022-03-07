@@ -43,18 +43,21 @@ jobs:
               gettext \
               flake8 \
               pylint \
+              python-is-python3 \
               python-pytest \
               python3-pytest \
               python3-pytest-flake8
-
           # Runtime dependencies (required)
           sudo apt-get install \
+              python3-qtpy \
               python3-pyqt5
-
           # Runtime dependencies (optional)
           sudo apt-get install \
-              python3-qtpy \
               python3-send2trash
+          # Development environment
+          make requirements-dev
+          # These requirements are already satisfied by python3-send2trash.
+          # make requirements-optional
 
       - name: Build Translations
         run: make i18n
@@ -97,11 +100,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install -r requirements/requirements.txt
-          pip install -r requirements/requirements-optional.txt
-          pip install -r requirements/requirements-maint.txt
-          pip install -r requirements/requirements-dev.txt
           pip install PyQt5
+          pip install qtpy
+          pip install --requirement requirements/requirements-dev.txt
+          pip install --requirement requirements/requirements-maint.txt
 
       # Based on: contrib/win32/run-pynsist.sh
       - name: Build Installer
