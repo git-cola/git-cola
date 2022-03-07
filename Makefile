@@ -293,6 +293,10 @@ format::
 	$(GREP) -v ^qtpy | \
 	$(XARGS) $(BLACK) --skip-string-normalization
 
+.PHONY: requirements
+requirements::
+	$(PIP) install --requirement requirements/requirements.txt
+
 .PHONY: requirements-dev
 requirements-dev::
 	$(PIP) install --requirement requirements/requirements-dev.txt

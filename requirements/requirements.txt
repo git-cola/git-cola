@@ -1,0 +1,10 @@
+# These packages are required to run git-cola.
+#
+# Git Cola can run with either PyQt5 or PySide2. You only need one of the two.
+# We recommend PyQt5 but PySide2 is also supported and can be used instead.
+PyQt5 >= 5.6.0; python_version >= "3.0"
+PySide2; python_version == "2.7"
+
+# qtpy provides a PyQt5/PyQt6/PySide2 abstraction layer that makes it possible
+# to choose between PyQt5, PySide2 and other Qt backends at runtime.
+qtpy >= 1.1.0

@@ -2,6 +2,7 @@
 
 ## Build tools
 build; python_version >= '3.0'
+setuptools>=42.0.0
 setuptools_scm[toml] >= 3.4.1
 wheel
 
