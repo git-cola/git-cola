@@ -3,6 +3,7 @@ all::
 
 # Development
 # -----------
+# make develop                  # python setup.py develop ~ one-time virtualenv development setup
 # make V=1                      # generate files; V=1 increases verbosity
 # make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
 # make test V=2                 # V=2 increases test verbosity
@@ -91,8 +92,7 @@ endif
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
 bindir = $(prefix)/bin
-python_code := "import sys; print('%s.%s' % (sys.version_info[0], sys.version_info[1]))"
-python_version := $(shell $(PYTHON) -c $(python_code))
+python_version := $(shell $(PYTHON) -c 'import sys; print("%s.%s" % sys.version_info[:2])')
 python_lib = python$(python_version)/site-packages
 pythondir = $(prefix)/lib/$(python_lib)
 # DESTDIR =
@@ -109,9 +109,6 @@ cola_dist := $(cola_base)-$(cola_version)
 SETUP ?= $(PYTHON) setup.py
 
 build_args += build
-ifdef USE_ENV_PYTHON
-    build_args += --use-env-python
-endif
 
 install_args += install
 ifdef DESTDIR
@@ -292,6 +289,12 @@ format::
 	$(GIT) ls-files -- '*.py' | \
 	$(GREP) -v ^qtpy | \
 	$(XARGS) $(BLACK) --skip-string-normalization
+
+# Run "make develop" from inside a newly created virtualenv to setup the build system
+# using "python setup.py develop".
+.PHONY: develop
+develop::
+	$(SETUP) develop
 
 .PHONY: requirements
 requirements::

@@ -3,7 +3,8 @@ import os
 try:
     from shutil import which  # pylint: disable=unused-import
 except ImportError:
-    from distutils.spawn import find_executable as which  # pylint: disable=unused-import
+    # pylint: disable=unused-import
+    from distutils.spawn import find_executable as which  # noqa
 
 
 def encode(string):

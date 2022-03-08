@@ -37,6 +37,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          set -x
           sudo apt-get update
           sudo apt-get install \
               black \
@@ -45,6 +46,7 @@ jobs:
               pylint \
               python-is-python3 \
               python-pytest \
+              python-setuptools-scm \
               python3-pytest \
               python3-pytest-flake8
           # Runtime dependencies (required)
@@ -54,18 +56,22 @@ jobs:
           # Runtime dependencies (optional)
           sudo apt-get install \
               python3-send2trash
-          # Development environment
-          make requirements-dev
-          # These requirements are already satisfied by python3-send2trash.
-          # make requirements-optional
+          python -m venv --system-site-packages env
+          source env/bin/activate
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
+          make develop
 
       - name: Build Translations
-        run: make i18n
+        run: |
+          source env/bin/activate
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
+          make i18n
 
       - name: Run Unit Tests
         run: |
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
           make test
 
       - name: Run Linter
@@ -134,16 +140,23 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          set -x
           brew install sphinx-doc
           brew install git-cola
+          $(brew --prefix python3)/bin/python3 -m venv --system-site-packages env
+          source env/bin/activate
+          make requirements-dev
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
+          make develop
 
       - name: Build Bundle
         run: |
+          set -x
+          source env/bin/activate
+          export SETUPTOOLS_USE_DISTUTILS=stdlib
           mkdir build
           make \
-            PYTHON=$(brew --prefix python3)/bin/python3 \
-            PYTHON_CONFIG=$(brew --prefix python3)/bin/python3-config \
-            SPHINXBUILD=$(brew --prefix sphinx-doc)/bin/sphinx-build \
+            PYTHON_CONFIG=python3-config \
             git-cola.app
           mv git-cola.app build/
 
