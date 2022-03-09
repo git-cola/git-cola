@@ -1781,7 +1781,7 @@ msgid "Prevent \"Stage\" from staging all files when nothing is selected"
 msgstr "何も選択されていないとき、全てのファイルをステージングしないようにする"
 
 msgid "Previous File"
-msgstr "以前ののファイル"
+msgstr "以前のファイル"
 
 msgid "Prompt on creation"
 msgstr "生成時のプロンプト"
