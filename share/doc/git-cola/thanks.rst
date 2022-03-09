@@ -256,6 +256,7 @@ Thanks
 * wm4
 * wsdfhjxc
 * Xie Hua Liang (xieofxie)
+* YAMAMOTO Kenyu
 * Yi EungJun
 * Zauber Paracelsus
 * Zeioth
