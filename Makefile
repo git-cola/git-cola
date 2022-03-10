@@ -108,9 +108,7 @@ cola_dist := $(cola_base)-$(cola_version)
 
 SETUP ?= $(PYTHON) setup.py
 
-build_args += build
-
-install_args += install
+install_args =
 ifdef DESTDIR
 	install_args += --root="$(DESTDIR)"
 	export DESTDIR
@@ -135,11 +133,11 @@ all:: build
 
 .PHONY: build
 build::
-	$(SETUP) $(QUIET) $(VERBOSE) $(build_args)
+	$(SETUP) $(QUIET) $(VERBOSE) build
 
 .PHONY: install
 install:: all
-	$(SETUP) $(QUIET) $(VERBOSE) $(install_args)
+	$(SETUP) $(QUIET) $(VERBOSE) install $(install_args)
 
 .PHONY: doc
 doc::
@@ -167,10 +165,10 @@ install-man::
 
 .PHONY: uninstall
 uninstall::
+	$(RM) "$(DESTDIR)$(prefix)"/bin/cola
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola-sequence-editor
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-dag
-	$(RM) "$(DESTDIR)$(prefix)"/bin/cola
 	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola.desktop
 	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola-folder-handler.desktop
 	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-dag.desktop
@@ -178,7 +176,6 @@ uninstall::
 	$(RM) "$(DESTDIR)$(prefix)"/share/metainfo/git-cola.appdata.xml
 	$(RM) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps/git-cola.svg
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
-	$(RM_R) "$(DESTDIR)$(prefix)"/share/git-cola
 	$(RM) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
 	$(RM_R) "$(DESTDIR)$(pythondir)"/git_cola-*
 	$(RM_R) "$(DESTDIR)$(pythondir)"/cola

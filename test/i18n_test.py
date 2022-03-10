@@ -1,5 +1,6 @@
 """Tests for the i18n translation module"""
 from __future__ import absolute_import, division, print_function, unicode_literals
+import os
 
 import pytest
 
@@ -64,3 +65,15 @@ def test_translate_push_pull_french():
     expect = 'Pousser'
     actual = N_('Push')
     assert expect == actual
+
+
+def test_get_filename_for_locale():
+    """Ensure that the appropriate .po files are found"""
+    actual = i18n.get_filename_for_locale('does_not_exist')
+    assert actual is None
+
+    actual = i18n.get_filename_for_locale('id_ID')
+    assert os.path.basename(actual) == 'id_ID.po'
+
+    actual = i18n.get_filename_for_locale('ja_JP')
+    assert os.path.basename(actual) == 'ja.po'

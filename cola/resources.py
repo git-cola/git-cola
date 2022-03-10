@@ -66,9 +66,9 @@ def doc(*args):
     return share('doc', 'git-cola', *args)
 
 
-def locale(*args):
-    """Return a path relative to cola's i18n locale directory, eg. /usr/share/locale"""
-    return share('locale', *args)
+def i18n(*args):
+    """Return a path relative to cola's i18n locale directory, eg. cola/i18n"""
+    return package_data('i18n', *args)
 
 
 def html_docs():

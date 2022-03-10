@@ -327,7 +327,7 @@ The test suite can be found in the [test](test) directory.
 Commits and pull requests are automatically tested for code quality
 using [GitHub Actions](https://github.com/git-cola/git-cola/actions/workflows/main.yml).
 
-Auto-format `po/*.po` files before committing when updating translations:
+Auto-format `cola/i18n/*.po` files before committing when updating translations:
 
     $ make po
 
