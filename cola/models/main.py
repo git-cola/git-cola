@@ -225,10 +225,7 @@ class MainModel(QtCore.QObject):
 
     def emit_about_to_update(self):
         self.previous_contents.emit(
-            self.staged,
-            self.unmerged,
-            self.modified,
-            self.untracked
+            self.staged, self.unmerged, self.modified, self.untracked
         )
         self.about_to_update.emit()
 

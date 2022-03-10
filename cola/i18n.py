@@ -12,12 +12,14 @@ from . import resources
 
 class NullTranslation(object):
     """This is a pass-through object that does nothing"""
+
     def gettext(self, value):
         return value
 
 
 class State(object):
     """The application-wide current translation state"""
+
     translation = NullTranslation()
 
     @classmethod
@@ -35,7 +37,6 @@ class State(object):
 
 
 class Translation(object):
-
     def __init__(self, lang):
         self.lang = lang
         self.messages = {}

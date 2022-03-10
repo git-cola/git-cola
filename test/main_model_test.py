@@ -237,7 +237,6 @@ def test_remote_args_rebase_only(mock_context):
 
 
 def test_run_remote_action(mock_context):
-
     def passthrough(*args, **kwargs):
         return (args, kwargs)
 

@@ -38,7 +38,7 @@ authors = 'David Aguilar and contributors'
 versionfile = os.path.join(srcdir, 'cola', '_version.py')
 scope = {}
 with open(versionfile) as f:
-    exec (f.read(), scope)
+    exec(f.read(), scope)
 
 # The short X.Y version.
 version = scope['VERSION']

@@ -338,9 +338,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # The current/new set of categorized files.
         new_c = self.contents()
 
-        select_staged = partial(
-            _select_item, self, new_c.staged, self._staged_item
-        )
+        select_staged = partial(_select_item, self, new_c.staged, self._staged_item)
         select_unmerged = partial(
             _select_item, self, new_c.unmerged, self._unmerged_item
         )
@@ -449,9 +447,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         """Stage or unstage files according to the selection"""
         context = self.context
         selected_indexes = self.selected_indexes()
-        is_header = any(
-            category == HEADER_IDX for (category, idx) in selected_indexes
-        )
+        is_header = any(category == HEADER_IDX for (category, idx) in selected_indexes)
         if is_header:
             is_staged = any(
                 idx == STAGED_IDX and category == HEADER_IDX
@@ -610,9 +606,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def _set_untracked(self, items):
         """Adds items to the 'Untracked' subtree."""
         with qtutils.BlockSignals(self):
-            self._set_subtree(
-                items, UNTRACKED_IDX, N_('Untracked'), untracked=True
-            )
+            self._set_subtree(items, UNTRACKED_IDX, N_('Untracked'), untracked=True)
 
     def _set_subtree(
         self, items, idx, parent_title, staged=False, untracked=False, deleted_set=None

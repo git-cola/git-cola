@@ -266,7 +266,7 @@ class ViewerMixin(object):
 
 
 def set_icon(icon, action):
-    """"Set the icon for an action and return the action"""
+    """ "Set the icon for an action and return the action"""
     action.setIcon(icon)
     return action
 
