@@ -56,8 +56,6 @@ jobs:
           # Runtime dependencies (optional)
           sudo apt-get install \
               python3-send2trash
-          source env/bin/activate
-          make develop
 
       - name: Build Translations
         run: |
@@ -101,8 +99,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install PyQt5
-          pip install qtpy
+          pip install --requirement requirements/requirements.txt
           pip install --requirement requirements/requirements-dev.txt
           pip install --requirement requirements/requirements-maint.txt
 
@@ -136,23 +133,16 @@ jobs:
       - name: Install Dependencies
         run: |
           set -x
-          brew install sphinx-doc
           brew install git-cola
-          $(brew --prefix python3)/bin/python3 -m venv --system-site-packages env
+          python3 -m venv env
           source env/bin/activate
           make requirements-dev
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
-          make develop
 
       - name: Build Bundle
         run: |
           set -x
           source env/bin/activate
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
-          mkdir build
-          make \
-            PYTHON_CONFIG=python3-config \
-            git-cola.app
+          make git-cola.app
           mv git-cola.app build/
 
       - name: Upload Artifact
