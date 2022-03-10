@@ -11,7 +11,7 @@ modify entries, comments or metadata, etc. or create new po files from scratch.
 **polib** provides a simple and pythonic API via the :func:`~polib.pofile` and
 :func:`~polib.mofile` convenience functions.
 """
-
+from __future__ import absolute_import, division, print_function
 import array
 import codecs
 import os
@@ -20,6 +20,8 @@ import struct
 import sys
 import textwrap
 import io
+
+from . import compat
 
 
 __author__ = 'David Jean Louis <izimobil@gmail.com>'
@@ -36,20 +38,20 @@ default_encoding = 'utf-8'
 
 if sys.version_info < (3,):
     PY3 = False
-    text_type = unicode
+    text_type = compat.ustr
 
     def b(s):
         return s
 
     def u(s):
-        return unicode(s, "unicode_escape")
+        return compat.ustr(s, "unicode_escape")
 
 else:
     PY3 = True
     text_type = str
 
     def b(s):
-        return s.encode("latin-1")
+        return s.encode("utf-8")
 
     def u(s):
         return s
@@ -57,7 +59,7 @@ else:
 # _pofile_or_mofile {{{
 
 
-def _pofile_or_mofile(f, type, **kwargs):
+def _pofile_or_mofile(f, filetype, **kwargs):
     """
     Internal function used by :func:`polib.pofile` and :func:`polib.mofile` to
     honor the DRY concept.
@@ -65,10 +67,10 @@ def _pofile_or_mofile(f, type, **kwargs):
     # get the file encoding
     enc = kwargs.get('encoding')
     if enc is None:
-        enc = detect_encoding(f, type == 'mofile')
+        enc = detect_encoding(f, filetype == 'mofile')
 
     # parse the file
-    kls = type == 'pofile' and _POFileParser or _MOFileParser
+    kls = _POFileParser if filetype == 'pofile' else _MOFileParser
     parser = kls(
         f,
         encoding=enc,
@@ -100,6 +102,7 @@ def _is_file(filename_or_contents):
 # function pofile() {{{
 
 
+# pylint: disable=redefined-outer-name
 def pofile(pofile, **kwargs):
     """
     Convenience function that parses the po or pot file ``pofile`` and returns
@@ -132,6 +135,7 @@ def pofile(pofile, **kwargs):
 # function mofile() {{{
 
 
+# pylint: disable=redefined-outer-name
 def mofile(mofile, **kwargs):
     """
     Convenience function that parses the mo file ``mofile`` and returns a
@@ -286,7 +290,7 @@ class _BaseFile(list):
     classes. This class should **not** be instantiated directly.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *_args, **kwargs):
         """
         Constructor, accepts the following keyword arguments:
 
@@ -307,7 +311,7 @@ class _BaseFile(list):
         """
         list.__init__(self)
         # the opened file handle
-        pofile = kwargs.get('pofile', None)
+        pofile = kwargs.get('pofile', None)  # pylint: disable=redefined-outer-name
         if pofile and _is_file(pofile):
             self.fpath = pofile
         else:
@@ -333,7 +337,7 @@ class _BaseFile(list):
                   [e for e in self if not e.obsolete]
         for entry in entries:
             ret.append(entry.__unicode__(self.wrapwidth))
-        for entry in self.obsolete_entries():
+        for entry in self.obsolete_entries():  # pylint: disable=no-member
             ret.append(entry.__unicode__(self.wrapwidth))
         ret = u('\n').join(ret)
         return ret
@@ -346,7 +350,7 @@ class _BaseFile(list):
             """
             Returns the string representation of the file.
             """
-            return unicode(self).encode(self.encoding)
+            return compat.ustr(self).encode(self.encoding)
 
     def __contains__(self, entry):
         """
@@ -366,6 +370,9 @@ class _BaseFile(list):
 
     def __eq__(self, other):
         return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(str(self))
 
     def append(self, entry):
         """
@@ -543,13 +550,13 @@ class _BaseFile(list):
         Return the binary representation of the file.
         """
         offsets = []
-        entries = self.translated_entries()
+        entries = self.translated_entries()  # pylint: disable=no-member
 
         # the keys are sorted in the .mo file
-        def cmp(_self, other):
+        def cmp(_self, other):  # pylint: disable=unused-variable
             # msgfmt compares entries with msgctxt if it exists
-            self_msgid = _self.msgctxt and _self.msgctxt or _self.msgid
-            other_msgid = other.msgctxt and other.msgctxt or other.msgid
+            self_msgid = _self.msgctxt or _self.msgid
+            other_msgid = other.msgctxt or other.msgid
             if self_msgid > other_msgid:
                 return 1
             elif self_msgid < other_msgid:
@@ -615,7 +622,7 @@ class _BaseFile(list):
         if PY3 and sys.version_info.minor > 1:  # python 3.2 or superior
             output += array.array("i", offsets).tobytes()
         else:
-            output += array.array("i", offsets).tostring()
+            output += array.array("i", offsets).tostring()  # pylint: disable=no-member
         output += ids
         output += strs
         return output
@@ -645,7 +652,7 @@ class POFile(_BaseFile):
         """
         ret, headers = '', self.header.split('\n')
         for header in headers:
-            if not len(header):
+            if not header:
                 ret += "#\n"
             elif header[:1] in [',', ':']:
                 ret += '#%s\n' % header
@@ -769,6 +776,7 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath)
 
+    # pylint: disable=no-self-use,arguments-differ
     def save(self, fpath=None):
         """
         Saves the mofile to ``fpath``.
@@ -780,30 +788,35 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath, 'to_binary')
 
+    # pylint: disable=no-self-use
     def percent_translated(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return 100
 
+    # pylint: disable=no-self-use
     def translated_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return self
 
+    # pylint: disable=no-self-use
     def untranslated_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
+    # pylint: disable=no-self-use
     def fuzzy_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
+    # pylint: disable=no-self-use
     def obsolete_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
@@ -819,7 +832,7 @@ class _BaseEntry(object):
     This class should **not** be instantiated directly.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *_args, **kwargs):
         """
         Constructor, accepts the following keyword arguments:
 
@@ -898,11 +911,15 @@ class _BaseEntry(object):
             """
             Returns the string representation of the entry.
             """
-            return unicode(self).encode(self.encoding)
+            return compat.ustr(self).encode(self.encoding)
 
     def __eq__(self, other):
         return str(self) == str(other)
 
+    def __hash__(self):
+        return hash(str(self))
+
+    # pylint: disable=no-self-use
     def _str_field(self, fieldname, delflag, plural_index, field,
                    wrapwidth=78):
         lines = field.splitlines(True)
@@ -1005,7 +1022,7 @@ class POEntry(_BaseEntry):
             val = getattr(self, c[0])
             if val:
                 for comment in val.split('\n'):
-                    if wrapwidth > 0 and len(comment) + len(c[1]) > wrapwidth:
+                    if len(comment) + len(c[1]) > wrapwidth > 0:
                         ret += textwrap.wrap(
                             comment,
                             wrapwidth,
@@ -1025,7 +1042,7 @@ class POEntry(_BaseEntry):
                 else:
                     filelist.append(fpath)
             filestr = ' '.join(filelist)
-            if wrapwidth > 0 and len(filestr) + 3 > wrapwidth:
+            if len(filestr) + 3 > wrapwidth > 0:
                 # textwrap split words that contain hyphen, this is not
                 # what we want for filenames, so the dirty hack is to
                 # temporally replace hyphens with a char that a file cannot
@@ -1060,6 +1077,7 @@ class POEntry(_BaseEntry):
         ret = u('\n').join(ret)
         return ret
 
+    # pylint: disable=cmp-method,too-many-return-statements
     def __cmp__(self, other):
         """
         Called by comparison operations if rich comparison is not defined.
@@ -1228,7 +1246,8 @@ class _POFileParser(object):
     file format.
     """
 
-    def __init__(self, pofile, *args, **kwargs):
+    # pylint: disable=redefined-outer-name
+    def __init__(self, pofile, *_args, **kwargs):
         """
         Constructor.
 
@@ -1288,6 +1307,7 @@ class _POFileParser(object):
         #     * MS: a msgstr
         #     * MX: a msgstr plural
         #     * MC: a msgid or msgstr continuation line
+        # pylint: disable=redefined-builtin
         all = ['st', 'he', 'gc', 'oc', 'fl', 'ct', 'pc', 'pm', 'pp', 'tc',
                'ms', 'mp', 'mx', 'mi']
 
@@ -1309,6 +1329,7 @@ class _POFileParser(object):
         self.add('mx', ['mi', 'mx', 'mp', 'tc'],                         'mx')
         self.add('mc', ['ct', 'mi', 'mp', 'ms', 'mx', 'pm', 'pp', 'pc'], 'mc')
 
+    # pylint: disable=too-many-branches
     def parse(self):
         """
         Run the state machine, parse the file line by line and call process()
@@ -1661,7 +1682,8 @@ class _MOFileParser(object):
     A class to parse binary mo files.
     """
 
-    def __init__(self, mofile, *args, **kwargs):
+    # pylint: disable=unused-argument,redefined-outer-name
+    def __init__(self, mofile, *_args, **kwargs):
         """
         Constructor.
 
@@ -1796,8 +1818,8 @@ class _MOFileParser(object):
         Private method that unpack n bytes of data using format <fmt>.
         It returns a tuple or a mixed value if the tuple length is 1.
         """
-        bytes = self.fhandle.read(numbytes)
-        tup = struct.unpack(fmt, bytes)
+        content = self.fhandle.read(numbytes)
+        tup = struct.unpack(fmt, content)
         if len(tup) == 1:
             return tup[0]
         return tup
