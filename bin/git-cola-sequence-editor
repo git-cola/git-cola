@@ -3,7 +3,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import sys
 
-sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+realpath = os.path.abspath(os.path.realpath(__file__))
+sys.path.insert(1, os.path.dirname(os.path.dirname(realpath)))
 
 
 if __name__ == '__main__':
