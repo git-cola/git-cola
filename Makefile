@@ -1,10 +1,11 @@
 # The default target of this Makefile is...
+.PHONY: all
 all::
 
 # Development
 # -----------
-# make develop                  # python setup.py develop ~ one-time virtualenv development setup
-# make V=1                      # generate files; V=1 increases verbosity
+# make V=1                      # V=1 increases verbosity
+# make develop                  # pip install --editable .
 # make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
 # make test V=2                 # V=2 increases test verbosity
 # make doc                      # build docs
@@ -19,8 +20,7 @@ all::
 # ------------
 # make pot      # update main translation template
 # make po       # merge translations
-# make mo       # generate message files
-# make i18n     # all three of the above
+# make i18n     # make pot + make po
 #
 # Installation
 # ------------
@@ -33,16 +33,13 @@ all::
 #
 # The external commands used by this Makefile are...
 BLACK = black
-CTAGS = ctags
 CP = cp
 FIND = find
 FLAKE8 = flake8
 GREP = grep
 GIT = git
-GZIP = gzip
-LN = ln
-LN_S = $(LN) -s -f
 MARKDOWN = markdown
+MSGMERGE = msgmerge
 MKDIR_P = mkdir -p
 PIP = pip
 PYTHON ?= python
@@ -54,6 +51,7 @@ RMDIR = rmdir
 TAR = tar
 TOX = tox
 XARGS = xargs
+XGETTEXT = xgettext
 
 # Flags
 # -----
@@ -91,7 +89,6 @@ endif
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
-bindir = $(prefix)/bin
 python_version := $(shell $(PYTHON) -c 'import sys; print("%s.%s" % sys.version_info[:2])')
 python_lib = python$(python_version)/site-packages
 pythondir = $(prefix)/lib/$(python_lib)
@@ -106,38 +103,27 @@ include cola/_version.py
 cola_version := $(subst ',,$(VERSION))
 cola_dist := $(cola_base)-$(cola_version)
 
-SETUP ?= $(PYTHON) setup.py
-
 install_args =
 ifdef DESTDIR
 	install_args += --root="$(DESTDIR)"
 	export DESTDIR
 endif
 install_args += --prefix="$(prefix)"
-install_args += --install-scripts="$(bindir)"
-install_args += --single-version-externally-managed
-install_args += --record=build/MANIFEST
 export prefix
 
 PYTHON_DIRS = cola
 PYTHON_DIRS += test
 
 ALL_PYTHON_DIRS = $(PYTHON_DIRS)
-ALL_PYTHON_DIRS += extras
 
 # User customizations
 -include config.mak
 
-.PHONY: all
-all:: build
-
-.PHONY: build
-build::
-	$(SETUP) $(QUIET) $(VERBOSE) build
+all::
 
 .PHONY: install
 install:: all
-	$(SETUP) $(QUIET) $(VERBOSE) install $(install_args)
+	$(PIP) $(QUIET) $(VERBOSE) install $(install_args) .
 
 .PHONY: doc
 doc::
@@ -176,7 +162,6 @@ uninstall::
 	$(RM) "$(DESTDIR)$(prefix)"/share/metainfo/git-cola.appdata.xml
 	$(RM) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps/git-cola.svg
 	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
-	$(RM) "$(DESTDIR)$(prefix)"/share/locale/*/LC_MESSAGES/git-cola.mo
 	$(RM_R) "$(DESTDIR)$(pythondir)"/git_cola-*
 	$(RM_R) "$(DESTDIR)$(pythondir)"/cola
 	$(RMDIR) -p "$(DESTDIR)$(pythondir)" 2>/dev/null || true
@@ -195,7 +180,7 @@ uninstall::
 	$(RMDIR) "$(DESTDIR)$(prefix)" 2>/dev/null || true
 
 .PHONY: test
-test:: all
+test::
 	$(PYTEST) $(PYTEST_FLAGS) $(flags) $(PYTHON_DIRS)
 
 .PHONY: coverage
@@ -207,26 +192,45 @@ clean::
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | $(XARGS) -0 $(RM)
 	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | $(XARGS) -0 $(RM_R)
 	$(RM_R) build dist tags git-cola.app
-	$(RM_R) share/locale
 	$(MAKE) -C share/doc/git-cola clean
 
 # Update i18n files
 .PHONY: i18n
 i18n:: pot
 i18n:: po
-i18n:: mo
 
+# Regenerate git-cola.pot with new translations
 .PHONY: pot
 pot::
-	$(SETUP) build_pot --build-dir=po --no-lang
+	$(XGETTEXT) \
+		--language=Python \
+		--keyword=N_ \
+		--no-wrap \
+		--no-location \
+		--omit-header \
+		--sort-output \
+		--output-dir cola/i18n \
+		--output git-cola.pot \
+		cola/*.py \
+		cola/*/*.py
 
+# Update .po files with new translations from git-cola.pot
 .PHONY: po
 po::
-	$(SETUP) build_pot --build-dir=po
-
-.PHONY: mo
-mo::
-	$(SETUP) build_mo --force
+	for po in cola/i18n/*.po; \
+	do \
+		$(MSGMERGE) \
+			--no-location \
+			--no-wrap \
+			--no-fuzzy-matching \
+			--sort-output \
+			--output-file $$po.new \
+			$$po \
+			cola/i18n/git-cola.pot \
+			&& \
+		mv $$po.new $$po; \
+	\
+	done
 
 .PHONY: git-cola.app
 git-cola.app::
@@ -287,11 +291,11 @@ format::
 	$(GREP) -v ^qtpy | \
 	$(XARGS) $(BLACK) --skip-string-normalization
 
-# Run "make develop" from inside a newly created virtualenv to setup the build system
-# using "python setup.py develop".
+# Run "make develop" from inside a newly created virtualenv to create an
+# editable installation.
 .PHONY: develop
 develop::
-	$(SETUP) develop
+	$(PIP) install --editable .
 
 .PHONY: requirements
 requirements::

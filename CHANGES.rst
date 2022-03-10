@@ -16,6 +16,11 @@ Breaking Changes
   (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
 * The build system was switched to `setuptools` and no longer depends on `distutils`.
+  ``python setup.py {build,install,build_pot,build_mo}`` are no longer provided.
+  Use the https://pypa-build.readthedocs.io/en/stable/installation.html
+  ``python -m build`` tool to generate sdist and wheel distributions,
+  and ``pip install`` to install Git Cola.
+  (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
 * The `git-cola`, `git-dag` and `git-cola-sequence-editor` commands are now installed
   using setuptools entry points.
@@ -30,6 +35,9 @@ Breaking Changes
 * The `share/git-cola/lib` private Python modules directory no longer exists.
 
 * The `NO_VENDOR_LIBS` and `NO_PRIVATE_LIBS` Makefile options are no longer necessary.
+
+* The `share/git-cola` filesystem namespace no longer exists. All of cola's package data
+  is distributed alongside the `cola` module as package data.
 
 
 Usability, bells and whistles

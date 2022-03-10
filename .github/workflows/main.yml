@@ -56,22 +56,17 @@ jobs:
           # Runtime dependencies (optional)
           sudo apt-get install \
               python3-send2trash
-          python -m venv --system-site-packages env
           source env/bin/activate
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
           make develop
 
       - name: Build Translations
         run: |
-          source env/bin/activate
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
           make i18n
 
       - name: Run Unit Tests
         run: |
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
-          export SETUPTOOLS_USE_DISTUTILS=stdlib
           make test
 
       - name: Run Linter

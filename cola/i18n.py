@@ -136,8 +136,6 @@ def _check_win32_locale():
             break
     else:
         lang = None
-        import locale  # pylint: disable=all
-
         try:
             import ctypes  # pylint: disable=all
         except ImportError:
