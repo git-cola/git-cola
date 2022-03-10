@@ -348,7 +348,7 @@ class ApplyPatches(ContextCommand):
 
 
 class Archive(ContextCommand):
-    """"Export archives using the "git archive" command"""
+    """ "Export archives using the "git archive" command"""
 
     def __init__(self, context, ref, fmt, prefix, filename):
         super(Archive, self).__init__(context)
@@ -2512,6 +2512,7 @@ class StageModifiedAndUntracked(StageCarefully):
 
 class StageOrUnstageAll(ContextCommand):
     """If the selection is staged, unstage it, otherwise stage"""
+
     @staticmethod
     def name():
         return N_('Stage / Unstage All')

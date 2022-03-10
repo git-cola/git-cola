@@ -58,8 +58,7 @@ def test_diff():
     assert len(hunks[2].lines) == 16
     assert hunks[2].lines[0] == '@@ -43,11 +52,10 @@ class DiffParser(object):\n'
     assert hunks[2].lines[-1] == (
-        '         """Writes a new diff corresponding to the user\'s'
-        ' selection."""\n'
+        '         """Writes a new diff corresponding to the user\'s' ' selection."""\n'
     )
 
 
@@ -75,12 +74,7 @@ def test_diff_at_start():
     assert hunks[0].new_start == 1
     assert hunks[0].new_count == 4
     assert parser.generate_patch(1, 3) == (
-        '--- a/foo bar/a\n'
-        '+++ b/foo bar/a\n'
-        '@@ -1 +1,3 @@\n'
-        ' bar\n'
-        '+a\n'
-        '+b\n'
+        '--- a/foo bar/a\n' '+++ b/foo bar/a\n' '@@ -1 +1,3 @@\n' ' bar\n' '+a\n' '+b\n'
     )
     assert parser.generate_patch(0, 4) == (
         '--- a/foo bar/a\n'
@@ -120,18 +114,10 @@ def test_diff_that_empties_file():
     assert hunks[0].new_start == 0
     assert hunks[0].new_count == 0
     assert parser.generate_patch(1, 1) == (
-        '--- a/filename\n'
-        '+++ b/filename\n'
-        '@@ -1,2 +1 @@\n'
-        '-first\n'
-        ' second\n'
+        '--- a/filename\n' '+++ b/filename\n' '@@ -1,2 +1 @@\n' '-first\n' ' second\n'
     )
     assert parser.generate_patch(0, 2) == (
-        '--- a/filename\n'
-        '+++ b/filename\n'
-        '@@ -1,2 +0,0 @@\n'
-        '-first\n'
-        '-second\n'
+        '--- a/filename\n' '+++ b/filename\n' '@@ -1,2 +0,0 @@\n' '-first\n' '-second\n'
     )
 
 

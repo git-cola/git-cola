@@ -108,7 +108,7 @@ class MainView(standard.MainWindow):
             'Favorites',
             N_('Favorites'),
             self,
-            fn=lambda dock: bookmarks.bookmark(context, dock)
+            fn=lambda dock: bookmarks.bookmark(context, dock),
         )
         bookmarkswidget = self.bookmarksdock.widget()
         qtutils.hide_dock(self.bookmarksdock)
@@ -117,7 +117,7 @@ class MainView(standard.MainWindow):
             'Recent',
             N_('Recent'),
             self,
-            fn=lambda dock: bookmarks.recent(context, dock)
+            fn=lambda dock: bookmarks.recent(context, dock),
         )
         recentwidget = self.recentdock.widget()
         qtutils.hide_dock(self.recentdock)
@@ -125,10 +125,7 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdock = create_dock(
-            'Branches',
-            N_('Branches'),
-            self,
-            fn=partial(branch.BranchesWidget, context)
+            'Branches', N_('Branches'), self, fn=partial(branch.BranchesWidget, context)
         )
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
@@ -140,7 +137,7 @@ class MainView(standard.MainWindow):
             'Submodules',
             N_('Submodules'),
             self,
-            fn=partial(submodules.SubmodulesWidget, context)
+            fn=partial(submodules.SubmodulesWidget, context),
         )
         self.submoduleswidget = self.submodulesdock.widget()
 

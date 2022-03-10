@@ -342,12 +342,7 @@ def test_version():
 def test_stdout():
     """Test overflowing the stdout buffer"""
     # Write to stdout only
-    code = (
-        r'import sys;'
-        r'value = "\0" * %d;'
-        r'sys.stdout.write(value);'
-    ) % BUFFER_SIZE
-
+    code = r'import sys; value = "\0" * %d; sys.stdout.write(value);' % BUFFER_SIZE
     status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
 
     assert status == 0
@@ -364,9 +359,7 @@ def test_stderr():
     """Test that stderr is seen"""
     # Write to stderr and capture it
     code = (
-        r'import sys;'
-        r'value = "\0" * %d;'
-        r'sys.stderr.write(value);'
+        r'import sys;' r'value = "\0" * %d;' r'sys.stderr.write(value);'
     ) % BUFFER_SIZE
 
     status, out, err = git.Git.execute(['python', '-c', code], _raw=True)

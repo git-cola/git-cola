@@ -5,6 +5,7 @@ import stat
 import tempfile
 
 import pytest
+
 try:
     from unittest.mock import Mock, patch  # noqa pylint: disable=unused-import
 except ImportError:

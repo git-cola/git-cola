@@ -327,7 +327,7 @@ The test suite can be found in the [test](test) directory.
 Commits and pull requests are automatically tested for code quality
 using [GitHub Actions](https://github.com/git-cola/git-cola/actions/workflows/main.yml).
 
-Auto-format `po/*.po` files before committing when updating translations:
+Auto-format `cola/i18n/*.po` files before committing when updating translations:
 
     $ make po
 
@@ -342,8 +342,7 @@ Git Cola installs its modules into the default Python site-packages directory
 
 While end-users can use `pip install git-cola` to install Git Cola, distribution
 packagers should use the `make prefix=/usr` install process. Git Cola's `Makefile` wraps
-`python setup.py install --single-version-externally-managed` to provide a
-packaging-friendly `make install` target.
+`pip install --prefix=<prefix>` to provide a packaging-friendly `make install` target.
 
 
 # Windows (Continued)
