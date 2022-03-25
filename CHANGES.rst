@@ -50,6 +50,9 @@ Usability, bells and whistles
 Fixes
 -----
 
+* Staging conflicted binary files has been fixed to avoid Unicode decoding errors.
+  (`#1189 <https://github.com/git-cola/git-cola/issues/1189>`_)
+
 * Ensure that secure permissions are used when creating temporary files.
   (`#1209 <https://github.com/git-cola/git-cola/pull/1209>`_)
 
