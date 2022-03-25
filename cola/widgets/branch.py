@@ -389,7 +389,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_async(self, action, args, kwarg=None):
         if kwarg is None:
             kwarg = {}
-        task = AsyncGitActionTask(self, action, args, kwarg)
+        task = AsyncGitActionTask(self.git_helper, action, args, kwarg)
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )
