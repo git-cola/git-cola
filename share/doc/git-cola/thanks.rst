@@ -82,6 +82,7 @@ Thanks
 * fu7mu4
 * Garoe Dorta
 * Geoffrey van Wyk
+* Georg Limbach
 * geotavros
 * `Git Hackers <http://git-scm.com/about>`_
 * green-eyed-bear
