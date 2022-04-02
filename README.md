@@ -158,46 +158,30 @@ but it has not been updated for a while.
     # build from source
     cd /usr/ports/devel/git-cola && make clean install
 
+
 ## macOS
 
-[Homebrew](https://brew.sh/) is the easiest way to install
-Git Cola's PyQt5 dependencies.  We will use Homebrew to install
-the git-cola recipe, but build our own .app bundle from source.
+You can install Git Cola using the same `Makefile` steps above to install from source.
 
-[Sphinx](http://sphinx-doc.org/latest/install.html) is used to build the
-documentation.
+### git-cola.app
 
-    brew install sphinx-doc
+If you'd like to build a `git-cola.app` bundle for `/Applications` run this command:
+
+    make git-cola.app
+
+### Homebrew
+
+An easy way to install Git Cola is to use [Homebrew](https://brew.sh/) .
+Use Homebrew to install the git-cola recipe:
+
     brew install git-cola
 
-Once brew has installed `git-cola` you can:
+### Updating macOS and Homebrew
 
-1. Clone the git-cola repositroy
+Updating macOS can often break Homebrew-managed software.
 
-    git clone https://github.com/git-cola/git-cola
-    cd git-cola
-
-2. Build the git-cola.app application bundle
-
-    make \
-        PYTHON=$(brew --prefix python3)/bin/python3 \
-        PYTHON_CONFIG=$(brew --prefix python3)/bin/python3-config \
-        SPHINXBUILD=$(brew --prefix sphinx-doc)/bin/sphinx-build \
-        git-cola.app
-
-3. Copy it to /Applications
-
-    rsync -ar --delete git-cola.app/ /Applications/git-cola.app/
-
-Newer versions of Homebrew install their own `python3` installation and
-provide the `PyQt5` modules for `python3` only.  You have to use
-`python3 ./bin/git-cola` when running from the source tree.
-
-### Upgrading using Homebrew
-
-If you upgrade using `brew` then it is recommended that you re-install
-Git Colaa's dependencies when upgrading.  Re-installing ensures that the
-Python modules provided by Homebrew will be properly set up.
+If you upgrade your macOS version and Git Cola no longer runs then then it is
+recommended that you re-install Git Cola's dependencies after upgrading.
 
 A quick fix when upgrading to newer versions of XCode or macOS is to
 reinstall pyqt5.
@@ -225,6 +209,7 @@ scratch using the instructions below should get things back in shape.
 
     # re-install git-cola and its dependencies
     brew install git-cola
+
 
 ## Windows
 

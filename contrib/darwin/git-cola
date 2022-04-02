@@ -1,10 +1,15 @@
 #!/bin/sh
-# Setup PATH for git-osx-installer and other common locations
-PATH="$PATH":/usr/local/bin:/usr/local/git/bin
-export PATH
 
 # $0 = Contents/MacOS/git-cola
+# macos = Contents/MacOS
 macos="$(dirname "$0")"
+# contents = Contents
 contents="$(dirname "$macos")"
+# resources = Contents/Resources
+resources="${contents}/Resources"
 
-exec "$contents/Resources/bin/git-cola" --prompt
+# Setup PATH for git-osx-installer and other common locations
+PATH="${resources}/bin:${PATH}:/usr/local/bin:/usr/local/git/bin"
+export PATH
+
+exec python "${contents}/Resources/bin/git-cola" --prompt

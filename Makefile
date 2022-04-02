@@ -7,7 +7,7 @@ all::
 # make V=1                      # V=1 increases verbosity
 # make develop                  # pip install --editable .
 # make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
-# make test V=2                 # V=2 increases test verbosity
+# make test V=2                 # run tests; V=2 increases test verbosity
 # make doc                      # build docs
 # make flake8                   # python style checks
 # make pylint [color=1]         # run pylint; color=1 colorizes output
@@ -27,10 +27,6 @@ all::
 # make prefix=<path> install
 # DESTDIR is also supported.
 #
-# To disable distutil's replacement of "#!/usr/bin/env python" with
-# the path to the build environment's python, pass USE_ENV_PYTHON=1
-# when invoking make.
-#
 # The external commands used by this Makefile are...
 BLACK = black
 CP = cp
@@ -43,6 +39,7 @@ MSGMERGE = msgmerge
 MKDIR_P = mkdir -p
 PIP = pip
 PYTHON ?= python
+PYTHON3 ?= python3
 PYLINT = $(PYTHON) -B -m pylint
 PYTEST = $(PYTHON) -B -m pytest
 RM = rm -f
@@ -97,6 +94,7 @@ pythondir = $(prefix)/lib/$(python_lib)
 cola_base := git-cola
 cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
+cola_app_resources = $(cola_app)/Contents/Resources
 
 # Read $(VERSION) from cola/_version.py and strip quotes.
 include cola/_version.py
@@ -232,15 +230,23 @@ po::
 	\
 	done
 
+# Build a git-cola.app bundle.
 .PHONY: git-cola.app
 git-cola.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
-	$(MKDIR_P) $(cola_app)/Contents/Resources
-	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo \
-	$(cola_app)/Contents
+	$(MKDIR_P) $(cola_app_resources)
+	$(PYTHON3) -m venv $(cola_app_resources)
+	$(cola_app_resources)/bin/pip install --requirement requirements/requirements.txt
+	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-optional.txt
+	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-dev.txt
+
+	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
-	$(MAKE) prefix=$(cola_app)/Contents/Resources install install-doc
+	$(MAKE) PIP=$(cola_app_resources)/bin/pip \
+		prefix=$(cola_app_resources) install
+	$(MAKE) SPHINXBUILD=$(cola_app_resources)/bin/sphinx-build \
+		prefix=$(cola_app_resources) install-doc
 
 .PHONY: app-tarball
 app-tarball:: git-cola.app
