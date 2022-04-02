@@ -8,7 +8,6 @@
 /.eggs
 /env*
 /git-cola.app
-/git_cola.egg-info
 /local
 /Meta
 /pip-wheel-metadata
@@ -22,6 +21,7 @@
 __pycache__
 .DS_Store
 .noseids
+*.egg-info
 *.gz
 *.py[cod]
 *.qm
