@@ -43,11 +43,11 @@ class Theme(object):
         if not palette_dark and not self.is_dark:
             return app_palette
         if self.is_dark:
-            bg_color = QtGui.QColor("#202025")
+            bg_color = QtGui.QColor('#202025')
         else:
-            bg_color = QtGui.QColor("#edeef3")
+            bg_color = QtGui.QColor('#edeef3')
 
-        txt_color = QtGui.QColor("#777")
+        txt_color = QtGui.QColor('#777')
         palette = QPalette(bg_color)
         palette.setColor(QPalette.Base, bg_color)
         palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
@@ -130,11 +130,11 @@ class Theme(object):
         color_rgb = qtutils.rgb_css(color)
 
         if self.is_dark:
-            background = "#2e2f30"
-            field = "#383a3c"
-            grayed = "#06080a"
-            button_text = "#000000"
-            field_text = "#d0d0d0"
+            background = '#2e2f30'
+            field = '#383a3c'
+            grayed = '#06080a'
+            button_text = '#000000'
+            field_text = '#d0d0d0'
             darker = qtutils.hsl_css(
                 color.hslHueF(), color.hslSaturationF() * 0.3, color.lightnessF() * 1.3
             )
@@ -145,11 +145,11 @@ class Theme(object):
                 color.hslHueF(), color.hslSaturationF() * 0.7, color.lightnessF() * 0.7
             )
         else:
-            background = "#edeef3"
-            field = "#ffffff"
-            grayed = "#a2a2b0"
-            button_text = "#ffffff"
-            field_text = "#000000"
+            background = '#edeef3'
+            field = '#ffffff'
+            grayed = '#a2a2b0'
+            button_text = '#ffffff'
+            field_text = '#000000'
             darker = qtutils.hsl_css(
                 color.hslHueF(), color.hslSaturationF(), color.lightnessF() * 0.4
             )
@@ -531,13 +531,13 @@ class Theme(object):
         If user has deleted file, use default style"""
 
         # get user path Windows
-        userpath = os.getenv("USERPROFILE")
+        userpath = os.getenv('USERPROFILE')
         # if not found Windows, try Unix
         if not userpath:
-            userpath = os.getenv("HOME")
+            userpath = os.getenv('HOME')
         # check if path exists
         filepath = os.path.join(
-            userpath, ".config", "git-cola", "themes", self.name + ".qss"
+            userpath, '.config', 'git-cola', 'themes', self.name + '.qss'
         )
         if not os.path.exists(filepath):
             return self.style_sheet_default(app_palette)
@@ -548,53 +548,53 @@ class Theme(object):
 
 def get_all_themes():
     themes = [
-        Theme("default", N_("Default"), False, EStylesheet.DEFAULT, None),
+        Theme('default', N_('Default'), False, EStylesheet.DEFAULT, None),
         Theme(
-            "flat-light-blue", N_("Flat light blue"), False, EStylesheet.FLAT, "#5271cc"
+            'flat-light-blue', N_('Flat light blue'), False, EStylesheet.FLAT, '#5271cc'
         ),
         Theme(
-            "flat-light-red", N_("Flat light red"), False, EStylesheet.FLAT, "#cc5452"
+            'flat-light-red', N_('Flat light red'), False, EStylesheet.FLAT, '#cc5452'
         ),
         Theme(
-            "flat-light-grey", N_("Flat light grey"), False, EStylesheet.FLAT, "#707478"
+            'flat-light-grey', N_('Flat light grey'), False, EStylesheet.FLAT, '#707478'
         ),
         Theme(
-            "flat-light-green",
-            N_("Flat light green"),
+            'flat-light-green',
+            N_('Flat light green'),
             False,
             EStylesheet.FLAT,
-            "#42a65c",
+            '#42a65c',
         ),
         Theme(
-            "flat-dark-blue", N_("Flat dark blue"), True, EStylesheet.FLAT, "#5271cc"
+            'flat-dark-blue', N_('Flat dark blue'), True, EStylesheet.FLAT, '#5271cc'
         ),
-        Theme("flat-dark-red", N_("Flat dark red"), True, EStylesheet.FLAT, "#cc5452"),
+        Theme('flat-dark-red', N_('Flat dark red'), True, EStylesheet.FLAT, '#cc5452'),
         Theme(
-            "flat-dark-grey", N_("Flat dark grey"), True, EStylesheet.FLAT, "#aaaaaa"
+            'flat-dark-grey', N_('Flat dark grey'), True, EStylesheet.FLAT, '#aaaaaa'
         ),
         Theme(
-            "flat-dark-green", N_("Flat dark green"), True, EStylesheet.FLAT, "#42a65c"
+            'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
         ),
     ]
 
     # get user path Windows
-    userpath = os.getenv("USERPROFILE")
+    userpath = os.getenv('USERPROFILE')
     # if not found Windows, try Unix
     if not userpath:
-        userpath = os.getenv("HOME")
+        userpath = os.getenv('HOME')
     # check if variable was set
     if not userpath:
         return themes
     # check if path exists
-    path = os.path.join(userpath, ".config", "git-cola", "themes")
+    path = os.path.join(userpath, '.config', 'git-cola', 'themes')
     if not os.path.exists(path):
         return themes
 
     # get only files with extension .qss
     for root, dirs, files in os.walk(path):
         for file in files:
-            name, ext = file.split(".")
-            if ext == "qss":
+            name, ext = file.split('.')
+            if ext == 'qss':
                 themes.append(
                     Theme(name, N_(name.capitalize()), None, EStylesheet.CUSTOM, None)
                 )
