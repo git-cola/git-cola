@@ -1,5 +1,6 @@
-"""Themes generators"""
-from __future__ import absolute_import, division, print_function, unicode_literals
+"""Provides themes generator"""
+from __future__ import absolute_import, division, unicode_literals
+import os
 
 from qtpy import QtGui
 
@@ -12,12 +13,13 @@ from . import qtutils
 class EStylesheet(object):
     DEFAULT = 1
     FLAT = 2
+    CUSTOM = 3
 
 
 class Theme(object):
-    def __init__(
-        self, name, hr_name, is_dark, style_sheet=EStylesheet.DEFAULT, main_color=None
-    ):
+
+    def __init__(self, name, hr_name, is_dark,
+                 style_sheet=EStylesheet.DEFAULT, main_color=None):
         self.name = name
         self.hr_name = hr_name
         self.is_dark = is_dark
@@ -25,7 +27,9 @@ class Theme(object):
         self.main_color = main_color
 
     def build_style_sheet(self, app_palette):
-        if self.style_sheet == EStylesheet.FLAT:
+        if self.style_sheet == EStylesheet.CUSTOM:
+            return self.style_sheet_custom(app_palette)
+        elif self.style_sheet == EStylesheet.FLAT:
             return self.style_sheet_flat()
         else:
             return self.style_sheet_default(app_palette)
@@ -75,7 +79,6 @@ class Theme(object):
                 border: %(checkbox_border)spx solid %(shadow_rgb)s;
                 background: %(base_rgb)s;
             }
-
             QRadioButton::indicator {
                 width: %(radio_size)spx;
                 height: %(radio_size)spx;
@@ -91,11 +94,9 @@ class Theme(object):
                 border-radius: %(radio_radius)spx;
                 background: %(base_rgb)s;
             }
-
             QSplitter::handle:hover {
                 background: %(highlight_rgb)s;
             }
-
             QMainWindow::separator {
                 background: %(window_rgb)s;
                 width: %(separator)spx;
@@ -104,7 +105,6 @@ class Theme(object):
             QMainWindow::separator:hover {
                 background: %(highlight_rgb)s;
             }
-
             """ % dict(
             separator=defs.separator,
             window_rgb=window_rgb,
@@ -163,7 +163,6 @@ class Theme(object):
                 show-decoration-selected: 1;
                 spacing: 2px;
             }
-
             /* Focused widths get a thin border */
             QTreeView:focus, QListView:focus,
             QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
@@ -171,7 +170,6 @@ class Theme(object):
                 border-style: solid;
                 border-color: %(focus)s;
             }
-
             QWidget:disabled {
                 border-color: %(grayed)s;
                 color: %(grayed)s;
@@ -200,7 +198,6 @@ class Theme(object):
             DockTitleBarWidget {
                 padding-bottom: 4px;
             }
-
             /* buttons */
             QPushButton[flat="false"] {
                 background-color: %(button)s;
@@ -234,7 +231,6 @@ class Theme(object):
             QPushButton[flat="true"]:disabled {
                 background-color: transparent;
             }
-
             /*menus*/
             QMenuBar {
                 background-color: %(background)s;
@@ -258,7 +254,6 @@ class Theme(object):
                 background: %(background)s;
                 height: 1px;
             }
-
             /* combo box */
             QComboBox {
                 background-color: %(field)s;
@@ -296,7 +291,6 @@ class Theme(object):
                 background-color: %(darker)s;
                 color: %(button_text)s;
             }
-
             /* MainWindow separator */
             QMainWindow::separator {
                 width: %(separator)spx;
@@ -305,7 +299,6 @@ class Theme(object):
             QMainWindow::separator:hover {
                 background: %(focus)s;
             }
-
             /* scroll bar */
             QScrollBar {
                 background-color: %(field)s;
@@ -383,7 +376,6 @@ class Theme(object):
                 border-color: %(darker)s %(button)s
                               %(button)s %(button)s;
             }
-
             /* tab bar (stacked & docked widgets) */
             QTabBar::tab {
                 background: transparent;
@@ -395,7 +387,6 @@ class Theme(object):
             QTabBar::tab:selected {
                 background: %(grayed)s;
             }
-
             /* check box */
             QCheckBox {
                 spacing: 8px;
@@ -426,7 +417,6 @@ class Theme(object):
             QCheckBox::indicator:checked:pressed {
                 background-color: %(field)s;
             }
-
             /* radio checkbox */
             QRadioButton {
                 spacing: 8px;
@@ -436,7 +426,6 @@ class Theme(object):
                 height: 0.75em;
                 width: 0.75em;
             }
-
             /* progress bar */
             QProgressBar {
                 background-color: %(field)s;
@@ -446,7 +435,6 @@ class Theme(object):
                 background-color: %(button)s;
                 width: 1px;
             }
-
             /* spin box */
             QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
                 background-color: transparent;
@@ -472,12 +460,10 @@ class Theme(object):
                 border-color: %(button)s %(field)s %(field)s %(field)s;
                 border-width: 4px 3px 0 3px;
             }
-
             /* dialogs */
             QDialog > QFrame {
                 margin: 2px 2px 2px 2px;
             }
-
             /* headers */
             QHeaderView {
                 color: %(field_text)s;
@@ -492,7 +478,6 @@ class Theme(object):
                 color: %(field_text)s;
                 padding-left: 4px;
             }
-
             /* headers */
             QHeaderView {
                 color: %(field_text)s;
@@ -507,7 +492,6 @@ class Theme(object):
                 color: %(field_text)s;
                 padding-left: 4px;
             }
-
             """ % dict(
             background=background,
             field=field,
@@ -521,37 +505,67 @@ class Theme(object):
             focus=focus,
         )
 
+    def style_sheet_custom(self, app_palette):
+        """Get custom style sheet.
+        File name is saved in variable self.name.
+        If user has deleted file, use default style"""
+
+        # get user path Windows
+        userpath = os.getenv('USERPROFILE')
+        # if not found Windows, try Unix
+        if not userpath:
+            userpath = os.getenv('HOME')
+        # check if path exists
+        filepath = os.path.join(userpath, '.config', 'git-cola', 'themes', self.name + '.qss')
+        if not os.path.exists(filepath):
+            return self.style_sheet_default(app_palette)
+
+        with open(filepath) as file:
+            return file.read()
+
 
 def get_all_themes():
-    return [
-        Theme('default', N_('Default'), False, EStylesheet.DEFAULT, None),
-        Theme(
-            'flat-light-blue', N_('Flat light blue'), False, EStylesheet.FLAT, '#5271cc'
-        ),
-        Theme(
-            'flat-light-red', N_('Flat light red'), False, EStylesheet.FLAT, '#cc5452'
-        ),
-        Theme(
-            'flat-light-grey', N_('Flat light grey'), False, EStylesheet.FLAT, '#707478'
-        ),
-        Theme(
-            'flat-light-green',
-            N_('Flat light green'),
-            False,
-            EStylesheet.FLAT,
-            '#42a65c',
-        ),
-        Theme(
-            'flat-dark-blue', N_('Flat dark blue'), True, EStylesheet.FLAT, '#5271cc'
-        ),
-        Theme('flat-dark-red', N_('Flat dark red'), True, EStylesheet.FLAT, '#cc5452'),
-        Theme(
-            'flat-dark-grey', N_('Flat dark grey'), True, EStylesheet.FLAT, '#aaaaaa'
-        ),
-        Theme(
-            'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
-        ),
+    themes = [
+        Theme('default', N_('Default'), False,
+              EStylesheet.DEFAULT, None),
+        Theme('flat-light-blue', N_('Flat light blue'),
+              False, EStylesheet.FLAT, '#5271cc'),
+        Theme('flat-light-red', N_('Flat light red'),
+              False, EStylesheet.FLAT, '#cc5452'),
+        Theme('flat-light-grey', N_('Flat light grey'),
+              False, EStylesheet.FLAT, '#707478'),
+        Theme('flat-light-green', N_('Flat light green'),
+              False, EStylesheet.FLAT, '#42a65c'),
+        Theme('flat-dark-blue', N_('Flat dark blue'),
+              True, EStylesheet.FLAT, '#5271cc'),
+        Theme('flat-dark-red', N_('Flat dark red'),
+              True, EStylesheet.FLAT, '#cc5452'),
+        Theme('flat-dark-grey', N_('Flat dark grey'),
+              True, EStylesheet.FLAT, '#aaaaaa'),
+        Theme('flat-dark-green', N_('Flat dark green'),
+              True, EStylesheet.FLAT, '#42a65c')
     ]
+
+    # get user path Windows
+    userpath = os.getenv('USERPROFILE')
+    # if not found Windows, try Unix
+    if not userpath:
+        userpath = os.getenv('HOME')
+    # check if variable was set
+    if not userpath:
+        return themes
+    # check if path exists
+    path = os.path.join(userpath, '.config', 'git-cola', 'themes')
+    if not os.path.exists(path):
+        return themes
+
+    # get only files with extension .qss
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            name, ext = file.split('.')
+            if ext == 'qss':
+                themes.append(Theme(name, N_(name.capitalize()), None, EStylesheet.CUSTOM, None))
+    return themes
 
 
 def options():
