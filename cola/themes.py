@@ -8,7 +8,7 @@ from .i18n import N_
 from .widgets import defs
 from . import icons
 from . import qtutils
-
+from . import resources
 
 class EStylesheet(object):
     DEFAULT = 1
@@ -30,11 +30,12 @@ class Theme(object):
         if self.style_sheet == EStylesheet.CUSTOM:
             return self.style_sheet_custom(app_palette)
         elif self.style_sheet == EStylesheet.FLAT:
+            print(self.style_sheet_flat())
             return self.style_sheet_flat()
         else:
             return self.style_sheet_default(app_palette)
 
-    def build_palette(self, app_palette):
+    def build_palette(self, app_palette) -> QtGui.QPalette:
         QPalette = QtGui.QPalette
         palette_dark = app_palette.color(QPalette.Base).lightnessF() < 0.5
 
@@ -530,15 +531,8 @@ class Theme(object):
         File name is saved in variable self.name.
         If user has deleted file, use default style"""
 
-        # get user path Windows
-        userpath = os.getenv('USERPROFILE')
-        # if not found Windows, try Unix
-        if not userpath:
-            userpath = os.getenv('HOME')
         # check if path exists
-        filepath = os.path.join(
-            userpath, '.config', 'git-cola', 'themes', self.name + '.qss'
-        )
+        filepath = resources.config_home('themes', self.name + '.qss')
         if not os.path.exists(filepath):
             return self.style_sheet_default(app_palette)
 
@@ -577,16 +571,8 @@ def get_all_themes():
         ),
     ]
 
-    # get user path Windows
-    userpath = os.getenv('USERPROFILE')
-    # if not found Windows, try Unix
-    if not userpath:
-        userpath = os.getenv('HOME')
-    # check if variable was set
-    if not userpath:
-        return themes
-    # check if path exists
-    path = os.path.join(userpath, '.config', 'git-cola', 'themes')
+    # check if themes path exists in user folder
+    path = resources.config_home('themes')
     if not os.path.exists(path):
         return themes
 
