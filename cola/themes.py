@@ -16,7 +16,6 @@ class EStylesheet(object):
     DEFAULT = 1
     FLAT = 2
     CUSTOM = 3  # Files located in ~/.config/git-cola/themes/*.qss
-    SYSTEM = 4  # Application qt5ct (Qt5 Configuration Tool)
 
 
 class Theme(object):
@@ -577,7 +576,6 @@ def get_all_themes():
         Theme(
             'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
         ),
-        Theme('system', N_('System'), False, EStylesheet.SYSTEM, None),
     ]
 
     # check if themes path exists in user folder

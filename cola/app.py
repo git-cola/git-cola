@@ -200,8 +200,6 @@ class ColaApplication(object):
         if theme_str is None:
             theme_str = self.context.cfg.get('cola.theme', default='default')
         theme = themes.find_theme(theme_str)
-        if theme.style_sheet == themes.EStylesheet.SYSTEM:
-            return
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
         if theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))
