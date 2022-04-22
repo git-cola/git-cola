@@ -579,8 +579,8 @@ def get_all_themes():
     # get only files with extension .qss
     for root, dirs, files in os.walk(path):
         for file in files:
-            name, ext = file.split('.')
-            if ext == 'qss':
+            name, ext = os.path.splitext(file)
+            if ext == '.qss':
                 themes.append(
                     Theme(name, N_(name.capitalize()), None, EStylesheet.CUSTOM, None)
                 )
