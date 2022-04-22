@@ -577,7 +577,7 @@ def get_all_themes():
         Theme(
             'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
         ),
-        Theme('system', N_('System'), None, EStylesheet.SYSTEM, None),
+        Theme('system', N_('System'), False, EStylesheet.SYSTEM, None),
     ]
 
     # check if themes path exists in user folder
