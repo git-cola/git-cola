@@ -31,7 +31,6 @@ class Theme(object):
         if self.style_sheet == EStylesheet.CUSTOM:
             return self.style_sheet_custom(app_palette)
         elif self.style_sheet == EStylesheet.FLAT:
-            print(self.style_sheet_flat())
             return self.style_sheet_flat()
         else:
             return self.style_sheet_default(app_palette)
