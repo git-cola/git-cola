@@ -583,9 +583,7 @@ def get_all_themes():
         for file in files:
             name, ext = os.path.splitext(file)
             if ext == '.qss':
-                themes.append(
-                    Theme(name, N_(name.capitalize()), False, EStylesheet.CUSTOM, None)
-                )
+                themes.append(Theme(name, N_(name), False, EStylesheet.CUSTOM, None))
     return themes
 
 
