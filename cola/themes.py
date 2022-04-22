@@ -570,9 +570,7 @@ def get_all_themes():
         Theme(
             'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
         ),
-        Theme(
-            'system', N_('System'), None, EStylesheet.SYSTEM, None
-        ),
+        Theme('system', N_('System'), None, EStylesheet.SYSTEM, None),
     ]
 
     # check if themes path exists in user folder
@@ -586,7 +584,7 @@ def get_all_themes():
             name, ext = os.path.splitext(file)
             if ext == '.qss':
                 themes.append(
-                    Theme(name, N_(name.capitalize()), None, EStylesheet.CUSTOM, None)
+                    Theme(name, N_(name.capitalize()), False, EStylesheet.CUSTOM, None)
                 )
     return themes
 
