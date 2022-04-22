@@ -1,6 +1,7 @@
 """Themes generators"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
+import sys
 
 from qtpy import QtGui
 
@@ -537,8 +538,14 @@ class Theme(object):
         if not os.path.exists(filepath):
             return self.style_sheet_default(app_palette)
 
-        with open(filepath) as file:
-            return file.read()
+        try:
+            with open(filepath) as fp:
+                return fp.read()
+        except (IOError, OSError) as err:
+            sys.stderr.write(
+                'warning: unable to read custom theme %s: %s\n' % (filepath, err)
+            )
+            return self.style_sheet_default(app_palette)
 
 
 def get_all_themes():
