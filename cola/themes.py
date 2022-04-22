@@ -10,6 +10,7 @@ from . import icons
 from . import qtutils
 from . import resources
 
+
 class EStylesheet(object):
     DEFAULT = 1
     FLAT = 2
@@ -35,7 +36,7 @@ class Theme(object):
         else:
             return self.style_sheet_default(app_palette)
 
-    def build_palette(self, app_palette) -> QtGui.QPalette:
+    def build_palette(self, app_palette):
         QPalette = QtGui.QPalette
         palette_dark = app_palette.color(QPalette.Base).lightnessF() < 0.5
 
