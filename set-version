@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
 import argparse
+import datetime
 import os
 import sys
 
@@ -17,6 +17,8 @@ def main():
     #CreateReleaseNotes(version).update()
     PyVersion(version).update()
     PyNsistVersion(version).update()
+    GitColaAppDataVersion(version).update()
+    GitDagAppDataVersion(version).update()
     # Old workflow: updated relnotes.rst with the latest relnotes/vX.Y.rst
     #RelnotesVersion(version).update()
     RelnotesStableVersion(version).update()
@@ -178,7 +180,35 @@ class PyVersion(Version):
         return "VERSION = '%s'" % self.num_version
 
 
+class AppDataVersion(Version):
+    """Append tagged versions to the *.appdata.xml files"""
+
+    def match(self, txt):
+        """Modify the file when we find the closing </releases> tag"""
+        return txt.startswith('  </releases>')
+
+    def replacement(self, txt):
+        """Append a <release version=... /> xml tag to appinfo.xml """
+        version = self.num_version
+        now = datetime.datetime.now()
+        date = now.strftime('%Y-%m-%d')
+        return '    <release version="%s" date="%s" />\n%s' % (version, date, txt)
+
+
+class GitColaAppDataVersion(AppDataVersion):
+    """Add new releases to git-cola.appdata.xml"""
+
+    path = 'share/metainfo/git-cola.appdata.xml'
+
+
+class GitDagAppDataVersion(AppDataVersion):
+    """Add new releases to git-dag.appdata.xml"""
+
+    path = 'share/metainfo/git-dag.appdata.xml'
+
+
 class PyNsistVersion(Version):
+    """Update pynsist.cfg with the current version"""
 
     path = 'pynsist.cfg'
 
