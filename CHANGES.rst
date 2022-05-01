@@ -6,9 +6,9 @@ v4.0.0
 Breaking Changes
 ----------------
 
-* The build system is now Python3-only. While Git Cola still technically runs under
-  Python2, it is no longer officially supported and may stop working in a future
-  release.
+* The build system is now Python3-only and has been modernized for PEP-517/518.
+  While Git Cola still builds and runs under Python2, it is no longer officially
+  supported and may stop working in a future release without notice.
   (`#1201 <https://github.com/git-cola/git-cola/issues/1201>`_)
 
 * The default `#!/usr/bin/env python` lines in the `git-cola` and `git-dag` wrapper
