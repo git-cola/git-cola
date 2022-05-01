@@ -262,7 +262,7 @@ def authors_text():
         # Please submit a pull request if you would like to include your
         # email address in the about screen.
         # See the `generate-about` script in the "todo" branch.
-        # vim :read! ./Meta/generate-about
+        # vim :read! ./todo/generate-about
         dict(
             name='David Aguilar',
             title=N_('Maintainer (since 2007) and developer'),

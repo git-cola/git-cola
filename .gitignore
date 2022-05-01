@@ -9,13 +9,13 @@
 /env*
 /git-cola.app
 /local
-/Meta
 /pip-wheel-metadata
 /pynsist_pkgs
 /.pytest_cache
 /README.html
 /share/locale
 /test/tmp
+/todo
 /tags
 /.tox
 __pycache__
