@@ -6,12 +6,18 @@ v4.0.0
 Breaking Changes
 ----------------
 
+These changes are primarily breaking changes for packagers of Git Cola.
+For example, Linux distribution and Homebrew package maintainers may need to
+be aware of these changes.
+
+Changes have been made build infrastructure and the resulting filesystem artifacts.
+
 * The build system is now Python3-only and has been modernized for PEP-517/518.
   While Git Cola still builds and runs under Python2, it is no longer officially
   supported and may stop working in a future release without notice.
   (`#1201 <https://github.com/git-cola/git-cola/issues/1201>`_)
 
-* The default `#!/usr/bin/env python` lines in the `git-cola` and `git-dag` wrapper
+* The `#!/usr/bin/env python` shebang lines in the `git-cola` and `git-dag` wrapper
   scripts have been updated to use `python3`.
   (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
@@ -19,14 +25,14 @@ Breaking Changes
   ``python setup.py {build,install,build_pot,build_mo}`` are no longer provided.
   Use the https://pypa-build.readthedocs.io/en/stable/installation.html
   ``python -m build`` tool to generate sdist and wheel distributions,
-  and ``pip install`` to install Git Cola.
+  and ``pip install .`` to install Git Cola from source.
   (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
 
 * The `git-cola`, `git-dag` and `git-cola-sequence-editor` commands are now installed
   using setuptools entry points.
 
-* The `bin/` wrapper scripts continue to be provided for convenience but they are not
-  the scripts that get installed.
+* The `bin/` wrapper scripts in the source tree continue to be provided for convenience
+  but they are not the scripts that get installed.
 
 * The `qtpy` Python package is no longer installed alongside the `cola` Python package.
 
@@ -38,6 +44,10 @@ Breaking Changes
 
 * The `share/git-cola` filesystem namespace no longer exists. All of cola's package data
   is distributed alongside the `cola` module as package data.
+
+* Building the Sphinx documentation now also requires the `jaraco.packaging` and
+  `rst.linker` packages. See `requirements/requirements-dev.txt` for the package
+  requirement details.
 
 
 Usability, bells and whistles
