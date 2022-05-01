@@ -1,6 +1,6 @@
 git-cola maintenance scripts
 ============================
-This branch is typically checked out as a worktree called "Meta" at the
+This branch is typically checked out as a worktree called "todo" at the
 top-level of the git-cola repository.
 
 Creating a new release
@@ -8,11 +8,11 @@ Creating a new release
 From the top of the git-cola repository a release can then be created by
 running:
 
-	Meta/release --all
+	todo/release --all
 
 This branch is intended to be checked out in a seperate repository within a
-git-cola repository, e.g. at git-cola/Meta (and is the reason that git-cola's
-.gitignore mentions "Meta".  The release script assumes that you have a clone
+git-cola repository, e.g. at git-cola/todo (and is the reason that git-cola's
+.gitignore mentions "todo".  The release script assumes that you have a clone
 of git-cola.github.io sibling to the git-cola repository.  Your directory
 structure should look roughly like this:
 
@@ -25,7 +25,7 @@ Release checklist
 -----------------
 The following steps should be taken when creating a new release.
 
-* Run `./Meta/set-version vX.Y.Z`, or perform the following three steps
+* Run `./todo/set-version vX.Y.Z`, or perform the following three steps
   manually by editing the corresponding file:
 
   * Update `cola/_version.py` with the new version number
@@ -50,7 +50,7 @@ The following steps should be taken when creating a new release.
 
 * Start a Windows VM session
 
-* Run `Meta/release --all` to build the installers and update
+* Run `todo/release --all` to build the installers and update
   the sibling `git-cola.github.io` repository.
 
 * Commit `git-cola.github.io` changes, `git commit -sm'git-cola vX.Y'`

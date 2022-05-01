@@ -1,7 +1,7 @@
 #!/bin/sh
 unset CDPATH
 COLA_TOP=$(git rev-parse --show-toplevel)
-META=$(cd "$(dirname "$0")" && pwd)
+TODO=$(cd "$(dirname "$0")" && pwd)
 
 # This variable must be defined in config to use the github API
 GITHUB_TOKEN=UNDEFINED
@@ -18,9 +18,9 @@ fi
 
 # Place your github token in an untracked file called "config", e.g.
 # GITHUB_TOKEN="mysecrettoken"
-if test -e "$META/config"
+if test -e "$TODO/config"
 then
-	. "$META/config"
+	. "$TODO/config"
 fi
 
 do_or_die () {
