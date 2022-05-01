@@ -56,13 +56,13 @@ def get(key):
 
 def version():
     """Returns the current version"""
-    version = VERSION
+    pkg_version = VERSION
     if metadata is not None:
         try:
-            version = metadata.version('git-cola')
+            pkg_version = metadata.version('git-cola')
         except (ImportError, OSError):
             pass
-    return version
+    return pkg_version
 
 
 @memoize
