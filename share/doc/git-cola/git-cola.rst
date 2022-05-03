@@ -537,6 +537,15 @@ You may also want to customize the diff colors when using a dark theme::
 
 Please see `#760 <https://github.com/git-cola/git-cola/issues/760>`_ for more details.
 
+Custom Themes
+-------------
+To create your own custom theme for Git Cola just create a QSS file and put it in
+``~/.config/themes/``. You can add as many files as you want. Each file will become
+an option in ``Menu -> File -> Preferences -> Appearance -> GUI theme``.
+
+Some examples can be found here `Qt Style Sheets Examples <https://doc.qt.io/qt-5/stylesheet-examples.html>`_.
+
+
 CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
