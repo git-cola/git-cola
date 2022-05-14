@@ -53,6 +53,11 @@ Changes have been made build infrastructure and the resulting filesystem artifac
 Usability, bells and whistles
 -----------------------------
 
+* Git Cola now supports user-configurable UI themes. Themes are configured using
+  .qss Qt stylesheets.
+  (`#1222 <https://github.com/git-cola/git-cola/pull/1222>`_)
+  (`#1226 <https://github.com/git-cola/git-cola/pull/1226>`_)
+
 * Git Cola now keeps track of child Browser windows and will close all of them when
   the main window is closed.
   (`#1200 <https://github.com/git-cola/git-cola/pull/1200>`_)
