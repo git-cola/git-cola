@@ -1,3 +1,0 @@
-jaraco.packaging >= 9
-rst.linker >= 1.9
-sphinx
