@@ -7,6 +7,7 @@ from qtpy import QtGui
 
 from .i18n import N_
 from .widgets import defs
+from . import core
 from . import icons
 from . import qtutils
 from . import resources
@@ -533,16 +534,14 @@ class Theme(object):
         If user has deleted file, use default style"""
 
         # check if path exists
-        filepath = resources.config_home('themes', self.name + '.qss')
-        if not os.path.exists(filepath):
+        filename = resources.config_home('themes', self.name + '.qss')
+        if not core.exists(filename):
             return self.style_sheet_default(app_palette)
-
         try:
-            with open(filepath) as fp:
-                return fp.read()
+            return core.read(filename)
         except (IOError, OSError) as err:
-            sys.stderr.write(
-                'warning: unable to read custom theme %s: %s\n' % (filepath, err)
+            core.print_stderr(
+                'warning: unable to read custom theme %s: %s' % (filename, err)
             )
             return self.style_sheet_default(app_palette)
 
