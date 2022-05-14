@@ -53,8 +53,9 @@ Changes have been made build infrastructure and the resulting filesystem artifac
 Usability, bells and whistles
 -----------------------------
 
-* Git Cola now supports user-configurable UI themes. Themes are configured using
-  .qss Qt stylesheets.
+* `Custom UI themes
+  <https://git-cola.readthedocs.io/en/latest/git-cola.html#custom-themes>`_
+  can be used by adding `*.qss` Qt stylesheet files to `~/.config/git-cola/themes/`.
   (`#1222 <https://github.com/git-cola/git-cola/pull/1222>`_)
   (`#1226 <https://github.com/git-cola/git-cola/pull/1226>`_)
 
