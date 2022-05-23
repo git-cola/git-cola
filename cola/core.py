@@ -127,6 +127,11 @@ def mkpath(path, encoding=None):
     return encode(path, encoding=encoding)
 
 
+def decode_seq(seq, encoding=None):
+    """Decode a sequence of values"""
+    return [decode(x, encoding=encoding) for x in seq]
+
+
 def list2cmdline(cmd):
     return subprocess.list2cmdline([decode(c) for c in cmd])
 
@@ -467,6 +472,7 @@ else:
 isdir = wrap(mkpath, os.path.isdir)
 isfile = wrap(mkpath, os.path.isfile)
 islink = wrap(mkpath, os.path.islink)
+listdir = wrap(mkpath, os.listdir, decorator=decode_seq)
 makedirs = wrap(mkpath, os.makedirs)
 try:
     readlink = wrap(mkpath, os.readlink, decorator=decode)
