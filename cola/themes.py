@@ -1,7 +1,6 @@
 """Themes generators"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
-import sys
 
 from qtpy import QtGui
 
@@ -579,15 +578,20 @@ def get_all_themes():
 
     # check if themes path exists in user folder
     path = resources.config_home('themes')
-    if not os.path.exists(path):
+    if not os.path.isdir(path):
         return themes
 
-    # get only files with extension .qss
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            name, ext = os.path.splitext(file)
-            if ext == '.qss':
-                themes.append(Theme(name, N_(name), False, EStylesheet.CUSTOM, None))
+    # Gather Qt .qss stylesheet themes
+    try:
+        filenames = core.listdir(path)
+    except OSError:
+        return themes
+
+    for filename in filenames:
+        name, ext = os.path.splitext(filename)
+        if ext == '.qss':
+            themes.append(Theme(name, N_(name), False, EStylesheet.CUSTOM, None))
+
     return themes
 
 
