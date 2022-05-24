@@ -4,7 +4,7 @@ make check
 ./todo/set-version vA.B.C
 ./todo/commit-version
 # remove any (BETA) markers from the release notes
-./todo/tag
+./todo/tag vA.B.C
 git cola push
 vx env39 ./todo/release --all
 vim github.io/_config.yaml
