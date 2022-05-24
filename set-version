@@ -184,15 +184,15 @@ class AppDataVersion(Version):
     """Append tagged versions to the *.appdata.xml files"""
 
     def match(self, txt):
-        """Modify the file when we find the closing </releases> tag"""
-        return txt.startswith('  </releases>')
+        """Modify the file when we find the opening <releases> tag"""
+        return txt.startswith('  <releases>')
 
     def replacement(self, txt):
         """Append a <release version=... /> xml tag to appinfo.xml """
         version = self.num_version
         now = datetime.datetime.now()
         date = now.strftime('%Y-%m-%d')
-        return '    <release version="%s" date="%s" />\n%s' % (version, date, txt)
+        return '%s\n    <release version="%s" date="%s" />' % (txt, version, date)
 
 
 class GitColaAppDataVersion(AppDataVersion):
