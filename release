@@ -11,7 +11,7 @@ do_upload=false
 file_to_upload=
 
 # Commands
-GH_RELEASE="$META/github-release"
+GH_RELEASE="$TODO/github-release"
 
 usage () {
 	echo "$(basename "$0") [options]"
