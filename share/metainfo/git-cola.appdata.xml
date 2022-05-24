@@ -17,6 +17,7 @@
   </screenshots>
   <url type="homepage">https://git-cola.github.io/</url>
   <releases>
+    <release version="4.0.0" date="2022-05-23" />
     <release version="3.12.0" date="2022-01-20" />
   </releases>
   <content_rating type="oars-1.1" />
