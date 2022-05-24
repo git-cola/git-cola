@@ -220,10 +220,10 @@ class PyNsistVersion(Version):
         if txt.startswith('['):
             self.section = txt[1:-1]
             return False
-        return self.section == 'Application' and txt.startswith('version = ')
+        return self.section == 'Application' and txt.startswith('version=')
 
     def replacement(self, txt):
-        return 'version = %s' % self.num_version
+        return 'version=%s' % self.num_version
 
 
 class RelnotesVersion(Version):
