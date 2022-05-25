@@ -62,14 +62,16 @@ Python modules are installed.
 
 # Installation
 
+**IMPORTANT**: never run `pip install` as root or outside of a Python virtualenv!
+
 You can install the latest released version using `pip`:
 
-    pip install git-cola
+    python3 -m venv env3
+    ./env3/bin/pip install git-cola
+    ./env3/bin/git-cola
 
-You can use `pip install .` to install the latest version from source.
-
-Once you have `git-cola` installed in your `$PATH` then you can launch it like any other
-`git` built-in command:
+Add the `env3/bin` directory to your `$PATH` (or symlink to `bin/git-cola` from somewhere
+in your `$PATH`) allows you to launch Git Cola like any other built-in `git` command:
 
     git cola
     git dag
@@ -77,32 +79,29 @@ Once you have `git-cola` installed in your `$PATH` then you can launch it like a
 ## Python Virtual Environments
 
 If you don't have PyQt installed then the easiest way to get it is to use a Python
-virtualenv and install Git Cola inside of it.
+virtualenv and install Git Cola into it in "editable" mode so that you can "upgrade"
+Git Cola by running `git pull`.
 
     # Create a virtualenv called "env3" and activate it.
     python3 -m venv env3
     source env3/bin/activate
 
-    # One-time setup: install optional requirements.
-    pip install -r requirements/requirements-optional.txt
+    # One-time setup: install optional requirements for development.
+    make requirements-dev requirements-optional
 
-    # Generate the i18n translations.
-    make
+    # Install git-cola in "editable" mode so that it uses the source tree.
+    make develop
 
-    # Install cola in "editable" mode so that it uses the source tree.
-    pip install --editable .
-
-    # Run Git Cola.
+    # Run Git Cola via the "git-cola" Git subcommand.
     git cola
 
-If you add `$PWD/env3/bin` (or add a symlink to the `$PWD/env3/bin/git-cola` script) to
-your `$PATH` then you can run `git cola` as if it were a builtin `git` command without
-needing to have the virtualenv activated.
+If you add `env3/bin` (or symlink to `bin/git-cola` ) to your `$PATH` then you can
+run `git cola` as if it were a builtin `git` command.
 
 ## Standalone Installation
 
 Running `make install` will install Git Cola in your `$HOME` directory
-(`$HOME/bin/git-cola`, `$HOME/share/git-cola`, etc).
+(`$HOME/bin/git-cola`, `$HOME/lib`, etc).
 
 If you want to do a global install you can do
 
@@ -114,7 +113,7 @@ The `Makefile` also supports `DESTDIR`:
 
 ## Linux
 
-Linux is it! Your distro has probably already packaged git-cola.
+Linux is it! Your distro has probably already packaged `git-cola`.
 If not, please file a bug against your distribution ;-)
 
 ### Arch
@@ -152,22 +151,19 @@ but it has not been updated for a while.
 
 ## FreeBSD
 
-    # install from official binary packages
+    # Install from official binary packages
     pkg install -r FreeBSD devel/git-cola
 
-    # build from source
+    # Build from source
     cd /usr/ports/devel/git-cola && make clean install
 
 
 ## macOS
 
+For most end-users we recommend using either Homebrew or `pip install git-cola`
+inside of a virtualenv.
+
 You can install Git Cola using the same `Makefile` steps above to install from source.
-
-### git-cola.app
-
-If you'd like to build a `git-cola.app` bundle for `/Applications` run this command:
-
-    make git-cola.app
 
 ### Homebrew
 
@@ -175,6 +171,20 @@ An easy way to install Git Cola is to use [Homebrew](https://brew.sh/) .
 Use Homebrew to install the git-cola recipe:
 
     brew install git-cola
+
+If you install using Homebrew you can stop at this step.
+You don't need to clone the repo or anything.
+
+### git-cola.app
+
+If you have all of the dependencies installed, either via `pip` or `brew` then
+you can build a shell `git-cola.app` app bundle wrapper for use in `/Applications`.
+
+If you'd like to build a `git-cola.app` bundle for `/Applications` run this command:
+
+    make git-cola.app
+
+You will need to periodically rebuild the app wrapper whenever Python is upgraded.
 
 ### Updating macOS and Homebrew
 
