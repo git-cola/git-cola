@@ -82,6 +82,9 @@ def get_filename_for_locale(name):
     if not name:  # If no locale was specified then try the current locale.
         name = locale.getdefaultlocale()[0]
 
+    if not name:
+        return None
+
     name = name.split('.', 1)[0]  # foo_BAR.UTF-8 -> foo_BAR
 
     filename = resources.i18n('%s.po' % name)
