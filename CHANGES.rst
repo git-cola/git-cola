@@ -1,3 +1,14 @@
+.. _v4.0.1:
+
+Fixes
+-----
+
+* We now guard against `locale.getdefaultlocale()` returning `None` in some
+  configurations, notably on macOS if none of 'LC_ALL', 'LC_CTYPE', 'LANG' or 'LANGUAGE'
+  are defined.
+  (`#1234 <https://github.com/git-cola/git-cola/issues/1234>`_)
+
+
 .. _v4.0.0:
 
 v4.0.0
