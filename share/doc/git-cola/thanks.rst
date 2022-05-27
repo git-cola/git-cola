@@ -216,6 +216,7 @@ Thanks
 * Sean Allred
 * Sebastian Brass
 * Sebastian Oliva
+* Sergei Dyshel
 * Sergey Leschina
 * Shun Sakai
 * Simon Peeters
