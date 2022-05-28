@@ -227,7 +227,7 @@ class PreferencesModel(QtCore.QObject):
             self.config.set_repo(config, value)
         else:
             self.config.set_user(config, value)
-        self.config_updated.emit(source, config, value)
+        self.config_updated.emit(source, config, str(value))
 
     def get_config(self, source, config):
         """Get a configured value"""
