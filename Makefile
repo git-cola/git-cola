@@ -125,27 +125,27 @@ install:: all
 
 .PHONY: doc
 doc::
-	$(MAKE) -C share/doc/git-cola all
+	$(MAKE) -C docs all
 
 .PHONY: html
 html::
-	$(MAKE) -C share/doc/git-cola html
+	$(MAKE) -C docs html
 
 .PHONY: man
 man::
-	$(MAKE) -C share/doc/git-cola man
+	$(MAKE) -C docs man
 
 .PHONY: install-doc
 install-doc::
-	$(MAKE) -C share/doc/git-cola install
+	$(MAKE) -C docs install
 
 .PHONY: install-html
 install-html::
-	$(MAKE) -C share/doc/git-cola install-html
+	$(MAKE) -C docs install-html
 
 .PHONY: install-man
 install-man::
-	$(MAKE) -C share/doc/git-cola install-man
+	$(MAKE) -C docs install-man
 
 .PHONY: uninstall
 uninstall::
@@ -190,7 +190,7 @@ clean::
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | $(XARGS) -0 $(RM)
 	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | $(XARGS) -0 $(RM_R)
 	$(RM_R) build dist tags git-cola.app
-	$(MAKE) -C share/doc/git-cola clean
+	$(MAKE) -C docs clean
 
 # Update i18n files
 .PHONY: i18n

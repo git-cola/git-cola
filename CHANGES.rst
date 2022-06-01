@@ -11,6 +11,10 @@ Fixes
 * The preferences dialog has been fixed to properly handle booleans.
   (`#1235 <https://github.com/git-cola/git-cola/issues/1235>`_)
 
+* The `docs/` directory was restructured to avoid missing `setup.py` errors.
+  `share/doc/git-cola` is now a symlink pointing to `docs/`.
+  (`#1230 <https://github.com/git-cola/git-cola/issues/1230>`_)
+
 
 .. _v4.0.0:
 

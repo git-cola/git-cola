@@ -15,4 +15,4 @@ Clone the git-cola repo to get the latest development version:
 ``git clone git://github.com/git-cola/git-cola.git``
 
 
-.. include:: ../../../CHANGES.rst
+.. include:: ../CHANGES.rst

@@ -17,9 +17,9 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 * [HTML documentation](https://git-cola.readthedocs.io/en/latest/)
 
-* [Git Cola documentation](share/doc/git-cola/git-cola.rst)
+* [Git Cola documentation](docs/git-cola.rst)
 
-* [Git DAG documentation](share/doc/git-cola/git-dag.rst)
+* [Git DAG documentation](docs/git-dag.rst)
 
 * [Contributing guidelines](CONTRIBUTING.md)
 

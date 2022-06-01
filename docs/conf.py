@@ -8,8 +8,7 @@ except ImportError:
     sphinx_rtd_theme = None
 
 # Add the cola source directory to sys.path
-abspath = os.path.abspath(os.path.realpath(__file__))
-docdir = os.path.dirname(os.path.dirname(abspath))
+docdir = os.path.abspath(os.path.realpath(__file__))
 srcdir = os.path.dirname(os.path.dirname(docdir))
 extrasdir = os.path.join(srcdir, 'extras')
 sys.path.insert(1, extrasdir)
@@ -79,7 +78,7 @@ latex_documents = [
 intersphinx_mapping = {'https://docs.python.org/3': None}
 
 link_files = {
-    '../../../CHANGES.rst': dict(
+    '../CHANGES.rst': dict(
         using=dict(GH='https://github.com'),
         replace=[
             dict(
