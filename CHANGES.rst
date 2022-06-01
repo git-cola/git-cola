@@ -8,6 +8,9 @@ Fixes
   are defined.
   (`#1234 <https://github.com/git-cola/git-cola/issues/1234>`_)
 
+* The preferences dialog has been fixed to properly handle booleans.
+  (`#1235 <https://github.com/git-cola/git-cola/issues/1235>`_)
+
 
 .. _v4.0.0:
 

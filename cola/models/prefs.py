@@ -214,7 +214,7 @@ def status_show_totals(context):
 class PreferencesModel(QtCore.QObject):
     """Interact with repo-local and user-global git config preferences"""
 
-    config_updated = Signal(str, str, str)
+    config_updated = Signal(str, str, object)
 
     def __init__(self, context):
         super(PreferencesModel, self).__init__()
