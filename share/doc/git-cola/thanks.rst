@@ -117,6 +117,7 @@ Thanks
 * Jimmy M. Coleman
 * Joachim Jablon
 * Joachim Lusiardi
+* Joel Barrios
 * Johannes Löhnert
 * Johann Schmitz
 * Jordan Bedwell
