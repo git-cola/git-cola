@@ -208,7 +208,6 @@ class MainWindowMixin(WidgetMixin):
 
     def update_dockwidget_lock_state(self):
         if self.lock_layout:
-            #features = QDockWidget.DockWidgetClosable | QDockWidget.DockWidgetFloatable 
             features = QDockWidget.DockWidgetClosable
         else:
             features = (
