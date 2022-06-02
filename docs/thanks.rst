@@ -93,6 +93,7 @@ Thanks
 * Gyuris Gellért
 * Harro Verton
 * Hannes @kannes
+* hydrargyrum
 * Igor Galarraga
 * Igor Kopach
 * Ilya Tumaykin
