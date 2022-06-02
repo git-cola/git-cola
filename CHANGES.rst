@@ -22,6 +22,10 @@ Fixes
   `share/doc/git-cola` is now a symlink pointing to `docs/`.
   (`#1230 <https://github.com/git-cola/git-cola/issues/1230>`_)
 
+* Message boxes could sometimes display off-screen or using geometry that is larger
+  than the current desktop. Message box sizes are now clamped to the desktop size.
+  (`#1228 <https://github.com/git-cola/git-cola/issues/1228>`_)
+
 
 .. _v4.0.0:
 

@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-import time
 from functools import partial
+import time
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -899,6 +899,32 @@ class MessageBox(Dialog):
     def run(self):
         self.show()
         return self.exec_()
+
+    def apply_state(self, state):
+        """Imports data for view save/restore"""
+        desktop_width, desktop_height = qtutils.desktop_size()
+        width = min(desktop_width, utils.asint(state.get('width')))
+        height = min(desktop_height, utils.asint(state.get('height')))
+        x = min(desktop_width, utils.asint(state.get('x')))
+        y = min(desktop_height, utils.asint(state.get('y')))
+        result = False
+
+        if width and height:
+            self.resize(width, height)
+            self.move(x, y)
+            result = True
+
+        return result
+
+    def export_state(self):
+        """Exports data for view save/restore"""
+        desktop_width, desktop_height = qtutils.desktop_size()
+        state = {}
+        state['width'] = min(desktop_width, self.width())
+        state['height'] = min(desktop_height, self.height())
+        state['x'] = min(desktop_width, self.x())
+        state['y'] = min(desktop_height, self.y())
+        return state
 
 
 def confirm(
