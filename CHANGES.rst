@@ -1,5 +1,12 @@
 .. _v4.0.1:
 
+Usability, bells and whistles
+-----------------------------
+
+* Double-clicking dock widgets no longer creates sub-windows when the layout is locked.
+  (`#1176 <https://github.com/git-cola/git-cola/issues/1176>`_)
+  (`#1198 <https://github.com/git-cola/git-cola/pull/1198>`_)
+
 Fixes
 -----
 
@@ -66,7 +73,6 @@ Changes have been made build infrastructure and the resulting filesystem artifac
 * Building the Sphinx documentation now also requires the `jaraco.packaging` and
   `rst.linker` packages. See `requirements/requirements-dev.txt` for the package
   requirement details.
-
 
 Usability, bells and whistles
 -----------------------------
