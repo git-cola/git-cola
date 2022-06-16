@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-import os
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -15,6 +14,7 @@ from ..compat import ustr
 from ..i18n import N_
 from ..models import prefs
 from ..models.prefs import Defaults
+from ..models.prefs import fallback_editor
 
 
 def preferences(context, model=None, parent=None):
@@ -248,7 +248,7 @@ class SettingsFormWidget(FormWidget):
                 prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
                 prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
                 prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
-                prefs.EDITOR: (self.editor, os.getenv('VISUAL', Defaults.editor)),
+                prefs.EDITOR: (self.editor, fallback_editor()),
                 prefs.HISTORY_BROWSER: (
                     self.historybrowser,
                     prefs.default_history_browser(),
