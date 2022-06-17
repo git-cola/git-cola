@@ -534,7 +534,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         spellcheck = self.description.spellcheck
         cfg = self.context.cfg
 
-        if cfg.get_user(prefs.SPELL_CHECK) != enabled:
+        if prefs.spellcheck(self.context) != enabled:
             cfg.set_user(prefs.SPELL_CHECK, enabled)
         if enabled and not self.spellcheck_initialized:
             # Add our name to the dictionary
