@@ -1,19 +1,26 @@
 .. _v4.0.2:
 
+v4.0.2
+======
+
 Usability, bells and whistles
 -----------------------------
 
-* The `$VISUAL` environment variable is now consulted when `gui.editor` is unset.
-  (`#1198 <https://github.com/git-cola/git-cola/pull/1237>`_)
+* The `$GIT_VISUAL` and `$VISUAL` environment variable are now consulted in addition
+  to `$GIT_EDITOR` and `$EDITOR` when the `gui.editor` configuration is unset.
+  (`#1237 <https://github.com/git-cola/git-cola/pull/1237>`_)
 
 Fixes
 -----
 
 * We no longer write the `cola.spellcheck` configuration value on launch.
-  (`#1198 <https://github.com/git-cola/git-cola/pull/1238>`_)
+  (`#1238 <https://github.com/git-cola/git-cola/pull/1238>`_)
 
 
 .. _v4.0.1:
+
+v4.0.1
+======
 
 Usability, bells and whistles
 -----------------------------

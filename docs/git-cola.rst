@@ -119,8 +119,17 @@ Print the `git cola` version.
 CONFIGURE YOUR EDITOR
 =====================
 The editor used by `Ctrl-e` is configured from the Preferences screen.
-The environment variable `$VISUAL` is consulted when no editor has been
-configured.
+
+The following environment variables are consulted when no editor is configured.
+If defined, the first of these variables is used:
+
+* `GIT_VISUAL`
+* `VISUAL`
+* `GIT_EDITOR`
+* `EDITOR`
+
+The `*VISUAL` variables are consulted before the `*EDITOR` variables so that you can
+configure a graphical editor independently of the editor used by the Git CLI.
 
 *ProTip*: Configuring your editor to `gvim -f -p` will open multiple tabs
 when editing files.  `gvim -f -o` uses splits.

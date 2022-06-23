@@ -130,8 +130,24 @@ def background_editor(context):
 
 
 def fallback_editor():
-    """Return a fallback editor for cases where one is not configured"""
-    return os.getenv('VISUAL', Defaults.editor)
+    """Return a fallback editor for cases where one is not configured
+
+    GIT_VISUAL and VISUAL are consulted before GIT_EDITOR and EDITOR to allow
+    configuring a visual editor for Git Cola using $GIT_VISUAL and an alternative
+    editor for the Git CLI.
+    """
+    editor_variables = (
+        'GIT_VISUAL',
+        'VISUAL',
+        'GIT_EDITOR',
+        'EDITOR',
+    )
+    for env in editor_variables:
+        editor = core.getenv(env)
+        if editor:
+            return editor
+
+    return Defaults.editor
 
 
 def _remap_editor(app):
