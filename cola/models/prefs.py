@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import os
 import sys
 
 from qtpy import QtCore
@@ -118,7 +119,7 @@ def display_untracked(context):
 
 def editor(context):
     """Return the configured editor"""
-    app = context.cfg.get(EDITOR, default=Defaults.editor)
+    app = context.cfg.get(EDITOR, default=fallback_editor())
     return _remap_editor(app)
 
 
@@ -126,6 +127,11 @@ def background_editor(context):
     """Return the configured non-blocking background editor"""
     app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
+
+
+def fallback_editor():
+    """Return a fallback editor for cases where one is not configured"""
+    return os.getenv('VISUAL', Defaults.editor)
 
 
 def _remap_editor(app):
