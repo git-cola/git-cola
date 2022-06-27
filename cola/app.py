@@ -193,6 +193,7 @@ class ColaApplication(object):
         self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
+        self._app.setDesktopFileName("git-cola")
         self._install_style(gui_theme)
 
     def _install_style(self, theme_str):
