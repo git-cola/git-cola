@@ -155,6 +155,7 @@ Thanks
 * Marco Costalba
 * Mariusz Jaskółka
 * Markus Heidelberg
+* Martin Gysel
 * Martin Konecny
 * Matěj Šmíd
 * Matthew Levine
