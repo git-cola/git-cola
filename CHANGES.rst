@@ -10,6 +10,9 @@ Usability, bells and whistles
   to `$GIT_EDITOR` and `$EDITOR` when the `gui.editor` configuration is unset.
   (`#1237 <https://github.com/git-cola/git-cola/pull/1237>`_)
 
+* The application window icon is now enabled when running on Wayland.
+  (`#1240 <https://github.com/git-cola/git-cola/pull/1240>`_)
+
 Fixes
 -----
 
