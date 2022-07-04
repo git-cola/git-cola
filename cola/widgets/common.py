@@ -58,7 +58,7 @@ def worktree_dir_action(context, parent, *keys):
         parent,
         cmds.OpenWorktree,
         context,
-        lambda: None, # nop
+        lambda: None,  # nop
         *keys
     )
     action.setIcon(icons.folder())
