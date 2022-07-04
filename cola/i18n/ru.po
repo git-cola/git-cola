@@ -1620,6 +1620,9 @@ msgstr "Число строк в контексте сравнения"
 msgid "Open"
 msgstr "Открыть"
 
+msgid "Open Directory"
+msgstr "Открыть каталог"
+
 msgid "Open Git Repository..."
 msgstr "Открыть Git репозиторий..."
 
@@ -1635,6 +1638,9 @@ msgstr "Открыть последний"
 
 msgid "Open Using Default Application"
 msgstr "Открыть, используя приложение по умолчанию"
+
+msgid "Open Worktree"
+msgstr "Открыть рабочий каталог"
 
 msgid "Open in New Window"
 msgstr "Открыть в новом окне"
