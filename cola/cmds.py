@@ -1716,6 +1716,18 @@ class OpenParentDir(OpenDir):
         return dirnames
 
 
+class OpenWorktree(OpenDir):
+    """Open worktree directory using the OS default."""
+
+    @staticmethod
+    def name():
+        return N_('Open Worktree')
+
+    def __init__(self, context, __):
+        dirnames = [context.git.worktree()]
+        super(OpenWorktree, self).__init__(context, dirnames)
+
+
 class OpenNewRepo(ContextCommand):
     """Launches git-cola on a repo."""
 

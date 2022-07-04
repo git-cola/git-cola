@@ -52,6 +52,19 @@ def parent_dir_action(context, parent, fn):
     return action
 
 
+def worktree_dir_action(context, parent, *keys):
+    """Open the repository worktree -> QAction"""
+    action = cmd_action(
+        parent,
+        cmds.OpenWorktree,
+        context,
+        lambda: None, # nop
+        *keys
+    )
+    action.setIcon(icons.folder())
+    return action
+
+
 def refresh_action(context, parent):
     """Refresh the repository state -> QAction"""
     return qtutils.add_action(

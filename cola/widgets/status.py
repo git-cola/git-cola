@@ -193,6 +193,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 context, self, self.selected_group
             )
 
+            self.worktree_dir_action = common.worktree_dir_action(context, self)
+
         self.terminal_action = common.terminal_action(
             context, self, self.selected_group
         )
@@ -683,6 +685,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         if self.terminal_action is not None:
             menu.addAction(self.terminal_action)
+
+        if not utils.is_win32():
+            menu.addAction(self.worktree_dir_action)
 
         self._add_copy_actions(menu)
 
