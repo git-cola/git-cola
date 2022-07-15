@@ -202,14 +202,13 @@ class RepoTreeView(standard.TreeView):
 
         self.action_refresh = common.refresh_action(context, self)
 
-        if not utils.is_win32():
-            self.action_default_app = common.default_app_action(
-                context, self, self.selected_paths
-            )
+        self.action_default_app = common.default_app_action(
+            context, self, self.selected_paths
+        )
 
-            self.action_parent_dir = common.parent_dir_action(
-                context, self, self.selected_paths
-            )
+        self.action_parent_dir = common.parent_dir_action(
+            context, self, self.selected_paths
+        )
 
         self.action_terminal = common.terminal_action(
             context, self, self.selected_paths
@@ -349,9 +348,8 @@ class RepoTreeView(standard.TreeView):
 
         self.action_editor.setEnabled(selected)
         self.action_history.setEnabled(selected)
-        if not utils.is_win32():
-            self.action_default_app.setEnabled(selected)
-            self.action_parent_dir.setEnabled(selected)
+        self.action_default_app.setEnabled(selected)
+        self.action_parent_dir.setEnabled(selected)
 
         if self.action_terminal is not None:
             self.action_terminal.setEnabled(selected)
@@ -380,10 +378,9 @@ class RepoTreeView(standard.TreeView):
         menu.addAction(self.action_revert_uncommitted)
         menu.addAction(self.action_untrack)
         menu.addAction(self.action_rename)
-        if not utils.is_win32():
-            menu.addSeparator()
-            menu.addAction(self.action_default_app)
-            menu.addAction(self.action_parent_dir)
+        menu.addSeparator()
+        menu.addAction(self.action_default_app)
+        menu.addAction(self.action_parent_dir)
 
         if self.action_terminal is not None:
             menu.addAction(self.action_terminal)

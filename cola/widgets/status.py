@@ -184,16 +184,15 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             context, self, *hotkeys.ACCEPT
         )
 
-        if not utils.is_win32():
-            self.default_app_action = common.default_app_action(
-                context, self, self.selected_group
-            )
+        self.default_app_action = common.default_app_action(
+            context, self, self.selected_group
+        )
 
-            self.parent_dir_action = common.parent_dir_action(
-                context, self, self.selected_group
-            )
+        self.parent_dir_action = common.parent_dir_action(
+            context, self, self.selected_group
+        )
 
-            self.worktree_dir_action = common.worktree_dir_action(context, self)
+        self.worktree_dir_action = common.worktree_dir_action(context, self)
 
         self.terminal_action = common.terminal_action(
             context, self, self.selected_group
@@ -676,18 +675,17 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         else:
             self._create_unstaged_context_menu(menu, s)
 
-        if not utils.is_win32():
-            if not menu.isEmpty():
-                menu.addSeparator()
-            if not self.selection_model.is_empty():
-                menu.addAction(self.default_app_action)
-                menu.addAction(self.parent_dir_action)
+        if not menu.isEmpty():
+            menu.addSeparator()
+
+        if not self.selection_model.is_empty():
+            menu.addAction(self.default_app_action)
+            menu.addAction(self.parent_dir_action)
 
         if self.terminal_action is not None:
             menu.addAction(self.terminal_action)
 
-        if not utils.is_win32():
-            menu.addAction(self.worktree_dir_action)
+        menu.addAction(self.worktree_dir_action)
 
         self._add_copy_actions(menu)
 
