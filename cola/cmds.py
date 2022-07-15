@@ -1674,13 +1674,13 @@ class OpenDefaultApp(ContextCommand):
             launcher = 'open'
         else:
             launcher = 'xdg-open'
-        self.launcher = launcher
+        self.launcher = utils.shell_split(launcher)
         self.filenames = filenames
 
     def do(self):
         if not self.filenames:
             return
-        core.fork([self.launcher] + self.filenames)
+        core.fork(self.launcher + self.filenames)
 
 
 class OpenDir(OpenDefaultApp):
@@ -1700,7 +1700,7 @@ class OpenDir(OpenDefaultApp):
             return
         # An empty dirname defaults to CWD.
         dirs = [(dirname or core.getcwd()) for dirname in dirnames]
-        core.fork([self.launcher] + dirs)
+        core.fork(self.launcher + dirs)
 
 
 class OpenParentDir(OpenDir):
