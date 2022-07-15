@@ -15,6 +15,9 @@ Usability, bells and whistles
 * The Status widget now has an "Open Worktree" action.
   (`#1245 <https://github.com/git-cola/git-cola/pull/1245>`_)
 
+* The "Open Using Default Application", "Open Directory",
+  "Open Parent Directory" and "Open Worktree" actions are now available on Windows.
+
 Fixes
 -----
 * Use of a `~/.config/git-cola/language` file to override the language has been fixed.
