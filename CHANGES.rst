@@ -16,6 +16,9 @@ Usability, bells and whistles
 Fixes
 -----
 
+* Use of a `~/.config/git-cola/language` file to override the language has been fixed.
+  (`#1246 <https://github.com/git-cola/git-cola/issues/1246>`_)
+
 * We no longer write the `cola.spellcheck` configuration value on launch.
   (`#1238 <https://github.com/git-cola/git-cola/pull/1238>`_)
 

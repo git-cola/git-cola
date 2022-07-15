@@ -4,7 +4,6 @@ import locale
 import os
 import sys
 
-from . import compat
 from . import core
 from . import polib
 from . import resources
@@ -98,15 +97,12 @@ def get_filename_for_locale(name):
     return None
 
 
-def install(locale):
+def install(lang):
     # pylint: disable=global-statement
-    if sys.platform == 'win32':
-        _check_win32_locale()
-    if locale:
-        _set_language(locale)
-    _install_custom_language()
-
-    State.update(locale)
+    if sys.platform == 'win32' and not lang:
+        lang = _get_win32_default_locale()
+    lang = _install_custom_language(lang)
+    State.update(lang)
 
 
 def uninstall():
@@ -114,47 +110,36 @@ def uninstall():
     State.reset()
 
 
-def _install_custom_language():
+def _install_custom_language(lang):
     """Allow a custom language to be set in ~/.config/git-cola/language"""
     lang_file = resources.config_home('language')
     if not core.exists(lang_file):
-        return
+        return lang
     try:
-        locale = core.read(lang_file).strip()
+        lang = core.read(lang_file).strip()
     except (OSError, IOError):
-        return
-    if locale:
-        _set_language(locale)
+        return lang
+    return lang
 
 
-def _set_language(locale):
-    compat.setenv('LANGUAGE', locale)
-    compat.setenv('LANG', locale)
-    compat.setenv('LC_ALL', locale)
-    compat.setenv('LC_MESSAGES', locale)
-
-
-def _check_win32_locale():
-    for i in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
-        if os.environ.get(i):
-            break
-    else:
-        lang = None
-        try:
-            import ctypes  # pylint: disable=all
-        except ImportError:
-            # use only user's default locale
-            lang = locale.getdefaultlocale()[0]
-        else:
-            # using ctypes to determine all locales
-            lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
-            lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
-            if lcid_user != lcid_system:
-                lcid = [lcid_user, lcid_system]
-            else:
-                lcid = [lcid_user]
-            lang = [locale.windows_locale.get(i) for i in lcid]
-            lang = ':'.join([i for i in lang if i])
-        # set lang code for gettext
+def _get_win32_default_locale():
+    """Get the default locale on Windows"""
+    for name in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
+        lang = os.environ.get(name)
         if lang:
-            compat.setenv('LANGUAGE', lang)
+            return lang
+    try:
+        import ctypes  # pylint: disable=all
+    except ImportError:
+        # use only user's default locale
+        return locale.getdefaultlocale()[0]
+    # using ctypes to determine all locales
+    lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
+    lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
+    lang_user = locale.windows_locale.get(lcid_user)
+    lang_system = locale.windows_locale.get(lcid_system)
+    if lang_user:
+        lang = lang_user
+    else:
+        lang = lang_system
+    return lang
