@@ -5,7 +5,6 @@ v4.0.2
 
 Usability, bells and whistles
 -----------------------------
-
 * The `$GIT_VISUAL` and `$VISUAL` environment variable are now consulted in addition
   to `$GIT_EDITOR` and `$EDITOR` when the `gui.editor` configuration is unset.
   (`#1237 <https://github.com/git-cola/git-cola/pull/1237>`_)
@@ -15,12 +14,16 @@ Usability, bells and whistles
 
 Fixes
 -----
-
 * Use of a `~/.config/git-cola/language` file to override the language has been fixed.
   (`#1246 <https://github.com/git-cola/git-cola/issues/1246>`_)
 
 * We no longer write the `cola.spellcheck` configuration value on launch.
   (`#1238 <https://github.com/git-cola/git-cola/pull/1238>`_)
+
+Translations
+------------
+* Updated Spanish translation.
+  (`#1244  <https://github.com/git-cola/git-cola/pull/1244>`_)
 
 
 .. _v4.0.1:
@@ -30,14 +33,12 @@ v4.0.1
 
 Usability, bells and whistles
 -----------------------------
-
 * Double-clicking dock widgets no longer creates sub-windows when the layout is locked.
   (`#1176 <https://github.com/git-cola/git-cola/issues/1176>`_)
   (`#1198 <https://github.com/git-cola/git-cola/pull/1198>`_)
 
 Fixes
 -----
-
 * We now guard against `locale.getdefaultlocale()` returning `None` in some
   configurations, notably on macOS if none of 'LC_ALL', 'LC_CTYPE', 'LANG' or 'LANGUAGE'
   are defined.
@@ -62,7 +63,6 @@ v4.0.0
 
 Breaking Changes
 ----------------
-
 These changes are primarily breaking changes for packagers of Git Cola.
 For example, Linux distribution and Homebrew package maintainers may need to
 be aware of these changes.
@@ -108,7 +108,6 @@ Changes have been made build infrastructure and the resulting filesystem artifac
 
 Usability, bells and whistles
 -----------------------------
-
 * `Custom UI themes
   <https://git-cola.readthedocs.io/en/latest/git-cola.html#custom-themes>`_
   can be used by adding `*.qss` Qt stylesheet files to `~/.config/git-cola/themes/`.
@@ -121,7 +120,6 @@ Usability, bells and whistles
 
 Fixes
 -----
-
 * Staging conflicted binary files has been fixed to avoid Unicode decoding errors.
   (`#1189 <https://github.com/git-cola/git-cola/issues/1189>`_)
 
@@ -143,7 +141,6 @@ Fixes
 
 Packaging
 ---------
-
 * `vcruntime140.dll` and `msvcp140.dll` are now included in the Windows installation.
   (`#1207 <https://github.com/git-cola/git-cola/pull/1207>`_)
 
