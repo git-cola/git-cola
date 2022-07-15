@@ -12,6 +12,9 @@ Usability, bells and whistles
 * The application window icon is now enabled when running on Wayland.
   (`#1240 <https://github.com/git-cola/git-cola/pull/1240>`_)
 
+* The Status widget now has an "Open Worktree" action.
+  (`#1245 <https://github.com/git-cola/git-cola/pull/1245>`_)
+
 Fixes
 -----
 * Use of a `~/.config/git-cola/language` file to override the language has been fixed.
