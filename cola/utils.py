@@ -312,6 +312,21 @@ def is_win32():
     return sys.platform == 'win32' or sys.platform == 'cygwin'
 
 
+def launch_default_app(paths):
+    """Execute the default application on the specified paths"""
+    if is_win32():
+        for path in paths:
+            os.startfile(path)
+        return
+
+    if is_darwin():
+        launcher = 'open'
+    else:
+        launcher = 'xdg-open'
+
+    core.fork([launcher] + paths)
+
+
 def expandpath(path):
     """Expand ~user/ and environment $variables"""
     path = os.path.expandvars(path)
