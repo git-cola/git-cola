@@ -1683,24 +1683,49 @@ class OpenDefaultApp(ContextCommand):
         core.fork([self.launcher] + self.filenames)
 
 
-class OpenParentDir(OpenDefaultApp):
+class OpenDir(OpenDefaultApp):
+    """Open directories using the OS default."""
+
+    @staticmethod
+    def name():
+        return N_('Open Directory')
+
+    @property
+    def _dirnames(self):
+        return self.filenames
+
+    def do(self):
+        dirnames = self._dirnames
+        if not dirnames:
+            return
+        # An empty dirname defaults to CWD.
+        dirs = [(dirname or core.getcwd()) for dirname in dirnames]
+        core.fork([self.launcher] + dirs)
+
+
+class OpenParentDir(OpenDir):
     """Open parent directories using the OS default."""
 
     @staticmethod
     def name():
         return N_('Open Parent Directory')
 
-    def __init__(self, context, filenames):
-        OpenDefaultApp.__init__(self, context, filenames)
-
-    def do(self):
-        if not self.filenames:
-            return
+    @property
+    def _dirnames(self):
         dirnames = list(set([os.path.dirname(x) for x in self.filenames]))
-        # os.path.dirname() can return an empty string so we fallback to
-        # the current directory
-        dirs = [(dirname or core.getcwd()) for dirname in dirnames]
-        core.fork([self.launcher] + dirs)
+        return dirnames
+
+
+class OpenWorktree(OpenDir):
+    """Open worktree directory using the OS default."""
+
+    @staticmethod
+    def name():
+        return N_('Open Worktree')
+
+    def __init__(self, context, __):
+        dirnames = [context.git.worktree()]
+        super(OpenWorktree, self).__init__(context, dirnames)
 
 
 class OpenNewRepo(ContextCommand):

@@ -1503,6 +1503,9 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+msgid "Open Directory"
+msgstr ""
+
 msgid "Open Git Repository..."
 msgstr ""
 
@@ -1516,6 +1519,9 @@ msgid "Open Recent"
 msgstr ""
 
 msgid "Open Using Default Application"
+msgstr ""
+
+msgid "Open Worktree"
 msgstr ""
 
 msgid "Open in New Window"
