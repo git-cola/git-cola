@@ -2854,7 +2854,7 @@ msgid "git-cola diff"
 msgstr "git-cola diff"
 
 msgid "git://git.example.com/repo.git"
-msgstr "git://git.ejemplo.com/repo.git"
+msgstr "git://git.example.com/repo.git"
 
 msgid "grep result..."
 msgstr "resultados de grep..."
