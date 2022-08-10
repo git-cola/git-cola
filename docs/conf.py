@@ -19,11 +19,16 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinxtogithub',
-    'jaraco.packaging.sphinx',
+    # https://github.com/git-cola/git-cola/issues/1250
+    # https://github.com/jaraco/jaraco.packaging/issues/7
+    # 'jaraco.packaging.sphinx',
     'rst.linker',
 ]
 if sphinx_rtd_theme:
     extensions.append('sphinx_rtd_theme')
+
+# package_url is inject py jaraco.packaging.sphinx when available.
+package_url = 'https://github.com/git-cola/git-cola'
 
 templates_path = ['_templates']
 source_suffix = '.rst'
@@ -83,11 +88,11 @@ link_files = {
         replace=[
             dict(
                 pattern=r'(Issue #|\B#)(?P<issue>\d+)',
-                url='{package_url}/issues/{issue}',
+                url='%s/issues/{issue}' % package_url,
             ),
             dict(
                 pattern=r'\B\+(?P<pull>\d+)',
-                url='{package_url}/pull/{pull}',
+                url='%s/pull/{pull}' % package_url,
             ),
             dict(
                 pattern=r'^(?m)((?P<scm_version>v?\d+(\.\d+){1,2}))\n[-=]+\n',

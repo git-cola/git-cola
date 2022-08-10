@@ -32,6 +32,12 @@ Translations
   (`#1244  <https://github.com/git-cola/git-cola/pull/1244>`_)
 
 
+Packaging
+---------
+* Building documentation offline is supported again.
+  (`#1250 <https://github.com/git-cola/git-cola/issues/1250>`_)
+
+
 .. _v4.0.1:
 
 v4.0.1
