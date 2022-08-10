@@ -58,6 +58,7 @@ Thanks
 * Dave Cottlehuber
 * Dave Thomas
 * David Aguilar
+* David Bold
 * David Fernandez
 * David LeGare
 * David Martínez Martí
