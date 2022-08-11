@@ -316,7 +316,8 @@ def launch_default_app(paths):
     """Execute the default application on the specified paths"""
     if is_win32():
         for path in paths:
-            os.startfile(path)
+            if hasattr(os, 'startfile'):
+                os.startfile(path)  # pylint: disable=no-member
         return
 
     if is_darwin():

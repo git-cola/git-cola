@@ -142,8 +142,8 @@ def fallback_editor():
         'EDITOR',
     )
     for env in editor_variables:
-        editor = core.getenv(env)
-        if editor:
+        env_editor = core.getenv(env)
+        if env_editor:
             return editor
 
     return Defaults.editor
