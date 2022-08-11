@@ -133,6 +133,7 @@ Thanks
 * Kerrick Staley
 * Kevin Kofler
 * Kirit Sælensminde
+* Kisaragi Hiu
 * Kyle Slane
 * László Böszörményi
 * lcjh
