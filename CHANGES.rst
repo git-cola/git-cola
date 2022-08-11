@@ -31,6 +31,9 @@ Translations
 * Updated Spanish translation.
   (`#1244  <https://github.com/git-cola/git-cola/pull/1244>`_)
 
+* Updated Japanese translation.
+  (`#1249  <https://github.com/git-cola/git-cola/pull/1249>`_)
+
 
 Packaging
 ---------
