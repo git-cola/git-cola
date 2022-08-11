@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: git-cola VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-17 01:06-0700\n"
-"PO-Revision-Date: 2019-07-27 13:24+0900\n"
-"Last-Translator: Shun Sakai <sorairolake@protonmail.ch>\n"
 "Language-Team: Japanese\n"
+"PO-Revision-Date: 2022-07-30 19:33+0900\n"
+"Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -342,10 +342,10 @@ msgid "%s: No such file or directory."
 msgstr "%s: そのようなファイルやディレクトリはありません。"
 
 msgid "&Edit"
-msgstr "&E編集"
+msgstr "編集(&E)"
 
 msgid "&File"
-msgstr "&Fファイル"
+msgstr "ファイル(&F)"
 
 msgid "(Amending)"
 msgstr "(訂正)"
@@ -395,16 +395,16 @@ msgid "A stash named \"%s\" already exists"
 msgstr "\"%s\" という名前のstashは既に存在します。"
 
 msgid "Abort"
-msgstr "中止しています。"
+msgstr "中止"
 
 msgid "Abort Action"
-msgstr "アクションを中止しています。"
+msgstr "アクションを中止"
 
 msgid "Abort Merge"
-msgstr "マージを中止しています。"
+msgstr "マージを中止"
 
 msgid "Abort Merge..."
-msgstr "マージ中止…"
+msgstr "マージを中止…"
 
 msgid "Abort the action?"
 msgstr "このアクションを中止しますか？"
@@ -1038,7 +1038,7 @@ msgid "Disable"
 msgstr "無効"
 
 msgid "Display Untracked Files"
-msgstr "未トラックファイルの表示"
+msgstr "未追跡ファイルの表示"
 
 msgid "Documentation"
 msgstr "ドキュメント"
@@ -2014,7 +2014,7 @@ msgid "Revert Diff Hunk"
 msgstr "差分のリバート"
 
 msgid "Revert Diff Hunk..."
-msgstr "差分のリバート中"
+msgstr "差分のリバート…"
 
 msgid "Revert Diff Hunk?"
 msgstr "差分をリバートしますか?"
@@ -2023,7 +2023,7 @@ msgid "Revert Selected Lines"
 msgstr "選択行のリバート"
 
 msgid "Revert Selected Lines..."
-msgstr "選択行のリバート中"
+msgstr "選択行のリバート…"
 
 msgid "Revert Selected Lines?"
 msgstr "選択行をリバートしますか？"
@@ -2032,10 +2032,10 @@ msgid "Revert Uncommitted Changes"
 msgstr "コミットしていない変更のリバート"
 
 msgid "Revert Uncommitted Changes?"
-msgstr "コミットしていない変更のリバート中"
+msgstr "コミットしていない変更をリバートしますか？"
 
 msgid "Revert Uncommitted Edits..."
-msgstr "コミットしていない編集のリバート中"
+msgstr "コミットしていない編集のリバート…"
 
 msgid "Revert Unstaged Changes"
 msgstr "ステージングしていない変更のリバート"
@@ -2044,7 +2044,7 @@ msgid "Revert Unstaged Changes?"
 msgstr "ステージングしていない変更をリバートしますか？"
 
 msgid "Revert Unstaged Edits..."
-msgstr "ステージングしていない編集のリバート中"
+msgstr "ステージングしていない編集のリバート…"
 
 msgid "Revert the uncommitted changes?"
 msgstr "コミットしていない変更をリバートしますか？"
@@ -2291,7 +2291,7 @@ msgid "Sign off on this commit"
 msgstr "このコミットの署名をOFFにする"
 
 msgid "Simplified Chinese translation"
-msgstr "中国語翻訳(簡体字)"
+msgstr "簡体字中国語翻訳"
 
 msgid "Skip"
 msgstr "スキップ"
@@ -2330,10 +2330,10 @@ msgid "Stage / Unstage"
 msgstr "ステージ / ステージ解除"
 
 msgid "Stage / Unstage All"
-msgstr ""
+msgstr "一括ステージ / 一括ステージ解除"
 
 msgid "Stage All Untracked"
-msgstr "全てのトラックしていないものをステージする"
+msgstr "未追跡の一括ステージング"
 
 msgid "Stage Changed Files To Commit"
 msgstr "コミットするために変更されたファイルをステージする"
@@ -2345,7 +2345,7 @@ msgid "Stage Modified"
 msgstr "修正のステージング"
 
 msgid "Stage Modified and Untracked"
-msgstr ""
+msgstr "修正と未追跡のステージング"
 
 msgid "Stage Selected"
 msgstr "選択分のステージング"
@@ -2357,7 +2357,7 @@ msgid "Stage Unmerged"
 msgstr "非マージ分のステージング"
 
 msgid "Stage Untracked"
-msgstr "非トラック分のステージング"
+msgstr "未追跡のステージング"
 
 msgid "Stage and Commit"
 msgstr "ステージングとコミット"
@@ -2528,7 +2528,7 @@ msgid ""
 "This operation drops uncommitted changes.\n"
 "These changes cannot be recovered."
 msgstr ""
-"この操作は、コミットしていない変更をドロップします。\n"
+"この操作は、コミットしていない変更を破棄します。\n"
 "これらの変更は回復できません。"
 
 msgid ""
@@ -2583,7 +2583,7 @@ msgid "Tracking branch"
 msgstr "トラッキングブランチ"
 
 msgid "Traditional Chinese (Taiwan) translation"
-msgstr "伝統的中国語(台湾)翻訳"
+msgstr "繁体字中国語(台湾)翻訳"
 
 msgid "Translation"
 msgstr "翻訳"
@@ -2649,14 +2649,14 @@ msgid "Unstaging: %s"
 msgstr "ステージ解除: %s"
 
 msgid "Untrack Selected"
-msgstr "選択のトラック解除する"
+msgstr "選択を未追跡にする"
 
 msgid "Untracked"
-msgstr "トラック解除済み"
+msgstr "未追跡"
 
 #, python-format
 msgid "Untracking: %s"
-msgstr "トラック解除中:%s"
+msgstr "未追跡にしています: %s"
 
 msgid "Update All Submodules..."
 msgstr "全てのサブモジュールを更新..."
