@@ -18,6 +18,10 @@ Usability, bells and whistles
 * The "Open Using Default Application", "Open Directory",
   "Open Parent Directory" and "Open Worktree" actions are now available on Windows.
 
+* The dialog for opening repositories is now a read-only dialog that omits the
+  ability to create folders and modify the filesystem.
+  (`#1168 <https://github.com/git-cola/git-cola/issues/1168>`_)
+
 Fixes
 -----
 * Use of a `~/.config/git-cola/language` file to override the language has been fixed.
