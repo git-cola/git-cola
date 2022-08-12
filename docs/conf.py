@@ -22,7 +22,8 @@ extensions = [
     # https://github.com/git-cola/git-cola/issues/1250
     # https://github.com/jaraco/jaraco.packaging/issues/7
     # 'jaraco.packaging.sphinx',
-    'rst.linker',
+    # Python 3.11 https://github.com/git-cola/git-cola/issues/1251
+    #'rst.linker',
 ]
 if sphinx_rtd_theme:
     extensions.append('sphinx_rtd_theme')
