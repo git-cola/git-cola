@@ -28,9 +28,6 @@ extensions = [
 if sphinx_rtd_theme:
     extensions.append('sphinx_rtd_theme')
 
-# package_url is inject py jaraco.packaging.sphinx when available.
-package_url = 'https://github.com/git-cola/git-cola'
-
 templates_path = ['_templates']
 source_suffix = '.rst'
 source_encoding = 'utf-8'
@@ -82,6 +79,10 @@ latex_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/3': None}
+
+# {package_url} is provided py jaraco.packaging.sphinx when available
+# for use in the rst.linker configuration. We expand the value manually for now.
+package_url = 'https://github.com/git-cola/git-cola'
 
 link_files = {
     '../CHANGES.rst': dict(
