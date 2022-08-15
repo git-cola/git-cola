@@ -33,16 +33,20 @@ Fixes
 Translations
 ------------
 * Updated Spanish translation.
-  (`#1244  <https://github.com/git-cola/git-cola/pull/1244>`_)
+  (`#1244 <https://github.com/git-cola/git-cola/pull/1244>`_)
 
 * Updated Japanese translation.
-  (`#1249  <https://github.com/git-cola/git-cola/pull/1249>`_)
+  (`#1249 <https://github.com/git-cola/git-cola/pull/1249>`_)
 
 
 Packaging
 ---------
 * Building documentation offline is supported again.
   (`#1250 <https://github.com/git-cola/git-cola/issues/1250>`_)
+
+* The Appstream Metadata files were missing in the v4.0.0 release are included again.
+  (`#1254 <https://github.com/git-cola/git-cola/pull/1254>`_)
+  (`#1253 <https://github.com/git-cola/git-cola/issues/1253>`_)
 
 
 .. _v4.0.1:
@@ -199,12 +203,12 @@ Fixes
   (`#1183 <https://github.com/git-cola/git-cola/pull/1183>`_)
 
 * Documentation typofixes.
-  (`#1185  <https://github.com/git-cola/git-cola/pull/1185>`_)
+  (`#1185 <https://github.com/git-cola/git-cola/pull/1185>`_)
 
 Translations
 ------------
 * Updated Polish translation.
-  (`#1184  <https://github.com/git-cola/git-cola/pull/1184>`_)
+  (`#1184 <https://github.com/git-cola/git-cola/pull/1184>`_)
 
 Development
 -----------
@@ -354,7 +358,7 @@ Usability, bells and whistles
 Translations
 ------------
 * Updated Polish translation.
-  (`#1107  <https://github.com/git-cola/git-cola/pull/1107>`_)
+  (`#1107 <https://github.com/git-cola/git-cola/pull/1107>`_)
 
 * Updated Japanese translation.
   (`#1098 <https://github.com/git-cola/git-cola/pull/1098>`_)
