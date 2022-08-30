@@ -785,12 +785,14 @@ requires shellquoting.
 This configuration variable is for custom terminals outside of the builtin set.
 The table below shows the builtin configuration.
 
-    Terminal            cola.terminal           cola.terminalshellquote
-    --------            -------------           -----------------------
-    gnome-terminal      gnome-terminal --       false
-    konsole             konsole -e              false
-    xfce4-terminal      xfce4-terminal -e       true
-    xterm               xterm -e                false
+=================== ======================= =============================
+Terminal            ``cola.terminal``       ``cola.terminalshellquote``
+=================== ======================= =============================
+gnome-terminal      ``gnome-terminal --``   ``false``
+konsole             ``konsole -e``          ``false``
+xfce4-terminal      ``xfce4-terminal -e``   ``true``
+xterm               ``xterm -e``            ``false``
+=================== ======================= =============================
 
 cola.textwidth
 --------------
