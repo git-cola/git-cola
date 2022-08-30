@@ -512,7 +512,7 @@ Some systems provide a theme that you can install::
 
 You can activate the theme using the following environment variable::
 
-    # Override the default theme to adwait-dark
+    # Override the default theme to adwaita-dark
     export QT_STYLE_OVERRIDE=adwaita-dark
 
 `QT_STYLE_OVERRIDE` may already be set in your Desktop Environment, so check that
