@@ -13,32 +13,32 @@ Git Cola is a sleek and powerful Git GUI.
 OPTIONS
 =======
 
---amend
--------
+``--amend``
+-----------
 Start `git cola` in amend mode.
 
---prompt
---------
+``--prompt``
+------------
 Prompt for a Git repository.  Defaults to the current directory.
 
--r, --repo <path>
------------------
+``-r, --repo <path>``
+---------------------
 Open the Git repository at `<path>`.  Defaults to the current directory.
 
--s, --status-filter <filter>
-----------------------------
+``-s, --status-filter <filter>``
+--------------------------------
 Apply the path filter to the status widget.
 
---version
----------
+``--version``
+-------------
 Print the `git cola` version and exit.
 
--h, --help
-----------
+``-h, --help``
+--------------
 Show usage and optional arguments.
 
---help-commands
----------------
+``--help-commands``
+-------------------
 Show available sub-commands.
 
 SUB-COMMANDS
