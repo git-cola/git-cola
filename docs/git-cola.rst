@@ -510,7 +510,7 @@ Some systems provide a theme that you can install::
 
     sudo apt-get install adwaita-qt
 
-You can activate the theme using the following enviornment variable::
+You can activate the theme using the following environment variable::
 
     # Override the default theme to adwait-dark
     export QT_STYLE_OVERRIDE=adwaita-dark
