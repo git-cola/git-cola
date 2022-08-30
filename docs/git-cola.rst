@@ -212,7 +212,7 @@ Selecting a file displays its diff in the :ref:`Diff` viewer.
 Double-clicking a file stages its contents, as does the
 the `Ctrl-s` shortcut key.
 
-`Ctrl-e` opens selected files in the conifgured editor, and
+`Ctrl-e` opens selected files in the configured editor, and
 `Ctrl-d` opens selected files using `git difftool <http://git-scm.com/docs/git-difftool>`_
 
 Additional actions can be performed using the right-click context menu.
