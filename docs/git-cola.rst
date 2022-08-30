@@ -774,13 +774,13 @@ accordingly.
 cola.terminalshellquote
 -----------------------
 Some terminal require that the command string get passed as a string.
-For example, ``xfce4-terminal -e "git difftool"`` requires shellquoting,
+For example, ``xfce4-terminal -e "git difftool"`` requires shell quoting,
 whereas ``gnome-terminal -- git difftool`` does not.
 
 You should not need to set this variable for the built-in terminals
 cola knows about -- it will behave correctly without configuration.
 For example, when unconfigured, cola already knows that xfce4-terminal
-requires shellquoting.
+requires shell quoting.
 
 This configuration variable is for custom terminals outside of the builtin set.
 The table below shows the builtin configuration.
