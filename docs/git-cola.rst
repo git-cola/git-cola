@@ -13,32 +13,32 @@ Git Cola is a sleek and powerful Git GUI.
 OPTIONS
 =======
 
---amend
--------
+``--amend``
+-----------
 Start `git cola` in amend mode.
 
---prompt
---------
+``--prompt``
+------------
 Prompt for a Git repository.  Defaults to the current directory.
 
--r, --repo <path>
------------------
+``-r, --repo <path>``
+---------------------
 Open the Git repository at `<path>`.  Defaults to the current directory.
 
--s, --status-filter <filter>
-----------------------------
+``-s, --status-filter <filter>``
+--------------------------------
 Apply the path filter to the status widget.
 
---version
----------
+``--version``
+-------------
 Print the `git cola` version and exit.
 
--h, --help
-----------
+``-h, --help``
+--------------
 Show usage and optional arguments.
 
---help-commands
----------------
+``--help-commands``
+-------------------
 Show available sub-commands.
 
 SUB-COMMANDS
@@ -212,7 +212,7 @@ Selecting a file displays its diff in the :ref:`Diff` viewer.
 Double-clicking a file stages its contents, as does the
 the `Ctrl-s` shortcut key.
 
-`Ctrl-e` opens selected files in the conifgured editor, and
+`Ctrl-e` opens selected files in the configured editor, and
 `Ctrl-d` opens selected files using `git difftool <http://git-scm.com/docs/git-difftool>`_
 
 Additional actions can be performed using the right-click context menu.
@@ -510,9 +510,9 @@ Some systems provide a theme that you can install::
 
     sudo apt-get install adwaita-qt
 
-You can activate the theme using the following enviornment variable::
+You can activate the theme using the following environment variable::
 
-    # Override the default theme to adwait-dark
+    # Override the default theme to adwaita-dark
     export QT_STYLE_OVERRIDE=adwaita-dark
 
 `QT_STYLE_OVERRIDE` may already be set in your Desktop Environment, so check that
@@ -774,23 +774,25 @@ accordingly.
 cola.terminalshellquote
 -----------------------
 Some terminal require that the command string get passed as a string.
-For example, ``xfce4-terminal -e "git difftool"`` requires shellquoting,
+For example, ``xfce4-terminal -e "git difftool"`` requires shell quoting,
 whereas ``gnome-terminal -- git difftool`` does not.
 
 You should not need to set this variable for the built-in terminals
 cola knows about -- it will behave correctly without configuration.
 For example, when unconfigured, cola already knows that xfce4-terminal
-requires shellquoting.
+requires shell quoting.
 
 This configuration variable is for custom terminals outside of the builtin set.
 The table below shows the builtin configuration.
 
-    Terminal            cola.terminal           cola.terminalshellquote
-    --------            -------------           -----------------------
-    gnome-terminal      gnome-terminal --       false
-    konsole             konsole -e              false
-    xfce4-terminal      xfce4-terminal -e       true
-    xterm               xterm -e                false
+=================== ======================= =============================
+Terminal            ``cola.terminal``       ``cola.terminalshellquote``
+=================== ======================= =============================
+gnome-terminal      ``gnome-terminal --``   ``false``
+konsole             ``konsole -e``          ``false``
+xfce4-terminal      ``xfce4-terminal -e``   ``true``
+xterm               ``xterm -e``            ``false``
+=================== ======================= =============================
 
 cola.textwidth
 --------------
