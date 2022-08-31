@@ -134,6 +134,7 @@ Thanks
 * Kevin Kofler
 * Kirit Sælensminde
 * Kisaragi Hiu
+* Kurt McKee
 * Kyle Slane
 * László Böszörményi
 * lcjh
