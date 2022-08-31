@@ -24,6 +24,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Documentation rendering errors that have been fixed.
+  (`#1256 <https://github.com/git-cola/git-cola/pull/1256>`_)
+
 * Use of a `~/.config/git-cola/language` file to override the language has been fixed.
   (`#1246 <https://github.com/git-cola/git-cola/issues/1246>`_)
 
@@ -37,7 +40,6 @@ Translations
 
 * Updated Japanese translation.
   (`#1249 <https://github.com/git-cola/git-cola/pull/1249>`_)
-
 
 Packaging
 ---------
