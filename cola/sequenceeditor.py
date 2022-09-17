@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys
 import re
 from argparse import ArgumentParser
-from functools import partial
+from functools import partial, reduce
 
 from cola import app  # prints a message if Qt cannot be found
 from qtpy import QtCore
@@ -320,6 +320,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         )
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         # actions
         self.copy_oid_action = qtutils.add_action(
@@ -446,10 +447,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.commits_selected.emit(commits)
 
     def toggle_enabled(self):
-        item = self.selected_item()
-        if item is None:
-            return
-        item.toggle_enabled()
+        items = self.selected_items()
+        logic_or = reduce(lambda res, item: res or item.is_enabled(), items, False)
+        for item in items:
+            item.set_enabled(not logic_or)
 
     def select_first(self):
         items = self.items()
@@ -460,40 +461,43 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self.setCurrentIndex(idx)
 
     def shift_down(self):
-        item = self.selected_item()
-        if item is None:
-            return
-        items = self.items()
-        idx = items.index(item)
-        if idx < len(items) - 1:
-            self.move_rows.emit([idx], idx + 1)
+        sel_items = self.selected_items()
+        all_items = self.items()
+        sel_idx = sorted(list(map(lambda item: all_items.index(item), sel_items)))
+        idx = sel_idx[0] + 1
+        if not (idx > len(all_items) - len(sel_items) or all_items[sel_idx[-1]] is all_items[-1]):
+            self.move_rows.emit([*sel_idx], idx)
 
     def shift_up(self):
-        item = self.selected_item()
-        if item is None:
-            return
-        items = self.items()
-        idx = items.index(item)
-        if idx > 0:
-            self.move_rows.emit([idx], idx - 1)
+        sel_items = self.selected_items()
+        all_items = self.items()
+        sel_idx = sorted(list(map(lambda item: all_items.index(item), sel_items)))
+        idx = sel_idx[0] - 1
+        if not (idx < 0):
+            self.move_rows.emit([*sel_idx], idx)
 
     def move(self, src_idxs, dst_idx):
-        new_items = []
-        items = self.items()
+        moved_items = list()
+        src_base = sorted(src_idxs)[0]
         for idx in reversed(sorted(src_idxs)):
-            item = items[idx].copy()
-            self.invisibleRootItem().takeChild(idx)
-            new_items.insert(0, item)
+            item = self.invisibleRootItem().takeChild(idx)
+            moved_items.insert(0, [dst_idx + (idx - src_base), item])
 
-        if new_items:
-            self.invisibleRootItem().insertChildren(dst_idx, new_items)
-            self.setCurrentItem(new_items[0])
+        for item in moved_items:
+            self.invisibleRootItem().insertChild(item[0], item[1])
+            self.setCurrentItem(item[1])
+
+        if moved_items:
+            moved_items = [item[1] for item in moved_items]
             # If we've moved to the top then we need to re-decorate all items.
             # Otherwise, we can decorate just the new items.
             if dst_idx == 0:
                 self.decorate(self.items())
             else:
-                self.decorate(new_items)
+                self.decorate(moved_items)
+
+            for item in moved_items:
+                item.setSelected(True)
         self.validate()
 
     # Qt events
@@ -503,6 +507,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.validate()
 
     def contextMenuEvent(self, event):
+        items = self.selected_items()
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.action_pick)
         menu.addAction(self.action_reword)
@@ -513,7 +518,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
         menu.addAction(self.copy_oid_action)
+        if len(items) > 1:
+            self.copy_oid_action.setDisabled(True)
         menu.addAction(self.external_diff_action)
+        if len(items) > 1:
+            self.external_diff_action.setDisabled(True)
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
