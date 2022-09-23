@@ -5,6 +5,11 @@ v4.0.2
 
 Usability, bells and whistles
 -----------------------------
+* The Rebase editor (`git-cola-sequence-editor`) now supports multi-select.
+  Use `Shift-{Up,Down}` to select multiple lines and the keyboard hotkeys
+  listed in the `?` dialog to drive the UI.
+  (`#1257 <https://github.com/git-cola/git-cola/pull/1257>`_)
+
 * The `$GIT_VISUAL` and `$VISUAL` environment variable are now consulted in addition
   to `$GIT_EDITOR` and `$EDITOR` when the `gui.editor` configuration is unset.
   (`#1237 <https://github.com/git-cola/git-cola/pull/1237>`_)
