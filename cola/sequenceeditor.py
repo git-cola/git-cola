@@ -467,8 +467,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         if not sel_idx:
             return
         idx = sel_idx[0] + 1
-        if not (idx > len(all_items) - len(sel_items)
-                or all_items[sel_idx[-1]] is all_items[-1]):
+        if not (
+            idx > len(all_items) - len(sel_items)
+            or all_items[sel_idx[-1]] is all_items[-1]
+        ):
             self.move_rows.emit(sel_idx, idx)
 
     def shift_up(self):

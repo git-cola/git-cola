@@ -54,13 +54,8 @@ def parent_dir_action(context, parent, fn):
 
 def worktree_dir_action(context, parent, *keys):
     """Open the repository worktree -> QAction"""
-    action = cmd_action(
-        parent,
-        cmds.OpenWorktree,
-        context,
-        lambda: None,  # nop
-        *keys
-    )
+    # lambda: None is a no-op.
+    action = cmd_action(parent, cmds.OpenWorktree, context, lambda: None, *keys)
     action.setIcon(icons.folder())
     return action
 

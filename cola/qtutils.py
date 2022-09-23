@@ -443,10 +443,10 @@ def open_files(title, directory=None, filters=''):
 def opendir_dialog(caption, path):
     """Prompts for a directory path"""
     options = (
-        QtWidgets.QFileDialog.Directory |
-        QtWidgets.QFileDialog.DontResolveSymlinks |
-        QtWidgets.QFileDialog.ReadOnly |
-        QtWidgets.QFileDialog.ShowDirsOnly
+        QtWidgets.QFileDialog.Directory
+        | QtWidgets.QFileDialog.DontResolveSymlinks
+        | QtWidgets.QFileDialog.ReadOnly
+        | QtWidgets.QFileDialog.ShowDirsOnly
     )
     return compat.getexistingdirectory(
         parent=active_window(), caption=caption, basedir=path, options=options

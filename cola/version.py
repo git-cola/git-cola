@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import sys
+
 try:
     if sys.version_info < (3, 8):
         import importlib_metadata as metadata
