@@ -463,18 +463,23 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     def shift_down(self):
         sel_items = self.selected_items()
         all_items = self.items()
-        sel_idx = sorted(list(map(lambda item: all_items.index(item), sel_items)))
+        sel_idx = sorted([all_items.index(item) for item in sel_items])
+        if not sel_idx:
+            return
         idx = sel_idx[0] + 1
-        if not (idx > len(all_items) - len(sel_items) or all_items[sel_idx[-1]] is all_items[-1]):
-            self.move_rows.emit([*sel_idx], idx)
+        if not (idx > len(all_items) - len(sel_items)
+                or all_items[sel_idx[-1]] is all_items[-1]):
+            self.move_rows.emit(sel_idx, idx)
 
     def shift_up(self):
         sel_items = self.selected_items()
         all_items = self.items()
-        sel_idx = sorted(list(map(lambda item: all_items.index(item), sel_items)))
+        sel_idx = sorted([all_items.index(item) for item in sel_items])
+        if not sel_idx:
+            return
         idx = sel_idx[0] - 1
-        if not (idx < 0):
-            self.move_rows.emit([*sel_idx], idx)
+        if idx >= 0:
+            self.move_rows.emit(sel_idx, idx)
 
     def move(self, src_idxs, dst_idx):
         moved_items = list()
