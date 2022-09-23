@@ -1718,7 +1718,8 @@ class OpenWorktree(OpenDir):
     def name():
         return N_('Open Worktree')
 
-    def __init__(self, context, __):
+    # The _unused parameter is needed by worktree_dir_action() -> common.cmd_action().
+    def __init__(self, context, _unused=None):
         dirnames = [context.git.worktree()]
         super(OpenWorktree, self).__init__(context, dirnames)
 
