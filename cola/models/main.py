@@ -7,6 +7,7 @@ from qtpy.QtCore import Signal
 
 from .. import core
 from .. import gitcmds
+from .. import gitcfg
 from .. import version
 from ..git import STDOUT
 from . import prefs
@@ -128,14 +129,17 @@ class MainModel(QtCore.QObject):
         return self.local_branches + self.remote_branches
 
     def set_worktree(self, worktree):
+        last_worktree = self.git.paths.worktree
         self.git.set_worktree(worktree)
+
         is_valid = self.git.is_valid()
         if is_valid:
+            reset = last_worktree is None or last_worktree != worktree
             cwd = self.git.getcwd()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
-            self.update_config(reset=True)
+            self.update_config(reset=reset)
             self.worktree_changed.emit()
         return is_valid
 
@@ -299,7 +303,7 @@ class MainModel(QtCore.QObject):
         return not self.local_branches
 
     def _update_remotes(self):
-        self.remotes = self.git.remote()[STDOUT].splitlines()
+        self.remotes = gitcfg.get_remotes(self.cfg)
 
     def _update_branches_and_tags(self):
         context = self.context

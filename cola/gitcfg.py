@@ -115,6 +115,7 @@ class GitConfig(QtCore.QObject):
 
     def __init__(self, context):
         super(GitConfig, self).__init__()
+        self.context = context
         self.git = context.git
         self._map = {}
         self._system = {}
@@ -215,7 +216,7 @@ class GitConfig(QtCore.QObject):
             return self._read_config_file(path)
 
         dest = {}
-        if version.check_git(self, 'config-includes'):
+        if version.check_git(self.context, 'config-includes'):
             args = ('--null', '--file', path, '--list', '--includes')
         else:
             args = ('--null', '--file', path, '--list')
@@ -313,7 +314,7 @@ class GitConfig(QtCore.QObject):
 
         get_all() allows for this use case by gathering all of the per-config
         values separately and then orders them according to the expected
-        local > global > system order.
+        local > user > system precedence order.
 
         """
         result = []
@@ -364,6 +365,7 @@ class GitConfig(QtCore.QObject):
         self.repo_config_changed.emit(key, value)
 
     def find(self, pat):
+        """Return a a dict of values for all keys matching the specified pattern"""
         pat = pat.lower()
         match = fnmatch.fnmatch
         result = {}
@@ -461,12 +463,12 @@ class GitConfig(QtCore.QObject):
             if utils.is_win32():
                 # Try to find Git's sh.exe directory in
                 # one of the typical locations
-                pf = os.environ.get('ProgramFiles', 'C:\\Program Files')
-                pf32 = os.environ.get('ProgramFiles(x86)', 'C:\\Program Files (x86)')
-                pf64 = os.environ.get('ProgramW6432', 'C:\\Program Files')
+                pf = os.environ.get('ProgramFiles', r'C:\Program Files')
+                pf32 = os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)')
+                pf64 = os.environ.get('ProgramW6432', r'C:\Program Files')
 
                 for p in [pf64, pf32, pf, 'C:\\']:
-                    candidate = os.path.join(p, 'Git\\bin\\sh.exe')
+                    candidate = os.path.join(p, r'Git\bin\sh.exe')
                     if os.path.isfile(candidate):
                         return candidate
                 return None
@@ -508,3 +510,11 @@ def python_to_git(value):
     if isinstance(value, int_types):
         return ustr(value)
     return value
+
+
+def get_remotes(cfg):
+    """Get all of the configured git remotes"""
+    # Gather all of the remote.*.url entries.
+    prefix = len('remote.')
+    suffix = len('.url')
+    return sorted(key[prefix:-suffix] for key in cfg.find('remote.*.url'))
