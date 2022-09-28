@@ -129,14 +129,17 @@ class MainModel(QtCore.QObject):
         return self.local_branches + self.remote_branches
 
     def set_worktree(self, worktree):
+        last_worktree = self.git.paths.worktree
         self.git.set_worktree(worktree)
+
         is_valid = self.git.is_valid()
         if is_valid:
+            reset = last_worktree is None or last_worktree != worktree
             cwd = self.git.getcwd()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
             core.chdir(cwd)
-            self.update_config(reset=True)
+            self.update_config(reset=reset)
             self.worktree_changed.emit()
         return is_valid
 
