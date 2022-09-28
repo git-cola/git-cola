@@ -27,6 +27,10 @@ Usability, bells and whistles
   ability to create folders and modify the filesystem.
   (`#1168 <https://github.com/git-cola/git-cola/issues/1168>`_)
 
+* A few more `git` calls have been eliminated from the startup sequence.
+  This further improved the startup time for Git Cola.
+  (`#1259 <https://github.com/git-cola/git-cola/pull/1259>`_)
+
 Fixes
 -----
 * Documentation rendering errors that have been fixed.
