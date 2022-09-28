@@ -115,6 +115,7 @@ class GitConfig(QtCore.QObject):
 
     def __init__(self, context):
         super(GitConfig, self).__init__()
+        self.context = context
         self.git = context.git
         self._map = {}
         self._system = {}
@@ -215,7 +216,7 @@ class GitConfig(QtCore.QObject):
             return self._read_config_file(path)
 
         dest = {}
-        if version.check_git(self, 'config-includes'):
+        if version.check_git(self.context, 'config-includes'):
             args = ('--null', '--file', path, '--list', '--includes')
         else:
             args = ('--null', '--file', path, '--list')
