@@ -7,6 +7,7 @@ from qtpy.QtCore import Signal
 
 from .. import core
 from .. import gitcmds
+from .. import gitcfg
 from .. import version
 from ..git import STDOUT
 from . import prefs
@@ -299,7 +300,7 @@ class MainModel(QtCore.QObject):
         return not self.local_branches
 
     def _update_remotes(self):
-        self.remotes = self.git.remote()[STDOUT].splitlines()
+        self.remotes = gitcfg.get_remotes(self.cfg)
 
     def _update_branches_and_tags(self):
         context = self.context

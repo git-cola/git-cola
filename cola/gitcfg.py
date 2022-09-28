@@ -510,3 +510,11 @@ def python_to_git(value):
     if isinstance(value, int_types):
         return ustr(value)
     return value
+
+
+def get_remotes(cfg):
+    """Get all of the configured git remotes"""
+    # Gather all of the remote.*.url entries.
+    prefix = len('remote.')
+    suffix = len('.url')
+    return sorted(key[prefix:-suffix] for key in cfg.find('remote.*.url'))
