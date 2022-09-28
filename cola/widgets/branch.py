@@ -2,11 +2,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 
+from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..compat import uchr
+from ..git import STDOUT
 from ..i18n import N_
 from ..interaction import Interaction
 from ..widgets import defs
@@ -128,12 +130,18 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setColumnCount(1)
         self.setExpandsOnDoubleClick(False)
 
+        self.current_branch = None
         self.tree_helper = BranchesTreeHelper()
         self.git_helper = GitHelper(context)
-        self.current_branch = None
-
         self.runtask = qtutils.RunTask(parent=self)
+
         self._active = False
+        self._tree_states = None
+
+        # The refresh timer is used to debounce update events.
+        # This makes it so that two events in quick succession only refresh once.
+        self._refresh_timer = QtCore.QTimer(self)
+        self._refresh_timer.timeout.connect(self._refresh)
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         context.model.updated.connect(self.updated)
@@ -146,12 +154,21 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.doubleClicked.connect(self.checkout_action)
 
     def refresh(self):
+        """Start the refresh timer"""
+        if self._refresh_timer.isActive():
+            self._refresh_timer.stop()
+        self._refresh_timer.start(120)
+
+    def _refresh(self):
+        """Refresh the UI to match the updated state"""
+        self._refresh_timer.stop()
+        # There is no need to refresh the UI when this widget is inactive.
         if not self._active:
             return
         model = self.context.model
         self.current_branch = model.currentbranch
 
-        states = self.save_tree_state()
+        self._tree_states = self._save_tree_state()
         ellipsis = icons.ellipsis()
 
         local_tree = create_tree_entries(model.local_branches)
@@ -170,8 +187,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
-        self.update_select_branch()
-        self.load_tree_state(states)
+        self._update_branches()
 
     def showEvent(self, event):
         """Defer updating widgets until the widget is visible"""
@@ -342,19 +358,22 @@ class BranchesTreeWidget(standard.TreeWidget):
         if remote and r_branch:
             cmds.do(cmds.SetUpstreamBranch, context, branch, remote, r_branch)
 
-    def save_tree_state(self):
+    def _save_tree_state(self):
+        """Save the tree state into a dictionary"""
         states = {}
         for item in self.items():
             states.update(self.tree_helper.save_state(item))
 
         return states
 
-    def load_tree_state(self, states):
+    def _load_tree_state(self, states):
+        """Restore expanded items after rebuilding UI widgets"""
         for item in self.items():
             if item.name in states:
                 self.tree_helper.load_state(item, states[item.name])
 
-    def update_select_branch(self):
+    def _update_branches(self):
+        """Query branch details using a background task"""
         context = self.context
         current_branch = self.current_branch
         top_item = self.topLevelItem(0)
@@ -364,27 +383,32 @@ class BranchesTreeWidget(standard.TreeWidget):
             expand_item_parents(item)
             item.setIcon(0, icons.star())
 
-            tracked_branch = gitcmds.tracked_branch(context, current_branch)
-            if current_branch and tracked_branch:
-                status = {'ahead': 0, 'behind': 0}
-                status_str = ''
+            branch_details_task = BranchDetailsTask(
+                context, current_branch, self.git_helper
+            )
+            self.runtask.start(
+                branch_details_task, finish=self._update_branches_finished
+            )
 
-                origin = tracked_branch + '..' + self.current_branch
-                log = self.git_helper.log(origin)
-                status['ahead'] = len(log[1].splitlines())
+    def _update_branches_finished(self, task):
+        """Update the UI with the branch details once the background task completes"""
+        current_branch, tracked_branch, ahead, behind = task.result
+        top_item = self.topLevelItem(0)
+        item = find_by_refname(top_item, current_branch)
+        if current_branch and tracked_branch and item is not None:
+            status_str = ''
+            if ahead > 0:
+                status_str += '%s%s' % (uchr(0x2191), ahead)
 
-                origin = self.current_branch + '..' + tracked_branch
-                log = self.git_helper.log(origin)
-                status['behind'] = len(log[1].splitlines())
+            if behind > 0:
+                status_str += '  %s%s' % (uchr(0x2193), behind)
 
-                if status['ahead'] > 0:
-                    status_str += '%s%s' % (uchr(0x2191), status['ahead'])
+            if status_str:
+                item.setText(0, '%s\t%s' % (item.text(0), status_str))
 
-                if status['behind'] > 0:
-                    status_str += '  %s%s' % (uchr(0x2193), status['behind'])
-
-                if status_str:
-                    item.setText(0, '%s\t%s' % (item.text(0), status_str))
+        if self._tree_states:
+            self._load_tree_state(self._tree_states)
+            self._tree_states = None
 
     def git_action_async(self, action, args, kwarg=None):
         if kwarg is None:
@@ -465,6 +489,36 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def selected_refname(self):
         return getattr(self.selected_item(), 'refname', None)
+
+
+class BranchDetailsTask(qtutils.Task):
+    """Lookup branch details in a background task"""
+    def __init__(self, context, current_branch, git_helper):
+        super(BranchDetailsTask, self).__init__()
+        self.context = context
+        self.current_branch = current_branch
+        self.git_helper = git_helper
+
+    def task(self):
+        """Query git for branch details"""
+        tracked_branch = gitcmds.tracked_branch(self.context, self.current_branch)
+        ahead = 0
+        behind = 0
+
+        if self.current_branch and tracked_branch:
+            origin = tracked_branch + '..' + self.current_branch
+            our_commits = self.git_helper.log(origin)[STDOUT]
+            ahead = our_commits.count('\n')
+            if our_commits:
+                ahead += 1
+
+            origin = self.current_branch + '..' + tracked_branch
+            their_commits = self.git_helper.log(origin)[STDOUT]
+            behind = their_commits.count('\n')
+            if their_commits:
+                behind += 1
+
+        return self.current_branch, tracked_branch, ahead, behind
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -672,7 +726,7 @@ class GitHelper(object):
         self.git = context.git
 
     def log(self, origin):
-        return self.git.log(origin, oneline=True)
+        return self.git.log(origin, abbrev=7, pretty='format:%h')
 
     def push(self, remote, branch):
         return self.git.push(remote, branch, verbose=True)
