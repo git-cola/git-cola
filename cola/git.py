@@ -262,6 +262,7 @@ class Git(object):
         :param _cwd: working directory, defaults to the current directory.
         :param _decode: whether to decode output, defaults to True.
         :param _encoding: default encoding, defaults to None (utf-8).
+        :param _readonly: avoid taking the index lock. Assume the command is read-only.
         :param _raw: do not strip trailing whitespace.
         :param _stdin: optional stdin filehandle.
         :returns (status, out, err): exit status, stdout, stderr
