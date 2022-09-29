@@ -64,7 +64,7 @@ def diff_index_filenames(context, ref):
     Return a diff of filenames that have been modified relative to the index
     """
     git = context.git
-    out = git.diff_index(ref, name_only=True, z=True)[STDOUT]
+    out = git.diff_index(ref, name_only=True, z=True, _readonly=True)[STDOUT]
     return _parse_diff_filenames(out)
 
 
@@ -117,7 +117,7 @@ def diff(context, args):
 
     """
     git = context.git
-    out = git.diff(name_only=True, z=True, *args)[STDOUT]
+    out = git.diff(name_only=True, z=True, _readonly=True, *args)[STDOUT]
     return _parse_diff_filenames(out)
 
 
@@ -130,7 +130,7 @@ def _parse_diff_filenames(out):
 def tracked_files(context, *args):
     """Return the names of all files in the repository"""
     git = context.git
-    out = git.ls_files('--', *args, z=True)[STDOUT]
+    out = git.ls_files('--', *args, z=True, _readonly=True)[STDOUT]
     if out:
         return sorted(out[:-1].split('\0'))
     return []
@@ -140,7 +140,8 @@ def all_files(context, *args):
     """Returns a sorted list of all files, including untracked files."""
     git = context.git
     ls_files = git.ls_files(
-        '--', *args, z=True, cached=True, others=True, exclude_standard=True
+        '--', *args,
+        z=True, cached=True, others=True, exclude_standard=True, _readonly=True
     )[STDOUT]
     return sorted([f for f in ls_files.split('\0') if f])
 
@@ -168,7 +169,7 @@ def current_branch(context):
         # OSError means we can't use the stat cache
         key = 0
 
-    status, data, _ = git.rev_parse('HEAD', symbolic_full_name=True)
+    status, data, _ = git.rev_parse('HEAD', symbolic_full_name=True, _readonly=True)
     if status != 0:
         # git init -- read .git/HEAD.  We could do this unconditionally...
         data = _read_git_head(context, head)
@@ -302,9 +303,9 @@ def untracked_files(context, paths=None, **kwargs):
     if paths is None:
         paths = []
     args = ['--'] + paths
-    out = git.ls_files(z=True, others=True, exclude_standard=True, *args, **kwargs)[
-        STDOUT
-    ]
+    out = git.ls_files(
+        z=True, others=True, exclude_standard=True, _readonly=True, *args, **kwargs
+    )[STDOUT]
     if out:
         return out[:-1].split('\0')
     return []
@@ -655,11 +656,11 @@ def diff_index(context, head, cached=True, paths=None):
     if paths is None:
         paths = []
     args = [head, '--'] + paths
-    status, out, _ = git.diff_index(cached=cached, z=True, *args)
+    status, out, _ = git.diff_index(cached=cached, z=True, _readonly=True, *args)
     if status != 0:
         # handle git init
         args[0] = EMPTY_TREE_OID
-        status, out, _ = git.diff_index(cached=cached, z=True, *args)
+        status, out, _ = git.diff_index(cached=cached, z=True, _readonly=True, *args)
 
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
@@ -683,7 +684,7 @@ def diff_worktree(context, paths=None):
     if paths is None:
         paths = []
     args = ['--'] + paths
-    status, out, _ = git.diff_files(z=True, *args)
+    status, out, _ = git.diff_files(z=True, _readonly=True, *args)
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
@@ -768,7 +769,9 @@ def ls_tree(context, path, ref='HEAD'):
     """Return a parsed git ls-tree result for a single directory"""
     git = context.git
     result = []
-    status, out, _ = git.ls_tree(ref, '--', path, z=True, full_tree=True)
+    status, out, _ = git.ls_tree(
+        ref, '--', path, z=True, full_tree=True, _readonly=True
+    )
     if status == 0 and out:
         path_offset = 6 + 1 + 4 + 1 + OID_LENGTH + 1
         for line in out[:-1].split('\0'):
@@ -828,7 +831,7 @@ def rev_list_range(context, start, end):
     """Return (oid, summary) pairs between start and end."""
     git = context.git
     revrange = '%s..%s' % (start, end)
-    out = git.rev_list(revrange, pretty='oneline')[STDOUT]
+    out = git.rev_list(revrange, pretty='oneline', _readonly=True)[STDOUT]
     return parse_rev_list(out)
 
 
@@ -862,7 +865,7 @@ def abort_merge(context):
     """Abort a merge by reading the tree at HEAD."""
     # Reset the worktree
     git = context.git
-    status, out, err = git.read_tree('HEAD', reset=True, u=True, v=True)
+    status, out, err = git.read_tree('HEAD', reset=True, u=True, v=True, _readonly=True)
     # remove MERGE_HEAD
     merge_head = git.git_path('MERGE_HEAD')
     if core.exists(merge_head):
@@ -886,7 +889,7 @@ def strip_remote(remotes, remote_branch):
 def parse_refs(context, argv):
     """Parse command-line arguments into object IDs"""
     git = context.git
-    status, out, _ = git.rev_parse(*argv)
+    status, out, _ = git.rev_parse(_readonly=True, *argv)
     if status == 0:
         oids = [oid for oid in out.splitlines() if oid]
     else:
@@ -897,13 +900,15 @@ def parse_refs(context, argv):
 def prev_commitmsg(context, *args):
     """Queries git for the latest commit message."""
     git = context.git
-    return git.log('-1', no_color=True, pretty='format:%s%n%n%b', *args)[STDOUT]
+    return git.log(
+        '-1', no_color=True, pretty='format:%s%n%n%b', _readonly=True, *args
+    )[STDOUT]
 
 
 def rev_parse(context, name):
     """Call git rev-parse and return the output"""
     git = context.git
-    status, out, _ = git.rev_parse(name)
+    status, out, _ = git.rev_parse(name, _readonly=True)
     if status == 0:
         result = out.strip()
     else:
@@ -967,7 +972,7 @@ def annex_path(context, head, filename):
 
     # unfortunately there's no way to filter this down to a single path
     # so we just have to scan all reported paths
-    status, out, _ = git.annex('findref', '--json', head)
+    status, out, _ = git.annex('findref', '--json', head, _readonly=True)
     if status == 0:
         for line in out.splitlines():
             info = json.loads(line)
@@ -981,7 +986,7 @@ def annex_path(context, head, filename):
                 break
     key = annex_info.get('key', '')
     if key:
-        status, out, _ = git.annex('contentlocation', key)
+        status, out, _ = git.annex('contentlocation', key, _readonly=True)
         if status == 0 and os.path.exists(out):
             path = out
 
@@ -1004,5 +1009,5 @@ def is_binary(context, filename):
 
 def is_valid_ref(context, ref):
     """Is the provided Git ref a valid refname?"""
-    status, _, _ = context.git.rev_parse(ref, quiet=True, verify=True)
+    status, _, _ = context.git.rev_parse(ref, quiet=True, verify=True, _readonly=True)
     return status == 0

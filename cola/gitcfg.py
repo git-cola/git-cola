@@ -220,7 +220,7 @@ class GitConfig(QtCore.QObject):
             args = ('--null', '--file', path, '--list', '--includes')
         else:
             args = ('--null', '--file', path, '--list')
-        config_lines = self.git.config(*args)[STDOUT].split('\0')
+        config_lines = self.git.config(_readonly=True, *args)[STDOUT].split('\0')
         for line in config_lines:
             if not line:
                 # the user has an invalid entry in their git config
@@ -318,7 +318,9 @@ class GitConfig(QtCore.QObject):
 
         """
         result = []
-        status, out, _ = self.git.config(key, z=True, get_all=True, show_origin=True)
+        status, out, _ = self.git.config(
+            key, z=True, get_all=True, show_origin=True, _readonly=True
+        )
         if status == 0:
             current_source = ''
             current_result = []
@@ -350,17 +352,17 @@ class GitConfig(QtCore.QObject):
 
     def set_user(self, key, value):
         if value in (None, ''):
-            self.git.config('--global', key, unset=True)
+            self.git.config('--global', key, unset=True, _readonly=True)
         else:
-            self.git.config('--global', key, python_to_git(value))
+            self.git.config('--global', key, python_to_git(value), _readonly=True)
         self.update()
         self.user_config_changed.emit(key, value)
 
     def set_repo(self, key, value):
         if value in (None, ''):
-            self.git.config(key, unset=True)
+            self.git.config(key, unset=True, _readonly=True)
         else:
-            self.git.config(key, python_to_git(value))
+            self.git.config(key, python_to_git(value), _readonly=True)
         self.update()
         self.repo_config_changed.emit(key, value)
 
@@ -426,7 +428,7 @@ class GitConfig(QtCore.QObject):
     def check_attr(self, attr, path):
         """Check file attributes for a path"""
         value = None
-        status, out, _ = self.git.check_attr(attr, '--', path)
+        status, out, _ = self.git.check_attr(attr, '--', path, _readonly=True)
         if status == 0:
             header = '%s: %s: ' % (path, attr)
             if out.startswith(header):

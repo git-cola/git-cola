@@ -101,7 +101,7 @@ def version_to_list(value):
 def git_version_str(context):
     """Returns the current GIT version"""
     git = context.git
-    return git.version()[STDOUT].strip()
+    return git.version(_readonly=True)[STDOUT].strip()
 
 
 @memoize

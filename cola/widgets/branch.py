@@ -493,6 +493,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
 class BranchDetailsTask(qtutils.Task):
     """Lookup branch details in a background task"""
+
     def __init__(self, context, current_branch, git_helper):
         super(BranchDetailsTask, self).__init__()
         self.context = context
@@ -726,7 +727,7 @@ class GitHelper(object):
         self.git = context.git
 
     def log(self, origin):
-        return self.git.log(origin, abbrev=7, pretty='format:%h')
+        return self.git.log(origin, abbrev=7, pretty='format:%h', _readonly=True)
 
     def push(self, remote, branch):
         return self.git.push(remote, branch, verbose=True)

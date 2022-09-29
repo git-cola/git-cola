@@ -80,7 +80,7 @@ class GrepThread(QtCore.QThread):
             args = utils.shell_split(query)
         else:
             args = [query]
-        status, out, err = git.grep(self.regexp_mode, n=True, *args)
+        status, out, err = git.grep(self.regexp_mode, n=True, _readonly=True, *args)
         if query == self.query:
             self.result.emit(status, out, err)
         else:
