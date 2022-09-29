@@ -34,19 +34,25 @@ def _stat_info(git):
     # Try /etc/gitconfig as a fallback for the system config
     paths = [
         ('system', '/etc/gitconfig'),
-        ('user', _USER_XDG_CONFIG),
         ('user', _USER_CONFIG),
+        ('user', _USER_XDG_CONFIG),
     ]
     config = git.git_path('config')
     if config:
         paths.append(('repo', config))
 
     statinfo = []
+    categories_completed = set()
     for category, path in paths:
+        # We should only read ~/.gitconfig xor ~/.config/git/config (not both).
+        # Only processing the first entry in each category to accomplish this.
+        if category in categories_completed:
+            continue
         try:
             statinfo.append((category, path, core.stat(path).st_mtime))
         except OSError:
             continue
+        categories_completed.add(category)
     return statinfo
 
 
@@ -54,8 +60,8 @@ def _cache_key(git):
     # Try /etc/gitconfig as a fallback for the system config
     paths = [
         '/etc/gitconfig',
-        _USER_XDG_CONFIG,
         _USER_CONFIG,
+        _USER_XDG_CONFIG,
     ]
     config = git.git_path('config')
     if config:
