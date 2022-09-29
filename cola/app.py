@@ -9,7 +9,7 @@ import sys
 import time
 
 __copyright__ = """
-Copyright (C) 2007-2017 David Aguilar and contributors
+Copyright (C) 2007-2022 David Aguilar and contributors
 """
 
 try:
