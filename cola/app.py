@@ -17,10 +17,12 @@ try:
 except ImportError:
     sys.stderr.write(
         """
-You do not seem to have PyQt5, PySide, or PyQt4 installed.
-Please install it before using git-cola, e.g. on a Debian/Ubutnu system:
+You do not seem to have PyQt (or PySide) and qtpy installed.
+Please install the PyQt (or PySide) and qtpy into your Python environment.
 
-    sudo apt-get install python-pyqt5 python-pyqt5.qtwebkit
+For example, on a Debian/Ubuntu system you can install these using apt:
+
+    sudo apt install python3-pyqt5 python3-pyqt5.qtwebkit python3-qtpy
 
 """
     )
