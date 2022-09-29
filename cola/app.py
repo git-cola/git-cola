@@ -579,6 +579,20 @@ class Timer(object):
         sys.stdout.write('%s: %.5fs\n' % (key, elapsed))
 
 
+class NullArgs(object):
+    """Stub arguments for interactive API use"""
+
+    def __init__(self):
+        self.icon_themes = []
+        self.theme = None
+        self.settings = None
+
+
+def null_args():
+    """Create a new instance of application arguments"""
+    return NullArgs()
+
+
 class ApplicationContext(object):
     """Context for performing operations on Git and related data models"""
 
