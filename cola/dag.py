@@ -13,14 +13,9 @@ def main(argv=None):
     return args.func(args)
 
 
-def winmain():
-    """Windows git-dag entrypoint"""
-    return app.winmain(main)
-
-
 def shortcut_launch():
     """Run git-dag from a Windows shortcut"""
-    return app.winmain(main, ['--prompt'])
+    return main(argv=['--prompt'])
 
 
 def parse_args(argv=None):

@@ -62,11 +62,6 @@ def main():
     return view.status
 
 
-def winmain():
-    """Windows git-cola-sequence-editor entrypoint"""
-    return app.winmain(main)
-
-
 def stop(_context, _view):
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()

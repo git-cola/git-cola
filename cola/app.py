@@ -538,6 +538,12 @@ def startup_message():
 
 def initialize():
     """System-level initialization"""
+    # We support ~/.config/git-cola/git-bindir on Windows for configuring
+    # a custom location for finding the "git" executable.
+    git_path = find_git()
+    if git_path:
+        prepend_path(git_path)
+
     # The current directory may have been deleted while we are still
     # in that directory.  We rectify this situation by walking up the
     # directory tree and retrying.
@@ -616,14 +622,6 @@ class ApplicationContext(object):
         """Initialize view-specific members"""
         self.view = view
         self.runtask = qtutils.RunTask(parent=view)
-
-
-def winmain(main_fn, *argv):
-    """Find Git and launch main(argv)"""
-    git_path = find_git()
-    if git_path:
-        prepend_path(git_path)
-    return main_fn(*argv)
 
 
 def find_git():
