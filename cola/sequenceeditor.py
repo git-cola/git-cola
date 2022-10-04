@@ -98,7 +98,7 @@ class MainWindow(standard.MainWindow):
         self.context = context
         self.status = 1
         self.editor = None
-        default_title = '%s - git cola seqeuence editor' % core.getcwd()
+        default_title = '%s - git cola sequence editor' % core.getcwd()
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
 
