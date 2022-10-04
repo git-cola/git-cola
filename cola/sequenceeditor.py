@@ -34,6 +34,7 @@ REWORD = 'reword'
 EDIT = 'edit'
 FIXUP = 'fixup'
 SQUASH = 'squash'
+UPDATE_REF = 'update-ref'
 EXEC = 'exec'
 COMMANDS = (
     PICK,
@@ -50,6 +51,7 @@ ABBREV = {
     'f': FIXUP,
     's': SQUASH,
     'x': EXEC,
+    'u': UPDATE_REF,
 }
 
 
@@ -223,6 +225,9 @@ class Editor(QtWidgets.QWidget):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
         exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$' % re_comment_char)
+        update_ref_rgx = re.compile(
+          r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
+        )
         # The upper bound of 40 below must match git.OID_LENGTH.
         # We'll have to update this to the new hash length when that happens.
         pick_rgx = re.compile(
@@ -250,6 +255,14 @@ class Editor(QtWidgets.QWidget):
                 command = unabbrev(match.group(2))
                 cmdexec = match.group(3)
                 self.tree.add_item(idx, enabled, command, cmdexec=cmdexec)
+                idx += 1
+                continue
+            match = update_ref_rgx.match(line)
+            if match:
+                enabled = match.group(1) is None
+                command = unabbrev(match.group(2))
+                branch = match.group(3)
+                self.tree.add_item(idx, enabled, command, branch=branch)
                 idx += 1
                 continue
 
@@ -373,7 +386,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.move_rows.connect(self.move)
         self.items_moved.connect(self.decorate)
 
-    def add_item(self, idx, enabled, command, oid='', summary='', cmdexec=''):
+    def add_item(
+      self, idx, enabled, command, oid='', summary='', cmdexec='', branch=''
+    ):
         comment_char = self.comment_char
         item = RebaseTreeWidgetItem(
             idx,
@@ -382,6 +397,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             oid=oid,
             summary=summary,
             cmdexec=cmdexec,
+            branch=branch,
             comment_char=comment_char,
         )
         self.invisibleRootItem().addChild(item)
@@ -546,6 +562,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         oid='',
         summary='',
         cmdexec='',
+        branch='',
         comment_char='#',
         parent=None,
     ):
@@ -556,6 +573,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.oid = oid
         self.summary = summary
         self.cmdexec = cmdexec
+        self.branch = branch
         self.comment_char = comment_char
 
         # if core.abbrev is set to a higher value then we will notice by
@@ -570,6 +588,9 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         if self.is_exec():
             self.setText(3, '')
             self.setText(4, cmdexec)
+        elif self.is_update_ref():
+            self.setText(3, '')
+            self.setText(4, branch)
         else:
             self.setText(3, oid)
             self.setText(4, summary)
@@ -593,11 +614,16 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             oid=self.oid,
             summary=self.summary,
             cmdexec=self.cmdexec,
+            branch=self.branch,
+            comment_char=self.comment_char,
         )
 
     def decorate(self, parent):
         if self.is_exec():
             items = [EXEC]
+            idx = 0
+        elif self.is_update_ref():
+            items = [UPDATE_REF]
             idx = 0
         else:
             items = COMMANDS
@@ -618,8 +644,13 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def is_exec(self):
         return self.command == EXEC
 
+    def is_update_ref(self):
+        return self.command == UPDATE_REF
+
     def is_commit(self):
-        return bool(self.command != EXEC and self.oid and self.summary)
+        return bool(
+          not (self.is_exec() or self.is_update_ref()) and self.oid and self.summary
+        )
 
     def value(self):
         """Return the serialized representation of an item"""
@@ -629,6 +660,8 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             comment = self.comment_char + ' '
         if self.is_exec():
             return '%s%s %s' % (comment, self.command, self.cmdexec)
+        if self.is_update_ref():
+            return '%s%s %s' % (comment, self.command, self.branch)
         return '%s%s %s %s' % (comment, self.command, self.oid, self.summary)
 
     def is_enabled(self):
@@ -674,6 +707,7 @@ edit = use commit, but stop for amending
 squash = use commit, but meld into previous commit
 fixup = like "squash", but discard this commit's log message
 exec = run command (the rest of the line) using shell
+update-ref = update branches that point to commits
 
 These lines can be re-ordered; they are executed from top to bottom.
 
