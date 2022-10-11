@@ -204,7 +204,6 @@ pot::
 		--language=Python \
 		--keyword=N_ \
 		--no-wrap \
-		--no-location \
 		--omit-header \
 		--sort-output \
 		--output-dir cola/i18n \
@@ -218,7 +217,6 @@ po::
 	for po in cola/i18n/*.po; \
 	do \
 		$(MSGMERGE) \
-			--no-location \
 			--no-wrap \
 			--no-fuzzy-matching \
 			--sort-output \
