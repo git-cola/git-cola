@@ -11,6 +11,12 @@ Fixes
   (`#1263 <https://github.com/git-cola/git-cola/issues/1263>`_)
 
 
+Translations
+------------
+* The .po and .pot files now contain location information.
+  (`#880 <https://github.com/git-cola/git-cola/issues/880>`_)
+
+
 v4.0.2
 ======
 
