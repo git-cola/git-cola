@@ -167,6 +167,7 @@ class GitConfig(QtCore.QObject):
             if not line:
                 continue
             # Treat "unknown" the same as "system" (lowest priority).
+            # pylint: disable=too-many-boolean-expressions
             if (
                 line.startswith(system_key)
                 or line.startswith(global_key)
@@ -201,14 +202,14 @@ class GitConfig(QtCore.QObject):
             # macOS has credential.helper=osxkeychain in the "unknown" scope from
             # /Applications/Xcode.app/Contents/Developer/usr/share/git-core/gitconfig.
             # Treat "unknown" as equivalent to "system".
-            if current_scope == system_scope or current_scope == unknown_scope:
+            if current_scope in (system_scope, unknown_scope):
                 self._system[current_key] = current_value
                 self._global_or_system[current_key] = current_value
             elif current_scope == global_scope:
                 self._global[current_key] = current_value
                 self._global_or_system[current_key] = current_value
             # "worktree" is treated as equivalent to "local".
-            elif current_scope == local_scope or current_scope == worktree_scope:
+            elif current_scope in (local_scope, worktree_scope):
                 self._local[current_key] = current_value
 
             # Add this value to the multi-values storage used by get_all().
@@ -291,7 +292,7 @@ class GitConfig(QtCore.QObject):
         # Check for a renamed version of this key (x.kittycat -> x.kittyCat)
         renamed_key = self._renamed_keys.get(key.lower(), key)
         if renamed_key in self._multi_values:
-            self._multi_values[renamed_key]
+            return self._multi_values[renamed_key]
 
         key_lower = key.lower()
         if key_lower in self._multi_values:
