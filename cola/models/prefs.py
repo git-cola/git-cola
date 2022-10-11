@@ -244,7 +244,7 @@ class PreferencesModel(QtCore.QObject):
 
     def set_config(self, source, config, value):
         """Set a configuration value"""
-        if source == 'repo':
+        if source == 'local':
             self.config.set_repo(config, value)
         else:
             self.config.set_user(config, value)
@@ -252,7 +252,7 @@ class PreferencesModel(QtCore.QObject):
 
     def get_config(self, source, config):
         """Get a configured value"""
-        if source == 'repo':
+        if source == 'local':
             value = self.config.get_repo(config)
         else:
             value = self.config.get(config)

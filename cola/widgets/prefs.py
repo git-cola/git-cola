@@ -27,7 +27,7 @@ def preferences(context, model=None, parent=None):
 
 
 class FormWidget(QtWidgets.QWidget):
-    def __init__(self, context, model, parent, source='user'):
+    def __init__(self, context, model, parent, source='global'):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
         self.cfg = context.cfg
@@ -91,7 +91,7 @@ class FormWidget(QtWidgets.QWidget):
         return runner
 
     def update_from_config(self):
-        if self.source == 'user':
+        if self.source == 'global':
             getter = self.cfg.get_user_or_system
         else:
             getter = self.cfg.get
@@ -287,10 +287,10 @@ class SettingsFormWidget(FormWidget):
     def font_size_changed(self, size):
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
-        cmds.do(prefs.SetConfig, self.model, 'user', prefs.FONTDIFF, font.toString())
+        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
 
     def current_font_changed(self, font):
-        cmds.do(prefs.SetConfig, self.model, 'user', prefs.FONTDIFF, font.toString())
+        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
 
 
 class AppearanceFormWidget(FormWidget):
@@ -371,8 +371,8 @@ class PreferencesView(standard.Dialog):
         self.tab_bar.addTab(N_('Settings'))
         self.tab_bar.addTab(N_('Appearance'))
 
-        self.user_form = RepoFormWidget(context, model, self, source='user')
-        self.repo_form = RepoFormWidget(context, model, self, source='repo')
+        self.user_form = RepoFormWidget(context, model, self, source='global')
+        self.repo_form = RepoFormWidget(context, model, self, source='local')
         self.options_form = SettingsFormWidget(context, model, self)
         self.appearance_form = AppearanceFormWidget(context, model, self)
         self.appearance = AppearanceWidget(self.appearance_form, self)

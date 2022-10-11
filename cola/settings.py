@@ -249,12 +249,12 @@ class Session(Settings):
 
     _sessions_dir = resources.config_home('sessions')
 
-    repo = property(lambda self: self.values['repo'])
+    repo = property(lambda self: self.values['local'])
 
     def __init__(self, session_id, repo=None):
         Settings.__init__(self)
         self.session_id = session_id
-        self.values.update({'repo': repo})
+        self.values.update({'local': repo})
         self.expired = False
 
     def session_path(self):

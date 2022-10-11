@@ -166,7 +166,7 @@ def get_icon_themes(context):
     if icon_themes_env:
         result.extend([x for x in icon_themes_env.split(':') if x])
 
-    icon_themes_cfg = context.cfg.get_all('cola.icontheme')
+    icon_themes_cfg = list(reversed(context.cfg.get_all('cola.icontheme')))
     if icon_themes_cfg:
         result.extend(icon_themes_cfg)
 
