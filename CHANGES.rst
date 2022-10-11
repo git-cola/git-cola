@@ -1,3 +1,19 @@
+.. _v4.0.3:
+
+Fixes
+-----
+* The config reader has been revamped to better read settings when git config
+  files are located in unexpected locations.
+  (`#927 <https://github.com/git-cola/git-cola/issues/927>`_)
+
+* The preferences dialog no longer throws an error when the editor has not
+  been configured.
+  (`#1263 <https://github.com/git-cola/git-cola/issues/1263>`_)
+
+
+v4.0.2
+======
+
 .. _v4.0.2:
 
 v4.0.2
