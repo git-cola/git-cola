@@ -12,6 +12,7 @@ from qtpy.QtCore import Signal
 from . import core
 from . import utils
 from . import version
+from . import resources
 from .compat import int_types
 from .compat import ustr
 
@@ -142,16 +143,13 @@ class GitConfig(QtCore.QObject):
         self.reset_values()
 
         show_scope = version.check_git(self.context, 'config-show-scope')
-        status, config_output, _ = self.git.config(
-            show_origin=True, show_scope=show_scope, list=True, includes=True
-        )
-        if status != 0:
-            return
-
+        show_origin = version.check_git(self.context, 'config-show-origin')
         if show_scope:
             reader = _read_config_with_scope
-        else:
+        elif show_origin:
             reader = _read_config_with_origin
+        else:
+            reader = _read_config_fallback
 
         unknown_scope = 'unknown'
         system_scope = 'system'
@@ -161,7 +159,7 @@ class GitConfig(QtCore.QObject):
         cache_paths = set()
 
         for (current_scope, current_key, current_value, continuation) in reader(
-            config_output, cache_paths, self._renamed_keys
+            self.context, cache_paths, self._renamed_keys
         ):
             # Store the values for fast cached lookup.
             self._all[current_key] = current_value
@@ -432,7 +430,7 @@ class GitConfig(QtCore.QObject):
         return os.path.join(self.hooks(), *paths)
 
 
-def _read_config_with_scope(config_output, cache_paths, renamed_keys):
+def _read_config_with_scope(context, cache_paths, renamed_keys):
     """Read the output from "git config --show-scope --show-origin --list
 
     ``--show-scope`` was introduced in Git v2.26.0.
@@ -450,6 +448,12 @@ def _read_config_with_scope(config_output, cache_paths, renamed_keys):
     current_key = ''
     current_scope = ''
     current_path = ''
+
+    status, config_output, _ = context.git.config(
+        show_origin=True, show_scope=True, list=True, includes=True
+    )
+    if status != 0:
+        return
 
     for line in config_output.splitlines():
         if not line:
@@ -486,7 +490,7 @@ def _read_config_with_scope(config_output, cache_paths, renamed_keys):
         yield current_scope, current_key, current_value, continuation
 
 
-def _read_config_with_origin(config_output, cache_paths, renamed_keys):
+def _read_config_with_origin(context, cache_paths, renamed_keys):
     """Read the output from "git config --show-origin --list
 
     ``--show-origin`` was introduced in Git v2.8.0.
@@ -506,6 +510,12 @@ def _read_config_with_origin(config_output, cache_paths, renamed_keys):
     current_path = ''
     current_scope = system_scope
     current_scope_id = system_scope_id
+
+    status, config_output, _ = context.git.config(
+        show_origin=True, list=True, includes=True
+    )
+    if status != 0:
+        return
 
     for line in config_output.splitlines():
         if not line or line.startswith(command_line):
@@ -545,6 +555,73 @@ def _read_config_with_origin(config_output, cache_paths, renamed_keys):
                 current_value = line
 
         yield current_scope, current_key, current_value, continuation
+
+
+def _read_config_fallback(context, cache_paths, renamed_keys):
+    """Fallback config reader for Git < 2.8.0"""
+    system_scope = 'system'
+    global_scope = 'global'
+    local_scope = 'local'
+    includes = version.check_git(context, 'config-includes')
+
+    current_path = '/etc/gitconfig'
+    if os.path.exists(current_path):
+        cache_paths.add(current_path)
+        status, config_output, _ = context.git.config(
+            z=True,
+            list=True,
+            includes=includes,
+            system=True,
+        )
+        if status == 0:
+            for key, value in _read_config_from_null_list(config_output):
+                renamed_keys[key.lower()] = key
+                yield system_scope, key, value, False
+
+    gitconfig_home = core.expanduser(os.path.join('~', '.gitconfig'))
+    gitconfig_xdg = resources.xdg_config_home('git', 'config')
+
+    if os.path.exists(gitconfig_home):
+        gitconfig = gitconfig_home
+    elif os.path.exists(gitconfig_xdg):
+        gitconfig = gitconfig_xdg
+    else:
+        gitconfig = None
+
+    if gitconfig:
+        cache_paths.add(gitconfig)
+        status, config_output, _ = context.git.config(
+            z=True, list=True, includes=includes, **{'global': True}
+        )
+        if status == 0:
+            for key, value in _read_config_from_null_list(config_output):
+                renamed_keys[key.lower()] = key
+                yield global_scope, key, value, False
+
+    local_config = context.git.git_path('config')
+    if os.path.exists(local_config):
+        cache_paths.add(gitconfig)
+        status, config_output, _ = context.git.config(
+            z=True,
+            list=True,
+            includes=includes,
+            local=True,
+        )
+        if status == 0:
+            for key, value in _read_config_from_null_list(config_output):
+                renamed_keys[key.lower()] = key
+                yield local_scope, key, value, False
+
+
+def _read_config_from_null_list(config_output):
+    """Parse the "git config --list -z" records"""
+    for record in config_output.rstrip('\0').split('\0'):
+        try:
+            name, value = record.split('\n', 1)
+        except ValueError:
+            name = record
+            value = 'true'
+        yield (name, _config_to_python(value))
 
 
 def python_to_git(value):

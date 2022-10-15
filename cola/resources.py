@@ -128,9 +128,14 @@ def icon_dir(theme):
     return icons
 
 
-def config_home(*args):
-    """Return the XDG_CONFIG_HOME configuration directory, eg. ~/.config/git-cola"""
+def xdg_config_home(*args):
+    """Return the XDG_CONFIG_HOME configuration directory, eg. ~/.config"""
     config = core.getenv(
         'XDG_CONFIG_HOME', os.path.join(core.expanduser('~'), '.config')
     )
-    return os.path.join(config, 'git-cola', *args)
+    return os.path.join(config, *args)
+
+
+def config_home(*args):
+    """Return git-cola's configuration directory, eg. ~/.config/git-cola"""
+    return xdg_config_home('git-cola', *args)
