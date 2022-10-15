@@ -151,7 +151,7 @@ class GitConfig(QtCore.QObject):
         if show_scope:
             reader = _read_config_with_scope
         else:
-            reader = _read_config_with_scope
+            reader = _read_config_with_origin
 
         unknown_scope = 'unknown'
         system_scope = 'system'
@@ -473,6 +473,67 @@ def _read_config_with_scope(config_output, cache_paths, renamed_keys):
             elif current_path == command_line:
                 continue
             renamed_keys[current_key.lower()] = current_key
+        else:
+            # Values are allowed to span multiple lines when \n is embedded
+            # in the value. Detect this and append to the previous value.
+            continuation = True
+            if current_value and isinstance(current_value, str):
+                current_value += '\n'
+                current_value += line
+            else:
+                current_value = line
+
+        yield current_scope, current_key, current_value, continuation
+
+
+def _read_config_with_origin(config_output, cache_paths, renamed_keys):
+    """Read the output from "git config --show-origin --list
+
+    ``--show-origin`` was introduced in Git v2.8.0.
+    """
+    command_line = 'command line:\t'
+    system_scope = 'system'
+    global_scope = 'global'
+    local_scope = 'local'
+    file_scheme = 'file:'
+
+    system_scope_id = 0
+    global_scope_id = 1
+    local_scope_id = 2
+
+    current_value = ''
+    current_key = ''
+    current_path = ''
+    current_scope = system_scope
+    current_scope_id = system_scope_id
+
+    for line in config_output.splitlines():
+        if not line or line.startswith(command_line):
+            continue
+        try:
+            tab_index = line.index('\t')
+        except ValueError:
+            tab_index = 0
+        if line.startswith(file_scheme) and tab_index > 5:
+            continuation = False
+            current_path = line[:tab_index]
+            rest = line[tab_index + 1:]
+
+            cache_paths.add(current_path)
+            current_key, current_value = _config_key_value(rest, '=')
+            renamed_keys[current_key.lower()] = current_key
+
+            # The valid state machine transitions are system -> global,
+            # system -> local and global -> local. We start from the system state.
+            basename = os.path.basename(current_path)
+            if current_scope_id == system_scope_id and basename == '.gitconfig':
+                # system -> global
+                current_scope_id = global_scope_id
+                current_scope = global_scope
+            elif current_scope_id < local_scope_id and basename == 'config':
+                # system -> local, global -> local
+                current_scope_id = local_scope_id
+                current_scope = local_scope
         else:
             # Values are allowed to span multiple lines when \n is embedded
             # in the value. Detect this and append to the previous value.
