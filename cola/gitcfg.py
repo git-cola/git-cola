@@ -141,67 +141,34 @@ class GitConfig(QtCore.QObject):
 
         self.reset_values()
 
-        includes = version.check_git(self.context, 'config-includes')
+        show_scope = version.check_git(self.context, 'config-show-scope')
         status, config_output, _ = self.git.config(
-            show_origin=True, show_scope=True, list=True, includes=includes
+            show_origin=True, show_scope=show_scope, list=True, includes=True
         )
         if status != 0:
             return
 
-        unknown_scope, unknown_key = _append_tab('unknown')
-        system_scope, system_key = _append_tab('system')
-        global_scope, global_key = _append_tab('global')
-        local_scope, local_key = _append_tab('local')
-        worktree_scope, worktree_key = _append_tab('worktree')
-        command_scope, command_key = _append_tab('command')
-        command_path = 'command line:'
-        file_scheme = 'file:'
+        if show_scope:
+            reader = _read_config_with_scope
+        else:
+            reader = _read_config_with_scope
 
-        current_value = ''
-        current_key = ''
-        current_scope = ''
-        current_path = ''
+        unknown_scope = 'unknown'
+        system_scope = 'system'
+        global_scope = 'global'
+        local_scope = 'local'
+        worktree_scope = 'worktree'
         cache_paths = set()
 
-        for line in config_output.splitlines():
-            if not line:
-                continue
-            # Treat "unknown" the same as "system" (lowest priority).
-            # pylint: disable=too-many-boolean-expressions
-            if (
-                line.startswith(system_key)
-                or line.startswith(global_key)
-                or line.startswith(local_key)
-                or line.startswith(command_key)
-                or line.startswith(worktree_key)  # worktree and unknown are uncommon.
-                or line.startswith(unknown_key)
-            ):
-                continuation = False
-                current_scope, current_path, rest = line.split('\t', 2)
-                if current_scope == command_scope:
-                    continue
-                current_key, current_value = _config_key_value(rest, '=')
-                if current_path.startswith(file_scheme):
-                    cache_paths.add(current_path[len(file_scheme):])
-                elif current_path == command_path:
-                    continue
-                self._renamed_keys[current_key.lower()] = current_key
-            else:
-                # Values are allowed to span multiple lines when \n is embedded
-                # in the value. Detect this and append to the previous value.
-                continuation = True
-                if current_value and isinstance(current_value, str):
-                    current_value += '\n'
-                    current_value += line
-                else:
-                    current_value = line
-
+        for (
+            current_scope, current_key, current_value, continuation
+        ) in reader(config_output, cache_paths, self._renamed_keys):
             # Store the values for fast cached lookup.
             self._all[current_key] = current_value
 
             # macOS has credential.helper=osxkeychain in the "unknown" scope from
             # /Applications/Xcode.app/Contents/Developer/usr/share/git-core/gitconfig.
-            # Treat "unknown" as equivalent to "system".
+            # Treat "unknown" as equivalent to "system" (lowest priority).
             if current_scope in (system_scope, unknown_scope):
                 self._system[current_key] = current_value
                 self._global_or_system[current_key] = current_value
@@ -463,6 +430,60 @@ class GitConfig(QtCore.QObject):
     def hooks_path(self, *paths):
         """Return a path from within the git hooks directory"""
         return os.path.join(self.hooks(), *paths)
+
+
+def _read_config_with_scope(config_output, cache_paths, renamed_keys):
+    """Read the output from "git config --show-scope --show-origin --list
+
+    ``--show-scope`` was introduced in Git v2.26.0.
+    """
+    unknown_key = 'unknown\t'
+    system_key = 'system\t'
+    global_key = 'global\t'
+    local_key = 'local\t'
+    worktree_key = 'worktree\t'
+    command_scope, command_key = _append_tab('command')
+    command_line = 'command line:'
+    file_scheme = 'file:'
+
+    current_value = ''
+    current_key = ''
+    current_scope = ''
+    current_path = ''
+
+    for line in config_output.splitlines():
+        if not line:
+            continue
+        # pylint: disable=too-many-boolean-expressions
+        if (
+            line.startswith(system_key)
+            or line.startswith(global_key)
+            or line.startswith(local_key)
+            or line.startswith(command_key)
+            or line.startswith(worktree_key)  # worktree and unknown are uncommon.
+            or line.startswith(unknown_key)
+        ):
+            continuation = False
+            current_scope, current_path, rest = line.split('\t', 2)
+            if current_scope == command_scope:
+                continue
+            current_key, current_value = _config_key_value(rest, '=')
+            if current_path.startswith(file_scheme):
+                cache_paths.add(current_path[len(file_scheme):])
+            elif current_path == command_line:
+                continue
+            renamed_keys[current_key.lower()] = current_key
+        else:
+            # Values are allowed to span multiple lines when \n is embedded
+            # in the value. Detect this and append to the previous value.
+            continuation = True
+            if current_value and isinstance(current_value, str):
+                current_value += '\n'
+                current_value += line
+            else:
+                current_value = line
+
+        yield current_scope, current_key, current_value, continuation
 
 
 def python_to_git(value):

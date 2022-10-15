@@ -39,8 +39,10 @@ _versions = {
     'force-with-lease': '1.8.5',
     # git submodule update --recursive was introduced in 1.6.5
     'submodule-update-recursive': '1.6.5',
-    # git include.path pseudo-variable was introduced in 1.7.10
-    'config-includes': '1.7.10',
+    # git config --show-scope was introduced in 2.26.0
+    'config-show-scope': '2.26.0',
+    # git config --show-origin was introduced in 2.8.0
+    'config-show-origin': '2.8.0',
     # git for-each-ref --sort=version:refname
     'version-sort': '2.7.0',
     # Qt support for QT_AUTO_SCREEN_SCALE_FACTOR and QT_SCALE_FACTOR
