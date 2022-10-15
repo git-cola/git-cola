@@ -2423,6 +2423,9 @@ class Stage(ContextCommand):
 
         add = []
         remove = []
+        status = 0
+        out = ''
+        err = ''
 
         for path in set(paths):
             if core.exists(path) or core.islink(path):
