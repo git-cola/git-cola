@@ -140,8 +140,13 @@ def all_files(context, *args):
     """Returns a sorted list of all files, including untracked files."""
     git = context.git
     ls_files = git.ls_files(
-        '--', *args,
-        z=True, cached=True, others=True, exclude_standard=True, _readonly=True
+        '--',
+        *args,
+        z=True,
+        cached=True,
+        others=True,
+        exclude_standard=True,
+        _readonly=True
     )[STDOUT]
     return sorted([f for f in ls_files.split('\0') if f])
 

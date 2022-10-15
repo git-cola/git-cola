@@ -160,9 +160,9 @@ class GitConfig(QtCore.QObject):
         worktree_scope = 'worktree'
         cache_paths = set()
 
-        for (
-            current_scope, current_key, current_value, continuation
-        ) in reader(config_output, cache_paths, self._renamed_keys):
+        for (current_scope, current_key, current_value, continuation) in reader(
+            config_output, cache_paths, self._renamed_keys
+        ):
             # Store the values for fast cached lookup.
             self._all[current_key] = current_value
 
@@ -469,7 +469,7 @@ def _read_config_with_scope(config_output, cache_paths, renamed_keys):
                 continue
             current_key, current_value = _config_key_value(rest, '=')
             if current_path.startswith(file_scheme):
-                cache_paths.add(current_path[len(file_scheme):])
+                cache_paths.add(current_path[len(file_scheme) :])
             elif current_path == command_line:
                 continue
             renamed_keys[current_key.lower()] = current_key
@@ -517,7 +517,7 @@ def _read_config_with_origin(config_output, cache_paths, renamed_keys):
         if line.startswith(file_scheme) and tab_index > 5:
             continuation = False
             current_path = line[:tab_index]
-            rest = line[tab_index + 1:]
+            rest = line[tab_index + 1 :]
 
             cache_paths.add(current_path)
             current_key, current_value = _config_key_value(rest, '=')
