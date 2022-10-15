@@ -46,6 +46,7 @@ class MainModel(QtCore.QObject):
     mode_none = 'none'  # Default: nothing's happened, do nothing
     mode_worktree = 'worktree'  # Comparing index to worktree
     mode_diffstat = 'diffstat'  # Showing a diffstat
+    mode_display = 'display'  # Displaying arbitrary information
     mode_untracked = 'untracked'  # Dealing with an untracked file
     mode_untracked_diff = 'untracked-diff'  # Diffing an untracked file
     mode_index = 'index'  # Comparing index to last commit
@@ -55,7 +56,7 @@ class MainModel(QtCore.QObject):
     modes_undoable = set((mode_amend, mode_index, mode_worktree))
 
     # Modes where we can partially stage files
-    modes_stageable = set((mode_amend, mode_worktree, mode_untracked_diff))
+    modes_partially_stageable = set((mode_amend, mode_worktree, mode_untracked_diff))
 
     # Modes where we can partially unstage files
     modes_unstageable = set((mode_amend, mode_index))
@@ -121,9 +122,13 @@ class MainModel(QtCore.QObject):
         """Whether we can checkout files from the $head."""
         return self.mode in self.modes_undoable
 
+    def partially_stageable(self):
+        """Whether partial staging should be allowed."""
+        return self.mode in self.modes_partially_stageable
+
     def stageable(self):
         """Whether staging should be allowed."""
-        return self.mode in self.modes_stageable
+        return self.partially_stageable() or self.mode == self.modes_untracked
 
     def all_branches(self):
         return self.local_branches + self.remote_branches

@@ -1,5 +1,8 @@
 .. _v4.0.3:
 
+v4.0.3
+======
+
 Fixes
 -----
 * The config reader has been revamped to better read settings when git config
@@ -11,15 +14,14 @@ Fixes
   been configured.
   (`#1263 <https://github.com/git-cola/git-cola/issues/1263>`_)
 
+* Context menu actions for staging files has been added when diffing images.
+  (`#1265 <https://github.com/git-cola/git-cola/issues/1265>`_)
 
 Translations
 ------------
 * The .po and .pot files now contain location information.
   (`#880 <https://github.com/git-cola/git-cola/issues/880>`_)
 
-
-v4.0.2
-======
 
 .. _v4.0.2:
 

@@ -735,7 +735,7 @@ class DiffEditor(DiffTextEdit):
         enabled = False
         s = self.selection_model.selection()
         model = self.model
-        if model.stageable():
+        if model.partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 pass
@@ -784,7 +784,7 @@ class DiffEditor(DiffTextEdit):
                 self.stage_or_unstage.setText(N_('Unstage'))
             menu.addAction(self.stage_or_unstage)
 
-        if model.stageable():
+        if model.partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 path = core.abspath(item)
@@ -879,7 +879,11 @@ class DiffEditor(DiffTextEdit):
         """setPlainText(str) while retaining scrollbar positions"""
         model = self.model
         mode = model.mode
-        highlight = mode not in (model.mode_none, model.mode_untracked)
+        highlight = mode not in (
+            model.mode_none,
+            model.mode_display,
+            model.mode_untracked,
+        )
         self.highlighter.set_enabled(highlight)
 
         scrollbar = self.verticalScrollBar()
@@ -926,7 +930,7 @@ class DiffEditor(DiffTextEdit):
     def apply_selection(self):
         model = self.model
         s = self.selection_model.single_selection()
-        if model.stageable() and (s.modified or s.untracked):
+        if model.partially_stageable() and (s.modified or s.untracked):
             self.process_diff_selection()
         elif model.unstageable():
             self.process_diff_selection(reverse=True)

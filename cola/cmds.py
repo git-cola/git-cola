@@ -1061,13 +1061,17 @@ class DeleteRemoteBranch(DeleteBranch):
         return command % (self.remote, self.branch)
 
 
-def get_mode(model, staged, modified, unmerged, untracked):
+def get_mode(context, filename, staged, modified, unmerged, untracked):
+    model = context.model
     if staged:
         mode = model.mode_index
     elif modified or unmerged:
         mode = model.mode_worktree
     elif untracked:
-        mode = model.mode_untracked
+        if gitcmds.is_binary(context, filename):
+            mode = model.mode_untracked
+        else:
+            mode = model.mode_untracked_diff
     else:
         mode = model.mode
     return mode
@@ -1116,7 +1120,9 @@ class DiffImage(EditModel):
         self.new_filename = filename
         self.new_diff_type = self.get_diff_type(filename)
         self.new_file_type = main.Types.IMAGE
-        self.new_mode = get_mode(self.model, staged, modified, unmerged, untracked)
+        self.new_mode = get_mode(
+            context, filename, staged, modified, unmerged, untracked
+        )
         self.staged = staged
         self.modified = modified
         self.unmerged = unmerged
@@ -2749,7 +2755,7 @@ class UntrackedSummary(EditModel):
         self.new_diff_text = io.getvalue()
         self.new_diff_type = main.Types.TEXT
         self.new_file_type = main.Types.TEXT
-        self.new_mode = self.model.mode_untracked
+        self.new_mode = self.model.mode_display
 
 
 class VisualizeAll(ContextCommand):
