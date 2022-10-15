@@ -108,7 +108,7 @@ class StatusWidget(QtWidgets.QFrame):
 # pylint: disable=too-many-ancestors
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Read-only access to the mode state
-    mode = property(lambda self: self.m.mode)
+    mode = property(lambda self: self._model.mode)
 
     def __init__(self, context, parent=None):
         QtWidgets.QTreeWidget.__init__(self, parent)
@@ -285,15 +285,17 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.delete_untracked_files_action.setIcon(icons.discard())
 
-        # The model is stored as self.m because self.model() is a
+        # The model is stored as self._model because self.model() is a
         # QTreeWidgetItem method that returns a QAbstractItemModel.
-        self.m = context.model
-        self.m.previous_contents.connect(
+        self._model = context.model
+        self._model.previous_contents.connect(
             self._set_previous_contents, type=Qt.QueuedConnection
         )
-        self.m.about_to_update.connect(self._about_to_update, type=Qt.QueuedConnection)
-        self.m.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        self.m.diff_text_changed.connect(
+        self._model.about_to_update.connect(
+            self._about_to_update, type=Qt.QueuedConnection
+        )
+        self._model.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self._model.diff_text_changed.connect(
             self._make_current_item_visible, type=Qt.QueuedConnection
         )
         # pylint: disable=no-member
@@ -560,10 +562,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.old_current_item = self.current_item()
 
     def refresh(self):
-        self._set_staged(self.m.staged)
-        self._set_modified(self.m.modified)
-        self._set_unmerged(self.m.unmerged)
-        self._set_untracked(self.m.untracked)
+        self._set_staged(self._model.staged)
+        self._set_modified(self._model.modified)
+        self._set_unmerged(self._model.unmerged)
+        self._set_untracked(self._model.untracked)
         self._update_column_widths()
         self._update_actions()
         self._restore_selection()
@@ -583,7 +585,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 STAGED_IDX,
                 N_('Staged'),
                 staged=True,
-                deleted_set=self.m.staged_deleted,
+                deleted_set=self._model.staged_deleted,
             )
 
     def _set_modified(self, items):
@@ -593,7 +595,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 items,
                 MODIFIED_IDX,
                 N_('Modified'),
-                deleted_set=self.m.unstaged_deleted,
+                deleted_set=self._model.unstaged_deleted,
             )
 
     def _set_unmerged(self, items):
@@ -757,11 +759,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return menu
 
     def _create_staged_context_menu(self, menu, s):
-        if s.staged[0] in self.m.submodules:
+        if s.staged[0] in self._model.submodules:
             return self._create_staged_submodule_context_menu(menu, s)
 
         context = self.context
-        if self.m.unstageable():
+        if self._model.unstageable():
             action = menu.addAction(
                 icons.remove(),
                 N_('Unstage Selected'),
@@ -773,13 +775,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Do all of the selected items exist?
         all_exist = all(
-            i not in self.m.staged_deleted and core.exists(i) for i in self.staged()
+            i not in self._model.staged_deleted and core.exists(i)
+            for i in self.staged()
         )
 
         if all_exist:
             menu.addAction(self.launch_difftool_action)
 
-        if self.m.undoable():
+        if self._model.undoable():
             menu.addAction(self.revert_unstaged_edits_action)
 
         menu.addAction(self.view_history_action)
@@ -824,11 +827,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_unstaged_context_menu(self, menu, s):
         context = self.context
-        modified_submodule = s.modified and s.modified[0] in self.m.submodules
+        modified_submodule = s.modified and s.modified[0] in self._model.submodules
         if modified_submodule:
             return self._create_modified_submodule_context_menu(menu, s)
 
-        if self.m.stageable():
+        if self._model.stageable():
             action = menu.addAction(
                 icons.add(),
                 N_('Stage Selected'),
@@ -841,20 +844,20 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Do all of the selected items exist?
         all_exist = all(
-            i not in self.m.unstaged_deleted and core.exists(i) for i in self.staged()
+            i not in self._model.unstaged_deleted and core.exists(i)
+            for i in self.staged()
         )
 
-        if all_exist and s.modified and self.m.stageable():
+        if all_exist and s.modified and self._model.stageable():
             menu.addAction(self.launch_difftool_action)
 
-        if s.modified and self.m.stageable():
-            if self.m.undoable():
-                menu.addSeparator()
-                menu.addAction(self.revert_unstaged_edits_action)
+        if s.modified and self._model.stageable() and self._model.undoable():
+            menu.addSeparator()
+            menu.addAction(self.revert_unstaged_edits_action)
 
         if all_exist and s.untracked:
             # Git Annex / Git LFS
-            annex = self.m.annex
+            annex = self._model.annex
             lfs = core.find_executable('git-lfs')
             if annex or lfs:
                 menu.addSeparator()
@@ -895,7 +898,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             )
             menu.addSeparator()
 
-        if self.m.stageable():
+        if self._model.stageable():
             menu.addSeparator()
             action = menu.addAction(
                 icons.add(),
@@ -958,7 +961,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def contents(self):
         """Return all of the current files in a selection.State container"""
         return selection.State(
-            self.m.staged, self.m.unmerged, self.m.modified, self.m.untracked
+            self._model.staged,
+            self._model.unmerged,
+            self._model.modified,
+            self._model.untracked,
         )
 
     def all_files(self):
@@ -1002,19 +1008,19 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             idx -= len(content)
 
     def staged(self):
-        return qtutils.get_selected_values(self, STAGED_IDX, self.m.staged)
+        return qtutils.get_selected_values(self, STAGED_IDX, self._model.staged)
 
     def unstaged(self):
         return self.unmerged() + self.modified() + self.untracked()
 
     def modified(self):
-        return qtutils.get_selected_values(self, MODIFIED_IDX, self.m.modified)
+        return qtutils.get_selected_values(self, MODIFIED_IDX, self._model.modified)
 
     def unmerged(self):
-        return qtutils.get_selected_values(self, UNMERGED_IDX, self.m.unmerged)
+        return qtutils.get_selected_values(self, UNMERGED_IDX, self._model.unmerged)
 
     def untracked(self):
-        return qtutils.get_selected_values(self, UNTRACKED_IDX, self.m.untracked)
+        return qtutils.get_selected_values(self, UNTRACKED_IDX, self._model.untracked)
 
     def staged_items(self):
         return qtutils.get_selected_items(self, STAGED_IDX)
@@ -1043,7 +1049,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         selected_indexes = self.selected_indexes()
         if not selected_indexes:
-            if self.m.amending():
+            if self._model.amending():
                 cmds.do(cmds.SetDiffText, context, '')
             else:
                 cmds.do(cmds.ResetMode, context)
