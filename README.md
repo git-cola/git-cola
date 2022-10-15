@@ -32,7 +32,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 ## Runtime
 
-* [Git](https://git-scm.com/) 2.2.0 or newer.
+* [Git](https://git-scm.com/) 2.8.0 or newer.
 
 * [Python](https://python.org/) 3.6 or newer.
 
