@@ -87,6 +87,7 @@ Thanks
 * Geoffrey van Wyk
 * Georg Limbach
 * geotavros
+* Gianni Lerro
 * `Git Hackers <http://git-scm.com/about>`_
 * green-eyed-bear
 * Glen Mailer
