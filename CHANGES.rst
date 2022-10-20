@@ -17,6 +17,10 @@ Fixes
 * Context menu actions for staging files has been added when diffing images.
   (`#1265 <https://github.com/git-cola/git-cola/issues/1265>`_)
 
+* The stash editor now properly displays stashes with slashes ("/") in
+  their names or messsages.
+  (`#1267 <https://github.com/git-cola/git-cola/pull/1267>`_)
+
 Translations
 ------------
 * The .po and .pot files now contain location information.
