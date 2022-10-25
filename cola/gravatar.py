@@ -73,8 +73,10 @@ class GravatarLabel(QtWidgets.QLabel):
         self.network.finished.connect(self.network_finished)
 
     def set_email(self, email):
-        if email in self.pixmaps:
-            self.setPixmap(self.pixmaps[email])
+        """Update the author icon based on the specified email"""
+        pixmap = self.pixmaps.get(email, None)
+        if pixmap is not None:
+            self.setPixmap(pixmap)
             return
         if self.timeout > 0 and (int(time.time()) - self.timeout) < (5 * 60):
             self.set_pixmap_from_response()
