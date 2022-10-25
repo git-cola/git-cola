@@ -105,6 +105,7 @@ Thanks
 * Iulian Udrea
 * Ivar Smolin
 * Jad El Kik
+* Jakub Klos
 * Jan @hanksoff
 * Jan Šilhan
 * Jan Tumanov
