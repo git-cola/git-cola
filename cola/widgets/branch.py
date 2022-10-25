@@ -131,7 +131,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.setExpandsOnDoubleClick(False)
 
         self.current_branch = None
-        self.tree_helper = BranchesTreeHelper()
+        self.tree_helper = BranchesTreeHelper(self)
         self.git_helper = GitHelper(context)
         self.runtask = qtutils.RunTask(parent=self)
 
@@ -700,14 +700,24 @@ def get_toplevel_item(item):
 
 
 class BranchesTreeHelper(object):
+    """Save and restore the tree state"""
+
+    def __init__(self, tree):
+        self.tree = tree
+
     def load_state(self, item, state):
         """Load expanded items from a dict"""
+        if not state:
+            return
         if state.get('expanded', False) and not item.isExpanded():
             item.setExpanded(True)
         if state.get('selected', False) and not item.isSelected():
             item.setSelected(True)
+            self.tree.setCurrentItem(item)
 
         children_state = state.get('children', {})
+        if not children_state:
+            return
         for i in range(item.childCount()):
             child = item.child(i)
             self.load_state(child, children_state.get(child.name, {}))

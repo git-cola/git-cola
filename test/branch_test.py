@@ -195,7 +195,7 @@ def test_should_return_a_valid_child_on_find_child():
 def test_should_return_empty_state_on_save_state():
     """Test the save_state function."""
     top = _create_item('top', None, False)
-    tree_helper = branch.BranchesTreeHelper()
+    tree_helper = branch.BranchesTreeHelper(Mock())
     actual = tree_helper.save_state(top)
     assert {'top': {'children': {}, 'expanded': False, 'selected': False}} == actual
 
@@ -203,7 +203,7 @@ def test_should_return_empty_state_on_save_state():
 def test_should_return_a_valid_state_on_save_state():
     """Test the save_state function."""
     items = _create_top_item()
-    tree_helper = branch.BranchesTreeHelper()
+    tree_helper = branch.BranchesTreeHelper(Mock())
     actual = tree_helper.save_state(items['top'])
     expect = {
         'top': {
