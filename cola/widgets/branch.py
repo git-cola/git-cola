@@ -198,7 +198,9 @@ class BranchesTreeWidget(standard.TreeWidget):
 
     def _toggle_expanded(self, index):
         """Toggle expanded/collapsed state when items are clicked"""
-        self.setExpanded(index, not self.isExpanded(index))
+        item = self.itemFromIndex(index)
+        if item and item.childCount():
+            self.setExpanded(index, not self.isExpanded(index))
 
     def contextMenuEvent(self, event):
         """Build and execute the context menu"""
@@ -369,8 +371,7 @@ class BranchesTreeWidget(standard.TreeWidget):
     def _load_tree_state(self, states):
         """Restore expanded items after rebuilding UI widgets"""
         for item in self.items():
-            if item.name in states:
-                self.tree_helper.load_state(item, states[item.name])
+            self.tree_helper.load_state(item, states.get(item.name, {}))
 
     def _update_branches(self):
         """Query branch details using a background task"""
@@ -701,22 +702,30 @@ def get_toplevel_item(item):
 class BranchesTreeHelper(object):
     def load_state(self, item, state):
         """Load expanded items from a dict"""
-        if state.keys():
+        if state.get('expanded', False) and not item.isExpanded():
             item.setExpanded(True)
+        if state.get('selected', False) and not item.isSelected():
+            item.setSelected(True)
 
+        children_state = state.get('children', {})
         for i in range(item.childCount()):
             child = item.child(i)
-            if child.name in state:
-                self.load_state(child, state[child.name])
+            self.load_state(child, children_state.get(child.name, {}))
 
     def save_state(self, item):
-        """Save expanded items in a dict"""
-        result = {item.name: {}}
-
-        if item.isExpanded():
-            for i in range(item.childCount()):
-                child = item.child(i)
-                result[item.name].update(self.save_state(child))
+        """Save the selected and expanded item state into a dict"""
+        expanded = item.isExpanded()
+        selected = item.isSelected()
+        children = {}
+        entry = {
+            'children': children,
+            'expanded': expanded,
+            'selected': selected,
+        }
+        result = {item.name: entry}
+        for i in range(item.childCount()):
+            child = item.child(i)
+            children.update(self.save_state(child))
 
         return result
 

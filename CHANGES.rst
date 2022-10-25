@@ -3,6 +3,12 @@
 v4.0.3
 ======
 
+Usability, bells and whistles
+-----------------------------
+* The branches widget no longer loses its selection state in response to
+  notifications and UI actions.
+  (`#1221 <https://github.com/git-cola/git-cola/issues/1221>`_)
+
 Fixes
 -----
 * The config reader has been revamped to better read settings when git config

@@ -197,7 +197,7 @@ def test_should_return_empty_state_on_save_state():
     top = _create_item('top', None, False)
     tree_helper = branch.BranchesTreeHelper()
     actual = tree_helper.save_state(top)
-    assert {'top': {}} == actual
+    assert {'top': {'children': {}, 'expanded': False, 'selected': False}} == actual
 
 
 def test_should_return_a_valid_state_on_save_state():
@@ -207,8 +207,31 @@ def test_should_return_a_valid_state_on_save_state():
     actual = tree_helper.save_state(items['top'])
     expect = {
         'top': {
-            'child_1': {},
-            'child_2': {'sub_child_2_1': {}, 'sub_child_2_2': {}},
+            'children': {
+                'child_1': {
+                    'children': {},
+                    'expanded': False,
+                    'selected': False,
+                },
+                'child_2': {
+                    'children': {
+                        'sub_child_2_1': {
+                            'children': {},
+                            'expanded': False,
+                            'selected': False,
+                        },
+                        'sub_child_2_2': {
+                            'children': {},
+                            'expanded': False,
+                            'selected': False,
+                        },
+                    },
+                    'expanded': True,
+                    'selected': False,
+                },
+            },
+            'expanded': True,
+            'selected': False,
         }
     }
     assert expect == actual
