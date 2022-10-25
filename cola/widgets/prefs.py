@@ -135,6 +135,9 @@ class RepoFormWidget(FormWidget):
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
 
+        tooltip = N_('Use gravatar.com to lookup icons for author emails')
+        self.enable_gravatar = qtutils.checkbox(checked=True, tooltip=tooltip)
+
         tooltip = N_('Prevent "Stage" from staging all files when nothing is selected')
         self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
 
@@ -158,6 +161,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
+        self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
         self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
         self.add_row(
@@ -168,6 +172,7 @@ class RepoFormWidget(FormWidget):
             {
                 prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
                 prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
+                prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
                 prefs.CHECK_PUBLISHED_COMMITS: (
                     self.check_published_commits,
                     Defaults.check_published_commits,

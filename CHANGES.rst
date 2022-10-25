@@ -9,6 +9,10 @@ Usability, bells and whistles
   notifications and UI actions.
   (`#1221 <https://github.com/git-cola/git-cola/issues/1221>`_)
 
+* The use of ``gravatar.com`` to fetch icons associated with author emails
+  can now be disabled by setting `git config --global cola.gravatar false`.
+  (`#933 <https://github.com/git-cola/git-cola/issues/933>`_)
+
 Fixes
 -----
 * The config reader has been revamped to better read settings when git config

@@ -606,6 +606,14 @@ Expand tabs into spaces in the commit message editor.  When set to `true`,
 The number of spaces is determined by `cola.tabwidth`.
 Defaults to `false`.
 
+cola.gravatar
+-------------
+Use the `gravatar.com` service to lookup icons for author emails.
+Gravatar icons work by sending an MD5 hash of an author's email to `gravatar.com`
+when requesting an icon. Warning: this feature can leak information.
+Network requests to `gravatar.com` are disabled when set to `false`.
+Defaults to `true`.
+
 cola.fileattributes
 -------------------
 Enables per-file gitattributes encoding and binary file support.

@@ -997,7 +997,7 @@ class DiffWidget(QtWidgets.QWidget):
             QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
         )
 
-        self.gravatar_label = gravatar.GravatarLabel()
+        self.gravatar_label = gravatar.GravatarLabel(self.context, parent=self)
 
         self.author_label = TextLabel()
         self.author_label.setTextFormat(Qt.RichText)

@@ -22,6 +22,7 @@ DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
+ENABLE_GRAVATAR = 'cola.gravatar'
 EXPANDTAB = 'cola.expandtab'
 FONTDIFF = 'cola.fontdiff'
 HIDPI = 'cola.hidpi'
@@ -63,6 +64,7 @@ class Defaults(object):
     diff_context = 5
     difftool = 'xxdiff'
     editor = 'gvim'
+    enable_gravatar = True
     expandtab = False
     history_browser = 'gitk'
     icon_theme = 'default'
@@ -158,6 +160,11 @@ def _remap_editor(app):
 def comment_char(context):
     """Return the configured git commit comment character"""
     return context.cfg.get(COMMENT_CHAR, default=Defaults.comment_char)
+
+
+def enable_gravatar(context):
+    """Is gravatar enabled?"""
+    return context.cfg.get(ENABLE_GRAVATAR, default=Defaults.enable_gravatar)
 
 
 def default_history_browser():
