@@ -2,7 +2,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 
-from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -135,13 +134,9 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.git_helper = GitHelper(context)
         self.runtask = qtutils.RunTask(parent=self)
 
-        self._active = False
+        self._visible = False
+        self._needs_refresh = False
         self._tree_states = None
-
-        # The refresh timer is used to debounce update events.
-        # This makes it so that two events in quick succession only refresh once.
-        self._refresh_timer = QtCore.QTimer(self)
-        self._refresh_timer.timeout.connect(self._refresh)
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         context.model.updated.connect(self.updated)
@@ -154,16 +149,14 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.doubleClicked.connect(self.checkout_action)
 
     def refresh(self):
-        """Start the refresh timer"""
-        if self._refresh_timer.isActive():
-            self._refresh_timer.stop()
-        self._refresh_timer.start(120)
+        """Refresh the UI widgets to match the current state"""
+        self._needs_refresh = True
+        self._refresh()
 
     def _refresh(self):
         """Refresh the UI to match the updated state"""
-        self._refresh_timer.stop()
         # There is no need to refresh the UI when this widget is inactive.
-        if not self._active:
+        if not self._visible:
             return
         model = self.context.model
         self.current_branch = model.currentbranch
@@ -187,13 +180,19 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
+
+        if self._tree_states:
+            self._load_tree_state(self._tree_states)
+            self._tree_states = None
+
         self._update_branches()
 
     def showEvent(self, event):
         """Defer updating widgets until the widget is visible"""
-        if not self._active:
-            self._active = True
-            self.refresh()
+        if not self._visible:
+            self._visible = True
+            if self._needs_refresh:
+                self.refresh()
         return super(BranchesTreeWidget, self).showEvent(event)
 
     def _toggle_expanded(self, index):
@@ -365,13 +364,19 @@ class BranchesTreeWidget(standard.TreeWidget):
         states = {}
         for item in self.items():
             states.update(self.tree_helper.save_state(item))
-
         return states
 
     def _load_tree_state(self, states):
         """Restore expanded items after rebuilding UI widgets"""
+        # Disable animations to eliminate redraw flicker.
+        animated = self.isAnimated()
+        self.setAnimated(False)
+
         for item in self.items():
             self.tree_helper.load_state(item, states.get(item.name, {}))
+        self.tree_helper.set_current_item()
+
+        self.setAnimated(animated)
 
     def _update_branches(self):
         """Query branch details using a background task"""
@@ -406,10 +411,6 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             if status_str:
                 item.setText(0, '%s\t%s' % (item.text(0), status_str))
-
-        if self._tree_states:
-            self._load_tree_state(self._tree_states)
-            self._tree_states = None
 
     def git_action_async(self, action, args, kwarg=None, update_refs=False):
         if kwarg is None:
@@ -672,7 +673,8 @@ def expand_item_parents(item):
     """Expand tree parents from item"""
     parent = item.parent()
     while parent is not None:
-        parent.setExpanded(True)
+        if not parent.isExpanded():
+            parent.setExpanded(True)
         parent = parent.parent()
 
 
@@ -709,6 +711,13 @@ class BranchesTreeHelper(object):
 
     def __init__(self, tree):
         self.tree = tree
+        self.current_item = None
+
+    def set_current_item(self):
+        """Reset the current item"""
+        if self.current_item is not None:
+            self.tree.setCurrentItem(self.current_item)
+        self.current_item = None
 
     def load_state(self, item, state):
         """Load expanded items from a dict"""
@@ -718,7 +727,7 @@ class BranchesTreeHelper(object):
             item.setExpanded(True)
         if state.get('selected', False) and not item.isSelected():
             item.setSelected(True)
-            self.tree.setCurrentItem(item)
+            self.current_item = item
 
         children_state = state.get('children', {})
         if not children_state:
