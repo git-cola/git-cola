@@ -41,12 +41,13 @@ def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, fn):
 class AsyncGitActionTask(qtutils.Task):
     """Run git action asynchronously"""
 
-    def __init__(self, git_helper, action, args, kwarg):
+    def __init__(self, git_helper, action, args, kwarg, update_refs):
         qtutils.Task.__init__(self)
         self.git_helper = git_helper
         self.action = action
         self.args = args
         self.kwarg = kwarg
+        self.update_refs = update_refs
 
     def task(self):
         """Runs action and captures the result"""
@@ -112,7 +113,6 @@ class BranchesWidget(QtWidgets.QFrame):
     def refresh(self):
         icon = self.order_icon(self.model.ref_sort)
         self.sort_order_button.setIcon(icon)
-        self.tree.refresh()
 
 
 # pylint: disable=too-many-ancestors
@@ -411,10 +411,10 @@ class BranchesTreeWidget(standard.TreeWidget):
             self._load_tree_state(self._tree_states)
             self._tree_states = None
 
-    def git_action_async(self, action, args, kwarg=None):
+    def git_action_async(self, action, args, kwarg=None, update_refs=False):
         if kwarg is None:
             kwarg = {}
-        task = AsyncGitActionTask(self.git_helper, action, args, kwarg)
+        task = AsyncGitActionTask(self.git_helper, action, args, kwarg, update_refs)
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )
@@ -423,7 +423,8 @@ class BranchesTreeWidget(standard.TreeWidget):
     def git_action_completed(self, task):
         status, out, err = task.result
         self.git_helper.show_result(task.action, status, out, err)
-        self.context.model.update_refs()
+        if task.update_refs:
+            self.context.model.update_refs()
 
     def push_action(self):
         context = self.context
@@ -434,7 +435,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             if remote and branch_name:
                 # we assume that user wants to "Push" the selected local
                 # branch to a remote with same name
-                self.git_action_async('push', [remote, branch_name])
+                self.git_action_async('push', [remote, branch_name], update_refs=True)
 
     def rename_action(self):
         branch = self.selected_refname()
@@ -442,7 +443,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_('Enter New Branch Name'), title=N_('Rename branch'), text=branch
         )
         if ok and new_branch:
-            self.git_action_async('rename', [branch, new_branch])
+            self.git_action_async('rename', [branch, new_branch], update_refs=True)
 
     def pull_action(self):
         context = self.context
@@ -453,7 +454,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
-                self.git_action_async('pull', [remote, branch_name])
+                self.git_action_async('pull', [remote, branch_name], update_refs=True)
 
     def delete_action(self):
         branch = self.selected_refname()
@@ -462,6 +463,8 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         remote = False
         root = get_toplevel_item(self.selected_item())
+        if not root:
+            return
         if root.name == N_('Remote'):
             remote = True
 
@@ -480,13 +483,15 @@ class BranchesTreeWidget(standard.TreeWidget):
     def checkout_action(self):
         branch = self.selected_refname()
         if branch and branch != self.current_branch:
-            self.git_action_async('checkout', [branch])
+            self.git_action_async('checkout', [branch], update_refs=True)
 
     def checkout_new_branch_action(self):
         branch = self.selected_refname()
         if branch and branch != self.current_branch:
             _, new_branch = gitcmds.parse_remote_branch(branch)
-            self.git_action_async('checkout', ['-b', new_branch, branch])
+            self.git_action_async(
+                'checkout', ['-b', new_branch, branch], update_refs=True
+            )
 
     def selected_refname(self):
         return getattr(self.selected_item(), 'refname', None)
