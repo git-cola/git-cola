@@ -157,6 +157,7 @@ Thanks
 * Maciej Filipiak
 * Mahmoud Hossam
 * Mateusz Kedzior
+* Matias N. Goldberg
 * Maicon D. Filippsen
 * Marcin Mielniczuk
 * Marco Costalba
