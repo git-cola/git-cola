@@ -193,7 +193,8 @@ class Settings(object):
         # Flush the data to disk.
         core.sync()
         # Delete the .bak file.
-        remove_path(path_bak)
+        if core.exists(path_bak):
+            remove_path(path_bak)
 
     def load(self, path=None):
         """Load settings robustly.
