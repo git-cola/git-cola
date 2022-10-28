@@ -185,7 +185,7 @@ class Settings(object):
         if not write_json(self.values, path_tmp):
             return
         # Rename the current settings to a .bak file.
-        if not rename_path(path, path_bak):
+        if core.exists(path) and not rename_path(path, path_bak):
             return
         # Rename the new settings from .tmp to the settings file.
         if not rename_path(path_tmp, path):
