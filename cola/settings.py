@@ -39,6 +39,7 @@ def read_json(path):
 
 
 def write_json(values, path):
+    """Write the specified values dict to a JSON file at the specified path"""
     try:
         parent = os.path.dirname(path)
         if not core.isdir(parent):
@@ -47,6 +48,26 @@ def write_json(values, path):
             json.dump(values, fp, indent=4)
     except (ValueError, TypeError, OSError, IOError):
         sys.stderr.write('git-cola: error writing "%s"\n' % path)
+        return False
+    return True
+
+
+def rename_path(old, new):
+    """Rename a filename. Catch exceptions and return False on error."""
+    try:
+        core.rename(old, new)
+    except (IOError, OSError):
+        sys.stderr.write('git-cola: error renaming "%s" to "%s"\n' % (old, new))
+        return False
+    return True
+
+
+def remove_path(path):
+    """Remove a filename. Report errors to stderr."""
+    try:
+        core.remove(path)
+    except (IOError, OSError):
+        sys.stderr.write('git-cola: error removing "%s"\n' % path)
 
 
 class Settings(object):
@@ -146,10 +167,64 @@ class Settings(object):
         return self.config_path
 
     def save(self):
-        write_json(self.values, self.path())
+        """Write settings robustly to avoid losing data during a forced shutdown.
+
+        To save robustly we take these steps:
+          * Write the new settings to a .tmp file.
+          * Rename the current settings to a .bak file.
+          * Rename the new settings from .tmp to the settings file.
+          * Flush the data to disk
+          * Delete the .bak file.
+
+        Cf. https://github.com/git-cola/git-cola/issues/1241
+        """
+        path = self.path()
+        path_tmp = path + '.tmp'
+        path_bak = path + '.bak'
+        # Write the new settings to the .tmp file.
+        if not write_json(self.values, path_tmp):
+            return
+        # Rename the current settings to a .bak file.
+        if not rename_path(path, path_bak):
+            return
+        # Rename the new settings from .tmp to the settings file.
+        if not rename_path(path_tmp, path):
+            return
+        # Flush the data to disk.
+        core.sync()
+        # Delete the .bak file.
+        remove_path(path_bak)
 
     def load(self, path=None):
-        self.values.update(self.asdict(path=path))
+        """Load settings robustly.
+
+        Attempt to load settings from the .bak file if it exists since it indicates
+        that the program terminated before the data was flushed to disk. This can
+        happen when a machine is force-shutdown, for example.
+
+        This follows the strategy outlined in issue #1241. If the .bak file exists
+        we use it, otherwise we fallback to the actual path or the .tmp path as a
+        final last-ditch attempt to recover settings.
+
+        """
+        path = self.path()
+        path_bak = path + '.bak'
+        path_tmp = path + '.tmp'
+
+        if core.exists(path_bak):
+            self.values.update(self.asdict(path=path_bak))
+        elif core.exists(path):
+            self.values.update(self.asdict(path=path))
+        elif core.exists(path_tmp):
+            # This is potentially dangerous, but it's guarded by the fact that the
+            # file must be valid JSON in order otherwise the reader will return an
+            # empty string, thus making this a no-op.
+            self.values.update(self.asdict(path=path_tmp))
+        else:
+            # This is either a new installation or the settings were lost.
+            pass
+        # We could try to remove the .bak and .tmp files, but it's better to set save()
+        # handle that the next time it succeeds.
         self.upgrade_settings()
         return True
 

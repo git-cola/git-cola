@@ -31,6 +31,10 @@ Fixes
   their names or messsages.
   (`#1267 <https://github.com/git-cola/git-cola/pull/1267>`_)
 
+* The settings file is now written-to and read-from in a robust manner to avoid data
+  loss when doing an ACPI shutdown or forced shutdown of a machine.
+  (`#1241 <https://github.com/git-cola/git-cola/issues/1241>`_)
+
 Translations
 ------------
 * The .po and .pot files now contain location information.
