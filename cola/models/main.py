@@ -105,6 +105,7 @@ class MainModel(QtCore.QObject):
         self.submodules = set()
         self.submodules_list = None  # lazy loaded
 
+        self.error = None  # The last error message.
         self.ref_sort = 0  # (0: version, 1:reverse-chrono)
         self.local_branches = []
         self.remote_branches = []
@@ -145,7 +146,21 @@ class MainModel(QtCore.QObject):
             self.set_directory(cwd)
             core.chdir(cwd)
             self.update_config(reset=reset)
-            self.worktree_changed.emit()
+
+            # Detect the "git init" scenario by checking for branches.
+            # If no branches exist then we cannot use "git rev-parse" yet.
+            err = None
+            refs = self.git.git_path('refs', 'heads')
+            if core.exists(refs) and core.listdir(refs):
+                # "git rev-parse" will fail when the safe.directory protection is active.
+                status, _, err = self.git.rev_parse('HEAD')
+                is_valid = status == 0
+            if is_valid:
+                self.error = None
+                self.worktree_changed.emit()
+            else:
+                self.error = err
+
         return is_valid
 
     def is_git_lfs_enabled(self):

@@ -35,6 +35,10 @@ Fixes
   loss when doing an ACPI shutdown or forced shutdown of a machine.
   (`#1241 <https://github.com/git-cola/git-cola/issues/1241>`_)
 
+* Git Cola now displays an error message when attempting to open a repository that
+  cannot be accessed due to the new `safe.directory` protections in Git v2.30.3.
+  (`#1243 <https://github.com/git-cola/git-cola/issues/1243>`_)
+
 Translations
 ------------
 * The .po and .pot files now contain location information.

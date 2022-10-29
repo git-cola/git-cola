@@ -493,8 +493,11 @@ def new_worktree(context, repo, prompt):
 
         valid = model.set_worktree(gitdir)
         if not valid:
+            err = model.error
             standard.critical(
-                N_('Error Opening Repository'), N_('Could not open %s.' % gitdir)
+                N_('Error Opening Repository'),
+                message=N_('Could not open %s.' % gitdir),
+                details=err,
             )
 
 
