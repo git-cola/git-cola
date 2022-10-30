@@ -152,7 +152,8 @@ class MainModel(QtCore.QObject):
             err = None
             refs = self.git.git_path('refs', 'heads')
             if core.exists(refs) and core.listdir(refs):
-                # "git rev-parse" will fail when the safe.directory protection is active.
+                # "git rev-parse" exits with a non-zero exit status when the
+                # safe.directory protection is active.
                 status, _, err = self.git.rev_parse('HEAD')
                 is_valid = status == 0
             if is_valid:
