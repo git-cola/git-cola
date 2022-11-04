@@ -1060,6 +1060,7 @@ class DiffWidget(QtWidgets.QWidget):
 
     def commits_selected(self, commits):
         if len(commits) != 1:
+            self.clear()
             return
         commit = commits[0]
         oid = self.oid = commit.oid
@@ -1088,6 +1089,14 @@ class DiffWidget(QtWidgets.QWidget):
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
         self.gravatar_label.set_email(email)
+
+    def clear(self):
+        self.date_label.set_text('')
+        self.oid_label.set_text('')
+        self.author_label.set_text('')
+        self.summary_label.set_text('')
+        self.gravatar_label.clear()
+        self.diff.clear()
 
     def files_selected(self, filenames):
         if not filenames:
