@@ -47,6 +47,7 @@ Thanks
 * 林博仁 (Buo-ren Lin)
 * cclaus
 * Charles 101
+* Chris Stefano
 * Christian Jann
 * Christoph Erhardt
 * Christopher Meng
