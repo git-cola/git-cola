@@ -51,6 +51,7 @@ class FileWidget(TreeWidget):
 
     def commits_selected(self, commits):
         if not commits:
+            self.clear()
             return
         git = self.context.git
         commit = commits[0]
