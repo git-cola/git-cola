@@ -1,3 +1,15 @@
+.. _v4.1.0:
+
+v4.1.0
+======
+
+Usability, bells and whistles
+-----------------------------
+* The rebase editor was taught to handle stacked branch workflows enabled by
+  ``git rebase --update-refs``.
+  (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
+
+
 .. _v4.0.3:
 
 v4.0.3
