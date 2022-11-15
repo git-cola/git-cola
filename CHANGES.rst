@@ -1,3 +1,14 @@
+.. _v4.0.4:
+
+v4.0.4
+======
+
+Fixes
+-----
+* The "T" hotkey for "Find Files" was removed to avoid issues in some configurations.
+  (`#1270 <https://github.com/git-cola/git-cola/issues/1270>`_)
+
+
 .. _v4.0.3:
 
 v4.0.3

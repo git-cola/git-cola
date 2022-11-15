@@ -627,10 +627,17 @@ class VimMixin(object):
         self.add_navigation('EndOfLine', hotkeys.END_OF_LINE)
 
         qtutils.add_action(
-            widget, 'PageUp', widget.page_up, hotkeys.SECONDARY_ACTION, hotkeys.UP
+            widget,
+            'PageUp',
+            widget.page_up,
+            hotkeys.SECONDARY_ACTION,
+            hotkeys.TEXT_UP,
         )
         qtutils.add_action(
-            widget, 'PageDown', widget.page_down, hotkeys.PRIMARY_ACTION, hotkeys.DOWN
+            widget, 'PageDown',
+            widget.page_down,
+            hotkeys.PRIMARY_ACTION,
+            hotkeys.TEXT_DOWN,
         )
         qtutils.add_action(
             widget,
