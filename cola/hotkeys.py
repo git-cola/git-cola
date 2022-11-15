@@ -121,8 +121,8 @@ OPEN = QKeySequence.Open
 SELECT_ALL = QKeySequence.SelectAll
 
 # Text navigation
-DOWN = hotkey(Qt.Key_D)
-UP = hotkey(Qt.Key_U)
+TEXT_DOWN = hotkey(Qt.Key_D)
+TEXT_UP = hotkey(Qt.Key_U)
 SELECT_FORWARD = hotkey(Qt.SHIFT + Qt.Key_F)
 SELECT_BACK = hotkey(Qt.SHIFT + Qt.Key_B)
 SELECT_DOWN = hotkey(Qt.SHIFT + Qt.Key_D)

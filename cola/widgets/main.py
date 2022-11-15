@@ -276,7 +276,6 @@ class MainView(standard.MainWindow):
             N_('Find Files'),
             partial(finder.finder, context),
             hotkeys.FINDER,
-            hotkeys.FINDER_SECONDARY,
         )
         self.find_files_action.setIcon(icons.search())
 
