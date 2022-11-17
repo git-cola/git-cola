@@ -77,6 +77,11 @@ def test_untracked(app_context):
     assert app_context.model.untracked == ['C']
 
 
+def test_stageable(app_context):
+    """Test the 'stageable' attribute."""
+    assert not app_context.model.stageable()
+
+
 def test_remotes(app_context):
     """Test the 'remote' attribute."""
     helper.run_git('remote', 'add', 'origin', '.')
