@@ -8,6 +8,9 @@ Fixes
 * The "T" hotkey for "Find Files" was removed to avoid issues in some configurations.
   (`#1270 <https://github.com/git-cola/git-cola/issues/1270>`_)
 
+* Some context menus entries were erroring out on binary files.
+  (`#1271 <https://github.com/git-cola/git-cola/pull/1271>`_)
+
 
 .. _v4.0.3:
 
