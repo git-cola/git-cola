@@ -129,7 +129,7 @@ class MainModel(QtCore.QObject):
 
     def stageable(self):
         """Whether staging should be allowed."""
-        return self.partially_stageable() or self.mode == self.modes_untracked
+        return self.partially_stageable() or self.mode == self.mode_untracked
 
     def all_branches(self):
         return self.local_branches + self.remote_branches
