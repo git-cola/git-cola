@@ -4,7 +4,7 @@ make check
 ./todo/set-version vA.B.C
 ./todo/commit-version
 # remove any (BETA) markers from the release notes
-./todo/tag vA.B.C
+./todo/tag [vA.B.C (optional)]
 vx env39 make develop
 git cola push
 
