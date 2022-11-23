@@ -9,6 +9,12 @@ Usability, bells and whistles
   ``git rebase --update-refs``.
   (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
 
+
+.. _v4.0.4:
+
+v4.0.4
+======
+
 Fixes
 -----
 * The "T" hotkey for "Find Files" was removed to avoid issues in some configurations.
