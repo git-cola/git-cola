@@ -382,7 +382,7 @@ class GitRepoItem(QtGui.QStandardItem):
 class GitRepoNameItem(GitRepoItem):
     """Subclass GitRepoItem to provide a custom type()."""
 
-    TYPE = QtGui.QStandardItem.ItemType(QtGui.QStandardItem.UserType + 1)
+    TYPE = qtutils.standard_item_type_value(1)
 
     def __init__(self, path, is_dir):
         GitRepoItem.__init__(self, path)

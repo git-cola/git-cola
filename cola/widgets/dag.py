@@ -990,7 +990,7 @@ class Cache(object):
 
 
 class Edge(QtWidgets.QGraphicsItem):
-    item_type = QtWidgets.QGraphicsItem.UserType + 1
+    item_type = qtutils.standard_item_type_value(1)
 
     def __init__(self, source, dest):
 
@@ -1142,7 +1142,7 @@ class EdgeColor(object):
 
 
 class Commit(QtWidgets.QGraphicsItem):
-    item_type = QtWidgets.QGraphicsItem.UserType + 2
+    item_type = qtutils.standard_item_type_value(2)
     commit_radius = 12.0
     merge_radius = 18.0
 
@@ -1267,7 +1267,7 @@ class Commit(QtWidgets.QGraphicsItem):
 
 class Label(QtWidgets.QGraphicsItem):
 
-    item_type = QtWidgets.QGraphicsItem.UserType + 3
+    item_type = qtutils.graphics_item_type_value(3)
 
     head_color = QtGui.QColor(Qt.green)
     other_color = QtGui.QColor(Qt.white)

@@ -342,9 +342,27 @@ def prompt_n(msg, inputs):
     return (ok, text)
 
 
+def standard_item_type_value(value):
+    """Return a custom UserType for use in QTreeWidgetItem.type() overrides"""
+    return custom_item_type_value(QtGui.QStandardItem, value)
+
+
+def graphics_item_type_value(value):
+    """Return a custom UserType for use in QGraphicsItem.type() overrides"""
+    return custom_item_type_value(QtWidgets.QGraphicsItem, value)
+
+
+def custom_item_type_value(cls, value):
+    """Return a custom cls.UserType for use in cls.type() overrides"""
+    user_type = cls.UserType
+    if hasattr(user_type, 'value'):
+        user_type = user_type.value
+    return user_type + value
+
+
 class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
-    TYPE = QtGui.QStandardItem.UserType + 101
+    TYPE = standard_item_type_value(101)
 
     def __init__(self, path, icon, deleted):
         QtWidgets.QTreeWidgetItem.__init__(self)
