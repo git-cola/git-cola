@@ -7,7 +7,14 @@ Usability, bells and whistles
 -----------------------------
 * The rebase editor was taught to handle stacked branch workflows enabled by
   ``git rebase --update-refs``.
-  (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
+
+Packaging and Dependencies
+--------------------------
+* PyQt6 is now officially supported.
+  (`#1211 <https://github.com/git-cola/git-cola/issues/1211>`_)
+  (`#1273 <https://github.com/git-cola/git-cola/issues/1273>`_)
+
+* The vendored `qtpy` library was updated to `v2.3.0`.
 
 
 .. _v4.0.4:
