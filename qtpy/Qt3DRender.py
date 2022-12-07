@@ -1,26 +1,45 @@
-# -*- coding: utf-8 -*-
 # -----------------------------------------------------------------------------
 # Copyright © 2009- The Spyder Development Team
 #
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
 # -----------------------------------------------------------------------------
+
 """Provides Qt3DRender classes and functions."""
 
-# Local imports
-from . import PYQT5, PYSIDE2, PythonQtError, PYSIDE_VERSION
-from .py3compat import PY2
+from . import (
+    PYQT5,
+    PYQT6,
+    PYSIDE2,
+    PYSIDE6,
+    QtModuleNotInstalledError,
+)
 
 if PYQT5:
-    from PyQt5.Qt3DRender import *
+    try:
+        from PyQt5.Qt3DRender import *
+    except ModuleNotFoundError as error:
+        raise QtModuleNotInstalledError(
+            name='Qt3DRender', missing_package='PyQt3D'
+        ) from error
+elif PYQT6:
+    try:
+        from PyQt6.Qt3DRender import *
+    except ModuleNotFoundError as error:
+        raise QtModuleNotInstalledError(
+            name='Qt3DRender', missing_package='PyQt6-3D'
+        ) from error
 elif PYSIDE2:
-    if not PY2 or (PY2 and PYSIDE_VERSION < '5.12.4'):
-        # https://bugreports.qt.io/projects/PYSIDE/issues/PYSIDE-1026
-        import PySide2.Qt3DRender as __temp
-        import inspect
-        for __name in inspect.getmembers(__temp.Qt3DRender):
-            globals()[__name[0]] = __name[1]
-    else:
-        raise PythonQtError('A bug in Shiboken prevents this')
-else:
-    raise PythonQtError('No Qt bindings could be found')
+    # https://bugreports.qt.io/projects/PYSIDE/issues/PYSIDE-1026
+    import PySide2.Qt3DRender as __temp
+    import inspect
+
+    for __name in inspect.getmembers(__temp.Qt3DRender):
+        globals()[__name[0]] = __name[1]
+elif PYSIDE6:
+    # https://bugreports.qt.io/projects/PYSIDE/issues/PYSIDE-1026
+    import PySide6.Qt3DRender as __temp
+    import inspect
+
+    for __name in inspect.getmembers(__temp.Qt3DRender):
+        globals()[__name[0]] = __name[1]

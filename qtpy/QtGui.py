@@ -1,161 +1,74 @@
-# -*- coding: utf-8 -*-
-#
+# -----------------------------------------------------------------------------
 # Copyright © 2014-2015 Colin Duquesnoy
 # Copyright © 2009- The Spyder Development Team
 #
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
+# -----------------------------------------------------------------------------
 
-"""
-Provides QtGui classes and functions.
-.. warning:: Only PyQt4/PySide QtGui classes compatible with PyQt5.QtGui are
-    exposed here. Therefore, you need to treat/use this package as if it were
-    the ``PyQt5.QtGui`` module.
-"""
-import warnings
+"""Provides QtGui classes and functions."""
 
-from . import PYQT5, PYQT4, PYSIDE, PYSIDE2, PythonQtError
-
+from . import PYQT6, PYQT5, PYSIDE2, PYSIDE6
 
 if PYQT5:
     from PyQt5.QtGui import *
+elif PYQT6:
+    from PyQt6 import QtGui
+    from PyQt6.QtGui import *
+    from PyQt6.QtOpenGL import *
+    QFontMetrics.width = lambda self, *args, **kwargs: self.horizontalAdvance(*args, **kwargs)
+    QFontMetricsF.width = lambda self, *args, **kwargs: self.horizontalAdvance(*args, **kwargs)
+
+    # Map missing/renamed methods
+    QDrag.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
+    QGuiApplication.exec_ = QGuiApplication.exec
+    QTextDocument.print_ = lambda self, *args, **kwargs: self.print(*args, **kwargs)
+
+    # Allow unscoped access for enums inside the QtGui module
+    from .enums_compat import promote_enums
+    promote_enums(QtGui)
+    del QtGui
 elif PYSIDE2:
     from PySide2.QtGui import *
-elif PYQT4:
-    try:
-        # Older versions of PyQt4 do not provide these
-        from PyQt4.QtGui import (QGlyphRun, QMatrix2x2, QMatrix2x3,
-                                 QMatrix2x4, QMatrix3x2, QMatrix3x3,
-                                 QMatrix3x4, QMatrix4x2, QMatrix4x3,
-                                 QMatrix4x4, QTouchEvent, QQuaternion,
-                                 QRadialGradient, QRawFont, QStaticText,
-                                 QVector2D, QVector3D, QVector4D,
-                                 qFuzzyCompare)
-    except ImportError:
-        pass
-    try:
-        from PyQt4.Qt import QKeySequence, QTextCursor
-    except ImportError:
-        # In PyQt4-sip 4.19.13 QKeySequence and QTextCursor are in PyQt4.QtGui
-        from PyQt4.QtGui import QKeySequence, QTextCursor
-    from PyQt4.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
-                             QBrush, QClipboard, QCloseEvent, QColor,
-                             QConicalGradient, QContextMenuEvent, QCursor,
-                             QDoubleValidator, QDrag,
-                             QDragEnterEvent, QDragLeaveEvent, QDragMoveEvent,
-                             QDropEvent, QFileOpenEvent, QFocusEvent, QFont,
-                             QFontDatabase, QFontInfo, QFontMetrics,
-                             QFontMetricsF, QGradient, QHelpEvent,
-                             QHideEvent, QHoverEvent, QIcon, QIconDragEvent,
-                             QIconEngine, QImage, QImageIOHandler, QImageReader,
-                             QImageWriter, QInputEvent, QInputMethodEvent,
-                             QKeyEvent, QLinearGradient,
-                             QMouseEvent, QMoveEvent, QMovie,
-                             QPaintDevice, QPaintEngine, QPaintEngineState,
-                             QPaintEvent, QPainter, QPainterPath,
-                             QPainterPathStroker, QPalette, QPen, QPicture,
-                             QPictureIO, QPixmap, QPixmapCache, QPolygon,
-                             QPolygonF, QRegExpValidator, QRegion, QResizeEvent,
-                             QSessionManager, QShortcutEvent, QShowEvent,
-                             QStandardItem, QStandardItemModel,
-                             QStatusTipEvent, QSyntaxHighlighter, QTabletEvent,
-                             QTextBlock, QTextBlockFormat, QTextBlockGroup,
-                             QTextBlockUserData, QTextCharFormat,
-                             QTextDocument, QTextDocumentFragment,
-                             QTextDocumentWriter, QTextFormat, QTextFragment,
-                             QTextFrame, QTextFrameFormat, QTextImageFormat,
-                             QTextInlineObject, QTextItem, QTextLayout,
-                             QTextLength, QTextLine, QTextList, QTextListFormat,
-                             QTextObject, QTextObjectInterface, QTextOption,
-                             QTextTable, QTextTableCell, QTextTableCellFormat,
-                             QTextTableFormat, QTransform,
-                             QValidator, QWhatsThisClickedEvent, QWheelEvent,
-                             QWindowStateChangeEvent, qAlpha, qBlue,
-                             qGray, qGreen, qIsGray, qRed, qRgb,
-                             qRgba, QIntValidator)
+    if hasattr(QFontMetrics, 'horizontalAdvance'):
+        # Needed to prevent raising a DeprecationWarning when using QFontMetrics.width
+        QFontMetrics.width = lambda self, *args, **kwargs: self.horizontalAdvance(*args, **kwargs)
+elif PYSIDE6:
+    from PySide6.QtGui import *
+    from PySide6.QtOpenGL import *
+    QFontMetrics.width = lambda self, *args, **kwargs: self.horizontalAdvance(*args, **kwargs)
+    QFontMetricsF.width = lambda self, *args, **kwargs: self.horizontalAdvance(*args, **kwargs)
 
-    # QDesktopServices has has been split into (QDesktopServices and
-    # QStandardPaths) in Qt5
-    # It only exposes QDesktopServices that are still in pyqt5
-    from PyQt4.QtGui import QDesktopServices as _QDesktopServices
+    # Map DeprecationWarning methods
+    QDrag.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
+    QGuiApplication.exec_ = QGuiApplication.exec
 
-    class QDesktopServices():
-        openUrl = _QDesktopServices.openUrl
-        setUrlHandler = _QDesktopServices.setUrlHandler
-        unsetUrlHandler = _QDesktopServices.unsetUrlHandler
-
-        def __getattr__(self, name):
-            attr = getattr(_QDesktopServices, name)
-
-            new_name = name
-            if name == 'storageLocation':
-                new_name = 'writableLocation'
-            warnings.warn(("Warning QDesktopServices.{} is deprecated in Qt5"
-                            "we recommend you use QDesktopServices.{} instead").format(name, new_name),
-                           DeprecationWarning)
-            return attr
-    QDesktopServices = QDesktopServices()
-
-elif PYSIDE:
-    from PySide.QtGui import (QAbstractTextDocumentLayout, QActionEvent, QBitmap,
-                              QBrush, QClipboard, QCloseEvent, QColor,
-                              QConicalGradient, QContextMenuEvent, QCursor,
-                              QDoubleValidator, QDrag,
-                              QDragEnterEvent, QDragLeaveEvent, QDragMoveEvent,
-                              QDropEvent, QFileOpenEvent, QFocusEvent, QFont,
-                              QFontDatabase, QFontInfo, QFontMetrics,
-                              QFontMetricsF, QGradient, QHelpEvent,
-                              QHideEvent, QHoverEvent, QIcon, QIconDragEvent,
-                              QIconEngine, QImage, QImageIOHandler, QImageReader,
-                              QImageWriter, QInputEvent, QInputMethodEvent,
-                              QKeyEvent, QKeySequence, QLinearGradient,
-                              QMatrix2x2, QMatrix2x3, QMatrix2x4, QMatrix3x2,
-                              QMatrix3x3, QMatrix3x4, QMatrix4x2, QMatrix4x3,
-                              QMatrix4x4, QMouseEvent, QMoveEvent, QMovie,
-                              QPaintDevice, QPaintEngine, QPaintEngineState,
-                              QPaintEvent, QPainter, QPainterPath,
-                              QPainterPathStroker, QPalette, QPen, QPicture,
-                              QPictureIO, QPixmap, QPixmapCache, QPolygon,
-                              QPolygonF, QQuaternion, QRadialGradient,
-                              QRegExpValidator, QRegion, QResizeEvent,
-                              QSessionManager, QShortcutEvent, QShowEvent,
-                              QStandardItem, QStandardItemModel,
-                              QStatusTipEvent, QSyntaxHighlighter, QTabletEvent,
-                              QTextBlock, QTextBlockFormat, QTextBlockGroup,
-                              QTextBlockUserData, QTextCharFormat, QTextCursor,
-                              QTextDocument, QTextDocumentFragment,
-                              QTextFormat, QTextFragment,
-                              QTextFrame, QTextFrameFormat, QTextImageFormat,
-                              QTextInlineObject, QTextItem, QTextLayout,
-                              QTextLength, QTextLine, QTextList, QTextListFormat,
-                              QTextObject, QTextObjectInterface, QTextOption,
-                              QTextTable, QTextTableCell, QTextTableCellFormat,
-                              QTextTableFormat, QTouchEvent, QTransform,
-                              QValidator, QVector2D, QVector3D, QVector4D,
-                              QWhatsThisClickedEvent, QWheelEvent,
-                              QWindowStateChangeEvent, qAlpha, qBlue,
-                              qGray, qGreen, qIsGray, qRed, qRgb, qRgba,
-                              QIntValidator)
-    # QDesktopServices has has been split into (QDesktopServices and
-    # QStandardPaths) in Qt5
-    # It only exposes QDesktopServices that are still in pyqt5
-    from PySide.QtGui import QDesktopServices as _QDesktopServices
-
-    class QDesktopServices():
-        openUrl = _QDesktopServices.openUrl
-        setUrlHandler = _QDesktopServices.setUrlHandler
-        unsetUrlHandler = _QDesktopServices.unsetUrlHandler
-
-        def __getattr__(self, name):
-            attr = getattr(_QDesktopServices, name)
-
-            new_name = name
-            if name == 'storageLocation':
-                new_name = 'writableLocation'
-            warnings.warn(("Warning QDesktopServices.{} is deprecated in Qt5"
-                            "we recommend you use QDesktopServices.{} instead").format(name, new_name),
-                           DeprecationWarning)
-            return attr
-    QDesktopServices = QDesktopServices()
-else:
-    raise PythonQtError('No Qt bindings could be found')
+if PYSIDE2 or PYSIDE6:
+    # PySide{2,6} do not accept the `mode` keyword argument in
+    # QTextCursor.movePosition() even though it is a valid optional argument
+    # as per C++ API. Fix this by monkeypatching.
+    #
+    # Notes:
+    #
+    # * The `mode` argument is called `arg__2` in PySide{2,6} as per
+    #   QTextCursor.movePosition.__doc__ and __signature__. Using `arg__2` as
+    #   keyword argument works as intended, so does using a positional
+    #   argument. Tested with PySide2 5.15.0, 5.15.2.1 and 5.15.3 and PySide6
+    #   6.3.0; older version, down to PySide 1, are probably affected as well [1].
+    #
+    # * PySide2 5.15.0 and 5.15.2.1 silently ignore invalid keyword arguments,
+    #   i.e. passing the `mode` keyword argument has no effect and doesn’t
+    #   raise an exception. Older versions, down to PySide 1, are probably
+    #   affected as well [1]. At least PySide2 5.15.3 and PySide6 6.3.0 raise an
+    #   exception when `mode` or any other invalid keyword argument is passed.
+    #
+    # [1] https://bugreports.qt.io/browse/PYSIDE-185
+    movePosition = QTextCursor.movePosition
+    def movePositionPatched(
+        self,
+        operation: QTextCursor.MoveOperation,
+        mode: QTextCursor.MoveMode = QTextCursor.MoveAnchor,
+        n: int = 1,
+    ) -> bool:
+        return movePosition(self, operation, mode, n)
+    QTextCursor.movePosition = movePositionPatched

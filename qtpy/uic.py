@@ -1,16 +1,16 @@
 import os
 
-from . import PYSIDE, PYSIDE2, PYQT4, PYQT5
+from . import PYSIDE6, PYSIDE2, PYQT5, PYQT6
 from .QtWidgets import QComboBox
 
 
-if PYQT5:
+if PYQT6:
+
+    from PyQt6.uic import *
+
+elif PYQT5:
 
     from PyQt5.uic import *
-
-elif PYQT4:
-
-    from PyQt4.uic import *
 
 else:
 
@@ -78,18 +78,26 @@ else:
     # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
     # DEALINGS IN THE SOFTWARE.
 
-    if PYSIDE:
-        from PySide.QtCore import QMetaObject
-        from PySide.QtUiTools import QUiLoader
-        try:
-            from pysideuic import compileUi
-        except ImportError:
-            pass
+    if PYSIDE6:
+        from PySide6.QtCore import QMetaObject
+        from PySide6.QtUiTools import QUiLoader
     elif PYSIDE2:
         from PySide2.QtCore import QMetaObject
         from PySide2.QtUiTools import QUiLoader
         try:
             from pyside2uic import compileUi
+            # Patch UIParser as xml.etree.Elementree.Element.getiterator
+            # was deprecated since Python 3.2 and removed in Python 3.9
+            # https://docs.python.org/3.9/whatsnew/3.9.html#removed
+            from pyside2uic.uiparser import UIParser
+            from xml.etree.ElementTree import Element
+            class ElemPatched(Element):
+                def getiterator(self, *args, **kwargs):
+                    return self.iter(*args, **kwargs)
+            def readResources(self, elem):
+                return self._readResources(ElemPatched(elem))
+            UIParser._readResources = UIParser.readResources
+            UIParser.readResources = readResources
         except ImportError:
             pass
 
@@ -156,9 +164,11 @@ else:
                     # customWidgets is empty.
                     try:
                         widget = self.customWidgets[class_name](parent)
-                    except KeyError:
-                        raise Exception('No custom widget ' + class_name + ' '
-                                        'found in customWidgets')
+                    except KeyError as error:
+                        raise Exception(
+                            f'No custom widget {class_name} '
+                            'found in customWidgets'
+                            ) from error
 
                 if self.baseinstance:
                     # set an attribute for the new child widget on the base
@@ -247,11 +257,9 @@ else:
         """
 
         import sys
-        if sys.version_info >= (3, 0):
-            from io import StringIO
-        else:
-            from io import BytesIO as StringIO
+        from io import StringIO
         from xml.etree.ElementTree import ElementTree
+        
         from . import QtWidgets
 
         # Parse the UI file
@@ -261,7 +269,7 @@ else:
         widget_class = ui.find('widget').get('class')
         form_class = ui.find('class').text
 
-        with open(uifile, 'r') as fd:
+        with open(uifile, encoding="utf-8") as fd:
             code_stream = StringIO()
             frame = {}
 

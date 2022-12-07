@@ -1,30 +1,27 @@
-# -*- coding: utf-8 -*-
-#
+# -----------------------------------------------------------------------------
 # Copyright © 2014-2015 Colin Duquesnoy
-# Copyright © 2009- The Spyder Developmet Team
+# Copyright © 2009- The Spyder Development Team
 #
 # Licensed under the terms of the MIT License
 # (see LICENSE.txt for details)
+# -----------------------------------------------------------------------------
 
-"""
-Provides QtTest and functions
-"""
+"""Provides QtTest and functions"""
 
-from . import PYQT5,PYSIDE2, PYQT4, PYSIDE, PythonQtError
-
+from . import PYQT5, PYQT6, PYSIDE6, PYSIDE2
 
 if PYQT5:
-    from PyQt5.QtTest import QTest
-elif PYSIDE2:
-    from PySide2.QtTest import QTest
-elif PYQT4:
-    from PyQt4.QtTest import QTest as OldQTest
+    from PyQt5.QtTest import *
+elif PYQT6:
+    from PyQt6 import QtTest
+    from PyQt6.QtTest import *
 
-    class QTest(OldQTest):
-        @staticmethod
-        def qWaitForWindowActive(QWidget):
-            OldQTest.qWaitForWindowShown(QWidget)
-elif PYSIDE:
-    from PySide.QtTest import QTest
-else:
-    raise PythonQtError('No Qt bindings could be found')
+    # Allow unscoped access for enums inside the QtTest module
+    from .enums_compat import promote_enums
+
+    promote_enums(QtTest)
+    del QtTest
+elif PYSIDE2:
+    from PySide2.QtTest import *
+elif PYSIDE6:
+    from PySide6.QtTest import *

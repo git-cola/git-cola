@@ -1,17 +1,20 @@
 # Authors
 
-## Maintainer
+## Original Authors
 
-Spyder Development Team ([Spyder-IDE](http://github.com/spyder-ide))
+* [pyqode.qt](https://github.com/pyQode/pyqode.qt): Colin Duquesnoy ([@ColinDuquesnoy](https://github.com/ColinDuquesnoy))
+* [spyderlib.qt](https://github.com/spyder-ide/spyder/commits/2.3/spyderlib/qt): Pierre Raybaut ([@PierreRaybaut](https://github.com/PierreRaybaut))
+* [qt-helpers](https://github.com/glue-viz/qt-helpers): Thomas Robitaille ([@astrofrog](https://www.github.com/astrofrog))
 
 
-## Main Authors
+## Current Maintainers
 
-* Colin Duquesnoy ([@ColinDuquesnoy](http://github.com/ColinDuquesnoy))
-
-* [The QtPy Contributors](https://github.com/spyder-ide/qtpy/graphs/contributors)
+* Daniel Althviz ([@dalthviz](https://github.com/dalthviz))
+* Carlos Cordoba ([@ccordoba12](https://github.com/ccordoba12))
+* C.A.M. Gerlach ([@CAM-Gerlach](https://github.com/CAM-Gerlach))
+* Spyder Development Team ([Spyder-IDE](https://github.com/spyder-ide))
 
 
 ## Contributors
 
-* Thomas Robitaille ([@astrofrog](http://www.github.com/astrofrog))
+* [The QtPy Contributors](https://github.com/spyder-ide/qtpy/graphs/contributors)
