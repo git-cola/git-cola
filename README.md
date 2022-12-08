@@ -63,54 +63,10 @@ Python modules are installed.
 
 # Installation
 
-**IMPORTANT**: never run `pip install` as root or outside of a Python virtualenv!
+**IMPORTANT**: never run `pip install` or `make install` as root or outside of a
+Python virtualenv!
 
-You can install the latest released version using `pip`:
-
-    python3 -m venv env3
-    ./env3/bin/pip install git-cola
-    ./env3/bin/git-cola
-
-Add the `env3/bin` directory to your `$PATH` (or symlink to `bin/git-cola` from somewhere
-in your `$PATH`) allows you to launch Git Cola like any other built-in `git` command:
-
-    git cola
-    git dag
-
-## Python Virtual Environments
-
-If you don't have PyQt installed then the easiest way to get it is to use a Python
-virtualenv and install Git Cola into it in "editable" mode so that you can "upgrade"
-Git Cola by running `git pull`.
-
-    # Create a virtualenv called "env3" and activate it.
-    python3 -m venv env3
-    source env3/bin/activate
-
-    # One-time setup: install optional requirements for development.
-    make requirements-dev requirements-optional
-
-    # Install git-cola in "editable" mode so that it uses the source tree.
-    make develop
-
-    # Run Git Cola via the "git-cola" Git subcommand.
-    git cola
-
-If you add `env3/bin` (or symlink to `bin/git-cola` ) to your `$PATH` then you can
-run `git cola` as if it were a builtin `git` command.
-
-## Standalone Installation
-
-Running `make install` will install Git Cola in your `$HOME` directory
-(`$HOME/bin/git-cola`, `$HOME/lib`, etc).
-
-If you want to do a global install you can do
-
-    make prefix=/usr/local install
-
-The `Makefile` also supports `DESTDIR`:
-
-    make DESTDIR=/tmp/stage prefix=/usr/local install
+There are several ways to install Git Cola.
 
 ## Linux
 
@@ -159,12 +115,71 @@ but it has not been updated for a while.
     cd /usr/ports/devel/git-cola && make clean install
 
 
+## Install into a Python Virtualenv from PyPI using pip
+
+**IMPORTANT**: never run `pip install` or `make install` as root or outside of a
+Python virtualenv!
+
+One way to install the latest released version is to use `venv` (virtualenv) and `pip`.
+This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
+
+    python3 -m venv env3
+    ./env3/bin/pip install git-cola
+    ./env3/bin/git-cola
+
+Add the `env3/bin` directory to your `$PATH`, or symlink to `bin/git-cola` from
+somewhere in your `$PATH` such as `~/.local/bin/git-cola`, and you can launch
+Git Cola like any other built-in `git` command:
+
+    git cola
+    git dag
+
+
+## Install into a Python Virtualenv from Source
+
+If you don't have PyQt installed then the easiest way to get it is to use a Python
+virtualenv and install Git Cola into it in "editable" mode. This install method
+lets you upgrade Git Cola by running `git pull`.
+
+    # Create a virtualenv called "env3" and activate it.
+    python3 -m venv env3
+    source env3/bin/activate
+
+    # One-time setup: install optional requirements for development.
+    make requirements-dev requirements-optional
+
+    # Install git-cola in "editable" mode so that it uses the source tree.
+    make develop
+
+    # Run Git Cola via the "git-cola" Git subcommand.
+    git cola
+
+
+If you add `env3/bin` (or symlink to `bin/git-cola` ) to your `$PATH` then you can
+run `git cola` as if it were a builtin `git` command from outside of the virtualenv
+(eg. after running "deactivate" or when opening a new shell).
+
+
+## Standalone Installation from Source
+
+Running `make install prefix=$HOME/.local` will install Git Cola in your
+`$HOME/.local` directory (`$HOME/.local/bin/git-cola`, `$HOME/.local/lib`, etc).
+
+This installation method assumes that the `qtpy` and `PyQt*` dependencies have
+been pre-installed.
+
+The `Makefile` also supports `DESTDIR` to support creating packages for Linux package
+managers:
+
+    make DESTDIR=/tmp/stage prefix=/usr/local install
+
+
 ## macOS
 
-For most end-users we recommend using either Homebrew or `pip install git-cola`
-inside of a virtualenv.
+For most end-users we recommend using either Homebrew or installing into
+a Python virtualenv as described above.
 
-You can install Git Cola using the same `Makefile` steps above to install from source.
+You can install Git Cola from source using the same steps as above.
 
 ### Homebrew
 
