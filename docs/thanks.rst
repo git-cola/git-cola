@@ -23,6 +23,7 @@ Thanks
 * Andrej Kvasnica
 * Andrew Chen
 * Andrew Hemming
+* Andy O'Neill
 * armandg
 * Arthur Coelho
 * Audrey Yeena Toskin
