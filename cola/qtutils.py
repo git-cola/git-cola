@@ -354,10 +354,15 @@ def graphics_item_type_value(value):
 
 def custom_item_type_value(cls, value):
     """Return a custom cls.UserType for use in cls.type() overrides"""
-    user_type = cls.UserType
-    if hasattr(user_type, 'value'):
-        user_type = user_type.value
+    user_type = enum_value(cls.UserType)
     return user_type + value
+
+
+def enum_value(value):
+    """Qt6 has enums with an inner '.value' attribute."""
+    if hasattr(value, 'value'):
+        value = value.value
+    return value
 
 
 class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
