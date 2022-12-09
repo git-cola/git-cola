@@ -78,6 +78,7 @@ Thanks
 * Efimov Vasily
 * Eric Drechsel
 * Eric Wild
+* Ernst Widerberg
 * Erop @EgZvor
 * Erwan Bousse
 * Fabio Coatti
