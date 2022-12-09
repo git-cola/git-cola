@@ -118,8 +118,8 @@ class GravatarLabel(QtWidgets.QLabel):
             relocated = location != request_location
         else:
             relocated = False
-
-        if reply.error() == QtNetwork.QNetworkReply.NoError:
+        no_error = qtutils.enum_value(QtNetwork.QNetworkReply.NetworkError.NoError)
+        if reply.error() == no_error:
             if relocated:
                 # We could do get_url(parse.unquote(location)) to
                 # download the default image.
