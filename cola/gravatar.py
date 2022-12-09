@@ -10,7 +10,7 @@ from qtpy import QtNetwork
 from . import compat
 from . import core
 from . import icons
-from .compat import bstr
+from . import qtutils
 from .compat import parse
 from .models import prefs
 from .widgets import defs
@@ -111,7 +111,7 @@ class GravatarLabel(QtWidgets.QLabel):
     def network_finished(self, reply):
         email = self.email
 
-        header = QtCore.QByteArray(bstr('Location'))
+        header = QtCore.QByteArray(b'Location')
         location = core.decode(bytes(reply.rawHeader(header))).strip()
         if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)
