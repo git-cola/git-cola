@@ -309,7 +309,7 @@ def is_darwin():
 
 def is_win32():
     """Return True on win32"""
-    return sys.platform == 'win32' or sys.platform == 'cygwin'
+    return sys.platform in {'win32', 'cygwin'}
 
 
 def launch_default_app(paths):
