@@ -45,8 +45,7 @@ jobs:
               flake8 \
               pylint \
               python-is-python3 \
-              python-pytest \
-              python-setuptools-scm \
+              python3-setuptools-scm \
               python3-pytest \
               python3-pytest-flake8
           # Runtime dependencies (required)
