@@ -1,5 +1,8 @@
 [MASTER]
 
+# Specify what version of Python to evaluate code against.
+py-version = 2.7
+
 # Specify a configuration file.
 #rcfile=
 
