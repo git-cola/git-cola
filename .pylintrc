@@ -59,7 +59,22 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=assignment-from-none,bad-continuation,bad-option-value,consider-using-dict-comprehension,consider-using-set-comprehension,fixme,wrong-import-position,invalid-name,missing-docstring,no-else-return,too-many-instance-attributes,useless-object-inheritance,super-with-arguments,raise-missing-from,duplicate-code
+disable=
+    assignment-from-none,
+    bad-continuation,
+    bad-option-value,
+    consider-using-dict-comprehension,
+    consider-using-set-comprehension,
+    duplicate-code,
+    fixme,
+    invalid-name,
+    missing-docstring,
+    no-else-return,
+    raise-missing-from,
+    super-with-arguments,
+    too-many-instance-attributes,
+    useless-object-inheritance,
+    wrong-import-position
 
 [REPORTS]
 
