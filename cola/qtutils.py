@@ -1097,7 +1097,7 @@ class ImageFormats(object):
         # portability: python3 data() returns bytes, python2 returns str
         decode = core.decode
         formats = [decode(x.data()) for x in formats_qba]
-        self.extensions = set(['.' + fmt for fmt in formats])
+        self.extensions = {'.' + fmt for fmt in formats}
 
     def ok(self, filename):
         _, ext = os.path.splitext(filename)
