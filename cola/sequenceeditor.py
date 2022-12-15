@@ -157,14 +157,14 @@ class Editor(QtWidgets.QWidget):
 
         self.rebase_button = qtutils.create_button(
             text=core.getenv('GIT_COLA_SEQ_EDITOR_ACTION', N_('Rebase')),
-            tooltip=N_('Accept changes and rebase\n' 'Shortcut: Ctrl+Enter'),
+            tooltip=N_('Accept changes and rebase\nShortcut: Ctrl+Enter'),
             icon=icons.ok(),
             default=True,
         )
 
         self.extdiff_button = qtutils.create_button(
             text=N_('Launch Diff Tool'),
-            tooltip=N_('Launch external diff tool\n' 'Shortcut: Ctrl+D'),
+            tooltip=N_('Launch external diff tool\nShortcut: Ctrl+D'),
         )
         self.extdiff_button.setEnabled(False)
 
