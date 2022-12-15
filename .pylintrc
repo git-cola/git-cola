@@ -77,7 +77,6 @@ disable=
     too-many-instance-attributes,
     unspecified-encoding,
     useless-object-inheritance,
-    wrong-import-position
 
 [REPORTS]
 

@@ -3,6 +3,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import sys
 
+from .git import STDOUT
+from .decorators import memoize
+from ._version import VERSION
+
 try:
     if sys.version_info < (3, 8):
         import importlib_metadata as metadata
@@ -16,9 +20,6 @@ if __name__ == '__main__':
     srcdir = os.path.dirname(os.path.dirname(__file__))
     sys.path.insert(1, srcdir)
 
-from .git import STDOUT  # noqa
-from .decorators import memoize  # noqa
-from ._version import VERSION  # noqa
 
 # minimum version requirements
 _versions = {
