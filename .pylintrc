@@ -68,6 +68,7 @@ disable=
     bad-option-value,
     consider-using-dict-comprehension,
     consider-using-set-comprehension,
+    consider-using-with,
     duplicate-code,
     fixme,
     invalid-name,
