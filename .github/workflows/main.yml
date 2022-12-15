@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         # Repository checked out under $GITHUB_WORKSPACE
 
       - name: Install Dependencies
@@ -22,7 +22,7 @@ jobs:
         run: make prefix="build" install
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: git-cola-run${{github.run_number}}-${{runner.os}}
           path: build/
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         # Repository checked out under $GITHUB_WORKSPACE
 
       - name: Install Dependencies
@@ -81,17 +81,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         # Repository checked out under $GITHUB_WORKSPACE
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
           architecture: 'x64'
 
       - name: Pip Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
             path: ~\AppData\Local\pip\Cache
             key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/requirements*.txt') }}
@@ -116,7 +116,7 @@ jobs:
           mv git-cola*.exe git-cola-run${{github.run_number}}.exe
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: git-cola-run${{github.run_number}}-${{runner.os}}
           path: build\nsis\git-cola*.exe
@@ -126,7 +126,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         # Repository checked out under $GITHUB_WORKSPACE
 
       - name: Install Dependencies
@@ -145,7 +145,7 @@ jobs:
           mv git-cola.app build/
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: git-cola-run${{github.run_number}}-${{runner.os}}
           path: build/
