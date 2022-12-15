@@ -43,7 +43,7 @@ COMMANDS = (
     FIXUP,
     SQUASH,
 )
-COMMAND_IDX = dict([(cmd_, idx_) for idx_, cmd_ in enumerate(COMMANDS)])
+COMMAND_IDX = {cmd_: idx_ for idx_, cmd_ in enumerate(COMMANDS)}
 ABBREV = {
     'p': PICK,
     'r': REWORD,

@@ -368,7 +368,7 @@ class GitConfig(QtCore.QObject):
         """
         prefix = len('guitool.%s.' % name)
         guitools = self.find('guitool.%s.*' % name)
-        return dict([(key[prefix:], value) for (key, value) in guitools.items()])
+        return {key[prefix:]: value for (key, value) in guitools.items()}
 
     def get_guitool_names(self):
         guitools = self.find('guitool.*.cmd')
