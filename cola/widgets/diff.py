@@ -485,8 +485,8 @@ class Viewer(QtWidgets.QFrame):
     def render_side_by_side(self):
         # Side-by-side lineup comp
         pixmaps = self.pixmaps
-        width = sum([pixmap.width() for pixmap in pixmaps])
-        height = max([pixmap.height() for pixmap in pixmaps])
+        width = sum(pixmap.width() for pixmap in pixmaps)
+        height = max(pixmap.height() for pixmap in pixmaps)
         image = create_image(width, height)
 
         # Paint each pixmap
@@ -505,8 +505,8 @@ class Viewer(QtWidgets.QFrame):
         if len(pixmaps) == 1:
             return pixmaps[0]
 
-        width = max([pixmap.width() for pixmap in pixmaps])
-        height = max([pixmap.height() for pixmap in pixmaps])
+        width = max(pixmap.width() for pixmap in pixmaps)
+        height = max(pixmap.height() for pixmap in pixmaps)
         image = create_image(width, height)
 
         painter = create_painter(image)
