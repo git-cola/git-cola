@@ -98,6 +98,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          pip install wheel
           pip install --requirement requirements/requirements.txt
           pip install --requirement requirements/requirements-dev.txt
           pip install --requirement requirements/requirements-maint.txt
@@ -135,6 +136,7 @@ jobs:
           brew install git-cola
           python3 -m venv env
           source env/bin/activate
+          python -m pip install wheel
           make requirements-dev
 
       - name: Build Bundle
