@@ -495,7 +495,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self.move_rows.emit(sel_idx, idx)
 
     def move(self, src_idxs, dst_idx):
-        moved_items = list()
+        moved_items = []
         src_base = sorted(src_idxs)[0]
         for idx in reversed(sorted(src_idxs)):
             item = self.invisibleRootItem().takeChild(idx)
