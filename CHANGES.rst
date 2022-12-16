@@ -16,6 +16,12 @@ Packaging and Dependencies
 
 * The vendored `qtpy` library was updated to `v2.3.0`.
 
+Development
+-----------
+* Fixes and updates to Git Cola's CI actions.
+  (`#1278 <https://github.com/git-cola/git-cola/pull/1278>`_)
+  (`#1277 <https://github.com/git-cola/git-cola/issues/1277>`_)
+
 
 .. _v4.0.4:
 
