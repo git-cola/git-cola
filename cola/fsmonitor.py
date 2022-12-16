@@ -258,12 +258,10 @@ if AVAILABLE == 'inotify':
             context = self.context
             try:
                 if self._worktree is not None:
-                    tracked_dirs = set(
-                        [
-                            os.path.dirname(os.path.join(self._worktree, path))
-                            for path in gitcmds.tracked_files(context)
-                        ]
-                    )
+                    tracked_dirs = {
+                        os.path.dirname(os.path.join(self._worktree, path))
+                        for path in gitcmds.tracked_files(context)
+                    }
                     self._refresh_watches(
                         tracked_dirs,
                         self._worktree_wd_to_path_map,

@@ -304,9 +304,7 @@ def prompt_n(msg, inputs):
             long_value = k + v
 
     metrics = QtGui.QFontMetrics(dialog.font())
-    min_width = metrics.width(long_value) + 100
-    if min_width > 720:
-        min_width = 720
+    min_width = min(720, metrics.width(long_value) + 100)
     dialog.setMinimumWidth(min_width)
 
     ok_b = ok_button(msg, enabled=False)
@@ -1099,7 +1097,7 @@ class ImageFormats(object):
         # portability: python3 data() returns bytes, python2 returns str
         decode = core.decode
         formats = [decode(x.data()) for x in formats_qba]
-        self.extensions = set(['.' + fmt for fmt in formats])
+        self.extensions = {'.' + fmt for fmt in formats}
 
     def ok(self, filename):
         _, ext = os.path.splitext(filename)

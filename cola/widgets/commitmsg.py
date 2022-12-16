@@ -89,7 +89,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.description.set_dictionary(cfg.get('cola.dictionary', None))
         self.description.menu_actions.extend(menu_actions)
 
-        commit_button_tooltip = N_('Commit staged changes\n' 'Shortcut: Ctrl+Enter')
+        commit_button_tooltip = N_('Commit staged changes\nShortcut: Ctrl+Enter')
         self.commit_button = qtutils.create_button(
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip, icon=icons.commit()
         )
@@ -437,7 +437,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             )
             if self.model.modified:
                 informative_text = N_(
-                    'Would you like to stage and ' 'commit all modified files?'
+                    'Would you like to stage and commit all modified files?'
                 )
                 if not Interaction.confirm(
                     N_('Stage and commit?'),

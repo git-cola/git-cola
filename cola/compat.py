@@ -15,7 +15,7 @@ PY_VERSION_MAJOR = PY_VERSION[0]
 PY2 = PY_VERSION_MAJOR == 2
 PY3 = PY_VERSION_MAJOR >= 3
 PY26_PLUS = PY2 and sys.version_info[1] >= 6
-WIN32 = sys.platform == 'win32' or sys.platform == 'cygwin'
+WIN32 = sys.platform in {'win32', 'cygwin'}
 ENCODING = 'utf-8'
 
 

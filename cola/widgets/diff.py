@@ -42,7 +42,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
     DIFF_FILE_HEADER_START_RGX = re.compile(r'diff --git a/.* b/.*')
     DIFF_HUNK_HEADER_RGX = re.compile(
-        r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|' r'(?:@@@ (?:-[0-9,]+ ){2}\+[0-9,]+ @@@)'
+        r'(?:@@ -[0-9,]+ \+[0-9,]+ @@)|(?:@@@ (?:-[0-9,]+ ){2}\+[0-9,]+ @@@)'
     )
     BAD_WHITESPACE_RGX = re.compile(r'\s+$')
 
@@ -485,8 +485,8 @@ class Viewer(QtWidgets.QFrame):
     def render_side_by_side(self):
         # Side-by-side lineup comp
         pixmaps = self.pixmaps
-        width = sum([pixmap.width() for pixmap in pixmaps])
-        height = max([pixmap.height() for pixmap in pixmaps])
+        width = sum(pixmap.width() for pixmap in pixmaps)
+        height = max(pixmap.height() for pixmap in pixmaps)
         image = create_image(width, height)
 
         # Paint each pixmap
@@ -505,8 +505,8 @@ class Viewer(QtWidgets.QFrame):
         if len(pixmaps) == 1:
             return pixmaps[0]
 
-        width = max([pixmap.width() for pixmap in pixmaps])
-        height = max([pixmap.height() for pixmap in pixmaps])
+        width = max(pixmap.width() for pixmap in pixmaps)
+        height = max(pixmap.height() for pixmap in pixmaps)
         image = create_image(width, height)
 
         painter = create_painter(image)

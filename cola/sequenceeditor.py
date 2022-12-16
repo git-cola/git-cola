@@ -43,7 +43,7 @@ COMMANDS = (
     FIXUP,
     SQUASH,
 )
-COMMAND_IDX = dict([(cmd_, idx_) for idx_, cmd_ in enumerate(COMMANDS)])
+COMMAND_IDX = {cmd_: idx_ for idx_, cmd_ in enumerate(COMMANDS)}
 ABBREV = {
     'p': PICK,
     'r': REWORD,
@@ -157,14 +157,14 @@ class Editor(QtWidgets.QWidget):
 
         self.rebase_button = qtutils.create_button(
             text=core.getenv('GIT_COLA_SEQ_EDITOR_ACTION', N_('Rebase')),
-            tooltip=N_('Accept changes and rebase\n' 'Shortcut: Ctrl+Enter'),
+            tooltip=N_('Accept changes and rebase\nShortcut: Ctrl+Enter'),
             icon=icons.ok(),
             default=True,
         )
 
         self.extdiff_button = qtutils.create_button(
             text=N_('Launch Diff Tool'),
-            tooltip=N_('Launch external diff tool\n' 'Shortcut: Ctrl+D'),
+            tooltip=N_('Launch external diff tool\nShortcut: Ctrl+D'),
         )
         self.extdiff_button.setEnabled(False)
 
@@ -495,7 +495,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self.move_rows.emit(sel_idx, idx)
 
     def move(self, src_idxs, dst_idx):
-        moved_items = list()
+        moved_items = []
         src_base = sorted(src_idxs)[0]
         for idx in reversed(sorted(src_idxs)):
             item = self.invisibleRootItem().takeChild(idx)

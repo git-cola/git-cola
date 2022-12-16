@@ -118,7 +118,9 @@ class GravatarLabel(QtWidgets.QLabel):
             relocated = location != request_location
         else:
             relocated = False
-        no_error = qtutils.enum_value(QtNetwork.QNetworkReply.NetworkError.NoError)
+        no_error = qtutils.enum_value(
+            QtNetwork.QNetworkReply.NetworkError.NoError  # pylint: disable=no-member
+        )
         if reply.error() == no_error:
             if relocated:
                 # We could do get_url(parse.unquote(location)) to

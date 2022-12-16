@@ -600,7 +600,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _set_unmerged(self, items):
         """Adds items to the 'Unmerged' subtree."""
-        deleted_set = set([path for path in items if not core.exists(path)])
+        deleted_set = {path for path in items if not core.exists(path)}
         with qtutils.BlockSignals(self):
             self._set_subtree(
                 items, UNMERGED_IDX, N_('Unmerged'), deleted_set=deleted_set
