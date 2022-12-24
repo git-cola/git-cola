@@ -682,6 +682,8 @@ def diff_index(context, head, cached=True, paths=None):
 
 def diff_worktree(context, paths=None):
     git = context.git
+    ignore_submodules_value = context.cfg.get('diff.ignoresubmodules', 'none')
+    ignore_submodules = ignore_submodules_value in {'all', 'dirty', 'untracked'}
     modified = []
     deleted = set()
     submodules = set()
@@ -693,6 +695,8 @@ def diff_worktree(context, paths=None):
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
+            if ignore_submodules:
+                continue
         if status in 'DAMT':
             modified.append(path)
             if status == 'D':

@@ -9,6 +9,9 @@ Usability, bells and whistles
   ``git rebase --update-refs``.
   (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
 
+* The status widget now respects `diff.ignoreSubmodules`.
+  (`#1269 <https://github.com/git-cola/git-cola/issues/1269>`_)
+
 Packaging and Dependencies
 --------------------------
 * PyQt6 is now officially supported.
