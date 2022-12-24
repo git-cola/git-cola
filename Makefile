@@ -231,7 +231,7 @@ po::
 git-cola.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app_resources)
-	$(PYTHON3) -m venv $(cola_app_resources)
+	$(PYTHON3) -m venv --copies $(cola_app_resources)
 	$(cola_app_resources)/bin/pip install --requirement requirements/requirements.txt
 	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-optional.txt
 	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-dev.txt
