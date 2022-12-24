@@ -53,5 +53,17 @@
 	<string>NSApplication</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>Access Git repositories in the Desktop/ folder.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Access Git repositories in the Documents/ folder.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>Access Git repositories in the Downloads/ folder.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>Access Git repositories on network volumes.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>Access Git repositories on removable volumes.</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>Access Git repositories from a file provider.</string>
 </dict>
 </plist>
