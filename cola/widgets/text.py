@@ -634,7 +634,8 @@ class VimMixin(object):
             hotkeys.TEXT_UP,
         )
         qtutils.add_action(
-            widget, 'PageDown',
+            widget,
+            'PageDown',
             widget.page_down,
             hotkeys.PRIMARY_ACTION,
             hotkeys.TEXT_DOWN,

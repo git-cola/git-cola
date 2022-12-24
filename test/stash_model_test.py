@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+
 # pylint: disable=redefined-outer-name
 from cola.models.stash import StashModel
 
@@ -14,8 +15,9 @@ def test_stash_info_for_message_without_slash(app_context):
     helper.commit_files()
     helper.write_file('A', 'change')
     helper.run_git('stash', 'save', 'some message')
-    assert StashModel(app_context).stash_info()[0] \
-        == [r'stash@{0}: On main: some message']
+    assert StashModel(app_context).stash_info()[0] == [
+        r'stash@{0}: On main: some message'
+    ]
 
 
 def test_stash_info_for_message_with_slash(app_context):

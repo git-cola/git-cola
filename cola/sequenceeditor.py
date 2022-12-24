@@ -226,7 +226,7 @@ class Editor(QtWidgets.QWidget):
         re_comment_char = re.escape(self.comment_char)
         exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$' % re_comment_char)
         update_ref_rgx = re.compile(
-          r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
+            r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
         )
         # The upper bound of 40 below must match git.OID_LENGTH.
         # We'll have to update this to the new hash length when that happens.
@@ -387,7 +387,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.items_moved.connect(self.decorate)
 
     def add_item(
-      self, idx, enabled, command, oid='', summary='', cmdexec='', branch=''
+        self, idx, enabled, command, oid='', summary='', cmdexec='', branch=''
     ):
         comment_char = self.comment_char
         item = RebaseTreeWidgetItem(
@@ -649,7 +649,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def is_commit(self):
         return bool(
-          not (self.is_exec() or self.is_update_ref()) and self.oid and self.summary
+            not (self.is_exec() or self.is_update_ref()) and self.oid and self.summary
         )
 
     def value(self):
