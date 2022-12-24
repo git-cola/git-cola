@@ -7,6 +7,7 @@ Usability, bells and whistles
 -----------------------------
 * The rebase editor was taught to handle stacked branch workflows enabled by
   ``git rebase --update-refs``.
+  (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
 
 Packaging and Dependencies
 --------------------------
