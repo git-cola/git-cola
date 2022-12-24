@@ -52,6 +52,8 @@ _versions = {
     'qt-hidpi-scale': '5.6.0',
     # git rev-parse --show-superproject-working-tree was added in 2.13.0
     'show-superproject-working-tree': '2.13.0',
+    # git rebase --update-refs was added in 2.38.0
+    'rebase-update-refs': '2.38.0',
 }
 
 

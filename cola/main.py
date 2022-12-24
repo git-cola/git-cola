@@ -346,6 +346,12 @@ def add_rebase_command(subparser):
         help="passed to 'git apply' by 'git rebase'",
     )
     parser.add_argument(
+        '--update-refs',
+        default=False,
+        action='store_true',
+        help='update branches that point to commits that are being rebased',
+    )
+    parser.add_argument(
         '-C',
         dest='context_lines',
         default=None,
@@ -648,6 +654,7 @@ def cmd_rebase(args):
         'abort': args.abort,
         'skip': args.skip,
         'edit_todo': args.edit_todo,
+        'update_refs': args.update_refs,
         'upstream': args.upstream,
         'branch': args.branch,
     }

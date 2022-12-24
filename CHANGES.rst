@@ -6,8 +6,11 @@ v4.1.0
 Usability, bells and whistles
 -----------------------------
 * The rebase editor was taught to handle stacked branch workflows enabled by
-  ``git rebase --update-refs``.
+  ``git rebase --update-refs``. The `git cola rebase` sub-command now has
+  an `--update-refs` option and the menu actions display a prompt that allows
+  you to enable the updating of stacked branches.
   (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
+  (`#571 <https://github.com/git-cola/git-cola/issues/571>`_)
 
 * The status widget now respects `diff.ignoreSubmodules`.
   (`#1269 <https://github.com/git-cola/git-cola/issues/1269>`_)

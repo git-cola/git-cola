@@ -1914,6 +1914,30 @@ class Rebase(ContextCommand):
         kwargs['autosquash'] = self.kwargs.get('autosquash', True)
         kwargs.update(self.kwargs)
 
+        # Prompt to determine whether or not to use "git rebase --update-refs".
+        has_update_refs = version.check_git(self.context, 'rebase-update-refs')
+        if has_update_refs and not kwargs.get('update_refs', False):
+            title = N_('Update stacked branches when rebasing?')
+            text = N_(
+                '"git rebase --update-refs" automatically force-updates any\n'
+                'branches that point to commits that are being rebased.\n\n'
+                'Any branches that are checked out in a worktree are not updated.\n\n'
+                'Using this feature is helpful for "stacked" branch workflows.'
+            )
+            info = N_('Update stacked branches when rebasing?')
+            ok_text = N_('Update stacked branches')
+            cancel_text = N_('Do not update stacked branches')
+            update_refs = Interaction.confirm(
+                title,
+                text,
+                info,
+                ok_text,
+                default=True,
+                cancel_text=cancel_text,
+            )
+            if update_refs:
+                kwargs['update_refs'] = True
+
         if upstream:
             args.append(upstream)
         if self.branch:
