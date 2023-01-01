@@ -72,26 +72,21 @@ class StartupDialog(standard.Dialog):
         recent = settings.recent
         all_repos = bookmarks + recent
 
-        directory_icon = icons.directory()
-        user_role = Qt.UserRole
         normalize = display.normalize_path
         paths = {normalize(repo['path']) for repo in all_repos}
         short_paths = display.shorten_paths(paths)
         self.short_paths = short_paths
 
         added = set()
+        builder = BuildItem(self.context)
         for repo in all_repos:
             path = normalize(repo['path'])
+            name = normalize(repo['name'])
             if path in added:
                 continue
             added.add(path)
 
-            item = QtGui.QStandardItem(path)
-            item.setEditable(False)
-            item.setData(path, user_role)
-            item.setIcon(directory_icon)
-            item.setToolTip(path)
-            item.setText(self.short_paths.get(path, path))
+            item = builder.get(path, name)
             bookmarks_model.appendRow(item)
             items.append(item)
 
@@ -274,6 +269,38 @@ class StartupDialog(standard.Dialog):
         if selected and selected[0].row() != 0:
             return self.bookmarks_model.data(selected[0], Qt.UserRole)
         return None
+
+
+class BuildItem(object):
+    def __init__(self, context):
+        self.star_icon = icons.star()
+        self.folder_icon = icons.folder()
+        cfg = context.cfg
+        self.default_repo = cfg.get('cola.defaultrepo')
+
+    def get(self, path, name):
+        is_default = self.default_repo == path
+        if is_default:
+            icon = self.star_icon
+        else:
+            icon = self.folder_icon
+        return PromptWidgetItem(path, name, icon, is_default)
+
+
+class PromptWidgetItem(QtGui.QStandardItem):
+    def __init__(self, path, name, icon, is_default):
+        QtGui.QStandardItem.__init__(self, icon, name)
+        self.path = path
+        self.is_default = is_default
+        self.name = name
+
+        user_role = Qt.UserRole
+        self.setEditable(False)
+        self.setData(path, user_role)
+        self.setIcon(icon)
+        self.setText(name)
+        self.setToolTip(path)
+        self.setFlags(self.flags() | Qt.ItemIsEditable)
 
 
 def make_size(size):
