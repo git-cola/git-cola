@@ -2203,7 +2203,7 @@ msgstr ""
 #: cola/guicmds.py:186 cola/guicmds.py:195 cola/widgets/editremotes.py:473
 #: cola/widgets/startup.py:213
 #, fuzzy
-msgid "Open Git Repository..."
+msgid "Open Git Repository"
 msgstr "Öppna befintligt arkiv"
 
 #: cola/widgets/submodules.py:49

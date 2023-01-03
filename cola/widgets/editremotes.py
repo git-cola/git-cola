@@ -470,6 +470,6 @@ class RemoteWidget(QtWidgets.QWidget):
 
     def open_repo(self):
         git = self.context.git
-        repo = qtutils.opendir_dialog(N_('Open Git Repository...'), core.getcwd())
+        repo = qtutils.opendir_dialog(N_('Open Git Repository'), core.getcwd())
         if repo and git.is_git_repository(repo):
             self.url = repo

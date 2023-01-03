@@ -2197,7 +2197,7 @@ msgstr ""
 
 #: cola/guicmds.py:186 cola/guicmds.py:195 cola/widgets/editremotes.py:473
 #: cola/widgets/startup.py:213
-msgid "Open Git Repository..."
+msgid "Open Git Repository"
 msgstr "Abrir o Repositório Git"
 
 #: cola/widgets/submodules.py:49

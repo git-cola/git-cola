@@ -183,7 +183,7 @@ def diff_expression(context):
 
 def open_repo(context):
     model = context.model
-    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'), model.getcwd())
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository'), model.getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenRepo, context, dirname)
@@ -192,7 +192,7 @@ def open_repo(context):
 def open_repo_in_new_window(context):
     """Spawn a new cola session."""
     model = context.model
-    dirname = qtutils.opendir_dialog(N_('Open Git Repository...'), model.getcwd())
+    dirname = qtutils.opendir_dialog(N_('Open Git Repository'), model.getcwd())
     if not dirname:
         return
     cmds.do(cmds.OpenNewRepo, context, dirname)

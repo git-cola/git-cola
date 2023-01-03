@@ -210,7 +210,7 @@ class StartupDialog(standard.Dialog):
         self.repodir = self.get_selected_bookmark()
         if not self.repodir:
             self.repodir = qtutils.opendir_dialog(
-                N_('Open Git Repository...'), core.getcwd()
+                N_('Open Git Repository'), core.getcwd()
             )
         if self.repodir:
             self.accept()

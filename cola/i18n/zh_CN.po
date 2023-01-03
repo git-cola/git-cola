@@ -2130,8 +2130,8 @@ msgstr ""
 
 #: cola/guicmds.py:186 cola/guicmds.py:195 cola/widgets/editremotes.py:473
 #: cola/widgets/startup.py:213
-msgid "Open Git Repository..."
-msgstr "打开已有版本库..."
+msgid "Open Git Repository"
+msgstr "打开已有版本库"
 
 #: cola/widgets/submodules.py:49
 msgid "Open Parent"
