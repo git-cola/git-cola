@@ -2150,8 +2150,8 @@ msgstr "Открыть каталог"
 
 #: cola/guicmds.py:186 cola/guicmds.py:195 cola/widgets/editremotes.py:473
 #: cola/widgets/startup.py:213
-msgid "Open Git Repository..."
-msgstr "Открыть Git репозиторий..."
+msgid "Open Git Repository"
+msgstr "Открыть Git репозиторий"
 
 #: cola/widgets/submodules.py:49
 #, fuzzy
