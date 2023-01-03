@@ -45,7 +45,7 @@ class StartupDialog(standard.Dialog):
 
         self.new_button = qtutils.create_button(text=N_('New...'), icon=icons.new())
         self.open_button = qtutils.create_button(
-            text=N_('Open...'), icon=icons.folder()
+            text=N_('Open Git Repository'), icon=icons.folder()
         )
         self.clone_button = qtutils.create_button(
             text=N_('Clone...'), icon=icons.cola()
@@ -55,7 +55,7 @@ class StartupDialog(standard.Dialog):
         self.bookmarks_model = bookmarks_model = QtGui.QStandardItemModel()
         self.items = items = []
 
-        item = QtGui.QStandardItem(N_('Open...'))
+        item = QtGui.QStandardItem(N_('Browse...'))
         item.setEditable(False)
         item.setIcon(icons.open_directory())
         bookmarks_model.appendRow(item)
