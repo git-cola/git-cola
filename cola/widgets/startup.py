@@ -360,7 +360,7 @@ class BookmarksListView(QtWidgets.QListView):
 
         self.copy_action = qtutils.add_action(self, N_('Copy'), self.copy, hotkeys.COPY)
 
-        self.delete_action = qtutils.add_action(self, N_('Delete'), self.delete_action)
+        self.delete_action = qtutils.add_action(self, N_('Delete'), self.delete_item)
 
         self.remove_missing_action = qtutils.add_action(
             self, N_('Prune Missing Entries'), self.remove_missing
@@ -520,7 +520,7 @@ class BookmarksListView(QtWidgets.QListView):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
 
-    def delete_action(self):
+    def delete_item(self):
         """Remove the selected repo item
 
         If the item comes from bookmarks (item.is_bookmark) then delete the item
