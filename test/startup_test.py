@@ -1,4 +1,7 @@
 """Test Startup Dialog (git cola --prompt) Context Menu and related classes"""
+# pylint: disable=redefined-outer-name
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from cola.widgets import startup
 
 from .helper import app_context
@@ -7,83 +10,83 @@ from .helper import app_context
 assert app_context is not None
 
 
-class TestBuildItem:
-    """startup.BuildItem test for PrompotWIdgetItem creation"""
+def test_get_with_default_repo(app_context):
+    """Test BuildItem::get for default repo"""
+    path = '/home/foo/git-cola'
+    name = 'git-cola'
+    mode = startup.ICON_MODE
+    is_bookmark = True
 
-    def test_get_with_default_repo(self, app_context):
-        """Test BuildItem::get for default repo"""
-        path = '/home/foo/git-cola'
-        name = 'git-cola'
-        mode = startup.ICON_MODE
-        is_bookmark = True
+    app_context.cfg.set_repo('cola.defaultrepo', path)
+    builder = startup.BuildItem(app_context)
 
-        app_context.cfg.set_repo('cola.defaultrepo', path)
-        builder = startup.BuildItem(app_context)
+    actual = builder.get(path, name, mode, is_bookmark)
 
-        actual = builder.get(path, name, mode, is_bookmark)
+    assert actual.path == path
+    assert actual.name == name
+    assert actual.mode == startup.ICON_MODE
+    assert actual.is_default
+    assert actual.is_bookmark
+    assert actual.text() == name
+    assert actual.isEditable()
 
-        assert actual.path == path
-        assert actual.name == name
-        assert actual.mode == startup.ICON_MODE
-        assert actual.is_default
-        assert actual.is_bookmark
-        assert actual.text() == name
-        assert actual.isEditable()
 
-    def test_get_with_non_default_repo(self, app_context):
-        """Test BuildItem::get for non-default repo"""
-        default_repo_path = '/home/foo/default_repo'
-        path = '/home/foo/git-cola'
-        name = 'git-cola'
-        mode = startup.ICON_MODE
-        is_bookmark = True
+def test_get_with_non_default_repo(app_context):
+    """Test BuildItem::get for non-default repo"""
+    default_repo_path = '/home/foo/default_repo'
+    path = '/home/foo/git-cola'
+    name = 'git-cola'
+    mode = startup.ICON_MODE
+    is_bookmark = True
 
-        app_context.cfg.set_repo('cola.defaultrepo', default_repo_path)
-        builder = startup.BuildItem(app_context)
+    app_context.cfg.set_repo('cola.defaultrepo', default_repo_path)
+    builder = startup.BuildItem(app_context)
 
-        actual = builder.get(path, name, mode, is_bookmark)
+    actual = builder.get(path, name, mode, is_bookmark)
 
-        assert actual.path == path
-        assert actual.name == name
-        assert not actual.is_default
-        assert actual.is_bookmark == is_bookmark
-        assert actual.text() == name
-        assert actual.isEditable()
+    assert actual.path == path
+    assert actual.name == name
+    assert not actual.is_default
+    assert actual.is_bookmark == is_bookmark
+    assert actual.text() == name
+    assert actual.isEditable()
 
-    def test_get_with_item_from_recent(self, app_context):
-        """Test BuildItem::get for repository from recent list"""
-        path = '/home/foo/git-cola'
-        name = 'git-cola'
-        mode = startup.ICON_MODE
-        is_bookmark = False
 
-        app_context.cfg.set_repo('cola.defaultrepo', path)
-        builder = startup.BuildItem(app_context)
+def test_get_with_item_from_recent(app_context):
+    """Test BuildItem::get for repository from recent list"""
+    path = '/home/foo/git-cola'
+    name = 'git-cola'
+    mode = startup.ICON_MODE
+    is_bookmark = False
 
-        actual = builder.get(path, name, mode, is_bookmark)
+    app_context.cfg.set_repo('cola.defaultrepo', path)
+    builder = startup.BuildItem(app_context)
 
-        assert actual.path == path
-        assert actual.name == name
-        assert actual.is_default
-        assert not actual.is_bookmark
-        assert actual.text() == name
-        assert actual.isEditable()
+    actual = builder.get(path, name, mode, is_bookmark)
 
-    def test_get_with_list_mode(self, app_context):
-        """Test BuildItem::get for list mode building"""
-        path = '/home/foo/git-cola'
-        name = 'git-cola'
-        mode = startup.LIST_MODE
-        is_bookmark = True
+    assert actual.path == path
+    assert actual.name == name
+    assert actual.is_default
+    assert not actual.is_bookmark
+    assert actual.text() == name
+    assert actual.isEditable()
 
-        app_context.cfg.set_repo('cola.defaultrepo', path)
-        builder = startup.BuildItem(app_context)
 
-        actual = builder.get(path, name, mode, is_bookmark)
+def test_get_with_list_mode(app_context):
+    """Test BuildItem::get for list mode building"""
+    path = '/home/foo/git-cola'
+    name = 'git-cola'
+    mode = startup.LIST_MODE
+    is_bookmark = True
 
-        assert actual.path == path
-        assert actual.name == name
-        assert actual.is_default
-        assert actual.is_bookmark
-        assert actual.text() == path
-        assert not actual.isEditable()
+    app_context.cfg.set_repo('cola.defaultrepo', path)
+    builder = startup.BuildItem(app_context)
+
+    actual = builder.get(path, name, mode, is_bookmark)
+
+    assert actual.path == path
+    assert actual.name == name
+    assert actual.is_default
+    assert actual.is_bookmark
+    assert actual.text() == path
+    assert not actual.isEditable()
