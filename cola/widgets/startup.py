@@ -256,7 +256,7 @@ class StartupDialog(standard.Dialog):
                 return
             self.accept()
 
-    def handle_broken_repo(self, index, mode):
+    def handle_broken_repo(self, index):
         settings = self.context.settings
         all_repos = settings.bookmarks + settings.recent
         repodir = self.bookmarks_model.data(index, Qt.UserRole)
@@ -361,10 +361,6 @@ class BookmarksListView(QtWidgets.QListView):
         self.copy_action = qtutils.add_action(self, N_('Copy'), self.copy, hotkeys.COPY)
 
         self.delete_action = qtutils.add_action(self, N_('Delete'), self.delete_action)
-
-        # self.delete_bookmark_action = qtutils.add_action(
-        #    self, N_('Delete from Bookmark List'), self.delete_bookmark
-        # )
 
         self.remove_missing_action = qtutils.add_action(
             self, N_('Prune Missing Entries'), self.remove_missing
