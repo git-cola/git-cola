@@ -187,8 +187,9 @@ Thanks
 * Mosaab Alzoubi
 * Muhammad Bashir Al-Noimi
 * Myz
-* Naraesk
+* nakanoi
 * Nanda Lopes
+* Naraesk
 * Niel Buys
 * Nick Todd
 * Nicolas Dietrich
