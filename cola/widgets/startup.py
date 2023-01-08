@@ -7,16 +7,22 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
+from .. import cmds
 from .. import core
 from .. import display
 from .. import guicmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import utils
 from .. import version
 from . import clone
 from . import defs
 from . import standard
+
+
+ICON_MODE = 0
+LIST_MODE = 1
 
 
 class StartupDialog(standard.Dialog):
@@ -72,39 +78,29 @@ class StartupDialog(standard.Dialog):
         recent = settings.recent
         all_repos = bookmarks + recent
 
-        directory_icon = icons.directory()
-        user_role = Qt.UserRole
         normalize = display.normalize_path
-        paths = {normalize(repo['path']) for repo in all_repos}
-        short_paths = display.shorten_paths(paths)
-        self.short_paths = short_paths
 
         added = set()
-        for repo in all_repos:
+        builder = BuildItem(self.context)
+        default_view_mode = ICON_MODE
+        for idx, repo in enumerate(all_repos):
             path = normalize(repo['path'])
+            name = normalize(repo['name'])
+            is_bookmark = idx < len(bookmarks)
             if path in added:
                 continue
             added.add(path)
 
-            item = QtGui.QStandardItem(path)
-            item.setEditable(False)
-            item.setData(path, user_role)
-            item.setIcon(directory_icon)
-            item.setToolTip(path)
-            item.setText(self.short_paths.get(path, path))
+            item = builder.get(path, name, default_view_mode, is_bookmark)
             bookmarks_model.appendRow(item)
             items.append(item)
 
-        selection_mode = QtWidgets.QAbstractItemView.SingleSelection
-        self.bookmarks = bookmarks = QtWidgets.QListView()
-        bookmarks.setSelectionMode(selection_mode)
-        bookmarks.setModel(bookmarks_model)
-        bookmarks.setViewMode(QtWidgets.QListView.IconMode)
-        bookmarks.setResizeMode(QtWidgets.QListView.Adjust)
-        bookmarks.setGridSize(make_size(defs.large_icon))
-        bookmarks.setIconSize(make_size(defs.medium_icon))
-        bookmarks.setDragEnabled(False)
-        bookmarks.setWordWrap(True)
+        self.bookmarks = bookmarks = BookmarksListView(
+            context,
+            bookmarks_model,
+            self.open_selected_bookmark,
+            self.set_model,
+        )
 
         self.tab_layout = qtutils.vbox(
             defs.no_margin, defs.no_spacing, self.tab_bar, self.bookmarks
@@ -139,14 +135,9 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.clone_button, self.clone_repo)
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
-        # Open the selected repository when "enter" is pressed.
-        self.action_open_repo = qtutils.add_action(
-            self, N_('Open'), self.open_selected_bookmark, *hotkeys.ACCEPT
-        )
 
         # pylint: disable=no-member
         self.tab_bar.currentChanged.connect(self.tab_changed)
-        self.bookmarks.activated.connect(self.open_bookmark)
 
         self.init_state(settings, self.resize_widget)
         self.setFocusProxy(self.bookmarks)
@@ -160,22 +151,36 @@ class StartupDialog(standard.Dialog):
 
     def tab_changed(self, idx):
         bookmarks = self.bookmarks
-        if idx == 0:
-            bookmarks.setViewMode(QtWidgets.QListView.IconMode)
-            bookmarks.setIconSize(make_size(defs.medium_icon))
-            bookmarks.setGridSize(make_size(defs.large_icon))
+        if idx == ICON_MODE:
+            mode = QtWidgets.QListView.IconMode
+            icon_size = make_size(defs.medium_icon)
+            grid_size = make_size(defs.large_icon)
             list_mode = 'folder'
-            for item in self.items:
-                path = item.data(Qt.UserRole)
-                item.setText(self.short_paths.get(path, path))
+            view_mode = ICON_MODE
+            rename_enabled = True
         else:
-            bookmarks.setViewMode(QtWidgets.QListView.ListMode)
-            bookmarks.setIconSize(make_size(defs.default_icon))
-            bookmarks.setGridSize(QtCore.QSize())
+            mode = QtWidgets.QListView.ListMode
+            icon_size = make_size(defs.default_icon)
+            grid_size = QtCore.QSize()
             list_mode = 'list'
-            for item in self.items:
-                path = item.data(Qt.UserRole)
-                item.setText(path)
+            view_mode = LIST_MODE
+            rename_enabled = False
+
+        self.bookmarks.set_rename_enabled(rename_enabled)
+        self.bookmarks.set_view_mode(view_mode)
+
+        bookmarks.setViewMode(mode)
+        bookmarks.setIconSize(icon_size)
+        bookmarks.setGridSize(grid_size)
+
+        new_items = []
+        builder = BuildItem(self.context)
+        for item in self.items:
+            if isinstance(item, PromptWidgetItem):
+                item = builder.get(item.path, item.name, view_mode, item.is_bookmark)
+                new_items.append(item)
+
+        self.set_model(new_items)
 
         if list_mode != self.list_mode:
             self.list_mode = list_mode
@@ -251,11 +256,10 @@ class StartupDialog(standard.Dialog):
                 return
             self.accept()
 
-    def handle_broken_repo(self, index):
+    def handle_broken_repo(self, index, mode):
         settings = self.context.settings
         all_repos = settings.bookmarks + settings.recent
         repodir = self.bookmarks_model.data(index, Qt.UserRole)
-
         repo = next(repo for repo in all_repos if repo['path'] == repodir)
         title = N_('Repository Not Found')
         text = N_('%s could not be opened. Remove from bookmarks?') % repo['path']
@@ -274,6 +278,316 @@ class StartupDialog(standard.Dialog):
         if selected and selected[0].row() != 0:
             return self.bookmarks_model.data(selected[0], Qt.UserRole)
         return None
+
+    def set_model(self, items):
+        bookmarks_model = self.bookmarks_model
+        self.items = new_items = []
+        bookmarks_model.clear()
+
+        item = QtGui.QStandardItem(N_('Browse...'))
+        item.setEditable(False)
+        item.setIcon(icons.open_directory())
+        bookmarks_model.appendRow(item)
+
+        for item in items:
+            bookmarks_model.appendRow(item)
+            new_items.append(item)
+
+
+class BookmarksListView(QtWidgets.QListView):
+    """
+    List view class implementation of QWidgets.QListView for bookmarks and recent repos.
+    Almost methods is comes from `cola/widgets/bookmarks.py`.
+    """
+
+    def __init__(self, context, model, open_selected_repo, set_model, parent=None):
+        super(BookmarksListView, self).__init__(parent)
+
+        self.current_mode = ICON_MODE
+        self.context = context
+        self.open_selected_repo = open_selected_repo
+        self.set_model = set_model
+
+        self.setEditTriggers(self.SelectedClicked)
+
+        self.activated.connect(self.open_selected_repo)
+
+        self.setModel(model)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.setViewMode(QtWidgets.QListView.IconMode)
+        self.setResizeMode(QtWidgets.QListView.Adjust)
+        self.setGridSize(make_size(defs.large_icon))
+        self.setIconSize(make_size(defs.medium_icon))
+        self.setDragEnabled(False)
+        self.setWordWrap(True)
+
+        # Context Menu
+        self.open_action = qtutils.add_action(
+            self, N_('Open'), self.open_selected_repo, hotkeys.OPEN
+        )
+
+        self.accept_action = qtutils.add_action(
+            self, N_('Accept'), self.accept_repo, *hotkeys.ACCEPT
+        )
+
+        self.open_new_action = qtutils.add_action(
+            self, N_('Open in New Window'), self.open_new_repo, hotkeys.NEW
+        )
+
+        self.set_default_repo_action = qtutils.add_action(
+            self, N_('Set Default Repository'), self.set_default_repo
+        )
+
+        self.clear_default_repo_action = qtutils.add_action(
+            self, N_('Clear Default Repository'), self.clear_default_repo
+        )
+
+        self.rename_repo_action = qtutils.add_action(
+            self, N_('Rename Repository'), self.rename_repo
+        )
+
+        self.open_default_action = qtutils.add_action(
+            self, cmds.OpenDefaultApp.name(), self.open_default, hotkeys.PRIMARY_ACTION
+        )
+
+        self.launch_editor_action = qtutils.add_action(
+            self, cmds.Edit.name(), self.launch_editor, hotkeys.EDIT
+        )
+
+        self.launch_terminal_action = qtutils.add_action(
+            self, cmds.LaunchTerminal.name(), self.launch_terminal, hotkeys.TERMINAL
+        )
+
+        self.copy_action = qtutils.add_action(self, N_('Copy'), self.copy, hotkeys.COPY)
+
+        self.delete_action = qtutils.add_action(self, N_('Delete'), self.delete_action)
+
+        # self.delete_bookmark_action = qtutils.add_action(
+        #    self, N_('Delete from Bookmark List'), self.delete_bookmark
+        # )
+
+        self.remove_missing_action = qtutils.add_action(
+            self, N_('Prune Missing Entries'), self.remove_missing
+        )
+        self.remove_missing_action.setToolTip(
+            N_('Remove stale entries for repositories that no longer exist')
+        )
+
+        # pylint: disable=no-member
+        self.model().itemChanged.connect(self.item_changed)
+
+        self.action_group = utils.Group(
+            self.open_action,
+            self.open_new_action,
+            self.copy_action,
+            self.launch_editor_action,
+            self.launch_terminal_action,
+            self.open_default_action,
+            self.rename_repo_action,
+            self.delete_action,
+        )
+        self.action_group.setEnabled(True)
+        self.set_default_repo_action.setEnabled(True)
+        self.clear_default_repo_action.setEnabled(True)
+
+    def set_rename_enabled(self, is_enabled):
+        self.rename_repo_action.setEnabled(is_enabled)
+
+    def set_view_mode(self, view_mode):
+        self.current_mode = view_mode
+
+    def selected_item(self):
+        index = self.currentIndex()
+        return self.model().itemFromIndex(index)
+
+    def refresh(self):
+        self.model().layoutChanged.emit()
+        context = self.context
+        settings = context.settings
+        builder = BuildItem(context)
+        normalize = display.normalize_path
+
+        bookmarks = settings.bookmarks
+        recent = settings.recent
+        all_repos = bookmarks + recent
+
+        items = []
+        added = set()
+        for idx, repo in enumerate(all_repos):
+            path = normalize(repo['path'])
+            name = normalize(repo['name'])
+            is_bookmark = idx < len(bookmarks)
+            if path in added:
+                continue
+            added.add(path)
+
+            item = builder.get(path, name, self.current_mode, is_bookmark)
+            items.append(item)
+
+        self.set_model(items)
+
+    def contextMenuEvent(self, event):
+        """Configures prompt's context menu."""
+        item = self.selected_item()
+
+        if isinstance(item, PromptWidgetItem):
+            menu = qtutils.create_menu(N_('Actions'), self)
+            menu.addAction(self.open_action)
+            menu.addAction(self.open_new_action)
+            menu.addAction(self.open_default_action)
+            menu.addSeparator()
+            menu.addAction(self.copy_action)
+            menu.addAction(self.launch_editor_action)
+            menu.addAction(self.launch_terminal_action)
+            menu.addSeparator()
+            if item and item.is_default:
+                menu.addAction(self.clear_default_repo_action)
+            else:
+                menu.addAction(self.set_default_repo_action)
+            menu.addAction(self.rename_repo_action)
+            menu.addSeparator()
+            menu.addAction(self.delete_action)
+            menu.addAction(self.remove_missing_action)
+            menu.exec_(self.mapToGlobal(event.pos()))
+
+    def item_changed(self, item):
+        self.rename_entry(item, item.text())
+
+    def rename_entry(self, item, new_name):
+        settings = self.context.settings
+        if item.is_bookmark:
+            rename = settings.rename_bookmark
+        else:
+            rename = settings.rename_recent
+
+        if rename(item.path, item.name, new_name):
+            settings.save()
+            item.name = new_name
+        else:
+            item.setText(item.name)
+
+    def apply_fn(self, fn, *args, **kwargs):
+        item = self.selected_item()
+        if item:
+            fn(item, *args, **kwargs)
+
+    def copy(self):
+        self.apply_fn(lambda item: qtutils.set_clipboard(item.path))
+
+    def open_default(self):
+        context = self.context
+        self.apply_fn(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
+
+    def set_default_repo(self):
+        self.apply_fn(self.set_default_item)
+
+    def set_default_item(self, item):
+        context = self.context
+        cmds.do(cmds.SetDefaultRepo, context, item.path)
+        self.refresh()
+
+    def clear_default_repo(self):
+        self.apply_fn(self.clear_default_item)
+
+    def clear_default_item(self, _item):
+        context = self.context
+        cmds.do(cmds.SetDefaultRepo, context, None)
+        self.refresh()
+
+    def rename_repo(self):
+        index = self.currentIndex()
+        self.edit(index)
+
+    def accept_repo(self):
+        self.apply_fn(self.accept_item)
+
+    def accept_item(self, _item):
+        if self.state() & self.EditingState:
+            current_index = self.currentIndex()
+            widget = self.indexWidget(current_index)
+            if widget:
+                self.commitData(widget)
+            self.closePersistentEditor(current_index)
+            self.refresh()
+        else:
+            self.open_selected_repo()
+
+    def open_new_repo(self):
+        context = self.context
+        self.apply_fn(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
+
+    def launch_editor(self):
+        context = self.context
+        self.apply_fn(lambda item: cmds.do(cmds.Edit, context, [item.path]))
+
+    def launch_terminal(self):
+        context = self.context
+        self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
+
+    def delete_action(self):
+        """Remove the selected repo item
+
+        If the item comes from bookmarks (item.is_bookmark) then delete the item
+        from the Bookmarks list, otherwise delete it from the Recents list.
+        """
+        item = self.selected_item()
+        if not item:
+            return
+
+        if item.is_bookmark:
+            cmd = cmds.RemoveBookmark
+        else:
+            cmd = cmds.RemoveRecent
+        context = self.context
+        ok, _, _, _ = cmds.do(cmd, context, item.path, item.name, icon=icons.discard())
+        if ok:
+            self.refresh()
+
+    def remove_missing(self):
+        """Remove missing entries from the favorites/recent file list"""
+        settings = self.context.settings
+        settings.remove_missing_bookmarks()
+        settings.remove_missing_recent()
+        self.refresh()
+
+
+class BuildItem(object):
+    def __init__(self, context):
+        self.star_icon = icons.star()
+        self.folder_icon = icons.folder()
+        cfg = context.cfg
+        self.default_repo = cfg.get('cola.defaultrepo')
+
+    def get(self, path, name, mode, is_bookmark):
+        is_default = self.default_repo == path
+        if is_default:
+            icon = self.star_icon
+        else:
+            icon = self.folder_icon
+        return PromptWidgetItem(path, name, mode, icon, is_default, is_bookmark)
+
+
+class PromptWidgetItem(QtGui.QStandardItem):
+    def __init__(self, path, name, mode, icon, is_default, is_bookmark):
+        QtGui.QStandardItem.__init__(self, icon, name)
+        self.path = path
+        self.name = name
+        self.mode = mode
+        self.is_default = is_default
+        self.is_bookmark = is_bookmark
+        editable = mode == ICON_MODE
+
+        if self.mode == ICON_MODE:
+            item_text = self.name
+        else:
+            item_text = self.path
+
+        user_role = Qt.UserRole
+        self.setEditable(editable)
+        self.setData(path, user_role)
+        self.setIcon(icon)
+        self.setText(item_text)
+        self.setToolTip(path)
 
 
 def make_size(size):
