@@ -1,3 +1,17 @@
+.. _v4.2.0:
+
+v4.2.0
+======
+
+Usability, bells and whistles
+-----------------------------
+* The startup dialog now has a right-click context menu that allows you to prune
+  stale entries and other operations that were not previously accessible from
+  the startup dialog.
+  (`#1199 <https://github.com/git-cola/git-cola/issues/1199>`_)
+  (`#1280 <https://github.com/git-cola/git-cola/pull/1280>`_)
+
+
 .. _v4.1.0:
 
 v4.1.0
