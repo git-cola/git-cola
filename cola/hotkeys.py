@@ -51,6 +51,7 @@ AMEND = hotkey(Qt.CTRL | Qt.Key_M)
 MERGE = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_M)
 PUSH = hotkey(Qt.CTRL | Qt.Key_P)
 PULL = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_P)
+OPEN_REPO_SEARCH = hotkey(Qt.ALT | Qt.Key_P)
 # Q-Z
 QUIT = hotkey(Qt.CTRL | Qt.Key_Q)
 REFRESH = hotkey(Qt.CTRL | Qt.Key_R)
