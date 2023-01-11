@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 
 from qtpy import QtCore
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -39,7 +40,25 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.context = context
         self.style = style
-        self.tree = BookmarksTreeWidget(context, style, parent=self)
+
+        self.items = items = []
+        self.model = model = QtGui.QStandardItemModel()
+
+        settings = context.settings
+        builder = BuildItem(context)
+        # bookmarks
+        if self.style == BOOKMARKS:
+            entries = settings.bookmarks
+        # recent items
+        elif self.style == RECENT_REPOS:
+            entries = settings.recent
+
+        for entry in entries:
+            item = builder.get(entry['path'], entry['name'])
+            items.append(item)
+            model.appendRow(item)
+
+        self.tree = BookmarksTreeView(context, style, self.set_items_to_models, parent=self)
 
         self.add_button = qtutils.create_action_button(
             tooltip=N_('Add'), icon=icons.add()
@@ -71,7 +90,11 @@ class BookmarksWidget(QtWidgets.QFrame):
             self.delete_button,
         )
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.spacing,
+            self.tree
+        )
         self.setLayout(self.main_layout)
 
         self.corner_widget = QtWidgets.QWidget(self)
@@ -83,15 +106,22 @@ class BookmarksWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
         qtutils.connect_button(self.open_button, self.tree.open_repo)
 
-        item_selection_changed = self.tree_item_selection_changed
-        # pylint: disable=no-member
-        self.tree.itemSelectionChanged.connect(item_selection_changed)
-
         QtCore.QTimer.singleShot(0, self.reload_bookmarks)
 
     def reload_bookmarks(self):
         # Called once after the GUI is initialized
-        self.tree.refresh()
+        tree = self.tree
+        tree.refresh()
+        
+        model = tree.model()
+
+        model.itemChanged.connect(tree.item_changed)
+        selection = tree.selectionModel()
+        selection.selectionChanged.connect(tree.item_selection_changed)
+        tree.doubleClicked.connect(tree.tree_double_clicked)
+
+        first_idx = model.index(0, 0)
+        selection.select(first_idx, QtCore.QItemSelectionModel.Select)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())
@@ -101,19 +131,31 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.tree.default_changed.connect(other.tree.refresh)
         other.tree.default_changed.connect(self.tree.refresh)
 
+    def set_items_to_models(self, items):
+        model = self.model
+        self.items.clear()
+        model.clear()
+
+        for item in items:
+            self.items.append(item)
+            model.appendRow(item)
+
+        self.tree.setModel(model)
+
 
 def disable_rename(_path, _name, _new_name):
     return False
 
 
 # pylint: disable=too-many-ancestors
-class BookmarksTreeWidget(standard.TreeWidget):
+class BookmarksTreeView(standard.TreeView):
     default_changed = Signal()
 
-    def __init__(self, context, style, parent=None):
-        standard.TreeWidget.__init__(self, parent=parent)
+    def __init__(self, context, style, set_model, parent=None):
+        standard.TreeView.__init__(self, parent=parent)
         self.context = context
         self.style = style
+        self.set_model = set_model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -171,11 +213,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
             N_('Remove stale entries for repositories that no longer exist')
         )
 
-        # pylint: disable=no-member
-        self.itemChanged.connect(self.item_changed)
-        self.itemSelectionChanged.connect(self.item_selection_changed)
-        self.itemDoubleClicked.connect(self.tree_double_clicked)
-
         self.action_group = utils.Group(
             self.open_action,
             self.open_new_action,
@@ -212,8 +249,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         if self.style == BOOKMARKS and prefs.sort_bookmarks(context):
             items.sort(key=lambda x: x.name)
 
-        self.clear()
-        self.addTopLevelItems(items)
+        self.set_model(items)
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
@@ -237,8 +273,28 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.remove_missing_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def item_changed(self, item, _index):
-        self.rename_entry(item, item.text(0))
+    def item_selection_changed(self, selected, deselected):
+        item_idx = selected.indexes()
+        if item_idx:
+            item = self.model().itemFromIndex(item_idx[0])
+            enabled = bool(item)
+            self.action_group.setEnabled(enabled)
+
+            is_default = bool(item and item.is_default)
+            self.set_default_repo_action.setEnabled(not is_default)
+            self.clear_default_repo_action.setEnabled(is_default)
+
+    def tree_double_clicked(self, _index):
+        context = self.context
+        item = self.selected_item()
+        cmds.do(cmds.OpenRepo, context, item.path)
+
+    def selected_item(self):
+        index = self.currentIndex()
+        return self.model().itemFromIndex(index)
+
+    def item_changed(self, item):
+        self.rename_entry(item, item.text())
 
     def rename_entry(self, item, new_name):
         settings = self.context.settings
@@ -285,19 +341,22 @@ class BookmarksTreeWidget(standard.TreeWidget):
         self.refresh()
 
     def rename_repo(self):
-        self.apply_fn(lambda item: self.editItem(item, 0))
+        index = self.currentIndex()
+        self.edit(index)
 
     def accept_repo(self):
         self.apply_fn(self.accept_item)
 
     def accept_item(self, item):
         if self.state() & self.EditingState:
-            widget = self.itemWidget(item, 0)
+            current_index = self.currentIndex()
+            widget = self.indexWidget(current_index)
             if widget:
                 self.commitData(widget)
-            self.closePersistentEditor(item, 0)
+            self.closePersistentEditor(current_index)
+            self.refresh()
         else:
-            self.open_repo()
+            self.open_selected_repo()
 
     def open_repo(self):
         context = self.context
@@ -314,19 +373,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
     def launch_terminal(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
-
-    def item_selection_changed(self):
-        item = self.selected_item()
-        enabled = bool(item)
-        self.action_group.setEnabled(enabled)
-
-        is_default = bool(item and item.is_default)
-        self.set_default_repo_action.setEnabled(not is_default)
-        self.clear_default_repo_action.setEnabled(is_default)
-
-    def tree_double_clicked(self, item, _column):
-        context = self.context
-        cmds.do(cmds.OpenRepo, context, item.path)
 
     def add_bookmark(self):
         normpath = utils.expandpath(core.getcwd())
@@ -388,17 +434,17 @@ class BuildItem(object):
             icon = self.star_icon
         else:
             icon = self.folder_icon
-        return BookmarksTreeWidgetItem(path, name, icon, is_default)
+        return BookmarksTreeItem(path, name, icon, is_default)
 
 
-class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+class BookmarksTreeItem(QtGui.QStandardItem):
     def __init__(self, path, name, icon, is_default):
-        QtWidgets.QTreeWidgetItem.__init__(self)
+        QtGui.QStandardItem.__init__(self)
         self.path = path
         self.name = name
         self.is_default = is_default
 
-        self.setIcon(0, icon)
-        self.setText(0, name)
-        self.setToolTip(0, path)
+        self.setIcon(icon)
+        self.setText(name)
+        self.setToolTip(path)
         self.setFlags(self.flags() | Qt.ItemIsEditable)
