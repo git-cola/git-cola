@@ -12,62 +12,117 @@ from ..widgets import standard
 from ..widgets import text
 
 
-def switcher(
-    context, entries, title, place_holder=None, enter_action=None, parent=None
+def switcher_inner_view(
+    context, entries, title=None, place_holder=None, enter_action=None, parent=None
 ):
-    widget = SwitcherDialog(context, entries, title, place_holder, enter_action, parent)
-    widget.show()
-    return widget
+    dialog = SwitcherInnerView(
+        context, entries, title, place_holder, enter_action, parent
+    )
+    dialog.show()
+    return dialog
+
+
+def switcher_outer_view(context, entries, place_holder=None, parent=None):
+    dialog = SwitcherOuterView(context, entries, place_holder, parent)
+    dialog.show()
+    return dialog
 
 
 def switcher_item(key, icon=None, name=None):
     return SwitcherListItem(key, icon, name)
 
 
-class SwitcherDialog(standard.Dialog):
-    """
-    Quick switcher dialog class. This contains input field, filter proxy model and quick
-    switcher list view(OPTIONALLY by show_lsit).
+def moving_keys():
+    selection_move_keys = [
+        Qt.Key_Enter,
+        Qt.Key_Return,
+        Qt.Key_Up,
+        Qt.Key_Down,
+        Qt.Key_Home,
+        Qt.Key_End,
+        Qt.Key_PageUp,
+        Qt.Key_PageDown,
+    ]
+    return selection_move_keys
 
-    list_fitlered signal is for the event that user input strings to input field and
-    filtered items by proxy model.
-    switcher_selection_move signal is for the event that selecttion move key like UP,
-    DOWN has pressed.
-    These signals will only be emitted when this class does not have switcher_list
-    class.
+
+class Switcher(standard.Dialog):
+    """
+    Quick switcher base class. This contains input field, filter proxy model.
+    This will be inherited by outer-view class(SwitcherOuterView) or inner-view class
+    (SwitcherInnerView).
+
+    inner-view class is a quick-switcher widget including view. In this case, this
+    switcher will have switcher_list field, and show the items list in itself.
+    outer-view class is a quick-switcher widget without view(only input field), which
+    means sharing model with other view class.
+
+    switcher_selection_move signal is for the event that selection move key like UP,
+    DOWN has pressed while focusing on input field.
     """
 
     def __init__(
-        self, context, entries, title, place_holder=None, enter_action=None, parent=None
+        self,
+        context,
+        entries_model,
+        place_holder=None,
+        parent=None,
     ):
         standard.Dialog.__init__(self, parent=parent)
-        self.setModal(False)
-        self.setWindowTitle(title)
 
         self.context = context
-        self.entries = entries
-        self.enter_action = enter_action
+        self.entries_model = entries_model
 
         self.filter_input = SwitcherLineEdit(place_holder=place_holder, parent=self)
 
-        self.proxy_model = SwitcherSortFilterProxyModel(entries, parent=self)
+        self.proxy_model = SwitcherSortFilterProxyModel(entries_model, parent=self)
+        self.switcher_list = None
 
-        if enter_action:
-            self.switcher_list = SwitcherTreeView(
-                self.proxy_model, self.enter_selected_item, parent=self
-            )
-        else:
-            self.switcher_list = None
-
-        self.filter_input.switcher_selection_move.connect(self.switcher_selection_moved)
         self.filter_input.textChanged.connect(self.filter_input_changed)
+
+    def filter_input_changed(self):
+        input_text = self.filter_input.text()
+        self.proxy_model.setFilterRegExp(input_text)
+
+
+class SwitcherInnerView(Switcher):
+    def __init__(
+        self,
+        context,
+        entries_model,
+        title,
+        place_holder=None,
+        enter_action=None,
+        parent=None,
+    ):
+        Switcher.__init__(
+            self,
+            context,
+            entries_model,
+            place_holder=place_holder,
+            parent=parent,
+        )
+        self.setModal(False)
+        self.setWindowTitle(title)
+
+        self.enter_action = enter_action
+        self.switcher_list = SwitcherTreeView(
+            self.proxy_model, self.enter_selected_item, parent=self
+        )
 
         self.main_layout = qtutils.vbox(
             defs.no_margin, defs.spacing, self.filter_input, self.switcher_list
         )
         self.setLayout(self.main_layout)
 
-    def resizeEvent(self, event):
+        # moving key has pressed while focusing on input field
+        self.filter_input.switcher_selection_move.connect(
+            self.switcher_list.keyPressEvent
+        )
+        # some key except moving key has pressed while focusing on list view
+        self.switcher_list.switcher_inner_text.connect(self.filter_input.keyPressEvent)
+
+    def resizeEvent(self, _event):
         parent = self.parent()
         if parent is None:
             return
@@ -79,14 +134,6 @@ class SwitcherDialog(standard.Dialog):
 
         self.move(x, y)
 
-    def filter_input_changed(self):
-        text = self.filter_input.text()
-        self.proxy_model.setFilterRegExp(text)
-
-    def switcher_selection_moved(self, event):
-        if self.switcher_list:
-            self.switcher_list.keyPressEvent(event)
-
     def enter_selected_item(self, index):
         item = self.switcher_list.model().itemFromIndex(index)
         if item:
@@ -94,10 +141,36 @@ class SwitcherDialog(standard.Dialog):
         self.close()
 
 
+class SwitcherOuterView(Switcher):
+    def __init__(self, context, entries_model, place_holder=None, parent=None):
+        Switcher.__init__(
+            self,
+            context,
+            entries_model,
+            place_holder=place_holder,
+            parent=parent,
+        )
+        self.filter_input.setVisible(False)
+
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.filter_input)
+        self.setLayout(self.main_layout)
+
+    def filter_input_changed(self):
+        input_text = self.filter_input.text()
+        self.proxy_model.setFilterRegExp(input_text)
+
+        # set invisible when input field get empty
+        if input_text == '':
+            self.filter_input.setVisible(False)
+
+
 class SwitcherLineEdit(text.LineEdit):
     """Quick switcher input line class"""
 
+    # signal is for the event that selection move key like UP, DOWN has pressed
+    # while focusing on this line edit widget
     switcher_selection_move = Signal(QtGui.QKeyEvent)
+    switcher_visible = Signal(bool)
 
     def __init__(self, place_holder=None, parent=None):
         text.LineEdit.__init__(self, parent=parent)
@@ -105,19 +178,18 @@ class SwitcherLineEdit(text.LineEdit):
             self.setPlaceholderText(place_holder)
 
     def keyPressEvent(self, event):
-        selection_move_keys = [
-            Qt.Key_Enter,
-            Qt.Key_Return,
-            Qt.Key_Up,
-            Qt.Key_Down,
-            Qt.Key_Home,
-            Qt.Key_End,
-            Qt.Key_PageUp,
-            Qt.Key_PageDown,
-        ]
-
+        """
+        To be able to move the selection while focus on the input field, input text
+        field should be able to filter pressed key.
+        If pressed key is moving selection key like UP or DOWN, the
+        switcher_selection_move signal will be emitted and the view selection
+        will be moved regardless whether Switcher is inner-view or outer-view.
+        Or else, simply act like text input to the field.
+        """
+        selection_moving_keys = moving_keys()
         pressed_key = event.key()
-        if pressed_key in selection_move_keys:
+
+        if pressed_key in selection_moving_keys:
             self.switcher_selection_move.emit(event)
         else:
             super().keyPressEvent(event)
@@ -142,15 +214,29 @@ class SwitcherSortFilterProxyModel(QtCore.QSortFilterProxyModel):
 class SwitcherTreeView(standard.TreeView):
     """Tree view class for showing proxy items in SwitcherSortFilterProxyModel"""
 
-    def __init__(self, entries, enter_action, parent=None):
+    # signal is for the event that some key except moving key has pressed
+    # while focusing this view
+    switcher_inner_text = Signal(QtGui.QKeyEvent)
+
+    def __init__(self, entries_proxy_model, enter_action, parent=None):
         standard.TreeView.__init__(self, parent)
 
         self.setHeaderHidden(True)
-        self.setModel(entries)
+        self.setModel(entries_proxy_model)
 
         self.activated.connect(enter_action)
         self.doubleClicked.connect(enter_action)
         self.entered.connect(enter_action)
+
+    def keyPressEvent(self, event):
+        """hooks when a key has pressed while focusing on list view"""
+        selection_moving_keys = moving_keys()
+        pressed_key = event.key()
+
+        if pressed_key in selection_moving_keys or pressed_key == Qt.Key_Escape:
+            super().keyPressEvent(event)
+        else:
+            self.switcher_inner_text.emit(event)
 
 
 class SwitcherListItem(QtGui.QStandardItem):
