@@ -124,6 +124,10 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.quick_switcher.filter_input.switcher_selection_move.connect(
             self.tree.keyPressEvent
         )
+        # escape key has pressed while focusing on input field
+        self.quick_switcher.filter_input.switcher_escape.connect(
+            self.close_switcher_input_field
+        )
         # some key except moving key has pressed while focusing on list view
         self.tree.switcher_text.connect(self.switcher_text_inputted)
 
@@ -162,6 +166,9 @@ class BookmarksWidget(QtWidgets.QFrame):
     def toggle_switcher_input_field(self):
         visible = self.quick_switcher.filter_input.isVisible()
         self.enable_switcher_input_field(not visible)
+
+    def close_switcher_input_field(self):
+        self.enable_switcher_input_field(False)
 
     def enable_switcher_input_field(self, visible):
         filter_input = self.quick_switcher.filter_input
