@@ -125,6 +125,10 @@ class SwitcherInnerView(Switcher):
         # some key except moving key has pressed while focusing on list view
         self.switcher_list.switcher_inner_text.connect(self.filter_input.keyPressEvent)
 
+        # default selection for first index
+        first_proxy_idx = self.proxy_model.index(0, 0)
+        self.switcher_list.setCurrentIndex(first_proxy_idx)
+
     def resizeEvent(self, _event):
         parent = self.parent()
         if parent is None:
