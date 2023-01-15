@@ -1,6 +1,8 @@
 """Provides quick switcher"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import re
+
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy.QtCore import Qt
@@ -82,7 +84,8 @@ class Switcher(standard.Dialog):
 
     def filter_input_changed(self):
         input_text = self.filter_input.text()
-        self.proxy_model.setFilterRegExp(input_text)
+        pattern = '.*'.join(re.escape(c) for c in input_text)
+        self.proxy_model.setFilterRegExp(pattern)
 
 
 class SwitcherInnerView(Switcher):
@@ -157,7 +160,8 @@ class SwitcherOuterView(Switcher):
 
     def filter_input_changed(self):
         input_text = self.filter_input.text()
-        self.proxy_model.setFilterRegExp(input_text)
+        pattern = '.*'.join(re.escape(c) for c in input_text)
+        self.proxy_model.setFilterRegExp(pattern)
 
         # set invisible when input field get empty
         if input_text == '':
