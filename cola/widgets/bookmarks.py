@@ -125,7 +125,7 @@ class BookmarksWidget(QtWidgets.QFrame):
             self.tree.keyPressEvent
         )
         # some key except moving key has pressed while focusing on list view
-        self.tree.switcher_text.connect(self.quick_switcher.filter_input.keyPressEvent)
+        self.tree.switcher_text.connect(self.switcher_text_inputted)
 
     def reload_bookmarks(self):
         # Called once after the GUI is initialized
@@ -138,9 +138,6 @@ class BookmarksWidget(QtWidgets.QFrame):
         selection = tree.selectionModel()
         selection.selectionChanged.connect(tree.item_selection_changed)
         tree.doubleClicked.connect(tree.tree_double_clicked)
-
-        first_idx = model.index(0, 0)
-        selection.select(first_idx, QtCore.QItemSelectionModel.Select)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())
@@ -172,6 +169,13 @@ class BookmarksWidget(QtWidgets.QFrame):
         filter_input.setVisible(visible)
         if not visible:
             filter_input.clear()
+
+    def switcher_text_inputted(self, event):
+        # default selection for first index
+        first_proxy_idx = self.quick_switcher.proxy_model.index(0, 0)
+        self.tree.setCurrentIndex(first_proxy_idx)
+
+        self.quick_switcher.filter_input.keyPressEvent(event)
 
 
 def disable_rename(_path, _name, _new_name):
