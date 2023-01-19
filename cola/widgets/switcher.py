@@ -104,8 +104,9 @@ class SwitcherInnerView(Switcher):
             place_holder=place_holder,
             parent=parent,
         )
-        self.setModal(False)
         self.setWindowTitle(title)
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
 
         self.enter_action = enter_action
         self.switcher_list = SwitcherTreeView(
@@ -145,13 +146,8 @@ class SwitcherInnerView(Switcher):
             return
         # Size
         width = parent.width()
-        self.resize(max(width // 2, 320), max(self.height(), 240))
-        # Position
-        left = parent.x()
-        center_x = left + width // 2
-        x = center_x - self.width() // 2
-        y = parent.y()
-        self.move(x, y)
+        height = parent.height()
+        self.resize(max(width * 2 // 3, 320), max(height * 2 // 3, 240))
 
     def enter_selected_item(self, index):
         item = self.switcher_list.model().itemFromIndex(index)
