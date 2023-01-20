@@ -602,10 +602,11 @@ class MainView(standard.MainWindow):
 
         self.quick_repository_search = add_action(
             self,
-            N_('Open Repository Quick Searcch'),
+            N_('Repository Quick Search...'),
             self.open_quick_repository_search,
             hotkeys.OPEN_REPO_SEARCH,
         )
+        self.quick_repository_search.setIcon(icons.search())
 
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
@@ -614,6 +615,7 @@ class MainView(standard.MainWindow):
         # File Menu
         add_menu = qtutils.add_menu
         self.file_menu = add_menu(N_('&File'), self.menubar)
+        self.file_menu.addAction(self.quick_repository_search)
         # File->Open Recent menu
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(icons.folder())
@@ -1254,16 +1256,15 @@ class MainView(standard.MainWindow):
                 entries.appendRow(entry)
                 added.add(key)
 
-            parent = qtutils.active_window()
             title = N_('Quick Repository Search')
-            place_holder = N_('Search repository by name...')
+            place_holder = N_('Search repositories by name...')
             switcher.switcher_inner_view(
                 self.context,
                 entries,
                 title,
                 place_holder=place_holder,
                 enter_action=self.open_repository_from_quick_selection,
-                parent=parent,
+                parent=self,
             )
 
     def open_repository_from_quick_selection(self, item):
