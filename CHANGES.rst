@@ -5,6 +5,11 @@ v4.2.0
 
 Usability, bells and whistles
 -----------------------------
+* Repositories within the Bookmarks and Favorites tools can now be searched with the
+  "Search" icon. Fast switching between repositories is supported with the new
+  `Alt-p` and "Repository Quick Search" File menu action.
+  (`#1282 <https://github.com/git-cola/git-cola/pull/1282>`_)
+
 * The startup dialog now has a right-click context menu that allows you to prune
   stale entries and other operations that were not previously accessible from
   the startup dialog.
