@@ -1,6 +1,5 @@
 """Provides quick switcher"""
 from __future__ import absolute_import, division, print_function, unicode_literals
-
 import re
 
 from qtpy import QtCore
@@ -123,7 +122,7 @@ class SwitcherInnerView(Switcher):
             self.switcher_list.keyPressEvent
         )
         # escape key pressed while focusing on input field
-        self.filter_input.switcher_escape.connect(self.close_widget)
+        self.filter_input.switcher_escape.connect(self.close)
         # some key except moving key has pressed while focusing on list view
         self.switcher_list.switcher_inner_text.connect(self.filter_input.keyPressEvent)
 
@@ -131,26 +130,33 @@ class SwitcherInnerView(Switcher):
         first_proxy_idx = self.proxy_model.index(0, 0)
         self.switcher_list.setCurrentIndex(first_proxy_idx)
 
-    def resizeEvent(self, _event):
-        parent = self.parent()
+        self.set_initial_geometry(parent)
+
+    def accept_selected_item(self):
+        item = self.switcher_list.selected_item()
+        if item:
+            self.enter_action(item)
+            self.accept()
+
+    def set_initial_geometry(self, parent):
+        """Set the initial size and position"""
         if parent is None:
             return
-        left = parent.x()
+        # Size
         width = parent.width()
+        self.resize(max(width // 2, 320), max(self.height(), 240))
+        # Position
+        left = parent.x()
         center_x = left + width // 2
         x = center_x - self.width() // 2
         y = parent.y()
-
         self.move(x, y)
 
     def enter_selected_item(self, index):
         item = self.switcher_list.model().itemFromIndex(index)
         if item:
             self.enter_action(item)
-        self.close()
-
-    def close_widget(self):
-        self.close()
+            self.accept()
 
 
 class SwitcherOuterView(Switcher):
@@ -162,19 +168,17 @@ class SwitcherOuterView(Switcher):
             place_holder=place_holder,
             parent=parent,
         )
-        self.filter_input.setVisible(False)
+        self.filter_input.hide()
 
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.filter_input)
         self.setLayout(self.main_layout)
 
     def filter_input_changed(self):
+        super().filter_input_changed()
+        # Hide the input when it becomes empty.
         input_text = self.filter_input.text()
-        pattern = '.*'.join(re.escape(c) for c in input_text)
-        self.proxy_model.setFilterRegExp(pattern)
-
-        # set invisible when input field get empty
-        if input_text == '':
-            self.filter_input.setVisible(False)
+        if not input_text:
+            self.filter_input.hide()
 
 
 class SwitcherLineEdit(text.LineEdit):
