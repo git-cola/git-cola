@@ -123,6 +123,7 @@ class SwitcherInnerView(Switcher):
         )
         # escape key pressed while focusing on input field
         self.filter_input.switcher_escape.connect(self.close)
+        self.filter_input.switcher_accept.connect(self.accept_selected_item)
         # some key except moving key has pressed while focusing on list view
         self.switcher_list.switcher_inner_text.connect(self.filter_input.keyPressEvent)
 
@@ -188,6 +189,7 @@ class SwitcherLineEdit(text.LineEdit):
     # while focusing on this line edit widget
     switcher_selection_move = Signal(QtGui.QKeyEvent)
     switcher_visible = Signal(bool)
+    switcher_accept = Signal()
     switcher_escape = Signal()
 
     def __init__(self, place_holder=None, parent=None):
@@ -209,6 +211,8 @@ class SwitcherLineEdit(text.LineEdit):
 
         if pressed_key == Qt.Key_Escape:
             self.switcher_escape.emit()
+        elif pressed_key in (Qt.Key_Enter, Qt.Key_Return):
+            self.switcher_accept.emit()
         elif pressed_key in selection_moving_keys:
             self.switcher_selection_move.emit(event)
         else:
@@ -244,9 +248,7 @@ class SwitcherTreeView(standard.TreeView):
         self.setHeaderHidden(True)
         self.setModel(entries_proxy_model)
 
-        self.activated.connect(enter_action)
         self.doubleClicked.connect(enter_action)
-        self.entered.connect(enter_action)
 
     def keyPressEvent(self, event):
         """hooks when a key has pressed while focusing on list view"""
