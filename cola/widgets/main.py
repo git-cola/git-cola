@@ -17,6 +17,7 @@ from ..models import prefs
 from ..qtutils import get
 from .. import cmds
 from .. import core
+from .. import display
 from .. import guicmds
 from .. import git
 from .. import gitcmds
@@ -55,6 +56,7 @@ from . import search
 from . import standard
 from . import status
 from . import stash
+from . import switcher
 from . import toolbar
 
 
@@ -598,6 +600,14 @@ class MainView(standard.MainWindow):
             self, N_('Reset Layout'), self.reset_layout
         )
 
+        self.quick_repository_search = add_action(
+            self,
+            N_('Repository Quick Search...'),
+            self.open_quick_repository_search,
+            hotkeys.OPEN_REPO_SEARCH,
+        )
+        self.quick_repository_search.setIcon(icons.search())
+
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
         self.setMenuBar(self.menubar)
@@ -605,6 +615,7 @@ class MainView(standard.MainWindow):
         # File Menu
         add_menu = qtutils.add_menu
         self.file_menu = add_menu(N_('&File'), self.menubar)
+        self.file_menu.addAction(self.quick_repository_search)
         # File->Open Recent menu
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
         self.open_recent_menu.setIcon(icons.folder())
@@ -1185,7 +1196,7 @@ class MainView(standard.MainWindow):
         self.dag = dag.git_dag(self.context, existing_view=self.dag)
 
     def show_cursor_position(self, rows, cols):
-        display = '%02d:%02d' % (rows, cols)
+        display_content = '%02d:%02d' % (rows, cols)
         css = """
             <style>
             .good {
@@ -1213,8 +1224,51 @@ class MainView(standard.MainWindow):
             cls = 'first-warning'
         else:
             cls = 'good'
-        div = '<div class="%s">%s</div>' % (cls, display)
+        div = '<div class="%s">%s</div>' % (cls, display_content)
         self.position_label.setText(css + div)
+
+    def open_quick_repository_search(self):
+        settings = self.context.settings
+        items = settings.bookmarks + settings.recent
+
+        if items:
+            cfg = self.context.cfg
+            default_repo = cfg.get('cola.defaultrepo')
+
+            entries = QtGui.QStandardItemModel()
+            added = set()
+            normalize = display.normalize_path
+            star_icon = icons.star()
+            folder_icon = icons.folder()
+
+            for item in items:
+                key = normalize(item['path'])
+                if key in added:
+                    continue
+
+                name = item['name']
+                if default_repo == item['path']:
+                    icon = star_icon
+                else:
+                    icon = folder_icon
+
+                entry = switcher.switcher_item(key, icon, name)
+                entries.appendRow(entry)
+                added.add(key)
+
+            title = N_('Quick Repository Search')
+            place_holder = N_('Search repositories by name...')
+            switcher.switcher_inner_view(
+                self.context,
+                entries,
+                title,
+                place_holder=place_holder,
+                enter_action=self.open_repository_from_quick_selection,
+                parent=self,
+            )
+
+    def open_repository_from_quick_selection(self, item):
+        cmds.do(cmds.OpenRepo, self.context, item.key)
 
 
 class FocusProxy(object):

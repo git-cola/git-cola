@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 
 from qtpy import QtCore
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -19,6 +20,7 @@ from ..interaction import Interaction
 from ..models import prefs
 from ..widgets import defs
 from ..widgets import standard
+from ..widgets import switcher
 
 
 BOOKMARKS = 0
@@ -39,7 +41,31 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.context = context
         self.style = style
-        self.tree = BookmarksTreeWidget(context, style, parent=self)
+
+        self.items = items = []
+        self.model = model = QtGui.QStandardItemModel()
+
+        settings = context.settings
+        builder = BuildItem(context)
+        # bookmarks
+        if self.style == BOOKMARKS:
+            entries = settings.bookmarks
+        # recent items
+        elif self.style == RECENT_REPOS:
+            entries = settings.recent
+
+        for entry in entries:
+            item = builder.get(entry['path'], entry['name'])
+            items.append(item)
+            model.appendRow(item)
+
+        place_holder = N_('Search repositories by name...')
+        self.quick_switcher = switcher.switcher_outer_view(
+            context, model, place_holder=place_holder
+        )
+        self.tree = BookmarksTreeView(
+            context, style, self.set_items_to_models, parent=self
+        )
 
         self.add_button = qtutils.create_action_button(
             tooltip=N_('Add'), icon=icons.add()
@@ -51,6 +77,10 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.open_button = qtutils.create_action_button(
             tooltip=N_('Open'), icon=icons.repo()
+        )
+
+        self.search_button = qtutils.create_action_button(
+            tooltip=N_('Search'), icon=icons.search()
         )
 
         self.button_group = utils.Group(self.delete_button, self.open_button)
@@ -66,12 +96,15 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.button_layout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
+            self.search_button,
             self.open_button,
             self.add_button,
             self.delete_button,
         )
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.tree)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.quick_switcher, self.tree
+        )
         self.setLayout(self.main_layout)
 
         self.corner_widget = QtWidgets.QWidget(self)
@@ -82,16 +115,33 @@ class BookmarksWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.add_button, self.tree.add_bookmark)
         qtutils.connect_button(self.delete_button, self.tree.delete_bookmark)
         qtutils.connect_button(self.open_button, self.tree.open_repo)
-
-        item_selection_changed = self.tree_item_selection_changed
-        # pylint: disable=no-member
-        self.tree.itemSelectionChanged.connect(item_selection_changed)
+        qtutils.connect_button(self.search_button, self.toggle_switcher_input_field)
 
         QtCore.QTimer.singleShot(0, self.reload_bookmarks)
 
+        self.tree.toggle_switcher.connect(self.enable_switcher_input_field)
+        # moving key has pressed while focusing on input field
+        self.quick_switcher.filter_input.switcher_selection_move.connect(
+            self.tree.keyPressEvent
+        )
+        # escape key has pressed while focusing on input field
+        self.quick_switcher.filter_input.switcher_escape.connect(
+            self.close_switcher_input_field
+        )
+        # some key except moving key has pressed while focusing on list view
+        self.tree.switcher_text.connect(self.switcher_text_inputted)
+
     def reload_bookmarks(self):
         # Called once after the GUI is initialized
-        self.tree.refresh()
+        tree = self.tree
+        tree.refresh()
+
+        model = tree.model()
+
+        model.dataChanged.connect(tree.item_changed)
+        selection = tree.selectionModel()
+        selection.selectionChanged.connect(tree.item_selection_changed)
+        tree.doubleClicked.connect(tree.tree_double_clicked)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())
@@ -101,19 +151,56 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.tree.default_changed.connect(other.tree.refresh)
         other.tree.default_changed.connect(self.tree.refresh)
 
+    def set_items_to_models(self, items):
+        model = self.model
+        self.items.clear()
+        model.clear()
+
+        for item in items:
+            self.items.append(item)
+            model.appendRow(item)
+
+        self.quick_switcher.proxy_model.setSourceModel(model)
+        self.tree.setModel(self.quick_switcher.proxy_model)
+
+    def toggle_switcher_input_field(self):
+        visible = self.quick_switcher.filter_input.isVisible()
+        self.enable_switcher_input_field(not visible)
+
+    def close_switcher_input_field(self):
+        self.enable_switcher_input_field(False)
+
+    def enable_switcher_input_field(self, visible):
+        filter_input = self.quick_switcher.filter_input
+
+        filter_input.setVisible(visible)
+        if not visible:
+            filter_input.clear()
+
+    def switcher_text_inputted(self, event):
+        # default selection for first index
+        first_proxy_idx = self.quick_switcher.proxy_model.index(0, 0)
+        self.tree.setCurrentIndex(first_proxy_idx)
+
+        self.quick_switcher.filter_input.keyPressEvent(event)
+
 
 def disable_rename(_path, _name, _new_name):
     return False
 
 
 # pylint: disable=too-many-ancestors
-class BookmarksTreeWidget(standard.TreeWidget):
+class BookmarksTreeView(standard.TreeView):
     default_changed = Signal()
+    toggle_switcher = Signal(bool)
+    # this signal will be emitted when some key pressed while focusing on tree view
+    switcher_text = Signal(QtGui.QKeyEvent)
 
-    def __init__(self, context, style, parent=None):
-        standard.TreeWidget.__init__(self, parent=parent)
+    def __init__(self, context, style, set_model, parent=None):
+        standard.TreeView.__init__(self, parent=parent)
         self.context = context
         self.style = style
+        self.set_model = set_model
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -171,11 +258,6 @@ class BookmarksTreeWidget(standard.TreeWidget):
             N_('Remove stale entries for repositories that no longer exist')
         )
 
-        # pylint: disable=no-member
-        self.itemChanged.connect(self.item_changed)
-        self.itemSelectionChanged.connect(self.item_selection_changed)
-        self.itemDoubleClicked.connect(self.tree_double_clicked)
-
         self.action_group = utils.Group(
             self.open_action,
             self.open_new_action,
@@ -196,6 +278,27 @@ class BookmarksTreeWidget(standard.TreeWidget):
                 self.refresh, type=Qt.QueuedConnection
             )
 
+    def keyPressEvent(self, event):
+        """
+        This will be hooked while focusing on this list view.
+        Set input field invisible when escape key pressed.
+        Move selection when move key like tab, UP etc pressed.
+        Or open input field and simply act like text input to it. This is when
+        some character key pressed while focusing on tree view, NOT input field.
+        """
+        selection_moving_keys = switcher.moving_keys()
+        pressed_key = event.key()
+
+        if pressed_key == Qt.Key_Escape:
+            self.toggle_switcher.emit(False)
+        elif pressed_key in hotkeys.ACCEPT:
+            self.accept_repo()
+        elif pressed_key in selection_moving_keys:
+            super().keyPressEvent(event)
+        else:
+            self.toggle_switcher.emit(True)
+            self.switcher_text.emit(event)
+
     def refresh(self):
         context = self.context
         settings = context.settings
@@ -212,8 +315,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         if self.style == BOOKMARKS and prefs.sort_bookmarks(context):
             items.sort(key=lambda x: x.name)
 
-        self.clear()
-        self.addTopLevelItems(items)
+        self.set_model(items)
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
@@ -237,8 +339,30 @@ class BookmarksTreeWidget(standard.TreeWidget):
         menu.addAction(self.remove_missing_action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
-    def item_changed(self, item, _index):
-        self.rename_entry(item, item.text(0))
+    def item_selection_changed(self, selected, _deselected):
+        item_idx = selected.indexes()
+        if item_idx:
+            item = self.model().itemFromIndex(item_idx[0])
+            enabled = bool(item)
+            self.action_group.setEnabled(enabled)
+
+            is_default = bool(item and item.is_default)
+            self.set_default_repo_action.setEnabled(not is_default)
+            self.clear_default_repo_action.setEnabled(is_default)
+
+    def tree_double_clicked(self, _index):
+        context = self.context
+        item = self.selected_item()
+        cmds.do(cmds.OpenRepo, context, item.path)
+        self.toggle_switcher.emit(False)
+
+    def selected_item(self):
+        index = self.currentIndex()
+        return self.model().itemFromIndex(index)
+
+    def item_changed(self, _top_left, _bottom_right, _roles):
+        item = self.selected_item()
+        self.rename_entry(item, item.text())
 
     def rename_entry(self, item, new_name):
         settings = self.context.settings
@@ -252,7 +376,8 @@ class BookmarksTreeWidget(standard.TreeWidget):
             settings.save()
             item.name = new_name
         else:
-            item.setText(0, item.name)
+            item.setText(item.name)
+        self.toggle_switcher.emit(False)
 
     def apply_fn(self, fn, *args, **kwargs):
         item = self.selected_item()
@@ -261,72 +386,79 @@ class BookmarksTreeWidget(standard.TreeWidget):
 
     def copy(self):
         self.apply_fn(lambda item: qtutils.set_clipboard(item.path))
+        self.toggle_switcher.emit(False)
 
     def open_default(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
+        self.toggle_switcher.emit(False)
 
     def set_default_repo(self):
         self.apply_fn(self.set_default_item)
+        self.toggle_switcher.emit(False)
 
     def set_default_item(self, item):
         context = self.context
         cmds.do(cmds.SetDefaultRepo, context, item.path)
         self.refresh()
         self.default_changed.emit()
+        self.toggle_switcher.emit(False)
 
     def clear_default_repo(self):
         self.apply_fn(self.clear_default_item)
         self.default_changed.emit()
+        self.toggle_switcher.emit(False)
 
     def clear_default_item(self, _item):
         context = self.context
         cmds.do(cmds.SetDefaultRepo, context, None)
         self.refresh()
+        self.toggle_switcher.emit(False)
 
     def rename_repo(self):
-        self.apply_fn(lambda item: self.editItem(item, 0))
+        index = self.currentIndex()
+        self.edit(index)
+        self.toggle_switcher.emit(False)
 
     def accept_repo(self):
         self.apply_fn(self.accept_item)
+        self.toggle_switcher.emit(False)
 
-    def accept_item(self, item):
+    def accept_item(self, _item):
         if self.state() & self.EditingState:
-            widget = self.itemWidget(item, 0)
+            current_index = self.currentIndex()
+            widget = self.indexWidget(current_index)
             if widget:
                 self.commitData(widget)
-            self.closePersistentEditor(item, 0)
+            self.closePersistentEditor(current_index)
+            self.refresh()
         else:
-            self.open_repo()
+            self.open_selected_repo()
 
     def open_repo(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.OpenRepo, context, item.path))
 
+    def open_selected_repo(self):
+        item = self.selected_item()
+        context = self.context
+        cmds.do(cmds.OpenRepo, context, item.path)
+        self.toggle_switcher.emit(False)
+
     def open_new_repo(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
+        self.toggle_switcher.emit(False)
 
     def launch_editor(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.Edit, context, [item.path]))
+        self.toggle_switcher.emit(False)
 
     def launch_terminal(self):
         context = self.context
         self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
-
-    def item_selection_changed(self):
-        item = self.selected_item()
-        enabled = bool(item)
-        self.action_group.setEnabled(enabled)
-
-        is_default = bool(item and item.is_default)
-        self.set_default_repo_action.setEnabled(not is_default)
-        self.clear_default_repo_action.setEnabled(is_default)
-
-    def tree_double_clicked(self, item, _column):
-        context = self.context
-        cmds.do(cmds.OpenRepo, context, item.path)
+        self.toggle_switcher.emit(False)
 
     def add_bookmark(self):
         normpath = utils.expandpath(core.getcwd())
@@ -364,6 +496,7 @@ class BookmarksTreeWidget(standard.TreeWidget):
         ok, _, _, _ = cmds.do(cmd, context, item.path, item.name, icon=icons.discard())
         if ok:
             self.refresh()
+        self.toggle_switcher.emit(False)
 
     def remove_missing(self):
         """Remove missing entries from the favorites/recent file list"""
@@ -388,17 +521,18 @@ class BuildItem(object):
             icon = self.star_icon
         else:
             icon = self.folder_icon
-        return BookmarksTreeWidgetItem(path, name, icon, is_default)
+        return BookmarksTreeItem(path, name, icon, is_default)
 
 
-class BookmarksTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+class BookmarksTreeItem(switcher.SwitcherListItem):
     def __init__(self, path, name, icon, is_default):
-        QtWidgets.QTreeWidgetItem.__init__(self)
+        switcher.SwitcherListItem.__init__(self, name, icon=icon, name=name)
+
         self.path = path
         self.name = name
         self.is_default = is_default
 
-        self.setIcon(0, icon)
-        self.setText(0, name)
-        self.setToolTip(0, path)
+        self.setIcon(icon)
+        self.setText(name)
+        self.setToolTip(path)
         self.setFlags(self.flags() | Qt.ItemIsEditable)
