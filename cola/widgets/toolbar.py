@@ -6,11 +6,12 @@ from qtpy.QtCore import Qt
 from qtpy import QtWidgets
 
 from ..i18n import N_
-from ..widgets import standard
 from .. import icons
 from .. import qtutils
-from .toolbarcmds import COMMANDS
 from . import defs
+from . import standard
+from .toolbarcmds import COMMANDS
+
 
 TREE_LAYOUT = {
     'Others': ['Others::LaunchEditor', 'Others::RevertUnstagedEdits'],
@@ -144,7 +145,8 @@ class ToolBarState(object):
             if toolbar_area == Qt.NoToolBarArea:
                 continue  # filter out removed toolbars
             items = [x.data() for x in toolbar.actions()]
-
+            # show_icons is for backwards compatibility with git-cola <= 3.11.0
+            show_icons = toolbar.toolbar_style() != ToolBar.STYLE_TEXT_ONLY
             result.append(
                 {
                     'name': toolbar.windowTitle(),
@@ -155,8 +157,7 @@ class ToolBarState(object):
                     'y': toolbar.pos().y(),
                     'width': toolbar.width(),
                     'height': toolbar.height(),
-                    # show_icons kept for backwards compatibility in git-cola <= 3.11.0
-                    'show_icons': toolbar.toolbar_style() != ToolBar.STYLE_TEXT_ONLY,
+                    'show_icons': show_icons,
                     'toolbar_style': toolbar.toolbar_style(),
                     'visible': toolbar.isVisible(),
                     'items': items,
@@ -243,22 +244,22 @@ class ToolBar(QtWidgets.QToolBar):
             title = N_(command['title'])
             callback = partial(command['action'], self.context)
 
+            tooltip = command.get('tooltip', None)
             icon = None
             command_icon = command.get('icon', None)
             if command_icon:
                 icon = getattr(icons, command_icon, None)
                 if callable(icon):
                     icon = icon()
-            if icon:
-                toolbar_action = self.addAction(icon, title, callback)
-            else:
-                toolbar_action = self.addAction(title, callback)
 
-            toolbar_action.setData(data)
-
-            tooltip = command.get('tooltip', None)
-            if tooltip:
-                toolbar_action.setToolTip('%s\n%s' % (title, tooltip))
+            toolbar_item = qtutils.create_toolbutton_with_callback(
+                callback,
+                title,
+                icon,
+                tooltip,
+            )
+            action = self.addWidget(toolbar_item)
+            action.setData(data)
 
     def delete_toolbar(self):
         self.parent().removeToolBar(self)

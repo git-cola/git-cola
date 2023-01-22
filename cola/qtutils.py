@@ -899,6 +899,13 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
     return button
 
 
+def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
+    """Create a toolbutton that runs the specified callback"""
+    toolbutton = create_toolbutton(text=text, layout=layout, tooltip=tooltip, icon=icon)
+    connect_button(toolbutton, callback)
+    return toolbutton
+
+
 # pylint: disable=line-too-long
 def mimedata_from_paths(context, paths):
     """Return mimedata with a list of absolute path URLs
