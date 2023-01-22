@@ -1,7 +1,7 @@
 [MASTER]
 
 # Specify what version of Python to evaluate code against.
-py-version = 2.7
+py-version = 3.6
 
 # Specify a configuration file.
 #rcfile=
@@ -58,6 +58,7 @@ disable=
     bad-continuation,
     bad-option-value,
     consider-using-with,
+    consider-using-f-string,
     duplicate-code,
     fixme,
     invalid-name,

@@ -72,7 +72,7 @@ ifneq ($(uname_S),Linux)
 endif
 
 TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
-TOX_ENVS ?= py{27,36,37,38,39,lint}
+TOX_ENVS ?= py{36,37,38,39,310,311}
 
 PYLINT_SCORE_FLAG := $(shell $(PYLINT) --score=no --help >/dev/null 2>&1 && echo " --score=no" || true)
 PYLINT_FLAGS = --rcfile=.pylintrc
@@ -304,8 +304,8 @@ requirements-optional::
 
 .PHONY: tox
 tox::
-	$(TOX) $(TOX_FLAGS) $(flags)
+	$(TOX) $(TOX_FLAGS) --parallel auto -e "${TOX_ENVS}" $(flags)
 
 .PHONY: tox-check
 tox-check::
-	$(TOX) $(TOX_FLAGS) --parallel auto -e "$(TOX_ENVS)" $(flags)
+	$(TOX) $(TOX_FLAGS) --parallel auto -e check $(flags)
