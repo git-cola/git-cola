@@ -29,6 +29,11 @@ COMMANDS = {
         'action': cmds.run(cmds.RevertUnstagedEdits),
         'icon': 'undo',
     },
+    'File::QuickOpen': {
+        'title': 'Quick Open...',
+        'action': guicmds.open_quick_repo_search,
+        'icon': 'search',
+    },
     'File::NewRepo': {
         'title': 'New Repository...',
         'action': guicmds.open_new_repo,

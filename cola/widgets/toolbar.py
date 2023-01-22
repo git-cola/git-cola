@@ -16,6 +16,7 @@ from .toolbarcmds import COMMANDS
 TREE_LAYOUT = {
     'Others': ['Others::LaunchEditor', 'Others::RevertUnstagedEdits'],
     'File': [
+        'File::QuickOpen',
         'File::NewRepo',
         'File::OpenRepo',
         'File::OpenRepoNewWindow',

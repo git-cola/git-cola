@@ -1,9 +1,12 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
+from qtpy import QtGui
+
 from . import cmds
 from . import core
 from . import difftool
+from . import display
 from . import gitcmds
 from . import icons
 from . import qtutils
@@ -11,6 +14,7 @@ from .i18n import N_
 from .interaction import Interaction
 from .widgets import completion
 from .widgets import editremotes
+from .widgets import switcher
 from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output
@@ -196,6 +200,50 @@ def open_repo_in_new_window(context):
     if not dirname:
         return
     cmds.do(cmds.OpenNewRepo, context, dirname)
+
+
+def open_quick_repo_search(context, parent=None):
+    """Open a Quick Repository Search dialog"""
+    if parent is None:
+        parent = qtutils.active_window()
+    settings = context.settings
+    items = settings.bookmarks + settings.recent
+
+    if items:
+        cfg = context.cfg
+        default_repo = cfg.get('cola.defaultrepo')
+
+        entries = QtGui.QStandardItemModel()
+        added = set()
+        normalize = display.normalize_path
+        star_icon = icons.star()
+        folder_icon = icons.folder()
+
+        for item in items:
+            key = normalize(item['path'])
+            if key in added:
+                continue
+
+            name = item['name']
+            if default_repo == item['path']:
+                icon = star_icon
+            else:
+                icon = folder_icon
+
+            entry = switcher.switcher_item(key, icon, name)
+            entries.appendRow(entry)
+            added.add(key)
+
+        title = N_('Quick Open Repository')
+        place_holder = N_('Search repositories by name...')
+        switcher.switcher_inner_view(
+            context,
+            entries,
+            title,
+            place_holder=place_holder,
+            enter_action=lambda entry: cmds.do(cmds.OpenRepo, context, entry.key),
+            parent=parent,
+        )
 
 
 def load_commitmsg(context):
