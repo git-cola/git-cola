@@ -11,9 +11,8 @@ all::
 # make doc                      # build docs
 # make flake8                   # python style checks
 # make pylint [color=1]         # run pylint; color=1 colorizes output
-# make pylint3k [color=1]       # run python2+3 compatibility checks
 # make format                   # run the black python formatter
-# make check [color=1]          # run test, doc, flake8, pylint3k, and pylint
+# make check [color=1]          # run test, doc, flake8 and pylint
 # make check file=<filename>    # run checks on <filename>
 #
 # Release Prep
@@ -258,12 +257,6 @@ flake8::
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
 	$(ALL_PYTHON_DIRS) contrib
 
-.PHONY: pylint3k
-pylint3k::
-	$(PYLINT) --version
-	$(PYLINT) $(PYLINT_FLAGS) --py3k $(flags) \
-	$(ALL_PYTHON_DIRS)
-
 .PHONY: pylint
 pylint::
 	$(PYLINT) --version
@@ -276,14 +269,12 @@ ifdef file
 check::
 	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
-	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized --py3k $(flags) $(file)
 else
 # NOTE: flake8 is not part of "make check" because the pytest-flake8 plugin runs flake8
 # checks during "make test" via pytest.
 check:: all
 check:: test
 check:: doc
-check:: pylint3k
 check:: pylint
 endif
 

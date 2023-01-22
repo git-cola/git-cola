@@ -1,18 +1,15 @@
 # Development packages are used to build from source, run the test suite and build documentation
 
 ## Build tools
-build; python_version >= '3.0'
+build
 setuptools>=42
 setuptools_scm[toml] >= 3.4.1
 wheel
 
 ## pylint, flake8 checkers are used by "make check".
-astroid==1.6.5; python_version == '2.7'
-enum34==1.1.6; python_version < '3.4'
 flake8
 mock
-pylint==1.9.4; python_version == '2.7'
-pylint==2.7.0; python_version >= '3.6'
+pylint>=2.14.0
 PyYAML
 
 ## mock and pytest packages are used by the "make test" test suite.
@@ -25,5 +22,4 @@ pytest-black-multipy
 jaraco.packaging >= 9
 rst.linker >= 1.9
 Sphinx
-sphinx-rtd-theme==0.4.3; python_version < '3.0'
-sphinx-rtd-theme; python_version >= '3.0'
+sphinx-rtd-theme
