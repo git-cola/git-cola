@@ -125,7 +125,7 @@ Python virtualenv!
 One way to install the latest released version is to use `venv` (virtualenv) and `pip`.
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
 
-    python3 -m venv env3
+    python3 -m venv --system-site-packages env3
     ./env3/bin/pip install git-cola
     ./env3/bin/git-cola
 
@@ -144,7 +144,7 @@ virtualenv and install Git Cola into it in "editable" mode. This install method
 lets you upgrade Git Cola by running `git pull`.
 
     # Create a virtualenv called "env3" and activate it.
-    python3 -m venv env3
+    python3 -m venv --system-site-packages env3
     source env3/bin/activate
 
     # One-time setup: install optional requirements for development.
