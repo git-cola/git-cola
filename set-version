@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Replace hard-coded version strings with an updated version"""
 import argparse
 import datetime
 import os
@@ -6,6 +7,7 @@ import sys
 
 
 def main():
+    """Main entry point"""
     parser = argparse.ArgumentParser()
     parser.add_argument('version')
     args = parser.parse_args()
@@ -29,22 +31,30 @@ def main():
 
 
 def warn(msg):
+    """Print a warning to stderr"""
     sys.stderr.write('warning: %s\n' % msg)
 
 
 def num_version(version):
+    """Return just the numeric parts of a version
+
+    >>> num_version('v1.2.3')
+    '1.2.3'
+    """
     if version.startswith('v'):
         version = version[1:]
     return version
 
 
 def tag_version(version):
+    """Return the version number for a tag"""
     if not version.startswith('v'):
         version = 'v' + version
     return version
 
 
 def is_section_end(txt):
+    """Is this the end of an RST section?"""
     return (txt.startswith('=') and
             txt.endswith('=') and
             txt == ('=' * len(txt)))
@@ -60,22 +70,27 @@ class Version(object):
         self.readonly = False
 
     def match(self):
+        """Does the current line need replacement?"""
         return False
 
     def replacement(self, txt):
+        """Return a replacement for the current line"""
         return txt
 
     def read(self):
+        """Read a file into memory"""
         with open(self.path, 'r') as f:
             return f.read()
 
     def write(self, content):
+        """Write new content to the file in the 'path' class attribute"""
         if self.readonly:
             return
         with open(self.path, 'w') as f:
             f.write(content)
 
     def filter(self, content):
+        """Loop over the file contents and replace lines that match"""
         if not content:
             return ''
         final_content = []
@@ -87,6 +102,7 @@ class Version(object):
         return '\n'.join(final_content) + '\n'
 
     def update(self):
+        """Main entry point for updating files"""
         if self.readonly:
             self.warn()
             return
@@ -95,6 +111,7 @@ class Version(object):
         self.warn()
 
     def warn(self):
+        """Display warnings specific to the file"""
         pass
 
 
