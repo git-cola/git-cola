@@ -247,7 +247,7 @@ class RelnotesVersion(Version):
 
 class RelnotesStableVersion(Version):
 
-    path = 'share/doc/git-cola/relnotes.rst'
+    path = 'docs/relnotes.rst'
 
     def __init__(self, version):
         super(RelnotesStableVersion, self).__init__(version)
