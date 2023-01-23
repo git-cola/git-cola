@@ -62,7 +62,7 @@ def is_section_end(txt):
 
 class Version(object):
 
-    path = None
+    path = ''
 
     def __init__(self, version):
         self.num_version = num_version(version)
