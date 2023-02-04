@@ -126,6 +126,36 @@ class ConfirmAction(ContextCommand):
         return ok, status, out, err
 
 
+class AbortCherryPick(ConfirmAction):
+    """Reset an in-progress merge back to HEAD"""
+
+    def confirm(self):
+        title = N_('Abort Cherry-Pick...')
+        question = N_('Aborting the current cherry-pick?')
+        info = N_(
+            'Aborting a cherry-pick can cause uncommitted changes to be lost.\n'
+            'Recovering uncommitted changes is not possible.'
+        )
+        ok_txt = N_('Abort Cherry-Pick')
+        return Interaction.confirm(
+            title, question, info, ok_txt, default=False, icon=icons.undo()
+        )
+
+    def action(self):
+        status, out, err = gitcmds.abort_cherry_pick(self.context)
+        self.model.update_file_merge_status()
+        return status, out, err
+
+    def success(self):
+        self.model.set_commitmsg('')
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git cherry-pick --abort'
+
+
 class AbortMerge(ConfirmAction):
     """Reset an in-progress merge back to HEAD"""
 
@@ -144,7 +174,7 @@ class AbortMerge(ConfirmAction):
 
     def action(self):
         status, out, err = gitcmds.abort_merge(self.context)
-        self.model.update_file_status()
+        self.model.update_file_merge_status()
         return status, out, err
 
     def success(self):
@@ -440,7 +470,7 @@ class CherryPick(ContextCommand):
 
     def do(self):
         status, out, err = self.model.cherry_pick_list(self.commits)
-        self.model.update_file_status()
+        self.model.update_file_merge_status()
         title = N_('Cherry-pick failed')
         Interaction.command(title, 'git cherry-pick', status, out, err)
 

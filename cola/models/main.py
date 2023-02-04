@@ -82,6 +82,7 @@ class MainModel(QtCore.QObject):
         self.file_type = Types.TEXT
         self.mode = self.mode_none
         self.filename = None
+        self.is_cherry_picking = False
         self.is_merging = False
         self.is_rebasing = False
         self.currentbranch = ''
@@ -234,7 +235,7 @@ class MainModel(QtCore.QObject):
         if self.amending():
             if mode != self.mode_none:
                 return
-        if self.is_merging and mode == self.mode_amend:
+        if (self.is_cherry_picking or self.is_merging) and mode == self.mode_amend:
             mode = self.mode
         if mode == self.mode_amend:
             head = 'HEAD^'
@@ -258,8 +259,15 @@ class MainModel(QtCore.QObject):
         self.updated.emit()
 
     def update_file_status(self, update_index=False):
+        """Update modified/staged files status"""
         self.emit_about_to_update()
         self.update_files(update_index=update_index, emit=True)
+
+    def update_file_merge_status(self):
+        """Update modified/staged files and Merge/Rebase/Cherry-pick status"""
+        self.emit_about_to_update()
+        self._update_merge_rebase_status()
+        self.update_file_status()
 
     def update_status(self, update_index=False, reset=False):
         # Give observers a chance to respond
@@ -344,11 +352,13 @@ class MainModel(QtCore.QObject):
         self.refs_updated.emit()
 
     def _update_merge_rebase_status(self):
+        cherry_pick_head = self.git.git_path('CHERRY_PICK_HEAD')
         merge_head = self.git.git_path('MERGE_HEAD')
         rebase_merge = self.git.git_path('rebase-merge')
+        self.is_cherry_picking = cherry_pick_head and core.exists(cherry_pick_head)
         self.is_merging = merge_head and core.exists(merge_head)
         self.is_rebasing = rebase_merge and core.exists(rebase_merge)
-        if self.is_merging and self.mode == self.mode_amend:
+        if (self.is_merging or self.is_cherry_picking) and self.mode == self.mode_amend:
             self.set_mode(self.mode_none)
 
     def _update_commitmsg(self):

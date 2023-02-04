@@ -870,20 +870,19 @@ def prepare_commit_message_hook(context):
     return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
-def abort_merge(context):
-    """Abort a merge by reading the tree at HEAD."""
+def abort_cherry_pick(context):
+    """Abort a cherry-pick."""
     # Reset the worktree
     git = context.git
-    status, out, err = git.read_tree('HEAD', reset=True, u=True, v=True, _readonly=True)
-    # remove MERGE_HEAD
-    merge_head = git.git_path('MERGE_HEAD')
-    if core.exists(merge_head):
-        core.unlink(merge_head)
-    # remove MERGE_MESSAGE, etc.
-    merge_msg_path = merge_message_path(context)
-    while merge_msg_path:
-        core.unlink(merge_msg_path)
-        merge_msg_path = merge_message_path(context)
+    status, out, err = git.cherry_pick(abort=True)
+    return status, out, err
+
+
+def abort_merge(context):
+    """Abort a merge"""
+    # Reset the worktree
+    git = context.git
+    status, out, err = git.merge(abort=True)
     return status, out, err
 
 

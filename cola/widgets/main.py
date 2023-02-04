@@ -294,6 +294,10 @@ class MainView(standard.MainWindow):
             hotkeys.CHERRY_PICK,
         )
         self.cherry_pick_action.setIcon(icons.cherry_pick())
+        self.cherry_pick_abort_action = add_action(
+            self, N_('Abort Cherry-Pick...'), cmds.run(cmds.AbortCherryPick, context)
+        )
+        self.cherry_pick_abort_action.setIcon(icons.style_dialog_reset())
 
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'), partial(guicmds.load_commitmsg, context)
@@ -695,6 +699,7 @@ class MainView(standard.MainWindow):
         self.actions_menu.addSeparator()
         self.actions_menu.addAction(self.create_tag_action)
         self.actions_menu.addAction(self.cherry_pick_action)
+        self.actions_menu.addAction(self.cherry_pick_abort_action)
         self.actions_menu.addAction(self.merge_local_action)
         self.actions_menu.addAction(self.merge_abort_action)
         self.actions_menu.addSeparator()
@@ -1015,10 +1020,11 @@ class MainView(standard.MainWindow):
     def refresh(self):
         """Update the title with the current branch and directory name."""
         curbranch = self.model.currentbranch
-        curdir = core.getcwd()
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
+        is_cherry_picking = self.model.is_rebasing
 
+        curdir = core.getcwd()
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % curbranch
@@ -1030,7 +1036,12 @@ class MainView(standard.MainWindow):
                 'Resolve conflicts, commit changes, and run:\n'
                 '    Rebase > Continue'
             )
-
+        elif is_cherry_picking:
+            msg += '\n\n'
+            msg += N_(
+                'This repository is in the middle of a cherry-pick.\n'
+                'Resolve conflicts and commit changes.'
+            )
         elif is_merging:
             msg += '\n\n'
             msg += N_(
@@ -1055,15 +1066,18 @@ class MainView(standard.MainWindow):
 
         project = self.model.project
         curbranch = self.model.currentbranch
+        is_cherry_picking = self.model.is_cherry_picking
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
         prefix = uchr(0xAB)
         suffix = uchr(0xBB)
 
-        if is_rebasing:
-            alerts.append(N_('Rebasing'))
+        if is_cherry_picking:
+            alerts.append(N_('Cherry-picking'))
         elif is_merging:
             alerts.append(N_('Merging'))
+        elif is_rebasing:
+            alerts.append(N_('Rebasing'))
 
         if self.mode == self.model.mode_amend:
             alerts.append(N_('Amending'))
@@ -1091,6 +1105,8 @@ class MainView(standard.MainWindow):
 
         self.annex_init_action.setEnabled(not self.model.annex)
         self.lfs_init_action.setEnabled(not self.model.lfs)
+        self.merge_abort_action.setEnabled(self.model.is_merging)
+        self.cherry_pick_abort_action.setEnabled(self.model.is_cherry_picking)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
