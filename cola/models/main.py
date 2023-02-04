@@ -440,11 +440,13 @@ class MainModel(QtCore.QObject):
         errs = []
         status = 0
         for rev in revs:
-            stat, out, err = self.git.cherry_pick(rev)
-            status = max(stat, status)
+            status, out, err = self.git.cherry_pick(rev)
+            if status != 0:
+                output = '# git cherry-pick %s\n\n%s' % (rev, out)
+                return (status, output, err)
             outs.append(out)
             errs.append(err)
-        return (status, '\n'.join(outs), '\n'.join(errs))
+        return (0, '\n'.join(outs), '\n'.join(errs))
 
     def is_commit_published(self):
         """Return True if the latest commit exists in any remote branch"""

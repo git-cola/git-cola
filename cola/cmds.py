@@ -439,8 +439,10 @@ class CherryPick(ContextCommand):
         self.commits = commits
 
     def do(self):
-        self.model.cherry_pick_list(self.commits)
+        status, out, err = self.model.cherry_pick_list(self.commits)
         self.model.update_file_status()
+        title = N_('Cherry-pick failed')
+        Interaction.command(title, 'git cherry-pick', status, out, err)
 
 
 class Revert(ContextCommand):
