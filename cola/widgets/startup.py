@@ -7,6 +7,7 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
+from ..models import prefs
 from .. import cmds
 from .. import core
 from .. import display
@@ -73,20 +74,16 @@ class StartupDialog(standard.Dialog):
         self.tab_bar.addTab(icons.three_bars(), N_('List'))
 
         # Bookmarks/"Favorites" and Recent are lists of {name,path: str}
-        settings = context.settings
-        bookmarks = settings.bookmarks
-        recent = settings.recent
-        all_repos = bookmarks + recent
-
         normalize = display.normalize_path
+        settings = context.settings
+        all_repos = get_all_repos(self.context, settings)
 
         added = set()
         builder = BuildItem(self.context)
         default_view_mode = ICON_MODE
-        for idx, repo in enumerate(all_repos):
+        for repo, is_bookmark in all_repos:
             path = normalize(repo['path'])
             name = normalize(repo['name'])
-            is_bookmark = idx < len(bookmarks)
             if path in added:
                 continue
             added.add(path)
@@ -95,7 +92,7 @@ class StartupDialog(standard.Dialog):
             bookmarks_model.appendRow(item)
             items.append(item)
 
-        self.bookmarks = bookmarks = BookmarksListView(
+        self.bookmarks = BookmarksListView(
             context,
             bookmarks_model,
             self.open_selected_bookmark,
@@ -258,9 +255,10 @@ class StartupDialog(standard.Dialog):
 
     def handle_broken_repo(self, index):
         settings = self.context.settings
-        all_repos = settings.bookmarks + settings.recent
+        all_repos = get_all_repos(self.context, settings)
+
         repodir = self.bookmarks_model.data(index, Qt.UserRole)
-        repo = next(repo for repo in all_repos if repo['path'] == repodir)
+        repo = next(repo for repo, is_bookmark in all_repos if repo['path'] == repodir)
         title = N_('Repository Not Found')
         text = N_('%s could not be opened. Remove from bookmarks?') % repo['path']
         logo = icons.from_style(QtWidgets.QStyle.SP_MessageBoxWarning)
@@ -292,6 +290,20 @@ class StartupDialog(standard.Dialog):
         for item in items:
             bookmarks_model.appendRow(item)
             new_items.append(item)
+
+
+def get_all_repos(context, settings):
+    """Return a sorted list of bookmarks and recent repositorties"""
+    bookmarks = settings.bookmarks
+    recent = settings.recent
+    all_repos = [
+        (repo, True) for repo in bookmarks
+    ] + [
+        (repo, False) for repo in recent
+    ]
+    if prefs.sort_bookmarks(context):
+        all_repos.sort(key=lambda details: details[0]['path'].lower())
+    return all_repos
 
 
 class BookmarksListView(QtWidgets.QListView):
@@ -402,17 +414,13 @@ class BookmarksListView(QtWidgets.QListView):
         settings = context.settings
         builder = BuildItem(context)
         normalize = display.normalize_path
-
-        bookmarks = settings.bookmarks
-        recent = settings.recent
-        all_repos = bookmarks + recent
-
         items = []
         added = set()
-        for idx, repo in enumerate(all_repos):
+
+        all_repos = get_all_repos(self.context, settings)
+        for repo, is_bookmark in all_repos:
             path = normalize(repo['path'])
             name = normalize(repo['name'])
-            is_bookmark = idx < len(bookmarks)
             if path in added:
                 continue
             added.add(path)

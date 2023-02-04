@@ -313,7 +313,7 @@ class BookmarksTreeView(standard.TreeView):
 
         items = [builder.get(entry['path'], entry['name']) for entry in entries]
         if self.style == BOOKMARKS and prefs.sort_bookmarks(context):
-            items.sort(key=lambda x: x.name)
+            items.sort(key=lambda x: x.name.lower())
 
         self.set_model(items)
 

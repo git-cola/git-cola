@@ -16,6 +16,10 @@ Usability, bells and whistles
   (`#1199 <https://github.com/git-cola/git-cola/issues/1199>`_)
   (`#1280 <https://github.com/git-cola/git-cola/pull/1280>`_)
 
+* The Startup dialog, the Favorites widget and the Recents widgets now sort
+  their repositories using a case-insensitive sort.
+  (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
+
 
 .. _v4.1.0:
 
