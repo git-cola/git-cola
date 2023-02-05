@@ -40,6 +40,11 @@ Usability, bells and whistles
   This will quickly change the text size within the current session only.
   (`#1029 <https://github.com/git-cola/git-cola/issues/1029>`_)
 
+* The Console widget learned to open URLs. Right click anywhere on a line
+  that includes links and a context menu action will appear that allows
+  opening the link using your default browser.
+  (`#1139 <https://github.com/git-cola/git-cola/issues/1139>`_)
+
 
 .. _v4.1.0:
 

@@ -1,6 +1,7 @@
 """Text widgets"""
 # pylint: disable=unexpected-keyword-arg
 from __future__ import absolute_import, division, print_function, unicode_literals
+from functools import partial
 import math
 
 from qtpy import QtCore
@@ -12,6 +13,7 @@ from qtpy.QtCore import Signal
 from ..models import prefs
 from ..qtutils import get
 from .. import hotkeys
+from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from . import defs
@@ -241,6 +243,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.ext = PlainTextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
         self.mouse_zoom = True
+        self.customContextMenuRequested.connect(
+            self._custom_context_menu_requested, type=Qt.QueuedConnection
+        )
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -253,6 +259,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     def value(self):
         """Return a safe value, e.g. a stripped value"""
         return self.ext.value()
+
+    def offset_and_selection(self):
+        """Return the cursor offset and selected text"""
+        return self.ext.offset_and_selection()
 
     def set_value(self, value, block=False):
         self.ext.set_value(value, block=block)
@@ -286,6 +296,30 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             event.ignore()
             return
         super(PlainTextEdit, self).wheelEvent(event)
+
+    def _custom_context_menu_requested(self, point):
+        """Generate a custom context menu"""
+        links = self._get_links()
+        menu = self.createStandardContextMenu()
+        for url in links:
+            action = menu.addAction(N_('Open "%s"') % url)
+            action.setIcon(icons.external())
+            qtutils.connect_action(
+                action,
+                partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
+            )
+        menu.exec_(self.mapToGlobal(point))
+
+    def _get_links(self):
+        """Return http links on the current line"""
+        _, selection = self.offset_and_selection()
+        if selection:
+            line = selection
+        else:
+            line = self.selected_line()
+        if not line:
+            return []
+        return [word for word in line.split() if word.startswith(('http://', 'https://'))]
 
 
 class TextEditExtension(BaseTextEditExtension):
