@@ -152,7 +152,7 @@ def all_files(context, *args):
     return sorted([f for f in ls_files.split('\0') if f])
 
 
-class _current_branch(object):
+class CurrentBranchCache(object):
     """Cache for current_branch()"""
 
     key = None
@@ -160,7 +160,8 @@ class _current_branch(object):
 
 
 def reset():
-    _current_branch.key = None
+    """Reset cached value in this module (eg. the cached current branch)"""
+    CurrentBranchCache.key = None
 
 
 def current_branch(context):
@@ -169,8 +170,8 @@ def current_branch(context):
     head = git.git_path('HEAD')
     try:
         key = core.stat(head).st_mtime
-        if _current_branch.key == key:
-            return _current_branch.value
+        if CurrentBranchCache.key == key:
+            return CurrentBranchCache.value
     except OSError:
         # OSError means we can't use the stat cache
         key = 0
@@ -183,8 +184,8 @@ def current_branch(context):
     for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
             value = data[len(refs_prefix) :]
-            _current_branch.key = key
-            _current_branch.value = value
+            CurrentBranchCache.key = key
+            CurrentBranchCache.value = value
             return value
     # Detached head
     return data
