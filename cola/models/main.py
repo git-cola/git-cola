@@ -441,23 +441,6 @@ class MainModel(QtCore.QObject):
         """
         return self.git.branch(name, base, track=track, force=force)
 
-    def cherry_pick_list(self, revs):
-        """Cherry-picks each revision into the current branch.
-        Returns a list of command output strings (1 per cherry pick)"""
-        if not revs:
-            return []
-        outs = []
-        errs = []
-        status = 0
-        for rev in revs:
-            status, out, err = self.git.cherry_pick(rev)
-            if status != 0:
-                output = '# git cherry-pick %s\n\n%s' % (rev, out)
-                return (status, output, err)
-            outs.append(out)
-            errs.append(err)
-        return (0, '\n'.join(outs), '\n'.join(errs))
-
     def is_commit_published(self):
         """Return True if the latest commit exists in any remote branch"""
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
