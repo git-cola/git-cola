@@ -20,6 +20,22 @@ Usability, bells and whistles
   their repositories using a case-insensitive sort.
   (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
 
+* The "Copy Leading Paths" action in the Status widget's right-click "Copy" sub-menu
+  can now strip off an arbitrary number of leading paths.
+  (`#784 <https://github.com/git-cola/git-cola/issues/784>`_)
+
+* The "Cherry-Pick" action now reports errors when "git cherry-pick" fails.
+  A new "Abort Cherry-Pick" action has been added for aborting a failed cherry-pick.
+  (`#1062 <https://github.com/git-cola/git-cola/issues/1062>`_)
+
+* The "Favorites" are now sorted with a case-insenstive search. The startup dialog
+  now uses a sorted list of repositories as well.
+  (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
+
+* The hotkeys documentation has been updated to clarify that the "Copy Commit ID"
+  action is availalbe in several tools.
+  (`#779 <https://github.com/git-cola/git-cola/issues/779>`_)
+
 
 .. _v4.1.0:
 
