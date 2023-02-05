@@ -421,7 +421,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 # The item no longer exists in this list so search for
                 # its nearest neighbors and select them instead.
                 idx = old.index(item)
-                for j in itertools.chain(old[idx + 1 :], reversed(old[:idx])):
+                for j in itertools.chain(old[idx + 1:], reversed(old[:idx])):
                     if j in new:
                         reselect(j, current=True)
                         return

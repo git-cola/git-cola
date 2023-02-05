@@ -15,29 +15,30 @@ from .i18n import N_
 from .interaction import Interaction
 
 
-class InvalidRepositoryError(Exception):
-    pass
-
-
 def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
-    fn = context.git.add
+    git_add = context.git.add
     return utils.slice_fn(
-        items, lambda paths: fn('--', force=True, verbose=True, u=u, *paths)
+        items, lambda paths: git_add(
+            '--', force=True, verbose=True, u=u, *paths
+        )
     )
 
 
 def apply_diff(context, filename):
+    """Use "git apply" to apply the patch in `filename` to the staging area"""
     git = context.git
     return git.apply(filename, index=True, cached=True)
 
 
 def apply_diff_to_worktree(context, filename):
+    """Use "git apply" to apply the patch in `filename` to the worktree"""
     git = context.git
     return git.apply(filename)
 
 
 def get_branch(context, branch):
+    """Get the current branch"""
     if branch is None:
         branch = current_branch(context)
     return branch
@@ -911,10 +912,11 @@ def abort_merge(context):
 
 
 def strip_remote(remotes, remote_branch):
+    """Get branch names with the "<remote>/" prefix removed"""
     for remote in remotes:
         prefix = remote + '/'
         if remote_branch.startswith(prefix):
-            return remote_branch[len(prefix) :]
+            return remote_branch[len(prefix):]
     return remote_branch.split('/', 1)[-1]
 
 
@@ -961,10 +963,12 @@ def write_blob(context, oid, filename):
 
 
 def cat_file_blob(context, filename, oid):
+    """Write a blob from git to the specified filename"""
     return cat_file(context, filename, 'blob', oid)
 
 
 def cat_file_to_path(context, filename, oid):
+    """Extract a file from an commit ref and a write it to the specified filename"""
     return cat_file(context, filename, oid, path=filename, filters=True)
 
 
@@ -977,9 +981,9 @@ def cat_file(context, filename, *args, **kwargs):
     basename = os.path.basename(filename)
     suffix = '-' + basename  # ensures the correct filename extension
     path = utils.tmp_filename('blob', suffix=suffix)
-    with open(path, 'wb') as fp:
+    with open(path, 'wb') as tmp_file:
         status, out, err = git.cat_file(
-            _raw=True, _readonly=True, _stdout=fp, *args, **kwargs
+            _raw=True, _readonly=True, _stdout=tmp_file, *args, **kwargs
         )
         Interaction.command(N_('Error'), 'git cat-file', status, out, err)
         if status == 0:
@@ -1026,6 +1030,7 @@ def annex_path(context, head, filename):
 
 
 def is_binary(context, filename):
+    """A heustic to determine whether `filename` contains (non-text) binary content"""
     cfg_is_binary = context.cfg.is_binary(filename)
     if cfg_is_binary is not None:
         return cfg_is_binary
