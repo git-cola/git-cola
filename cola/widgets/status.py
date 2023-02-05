@@ -230,12 +230,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.copy_relpath_action.setIcon(icons.copy())
 
-        self.copy_leading_path_action = qtutils.add_action(
-            self,
-            N_('Copy Leading Path to Clipboard'),
-            partial(copy_leading_path, context),
+        self.copy_leading_path_widget = CopyLeadingPathWidget(
+            N_('Copy Leading Path to Clipboard'), self
         )
-        self.copy_leading_path_action.setIcon(icons.copy())
 
         self.copy_basename_action = qtutils.add_action(
             self, N_('Copy Basename to Clipboard'), partial(copy_basename, context)
@@ -698,18 +695,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         enabled = self.selection_model.filename() is not None
         self.copy_path_action.setEnabled(enabled)
         self.copy_relpath_action.setEnabled(enabled)
-        self.copy_leading_path_action.setEnabled(enabled)
         self.copy_basename_action.setEnabled(enabled)
-        copy_icon = icons.copy()
+
+        copy_leading_path_action = QtWidgets.QWidgetAction(self)
+        copy_leading_path_action.setEnabled(enabled)
+        copy_leading_path_action.setDefaultWidget(self.copy_leading_path_widget)
+        copy_leading_path_action.triggered[bool].connect(
+            lambda _: copy_leading_path(context, self.copy_leading_path_widget.value()),
+            Qt.QueuedConnection
+        )
 
         menu.addSeparator()
         copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
         menu.addMenu(copy_menu)
 
+        copy_icon = icons.copy()
         copy_menu.setIcon(copy_icon)
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
-        copy_menu.addAction(self.copy_leading_path_action)
+        copy_menu.addAction(copy_leading_path_action)
         copy_menu.addAction(self.copy_basename_action)
 
         settings = Settings.read()
@@ -1213,10 +1217,12 @@ def copy_basename(context):
     qtutils.copy_path(basename, absolute=False)
 
 
-def copy_leading_path(context):
+def copy_leading_path(context, levels=0):
     """Copy the selected leading path to the clipboard"""
     filename = context.selection.filename()
     dirname = os.path.dirname(filename)
+    for i in range(levels):
+        dirname = os.path.dirname(dirname)
     qtutils.copy_path(dirname, absolute=False)
 
 
@@ -1547,3 +1553,31 @@ def _transplant_selection_across_sections(
             select_modified(old_path, current=True)
         elif old_path in staged_paths:
             select_staged(old_path, current=True)
+
+
+class CopyLeadingPathWidget(QtWidgets.QWidget):
+    """A widget that holds a label and a spinbox for the number of paths to strip"""
+
+    def __init__(self, title, parent):
+        QtWidgets.QWidget.__init__(self)
+        self.icon = QtWidgets.QLabel(self)
+        self.label = QtWidgets.QLabel(self)
+        self.spinbox = standard.SpinBox(value=0, mini=0, parent=self)
+
+        icon = icons.copy()
+        pixmap = icon.pixmap(defs.default_icon, defs.default_icon)
+        self.icon.setPixmap(pixmap)
+        self.label.setText(title)
+
+        layout = qtutils.hbox(
+            defs.no_margin,
+            defs.titlebar_spacing,
+            self.icon,
+            self.label,
+            self.spinbox
+        )
+        self.setLayout(layout)
+
+    def value(self):
+        """Return the current value of the spinbox"""
+        return self.spinbox.value()
