@@ -211,6 +211,7 @@ Thanks
 * Paulo Fidalgo
 * Pavel Borecki
 * Pavel Rehak
+* Peer Sommerlund
 * Peter Dave Hello
 * Peter Júnoš
 * Petr Gladkikh
