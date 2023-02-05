@@ -36,7 +36,7 @@ class Theme(object):
         elif self.style_sheet == EStylesheet.FLAT:
             return self.style_sheet_flat()
         else:
-            return self.style_sheet_default(app_palette)
+            return style_sheet_default(app_palette)
 
     def build_palette(self, app_palette):
         QPalette = QtGui.QPalette
@@ -56,76 +56,6 @@ class Theme(object):
         palette.setColor(QPalette.Base, bg_color)
         palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
         return palette
-
-    def style_sheet_default(self, palette):
-        window = palette.color(QtGui.QPalette.Window)
-        highlight = palette.color(QtGui.QPalette.Highlight)
-        shadow = palette.color(QtGui.QPalette.Shadow)
-        base = palette.color(QtGui.QPalette.Base)
-
-        window_rgb = qtutils.rgb_css(window)
-        highlight_rgb = qtutils.rgb_css(highlight)
-        shadow_rgb = qtutils.rgb_css(shadow)
-        base_rgb = qtutils.rgb_css(base)
-
-        return """
-            QCheckBox::indicator {
-                width: %(checkbox_size)spx;
-                height: %(checkbox_size)spx;
-            }
-            QCheckBox::indicator::unchecked {
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-            QCheckBox::indicator::checked {
-                image: url(%(checkbox_icon)s);
-                border: %(checkbox_border)spx solid %(shadow_rgb)s;
-                background: %(base_rgb)s;
-            }
-
-            QRadioButton::indicator {
-                width: %(radio_size)spx;
-                height: %(radio_size)spx;
-            }
-            QRadioButton::indicator::unchecked {
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-            QRadioButton::indicator::checked {
-                image: url(%(radio_icon)s);
-                border: %(radio_border)spx solid %(shadow_rgb)s;
-                border-radius: %(radio_radius)spx;
-                background: %(base_rgb)s;
-            }
-
-            QSplitter::handle:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            QMainWindow::separator {
-                background: %(window_rgb)s;
-                width: %(separator)spx;
-                height: %(separator)spx;
-            }
-            QMainWindow::separator:hover {
-                background: %(highlight_rgb)s;
-            }
-
-            """ % dict(
-            separator=defs.separator,
-            window_rgb=window_rgb,
-            highlight_rgb=highlight_rgb,
-            shadow_rgb=shadow_rgb,
-            base_rgb=base_rgb,
-            checkbox_border=defs.border,
-            checkbox_icon=icons.check_name(),
-            checkbox_size=defs.checkbox,
-            radio_border=defs.radio_border,
-            radio_icon=icons.dot_name(),
-            radio_radius=defs.radio // 2,
-            radio_size=defs.radio,
-        )
 
     def style_sheet_flat(self):
         main_color = self.main_color
@@ -539,14 +469,85 @@ class Theme(object):
         # check if path exists
         filename = resources.config_home('themes', self.name + '.qss')
         if not core.exists(filename):
-            return self.style_sheet_default(app_palette)
+            return style_sheet_default(app_palette)
         try:
             return core.read(filename)
         except (IOError, OSError) as err:
             core.print_stderr(
                 'warning: unable to read custom theme %s: %s' % (filename, err)
             )
-            return self.style_sheet_default(app_palette)
+            return style_sheet_default(app_palette)
+
+
+def style_sheet_default(palette):
+    window = palette.color(QtGui.QPalette.Window)
+    highlight = palette.color(QtGui.QPalette.Highlight)
+    shadow = palette.color(QtGui.QPalette.Shadow)
+    base = palette.color(QtGui.QPalette.Base)
+
+    window_rgb = qtutils.rgb_css(window)
+    highlight_rgb = qtutils.rgb_css(highlight)
+    shadow_rgb = qtutils.rgb_css(shadow)
+    base_rgb = qtutils.rgb_css(base)
+
+    return """
+        QCheckBox::indicator {
+            width: %(checkbox_size)spx;
+            height: %(checkbox_size)spx;
+        }
+        QCheckBox::indicator::unchecked {
+            border: %(checkbox_border)spx solid %(shadow_rgb)s;
+            background: %(base_rgb)s;
+        }
+        QCheckBox::indicator::checked {
+            image: url(%(checkbox_icon)s);
+            border: %(checkbox_border)spx solid %(shadow_rgb)s;
+            background: %(base_rgb)s;
+        }
+
+        QRadioButton::indicator {
+            width: %(radio_size)spx;
+            height: %(radio_size)spx;
+        }
+        QRadioButton::indicator::unchecked {
+            border: %(radio_border)spx solid %(shadow_rgb)s;
+            border-radius: %(radio_radius)spx;
+            background: %(base_rgb)s;
+        }
+        QRadioButton::indicator::checked {
+            image: url(%(radio_icon)s);
+            border: %(radio_border)spx solid %(shadow_rgb)s;
+            border-radius: %(radio_radius)spx;
+            background: %(base_rgb)s;
+        }
+
+        QSplitter::handle:hover {
+            background: %(highlight_rgb)s;
+        }
+
+        QMainWindow::separator {
+            background: %(window_rgb)s;
+            width: %(separator)spx;
+            height: %(separator)spx;
+        }
+        QMainWindow::separator:hover {
+            background: %(highlight_rgb)s;
+        }
+
+        """ % dict(
+        separator=defs.separator,
+        window_rgb=window_rgb,
+        highlight_rgb=highlight_rgb,
+        shadow_rgb=shadow_rgb,
+        base_rgb=base_rgb,
+        checkbox_border=defs.border,
+        checkbox_icon=icons.check_name(),
+        checkbox_size=defs.checkbox,
+        radio_border=defs.radio_border,
+        radio_icon=icons.dot_name(),
+        radio_radius=defs.radio // 2,
+        radio_size=defs.radio,
+    )
 
 
 def get_all_themes():
