@@ -192,6 +192,7 @@ class ColaApplication(object):
         icons.install(icon_themes or get_icon_themes(context))
 
         self.context = context
+        self.theme = None
         self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
@@ -203,6 +204,7 @@ class ColaApplication(object):
         if theme_str is None:
             theme_str = self.context.cfg.get('cola.theme', default='default')
         theme = themes.find_theme(theme_str)
+        self.theme = theme
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
         if theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))

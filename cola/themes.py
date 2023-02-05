@@ -27,6 +27,8 @@ class Theme(object):
         self.is_dark = is_dark
         self.style_sheet = style_sheet
         self.main_color = main_color
+        self.text_color = None
+        self.highlight_color = None
 
     def build_style_sheet(self, app_palette):
         if self.style_sheet == EStylesheet.CUSTOM:
@@ -55,8 +57,7 @@ class Theme(object):
         palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
         return palette
 
-    @staticmethod
-    def style_sheet_default(palette):
+    def style_sheet_default(self, palette):
         window = palette.color(QtGui.QPalette.Window)
         highlight = palette.color(QtGui.QPalette.Highlight)
         shadow = palette.color(QtGui.QPalette.Shadow)
@@ -157,6 +158,9 @@ class Theme(object):
             )
             lighter = qtutils.hsl_css(color.hslHueF(), color.hslSaturationF() * 2, 0.92)
             focus = color_rgb
+
+        self.text_color = field_text
+        self.highlight_color = lighter
 
         return """
             /* regular widgets */

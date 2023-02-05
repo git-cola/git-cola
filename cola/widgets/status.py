@@ -231,7 +231,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_relpath_action.setIcon(icons.copy())
 
         self.copy_leading_path_widget = CopyLeadingPathWidget(
-            N_('Copy Leading Path to Clipboard'), self
+            N_('Copy Leading Path to Clipboard'), self.context, self
         )
 
         self.copy_basename_action = qtutils.add_action(
@@ -1559,11 +1559,13 @@ def _transplant_selection_across_sections(
 class CopyLeadingPathWidget(QtWidgets.QWidget):
     """A widget that holds a label and a spinbox for the number of paths to strip"""
 
-    def __init__(self, title, parent):
+    def __init__(self, title, context, parent):
         QtWidgets.QWidget.__init__(self)
+        self.context = context
         self.icon = QtWidgets.QLabel(self)
         self.label = QtWidgets.QLabel(self)
-        self.spinbox = standard.SpinBox(value=0, mini=0, parent=self)
+        self.spinbox = standard.SpinBox(value=0, mini=0, maxi=99, parent=self)
+        self.spinbox.setToolTip(N_('The number of leading paths to strip'))
 
         icon = icons.copy()
         pixmap = icon.pixmap(defs.default_icon, defs.default_icon)
@@ -1581,28 +1583,40 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         self.setLayout(layout)
 
         palette = parent.palette()
-        color = palette.highlight().color()
-        highlight_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+        theme = context.app.theme
+        if theme.highlight_color:
+            highlight_rgb = context.app.theme.highlight_color
+        else:
+            color = palette.highlight().color()
+            highlight_rgb = qtutils.rgb_css(color)
 
-        color = palette.buttonText().color()
-        text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+        if theme.text_color:
+            text_rgb = theme.text_color
+            highlight_text_rgb = theme.text_color
+        else:
+            color = palette.text().color()
+            text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
 
-        color = palette.highlightedText().color()
-        highlight_text_rgb = 'rgb(%s, %s, %s)' % (
-            color.red(), color.green(), color.blue()
-        )
+            color = palette.highlightedText().color()
+            highlight_text_rgb = 'rgb(%s, %s, %s)' % (
+                color.red(), color.green(), color.blue()
+            )
 
-        stylesheet = '''
+        stylesheet = """
+            * {
+                show-decoration-selected: 1
+            }
             QLabel {
                 color: %(text_rgb)s;
+                show-decoration-selected: 1
             }
-            :hover {
+            QLabel:hover {
                 color: %(highlight_text_rgb)s;
                 background-color: %(highlight_rgb)s;
                 background-clip: padding;
+                show-decoration-selected: 1
             }
-            * { show-decoration-selected: 1 }
-        ''' % dict(
+        """ % dict(
             text_rgb=text_rgb,
             highlight_text_rgb=highlight_text_rgb,
             highlight_rgb=highlight_rgb
