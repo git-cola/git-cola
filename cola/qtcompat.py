@@ -1,10 +1,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from qtpy import PYQT4
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
+try:
+    from qtpy import PYQT4
+except ImportError:
+    PYQT4 = False
 
 from . import hotkeys
 
