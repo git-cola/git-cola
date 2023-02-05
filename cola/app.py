@@ -222,6 +222,10 @@ class ColaApplication(object):
         """QApplication::desktop() pass-through"""
         return self._app.desktop()
 
+    def palette(self):
+        """QApplication::palette() pass-through"""
+        return self._app.palette()
+
     def start(self):
         """Wrap exec_() and start the application"""
         # Defer connection so that local cola.inotify is honored

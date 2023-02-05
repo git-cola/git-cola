@@ -5,6 +5,7 @@ from functools import partial
 
 from qtpy.QtCore import Qt
 from qtpy import QtCore
+from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
@@ -230,9 +231,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         self.copy_relpath_action.setIcon(icons.copy())
 
-        self.copy_leading_path_widget = CopyLeadingPathWidget(
-            N_('Copy Leading Path to Clipboard'), self.context, self
-        )
+        self.copy_leading_paths_value = 1
 
         self.copy_basename_action = qtutils.add_action(
             self, N_('Copy Basename to Clipboard'), partial(copy_basename, context)
@@ -697,21 +696,33 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.copy_relpath_action.setEnabled(enabled)
         self.copy_basename_action.setEnabled(enabled)
 
-        copy_leading_path_action = QtWidgets.QWidgetAction(self)
+        copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
+        copy_icon = icons.copy()
+        copy_menu.setIcon(copy_icon)
+
+        copy_leading_path_action = QtWidgets.QWidgetAction(copy_menu)
         copy_leading_path_action.setEnabled(enabled)
-        copy_leading_path_action.setDefaultWidget(self.copy_leading_path_widget)
-        # pylint: disable=unsubscriptable-object
-        copy_leading_path_action.triggered[bool].connect(
-            lambda _: copy_leading_path(context, self.copy_leading_path_widget.value()),
-            Qt.QueuedConnection
+
+        widget = CopyLeadingPathWidget(
+            N_('Copy Leading Path to Clipboard'), self.context, copy_menu
+        )
+
+        # Store the value of the leading paths spinbox so that the value does not reset
+        # everytime the menu is shown and recreated.
+        widget.set_value(self.copy_leading_paths_value)
+        widget.spinbox.valueChanged.connect(
+            partial(setattr, self, 'copy_leading_paths_value')
+        )
+        copy_leading_path_action.setDefaultWidget(widget)
+
+        # Copy the leading path when the action is activated.
+        qtutils.connect_action(
+            copy_leading_path_action,
+            lambda widget=widget: copy_leading_path(context, widget.value())
         )
 
         menu.addSeparator()
-        copy_menu = QtWidgets.QMenu(N_('Copy...'), menu)
         menu.addMenu(copy_menu)
-
-        copy_icon = icons.copy()
-        copy_menu.setIcon(copy_icon)
         copy_menu.addAction(self.copy_path_action)
         copy_menu.addAction(self.copy_relpath_action)
         copy_menu.addAction(copy_leading_path_action)
@@ -1218,13 +1229,13 @@ def copy_basename(context):
     qtutils.copy_path(basename, absolute=False)
 
 
-def copy_leading_path(context, levels=0):
-    """Copy the selected leading path to the clipboard"""
+def copy_leading_path(context, strip_components):
+    """Peal off trailing path components and copy the current path to the clipboard"""
     filename = context.selection.filename()
-    dirname = os.path.dirname(filename)
-    for _ in range(levels):
-        dirname = os.path.dirname(dirname)
-    qtutils.copy_path(dirname, absolute=False)
+    value = filename
+    for _ in range(strip_components):
+        value = os.path.dirname(value)
+    qtutils.copy_path(value, absolute=False)
 
 
 def copy_format(context, fmt):
@@ -1560,11 +1571,11 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
     """A widget that holds a label and a spinbox for the number of paths to strip"""
 
     def __init__(self, title, context, parent):
-        QtWidgets.QWidget.__init__(self)
+        QtWidgets.QWidget.__init__(self, parent)
         self.context = context
         self.icon = QtWidgets.QLabel(self)
         self.label = QtWidgets.QLabel(self)
-        self.spinbox = standard.SpinBox(value=0, mini=0, maxi=99, parent=self)
+        self.spinbox = standard.SpinBox(value=1, mini=1, maxi=99, parent=self)
         self.spinbox.setToolTip(N_('The number of leading paths to strip'))
 
         icon = icons.copy()
@@ -1582,7 +1593,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         )
         self.setLayout(layout)
 
-        palette = parent.palette()
+        palette = context.app.palette()
         theme = context.app.theme
         if theme.highlight_color:
             highlight_rgb = context.app.theme.highlight_color
@@ -1602,6 +1613,12 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
                 color.red(), color.green(), color.blue()
             )
 
+        if theme.disabled_text_color:
+            disabled_text_rgb = theme.disabled_text_color
+        else:
+            color = palette.color(QtGui.QPalette.Disabled, QtGui.QPalette.Text)
+            disabled_text_rgb = qtutils.rgb_css(color)
+
         stylesheet = """
             * {
                 show-decoration-selected: 1
@@ -1616,7 +1633,11 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
                 background-clip: padding;
                 show-decoration-selected: 1
             }
+            QLabel:disabled {
+                color: %(disabled_text_rgb)s;
+            }
         """ % dict(
+            disabled_text_rgb=disabled_text_rgb,
             text_rgb=text_rgb,
             highlight_text_rgb=highlight_text_rgb,
             highlight_rgb=highlight_rgb
@@ -1627,3 +1648,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
     def value(self):
         """Return the current value of the spinbox"""
         return self.spinbox.value()
+
+    def set_value(self, value):
+        """Set the spinbox value"""
+        self.spinbox.setValue(value)

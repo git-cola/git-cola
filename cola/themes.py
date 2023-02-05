@@ -27,6 +27,7 @@ class Theme(object):
         self.is_dark = is_dark
         self.style_sheet = style_sheet
         self.main_color = main_color
+        self.disabled_text_color = None
         self.text_color = None
         self.highlight_color = None
 
@@ -89,6 +90,7 @@ class Theme(object):
             lighter = qtutils.hsl_css(color.hslHueF(), color.hslSaturationF() * 2, 0.92)
             focus = color_rgb
 
+        self.disabled_text_color = grayed
         self.text_color = field_text
         self.highlight_color = lighter
 
