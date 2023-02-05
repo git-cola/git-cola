@@ -183,7 +183,7 @@ def current_branch(context):
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
-            value = data[len(refs_prefix) :]
+            value = data[len(refs_prefix):]
             CurrentBranchCache.key = key
             CurrentBranchCache.value = value
             return value
@@ -200,15 +200,15 @@ def _read_git_head(context, head, default='main'):
         data = core.read(head).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
-            return data[len(ref_prefix) :]
+            return data[len(ref_prefix):]
         # Detached head
         return data
     # Legacy .git/HEAD symlinks
-    elif islink:
+    if islink:
         refs_heads = core.realpath(git.git_path('refs', 'heads'))
         path = core.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
-            return path[len(refs_heads) + 1 :]
+            return path[len(refs_heads) + 1:]
 
     return default
 
@@ -244,8 +244,9 @@ def for_each_ref_basename(context, refs):
     return [x[offset:] for x in non_heads]
 
 
-def _triple(x, y):
-    return (x, len(x) + 1, y)
+def _prefix_and_size(prefix, values):
+    """Return a tuple of (prefix, len(prefix) + 1, y) for <prefix>/ stripping"""
+    return (prefix, len(prefix) + 1, values)
 
 
 def all_refs(context, split=False, sort_key='version:refname'):
@@ -254,11 +255,10 @@ def all_refs(context, split=False, sort_key='version:refname'):
     local_branches = []
     remote_branches = []
     tags = []
-    triple = _triple
     query = (
-        triple('refs/tags', tags),
-        triple('refs/heads', local_branches),
-        triple('refs/remotes', remote_branches),
+        _prefix_and_size('refs/tags', tags),
+        _prefix_and_size('refs/heads', local_branches),
+        _prefix_and_size('refs/remotes', remote_branches),
     )
     sort = _version_sort(context, key=sort_key)
     _, out, _ = git.for_each_ref(format='%(refname)', sort=sort, _readonly=True)
