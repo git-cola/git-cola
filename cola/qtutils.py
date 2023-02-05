@@ -31,29 +31,31 @@ def active_window():
 
 def connect_action(action, fn):
     """Connect an action to a function"""
-    action.triggered[bool].connect(lambda x: fn())
+    action.triggered[bool].connect(lambda x: fn(), type=Qt.QueuedConnection)
 
 
 def connect_action_bool(action, fn):
     """Connect a triggered(bool) action to a function"""
-    action.triggered[bool].connect(fn)
+    action.triggered[bool].connect(fn, type=Qt.QueuedConnection)
 
 
 def connect_button(button, fn):
     """Connect a button to a function"""
     # Some versions of Qt send the `bool` argument to the clicked callback,
     # and some do not.  The lambda consumes all callback-provided arguments.
-    button.clicked.connect(lambda *args, **kwargs: fn())
+    button.clicked.connect(lambda *args, **kwargs: fn(), type=Qt.QueuedConnection)
 
 
 def connect_checkbox(widget, fn):
     """Connect a checkbox to a function taking bool"""
-    widget.clicked.connect(lambda *args, **kwargs: fn(get(checkbox)))
+    widget.clicked.connect(
+        lambda *args, **kwargs: fn(get(checkbox)), type=Qt.QueuedConnection
+    )
 
 
 def connect_released(button, fn):
     """Connect a button to a function"""
-    button.released.connect(fn)
+    button.released.connect(fn, type=Qt.QueuedConnection)
 
 
 def button_action(button, action):
@@ -63,7 +65,7 @@ def button_action(button, action):
 
 def connect_toggle(toggle, fn):
     """Connect a toggle button to a function"""
-    toggle.toggled.connect(fn)
+    toggle.toggled.connect(fn, type=Qt.QueuedConnection)
 
 
 def disconnect(signal):
@@ -319,7 +321,9 @@ def prompt_n(msg, inputs):
         lineedit = QtWidgets.QLineEdit()
         # Enable the OK button only when all fields have been populated
         # pylint: disable=no-member
-        lineedit.textChanged.connect(lambda x: ok_b.setEnabled(all(get_values())))
+        lineedit.textChanged.connect(
+            lambda x: ok_b.setEnabled(all(get_values())), type=Qt.QueuedConnection
+        )
         if value:
             lineedit.setText(value)
         form_widgets.append((name, lineedit))
