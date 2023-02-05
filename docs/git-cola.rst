@@ -698,6 +698,12 @@ cola.maxrecent
 the start and recent repositories menu.  The maximum number of repositories to
 remember is controlled by `cola.maxrecent` and defaults to `8`.
 
+cola.mousezoom
+--------------
+Controls whether zooming text using Ctrl + MouseWheel scroll is enabled.
+Set to `false to disable scrolling with the mouse wheel.
+Defauls to `true`.
+
 cola.dragencoding
 -----------------
 `git cola` encodes paths dragged from its widgets into `utf-16` when adding

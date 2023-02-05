@@ -35,6 +35,7 @@ MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
+MOUSE_ZOOM = 'cola.mousezoom'
 RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
 SAFE_MODE = 'cola.safemode'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
@@ -75,6 +76,7 @@ class Defaults(object):
     merge_keep_backup = True
     merge_summary = True
     merge_verbosity = 2
+    mouse_zoom = True
     resize_browser_columns = False
     save_window_settings = True
     safe_mode = False
@@ -202,6 +204,11 @@ def maxrecent(context):
     if context:
         value = context.cfg.get(MAXRECENT, default=value)
     return value
+
+
+def mouse_zoom(context):
+    """Should we zoom text when using Ctrl + MouseWheel scroll"""
+    return context.cfg.get(MOUSE_ZOOM, default=Defaults.mouse_zoom)
 
 
 def spellcheck(context):

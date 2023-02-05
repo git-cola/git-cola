@@ -217,6 +217,7 @@ class SettingsFormWidget(FormWidget):
         self.mergetool = QtWidgets.QLineEdit()
 
         self.linebreak = qtutils.checkbox()
+        self.mouse_zoom = qtutils.checkbox()
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
@@ -239,6 +240,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
         self.add_row(N_('Check spelling'), self.check_spelling)
+        self.add_row(N_('Ctrl+MouseWheel to Zoom'), self.mouse_zoom)
 
         self.set_config(
             {
@@ -269,6 +271,7 @@ class SettingsFormWidget(FormWidget):
                     Defaults.resize_browser_columns,
                 ),
                 prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
+                prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
             }
         )
 

@@ -36,6 +36,10 @@ Usability, bells and whistles
   action is availalbe in several tools.
   (`#779 <https://github.com/git-cola/git-cola/issues/779>`_)
 
+* The diff text can now be quickly zoomed using ctrl + mousewheel scroll.
+  This will quickly change the text size within the current session only.
+  (`#1029 <https://github.com/git-cola/git-cola/issues/1029>`_)
+
 
 .. _v4.1.0:
 

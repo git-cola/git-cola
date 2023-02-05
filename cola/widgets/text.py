@@ -240,6 +240,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         QtWidgets.QPlainTextEdit.__init__(self, parent)
         self.ext = PlainTextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
+        self.mouse_zoom = True
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -255,6 +256,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
     def set_value(self, value, block=False):
         self.ext.set_value(value, block=block)
+
+    def set_mouse_zoom(self, value):
+        """Enable/disable text zooming in response to ctrl + mousewheel scroll events"""
+        self.mouse_zoom = value
 
     def has_selection(self):
         return self.ext.has_selection()
@@ -277,7 +282,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
     def wheelEvent(self, event):
         """Disable control+wheelscroll text resizing"""
-        if event.modifiers() & Qt.ControlModifier:
+        if not self.mouse_zoom and (event.modifiers() & Qt.ControlModifier):
             event.ignore()
             return
         super(PlainTextEdit, self).wheelEvent(event)
@@ -567,6 +572,7 @@ class HintedPlainTextEdit(PlainTextEdit):
         # Refresh palettes when text changes
         # pylint: disable=no-member
         self.textChanged.connect(self.hint.refresh)
+        self.set_mouse_zoom(context.cfg.get(prefs.MOUSE_ZOOM, default=True))
 
     def set_value(self, value, block=False):
         """Set the widget text or enable hint mode when empty"""
