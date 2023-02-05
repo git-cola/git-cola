@@ -1,4 +1,5 @@
 [project]
+name = "git-cola"
 dynamic = ["version"]
 
 [build-system]
