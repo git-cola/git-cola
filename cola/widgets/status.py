@@ -128,10 +128,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if not prefs.status_indent(context):
             self.setIndentation(0)
 
-        ok = icons.ok()
+        ok_icon = icons.ok()
         compare = icons.compare()
         question = icons.question()
-        self._add_toplevel_item(N_('Staged'), ok, hide=True)
+        self._add_toplevel_item(N_('Staged'), ok_icon, hide=True)
         self._add_toplevel_item(N_('Unmerged'), compare, hide=True)
         self._add_toplevel_item(N_('Modified'), compare, hide=True)
         self._add_toplevel_item(N_('Untracked'), question, hide=True)
