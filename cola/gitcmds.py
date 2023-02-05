@@ -888,7 +888,11 @@ def cherry_pick(context, revs):
     for rev in revs:
         status, out, err = context.git.cherry_pick(rev)
         if status != 0:
-            output = '# git cherry-pick %s\n\n%s' % (rev, out)
+            details = N_(
+                'Hint: The "Actions > Abort Cherry-Pick" menu action can be used to '
+                'cancel the current cherry-pick.'
+            )
+            output = '# git cherry-pick %s\n# %s\n\n%s' % (rev, details, out)
             return (status, output, err)
         outs.append(out)
         errs.append(err)
