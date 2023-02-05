@@ -634,7 +634,7 @@ cola.fontdiff
 Specifies the font to use for `git cola`'s diff display.
 
 cola.hidpi
--------------
+----------
 Specifies the High DPI displays scale factor. Set `0` to automatically scaled.
 Setting value between 0 and 1 is undefined.
 This option requires at least Qt 5.6 to work.
@@ -666,7 +666,7 @@ command line, once for each icon theme, in the order that they should be
 searched.  This can be used to override a subset of the icons, and fallback
 to the built-in icons for the remainder.
 
-cola.imagediff.<extension>
+cola.imagediff.[extension]
 --------------------------
 Enable image diffs for the specified file extension.  For example, configuring
 `git config --global cola.imagediff.svg false` will disable use of the visual
