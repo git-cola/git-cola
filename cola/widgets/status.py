@@ -658,7 +658,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_context_menu(self):
         """Set up the status menu for the repo status tree."""
-        s = self.selection()
+        sel = self.selection()
         menu = qtutils.create_menu('Status', self)
         selected_indexes = self.selected_indexes()
         if selected_indexes:
@@ -667,12 +667,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             if category == HEADER_IDX:
                 return self._create_header_context_menu(menu, idx)
 
-        if s.staged:
-            self._create_staged_context_menu(menu, s)
-        elif s.unmerged:
-            self._create_unmerged_context_menu(menu, s)
+        if sel.staged:
+            self._create_staged_context_menu(menu, sel)
+        elif sel.unmerged:
+            self._create_unmerged_context_menu(menu, sel)
         else:
-            self._create_unstaged_context_menu(menu, s)
+            self._create_unstaged_context_menu(menu, sel)
 
         if not menu.isEmpty():
             menu.addSeparator()
@@ -700,6 +700,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         copy_leading_path_action = QtWidgets.QWidgetAction(self)
         copy_leading_path_action.setEnabled(enabled)
         copy_leading_path_action.setDefaultWidget(self.copy_leading_path_widget)
+        # pylint: disable=unsubscriptable-object
         copy_leading_path_action.triggered[bool].connect(
             lambda _: copy_leading_path(context, self.copy_leading_path_widget.value()),
             Qt.QueuedConnection
@@ -1587,7 +1588,9 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
 
         color = palette.highlightedText().color()
-        highlight_text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+        highlight_text_rgb = 'rgb(%s, %s, %s)' % (
+            color.red(), color.green(), color.blue()
+        )
 
         stylesheet = '''
             QLabel {
