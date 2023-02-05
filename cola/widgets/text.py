@@ -319,7 +319,8 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             line = self.selected_line()
         if not line:
             return []
-        return [word for word in line.split() if word.startswith(('http://', 'https://'))]
+        return [word for word in line.split()
+                if word.startswith(('http://', 'https://'))]
 
 
 class TextEditExtension(BaseTextEditExtension):
