@@ -1221,7 +1221,7 @@ def copy_leading_path(context, levels=0):
     """Copy the selected leading path to the clipboard"""
     filename = context.selection.filename()
     dirname = os.path.dirname(filename)
-    for i in range(levels):
+    for _ in range(levels):
         dirname = os.path.dirname(dirname)
     qtutils.copy_path(dirname, absolute=False)
 
@@ -1574,9 +1574,38 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
             defs.titlebar_spacing,
             self.icon,
             self.label,
+            qtutils.STRETCH,
             self.spinbox
         )
         self.setLayout(layout)
+
+        palette = parent.palette()
+        color = palette.highlight().color()
+        highlight_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+
+        color = palette.buttonText().color()
+        text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+
+        color = palette.highlightedText().color()
+        highlight_text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+
+        stylesheet = '''
+            QLabel {
+                color: %(text_rgb)s;
+            }
+            :hover {
+                color: %(highlight_text_rgb)s;
+                background-color: %(highlight_rgb)s;
+                background-clip: padding;
+            }
+            * { show-decoration-selected: 1 }
+        ''' % dict(
+            text_rgb=text_rgb,
+            highlight_text_rgb=highlight_text_rgb,
+            highlight_rgb=highlight_rgb
+        )
+
+        self.setStyleSheet(stylesheet)
 
     def value(self):
         """Return the current value of the spinbox"""
