@@ -178,6 +178,7 @@ Thanks
 * Micha Rosenbaum
 * Michael Geddes
 * Michael Homer
+* Michael Schwarz
 * Mickael Albertus
 * Miguel Boekhold
 * Mike Hanson
