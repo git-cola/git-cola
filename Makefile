@@ -228,6 +228,9 @@ po::
 # Build a git-cola.app bundle.
 .PHONY: git-cola.app
 git-cola.app::
+    cola_full_version := $(shell ./bin/git-cola version --brief)
+
+git-cola.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app_resources)
 	$(PYTHON3) -m venv --copies $(cola_app_resources)
@@ -236,6 +239,10 @@ git-cola.app::
 	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-dev.txt
 
 	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
+ifneq ($(cola_full_version),)
+	sed -i -e s/0.0.0.0/$(cola_full_version)/ $(cola_app)/Contents/Info.plist
+endif
+	sed -i -e s/0.0.0/$(cola_version)/ $(cola_app)/Contents/Info.plist
 	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
 	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
 	$(MAKE) PIP=$(cola_app_resources)/bin/pip \

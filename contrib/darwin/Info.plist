@@ -34,7 +34,7 @@
 	<key>CFBundleSignature</key>
 	<string>Cola</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.0</string>
+	<string>0.0.0.0</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
