@@ -45,6 +45,14 @@ Usability, bells and whistles
   opening the link using your default browser.
   (`#1139 <https://github.com/git-cola/git-cola/issues/1139>`_)
 
+* The drag and drop behavior for the status widget has been improved.
+  Dragging multiple files into terminals will do the right thing by default
+  for most terminals. Some terminals (such as `kitty`) will mash multiple
+  files together without spaces when the payload contains URLs.
+  Dragging with the `shift` buttton held down avoids this issue by only
+  including plain shell-friendly paths in the drag-and-drop data.
+  (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
+
 
 .. _v4.1.0:
 

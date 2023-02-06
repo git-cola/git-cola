@@ -208,7 +208,7 @@ as the ergonomical and vim-like `j` and `k` shortcut keys.
 
 There are several convenient ways to interact with files in the `Status` tool.
 
-Selecting a file displays its diff in the :ref:`Diff` viewer.
+Selecting a file displays its diff in the `Diff` viewer.
 Double-clicking a file stages its contents, as does the
 the `Ctrl-s` shortcut key.
 
@@ -216,6 +216,22 @@ the `Ctrl-s` shortcut key.
 `Ctrl-d` opens selected files using `git difftool <http://git-scm.com/docs/git-difftool>`_
 
 Additional actions can be performed using the right-click context menu.
+
+Drag and Drop
+-------------
+Files can be dragged from the the `Status` tool onto other applications.
+
+Some terminals do not gracefully handle multiple files being dragged onto them.
+For example, `kitty` will mash multiple paths together instead of separating them with
+spaces.
+
+To avoid this issue, hold down `shift` when dragging from the `Status` tool. The drag
+and drop payload will no longer contain local file URLs -- it will contain plain text
+that is amenable for use in a command-line.
+
+Note: if drag and drop is not working and you are using Wayland / Gnome then you may
+need to ``export QT_QPA_PLATFORM=wayland`` in your environment before running
+`git cola`.
 
 Actions
 -------
@@ -703,14 +719,6 @@ cola.mousezoom
 Controls whether zooming text using Ctrl + MouseWheel scroll is enabled.
 Set to `false to disable scrolling with the mouse wheel.
 Defauls to `true`.
-
-cola.dragencoding
------------------
-`git cola` encodes paths dragged from its widgets into `utf-16` when adding
-them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
-`utf-16` is used to make `gnome-terminal` see the right paths, but other
-terminals may expect a different encoding.  If you are using a terminal that
-expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
 
 cola.readsize
 -------------

@@ -80,11 +80,10 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.dir_icon = icons.directory()
 
     def mimeData(self, indexes):
-        context = self.context
         paths = qtutils.paths_from_indexes(
             self, indexes, item_type=GitRepoNameItem.TYPE
         )
-        return qtutils.mimedata_from_paths(context, paths)
+        return qtutils.mimedata_from_paths(paths)
 
     # pylint: disable=no-self-use
     def mimeTypes(self):

@@ -911,35 +911,39 @@ def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
 
 
 # pylint: disable=line-too-long
-def mimedata_from_paths(context, paths):
+def mimedata_from_paths(paths, include_urls=True):
     """Return mimedata with a list of absolute path URLs
 
-    The text/x-moz-list format is always included by Qt, and doing
-    mimedata.removeFormat('text/x-moz-url') has no effect.
-    C.f. http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
+    Set `include_urls` to False to prevent URLs from being included
+    in the mimedata. This is useful in some terminals that do not gracefully handle
+    multiple URLs being included in the payload, for example "kitty".
 
-    gnome-terminal expects utf-16 encoded text, but other terminals,
-    e.g. terminator, prefer utf-8, so allow cola.dragencoding
-    to override the default.
+    This allows the mimedata to contain just plain a plain text value that we
+    are able to format ourselves.
 
+    Older verisons of gnome-terminal expected a utf-16 encoding, but that
+    behavior is no longer needed.
     """  # noqa
-    cfg = context.cfg
     abspaths = [core.abspath(path) for path in paths]
-    urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
+    paths_text = core.list2cmdline(abspaths)
 
     mimedata = QtCore.QMimeData()
-    mimedata.setUrls(urls)
-
-    paths_text = core.list2cmdline(abspaths)
-    encoding = cfg.get('cola.dragencoding', 'utf-16')
-    moz_text = core.encode(paths_text, encoding=encoding)
-    mimedata.setData('text/x-moz-url', moz_text)
+    mimedata.setText(paths_text)
+    if include_urls:
+        urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
+        mimedata.setUrls(urls)
 
     return mimedata
 
 
-def path_mimetypes():
-    return ['text/uri-list', 'text/x-moz-url']
+def path_mimetypes(include_urls=True):
+    """Return a list of mimetypes that we generate"""
+    mime_types = [
+        'text/plain',
+    ]
+    if include_urls:
+        mime_types.append('text/uri-list')
+    return mime_types
 
 
 class BlockSignals(object):
