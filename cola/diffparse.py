@@ -6,6 +6,11 @@ from collections import defaultdict
 from . import compat
 
 
+DIFF_CONTEXT = ' '
+DIFF_ADDITION = '+'
+DIFF_DELETION = '-'
+DIFF_NO_NEWLINE = '\\'
+
 _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
 
@@ -260,11 +265,6 @@ class DiffParser(object):
     def generate_patch(self, first_line_idx, last_line_idx, reverse=False):
         """Return a patch containing a subset of the diff"""
 
-        ADDITION = '+'
-        DELETION = '-'
-        CONTEXT = ' '
-        NO_NEWLINE = '\\'
-
         lines = ['--- a/%s\n' % self.filename, '+++ b/%s\n' % self.filename]
 
         start_offset = 0
@@ -289,20 +289,20 @@ class DiffParser(object):
                 line_type, line_content = line[:1], line[1:]
 
                 if reverse:
-                    if line_type == ADDITION:
-                        line_type = DELETION
-                    elif line_type == DELETION:
-                        line_type = ADDITION
+                    if line_type == DIFF_ADDITION:
+                        line_type = DIFF_DELETION
+                    elif line_type == DIFF_DELETION:
+                        line_type = DIFF_ADDITION
 
                 if not first_line_idx <= line_idx <= last_line_idx:
-                    if line_type == ADDITION:
+                    if line_type == DIFF_ADDITION:
                         # Skip additions that are not selected.
                         prev_skipped = True
                         continue
-                    if line_type == DELETION:
+                    if line_type == DIFF_DELETION:
                         # Change deletions that are not selected to context.
-                        line_type = CONTEXT
-                if line_type == NO_NEWLINE and prev_skipped:
+                        line_type = DIFF_CONTEXT
+                if line_type == DIFF_NO_NEWLINE and prev_skipped:
                     # If the line immediately before a "No newline" line was
                     # skipped (because it was an unselected addition) skip
                     # the "No newline" line as well.
@@ -313,11 +313,11 @@ class DiffParser(object):
 
             # Do not include hunks that, after filtering, have only context
             # lines (no additions or deletions).
-            if not counts[ADDITION] and not counts[DELETION]:
+            if not counts[DIFF_ADDITION] and not counts[DIFF_DELETION]:
                 continue
 
-            old_count = counts[CONTEXT] + counts[DELETION]
-            new_count = counts[CONTEXT] + counts[ADDITION]
+            old_count = counts[DIFF_CONTEXT] + counts[DIFF_DELETION]
+            new_count = counts[DIFF_CONTEXT] + counts[DIFF_ADDITION]
 
             if reverse:
                 old_start = hunk.new_start
@@ -329,7 +329,7 @@ class DiffParser(object):
             if new_count == 0:
                 new_start -= 1
 
-            start_offset += counts[ADDITION] - counts[DELETION]
+            start_offset += counts[DIFF_ADDITION] - counts[DIFF_DELETION]
 
             lines.append(
                 _format_hunk_header(
