@@ -13,18 +13,6 @@ DIFF_DELETION = '-'
 DIFF_NO_NEWLINE = '\\'
 
 
-class _DiffHunk(object):
-    def __init__(
-        self, old_start, old_count, new_start, new_count, heading, lines
-    ):
-        self.old_start = old_start
-        self.old_count = old_count
-        self.new_start = new_start
-        self.new_count = new_count
-        self.heading = heading
-        self.lines = lines
-
-
 def parse_range_str(range_str):
     if ',' in range_str:
         begin, end = range_str.split(',', 1)
@@ -231,6 +219,18 @@ class _HunkGrouper:
         if match is not None:
             self.match = match
         return self.match
+
+
+class _DiffHunk:
+    def __init__(
+        self, old_start, old_count, new_start, new_count, heading, lines
+    ):
+        self.old_start = old_start
+        self.old_count = old_count
+        self.new_start = new_start
+        self.new_count = new_count
+        self.heading = heading
+        self.lines = lines
 
 
 class Patch:
