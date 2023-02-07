@@ -31,7 +31,6 @@ def test_diff():
     hunks = parser.hunks
 
     assert len(hunks) == 3
-    assert hunks[0].first_line_idx == 0
     assert len(hunks[0].lines) == 23
     assert hunks[0].lines[0] == '@@ -6,10 +6,21 @@ from cola import gitcmds\n'
     assert hunks[0].lines[1] == ' from cola import gitcfg\n'
@@ -43,7 +42,6 @@ def test_diff():
         r" \+(\d+),(\d+) @@.*')"
         '\n'
     )
-    assert hunks[1].first_line_idx == 23
     assert len(hunks[1].lines) == 18
     assert hunks[1].lines[0] == '@@ -29,13 +40,11 @@ class DiffParser(object):\n'
     assert hunks[1].lines[1] == '         self.diff_sel = []\n'
@@ -54,7 +52,6 @@ def test_diff():
     )
     assert hunks[1].lines[-1] == '         self.header = header\n'
 
-    assert hunks[2].first_line_idx == 41
     assert len(hunks[2].lines) == 16
     assert hunks[2].lines[0] == '@@ -43,11 +52,10 @@ class DiffParser(object):\n'
     assert hunks[2].lines[-1] == (

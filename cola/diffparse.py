@@ -16,19 +16,14 @@ _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
 class _DiffHunk(object):
     def __init__(
-        self, old_start, old_count, new_start, new_count, heading, first_line_idx, lines
+        self, old_start, old_count, new_start, new_count, heading, lines
     ):
         self.old_start = old_start
         self.old_count = old_count
         self.new_start = new_start
         self.new_count = new_count
         self.heading = heading
-        self.first_line_idx = first_line_idx
         self.lines = lines
-
-    @property
-    def last_line_idx(self):
-        return self.first_line_idx + len(self.lines) - 1
 
 
 def parse_range_str(range_str):
@@ -53,8 +48,9 @@ def _format_hunk_header(old_start, old_count, new_start, new_count, heading=''):
 
 
 def _parse_diff(diff_text):
+    header_line_count = 0
     hunks = []
-    for line_idx, line in enumerate(diff_text.split('\n')):
+    for line in diff_text.split('\n'):
         match = _HUNK_HEADER_RE.match(line)
         if match:
             old_start, old_count = parse_range_str(match.group(1))
@@ -67,13 +63,14 @@ def _parse_diff(diff_text):
                     new_start,
                     new_count,
                     heading,
-                    line_idx,
                     lines=[line + '\n'],
                 )
             )
         elif line and hunks:
             hunks[-1].lines.append(line + '\n')
-    return hunks
+        elif line:
+            header_line_count += 1
+    return header_line_count, hunks
 
 
 def digits(number):
@@ -260,7 +257,14 @@ class DiffParser(object):
 
     def __init__(self, filename, diff_text):
         self.filename = filename
-        self.hunks = _parse_diff(diff_text)
+        self.header_line_count, self.hunks = _parse_diff(diff_text)
+
+    def _hunk_iter(self):
+        hunk_last_line_idx = self.header_line_count - 1
+        for hunk in self.hunks:
+            hunk_first_line_idx = hunk_last_line_idx + 1
+            hunk_last_line_idx += len(hunk.lines)
+            yield hunk_first_line_idx, hunk_last_line_idx, hunk
 
     def generate_patch(self, first_line_idx, last_line_idx, reverse=False):
         """Return a patch containing a subset of the diff"""
@@ -269,14 +273,14 @@ class DiffParser(object):
 
         start_offset = 0
 
-        for hunk in self.hunks:
+        for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
             # skip hunks until we get to the one that contains the first
             # selected line
-            if hunk.last_line_idx < first_line_idx:
+            if hunk_last_line_idx < first_line_idx:
                 continue
             # once we have processed the hunk that contains the last selected
             # line, we can stop
-            if hunk.first_line_idx > last_line_idx:
+            if hunk_first_line_idx > last_line_idx:
                 break
 
             prev_skipped = False
@@ -284,7 +288,7 @@ class DiffParser(object):
             filtered_lines = []
 
             for line_idx, line in enumerate(
-                hunk.lines[1:], start=hunk.first_line_idx + 1
+                hunk.lines[1:], start=hunk_first_line_idx + 1
             ):
                 line_type, line_content = line[:1], line[1:]
 
@@ -347,11 +351,11 @@ class DiffParser(object):
     def generate_hunk_patch(self, line_idx, reverse=False):
         """Return a patch containing the hunk for the specified line only"""
         hunk = None
-        for hunk in self.hunks:
-            if line_idx <= hunk.last_line_idx:
+        for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
+            if line_idx <= hunk_last_line_idx:
                 break
         if hunk is None:
             return None
         return self.generate_patch(
-            hunk.first_line_idx, hunk.last_line_idx, reverse=reverse
+            hunk_first_line_idx, hunk_last_line_idx, reverse=reverse
         )
