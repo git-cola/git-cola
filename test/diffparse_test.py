@@ -27,8 +27,8 @@ def difflines_data():
 
 def test_diff():
     fixture_path = helper.fixture('diff.txt')
-    parser = diffparse.DiffParser('cola/diffparse.py', core.read(fixture_path))
-    hunks = parser.hunks
+    patch = diffparse.Patch.parse('cola/diffparse.py', core.read(fixture_path))
+    hunks = patch.hunks
 
     assert len(hunks) == 3
     assert len(hunks[0].lines) == 23
@@ -61,8 +61,8 @@ def test_diff():
 
 def test_diff_at_start():
     fixture_path = helper.fixture('diff-start.txt')
-    parser = diffparse.DiffParser('foo bar/a', core.read(fixture_path))
-    hunks = parser.hunks
+    patch = diffparse.Patch.parse('foo bar/a', core.read(fixture_path))
+    hunks = patch.hunks
 
     assert hunks[0].lines[0] == '@@ -1 +1,4 @@\n'
     assert hunks[-1].lines[-1] == '+c\n'
@@ -70,10 +70,10 @@ def test_diff_at_start():
     assert hunks[0].old_count == 1
     assert hunks[0].new_start == 1
     assert hunks[0].new_count == 4
-    assert parser.generate_patch(1, 3) == (
+    assert patch.generate_patch(1, 3) == (
         '--- a/foo bar/a\n' '+++ b/foo bar/a\n' '@@ -1 +1,3 @@\n' ' bar\n' '+a\n' '+b\n'
     )
-    assert parser.generate_patch(0, 4) == (
+    assert patch.generate_patch(0, 4) == (
         '--- a/foo bar/a\n'
         '+++ b/foo bar/a\n'
         '@@ -1 +1,4 @@\n'
@@ -86,8 +86,8 @@ def test_diff_at_start():
 
 def test_diff_at_end():
     fixture_path = helper.fixture('diff-end.txt')
-    parser = diffparse.DiffParser('rijndael.js', core.read(fixture_path))
-    hunks = parser.hunks
+    patch = diffparse.Patch.parse('rijndael.js', core.read(fixture_path))
+    hunks = patch.hunks
 
     assert hunks[0].lines[0] == '@@ -1,39 +1 @@\n'
     assert hunks[-1].lines[-1] == (
@@ -101,8 +101,8 @@ def test_diff_at_end():
 
 def test_diff_that_empties_file():
     fixture_path = helper.fixture('diff-empty.txt')
-    parser = diffparse.DiffParser('filename', core.read(fixture_path))
-    hunks = parser.hunks
+    patch = diffparse.Patch.parse('filename', core.read(fixture_path))
+    hunks = patch.hunks
 
     assert hunks[0].lines[0] == '@@ -1,2 +0,0 @@\n'
     assert hunks[-1].lines[-1] == '-second\n'
@@ -110,10 +110,10 @@ def test_diff_that_empties_file():
     assert hunks[0].old_count == 2
     assert hunks[0].new_start == 0
     assert hunks[0].new_count == 0
-    assert parser.generate_patch(1, 1) == (
+    assert patch.generate_patch(1, 1) == (
         '--- a/filename\n' '+++ b/filename\n' '@@ -1,2 +1 @@\n' '-first\n' ' second\n'
     )
-    assert parser.generate_patch(0, 2) == (
+    assert patch.generate_patch(0, 2) == (
         '--- a/filename\n' '+++ b/filename\n' '@@ -1,2 +0,0 @@\n' '-first\n' '-second\n'
     )
 
@@ -124,15 +124,15 @@ deleted file mode 100755
 @@ -1,1 +0,0 @@
 -#!/bin/sh
 """
-    parser = diffparse.DiffParser('deleted.txt', diff_text)
+    patch = diffparse.Patch.parse('deleted.txt', diff_text)
 
     expect = 1
-    actual = len(parser.hunks)
+    actual = len(patch.hunks)
     assert expect == actual
 
     # Selecting the first two lines generate no diff
     expect = None
-    actual = parser.generate_patch(0, 1)
+    actual = patch.generate_patch(0, 1)
     assert expect == actual
 
     # Selecting the last line should generate a line removal
@@ -142,17 +142,17 @@ deleted file mode 100755
 @@ -1 +0,0 @@
 -#!/bin/sh
 """
-    actual = parser.generate_patch(1, 2)
+    actual = patch.generate_patch(1, 2)
     assert expect == actual
 
     # All three lines should map to the same hunk diff
-    actual = parser.generate_hunk_patch(0)
+    actual = patch.generate_hunk_patch(0)
     assert expect == actual
 
-    actual = parser.generate_hunk_patch(1)
+    actual = patch.generate_hunk_patch(1)
     assert expect == actual
 
-    actual = parser.generate_hunk_patch(2)
+    actual = patch.generate_hunk_patch(2)
     assert expect == actual
 
 

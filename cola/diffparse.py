@@ -47,32 +47,6 @@ def _format_hunk_header(old_start, old_count, new_start, new_count, heading=''):
     )
 
 
-def _parse_diff(diff_text):
-    header_line_count = 0
-    hunks = []
-    for line in diff_text.split('\n'):
-        match = _HUNK_HEADER_RE.match(line)
-        if match:
-            old_start, old_count = parse_range_str(match.group(1))
-            new_start, new_count = parse_range_str(match.group(2))
-            heading = match.group(3)
-            hunks.append(
-                _DiffHunk(
-                    old_start,
-                    old_count,
-                    new_start,
-                    new_count,
-                    heading,
-                    lines=[line + '\n'],
-                )
-            )
-        elif line and hunks:
-            hunks[-1].lines.append(line + '\n')
-        elif line:
-            header_line_count += 1
-    return header_line_count, hunks
-
-
 def digits(number):
     """Return the number of digits needed to display a number"""
     if number >= 0:
@@ -247,7 +221,7 @@ class FormatDigits(object):
         return result
 
 
-class DiffParser(object):
+class Patch:
     """Parse and rewrite diffs to produce edited patches
 
     This parser is used for modifying the worktree and index by constructing
@@ -255,9 +229,36 @@ class DiffParser(object):
 
     """
 
-    def __init__(self, filename, diff_text):
+    def __init__(self, filename, hunks, header_line_count=0):
         self.filename = filename
-        self.header_line_count, self.hunks = _parse_diff(diff_text)
+        self.hunks = hunks
+        self.header_line_count = header_line_count
+
+    @classmethod
+    def parse(cls, filename, diff_text):
+        header_line_count = 0
+        hunks = []
+        for line in diff_text.split('\n'):
+            match = _HUNK_HEADER_RE.match(line)
+            if match:
+                old_start, old_count = parse_range_str(match.group(1))
+                new_start, new_count = parse_range_str(match.group(2))
+                heading = match.group(3)
+                hunks.append(
+                    _DiffHunk(
+                        old_start,
+                        old_count,
+                        new_start,
+                        new_count,
+                        heading,
+                        lines=[line + '\n'],
+                    )
+                )
+            elif line and hunks:
+                hunks[-1].lines.append(line + '\n')
+            elif line:
+                header_line_count += 1
+        return cls(filename, hunks, header_line_count)
 
     def _hunk_iter(self):
         hunk_last_line_idx = self.header_line_count - 1

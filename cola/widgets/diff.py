@@ -1029,11 +1029,11 @@ class DiffEditor(DiffTextEdit):
 
     def extract_patch(self, reverse=False):
         first_line_idx, last_line_idx = self.selected_lines()
-        parser = diffparse.DiffParser(self.model.filename, self.model.diff_text)
+        patch = diffparse.Patch.parse(self.model.filename, self.model.diff_text)
         if self.has_selection():
-            return parser.generate_patch(first_line_idx, last_line_idx, reverse)
+            return patch.generate_patch(first_line_idx, last_line_idx, reverse)
         else:
-            return parser.generate_hunk_patch(first_line_idx, reverse)
+            return patch.generate_hunk_patch(first_line_idx, reverse)
 
     def patch_encoding(self):
         if isinstance(self.model.diff_text, core.UStr):
