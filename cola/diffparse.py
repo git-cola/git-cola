@@ -55,7 +55,7 @@ def digits(number):
     return result
 
 
-class Counter(object):
+class LineCounter(object):
     """Keep track of a diff range's values"""
 
     def __init__(self, value=0, max_value=-1):
@@ -92,10 +92,10 @@ class DiffLines(object):
 
         # diff <old> <new>
         # merge <ours> <theirs> <new>
-        self.old = Counter()
-        self.new = Counter()
-        self.ours = Counter()
-        self.theirs = Counter()
+        self.old = LineCounter()
+        self.new = LineCounter()
+        self.ours = LineCounter()
+        self.theirs = LineCounter()
 
     def digits(self):
         return digits(
