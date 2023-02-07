@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import math
 import re
 from collections import defaultdict
+from itertools import groupby
 
 from . import compat
 
@@ -10,8 +11,6 @@ DIFF_CONTEXT = ' '
 DIFF_ADDITION = '+'
 DIFF_DELETION = '-'
 DIFF_NO_NEWLINE = '\\'
-
-_HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
 
 class _DiffHunk(object):
@@ -221,6 +220,19 @@ class FormatDigits(object):
         return result
 
 
+class _HunkGrouper:
+    _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
+
+    def __init__(self):
+        self.match = None
+
+    def __call__(self, line):
+        match = self._HUNK_HEADER_RE.match(line)
+        if match is not None:
+            self.match = match
+        return self.match
+
+
 class Patch:
     """Parse and rewrite diffs to produce edited patches
 
@@ -238,9 +250,8 @@ class Patch:
     def parse(cls, filename, diff_text):
         header_line_count = 0
         hunks = []
-        for line in diff_text.split('\n'):
-            match = _HUNK_HEADER_RE.match(line)
-            if match:
+        for match, hunk_lines in groupby(diff_text.split('\n'), _HunkGrouper()):
+            if match is not None:
                 old_start, old_count = parse_range_str(match.group(1))
                 new_start, new_count = parse_range_str(match.group(2))
                 heading = match.group(3)
@@ -251,13 +262,11 @@ class Patch:
                         new_start,
                         new_count,
                         heading,
-                        lines=[line + '\n'],
+                        lines=[line + '\n' for line in hunk_lines if line],
                     )
                 )
-            elif line and hunks:
-                hunks[-1].lines.append(line + '\n')
-            elif line:
-                header_line_count += 1
+            else:
+                header_line_count = len(list(hunk_lines))
         return cls(filename, hunks, header_line_count)
 
     def _hunk_iter(self):
