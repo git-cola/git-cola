@@ -126,7 +126,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.setAutoScroll(False)
         self.setDragEnabled(True)
         self.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
-        self._shift_drag = False
+        self._alt_drag = False
 
         if not prefs.status_indent(context):
             self.setIndentation(0)
@@ -1191,19 +1191,24 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def mousePressEvent(self, event):
         """Keep track of whether to drag URLs or just text"""
-        if event.buttons() == Qt.LeftButton:
-            self._shift_drag = event.modifiers() == Qt.ShiftModifier
+        self._alt_drag = event.modifiers() & Qt.AltModifier
         return super(StatusTreeWidget, self).mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+        """Keep track of whether to drag URLs or just text"""
+        self._alt_drag = event.modifiers() & Qt.AltModifier
+        return super(StatusTreeWidget, self).mouseMoveEvent(event)
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
+        context = self.context
         paths = qtutils.paths_from_items(items, item_filter=_item_filter)
-        include_urls = not self._shift_drag
-        return qtutils.mimedata_from_paths(paths, include_urls=include_urls)
+        include_urls = not self._alt_drag
+        return qtutils.mimedata_from_paths(context, paths, include_urls=include_urls)
 
     # pylint: disable=no-self-use
     def mimeTypes(self):
-        return qtutils.path_mimetypes(include_urls=not self._shift_drag)
+        return qtutils.path_mimetypes(include_urls=not self._alt_drag)
 
 
 def _item_filter(item):

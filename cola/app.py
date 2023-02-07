@@ -147,15 +147,20 @@ def setup_environment():
     #   Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome.
     #   Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.
     #
-    # This annoying, so we silence the warning.
-    # We'll need to keep this hack here until a future version of Qt provides
-    # Qt Wayland widgets that are usable in gnome-shell.
-    # Cf. https://bugreports.qt.io/browse/QTBUG-68619
+    # Follow the advice and opt-in to QT_QPA_PLATFORM=wayland unless the user
+    # has a custom QT_QPA_PLATFORM.
+    #
+    # In the past we would compat.unsetenv('XDG_SESSION_TYPE') when
+    # XDG_CURRENT_DESKTOP == GNOME and XDG_SESSION_TYPE == wayland
+    # to silence the warning. This was before
+    # https://bugreports.qt.io/browse/QTBUG-68619 was resolved.
+    #
+    # These days we can opt-in instead.
     if (
-        core.getenv('XDG_CURRENT_DESKTOP', '') == 'GNOME'
-        and core.getenv('XDG_SESSION_TYPE', '') == 'wayland'
+        core.getenv('XDG_SESSION_TYPE', '') == 'wayland'
+        and not core.getenv('QT_QPA_PLATFORM', '')
     ):
-        compat.unsetenv('XDG_SESSION_TYPE')
+        compat.setenv('QT_QPA_PLATFORM', 'wayland')
 
 
 def get_icon_themes(context):

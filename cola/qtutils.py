@@ -911,12 +911,12 @@ def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
 
 
 # pylint: disable=line-too-long
-def mimedata_from_paths(paths, include_urls=True):
+def mimedata_from_paths(context, paths, include_urls=True):
     """Return mimedata with a list of absolute path URLs
 
     Set `include_urls` to False to prevent URLs from being included
     in the mimedata. This is useful in some terminals that do not gracefully handle
-    multiple URLs being included in the payload, for example "kitty".
+    multiple URLs being included in the payload.
 
     This allows the mimedata to contain just plain a plain text value that we
     are able to format ourselves.
@@ -927,11 +927,22 @@ def mimedata_from_paths(paths, include_urls=True):
     abspaths = [core.abspath(path) for path in paths]
     paths_text = core.list2cmdline(abspaths)
 
+    # The text/x-moz-list format is always included by Qt, and doing
+    # mimedata.removeFormat('text/x-moz-url') has no effect.
+    # http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
+    #
+    # Older versions of gnome-terminal expect utf-16 encoded text, but other terminals,
+    # e.g. terminator, expect utf-8, so use cola.dragencoding to override the default.
+    # NOTE: text/x-moz-url does not seem to be used/needed by modern versions of
+    # gnome-terminal, kitty, and terminator.
     mimedata = QtCore.QMimeData()
     mimedata.setText(paths_text)
     if include_urls:
         urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
+        encoding = context.cfg.get('cola.dragencoding', 'utf-16')
+        encoded_text = core.encode(paths_text, encoding=encoding)
         mimedata.setUrls(urls)
+        mimedata.setData('text/x-moz-url', encoded_text)
 
     return mimedata
 
@@ -940,9 +951,11 @@ def path_mimetypes(include_urls=True):
     """Return a list of mimetypes that we generate"""
     mime_types = [
         'text/plain',
+        'text/plain;charset=utf-8',
     ]
     if include_urls:
         mime_types.append('text/uri-list')
+        mime_types.append('text/x-moz-url')
     return mime_types
 
 
