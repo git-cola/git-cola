@@ -1597,7 +1597,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         self.label.setText(title)
 
         layout = qtutils.hbox(
-            defs.no_margin,
+            defs.small_margin,
             defs.titlebar_spacing,
             self.icon,
             self.label,
