@@ -50,7 +50,7 @@ Usability, bells and whistles
   Some terminals (such as `kitty`) consume multiple file URLs by separating paths with
   newlines. This is useful when you'd like to capture raw filenames but is less
   convenient when dropping  filenames onto a command-line. We can now drag with the
-  `Alt` button held down to drag-and-drop filenames for command line use.
+  `Alt` button held down to drag-and-drop filenames for command-line use.
   Using the `Alt` modifier omits URLs so that the drag-and-drop payload includes only
   space-delimited, shell-quoted paths.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
