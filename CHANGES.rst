@@ -45,12 +45,14 @@ Usability, bells and whistles
   opening the link using your default browser.
   (`#1139 <https://github.com/git-cola/git-cola/issues/1139>`_)
 
-* The drag and drop behavior for the status widget has been improved.
-  Dragging multiple files into terminals will do the right thing by default
-  for most terminals. Some terminals (such as `kitty`) will mash multiple
-  files together without spaces when the payload contains URLs.
-  Dragging with the `shift` buttton held down avoids this issue by only
-  including plain shell-friendly paths in the drag-and-drop data.
+* Drag-and-drop has been improved when dragging filenames from the Status tool.
+  Dragging multiple files requires special handling to improve usability.
+  Some terminals (such as `kitty`) consume multiple file URLs by separating paths with
+  newlines. This is useful when you'd like to capture raw filenames but is less
+  convenient when dropping  filenames onto a command-line. We can now drag with the
+  `Alt` button held down to drag-and-drop filenames for command line use.
+  Using the `Alt` modifier omits URLs so that the drag-and-drop payload includes only
+  space-delimited, shell-quoted paths.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
 
 Development
