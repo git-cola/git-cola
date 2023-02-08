@@ -53,6 +53,13 @@ Usability, bells and whistles
   including plain shell-friendly paths in the drag-and-drop data.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
 
+Development
+-----------
+* The vendored `qtpy` module was modified to sever its dependency on
+  `packaging.version`. This mostly affects users that want to run Git Cola from the
+  source tree against their distro-provided Python packages without using a virtualenv.
+  (`#1286 <https://github.com/git-cola/git-cola/issues/1286>`_)
+
 
 .. _v4.1.0:
 

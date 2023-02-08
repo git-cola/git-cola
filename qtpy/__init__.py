@@ -54,7 +54,6 @@ PySide6
 
 """
 
-from packaging.version import parse
 import os
 import platform
 import sys
@@ -189,23 +188,6 @@ if API in PYQT5_API:
         from PyQt5.QtCore import QT_VERSION_STR as QT_VERSION  # analysis:ignore
 
         QT5 = PYQT5 = True
-
-        if sys.platform == 'darwin':
-            macos_version = parse(platform.mac_ver()[0])
-            if macos_version < parse('10.10'):
-                if parse(QT_VERSION) >= parse('5.9'):
-                    raise PythonQtError("Qt 5.9 or higher only works in "
-                                        "macOS 10.10 or higher. Your "
-                                        "program will fail in this "
-                                        "system.")
-            elif macos_version < parse('10.11'):
-                if parse(QT_VERSION) >= parse('5.11'):
-                    raise PythonQtError("Qt 5.11 or higher only works in "
-                                        "macOS 10.11 or higher. Your "
-                                        "program will fail in this "
-                                        "system.")
-
-            del macos_version
     except ImportError:
         API = 'pyside2'
     else:
@@ -218,17 +200,6 @@ if API in PYSIDE2_API:
 
         PYQT5 = False
         QT5 = PYSIDE2 = True
-
-        if sys.platform == 'darwin':
-            macos_version = parse(platform.mac_ver()[0])
-            if macos_version < parse('10.11'):
-                if parse(QT_VERSION) >= parse('5.11'):
-                    raise PythonQtError("Qt 5.11 or higher only works in "
-                                        "macOS 10.11 or higher. Your "
-                                        "program will fail in this "
-                                        "system.")
-
-            del macos_version
     except ImportError:
         API = 'pyqt6'
     else:
@@ -277,32 +248,3 @@ try:
     from . import QtDataVisualization as QtDatavisualization  # analysis:ignore
 except (ImportError, PythonQtError):
     pass
-
-
-def _warn_old_minor_version(name, old_version, min_version):
-    """Warn if using a Qt or binding version no longer supported by QtPy."""
-    warning_message = (
-        "{name} version {old_version} is not supported by QtPy. "
-        "To ensure your application works correctly with QtPy, "
-        "please upgrade to {name} {min_version} or later.".format(
-            name=name, old_version=old_version, min_version=min_version))
-    warnings.warn(warning_message, PythonQtWarning)
-
-
-# Warn if using an End of Life or unsupported Qt API/binding minor version
-if QT_VERSION:
-    if QT5 and (parse(QT_VERSION) < parse(QT5_VERSION_MIN)):
-        _warn_old_minor_version('Qt5', QT_VERSION, QT5_VERSION_MIN)
-    elif QT6 and (parse(QT_VERSION) < parse(QT6_VERSION_MIN)):
-        _warn_old_minor_version('Qt6', QT_VERSION, QT6_VERSION_MIN)
-
-if PYQT_VERSION:
-    if PYQT5 and (parse(PYQT_VERSION) < parse(PYQT5_VERSION_MIN)):
-        _warn_old_minor_version('PyQt5', PYQT_VERSION, PYQT5_VERSION_MIN)
-    elif PYQT6 and (parse(PYQT_VERSION) < parse(PYQT6_VERSION_MIN)):
-        _warn_old_minor_version('PyQt6', PYQT_VERSION, PYQT6_VERSION_MIN)
-elif PYSIDE_VERSION:
-    if PYSIDE2 and (parse(PYSIDE_VERSION) < parse(PYSIDE2_VERSION_MIN)):
-        _warn_old_minor_version('PySide2', PYSIDE_VERSION, PYSIDE2_VERSION_MIN)
-    elif PYSIDE6 and (parse(PYSIDE_VERSION) < parse(PYSIDE6_VERSION_MIN)):
-        _warn_old_minor_version('PySide6', PYSIDE_VERSION, PYSIDE6_VERSION_MIN)
