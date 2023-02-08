@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import math
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from itertools import groupby
 
 from . import compat
@@ -253,6 +253,11 @@ class _DiffHunk:
         ]
         self.content_lines = content_lines
 
+        self.changes = type_counts[DIFF_DELETION] + type_counts[DIFF_ADDITION]
+
+    def has_changes(self):
+        return bool(self.changes)
+
     def line_delta(self):
         return self.new_count - self.old_count
 
@@ -286,8 +291,9 @@ class Patch:
                     heading=match.group(3),
                     content_lines=[line + '\n' for line in hunk_lines if line],
                 )
-                hunks.append(hunk)
-                start_offset += hunk.line_delta()
+                if hunk.has_changes():
+                    hunks.append(hunk)
+                    start_offset += hunk.line_delta()
             else:
                 header_line_count = len(list(hunk_lines))
         return cls(filename, hunks, header_line_count)
@@ -312,96 +318,120 @@ class Patch:
             hunk_last_line_idx += len(hunk.lines)
             yield hunk_first_line_idx, hunk_last_line_idx, hunk
 
-    def generate_patch(self, first_line_idx, last_line_idx, reverse=False):
-        """Return a patch containing a subset of the diff"""
+    @staticmethod
+    def _reverse_content_lines(content_lines):
+        # Normally in a diff, deletions come before additions.  In order to preserve
+        # this property in reverse patches, when this function encounters a deletion
+        # line and switches it to addition, it appends the line to the pending_additions
+        # list, while additions that get switched to deletions are appended directly to
+        # the content_lines list.  Each time a context line is encountered, any pending
+        # additions are then appended to the content_lines list immmediately before the
+        # context line and the pending_additions list is cleared.
+        new_content_lines = []
+        pending_additions = []
+        line_type = None
+        for line in content_lines:
+            prev_line_type = line_type
+            line_type = line[:1]
+            if line_type == DIFF_ADDITION:
+                new_content_lines.append(DIFF_DELETION + line[1:])
+            elif line_type == DIFF_DELETION:
+                pending_additions.append(DIFF_ADDITION + line[1:])
+            elif line_type == DIFF_NO_NEWLINE:
+                if prev_line_type == DIFF_DELETION:
+                    # Previous line was a deletion that was switched to an
+                    # addition, so the "No newline" line goes with it.
+                    pending_additions.append(line)
+                else:
+                    new_content_lines.append(line)
+            else:
+                new_content_lines.extend(pending_additions)
+                new_content_lines.append(line)
+                pending_additions = []
+        new_content_lines.extend(pending_additions)
+        return new_content_lines
 
-        lines = ['--- a/%s\n' % self.filename, '+++ b/%s\n' % self.filename]
-
+    def extract_subset(self, first_line_idx, last_line_idx, *, reverse=False):
+        new_hunks = []
         start_offset = 0
-
         for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
-            # skip hunks until we get to the one that contains the first
-            # selected line
+            # Skip hunks until reaching the one that contains the first selected line.
             if hunk_last_line_idx < first_line_idx:
                 continue
-            # once we have processed the hunk that contains the last selected
-            # line, we can stop
+
+            # Stop once the hunk that contains the last selected line has been
+            # processed.
             if hunk_first_line_idx > last_line_idx:
                 break
 
+            content_lines = []
+
             prev_skipped = False
-            counts = defaultdict(int)
-            filtered_lines = []
-
-            for line_idx, line in enumerate(
-                hunk.lines[1:], start=hunk_first_line_idx + 1
+            for hunk_line_idx, line in enumerate(
+                hunk.content_lines, start=hunk_first_line_idx + 1
             ):
-                line_type, line_content = line[:1], line[1:]
-
-                if reverse:
+                line_type = line[:1]
+                if not first_line_idx <= hunk_line_idx <= last_line_idx:
                     if line_type == DIFF_ADDITION:
-                        line_type = DIFF_DELETION
+                        if reverse:
+                            # Change unselected additions to context for reverse diffs.
+                            line = DIFF_CONTEXT + line[1:]
+                        else:
+                            # Skip unselected additions for normal diffs.
+                            prev_skipped = True
+                            continue
                     elif line_type == DIFF_DELETION:
-                        line_type = DIFF_ADDITION
+                        if not reverse:
+                            # Change unselected deletions to context for normal diffs.
+                            line = DIFF_CONTEXT + line[1:]
+                        else:
+                            # Skip unselected deletions for reverse diffs.
+                            prev_skipped = True
+                            continue
 
-                if not first_line_idx <= line_idx <= last_line_idx:
-                    if line_type == DIFF_ADDITION:
-                        # Skip additions that are not selected.
-                        prev_skipped = True
-                        continue
-                    if line_type == DIFF_DELETION:
-                        # Change deletions that are not selected to context.
-                        line_type = DIFF_CONTEXT
                 if line_type == DIFF_NO_NEWLINE and prev_skipped:
-                    # If the line immediately before a "No newline" line was
-                    # skipped (because it was an unselected addition) skip
-                    # the "No newline" line as well.
+                    # If the line immediately before a "No newline" line was skipped
+                    # (e.g.  because it was an unselected addition) skip the "No
+                    # newline" line as well
                     continue
-                filtered_lines.append(line_type + line_content)
-                counts[line_type] += 1
-                prev_skipped = False
 
-            # Do not include hunks that, after filtering, have only context
-            # lines (no additions or deletions).
-            if not counts[DIFF_ADDITION] and not counts[DIFF_DELETION]:
-                continue
-
-            old_count = counts[DIFF_CONTEXT] + counts[DIFF_DELETION]
-            new_count = counts[DIFF_CONTEXT] + counts[DIFF_ADDITION]
+                content_lines.append(line)
 
             if reverse:
                 old_start = hunk.new_start
+                content_lines = self._reverse_content_lines(content_lines)
             else:
                 old_start = hunk.old_start
-            new_start = old_start + start_offset
-            if old_count == 0:
-                new_start += 1
-            if new_count == 0:
-                new_start -= 1
-
-            start_offset += counts[DIFF_ADDITION] - counts[DIFF_DELETION]
-
-            lines.append(
-                _format_hunk_header(
-                    old_start, old_count, new_start, new_count, hunk.heading
-                )
+            new_hunk = _DiffHunk(
+                old_start=old_start,
+                start_offset=start_offset,
+                heading=hunk.heading,
+                content_lines=content_lines,
             )
-            lines.extend(filtered_lines)
+            if new_hunk.has_changes():
+                new_hunks.append(new_hunk)
+                start_offset += new_hunk.line_delta()
 
-        # If there are only two lines, that means we did not include any hunks,
-        # so return None.
-        if len(lines) == 2:
-            return None
-        return ''.join(lines)
+        return Patch(self.filename, new_hunks)
 
-    def generate_hunk_patch(self, line_idx, reverse=False):
-        """Return a patch containing the hunk for the specified line only"""
-        hunk = None
-        for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
+    def extract_hunk(self, line_idx, *, reverse=False):
+        """Return a new patch containing only the hunk containing the specified line"""
+        new_hunks = []
+        for _, hunk_last_line_idx, hunk in self._hunk_iter():
             if line_idx <= hunk_last_line_idx:
+                if reverse:
+                    old_start = hunk.new_start
+                    content_lines = self._reverse_content_lines(hunk.content_lines)
+                else:
+                    old_start = hunk.old_start
+                    content_lines = hunk.content_lines
+                new_hunks = [
+                    _DiffHunk(
+                        old_start=old_start,
+                        start_offset=0,
+                        heading=hunk.heading,
+                        content_lines=content_lines,
+                    )
+                ]
                 break
-        if hunk is None:
-            return None
-        return self.generate_patch(
-            hunk_first_line_idx, hunk_last_line_idx, reverse=reverse
-        )
+        return Patch(self.filename, new_hunks)

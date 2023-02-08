@@ -1031,9 +1031,9 @@ class DiffEditor(DiffTextEdit):
         first_line_idx, last_line_idx = self.selected_lines()
         patch = diffparse.Patch.parse(self.model.filename, self.model.diff_text)
         if self.has_selection():
-            return patch.generate_patch(first_line_idx, last_line_idx, reverse)
+            return patch.extract_subset(first_line_idx, last_line_idx, reverse)
         else:
-            return patch.generate_hunk_patch(first_line_idx, reverse)
+            return patch.extract_hunk(first_line_idx, reverse)
 
     def patch_encoding(self):
         if isinstance(self.model.diff_text, core.UStr):
@@ -1046,13 +1046,13 @@ class DiffEditor(DiffTextEdit):
         """Implement un/staging of the selected line(s) or hunk."""
         if self.selection_model.is_empty():
             return
-        patch_text = self.extract_patch(reverse)
-        if patch_text is None:
+        patch = self.extract_patch(reverse)
+        if not patch.has_changes():
             return
         cmds.do(
             cmds.ApplyPatch,
             self.context,
-            patch_text,
+            patch,
             self.patch_encoding(),
             apply_to_worktree,
         )

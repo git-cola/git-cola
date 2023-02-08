@@ -330,12 +330,12 @@ class ApplyPatch(ContextCommand):
     def __init__(
         self,
         context,
-        patch_text,
+        patch,
         encoding,
         apply_to_worktree,
     ):
         super(ApplyPatch, self).__init__(context)
-        self.patch_text = patch_text
+        self.patch = patch
         self.encoding = encoding
         self.apply_to_worktree = apply_to_worktree
 
@@ -344,7 +344,7 @@ class ApplyPatch(ContextCommand):
 
         tmp_file = utils.tmp_filename('patch')
         try:
-            core.write(tmp_file, self.patch_text, encoding=self.encoding)
+            core.write(tmp_file, self.patch.as_text(), encoding=self.encoding)
             if self.apply_to_worktree:
                 status, out, err = gitcmds.apply_diff_to_worktree(context, tmp_file)
             else:
