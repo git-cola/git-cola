@@ -292,6 +292,19 @@ class Patch:
                 header_line_count = len(list(hunk_lines))
         return cls(filename, hunks, header_line_count)
 
+    def has_changes(self):
+        return bool(self.hunks)
+
+    def as_text(self, *, file_headers=True):
+        lines = []
+        if self.hunks:
+            if file_headers:
+                lines.append('--- a/%s\n' % self.filename)
+                lines.append('+++ b/%s\n' % self.filename)
+            for hunk in self.hunks:
+                lines.extend(hunk.lines)
+        return ''.join(lines)
+
     def _hunk_iter(self):
         hunk_last_line_idx = self.header_line_count - 1
         for hunk in self.hunks:
