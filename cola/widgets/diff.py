@@ -780,8 +780,10 @@ class DiffEditor(DiffTextEdit):
         if model.stageable() or model.unstageable():
             if model.stageable():
                 self.stage_or_unstage.setText(N_('Stage'))
+                self.stage_or_unstage.setIcon(icons.add())
             else:
                 self.stage_or_unstage.setText(N_('Unstage'))
+                self.stage_or_unstage.setIcon(icons.remove())
             menu.addAction(self.stage_or_unstage)
 
         if model.partially_stageable():
