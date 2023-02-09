@@ -55,6 +55,9 @@ Usability, bells and whistles
   space-delimited, shell-quoted paths.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
 
+* The "Unstage" menu item in the Status tool now uses a "Remove" icon.
+  (`#1289 <https://github.com/git-cola/git-cola/pull/1289>`_)
+
 Development
 -----------
 * The vendored `qtpy` module was modified to sever its dependency on
