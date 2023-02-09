@@ -775,12 +775,14 @@ class DiffEditor(DiffTextEdit):
             self,
             'Edit and Apply',
             partial(self.apply_selection, edit=True),
+            hotkeys.EDIT_AND_STAGE_DIFF,
         )
 
         self.action_edit_and_revert_selection = qtutils.add_action(
             self,
             'Edit and Revert',
             partial(self.revert_selection, edit=True),
+            hotkeys.EDIT_AND_REVERT,
         )
         self.action_edit_and_revert_selection.setIcon(icons.undo())
         self.launch_editor = actions.launch_editor_at_line(
