@@ -864,6 +864,8 @@ class DiffEditor(DiffTextEdit):
 
         action = menu.addAction(icons.select_all(), N_('Select All'), self.selectAll)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
+
+        self.add_links_to_menu(menu)
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def mousePressEvent(self, event):

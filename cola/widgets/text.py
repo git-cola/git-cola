@@ -243,10 +243,6 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.ext = PlainTextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
         self.mouse_zoom = True
-        self.customContextMenuRequested.connect(
-            self._custom_context_menu_requested, type=Qt.QueuedConnection
-        )
-        self.setContextMenuPolicy(Qt.CustomContextMenu)
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -297,10 +293,15 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             return
         super(PlainTextEdit, self).wheelEvent(event)
 
-    def _custom_context_menu_requested(self, point):
+    def contextMenuEvent(self, event):
         """Generate a custom context menu"""
-        links = self._get_links()
         menu = self.createStandardContextMenu()
+        self.add_links_to_menu(menu)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+    def add_links_to_menu(self, menu):
+        """Add actions for opening URLs to a custom menu"""
+        links = self._get_links()
         for url in links:
             action = menu.addAction(N_('Open "%s"') % url)
             action.setIcon(icons.external())
@@ -308,7 +309,6 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
                 action,
                 partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
             )
-        menu.exec_(self.mapToGlobal(point))
 
     def _get_links(self):
         """Return http links on the current line"""
