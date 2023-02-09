@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+from functools import partial
 import os
 import re
 
@@ -9,6 +10,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from ..i18n import N_
+from ..editpatch import edit_patch
 from ..interaction import Interaction
 from ..models import main
 from ..models import prefs
@@ -769,6 +771,18 @@ class DiffEditor(DiffTextEdit):
         )
         self.action_revert_selection.setIcon(icons.undo())
 
+        self.action_edit_and_apply_selection = qtutils.add_action(
+            self,
+            'Edit and Apply',
+            partial(self.apply_selection, edit=True),
+        )
+
+        self.action_edit_and_revert_selection = qtutils.add_action(
+            self,
+            'Edit and Revert',
+            partial(self.revert_selection, edit=True),
+        )
+        self.action_edit_and_revert_selection.setIcon(icons.undo())
         self.launch_editor = actions.launch_editor_at_line(
             context, self, hotkeys.EDIT_SHORT, *hotkeys.ACCEPT
         )
@@ -853,18 +867,28 @@ class DiffEditor(DiffTextEdit):
             elif item not in model.unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
+                    edit_and_apply_text = N_('Edit Selected Lines to Stage...')
                     revert_text = N_('Revert Selected Lines...')
+                    edit_and_revert_text = N_('Edit Selected Lines to Revert...')
                 else:
                     apply_text = N_('Stage Diff Hunk')
+                    edit_and_apply_text = N_('Edit Diff Hunk to Stage...')
                     revert_text = N_('Revert Diff Hunk...')
+                    edit_and_revert_text = N_('Edit Diff Hunk to Revert...')
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.add())
+                menu.addAction(self.action_apply_selection)
+
+                self.action_edit_and_apply_selection.setText(edit_and_apply_text)
+                self.action_edit_and_apply_selection.setIcon(icons.add())
+                menu.addAction(self.action_edit_and_apply_selection)
 
                 self.action_revert_selection.setText(revert_text)
-
-                menu.addAction(self.action_apply_selection)
                 menu.addAction(self.action_revert_selection)
+
+                self.action_edit_and_revert_selection.setText(edit_and_revert_text)
+                menu.addAction(self.action_edit_and_revert_selection)
 
         if s.staged and model.unstageable():
             item = s.staged[0]
@@ -884,12 +908,18 @@ class DiffEditor(DiffTextEdit):
             elif item not in model.staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
+                    edit_and_apply_text = N_('Edit Selected Lines to Unstage...')
                 else:
                     apply_text = N_('Unstage Diff Hunk')
+                    edit_and_apply_text = N_('Edit Diff Hunk to Unstage...')
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.remove())
                 menu.addAction(self.action_apply_selection)
+
+                self.action_edit_and_apply_selection.setText(edit_and_apply_text)
+                self.action_edit_and_apply_selection.setIcon(icons.remove())
+                menu.addAction(self.action_edit_and_apply_selection)
 
         if model.stageable() or model.unstageable():
             # Do not show the "edit" action when the file does not exist.
@@ -995,45 +1025,46 @@ class DiffEditor(DiffTextEdit):
                 lines.append(line)
         return sep, lines
 
-    def apply_selection(self):
+    def apply_selection(self, *, edit=False):
         model = self.model
         s = self.selection_model.single_selection()
         if model.partially_stageable() and (s.modified or s.untracked):
-            self.process_diff_selection()
+            self.process_diff_selection(edit=edit)
         elif model.unstageable():
-            self.process_diff_selection(reverse=True)
+            self.process_diff_selection(reverse=True, edit=edit)
 
-    def revert_selection(self):
+    def revert_selection(self, *, edit=False):
         """Destructively revert selected lines or hunk from a worktree file."""
 
-        if self.has_selection():
-            title = N_('Revert Selected Lines?')
-            ok_text = N_('Revert Selected Lines')
-        else:
-            title = N_('Revert Diff Hunk?')
-            ok_text = N_('Revert Diff Hunk')
+        if not edit:
+            if self.has_selection():
+                title = N_('Revert Selected Lines?')
+                ok_text = N_('Revert Selected Lines')
+            else:
+                title = N_('Revert Diff Hunk?')
+                ok_text = N_('Revert Diff Hunk')
 
-        if not Interaction.confirm(
-            title,
-            N_(
-                'This operation drops uncommitted changes.\n'
-                'These changes cannot be recovered.'
-            ),
-            N_('Revert the uncommitted changes?'),
-            ok_text,
-            default=True,
-            icon=icons.undo(),
-        ):
-            return
-        self.process_diff_selection(reverse=True, apply_to_worktree=True)
+            if not Interaction.confirm(
+                title,
+                N_(
+                    'This operation drops uncommitted changes.\n'
+                    'These changes cannot be recovered.'
+                ),
+                N_('Revert the uncommitted changes?'),
+                ok_text,
+                default=True,
+                icon=icons.undo(),
+            ):
+                return
+        self.process_diff_selection(reverse=True, apply_to_worktree=True, edit=edit)
 
     def extract_patch(self, reverse=False):
         first_line_idx, last_line_idx = self.selected_lines()
         patch = diffparse.Patch.parse(self.model.filename, self.model.diff_text)
         if self.has_selection():
-            return patch.extract_subset(first_line_idx, last_line_idx, reverse)
+            return patch.extract_subset(first_line_idx, last_line_idx, reverse=reverse)
         else:
-            return patch.extract_hunk(first_line_idx, reverse)
+            return patch.extract_hunk(first_line_idx, reverse=reverse)
 
     def patch_encoding(self):
         if isinstance(self.model.diff_text, core.UStr):
@@ -1042,18 +1073,33 @@ class DiffEditor(DiffTextEdit):
         else:
             return self.context.cfg.file_encoding(self.model.filename)
 
-    def process_diff_selection(self, reverse=False, apply_to_worktree=False):
+    def process_diff_selection(
+        self, reverse=False, apply_to_worktree=False, edit=False
+    ):
         """Implement un/staging of the selected line(s) or hunk."""
         if self.selection_model.is_empty():
             return
         patch = self.extract_patch(reverse)
         if not patch.has_changes():
             return
+        patch_encoding = self.patch_encoding()
+
+        if edit:
+            patch = edit_patch(
+                patch,
+                patch_encoding,
+                self.context,
+                reverse=reverse,
+                apply_to_worktree=apply_to_worktree,
+            )
+            if not patch.has_changes():
+                return
+
         cmds.do(
             cmds.ApplyPatch,
             self.context,
             patch,
-            self.patch_encoding(),
+            patch_encoding,
             apply_to_worktree,
         )
 
