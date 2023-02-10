@@ -236,7 +236,8 @@ class MainModel(QtCore.QObject):
         if self.amending():
             if mode != self.mode_none:
                 return
-        if (self.is_cherry_picking or self.is_merging) and mode == self.mode_amend:
+        if ((self.is_cherry_picking or self.is_merging or self.is_applying_patch)
+                and mode == self.mode_amend):
             mode = self.mode
         if mode == self.mode_amend:
             head = 'HEAD^'
@@ -361,7 +362,10 @@ class MainModel(QtCore.QObject):
         self.is_merging = merge_head and core.exists(merge_head)
         self.is_rebasing = rebase_merge and core.exists(rebase_merge)
         self.is_applying_patch = rebase_apply and core.exists(rebase_apply)
-        if (self.is_merging or self.is_cherry_picking) and self.mode == self.mode_amend:
+        if (
+            self.mode == self.mode_amend and
+            (self.is_merging or self.is_cherry_picking or self.is_applying_patch)
+        ):
             self.set_mode(self.mode_none)
 
     def _update_commitmsg(self):

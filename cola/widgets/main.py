@@ -232,6 +232,12 @@ class MainView(standard.MainWindow):
         )
         self.apply_patches_action.setIcon(icons.diff())
 
+        self.apply_patches_abort_action = add_action(
+            self, N_('Abort Applying Patches...'),
+            cmds.run(cmds.AbortApplyPatch, context)
+        )
+        self.apply_patches_abort_action.setIcon(icons.style_dialog_reset())
+
         self.export_patches_action = add_action(
             self,
             N_('Export Patches...'),
@@ -634,6 +640,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.apply_patches_action)
+        self.file_menu.addAction(self.apply_patches_abort_action)
         self.file_menu.addAction(self.export_patches_action)
         self.file_menu.addAction(self.save_tarball_action)
 
@@ -1037,6 +1044,12 @@ class MainView(standard.MainWindow):
                 'Resolve conflicts, commit changes, and run:\n'
                 '    Rebase > Continue'
             )
+        elif is_applying_patch:
+            msg += '\n\n'
+            msg += N_(
+                'This repository has unresolved conflicts after applying a patch.\n'
+                'Resolve conflicts and commit changes.'
+            )
         elif is_cherry_picking:
             msg += '\n\n'
             msg += N_(
@@ -1070,6 +1083,7 @@ class MainView(standard.MainWindow):
         is_cherry_picking = self.model.is_cherry_picking
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
+        is_applying_patch = self.model.is_applying_patch
         prefix = uchr(0xAB)
         suffix = uchr(0xBB)
 
@@ -1079,6 +1093,8 @@ class MainView(standard.MainWindow):
             alerts.append(N_('Merging'))
         elif is_rebasing:
             alerts.append(N_('Rebasing'))
+        elif is_applying_patch:
+            alerts.append(N_('Applying Patch'))
 
         if self.mode == self.model.mode_amend:
             alerts.append(N_('Amending'))
@@ -1108,6 +1124,7 @@ class MainView(standard.MainWindow):
         self.lfs_init_action.setEnabled(not self.model.lfs)
         self.merge_abort_action.setEnabled(self.model.is_merging)
         self.cherry_pick_abort_action.setEnabled(self.model.is_cherry_picking)
+        self.apply_patches_abort_action.setEnabled(self.model.is_applying_patch)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists

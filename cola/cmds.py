@@ -126,8 +126,39 @@ class ConfirmAction(ContextCommand):
         return ok, status, out, err
 
 
+class AbortApplyPatch(ConfirmAction):
+    """Reset an in-progress "git am" patch application"""
+
+    def confirm(self):
+        title = N_('Abort Applying Patch...')
+        question = N_('Aborting applying the current patch?')
+        info = N_(
+            'Aborting a patch can cause uncommitted changes to be lost.\n'
+            'Recovering uncommitted changes is not possible.'
+        )
+        ok_txt = N_('Abort Applying Patch')
+        return Interaction.confirm(
+            title, question, info, ok_txt, default=False, icon=icons.undo()
+        )
+
+    def action(self):
+        status, out, err = gitcmds.abort_apply_patch(self.context)
+        self.model.update_file_merge_status()
+        return status, out, err
+
+    def success(self):
+        self.model.set_commitmsg('')
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git am --abort'
+
+
+
 class AbortCherryPick(ConfirmAction):
-    """Reset an in-progress merge back to HEAD"""
+    """Reset an in-progress cherry-pick"""
 
     def confirm(self):
         title = N_('Abort Cherry-Pick...')

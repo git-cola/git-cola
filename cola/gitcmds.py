@@ -900,6 +900,14 @@ def cherry_pick(context, revs):
     return (0, '\n'.join(outs), '\n'.join(errs))
 
 
+def abort_apply_patch(context):
+    """Abort a "git am" session."""
+    # Reset the worktree
+    git = context.git
+    status, out, err = git.am(abort=True)
+    return status, out, err
+
+
 def abort_cherry_pick(context):
     """Abort a cherry-pick."""
     # Reset the worktree

@@ -14,7 +14,7 @@ Copyright (C) 2007-2022 David Aguilar and contributors
 
 try:
     from qtpy import QtCore
-except ImportError as err:
+except ImportError as error:
     sys.stderr.write(
         """
 Your Python environment does not have qtpy and PyQt (or PySide).
@@ -27,7 +27,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
 
     sudo apt install python3-pyqt5 python3-pyqt5.qtwebengine python3-qtpy
 
-""".format(err=err)
+""".format(err=error)
     )
     sys.exit(1)
 
@@ -37,7 +37,7 @@ from qtpy.QtCore import Qt
 try:
     # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
     # imported before QApplication is constructed.
-    from qtpy import QtWebEngineWidgets
+    from qtpy import QtWebEngineWidgets # noqa
 except ImportError:
     # QtWebEngineWidgets / QtWebKit is not available -- no big deal.
     pass
