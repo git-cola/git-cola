@@ -64,6 +64,11 @@ Usability, bells and whistles
 * The Apply Patches dialog now reports errors when patches fail to apply.
   (`#673 <https://github.com/git-cola/git-cola/issues/673>`_)
 
+* The spelling dictionaries are now discovered dynamically at runtime.
+  `dict/words` and `dict/propernames` are now discovered via `$XDG_DATA_DIRS`
+  by the spell checker.
+  (`#873 <https://github.com/git-cola/git-cola/issues/873>`_)
+
 * The File menu has a new "Patches" sub-menu with a full set of "git am" Patch actions.
 
 

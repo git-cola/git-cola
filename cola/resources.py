@@ -136,6 +136,47 @@ def xdg_config_home(*args):
     return os.path.join(config, *args)
 
 
+def xdg_data_home(*args):
+    """Return the XDG_DATA_HOME configuration directory, eg. ~/.local/share"""
+    config = core.getenv(
+        'XDG_DATA_HOME', os.path.join(core.expanduser('~'), '.local', 'share')
+    )
+    return os.path.join(config, *args)
+
+
+def xdg_data_dirs():
+    """Return the current set of XDG data directories
+
+    Returns the values from $XDG_DATA_DIRS when defined in the environment.
+    If $XDG_DATA_DIRS is either not set or empty, a value equal to
+    /usr/local/share:/usr/share is used.
+    """
+    paths = []
+    xdg_data_home_dir = xdg_data_home()
+    if os.path.isdir(xdg_data_home_dir):
+        paths.append(xdg_data_home_dir)
+
+    xdg_data_dirs_env = core.getenv('XDG_DATA_DIRS', '')
+    if not xdg_data_dirs_env:
+        xdg_data_dirs_env = '/usr/local/share:/usr/share'
+    paths.extend(
+        path for path in xdg_data_dirs_env.split(':') if os.path.isdir(path)
+    )
+    return paths
+
+
+def find_first(subpath, paths, validate=os.path.isfile):
+    """Return the first `subpath` found in the specified directory paths"""
+    if os.path.isabs(subpath):
+        return subpath
+    for path in paths:
+        candidate = os.path.join(path, subpath)
+        if validate(candidate):
+            return candidate
+    # Nothing was found so return None.
+    return None
+
+
 def config_home(*args):
     """Return git-cola's configuration directory, eg. ~/.config/git-cola"""
     return xdg_config_home('git-cola', *args)

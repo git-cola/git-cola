@@ -616,6 +616,14 @@ cola.dictionary
 Specifies an additional dictionary for `git cola` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
 
+By default, `git cola` searches for `dict/words` and `dict/propernames` dictionary
+files in `~/.local/share` and `$XDG_DATA_DIRS`.
+
+If `$XDG_DATA_DIRS` is undefined or set to an empty value then `/usr/local/share` and
+`/usr/share` are searched for dictionary files.
+
+Dictionary files are newline-separated and contain one word per line.
+
 cola.expandtab
 --------------
 Expand tabs into spaces in the commit message editor.  When set to `true`,

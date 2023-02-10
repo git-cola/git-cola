@@ -1,8 +1,9 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import codecs
 import collections
 import os
 
-from cola import core
+from . import resources
 
 __copyright__ = """
 2012 Peter Norvig (http://norvig.com/spell-correct.html)
@@ -53,13 +54,12 @@ def correct(word, words):
 class NorvigSpellCheck(object):
     def __init__(
         self,
-        words='/usr/share/dict/words',
-        cracklib='/usr/share/dict/cracklib-small',
-        propernames='/usr/share/dict/propernames',
+        words='dict/words',
+        propernames='dict/propernames',
     ):
-        self.dictwords = words
-        self.cracklib = cracklib
-        self.propernames = propernames
+        data_dirs = resources.xdg_data_dirs()
+        self.dictwords = resources.find_first(words, data_dirs)
+        self.propernames = resources.find_first(propernames, data_dirs)
         self.words = collections.defaultdict(lambda: 1)
         self.extra_words = set()
         self.dictionary = None
@@ -91,13 +91,10 @@ class NorvigSpellCheck(object):
         paths = []
 
         words = self.dictwords
-        cracklib = self.cracklib
         propernames = self.propernames
         cfg_dictionary = self.dictionary
 
-        if cracklib and os.path.exists(cracklib):
-            paths.append((cracklib, True))
-        elif words and os.path.exists(words):
+        if words and os.path.exists(words):
             paths.append((words, True))
 
         if propernames and os.path.exists(propernames):
@@ -108,11 +105,13 @@ class NorvigSpellCheck(object):
 
         for (path, title) in paths:
             try:
-                with open(path, 'r') as f:
-                    for word in f:
-                        word = core.decode(word.rstrip())
+                with codecs.open(
+                    path, 'r', encoding='utf-8', errors='ignore'
+                ) as words_file:
+                    for line in words_file:
+                        word = line.rstrip()
                         yield word
                         if title:
                             yield word.title()
-            except IOError:
+            except (IOError, OSError):
                 pass
