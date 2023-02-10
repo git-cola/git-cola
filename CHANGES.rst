@@ -71,6 +71,11 @@ Usability, bells and whistles
 
 * The File menu has a new "Patches" sub-menu with a full set of "git am" Patch actions.
 
+* The Diff Editor and various diff widgets now have a "Copy Diff" action
+  with an `Alt+Shift+C` hotkey that copies the selected diff text to the clipboard
+  with the `+/-/<space>` diff prefix characters removed.
+  (`#1288 <https://github.com/git-cola/git-cola/issues/1288>`_)
+
 
 Development
 -----------

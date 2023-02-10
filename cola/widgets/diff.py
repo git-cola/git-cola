@@ -172,14 +172,30 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         else:
             self.numbers = None
         self.scrollvalue = None
+
+        self.copy_diff_action = qtutils.add_action(
+            self,
+            N_('Copy Diff'),
+            self.copy_diff,
+            hotkeys.COPY_DIFF,
+        )
+        self.copy_diff_action.setIcon(icons.copy())
+        self.copy_diff_action.setEnabled(False)
+
         # pylint: disable=no-member
-        self.cursorPositionChanged.connect(self._cursor_changed)
+        self.cursorPositionChanged.connect(self._cursor_changed, Qt.QueuedConnection)
+        self.selectionChanged.connect(self._selection_changed, Qt.QueuedConnection)
 
     def _cursor_changed(self):
         """Update the line number display when the cursor changes"""
         line_number = max(0, self.textCursor().blockNumber())
         if self.numbers:
             self.numbers.set_highlighted(line_number)
+
+    def _selection_changed(self):
+        """Respond to selection changes"""
+        selected = bool(self.selected_text())
+        self.copy_diff_action.setEnabled(selected)
 
     def resizeEvent(self, event):
         super(DiffTextEdit, self).resizeEvent(event)
@@ -220,6 +236,38 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.set_value(diff)
 
         self.restore_scrollbar()
+
+    def selected_diff_stripped(self):
+        """Return the selected diff stripped of any diff characters"""
+        sep, selection = self.selected_text_lines()
+        return sep.join(_strip_diff(line) for line in selection)
+
+    def contextMenuEvent(self, event):
+        """Create the context menu for the diff display."""
+        menu = self.createStandardContextMenu()
+        menu.addAction(self.copy_diff_action)
+        menu.exec_(self.mapToGlobal(event.pos()))
+
+    def copy_diff(self):
+        """Copy the selected diff text stripped of any diff prefix characters"""
+        text = self.selected_diff_stripped()
+        qtutils.set_clipboard(text)
+
+
+def _get_sep(text):
+    """Return either CRLF or LF based on the content"""
+    if '\r\n' in text:
+        sep = '\r\n'
+    else:
+        sep = '\n'
+    return sep
+
+
+def _strip_diff(value):
+    """Remove +/-/<space> from a selection"""
+    if value.startswith(('+', '-', ' ')):
+        return value[1:]
+    return value
 
 
 class DiffLineNumbers(TextDecorator):
@@ -859,8 +907,13 @@ class DiffEditor(DiffTextEdit):
         menu.addAction(self.move_up)
         menu.addAction(self.move_down)
         menu.addSeparator()
+
+        selected = bool(self.selected_text())
         action = menu.addAction(icons.copy(), N_('Copy'), self.copy)
         action.setShortcut(QtGui.QKeySequence.Copy)
+        action.setEnabled(selected)
+
+        menu.addAction(self.copy_diff_action)
 
         action = menu.addAction(icons.select_all(), N_('Select All'), self.selectAll)
         action.setShortcut(QtGui.QKeySequence.SelectAll)
@@ -930,6 +983,17 @@ class DiffEditor(DiffTextEdit):
             last_line_idx = line_idx
 
         return first_line_idx, last_line_idx
+
+    def selected_text_lines(self):
+        """Return selected lines and the CRLF / LF separator"""
+        first_line_idx, last_line_idx = self.selected_lines()
+        text = get(self)
+        sep = _get_sep(text)
+        lines = []
+        for line_idx, line in enumerate(text.split(sep)):
+            if first_line_idx <= line_idx <= last_line_idx:
+                lines.append(line)
+        return sep, lines
 
     def apply_selection(self):
         model = self.model

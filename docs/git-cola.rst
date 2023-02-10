@@ -297,6 +297,10 @@ Extraneous whitespace is shown with a pure-red background.
 Right-clicking in the diff provides access to additional actions
 that use either the cursor location or text selection.
 
+The "Copy Diff" action at ``Alt + Shift + C`` copies the selected lines to the
+clipboard. The ``+``, ``-`` and `` `` diff line prefixes are stripped from each line
+when copying diffs using the "Copy Diff" action.
+
 Staging content for commit
 --------------------------
 The ``@@`` patterns denote a new diff hunk.  Selecting lines of diff

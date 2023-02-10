@@ -191,6 +191,11 @@ class BaseTextEditExtension(QtCore.QObject):
     def has_selection(self):
         return self.cursor().hasSelection()
 
+    def selected_text(self):
+        """Return the selected text"""
+        _, selection = self.offset_and_selection()
+        return selection
+
     def offset_and_selection(self):
         """Return the cursor offset and selected text"""
         cursor = self.cursor()
@@ -291,6 +296,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     def selected_line(self):
         return self.ext.selected_line()
 
+    def selected_text(self):
+        """Return the selected text"""
+        return self.ext.selected_text()
+
     def set_tabwidth(self, width):
         self.ext.set_tabwidth(width)
 
@@ -381,6 +390,10 @@ class TextEdit(QtWidgets.QTextEdit):
 
     def selected_line(self):
         return self.ext.selected_line()
+
+    def selected_text(self):
+        """Return the selected text"""
+        return self.ext.selected_text()
 
     def set_tabwidth(self, width):
         self.ext.set_tabwidth(width)
