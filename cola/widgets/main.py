@@ -1022,6 +1022,7 @@ class MainView(standard.MainWindow):
         curbranch = self.model.currentbranch
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
+        is_applying_patch = self.model.is_applying_patch
         is_cherry_picking = self.model.is_rebasing
 
         curdir = core.getcwd()

@@ -85,6 +85,7 @@ class MainModel(QtCore.QObject):
         self.is_cherry_picking = False
         self.is_merging = False
         self.is_rebasing = False
+        self.is_applying_patch = False
         self.currentbranch = ''
         self.directory = ''
         self.project = ''
@@ -355,9 +356,11 @@ class MainModel(QtCore.QObject):
         cherry_pick_head = self.git.git_path('CHERRY_PICK_HEAD')
         merge_head = self.git.git_path('MERGE_HEAD')
         rebase_merge = self.git.git_path('rebase-merge')
+        rebase_apply = self.git.git_path('rebase-apply', 'applying')
         self.is_cherry_picking = cherry_pick_head and core.exists(cherry_pick_head)
         self.is_merging = merge_head and core.exists(merge_head)
         self.is_rebasing = rebase_merge and core.exists(rebase_merge)
+        self.is_applying_patch = rebase_apply and core.exists(rebase_apply)
         if (self.is_merging or self.is_cherry_picking) and self.mode == self.mode_amend:
             self.set_mode(self.mode_none)
 
