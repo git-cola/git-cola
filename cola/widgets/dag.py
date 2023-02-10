@@ -13,6 +13,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models import main
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -640,8 +641,16 @@ class GitDAG(standard.MainWindow):
         self.file_dock = qtutils.create_dock('Files', N_('Files'), self)
         self.file_dock.setWidget(self.filewidget)
 
+        self.diff_options = diff.Options(self.diffwidget)
+        self.diffwidget.set_options(self.diff_options)
+        self.diff_options.hide_advanced_options()
+        self.diff_options.set_diff_type(main.Types.TEXT)
+
         self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self)
         self.diff_dock.setWidget(self.diffwidget)
+
+        diff_titlebar = self.diff_dock.titleBarWidget()
+        diff_titlebar.add_corner_widget(self.diff_options)
 
         self.graph_controls_layout = qtutils.hbox(
             defs.no_margin,
@@ -762,6 +771,7 @@ class GitDAG(standard.MainWindow):
         state = standard.MainWindow.export_state(self)
         state['count'] = self.params.count
         state['log'] = self.treewidget.export_state()
+        state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
         return state
 
     def apply_state(self, state):
@@ -775,6 +785,7 @@ class GitDAG(standard.MainWindow):
             result = False
         self.params.set_count(count)
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
+        self.diffwidget.set_word_wrapping(state.get('word_wrap', False), update=True)
 
         try:
             log_state = state['log']

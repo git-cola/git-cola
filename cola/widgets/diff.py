@@ -982,11 +982,14 @@ class DiffEditor(DiffTextEdit):
 
 
 class DiffWidget(QtWidgets.QWidget):
-    def __init__(self, context, parent, is_commit=False):
+    """Display commit metadata and text diffs"""
+
+    def __init__(self, context, parent, is_commit=False, options=None):
         QtWidgets.QWidget.__init__(self, parent)
 
         self.context = context
         self.oid = 'HEAD'
+        self.options = options
 
         author_font = QtGui.QFont(self.font())
         author_font.setPointSize(int(author_font.pointSize() * 1.1))
@@ -1051,6 +1054,15 @@ class DiffWidget(QtWidgets.QWidget):
 
     def set_tabwidth(self, width):
         self.diff.set_tabwidth(width)
+
+    def set_word_wrapping(self, enabled, update=False):
+        """Enable and disable word wrapping"""
+        self.diff.set_word_wrapping(enabled, update=update)
+
+    def set_options(self, options):
+        """Register an options widget"""
+        self.options = options
+        self.diff.set_options(options)
 
     def set_diff_oid(self, oid, filename=None):
         context = self.context
