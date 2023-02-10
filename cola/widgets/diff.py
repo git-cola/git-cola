@@ -679,6 +679,14 @@ class Options(QtWidgets.QWidget):
         """Respond to Qt action callbacks"""
         self.widget.set_word_wrapping(value, update=False)
 
+    def hide_advanced_options(self):
+        """Hide advanced options that are not applicable to the DiffWidget"""
+        self.show_line_numbers.setVisible(False)
+        self.ignore_space_at_eol.setVisible(False)
+        self.ignore_space_change.setVisible(False)
+        self.ignore_all_space.setVisible(False)
+        self.function_context.setVisible(False)
+
 
 # pylint: disable=too-many-ancestors
 class DiffEditor(DiffTextEdit):
