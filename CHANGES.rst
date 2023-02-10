@@ -61,6 +61,9 @@ Usability, bells and whistles
 * The DAG diff viewer learned to word-wrap the diff text.
   (`#1242 <https://github.com/git-cola/git-cola/issues/1242>`_)
 
+* The Apply Patches dialog now reports errors when patches fail to apply.
+  (`#673 <https://github.com/git-cola/git-cola/issues/673>`_)
+
 
 Development
 -----------
