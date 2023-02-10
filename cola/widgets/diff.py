@@ -414,9 +414,9 @@ class Viewer(QtWidgets.QFrame):
         # The "file type" is whether the file itself is an image.
         self.options.set_file_type(file_type)
 
-    def set_options(self):
+    def update_options(self):
         """Emit a signal indicating that options have changed"""
-        self.text.set_options()
+        self.text.update_options()
 
     def set_line_numbers(self, enabled, update=False):
         """Enable/disable line numbers in the text widget"""
@@ -655,12 +655,12 @@ class Options(QtWidgets.QWidget):
             self.toggle_image_diff.setIcon(icons.visualize())
 
     def add_option(self, title):
-        """Add a diff option which calls set_options() on change"""
-        action = qtutils.add_action(self, title, self.set_options)
+        """Add a diff option which calls update_options() on change"""
+        action = qtutils.add_action(self, title, self.update_options)
         action.setCheckable(True)
         return action
 
-    def set_options(self):
+    def update_options(self):
         """Update diff options in response to UI events"""
         space_at_eol = get(self.ignore_space_at_eol)
         space_change = get(self.ignore_space_change)
@@ -669,9 +669,10 @@ class Options(QtWidgets.QWidget):
         gitcmds.update_diff_overrides(
             space_at_eol, space_change, all_space, function_context
         )
-        self.widget.set_options()
+        self.widget.update_options()
 
     def set_line_numbers(self, value):
+        """Enable / disable line numbers"""
         self.widget.set_line_numbers(value, update=False)
 
     def set_word_wrapping(self, value):
@@ -753,19 +754,7 @@ class DiffEditor(DiffTextEdit):
         # correctly displaying the line numbers widget until the text scrolls.
         self.set_value(self.value())
 
-    def set_word_wrapping(self, enabled, update=False):
-        """Enable/disable word wrapping"""
-        if update:
-            with qtutils.BlockSignals(self.options.enable_word_wrapping):
-                self.options.enable_word_wrapping.setChecked(enabled)
-        if enabled:
-            self.setWordWrapMode(QtGui.QTextOption.WordWrap)
-            self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
-        else:
-            self.setWordWrapMode(QtGui.QTextOption.NoWrap)
-            self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
-
-    def set_options(self):
+    def update_options(self):
         self.options_changed.emit()
 
     # Qt overrides

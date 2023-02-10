@@ -238,11 +238,12 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     cursor_changed = Signal(int, int)
     leave = Signal()
 
-    def __init__(self, parent=None, get_value=None, readonly=False):
+    def __init__(self, parent=None, get_value=None, readonly=False, options=None):
         QtWidgets.QPlainTextEdit.__init__(self, parent)
         self.ext = PlainTextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
         self.mouse_zoom = True
+        self.options = options
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -266,6 +267,22 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     def set_mouse_zoom(self, value):
         """Enable/disable text zooming in response to ctrl + mousewheel scroll events"""
         self.mouse_zoom = value
+
+    def set_options(self, options):
+        """Register an Options widget"""
+        self.options = options
+
+    def set_word_wrapping(self, enabled, update=False):
+        """Enable/disable word wrapping"""
+        if update and self.options is not None:
+            with qtutils.BlockSignals(self.options.enable_word_wrapping):
+                self.options.enable_word_wrapping.setChecked(enabled)
+        if enabled:
+            self.setWordWrapMode(QtGui.QTextOption.WordWrap)
+            self.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
+        else:
+            self.setWordWrapMode(QtGui.QTextOption.NoWrap)
+            self.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
 
     def has_selection(self):
         return self.ext.has_selection()
