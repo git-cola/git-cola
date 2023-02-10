@@ -156,6 +156,8 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
 # pylint: disable=too-many-ancestors
 class DiffTextEdit(VimHintedPlainTextEdit):
+    """A textedit for interacting with diff text"""
+
     def __init__(
         self, context, parent, is_commit=False, whitespace=True, numbers=False
     ):
@@ -203,6 +205,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.scrollvalue = None
 
     def set_loading_message(self):
+        """Add a pending loading message in the diff view"""
         self.hint.set_value('+++ ' + N_('Loading...'))
         self.set_value('')
 
@@ -854,7 +857,6 @@ class DiffEditor(DiffTextEdit):
         menu.addSeparator()
         menu.addAction(self.move_up)
         menu.addAction(self.move_down)
-
         menu.addSeparator()
         action = menu.addAction(icons.copy(), N_('Copy'), self.copy)
         action.setShortcut(QtGui.QKeySequence.Copy)

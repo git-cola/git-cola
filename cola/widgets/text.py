@@ -192,6 +192,7 @@ class BaseTextEditExtension(QtCore.QObject):
         return self.cursor().hasSelection()
 
     def offset_and_selection(self):
+        """Return the cursor offset and selected text"""
         cursor = self.cursor()
         offset = cursor.selectionStart()
         selection_text = cursor.selection().toPlainText()
