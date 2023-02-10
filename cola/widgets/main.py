@@ -236,7 +236,28 @@ class MainView(standard.MainWindow):
             self, N_('Abort Applying Patches...'),
             cmds.run(cmds.AbortApplyPatch, context)
         )
-        self.apply_patches_abort_action.setIcon(icons.style_dialog_reset())
+        self.apply_patches_abort_action.setIcon(icons.style_dialog_discard())
+        self.apply_patches_abort_action.setToolTip(
+            N_('Abort the current "git am" patch session')
+        )
+
+        self.apply_patches_continue_action = add_action(
+            self, N_('Continue Applying Patches'),
+            cmds.run(cmds.ApplyPatchesContinue, context)
+        )
+        self.apply_patches_continue_action.setToolTip(
+            N_('Commit the current state and continue applying patches')
+        )
+        self.apply_patches_continue_action.setIcon(icons.commit())
+
+        self.apply_patches_skip_action = add_action(
+            self, N_('Skip Current Patch'),
+            cmds.run(cmds.ApplyPatchesContinue, context)
+        )
+        self.apply_patches_skip_action.setToolTip(
+            N_('Skip applying the current patch and continue applying patches')
+        )
+        self.apply_patches_skip_action.setIcon(icons.discard())
 
         self.export_patches_action = add_action(
             self,
@@ -303,7 +324,7 @@ class MainView(standard.MainWindow):
         self.cherry_pick_abort_action = add_action(
             self, N_('Abort Cherry-Pick...'), cmds.run(cmds.AbortCherryPick, context)
         )
-        self.cherry_pick_abort_action.setIcon(icons.style_dialog_reset())
+        self.cherry_pick_abort_action.setIcon(icons.style_dialog_discard())
 
         self.load_commitmsg_action = add_action(
             self, N_('Load Commit Message...'), partial(guicmds.load_commitmsg, context)
@@ -337,7 +358,7 @@ class MainView(standard.MainWindow):
         self.merge_abort_action = add_action(
             self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context)
         )
-        self.merge_abort_action.setIcon(icons.style_dialog_reset())
+        self.merge_abort_action.setIcon(icons.style_dialog_discard())
 
         self.update_submodules_action = add_action(
             self,
@@ -639,10 +660,15 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.edit_remotes_action)
         self.file_menu.addAction(self.browse_recently_modified_action)
         self.file_menu.addSeparator()
-        self.file_menu.addAction(self.apply_patches_action)
-        self.file_menu.addAction(self.apply_patches_abort_action)
-        self.file_menu.addAction(self.export_patches_action)
         self.file_menu.addAction(self.save_tarball_action)
+
+        self.patches_menu = self.file_menu.addMenu(N_('Patches'))
+        self.patches_menu.setIcon(icons.diff())
+        self.patches_menu.addAction(self.export_patches_action)
+        self.patches_menu.addAction(self.apply_patches_action)
+        self.patches_menu.addAction(self.apply_patches_continue_action)
+        self.patches_menu.addAction(self.apply_patches_skip_action)
+        self.patches_menu.addAction(self.apply_patches_abort_action)
 
         # Git Annex / Git LFS
         annex = core.find_executable('git-annex')
@@ -1124,6 +1150,8 @@ class MainView(standard.MainWindow):
         self.lfs_init_action.setEnabled(not self.model.lfs)
         self.merge_abort_action.setEnabled(self.model.is_merging)
         self.cherry_pick_abort_action.setEnabled(self.model.is_cherry_picking)
+        self.apply_patches_continue_action.setEnabled(self.model.is_applying_patch)
+        self.apply_patches_skip_action.setEnabled(self.model.is_applying_patch)
         self.apply_patches_abort_action.setEnabled(self.model.is_applying_patch)
 
     def update_menu_actions(self):

@@ -156,7 +156,6 @@ class AbortApplyPatch(ConfirmAction):
         return 'git am --abort'
 
 
-
 class AbortCherryPick(ConfirmAction):
     """Reset an in-progress cherry-pick"""
 
@@ -409,6 +408,36 @@ class ApplyPatches(ContextCommand):
                 (N_('%d patch(es) applied.') + '\n\n%s')
                 % (len(self.patches), basenames),
             )
+
+
+class ApplyPatchesContinue(ContextCommand):
+    """Run "git am --continue" to continue on the next patch in a "git am" session"""
+    def do(self):
+        status, out, err = self.git.am('--continue')
+        Interaction.command(
+            N_('Failed to commit and continue applying patches'),
+            'git am --continue',
+            status,
+            out,
+            err
+        )
+        self.model.update_status()
+        return status, out, err
+
+
+class ApplyPatchesSkip(ContextCommand):
+    """Run "git am --skip" to continue on the next patch in a "git am" session"""
+    def do(self):
+        status, out, err = self.git.am(skip=True)
+        Interaction.command(
+            N_('Failed to continue applying patches after skipping the current patch'),
+            'git am --skip',
+            status,
+            out,
+            err
+        )
+        self.model.update_status()
+        return status, out, err
 
 
 class Archive(ContextCommand):
