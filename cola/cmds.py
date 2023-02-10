@@ -360,8 +360,9 @@ class ApplyPatches(ContextCommand):
 
     def do(self):
         status, out, err = self.git.am('-3', *self.patches)
-        Interaction.log_status(status, out, err)
-
+        Interaction.command(
+            N_('Patch failed to apply'), 'git am -3', status, out, err
+        )
         # Display a diffstat
         self.model.update_file_status()
 
@@ -371,10 +372,12 @@ class ApplyPatches(ContextCommand):
             patch_basenames.append('...')
 
         basenames = '\n'.join(patch_basenames)
-        Interaction.information(
-            N_('Patch(es) Applied'),
-            (N_('%d patch(es) applied.') + '\n\n%s') % (len(self.patches), basenames),
-        )
+        if status == 0:
+            Interaction.information(
+                N_('Patch(es) Applied'),
+                (N_('%d patch(es) applied.') + '\n\n%s')
+                % (len(self.patches), basenames),
+            )
 
 
 class Archive(ContextCommand):
