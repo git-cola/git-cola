@@ -1602,8 +1602,16 @@ class LaunchTerminal(ContextCommand):
             shell = True
         else:
             argv = utils.shell_split(cmd)
-            argv.append(os.getenv('SHELL', '/bin/sh'))
+            command = '/bin/sh'
+            shells = ('zsh', 'fish', 'bash', 'sh')
+            for basename in shells:
+                executable = core.find_executable(basename)
+                if executable:
+                    command = executable
+                    break
+            argv.append(os.getenv('SHELL', command))
             shell = False
+
         core.fork(argv, cwd=self.path, shell=shell)
 
 
