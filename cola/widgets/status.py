@@ -198,7 +198,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.worktree_dir_action = common.worktree_dir_action(context, self)
 
         self.terminal_action = common.terminal_action(
-            context, self, self.selected_group
+            context, self, func=self.selected_group
         )
 
         self.up_action = qtutils.add_action(

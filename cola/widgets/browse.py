@@ -211,7 +211,7 @@ class RepoTreeView(standard.TreeView):
         )
 
         self.action_terminal = common.terminal_action(
-            context, self, self.selected_paths
+            context, self, func=self.selected_paths
         )
 
         self.x_width = QtGui.QFontMetrics(self.font()).width('x')

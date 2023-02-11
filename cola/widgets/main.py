@@ -36,6 +36,7 @@ from . import browse
 from . import cfgactions
 from . import clone
 from . import commitmsg
+from . import common
 from . import compare
 from . import createbranch
 from . import createtag
@@ -637,6 +638,10 @@ class MainView(standard.MainWindow):
         )
         self.quick_repository_search.setIcon(icons.search())
 
+        self.terminal_action = common.terminal_action(
+            context, self, hotkey=hotkeys.TERMINAL
+        )
+
         # Create the application menu
         self.menubar = QtWidgets.QMenuBar(self)
         self.setMenuBar(self.menubar)
@@ -725,6 +730,8 @@ class MainView(standard.MainWindow):
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)
+        if self.terminal_action is not None:
+            self.actions_menu.addAction(self.terminal_action)
         self.actions_menu.addAction(self.fetch_action)
         self.actions_menu.addAction(self.push_action)
         self.actions_menu.addAction(self.pull_action)

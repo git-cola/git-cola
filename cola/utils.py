@@ -228,7 +228,7 @@ def select_directory(paths):
         if core.isdir(path):
             return path
 
-    return os.path.dirname(paths[0])
+    return os.path.dirname(paths[0]) or core.getcwd()
 
 
 def strip_prefix(prefix, string):

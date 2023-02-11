@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import functools
 
 from ..i18n import N_
 from .. import cmds
@@ -44,10 +45,10 @@ def edit_action(context, parent, *keys):
     return action
 
 
-def parent_dir_action(context, parent, fn):
+def parent_dir_action(context, parent, func):
     """Open the parent directory of paths -> QAction"""
     hotkey = hotkeys.SECONDARY_ACTION
-    action = cmd_action(parent, cmds.OpenParentDir, context, fn, hotkey)
+    action = cmd_action(parent, cmds.OpenParentDir, context, func, hotkey)
     action.setIcon(icons.folder())
     return action
 
@@ -67,15 +68,19 @@ def refresh_action(context, parent):
     )
 
 
-def terminal_action(context, parent, fn):
+def terminal_action(context, parent, func=None, hotkey=None):
     """Launch a terminal -> QAction"""
     action = None
     if cmds.LaunchTerminal.is_available(context):
+        if func is None:
+            func = functools.partial(lambda: None)
         action = cmd_action(
             parent,
             cmds.LaunchTerminal,
             context,
-            lambda: utils.select_directory(fn()),
-            hotkeys.TERMINAL,
+            lambda: utils.select_directory(func()),
         )
+        action.setIcon(icons.terminal())
+        if hotkey is not None:
+            action.setShortcut(hotkey)
     return action
