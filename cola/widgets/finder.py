@@ -190,7 +190,7 @@ class Finder(standard.Dialog):
         qtutils.connect_button(self.edit_button, self.edit)
         qtutils.connect_button(self.open_default_button, self.open_default)
         qtutils.connect_button(self.refresh_button, self.search)
-        qtutils.connect_button(self.help_button, show_help)
+        qtutils.connect_button(self.help_button, partial(show_help, context))
         qtutils.connect_button(self.close_button, self.close)
         qtutils.add_close_action(self)
 
