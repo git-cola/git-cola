@@ -389,7 +389,8 @@ class ApplyPatches(ContextCommand):
         self.patches = patches
 
     def do(self):
-        status, out, err = self.git.am('-3', *self.patches)
+        status, output, err = self.git.am('-3', *self.patches)
+        out = '# git am -3 %s\n\n%s' % (core.list2cmdline(self.patches), output)
         Interaction.command(
             N_('Patch failed to apply'), 'git am -3', status, out, err
         )
