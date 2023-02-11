@@ -105,11 +105,13 @@ def basename_from_filename(filename):
 
 
 def from_filename(filename):
+    """Return a QIcon from a filename"""
     basename = basename_from_filename(filename)
     return from_name(name_from_basename(basename))
 
 
 def mkicon(value, default=None):
+    """Create an icon from a string value"""
     if value is None and default is not None:
         value = default()
     elif value and isinstance(value, (str, ustr)):
@@ -124,6 +126,7 @@ def from_style(key):
 
 
 def status(filename, deleted, is_staged, untracked):
+    """Status icon for a file"""
     if deleted:
         icon_name = 'circle-slash-red.svg'
     elif is_staged:
@@ -139,78 +142,97 @@ def status(filename, deleted, is_staged, untracked):
 
 
 def three_bars():
+    """Three-bars icon"""
     return icon('three-bars.svg')
 
 
 def add():
+    """Add icon"""
     return from_theme('list-add', fallback='plus.svg')
 
 
 def alphabetical():
+    """Alphabetical icon"""
     return from_theme('view-sort', fallback='a-z-order.svg')
 
 
 def branch():
+    """Branch icon"""
     return icon('git-branch.svg')
 
 
 def check_name():
+    """Checkmark icon name"""
     return name_from_basename('check.svg')
 
 
 def cherry_pick():
+    """Cherry-pick icon"""
     return icon('git-commit.svg')
 
 
 def close():
+    """Close icon"""
     return icon('x.svg')
 
 
 def cola():
+    """Git Cola icon"""
     return icon('git-cola.svg')
 
 
 def commit():
+    """Commit icon"""
     return icon('document-save-symbolic.svg')
 
 
 def compare():
+    """Compare icon"""
     return icon('git-compare.svg')
 
 
 def configure():
+    """Configure icon"""
     return icon('gear.svg')
 
 
 def cut():
+    """Cut icon"""
     return from_theme('edit-cut', fallback='edit-cut.svg')
 
 
 def copy():
+    """Copy icon"""
     return from_theme('edit-copy', fallback='edit-copy.svg')
 
 
 def paste():
+    """Paste icon"""
     return from_theme('edit-paste', fallback='edit-paste.svg')
 
 
 def delete():
+    """Delete icon"""
     return from_theme('edit-delete', fallback='trashcan.svg')
 
 
 def default_app():
+    """Default app icon"""
     return icon('telescope.svg')
 
 
 def dot_name():
+    """Dot icon name"""
     return name_from_basename('primitive-dot.svg')
 
 
 def download():
+    """Download icon"""
     return icon('file-download.svg')
 
 
 def discard():
+    """Discard icon"""
     return from_theme('delete', fallback='trashcan.svg')
 
 
@@ -220,176 +242,220 @@ def discard():
 
 
 def folder():
+    """Folder icon"""
     return from_theme('folder', fallback='folder.svg')
 
 
 def directory():
+    """Directory icon"""
     return from_theme('folder', fallback='file-directory.svg')
 
 
 def diff():
+    """Diff icon"""
     return icon('diff.svg')
 
 
 def edit():
+    """Edit icon"""
     return from_theme('document-edit', fallback='pencil.svg')
 
 
 def ellipsis():
+    """Ellipsis icon"""
     return icon('ellipsis.svg')
 
 
 def external():
+    """External link icon"""
     return icon('link-external.svg')
 
 
 def file_code():
+    """Code file icon"""
     return icon('file-code.svg')
 
 
 def file_text():
+    """Text file icon"""
     return icon('file-text.svg')
 
 
 def file_zip():
+    """Zip file / tarball icon"""
     return icon('file-zip.svg')
 
 
 def fold():
+    """Fold icon"""
     return icon('fold.svg')
 
 
 def merge():
+    """Merge icon"""
     return icon('git-merge.svg')
 
 
 def modified():
+    """Modified icon"""
     return icon('modified.svg')
 
 
 def modified_name():
+    """Modified icon name"""
     return name_from_basename('modified.svg')
 
 
 def move_down():
+    """Move down icon"""
     return from_theme('go-previous', fallback='arrow-down.svg')
 
 
 def move_up():
+    """Move up icon"""
     return from_theme('go-next', fallback='arrow-up.svg')
 
 
 def new():
+    """Add new/add-to-list icon"""
     return from_theme('list-add', fallback='folder-new.svg')
 
 
 def ok():
+    """Ok/accept icon"""
     return from_theme('checkmark', fallback='check.svg')
 
 
 def open_directory():
+    """Open directory icon"""
     return from_theme('folder', fallback='folder.svg')
 
 
 def partial_name():
+    """Partial icon name"""
     return name_from_basename('partial.svg')
 
 
 def pull():
+    """Pull icon"""
     return icon('repo-pull.svg')
 
 
 def push():
+    """Push icon"""
     return icon('repo-push.svg')
 
 
 def question():
+    """Question icon"""
     return icon('question.svg')
 
 
 def remove():
+    """Remove icon"""
     return from_theme('list-remove', fallback='circle-slash.svg')
 
 
 def repo():
+    """Repository icon"""
     return icon('repo.svg')
 
 
 def reverse_chronological():
+    """Reverse chronological icon"""
     return icon('last-first-order.svg')
 
 
 def save():
+    """Save icon"""
     return from_theme('document-save', fallback='desktop-download.svg')
 
 
 def search():
+    """Search icon"""
     return from_theme('search', fallback='search.svg')
 
 
 def select_all():
+    """Select all icon"""
     return from_theme('edit-select-all', fallback='edit-select-all')
 
 
 def staged():
+    """Staged icon"""
     return icon('staged.svg')
 
 
 def staged_name():
+    """Staged icon name"""
     return name_from_basename('staged.svg')
 
 
 def star():
+    """Star icon"""
     return icon('star.svg')
 
 
 def sync():
+    """Sync/update icon"""
     return icon('sync.svg')
 
 
 def tag():
+    """Tag icon"""
     return icon('tag.svg')
 
 
 def undo():
+    """Undo icon"""
     return from_theme('edit-undo', fallback='edit-undo.svg')
 
 
 def redo():
+    """Redo icon"""
     return from_theme('edit-redo', fallback='edit-redo.svg')
 
 
 def style_dialog_apply():
+    """Apply icon from the current style"""
     return from_style(QtWidgets.QStyle.SP_DialogApplyButton)
 
 
 def style_dialog_discard():
+    """Discard icon for the current style"""
     return from_style(QtWidgets.QStyle.SP_DialogDiscardButton)
 
 
 def style_dialog_reset():
+    """Reset icon for the current style"""
     return from_style(QtWidgets.QStyle.SP_DialogResetButton)
 
 
 def unfold():
+    """Expand/unfold icon"""
     return icon('unfold.svg')
 
 
 def visualize():
+    """An eye icon to represent visualization"""
     return icon('eye.svg')
 
 
 def upstream_name():
+    """Upstream branch icon name"""
     return name_from_basename('upstream.svg')
 
 
 def zoom_fit_best():
+    """Zoom-to-fit icon"""
     return from_theme('zoom-fit-best', fallback='zoom-fit-best.svg')
 
 
 def zoom_in():
+    """Zoom-in icon"""
     return from_theme('zoom-in', fallback='zoom-in.svg')
 
 
 def zoom_out():
+    """Zoom-out icon"""
     return from_theme('zoom-out', fallback='zoom-out.svg')
