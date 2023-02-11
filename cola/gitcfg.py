@@ -382,32 +382,41 @@ class GitConfig(QtCore.QObject):
         return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
 
     def terminal(self):
+        """Return a suitable terminal command for running a shell"""
         term = self.get('cola.terminal', default=None)
-        if not term:
-            # find a suitable default terminal
-            term = 'xterm -e'  # for mac osx
-            if utils.is_win32():
-                # Try to find Git's sh.exe directory in
-                # one of the typical locations
-                pf = os.environ.get('ProgramFiles', r'C:\Program Files')
-                pf32 = os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)')
-                pf64 = os.environ.get('ProgramW6432', r'C:\Program Files')
+        if term:
+            return term
 
-                for p in [pf64, pf32, pf, 'C:\\']:
-                    candidate = os.path.join(p, r'Git\bin\sh.exe')
-                    if os.path.isfile(candidate):
-                        return candidate
-                return None
-            else:
-                candidates = ('xfce4-terminal', 'konsole', 'gnome-terminal')
-                for basename in candidates:
-                    if core.exists('/usr/bin/%s' % basename):
-                        if basename == 'gnome-terminal':
-                            term = '%s --' % basename
-                        else:
-                            term = '%s -e' % basename
-                        break
-        return term
+        # find a suitable default terminal
+        if utils.is_win32():
+            # Try to find Git's sh.exe directory in
+            # one of the typical locations
+            pf = os.environ.get('ProgramFiles', r'C:\Program Files')
+            pf32 = os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)')
+            pf64 = os.environ.get('ProgramW6432', r'C:\Program Files')
+
+            for p in [pf64, pf32, pf, 'C:\\']:
+                candidate = os.path.join(p, r'Git\bin\sh.exe')
+                if os.path.isfile(candidate):
+                    return candidate
+            return None
+
+        # If no terminal has been configured then we'll look for the following programs
+        # and use the first one we find.
+        terminals = (
+            # (<executable>, <command> for running arbitrary commands)
+            ('kitty', 'kitty'),
+            ('alacritty', 'alacritty -e'),
+            ('uxterm', 'uxterm -e'),
+            ('konsole', 'konsole -e'),
+            ('gnome-terminal', 'gnome-terminal --'),
+            ('mate-terminal', 'mate-terminal --'),
+            ('xterm', 'xterm -e'),
+        )
+        for executable, command in terminals:
+            if core.find_executable(executable):
+                return command
+        return None
 
     def color(self, key, default):
         value = self.get('cola.color.%s' % key, default=default)
