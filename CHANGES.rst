@@ -80,6 +80,10 @@ Usability, bells and whistles
   messages when `git revert` fails.
   (`#885 <https://github.com/git-cola/git-cola/issues/885>`_)
 
+* The "Status" tool now disables "Copy" actions in its context menu when no
+  files have been selected.
+  (`#697 <https://github.com/git-cola/git-cola/issues/697>`_)
+
 
 Development
 -----------

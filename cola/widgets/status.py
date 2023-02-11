@@ -575,6 +575,13 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         can_revert_edits = bool(selected.staged or selected.modified)
         self.revert_unstaged_edits_action.setEnabled(can_revert_edits)
 
+        enabled = self.selection_model.filename() is not None
+        self.default_app_action.setEnabled(enabled)
+        self.parent_dir_action.setEnabled(enabled)
+        self.copy_path_action.setEnabled(enabled)
+        self.copy_relpath_action.setEnabled(enabled)
+        self.copy_basename_action.setEnabled(enabled)
+
     def _set_staged(self, items):
         """Adds items to the 'Staged' subtree."""
         with qtutils.BlockSignals(self):
