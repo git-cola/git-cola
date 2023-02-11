@@ -88,8 +88,8 @@ Usability, bells and whistles
 Development
 -----------
 * The vendored `qtpy` module was modified to sever its dependency on
-  `packaging.version`. This mostly affects users that want to run Git Cola from the
-  source tree against their distro-provided Python packages without using a virtualenv.
+  `packaging.version`. This mostly affects users that want to run Git Cola directly from
+  the the source tree outside of any virtualenv.
   (`#1286 <https://github.com/git-cola/git-cola/issues/1286>`_)
 
 
