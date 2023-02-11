@@ -124,8 +124,8 @@ class AddSubmodule(standard.Dialog):
             defs.no_margin,
             defs.button_spacing,
             qtutils.STRETCH,
-            self.add_button,
             self.close_button,
+            self.add_button,
         )
 
         self.main_layout = qtutils.vbox(

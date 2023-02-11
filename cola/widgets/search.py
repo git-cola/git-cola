@@ -100,8 +100,8 @@ class SearchWidget(standard.Dialog):
         self.bottom_layout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
-            self.button_close,
             qtutils.STRETCH,
+            self.button_close,
             self.button_export,
             self.button_cherrypick,
         )

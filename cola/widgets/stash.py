@@ -86,10 +86,10 @@ class StashView(standard.Dialog):
         self.btn_layt = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.button_close,
-            qtutils.STRETCH,
             self.stash_index,
             self.keep_index,
+            qtutils.STRETCH,
+            self.button_close,
             self.button_save,
             self.button_apply,
             self.button_pop,

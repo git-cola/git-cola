@@ -147,8 +147,8 @@ class Archive(Dialog):
         self.btnlayt = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
-            self.close_button,
             qtutils.STRETCH,
+            self.close_button,
             self.save_button,
         )
 

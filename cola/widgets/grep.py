@@ -166,10 +166,10 @@ class Grep(Dialog):
         self.bottom_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.close_button,
-            qtutils.STRETCH,
-            self.shell_checkbox,
             self.refresh_button,
+            self.shell_checkbox,
+            qtutils.STRETCH,
+            self.close_button,
             self.edit_button,
         )
 

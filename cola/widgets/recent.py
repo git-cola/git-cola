@@ -86,10 +86,10 @@ class RecentFiles(standard.Dialog):
         self.button_layout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
-            self.close_button,
-            qtutils.STRETCH,
             self.expand_button,
             self.collapse_button,
+            qtutils.STRETCH,
+            self.close_button,
             self.edit_button,
         )
 

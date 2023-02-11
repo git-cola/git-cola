@@ -109,13 +109,13 @@ class Merge(standard.Dialog):
         self.buttonlayt = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.button_close,
-            qtutils.STRETCH,
+            self.button_viz,
             self.checkbox_squash,
             self.checkbox_noff,
             self.checkbox_commit,
             self.checkbox_sign,
-            self.button_viz,
+            qtutils.STRETCH,
+            self.button_close,
             self.button_merge,
         )
 

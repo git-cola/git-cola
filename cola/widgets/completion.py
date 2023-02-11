@@ -748,8 +748,8 @@ class GitDialog(QtWidgets.QDialog):
             defs.no_margin,
             defs.button_spacing,
             qtutils.STRETCH,
-            self.ok_button,
             self.close_button,
+            self.ok_button,
         )
 
         self.main_layout = qtutils.vbox(

@@ -105,8 +105,8 @@ class CreateTag(standard.Dialog):
         self.button_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.close_button,
             qtutils.STRETCH,
+            self.close_button,
             self.create_button,
         )
 

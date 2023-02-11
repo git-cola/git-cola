@@ -237,8 +237,6 @@ class RemoteActionDialog(standard.Dialog):
         self.options_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.close_button,
-            qtutils.STRETCH,
             self.force_checkbox,
             self.ff_only_checkbox,
             self.no_ff_checkbox,
@@ -247,6 +245,8 @@ class RemoteActionDialog(standard.Dialog):
             self.rebase_checkbox,
             self.upstream_checkbox,
             self.prompt_checkbox,
+            qtutils.STRETCH,
+            self.close_button,
             self.action_button,
         )
 
