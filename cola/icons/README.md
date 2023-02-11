@@ -87,6 +87,7 @@ The following files are from Github's
 - sync.svg
 - tag.svg
 - telescope.svg
+- terminal.svg
 - three-bars.svg
 - trashcan.svg
 - unfold.svg

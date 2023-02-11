@@ -406,6 +406,11 @@ def tag():
     return icon('tag.svg')
 
 
+def terminal():
+    """Terminal icon"""
+    return icon('terminal.svg')
+
+
 def undo():
     """Undo icon"""
     return from_theme('edit-undo', fallback='edit-undo.svg')
