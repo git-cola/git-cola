@@ -76,6 +76,10 @@ Usability, bells and whistles
   with the `+/-/<space>` diff prefix characters removed.
   (`#1288 <https://github.com/git-cola/git-cola/issues/1288>`_)
 
+* The "Revert" action for reverting commits from the DAG tool now displays error
+  messages when `git revert` fails.
+  (`#885 <https://github.com/git-cola/git-cola/issues/885>`_)
+
 
 Development
 -----------

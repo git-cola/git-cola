@@ -547,8 +547,11 @@ class Revert(ContextCommand):
         self.oid = oid
 
     def do(self):
-        self.git.revert(self.oid, no_edit=True)
+        status, output, err = self.git.revert(self.oid, no_edit=True)
         self.model.update_file_status()
+        title = N_('Revert failed')
+        out = '# git revert %s\n\n' % self.oid
+        Interaction.command(title, 'git revert', status, out, err)
 
 
 class ResetMode(EditModel):
