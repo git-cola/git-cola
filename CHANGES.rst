@@ -91,6 +91,10 @@ Usability, bells and whistles
   files have been selected.
   (`#697 <https://github.com/git-cola/git-cola/issues/697>`_)
 
+* The Diff Editor now uses an easier-to-see *block cursor* by default.
+  Disable `cola.blockcursor <https://git-cola.readthedocs.io/en/latest/git-cola.html#cola-blockcursor>`_
+  to continue using original *line cursor*.
+
 
 Development
 -----------

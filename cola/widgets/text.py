@@ -633,6 +633,7 @@ class HintedPlainTextEdit(PlainTextEdit):
         )
         self.hint = HintWidget(self, hint)
         self.hint.init()
+        self.context = context
         self.setFont(qtutils.diff_font(context))
         self.set_tabwidth(prefs.tabwidth(context))
         # Refresh palettes when text changes

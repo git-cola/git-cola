@@ -316,6 +316,7 @@ class AppearanceFormWidget(FormWidget):
         self.bold_headers = qtutils.checkbox()
         self.status_show_totals = qtutils.checkbox()
         self.status_indent = qtutils.checkbox()
+        self.block_cursor = qtutils.checkbox(checked=True)
 
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('Icon theme'), self.icon_theme)
@@ -323,6 +324,7 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('Bold on dark headers instead of italic'), self.bold_headers)
         self.add_row(N_('Show file counts in Status titles'), self.status_show_totals)
         self.add_row(N_('Indent Status paths'), self.status_indent)
+        self.add_row(N_('Use a block cursor in diff editors'), self.block_cursor)
 
         self.set_config(
             {
@@ -335,6 +337,7 @@ class AppearanceFormWidget(FormWidget):
                 prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
                 prefs.THEME: (self.theme, Defaults.theme),
                 prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
+                prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
             }
         )
 

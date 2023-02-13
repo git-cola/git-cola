@@ -14,6 +14,7 @@ AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
 AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
+BLOCK_CURSOR = 'cola.blockcursor'
 BOLD_HEADERS = 'cola.boldheaders'
 CHECK_CONFLICTS = 'cola.checkconflicts'
 CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
@@ -57,6 +58,7 @@ class Defaults(object):
     # These should match Git's defaults for git-defined values.
     autotemplate = False
     blame_viewer = 'git gui blame'
+    block_cursor = True
     bold_headers = False
     check_conflicts = True
     check_published_commits = True
@@ -96,6 +98,11 @@ def blame_viewer(context):
     """Return the configured "blame" viewer"""
     default = Defaults.blame_viewer
     return context.cfg.get(BLAME_VIEWER, default=default)
+
+
+def block_cursor(context):
+    """Should we display a block cursor in diff editors?"""
+    return context.cfg.get(BLOCK_CURSOR, default=Defaults.block_cursor)
 
 
 def bold_headers(context):

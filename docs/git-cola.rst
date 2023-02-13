@@ -620,6 +620,12 @@ cola.blameviewer
 ----------------
 The command used to blame files.  Defaults to `git gui blame`.
 
+cola.blockcursor
+----------------
+Whether to use a "block" cursor in diff editors. The block cursor is easier to
+see compared to a line cursor. Set to `false` to use a thin "line" cursor.
+Defauls to `true`.
+
 cola.browserdockable
 --------------------
 Whether to create a dock widget with the `Browser` tool.
