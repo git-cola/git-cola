@@ -154,9 +154,12 @@ def fallback_editor():
 
 
 def _remap_editor(app):
-    """Remap a configured editorinto a visual editor name"""
-    # We do this for vim users because this configuration is convenient.
-    return {'vim': 'gvim -f'}.get(app, app)
+    """Remap a configured editor into a visual editor name"""
+    # We do this for vim users because this configuration is convenient for new users.
+    return {
+        'vim': 'gvim -f',
+        'nvim': 'nvim-qt --nofork',
+    }.get(app, app)
 
 
 def comment_char(context):
