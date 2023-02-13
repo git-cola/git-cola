@@ -248,7 +248,7 @@ class MainModel(QtCore.QObject):
         # Stay in diff mode until explicitly reset.
         if self.mode == self.mode_diff and mode != self.mode_none:
             mode = self.mode_diff
-            head = self.head
+            head = head or self.head
         else:
             # If we are amending then we'll use "HEAD^", otherwise use the specified
             # head or "HEAD" if head has not been specified.
