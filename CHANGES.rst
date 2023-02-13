@@ -12,6 +12,9 @@ Usability, bells and whistles
   (`#1290 <https://github.com/git-cola/git-cola/pull/1290>`_)
   (`#794 <https://github.com/git-cola/git-cola/issues/794>`_)
 
+* A new *Diff Mode* can be used to diff, unstage and revert edits from arbitrary commits
+  (`#816 <https://github.com/git-cola/git-cola/issues/816>`_)
+
 * Repositories within the Bookmarks and Favorites tools can now be searched with the
   "Search" icon. Fast switching between repositories is supported with the new
   `Alt-p` and "Quick Open..." File menu action.

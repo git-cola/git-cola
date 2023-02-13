@@ -64,6 +64,9 @@ class ActionButtons(QFlowLayoutWidget):
         self.push_button = tooltip_button(N_('Push...'), layout)
         self.pull_button = tooltip_button(N_('Pull...'), layout)
         self.stash_button = tooltip_button(N_('Stash...'), layout)
+        self.exit_diff_mode_button = tooltip_button(N_('Exit Diff'), layout)
+        self.exit_diff_mode_button.setToolTip(N_('Exit Diff mode'))
+        self.exit_diff_mode_button.setVisible(False)
         self.aspect_ratio = 0.4
         layout.addStretch()
         self.setMinimumHeight(30)
@@ -75,6 +78,7 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.pull_button, partial(remote.pull, context))
         connect_button(self.stash_button, partial(stash.view, context))
         connect_button(self.stage_button, cmds.run(cmds.StageSelected, context))
+        connect_button(self.exit_diff_mode_button, cmds.run(cmds.ResetMode, context))
         connect_button(self.unstage_button, self.unstage)
 
     def unstage(self):
@@ -86,3 +90,8 @@ class ActionButtons(QFlowLayoutWidget):
             cmds.do(cmds.UnstageAll, context)
         else:
             cmds.do(cmds.Unstage, context, paths)
+
+    def set_mode(self, mode):
+        """Respond to changes to the diff mode"""
+        diff_mode = mode == self.context.model.mode_diff
+        self.exit_diff_mode_button.setVisible(diff_mode)

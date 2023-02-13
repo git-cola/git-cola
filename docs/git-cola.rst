@@ -211,6 +211,7 @@ The Diff editor can be focused with `Ctrl-j`.
 the Status tool can be focused with `Ctrl-k`.
 the Commit tool can be focused with `Ctrl-l`.
 
+
 .. _status:
 
 STATUS
@@ -309,6 +310,7 @@ Add to .gitignore
 ~~~~~~~~~~~~~~~~~
 Adds untracked files to to the .gitignore file.
 
+
 .. _diff:
 
 DIFF
@@ -334,6 +336,19 @@ entire patch diff hunk.
 The corresponding opposite commands can be performed on staged files as well,
 e.g. staged content can be selectively removed from the index when we are
 viewing diffs for staged content.
+
+Diff Against Commit (Diff Mode)
+-------------------------------
+*Diff Mode* allows you to selectively unstage and revert edits from arbitrary commits
+so that you can bring these edits back into your worktree.
+
+You can use the diff editor to unstage edits against arbitrary commits by using the
+``Diff > Against Commit... (Diff Mode)`` menu action.
+
+You can exit *Diff Mode* by clicking on the red circle-slash icon on the Status
+widget, by using the ``Diff > Exit Diff mode`` menu action, or by clicking in
+an empty area in the `Status` tool.
+
 
 COMMIT MESSAGE EDITOR
 =====================

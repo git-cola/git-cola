@@ -171,6 +171,11 @@ def cherry_pick():
     return icon('git-commit.svg')
 
 
+def circle_slash_red():
+    """A circle with a slash through it"""
+    return icon('circle-slash-red.svg')
+
+
 def close():
     """Close icon"""
     return icon('x.svg')

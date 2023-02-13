@@ -1151,6 +1151,17 @@ def get_mode(context, filename, staged, modified, unmerged, untracked):
     return mode
 
 
+class DiffAgainstCommitMode(ContextCommand):
+    """Diff against arbitrary commits"""
+    def __init__(self, context, oid):
+        super(DiffAgainstCommitMode, self).__init__(context)
+        self.oid = oid
+
+    def do(self):
+        self.model.set_mode(self.model.mode_diff, head=self.oid)
+        self.model.update_file_status()
+
+
 class DiffText(EditModel):
     """Set the diff type to text"""
 

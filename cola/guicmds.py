@@ -174,6 +174,15 @@ def export_patches(context):
     )
 
 
+def diff_against_commit(context):
+    """Diff against any commit and checkout changes using the Diff Editor"""
+    icon = icons.compare()
+    ref = choose_ref(context, N_('Diff Against Commit'), N_('Diff'), icon=icon)
+    if not ref:
+        return
+    cmds.do(cmds.DiffAgainstCommitMode, context, ref)
+
+
 def diff_expression(context):
     """Diff using an arbitrary expression."""
     tracked = gitcmds.tracked_branch(context)

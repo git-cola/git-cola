@@ -709,7 +709,7 @@ def tool_button():
     return button
 
 
-def create_action_button(tooltip=None, icon=None):
+def create_action_button(tooltip=None, icon=None, visible=True):
     """Create a small toolbutton for use in dock title widgets"""
     button = tool_button()
     if tooltip is not None:
@@ -717,6 +717,7 @@ def create_action_button(tooltip=None, icon=None):
     if icon is not None:
         button.setIcon(icon)
         button.setIconSize(QtCore.QSize(defs.small_icon, defs.small_icon))
+    button.setVisible(visible)
     return button
 
 

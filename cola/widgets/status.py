@@ -64,6 +64,12 @@ class StatusWidget(QtWidgets.QFrame):
         self.tree = StatusTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
 
+        tooltip = N_('Exit "Diff" mode')
+        icon = icons.circle_slash_red()
+        self.exit_diff_mode_button = qtutils.create_action_button(
+            tooltip=tooltip, icon=icon, visible=False
+        )
+
         self.main_layout = qtutils.vbox(
             defs.no_margin, defs.no_spacing, self.filter_widget, self.tree
         )
@@ -73,8 +79,13 @@ class StatusWidget(QtWidgets.QFrame):
             self, tooltip, self.toggle_filter, hotkeys.FILTER
         )
 
+        titlebar.add_corner_widget(self.exit_diff_mode_button)
         titlebar.add_corner_widget(self.filter_button)
+
         qtutils.connect_button(self.filter_button, self.toggle_filter)
+        qtutils.connect_button(
+            self.exit_diff_mode_button, cmds.run(cmds.ResetMode, self.context)
+        )
 
     def toggle_filter(self):
         """Toggle the paths filter"""
@@ -99,6 +110,11 @@ class StatusWidget(QtWidgets.QFrame):
         self.filter_widget.setVisible(True)
         self.filter_widget.text.set_value(txt)
         self.filter_widget.apply_filter()
+
+    def set_mode(self, mode):
+        """React to changes in model's editing mode"""
+        exit_diff_mode_visible = mode == self.context.model.mode_diff
+        self.exit_diff_mode_button.setVisible(exit_diff_mode_visible)
 
     def move_up(self):
         self.tree.move_up()

@@ -90,8 +90,9 @@ class MainView(standard.MainWindow):
             )
 
         # "Actions" widget
+        self.actionswidget = action.ActionButtons(context, self)
         self.actionsdock = create_dock(
-            'Actions', N_('Actions'), self, widget=action.ActionButtons(context, self)
+            'Actions', N_('Actions'), self, widget=self.actionswidget
         )
         qtutils.hide_dock(self.actionsdock)
 
@@ -509,6 +510,18 @@ class MainView(standard.MainWindow):
             self, N_('About'), partial(about.about_dialog, context)
         )
 
+        self.diff_against_commit_action = add_action(
+            self,
+            N_('Against Commit... (Diff Mode)'),
+            partial(guicmds.diff_against_commit, context)
+        )
+        self.diff_against_commit_action.setIcon(icons.compare())
+
+        self.exit_diff_mode_action = add_action(
+            self, N_('Exit Diff Mode'), cmds.run(cmds.ResetMode, context)
+        )
+        self.exit_diff_mode_action.setIcon(icons.compare())
+
         self.diff_expression_action = add_action(
             self, N_('Expression...'), partial(guicmds.diff_expression, context)
         )
@@ -772,8 +785,10 @@ class MainView(standard.MainWindow):
         self.diff_menu = add_menu(N_('Diff'), self.menubar)
         self.diff_menu.addAction(self.diff_expression_action)
         self.diff_menu.addAction(self.branch_compare_action)
-        self.diff_menu.addSeparator()
         self.diff_menu.addAction(self.show_diffstat_action)
+        self.diff_menu.addSeparator()
+        self.diff_menu.addAction(self.diff_against_commit_action)
+        self.diff_menu.addAction(self.exit_diff_mode_action)
 
         # Branch Menu
         self.branch_menu = add_menu(N_('Branch'), self.menubar)
@@ -1104,7 +1119,11 @@ class MainView(standard.MainWindow):
             self.commit_amend_action.setChecked(False)
 
         self.commitdock.setToolTip(msg)
+
+        self.actionswidget.set_mode(self.mode)
         self.commiteditor.set_mode(self.mode)
+        self.statuswidget.set_mode(self.mode)
+
         self.update_actions()
 
     def refresh_window_title(self):
@@ -1117,10 +1136,17 @@ class MainView(standard.MainWindow):
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
         is_applying_patch = self.model.is_applying_patch
+        is_diff_mode = self.mode == self.model.mode_diff
+        is_amend_mode = self.mode == self.model.mode_amend
+
         prefix = uchr(0xAB)
         suffix = uchr(0xBB)
 
-        if is_cherry_picking:
+        if is_amend_mode:
+            alerts.append(N_('Amending'))
+        elif is_diff_mode:
+            alerts.append(N_('Diff Mode'))
+        elif is_cherry_picking:
             alerts.append(N_('Cherry-picking'))
         elif is_merging:
             alerts.append(N_('Merging'))
@@ -1128,9 +1154,6 @@ class MainView(standard.MainWindow):
             alerts.append(N_('Rebasing'))
         elif is_applying_patch:
             alerts.append(N_('Applying Patch'))
-
-        if self.mode == self.model.mode_amend:
-            alerts.append(N_('Amending'))
 
         if alerts:
             alert_text = (prefix + ' %s ' + suffix + ' ') % ', '.join(alerts)
@@ -1160,6 +1183,9 @@ class MainView(standard.MainWindow):
         self.apply_patches_continue_action.setEnabled(self.model.is_applying_patch)
         self.apply_patches_skip_action.setEnabled(self.model.is_applying_patch)
         self.apply_patches_abort_action.setEnabled(self.model.is_applying_patch)
+
+        diff_mode = self.model.mode == self.model.mode_diff
+        self.exit_diff_mode_action.setEnabled(diff_mode)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
