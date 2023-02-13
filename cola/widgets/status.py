@@ -77,6 +77,7 @@ class StatusWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.filter_button, self.toggle_filter)
 
     def toggle_filter(self):
+        """Toggle the paths filter"""
         shown = not self.filter_widget.isVisible()
         self.filter_widget.setVisible(shown)
         if shown:
@@ -85,13 +86,16 @@ class StatusWidget(QtWidgets.QFrame):
             self.tree.setFocus()
 
     def set_initial_size(self):
+        """Set the initial size of the statu widget"""
         self.setMaximumWidth(222)
         QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
 
     def refresh(self):
+        """Refresh the tree and rerun the diff to see updates"""
         self.tree.show_selection()
 
     def set_filter(self, txt):
+        """Set the filter text"""
         self.filter_widget.setVisible(True)
         self.filter_widget.text.set_value(txt)
         self.filter_widget.apply_filter()
