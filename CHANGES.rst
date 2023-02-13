@@ -98,6 +98,10 @@ Usability, bells and whistles
   Disable `cola.blockcursor <https://git-cola.readthedocs.io/en/latest/git-cola.html#cola-blockcursor>`_
   to continue using original *line cursor*.
 
+* Saving files when using "Browse Other Branch" now displays errors from
+  ``git show`` when saving files from arbitrary commits.
+  (`#1065 <https://github.com/git-cola/git-cola/issues/1065>`_)
+
 
 Development
 -----------

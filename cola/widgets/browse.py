@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import shlex
 
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -550,7 +551,16 @@ class SaveBlob(cmds.ContextCommand):
         model = self.browse_model
         ref = '%s:%s' % (model.ref, model.relpath)
         with core.xopen(model.filename, 'wb') as fp:
-            status, _, _ = git.show(ref, _stdout=fp)
+            status, output, err = git.show(ref, _stdout=fp)
+
+        out = '# git show %s >%s\n%s' % (
+            shlex.quote(ref),
+            shlex.quote(model.filename),
+            output,
+        )
+        Interaction.command(N_('Error Saving File'), 'git show', status, out, err)
+        if status != 0:
+            return
 
         msg = N_('Saved "%(filename)s" from "%(ref)s" to "%(destination)s"') % dict(
             filename=model.relpath, ref=model.ref, destination=model.filename
