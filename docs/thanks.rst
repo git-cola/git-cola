@@ -251,6 +251,7 @@ Thanks
 * Steffen Prohaska
 * Stéphane Cerveau
 * Stephen Groat
+* Suyandi
 * Sven Claussner
 * Szymon Judasz
 * Taylor Braun-Jones
