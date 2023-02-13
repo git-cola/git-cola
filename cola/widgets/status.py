@@ -97,7 +97,7 @@ class StatusWidget(QtWidgets.QFrame):
             self.tree.setFocus()
 
     def set_initial_size(self):
-        """Set the initial size of the statu widget"""
+        """Set the initial size of the status widget"""
         self.setMaximumWidth(222)
         QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
 
