@@ -57,7 +57,9 @@ class MainModel(QtCore.QObject):
     modes_undoable = set((mode_amend, mode_diff, mode_index, mode_worktree))
 
     # Modes where we can partially stage files
-    modes_partially_stageable = set((mode_amend, mode_diff, mode_worktree, mode_untracked_diff))
+    modes_partially_stageable = set(
+        (mode_amend, mode_diff, mode_worktree, mode_untracked_diff)
+    )
 
     # Modes where we can partially unstage files
     modes_unstageable = set((mode_amend, mode_diff, mode_index))
@@ -248,8 +250,8 @@ class MainModel(QtCore.QObject):
             mode = self.mode_diff
             head = self.head
         else:
-            # If we are amending then we'll use HEAD^, otherwise use the specified "head" or
-            # HEAD if no "head" has been specified.
+            # If we are amending then we'll use "HEAD^", otherwise use the specified
+            # head or "HEAD" if head has not been specified.
             if mode == self.mode_amend:
                 head = 'HEAD^'
             elif not head:
