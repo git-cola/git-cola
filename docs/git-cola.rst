@@ -141,6 +141,29 @@ When you select a line in the diff or grep screens and press any of
 The editor preference is saved in the `gui.editor` variable using
 `git config <http://git-scm.com/docs/git-config>`_.
 
+The following are some recommend editor configurations.
+
+* Neovim + Neovim-Qt
+
+.. sourcecode:: sh
+
+   git config --global core.editor nvim
+   git config --global gui.editor 'nvim-qt --nofork'
+
+* Vim + gvim
+
+.. sourcecode:: sh
+
+   git config --global core.editor vim
+   git config --global gui.editor 'gvim -f'
+
+* Sublime Text
+
+.. sourcecode:: sh
+
+   git config --global gui.editor 'subl --wait'
+
+
 KEYBOARD SHORTCUTS
 ==================
 `git cola` has many useful keyboard shortcuts.
