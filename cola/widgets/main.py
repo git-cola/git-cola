@@ -235,8 +235,9 @@ class MainView(standard.MainWindow):
         self.apply_patches_action.setIcon(icons.diff())
 
         self.apply_patches_abort_action = add_action(
-            self, N_('Abort Applying Patches...'),
-            cmds.run(cmds.AbortApplyPatch, context)
+            self,
+            N_('Abort Applying Patches...'),
+            cmds.run(cmds.AbortApplyPatch, context),
         )
         self.apply_patches_abort_action.setIcon(icons.style_dialog_discard())
         self.apply_patches_abort_action.setToolTip(
@@ -244,8 +245,9 @@ class MainView(standard.MainWindow):
         )
 
         self.apply_patches_continue_action = add_action(
-            self, N_('Continue Applying Patches'),
-            cmds.run(cmds.ApplyPatchesContinue, context)
+            self,
+            N_('Continue Applying Patches'),
+            cmds.run(cmds.ApplyPatchesContinue, context),
         )
         self.apply_patches_continue_action.setToolTip(
             N_('Commit the current state and continue applying patches')
@@ -253,8 +255,7 @@ class MainView(standard.MainWindow):
         self.apply_patches_continue_action.setIcon(icons.commit())
 
         self.apply_patches_skip_action = add_action(
-            self, N_('Skip Current Patch'),
-            cmds.run(cmds.ApplyPatchesContinue, context)
+            self, N_('Skip Current Patch'), cmds.run(cmds.ApplyPatchesContinue, context)
         )
         self.apply_patches_skip_action.setToolTip(
             N_('Skip applying the current patch and continue applying patches')
@@ -513,7 +514,7 @@ class MainView(standard.MainWindow):
         self.diff_against_commit_action = add_action(
             self,
             N_('Against Commit... (Diff Mode)'),
-            partial(guicmds.diff_against_commit, context)
+            partial(guicmds.diff_against_commit, context),
         )
         self.diff_against_commit_action.setIcon(icons.compare())
 

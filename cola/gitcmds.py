@@ -19,9 +19,7 @@ def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
     return utils.slice_fn(
-        items, lambda paths: git_add(
-            '--', force=True, verbose=True, u=u, *paths
-        )
+        items, lambda paths: git_add('--', force=True, verbose=True, u=u, *paths)
     )
 
 

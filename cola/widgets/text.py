@@ -333,8 +333,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             action = menu.addAction(N_('Open "%s"') % url)
             action.setIcon(icons.external())
             qtutils.connect_action(
-                action,
-                partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
+                action, partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
             )
 
     def _get_links(self):
@@ -346,8 +345,9 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             line = self.selected_line()
         if not line:
             return []
-        return [word for word in line.split()
-                if word.startswith(('http://', 'https://'))]
+        return [
+            word for word in line.split() if word.startswith(('http://', 'https://'))
+        ]
 
 
 class TextEditExtension(BaseTextEditExtension):

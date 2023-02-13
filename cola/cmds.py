@@ -366,9 +366,7 @@ class ApplyPatches(ContextCommand):
     def do(self):
         status, output, err = self.git.am('-3', *self.patches)
         out = '# git am -3 %s\n\n%s' % (core.list2cmdline(self.patches), output)
-        Interaction.command(
-            N_('Patch failed to apply'), 'git am -3', status, out, err
-        )
+        Interaction.command(N_('Patch failed to apply'), 'git am -3', status, out, err)
         # Display a diffstat
         self.model.update_file_status()
 
@@ -388,6 +386,7 @@ class ApplyPatches(ContextCommand):
 
 class ApplyPatchesContinue(ContextCommand):
     """Run "git am --continue" to continue on the next patch in a "git am" session"""
+
     def do(self):
         status, out, err = self.git.am('--continue')
         Interaction.command(
@@ -395,7 +394,7 @@ class ApplyPatchesContinue(ContextCommand):
             'git am --continue',
             status,
             out,
-            err
+            err,
         )
         self.model.update_status()
         return status, out, err
@@ -403,6 +402,7 @@ class ApplyPatchesContinue(ContextCommand):
 
 class ApplyPatchesSkip(ContextCommand):
     """Run "git am --skip" to continue on the next patch in a "git am" session"""
+
     def do(self):
         status, out, err = self.git.am(skip=True)
         Interaction.command(
@@ -410,7 +410,7 @@ class ApplyPatchesSkip(ContextCommand):
             'git am --skip',
             status,
             out,
-            err
+            err,
         )
         self.model.update_status()
         return status, out, err
@@ -1153,6 +1153,7 @@ def get_mode(context, filename, staged, modified, unmerged, untracked):
 
 class DiffAgainstCommitMode(ContextCommand):
     """Diff against arbitrary commits"""
+
     def __init__(self, context, oid):
         super(DiffAgainstCommitMode, self).__init__(context)
         self.oid = oid

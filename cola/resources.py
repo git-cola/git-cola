@@ -159,9 +159,7 @@ def xdg_data_dirs():
     xdg_data_dirs_env = core.getenv('XDG_DATA_DIRS', '')
     if not xdg_data_dirs_env:
         xdg_data_dirs_env = '/usr/local/share:/usr/share'
-    paths.extend(
-        path for path in xdg_data_dirs_env.split(':') if os.path.isdir(path)
-    )
+    paths.extend(path for path in xdg_data_dirs_env.split(':') if os.path.isdir(path))
     return paths
 
 

@@ -10,12 +10,15 @@ from .models import prefs
 
 def wrap_comment(context, text):
     indent = prefs.comment_char(context) + ' '
-    return textwrap.fill(
-        text,
-        width=80,
-        initial_indent=indent,
-        subsequent_indent=indent,
-    ) + '\n'
+    return (
+        textwrap.fill(
+            text,
+            width=80,
+            initial_indent=indent,
+            subsequent_indent=indent,
+        )
+        + '\n'
+    )
 
 
 def strip_comments(context, text):

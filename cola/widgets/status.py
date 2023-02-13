@@ -99,7 +99,7 @@ class StatusWidget(QtWidgets.QFrame):
     def set_initial_size(self):
         """Set the initial size of the statu widget"""
         self.setMaximumWidth(222)
-        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
+        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2**13))
 
     def refresh(self):
         """Refresh the tree and rerun the diff to see updates"""
@@ -747,7 +747,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # Copy the leading path when the action is activated.
         qtutils.connect_action(
             copy_leading_path_action,
-            lambda widget=widget: copy_leading_path(context, widget.value())
+            lambda widget=widget: copy_leading_path(context, widget.value()),
         )
 
         menu.addSeparator()
@@ -1629,7 +1629,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
             self.icon,
             self.label,
             qtutils.STRETCH,
-            self.spinbox
+            self.spinbox,
         )
         self.setLayout(layout)
 
@@ -1650,7 +1650,9 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
 
             color = palette.highlightedText().color()
             highlight_text_rgb = 'rgb(%s, %s, %s)' % (
-                color.red(), color.green(), color.blue()
+                color.red(),
+                color.green(),
+                color.blue(),
             )
 
         if theme.disabled_text_color:
@@ -1680,7 +1682,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
             disabled_text_rgb=disabled_text_rgb,
             text_rgb=text_rgb,
             highlight_text_rgb=highlight_text_rgb,
-            highlight_rgb=highlight_rgb
+            highlight_rgb=highlight_rgb,
         )
 
         self.setStyleSheet(stylesheet)

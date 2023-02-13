@@ -241,8 +241,9 @@ class MainModel(QtCore.QObject):
         if self.amending() and mode != self.mode_none:
             return
         # We cannot amend in the middle of git cherry-pick, git am or git merge.
-        if ((self.is_cherry_picking or self.is_merging or self.is_applying_patch)
-                and mode == self.mode_amend):
+        if (
+            self.is_cherry_picking or self.is_merging or self.is_applying_patch
+        ) and mode == self.mode_amend:
             mode = self.mode
 
         # Stay in diff mode until explicitly reset.
@@ -376,9 +377,8 @@ class MainModel(QtCore.QObject):
         self.is_merging = merge_head and core.exists(merge_head)
         self.is_rebasing = rebase_merge and core.exists(rebase_merge)
         self.is_applying_patch = rebase_apply and core.exists(rebase_apply)
-        if (
-            self.mode == self.mode_amend and
-            (self.is_merging or self.is_cherry_picking or self.is_applying_patch)
+        if self.mode == self.mode_amend and (
+            self.is_merging or self.is_cherry_picking or self.is_applying_patch
         ):
             self.set_mode(self.mode_none)
 

@@ -296,9 +296,7 @@ def get_all_repos(context, settings):
     """Return a sorted list of bookmarks and recent repositorties"""
     bookmarks = settings.bookmarks
     recent = settings.recent
-    all_repos = [
-        (repo, True) for repo in bookmarks
-    ] + [
+    all_repos = [(repo, True) for repo in bookmarks] + [
         (repo, False) for repo in recent
     ]
     if prefs.sort_bookmarks(context):

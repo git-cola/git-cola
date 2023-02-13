@@ -30,8 +30,10 @@ class LogWidget(QtWidgets.QFrame):
         self.channel.connect(self.append, type=Qt.QueuedConnection)
         self.log(N_('Right-click links to open:'))
         self.log('  Documentation: https://git-cola.readthedocs.io/en/latest/')
-        self.log('  Keyboard Shortcuts: '
-                 'https://git-cola.github.io/share/doc/git-cola/hotkeys.html\n')
+        self.log(
+            '  Keyboard Shortcuts: '
+            'https://git-cola.github.io/share/doc/git-cola/hotkeys.html\n'
+        )
 
     def clear(self):
         self.output_text.clear()
