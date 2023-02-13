@@ -342,7 +342,7 @@ class ApplyPatch(ContextCommand):
     def do(self):
         context = self.context
 
-        tmp_file = utils.tmp_filename('apply', '.patch')
+        tmp_file = utils.tmp_filename('apply', suffix='.patch')
         try:
             core.write(tmp_file, self.patch.as_text(), encoding=self.encoding)
             if self.apply_to_worktree:
