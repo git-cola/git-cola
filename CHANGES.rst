@@ -6,9 +6,10 @@ v4.2.0
 Usability, bells and whistles
 -----------------------------
 * You can now edit the diffs from the Diff Editor in your favorite editor.
-  The right-click context menu and ``Ctrl + Shift + D`` hotkeys can now be used to send
-  either the current diff hunk, or the selected diff, to your favorite editor for
-  editing before they are reverted or applied to the worktree or staging area.
+  The right-click context menu and ``Ctrl + Shift + S`` and ``Ctrl + Shift + U`` hotkeys
+  can now be used to send either the current diff hunk, or the selected diff, to your
+  favorite editor for editing before they are reverted or applied to the worktree or
+  staging area.
   (`#1290 <https://github.com/git-cola/git-cola/pull/1290>`_)
   (`#794 <https://github.com/git-cola/git-cola/issues/794>`_)
 
