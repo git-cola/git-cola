@@ -95,6 +95,7 @@ Thanks
 * geotavros
 * Gianni Lerro
 * `Git Hackers <http://git-scm.com/about>`_
+* Graham Bartlett
 * green-eyed-bear
 * Glen Mailer
 * Guillaume de Bure
