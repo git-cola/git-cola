@@ -82,7 +82,15 @@ span.title {
 <tr>
     <td class="shortcut">Ctrl + U</td>
     <td>:</td>
-    <td>Revert unstaged edits</td>
+    <td>Revert the selected lines, or the diff hunk beneath the text cursor when nothing
+        is selected, from the worktree</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + Shift + U</td>
+    <td>:</td>
+    <td>Launch an external editor to edit the selected lines, or the diff hunk beneath
+        the text cursor when nothing is selected, and then revert unstaged changes
+        using the edited diff</td>
 </tr>
 <tr>
     <td class="shortcut">Ctrl + Z</td>
@@ -264,8 +272,14 @@ span.title {
 <tr>
     <td class="shortcut">S</td>
     <td>:</td>
-    <td>Stage the selected lines, or the diff hunk beneath the text cursor
+    <td>Stage or unstage the selected lines, or the diff hunk beneath the text cursor
         when nothing is selected</td>
+</tr>
+<tr>
+    <td class="shortcut">Ctrl + Shift + S</td>
+    <td>:</td>
+    <td>Launch an external editor to edit the selected lines, or the diff hunk beneath the
+        text cursor when nothing is selected, and then stage or unstage the edited diff</td>
 </tr>
 <tr>
     <td class="shortcut">Ctrl + D</td>
