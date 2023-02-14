@@ -15,7 +15,6 @@ PyYAML
 ## mock and pytest packages are used by the "make test" test suite.
 pytest>=3.6
 pytest-cov
-pytest-black-multipy
 
 ## Build and install documentation using "make doc" and "make install-doc".
 jaraco.packaging >= 9
