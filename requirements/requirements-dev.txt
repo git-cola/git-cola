@@ -9,7 +9,6 @@ wheel
 ## pylint, flake8 checkers are used by "make check".
 flake8
 pylint>=2.14.0
-PyYAML
 
 ## pytest packages are used by the "make test" test suite.
 pytest>=3.6
