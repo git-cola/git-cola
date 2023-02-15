@@ -25,8 +25,9 @@ from ..qtutils import get
 from ..utils import Group
 from . import defs
 from .selectcommits import select_commits
-from .spellcheck import SpellCheckTextEdit
+from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
 from .text import HintedLineEdit
+from .text import anchor_mode
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
@@ -81,12 +82,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         ]
 
         # Widgets
-        self.summary = CommitSummaryLineEdit(context)
+        self.summary = CommitSummaryLineEdit(context, check=self.spellcheck)
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
-
-        self.summary_validator = MessageValidator(context, parent=self.summary)
-        self.summary.setValidator(self.summary_validator)
 
         self.description = CommitMessageTextEdit(
             context, check=self.spellcheck, parent=self
@@ -180,13 +178,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
         # Handle the one-off autowrapping
         qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 
-        qtutils.add_action(
-            self.summary, N_('Move Down'), self.focus_description, *hotkeys.ACCEPT
-        )
-
-        qtutils.add_action(
-            self.summary, N_('Move Down'), self.summary_cursor_down, hotkeys.DOWN
-        )
+        self.summary.accepted.connect(self.focus_description)
+        self.summary.down_pressed.connect(self.summary_cursor_down)
 
         self.model.commit_message_changed.connect(
             self.set_commit_message, type=Qt.QueuedConnection
@@ -199,9 +192,13 @@ class CommitMessageEditor(QtWidgets.QFrame):
         )
 
         # pylint: disable=no-member
-        self.summary.textChanged.connect(self.commit_summary_changed)
-        self.description.textChanged.connect(self._commit_message_changed)
-        self.description.leave.connect(self.focus_summary)
+        self.summary.textChanged.connect(
+            self.commit_summary_changed, Qt.QueuedConnection
+        )
+        self.description.textChanged.connect(
+            self._commit_message_changed, Qt.QueuedConnection
+        )
+        self.description.leave.connect(self.focus_summary, Qt.QueuedConnection)
 
         self.commit_group.setEnabled(False)
 
@@ -245,7 +242,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def focus_description(self):
         self.description.setFocus()
 
-    def summary_cursor_down(self):
+    def summary_cursor_down(self, modifiers):
         """Handle the down key in the summary field
 
         If the cursor is at the end of the line then focus the description.
@@ -253,12 +250,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         subsequence "down" press moves to the end of the line.
 
         """
-        cur_position = self.summary.cursorPosition()
-        end_position = len(get(self.summary))
-        if cur_position == end_position:
-            self.focus_description()
-        else:
-            self.summary.setCursorPosition(end_position)
+        self.focus_description()
 
     def commit_message(self, raw=True):
         """Return the commit message as a unicode string"""
@@ -281,7 +273,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             return text
         return textwrap.word_wrap(text, self._tabwidth, self._textwidth)
 
-    def commit_summary_changed(self, value):
+    def commit_summary_changed(self):
         """Respond to changes to the `summary` field
 
         Newlines can enter the `summary` field when pasting, which is
@@ -290,6 +282,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         "extended description" field.
 
         """
+        value = self.summary.value()
         if '\n' in value:
             summary, description = value.split('\n', 1)
             description = description.lstrip('\n')
@@ -561,51 +554,62 @@ class CommitMessageEditor(QtWidgets.QFrame):
             spell_check.add_word('Closes')
             spell_check.add_word('Fixes')
 
-        self.description.highlighter.enable(enabled)
         self.summary.highlighter.enable(enabled)
+        self.description.highlighter.enable(enabled)
 
 
-class MessageValidator(QtGui.QValidator):
-    """Prevent invalid commit messages"""
+class CommitSummaryLineEdit(SpellCheckLineEdit):
 
-    def __init__(self, context, parent=None):
-        super(MessageValidator, self).__init__(parent)
-        self.context = context
+    down_pressed = Signal(object)
+    accepted = Signal()
+
+    def __init__(self, context, check=None, parent=None):
+        hint = N_('Commit summary')
+        SpellCheckLineEdit.__init__(self, context, hint, check=check, parent=parent)
+        self.menu_actions = []
         self._comment_char = None
-        self.refresh()
-        context.cfg.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self._refresh_config()
 
-    def refresh(self):
+        self.textChanged.connect(self._update_summary_text, Qt.QueuedConnection)
+        context.cfg.updated.connect(self._refresh_config, type=Qt.QueuedConnection)
+
+    def _refresh_config(self):
         """Update comment char in response to config changes"""
         self._comment_char = prefs.comment_char(self.context)
 
-    def validate(self, string, idx):
-        """Scrub whitespace and validate the commit message"""
-        string = string.lstrip()
-        if string.startswith(self._comment_char):
-            state = self.Invalid
-        else:
-            state = self.Acceptable
-        return (state, string, idx)
-
-
-class CommitSummaryLineEdit(HintedLineEdit):
-
-    cursor = Signal(int, int)
-
-    def __init__(self, context, parent=None):
-        hint = N_('Commit summary')
-        HintedLineEdit.__init__(self, context, hint, parent=parent)
-        self.menu_actions = []
-
-    def build_menu(self):
-        menu = self.createStandardContextMenu()
+    def build_context_menu(self, menu):
+        """Add our custom context menu events"""
         add_menu_actions(menu, self.menu_actions)
-        return menu
 
-    def contextMenuEvent(self, event):
-        menu = self.build_menu()
-        menu.exec_(self.mapToGlobal(event.pos()))
+    def _update_summary_text(self):
+        """Prevent commit messages from starting with comment characters"""
+        value = self.value()
+        if self._comment_char and value.startswith(self._comment_char):
+            cursor = self.textCursor()
+            position = cursor.position()
+
+            value = value.lstrip()
+            if self._comment_char:
+                value = value.lstrip(self._comment_char).lstrip()
+
+            self.set_value(value, block=True)
+
+            value = self.value()
+            if position > 1:
+                position = max(0, min(position - 1, len(value) - 1))
+                cursor.setPosition(position)
+                self.setTextCursor(cursor)
+
+    def keyPressEvent(self, event):
+        """Allow "Enter" to focus into the extended description field"""
+        event_key = event.key()
+        if event_key in (
+            Qt.Key_Enter,
+            Qt.Key_Return,
+        ):
+            self.accepted.emit()
+            return
+        SpellCheckLineEdit.keyPressEvent(self, event)
 
 
 # pylint: disable=too-many-ancestors
@@ -640,8 +644,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
                 # Otherwise, emit a signal so that the parent can
                 # change focus.
                 if cursor.hasSelection():
-                    cursor.setPosition(0)
-                    self.setTextCursor(cursor)
+                    self.set_cursor_position(0)
                 else:
                     self.leave.emit()
                 event.accept()
@@ -667,10 +670,8 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
             text_after = all_text[position:]
             lines_after = text_after.count('\n')
             if lines_after == 0:
-                if event.modifiers() & Qt.ShiftModifier:
-                    mode = QtGui.QTextCursor.KeepAnchor
-                else:
-                    mode = QtGui.QTextCursor.MoveAnchor
+                select = event.modifiers() & Qt.ShiftModifier
+                mode = anchor_mode(select)
                 cursor.setPosition(len(all_text), mode)
                 self.setTextCursor(cursor)
                 event.accept()

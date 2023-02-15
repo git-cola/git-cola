@@ -13,6 +13,10 @@ Usability, bells and whistles
   (`#1290 <https://github.com/git-cola/git-cola/pull/1290>`_)
   (`#794 <https://github.com/git-cola/git-cola/issues/794>`_)
 
+* The Commit Message Editor now supports spell-checking in the summary field.
+  (`#633 <https://github.com/git-cola/git-cola/issues/633>`_)
+  (`#1070 <https://github.com/git-cola/git-cola/issues/1070>`_)
+
 * A new *Diff Mode* can be used to diff, unstage and revert edits from arbitrary commits
   (`#816 <https://github.com/git-cola/git-cola/issues/816>`_)
 
