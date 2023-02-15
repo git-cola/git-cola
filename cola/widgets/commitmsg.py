@@ -15,6 +15,7 @@ from .. import hotkeys
 from .. import icons
 from .. import textwrap
 from .. import qtutils
+from .. import spellcheck
 from ..interaction import Interaction
 from ..gitcmds import commit_message_path
 from ..i18n import N_
@@ -35,9 +36,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
+        cfg = context.cfg
         self.context = context
         self.model = model = context.model
         self.spellcheck_initialized = False
+        self.spellcheck = spellcheck.NorvigSpellCheck()
+        self.spellcheck.set_dictionary(cfg.get('cola.dictionary', None))
 
         self._linebreak = None
         self._textwidth = None
@@ -81,12 +85,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
 
-        cfg = context.cfg
         self.summary_validator = MessageValidator(context, parent=self.summary)
         self.summary.setValidator(self.summary_validator)
 
-        self.description = CommitMessageTextEdit(context, parent=self)
-        self.description.set_dictionary(cfg.get('cola.dictionary', None))
+        self.description = CommitMessageTextEdit(
+            context, check=self.spellcheck, parent=self
+        )
         self.description.menu_actions.extend(menu_actions)
 
         commit_button_tooltip = N_('Commit staged changes\nShortcut: Ctrl+Enter')
@@ -128,9 +132,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         # Spell checker
         self.check_spelling_action = self.actions_menu.addAction(N_('Check Spelling'))
         self.check_spelling_action.setCheckable(True)
-        spellcheck = prefs.spellcheck(context)
-        self.check_spelling_action.setChecked(spellcheck)
-        self.toggle_check_spelling(spellcheck)
+        spell_check = prefs.spellcheck(context)
+        self.check_spelling_action.setChecked(spell_check)
+        self.toggle_check_spelling(spell_check)
 
         # Line wrapping
         self.autowrap_action = self.actions_menu.addAction(N_('Auto-Wrap Lines'))
@@ -531,7 +535,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.choose_commit(cmds.LoadFixupMessage)
 
     def toggle_check_spelling(self, enabled):
-        spellcheck = self.description.spellcheck
+        spell_check = self.spellcheck
         cfg = self.context.cfg
 
         if prefs.spellcheck(self.context) != enabled:
@@ -542,26 +546,27 @@ class CommitMessageEditor(QtWidgets.QFrame):
             user_name = cfg.get('user.name')
             if user_name:
                 for part in user_name.split():
-                    spellcheck.add_word(part)
+                    spell_check.add_word(part)
 
             # Add our email address to the dictionary
             user_email = cfg.get('user.email')
             if user_email:
                 for part in user_email.split('@'):
                     for elt in part.split('.'):
-                        spellcheck.add_word(elt)
+                        spell_check.add_word(elt)
 
             # git jargon
-            spellcheck.add_word('Acked')
-            spellcheck.add_word('Signed')
-            spellcheck.add_word('Closes')
-            spellcheck.add_word('Fixes')
+            spell_check.add_word('Acked')
+            spell_check.add_word('Signed')
+            spell_check.add_word('Closes')
+            spell_check.add_word('Fixes')
 
         self.description.highlighter.enable(enabled)
+        self.summary.highlighter.enable(enabled)
 
 
 class MessageValidator(QtGui.QValidator):
-    """Prevent invalid branch names"""
+    """Prevent invalid commit messages"""
 
     def __init__(self, context, parent=None):
         super(MessageValidator, self).__init__(parent)
@@ -607,9 +612,9 @@ class CommitSummaryLineEdit(HintedLineEdit):
 class CommitMessageTextEdit(SpellCheckTextEdit):
     leave = Signal()
 
-    def __init__(self, context, parent=None):
+    def __init__(self, context, check=None, parent=None):
         hint = N_('Extended description...')
-        SpellCheckTextEdit.__init__(self, context, hint, parent)
+        SpellCheckTextEdit.__init__(self, context, hint, check=check, parent=parent)
         self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(

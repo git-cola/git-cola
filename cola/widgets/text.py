@@ -656,6 +656,7 @@ class HintedTextEdit(TextEdit):
         TextEdit.__init__(
             self, parent=parent, get_value=get_value_hinted, readonly=readonly
         )
+        self.context = context
         self.hint = HintWidget(self, hint)
         self.hint.init()
         # Refresh palettes when text changes

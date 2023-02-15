@@ -1,14 +1,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import re
 
+from qtpy import QtCore
+from qtpy import QtGui
+from qtpy import QtWidgets
 from qtpy.QtCore import Qt
-from qtpy.QtCore import QEvent
-from qtpy.QtCore import Signal
-from qtpy.QtGui import QMouseEvent
-from qtpy.QtGui import QSyntaxHighlighter
-from qtpy.QtGui import QTextCharFormat
-from qtpy.QtGui import QTextCursor
-from qtpy.QtWidgets import QAction
 
 from .. import qtutils
 from .. import spellcheck
@@ -18,22 +14,19 @@ from .text import HintedTextEdit
 
 # pylint: disable=too-many-ancestors
 class SpellCheckTextEdit(HintedTextEdit):
-    def __init__(self, context, hint, parent=None):
+    def __init__(self, context, hint, check=None, parent=None):
         HintedTextEdit.__init__(self, context, hint, parent)
 
         # Default dictionary based on the current locale.
-        self.spellcheck = spellcheck.NorvigSpellCheck()
+        self.spellcheck = check or spellcheck.NorvigSpellCheck()
         self.highlighter = Highlighter(self.document(), self.spellcheck)
-
-    def set_dictionary(self, dictionary):
-        self.spellcheck.set_dictionary(dictionary)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:
             # Rewrite the mouse event to a left button event so the cursor is
             # moved to the location of the pointer.
-            event = QMouseEvent(
-                QEvent.MouseButtonPress,
+            event = QtGui.QMouseEvent(
+                QtCore.QEvent.MouseButtonPress,
                 event.pos(),
                 Qt.LeftButton,
                 Qt.LeftButton,
@@ -46,7 +39,7 @@ class SpellCheckTextEdit(HintedTextEdit):
 
         # Select the word under the cursor.
         cursor = self.textCursor()
-        cursor.select(QTextCursor.WordUnderCursor)
+        cursor.select(QtGui.QTextCursor.WordUnderCursor)
         self.setTextCursor(cursor)
 
         # Check if the selected word is misspelled and offer spelling
@@ -84,12 +77,12 @@ class SpellCheckTextEdit(HintedTextEdit):
         cursor.endEditBlock()
 
 
-class Highlighter(QSyntaxHighlighter):
+class Highlighter(QtGui.QSyntaxHighlighter):
 
     WORDS = r"(?iu)[\w']+"
 
     def __init__(self, doc, spellcheck_widget):
-        QSyntaxHighlighter.__init__(self, doc)
+        QtGui.QSyntaxHighlighter.__init__(self, doc)
         self.spellcheck = spellcheck_widget
         self.enabled = False
 
@@ -100,9 +93,9 @@ class Highlighter(QSyntaxHighlighter):
     def highlightBlock(self, text):
         if not self.enabled:
             return
-        fmt = QTextCharFormat()
+        fmt = QtGui.QTextCharFormat()
         fmt.setUnderlineColor(Qt.red)
-        fmt.setUnderlineStyle(QTextCharFormat.SpellCheckUnderline)
+        fmt.setUnderlineStyle(QtGui.QTextCharFormat.SpellCheckUnderline)
 
         for word_object in re.finditer(self.WORDS, text):
             if not self.spellcheck.check(word_object.group()):
@@ -111,13 +104,13 @@ class Highlighter(QSyntaxHighlighter):
                 )
 
 
-class SpellAction(QAction):
+class SpellAction(QtWidgets.QAction):
     """QAction that returns the text in a signal."""
 
-    result = Signal(object)
+    result = QtCore.Signal(object)
 
     def __init__(self, *args):
-        QAction.__init__(self, *args)
+        QtWidgets.QAction.__init__(self, *args)
         # pylint: disable=no-member
         self.triggered.connect(self.correct)
 
