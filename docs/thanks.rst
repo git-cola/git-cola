@@ -192,7 +192,6 @@ Thanks
 * Mithil Poojary
 * Mosaab Alzoubi
 * Muhammad Bashir Al-Noimi
-* Myz
 * nakanoi
 * Nanda Lopes
 * Naraesk
@@ -218,10 +217,12 @@ Thanks
 * Pavel Rehak
 * Peer Sommerlund
 * Peter Dave Hello
+* Peter Jensen
 * Peter Júnoš
 * Petr Gladkikh
 * Philip Stark
 * Pilar Molina Lopez
+* Pius Raeder
 * Radek Novacek
 * Radek Postołowicz
 * Rafael Nascimento
