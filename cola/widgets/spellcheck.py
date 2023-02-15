@@ -64,7 +64,12 @@ class SpellCheckTextEdit(HintedTextEdit):
 
     def contextMenuEvent(self, event):
         popup_menu, _ = self.context_menu()
+        self.build_context_menu(popup_menu)
         popup_menu.exec_(self.mapToGlobal(event.pos()))
+
+    def build_context_menu(self, menu):
+        """Extension point for adding to the context menu"""
+        pass
 
     def correct(self, word):
         """Replaces the selected text with word."""
@@ -75,6 +80,120 @@ class SpellCheckTextEdit(HintedTextEdit):
         cursor.insertText(word)
 
         cursor.endEditBlock()
+
+
+class SpellCheckLineEdit(SpellCheckTextEdit):
+    """A fake QLineEdit that provides spellcheck capabilities
+
+    This class emulates QLineEdit using our QPlainTextEdit base class
+    so that we can leverage the existing spellcheck feature.
+
+    """
+    down_pressed = QtCore.Signal(object)
+
+    # Based on http://blog.ssokolow.com/archives/2022/07/22/a-qlineedit-replacement-with-spell-checking/
+    def __init__(self, context, hint, check=None, parent=None):
+        super(SpellCheckLineEdit, self).__init__(
+            context, hint, check=check, parent=parent
+        )
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setWordWrapMode(QtGui.QTextOption.NoWrap)
+        self.setTabChangesFocus(True)
+        self.textChanged.connect(self._trim_changed_text_lines, Qt.QueuedConnection)
+
+    def focusInEvent(self, event):
+        """Select text when entering with a tab to mimic QLineEdit"""
+        super(SpellCheckLineEdit, self).focusInEvent(event)
+
+        if event.reason() in (
+            Qt.BacktabFocusReason,
+            Qt.ShortcutFocusReason,
+            Qt.TabFocusReason,
+        ):
+            self.selectAll()
+
+    def focusOutEvent(self, event):
+        """De-select text when exiting with tab to mimic QLineEdit"""
+        super(SpellCheckLineEdit, self).focusOutEvent(event)
+
+        if event.reason() in (
+            Qt.BacktabFocusReason,
+            Qt.MouseFocusReason,
+            Qt.ShortcutFocusReason,
+            Qt.TabFocusReason,
+        ):
+            cur = self.textCursor()
+            cur.movePosition(QtGui.QTextCursor.End)
+            self.setTextCursor(cur)
+
+    def keyPressEvent(self, event):
+        """Handle the up/down arrow keys"""
+        event_key = event.key()
+        if event_key == Qt.Key_Up:
+            cursor = self.textCursor()
+            if cursor.position() == 0:
+                cursor.clearSelection()
+            else:
+                if event.modifiers() & Qt.ShiftModifier:
+                    mode = QtGui.QTextCursor.KeepAnchor
+                else:
+                    mode = QtGui.QTextCursor.MoveAnchor
+                cursor.setPosition(0, mode)
+            self.setTextCursor(cursor)
+            return
+
+        if event_key == Qt.Key_Down:
+            cursor = self.textCursor()
+            cur_position = cursor.position()
+            end_position = len(self.value())
+            if cur_position == end_position:
+                cursor.clearSelection()
+                self.setTextCursor(cursor)
+                self.down_pressed.emit(event.modifiers())
+            else:
+                if event.modifiers() & Qt.ShiftModifier:
+                    mode = QtGui.QTextCursor.KeepAnchor
+                else:
+                    mode = QtGui.QTextCursor.MoveAnchor
+                cursor.setPosition(end_position, mode)
+                self.setTextCursor(cursor)
+            return
+        super(SpellCheckLineEdit, self).keyPressEvent(event)
+
+    def minimumSizeHint(self):
+        """Match QLineEdit's size behavior"""
+        block_fmt = self.document().firstBlock().blockFormat()
+        width = super(SpellCheckLineEdit, self).minimumSizeHint().width()
+        height = int(
+            QtGui.QFontMetricsF(self.font()).lineSpacing() +
+            block_fmt.topMargin() +
+            block_fmt.bottomMargin() +
+            self.document().documentMargin() +
+            2 * self.frameWidth()
+        )
+
+        style_opts = QtWidgets.QStyleOptionFrame()
+        style_opts.initFrom(self)
+        style_opts.lineWidth = self.frameWidth()
+
+        return self.style().sizeFromContents(
+            QtWidgets.QStyle.CT_LineEdit,
+            style_opts,
+            QtCore.QSize(width, height),
+            self
+        )
+
+    def sizeHint(self):
+        """Use the minimum size as the sizeHint()"""
+        return self.minimumSizeHint()
+
+    def _trim_changed_text_lines(self):
+        """Trim the document to a single line to enforce a maximum of line line"""
+        # self.setMaximumBlockCount(1) Undo/Redo.
+        if self.document().blockCount() > 1:
+            self.document().setPlainText(self.document().firstBlock().text())
 
 
 class Highlighter(QtGui.QSyntaxHighlighter):

@@ -385,6 +385,12 @@ class TextEdit(QtWidgets.QTextEdit):
         """Return a safe value, e.g. a stripped value"""
         return self.ext.value()
 
+    def set_cursor_position(self, position):
+        """Set the cursor position"""
+        cursor = self.textCursor()
+        cursor.setPosition(position)
+        self.setTextCursor(cursor)
+
     def set_value(self, value, block=False):
         self.ext.set_value(value, block=block)
 
