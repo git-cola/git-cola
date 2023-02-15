@@ -4,12 +4,9 @@ import shutil
 import stat
 import tempfile
 
-import pytest
+from unittest.mock import Mock, patch  # noqa pylint: disable=unused-import
 
-try:
-    from unittest.mock import Mock, patch  # noqa pylint: disable=unused-import
-except ImportError:
-    from mock import Mock, patch  # noqa pylint: disable=unused-import
+import pytest
 
 from cola import core
 from cola import git

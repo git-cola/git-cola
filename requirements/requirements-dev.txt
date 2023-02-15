@@ -8,15 +8,11 @@ wheel
 
 ## pylint, flake8 checkers are used by "make check".
 flake8
-mock
 pylint>=2.14.0
-PyYAML
 
-## mock and pytest packages are used by the "make test" test suite.
+## pytest packages are used by the "make test" test suite.
 pytest>=3.6
 pytest-cov
-pytest-flake8
-pytest-black-multipy
 
 ## Build and install documentation using "make doc" and "make install-doc".
 jaraco.packaging >= 9
