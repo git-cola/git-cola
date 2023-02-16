@@ -53,18 +53,29 @@ class FileWidget(TreeWidget):
         if not commits:
             self.clear()
             return
+
         git = self.context.git
-        commit = commits[0]
-        oid = commit.oid
-        status, out, _ = git.show(
-            oid, z=True, numstat=True, oneline=True, no_renames=True
-        )
-        if status == 0:
-            paths = [f for f in out.rstrip('\0').split('\0') if f]
-            if paths:
-                paths = paths[1:]
+        paths = []
+
+        if len(commits) > 1:
+            # Get a list of changed files for a commit range.
+            start = commits[-1].oid + '~'
+            end = commits[0].oid
+            status, out, _ = git.diff(start, end, z=True, numstat=True, no_renames=True)
+            if status == 0:
+                paths = [f for f in out.rstrip('\0').split('\0') if f]
         else:
-            paths = []
+            # Get the list of changed files in a singel commit.
+            commit = commits[0]
+            oid = commit.oid
+            status, out, _ = git.show(
+                oid, z=True, numstat=True, oneline=True, no_renames=True
+            )
+            if status == 0:
+                paths = [f for f in out.rstrip('\0').split('\0') if f]
+                if paths:
+                    paths = paths[1:]  # Skip over the summary on the first line.
+
         self.list_files(paths)
 
     def list_files(self, files_log):

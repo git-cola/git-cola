@@ -376,15 +376,20 @@ def oid_diff(context, oid, filename=None):
     # Naively "$oid^!" is what we'd like to use but that doesn't
     # give the correct result for merges--the diff is reversed.
     # Be explicit and compare oid against its first parent.
+    return oid_diff_range(context, oid + '~', oid, filename=filename)
+
+
+def oid_diff_range(context, start, end, filename=None):
+    """Reeturn the diff for a commit range"""
+    args = [start, end]
     git = context.git
-    args = [oid + '~', oid]
     opts = common_diff_opts(context)
     _add_filename(args, filename)
     status, out, _ = git.diff(*args, **opts)
     if status != 0:
         # We probably don't have "$oid~" because this is the root commit.
         # "git show" is clever enough to handle the root commit.
-        args = [oid + '^!']
+        args = [end + '^!']
         _add_filename(args, filename)
         _, out, _ = git.show(pretty='format:', _readonly=True, *args, **opts)
         out = out.lstrip()
@@ -392,11 +397,17 @@ def oid_diff(context, oid, filename=None):
 
 
 def diff_info(context, oid, filename=None):
+    """Return the diff for the specified oid"""
+    return diff_range(context, oid + '~', oid, filename=filename)
+
+
+def diff_range(context, start, end, filename=None):
+    """Return the diff for the specified commit range"""
     git = context.git
-    decoded = log(git, '-1', oid, '--', pretty='format:%b').strip()
+    decoded = log(git, '-1', end, '--', pretty='format:%b').strip()
     if decoded:
         decoded += '\n\n'
-    return decoded + oid_diff(context, oid, filename=filename)
+    return decoded + oid_diff_range(context, start, end, filename=filename)
 
 
 # pylint: disable=too-many-arguments

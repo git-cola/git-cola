@@ -70,6 +70,10 @@ Usability, bells and whistles
   space-delimited, shell-quoted paths.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
 
+* The DAG viewer now displays the diff between the start and end commits when
+  multiple commits are selected. The diffs are displayed in the DAG's inline diff viewer.
+  (`#552 <https://github.com/git-cola/git-cola/issues/552>`_)
+
 * The "Unstage" menu item in the Status tool now uses a "Remove" icon.
   (`#1289 <https://github.com/git-cola/git-cola/pull/1289>`_)
 

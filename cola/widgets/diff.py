@@ -1126,6 +1126,8 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.context = context
         self.oid = 'HEAD'
+        self.oid_start = None
+        self.oid_end = None
         self.options = options
 
         author_font = QtGui.QFont(self.font())
@@ -1201,27 +1203,46 @@ class DiffWidget(QtWidgets.QWidget):
         self.options = options
         self.diff.set_options(options)
 
-    def set_diff_oid(self, oid, filename=None):
-        context = self.context
+    def start_diff_task(self, task):
+        """Clear the display and start a diff-gathering task"""
         self.diff.save_scrollbar()
         self.diff.set_loading_message()
-        task = DiffInfoTask(context, oid, filename)
         self.context.runtask.start(task, result=self.set_diff)
 
+    def set_diff_oid(self, oid, filename=None):
+        """Set the diff from a single commit object ID"""
+        task = DiffInfoTask(self.context, oid, filename)
+        self.start_diff_task(task)
+
+    def set_diff_range(self, start, end, filename=None):
+        task = DiffRangeTask(self.context, start + '~', end, filename)
+        self.start_diff_task(task)
+
     def commits_selected(self, commits):
-        if len(commits) != 1:
+        """Display an appropriate diff when commits are selected"""
+        if not commits:
             self.clear()
             return
         commit = commits[0]
-        oid = self.oid = commit.oid
+        oid = commit.oid
         email = commit.email or ''
         summary = commit.summary or ''
         author = commit.author or ''
-
         self.set_details(oid, author, email, '', summary)
-        self.set_diff_oid(oid)
+        self.oid = oid
+
+        if len(commits) > 1:
+            start, end = commits[-1], commits[0]
+            self.set_diff_range(start.oid, end.oid)
+            self.oid_start = start
+            self.oid_end = end
+        else:
+            self.set_diff_oid(oid)
+            self.oid_start = None
+            self.oid_end = None
 
     def set_diff(self, diff):
+        """Set the diff text"""
         self.diff.set_diff(diff)
 
     def set_details(self, oid, author, email, date, summary):
@@ -1249,9 +1270,15 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.clear()
 
     def files_selected(self, filenames):
+        """Update the view when a filename is selected"""
         if not filenames:
             return
-        self.set_diff_oid(self.oid, filenames[0])
+        oid_start = self.oid_start
+        oid_end = self.oid_end
+        if oid_start and oid_end:
+            self.set_diff_range(oid_start.oid, oid_end.oid, filename=filenames[0])
+        else:
+            self.set_diff_oid(self.oid, filename=filenames[0])
 
 
 class TextLabel(QtWidgets.QLabel):
@@ -1302,6 +1329,7 @@ class TextLabel(QtWidgets.QLabel):
 
 
 class DiffInfoTask(qtutils.Task):
+    """Gather diffs for a single commit"""
     def __init__(self, context, oid, filename):
         qtutils.Task.__init__(self)
         self.context = context
@@ -1312,3 +1340,17 @@ class DiffInfoTask(qtutils.Task):
         context = self.context
         oid = self.oid
         return gitcmds.diff_info(context, oid, filename=self.filename)
+
+
+class DiffRangeTask(qtutils.Task):
+    """Gather diffs for a range of commits"""
+    def __init__(self, context, start, end, filename):
+        qtutils.Task.__init__(self)
+        self.context = context
+        self.start = start
+        self.end = end
+        self.filename = filename
+
+    def task(self):
+        context = self.context
+        return gitcmds.diff_range(context, self.start, self.end, filename=self.filename)
