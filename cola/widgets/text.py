@@ -626,7 +626,14 @@ class HintWidget(QtCore.QObject):
     def focus_out(self):
         """Re-enable hint-mode when losing focus"""
         widget = self.widget()
-        if not get(widget):
+        try:
+            value = get(widget)
+        except RuntimeError:
+            # The widget may have just been destroyed during application shutdown.
+            # We're receiving a focusOut event but the widget can no longer be used.
+            # This can be safely ignored.
+            return
+        if not value:
             self.enable(True)
 
 
