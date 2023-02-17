@@ -464,8 +464,7 @@ def open_files(title, directory=None, filters=''):
     )
     return result[0]
 
-
-def opendir_dialog(caption, path):
+def opendir_dialog(path, caption='Browse...'):
     """Prompts for a directory path"""
     options = (
         QtWidgets.QFileDialog.Directory
