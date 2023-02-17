@@ -430,3 +430,21 @@ class seq(object):
 
     def __getitem__(self, idx):
         return self.seq[idx]
+
+
+def catch_runtime_error(func, *args, **kwargs):
+    """Run the function safely.
+
+    Catch RuntimeError to avoid tracebacks during application shutdown.
+
+    """
+    # Signals and callbacks can sometimes get triggered during application shutdown.
+    # This can happen when exiting while background tasks are still processing.
+    # Guard against this by making this operation a no-op.
+    try:
+        valid = True
+        result = func(*args, **kwargs)
+    except RuntimeError:
+        valid = False
+        result = None
+    return (valid, result)

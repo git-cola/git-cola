@@ -15,6 +15,7 @@ from ..qtutils import get
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import utils
 from ..i18n import N_
 from . import defs
 
@@ -605,7 +606,9 @@ class HintWidget(QtCore.QObject):
             style = self._hint_style
         else:
             style = self._default_style
-        QtCore.QTimer.singleShot(0, lambda: self._widget.setStyleSheet(style))
+        QtCore.QTimer.singleShot(
+            0, lambda: utils.catch_runtime_error(self._widget.setStyleSheet, style)
+        )
 
     def eventFilter(self, _obj, event):
         """Enable/disable hint-mode when focus changes"""
@@ -626,9 +629,8 @@ class HintWidget(QtCore.QObject):
     def focus_out(self):
         """Re-enable hint-mode when losing focus"""
         widget = self.widget()
-        try:
-            value = get(widget)
-        except RuntimeError:
+        valid, value = utils.catch_runtime_error(get, widget)
+        if not valid:
             # The widget may have just been destroyed during application shutdown.
             # We're receiving a focusOut event but the widget can no longer be used.
             # This can be safely ignored.

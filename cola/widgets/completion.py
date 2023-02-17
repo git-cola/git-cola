@@ -297,12 +297,7 @@ class GatherCompletionsThread(QtCore.QThread):
 
     def dispose(self):
         self.running = False
-        try:
-            self.wait()
-        except RuntimeError:
-            # The C++ object may have already been deleted by python while
-            # the application is tearing down. This is fine.
-            pass
+        utils.catch_runtime_error(self.wait)
 
     def run(self):
         text = None
@@ -457,12 +452,14 @@ class CompletionModel(QtGui.QStandardItemModel):
                 item.setIcon(from_filename(match))
             items.append(item)
 
-        try:
-            self.clear()
-            self.invisibleRootItem().appendRows(items)
-            self.updated.emit()
-        except RuntimeError:  # C++ object has been deleted
-            pass
+        # Results from background tasks can arrive after the widget has been destroyed.
+        utils.catch_runtime_error(self.set_items, items)
+
+    def set_items(self, items):
+        """Clear the widget and add items to the model"""
+        self.clear()
+        self.invisibleRootItem().appendRows(items)
+        self.updated.emit()
 
     def dispose(self):
         self.update_thread.dispose()
