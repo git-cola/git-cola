@@ -69,7 +69,6 @@ class SpellCheckTextEdit(HintedTextEdit):
 
     def build_context_menu(self, menu):
         """Extension point for adding to the context menu"""
-        pass
 
     def correct(self, word):
         """Replaces the selected text with word."""
@@ -89,9 +88,10 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
     so that we can leverage the existing spellcheck feature.
 
     """
-    down_pressed = QtCore.Signal(object)
+    down_pressed = QtCore.Signal()
 
-    # Based on http://blog.ssokolow.com/archives/2022/07/22/a-qlineedit-replacement-with-spell-checking/
+    # This widget is a single-line QTextEdit as described in
+    # http://blog.ssokolow.com/archives/2022/07/22/a-qlineedit-replacement-with-spell-checking/
     def __init__(self, context, hint, check=None, parent=None):
         super(SpellCheckLineEdit, self).__init__(
             context, hint, check=check, parent=parent
@@ -151,7 +151,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
             if cur_position == end_position:
                 cursor.clearSelection()
                 self.setTextCursor(cursor)
-                self.down_pressed.emit(event.modifiers())
+                self.down_pressed.emit()
             else:
                 if event.modifiers() & Qt.ShiftModifier:
                     mode = QtGui.QTextCursor.KeepAnchor

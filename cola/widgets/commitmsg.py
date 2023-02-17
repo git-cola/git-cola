@@ -26,7 +26,6 @@ from ..utils import Group
 from . import defs
 from .selectcommits import select_commits
 from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
-from .text import HintedLineEdit
 from .text import anchor_mode
 
 
@@ -242,7 +241,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def focus_description(self):
         self.description.setFocus()
 
-    def summary_cursor_down(self, modifiers):
+    def summary_cursor_down(self):
         """Handle the down key in the summary field
 
         If the cursor is at the end of the line then focus the description.
@@ -560,7 +559,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):
 
-    down_pressed = Signal(object)
+    down_pressed = Signal()
     accepted = Signal()
 
     def __init__(self, context, check=None, parent=None):
