@@ -252,11 +252,8 @@ To avoid this issue, hold down `Alt / Option` when dragging from the `Status` to
 The drag and drop payload will no longer contain local file URLs -- it will contain
 plain text that is amenable for use on a command-line.
 
-Note: if drag and drop is not working and you are using Wayland / Gnome then you may
-need to check whether you have ``QT_QPA_PLATFORM`` set in your environment to a value
-other than ``wayland``. Git Cola will set this value to ``wayland`` when Wayland is
-detected, but this setup is not performed if the ``QT_QPA_PLATFORM`` environment
-variable is already set.
+Note: if drag and drop is not working and you are on Wayland then you may
+need to ``export QT_QPA_PLATFORM=wayland`` in your environment.
 
 Actions
 -------
