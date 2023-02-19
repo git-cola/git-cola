@@ -102,6 +102,7 @@ def new_repo(context):
 
 
 def open_new_repo(context):
+    """Create a new repository and open it"""
     dirname = new_repo(context)
     if not dirname:
         return
@@ -109,6 +110,7 @@ def open_new_repo(context):
 
 
 def new_bare_repo(context):
+    """Create a bare repository and configure a remote pointing to it"""
     result = None
     repo = prompt_for_new_bare_repo()
     if not repo:
@@ -129,6 +131,7 @@ def new_bare_repo(context):
 
 
 def prompt_for_new_bare_repo():
+    """Prompt for a directory and name for a new bare repository"""
     path = qtutils.opendir_dialog(N_('Select Directory...'), core.getcwd())
     if not path:
         return None
@@ -195,6 +198,7 @@ def diff_expression(context):
 
 
 def open_repo(context):
+    """Open a repository in the current window"""
     model = context.model
     dirname = qtutils.opendir_dialog(N_('Open Git Repository'), model.getcwd())
     if not dirname:
@@ -264,23 +268,30 @@ def load_commitmsg(context):
 
 
 def choose_from_dialog(get, context, title, button_text, default, icon=None):
+    """Choose a value from a dialog using the `get` method"""
     parent = qtutils.active_window()
     return get(context, title, button_text, parent, default=default, icon=icon)
 
 
 def choose_ref(context, title, button_text, default=None, icon=None):
+    """Choose a Git ref and return it"""
     return choose_from_dialog(
         completion.GitRefDialog.get, context, title, button_text, default, icon=icon
     )
 
 
 def choose_branch(context, title, button_text, default=None, icon=None):
+    """Choose a branch and return either the chosen branch or an empty value"""
     return choose_from_dialog(
         completion.GitBranchDialog.get, context, title, button_text, default, icon=icon
     )
 
 
 def choose_potential_branch(context, title, button_text, default=None, icon=None):
+    """Choose a "potential" branch for checking out.
+
+    This dialog includes remote branches from which new local branches can be created.
+    """
     return choose_from_dialog(
         completion.GitCheckoutBranchDialog.get,
         context,
@@ -292,6 +303,7 @@ def choose_potential_branch(context, title, button_text, default=None, icon=None
 
 
 def choose_remote_branch(context, title, button_text, default=None, icon=None):
+    """Choose a remote branch"""
     return choose_from_dialog(
         completion.GitRemoteBranchDialog.get,
         context,
@@ -323,6 +335,7 @@ def rename_branch(context):
 
 
 def reset_soft(context):
+    """Run "git reset --soft" to reset the branch HEAD"""
     title = N_('Reset Branch (Soft)')
     ok_text = N_('Reset Branch')
     ref = choose_ref(context, title, ok_text, default='HEAD^')
@@ -331,6 +344,7 @@ def reset_soft(context):
 
 
 def reset_mixed(context):
+    """Run "git reset --mixed" to reset the branch HEAD and staging area"""
     title = N_('Reset Branch and Stage (Mixed)')
     ok_text = N_('Reset')
     ref = choose_ref(context, title, ok_text, default='HEAD^')
@@ -339,6 +353,7 @@ def reset_mixed(context):
 
 
 def reset_keep(context):
+    """Run "git reset --keep" safe reset to avoid clobbering local changes"""
     title = N_('Reset All (Keep Unstaged Changes)')
     ref = choose_ref(context, title, N_('Reset and Restore'))
     if ref:
@@ -346,6 +361,12 @@ def reset_keep(context):
 
 
 def reset_merge(context):
+    """Run "git reset --merge" to reset the working tree and staging area
+
+    The staging area is allowed to carry forward unmerged index entries,
+    but if any unstaged changes would be clobbered by the reset then the
+    reset is aborted.
+    """
     title = N_('Restore Worktree and Reset All (Merge)')
     ok_text = N_('Reset and Restore')
     ref = choose_ref(context, title, ok_text, default='HEAD^')
@@ -354,6 +375,7 @@ def reset_merge(context):
 
 
 def reset_hard(context):
+    """Run "git reset --hard" to fully reset the working tree and staging area"""
     title = N_('Restore Worktree and Reset All (Hard)')
     ok_text = N_('Reset and Restore')
     ref = choose_ref(context, title, ok_text, default='HEAD^')
@@ -362,6 +384,7 @@ def reset_hard(context):
 
 
 def restore_worktree(context):
+    """Restore the worktree to the content from the specified commit"""
     title = N_('Restore Worktree')
     ok_text = N_('Restore Worktree')
     ref = choose_ref(context, title, ok_text, default='HEAD^')
