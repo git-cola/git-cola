@@ -183,6 +183,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         )
         self.copy_diff_action.setIcon(icons.copy())
         self.copy_diff_action.setEnabled(False)
+        self.menu_actions.append(self.copy_diff_action)
 
         # pylint: disable=no-member
         self.cursorPositionChanged.connect(self._cursor_changed, Qt.QueuedConnection)
@@ -251,12 +252,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         """Return the selected diff stripped of any diff characters"""
         sep, selection = self.selected_text_lines()
         return sep.join(_strip_diff(line) for line in selection)
-
-    def contextMenuEvent(self, event):
-        """Create the context menu for the diff display."""
-        menu = self.createStandardContextMenu()
-        menu.addAction(self.copy_diff_action)
-        menu.exec_(self.mapToGlobal(event.pos()))
 
     def copy_diff(self):
         """Copy the selected diff text stripped of any diff prefix characters"""
@@ -841,14 +836,18 @@ class DiffEditor(DiffTextEdit):
     def update_options(self):
         self.options_changed.emit()
 
-    # Qt overrides
-    def contextMenuEvent(self, event):
-        """Create the context menu for the diff display."""
-        menu = qtutils.create_menu(N_('Actions'), self)
+    def create_context_menu(self, event_pos):
+        """Override create_context_menu() to display a completely custom menu"""
+        menu = super(DiffEditor, self).create_context_menu(event_pos)
         context = self.context
         model = self.model
         s = self.selection_model.selection()
         filename = self.selection_model.filename()
+
+        # These menu actions will be inserted at the start of the widget.
+        current_actions = menu.actions()
+        menu_actions = []
+        add_action = menu_actions.append
 
         if model.stageable() or model.unstageable():
             if model.stageable():
@@ -857,23 +856,28 @@ class DiffEditor(DiffTextEdit):
             else:
                 self.stage_or_unstage.setText(N_('Unstage'))
                 self.stage_or_unstage.setIcon(icons.remove())
-            menu.addAction(self.stage_or_unstage)
+            add_action(self.stage_or_unstage)
 
         if model.partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 path = core.abspath(item)
-                action = menu.addAction(
+                action = qtutils.add_action_with_icon(
+                    menu,
                     icons.add(),
                     cmds.Stage.name(),
                     cmds.run(cmds.Stage, context, s.modified),
+                    hotkeys.STAGE_SELECTION,
                 )
-                action.setShortcut(hotkeys.STAGE_SELECTION)
-                menu.addAction(
+                add_action(action)
+
+                action = qtutils.add_action_with_icon(
+                    menu,
                     icons.cola(),
                     N_('Launch git-cola'),
                     cmds.run(cmds.OpenRepo, context, path),
                 )
+                add_action(action)
             elif item not in model.unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
@@ -888,33 +892,39 @@ class DiffEditor(DiffTextEdit):
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.add())
-                menu.addAction(self.action_apply_selection)
+                add_action(self.action_apply_selection)
 
                 self.action_edit_and_apply_selection.setText(edit_and_apply_text)
                 self.action_edit_and_apply_selection.setIcon(icons.add())
-                menu.addAction(self.action_edit_and_apply_selection)
+                add_action(self.action_edit_and_apply_selection)
 
                 self.action_revert_selection.setText(revert_text)
-                menu.addAction(self.action_revert_selection)
+                add_action(self.action_revert_selection)
 
                 self.action_edit_and_revert_selection.setText(edit_and_revert_text)
-                menu.addAction(self.action_edit_and_revert_selection)
+                add_action(self.action_edit_and_revert_selection)
 
         if s.staged and model.unstageable():
             item = s.staged[0]
             if item in model.submodules:
                 path = core.abspath(item)
-                action = menu.addAction(
+                action = qtutils.add_action_with_icon(
+                    menu,
                     icons.remove(),
                     cmds.Unstage.name(),
                     cmds.run(cmds.Unstage, context, s.staged),
+                    hotkeys.STAGE_SELECTION,
                 )
-                action.setShortcut(hotkeys.STAGE_SELECTION)
-                menu.addAction(
+                add_action(action)
+
+                qtutils.add_action_with_icon(
+                    menu,
                     icons.cola(),
                     N_('Launch git-cola'),
                     cmds.run(cmds.OpenRepo, context, path),
                 )
+                add_action(action)
+
             elif item not in model.staged_deleted:
                 if self.has_selection():
                     apply_text = N_('Unstage Selected Lines')
@@ -925,41 +935,36 @@ class DiffEditor(DiffTextEdit):
 
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.remove())
-                menu.addAction(self.action_apply_selection)
+                add_action(self.action_apply_selection)
 
                 self.action_edit_and_apply_selection.setText(edit_and_apply_text)
                 self.action_edit_and_apply_selection.setIcon(icons.remove())
-                menu.addAction(self.action_edit_and_apply_selection)
+                add_action(self.action_edit_and_apply_selection)
 
         if model.stageable() or model.unstageable():
             # Do not show the "edit" action when the file does not exist.
             # Untracked files exist by definition.
             if filename and core.exists(filename):
-                menu.addSeparator()
-                menu.addAction(self.launch_editor)
+                add_action(qtutils.menu_separator(menu))
+                add_action(self.launch_editor)
 
             # Removed files can still be diffed.
-            menu.addAction(self.launch_difftool)
+            add_action(self.launch_difftool)
 
         # Add the Previous/Next File actions, which improves discoverability
         # of their associated shortcuts
-        menu.addSeparator()
-        menu.addAction(self.move_up)
-        menu.addAction(self.move_down)
-        menu.addSeparator()
+        add_action(qtutils.menu_separator(menu))
+        add_action(self.move_up)
+        add_action(self.move_down)
+        add_action(qtutils.menu_separator(menu))
 
-        selected = bool(self.selected_text())
-        action = menu.addAction(icons.copy(), N_('Copy'), self.copy)
-        action.setShortcut(QtGui.QKeySequence.Copy)
-        action.setEnabled(selected)
+        if current_actions:
+            first_action = current_actions[0]
+        else:
+            first_action = None
+        menu.insertActions(first_action, menu_actions)
 
-        menu.addAction(self.copy_diff_action)
-
-        action = menu.addAction(icons.select_all(), N_('Select All'), self.selectAll)
-        action.setShortcut(QtGui.QKeySequence.SelectAll)
-
-        self.add_links_to_menu(menu)
-        menu.exec_(self.mapToGlobal(event.pos()))
+        return menu
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:

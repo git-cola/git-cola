@@ -34,13 +34,8 @@ class SpellCheckTextEdit(HintedTextEdit):
             )
         HintedTextEdit.mousePressEvent(self, event)
 
-    def context_menu(self):
-        popup_menu = HintedTextEdit.createStandardContextMenu(self)
-
-        # Select the word under the cursor.
-        cursor = self.textCursor()
-        cursor.select(QtGui.QTextCursor.WordUnderCursor)
-        self.setTextCursor(cursor)
+    def create_context_menu(self, event_pos):
+        popup_menu = super(SpellCheckTextEdit, self).create_context_menu(event_pos)
 
         # Check if the selected word is misspelled and offer spelling
         # suggestions if it is.
@@ -60,15 +55,15 @@ class SpellCheckTextEdit(HintedTextEdit):
                     popup_menu.addSeparator()
                     popup_menu.addMenu(spell_menu)
 
-        return popup_menu, spell_menu
+        return popup_menu
 
     def contextMenuEvent(self, event):
-        popup_menu, _ = self.context_menu()
-        self.build_context_menu(popup_menu)
-        popup_menu.exec_(self.mapToGlobal(event.pos()))
-
-    def build_context_menu(self, menu):
-        """Extension point for adding to the context menu"""
+        """Select the current word and then show a context menu"""
+        # Select the word under the cursor before calling the default contextMenuEvent.
+        cursor = self.textCursor()
+        cursor.select(QtGui.QTextCursor.WordUnderCursor)
+        self.setTextCursor(cursor)
+        super(SpellCheckTextEdit, self).contextMenuEvent(event)
 
     def correct(self, word):
         """Replaces the selected text with word."""

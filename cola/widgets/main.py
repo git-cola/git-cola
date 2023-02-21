@@ -740,7 +740,7 @@ class MainView(standard.MainWindow):
         )
         select_all.setIcon(icons.select_all())
         edit_menu.addSeparator()
-        commitmsg.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
+        qtutils.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)

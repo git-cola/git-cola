@@ -69,7 +69,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         # Menu acctions
         self.menu_actions = menu_actions = [
-            None,
             self.signoff_action,
             self.commit_action,
             None,
@@ -78,6 +77,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             None,
             self.move_up,
             self.move_down,
+            None,
         ]
 
         # Widgets
@@ -565,7 +565,6 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
     def __init__(self, context, check=None, parent=None):
         hint = N_('Commit summary')
         SpellCheckLineEdit.__init__(self, context, hint, check=check, parent=parent)
-        self.menu_actions = []
         self._comment_char = None
         self._refresh_config()
 
@@ -575,10 +574,6 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
     def _refresh_config(self):
         """Update comment char in response to config changes"""
         self._comment_char = prefs.comment_char(self.context)
-
-    def build_context_menu(self, menu):
-        """Add our custom context menu events"""
-        add_menu_actions(menu, self.menu_actions)
 
     def _update_summary_text(self):
         """Prevent commit messages from starting with comment characters"""
@@ -618,20 +613,10 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
     def __init__(self, context, check=None, parent=None):
         hint = N_('Extended description...')
         SpellCheckTextEdit.__init__(self, context, hint, check=check, parent=parent)
-        self.menu_actions = []
 
         self.action_emit_leave = qtutils.add_action(
             self, 'Shift Tab', self.leave.emit, hotkeys.LEAVE
         )
-
-    def build_menu(self):
-        menu, _ = self.context_menu()
-        add_menu_actions(menu, self.menu_actions)
-        return menu
-
-    def contextMenuEvent(self, event):
-        menu = self.build_menu()
-        menu.exec_(self.mapToGlobal(event.pos()))
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Up:
@@ -681,12 +666,3 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         SpellCheckTextEdit.setFont(self, font)
         fm = self.fontMetrics()
         self.setMinimumSize(QtCore.QSize(fm.width('MMMM'), fm.height() * 2))
-
-
-def add_menu_actions(menu, menu_actions):
-    """Add actions to a menu, treating None as a separator"""
-    for action in menu_actions:
-        if action is None:
-            menu.addSeparator()
-        else:
-            menu.addAction(action)

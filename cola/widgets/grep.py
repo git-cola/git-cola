@@ -325,12 +325,7 @@ class GrepTextView(VimHintedPlainTextEdit):
         self.context = context
         self.goto_action = qtutils.add_action(self, 'Launch Editor', self.edit)
         self.goto_action.setShortcut(hotkeys.EDIT)
-
-    def contextMenuEvent(self, event):
-        menu = self.createStandardContextMenu(event.pos())
-        menu.addSeparator()
-        menu.addAction(self.goto_action)
-        menu.exec_(self.mapToGlobal(event.pos()))
+        self.menu_actions.append(self.goto_action)
 
     def edit(self):
         goto_grep(self.context, self.selected_line())

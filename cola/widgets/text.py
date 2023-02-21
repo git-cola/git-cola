@@ -35,6 +35,7 @@ class LineEdit(QtWidgets.QLineEdit):
             get_value = get_stripped
         self._get_value = get_value
         self.cursor_position = LineEditCursorPosition(self, row)
+        self.menu_actions = []
 
         if clear_button and hasattr(self, 'setClearButtonEnabled'):
             self.setClearButtonEnabled(True)
@@ -213,6 +214,44 @@ class BaseTextEditExtension(QtCore.QObject):
                 cursor = widget.cursorForPosition(event.pos())
                 widget.setTextCursor(cursor)
 
+    def add_links_to_menu(self, menu):
+        """Add actions for opening URLs to a custom menu"""
+        links = self._get_links()
+        if links:
+            menu.addSeparator()
+        for url in links:
+            action = menu.addAction(N_('Open "%s"') % url)
+            action.setIcon(icons.external())
+            qtutils.connect_action(
+                action, partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
+            )
+
+    def _get_links(self):
+        """Return http links on the current line"""
+        _, selection = self.offset_and_selection()
+        if selection:
+            line = selection
+        else:
+            line = self.selected_line()
+        if not line:
+            return []
+        return [
+            word for word in line.split() if word.startswith(('http://', 'https://'))
+        ]
+
+    def create_context_menu(self, event_pos):
+        """Create a context menu for a widget"""
+        menu = self.widget.createStandardContextMenu(event_pos)
+        qtutils.add_menu_actions(menu, self.widget.menu_actions)
+        self.add_links_to_menu(menu)
+        return menu
+
+    def context_menu_event(self, event):
+        """Default context menu event"""
+        event_pos = event.pos()
+        menu = self.widget.create_context_menu(event_pos)
+        menu.exec_(self.widget.mapToGlobal(event_pos))
+
     # For extension by sub-classes
 
     # pylint: disable=no-self-use
@@ -251,6 +290,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.cursor_position = self.ext.cursor_position
         self.mouse_zoom = True
         self.options = options
+        self.menu_actions = []
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -321,34 +361,13 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             return
         super(PlainTextEdit, self).wheelEvent(event)
 
+    def create_context_menu(self, event_pos):
+        """Create a custom context menu"""
+        return self.ext.create_context_menu(event_pos)
+
     def contextMenuEvent(self, event):
-        """Generate a custom context menu"""
-        menu = self.createStandardContextMenu()
-        self.add_links_to_menu(menu)
-        menu.exec_(self.mapToGlobal(event.pos()))
-
-    def add_links_to_menu(self, menu):
-        """Add actions for opening URLs to a custom menu"""
-        links = self._get_links()
-        for url in links:
-            action = menu.addAction(N_('Open "%s"') % url)
-            action.setIcon(icons.external())
-            qtutils.connect_action(
-                action, partial(QtGui.QDesktopServices.openUrl, QtCore.QUrl(url))
-            )
-
-    def _get_links(self):
-        """Return http links on the current line"""
-        _, selection = self.offset_and_selection()
-        if selection:
-            line = selection
-        else:
-            line = self.selected_line()
-        if not line:
-            return []
-        return [
-            word for word in line.split() if word.startswith(('http://', 'https://'))
-        ]
+        """Custom contextMenuEvent() for building our custom context menus"""
+        self.ext.context_menu_event(event)
 
 
 class TextEditExtension(BaseTextEditExtension):
@@ -377,6 +396,7 @@ class TextEdit(QtWidgets.QTextEdit):
         self.ext = TextEditExtension(self, get_value, readonly)
         self.cursor_position = self.ext.cursor_position
         self.expandtab_enabled = False
+        self.menu_actions = []
 
     def get(self):
         """Return the raw unicode value from Qt"""
@@ -433,7 +453,16 @@ class TextEdit(QtWidgets.QTextEdit):
         cursor = self.textCursor()
         cursor.insertText(' ' * tabwidth)
 
+    def create_context_menu(self, event_pos):
+        """Create a custom context menu"""
+        return self.ext.create_context_menu(event_pos)
+
+    def contextMenuEvent(self, event):
+        """Custom contextMenuEvent() for building our custom context menus"""
+        self.ext.context_menu_event(event)
+
     def keyPressEvent(self, event):
+        """Override keyPressEvent to handle tab expansion"""
         expandtab = self.should_expandtab(event)
         if expandtab:
             self.expandtab()
@@ -442,6 +471,7 @@ class TextEdit(QtWidgets.QTextEdit):
             QtWidgets.QTextEdit.keyPressEvent(self, event)
 
     def keyReleaseEvent(self, event):
+        """Override keyReleaseEvent to special-case tab expansion"""
         expandtab = self.should_expandtab(event)
         if expandtab:
             event.ignore()
