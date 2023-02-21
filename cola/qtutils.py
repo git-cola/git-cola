@@ -536,8 +536,23 @@ def add_action(widget, text, fn, *shortcuts):
     return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
 
 
+def add_action_with_icon(widget, icon, text, fn, *shortcuts):
+    """Create a QAction using a custom icon"""
+    tip = text
+    action = _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+    action.setIcon(icon)
+    return action
+
+
 def add_action_with_status_tip(widget, text, tip, fn, *shortcuts):
     return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+
+
+def menu_separator(widget):
+    """Return a QAction whose isSeparator() returns true. Used in context menus"""
+    action = QtWidgets.QAction('', widget)
+    action.setSeparator(True)
+    return action
 
 
 def _add_action(widget, text, tip, fn, connect, *shortcuts):
@@ -1188,3 +1203,18 @@ def get_selected_items(widget, idx):
     """Return the selected items under the top-level item"""
     item = widget.topLevelItem(idx)
     return tree_selection_items(item)
+
+
+def add_menu_actions(menu, menu_actions):
+    """Add actions to a menu, treating None as a separator"""
+    current_actions = menu.actions()
+    if current_actions:
+        first_action = current_actions[0]
+    else:
+        first_action = None
+        menu.addSeparator()
+
+    for action in menu_actions:
+        if action is None:
+            action = menu_separator(menu)
+        menu.insertAction(first_action, action)
