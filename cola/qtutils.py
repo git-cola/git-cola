@@ -76,7 +76,7 @@ def disconnect(signal):
         pass
 
 
-def get(widget):
+def get(widget, default=None):
     """Query a widget for its python value"""
     if hasattr(widget, 'isChecked'):
         value = widget.isChecked()
@@ -91,7 +91,7 @@ def get(widget):
     elif hasattr(widget, 'date'):
         value = widget.date().toString(Qt.ISODate)
     else:
-        value = None
+        value = default
     return value
 
 
