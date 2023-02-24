@@ -258,6 +258,45 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         text = self.selected_diff_stripped()
         qtutils.set_clipboard(text)
 
+    def selected_lines(self):
+        """Return selected lines"""
+        cursor = self.textCursor()
+        selection_start = cursor.selectionStart()
+        selection_end = max(selection_start, cursor.selectionEnd() - 1)
+
+        first_line_idx = -1
+        last_line_idx = -1
+        line_idx = 0
+        line_start = 0
+
+        for line_idx, line in enumerate(get(self, default='').splitlines()):
+            line_end = line_start + len(line)
+            if line_start <= selection_start <= line_end:
+                first_line_idx = line_idx
+            if line_start <= selection_end <= line_end:
+                last_line_idx = line_idx
+                break
+            line_start = line_end + 1
+
+        if first_line_idx == -1:
+            first_line_idx = line_idx
+
+        if last_line_idx == -1:
+            last_line_idx = line_idx
+
+        return first_line_idx, last_line_idx
+
+    def selected_text_lines(self):
+        """Return selected lines and the CRLF / LF separator"""
+        first_line_idx, last_line_idx = self.selected_lines()
+        text = get(self, default='')
+        sep = _get_sep(text)
+        lines = []
+        for line_idx, line in enumerate(text.split(sep)):
+            if first_line_idx <= line_idx <= last_line_idx:
+                lines.append(line)
+        return sep, lines
+
 
 def _get_sep(text):
     """Return either CRLF or LF based on the content"""
@@ -1001,44 +1040,6 @@ class DiffEditor(DiffTextEdit):
 
         if scrollbar and scrollvalue is not None:
             scrollbar.setValue(scrollvalue)
-
-    def selected_lines(self):
-        cursor = self.textCursor()
-        selection_start = cursor.selectionStart()
-        selection_end = max(selection_start, cursor.selectionEnd() - 1)
-
-        first_line_idx = -1
-        last_line_idx = -1
-        line_idx = 0
-        line_start = 0
-
-        for line_idx, line in enumerate(get(self).splitlines()):
-            line_end = line_start + len(line)
-            if line_start <= selection_start <= line_end:
-                first_line_idx = line_idx
-            if line_start <= selection_end <= line_end:
-                last_line_idx = line_idx
-                break
-            line_start = line_end + 1
-
-        if first_line_idx == -1:
-            first_line_idx = line_idx
-
-        if last_line_idx == -1:
-            last_line_idx = line_idx
-
-        return first_line_idx, last_line_idx
-
-    def selected_text_lines(self):
-        """Return selected lines and the CRLF / LF separator"""
-        first_line_idx, last_line_idx = self.selected_lines()
-        text = get(self)
-        sep = _get_sep(text)
-        lines = []
-        for line_idx, line in enumerate(text.split(sep)):
-            if first_line_idx <= line_idx <= last_line_idx:
-                lines.append(line)
-        return sep, lines
 
     def apply_selection(self, *, edit=False):
         model = self.model
