@@ -430,6 +430,11 @@ class CompletionModel(QtGui.QStandardItemModel):
         return ((), (), set())
 
     def apply_matches(self, match_tuple):
+        """Build widgets for all of the matching items"""
+        if not match_tuple:
+            # Results from background tasks can arrive after the widget has been destroyed.
+            utils.catch_runtime_error(self.set_items, [])
+            return
         matched_refs, matched_paths, dirs = match_tuple
         QStandardItem = QtGui.QStandardItem
 
@@ -474,7 +479,7 @@ def _lower(x):
     return x.lower()
 
 
-def filter_matches(match_text, candidates, case_sensitive, sort_key=lambda x: x):
+def filter_matches(match_text, candidates, case_sensitive, sort_key=None):
     """Filter candidates and return the matches"""
     if case_sensitive:
         case_transform = _identity
@@ -487,7 +492,16 @@ def filter_matches(match_text, candidates, case_sensitive, sort_key=lambda x: x)
     else:
         matches = list(candidates)
 
-    matches.sort(key=lambda x: sort_key(case_transform(x)))
+    if case_sensitive:
+        if sort_key is None:
+            matches.sort()
+        else:
+            matches.sort(key=sort_key)
+    else:
+        if sort_key is None:
+            matches.sort(key=_lower)
+        else:
+            matches.sort(key=lambda x: sort_key(_lower(x)))
     return matches
 
 

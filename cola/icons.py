@@ -6,6 +6,7 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 from . import core
+from . import decorators
 from . import qtcompat
 from . import resources
 from .compat import ustr
@@ -65,6 +66,7 @@ def name_from_basename(basename):
     return 'icons:' + basename
 
 
+@decorators.memoize
 def from_name(name):
     """Return a QIcon from an absolute filename or "icons:basename.svg" name"""
     return QtGui.QIcon(name)
@@ -92,6 +94,7 @@ def from_theme(name, fallback=None):
     return icon(fallback or name)
 
 
+@decorators.memoize
 def basename_from_filename(filename):
     """Returns an icon name based on the filename"""
     mimetype = core.guess_mimetype(filename)
@@ -104,6 +107,7 @@ def basename_from_filename(filename):
     return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'file-text.svg')
 
 
+@decorators.memoize
 def from_filename(filename):
     """Return a QIcon from a filename"""
     basename = basename_from_filename(filename)
