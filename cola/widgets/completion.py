@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import re
+import time
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -683,17 +684,27 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
     def __init__(self, context, parent):
         GitRefCompletionModel.__init__(self, context, parent)
-        self.model_updated.connect(self.gather_paths, type=Qt.QueuedConnection)
         self._paths = []
         self._model = context.model
+        self._runtask = qtutils.RunTask(parent=self)
+        self._time = 0.0  # A low start time ensures that the very first event starts a task.
+        self.model_updated.connect(self._start_gathering_paths, type=Qt.QueuedConnection)
+
+    def _start_gathering_paths(self):
+        """Gather paths when the model changes"""
+        # Debounce updates that land within 1 second of each other.
+        if time.time() - self._time > 1.0:
+            self._runtask.start(qtutils.SimpleTask(self.gather_paths))
+        self._time = time.time()
 
     def gather_paths(self):
         """Gather paths and store them in the model"""
-        if not self._model.cfg.get(prefs.AUTOCOMPLETE_PATHS, True):
+        self._time = time.time()
+        if self._model.cfg.get(prefs.AUTOCOMPLETE_PATHS, True):
+            self._paths = gitcmds.tracked_files(self.context)
+        else:
             self._paths = []
-            return
-        context = self.context
-        self._paths = gitcmds.tracked_files(context)
+        self._time = time.time()
 
     def gather_matches(self, case_sensitive):
         """Filter paths and refs to find matching entries"""
