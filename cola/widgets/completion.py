@@ -433,7 +433,8 @@ class CompletionModel(QtGui.QStandardItemModel):
     def apply_matches(self, match_tuple):
         """Build widgets for all of the matching items"""
         if not match_tuple:
-            # Results from background tasks can arrive after the widget has been destroyed.
+            # Results from background tasks may arrive after the widget
+            # has been destroyed.
             utils.catch_runtime_error(self.set_items, [])
             return
         matched_refs, matched_paths, dirs = match_tuple
@@ -687,8 +688,10 @@ class GitLogCompletionModel(GitRefCompletionModel):
         self._paths = []
         self._model = context.model
         self._runtask = qtutils.RunTask(parent=self)
-        self._time = 0.0  # A low start time ensures that the very first event starts a task.
-        self.model_updated.connect(self._start_gathering_paths, type=Qt.QueuedConnection)
+        self._time = 0.0  # ensure that the first event runs a task.
+        self.model_updated.connect(
+            self._start_gathering_paths, type=Qt.QueuedConnection
+        )
 
     def _start_gathering_paths(self):
         """Gather paths when the model changes"""
