@@ -53,6 +53,7 @@ def save_path(context, path, model):
 
 
 class Browser(standard.Widget):
+    """A repository branch file browser. Browses files provided by GitRepoModel"""
     # Read-only mode property
     mode = property(lambda self: self.model.mode)
 

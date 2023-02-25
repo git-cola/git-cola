@@ -557,7 +557,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.description.highlighter.enable(enabled)
 
 
+# pylint: disable=too-many-ancestors
 class CommitSummaryLineEdit(SpellCheckLineEdit):
+    """Text input field for the commit summary"""
 
     down_pressed = Signal()
     accepted = Signal()

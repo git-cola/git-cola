@@ -300,7 +300,8 @@ class GatherCompletionsThread(QtCore.QThread):
         utils.catch_runtime_error(self.wait)
 
     def run(self):
-        text = None
+        text = ''
+        items = []
         self.running = True
         # Loop when the matched text changes between the start and end time.
         # This happens when gather_matches() takes too long and the
@@ -475,7 +476,6 @@ def _lower(x):
 
 def filter_matches(match_text, candidates, case_sensitive, sort_key=lambda x: x):
     """Filter candidates and return the matches"""
-
     if case_sensitive:
         case_transform = _identity
     else:
@@ -493,7 +493,6 @@ def filter_matches(match_text, candidates, case_sensitive, sort_key=lambda x: x)
 
 def filter_path_matches(match_text, file_list, case_sensitive):
     """Return matching completions from a list of candidate files"""
-
     files = set(file_list)
     files_and_dirs = utils.add_parents(files)
     dirs = files_and_dirs.difference(files)
@@ -526,7 +525,7 @@ class GitCompletionModel(CompletionModel):
     def __init__(self, context, parent):
         CompletionModel.__init__(self, context, parent)
         self.context = context
-        context.model.updated.connect(self.model_updated)
+        context.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
     def gather_matches(self, case_sensitive):
         refs = filter_matches(
@@ -544,7 +543,7 @@ class GitRefCompletionModel(GitCompletionModel):
 
     def __init__(self, context, parent):
         GitCompletionModel.__init__(self, context, parent)
-        context.model.refs_updated.connect(self.model_updated)
+        context.model.refs_updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
     def matches(self):
         model = self.context.model
@@ -675,6 +674,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         self._model = context.model
 
     def gather_paths(self):
+        """Gather paths and store them in the model"""
         if not self._model.cfg.get(prefs.AUTOCOMPLETE_PATHS, True):
             self._paths = []
             return
@@ -682,6 +682,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
         self._paths = gitcmds.tracked_files(context)
 
     def gather_matches(self, case_sensitive):
+        """Filter paths and refs to find matching entries"""
         if not self._paths:
             self.gather_paths()
         refs = filter_matches(
