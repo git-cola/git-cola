@@ -743,6 +743,7 @@ GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel, hint='<path>')
 
 
 class GitDialog(QtWidgets.QDialog):
+    # The "lineedit" argument is provided by the derived class constructor.
     def __init__(self, lineedit, context, title, text, parent, icon=None):
         QtWidgets.QDialog.__init__(self, parent)
         self.context = context

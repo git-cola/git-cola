@@ -94,7 +94,6 @@ def from_theme(name, fallback=None):
     return icon(fallback or name)
 
 
-@decorators.memoize
 def basename_from_filename(filename):
     """Returns an icon name based on the filename"""
     mimetype = core.guess_mimetype(filename)
@@ -107,7 +106,6 @@ def basename_from_filename(filename):
     return KNOWN_FILE_EXTENSIONS.get(extension.lower(), 'file-text.svg')
 
 
-@decorators.memoize
 def from_filename(filename):
     """Return a QIcon from a filename"""
     basename = basename_from_filename(filename)
