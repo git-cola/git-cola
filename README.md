@@ -42,7 +42,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 Git Cola uses QtPy, so you can choose between PyQt6, PyQt5 and PySide2 by setting
 the `QT_API` environment variable to `pyqt6`, `pyqt5` or `pyside2` as desired.
-`qtpy` defaults to `pyqt6` and falls back to `pyqt6` and `pyside2` if `pyqt5`
+`qtpy` defaults to `pyqt5` and falls back to `pyqt6` and `pyside2` if `pyqt5`
 is not installed.
 
 Any of the following Python Qt libraries must be installed:
@@ -126,6 +126,7 @@ One way to install the latest released version is to use `venv` (virtualenv) and
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
 
     python3 -m venv --system-site-packages env3
+    ./env3/bin/pip install PyQt$(echo $(qmake -query QT_VERSION) | head -c 1)==$(qmake -query QT_VERSION)
     ./env3/bin/pip install git-cola
     ./env3/bin/git-cola
 
