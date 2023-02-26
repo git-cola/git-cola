@@ -722,7 +722,9 @@ class GitDAG(standard.MainWindow):
         # signals/slots to bring control back to the main GUI thread
         self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
-        qtutils.add_action(self, 'Focus', self.focus_input, hotkeys.FOCUS)
+        qtutils.add_action(self, 'FocusInput', self.focus_input, hotkeys.FOCUS_INPUT)
+        qtutils.add_action(self, 'FocusTree', self.focus_tree, hotkeys.FOCUS_TREE)
+        qtutils.add_action(self, 'FocusDiff', self.focus_diff, hotkeys.FOCUS_DIFF)
         qtutils.add_close_action(self)
 
         self.set_params(params)
@@ -748,10 +750,16 @@ class GitDAG(standard.MainWindow):
         thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
     def focus_input(self):
+        """Focus the revision input field"""
         self.revtext.setFocus()
 
     def focus_tree(self):
+        """Focus the revision tree list widget"""
         self.treewidget.setFocus()
+
+    def focus_diff(self):
+        """Focus the diff widget"""
+        self.diffwidget.setFocus()
 
     def text_changed(self, txt):
         self.params.ref = txt

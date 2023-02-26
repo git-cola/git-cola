@@ -1175,6 +1175,7 @@ class DiffWidget(QtWidgets.QWidget):
         self.oid_label.elide()
 
         self.diff = DiffTextEdit(context, self, is_commit=is_commit, whitespace=False)
+        self.setFocusProxy(self.diff)
 
         self.info_layout = qtutils.vbox(
             defs.no_margin,
