@@ -5,7 +5,6 @@ from functools import partial
 
 from qtpy.QtCore import Qt
 from qtpy import QtCore
-from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
@@ -1633,33 +1632,10 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         )
         self.setLayout(layout)
 
-        palette = context.app.palette()
         theme = context.app.theme
-        if theme.highlight_color:
-            highlight_rgb = context.app.theme.highlight_color
-        else:
-            color = palette.highlight().color()
-            highlight_rgb = qtutils.rgb_css(color)
-
-        if theme.text_color:
-            text_rgb = theme.text_color
-            highlight_text_rgb = theme.text_color
-        else:
-            color = palette.text().color()
-            text_rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
-
-            color = palette.highlightedText().color()
-            highlight_text_rgb = 'rgb(%s, %s, %s)' % (
-                color.red(),
-                color.green(),
-                color.blue(),
-            )
-
-        if theme.disabled_text_color:
-            disabled_text_rgb = theme.disabled_text_color
-        else:
-            color = palette.color(QtGui.QPalette.Disabled, QtGui.QPalette.Text)
-            disabled_text_rgb = qtutils.rgb_css(color)
+        highlight_rgb = theme.highlight_color_rgb()
+        text_rgb, highlight_text_rgb = theme.text_colors_rgb()
+        disabled_text_rgb = theme.disabled_text_color_rgb()
 
         stylesheet = """
             * {

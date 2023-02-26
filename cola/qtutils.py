@@ -29,6 +29,11 @@ def active_window():
     return QtWidgets.QApplication.activeWindow()
 
 
+def current_palette():
+    """Return the QPalette for the current application"""
+    return QtWidgets.QApplication.instance().palette()
+
+
 def connect_action(action, fn):
     """Connect an action to a function"""
     action.triggered[bool].connect(lambda x: fn(), type=Qt.QueuedConnection)
@@ -1086,31 +1091,57 @@ class RunTask(QtCore.QObject):
 
 # Syntax highlighting
 
-
 def rgb(r, g, b):
+    """Create a QColor from r, g, b arguments"""
     color = QtGui.QColor()
     color.setRgb(r, g, b)
     return color
 
 
 def rgba(r, g, b, a=255):
+    """Create a QColor with alpha from r, g, b, a arguments"""
     color = rgb(r, g, b)
     color.setAlpha(a)
     return color
 
 
 def RGB(args):
+    """Create a QColor from a list of [r, g, b] arguments"""
     return rgb(*args)
 
 
 def rgb_css(color):
-    """Convert a QColor into an rgb(int, int, int) CSS string"""
-    return 'rgb(%d, %d, %d)' % (color.red(), color.green(), color.blue())
+    """Convert a QColor into an rgb #abcdef CSS string"""
+    return '#%s' % rgb_hex(color)
 
 
 def rgb_hex(color):
     """Convert a QColor into a hex aabbcc string"""
     return '%02x%02x%02x' % (color.red(), color.green(), color.blue())
+
+
+def clamp_color(value):
+    """Clamp an integer value between 0 and 255"""
+    return min(255, max(value, 0))
+
+
+def css_color(value):
+    """Convert a #abcdef hex string into a QColor"""
+    if value.startswith('#'):
+        value = value[1:]
+    try:
+        r = clamp_color(int(value[:2], base=16))  # ab
+    except ValueError:
+        r = 255
+    try:
+        g = clamp_color(int(value[2:4], base=16))  # cd
+    except ValueError:
+        g = 255
+    try:
+        b = clamp_color(int(value[4:6], base=16))  # ef
+    except ValueError:
+        b = 255
+    return rgb(r, g, b)
 
 
 def hsl(h, s, light):
@@ -1120,6 +1151,7 @@ def hsl(h, s, light):
 
 
 def hsl_css(h, s, light):
+    """Convert HSL values to a CSS #abcdef color string"""
     return rgb_css(hsl(h, s, light))
 
 

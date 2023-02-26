@@ -25,11 +25,14 @@ class Theme(object):
         self.name = name
         self.hr_name = hr_name
         self.is_dark = is_dark
+        self.is_palette_dark = None
         self.style_sheet = style_sheet
         self.main_color = main_color
         self.disabled_text_color = None
         self.text_color = None
         self.highlight_color = None
+        self.background_color = None
+        self.palette = None
 
     def build_style_sheet(self, app_palette):
         if self.style_sheet == EStylesheet.CUSTOM:
@@ -37,31 +40,41 @@ class Theme(object):
         elif self.style_sheet == EStylesheet.FLAT:
             return self.style_sheet_flat()
         else:
+            window = app_palette.color(QtGui.QPalette.Window)
+            self.is_palette_dark = window.lightnessF() < 0.5
             return style_sheet_default(app_palette)
 
     def build_palette(self, app_palette):
         QPalette = QtGui.QPalette
         palette_dark = app_palette.color(QPalette.Base).lightnessF() < 0.5
+        if self.is_palette_dark is None:
+            self.is_palette_dark = palette_dark
 
         if palette_dark and self.is_dark:
+            self.palette = app_palette
             return app_palette
         if not palette_dark and not self.is_dark:
+            self.palette = app_palette
             return app_palette
         if self.is_dark:
-            bg_color = QtGui.QColor('#202025')
+            background = '#202025'
         else:
-            bg_color = QtGui.QColor('#edeef3')
+            background = '#edeef3'
 
-        txt_color = QtGui.QColor('#777')
+        bg_color = qtutils.css_color(background)
+        txt_color = qtutils.css_color('#777777')
         palette = QPalette(bg_color)
         palette.setColor(QPalette.Base, bg_color)
         palette.setColor(QPalette.Disabled, QPalette.Text, txt_color)
+        self.background_color = background
+        self.palette = palette
         return palette
 
     def style_sheet_flat(self):
         main_color = self.main_color
-        color = QtGui.QColor(main_color)
+        color = qtutils.css_color(main_color)
         color_rgb = qtutils.rgb_css(color)
+        self.is_palette_dark = self.is_dark
 
         if self.is_dark:
             background = '#2e2f30'
@@ -87,12 +100,13 @@ class Theme(object):
             darker = qtutils.hsl_css(
                 color.hslHueF(), color.hslSaturationF(), color.lightnessF() * 0.4
             )
-            lighter = qtutils.hsl_css(color.hslHueF(), color.hslSaturationF() * 2, 0.92)
+            lighter = qtutils.hsl_css(color.hslHueF(), color.hslSaturationF(), 0.92)
             focus = color_rgb
 
         self.disabled_text_color = grayed
         self.text_color = field_text
         self.highlight_color = lighter
+        self.background_color = background
 
         return """
             /* regular widgets */
@@ -480,6 +494,71 @@ class Theme(object):
             )
             return style_sheet_default(app_palette)
 
+    def get_palette(self):
+        """Get a QPalette for the current theme"""
+        if self.palette is None:
+            palette = qtutils.current_palette()
+        else:
+            palette = self.palette
+        return palette
+
+    def highlight_color_rgb(self):
+        """Return an rgb(r,g,b) css color value for the selection highlight"""
+        if self.highlight_color:
+            highlight_rgb = self.highlight_color
+        elif self.main_color:
+            highlight_rgb = qtutils.rgb_css(
+                qtutils.css_color(self.main_color).lighter()
+            )
+        else:
+            palette = self.get_palette()
+            color = palette.color(QtGui.QPalette.Highlight)
+            highlight_rgb = qtutils.rgb_css(color)
+        return highlight_rgb
+
+    def selection_color(self):
+        """Return a color suitable for selections"""
+        highlight = qtutils.css_color(self.highlight_color_rgb())
+        if highlight.lightnessF() > 0.7:  # Avoid clamping light colors to white.
+            color = highlight
+        else:
+            color = highlight.lighter()
+        return color
+
+    def text_colors_rgb(self):
+        """Return a pair of rgb(r,g,b) css color values for text and selected text"""
+        if self.text_color:
+            text_rgb = self.text_color
+            highlight_text_rgb = self.text_color
+        else:
+            palette = self.get_palette()
+            color = palette.text().color()
+            text_rgb = qtutils.rgb_css(color)
+
+            color = palette.highlightedText().color()
+            highlight_text_rgb = qtutils.rgb_css(color)
+        return text_rgb, highlight_text_rgb
+
+    def disabled_text_color_rgb(self):
+        """Return an rgb(r,g,b) css color value for the disabled text"""
+        if self.disabled_text_color:
+            disabled_text_rgb = self.disabled_text_color
+        else:
+            palette = self.get_palette()
+            color = palette.color(QtGui.QPalette.Disabled, QtGui.QPalette.Text)
+            disabled_text_rgb = qtutils.rgb_css(color)
+        return disabled_text_rgb
+
+    def background_color_rgb(self):
+        """Return an rgb(r,g,b) css color value for the window background"""
+        if self.background_color:
+            background_color = self.background_color
+        else:
+            palette = self.get_palette()
+            window = palette.color(QtGui.QPalette.Base)
+            background_color = qtutils.rgb_css(window)
+        return background_color
+
 
 def style_sheet_default(palette):
     window = palette.color(QtGui.QPalette.Window)
@@ -554,32 +633,68 @@ def style_sheet_default(palette):
 
 def get_all_themes():
     themes = [
-        Theme('default', N_('Default'), False, EStylesheet.DEFAULT, None),
         Theme(
-            'flat-light-blue', N_('Flat light blue'), False, EStylesheet.FLAT, '#5271cc'
+            'default',
+            N_('Default'),
+            False,
+            style_sheet=EStylesheet.DEFAULT,
+            main_color=None,
         ),
         Theme(
-            'flat-light-red', N_('Flat light red'), False, EStylesheet.FLAT, '#cc5452'
+            'flat-light-blue',
+            N_('Flat light blue'),
+            False,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#5271cc',
         ),
         Theme(
-            'flat-light-grey', N_('Flat light grey'), False, EStylesheet.FLAT, '#707478'
+            'flat-light-red',
+            N_('Flat light red'),
+            False,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#cc5452',
+        ),
+        Theme(
+            'flat-light-grey',
+            N_('Flat light grey'),
+            False,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#707478',
         ),
         Theme(
             'flat-light-green',
             N_('Flat light green'),
             False,
-            EStylesheet.FLAT,
-            '#42a65c',
+            style_sheet=EStylesheet.FLAT,
+            main_color='#42a65c',
         ),
         Theme(
-            'flat-dark-blue', N_('Flat dark blue'), True, EStylesheet.FLAT, '#5271cc'
+            'flat-dark-blue',
+            N_('Flat dark blue'),
+            True,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#5271cc',
         ),
-        Theme('flat-dark-red', N_('Flat dark red'), True, EStylesheet.FLAT, '#cc5452'),
         Theme(
-            'flat-dark-grey', N_('Flat dark grey'), True, EStylesheet.FLAT, '#aaaaaa'
+            'flat-dark-red',
+            N_('Flat dark red'),
+            True,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#cc5452'
         ),
         Theme(
-            'flat-dark-green', N_('Flat dark green'), True, EStylesheet.FLAT, '#42a65c'
+            'flat-dark-grey',
+            N_('Flat dark grey'),
+            True,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#aaaaaa',
+        ),
+        Theme(
+            'flat-dark-green',
+            N_('Flat dark green'),
+            True,
+            style_sheet=EStylesheet.FLAT,
+            main_color='#42a65c',
         ),
     ]
 

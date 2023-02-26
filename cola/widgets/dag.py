@@ -1118,22 +1118,34 @@ class EdgeColor(object):
     current_color_index = 0
     colors = [
         QtGui.QColor(Qt.red),
-        QtGui.QColor(Qt.green),
-        QtGui.QColor(Qt.blue),
-        QtGui.QColor(Qt.black),
-        QtGui.QColor(Qt.darkRed),
-        QtGui.QColor(Qt.darkGreen),
-        QtGui.QColor(Qt.darkBlue),
         QtGui.QColor(Qt.cyan),
         QtGui.QColor(Qt.magenta),
+        QtGui.QColor(Qt.green),
         # Orange; Qt.yellow is too low-contrast
         qtutils.rgba(0xFF, 0x66, 0x00),
-        QtGui.QColor(Qt.gray),
-        QtGui.QColor(Qt.darkCyan),
-        QtGui.QColor(Qt.darkMagenta),
-        QtGui.QColor(Qt.darkYellow),
-        QtGui.QColor(Qt.darkGray),
     ]
+
+    @classmethod
+    def update_colors(cls, theme):
+        """Update the colors based on the color theme"""
+        if theme.is_dark or theme.is_palette_dark:
+            cls.colors.extend([
+                QtGui.QColor(Qt.red).lighter(),
+                QtGui.QColor(Qt.cyan).lighter(),
+                QtGui.QColor(Qt.magenta).lighter(),
+                QtGui.QColor(Qt.green).lighter(),
+                QtGui.QColor(Qt.yellow).lighter(),
+            ])
+        else:
+            cls.colors.extend([
+                QtGui.QColor(Qt.blue),
+                QtGui.QColor(Qt.darkRed),
+                QtGui.QColor(Qt.darkCyan),
+                QtGui.QColor(Qt.darkMagenta),
+                QtGui.QColor(Qt.darkGreen),
+                QtGui.QColor(Qt.darkYellow),
+                QtGui.QColor(Qt.darkBlue),
+            ])
 
     @classmethod
     def cycle(cls):
@@ -1289,10 +1301,10 @@ class Label(QtWidgets.QGraphicsItem):
     head_pen.setWidth(1)
 
     text_pen = QtGui.QPen()
-    text_pen.setColor(QtGui.QColor(Qt.darkGray))
+    text_pen.setColor(QtGui.QColor(Qt.black))
     text_pen.setWidth(1)
 
-    alpha = 180
+    alpha = 200
     head_color.setAlpha(alpha)
     other_color.setAlpha(alpha)
     remote_color.setAlpha(alpha)
@@ -1400,8 +1412,10 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def __init__(self, context, parent):
         QtWidgets.QGraphicsView.__init__(self, parent)
         ViewerMixin.__init__(self)
+        EdgeColor.update_colors(context.app.theme)
 
-        highlight = self.palette().color(QtGui.QPalette.Highlight)
+        theme = context.app.theme
+        highlight = theme.selection_color()
         Commit.commit_selected_color = highlight
         Commit.selected_outline_color = highlight.darker()
 
@@ -1441,7 +1455,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
-        self.setBackgroundBrush(QtGui.QColor(Qt.white))
+
+        background_color = qtutils.css_color(context.app.theme.background_color_rgb())
+        self.setBackgroundBrush(background_color)
 
         qtutils.add_action(
             self,
