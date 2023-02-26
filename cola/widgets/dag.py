@@ -95,6 +95,7 @@ class ViewerMixin(object):
         return selected_items[0]
 
     def selected_oid(self):
+        """Return the currently selected commit object ID"""
         item = self.selected_item()
         if item is None:
             result = None
@@ -103,9 +104,11 @@ class ViewerMixin(object):
         return result
 
     def selected_oids(self):
+        """Return the currently selected comit object IDs"""
         return [i.commit for i in self.selected_items()]
 
     def with_oid(self, fn):
+        """Run an operation with a commit object ID"""
         oid = self.selected_oid()
         if oid:
             result = fn(oid)
@@ -114,40 +117,49 @@ class ViewerMixin(object):
         return result
 
     def diff_selected_this(self):
+        """Diff the selected commit against the clicked commit"""
         clicked_oid = self.clicked.oid
         selected_oid = self.selected.oid
         self.diff_commits.emit(selected_oid, clicked_oid)
 
     def diff_this_selected(self):
+        """Diff the clicked commit against the selected commit"""
         clicked_oid = self.clicked.oid
         selected_oid = self.selected.oid
         self.diff_commits.emit(clicked_oid, selected_oid)
 
     def cherry_pick(self):
+        """Cherry-pick a commit using git cherry-pick"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.CherryPick, context, [oid]))
 
     def revert(self):
+        """Revert a commit using git revert"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.Revert, context, oid))
 
     def copy_to_clipboard(self):
+        """Copy the current commit object ID to the clipboard"""
         self.with_oid(qtutils.set_clipboard)
 
     def create_branch(self):
+        """Create a branch at the selected commit"""
         context = self.context
         create_new_branch = partial(createbranch.create_new_branch, context)
         self.with_oid(lambda oid: create_new_branch(revision=oid))
 
     def create_tag(self):
+        """Create a tag at the selected commit"""
         context = self.context
         self.with_oid(lambda oid: createtag.create_tag(context, ref=oid))
 
     def create_tarball(self):
+        """Create a tarball from the selected commit"""
         context = self.context
         self.with_oid(lambda oid: archive.show_save_dialog(context, oid, parent=self))
 
     def show_diff(self):
+        """Show the diff for the selected commit"""
         context = self.context
         self.with_oid(
             lambda oid: difftool.diff_expression(
@@ -156,6 +168,7 @@ class ViewerMixin(object):
         )
 
     def show_dir_diff(self):
+        """Show a full directory diff for the selected commit"""
         context = self.context
         self.with_oid(
             lambda oid: cmds.difftool_launch(
@@ -164,38 +177,47 @@ class ViewerMixin(object):
         )
 
     def reset_mixed(self):
+        """Reset the repository using git reset --mixed"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetMixed, context, ref=oid))
 
     def reset_keep(self):
+        """Reset the repository using git reset --keep"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetKeep, context, ref=oid))
 
     def reset_merge(self):
+        """Reset the repository using git reset --merge"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetMerge, context, ref=oid))
 
     def reset_soft(self):
+        """Reset the repository using git reset --soft"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetSoft, context, ref=oid))
 
     def reset_hard(self):
+        """Reset the repository using git reset --hard"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.ResetHard, context, ref=oid))
 
     def restore_worktree(self):
+        """Reset the worktree contents from the selected commit"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.RestoreWorktree, context, ref=oid))
 
     def checkout_detached(self):
+        """Checkout a commit using an anonymous detached HEAD"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.Checkout, context, [oid]))
 
     def save_blob_dialog(self):
+        """Save a file blob from the selected commit"""
         context = self.context
         self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid))
 
     def update_menu_actions(self, event):
+        """Update menu actions to reflect the selection state"""
         selected_items = self.selected_items()
         item = self.itemAt(event.pos())
         if item is None:
@@ -236,6 +258,7 @@ class ViewerMixin(object):
         self.menu_actions['save_blob'].setEnabled(has_single_selection)
 
     def context_menu_event(self, event):
+        """Build a context menu and execute it"""
         self.update_menu_actions(event)
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.menu_actions['diff_this_selected'])
@@ -273,6 +296,7 @@ def set_icon(icon, action):
 
 
 def viewer_actions(widget):
+    """Return commont actions across the tree and graph widgets"""
     return {
         'diff_this_selected': set_icon(
             icons.compare(),
@@ -390,6 +414,8 @@ def viewer_actions(widget):
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+    """Custom TreeWidgetItem used in to build the commit tree widget"""
+
     def __init__(self, commit, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.commit = commit
@@ -400,6 +426,7 @@ class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
 # pylint: disable=too-many-ancestors
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
+    """Display commits using a flat treewidget in "list" mode"""
 
     commits_selected = Signal(object)
     diff_commits = Signal(object, object)
@@ -475,12 +502,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     # ViewerMixin
     def go_up(self):
+        """Select the item above the current item"""
         self.goto(self.itemAbove)
 
     def go_down(self):
+        """Select the item below the current item"""
         self.goto(self.itemBelow)
 
     def goto(self, finder):
+        """Move the selection using a finder strategy"""
         items = self.selected_items()
         item = items[0] if items else None
         if item is None:
@@ -490,15 +520,18 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self.select([found.commit.oid])
 
     def selected_commit_range(self):
+        """Return a range of selected commits"""
         selected_items = self.selected_items()
         if not selected_items:
             return None, None
         return selected_items[-1].commit.oid, selected_items[0].commit.oid
 
     def set_selecting(self, selecting):
+        """Record the  "are we selecting?" status"""
         self.selecting = selecting
 
     def selection_changed(self):
+        """Respond to itemSelectionChanged notifications"""
         items = self.selected_items()
         if not items:
             return
@@ -507,12 +540,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.set_selecting(False)
 
     def select_commits(self, commits):
+        """Select commits that were selected by the sibling tree/graph widget"""
         if self.selecting:
             return
         with qtutils.BlockSignals(self):
             self.select([commit.oid for commit in commits])
 
     def select(self, oids):
+        """Mark items as selected"""
         if not oids:
             return
         self.clearSelection()
@@ -525,11 +560,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             item.setSelected(True)
 
     def clear(self):
+        """Clear the tree"""
         QtWidgets.QTreeWidget.clear(self)
         self.oidmap.clear()
         self.commits = []
 
     def add_commits(self, commits):
+        """Add commits to the tree"""
         self.commits.extend(commits)
         items = []
         for c in reversed(commits):
@@ -541,6 +578,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.insertTopLevelItems(0, items)
 
     def create_patch(self):
+        """Export a patch from the selected items"""
         items = self.selectedItems()
         if not items:
             return
@@ -551,9 +589,11 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     # Qt overrides
     def contextMenuEvent(self, event):
+        """Create a custom context menu and execute it"""
         self.context_menu_event(event)
 
     def mousePressEvent(self, event):
+        """Intercept the right-click event to retain selection state"""
         if event.button() == Qt.RightButton:
             event.accept()
             return
