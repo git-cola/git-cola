@@ -218,6 +218,11 @@ def paste():
     return from_theme('edit-paste', fallback='edit-paste.svg')
 
 
+def play():
+    """Play icon"""
+    return icon('play.svg')
+
+
 def delete():
     """Delete icon"""
     return from_theme('edit-delete', fallback='trashcan.svg')

@@ -592,10 +592,12 @@ class MainView(standard.MainWindow):
             cmds.run(cmds.Rebase, context),
             hotkeys.REBASE_START_AND_CONTINUE,
         )
+        self.rebase_start_action.setIcon(icons.play())
 
         self.rebase_edit_todo_action = add_action(
             self, N_('Edit...'), cmds.run(cmds.RebaseEditTodo, context)
         )
+        self.rebase_edit_todo_action.setIcon(icons.edit())
 
         self.rebase_continue_action = add_action(
             self,
@@ -603,14 +605,17 @@ class MainView(standard.MainWindow):
             cmds.run(cmds.RebaseContinue, context),
             hotkeys.REBASE_START_AND_CONTINUE,
         )
+        self.rebase_continue_action.setIcon(icons.play())
 
         self.rebase_skip_action = add_action(
             self, N_('Skip Current Patch'), cmds.run(cmds.RebaseSkip, context)
         )
+        self.rebase_skip_action.setIcon(icons.delete())
 
         self.rebase_abort_action = add_action(
             self, N_('Abort'), cmds.run(cmds.RebaseAbort, context)
         )
+        self.rebase_abort_action.setIcon(icons.close())
 
         # For "Start Rebase" only, reverse the first argument to setEnabled()
         # so that we can operate on it as a group.
