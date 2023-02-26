@@ -129,14 +129,15 @@ If you already have `PyQt5` installed from your distribution's package manager
 then you should skip the `pip install PyQt` steps.
 
 If you already have the `qt5-devel` package installed then you can lookup its version so
-that your virtualenv can install a compatible version of PyQt5 using `qmake`:
+that your virtualenv can install a compatible version of PyQt using `qmake`:
 
     QT_VERSION=$(qmake -query QT_VERSION)
-    QT_VERSION_MAJOR=$(qmake -query QT_VERSION)
+    QT_VERSION_MAJOR=$(qmake -query QT_VERSION | head -c 1)
     echo PyQt${QT_VERSION_MAJOR}==${QT_VERSION}
 
 Take note of the `PyQtX==A.B.C` value so that you can specify it when installing
-PyQt below.
+PyQt below if, and only if, you have `qmake` installed and want to interoperate
+with its corresponding Qt installation.
 
     python3 -m venv --system-site-packages env3
 
