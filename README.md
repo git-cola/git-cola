@@ -42,7 +42,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 Git Cola uses QtPy, so you can choose between PyQt6, PyQt5 and PySide2 by setting
 the `QT_API` environment variable to `pyqt6`, `pyqt5` or `pyside2` as desired.
-`qtpy` defaults to `pyqt6` and falls back to `pyqt6` and `pyside2` if `pyqt5`
+`qtpy` defaults to `pyqt5` and falls back to `pyqt6` and `pyside2` if `pyqt5`
 is not installed.
 
 Any of the following Python Qt libraries must be installed:
@@ -125,12 +125,29 @@ Python virtualenv!
 One way to install the latest released version is to use `venv` (virtualenv) and `pip`.
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
 
+If you already have `PyQt5` installed from your distribution's package manager
+then you should skip the `pip install PyQt` steps.
+
+If you already have the `qt5-devel` package installed then you can lookup its version so
+that your virtualenv can install a compatible version of PyQt5 using `qmake`:
+
+    QT_VERSION=$(qmake -query QT_VERSION)
+    QT_VERSION_MAJOR=$(qmake -query QT_VERSION)
+    echo PyQt${QT_VERSION_MAJOR}==${QT_VERSION}
+
+Take note of the `PyQtX==A.B.C` value so that you can specify it when installing
+PyQt below.
+
     python3 -m venv --system-site-packages env3
+
+    # Skip this command if you already have PyQt installed or if you do not have qmake
+    ./env3/bin/pip install PyQt${QT_VERSION_MAJOR}==${QT_VERSION}
+
     ./env3/bin/pip install git-cola
     ./env3/bin/git-cola
 
-Add the `env3/bin` directory to your `$PATH`, or symlink to `bin/git-cola` from
-somewhere in your `$PATH` such as `~/.local/bin/git-cola`, and you can launch
+Add the `env3/bin` directory to your `PATH` or symlink to `bin/git-cola` from
+somewhere in your `PATH` such as `~/.local/bin/git-cola`, and you can launch
 Git Cola like any other built-in `git` command:
 
     git cola
