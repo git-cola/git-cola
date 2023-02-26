@@ -33,6 +33,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
     )
     sys.exit(1)
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -182,11 +183,24 @@ class ColaApplication(object):
 
         self.context = context
         self.theme = None
+        self._set_rendering_options()
         self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
         self._app.setWindowIcon(icons.cola())
         self._app.setDesktopFileName('git-cola')
         self._install_style(gui_theme)
+
+    def _set_rendering_options(self):
+        """Configure rendering options for QGraphicsView"""
+        try:
+            QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_UseOpenGLES)
+            format = QtGui.QSurfaceFormat()
+            format.setVersion(2, 0)
+            format.setProfile(QtGui.QSurfaceFormat.NoProfile)
+            format.setSwapBehavior(QtGui.QSurfaceFormat.DoubleBuffer)
+            QtGui.QSurfaceFormat.setDefaultFormat(format)
+        except Exception:
+            pass
 
     def _install_style(self, theme_str):
         """Generate and apply a stylesheet to the app"""

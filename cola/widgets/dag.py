@@ -572,6 +572,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         """Respond to itemSelectionChanged notifications"""
         items = self.selected_items()
         if not items:
+            self.set_selecting(True)
+            self.commits_selected.emit([])
+            self.set_selecting(False)
             return
         self.set_selecting(True)
         self.commits_selected.emit([i.commit for i in items])
@@ -586,9 +589,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     def select(self, oids):
         """Mark items as selected"""
+        self.clearSelection()
         if not oids:
             return
-        self.clearSelection()
         for oid in oids:
             try:
                 item = self.oidmap[oid]
@@ -931,8 +934,7 @@ class GitDAG(standard.MainWindow):
         self.old_refs = refs
 
     def select_commits(self, commits):
-        if commits:
-            self.selection = commits
+        self.selection = commits
 
     def clear(self):
         self.commits.clear()
@@ -1507,7 +1509,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         self.context = context
         self.columns = {}
-        self.selection_list = []
         self.menu_actions = None
         self.commits = []
         self.items = {}
@@ -1530,14 +1531,14 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setDragMode(self.RubberBandDrag)
 
         scene = QtWidgets.QGraphicsScene(self)
-        scene.setItemIndexMethod(QtWidgets.QGraphicsScene.NoIndex)
+        scene.setItemIndexMethod(QtWidgets.QGraphicsScene.BspTreeIndex)
         self.setScene(scene)
 
         # pylint: disable=no-member
         scene.selectionChanged.connect(self.selection_changed)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setViewportUpdateMode(self.BoundingRectViewportUpdate)
+        self.setViewportUpdateMode(self.SmartViewportUpdate)
         self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)
@@ -1579,7 +1580,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def clear(self):
         EdgeColor.reset()
         self.scene().clear()
-        self.selection_list = []
         self.items.clear()
         self.x_offsets.clear()
         self.x_min = 24
@@ -1760,24 +1760,10 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.fitInView(rect, Qt.KeepAspectRatio)
         self.scene().invalidate()
 
-    def save_selection(self, event):
-        if event.button() != Qt.LeftButton:
-            return
-        elif Qt.ShiftModifier != event.modifiers():
-            return
-        self.selection_list = self.selected_items()
-
-    def restore_selection(self, event):
-        if Qt.ShiftModifier != event.modifiers():
-            return
-        for item in self.selection_list:
-            item.setSelected(True)
-
-    def handle_event(self, event_handler, event):
-        self.save_selection(event)
+    def handle_event(self, event_handler, event, update=True):
         event_handler(self, event)
-        self.restore_selection(event)
-        self.update()
+        if update:
+            self.update()
 
     def set_selecting(self, selecting):
         self.selecting = selecting
@@ -2233,15 +2219,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.handle_event(QtWidgets.QGraphicsView.mousePressEvent, event)
 
     def mouseMoveEvent(self, event):
-        pos = self.mapToScene(event.pos())
         if self.is_panning:
             self.pan(event)
             return
+        pos = self.mapToScene(event.pos())
         self.last_mouse[0] = pos.x()
         self.last_mouse[1] = pos.y()
-        self.handle_event(QtWidgets.QGraphicsView.mouseMoveEvent, event)
-        if self.pressed:
-            self.viewport().repaint()
+        self.handle_event(QtWidgets.QGraphicsView.mouseMoveEvent, event, update=False)
 
     def mouseReleaseEvent(self, event):
         self.pressed = False
@@ -2249,7 +2233,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             self.is_panning = False
             return
         self.handle_event(QtWidgets.QGraphicsView.mouseReleaseEvent, event)
-        self.selection_list = []
         self.viewport().repaint()
 
     def wheelEvent(self, event):
