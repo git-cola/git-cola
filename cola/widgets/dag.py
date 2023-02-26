@@ -176,6 +176,11 @@ class ViewerMixin(object):
             )
         )
 
+    def rebase_to_commit(self):
+        """Rebase the current branch to the selected commit"""
+        context = self.context
+        self.with_oid(lambda oid: cmds.do(cmds.Rebase, context, upstream=oid))
+
     def reset_mixed(self):
         """Reset the repository using git reset --mixed"""
         context = self.context
@@ -248,6 +253,7 @@ class ViewerMixin(object):
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection)
         self.menu_actions['create_tarball'].setEnabled(has_single_selection)
+        self.menu_actions['rebase_to_commit'].setEnabled(has_single_selection)
         self.menu_actions['reset_mixed'].setEnabled(has_single_selection)
         self.menu_actions['reset_keep'].setEnabled(has_single_selection)
         self.menu_actions['reset_merge'].setEnabled(has_single_selection)
@@ -266,6 +272,7 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['diff_commit'])
         menu.addAction(self.menu_actions['diff_commit_all'])
         menu.addSeparator()
+        menu.addAction(self.menu_actions['rebase_to_commit'])
         menu.addAction(self.menu_actions['create_branch'])
         menu.addAction(self.menu_actions['create_tag'])
         menu.addSeparator()
@@ -352,6 +359,12 @@ def viewer_actions(widget):
         ),
         'checkout_detached': qtutils.add_action(
             widget, N_('Checkout Detached HEAD'), widget.proxy.checkout_detached
+        ),
+        'rebase_to_commit': set_icon(
+            icons.play(),
+            qtutils.add_action(
+                widget, N_('Rebase to this commit'), widget.proxy.rebase_to_commit
+            ),
         ),
         'reset_soft': set_icon(
             icons.style_dialog_reset(),
