@@ -118,23 +118,29 @@ class MainModel(QtCore.QObject):
         if cwd:
             self.set_worktree(cwd)
 
-    def unstageable(self):
+    def is_diff_mode(self):
+        """Are we in diff mode?"""
+        return self.mode == self.mode_diff
+
+    def is_unstageable(self):
+        """Are we in a mode that supports "unstage" actions?"""
         return self.mode in self.modes_unstageable
 
-    def amending(self):
+    def is_amend_mode(self):
+        """Are we amending a commit?"""
         return self.mode == self.mode_amend
 
-    def undoable(self):
-        """Whether we can checkout files from the $head."""
+    def is_undoable(self):
+        """Can we checkout from the current branch or head ref?"""
         return self.mode in self.modes_undoable
 
-    def partially_stageable(self):
+    def is_partially_stageable(self):
         """Whether partial staging should be allowed."""
         return self.mode in self.modes_partially_stageable
 
-    def stageable(self):
+    def is_stageable(self):
         """Whether staging should be allowed."""
-        return self.partially_stageable() or self.mode == self.mode_untracked
+        return self.is_partially_stageable() or self.mode == self.mode_untracked
 
     def all_branches(self):
         return self.local_branches + self.remote_branches
@@ -238,7 +244,7 @@ class MainModel(QtCore.QObject):
     def set_mode(self, mode, head=None):
         """Set the current editing mode (worktree, index, amending, ...)"""
         # Do not allow going into index or worktree mode when amending.
-        if self.amending() and mode != self.mode_none:
+        if self.is_amend_mode() and mode != self.mode_none:
             return
         # We cannot amend in the middle of git cherry-pick, git am or git merge.
         if (
@@ -388,7 +394,7 @@ class MainModel(QtCore.QObject):
         The message is cleared when the merge completes
 
         """
-        if self.amending():
+        if self.is_amend_mode():
             return
         # Check if there's a message file in .git/
         context = self.context

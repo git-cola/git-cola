@@ -854,7 +854,7 @@ class DiffEditor(DiffTextEdit):
         enabled = False
         s = self.selection_model.selection()
         model = self.model
-        if model.partially_stageable():
+        if model.is_partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 pass
@@ -888,8 +888,8 @@ class DiffEditor(DiffTextEdit):
         menu_actions = []
         add_action = menu_actions.append
 
-        if model.stageable() or model.unstageable():
-            if model.stageable():
+        if model.is_stageable() or model.is_unstageable():
+            if model.is_stageable():
                 self.stage_or_unstage.setText(N_('Stage'))
                 self.stage_or_unstage.setIcon(icons.add())
             else:
@@ -897,7 +897,7 @@ class DiffEditor(DiffTextEdit):
                 self.stage_or_unstage.setIcon(icons.remove())
             add_action(self.stage_or_unstage)
 
-        if model.partially_stageable():
+        if model.is_partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
                 path = core.abspath(item)
@@ -943,7 +943,7 @@ class DiffEditor(DiffTextEdit):
                 self.action_edit_and_revert_selection.setText(edit_and_revert_text)
                 add_action(self.action_edit_and_revert_selection)
 
-        if s.staged and model.unstageable():
+        if s.staged and model.is_unstageable():
             item = s.staged[0]
             if item in model.submodules:
                 path = core.abspath(item)
@@ -980,7 +980,7 @@ class DiffEditor(DiffTextEdit):
                 self.action_edit_and_apply_selection.setIcon(icons.remove())
                 add_action(self.action_edit_and_apply_selection)
 
-        if model.stageable() or model.unstageable():
+        if model.is_stageable() or model.is_unstageable():
             # Do not show the "edit" action when the file does not exist.
             # Untracked files exist by definition.
             if filename and core.exists(filename):
@@ -1044,9 +1044,9 @@ class DiffEditor(DiffTextEdit):
     def apply_selection(self, *, edit=False):
         model = self.model
         s = self.selection_model.single_selection()
-        if model.partially_stageable() and (s.modified or s.untracked):
+        if model.is_partially_stageable() and (s.modified or s.untracked):
             self.process_diff_selection(edit=edit)
-        elif model.unstageable():
+        elif model.is_unstageable():
             self.process_diff_selection(reverse=True, edit=edit)
 
     def revert_selection(self, *, edit=False):

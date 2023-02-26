@@ -79,7 +79,7 @@ def test_untracked(app_context):
 
 def test_stageable(app_context):
     """Test the 'stageable' attribute."""
-    assert not app_context.model.stageable()
+    assert not app_context.model.is_stageable()
 
 
 def test_remotes(app_context):

@@ -808,7 +808,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             return self._create_staged_submodule_context_menu(menu, s)
 
         context = self.context
-        if self._model.unstageable():
+        if self._model.is_unstageable():
             action = menu.addAction(
                 icons.remove(),
                 N_('Unstage Selected'),
@@ -827,7 +827,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if all_exist:
             menu.addAction(self.launch_difftool_action)
 
-        if self._model.undoable():
+        if self._model.is_undoable():
             menu.addAction(self.revert_unstaged_edits_action)
 
         menu.addAction(self.view_history_action)
@@ -876,7 +876,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if modified_submodule:
             return self._create_modified_submodule_context_menu(menu, s)
 
-        if self._model.stageable():
+        if self._model.is_stageable():
             action = menu.addAction(
                 icons.add(),
                 N_('Stage Selected'),
@@ -893,10 +893,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             for i in self.staged()
         )
 
-        if all_exist and s.modified and self._model.stageable():
+        if all_exist and s.modified and self._model.is_stageable():
             menu.addAction(self.launch_difftool_action)
 
-        if s.modified and self._model.stageable() and self._model.undoable():
+        if s.modified and self._model.is_stageable() and self._model.is_undoable():
             menu.addSeparator()
             menu.addAction(self.revert_unstaged_edits_action)
 
@@ -943,7 +943,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             )
             menu.addSeparator()
 
-        if self._model.stageable():
+        if self._model.is_stageable():
             menu.addSeparator()
             action = menu.addAction(
                 icons.add(),
@@ -1094,7 +1094,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         selected_indexes = self.selected_indexes()
         if not selected_indexes:
-            if self._model.amending():
+            if self._model.is_amend_mode() or self._model.is_diff_mode():
                 cmds.do(cmds.SetDiffText, context, '')
             else:
                 cmds.do(cmds.ResetMode, context)

@@ -1137,7 +1137,7 @@ class MainView(standard.MainWindow):
         is_merging = self.model.is_merging
         is_rebasing = self.model.is_rebasing
         is_applying_patch = self.model.is_applying_patch
-        is_diff_mode = self.mode == self.model.mode_diff
+        is_diff_mode = self.model.is_diff_mode()
         is_amend_mode = self.mode == self.model.mode_amend
 
         prefix = uchr(0xAB)

@@ -2169,7 +2169,7 @@ class RevertEditsCommand(ConfirmAction):
         self.icon = icons.undo()
 
     def ok_to_run(self):
-        return self.model.undoable()
+        return self.model.is_undoable()
 
     # pylint: disable=no-self-use
     def checkout_from_head(self):
