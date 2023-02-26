@@ -1336,6 +1336,7 @@ class TextLabel(QtWidgets.QLabel):
 
 class DiffInfoTask(qtutils.Task):
     """Gather diffs for a single commit"""
+
     def __init__(self, context, oid, filename):
         qtutils.Task.__init__(self)
         self.context = context
@@ -1350,6 +1351,7 @@ class DiffInfoTask(qtutils.Task):
 
 class DiffRangeTask(qtutils.Task):
     """Gather diffs for a range of commits"""
+
     def __init__(self, context, start, end, filename):
         qtutils.Task.__init__(self)
         self.context = context

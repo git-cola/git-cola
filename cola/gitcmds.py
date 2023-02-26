@@ -181,7 +181,7 @@ def current_branch(context):
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
-            value = data[len(refs_prefix):]
+            value = data[len(refs_prefix) :]
             CurrentBranchCache.key = key
             CurrentBranchCache.value = value
             return value
@@ -198,7 +198,7 @@ def _read_git_head(context, head, default='main'):
         data = core.read(head).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
-            return data[len(ref_prefix):]
+            return data[len(ref_prefix) :]
         # Detached head
         return data
     # Legacy .git/HEAD symlinks
@@ -206,7 +206,7 @@ def _read_git_head(context, head, default='main'):
         refs_heads = core.realpath(git.git_path('refs', 'heads'))
         path = core.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
-            return path[len(refs_heads) + 1:]
+            return path[len(refs_heads) + 1 :]
 
     return default
 
@@ -938,7 +938,7 @@ def strip_remote(remotes, remote_branch):
     for remote in remotes:
         prefix = remote + '/'
         if remote_branch.startswith(prefix):
-            return remote_branch[len(prefix):]
+            return remote_branch[len(prefix) :]
     return remote_branch.split('/', 1)[-1]
 
 

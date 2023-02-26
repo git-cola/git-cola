@@ -391,8 +391,7 @@ class MainModel(QtCore.QObject):
     def _update_commitmsg(self):
         """Check for merge message files and update the commit message
 
-        The message is cleared when the merge completes
-
+        The message is cleared when the merge completes.
         """
         if self.is_amend_mode():
             return

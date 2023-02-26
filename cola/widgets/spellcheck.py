@@ -83,6 +83,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
     so that we can leverage the existing spellcheck feature.
 
     """
+
     down_pressed = QtCore.Signal()
 
     # This widget is a single-line QTextEdit as described in
@@ -162,11 +163,11 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         block_fmt = self.document().firstBlock().blockFormat()
         width = super(SpellCheckLineEdit, self).minimumSizeHint().width()
         height = int(
-            QtGui.QFontMetricsF(self.font()).lineSpacing() +
-            block_fmt.topMargin() +
-            block_fmt.bottomMargin() +
-            self.document().documentMargin() +
-            2 * self.frameWidth()
+            QtGui.QFontMetricsF(self.font()).lineSpacing()
+            + block_fmt.topMargin()
+            + block_fmt.bottomMargin()
+            + self.document().documentMargin()
+            + 2 * self.frameWidth()
         )
 
         style_opts = QtWidgets.QStyleOptionFrame()
@@ -174,10 +175,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         style_opts.lineWidth = self.frameWidth()
 
         return self.style().sizeFromContents(
-            QtWidgets.QStyle.CT_LineEdit,
-            style_opts,
-            QtCore.QSize(width, height),
-            self
+            QtWidgets.QStyle.CT_LineEdit, style_opts, QtCore.QSize(width, height), self
         )
 
     def sizeHint(self):
