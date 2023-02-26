@@ -74,7 +74,7 @@ Usability, bells and whistles
   multiple commits are selected. The diffs are displayed in the DAG's inline diff viewer.
   (`#552 <https://github.com/git-cola/git-cola/issues/552>`_)
 
-* The DAG viewer learned to initiate rebases from its right-click menu.
+* The DAG viewer learned to checkout branches and initiate rebases from its right-click menu.
   (`#1113 <https://github.com/git-cola/git-cola/issues/1113>`_)
 
 * The "Unstage" menu item in the Status tool now uses a "Remove" icon.

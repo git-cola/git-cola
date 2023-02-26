@@ -56,9 +56,11 @@ def browse_other(context):
     BrowseBranch.browse(context, branch)
 
 
-def checkout_branch(context):
+def checkout_branch(context, default=None):
     """Launch the 'Checkout Branch' dialog."""
-    branch = choose_potential_branch(context, N_('Checkout Branch'), N_('Checkout'))
+    branch = choose_potential_branch(
+        context, N_('Checkout Branch'), N_('Checkout'), default=default
+    )
     if not branch:
         return
     cmds.do(cmds.CheckoutBranch, context, branch)

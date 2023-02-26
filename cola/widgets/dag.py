@@ -19,6 +19,7 @@ from .. import core
 from .. import cmds
 from .. import difftool
 from .. import gitcmds
+from .. import guicmds
 from .. import hotkeys
 from .. import icons
 from .. import qtcompat
@@ -142,6 +143,16 @@ class ViewerMixin(object):
         """Copy the current commit object ID to the clipboard"""
         self.with_oid(qtutils.set_clipboard)
 
+    def checkout_branch(self):
+        """Checkout the selected branch"""
+        item = self.selected_item()
+        if not item:
+            return
+        branches = item.commit.branches
+        if not branches:
+            return
+        guicmds.checkout_branch(self.context, default=branches[0])
+
     def create_branch(self):
         """Create a branch at the selected commit"""
         context = self.context
@@ -224,6 +235,7 @@ class ViewerMixin(object):
     def update_menu_actions(self, event):
         """Update menu actions to reflect the selection state"""
         selected_items = self.selected_items()
+        selected_item = self.selected_item()
         item = self.itemAt(event.pos())
         if item is None:
             self.clicked = commit = None
@@ -234,6 +246,11 @@ class ViewerMixin(object):
         has_selection = bool(selected_items)
         can_diff = bool(
             commit and has_single_selection and commit is not selected_items[0].commit
+        )
+        has_branches = (
+            has_single_selection and
+            selected_item and
+            bool(selected_item.commit.branches)
         )
 
         if can_diff:
@@ -246,6 +263,7 @@ class ViewerMixin(object):
         self.menu_actions['diff_commit'].setEnabled(has_single_selection)
         self.menu_actions['diff_commit_all'].setEnabled(has_single_selection)
 
+        self.menu_actions['checkout_branch'].setEnabled(has_branches)
         self.menu_actions['checkout_detached'].setEnabled(has_single_selection)
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
         self.menu_actions['copy'].setEnabled(has_single_selection)
@@ -272,9 +290,10 @@ class ViewerMixin(object):
         menu.addAction(self.menu_actions['diff_commit'])
         menu.addAction(self.menu_actions['diff_commit_all'])
         menu.addSeparator()
-        menu.addAction(self.menu_actions['rebase_to_commit'])
+        menu.addAction(self.menu_actions['checkout_branch'])
         menu.addAction(self.menu_actions['create_branch'])
         menu.addAction(self.menu_actions['create_tag'])
+        menu.addAction(self.menu_actions['rebase_to_commit'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['cherry_pick'])
         menu.addAction(self.menu_actions['revert'])
@@ -355,6 +374,12 @@ def viewer_actions(widget):
                 N_('Launch Directory Diff Tool'),
                 widget.proxy.show_dir_diff,
                 hotkeys.DIFF_SECONDARY,
+            ),
+        ),
+        'checkout_branch': set_icon(
+            icons.branch(),
+            qtutils.add_action(
+                widget, N_('Checkout Branch'), widget.proxy.checkout_branch
             ),
         ),
         'checkout_detached': qtutils.add_action(

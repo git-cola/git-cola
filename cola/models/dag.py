@@ -85,6 +85,7 @@ class Commit(object):
         'summary',
         'parents',
         'children',
+        'branches',
         'tags',
         'author',
         'authdate',
@@ -101,6 +102,7 @@ class Commit(object):
         self.parents = []
         self.children = []
         self.tags = set()
+        self.branches = []
         self.email = None
         self.author = None
         self.authdate = None
@@ -145,6 +147,10 @@ class Commit(object):
 
         if tag.startswith('tag: '):
             tag = tag[5:]  # strip off "tag: " leaving refs/tags/
+
+        if tag.startswith('refs/heads/'):
+            branch = tag[11:]
+            self.branches.append(branch)
 
         if tag.startswith('refs/'):
             # strip off refs/ leaving just tags/XXX remotes/XXX heads/XXX
