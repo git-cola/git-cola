@@ -288,20 +288,26 @@ class ViewerMixin(object):
         self.menu_actions['diff_commit_all'].setEnabled(has_single_selection_or_clicked)
 
         self.menu_actions['checkout_branch'].setEnabled(has_branches)
-        self.menu_actions['checkout_detached'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['checkout_detached'].setEnabled(
+            has_single_selection_or_clicked
+        )
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['copy'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_branch'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_tarball'].setEnabled(has_single_selection_or_clicked)
-        self.menu_actions['rebase_to_commit'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['rebase_to_commit'].setEnabled(
+            has_single_selection_or_clicked
+        )
         self.menu_actions['reset_mixed'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['reset_keep'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['reset_merge'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['reset_soft'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['reset_hard'].setEnabled(has_single_selection_or_clicked)
-        self.menu_actions['restore_worktree'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['restore_worktree'].setEnabled(
+            has_single_selection_or_clicked
+        )
         self.menu_actions['revert'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['save_blob'].setEnabled(has_single_selection_or_clicked)
 
