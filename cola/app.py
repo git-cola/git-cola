@@ -33,7 +33,6 @@ On a Debian/Ubuntu system you can install these modules using apt:
     )
     sys.exit(1)
 
-from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
