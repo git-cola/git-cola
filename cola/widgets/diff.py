@@ -1239,7 +1239,7 @@ class DiffWidget(QtWidgets.QWidget):
         self.oid = oid
 
         if len(commits) > 1:
-            start, end = commits[-1], commits[0]
+            start, end = commits[0], commits[-1]
             self.set_diff_range(start.oid, end.oid)
             self.oid_start = start
             self.oid_end = end

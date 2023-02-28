@@ -123,6 +123,15 @@ class ViewerMixin(object):
             result = None
         return result
 
+    def with_selected_oid(self, fn):
+        """Run an operation with a commit object ID"""
+        oid = self.selected_oid()
+        if oid:
+            result = fn(oid)
+        else:
+            result = None
+        return result
+
     def diff_selected_this(self):
         """Diff the selected commit against the clicked commit"""
         clicked_oid = self.clicked.oid
@@ -252,14 +261,20 @@ class ViewerMixin(object):
             self.clicked = commit = item.commit
 
         has_single_selection = len(selected_items) == 1
+        has_single_selection_or_clicked = bool(has_single_selection or commit)
         has_selection = bool(selected_items)
         can_diff = bool(
-            commit and has_single_selection and commit is not selected_items[0].commit
+            commit and
+            has_single_selection and
+            selected_items and
+            commit is not selected_items[0].commit
         )
         has_branches = (
             has_single_selection and
             selected_item and
             bool(selected_item.commit.branches)
+        ) or (
+            self.clicked and bool(self.clicked.branches)
         )
 
         if can_diff:
@@ -269,26 +284,26 @@ class ViewerMixin(object):
 
         self.menu_actions['diff_this_selected'].setEnabled(can_diff)
         self.menu_actions['diff_selected_this'].setEnabled(can_diff)
-        self.menu_actions['diff_commit'].setEnabled(has_single_selection)
-        self.menu_actions['diff_commit_all'].setEnabled(has_single_selection)
+        self.menu_actions['diff_commit'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['diff_commit_all'].setEnabled(has_single_selection_or_clicked)
 
         self.menu_actions['checkout_branch'].setEnabled(has_branches)
-        self.menu_actions['checkout_detached'].setEnabled(has_single_selection)
-        self.menu_actions['cherry_pick'].setEnabled(has_single_selection)
-        self.menu_actions['copy'].setEnabled(has_single_selection)
-        self.menu_actions['create_branch'].setEnabled(has_single_selection)
+        self.menu_actions['checkout_detached'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['cherry_pick'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['copy'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['create_branch'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_patch'].setEnabled(has_selection)
-        self.menu_actions['create_tag'].setEnabled(has_single_selection)
-        self.menu_actions['create_tarball'].setEnabled(has_single_selection)
-        self.menu_actions['rebase_to_commit'].setEnabled(has_single_selection)
-        self.menu_actions['reset_mixed'].setEnabled(has_single_selection)
-        self.menu_actions['reset_keep'].setEnabled(has_single_selection)
-        self.menu_actions['reset_merge'].setEnabled(has_single_selection)
-        self.menu_actions['reset_soft'].setEnabled(has_single_selection)
-        self.menu_actions['reset_hard'].setEnabled(has_single_selection)
-        self.menu_actions['restore_worktree'].setEnabled(has_single_selection)
-        self.menu_actions['revert'].setEnabled(has_single_selection)
-        self.menu_actions['save_blob'].setEnabled(has_single_selection)
+        self.menu_actions['create_tag'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['create_tarball'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['rebase_to_commit'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['reset_mixed'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['reset_keep'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['reset_merge'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['reset_soft'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['reset_hard'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['restore_worktree'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['revert'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['save_blob'].setEnabled(has_single_selection_or_clicked)
 
     def context_menu_event(self, event):
         """Build a context menu and execute it"""
@@ -586,7 +601,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self.set_selecting(False)
             return
         self.set_selecting(True)
-        self.commits_selected.emit([i.commit for i in items])
+        self.commits_selected.emit(sort_by_generation([i.commit for i in items]))
         self.set_selecting(False)
 
     def select_commits(self, commits):
@@ -644,6 +659,11 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     def mousePressEvent(self, event):
         """Intercept the right-click event to retain selection state"""
+        item = self.itemAt(event.pos())
+        if item is None:
+            self.clicked = None
+        else:
+            self.clicked = item.commit
         if event.button() == Qt.RightButton:
             event.accept()
             return
@@ -982,7 +1002,7 @@ class GitDAG(standard.MainWindow):
         new_commits = [c for c in new_commits if c is not None]
         if new_commits:
             # The old selection exists in the new state
-            self.commits_selected.emit(new_commits)
+            self.commits_selected.emit(sort_by_generation(new_commits))
         else:
             # The old selection is now empty.  Select the top-most commit
             self.commits_selected.emit([commit_obj])
@@ -1301,7 +1321,6 @@ class Commit(QtWidgets.QGraphicsItem):
         cached_commit_color=commit_color,
         cached_merge_color=merge_color,
     ):
-
         QtWidgets.QGraphicsItem.__init__(self)
 
         self.commit = commit
@@ -1326,7 +1345,6 @@ class Commit(QtWidgets.QGraphicsItem):
 
         self.pressed = False
         self.dragged = False
-
         self.edges = {}
 
     def itemChange(self, change, value):
@@ -1608,7 +1626,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def selection_changed(self):
         # Broadcast selection to other widgets
         selected_items = self.scene().selectedItems()
-        commits = [item.commit for item in selected_items]
+        commits = sort_by_generation([item.commit for item in selected_items])
         self.set_selecting(True)
         self.commits_selected.emit(commits)
         self.set_selecting(False)
@@ -1733,7 +1751,6 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     def zoom_to_fit(self):
         """Fit selected items into the viewport"""
-
         items = self.selected_items()
         self.fit_view_to_items(items)
 
