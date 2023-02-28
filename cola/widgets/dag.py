@@ -108,9 +108,15 @@ class ViewerMixin(object):
         """Return the currently selected comit object IDs"""
         return [i.commit for i in self.selected_items()]
 
+    def clicked_oid(self):
+        """Return the clicked or selected commit object ID"""
+        if self.clicked:
+            return self.clicked.oid
+        return self.selected_oid()
+
     def with_oid(self, fn):
         """Run an operation with a commit object ID"""
-        oid = self.selected_oid()
+        oid = self.clicked_oid()
         if oid:
             result = fn(oid)
         else:
@@ -144,11 +150,14 @@ class ViewerMixin(object):
         self.with_oid(qtutils.set_clipboard)
 
     def checkout_branch(self):
-        """Checkout the selected branch"""
-        item = self.selected_item()
-        if not item:
-            return
-        branches = item.commit.branches
+        """Checkout the clicked/selected branch"""
+        branches = []
+        clicked = self.clicked
+        selected = self.selected_item()
+        if clicked:
+            branches.extend(clicked.branches)
+        if selected:
+            branches.extend(selected.commit.branches)
         if not branches:
             return
         guicmds.checkout_branch(self.context, default=branches[0])
