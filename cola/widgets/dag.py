@@ -1678,7 +1678,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         context = self.context
         selected_commits = sort_by_generation([n.commit for n in items])
         oids = [c.oid for c in selected_commits]
-        all_oids = [c.oid for c in self.commits]
+        all_oids = [c.oid for c in sort_by_generation(self.commits)]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     def _select_parent(self):
@@ -2291,7 +2291,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
 
 def sort_by_generation(commits):
-    if len(commits) < 2:
+    """Sort commits by their generation. Ensures consistent diffs and patch exports"""
+    if len(commits) <= 1:
         return commits
     commits.sort(key=lambda x: x.generation)
     return commits
