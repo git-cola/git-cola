@@ -59,13 +59,13 @@ class FileWidget(TreeWidget):
 
         if len(commits) > 1:
             # Get a list of changed files for a commit range.
-            start = commits[-1].oid + '~'
-            end = commits[0].oid
+            start = commits[0].oid + '~'
+            end = commits[-1].oid
             status, out, _ = git.diff(start, end, z=True, numstat=True, no_renames=True)
             if status == 0:
                 paths = [f for f in out.rstrip('\0').split('\0') if f]
         else:
-            # Get the list of changed files in a singel commit.
+            # Get the list of changed files in a single commit.
             commit = commits[0]
             oid = commit.oid
             status, out, _ = git.show(
