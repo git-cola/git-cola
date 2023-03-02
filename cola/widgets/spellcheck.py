@@ -95,6 +95,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWordWrapMode(QtGui.QTextOption.NoWrap)
         self.setTabChangesFocus(True)
         self.textChanged.connect(self._trim_changed_text_lines, Qt.QueuedConnection)
