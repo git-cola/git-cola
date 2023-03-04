@@ -1230,7 +1230,7 @@ class DiffWidget(QtWidgets.QWidget):
         if not commits:
             self.clear()
             return
-        commit = commits[0]
+        commit = commits[-1]
         oid = commit.oid
         email = commit.email or ''
         summary = commit.summary or ''
