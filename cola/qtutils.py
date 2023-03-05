@@ -536,7 +536,8 @@ def add_action_bool(widget, text, fn, checked, *shortcuts):
     return action
 
 
-def add_action(widget, text, fn, *shortcuts):
+def add_action(widget, text, func, *shortcuts):
+    """Create a QAction and bind it to the `func` callback with optional shortcuts"""
     tip = text
     return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
 

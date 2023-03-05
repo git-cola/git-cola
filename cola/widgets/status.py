@@ -1176,6 +1176,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 return
 
     def move_up(self):
+        """Select the item above the currently selected item"""
         idx = self.selected_idx()
         all_files = self.all_files()
         if idx is None:
@@ -1196,6 +1197,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             self.select_by_index(len(all_files) - 1)
 
     def move_down(self):
+        """Select the item below the currently selected item"""
         idx = self.selected_idx()
         all_files = self.all_files()
         if idx is None:
@@ -1234,10 +1236,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     # pylint: disable=no-self-use
     def mimeTypes(self):
+        """Return the mimetypes that this widget generates"""
         return qtutils.path_mimetypes(include_urls=not self._alt_drag)
 
 
 def _item_filter(item):
+    """Filter items down to just those that exist on disk"""
     return not item.deleted and core.exists(item.path)
 
 
@@ -1278,6 +1282,7 @@ def copy_leading_path(context, strip_components):
 
 
 def copy_format(context, fmt):
+    """Add variables usable in the custom Copy format strings"""
     values = {}
     values['path'] = path = context.selection.filename()
     values['abspath'] = abspath = os.path.abspath(path)
@@ -1289,6 +1294,7 @@ def copy_format(context, fmt):
 
 
 def show_help(context):
+    """Display the help for the custom Copy format strings"""
     help_text = N_(
         r"""
         Format String Variables
@@ -1307,6 +1313,7 @@ def show_help(context):
 
 
 class StatusFilterWidget(QtWidgets.QWidget):
+    """Filter paths displayed by the Status tool"""
     def __init__(self, context, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
@@ -1328,6 +1335,7 @@ class StatusFilterWidget(QtWidgets.QWidget):
         widget.editingFinished.connect(self.apply_filter)
 
     def apply_filter(self):
+        """Apply the text filter to the model"""
         value = get(self.text)
         if value == self._filter:
             return
@@ -1344,6 +1352,8 @@ def customize_copy_actions(context, parent):
 
 
 class CustomizeCopyActions(standard.Dialog):
+    """A dialog for defining custom Copy actions and format strings"""
+
     def __init__(self, context, parent):
         standard.Dialog.__init__(self, parent=parent)
         self.setWindowTitle(N_('Custom Copy Actions'))
@@ -1393,6 +1403,7 @@ class CustomizeCopyActions(standard.Dialog):
         QtCore.QTimer.singleShot(0, self.reload_settings)
 
     def reload_settings(self):
+        """Update the view to match the current settings"""
         # Called once after the GUI is initialized
         settings = self.context.settings
         settings.load()
@@ -1409,16 +1420,19 @@ class CustomizeCopyActions(standard.Dialog):
                 table.setItem(rows, 1, fmt)
 
     def export_state(self):
+        """Export the current state into the saved settings"""
         state = super(CustomizeCopyActions, self).export_state()
         standard.export_header_columns(self.table, state)
         return state
 
     def apply_state(self, state):
+        """Restore state from the saved settings"""
         result = super(CustomizeCopyActions, self).apply_state(state)
         standard.apply_header_columns(self.table, state)
         return result
 
     def add(self):
+        """Add a custom Copy action and format string"""
         self.table.setFocus()
         rows = self.table.rowCount()
         self.table.setRowCount(rows + 1)
@@ -1443,6 +1457,7 @@ class CustomizeCopyActions(standard.Dialog):
             self.table.removeRow(row)
 
     def save(self):
+        """Save custom copy actions to the settings"""
         copy_formats = []
         for row in range(self.table.rowCount()):
             name = self.table.item(row, 0)
@@ -1464,6 +1479,7 @@ class CustomizeCopyActions(standard.Dialog):
         self.accept()
 
     def table_selection_changed(self):
+        """Update the enabled state of action buttons based on the current selection"""
         items = self.table.selectedItems()
         self.remove_button.setEnabled(bool(items))
 
