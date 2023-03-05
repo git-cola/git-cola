@@ -537,21 +537,21 @@ def add_action_bool(widget, text, fn, checked, *shortcuts):
 
 
 def add_action(widget, text, func, *shortcuts):
-    """Create a QAction and bind it to the `func` callback with optional shortcuts"""
+    """Create a QAction and bind it to the `func` callback and hotkeys"""
     tip = text
-    return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+    return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
-def add_action_with_icon(widget, icon, text, fn, *shortcuts):
-    """Create a QAction using a custom icon"""
+def add_action_with_icon(widget, icon, text, func, *shortcuts):
+    """Create a QAction using a custom icon bound to the `func` callback and hotkeys"""
     tip = text
-    action = _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+    action = _add_action(widget, text, tip, func, connect_action, *shortcuts)
     action.setIcon(icon)
     return action
 
 
-def add_action_with_status_tip(widget, text, tip, fn, *shortcuts):
-    return _add_action(widget, text, tip, fn, connect_action, *shortcuts)
+def add_action_with_status_tip(widget, text, tip, func, *shortcuts):
+    return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
 def menu_separator(widget):
