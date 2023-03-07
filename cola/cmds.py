@@ -472,14 +472,14 @@ class CheckoutTheirs(ConfirmAction):
 
     @staticmethod
     def name():
-        return N_('Checkout files from "their" branch (MERGE_HEAD)')
+        return N_('Checkout files from their branch (MERGE_HEAD)')
 
     def confirm(self):
         title = self.name()
-        question = N_('Checkout files from their MERGE_HEAD using "git checkout --theirs"?')
+        question = N_('Checkout files from their branch?')
         info = N_(
             'This operation will replace the selected unmerged files with content '
-            'from the branch being merged.\n'
+            'from the branch being merged using "git checkout --theirs".\n'
             '*ALL* uncommitted changes will be lost.\n'
             'Recovering uncommitted changes is not possible.'
         )
@@ -510,14 +510,14 @@ class CheckoutOurs(ConfirmAction):
 
     @staticmethod
     def name():
-        return N_('Checkout files from "our" branch (HEAD)')
+        return N_('Checkout files from our branch (HEAD)')
 
     def confirm(self):
         title = self.name()
-        question = N_('Checkout files from MERGE_HEAD?')
+        question = N_('Checkout files from our branch?')
         info = N_(
-            'This will replace the selected unmerged files with content '
-            'from the branch being merged into.\n'
+            'This operation will replace the selected unmerged files with content '
+            'from your current branch using "git checkout --ours".\n'
             '*ALL* uncommitted changes will be lost.\n'
             'Recovering uncommitted changes is not possible.'
         )
