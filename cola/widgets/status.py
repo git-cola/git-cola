@@ -236,6 +236,20 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             hotkeys.MOVE_DOWN_SECONDARY,
         )
 
+        # Checkout the selected paths using "git checkout --ours".
+        self.checkout_ours_action = qtutils.add_action(
+            self,
+            cmds.CheckoutOurs.name(),
+            cmds.run(cmds.CheckoutOurs, context)
+        )
+
+        # Checkout the selected paths using "git checkout --theirs".
+        self.checkout_theirs_action = qtutils.add_action(
+            self,
+            cmds.CheckoutTheirs.name(),
+            cmds.run(cmds.CheckoutTheirs, context)
+        )
+
         self.copy_path_action = qtutils.add_action(
             self,
             N_('Copy Path to Clipboard'),
@@ -867,6 +881,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         menu.addAction(self.launch_editor_action)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
+        menu.addSeparator()
+        menu.addAction(self.checkout_ours_action)
+        menu.addAction(self.checkout_theirs_action)
         return menu
 
     def _create_unstaged_context_menu(self, menu, s):

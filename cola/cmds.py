@@ -464,6 +464,83 @@ class Checkout(EditModel):
         else:
             self.model.update_file_status()
         Interaction.command(N_('Error'), 'git checkout', status, out, err)
+        return status, out, err
+
+
+class CheckoutTheirs(ConfirmAction):
+    """Checkout "their" version of a file when performing a merge"""
+
+    @staticmethod
+    def name():
+        return N_('Checkout files from "their" branch (MERGE_HEAD)')
+
+    def confirm(self):
+        title = self.name()
+        question = N_('Checkout files from their MERGE_HEAD using "git checkout --theirs"?')
+        info = N_(
+            'This operation will replace the selected unmerged files with content '
+            'from the branch being merged.\n'
+            '*ALL* uncommitted changes will be lost.\n'
+            'Recovering uncommitted changes is not possible.'
+        )
+        ok_txt = N_('Checkout Files')
+        return Interaction.confirm(
+            title, question, info, ok_txt, default=True, icon=icons.merge()
+        )
+
+    def action(self):
+        selection = self.selection.selection()
+        paths = selection.unmerged
+        if not paths:
+            return 0, '', ''
+
+        argv = ['--theirs', '--'] + paths
+        cmd = Checkout(self.context, argv)
+        return cmd.do()
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git checkout --theirs'
+
+
+class CheckoutOurs(ConfirmAction):
+    """Checkout "our" version of a file when performing a merge"""
+
+    @staticmethod
+    def name():
+        return N_('Checkout files from "our" branch (HEAD)')
+
+    def confirm(self):
+        title = self.name()
+        question = N_('Checkout files from MERGE_HEAD?')
+        info = N_(
+            'This will replace the selected unmerged files with content '
+            'from the branch being merged into.\n'
+            '*ALL* uncommitted changes will be lost.\n'
+            'Recovering uncommitted changes is not possible.'
+        )
+        ok_txt = N_('Checkout Files')
+        return Interaction.confirm(
+            title, question, info, ok_txt, default=True, icon=icons.merge()
+        )
+
+    def action(self):
+        selection = self.selection.selection()
+        paths = selection.unmerged
+        if not paths:
+            return 0, '', ''
+
+        argv = ['--ours', '--'] + paths
+        cmd = Checkout(self.context, argv)
+        return cmd.do()
+
+    def error_message(self):
+        return N_('Error')
+
+    def command(self):
+        return 'git checkout --ours'
 
 
 class BlamePaths(ContextCommand):
