@@ -113,7 +113,7 @@ msgid ""
 "    "
 msgstr ""
 
-#: cola/widgets/status.py:1230
+#: cola/widgets/status.py:1316
 #, python-format
 msgid ""
 "\n"
@@ -128,7 +128,7 @@ msgid ""
 "           %(ext)s  =  file extension\n"
 msgstr ""
 
-#: cola/sequenceeditor.py:668
+#: cola/sequenceeditor.py:701
 msgid ""
 "\n"
 "Commands\n"
@@ -139,6 +139,7 @@ msgid ""
 "squash = use commit, but meld into previous commit\n"
 "fixup = like \"squash\", but discard this commit's log message\n"
 "exec = run command (the rest of the line) using shell\n"
+"update-ref = update branches that point to commits\n"
 "\n"
 "These lines can be re-ordered; they are executed from top to bottom.\n"
 "\n"
@@ -195,7 +196,7 @@ msgstr ""
 "在文本输入区和结果区之间\n"
 "使用向上/向下键以切换聚焦\n"
 
-#: cola/widgets/dag.py:759
+#: cola/widgets/dag.py:892
 msgid " - DAG"
 msgstr " - 历史视图"
 
@@ -203,7 +204,7 @@ msgstr " - 历史视图"
 msgid " commits ago"
 msgstr " 个提交之前"
 
-#: cola/cmds.py:1052
+#: cola/cmds.py:1203
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "已从远程 \"%(remote)s\" 删除分支 \"%(branch)s\"."
@@ -218,7 +219,7 @@ msgstr "\"%(command)s\" 命令返回状态 \"%(status)d\""
 msgid "\"%(command)s\" returned exit status %(status)d"
 msgstr "\"%(command)s\" 命令返回状态  %(status)d"
 
-#: cola/guicmds.py:148
+#: cola/guicmds.py:157
 #, fuzzy, python-format
 msgid "\"%s\" already exists"
 msgstr "分支 '%s' 已经存在."
@@ -228,41 +229,51 @@ msgstr "分支 '%s' 已经存在."
 msgid "\"%s\" already exists, cola will create a new directory"
 msgstr "\"%s\" 已经存在, 程序会新建文件夹"
 
-#: cola/cmds.py:2155
+#: cola/cmds.py:2356
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr "\"%s\" 需要选择一个文件."
 
-#: cola/sequenceeditor.py:309
+#: cola/cmds.py:2093
+msgid ""
+"\"git rebase --update-refs\" automatically force-updates any\n"
+"branches that point to commits that are being rebased.\n"
+"\n"
+"Any branches that are checked out in a worktree are not updated.\n"
+"\n"
+"Using this feature is helpful for \"stacked\" branch workflows."
+msgstr ""
+
+#: cola/sequenceeditor.py:322
 msgid "#"
 msgstr ""
 
-#: cola/widgets/browse.py:90
+#: cola/widgets/browse.py:92
 #, python-format
 msgid "%(project)s: %(branch)s - Browse"
 msgstr "%(project)s: %(branch)s - 浏览器"
 
-#: cola/widgets/dag.py:755
+#: cola/widgets/dag.py:888
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s: %(ref)s - 历史视图"
 
-#: cola/models/browse.py:317
+#: cola/models/browse.py:316
 #, python-format
 msgid "%d days ago"
 msgstr "%d 天前"
 
-#: cola/models/browse.py:316
+#: cola/models/browse.py:315
 #, python-format
 msgid "%d hours ago"
 msgstr "%d 小时前"
 
-#: cola/models/browse.py:309 cola/models/browse.py:313
+#: cola/models/browse.py:308 cola/models/browse.py:312
 #, python-format
 msgid "%d minutes ago"
 msgstr "%d 分钟前"
 
-#: cola/cmds.py:346
+#: cola/cmds.py:382
 #, python-format
 msgid "%d patch(es) applied."
 msgstr "已应用 %d 个补丁."
@@ -272,7 +283,7 @@ msgstr "已应用 %d 个补丁."
 msgid "%d skipped"
 msgstr "%d 已跳过"
 
-#: cola/cmds.py:2386
+#: cola/cmds.py:2587
 #, python-format
 msgid ""
 "%s appears to contain merge conflicts.\n"
@@ -281,40 +292,40 @@ msgid ""
 "Stage it anyways?"
 msgstr ""
 
-#: cola/widgets/startup.py:261
+#: cola/widgets/startup.py:263
 #, python-format
 msgid "%s could not be opened. Remove from bookmarks?"
 msgstr ""
 
-#: cola/app.py:504 cola/widgets/bookmarks.py:350
+#: cola/app.py:502 cola/widgets/bookmarks.py:482
 #, python-format
 msgid "%s is not a Git repository."
 msgstr "%s 不是 Git 版本库。"
 
-#: cola/cmds.py:870
+#: cola/cmds.py:1021
 #, python-format
 msgid "%s will be removed from your bookmarks."
 msgstr "%s 会将被从书签中移除。"
 
-#: cola/cmds.py:883
+#: cola/cmds.py:1034
 #, python-format
 msgid "%s will be removed from your recent repositories."
 msgstr "%s 将从最近使用的版本库列表中被移除。"
 
-#: cola/cmds.py:1540
+#: cola/cmds.py:1717
 #, python-format
 msgid "%s: No such file or directory."
 msgstr "%s: 此文件或文件夹不存在."
 
-#: cola/widgets/main.py:659
+#: cola/widgets/main.py:728
 msgid "&Edit"
 msgstr "编辑"
 
-#: cola/widgets/main.py:608
+#: cola/widgets/main.py:670
 msgid "&File"
 msgstr "文件"
 
-#: cola/widgets/browse.py:92
+#: cola/widgets/browse.py:94
 msgid "(Amending)"
 msgstr "(正在修正)"
 
@@ -326,27 +337,27 @@ msgstr "*** 分支点 ***"
 msgid "*** Sandbox ***"
 msgstr "*** 沙盒 ***"
 
-#: cola/widgets/diff.py:603
+#: cola/widgets/diff.py:699
 msgid "100%"
 msgstr "100%"
 
-#: cola/widgets/diff.py:604
+#: cola/widgets/diff.py:700
 msgid "200%"
 msgstr "200%"
 
-#: cola/widgets/diff.py:601
+#: cola/widgets/diff.py:697
 msgid "25%"
 msgstr "25%"
 
-#: cola/widgets/diff.py:605
+#: cola/widgets/diff.py:701
 msgid "400%"
 msgstr "400%"
 
-#: cola/widgets/diff.py:602
+#: cola/widgets/diff.py:698
 msgid "50%"
 msgstr "50%"
 
-#: cola/widgets/diff.py:606
+#: cola/widgets/diff.py:702
 msgid "800%"
 msgstr "800%"
 
@@ -354,7 +365,7 @@ msgstr "800%"
 msgid "<path> ..."
 msgstr "<路径> ..."
 
-#: cola/cmds.py:1563
+#: cola/cmds.py:1740
 msgid ""
 "A commit template has not been configured.\n"
 "Use \"git config\" to define \"commit.template\"\n"
@@ -364,7 +375,7 @@ msgstr ""
 "使用 \"git config\" 定义 \"commit template\"\n"
 "而指定一个提交模板."
 
-#: cola/cmds.py:1613
+#: cola/cmds.py:1790
 #, python-format
 msgid "A hook must be provided at \"%s\""
 msgstr "钩子必须位于 \"%s\""
@@ -374,7 +385,7 @@ msgstr "钩子必须位于 \"%s\""
 msgid "A stash named \"%s\" already exists"
 msgstr "名为 \"%s\" 的暂存已存在"
 
-#: cola/widgets/cfgactions.py:82 cola/widgets/main.py:567
+#: cola/widgets/cfgactions.py:82 cola/widgets/main.py:616
 msgid "Abort"
 msgstr "中止"
 
@@ -382,11 +393,31 @@ msgstr "中止"
 msgid "Abort Action"
 msgstr "中止操作"
 
-#: cola/cmds.py:140
+#: cola/cmds.py:138
+msgid "Abort Applying Patch"
+msgstr ""
+
+#: cola/cmds.py:132
+msgid "Abort Applying Patch..."
+msgstr ""
+
+#: cola/widgets/main.py:239
+msgid "Abort Applying Patches..."
+msgstr ""
+
+#: cola/cmds.py:168
+msgid "Abort Cherry-Pick"
+msgstr ""
+
+#: cola/cmds.py:162 cola/widgets/main.py:328
+msgid "Abort Cherry-Pick..."
+msgstr ""
+
+#: cola/cmds.py:199
 msgid "Abort Merge"
 msgstr "中止合并"
 
-#: cola/cmds.py:133 cola/widgets/main.py:329
+#: cola/cmds.py:192 cola/widgets/main.py:362
 msgid "Abort Merge..."
 msgstr "中止合并..."
 
@@ -394,7 +425,31 @@ msgstr "中止合并..."
 msgid "Abort the action?"
 msgstr "终止此操作?"
 
-#: cola/cmds.py:136
+#: cola/widgets/main.py:244
+msgid "Abort the current \"git am\" patch session"
+msgstr ""
+
+#: cola/cmds.py:165
+msgid ""
+"Aborting a cherry-pick can cause uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+
+#: cola/cmds.py:135
+msgid ""
+"Aborting a patch can cause uncommitted changes to be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+
+#: cola/cmds.py:133
+msgid "Aborting applying the current patch?"
+msgstr ""
+
+#: cola/cmds.py:163
+msgid "Aborting the current cherry-pick?"
+msgstr ""
+
+#: cola/cmds.py:195
 msgid ""
 "Aborting the current merge will cause *ALL* uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
@@ -402,11 +457,11 @@ msgstr ""
 "中止当前的合并会丢失所有未提交的修改.\n"
 "将无法恢复未提交的修改."
 
-#: cola/cmds.py:134
+#: cola/cmds.py:193
 msgid "Aborting the current merge?"
 msgstr "终止当前合并吗?"
 
-#: cola/widgets/about.py:91 cola/widgets/main.py:478
+#: cola/widgets/about.py:91 cola/widgets/main.py:511
 msgid "About"
 msgstr "关于"
 
@@ -414,11 +469,11 @@ msgstr "关于"
 msgid "About git-cola"
 msgstr "关于 git-cola"
 
-#: cola/widgets/bookmarks.py:130
+#: cola/widgets/bookmarks.py:217 cola/widgets/startup.py:340
 msgid "Accept"
 msgstr "接受"
 
-#: cola/sequenceeditor.py:158
+#: cola/sequenceeditor.py:160
 msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
@@ -426,29 +481,29 @@ msgstr ""
 "接受变更并衍合\n"
 "快捷键：Ctrl+Enter"
 
-#: cola/widgets/status.py:1291
+#: cola/widgets/status.py:1381
 msgid "Action Name"
 msgstr "操作名称"
 
-#: cola/sequenceeditor.py:513 cola/widgets/bookmarks.py:219
-#: cola/widgets/branch.py:215 cola/widgets/browse.py:368
-#: cola/widgets/commitmsg.py:98 cola/widgets/dag.py:239
-#: cola/widgets/diff.py:774 cola/widgets/filelist.py:98
-#: cola/widgets/main.py:93 cola/widgets/main.py:682
+#: cola/sequenceeditor.py:529 cola/widgets/bookmarks.py:321
+#: cola/widgets/branch.py:216 cola/widgets/browse.py:370
+#: cola/widgets/commitmsg.py:99 cola/widgets/dag.py:317
+#: cola/widgets/filelist.py:110 cola/widgets/main.py:95
+#: cola/widgets/main.py:751 cola/widgets/startup.py:436
 msgid "Actions"
 msgstr "操作"
 
-#: cola/widgets/commitmsg.py:100
+#: cola/widgets/commitmsg.py:101
 msgid "Actions..."
 msgstr "操作..."
 
-#: cola/widgets/bookmarks.py:45 cola/widgets/gitignore.py:64
+#: cola/widgets/bookmarks.py:71 cola/widgets/gitignore.py:64
 #: cola/widgets/patch.py:99 cola/widgets/patch.py:113
-#: cola/widgets/status.py:1296
+#: cola/widgets/status.py:1386
 msgid "Add"
 msgstr "添加"
 
-#: cola/widgets/bookmarks.py:338
+#: cola/widgets/bookmarks.py:470
 msgid "Add Favorite"
 msgstr "添加收藏"
 
@@ -456,16 +511,16 @@ msgstr "添加收藏"
 msgid "Add Remote"
 msgstr "添加远程"
 
-#: cola/widgets/toolbar.py:314
+#: cola/widgets/toolbar.py:316
 msgid "Add Separator"
 msgstr "添加分隔符"
 
-#: cola/cmds.py:2820 cola/widgets/submodules.py:42
+#: cola/cmds.py:3024 cola/widgets/submodules.py:42
 #: cola/widgets/submodules.py:111
 msgid "Add Submodule"
 msgstr ""
 
-#: cola/cmds.py:2817 cola/widgets/main.py:342
+#: cola/cmds.py:3021 cola/widgets/main.py:375
 msgid "Add Submodule..."
 msgstr ""
 
@@ -495,7 +550,7 @@ msgstr "添加补丁 (+)"
 msgid "Add remote"
 msgstr "添加远程"
 
-#: cola/cmds.py:2818
+#: cola/cmds.py:3022
 msgid "Add this submodule?"
 msgstr ""
 
@@ -503,11 +558,11 @@ msgstr ""
 msgid "Add to .gitignore"
 msgstr "添加至 .gitignore"
 
-#: cola/widgets/status.py:259
+#: cola/widgets/status.py:290
 msgid "Add to Git Annex"
 msgstr "添加至 Git Annex"
 
-#: cola/widgets/status.py:263
+#: cola/widgets/status.py:294
 msgid "Add to Git LFS"
 msgstr "添加至 Git LFS"
 
@@ -527,15 +582,19 @@ msgstr "添加内容"
 msgid "Advanced"
 msgstr "高级"
 
+#: cola/widgets/main.py:516
+msgid "Against Commit... (Diff Mode)"
+msgstr ""
+
 #: cola/models/browse.py:33
 msgid "Age"
 msgstr "修改时间"
 
-#: cola/widgets/prefs.py:369
+#: cola/widgets/prefs.py:380
 msgid "All Repositories"
 msgstr "全部版本库"
 
-#: cola/cmds.py:2900
+#: cola/cmds.py:3104
 #, python-format
 msgid ""
 "All submodules will be updated using\n"
@@ -550,23 +609,23 @@ msgstr ""
 msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
 msgstr "启用时总是在合并时创建一个提交,即使是快进合并方式"
 
-#: cola/cmds.py:168
+#: cola/cmds.py:227
 msgid "Amend"
 msgstr "修正"
 
-#: cola/widgets/commitmsg.py:471
+#: cola/widgets/commitmsg.py:467
 msgid "Amend Commit"
 msgstr "修正提交"
 
-#: cola/widgets/commitmsg.py:109 cola/widgets/main.py:186
+#: cola/widgets/commitmsg.py:110 cola/widgets/main.py:188
 msgid "Amend Last Commit"
 msgstr "修正上次提交"
 
-#: cola/widgets/commitmsg.py:470
+#: cola/widgets/commitmsg.py:466
 msgid "Amend the published commit?"
 msgstr "修正已发布的提交吗?"
 
-#: cola/widgets/main.py:1061
+#: cola/widgets/main.py:1152
 msgid "Amending"
 msgstr "修正中"
 
@@ -578,7 +637,7 @@ msgstr ""
 "操作正在进行中.\n"
 "若终止有可能造成数据损失."
 
-#: cola/cmds.py:2608
+#: cola/cmds.py:2812
 msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
@@ -586,12 +645,12 @@ msgstr ""
 "一个无签名的轻量标签会取而代之.\n"
 "创建无签名标签吗?"
 
-#: cola/widgets/prefs.py:372
+#: cola/widgets/prefs.py:383
 msgid "Appearance"
 msgstr "外观"
 
 #: cola/widgets/patch.py:108 cola/widgets/stash.py:48
-#: cola/widgets/stash.py:107 cola/widgets/toolbar.py:322
+#: cola/widgets/stash.py:107 cola/widgets/toolbar.py:324
 msgid "Apply"
 msgstr "应用"
 
@@ -599,7 +658,7 @@ msgstr "应用"
 msgid "Apply Patches"
 msgstr "应用补丁"
 
-#: cola/widgets/main.py:231
+#: cola/widgets/main.py:233
 msgid "Apply Patches..."
 msgstr "应用补丁..."
 
@@ -611,15 +670,19 @@ msgstr "应用并丢弃所选暂存 (git stash pop)"
 msgid "Apply the selected stash"
 msgstr "应用所选暂存"
 
+#: cola/widgets/main.py:1162
+msgid "Applying Patch"
+msgstr ""
+
 #: cola/widgets/cfgactions.py:207
 msgid "Arguments"
 msgstr "参数"
 
-#: cola/qtutils.py:798
+#: cola/qtutils.py:845
 msgid "Attach"
 msgstr "结合"
 
-#: cola/models/browse.py:33 cola/models/browse.py:72 cola/widgets/dag.py:412
+#: cola/models/browse.py:33 cola/models/browse.py:72 cola/widgets/dag.py:508
 msgid "Author"
 msgstr "作者"
 
@@ -631,15 +694,15 @@ msgstr "作者"
 msgid "Auto"
 msgstr "自动"
 
-#: cola/widgets/commitmsg.py:136 cola/widgets/prefs.py:230
+#: cola/widgets/commitmsg.py:137 cola/widgets/prefs.py:236
 msgid "Auto-Wrap Lines"
 msgstr "自动换行"
 
-#: cola/widgets/prefs.py:162
+#: cola/widgets/prefs.py:166
 msgid "Autocomplete Paths"
 msgstr ""
 
-#: cola/widgets/prefs.py:155
+#: cola/widgets/prefs.py:158
 msgid "Automatically Load Commit Message Template"
 msgstr ""
 
@@ -647,24 +710,24 @@ msgstr ""
 msgid "Basic Regexp"
 msgstr "基本正则表达式"
 
-#: cola/widgets/prefs.py:226
+#: cola/widgets/prefs.py:232
 msgid "Blame Viewer"
 msgstr "问责查看器"
 
-#: cola/widgets/browse.py:199
+#: cola/widgets/browse.py:201
 #, fuzzy
 msgid "Blame selected paths"
 msgstr "编辑所选路径"
 
-#: cola/cmds.py:405 cola/widgets/status.py:255
+#: cola/cmds.py:551 cola/widgets/status.py:286
 msgid "Blame..."
 msgstr "问责..."
 
-#: cola/widgets/prefs.py:315
+#: cola/widgets/prefs.py:324
 msgid "Bold on dark headers instead of italic"
 msgstr "暗色背景粗体字体而斜体头部"
 
-#: cola/widgets/main.py:726 cola/widgets/submodules.py:119
+#: cola/widgets/main.py:800 cola/widgets/submodules.py:119
 msgid "Branch"
 msgstr "分支"
 
@@ -698,16 +761,16 @@ msgstr "分支名"
 msgid "Branch name"
 msgstr ""
 
-#: cola/widgets/browse.py:86 cola/widgets/main.py:1016
+#: cola/widgets/browse.py:88 cola/widgets/main.py:1092
 #, python-format
 msgid "Branch: %s"
 msgstr "分支: %s"
 
-#: cola/widgets/branch.py:84 cola/widgets/main.py:128
+#: cola/widgets/branch.py:84 cola/widgets/main.py:130
 msgid "Branches"
 msgstr "分支"
 
-#: cola/widgets/main.py:487
+#: cola/widgets/main.py:532
 msgid "Branches..."
 msgstr "分支..."
 
@@ -716,44 +779,45 @@ msgstr "分支..."
 msgid "Brazilian translation"
 msgstr "巴西语翻译"
 
-#: cola/guicmds.py:49
+#: cola/guicmds.py:53
 msgid "Browse"
 msgstr "浏览"
 
-#: cola/guicmds.py:49
+#: cola/guicmds.py:53
 msgid "Browse Commits..."
 msgstr "浏览提交..."
 
-#: cola/widgets/main.py:460
+#: cola/widgets/main.py:493
 msgid "Browse Current Branch..."
 msgstr "浏览当前分支上的文件..."
 
-#: cola/widgets/main.py:466
+#: cola/widgets/main.py:499
 msgid "Browse Other Branch..."
 msgstr "浏览其他分支..."
 
-#: cola/widgets/search.py:46
+#: cola/widgets/editremotes.py:437 cola/widgets/search.py:46
+#: cola/widgets/startup.py:65 cola/widgets/startup.py:285
 msgid "Browse..."
 msgstr "浏览..."
 
-#: cola/widgets/main.py:88
+#: cola/widgets/main.py:89
 msgid "Browser"
 msgstr "浏览器"
 
-#: cola/widgets/browse.py:572
+#: cola/widgets/browse.py:583
 #, python-format
 msgid "Browsing %s"
 msgstr "浏览 %s"
 
-#: cola/widgets/commitmsg.py:117
+#: cola/widgets/commitmsg.py:118
 msgid "Bypass Commit Hooks"
 msgstr "跳过提交钩子"
 
-#: cola/sequenceeditor.py:174 cola/widgets/standard.py:941
+#: cola/sequenceeditor.py:176 cola/widgets/standard.py:941
 msgid "Cancel"
 msgstr "取消"
 
-#: cola/sequenceeditor.py:175
+#: cola/sequenceeditor.py:177
 msgid ""
 "Cancel rebase\n"
 "Shortcut: Ctrl+Q"
@@ -761,46 +825,46 @@ msgstr ""
 "取消衍合\n"
 "快捷键: Ctrl+Q"
 
-#: cola/cmds.py:201
+#: cola/cmds.py:260
 msgid "Cannot Amend"
 msgstr "无法修正"
 
-#: cola/cmds.py:420
+#: cola/cmds.py:566
 #, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
 msgstr "无法执行 \"%s\": 请配置问责查看器"
 
-#: cola/cmds.py:2936
+#: cola/cmds.py:3140
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr "无法执行 \"%s\": 请配置历史浏览器"
 
-#: cola/cmds.py:1420
+#: cola/cmds.py:1589
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
 msgstr "无法执行 \"%s\": 请配置编辑器"
 
-#: cola/models/browse.py:338
+#: cola/models/browse.py:337
 msgid "Changed Upstream"
 msgstr "上游已更改"
 
-#: cola/widgets/prefs.py:164
+#: cola/widgets/prefs.py:168
 msgid "Check Published Commits when Amending"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:129
+#: cola/widgets/commitmsg.py:130
 msgid "Check Spelling"
 msgstr "检查拼写"
 
-#: cola/widgets/prefs.py:236
+#: cola/widgets/prefs.py:242
 msgid "Check spelling"
 msgstr "检查拼写"
 
-#: cola/widgets/prefs.py:144
+#: cola/widgets/prefs.py:147
 msgid "Check whether a commit has been published when amending"
 msgstr ""
 
-#: cola/guicmds.py:57 cola/widgets/branch.py:220
+#: cola/guicmds.py:62 cola/widgets/branch.py:221
 msgid "Checkout"
 msgstr "签出"
 
@@ -808,33 +872,61 @@ msgstr "签出"
 msgid "Checkout After Creation"
 msgstr "在创建后签出"
 
-#: cola/guicmds.py:57
+#: cola/guicmds.py:62 cola/widgets/dag.py:412
 msgid "Checkout Branch"
 msgstr "签出分支"
 
-#: cola/widgets/dag.py:329
+#: cola/widgets/dag.py:416
 msgid "Checkout Detached HEAD"
 msgstr "签出分离的 HEAD"
 
-#: cola/widgets/branch.py:224
+#: cola/cmds.py:486 cola/cmds.py:524
+msgid "Checkout Files"
+msgstr ""
+
+#: cola/widgets/branch.py:225
 msgid "Checkout as new branch"
 msgstr "签出为新分支"
 
-#: cola/widgets/main.py:525
+#: cola/cmds.py:513
+msgid "Checkout files from our branch (HEAD)"
+msgstr ""
+
+#: cola/cmds.py:517
+msgid "Checkout files from our branch?"
+msgstr ""
+
+#: cola/cmds.py:475
+msgid "Checkout files from their branch (MERGE_HEAD)"
+msgstr ""
+
+#: cola/cmds.py:479
+msgid "Checkout files from their branch?"
+msgstr ""
+
+#: cola/widgets/main.py:570
 msgid "Checkout..."
 msgstr "签出..."
 
-#: cola/widgets/dag.py:308 cola/widgets/search.py:79
+#: cola/widgets/dag.py:389 cola/widgets/search.py:79
 msgid "Cherry Pick"
 msgstr "挑取(Cherry Pick)"
 
-#: cola/guicmds.py:67
+#: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
 msgstr "挑取(Cherry-Pick)提交"
 
-#: cola/widgets/main.py:293
+#: cola/widgets/main.py:322
 msgid "Cherry-Pick..."
 msgstr "挑取(Cherry-Pick)..."
+
+#: cola/cmds.py:590
+msgid "Cherry-pick failed"
+msgstr ""
+
+#: cola/widgets/main.py:1156
+msgid "Cherry-picking"
+msgstr ""
 
 #: cola/widgets/search.py:319
 msgid "Choose Paths"
@@ -844,19 +936,19 @@ msgstr "选择路径"
 msgid "Choose the \"git grep\" regular expression mode"
 msgstr "选择 \"git grep\" 正则表达式模式"
 
-#: cola/widgets/bookmarks.py:142
+#: cola/widgets/bookmarks.py:229 cola/widgets/startup.py:352
 msgid "Clear Default Repository"
 msgstr "清除默认版本库"
 
-#: cola/widgets/commitmsg.py:313
+#: cola/widgets/commitmsg.py:309
 msgid "Clear commit message"
 msgstr "清除提交信息"
 
-#: cola/widgets/commitmsg.py:310
+#: cola/widgets/commitmsg.py:306
 msgid "Clear commit message?"
 msgstr "清除提交消息吗?"
 
-#: cola/widgets/commitmsg.py:58
+#: cola/widgets/commitmsg.py:62
 msgid "Clear..."
 msgstr "清除..."
 
@@ -868,7 +960,7 @@ msgstr "克隆"
 msgid "Clone Repository"
 msgstr "克隆已有版本库"
 
-#: cola/widgets/main.py:426 cola/widgets/startup.py:51
+#: cola/widgets/main.py:459 cola/widgets/startup.py:58
 msgid "Clone..."
 msgstr "克隆(clone)..."
 
@@ -877,12 +969,12 @@ msgstr "克隆(clone)..."
 msgid "Cloning repository at %s"
 msgstr "克隆位于 %s 的已有版本库"
 
-#: cola/qtutils.py:705 cola/qtutils.py:755 cola/widgets/about.py:508
-#: cola/widgets/remote.py:328 cola/widgets/text.py:832
+#: cola/qtutils.py:752 cola/qtutils.py:802 cola/widgets/about.py:508
+#: cola/widgets/remote.py:328 cola/widgets/text.py:959
 msgid "Close"
 msgstr "关闭"
 
-#: cola/qtutils.py:569
+#: cola/qtutils.py:615
 msgid "Close..."
 msgstr "关闭..."
 
@@ -890,23 +982,23 @@ msgstr "关闭..."
 msgid "Collapse all"
 msgstr "全部合起"
 
-#: cola/sequenceeditor.py:311
+#: cola/sequenceeditor.py:324
 msgid "Command"
 msgstr "命令"
 
-#: cola/widgets/main.py:158 cola/widgets/merge.py:74
+#: cola/widgets/main.py:160 cola/widgets/merge.py:74
 msgid "Commit"
 msgstr "提交"
 
-#: cola/cmds.py:692
+#: cola/cmds.py:843
 msgid "Commit failed"
 msgstr "克隆失败"
 
-#: cola/widgets/commitmsg.py:57
+#: cola/widgets/commitmsg.py:61
 msgid "Commit staged changes"
 msgstr "提交已缓存修改"
 
-#: cola/widgets/commitmsg.py:92
+#: cola/widgets/commitmsg.py:93
 msgid ""
 "Commit staged changes\n"
 "Shortcut: Ctrl+Enter"
@@ -914,16 +1006,20 @@ msgstr ""
 "提交已缓存变更\n"
 "快捷键: Ctrl+Enter"
 
-#: cola/widgets/commitmsg.py:592
+#: cola/widgets/commitmsg.py:568
 msgid "Commit summary"
 msgstr "提交概要"
+
+#: cola/widgets/main.py:253
+msgid "Commit the current state and continue applying patches"
+msgstr ""
 
 #: cola/widgets/merge.py:70
 msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
 msgstr "若合并无冲突即可提交.取消勾选以保持此合并操作的未提交状态"
 
-#: cola/widgets/commitmsg.py:54 cola/widgets/commitmsg.py:94
-#: cola/widgets/main.py:700 cola/widgets/main.py:701
+#: cola/widgets/commitmsg.py:58 cola/widgets/commitmsg.py:95
+#: cola/widgets/main.py:772 cola/widgets/main.py:773
 msgid "Commit@@verb"
 msgstr "提交@@verb"
 
@@ -935,7 +1031,7 @@ msgstr "比较"
 msgid "Compare All"
 msgstr "比较全部"
 
-#: cola/widgets/toolbar.py:268 cola/widgets/toolbar.py:305
+#: cola/widgets/toolbar.py:270 cola/widgets/toolbar.py:307
 msgid "Configure Toolbar"
 msgstr "配置工具栏"
 
@@ -943,45 +1039,53 @@ msgstr "配置工具栏"
 msgid "Configure the remote branch as the the new upstream"
 msgstr "将远程分支设为新的上游"
 
-#: cola/widgets/main.py:165
+#: cola/widgets/main.py:167
 msgid "Console"
 msgstr "控制台"
 
-#: cola/interaction.py:110 cola/widgets/main.py:557
+#: cola/interaction.py:110 cola/widgets/main.py:604
 msgid "Continue"
 msgstr "继续"
 
-#: cola/widgets/bookmarks.py:161 cola/widgets/diff.py:860
-#: cola/widgets/main.py:667
+#: cola/widgets/main.py:249
+msgid "Continue Applying Patches"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:248 cola/widgets/main.py:736
+#: cola/widgets/startup.py:371
 msgid "Copy"
 msgstr "复制"
 
-#: cola/widgets/status.py:241
+#: cola/widgets/status.py:272
 msgid "Copy Basename to Clipboard"
 msgstr "复制基名到剪贴板"
 
-#: cola/widgets/status.py:235
+#: cola/widgets/diff.py:180
+msgid "Copy Diff"
+msgstr ""
+
+#: cola/widgets/status.py:749
 msgid "Copy Leading Path to Clipboard"
 msgstr "复制前导路径到剪贴板"
 
-#: cola/widgets/status.py:219
+#: cola/widgets/status.py:255
 msgid "Copy Path to Clipboard"
 msgstr "复制路径到剪贴板"
 
-#: cola/widgets/status.py:227
+#: cola/widgets/status.py:263
 msgid "Copy Relative Path to Clipboard"
 msgstr "复制相对路径到剪贴板"
 
-#: cola/sequenceeditor.py:322 cola/widgets/dag.py:383
+#: cola/sequenceeditor.py:335 cola/widgets/dag.py:476
 msgid "Copy SHA-1"
 msgstr "复制 SHA-1"
 
-#: cola/widgets/status.py:704
+#: cola/widgets/status.py:741
 #, fuzzy
 msgid "Copy..."
 msgstr "复制"
 
-#: cola/app.py:497
+#: cola/app.py:494
 #, python-format
 msgid "Could not open %s."
 msgstr ""
@@ -991,16 +1095,16 @@ msgstr ""
 msgid "Could not parse Git URL: \"%s\""
 msgstr "无法解析 URL \"%s\""
 
-#: cola/app.py:506
+#: cola/app.py:504
 msgid "Create"
 msgstr ""
 
 #: cola/widgets/createbranch.py:86 cola/widgets/createbranch.py:135
-#: cola/widgets/createbranch.py:299 cola/widgets/dag.py:290
+#: cola/widgets/createbranch.py:299 cola/widgets/dag.py:371
 msgid "Create Branch"
 msgstr "创建分支"
 
-#: cola/widgets/dag.py:294
+#: cola/widgets/dag.py:375
 msgid "Create Patch"
 msgstr "创建补丁"
 
@@ -1008,20 +1112,20 @@ msgstr "创建补丁"
 msgid "Create Remote Branch"
 msgstr "创建远程分支"
 
-#: cola/widgets/commitmsg.py:123 cola/widgets/merge.py:78
+#: cola/widgets/commitmsg.py:124 cola/widgets/merge.py:78
 msgid "Create Signed Commit"
 msgstr "创建带签名提交: %s"
 
 #: cola/widgets/createtag.py:55 cola/widgets/createtag.py:91
-#: cola/widgets/dag.py:298
+#: cola/widgets/dag.py:379
 msgid "Create Tag"
 msgstr "创建标签"
 
-#: cola/widgets/main.py:493
+#: cola/widgets/main.py:538
 msgid "Create Tag..."
 msgstr "新建标签..."
 
-#: cola/cmds.py:2611
+#: cola/cmds.py:2815
 msgid "Create Unsigned Tag"
 msgstr "创建无签名标签"
 
@@ -1034,7 +1138,7 @@ msgstr "启用时总是在合并时创建一个提交,即使是快进合并方�
 msgid "Create a new remote branch?"
 msgstr "创建远程分支吗?"
 
-#: cola/app.py:505
+#: cola/app.py:503
 msgid "Create a new repository at that location?"
 msgstr ""
 
@@ -1042,28 +1146,32 @@ msgstr ""
 msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
 msgstr ""
 
-#: cola/widgets/main.py:500
+#: cola/widgets/main.py:545
 msgid "Create..."
 msgstr "新建..."
 
-#: cola/cmds.py:2647
+#: cola/cmds.py:2851
 #, python-format
 msgid "Created a new tag named \"%s\""
 msgstr "创建了名为“%s”的新标签"
 
-#: cola/widgets/prefs.py:370
+#: cola/widgets/prefs.py:243
+msgid "Ctrl+MouseWheel to Zoom"
+msgstr ""
+
+#: cola/widgets/prefs.py:381
 msgid "Current Repository"
 msgstr "当前版本库"
 
-#: cola/widgets/status.py:1286
+#: cola/widgets/status.py:1376
 msgid "Custom Copy Actions"
 msgstr "自定义复制操作"
 
-#: cola/widgets/status.py:246
+#: cola/widgets/status.py:277
 msgid "Customize..."
 msgstr "自定义..."
 
-#: cola/widgets/main.py:665
+#: cola/widgets/main.py:734
 msgid "Cut"
 msgstr "剪切"
 
@@ -1071,75 +1179,75 @@ msgstr "剪切"
 msgid "Czech translation"
 msgstr "捷克语翻译"
 
-#: cola/widgets/main.py:541
+#: cola/widgets/main.py:586
 msgid "DAG..."
 msgstr "历史视图..."
 
-#: cola/icons.py:54
+#: cola/icons.py:55
 msgid "Dark Theme"
 msgstr ""
 
-#: cola/widgets/dag.py:412
+#: cola/widgets/dag.py:508
 msgid "Date, Time"
 msgstr "日期, 时间"
 
-#: cola/icons.py:53 cola/themes.py:550
+#: cola/icons.py:54 cola/themes.py:638
 msgid "Default"
 msgstr "默认"
 
-#: cola/cmds.py:780 cola/guicmds.py:22 cola/guicmds.py:31
-#: cola/widgets/bookmarks.py:49 cola/widgets/bookmarks.py:164
-#: cola/widgets/main.py:671
+#: cola/cmds.py:931 cola/guicmds.py:26 cola/guicmds.py:35
+#: cola/widgets/bookmarks.py:75 cola/widgets/bookmarks.py:251
+#: cola/widgets/main.py:740 cola/widgets/startup.py:373
 msgid "Delete"
 msgstr "删除"
 
-#: cola/cmds.py:943
+#: cola/cmds.py:1094
 #, python-format
 msgid "Delete %d file(s)?"
 msgstr "删除 %d 个文件吗?"
 
-#: cola/cmds.py:871
+#: cola/cmds.py:1022
 msgid "Delete Bookmark"
 msgstr "删除书签"
 
-#: cola/cmds.py:869
+#: cola/cmds.py:1020
 msgid "Delete Bookmark?"
 msgstr "删除书签吗?"
 
-#: cola/cmds.py:969 cola/cmds.py:972 cola/guicmds.py:22
-#: cola/widgets/branch.py:266
+#: cola/cmds.py:1120 cola/cmds.py:1123 cola/guicmds.py:26
+#: cola/widgets/branch.py:267
 msgid "Delete Branch"
 msgstr "删除分支"
 
-#: cola/cmds.py:944
+#: cola/cmds.py:1095
 msgid "Delete Files"
 msgstr "删除文件"
 
-#: cola/widgets/status.py:284
+#: cola/widgets/status.py:315
 msgid "Delete Files..."
 msgstr "删除文件..."
 
-#: cola/cmds.py:940
+#: cola/cmds.py:1091
 msgid "Delete Files?"
 msgstr "删除文件吗?"
 
-#: cola/cmds.py:777
+#: cola/cmds.py:928
 msgid "Delete Remote"
 msgstr "删除远程"
 
-#: cola/guicmds.py:31 cola/widgets/branch.py:268
+#: cola/guicmds.py:35 cola/widgets/branch.py:269
 msgid "Delete Remote Branch"
 msgstr "删除远程分支"
 
-#: cola/widgets/main.py:513
+#: cola/widgets/main.py:558
 msgid "Delete Remote Branch..."
 msgstr "删除远程分支..."
 
-#: cola/widgets/toolbar.py:270
+#: cola/widgets/toolbar.py:272
 msgid "Delete Toolbar"
 msgstr "删除工具栏"
 
-#: cola/cmds.py:970
+#: cola/cmds.py:1121
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr ""
@@ -1148,20 +1256,20 @@ msgstr ""
 msgid "Delete remote"
 msgstr "删除远程"
 
-#: cola/cmds.py:779
+#: cola/cmds.py:930
 #, python-format
 msgid "Delete remote \"%s\""
 msgstr "删除远程 \"%s\""
 
-#: cola/cmds.py:778
+#: cola/cmds.py:929
 msgid "Delete remote?"
 msgstr "删除远程吗?"
 
-#: cola/widgets/main.py:507
+#: cola/widgets/main.py:552
 msgid "Delete..."
 msgstr "删除..."
 
-#: cola/cmds.py:922
+#: cola/cmds.py:1073
 #, python-format
 msgid "Deleting \"%s\" failed"
 msgstr "删除 \"%s\" 失败"
@@ -1174,11 +1282,11 @@ msgstr "删除内容"
 msgid "Depth"
 msgstr ""
 
-#: cola/qtutils.py:759 cola/qtutils.py:800
+#: cola/qtutils.py:806 cola/qtutils.py:847
 msgid "Detach"
 msgstr "分离"
 
-#: cola/widgets/prefs.py:160
+#: cola/widgets/prefs.py:163
 msgid "Detect Conflict Markers"
 msgstr "检测冲突标记"
 
@@ -1242,36 +1350,44 @@ msgstr "在未合并文件中检测冲突标记"
 msgid "Developer"
 msgstr "开发者"
 
-#: cola/widgets/dag.py:643 cola/widgets/diff.py:596 cola/widgets/main.py:171
-#: cola/widgets/main.py:719
+#: cola/guicmds.py:185 cola/widgets/dag.py:765 cola/widgets/diff.py:692
+#: cola/widgets/main.py:173 cola/widgets/main.py:791
 msgid "Diff"
 msgstr "差异比较"
 
-#: cola/widgets/browse.py:166
+#: cola/guicmds.py:185
+msgid "Diff Against Commit"
+msgstr ""
+
+#: cola/widgets/browse.py:168
 msgid "Diff Against Predecessor..."
 msgstr "与之前提交比较差异..."
 
-#: cola/widgets/diff.py:587 cola/widgets/diff.py:611
+#: cola/widgets/main.py:1154
+msgid "Diff Mode"
+msgstr ""
+
+#: cola/widgets/diff.py:683 cola/widgets/diff.py:707
 msgid "Diff Options"
 msgstr "差异选项"
 
-#: cola/widgets/prefs.py:227
+#: cola/widgets/prefs.py:233
 msgid "Diff Tool"
 msgstr "差异比较工具"
 
-#: cola/widgets/dag.py:285
+#: cola/widgets/dag.py:366
 msgid "Diff selected -> this"
 msgstr "所选文件 -> 此文件 比较差异"
 
-#: cola/widgets/dag.py:279
+#: cola/widgets/dag.py:360
 msgid "Diff this -> selected"
 msgstr "此文件 -> 所选文件 比较差异"
 
-#: cola/widgets/main.py:210
+#: cola/widgets/main.py:212
 msgid "Diffstat"
 msgstr "差异统计"
 
-#: cola/cmds.py:3052
+#: cola/cmds.py:3256
 msgid "Difftool"
 msgstr "差异工具"
 
@@ -1283,11 +1399,15 @@ msgstr "目录已存在"
 msgid "Disable"
 msgstr ""
 
-#: cola/widgets/prefs.py:159
+#: cola/widgets/prefs.py:162
 msgid "Display Untracked Files"
 msgstr "显示未跟踪文件"
 
-#: cola/widgets/main.py:432
+#: cola/cmds.py:2100
+msgid "Do not update stacked branches"
+msgstr ""
+
+#: cola/widgets/main.py:465
 msgid "Documentation"
 msgstr "帮助文档"
 
@@ -1312,11 +1432,23 @@ msgstr "丢弃暂存 \"%s\" 吗?"
 msgid "Drop the selected stash"
 msgstr "丢弃所选暂存"
 
-#: cola/qtutils.py:712 cola/sequenceeditor.py:345 cola/widgets/grep.py:102
+#: cola/qtutils.py:759 cola/sequenceeditor.py:358 cola/widgets/grep.py:102
 msgid "Edit"
 msgstr "编辑"
 
-#: cola/cmds.py:1971
+#: cola/widgets/diff.py:930
+msgid "Edit Diff Hunk to Revert..."
+msgstr ""
+
+#: cola/widgets/diff.py:928
+msgid "Edit Diff Hunk to Stage..."
+msgstr ""
+
+#: cola/widgets/diff.py:973
+msgid "Edit Diff Hunk to Unstage..."
+msgstr ""
+
+#: cola/cmds.py:2172
 msgid "Edit Rebase"
 msgstr "编辑衍合"
 
@@ -1324,27 +1456,56 @@ msgstr "编辑衍合"
 msgid "Edit Remotes"
 msgstr "编辑远程"
 
-#: cola/widgets/main.py:262
+#: cola/widgets/main.py:292
 msgid "Edit Remotes..."
 msgstr "编辑远程..."
+
+#: cola/widgets/diff.py:925
+msgid "Edit Selected Lines to Revert..."
+msgstr ""
+
+#: cola/widgets/diff.py:923
+msgid "Edit Selected Lines to Stage..."
+msgstr ""
+
+#: cola/widgets/diff.py:970
+msgid "Edit Selected Lines to Unstage..."
+msgstr ""
 
 #: cola/widgets/editremotes.py:44
 msgid "Edit remotes by selecting them from the list"
 msgstr "从列表中选择远程进行编辑"
 
-#: cola/widgets/browse.py:191 cola/widgets/common.py:38
+#: cola/widgets/browse.py:193 cola/widgets/common.py:39
 msgid "Edit selected paths"
 msgstr "编辑所选路径"
 
-#: cola/widgets/main.py:552
+#: cola/editpatch.py:45
+msgid "Edit the following patch, which will then be applied to the staging area to stage the changes:"
+msgstr ""
+
+#: cola/editpatch.py:40
+msgid "Edit the following patch, which will then be applied to the staging area to unstage the changes:"
+msgstr ""
+
+#: cola/editpatch.py:34
+msgid "Edit the following patch, which will then be applied to the worktree to revert the changes:"
+msgstr ""
+
+#: cola/widgets/main.py:598
 msgid "Edit..."
 msgstr "编辑..."
 
-#: cola/widgets/prefs.py:224
+#: cola/widgets/prefs.py:230
 msgid "Editor"
 msgstr "编辑器"
 
-#: cola/widgets/prefs.py:148
+#: cola/editpatch.py:88
+#, python-format
+msgid "Editor returned %s exit code.  Not applying patch."
+msgstr ""
+
+#: cola/widgets/prefs.py:151
 msgid "Email Address"
 msgstr "电子邮件地址"
 
@@ -1352,23 +1513,27 @@ msgstr "电子邮件地址"
 msgid "Email contributor"
 msgstr "电子邮件贡献者"
 
-#: cola/widgets/prefs.py:141
+#: cola/widgets/prefs.py:164
+msgid "Enable Gravatar Icons"
+msgstr ""
+
+#: cola/widgets/prefs.py:144
 msgid "Enable path autocompletion in tools"
 msgstr ""
 
-#: cola/widgets/diff.py:583
+#: cola/widgets/diff.py:679
 msgid "Enable word wrapping"
 msgstr ""
 
-#: cola/sequenceeditor.py:310
+#: cola/sequenceeditor.py:323
 msgid "Enabled"
 msgstr "已启用"
 
-#: cola/guicmds.py:262 cola/widgets/branch.py:441
+#: cola/guicmds.py:333 cola/widgets/branch.py:444
 msgid "Enter New Branch Name"
 msgstr "输入新分支名"
 
-#: cola/guicmds.py:138
+#: cola/guicmds.py:147
 #, fuzzy
 msgid "Enter a name for the new bare repo"
 msgstr "为暂存输入名称"
@@ -1377,13 +1542,15 @@ msgstr "为暂存输入名称"
 msgid "Enter a name for the stash"
 msgstr "为暂存输入名称"
 
-#: cola/cmds.py:154 cola/cmds.py:230 cola/cmds.py:239 cola/cmds.py:254
-#: cola/cmds.py:264 cola/cmds.py:397 cola/cmds.py:488 cola/cmds.py:606
-#: cola/cmds.py:922 cola/cmds.py:1019 cola/cmds.py:1834 cola/cmds.py:2200
-#: cola/cmds.py:2440 cola/cmds.py:2446 cola/cmds.py:2454 cola/cmds.py:2676
-#: cola/cmds.py:2694 cola/cmds.py:2970 cola/gitcmds.py:952 cola/guicmds.py:148
-#: cola/models/stash.py:70 cola/models/stash.py:87 cola/models/stash.py:108
-#: cola/widgets/bookmarks.py:350 cola/widgets/branch.py:751
+#: cola/cmds.py:152 cola/cmds.py:182 cola/cmds.py:213 cola/cmds.py:289
+#: cola/cmds.py:298 cola/cmds.py:313 cola/cmds.py:323 cola/cmds.py:466
+#: cola/cmds.py:502 cola/cmds.py:540 cola/cmds.py:639 cola/cmds.py:757
+#: cola/cmds.py:1073 cola/cmds.py:1170 cola/cmds.py:2011 cola/cmds.py:2401
+#: cola/cmds.py:2644 cola/cmds.py:2650 cola/cmds.py:2658 cola/cmds.py:2880
+#: cola/cmds.py:2898 cola/cmds.py:3174 cola/gitcmds.py:1010
+#: cola/guicmds.py:157 cola/models/stash.py:70 cola/models/stash.py:87
+#: cola/models/stash.py:108 cola/widgets/bookmarks.py:482
+#: cola/widgets/branch.py:784
 msgid "Error"
 msgstr "错误"
 
@@ -1395,31 +1562,35 @@ msgstr "克隆出错"
 msgid "Error Creating Branch"
 msgstr "创建分支出错"
 
-#: cola/app.py:508 cola/guicmds.py:95
+#: cola/app.py:506 cola/guicmds.py:101
 msgid "Error Creating Repository"
 msgstr "创建版本库出错"
 
-#: cola/cmds.py:1057
+#: cola/cmds.py:1208
 msgid "Error Deleting Remote Branch"
 msgstr "删除远程分支出错"
 
-#: cola/cmds.py:1422
+#: cola/cmds.py:1591
 msgid "Error Editing File"
 msgstr "编辑文件出错"
 
-#: cola/cmds.py:419
+#: cola/cmds.py:565
 msgid "Error Launching Blame Viewer"
 msgstr "启动问责查看器出错"
 
-#: cola/cmds.py:2935
+#: cola/cmds.py:3139
 msgid "Error Launching History Browser"
 msgstr "启动历史浏览器出错"
 
-#: cola/app.py:497
+#: cola/app.py:493
 msgid "Error Opening Repository"
 msgstr ""
 
-#: cola/cmds.py:769
+#: cola/widgets/browse.py:562
+msgid "Error Saving File"
+msgstr ""
+
+#: cola/cmds.py:920
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "创建远程 \"%s\" 出错"
@@ -1428,35 +1599,35 @@ msgstr "创建远程 \"%s\" 出错"
 msgid "Error creating stash"
 msgstr "创建暂存出错"
 
-#: cola/cmds.py:981
+#: cola/cmds.py:1132
 #, python-format
 msgid "Error deleting branch \"%s\""
 msgstr ""
 
-#: cola/cmds.py:787
+#: cola/cmds.py:938
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "删除远程 \"%s\" 出错"
 
-#: cola/cmds.py:811
+#: cola/cmds.py:962
 #, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
 msgstr "重命名 \"%(name)s\" 为 \"%(new_name)s\" 出错"
 
-#: cola/cmds.py:1600
+#: cola/cmds.py:1777
 msgid "Error running prepare-commitmsg hook"
 msgstr "运行 prepare-commitmsg 钩子出错"
 
-#: cola/cmds.py:2833 cola/cmds.py:2879
+#: cola/cmds.py:3037 cola/cmds.py:3083
 #, python-format
 msgid "Error updating submodule %s"
 msgstr "更新子模块 \"%s\" 出错"
 
-#: cola/cmds.py:2915
+#: cola/cmds.py:3119
 msgid "Error updating submodules"
 msgstr "更新子模块出错"
 
-#: cola/cmds.py:1539
+#: cola/cmds.py:1716
 msgid "Error: Cannot find commit template"
 msgstr "错误: 无法找到提交模板"
 
@@ -1464,7 +1635,7 @@ msgstr "错误: 无法找到提交模板"
 msgid "Error: Stash exists"
 msgstr "错误: 暂存已存在"
 
-#: cola/cmds.py:1561
+#: cola/cmds.py:1738
 msgid "Error: Unconfigured commit template"
 msgstr "错误: 未配置提交模板"
 
@@ -1473,29 +1644,45 @@ msgstr "错误: 未配置提交模板"
 msgid "Error: could not clone \"%s\""
 msgstr "错误: 无法克隆 \"%s\""
 
-#: cola/cmds.py:2639
+#: cola/cmds.py:2843
 #, python-format
 msgid "Error: could not create tag \"%s\""
 msgstr "错误: 无法创建标签 \"%s\""
 
-#: cola/widgets/branch.py:418
+#: cola/widgets/branch.py:420
 #, python-format
 msgid "Executing action %s"
 msgstr "执行动作 %s"
+
+#: cola/widgets/status.py:66
+msgid "Exit \"Diff\" mode"
+msgstr ""
+
+#: cola/widgets/action.py:67
+msgid "Exit Diff"
+msgstr ""
+
+#: cola/widgets/main.py:522
+msgid "Exit Diff Mode"
+msgstr ""
+
+#: cola/widgets/action.py:68
+msgid "Exit Diff mode"
+msgstr ""
 
 #: cola/widgets/recent.py:67
 msgid "Expand all"
 msgstr "全部展开"
 
-#: cola/guicmds.py:159 cola/widgets/search.py:75
+#: cola/guicmds.py:168 cola/widgets/search.py:75
 msgid "Export Patches"
 msgstr "导出补丁"
 
-#: cola/widgets/main.py:237
+#: cola/widgets/main.py:267
 msgid "Export Patches..."
 msgstr "导出补丁..."
 
-#: cola/widgets/main.py:482
+#: cola/widgets/main.py:527
 msgid "Expression..."
 msgstr "表达式..."
 
@@ -1503,9 +1690,17 @@ msgstr "表达式..."
 msgid "Extended Regexp"
 msgstr "拓展正则表达式"
 
-#: cola/widgets/commitmsg.py:611
+#: cola/widgets/commitmsg.py:616
 msgid "Extended description..."
 msgstr "拓展描述..."
+
+#: cola/cmds.py:393
+msgid "Failed to commit and continue applying patches"
+msgstr ""
+
+#: cola/cmds.py:409
+msgid "Failed to continue applying patches after skipping the current patch"
+msgstr ""
 
 #: cola/widgets/createbranch.py:124
 msgid "Fast Forward Only"
@@ -1515,11 +1710,11 @@ msgstr "仅快速合并"
 msgid "Fast-forward only"
 msgstr "仅快速合并"
 
-#: cola/widgets/bookmarks.py:61
+#: cola/widgets/bookmarks.py:91
 msgid "Favorite repositories"
 msgstr "版本库收藏夹"
 
-#: cola/widgets/main.py:109
+#: cola/widgets/main.py:111
 msgid "Favorites"
 msgstr "收藏夹"
 
@@ -1531,11 +1726,11 @@ msgstr "获取"
 msgid "Fetch Tracking Branch"
 msgstr "获取跟踪分支"
 
-#: cola/widgets/action.py:63 cola/widgets/main.py:348
+#: cola/widgets/action.py:63 cola/widgets/main.py:381
 msgid "Fetch..."
 msgstr "获取..."
 
-#: cola/widgets/main.py:537
+#: cola/widgets/main.py:582
 msgid "File Browser..."
 msgstr "文件浏览器..."
 
@@ -1543,24 +1738,24 @@ msgstr "文件浏览器..."
 msgid "File Differences"
 msgstr "文件差异"
 
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:561
+#: cola/widgets/archive.py:199 cola/widgets/browse.py:572
 msgid "File Saved"
 msgstr "文件已保存"
 
-#: cola/widgets/archive.py:199 cola/widgets/browse.py:561
+#: cola/widgets/archive.py:199 cola/widgets/browse.py:572
 #, python-format
 msgid "File saved to \"%s\""
 msgstr "文件保存为 \"%s\""
 
-#: cola/fsmonitor.py:521
+#: cola/fsmonitor.py:519
 msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr "监视文件系统更改：已禁用，因为 cola.notify 选项设置为 false。\n"
 
-#: cola/fsmonitor.py:538
+#: cola/fsmonitor.py:536
 msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
 msgstr ""
 
-#: cola/fsmonitor.py:532
+#: cola/fsmonitor.py:530
 msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
 msgstr ""
 
@@ -1579,19 +1774,19 @@ msgstr "监视文件系统更改：已开启。\n"
 msgid "Filename"
 msgstr "文件名"
 
-#: cola/widgets/dag.py:640
+#: cola/widgets/dag.py:757
 msgid "Files"
 msgstr "文件"
 
-#: cola/widgets/branch.py:759
+#: cola/widgets/branch.py:792
 msgid "Filter branches..."
 msgstr "过滤分支..."
 
-#: cola/widgets/status.py:1251
+#: cola/widgets/status.py:1338
 msgid "Filter paths..."
 msgstr "对路径进行过滤..."
 
-#: cola/widgets/finder.py:113 cola/widgets/main.py:276
+#: cola/widgets/finder.py:113 cola/widgets/main.py:306
 msgid "Find Files"
 msgstr "查找文件"
 
@@ -1599,59 +1794,59 @@ msgstr "查找文件"
 msgid "Fixed String"
 msgstr "特定字符串"
 
-#: cola/widgets/prefs.py:222
+#: cola/widgets/prefs.py:228
 msgid "Fixed-Width Font"
 msgstr "等宽字体"
 
-#: cola/sequenceeditor.py:350
+#: cola/sequenceeditor.py:363
 msgid "Fixup"
 msgstr "修正"
 
-#: cola/widgets/commitmsg.py:147
+#: cola/widgets/commitmsg.py:148
 msgid "Fixup Previous Commit"
 msgstr "修正前一次提交"
 
-#: cola/themes.py:568
+#: cola/themes.py:673
 msgid "Flat dark blue"
 msgstr "扁平深蓝"
 
-#: cola/themes.py:575
+#: cola/themes.py:694
 msgid "Flat dark green"
 msgstr "扁平深绿"
 
-#: cola/themes.py:572
+#: cola/themes.py:687
 msgid "Flat dark grey"
 msgstr "扁平深灰"
 
-#: cola/themes.py:570
+#: cola/themes.py:680
 msgid "Flat dark red"
 msgstr "扁平深红"
 
-#: cola/themes.py:552
+#: cola/themes.py:645
 msgid "Flat light blue"
 msgstr "扁平浅蓝"
 
-#: cola/themes.py:562
+#: cola/themes.py:666
 msgid "Flat light green"
 msgstr "扁平浅绿"
 
-#: cola/themes.py:558
+#: cola/themes.py:659
 msgid "Flat light grey"
 msgstr "扁平浅灰"
 
-#: cola/themes.py:555
+#: cola/themes.py:652
 msgid "Flat light red"
 msgstr "扁平浅红"
 
-#: cola/widgets/startup.py:66
+#: cola/widgets/startup.py:73
 msgid "Folder"
 msgstr ""
 
-#: cola/widgets/toolbar.py:177
+#: cola/widgets/toolbar.py:179
 msgid "Follow System Style"
 msgstr ""
 
-#: cola/widgets/prefs.py:223
+#: cola/widgets/prefs.py:229
 msgid "Font Size"
 msgstr "字体大小"
 
@@ -1685,7 +1880,7 @@ msgstr "强制获取从 %s 吗?"
 msgid "Force push to %s?"
 msgstr "强制推送到 %s 吗?"
 
-#: cola/widgets/status.py:1291
+#: cola/widgets/status.py:1381
 msgid "Format String"
 msgstr "格式化字符串"
 
@@ -1697,7 +1892,7 @@ msgstr "法语翻译"
 msgid "GPG-sign the merge commit"
 msgstr "GPG 签名合并提交"
 
-#: cola/widgets/prefs.py:312
+#: cola/widgets/prefs.py:321
 msgid "GUI theme"
 msgstr "界面主题"
 
@@ -1711,27 +1906,27 @@ msgstr "为 \"%s\" 收集信息..."
 msgid "German translation"
 msgstr "德语翻译"
 
-#: cola/widgets/main.py:472
+#: cola/widgets/main.py:505
 msgid "Get Commit Message Template"
 msgstr "取得提交信息模板"
 
-#: cola/widgets/dag.py:426
+#: cola/widgets/dag.py:522
 msgid "Go Down"
 msgstr "下一项"
 
-#: cola/widgets/dag.py:422
+#: cola/widgets/dag.py:518
 msgid "Go Up"
 msgstr "上一项"
 
-#: cola/widgets/dag.py:376 cola/widgets/filelist.py:42
+#: cola/widgets/dag.py:469 cola/widgets/filelist.py:42
 msgid "Grab File..."
 msgstr "抓取文件..."
 
-#: cola/widgets/dag.py:658
+#: cola/widgets/dag.py:783
 msgid "Graph"
 msgstr "图示"
 
-#: cola/widgets/main.py:319
+#: cola/widgets/main.py:352
 msgid "Grep"
 msgstr "筛选 (grep)"
 
@@ -1739,12 +1934,12 @@ msgstr "筛选 (grep)"
 msgid "Have you rebased/pulled lately?"
 msgstr "最近有衍合或拉取操作吗?"
 
-#: cola/sequenceeditor.py:108 cola/sequenceeditor.py:170
-#: cola/widgets/finder.py:138 cola/widgets/main.py:775
+#: cola/sequenceeditor.py:110 cola/sequenceeditor.py:172
+#: cola/widgets/finder.py:138 cola/widgets/main.py:849
 msgid "Help"
 msgstr "帮助"
 
-#: cola/widgets/status.py:1242
+#: cola/widgets/status.py:1328
 msgid "Help - Custom Copy Actions"
 msgstr "帮助 - 自定义复制操作"
 
@@ -1752,15 +1947,19 @@ msgstr "帮助 - 自定义复制操作"
 msgid "Help - Find Files"
 msgstr "帮助 - 查找文件"
 
-#: cola/sequenceeditor.py:704
+#: cola/sequenceeditor.py:738
 msgid "Help - git-cola-sequence-editor"
 msgstr "帮助 - git-cola-sequence-editor"
 
-#: cola/widgets/prefs.py:314
+#: cola/widgets/prefs.py:323
 msgid "High DPI"
 msgstr "高分辨率"
 
-#: cola/widgets/prefs.py:225
+#: cola/gitcmds.py:902
+msgid "Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel the current cherry-pick."
+msgstr ""
+
+#: cola/widgets/prefs.py:231
 msgid "History Browser"
 msgstr "历史浏览器"
 
@@ -1768,23 +1967,23 @@ msgstr "历史浏览器"
 msgid "Hungarian translation"
 msgstr "匈牙利语翻译"
 
-#: cola/widgets/toolbar.py:178
+#: cola/widgets/toolbar.py:180
 msgid "Icon Only"
 msgstr ""
 
-#: cola/widgets/prefs.py:313
+#: cola/widgets/prefs.py:322
 msgid "Icon theme"
 msgstr ""
 
-#: cola/widgets/diff.py:573
+#: cola/widgets/diff.py:669
 msgid "Ignore all whitespace"
 msgstr "忽略所有空格"
 
-#: cola/widgets/diff.py:570
+#: cola/widgets/diff.py:666
 msgid "Ignore changes in amount of whitespace"
 msgstr "忽略空格数量"
 
-#: cola/widgets/diff.py:566
+#: cola/widgets/diff.py:662
 msgid "Ignore changes in whitespace at EOL"
 msgstr "行尾忽略空格"
 
@@ -1800,7 +1999,7 @@ msgstr "忽略精确文件名"
 msgid "Ignore filename or pattern"
 msgstr "忽略文件名或匹配模式"
 
-#: cola/widgets/status.py:873
+#: cola/widgets/status.py:937
 msgid "Ignore..."
 msgstr ""
 
@@ -1808,7 +2007,7 @@ msgstr ""
 msgid "Include tags "
 msgstr "包含标签 "
 
-#: cola/widgets/prefs.py:317
+#: cola/widgets/prefs.py:326
 msgid "Indent Status paths"
 msgstr "缩进状态路径"
 
@@ -1816,12 +2015,12 @@ msgstr "缩进状态路径"
 msgid "Indonesian translation"
 msgstr "印尼语翻译"
 
-#: cola/widgets/main.py:587
+#: cola/widgets/main.py:637
 #, fuzzy
 msgid "Initialize Git Annex"
 msgstr "初始化..."
 
-#: cola/widgets/main.py:591
+#: cola/widgets/main.py:641
 #, fuzzy
 msgid "Initialize Git LFS"
 msgstr "初始化..."
@@ -1830,23 +2029,27 @@ msgstr "初始化..."
 msgid "Inititalize submodules"
 msgstr "初始化子模块"
 
-#: cola/widgets/prefs.py:231
+#: cola/widgets/prefs.py:237
 msgid "Insert spaces instead of tabs"
 msgstr "插入空格而非制表符"
 
-#: cola/cmds.py:1935
+#: cola/cmds.py:2136
 msgid "Interactive Rebase"
 msgstr "交互式衍合"
 
-#: cola/cmds.py:2170
+#: cola/cmds.py:2371
 msgid "Invalid Revision"
 msgstr "无效版本"
+
+#: cola/editpatch.py:61
+msgid "It is not necessary to update the hunk header lines as they will be regenerated automatically."
+msgstr ""
 
 #: cola/widgets/about.py:421 cola/widgets/about.py:424
 msgid "Japanese translation"
 msgstr ""
 
-#: cola/widgets/prefs.py:233
+#: cola/widgets/prefs.py:239
 msgid "Keep *.orig Merge Backups"
 msgstr "保留合并备份 (*.orig)"
 
@@ -1854,28 +2057,28 @@ msgstr "保留合并备份 (*.orig)"
 msgid "Keep Index"
 msgstr "保留索引"
 
-#: cola/widgets/main.py:438
+#: cola/widgets/main.py:471
 msgid "Keyboard Shortcuts"
 msgstr "键盘快捷键"
 
-#: cola/cmds.py:1445 cola/sequenceeditor.py:164 cola/sequenceeditor.py:326
-#: cola/widgets/dag.py:316 cola/widgets/filelist.py:34
+#: cola/cmds.py:1614 cola/sequenceeditor.py:166 cola/sequenceeditor.py:339
+#: cola/widgets/dag.py:397 cola/widgets/filelist.py:34
 msgid "Launch Diff Tool"
 msgstr "启动差异工具"
 
-#: cola/widgets/dag.py:323
+#: cola/widgets/dag.py:404
 msgid "Launch Directory Diff Tool"
 msgstr "启动目录差异工具"
 
-#: cola/cmds.py:1378 cola/cmds.py:1508 cola/widgets/filelist.py:38
+#: cola/cmds.py:1547 cola/cmds.py:1685 cola/widgets/filelist.py:38
 msgid "Launch Editor"
 msgstr "启动编辑器"
 
-#: cola/cmds.py:1481
+#: cola/cmds.py:1650
 msgid "Launch Terminal"
 msgstr "启动终端"
 
-#: cola/sequenceeditor.py:165
+#: cola/sequenceeditor.py:167
 msgid ""
 "Launch external diff tool\n"
 "Shortcut: Ctrl+D"
@@ -1883,45 +2086,50 @@ msgstr ""
 "加载外部差异工具\n"
 "快捷键: Ctrl+D"
 
-#: cola/widgets/diff.py:799 cola/widgets/diff.py:830
-#: cola/widgets/status.py:795 cola/widgets/status.py:888
+#: cola/widgets/diff.py:916 cola/widgets/diff.py:962
+#: cola/widgets/status.py:856 cola/widgets/status.py:952
 msgid "Launch git-cola"
 msgstr "启动 git-cola"
 
-#: cola/widgets/browse.py:167
+#: cola/widgets/browse.py:169
 msgid "Launch git-difftool against previous versions"
 msgstr "对之前的版本启动 git-difftool"
 
-#: cola/widgets/browse.py:159
+#: cola/widgets/browse.py:161
 msgid "Launch git-difftool on the current path"
 msgstr "在当前路径运行 git-difftool"
 
-#: cola/icons.py:55
+#: cola/icons.py:56
 msgid "Light Theme"
 msgstr ""
 
-#: cola/widgets/startup.py:67
+#: cola/editpatch.py:59
+#, python-format
+msgid "Lines starting with '%s' will be ignored."
+msgstr ""
+
+#: cola/widgets/startup.py:74
 msgid "List"
 msgstr ""
 
-#: cola/guicmds.py:204
+#: cola/guicmds.py:267
 msgid "Load Commit Message"
 msgstr "加载提交消息"
 
-#: cola/widgets/main.py:300
+#: cola/widgets/main.py:333
 msgid "Load Commit Message..."
 msgstr "加载提交信息..."
 
-#: cola/widgets/commitmsg.py:143
+#: cola/widgets/commitmsg.py:144
 msgid "Load Previous Commit Message"
 msgstr "加载前一次提交信息"
 
-#: cola/widgets/diff.py:206
+#: cola/widgets/diff.py:236
 msgid "Loading..."
 msgstr "加载中..."
 
-#: cola/widgets/branch.py:175 cola/widgets/branch.py:238
-#: cola/widgets/branch.py:279 cola/widgets/compare.py:38
+#: cola/widgets/branch.py:168 cola/widgets/branch.py:239
+#: cola/widgets/branch.py:280 cola/widgets/compare.py:38
 #: cola/widgets/compare.py:53 cola/widgets/compare.py:58
 msgid "Local"
 msgstr "本地"
@@ -1935,11 +2143,11 @@ msgstr "本地分支"
 msgid "Local branch"
 msgstr "本地分支"
 
-#: cola/widgets/dag.py:664 cola/widgets/main.py:595
+#: cola/widgets/dag.py:789 cola/widgets/main.py:645
 msgid "Lock Layout"
 msgstr "锁定布局"
 
-#: cola/widgets/dag.py:635
+#: cola/widgets/dag.py:752
 msgid "Log"
 msgstr "记录"
 
@@ -1956,15 +2164,15 @@ msgstr "合并"
 msgid "Merge \"%(revision)s\" into \"%(branch)s\""
 msgstr "合并 \"%(revision)s\" 到分支 \"%(branch)s\""
 
-#: cola/widgets/prefs.py:228
+#: cola/widgets/prefs.py:234
 msgid "Merge Tool"
 msgstr "合并工具"
 
-#: cola/widgets/prefs.py:151
+#: cola/widgets/prefs.py:154
 msgid "Merge Verbosity"
 msgstr "合并冗余度"
 
-#: cola/cmds.py:1658
+#: cola/cmds.py:1835
 msgid "Merge failed.  Conflict resolution is required."
 msgstr "合并失败. 需要解决冲突."
 
@@ -1973,15 +2181,15 @@ msgstr "合并失败. 需要解决冲突."
 msgid "Merge into \"%s\""
 msgstr "合并到 \"%s\""
 
-#: cola/widgets/branch.py:229
+#: cola/widgets/branch.py:230
 msgid "Merge into current branch"
 msgstr "合并到当前分支"
 
-#: cola/widgets/main.py:324
+#: cola/widgets/main.py:357
 msgid "Merge..."
 msgstr "合并 (merge)..."
 
-#: cola/widgets/main.py:1058
+#: cola/widgets/main.py:1158
 msgid "Merging"
 msgstr "合并中"
 
@@ -1989,7 +2197,7 @@ msgstr "合并中"
 msgid "Message"
 msgstr "消息"
 
-#: cola/widgets/commitmsg.py:425
+#: cola/widgets/commitmsg.py:421
 msgid "Missing Commit Message"
 msgstr "提交信息不存在"
 
@@ -1997,43 +2205,42 @@ msgstr "提交信息不存在"
 msgid "Missing Data"
 msgstr "数据不存在"
 
-#: cola/cmds.py:2601
+#: cola/cmds.py:2805
 msgid "Missing Name"
 msgstr "名称不存在"
 
-#: cola/cmds.py:2595
+#: cola/cmds.py:2799
 msgid "Missing Revision"
 msgstr "版本不存在"
 
-#: cola/cmds.py:2605
+#: cola/cmds.py:2809
 msgid "Missing Tag Message"
 msgstr "标签信息不存在"
 
-#: cola/models/browse.py:334 cola/widgets/status.py:136
-#: cola/widgets/status.py:595
+#: cola/models/browse.py:333 cola/widgets/status.py:158
+#: cola/widgets/status.py:635
 msgid "Modified"
 msgstr "已修改"
 
-#: cola/widgets/commitmsg.py:514
+#: cola/widgets/commitmsg.py:510
 msgid "More..."
 msgstr "更多..."
 
-#: cola/widgets/commitmsg.py:180 cola/widgets/commitmsg.py:184
-#: cola/widgets/standard.py:244 cola/widgets/status.py:211
+#: cola/widgets/standard.py:244 cola/widgets/status.py:233
 msgid "Move Down"
 msgstr "下移"
 
-#: cola/widgets/standard.py:236 cola/widgets/status.py:203
+#: cola/widgets/standard.py:236 cola/widgets/status.py:225
 msgid "Move Up"
 msgstr "上移"
 
-#: cola/widgets/status.py:273
+#: cola/widgets/status.py:304
 msgid "Move files to trash"
 msgstr "移动文件到回收站"
 
-#: cola/models/browse.py:33 cola/widgets/bookmarks.py:335
+#: cola/models/browse.py:33 cola/widgets/bookmarks.py:467
 #: cola/widgets/createtag.py:61 cola/widgets/editremotes.py:450
-#: cola/widgets/status.py:1363 cola/widgets/toolbar.py:311
+#: cola/widgets/status.py:1457 cola/widgets/toolbar.py:313
 msgid "Name"
 msgstr "名称"
 
@@ -2041,19 +2248,19 @@ msgstr "名称"
 msgid "Name for the new remote"
 msgstr "新远程的名称"
 
-#: cola/guicmds.py:139 cola/widgets/main.py:249
+#: cola/guicmds.py:148 cola/widgets/main.py:279
 msgid "New Bare Repository..."
 msgstr "新建空版本库..."
 
-#: cola/guicmds.py:81 cola/widgets/main.py:244
+#: cola/guicmds.py:87 cola/widgets/main.py:274
 msgid "New Repository..."
 msgstr "新建版本库..."
 
-#: cola/widgets/main.py:904
+#: cola/widgets/main.py:978
 msgid "New Toolbar"
 msgstr "添加工具栏"
 
-#: cola/widgets/startup.py:46
+#: cola/widgets/startup.py:53
 msgid "New..."
 msgstr "新建..."
 
@@ -2069,7 +2276,7 @@ msgstr "号码"
 msgid "No Revision Specified"
 msgstr "没有指定版本"
 
-#: cola/widgets/commitmsg.py:435
+#: cola/widgets/commitmsg.py:431
 msgid ""
 "No changes to commit.\n"
 "\n"
@@ -2107,29 +2314,34 @@ msgstr ""
 "非快进合并式上传会覆盖远程历史!\n"
 "(之前拉取了吗?)"
 
-#: cola/widgets/commitmsg.py:452
+#: cola/widgets/commitmsg.py:448
 msgid "Nothing to commit"
 msgstr "没有改动可提交"
 
-#: cola/gitcmds.py:587
+#: cola/gitcmds.py:603
 msgid "Nothing to do"
 msgstr "不做操作"
 
-#: cola/widgets/prefs.py:152
+#: cola/widgets/prefs.py:155
 msgid "Number of Diff Context Lines"
 msgstr "Diff 上下文行数"
 
-#: cola/widgets/bookmarks.py:53 cola/widgets/bookmarks.py:126
-#: cola/widgets/startup.py:144
+#: cola/widgets/bookmarks.py:79 cola/widgets/bookmarks.py:213
+#: cola/widgets/startup.py:336
 msgid "Open"
 msgstr "打开"
 
-#: cola/cmds.py:1686
+#: cola/widgets/text.py:223
+#, python-format
+msgid "Open \"%s\""
+msgstr ""
+
+#: cola/cmds.py:1863
 msgid "Open Directory"
 msgstr ""
 
-#: cola/guicmds.py:186 cola/guicmds.py:195 cola/widgets/editremotes.py:473
-#: cola/widgets/startup.py:213
+#: cola/guicmds.py:205 cola/guicmds.py:214 cola/widgets/editremotes.py:473
+#: cola/widgets/startup.py:55 cola/widgets/startup.py:215
 msgid "Open Git Repository"
 msgstr "打开已有版本库"
 
@@ -2137,36 +2349,35 @@ msgstr "打开已有版本库"
 msgid "Open Parent"
 msgstr "打开父级"
 
-#: cola/cmds.py:1706
+#: cola/cmds.py:1883
 msgid "Open Parent Directory"
 msgstr "打开上级目录"
 
-#: cola/widgets/main.py:610
+#: cola/widgets/main.py:673
 msgid "Open Recent"
 msgstr "打开最近版本库"
 
-#: cola/cmds.py:1669
+#: cola/cmds.py:1846
 msgid "Open Using Default Application"
 msgstr "用默认程序打开"
 
-#: cola/cmds.py:1719
+#: cola/cmds.py:1896
 msgid "Open Worktree"
 msgstr ""
 
-#: cola/widgets/bookmarks.py:134
+#: cola/widgets/bookmarks.py:221 cola/widgets/startup.py:344
 msgid "Open in New Window"
 msgstr "新窗口打开"
 
-#: cola/widgets/main.py:369
+#: cola/widgets/main.py:402
 msgid "Open in New Window..."
 msgstr "在新窗口打开..."
 
-#: cola/widgets/editremotes.py:437 cola/widgets/main.py:363
-#: cola/widgets/startup.py:48 cola/widgets/startup.py:58
+#: cola/widgets/main.py:396
 msgid "Open..."
 msgstr "打开..."
 
-#: cola/widgets/branch.py:343
+#: cola/widgets/branch.py:344
 msgid "Other branches"
 msgstr "其他分支"
 
@@ -2191,19 +2402,27 @@ msgstr ""
 "用 Shell 解析参数\n"
 "若命令行条目包含空格, 请添加双引号."
 
-#: cola/models/browse.py:332
+#: cola/models/browse.py:331
 msgid "Partially Staged"
 msgstr "部分已缓存"
 
-#: cola/widgets/main.py:669
+#: cola/widgets/main.py:738
 msgid "Paste"
 msgstr "粘贴"
 
-#: cola/cmds.py:345
+#: cola/cmds.py:369
+msgid "Patch failed to apply"
+msgstr ""
+
+#: cola/cmds.py:381
 msgid "Patch(es) Applied"
 msgstr "已应用补丁"
 
-#: cola/widgets/bookmarks.py:336 cola/widgets/submodules.py:118
+#: cola/widgets/main.py:689
+msgid "Patches"
+msgstr ""
+
+#: cola/widgets/bookmarks.py:468 cola/widgets/submodules.py:118
 msgid "Path"
 msgstr "路径"
 
@@ -2211,11 +2430,11 @@ msgstr "路径"
 msgid "Path or URL to clone (Env. $VARS okay)"
 msgstr "克隆路径或 URL (可以使用环境变量)"
 
-#: cola/sequenceeditor.py:334
+#: cola/sequenceeditor.py:347
 msgid "Pick"
 msgstr ""
 
-#: cola/widgets/diff.py:596
+#: cola/widgets/diff.py:692
 msgid "Pixel XOR"
 msgstr "像素异或"
 
@@ -2223,19 +2442,19 @@ msgstr "像素异或"
 msgid "Please provide both a branch name and revision expression."
 msgstr "请同时提供分支名称和版本表达式."
 
-#: cola/cmds.py:2154
+#: cola/cmds.py:2355
 msgid "Please select a file"
 msgstr "请选择一个文件"
 
-#: cola/cmds.py:2601
+#: cola/cmds.py:2805
 msgid "Please specify a name for the new tag."
 msgstr "请为新标签指定名称."
 
-#: cola/cmds.py:2595
+#: cola/cmds.py:2799
 msgid "Please specify a revision to tag."
 msgstr "请指定一个版本进行标记."
 
-#: cola/widgets/commitmsg.py:418
+#: cola/widgets/commitmsg.py:414
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -2253,7 +2472,7 @@ msgstr ""
 "- 第二行: 空行\n"
 "- 剩余行: 请描述为什么你做的这些改动是好的.\n"
 
-#: cola/cmds.py:508
+#: cola/cmds.py:659
 msgid "Point the current branch head to a new commit?"
 msgstr ""
 
@@ -2266,7 +2485,7 @@ msgstr "波兰语翻译"
 msgid "Pop"
 msgstr "弹出"
 
-#: cola/widgets/main.py:257 cola/widgets/prefs.py:361
+#: cola/widgets/main.py:287 cola/widgets/prefs.py:372
 msgid "Preferences"
 msgstr "首选项"
 
@@ -2274,11 +2493,11 @@ msgstr "首选项"
 msgid "Prefix"
 msgstr "前缀"
 
-#: cola/widgets/main.py:306
+#: cola/widgets/main.py:339
 msgid "Prepare Commit Message"
 msgstr "准备提交信息"
 
-#: cola/widgets/prefs.py:138
+#: cola/widgets/prefs.py:141
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
 msgstr ""
 
@@ -2298,43 +2517,51 @@ msgstr "推送创建远程分支时提醒"
 msgid "Prune "
 msgstr "从..清除(prune) "
 
-#: cola/widgets/bookmarks.py:168
+#: cola/widgets/bookmarks.py:255 cola/widgets/startup.py:376
 msgid "Prune Missing Entries"
 msgstr ""
 
-#: cola/widgets/branch.py:245 cola/widgets/remote.py:723
+#: cola/widgets/branch.py:246 cola/widgets/remote.py:723
 msgid "Pull"
 msgstr "拉取"
 
-#: cola/widgets/action.py:65 cola/widgets/main.py:358
+#: cola/widgets/action.py:65 cola/widgets/main.py:391
 msgid "Pull..."
 msgstr "拉取..."
 
-#: cola/widgets/branch.py:251 cola/widgets/remote.py:593
+#: cola/widgets/branch.py:252 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:693
 msgid "Push"
 msgstr "推送"
 
-#: cola/widgets/action.py:64 cola/widgets/main.py:353
+#: cola/widgets/action.py:64 cola/widgets/main.py:386
 msgid "Push..."
 msgstr "上传..."
 
-#: cola/widgets/main.py:316
+#: cola/guicmds.py:252
+msgid "Quick Open Repository"
+msgstr ""
+
+#: cola/widgets/main.py:654
+msgid "Quick Open..."
+msgstr ""
+
+#: cola/widgets/main.py:349
 msgid "Quit"
 msgstr "退出"
 
-#: cola/cmds.py:1949 cola/cmds.py:1985 cola/cmds.py:1986 cola/cmds.py:1999
-#: cola/cmds.py:2000 cola/sequenceeditor.py:157 cola/sequenceeditor.py:198
-#: cola/widgets/main.py:742 cola/widgets/remote.py:211
+#: cola/cmds.py:2150 cola/cmds.py:2186 cola/cmds.py:2187 cola/cmds.py:2200
+#: cola/cmds.py:2201 cola/sequenceeditor.py:159 cola/sequenceeditor.py:200
+#: cola/widgets/main.py:816 cola/widgets/remote.py:211
 msgid "Rebase"
 msgstr "衍合"
 
-#: cola/cmds.py:1948
+#: cola/cmds.py:2149
 #, python-format
 msgid "Rebase onto %s"
 msgstr "衍合到 %s"
 
-#: cola/cmds.py:1961
+#: cola/cmds.py:2162
 msgid "Rebase stopped"
 msgstr "衍合已停止"
 
@@ -2342,19 +2569,23 @@ msgstr "衍合已停止"
 msgid "Rebase the current branch instead of merging"
 msgstr "衍合当前分支而不是合并"
 
-#: cola/widgets/main.py:1056
+#: cola/widgets/dag.py:421
+msgid "Rebase to this commit"
+msgstr ""
+
+#: cola/widgets/main.py:1160
 msgid "Rebasing"
 msgstr "衍合中"
 
-#: cola/widgets/main.py:118
+#: cola/widgets/main.py:120
 msgid "Recent"
 msgstr "最近"
 
-#: cola/widgets/bookmarks.py:63
+#: cola/widgets/bookmarks.py:93
 msgid "Recent repositories"
 msgstr "最近使用版本库"
 
-#: cola/widgets/prefs.py:229
+#: cola/widgets/prefs.py:235
 msgid "Recent repository count"
 msgstr "最近使用版本库数目"
 
@@ -2362,7 +2593,7 @@ msgstr "最近使用版本库数目"
 msgid "Recently Modified Files"
 msgstr "最近修改过的文件"
 
-#: cola/widgets/main.py:285
+#: cola/widgets/main.py:314
 msgid "Recently Modified Files..."
 msgstr "最近修改过的文件 ..."
 
@@ -2374,7 +2605,7 @@ msgstr "已丢弃的暂存是无法恢复的."
 msgid "Recovering lost commits may not be easy."
 msgstr "恢复丢失的提交是比较困难的."
 
-#: cola/widgets/main.py:662
+#: cola/widgets/main.py:731
 msgid "Redo"
 msgstr "重做"
 
@@ -2394,8 +2625,8 @@ msgstr ""
 msgid "Reference repository to use when cloning (optional)"
 msgstr ""
 
-#: cola/cmds.py:2027 cola/qtutils.py:718 cola/widgets/action.py:62
-#: cola/widgets/dag.py:668 cola/widgets/editremotes.py:85
+#: cola/cmds.py:2228 cola/qtutils.py:765 cola/widgets/action.py:62
+#: cola/widgets/dag.py:793 cola/widgets/editremotes.py:85
 #: cola/widgets/grep.py:105 cola/widgets/recent.py:116
 #: cola/widgets/submodules.py:45
 msgid "Refresh"
@@ -2405,8 +2636,8 @@ msgstr "刷新"
 msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
 msgstr ""
 
-#: cola/widgets/branch.py:179 cola/widgets/branch.py:223
-#: cola/widgets/branch.py:267 cola/widgets/branch.py:464
+#: cola/widgets/branch.py:172 cola/widgets/branch.py:224
+#: cola/widgets/branch.py:268 cola/widgets/branch.py:469
 #: cola/widgets/compare.py:54 cola/widgets/compare.py:59
 #: cola/widgets/remote.py:147
 msgid "Remote"
@@ -2416,7 +2647,7 @@ msgstr "远程(remote)"
 msgid "Remote Branch"
 msgstr "远程分支"
 
-#: cola/cmds.py:1051
+#: cola/cmds.py:1202
 msgid "Remote Branch Deleted"
 msgstr "远程分支已删除"
 
@@ -2424,17 +2655,17 @@ msgstr "远程分支已删除"
 msgid "Remote git repositories - double-click to rename"
 msgstr "远程版本库 - 双击以改名"
 
-#: cola/cmds.py:884 cola/widgets/patch.py:103 cola/widgets/patch.py:118
-#: cola/widgets/startup.py:263 cola/widgets/status.py:1297
+#: cola/cmds.py:1035 cola/widgets/patch.py:103 cola/widgets/patch.py:118
+#: cola/widgets/startup.py:265 cola/widgets/status.py:1387
 msgid "Remove"
 msgstr "移除"
 
-#: cola/cmds.py:882
+#: cola/cmds.py:1033
 #, python-format
 msgid "Remove %s from the recent list?"
 msgstr "将 %s 从最近使用列表中移除吗?"
 
-#: cola/widgets/toolbar.py:315
+#: cola/widgets/toolbar.py:317
 msgid "Remove Element"
 msgstr "移除元素"
 
@@ -2446,64 +2677,64 @@ msgstr ""
 msgid "Remove selected (Delete)"
 msgstr "移除所选 (删除)"
 
-#: cola/widgets/bookmarks.py:171
+#: cola/widgets/bookmarks.py:258 cola/widgets/startup.py:379
 msgid "Remove stale entries for repositories that no longer exist"
 msgstr ""
 
-#: cola/guicmds.py:262 cola/widgets/browse.py:153
+#: cola/guicmds.py:333 cola/widgets/browse.py:155
 msgid "Rename"
 msgstr "重命名"
 
-#: cola/cmds.py:1008
+#: cola/cmds.py:1159
 #, python-format
 msgid "Rename \"%s\""
 msgstr "重命名 \"%s\""
 
-#: cola/widgets/branch.py:257
+#: cola/widgets/branch.py:258
 msgid "Rename Branch"
 msgstr "重命名分支"
 
-#: cola/widgets/main.py:519
+#: cola/widgets/main.py:564
 msgid "Rename Branch..."
 msgstr "重命名分支..."
 
-#: cola/guicmds.py:259
+#: cola/guicmds.py:330
 msgid "Rename Existing Branch"
 msgstr "重命名已有分支"
 
-#: cola/cmds.py:799
+#: cola/cmds.py:950
 msgid "Rename Remote"
 msgstr "重命名远程"
 
-#: cola/widgets/bookmarks.py:146
+#: cola/widgets/bookmarks.py:233 cola/widgets/startup.py:356
 msgid "Rename Repository"
 msgstr "重命名版本库"
 
-#: cola/widgets/branch.py:441
+#: cola/widgets/branch.py:444
 msgid "Rename branch"
 msgstr "重命名分支"
 
-#: cola/cmds.py:800
+#: cola/cmds.py:951
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "重命名远程 \"%(current)s\" 为 \"%(new)s\"?"
 
-#: cola/widgets/browse.py:153
+#: cola/widgets/browse.py:155
 msgid "Rename selected paths"
 msgstr "重命名所选路径"
 
-#: cola/app.py:503 cola/widgets/startup.py:260
+#: cola/app.py:501 cola/widgets/startup.py:262
 msgid "Repository Not Found"
 msgstr ""
 
-#: cola/widgets/browse.py:84 cola/widgets/main.py:1014
+#: cola/widgets/browse.py:86 cola/widgets/main.py:1090
 #, python-format
 msgid "Repository: %s"
 msgstr "版本库: %s"
 
-#: cola/guicmds.py:278 cola/widgets/createbranch.py:125
-#: cola/widgets/dag.py:253 cola/widgets/editremotes.py:58
-#: cola/widgets/main.py:752
+#: cola/guicmds.py:351 cola/widgets/createbranch.py:125
+#: cola/widgets/dag.py:333 cola/widgets/editremotes.py:58
+#: cola/widgets/main.py:826
 msgid "Reset"
 msgstr "复位"
 
@@ -2512,22 +2743,22 @@ msgstr "复位"
 msgid "Reset \"%(branch)s\" to \"%(revision)s\"?"
 msgstr "复位分支 \"%(branch)s\" 到 \"%(revision)s\" 吗?"
 
-#: cola/guicmds.py:285
+#: cola/guicmds.py:359
 msgid "Reset All (Keep Unstaged Changes)"
 msgstr ""
 
-#: cola/cmds.py:510 cola/cmds.py:561 cola/guicmds.py:270
+#: cola/cmds.py:661 cola/cmds.py:712 cola/guicmds.py:342
 #: cola/widgets/createbranch.py:293
 msgid "Reset Branch"
 msgstr "重置分支"
 
-#: cola/cmds.py:558 cola/guicmds.py:269 cola/widgets/dag.py:334
-#: cola/widgets/main.py:380
+#: cola/cmds.py:709 cola/guicmds.py:341 cola/widgets/dag.py:427
+#: cola/widgets/main.py:413
 msgid "Reset Branch (Soft)"
 msgstr ""
 
-#: cola/cmds.py:507 cola/guicmds.py:277 cola/widgets/dag.py:340
-#: cola/widgets/main.py:387
+#: cola/cmds.py:658 cola/guicmds.py:350 cola/widgets/dag.py:433
+#: cola/widgets/main.py:420
 msgid "Reset Branch and Stage (Mixed)"
 msgstr ""
 
@@ -2535,20 +2766,20 @@ msgstr ""
 msgid "Reset Branch?"
 msgstr "重置分支吗?"
 
-#: cola/widgets/main.py:599
+#: cola/widgets/main.py:649
 msgid "Reset Layout"
 msgstr ""
 
-#: cola/cmds.py:542
+#: cola/cmds.py:693
 msgid "Reset Worktree and Reset All?"
 msgstr ""
 
-#: cola/cmds.py:527 cola/cmds.py:544 cola/cmds.py:578 cola/guicmds.py:286
-#: cola/guicmds.py:293 cola/guicmds.py:301
+#: cola/cmds.py:678 cola/cmds.py:695 cola/cmds.py:729 cola/guicmds.py:360
+#: cola/guicmds.py:373 cola/guicmds.py:382
 msgid "Reset and Restore"
 msgstr ""
 
-#: cola/cmds.py:559
+#: cola/cmds.py:710
 msgid "Reset branch?"
 msgstr ""
 
@@ -2557,123 +2788,127 @@ msgstr ""
 msgid "Resetting \"%(branch)s\" to \"%(revision)s\" will lose commits."
 msgstr "复位 \"%(branch)s\" to \"%(revision)s\" 将丢失提交."
 
-#: cola/widgets/prefs.py:235
+#: cola/widgets/prefs.py:241
 msgid "Resize File Browser columns"
 msgstr ""
 
-#: cola/widgets/prefs.py:340
+#: cola/widgets/prefs.py:351
 msgid "Restart the application after changing appearance settings."
 msgstr ""
 
-#: cola/cmds.py:612 cola/cmds.py:615 cola/guicmds.py:308 cola/guicmds.py:309
-#: cola/widgets/dag.py:370 cola/widgets/main.py:418
+#: cola/cmds.py:763 cola/cmds.py:766 cola/guicmds.py:390 cola/guicmds.py:391
+#: cola/widgets/dag.py:463 cola/widgets/main.py:451
 msgid "Restore Worktree"
 msgstr ""
 
-#: cola/cmds.py:575 cola/guicmds.py:300 cola/widgets/dag.py:363
-#: cola/widgets/main.py:411
+#: cola/cmds.py:726 cola/guicmds.py:381 cola/widgets/dag.py:456
+#: cola/widgets/main.py:444
 msgid "Restore Worktree and Reset All (Hard)"
 msgstr ""
 
-#: cola/cmds.py:524 cola/widgets/main.py:395
+#: cola/cmds.py:675 cola/widgets/main.py:428
 msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
 msgstr ""
 
-#: cola/widgets/dag.py:347
+#: cola/widgets/dag.py:440
 msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
 msgstr ""
 
-#: cola/cmds.py:541 cola/guicmds.py:292 cola/widgets/dag.py:355
-#: cola/widgets/main.py:403
+#: cola/cmds.py:692 cola/guicmds.py:372 cola/widgets/dag.py:448
+#: cola/widgets/main.py:436
 msgid "Restore Worktree and Reset All (Merge)"
 msgstr ""
 
-#: cola/cmds.py:576
+#: cola/cmds.py:727
 msgid "Restore Worktree and Reset All?"
 msgstr ""
 
-#: cola/cmds.py:613
+#: cola/cmds.py:764
 #, python-format
 msgid "Restore Worktree to %s?"
 msgstr ""
 
-#: cola/cmds.py:525
+#: cola/cmds.py:676
 msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr ""
 
-#: cola/widgets/dag.py:311
+#: cola/widgets/dag.py:392
 msgid "Revert"
 msgstr "撤销"
 
-#: cola/widgets/diff.py:942
+#: cola/widgets/diff.py:1061
 msgid "Revert Diff Hunk"
 msgstr "撤销差异区域"
 
-#: cola/widgets/diff.py:808
+#: cola/widgets/diff.py:929
 msgid "Revert Diff Hunk..."
 msgstr "撤销差异区域..."
 
-#: cola/widgets/diff.py:941
+#: cola/widgets/diff.py:1060
 msgid "Revert Diff Hunk?"
 msgstr "撤销差异区域吗?"
 
-#: cola/widgets/diff.py:939
+#: cola/widgets/diff.py:1058
 msgid "Revert Selected Lines"
 msgstr "撤销所选行"
 
-#: cola/widgets/diff.py:805
+#: cola/widgets/diff.py:924
 msgid "Revert Selected Lines..."
 msgstr "撤销所选行..."
 
-#: cola/widgets/diff.py:938
+#: cola/widgets/diff.py:1057
 msgid "Revert Selected Lines?"
 msgstr "撤销所选行吗?"
 
-#: cola/cmds.py:2117
+#: cola/cmds.py:2318
 msgid "Revert Uncommitted Changes"
 msgstr "撤销未提交的修改"
 
-#: cola/cmds.py:2111
+#: cola/cmds.py:2312
 msgid "Revert Uncommitted Changes?"
 msgstr "撤销未提交的修改吗?"
 
-#: cola/cmds.py:2104
+#: cola/cmds.py:2305
 msgid "Revert Uncommitted Edits..."
 msgstr "撤销未缓存修订..."
 
-#: cola/cmds.py:2095
+#: cola/cmds.py:2296
 msgid "Revert Unstaged Changes"
 msgstr "恢复未缓存的改动"
 
-#: cola/cmds.py:2089
+#: cola/cmds.py:2290
 msgid "Revert Unstaged Changes?"
 msgstr "恢复未缓存的改动?"
 
-#: cola/cmds.py:2081
+#: cola/cmds.py:2282
 msgid "Revert Unstaged Edits..."
 msgstr "恢复未缓存修订..."
 
-#: cola/cmds.py:2116 cola/widgets/diff.py:950
+#: cola/cmds.py:604
+msgid "Revert failed"
+msgstr ""
+
+#: cola/cmds.py:2317 cola/widgets/diff.py:1069
 msgid "Revert the uncommitted changes?"
 msgstr "撤销未提交的修改吗?"
 
-#: cola/cmds.py:2094
+#: cola/cmds.py:2295
 msgid "Revert the unstaged changes?"
 msgstr "恢复这个未缓存的改动?"
 
-#: cola/widgets/browse.py:183
+#: cola/widgets/browse.py:185
 msgid "Revert uncommitted changes to selected paths"
 msgstr "撤销所选路径未提交的改动"
 
-#: cola/widgets/browse.py:175
+#: cola/widgets/browse.py:177
 msgid "Revert unstaged changes to selected paths"
 msgstr "撤销所选路径未缓存的改动"
 
-#: cola/guicmds.py:250
+#: cola/guicmds.py:321
 msgid "Review"
 msgstr "审阅"
 
-#: cola/widgets/main.py:532
+#: cola/widgets/main.py:577
 msgid "Review..."
 msgstr "审阅..."
 
@@ -2689,19 +2924,23 @@ msgstr "版本表达式:"
 msgid "Revision to Merge"
 msgstr "要合并的版本"
 
-#: cola/sequenceeditor.py:339
+#: cola/sequenceeditor.py:352
 msgid "Reword"
 msgstr "改写"
 
-#: cola/cmds.py:631 cola/widgets/commitmsg.py:464
+#: cola/cmds.py:782 cola/widgets/commitmsg.py:460
 msgid "Rewrite Published Commit?"
 msgstr "重写已发布的提交吗?"
+
+#: cola/widgets/log.py:31
+msgid "Right-click links to open:"
+msgstr ""
 
 #: cola/interaction.py:126 cola/widgets/cfgactions.py:245
 msgid "Run"
 msgstr "运行"
 
-#: cola/cmds.py:2147
+#: cola/cmds.py:2348
 #, python-format
 msgid "Run \"%s\"?"
 msgstr "运行 \"%s\"?"
@@ -2716,7 +2955,7 @@ msgstr "运行 %s?"
 msgid "Run the \"%s\" command?"
 msgstr "运行 \"%s\" 命令吗?"
 
-#: cola/cmds.py:2186
+#: cola/cmds.py:2387
 #, python-format
 msgid "Running command: %s"
 msgstr "正运行命令:%s"
@@ -2725,17 +2964,17 @@ msgstr "正运行命令:%s"
 msgid "Russian translation"
 msgstr "俄语翻译"
 
-#: cola/sequenceeditor.py:312
+#: cola/sequenceeditor.py:325
 msgid "SHA-1"
 msgstr "SHA-1"
 
-#: cola/widgets/prefs.py:161
+#: cola/widgets/prefs.py:165
 msgid "Safe Mode"
 msgstr "安全模式"
 
-#: cola/cmds.py:1972 cola/widgets/archive.py:126 cola/widgets/browse.py:592
+#: cola/cmds.py:2173 cola/widgets/archive.py:126 cola/widgets/browse.py:603
 #: cola/widgets/editremotes.py:54 cola/widgets/stash.py:52
-#: cola/widgets/status.py:1303
+#: cola/widgets/status.py:1393
 msgid "Save"
 msgstr "保存"
 
@@ -2743,11 +2982,11 @@ msgstr "保存"
 msgid "Save Archive"
 msgstr "保存归档"
 
-#: cola/widgets/dag.py:303 cola/widgets/main.py:312
+#: cola/widgets/dag.py:384 cola/widgets/main.py:345
 msgid "Save As Tarball/Zip..."
 msgstr "存为压缩存档 Tar/Zip..."
 
-#: cola/widgets/prefs.py:234
+#: cola/widgets/prefs.py:240
 msgid "Save GUI Settings"
 msgstr "保存界面设定"
 
@@ -2759,12 +2998,13 @@ msgstr "进行暂存"
 msgid "Save modified state to new stash"
 msgstr "保存修改状态到新暂存"
 
-#: cola/widgets/browse.py:555
+#: cola/widgets/browse.py:566
 #, python-format
 msgid "Saved \"%(filename)s\" from \"%(ref)s\" to \"%(destination)s\""
 msgstr "已从 \"%(ref)s\" 保存 \"%(filename)s\" 到 \"%(destination)s\""
 
-#: cola/widgets/grep.py:98 cola/widgets/search.py:42 cola/widgets/search.py:62
+#: cola/widgets/bookmarks.py:83 cola/widgets/grep.py:98
+#: cola/widgets/search.py:42 cola/widgets/search.py:62
 msgid "Search"
 msgstr "搜寻"
 
@@ -2800,6 +3040,10 @@ msgstr "按路径查找"
 msgid "Search for a fixed string"
 msgstr "用特定字符串查找"
 
+#: cola/guicmds.py:253 cola/widgets/bookmarks.py:62
+msgid "Search repositories by name..."
+msgstr ""
+
 #: cola/widgets/grep.py:122
 msgid "Search using a POSIX basic regular expression"
 msgstr "使用 POSIX 基本正则表达式查找"
@@ -2808,7 +3052,7 @@ msgstr "使用 POSIX 基本正则表达式查找"
 msgid "Search using a POSIX extended regular expression"
 msgstr "使用 POSIX 拓展正则表达式查找"
 
-#: cola/widgets/main.py:454
+#: cola/widgets/main.py:487
 msgid "Search..."
 msgstr "查找..."
 
@@ -2816,47 +3060,47 @@ msgstr "查找..."
 msgid "Search:"
 msgstr ""
 
-#: cola/guicmds.py:259 cola/widgets/selectcommits.py:73
+#: cola/guicmds.py:330 cola/widgets/selectcommits.py:73
 msgid "Select"
 msgstr "选择"
 
-#: cola/widgets/diff.py:863 cola/widgets/main.py:675
+#: cola/widgets/main.py:744
 msgid "Select All"
 msgstr "全选"
 
-#: cola/guicmds.py:250
+#: cola/guicmds.py:321
 msgid "Select Branch to Review"
 msgstr "选择分支进行审阅"
 
-#: cola/widgets/dag.py:1459
+#: cola/widgets/dag.py:1606
 msgid "Select Child"
 msgstr "选择子项目"
 
-#: cola/widgets/commitmsg.py:520
+#: cola/widgets/commitmsg.py:516
 msgid "Select Commit"
 msgstr "选择提交"
 
-#: cola/guicmds.py:128
+#: cola/guicmds.py:137
 msgid "Select Directory..."
 msgstr "选择目录..."
 
-#: cola/cmds.py:1934
+#: cola/cmds.py:2135
 msgid "Select New Upstream"
 msgstr "选择上游项目"
 
-#: cola/widgets/dag.py:1463
+#: cola/widgets/dag.py:1610
 msgid "Select Newest Child"
 msgstr "选择最新子项目"
 
-#: cola/widgets/dag.py:1453
+#: cola/widgets/dag.py:1600
 msgid "Select Oldest Parent"
 msgstr "选择最旧父项目"
 
-#: cola/widgets/dag.py:1448
+#: cola/widgets/dag.py:1595
 msgid "Select Parent"
 msgstr "选择父项目"
 
-#: cola/widgets/browse.py:519
+#: cola/widgets/browse.py:521
 msgid "Select Previous Version"
 msgstr "选择之前版本"
 
@@ -2882,11 +3126,11 @@ msgstr "选择补丁文件..."
 msgid "Select repository"
 msgstr "选择版本库..."
 
-#: cola/widgets/bookmarks.py:138
+#: cola/widgets/bookmarks.py:225 cola/widgets/startup.py:348
 msgid "Set Default Repository"
 msgstr "选择默认版本库"
 
-#: cola/widgets/branch.py:280
+#: cola/widgets/branch.py:281
 msgid "Set Upstream Branch"
 msgstr "设置上游分支"
 
@@ -2900,7 +3144,7 @@ msgstr ""
 msgid "Set upstream"
 msgstr "设置上游"
 
-#: cola/widgets/prefs.py:371
+#: cola/widgets/prefs.py:382
 msgid "Settings"
 msgstr "设置"
 
@@ -2908,11 +3152,11 @@ msgstr "设置"
 msgid "Shell arguments"
 msgstr "Shell 参数"
 
-#: cola/sequenceeditor.py:363
+#: cola/sequenceeditor.py:376
 msgid "Shift Down"
 msgstr "Shift 上箭"
 
-#: cola/sequenceeditor.py:367
+#: cola/sequenceeditor.py:380
 msgid "Shift Up"
 msgstr "Shift 下键"
 
@@ -2920,16 +3164,16 @@ msgstr "Shift 下键"
 msgid "Shortcuts"
 msgstr "快捷键"
 
-#: cola/widgets/prefs.py:158
+#: cola/widgets/prefs.py:161
 msgid "Show Diffstat After Merge"
 msgstr "在合并后显示 Diffstat"
 
-#: cola/widgets/prefs.py:157
+#: cola/widgets/prefs.py:160
 msgid "Show Full Paths in the Window Title"
 msgstr "在窗口标题中显示完整路径"
 
-#: cola/sequenceeditor.py:104 cola/widgets/finder.py:187
-#: cola/widgets/status.py:1299
+#: cola/sequenceeditor.py:106 cola/widgets/finder.py:187
+#: cola/widgets/status.py:1389
 msgid "Show Help"
 msgstr "显示帮助"
 
@@ -2937,11 +3181,11 @@ msgstr "显示帮助"
 msgid "Show History"
 msgstr "显示历史"
 
-#: cola/widgets/prefs.py:316
+#: cola/widgets/prefs.py:325
 msgid "Show file counts in Status titles"
 msgstr "在状态标题中显示文件计数"
 
-#: cola/sequenceeditor.py:170 cola/widgets/finder.py:138
+#: cola/sequenceeditor.py:172 cola/widgets/finder.py:138
 msgid ""
 "Show help\n"
 "Shortcut: ?"
@@ -2949,11 +3193,11 @@ msgstr ""
 "显示帮助\n"
 "快捷键: ?"
 
-#: cola/widgets/diff.py:580
+#: cola/widgets/diff.py:676
 msgid "Show line numbers"
 msgstr "显示行号"
 
-#: cola/widgets/diff.py:576
+#: cola/widgets/diff.py:672
 msgid "Show whole surrounding functions of changes"
 msgstr "显示包含修改的整个函数"
 
@@ -2961,11 +3205,11 @@ msgstr "显示包含修改的整个函数"
 msgid "Showing changes since"
 msgstr "显示改动自"
 
-#: cola/widgets/diff.py:596
+#: cola/widgets/diff.py:692
 msgid "Side by side"
 msgstr "并排"
 
-#: cola/cmds.py:2318
+#: cola/cmds.py:2519
 msgid "Sign Off"
 msgstr "签名(Sign Off)"
 
@@ -2973,7 +3217,7 @@ msgstr "签名(Sign Off)"
 msgid "Sign Tag"
 msgstr "为标签签名"
 
-#: cola/widgets/commitmsg.py:51
+#: cola/widgets/commitmsg.py:55
 msgid "Sign off on this commit"
 msgstr "对本次提交签名"
 
@@ -2981,15 +3225,19 @@ msgstr "对本次提交签名"
 msgid "Simplified Chinese translation"
 msgstr "简体中文翻译"
 
-#: cola/cmds.py:2393
+#: cola/cmds.py:2594
 msgid "Skip"
 msgstr "跳过"
 
-#: cola/widgets/main.py:563
+#: cola/widgets/main.py:258 cola/widgets/main.py:611
 msgid "Skip Current Patch"
 msgstr "跳过当前补丁"
 
-#: cola/widgets/prefs.py:232
+#: cola/widgets/main.py:261
+msgid "Skip applying the current patch and continue applying patches"
+msgstr ""
+
+#: cola/widgets/prefs.py:238
 msgid "Sort bookmarks alphabetically"
 msgstr "按字母顺序排列书签"
 
@@ -3010,11 +3258,11 @@ msgstr "指定标签信息"
 msgid "Specifies the tag name"
 msgstr "指定标签名称"
 
-#: cola/widgets/spellcheck.py:58
+#: cola/widgets/spellcheck.py:46
 msgid "Spelling Suggestions"
 msgstr "拼写建议"
 
-#: cola/sequenceeditor.py:357 cola/widgets/merge.py:58
+#: cola/sequenceeditor.py:370 cola/widgets/merge.py:58
 msgid "Squash"
 msgstr "压缩"
 
@@ -3022,86 +3270,86 @@ msgstr "压缩"
 msgid "Squash the merged commits into a single commit"
 msgstr "压缩合并中提交成单一提交"
 
-#: cola/cmds.py:2404 cola/widgets/action.py:60 cola/widgets/diff.py:782
+#: cola/cmds.py:2605 cola/widgets/action.py:60 cola/widgets/diff.py:893
 msgid "Stage"
 msgstr "缓存"
 
-#: cola/cmds.py:2557
+#: cola/cmds.py:2761
 msgid "Stage / Unstage"
 msgstr "缓存 / 取消缓存"
 
-#: cola/cmds.py:2539
+#: cola/cmds.py:2743
 msgid "Stage / Unstage All"
 msgstr ""
 
-#: cola/widgets/main.py:224
+#: cola/widgets/main.py:226
 msgid "Stage All Untracked"
 msgstr "缓存所有未跟踪项目"
 
-#: cola/widgets/main.py:216
+#: cola/widgets/main.py:218
 msgid "Stage Changed Files To Commit"
 msgstr "缓存修改的文件为提交"
 
-#: cola/widgets/diff.py:807
+#: cola/widgets/diff.py:927
 msgid "Stage Diff Hunk"
 msgstr "缓存差异区域"
 
-#: cola/cmds.py:2495
+#: cola/cmds.py:2699
 msgid "Stage Modified"
 msgstr "缓存已修改的文件"
 
-#: cola/cmds.py:2528
+#: cola/cmds.py:2732
 msgid "Stage Modified and Untracked"
 msgstr ""
 
-#: cola/widgets/status.py:815 cola/widgets/status.py:834
-#: cola/widgets/status.py:902
+#: cola/widgets/status.py:876 cola/widgets/status.py:898
+#: cola/widgets/status.py:966
 msgid "Stage Selected"
 msgstr "缓存已选项目"
 
-#: cola/widgets/diff.py:804
+#: cola/widgets/diff.py:922
 msgid "Stage Selected Lines"
 msgstr "缓存所选行"
 
-#: cola/cmds.py:2506
+#: cola/cmds.py:2710
 msgid "Stage Unmerged"
 msgstr "缓存未合并的文件"
 
-#: cola/cmds.py:2517
+#: cola/cmds.py:2721
 msgid "Stage Untracked"
 msgstr "缓存未跟踪的文件"
 
-#: cola/widgets/commitmsg.py:446
+#: cola/widgets/commitmsg.py:442
 msgid "Stage and Commit"
 msgstr "缓存并提交"
 
-#: cola/widgets/commitmsg.py:443
+#: cola/widgets/commitmsg.py:439
 msgid "Stage and commit?"
 msgstr "缓存并提交吗?"
 
-#: cola/cmds.py:2392
+#: cola/cmds.py:2593
 msgid "Stage conflicts"
 msgstr "缓存冲突"
 
-#: cola/cmds.py:2383
+#: cola/cmds.py:2584
 msgid "Stage conflicts?"
 msgstr "缓存冲突?"
 
-#: cola/widgets/browse.py:140
+#: cola/widgets/browse.py:142
 msgid "Stage/unstage selected paths for commit"
 msgstr "缓存/取消缓存已选路径以提交"
 
-#: cola/models/browse.py:336 cola/widgets/status.py:134
-#: cola/widgets/status.py:584
+#: cola/models/browse.py:335 cola/widgets/status.py:156
+#: cola/widgets/status.py:624
 msgid "Staged"
 msgstr "已缓存"
 
-#: cola/cmds.py:2411
+#: cola/cmds.py:2612
 #, python-format
 msgid "Staging: %s"
 msgstr "正在缓存: %s"
 
-#: cola/widgets/main.py:546
+#: cola/widgets/main.py:591
 msgid "Start Interactive Rebase..."
 msgstr "开始交互式衍合..."
 
@@ -3127,15 +3375,15 @@ msgstr "提交已缓存修改"
 msgid "Stash unstaged changes only, keeping staged changes"
 msgstr "撤销所选路径未缓存的改动"
 
-#: cola/widgets/action.py:66 cola/widgets/main.py:375
+#: cola/widgets/action.py:66 cola/widgets/main.py:408
 msgid "Stash..."
 msgstr "暂存..."
 
-#: cola/models/browse.py:33 cola/widgets/main.py:100
+#: cola/models/browse.py:33 cola/widgets/main.py:102
 msgid "Status"
 msgstr "状态"
 
-#: cola/widgets/browse.py:148
+#: cola/widgets/browse.py:150
 msgid "Stop tracking paths"
 msgstr "停止跟踪路径"
 
@@ -3151,19 +3399,19 @@ msgstr ""
 msgid "Submodule path within the current repository (optional)"
 msgstr ""
 
-#: cola/widgets/main.py:138 cola/widgets/submodules.py:32
+#: cola/widgets/main.py:140 cola/widgets/submodules.py:32
 msgid "Submodules"
 msgstr "子模块"
 
-#: cola/widgets/prefs.py:153
+#: cola/widgets/prefs.py:156
 msgid "Summarize Merge Commits"
 msgstr "概述合并提交"
 
-#: cola/sequenceeditor.py:313 cola/widgets/dag.py:412
+#: cola/sequenceeditor.py:326 cola/widgets/dag.py:508
 msgid "Summary"
 msgstr "概要"
 
-#: cola/widgets/prefs.py:149
+#: cola/widgets/prefs.py:152
 msgid "Tab Width"
 msgstr "Tab 宽度"
 
@@ -3172,7 +3420,7 @@ msgstr "Tab 宽度"
 msgid "Tag"
 msgstr "标签"
 
-#: cola/cmds.py:2646
+#: cola/cmds.py:2850
 msgid "Tag Created"
 msgstr "标签已创建"
 
@@ -3180,45 +3428,45 @@ msgstr "标签已创建"
 msgid "Tag message..."
 msgstr "标签信息..."
 
-#: cola/cmds.py:2606
+#: cola/cmds.py:2810
 msgid "Tag-signing was requested but the tag message is empty."
 msgstr "标签需要签名但其内容为空."
 
-#: cola/widgets/branch.py:185 cola/widgets/branch.py:236
+#: cola/widgets/branch.py:178 cola/widgets/branch.py:237
 msgid "Tags"
 msgstr "标签"
 
-#: cola/widgets/toolbar.py:180
+#: cola/widgets/toolbar.py:182
 msgid "Text Beside Icon"
 msgstr ""
 
-#: cola/widgets/toolbar.py:179
+#: cola/widgets/toolbar.py:181
 msgid "Text Only"
 msgstr ""
 
-#: cola/widgets/toolbar.py:181
+#: cola/widgets/toolbar.py:183
 msgid "Text Under Icon"
 msgstr ""
 
-#: cola/widgets/prefs.py:150
+#: cola/widgets/prefs.py:153
 msgid "Text Width"
 msgstr "字符宽度"
 
-#: cola/cmds.py:971
+#: cola/cmds.py:1122
 msgid "The branch will be no longer available."
 msgstr "分支已不可用。"
 
-#: cola/cmds.py:503
+#: cola/cmds.py:654
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr ""
 
-#: cola/cmds.py:554 cola/cmds.py:645
+#: cola/cmds.py:705 cola/cmds.py:796
 #, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr ""
 
-#: cola/widgets/commitmsg.py:311
+#: cola/widgets/commitmsg.py:307
 msgid "The commit message will be cleared."
 msgstr "提交消息会被清除。"
 
@@ -3227,53 +3475,57 @@ msgstr "提交消息会被清除。"
 msgid "The file \"%s\" exists and will be overwritten."
 msgstr "文件 \"%s\" 已存在,将被覆盖."
 
-#: cola/cmds.py:941
+#: cola/cmds.py:1092
 msgid "The following files will be deleted:"
 msgstr "如下文件会被删除:"
 
-#: cola/cmds.py:571
+#: cola/widgets/status.py:1651
+msgid "The number of leading paths to strip"
+msgstr ""
+
+#: cola/cmds.py:722
 #, python-format
 msgid "The repository will be reset using \"git reset --hard %s\""
 msgstr ""
 
-#: cola/cmds.py:520
+#: cola/cmds.py:671
 #, python-format
 msgid "The repository will be reset using \"git reset --keep %s\""
 msgstr ""
 
-#: cola/cmds.py:537
+#: cola/cmds.py:688
 #, python-format
 msgid "The repository will be reset using \"git reset --merge %s\""
 msgstr ""
 
-#: cola/cmds.py:2171
+#: cola/cmds.py:2372
 msgid "The revision expression cannot be empty."
 msgstr "版本表达式不能为空."
 
-#: cola/cmds.py:2819
+#: cola/cmds.py:3023
 #, python-format
 msgid ""
 "The submodule will be added using\n"
 "\"%s\""
 msgstr ""
 
-#: cola/cmds.py:2864
+#: cola/cmds.py:3068
 #, python-format
 msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
 
-#: cola/cmds.py:591
+#: cola/cmds.py:742
 #, python-format
 msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr ""
 
-#: cola/widgets/commitmsg.py:312
+#: cola/widgets/commitmsg.py:308
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "此操作无法恢复. 清空提交消息吗?"
 
-#: cola/cmds.py:633 cola/widgets/commitmsg.py:466
+#: cola/cmds.py:784 cola/widgets/commitmsg.py:462
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
@@ -3283,7 +3535,7 @@ msgstr ""
 "此操作会重写同步历史.\n"
 "很可能这不是你的心意."
 
-#: cola/widgets/diff.py:947
+#: cola/widgets/diff.py:1066
 #, fuzzy
 msgid ""
 "This operation drops uncommitted changes.\n"
@@ -3292,7 +3544,7 @@ msgstr ""
 "此操作将丢弃未提交的修改.\n"
 "造成的改动将无法撤销."
 
-#: cola/cmds.py:2113
+#: cola/cmds.py:2314
 msgid ""
 "This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
@@ -3300,7 +3552,7 @@ msgstr ""
 "此操作将丢弃未提交的修改.\n"
 "造成的改动将无法撤销."
 
-#: cola/cmds.py:2091
+#: cola/cmds.py:2292
 msgid ""
 "This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
@@ -3308,7 +3560,27 @@ msgstr ""
 "这个操作会留下未缓存的改动.\n"
 "这些改动将无法恢复."
 
-#: cola/widgets/main.py:1021
+#: cola/cmds.py:481
+msgid ""
+"This operation will replace the selected unmerged files with content from the branch being merged using \"git checkout --theirs\".\n"
+"*ALL* uncommitted changes will be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+
+#: cola/cmds.py:519
+msgid ""
+"This operation will replace the selected unmerged files with content from your current branch using \"git checkout --ours\".\n"
+"*ALL* uncommitted changes will be lost.\n"
+"Recovering uncommitted changes is not possible."
+msgstr ""
+
+#: cola/widgets/main.py:1104
+msgid ""
+"This repository has unresolved conflicts after applying a patch.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+
+#: cola/widgets/main.py:1097
 msgid ""
 "This repository is currently being rebased.\n"
 "Resolve conflicts, commit changes, and run:\n"
@@ -3318,7 +3590,13 @@ msgstr ""
 "解决内容冲突, 提交更改, 并执行\n"
 "    衍合 > 继续"
 
-#: cola/widgets/main.py:1029
+#: cola/widgets/main.py:1110
+msgid ""
+"This repository is in the middle of a cherry-pick.\n"
+"Resolve conflicts and commit changes."
+msgstr ""
+
+#: cola/widgets/main.py:1116
 msgid ""
 "This repository is in the middle of a merge.\n"
 "Resolve conflicts and commit changes."
@@ -3326,11 +3604,23 @@ msgstr ""
 "此版本库正在合并中.\n"
 "解决内容冲突并提交更改."
 
-#: cola/sequenceeditor.py:330
+#: cola/editpatch.py:58
+msgid "To abort applying this patch, remove all lines."
+msgstr ""
+
+#: cola/editpatch.py:57
+msgid "To avoid applying addition lines ('+'), delete them."
+msgstr ""
+
+#: cola/editpatch.py:55
+msgid "To avoid applying removal lines ('-'), change them to context lines (' ')."
+msgstr ""
+
+#: cola/sequenceeditor.py:343
 msgid "Toggle Enabled"
 msgstr "切换已启用"
 
-#: cola/widgets/diff.py:591
+#: cola/widgets/diff.py:687
 msgid "Toggle image diff"
 msgstr ""
 
@@ -3342,7 +3632,7 @@ msgstr "切换分支过滤器"
 msgid "Toggle the paths filter"
 msgstr "切换路径过滤器开关"
 
-#: cola/widgets/toolbar.py:316
+#: cola/widgets/toolbar.py:318
 msgid "Toolbar Style:"
 msgstr ""
 
@@ -3386,79 +3676,79 @@ msgstr "URL: %s"
 msgid "Ukranian translation"
 msgstr "乌克兰语翻译"
 
-#: cola/cmds.py:1927
+#: cola/cmds.py:2128
 msgid "Unable to rebase"
 msgstr "无法进行衍合"
 
-#: cola/cmds.py:828
+#: cola/cmds.py:979
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
 msgstr ""
 
-#: cola/widgets/main.py:660
+#: cola/widgets/main.py:729
 msgid "Undo"
 msgstr "撤销"
 
-#: cola/cmds.py:638 cola/cmds.py:643 cola/cmds.py:646 cola/widgets/main.py:200
+#: cola/cmds.py:789 cola/cmds.py:794 cola/cmds.py:797 cola/widgets/main.py:202
 msgid "Undo Last Commit"
 msgstr ""
 
-#: cola/cmds.py:644
+#: cola/cmds.py:795
 msgid "Undo last commit?"
 msgstr ""
 
-#: cola/cmds.py:637
+#: cola/cmds.py:788
 msgid "Undo the published commit?"
 msgstr ""
 
-#: cola/models/browse.py:330 cola/widgets/status.py:135
-#: cola/widgets/status.py:604
+#: cola/models/browse.py:329 cola/widgets/status.py:157
+#: cola/widgets/status.py:644
 msgid "Unmerged"
 msgstr "未合并"
 
-#: cola/cmds.py:2659 cola/widgets/action.py:61 cola/widgets/diff.py:784
+#: cola/cmds.py:2863 cola/widgets/action.py:61 cola/widgets/diff.py:896
 msgid "Unstage"
 msgstr "取消缓存"
 
-#: cola/widgets/main.py:195 cola/widgets/status.py:734
+#: cola/widgets/main.py:197 cola/widgets/status.py:794
 msgid "Unstage All"
 msgstr "全部取消缓存"
 
-#: cola/widgets/diff.py:837
+#: cola/widgets/diff.py:972
 msgid "Unstage Diff Hunk"
 msgstr "取消缓存差异区域"
 
-#: cola/widgets/main.py:205
+#: cola/widgets/main.py:207
 msgid "Unstage From Commit"
 msgstr "从本次提交撤除"
 
-#: cola/widgets/status.py:767 cola/widgets/status.py:801
+#: cola/widgets/status.py:827 cola/widgets/status.py:862
 msgid "Unstage Selected"
 msgstr "取消缓存已选项目"
 
-#: cola/widgets/diff.py:835
+#: cola/widgets/diff.py:969
 msgid "Unstage Selected Lines"
 msgstr "取消缓存所选行(&S)"
 
-#: cola/cmds.py:2671
+#: cola/cmds.py:2875
 #, python-format
 msgid "Unstaging: %s"
 msgstr "正取消缓存: %s"
 
-#: cola/widgets/browse.py:147
+#: cola/widgets/browse.py:149
 msgid "Untrack Selected"
 msgstr "取消跟踪所选项目"
 
-#: cola/widgets/status.py:137 cola/widgets/status.py:610
+#: cola/widgets/status.py:159 cola/widgets/status.py:650
 msgid "Untracked"
 msgstr "未跟踪"
 
-#: cola/cmds.py:996 cola/cmds.py:2727
+#: cola/cmds.py:1147 cola/cmds.py:2931
 #, python-format
 msgid "Untracking: %s"
 msgstr "跟踪: %s"
 
-#: cola/widgets/main.py:335
+#: cola/widgets/main.py:368
 msgid "Update All Submodules..."
 msgstr "更新所有子模块..."
 
@@ -3466,40 +3756,56 @@ msgstr "更新所有子模块..."
 msgid "Update Existing Branch:"
 msgstr "更新已有分支:"
 
-#: cola/cmds.py:2865
+#: cola/cmds.py:3069
 msgid "Update Submodule"
 msgstr "更新子模块"
 
-#: cola/cmds.py:2862
+#: cola/cmds.py:3066
 msgid "Update Submodule..."
 msgstr "更新子模块..."
 
-#: cola/cmds.py:2901
+#: cola/cmds.py:3105
 msgid "Update Submodules"
 msgstr "更新子模块"
 
-#: cola/cmds.py:2899
+#: cola/cmds.py:3103
 msgid "Update all submodules?"
 msgstr "更新所有子模块?"
 
-#: cola/cmds.py:2898
+#: cola/cmds.py:2099
+msgid "Update stacked branches"
+msgstr ""
+
+#: cola/cmds.py:2091 cola/cmds.py:2098
+msgid "Update stacked branches when rebasing?"
+msgstr ""
+
+#: cola/cmds.py:3102
 msgid "Update submodules..."
 msgstr "更新子模块..."
 
-#: cola/widgets/status.py:893
+#: cola/widgets/status.py:957
 msgid "Update this submodule"
 msgstr "更新此子模块"
 
-#: cola/cmds.py:2863
+#: cola/cmds.py:3067
 msgid "Update this submodule?"
 msgstr "更新此子模块?"
 
-#: cola/widgets/branch.py:418 cola/widgets/createbranch.py:300
+#: cola/widgets/branch.py:420 cola/widgets/createbranch.py:300
 #: cola/widgets/remote.py:135
 msgid "Updating"
 msgstr "更新"
 
-#: cola/widgets/prefs.py:147
+#: cola/widgets/prefs.py:327
+msgid "Use a block cursor in diff editors"
+msgstr ""
+
+#: cola/widgets/prefs.py:138
+msgid "Use gravatar.com to lookup icons for author emails"
+msgstr ""
+
+#: cola/widgets/prefs.py:150
 msgid "User Name"
 msgstr "用户名"
 
@@ -3507,15 +3813,15 @@ msgstr "用户名"
 msgid "Version"
 msgstr "版本"
 
-#: cola/widgets/dag.py:676 cola/widgets/main.py:765 cola/widgets/main.py:887
+#: cola/widgets/dag.py:801 cola/widgets/main.py:839 cola/widgets/main.py:961
 msgid "View"
 msgstr "视图"
 
-#: cola/widgets/browse.py:131 cola/widgets/status.py:251
+#: cola/widgets/browse.py:133 cola/widgets/status.py:282
 msgid "View History..."
 msgstr "查看历史..."
 
-#: cola/widgets/browse.py:132
+#: cola/widgets/browse.py:134
 msgid "View history for selected paths"
 msgstr "查看所选路径历史"
 
@@ -3523,11 +3829,11 @@ msgstr "查看所选路径历史"
 msgid "Visualize"
 msgstr "图示"
 
-#: cola/widgets/main.py:449
+#: cola/widgets/main.py:482
 msgid "Visualize All Branches..."
 msgstr "图示所有分支的历史..."
 
-#: cola/widgets/main.py:443
+#: cola/widgets/main.py:476
 msgid "Visualize Current Branch..."
 msgstr "图示当前分支的历史..."
 
@@ -3535,11 +3841,11 @@ msgstr "图示当前分支的历史..."
 msgid "Whether to sign the tag (git tag -s)"
 msgstr "是否为标签签名 (git tag -s)"
 
-#: cola/widgets/commitmsg.py:440
+#: cola/widgets/commitmsg.py:436
 msgid "Would you like to stage and commit all modified files?"
 msgstr "要缓存并提交所有已修改文件吗?"
 
-#: cola/widgets/diff.py:596
+#: cola/widgets/diff.py:692
 msgid "XOR"
 msgstr "异或"
 
@@ -3547,7 +3853,7 @@ msgstr "异或"
 msgid "Yes"
 msgstr "是"
 
-#: cola/cmds.py:203
+#: cola/cmds.py:262
 msgid ""
 "You are in the middle of a merge.\n"
 "Cannot amend while merging."
@@ -3555,7 +3861,7 @@ msgstr ""
 "合并正在进行中.\n"
 "在合并过程中无法修正."
 
-#: cola/cmds.py:1928
+#: cola/cmds.py:2129
 msgid "You cannot rebase with uncommitted changes."
 msgstr "有未提交修改时无法衍合。"
 
@@ -3567,16 +3873,16 @@ msgstr "指定一个版本进行合并."
 msgid "You must specify a revision to view."
 msgstr "指定一个版本进行查看."
 
-#: cola/widgets/dag.py:595 cola/widgets/dag.py:1437
+#: cola/widgets/dag.py:712 cola/widgets/dag.py:1584
 msgid "Zoom In"
 msgstr "放大"
 
-#: cola/widgets/dag.py:591 cola/widgets/dag.py:1443
+#: cola/widgets/dag.py:708 cola/widgets/dag.py:1590
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: cola/widgets/dag.py:430 cola/widgets/dag.py:599 cola/widgets/dag.py:1445
-#: cola/widgets/diff.py:600
+#: cola/widgets/dag.py:526 cola/widgets/dag.py:716 cola/widgets/dag.py:1592
+#: cola/widgets/diff.py:696
 msgid "Zoom to Fit"
 msgstr "缩放到适合"
 
@@ -3584,26 +3890,26 @@ msgstr "缩放到适合"
 msgid "command-line arguments"
 msgstr "命令行参数"
 
-#: cola/widgets/main.py:853 cola/widgets/main.py:859
+#: cola/widgets/main.py:927 cola/widgets/main.py:933
 msgid "error: unable to execute git"
 msgstr "错误: 无法执行 git"
 
-#: cola/widgets/log.py:45
+#: cola/widgets/log.py:51
 #, python-format
 msgid "exit code %s"
 msgstr "退出代码 %s"
 
-#: cola/app.py:310
+#: cola/app.py:305
 #, python-format
 msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "致命错误: \"%s\" 不是有效目录. 请用 --repo <路径> 指定."
 
-#: cola/widgets/main.py:849
+#: cola/widgets/main.py:923
 #, python-format
 msgid "git cola version %s"
 msgstr "git cola 版本 %s"
 
-#: cola/widgets/startup.py:28
+#: cola/widgets/startup.py:35
 msgid "git-cola"
 msgstr "git-cola"
 
@@ -3627,11 +3933,11 @@ msgstr "hotkeys_zh_CN.html"
 msgid "path/to/submodule"
 msgstr ""
 
-#: cola/widgets/toolbar.py:243
+#: cola/widgets/toolbar.py:245
 msgid "title"
 msgstr ""
 
-#: cola/cmds.py:2343
+#: cola/cmds.py:2544
 msgid "unknown"
 msgstr "未知"
 
