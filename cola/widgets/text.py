@@ -27,6 +27,7 @@ def get_stripped(widget):
 class LineEdit(QtWidgets.QLineEdit):
 
     cursor_changed = Signal(int, int)
+    esc_pressed = Signal()
 
     def __init__(self, parent=None, row=1, get_value=None, clear_button=False):
         QtWidgets.QLineEdit.__init__(self, parent)
@@ -61,6 +62,12 @@ class LineEdit(QtWidgets.QLineEdit):
         pos = self.cursorPosition()
         self.setText(value)
         self.setCursorPosition(pos)
+
+    def keyPressEvent(self, event):
+        key = event.key()
+        if key == Qt.Key_Escape:
+            self.esc_pressed.emit()
+        super(LineEdit, self).keyPressEvent(event)
 
 
 class LineEditCursorPosition(object):
@@ -368,6 +375,88 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     def contextMenuEvent(self, event):
         """Custom contextMenuEvent() for building our custom context menus"""
         self.ext.context_menu_event(event)
+
+
+class TextSearchWidget(QtWidgets.QWidget):
+    """The search dialog that displays over a text edit field"""
+    search_text = Signal(object, bool)
+
+    def __init__(self, parent):
+        super(TextSearchWidget, self).__init__(parent)
+        self.setAutoFillBackground(True)
+        self._parent = parent
+
+        self.text = HintedDefaultLineEdit(N_('Find in diff'), parent=self)
+
+        self.prev_button = qtutils.create_action_button(
+            tooltip=N_('Find the previous occurrence of the phrase'),
+            icon=icons.previous()
+        )
+
+        self.next_button = qtutils.create_action_button(
+            tooltip=N_('Find the next occurrence of the phrase'),
+            icon=icons.next()
+        )
+
+        self.match_case_checkbox = qtutils.checkbox(N_('Match Case'))
+        self.whole_words_checkbox = qtutils.checkbox(N_('Whole Words'))
+
+        self.close_button = qtutils.create_action_button(
+            tooltip=N_('Close the find bar'),
+            icon=icons.close()
+        )
+
+        layout = qtutils.hbox(
+            defs.margin,
+            defs.button_spacing,
+            self.text,
+            self.prev_button,
+            self.next_button,
+            self.match_case_checkbox,
+            self.whole_words_checkbox,
+            qtutils.STRETCH,
+            self.close_button,
+        )
+        self.setLayout(layout)
+        self.setFocusProxy(self.text)
+
+        self.text.esc_pressed.connect(self.hide_search)
+        self.text.returnPressed.connect(self.search)
+        self.text.textChanged.connect(self.search)
+
+        qtutils.connect_button(self.next_button, self.search)
+        qtutils.connect_button(self.prev_button, self.search_backwards)
+        qtutils.connect_button(self.close_button, self.hide_search)
+        qtutils.connect_checkbox(self.match_case_checkbox, lambda _: self.search())
+        qtutils.connect_checkbox(self.whole_words_checkbox, lambda _: self.search())
+
+    def search(self):
+        """Emit a signal with the current search text"""
+        self.search_text.emit(self.text.get(), False)
+
+    def search_backwards(self):
+        """Emit a signal with the current search text for a backwards search"""
+        self.search_text.emit(self.text.get(), True)
+
+    def hide_search(self):
+        """Hide the search window"""
+        self.hide()
+        self._parent.setFocus(True)
+
+    def find_flags(self, backwards):
+        """Return QTextDocument.FindFlags for the current search options"""
+        flags = QtGui.QTextDocument.FindFlags()
+        if backwards:
+            flags = flags | QtGui.QTextDocument.FindBackward
+        if self.match_case_checkbox.isChecked():
+            flags = flags | QtGui.QTextDocument.FindCaseSensitively
+        if self.whole_words_checkbox.isChecked():
+            flags = flags | QtGui.QTextDocument.FindWholeWords
+        return flags
+
+    def is_case_sensitive(self):
+        """Are we searching using a case-insensitive search?"""
+        return self.match_case_checkbox.isChecked()
 
 
 class TextEditExtension(BaseTextEditExtension):

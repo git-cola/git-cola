@@ -27,6 +27,7 @@ from .. import utils
 from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
+from .text import TextSearchWidget
 from . import defs
 from . import imageview
 
@@ -439,6 +440,8 @@ class DiffLineNumbers(TextDecorator):
 
 class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
+    INDEX_TEXT = 0
+    INDEX_IMAGE = 1
 
     def __init__(self, context, parent=None):
         super(Viewer, self).__init__(parent)
@@ -451,12 +454,19 @@ class Viewer(QtWidgets.QFrame):
         self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
+        self.search_widget = TextSearchWidget(self)
+        self.search_widget.hide()
 
         stack = self.stack = QtWidgets.QStackedWidget(self)
         stack.addWidget(self.text)
         stack.addWidget(self.image)
 
-        self.main_layout = qtutils.vbox(defs.no_margin, defs.no_spacing, self.stack)
+        self.main_layout = qtutils.vbox(
+            defs.no_margin,
+            defs.no_spacing,
+            self.stack,
+            self.search_widget,
+        )
         self.setLayout(self.main_layout)
 
         # Observe images
@@ -473,6 +483,65 @@ class Viewer(QtWidgets.QFrame):
         options.zoom_mode.currentIndexChanged.connect(lambda _: self.render())
 
         self.setFocusProxy(self.text)
+
+        self.search_widget.search_text.connect(self.search_text)
+
+        self.search_action = qtutils.add_action(
+            self,
+            N_('Search in Diff'),
+            self.show_search_diff,
+            hotkeys.SEARCH,
+        )
+        self.search_next_action = qtutils.add_action(
+            self,
+            N_('Find next item'),
+            self.search_widget.search,
+            hotkeys.SEARCH_NEXT,
+        )
+        self.search_prev_action = qtutils.add_action(
+            self,
+            N_('Find previous item'),
+            self.search_widget.search_backwards,
+            hotkeys.SEARCH_PREV,
+        )
+
+    def show_search_diff(self):
+        """Show a dialog for searching diffs"""
+        # The diff search is only active in text mode.
+        if self.stack.currentIndex() != self.INDEX_TEXT:
+            return
+        if not self.search_widget.isVisible():
+            self.search_widget.show()
+        self.search_widget.setFocus(True)
+
+    def search_text(self, text, backwards):
+        """Search the diff text for the given text"""
+        cursor = self.text.textCursor()
+        if cursor.hasSelection():
+            selected_text = cursor.selectedText()
+            case_sensitive = self.search_widget.is_case_sensitive()
+            if text_matches(case_sensitive, selected_text, text):
+                if backwards:
+                    position = cursor.selectionStart()
+                else:
+                    position = cursor.selectionEnd()
+            else:
+                if backwards:
+                    position = cursor.selectionEnd()
+                else:
+                    position = cursor.selectionStart()
+            cursor.setPosition(position)
+            self.text.setTextCursor(cursor)
+
+        flags = self.search_widget.find_flags(backwards)
+        if not self.text.find(text, flags):
+            if backwards:
+                location = QtGui.QTextCursor.End
+            else:
+                location = QtGui.QTextCursor.Start
+            cursor.movePosition(location, QtGui.QTextCursor.MoveAnchor)
+            self.text.setTextCursor(cursor)
+            self.text.find(text, flags)
 
     def export_state(self, state):
         state['show_diff_line_numbers'] = self.options.show_line_numbers.isChecked()
@@ -501,6 +570,7 @@ class Viewer(QtWidgets.QFrame):
         self.options.set_diff_type(diff_type)
         if diff_type == main.Types.IMAGE:
             self.stack.setCurrentWidget(self.image)
+            self.search_widget.hide()
             self.render()
         else:
             self.stack.setCurrentWidget(self.text)
@@ -633,6 +703,13 @@ def create_image(width, height):
     image = QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
     image.fill(Qt.transparent)
     return image
+
+
+def text_matches(case_sensitive, a, b):
+    """Compare text with case sensitivity taken into account"""
+    if case_sensitive:
+        return a == b
+    return a.lower() == b.lower()
 
 
 def create_painter(image):
