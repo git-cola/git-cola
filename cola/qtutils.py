@@ -1061,6 +1061,9 @@ class RunTask(QtCore.QObject):
         self.result_fn = result
         if progress is not None:
             progress.show()
+            if hasattr(progress, 'start'):
+                progress.start()
+
         # prevents garbage collection bugs in certain PyQt4 versions
         self.tasks.append(task)
         task_id = id(task)
@@ -1069,6 +1072,7 @@ class RunTask(QtCore.QObject):
         self.threadpool.start(task)
 
     def finish(self, task):
+        """The task has finished. Run the finish and result callbacks"""
         task_id = id(task)
         try:
             self.tasks.remove(task)
@@ -1081,6 +1085,8 @@ class RunTask(QtCore.QObject):
             finish = progress = result = None
 
         if progress is not None:
+            if hasattr(progress, 'stop'):
+                progress.stop()
             progress.hide()
 
         if result is not None:

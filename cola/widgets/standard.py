@@ -651,24 +651,28 @@ class ProgressDialog(QtWidgets.QProgressDialog):
 
     def __init__(self, title, label, parent):
         QtWidgets.QProgressDialog.__init__(self, parent)
+        self._parent = parent
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
+
+        self.animation_thread = ProgressAnimationThread(label, self)
+        self.animation_thread.updated.connect(self.set_text, type=Qt.QueuedConnection)
+
         self.reset()
         self.setRange(0, 0)
         self.setMinimumDuration(0)
         self.setCancelButton(None)
         self.setFont(qtutils.default_monospace_font())
-        self.thread = ProgressAnimationThread(label, self)
-        self.thread.updated.connect(self.refresh, type=Qt.QueuedConnection)
-
         self.set_details(title, label)
 
     def set_details(self, title, label):
+        """Update the window title and progress label"""
         self.setWindowTitle(title)
         self.setLabelText(label + '     ')
-        self.thread.set_text(label)
+        self.animation_thread.set_text(label)
 
-    def refresh(self, txt):
+    def set_text(self, txt):
+        """Set the label text"""
         self.setLabelText(txt)
 
     def keyPressEvent(self, event):
@@ -676,16 +680,16 @@ class ProgressDialog(QtWidgets.QProgressDialog):
         if event.key() != Qt.Key_Escape:
             super(ProgressDialog, self).keyPressEvent(event)
 
-    def show(self):
+    def start(self):
+        """Start the animation thread and use a wait cursor"""
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
-        super(ProgressDialog, self).show()
-        self.thread.start()
+        self.animation_thread.start()
 
-    def hide(self):
+    def stop(self):
+        """Stop the animation thread and restore the normal cursor"""
+        self.animation_thread.stop()
+        self.animation_thread.wait()
         QtWidgets.QApplication.restoreOverrideCursor()
-        self.thread.stop()
-        self.thread.wait()
-        super(ProgressDialog, self).hide()
 
 
 class ProgressAnimationThread(QtCore.QThread):
