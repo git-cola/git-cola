@@ -672,6 +672,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
         self.setLabelText(txt)
 
     def keyPressEvent(self, event):
+        """Customize keyPressEvent to remove the ESC key cancel feature"""
         if event.key() != Qt.Key_Escape:
             super(ProgressDialog, self).keyPressEvent(event)
 
