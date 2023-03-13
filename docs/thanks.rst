@@ -74,6 +74,7 @@ Thanks
 * Dmitriy Bogdanov
 * Dmitry Kann
 * Dmitry Pashkevich
+* Dorian Marchal
 * Doug Hoskisson
 * Drugoy
 * Efimov Vasily
