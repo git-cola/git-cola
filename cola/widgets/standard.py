@@ -303,23 +303,9 @@ class TreeMixin(object):
         was_collapsed = not was_expanded
 
         # Vim keybindings...
-        # Rewrite the event before marshalling to QTreeView.event()
-        key = event.key()
+        event = _create_vim_navigation_key_event(event)
 
-        # Remap 'H' to 'Left'
-        if key == Qt.Key_H:
-            event = QtGui.QKeyEvent(event.type(), Qt.Key_Left, event.modifiers())
-        # Remap 'J' to 'Down'
-        elif key == Qt.Key_J:
-            event = QtGui.QKeyEvent(event.type(), Qt.Key_Down, event.modifiers())
-        # Remap 'K' to 'Up'
-        elif key == Qt.Key_K:
-            event = QtGui.QKeyEvent(event.type(), Qt.Key_Up, event.modifiers())
-        # Remap 'L' to 'Right'
-        elif key == Qt.Key_L:
-            event = QtGui.QKeyEvent(event.type(), Qt.Key_Right, event.modifiers())
-
-        # Re-read the event key to take the remappings into account
+        # Read the updated event key to take the remappings into account
         key = event.key()
         if key == Qt.Key_Up:
             idxs = widget.selectedIndexes()
@@ -429,6 +415,24 @@ class TreeMixin(object):
                 widths = widths[:count]
             for idx, value in enumerate(widths):
                 widget.setColumnWidth(idx, value)
+
+
+def _create_vim_navigation_key_event(event):
+    """Support minimal Vim-like keybindings by rewriting the QKeyEvents"""
+    key = event.key()
+    # Remap 'H' to 'Left'
+    if key == Qt.Key_H:
+        event = QtGui.QKeyEvent(event.type(), Qt.Key_Left, event.modifiers())
+    # Remap 'J' to 'Down'
+    elif key == Qt.Key_J:
+        event = QtGui.QKeyEvent(event.type(), Qt.Key_Down, event.modifiers())
+    # Remap 'K' to 'Up'
+    elif key == Qt.Key_K:
+        event = QtGui.QKeyEvent(event.type(), Qt.Key_Up, event.modifiers())
+    # Remap 'L' to 'Right'
+    elif key == Qt.Key_L:
+        event = QtGui.QKeyEvent(event.type(), Qt.Key_Right, event.modifiers())
+    return event
 
 
 class DraggableTreeMixin(TreeMixin):
