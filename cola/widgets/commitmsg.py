@@ -191,13 +191,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         )
 
         # pylint: disable=no-member
-        self.summary.textChanged.connect(
-            self.commit_summary_changed, Qt.QueuedConnection
-        )
-        self.description.textChanged.connect(
-            self._commit_message_changed, Qt.QueuedConnection
-        )
-        self.description.leave.connect(self.focus_summary, Qt.QueuedConnection)
+        self.summary.textChanged.connect(self.commit_summary_changed)
+        self.description.textChanged.connect(self._commit_message_changed)
+        self.description.leave.connect(self.focus_summary)
 
         self.commit_group.setEnabled(False)
 

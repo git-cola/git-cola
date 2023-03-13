@@ -98,7 +98,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setWordWrapMode(QtGui.QTextOption.NoWrap)
         self.setTabChangesFocus(True)
-        self.textChanged.connect(self._trim_changed_text_lines, Qt.QueuedConnection)
+        self.textChanged.connect(self._trim_changed_text_lines)
 
     def focusInEvent(self, event):
         """Select text when entering with a tab to mimic QLineEdit"""
