@@ -320,12 +320,12 @@ def modified_name():
 
 def move_down():
     """Move down icon"""
-    return from_theme('go-next', fallback='arrow-up.svg')
+    return from_theme('go-next', fallback='arrow-down.svg')
 
 
 def move_up():
     """Move up icon"""
-    return from_theme('go-previous', fallback='arrow-down.svg')
+    return from_theme('go-previous', fallback='arrow-up.svg')
 
 
 def new():
@@ -343,12 +343,12 @@ def open_directory():
     return from_theme('folder', fallback='folder.svg')
 
 
-def previous():
+def up():
     """Previous icon"""
     return icon('arrow-up.svg')
 
 
-def next():
+def down():
     """Go to next item icon"""
     return icon('arrow-down.svg')
 

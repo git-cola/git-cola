@@ -390,12 +390,12 @@ class TextSearchWidget(QtWidgets.QWidget):
 
         self.prev_button = qtutils.create_action_button(
             tooltip=N_('Find the previous occurrence of the phrase'),
-            icon=icons.previous()
+            icon=icons.up()
         )
 
         self.next_button = qtutils.create_action_button(
             tooltip=N_('Find the next occurrence of the phrase'),
-            icon=icons.next()
+            icon=icons.down()
         )
 
         self.match_case_checkbox = qtutils.checkbox(N_('Match Case'))
