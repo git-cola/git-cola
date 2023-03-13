@@ -94,6 +94,7 @@ Thanks
 * Georg Limbach
 * geotavros
 * Gianni Lerro
+* Giovanni Martins
 * `Git Hackers <http://git-scm.com/about>`_
 * Graham Bartlett
 * green-eyed-bear
