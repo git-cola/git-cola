@@ -375,12 +375,11 @@ class TreeMixin(object):
         widget = self.widget
         if hasattr(widget, 'selectedItems'):
             return widget.selectedItems()
+        if hasattr(widget, 'itemFromIndex'):
+            item_from_index = widget.itemFromIndex
         else:
-            if hasattr(widget, 'itemFromIndex'):
-                item_from_index = widget.itemFromIndex
-            else:
-                item_from_index = widget.model().itemFromIndex
-            return [item_from_index(i) for i in widget.selectedIndexes()]
+            item_from_index = widget.model().itemFromIndex
+        return [item_from_index(i) for i in widget.selectedIndexes()]
 
     def selected_item(self):
         """Return the first selected item"""

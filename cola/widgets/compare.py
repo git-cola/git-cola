@@ -195,22 +195,19 @@ class CompareBranchesDialog(standard.Dialog):
             tracked_branch = gitcmds.tracked_branch(context)
             if tracked_branch:
                 return gitcmds.merge_base(context, branch, tracked_branch)
-            else:
-                remote_branches = gitcmds.branch_list(context, remote=True)
-                remote_branch = 'origin/%s' % branch
-                if remote_branch in remote_branches:
-                    return gitcmds.merge_base(context, branch, remote_branch)
+            remote_branches = gitcmds.branch_list(context, remote=True)
+            remote_branch = 'origin/%s' % branch
+            if remote_branch in remote_branches:
+                return gitcmds.merge_base(context, branch, remote_branch)
 
-                if 'origin/main' in remote_branches:
-                    return gitcmds.merge_base(context, branch, 'origin/main')
+            if 'origin/main' in remote_branches:
+                return gitcmds.merge_base(context, branch, 'origin/main')
 
-                if 'origin/master' in remote_branches:
-                    return gitcmds.merge_base(context, branch, 'origin/master')
-
-                return 'HEAD'
-        else:
-            # Compare against the remote branch
-            return branch
+            if 'origin/master' in remote_branches:
+                return gitcmds.merge_base(context, branch, 'origin/master')
+            return 'HEAD'
+        # Compare against the remote branch
+        return branch
 
     def update_combo_boxes(self, left=False):
         """Update listwidgets from the combobox selection

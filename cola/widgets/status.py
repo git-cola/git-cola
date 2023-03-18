@@ -502,7 +502,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 # if the modified or untracked headers are selected.
                 cmds.do(cmds.UnstageAll, context)
                 return  # Everything was unstaged. There's nothing more to be done.
-            elif is_modified and is_untracked:
+            if is_modified and is_untracked:
                 # If both modified and untracked headers are selected then
                 # stage everything.
                 cmds.do(cmds.StageModifiedAndUntracked, context)
@@ -511,7 +511,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             # possibly a subset of the other category (eg. all modified and
             # some untracked).  We don't return here so that StageOrUnstage
             # gets a chance to run below.
-            elif is_modified:
+            if is_modified:
                 cmds.do(cmds.StageModified, context)
             elif is_untracked:
                 cmds.do(cmds.StageUntracked, context)

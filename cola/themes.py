@@ -37,12 +37,11 @@ class Theme(object):
     def build_style_sheet(self, app_palette):
         if self.style_sheet == EStylesheet.CUSTOM:
             return self.style_sheet_custom(app_palette)
-        elif self.style_sheet == EStylesheet.FLAT:
+        if self.style_sheet == EStylesheet.FLAT:
             return self.style_sheet_flat()
-        else:
-            window = app_palette.color(QtGui.QPalette.Window)
-            self.is_palette_dark = window.lightnessF() < 0.5
-            return style_sheet_default(app_palette)
+        window = app_palette.color(QtGui.QPalette.Window)
+        self.is_palette_dark = window.lightnessF() < 0.5
+        return style_sheet_default(app_palette)
 
     def build_palette(self, app_palette):
         QPalette = QtGui.QPalette

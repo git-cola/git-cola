@@ -63,7 +63,6 @@ disable=
     fixme,
     invalid-name,
     missing-docstring,
-    no-else-return,
     raise-missing-from,
     super-with-arguments,
     too-many-instance-attributes,

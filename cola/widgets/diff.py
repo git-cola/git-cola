@@ -1176,15 +1176,13 @@ class DiffEditor(DiffTextEdit):
         patch = diffparse.Patch.parse(self.model.filename, self.model.diff_text)
         if self.has_selection():
             return patch.extract_subset(first_line_idx, last_line_idx, reverse=reverse)
-        else:
-            return patch.extract_hunk(first_line_idx, reverse=reverse)
+        return patch.extract_hunk(first_line_idx, reverse=reverse)
 
     def patch_encoding(self):
         if isinstance(self.model.diff_text, core.UStr):
             # original encoding must prevail
             return self.model.diff_text.encoding
-        else:
-            return self.context.cfg.file_encoding(self.model.filename)
+        return self.context.cfg.file_encoding(self.model.filename)
 
     def process_diff_selection(
         self, reverse=False, apply_to_worktree=False, edit=False

@@ -202,9 +202,9 @@ class Merge(standard.Dialog):
         """Retrieve candidate items to merge"""
         if get(self.radio_local):
             return self.model.local_branches
-        elif get(self.radio_remote):
+        if get(self.radio_remote):
             return self.model.remote_branches
-        elif get(self.radio_tag):
+        if get(self.radio_tag):
             return self.model.tags
         return []
 
