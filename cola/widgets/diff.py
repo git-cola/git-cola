@@ -87,38 +87,32 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         """Highlight the current text block"""
         if not self.enabled or not text:
             return
-        diff_header_fmt = self.diff_header_fmt
-        bold_diff_header_fmt = self.bold_diff_header_fmt
-        diff_add_fmt = self.diff_add_fmt
-        diff_remove_fmt = self.diff_remove_fmt
-        bad_whitespace_fmt = self.bad_whitespace_fmt
-
         formats = []
         state = next_state(self.previousBlockState(), text, self.is_commit)
         if state == DiffSyntaxHighlighter.DIFFSTAT_STATE:
             state, formats = get_formats_for_diffstat(
                 state,
                 text,
-                diff_header_fmt,
-                bold_diff_header_fmt
+                self.diff_header_fmt,
+                self.bold_diff_header_fmt
             )
         elif state == DiffSyntaxHighlighter.DIFF_FILE_HEADER_STATE:
             state, formats = get_formats_for_diff_header(
                 state,
                 text,
-                bold_diff_header_fmt,
-                diff_header_fmt
+                self.diff_header_fmt,
+                self.bold_diff_header_fmt
             )
         elif state == DiffSyntaxHighlighter.DIFF_STATE:
             state, formats = get_formats_for_diff_text(
                 state,
                 text,
                 self.whitespace,
-                diff_header_fmt,
-                bold_diff_header_fmt,
-                diff_remove_fmt,
-                diff_add_fmt,
-                bad_whitespace_fmt
+                self.diff_header_fmt,
+                self.bold_diff_header_fmt,
+                self.diff_add_fmt,
+                self.diff_remove_fmt,
+                self.bad_whitespace_fmt
             )
 
         for start, end, fmt in formats:
@@ -165,7 +159,7 @@ def get_formats_for_diffstat(state, text, diff_header_fmt, bold_diff_header_fmt)
     return state, formats
 
 
-def get_formats_for_diff_header(state, text, bold_diff_header_fmt, diff_header_fmt):
+def get_formats_for_diff_header(state, text, diff_header_fmt, bold_diff_header_fmt):
     """Returns (state, [(start, end, fmt), ...]) for highlighting diff headers"""
     formats = []
     if DiffSyntaxHighlighter.DIFF_HUNK_HEADER_RGX.match(text):
@@ -183,8 +177,8 @@ def get_formats_for_diff_text(
     whitespace,
     diff_header_fmt,
     bold_diff_header_fmt,
-    diff_remove_fmt,
     diff_add_fmt,
+    diff_remove_fmt,
     bad_whitespace_fmt
 ):
     """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
