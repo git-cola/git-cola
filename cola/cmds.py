@@ -3228,7 +3228,7 @@ def difftool_launch(
             suffix = '^!' if left_take_magic else '~'
             # Check root commit (no parents and thus cannot execute '~')
             git = context.git
-            status, out, err = git.rev_list(left, parents=True, n=1)
+            status, out, err = git.rev_list(left, parents=True, n=1, _readonly=True)
             Interaction.log_status(status, out, err)
             if status:
                 raise OSError('git rev-list command failed')
