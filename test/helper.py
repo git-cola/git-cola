@@ -40,18 +40,18 @@ def remove_readonly(func, path, _exc_info):
 def touch(*paths):
     """Open and close a file to either create it or update its mtime"""
     for path in paths:
-        open(path, 'a').close()
+        core.open_append(path).close()
 
 
 def write_file(path, content):
     """Write content to the specified file path"""
-    with open(path, 'w') as f:
+    with core.open_write(path) as f:
         f.write(content)
 
 
 def append_file(path, content):
     """Open a file in append mode and write content to it"""
-    with open(path, 'a') as f:
+    with core.open_append(path) as f:
         f.write(content)
 
 

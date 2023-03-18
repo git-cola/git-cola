@@ -396,7 +396,27 @@ def guess_mimetype(filename):
 
 
 def xopen(path, mode='r', encoding=None):
+    """Open a file with the specified mode and encoding
+
+    The path is decoded into unicode on Windows and encoded into bytes on Unix.
+    """
+    # pylint: disable=unspecified-encoding
     return open(mkpath(path, encoding=encoding), mode)
+
+
+def open_append(path, encoding=None):
+    """Open a file for appending in utf-8 text mode"""
+    return open(mkpath(path, encoding=encoding), 'a', encoding='utf-8')
+
+
+def open_read(path, encoding=None):
+    """Open a file for reading in utf-8 text mode"""
+    return open(mkpath(path, encoding=encoding), 'rt', encoding='utf-8')
+
+
+def open_write(path, encoding=None):
+    """Open a file for writing in utf-8 text mode"""
+    return open(mkpath(path, encoding=encoding), 'wt', encoding='utf-8')
 
 
 def print_stdout(msg, linesep='\n'):

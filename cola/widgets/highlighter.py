@@ -100,9 +100,8 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication([])
 
     python = QtWidgets.QPlainTextEdit()
-    f = open(__file__, 'r')
-    python.setPlainText(f.read())
-    f.close()
+    with open(__file__, 'r', encoding='utf-8') as f:
+        python.setPlainText(f.read())
 
     python.setWindowTitle('python')
     python.show()

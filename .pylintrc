@@ -67,7 +67,6 @@ disable=
     raise-missing-from,
     super-with-arguments,
     too-many-instance-attributes,
-    unspecified-encoding,
     useless-object-inheritance,
 
 [REPORTS]

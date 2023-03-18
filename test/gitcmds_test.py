@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
+from cola import core
 from cola import gitcmds
 from cola.widgets.remote import get_default_remote
 
@@ -177,24 +178,24 @@ def test_all_refs_split(app_context):
 
 def test_binary_files(app_context):
     # Create a binary file and ensure that it's detected as binary.
-    with open('binary-file.txt', 'wb') as f:
+    with core.xopen('binary-file.txt', 'wb') as f:
         f.write(b'hello\0world\n')
     assert gitcmds.is_binary(app_context, 'binary-file.txt')
 
     # Create a text file and ensure that it's not detected as binary.
-    with open('text-file.txt', 'w') as f:
+    with core.open_write('text-file.txt') as f:
         f.write('hello world\n')
     assert not gitcmds.is_binary(app_context, 'text-file.txt')
 
     # Create a .gitattributes file and mark text-file.txt as binary.
     app_context.cfg.reset()
-    with open('.gitattributes', 'w') as f:
+    with core.open_write('.gitattributes') as f:
         f.write('text-file.txt binary\n')
     assert gitcmds.is_binary(app_context, 'text-file.txt')
 
     # Remove the "binary" attribute using "-binary" from binary-file.txt.
     # Ensure that we do not flag this file as binary.
-    with open('.gitattributes', 'w') as f:
+    with core.open_write('.gitattributes') as f:
         f.write('binary-file.txt -binary\n')
     assert not gitcmds.is_binary(app_context, 'binary-file.txt')
 
@@ -213,7 +214,7 @@ def test_is_valid_ref(app_context):
 
 def test_diff_helper(app_context):
     helper.commit_files()
-    with open('A', 'w') as f:
+    with core.open_write('A') as f:
         f.write('A change\n')
     helper.run_git('add', 'A')
 

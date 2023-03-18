@@ -32,7 +32,7 @@ def mklist(obj):
 
 def read_json(path):
     try:
-        with core.xopen(path, 'rt') as fp:
+        with core.open_read(path) as fp:
             return mkdict(json.load(fp))
     except (ValueError, TypeError, OSError, IOError):  # bad path or json
         return {}
@@ -44,7 +44,7 @@ def write_json(values, path):
         parent = os.path.dirname(path)
         if not core.isdir(parent):
             core.makedirs(parent)
-        with core.xopen(path, 'wt') as fp:
+        with core.open_write(path) as fp:
             json.dump(values, fp, indent=4)
     except (ValueError, TypeError, OSError, IOError):
         sys.stderr.write('git-cola: error writing "%s"\n' % path)
