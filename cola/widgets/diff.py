@@ -88,120 +88,93 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         if not self.enabled or not text:
             return
         formats = []
-        state = next_state(self.previousBlockState(), text, self.is_commit)
-        if state == DiffSyntaxHighlighter.DIFFSTAT_STATE:
-            state, formats = get_formats_for_diffstat(
-                state,
-                text,
-                self.diff_header_fmt,
-                self.bold_diff_header_fmt
-            )
-        elif state == DiffSyntaxHighlighter.DIFF_FILE_HEADER_STATE:
-            state, formats = get_formats_for_diff_header(
-                state,
-                text,
-                self.diff_header_fmt,
-                self.bold_diff_header_fmt
-            )
-        elif state == DiffSyntaxHighlighter.DIFF_STATE:
-            state, formats = get_formats_for_diff_text(
-                state,
-                text,
-                self.whitespace,
-                self.diff_header_fmt,
-                self.bold_diff_header_fmt,
-                self.diff_add_fmt,
-                self.diff_remove_fmt,
-                self.bad_whitespace_fmt
-            )
+        state = self.get_next_state(text)
+        if state == self.DIFFSTAT_STATE:
+            state, formats = self.get_formats_for_diffstat(state, text)
+        elif state == self.DIFF_FILE_HEADER_STATE:
+            state, formats = self.get_formats_for_diff_header(state, text)
+        elif state == self.DIFF_STATE:
+            state, formats = self.get_formats_for_diff_text(state, text)
 
         for start, end, fmt in formats:
             self.setFormat(start, end, fmt)
 
         self.setCurrentBlockState(state)
 
+    def get_next_state(self, text):
+        """Transition to the next state based on the input text"""
+        state = self.previousBlockState()
+        if state == DiffSyntaxHighlighter.INITIAL_STATE:
+            if text.startswith('Submodule '):
+                state = DiffSyntaxHighlighter.SUBMODULE_STATE
+            elif text.startswith('diff --git '):
+                state = DiffSyntaxHighlighter.DIFFSTAT_STATE
+            elif self.is_commit:
+                state = DiffSyntaxHighlighter.DEFAULT_STATE
+            else:
+                state = DiffSyntaxHighlighter.DIFFSTAT_STATE
 
-def next_state(state, text, is_commit):
-    """Transition to the next state based on the input text"""
-    if state == DiffSyntaxHighlighter.INITIAL_STATE:
-        if text.startswith('Submodule '):
-            state = DiffSyntaxHighlighter.SUBMODULE_STATE
-        elif text.startswith('diff --git '):
-            state = DiffSyntaxHighlighter.DIFFSTAT_STATE
-        elif is_commit:
-            state = DiffSyntaxHighlighter.DEFAULT_STATE
+        return state
+
+    def get_formats_for_diffstat(self, state, text):
+        """Returns (state, [(start, end, fmt), ...]) for highlighting diffstat text"""
+        formats = []
+        if self.DIFF_FILE_HEADER_START_RGX.match(text):
+            state = self.DIFF_FILE_HEADER_STATE
+            end = len(text)
+            fmt = self.diff_header_fmt
+            formats.append((0, end, fmt))
+        elif self.DIFF_HUNK_HEADER_RGX.match(text):
+            state = self.DIFF_STATE
+            end = len(text)
+            fmt = self.bold_diff_header_fmt
+            formats.append((0, end, fmt))
+        elif '|' in text:
+            offset = text.index('|')
+            formats.append((0, offset, self.bold_diff_header_fmt))
+            formats.append((offset, len(text) - offset, self.diff_header_fmt))
         else:
-            state = DiffSyntaxHighlighter.DIFFSTAT_STATE
+            formats.append((0, len(text), self.diff_header_fmt))
 
-    return state
+        return state, formats
 
-
-def get_formats_for_diffstat(state, text, diff_header_fmt, bold_diff_header_fmt):
-    """Returns (state, [(start, end, fmt), ...]) for highlighting diffstat text"""
-    formats = []
-    if DiffSyntaxHighlighter.DIFF_FILE_HEADER_START_RGX.match(text):
-        state = DiffSyntaxHighlighter.DIFF_FILE_HEADER_STATE
-        end = len(text)
-        fmt = diff_header_fmt
-        formats.append((0, end, fmt))
-    elif DiffSyntaxHighlighter.DIFF_HUNK_HEADER_RGX.match(text):
-        state = DiffSyntaxHighlighter.DIFF_STATE
-        end = len(text)
-        fmt = bold_diff_header_fmt
-        formats.append((0, end, fmt))
-    elif '|' in text:
-        offset = text.index('|')
-        formats.append((0, offset, bold_diff_header_fmt))
-        formats.append((offset, len(text) - offset, diff_header_fmt))
-    else:
-        formats.append((0, len(text), diff_header_fmt))
-
-    return state, formats
-
-
-def get_formats_for_diff_header(state, text, diff_header_fmt, bold_diff_header_fmt):
-    """Returns (state, [(start, end, fmt), ...]) for highlighting diff headers"""
-    formats = []
-    if DiffSyntaxHighlighter.DIFF_HUNK_HEADER_RGX.match(text):
-        state = DiffSyntaxHighlighter.DIFF_STATE
-        formats.append((0, len(text), bold_diff_header_fmt))
-    else:
-        formats.append((0, len(text), diff_header_fmt))
-
-    return state, formats
-
-
-def get_formats_for_diff_text(
-    state,
-    text,
-    whitespace,
-    diff_header_fmt,
-    bold_diff_header_fmt,
-    diff_add_fmt,
-    diff_remove_fmt,
-    bad_whitespace_fmt
-):
-    """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
-    formats = []
-    if DiffSyntaxHighlighter.DIFF_FILE_HEADER_START_RGX.match(text):
-        state = DiffSyntaxHighlighter.DIFF_FILE_HEADER_STATE
-        formats.append((0, len(text), diff_header_fmt))
-    elif DiffSyntaxHighlighter.DIFF_HUNK_HEADER_RGX.match(text):
-        formats.append((0, len(text), bold_diff_header_fmt))
-    elif text.startswith('-'):
-        if text == '-- ':
-            state = DiffSyntaxHighlighter.END_STATE
+    def get_formats_for_diff_header(self, state, text):
+        """Returns (state, [(start, end, fmt), ...]) for highlighting diff headers"""
+        formats = []
+        if self.DIFF_HUNK_HEADER_RGX.match(text):
+            state = self.DIFF_STATE
+            formats.append((0, len(text), self.bold_diff_header_fmt))
         else:
-            formats.append((0, len(text), diff_remove_fmt))
-    elif text.startswith('+'):
-        formats.append((0, len(text), diff_add_fmt))
-        if whitespace:
-            match = DiffSyntaxHighlighter.BAD_WHITESPACE_RGX.search(text)
-            if match is not None:
-                start = match.start()
-                formats.append((start, len(text) - start, bad_whitespace_fmt))
+            formats.append((0, len(text), self.diff_header_fmt))
 
-    return state, formats
+        return state, formats
+
+    def get_formats_for_diff_text(self, state, text):
+        """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
+        formats = []
+
+        if self.DIFF_FILE_HEADER_START_RGX.match(text):
+            state = self.DIFF_FILE_HEADER_STATE
+            formats.append((0, len(text), self.diff_header_fmt))
+
+        elif self.DIFF_HUNK_HEADER_RGX.match(text):
+            formats.append((0, len(text), self.bold_diff_header_fmt))
+
+        elif text.startswith('-'):
+            if text == '-- ':
+                state = self.END_STATE
+            else:
+                formats.append((0, len(text), self.diff_remove_fmt))
+
+        elif text.startswith('+'):
+            formats.append((0, len(text), self.diff_add_fmt))
+            if self.whitespace:
+                match = self.BAD_WHITESPACE_RGX.search(text)
+                if match is not None:
+                    start = match.start()
+                    formats.append((start, len(text) - start, self.bad_whitespace_fmt))
+
+        return state, formats
 
 
 # pylint: disable=too-many-ancestors
