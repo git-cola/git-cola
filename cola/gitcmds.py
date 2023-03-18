@@ -361,6 +361,7 @@ def common_diff_opts(context):
         'no_ext_diff': True,
         'unified': config.get('gui.diffcontext', default=3),
         '_raw': True,
+        '_readonly': True,
     }
     opts.update(_diff_overrides)
     return opts
