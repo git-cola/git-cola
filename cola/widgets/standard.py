@@ -528,7 +528,6 @@ class Dialog(WidgetMixin, QtWidgets.QDialog):
         self.dispose()
         return self.Base.reject(self)
 
-    # pylint: disable=no-self-use
     def dispose(self):
         """Extension method for model deregistration in sub-classes"""
         return

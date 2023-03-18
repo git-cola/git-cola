@@ -43,11 +43,8 @@ if PY3:
 else:
     bchr = chr
     maxsize = 2**31
-    # pylint: disable=unicode-builtin
     ustr = unicode  # noqa
-    # pylint: disable=unichr-builtin
     uchr = unichr  # noqa
-    # pylint: disable=long-builtin
     int_types = (int, long)  # noqa
 
 # Qt's max 32-bit signed integer range (-2147483648 to 2147483647)

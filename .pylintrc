@@ -55,8 +55,6 @@ confidence=
 # --disable=W"
 disable=
     assignment-from-none,
-    bad-continuation,
-    bad-option-value,
     consider-using-with,
     consider-using-f-string,
     duplicate-code,

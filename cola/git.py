@@ -188,7 +188,6 @@ class Git(object):
         self._valid = {}  #: Store the result of is_git_dir() for performance
         self.set_worktree(core.getcwd())
 
-    # pylint: disable=no-self-use
     def is_git_repository(self, path):
         return is_git_repository(path)
 

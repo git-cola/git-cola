@@ -1251,7 +1251,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         include_urls = not self._alt_drag
         return qtutils.mimedata_from_paths(context, paths, include_urls=include_urls)
 
-    # pylint: disable=no-self-use
     def mimeTypes(self):
         """Return the mimetypes that this widget generates"""
         return qtutils.path_mimetypes(include_urls=not self._alt_drag)

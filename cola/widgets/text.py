@@ -261,17 +261,16 @@ class BaseTextEditExtension(QtCore.QObject):
 
     # For extension by sub-classes
 
-    # pylint: disable=no-self-use
     def init(self):
         """Called during init for class-specific settings"""
         return
 
-    # pylint: disable=no-self-use,unused-argument
+    # pylint: disable=unused-argument
     def set_textwidth(self, width):
         """Set the text width"""
         return
 
-    # pylint: disable=no-self-use,unused-argument
+    # pylint: disable=unused-argument
     def set_linebreak(self, brk):
         """Enable word wrapping"""
         return
@@ -1157,4 +1156,4 @@ class LineNumbers(TextDecorator):
                 Qt.AlignRight | Qt.AlignVCenter,
                 number,
             )
-            block = block.next()  # pylint: disable=next-method-called
+            block = block.next()

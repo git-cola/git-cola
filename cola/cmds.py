@@ -79,32 +79,26 @@ class EditModel(ContextCommand):
 class ConfirmAction(ContextCommand):
     """Confirm an action before running it"""
 
-    # pylint: disable=no-self-use
     def ok_to_run(self):
         """Return True when the command is ok to run"""
         return True
 
-    # pylint: disable=no-self-use
     def confirm(self):
         """Prompt for confirmation"""
         return True
 
-    # pylint: disable=no-self-use
     def action(self):
         """Run the command and return (status, out, err)"""
         return (-1, '', '')
 
-    # pylint: disable=no-self-use
     def success(self):
         """Callback run on success"""
         return
 
-    # pylint: disable=no-self-use
     def command(self):
         """Command name, for error messages"""
         return 'git'
 
-    # pylint: disable=no-self-use
     def error_message(self):
         """Command error message"""
         return ''
@@ -2248,7 +2242,6 @@ class RevertEditsCommand(ConfirmAction):
     def ok_to_run(self):
         return self.model.is_undoable()
 
-    # pylint: disable=no-self-use
     def checkout_from_head(self):
         return False
 
@@ -2675,7 +2668,6 @@ class StageCarefully(Stage):
         super(StageCarefully, self).__init__(context, None)
         self.init_paths()
 
-    # pylint: disable=no-self-use
     def init_paths(self):
         """Initialize path data"""
         return

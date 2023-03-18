@@ -455,7 +455,7 @@ class DiffLineNumbers(TextDecorator):
                 text,
             )
 
-            block = block.next()  # pylint: disable=next-method-called
+            block = block.next()
 
 
 class Viewer(QtWidgets.QFrame):

@@ -85,7 +85,6 @@ class GitRepoModel(QtGui.QStandardItemModel):
         )
         return qtutils.mimedata_from_paths(self.context, paths)
 
-    # pylint: disable=no-self-use
     def mimeTypes(self):
         return qtutils.path_mimetypes()
 

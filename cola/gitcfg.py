@@ -45,7 +45,7 @@ def _config_to_python(v):
         v = False
     else:
         try:
-            v = int(v)  # pylint: disable=redefined-variable-type
+            v = int(v)
         except ValueError:
             pass
     return v

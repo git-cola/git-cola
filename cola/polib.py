@@ -809,7 +809,7 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath)
 
-    # pylint: disable=no-self-use,arguments-differ
+    # pylint: disable=arguments-differ
     def save(self, fpath=None):
         """
         Saves the mofile to ``fpath``.
@@ -821,35 +821,30 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath, 'to_binary')
 
-    # pylint: disable=no-self-use
     def percent_translated(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return 100
 
-    # pylint: disable=no-self-use
     def translated_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return self
 
-    # pylint: disable=no-self-use
     def untranslated_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
-    # pylint: disable=no-self-use
     def fuzzy_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
-    # pylint: disable=no-self-use
     def obsolete_entries(self):
         """
         Convenience method to keep the same interface with POFile instances.
@@ -957,7 +952,6 @@ class _BaseEntry(object):
     def __hash__(self):
         return hash(str(self))
 
-    # pylint: disable=no-self-use
     def _str_field(self, fieldname, delflag, plural_index, field, wrapwidth=78):
         lines = field.splitlines(True)
         if len(lines) > 1:
@@ -1120,7 +1114,7 @@ class POEntry(_BaseEntry):
         ret = u('\n').join(ret)
         return ret
 
-    # pylint: disable=cmp-method,too-many-return-statements
+    # pylint: disable=too-many-return-statements
     def __cmp__(self, other):
         """
         Called by comparison operations if rich comparison is not defined.

@@ -94,7 +94,6 @@ class _BaseThread(QtCore.QThread):
     def _pending(self):
         return self._force_notify or self._file_paths or self._force_config
 
-    # pylint: disable=no-self-use
     def refresh(self):
         """Do any housekeeping necessary in response to repository changes."""
         return
