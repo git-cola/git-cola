@@ -1123,8 +1123,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cls = {
                 STAGED_IDX: cmds.DiffStagedSummary,
                 MODIFIED_IDX: cmds.Diffstat,
-                # TODO implement UnmergedSummary
-                # UNMERGED_IDX: cmds.UnmergedSummary,
+                UNMERGED_IDX: cmds.UnmergedSummary,
                 UNTRACKED_IDX: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
             cmds.do(cls, context)

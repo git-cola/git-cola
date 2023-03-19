@@ -117,6 +117,8 @@ Usability, bells and whistles
   ``git show`` when saving files from arbitrary commits.
   (`#1065 <https://github.com/git-cola/git-cola/issues/1065>`_)
 
+* The "Unmerged" header item in the Status tool now displays a summary list of unmerged files.
+
 
 Development
 -----------

@@ -2926,19 +2926,33 @@ class Untrack(ContextCommand):
         Interaction.log_status(status, out, err)
 
 
+class UnmergedSummary(EditModel):
+    """List unmerged files in the diff text."""
+
+    def __init__(self, context):
+        super(UnmergedSummary, self).__init__(context)
+        unmerged = self.model.unmerged
+        io = StringIO()
+        io.write('# %s unmerged  file(s)\n' % len(unmerged))
+        if unmerged:
+            io.write('\n'.join(unmerged) + '\n')
+        self.new_diff_text = io.getvalue()
+        self.new_diff_type = main.Types.TEXT
+        self.new_file_type = main.Types.TEXT
+        self.new_mode = self.model.mode_display
+
+
 class UntrackedSummary(EditModel):
     """List possible .gitignore rules as the diff text."""
 
     def __init__(self, context):
         super(UntrackedSummary, self).__init__(context)
         untracked = self.model.untracked
-        suffix = 's' if untracked else ''
         io = StringIO()
-        io.write('# %s untracked file%s\n' % (len(untracked), suffix))
+        io.write('# %s untracked file(s)\n' % len(untracked))
         if untracked:
-            io.write('# possible .gitignore rule%s:\n' % suffix)
-            for u in untracked:
-                io.write('/' + u + '\n')
+            io.write('# Add these lines to ".gitignore" to ignore these files:\n')
+            io.write('\n'.join('/' + filename for filename in untracked) + '\n')
         self.new_diff_text = io.getvalue()
         self.new_diff_type = main.Types.TEXT
         self.new_file_type = main.Types.TEXT
