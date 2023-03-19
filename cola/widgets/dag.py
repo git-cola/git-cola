@@ -264,18 +264,16 @@ class ViewerMixin(object):
         has_single_selection_or_clicked = bool(has_single_selection or commit)
         has_selection = bool(selected_items)
         can_diff = bool(
-            commit and
-            has_single_selection and
-            selected_items and
-            commit is not selected_items[0].commit
+            commit
+            and has_single_selection
+            and selected_items
+            and commit is not selected_items[0].commit
         )
         has_branches = (
-            has_single_selection and
-            selected_item and
-            bool(selected_item.commit.branches)
-        ) or (
-            self.clicked and bool(self.clicked.branches)
-        )
+            has_single_selection
+            and selected_item
+            and bool(selected_item.commit.branches)
+        ) or (self.clicked and bool(self.clicked.branches))
 
         if can_diff:
             self.selected = selected_items[0].commit
@@ -1252,23 +1250,27 @@ class EdgeColor(object):
     def update_colors(cls, theme):
         """Update the colors based on the color theme"""
         if theme.is_dark or theme.is_palette_dark:
-            cls.colors.extend([
-                QtGui.QColor(Qt.red).lighter(),
-                QtGui.QColor(Qt.cyan).lighter(),
-                QtGui.QColor(Qt.magenta).lighter(),
-                QtGui.QColor(Qt.green).lighter(),
-                QtGui.QColor(Qt.yellow).lighter(),
-            ])
+            cls.colors.extend(
+                [
+                    QtGui.QColor(Qt.red).lighter(),
+                    QtGui.QColor(Qt.cyan).lighter(),
+                    QtGui.QColor(Qt.magenta).lighter(),
+                    QtGui.QColor(Qt.green).lighter(),
+                    QtGui.QColor(Qt.yellow).lighter(),
+                ]
+            )
         else:
-            cls.colors.extend([
-                QtGui.QColor(Qt.blue),
-                QtGui.QColor(Qt.darkRed),
-                QtGui.QColor(Qt.darkCyan),
-                QtGui.QColor(Qt.darkMagenta),
-                QtGui.QColor(Qt.darkGreen),
-                QtGui.QColor(Qt.darkYellow),
-                QtGui.QColor(Qt.darkBlue),
-            ])
+            cls.colors.extend(
+                [
+                    QtGui.QColor(Qt.blue),
+                    QtGui.QColor(Qt.darkRed),
+                    QtGui.QColor(Qt.darkCyan),
+                    QtGui.QColor(Qt.darkMagenta),
+                    QtGui.QColor(Qt.darkGreen),
+                    QtGui.QColor(Qt.darkYellow),
+                    QtGui.QColor(Qt.darkBlue),
+                ]
+            )
 
     @classmethod
     def cycle(cls):

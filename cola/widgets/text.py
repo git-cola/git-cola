@@ -389,21 +389,18 @@ class TextSearchWidget(QtWidgets.QWidget):
         self.text = HintedDefaultLineEdit(N_('Find in diff'), parent=self)
 
         self.prev_button = qtutils.create_action_button(
-            tooltip=N_('Find the previous occurrence of the phrase'),
-            icon=icons.up()
+            tooltip=N_('Find the previous occurrence of the phrase'), icon=icons.up()
         )
 
         self.next_button = qtutils.create_action_button(
-            tooltip=N_('Find the next occurrence of the phrase'),
-            icon=icons.down()
+            tooltip=N_('Find the next occurrence of the phrase'), icon=icons.down()
         )
 
         self.match_case_checkbox = qtutils.checkbox(N_('Match Case'))
         self.whole_words_checkbox = qtutils.checkbox(N_('Whole Words'))
 
         self.close_button = qtutils.create_action_button(
-            tooltip=N_('Close the find bar'),
-            icon=icons.close()
+            tooltip=N_('Close the find bar'), icon=icons.close()
         )
 
         layout = qtutils.hbox(
