@@ -22,8 +22,8 @@ def create(context):
 class MainModel(QtCore.QObject):
     """Repository status model"""
 
-    # TODO this class can probably be split apart into a DiffModel,
-    # CommitMessageModel, StatusModel, and an AppStatusStateMachine.
+    # Refactor: split this class apart into separate DiffModel, CommitMessageModel,
+    # StatusModel, and an DiffEditorState.
 
     # Signals
     about_to_update = Signal()

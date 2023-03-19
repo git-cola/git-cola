@@ -133,8 +133,6 @@ class ToolBarState(object):
             if data['float']:
                 toolbar.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)
                 toolbar.move(data['x'], data['y'])
-            # TODO: handle changed width when exists more than one toolbar in
-            # an area
 
     def export_state(self):
         result = []

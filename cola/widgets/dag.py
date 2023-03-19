@@ -1910,14 +1910,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             try:
                 commit_item = self.items[commit.oid]
             except KeyError:
-                # TODO - Handle truncated history viewing
-                continue
+                continue  # The history is truncated.
             for parent in reversed(commit.parents):
                 try:
                     parent_item = self.items[parent.oid]
                 except KeyError:
-                    # TODO - Handle truncated history viewing
-                    continue
+                    continue  # The history is truncated.
                 try:
                     edge = parent_item.edges[commit.oid]
                 except KeyError:

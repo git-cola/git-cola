@@ -58,7 +58,6 @@ disable=
     consider-using-with,
     consider-using-f-string,
     duplicate-code,
-    fixme,
     invalid-name,
     missing-docstring,
     raise-missing-from,

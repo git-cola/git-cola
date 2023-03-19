@@ -841,8 +841,7 @@ class MainView(standard.MainWindow):
         self.view_menu.aboutToShow.connect(lambda: self.build_view_menu(self.view_menu))
         self.setup_dockwidget_view_menu()
         if utils.is_darwin():
-            # TODO or self.menubar.setNativeMenuBar(False)
-            # Since native OSX menu doesn't show empty entries
+            # The native macOS menu doesn't show empty entries.
             self.build_view_menu(self.view_menu)
 
         # Help Menu

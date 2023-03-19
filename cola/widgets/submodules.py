@@ -209,7 +209,6 @@ class BuildItem(object):
         """entry: same as returned from list_submodule"""
         name = entry[2]
         path = entry[2]
-        # TODO better tip
         tip = path + '\n' + entry[1]
         if entry[3]:
             tip += '\n({0})'.format(entry[3])
