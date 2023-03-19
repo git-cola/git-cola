@@ -288,11 +288,10 @@ def shell_split(value):
 
 def tmp_filename(label, suffix=''):
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
-    handle = tempfile.NamedTemporaryFile(
+    with tempfile.NamedTemporaryFile(
         prefix=label + '-', suffix=suffix, delete=False
-    )
-    handle.close()
-    return handle.name
+    ) as handle:
+        return handle.name
 
 
 def is_linux():

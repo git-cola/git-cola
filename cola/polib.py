@@ -2,7 +2,7 @@
 #
 # License: MIT (see extras/polib/LICENSE file provided)
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
-# pylint: disable=no-else-return
+# pylint: disable=consider-using-with,no-else-return
 
 """
 **polib** allows you to manipulate, create, modify gettext files (pot, po and
