@@ -1005,18 +1005,14 @@ class Channel(QtCore.QObject):
 
 
 class Task(QtCore.QRunnable):
-    """Disable auto-deletion to avoid gc issues
-
-    Python's garbage collector will try to double-free the task
-    once it's finished, so disable Qt's auto-deletion as a workaround.
-
-    """
-
+    """Run a task in the background and return the result using a Channel"""
     def __init__(self):
         QtCore.QRunnable.__init__(self)
 
         self.channel = Channel()
         self.result = None
+        # Python's garbage collector will try to double-free the task
+        # once it's finished, so disable Qt's auto-deletion as a workaround.
         self.setAutoDelete(False)
 
     def run(self):
@@ -1025,7 +1021,8 @@ class Task(QtCore.QRunnable):
         self.channel.finished.emit(self)
 
     def task(self):
-        return None
+        """Perform a long-running task"""
+        return ()
 
     def connect(self, handler):
         self.channel.result.connect(handler, type=Qt.QueuedConnection)
