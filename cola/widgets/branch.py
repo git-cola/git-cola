@@ -21,16 +21,17 @@ from .. import qtutils
 from .text import LineEdit
 
 
-def defer_fn(parent, title, fn, *args, **kwargs):
-    return qtutils.add_action(parent, title, partial(fn, *args, **kwargs))
+def defer_func(parent, title, func, *args, **kwargs):
+    """Return a QAction bound against a partial func with arguments"""
+    return qtutils.add_action(parent, title, partial(func, *args, **kwargs))
 
 
-def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, fn):
+def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, func):
     """Add a remote branch to the context menu"""
     branch_remote, _ = gitcmds.parse_remote_branch(remote_branch)
     if branch_remote != remote:
         menu.addSeparator()
-    action = defer_fn(menu, remote_branch, fn, branch, remote_branch)
+    action = defer_func(menu, remote_branch, func, branch, remote_branch)
     if remote_branch == upstream:
         action.setIcon(icons.star())
     menu.addAction(action)

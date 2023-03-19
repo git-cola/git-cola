@@ -468,20 +468,20 @@ class BookmarksListView(QtWidgets.QListView):
         else:
             item.setText(item.name)
 
-    def apply_fn(self, fn, *args, **kwargs):
+    def apply_func(self, func, *args, **kwargs):
         item = self.selected_item()
         if item:
-            fn(item, *args, **kwargs)
+            func(item, *args, **kwargs)
 
     def copy(self):
-        self.apply_fn(lambda item: qtutils.set_clipboard(item.path))
+        self.apply_func(lambda item: qtutils.set_clipboard(item.path))
 
     def open_default(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
+        self.apply_func(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
 
     def set_default_repo(self):
-        self.apply_fn(self.set_default_item)
+        self.apply_func(self.set_default_item)
 
     def set_default_item(self, item):
         context = self.context
@@ -489,7 +489,7 @@ class BookmarksListView(QtWidgets.QListView):
         self.refresh()
 
     def clear_default_repo(self):
-        self.apply_fn(self.clear_default_item)
+        self.apply_func(self.clear_default_item)
 
     def clear_default_item(self, _item):
         context = self.context
@@ -501,7 +501,7 @@ class BookmarksListView(QtWidgets.QListView):
         self.edit(index)
 
     def accept_repo(self):
-        self.apply_fn(self.accept_item)
+        self.apply_func(self.accept_item)
 
     def accept_item(self, _item):
         if self.state() & self.EditingState:
@@ -516,15 +516,15 @@ class BookmarksListView(QtWidgets.QListView):
 
     def open_new_repo(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
+        self.apply_func(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
 
     def launch_editor(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.Edit, context, [item.path]))
+        self.apply_func(lambda item: cmds.do(cmds.Edit, context, [item.path]))
 
     def launch_terminal(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
+        self.apply_func(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
 
     def delete_item(self):
         """Remove the selected repo item

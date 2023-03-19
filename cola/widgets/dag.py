@@ -72,11 +72,11 @@ class FocusRedirectProxy(object):
         """Forward the captured action to the focused or default widget"""
         widget = QtWidgets.QApplication.focusWidget()
         if widget in self.widgets and hasattr(widget, name):
-            fn = getattr(widget, name)
+            func = getattr(widget, name)
         else:
-            fn = getattr(self.default, name)
+            func = getattr(self.default, name)
 
-        return fn(*args, **kwargs)
+        return func(*args, **kwargs)
 
 
 class ViewerMixin(object):
@@ -114,20 +114,20 @@ class ViewerMixin(object):
             return self.clicked.oid
         return self.selected_oid()
 
-    def with_oid(self, fn):
+    def with_oid(self, func):
         """Run an operation with a commit object ID"""
         oid = self.clicked_oid()
         if oid:
-            result = fn(oid)
+            result = func(oid)
         else:
             result = None
         return result
 
-    def with_selected_oid(self, fn):
+    def with_selected_oid(self, func):
         """Run an operation with a commit object ID"""
         oid = self.selected_oid()
         if oid:
-            result = fn(oid)
+            result = func(oid)
         else:
             result = None
         return result
@@ -1015,12 +1015,12 @@ class GitDAG(standard.MainWindow):
 
         self.graphview.set_initial_view()
 
-    def diff_commits(self, a, b):
+    def diff_commits(self, left, right):
         paths = self.params.paths()
         if paths:
-            cmds.difftool_launch(self.context, left=a, right=b, paths=paths)
+            cmds.difftool_launch(self.context, left=left, right=right, paths=paths)
         else:
-            difftool.diff_commits(self.context, self, a, b)
+            difftool.diff_commits(self.context, self, left, right)
 
     # Qt overrides
     def closeEvent(self, event):
@@ -1071,7 +1071,7 @@ class ReaderThread(QtCore.QThread):
         repo.reset()
         self.begin.emit()
         commits = []
-        for c in repo.get():
+        for commit in repo.get():
             self._mutex.lock()
             if self._stop:
                 self._condition.wait(self._mutex)
@@ -1079,7 +1079,7 @@ class ReaderThread(QtCore.QThread):
             if self._abort:
                 repo.reset()
                 return
-            commits.append(c)
+            commits.append(commit)
             if len(commits) >= 512:
                 self.add.emit(commits)
                 commits = []
@@ -1655,13 +1655,13 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             item_rect = item.sceneTransform().mapRect(item.boundingRect())
             self.ensureVisible(item_rect)
 
-    def _get_item_by_generation(self, commits, criteria_fn):
+    def _get_item_by_generation(self, commits, criteria_func):
         """Return the item for the commit matching criteria"""
         if not commits:
             return None
         generation = None
         for commit in commits:
-            if generation is None or criteria_fn(generation, commit.generation):
+            if generation is None or criteria_func(generation, commit.generation):
                 oid = commit.oid
                 generation = commit.generation
         try:
@@ -1769,12 +1769,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
             for item in items:
                 pos = item.pos()
-                x = pos.x()
-                y = pos.y()
-                x_min = min(x_min, x)
-                x_max = max(x_max, x)
-                y_min = min(y_min, y)
-                y_max = max(y_max, y)
+                x_val = pos.x()
+                y_val = pos.y()
+                x_min = min(x_min, x_val)
+                x_max = max(x_max, x_val)
+                y_min = min(y_min, y_val)
+                y_max = max(y_max, y_val)
 
             rect = QtCore.QRectF(x_min, y_min, abs(x_max - x_min), abs(y_max - y_min))
 
@@ -1802,27 +1802,27 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
     def pan(self, event):
         pos = event.pos()
-        dx = pos.x() - self.mouse_start[0]
-        dy = pos.y() - self.mouse_start[1]
+        x_offset = pos.x() - self.mouse_start[0]
+        y_offset = pos.y() - self.mouse_start[1]
 
-        if dx == 0 and dy == 0:
+        if x_offset == 0 and y_offset == 0:
             return
 
-        rect = QtCore.QRect(0, 0, abs(dx), abs(dy))
+        rect = QtCore.QRect(0, 0, abs(x_offset), abs(y_offset))
         delta = self.mapToScene(rect).boundingRect()
 
-        tx = delta.width()
-        if dx < 0.0:
-            tx = -tx
+        x_translate = delta.width()
+        if x_offset < 0.0:
+            x_translate = -x_translate
 
-        ty = delta.height()
-        if dy < 0.0:
-            ty = -ty
+        y_translate = delta.height()
+        if y_offset < 0.0:
+            y_translate = -y_translate
 
         matrix = self.transform()
         matrix.reset()
         matrix *= self.saved_matrix
-        matrix.translate(tx, ty)
+        matrix.translate(x_translate, y_translate)
 
         self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
         self.setTransform(matrix)
@@ -1933,12 +1933,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         # edges to prevent double edge invalidation.
         invalid_edges = set()
 
-        for oid, (x, y) in positions.items():
+        for oid, (x_val, y_val) in positions.items():
             item = self.items[oid]
 
             pos = item.pos()
-            if pos != (x, y):
-                item.setPos(x, y)
+            if pos != (x_val, y_val):
+                item.setPos(x_val, y_val)
 
                 for edge in item.edges.values():
                     invalid_edges.add(edge)
@@ -2049,12 +2049,12 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             # frontier values for fork children will be overridden in course of
             # propagate_frontier.
             for offset in itertools.count(1):
-                for c in [column + offset, column - offset]:
-                    if c not in self.columns:
-                        # Column 'c' is not occupied.
+                for value in (column + offset, column - offset):
+                    if value not in self.columns:
+                        # Column is not occupied.
                         continue
                     try:
-                        frontier = self.frontier[c]
+                        frontier = self.frontier[value]
                     except KeyError:
                         # Column 'c' was never allocated.
                         continue
@@ -2116,8 +2116,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 can_overlap = list(range(column + 1, self.max_column + 1))
             else:
                 can_overlap = list(range(column - 1, self.min_column - 1, -1))
-            for c in can_overlap:
-                frontier = self.frontier[c]
+            for value in can_overlap:
+                frontier = self.frontier[value]
                 if frontier > cell_row:
                     cell_row = frontier
 
@@ -2127,8 +2127,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         else:
             can_overlap = list(range(self.max_column, column, -1))
         for cell_row in itertools.count(cell_row):
-            for c in can_overlap:
-                if (c, cell_row) in self.tagged_cells:
+            for value in can_overlap:
+                if (value, cell_row) in self.tagged_cells:
                     # Overlapping. Try next row.
                     break
             else:
@@ -2220,11 +2220,11 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         positions = {}
 
         for node in self.commits:
-            x_pos = x_start + node.column * x_off
-            y_pos = y_off + node.row * y_off
+            x_val = x_start + node.column * x_off
+            y_val = y_off + node.row * y_off
 
-            positions[node.oid] = (x_pos, y_pos)
-            x_min = min(x_min, x_pos)
+            positions[node.oid] = (x_val, y_val)
+            x_min = min(x_min, x_val)
 
         self.x_min = x_min
 

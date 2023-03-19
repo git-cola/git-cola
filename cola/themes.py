@@ -679,7 +679,7 @@ def get_all_themes():
             N_('Flat dark red'),
             True,
             style_sheet=EStylesheet.FLAT,
-            main_color='#cc5452'
+            main_color='#cc5452',
         ),
         Theme(
             'flat-dark-grey',

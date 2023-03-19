@@ -9,23 +9,23 @@ from .. import qtutils
 from .. import utils
 
 
-def cmd_action(parent, cmd, context, fn, *keys):
+def cmd_action(parent, cmd, context, func, *keys):
     """Wrap a standard Command object in a QAction
 
-    This function assumes that :func:`fn()` takes no arguments,
+    This function assumes that :func:`func()` takes no arguments,
     that `cmd` has a :func:`name()` method, and that the `cmd`
-    constructor takes a single argument, as returned by `fn`.
+    constructor takes a single argument, as returned by `func`.
 
     """
     return qtutils.add_action(
-        parent, cmd.name(), lambda: cmds.do(cmd, context, fn()), *keys
+        parent, cmd.name(), lambda: cmds.do(cmd, context, func()), *keys
     )
 
 
-def default_app_action(context, parent, fn):
+def default_app_action(context, parent, func):
     """Open paths with the OS-default app -> QAction"""
     action = cmd_action(
-        parent, cmds.OpenDefaultApp, context, fn, hotkeys.PRIMARY_ACTION
+        parent, cmds.OpenDefaultApp, context, func, hotkeys.PRIMARY_ACTION
     )
     action.setIcon(icons.default_app())
     return action

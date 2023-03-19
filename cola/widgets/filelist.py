@@ -83,8 +83,8 @@ class FileWidget(TreeWidget):
         if not files_log:
             return
         files = []
-        for f in files_log:
-            item = FileTreeWidgetItem(f)
+        for filename in files_log:
+            item = FileTreeWidgetItem(filename)
             files.append(item)
         self.insertTopLevelItems(0, files)
 
@@ -103,8 +103,8 @@ class FileWidget(TreeWidget):
     def show(self):
         self.adjust_columns(QSize(), QSize())
 
-    def resizeEvent(self, e):
-        self.adjust_columns(e.size(), e.oldSize())
+    def resizeEvent(self, event):
+        self.adjust_columns(event.size(), event.oldSize())
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)

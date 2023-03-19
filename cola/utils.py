@@ -25,9 +25,9 @@ def asint(obj, default=0):
     return value
 
 
-def clamp(value, lo, hi):
+def clamp(value, low, high):
     """Clamp a value to the specified range"""
-    return min(hi, max(lo, value))
+    return min(high, max(low, value))
 
 
 def epoch_millis():
@@ -49,25 +49,26 @@ def add_parents(paths):
     return all_paths
 
 
-def format_exception(e):
+def format_exception(exc):
+    """Format an exception object for display"""
     exc_type, exc_value, exc_tb = sys.exc_info()
     details = traceback.format_exception(exc_type, exc_value, exc_tb)
     details = '\n'.join(map(core.decode, details))
-    if hasattr(e, 'msg'):
-        msg = e.msg
+    if hasattr(exc, 'msg'):
+        msg = exc.msg
     else:
-        msg = core.decode(repr(e))
+        msg = core.decode(repr(exc))
     return (msg, details)
 
 
-def sublist(a, b):
+def sublist(values, remove):
     """Subtracts list b from list a and returns the resulting list."""
     # conceptually, c = a - b
-    c = []
-    for item in a:
-        if item not in b:
-            c.append(item)
-    return c
+    result = []
+    for item in values:
+        if item not in remove:
+            result.append(item)
+    return result
 
 
 __grep_cache = {}
@@ -238,11 +239,11 @@ def strip_prefix(prefix, string):
     return string[len(prefix) :]
 
 
-def sanitize(s):
+def sanitize(value):
     """Removes shell metacharacters from a string."""
-    for c in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
-        s = s.replace(c, '_')
-    return s
+    for char in """ \t!@#$%^&*()\\;,<>"'[]{}~|""":
+        value = value.replace(char, '_')
+    return value
 
 
 def tablength(word, tabwidth):
@@ -255,41 +256,43 @@ def tablength(word, tabwidth):
     return len(word.replace('\t', '')) + word.count('\t') * tabwidth
 
 
-def _shell_split_py2(s):
+def _shell_split_py2(value):
     """Python2 requires bytes inputs to shlex.split().  Returns [unicode]"""
     try:
-        result = shlex.split(core.encode(s))
+        result = shlex.split(core.encode(value))
     except ValueError:
-        result = core.encode(s).strip().split()
+        result = core.encode(value).strip().split()
     # Decode to unicode strings
     return [core.decode(arg) for arg in result]
 
 
-def _shell_split_py3(s):
+def _shell_split_py3(value):
     """Python3 requires unicode inputs to shlex.split().  Converts to unicode"""
     try:
-        result = shlex.split(s)
+        result = shlex.split(value)
     except ValueError:
-        result = core.decode(s).strip().split()
+        result = core.decode(value).strip().split()
     # Already unicode
     return result
 
 
-def shell_split(s):
+def shell_split(value):
     if compat.PY2:
         # Encode before calling split()
-        values = _shell_split_py2(s)
+        values = _shell_split_py2(value)
     else:
         # Python3 does not need the encode/decode dance
-        values = _shell_split_py3(s)
+        values = _shell_split_py3(value)
     return values
 
 
 def tmp_filename(label, suffix=''):
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
-    fd = tempfile.NamedTemporaryFile(prefix=label + '-', suffix=suffix, delete=False)
-    fd.close()
-    return fd.name
+    handle = tempfile.NamedTemporaryFile(
+        prefix=label + '-', suffix=suffix, delete=False
+    )
+    handle.close()
+    return handle.name
 
 
 def is_linux():
@@ -366,8 +369,8 @@ class Proxy(object):
         return getattr(self._obj, name)
 
 
-def slice_fn(input_items, map_fn):
-    """Slice input_items and call map_fn over every slice
+def slice_func(input_items, map_func):
+    """Slice input_items and call `map_func` over every slice
 
     This exists because of "errno: Argument list too long"
 
@@ -405,7 +408,7 @@ def slice_fn(input_items, map_fn):
 
     items = copy.copy(input_items)
     while items:
-        stat, out, err = map_fn(items[:size])
+        stat, out, err = map_func(items[:size])
         if stat < 0:
             status = min(stat, status)
         else:
@@ -417,19 +420,19 @@ def slice_fn(input_items, map_fn):
     return (status, '\n'.join(outs), '\n'.join(errs))
 
 
-class seq(object):
+class Sequence(object):
     def __init__(self, sequence):
-        self.seq = sequence
+        self.sequence = sequence
 
     def index(self, item, default=-1):
         try:
-            idx = self.seq.index(item)
+            idx = self.sequence.index(item)
         except ValueError:
             idx = default
         return idx
 
     def __getitem__(self, idx):
-        return self.seq[idx]
+        return self.sequence[idx]
 
 
 def catch_runtime_error(func, *args, **kwargs):

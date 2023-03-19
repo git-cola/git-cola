@@ -18,10 +18,10 @@ def decorator(caller, func=None):
         # return a decorator
         # pylint: disable=unused-argument
         @functools.wraps(caller)
-        def _decorator(f, *dummy_args, **dummy_opts):
-            @functools.wraps(f)
+        def _decorator(func, *dummy_args, **dummy_opts):
+            @functools.wraps(func)
             def _caller(*args, **opts):
-                return caller(f, *args, **opts)
+                return caller(func, *args, **opts)
 
             return _caller
 

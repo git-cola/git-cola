@@ -379,22 +379,22 @@ class BookmarksTreeView(standard.TreeView):
             item.setText(item.name)
         self.toggle_switcher.emit(False)
 
-    def apply_fn(self, fn, *args, **kwargs):
+    def apply_func(self, func, *args, **kwargs):
         item = self.selected_item()
         if item:
-            fn(item, *args, **kwargs)
+            func(item, *args, **kwargs)
 
     def copy(self):
-        self.apply_fn(lambda item: qtutils.set_clipboard(item.path))
+        self.apply_func(lambda item: qtutils.set_clipboard(item.path))
         self.toggle_switcher.emit(False)
 
     def open_default(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
+        self.apply_func(lambda item: cmds.do(cmds.OpenDefaultApp, context, [item.path]))
         self.toggle_switcher.emit(False)
 
     def set_default_repo(self):
-        self.apply_fn(self.set_default_item)
+        self.apply_func(self.set_default_item)
         self.toggle_switcher.emit(False)
 
     def set_default_item(self, item):
@@ -405,7 +405,7 @@ class BookmarksTreeView(standard.TreeView):
         self.toggle_switcher.emit(False)
 
     def clear_default_repo(self):
-        self.apply_fn(self.clear_default_item)
+        self.apply_func(self.clear_default_item)
         self.default_changed.emit()
         self.toggle_switcher.emit(False)
 
@@ -421,7 +421,7 @@ class BookmarksTreeView(standard.TreeView):
         self.toggle_switcher.emit(False)
 
     def accept_repo(self):
-        self.apply_fn(self.accept_item)
+        self.apply_func(self.accept_item)
         self.toggle_switcher.emit(False)
 
     def accept_item(self, _item):
@@ -437,7 +437,7 @@ class BookmarksTreeView(standard.TreeView):
 
     def open_repo(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.OpenRepo, context, item.path))
+        self.apply_func(lambda item: cmds.do(cmds.OpenRepo, context, item.path))
 
     def open_selected_repo(self):
         item = self.selected_item()
@@ -447,17 +447,17 @@ class BookmarksTreeView(standard.TreeView):
 
     def open_new_repo(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
+        self.apply_func(lambda item: cmds.do(cmds.OpenNewRepo, context, item.path))
         self.toggle_switcher.emit(False)
 
     def launch_editor(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.Edit, context, [item.path]))
+        self.apply_func(lambda item: cmds.do(cmds.Edit, context, [item.path]))
         self.toggle_switcher.emit(False)
 
     def launch_terminal(self):
         context = self.context
-        self.apply_fn(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
+        self.apply_func(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
         self.toggle_switcher.emit(False)
 
     def add_bookmark(self):

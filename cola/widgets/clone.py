@@ -28,9 +28,9 @@ def clone(context, spawn=True, show=True):
 
 def clone_repo(context, show, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
-    fn = partial(start_clone_task, context, progress, finish, spawn)
+    func = partial(start_clone_task, context, progress, finish, spawn)
     prompt = prompt_for_clone(context, show=show)
-    prompt.result.connect(fn)
+    prompt.result.connect(func)
     return prompt
 
 

@@ -177,8 +177,8 @@ class BaseTextEditExtension(QtCore.QObject):
     def set_tabwidth(self, width):
         self._tabwidth = width
         font = self.widget.font()
-        fm = QtGui.QFontMetrics(font)
-        pixels = fm.width('M' * width)
+        metrics = QtGui.QFontMetrics(font)
+        pixels = metrics.width('M' * width)
         self.widget.setTabStopWidth(pixels)
 
     def selected_line(self):
@@ -378,6 +378,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
 class TextSearchWidget(QtWidgets.QWidget):
     """The search dialog that displays over a text edit field"""
+
     search_text = Signal(object, bool)
 
     def __init__(self, parent):

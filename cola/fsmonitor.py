@@ -454,10 +454,10 @@ if AVAILABLE == 'pywin32':
                         timeout = self._NOTIFICATION_DELAY
                     else:
                         timeout = win32event.INFINITE
-                    rc = win32event.WaitForMultipleObjects(events, False, timeout)
+                    status = win32event.WaitForMultipleObjects(events, False, timeout)
                     if not self._running:
                         break
-                    if rc == win32event.WAIT_TIMEOUT:
+                    if status == win32event.WAIT_TIMEOUT:
                         self.notify()
                     else:
                         self._handle_results()

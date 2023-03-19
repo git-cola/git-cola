@@ -196,7 +196,7 @@ class RemoteEditor(standard.Dialog):
             self.current_name = name
 
             self.refresh(select=False)
-            remotes = utils.seq(self.remote_list)
+            remotes = utils.Sequence(self.remote_list)
             idx = remotes.index(name)
             self.select_remote(idx)
             gather = False  # already done by select_remote()
@@ -253,7 +253,7 @@ class RemoteEditor(standard.Dialog):
                 self.select_remote(0)
             elif self.current_name and remotes:
                 # Reselect the previously selected item
-                remote_seq = utils.seq(remotes)
+                remote_seq = utils.Sequence(remotes)
                 idx = remote_seq.index(self.current_name)
                 if idx >= 0:
                     item = self.remotes.item(idx)

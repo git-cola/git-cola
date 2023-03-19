@@ -63,21 +63,27 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
         dark = palette.color(QPalette.Base).lightnessF() < 0.5
 
-        self.color_text = qtutils.RGB(cfg.color('text', '030303'))
-        self.color_add = qtutils.RGB(cfg.color('add', '77aa77' if dark else 'd2ffe4'))
-        self.color_remove = qtutils.RGB(
+        self.color_text = qtutils.rgb_triple(cfg.color('text', '030303'))
+        self.color_add = qtutils.rgb_triple(
+            cfg.color('add', '77aa77' if dark else 'd2ffe4')
+        )
+        self.color_remove = qtutils.rgb_triple(
             cfg.color('remove', 'aa7777' if dark else 'fee0e4')
         )
-        self.color_header = qtutils.RGB(cfg.color('header', header))
+        self.color_header = qtutils.rgb_triple(cfg.color('header', header))
 
-        self.diff_header_fmt = qtutils.make_format(fg=self.color_header)
-        self.bold_diff_header_fmt = qtutils.make_format(fg=self.color_header, bold=True)
-
-        self.diff_add_fmt = qtutils.make_format(fg=self.color_text, bg=self.color_add)
-        self.diff_remove_fmt = qtutils.make_format(
-            fg=self.color_text, bg=self.color_remove
+        self.diff_header_fmt = qtutils.make_format(foreground=self.color_header)
+        self.bold_diff_header_fmt = qtutils.make_format(
+            foreground=self.color_header, bold=True
         )
-        self.bad_whitespace_fmt = qtutils.make_format(bg=Qt.red)
+
+        self.diff_add_fmt = qtutils.make_format(
+            foreground=self.color_text, background=self.color_add
+        )
+        self.diff_remove_fmt = qtutils.make_format(
+            foreground=self.color_text, background=self.color_remove
+        )
+        self.bad_whitespace_fmt = qtutils.make_format(background=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
 
     def set_enabled(self, enabled):
@@ -460,6 +466,7 @@ class DiffLineNumbers(TextDecorator):
 
 class Viewer(QtWidgets.QFrame):
     """Text and image diff viewers"""
+
     INDEX_TEXT = 0
     INDEX_IMAGE = 1
 

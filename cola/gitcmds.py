@@ -18,7 +18,7 @@ from .interaction import Interaction
 def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
-    return utils.slice_fn(
+    return utils.slice_func(
         items, lambda paths: git_add('--', force=True, verbose=True, u=u, *paths)
     )
 
@@ -584,8 +584,8 @@ def export_patchset(context, start, end, output='patches', **kwargs):
 def reset_paths(context, head, items):
     """Run "git reset" while preventing argument overflow"""
     items = list(set(items))
-    fn = context.git.reset
-    status, out, err = utils.slice_fn(items, lambda paths: fn(head, '--', *paths))
+    func = context.git.reset
+    status, out, err = utils.slice_func(items, lambda paths: func(head, '--', *paths))
     return (status, out, err)
 
 

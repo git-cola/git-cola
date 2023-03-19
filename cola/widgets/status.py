@@ -238,16 +238,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Checkout the selected paths using "git checkout --ours".
         self.checkout_ours_action = qtutils.add_action(
-            self,
-            cmds.CheckoutOurs.name(),
-            cmds.run(cmds.CheckoutOurs, context)
+            self, cmds.CheckoutOurs.name(), cmds.run(cmds.CheckoutOurs, context)
         )
 
         # Checkout the selected paths using "git checkout --theirs".
         self.checkout_theirs_action = qtutils.add_action(
-            self,
-            cmds.CheckoutTheirs.name(),
-            cmds.run(cmds.CheckoutTheirs, context)
+            self, cmds.CheckoutTheirs.name(), cmds.run(cmds.CheckoutTheirs, context)
         )
 
         self.copy_path_action = qtutils.add_action(
@@ -1329,6 +1325,7 @@ def show_help(context):
 
 class StatusFilterWidget(QtWidgets.QWidget):
     """Filter paths displayed by the Status tool"""
+
     def __init__(self, context, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context

@@ -95,12 +95,12 @@ def check_git(context, key):
 def version_to_list(value):
     """Convert a version string to a list of numbers or strings"""
     ver_list = []
-    for p in value.split('.'):
+    for part in value.split('.'):
         try:
-            n = int(p)
+            number = int(part)
         except ValueError:
-            n = p
-        ver_list.append(n)
+            number = part
+        ver_list.append(number)
     return ver_list
 
 

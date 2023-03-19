@@ -69,19 +69,19 @@ rm_watch.errcheck = _errcheck
 
 def read_events(inotify_fd, count=64):
     buf = ctypes.create_string_buffer(MAX_EVENT_SIZE * count)
-    n = _read(inotify_fd, buf, ctypes.sizeof(buf))
+    num = _read(inotify_fd, buf, ctypes.sizeof(buf))
 
     addr = ctypes.addressof(buf)
-    while n:
-        assert n >= ctypes.sizeof(inotify_event)
+    while num:
+        assert num >= ctypes.sizeof(inotify_event)
         event = inotify_event.from_address(addr)
         addr += ctypes.sizeof(inotify_event)
-        n -= ctypes.sizeof(inotify_event)
+        num -= ctypes.sizeof(inotify_event)
         if event.len:
-            assert n >= event.len
+            assert num >= event.len
             name = ctypes.string_at(addr)
             addr += event.len
-            n -= event.len
+            num -= event.len
         else:
             name = None
         yield event.wd, event.mask, event.cookie, name

@@ -250,7 +250,7 @@ def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
         r')'
     )
 
-    w = TextWrapper(
+    wrapper = TextWrapper(
         width=limit,
         tabwidth=tabwidth,
         break_on_hyphens=break_on_hyphens,
@@ -261,7 +261,7 @@ def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
         if special_tag_rgx.match(line):
             lines.append(line)
         else:
-            lines.append(w.fill(line))
+            lines.append(wrapper.fill(line))
 
     return '\n'.join(lines)
 

@@ -492,14 +492,14 @@ class CommitMessageEditor(QtWidgets.QFrame):
         commits = dag.RepoReader(context, params)
 
         menu_commits = []
-        for idx, c in enumerate(commits.get()):
-            menu_commits.insert(0, c)
+        for idx, commit in enumerate(commits.get()):
+            menu_commits.insert(0, commit)
             if idx > 5:
                 continue
 
         menu.clear()
-        for c in menu_commits:
-            menu.addAction(prefix + c.summary, cmds.run(cmd, context, c.oid))
+        for commit in menu_commits:
+            menu.addAction(prefix + commit.summary, cmds.run(cmd, context, commit.oid))
 
         if len(commits) == 6:
             menu.addSeparator()
@@ -662,5 +662,5 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
 
     def setFont(self, font):
         SpellCheckTextEdit.setFont(self, font)
-        fm = self.fontMetrics()
-        self.setMinimumSize(QtCore.QSize(fm.width('MMMM'), fm.height() * 2))
+        metrics = self.fontMetrics()
+        self.setMinimumSize(QtCore.QSize(metrics.width('MMMM'), metrics.height() * 2))

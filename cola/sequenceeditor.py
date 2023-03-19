@@ -292,8 +292,8 @@ class Editor(QtWidgets.QWidget):
         try:
             core.write(self.filename, string)
             status = 0
-        except (OSError, IOError, ValueError) as e:
-            msg, details = utils.format_exception(e)
+        except (OSError, IOError, ValueError) as exc:
+            msg, details = utils.format_exception(exc)
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
         return status
@@ -451,8 +451,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         params = dag.DAG(oid, 2)
         repo = dag.RepoReader(context, params)
         commits = []
-        for c in repo.get():
-            commits.append(c)
+        for commit in repo.get():
+            commits.append(commit)
         if commits:
             commits = commits[-1:]
         self.commits_selected.emit(commits)

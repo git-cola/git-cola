@@ -473,12 +473,12 @@ class CompletionModel(QtGui.QStandardItemModel):
         self.update_thread.dispose()
 
 
-def _identity(x):
-    return x
+def _identity(value):
+    return value
 
 
-def _lower(x):
-    return x.lower()
+def _lower(value):
+    return value.lower()
 
 
 def filter_matches(match_text, candidates, case_sensitive, sort_key=None):
@@ -808,9 +808,9 @@ class GitDialog(QtWidgets.QDialog):
         dlg.show()
 
         def show_popup():
-            x = dlg.lineedit.x()
-            y = dlg.lineedit.y() + dlg.lineedit.height()
-            point = QtCore.QPoint(x, y)
+            x_val = dlg.lineedit.x()
+            y_val = dlg.lineedit.y() + dlg.lineedit.height()
+            point = QtCore.QPoint(x_val, y_val)
             mapped = dlg.mapToGlobal(point)
             dlg.lineedit.popup().move(mapped.x(), mapped.y())
             dlg.lineedit.popup().show()

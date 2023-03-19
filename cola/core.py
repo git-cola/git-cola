@@ -357,24 +357,24 @@ def _decorator_noop(x):
     return x
 
 
-def wrap(action, fn, decorator=None):
+def wrap(action, func, decorator=None):
     """Wrap arguments with `action`, optionally decorate the result"""
     if decorator is None:
         decorator = _decorator_noop
 
-    @functools.wraps(fn)
+    @functools.wraps(func)
     def wrapped(*args, **kwargs):
-        return decorator(fn(action(*args, **kwargs)))
+        return decorator(func(action(*args, **kwargs)))
 
     return wrapped
 
 
-def decorate(decorator, fn):
-    """Decorate the result of `fn` with `action`"""
+def decorate(decorator, func):
+    """Decorate the result of `func` with `action`"""
 
-    @functools.wraps(fn)
+    @functools.wraps(func)
     def decorated(*args, **kwargs):
-        return decorator(fn(*args, **kwargs))
+        return decorator(func(*args, **kwargs))
 
     return decorated
 
@@ -475,11 +475,11 @@ def _find_executable(executable, path=None):
         executable = executable + '.exe'
 
     if not os.path.isfile(executable):
-        for p in paths:
-            f = os.path.join(p, executable)
-            if os.path.isfile(f):
+        for dirname in paths:
+            filename = os.path.join(dirname, executable)
+            if os.path.isfile(filename):
                 # the file exists, we have a shot at spawn working
-                return f
+                return filename
         return None
 
     return executable

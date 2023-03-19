@@ -101,7 +101,7 @@ class MainView(standard.MainWindow):
             'Status',
             N_('Status'),
             self,
-            fn=lambda dock: status.StatusWidget(context, dock.titleBarWidget(), dock),
+            func=lambda dock: status.StatusWidget(context, dock.titleBarWidget(), dock),
         )
         self.statuswidget = self.statusdock.widget()
 
@@ -110,7 +110,7 @@ class MainView(standard.MainWindow):
             'Favorites',
             N_('Favorites'),
             self,
-            fn=lambda dock: bookmarks.bookmark(context, dock),
+            func=lambda dock: bookmarks.bookmark(context, dock),
         )
         bookmarkswidget = self.bookmarksdock.widget()
         qtutils.hide_dock(self.bookmarksdock)
@@ -119,7 +119,7 @@ class MainView(standard.MainWindow):
             'Recent',
             N_('Recent'),
             self,
-            fn=lambda dock: bookmarks.recent(context, dock),
+            func=lambda dock: bookmarks.recent(context, dock),
         )
         recentwidget = self.recentdock.widget()
         qtutils.hide_dock(self.recentdock)
@@ -127,7 +127,10 @@ class MainView(standard.MainWindow):
 
         # "Branch" widgets
         self.branchdock = create_dock(
-            'Branches', N_('Branches'), self, fn=partial(branch.BranchesWidget, context)
+            'Branches',
+            N_('Branches'),
+            self,
+            func=partial(branch.BranchesWidget, context),
         )
         self.branchwidget = self.branchdock.widget()
         titlebar = self.branchdock.titleBarWidget()
@@ -139,7 +142,7 @@ class MainView(standard.MainWindow):
             'Submodules',
             N_('Submodules'),
             self,
-            fn=partial(submodules.SubmodulesWidget, context),
+            func=partial(submodules.SubmodulesWidget, context),
         )
         self.submoduleswidget = self.submodulesdock.widget()
 
@@ -151,8 +154,8 @@ class MainView(standard.MainWindow):
         self.position_label.setFont(font)
 
         # make the position label fixed size to avoid layout issues
-        fm = self.position_label.fontMetrics()
-        width = fm.width('99:999') + defs.spacing
+        metrics = self.position_label.fontMetrics()
+        width = metrics.width('99:999') + defs.spacing
         self.position_label.setMinimumWidth(width)
 
         editor = commitmsg.CommitMessageEditor(context, self)
@@ -170,7 +173,10 @@ class MainView(standard.MainWindow):
 
         # "Diff Viewer" widget
         self.diffdock = create_dock(
-            'Diff', N_('Diff'), self, fn=lambda dock: diff.Viewer(context, parent=dock)
+            'Diff',
+            N_('Diff'),
+            self,
+            func=lambda dock: diff.Viewer(context, parent=dock),
         )
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
@@ -280,11 +286,11 @@ class MainView(standard.MainWindow):
         )
         self.new_bare_repository_action.setIcon(icons.new())
 
-        prefs_fn = partial(
+        prefs_func = partial(
             prefs_widget.preferences, context, parent=self, model=prefs_model
         )
         self.preferences_action = add_action(
-            self, N_('Preferences'), prefs_fn, QtGui.QKeySequence.Preferences
+            self, N_('Preferences'), prefs_func, QtGui.QKeySequence.Preferences
         )
         self.preferences_action.setIcon(icons.configure())
 
@@ -1356,9 +1362,9 @@ class FocusProxy(object):
 
         def callback():
             focus = self.focus(name)
-            fn = getattr(focus, name, None)
-            if fn:
-                fn()
+            func = getattr(focus, name, None)
+            if func:
+                func()
 
         return callback
 

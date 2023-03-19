@@ -37,18 +37,18 @@ def _cache_key_from_paths(paths):
     return None
 
 
-def _config_to_python(v):
+def _config_to_python(value):
     """Convert a Git config string into a Python value"""
-    if v in ('true', 'yes'):
-        v = True
-    elif v in ('false', 'no'):
-        v = False
+    if value in ('true', 'yes'):
+        value = True
+    elif value in ('false', 'no'):
+        value = False
     else:
         try:
-            v = int(v)
+            value = int(value)
         except ValueError:
             pass
-    return v
+    return value
 
 
 def unhex(value):
@@ -193,14 +193,14 @@ class GitConfig(QtCore.QObject):
         # Send a notification that the configuration has been updated.
         self.updated.emit()
 
-    def _get(self, src, key, default, fn=None, cached=True):
+    def _get(self, src, key, default, func=None, cached=True):
         if not cached or not src:
             self.update()
         try:
             value = self._get_value(src, key)
         except KeyError:
-            if fn:
-                value = fn()
+            if func:
+                value = func()
             else:
                 value = default
         return value
@@ -220,9 +220,9 @@ class GitConfig(QtCore.QObject):
         # Allow the final KeyError to bubble up
         return src[key.lower()]
 
-    def get(self, key, default=None, fn=None, cached=True):
+    def get(self, key, default=None, func=None, cached=True):
         """Return the string value for a config key."""
-        return self._get(self._all, key, default, fn=fn, cached=cached)
+        return self._get(self._all, key, default, func=func, cached=cached)
 
     def get_all(self, key):
         """Return all values for a key sorted in priority order
@@ -311,7 +311,7 @@ class GitConfig(QtCore.QObject):
 
     def is_per_file_attrs_enabled(self):
         return self.get(
-            'cola.fileattributes', fn=lambda: os.path.exists('.gitattributes')
+            'cola.fileattributes', func=lambda: os.path.exists('.gitattributes')
         )
 
     def is_binary(self, path):
@@ -423,11 +423,11 @@ class GitConfig(QtCore.QObject):
         struct_layout = core.encode('BBB')
         try:
             # pylint: disable=no-member
-            r, g, b = struct.unpack(struct_layout, unhex(value))
+            red, green, blue = struct.unpack(struct_layout, unhex(value))
         except (struct.error, TypeError):
             # pylint: disable=no-member
-            r, g, b = struct.unpack(struct_layout, unhex(default))
-        return (r, g, b)
+            red, green, blue = struct.unpack(struct_layout, unhex(default))
+        return (red, green, blue)
 
     def hooks(self):
         """Return the path to the git hooks directory"""

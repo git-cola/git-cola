@@ -89,10 +89,10 @@ msg-template={path}:{line}:{column}: {msg} ({symbol})
 [BASIC]
 
 # Good variable names which should always be accepted, separated by a comma
-good-names=i,j,k,ex,Run,_
+good-names=f,i,j,k,ok,v,_
 
 # Bad variable names which should always be refused, separated by a comma
-bad-names=foo,bar,baz,toto,tutu,tata
+bad-names=
 
 # Colon-delimited sets of names that determine each other's naming style when
 # the name regexes allow several styles.

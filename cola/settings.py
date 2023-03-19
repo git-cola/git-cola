@@ -32,8 +32,8 @@ def mklist(obj):
 
 def read_json(path):
     try:
-        with core.open_read(path) as fp:
-            return mkdict(json.load(fp))
+        with core.open_read(path) as f:
+            return mkdict(json.load(f))
     except (ValueError, TypeError, OSError, IOError):  # bad path or json
         return {}
 

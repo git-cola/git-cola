@@ -217,17 +217,17 @@ def test_find_git_directory_uses_GIT_WORK_TREE(is_git_dir, getenv):
     git_dir = '/repo/worktree/.git'
     worktree = '/repo/worktree'
 
-    def is_git_dir_fn(path):
+    def is_git_dir_func(path):
         return path == git_dir
 
-    is_git_dir.side_effect = is_git_dir_fn
+    is_git_dir.side_effect = is_git_dir_func
 
-    def getenv_fn(name):
+    def getenv_func(name):
         if name == 'GIT_WORK_TREE':
             return worktree
         return None
 
-    getenv.side_effect = getenv_fn
+    getenv.side_effect = getenv_func
 
     paths = git.find_git_directory(worktree)
     assert is_git_dir.called
@@ -242,17 +242,17 @@ def test_uses_cwd_for_worktree_with_GIT_DIR(is_git_dir, getenv):
     git_dir = '/repo/.yadm/repo.git'
     worktree = '/repo'
 
-    def getenv_fn(name):
+    def getenv_func(name):
         if name == 'GIT_DIR':
             return git_dir
         return None
 
-    getenv.side_effect = getenv_fn
+    getenv.side_effect = getenv_func
 
-    def is_git_dir_fn(path):
+    def is_git_dir_func(path):
         return path == git_dir
 
-    is_git_dir.side_effect = is_git_dir_fn
+    is_git_dir.side_effect = is_git_dir_func
 
     paths = git.find_git_directory(worktree)
     assert is_git_dir.called

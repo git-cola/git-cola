@@ -34,33 +34,33 @@ def current_palette():
     return QtWidgets.QApplication.instance().palette()
 
 
-def connect_action(action, fn):
+def connect_action(action, func):
     """Connect an action to a function"""
-    action.triggered[bool].connect(lambda x: fn(), type=Qt.QueuedConnection)
+    action.triggered[bool].connect(lambda x: func(), type=Qt.QueuedConnection)
 
 
-def connect_action_bool(action, fn):
+def connect_action_bool(action, func):
     """Connect a triggered(bool) action to a function"""
-    action.triggered[bool].connect(fn, type=Qt.QueuedConnection)
+    action.triggered[bool].connect(func, type=Qt.QueuedConnection)
 
 
-def connect_button(button, fn):
+def connect_button(button, func):
     """Connect a button to a function"""
     # Some versions of Qt send the `bool` argument to the clicked callback,
     # and some do not.  The lambda consumes all callback-provided arguments.
-    button.clicked.connect(lambda *args, **kwargs: fn(), type=Qt.QueuedConnection)
+    button.clicked.connect(lambda *args, **kwargs: func(), type=Qt.QueuedConnection)
 
 
-def connect_checkbox(widget, fn):
+def connect_checkbox(widget, func):
     """Connect a checkbox to a function taking bool"""
     widget.clicked.connect(
-        lambda *args, **kwargs: fn(get(checkbox)), type=Qt.QueuedConnection
+        lambda *args, **kwargs: func(get(checkbox)), type=Qt.QueuedConnection
     )
 
 
-def connect_released(button, fn):
+def connect_released(button, func):
     """Connect a button to a function"""
-    button.released.connect(fn, type=Qt.QueuedConnection)
+    button.released.connect(func, type=Qt.QueuedConnection)
 
 
 def button_action(button, action):
@@ -68,9 +68,9 @@ def button_action(button, action):
     connect_button(button, action.trigger)
 
 
-def connect_toggle(toggle, fn):
+def connect_toggle(toggle, func):
     """Connect a toggle button to a function"""
-    toggle.toggled.connect(fn, type=Qt.QueuedConnection)
+    toggle.toggled.connect(func, type=Qt.QueuedConnection)
 
 
 def disconnect(signal):
@@ -345,8 +345,8 @@ def prompt_n(msg, inputs):
 
     accepted = dialog.exec_() == QtWidgets.QDialog.Accepted
     text = get_values()
-    ok = accepted and all(text)
-    return (ok, text)
+    success = accepted and all(text)
+    return (success, text)
 
 
 def standard_item_type_value(value):
@@ -393,7 +393,7 @@ def paths_from_indexes(model, indexes, item_type=TreeWidgetItem.TYPE, item_filte
     return paths_from_items(items, item_type=item_type, item_filter=item_filter)
 
 
-def _true_filter(_x):
+def _true_filter(_value):
     return True
 
 
@@ -528,9 +528,9 @@ def persist_clipboard():
     QtWidgets.QApplication.sendEvent(clipboard, event)
 
 
-def add_action_bool(widget, text, fn, checked, *shortcuts):
+def add_action_bool(widget, text, func, checked, *shortcuts):
     tip = text
-    action = _add_action(widget, text, tip, fn, connect_action_bool, *shortcuts)
+    action = _add_action(widget, text, tip, func, connect_action_bool, *shortcuts)
     action.setCheckable(True)
     action.setChecked(checked)
     return action
@@ -561,13 +561,13 @@ def menu_separator(widget):
     return action
 
 
-def _add_action(widget, text, tip, fn, connect, *shortcuts):
+def _add_action(widget, text, tip, func, connect, *shortcuts):
     action = QtWidgets.QAction(text, widget)
     if hasattr(action, 'setIconVisibleInMenu'):
         action.setIconVisibleInMenu(True)
     if tip:
         action.setStatusTip(tip)
-    connect(action, fn)
+    connect(action, func)
     if shortcuts:
         action.setShortcuts(shortcuts)
         if hasattr(Qt, 'WidgetWithChildrenShortcut'):
@@ -634,9 +634,9 @@ def desktop_size():
 def center_on_screen(widget):
     """Move widget to the center of the default screen"""
     width, height = desktop_size()
-    cx = width // 2
-    cy = height // 2
-    widget.move(cx - widget.width() // 2, cy - widget.height() // 2)
+    center_x = width // 2
+    center_y = height // 2
+    widget.move(center_x - widget.width() // 2, center_y - widget.height() // 2)
 
 
 def default_size(parent, width, height, use_parent_height=True):
@@ -848,7 +848,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         self.toggle_button.setToolTip(tooltip)
 
 
-def create_dock(name, title, parent, stretch=True, widget=None, fn=None):
+def create_dock(name, title, parent, stretch=True, widget=None, func=None):
     """Create a dock widget and set it up accordingly."""
     dock = QtWidgets.QDockWidget(parent)
     dock.setWindowTitle(title)
@@ -858,9 +858,8 @@ def create_dock(name, title, parent, stretch=True, widget=None, fn=None):
     dock.setAutoFillBackground(True)
     if hasattr(parent, 'dockwidgets'):
         parent.dockwidgets.append(dock)
-    if fn:
-        widget = fn(dock)
-        assert isinstance(widget, QtWidgets.QFrame), "Docked widget has to be a QFrame"
+    if func:
+        widget = func(dock)
     if widget:
         dock.setWidget(widget)
     return dock
@@ -1006,6 +1005,7 @@ class Channel(QtCore.QObject):
 
 class Task(QtCore.QRunnable):
     """Run a task in the background and return the result using a Channel"""
+
     def __init__(self):
         QtCore.QRunnable.__init__(self)
 
@@ -1031,15 +1031,15 @@ class Task(QtCore.QRunnable):
 class SimpleTask(Task):
     """Run a simple callable as a task"""
 
-    def __init__(self, fn, *args, **kwargs):
+    def __init__(self, func, *args, **kwargs):
         Task.__init__(self)
 
-        self.fn = fn
+        self.func = func
         self.args = args
         self.kwargs = kwargs
 
     def task(self):
-        return self.fn(*self.args, **self.kwargs)
+        return self.func(*self.args, **self.kwargs)
 
 
 class RunTask(QtCore.QObject):
@@ -1050,11 +1050,11 @@ class RunTask(QtCore.QObject):
         self.tasks = []
         self.task_details = {}
         self.threadpool = QtCore.QThreadPool.globalInstance()
-        self.result_fn = None
+        self.result_func = None
 
     def start(self, task, progress=None, finish=None, result=None):
         """Start the task and register a callback"""
-        self.result_fn = result
+        self.result_func = result
         if progress is not None:
             progress.show()
             if hasattr(progress, 'start'):
@@ -1094,22 +1094,23 @@ class RunTask(QtCore.QObject):
 
 # Syntax highlighting
 
-def rgb(r, g, b):
+
+def rgb(red, green, blue):
     """Create a QColor from r, g, b arguments"""
     color = QtGui.QColor()
-    color.setRgb(r, g, b)
+    color.setRgb(red, green, blue)
     return color
 
 
-def rgba(r, g, b, a=255):
+def rgba(red, green, blue, alpha=255):
     """Create a QColor with alpha from r, g, b, a arguments"""
-    color = rgb(r, g, b)
-    color.setAlpha(a)
+    color = rgb(red, green, blue)
+    color.setAlpha(alpha)
     return color
 
 
-def RGB(args):
-    """Create a QColor from a list of [r, g, b] arguments"""
+def rgb_triple(args):
+    """Create a QColor from an argument with an [r, g, b] triple"""
     return rgb(*args)
 
 
@@ -1133,37 +1134,41 @@ def css_color(value):
     if value.startswith('#'):
         value = value[1:]
     try:
-        r = clamp_color(int(value[:2], base=16))  # ab
+        red = clamp_color(int(value[:2], base=16))  # ab
     except ValueError:
-        r = 255
+        red = 255
     try:
-        g = clamp_color(int(value[2:4], base=16))  # cd
+        green = clamp_color(int(value[2:4], base=16))  # cd
     except ValueError:
-        g = 255
+        green = 255
     try:
-        b = clamp_color(int(value[4:6], base=16))  # ef
+        blue = clamp_color(int(value[4:6], base=16))  # ef
     except ValueError:
-        b = 255
-    return rgb(r, g, b)
+        blue = 255
+    return rgb(red, green, blue)
 
 
-def hsl(h, s, light):
+def hsl(hue, saturation, lightness):
+    """Return a QColor from an hue, saturation and lightness"""
     return QtGui.QColor.fromHslF(
-        utils.clamp(h, 0.0, 1.0), utils.clamp(s, 0.0, 1.0), utils.clamp(light, 0.0, 1.0)
+        utils.clamp(hue, 0.0, 1.0),
+        utils.clamp(saturation, 0.0, 1.0),
+        utils.clamp(lightness, 0.0, 1.0),
     )
 
 
-def hsl_css(h, s, light):
+def hsl_css(hue, saturation, lightness):
     """Convert HSL values to a CSS #abcdef color string"""
-    return rgb_css(hsl(h, s, light))
+    return rgb_css(hsl(hue, saturation, lightness))
 
 
-def make_format(fg=None, bg=None, bold=False):
+def make_format(foreground=None, background=None, bold=False):
+    """Create a QTextFormat from the provided foreground, background and bold values"""
     fmt = QtGui.QTextCharFormat()
-    if fg:
-        fmt.setForeground(fg)
-    if bg:
-        fmt.setBackground(bg)
+    if foreground:
+        fmt.setForeground(foreground)
+    if background:
+        fmt.setBackground(background)
     if bold:
         fmt.setFontWeight(QtGui.QFont.Bold)
     return fmt

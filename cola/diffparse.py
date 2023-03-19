@@ -97,10 +97,10 @@ class DiffLines(object):
 
     def parse(self, diff_text):
         lines = []
-        DIFF_STATE = 1
-        state = INITIAL_STATE = 0
+        diff_state = 1
+        state = initial_state = 0
         merge = self.merge = False
-        NO_NEWLINE = r'\ No newline at end of file'
+        no_newline = r'\ No newline at end of file'
 
         old = self.old.reset()
         new = self.new.reset()
@@ -111,7 +111,7 @@ class DiffLines(object):
             if text.startswith('@@ -'):
                 parts = text.split(' ', 4)
                 if parts[0] == '@@' and parts[3] == '@@':
-                    state = DIFF_STATE
+                    state = diff_state
                     old.parse(parts[1][1:])
                     new.parse(parts[2][1:])
                     lines.append((self.DASH, self.DASH))
@@ -120,13 +120,13 @@ class DiffLines(object):
                 self.merge = merge = True
                 parts = text.split(' ', 5)
                 if parts[0] == '@@@' and parts[4] == '@@@':
-                    state = DIFF_STATE
+                    state = diff_state
                     ours.parse(parts[1][1:])
                     theirs.parse(parts[2][1:])
                     new.parse(parts[3][1:])
                     lines.append((self.DASH, self.DASH, self.DASH))
                     continue
-            if state == INITIAL_STATE or text.rstrip() == NO_NEWLINE:
+            if state == initial_state or text.rstrip() == no_newline:
                 if merge:
                     lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
                 else:
@@ -157,7 +157,7 @@ class DiffLines(object):
                 ours.tick()
                 theirs.tick()
             else:
-                state = INITIAL_STATE
+                state = initial_state
                 if merge:
                     lines.append((self.EMPTY, self.EMPTY, self.EMPTY))
                 else:

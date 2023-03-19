@@ -123,8 +123,8 @@ class GitCommandWidget(standard.Dialog):
         text = self.read_stream(self.proc.readAllStandardError)
         self.err += text
 
-    def read_stream(self, fn):
-        data = fn().data()
+    def read_stream(self, func):
+        data = func().data()
         text = core.decode(data)
         self.append_text(text)
         return text

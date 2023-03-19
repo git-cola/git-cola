@@ -21,8 +21,8 @@ ENCODING = 'utf-8'
 
 if PY3:
 
-    def bstr(x, encoding=ENCODING):
-        return bytes(x, encoding=encoding)
+    def bstr(value, encoding=ENCODING):
+        return bytes(value, encoding=encoding)
 
 elif PY26_PLUS:
     bstr = bytes

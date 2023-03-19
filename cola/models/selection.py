@@ -13,33 +13,37 @@ def create():
     return SelectionModel()
 
 
-def pick(s):
+def pick(selection):
     """Choose the first list from stage, unmerged, modified, untracked"""
-    if s.staged:
-        files = s.staged
-    elif s.unmerged:
-        files = s.unmerged
-    elif s.modified:
-        files = s.modified
-    elif s.untracked:
-        files = s.untracked
+    if selection.staged:
+        files = selection.staged
+    elif selection.unmerged:
+        files = selection.unmerged
+    elif selection.modified:
+        files = selection.modified
+    elif selection.untracked:
+        files = selection.untracked
     else:
         files = []
     return files
 
 
-def union(s):
+def union(selection):
     """Return the union of all selected items in a sorted list"""
-    return list(sorted(set(s.staged + s.unmerged + s.modified + s.untracked)))
+    values = set(
+        selection.staged + selection.unmerged + selection.modified + selection.untracked
+    )
+    return list(sorted(values))
 
 
-def _filter(a, b):
-    b_set = set(b)
-    a_copy = list(a)
-    last = len(a_copy) - 1
-    for idx, i in enumerate(reversed(a)):
-        if i not in b_set:
-            a.pop(last - idx)
+def _filter(values, remove):
+    """Filter a list in-place by removing items"""
+    remove_set = set(remove)
+    values_copy = list(values)
+    last = len(values_copy) - 1
+    for idx, value in enumerate(reversed(values)):
+        if value not in remove_set:
+            values.pop(last - idx)
 
 
 class SelectionModel(QtCore.QObject):
@@ -91,22 +95,22 @@ class SelectionModel(QtCore.QObject):
 
     def single_selection(self):
         """Scan across staged, modified, etc. and return a single item."""
-        st = None
-        m = None
-        um = None
-        ut = None
+        staged = None
+        modified = None
+        unmerged = None
+        untracked = None
         if self.staged:
-            st = self.staged[0]
+            staged = self.staged[0]
         elif self.modified:
-            m = self.modified[0]
+            modified = self.modified[0]
         elif self.unmerged:
-            um = self.unmerged[0]
+            unmerged = self.unmerged[0]
         elif self.untracked:
-            ut = self.untracked[0]
-        return State(st, um, m, ut)
+            untracked = self.untracked[0]
+        return State(staged, unmerged, modified, untracked)
 
     def filename(self):
-        paths = [p for p in self.single_selection() if p is not None]
+        paths = [path for path in self.single_selection() if path is not None]
         if paths:
             filename = paths[0]
         else:
