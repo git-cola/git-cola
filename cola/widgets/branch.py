@@ -540,14 +540,6 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
-    # TODO: review standard.py 317.
-    # original function returns 'QTreeWidgetItem' object which has no
-    # attribute 'rowCount'. This workaround fix error throw when
-    # navigating with keyboard and press left key
-    @staticmethod
-    def rowCount():
-        return 1
-
 
 class TreeEntry(object):
     """Tree representation for the branches widget

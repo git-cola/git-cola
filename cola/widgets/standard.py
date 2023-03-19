@@ -332,14 +332,12 @@ class TreeMixin(object):
 
         # Process non-root entries with valid parents only.
         elif key == Qt.Key_Left and index.parent().isValid():
-
             # File entries have rowCount() == 0
             model = widget.model()
-            if (
-                hasattr(model, 'itemFromIndex')
-                and model.itemFromIndex(index).rowCount() == 0
-            ):
-                widget.setCurrentIndex(index.parent())
+            if hasattr(model, 'itemFromIndex'):
+                item = model.itemFromIndex(index)
+                if hasattr(item, 'rowCount') and item.rowCount() == 0:
+                    widget.setCurrentIndex(index.parent())
 
             # Otherwise, do this for collapsed directories only
             elif was_collapsed:
