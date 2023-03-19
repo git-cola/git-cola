@@ -734,7 +734,6 @@ def list_submodule(context):
     if status == 0 and data:
         data = data.splitlines()
         # see git submodule status
-        # TODO better separation
         for line in data:
             state = line[0].strip()
             sha1 = line[1 : OID_LENGTH + 1]
@@ -760,32 +759,6 @@ def merge_base_parent(context, branch):
     return 'HEAD'
 
 
-# TODO Unused?
-def parse_ls_tree(context, rev):
-    """Return a list of (mode, type, oid, path) tuples."""
-    output = []
-    git = context.git
-    lines = git.ls_tree(rev, r=True, _readonly=True)[STDOUT].splitlines()
-    regex = re.compile(r'^(\d+)\W(\w+)\W(\w+)[ \t]+(.*)$')
-    for line in lines:
-        match = regex.match(line)
-        if match:
-            mode = match.group(1)
-            objtype = match.group(2)
-            oid = match.group(3)
-            filename = match.group(4)
-            output.append(
-                (
-                    mode,
-                    objtype,
-                    oid,
-                    filename,
-                )
-            )
-    return output
-
-
-# TODO unused?
 def ls_tree(context, path, ref='HEAD'):
     """Return a parsed git ls-tree result for a single directory"""
     git = context.git
