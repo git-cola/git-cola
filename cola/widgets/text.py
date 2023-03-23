@@ -379,11 +379,10 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 class TextSearchWidget(QtWidgets.QWidget):
     """The search dialog that displays over a text edit field"""
 
-    search_text = Signal(object, bool)
-
-    def __init__(self, parent):
+    def __init__(self, widget, parent):
         super(TextSearchWidget, self).__init__(parent)
         self.setAutoFillBackground(True)
+        self._widget = widget
         self._parent = parent
 
         self.text = HintedDefaultLineEdit(N_('Find in diff'), parent=self)
@@ -429,11 +428,11 @@ class TextSearchWidget(QtWidgets.QWidget):
 
     def search(self):
         """Emit a signal with the current search text"""
-        self.search_text.emit(self.text.get(), False)
+        self.search_text(backwards=False)
 
     def search_backwards(self):
         """Emit a signal with the current search text for a backwards search"""
-        self.search_text.emit(self.text.get(), True)
+        self.search_text(backwards=True)
 
     def hide_search(self):
         """Hide the search window"""
@@ -454,6 +453,43 @@ class TextSearchWidget(QtWidgets.QWidget):
     def is_case_sensitive(self):
         """Are we searching using a case-insensitive search?"""
         return self.match_case_checkbox.isChecked()
+
+    def search_text(self, backwards=False):
+        """Search the diff text for the given text"""
+        text = self.text.get()
+        cursor = self._widget.textCursor()
+        if cursor.hasSelection():
+            selected_text = cursor.selectedText()
+            case_sensitive = self.is_case_sensitive()
+            if text_matches(case_sensitive, selected_text, text):
+                if backwards:
+                    position = cursor.selectionStart()
+                else:
+                    position = cursor.selectionEnd()
+            else:
+                if backwards:
+                    position = cursor.selectionEnd()
+                else:
+                    position = cursor.selectionStart()
+            cursor.setPosition(position)
+            self._widget.setTextCursor(cursor)
+
+        flags = self.find_flags(backwards)
+        if not self._widget.find(text, flags):
+            if backwards:
+                location = QtGui.QTextCursor.End
+            else:
+                location = QtGui.QTextCursor.Start
+            cursor.movePosition(location, QtGui.QTextCursor.MoveAnchor)
+            self._widget.setTextCursor(cursor)
+            self._widget.find(text, flags)
+
+
+def text_matches(case_sensitive, a, b):
+    """Compare text with case sensitivity taken into account"""
+    if case_sensitive:
+        return a == b
+    return a.lower() == b.lower()
 
 
 class TextEditExtension(BaseTextEditExtension):

@@ -481,7 +481,7 @@ class Viewer(QtWidgets.QFrame):
         self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
-        self.search_widget = TextSearchWidget(self)
+        self.search_widget = TextSearchWidget(self.text, self)
         self.search_widget.hide()
 
         stack = self.stack = QtWidgets.QStackedWidget(self)
@@ -511,8 +511,6 @@ class Viewer(QtWidgets.QFrame):
 
         self.setFocusProxy(self.text)
 
-        self.search_widget.search_text.connect(self.search_text)
-
         self.search_action = qtutils.add_action(
             self,
             N_('Search in Diff'),
@@ -540,35 +538,6 @@ class Viewer(QtWidgets.QFrame):
         if not self.search_widget.isVisible():
             self.search_widget.show()
         self.search_widget.setFocus(True)
-
-    def search_text(self, text, backwards):
-        """Search the diff text for the given text"""
-        cursor = self.text.textCursor()
-        if cursor.hasSelection():
-            selected_text = cursor.selectedText()
-            case_sensitive = self.search_widget.is_case_sensitive()
-            if text_matches(case_sensitive, selected_text, text):
-                if backwards:
-                    position = cursor.selectionStart()
-                else:
-                    position = cursor.selectionEnd()
-            else:
-                if backwards:
-                    position = cursor.selectionEnd()
-                else:
-                    position = cursor.selectionStart()
-            cursor.setPosition(position)
-            self.text.setTextCursor(cursor)
-
-        flags = self.search_widget.find_flags(backwards)
-        if not self.text.find(text, flags):
-            if backwards:
-                location = QtGui.QTextCursor.End
-            else:
-                location = QtGui.QTextCursor.Start
-            cursor.movePosition(location, QtGui.QTextCursor.MoveAnchor)
-            self.text.setTextCursor(cursor)
-            self.text.find(text, flags)
 
     def export_state(self, state):
         state['show_diff_line_numbers'] = self.options.show_line_numbers.isChecked()
@@ -730,13 +699,6 @@ def create_image(width, height):
     image = QtGui.QImage(size, QtGui.QImage.Format_ARGB32_Premultiplied)
     image.fill(Qt.transparent)
     return image
-
-
-def text_matches(case_sensitive, a, b):
-    """Compare text with case sensitivity taken into account"""
-    if case_sensitive:
-        return a == b
-    return a.lower() == b.lower()
 
 
 def create_painter(image):
