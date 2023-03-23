@@ -1029,8 +1029,8 @@ class GitDAG(standard.MainWindow):
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
-        text = core.list2cmdline(argv)
-        self.revtext.setText(text)
+        rev_text = core.list2cmdline(argv)
+        self.revtext.setText(rev_text)
         self.display()
 
     def difftool_selected(self, files):
