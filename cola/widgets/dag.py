@@ -1149,7 +1149,7 @@ class Edge(QtWidgets.QGraphicsItem):
             color = EdgeColor.current()
             line = Qt.SolidLine
 
-        self.pen = QtGui.QPen(color, 4.0, line, Qt.SquareCap, Qt.RoundJoin)
+        self.pen = QtGui.QPen(color, 2.0, line, Qt.SquareCap, Qt.RoundJoin)
 
     def recompute_bound(self):
         dest_pt = Commit.item_bbox.center()
