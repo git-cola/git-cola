@@ -755,13 +755,14 @@ class GitDAG(standard.MainWindow):
         self.file_dock = qtutils.create_dock('Files', N_('Files'), self)
         self.file_dock.setWidget(self.filewidget)
 
+        self.diff_panel = diff.DiffPanel(self.diffwidget, self.diffwidget.diff, self)
         self.diff_options = diff.Options(self.diffwidget)
         self.diffwidget.set_options(self.diff_options)
         self.diff_options.hide_advanced_options()
         self.diff_options.set_diff_type(main.Types.TEXT)
 
         self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self)
-        self.diff_dock.setWidget(self.diffwidget)
+        self.diff_dock.setWidget(self.diff_panel)
 
         diff_titlebar = self.diff_dock.titleBarWidget()
         diff_titlebar.add_corner_widget(self.diff_options)

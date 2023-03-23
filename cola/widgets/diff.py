@@ -1352,6 +1352,47 @@ class DiffWidget(QtWidgets.QWidget):
             self.set_diff_oid(self.oid, filename=filenames[0])
 
 
+class DiffPanel(QtWidgets.QWidget):
+    """A combined diff + search panel"""
+
+    def __init__(self, diff_widget, text_widget, parent):
+        super(DiffPanel, self).__init__(parent)
+        self.diff_widget = diff_widget
+        self.search_widget = TextSearchWidget(text_widget, self)
+        self.search_widget.hide()
+        layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.diff_widget, self.search_widget
+        )
+        self.setLayout(layout)
+        self.setFocusProxy(self.diff_widget)
+
+        self.search_action = qtutils.add_action(
+            self,
+            N_('Search in Diff'),
+            self.show_search,
+            hotkeys.SEARCH,
+        )
+        self.search_next_action = qtutils.add_action(
+            self,
+            N_('Find next item'),
+            self.search_widget.search,
+            hotkeys.SEARCH_NEXT,
+        )
+        self.search_prev_action = qtutils.add_action(
+            self,
+            N_('Find previous item'),
+            self.search_widget.search_backwards,
+            hotkeys.SEARCH_PREV,
+        )
+
+    def show_search(self):
+        """Show a dialog for searching diffs"""
+        # The diff search is only active in text mode.
+        if not self.search_widget.isVisible():
+            self.search_widget.show()
+        self.search_widget.setFocus(True)
+
+
 class TextLabel(QtWidgets.QLabel):
     def __init__(self, parent=None):
         QtWidgets.QLabel.__init__(self, parent)
