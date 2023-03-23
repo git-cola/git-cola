@@ -1420,21 +1420,17 @@ class Label(QtWidgets.QGraphicsItem):
     remote_color = QtGui.QColor(Qt.yellow)
 
     head_pen = QtGui.QPen()
-    head_pen.setColor(head_color.darker().darker())
+    head_pen.setColor(QtGui.QColor(Qt.black))
     head_pen.setWidth(1)
 
     text_pen = QtGui.QPen()
     text_pen.setColor(QtGui.QColor(Qt.black))
     text_pen.setWidth(1)
 
-    alpha = 200
-    head_color.setAlpha(alpha)
-    other_color.setAlpha(alpha)
-    remote_color.setAlpha(alpha)
-
-    border = 2
-    item_spacing = 5
-    text_offset = 1
+    border = 1
+    item_spacing = 8
+    text_x_offset = 3
+    text_y_offset = 0
 
     def __init__(self, commit):
         QtWidgets.QGraphicsItem.__init__(self)
@@ -1452,20 +1448,21 @@ class Label(QtWidgets.QGraphicsItem):
         height = 18
         current_width = 0
         spacing = self.item_spacing
-        border = self.border + self.text_offset  # text offset=1 in paint()
+        border_x = self.border + self.text_x_offset
+        border_y = self.border + self.text_y_offset
 
         font = cache.label_font()
         item_shape = QPainterPath()
 
         base_rect = QRectF(0, 0, width, height)
-        base_rect = base_rect.adjusted(-border, -border, border, border)
+        base_rect = base_rect.adjusted(-border_x, -border_y, border_x, border_y)
         item_shape.addRect(base_rect)
 
         for tag in self.commit.tags:
             text_shape = QPainterPath()
             text_shape.addText(current_width, 0, font, tag)
             text_rect = text_shape.boundingRect()
-            box_rect = text_rect.adjusted(-border, -border, border, border)
+            box_rect = text_rect.adjusted(-border_x, -border_y, border_x, border_y)
             item_shape.addRect(box_rect)
             current_width = item_shape.boundingRect().width() + spacing
 
@@ -1476,9 +1473,10 @@ class Label(QtWidgets.QGraphicsItem):
         font = cache.label_font()
         painter.setFont(font)
 
-        current_width = 0
+        current_width = 3
         border = self.border
-        offset = self.text_offset
+        x_offset = self.text_x_offset
+        y_offset = self.text_y_offset
         spacing = self.item_spacing
         QRectF = QtCore.QRectF
 
@@ -1513,7 +1511,7 @@ class Label(QtWidgets.QGraphicsItem):
             text_rect = painter.boundingRect(
                 QRectF(current_width, 0, 0, 0), Qt.TextSingleLine, tag
             )
-            box_rect = text_rect.adjusted(-offset, -offset, offset, offset)
+            box_rect = text_rect.adjusted(-x_offset, -y_offset, x_offset, y_offset)
 
             painter.drawRoundedRect(box_rect, border, border)
             painter.drawText(text_rect, Qt.TextSingleLine, tag)
@@ -1530,7 +1528,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     y_adjust = int(Commit.commit_radius * 4 / 3)
 
     x_off = -18
-    y_off = -24
+    y_off = -20
 
     def __init__(self, context, parent):
         QtWidgets.QGraphicsView.__init__(self, parent)
