@@ -101,7 +101,7 @@ class Commit(object):
         self.summary = None
         self.parents = []
         self.children = []
-        self.tags = set()
+        self.tags = []
         self.branches = []
         self.email = None
         self.author = None
@@ -190,10 +190,10 @@ class Commit(object):
 
         head_arrow = 'HEAD -> '
         if tag.startswith(head_arrow):
-            self.tags.add('HEAD')
+            self.tags.append('HEAD')
             self.add_label(tag[len(head_arrow) :])
         else:
-            self.tags.add(tag)
+            self.tags.append(tag)
 
     def __str__(self):
         return self.oid
