@@ -420,6 +420,19 @@ class TextSearchWidget(QtWidgets.QWidget):
         self.text.returnPressed.connect(self.search)
         self.text.textChanged.connect(self.search)
 
+        self.search_next_action = qtutils.add_action(
+            parent,
+            N_('Find next item'),
+            self.search,
+            hotkeys.SEARCH_NEXT,
+        )
+        self.search_prev_action = qtutils.add_action(
+            parent,
+            N_('Find previous item'),
+            self.search_backwards,
+            hotkeys.SEARCH_PREV,
+        )
+
         qtutils.connect_button(self.next_button, self.search)
         qtutils.connect_button(self.prev_button, self.search_backwards)
         qtutils.connect_button(self.close_button, self.hide_search)

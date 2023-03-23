@@ -517,18 +517,6 @@ class Viewer(QtWidgets.QFrame):
             self.show_search_diff,
             hotkeys.SEARCH,
         )
-        self.search_next_action = qtutils.add_action(
-            self,
-            N_('Find next item'),
-            self.search_widget.search,
-            hotkeys.SEARCH_NEXT,
-        )
-        self.search_prev_action = qtutils.add_action(
-            self,
-            N_('Find previous item'),
-            self.search_widget.search_backwards,
-            hotkeys.SEARCH_PREV,
-        )
 
     def show_search_diff(self):
         """Show a dialog for searching diffs"""
@@ -1371,18 +1359,6 @@ class DiffPanel(QtWidgets.QWidget):
             N_('Search in Diff'),
             self.show_search,
             hotkeys.SEARCH,
-        )
-        self.search_next_action = qtutils.add_action(
-            self,
-            N_('Find next item'),
-            self.search_widget.search,
-            hotkeys.SEARCH_NEXT,
-        )
-        self.search_prev_action = qtutils.add_action(
-            self,
-            N_('Find previous item'),
-            self.search_widget.search_backwards,
-            hotkeys.SEARCH_PREV,
         )
 
     def show_search(self):
