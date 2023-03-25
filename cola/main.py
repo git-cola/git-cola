@@ -441,6 +441,12 @@ def add_tag_command(subparser):
 def add_version_command(subparser):
     parser = add_command(subparser, 'version', 'print the version', cmd_version)
     parser.add_argument(
+        '--builtin',
+        action='store_true',
+        default=False,
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
         '--brief',
         action='store_true',
         default=False,
@@ -602,7 +608,7 @@ def cmd_merge(args):
 def cmd_version(args):
     from . import version  # pylint: disable=all
 
-    version.print_version(brief=args.brief)
+    version.print_version(builtin=args.builtin, brief=args.brief)
     return 0
 
 

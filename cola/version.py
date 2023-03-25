@@ -73,6 +73,11 @@ def version():
     return pkg_version
 
 
+def builtin_version():
+    """Returns the version recorded in cola/_version.py"""
+    return VERSION
+
+
 @memoize
 def check_version(min_ver, ver):
     """Check whether ver is greater or equal to min_ver"""
@@ -124,12 +129,15 @@ def git_version(context):
 
 
 def cola_version():
+    """A version string for consumption by humans"""
     suffix = version()
     return 'cola version %s' % suffix
 
 
-def print_version(brief=False):
-    if brief:
+def print_version(builtin=False, brief=False):
+    if builtin:
+        msg = builtin_version()
+    elif brief:
         msg = version()
     else:
         msg = cola_version()
