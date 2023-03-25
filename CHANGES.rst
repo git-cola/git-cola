@@ -5,37 +5,41 @@ v4.2.0
 
 Usability, bells and whistles
 -----------------------------
-* You can now edit the diffs from the Diff Editor in your favorite editor.
-  The right-click context menu and ``Ctrl + Shift + S`` and ``Ctrl + Shift + U`` hotkeys
-  can now be used to send either the current diff hunk, or the selected diff, to your
-  favorite editor for editing before they are reverted or applied to the worktree or
-  staging area.
+* The Diff Editor can now send diffs to your favorite editor before the diffs are applied.
+  The right-click "Edit Diff ..." menu actions and the `Ctrl + Shift + S` /
+  `Ctrl + Shift + U` hotkeys send the current diff hunk, or the selected diff, to your
+  editor before they are applied to the worktree / staging area.
   (`#1290 <https://github.com/git-cola/git-cola/pull/1290>`_)
   (`#794 <https://github.com/git-cola/git-cola/issues/794>`_)
 
-* The Commit Message Editor now supports spell-checking in the summary field.
+* The Diff Editor and DAG viewer can now search within their diffs using
+  `Ctrl + F` and `Ctrl + G` hotkeys.
+  (`#1116 <https://github.com/git-cola/git-cola/issues/1116>`_)
+
+* A new *Diff Mode* can be used to diff and unstage edits relative to any commit.
+  (`#816 <https://github.com/git-cola/git-cola/issues/816>`_)
+
+* The Commit Message Editor can now spell-check the summary field. Previously only the
+  "Extended Description..." field supported spell checking.
   (`#633 <https://github.com/git-cola/git-cola/issues/633>`_)
   (`#1070 <https://github.com/git-cola/git-cola/issues/1070>`_)
 
-* A new *Diff Mode* can be used to diff, unstage and revert edits from arbitrary commits
-  (`#816 <https://github.com/git-cola/git-cola/issues/816>`_)
-
-* Repositories within the Bookmarks and Favorites tools can now be searched with the
-  "Search" icon. Fast switching between repositories is supported with the new
-  `Alt-p` and "Quick Open..." File menu action.
+* Repositories in your "Recents" and "Favorites" can now be searched using the new
+  "Search" tool button. Quickly switch between these repositories using the `Alt + P`
+  hotkey and "Quick Open..." File menu action.
   (`#1282 <https://github.com/git-cola/git-cola/pull/1282>`_)
 
+* "Favorites", "Recents" and the startup dialog now display a case-insensitively
+  sorted list of repositories.
+  (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
+
 * The startup dialog now has a right-click context menu that allows you to prune
-  stale entries and other operations that were not previously accessible from
+  stale entries and other actions that were not previously accessible from
   the startup dialog.
   (`#1199 <https://github.com/git-cola/git-cola/issues/1199>`_)
   (`#1280 <https://github.com/git-cola/git-cola/pull/1280>`_)
 
-* The Startup dialog, the Favorites widget and the Recents widgets now sort
-  their repositories using a case-insensitive sort.
-  (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
-
-* The "Copy Leading Paths" action in the Status widget's right-click "Copy" sub-menu
+* The "Copy Leading Paths" action in the Status tool's right-click "Copy" sub-menu
   can now strip off an arbitrary number of leading paths.
   (`#784 <https://github.com/git-cola/git-cola/issues/784>`_)
 
@@ -43,88 +47,82 @@ Usability, bells and whistles
   A new "Abort Cherry-Pick" action has been added for aborting a failed cherry-pick.
   (`#1062 <https://github.com/git-cola/git-cola/issues/1062>`_)
 
-* The "Favorites" are now sorted with a case-insenstive search. The startup dialog
-  now uses a sorted list of repositories as well.
-  (`#1047 <https://github.com/git-cola/git-cola/issues/1047>`_)
-
-* The hotkeys documentation has been updated to clarify that the "Copy Commit ID"
-  action is availalbe in several tools.
-  (`#779 <https://github.com/git-cola/git-cola/issues/779>`_)
-
-* The diff text can now be quickly zoomed using ctrl + mousewheel scroll.
+* The diff text can now be quickly zoomed using `Ctrl + Mouse wheel` scroll.
   This will quickly change the text size within the current session only.
   (`#1029 <https://github.com/git-cola/git-cola/issues/1029>`_)
 
-* The Console widget learned to open URLs. Right click anywhere on a line
-  that includes links and a context menu action will appear that allows
-  opening the link using your default browser.
+* The Console and Diff widgets learned to open URLs. Right-click on a line
+  that contains http URLs and context-menu actions for opening each URL
+  using your default web browser will be displayed.
   (`#1139 <https://github.com/git-cola/git-cola/issues/1139>`_)
 
 * Drag-and-drop has been improved when dragging filenames from the Status tool.
   Dragging multiple files requires special handling to improve usability.
   Some terminals (such as `kitty`) consume multiple file URLs by separating paths with
   newlines. This is useful when you'd like to capture raw filenames but is less
-  convenient when dropping  filenames onto a command-line. We can now drag with the
-  `Alt` button held down to drag-and-drop filenames for command-line use.
-  Using the `Alt` modifier omits URLs so that the drag-and-drop payload includes only
-  space-delimited, shell-quoted paths.
+  convenient when dropping  filenames onto a command-line. Drag with the `Alt`-modifier
+  held down to drag-and-drop filenames for command-line use. Using the `Alt` modifier
+  omits URLs so that the drag-and-drop payload includes only space-delimited,
+  shell-quoted paths.
   (`#719 <https://github.com/git-cola/git-cola/issues/719>`_)
 
 * The DAG viewer now displays the diff between the start and end commits when
-  multiple commits are selected. The diffs are displayed in the DAG's inline diff viewer.
+  multiple commits are selected. The diffs are displayed in the DAG's diff viewer.
   (`#552 <https://github.com/git-cola/git-cola/issues/552>`_)
 
 * The DAG viewer learned to checkout branches and initiate rebases from its right-click menu.
   (`#1113 <https://github.com/git-cola/git-cola/issues/1113>`_)
 
-* The "Unstage" menu item in the Status tool now uses a "Remove" icon.
-  (`#1289 <https://github.com/git-cola/git-cola/pull/1289>`_)
-
 * The DAG diff viewer learned to word-wrap the diff text.
   (`#1242 <https://github.com/git-cola/git-cola/issues/1242>`_)
 
-* The Apply Patches dialog now reports errors when patches fail to apply.
-  (`#673 <https://github.com/git-cola/git-cola/issues/673>`_)
-
 * The spelling dictionaries are now discovered dynamically at runtime.
   `dict/words` and `dict/propernames` are now discovered via `$XDG_DATA_DIRS`
-  by the spell checker.
+  by the spell checker. This allows a spelling dictionary to be placed in eg.
+  `~/.local/share/dict/words` to override the default `/usr/share/dict/words`.
   (`#873 <https://github.com/git-cola/git-cola/issues/873>`_)
 
-* The File menu has a new "Patches" sub-menu with a full set of "git am" Patch actions.
+* The File menu now has a "Patches" sub-menu with a full set of "git am" Patch actions.
 
-* The Diff Editor and various diff widgets now have a "Copy Diff" action
-  with an `Alt+Shift+C` hotkey that copies the selected diff text to the clipboard
-  with the `+/-/<space>` diff prefix characters removed.
+* The Diff Editor and various Diff widgets now have a "Copy Diff" action with an
+  `Alt + Shift + C` hotkey that copies the selected diff text to the clipboard with the
+  `+`, `-` and `<Space>` diff prefix characters removed.
   (`#1288 <https://github.com/git-cola/git-cola/issues/1288>`_)
 
 * The "Revert" action for reverting commits from the DAG tool now displays error
-  messages when `git revert` fails.
+  messages when ``git revert`` fails.
   (`#885 <https://github.com/git-cola/git-cola/issues/885>`_)
-
-* The "Status" tool now disables "Copy" actions in its context menu when no
-  files have been selected.
-  (`#697 <https://github.com/git-cola/git-cola/issues/697>`_)
-
-* The Diff Editor learned to search within the diff text using the standard ctrl-f hotkey.
-  (`#1116 <https://github.com/git-cola/git-cola/issues/1116>`_)
 
 * The Diff Editor now uses an easier-to-see *block cursor* by default.
   Disable `cola.blockcursor <https://git-cola.readthedocs.io/en/latest/git-cola.html#cola-blockcursor>`_
-  to continue using original *line cursor*.
+  to continue using original *line cursor* by running
+  ``git config --global cola.blockcursor false``, or by editing the settings in the menu.
+
+* The "Unmerged" header item in the Status tool now displays a summary list of unmerged files.
+
+* The hotkeys documentation has been updated to clarify that the "Copy Commit ID"
+  action is available in several tools.
+  (`#779 <https://github.com/git-cola/git-cola/issues/779>`_)
 
 * Saving files when using "Browse Other Branch" now displays errors from
   ``git show`` when saving files from arbitrary commits.
   (`#1065 <https://github.com/git-cola/git-cola/issues/1065>`_)
 
-* The "Unmerged" header item in the Status tool now displays a summary list of unmerged files.
+* The Apply Patches dialog now reports errors when patches fail to apply.
+  (`#673 <https://github.com/git-cola/git-cola/issues/673>`_)
 
+* The "Status" tool now disables "Copy" actions in its context menu when no
+  files have been selected.
+  (`#697 <https://github.com/git-cola/git-cola/issues/697>`_)
+
+* The "Unstage" menu item in the Status tool now uses a "Remove" icon.
+  (`#1289 <https://github.com/git-cola/git-cola/pull/1289>`_)
 
 Development
 -----------
-* The vendored `qtpy` module was modified to sever its dependency on
-  `packaging.version`. This mostly affects users that want to run Git Cola directly from
-  the the source tree outside of any virtualenv.
+* The vendored `qtpy` module was modified to sever its dependency on the
+  `packaging.version` module. This mostly affects users that want to run
+  Git Cola directly from the the source tree outside of any virtualenv.
   (`#1286 <https://github.com/git-cola/git-cola/issues/1286>`_)
 
 
@@ -136,8 +134,8 @@ v4.1.0
 Usability, bells and whistles
 -----------------------------
 * The rebase editor was taught to handle stacked branch workflows enabled by
-  ``git rebase --update-refs``. The `git cola rebase` sub-command now has
-  an `--update-refs` option and the menu actions display a prompt that allows
+  ``git rebase --update-refs``. The ``git cola rebase`` sub-command now has
+  an ``--update-refs`` option and the menu actions display a prompt that allows
   you to enable the updating of stacked branches.
   (`#1261 <https://github.com/git-cola/git-cola/pull/1261>`_)
   (`#571 <https://github.com/git-cola/git-cola/issues/571>`_)
@@ -1202,7 +1200,7 @@ Usability, bells and whistles
 * The Edit menu's "Copy" and "Select All" actions now forward to either the
   diff, status, recent, or favorites widgets, based on which widget has focus.
 
-* The "File" and "Edit" menu can now be activated using `Alt-{f,e}` hotkeys.
+* The "File" and "Edit" menu can now be activated using `Alt + {F,E}` hotkeys.
   (`#759 <https://github.com/git-cola/git-cola/issues/759>`_)
 
 * It was easy to accidentally trigger the first action in the `Status` tool's
@@ -1929,7 +1927,7 @@ Usability, bells and whistles
   (`#473 <https://github.com/git-cola/git-cola/pull/473>`_)
 
 * The `Status` tool also learned about the history hotkey.
-  Additionally, the `Alt-{j,k}` aliases are also supported in the `Status`
+  Additionally, the `Alt + {J,K}` aliases are also supported in the `Status`
   tool for consistency with the other tools where the non-Alt hotkeys are not
   available.
   (`#488 <https://github.com/git-cola/git-cola/pull/488>`_)
@@ -2017,7 +2015,7 @@ Usability, bells and whistles
 * The `diff` editor now understands vim-style `hjkl` navigation hotkeys.
   (`#476 <https://github.com/git-cola/git-cola/issues/476>`_)
 
-* `Alt-{j,k}` navigation hotkeys were added to allow changing to the
+* `Alt + {J,K}` navigation hotkeys were added to allow changing to the
   next/previous file from the diff and commit editors.
 
 * The `Rename branch` menu action is now disabled in empty repositories.
@@ -2987,7 +2985,7 @@ Usability, bells and whistles
 * New `git cola grep` standalone mode.
 * Support for passing arguments to the configured editors, e.g. `gvim -p`
   This makes it possible to select multiple files in the status
-  window and use `Ctrl-e` to edit them all at once.
+  window and use `Ctrl + E` to edit them all at once.
 * Remote operations now prompt on errors only.
 * The `Tab` key now jumps to the extended description when editing the summary.
 * More shortcut key labels and misc. UX improvements.
@@ -2995,7 +2993,7 @@ Usability, bells and whistles
 Fixes
 -----
 * Selecting an item no longer copies its filename to the copy/paste buffer.
-  `Ctrl-c` or the "Copy" context-menu action can be used instead.
+  `Ctrl + C` or the "Copy" context-menu action can be used instead.
 * The repository monitoring feature on Windows learned to ignore
   changes within the ".git" directory.  Thanks to Andreas Sommer.
   (`#120 <https://github.com/git-cola/git-cola/issues/120>`_)
