@@ -213,8 +213,8 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.menu_actions.append(self.copy_diff_action)
 
         # pylint: disable=no-member
-        self.cursorPositionChanged.connect(self._cursor_changed, Qt.QueuedConnection)
-        self.selectionChanged.connect(self._selection_changed, Qt.QueuedConnection)
+        self.cursorPositionChanged.connect(self._cursor_changed)
+        self.selectionChanged.connect(self._selection_changed)
 
     def setFont(self, font):
         """Override setFont() so that we can use a custom "block" cursor"""
@@ -227,7 +227,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     def _cursor_changed(self):
         """Update the line number display when the cursor changes"""
         line_number = max(0, self.textCursor().blockNumber())
-        if self.numbers:
+        if self.numbers is not None:
             self.numbers.set_highlighted(line_number)
 
     def _selection_changed(self):
