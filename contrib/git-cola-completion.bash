@@ -6,7 +6,7 @@
 # Completion is provided for "git cola ..." and "git dag ..." via the
 # _git_cola() and _git_dag() functions.
 
-__git_cola_common_options="--prompt --repo --version"
+__git_cola_common_options="--icon-theme --prompt --repo --theme --version"
 __git_cola_subcommands_list=
 
 __git_cola_common_opts () {
@@ -121,6 +121,7 @@ _git_cola () {
 			--stop
 			--strategy
 			--strategy-option
+			--update-refs
 			--verbose
 			--verify
 			--whitespace
