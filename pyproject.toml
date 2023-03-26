@@ -1,6 +1,27 @@
 [project]
 name = "git-cola"
+authors = [
+    {name = "David Aguilar", email = "davvid@gmail.com"}
+]
+classifiers = [
+	"Development Status :: 6 - Mature",
+	"Intended Audience :: Developers",
+	"Intended Audience :: End Users/Desktop",
+	"License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+	"Programming Language :: Python :: 3",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Software Development :: Version Control :: Git",
+]
+description = "A sleek and powerful Git GUI"
 dynamic = ["version"]
+license = {file = "COPYING"}
+readme = "README.md"
+
+[project.scripts]
+cola = "cola.main:main"
+git-cola = "cola.main:main"
+git-dag = "cola.dag:main"
+git-cola-sequence-editor = "cola.sequenceeditor:main"
 
 [build-system]
 requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4.1"]
