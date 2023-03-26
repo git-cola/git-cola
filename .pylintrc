@@ -58,10 +58,12 @@ disable=
     duplicate-code,
     invalid-name,
     missing-docstring,
+    no-self-use,
     raise-missing-from,
     super-with-arguments,
     too-many-instance-attributes,
     useless-object-inheritance,
+    useless-option-value,
 
 [REPORTS]
 
