@@ -392,7 +392,7 @@ def oid_diff_range(context, start, end, filename=None):
         # "git show" is clever enough to handle the root commit.
         args = [end + '^!']
         _add_filename(args, filename)
-        _, out, _ = git.show(pretty='format:', _readonly=True, *args, **opts)
+        _, out, _ = git.show(pretty='format:', *args, **opts)
         out = out.lstrip()
     return out
 

@@ -1,3 +1,13 @@
+.. _v4.2.1:
+
+v4.2.1
+======
+
+Fixes
+-----
+* Diffs for repositories with a single commit have been fixed.
+  (`#1306 <https://github.com/git-cola/git-cola/issues/1306>`_)
+
 .. _v4.2.0:
 
 v4.2.0
