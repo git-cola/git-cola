@@ -91,13 +91,16 @@ class CompletionLineEdit(HintedLineEdit):
         Qt.Key_Down: 'down',
     }
 
-    def __init__(self, context, model_factory, hint='', parent=None):
+    def __init__(
+        self, context, model_factory, hint='', show_all_completions=False, parent=None
+    ):
         HintedLineEdit.__init__(self, context, hint, parent=parent)
         # Tracks when the completion popup was active during key events
 
         self.context = context
         # The most recently selected completion item
         self._selection = None
+        self._show_all_completions = show_all_completions
 
         # Create a completion model
         completion_model = model_factory(context, self)
@@ -208,7 +211,9 @@ class CompletionLineEdit(HintedLineEdit):
     def _completions_updated(self):
         popup = self.popup()
         if not popup.isVisible():
-            return
+            if not self.hasFocus() or not self._show_all_completions:
+                return
+            popup.show()
         # Select the first item
         idx = self._completion_model.index(0, 0)
         selection = QtCore.QItemSelection(idx, idx)
@@ -729,12 +734,19 @@ class GitLogCompletionModel(GitRefCompletionModel):
         return (refs, paths, dirs)
 
 
-def bind_lineedit(model, hint=''):
+def bind_lineedit(model, hint='', show_all_completions=False):
     """Create a line edit bound against a specific model"""
 
     class BoundLineEdit(CompletionLineEdit):
         def __init__(self, context, hint=hint, parent=None):
-            CompletionLineEdit.__init__(self, context, model, hint=hint, parent=parent)
+            CompletionLineEdit.__init__(
+                self,
+                context,
+                model,
+                hint=hint,
+                show_all_completions=show_all_completions,
+                parent=parent,
+            )
             self.context = context
 
     return BoundLineEdit
@@ -744,7 +756,9 @@ def bind_lineedit(model, hint=''):
 GitLogLineEdit = bind_lineedit(GitLogCompletionModel, hint='<ref>')
 GitRefLineEdit = bind_lineedit(GitRefCompletionModel, hint='<ref>')
 GitCheckoutBranchLineEdit = bind_lineedit(
-    GitCheckoutBranchCompletionModel, hint='<branch>'
+    GitCheckoutBranchCompletionModel,
+    hint='<branch>',
+    show_all_completions=True,
 )
 GitCreateBranchLineEdit = bind_lineedit(GitCreateBranchCompletionModel, hint='<branch>')
 GitBranchLineEdit = bind_lineedit(GitBranchCompletionModel, hint='<branch>')
