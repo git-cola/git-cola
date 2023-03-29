@@ -301,7 +301,7 @@ class GatherCompletionsThread(QtCore.QThread):
         utils.catch_runtime_error(self.wait)
 
     def run(self):
-        text = ''
+        text = None
         items = []
         self.running = True
         # Loop when the matched text changes between the start and end time.
