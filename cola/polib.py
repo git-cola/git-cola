@@ -57,6 +57,7 @@ if sys.version_info < (3,):
     def u(s):
         return compat.ustr(s, "unicode_escape")
 
+
 else:
     PY3 = True
     text_type = str

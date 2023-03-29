@@ -98,7 +98,7 @@ class StatusWidget(QtWidgets.QFrame):
     def set_initial_size(self):
         """Set the initial size of the status widget"""
         self.setMaximumWidth(222)
-        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2**13))
+        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
 
     def refresh(self):
         """Refresh the tree and rerun the diff to see updates"""
