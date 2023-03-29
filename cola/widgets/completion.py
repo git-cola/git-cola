@@ -523,6 +523,7 @@ class Completer(QtWidgets.QCompleter):
         self._model = model
         self.setCompletionMode(QtWidgets.QCompleter.UnfilteredPopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
+        self.setFilterMode(QtCore.Qt.MatchContains)
 
         model.model_updated.connect(self.update, type=Qt.QueuedConnection)
         self.setModel(model)
