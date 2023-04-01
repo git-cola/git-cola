@@ -8,6 +8,9 @@ Fixes
 * Diffs for repositories with a single commit have been fixed.
   (`#1306 <https://github.com/git-cola/git-cola/issues/1306>`_)
 
+* The toolbars follow the Qt toolbar style, as they did prior to `v4.2.0`.
+  (`#1307 <https://github.com/git-cola/git-cola/issues/1307>`_)
+
 * The "Checkout Branch" dialog was fixed to display all completions when first shown.
   (`#1308 <https://github.com/git-cola/git-cola/issues/1308>`_)
 

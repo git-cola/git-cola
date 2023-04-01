@@ -250,15 +250,16 @@ class ToolBar(QtWidgets.QToolBar):
                 icon = getattr(icons, command_icon, None)
                 if callable(icon):
                     icon = icon()
+            if icon:
+                toolbar_action = self.addAction(icon, title, callback)
+            else:
+                toolbar_action = self.addAction(title, callback)
 
-            toolbar_item = qtutils.create_toolbutton_with_callback(
-                callback,
-                title,
-                icon,
-                tooltip,
-            )
-            action = self.addWidget(toolbar_item)
-            action.setData(data)
+            toolbar_action.setData(data)
+
+            tooltip = command.get('tooltip', None)
+            if tooltip:
+                toolbar_action.setToolTip('%s\n%s' % (title, tooltip))
 
     def delete_toolbar(self):
         self.parent().removeToolBar(self)
