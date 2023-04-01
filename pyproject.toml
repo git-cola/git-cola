@@ -34,4 +34,4 @@ skip-string-normalization = true
 # "fallback_version" does not (currently) work when building from tarballs.
 # "fallback_version" should start working once this upstream issue is resolved:
 # https://github.com/pypa/setuptools_scm/issues/549
-fallback_version = "4.2.0"
+fallback_version = "4.2.1"
