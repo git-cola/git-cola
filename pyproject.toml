@@ -16,7 +16,9 @@ description = "A sleek and powerful Git GUI"
 dynamic = ["version"]
 license = {file = "COPYING"}
 readme = "README.md"
-
+authors = [
+    "David Aguilar @davvid",
+]
 [project.scripts]
 cola = "cola.main:main"
 git-cola = "cola.main:main"
@@ -35,3 +37,6 @@ skip-string-normalization = true
 # "fallback_version" should start working once this upstream issue is resolved:
 # https://github.com/pypa/setuptools_scm/issues/549
 fallback_version = "4.2.1"
+
+
+
