@@ -311,9 +311,8 @@ if AVAILABLE == 'inotify':
                         # simply ignore them.
                         continue
                     raise e
-                else:
-                    wd_to_path_map[wd] = path
-                    path_to_wd_map[path] = wd
+                wd_to_path_map[wd] = path
+                path_to_wd_map[path] = wd
 
         def _check_event(self, wd, mask, name):
             if mask & inotify.IN_Q_OVERFLOW:

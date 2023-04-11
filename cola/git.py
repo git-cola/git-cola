@@ -331,7 +331,7 @@ class Git(object):
     def git(self, cmd, *args, **kwargs):
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
-        _kwargs = dict(_cwd=self.getcwd())
+        _kwargs = {'_cwd': self.getcwd()}
         execute_kwargs = (
             '_cwd',
             '_decode',

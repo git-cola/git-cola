@@ -24,7 +24,6 @@ if PY3:
     def bstr(value, encoding=ENCODING):
         return bytes(value, encoding=encoding)
 
-
 elif PY26_PLUS:
     bstr = bytes
 else:

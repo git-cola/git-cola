@@ -81,6 +81,5 @@ def interruptable(func, *args, **opts):
             if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
             raise e
-        else:
-            break
+        break
     return result

@@ -242,14 +242,14 @@ class Settings(object):
         normalize = display.normalize_path
         if self.bookmarks and not isinstance(self.bookmarks[0], dict):
             bookmarks = [
-                dict(name=os.path.basename(path), path=normalize(path))
+                {'name': os.path.basename(path), 'path': normalize(path)}
                 for path in self.bookmarks
             ]
             self.values['bookmarks'] = bookmarks
 
         if self.recent and not isinstance(self.recent[0], dict):
             recent = [
-                dict(name=os.path.basename(path), path=normalize(path))
+                {'name': os.path.basename(path), 'path': normalize(path)}
                 for path in self.recent
             ]
             self.values['recent'] = recent

@@ -591,7 +591,10 @@ class RemoteActionDialog(standard.Dialog):
 
             if prompt and candidate not in self.model.remote_branches:
                 title = N_('Push')
-                args = dict(branch=branch, remote=remote)
+                args = {
+                    'branch': branch,
+                    'remote': remote,
+                }
                 msg = (
                     N_(
                         'Branch "%(branch)s" does not exist in "%(remote)s".\n'

@@ -36,9 +36,10 @@ class Interaction(object):
 
     @staticmethod
     def format_command_status(cmd, status):
-        return N_('"%(command)s" returned exit status %(status)d') % dict(
-            command=cmd, status=status
-        )
+        return N_('"%(command)s" returned exit status %(status)d') % {
+            'command': cmd,
+            'status': status,
+        }
 
     @staticmethod
     def format_out_err(out, err):

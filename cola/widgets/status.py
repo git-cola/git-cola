@@ -1682,12 +1682,12 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
             QLabel:disabled {
                 color: %(disabled_text_rgb)s;
             }
-        """ % dict(
-            disabled_text_rgb=disabled_text_rgb,
-            text_rgb=text_rgb,
-            highlight_text_rgb=highlight_text_rgb,
-            highlight_rgb=highlight_rgb,
-        )
+        """ % {
+            'disabled_text_rgb': disabled_text_rgb,
+            'text_rgb': text_rgb,
+            'highlight_text_rgb': highlight_text_rgb,
+            'highlight_rgb': highlight_rgb,
+        }
 
         self.setStyleSheet(stylesheet)
 

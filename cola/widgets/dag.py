@@ -885,7 +885,10 @@ class GitDAG(standard.MainWindow):
         if self.params.ref:
             self.setWindowTitle(
                 N_('%(project)s: %(ref)s - DAG')
-                % dict(project=project, ref=self.params.ref)
+                % {
+                    'project': project,
+                    'ref': self.params.ref,
+                }
             )
         else:
             self.setWindowTitle(project + N_(' - DAG'))

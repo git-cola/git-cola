@@ -263,9 +263,10 @@ class CreateBranchDialog(standard.Dialog):
             check_branch = bool(commits)
 
         if check_branch:
-            msg = N_(
-                'Resetting "%(branch)s" to "%(revision)s" will lose commits.'
-            ) % dict(branch=branch, revision=revision)
+            msg = N_('Resetting "%(branch)s" to "%(revision)s" will lose commits.') % {
+                'branch': branch,
+                'revision': revision,
+            }
             if ffwd_only:
                 Interaction.critical(N_('Branch Exists'), msg)
                 return
@@ -282,9 +283,10 @@ class CreateBranchDialog(standard.Dialog):
             line = N_('Recovering lost commits may not be easy.')
             lines.append(line)
 
-            info_text = N_('Reset "%(branch)s" to "%(revision)s"?') % dict(
-                branch=branch, revision=revision
-            )
+            info_text = N_('Reset "%(branch)s" to "%(revision)s"?') % {
+                'branch': branch,
+                'revision': revision,
+            }
 
             if not Interaction.confirm(
                 N_('Reset Branch?'),
@@ -312,7 +314,10 @@ class CreateBranchDialog(standard.Dialog):
                     N_('Error Creating Branch'),
                     (
                         N_('"%(command)s" returned exit status "%(status)d"')
-                        % dict(command='git ' + cmd, status=status)
+                        % {
+                            'command': 'git ' + cmd,
+                            'status': status,
+                        }
                     ),
                 )
                 return

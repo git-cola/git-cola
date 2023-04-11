@@ -719,7 +719,10 @@ def tool_button():
             border: %(border)spx solid %(highlight_rgb)s;
         }
     """
-        % dict(border=defs.border, highlight_rgb=highlight_rgb)
+        % {
+            'border': defs.border,
+            'highlight_rgb': highlight_rgb,
+        }
     )
     return button
 

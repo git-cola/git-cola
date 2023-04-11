@@ -444,7 +444,12 @@ class MainModel(QtCore.QObject):
 
     def push(self, remote, remote_branch='', local_branch='', **opts):
         # Swap the branches in push mode (reverse of fetch)
-        opts.update(dict(local_branch=remote_branch, remote_branch=local_branch))
+        opts.update(
+            {
+                'local_branch': remote_branch,
+                'remote_branch': local_branch,
+            }
+        )
         result = run_remote_action(
             self.context, self.git.push, remote, push=True, **opts
         )

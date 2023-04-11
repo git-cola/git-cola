@@ -684,12 +684,12 @@ class HintWidget(QtCore.QObject):
         error_bg_rgb = qtutils.rgb_css(error_bg_color)
         error_fg_rgb = qtutils.rgb_css(error_fg_color)
 
-        env = dict(
-            name=widget.__class__.__name__,
-            error_fg_rgb=error_fg_rgb,
-            error_bg_rgb=error_bg_rgb,
-            hint_rgb=hint_rgb,
-        )
+        env = {
+            'name': widget.__class__.__name__,
+            'error_fg_rgb': error_fg_rgb,
+            'error_bg_rgb': error_bg_rgb,
+            'hint_rgb': hint_rgb,
+        }
 
         self._default_style = ''
 
