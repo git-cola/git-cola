@@ -636,9 +636,11 @@ class RemoteActionDialog(standard.Dialog):
 
     def action_completed(self, task):
         """Grab the results of the action and finish up"""
-        status, out, err = task.result
         self.buttons.setEnabled(True)
+        if not task.result or not isinstance(task.result, (list, tuple)):
+            return
 
+        status, out, err = task.result
         command = 'git %s' % self.action.lower()
         message = Interaction.format_command_status(command, status)
         details = Interaction.format_out_err(out, err)
