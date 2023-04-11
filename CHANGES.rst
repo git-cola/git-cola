@@ -1,3 +1,14 @@
+.. _v4.2.2:
+
+v4.2.1
+======
+
+Fixes
+-----
+* ``QApplication::desktop()`` is no longer available on PyQt6.
+  Git Cola no longer relies on this method.
+
+
 .. _v4.2.1:
 
 v4.2.1

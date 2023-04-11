@@ -207,10 +207,6 @@ class ColaApplication(object):
         """QApplication::activeWindow() pass-through"""
         return self._app.activeWindow()
 
-    def desktop(self):
-        """QApplication::desktop() pass-through"""
-        return self._app.desktop()
-
     def palette(self):
         """QApplication::palette() pass-through"""
         return self._app.palette()

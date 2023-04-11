@@ -118,8 +118,8 @@ class MainWindow(standard.MainWindow):
         """Set the window size on the first initial view"""
         context = self.context
         if utils.is_darwin():
-            desktop = context.app.desktop()
-            self.resize(desktop.width(), desktop.height())
+            width, height = qtutils.desktop_size()
+            self.resize(width, height)
         else:
             self.showMaximized()
 

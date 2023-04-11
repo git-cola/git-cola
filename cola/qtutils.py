@@ -620,14 +620,8 @@ def app():
     return QtWidgets.QApplication.instance()
 
 
-def desktop():
-    """Return the desktop"""
-    return app().desktop()
-
-
 def desktop_size():
-    desk = desktop()
-    rect = desk.screenGeometry(QtGui.QCursor().pos())
+    rect = app().primaryScreen().geometry()
     return (rect.width(), rect.height())
 
 

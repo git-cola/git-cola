@@ -184,12 +184,12 @@ class StartupDialog(standard.Dialog):
             self.context.cfg.set_user('cola.startupmode', list_mode)
 
     def resize_widget(self):
-        screen = QtWidgets.QApplication.instance().desktop()
+        width, height = qtutils.desktop_size()
         self.setGeometry(
-            screen.width() // 4,
-            screen.height() // 4,
-            screen.width() // 2,
-            screen.height() // 2,
+            width // 4,
+            height // 4,
+            width // 2,
+            height // 2,
         )
 
     def find_git_repo(self):

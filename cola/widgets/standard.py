@@ -43,9 +43,7 @@ class WidgetMixin(object):
         self.move(x, y)
 
     def resize_to_desktop(self):
-        desktop = QtWidgets.QApplication.instance().desktop()
-        width = desktop.width()
-        height = desktop.height()
+        width, height = qtutils.desktop_size()
         if utils.is_darwin():
             self.resize(width, height)
         else:
