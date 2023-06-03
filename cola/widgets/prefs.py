@@ -181,8 +181,11 @@ class RepoFormWidget(FormWidget):
         self.set_config(
             {
                 prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
+                prefs.AUTOCOMPLETE_PATHS: (
+                    self.autocomplete_paths,
+                    Defaults.autocomplete_paths,
+                ),
                 prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
-                prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
                 prefs.CHECK_PUBLISHED_COMMITS: (
                     self.check_published_commits,
                     Defaults.check_published_commits,
@@ -192,8 +195,7 @@ class RepoFormWidget(FormWidget):
                     self.display_untracked,
                     Defaults.display_untracked,
                 ),
-                prefs.USER_NAME: (self.name, ''),
-                prefs.USER_EMAIL: (self.email, ''),
+                prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
                 prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
                 prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
                 prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),
@@ -202,13 +204,11 @@ class RepoFormWidget(FormWidget):
                     Defaults.patches_directory,
                 ),
                 prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
-                prefs.AUTOCOMPLETE_PATHS: (
-                    self.autocomplete_paths,
-                    Defaults.autocomplete_paths,
-                ),
                 prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
                 prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
                 prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
+                prefs.USER_NAME: (self.name, ''),
+                prefs.USER_EMAIL: (self.email, ''),
             }
         )
 
