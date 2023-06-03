@@ -2165,7 +2165,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         for node in sort_by_generation(list(self.commits)):
             if node.column is None:
-                # Node is either root or its parent is not in items. The last
+                # Node is either root or its parent is not in items. This
                 # happens when tree loading is in progress. Allocate new
                 # columns for such nodes.
                 node.column = self.alloc_column()
