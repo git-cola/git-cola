@@ -9,6 +9,7 @@
 /env*
 /git-cola.app
 /local
+/patches
 /pip-wheel-metadata
 /pynsist_pkgs
 /.pytest_cache
