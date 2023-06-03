@@ -112,7 +112,7 @@ def set_widget_value(widget, value):
             widget.setText(value)
         elif isinstance(widget, QtWidgets.QCheckBox):
             widget.setChecked(value)
-        elif isinstance(widget, qtutils.ComboBox):
+        elif hasattr(widget, 'set_value'):
             widget.set_value(value)
 
 
@@ -121,6 +121,15 @@ class RepoFormWidget(FormWidget):
         FormWidget.__init__(self, context, model, parent, source=source)
         self.name = QtWidgets.QLineEdit()
         self.email = QtWidgets.QLineEdit()
+
+        tooltip = N_(
+            'Default directory when exporting patches.\n'
+            'Relative paths are relative to the current repository.\n'
+            'Absolute path are used as-is.'
+        )
+        patches_directory = prefs.patches_directory(context)
+        self.patches_directory = standard.DirectoryPathLineEdit(patches_directory, self)
+        self.patches_directory.setToolTip(tooltip)
 
         self.diff_context = standard.SpinBox(value=5, mini=2, maxi=9995)
         self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
@@ -153,6 +162,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
+        self.add_row(N_('Patches Directory'), self.patches_directory)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
@@ -187,6 +197,10 @@ class RepoFormWidget(FormWidget):
                 prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
                 prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
                 prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),
+                prefs.PATCHES_DIRECTORY: (
+                    self.patches_directory,
+                    Defaults.patches_directory,
+                ),
                 prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
                 prefs.AUTOCOMPLETE_PATHS: (
                     self.autocomplete_paths,

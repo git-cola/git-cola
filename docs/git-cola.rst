@@ -793,6 +793,12 @@ cola.resizebrowsercolumns
 `git cola` will automatically resize the file browser columns as folders are
 expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
 
+cola.patchesdirectory
+---------------------
+The default directory to use when exporting patches. Relative paths are treated
+as being relative to the current repository. Absolute paths are used as-is.
+Defaults to `patches`.
+
 cola.safemode
 -------------
 The "Stage" button in the `git cola` Actions panel stages all files when it is

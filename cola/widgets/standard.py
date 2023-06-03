@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
+import os
 import time
 
 from qtpy import QtCore
@@ -741,6 +742,52 @@ class SpinBox(QtWidgets.QSpinBox):
         metrics = QtGui.QFontMetrics(font)
         width = max(self.minimumWidth(), metrics.width('XXXXXX'))
         self.setMinimumWidth(width)
+
+
+class DirectoryPathLineEdit(QtWidgets.QWidget):
+    """A combined line edit and file browser button"""
+    def __init__(self, path, parent):
+        QtWidgets.QWidget.__init__(self, parent)
+
+        self.line_edit = QtWidgets.QLineEdit()
+        self.line_edit.setText(path)
+
+        self.browse_button = qtutils.create_button(
+            tooltip=N_('Select directory'), icon=icons.folder()
+        )
+        layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.browse_button,
+            self.line_edit,
+        )
+        self.setLayout(layout)
+
+        qtutils.connect_button(self.browse_button, self._select_directory)
+
+    def set_value(self, value):
+        """Set the path value"""
+        self.line_edit.setText(value)
+
+    def value(self):
+        """Return the current path value"""
+        return self.line_edit.text().strip()
+
+    def _select_directory(self):
+        """Open a file browser and select a directory"""
+        output_dir = qtutils.opendir_dialog(
+            N_('Select directory'), self.value()
+        )
+        if not output_dir:
+            return
+        # Make the directory relative only if it the current directory or
+        # or subdirectory from the current directory.
+        current_dir = core.getcwd()
+        if output_dir == current_dir:
+            output_dir = '.'
+        elif output_dir.startswith(current_dir + os.sep):
+            output_dir = os.path.relpath(output_dir)
+        self.set_value(output_dir)
 
 
 def export_header_columns(widget, state):

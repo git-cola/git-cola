@@ -37,6 +37,7 @@ MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
 MOUSE_ZOOM = 'cola.mousezoom'
+PATCHES_DIRECTORY = 'cola.patchesdirectory'
 RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
 SAFE_MODE = 'cola.safemode'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
@@ -90,6 +91,7 @@ class Defaults(object):
     textwidth = 72
     theme = 'default'
     hidpi = hidpi.Option.AUTO
+    patches_directory = 'patches'
     status_indent = False
     status_show_totals = False
 
@@ -229,6 +231,11 @@ def spellcheck(context):
 def expandtab(context):
     """Should we expand tabs in commit messages?"""
     return context.cfg.get(EXPANDTAB, default=Defaults.expandtab)
+
+
+def patches_directory(context):
+    """Return the patches output directory"""
+    return context.cfg.get(PATCHES_DIRECTORY, default=Defaults.patches_directory)
 
 
 def sort_bookmarks(context):

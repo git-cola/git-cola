@@ -9,6 +9,7 @@ from .. import qtutils
 from ..i18n import N_
 from ..icons import folder
 from ..interaction import Interaction
+from ..models import prefs
 from . import completion
 from . import defs
 from .diff import DiffTextEdit
@@ -156,7 +157,7 @@ class SelectCommitsAndOutput(SelectCommits):
     def __init__(self, context, model, parent=None, title=None, multiselect=True):
         SelectCommits.__init__(self, context, model, parent, title, multiselect)
 
-        self.output_dir = 'output'
+        self.output_dir = prefs.patches_directory(context)
         self.select_output = qtutils.create_button(
             tooltip=N_('Select output dir'), icon=folder()
         )

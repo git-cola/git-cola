@@ -9,6 +9,10 @@ Usability, bells and whistles
   The commit date is now displayed and the subject field is displayed
   directly above the extended description.
 
+* The default `patches` directory that is used when exporting patches
+  is now configurable using the `cola.patchesdirectory` configuration
+  variable and the Preferences dialog.
+
 Fixes
 -----
 * ``QApplication::desktop()`` is no longer available on PyQt6.
