@@ -1,7 +1,13 @@
 .. _v4.2.2:
 
-v4.2.1
+v4.2.2
 ======
+
+Usability, bells and whistles
+-----------------------------
+* `git dag` now displays commit metadata more similarly to `git log`.
+  The commit date is now displayed and the subject field is displayed
+  directly above the extended description.
 
 Fixes
 -----
