@@ -34,11 +34,12 @@ def new_apply_patches(context, patches=None, parent=None):
 
 
 def get_patches_from_paths(paths):
+    """Returns all patches benath a given path"""
     paths = [core.decode(p) for p in paths]
     patches = [
         p
         for p in paths
-        if core.isfile(p) and (p.endswith('.patch') or p.endswith('.mbox'))
+        if core.isfile(p) and p.endswith(('.patch', '.mbox'))
     ]
     dirs = [p for p in paths if core.isdir(p)]
     dirs.sort()
@@ -48,6 +49,7 @@ def get_patches_from_paths(paths):
 
 
 def get_patches_from_mimedata(mimedata):
+    """Extract path files from a QMimeData payload"""
     urls = mimedata.urls()
     if not urls:
         return []
@@ -59,7 +61,7 @@ def get_patches_from_dir(path):
     """Find patches in a subdirectory"""
     patches = []
     for root, _, files in core.walk(path):
-        for name in [f for f in files if f.endswith('.patch')]:
+        for name in [f for f in files if f.endswith(('.patch', '.mbox'))]:
             patches.append(core.decode(os.path.join(root, name)))
     return patches
 
