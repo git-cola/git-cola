@@ -491,6 +491,14 @@ def save_as(filename, title='Save As...'):
     return result[0]
 
 
+def existing_file(directory, title='Append...'):
+    """Creates a Save File dialog and returns a filename."""
+    result = compat.getopenfilename(
+        parent=active_window(), caption=title, basedir=directory
+    )
+    return result[0]
+
+
 def copy_path(filename, absolute=True):
     """Copy a filename to the clipboard"""
     if filename is None:
