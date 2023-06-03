@@ -175,7 +175,7 @@ def export_patches(context):
         context,
         reversed(to_export_and_output['to_export']),
         reversed(revs),
-        to_export_and_output['output'],
+        output=to_export_and_output['output'],
     )
 
 
