@@ -142,9 +142,13 @@ def read(filename, size=-1, encoding=None, errors='strict'):
         return xread(fh, size=size, encoding=encoding, errors=errors)
 
 
-def write(path, contents, encoding=None):
+def write(path, contents, encoding=None, append=False):
     """Writes a unicode string to a file"""
-    with xopen(path, 'wb') as fh:
+    if append:
+        mode = 'ab'
+    else:
+        mode = 'wb'
+    with xopen(path, mode) as fh:
         return xwrite(fh, contents, encoding=encoding)
 
 
