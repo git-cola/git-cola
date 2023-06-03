@@ -523,4 +523,7 @@ relpath = wrap(mkpath, os.path.relpath, decorator=decode)
 remove = wrap(mkpath, os.remove)
 stat = wrap(mkpath, os.stat)
 unlink = wrap(mkpath, os.unlink)
-walk = wrap(mkpath, os.walk)
+if PY2:
+    walk = wrap(mkpath, os.walk)
+else:
+    walk = os.walk
