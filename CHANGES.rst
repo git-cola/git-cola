@@ -19,6 +19,10 @@ Usability, bells and whistles
 * Existing patches can be appended to by choosing a patch file from
   the `Append Patch` sub-menu in the `Patches` context menu action.
 
+* Patches can now be applied by dragging and dropping patches files from
+  a file browser onto the diff editor. The "Apply Patches" dialog is
+  launched with the drag-and-dropped patch files.
+
 Fixes
 -----
 * ``QApplication::desktop()`` is no longer available on PyQt6.

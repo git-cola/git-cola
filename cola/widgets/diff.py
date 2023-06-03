@@ -484,6 +484,10 @@ class Viewer(QtWidgets.QFrame):
         self.image.setFocusPolicy(Qt.NoFocus)
         self.search_widget = TextSearchWidget(self.text, self)
         self.search_widget.hide()
+        self._drag_has_patches = False
+
+        self.setAcceptDrops(True)
+        self.setFocusProxy(self.text)
 
         stack = self.stack = QtWidgets.QStackedWidget(self)
         stack.addWidget(self.text)
@@ -510,14 +514,44 @@ class Viewer(QtWidgets.QFrame):
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
         options.zoom_mode.currentIndexChanged.connect(lambda _: self.render())
 
-        self.setFocusProxy(self.text)
-
         self.search_action = qtutils.add_action(
             self,
             N_('Search in Diff'),
             self.show_search_diff,
             hotkeys.SEARCH,
         )
+
+    def dragEnterEvent(self, event):
+        """Accepts drops if the mimedata contains patches"""
+        super(Viewer, self).dragEnterEvent(event)
+        patches = patch_mod.get_patches_from_mimedata(event.mimeData())
+        if patches:
+            event.acceptProposedAction()
+            self._drag_has_patches = True
+
+    def dragLeaveEvent(self, event):
+        """End the drag+drop interaction"""
+        super(Viewer, self).dragLeaveEvent(event)
+        if self._drag_has_patches:
+            event.accept()
+        else:
+            event.ignore()
+        self._drag_has_patches = False
+
+    def dropEvent(self, event):
+        """Apply patches when dropped onto the widget"""
+        if not self._drag_has_patches:
+            event.ignore()
+            return
+        event.setDropAction(Qt.CopyAction)
+        super(Viewer, self).dropEvent(event)
+        self._drag_has_patches = False
+
+        patches = patch_mod.get_patches_from_mimedata(event.mimeData())
+        if patches:
+            patch_mod.apply_patches(self.context, patches=patches)
+
+        event.accept()  # must be called after dropEvent()
 
     def show_search_diff(self):
         """Show a dialog for searching diffs"""

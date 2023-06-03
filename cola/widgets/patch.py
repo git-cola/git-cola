@@ -18,15 +18,17 @@ from . import defs
 from . import diff
 
 
-def apply_patches(context):
+def apply_patches(context, patches=None):
+    """Open the ApplyPatches dialog"""
     parent = qtutils.active_window()
-    dlg = new_apply_patches(context, parent=parent)
+    dlg = new_apply_patches(context, patches=patches, parent=parent)
     dlg.show()
     dlg.raise_()
     return dlg
 
 
 def new_apply_patches(context, patches=None, parent=None):
+    """Create a new instances of the ApplyPatches dialog"""
     dlg = ApplyPatches(context, parent=parent)
     if patches:
         dlg.add_paths(patches)
