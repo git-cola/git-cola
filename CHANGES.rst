@@ -13,6 +13,9 @@ Usability, bells and whistles
   is now configurable using the `cola.patchesdirectory` configuration
   variable and the Preferences dialog.
 
+* The Diff Editor can now export the diff selection, or the
+  current diff hunk, to a `*.patch` file.
+
 Fixes
 -----
 * ``QApplication::desktop()`` is no longer available on PyQt6.

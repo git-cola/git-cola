@@ -1044,6 +1044,9 @@ class DiffEditor(DiffTextEdit):
             # Removed files can still be diffed.
             add_action(self.launch_difftool)
 
+        add_action(qtutils.menu_separator(menu))
+        _add_patch_actions(self, self.context, menu)
+
         # Add the Previous/Next File actions, which improves discoverability
         # of their associated shortcuts
         add_action(qtutils.menu_separator(menu))
@@ -1174,6 +1177,43 @@ class DiffEditor(DiffTextEdit):
     def _update_line_number(self):
         """Update the selection model when the cursor changes"""
         self.selection_model.line_number = self.numbers.current_line()
+
+
+def _add_patch_actions(widget, context, menu):
+    """Add actions for manipulating patch files"""
+    patches_menu = menu.addMenu(N_('Patches'))
+    patches_menu.setIcon(icons.diff())
+    export_action = qtutils.add_action(
+        patches_menu,
+        N_('Export Patch'),
+        lambda: _export_patch(widget, context),
+    )
+    export_action.setIcon(icons.save())
+    patches_menu.addAction(export_action)
+
+
+def _export_patch(diff_editor, context):
+    """Export the selected diff to a patch file"""
+    if diff_editor.selection_model.is_empty():
+        return
+    patch = diff_editor.extract_patch(reverse=False)
+    if not patch.has_changes():
+        return
+    default_filename = os.path.join(prefs.patches_directory(context), 'diff.patch')
+    filename = qtutils.save_as(default_filename)
+    if not filename:
+        return
+    encoding = diff_editor.patch_encoding()
+    content = patch.as_text()
+    try:
+        core.write(filename, content, encoding=encoding)
+    except (IOError, OSError) as exc:
+        _, details = utils.format_exception(exc)
+        title = N_('Error writing patch')
+        msg = N_('Unable to write patch to "%s". Check permissions?' % filename)
+        Interaction.critical(title, message=msg, details=details)
+        return
+    Interaction.log('Patch written to "%s"' % filename)
 
 
 class DiffWidget(QtWidgets.QWidget):
