@@ -1200,18 +1200,24 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.gravatar_label = gravatar.GravatarLabel(self.context, parent=self)
 
+        self.oid_label = TextLabel()
+        self.oid_label.setTextFormat(Qt.PlainText)
+        self.oid_label.setSizePolicy(policy)
+        self.oid_label.setAlignment(Qt.AlignBottom)
+        self.oid_label.elide()
+
         self.author_label = TextLabel()
         self.author_label.setTextFormat(Qt.RichText)
         self.author_label.setFont(author_font)
         self.author_label.setSizePolicy(policy)
-        self.author_label.setAlignment(Qt.AlignBottom)
+        self.author_label.setAlignment(Qt.AlignTop)
         self.author_label.elide()
 
         self.date_label = TextLabel()
         self.date_label.setTextFormat(Qt.PlainText)
         self.date_label.setSizePolicy(policy)
         self.date_label.setAlignment(Qt.AlignTop)
-        self.date_label.hide()
+        self.date_label.elide()
 
         self.summary_label = TextLabel()
         self.summary_label.setTextFormat(Qt.PlainText)
@@ -1220,22 +1226,16 @@ class DiffWidget(QtWidgets.QWidget):
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
-        self.oid_label = TextLabel()
-        self.oid_label.setTextFormat(Qt.PlainText)
-        self.oid_label.setSizePolicy(policy)
-        self.oid_label.setAlignment(Qt.AlignTop)
-        self.oid_label.elide()
-
         self.diff = DiffTextEdit(context, self, is_commit=is_commit, whitespace=False)
         self.setFocusProxy(self.diff)
 
         self.info_layout = qtutils.vbox(
             defs.no_margin,
             defs.no_spacing,
+            self.oid_label,
             self.author_label,
             self.date_label,
             self.summary_label,
-            self.oid_label,
         )
 
         self.logo_layout = qtutils.hbox(
@@ -1284,10 +1284,11 @@ class DiffWidget(QtWidgets.QWidget):
             return
         commit = commits[-1]
         oid = commit.oid
-        email = commit.email or ''
-        summary = commit.summary or ''
         author = commit.author or ''
-        self.set_details(oid, author, email, '', summary)
+        email = commit.email or ''
+        date = commit.authdate or ''
+        summary = commit.summary or ''
+        self.set_details(oid, author, email, date, summary)
         self.oid = oid
 
         if len(commits) > 1:
