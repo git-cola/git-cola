@@ -29,6 +29,7 @@ from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
 from .text import TextSearchWidget
 from . import defs
+from . import patch as patch_mod
 from . import imageview
 
 
@@ -1191,6 +1192,57 @@ def _add_patch_actions(widget, context, menu):
     export_action.setIcon(icons.save())
     patches_menu.addAction(export_action)
 
+    # Build the "Append Patch" menu dynamically.
+    append_menu = patches_menu.addMenu(N_('Append Patch'))
+    append_menu.setIcon(icons.add())
+    append_menu.aboutToShow.connect(
+        lambda: _build_patch_append_menu(widget, context, append_menu)
+    )
+
+
+def _build_patch_append_menu(widget, context, menu):
+    """Build the "Append Patch" submenu"""
+    # Build the menu when first displayed only. This initial check avoids
+    # re-populating the menu with duplicate actions.
+    menu_actions = menu.actions()
+    if menu_actions:
+        return
+    subdir_menus = {}
+    path = prefs.patches_directory(context)
+    patches = patch_mod.get_patches_from_dir(path)
+    for patch in patches:
+        relpath = os.path.relpath(patch, start=path)
+        sub_menu = _add_patch_subdirs(menu, subdir_menus, relpath)
+        patch_basename = os.path.basename(relpath)
+        append_action = qtutils.add_action(
+            sub_menu,
+            patch_basename,
+            lambda patch_file=patch: _append_patch(widget, patch_file),
+        )
+        append_action.setIcon(icons.save())
+        sub_menu.addAction(append_action)
+
+
+def _add_patch_subdirs(menu, subdir_menus, relpath):
+    """Build menu leading up to the patch"""
+    # If the path contains no directory separators then add it to the
+    # root of the menu.
+    if os.sep not in relpath:
+        return menu
+
+    # Loop over each directory component and build a menu if it doesn't already exist.
+    components = []
+    for dirname in os.path.dirname(relpath).split(os.sep):
+        components.append(dirname)
+        current_dir = os.sep.join(components)
+        try:
+            menu = subdir_menus[current_dir]
+        except KeyError:
+            menu = subdir_menus[current_dir] = menu.addMenu(dirname)
+            menu.setIcon(icons.folder())
+
+    return menu
+
 
 def _export_patch(diff_editor, context):
     """Export the selected diff to a patch file"""
@@ -1203,10 +1255,25 @@ def _export_patch(diff_editor, context):
     filename = qtutils.save_as(default_filename)
     if not filename:
         return
+    _write_patch_to_file(diff_editor, patch, filename)
+
+
+def _append_patch(diff_editor, filename):
+    """Append diffs to the specified patch file"""
+    if diff_editor.selection_model.is_empty():
+        return
+    patch = diff_editor.extract_patch(reverse=False)
+    if not patch.has_changes():
+        return
+    _write_patch_to_file(diff_editor, patch, filename, append=True)
+
+
+def _write_patch_to_file(diff_editor, patch, filename, append=False):
+    """Write diffs from the Diff Editor to the specified patch file"""
     encoding = diff_editor.patch_encoding()
     content = patch.as_text()
     try:
-        core.write(filename, content, encoding=encoding)
+        core.write(filename, content, encoding=encoding, append=append)
     except (IOError, OSError) as exc:
         _, details = utils.format_exception(exc)
         title = N_('Error writing patch')

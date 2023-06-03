@@ -13,8 +13,11 @@ Usability, bells and whistles
   is now configurable using the `cola.patchesdirectory` configuration
   variable and the Preferences dialog.
 
-* The Diff Editor can now export the diff selection, or the
-  current diff hunk, to a `*.patch` file.
+* The Diff Editor can now export the diff selection, or the current
+  diff hunk, to a `*.patch` file from the `Patches` context menu action.
+
+* Existing patches can be appended to by choosing a patch file from
+  the `Append Patch` sub-menu in the `Patches` context menu action.
 
 Fixes
 -----
