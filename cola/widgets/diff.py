@@ -1207,6 +1207,15 @@ def _build_patch_append_menu(widget, context, menu):
     menu_actions = menu.actions()
     if menu_actions:
         return
+
+    choose_patch_action = qtutils.add_action(
+        menu,
+        N_('Choose Patch...'),
+        lambda: _export_patch(widget, context, append=True),
+    )
+    choose_patch_action.setIcon(icons.diff())
+    menu.addAction(choose_patch_action)
+
     subdir_menus = {}
     path = prefs.patches_directory(context)
     patches = patch_mod.get_patches_from_dir(path)
@@ -1244,18 +1253,22 @@ def _add_patch_subdirs(menu, subdir_menus, relpath):
     return menu
 
 
-def _export_patch(diff_editor, context):
+def _export_patch(diff_editor, context, append=False):
     """Export the selected diff to a patch file"""
     if diff_editor.selection_model.is_empty():
         return
     patch = diff_editor.extract_patch(reverse=False)
     if not patch.has_changes():
         return
-    default_filename = os.path.join(prefs.patches_directory(context), 'diff.patch')
-    filename = qtutils.save_as(default_filename)
+    directory = prefs.patches_directory(context)
+    if append:
+        filename = qtutils.existing_file(directory, title=N_('Append Patch...'))
+    else:
+        default_filename = os.path.join(directory, 'diff.patch')
+        filename = qtutils.save_as(default_filename)
     if not filename:
         return
-    _write_patch_to_file(diff_editor, patch, filename)
+    _write_patch_to_file(diff_editor, patch, filename, append=append)
 
 
 def _append_patch(diff_editor, filename):
