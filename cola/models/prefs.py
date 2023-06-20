@@ -30,6 +30,7 @@ HIDPI = 'cola.hidpi'
 HISTORY_BROWSER = 'gui.historybrowser'
 ICON_THEME = 'cola.icontheme'
 LINEBREAK = 'cola.linebreak'
+LOGDATE = 'cola.logdate'
 MAXRECENT = 'cola.maxrecent'
 MERGE_DIFFSTAT = 'merge.diffstat'
 MERGE_KEEPBACKUP = 'merge.keepbackup'
@@ -51,6 +52,34 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+
+
+class DateFormat(object):
+    DEFAULT = 'default'
+    RELATIVE = 'relative'
+    LOCAL = 'local'
+    ISO = 'iso8601'
+    ISO_STRICT = 'iso8601-strict'
+    RFC = 'rfc2822'
+    SHORT = 'short'
+    RAW = 'raw'
+    HUMAN = 'human'
+    UNIX = 'unix'
+
+
+def date_formats():
+    return [
+        DateFormat.DEFAULT,
+        DateFormat.RELATIVE,
+        DateFormat.LOCAL,
+        DateFormat.ISO,
+        DateFormat.ISO_STRICT,
+        DateFormat.RFC,
+        DateFormat.SHORT,
+        DateFormat.RAW,
+        DateFormat.HUMAN,
+        DateFormat.UNIX,
+    ]
 
 
 class Defaults(object):
@@ -94,6 +123,7 @@ class Defaults(object):
     patches_directory = 'patches'
     status_indent = False
     status_show_totals = False
+    logdate = DateFormat.DEFAULT
 
 
 def blame_viewer(context):
@@ -208,6 +238,11 @@ def history_browser(context):
 def linebreak(context):
     """Should we word-wrap lines in the commit message editor?"""
     return context.cfg.get(LINEBREAK, default=Defaults.linebreak)
+
+
+def logdate(context):
+    """Return the configured log date format"""
+    return context.cfg.get(LOGDATE, default=Defaults.logdate)
 
 
 def maxrecent(context):
