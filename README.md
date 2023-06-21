@@ -272,6 +272,14 @@ Once these are installed you can run Git Cola from the Start menu.
 
 See "Windows (Continued)" below for more details.
 
+If you'd like to install Git Cola with
+[winget](https://github.com/microsoft/winget-cli) run the following command:
+
+    winget install git-cola.git-cola
+
+As there is no dependency resolution yet you have to install Git as well with:
+
+    winget install Git.Git
 
 # Goodies
 
