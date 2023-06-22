@@ -142,7 +142,10 @@ class RepoFormWidget(FormWidget):
         self.textwidth = standard.SpinBox(value=72, maxi=150)
 
         self.logdate = qtutils.combo(prefs.date_formats())
-        tooltip = N_('This value is passed to git log --date')
+        tooltip = N_(
+            'The date-time format used when displaying dates in Git DAG.\n'
+            'This value is passed to git log --date=<format>'
+        )
         self.logdate.setToolTip(tooltip)
 
         tooltip = N_('Detect conflict markers in unmerged files')
