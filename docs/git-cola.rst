@@ -762,6 +762,14 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
+cola.logdate
+------------
+Set the default date-time mode for the DAG display. This value is
+passed to `git log --date=<format>`.
+See `git log(1) <https://git-scm.com/docs/git-log#Documentation/git-log.txt---dateltformatgt>`_
+for details.
+
+
 cola.maxrecent
 --------------
 `git cola` caps the number of recent repositories to avoid cluttering

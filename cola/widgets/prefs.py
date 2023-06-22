@@ -141,6 +141,10 @@ class RepoFormWidget(FormWidget):
         self.tabwidth = standard.SpinBox(value=8, maxi=42)
         self.textwidth = standard.SpinBox(value=72, maxi=150)
 
+        self.logdate = qtutils.combo(prefs.date_formats())
+        tooltip = N_('This value is passed to git log --date')
+        self.logdate.setToolTip(tooltip)
+
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
 
@@ -160,6 +164,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Text Width'), self.textwidth)
+        self.add_row(N_('Log Date Format'), self.logdate)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Patches Directory'), self.patches_directory)
@@ -196,6 +201,7 @@ class RepoFormWidget(FormWidget):
                     Defaults.display_untracked,
                 ),
                 prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
+                prefs.LOGDATE: (self.logdate, Defaults.logdate),
                 prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
                 prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
                 prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),

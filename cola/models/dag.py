@@ -3,6 +3,7 @@ import json
 
 from .. import core
 from .. import utils
+from ..models import prefs
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
@@ -273,7 +274,12 @@ class RepoReader(object):
 
         self.reset()
         ref_args = utils.shell_split(self.params.ref)
-        cmd = self._cmd + ['-%d' % self.params.count] + ref_args
+        cmd = (
+            self._cmd
+            + ['-%d' % self.params.count]
+            + ref_args
+            + ['--date=%s' % prefs.logdate(self.context)]
+        )
         self._proc = core.start_command(cmd)
 
         while True:
