@@ -1,6 +1,6 @@
-.. _v4.2.2:
+.. _v4.3.0:
 
-v4.2.2
+v4.3.0
 ======
 
 Usability, bells and whistles
@@ -8,6 +8,9 @@ Usability, bells and whistles
 * `git dag` now displays commit metadata more similarly to `git log`.
   The commit date is now displayed and the subject field is displayed
   directly above the extended description.
+
+* `git dag` now supports a `cola.logdate` configuration for controlling
+  the date format. The configured value is passed to `git log --date=<format>`.
 
 * The default `patches` directory that is used when exporting patches
   is now configurable using the `cola.patchesdirectory` configuration
