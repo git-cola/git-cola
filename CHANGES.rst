@@ -33,6 +33,12 @@ Fixes
 * ``QApplication::desktop()`` is no longer available on PyQt6.
   Git Cola no longer relies on this method.
 
+Packaging
+---------
+* Git Cola can now be installed on Windows using `winget`.
+  See the ``README.md`` file for more details.
+  (`#1318 <https://github.com/git-cola/git-cola/pull/1318>`_)
+
 
 .. _v4.2.1:
 
