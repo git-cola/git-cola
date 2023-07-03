@@ -11,6 +11,8 @@ Usability, bells and whistles
 
 * `git dag` now supports a `cola.logdate` configuration for controlling
   the date format. The configured value is passed to `git log --date=<format>`.
+  (`#1319 <https://github.com/git-cola/git-cola/pull/1319>`_)
+  (`#1312 <https://github.com/git-cola/git-cola/issues/1312>`_)
 
 * The default `patches` directory that is used when exporting patches
   is now configurable using the `cola.patchesdirectory` configuration
