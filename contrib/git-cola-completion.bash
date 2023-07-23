@@ -1,10 +1,12 @@
-# This is a git-cola extension for Git's git-completion.bash script
+# git-cola extensions for Git's git-completion.bash script
 #
 # This script must be sourced *after* Git's git-completion.bash script.
-# See git.git's contrib/completion/git-completion.bash for details.
+# Source git.git's git-completion.bash and then source this script from
+# your ~/.bashrc in order to activate the completions.
 #
 # Completion is provided for "git cola ..." and "git dag ..." via the
 # _git_cola() and _git_dag() functions.
+# See git.git's contrib/completion/git-completion.bash for more details.
 
 __git_cola_common_options="--icon-theme --prompt --repo --theme --version"
 __git_cola_subcommands_list=

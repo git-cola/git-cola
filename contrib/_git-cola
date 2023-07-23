@@ -1,0 +1,169 @@
+#compdef git-cola
+#description zsh completion for git-cola
+#
+# The recommended way to install this script is to make a copy of it as a
+# file named '_git-cola' inside any directory in your fpath.
+#
+# For example, create a directory '~/.config/zsh/completion',
+# copy this file to '~/.config/zsh/completion/_git-cola',
+# and then add the following to your ~/.zshrc file:
+#
+#  fpath=(~/.config/zsh/completion $fpath)
+
+__git-cola_common_options () {
+	# these can't be prefixed
+	_arguments '--help[Show help]' \
+		'--icon-theme=-[specify an icon theme name or directory]:theme:(dark light default)' \
+		'--theme=-[specify a GUI theme name]:theme:(dark light default)' \
+		'--prompt[prompt for a repository]' \
+		'--repo=-[open the specified git repository]:repository:_files -/' \
+		'--version[print version number]'
+}
+
+_git-cola_refs () {
+	typeset -a refs
+	local ref
+
+	if git rev-parse HEAD >/dev/null 2>&1
+	then
+		for ref in $(git for-each-ref --format='%(refname:short)')
+		do
+			refs+=(${ref})
+		done
+
+		(( $#refs )) && _describe -t refs 'refs' refs
+	fi
+
+}
+
+_git-cola-am () {
+	__git-cola_common_options
+	_arguments \
+		'*:patches:_files -g "*.patch"'
+}
+
+_git-cola-archive () {
+	__git-cola_common_options
+	_arguments \
+		':ref:_git-cola_refs'
+}
+
+_git-cola-cola () {
+	__git-cola_common_options
+	_arguments \
+		'--status-filter=-[status path filter]:path:_files'
+}
+
+_git-cola-dag () {
+	__git-cola_common_options
+	_arguments \
+		'--all[show all branches]' \
+		'*:refs:_git-cola_refs'
+}
+
+_git-cola-diff () {
+	__git-cola_common_options
+	_arguments \
+		'*:refs:_git-cola_refs'
+}
+
+_git-cola-find () {
+	__git-cola_common_options
+	_arguments \
+		':path:_files'
+}
+
+_git-cola-grep () {
+	__git-cola_common_options
+	_arguments \
+		'*:path:_files'
+}
+
+_git-cola-merge () {
+	__git-cola_common_options
+	_arguments \
+		':ref:_git-cola_refs'
+}
+
+_git-cola-rebase () {
+	__git-cola_common_options
+	_arguments \
+		'--autosquash[move commits that begin with squash!/fixup!]' \
+		'--autostash[automatically stash/stash pop before and after]' \
+		'--fork-point[use "merge-base --fork-point" to refine upstream]' \
+		'--onto=-[rebase onto given branch instead of upstream]:ref:_git-cola_refs' \
+		'--preserve-merges[try to recreate merges instead of ignoring them]' \
+		'--root[rebase all reachable commits up to the root(s)]' \
+		'--strategy=-[use the given merge strategy]:strategy:(recursive resolve octopus ort ours subtree)' \
+		'--verify[allow pre-rebase hook to run]' \
+		'--continue[continue]' \
+		'--abort[abort adn check out the original branch]' \
+		'--skip[skip current patch and continue]' \
+		'--edit-todo[edit the todo list]' \
+		':ref:_git-cola_refs' \
+		':ref:_git-cola_refs'
+}
+
+_git-cola-tag () {
+	__git-cola_common_options
+	_arguments \
+		'--sign[annotated and GPG-signed tag]' \
+		':tag name:' \
+		':ref:_git-cola_refs'
+}
+
+
+_git-cola () {
+	local curcontext="$curcontext" state line
+	typeset -A opt_args
+	_arguments -C \
+		':command:->command' \
+		'*::options:->options' \
+
+	case $state in
+	(command)
+		#breaks if defined outside the func
+		local -a subcommands
+		subcommands=(
+			'about:about git-cola'
+			'am:apply patches using "git am"'
+			'archive:save an archive'
+			'branch:create a branch'
+			'browse:browse repository'
+			'clone:clone repository'
+			'cola:start git-cola'
+			'config:edit configuration'
+			'dag:visualize branch history'
+			'diff:view diffs'
+			'fetch:fetch remotes'
+			'find:find files'
+			'grep:grep source'
+			'merge:merge branches'
+			'pull:pull remote branches'
+			'push:push remote branches'
+			'rebase:interactive rebase'
+			'recent:edit recent files'
+			'remote:edit remotes'
+			'search:search commits'
+			'stash:stash and unstash changes'
+			'tag:create tags'
+			'version:print the version'
+			'--help-commands:show available sub-commands'
+		)
+
+		_describe -t commands git-cola subcommands
+	;;
+	(options)
+		local funcname
+		funcname=_git-cola-$line[1]
+		if type $funcname | grep -q 'shell function'
+		then
+			$funcname
+		else
+			__git-cola_common_options
+		fi
+	;;
+	esac
+}
+
+_git-cola "$@"

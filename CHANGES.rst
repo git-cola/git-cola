@@ -28,6 +28,9 @@ Usability, bells and whistles
   a file browser onto the diff editor. The "Apply Patches" dialog is
   launched with the drag-and-dropped patch files.
 
+* Shell completions for zsh are now provided in the source distribution.
+  See the `contrib/_git-cola` zsh completion file for more details
+
 Fixes
 -----
 * ``QApplication::desktop()`` is no longer available on PyQt6.
