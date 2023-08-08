@@ -297,6 +297,15 @@ environment variable:
     export GIT_SEQUENCE_EDITOR="$HOME/git-cola/bin/git-cola-sequence-editor"
     git rebase -i @{upstream}
 
+## Shell Completions
+
+Shell completion scripts are available for bash and zsh.
+Each script contains instructions on how to install and activate the completions.
+
+* [bash completion script](contrib/git-cola-completion.bash)
+
+* [zsh completion script](contrib/_git-cola)
+
 
 # Git Cola Sub-commands
 

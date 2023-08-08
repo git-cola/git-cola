@@ -1232,6 +1232,17 @@ prior to launching `git cola`.::
     eval $(gpg-agent --daemon)
     git cola
 
+SHELL COMPLETIONS
+=================
+
+Git Cola provides shell completions for zsh and bash.
+The completion scripts and instructions are included in Git Cola's
+`contrib` directory.
+
+* `Shell completion scripts <https://gitlab.com/git-cola/git-cola/-/tree/main/contrib>`_
+
+* `Setup instructions <https://gitlab.com/git-cola/git-cola/-/blob/main/contrib/README.md>`_
+
 WINDOWS NOTES
 =============
 

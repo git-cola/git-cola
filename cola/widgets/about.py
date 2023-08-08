@@ -126,7 +126,7 @@ def copyright_text():
     return """
 Git Cola: The highly caffeinated Git GUI
 
-Copyright (C) 2007-2020 David Aguilar and contributors
+Copyright (C) 2007-2023 David Aguilar and contributors
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License
