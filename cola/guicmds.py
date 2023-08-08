@@ -19,6 +19,11 @@ from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output
 
+try:
+    from win10toast import ToastNotifier as notification
+except ImportError:
+    notification = None
+
 
 def delete_branch(context):
     """Launch the 'Delete Branch' dialog."""
@@ -393,7 +398,17 @@ def restore_worktree(context):
     if ref:
         cmds.do(cmds.RestoreWorktree, context, ref)
 
+def notification(notification_title, notification_text, duraion=20, threaded=True):
+    AVAILABLE = notification is not None
+    if AVAILABLE:
+        toast = notification()
+        toast.show_toast(
+            notification_title,
+            notification_text,
+            duration=duraion,
+            threaded=threaded)
 
 def install():
     """Install the GUI-model interaction hooks"""
     Interaction.choose_ref = staticmethod(choose_ref)
+    Interaction.notification = staticmethod(notification)

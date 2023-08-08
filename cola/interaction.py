@@ -153,3 +153,10 @@ class Interaction(object):
         icon = icon or '?'
         cls.information(title, button_text)
         return sys.stdin.readline().strip() or default
+
+    @classmethod
+    def notification(cls):
+        """
+            ???
+        """
+        return
