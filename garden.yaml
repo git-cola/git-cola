@@ -1,0 +1,89 @@
+# Use "cargo install garden-tools" to install garden (https://gitlab.com/garden-rs/garden).
+# Usage:
+#   # Related Projects
+#   garden grow pages           # Clone the Git Cola homepage
+#   garden grow fedora          # Clone the Fedora packaging
+#   garden grow deb             # Clone the Debian packaging
+---
+garden:
+  root: "${GARDEN_CONFIG_DIR}"
+trees:
+  git-cola:
+    path: "${GARDEN_CONFIG_DIR}"
+    url: "git@gitlab.com:git-cola/git-cola.git"
+    remotes:
+      DasaniT: "https://github.com/DasaniT/git-cola.git"
+      Mailaender: "https://github.com/Mailaender/git-cola.git"
+      Mithil467: "https://github.com/Mithil467/git-cola.git"
+      NielBuys: "https://github.com/NielBuys/git-cola.git"
+      WNguyen14: "https://github.com/WNguyen14/git-cola.git"
+      abid1998: "https://github.com/abid1998/git-cola.git"
+      achernet: "https://github.com/achernet/git-cola.git"
+      axel-h: "https://github.com/axel-h/git-cola.git"
+      bearsh: "https://github.com/bearsh/git-cola.git"
+      bensmrs: "https://github.com/bensmrs/git-cola.git"
+      bobvanderlinden: "https://github.com/bobvanderlinden/git-cola.git"
+      brccabral: "https://github.com/brccabral/git-cola.git"
+      davvid: "git@github.com:davvid/git-cola.git"
+      dschwoerer: "https://github.com/dschwoerer/git-cola.git"
+      florisla: "https://github.com/florisla/git-cola.git"
+      fu7mu4: "https://github.com/fu7mu4/git-cola.git"
+      gdebure: "https://github.com/gdebure/git-cola.git"
+      github: "git@github.com:git-cola/git-cola.git"
+      guoyunhe: "https://github.com/guoyunhe/git-cola.git"
+      gyuris: "https://github.com/gyuris/git-cola.git"
+      haffmans: "https://github.com/haffmans/git-cola.git"
+      harmathy: "https://github.com/harmathy/git-cola.git"
+      hsoft: "https://github.com/hsoft/git-cola.git"
+      jamie-pate: "https://github.com/jamie-pate/git-cola.git"
+      kenyuy: "https://github.com/kenyuy/git-cola.git"
+      kisaragi-hiu: "https://github.com/kisaragi-hiu/git-cola.git"
+      kneirinck: "https://github.com/kneirinck/git-cola.git"
+      kurtmckee: "https://github.com/kurtmckee/git-cola.git"
+      laerreal: "https://github.com/laerreal/git-cola.git"
+      lah7: "https://github.com/lah7/git-cola.git"
+      living180: "https://github.com/living180/git-cola.git"
+      ljhcage: "https://github.com/ljhcage/git-cola.git"
+      malpas: "https://github.com/malpas/git-cola.git"
+      melkecelioglu: "https://github.com/melkecelioglu/git-cola.git"
+      milestone12: "https://github.com/milestone12/git-cola.git"
+      mmargoliono: "https://github.com/mmargoliono/git-cola"
+      mp-chet: "https://github.com/mp-chet/git-cola.git"
+      nakanoi: "https://github.com/nakanoi/git-cola.git"
+      nandalopes: "https://github.com/nandalopes/git-cola.git"
+      pilarmolinalopez: "https://github.com/pilarmolinalopez/git-cola.git"
+      quintusfelix: "https://github.com/quintusfelix/git-cola.git"
+      rafaelreuber: "https://github.com/rafaelreuber/git-cola.git"
+      scop: "https://github.com/scop/git-cola.git"
+      sergei-dyshel: "https://github.com/sergei-dyshel/git-cola.git"
+      skunkwerks: "https://github.com/skunkwerks/git-cola.git"
+      takluyver: "https://github.com/takluyver/git-cola.git"
+      thk123: "https://github.com/thk123/git-cola.git"
+      timgates42: "https://github.com/timgates42/git-cola.git"
+      vdragon: "https://github.com/Vdragon/git-cola.git"
+      victorhck: "https://github.com/victorhck/git-cola.git"
+      virtualstaticvoid: "https://github.com/virtualstaticvoid/git-cola.git"
+      wm4: "https://github.com/wm4/git-cola.git"
+      wojnilowicz: "https://github.com/wojnilowicz/git-cola.git"
+  deb:
+    description: Debian packaging for Git Cola
+    url: "git@gitlab.com:git-cola/git-cola-debian.git"
+    remotes:
+      davvid: "git@github.com:davvid/git-cola-debian.git"
+  fedora:
+    description: Fedora packaging for Git Cola
+    url: "git@gitlab.com:git-cola/git-cola-fedora.git"
+    remotes:
+      fedora: "https://src.fedoraproject.org/rpms/git-cola.git"
+      github: "git@github.com:davvid/git-cola-fedora.git"
+  pages:
+    description: "Git Cola's homepage"
+    url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
+    remotes:
+      github: "git@github.com:git-cola/git-cola.github.io.git"
+      ls-jad-elkik: "git://github.com/ls-jad-elkik/git-cola.github.io.git"
+      lz-coder: "https://github.com/lz-coder/git-cola.github.io.git"
+    links:
+      - "https://git-cola.gitlab.io"
+      - "https://git-cola.github.io"
+...

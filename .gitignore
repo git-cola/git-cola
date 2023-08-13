@@ -4,11 +4,14 @@
 /build
 /config.mak
 /cola/_build_version.py
+/deb
 /dist
 /.eggs
 /env*
+/fedora
 /git-cola.app
 /local
+/pages
 /patches
 /pip-wheel-metadata
 /pynsist_pkgs
