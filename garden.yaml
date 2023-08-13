@@ -1,5 +1,28 @@
 # Use "cargo install garden-tools" to install garden (https://gitlab.com/garden-rs/garden).
+#
 # Usage:
+#
+#   # Development Workflows
+#   garden develop              # Run from a virtualenv to "pip install --editable ."
+#   garden requirements         # Install runtime requirements
+#   garden requirements/opt     # Install optional runtime requirements
+#   garden requirements/dev     # Install developer requirements
+#   garden test                 # Run the test suite
+#   garden format               # Format code using "black"
+#   garden doc                  # Generate documentation: html + manual pages
+#   garden html                 # Generate documentation: html only
+#   garden man                  # Generate documentation: manual pages only
+#   garden pot                  # Regenerate git-cola.pot with new translations
+#   garden po                   # Update .po files with new translations from git-cola.pot
+#
+#   # Installation
+#   garden install              # Install git-cola to the installation ${prefix}
+#   garden install-doc          # Install documentation
+#
+#   # Variables can be overridden using "-D name=value", eg:
+#   garden -D prefix=$PWD/dist install
+#   garden -D prefix=$PWD/dist install-doc
+#
 #   # Related Projects
 #   garden grow pages           # Clone the Git Cola homepage
 #   garden grow fedora          # Clone the Fedora packaging
@@ -7,10 +30,62 @@
 ---
 garden:
   root: "${GARDEN_CONFIG_DIR}"
+
 trees:
   git-cola:
     path: "${GARDEN_CONFIG_DIR}"
     url: "git@gitlab.com:git-cola/git-cola.git"
+    commands:
+      develop: ${PIP} install --editable .
+      doc: ${MAKE} -C docs all
+      check: |
+        garden -vv test
+        garden -vv doc
+        garden -vv pylint
+      format: |
+        ${GIT} ls-files -- '*.py' |
+        ${GREP} -v ^qtpy |
+        ${XARGS} ${BLACK} --skip-string-normalization
+      html: ${MAKE} -C docs html
+      install: |
+        if test -n "${DESTDIR}"
+        then
+            pip_root="--root=${DESTDIR}"
+            export DESTDIR="${DESTDIR}"
+        fi
+        ${PIP} install --disable-pip-version-check $pip_root "--prefix=${prefix}" "$@" .
+      install-doc: ${MAKE} -C docs install DESTDIR=${DESTDIR} prefix=${prefix}
+      po: |
+        for po in cola/i18n/*.po
+        do
+            ${MSGMERGE} \
+                --no-wrap \
+                --no-fuzzy-matching \
+                --sort-output \
+                --output-file $$po.new \
+                $$po \
+                cola/i18n/git-cola.pot
+            mv $$po.new $$po
+        done
+      pot: |
+        ${XGETTEXT} \
+            --language=Python \
+            --keyword=N_ \
+            --no-wrap \
+            --omit-header \
+            --sort-output \
+            --output-dir cola/i18n \
+            --output git-cola.pot \
+            cola/*.py \
+            cola/*/*.py
+      man: ${MAKE} -C docs man
+      pylint: |
+        ${PYLINT} --version
+        ${PYLINT} --rcfile=.pylintrc ${PYLINT_FLAGS} "$@" cola test
+      requirements: ${PIP} install --requirement requirements/requirements.txt
+      requirements/opt: ${PIP} install --requirement requirements/requirements-optional.txt
+      requirements/dev: ${PIP} install --requirement requirements/requirements-dev.txt
+      test: ${PYTEST} ${PYTEST_FLAGS} "$@" cola test
     remotes:
       DasaniT: "https://github.com/DasaniT/git-cola.git"
       Mailaender: "https://github.com/Mailaender/git-cola.git"
@@ -86,4 +161,32 @@ trees:
     links:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
+
+# Variables can be overridden externally using "garden -D name=value ...".
+variables:
+  # Traditional DESTDIR + prefix variables
+  DESTDIR: ""
+  prefix: ${GARDEN_CONFIG_DIR}/dist
+  # External commands and options
+  BLACK: black
+  GIT: git
+  MAKE: make
+  MSGMERGE: msgmerge
+  PIP: pip
+  PYLINT: ${PYTHON3} -B -m pylint
+  PYLINT_FLAGS: |
+    $ if ${PYLINT} --score=no --help >/dev/null 2>&1
+    then
+        printf '%s' "--score=no"
+    fi
+  PYTEST: ${PYTHON3} -B -m pytest
+  PYTEST_FLAGS: |
+    $ if test "$(uname -s)" != "Linux"
+    then
+        printf '%s' --ignore=cola/inotify.py
+    fi
+  PYTHON3: python3
+  XARGS: xargs
+  XGETTEXT: xgettext
+
 ...
