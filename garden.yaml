@@ -8,7 +8,7 @@
 #   garden requirements/opt     # Install optional runtime requirements
 #   garden requirements/dev     # Install developer requirements
 #   garden test                 # Run the test suite
-#   garden format               # Format code using "black"
+#   garden fmt                  # Format code using "black"
 #   garden doc                  # Generate documentation: html + manual pages
 #   garden html                 # Generate documentation: html only
 #   garden man                  # Generate documentation: manual pages only
@@ -42,7 +42,7 @@ trees:
         garden -vv test
         garden -vv doc
         garden -vv pylint
-      format: |
+      fmt: |
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
         ${XARGS} ${BLACK} --skip-string-normalization
