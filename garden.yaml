@@ -170,6 +170,7 @@ variables:
   # External commands and options
   BLACK: black
   GIT: git
+  GREP: grep
   MAKE: make
   MSGMERGE: msgmerge
   PIP: pip
