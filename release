@@ -1,5 +1,5 @@
 #!/bin/sh
-. $(dirname $0)/common.sh
+. "$(dirname "$0")/common.sh"
 
 # Options
 do_docs=false
@@ -11,7 +11,7 @@ do_upload=false
 file_to_upload=
 
 # Commands
-GH_RELEASE="$TODO/github-release"
+GH_RELEASE="${TODO}/github-release"
 
 usage () {
 	echo "$(basename "$0") [options]"
@@ -30,28 +30,29 @@ usage () {
 }
 
 init_release () {
-	if test -z "$vVERSION"
+	if test -z "${vVERSION}"
 	then
 		return 1
 	fi
-	if ! "$GH_RELEASE" get --show-id "$vVERSION"
+	echo "Checking for a pre-existing ${vVERSION} release"
+	if ! "${GH_RELEASE}" get --show-id "${vVERSION}"
 	then
-		commit=$(git rev-parse "$vVERSION""^{commit}")
-		do_or_die "$GH_RELEASE" create "$vVERSION" "$commit"
+		commit=$(git rev-parse "${vVERSION}^{commit}")
+		do_or_die "${GH_RELEASE}" create "${vVERSION}" "${commit}"
 	fi
 }
 
 build_docs () {
 	title Building docs
-	do_or_die make prefix="$DOCUMENT_ROOT" install-doc
+	do_or_die make prefix="${DOCUMENT_ROOT}" install-doc
 }
 
 build_tarball () {
 	title Building tarball
 	do_or_die make app-tarball
-	if test "$do_upload" = true
+	if test "${do_upload}" = true
 	then
-		upload_file git-cola-"$VERSION".app.tar.gz
+		upload_file git-cola-"${VERSION}".app.tar.gz
 	fi
 }
 
@@ -59,19 +60,18 @@ build_win32 () {
 	title Building pynsist installer
 
 	do_or_die ./contrib/win32/run-pynsist.sh
-	do_or_die cp build/nsis/git-cola_"$VERSION".exe git-cola-"$VERSION".exe
-	do_or_die chmod 644 git-cola-"$VERSION".exe
-	do_or_die zip -9 -m git-cola-"$VERSION".windows.zip \
-		-xi git-cola-"$VERSION".exe
-	if test "$do_upload" = true
+	do_or_die cp "build/nsis/git-cola_${VERSION}.exe" "git-cola-${VERSION}.exe"
+	do_or_die chmod 644 "git-cola-${VERSION}.exe"
+	do_or_die zip -9 -m "git-cola-${VERSION}.windows.zip" -xi "git-cola-${VERSION}.exe"
+	if test "${do_upload}" = true
 	then
-		upload_file git-cola-"$VERSION".windows.zip
+		upload_file "git-cola-${VERSION}.windows.zip"
 	fi
 }
 
 upload_file () {
 	filename="$1"
-	do_or_die "$GH_RELEASE" upload "$vVERSION" "$filename"
+	do_or_die "${GH_RELEASE}" upload "${vVERSION}" "${filename}"
 }
 
 # Parse options
@@ -132,28 +132,28 @@ do
 	esac
 done
 
-if test "$do_tarball" = true || test "$do_upload" = true
+if test "${do_tarball}" = true || test "${do_upload}" = true
 then
 	init_release
 fi
 
 
-if test "$do_tarball" = true
+if test "${do_tarball}" = true
 then
 	build_tarball
 fi
 
-if test "$do_win32" = true
+if test "${do_win32}" = true
 then
 	build_win32
 fi
 
-if test "$do_docs" = true
+if test "${do_docs}" = true
 then
 	build_docs
 fi
 
-if test "$do_upload" = true && test -n "$file_to_upload"
+if test "${do_upload}" = true && test -n "${file_to_upload}"
 then
-	upload_file "$file_to_upload"
+	upload_file "${file_to_upload}"
 fi
