@@ -5,22 +5,22 @@ make check
 ./todo/commit-version
 # remove any (BETA) markers from the release notes
 ./todo/tag [vA.B.C (optional)]
-vx env39 make develop
+vx env3 make develop
 git cola push
 
-# vx env39 pypi-secure-upload
+# vx env3 pypi-secure-upload
 rm -rf build dist
-vx env39 python setup.py build
-vx env39 python -m build -n .
+vx env3 python setup.py build
+vx env3 python -m build -n .
 for filename in dist/*.whl dist/*.gz
 do
-    vx env39 python -m twine upload --sign "$filename"
+    vx env3 python -m twine upload --sign "$filename"
 done
 
 # Create installers and upload.
 rm -rf build dist
-vx env39 ./todo/release --all
+vx env3 ./todo/release --all
 
 # Update git-cola.github.io
 vim github.io/_config.yaml
-vx env39 ./todo/github.io.sh
+vx env3 ./todo/github.io.sh
