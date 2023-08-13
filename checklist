@@ -23,4 +23,4 @@ vx env3 ./todo/release --all
 
 # Update git-cola.github.io
 vim pages/_config.yaml
-vx env3 ./todo/github.io.sh
+./todo/pages.sh
