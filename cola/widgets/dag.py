@@ -1868,29 +1868,29 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             return
         self.zoom = scale
 
-        adjust_scrollbars = True
+        adjust_scrollbars = False
         scrollbar = self.verticalScrollBar()
+        scrollbar_offset = 1.0
         if scrollbar:
             value = get(scrollbar)
-            min_ = scrollbar.minimum()
-            max_ = scrollbar.maximum()
-            range_ = max_ - min_
-            distance = value - min_
-            nonzero_range = range_ > 0.1
+            minimum = scrollbar.minimum()
+            maximum = scrollbar.maximum()
+            scrollbar_range = maximum - minimum
+            distance = value - minimum
+            nonzero_range = scrollbar_range > 0.1
             if nonzero_range:
-                scrolloffset = distance / range_
-            else:
-                adjust_scrollbars = False
+                scrollbar_offset = distance / scrollbar_range
+                adjust_scrollbars = True
 
         self.setTransformationAnchor(QtWidgets.QGraphicsView.NoAnchor)
         self.scale(scale, scale)
 
         scrollbar = self.verticalScrollBar()
         if scrollbar and adjust_scrollbars:
-            min_ = scrollbar.minimum()
-            max_ = scrollbar.maximum()
-            range_ = max_ - min_
-            value = min_ + int(float(range_) * scrolloffset)
+            minimum = scrollbar.minimum()
+            maximum = scrollbar.maximum()
+            scrollbar_range = maximum - minimum
+            value = minimum + int(float(scrollbar_range) * scrollbar_offset)
             scrollbar.setValue(value)
 
     def add_commits(self, commits):
