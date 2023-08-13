@@ -177,7 +177,6 @@ class GitCommandWidget(standard.Dialog):
 
 
 class ActionDialog(standard.Dialog):
-
     VALUES = {}
 
     def __init__(self, context, parent, name, opts):

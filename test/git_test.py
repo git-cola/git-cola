@@ -124,7 +124,6 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
-
     git_dir = '/ceiling/.git'
     ceiling = '/tmp:/ceiling:/other/ceiling'
     is_git_dir.side_effect = lambda x: x == git_dir

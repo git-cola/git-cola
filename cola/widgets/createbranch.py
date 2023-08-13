@@ -308,7 +308,7 @@ class CreateBranchDialog(standard.Dialog):
         self.progress.hide()
         del self.progress
 
-        for (cmd, status, _, _) in results:
+        for cmd, status, _, _ in results:
             if status != 0:
                 Interaction.critical(
                     N_('Error Creating Branch'),

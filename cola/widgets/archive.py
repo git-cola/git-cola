@@ -20,7 +20,6 @@ from . import defs
 
 
 class ExpandableGroupBox(QtWidgets.QGroupBox):
-
     expanded = Signal(bool)
 
     def __init__(self, parent=None):

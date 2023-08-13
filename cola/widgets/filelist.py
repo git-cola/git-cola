@@ -13,7 +13,6 @@ from .standard import TreeWidget
 
 # pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
-
     files_selected = Signal(object)
     difftool_selected = Signal(object)
     histories_selected = Signal(object)

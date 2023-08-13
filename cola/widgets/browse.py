@@ -663,7 +663,6 @@ class BrowseBranch(standard.Dialog):
 
 # pylint: disable=too-many-ancestors
 class GitTreeWidget(standard.TreeView):
-
     selection_changed = Signal()
     path_chosen = Signal(object)
 

@@ -191,7 +191,6 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
 
 
 class Highlighter(QtGui.QSyntaxHighlighter):
-
     WORDS = r"(?iu)[\w']+"
 
     def __init__(self, doc, spellcheck_widget):

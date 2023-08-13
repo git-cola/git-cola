@@ -42,13 +42,13 @@ if PY3:
     uchr = chr
 else:
     bchr = chr
-    maxsize = 2 ** 31
+    maxsize = 2**31
     ustr = unicode  # noqa
     uchr = unichr  # noqa
     int_types = (int, long)  # noqa
 
 # Qt's max 32-bit signed integer range (-2147483648 to 2147483647)
-maxint = (2 ** 31) - 1
+maxint = (2**31) - 1
 
 
 def setenv(key, value):

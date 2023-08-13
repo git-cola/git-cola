@@ -16,7 +16,6 @@ def stdout(msg):
 
 class DirHelper(object):
     def __init__(self, is_dir, list_dir, walk, rmtree):
-
         self.is_dir = is_dir
         self.list_dir = list_dir
         self.walk = walk
@@ -25,7 +24,6 @@ class DirHelper(object):
 
 class FileSystemHelper(object):
     def __init__(self, open_, path_join, move, exists):
-
         self.open_ = open_
         self.path_join = path_join
         self.move = move
@@ -36,12 +34,10 @@ class Replacer(object):
     "Encapsulates a simple text replace"
 
     def __init__(self, from_, to):
-
         self.from_ = from_
         self.to = to
 
     def process(self, text):
-
         return text.replace(self.from_, self.to)
 
 
@@ -49,13 +45,11 @@ class FileHandler(object):
     "Applies a series of replacements the contents of a file inplace"
 
     def __init__(self, name, replacers, opener):
-
         self.name = name
         self.replacers = replacers
         self.opener = opener
 
     def process(self):
-
         text = self.opener(self.name, "r").read()
 
         for replacer in self.replacers:
@@ -70,31 +64,26 @@ class Remover(object):
         self.remove = remove
 
     def __call__(self, name):
-
         if self.exists(name):
             self.remove(name)
 
 
 class ForceRename(object):
     def __init__(self, renamer, remove):
-
         self.renamer = renamer
         self.remove = remove
 
     def __call__(self, from_, to):
-
         self.remove(to)
         self.renamer(from_, to)
 
 
 class VerboseRename(object):
     def __init__(self, renamer, stream):
-
         self.renamer = renamer
         self.stream = stream
 
     def __call__(self, from_, to):
-
         self.stream.write(
             "Renaming directory '%s' -> '%s'\n"
             % (os.path.basename(from_), os.path.basename(to))
@@ -107,28 +96,23 @@ class DirectoryHandler(object):
     "Encapsulates renaming a directory by removing its first character"
 
     def __init__(self, name, root, renamer):
-
         self.name = name
         self.new_name = name[1:]
         self.root = root + os.sep
         self.renamer = renamer
 
     def path(self):
-
         return os.path.join(self.root, self.name)
 
     def relative_path(self, directory, filename):
-
         path = directory.replace(self.root, "", 1)
         return os.path.join(path, filename)
 
     def new_relative_path(self, directory, filename):
-
         path = self.relative_path(directory, filename)
         return path.replace(self.name, self.new_name, 1)
 
     def process(self):
-
         from_ = os.path.join(self.root, self.name)
         to = os.path.join(self.root, self.new_name)
         self.renamer(from_, to)
@@ -136,29 +120,23 @@ class DirectoryHandler(object):
 
 class HandlerFactory(object):
     def create_file_handler(self, name, replacers, opener):
-
         return FileHandler(name, replacers, opener)
 
     def create_dir_handler(self, name, root, renamer):
-
         return DirectoryHandler(name, root, renamer)
 
 
 class OperationsFactory(object):
     def create_force_rename(self, renamer, remover):
-
         return ForceRename(renamer, remover)
 
     def create_verbose_rename(self, renamer, stream):
-
         return VerboseRename(renamer, stream)
 
     def create_replacer(self, from_, to):
-
         return Replacer(from_, to)
 
     def create_remover(self, exists, remove):
-
         return Remover(exists, remove)
 
 
@@ -169,12 +147,10 @@ class Layout(object):
     """
 
     def __init__(self, directory_handlers, file_handlers):
-
         self.directory_handlers = directory_handlers
         self.file_handlers = file_handlers
 
     def process(self):
-
         for handler in self.file_handlers:
             handler.process()
 
@@ -204,7 +180,6 @@ class LayoutFactory(object):
         stream,
         force,
     ):
-
         self.operations_factory = operations_factory
         self.handler_factory = handler_factory
 
@@ -216,7 +191,6 @@ class LayoutFactory(object):
         self.force = force
 
     def create_layout(self, path):
-
         contents = self.dir_helper.list_dir(path)
 
         renamer = self.file_helper.move
@@ -287,7 +261,6 @@ class LayoutFactory(object):
         return Layout(underscore_directories, filelist)
 
     def is_underscore_dir(self, path, directory):
-
         return self.dir_helper.is_dir(
             self.file_helper.path_join(path, directory)
         ) and directory.startswith("_")
@@ -347,7 +320,6 @@ def setup(app):
 
 
 def main(args):
-
     usage = "usage: %prog [options] <html directory>"
     parser = OptionParser(usage=usage)
     parser.add_option(

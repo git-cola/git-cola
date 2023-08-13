@@ -46,7 +46,6 @@ elif utils.is_linux():
 
 
 class _Monitor(QtCore.QObject):
-
     files_changed = Signal()
     config_changed = Signal()
 
@@ -232,7 +231,7 @@ if AVAILABLE == 'inotify':
                     if not events:
                         self.notify()
                     else:
-                        for (fd, _) in events:
+                        for fd, _ in events:
                             if fd == self._inotify_fd:
                                 self._handle_events()
 

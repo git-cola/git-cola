@@ -238,7 +238,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         if root.name != N_('Tags'):
             # local branch
             if root.name == N_('Local'):
-
                 remote = gitcmds.tracked_branch(context, full_name)
                 if remote is not None:
                     menu.addSeparator()

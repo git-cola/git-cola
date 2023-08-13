@@ -616,7 +616,7 @@ class Viewer(QtWidgets.QFrame):
         self.cleanup()
 
     def cleanup(self):
-        for (image, unlink) in self.images:
+        for image, unlink in self.images:
             if unlink and core.exists(image):
                 os.unlink(image)
         self.images = []
@@ -875,7 +875,6 @@ class Options(QtWidgets.QWidget):
 
 # pylint: disable=too-many-ancestors
 class DiffEditor(DiffTextEdit):
-
     up = Signal()
     down = Signal()
     options_changed = Signal()

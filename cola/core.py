@@ -60,7 +60,6 @@ class UStr(ustr):
     """
 
     def __new__(cls, string, encoding):
-
         if isinstance(string, UStr):
             if encoding != string.encoding:
                 raise ValueError(

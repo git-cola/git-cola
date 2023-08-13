@@ -57,7 +57,6 @@ def is_git_dir(git_dir):
                 and core.isfile(join(git_dir, 'commondir'))
             )
         ):
-
             result = core.isfile(headref) or (
                 core.islink(headref) and core.readlink(headref).startswith('refs/')
             )

@@ -92,7 +92,6 @@ class CloneTask(qtutils.Task):
 
 
 class Clone(standard.Dialog):
-
     # Signal binding for returning the input data
     result = QtCore.Signal(object, object, bool, bool)
 

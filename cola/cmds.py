@@ -1767,7 +1767,6 @@ class PrepareCommitMessageHook(ContextCommand):
         self.old_commitmsg = self.model.commitmsg
 
     def get_message(self):
-
         title = N_('Error running prepare-commitmsg hook')
         hook = gitcmds.prepare_commit_message_hook(self.context)
 

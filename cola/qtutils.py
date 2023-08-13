@@ -265,7 +265,7 @@ def combo(items, editable=False, parent=None):
 def combo_mapped(data, editable=False, transform=None, parent=None):
     """Create a readonly (by default) combobox from a list of items"""
     widget = ComboBox(editable=editable, transform=transform, parent=parent)
-    for (k, v) in data:
+    for k, v in data:
         widget.add_item(k, v)
     return widget
 
@@ -373,7 +373,6 @@ def enum_value(value):
 
 
 class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     TYPE = standard_item_type_value(101)
 
     def __init__(self, path, icon, deleted):
@@ -999,7 +998,7 @@ class BlockSignals(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Restore Qt signals when we exit the scope"""
-        for (widget, value) in zip(self.widgets, self.values):
+        for widget, value in zip(self.widgets, self.values):
             widget.blockSignals(value)
 
 

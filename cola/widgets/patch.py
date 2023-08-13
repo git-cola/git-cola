@@ -38,11 +38,7 @@ def new_apply_patches(context, patches=None, parent=None):
 def get_patches_from_paths(paths):
     """Returns all patches benath a given path"""
     paths = [core.decode(p) for p in paths]
-    patches = [
-        p
-        for p in paths
-        if core.isfile(p) and p.endswith(('.patch', '.mbox'))
-    ]
+    patches = [p for p in paths if core.isfile(p) and p.endswith(('.patch', '.mbox'))]
     dirs = [p for p in paths if core.isdir(p)]
     dirs.sort()
     for d in dirs:

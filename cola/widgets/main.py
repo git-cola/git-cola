@@ -1395,7 +1395,7 @@ def _install_config_actions(context, menu, names_and_shortcuts):
         return
     menu.addSeparator()
     cache = {}
-    for (name, shortcut) in names_and_shortcuts:
+    for name, shortcut in names_and_shortcuts:
         sub_menu, action_name = build_menus(name, menu, cache)
         callback = cmds.run(cmds.RunConfigAction, context, name)
         menu_action = sub_menu.addAction(action_name, callback)

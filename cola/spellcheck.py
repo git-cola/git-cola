@@ -103,7 +103,7 @@ class NorvigSpellCheck(object):
         if cfg_dictionary and os.path.exists(cfg_dictionary):
             paths.append((cfg_dictionary, False))
 
-        for (path, title) in paths:
+        for path, title in paths:
             try:
                 with codecs.open(
                     path, 'r', encoding='utf-8', errors='ignore'

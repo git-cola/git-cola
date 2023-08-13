@@ -25,7 +25,6 @@ def get_stripped(widget):
 
 
 class LineEdit(QtWidgets.QLineEdit):
-
     cursor_changed = Signal(int, int)
     esc_pressed = Signal()
 
@@ -286,7 +285,6 @@ class PlainTextEditExtension(BaseTextEditExtension):
 
 
 class PlainTextEdit(QtWidgets.QPlainTextEdit):
-
     cursor_changed = Signal(int, int)
     leave = Signal()
 
@@ -522,7 +520,6 @@ class TextEditExtension(BaseTextEditExtension):
 
 
 class TextEdit(QtWidgets.QTextEdit):
-
     cursor_changed = Signal(int, int)
     leave = Signal()
 

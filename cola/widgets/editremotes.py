@@ -415,7 +415,6 @@ def lineedit(context, hint):
 
 
 class RemoteWidget(QtWidgets.QWidget):
-
     name = property(
         lambda self: get(self.remote_name),
         lambda self, value: self.remote_name.set_value(value),

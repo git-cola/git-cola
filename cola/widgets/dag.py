@@ -1113,7 +1113,6 @@ class ReaderThread(QtCore.QThread):
 
 
 class Cache(object):
-
     _label_font = None
 
     @classmethod
@@ -1129,7 +1128,6 @@ class Edge(QtWidgets.QGraphicsItem):
     item_type = qtutils.standard_item_type_value(1)
 
     def __init__(self, source, dest):
-
         QtWidgets.QGraphicsItem.__init__(self)
 
         self.setAcceptedMouseButtons(Qt.NoButton)
@@ -1388,7 +1386,6 @@ class Commit(QtWidgets.QGraphicsItem):
         return self.item_shape
 
     def paint(self, painter, option, _widget):
-
         # Do not draw outside the exposed rect
         painter.setClipRect(option.exposedRect)
 
@@ -1416,7 +1413,6 @@ class Commit(QtWidgets.QGraphicsItem):
 
 
 class Label(QtWidgets.QGraphicsItem):
-
     item_type = qtutils.graphics_item_type_value(3)
 
     head_color = QtGui.QColor(Qt.green)
@@ -1524,7 +1520,6 @@ class Label(QtWidgets.QGraphicsItem):
 
 # pylint: disable=too-many-ancestors
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
-
     commits_selected = Signal(object)
     diff_commits = Signal(object, object)
 

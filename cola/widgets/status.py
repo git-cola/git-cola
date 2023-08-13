@@ -98,7 +98,7 @@ class StatusWidget(QtWidgets.QFrame):
     def set_initial_size(self):
         """Set the initial size of the status widget"""
         self.setMaximumWidth(222)
-        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2 ** 13))
+        QtCore.QTimer.singleShot(1, lambda: self.setMaximumWidth(2**13))
 
     def refresh(self):
         """Refresh the tree and rerun the diff to see updates"""
@@ -419,7 +419,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         did_reselect = False
 
         with qtutils.BlockSignals(self):
-            for (new, old, sel, reselect) in saved_selection:
+            for new, old, sel, reselect in saved_selection:
                 for item in sel:
                     if item in new:
                         reselect(item, current=False)
@@ -436,7 +436,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         #
         # The following block of code implements the behavior of selecting
         # the next item based on the previous selection.
-        for (new, old, sel, reselect) in saved_selection:
+        for new, old, sel, reselect in saved_selection:
             # When modified is staged, select the next modified item
             # When unmerged is staged, select the next unmerged item
             # When unstaging, select the next staged item

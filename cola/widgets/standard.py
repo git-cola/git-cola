@@ -746,6 +746,7 @@ class SpinBox(QtWidgets.QSpinBox):
 
 class DirectoryPathLineEdit(QtWidgets.QWidget):
     """A combined line edit and file browser button"""
+
     def __init__(self, path, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -775,9 +776,7 @@ class DirectoryPathLineEdit(QtWidgets.QWidget):
 
     def _select_directory(self):
         """Open a file browser and select a directory"""
-        output_dir = qtutils.opendir_dialog(
-            N_('Select directory'), self.value()
-        )
+        output_dir = qtutils.opendir_dialog(N_('Select directory'), self.value())
         if not output_dir:
             return
         # Make the directory relative only if it the current directory or
@@ -836,7 +835,6 @@ class MessageBox(Dialog):
         cancel_text=None,
         cancel_icon=None,
     ):
-
         Dialog.__init__(self, parent=parent)
 
         if parent:

@@ -292,7 +292,6 @@ class CompletionLineEdit(HintedLineEdit):
 
 
 class GatherCompletionsThread(QtCore.QThread):
-
     items_gathered = Signal(object)
 
     def __init__(self, model):
@@ -399,7 +398,6 @@ def ref_sort_key(ref):
 
 
 class CompletionModel(QtGui.QStandardItemModel):
-
     updated = Signal()
     items_gathered = Signal(object)
     model_updated = Signal()

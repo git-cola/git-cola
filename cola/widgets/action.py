@@ -16,7 +16,6 @@ from ..qtutils import connect_button
 
 
 class QFlowLayoutWidget(QtWidgets.QFrame):
-
     _horizontal = QtWidgets.QBoxLayout.LeftToRight
     _vertical = QtWidgets.QBoxLayout.TopToBottom
 

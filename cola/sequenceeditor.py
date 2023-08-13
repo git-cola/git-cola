@@ -547,7 +547,6 @@ class ComboBox(QtWidgets.QComboBox):
 
 
 class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
     OID_LENGTH = 7

@@ -158,7 +158,7 @@ class GitConfig(QtCore.QObject):
         worktree_scope = 'worktree'
         cache_paths = set()
 
-        for (current_scope, current_key, current_value, continuation) in reader(
+        for current_scope, current_key, current_value, continuation in reader(
             self.context, cache_paths, self._renamed_keys
         ):
             # Store the values for fast cached lookup.

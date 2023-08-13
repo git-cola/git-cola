@@ -229,7 +229,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         QtCore.QTimer.singleShot(1, self.restore_size)
 
     def restore_size(self):
-        self.setMaximumHeight(2 ** 13)
+        self.setMaximumHeight(2**13)
 
     def focus_summary(self):
         self.summary.setFocus()
