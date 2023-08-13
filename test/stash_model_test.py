@@ -7,7 +7,7 @@ from . import helper
 from .helper import app_context
 
 
-# These assertions make flake8 happy. It considers them unused imports otherwise.
+# These assertions make pylint happy. It considers them unused imports otherwise.
 assert app_context is not None
 
 

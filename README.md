@@ -364,7 +364,7 @@ The following commands should be run during development:
     # Run the unit tests
     $ make test
 
-    # Run tests and longer-running pylint and flake8 checks
+    # Run tests and longer-running pylint checks
     $ make check
 
     # Run tests against multiple python interpreters using tox

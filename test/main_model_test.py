@@ -13,7 +13,7 @@ from .helper import app_context
 from .helper import Mock
 
 
-# These assertions make flake8 happy. It considers them unused imports otherwise.
+# These assertions make pylint happy. It considers them unused imports otherwise.
 assert app_context is not None
 
 REMOTE = 'server'

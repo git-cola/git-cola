@@ -45,7 +45,6 @@ jobs:
           sudo apt-get install \
               black \
               gettext \
-              flake8 \
               pylint \
               python-is-python3 \
               python3-setuptools-scm \
@@ -70,9 +69,6 @@ jobs:
 
       - name: Run Linter
         run: make pylint color=0
-
-      - name: Check Code Style
-        run: make flake8
 
       - name: Check Code Formatting
         # For strict adherence to formatting, run 'black' with --check

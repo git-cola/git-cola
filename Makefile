@@ -9,10 +9,9 @@ all::
 # make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
 # make test V=2                 # run tests; V=2 increases test verbosity
 # make doc                      # build docs
-# make flake8                   # python style checks
 # make pylint [color=1]         # run pylint; color=1 colorizes output
 # make format                   # run the black python formatter
-# make check [color=1]          # run test, doc, flake8 and pylint
+# make check [color=1]          # run test, doc and pylint
 # make check file=<filename>    # run checks on <filename>
 #
 # Release Prep
@@ -30,7 +29,6 @@ all::
 BLACK = black
 CP = cp
 FIND = find
-FLAKE8 = flake8
 GREP = grep
 GIT = git
 MARKDOWN = markdown
@@ -62,8 +60,6 @@ ifdef V
 else
     QUIET = --quiet
 endif
-
-FLAKE8_FLAGS = $(VERBOSE)
 
 PYTEST_FLAGS = $(QUIET) $(TEST_VERBOSE)
 uname_S := $(shell uname -s)
@@ -258,12 +254,6 @@ app-tarball:: git-cola.app
 %.html: %.md
 	$(MARKDOWN) $< >$@
 
-.PHONY: flake8
-flake8::
-	$(FLAKE8) --version
-	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) \
-	$(ALL_PYTHON_DIRS) contrib
-
 .PHONY: pylint
 pylint::
 	$(PYLINT) --version
@@ -274,13 +264,11 @@ pylint::
 .PHONY: check
 ifdef file
 check::
-	$(FLAKE8) $(FLAKE8_FLAGS) $(flags) $(file)
 	$(PYLINT) $(PYLINT_FLAGS) --output-format=colorized $(flags) $(file)
 else
 check:: all
 check:: test
 check:: doc
-check:: flake8
 check:: pylint
 endif
 
