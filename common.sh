@@ -6,7 +6,7 @@ TODO=$(cd "$(dirname "$0")" && pwd)
 # This variable must be defined in config to use the github API
 GITHUB_TOKEN=UNDEFINED
 # Windows build VM
-DOCUMENT_ROOT="$COLA_TOP/../git-cola.github.io"
+DOCUMENT_ROOT="$COLA_TOP/pages"
 RELEASES="$DOCUMENT_ROOT/releases"
 
 # _the_ cola version

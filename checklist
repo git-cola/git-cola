@@ -22,5 +22,5 @@ rm -rf build dist
 vx env3 ./todo/release --all
 
 # Update git-cola.github.io
-vim github.io/_config.yaml
+vim pages/_config.yaml
 vx env3 ./todo/github.io.sh
