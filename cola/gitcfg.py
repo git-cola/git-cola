@@ -372,7 +372,7 @@ class GitConfig(QtCore.QObject):
         if _use_pwd:
             user = pwd.getpwuid(os.getuid()).pw_name
         else:
-            user = os.getenv('USER', N_('unknown'))
+            user = os.getenv('USER', 'unknown')
 
         name = self.get('user.name', user)
         email = self.get('user.email', '%s@%s' % (user, core.node()))
