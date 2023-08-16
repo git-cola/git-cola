@@ -164,10 +164,10 @@ trees:
         ${INSTALL} -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
   fedora:
     description: Fedora packaging for Git Cola
-    url: "git@gitlab.com:git-cola/git-cola-fedora.git"
+    url: "https://src.fedoraproject.org/rpms/git-cola.git"
     remotes:
-      fedora: "https://src.fedoraproject.org/rpms/git-cola.git"
-      github: "git@github.com:davvid/git-cola-fedora.git"
+      git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
+      davvid: "git@github.com:davvid/git-cola-fedora.git"
   pages:
     description: "Git Cola's homepage"
     url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
