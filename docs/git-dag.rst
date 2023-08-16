@@ -15,21 +15,21 @@ graphical interface.
 OPTIONS
 =======
 
---prompt
---------
+``--prompt``
+------------
 Prompt for a Git repository instead of using the current directory.
 
--r, --repo <path>
------------------
+``-r, --repo <path>``
+---------------------
 Run `git dag` on the git repository in `<path>`.
 Defaults to the current directory.
 
---version
----------
+``--version``
+-------------
 Print the `git dag` version and exit.
 
--h, --help
-----------
+``-h, --help``
+--------------
 Show usage and optional arguments.
 
 Log Options
