@@ -1,9 +1,9 @@
-# Use "cargo install garden-tools" to install garden (https://gitlab.com/garden-rs/garden).
+# Use "cargo install garden-tools" to install garden https://gitlab.com/garden-rs/garden
 #
 # Usage:
 #
 #   # Development Workflows
-#   garden develop              # Run from a virtualenv to "pip install --editable ."
+#   garden develop              # Runs "pip install --editable ."
 #   garden requirements         # Install runtime requirements
 #   garden requirements/opt     # Install optional runtime requirements
 #   garden requirements/dev     # Install developer requirements
@@ -17,11 +17,11 @@
 #
 #   # Installation
 #   garden install              # Install git-cola to the installation ${prefix}
-#   garden install-doc          # Install documentation
+#   garden install docs         # Install documentation
 #
 #   # Variables can be overridden using "-D name=value", eg:
-#   garden -D prefix=$PWD/dist install
-#   garden -D prefix=$PWD/dist install-doc
+#   garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
+#   garden -D prefix=$PWD/dist install docs
 #
 #   # Related Projects
 #   garden grow pages           # Clone the Git Cola homepage
@@ -37,7 +37,7 @@ trees:
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
       develop: ${PIP} install --editable .
-      doc: ${MAKE} -C docs all
+      doc: garden -vv cmd docs html man
       check: |
         garden -vv test
         garden -vv doc
@@ -46,15 +46,14 @@ trees:
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
         ${XARGS} ${BLACK} --skip-string-normalization
-      html: ${MAKE} -C docs html
+      html: garden -vv html docs
       install: |
         if test -n "${DESTDIR}"
         then
             pip_root="--root=${DESTDIR}"
             export DESTDIR="${DESTDIR}"
         fi
-        ${PIP} install --disable-pip-version-check $pip_root "--prefix=${prefix}" "$@" .
-      install-doc: ${MAKE} -C docs install DESTDIR=${DESTDIR} prefix=${prefix}
+        ${PIP} install --disable-pip-version-check $pip_root --prefix=${prefix} "$@" .
       po: |
         for po in cola/i18n/*.po
         do
@@ -78,14 +77,14 @@ trees:
             --output git-cola.pot \
             cola/*.py \
             cola/*/*.py
-      man: ${MAKE} -C docs man
+      man: garden -vv man docs
       pylint: |
         ${PYLINT} --version
-        ${PYLINT} --rcfile=.pylintrc ${PYLINT_FLAGS} "$@" cola test
+        ${PYLINT} --rcfile=.pylintrc ${PYLINT_OPTIONS} "$@" cola test
       requirements: ${PIP} install --requirement requirements/requirements.txt
       requirements/opt: ${PIP} install --requirement requirements/requirements-optional.txt
       requirements/dev: ${PIP} install --requirement requirements/requirements-dev.txt
-      test: ${PYTEST} ${PYTEST_FLAGS} "$@" cola test
+      test: ${PYTEST} ${PYTEST_OPTIONS} "$@" cola test
     remotes:
       DasaniT: "https://github.com/DasaniT/git-cola.git"
       Mailaender: "https://github.com/Mailaender/git-cola.git"
@@ -145,6 +144,24 @@ trees:
     url: "git@gitlab.com:git-cola/git-cola-debian.git"
     remotes:
       davvid: "git@github.com:davvid/git-cola-debian.git"
+  docs:
+    commands:
+      clean: rm -fr _build
+      doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS_ALL} _build/doctest
+      html: ${SPHINXBUILD} -b html ${SPHINX_OPTIONS_ALL} _build/html
+      man: ${SPHINXBUILD} -b man ${SPHINX_OPTIONS_ALL} _build/man
+      linkcheck: ${SPHINXBUILD} -b linkcheck ${SPHINX_OPTIONS_ALL} _build/linkcheck
+      install: |
+        ${MKDIR_P} ${DESTDIR}${docdir}
+        ${INSTALL} -m 644 *.html ${DESTDIR}${docdir}
+        ${INSTALL} -m 644 *.rst ${DESTDIR}${docdir}
+        # HTML documentation
+        ${MKDIR_P} ${DESTDIR}${htmldir}
+        ${RSYNC} ${RSYNC_OPTIONS} _build/html/ ${DESTDIR}${htmldir}/
+        # Manual pages
+        ${MKDIR_P} ${DESTDIR}${mandir}
+        ${INSTALL} -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
+        ${INSTALL} -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
   fedora:
     description: Fedora packaging for Git Cola
     url: "git@gitlab.com:git-cola/git-cola-fedora.git"
@@ -167,26 +184,27 @@ variables:
   # Traditional DESTDIR + prefix variables
   DESTDIR: ""
   prefix: ${GARDEN_CONFIG_DIR}/dist
+  docdir: ${prefix}/share/doc/git-cola
+  htmldir: ${docdir}/html
+  mandir: ${prefix}/share/man/man1
   # External commands and options
   BLACK: black
   GIT: git
   GREP: grep
-  MAKE: make
+  INSTALL: install
+  MKDIR_P: mkdir -p
   MSGMERGE: msgmerge
   PIP: pip
-  PYLINT: ${PYTHON3} -B -m pylint
-  PYLINT_FLAGS: |
-    $ if ${PYLINT} --score=no --help >/dev/null 2>&1
-    then
-        printf '%s' "--score=no"
-    fi
+  PYLINT: ${PYTHON} -B -m pylint
+  PYLINT_OPTIONS: $ ${PYLINT} --score=no --help >/dev/null 2>&1 && printf '%s' --score=no
   PYTEST: ${PYTHON3} -B -m pytest
-  PYTEST_FLAGS: |
-    $ if test "$(uname -s)" != "Linux"
-    then
-        printf '%s' --ignore=cola/inotify.py
-    fi
-  PYTHON3: python3
+  PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
+  PYTHON: python3
+  RSYNC: rsync
+  RSYNC_OPTIONS: "-r --delete --exclude=.buildinfo"
+  SPHINXBUILD: sphinx-build
+  SPHINX_OPTIONS: "-a"
+  SPHINX_OPTIONS_ALL: "-d _build/doctrees ."
   XARGS: xargs
   XGETTEXT: xgettext
 
