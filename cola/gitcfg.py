@@ -6,6 +6,14 @@ import fnmatch
 import os
 import struct
 
+try:
+    import pwd
+
+    _use_pwd = True
+except ImportError:
+    _use_pwd = False
+
+
 from qtpy import QtCore
 from qtpy.QtCore import Signal
 
@@ -358,6 +366,17 @@ class GitConfig(QtCore.QObject):
             if out.startswith(header):
                 value = out[len(header) :].strip()
         return value
+
+    def get_author(self):
+        """Return (name, email) for authoring commits"""
+        if _use_pwd:
+            user = pwd.getpwuid(os.getuid()).pw_name
+        else:
+            user = os.getenv('USER', N_('unknown'))
+
+        name = self.get('user.name', user)
+        email = self.get('user.email', '%s@%s' % (user, core.node()))
+        return (name, email)
 
     def get_guitool_opts(self, name):
         """Return the guitool.<name> namespace as a dict

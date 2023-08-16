@@ -2528,16 +2528,7 @@ class SignOff(ContextCommand):
 
     def signoff(self):
         """Generate the signoff string"""
-        try:
-            import pwd  # pylint: disable=all
-
-            user = pwd.getpwuid(os.getuid()).pw_name
-        except ImportError:
-            user = os.getenv('USER', N_('unknown'))
-
-        cfg = self.cfg
-        name = cfg.get('user.name', user)
-        email = cfg.get('user.email', '%s@%s' % (user, core.node()))
+        name, email = self.cfg.get_author()
         return '\nSigned-off-by: %s <%s>' % (name, email)
 
 
