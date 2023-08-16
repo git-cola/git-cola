@@ -86,6 +86,7 @@ trees:
       requirements/dev: ${PIP} install --requirement requirements/requirements-dev.txt
       test: ${PYTEST} ${PYTEST_OPTIONS} "$@" cola test
     remotes:
+      BaumiCoder: "https://github.com/BaumiCoder/git-cola.git"
       DasaniT: "https://github.com/DasaniT/git-cola.git"
       Mailaender: "https://github.com/Mailaender/git-cola.git"
       Mithil467: "https://github.com/Mithil467/git-cola.git"
