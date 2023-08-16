@@ -479,6 +479,71 @@ def viewer_actions(widget):
     }
 
 
+class GitDagLineEdit(completion.GitLogLineEdit):
+    """The text input field for specifying "git log" options"""
+
+    def __init__(self, context):
+        super(GitDagLineEdit, self).__init__(context)
+        self._action_filter_to_current_author = qtutils.add_action(
+            self, N_('Commits authored by me'), self._filter_to_current_author
+        )
+        self._action_pickaxe_search = qtutils.add_action(
+            self, N_('Pickaxe search for changes containing text'), self._pickaxe_search
+        )
+        self._action_grep_search = qtutils.add_action(
+            self, N_('Search commit messages'), self._grep_search,
+        )
+        self._action_no_merges = qtutils.add_action(
+            self, N_('Ignore merge commits'), self._no_merges
+        )
+
+    def contextMenuEvent(self, event):
+        """Adds custom actions to the default context menu"""
+        event_pos = event.pos()
+        menu = self.createStandardContextMenu()
+        menu.addSeparator()
+        actions = menu.actions()
+        first_action = actions[0]
+        menu.insertAction(first_action, self._action_pickaxe_search)
+        menu.insertAction(first_action, self._action_filter_to_current_author)
+        menu.insertAction(first_action, self._action_grep_search)
+        menu.insertAction(first_action, self._action_no_merges)
+        menu.insertSeparator(first_action)
+        menu.exec_(self.mapToGlobal(event_pos))
+
+    def insert(self, text):
+        """Insert text at the beginning of the current text"""
+        value = self.value()
+        if value:
+            text = '%s %s' % (text, value)
+        self.setText(text)
+        self.close_popup()
+
+    def _filter_to_current_author(self):
+        """Filter to commits by the current author/user"""
+        _, email = self.context.cfg.get_author()
+        author_filter = '--author=' + email
+        self.insert(author_filter)
+
+    def _pickaxe_search(self):
+        """Pickaxe search for changes containing text"""
+        self.insert('-G"search"')
+        start = len('-G"')
+        length = len('search')
+        self.setSelection(start, length)
+
+    def _grep_search(self):
+        """Pickaxe search for changes containing text"""
+        self.insert('--grep="search"')
+        start = len('--grep="')
+        length = len('search')
+        self.setSelection(start, length)
+
+    def _no_merges(self):
+        """Ignore merge commits"""
+        self.insert('--no-merges')
+
+
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     """Custom TreeWidgetItem used in to build the commit tree widget"""
 
@@ -699,7 +764,7 @@ class GitDAG(standard.MainWindow):
         self.force_refresh = False
 
         self.thread = None
-        self.revtext = completion.GitLogLineEdit(context)
+        self.revtext = GitDagLineEdit(context)
         self.maxresults = standard.SpinBox()
 
         self.zoom_out = qtutils.create_action_button(

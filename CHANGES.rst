@@ -7,6 +7,9 @@ Usability, bells and whistles
 -----------------------------
 * `git dag` now includes completions for `git log` options in the text input field.
 
+* `git dag` now provides convenient search filters when right-clicking in the
+  text input field.
+
 
 .. _v4.3.0:
 
