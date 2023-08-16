@@ -695,6 +695,43 @@ class GitLogCompletionModel(GitRefCompletionModel):
             self._start_gathering_paths, type=Qt.QueuedConnection
         )
 
+    def matches(self):
+        """Return candidate values for completion"""
+        matches = super(GitLogCompletionModel, self).matches()
+        return [
+            '--all',
+            '--all-match',
+            '--author',
+            '--after=two.days.ago',
+            '--basic-regexp',
+            '--before=two.days.ago',
+            '--branches',
+            '--committer',
+            '--exclude',
+            '--extended-regexp',
+            '--find-object',
+            '--first-parent',
+            '--fixed-strings',
+            '--full-diff',
+            '--grep',
+            '--invert-grep',
+            '--merges',
+            '--no-merges',
+            '--not',
+            '--perl-regexp',
+            '--pickaxe-all',
+            '--pickaxe-regex',
+            '--regexp-ignore-case',
+            '--tags',
+            '-D',
+            '-E',
+            '-F',
+            '-G',
+            '-P',
+            '-S',
+            '@{upstream}',
+        ] + matches
+
     def _start_gathering_paths(self):
         """Gather paths when the model changes"""
         # Debounce updates that land within 1 second of each other.

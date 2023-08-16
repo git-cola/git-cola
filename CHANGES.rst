@@ -1,3 +1,13 @@
+.. _v4.4.0:
+
+v4.4.0
+======
+
+Usability, bells and whistles
+-----------------------------
+* `git dag` now includes completions for `git log` options in the text input field.
+
+
 .. _v4.3.0:
 
 v4.3.0
