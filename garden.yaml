@@ -198,7 +198,7 @@ variables:
   PIP: pip
   PYLINT: ${PYTHON} -B -m pylint
   PYLINT_OPTIONS: $ ${PYLINT} --score=no --help >/dev/null 2>&1 && printf '%s' --score=no
-  PYTEST: ${PYTHON3} -B -m pytest
+  PYTEST: ${PYTHON} -B -m pytest
   PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
   PYTHON: python3
   RSYNC: rsync
