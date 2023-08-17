@@ -942,9 +942,10 @@ class RemoteRename(RemoteCommand):
 
     def confirm(self):
         title = N_('Rename Remote')
-        text = N_('Rename remote "%(current)s" to "%(new)s"?') % dict(
-            current=self.remote, new=self.new_name
-        )
+        text = N_('Rename remote "%(current)s" to "%(new)s"?') % {
+            'current': self.remote,
+            'new': self.new_name,
+        }
         info_text = ''
         ok_text = title
         return Interaction.confirm(title, text, info_text, ok_text)
@@ -953,9 +954,10 @@ class RemoteRename(RemoteCommand):
         return self.git.remote('rename', self.remote, self.new_name)
 
     def error_message(self):
-        return N_('Error renaming "%(name)s" to "%(new_name)s"') % dict(
-            name=self.remote, new_name=self.new_name
-        )
+        return N_('Error renaming "%(name)s" to "%(new_name)s"') % {
+            'name': self.remote,
+            'new_name': self.new_name,
+        }
 
     def command(self):
         return 'git remote rename "%s" "%s"' % (self.remote, self.new_name)
@@ -970,9 +972,10 @@ class RemoteSetURL(RemoteCommand):
         return self.git.remote('set-url', self.remote, self.url)
 
     def error_message(self):
-        return N_('Unable to set URL for "%(name)s" to "%(url)s"') % dict(
-            name=self.remote, url=self.url
-        )
+        return N_('Unable to set URL for "%(name)s" to "%(url)s"') % {
+            'name': self.remote,
+            'url': self.url,
+        }
 
     def command(self):
         return 'git remote set-url "%s" "%s"' % (self.remote, self.url)
@@ -1195,7 +1198,10 @@ class DeleteRemoteBranch(DeleteBranch):
         Interaction.information(
             N_('Remote Branch Deleted'),
             N_('"%(branch)s" has been deleted from "%(remote)s".')
-            % dict(branch=self.branch, remote=self.remote),
+            % {
+                'branch': self.branch,
+                'remote': self.remote,
+            },
         )
 
     def error_message(self):
@@ -1877,7 +1883,7 @@ class OpenParentDir(OpenDir):
 
     @property
     def _dirnames(self):
-        dirnames = list(set([os.path.dirname(x) for x in self.filenames]))
+        dirnames = list({os.path.dirname(x) for x in self.filenames})
         return dirnames
 
 
@@ -2142,11 +2148,11 @@ class Rebase(ContextCommand):
             GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
             GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
-            # TODO this blocks the user interface window for the duration
-            # of git-cola-sequence-editor. We would need to implement
-            # signals for QProcess and continue running the main thread.
-            # Alternatively, we can hide the main window while rebasing.
-            # That doesn't require as much effort.
+            # This blocks the user interface window for the duration
+            # of git-cola-sequence-editor. We would need to run the command
+            # in a QRunnable task to avoid blocking the main thread.
+            # Alternatively, we can hide the main window while rebasing,
+            # which doesn't require as much effort.
             status, out, err = self.git.rebase(
                 *args, _no_win32_startupinfo=True, **kwargs
             )

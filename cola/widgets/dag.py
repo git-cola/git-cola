@@ -491,7 +491,9 @@ class GitDagLineEdit(completion.GitLogLineEdit):
             self, N_('Pickaxe search for changes containing text'), self._pickaxe_search
         )
         self._action_grep_search = qtutils.add_action(
-            self, N_('Search commit messages'), self._grep_search,
+            self,
+            N_('Search commit messages'),
+            self._grep_search,
         )
         self._action_no_merges = qtutils.add_action(
             self, N_('Ignore merge commits'), self._no_merges
