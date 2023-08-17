@@ -586,14 +586,14 @@ class CherryPick(ContextCommand):
 
 
 class Revert(ContextCommand):
-    """Cherry pick commits into the current branch."""
+    """Revert a commit"""
 
     def __init__(self, context, oid):
         super(Revert, self).__init__(context)
         self.oid = oid
 
     def do(self):
-        status, output, err = self.git.revert(self.oid, no_edit=True)
+        status, out, err = self.git.revert(self.oid, no_edit=True)
         self.model.update_file_status()
         title = N_('Revert failed')
         out = '# git revert %s\n\n' % self.oid
