@@ -140,6 +140,7 @@ trees:
       virtualstaticvoid: "https://github.com/virtualstaticvoid/git-cola.git"
       wm4: "https://github.com/wm4/git-cola.git"
       wojnilowicz: "https://github.com/wojnilowicz/git-cola.git"
+      yaellevy: "https://github.com/yaellevy/git-cola.git"
   deb:
     description: Debian packaging for Git Cola
     url: "git@gitlab.com:git-cola/git-cola-debian.git"
@@ -148,10 +149,10 @@ trees:
   docs:
     commands:
       clean: rm -fr _build
-      doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS_ALL} _build/doctest
-      html: ${SPHINXBUILD} -b html ${SPHINX_OPTIONS_ALL} _build/html
-      man: ${SPHINXBUILD} -b man ${SPHINX_OPTIONS_ALL} _build/man
-      linkcheck: ${SPHINXBUILD} -b linkcheck ${SPHINX_OPTIONS_ALL} _build/linkcheck
+      doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS} _build/doctest
+      html: ${SPHINXBUILD} -b html ${SPHINX_OPTIONS} _build/html
+      man: ${SPHINXBUILD} -b man ${SPHINX_OPTIONS} _build/man
+      linkcheck: ${SPHINXBUILD} -b linkcheck ${SPHINX_OPTIONS} _build/linkcheck
       install: |
         ${MKDIR_P} ${DESTDIR}${docdir}
         ${INSTALL} -m 644 *.html ${DESTDIR}${docdir}
@@ -204,8 +205,7 @@ variables:
   RSYNC: rsync
   RSYNC_OPTIONS: "-r --delete --exclude=.buildinfo"
   SPHINXBUILD: sphinx-build
-  SPHINX_OPTIONS: "-a"
-  SPHINX_OPTIONS_ALL: "-d _build/doctrees ."
+  SPHINX_OPTIONS: "-d _build/doctrees -a ."
   XARGS: xargs
   XGETTEXT: xgettext
 
