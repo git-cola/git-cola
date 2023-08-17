@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from .. import cmds
+from .. import difftool
 from .. import guicmds
 from ..widgets import archive
 from ..widgets import browse
@@ -205,7 +206,7 @@ COMMANDS = {
     },
     'Diff::Difftool': {
         'title': 'Launch Diff tool',
-        'action': cmds.run(cmds.LaunchDifftool),
+        'action': cmds.run(difftool.LaunchDifftool),
         'icon': 'diff',
     },
     'Diff::Expression': {

@@ -200,7 +200,7 @@ class ViewerMixin(object):
         """Show a full directory diff for the selected commit"""
         context = self.context
         self.with_oid(
-            lambda oid: cmds.difftool_launch(
+            lambda oid: difftool.difftool_launch(
                 context, left=oid, left_take_magic=True, dir_diff=True
             )
         )
@@ -1087,7 +1087,7 @@ class GitDAG(standard.MainWindow):
     def diff_commits(self, left, right):
         paths = self.params.paths()
         if paths:
-            cmds.difftool_launch(self.context, left=left, right=right, paths=paths)
+            difftool.difftool_launch(self.context, left=left, right=right, paths=paths)
         else:
             difftool.diff_commits(self.context, self, left, right)
 
@@ -1108,7 +1108,7 @@ class GitDAG(standard.MainWindow):
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
-        cmds.difftool_launch(
+        difftool.difftool_launch(
             self.context, left=bottom, left_take_parent=True, right=top, paths=files
         )
 

@@ -1,4 +1,5 @@
 """Editor commands"""
+# pylint: disable=too-many-lines
 from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import re
@@ -21,7 +22,6 @@ from . import utils
 from . import version
 from .cmd import ContextCommand
 from .git import STDOUT
-from .git import EMPTY_TREE_OID
 from .git import MISSING_BLOB_OID
 from .i18n import N_
 from .interaction import Interaction
@@ -1525,20 +1525,6 @@ class DiffStagedSummary(EditModel):
         self.new_mode = self.model.mode_index
 
 
-class Difftool(ContextCommand):
-    """Run git-difftool limited by path."""
-
-    def __init__(self, context, staged, filenames):
-        super(Difftool, self).__init__(context)
-        self.staged = staged
-        self.filenames = filenames
-
-    def do(self):
-        difftool_launch_with_head(
-            self.context, self.filenames, self.staged, self.model.head
-        )
-
-
 class Edit(ContextCommand):
     """Edit a file using the configured gui.editor."""
 
@@ -1606,42 +1592,6 @@ class FormatPatch(ContextCommand):
             context, self.to_export, self.revs, self.output
         )
         Interaction.log_status(status, out, err)
-
-
-class LaunchDifftool(ContextCommand):
-    @staticmethod
-    def name():
-        return N_('Launch Diff Tool')
-
-    def do(self):
-        s = self.selection.selection()
-        if s.unmerged:
-            paths = s.unmerged
-            if utils.is_win32():
-                core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
-            else:
-                cfg = self.cfg
-                cmd = cfg.terminal()
-                argv = utils.shell_split(cmd)
-
-                terminal = os.path.basename(argv[0])
-                shellquote_terms = set(['xfce4-terminal'])
-                shellquote_default = terminal in shellquote_terms
-
-                mergetool = ['git', 'mergetool', '--no-prompt', '--']
-                mergetool.extend(paths)
-                needs_shellquote = cfg.get(
-                    'cola.terminalshellquote', shellquote_default
-                )
-
-                if needs_shellquote:
-                    argv.append(core.list2cmdline(mergetool))
-                else:
-                    argv.extend(mergetool)
-
-                core.fork(argv)
-        else:
-            difftool_run(self.context)
 
 
 class LaunchTerminal(ContextCommand):
@@ -3174,87 +3124,4 @@ def do(cls, *args, **opts):
         if hasattr(cls, '__name__'):
             msg = '%s exception:\n%s' % (cls.__name__, msg)
         Interaction.critical(N_('Error'), message=msg, details=details)
-        return None
-
-
-def difftool_run(context):
-    """Start a default difftool session"""
-    selection = context.selection
-    files = selection.group()
-    if not files:
-        return
-    s = selection.selection()
-    head = context.model.head
-    difftool_launch_with_head(context, files, bool(s.staged), head)
-
-
-def difftool_launch_with_head(context, filenames, staged, head):
-    """Launch difftool against the provided head"""
-    if head == 'HEAD':
-        left = None
-    else:
-        left = head
-    difftool_launch(context, left=left, staged=staged, paths=filenames)
-
-
-def difftool_launch(
-    context,
-    left=None,
-    right=None,
-    paths=None,
-    staged=False,
-    dir_diff=False,
-    left_take_magic=False,
-    left_take_parent=False,
-):
-    """Launches 'git difftool' with given parameters
-
-    :param left: first argument to difftool
-    :param right: second argument to difftool_args
-    :param paths: paths to diff
-    :param staged: activate `git difftool --staged`
-    :param dir_diff: activate `git difftool --dir-diff`
-    :param left_take_magic: whether to append the magic ^! diff expression
-    :param left_take_parent: whether to append the first-parent ~ for diffing
-
-    """
-
-    difftool_args = ['git', 'difftool', '--no-prompt']
-    if staged:
-        difftool_args.append('--cached')
-    if dir_diff:
-        difftool_args.append('--dir-diff')
-
-    if left:
-        if left_take_parent or left_take_magic:
-            suffix = '^!' if left_take_magic else '~'
-            # Check root commit (no parents and thus cannot execute '~')
-            git = context.git
-            status, out, err = git.rev_list(left, parents=True, n=1, _readonly=True)
-            Interaction.log_status(status, out, err)
-            if status:
-                raise OSError('git rev-list command failed')
-
-            if len(out.split()) >= 2:
-                # Commit has a parent, so we can take its child as requested
-                left += suffix
-            else:
-                # No parent, assume it's the root commit, so we have to diff
-                # against the empty tree.
-                left = EMPTY_TREE_OID
-                if not right and left_take_magic:
-                    right = left
-        difftool_args.append(left)
-
-    if right:
-        difftool_args.append(right)
-
-    if paths:
-        difftool_args.append('--')
-        difftool_args.extend(paths)
-
-    runtask = context.runtask
-    if runtask:
-        Interaction.async_command(N_('Difftool'), difftool_args, runtask)
-    else:
-        core.fork(difftool_args)
+    return None

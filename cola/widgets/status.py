@@ -17,6 +17,7 @@ from ..settings import Settings
 from .. import actions
 from .. import cmds
 from .. import core
+from .. import difftool
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
@@ -196,8 +197,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         self.launch_difftool_action = qtutils.add_action(
             self,
-            cmds.LaunchDifftool.name(),
-            cmds.run(cmds.LaunchDifftool, context),
+            difftool.LaunchDifftool.name(),
+            cmds.run(difftool.LaunchDifftool, context),
             hotkeys.DIFF,
         )
         self.launch_difftool_action.setIcon(icons.diff())

@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from . import cmds
+from . import difftool
 from . import hotkeys
 from . import icons
 from . import qtutils
@@ -34,7 +35,7 @@ def launch_editor_at_line(context, widget, *shortcuts):
 def launch_difftool(context, widget):
     """Create a QAction to launch git-difftool(1)"""
     icon = icons.diff()
-    cmd = cmds.LaunchDifftool
+    cmd = difftool.LaunchDifftool
     action = qtutils.add_action(
         widget, cmd.name(), cmds.run(cmd, context), hotkeys.DIFF
     )

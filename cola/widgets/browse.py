@@ -14,6 +14,7 @@ from ..i18n import N_
 from ..interaction import Interaction
 from .. import cmds
 from .. import core
+from .. import difftool
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -161,9 +162,9 @@ class RepoTreeView(standard.TreeView):
 
         self.action_difftool = qtutils.add_action_with_status_tip(
             self,
-            cmds.LaunchDifftool.name(),
+            difftool.LaunchDifftool.name(),
             N_('Launch git-difftool on the current path'),
-            cmds.run(cmds.LaunchDifftool, context),
+            cmds.run(difftool.LaunchDifftool, context),
             hotkeys.DIFF,
         )
 
@@ -527,7 +528,7 @@ class RepoTreeView(standard.TreeView):
         if not commits:
             return
         commit = commits[0]
-        cmds.difftool_launch(context, left=commit, paths=paths)
+        difftool.difftool_launch(context, left=commit, paths=paths)
 
     def current_path(self):
         """Return the path for the current item."""
