@@ -54,6 +54,9 @@ trees:
             export DESTDIR="${DESTDIR}"
         fi
         ${PIP} install --disable-pip-version-check $pip_root --prefix=${prefix} "$@" .
+      i18n: |
+        garden -vv pot
+        garden -vv po
       po: |
         for po in cola/i18n/*.po
         do
