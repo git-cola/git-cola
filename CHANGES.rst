@@ -11,6 +11,18 @@ Usability, bells and whistles
   text input field.
 
 
+.. _v4.3.1:
+
+v4.3.1
+======
+
+Fixes
+-----
+* The pypi wheel was fixed to include `entry_points.txt`.
+
+* The "Revert" command was throwing an exception after succesfully completing.
+
+
 .. _v4.3.0:
 
 v4.3.0
