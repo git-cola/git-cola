@@ -1818,7 +1818,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             commit = self.commits[-1]
             items.append(self.items[commit.oid])
 
-        self.setSceneRect(self.scene().itemsBoundingRect())
+        bounds = self.scene().itemsBoundingRect()
+        bounds.adjust(-64, 0, 0, 0)
+        self.setSceneRect(bounds)
         self.fit_view_to_items(items)
 
     def zoom_to_fit(self):
