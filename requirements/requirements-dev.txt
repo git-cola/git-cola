@@ -6,14 +6,13 @@ setuptools>=42
 setuptools_scm[toml] >= 3.4.1
 wheel
 
-## pylint is used by "garden check".
-pylint>=2.14.0
 
-## pytest packages are used by the "garden test" test suite.
+black >= 22.0.0
+pylint >= 2.14.0
 pytest>=3.6
 pytest-cov
 
-## Build and install documentation using "garden doc" and "garden install-doc".
+## Build and install documentation using "garden doc" and "garden install docs".
 jaraco.packaging >= 9
 rst.linker >= 1.9
 Sphinx
