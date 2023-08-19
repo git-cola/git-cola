@@ -45,7 +45,7 @@ trees:
       fmt: |
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
-        ${XARGS} ${BLACK} --skip-string-normalization
+        ${XARGS} ${BLACK} "$@" --skip-string-normalization
       html: garden -vv html docs
       install: |
         if test -n "${DESTDIR}"
