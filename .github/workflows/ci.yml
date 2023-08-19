@@ -4,51 +4,39 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: 'Build'
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        # Repository checked out under $GITHUB_WORKSPACE
-
-      - name: Install Dependencies
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal --no-self-update
+      - name: Install Garden
+        run: cargo install garden-tools
+      - uses: Swatinem/rust-cache@v2
+      - name: Install build dependencies
         run: |
+          set -x
           sudo apt-get update
-          sudo apt-get install \
-              gettext \
-              python3-sphinx
-
-      - name: Build
-        run: make prefix="build" install
-
-      - name: Zip Artifact
-        run: zip artifact.zip build/* -r
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: git-cola-run${{github.run_number}}-${{runner.os}}
-          path: artifact.zip
+          sudo apt-get install python3-sphinx python3-qtpy python3-pyqt5
+      - name: Install Git Cola
+        run: garden -D prefix="dist" install
 
   test:
-    name: 'Test'
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        # Repository checked out under $GITHUB_WORKSPACE
-
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal --no-self-update
+      - name: Install Garden
+        run: cargo install garden-tools
+      - uses: Swatinem/rust-cache@v2
       - name: Install Dependencies
         run: |
           set -x
           sudo apt-get update
-          sudo apt-get install \
-              black \
-              gettext \
-              pylint \
-              python-is-python3 \
-              python3-setuptools-scm \
-              python3-pytest
           # Runtime dependencies (required)
           sudo apt-get install \
               python3-qtpy \
@@ -56,99 +44,94 @@ jobs:
           # Runtime dependencies (optional)
           sudo apt-get install \
               python3-send2trash
-
-      - name: Build Translations
-        run: |
-          make i18n
-
-      - name: Run Unit Tests
+          # Development dependencies
+          sudo apt-get install \
+              pylint \
+              python-is-python3 \
+              python3-pytest \
+              python3-setuptools-scm \
+              python3-sphinx
+      - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
-          make test
+      - name: Run tests and checks
+        run: garden check
+      - name: Code formatting
+        run: |
+          pip install 'black>=22.0.0'
+          garden fmt -- --check
 
-      - name: Run Linter
-        run: make pylint color=0
-
-      - name: Check Code Formatting
-        # For strict adherence to formatting, run 'black' with --check
-        run: make format
-
-  win32:
-    name: 'Build / win32'
+  windows:
+    name: Windows
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        # Repository checked out under $GITHUB_WORKSPACE
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          architecture: 'x64'
-
+          architecture: x64
       - name: Pip Cache
         uses: actions/cache@v3
         with:
-            path: ~\AppData\Local\pip\Cache
-            key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/requirements*.txt') }}
-
+          path: ~/AppData/Local/pip/Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/requirements*.txt') }}
       - name: Install Dependencies
         run: |
           pip install wheel
           pip install --requirement requirements/requirements.txt
+          pip install --requirement requirements/requirements-opt.txt
           pip install --requirement requirements/requirements-dev.txt
           pip install --requirement requirements/requirements-maint.txt
-
       # Based on: contrib/win32/run-pynsist.sh
       - name: Build Installer
         run: |
-          make all
           make doc
           make htmldir="$PWD/share/doc/git-cola/html" install-doc
           pynsist pynsist.cfg
           rm -r share/doc/git-cola/html
 
           # Rename executable output
-          cd build\nsis
-          mv git-cola*.exe git-cola-run${{github.run_number}}.exe
-
+          cd build/nsis
+          mv git-cola*.exe git-cola-latest-${{github.run_number}}.exe
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: git-cola-run${{github.run_number}}-${{runner.os}}
-          path: build\nsis\git-cola*.exe
+          name: git-cola-latest-${{github.run_number}}-${{runner.os}}
+          path: build/nsis/git-cola*.exe
 
-  darwin:
-    name: 'Build / darwin'
+  macos:
+    name: macOS
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        # Repository checked out under $GITHUB_WORKSPACE
-
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal --no-self-update
+      - name: Install Garden
+        run: cargo install garden-tools
+      - uses: Swatinem/rust-cache@v2
       - name: Install Dependencies
         run: |
           set -x
           brew install git-cola
-          python3 -m venv env
-          source env/bin/activate
+          python3 -m venv env3
+          source env3/bin/activate
           python -m pip install wheel
-          make requirements-dev
-
+          garden requirements
+          garden requirements/dev
       - name: Build Bundle
         run: |
           set -x
-          source env/bin/activate
+          source env3/bin/activate
           make git-cola.app
           mv git-cola.app build/
-
       - name: Zip Artifact
-        run: zip artifact.zip build/* -r
-
+        run: zip -r git-cola.app.zip build/*
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: git-cola-run${{github.run_number}}-${{runner.os}}
-          path: artifact.zip
+          name: git-cola-latest-${{github.run_number}}-${{runner.os}}
+          path: git-cola.app.zip
