@@ -85,6 +85,7 @@ trees:
         ${PYLINT} --version
         ${PYLINT} --rcfile=.pylintrc ${PYLINT_OPTIONS} "$@" cola test
       requirements: ${PIP} install --requirement requirements/requirements.txt
+      requirements/maint: ${PIP} install --requirement requirements/requirements-maint.txt
       requirements/opt: ${PIP} install --requirement requirements/requirements-optional.txt
       requirements/dev: ${PIP} install --requirement requirements/requirements-dev.txt
       test: ${PYTEST} ${PYTEST_OPTIONS} "$@" cola test
