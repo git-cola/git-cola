@@ -1,4 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+
+import sys
 from functools import partial
 import errno
 import os
@@ -109,10 +111,13 @@ class Paths(object):
         self.common_dir = common_dir
 
     def get(self, path):
+        separator = ":"
+        if sys.platform == "win32":
+            separator = ";"
         ceiling_dirs = set()
         ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
         if ceiling:
-            ceiling_dirs.update([x for x in ceiling.split(':') if x])
+            ceiling_dirs.update([x for x in ceiling.split(separator) if x])
 
         if path:
             path = core.abspath(path)
