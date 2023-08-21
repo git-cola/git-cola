@@ -144,7 +144,7 @@ def all_files(context, *args):
         cached=True,
         others=True,
         exclude_standard=True,
-        _readonly=True
+        _readonly=True,
     )[STDOUT]
     return sorted([f for f in ls_files.split('\0') if f])
 
@@ -329,7 +329,7 @@ def log(git, *args, **kwargs):
         no_ext_diff=True,
         _readonly=True,
         *args,
-        **kwargs
+        **kwargs,
     )[STDOUT]
 
 
@@ -458,7 +458,7 @@ def diff_helper(
         cached=cached,
         _encoding=encoding,
         *argv,
-        **common_diff_opts(context)
+        **common_diff_opts(context),
     )
 
     success = status == 0

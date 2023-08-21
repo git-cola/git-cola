@@ -668,9 +668,7 @@ class Fetch(RemoteActionDialog):
     """Fetch from remote repositories"""
 
     def __init__(self, context, parent=None):
-        super().__init__(
-            context, FETCH, N_('Fetch'), parent=parent, icon=icons.repo()
-        )
+        super().__init__(context, FETCH, N_('Fetch'), parent=parent, icon=icons.repo())
 
     def export_state(self):
         """Export persistent settings"""
@@ -693,9 +691,7 @@ class Push(RemoteActionDialog):
     """Push to remote repositories"""
 
     def __init__(self, context, parent=None):
-        super().__init__(
-            context, PUSH, N_('Push'), parent=parent, icon=icons.push()
-        )
+        super().__init__(context, PUSH, N_('Push'), parent=parent, icon=icons.push())
 
     def export_state(self):
         """Export persistent settings"""
@@ -723,9 +719,7 @@ class Pull(RemoteActionDialog):
     """Pull from remote repositories"""
 
     def __init__(self, context, parent=None):
-        super().__init__(
-            context, PULL, N_('Pull'), parent=parent, icon=icons.pull()
-        )
+        super().__init__(context, PULL, N_('Pull'), parent=parent, icon=icons.pull())
 
     def apply_state(self, state):
         """Apply persistent settings"""

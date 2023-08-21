@@ -1500,9 +1500,7 @@ class DiffStaged(Diff):
     """Perform a staged diff on a file."""
 
     def __init__(self, context, filename, deleted=None):
-        super().__init__(
-            context, filename, cached=True, deleted=deleted
-        )
+        super().__init__(context, filename, cached=True, deleted=deleted)
         self.new_mode = self.model.mode_index
 
 
@@ -1932,7 +1930,7 @@ class Clone(ContextCommand):
             self.new_directory,
             recurse_submodules=recurse_submodules,
             shallow_submodules=shallow_submodules,
-            **kwargs
+            **kwargs,
         )
 
         self.status = status

@@ -293,7 +293,7 @@ class Git:
                 stdout=_stdout,
                 stderr=_stderr,
                 no_win32_startupinfo=_no_win32_startupinfo,
-                **extra
+                **extra,
             )
         finally:
             # Let the next thread in

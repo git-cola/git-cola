@@ -155,19 +155,19 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
 @patch('cola.core.isfile')
 def test_is_git_dir_finds_linked_repository(isfile, isdir, islink):
     dirs = {
-            '/foo',
-            '/foo/.git',
-            '/foo/.git/refs',
-            '/foo/.git/objects',
-            '/foo/.git/worktrees',
-            '/foo/.git/worktrees/foo',
+        '/foo',
+        '/foo/.git',
+        '/foo/.git/refs',
+        '/foo/.git/objects',
+        '/foo/.git/worktrees',
+        '/foo/.git/worktrees/foo',
     }
     files = {
-            '/foo/.git/HEAD',
-            '/foo/.git/worktrees/foo/HEAD',
-            '/foo/.git/worktrees/foo/index',
-            '/foo/.git/worktrees/foo/commondir',
-            '/foo/.git/worktrees/foo/gitdir',
+        '/foo/.git/HEAD',
+        '/foo/.git/worktrees/foo/HEAD',
+        '/foo/.git/worktrees/foo/index',
+        '/foo/.git/worktrees/foo/commondir',
+        '/foo/.git/worktrees/foo/gitdir',
     }
     islink.return_value = False
     isfile.side_effect = lambda x: x in files

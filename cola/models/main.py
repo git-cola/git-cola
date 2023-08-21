@@ -57,7 +57,10 @@ class MainModel(QtCore.QObject):
 
     # Modes where we can partially stage files
     modes_partially_stageable = {
-        mode_amend, mode_diff, mode_worktree, mode_untracked_diff
+        mode_amend,
+        mode_diff,
+        mode_worktree,
+        mode_untracked_diff,
     }
 
     # Modes where we can partially unstage files

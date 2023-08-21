@@ -486,9 +486,7 @@ class Theme:
         try:
             return core.read(filename)
         except OSError as err:
-            core.print_stderr(
-                f'warning: unable to read custom theme {filename}: {err}'
-            )
+            core.print_stderr(f'warning: unable to read custom theme {filename}: {err}')
             return style_sheet_default(app_palette)
 
     def get_palette(self):

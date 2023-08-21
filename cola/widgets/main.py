@@ -302,7 +302,7 @@ class MainView(standard.MainWindow):
             self,
             cmds.Refresh.name(),
             cmds.run(cmds.Refresh, context),
-            *hotkeys.REFRESH_HOTKEYS
+            *hotkeys.REFRESH_HOTKEYS,
         )
         self.rescan_action.setIcon(icons.sync())
 

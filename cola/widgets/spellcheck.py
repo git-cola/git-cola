@@ -88,9 +88,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
     # This widget is a single-line QTextEdit as described in
     # http://blog.ssokolow.com/archives/2022/07/22/a-qlineedit-replacement-with-spell-checking/
     def __init__(self, context, hint, check=None, parent=None):
-        super().__init__(
-            context, hint, check=check, parent=parent
-        )
+        super().__init__(context, hint, check=check, parent=parent)
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

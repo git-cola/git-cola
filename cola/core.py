@@ -61,9 +61,7 @@ class UStr(ustr):
     def __new__(cls, string, encoding):
         if isinstance(string, UStr):
             if encoding != string.encoding:
-                raise ValueError(
-                    f'Encoding conflict: {string.encoding} vs. {encoding}'
-                )
+                raise ValueError(f'Encoding conflict: {string.encoding} vs. {encoding}')
             string = ustr(string)
 
         obj = ustr.__new__(cls, string)
@@ -183,7 +181,7 @@ def start_command(
     stdout=subprocess.PIPE,
     no_win32_startupinfo=False,
     stderr=subprocess.PIPE,
-    **extra
+    **extra,
 ):
     """Start the given command, and return a subprocess object.
 
@@ -241,7 +239,7 @@ def start_command(
         cwd=cwd,
         env=env,
         universal_newlines=universal_newlines,
-        **extra
+        **extra,
     )
 
 

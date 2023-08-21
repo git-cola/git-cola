@@ -48,8 +48,10 @@ default_encoding = 'utf-8'
 PY3 = True
 text_type = str
 
+
 def b(s):
     return s.encode('utf-8')
+
 
 def u(s):
     return s
@@ -1584,9 +1586,7 @@ class _POFileParser:
             fpath = '%s ' % self.instance.fpath if self.instance.fpath else ''
             if hasattr(self.fhandle, 'close'):
                 self.fhandle.close()
-            raise OSError(
-                f'Syntax error in po file {fpath}(line {self.current_line})'
-            )
+            raise OSError(f'Syntax error in po file {fpath}(line {self.current_line})')
 
     # state handlers
 
@@ -1839,9 +1839,7 @@ class _MOFileParser:
                 entry = self._build_entry(
                     msgid=msgid_tokens[0],
                     msgid_plural=msgid_tokens[1],
-                    msgstr_plural={
-                        k: v for k, v in enumerate(msgstr.split(b('\0')))
-                    },
+                    msgstr_plural={k: v for k, v in enumerate(msgstr.split(b('\0')))},
                 )
             else:
                 entry = self._build_entry(msgid=msgid, msgstr=msgstr)

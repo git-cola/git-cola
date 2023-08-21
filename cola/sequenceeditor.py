@@ -348,7 +348,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self,
             N_('Reword'),
             lambda: self.set_selected_to(REWORD),
-            *hotkeys.REBASE_REWORD
+            *hotkeys.REBASE_REWORD,
         )
 
         self.action_edit = qtutils.add_action(
@@ -359,14 +359,14 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self,
             N_('Fixup'),
             lambda: self.set_selected_to(FIXUP),
-            *hotkeys.REBASE_FIXUP
+            *hotkeys.REBASE_FIXUP,
         )
 
         self.action_squash = qtutils.add_action(
             self,
             N_('Squash'),
             lambda: self.set_selected_to(SQUASH),
-            *hotkeys.REBASE_SQUASH
+            *hotkeys.REBASE_SQUASH,
         )
 
         self.action_shift_down = qtutils.add_action(
