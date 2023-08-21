@@ -25,6 +25,10 @@ Development
   when using `black`. Use of `brunette` allows us to enable quote normalization
   using the single-quotes mode.
 
+* The test suite now works on Windows.
+  (`#1331 <https://github.com/git-cola/git-cola/issues/1331>`_)
+  (`#1332 <https://github.com/git-cola/git-cola/pull/1332>`_)
+
 
 .. _v4.3.1:
 
