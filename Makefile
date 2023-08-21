@@ -10,7 +10,7 @@ all::
 # make test V=2                 # run tests; V=2 increases test verbosity
 # make doc                      # build docs
 # make pylint [color=1]         # run pylint; color=1 colorizes output
-# make format                   # run the black python formatter
+# make fmt                      # run the code formatter
 # make check [color=1]          # run test, doc and pylint
 # make check file=<filename>    # run checks on <filename>
 #
@@ -26,7 +26,7 @@ all::
 # DESTDIR is also supported.
 #
 # The external commands used by this Makefile are...
-BLACK = black
+BRUNETTE = brunette
 CP = cp
 FIND = find
 GREP = grep
@@ -272,11 +272,11 @@ check:: doc
 check:: pylint
 endif
 
-.PHONY: format
-format::
+.PHONY: fmt
+fmt::
 	$(GIT) ls-files -- '*.py' | \
 	$(GREP) -v ^qtpy | \
-	$(XARGS) $(BLACK) --skip-string-normalization
+	$(XARGS) $(BRUNETTE) --config=setup.cfg
 
 # Run "make develop" from inside a newly created virtualenv to create an
 # editable installation.

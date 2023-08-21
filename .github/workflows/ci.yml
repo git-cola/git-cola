@@ -51,6 +51,7 @@ jobs:
               python3-pytest \
               python3-setuptools-scm \
               python3-sphinx
+          pip install brunette
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
@@ -58,9 +59,7 @@ jobs:
       - name: Run tests and checks
         run: garden check
       - name: Code formatting
-        run: |
-          pip install 'black>=22.0.0'
-          garden fmt -- --check
+        run: garden fmt -- --check
 
   windows:
     name: Windows

@@ -27,9 +27,6 @@ git-cola-sequence-editor = "cola.sequenceeditor:main"
 requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4.1"]
 build-backend = "setuptools.build_meta"
 
-[tool.black]
-skip-string-normalization = true
-
 [tool.setuptools_scm]
 # "fallback_version" does not (currently) work when building from tarballs.
 # "fallback_version" should start working once this upstream issue is resolved:
