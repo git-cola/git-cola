@@ -19,6 +19,7 @@ BOLD_HEADERS = 'cola.boldheaders'
 CHECK_CONFLICTS = 'cola.checkconflicts'
 CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
 COMMENT_CHAR = 'core.commentchar'
+COMMIT_CLEANUP = 'commit.cleanup'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
@@ -68,6 +69,7 @@ class DateFormat(object):
 
 
 def date_formats():
+    """Return valid values for git config cola.logdate"""
     return [
         DateFormat.DEFAULT,
         DateFormat.RELATIVE,
@@ -82,6 +84,17 @@ def date_formats():
     ]
 
 
+def commit_cleanup_modes():
+    """Return valid values for the git config commit.cleanup"""
+    return [
+        'default',
+        'whitespace',
+        'strip',
+        'scissors',
+        'verbatim',
+    ]
+
+
 class Defaults(object):
     """Read-only class for holding defaults that get overridden"""
 
@@ -93,6 +106,7 @@ class Defaults(object):
     check_conflicts = True
     check_published_commits = True
     comment_char = '#'
+    commit_cleanup = 'default'
     display_untracked = True
     diff_context = 5
     difftool = 'xxdiff'
@@ -204,6 +218,11 @@ def _remap_editor(app):
 def comment_char(context):
     """Return the configured git commit comment character"""
     return context.cfg.get(COMMENT_CHAR, default=Defaults.comment_char)
+
+
+def commit_cleanup(context):
+    """Return the configured git commit cleanup mode"""
+    return context.cfg.get(COMMIT_CLEANUP, default=Defaults.commit_cleanup)
 
 
 def enable_gravatar(context):

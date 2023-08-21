@@ -131,6 +131,33 @@ class RepoFormWidget(FormWidget):
         self.patches_directory = standard.DirectoryPathLineEdit(patches_directory, self)
         self.patches_directory.setToolTip(tooltip)
 
+        tooltip = N_(
+            '''
+This option determines how the supplied commit message should be
+cleaned up before committing.
+
+The <mode> can be strip, whitespace, verbatim, scissors or default.
+
+strip
+    Strip leading and trailing empty lines, trailing whitespace,
+    commentary and collapse consecutive empty lines.
+
+whitespace
+    Same as strip except #commentary is not removed.
+
+verbatim
+    Do not change the message at all.
+
+scissors
+    Same as whitespace except that everything from (and including) the line
+    found below is truncated, if the message is to be edited.
+    "#" can be customized with core.commentChar.
+
+    # ------------------------ >8 ------------------------'''
+        )
+        self.commit_cleanup = qtutils.combo(
+            prefs.commit_cleanup_modes(), tooltip=tooltip
+        )
         self.diff_context = standard.SpinBox(value=5, mini=2, maxi=9995)
         self.merge_verbosity = standard.SpinBox(value=5, maxi=5)
         self.merge_summary = qtutils.checkbox(checked=True)
@@ -168,6 +195,7 @@ class RepoFormWidget(FormWidget):
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Log Date Format'), self.logdate)
+        self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Patches Directory'), self.patches_directory)
@@ -198,6 +226,7 @@ class RepoFormWidget(FormWidget):
                     self.check_published_commits,
                     Defaults.check_published_commits,
                 ),
+                prefs.COMMIT_CLEANUP: (self.commit_cleanup, Defaults.commit_cleanup),
                 prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
                 prefs.DISPLAY_UNTRACKED: (
                     self.display_untracked,

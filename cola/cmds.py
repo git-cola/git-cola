@@ -811,8 +811,7 @@ class Commit(ResetMode):
     def do(self):
         # Create the commit message file
         context = self.context
-        comment_char = prefs.comment_char(context)
-        msg = self.strip_comments(self.msg, comment_char=comment_char)
+        msg = self.msg
         tmp_file = utils.tmp_filename('commit-message')
         try:
             core.write(tmp_file, msg)

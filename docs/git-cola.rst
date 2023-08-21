@@ -958,6 +958,50 @@ Defaults to "#bbbbbb"::
 
     git config cola.color.header '#bbbbbb'
 
+commit.cleanup
+--------------
+Configure whether commit messages should be stripped of whitespace and comments.
+
+Valid values are ``strip``, ``whitespace``, ``verbatim``, ``scissors`` or ``default``.
+
+The ``default`` mode uses the ``whitespace`` mode when committing through Git Cola
+and the ``strip`` mode when committing using the ``git commit`` command-line.
+
+* ``strip`` - Strip leading and trailing empty lines, trailing whitespace,
+  commentary and collapse consecutive empty lines.
+
+* ``whitespace`` - Same as strip except ``# commentary`` is not removed.
+  This is the ``default`` behavior when committing through `Git Cola`.
+
+* ``verbatim`` - Do not change the message at all.
+
+* ``scissors`` - Same as whitespace except that everything from (and including)
+  the line found below is truncated, if the message is to be edited.
+  "#" can be customized with ``core.commentChar``::
+
+    # ------------------------ >8 ------------------------
+    Scissor-lines and all following lines are removed.
+
+Changing the mode to ``whitespace`` can be useful when you always want to keep
+lines that begin with comment character ``#`` in your log message, even when
+committing using the command-line ``git commit``.
+
+On the contrary, if you always want to always strip comments, even when
+committing through Git Cola, then configure ``commit.cleanup`` to ``strip``.
+
+Please see the `git commit cleanup mode documentation
+<https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---cleanupltmodegt>`_
+for more details.
+
+core.commentChar
+----------------
+Commit messages can contain comments that start with this character.
+Defaults to ``#``.
+
+Please see the `git config documentation
+<https://git-scm.com/docs/git-config#Documentation/git-config.txt-corecommentChar>`_
+for more details.
+
 core.hooksPath
 --------------
 Hooks are programs you can place in a hooks directory to trigger actions at

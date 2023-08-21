@@ -5,6 +5,13 @@ v4.4.0
 
 Usability, bells and whistles
 -----------------------------
+* Git Cola now preserves `# commentary` in commit messages by default.
+  The `commit.cleanup` Git configuration variable can be used to
+  customize this behavior. For example, if you want Git Cola to
+  strip comments (the old behavior before v4.4.0) then
+  you can run `git config --global commit.cleanup strip` or configure
+  the "Commit Message Cleanup" setting in the Preferences window.
+
 * `git dag` now includes completions for `git log` options in the text input field.
 
 * `git dag` now provides convenient search filters when right-clicking in the

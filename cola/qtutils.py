@@ -257,9 +257,12 @@ class ComboBox(QtWidgets.QComboBox):
         self.setCurrentIndex(index)
 
 
-def combo(items, editable=False, parent=None):
+def combo(items, editable=False, tooltip='', parent=None):
     """Create a readonly (by default) combobox from a list of items"""
-    return ComboBox(editable=editable, items=items, parent=parent)
+    combobox = ComboBox(editable=editable, items=items, parent=parent)
+    if tooltip:
+        combobox.setToolTip(tooltip)
+    return combobox
 
 
 def combo_mapped(data, editable=False, transform=None, parent=None):
