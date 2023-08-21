@@ -28,7 +28,7 @@ http://www.python.org/dev/peps/pep-0008/
 
 * Use 4-space indents.
 
-* Use `variable_names_with_underscores`, AKA "snake case" naming.
+* Use `variable_names_with_underscores` AKA "snake case" naming.
   No camelCase.  The only exception is when overriding Qt functions.
 
 * Do not introduce trailing whitespace.  The "Diff" viewer displays
@@ -36,7 +36,8 @@ http://www.python.org/dev/peps/pep-0008/
 
 * If you use SublimeText, configure `newline_at_eof_on_save` to true.
 
-https://robots.thoughtbot.com/no-newline-at-end-of-file
+* Avoid "No newline at end of file"
+  [in your diffs](https://robots.thoughtbot.com/no-newline-at-end-of-file).
 
 ## Describe your changes well.
 

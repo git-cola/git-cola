@@ -10,8 +10,7 @@ py-version = 3.6
 # pygtk.require().
 #init-hook=
 
-# Add files or directories to the blacklist. They should be base names, not
-# paths.
+# Add files or directories to ignore. They should be base names, not paths.
 ignore=.git,qtpy,sphinxtogithub
 
 # Pickle collected data for later comparisons.
