@@ -223,8 +223,7 @@ def start_command(
         # git-cola invokes git, which is very annoying.  The code below
         # prevents this by ensuring that any window will be hidden.
         startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
-        startupinfo.wShowWindow = subprocess.SW_HIDE
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         extra['startupinfo'] = startupinfo
 
         if WIN32 and not no_win32_startupinfo:
