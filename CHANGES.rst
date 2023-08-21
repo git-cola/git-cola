@@ -3265,7 +3265,7 @@ Usability, bells and whistles
 
 * The commit message editor was redesigned to have a more compact
   and keyboard-convenient user interface.
-  
+
 * Keyboard shortcuts for adding a Signed-off-by (`Ctrl + i`)
   and creating a commit (`Ctrl + m`) were added.
 

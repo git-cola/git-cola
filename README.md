@@ -318,12 +318,12 @@ See `git cola --help-commands` for the full list of commands.
 
     $ git cola --help-commands
     usage: git-cola [-h]
-    
+
                     {cola,am,archive,branch,browse,config,
                      dag,diff,fetch,find,grep,merge,pull,push,
                      rebase,remote,search,stash,tag,version}
                     ...
-    
+
     valid commands:
       {cola,am,archive,branch,browse,config,
        dag,diff,fetch,find,grep,merge,pull,push,
@@ -352,7 +352,7 @@ See `git cola --help-commands` for the full list of commands.
 
 ## Development
 
-If you already have Git Cola's dependencies installed then you can 
+If you already have Git Cola's dependencies installed then you can
 start `cola` as a Python module if you have the source code available.
 
     python -m cola
