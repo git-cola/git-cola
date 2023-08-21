@@ -15,6 +15,7 @@ from .compat import ustr
 from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
+from .utils import is_win32
 
 
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
@@ -111,9 +112,7 @@ class Paths(object):
         self.common_dir = common_dir
 
     def get(self, path):
-        separator = ":"
-        if sys.platform == "win32":
-            separator = ";"
+        separator = ';' if is_win32() else ':'
         ceiling_dirs = set()
         ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
         if ceiling:

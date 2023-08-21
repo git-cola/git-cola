@@ -7,6 +7,7 @@ import sys
 
 from cola import git
 from cola.git import STDOUT
+from cola.utils import is_win32
 
 from .helper import patch
 
@@ -127,13 +128,11 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
-    separator = ":"
-    if sys.platform == "win32":
-        separator = ";"
+    separator = ';' if is_win32() else ':'
     git_dir = str(pathlib.Path('/ceiling/.git').resolve())
     ceiling = separator.join(
         str(pathlib.Path(path).resolve())
-        for path in ("/tmp", "/ceiling", "/other/ceiling")
+        for path in ('/tmp', '/ceiling', '/other/ceiling')
     )
     is_git_dir.side_effect = lambda x: x == git_dir
 
