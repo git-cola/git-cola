@@ -2,6 +2,9 @@
 # pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import os
+import pathlib
+
 from cola import git
 from cola.git import STDOUT
 
@@ -36,7 +39,7 @@ def test_find_git_dir_empty_string(is_git_dir):
 def test_find_git_dir_never_found(is_git_dir):
     is_git_dir.return_value = False
 
-    paths = git.find_git_directory('/does/not/exist')
+    paths = git.find_git_directory(str(pathlib.Path('/does/not/exist').resolve()))
 
     assert is_git_dir.called
     assert paths.git_dir is None
@@ -48,22 +51,22 @@ def test_find_git_dir_never_found(is_git_dir):
     assert expect == actual
     is_git_dir.assert_has_calls(
         [
-            (('/does/not/exist',), {}),
-            (('/does/not/exist/.git',), {}),
-            (('/does/not',), {}),
-            (('/does/not/.git',), {}),
-            (('/does',), {}),
-            (('/does/.git',), {}),
-            (('/',), {}),
-            (('/.git',), {}),
+            ((str(pathlib.Path('/does/not/exist').resolve()),), {}),
+            ((str(pathlib.Path('/does/not/exist/.git').resolve()),), {}),
+            ((str(pathlib.Path('/does/not').resolve()),), {}),
+            ((str(pathlib.Path('/does/not/.git').resolve()),), {}),
+            ((str(pathlib.Path('/does').resolve()),), {}),
+            ((str(pathlib.Path('/does/.git').resolve()),), {}),
+            ((str(pathlib.Path('/').resolve()),), {}),
+            ((str(pathlib.Path('/.git').resolve()),), {}),
         ]
     )
 
 
 @patch('cola.git.is_git_dir')
 def test_find_git_dir_found_right_away(is_git_dir):
-    git_dir = '/seems/to/exist/.git'
-    worktree = '/seems/to/exist'
+    git_dir = str(pathlib.Path('/seems/to/exist/.git').resolve())
+    worktree = str(pathlib.Path('/seems/to/exist').resolve())
     is_git_dir.return_value = True
 
     paths = git.find_git_directory(git_dir)
@@ -76,8 +79,8 @@ def test_find_git_dir_found_right_away(is_git_dir):
 
 @patch('cola.git.is_git_dir')
 def test_find_git_does_discovery(is_git_dir):
-    git_dir = '/the/root/.git'
-    worktree = '/the/root'
+    git_dir = str(pathlib.Path('/the/root/.git').resolve())
+    worktree = str(pathlib.Path('/the/root').resolve())
     is_git_dir.side_effect = lambda x: x == git_dir
 
     paths = git.find_git_directory('/the/root/sub/dir')
@@ -91,15 +94,15 @@ def test_find_git_does_discovery(is_git_dir):
 @patch('cola.git.is_git_file')
 @patch('cola.git.is_git_dir')
 def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
-    git_file = '/the/root/.git'
-    worktree = '/the/root'
-    git_dir = '/super/module/.git/modules/root'
+    git_file = str(pathlib.Path('/the/root/.git').resolve())
+    worktree = str(pathlib.Path('/the/root').resolve())
+    git_dir = str(pathlib.Path('/super/module/.git/modules/root').resolve())
 
     is_git_dir.side_effect = lambda x: x == git_file
     is_git_file.side_effect = lambda x: x == git_file
     read_git_file.return_value = git_dir
 
-    paths = git.find_git_directory('/the/root/sub/dir')
+    paths = git.find_git_directory(str(pathlib.Path('/the/root/sub/dir').resolve()))
 
     assert git_dir == paths.git_dir
     assert git_file == paths.git_file
@@ -110,22 +113,25 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
     assert expect == actual
     is_git_dir.assert_has_calls(
         [
-            (('/the/root/sub/dir',), {}),
-            (('/the/root/sub/dir/.git',), {}),
-            (('/the/root/sub',), {}),
-            (('/the/root/sub/.git',), {}),
-            (('/the/root',), {}),
-            (('/the/root/.git',), {}),
+            ((str(pathlib.Path('/the/root/sub/dir').resolve()),), {}),
+            ((str(pathlib.Path('/the/root/sub/dir/.git').resolve()),), {}),
+            ((str(pathlib.Path('/the/root/sub').resolve()),), {}),
+            ((str(pathlib.Path('/the/root/sub/.git').resolve()),), {}),
+            ((str(pathlib.Path('/the/root').resolve()),), {}),
+            ((str(pathlib.Path('/the/root/.git').resolve()),), {}),
         ]
     )
-    read_git_file.assert_called_once_with('/the/root/.git')
+    read_git_file.assert_called_once_with(git_file)
 
 
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
-    git_dir = '/ceiling/.git'
-    ceiling = '/tmp:/ceiling:/other/ceiling'
+    git_dir = str(pathlib.Path('/ceiling/.git').resolve())
+    ceiling = os.pathsep.join(
+        str(pathlib.Path(path).resolve())
+        for path in ('/tmp', '/ceiling', '/other/ceiling')
+    )
     is_git_dir.side_effect = lambda x: x == git_dir
 
     def mock_getenv(k, v=None):
@@ -134,8 +140,7 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
         return v
 
     getenv.side_effect = mock_getenv
-
-    paths = git.find_git_directory('/ceiling/sub/dir')
+    paths = git.find_git_directory(str(pathlib.Path('/ceiling/sub/dir').resolve()))
 
     assert paths.git_dir is None
     assert paths.git_file is None
@@ -143,10 +148,10 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
     assert is_git_dir.call_count == 4
     is_git_dir.assert_has_calls(
         [
-            (('/ceiling/sub/dir',), {}),
-            (('/ceiling/sub/dir/.git',), {}),
-            (('/ceiling/sub',), {}),
-            (('/ceiling/sub/.git',), {}),
+            ((str(pathlib.Path('/ceiling/sub/dir').resolve()),), {}),
+            ((str(pathlib.Path('/ceiling/sub/dir/.git').resolve()),), {}),
+            ((str(pathlib.Path('/ceiling/sub').resolve()),), {}),
+            ((str(pathlib.Path('/ceiling/sub/.git').resolve()),), {}),
         ]
     )
 
@@ -155,8 +160,9 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
 @patch('cola.core.isdir')
 @patch('cola.core.isfile')
 def test_is_git_dir_finds_linked_repository(isfile, isdir, islink):
-    dirs = set(
-        [
+    dirs = {
+        str(pathlib.Path(directory).resolve())
+        for directory in [
             '/foo',
             '/foo/.git',
             '/foo/.git/refs',
@@ -164,31 +170,32 @@ def test_is_git_dir_finds_linked_repository(isfile, isdir, islink):
             '/foo/.git/worktrees',
             '/foo/.git/worktrees/foo',
         ]
-    )
-    files = set(
-        [
+    }
+    files = {
+        str(pathlib.Path(file).resolve())
+        for file in [
             '/foo/.git/HEAD',
             '/foo/.git/worktrees/foo/HEAD',
             '/foo/.git/worktrees/foo/index',
             '/foo/.git/worktrees/foo/commondir',
             '/foo/.git/worktrees/foo/gitdir',
         ]
-    )
+    }
     islink.return_value = False
     isfile.side_effect = lambda x: x in files
     isdir.side_effect = lambda x: x in dirs
 
-    assert git.is_git_dir('/foo/.git/worktrees/foo')
-    assert git.is_git_dir('/foo/.git')
+    assert git.is_git_dir(str(pathlib.Path('/foo/.git/worktrees/foo').resolve()))
+    assert git.is_git_dir(str(pathlib.Path('/foo/.git').resolve()))
 
 
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_worktree_from_GIT_DIR(is_git_dir, getenv):
-    git_dir = '/repo/.git'
-    worktree = '/repo'
+    git_dir = str(pathlib.Path('/repo/.git').resolve())
+    worktree = str(pathlib.Path('/repo').resolve())
     is_git_dir.return_value = True
-    getenv.side_effect = lambda x: x == 'GIT_DIR' and '/repo/.git' or None
+    getenv.side_effect = lambda x: x == 'GIT_DIR' and git_dir or None
 
     paths = git.find_git_directory(git_dir)
     assert is_git_dir.called
@@ -199,7 +206,7 @@ def test_find_git_worktree_from_GIT_DIR(is_git_dir, getenv):
 
 @patch('cola.git.is_git_dir')
 def test_finds_no_worktree_from_bare_repo(is_git_dir):
-    git_dir = '/repos/bare.git'
+    git_dir = str(pathlib.Path('/repos/bare.git').resolve())
     worktree = None
     is_git_dir.return_value = True
 
@@ -213,8 +220,8 @@ def test_finds_no_worktree_from_bare_repo(is_git_dir):
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_directory_uses_GIT_WORK_TREE(is_git_dir, getenv):
-    git_dir = '/repo/worktree/.git'
-    worktree = '/repo/worktree'
+    git_dir = str(pathlib.Path('/repo/worktree/.git').resolve())
+    worktree = str(pathlib.Path('/repo/worktree').resolve())
 
     def is_git_dir_func(path):
         return path == git_dir
@@ -238,8 +245,8 @@ def test_find_git_directory_uses_GIT_WORK_TREE(is_git_dir, getenv):
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_uses_cwd_for_worktree_with_GIT_DIR(is_git_dir, getenv):
-    git_dir = '/repo/.yadm/repo.git'
-    worktree = '/repo'
+    git_dir = str(pathlib.Path('/repo/.yadm/repo.git').resolve())
+    worktree = str(pathlib.Path('/repo').resolve())
 
     def getenv_func(name):
         if name == 'GIT_DIR':

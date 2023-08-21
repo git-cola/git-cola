@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+
 from functools import partial
 import errno
 import os
@@ -112,7 +113,7 @@ class Paths(object):
         ceiling_dirs = set()
         ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
         if ceiling:
-            ceiling_dirs.update([x for x in ceiling.split(':') if x])
+            ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
 
         if path:
             path = core.abspath(path)
