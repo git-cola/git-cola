@@ -7,7 +7,7 @@ to this software.
 
 ## Run the pre-commit checks before committing
 
-* `make check`
+* `garden check`
 
 ## Write tests
 
@@ -22,7 +22,7 @@ The style here is the standard Python PEP-8 style:
 
 http://www.python.org/dev/peps/pep-0008/
 
-* Use the `make fmt` command to format the source code using `brunette`.
+* Use the `garden fmt` command to format the source code using `brunette`.
 
 * Follow the same style as the existing code.
 
@@ -165,7 +165,7 @@ the new strings.
 
 To regenerate `git-cola.pot` and update `.po` files with new strings run:
 
-    make pot
+    garden pot
 
 This will update `.po` files with untranslated strings which translators can
 use to translate `git-cola`.
