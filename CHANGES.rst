@@ -11,6 +11,7 @@ Usability, bells and whistles
   strip comments (the old behavior before v4.4.0) then
   you can run `git config --global commit.cleanup strip` or configure
   the "Commit Message Cleanup" setting in the Preferences window.
+  (`#1330 <https://github.com/git-cola/git-cola/issues/1330>`_)
 
 * `git dag` now includes completions for `git log` options in the text input field.
 
