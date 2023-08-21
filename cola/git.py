@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import sys
 from functools import partial
 import errno
 import os
@@ -15,7 +14,6 @@ from .compat import ustr
 from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
-from .utils import is_win32
 
 
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
@@ -112,11 +110,10 @@ class Paths(object):
         self.common_dir = common_dir
 
     def get(self, path):
-        separator = ';' if is_win32() else ':'
         ceiling_dirs = set()
         ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
         if ceiling:
-            ceiling_dirs.update([x for x in ceiling.split(separator) if x])
+            ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
 
         if path:
             path = core.abspath(path)

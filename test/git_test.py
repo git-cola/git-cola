@@ -2,12 +2,11 @@
 # pylint: disable=redefined-outer-name
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import os
 import pathlib
-import sys
 
 from cola import git
 from cola.git import STDOUT
-from cola.utils import is_win32
 
 from .helper import patch
 
@@ -128,9 +127,8 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
 @patch('cola.core.getenv')
 @patch('cola.git.is_git_dir')
 def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
-    separator = ';' if is_win32() else ':'
     git_dir = str(pathlib.Path('/ceiling/.git').resolve())
-    ceiling = separator.join(
+    ceiling = os.pathsep.join(
         str(pathlib.Path(path).resolve())
         for path in ('/tmp', '/ceiling', '/other/ceiling')
     )
