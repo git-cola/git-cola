@@ -213,11 +213,11 @@ class Commit(object):
         return json.dumps(self.data(), sort_keys=True, indent=4, default=list)
 
     def is_fork(self):
-        '''Returns True if the node is a fork'''
+        """Returns True if the node is a fork"""
         return len(self.children) > 1
 
     def is_merge(self):
-        '''Returns True if the node is a fork'''
+        """Returns True if the node is a fork"""
         return len(self.parents) > 1
 
 

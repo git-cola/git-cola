@@ -777,7 +777,7 @@ class UndoLastCommit(ResetCommand):
                 N_(
                     'This commit has already been published.\n'
                     'This operation will rewrite published history.\n'
-                    'You probably don\'t want to do this.'
+                    "You probably don't want to do this."
                 ),
                 N_('Undo the published commit?'),
                 N_('Undo Last Commit'),

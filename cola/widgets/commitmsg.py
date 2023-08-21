@@ -229,7 +229,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         QtCore.QTimer.singleShot(1, self.restore_size)
 
     def restore_size(self):
-        self.setMaximumHeight(2**13)
+        self.setMaximumHeight(2 ** 13)
 
     def focus_summary(self):
         self.summary.setFocus()
@@ -457,7 +457,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
                 N_(
                     'This commit has already been published.\n'
                     'This operation will rewrite published history.\n'
-                    'You probably don\'t want to do this.'
+                    "You probably don't want to do this."
                 ),
                 N_('Amend the published commit?'),
                 N_('Amend Commit'),

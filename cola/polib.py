@@ -55,14 +55,14 @@ if sys.version_info < (3,):
         return s
 
     def u(s):
-        return compat.ustr(s, "unicode_escape")
+        return compat.ustr(s, 'unicode_escape')
 
 else:
     PY3 = True
     text_type = str
 
     def b(s):
-        return s.encode("utf-8")
+        return s.encode('utf-8')
 
     def u(s):
         return s
@@ -265,7 +265,7 @@ def escape(st):
         .replace('\t', r'\t')
         .replace('\r', r'\r')
         .replace('\n', r'\n')
-        .replace('\"', r'\"')
+        .replace('"', r'\"')
     )
 
 
@@ -633,7 +633,7 @@ class _BaseFile(list):
         offsets = koffsets + voffsets
 
         output = struct.pack(
-            "Iiiiiii",
+            'Iiiiiii',
             # Magic number
             MOFile.MAGIC,
             # Version
@@ -649,9 +649,9 @@ class _BaseFile(list):
             keystart,
         )
         if PY3 and sys.version_info.minor > 1:  # python 3.2 or superior
-            output += array.array("i", offsets).tobytes()
+            output += array.array('i', offsets).tobytes()
         else:
-            output += array.array("i", offsets).tostring()  # pylint: disable=no-member
+            output += array.array('i', offsets).tostring()  # pylint: disable=no-member
         output += ids
         output += strs
         return output
@@ -684,7 +684,7 @@ class POFile(_BaseFile):
         ret, headers = '', self.header.split('\n')
         for header in headers:
             if not header:
-                ret += "#\n"
+                ret += '#\n'
             elif header[:1] in [',', ':']:
                 ret += '#%s\n' % header
             else:
@@ -907,13 +907,13 @@ class _BaseEntry(object):
         ret = []
         # write the msgctxt if any
         if self.msgctxt is not None:
-            ret += self._str_field("msgctxt", delflag, "", self.msgctxt, wrapwidth)
+            ret += self._str_field('msgctxt', delflag, '', self.msgctxt, wrapwidth)
         # write the msgid
-        ret += self._str_field("msgid", delflag, "", self.msgid, wrapwidth)
+        ret += self._str_field('msgid', delflag, '', self.msgid, wrapwidth)
         # write the msgid_plural if any
         if self.msgid_plural:
             ret += self._str_field(
-                "msgid_plural", delflag, "", self.msgid_plural, wrapwidth
+                'msgid_plural', delflag, '', self.msgid_plural, wrapwidth
             )
         if self.msgstr_plural:
             # write the msgstr_plural if any
@@ -924,11 +924,11 @@ class _BaseEntry(object):
                 msgstr = msgstrs[index]
                 plural_index = '[%s]' % index
                 ret += self._str_field(
-                    "msgstr", delflag, plural_index, msgstr, wrapwidth
+                    'msgstr', delflag, plural_index, msgstr, wrapwidth
                 )
         else:
             # otherwise write the msgstr
-            ret += self._str_field("msgstr", delflag, "", self.msgstr, wrapwidth)
+            ret += self._str_field('msgstr', delflag, '', self.msgstr, wrapwidth)
         ret.append('')
         ret = u('\n').join(ret)
         return ret
@@ -992,7 +992,7 @@ class _BaseEntry(object):
     @property
     def msgid_with_context(self):
         if self.msgctxt:
-            return '%s%s%s' % (self.msgctxt, "\x04", self.msgid)
+            return '%s%s%s' % (self.msgctxt, '\x04', self.msgid)
         return self.msgid
 
 
@@ -1102,13 +1102,13 @@ class POEntry(_BaseEntry):
         # previous context and previous msgid/msgid_plural
         fields = ['previous_msgctxt', 'previous_msgid', 'previous_msgid_plural']
         if self.obsolete:
-            prefix = "#~| "
+            prefix = '#~| '
         else:
-            prefix = "#| "
+            prefix = '#| '
         for f in fields:
             val = getattr(self, f)
             if val is not None:
-                ret += self._str_field(f, prefix, "", val, wrapwidth)
+                ret += self._str_field(f, prefix, '', val, wrapwidth)
 
         ret.append(_BaseEntry.__unicode__(self, wrapwidth))
         ret = u('\n').join(ret)

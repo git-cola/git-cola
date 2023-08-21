@@ -132,7 +132,7 @@ class RepoFormWidget(FormWidget):
         self.patches_directory.setToolTip(tooltip)
 
         tooltip = N_(
-            '''
+            """
 This option determines how the supplied commit message should be
 cleaned up before committing.
 
@@ -153,7 +153,7 @@ scissors
     found below is truncated, if the message is to be edited.
     "#" can be customized with core.commentChar.
 
-    # ------------------------ >8 ------------------------'''
+    # ------------------------ >8 ------------------------"""
         )
         self.commit_cleanup = qtutils.combo(
             prefs.commit_cleanup_modes(), tooltip=tooltip

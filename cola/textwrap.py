@@ -195,7 +195,7 @@ class TextWrapper(object):
         more than 'self.width' columns, and return a new string
         containing the entire wrapped paragraph.
         """
-        return "\n".join(self.wrap(text))
+        return '\n'.join(self.wrap(text))
 
 
 def word_wrap(text, tabwidth, limit, break_on_hyphens=False):

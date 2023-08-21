@@ -427,7 +427,7 @@ def diff_helper(
     reverse=False,
     untracked=False,
 ):
-    "Invokes git diff on a filepath."
+    'Invokes git diff on a filepath.'
     git = context.git
     cfg = context.cfg
     if commit:

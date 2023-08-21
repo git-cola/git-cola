@@ -31,19 +31,19 @@ def strip_comments(context, text):
 def patch_edit_header(context, *, reverse, apply_to_worktree):
     if apply_to_worktree:
         header = N_(
-            "Edit the following patch, which will then be applied to the worktree to"
-            " revert the changes:"
+            'Edit the following patch, which will then be applied to the worktree to'
+            ' revert the changes:'
         )
     else:
         if reverse:
             header = N_(
-                "Edit the following patch, which will then be applied to the staging"
-                " area to unstage the changes:"
+                'Edit the following patch, which will then be applied to the staging'
+                ' area to unstage the changes:'
             )
         else:
             header = N_(
-                "Edit the following patch, which will then be applied to the staging"
-                " area to stage the changes:"
+                'Edit the following patch, which will then be applied to the staging'
+                ' area to stage the changes:'
             )
     return wrap_comment(context, header)
 
@@ -55,11 +55,11 @@ def patch_edit_footer(context):
             "To avoid applying removal lines ('-'), change them to context lines (' ')."
         ),
         N_("To avoid applying addition lines ('+'), delete them."),
-        N_("To abort applying this patch, remove all lines."),
+        N_('To abort applying this patch, remove all lines.'),
         N_("Lines starting with '%s' will be ignored.") % prefs.comment_char(context),
         N_(
-            "It is not necessary to update the hunk header lines as they will be"
-            " regenerated automatically."
+            'It is not necessary to update the hunk header lines as they will be'
+            ' regenerated automatically.'
         ),
     ]
     return ''.join(wrap_comment(context, part) for part in parts)
@@ -85,7 +85,7 @@ def edit_patch(patch, encoding, context, *, reverse, apply_to_worktree):
             )
         else:
             Interaction.log(
-                N_("Editor returned %s exit code.  Not applying patch.") % status
+                N_('Editor returned %s exit code.  Not applying patch.') % status
             )
             patch_text = ''
         return diffparse.Patch.parse(patch.filename, patch_text)
