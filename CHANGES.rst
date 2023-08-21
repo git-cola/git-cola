@@ -18,6 +18,13 @@ Usability, bells and whistles
 * `git dag` now provides convenient search filters when right-clicking in the
   text input field.
 
+Development
+-----------
+* `brunette <https://pypi.org/project/brunette/>`_ is now being used to enforce
+  Git Cola's python code style. We were previously disabling quote normalization
+  when using `black`. Use of `brunette` allows us to enable quote normalization
+  using the single-quotes mode.
+
 
 .. _v4.3.1:
 
