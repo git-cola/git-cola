@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 import os
 import re
@@ -219,7 +218,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def setFont(self, font):
         """Override setFont() so that we can use a custom "block" cursor"""
-        super(DiffTextEdit, self).setFont(font)
+        super().setFont(font)
         if prefs.block_cursor(self.context):
             metrics = QtGui.QFontMetrics(font)
             width = metrics.width('M')
@@ -237,7 +236,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.copy_diff_action.setEnabled(selected)
 
     def resizeEvent(self, event):
-        super(DiffTextEdit, self).resizeEvent(event)
+        super().resizeEvent(event)
         if self.numbers:
             self.numbers.refresh_size()
 
@@ -472,7 +471,7 @@ class Viewer(QtWidgets.QFrame):
     INDEX_IMAGE = 1
 
     def __init__(self, context, parent=None):
-        super(Viewer, self).__init__(parent)
+        super().__init__(parent)
 
         self.context = context
         self.model = model = context.model
@@ -523,7 +522,7 @@ class Viewer(QtWidgets.QFrame):
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
-        super(Viewer, self).dragEnterEvent(event)
+        super().dragEnterEvent(event)
         patches = patch_mod.get_patches_from_mimedata(event.mimeData())
         if patches:
             event.acceptProposedAction()
@@ -531,7 +530,7 @@ class Viewer(QtWidgets.QFrame):
 
     def dragLeaveEvent(self, event):
         """End the drag+drop interaction"""
-        super(Viewer, self).dragLeaveEvent(event)
+        super().dragLeaveEvent(event)
         if self._drag_has_patches:
             event.accept()
         else:
@@ -544,7 +543,7 @@ class Viewer(QtWidgets.QFrame):
             event.ignore()
             return
         event.setDropAction(Qt.CopyAction)
-        super(Viewer, self).dropEvent(event)
+        super().dropEvent(event)
         self._drag_has_patches = False
 
         patches = patch_mod.get_patches_from_mimedata(event.mimeData())
@@ -744,7 +743,7 @@ class Options(QtWidgets.QWidget):
     PIXEL_XOR = 3
 
     def __init__(self, parent):
-        super(Options, self).__init__(parent)
+        super().__init__(parent)
         # Create widgets
         self.widget = parent
         self.ignore_space_at_eol = self.add_option(
@@ -965,7 +964,7 @@ class DiffEditor(DiffTextEdit):
 
     def create_context_menu(self, event_pos):
         """Override create_context_menu() to display a completely custom menu"""
-        menu = super(DiffEditor, self).create_context_menu(event_pos)
+        menu = super().create_context_menu(event_pos)
         context = self.context
         model = self.model
         s = self.selection_model.selection()
@@ -1105,7 +1104,7 @@ class DiffEditor(DiffTextEdit):
                 cursor = self.cursorForPosition(event.pos())
                 self.setTextCursor(cursor)
 
-        return super(DiffEditor, self).mousePressEvent(event)
+        return super().mousePressEvent(event)
 
     def setPlainText(self, text):
         """setPlainText(str) while retaining scrollbar positions"""
@@ -1320,7 +1319,7 @@ def _write_patch_to_file(diff_editor, patch, filename, append=False):
     content = patch.as_text()
     try:
         core.write(filename, content, encoding=encoding, append=append)
-    except (IOError, OSError) as exc:
+    except OSError as exc:
         _, details = utils.format_exception(exc)
         title = N_('Error writing patch')
         msg = N_('Unable to write patch to "%s". Check permissions?' % filename)
@@ -1498,7 +1497,7 @@ class DiffPanel(QtWidgets.QWidget):
     """A combined diff + search panel"""
 
     def __init__(self, diff_widget, text_widget, parent):
-        super(DiffPanel, self).__init__(parent)
+        super().__init__(parent)
         self.diff_widget = diff_widget
         self.search_widget = TextSearchWidget(text_widget, self)
         self.search_widget.hide()

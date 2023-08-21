@@ -1,13 +1,12 @@
 """Test the textwrap module"""
 # pylint: disable=redefined-outer-name
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import pytest
 
 from cola import textwrap
 
 
-class WordWrapDefaults(object):
+class WordWrapDefaults:
     def __init__(self):
         self.tabwidth = 8
         self.limit = None

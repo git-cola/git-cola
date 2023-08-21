@@ -1,6 +1,5 @@
 """Script for preparing the html output of the Sphinx documentation system for
 github pages. """
-from __future__ import absolute_import, division, unicode_literals
 
 VERSION = (1, 1, 0, 'dev')
 

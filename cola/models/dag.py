@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import json
 
 from .. import core
@@ -11,7 +10,7 @@ logfmt = r'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
 logsep = chr(0x01)
 
 
-class CommitFactory(object):
+class CommitFactory:
     root_generation = 0
     commits = {}
 
@@ -38,7 +37,7 @@ class CommitFactory(object):
         return commit
 
 
-class DAG(object):
+class DAG:
     def __init__(self, ref, count):
         self.ref = ref
         self.count = count
@@ -78,7 +77,7 @@ class DAG(object):
         return [p for p in all_refs if p and core.exists(p)]
 
 
-class Commit(object):
+class Commit:
     root_generation = 0
 
     __slots__ = (
@@ -221,7 +220,7 @@ class Commit(object):
         return len(self.parents) > 1
 
 
-class RepoReader(object):
+class RepoReader:
     def __init__(self, context, params):
         self.context = context
         self.params = params

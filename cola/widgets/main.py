@@ -1,5 +1,4 @@
 """Main UI for authoring commits and other Git Cola interactions"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 from functools import partial
 
@@ -1029,7 +1028,7 @@ class MainView(standard.MainWindow):
                 # Omit the current worktree from the "Open Recent" menu.
                 continue
             name = entry['name']
-            text = '%s %s %s' % (name, uchr(0x2192), directory)
+            text = f'{name} {uchr(0x2192)} {directory}'
             menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
@@ -1176,7 +1175,7 @@ class MainView(standard.MainWindow):
         else:
             path_text = ''
 
-        title = '%s: %s %s%s' % (project, curbranch, alert_text, path_text)
+        title = f'{project}: {curbranch} {alert_text}{path_text}'
         self.setWindowTitle(title)
 
     def update_actions(self):
@@ -1328,11 +1327,11 @@ class MainView(standard.MainWindow):
             cls = 'first-warning'
         else:
             cls = 'good'
-        div = '<div class="%s">%s</div>' % (cls, display_content)
+        div = f'<div class="{cls}">{display_content}</div>'
         self.position_label.setText(css + div)
 
 
-class FocusProxy(object):
+class FocusProxy:
     """Proxy over child widgets and operate on the focused widget"""
 
     def __init__(self, *widgets):

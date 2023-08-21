@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import re
 
@@ -66,7 +65,7 @@ def get_patches_from_dir(path):
 
 class ApplyPatches(Dialog):
     def __init__(self, context, parent=None):
-        super(ApplyPatches, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.context = context
         self.setWindowTitle(N_('Apply Patches'))
         self.setAcceptDrops(True)
@@ -179,7 +178,7 @@ class ApplyPatches(Dialog):
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
-        super(ApplyPatches, self).dragEnterEvent(event)
+        super().dragEnterEvent(event)
         patches = get_patches_from_mimedata(event.mimeData())
         if patches:
             event.acceptProposedAction()
@@ -211,13 +210,13 @@ class ApplyPatches(Dialog):
 
     def export_state(self):
         """Export persistent settings"""
-        state = super(ApplyPatches, self).export_state()
+        state = super().export_state()
         state['sizes'] = get(self.splitter)
         return state
 
     def apply_state(self, state):
         """Apply persistent settings"""
-        result = super(ApplyPatches, self).apply_state(state)
+        result = super().apply_state(state)
         try:
             self.splitter.setSizes(state['sizes'])
         except (AttributeError, KeyError, ValueError, TypeError):
@@ -251,7 +250,7 @@ class PatchTreeWidget(DraggableTreeWidget):
             self.invisibleRootItem().takeChild(row)
 
 
-class Commit(object):
+class Commit:
     """Container for commit details"""
 
     def __init__(self):

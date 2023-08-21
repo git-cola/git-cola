@@ -1,5 +1,4 @@
 """A GUI for selecting commits"""
-from __future__ import division, absolute_import, unicode_literals
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -34,7 +33,7 @@ def select_commits_and_output(context, title, revs, summaries, multiselect=True)
     return dialog.select_commits_and_output()
 
 
-class Model(object):
+class Model:
     def __init__(self, revs, summaries):
         self.revisions = revs
         self.summaries = summaries

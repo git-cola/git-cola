@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 import errno
 import os
@@ -97,7 +96,7 @@ def read_git_file(path):
     return result
 
 
-class Paths(object):
+class Paths:
     """Git repository paths of interest"""
 
     def __init__(self, git_dir=None, git_file=None, worktree=None, common_dir=None):
@@ -176,7 +175,7 @@ def find_git_directory(path):
     ).get(path)
 
 
-class Git(object):
+class Git:
     """
     The Git class manages communication with the Git binary
     """
@@ -309,7 +308,7 @@ class Git(object):
 
         cola_trace = GIT_COLA_TRACE
         if cola_trace == 'trace':
-            msg = 'trace: %.3fs: %s' % (elapsed_time, core.list2cmdline(command))
+            msg = f'trace: {elapsed_time:.3f}s: {core.list2cmdline(command)}'
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
@@ -322,7 +321,7 @@ class Git(object):
                     '# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status)
                 )
         elif cola_trace:
-            core.print_stderr('# %.3fs: %s' % (elapsed_time, ' '.join(command)))
+            core.print_stderr('# {:.3f}s: {}'.format(elapsed_time, ' '.join(command)))
 
         # Allow access to the command's status code
         return (status, out, err)
@@ -416,10 +415,10 @@ def transform_kwargs(**kwargs):
         # isinstance(False, int) is True, so we have to check bool first
         if isinstance(value, bool):
             if value:
-                args.append('%s%s' % (dashes, dashify(k)))
+                args.append(f'{dashes}{dashify(k)}')
             # else: pass  # False is ignored; flag=False inhibits --flag
         elif isinstance(value, types_to_stringify):
-            args.append('%s%s%s%s' % (dashes, dashify(k), equals, value))
+            args.append(f'{dashes}{dashify(k)}{equals}{value}')
 
     return args
 

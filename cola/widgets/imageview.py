@@ -26,7 +26,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from __future__ import absolute_import, division, print_function, unicode_literals
 import argparse
 import os
 import sys
@@ -57,7 +56,7 @@ class ImageView(QtWidgets.QGraphicsView):
     image_changed = Signal()
 
     def __init__(self, parent=None):
-        super(ImageView, self).__init__(parent)
+        super().__init__(parent)
 
         scene = QtWidgets.QGraphicsScene(self)
         self.graphics_pixmap = QtWidgets.QGraphicsPixmapItem()
@@ -180,7 +179,7 @@ class ImageView(QtWidgets.QGraphicsView):
         )
 
     def resizeEvent(self, event):
-        super(ImageView, self).resizeEvent(event)
+        super().resizeEvent(event)
         self.update_scene_rect()
         event.accept()
         self.fitInView(self.last_scene_roi, Qt.KeepAspectRatio)
@@ -249,7 +248,7 @@ class ImageView(QtWidgets.QGraphicsView):
         return self.last_scene_roi
 
     def mousePressEvent(self, event):
-        super(ImageView, self).mousePressEvent(event)
+        super().mousePressEvent(event)
         button = event.button()
         modifier = event.modifiers()
 
@@ -269,7 +268,7 @@ class ImageView(QtWidgets.QGraphicsView):
             self.rubberband.show()
 
     def mouseMoveEvent(self, event):
-        super(ImageView, self).mouseMoveEvent(event)
+        super().mouseMoveEvent(event)
         # update selection display
         if self.rubberband is not None:
             self.rubberband.setGeometry(
@@ -302,7 +301,7 @@ class ImageView(QtWidgets.QGraphicsView):
         self.update()
 
     def mouseReleaseEvent(self, event):
-        super(ImageView, self).mouseReleaseEvent(event)
+        super().mouseReleaseEvent(event)
         # consume rubber band selection
         if self.rubberband is not None:
             self.rubberband.hide()

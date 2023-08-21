@@ -1,5 +1,4 @@
 """Widgets for manipulating git stashes"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt
@@ -266,7 +265,7 @@ class StashView(standard.Dialog):
 
     def export_state(self):
         """Export persistent settings"""
-        state = super(StashView, self).export_state()
+        state = super().export_state()
         state['keep_index'] = get(self.keep_index)
         state['stash_index'] = get(self.stash_index)
         state['sizes'] = get(self.splitter)
@@ -274,7 +273,7 @@ class StashView(standard.Dialog):
 
     def apply_state(self, state):
         """Apply persistent settings"""
-        result = super(StashView, self).apply_state(state)
+        result = super().apply_state(state)
         keep_index = bool(state.get('keep_index', True))
         stash_index = bool(state.get('stash_index', False))
         self.keep_index.setChecked(keep_index)

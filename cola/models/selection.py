@@ -1,5 +1,4 @@
 """Provides a selection model to handle selection."""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import collections
 
 from qtpy import QtCore
@@ -56,7 +55,7 @@ class SelectionModel(QtCore.QObject):
     unstaged = property(lambda self: self.unmerged + self.modified + self.untracked)
 
     def __init__(self):
-        super(SelectionModel, self).__init__()
+        super().__init__()
         self.staged = []
         self.unmerged = []
         self.modified = []

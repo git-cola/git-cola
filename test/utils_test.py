@@ -1,5 +1,4 @@
 """Tests the cola.utils module."""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from cola import core
@@ -36,7 +35,7 @@ def test_dirname():
 
 def test_add_parents():
     """Test the utils.add_parents() function."""
-    paths = set(['foo///bar///baz'])
+    paths = {'foo///bar///baz'}
     path_set = utils.add_parents(paths)
 
     assert 'foo/bar/baz' in path_set
@@ -45,7 +44,7 @@ def test_add_parents():
     assert 'foo///bar///baz' not in path_set
 
     # Ensure that the original set is unchanged
-    expect = set(['foo///bar///baz'])
+    expect = {'foo///bar///baz'}
     assert expect == paths
 
 

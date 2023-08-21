@@ -1,5 +1,4 @@
 """Miscellaneous Qt utility functions."""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from qtpy import compat
@@ -228,7 +227,7 @@ class ComboBox(QtWidgets.QComboBox):
     """Custom read-only combobox with a convenient API"""
 
     def __init__(self, items=None, editable=False, parent=None, transform=None):
-        super(ComboBox, self).__init__(parent)
+        super().__init__(parent)
         self.setEditable(editable)
         self.transform = transform
         self.item_data = []
@@ -987,7 +986,7 @@ def path_mimetypes(include_urls=True):
     return mime_types
 
 
-class BlockSignals(object):
+class BlockSignals:
     """Context manager for blocking a signals on a widget"""
 
     def __init__(self, *widgets):
@@ -1128,7 +1127,7 @@ def rgb_css(color):
 
 def rgb_hex(color):
     """Convert a QColor into a hex aabbcc string"""
-    return '%02x%02x%02x' % (color.red(), color.green(), color.blue())
+    return f'{color.red():02x}{color.green():02x}{color.blue():02x}'
 
 
 def clamp_color(value):
@@ -1181,7 +1180,7 @@ def make_format(foreground=None, background=None, bold=False):
     return fmt
 
 
-class ImageFormats(object):
+class ImageFormats:
     def __init__(self):
         # returns a list of QByteArray objects
         formats_qba = QtGui.QImageReader.supportedImageFormats()

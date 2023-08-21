@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import time
 import hashlib
 
@@ -16,7 +15,7 @@ from .models import prefs
 from .widgets import defs
 
 
-class Gravatar(object):
+class Gravatar:
     @staticmethod
     def url_for_email(email, imgsize):
         email_hash = md5_hexdigest(email)

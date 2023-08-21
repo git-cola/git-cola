@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 import sys
 
@@ -10,7 +9,7 @@ from .i18n import N_
 # triggers method-already-defined pylint warnings.  Silence that warning.
 #
 # pylint: disable=function-redefined
-class Interaction(object):
+class Interaction:
     """Prompts the user and answers questions"""
 
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))

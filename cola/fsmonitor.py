@@ -6,7 +6,6 @@ Linux monitoring uses using inotify.
 Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 import errno
 import os
 import os.path
@@ -223,7 +222,7 @@ if AVAILABLE == 'inotify':
                 try:
                     events = poll_obj.poll(timeout)
                 # pylint: disable=duplicate-except
-                except (OSError, select.error):
+                except OSError:
                     continue
                 else:
                     if not self._running:
@@ -354,7 +353,7 @@ if AVAILABLE == 'inotify':
 
 if AVAILABLE == 'pywin32':
 
-    class _Win32Watch(object):
+    class _Win32Watch:
         def __init__(self, path, flags):
             self.flags = flags
 

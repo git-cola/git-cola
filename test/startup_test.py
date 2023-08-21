@@ -1,6 +1,5 @@
 """Test Startup Dialog (git cola --prompt) Context Menu and related classes"""
 # pylint: disable=redefined-outer-name
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from cola.widgets import startup
 

@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from .. import cmds
 from .. import core
 from .. import gitcmds
@@ -9,7 +7,7 @@ from ..git import STDOUT
 from ..interaction import Interaction
 
 
-class StashModel(object):
+class StashModel:
     def __init__(self, context):
         self.context = context
         self.git = context.git
@@ -31,7 +29,7 @@ class StashModel(object):
         """Parses "git stash list" and returns a list of stashes."""
         stashes = self.stash_list(r'--format=%gd/%aD/%s')
         split_stashes = [s.split('/', 2) for s in stashes if s]
-        stashes = ['{0}: {1}'.format(s[0], s[2]) for s in split_stashes]
+        stashes = [f'{s[0]}: {s[2]}' for s in split_stashes]
         revids = [s[0] for s in split_stashes]
         author_dates = [s[1] for s in split_stashes]
         names = [s[2] for s in split_stashes]
@@ -47,7 +45,7 @@ class StashModel(object):
 
 class ApplyStash(cmds.ContextCommand):
     def __init__(self, context, stash_index, index, pop):
-        super(ApplyStash, self).__init__(context)
+        super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
         self.index = index
         self.pop = pop
@@ -75,7 +73,7 @@ class ApplyStash(cmds.ContextCommand):
 
 class DropStash(cmds.ContextCommand):
     def __init__(self, context, stash_index):
-        super(DropStash, self).__init__(context)
+        super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
 
     def do(self):
@@ -92,7 +90,7 @@ class DropStash(cmds.ContextCommand):
 
 class SaveStash(cmds.ContextCommand):
     def __init__(self, context, stash_name, keep_index):
-        super(SaveStash, self).__init__(context)
+        super().__init__(context)
         self.stash_name = stash_name
         self.keep_index = keep_index
 
@@ -116,7 +114,7 @@ class StashIndex(cmds.ContextCommand):
     """Stash the index away"""
 
     def __init__(self, context, stash_name):
-        super(StashIndex, self).__init__(context)
+        super().__init__(context)
         self.stash_name = stash_name
 
     def do(self):
@@ -126,7 +124,7 @@ class StashIndex(cmds.ContextCommand):
         name = self.stash_name
         branch = gitcmds.current_branch(context)
         head = gitcmds.rev_parse(context, 'HEAD')
-        message = 'On %s: %s' % (branch, name)
+        message = f'On {branch}: {name}'
 
         # Get the message used for the "index" commit
         status, out, err = git.rev_list('HEAD', '--', oneline=True, n=1)
@@ -143,7 +141,7 @@ class StashIndex(cmds.ContextCommand):
         index_tree = out.strip()
 
         status, out, err = git.commit_tree(
-            '-m', 'index on %s: %s' % (branch, head_msg), '-p', head, index_tree
+            '-m', f'index on {branch}: {head_msg}', '-p', head, index_tree
         )
         if status != 0:
             stash_error('commit-tree', status, out, err)

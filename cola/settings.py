@@ -1,5 +1,4 @@
 """Save settings, bookmarks, etc."""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import json
 import os
 import sys
@@ -34,7 +33,7 @@ def read_json(path):
     try:
         with core.open_read(path) as f:
             return mkdict(json.load(f))
-    except (ValueError, TypeError, OSError, IOError):  # bad path or json
+    except (ValueError, TypeError, OSError):  # bad path or json
         return {}
 
 
@@ -46,7 +45,7 @@ def write_json(values, path):
             core.makedirs(parent)
         with core.open_write(path) as fp:
             json.dump(values, fp, indent=4)
-    except (ValueError, TypeError, OSError, IOError):
+    except (ValueError, TypeError, OSError):
         sys.stderr.write('git-cola: error writing "%s"\n' % path)
         return False
     return True
@@ -56,8 +55,8 @@ def rename_path(old, new):
     """Rename a filename. Catch exceptions and return False on error."""
     try:
         core.rename(old, new)
-    except (IOError, OSError):
-        sys.stderr.write('git-cola: error renaming "%s" to "%s"\n' % (old, new))
+    except OSError:
+        sys.stderr.write(f'git-cola: error renaming "{old}" to "{new}"\n')
         return False
     return True
 
@@ -66,11 +65,11 @@ def remove_path(path):
     """Remove a filename. Report errors to stderr."""
     try:
         core.remove(path)
-    except (IOError, OSError):
+    except OSError:
         sys.stderr.write('git-cola: error removing "%s"\n' % path)
 
 
-class Settings(object):
+class Settings:
     config_path = resources.config_home('settings')
     bookmarks = property(lambda self: mklist(self.values['bookmarks']))
     gui_state = property(lambda self: mkdict(self.values['gui_state']))
@@ -338,7 +337,7 @@ class Session(Settings):
         return os.path.join(self._sessions_dir, self.session_id)
 
     def path(self):
-        base_path = super(Session, self).path()
+        base_path = super().path()
         if self.expired:
             path = base_path
         else:
@@ -364,7 +363,7 @@ class Session(Settings):
         been loaded initially.
 
         """
-        result = super(Session, self).load(path=path)
+        result = super().load(path=path)
         # This is the initial load, so expire the session and remove the
         # session state file.  Future calls will be equivalent to
         # Settings.load().
@@ -384,5 +383,5 @@ class Session(Settings):
     def update(self):
         """Reload settings from the base settings path"""
         # This method does not expire the session.
-        path = super(Session, self).path()
-        return super(Session, self).load(path=path)
+        path = super().path()
+        return super().load(path=path)

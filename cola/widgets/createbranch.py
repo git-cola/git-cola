@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from qtpy import QtWidgets
 from qtpy import QtCore
 from qtpy.QtCore import Qt
@@ -25,7 +23,7 @@ def create_new_branch(context, revision=''):
     return view
 
 
-class CreateOpts(object):
+class CreateOpts:
     def __init__(self, context):
         self.context = context
         self.reset = False

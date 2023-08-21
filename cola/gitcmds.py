@@ -1,5 +1,4 @@
 """Git commands and queries for Git"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import json
 import os
 import re
@@ -150,7 +149,7 @@ def all_files(context, *args):
     return sorted([f for f in ls_files.split('\0') if f])
 
 
-class CurrentBranchCache(object):
+class CurrentBranchCache:
     """Cache for current_branch()"""
 
     key = None
@@ -434,7 +433,7 @@ def diff_helper(
         ref, endref = commit + '^', commit
     argv = []
     if ref and endref:
-        argv.append('%s..%s' % (ref, endref))
+        argv.append(f'{ref}..{endref}')
     elif ref:
         argv.extend(utils.shell_split(ref.strip()))
     elif head and amending and cached:
@@ -824,7 +823,7 @@ def log_helper(context, all=False, extra_args=None):
 def rev_list_range(context, start, end):
     """Return (oid, summary) pairs between start and end."""
     git = context.git
-    revrange = '%s..%s' % (start, end)
+    revrange = f'{start}..{end}'
     out = git.rev_list(revrange, pretty='oneline', _readonly=True)[STDOUT]
     return parse_rev_list(out)
 
@@ -876,7 +875,7 @@ def cherry_pick(context, revs):
                 'Hint: The "Actions > Abort Cherry-Pick" menu action can be used to '
                 'cancel the current cherry-pick.'
             )
-            output = '# git cherry-pick %s\n# %s\n\n%s' % (rev, details, out)
+            output = f'# git cherry-pick {rev}\n# {details}\n\n{out}'
             return (status, output, err)
         outs.append(out)
         errs.append(err)
@@ -1034,7 +1033,7 @@ def is_binary(context, filename):
     size = 8000
     try:
         result = core.read(filename, size=size, encoding='bytes')
-    except (IOError, OSError):
+    except OSError:
         result = b''
 
     return b'\0' in result

@@ -1,5 +1,3 @@
-# encoding: utf-8
-from __future__ import absolute_import, division, print_function, unicode_literals
 import platform
 import webbrowser
 import sys
@@ -37,14 +35,14 @@ class ExpandingTabBar(QtWidgets.QTabBar):
 
     def tabSizeHint(self, tab_index):
         width = self.parent().width() // max(2, self.count()) - 1
-        size = super(ExpandingTabBar, self).tabSizeHint(tab_index)
+        size = super().tabSizeHint(tab_index)
         size.setWidth(width)
         return size
 
 
 class ExpandingTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent=None):
-        super(ExpandingTabWidget, self).__init__(parent)
+        super().__init__(parent)
         self.setTabBar(ExpandingTabBar(self))
 
     def resizeEvent(self, event):
@@ -54,7 +52,7 @@ class ExpandingTabWidget(QtWidgets.QTabWidget):
         width = event.size().width()
         height = self.tabBar().height()
         self.tabBar().resize(width, height)
-        return super(ExpandingTabWidget, self).resizeEvent(event)
+        return super().resizeEvent(event)
 
 
 class AboutView(QtWidgets.QDialog):
@@ -199,7 +197,7 @@ def link(url, text, palette=None):
         palette = QtGui.QPalette()
 
     color = palette.color(QtGui.QPalette.Foreground)
-    rgb = 'rgb(%s, %s, %s)' % (color.red(), color.green(), color.blue())
+    rgb = f'rgb({color.red()}, {color.green()}, {color.blue()})'
     scope = dict(rgb=rgb, text=text, url=url)
 
     return (

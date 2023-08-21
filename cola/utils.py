@@ -1,5 +1,4 @@
 """Miscellaneous utility functions"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import copy
 import os
 import random
@@ -338,7 +337,7 @@ def expandpath(path):
     return path
 
 
-class Group(object):
+class Group:
     """Operate on a collection of objects as a single unit"""
 
     def __init__(self, *members):
@@ -356,7 +355,7 @@ class Group(object):
         return relay
 
 
-class Proxy(object):
+class Proxy:
     """Wrap an object and override attributes"""
 
     def __init__(self, obj, **overrides):
@@ -419,7 +418,7 @@ def slice_func(input_items, map_func):
     return (status, '\n'.join(outs), '\n'.join(errs))
 
 
-class Sequence(object):
+class Sequence:
     def __init__(self, sequence):
         self.sequence = sequence
 

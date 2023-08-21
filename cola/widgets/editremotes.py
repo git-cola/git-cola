@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import operator
 
 from qtpy import QtCore
@@ -363,7 +362,7 @@ class RemoteInfoThread(QtCore.QThread):
 
 class AddRemoteDialog(QtWidgets.QDialog):
     def __init__(self, context, parent, readonly_url=False):
-        super(AddRemoteDialog, self).__init__(parent)
+        super().__init__(parent)
         self.context = context
         if parent:
             self.setWindowModality(Qt.WindowModal)
@@ -426,7 +425,7 @@ class RemoteWidget(QtWidgets.QWidget):
     valid = Signal(bool)
 
     def __init__(self, context, parent, readonly_url=False):
-        super(RemoteWidget, self).__init__(parent)
+        super().__init__(parent)
         self.setWindowModality(Qt.WindowModal)
         self.context = context
         self.setWindowTitle(N_('Add remote'))
