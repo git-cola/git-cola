@@ -1839,7 +1839,7 @@ class _MOFileParser:
                 entry = self._build_entry(
                     msgid=msgid_tokens[0],
                     msgid_plural=msgid_tokens[1],
-                    msgstr_plural={k: v for k, v in enumerate(msgstr.split(b('\0')))},
+                    msgstr_plural=dict(enumerate(msgstr.split(b('\x00')))),
                 )
             else:
                 entry = self._build_entry(msgid=msgid, msgstr=msgstr)
