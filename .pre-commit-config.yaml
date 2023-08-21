@@ -1,0 +1,25 @@
+# Run `pre-commit autoupdate` to update tool versions.
+
+exclude: qtpy/|test/fixtures/|\.rtf$|PkgInfo$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v4.4.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.10.1
+    hooks:
+      - id: pyupgrade
+        name: Enforce Python 3.6 idioms
+        args:
+          - --py36-plus
+
+  - repo: https://github.com/ODwyerSoftware/brunette
+    rev: 0.2.8
+    hooks:
+      - id: brunette
+        args:
+          - --config=setup.cfg
