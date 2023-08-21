@@ -23,3 +23,16 @@ repos:
       - id: brunette
         args:
           - --config=setup.cfg
+
+  - repo: https://github.com/pylint-dev/pylint
+    rev: v2.17.5
+    hooks:
+      - id: pylint
+        pass_filenames: false
+        additional_dependencies:
+          - pyqt5
+          - pytest
+        args:
+          - --rcfile=.pylintrc
+          - cola
+          - test
