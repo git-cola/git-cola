@@ -1,5 +1,12 @@
 # Run `pre-commit autoupdate` to update tool versions.
 
+ci:
+  skip:
+    # pylint's pre-commit documentation states it only works when running locally.
+    # https://pylint.pycqa.org/en/latest/user_guide/installation/pre-commit-integration.html
+    # Therefore, the pylint pre-commit hook is disabled when running in pre-commit CI.
+    - pylint
+
 exclude: qtpy/|test/fixtures/|\.rtf$|PkgInfo$
 
 repos:
