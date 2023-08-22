@@ -29,6 +29,9 @@ Development
   (`#1331 <https://github.com/git-cola/git-cola/issues/1331>`_)
   (`#1332 <https://github.com/git-cola/git-cola/pull/1332>`_)
 
+* Pre-commits hooks and code modernization.
+  (`#1333 <https://github.com/git-cola/git-cola/pull/1333>`_)
+
 
 .. _v4.3.1:
 
