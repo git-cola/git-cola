@@ -138,8 +138,6 @@ class RepoFormWidget(FormWidget):
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
-        self.tabwidth = standard.SpinBox(value=8, maxi=42)
-        self.textwidth = standard.SpinBox(value=72, maxi=150)
 
         self.logdate = qtutils.combo(prefs.date_formats())
         tooltip = N_(
@@ -165,8 +163,6 @@ class RepoFormWidget(FormWidget):
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
-        self.add_row(N_('Tab Width'), self.tabwidth)
-        self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Log Date Format'), self.logdate)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
@@ -214,8 +210,6 @@ class RepoFormWidget(FormWidget):
                 ),
                 prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
                 prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
-                prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
-                prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
                 prefs.USER_NAME: (self.name, ''),
                 prefs.USER_EMAIL: (self.email, ''),
             }
@@ -250,6 +244,8 @@ class SettingsFormWidget(FormWidget):
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
+        self.add_row(N_('Text Width'), self.textwidth)
+        self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Editor'), self.editor)
         self.add_row(N_('History Browser'), self.historybrowser)
         self.add_row(N_('Blame Viewer'), self.blameviewer)
