@@ -739,7 +739,7 @@ class SpinBox(QtWidgets.QSpinBox):
 
         font = self.font()
         metrics = QtGui.QFontMetrics(font)
-        width = max(self.minimumWidth(), metrics.width('XXXXXX'))
+        width = max(self.minimumWidth(), metrics.width('MMMMMM'))
         self.setMinimumWidth(width)
 
 
