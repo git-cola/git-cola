@@ -71,12 +71,13 @@ trees:
         ${CP} contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
         if test -n "${cola_full_version}"
         then
-            ${SED} -i -e s/0.0.0.0/${cola_full_version}/ $cola_app/Contents/Info.plist
+            ${SED} -i -e s/0.0.0.0/${cola_full_version}/ ${cola_app}/Contents/Info.plist
         fi
         ${SED} -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
         ${CP} contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         ${CP} contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
         garden -D PIP=${cola_app_resources}/bin/pip -D prefix=${cola_app_resources} install
+        garden -D SPHINXBUILD=${cola_app_resources}/bin/sphinx-build doc
         garden -D SPHINXBUILD=${cola_app_resources}/bin/sphinx-build -D prefix=${cola_app_resources} install docs
       man: garden -vv man docs
       po: |
