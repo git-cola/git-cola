@@ -7,6 +7,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust
@@ -26,6 +28,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust
@@ -65,6 +69,8 @@ jobs:
     name: Windows
     runs-on: windows-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Python
@@ -106,6 +112,8 @@ jobs:
     name: macOS
     runs-on: macos-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.11.0
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust
