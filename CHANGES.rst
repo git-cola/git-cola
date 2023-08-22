@@ -18,6 +18,9 @@ Usability, bells and whistles
 * `git dag` now provides convenient search filters when right-clicking in the
   text input field.
 
+* A `1.25 x` Hi-DPI magnification option mode is now available in the Appearance settings.
+  (`#1313 <https://github.com/git-cola/git-cola/issues/1313>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.
