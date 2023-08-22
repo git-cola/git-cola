@@ -66,8 +66,8 @@ Python modules are installed.
 
 # Installation
 
-**IMPORTANT**: never run `pip install` or `make install` as root or outside of a
-Python virtualenv!
+**IMPORTANT**: never run `pip install` or `garden install` outside of a
+Python virtualenv or as root!
 
 There are several ways to install Git Cola.
 
@@ -120,8 +120,8 @@ but it has not been updated for a while.
 
 ## Install into a Python Virtualenv from PyPI using pip
 
-**IMPORTANT**: never run `pip install` or `make install` as root or outside of a
-Python virtualenv!
+**IMPORTANT**: never run `pip install` or `garden install` outside of a
+Python virtualenv or as root!
 
 One way to install the latest released version is to use `venv` (virtualenv) and `pip`.
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
@@ -166,11 +166,12 @@ lets you upgrade Git Cola by running `git pull`.
     python3 -m venv --system-site-packages env3
     source env3/bin/activate
 
-    # One-time setup: install optional requirements for development.
-    make requirements-dev requirements-optional
+    # One-time setup: install dev and optional runtime requirements
+    garden requirements/dev
+    garden requirements/opt
 
     # Install git-cola in "editable" mode so that it uses the source tree.
-    make develop
+    garden develop
 
     # Run Git Cola via the "git-cola" Git subcommand.
     git cola
@@ -183,16 +184,16 @@ run `git cola` as if it were a builtin `git` command from outside of the virtual
 
 ## Standalone Installation from Source
 
-Running `make install prefix=$HOME/.local` will install Git Cola in your
+Running `garden -D prefix=$HOME/.local install` will install Git Cola in your
 `$HOME/.local` directory (`$HOME/.local/bin/git-cola`, `$HOME/.local/lib`, etc).
 
 This installation method assumes that the `qtpy` and `PyQt*` dependencies have
 been pre-installed.
 
-The `Makefile` also supports `DESTDIR` to support creating packages for Linux package
+The Garden recipe also supports `DESTDIR` to support creating packages for Linux package
 managers:
 
-    make DESTDIR=/tmp/stage prefix=/usr/local install
+    garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
 
 
 ## macOS
@@ -219,7 +220,7 @@ you can build a shell `git-cola.app` app bundle wrapper for use in `/Application
 
 If you'd like to build a `git-cola.app` bundle for `/Applications` run this command:
 
-    make git-cola.app
+    garden macos/app
 
 You will need to periodically rebuild the app wrapper whenever Python is upgraded.
 
@@ -363,13 +364,13 @@ start `cola` as a Python module if you have the source code available.
 The following commands should be run during development:
 
     # Run the unit tests
-    $ make test
+    $ garden test
 
     # Run tests and longer-running pylint checks
-    $ make check
+    $ garden check
 
     # Run tests against multiple python interpreters using tox
-    $ make tox
+    $ garden tox
 
 The test suite can be found in the [test](test) directory.
 
@@ -378,7 +379,7 @@ using [GitHub Actions](https://github.com/git-cola/git-cola/actions/workflows/ma
 
 Auto-format `cola/i18n/*.po` files before committing when updating translations:
 
-    $ make po
+    $ garden po
 
 When submitting patches, consult the
 [contributing guidelines](CONTRIBUTING.md).
@@ -390,8 +391,9 @@ Git Cola installs its modules into the default Python site-packages directory
 (eg. `lib/python3.7/site-packages`) using setuptools.
 
 While end-users can use `pip install git-cola` to install Git Cola, distribution
-packagers should use the `make prefix=/usr` install process. Git Cola's `Makefile` wraps
-`pip install --prefix=<prefix>` to provide a packaging-friendly `make install` target.
+packagers should use the `garden -D prefix=/usr install` process. Git Cola's Garden
+recipe wraps `pip install --prefix=<prefix>` to provide a packaging-friendly
+`garden install` target.
 
 
 # Windows (Continued)
@@ -417,7 +419,7 @@ to make the PyQt5 bindings available to Python.
 Once these are installed you can use `python.exe` to run
 directly from the source tree.  For example, from a Git Bash terminal:
 
-    /c/Python36/python.exe ./bin/git-cola
+    /c/Python39/python.exe ./bin/git-cola
 
 ## Multiple Python versions
 
