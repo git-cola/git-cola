@@ -18,6 +18,11 @@ Usability, bells and whistles
 * `git dag` now provides convenient search filters when right-clicking in the
   text input field.
 
+Fixes
+-----
+* `git dag` was not displaying history when refspecs were specified.
+  (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
+
 Development
 -----------
 * `brunette <https://pypi.org/project/brunette/>`_ is now being used to enforce
