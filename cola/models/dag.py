@@ -277,8 +277,8 @@ class RepoReader(object):
         cmd = (
             self._cmd
             + ['-%d' % self.params.count]
-            + ref_args
             + ['--date=%s' % prefs.logdate(self.context)]
+            + ref_args
         )
         self._proc = core.start_command(cmd)
 

@@ -1,3 +1,14 @@
+.. _v4.3.2:
+
+v4.3.2
+======
+
+Fixes
+-----
+* `git dag` was not displaying history when refspecs were specified.
+  (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
+
+
 .. _v4.3.1:
 
 v4.3.1
