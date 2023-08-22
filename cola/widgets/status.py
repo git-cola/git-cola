@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import itertools
 import os
 from functools import partial
@@ -668,7 +667,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self._expand_items(idx, items)
 
         if prefs.status_show_totals(self.context):
-            parent.setText(0, '%s (%s)' % (parent_title, len(items)))
+            parent.setText(0, f'{parent_title} ({len(items)})')
 
     def _update_column_widths(self):
         self.resizeColumnToContents(0)
@@ -1233,12 +1232,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def mousePressEvent(self, event):
         """Keep track of whether to drag URLs or just text"""
         self._alt_drag = event.modifiers() & Qt.AltModifier
-        return super(StatusTreeWidget, self).mousePressEvent(event)
+        return super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         """Keep track of whether to drag URLs or just text"""
         self._alt_drag = event.modifiers() & Qt.AltModifier
-        return super(StatusTreeWidget, self).mouseMoveEvent(event)
+        return super().mouseMoveEvent(event)
 
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
@@ -1434,13 +1433,13 @@ class CustomizeCopyActions(standard.Dialog):
 
     def export_state(self):
         """Export the current state into the saved settings"""
-        state = super(CustomizeCopyActions, self).export_state()
+        state = super().export_state()
         standard.export_header_columns(self.table, state)
         return state
 
     def apply_state(self, state):
         """Restore state from the saved settings"""
-        result = super(CustomizeCopyActions, self).apply_state(state)
+        result = super().apply_state(state)
         standard.apply_header_columns(self.table, state)
         return result
 
@@ -1667,28 +1666,28 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         disabled_text_rgb = theme.disabled_text_color_rgb()
 
         stylesheet = """
-            * {
+            * {{
                 show-decoration-selected: 1
-            }
-            QLabel {
-                color: %(text_rgb)s;
+            }}
+            QLabel {{
+                color: {text_rgb};
                 show-decoration-selected: 1
-            }
-            QLabel:hover {
-                color: %(highlight_text_rgb)s;
-                background-color: %(highlight_rgb)s;
+            }}
+            QLabel:hover {{
+                color: {highlight_text_rgb};
+                background-color: {highlight_rgb};
                 background-clip: padding;
                 show-decoration-selected: 1
-            }
-            QLabel:disabled {
-                color: %(disabled_text_rgb)s;
-            }
-        """ % {
-            'disabled_text_rgb': disabled_text_rgb,
-            'text_rgb': text_rgb,
-            'highlight_text_rgb': highlight_text_rgb,
-            'highlight_rgb': highlight_rgb,
-        }
+            }}
+            QLabel:disabled {{
+                color: {disabled_text_rgb};
+            }}
+        """.format(
+            disabled_text_rgb=disabled_text_rgb,
+            text_rgb=text_rgb,
+            highlight_text_rgb=highlight_text_rgb,
+            highlight_rgb=highlight_rgb,
+        )
 
         self.setStyleSheet(stylesheet)
 

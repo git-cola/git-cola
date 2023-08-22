@@ -103,4 +103,3 @@ nodes 5
 git checkout b2
 
 ../../../bin/git-dag --all &
-

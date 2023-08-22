@@ -1,5 +1,4 @@
 """A widget for searching git commits"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import time
 
 from qtpy import QtCore
@@ -26,7 +25,7 @@ def mkdate(timespec):
     return '%04d-%02d-%02d' % time.localtime(timespec)[:3]
 
 
-class SearchOptions(object):
+class SearchOptions:
     def __init__(self):
         self.query = ''
         self.max_count = 500
@@ -123,7 +122,7 @@ def search(context):
     return search_commits(context, qtutils.active_window())
 
 
-class SearchEngine(object):
+class SearchEngine:
     def __init__(self, context, model):
         self.context = context
         self.model = model

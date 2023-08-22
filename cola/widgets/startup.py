@@ -1,5 +1,4 @@
 """The startup dialog is presented when no repositories can be found at startup"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy.QtCore import Qt
 from qtpy import QtCore
@@ -311,7 +310,7 @@ class BookmarksListView(QtWidgets.QListView):
     """
 
     def __init__(self, context, model, open_selected_repo, set_model, parent=None):
-        super(BookmarksListView, self).__init__(parent)
+        super().__init__(parent)
 
         self.current_mode = ICON_MODE
         self.context = context
@@ -553,7 +552,7 @@ class BookmarksListView(QtWidgets.QListView):
         self.refresh()
 
 
-class BuildItem(object):
+class BuildItem:
     def __init__(self, context):
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()

@@ -1,5 +1,4 @@
 """Provides the StashView dialog."""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy import QtCore
 from qtpy import QtWidgets

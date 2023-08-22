@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import sys
 
 from qtpy import QtCore
@@ -55,7 +54,7 @@ USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 
 
-class DateFormat(object):
+class DateFormat:
     DEFAULT = 'default'
     RELATIVE = 'relative'
     LOCAL = 'local'
@@ -95,7 +94,7 @@ def commit_cleanup_modes():
     ]
 
 
-class Defaults(object):
+class Defaults:
     """Read-only class for holding defaults that get overridden"""
 
     # These should match Git's defaults for git-defined values.
@@ -323,7 +322,7 @@ class PreferencesModel(QtCore.QObject):
     config_updated = Signal(str, str, object)
 
     def __init__(self, context):
-        super(PreferencesModel, self).__init__()
+        super().__init__()
         self.context = context
         self.config = context.cfg
 

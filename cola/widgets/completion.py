@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import re
 import time
 
@@ -18,7 +17,7 @@ from . import defs
 from .text import HintedLineEdit
 
 
-class ValidateRegex(object):
+class ValidateRegex:
     def __init__(self, regex):
         self.regex = re.compile(regex)  # regex to scrub
 
@@ -35,7 +34,7 @@ class RemoteValidator(QtGui.QValidator):
     """Prevent invalid remote names"""
 
     def __init__(self, parent=None):
-        super(RemoteValidator, self).__init__(parent)
+        super().__init__(parent)
         self._validate = ValidateRegex(r'[ \t\\/]')
 
     def validate(self, string, idx):
@@ -46,7 +45,7 @@ class BranchValidator(QtGui.QValidator):
     """Prevent invalid branch names"""
 
     def __init__(self, git, parent=None):
-        super(BranchValidator, self).__init__(parent)
+        super().__init__(parent)
         self._git = git
         self._validate = ValidateRegex(r'[ \t\\]')  # forward-slash is okay
 
@@ -262,11 +261,11 @@ class CompletionLineEdit(HintedLineEdit):
         if event_type == QtCore.QEvent.Hide:
             self.close_popup()
 
-        return super(CompletionLineEdit, self).event(event)
+        return super().event(event)
 
     def keyPressEvent(self, event):
         """Process completion and navigation events"""
-        super(CompletionLineEdit, self).keyPressEvent(event)
+        super().keyPressEvent(event)
         visible = self.popup().isVisible()
 
         # Hide the popup when the field is empty
@@ -697,7 +696,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
 
     def matches(self):
         """Return candidate values for completion"""
-        matches = super(GitLogCompletionModel, self).matches()
+        matches = super().matches()
         return [
             '--all',
             '--all-match',

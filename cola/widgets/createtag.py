@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
@@ -35,7 +33,7 @@ def create_tag(context, name='', ref='', sign=False):
     return view
 
 
-class TagOptions(object):
+class TagOptions:
     """Simple data container for the CreateTag dialog."""
 
     def __init__(self, name, ref, sign):

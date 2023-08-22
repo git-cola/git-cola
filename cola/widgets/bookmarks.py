@@ -1,5 +1,4 @@
 """Provides widgets related to bookmarks"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from qtpy import QtCore
@@ -508,7 +507,7 @@ class BookmarksTreeView(standard.TreeView):
         self.refresh()
 
 
-class BuildItem(object):
+class BuildItem:
     def __init__(self, context):
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()

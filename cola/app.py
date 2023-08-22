@@ -1,6 +1,5 @@
 """Provides the main() routine and ColaApplication"""
 # pylint: disable=unused-import
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 import argparse
 import os
@@ -166,7 +165,7 @@ def get_icon_themes(context):
 
 
 # style note: we use camelCase here since we're masquerading a Qt class
-class ColaApplication(object):
+class ColaApplication:
     """The main cola application
 
     ColaApplication handles i18n of user-visible data
@@ -247,7 +246,7 @@ class ColaQApplication(QtWidgets.QApplication):
     """QApplication implementation for handling custom events"""
 
     def __init__(self, context, argv):
-        super(ColaQApplication, self).__init__(argv)
+        super().__init__(argv)
         self.context = context
         # Make icons sharp in HiDPI screen
         if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
@@ -263,7 +262,7 @@ class ColaQApplication(QtWidgets.QApplication):
                     'cola.refreshonfocus', default=False
                 ):
                     cmds.do(cmds.Refresh, context)
-        return super(ColaQApplication, self).event(e)
+        return super().event(e)
 
     def commitData(self, session_mgr):
         """Save session data"""
@@ -274,7 +273,7 @@ class ColaQApplication(QtWidgets.QApplication):
             return
         sid = session_mgr.sessionId()
         skey = session_mgr.sessionKey()
-        session_id = '%s_%s' % (sid, skey)
+        session_id = f'{sid}_{skey}'
         session = Session(session_id, repo=core.getcwd())
         session.update()
         view.save_state(settings=session)
@@ -553,7 +552,7 @@ def initialize():
             os.chdir('..')
 
 
-class Timer(object):
+class Timer:
     """Simple performance timer"""
 
     def __init__(self):
@@ -578,10 +577,10 @@ class Timer(object):
     def display(self, key):
         """Display a timer"""
         elapsed = self.elapsed(key)
-        sys.stdout.write('%s: %.5fs\n' % (key, elapsed))
+        sys.stdout.write(f'{key}: {elapsed:.5f}s\n')
 
 
-class NullArgs(object):
+class NullArgs:
     """Stub arguments for interactive API use"""
 
     def __init__(self):
@@ -595,7 +594,7 @@ def null_args():
     return NullArgs()
 
 
-class ApplicationContext(object):
+class ApplicationContext:
     """Context for performing operations on Git and related data models"""
 
     def __init__(self, args):

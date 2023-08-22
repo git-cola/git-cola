@@ -1,5 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -100,7 +98,7 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication([])
 
     python = QtWidgets.QPlainTextEdit()
-    with open(__file__, 'r', encoding='utf-8') as f:
+    with open(__file__, encoding='utf-8') as f:
         python.setPlainText(f.read())
 
     python.setWindowTitle('python')

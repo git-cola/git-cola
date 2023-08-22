@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import errno
 import functools
 
@@ -77,7 +76,7 @@ def interruptable(func, *args, **opts):
     while True:
         try:
             result = func(*args, **opts)
-        except (IOError, OSError) as e:
+        except OSError as e:
             if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
             raise e

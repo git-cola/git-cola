@@ -1,5 +1,4 @@
 """Provides widgets related to submodules"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -27,7 +26,7 @@ def add_submodule(context, parent):
 
 class SubmodulesWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
-        super(SubmodulesWidget, self).__init__(parent)
+        super().__init__(parent)
         self.context = context
         self.setToolTip(N_('Submodules'))
 
@@ -76,7 +75,7 @@ class AddSubmodule(standard.Dialog):
     """Add a new submodule"""
 
     def __init__(self, parent):
-        super(AddSubmodule, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         hint = N_('git://git.example.com/repo.git')
         tooltip = N_('Submodule URL (can be relative, ex: ../repo.git)')
@@ -190,14 +189,14 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         if not self._active:
             self._active = True
             self.update_model.emit()
-        return super(SubmodulesTreeWidget, self).showEvent(event)
+        return super().showEvent(event)
 
     def tree_double_clicked(self, item, _column):
         path = core.abspath(item.path)
         cmds.do(cmds.OpenRepo, self.context, path)
 
 
-class BuildItem(object):
+class BuildItem:
     def __init__(self):
         self.state_folder_map = {}
         self.state_folder_map[''] = icons.folder()
@@ -211,7 +210,7 @@ class BuildItem(object):
         path = entry[2]
         tip = path + '\n' + entry[1]
         if entry[3]:
-            tip += '\n({0})'.format(entry[3])
+            tip += f'\n({entry[3]})'
         icon = self.state_folder_map[entry[0]]
         return SubmodulesTreeWidgetItem(name, path, tip, icon)
 

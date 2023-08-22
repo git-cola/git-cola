@@ -1,5 +1,4 @@
 """Provides High DPI support by wrapping Qt options"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from qtpy import QtCore
 
@@ -9,7 +8,7 @@ from . import compat
 from . import version
 
 
-class Option(object):
+class Option:
     AUTO = '0'
     DISABLE = 'disable'
     TIMES_1 = '1'

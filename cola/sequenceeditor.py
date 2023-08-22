@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import sys
 import re
 from argparse import ArgumentParser
@@ -93,7 +92,7 @@ class MainWindow(standard.MainWindow):
     """The main git-cola application window"""
 
     def __init__(self, context, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super().__init__(parent)
         self.context = context
         self.status = 1
         self.editor = None
@@ -139,7 +138,7 @@ class Editor(QtWidgets.QWidget):
     exit = Signal(int)
 
     def __init__(self, context, filename, parent=None):
-        super(Editor, self).__init__(parent)
+        super().__init__(parent)
 
         self.widget_version = 1
         self.status = 1
@@ -290,7 +289,7 @@ class Editor(QtWidgets.QWidget):
         try:
             core.write(self.filename, string)
             status = 0
-        except (OSError, IOError, ValueError) as exc:
+        except (OSError, ValueError) as exc:
             msg, details = utils.format_exception(exc)
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
@@ -311,7 +310,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     move_rows = Signal(object, object)
 
     def __init__(self, context, comment_char, parent):
-        super(RebaseTreeWidget, self).__init__(parent=parent)
+        super().__init__(parent=parent)
         self.context = context
         self.comment_char = comment_char
         # header
@@ -349,7 +348,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self,
             N_('Reword'),
             lambda: self.set_selected_to(REWORD),
-            *hotkeys.REBASE_REWORD
+            *hotkeys.REBASE_REWORD,
         )
 
         self.action_edit = qtutils.add_action(
@@ -360,14 +359,14 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self,
             N_('Fixup'),
             lambda: self.set_selected_to(FIXUP),
-            *hotkeys.REBASE_FIXUP
+            *hotkeys.REBASE_FIXUP,
         )
 
         self.action_squash = qtutils.add_action(
             self,
             N_('Squash'),
             lambda: self.set_selected_to(SQUASH),
-            *hotkeys.REBASE_SQUASH
+            *hotkeys.REBASE_SQUASH,
         )
 
         self.action_shift_down = qtutils.add_action(
@@ -417,7 +416,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self.validate()
 
     def validate(self):
-        invalid_first_choice = set([FIXUP, SQUASH])
+        invalid_first_choice = {FIXUP, SQUASH}
         for item in self.items():
             if item.is_enabled() and item.is_commit():
                 if item.command in invalid_first_choice:
@@ -519,7 +518,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     # Qt events
 
     def dropEvent(self, event):
-        super(RebaseTreeWidget, self).dropEvent(event)
+        super().dropEvent(event)
         self.validate()
 
     def contextMenuEvent(self, event):
@@ -656,10 +655,10 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         else:
             comment = self.comment_char + ' '
         if self.is_exec():
-            return '%s%s %s' % (comment, self.command, self.cmdexec)
+            return f'{comment}{self.command} {self.cmdexec}'
         if self.is_update_ref():
-            return '%s%s %s' % (comment, self.command, self.branch)
-        return '%s%s %s %s' % (comment, self.command, self.oid, self.summary)
+            return f'{comment}{self.command} {self.branch}'
+        return f'{comment}{self.command} {self.oid} {self.summary}'
 
     def is_enabled(self):
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked

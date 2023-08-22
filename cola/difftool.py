@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from qtpy import QtWidgets
@@ -39,7 +38,7 @@ class LaunchDifftool(cmds.ContextCommand):
                 argv = utils.shell_split(cmd)
 
                 terminal = os.path.basename(argv[0])
-                shellquote_terms = set(['xfce4-terminal'])
+                shellquote_terms = {'xfce4-terminal'}
                 shellquote_default = terminal in shellquote_terms
 
                 mergetool = ['git', 'mergetool', '--no-prompt', '--']

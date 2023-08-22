@@ -1,6 +1,5 @@
 """Tests DAG functionality"""
 # pylint: disable=redefined-outer-name
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 import pytest
 
@@ -30,7 +29,7 @@ f4fb8fd5baaa55d9b41faca79be289bb4407281e^Ae3f5a2d0248de6197d6e0e63c901810b8a9af2
 ]  # noqa
 
 
-class DAGTestData(object):
+class DAGTestData:
     """Test data provided by the dag_context fixture"""
 
     def __init__(self, app_context, head='HEAD', count=1000):

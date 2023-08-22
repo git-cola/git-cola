@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import collections
 import itertools
 import math
@@ -57,7 +56,7 @@ def git_dag(context, args=None, existing_view=None, show=True):
     return view
 
 
-class FocusRedirectProxy(object):
+class FocusRedirectProxy:
     """Redirect actions from the main widget to child widgets"""
 
     def __init__(self, *widgets):
@@ -79,7 +78,7 @@ class FocusRedirectProxy(object):
         return func(*args, **kwargs)
 
 
-class ViewerMixin(object):
+class ViewerMixin:
     """Implementations must provide selected_items()"""
 
     def __init__(self):
@@ -483,7 +482,7 @@ class GitDagLineEdit(completion.GitLogLineEdit):
     """The text input field for specifying "git log" options"""
 
     def __init__(self, context):
-        super(GitDagLineEdit, self).__init__(context)
+        super().__init__(context)
         self._action_filter_to_current_author = qtutils.add_action(
             self, N_('Commits authored by me'), self._filter_to_current_author
         )
@@ -517,7 +516,7 @@ class GitDagLineEdit(completion.GitLogLineEdit):
         """Insert text at the beginning of the current text"""
         value = self.value()
         if value:
-            text = '%s %s' % (text, value)
+            text = f'{text} {value}'
         self.setText(text)
         self.close_popup()
 
@@ -747,7 +746,7 @@ class GitDAG(standard.MainWindow):
     commits_selected = Signal(object)
 
     def __init__(self, context, params, parent=None):
-        super(GitDAG, self).__init__(parent)
+        super().__init__(parent)
 
         self.setMinimumSize(420, 420)
 
@@ -1179,7 +1178,7 @@ class ReaderThread(QtCore.QThread):
         self.wait()
 
 
-class Cache(object):
+class Cache:
     _label_font = None
 
     @classmethod
@@ -1302,7 +1301,7 @@ class Edge(QtWidgets.QGraphicsItem):
         painter.drawPath(self.path)
 
 
-class EdgeColor(object):
+class EdgeColor:
     """An edge color factory"""
 
     current_color_index = 0

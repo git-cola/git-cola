@@ -1,5 +1,4 @@
 """i18n and l10n support for git-cola"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import locale
 import os
 import sys
@@ -9,14 +8,14 @@ from . import polib
 from . import resources
 
 
-class NullTranslation(object):
+class NullTranslation:
     """This is a pass-through object that does nothing"""
 
     def gettext(self, value):
         return value
 
 
-class State(object):
+class State:
     """The application-wide current translation state"""
 
     translation = NullTranslation()
@@ -35,7 +34,7 @@ class State(object):
         return cls.translation.gettext(value)
 
 
-class Translation(object):
+class Translation:
     def __init__(self, lang):
         self.lang = lang
         self.messages = {}
@@ -117,7 +116,7 @@ def _install_custom_language(lang):
         return lang
     try:
         lang = core.read(lang_file).strip()
-    except (OSError, IOError):
+    except OSError:
         return lang
     return lang
 

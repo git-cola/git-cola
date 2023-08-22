@@ -1,5 +1,4 @@
 """Widgets for Fetch, Push, and Pull"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import fnmatch
 
 from qtpy import QtGui
@@ -460,7 +459,7 @@ class RemoteActionDialog(standard.Dialog):
         displayed = []
         for remote_name in self.model.remotes:
             url = self.model.remote_url(remote_name, self.action)
-            display = '%s\t(%s)' % (remote_name, N_('URL: %s') % url)
+            display = '{}\t({})'.format(remote_name, N_('URL: %s') % url)
             displayed.append(display)
         qtutils.set_items(widget, displayed)
 
@@ -586,7 +585,7 @@ class RemoteActionDialog(standard.Dialog):
 
         if action == PUSH and not remote_branch:
             branch = local_branch
-            candidate = '%s/%s' % (remote, branch)
+            candidate = f'{remote}/{branch}'
             prompt = get(self.prompt_checkbox)
 
             if prompt and candidate not in self.model.remote_branches:
@@ -669,9 +668,7 @@ class Fetch(RemoteActionDialog):
     """Fetch from remote repositories"""
 
     def __init__(self, context, parent=None):
-        super(Fetch, self).__init__(
-            context, FETCH, N_('Fetch'), parent=parent, icon=icons.repo()
-        )
+        super().__init__(context, FETCH, N_('Fetch'), parent=parent, icon=icons.repo())
 
     def export_state(self):
         """Export persistent settings"""
@@ -694,9 +691,7 @@ class Push(RemoteActionDialog):
     """Push to remote repositories"""
 
     def __init__(self, context, parent=None):
-        super(Push, self).__init__(
-            context, PUSH, N_('Push'), parent=parent, icon=icons.push()
-        )
+        super().__init__(context, PUSH, N_('Push'), parent=parent, icon=icons.push())
 
     def export_state(self):
         """Export persistent settings"""
@@ -724,9 +719,7 @@ class Pull(RemoteActionDialog):
     """Pull from remote repositories"""
 
     def __init__(self, context, parent=None):
-        super(Pull, self).__init__(
-            context, PULL, N_('Pull'), parent=parent, icon=icons.pull()
-        )
+        super().__init__(context, PULL, N_('Pull'), parent=parent, icon=icons.pull())
 
     def apply_state(self, state):
         """Apply persistent settings"""

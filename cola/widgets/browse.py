@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import shlex
 
 from qtpy.QtCore import Qt
@@ -282,7 +281,7 @@ class RepoTreeView(standard.TreeView):
             size = x_width * 16
         else:
             # Filename and others use the actual content
-            size = super(RepoTreeView, self).sizeHintForColumn(column)
+            size = super().sizeHintForColumn(column)
         return size
 
     def save_selection(self):
@@ -538,7 +537,7 @@ class RepoTreeView(standard.TreeView):
         return self.name_item_from_index(index).path
 
 
-class BrowseModel(object):
+class BrowseModel:
     """Context data used for browsing branches via git-ls-tree"""
 
     def __init__(self, ref, filename=None):
@@ -549,17 +548,17 @@ class BrowseModel(object):
 
 class SaveBlob(cmds.ContextCommand):
     def __init__(self, context, model):
-        super(SaveBlob, self).__init__(context)
+        super().__init__(context)
         self.browse_model = model
 
     def do(self):
         git = self.context.git
         model = self.browse_model
-        ref = '%s:%s' % (model.ref, model.relpath)
+        ref = f'{model.ref}:{model.relpath}'
         with core.xopen(model.filename, 'wb') as fp:
             status, output, err = git.show(ref, _stdout=fp)
 
-        out = '# git show %s >%s\n%s' % (
+        out = '# git show {} >{}\n{}'.format(
             shlex.quote(ref),
             shlex.quote(model.filename),
             output,

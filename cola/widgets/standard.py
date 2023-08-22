@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 import os
 import time
@@ -23,7 +22,7 @@ from .. import utils
 from . import defs
 
 
-class WidgetMixin(object):
+class WidgetMixin:
     """Mix-in for common utilities and serialization of widget state"""
 
     closed = Signal(QtWidgets.QWidget)
@@ -157,7 +156,7 @@ class MainWindowMixin(WidgetMixin):
     def init_state(self, settings, callback, *args, **kwargs):
         """Save the initial state before calling the parent initializer"""
         self.default_state = self.saveState(self.widget_version)
-        super(MainWindowMixin, self).init_state(settings, callback, *args, **kwargs)
+        super().init_state(settings, callback, *args, **kwargs)
 
     def export_state(self):
         """Exports data for save/restore"""
@@ -228,7 +227,7 @@ class ListWidget(QtWidgets.QListWidget):
     """QListWidget with vim j/k navigation hotkeys"""
 
     def __init__(self, parent=None):
-        super(ListWidget, self).__init__(parent)
+        super().__init__(parent)
 
         self.up_action = qtutils.add_action(
             self,
@@ -271,7 +270,7 @@ class ListWidget(QtWidgets.QListWidget):
             self.setCurrentItem(new_item)
 
 
-class TreeMixin(object):
+class TreeMixin:
     def __init__(self, widget, Base):
         self.widget = widget
         self.Base = Base
@@ -439,7 +438,7 @@ class DraggableTreeMixin(TreeMixin):
     """
 
     def __init__(self, widget, Base):
-        super(DraggableTreeMixin, self).__init__(widget, Base)
+        super().__init__(widget, Base)
 
         self._inner_drag = False
         widget.setAcceptDrops(True)
@@ -591,7 +590,7 @@ class TreeWidget(QtWidgets.QTreeWidget):
     index_about_to_change = Signal()
 
     def __init__(self, parent=None):
-        super(TreeWidget, self).__init__(parent)
+        super().__init__(parent)
         self._mixin = self.Mixin(self, QtWidgets.QTreeWidget)
 
     def keyPressEvent(self, event):
@@ -673,7 +672,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
     def keyPressEvent(self, event):
         """Customize keyPressEvent to remove the ESC key cancel feature"""
         if event.key() != Qt.Key_Escape:
-            super(ProgressDialog, self).keyPressEvent(event)
+            super().keyPressEvent(event)
 
     def start(self):
         """Start the animation thread and use a wait cursor"""

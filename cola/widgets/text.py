@@ -1,6 +1,5 @@
 """Text widgets"""
 # pylint: disable=unexpected-keyword-arg
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 import math
 
@@ -66,10 +65,10 @@ class LineEdit(QtWidgets.QLineEdit):
         key = event.key()
         if key == Qt.Key_Escape:
             self.esc_pressed.emit()
-        super(LineEdit, self).keyPressEvent(event)
+        super().keyPressEvent(event)
 
 
-class LineEditCursorPosition(object):
+class LineEditCursorPosition:
     """Translate cursorPositionChanged(int,int) into cursorPosition(int,int)"""
 
     def __init__(self, widget, row):
@@ -356,14 +355,14 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
 
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
-        super(PlainTextEdit, self).mousePressEvent(event)
+        super().mousePressEvent(event)
 
     def wheelEvent(self, event):
         """Disable control+wheelscroll text resizing"""
         if not self.mouse_zoom and (event.modifiers() & Qt.ControlModifier):
             event.ignore()
             return
-        super(PlainTextEdit, self).wheelEvent(event)
+        super().wheelEvent(event)
 
     def create_context_menu(self, event_pos):
         """Create a custom context menu"""
@@ -378,7 +377,7 @@ class TextSearchWidget(QtWidgets.QWidget):
     """The search dialog that displays over a text edit field"""
 
     def __init__(self, widget, parent):
-        super(TextSearchWidget, self).__init__(parent)
+        super().__init__(parent)
         self.setAutoFillBackground(True)
         self._widget = widget
         self._parent = parent
@@ -568,14 +567,14 @@ class TextEdit(QtWidgets.QTextEdit):
 
     def mousePressEvent(self, event):
         self.ext.mouse_press_event(event)
-        super(TextEdit, self).mousePressEvent(event)
+        super().mousePressEvent(event)
 
     def wheelEvent(self, event):
         """Disable control+wheelscroll text resizing"""
         if event.modifiers() & Qt.ControlModifier:
             event.ignore()
             return
-        super(TextEdit, self).wheelEvent(event)
+        super().wheelEvent(event)
 
     def should_expandtab(self, event):
         return event.key() == Qt.Key_Tab and self.expandtab_enabled
@@ -611,7 +610,7 @@ class TextEdit(QtWidgets.QTextEdit):
             QtWidgets.QTextEdit.keyReleaseEvent(self, event)
 
 
-class TextEditCursorPosition(object):
+class TextEditCursorPosition:
     def __init__(self, widget, ext):
         self._widget = widget
         self._ext = ext
@@ -861,7 +860,7 @@ def anchor_mode(select):
 # The vim-like read-only text view
 
 
-class VimMixin(object):
+class VimMixin:
     def __init__(self, widget):
         self.widget = widget
         self.Base = widget.Base
@@ -1062,7 +1061,7 @@ class HintedLineEdit(HintedDefaultLineEdit):
     """A monospace line edit with hint text"""
 
     def __init__(self, context, hint, tooltip=None, parent=None):
-        super(HintedLineEdit, self).__init__(hint, tooltip=tooltip, parent=parent)
+        super().__init__(hint, tooltip=tooltip, parent=parent)
         self.setFont(qtutils.diff_font(context))
 
 
@@ -1102,7 +1101,7 @@ class VimTextBrowser(VimTextEdit):
         self.numbers = LineNumbers(self)
 
     def resizeEvent(self, event):
-        super(VimTextBrowser, self).resizeEvent(event)
+        super().resizeEvent(event)
         self.numbers.refresh_size()
 
 

@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import time
 
 from qtpy import QtGui
@@ -14,7 +13,7 @@ from ..git import STDOUT
 from ..i18n import N_
 
 
-class Columns(object):
+class Columns:
     """Defines columns in the worktree browser"""
 
     NAME = 0
@@ -90,7 +89,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def clear(self):
         self.entries.clear()
-        super(GitRepoModel, self).clear()
+        super().clear()
 
     def hasChildren(self, index):
         if index.isValid():

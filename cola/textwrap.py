@@ -1,5 +1,4 @@
 """Text wrapping and filling"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import re
 
 from .compat import ustr
@@ -11,7 +10,7 @@ from .compat import ustr
 # Simplified for git-cola by David Aguilar <davvid@gmail.com>
 
 
-class TextWrapper(object):
+class TextWrapper:
     """
     Object for wrapping/filling text.  The public interface consists of
     the wrap() and fill() methods; the other methods are just there for

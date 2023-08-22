@@ -1,5 +1,4 @@
 """Git Archive dialog"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 import os
 
 from qtpy import QtCore
@@ -104,7 +103,7 @@ class Archive(Dialog):
         # outputs
         self.fmt = None
 
-        filename = '%s-%s' % (os.path.basename(core.getcwd()), shortref)
+        filename = f'{os.path.basename(core.getcwd())}-{shortref}'
         self.prefix = filename + '/'
         self.filename = filename
 
@@ -239,7 +238,7 @@ class Archive(Dialog):
     def update_format(self, idx):
         self.fmt = self.format_strings[idx]
         text = self.strip_exts(self.filetext.text())
-        self.filename = '%s.%s' % (text, self.fmt)
+        self.filename = f'{text}.{self.fmt}'
         self.filetext.setText(self.filename)
         self.filetext.setFocus()
         if '/' in text:

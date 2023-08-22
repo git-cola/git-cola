@@ -1,4 +1,3 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
 import codecs
 import collections
 import os
@@ -29,11 +28,11 @@ def edits1(word):
 
 
 def known_edits2(word, words):
-    return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in words)
+    return {e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in words}
 
 
 def known(word, words):
-    return set(w for w in word if w in words)
+    return {w for w in word if w in words}
 
 
 def suggest(word, words):
@@ -51,7 +50,7 @@ def correct(word, words):
     return max(candidates, key=words.get)
 
 
-class NorvigSpellCheck(object):
+class NorvigSpellCheck:
     def __init__(
         self,
         words='dict/words',
@@ -113,5 +112,5 @@ class NorvigSpellCheck(object):
                         yield word
                         if title:
                             yield word.title()
-            except (IOError, OSError):
+            except OSError:
                 pass

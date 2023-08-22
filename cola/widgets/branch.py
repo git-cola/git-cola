@@ -1,5 +1,4 @@
 """Provides widgets related to branches"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 from functools import partial
 
 from qtpy import QtWidgets
@@ -194,7 +193,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             self._visible = True
             if self._needs_refresh:
                 self.refresh()
-        return super(BranchesTreeWidget, self).showEvent(event)
+        return super().showEvent(event)
 
     def _toggle_expanded(self, index):
         """Toggle expanded/collapsed state when items are clicked"""
@@ -404,13 +403,13 @@ class BranchesTreeWidget(standard.TreeWidget):
         if current_branch and tracked_branch and item is not None:
             status_str = ''
             if ahead > 0:
-                status_str += '%s%s' % (uchr(0x2191), ahead)
+                status_str += f'{uchr(0x2191)}{ahead}'
 
             if behind > 0:
-                status_str += '  %s%s' % (uchr(0x2193), behind)
+                status_str += f'  {uchr(0x2193)}{behind}'
 
             if status_str:
-                item.setText(0, '%s\t%s' % (item.text(0), status_str))
+                item.setText(0, f'{item.text(0)}\t{status_str}')
 
     def git_action_async(self, action, args, kwarg=None, update_refs=False):
         if kwarg is None:
@@ -502,7 +501,7 @@ class BranchDetailsTask(qtutils.Task):
     """Lookup branch details in a background task"""
 
     def __init__(self, context, current_branch, git_helper):
-        super(BranchDetailsTask, self).__init__()
+        super().__init__()
         self.context = context
         self.current_branch = current_branch
         self.git_helper = git_helper
@@ -541,7 +540,7 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
 
 
-class TreeEntry(object):
+class TreeEntry:
     """Tree representation for the branches widget
 
     The branch widget UI displays the basename.  For intermediate names, e.g.
@@ -698,7 +697,7 @@ def get_toplevel_item(item):
     return parents[-1]
 
 
-class BranchesTreeHelper(object):
+class BranchesTreeHelper:
     """Save and restore the tree state"""
 
     def __init__(self, tree):
@@ -746,7 +745,7 @@ class BranchesTreeHelper(object):
         return result
 
 
-class GitHelper(object):
+class GitHelper:
     def __init__(self, context):
         self.context = context
         self.git = context.git

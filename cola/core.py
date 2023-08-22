@@ -4,7 +4,6 @@ The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 import functools
 import itertools
 import mimetypes
@@ -62,9 +61,7 @@ class UStr(ustr):
     def __new__(cls, string, encoding):
         if isinstance(string, UStr):
             if encoding != string.encoding:
-                raise ValueError(
-                    'Encoding conflict: %s vs. %s' % (string.encoding, encoding)
-                )
+                raise ValueError(f'Encoding conflict: {string.encoding} vs. {encoding}')
             string = ustr(string)
 
         obj = ustr.__new__(cls, string)
@@ -184,7 +181,7 @@ def start_command(
     stdout=subprocess.PIPE,
     no_win32_startupinfo=False,
     stderr=subprocess.PIPE,
-    **extra
+    **extra,
 ):
     """Start the given command, and return a subprocess object.
 
@@ -242,7 +239,7 @@ def start_command(
         cwd=cwd,
         env=env,
         universal_newlines=universal_newlines,
-        **extra
+        **extra,
     )
 
 
@@ -413,12 +410,12 @@ def open_append(path, encoding=None):
 
 def open_read(path, encoding=None):
     """Open a file for reading in utf-8 text mode"""
-    return open(mkpath(path, encoding=encoding), 'rt', encoding='utf-8')
+    return open(mkpath(path, encoding=encoding), encoding='utf-8')
 
 
 def open_write(path, encoding=None):
     """Open a file for writing in utf-8 text mode"""
-    return open(mkpath(path, encoding=encoding), 'wt', encoding='utf-8')
+    return open(mkpath(path, encoding=encoding), 'w', encoding='utf-8')
 
 
 def print_stdout(msg, linesep='\n'):

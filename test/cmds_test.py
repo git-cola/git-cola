@@ -1,5 +1,4 @@
 """Test the cmds module"""
-from __future__ import absolute_import, division, print_function, unicode_literals
 
 from cola import cmds
 from cola.compat import uchr
