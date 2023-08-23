@@ -86,7 +86,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install wheel
-          pip install Sphinx==5.3.0
           pip install --requirement requirements/requirements.txt
           pip install --requirement requirements/requirements-opt.txt
           pip install --requirement requirements/requirements-dev.txt
@@ -128,7 +127,6 @@ jobs:
           python3 -m venv env3
           source env3/bin/activate
           python -m pip install wheel
-          python -m pip install Sphinx==5.3.0
           garden requirements
           garden requirements/dev
       - name: Build Bundle
