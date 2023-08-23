@@ -5,7 +5,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
     git clone https://github.com/git-cola/git-cola.git
 
 [![License](https://img.shields.io/:license-GPL-green.svg)](LICENSE)
-[![Build status](https://github.com/git-cola/git-cola/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/git-cola/git-cola/actions/workflows/main.yml)
+[![Build status](https://github.com/git-cola/git-cola/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/git-cola/git-cola/actions/workflows/main.yml)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/251/badge)](https://bestpractices.coreinfrastructure.org/projects/251)
 [![pre-commit.ci](https://results.pre-commit.ci/badge/github/git-cola/git-cola/main.svg)](https://results.pre-commit.ci/latest/github/git-cola/git-cola/main)
 
