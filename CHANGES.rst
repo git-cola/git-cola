@@ -40,6 +40,10 @@ Development
 * Pre-commits hooks and code modernization.
   (`#1333 <https://github.com/git-cola/git-cola/pull/1333>`_)
 
+* Compatibility with Sphinx 7.2.0 was added to the `sphinxtogithub`
+  sphinx documentation plugin.
+  (`#1336 <https://github.com/git-cola/git-cola/pull/1336>`_)
+
 
 .. _v4.3.1:
 
