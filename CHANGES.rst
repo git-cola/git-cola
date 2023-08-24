@@ -8,6 +8,12 @@ Fixes
 * `git dag` was not displaying history when refspecs were specified.
   (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
 
+Development
+-----------
+* Compatibility with Sphinx 7.2.0 was added to the `sphinxtogithub`
+  sphinx documentation plugin.
+  (`#1336 <https://github.com/git-cola/git-cola/pull/1336>`_)
+
 
 .. _v4.3.1:
 
