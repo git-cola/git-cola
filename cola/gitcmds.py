@@ -793,12 +793,10 @@ def parse_rev_list(raw_revs):
         if match:
             rev_id = match.group(1)
             summary = match.group(2)
-            revs.append(
-                (
-                    rev_id,
-                    summary,
-                )
-            )
+            revs.append((
+                rev_id,
+                summary,
+            ))
     return revs
 
 

@@ -230,9 +230,9 @@ class Editor(QtWidgets.QWidget):
         pick_rgx = re.compile(
             (
                 r'^\s*(%s)?\s*'
-                r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
-                r'\s+([0-9a-f]{7,40})'
-                r'\s+(.+)$'
+                + r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                + r'\s+([0-9a-f]{7,40})'
+                + r'\s+(.+)$'
             )
             % re_comment_char
         )
@@ -314,15 +314,13 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.context = context
         self.comment_char = comment_char
         # header
-        self.setHeaderLabels(
-            [
-                N_('#'),
-                N_('Enabled'),
-                N_('Command'),
-                N_('SHA-1'),
-                N_('Summary'),
-            ]
-        )
+        self.setHeaderLabels([
+            N_('#'),
+            N_('Enabled'),
+            N_('Command'),
+            N_('SHA-1'),
+            N_('Summary'),
+        ])
         self.header().setStretchLastSection(True)
         self.setColumnCount(5)
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)

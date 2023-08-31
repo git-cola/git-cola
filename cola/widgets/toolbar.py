@@ -145,22 +145,20 @@ class ToolBarState:
             items = [x.data() for x in toolbar.actions()]
             # show_icons is for backwards compatibility with git-cola <= 3.11.0
             show_icons = toolbar.toolbar_style() != ToolBar.STYLE_TEXT_ONLY
-            result.append(
-                {
-                    'name': toolbar.windowTitle(),
-                    'area': encode_toolbar_area(toolbar_area),
-                    'break': widget.toolBarBreak(toolbar),
-                    'float': toolbar.isFloating(),
-                    'x': toolbar.pos().x(),
-                    'y': toolbar.pos().y(),
-                    'width': toolbar.width(),
-                    'height': toolbar.height(),
-                    'show_icons': show_icons,
-                    'toolbar_style': toolbar.toolbar_style(),
-                    'visible': toolbar.isVisible(),
-                    'items': items,
-                }
-            )
+            result.append({
+                'name': toolbar.windowTitle(),
+                'area': encode_toolbar_area(toolbar_area),
+                'break': widget.toolBarBreak(toolbar),
+                'float': toolbar.isFloating(),
+                'x': toolbar.pos().x(),
+                'y': toolbar.pos().y(),
+                'width': toolbar.width(),
+                'height': toolbar.height(),
+                'show_icons': show_icons,
+                'toolbar_style': toolbar.toolbar_style(),
+                'visible': toolbar.isVisible(),
+                'items': items,
+            })
 
         return result
 

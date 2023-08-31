@@ -48,18 +48,16 @@ def test_find_git_dir_never_found(is_git_dir):
     expect = 8
     actual = is_git_dir.call_count
     assert expect == actual
-    is_git_dir.assert_has_calls(
-        [
-            ((str(pathlib.Path('/does/not/exist').resolve()),), {}),
-            ((str(pathlib.Path('/does/not/exist/.git').resolve()),), {}),
-            ((str(pathlib.Path('/does/not').resolve()),), {}),
-            ((str(pathlib.Path('/does/not/.git').resolve()),), {}),
-            ((str(pathlib.Path('/does').resolve()),), {}),
-            ((str(pathlib.Path('/does/.git').resolve()),), {}),
-            ((str(pathlib.Path('/').resolve()),), {}),
-            ((str(pathlib.Path('/.git').resolve()),), {}),
-        ]
-    )
+    is_git_dir.assert_has_calls([
+        ((str(pathlib.Path('/does/not/exist').resolve()),), {}),
+        ((str(pathlib.Path('/does/not/exist/.git').resolve()),), {}),
+        ((str(pathlib.Path('/does/not').resolve()),), {}),
+        ((str(pathlib.Path('/does/not/.git').resolve()),), {}),
+        ((str(pathlib.Path('/does').resolve()),), {}),
+        ((str(pathlib.Path('/does/.git').resolve()),), {}),
+        ((str(pathlib.Path('/').resolve()),), {}),
+        ((str(pathlib.Path('/.git').resolve()),), {}),
+    ])
 
 
 @patch('cola.git.is_git_dir')
@@ -110,16 +108,14 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
     expect = 6
     actual = is_git_dir.call_count
     assert expect == actual
-    is_git_dir.assert_has_calls(
-        [
-            ((str(pathlib.Path('/the/root/sub/dir').resolve()),), {}),
-            ((str(pathlib.Path('/the/root/sub/dir/.git').resolve()),), {}),
-            ((str(pathlib.Path('/the/root/sub').resolve()),), {}),
-            ((str(pathlib.Path('/the/root/sub/.git').resolve()),), {}),
-            ((str(pathlib.Path('/the/root').resolve()),), {}),
-            ((str(pathlib.Path('/the/root/.git').resolve()),), {}),
-        ]
-    )
+    is_git_dir.assert_has_calls([
+        ((str(pathlib.Path('/the/root/sub/dir').resolve()),), {}),
+        ((str(pathlib.Path('/the/root/sub/dir/.git').resolve()),), {}),
+        ((str(pathlib.Path('/the/root/sub').resolve()),), {}),
+        ((str(pathlib.Path('/the/root/sub/.git').resolve()),), {}),
+        ((str(pathlib.Path('/the/root').resolve()),), {}),
+        ((str(pathlib.Path('/the/root/.git').resolve()),), {}),
+    ])
     read_git_file.assert_called_once_with(git_file)
 
 
@@ -145,14 +141,12 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
     assert paths.git_file is None
     assert paths.worktree is None
     assert is_git_dir.call_count == 4
-    is_git_dir.assert_has_calls(
-        [
-            ((str(pathlib.Path('/ceiling/sub/dir').resolve()),), {}),
-            ((str(pathlib.Path('/ceiling/sub/dir/.git').resolve()),), {}),
-            ((str(pathlib.Path('/ceiling/sub').resolve()),), {}),
-            ((str(pathlib.Path('/ceiling/sub/.git').resolve()),), {}),
-        ]
-    )
+    is_git_dir.assert_has_calls([
+        ((str(pathlib.Path('/ceiling/sub/dir').resolve()),), {}),
+        ((str(pathlib.Path('/ceiling/sub/dir/.git').resolve()),), {}),
+        ((str(pathlib.Path('/ceiling/sub').resolve()),), {}),
+        ((str(pathlib.Path('/ceiling/sub/.git').resolve()),), {}),
+    ])
 
 
 @patch('cola.core.islink')

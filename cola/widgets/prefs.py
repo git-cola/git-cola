@@ -208,39 +208,37 @@ scissors
             N_('Check Published Commits when Amending'), self.check_published_commits
         )
 
-        self.set_config(
-            {
-                prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
-                prefs.AUTOCOMPLETE_PATHS: (
-                    self.autocomplete_paths,
-                    Defaults.autocomplete_paths,
-                ),
-                prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
-                prefs.CHECK_PUBLISHED_COMMITS: (
-                    self.check_published_commits,
-                    Defaults.check_published_commits,
-                ),
-                prefs.COMMIT_CLEANUP: (self.commit_cleanup, Defaults.commit_cleanup),
-                prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
-                prefs.DISPLAY_UNTRACKED: (
-                    self.display_untracked,
-                    Defaults.display_untracked,
-                ),
-                prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
-                prefs.LOGDATE: (self.logdate, Defaults.logdate),
-                prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
-                prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
-                prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),
-                prefs.PATCHES_DIRECTORY: (
-                    self.patches_directory,
-                    Defaults.patches_directory,
-                ),
-                prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
-                prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
-                prefs.USER_NAME: (self.name, ''),
-                prefs.USER_EMAIL: (self.email, ''),
-            }
-        )
+        self.set_config({
+            prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
+            prefs.AUTOCOMPLETE_PATHS: (
+                self.autocomplete_paths,
+                Defaults.autocomplete_paths,
+            ),
+            prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
+            prefs.CHECK_PUBLISHED_COMMITS: (
+                self.check_published_commits,
+                Defaults.check_published_commits,
+            ),
+            prefs.COMMIT_CLEANUP: (self.commit_cleanup, Defaults.commit_cleanup),
+            prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
+            prefs.DISPLAY_UNTRACKED: (
+                self.display_untracked,
+                Defaults.display_untracked,
+            ),
+            prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
+            prefs.LOGDATE: (self.logdate, Defaults.logdate),
+            prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
+            prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
+            prefs.MERGE_VERBOSITY: (self.merge_verbosity, Defaults.merge_verbosity),
+            prefs.PATCHES_DIRECTORY: (
+                self.patches_directory,
+                Defaults.patches_directory,
+            ),
+            prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
+            prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
+            prefs.USER_NAME: (self.name, ''),
+            prefs.USER_EMAIL: (self.email, ''),
+        })
 
 
 class SettingsFormWidget(FormWidget):
@@ -288,38 +286,36 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Check spelling'), self.check_spelling)
         self.add_row(N_('Ctrl+MouseWheel to Zoom'), self.mouse_zoom)
 
-        self.set_config(
-            {
-                prefs.SAVEWINDOWSETTINGS: (
-                    self.save_window_settings,
-                    Defaults.save_window_settings,
-                ),
-                prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
-                prefs.EXPANDTAB: (self.expandtab, Defaults.expandtab),
-                prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
-                prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
-                prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
-                prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
-                prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
-                prefs.EDITOR: (self.editor, fallback_editor()),
-                prefs.HISTORY_BROWSER: (
-                    self.historybrowser,
-                    prefs.default_history_browser(),
-                ),
-                prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
-                prefs.MERGE_KEEPBACKUP: (
-                    self.keep_merge_backups,
-                    Defaults.merge_keep_backup,
-                ),
-                prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
-                prefs.RESIZE_BROWSER_COLUMNS: (
-                    self.resize_browser_columns,
-                    Defaults.resize_browser_columns,
-                ),
-                prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
-                prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
-            }
-        )
+        self.set_config({
+            prefs.SAVEWINDOWSETTINGS: (
+                self.save_window_settings,
+                Defaults.save_window_settings,
+            ),
+            prefs.TABWIDTH: (self.tabwidth, Defaults.tabwidth),
+            prefs.EXPANDTAB: (self.expandtab, Defaults.expandtab),
+            prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
+            prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
+            prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
+            prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
+            prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
+            prefs.EDITOR: (self.editor, fallback_editor()),
+            prefs.HISTORY_BROWSER: (
+                self.historybrowser,
+                prefs.default_history_browser(),
+            ),
+            prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
+            prefs.MERGE_KEEPBACKUP: (
+                self.keep_merge_backups,
+                Defaults.merge_keep_backup,
+            ),
+            prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+            prefs.RESIZE_BROWSER_COLUMNS: (
+                self.resize_browser_columns,
+                Defaults.resize_browser_columns,
+            ),
+            prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
+            prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
+        })
 
         # pylint: disable=no-member
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
@@ -372,20 +368,18 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('Indent Status paths'), self.status_indent)
         self.add_row(N_('Use a block cursor in diff editors'), self.block_cursor)
 
-        self.set_config(
-            {
-                prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
-                prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
-                prefs.STATUS_SHOW_TOTALS: (
-                    self.status_show_totals,
-                    Defaults.status_show_totals,
-                ),
-                prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
-                prefs.THEME: (self.theme, Defaults.theme),
-                prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
-                prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
-            }
-        )
+        self.set_config({
+            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
+            prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
+            prefs.STATUS_SHOW_TOTALS: (
+                self.status_show_totals,
+                Defaults.status_show_totals,
+            ),
+            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
+            prefs.THEME: (self.theme, Defaults.theme),
+            prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
+            prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
+        })
 
 
 class AppearanceWidget(QtWidgets.QWidget):
