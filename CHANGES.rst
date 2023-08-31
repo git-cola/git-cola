@@ -21,9 +21,6 @@ Usability, bells and whistles
 * A `1.25 x` Hi-DPI magnification option mode is now available in the Appearance settings.
   (`#1313 <https://github.com/git-cola/git-cola/issues/1313>`_)
 
-* The minimum font size can now be set lower, which is helpful for Hi-DPI displays.
-  (`#1342 <https://github.com/git-cola/git-cola/pull/1342>`_)
-
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.
@@ -43,6 +40,28 @@ Development
 * Pre-commits hooks and code modernization.
   (`#1333 <https://github.com/git-cola/git-cola/pull/1333>`_)
 
+* Compatibility with Sphinx 7.2.0 was added to the `sphinxtogithub`
+  sphinx documentation plugin.
+  (`#1336 <https://github.com/git-cola/git-cola/pull/1336>`_)
+
+
+.. _v4.3.2:
+
+v4.3.2
+======
+
+Usability, bells and whistles
+-----------------------------
+* The minimum font size can now be set lower, which is helpful for Hi-DPI displays.
+  (`#1342 <https://github.com/git-cola/git-cola/pull/1342>`_)
+
+Fixes
+-----
+* `git dag` was not displaying history when refspecs were specified.
+  (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
+
+Development
+-----------
 * Compatibility with Sphinx 7.2.0 was added to the `sphinxtogithub`
   sphinx documentation plugin.
   (`#1336 <https://github.com/git-cola/git-cola/pull/1336>`_)
