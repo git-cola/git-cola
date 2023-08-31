@@ -233,7 +233,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:894
 msgid " - DAG"
-msgstr " - Verlauf"
+msgstr " - DAG"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
@@ -422,7 +422,7 @@ msgstr "Ein Hook muss bereitgestellt sein für \"%s\""
 #: cola/widgets/stash.py:236
 #, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "Eine Ablage mit dem Namen \"%s\" existiert bereits"
+msgstr "Eine Stash mit dem Namen \"%s\" existiert bereits"
 
 #: cola/widgets/cfgactions.py:82 cola/widgets/main.py:622
 msgid "Abort"
@@ -650,11 +650,11 @@ msgstr "Immer einen Merge-Commit erzeugen, selbst wenn schnelles Vorspulen mögl
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Ergänzen"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Letzten Commit nachbessern"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -666,7 +666,7 @@ msgstr "Möchten Sie die veröffentlichten Commit nachbessern?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Am Nachbessern"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -767,7 +767,7 @@ msgstr ""
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "Verantwortlichkeit..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -912,7 +912,7 @@ msgstr ""
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "Umstellen"
+msgstr "Checkout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
@@ -924,7 +924,7 @@ msgstr "Zu Branch wechseln"
 
 #: cola/widgets/dag.py:414
 msgid "Checkout Detached HEAD"
-msgstr "Wechseln zu losgelöstem HEAD"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -952,19 +952,19 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "Wechseln..."
+msgstr "Checkout..."
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
-msgstr "Einzelne Commits übernehmen"
+msgstr "Cherry Pick"
 
 #: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
-msgstr "Diesen Commit übernehmen"
+msgstr "Cherry-Pick Commit"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "Einzelnen Commit übernehmen..."
+msgstr "Cherry-Pick..."
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1654,7 +1654,7 @@ msgstr "Fehler beim erstellen der externen Referenz \"%s\""
 
 #: cola/models/stash.py:197
 msgid "Error creating stash"
-msgstr "Fehler beim Erstellen der Ablage"
+msgstr "Fehler beim Erstellen der Stash"
 
 #: cola/cmds.py:1126
 #, python-format
@@ -1694,7 +1694,7 @@ msgstr "Fehler: Commit-Vorlage nicht gefunden"
 
 #: cola/widgets/stash.py:235
 msgid "Error: Stash exists"
-msgstr "Fehler: Diese Ablage existiert bereits"
+msgstr "Fehler: Diese Stash existiert bereits"
 
 #: cola/cmds.py:1732
 msgid "Error: Unconfigured commit template"
@@ -1785,15 +1785,15 @@ msgstr "Favoriten"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "Holen"
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Verfolgten Branch holen"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "Holen..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2142,7 +2142,7 @@ msgstr "Sicherheitskopie beim Zusammenführen anlegen (Datei.orig)"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Vormerkliste unverändert lassen"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2619,20 +2619,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "Holen und zusammenführen"
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "Holen und zusammenführen..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "Veröffentlichen"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Veröffentlichen..."
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"
