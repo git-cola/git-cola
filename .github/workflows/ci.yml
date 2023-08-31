@@ -55,7 +55,7 @@ jobs:
               python3-pytest \
               python3-setuptools-scm \
               python3-sphinx
-          pip install brunette
+          pip install cercis
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"

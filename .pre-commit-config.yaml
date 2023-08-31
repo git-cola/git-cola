@@ -17,9 +17,10 @@ repos:
         args:
           - --py36-plus
 
-  - repo: https://github.com/ODwyerSoftware/brunette
-    rev: 0.2.8
+  - repo: https://github.com/jsh9/cercis
+    rev: 0.2.1
     hooks:
-      - id: brunette
+      - id: cercis
         args:
-          - --config=setup.cfg
+          - --line-length=88
+          - --function-definition-extra-indent=False

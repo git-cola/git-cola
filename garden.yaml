@@ -8,7 +8,7 @@
 #   garden requirements/opt     # Install optional runtime requirements
 #   garden requirements/dev     # Install developer requirements
 #   garden test                 # Run the test suite
-#   garden fmt                  # Format code using "brunette"
+#   garden fmt                  # Format code using "cercis"
 #   garden doc                  # Generate documentation: html + manual pages
 #   garden html                 # Generate documentation: html only
 #   garden man                  # Generate documentation: manual pages only
@@ -46,10 +46,10 @@ trees:
         garden -vv doc
         garden -vv pylint
       fmt: |
-        ${BRUNETTE} --version
+        ${CERCIS} --version
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
-        ${XARGS} ${BRUNETTE} --config=setup.cfg "$@"
+        ${XARGS} ${CERCIS} "$@"
       html: garden -vv html docs
       install: |
         if test -n "${DESTDIR}"
@@ -223,7 +223,7 @@ variables:
   cola_full_version: $ ./bin/git-cola version --brief
   cola_version: $ sed -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
   # External commands and options
-  BRUNETTE: brunette
+  CERCIS: cercis
   CP: cp
   GIT: git
   GREP: grep

@@ -28,10 +28,10 @@ Fixes
 
 Development
 -----------
-* `brunette <https://pypi.org/project/brunette/>`_ is now being used to enforce
+* `cercis <https://pypi.org/project/cercis/>`_ is now being used to enforce
   Git Cola's python code style. We were previously disabling quote normalization
-  when using `black`. Use of `brunette` allows us to enable quote normalization
-  using the single-quotes mode.
+  when using `black`. Use of `cercis` allows us to enable quote normalization
+  under its default single-quote settings.
 
 * The test suite now works on Windows.
   (`#1331 <https://github.com/git-cola/git-cola/issues/1331>`_)

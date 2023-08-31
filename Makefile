@@ -26,7 +26,7 @@ all::
 # DESTDIR is also supported.
 #
 # The external commands used by this Makefile are...
-BRUNETTE = brunette
+CERCIS = cercis
 CP = cp
 FIND = find
 GREP = grep
@@ -276,7 +276,7 @@ endif
 fmt::
 	$(GIT) ls-files -- '*.py' | \
 	$(GREP) -v ^qtpy | \
-	$(XARGS) $(BRUNETTE) --config=setup.cfg
+	$(XARGS) $(CERCIS)
 
 # Run "make develop" from inside a newly created virtualenv to create an
 # editable installation.

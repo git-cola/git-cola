@@ -22,7 +22,7 @@ The style here is the standard Python PEP-8 style:
 
 http://www.python.org/dev/peps/pep-0008/
 
-* Use the `garden fmt` command to format the source code using `brunette`.
+* Use the `garden fmt` command to format the source code using `cercis`.
 
 * Follow the same style as the existing code.
 

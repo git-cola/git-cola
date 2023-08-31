@@ -6,7 +6,7 @@ setuptools>=42
 setuptools_scm[toml] >= 3.4.1
 wheel
 
-brunette
+cercis
 pylint >= 2.14.0
 pytest>=3.6
 pytest-cov
