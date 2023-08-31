@@ -21,6 +21,9 @@ Usability, bells and whistles
 * A `1.25 x` Hi-DPI magnification option mode is now available in the Appearance settings.
   (`#1313 <https://github.com/git-cola/git-cola/issues/1313>`_)
 
+* The minimum font size can now be set lower, which is helpful for Hi-DPI displays.
+  (`#1342 <https://github.com/git-cola/git-cola/pull/1342>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.
