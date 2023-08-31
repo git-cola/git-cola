@@ -221,7 +221,7 @@ class SettingsFormWidget(FormWidget):
         FormWidget.__init__(self, context, model, parent)
 
         self.fixed_font = QtWidgets.QFontComboBox()
-        self.font_size = standard.SpinBox(value=12, mini=8, maxi=192)
+        self.font_size = standard.SpinBox(value=12, mini=6, maxi=192)
 
         self.maxrecent = standard.SpinBox(maxi=99)
         self.tabwidth = standard.SpinBox(maxi=42)
