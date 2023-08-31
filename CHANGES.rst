@@ -3,6 +3,11 @@
 v4.3.2
 ======
 
+Usability, bells and whistles
+-----------------------------
+* The minimum font size can now be set lower, which is helpful for Hi-DPI displays.
+  (`#1342 <https://github.com/git-cola/git-cola/pull/1342>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.
