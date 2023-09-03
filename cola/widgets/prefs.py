@@ -347,7 +347,8 @@ class AppearanceFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
         # Theme selectors
-        self.theme = qtutils.combo_mapped(themes.options())
+        self.themes = themes.get_all_themes()
+        self.theme = qtutils.combo_mapped(themes.options(themes=self.themes))
         self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
 
         # The transform to ustr is needed because the config reader will convert
@@ -380,6 +381,26 @@ class AppearanceFormWidget(FormWidget):
             prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
             prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
         })
+
+        self.theme.currentIndexChanged.connect(self._theme_changed)
+
+    def _theme_changed(self, theme_idx):
+        """Set the icon theme to dark/light when the main theme changes"""
+        # Set the icon theme to a theme that corresponds to the main settings.
+        try:
+            theme = self.themes[theme_idx]
+        except IndexError:
+            return
+        icon_theme = self.icon_theme.current_data()
+        if theme.name == 'default':
+            if icon_theme in ('light', 'dark'):
+                self.icon_theme.set_value('default')
+        elif theme.is_dark:
+            if icon_theme in ('default', 'light'):
+                self.icon_theme.set_value('dark')
+        elif not theme.is_dark:
+            if icon_theme in ('default', 'dark'):
+                self.icon_theme.set_value('light')
 
 
 class AppearanceWidget(QtWidgets.QWidget):

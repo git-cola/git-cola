@@ -22,14 +22,14 @@ class Theme:
     def __init__(
         self,
         name,
-        hr_name,
+        title,
         is_dark,
         style_sheet=EStylesheet.DEFAULT,
         main_color=None,
         macos_appearance=None,
     ):
         self.name = name
-        self.hr_name = hr_name
+        self.title = title
         self.is_dark = is_dark
         self.is_palette_dark = None
         self.style_sheet = style_sheet
@@ -810,10 +810,11 @@ def get_macos_themes():
     return themes
 
 
-def options():
+def options(themes=None):
     """Return a dictionary mapping display names to theme names"""
-    items = get_all_themes()
-    return [(item.hr_name, item.name) for item in items]
+    if themes is None:
+        themes = get_all_themes()
+    return [(theme.title, theme.name) for theme in themes]
 
 
 def find_theme(name):
