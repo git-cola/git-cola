@@ -60,8 +60,13 @@ Any of the following Python Qt libraries must be installed:
 Git Cola enables additional features when the following
 Python modules are installed.
 
-[send2trash](https://github.com/hsoft/send2trash) enables cross-platform
-"Send to Trash" functionality.
+[Send2Trash](https://pypi.org/project/Send2Trash/)
+enables cross-platform "Send to Trash" functionality.
+([source](https://github.com/hsoft/send2trash))
+
+[pyobjc](https://pypi.org/project/pyobjc/)
+enables macOS-specific application themes on macOS.
+([source](https://github.com/ronaldoussoren/pyobjc))
 
 
 # Installation

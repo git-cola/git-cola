@@ -9,6 +9,7 @@ from . import core
 from . import icons
 from . import qtutils
 from . import resources
+from . import utils
 
 
 class EStylesheet:
@@ -19,7 +20,13 @@ class EStylesheet:
 
 class Theme:
     def __init__(
-        self, name, hr_name, is_dark, style_sheet=EStylesheet.DEFAULT, main_color=None
+        self,
+        name,
+        hr_name,
+        is_dark,
+        style_sheet=EStylesheet.DEFAULT,
+        main_color=None,
+        macos_appearance=None,
     ):
         self.name = name
         self.hr_name = hr_name
@@ -27,6 +34,7 @@ class Theme:
         self.is_palette_dark = None
         self.style_sheet = style_sheet
         self.main_color = main_color
+        self.macos_appearance = macos_appearance
         self.disabled_text_color = None
         self.text_color = None
         self.highlight_color = None
@@ -602,7 +610,7 @@ def style_sheet_default(palette):
         }}
 
         QMainWindow::separator {{
-            background: {window_rgb};
+            background: none;
             width: {separator}px;
             height: {separator}px;
         }}
@@ -635,6 +643,12 @@ def get_all_themes():
             style_sheet=EStylesheet.DEFAULT,
             main_color=None,
         ),
+    ]
+
+    if utils.is_darwin():
+        themes.extend(get_macos_themes().values())
+
+    themes.extend([
         Theme(
             'flat-light-blue',
             N_('Flat light blue'),
@@ -691,7 +705,7 @@ def get_all_themes():
             style_sheet=EStylesheet.FLAT,
             main_color='#42a65c',
         ),
-    ]
+    ])
 
     # check if themes path exists in user folder
     path = resources.config_home('themes')
@@ -708,6 +722,90 @@ def get_all_themes():
         name, ext = os.path.splitext(filename)
         if ext == '.qss':
             themes.append(Theme(name, N_(name), False, EStylesheet.CUSTOM, None))
+
+    return themes
+
+
+def apply_platform_theme(theme):
+    """Apply platform-specific themes (eg. dark mode on macOS)"""
+    # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
+    # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
+    if utils.is_darwin():
+        try:
+            import AppKit
+        except ImportError:
+            return
+        app = AppKit.NSApplication.sharedApplication()
+        macos_themes = get_macos_themes()
+        try:
+            macos_appearance = macos_themes[theme].macos_appearance
+        except KeyError:
+            return
+        if macos_appearance is None:
+            return
+        appearance = AppKit.NSAppearance.appearanceNamed_(macos_appearance)
+        app.setAppearance_(appearance)
+
+
+def get_macos_themes():
+    """Get a mapping from theme names to macOS NSAppearanceName values"""
+    try:
+        import AppKit
+    except ImportError:
+        return {}
+
+    themes = {}
+
+    def _add_theme(name, description, is_dark, attr):
+        """Add an AppKit theme if it exists"""
+        if hasattr(AppKit, attr):
+            themes[name] = Theme(
+                name, description, is_dark, macos_appearance=getattr(AppKit, attr)
+            )
+
+    _add_theme('macos-aqua', N_('MacOS Aqua'), False, 'NSAppearanceNameAqua')
+    _add_theme(
+        'macos-dark-aqua',
+        N_('MacOS Dark Aqua'),
+        True,
+        'NSAppearanceNameDarkAqua',
+    )
+    _add_theme(
+        'macos-vibrant-light',
+        N_('MacOS Vibrant Light'),
+        False,
+        'NSAppearanceNameVibrantLight',
+    )
+    _add_theme(
+        'macos-vibrant-dark',
+        N_('MacOS Vibrant Dark'),
+        True,
+        'NSAppearanceNameVibrantDark',
+    )
+    _add_theme(
+        'macos-aqua-high-contrast',
+        N_('MacOS Aqua (High Contrast)'),
+        False,
+        'NSAppearanceNameAccessibilityHighContrastAqua',
+    )
+    _add_theme(
+        'macos-dark-aqua-high-contrast',
+        N_('MacOS Dark Aqua (High Contrast)'),
+        False,
+        'NSAppearanceNameAccessibilityHighContrastDarkAqua',
+    )
+    _add_theme(
+        'macos-vibrant-light-high-contrast',
+        N_('MacOS Vibrant Light (High Contrast)'),
+        True,
+        'NSAppearanceNameAccessibilityHighContrastVibrantLight',
+    )
+    _add_theme(
+        'macos-vibrant-dark-high-contrast',
+        N_('MacOS Vibrant Dark (High Contrast)'),
+        False,
+        'NSAppearanceNameAccessibilityHighContrastVibrantDark',
+    )
 
     return themes
 

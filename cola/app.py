@@ -194,7 +194,11 @@ class ColaApplication:
         theme = themes.find_theme(theme_str)
         self.theme = theme
         self._app.setStyleSheet(theme.build_style_sheet(self._app.palette()))
-        if theme_str != 'default':
+
+        is_macos_theme = theme_str.startswith('macos-')
+        if is_macos_theme:
+            themes.apply_platform_theme(theme_str)
+        elif theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))
 
     def _install_hidpi_config(self):

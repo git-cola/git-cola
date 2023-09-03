@@ -21,6 +21,10 @@ Usability, bells and whistles
 * A `1.25 x` Hi-DPI magnification option mode is now available in the Appearance settings.
   (`#1313 <https://github.com/git-cola/git-cola/issues/1313>`_)
 
+* MacOS-specific application themes are now available in the Appearance settings
+  when the pyobjc module is installed.
+  (`#905 <https://github.com/git-cola/git-cola/issues/905>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.
