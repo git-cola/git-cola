@@ -34,6 +34,7 @@ Thanks
 * balping
 * Barış ÇELİK
 * Barry Roberts
+* Bastian Müller
 * Boris W
 * Ben Boeckel
 * Ben Cole
