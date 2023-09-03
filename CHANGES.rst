@@ -57,6 +57,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Flashing windows during startup on Windows has been fixed.
+  (`#1329 <https://github.com/git-cola/git-cola/issues/1329>`_)
+
 * `git dag` was not displaying history when refspecs were specified.
   (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
 
