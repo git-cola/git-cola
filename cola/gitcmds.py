@@ -12,6 +12,7 @@ from .git import EMPTY_TREE_OID
 from .git import OID_LENGTH
 from .i18n import N_
 from .interaction import Interaction
+from .models import prefs
 
 
 def add(context, items, u=False):
@@ -843,6 +844,18 @@ def merge_message_path(context):
         if core.exists(path):
             return path
     return None
+
+
+def read_merge_commit_message(context, path):
+    """Read a merge commit message from disk while stripping commentary"""
+    content = core.read(path)
+    cleanup_mode = prefs.commit_cleanup(context)
+    if cleanup_mode in ('verbatim', 'scissors', 'whitespace'):
+        return content
+    comment_char = prefs.comment_char(context)
+    return '\n'.join(
+        (line for line in content.splitlines() if not line.startswith(comment_char))
+    )
 
 
 def prepare_commit_message_hook(context):

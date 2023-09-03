@@ -401,7 +401,7 @@ class MainModel(QtCore.QObject):
         context = self.context
         merge_msg_path = gitcmds.merge_message_path(context)
         if merge_msg_path:
-            msg = core.read(merge_msg_path)
+            msg = gitcmds.read_merge_commit_message(context, merge_msg_path)
             if msg != self._auto_commitmsg:
                 self._auto_commitmsg = msg
                 self._prev_commitmsg = self.commitmsg
