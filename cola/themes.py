@@ -1,6 +1,11 @@
 """Themes generators"""
 import os
 
+
+try:
+    import AppKit
+except ImportError:
+    AppKit = None
 from qtpy import QtGui
 
 from .i18n import N_
@@ -728,9 +733,7 @@ def apply_platform_theme(theme):
     # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
     # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
     if utils.is_darwin():
-        try:
-            import AppKit
-        except ImportError:
+        if AppKit is None:
             return
         app = AppKit.NSApplication.sharedApplication()
         macos_themes = get_macos_themes()
@@ -746,12 +749,9 @@ def apply_platform_theme(theme):
 
 def get_macos_themes():
     """Get a mapping from theme names to macOS NSAppearanceName values"""
-    try:
-        import AppKit
-    except ImportError:
-        return {}
-
     themes = {}
+    if AppKit is None:
+        return themes
 
     def _add_theme(name, description, is_dark, attr):
         """Add an AppKit theme if it exists"""
