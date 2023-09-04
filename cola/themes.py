@@ -753,29 +753,34 @@ def get_macos_themes():
     if AppKit is None:
         return themes
 
-    def _add_theme(name, description, is_dark, attr):
+    def add_macos_theme(name, description, is_dark, attr):
         """Add an AppKit theme if it exists"""
         if hasattr(AppKit, attr):
             themes[name] = Theme(
                 name, description, is_dark, macos_appearance=getattr(AppKit, attr)
             )
 
-    _add_theme('macos-aqua', N_('MacOS Aqua'), False, 'NSAppearanceNameAqua')
-    _add_theme(
-        'macos-dark-aqua',
-        N_('MacOS Dark Aqua'),
+    add_macos_theme(
+        'macos-aqua-light',
+        N_('MacOS Aqua light'),
+        False,
+        'NSAppearanceNameAqua'
+    )
+    add_macos_theme(
+        'macos-aqua-dark',
+        N_('MacOS Aqua dark'),
         True,
         'NSAppearanceNameDarkAqua',
     )
-    _add_theme(
+    add_macos_theme(
         'macos-vibrant-light',
-        N_('MacOS Vibrant Light'),
+        N_('MacOS Vibrant light'),
         False,
         'NSAppearanceNameVibrantLight',
     )
-    _add_theme(
+    add_macos_theme(
         'macos-vibrant-dark',
-        N_('MacOS Vibrant Dark'),
+        N_('MacOS Vibrant dark'),
         True,
         'NSAppearanceNameVibrantDark',
     )
