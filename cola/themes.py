@@ -564,12 +564,10 @@ class Theme:
 
 
 def style_sheet_default(palette):
-    window = palette.color(QtGui.QPalette.Window)
     highlight = palette.color(QtGui.QPalette.Highlight)
     shadow = palette.color(QtGui.QPalette.Shadow)
     base = palette.color(QtGui.QPalette.Base)
 
-    window_rgb = qtutils.rgb_css(window)
     highlight_rgb = qtutils.rgb_css(highlight)
     shadow_rgb = qtutils.rgb_css(shadow)
     base_rgb = qtutils.rgb_css(base)
@@ -620,7 +618,6 @@ def style_sheet_default(palette):
 
         """.format(
         separator=defs.separator,
-        window_rgb=window_rgb,
         highlight_rgb=highlight_rgb,
         shadow_rgb=shadow_rgb,
         base_rgb=base_rgb,
