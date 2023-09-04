@@ -779,31 +779,6 @@ def get_macos_themes():
         True,
         'NSAppearanceNameVibrantDark',
     )
-    _add_theme(
-        'macos-aqua-high-contrast',
-        N_('MacOS Aqua (High Contrast)'),
-        False,
-        'NSAppearanceNameAccessibilityHighContrastAqua',
-    )
-    _add_theme(
-        'macos-dark-aqua-high-contrast',
-        N_('MacOS Dark Aqua (High Contrast)'),
-        False,
-        'NSAppearanceNameAccessibilityHighContrastDarkAqua',
-    )
-    _add_theme(
-        'macos-vibrant-light-high-contrast',
-        N_('MacOS Vibrant Light (High Contrast)'),
-        True,
-        'NSAppearanceNameAccessibilityHighContrastVibrantLight',
-    )
-    _add_theme(
-        'macos-vibrant-dark-high-contrast',
-        N_('MacOS Vibrant Dark (High Contrast)'),
-        False,
-        'NSAppearanceNameAccessibilityHighContrastVibrantDark',
-    )
-
     return themes
 
 
