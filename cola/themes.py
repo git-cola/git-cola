@@ -761,10 +761,7 @@ def get_macos_themes():
             )
 
     add_macos_theme(
-        'macos-aqua-light',
-        N_('MacOS Aqua light'),
-        False,
-        'NSAppearanceNameAqua'
+        'macos-aqua-light', N_('MacOS Aqua light'), False, 'NSAppearanceNameAqua'
     )
     add_macos_theme(
         'macos-aqua-dark',
