@@ -832,9 +832,6 @@ class Commit(ResetMode):
             else:
                 self.model.set_commitmsg(self.new_commitmsg)
 
-        title = N_('Commit failed')
-        Interaction.command(title, 'git commit', status, out, err)
-
         return status, out, err
 
     @staticmethod

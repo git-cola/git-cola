@@ -25,6 +25,11 @@ Usability, bells and whistles
   when the pyobjc module is installed.
   (`#905 <https://github.com/git-cola/git-cola/issues/905>`_)
 
+* Git Cola now runs `git commit` in the background and feedback is provided while
+  the commit is running. This prevents the UI from freezing when running pre-commit
+  hooks that can make `git commit` take a long time to run.
+  (`#1320 <https://github.com/git-cola/git-cola/issues/1320>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.

@@ -23,12 +23,14 @@ from ..models import prefs
 from ..qtutils import get
 from ..utils import Group
 from . import defs
+from . import standard
 from .selectcommits import select_commits
 from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
 from .text import anchor_mode
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
+    commit_finished = Signal(object)
     cursor_changed = Signal(int, int)
     down = Signal()
     up = Signal()
@@ -94,6 +96,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip, icon=icons.commit()
         )
         self.commit_group = Group(self.commit_action, self.commit_button)
+        self.commit_progress_bar = standard.progress_bar(self)
+        self.commit_progress_bar.hide()
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
         self.actions_button = qtutils.create_toolbutton(
@@ -153,6 +157,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.actions_button,
             self.summary,
             self.commit_button,
+            self.commit_progress_bar,
         )
         self.toplayout.setContentsMargins(
             defs.margin, defs.no_margin, defs.no_margin, defs.no_margin
@@ -182,6 +187,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.model.commit_message_changed.connect(
             self.set_commit_message, type=Qt.QueuedConnection
         )
+        self.commit_finished.connect(self._commit_finished, type=Qt.QueuedConnection)
 
         self.summary.cursor_changed.connect(self.cursor_changed.emit)
         self.description.cursor_changed.connect(
@@ -467,8 +473,35 @@ class CommitMessageEditor(QtWidgets.QFrame):
             return
         no_verify = get(self.bypass_commit_hooks_action)
         sign = get(self.sign_action)
-        cmds.do(cmds.Commit, context, amend, msg, sign, no_verify=no_verify)
         self.bypass_commit_hooks_action.setChecked(False)
+        self.summary.setEnabled(False)
+        self.description.setEnabled(False)
+
+        self.commit_progress_bar.setMaximumWidth(self.commit_button.width())
+        self.commit_progress_bar.setMinimumHeight(self.commit_button.height() - 2)
+        self.commit_button.hide()
+        self.commit_progress_bar.show()
+
+        task = qtutils.SimpleTask(
+            cmds.run(cmds.Commit, context, amend, msg, sign, no_verify=no_verify)
+        )
+        self.context.runtask.start(
+            task,
+            finish=lambda commit_task: self.commit_finished.emit(commit_task),
+            progress=self.commit_progress_bar,
+        )
+
+    def _commit_finished(self, task):
+        """Reset widget state on completion of the commit task"""
+        self.summary.setEnabled(True)
+        self.description.setEnabled(True)
+
+        self.commit_progress_bar.hide()
+        self.commit_button.show()
+
+        title = N_('Commit failed')
+        status, out, err = task.result
+        Interaction.command(title, 'git commit', status, out, err)
 
     def build_fixup_menu(self):
         self.build_commits_menu(
