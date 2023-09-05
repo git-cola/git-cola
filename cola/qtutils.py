@@ -1063,7 +1063,6 @@ class RunTask(QtCore.QObject):
         """Start the task and register a callback"""
         self.result_func = result
         if progress is not None:
-            progress.show()
             if hasattr(progress, 'start'):
                 progress.start()
 

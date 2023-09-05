@@ -676,6 +676,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
 
     def start(self):
         """Start the animation thread and use a wait cursor"""
+        self.show()
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
         self.animation_thread.start()
 
@@ -684,6 +685,7 @@ class ProgressDialog(QtWidgets.QProgressDialog):
         self.animation_thread.stop()
         self.animation_thread.wait()
         QtWidgets.QApplication.restoreOverrideCursor()
+        self.hide()
 
 
 class ProgressAnimationThread(QtCore.QThread):
@@ -726,12 +728,20 @@ class ProgressTickThread(QtCore.QThread):
     """Emits a an int stream for progress bars"""
 
     updated = Signal(int)
+    activated = Signal()
 
-    def __init__(self, parent, maximum, timeout=0.05):
+    def __init__(
+        self,
+        parent,
+        maximum,
+        start=1.0,
+        timeout=0.05,
+    ):
         QtCore.QThread.__init__(self, parent)
         self.running = False
         self.timeout = timeout
         self.maximum = maximum
+        self._start = start
         self.value = 0
 
     def cycle(self):
@@ -747,9 +757,17 @@ class ProgressTickThread(QtCore.QThread):
         self.value = 0
 
     def run(self):
+        start_time = time.time()
+        active = False
         self.running = True
         while self.running:
-            self.updated.emit(self.cycle())
+            if active:
+                self.updated.emit(self.cycle())
+            else:
+                now = time.time()
+                if self._start < (now - start_time):
+                    active = True
+                    self.activated.emit()
             time.sleep(self.timeout)
 
 
@@ -1080,28 +1098,51 @@ def progress(title, text, parent):
 class ProgressBar(QtWidgets.QProgressBar):
     """An indeterminate progress bar with animated scrolling"""
 
-    def __init__(self, parent, maximum):
+    def __init__(self, parent, maximum, hide=(), disable=(), visible=False):
         super().__init__(parent)
         self.setTextVisible(False)
         self.setMaximum(maximum)
+        if not visible:
+            self.setVisible(False)
         self.progress_thread = ProgressTickThread(self, maximum)
         self.progress_thread.updated.connect(self.setValue, type=Qt.QueuedConnection)
+        self.progress_thread.activated.connect(self.activate, type=Qt.QueuedConnection)
+        self._widgets_to_hide = hide
+        self._widgets_to_disable = disable
 
     def start(self):
         """Start the progress tick thread"""
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
+
+        for widget in self._widgets_to_disable:
+            widget.setEnabled(False)
+
         self.progress_thread.start()
+
+    def activate(self):
+        """Hide widgets and display the progress bar"""
+        for widget in self._widgets_to_hide:
+            widget.hide()
+        self.show()
 
     def stop(self):
         """Stop the progress tick thread"""
         self.progress_thread.stop()
         self.progress_thread.wait()
+
+        for widget in self._widgets_to_disable:
+            widget.setEnabled(True)
+
+        self.hide()
+        for widget in self._widgets_to_hide:
+            widget.show()
+
         QtWidgets.QApplication.restoreOverrideCursor()
 
 
-def progress_bar(parent, maximum=10):
+def progress_bar(parent, maximum=10, hide=(), disable=()):
     """Return a text-less progress bar"""
-    widget = ProgressBar(parent, maximum)
+    widget = ProgressBar(parent, maximum, hide=hide, disable=disable)
     return widget
 
 
