@@ -743,18 +743,24 @@ class ProgressTickThread(QtCore.QThread):
         self.maximum = maximum
         self._start = start
         self.value = 0
+        self.step = 1
 
     def cycle(self):
         """Cycle to the next value value
 
         Values returns are in the inclusive (0, maximum + 1) range.
         """
-        self.value = (self.value + 1) % (self.maximum + 1)
+        self.value = (self.value + self.step) % (self.maximum + 1)
+        if self.value == self.maximum:
+            self.step = -1
+        elif self.value == 0:
+            self.step = 1
         return self.value
 
     def stop(self):
         self.running = False
         self.value = 0
+        self.step = 1
 
     def run(self):
         start_time = time.time()
@@ -1126,7 +1132,7 @@ class ProgressBar(QtWidgets.QProgressBar):
         self.show()
 
     def stop(self):
-        """Stop the progress tick thread"""
+        """Stop the progress tick thread, re-enable and display widgets"""
         self.progress_thread.stop()
         self.progress_thread.wait()
 
