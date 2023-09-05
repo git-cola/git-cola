@@ -722,6 +722,37 @@ class ProgressAnimationThread(QtCore.QThread):
             time.sleep(self.timeout)
 
 
+class ProgressTickThread(QtCore.QThread):
+    """Emits a an int stream for progress bars"""
+
+    updated = Signal(int)
+
+    def __init__(self, parent, maximum, timeout=0.05):
+        QtCore.QThread.__init__(self, parent)
+        self.running = False
+        self.timeout = timeout
+        self.maximum = maximum
+        self.value = 0
+
+    def cycle(self):
+        """Cycle to the next value value
+
+        Values returns are in the inclusive (0, maximum + 1) range.
+        """
+        self.value = (self.value + 1) % (self.maximum + 1)
+        return self.value
+
+    def stop(self):
+        self.running = False
+        self.value = 0
+
+    def run(self):
+        self.running = True
+        while self.running:
+            self.updated.emit(self.cycle())
+            time.sleep(self.timeout)
+
+
 class SpinBox(QtWidgets.QSpinBox):
     def __init__(
         self, parent=None, value=None, mini=1, maxi=99999, step=0, prefix='', suffix=''
@@ -1044,6 +1075,34 @@ def information(title, message=None, details=None, informative_text=None):
 def progress(title, text, parent):
     """Create a new ProgressDialog"""
     return ProgressDialog(title, text, parent)
+
+
+class ProgressBar(QtWidgets.QProgressBar):
+    """An indeterminate progress bar with animated scrolling"""
+
+    def __init__(self, parent, maximum):
+        super().__init__(parent)
+        self.setTextVisible(False)
+        self.setMaximum(maximum)
+        self.progress_thread = ProgressTickThread(self, maximum)
+        self.progress_thread.updated.connect(self.setValue, type=Qt.QueuedConnection)
+
+    def start(self):
+        """Start the progress tick thread"""
+        QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
+        self.progress_thread.start()
+
+    def stop(self):
+        """Stop the progress tick thread"""
+        self.progress_thread.stop()
+        self.progress_thread.wait()
+        QtWidgets.QApplication.restoreOverrideCursor()
+
+
+def progress_bar(parent, maximum=10):
+    """Return a text-less progress bar"""
+    widget = ProgressBar(parent, maximum)
+    return widget
 
 
 def question(title, text, default=True, logo=None):
