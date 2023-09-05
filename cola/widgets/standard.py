@@ -691,13 +691,14 @@ class ProgressDialog(QtWidgets.QProgressDialog):
 class ProgressAnimationThread(QtCore.QThread):
     """Emits a pseudo-animated text stream for progress bars"""
 
+    # The updated signal is emitted on each tick.
     updated = Signal(object)
 
-    def __init__(self, txt, parent, timeout=0.1):
+    def __init__(self, txt, parent, sleep_time=0.1):
         QtCore.QThread.__init__(self, parent)
         self.running = False
         self.txt = txt
-        self.timeout = timeout
+        self.sleep_time = sleep_time
         self.symbols = [
             '.  ..',
             '..  .',
@@ -708,47 +709,53 @@ class ProgressAnimationThread(QtCore.QThread):
         self.idx = -1
 
     def set_text(self, txt):
+        """Set the text prefix"""
         self.txt = txt
 
-    def cycle(self):
+    def tick(self):
+        """Tick to the next animated text value"""
         self.idx = (self.idx + 1) % len(self.symbols)
         return self.txt + self.symbols[self.idx]
 
     def stop(self):
+        """Stop the animation thread"""
         self.running = False
 
     def run(self):
+        """Emit ticks until stopped"""
         self.running = True
         while self.running:
-            self.updated.emit(self.cycle())
-            time.sleep(self.timeout)
+            self.updated.emit(self.tick())
+            time.sleep(self.sleep_time)
 
 
 class ProgressTickThread(QtCore.QThread):
     """Emits a an int stream for progress bars"""
 
+    # The updated signal emits progress tick values.
     updated = Signal(int)
+    # The activated signal is emitted when the progress bar is displayed.
     activated = Signal()
 
     def __init__(
         self,
         parent,
         maximum,
-        start=1.0,
-        timeout=0.05,
+        start_time=1.0,
+        sleep_time=0.05,
     ):
         QtCore.QThread.__init__(self, parent)
         self.running = False
-        self.timeout = timeout
+        self.sleep_time = sleep_time
         self.maximum = maximum
-        self._start = start
+        self.start_time = start_time
         self.value = 0
         self.step = 1
 
-    def cycle(self):
-        """Cycle to the next value value
+    def tick(self):
+        """Cycle to the next tick value
 
-        Values returns are in the inclusive (0, maximum + 1) range.
+        Returned values are in the inclusive (0, maximum + 1) range.
         """
         self.value = (self.value + self.step) % (self.maximum + 1)
         if self.value == self.maximum:
@@ -758,25 +765,31 @@ class ProgressTickThread(QtCore.QThread):
         return self.value
 
     def stop(self):
+        """Stop the tick thread and reset to the initial state"""
         self.running = False
         self.value = 0
         self.step = 1
 
     def run(self):
-        start_time = time.time()
+        """Start the tick thread
+
+        The progress bar will not be activated until after the start_time
+        interval has elapsed.
+        """
+        initial_time = time.time()
         active = False
         self.running = True
         self.value = 0
         self.step = 1
         while self.running:
             if active:
-                self.updated.emit(self.cycle())
+                self.updated.emit(self.tick())
             else:
                 now = time.time()
-                if self._start < (now - start_time):
+                if self.start_time < (now - initial_time):
                     active = True
                     self.activated.emit()
-            time.sleep(self.timeout)
+            time.sleep(self.sleep_time)
 
 
 class SpinBox(QtWidgets.QSpinBox):
