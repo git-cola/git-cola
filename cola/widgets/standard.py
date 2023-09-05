@@ -766,6 +766,8 @@ class ProgressTickThread(QtCore.QThread):
         start_time = time.time()
         active = False
         self.running = True
+        self.value = 0
+        self.step = 1
         while self.running:
             if active:
                 self.updated.emit(self.cycle())
