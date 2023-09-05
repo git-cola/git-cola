@@ -854,7 +854,7 @@ def read_merge_commit_message(context, path):
         return content
     comment_char = prefs.comment_char(context)
     return '\n'.join(
-        (line for line in content.splitlines() if not line.startswith(comment_char))
+        line for line in content.splitlines() if not line.startswith(comment_char)
     )
 
 

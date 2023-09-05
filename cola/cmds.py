@@ -3101,8 +3101,7 @@ def run(cls, *args, **opts):
         """Closure return by run() which runs the command"""
         if args or opts:
             return do(cls, *args, **opts)
-        else:
-            return do(cls, *local_args, **local_opts)
+        return do(cls, *local_args, **local_opts)
 
     return runner
 

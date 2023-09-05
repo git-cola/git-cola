@@ -487,7 +487,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         )
         self.context.runtask.start(
             task,
-            finish=lambda commit_task: self.commit_finished.emit(commit_task),
+            finish=self.commit_finished.emit,
             progress=self.commit_progress_bar,
         )
 
