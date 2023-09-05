@@ -223,6 +223,7 @@ Thanks
 * Peer Sommerlund
 * Peter Dave Hello
 * Peter Jensen
+* Peter Justin
 * Peter Júnoš
 * Petr Gladkikh
 * Philip Stark
