@@ -159,6 +159,8 @@ translated into a localized string.
 The translation message files are the `*.po` files in the `cola/i18n/` directory.
 Adding a new translation entails creating a new language-specific `.po` file.
 
+Please note - it is preferred that git command jargon will be left untranslated. 
+
 When new (untranslated) strings are added to the project, the `git-cola.pot`
 base template and the language-specific message files need to be updated with
 the new strings.

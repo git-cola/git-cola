@@ -648,11 +648,11 @@ msgstr "Siempre utilizar un \"merge commit\" cuando este habilitado, incluso cua
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Corregir"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Corregir commit"
+msgstr "Amend commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -664,7 +664,7 @@ msgstr "¿Corregir el commit publicado?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Corrigiendo"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -765,7 +765,7 @@ msgstr "Responsables de las rutas seleccionadas"
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "Responsable..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -1783,15 +1783,15 @@ msgstr "Favoritos"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "Extraer (Fetch)"
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Extraer (Fetch) la rama en seguimiento"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "Extraer (Fetch)..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2139,7 +2139,7 @@ msgstr "Conservar Merge Backups *.orig"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Mantener Index"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
