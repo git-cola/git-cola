@@ -30,6 +30,10 @@ Usability, bells and whistles
   hooks that can make `git commit` take a long time to run.
   (`#1320 <https://github.com/git-cola/git-cola/issues/1320>`_)
 
+* The Diff context menu was reworked to reduce visual clutter and better match
+  the Status context menu.
+  (`#1347 <https://github.com/git-cola/git-cola/issues/1347>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.

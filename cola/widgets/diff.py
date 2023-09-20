@@ -974,6 +974,7 @@ class DiffEditor(DiffTextEdit):
         current_actions = menu.actions()
         menu_actions = []
         add_action = menu_actions.append
+        edit_actions_added = False
 
         if model.is_stageable() or model.is_unstageable():
             if model.is_stageable():
@@ -1020,12 +1021,22 @@ class DiffEditor(DiffTextEdit):
                 self.action_apply_selection.setIcon(icons.add())
                 add_action(self.action_apply_selection)
 
+                self.action_revert_selection.setText(revert_text)
+                add_action(self.action_revert_selection)
+
+                add_action(qtutils.menu_separator(menu))
+
+                # Do not show the "edit" action when the file does not exist.
+                if filename and core.exists(filename):
+                    add_action(self.launch_editor)
+                # Removed files can still be diffed.
+                add_action(self.launch_difftool)
+                edit_actions_added = True
+
+                add_action(qtutils.menu_separator(menu))
                 self.action_edit_and_apply_selection.setText(edit_and_apply_text)
                 self.action_edit_and_apply_selection.setIcon(icons.add())
                 add_action(self.action_edit_and_apply_selection)
-
-                self.action_revert_selection.setText(revert_text)
-                add_action(self.action_revert_selection)
 
                 self.action_edit_and_revert_selection.setText(edit_and_revert_text)
                 add_action(self.action_edit_and_revert_selection)
@@ -1062,16 +1073,24 @@ class DiffEditor(DiffTextEdit):
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.remove())
                 add_action(self.action_apply_selection)
+                add_action(qtutils.menu_separator(menu))
+                # Do not show the "edit" action when the file does not exist.
+                if filename and core.exists(filename):
+                    add_action(self.launch_editor)
+                # Removed files can still be diffed.
+                add_action(self.launch_difftool)
+                add_action(qtutils.menu_separator(menu))
+                edit_actions_added = True
 
                 self.action_edit_and_apply_selection.setText(edit_and_apply_text)
                 self.action_edit_and_apply_selection.setIcon(icons.remove())
                 add_action(self.action_edit_and_apply_selection)
 
-        if model.is_stageable() or model.is_unstageable():
+        if not edit_actions_added and (model.is_stageable() or model.is_unstageable()):
+            add_action(qtutils.menu_separator(menu))
             # Do not show the "edit" action when the file does not exist.
             # Untracked files exist by definition.
             if filename and core.exists(filename):
-                add_action(qtutils.menu_separator(menu))
                 add_action(self.launch_editor)
 
             # Removed files can still be diffed.
