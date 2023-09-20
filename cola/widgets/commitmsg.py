@@ -99,7 +99,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.commit_progress_bar = standard.progress_bar(
             self,
             hide=(self.commit_button,),
-            disable=(self.commit_button, self.summary, self.description)
+            disable=(self.commit_button, self.summary, self.description),
         )
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
