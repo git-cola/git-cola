@@ -34,6 +34,9 @@ Usability, bells and whistles
   the Status context menu.
   (`#1347 <https://github.com/git-cola/git-cola/issues/1347>`_)
 
+* The standalone `git cola tag` tool now autocompletes the tag name field.
+  (`#706 <https://github.com/git-cola/git-cola/issues/706>`_)
+
 Fixes
 -----
 * `git dag` was not displaying history when refspecs were specified.

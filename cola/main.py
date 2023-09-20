@@ -704,6 +704,7 @@ def cmd_tag(args):
     from .widgets.createtag import new_create_tag  # pylint: disable=all
 
     context = app.application_init(args)
+    context.model.update_status()
     view = new_create_tag(context, name=args.name, ref=args.ref, sign=args.sign)
     return app.application_start(context, view)
 
