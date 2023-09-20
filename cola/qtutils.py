@@ -563,9 +563,9 @@ def add_action_with_status_tip(widget, text, tip, func, *shortcuts):
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
-def menu_separator(widget):
+def menu_separator(widget, text=''):
     """Return a QAction whose isSeparator() returns true. Used in context menus"""
-    action = QtWidgets.QAction('', widget)
+    action = QtWidgets.QAction(text, widget)
     action.setSeparator(True)
     return action
 
