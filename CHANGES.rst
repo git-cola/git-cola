@@ -35,7 +35,8 @@ Usability, bells and whistles
   (`#1347 <https://github.com/git-cola/git-cola/issues/1347>`_)
 
 * The standalone `git cola tag` tool now autocompletes the tag name field.
-  (`#706 <https://github.com/git-cola/git-cola/issues/706>`_)
+  (`#706 <https://github.com/git-cola/git-cola/pull/706>`_)
+  (`#691 <https://github.com/git-cola/git-cola/issues/691>`_)
 
 Fixes
 -----
