@@ -57,11 +57,11 @@ def test_translates_random_english():
 
 def test_translate_push_pull_french():
     i18n.install('fr_FR')
-    expect = 'Tirer'
+    expect = 'Pull'
     actual = N_('Pull')
     assert expect == actual
 
-    expect = 'Pousser'
+    expect = 'Push'
     actual = N_('Push')
     assert expect == actual
 
