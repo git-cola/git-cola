@@ -55,14 +55,10 @@ def test_translates_random_english():
     assert expect == actual
 
 
-def test_translate_push_pull_french():
+def test_translate_to_french():
     i18n.install('fr_FR')
-    expect = 'Tirer'
-    actual = N_('Pull')
-    assert expect == actual
-
-    expect = 'Pousser'
-    actual = N_('Push')
+    expect = ' commits avant'
+    actual = N_(' commits ago')
     assert expect == actual
 
 
