@@ -244,7 +244,7 @@ variables:
   SPHINX_OPTIONS: "-d _build/doctrees -a ."
   TOX: tox
   TOX_OPTIONS: "--develop --skip-missing-interpreters"
-  TOX_ENVS: "py{36,37,38,39,310,311}"
+  TOX_ENVS: "py36,py37,py38,py39,py310,py311"
   XARGS: xargs
   XGETTEXT: xgettext
 
