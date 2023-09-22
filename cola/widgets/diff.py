@@ -896,7 +896,7 @@ class DiffEditor(DiffTextEdit):
         )
 
         self.action_revert_selection = qtutils.add_action(
-            self, 'Revert', self.revert_selection, hotkeys.REVERT
+            self, 'Revert', self.revert_selection, hotkeys.REVERT, hotkeys.REVERT_ALT
         )
         self.action_revert_selection.setIcon(icons.undo())
 

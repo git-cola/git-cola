@@ -191,6 +191,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             cmds.RevertUnstagedEdits.name(),
             cmds.run(cmds.RevertUnstagedEdits, context),
             hotkeys.REVERT,
+            hotkeys.REVERT_ALT,
         )
         self.revert_unstaged_edits_action.setIcon(icons.undo())
 

@@ -72,6 +72,7 @@ FINDER_SECONDARY = hotkey(Qt.Key_T)
 TERMINAL = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_T)
 STAGE_UNTRACKED = hotkey(Qt.ALT | Qt.Key_U)
 REVERT = hotkey(Qt.CTRL | Qt.Key_U)
+REVERT_ALT = hotkey(Qt.ALT | Qt.SHIFT | Qt.Key_R)
 EDIT_AND_REVERT = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_U)
 WORD_RIGHT = hotkey(Qt.Key_W)
 
