@@ -95,8 +95,8 @@ def test_avoid_translation_git_jargon():
     if failed_languages_push:
         print('Failed languages push:', failed_languages_push)
 
-    assert failed_languages_push == []
-    assert failed_languages_push == []
+    assert not failed_languages_push
+    assert not failed_languages_pull
 
 
 def test_get_filename_for_locale():
