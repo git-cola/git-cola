@@ -896,7 +896,7 @@ class DiffEditor(DiffTextEdit):
         )
 
         self.action_revert_selection = qtutils.add_action(
-            self, 'Revert', self.revert_selection, hotkeys.REVERT
+            self, 'Revert', self.revert_selection, hotkeys.REVERT, hotkeys.REVERT_ALT
         )
         self.action_revert_selection.setIcon(icons.undo())
 
@@ -977,13 +977,24 @@ class DiffEditor(DiffTextEdit):
         edit_actions_added = False
 
         if model.is_stageable() or model.is_unstageable():
-            if model.is_stageable():
-                self.stage_or_unstage.setText(N_('Stage'))
-                self.stage_or_unstage.setIcon(icons.add())
-            else:
+            if (model.is_amend_mode() and s.staged) or not self.model.is_stageable():
                 self.stage_or_unstage.setText(N_('Unstage'))
                 self.stage_or_unstage.setIcon(icons.remove())
+            else:
+                self.stage_or_unstage.setText(N_('Stage'))
+                self.stage_or_unstage.setIcon(icons.add())
             add_action(self.stage_or_unstage)
+
+        if s.staged and model.is_unstageable():
+            item = s.staged[0]
+            if item not in model.submodules and item not in model.staged_deleted:
+                if self.has_selection():
+                    apply_text = N_('Unstage Selected Lines')
+                else:
+                    apply_text = N_('Unstage Diff Hunk')
+                self.action_apply_selection.setText(apply_text)
+                self.action_apply_selection.setIcon(icons.remove())
+                add_action(self.action_apply_selection)
 
         if model.is_partially_stageable():
             item = s.modified[0] if s.modified else None
@@ -1005,7 +1016,7 @@ class DiffEditor(DiffTextEdit):
                     cmds.run(cmds.OpenRepo, context, path),
                 )
                 add_action(action)
-            elif item not in model.unstaged_deleted:
+            elif item and item not in model.unstaged_deleted:
                 if self.has_selection():
                     apply_text = N_('Stage Selected Lines')
                     edit_and_apply_text = N_('Edit Selected Lines to Stage...')
@@ -1024,9 +1035,8 @@ class DiffEditor(DiffTextEdit):
                 self.action_revert_selection.setText(revert_text)
                 add_action(self.action_revert_selection)
 
-                add_action(qtutils.menu_separator(menu))
-
                 # Do not show the "edit" action when the file does not exist.
+                add_action(qtutils.menu_separator(menu))
                 if filename and core.exists(filename):
                     add_action(self.launch_editor)
                 # Removed files can still be diffed.
@@ -1063,18 +1073,8 @@ class DiffEditor(DiffTextEdit):
                 add_action(action)
 
             elif item not in model.staged_deleted:
-                if self.has_selection():
-                    apply_text = N_('Unstage Selected Lines')
-                    edit_and_apply_text = N_('Edit Selected Lines to Unstage...')
-                else:
-                    apply_text = N_('Unstage Diff Hunk')
-                    edit_and_apply_text = N_('Edit Diff Hunk to Unstage...')
-
-                self.action_apply_selection.setText(apply_text)
-                self.action_apply_selection.setIcon(icons.remove())
-                add_action(self.action_apply_selection)
-                add_action(qtutils.menu_separator(menu))
                 # Do not show the "edit" action when the file does not exist.
+                add_action(qtutils.menu_separator(menu))
                 if filename and core.exists(filename):
                     add_action(self.launch_editor)
                 # Removed files can still be diffed.
@@ -1082,6 +1082,10 @@ class DiffEditor(DiffTextEdit):
                 add_action(qtutils.menu_separator(menu))
                 edit_actions_added = True
 
+                if self.has_selection():
+                    edit_and_apply_text = N_('Edit Selected Lines to Unstage...')
+                else:
+                    edit_and_apply_text = N_('Edit Diff Hunk to Unstage...')
                 self.action_edit_and_apply_selection.setText(edit_and_apply_text)
                 self.action_edit_and_apply_selection.setIcon(icons.remove())
                 add_action(self.action_edit_and_apply_selection)

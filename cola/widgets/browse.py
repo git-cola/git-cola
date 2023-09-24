@@ -181,6 +181,7 @@ class RepoTreeView(standard.TreeView):
             N_('Revert unstaged changes to selected paths'),
             cmds.run(cmds.RevertUnstagedEdits, context),
             hotkeys.REVERT,
+            hotkeys.REVERT_ALT,
         )
 
         self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
