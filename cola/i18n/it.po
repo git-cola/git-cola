@@ -339,7 +339,7 @@ msgstr ""
 #: cola/widgets/stash.py:236
 #, fuzzy, python-format
 msgid "A stash named \"%s\" already exists"
-msgstr "Il file %s esiste già."
+msgstr "Il stash %s esiste già."
 
 #: cola/widgets/cfgactions.py:82 cola/widgets/main.py:622
 #, fuzzy
@@ -582,7 +582,7 @@ msgstr ""
 #: cola/widgets/commitmsg.py:463
 #, fuzzy
 msgid "Amend Commit"
-msgstr "Correggi l'ultima revisione"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -697,7 +697,7 @@ msgstr "Rinomina ramo"
 #: cola/cmds.py:545 cola/widgets/status.py:282
 #, fuzzy
 msgid "Blame..."
-msgstr "Rinomina"
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -848,20 +848,20 @@ msgstr ""
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "Attiva"
+msgstr "Checkout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
-msgstr "Attiva dopo la creazione"
+msgstr "Checkout dopo la creazione"
 
 #: cola/guicmds.py:62 cola/widgets/dag.py:410
 msgid "Checkout Branch"
-msgstr "Attiva ramo"
+msgstr "Checkout Branch"
 
 #: cola/widgets/dag.py:414
 #, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "Attiva ramo"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -890,7 +890,7 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "Attiva..."
+msgstr "Checkout..."
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
@@ -899,12 +899,12 @@ msgstr ""
 #: cola/guicmds.py:73
 #, fuzzy
 msgid "Cherry-Pick Commit"
-msgstr "Copia revisione"
+msgstr "Cherry-Pick Commit"
 
 #: cola/widgets/main.py:328
 #, fuzzy
 msgid "Cherry-Pick..."
-msgstr "Attiva..."
+msgstr "Cherry-Pick..."
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1649,7 +1649,7 @@ msgstr ""
 #: cola/models/stash.py:197
 #, fuzzy
 msgid "Error creating stash"
-msgstr "Crea ramo"
+msgstr ""
 
 #: cola/cmds.py:1126
 #, python-format
@@ -1786,16 +1786,16 @@ msgstr ""
 #: cola/widgets/remote.py:673
 #, fuzzy
 msgid "Fetch"
-msgstr "Ripristina..."
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Recupera duplicato locale di ramo remoto"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 #, fuzzy
 msgid "Fetch..."
-msgstr "Ripristina..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 #, fuzzy
@@ -2667,21 +2667,21 @@ msgstr ""
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 #, fuzzy
 msgid "Pull"
-msgstr "Propaga..."
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 #, fuzzy
 msgid "Pull..."
-msgstr "Propaga..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "Propaga (Push)"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Propaga..."
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"

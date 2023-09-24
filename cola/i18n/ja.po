@@ -641,11 +641,11 @@ msgstr "可能な場合には常にマージコミットを作成するする、
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "訂正"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "コミットの訂正"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -657,7 +657,7 @@ msgstr "発行済のコミットを訂正しますか？"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "訂正中"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -759,7 +759,7 @@ msgstr "選択したパスの名前を変更"
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "責任者..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -904,7 +904,7 @@ msgstr "アメンド時にコミットを発行したかどうかを確認"
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "チェックアウト"
+msgstr "Checkout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
@@ -912,11 +912,11 @@ msgstr "作成してすぐチェックアウト"
 
 #: cola/guicmds.py:62 cola/widgets/dag.py:410
 msgid "Checkout Branch"
-msgstr "ブランチをチェックアウト"
+msgstr "Checkout Branch"
 
 #: cola/widgets/dag.py:414
 msgid "Checkout Detached HEAD"
-msgstr "デタッチしたHEADをチェックアウト"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -944,19 +944,19 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "チェックアウト..."
+msgstr "Checkout..."
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
-msgstr "チェリーピック"
+msgstr "Cherry Pick"
 
 #: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
-msgstr "チェリーピックコミット"
+msgstr "Cherry-Pick Commit"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "チェリーピック..."
+msgstr "Cherry-Pick..."
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1779,15 +1779,15 @@ msgstr "よく使う"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "取得"
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "トラッキング・ブランチを取得"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "取得中..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2135,7 +2135,7 @@ msgstr "*.orig マージバックアップを保持"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "インデックスを保持"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2615,20 +2615,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "プル"
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "プル..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "プッシュ"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "プッシュ…"
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"

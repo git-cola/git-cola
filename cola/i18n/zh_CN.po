@@ -198,7 +198,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:894
 msgid " - DAG"
-msgstr " - 历史视图"
+msgstr " - DAG"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
@@ -327,7 +327,7 @@ msgstr "文件"
 
 #: cola/widgets/browse.py:98
 msgid "(Amending)"
-msgstr "(正在修正)"
+msgstr "(Amending)"
 
 #: cola/widgets/compare.py:36
 msgid "*** Branch Point ***"
@@ -611,11 +611,11 @@ msgstr "启用时总是在合并时创建一个提交,即使是快进合并方�
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "修正"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "修正提交"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -627,7 +627,7 @@ msgstr "修正已发布的提交吗?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "修正中"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -729,7 +729,7 @@ msgstr "编辑所选路径"
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "问责..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -874,7 +874,7 @@ msgstr ""
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "签出"
+msgstr "Checkout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
@@ -882,11 +882,11 @@ msgstr "在创建后签出"
 
 #: cola/guicmds.py:62 cola/widgets/dag.py:410
 msgid "Checkout Branch"
-msgstr "签出分支"
+msgstr "Checkout Branch"
 
 #: cola/widgets/dag.py:414
 msgid "Checkout Detached HEAD"
-msgstr "签出分离的 HEAD"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -914,19 +914,19 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "签出..."
+msgstr "Checkout..."
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
-msgstr "挑取(Cherry Pick)"
+msgstr "Cherry Pick"
 
 #: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
-msgstr "挑取(Cherry-Pick)提交"
+msgstr "Cherry-Pick Commit"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "挑取(Cherry-Pick)..."
+msgstr "Cherry-Pick..."
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1750,15 +1750,15 @@ msgstr "收藏夹"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "获取"
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "获取跟踪分支"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "获取..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2105,7 +2105,7 @@ msgstr "保留合并备份 (*.orig)"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "保留索引"
+msgstr "Keep index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2584,20 +2584,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "拉取"
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "拉取..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "推送"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "上传..."
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"

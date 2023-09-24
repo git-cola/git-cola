@@ -213,7 +213,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:894
 msgid " - DAG"
-msgstr " - Граф (DAG)"
+msgstr " - DAG"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
@@ -346,7 +346,7 @@ msgstr "Файл"
 
 #: cola/widgets/browse.py:98
 msgid "(Amending)"
-msgstr "(Зміна коміту)"
+msgstr "(Amending)"
 
 #: cola/widgets/compare.py:36
 msgid "*** Branch Point ***"
@@ -633,11 +633,11 @@ msgstr "Якщо увімкнено, завжди створювати комі�
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Змінити"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Змінити коміт"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -649,7 +649,7 @@ msgstr "Змінити опублікований коміт?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Змінення"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -752,7 +752,7 @@ msgstr "Редагувати вибрані шляхи"
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "Анотувати (blame)..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -898,7 +898,7 @@ msgstr ""
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "Переключитись"
+msgstr "Checkout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
@@ -906,12 +906,12 @@ msgstr "Переключитись після створення"
 
 #: cola/guicmds.py:62 cola/widgets/dag.py:410
 msgid "Checkout Branch"
-msgstr "Переключитись на гілку"
+msgstr "Checkout на Branch"
 
 #: cola/widgets/dag.py:414
 #, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "Переключитись на гілку"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -940,19 +940,19 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "Переключитись..."
+msgstr "Checkout..."
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
-msgstr "Висмикнути коміт (cherry pick)"
+msgstr "Cherry pick"
 
 #: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
-msgstr "Висмикнути коміт (cherry pick)"
+msgstr "Cherry-Pick Commit"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "Висмикнути коміт (cherry pick)..."
+msgstr "Cherry-Pick...
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1786,15 +1786,15 @@ msgstr "Улюбене"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "Отримати"
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Отримати гілку, що відстежується"
+msgstr "Fetch Tracking Branch"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "Отримати"
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2145,7 +2145,7 @@ msgstr "Зберігати резервні копії *.orig файлів пі�
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Зберегти індекс"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2625,20 +2625,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "Стягнути"
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "Стягнути"
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "Надіслати"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Надіслати"
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"

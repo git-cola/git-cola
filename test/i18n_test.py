@@ -54,17 +54,34 @@ def test_translates_random_english():
     actual = N_('Random')
     assert expect == actual
 
+def test_avoid_translation_git_jargon():
+    languages = ['cs_CS', 'de_DE', 'es_ES', 'fr_FR', 'hu_HU', 'id_ID', 'it_IT',
+                 'ja_JP', 'pl_PL', 'pt_BR', 'ru_RU', 'sv_SV', 'tr_TR', 'uk_UK',
+                 'zh_CN', 'zh_TW']
 
-def test_translate_push_pull_french():
-    i18n.install('fr_FR')
-    expect = 'Pull'
-    actual = N_('Pull')
-    assert expect == actual
+    expected_pull = 'Pull'
+    expected_push = 'Push'
+    failed_languages_pull = []
+    failed_languages_push = []
 
-    expect = 'Push'
-    actual = N_('Push')
-    assert expect == actual
+    for language in languages:
 
+        i18n.install(language)
+        if not expected_pull == N_(expected_pull):
+            failed_languages_pull.append(language)
+
+        if not expected_push == N_(expected_push):
+            failed_languages_push.append(language)
+
+        i18n.uninstall()
+
+    if failed_languages_pull:
+        print("\nFailed languages pull:", failed_languages_pull)
+    if failed_languages_push:
+        print("Failed languages push:", failed_languages_push)
+
+    assert failed_languages_push == []
+    assert failed_languages_push == []
 
 def test_get_filename_for_locale():
     """Ensure that the appropriate .po files are found"""

@@ -576,11 +576,11 @@ msgstr ""
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Ubah"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Ubah Commit"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -592,7 +592,7 @@ msgstr "Ubah penerbitan commit?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Mengubah"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -698,7 +698,7 @@ msgstr "Sunting lokasi terpilih"
 #: cola/cmds.py:545 cola/widgets/status.py:282
 #, fuzzy
 msgid "Blame..."
-msgstr "Tutup..."
+msgstr "Blame..."
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -859,7 +859,7 @@ msgstr "Checkout Cabang"
 #: cola/widgets/dag.py:414
 #, fuzzy
 msgid "Checkout Detached HEAD"
-msgstr "Checkout Cabang"
+msgstr "Checkout Detached HEAD"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -1613,7 +1613,7 @@ msgstr "Error membuat hulu \"%s\""
 #: cola/models/stash.py:197
 #, fuzzy
 msgid "Error creating stash"
-msgstr "Erroe Membuat Cabang"
+msgstr "Erroe Membuat stash"
 
 #: cola/cmds.py:1126
 #, python-format
@@ -1748,15 +1748,15 @@ msgstr ""
 #: cola/widgets/remote.py:673
 #, fuzzy
 msgid "Fetch"
-msgstr "Ambil..."
+msgstr "Fetch"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Fetch Cabang Terlacak"
+msgstr "Fetch Branch Terlacak"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "Ambil..."
+msgstr "Fetch..."
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -2109,7 +2109,7 @@ msgstr "Biarkan *.orig Merge Backup"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Pertahankan Index"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2599,11 +2599,11 @@ msgstr ""
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 #, fuzzy
 msgid "Pull"
-msgstr "Tarik..."
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "Tarik..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
@@ -2612,7 +2612,7 @@ msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Tekan..."
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"

@@ -222,7 +222,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:894
 msgid " - DAG"
-msgstr "Visualizar o Histórico"
+msgstr "- DAG"
 
 #: cola/widgets/recent.py:54
 msgid " commits ago"
@@ -355,7 +355,7 @@ msgstr "&Arquivo"
 
 #: cola/widgets/browse.py:98
 msgid "(Amending)"
-msgstr "(Modificando)"
+msgstr "(Amending)"
 
 #: cola/widgets/compare.py:36
 msgid "*** Branch Point ***"
@@ -639,11 +639,11 @@ msgstr "Sempre crie um commit de merge quando habilitado, mesmo quando o merge �
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Alterar"
+msgstr "Amend"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Alterar Commit"
+msgstr "Amend Commit"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -655,7 +655,7 @@ msgstr "Alterar o commit publicado ?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Alterando"
+msgstr "Amending"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -2136,7 +2136,7 @@ msgstr "Manter *.orig na Mesclagem de Backups"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Manter Índice"
+msgstr "Keep Index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2620,7 +2620,7 @@ msgstr ""
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 #, fuzzy
 msgid "Pull"
-msgstr "Puxar..."
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
