@@ -626,7 +626,7 @@ def _read_config_fallback(context, cache_paths, renamed_keys):
                 yield global_scope, key, value, False
 
     local_config = context.git.git_path('config')
-    if os.path.exists(local_config):
+    if local_config and os.path.exists(local_config):
         cache_paths.add(gitconfig)
         status, config_output, _ = context.git.config(
             z=True,
