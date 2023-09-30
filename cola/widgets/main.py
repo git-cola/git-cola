@@ -386,16 +386,25 @@ class MainView(standard.MainWindow):
             self, N_('Fetch...'), partial(remote.fetch, context), hotkeys.FETCH
         )
         self.fetch_action.setIcon(icons.download())
+        self.fetch_action.setToolTip(
+            N_('Fetch from one or more remotes using "git fetch"')
+        )
 
         self.push_action = add_action(
             self, N_('Push...'), partial(remote.push, context), hotkeys.PUSH
         )
         self.push_action.setIcon(icons.push())
+        self.push_action.setToolTip(
+            N_('Push to one or more remotes using "git push"')
+        )
 
         self.pull_action = add_action(
             self, N_('Pull...'), partial(remote.pull, context), hotkeys.PULL
         )
         self.pull_action.setIcon(icons.pull())
+        self.pull_action.setToolTip(
+            N_('Integrate changes using "git pull"')
+        )
 
         self.open_repo_action = add_action(
             self, N_('Open...'), partial(guicmds.open_repo, context), hotkeys.OPEN
@@ -413,7 +422,9 @@ class MainView(standard.MainWindow):
             self, N_('Stash...'), partial(stash.view, context), hotkeys.STASH
         )
         self.stash_action.setIcon(icons.commit())
-
+        self.stash_action.setToolTip(
+            N_('Temporarily stash away uncommitted changes using "git stash"')
+        )
         self.reset_soft_action = add_action(
             self, N_('Reset Branch (Soft)'), partial(guicmds.reset_soft, context)
         )
