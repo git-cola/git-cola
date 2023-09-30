@@ -44,10 +44,9 @@ class QFlowLayoutWidget(QtWidgets.QFrame):
             self.layout().setDirection(dxn)
 
 
-def tooltip_button(text, layout):
-    button = create_button(text, layout=layout)
-    button.setToolTip(text)
-    return button
+def tooltip_button(text, layout, tooltip=''):
+    """Convenience wrapper around qtutils.create_button()"""
+    return create_button(text, layout=layout, tooltip=tooltip)
 
 
 class ActionButtons(QFlowLayoutWidget):
@@ -55,15 +54,34 @@ class ActionButtons(QFlowLayoutWidget):
         QFlowLayoutWidget.__init__(self, parent)
         layout = self.layout()
         self.context = context
-        self.stage_button = tooltip_button(N_('Stage'), layout)
-        self.unstage_button = tooltip_button(N_('Unstage'), layout)
+        self.stage_button = tooltip_button(
+            N_('Stage'), layout, tooltip=N_('Stage changes using "git add"')
+        )
+        self.unstage_button = tooltip_button(
+            N_('Unstage'), layout, tooltip=N_('Unstage changes using "git reset"')
+        )
         self.refresh_button = tooltip_button(N_('Refresh'), layout)
-        self.fetch_button = tooltip_button(N_('Fetch...'), layout)
-        self.push_button = tooltip_button(N_('Push...'), layout)
-        self.pull_button = tooltip_button(N_('Pull...'), layout)
-        self.stash_button = tooltip_button(N_('Stash...'), layout)
-        self.exit_diff_mode_button = tooltip_button(N_('Exit Diff'), layout)
-        self.exit_diff_mode_button.setToolTip(N_('Exit Diff mode'))
+        self.fetch_button = tooltip_button(
+            N_('Fetch...'),
+            layout,
+            tooltip=N_('Fetch from one or more remotes using "git fetch"')
+        )
+        self.push_button = tooltip_button(
+            N_('Push...'),
+            layout,
+            N_('Push to one or more remotes using "git push"')
+        )
+        self.pull_button = tooltip_button(
+            N_('Pull...'), layout, tooltip=N_('Integrate changes using "git pull"')
+        )
+        self.stash_button = tooltip_button(
+            N_('Stash...'),
+            layout,
+            tooltip=N_('Temporarily stash away uncommitted changes using "git stash"')
+        )
+        self.exit_diff_mode_button = tooltip_button(
+            N_('Exit Diff'), layout, tooltip=N_('Exit Diff mode')
+        )
         self.exit_diff_mode_button.setVisible(False)
         self.aspect_ratio = 0.4
         layout.addStretch()
