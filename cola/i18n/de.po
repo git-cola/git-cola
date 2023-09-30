@@ -2619,20 +2619,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "Holen und zusammenführen"
+msgstr "Pull"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "Holen und zusammenführen..."
+msgstr "Pull..."
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "Veröffentlichen"
+msgstr "Push"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Veröffentlichen..."
+msgstr "Push..."
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"
