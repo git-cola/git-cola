@@ -423,11 +423,11 @@ msgstr ""
 
 #: cola/cmds.py:162
 msgid "Abort Cherry-Pick"
-msgstr "Abort Cherry-Pick"
+msgstr ""
 
 #: cola/cmds.py:156 cola/widgets/main.py:334
 msgid "Abort Cherry-Pick..."
-msgstr "Abort Cherry-Pick..."
+msgstr ""
 
 #: cola/cmds.py:193
 msgid "Abort Merge"
@@ -627,11 +627,11 @@ msgstr "Vždy vytvořit zápis sloučení, je-li povoleno, a to i v případě, 
 
 #: cola/cmds.py:221
 msgid "Amend"
-msgstr "Amend"
+msgstr "Pozměnit"
 
 #: cola/widgets/commitmsg.py:463
 msgid "Amend Commit"
-msgstr "Amend Commit"
+msgstr "Pozměnit zápis"
 
 #: cola/widgets/commitmsg.py:110 cola/widgets/main.py:194
 msgid "Amend Last Commit"
@@ -643,7 +643,7 @@ msgstr "Pozměnit uveřejněný zápis?"
 
 #: cola/widgets/main.py:1157
 msgid "Amending"
-msgstr "Amending"
+msgstr "Pozměnit"
 
 #: cola/widgets/cfgactions.py:151
 msgid ""
@@ -744,7 +744,7 @@ msgstr ""
 
 #: cola/cmds.py:545 cola/widgets/status.py:282
 msgid "Blame..."
-msgstr "Blame..."
+msgstr "Blame…"
 
 #: cola/widgets/prefs.py:347
 msgid "Bold on dark headers instead of italic"
@@ -889,7 +889,7 @@ msgstr ""
 
 #: cola/guicmds.py:62 cola/widgets/branch.py:222
 msgid "Checkout"
-msgstr "Checkout"
+msgstr "Přepnout"
 
 #: cola/widgets/createbranch.py:130
 msgid "Checkout After Creation"
@@ -901,7 +901,7 @@ msgstr "Přepnout větev"
 
 #: cola/widgets/dag.py:414
 msgid "Checkout Detached HEAD"
-msgstr "Checkout Detached HEAD"
+msgstr "Přepnout odpojené hlavní"
 
 #: cola/cmds.py:480 cola/cmds.py:518
 msgid "Checkout Files"
@@ -929,19 +929,19 @@ msgstr ""
 
 #: cola/widgets/main.py:576
 msgid "Checkout..."
-msgstr "Checkout..."
+msgstr "Přepnout…"
 
 #: cola/widgets/dag.py:387 cola/widgets/search.py:79
 msgid "Cherry Pick"
-msgstr "Cherry Pick"
+msgstr "Sloučit selektivně"
 
 #: cola/guicmds.py:73
 msgid "Cherry-Pick Commit"
-msgstr "Cherry-Pick Commit"
+msgstr "Sloučit konkrétní nahrání"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "Cherry-Pick..."
+msgstr "Selektivně sloučit…"
 
 #: cola/cmds.py:584
 msgid "Cherry-pick failed"
@@ -1671,7 +1671,7 @@ msgstr "Chyba: nedaří se nalézt šablonu nahrání"
 
 #: cola/widgets/stash.py:235
 msgid "Error: Stash exists"
-msgstr "Chyba: Stash existuje"
+msgstr "Chyba: Odklad existuje"
 
 #: cola/cmds.py:1732
 msgid "Error: Unconfigured commit template"
@@ -1762,15 +1762,15 @@ msgstr "Oblíbené"
 
 #: cola/widgets/remote.py:673
 msgid "Fetch"
-msgstr "Fetch"
+msgstr "Vyzvednout"
 
 #: cola/widgets/createbranch.py:127
 msgid "Fetch Tracking Branch"
-msgstr "Fetch Tracking Branch"
+msgstr "Vyzvednout sledovanou větev"
 
 #: cola/widgets/action.py:63 cola/widgets/main.py:387
 msgid "Fetch..."
-msgstr "Fetch..."
+msgstr "Vyzvednout (fetch)…"
 
 #: cola/widgets/main.py:588
 msgid "File Browser..."
@@ -1926,11 +1926,11 @@ msgstr "Vynutit vyzvednutí?"
 
 #: cola/widgets/remote.py:625
 msgid "Force Push"
-msgstr "Force Push"
+msgstr "Vynutit odeslání"
 
 #: cola/widgets/remote.py:619
 msgid "Force Push?"
-msgstr "Force Push?"
+msgstr "Vynutit odeslání?"
 
 #: cola/widgets/remote.py:616
 #, python-format
@@ -1940,7 +1940,7 @@ msgstr "Vynutit vyzvednutí z %s?"
 #: cola/widgets/remote.py:624
 #, python-format
 msgid "Force push to %s?"
-msgstr "Force push do %s?"
+msgstr "Vynutit odeslání do %s?"
 
 #: cola/widgets/status.py:1376
 msgid "Format String"
@@ -2115,7 +2115,7 @@ msgstr "Ponechat *.orig zálohy začlenění"
 
 #: cola/widgets/stash.py:71
 msgid "Keep Index"
-msgstr "Keep Index"
+msgstr "Zachovat index"
 
 #: cola/widgets/main.py:477
 msgid "Keyboard Shortcuts"
@@ -2587,20 +2587,20 @@ msgstr ""
 
 #: cola/widgets/branch.py:247 cola/widgets/remote.py:728
 msgid "Pull"
-msgstr "Pull"
+msgstr "Stáhnout si"
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:397
 msgid "Pull..."
-msgstr "Pull..."
+msgstr "Stáhnout si (pull)…"
 
 #: cola/widgets/branch.py:253 cola/widgets/remote.py:593
 #: cola/widgets/remote.py:698
 msgid "Push"
-msgstr "Push"
+msgstr "Odeslat"
 
 #: cola/widgets/action.py:64 cola/widgets/main.py:392
 msgid "Push..."
-msgstr "Push..."
+msgstr "Odeslat (push)…"
 
 #: cola/guicmds.py:252
 msgid "Quick Open Repository"
