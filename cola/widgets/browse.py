@@ -132,7 +132,7 @@ class RepoTreeView(standard.TreeView):
         queued = Qt.QueuedConnection
         self.index_about_to_change.connect(self.sync_selection, type=queued)
 
-        self.action_history = qtutils.add_action_with_status_tip(
+        self.action_history = qtutils.add_action_with_tooltip(
             self,
             N_('View History...'),
             N_('View history for selected paths'),
@@ -140,7 +140,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.HISTORY,
         )
 
-        self.action_stage = qtutils.add_action_with_status_tip(
+        self.action_stage = qtutils.add_action_with_tooltip(
             self,
             cmds.StageOrUnstage.name(),
             N_('Stage/unstage selected paths for commit'),
@@ -148,18 +148,18 @@ class RepoTreeView(standard.TreeView):
             hotkeys.STAGE_SELECTION,
         )
 
-        self.action_untrack = qtutils.add_action_with_status_tip(
+        self.action_untrack = qtutils.add_action_with_tooltip(
             self,
             N_('Untrack Selected'),
             N_('Stop tracking paths'),
             self.untrack_selected,
         )
 
-        self.action_rename = qtutils.add_action_with_status_tip(
+        self.action_rename = qtutils.add_action_with_tooltip(
             self, N_('Rename'), N_('Rename selected paths'), self.rename_selected
         )
 
-        self.action_difftool = qtutils.add_action_with_status_tip(
+        self.action_difftool = qtutils.add_action_with_tooltip(
             self,
             difftool.LaunchDifftool.name(),
             N_('Launch git-difftool on the current path'),
@@ -167,7 +167,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.DIFF,
         )
 
-        self.action_difftool_predecessor = qtutils.add_action_with_status_tip(
+        self.action_difftool_predecessor = qtutils.add_action_with_tooltip(
             self,
             N_('Diff Against Predecessor...'),
             N_('Launch git-difftool against previous versions'),
@@ -175,7 +175,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.DIFF_SECONDARY,
         )
 
-        self.action_revert_unstaged = qtutils.add_action_with_status_tip(
+        self.action_revert_unstaged = qtutils.add_action_with_tooltip(
             self,
             cmds.RevertUnstagedEdits.name(),
             N_('Revert unstaged changes to selected paths'),
@@ -184,7 +184,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.REVERT_ALT,
         )
 
-        self.action_revert_uncommitted = qtutils.add_action_with_status_tip(
+        self.action_revert_uncommitted = qtutils.add_action_with_tooltip(
             self,
             cmds.RevertUncommittedEdits.name(),
             N_('Revert uncommitted changes to selected paths'),
@@ -192,7 +192,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.UNDO,
         )
 
-        self.action_editor = qtutils.add_action_with_status_tip(
+        self.action_editor = qtutils.add_action_with_tooltip(
             self,
             cmds.LaunchEditor.name(),
             N_('Edit selected paths'),
@@ -200,7 +200,7 @@ class RepoTreeView(standard.TreeView):
             hotkeys.EDIT,
         )
 
-        self.action_blame = qtutils.add_action_with_status_tip(
+        self.action_blame = qtutils.add_action_with_tooltip(
             self,
             cmds.BlamePaths.name(),
             N_('Blame selected paths'),

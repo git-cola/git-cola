@@ -559,7 +559,8 @@ def add_action_with_icon(widget, icon, text, func, *shortcuts):
     return action
 
 
-def add_action_with_status_tip(widget, text, tip, func, *shortcuts):
+def add_action_with_tooltip(widget, text, tip, func, *shortcuts):
+    """Create an action with a tooltip"""
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 

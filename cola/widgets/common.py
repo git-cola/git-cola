@@ -32,7 +32,7 @@ def default_app_action(context, parent, func):
 
 def edit_action(context, parent, *keys):
     """Launch an editor -> QAction"""
-    action = qtutils.add_action_with_status_tip(
+    action = qtutils.add_action_with_tooltip(
         parent,
         cmds.LaunchEditor.name(),
         N_('Edit selected paths'),
