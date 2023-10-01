@@ -64,12 +64,10 @@ class ActionButtons(QFlowLayoutWidget):
         self.fetch_button = tooltip_button(
             N_('Fetch...'),
             layout,
-            tooltip=N_('Fetch from one or more remotes using "git fetch"')
+            tooltip=N_('Fetch from one or more remotes using "git fetch"'),
         )
         self.push_button = tooltip_button(
-            N_('Push...'),
-            layout,
-            N_('Push to one or more remotes using "git push"')
+            N_('Push...'), layout, N_('Push to one or more remotes using "git push"')
         )
         self.pull_button = tooltip_button(
             N_('Pull...'), layout, tooltip=N_('Integrate changes using "git pull"')
@@ -77,7 +75,7 @@ class ActionButtons(QFlowLayoutWidget):
         self.stash_button = tooltip_button(
             N_('Stash...'),
             layout,
-            tooltip=N_('Temporarily stash away uncommitted changes using "git stash"')
+            tooltip=N_('Temporarily stash away uncommitted changes using "git stash"'),
         )
         self.exit_diff_mode_button = tooltip_button(
             N_('Exit Diff'), layout, tooltip=N_('Exit Diff mode')

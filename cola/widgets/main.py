@@ -259,7 +259,7 @@ class MainView(standard.MainWindow):
             self,
             N_('Skip Current Patch'),
             N_('Skip applying the current patch and continue applying patches'),
-            cmds.run(cmds.ApplyPatchesContinue, context)
+            cmds.run(cmds.ApplyPatchesContinue, context),
         )
         self.apply_patches_skip_action.setIcon(icons.discard())
 
@@ -382,7 +382,8 @@ class MainView(standard.MainWindow):
             self,
             N_('Fetch...'),
             N_('Fetch from one or more remotes using "git fetch"'),
-            partial(remote.fetch, context), hotkeys.FETCH
+            partial(remote.fetch, context),
+            hotkeys.FETCH,
         )
         self.fetch_action.setIcon(icons.download())
 
@@ -391,7 +392,7 @@ class MainView(standard.MainWindow):
             N_('Push...'),
             N_('Push to one or more remotes using "git push"'),
             partial(remote.push, context),
-            hotkeys.PUSH
+            hotkeys.PUSH,
         )
         self.push_action.setIcon(icons.push())
 
@@ -400,7 +401,7 @@ class MainView(standard.MainWindow):
             N_('Pull...'),
             N_('Integrate changes using "git pull"'),
             partial(remote.pull, context),
-            hotkeys.PULL
+            hotkeys.PULL,
         )
         self.pull_action.setIcon(icons.pull())
 
@@ -421,7 +422,7 @@ class MainView(standard.MainWindow):
             N_('Stash...'),
             N_('Temporarily stash away uncommitted changes using "git stash"'),
             partial(stash.view, context),
-            hotkeys.STASH
+            hotkeys.STASH,
         )
         self.stash_action.setIcon(icons.commit())
 
@@ -429,7 +430,7 @@ class MainView(standard.MainWindow):
             self,
             N_('Reset Branch (Soft)'),
             cmds.ResetSoft.tooltip('<commit>'),
-            partial(guicmds.reset_soft, context)
+            partial(guicmds.reset_soft, context),
         )
         self.reset_soft_action.setIcon(icons.style_dialog_reset())
 
@@ -469,7 +470,7 @@ class MainView(standard.MainWindow):
             self,
             N_('Restore Worktree'),
             cmds.RestoreWorktree.tooltip('<commit>'),
-            partial(guicmds.restore_worktree, context)
+            partial(guicmds.restore_worktree, context),
         )
         self.restore_worktree_action.setIcon(icons.edit())
 
