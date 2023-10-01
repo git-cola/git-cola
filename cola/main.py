@@ -142,7 +142,9 @@ def add_dag_command(subparser):
         help='visualize all branches',
         default=False,
     )
-    parser.add_argument('args', nargs='*', metavar='<args>', help='git log arguments')
+    parser.add_argument(
+        'args', nargs=argparse.REMAINDER, metavar='<args>', help='git log arguments'
+    )
 
 
 def add_diff_command(subparser):
