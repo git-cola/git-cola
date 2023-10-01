@@ -147,7 +147,9 @@ def add_dag_command(subparser):
 
 def add_diff_command(subparser):
     parser = add_command(subparser, 'diff', 'view diffs', cmd_diff)
-    parser.add_argument('args', nargs='*', metavar='<args>', help='git diff arguments')
+    parser.add_argument(
+        'args', nargs=argparse.REMAINDER, metavar='<args>', help='git diff arguments'
+    )
 
 
 def add_fetch_command(subparser):
