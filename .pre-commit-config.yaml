@@ -1,4 +1,5 @@
-# Run `pre-commit autoupdate` to update tool versions.
+ci:
+  autoupdate_schedule: monthly
 
 exclude: qtpy/|test/fixtures/|\.rtf$|PkgInfo$
 
