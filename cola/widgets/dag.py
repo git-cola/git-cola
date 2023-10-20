@@ -997,7 +997,6 @@ class GitDAG(standard.MainWindow):
         # self.force_refresh triggers an Unconditional redraw
         self.force_refresh = True
         cmds.do(cmds.Refresh, self.context)
-        self.force_refresh = False
 
     def display(self):
         """Update the view when the Git refs change"""
@@ -1035,6 +1034,7 @@ class GitDAG(standard.MainWindow):
         self.old_oids = oids
         self.old_count = count
         self.old_refs = refs
+        self.force_refresh = False
 
     def select_commits(self, commits):
         self.selection = commits
