@@ -174,6 +174,12 @@ class RemoteActionDialog(standard.Dialog):
             checked=True, text=text, tooltip=tooltip
         )
 
+        text = N_('Show remote messages')
+        tooltip = N_('Display remote messages in a separate dialog')
+        self.remote_messages_checkbox = qtutils.checkbox(
+            checked=False, text=text, tooltip=tooltip
+        )
+
         text = N_('Fast-forward only')
         tooltip = N_(
             'Refuse to merge unless the current HEAD is already up-'
@@ -245,6 +251,7 @@ class RemoteActionDialog(standard.Dialog):
             self.rebase_checkbox,
             self.upstream_checkbox,
             self.prompt_checkbox,
+            self.remote_messages_checkbox,
             qtutils.STRETCH,
             self.close_button,
             self.action_button,
@@ -334,6 +341,7 @@ class RemoteActionDialog(standard.Dialog):
             # Push-only options
             self.upstream_checkbox.hide()
             self.prompt_checkbox.hide()
+            self.remote_messages_checkbox.hide()
 
         if action == PULL:
             # Fetch and Push-only options
@@ -565,10 +573,12 @@ class RemoteActionDialog(standard.Dialog):
     def action_callback(self):
         """Perform the actual fetch/push/pull operation"""
         action = self.action
+        remote_messages = False
         if action == FETCH:
             model_action = self.model.fetch
         elif action == PUSH:
             model_action = self.push_to_all
+            remote_messages = get(self.remote_messages_checkbox)
         else:  # if action == PULL:
             model_action = self.model.pull
 
@@ -635,11 +645,15 @@ class RemoteActionDialog(standard.Dialog):
 
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
+        if remote_messages:
+            result = remotemessage.with_context(self.context)
+        else:
+            result = None
         self.runtask.start(
             task,
             progress=self.progress,
             finish=self.action_completed,
-            result=remotemessage.with_context(self.context),
+            result=result,
         )
 
     def action_completed(self, task):
@@ -703,17 +717,19 @@ class Push(RemoteActionDialog):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
         state['prompt'] = get(self.prompt_checkbox)
+        state['remote_messages'] = get(self.remote_messages_checkbox)
         state['tags'] = get(self.tags_checkbox)
         return state
 
     def apply_state(self, state):
         """Apply persistent settings"""
         result = RemoteActionDialog.apply_state(self, state)
-
         # Restore the "prompt on creation" checkbox
         prompt = bool(state.get('prompt', True))
         self.prompt_checkbox.setChecked(prompt)
-
+        # Restore the "show remote messages" checkbox
+        remote_messages = bool(state.get('remote_messages', False))
+        self.remote_messages_checkbox.setChecked(remote_messages)
         # Restore the "tags" checkbox
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
