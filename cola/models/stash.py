@@ -83,13 +83,15 @@ class DropStash(cmds.ContextCommand):
         status, out, err = git.stash('drop', self.stash_ref)
         if status == 0:
             Interaction.log_status(status, out, err)
-            return re.search(r'\((.*)\)', out).group(1)
-        else:
-            title = N_('Error')
-            Interaction.command_error(
-                title, 'git stash drop ' + self.stash_ref, status, out, err
-            )
+            match = re.search(r'\((.*)\)', out)
+            if match:
+                return match.group(1)
             return ''
+        title = N_('Error')
+        Interaction.command_error(
+            title, 'git stash drop ' + self.stash_ref, status, out, err
+        )
+        return ''
 
 
 class SaveStash(cmds.ContextCommand):
@@ -126,16 +128,22 @@ class RenameStash(cmds.ContextCommand):
     def do(self):
         # Drop the stash first and get the returned ref
         ref = DropStash(self.context, self.stash_index).do()
-
         # Store the stash with a new name
-        args = ['store', '-m', self.stash_name, ref]
-        status, out, err = self.git.stash(*args)
-        if status == 0:
-            Interaction.log_status(status, out, err)
+        if ref:
+            args = ['store', '-m', self.stash_name, ref]
+            status, out, err = self.git.stash(*args)
+            if status == 0:
+                Interaction.log_status(status, out, err)
+            else:
+                title = N_('Error')
+                cmdargs = core.list2cmdline(args)
+                Interaction.command_error(
+                    title, 'git stash ' + cmdargs, status, out, err
+                )
         else:
-            title = N_('Error')
-            cmdargs = core.list2cmdline(args)
-            Interaction.command_error(title, 'git stash ' + cmdargs, status, out, err)
+            title = N_('Error Renaming Stash')
+            msg = N_('"git stash drop" did not return a ref to rename.')
+            Interaction.critical(title, message=msg)
 
         self.model.update_status()
 
