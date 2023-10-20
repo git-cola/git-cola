@@ -56,6 +56,7 @@ class AsyncGitActionTask(qtutils.Task):
 
 class BranchesWidget(QtWidgets.QFrame):
     """A widget for displaying and performing operations on branches"""
+
     def __init__(self, context, parent):
         QtWidgets.QFrame.__init__(self, parent)
         self.model = model = context.model
@@ -118,6 +119,7 @@ class BranchesWidget(QtWidgets.QFrame):
 # pylint: disable=too-many-ancestors
 class BranchesTreeWidget(standard.TreeWidget):
     """A tree widget for displaying branches"""
+
     updated = Signal()
 
     def __init__(self, context, parent=None):

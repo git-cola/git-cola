@@ -43,7 +43,8 @@ class StashView(standard.Dialog):
         self.button_rename = qtutils.create_button(
             text=N_('Rename'),
             tooltip=N_('Rename the selected stash'),
-            icon=icons.edit())
+            icon=icons.edit(),
+        )
 
         self.button_apply = qtutils.create_button(
             text=N_('Apply'), tooltip=N_('Apply the selected stash'), icon=icons.ok()
@@ -208,18 +209,21 @@ class StashView(standard.Dialog):
             self.stash_index.setChecked(False)
 
     def stash_rename(self):
-        """Renames the currently selected stash
-        """
+        """Renames the currently selected stash"""
         selection = self.selected_stash()
         name = self.selected_name()
         new_name, ok = qtutils.prompt(
-            N_('Enter a new name for the stash'), text=name,
-            title=N_('Rename Stash'), parent=self)
+            N_('Enter a new name for the stash'),
+            text=name,
+            title=N_('Rename Stash'),
+            parent=self,
+        )
         if not ok or not new_name:
             return
         if new_name == name:
             Interaction.information(
-                N_('No change made'), N_('The stash has not been renamed'))
+                N_('No change made'), N_('The stash has not been renamed')
+            )
             return
         context = self.context
         cmds.do(stash.RenameStash, context, selection, new_name)

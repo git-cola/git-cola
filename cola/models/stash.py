@@ -109,8 +109,7 @@ class SaveStash(cmds.ContextCommand):
         else:
             title = N_('Error')
             cmdargs = core.list2cmdline(args)
-            Interaction.command_error(
-                title, 'git stash ' + cmdargs, status, out, err)
+            Interaction.command_error(title, 'git stash ' + cmdargs, status, out, err)
 
         self.model.update_status()
 
