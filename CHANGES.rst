@@ -40,8 +40,11 @@ Usability, bells and whistles
 
 Fixes
 -----
-* `git dag` was not displaying history when refspecs were specified.
+* `git dag` fixed how it was handling refspec arguments.
   (`#1334 <https://github.com/git-cola/git-cola/issues/1334>`_)
+
+* `git dag` will now properly refresh itself when remote branches are updated.
+  (`#1063 <https://github.com/git-cola/git-cola/issues/1063>`_)
 
 Development
 -----------
