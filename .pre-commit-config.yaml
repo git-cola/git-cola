@@ -4,13 +4,13 @@ exclude: qtpy/|test/fixtures/|\.rtf$|PkgInfo$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks.git
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.14.0
+    rev: v3.15.0
     hooks:
       - id: pyupgrade
         name: Enforce Python 3.6 idioms
