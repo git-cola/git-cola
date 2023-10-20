@@ -1,6 +1,5 @@
 /.cache
 /.coverage
-/.idea
 /build
 /config.mak
 /cola/_build_version.py
@@ -24,11 +23,9 @@
 /.tox
 __pycache__
 .DS_Store
-.noseids
 *.egg-info
 *.gz
 *.py[cod]
-*.qm
 *.swp
 *.zip
 *~
