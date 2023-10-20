@@ -38,6 +38,9 @@ Usability, bells and whistles
   (`#706 <https://github.com/git-cola/git-cola/pull/706>`_)
   (`#691 <https://github.com/git-cola/git-cola/issues/691>`_)
 
+* The "Branches" dock widget now has a "Visualize" right-click menu option.
+  (`#1061 <https://github.com/git-cola/git-cola/issues/1061>`_)
+
 Fixes
 -----
 * `git dag` fixed how it was handling refspec arguments.
