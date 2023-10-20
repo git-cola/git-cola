@@ -192,27 +192,8 @@ def version_text(context):
     )
 
 
-def link(url, text, palette=None):
-    if palette is None:
-        palette = QtGui.QPalette()
-
-    color = palette.color(QtGui.QPalette.Foreground)
-    rgb = f'rgb({color.red()}, {color.green()}, {color.blue()})'
-    scope = dict(rgb=rgb, text=text, url=url)
-
-    return (
-        """
-        <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
-            href="%(url)s">
-            %(text)s
-        </a>
-    """
-        % scope
-    )
-
-
 def mailto(email, text, palette):
-    return link('mailto:%s' % email, text, palette) + '<br>'
+    return qtutils.link('mailto:%s' % email, text, palette) + '<br>'
 
 
 def render_authors(authors):
@@ -378,7 +359,7 @@ def authors_text():
         dict(name='Markus Heidelberg', title=N_('Developer')),
     )
     bug_url = 'https://github.com/git-cola/git-cola/issues'
-    bug_link = link(bug_url, bug_url)
+    bug_link = qtutils.link(bug_url, bug_url)
     scope = dict(bug_link=bug_link)
     prelude = (
         N_(
@@ -445,7 +426,7 @@ def translators_text():
     )
 
     bug_url = 'https://github.com/git-cola/git-cola/issues'
-    bug_link = link(bug_url, bug_url)
+    bug_link = qtutils.link(bug_url, bug_url)
     scope = dict(bug_link=bug_link)
 
     prelude = (

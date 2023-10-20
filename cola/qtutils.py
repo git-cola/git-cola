@@ -281,6 +281,25 @@ def textbrowser(text=None):
     return widget
 
 
+def link(url, text, palette=None):
+    if palette is None:
+        palette = QtGui.QPalette()
+
+    color = palette.color(QtGui.QPalette.Foreground)
+    rgb = f'rgb({color.red()}, {color.green()}, {color.blue()})'
+    scope = dict(rgb=rgb, text=text, url=url)
+
+    return (
+        """
+        <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
+            href="%(url)s">
+            %(text)s
+        </a>
+    """
+        % scope
+    )
+
+
 def add_completer(widget, items):
     """Add simple completion to a widget"""
     completer = QtWidgets.QCompleter(items, widget)
@@ -655,6 +674,8 @@ def default_size(parent, width, height, use_parent_height=True):
 def default_monospace_font():
     if utils.is_darwin():
         family = 'Monaco'
+    elif utils.is_win32():
+        family = 'Courier'
     else:
         family = 'Monospace'
     mfont = QtGui.QFont()

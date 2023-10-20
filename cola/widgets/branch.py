@@ -18,6 +18,7 @@ from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .text import LineEdit
+from . import remotemessage
 
 
 def defer_func(parent, title, func, *args, **kwargs):
@@ -429,7 +430,12 @@ class BranchesTreeWidget(standard.TreeWidget):
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )
-        self.runtask.start(task, progress=progress, finish=self.git_action_completed)
+        self.runtask.start(
+            task,
+            progress=progress,
+            finish=self.git_action_completed,
+            result=remotemessage.with_context(self.context),
+        )
 
     def git_action_completed(self, task):
         """Update the with the results of an async git action"""
