@@ -92,6 +92,7 @@ Thanks
 * Felipe Morales
 * Filip Danilović
 * Floris Lambrechts
+* Frank Weber
 * fu7mu4
 * Garoe Dorta
 * Geoffrey van Wyk
