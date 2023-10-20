@@ -1072,7 +1072,7 @@ msgstr "Commiter la fusion s'il n'y a pas de conflits. Décocher pour laisser la
 #: cola/widgets/commitmsg.py:58 cola/widgets/commitmsg.py:95
 #: cola/widgets/main.py:778 cola/widgets/main.py:779
 msgid "Commit@@verb"
-msgstr "Commiter@@verb"
+msgstr "Commiter"
 
 #: cola/difftool.py:78 cola/widgets/compare.py:70
 msgid "Compare"
