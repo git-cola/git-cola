@@ -1208,6 +1208,15 @@ Avoid creating shortcuts that conflict with existing built-in `git cola`
 shortcuts.  Creating a conflict will result in no action when the shortcut
 is used.
 
+SETTING UP CREDENTIAL HELPERS
+=============================
+Git has robust support for automatically handling credentials.
+
+The recommended approach is to use SSH keys and an SSH agent, but any of the core Git
+Credentials helpers will get used automatically by Git Cola.
+
+See https://git-scm.com/doc/credential-helpers for more details.
+
 SETTING UP GPG FOR SIGNED COMMITS
 =================================
 When creating signed commits, `gpg` will attempt to read your password from the
