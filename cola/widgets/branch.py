@@ -217,6 +217,13 @@ class BranchesTreeWidget(standard.TreeWidget):
         full_name = selected.refname
         menu = qtutils.create_menu(N_('Actions'), self)
 
+        visualize_action = qtutils.add_action(
+            menu, N_('Visualize'), self.visualize_branch_action
+        )
+        visualize_action.setIcon(icons.visualize())
+        menu.addAction(visualize_action)
+        menu.addSeparator()
+
         # all branches except current the current branch
         if full_name != self.current_branch:
             menu.addAction(
@@ -232,7 +239,6 @@ class BranchesTreeWidget(standard.TreeWidget):
                 menu, N_('Merge into current branch'), self.merge_action
             )
             merge_menu_action.setIcon(icons.merge())
-
             menu.addAction(merge_menu_action)
 
         # local and remote branch
@@ -503,6 +509,12 @@ class BranchesTreeWidget(standard.TreeWidget):
             self.git_action_async(
                 'checkout', ['-b', new_branch, branch], update_refs=True
             )
+
+    def visualize_branch_action(self):
+        """Visualize the selected branch"""
+        branch = self.selected_refname()
+        if branch:
+            cmds.do(cmds.VisualizeRevision, self.context, branch)
 
     def selected_refname(self):
         return getattr(self.selected_item(), 'refname', None)
