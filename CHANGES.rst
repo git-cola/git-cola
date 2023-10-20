@@ -41,6 +41,9 @@ Usability, bells and whistles
 * The "Branches" dock widget now has a "Visualize" right-click menu option.
   (`#1061 <https://github.com/git-cola/git-cola/issues/1061>`_)
 
+* The "Stash" dialog learned to rename stashes.
+  (`#558 <https://github.com/git-cola/git-cola/issues/558>`_)
+
 Fixes
 -----
 * `git dag` fixed how it was handling refspec arguments.
