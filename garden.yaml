@@ -14,6 +14,7 @@
 #   garden man                  # Generate documentation: manual pages only
 #   garden pot                  # Regenerate git-cola.pot with new translations
 #   garden po                   # Update .po files with new translations from git-cola.pot
+#   garden pages                # Install the pages/ website documentation.
 #
 #   # Installation
 #   garden install              # Install git-cola to the installation ${prefix}
@@ -103,6 +104,7 @@ trees:
             --output git-cola.pot \
             cola/*.py \
             cola/*/*.py
+      pages: garden -vv -D prefix=${TREE_PATH}/pages install docs
       pylint: |
         ${PYLINT} --version
         ${PYLINT} --rcfile=.pylintrc ${PYLINT_OPTIONS} "$@" cola test
