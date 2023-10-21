@@ -47,7 +47,6 @@ from . import editremotes
 from . import grep
 from . import log
 from . import merge
-from . import patch
 from . import prefs as prefs_widget
 from . import recent
 from . import remote
@@ -235,7 +234,7 @@ class MainView(standard.MainWindow):
         self.stage_untracked_action.setIcon(icons.add())
 
         self.apply_patches_action = add_action(
-            self, N_('Apply Patches...'), partial(patch.apply_patches, context)
+            self, N_('Apply Patches...'), partial(diff.apply_patches, context)
         )
         self.apply_patches_action.setIcon(icons.diff())
 

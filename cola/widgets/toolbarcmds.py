@@ -7,11 +7,11 @@ from ..widgets import compare
 from ..widgets import createbranch
 from ..widgets import createtag
 from ..widgets import dag
+from ..widgets import diff
 from ..widgets import editremotes
 from ..widgets import finder
 from ..widgets import grep
 from ..widgets import merge
-from ..widgets import patch
 from ..widgets import recent
 from ..widgets import remote
 from ..widgets import search
@@ -75,7 +75,7 @@ COMMANDS = {
     },
     'File::ApplyPatches': {
         'title': 'Apply Patches...',
-        'action': patch.apply_patches,
+        'action': diff.apply_patches,
         'icon': 'diff',
     },
     'File::ExportPatches': {
