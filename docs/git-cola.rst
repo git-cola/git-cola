@@ -1319,7 +1319,7 @@ Please see the following links for more details.
 
 https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
 
-FIPS Security Mode
+FIPS SECURITY MODE
 ==================
 `FIPS Security Mode <https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/FIPS_Mode_-_an_explanation>`_
 is available in newer versions of Python. These include Python 3.9+ and the
