@@ -25,16 +25,21 @@ from .interaction import Interaction
 
 AVAILABLE = None
 
+pywintypes = None
+win32file = None
+win32con = None
+win32event = None
 if utils.is_win32():
     try:
         import pywintypes
         import win32con
         import win32event
         import win32file
+
+        AVAILABLE = 'pywin32'
     except ImportError:
         pass
-    else:
-        AVAILABLE = 'pywin32'
+
 elif utils.is_linux():
     try:
         from . import inotify
@@ -376,7 +381,7 @@ if AVAILABLE == 'pywin32':
                 self.overlapped = pywintypes.OVERLAPPED()
                 self.overlapped.hEvent = self.event
                 self._start()
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 self.close()
 
         def append(self, events):
