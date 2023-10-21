@@ -55,6 +55,10 @@ Fixes
 * `git dag` will now properly refresh itself when remote branches are updated.
   (`#1063 <https://github.com/git-cola/git-cola/issues/1063>`_)
 
+* The `cola.inotify` feature no longer runs into issues when accessing WSL2
+  filesystems from Windows 11+.
+  (`#1194 <https://github.com/git-cola/git-cola/issues/1194>`_)
+
 Development
 -----------
 * `cercis <https://pypi.org/project/cercis/>`_ is now being used to enforce
