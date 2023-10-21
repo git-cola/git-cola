@@ -287,7 +287,7 @@ def link(url, text, palette=None):
 
     color = palette.color(QtGui.QPalette.Foreground)
     rgb_color = f'rgb({color.red()}, {color.green()}, {color.blue()})'
-    scope = dict(rgb=rgb_color, text=text, url=url)
+    scope = {'rgb': rgb_color, 'text': text, 'url': url}
 
     return (
         """
