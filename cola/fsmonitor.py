@@ -381,7 +381,7 @@ if AVAILABLE == 'pywin32':
                 self.overlapped = pywintypes.OVERLAPPED()
                 self.overlapped.hEvent = self.event
                 self._start()
-            except Exception:  # pylint: disable=broad-exception-caught
+            except Exception:  # pylint: disable=broad-exception-caught,broad-except
                 self.close()
 
         def append(self, events):
