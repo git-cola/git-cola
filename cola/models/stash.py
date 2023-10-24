@@ -120,7 +120,7 @@ class RenameStash(cmds.ContextCommand):
     """Rename the stash"""
 
     def __init__(self, context, stash_index, stash_name):
-        super(RenameStash, self).__init__(context)
+        super().__init__(context)
         self.context = context
         self.stash_index = stash_index
         self.stash_name = stash_name

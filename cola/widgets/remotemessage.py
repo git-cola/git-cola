@@ -1,4 +1,3 @@
-from __future__ import division, absolute_import, unicode_literals
 import re
 
 from qtpy.QtCore import Qt
