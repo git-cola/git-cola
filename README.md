@@ -200,7 +200,9 @@ managers:
 
     garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
 
-If you do not have `garden` available then the `make` can be used instead.
+If you do not have `garden` available then `make` can be used instead.
+The `Makefile` supports staged installs using the conventional
+[prefix and DESTDIR variables](https://www.gnu.org/software/make/manual/html_node/DESTDIR.html).
 
     make DESTDIR=/tmp/stage prefix=/usr/local install
 
