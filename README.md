@@ -200,6 +200,10 @@ managers:
 
     garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
 
+If you do not have `garden` available then the `make` can be used instead.
+
+    make DESTDIR=/tmp/stage prefix=/usr/local install
+
 
 ## macOS
 
