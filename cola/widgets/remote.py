@@ -341,7 +341,6 @@ class RemoteActionDialog(standard.Dialog):
             # Push-only options
             self.upstream_checkbox.hide()
             self.prompt_checkbox.hide()
-            self.remote_messages_checkbox.hide()
 
         if action == PULL:
             # Fetch and Push-only options
