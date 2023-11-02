@@ -13,7 +13,7 @@ classifiers = [
 	"Topic :: Software Development :: Version Control :: Git",
 ]
 description = "A sleek and powerful Git GUI"
-dynamic = ["version"]
+dynamic = ["dependencies", "optional-dependencies", "version"]
 license = {file = "COPYING"}
 readme = "README.md"
 
