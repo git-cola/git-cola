@@ -35,4 +35,4 @@ line-length = 88
 # "fallback_version" does not (currently) work when building from tarballs.
 # "fallback_version" should start working once this upstream issue is resolved:
 # https://github.com/pypa/setuptools_scm/issues/549
-fallback_version = "4.3.2"
+fallback_version = "4.4.0"
