@@ -573,12 +573,11 @@ class RemoteActionDialog(standard.Dialog):
     def action_callback(self):
         """Perform the actual fetch/push/pull operation"""
         action = self.action
-        remote_messages = False
+        remote_messages = get(self.remote_messages_checkbox)
         if action == FETCH:
             model_action = self.model.fetch
         elif action == PUSH:
             model_action = self.push_to_all
-            remote_messages = get(self.remote_messages_checkbox)
         else:  # if action == PULL:
             model_action = self.model.pull
 
