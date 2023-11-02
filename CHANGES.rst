@@ -44,7 +44,7 @@ Usability, bells and whistles
 * The "Stash" dialog learned to rename stashes.
   (`#558 <https://github.com/git-cola/git-cola/issues/558>`_)
 
-* The "Push" dialog can now display remote messages from the server.
+* The "Fetch", "Push" and "Pull" dialogs can now display remote messages from the server.
   (`#951 <https://github.com/git-cola/git-cola/issues/951>`_)
 
 Fixes
