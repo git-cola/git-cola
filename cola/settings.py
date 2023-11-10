@@ -284,10 +284,14 @@ class Settings:
 
     def get_gui_state(self, gui):
         """Returns the saved state for a gui"""
+        return self.get_gui_state_by_name(gui.name())
+
+    def get_gui_state_by_name(self, gui_name):
+        """Returns the saved state for a gui by name"""
         try:
-            state = mkdict(self.gui_state[gui.name()])
+            state = mkdict(self.gui_state[gui_name])
         except KeyError:
-            state = self.gui_state[gui.name()] = {}
+            state = self.gui_state[gui_name] = {}
         return state
 
 
