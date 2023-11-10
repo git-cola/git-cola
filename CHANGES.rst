@@ -1,3 +1,15 @@
+.. _v4.4.1:
+
+v4.4.1
+======
+
+Usability, bells and whistles
+-----------------------------
+* The remote messages dialog is now displayed for the Pull and Push actions in the
+  Branches widget only. These dialogs are disabled by default and enabled in the
+  main Push and Pull dialogs.
+  (`#1363 <https://github.com/git-cola/git-cola/issues/1363>`_)
+
 .. _v4.4.0:
 
 v4.4.0

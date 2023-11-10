@@ -15,7 +15,7 @@ def show(context, message):
         view.exec_()
 
 
-def with_context(context):
+def from_context(context):
     """Return a closure for the `result` callback from RunTask.start()"""
 
     def show_result(result):

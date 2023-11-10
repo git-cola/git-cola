@@ -422,7 +422,9 @@ class BranchesTreeWidget(standard.TreeWidget):
             if status_str:
                 item.setText(0, f'{item.text(0)}\t{status_str}')
 
-    def git_action_async(self, action, args, kwarg=None, update_refs=False):
+    def git_action_async(
+        self, action, args, kwarg=None, update_refs=False, remote_messages=False
+    ):
         """Execute a git action in a background task"""
         if kwarg is None:
             kwarg = {}
@@ -430,11 +432,16 @@ class BranchesTreeWidget(standard.TreeWidget):
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )
+        if remote_messages:
+            result_handler = remotemessage.from_context(self.context)
+        else:
+            result_handler = None
+
         self.runtask.start(
             task,
             progress=progress,
             finish=self.git_action_completed,
-            result=remotemessage.with_context(self.context),
+            result=result_handler,
         )
 
     def git_action_completed(self, task):
@@ -449,12 +456,20 @@ class BranchesTreeWidget(standard.TreeWidget):
         context = self.context
         branch = self.selected_refname()
         remote_branch = gitcmds.tracked_branch(context, branch)
+        context.settings.load()
+        push_settings = context.settings.get_gui_state_by_name('push')
+        remote_messages = push_settings.get('remote_messages', False)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
                 # we assume that user wants to "Push" the selected local
                 # branch to a remote with same name
-                self.git_action_async('push', [remote, branch_name], update_refs=True)
+                self.git_action_async(
+                    'push',
+                    [remote, branch_name],
+                    update_refs=True,
+                    remote_messages=remote_messages,
+                )
 
     def rename_action(self):
         """Rename the selected branch"""
@@ -472,10 +487,18 @@ class BranchesTreeWidget(standard.TreeWidget):
         if not branch:
             return
         remote_branch = gitcmds.tracked_branch(context, branch)
+        context.settings.load()
+        pull_settings = context.settings.get_gui_state_by_name('pull')
+        remote_messages = pull_settings.get('remote_messages', False)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
-                self.git_action_async('pull', [remote, branch_name], update_refs=True)
+                self.git_action_async(
+                    'pull',
+                    [remote, branch_name],
+                    update_refs=True,
+                    remote_messages=remote_messages,
+                )
 
     def delete_action(self):
         """Delete the selected branch"""
