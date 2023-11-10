@@ -729,7 +729,6 @@ class Push(RemoteActionDialog):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
         state['prompt'] = get(self.prompt_checkbox)
-        state['remote_messages'] = get(self.remote_messages_checkbox)
         state['tags'] = get(self.tags_checkbox)
         return state
 
