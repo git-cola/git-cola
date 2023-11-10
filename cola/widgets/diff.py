@@ -987,7 +987,7 @@ class DiffEditor(DiffTextEdit):
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.remove())
                 add_action(self.action_apply_selection)
-                stage_actions_added = self._add_stage_or_unstage_action(
+                stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
 
@@ -1003,7 +1003,7 @@ class DiffEditor(DiffTextEdit):
                     hotkeys.STAGE_SELECTION,
                 )
                 add_action(action)
-                stage_actions_added = self._add_stage_or_unstage_action(
+                stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
 
@@ -1033,7 +1033,7 @@ class DiffEditor(DiffTextEdit):
                 self.action_revert_selection.setText(revert_text)
                 add_action(self.action_revert_selection)
 
-                stage_actions_added = self._add_stage_or_unstage_action(
+                stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
                 # Do not show the "edit" action when the file does not exist.
@@ -1065,7 +1065,7 @@ class DiffEditor(DiffTextEdit):
                 )
                 add_action(action)
 
-                stage_actions_added = self._add_stage_or_unstage_action(
+                stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
 
