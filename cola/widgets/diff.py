@@ -975,15 +975,7 @@ class DiffEditor(DiffTextEdit):
         menu_actions = []
         add_action = menu_actions.append
         edit_actions_added = False
-
-        if model.is_stageable() or model.is_unstageable():
-            if (model.is_amend_mode() and s.staged) or not self.model.is_stageable():
-                self.stage_or_unstage.setText(N_('Unstage'))
-                self.stage_or_unstage.setIcon(icons.remove())
-            else:
-                self.stage_or_unstage.setText(N_('Stage'))
-                self.stage_or_unstage.setIcon(icons.add())
-            add_action(self.stage_or_unstage)
+        stage_action_added = False
 
         if s.staged and model.is_unstageable():
             item = s.staged[0]
@@ -995,6 +987,9 @@ class DiffEditor(DiffTextEdit):
                 self.action_apply_selection.setText(apply_text)
                 self.action_apply_selection.setIcon(icons.remove())
                 add_action(self.action_apply_selection)
+                stage_actions_added = self._add_stage_or_unstage_action(
+                    menu, add_action, stage_action_added
+                )
 
         if model.is_partially_stageable():
             item = s.modified[0] if s.modified else None
@@ -1008,6 +1003,9 @@ class DiffEditor(DiffTextEdit):
                     hotkeys.STAGE_SELECTION,
                 )
                 add_action(action)
+                stage_actions_added = self._add_stage_or_unstage_action(
+                    menu, add_action, stage_action_added
+                )
 
                 action = qtutils.add_action_with_icon(
                     menu,
@@ -1035,6 +1033,9 @@ class DiffEditor(DiffTextEdit):
                 self.action_revert_selection.setText(revert_text)
                 add_action(self.action_revert_selection)
 
+                stage_actions_added = self._add_stage_or_unstage_action(
+                    menu, add_action, stage_action_added
+                )
                 # Do not show the "edit" action when the file does not exist.
                 add_action(qtutils.menu_separator(menu))
                 if filename and core.exists(filename):
@@ -1063,6 +1064,10 @@ class DiffEditor(DiffTextEdit):
                     hotkeys.STAGE_SELECTION,
                 )
                 add_action(action)
+
+                stage_actions_added = self._add_stage_or_unstage_action(
+                    menu, add_action, stage_action_added
+                )
 
                 qtutils.add_action_with_icon(
                     menu,
@@ -1117,6 +1122,23 @@ class DiffEditor(DiffTextEdit):
         menu.insertActions(first_action, menu_actions)
 
         return menu
+
+    def _add_stage_or_unstage_action(self, menu, add_action, already_added):
+        """Add the Stage / Unstage menu action"""
+        if already_added:
+            return True
+        model = self.context.model
+        s = self.selection_model.selection()
+        if model.is_stageable() or model.is_unstageable():
+            if (model.is_amend_mode() and s.staged) or not self.model.is_stageable():
+                self.stage_or_unstage.setText(N_('Unstage'))
+                self.stage_or_unstage.setIcon(icons.remove())
+            else:
+                self.stage_or_unstage.setText(N_('Stage'))
+                self.stage_or_unstage.setIcon(icons.add())
+            add_action(qtutils.menu_separator(menu))
+            add_action(self.stage_or_unstage)
+        return True
 
     def mousePressEvent(self, event):
         if event.button() == Qt.RightButton:

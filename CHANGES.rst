@@ -10,6 +10,11 @@ Usability, bells and whistles
   main Push and Pull dialogs.
   (`#1363 <https://github.com/git-cola/git-cola/issues/1363>`_)
 
+* The whole-file Stage and Unstage actions in the Diff widget's right-click menu
+  are now listed *after* the line-oriented actions which stage the selection only.
+  This helps prevent accidental clicks from clobbering the index for the entire file.
+  (`#1362 <https://github.com/git-cola/git-cola/issues/1362>`_)
+
 .. _v4.4.0:
 
 v4.4.0
