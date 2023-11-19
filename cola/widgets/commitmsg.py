@@ -495,7 +495,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         title = N_('Commit failed')
         status, out, err = task.result
         Interaction.command(title, 'git commit', status, out, err)
-        self.setFocus(True)
+        self.setFocus()
 
     def build_fixup_menu(self):
         self.build_commits_menu(

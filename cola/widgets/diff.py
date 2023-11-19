@@ -559,7 +559,7 @@ class Viewer(QtWidgets.QFrame):
             return
         if not self.search_widget.isVisible():
             self.search_widget.show()
-        self.search_widget.setFocus(True)
+        self.search_widget.setFocus()
 
     def export_state(self, state):
         state['show_diff_line_numbers'] = self.options.show_line_numbers.isChecked()
@@ -1564,7 +1564,7 @@ class DiffPanel(QtWidgets.QWidget):
         # The diff search is only active in text mode.
         if not self.search_widget.isVisible():
             self.search_widget.show()
-        self.search_widget.setFocus(True)
+        self.search_widget.setFocus()
 
 
 class TextLabel(QtWidgets.QLabel):

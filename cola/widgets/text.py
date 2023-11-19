@@ -447,7 +447,7 @@ class TextSearchWidget(QtWidgets.QWidget):
     def hide_search(self):
         """Hide the search window"""
         self.hide()
-        self._parent.setFocus(True)
+        self._parent.setFocus()
 
     def find_flags(self, backwards):
         """Return QTextDocument.FindFlags for the current search options"""
