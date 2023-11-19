@@ -152,7 +152,11 @@ def version_text(context):
     qt_version = qtpy.QT_VERSION
     qtpy_version = qtpy.__version__
     pyqt_api_name = qtpy.API_NAME
-    if qtpy.PYQT5 or qtpy.PYQT4:
+    if (
+        getattr(qtpy, 'PYQT6', False)
+        or getattr(qtpy, 'PYQT5', False)
+        or getattr(qtpy, 'PYQT4', False)
+    ):
         pyqt_api_version = qtpy.PYQT_VERSION
     elif qtpy.PYSIDE:
         pyqt_api_version = qtpy.PYSIDE_VERSION
