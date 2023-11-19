@@ -15,6 +15,15 @@ Usability, bells and whistles
   from clobbering the index for the entire file.
   (`#1362 <https://github.com/git-cola/git-cola/issues/1362>`_)
 
+* The completion popup no longer reappears after an item is selected in the
+  "Checkout Branch" action and similar dialogs.
+  (`#1360 <https://github.com/git-cola/git-cola/issues/1360>`_)
+
+Fixes
+-----
+* PyQt6 compatibility was improved.
+
+
 .. _v4.4.0:
 
 v4.4.0
