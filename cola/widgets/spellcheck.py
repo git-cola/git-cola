@@ -181,7 +181,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         return self.minimumSizeHint()
 
     def _trim_changed_text_lines(self):
-        """Trim the document to a single line to enforce a maximum of line line"""
+        """Trim the document to a single line to enforce a maximum of one line"""
         # self.setMaximumBlockCount(1) Undo/Redo.
         if self.document().blockCount() > 1:
             self.document().setPlainText(self.document().firstBlock().text())
