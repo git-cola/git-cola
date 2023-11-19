@@ -212,7 +212,6 @@ class CompletionLineEdit(HintedLineEdit):
         if not popup.isVisible():
             if not self.hasFocus() or not self._show_all_completions:
                 return
-            popup.show()
         # Select the first item
         idx = self._completion_model.index(0, 0)
         selection = QtCore.QItemSelection(idx, idx)
