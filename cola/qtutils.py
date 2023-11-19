@@ -490,13 +490,20 @@ def open_files(title, directory=None, filters=''):
     return result[0]
 
 
+def _enum_value(value):
+    """Resolve Qt6 enum values"""
+    if hasattr(value, 'value'):
+        return value.value
+    return value
+
+
 def opendir_dialog(caption, path):
     """Prompts for a directory path"""
-    options = (
-        QtWidgets.QFileDialog.Directory
-        | QtWidgets.QFileDialog.DontResolveSymlinks
-        | QtWidgets.QFileDialog.ReadOnly
-        | QtWidgets.QFileDialog.ShowDirsOnly
+    options = QtWidgets.QFileDialog.Option(
+        _enum_value(QtWidgets.QFileDialog.Directory)
+        | _enum_value(QtWidgets.QFileDialog.DontResolveSymlinks)
+        | _enum_value(QtWidgets.QFileDialog.ReadOnly)
+        | _enum_value(QtWidgets.QFileDialog.ShowDirsOnly)
     )
     return compat.getexistingdirectory(
         parent=active_window(), caption=caption, basedir=path, options=options
