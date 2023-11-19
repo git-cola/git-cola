@@ -1,5 +1,3 @@
-import re
-
 from qtpy.QtCore import Qt
 
 from .. import qtutils
