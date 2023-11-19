@@ -23,7 +23,7 @@ def from_context(context):
     def show_result(result):
         """Display the asynchronous "result" when remote tasks complete"""
         _, out, err = result
-        output = '\n\n'.join((x for x in (out, err) if x))
+        output = '\n\n'.join(x for x in (out, err) if x)
         if output:
             message = N_('Right-click links to open:') + '\n\n' + output
         else:

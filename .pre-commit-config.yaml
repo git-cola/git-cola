@@ -19,7 +19,7 @@ repos:
           - --py36-plus
 
   - repo: https://github.com/jsh9/cercis
-    rev: 0.2.2
+    rev: 0.2.4
     hooks:
       - id: cercis
         args:
