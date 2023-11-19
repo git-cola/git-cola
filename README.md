@@ -123,33 +123,54 @@ but it has not been updated for a while.
     cd /usr/ports/devel/git-cola && make clean install
 
 
+## Installing PyQt dependencies on Debian / Ubuntu systems
+
+If you are on an older version of Debian or Ubuntu then you may have a rather old
+version of `git-cola` available from `apt`.
+
+The recommended approach to running the latest Git Cola version is to install its
+dependencies using `apt` and then run `./bin/git-cola` directly from the Git sources.
+
+No installation is required. Git Cola is designed to run directly from its source tree.
+
+For newer Debian/Ubuntu versions you may need to use the *Qt6* dependencies.
+For older Debian/Ubuntu versions you may need to use the *Qt5* dependencies.
+
+Git Cola runs fine with either version and only one of these two sets of packages are
+required.
+
+* Qt6 / PyQt6
+
+```bash
+sudo apt install python3-pyqt6 python3-pyqt6.qtsvg python3-pyqt6.qtwebengine
+```
+
+* Qt5 / PyQt5
+
+```bash
+sudo apt install python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtwebengine python3-pyqt5.qtsvg
+```
+
+At this point you should be able to launch `./bin/git-cola` from the source tree and
+there is nothing more to do.
+
+The further instructions below detail how to install Git Cola from PyPI or how to
+install it into a location separate from the source tree.
+
+
 ## Install into a Python Virtualenv from PyPI using pip
 
 **IMPORTANT**: never run `pip install` or `garden install` outside of a
 Python virtualenv or as root!
 
+**IMPORTANT**: if you are on Linux distributions where PyQt6 or PyQt5 are available from
+your package manager then it is highly recommended to install those dependencies using
+your system's package manager. See the section above for details.
+
 One way to install the latest released version is to use `venv` (virtualenv) and `pip`.
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
 
-If you already have `PyQt5` installed from your distribution's package manager
-then you should skip the `pip install PyQt` steps.
-
-If you already have the `qt5-devel` package installed then you can lookup its version so
-that your virtualenv can install a compatible version of PyQt using `qmake`:
-
-    QT_VERSION=$(qmake -query QT_VERSION)
-    QT_VERSION_MAJOR=$(qmake -query QT_VERSION | head -c 1)
-    echo PyQt${QT_VERSION_MAJOR}==${QT_VERSION}
-
-Take note of the `PyQtX==A.B.C` value so that you can specify it when installing
-PyQt below if, and only if, you have `qmake` installed and want to interoperate
-with its corresponding Qt installation.
-
     python3 -m venv --system-site-packages env3
-
-    # Skip this command if you already have PyQt installed or if you do not have qmake
-    ./env3/bin/pip install PyQt${QT_VERSION_MAJOR}==${QT_VERSION}
-
     ./env3/bin/pip install git-cola
     ./env3/bin/git-cola
 
@@ -182,7 +203,7 @@ lets you upgrade Git Cola by running `git pull`.
     git cola
 
 
-If you add `env3/bin` (or symlink to `bin/git-cola` ) to your `$PATH` then you can
+If you add `env3/bin` (or symlink to `bin/git-cola` ) somewhere in your `$PATH` then you can
 run `git cola` as if it were a builtin `git` command from outside of the virtualenv
 (eg. after running "deactivate" or when opening a new shell).
 
