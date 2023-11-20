@@ -14,8 +14,8 @@ from .. import icons
 from .. import qtutils
 from .. import utils
 from . import defs
+from . import log
 from . import standard
-from . import remotemessage
 
 
 FETCH = 'FETCH'
@@ -644,7 +644,7 @@ class RemoteActionDialog(standard.Dialog):
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
         if remote_messages:
-            result = remotemessage.from_context(self.context)
+            result = log.show_remote_messages(self.context)
         else:
             result = None
         self.runtask.start(

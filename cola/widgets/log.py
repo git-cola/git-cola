@@ -9,7 +9,8 @@ from .. import core
 from .. import qtutils
 from ..i18n import N_
 from . import defs
-from .text import VimTextEdit
+from . import text
+from . import standard
 
 
 class LogWidget(QtWidgets.QFrame):
@@ -20,7 +21,7 @@ class LogWidget(QtWidgets.QFrame):
     def __init__(self, context, parent=None, output=None):
         QtWidgets.QFrame.__init__(self, parent)
 
-        self.output_text = VimTextEdit(context, parent=self)
+        self.output_text = text.VimTextEdit(context, parent=self)
         self.highlighter = LogSyntaxHighlighter(self.output_text.document())
         if output:
             self.set_output(output)
@@ -31,7 +32,7 @@ class LogWidget(QtWidgets.QFrame):
         self.log('  Documentation: https://git-cola.readthedocs.io/en/latest/')
         self.log(
             '  Keyboard Shortcuts: '
-            'https://git-cola.github.io/share/doc/git-cola/hotkeys.html\n'
+            'https://git-cola.gitlab.io/share/doc/git-cola/hotkeys.html\n'
         )
 
     def clear(self):
@@ -57,13 +58,13 @@ class LogWidget(QtWidgets.QFrame):
         msg = core.decode(msg)
         cursor = self.output_text.textCursor()
         cursor.movePosition(cursor.End)
-        text = self.output_text
+        text_widget = self.output_text
         # NOTE: the ':  ' colon-SP-SP suffix is for the syntax highlighter
         prefix = core.decode(time.strftime('%Y-%m-%d %H:%M:%S:  '))  # ISO-8601
         for line in msg.split('\n'):
             cursor.insertText(prefix + line + '\n')
         cursor.movePosition(cursor.End)
-        text.setTextCursor(cursor)
+        text_widget.setTextCursor(cursor)
 
     def log(self, msg):
         """Add output to the log window"""
@@ -81,7 +82,62 @@ class LogSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         QPalette = QtGui.QPalette
         self.disabled_color = palette.color(QPalette.Disabled, QPalette.Text)
 
-    def highlightBlock(self, text):
-        end = text.find(':  ')
+    def highlightBlock(self, block_text):
+        end = block_text.find(':  ')
         if end > 0:
             self.setFormat(0, end + 1, self.disabled_color)
+
+
+class RemoteMessage(standard.Dialog):
+    """Provides a dialog to display remote messages"""
+
+    def __init__(self, context, message, parent=None):
+        standard.Dialog.__init__(self, parent=parent)
+        self.context = context
+        self.model = context.model
+
+        self.setWindowTitle(N_('Remote Messages'))
+        if parent is not None:
+            self.setWindowModality(Qt.WindowModal)
+
+        self.text = text.VimTextEdit(context, parent=self)
+        self.text.set_value(message)
+        # Set a monospace font, as some remote git messages include ASCII art
+        self.text.setFont(qtutils.default_monospace_font())
+
+        self.close_button = qtutils.close_button()
+        self.close_button.setDefault(True)
+
+        self.bottom_layout = qtutils.hbox(
+            defs.no_margin, defs.button_spacing, qtutils.STRETCH, self.close_button
+        )
+
+        self.main_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.text, self.bottom_layout
+        )
+        self.setLayout(self.main_layout)
+
+        qtutils.connect_button(self.close_button, self.close)
+
+        self.resize(defs.scale(720), defs.scale(400))
+
+
+def show_remote_messages(context):
+    """Return a closure for the `result` callback from RunTask.start()"""
+
+    def show_remote_messages_callback(result):
+        """Display the asynchronous "result" when remote tasks complete"""
+        _, out, err = result
+        output = '\n\n'.join(x for x in (out, err) if x)
+        if output:
+            message = N_('Right-click links to open:') + '\n\n' + output
+        else:
+            message = output
+
+        # Display a window if the remote sent a message
+        if message:
+            view = RemoteMessage(context, message, parent=context.view)
+            view.show()
+            view.exec_()
+
+    return show_remote_messages_callback

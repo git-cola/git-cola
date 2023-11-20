@@ -17,8 +17,8 @@ from .. import gitcmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
-from .text import LineEdit
-from . import remotemessage
+from . import log
+from . import text
 
 
 def defer_func(parent, title, func, *args, **kwargs):
@@ -433,7 +433,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_('Executing action %s') % action, N_('Updating'), self
         )
         if remote_messages:
-            result_handler = remotemessage.from_context(self.context)
+            result_handler = log.show_remote_messages(self.context)
         else:
             result_handler = None
 
@@ -835,7 +835,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.tree = tree
 
         hint = N_('Filter branches...')
-        self.text = LineEdit(parent=self, clear_button=True)
+        self.text = text.LineEdit(parent=self, clear_button=True)
         self.text.setToolTip(hint)
         self.setFocusProxy(self.text)
         self._filter = None
@@ -843,26 +843,25 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
-        text = self.text
         # pylint: disable=no-member
-        text.textChanged.connect(self.apply_filter)
+        self.text.textChanged.connect(self.apply_filter)
         self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
 
     def apply_filter(self):
-        text = get(self.text)
-        if text == self._filter:
+        value = get(self.text)
+        if value == self._filter:
             return
         self._apply_bold(self._filter, False)
-        self._filter = text
-        if text:
-            self._apply_bold(text, True)
+        self._filter = value
+        if value:
+            self._apply_bold(value, True)
 
-    def _apply_bold(self, text, value):
+    def _apply_bold(self, value, is_bold):
         match = Qt.MatchContains | Qt.MatchRecursive
-        children = self.tree.findItems(text, match)
+        children = self.tree.findItems(value, match)
 
         for child in children:
             if child.childCount() == 0:
                 font = child.font(0)
-                font.setBold(value)
+                font.setBold(is_bold)
                 child.setFont(0, font)
