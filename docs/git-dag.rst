@@ -1,19 +1,33 @@
-==========
-git-dag(1)
-==========
+=======
+git-dag
+=======
 
 SYNOPSIS
 ========
-git dag [options] [<since>..<until>] [[--] [<path>...]]
+``git dag [options] [<revision-range>] [[--] [<path>...]]``
+
 
 DESCRIPTION
 ===========
-`git-dag` is a powerful Git history visualizer.
-`git-dag` presents powerful `git log` features in a simple-to-use
-graphical interface.
+`git-dag` is an advanced Git history visualizer that presents ``git log``'s
+powerful features in an easy to use graphical interface.
+
 
 OPTIONS
 =======
+``<revision-range>``
+--------------------
+Show only commits in the specified revision range.
+When no ``<revision-range>`` is specified, it defaults to ``HEAD``
+(i.e. the whole history leading to the current commit).
+
+``origin..HEAD`` specifies all the commits reachable from the current commit
+(i.e.  ``HEAD``), but not from ``origin``.
+
+For a complete list of ways to spell ``<revision-range>``, see the Specifying Ranges
+section of `gitrevisions(7) <https://git-scm.com/docs/gitrevisions>`_
+(``man gitrevisions``).
+
 
 ``--prompt``
 ------------
@@ -21,23 +35,28 @@ Prompt for a Git repository instead of using the current directory.
 
 ``-r, --repo <path>``
 ---------------------
-Run `git dag` on the git repository in `<path>`.
+Open the git repository located at ``<path>``.
 Defaults to the current directory.
 
 ``--version``
 -------------
-Print the `git dag` version and exit.
+Print the version number and exit.
 
 ``-h, --help``
 --------------
 Show usage and optional arguments.
 
-Log Options
-===========
-The `Log` prompt allows you to pass arguments to `git log`.
+
+Log Arguments
+=============
+The ``Log`` text field allows you to pass arguments to `git log`.
 This can be used to filter the displayed history, for example
 entering `main -- Makefile` will display only commits on the
 `main` branch that touch the `Makefile`.
+
+The `Log` text field lets you interactively edit and replace the
+``[<revision-range>] [[--] [<path>...]]`` arguments that were initially
+specified on the command-line.
 
 CONTEXT-MENU ACTIONS
 ====================

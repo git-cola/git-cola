@@ -1,18 +1,19 @@
-===========
-git-cola(1)
-===========
+========
+git-cola
+========
 
 SYNOPSIS
 ========
-git cola [options] [sub-command]
+``git cola [options] [sub-command]``
+
 
 DESCRIPTION
 ===========
 Git Cola is a sleek and powerful Git GUI.
 
+
 OPTIONS
 =======
-
 ``--amend``
 -----------
 Start `git cola` in amend mode.
@@ -41,9 +42,9 @@ Show usage and optional arguments.
 -------------------
 Show available sub-commands.
 
+
 SUB-COMMANDS
 ============
-
 am
 --
 Apply patches.
@@ -115,6 +116,7 @@ Create tags.
 version
 -------
 Print the `git cola` version.
+
 
 CONFIGURE YOUR EDITOR
 =====================
@@ -192,6 +194,7 @@ This same hotkey reverts the entire file when used from the status tool.
 You can see the available shortcuts by pressing pressing the ``?`` key,
 choosing ``Help -> Keyboard shortcuts`` from the main menu,
 or by consulting the `git cola keyboard shortcuts reference <https://git-cola.github.io/share/doc/git-cola/hotkeys.html>`_.
+
 
 TOOLS
 =====
@@ -349,7 +352,6 @@ an empty area in the `Status` tool.
 
 COMMIT MESSAGE EDITOR
 =====================
-
 The commit message editor is a simple text widget
 for entering commit messages.
 
@@ -407,7 +409,6 @@ Keeping commit messages less than 76-characters wide is encouraged.
 is a great tool but long lines mess up its formatting for everyone else,
 so please be mindful when writing commit messages.
 
-
 Amend Last Commit
 -----------------
 Clicking on `Amend Last Commit` makes `git cola` amend the previous commit
@@ -443,9 +444,9 @@ To override the default path to this hook set the
 hook script.  This is useful if you would like to use a common hook
 across all repositories.
 
+
 BRANCHES
 ========
-
 The `Branches` tool provides a visual tree to navigate through the branches.
 The tree has three main nodes `Local Branch`, `Remote Branch` and `Tags`.
 Branches are grouped by their name divided by the character '/'.Ex::
@@ -524,6 +525,7 @@ patches after they have all been found.  This allows you
 to control the order in which patches are applied by placing
 patchsets into alphanumerically-sorted directories.
 
+
 CUSTOM WINDOW SETTINGS
 ======================
 `git cola` remembers modifications to the layout and arrangement
@@ -532,6 +534,7 @@ and restored at application shutdown/startup.
 
 `git cola` can be configured to not save custom layouts by unsetting
 the `Save Window Settings` option in the `git cola` preferences.
+
 
 DARK MODE AND WINDOW MANAGER THEMES
 ===================================
@@ -882,14 +885,15 @@ requires shell quoting.
 This configuration variable is for custom terminals outside of the builtin set.
 The table below shows the builtin configuration.
 
-=================== ======================= =============================
-Terminal            ``cola.terminal``       ``cola.terminalshellquote``
-=================== ======================= =============================
-gnome-terminal      ``gnome-terminal --``   ``false``
-konsole             ``konsole -e``          ``false``
-xfce4-terminal      ``xfce4-terminal -e``   ``true``
-xterm               ``xterm -e``            ``false``
-=================== ======================= =============================
+.. code-block:: text
+
+    Terminal            cola.terminal           cola.terminalshellquote
+    --------            -------------           -----------------------
+    gnome-terminal      "gnome-terminal --"     false
+    konsole             "konsole -e"            false
+    xfce4-terminal      "xfce4-terminal -e"     true
+    xterm               "xterm -e"              false
+
 
 cola.textwidth
 --------------
@@ -1056,6 +1060,7 @@ Your full name to be recorded in any newly created commits.
 Can be overridden by the 'GIT_AUTHOR_NAME' and 'GIT_COMMITTER_NAME'
 environment variables.
 
+
 ENVIRONMENT VARIABLES
 =====================
 
@@ -1208,6 +1213,7 @@ Avoid creating shortcuts that conflict with existing built-in `git cola`
 shortcuts.  Creating a conflict will result in no action when the shortcut
 is used.
 
+
 SETTING UP CREDENTIAL HELPERS
 =============================
 Git has robust support for automatically handling credentials.
@@ -1216,6 +1222,7 @@ The recommended approach is to use SSH keys and an SSH agent, but any of the cor
 Credentials helpers will get used automatically by Git Cola.
 
 See https://git-scm.com/doc/credential-helpers for more details.
+
 
 SETTING UP GPG FOR SIGNED COMMITS
 =================================
@@ -1285,6 +1292,7 @@ prior to launching `git cola`.::
     eval $(gpg-agent --daemon)
     git cola
 
+
 SHELL COMPLETIONS
 =================
 
@@ -1295,6 +1303,7 @@ The completion scripts and instructions are included in Git Cola's
 * `Shell completion scripts <https://gitlab.com/git-cola/git-cola/-/tree/main/contrib>`_
 
 * `Setup instructions <https://gitlab.com/git-cola/git-cola/-/blob/main/contrib/README.md>`_
+
 
 WINDOWS NOTES
 =============
@@ -1319,8 +1328,10 @@ Please see the following links for more details.
 
 https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
 
+
 FIPS SECURITY MODE
 ==================
+
 `FIPS Security Mode <https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/FIPS_Mode_-_an_explanation>`_
 is available in newer versions of Python. These include Python 3.9+ and the
 patched Python 3.6 used by CentOS8/RHEL8 (and possibly others).
@@ -1329,6 +1340,7 @@ Git Cola uses the ``hashlib.md5`` function and adheres to the FIPS security
 mode when available. Git Cola does not use the MD5 value for security purposes.
 MD5 is used only for the purposes of implementing the ``cola/gravatar.py``
 Gravatar client.
+
 
 LINKS
 =====
