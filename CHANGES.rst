@@ -1,3 +1,14 @@
+.. _v4.4.2:
+
+v4.4.2
+======
+
+Usability, bells and whistles
+-----------------------------
+* `Ctrl + Space` can now be used to display the autocomplete options in input fields
+  that provide autocompletion.
+
+
 .. _v4.4.1:
 
 v4.4.1
