@@ -451,7 +451,7 @@ class TextSearchWidget(QtWidgets.QWidget):
 
     def find_flags(self, backwards):
         """Return QTextDocument.FindFlags for the current search options"""
-        flags = QtGui.QTextDocument.FindFlags()
+        flags = QtGui.QTextDocument.FindFlag(0)
         if backwards:
             flags = flags | QtGui.QTextDocument.FindBackward
         if self.match_case_checkbox.isChecked():

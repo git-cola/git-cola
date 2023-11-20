@@ -8,6 +8,10 @@ Usability, bells and whistles
 * `Ctrl + Space` can now be used to display the autocomplete options in input fields
   that provide autocompletion.
 
+Fixes
+-----
+* PyQt6 compatibility for the "Find in diff" feature.
+
 
 .. _v4.4.1:
 
