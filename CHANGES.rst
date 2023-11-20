@@ -3787,7 +3787,7 @@ Usability, bells and whistles
 
 Portability
 -----------
-* Added :data:`cola.compat.hashlib` for `Python 2.4` compatibility
+* Added `cola.compat.hashlib` for `Python 2.4` compatibility
 * Improved `PyQt 4.1.x` compatibility.
 
 Fixes
