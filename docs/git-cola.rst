@@ -1347,12 +1347,10 @@ LINKS
 
 Git Cola's Git Repository
 -------------------------
-https://github.com/git-cola/git-cola/
+* `Primary repository <https://gitlab.com/git-cola/git-cola/>_`.
+* `Mirror repository <https://github.com/git-cola/git-cola/>_`.
+
 
 Git Cola Homepage
 -----------------
-https://git-cola.github.io/
-
-Mailing List
-------------
-https://groups.google.com/group/git-cola
+https://git-cola.gitlab.io/
