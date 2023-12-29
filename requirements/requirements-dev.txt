@@ -8,7 +8,7 @@ wheel
 
 cercis
 pylint >= 2.14.0
-pytest>=3.6
+pytest >= 3.6
 pytest-cov
 
 ## Build and install documentation using "garden doc" and "garden install docs".
