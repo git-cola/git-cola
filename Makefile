@@ -182,7 +182,7 @@ coverage::
 clean::
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | $(XARGS) -0 $(RM)
 	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | $(XARGS) -0 $(RM_R)
-	$(RM_R) build dist tags git-cola.app
+	$(RM_R) build dist git-cola.app
 	$(MAKE) -C docs clean
 
 # Update i18n files
