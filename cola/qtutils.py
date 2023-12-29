@@ -843,6 +843,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         )
 
         self.corner_layout = hbox(defs.no_margin, defs.spacing)
+        self.title_layout = hbox(defs.no_margin, defs.button_spacing, qlabel)
 
         if stretch:
             separator = STRETCH
@@ -852,7 +853,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         self.main_layout = hbox(
             defs.small_margin,
             defs.titlebar_spacing,
-            qlabel,
+            self.title_layout,
             separator,
             self.corner_layout,
             self.toggle_button,
@@ -873,7 +874,12 @@ class DockTitleBarWidget(QtWidgets.QFrame):
     def set_title(self, title):
         self.label.setText(title)
 
+    def add_title_widget(self, widget):
+        """Add widgets to the title area"""
+        self.title_layout.addWidget(widget)
+
     def add_corner_widget(self, widget):
+        """Add widgets to the corner area"""
         self.corner_layout.addWidget(widget)
 
     def update_tooltips(self):
