@@ -26,6 +26,8 @@ from .. import utils
 from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
+from .text import PlainTextLabel
+from .text import RichTextLabel
 from .text import TextSearchWidget
 from . import defs
 from . import standard
@@ -612,7 +614,7 @@ class Viewer(QtWidgets.QFrame):
     def update_filename(self):
         """Update the filename display when the selection changes"""
         filename = self.context.selection.filename()
-        self.filename.setText(filename or '')
+        self.filename.set_text(filename or '')
 
     def update_options(self):
         """Emit a signal indicating that options have changed"""
@@ -1415,35 +1417,23 @@ class DiffWidget(QtWidgets.QWidget):
         summary_font = QtGui.QFont(author_font)
         summary_font.setWeight(QtGui.QFont.Bold)
 
-        policy = QtWidgets.QSizePolicy(
-            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
-        )
-
         self.gravatar_label = gravatar.GravatarLabel(self.context, parent=self)
 
-        self.oid_label = TextLabel()
-        self.oid_label.setTextFormat(Qt.PlainText)
-        self.oid_label.setSizePolicy(policy)
+        self.oid_label = PlainTextLabel(parent=self)
         self.oid_label.setAlignment(Qt.AlignBottom)
         self.oid_label.elide()
 
-        self.author_label = TextLabel()
-        self.author_label.setTextFormat(Qt.RichText)
+        self.author_label = RichTextLabel(parent=self)
         self.author_label.setFont(author_font)
-        self.author_label.setSizePolicy(policy)
         self.author_label.setAlignment(Qt.AlignTop)
         self.author_label.elide()
 
-        self.date_label = TextLabel()
-        self.date_label.setTextFormat(Qt.PlainText)
-        self.date_label.setSizePolicy(policy)
+        self.date_label = PlainTextLabel(parent=self)
         self.date_label.setAlignment(Qt.AlignTop)
         self.date_label.elide()
 
-        self.summary_label = TextLabel()
-        self.summary_label.setTextFormat(Qt.PlainText)
+        self.summary_label = PlainTextLabel(parent=self)
         self.summary_label.setFont(summary_font)
-        self.summary_label.setSizePolicy(policy)
         self.summary_label.setAlignment(Qt.AlignTop)
         self.summary_label.elide()
 
@@ -1589,53 +1579,6 @@ class DiffPanel(QtWidgets.QWidget):
         if not self.search_widget.isVisible():
             self.search_widget.show()
         self.search_widget.setFocus()
-
-
-class TextLabel(QtWidgets.QLabel):
-    def __init__(self, parent=None):
-        QtWidgets.QLabel.__init__(self, parent)
-        self.setTextInteractionFlags(
-            Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
-        )
-        self._display = ''
-        self._template = ''
-        self._text = ''
-        self._elide = False
-        self._metrics = QtGui.QFontMetrics(self.font())
-        self.setOpenExternalLinks(True)
-
-    def elide(self):
-        self._elide = True
-
-    def set_text(self, text):
-        self.set_template(text, text)
-
-    def set_template(self, text, template):
-        self._display = text
-        self._text = text
-        self._template = template
-        self.update_text(self.width())
-        self.setText(self._display)
-
-    def update_text(self, width):
-        self._display = self._text
-        if not self._elide:
-            return
-        text = self._metrics.elidedText(self._template, Qt.ElideRight, width - 2)
-        if text != self._template:
-            self._display = text
-
-    # Qt overrides
-    def setFont(self, font):
-        self._metrics = QtGui.QFontMetrics(font)
-        QtWidgets.QLabel.setFont(self, font)
-
-    def resizeEvent(self, event):
-        if self._elide:
-            self.update_text(event.size().width())
-            with qtutils.BlockSignals(self):
-                self.setText(self._display)
-        QtWidgets.QLabel.resizeEvent(self, event)
 
 
 class DiffInfoTask(qtutils.Task):

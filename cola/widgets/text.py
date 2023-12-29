@@ -1200,3 +1200,69 @@ class LineNumbers(TextDecorator):
                 number,
             )
             block = block.next()
+
+
+class TextLabel(QtWidgets.QLabel):
+    """A text label that elides its display"""
+    def __init__(self, parent=None, open_external_links=True):
+        QtWidgets.QLabel.__init__(self, parent)
+        self._display = ''
+        self._template = ''
+        self._text = ''
+        self._elide = False
+        self._metrics = QtGui.QFontMetrics(self.font())
+        policy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
+        )
+        self.setSizePolicy(policy)
+        self.setTextInteractionFlags(
+            Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
+        )
+        self.setOpenExternalLinks(open_external_links)
+
+    def elide(self):
+        self._elide = True
+
+    def set_text(self, text):
+        self.set_template(text, text)
+
+    def set_template(self, text, template):
+        self._display = text
+        self._text = text
+        self._template = template
+        self.update_text(self.width())
+        self.setText(self._display)
+
+    def update_text(self, width):
+        self._display = self._text
+        if not self._elide:
+            return
+        text = self._metrics.elidedText(self._template, Qt.ElideRight, width - 2)
+        if text != self._template:
+            self._display = text
+
+    # Qt overrides
+    def setFont(self, font):
+        self._metrics = QtGui.QFontMetrics(font)
+        QtWidgets.QLabel.setFont(self, font)
+
+    def resizeEvent(self, event):
+        if self._elide:
+            self.update_text(event.size().width())
+            with qtutils.BlockSignals(self):
+                self.setText(self._display)
+        QtWidgets.QLabel.resizeEvent(self, event)
+
+
+class PlainTextLabel(TextLabel):
+    """A plaintext label that elides its display"""
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, open_external_links=False)
+        self.setTextFormat(Qt.PlainText)
+
+
+class RichTextLabel(TextLabel):
+    """A richtext label that elides its display"""
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, open_external_links=True)
+        self.setTextFormat(Qt.RichText)
