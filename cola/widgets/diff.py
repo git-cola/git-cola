@@ -574,7 +574,7 @@ class Viewer(QtWidgets.QFrame):
         diff_numbers = bool(state.get('show_diff_line_numbers', False))
         self.set_line_numbers(diff_numbers, update=True)
 
-        show_filenames = bool(state.get('show_diff_filenames', False))
+        show_filenames = bool(state.get('show_diff_filenames', True))
         self.set_show_filenames(show_filenames, update=True)
 
         image_mode = utils.asint(state.get('image_diff_mode', 0))
