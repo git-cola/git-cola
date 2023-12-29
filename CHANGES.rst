@@ -12,6 +12,11 @@ Fixes
 -----
 * PyQt6 compatibility for the "Find in diff" feature.
 
+Translations
+------------
+* Updated Polish translation.
+  (`#1368 <https://github.com/git-cola/git-cola/pull/1368>`_)
+
 
 .. _v4.4.1:
 
