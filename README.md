@@ -71,10 +71,54 @@ enables macOS-specific application themes on macOS.
 
 # Installation
 
-**IMPORTANT**: never run `pip install` or `garden install` outside of a
-Python virtualenv or as root!
+There are several ways to install Git Cola but you do not need to "install" Git Cola
+in order to run it.
 
-There are several ways to install Git Cola.
+Git Cola is designed to run directly from its source tree. Installation is optional.
+
+
+## From Source
+
+The recommended approach for running the latest Git Cola version is to install its
+PyQt dependencies using your distribution's package manager and then run
+`./bin/git-cola` directly from source.
+
+
+## Installing PyQt dependencies on Debian / Ubuntu systems
+
+Git Cola works with either PyQt5 or PyQt6 because it uses the
+[qtpy](https://github.com/spyder-ide/qtpy) library for PyQt compatibility.
+
+### PyQt5
+
+Users on newer Debian/Ubuntu version can install a single package to run from source.
+
+```bash
+sudo apt install python3-qtpy
+```
+
+If you are on an older version that does not have `python3-qtpy` available then you can
+install the following packages directly.
+
+```bash
+sudo apt install python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtwebengine python3-pyqt5.qtsvg
+```
+
+### PyQt6
+
+If you'd like to use Git Cola with the newer PyQt6 ecosystem then you can install these
+packages instead of PyQt5.
+
+```bash
+sudo apt install python3-pyqt6 python3-pyqt6.qtsvg python3-pyqt6.qtwebengine
+```
+
+At this point you should be able to launch `./bin/git-cola` from the source tree and
+there is nothing more to do.
+
+The further instructions below detail how to install Git Cola from PyPI or how to
+install it into a location separate from the source tree.
+
 
 ## Linux
 
@@ -110,10 +154,6 @@ Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
 [See here](https://packages.ubuntu.com/search?keywords=git-cola) for the
 versions that are available in Ubuntu's repositories.
 
-There was a [PPA by @pavreh](https://launchpad.net/~pavreh/+archive/ubuntu/git-cola)
-but it has not been updated for a while.
-
-
 ## FreeBSD
 
     # Install from official binary packages
@@ -121,42 +161,6 @@ but it has not been updated for a while.
 
     # Build from source
     cd /usr/ports/devel/git-cola && make clean install
-
-
-## Installing PyQt dependencies on Debian / Ubuntu systems
-
-If you are on an older version of Debian or Ubuntu then you may have a rather old
-version of `git-cola` available from `apt`.
-
-The recommended approach to running the latest Git Cola version is to install its
-dependencies using `apt` and then run `./bin/git-cola` directly from the Git sources.
-
-No installation is required. Git Cola is designed to run directly from its source tree.
-
-For newer Debian/Ubuntu versions you may need to use the *Qt6* dependencies.
-For older Debian/Ubuntu versions you may need to use the *Qt5* dependencies.
-
-Git Cola runs fine with either version and only one of these two sets of packages are
-required.
-
-* Qt6 / PyQt6
-
-```bash
-sudo apt install python3-pyqt6 python3-pyqt6.qtsvg python3-pyqt6.qtwebengine
-```
-
-* Qt5 / PyQt5
-
-```bash
-sudo apt install python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtwebengine python3-pyqt5.qtsvg
-```
-
-At this point you should be able to launch `./bin/git-cola` from the source tree and
-there is nothing more to do.
-
-The further instructions below detail how to install Git Cola from PyPI or how to
-install it into a location separate from the source tree.
-
 
 ## Install into a Python Virtualenv from PyPI using pip
 
