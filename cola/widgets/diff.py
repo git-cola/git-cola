@@ -478,6 +478,7 @@ class Viewer(QtWidgets.QFrame):
         self.images = []
         self.pixmaps = []
         self.options = options = Options(self)
+        self.filename = qtutils.label(fmt=Qt.PlainText)
         self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
@@ -563,6 +564,7 @@ class Viewer(QtWidgets.QFrame):
 
     def export_state(self, state):
         state['show_diff_line_numbers'] = self.options.show_line_numbers.isChecked()
+        state['show_diff_filenames'] = self.options.show_filenames.isChecked()
         state['image_diff_mode'] = self.options.image_mode.currentIndex()
         state['image_zoom_mode'] = self.options.zoom_mode.currentIndex()
         state['word_wrap'] = self.options.enable_word_wrapping.isChecked()
@@ -571,6 +573,9 @@ class Viewer(QtWidgets.QFrame):
     def apply_state(self, state):
         diff_numbers = bool(state.get('show_diff_line_numbers', False))
         self.set_line_numbers(diff_numbers, update=True)
+
+        show_filenames = bool(state.get('show_diff_filenames', False))
+        self.set_show_filenames(show_filenames, update=True)
 
         image_mode = utils.asint(state.get('image_diff_mode', 0))
         self.options.image_mode.set_index(image_mode)
@@ -598,9 +603,29 @@ class Viewer(QtWidgets.QFrame):
         # The "file type" is whether the file itself is an image.
         self.options.set_file_type(file_type)
 
+    def enable_filename_tracking(self):
+        """Enable displaying the currently selected filename"""
+        self.context.selection.selection_changed.connect(
+            self.update_filename, type=Qt.QueuedConnection
+        )
+
+    def update_filename(self):
+        """Update the filename display when the selection changes"""
+        filename = self.context.selection.filename()
+        self.filename.setText(filename or '')
+
     def update_options(self):
         """Emit a signal indicating that options have changed"""
         self.text.update_options()
+        show_filenames = get(self.options.show_filenames)
+        self.set_show_filenames(show_filenames)
+
+    def set_show_filenames(self, enabled, update=False):
+        """Enable/disable displaying the selected filename"""
+        self.filename.setVisible(enabled)
+        if update:
+            with qtutils.BlockSignals(self.options.show_filenames):
+                self.options.show_filenames.setChecked(enabled)
 
     def set_line_numbers(self, enabled, update=False):
         """Enable/disable line numbers in the text widget"""
@@ -749,20 +774,17 @@ class Options(QtWidgets.QWidget):
         self.ignore_space_at_eol = self.add_option(
             N_('Ignore changes in whitespace at EOL')
         )
-
         self.ignore_space_change = self.add_option(
             N_('Ignore changes in amount of whitespace')
         )
-
         self.ignore_all_space = self.add_option(N_('Ignore all whitespace'))
-
         self.function_context = self.add_option(
             N_('Show whole surrounding functions of changes')
         )
-
         self.show_line_numbers = qtutils.add_action_bool(
             self, N_('Show line numbers'), self.set_line_numbers, True
         )
+        self.show_filenames = self.add_option(N_('Show filenames'))
         self.enable_word_wrapping = qtutils.add_action_bool(
             self, N_('Enable word wrapping'), self.set_word_wrapping, True
         )
@@ -800,6 +822,7 @@ class Options(QtWidgets.QWidget):
         menu.addSeparator()
         menu.addAction(self.function_context)
         menu.addAction(self.show_line_numbers)
+        menu.addAction(self.show_filenames)
         menu.addSeparator()
         menu.addAction(self.enable_word_wrapping)
 
@@ -865,6 +888,7 @@ class Options(QtWidgets.QWidget):
 
     def hide_advanced_options(self):
         """Hide advanced options that are not applicable to the DiffWidget"""
+        self.show_filenames.setVisible(False)
         self.show_line_numbers.setVisible(False)
         self.ignore_space_at_eol.setVisible(False)
         self.ignore_space_change.setVisible(False)

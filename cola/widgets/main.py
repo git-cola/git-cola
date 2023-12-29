@@ -178,9 +178,10 @@ class MainView(standard.MainWindow):
         )
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
-
+        self.diffviewer.enable_filename_tracking()
         self.diffeditor = self.diffviewer.text
         titlebar = self.diffdock.titleBarWidget()
+        titlebar.add_corner_widget(self.diffviewer.filename)
         titlebar.add_corner_widget(self.diffviewer.options)
 
         # All Actions

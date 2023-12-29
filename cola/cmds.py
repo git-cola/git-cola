@@ -261,6 +261,7 @@ class AmendMode(EditModel):
         super().do()
         self.model.set_commitmsg(self.new_commitmsg)
         self.model.update_file_status()
+        self.context.selection.reset(emit=True)
 
     def undo(self):
         if self.skip:
@@ -268,6 +269,7 @@ class AmendMode(EditModel):
         self.model.set_commitmsg(self.old_commitmsg)
         super().undo()
         self.model.update_file_status()
+        self.context.selection.reset(emit=True)
 
 
 class AnnexAdd(ContextCommand):
@@ -613,6 +615,7 @@ class ResetMode(EditModel):
     def do(self):
         super().do()
         self.model.update_file_status()
+        self.context.selection.reset(emit=True)
 
 
 class ResetCommand(ConfirmAction):

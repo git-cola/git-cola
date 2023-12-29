@@ -8,6 +8,10 @@ Usability, bells and whistles
 * `Ctrl + Space` can now be used to display the autocomplete options in input fields
   that provide autocompletion.
 
+* The Diff widget can now display the currently selected filename.
+  Enable the "Show filenames" option in the Diff widget's tool menu.
+  (`#1367 <https://github.com/git-cola/git-cola/issues/1367>`_)
+
 Fixes
 -----
 * PyQt6 compatibility for the "Find in diff" feature.

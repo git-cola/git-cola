@@ -62,12 +62,14 @@ class SelectionModel(QtCore.QObject):
         self.untracked = []
         self.line_number = None
 
-    def reset(self):
+    def reset(self, emit=False):
         self.staged = []
         self.unmerged = []
         self.modified = []
         self.untracked = []
         self.line_number = None
+        if emit:
+            self.selection_changed.emit()
 
     def is_empty(self):
         return not (
