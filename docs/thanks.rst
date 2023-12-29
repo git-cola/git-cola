@@ -12,6 +12,7 @@ Thanks
 * Adil
 * AJ Bagwell
 * akontsevich
+* Albert Vaca Cintora
 * Aleksey Kontsevich
 * Alexander Preißner
 * Alex Chernetz
