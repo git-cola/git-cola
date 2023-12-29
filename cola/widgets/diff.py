@@ -480,7 +480,12 @@ class Viewer(QtWidgets.QFrame):
         self.images = []
         self.pixmaps = []
         self.options = options = Options(self)
-        self.filename = qtutils.label(fmt=Qt.PlainText)
+        self.filename = PlainTextLabel(parent=self)
+        self.filename.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        font = self.font()
+        font.setItalic(True)
+        self.filename.setFont(font)
+        self.filename.elide()
         self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
