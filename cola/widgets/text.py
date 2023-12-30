@@ -1204,6 +1204,7 @@ class LineNumbers(TextDecorator):
 
 class TextLabel(QtWidgets.QLabel):
     """A text label that elides its display"""
+
     def __init__(self, parent=None, open_external_links=True):
         QtWidgets.QLabel.__init__(self, parent)
         self._display = ''
@@ -1256,6 +1257,7 @@ class TextLabel(QtWidgets.QLabel):
 
 class PlainTextLabel(TextLabel):
     """A plaintext label that elides its display"""
+
     def __init__(self, parent=None):
         super().__init__(parent=parent, open_external_links=False)
         self.setTextFormat(Qt.PlainText)
@@ -1263,6 +1265,7 @@ class PlainTextLabel(TextLabel):
 
 class RichTextLabel(TextLabel):
     """A richtext label that elides its display"""
+
     def __init__(self, parent=None):
         super().__init__(parent=parent, open_external_links=True)
         self.setTextFormat(Qt.RichText)
