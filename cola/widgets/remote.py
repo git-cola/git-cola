@@ -132,8 +132,6 @@ class RemoteActionDialog(standard.Dialog):
         self.selected_remotes = []
 
         self.runtask = qtutils.RunTask(parent=self)
-        self.progress = standard.progress(title, N_('Updating'), self)
-
         self.local_label = QtWidgets.QLabel()
         self.local_label.setText(N_('Local Branch'))
 
@@ -222,8 +220,27 @@ class RemoteActionDialog(standard.Dialog):
 
         self.action_button = qtutils.ok_button(title, icon=icon)
         self.close_button = qtutils.close_button()
-
-        self.buttons = utils.Group(self.action_button, self.close_button)
+        self.buttons_group = utils.Group(self.action_button, self.close_button)
+        self.inputs_group = utils.Group(
+            self.force_checkbox,
+            self.ff_only_checkbox,
+            self.local_branch,
+            self.local_branches,
+            self.tags_checkbox,
+            self.prune_checkbox,
+            self.rebase_checkbox,
+            self.remote_name,
+            self.remotes,
+            self.remote_branches,
+            self.upstream_checkbox,
+            self.prompt_checkbox,
+            self.remote_messages_checkbox,
+        )
+        self.progress = standard.progress_bar(
+            self,
+            hide=(self.action_button,),
+            disable=(self.buttons_group, self.inputs_group),
+        )
 
         self.local_branch_layout = qtutils.hbox(
             defs.small_margin, defs.spacing, self.local_label, self.local_branch
@@ -255,6 +272,7 @@ class RemoteActionDialog(standard.Dialog):
             qtutils.STRETCH,
             self.close_button,
             self.action_button,
+            self.progress,
         )
 
         self.remote_input_layout = qtutils.vbox(
@@ -638,8 +656,8 @@ class RemoteActionDialog(standard.Dialog):
             ):
                 return
 
-        # Disable the GUI by default
-        self.buttons.setEnabled(False)
+        self.progress.setMaximumWidth(self.action_button.width())
+        self.progress.setMinimumHeight(self.action_button.height() - 2)
 
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
@@ -656,7 +674,6 @@ class RemoteActionDialog(standard.Dialog):
 
     def action_completed(self, task):
         """Grab the results of the action and finish up"""
-        self.buttons.setEnabled(True)
         if not task.result or not isinstance(task.result, (list, tuple)):
             return
 
