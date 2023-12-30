@@ -231,6 +231,7 @@ class RemoteActionDialog(standard.Dialog):
             self.rebase_checkbox,
             self.remote_name,
             self.remotes,
+            self.remote_branch,
             self.remote_branches,
             self.upstream_checkbox,
             self.prompt_checkbox,
