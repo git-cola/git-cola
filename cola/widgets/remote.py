@@ -220,7 +220,7 @@ class RemoteActionDialog(standard.Dialog):
 
         self.action_button = qtutils.ok_button(title, icon=icon)
         self.close_button = qtutils.close_button()
-        self.buttons_group = utils.Group(self.action_button, self.close_button)
+        self.buttons_group = utils.Group(self.close_button, self.action_button)
         self.inputs_group = utils.Group(
             self.force_checkbox,
             self.ff_only_checkbox,
