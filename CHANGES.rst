@@ -15,6 +15,10 @@ Usability, bells and whistles
 * The "Fetch", "Push" and "Pull" dialogs now have an embedded progress bar instead
   of displaying a progress bar in a separate popup window.
 
+* The "Fetch", "Push" and "Pull" dialogs will now stay open after the remote
+  operation completes when the "Close on completion" checkbox is unchecked.
+  These dialogs closed themselves unconditionally before this change.
+
 Fixes
 -----
 * PyQt6 compatibility for the "Find in diff" feature.

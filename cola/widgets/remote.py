@@ -218,10 +218,17 @@ class RemoteActionDialog(standard.Dialog):
         tooltip = N_('Configure the remote branch as the the new upstream')
         self.upstream_checkbox = qtutils.checkbox(text=text, tooltip=tooltip)
 
+        text = N_('Close on completion')
+        tooltip = N_('Close dialog when completed')
+        self.close_on_completion_checkbox = qtutils.checkbox(
+            checked=True, text=text, tooltip=tooltip
+        )
+
         self.action_button = qtutils.ok_button(title, icon=icon)
         self.close_button = qtutils.close_button()
         self.buttons_group = utils.Group(self.close_button, self.action_button)
         self.inputs_group = utils.Group(
+            self.close_on_completion_checkbox,
             self.force_checkbox,
             self.ff_only_checkbox,
             self.local_branch,
@@ -269,6 +276,7 @@ class RemoteActionDialog(standard.Dialog):
             self.rebase_checkbox,
             self.upstream_checkbox,
             self.prompt_checkbox,
+            self.close_on_completion_checkbox,
             self.remote_messages_checkbox,
             qtutils.STRETCH,
             self.close_button,
@@ -689,7 +697,9 @@ class RemoteActionDialog(standard.Dialog):
         Interaction.log(log_message)
 
         if status == 0:
-            self.accept()
+            close_on_completion = get(self.close_on_completion_checkbox)
+            if close_on_completion:
+                self.accept()
             return
 
         if self.action == PUSH:
@@ -701,12 +711,16 @@ class RemoteActionDialog(standard.Dialog):
     def export_state(self):
         """Export persistent settings"""
         state = standard.Dialog.export_state(self)
+        state['close_on_completion'] = get(self.close_on_completion_checkbox)
         state['remote_messages'] = get(self.remote_messages_checkbox)
         return state
 
     def apply_state(self, state):
         """Apply persistent settings"""
         result = standard.Dialog.apply_state(self, state)
+        # Restore the "close on completion" checkbox
+        close_on_completion = bool(state.get('close_on_completion', True))
+        self.close_on_completion_checkbox.setChecked(close_on_completion)
         # Restore the "show remote messages" checkbox
         remote_messages = bool(state.get('remote_messages', False))
         self.remote_messages_checkbox.setChecked(remote_messages)
