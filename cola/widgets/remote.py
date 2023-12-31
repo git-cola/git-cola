@@ -663,7 +663,7 @@ class RemoteActionDialog(standard.Dialog):
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
         if remote_messages:
-            result = log.show_remote_messages(self.context)
+            result = log.show_remote_messages(self, self.context)
         else:
             result = None
         self.runtask.start(

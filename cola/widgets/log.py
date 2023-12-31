@@ -122,7 +122,7 @@ class RemoteMessage(standard.Dialog):
         self.resize(defs.scale(720), defs.scale(400))
 
 
-def show_remote_messages(context):
+def show_remote_messages(parent, context):
     """Return a closure for the `result` callback from RunTask.start()"""
 
     def show_remote_messages_callback(result):
@@ -136,7 +136,7 @@ def show_remote_messages(context):
 
         # Display a window if the remote sent a message
         if message:
-            view = RemoteMessage(context, message, parent=context.view)
+            view = RemoteMessage(context, message, parent=parent)
             view.show()
             view.exec_()
 
