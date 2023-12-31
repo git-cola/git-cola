@@ -12,6 +12,9 @@ Usability, bells and whistles
   Enable the "Show filenames" option in the Diff widget's tool menu.
   (`#1367 <https://github.com/git-cola/git-cola/issues/1367>`_)
 
+* The "Fetch", "Push" and "Pull" dialogs now have an embedded progress bar instead
+  of displaying a progress bar in a separate popup window.
+
 Fixes
 -----
 * PyQt6 compatibility for the "Find in diff" feature.
