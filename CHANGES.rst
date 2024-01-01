@@ -28,6 +28,10 @@ Translations
 * Updated Polish translation.
   (`#1368 <https://github.com/git-cola/git-cola/pull/1368>`_)
 
+Development
+-----------
+* upload-artifact and setup-python github actions were upgraded.
+
 
 .. _v4.4.1:
 
