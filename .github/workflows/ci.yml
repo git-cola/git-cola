@@ -102,7 +102,7 @@ jobs:
           cd build/nsis
           mv git-cola*.exe git-cola-latest-${{github.run_number}}.exe
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: git-cola-latest-${{github.run_number}}-${{runner.os}}
           path: build/nsis/git-cola*.exe
@@ -138,7 +138,7 @@ jobs:
       - name: Zip Artifact
         run: zip -r git-cola.app.zip build/*
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: git-cola-latest-${{github.run_number}}-${{runner.os}}
           path: git-cola.app.zip
