@@ -11,8 +11,9 @@ Usability, bells and whistles
 * `Ctrl + Space` can now be used to display the autocomplete options in input fields
   that provide autocompletion.
 
-* The Diff widget can now display the currently selected filename.
-  Enable the "Show filenames" option in the Diff widget's tool menu.
+* The Diff widget now displays the currently selected filename.
+  Uncheck the "Show filenames" option in the Diff widget's tool menu
+  to disable this feature.
   (`#1367 <https://github.com/git-cola/git-cola/issues/1367>`_)
 
 * The "Fetch", "Push" and "Pull" dialogs now have an embedded progress bar instead
