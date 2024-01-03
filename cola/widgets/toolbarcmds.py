@@ -182,6 +182,11 @@ COMMANDS = {
         'action': cmds.run(cmds.StageUntracked),
         'icon': 'add',
     },
+    'Commit::StageModified': {
+        'title': 'Stage Changed Files To Commit',
+        'action': cmds.run(cmds.StageModified),
+        'icon': 'add',
+    },
     'Commit::UnstageAll': {
         'title': 'Unstage All',
         'action': cmds.run(cmds.UnstageAll),

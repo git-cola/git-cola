@@ -44,6 +44,7 @@ TREE_LAYOUT = {
         'Commit::AmendLast',
         'Commit::UndoLastCommit',
         'Commit::StageAll',
+        'Commit::StageModified',
         'Commit::UnstageAll',
         'Commit::Unstage',
         'Commit::LoadCommitMessage',
