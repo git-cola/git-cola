@@ -481,7 +481,7 @@ class Viewer(QtWidgets.QFrame):
         self.pixmaps = []
         self.options = options = Options(self)
         self.filename = PlainTextLabel(parent=self)
-        self.filename.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        self.filename.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         font = self.font()
         font.setItalic(True)
         self.filename.setFont(font)
