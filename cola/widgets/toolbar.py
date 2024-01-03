@@ -75,6 +75,12 @@ TREE_LAYOUT = {
     'View': ['View::DAG', 'View::FileBrowser'],
 }
 
+# Backwards-compatibility: Commit::StageUntracked was previously
+# exposed as Commit::StageUntracked.
+RENAMED = {
+    'Commit::StageAll': 'Commit::StageUntracked',
+}
+
 
 def configure(toolbar, parent=None):
     """Launches the Toolbar configure dialog"""
@@ -229,6 +235,7 @@ class ToolBar(QtWidgets.QToolBar):
     def add_action_from_data(self, data):
         parent = data['parent']
         child = data['child']
+        child = RENAMED.get(child, child)
 
         if child == self.SEPARATOR:
             toolbar_action = self.addSeparator()
@@ -367,28 +374,33 @@ class ToolbarView(standard.Dialog):
         commands = self.toolbar.commands
         for action in self.toolbar.actions():
             data = action.data()
-            if data['child'] == self.toolbar.SEPARATOR:
+            try:
+                command_name = data['child']
+            except KeyError:
+                continue
+            command_name = RENAMED.get(command_name, command_name)
+            if command_name == self.toolbar.SEPARATOR:
                 self.add_separator_action()
-            else:
-                try:
-                    child_data = data['child']
-                    command = commands[child_data]
-                except KeyError:
-                    pass
-                title = command['title']
-                icon = command.get('icon', None)
-                tooltip = command.get('tooltip', None)
-                self.right_list.add_item(title, tooltip, data, icon)
+                continue
+            try:
+                command = commands[command_name]
+            except KeyError:
+                continue
+            title = command['title']
+            icon = command.get('icon', None)
+            tooltip = command.get('tooltip', None)
+            self.right_list.add_item(title, tooltip, data, icon)
 
     def load_left_items(self):
         commands = self.toolbar.commands
         for parent in self.toolbar.tree_layout:
             top = self.left_list.insert_top(parent)
             for item in self.toolbar.tree_layout[parent]:
+                item = RENAMED.get(item, item)
                 try:
                     command = commands[item]
                 except KeyError:
-                    pass
+                    continue
                 icon = command.get('icon', None)
                 tooltip = command.get('tooltip', None)
                 child = create_child(parent, item, command['title'], tooltip, icon)
