@@ -99,7 +99,6 @@ class ActionButtons(QFlowLayoutWidget):
         """Unstage selected files, or all files if no selection exists."""
         context = self.context
         paths = context.selection.staged
-        context = self.context
         if not paths:
             cmds.do(cmds.UnstageAll, context)
         else:
