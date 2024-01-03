@@ -5,6 +5,9 @@ v4.4.2
 
 Usability, bells and whistles
 -----------------------------
+* "Stage Changed Files To Commit" was added to the available toolbar actions.
+  (`#1371 <https://github.com/git-cola/git-cola/issues/1371>`_)
+
 * `Ctrl + Space` can now be used to display the autocomplete options in input fields
   that provide autocompletion.
 
