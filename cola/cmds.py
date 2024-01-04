@@ -2657,6 +2657,10 @@ class StageUntracked(StageCarefully):
     def init_paths(self):
         self.paths = self.model.untracked
 
+    def stage_all(self):
+        """Disable the stage_all() behavior for untracked files"""
+        return (0, '', '')
+
 
 class StageModifiedAndUntracked(StageCarefully):
     """Stage all untracked files."""
