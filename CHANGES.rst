@@ -36,6 +36,10 @@ Translations
 * Updated Polish translation.
   (`#1368 <https://github.com/git-cola/git-cola/pull/1368>`_)
 
+Packaging and Dependencies
+--------------------------
+* The vendored `qtpy` library was updated to `v2.4.1`.
+
 Development
 -----------
 * upload-artifact and setup-python github actions were upgraded.
