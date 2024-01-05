@@ -42,10 +42,10 @@ trees:
     commands:
       develop: ${PIP} install --editable .
       doc: garden -vv cmd docs html man
-      check: |
-        garden -vv test
-        garden -vv doc
-        garden -vv pylint
+      check>:
+        - test
+        - doc
+        - pylint
       fmt: |
         ${CERCIS} --version
         ${GIT} ls-files -- '*.py' |
@@ -59,9 +59,9 @@ trees:
             export DESTDIR="${DESTDIR}"
         fi
         ${PIP} install --disable-pip-version-check $pip_root --prefix=${prefix} "$@" .
-      i18n: |
-        garden -vv pot
-        garden -vv po
+      i18n>:
+        - pot
+        - po
       macos/app: |
         ${MKDIR_P} ${cola_app}/Contents/MacOS
         ${MKDIR_P} ${cola_app_resources}
