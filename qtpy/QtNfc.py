@@ -20,6 +20,6 @@ if PYQT5:
 elif PYQT6:
     from PyQt6.QtNfc import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtNfc')
+    raise QtBindingMissingModuleError(name="QtNfc")
 elif PYSIDE6:
     from PySide6.QtNfc import *

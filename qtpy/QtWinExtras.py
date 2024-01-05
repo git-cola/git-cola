@@ -14,18 +14,18 @@ from . import (
     PYQT6,
     PYSIDE2,
     PYSIDE6,
-    QtModuleNotInQtVersionError,
     QtModuleNotInOSError,
+    QtModuleNotInQtVersionError,
 )
 
-if sys.platform == 'win32':
+if sys.platform == "win32":
     if PYQT5:
         from PyQt5.QtWinExtras import *
     elif PYQT6:
-        raise QtModuleNotInQtVersionError(name='QtWinExtras')
+        raise QtModuleNotInQtVersionError(name="QtWinExtras")
     elif PYSIDE2:
         from PySide2.QtWinExtras import *
     elif PYSIDE6:
-        raise QtModuleNotInQtVersionError(name='QtWinExtras')
+        raise QtModuleNotInQtVersionError(name="QtWinExtras")
 else:
-    raise QtModuleNotInOSError(name='QtWinExtras')
+    raise QtModuleNotInOSError(name="QtWinExtras")

@@ -14,18 +14,18 @@ from . import (
     PYQT6,
     PYSIDE2,
     PYSIDE6,
-    QtModuleNotInQtVersionError,
     QtModuleNotInOSError,
+    QtModuleNotInQtVersionError,
 )
 
-if sys.platform == 'darwin':
+if sys.platform == "darwin":
     if PYQT5:
         from PyQt5.QtMacExtras import *
     elif PYQT6:
-        raise QtModuleNotInQtVersionError(name='QtMacExtras')
+        raise QtModuleNotInQtVersionError(name="QtMacExtras")
     elif PYSIDE2:
         from PySide2.QtMacExtras import *
     elif PYSIDE6:
-        raise QtModuleNotInQtVersionError(name='QtMacExtras')
+        raise QtModuleNotInQtVersionError(name="QtMacExtras")
 else:
-    raise QtModuleNotInOSError(name='QtMacExtras')
+    raise QtModuleNotInOSError(name="QtMacExtras")

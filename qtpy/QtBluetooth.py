@@ -20,6 +20,6 @@ if PYQT5:
 elif PYQT6:
     from PyQt6.QtBluetooth import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtBluetooth')
+    raise QtBindingMissingModuleError(name="QtBluetooth")
 elif PYSIDE6:
     from PySide6.QtBluetooth import *

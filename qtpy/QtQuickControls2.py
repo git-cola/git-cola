@@ -15,10 +15,8 @@ from . import (
     QtBindingMissingModuleError,
 )
 
-if PYQT5:
-    raise QtBindingMissingModuleError(name='QtQuickControls2')
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtQuickControls2')
+if PYQT5 or PYQT6:
+    raise QtBindingMissingModuleError(name="QtQuickControls2")
 elif PYSIDE2:
     from PySide2.QtQuickControls2 import *
 elif PYSIDE6:

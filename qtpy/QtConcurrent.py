@@ -15,10 +15,8 @@ from . import (
     QtBindingMissingModuleError,
 )
 
-if PYQT5:
-    raise QtBindingMissingModuleError(name='QtConcurrent')
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtConcurrent')
+if PYQT5 or PYQT6:
+    raise QtBindingMissingModuleError(name="QtConcurrent")
 elif PYSIDE2:
     from PySide2.QtConcurrent import *
 elif PYSIDE6:

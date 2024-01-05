@@ -7,19 +7,27 @@
 
 """Provides QtSql classes and functions."""
 
-from . import PYQT5, PYQT6, PYSIDE6, PYSIDE2
+from . import PYQT5, PYQT6, PYSIDE2, PYSIDE6
 
 if PYQT5:
     from PyQt5.QtSql import *
 elif PYQT6:
     from PyQt6.QtSql import *
-    QSqlDatabase.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
+
+    QSqlDatabase.exec_ = lambda self, *args, **kwargs: self.exec(
+        *args,
+        **kwargs,
+    )
     QSqlQuery.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
     QSqlResult.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
 elif PYSIDE6:
     from PySide6.QtSql import *
+
     # Map DeprecationWarning methods
-    QSqlDatabase.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
+    QSqlDatabase.exec_ = lambda self, *args, **kwargs: self.exec(
+        *args,
+        **kwargs,
+    )
     QSqlQuery.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
     QSqlResult.exec_ = lambda self, *args, **kwargs: self.exec(*args, **kwargs)
 elif PYSIDE2:

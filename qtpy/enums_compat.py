@@ -25,7 +25,7 @@ if PYQT6:
         and adapted to also copy enum values aliased under different names.
 
         """
-        class_names = [name for name in dir(module) if name.startswith('Q')]
+        class_names = [name for name in dir(module) if name.startswith("Q")]
         for class_name in class_names:
             klass = getattr(module, class_name)
             if not isinstance(klass, sip.wrappertype):

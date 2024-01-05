@@ -7,61 +7,60 @@
 
 """Provides QtOpenGL classes and functions."""
 
+import contextlib
+
 from . import PYQT5, PYQT6, PYSIDE2, PYSIDE6
 
 if PYQT5:
-    from PyQt5.QtOpenGL import *
     from PyQt5.QtGui import (
         QOpenGLBuffer,
-        QOpenGLFramebufferObject,
-        QOpenGLFramebufferObjectFormat,
-        QOpenGLShader,
-        QOpenGLShaderProgram,
         QOpenGLContext,
         QOpenGLContextGroup,
         QOpenGLDebugLogger,
         QOpenGLDebugMessage,
+        QOpenGLFramebufferObject,
+        QOpenGLFramebufferObjectFormat,
         QOpenGLPixelTransferOptions,
+        QOpenGLShader,
+        QOpenGLShaderProgram,
         QOpenGLTexture,
         QOpenGLTextureBlitter,
         QOpenGLVersionProfile,
         QOpenGLVertexArrayObject,
         QOpenGLWindow,
     )
+    from PyQt5.QtOpenGL import *
 
     # These are not present on some architectures such as armhf
-    try:
+    with contextlib.suppress(ImportError):
         from PyQt5.QtGui import QOpenGLTimeMonitor, QOpenGLTimerQuery
-    except ImportError:
-        pass
+
 elif PYQT6:
-    from PyQt6.QtOpenGL import *
     from PyQt6.QtGui import QOpenGLContext, QOpenGLContextGroup
+    from PyQt6.QtOpenGL import *
 elif PYSIDE6:
-    from PySide6.QtOpenGL import *
     from PySide6.QtGui import QOpenGLContext, QOpenGLContextGroup
+    from PySide6.QtOpenGL import *
 elif PYSIDE2:
-    from PySide2.QtOpenGL import *
     from PySide2.QtGui import (
         QOpenGLBuffer,
-        QOpenGLFramebufferObject,
-        QOpenGLFramebufferObjectFormat,
-        QOpenGLShader,
-        QOpenGLShaderProgram,
         QOpenGLContext,
         QOpenGLContextGroup,
         QOpenGLDebugLogger,
         QOpenGLDebugMessage,
+        QOpenGLFramebufferObject,
+        QOpenGLFramebufferObjectFormat,
         QOpenGLPixelTransferOptions,
+        QOpenGLShader,
+        QOpenGLShaderProgram,
         QOpenGLTexture,
         QOpenGLTextureBlitter,
         QOpenGLVersionProfile,
         QOpenGLVertexArrayObject,
         QOpenGLWindow,
     )
+    from PySide2.QtOpenGL import *
 
     # These are not present on some architectures such as armhf
-    try:
+    with contextlib.suppress(ImportError):
         from PySide2.QtGui import QOpenGLTimeMonitor, QOpenGLTimerQuery
-    except ImportError:
-        pass

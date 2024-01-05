@@ -23,9 +23,9 @@ if PYQT5:
 elif PYQT6:
     from PyQt6.QtDBus import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtDBus')
+    raise QtBindingMissingModuleError(name="QtDBus")
 elif PYSIDE6:
-    if sys.platform != 'win32':
+    if sys.platform != "win32":
         from PySide6.QtDBus import *
     else:
-        raise QtModuleNotInOSError(name='QtDBus')
+        raise QtModuleNotInOSError(name="QtDBus")

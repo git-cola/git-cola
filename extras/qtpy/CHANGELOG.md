@@ -1,5 +1,108 @@
 # History of changes
 
+## Version 2.4.1 (2023-10-23)
+
+### Issues Closed
+
+* [Issue 462](https://github.com/spyder-ide/qtpy/issues/462) - Release QtPy 2.4.1
+* [Issue 458](https://github.com/spyder-ide/qtpy/issues/458) - Typo causes failed QWebEngineScript with PySide6
+
+In this release 2 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 459](https://github.com/spyder-ide/qtpy/pull/459) - [pre-commit.ci] pre-commit autoupdate, by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [PR 456](https://github.com/spyder-ide/qtpy/pull/456) - [pre-commit.ci] pre-commit autoupdate, by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [PR 455](https://github.com/spyder-ide/qtpy/pull/455) - PR: Fix bug when importing from `PySide6.QtWebEngineCore/QtWebEngineWidgets` (`QWebEngineScrip` vs `QWebEngineScript`) , by [@damonlynch](https://github.com/damonlynch)
+
+In this release 3 pull requests were closed.
+
+
+----
+
+
+## Version 2.4.0 (2023-08-29)
+
+### Issues Closed
+
+* [Issue 453](https://github.com/spyder-ide/qtpy/issues/453) - Release QtPy 2.4.0
+* [Issue 447](https://github.com/spyder-ide/qtpy/issues/447) - Type hints not working for `qtpy` specific imports ([PR 450](https://github.com/spyder-ide/qtpy/pull/450) by [@wkrasnicki](https://github.com/wkrasnicki))
+* [Issue 442](https://github.com/spyder-ide/qtpy/issues/442) - Some compatibility issues when using latest PyQt6 or PySide6 (6.5+) ([PR 448](https://github.com/spyder-ide/qtpy/pull/448) by [@dalthviz](https://github.com/dalthviz))
+* [Issue 439](https://github.com/spyder-ide/qtpy/issues/439) -  qtpy.uic.loadUiType failing for PySide6  ([PR 440](https://github.com/spyder-ide/qtpy/pull/440) by [@JaRoSchm](https://github.com/JaRoSchm))
+* [Issue 432](https://github.com/spyder-ide/qtpy/issues/432) - Add compatibility layer for keywords arguments of `QFileDialog ` `get*` class methods ([PR 433](https://github.com/spyder-ide/qtpy/pull/433) by [@Czaki](https://github.com/Czaki))
+* [Issue 423](https://github.com/spyder-ide/qtpy/issues/423) - Fix flaky importlib error on Ubuntu Python 3.7 conda CI job ([PR 425](https://github.com/spyder-ide/qtpy/pull/425) by [@CAM-Gerlach](https://github.com/CAM-Gerlach))
+* [Issue 383](https://github.com/spyder-ide/qtpy/issues/383) - Add extra packages available for PyQt to CI for testing ([PR 446](https://github.com/spyder-ide/qtpy/pull/446) by [@dalthviz](https://github.com/dalthviz))
+* [Issue 345](https://github.com/spyder-ide/qtpy/issues/345) - Use pre-commit to automatically format code with Black and imports with isort ([PR 451](https://github.com/spyder-ide/qtpy/pull/451) by [@Czaki](https://github.com/Czaki))
+
+In this release 8 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 451](https://github.com/spyder-ide/qtpy/pull/451) - PR: Setup pre-commit and format all code with Black, by [@Czaki](https://github.com/Czaki) ([345](https://github.com/spyder-ide/qtpy/issues/345))
+* [PR 450](https://github.com/spyder-ide/qtpy/pull/450) - PR: Update README with information on Pyright/Pylance integration and add CLI subcommand to help generate the related config, by [@wkrasnicki](https://github.com/wkrasnicki) ([447](https://github.com/spyder-ide/qtpy/issues/447))
+* [PR 449](https://github.com/spyder-ide/qtpy/pull/449) - PR: Improve enum to flags aliasing for PyQt6 and PySide6 > 6.3 and `QFileDialog` static methods kwarg compatibility, by [@dalthviz](https://github.com/dalthviz)
+* [PR 448](https://github.com/spyder-ide/qtpy/pull/448) - PR: Restore `QtWidgets.QFileDialog.Options` access as `QtWidgets.QFileDialog.Option` alias (PyQt6), by [@dalthviz](https://github.com/dalthviz) ([442](https://github.com/spyder-ide/qtpy/issues/442))
+* [PR 446](https://github.com/spyder-ide/qtpy/pull/446) - PR: Test using `PyQt` extra packages, by [@dalthviz](https://github.com/dalthviz) ([383](https://github.com/spyder-ide/qtpy/issues/383))
+* [PR 445](https://github.com/spyder-ide/qtpy/pull/445) - PR: Add mappings for deprecated `QDropEvent` `pos` and `posF` methods, by [@dalthviz](https://github.com/dalthviz)
+* [PR 444](https://github.com/spyder-ide/qtpy/pull/444) - PR: Restore `Qt.ItemFlags` access as `Qt.ItemFlag` alias (PyQt6), by [@dalthviz](https://github.com/dalthviz)
+* [PR 443](https://github.com/spyder-ide/qtpy/pull/443) - PR: Update bindings upper bound version to 6.5 and ignore `DeprecationWarning` (CI), by [@dalthviz](https://github.com/dalthviz)
+* [PR 440](https://github.com/spyder-ide/qtpy/pull/440) - PR: Replace custom implementation with loadUiType from PySide6, by [@JaRoSchm](https://github.com/JaRoSchm) ([439](https://github.com/spyder-ide/qtpy/issues/439))
+* [PR 438](https://github.com/spyder-ide/qtpy/pull/438) - PR: Make `exec()` for PySide2, by [@StSav012](https://github.com/StSav012)
+* [PR 437](https://github.com/spyder-ide/qtpy/pull/437) - PR: Make `QMenu.addAction` and `QToolBar.addAction` compatible with Qt6 arguments' order, by [@StSav012](https://github.com/StSav012)
+* [PR 434](https://github.com/spyder-ide/qtpy/pull/434) - PR: Enable more tests on CI, by [@Czaki](https://github.com/Czaki)
+* [PR 433](https://github.com/spyder-ide/qtpy/pull/433) - PR: Add wrapers to fix argument name in `QFileDialog` `get*`methods, by [@Czaki](https://github.com/Czaki) ([432](https://github.com/spyder-ide/qtpy/issues/432))
+* [PR 431](https://github.com/spyder-ide/qtpy/pull/431) - PR: Rename `utils.py` to `_utils.py` to make it private, by [@StSav012](https://github.com/StSav012)
+* [PR 425](https://github.com/spyder-ide/qtpy/pull/425) - PR: Make CI jobs much faster & less flaky w/Mamba, 1-pass solve & other tweaks, by [@CAM-Gerlach](https://github.com/CAM-Gerlach) ([423](https://github.com/spyder-ide/qtpy/issues/423))
+* [PR 424](https://github.com/spyder-ide/qtpy/pull/424) - PR: Add `QEnum` macro for PyQt bindings, by [@phil65](https://github.com/phil65)
+* [PR 422](https://github.com/spyder-ide/qtpy/pull/422) - PR: Use static calls of `exec_` elsewhere where needed, and test them, by [@StSav012](https://github.com/StSav012)
+* [PR 421](https://github.com/spyder-ide/qtpy/pull/421) - PR: Symmetrize `QDateTime.toPython` and `toPyDateTime`, etc., by [@StSav012](https://github.com/StSav012)
+* [PR 420](https://github.com/spyder-ide/qtpy/pull/420) - PR: Symmetrize `path` and `location` of `QLibraryInfo`, by [@StSav012](https://github.com/StSav012)
+* [PR 419](https://github.com/spyder-ide/qtpy/pull/419) - PR: Add missing issue closed for v2.3.1 changelog entry, by [@dalthviz](https://github.com/dalthviz)
+* [PR 387](https://github.com/spyder-ide/qtpy/pull/387) - PR: Improve import modularity between `QtGui`, `QtWidgets` and `QtOpenGL*` related modules, by [@DaelonSuzuka](https://github.com/DaelonSuzuka)
+
+In this release 21 pull requests were closed.
+
+
+----
+
+
+## Version 2.3.1 (2023-03-28)
+
+### Issues Closed
+
+* [Issue 416](https://github.com/spyder-ide/qtpy/issues/416) - Release QtPy 2.3.1
+* [Issue 412](https://github.com/spyder-ide/qtpy/issues/412) - How to catch QtBindingsNotFoundError ([PR 413](https://github.com/spyder-ide/qtpy/pull/413) by [@cbrnr](https://github.com/cbrnr))
+* [Issue 405](https://github.com/spyder-ide/qtpy/issues/405) - Remove patch that "may be limited to `PySide-5.11a1` only"
+* [Issue 402](https://github.com/spyder-ide/qtpy/issues/402) - `QTextStreamManipulator` has no `exec` method on PyQt5/6
+* [Issue 394](https://github.com/spyder-ide/qtpy/issues/394) - Differences in QEvent subclass APIs in PyQt6 cause attribute and/or type errors
+* [Issue 390](https://github.com/spyder-ide/qtpy/issues/390) - QtBindingsNotFoundError is not raised correctly (from None) in __init__ ([PR 391](https://github.com/spyder-ide/qtpy/pull/391) by [@CAM-Gerlach](https://github.com/CAM-Gerlach))
+* [Issue 389](https://github.com/spyder-ide/qtpy/issues/389) - Make `QtWidgets` and `QtGui` modules compatible with `PySide6`/`PyQt6` import locations for `PySide2`/`PyQt5` ([PR 410](https://github.com/spyder-ide/qtpy/pull/410) by [@StSav012](https://github.com/StSav012))
+* [Issue 386](https://github.com/spyder-ide/qtpy/issues/386) - Add official support for Python 3.11 ([PR 392](https://github.com/spyder-ide/qtpy/pull/392) by [@CAM-Gerlach](https://github.com/CAM-Gerlach))
+
+In this release 8 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 417](https://github.com/spyder-ide/qtpy/pull/417) - PR: Add compatibility mappings between bindings for all children of `QSinglePointEvent`, by [@StSav012](https://github.com/StSav012)
+* [PR 414](https://github.com/spyder-ide/qtpy/pull/414) - PR: Skip QtPositioning tests on Conda Qt >=6.4.3 where its not included, by [@CAM-Gerlach](https://github.com/CAM-Gerlach)
+* [PR 413](https://github.com/spyder-ide/qtpy/pull/413) - PR: Make `QtBindingsNotFoundError` also inherit from `ImportError`, by [@cbrnr](https://github.com/cbrnr) ([412](https://github.com/spyder-ide/qtpy/issues/412))
+* [PR 410](https://github.com/spyder-ide/qtpy/pull/410) - PR: Improve compatibility for `QtWidgets` and `QtGui` modules between Qt5 and Qt6 bindings, by [@StSav012](https://github.com/StSav012)
+* [PR 408](https://github.com/spyder-ide/qtpy/pull/408) - PR: Add mappings for QMouseEvent methods, by [@StSav012](https://github.com/StSav012)
+* [PR 407](https://github.com/spyder-ide/qtpy/pull/407) - PR: Remove patch that may be limited to PySide-5.11a1 only, by [@StSav012](https://github.com/StSav012)
+* [PR 404](https://github.com/spyder-ide/qtpy/pull/404) - PR: Don't make `QTextStreamManipulator.exec_` on PyQt5/6, by [@StSav012](https://github.com/StSav012)
+* [PR 401](https://github.com/spyder-ide/qtpy/pull/401) - PR: Unskip PySide2 5.15 on Python 3.11 with Conda on CIs, by [@CAM-Gerlach](https://github.com/CAM-Gerlach)
+* [PR 398](https://github.com/spyder-ide/qtpy/pull/398) - PR: Make warning usage consistant and refine messages, by [@CAM-Gerlach](https://github.com/CAM-Gerlach)
+* [PR 397](https://github.com/spyder-ide/qtpy/pull/397) - Simplify CI script following Qt 5.15.6 feedstock update, by [@CAM-Gerlach](https://github.com/CAM-Gerlach)
+* [PR 393](https://github.com/spyder-ide/qtpy/pull/393) - PR: Fix `LibraryLocation` -> `LibraryPath` renaming due to deprecation with Qt6, by [@StSav012](https://github.com/StSav012)
+* [PR 392](https://github.com/spyder-ide/qtpy/pull/392) - PR: Add Python 3.11 to CIs/tags & overhaul CI config, by [@CAM-Gerlach](https://github.com/CAM-Gerlach) ([386](https://github.com/spyder-ide/qtpy/issues/386))
+* [PR 391](https://github.com/spyder-ide/qtpy/pull/391) - PR: Use raise from None when raising QtBindingsNotFoundError in __init__, by [@CAM-Gerlach](https://github.com/CAM-Gerlach) ([390](https://github.com/spyder-ide/qtpy/issues/390))
+
+In this release 13 pull requests were closed.
+
+
+----
+
+
 ## Version 2.3.0 (2022-11-07)
 
 ### Issues Closed

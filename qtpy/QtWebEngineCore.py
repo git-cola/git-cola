@@ -20,14 +20,16 @@ if PYQT5:
         from PyQt5.QtWebEngineCore import *
     except ModuleNotFoundError as error:
         raise QtModuleNotInstalledError(
-            name='QtWebEngineCore', missing_package='PyQtWebEngine'
+            name="QtWebEngineCore",
+            missing_package="PyQtWebEngine",
         ) from error
 elif PYQT6:
     try:
         from PyQt6.QtWebEngineCore import *
     except ModuleNotFoundError as error:
         raise QtModuleNotInstalledError(
-            name='QtWebEngineCore', missing_package='PyQt6-WebEngine'
+            name="QtWebEngineCore",
+            missing_package="PyQt6-WebEngine",
         ) from error
 elif PYSIDE2:
     from PySide2.QtWebEngineCore import *

@@ -15,11 +15,7 @@ from . import (
     QtBindingMissingModuleError,
 )
 
-if PYQT5:
-    raise QtBindingMissingModuleError(name='QtStateMachine')
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtStateMachine')
-elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtStateMachine')
+if PYQT5 or PYQT6 or PYSIDE2:
+    raise QtBindingMissingModuleError(name="QtStateMachine")
 elif PYSIDE6:
     from PySide6.QtStateMachine import *

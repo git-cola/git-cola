@@ -15,10 +15,8 @@ from . import (
     QtBindingMissingModuleError,
 )
 
-if PYQT5:
-    raise QtBindingMissingModuleError(name='QtScxml')
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtScxml')
+if PYQT5 or PYQT6:
+    raise QtBindingMissingModuleError(name="QtScxml")
 elif PYSIDE2:
     from PySide2.QtScxml import *
 elif PYSIDE6:

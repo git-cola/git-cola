@@ -16,10 +16,10 @@ from . import (
 )
 
 if PYQT5:
-    raise QtBindingMissingModuleError(name='QtSvgWidgets')
+    raise QtBindingMissingModuleError(name="QtSvgWidgets")
 elif PYQT6:
     from PyQt6.QtSvgWidgets import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtSvgWidgets')
+    raise QtBindingMissingModuleError(name="QtSvgWidgets")
 elif PYSIDE6:
     from PySide6.QtSvgWidgets import *

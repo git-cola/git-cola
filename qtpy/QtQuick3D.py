@@ -20,6 +20,6 @@ if PYQT5:
 elif PYQT6:
     from PyQt6.QtQuick3D import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtQuick3D')
+    raise QtBindingMissingModuleError(name="QtQuick3D")
 elif PYSIDE6:
     from PySide6.QtQuick3D import *

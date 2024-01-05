@@ -12,8 +12,8 @@ from . import (
     PYQT6,
     PYSIDE2,
     PYSIDE6,
-    QtModuleNotInstalledError,
     QtBindingMissingModuleError,
+    QtModuleNotInstalledError,
 )
 
 if PYQT5:
@@ -21,16 +21,18 @@ if PYQT5:
         from PyQt5.QtNetworkAuth import *
     except ModuleNotFoundError as error:
         raise QtModuleNotInstalledError(
-            name='QtNetworkAuth', missing_package='PyQtNetworkAuth'
+            name="QtNetworkAuth",
+            missing_package="PyQtNetworkAuth",
         ) from error
 elif PYQT6:
     try:
         from PyQt6.QtNetworkAuth import *
     except ModuleNotFoundError as error:
         raise QtModuleNotInstalledError(
-            name='QtNetworkAuth', missing_package='PyQt6-NetworkAuth'
+            name="QtNetworkAuth",
+            missing_package="PyQt6-NetworkAuth",
         ) from error
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtNetworkAuth')
+    raise QtBindingMissingModuleError(name="QtNetworkAuth")
 elif PYSIDE6:
     from PySide6.QtNetworkAuth import *

@@ -19,7 +19,5 @@ if PYQT5:
     from PyQt5.sip import *
 elif PYQT6:
     from PyQt6.sip import *
-elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='sip')
-elif PYSIDE6:
-    raise QtBindingMissingModuleError(name='sip')
+elif PYSIDE2 or PYSIDE6:
+    raise QtBindingMissingModuleError(name="sip")

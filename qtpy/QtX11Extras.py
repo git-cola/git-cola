@@ -14,18 +14,18 @@ from . import (
     PYQT6,
     PYSIDE2,
     PYSIDE6,
-    QtModuleNotInQtVersionError,
     QtModuleNotInOSError,
+    QtModuleNotInQtVersionError,
 )
 
-if sys.platform == 'linux':
+if sys.platform == "linux":
     if PYQT5:
         from PyQt5.QtX11Extras import *
     elif PYQT6:
-        raise QtModuleNotInQtVersionError(name='QtX11Extras')
+        raise QtModuleNotInQtVersionError(name="QtX11Extras")
     elif PYSIDE2:
         from PySide2.QtX11Extras import *
     elif PYSIDE6:
-        raise QtModuleNotInQtVersionError(name='QtX11Extras')
+        raise QtModuleNotInQtVersionError(name="QtX11Extras")
 else:
-    raise QtModuleNotInOSError(name='QtX11Extras')
+    raise QtModuleNotInOSError(name="QtX11Extras")

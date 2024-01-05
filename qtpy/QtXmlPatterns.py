@@ -18,8 +18,8 @@ from . import (
 if PYQT5:
     from PyQt5.QtXmlPatterns import *
 elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtXmlPatterns')
+    raise QtBindingMissingModuleError(name="QtXmlPatterns")
 elif PYSIDE2:
     from PySide2.QtXmlPatterns import *
 elif PYSIDE6:
-    raise QtBindingMissingModuleError(name='QtXmlPatterns')
+    raise QtBindingMissingModuleError(name="QtXmlPatterns")

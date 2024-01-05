@@ -20,6 +20,6 @@ if PYQT5:
 elif PYQT6:
     from PyQt6.QtDesigner import *
 elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtDesigner')
+    raise QtBindingMissingModuleError(name="QtDesigner")
 elif PYSIDE6:
     from PySide6.QtDesigner import *

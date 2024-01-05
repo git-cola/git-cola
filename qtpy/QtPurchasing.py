@@ -21,11 +21,8 @@ if PYQT5:
         from PyQt5.QtPurchasing import *
     except ModuleNotFoundError as error:
         raise QtModuleNotInstalledError(
-            name='QtPurchasing', missing_package='PyQtPurchasing'
+            name="QtPurchasing",
+            missing_package="PyQtPurchasing",
         ) from error
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtPurchasing')
-elif PYSIDE2:
-    raise QtBindingMissingModuleError(name='QtPurchasing')
-elif PYSIDE6:
-    raise QtBindingMissingModuleError(name='QtPurchasing')
+elif PYQT6 or PYSIDE2 or PYSIDE6:
+    raise QtBindingMissingModuleError(name="QtPurchasing")

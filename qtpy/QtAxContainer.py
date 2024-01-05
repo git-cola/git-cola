@@ -15,10 +15,8 @@ from . import (
     QtBindingMissingModuleError,
 )
 
-if PYQT5:
-    raise QtBindingMissingModuleError(name='QtAxContainer')
-elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtAxContainer')
+if PYQT5 or PYQT6:
+    raise QtBindingMissingModuleError(name="QtAxContainer")
 elif PYSIDE2:
     from PySide2.QtAxContainer import *
 elif PYSIDE6:

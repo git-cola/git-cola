@@ -8,7 +8,7 @@
 
 """Provides QtTest and functions"""
 
-from . import PYQT5, PYQT6, PYSIDE6, PYSIDE2
+from . import PYQT5, PYQT6, PYSIDE2, PYSIDE6
 
 if PYQT5:
     from PyQt5.QtTest import *

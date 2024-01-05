@@ -18,8 +18,8 @@ from . import (
 if PYQT5:
     from PyQt5.QtTextToSpeech import *
 elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtTextToSpeech')
+    raise QtBindingMissingModuleError(name="QtTextToSpeech")
 elif PYSIDE2:
     from PySide2.QtTextToSpeech import *
 elif PYSIDE6:
-    raise QtBindingMissingModuleError(name='QtTextToSpeech')
+    raise QtBindingMissingModuleError(name="QtTextToSpeech")

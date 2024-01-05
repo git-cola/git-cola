@@ -18,8 +18,8 @@ from . import (
 if PYQT5:
     from PyQt5.QtLocation import *
 elif PYQT6:
-    raise QtBindingMissingModuleError(name='QtLocation')
+    raise QtBindingMissingModuleError(name="QtLocation")
 elif PYSIDE2:
     from PySide2.QtLocation import *
 elif PYSIDE6:
-    raise QtBindingMissingModuleError(name='QtLocation')
+    raise QtBindingMissingModuleError(name="QtLocation")
