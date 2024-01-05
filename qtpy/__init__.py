@@ -60,8 +60,6 @@ import platform
 import sys
 import warnings
 
-from packaging.version import parse
-
 # Version of QtPy
 __version__ = "2.4.1"
 
@@ -184,6 +182,20 @@ QT4 = QT6 = PYQT4 = PYQT6 = PYSIDE = PYSIDE2 = PYSIDE6 = False
 PYQT_VERSION = None
 PYSIDE_VERSION = None
 QT_VERSION = None
+
+
+def _parse_int(value):
+    """Convert a value into an integer"""
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
+
+def parse(version):
+    """Parse a version string into a tuple of ints"""
+    return tuple(_parse_int(x) for x in version.split('.'))
+
 
 # Unless `FORCE_QT_API` is set, use previously imported Qt Python bindings
 if not os.environ.get("FORCE_QT_API"):
