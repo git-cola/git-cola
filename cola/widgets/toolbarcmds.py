@@ -178,12 +178,12 @@ COMMANDS = {
         'icon': 'style_dialog_discard',
     },
     'Commit::StageModified': {
-        'title': 'Stage Changed Files To Commit',
+        'title': 'Stage Modified',
         'action': cmds.run(cmds.StageModified),
         'icon': 'add',
     },
     'Commit::StageUntracked': {
-        'title': 'Stage All Untracked',
+        'title': 'Stage Untracked',
         'action': cmds.run(cmds.StageUntracked),
         'icon': 'add',
     },

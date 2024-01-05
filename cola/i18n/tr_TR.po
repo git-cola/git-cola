@@ -3268,14 +3268,6 @@ msgstr ""
 msgid "Stage / Unstage All"
 msgstr ""
 
-#: cola/widgets/main.py:232
-msgid "Stage All Untracked"
-msgstr ""
-
-#: cola/widgets/main.py:224
-msgid "Stage Changed Files To Commit"
-msgstr ""
-
 #: cola/widgets/diff.py:1016
 msgid "Stage Diff Hunk"
 msgstr ""
@@ -3696,10 +3688,6 @@ msgstr ""
 
 #: cola/widgets/diff.py:1061
 msgid "Unstage Diff Hunk"
-msgstr ""
-
-#: cola/widgets/main.py:213
-msgid "Unstage From Commit"
 msgstr ""
 
 #: cola/widgets/status.py:823 cola/widgets/status.py:858

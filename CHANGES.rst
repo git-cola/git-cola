@@ -5,7 +5,7 @@ v4.4.2
 
 Usability, bells and whistles
 -----------------------------
-* "Stage Changed Files To Commit" was added to the available toolbar actions.
+* "Stage Modified" was added to the available toolbar actions.
   (`#1371 <https://github.com/git-cola/git-cola/issues/1371>`_)
 
 * "Stage Untracked" no longer stages modified files when the list of

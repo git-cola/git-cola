@@ -3489,22 +3489,14 @@ msgstr "Köa ändrade"
 msgid "Stage / Unstage All"
 msgstr ""
 
-#: cola/widgets/main.py:232
-msgid "Stage All Untracked"
-msgstr ""
-
-#: cola/widgets/main.py:224
-msgid "Stage Changed Files To Commit"
-msgstr "Köa ändrade filer för incheckning"
-
 #: cola/widgets/diff.py:1016
 #, fuzzy
 msgid "Stage Diff Hunk"
-msgstr "Inledande revision"
+msgstr ""
 
 #: cola/cmds.py:2691
 msgid "Stage Modified"
-msgstr ""
+msgstr "Köa ändrade"
 
 #: cola/cmds.py:2724
 msgid "Stage Modified and Untracked"
@@ -3524,12 +3516,12 @@ msgstr "Oköade ändringar"
 #: cola/cmds.py:2702
 #, fuzzy
 msgid "Stage Unmerged"
-msgstr "Köa ändrade"
+msgstr "Köa ändrade unmerged"
 
 #: cola/cmds.py:2713
 #, fuzzy
 msgid "Stage Untracked"
-msgstr "Köa ändrade"
+msgstr "Köa ändrade untracked"
 
 #: cola/widgets/commitmsg.py:438
 #, fuzzy
@@ -3940,10 +3932,6 @@ msgstr ""
 #: cola/widgets/diff.py:1061
 msgid "Unstage Diff Hunk"
 msgstr ""
-
-#: cola/widgets/main.py:213
-msgid "Unstage From Commit"
-msgstr "Ta bort från incheckningskö"
 
 #: cola/widgets/status.py:823 cola/widgets/status.py:858
 msgid "Unstage Selected"

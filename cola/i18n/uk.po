@@ -3400,14 +3400,6 @@ msgstr "Проіндексувати / Видалити з проіндексо�
 msgid "Stage / Unstage All"
 msgstr ""
 
-#: cola/widgets/main.py:232
-msgid "Stage All Untracked"
-msgstr "Проіндексувати всі непроіндексовані файли"
-
-#: cola/widgets/main.py:224
-msgid "Stage Changed Files To Commit"
-msgstr "Додати змінені файли до коміту"
-
 #: cola/widgets/diff.py:1016
 msgid "Stage Diff Hunk"
 msgstr "Додати частину різниці до проіндексованого"
@@ -3847,10 +3839,6 @@ msgstr "Видалити все з проіндексованого"
 #: cola/widgets/diff.py:1061
 msgid "Unstage Diff Hunk"
 msgstr "Видалити частину різниці з проіндексованого"
-
-#: cola/widgets/main.py:213
-msgid "Unstage From Commit"
-msgstr "Прибрати з коміту"
 
 #: cola/widgets/status.py:823 cola/widgets/status.py:858
 msgid "Unstage Selected"

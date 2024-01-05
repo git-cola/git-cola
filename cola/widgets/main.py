@@ -209,7 +209,7 @@ class MainView(standard.MainWindow):
         self.undo_commit_action.setIcon(icons.style_dialog_discard())
 
         self.unstage_selected_action = add_action(
-            self, N_('Unstage From Commit'), cmds.run(cmds.UnstageSelected, context)
+            self, N_('Unstage'), cmds.run(cmds.UnstageSelected, context)
         )
         self.unstage_selected_action.setIcon(icons.remove())
 
@@ -220,7 +220,7 @@ class MainView(standard.MainWindow):
 
         self.stage_modified_action = add_action(
             self,
-            N_('Stage Changed Files To Commit'),
+            cmds.StageModified.name(),
             cmds.run(cmds.StageModified, context),
             hotkeys.STAGE_MODIFIED,
         )
@@ -228,7 +228,7 @@ class MainView(standard.MainWindow):
 
         self.stage_untracked_action = add_action(
             self,
-            N_('Stage All Untracked'),
+            cmds.StageUntracked.name(),
             cmds.run(cmds.StageUntracked, context),
             hotkeys.STAGE_UNTRACKED,
         )

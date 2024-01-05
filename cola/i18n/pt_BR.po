@@ -3391,14 +3391,6 @@ msgstr "Estágio / Sem estágio "
 msgid "Stage / Unstage All"
 msgstr ""
 
-#: cola/widgets/main.py:232
-msgid "Stage All Untracked"
-msgstr "Stage todos Untracked"
-
-#: cola/widgets/main.py:224
-msgid "Stage Changed Files To Commit"
-msgstr "Stage Arquivos Modificados para o Commit"
-
 #: cola/widgets/diff.py:1016
 msgid "Stage Diff Hunk"
 msgstr "Reverter pedaço do Diff"
@@ -3836,10 +3828,6 @@ msgstr "Unstage em Todos"
 #: cola/widgets/diff.py:1061
 msgid "Unstage Diff Hunk"
 msgstr "Unstage pedaço do Diff"
-
-#: cola/widgets/main.py:213
-msgid "Unstage From Commit"
-msgstr "Unstage do Commit"
 
 #: cola/widgets/status.py:823 cola/widgets/status.py:858
 msgid "Unstage Selected"
