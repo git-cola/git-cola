@@ -39,7 +39,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 * [Python](https://python.org/) 3.6 or newer.
 
-* [QtPy](https://github.com/spyder-ide/qtpy) 1.1.0 or newer.
+* [QtPy](https://github.com/spyder-ide/qtpy) 2.0.0 or newer.
 
 Git Cola uses QtPy, so you can choose between PyQt6, PyQt5 and PySide2 by setting
 the `QT_API` environment variable to `pyqt6`, `pyqt5` or `pyside2` as desired.
@@ -49,10 +49,10 @@ is not installed.
 Any of the following Python Qt libraries must be installed:
 
 * [PyQt5 / PyQt6](https://www.riverbankcomputing.com/software/pyqt/download5)
-  5.6 or newer is required. Qt 6.0 is also supported via QtPy.
+  5.9 or newer is required. Qt 6.2 or newer is also supported via QtPy.
 
 * [PySide2](https://github.com/PySide/PySide)
-  5.11.0 or newer.
+  5.12.0 or newer.
 
 
 ## Optional Features
