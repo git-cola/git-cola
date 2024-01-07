@@ -174,9 +174,7 @@ class BaseTextEditExtension(QtCore.QObject):
 
     def set_tabwidth(self, width):
         self._tabwidth = width
-        font = self.widget.font()
-        metrics = QtGui.QFontMetrics(font)
-        pixels = metrics.width('M' * width)
+        pixels = qtutils.text_width(self.widget.font(), 'M') * width
         self.widget.setTabStopWidth(pixels)
 
     def selected_line(self):
@@ -1152,7 +1150,8 @@ class LineNumbers(TextDecorator):
     def width_hint(self):
         document = self.editor.document()
         digits = int(math.log(max(1, document.blockCount()), 10)) + 2
-        return defs.large_margin + self.fontMetrics().width('0') * digits
+        text_width = qtutils.text_width(self.font(), '0')
+        return defs.large_margin + (text_width * digits)
 
     def set_highlighted(self, line_number):
         """Set the line to highlight"""

@@ -221,7 +221,7 @@ class RepoTreeView(standard.TreeView):
             context, self, func=self.selected_paths
         )
 
-        self.x_width = QtGui.QFontMetrics(self.font()).width('x')
+        self.x_width = qtutils.text_width(self.font(), 'x')
         self.size_columns(force=True)
 
     def index_expanded(self, index):

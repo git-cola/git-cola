@@ -688,5 +688,5 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
 
     def setFont(self, font):
         SpellCheckTextEdit.setFont(self, font)
-        metrics = self.fontMetrics()
-        self.setMinimumSize(QtCore.QSize(metrics.width('MMMM'), metrics.height() * 2))
+        width, height = qtutils.text_size(font, 'MMMM')
+        self.setMinimumSize(QtCore.QSize(width, height * 2))

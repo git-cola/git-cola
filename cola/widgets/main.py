@@ -152,8 +152,8 @@ class MainView(standard.MainWindow):
         self.position_label.setFont(font)
 
         # make the position label fixed size to avoid layout issues
-        metrics = self.position_label.fontMetrics()
-        width = metrics.width('99:999') + defs.spacing
+        text_width = qtutils.text_width(font, '99:999')
+        width = text_width + defs.spacing
         self.position_label.setMinimumWidth(width)
 
         editor = commitmsg.CommitMessageEditor(context, self)

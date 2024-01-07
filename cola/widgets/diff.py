@@ -222,8 +222,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         """Override setFont() so that we can use a custom "block" cursor"""
         super().setFont(font)
         if prefs.block_cursor(self.context):
-            metrics = QtGui.QFontMetrics(font)
-            width = metrics.width('M')
+            width = qtutils.text_width(font, 'M')
             self.setCursorWidth(width)
 
     def _cursor_changed(self):
@@ -351,8 +350,9 @@ class DiffLineNumbers(TextDecorator):
         self.parser = diffparse.DiffLines()
         self.formatter = diffparse.FormatDigits()
 
-        self.setFont(qtutils.diff_font(context))
-        self._char_width = self.fontMetrics().width('0')
+        font = qtutils.diff_font(context)
+        self.setFont(font)
+        self._char_width = qtutils.text_width(font, 'M')
 
         QPalette = QtGui.QPalette
         self._palette = palette = self.palette()

@@ -806,10 +806,8 @@ class SpinBox(QtWidgets.QSpinBox):
             self.setSingleStep(step)
         if value is not None:
             self.setValue(value)
-
-        font = self.font()
-        metrics = QtGui.QFontMetrics(font)
-        width = max(self.minimumWidth(), metrics.width('MMMMMM'))
+        text_width = qtutils.text_width(self.font(), 'MMMMMM')
+        width = max(self.minimumWidth(), text_width)
         self.setMinimumWidth(width)
 
 

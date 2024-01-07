@@ -331,8 +331,7 @@ def prompt_n(msg, inputs):
         if len(k + v) > len(long_value):
             long_value = k + v
 
-    metrics = QtGui.QFontMetrics(dialog.font())
-    min_width = min(720, metrics.width(long_value) + 100)
+    min_width = min(720, text_width(dialog.font(), long_value) + 100)
     dialog.setMinimumWidth(min_width)
 
     ok_b = ok_button(msg, enabled=False)
@@ -1299,3 +1298,30 @@ def add_menu_actions(menu, menu_actions):
         if action is None:
             action = menu_separator(menu)
         menu.insertAction(first_action, action)
+
+
+def fontmetrics_width(metrics, text):
+    """Get the width in pixels of specified text
+
+    Calls QFontMetrics.horizontalAdvance() when available.
+    QFontMetricswidth() is deprecated. Qt 5.11 added horizontalAdvance().
+    """
+    if hasattr(metrics, 'horizontalAdvance'):
+        return metrics.horizontalAdvance(text)
+    return metrics.width(text)
+
+
+def text_width(font, text):
+    """Get the width in pixels for the QFont and text"""
+    metrics = QtGui.QFontMetrics(font)
+    return fontmetrics_width(metrics, text)
+
+
+def text_size(font, text):
+    """Return the width in pixels for the specified text
+
+    :param font_or_widget: The QFont or widget providing the font to use.
+    :param text: The text to measure.
+    """
+    metrics = QtGui.QFontMetrics(font)
+    return (fontmetrics_width(metrics, text), metrics.height())
