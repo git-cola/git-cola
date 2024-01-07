@@ -699,10 +699,10 @@ def diff_font_str(context):
 
 
 def diff_font(context):
-    return font(diff_font_str(context))
+    return font_from_string(diff_font_str(context))
 
 
-def font(string):
+def font_from_string(string):
     qfont = QtGui.QFont()
     qfont.fromString(string)
     return qfont
