@@ -37,6 +37,7 @@ garden:
 
 trees:
   git-cola:
+    description: The highly-caffeinated Git GUI
     path: "${GARDEN_CONFIG_DIR}"
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
@@ -174,11 +175,12 @@ trees:
       wojnilowicz: "https://github.com/wojnilowicz/git-cola.git"
       yaellevy: "https://github.com/yaellevy/git-cola.git"
   deb:
-    description: Debian packaging for Git Cola
+    description: Debian packaging
     url: "git@gitlab.com:git-cola/git-cola-debian.git"
     remotes:
       davvid: "git@github.com:davvid/git-cola-debian.git"
   docs:
+    description: Sphinx documentation
     commands:
       clean: rm -fr _build
       doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS} _build/doctest
@@ -197,7 +199,7 @@ trees:
         ${INSTALL} -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
         ${INSTALL} -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
   fedora:
-    description: Fedora packaging for Git Cola
+    description: Fedora packaging
     url: "https://src.fedoraproject.org/rpms/git-cola.git"
     remotes:
       git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
