@@ -246,7 +246,6 @@ class RemoteActionDialog(standard.Dialog):
         )
         self.progress = standard.progress_bar(
             self,
-            hide=(self.action_button,),
             disable=(self.buttons_group, self.inputs_group),
         )
 
@@ -279,9 +278,9 @@ class RemoteActionDialog(standard.Dialog):
             self.close_on_completion_checkbox,
             self.remote_messages_checkbox,
             qtutils.STRETCH,
+            self.progress,
             self.close_button,
             self.action_button,
-            self.progress,
         )
 
         self.remote_input_layout = qtutils.vbox(
@@ -665,8 +664,9 @@ class RemoteActionDialog(standard.Dialog):
             ):
                 return
 
-        self.progress.setMaximumWidth(self.action_button.width())
-        self.progress.setMinimumHeight(self.action_button.height() - 2)
+        self.progress.setMaximumHeight(
+            self.action_button.height() - defs.small_margin * 2
+        )
 
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
