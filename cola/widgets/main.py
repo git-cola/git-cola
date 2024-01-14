@@ -160,6 +160,7 @@ class MainView(standard.MainWindow):
         self.commiteditor = editor
         self.commitdock = create_dock('Commit', N_('Commit'), self, widget=editor)
         titlebar = self.commitdock.titleBarWidget()
+        titlebar.add_title_widget(self.commiteditor.commit_progress_bar)
         titlebar.add_corner_widget(self.position_label)
 
         # "Console" widget

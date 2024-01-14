@@ -98,9 +98,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.commit_group = Group(self.commit_action, self.commit_button)
         self.commit_progress_bar = standard.progress_bar(
             self,
-            hide=(self.commit_button,),
             disable=(self.commit_button, self.summary, self.description),
         )
+        self.commit_progress_bar.setMaximumHeight(defs.small_icon)
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
         self.actions_button = qtutils.create_toolbutton(
@@ -160,7 +160,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.actions_button,
             self.summary,
             self.commit_button,
-            self.commit_progress_bar,
         )
         self.toplayout.setContentsMargins(
             defs.margin, defs.no_margin, defs.no_margin, defs.no_margin
@@ -477,9 +476,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         no_verify = get(self.bypass_commit_hooks_action)
         sign = get(self.sign_action)
         self.bypass_commit_hooks_action.setChecked(False)
-
-        self.commit_progress_bar.setMaximumWidth(self.commit_button.width())
-        self.commit_progress_bar.setMinimumHeight(self.commit_button.height() - 2)
 
         task = qtutils.SimpleTask(
             cmds.run(cmds.Commit, context, amend, msg, sign, no_verify=no_verify)
