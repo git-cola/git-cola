@@ -63,12 +63,6 @@ link_files = {
 # Be strict about any broken references
 nitpicky = True
 
-extensions += ['sphinx.ext.intersphinx']
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'sphinx': ('https://www.sphinx-doc.org/en/stable/', None),
-}
-
 # Preserve authored syntax for defaults
 autodoc_preserve_defaults = True
 
