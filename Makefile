@@ -2,15 +2,16 @@
 .PHONY: all
 all::
 
-# Development
-# -----------
-# make V=1                      # V=1 increases verbosity
-# make doc                      # build docs
+# Usage
+# -----
+# make doc                             # Build documentation
+# make prefix=<path> install           # Install git-cola
+# make prefix=<path> install-doc       # Install documentation
 #
-# Installation
-# ------------
-# make prefix=<path> install
-# DESTDIR is also supported.
+# Variables
+# ---------
+# prefix - Installation prefix.
+# DESTDIR - Temporary staging directory.
 #
 # The external commands used by this Makefile are...
 CP = cp
