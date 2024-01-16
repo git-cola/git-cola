@@ -5,7 +5,6 @@ all::
 # Development
 # -----------
 # make V=1                      # V=1 increases verbosity
-# make develop                  # pip install --editable .
 # make test [flags=...]         # run tests; flags=-x fails fast, --ff failed first
 # make test V=2                 # run tests; V=2 increases test verbosity
 # make doc                      # build docs
@@ -35,8 +34,7 @@ MARKDOWN = markdown
 MSGMERGE = msgmerge
 MKDIR_P = mkdir -p
 PIP = pip
-PYTHON ?= python
-PYTHON3 ?= python3
+PYTHON ?= python3
 PYLINT = $(PYTHON) -B -m pylint
 PYTEST = $(PYTHON) -B -m pytest
 RM = rm -f
@@ -67,9 +65,6 @@ ifneq ($(uname_S),Linux)
     PYTEST_FLAGS += --ignore=cola/inotify.py
 endif
 
-TOX_FLAGS = $(VERBOSE_SHORT) --develop --skip-missing-interpreters
-TOX_ENVS ?= py{36,37,38,39,310,311}
-
 PYLINT_SCORE_FLAG := $(shell $(PYLINT) --score=no --help >/dev/null 2>&1 && echo " --score=no" || true)
 PYLINT_FLAGS = --rcfile=.pylintrc
 ifdef color
@@ -78,6 +73,8 @@ endif
 ifneq ($(PYLINT_SCORE_FLAGSCORE),)
     PYLINT_FLAGS += $(PYLINT_SCORE_FLAG)
 endif
+
+TOX_FLAGS = $(VERBOSE_SHORT)
 
 # These values can be overridden on the command-line or via config.mak
 prefix = $(HOME)
@@ -229,11 +226,8 @@ git-cola.app::
 git-cola.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app_resources)
-	$(PYTHON3) -m venv $(cola_app_resources)
-	$(cola_app_resources)/bin/pip install --requirement requirements/requirements.txt
-	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-optional.txt
-	$(cola_app_resources)/bin/pip install --requirement requirements/requirements-dev.txt
-
+	$(PYTHON) -m venv $(cola_app_resources)
+	$(cola_app_resources)/bin/pip install '.[docs,extras,pyqt6]'
 	$(CP) contrib/darwin/Info.plist contrib/darwin/PkgInfo $(cola_app)/Contents
 ifneq ($(cola_full_version),)
 	sed -i -e s/0.0.0.0/$(cola_full_version)/ $(cola_app)/Contents/Info.plist
@@ -278,28 +272,18 @@ fmt::
 	$(GREP) -v ^qtpy | \
 	$(XARGS) $(CERCIS)
 
-# Run "make develop" from inside a newly created virtualenv to create an
-# editable installation.
-.PHONY: develop
-develop::
-	$(PIP) install --editable .
-
-.PHONY: requirements
-requirements::
-	$(PIP) install --requirement requirements/requirements.txt
-
 .PHONY: requirements-dev
 requirements-dev::
-	$(PIP) install --requirement requirements/requirements-dev.txt
+	$(PIP) install --editable '.[build,dev]'
 
-.PHONY: requirements-optional
-requirements-optional::
-	$(PIP) install --requirement requirements/requirements-optional.txt
+.PHONY: requirements-extras
+requirements-extras::
+	$(PIP) install --editable '.[extras]'
 
 .PHONY: tox
 tox::
-	$(TOX) $(TOX_FLAGS) --parallel auto -e "${TOX_ENVS}" $(flags)
+	$(TOX) run $(TOX_FLAGS) $(flags)
 
 .PHONY: tox-check
 tox-check::
-	$(TOX) $(TOX_FLAGS) --parallel auto -e check $(flags)
+	$(TOX) run -e check $(TOX_FLAGS) $(flags)

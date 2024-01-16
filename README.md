@@ -189,25 +189,21 @@ Git Cola like any other built-in `git` command:
 ## Install into a Python Virtualenv from Source
 
 If you don't have PyQt installed then the easiest way to get it is to use a Python
-virtualenv and install Git Cola into it in "editable" mode. This install method
-lets you upgrade Git Cola by running `git pull`.
+virtualenv and install Git Cola into it in "editable" mode.
+
+This install method lets you upgrade Git Cola by running `git pull`.
 
     # Create a virtualenv called "env3" and activate it.
     python3 -m venv --system-site-packages env3
-    source env3/bin/activate
 
-    # One-time setup: install dev and optional runtime requirements
-    garden requirements/dev
-    garden requirements/opt
-
-    # Install git-cola in "editable" mode so that it uses the source tree.
-    garden develop
+    # Install PyQt and (optional) extra packages to enable all features.
+    ./env3/bin/pip install --editable '.[extras,pyqt6]'
 
     # Run Git Cola via the "git-cola" Git subcommand.
+    source env3/bin/activate
     git cola
 
-
-If you add `env3/bin` (or symlink to `bin/git-cola` ) somewhere in your `$PATH` then you can
+If you add `env3/bin` (or symlink to `env3/bin/git-cola` ) somewhere in your `$PATH` then you can
 run `git cola` as if it were a builtin `git` command from outside of the virtualenv
 (eg. after running "deactivate" or when opening a new shell).
 

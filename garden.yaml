@@ -3,10 +3,6 @@
 # Usage:
 #
 #   # Development Workflows
-#   garden develop              # Runs "pip install --editable ."
-#   garden requirements         # Install runtime requirements
-#   garden requirements/opt     # Install optional runtime requirements
-#   garden requirements/dev     # Install developer requirements
 #   garden test                 # Run the test suite
 #   garden fmt                  # Format code using "cercis"
 #   garden doc                  # Generate documentation: html + manual pages
@@ -19,6 +15,9 @@
 #   # Installation
 #   garden install              # Install git-cola to the installation ${prefix}
 #   garden install docs         # Install documentation
+#
+#   # Development
+#   garden dev                  # Create a virtualenv for development in "env3".
 #
 #   # Variables can be overridden using "-D name=value", eg:
 #   garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
@@ -41,8 +40,24 @@ trees:
     path: "${GARDEN_CONFIG_DIR}"
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
-      develop: ${PIP} install --editable .
       doc: garden -vv cmd docs html man
+      dev: ${PYTHON} -m venv --system-site-packages env3
+      dev>:
+        - dev/extras
+        - dev/development
+        - dev/build
+      dev/build: |
+        test -f env3/bin/activate && source env3/bin/activate || true
+        ${PIP} install --editable '.[build]'
+      dev/dev: |
+        test -f env3/bin/activate && source env3/bin/activate || true
+        ${PIP} install --editable '.[docs,dev]'
+      dev/extras: |
+        test -f env3/bin/activate && source env3/bin/activate || true
+        ${PIP} install --editable '.[extras]'
+      dev/pyqt6: |
+        test -f env3/bin/activate && source env3/bin/activate || true
+        ${PIP} install --editable '.[pyqt6]'
       check>:
         - test
         - doc
@@ -67,9 +82,8 @@ trees:
         ${MKDIR_P} ${cola_app}/Contents/MacOS
         ${MKDIR_P} ${cola_app_resources}
         ${PYTHON} -m venv ${cola_app_resources}
-        ${cola_app_resources}/bin/pip install --requirement requirements/requirements.txt
-        ${cola_app_resources}/bin/pip install --requirement requirements/requirements-optional.txt
-        ${cola_app_resources}/bin/pip install --requirement requirements/requirements-dev.txt
+        source ${cola_app_resources}/bin/activate
+        pip install '.[docs,extras,pyqt6]'
         ${CP} contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
         if test -n "${cola_full_version}"
         then
@@ -78,9 +92,9 @@ trees:
         ${SED} -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
         ${CP} contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         ${CP} contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
-        garden -D PIP=${cola_app_resources}/bin/pip -D prefix=${cola_app_resources} install
-        garden -D SPHINXBUILD=${cola_app_resources}/bin/sphinx-build doc
-        garden -D SPHINXBUILD=${cola_app_resources}/bin/sphinx-build -D prefix=${cola_app_resources} install docs
+        garden -vv -D prefix=${cola_app_resources} install
+        garden -vv doc
+        garden -vv -D prefix=${cola_app_resources} install docs
       man: garden -vv man docs
       po: |
         for po in cola/i18n/*.po
@@ -109,13 +123,9 @@ trees:
       pylint: |
         ${PYLINT} --version
         ${PYLINT} --rcfile=.pylintrc ${PYLINT_OPTIONS} "$@" cola test
-      requirements: ${PIP} install --requirement requirements/requirements.txt
-      requirements/maint: ${PIP} install --requirement requirements/requirements-maint.txt
-      requirements/opt: ${PIP} install --requirement requirements/requirements-optional.txt
-      requirements/dev: ${PIP} install --requirement requirements/requirements-dev.txt
-      test: ${PYTEST} ${PYTEST_OPTIONS} "$@" cola test
-      tox: ${TOX} ${TOX_OPTIONS} --parallel auto -e "${TOX_ENVS}" "$@"
-      tox/check: ${TOX} ${TOX_OPTIONS} --parallel auto -e check "$@"
+      test: ${PYTEST} ${PYTEST_OPTIONS} -p no:cacheprovider "$@" cola test
+      tox: ${TOX} run "$@"
+      tox/check: ${TOX} run -e check "$@"
     remotes:
       BaumiCoder: "https://github.com/BaumiCoder/git-cola.git"
       DasaniT: "https://github.com/DasaniT/git-cola.git"
@@ -247,8 +257,6 @@ variables:
   SPHINXBUILD: sphinx-build
   SPHINX_OPTIONS: "-d _build/doctrees -a ."
   TOX: tox
-  TOX_OPTIONS: "--develop --skip-missing-interpreters"
-  TOX_ENVS: "py36,py37,py38,py39,py310,py311"
   XARGS: xargs
   XGETTEXT: xgettext
 

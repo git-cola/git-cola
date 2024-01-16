@@ -34,6 +34,8 @@ html_theme = 'default'
 # for use in the rst.linker configuration. We expand the value manually for now.
 package_url = 'https://gitlab.com/git-cola/git-cola'
 
+project = 'Git Cola'
+
 # Link dates and other references in the changelog
 if rst_linker is not None:
     extensions += ['rst.linker']

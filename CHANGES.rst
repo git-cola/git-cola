@@ -610,8 +610,7 @@ Changes have been made build infrastructure and the resulting filesystem artifac
   is distributed alongside the `cola` module as package data.
 
 * Building the Sphinx documentation now also requires the `jaraco.packaging` and
-  `rst.linker` packages. See `requirements/requirements-dev.txt` for the package
-  requirement details.
+  `rst.linker` packages. See `setup.cfg` for the package requirement details.
 
 Usability, bells and whistles
 -----------------------------

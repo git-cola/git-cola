@@ -22,4 +22,8 @@ sphinx:
 # Optionally declare the Python requirements required to build your docs
 python:
    install:
-   - requirements: requirements/requirements-dev.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+        - pyqt5

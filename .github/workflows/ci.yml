@@ -22,7 +22,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install python3-sphinx python3-qtpy python3-pyqt5
       - name: Install Git Cola
-        run: garden -D prefix=dist install
+        run: garden -vv -D prefix=dist install
 
   test:
     name: Test
@@ -61,9 +61,9 @@ jobs:
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
       - name: Run tests and checks
-        run: garden check
+        run: garden -vv check
       - name: Code formatting
-        run: garden fmt -- --check
+        run: garden -vv fmt -- --check
 
   windows:
     name: Windows
@@ -82,14 +82,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/AppData/Local/pip/Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/requirements*.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
       - name: Install Dependencies
         run: |
-          pip install wheel
-          pip install --requirement requirements/requirements.txt
-          pip install --requirement requirements/requirements-opt.txt
-          pip install --requirement requirements/requirements-dev.txt
-          pip install --requirement requirements/requirements-maint.txt
+          pip install '.[build,docs,dev,extras]'
       # Based on: contrib/win32/run-pynsist.sh
       - name: Build Installer
         run: |
@@ -122,18 +118,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Install Dependencies
         run: |
-          set -x
           brew install git-cola
-          python3 -m venv env3
-          source env3/bin/activate
-          python -m pip install wheel
-          garden requirements
-          garden requirements/dev
       - name: Build Bundle
         run: |
-          set -x
-          source env3/bin/activate
-          garden macos/app
+          garden -vv macos/app
           mv git-cola.app build/
       - name: Zip Artifact
         run: zip -r git-cola.app.zip build/*

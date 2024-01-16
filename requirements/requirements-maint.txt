@@ -1,7 +1,0 @@
-# Maintainer packages
-
-## Upload packages to pypi
-twine; python_version >= '3.0'
-
-## Windows installer
-pynsist
