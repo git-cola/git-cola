@@ -4,8 +4,9 @@ all::
 
 # Usage
 # -----
-# make doc                             # Build documentation
 # make prefix=<path> install           # Install git-cola
+#
+# make doc                             # Build documentation
 # make prefix=<path> install-doc       # Install documentation
 #
 # Variables
