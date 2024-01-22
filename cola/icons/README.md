@@ -30,7 +30,7 @@ for git-cola's File Browser by Uri Okrent.
 - upstream.svg
 
 Copyright (C) 2011 Uri Okrent
-Copyright (C) 2015-2017 David Aguilar and contributors
+Copyright (C) 2015-2024 David Aguilar
 
 License: MIT
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2017 David Aguilar
+# Copyright (C) 2008-2024 David Aguilar
 # Copyright (C) 2015 Daniel Harding
 """Filesystem monitor for Linux and Windows
 

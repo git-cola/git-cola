@@ -7,10 +7,6 @@ import signal
 import sys
 import time
 
-__copyright__ = """
-Copyright (C) 2007-2022 David Aguilar and contributors
-"""
-
 try:
     from qtpy import QtCore
 except ImportError as error:
