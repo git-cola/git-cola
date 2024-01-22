@@ -33,25 +33,22 @@ def md5_hexdigest(value):
 
     Used for implementing the gravatar API. Not used for security purposes.
     """
+    # https://github.com/git-cola/git-cola/issues/1157
+    #  ValueError: error:060800A3:
+    #   digital envelope routines: EVP_DigestInit_ex: disabled for fips
+    #
+    # Newer versions of Python, including Centos8's patched Python3.6 and
+    # mainline Python 3.9+ have a "usedoforsecurity" parameter which allows us
+    # to continue using hashlib.md5().
     encoded_value = core.encode(value)
     result = ''
     try:
+        # This could raise ValueError in theory but we always use encoded bytes
+        # so that does not happen in practice.
+        result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
+    except TypeError:
+        # Fallback to trying hashlib.md5 directly.
         result = hashlib.md5(encoded_value).hexdigest()
-    except ValueError:
-        pass
-    if not result and compat.PY_VERSION >= (3, 6):
-        try:
-            # pylint: disable=unexpected-keyword-arg
-            result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
-        except ValueError:
-            # https://github.com/git-cola/git-cola/issues/1157
-            #  ValueError: error:060800A3:
-            #   digital envelope routines: EVP_DigestInit_ex: disabled for fips
-            #
-            # Newer versions of Python, including Centos8's patched Python3.6 and
-            # mainline Python 3.9+ have a "usedoforsecurity" parameter which allows us
-            # to continue using hashlib.md5().
-            pass
     return core.decode(result)
 
 
