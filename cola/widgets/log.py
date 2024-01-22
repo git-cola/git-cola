@@ -27,6 +27,7 @@ class LogWidget(QtWidgets.QFrame):
             self.set_output(output)
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.output_text)
         self.setLayout(self.main_layout)
+        self.setFocusProxy(self.output_text)
         self.channel.connect(self.append, type=Qt.QueuedConnection)
         self.log(N_('Right-click links to open:'))
         self.log('  Documentation: https://git-cola.readthedocs.io/en/latest/')
