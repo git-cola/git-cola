@@ -45,7 +45,7 @@ trees:
       dev/build: |
         test -f env3/bin/activate && source env3/bin/activate || true
         ${PIP} install --editable '.[build]'
-      dev/dev: |
+      dev/development: |
         test -f env3/bin/activate && source env3/bin/activate || true
         ${PIP} install --editable '.[docs,dev]'
       dev/extras: |
