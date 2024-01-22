@@ -108,6 +108,8 @@ trees:
       pylint: |
         ${PYLINT} --version
         ${PYLINT} ${PYLINT_OPTIONS} --rcfile=.pylintrc "$@" cola test
+      run: ${activate} ./bin/git-cola "$@"
+      run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
       test: ${activate} ${PYTEST_CMD} cola test "$@"
       tox: ${TOX} run "$@"
       tox/check: ${TOX} run -e check "$@"
