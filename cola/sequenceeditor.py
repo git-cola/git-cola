@@ -319,10 +319,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             N_('Enabled'),
             N_('Command'),
             N_('SHA-1'),
+            N_('Remarks'),
             N_('Summary'),
         ])
         self.header().setStretchLastSection(True)
-        self.setColumnCount(5)
+        self.setColumnCount(6)
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         # actions
@@ -375,6 +376,15 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY
         )
 
+        self.toggle_remark_actions = tuple(
+            qtutils.add_action(
+                self,
+                r,
+                lambda remark = r: self.toggle_remark(remark),
+                hotkeys.hotkey(Qt.CTRL | getattr(Qt, "Key_" + r))
+            ) for r in map(str, range(10))
+        )
+
         # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.selection_changed)
@@ -407,6 +417,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.resizeColumnToContents(2)
         self.resizeColumnToContents(3)
         self.resizeColumnToContents(4)
+        self.resizeColumnToContents(5)
 
     # actions
     def item_changed(self, item, column):
@@ -489,6 +500,20 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         if idx >= 0:
             self.move_rows.emit(sel_idx, idx)
 
+    def toggle_remark(self, remark):
+        items = self.selected_items()
+        logic_or = reduce(
+            lambda res, item: res or remark in item.remarks,
+            items,
+            False
+        )
+        if logic_or:
+            for item in items:
+                item.remove_remark(remark)
+        else:
+            for item in items:
+                item.add_remark(remark)
+
     def move(self, src_idxs, dst_idx):
         moved_items = []
         src_base = sorted(src_idxs)[0]
@@ -534,6 +559,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.copy_oid_action.setDisabled(len(items) > 1)
         menu.addAction(self.external_diff_action)
         self.external_diff_action.setDisabled(len(items) > 1)
+        menu.addSeparator()
+        menu_toggle_remark = menu.addMenu(N_('Toggle remark'))
+        tuple(map(menu_toggle_remark.addAction, self.toggle_remark_actions))
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
@@ -556,6 +584,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         cmdexec='',
         branch='',
         comment_char='#',
+        remarks=tuple(),
         parent=None,
     ):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
@@ -579,13 +608,15 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         # combo box on 2
         if self.is_exec():
             self.setText(3, '')
-            self.setText(4, cmdexec)
+            self.setText(5, cmdexec)
         elif self.is_update_ref():
             self.setText(3, '')
-            self.setText(4, branch)
+            self.setText(5, branch)
         else:
             self.setText(3, oid)
-            self.setText(4, summary)
+            self.setText(5, summary)
+
+        self.set_remarks(remarks)
 
         flags = self.flags() | Qt.ItemIsUserCheckable
         flags = flags | Qt.ItemIsDragEnabled
@@ -608,6 +639,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             cmdexec=self.cmdexec,
             branch=self.branch,
             comment_char=self.comment_char,
+            remarks=self.remarks,
         )
 
     def decorate(self, parent):
@@ -664,6 +696,16 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def toggle_enabled(self):
         self.set_enabled(not self.is_enabled())
+
+    def add_remark(self, remark):
+        self.set_remarks(tuple(sorted(set(self.remarks + (remark,)))))
+
+    def remove_remark(self, remark):
+        self.set_remarks(tuple(r for r in self.remarks if r != remark))
+
+    def set_remarks(self, remarks):
+        self.remarks = remarks
+        self.setText(4, "".join(remarks))
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""
