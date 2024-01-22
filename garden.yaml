@@ -1,27 +1,22 @@
 # Use "cargo install garden-tools" to install garden https://gitlab.com/garden-rs/garden
 #
-# Usage:
+#   # Installation
+#   garden install              # Install git-cola to the installation ${prefix}
+#   garden doc                  # Generate documentation: html + manual pages
+#   garden install docs         # Install documentation
 #
-#   # Development Workflows
+#   # Variables can be overridden using "-D name=value", e.g.:
+#   garden -D prefix=$PWD/dist install docs
+#   garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
+#
+#   # Development
 #   garden test                 # Run the test suite
 #   garden fmt                  # Format code using "cercis"
-#   garden doc                  # Generate documentation: html + manual pages
 #   garden html                 # Generate documentation: html only
 #   garden man                  # Generate documentation: manual pages only
 #   garden pot                  # Regenerate git-cola.pot with new translations
 #   garden po                   # Update .po files with new translations from git-cola.pot
 #   garden pages                # Install the pages/ website documentation.
-#
-#   # Installation
-#   garden install              # Install git-cola to the installation ${prefix}
-#   garden install docs         # Install documentation
-#
-#   # Development
-#   garden dev                  # Create a virtualenv for development in "env3".
-#
-#   # Variables can be overridden using "-D name=value", e.g.:
-#   garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
-#   garden -D prefix=$PWD/dist install docs
 #
 #   # macOS
 #   garden macos/app            # Build a git-cola.app bundle
@@ -36,35 +31,28 @@ trees:
     path: "${GARDEN_CONFIG_DIR}"
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
-      doc: garden -vv cmd docs html man
-      dev: ${PYTHON} -m venv --system-site-packages env3
+      doc: ${GARDEN} -vv cmd docs html man -- "$@"
+      dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
       dev>:
         - dev/extras
         - dev/development
         - dev/build
-      dev/build: |
-        test -f env3/bin/activate && source env3/bin/activate || true
-        ${PIP} install --editable '.[build]'
-      dev/development: |
-        test -f env3/bin/activate && source env3/bin/activate || true
-        ${PIP} install --editable '.[docs,dev]'
-      dev/extras: |
-        test -f env3/bin/activate && source env3/bin/activate || true
-        ${PIP} install --editable '.[extras]'
-      dev/pyqt6: |
-        test -f env3/bin/activate && source env3/bin/activate || true
-        ${PIP} install --editable '.[pyqt6]'
+      dev/build: ${activate} ${PIP} install --editable '.[build]'
+      dev/development: ${activate} ${PIP} install --editable '.[docs,dev]'
+      dev/extras: ${activate} ${PIP} install --editable '.[extras]'
+      dev/pyqt6: ${activate} ${PIP} install --editable '.[pyqt6]'
+      dev/env: ${activate} "$@"
       check>:
         - test
         - doc
         - pylint
       fmt: |
-        test -f env3/bin/activate && source env3/bin/activate || true
+        ${activate}
         ${CERCIS} --version
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
         ${XARGS} ${CERCIS} "$@"
-      html: garden -vv html docs
+      html: ${GARDEN} -vv html docs
       install: |
         if test -n "${DESTDIR}"
         then
@@ -80,7 +68,7 @@ trees:
         ${MKDIR_P} ${cola_app_resources}
         ${PYTHON} -m venv ${cola_app_resources}
         source ${cola_app_resources}/bin/activate
-        pip install '.[docs,extras,pyqt6]'
+        ${PIP} install '.[docs,extras,pyqt6]'
         ${CP} contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
         if test -n "${cola_full_version}"
         then
@@ -89,10 +77,10 @@ trees:
         ${SED} -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
         ${CP} contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         ${CP} contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
-        garden -vv -D prefix=${cola_app_resources} install
-        garden -vv doc
-        garden -vv -D prefix=${cola_app_resources} install docs
-      man: garden -vv man docs
+        ${GARDEN} -vv -D prefix=${cola_app_resources} install
+        ${GARDEN} -vv doc
+        ${GARDEN} -vv -D prefix=${cola_app_resources} install docs
+      man: ${GARDEN} -vv man docs
       po: |
         for po in cola/i18n/*.po
         do
@@ -116,11 +104,11 @@ trees:
             --output git-cola.pot \
             cola/*.py \
             cola/*/*.py
-      pages: garden -vv -D prefix=${TREE_PATH}/pages install docs
+      pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs
       pylint: |
         ${PYLINT} --version
-        ${PYLINT} --rcfile=.pylintrc ${PYLINT_OPTIONS} "$@" cola test
-      test: ${PYTEST} ${PYTEST_OPTIONS} -p no:cacheprovider "$@" cola test
+        ${PYLINT} ${PYLINT_OPTIONS} --rcfile=.pylintrc "$@" cola test
+      test: ${activate} ${PYTEST_CMD} cola test "$@"
       tox: ${TOX} run "$@"
       tox/check: ${TOX} run -e check "$@"
     remotes:
@@ -188,19 +176,21 @@ trees:
       davvid: "git@github.com:davvid/git-cola-debian.git"
   docs:
     description: Sphinx documentation
+    variables:
+      env_dir: ../env3
     commands:
       clean: rm -fr _build
-      doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS} _build/doctest
-      html: ${SPHINXBUILD} -a -b html ${SPHINX_OPTIONS} _build/html
-      man: ${SPHINXBUILD} -a -b man ${SPHINX_OPTIONS} _build/man
-      linkcheck: ${SPHINXBUILD} -b linkcheck ${SPHINX_OPTIONS} _build/linkcheck
+      doctest: ${activate} ${SPHINX_CMD} -b doctest . _build/doctest "$@"
+      html: ${activate} ${SPHINX_CMD} -b html . _build/html "$@"
+      man: ${activate} ${SPHINX_CMD} -b man . _build/man "$@"
+      linkcheck: ${activate} ${SPHINX_CMD} -b linkcheck . _build/linkcheck "$@"
       install: |
         ${MKDIR_P} ${DESTDIR}${docdir}
         ${INSTALL} -m 644 *.html ${DESTDIR}${docdir}
         ${INSTALL} -m 644 *.rst ${DESTDIR}${docdir}
         # HTML documentation
         ${MKDIR_P} ${DESTDIR}${htmldir}
-        ${RSYNC} ${RSYNC_OPTIONS} _build/html/ ${DESTDIR}${htmldir}/
+        ${RSYNC_CMD} _build/html/ ${DESTDIR}${htmldir}/
         # Manual pages
         ${MKDIR_P} ${DESTDIR}${mandir}
         ${INSTALL} -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
@@ -233,26 +223,41 @@ variables:
   cola_app: ${TREE_PATH}/git-cola.app
   cola_app_resources: ${cola_app}/Contents/Resources
   cola_full_version: $ ./bin/git-cola version --brief
-  cola_version: $ sed -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
+  cola_version: $ ${SED} -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
+  is_virtualenv: |
+    $ ${PYTHON} -c '
+    import os, sys
+    if sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV"):
+        print("true")
+    '
+  env_dir: env3
+  activate: |
+    if test -z "${is_virtualenv}" && test -f "${env_dir}/bin/activate"
+    then
+        source "${env_dir}/bin/activate"
+    fi
   # External commands and options
   CERCIS: cercis
   CP: cp
+  GARDEN: garden
   GIT: git
   GREP: grep
   INSTALL: install
   MKDIR_P: mkdir -p
   MSGMERGE: msgmerge
   PIP: pip
-  PYLINT: ${PYTHON} -B -m pylint
-  PYLINT_OPTIONS: $ ${PYLINT} --score=no --help >/dev/null 2>&1 && printf '%s' --score=no
-  PYTEST: ${PYTHON} -B -m pytest
+  PYLINT: ${activate} ${PYTHON} -B -m pylint
+  PYLINT_OPTIONS: |
+    $ ${activate} ${PYLINT} --score=no --help >/dev/null 2>&1 && printf '%s' --score=no
+  PYTEST: ${activate} ${PYTHON} -B -m pytest
   PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
+  PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS} -p no:cacheprovider
   PYTHON: python3
   RSYNC: rsync
-  RSYNC_OPTIONS: "-r --delete --exclude=.buildinfo"
+  RSYNC_CMD: ${RSYNC} -r --delete --exclude=.buildinfo
   SED: sed
-  SPHINXBUILD: sphinx-build
-  SPHINX_OPTIONS: "-d _build/doctrees -a ."
+  SPHINX: ${PYTHON} -m sphinx
+  SPHINX_CMD: ${SPHINX} -d _build/doctrees -a
   TOX: tox
   XARGS: xargs
   XGETTEXT: xgettext
