@@ -31,6 +31,8 @@ Fixes
 -----
 * PyQt6 compatibility for the "Find in diff" feature.
 
+* PyQt6 compatibility for the ``git dag`` Gravatar icons.
+
 Translations
 ------------
 * Updated Polish translation.

@@ -117,7 +117,8 @@ class GravatarLabel(QtWidgets.QLabel):
         no_error = qtutils.enum_value(
             QtNetwork.QNetworkReply.NetworkError.NoError  # pylint: disable=no-member
         )
-        if reply.error() == no_error:
+        reply_error = qtutils.enum_value(reply.error())
+        if reply_error == no_error:
             if relocated:
                 # We could do get_url(parse.unquote(location)) to
                 # download the default image.
