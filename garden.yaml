@@ -104,7 +104,8 @@ trees:
             --output git-cola.pot \
             cola/*.py \
             cola/*/*.py
-      pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs
+      pages<: doc
+      pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs "$@"
       pylint: |
         ${PYLINT} --version
         ${PYLINT} ${PYLINT_OPTIONS} --rcfile=.pylintrc "$@" cola test
