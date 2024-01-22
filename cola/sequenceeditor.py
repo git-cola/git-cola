@@ -2,6 +2,7 @@ import sys
 import re
 from argparse import ArgumentParser
 from functools import partial, reduce
+from threading import Thread
 
 from cola import app  # prints a message if Qt cannot be found
 from qtpy import QtCore
@@ -210,6 +211,8 @@ class Editor(QtWidgets.QWidget):
         # for a first time, the GUI freezes for a while on a big enough
         # sequence.
         # So, a cache is used (commit ID to paths tuple).
+        # A thread fills this cache in background to reduce the first
+        # run freezing.
         self.oid_to_paths = {}
 
         qtutils.connect_button(self.rebase_button, self.rebase)
@@ -248,6 +251,14 @@ class Editor(QtWidgets.QWidget):
         self.oid_to_paths[oid] = paths
 
         return paths
+
+    def poll_touched_paths_main(self):
+        for item in self.tree.items():
+            if not self.working:
+                # TODO: This does not work if user kills the window using a
+                #       cross (X) button on the window title.
+                return
+            self.paths_touched_by_oid(item.oid)
 
     def remark_toggled_for_files(self, remark, filenames):
         filenames = set(filenames)
@@ -317,6 +328,9 @@ class Editor(QtWidgets.QWidget):
         self.tree.refit()
         self.tree.select_first()
 
+        self.working = True
+        Thread(target = self.poll_touched_paths_main).start()
+
     # actions
     def cancel(self):
         if self.cancel_action == 'save':
@@ -325,6 +339,7 @@ class Editor(QtWidgets.QWidget):
             status = 1
 
         self.status = status
+        self.working = False
         self.exit.emit(status)
 
     def rebase(self):
@@ -332,6 +347,7 @@ class Editor(QtWidgets.QWidget):
         sequencer_instructions = '\n'.join(lines) + '\n'
         status = self.save(sequencer_instructions)
         self.status = status
+        self.working = False
         self.exit.emit(status)
 
     def save(self, string):
