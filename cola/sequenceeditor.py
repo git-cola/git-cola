@@ -531,11 +531,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
         menu.addAction(self.copy_oid_action)
-        if len(items) > 1:
-            self.copy_oid_action.setDisabled(True)
+        self.copy_oid_action.setDisabled(len(items) > 1)
         menu.addAction(self.external_diff_action)
-        if len(items) > 1:
-            self.external_diff_action.setDisabled(True)
+        self.external_diff_action.setDisabled(len(items) > 1)
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
