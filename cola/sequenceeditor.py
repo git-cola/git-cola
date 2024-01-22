@@ -149,7 +149,7 @@ class Editor(QtWidgets.QWidget):
 
         self.diff = diff.DiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
-        self.filewidget = filelist.FileWidget(context, self)
+        self.filewidget = filelist.FileWidget(context, self, remarks=True)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -203,6 +203,7 @@ class Editor(QtWidgets.QWidget):
         self.tree.external_diff.connect(self.external_diff)
 
         self.filewidget.files_selected.connect(self.diff.files_selected)
+        self.filewidget.remark_toggled.connect(self.remark_toggled_for_files)
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
@@ -216,6 +217,37 @@ class Editor(QtWidgets.QWidget):
     # signal callbacks
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
+
+    def remark_toggled_for_files(self, remark, filenames):
+        filenames = set(filenames)
+
+        items = self.tree.items()
+        touching_items = []
+
+        git = self.context.git
+
+        for item in items:
+            if not item.is_commit():
+                continue
+            oid = item.oid
+
+            status, out, _ = git.show(
+                oid, z=True, numstat=True, oneline=True, no_renames=True
+            )
+            if status != 0:
+                continue
+            paths = [f for f in out.rstrip('\0').split('\0') if f]
+            if paths:
+                # Skip over the summary on the first line.
+                paths = paths[1:]
+
+            # Drop numbers. Only path is needed.
+            paths = [f.split()[-1] for f in paths]
+
+            if filenames.intersection(paths):
+                touching_items.append(item)
+
+        self.tree.toggle_remark_of_items(remark, touching_items)
 
     # helpers
     def parse_sequencer_instructions(self, insns):
@@ -502,6 +534,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def toggle_remark(self, remark):
         items = self.selected_items()
+        self.toggle_remark_of_items(remark, items)
+
+    def toggle_remark_of_items(self, remark, items):
         logic_or = reduce(
             lambda res, item: res or remark in item.remarks,
             items,
