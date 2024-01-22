@@ -441,6 +441,7 @@ class Checkout(EditModel):
 
     The argv list is forwarded directly to git.
     """
+
     def __init__(self, context, argv, checkout_branch=False):
         super().__init__(context)
         self.argv = argv

@@ -31,6 +31,7 @@ class ExpandingTabBar(QtWidgets.QTabBar):
     it respects the OS style.  We override the style by implementing
     tabSizeHint() so that we can specify the size explicitly.
     """
+
     def tabSizeHint(self, tab_index):
         width = self.parent().width() // max(2, self.count()) - 1
         size = super().tabSizeHint(tab_index)

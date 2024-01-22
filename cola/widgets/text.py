@@ -986,6 +986,7 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
 
     This can only be used in read-only mode.
     """
+
     Base = HintedPlainTextEdit
     Mixin = VimMixin
 
