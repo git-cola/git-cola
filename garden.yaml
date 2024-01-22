@@ -59,6 +59,7 @@ trees:
         - doc
         - pylint
       fmt: |
+        test -f env3/bin/activate && source env3/bin/activate || true
         ${CERCIS} --version
         ${GIT} ls-files -- '*.py' |
         ${GREP} -v ^qtpy |
