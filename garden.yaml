@@ -30,10 +30,6 @@
 #   garden grow pages           # Clone the Git Cola homepage
 #   garden grow fedora          # Clone the Fedora packaging
 #   garden grow deb             # Clone the Debian packaging
----
-garden:
-  root: "${GARDEN_CONFIG_DIR}"
-
 trees:
   git-cola:
     description: The highly-caffeinated Git GUI
@@ -259,5 +255,3 @@ variables:
   TOX: tox
   XARGS: xargs
   XGETTEXT: xgettext
-
-...
