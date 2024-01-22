@@ -44,6 +44,7 @@ def md5_hexdigest(value):
     try:
         # This could raise ValueError in theory but we always use encoded bytes
         # so that does not happen in practice.
+        # pylint: disable=unexpected-keyword-arg
         result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
     except TypeError:
         # Fallback to trying hashlib.md5 directly.
