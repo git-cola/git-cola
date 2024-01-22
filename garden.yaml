@@ -215,6 +215,17 @@ trees:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
 
+commands:
+  commit: git commit "$@"
+  diff: git diff "$@"
+  diffs: git diff --staged "$@"
+  fetch: git fetch "$@"
+  stat: git status --short "$@"
+  status: git status "$@"
+  stage: git add -u "$@"
+  push: git push "$@"
+  pull: git pull --ff-only "$@"
+
 # Variables can be overridden externally using "garden -D name=value ...".
 variables:
   # Traditional DESTDIR + prefix variables
