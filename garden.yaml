@@ -19,7 +19,7 @@
 #   # Development
 #   garden dev                  # Create a virtualenv for development in "env3".
 #
-#   # Variables can be overridden using "-D name=value", eg:
+#   # Variables can be overridden using "-D name=value", e.g.:
 #   garden -D DESTDIR=/tmp/stage -D prefix=/usr/local install
 #   garden -D prefix=$PWD/dist install docs
 #
