@@ -2,6 +2,10 @@ import os
 import sys
 
 try:
+    import furo
+except ImportError:
+    furo = None
+try:
     import sphinx_rtd_theme
 except ImportError:
     sphinx_rtd_theme = None
@@ -82,7 +86,26 @@ man_pages = [
 # Disable this feature for consistency across Sphinx versions.
 man_make_section_directory = False
 
-# Enable the sphinx_rtd_theme.
-if sphinx_rtd_theme is not None:
+
+# furo overwrites "_static/pygments.css" so we monkey-patch
+# "def _overwrite_pygments_css()" to use "static/pygments.css" instead.
+def _overwrite_pygments_css(app, exception):
+    """Replacement for furo._overwrite_pygments_css to handle sphinxtogithub"""
+    if exception is not None:
+        return
+    assert app.builder
+    with open(
+        os.path.join(app.builder.outdir, 'static', 'pygments.css'),
+        'w',
+        encoding='utf-8',
+    ) as f:
+        f.write(furo.get_pygments_stylesheet())
+
+
+# Enable custom themes.
+if furo is not None and hasattr(furo, '_overwrite_pygments_css'):
+    furo._overwrite_pygments_css = _overwrite_pygments_css
+    html_theme = 'furo'
+elif sphinx_rtd_theme is not None:
     extensions += ['sphinx_rtd_theme']
     html_theme = 'sphinx_rtd_theme'
