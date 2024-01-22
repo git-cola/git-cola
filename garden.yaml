@@ -194,8 +194,8 @@ trees:
     commands:
       clean: rm -fr _build
       doctest: ${SPHINXBUILD} -b doctest ${SPHINX_OPTIONS} _build/doctest
-      html: ${SPHINXBUILD} -b html ${SPHINX_OPTIONS} _build/html
-      man: ${SPHINXBUILD} -b man ${SPHINX_OPTIONS} _build/man
+      html: ${SPHINXBUILD} -a -b html ${SPHINX_OPTIONS} _build/html
+      man: ${SPHINXBUILD} -a -b man ${SPHINX_OPTIONS} _build/man
       linkcheck: ${SPHINXBUILD} -b linkcheck ${SPHINX_OPTIONS} _build/linkcheck
       install: |
         ${MKDIR_P} ${DESTDIR}${docdir}
