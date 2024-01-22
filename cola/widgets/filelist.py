@@ -1,6 +1,7 @@
 from qtpy import QtWidgets
 from qtpy.QtCore import Signal
 from qtpy.QtCore import QSize
+from qtpy.QtCore import Qt
 
 from .. import cmds
 from .. import hotkeys
@@ -15,8 +16,9 @@ class FileWidget(TreeWidget):
     difftool_selected = Signal(object)
     histories_selected = Signal(object)
     grab_file = Signal(object)
+    remark_toggled = Signal(object, object)
 
-    def __init__(self, context, parent):
+    def __init__(self, context, parent, remarks=False):
         TreeWidget.__init__(self, parent)
         self.context = context
 
@@ -38,6 +40,18 @@ class FileWidget(TreeWidget):
         self.grab_file_action = qtutils.add_action(
             self, N_('Grab File...'), self._grab_file
         )
+
+        if remarks:
+            self.toggle_remark_actions = tuple(
+                qtutils.add_action(
+                    self,
+                    r,
+                    lambda remark = r: self.toggle_remark(remark),
+                    hotkeys.hotkey(Qt.CTRL | getattr(Qt, "Key_" + r))
+                ) for r in map(str, range(10))
+            )
+        else:
+            self.toggle_remark_actions = tuple()
 
         # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
@@ -109,6 +123,11 @@ class FileWidget(TreeWidget):
         menu.addAction(self.show_history_action)
         menu.addAction(self.launch_difftool_action)
         menu.addAction(self.launch_editor_action)
+        if self.toggle_remark_actions:
+            menu_toggle_remark = menu.addMenu(
+                N_('Toggle remark of touching commits')
+            )
+            tuple(map(menu_toggle_remark.addAction, self.toggle_remark_actions))
         menu.exec_(self.mapToGlobal(event.pos()))
 
     def show_diff(self):
@@ -128,6 +147,11 @@ class FileWidget(TreeWidget):
         items = self.selected_items()
         paths = [i.path for i in items]
         self.histories_selected.emit(paths)
+
+    def toggle_remark(self, remark):
+        items = self.selected_items()
+        paths = tuple(i.path for i in items)
+        self.remark_toggled.emit(remark, paths)
 
 
 class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):
