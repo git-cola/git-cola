@@ -114,6 +114,10 @@ trees:
       test: ${activate} ${PYTEST_CMD} cola test "$@"
       tox: ${TOX} run "$@"
       tox/check: ${TOX} run -e check "$@"
+    gitconfig:
+      remote.publish.pushurl:
+        - "git@gitlab.com:git-cola/git-cola.git"
+        - "git@github.com:git-cola/git-cola.git"
     remotes:
       BaumiCoder: "https://github.com/BaumiCoder/git-cola.git"
       DasaniT: "https://github.com/DasaniT/git-cola.git"
@@ -211,6 +215,10 @@ trees:
       github: "git@github.com:git-cola/git-cola.github.io.git"
       ls-jad-elkik: "git://github.com/ls-jad-elkik/git-cola.github.io.git"
       lz-coder: "https://github.com/lz-coder/git-cola.github.io.git"
+    gitconfig:
+      remote.origin.pushurl:
+        - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
+        - "git@github.com:git-cola/git-cola.github.io.git"
     links:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
