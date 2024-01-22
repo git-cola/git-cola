@@ -6,7 +6,6 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy import QtNetwork
 
-from . import compat
 from . import core
 from . import icons
 from . import qtutils
