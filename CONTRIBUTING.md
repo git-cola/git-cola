@@ -20,7 +20,7 @@ Find an appropriate test suite and extend it whenever possible.
 This project is very picky about code style.
 The style here is the standard Python PEP-8 style:
 
-http://www.python.org/dev/peps/pep-0008/
+https://www.python.org/dev/peps/pep-0008/
 
 * Use the `garden fmt` command to format the source code using `cercis`.
 
@@ -56,11 +56,11 @@ files you are modifying to see the current conventions.
 
 The body should provide a meaningful commit message, which:
 
-* explains the problem the change tries to solve, iow, what is wrong
-  with the current code without the change.
+* explains the problem the change tries to solve, in other words,
+  what is wrong with the current code without the change.
 
-* justifies the way the change solves the problem, iow, why the
-  result with the change is better.
+* justifies the way the change solves the problem, in other words,
+  why the result with the change is better.
 
 * alternate solutions considered but discarded, if any.
 
@@ -152,7 +152,7 @@ for some general tips on bug reporting.
 
 ## Internationalization and Localization
 
-git-cola is translated to several languages.  When strings are presented to
+Git Cola is translated to several languages.  When strings are presented to
 the user they must use the `N_('<string>')` function so that `<string>` is
 translated into a localized string.
 

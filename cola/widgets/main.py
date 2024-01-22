@@ -1383,7 +1383,7 @@ class FocusProxy:
         return callback
 
     def delete(self):
-        """Specialized delete() to deal with QLineEdit vs QTextEdit"""
+        """Specialized delete() to deal with QLineEdit vs. QTextEdit"""
         focus = self.focus('delete')
         if hasattr(focus, 'del_'):
             focus.del_()

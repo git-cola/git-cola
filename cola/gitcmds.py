@@ -158,7 +158,7 @@ class CurrentBranchCache:
 
 
 def reset():
-    """Reset cached value in this module (eg. the cached current branch)"""
+    """Reset cached value in this module (e.g. the cached current branch)"""
     CurrentBranchCache.key = None
 
 
@@ -381,7 +381,7 @@ def oid_diff(context, oid, filename=None):
 
 
 def oid_diff_range(context, start, end, filename=None):
-    """Reeturn the diff for a commit range"""
+    """Return the diff for a commit range"""
     args = [start, end]
     git = context.git
     opts = common_diff_opts(context)
@@ -427,7 +427,7 @@ def diff_helper(
     reverse=False,
     untracked=False,
 ):
-    'Invokes git diff on a filepath.'
+    """Invoke git diff on a path"""
     git = context.git
     cfg = context.cfg
     if commit:
@@ -522,7 +522,7 @@ def extract_diff_header(deleted, with_diff_header, suppress_header, diffoutput):
 
 def format_patchsets(context, to_export, revs, output='patches'):
     """
-    Group contiguous revision selection into patchsets
+    Group contiguous revision selection into patch sets
 
     Exists to handle multi-selection.
     Multiple disparate ranges in the revision selection
@@ -556,7 +556,7 @@ def format_patchsets(context, to_export, revs, output='patches'):
             cur_rev_idx = rev_idx
             patchset_idx += 1
 
-    # Export each patchsets
+    # Export each patch set
     status = 0
     for patchset in patches_to_export:
         stat, out, err = export_patchset(
@@ -613,7 +613,6 @@ def worktree_state(
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
             changed_upstream, and submodule.
-
     """
     git = context.git
     if update_index:
@@ -727,7 +726,7 @@ def diff_upstream(context, head):
 
 
 def list_submodule(context):
-    """Return submodules in the format(state, sha1, path, describe)"""
+    """Return submodules in the format(state, sha_1, path, describe)"""
     git = context.git
     status, data, _ = git.submodule('status')
     ret = []
@@ -1036,7 +1035,7 @@ def annex_path(context, head, filename):
 
 
 def is_binary(context, filename):
-    """A heustic to determine whether `filename` contains (non-text) binary content"""
+    """A heuristic to determine whether `filename` contains (non-text) binary content"""
     cfg_is_binary = context.cfg.is_binary(filename)
     if cfg_is_binary is not None:
         return cfg_is_binary

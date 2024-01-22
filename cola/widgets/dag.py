@@ -104,7 +104,7 @@ class ViewerMixin:
         return result
 
     def selected_oids(self):
-        """Return the currently selected comit object IDs"""
+        """Return the currently selected commit object IDs"""
         return [i.commit for i in self.selected_items()]
 
     def clicked_oid(self):
@@ -349,7 +349,7 @@ def set_icon(icon, action):
 
 
 def viewer_actions(widget):
-    """Return commont actions across the tree and graph widgets"""
+    """Return common actions across the tree and graph widgets"""
     return {
         'diff_this_selected': set_icon(
             icons.compare(),
@@ -596,7 +596,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
     def export_state(self):
         """Export the widget's state"""
         # The base class method is intentionally overridden because we only
-        # care about the details below for this subwidget.
+        # care about the details below for this sub-widget.
         state = {}
         state['column_widths'] = self.column_widths()
         return state
@@ -1112,7 +1112,7 @@ class GitDAG(standard.MainWindow):
         )
 
     def grab_file(self, filename):
-        """Save the selected file from the filelist widget"""
+        """Save the selected file from the file list widget"""
         oid = self.treewidget.selected_oid()
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
@@ -1261,12 +1261,12 @@ class Edge(QtWidgets.QGraphicsItem):
             path.moveTo(self.source.x(), self.source.y())
             path.lineTo(self.dest.x(), self.dest.y())
         else:
-            # Define points starting from source
+            # Define points starting from the source.
             point1 = QPointF(self.source.x(), self.source.y())
             point2 = QPointF(point1.x(), point1.y() - connector_length)
             point3 = QPointF(point2.x() + arc_rect, point2.y() - arc_rect)
 
-            # Define points starting from dest
+            # Define points starting from the destination.
             point4 = QPointF(self.dest.x(), self.dest.y())
             point5 = QPointF(point4.x(), point3.y() - arc_rect)
             point6 = QPointF(point5.x() - arc_rect, point5.y() + arc_rect)
@@ -1276,8 +1276,8 @@ class Edge(QtWidgets.QGraphicsItem):
             start_angle_arc2 = 90
             span_angle_arc2 = -90
 
-            # If the dest is at the left of the source, then we
-            # need to reverse some values
+            # If the destination is at the left of the source, then we need to
+            # reverse some values.
             if self.source.x() > self.dest.x():
                 point3 = QPointF(point2.x() - arc_rect, point3.y())
                 point6 = QPointF(point5.x() + arc_rect, point6.y())
@@ -1448,7 +1448,7 @@ class Commit(QtWidgets.QGraphicsItem):
         return self.item_shape
 
     def paint(self, painter, option, _widget):
-        # Do not draw outside the exposed rect
+        # Do not draw outside the exposed rectangle.
         painter.setClipRect(option.exposedRect)
 
         # Draw ellipse
@@ -2080,7 +2080,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def reset_columns(self):
         # Some children of displayed commits might not be accounted in
         # 'commits' list. It is common case during loading of big graph.
-        # But, they are assigned a column that must be reseted. Hence, use
+        # But, they are assigned a column that must be reset. Hence, use
         # depth-first traversal to reset all columns assigned.
         for node in self.commits:
             if node.column is None:

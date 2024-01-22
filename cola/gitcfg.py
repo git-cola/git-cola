@@ -298,7 +298,7 @@ class GitConfig(QtCore.QObject):
         self.repo_config_changed.emit(key, value)
 
     def find(self, pat):
-        """Return a a dict of values for all keys matching the specified pattern"""
+        """Return a dict of values for all keys matching the specified pattern"""
         pat = pat.lower()
         match = fnmatch.fnmatch
         result = {}

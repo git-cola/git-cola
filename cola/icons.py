@@ -59,7 +59,7 @@ def icon_themes():
 def name_from_basename(basename):
     """Prefix the basename with "icons:" so that git-cola's icons are found
 
-    "icons" is registered with Qt's resource system during install().
+    "icons" is registered with the Qt resource system during install().
 
     """
     return 'icons:' + basename
@@ -163,7 +163,7 @@ def branch():
 
 
 def check_name():
-    """Checkmark icon name"""
+    """Check mark icon name"""
     return name_from_basename('check.svg')
 
 

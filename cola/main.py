@@ -12,7 +12,7 @@ def main(argv=None):
     app.initialize()
     if argv is None:
         argv = sys.argv[1:]
-    # we're using argparse with subparser, but argparse
+    # we're using argparse with subparsers, but argparse
     # does not allow us to assign a default subparser
     # when none has been specified.  We fake it by injecting
     # 'cola' into the command-line so that parse_args()

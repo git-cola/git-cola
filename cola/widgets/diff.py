@@ -1309,7 +1309,7 @@ def _add_patch_actions(widget, context, menu):
 
 
 def _build_patch_append_menu(widget, context, menu):
-    """Build the "Append Patch" submenu"""
+    """Build the "Append Patch" sub-menu"""
     # Build the menu when first displayed only. This initial check avoids
     # re-populating the menu with duplicate actions.
     menu_actions = menu.actions()
@@ -1634,7 +1634,7 @@ def new_apply_patches(context, patches=None, parent=None):
 
 
 def get_patches_from_paths(paths):
-    """Returns all patches benath a given path"""
+    """Returns all patches beneath a given path"""
     paths = [core.decode(p) for p in paths]
     patches = [p for p in paths if core.isfile(p) and p.endswith(('.patch', '.mbox'))]
     dirs = [p for p in paths if core.isdir(p)]

@@ -286,7 +286,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                 menu.addSeparator()
                 menu.addAction(delete_menu_action)
 
-        # manage upstreams for local branches
+        # manage upstream branches for local branches
         if root.name == N_('Local'):
             upstream_menu = menu.addMenu(N_('Set Upstream Branch'))
             upstream_menu.setIcon(icons.branch())
@@ -640,7 +640,7 @@ def create_tree_entries(names):
 
     """
     # Phase 1: build a nested dictionary representing the intermediate
-    # names in the branches.  e.g. {'xxx': {'abc': {}, 'def': {}}}
+    # names in the branches, e.g. {'xxx': {'abc': {}, 'def': {}}}
     tree_names = create_name_dict(names)
 
     # Loop over the names again, this time we'll create tree entries
@@ -679,7 +679,7 @@ def create_tree_entries(names):
 
 def create_name_dict(names):
     # Phase 1: build a nested dictionary representing the intermediate
-    # names in the branches.  e.g. {'xxx': {'abc': {}, 'def': {}}}
+    # names in the branches, e.g. {'xxx': {'abc': {}, 'def': {}}}
     tree_names = {}
     for item in names:
         part_names = tree_names

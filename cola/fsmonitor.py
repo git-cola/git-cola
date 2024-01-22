@@ -293,7 +293,7 @@ if AVAILABLE == 'inotify':
                     inotify.rm_watch(self._inotify_fd, wd)
                 except OSError as e:
                     if e.errno == errno.EINVAL:
-                        # This error can occur if the target of the wd was
+                        # This error can occur if the target of the watch was
                         # removed on the filesystem before we call
                         # inotify.rm_watch() so ignore it.
                         continue

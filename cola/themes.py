@@ -511,7 +511,7 @@ class Theme:
         return palette
 
     def highlight_color_rgb(self):
-        """Return an rgb(r,g,b) css color value for the selection highlight"""
+        """Return an rgb(r,g,b) CSS color value for the selection highlight"""
         if self.highlight_color:
             highlight_rgb = self.highlight_color
         elif self.main_color:
@@ -534,7 +534,7 @@ class Theme:
         return color
 
     def text_colors_rgb(self):
-        """Return a pair of rgb(r,g,b) css color values for text and selected text"""
+        """Return a pair of rgb(r,g,b) CSS color values for text and selected text"""
         if self.text_color:
             text_rgb = self.text_color
             highlight_text_rgb = self.text_color
@@ -548,7 +548,7 @@ class Theme:
         return text_rgb, highlight_text_rgb
 
     def disabled_text_color_rgb(self):
-        """Return an rgb(r,g,b) css color value for the disabled text"""
+        """Return an rgb(r,g,b) CSS color value for the disabled text"""
         if self.disabled_text_color:
             disabled_text_rgb = self.disabled_text_color
         else:
@@ -558,7 +558,7 @@ class Theme:
         return disabled_text_rgb
 
     def background_color_rgb(self):
-        """Return an rgb(r,g,b) css color value for the window background"""
+        """Return an rgb(r,g,b) CSS color value for the window background"""
         if self.background_color:
             background_color = self.background_color
         else:
@@ -729,7 +729,7 @@ def get_all_themes():
 
 
 def apply_platform_theme(theme):
-    """Apply platform-specific themes (eg. dark mode on macOS)"""
+    """Apply platform-specific themes (e.g. dark mode on macOS)"""
     # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
     # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
     if utils.is_darwin():

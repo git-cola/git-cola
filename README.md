@@ -205,7 +205,7 @@ This install method lets you upgrade Git Cola by running `git pull`.
 
 If you add `env3/bin` (or symlink to `env3/bin/git-cola` ) somewhere in your `$PATH` then you can
 run `git cola` as if it were a builtin `git` command from outside of the virtualenv
-(eg. after running "deactivate" or when opening a new shell).
+(e.g. after running "deactivate" or when opening a new shell).
 
 
 ## Standalone Installation from Source
@@ -266,13 +266,13 @@ If you upgrade your macOS version and Git Cola no longer runs then then it is
 recommended that you re-install Git Cola's dependencies after upgrading.
 
 A quick fix when upgrading to newer versions of XCode or macOS is to
-reinstall pyqt5.
+reinstall PyQt6.
 
-    brew reinstall pyqt@5
+    brew reinstall pyqt@6
 
 You may also need to relink your pyqt installation:
 
-    brew link pyqt@5
+    brew link pyqt@6
 
 This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
 Homebrew now bundles its own Python3 installation instead of using the
@@ -422,7 +422,7 @@ When submitting patches, consult the
 ## Packaging Notes
 
 Git Cola installs its modules into the default Python site-packages directory
-(eg. `lib/python3.7/site-packages`) using setuptools.
+(e.g. `lib/python3.7/site-packages`) using setuptools.
 
 While end-users can use `pip install git-cola` to install Git Cola, distribution
 packagers should use the `garden -D prefix=/usr install` process. Git Cola's Garden

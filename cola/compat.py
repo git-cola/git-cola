@@ -46,14 +46,14 @@ else:
     uchr = unichr  # noqa
     int_types = (int, long)  # noqa
 
-# Qt's max 32-bit signed integer range (-2147483648 to 2147483647)
+# The max 32-bit signed integer range for Qt is (-2147483648 to 2147483647)
 maxint = (2**31) - 1
 
 
 def setenv(key, value):
     """Compatibility wrapper for setting environment variables
 
-    Why?  win32 requires putenv().  UNIX only requires os.environ.
+    Windows requires putenv(). Unix only requires os.environ.
     """
     if not PY3 and isinstance(value, ustr):
         value = value.encode(ENCODING, 'replace')
@@ -62,7 +62,7 @@ def setenv(key, value):
 
 
 def unsetenv(key):
-    """Compatibility wrapper for unsetting environment variables"""
+    """Compatibility wrapper for clearing environment variables"""
     os.environ.pop(key, None)
     if hasattr(os, 'unsetenv'):
         os.unsetenv(key)
@@ -74,9 +74,9 @@ def no_op(value):
 
 
 def byte_offset_to_int_converter():
-    """Return a function to convert byte string offsets into ints
+    """Return a function to convert byte string offsets into integers
 
-    Indexing into python3 bytes returns ints, Python2 returns str.
+    Indexing into python3 bytes returns integers. Python2 returns str.
     Thus, on Python2 we need to use `ord()` to convert the byte into
     an integer.  It's already an int on Python3, so we use no_op there.
     """

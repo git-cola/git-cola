@@ -187,7 +187,7 @@ def grid(margin, spacing, *widgets):
 
 
 def splitter(orientation, *widgets):
-    """Create a spliter over the specified widgets
+    """Create a splitter over the specified widgets
 
     :param orientation: Qt.Horizontal or Qt.Vertical
 
@@ -224,7 +224,7 @@ def label(text=None, align=None, fmt=None, selectable=True):
 
 
 class ComboBox(QtWidgets.QComboBox):
-    """Custom read-only combobox with a convenient API"""
+    """Custom read-only combo box with a convenient API"""
 
     def __init__(self, items=None, editable=False, parent=None, transform=None):
         super().__init__(parent)
@@ -257,7 +257,7 @@ class ComboBox(QtWidgets.QComboBox):
 
 
 def combo(items, editable=False, tooltip='', parent=None):
-    """Create a readonly (by default) combobox from a list of items"""
+    """Create a readonly (by default) combo box from a list of items"""
     combobox = ComboBox(editable=editable, items=items, parent=parent)
     if tooltip:
         combobox.setToolTip(tooltip)
@@ -265,7 +265,7 @@ def combo(items, editable=False, tooltip='', parent=None):
 
 
 def combo_mapped(data, editable=False, transform=None, parent=None):
-    """Create a readonly (by default) combobox from a list of items"""
+    """Create a readonly (by default) combo box from a list of items"""
     widget = ComboBox(editable=editable, transform=transform, parent=parent)
     for k, v in data:
         widget.add_item(k, v)
@@ -612,7 +612,7 @@ def _add_action(widget, text, tip, func, connect, *shortcuts):
 
 
 def set_selected_item(widget, idx):
-    """Sets a the currently selected item to the item at index idx."""
+    """Sets the currently selected item to the item at index idx."""
     if isinstance(widget, QtWidgets.QTreeWidget):
         item = widget.topLevelItem(idx)
         if item:
@@ -765,7 +765,7 @@ def tool_button():
 
 
 def create_action_button(tooltip=None, icon=None, visible=None):
-    """Create a small toolbutton for use in dock title widgets"""
+    """Create a small tool button for use in dock title widgets"""
     button = tool_button()
     if tooltip is not None:
         button.setToolTip(tooltip)
@@ -918,11 +918,11 @@ def create_menu(title, parent):
 
 
 class DebouncingMenu(QtWidgets.QMenu):
-    """Menu that debounces mouse release action ie. stops it if occurred
+    """Menu that debounces mouse release action i.e. stops it if occurred
     right after menu creation.
 
     Disables annoying behaviour when RMB is pressed to show menu, cursor is
-    moved accidentally 1px onto newly created menu and released causing to
+    moved accidentally 1 px onto newly created menu and released causing to
     execute menu action
     """
 
@@ -966,7 +966,7 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
 
 
 def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
-    """Create a toolbutton that runs the specified callback"""
+    """Create a tool button that runs the specified callback"""
     toolbutton = create_toolbutton(text=text, layout=layout, tooltip=tooltip, icon=icon)
     connect_button(toolbutton, callback)
     return toolbutton
@@ -974,16 +974,16 @@ def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
 
 # pylint: disable=line-too-long
 def mimedata_from_paths(context, paths, include_urls=True):
-    """Return mimedata with a list of absolute path URLs
+    """Return mime data with a list of absolute path URLs
 
     Set `include_urls` to False to prevent URLs from being included
-    in the mimedata. This is useful in some terminals that do not gracefully handle
+    in the mime data. This is useful in some terminals that do not gracefully handle
     multiple URLs being included in the payload.
 
-    This allows the mimedata to contain just plain a plain text value that we
+    This allows the mime data to contain just plain a plain text value that we
     are able to format ourselves.
 
-    Older verisons of gnome-terminal expected a utf-16 encoding, but that
+    Older versions of gnome-terminal expected a UTF-16 encoding, but that
     behavior is no longer needed.
     """  # noqa
     abspaths = [core.abspath(path) for path in paths]
@@ -993,8 +993,8 @@ def mimedata_from_paths(context, paths, include_urls=True):
     # mimedata.removeFormat('text/x-moz-url') has no effect.
     # http://www.qtcentre.org/threads/44643-Dragging-text-uri-list-Qt-inserts-garbage
     #
-    # Older versions of gnome-terminal expect utf-16 encoded text, but other terminals,
-    # e.g. terminator, expect utf-8, so use cola.dragencoding to override the default.
+    # Older versions of gnome-terminal expect UTF-16 encoded text, but other terminals,
+    # e.g. terminator, expect UTF-8, so use cola.dragencoding to override the default.
     # NOTE: text/x-moz-url does not seem to be used/needed by modern versions of
     # gnome-terminal, kitty, and terminator.
     mimedata = QtCore.QMimeData()
@@ -1010,7 +1010,7 @@ def mimedata_from_paths(context, paths, include_urls=True):
 
 
 def path_mimetypes(include_urls=True):
-    """Return a list of mimetypes that we generate"""
+    """Return a list of mime types that we generate"""
     mime_types = [
         'text/plain',
         'text/plain;charset=utf-8',
@@ -1053,7 +1053,7 @@ class Task(QtCore.QRunnable):
         self.channel = Channel()
         self.result = None
         # Python's garbage collector will try to double-free the task
-        # once it's finished, so disable Qt's auto-deletion as a workaround.
+        # once it's finished so disable the Qt auto-deletion.
         self.setAutoDelete(False)
 
     def run(self):

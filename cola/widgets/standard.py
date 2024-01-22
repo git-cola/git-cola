@@ -48,7 +48,7 @@ class WidgetMixin:
             self.resize(width, height)
         else:
             shown = self.isVisible()
-            # earlier show() fools Windows focus stealing prevention. the main
+            # earlier show() fools Windows focus stealing prevention. The main
             # window is blocked for the duration of "git rebase" and we don't
             # want to present a blocked window with git-cola-sequence-editor
             # hidden somewhere.
@@ -303,7 +303,7 @@ class TreeMixin:
         # Vim keybindings...
         event = _create_vim_navigation_key_event(event)
 
-        # Read the updated event key to take the remappings into account
+        # Read the updated event key to take the mappings into account
         key = event.key()
         if key == Qt.Key_Up:
             idxs = widget.selectedIndexes()
@@ -525,7 +525,7 @@ class Dialog(WidgetMixin, QtWidgets.QDialog):
         return self.Base.reject(self)
 
     def dispose(self):
-        """Extension method for model deregistration in sub-classes"""
+        """Extension method for model de-registration in sub-classes"""
         return
 
     def close(self):
@@ -730,7 +730,7 @@ class ProgressAnimationThread(QtCore.QThread):
 
 
 class ProgressTickThread(QtCore.QThread):
-    """Emits a an int stream for progress bars"""
+    """Emits an int stream for progress bars"""
 
     # The updated signal emits progress tick values.
     updated = Signal(int)

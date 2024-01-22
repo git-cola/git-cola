@@ -358,7 +358,7 @@ class PreviewTextView(VimTextBrowser):
         self.runtask = qtutils.RunTask(parent=self)
 
     def preview(self, filename, line_number):
-        """Preview the a file at the specified line number"""
+        """Preview a file at the specified line number"""
 
         if filename != self.filename:
             request = PreviewTask(filename, line_number)

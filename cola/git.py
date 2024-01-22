@@ -20,7 +20,7 @@ STATUS = 0
 STDOUT = 1
 STDERR = 2
 
-# Object ID / SHA1-related constants
+# Object ID / SHA-1-related constants
 # Git's empty tree is a built-in constant object name.
 EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 # Git's diff machinery returns zeroes for modified files whose content exists
@@ -362,8 +362,8 @@ class Git:
             result = self.execute(call, **_kwargs)
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:
-                # see if git exists at all. on win32 it can fail with ENOENT in
-                # case of argv overflow. we should be safe from that but use
+                # see if git exists at all. On win32 it can fail with ENOENT in
+                # case of argv overflow. We should be safe from that but use
                 # defensive coding for the worst-case scenario. On UNIX
                 # we have ENAMETOOLONG but that doesn't exist on Windows.
                 if _git_is_installed():
@@ -375,7 +375,7 @@ class Git:
 
 def _git_is_installed():
     """Return True if git is installed"""
-    # On win32 Git commands can fail with ENOENT in case of argv overflow. we
+    # On win32 Git commands can fail with ENOENT in case of argv overflow. We
     # should be safe from that but use defensive coding for the worst-case
     # scenario. On UNIX we have ENAMETOOLONG but that doesn't exist on
     # Windows.

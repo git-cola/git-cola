@@ -25,7 +25,7 @@ class TextWrapper:
         The width of a tab used when calculating line length.
       break_on_hyphens (default: false)
         Allow breaking hyphenated words. If true, wrapping will occur
-        preferably on whitespaces and right after hyphens part of
+        preferably on whitespace and right after the hyphenated part of
         compound words.
       drop_whitespace (default: true)
         Drop leading and trailing whitespace from lines.
@@ -99,7 +99,7 @@ class TextWrapper:
         'self.width' or less.  Some lines may be longer than this.  Chunks
         correspond roughly to words and the whitespace between them: each
         chunk is indivisible, but a line break can come between any two
-        chunks.  Chunks should not have internal whitespace; ie. a chunk is
+        chunks.  Chunks should not have internal whitespace; i.e. a chunk is
         either all whitespace or a "word".  Whitespace chunks will be removed
         from the beginning and end of lines, but apart from that whitespace is
         preserved.
@@ -120,7 +120,7 @@ class TextWrapper:
             width = self.width
 
             # First chunk on line is a space -- drop it, unless this
-            # is the very beginning of the text (ie. no lines started yet).
+            # is the very beginning of the text (i.e. no lines started yet).
             if self.drop_whitespace and is_blank(chunks[-1]) and lines:
                 chunks.pop()
 
@@ -143,7 +143,7 @@ class TextWrapper:
                 if not cur_line:
                     cur_line.append(chunks.pop())
 
-            # Avoid whitespace at the beginining of split lines
+            # Avoid whitespace at the beginning of split lines
             if (
                 linebreak
                 and self.drop_whitespace

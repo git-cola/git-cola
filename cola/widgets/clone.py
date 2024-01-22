@@ -204,7 +204,7 @@ class Clone(standard.Dialog):
             msg = N_('"%s" already exists, cola will create a new directory') % destdir
             Interaction.information(N_('Directory Exists'), msg)
 
-        # Make sure the new destdir doesn't exist
+        # Make sure the directory doesn't exist
         while core.exists(destdir):
             destdir = olddestdir + str(count)
             count += 1

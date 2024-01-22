@@ -41,7 +41,7 @@ def _map_rect_to_scene(self, rect):
 
 
 def wheel_translation(event):
-    """Return the Tx Ty translation delta for a pan"""
+    """Return the (Tx, Ty) translation delta for a pan"""
     if PYQT4:
         tx = event.delta()
         ty = 0.0

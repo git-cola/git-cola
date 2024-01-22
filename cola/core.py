@@ -1,8 +1,7 @@
-"""This module provides core functions for handling unicode and UNIX quirks
+"""This module provides core functions for handling Unicode and Unix quirks
 
 The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
-
 """
 import functools
 import itertools
@@ -49,7 +48,7 @@ _encoding_tests = [
 class UStr(ustr):
     """Unicode string wrapper that remembers its encoding
 
-    UStr wraps unicode strings to provide the `encoding` attribute.
+    UStr wraps Unicode strings to provide the `encoding` attribute.
     UStr is used when decoding strings of an unknown encoding.
     In order to generate patches that contain the original byte sequences,
     we must preserve the original encoding when calling decode()
@@ -79,7 +78,7 @@ def decode_maybe(value, encoding, errors='strict'):
 
 
 def decode(value, encoding=None, errors='strict'):
-    """decode(encoded_string) returns an unencoded unicode string"""
+    """decode(encoded_string) returns an un-encoded Unicode string"""
     if value is None:
         result = None
     elif isinstance(value, ustr):
@@ -109,14 +108,14 @@ def decode(value, encoding=None, errors='strict'):
 
 
 def encode(string, encoding=None):
-    """encode(unencoded_string) returns a string encoded in utf-8"""
+    """encode(string) returns a byte string encoded to UTF-8"""
     if not isinstance(string, ustr):
         return string
     return string.encode(encoding or ENCODING, 'replace')
 
 
 def mkpath(path, encoding=None):
-    # The Windows API requires unicode strings regardless of python version
+    # The Windows API requires Unicode strings regardless of python version
     if WIN32:
         return decode(path, encoding=encoding)
     # UNIX prefers bytes
@@ -139,7 +138,7 @@ def read(filename, size=-1, encoding=None, errors='strict'):
 
 
 def write(path, contents, encoding=None, append=False):
-    """Writes a unicode string to a file"""
+    """Writes a Unicode string to a file"""
     if append:
         mode = 'ab'
     else:
@@ -150,13 +149,13 @@ def write(path, contents, encoding=None, append=False):
 
 @interruptable
 def xread(fh, size=-1, encoding=None, errors='strict'):
-    """Read from a filehandle and retry when interrupted"""
+    """Read from a file handle and retry when interrupted"""
     return decode(fh.read(size), encoding=encoding, errors=errors)
 
 
 @interruptable
 def xwrite(fh, content, encoding=None):
-    """Write to a filehandle and retry when interrupted"""
+    """Write to a file handle and retry when interrupted"""
     return fh.write(encode(content, encoding=encoding))
 
 
@@ -194,20 +193,20 @@ def start_command(
         env.update(add_env)
 
     # Python3 on windows always goes through list2cmdline() internally inside
-    # of subprocess.py so we must provide unicode strings here otherwise
+    # of subprocess.py so we must provide Unicode strings here otherwise
     # Python3 breaks when bytes are provided.
     #
-    # Additionally, the preferred usage on Python3 is to pass unicode
+    # Additionally, the preferred usage on Python3 is to pass Unicode
     # strings to subprocess.  Python will automatically encode into the
-    # default encoding (utf-8) when it gets unicode strings.
+    # default encoding (UTF-8) when it gets Unicode strings.
     shell = extra.get('shell', False)
     cmd = prep_for_subprocess(cmd, shell=shell)
 
     if WIN32 and cwd == getcwd():
-        # Windows cannot deal with passing a cwd that contains unicode
+        # Windows cannot deal with passing a cwd that contains Unicode
         # but we luckily can pass None when the supplied cwd is the same
         # as our current directory and get the same effect.
-        # Not doing this causes unicode encoding errors when launching
+        # Not doing this causes Unicode encoding errors when launching
         # the subprocess.
         cwd = None
 
@@ -290,7 +289,7 @@ def _fork_posix(args, cwd=None, shell=False):
 
 def _fork_win32(args, cwd=None, shell=False):
     """Launch a background process using crazy win32 voodoo."""
-    # This is probably wrong, but it works.  Windows.. wow.
+    # This is probably wrong, but it works.  Windows.. Wow.
     if args[0] == 'git-dag':
         # win32 can't exec python scripts
         args = [sys.executable] + args
@@ -318,7 +317,7 @@ def _win32_find_exe(exe):
     variables.  This allows us to avoid passing shell=True to subprocess.Popen.
 
     For reference, see:
-    http://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection127121120120
+    https://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection127121120120
 
     """
     # try the argument itself
@@ -397,24 +396,24 @@ def guess_mimetype(filename):
 def xopen(path, mode='r', encoding=None):
     """Open a file with the specified mode and encoding
 
-    The path is decoded into unicode on Windows and encoded into bytes on Unix.
+    The path is decoded into Unicode on Windows and encoded into bytes on Unix.
     """
     # pylint: disable=unspecified-encoding
     return open(mkpath(path, encoding=encoding), mode)
 
 
 def open_append(path, encoding=None):
-    """Open a file for appending in utf-8 text mode"""
+    """Open a file for appending in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), 'a', encoding='utf-8')
 
 
 def open_read(path, encoding=None):
-    """Open a file for reading in utf-8 text mode"""
+    """Open a file for reading in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), encoding='utf-8')
 
 
 def open_write(path, encoding=None):
-    """Open a file for writing in utf-8 text mode"""
+    """Open a file for writing in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), 'w', encoding='utf-8')
 
 
@@ -491,7 +490,7 @@ def sync():
 
 
 def rename(old, new):
-    """Rename a path. Transform arguments to handle non-ascii file paths"""
+    """Rename a path. Transform arguments to handle non-ASCII file paths"""
     os.rename(mkpath(old), mkpath(new))
 
 

@@ -202,7 +202,7 @@ class ColaApplication:
             self._app.setPalette(theme.build_palette(self._app.palette()))
 
     def _install_hidpi_config(self):
-        """Sets QT HIDPI scalling (requires Qt 5.6)"""
+        """Sets QT HiDPI scaling (requires Qt 5.6)"""
         value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
 
@@ -511,7 +511,6 @@ def async_update(context):
     """Update the model in the background
 
     git-cola should startup as quickly as possible.
-
     """
     update_status = partial(context.model.update_status, update_index=True)
     task = qtutils.SimpleTask(update_status)

@@ -41,7 +41,7 @@ def new_finder(context, paths=None, parent=None):
 
 
 def add_wildcards(arg):
-    """Add "*" around user input to generate ls-files pathspecs matches
+    """Add "*" around user input to generate ls-files pathspec matches
 
     >>> '*x*' == \
         add_wildcards('x') == \

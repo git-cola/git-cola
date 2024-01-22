@@ -30,9 +30,7 @@ class ExpandingTabBar(QtWidgets.QTabBar):
     The setExpanding(True) method does not work in practice because
     it respects the OS style.  We override the style by implementing
     tabSizeHint() so that we can specify the size explicitly.
-
     """
-
     def tabSizeHint(self, tab_index):
         width = self.parent().width() // max(2, self.count()) - 1
         size = super().tabSizeHint(tab_index)
@@ -201,7 +199,7 @@ def mailto(email, text, palette):
 
 
 def render_authors(authors):
-    """Render a list of author details into richtext html"""
+    """Render a list of author details into rich text html"""
     for x in authors:
         x.setdefault('email', '')
 
@@ -470,7 +468,7 @@ def show_shortcuts():
     try:
         from qtpy import QtWebEngineWidgets  # pylint: disable=all
     except (ImportError, qtpy.PythonQtError):
-        # redhat disabled QtWebKit in their qt build but don't punish the users
+        # Redhat disabled QtWebKit in their Qt build but don't punish the users
         webbrowser.open_new_tab('file://' + hotkeys_html)
         return
 

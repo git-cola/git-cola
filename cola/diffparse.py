@@ -324,7 +324,7 @@ class Patch:
         # line and switches it to addition, it appends the line to the pending_additions
         # list, while additions that get switched to deletions are appended directly to
         # the content_lines list.  Each time a context line is encountered, any pending
-        # additions are then appended to the content_lines list immmediately before the
+        # additions are then appended to the content_lines list immediately before the
         # context line and the pending_additions list is cleared.
         new_content_lines = []
         pending_additions = []

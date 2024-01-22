@@ -254,17 +254,17 @@ def _shell_split_py2(value):
         result = shlex.split(core.encode(value))
     except ValueError:
         result = core.encode(value).strip().split()
-    # Decode to unicode strings
+    # Decode to Unicode strings
     return [core.decode(arg) for arg in result]
 
 
 def _shell_split_py3(value):
-    """Python3 requires unicode inputs to shlex.split().  Converts to unicode"""
+    """Python3 requires Unicode inputs to shlex.split().  Convert to Unicode"""
     try:
         result = shlex.split(value)
     except ValueError:
         result = core.decode(value).strip().split()
-    # Already unicode
+    # Already Unicode
     return result
 
 
@@ -287,17 +287,17 @@ def tmp_filename(label, suffix=''):
 
 
 def is_linux():
-    """Is this a linux machine?"""
+    """Is this a Linux machine?"""
     return sys.platform.startswith('linux')
 
 
 def is_debian():
-    """Is it debian?"""
+    """Is this a Debian/Linux machine?"""
     return os.path.exists('/usr/bin/apt-get')
 
 
 def is_darwin():
-    """Return True on OSX."""
+    """Is this a macOS machine?"""
     return sys.platform == 'darwin'
 
 

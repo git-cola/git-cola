@@ -40,7 +40,7 @@ class LineEdit(QtWidgets.QLineEdit):
             self.setClearButtonEnabled(True)
 
     def get(self):
-        """Return the raw unicode value from Qt"""
+        """Return the raw Unicode value from Qt"""
         return self.text()
 
     def value(self):
@@ -115,7 +115,7 @@ class BaseTextEditExtension(QtCore.QObject):
             )
 
     def get(self):
-        """Return the raw unicode value from Qt"""
+        """Return the raw Unicode value from Qt"""
         return self.widget.toPlainText()
 
     def value(self):
@@ -294,7 +294,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         self.menu_actions = []
 
     def get(self):
-        """Return the raw unicode value from Qt"""
+        """Return the raw Unicode value from Qt"""
         return self.ext.get()
 
     # For compatibility with QTextEdit
@@ -528,7 +528,7 @@ class TextEdit(QtWidgets.QTextEdit):
         self.menu_actions = []
 
     def get(self):
-        """Return the raw unicode value from Qt"""
+        """Return the raw Unicode value from Qt"""
         return self.ext.get()
 
     def value(self):
@@ -707,7 +707,7 @@ class HintWidget(QtCore.QObject):
         )
 
     def init(self):
-        """Defered initialization"""
+        """Deferred initialization"""
         if self.modern:
             self.widget().setPlaceholderText(self.value())
         else:
@@ -862,7 +862,7 @@ class VimMixin:
     def __init__(self, widget):
         self.widget = widget
         self.Base = widget.Base
-        # Common vim/unix-ish keyboard actions
+        # Common vim/Unix-ish keyboard actions
         self.add_navigation('End', hotkeys.GOTO_END)
         self.add_navigation('Up', hotkeys.MOVE_UP, shift=hotkeys.MOVE_UP_SHIFT)
         self.add_navigation('Down', hotkeys.MOVE_DOWN, shift=hotkeys.MOVE_DOWN_SHIFT)
@@ -985,9 +985,7 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
     """HintedPlainTextEdit with vim hotkeys
 
     This can only be used in read-only mode.
-
     """
-
     Base = HintedPlainTextEdit
     Mixin = VimMixin
 

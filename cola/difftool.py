@@ -280,7 +280,7 @@ def difftool_launch(
     :param paths: paths to diff
     :param staged: activate `git difftool --staged`
     :param dir_diff: activate `git difftool --dir-diff`
-    :param left_take_magic: whether to append the magic ^! diff expression
+    :param left_take_magic: whether to append the magic "^!" diff expression
     :param left_take_parent: whether to append the first-parent ~ for diffing
 
     """

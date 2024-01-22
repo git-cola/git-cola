@@ -68,7 +68,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
 
-        # Menu acctions
+        # Menu actions
         self.menu_actions = menu_actions = [
             self.signoff_action,
             self.commit_action,
@@ -180,7 +180,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.check_spelling_action, self.toggle_check_spelling
         )
 
-        # Handle the one-off autowrapping
+        # Handle the one-off auto-wrapping
         qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 
         self.summary.accepted.connect(self.focus_description)
@@ -255,7 +255,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.focus_description()
 
     def commit_message(self, raw=True):
-        """Return the commit message as a unicode string"""
+        """Return the commit message as a Unicode string"""
         summary = get(self.summary)
         if raw:
             description = get(self.description)

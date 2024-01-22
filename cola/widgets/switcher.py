@@ -52,13 +52,13 @@ class Switcher(standard.Dialog):
     This will be inherited by outer-view class(SwitcherOuterView) or inner-view class
     (SwitcherInnerView).
 
-    inner-view class is a quick-switcher widget including view. In this case, this
+    The inner-view class is a quick-switcher widget including view. In this case, this
     switcher will have switcher_list field, and show the items list in itself.
-    outer-view class is a quick-switcher widget without view(only input field), which
-    means sharing model with other view class.
+    The outer-view class is a quick-switcher widget without view(only input field),
+    which shares model with other view class.
 
-    switcher_selection_move signal is for the event that selection move key like UP,
-    DOWN has pressed while focusing on input field.
+    The switcher_selection_move signal is the event that the selection move actions
+    emit while the input field is focused.
     """
 
     def __init__(

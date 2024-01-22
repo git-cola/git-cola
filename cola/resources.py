@@ -66,7 +66,7 @@ def doc(*args):
 
 
 def i18n(*args):
-    """Return a path relative to cola's i18n locale directory, eg. cola/i18n"""
+    """Return a path relative to cola's i18n locale directory, e.g. cola/i18n"""
     return package_data('i18n', *args)
 
 
@@ -136,7 +136,7 @@ def xdg_config_home(*args):
 
 
 def xdg_data_home(*args):
-    """Return the XDG_DATA_HOME configuration directory, eg. ~/.local/share"""
+    """Return the XDG_DATA_HOME configuration directory, e.g. ~/.local/share"""
     config = core.getenv(
         'XDG_DATA_HOME', os.path.join(core.expanduser('~'), '.local', 'share')
     )
@@ -175,5 +175,5 @@ def find_first(subpath, paths, validate=os.path.isfile):
 
 
 def config_home(*args):
-    """Return git-cola's configuration directory, eg. ~/.config/git-cola"""
+    """Return git-cola's configuration directory, e.g. ~/.config/git-cola"""
     return xdg_config_home('git-cola', *args)

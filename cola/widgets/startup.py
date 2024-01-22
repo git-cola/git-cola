@@ -292,7 +292,7 @@ class StartupDialog(standard.Dialog):
 
 
 def get_all_repos(context, settings):
-    """Return a sorted list of bookmarks and recent repositorties"""
+    """Return a sorted list of bookmarks and recent repositories"""
     bookmarks = settings.bookmarks
     recent = settings.recent
     all_repos = [(repo, True) for repo in bookmarks] + [

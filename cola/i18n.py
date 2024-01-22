@@ -43,7 +43,7 @@ class Translation:
             self.load()
 
     def load(self):
-        """Read the pofile content into memory"""
+        """Read the .po file content into memory"""
         po = polib.pofile(self.filename, encoding='utf-8')
         messages = self.messages
         for entry in po.translated_entries():

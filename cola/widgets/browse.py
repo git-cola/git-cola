@@ -507,12 +507,12 @@ class RepoTreeView(standard.TreeView):
         cmds.do(cmds.VisualizePaths, self.context, paths)
 
     def untrack_selected(self):
-        """untrack selected paths."""
+        """Untrack selected paths."""
         context = self.context
         cmds.do(cmds.Untrack, context, self.selected_tracked_paths())
 
     def rename_selected(self):
-        """untrack selected paths."""
+        """Untrack selected paths."""
         context = self.context
         cmds.do(cmds.Rename, context, self.selected_tracked_paths())
 
@@ -818,7 +818,7 @@ class GitTreeModel(GitFileTreeModel):
 
 class GitTreeItem(QtGui.QStandardItem):
     """
-    Represents a cell in a treeview.
+    Represents a cell in a tree view.
 
     Many GitRepoItems could map to a single repository path,
     but this tree only has a single column.
