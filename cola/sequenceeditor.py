@@ -205,6 +205,13 @@ class Editor(QtWidgets.QWidget):
         self.filewidget.files_selected.connect(self.diff.files_selected)
         self.filewidget.remark_toggled.connect(self.remark_toggled_for_files)
 
+        # `git.show` is too expensive.
+        # When user toggles a remark of all commits touching selected paths
+        # for a first time, the GUI freezes for a while on a big enough
+        # sequence.
+        # So, a cache is used (commit ID to paths tuple).
+        self.oid_to_paths = {}
+
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
         qtutils.connect_button(self.help_button, partial(show_help, context))
@@ -218,31 +225,42 @@ class Editor(QtWidgets.QWidget):
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
 
+    def paths_touched_by_oid(self, oid):
+        try:
+            return self.oid_to_paths[oid]
+        except KeyError:
+            pass
+
+        status, out, _ = self.context.git.show(
+            oid, z=True, numstat=True, oneline=True, no_renames=True
+        )
+
+        if status != 0:
+            return ()
+
+        paths = [f for f in out.rstrip('\0').split('\0') if f]
+        if paths:
+            # Skip over the summary on the first line.
+            paths = paths[1:]
+
+        # Drop numbers. Only path is needed.
+        paths = tuple(f.split()[-1] for f in paths)
+        self.oid_to_paths[oid] = paths
+
+        return paths
+
     def remark_toggled_for_files(self, remark, filenames):
         filenames = set(filenames)
 
         items = self.tree.items()
         touching_items = []
 
-        git = self.context.git
-
         for item in items:
             if not item.is_commit():
                 continue
             oid = item.oid
 
-            status, out, _ = git.show(
-                oid, z=True, numstat=True, oneline=True, no_renames=True
-            )
-            if status != 0:
-                continue
-            paths = [f for f in out.rstrip('\0').split('\0') if f]
-            if paths:
-                # Skip over the summary on the first line.
-                paths = paths[1:]
-
-            # Drop numbers. Only path is needed.
-            paths = [f.split()[-1] for f in paths]
+            paths = self.paths_touched_by_oid(oid)
 
             if filenames.intersection(paths):
                 touching_items.append(item)
