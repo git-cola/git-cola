@@ -42,6 +42,8 @@ Packaging and Dependencies
 --------------------------
 * The vendored `qtpy` library was updated to `v2.4.1`.
 
+* The documentation no longer depends on `jaraco.packaging`.
+
 Development
 -----------
 * upload-artifact and setup-python github actions were upgraded.

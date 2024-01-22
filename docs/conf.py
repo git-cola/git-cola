@@ -22,16 +22,13 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinxtogithub',
-    # https://github.com/git-cola/git-cola/issues/1250
-    # https://github.com/jaraco/jaraco.packaging/issues/7
-    # 'jaraco.packaging.sphinx',
 ]
 
 master_doc = 'index'
 html_theme = 'default'
 
-# {package_url} is provided py jaraco.packaging.sphinx when available
-# for use in the rst.linker configuration. We expand the value manually for now.
+# {package_url} can be provided py jaraco.packaging.sphinx but we
+# expand the value manually to avoid the dependency.
 package_url = 'https://gitlab.com/git-cola/git-cola'
 
 project = 'Git Cola'
