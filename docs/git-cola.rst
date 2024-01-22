@@ -141,7 +141,7 @@ When you select a line in the diff or grep screens and press any of
 `Enter`, `Ctrl-e`, or the `Edit` button, you are taken to that exact line.
 
 The editor preference is saved in the `gui.editor` variable using
-`git config <http://git-scm.com/docs/git-config>`_.
+`git config <https://git-scm.com/docs/git-config>`_.
 
 The following are some recommend editor configurations.
 
@@ -220,14 +220,14 @@ the Commit tool can be focused with `Ctrl-l`.
 STATUS
 ======
 The `Status` tool provides a visual analog to the
-`git status <http://git-scm.com/docs/git-status>`_ command.
+`git status <https://git-scm.com/docs/git-status>`_ command.
 
 `Status` displays files that are `modified` relative to the staging area,
 `staged` for the next commit, `unmerged` files from an in-progress merge,
 and files that are `untracked` to git.
 
 These are the same categories one sees when running
-`git status <http://git-scm.com/docs/git-status>`_
+`git status <https://git-scm.com/docs/git-status>`_
 on the command line.
 
 You can navigate through the list of files using keyboard arrows as well
@@ -240,7 +240,7 @@ Double-clicking a file stages its contents, as does the
 the `Ctrl-s` shortcut key.
 
 `Ctrl-e` opens selected files in the configured editor, and
-`Ctrl-d` opens selected files using `git difftool <http://git-scm.com/docs/git-difftool>`_
+`Ctrl-d` opens selected files using `git difftool <https://git-scm.com/docs/git-difftool>`_
 
 Additional actions can be performed using the right-click context menu.
 
@@ -273,7 +273,7 @@ Different actions are available depending a file's status.
 
 Stage Selected
 ~~~~~~~~~~~~~~
-Add to the staging area using `git add <http://git-scm.com/docs/git-add>`_
+Add to the staging area using `git add <https://git-scm.com/docs/git-add>`_
 Marks unmerged files as resolved.
 
 Launch Editor
@@ -296,11 +296,11 @@ Throws away uncommitted edits
 Unstage Selected
 ~~~~~~~~~~~~~~~~
 Remove from the index/staging area with
-`git reset <http://git-scm.com/docs/git-reset>`_
+`git reset <https://git-scm.com/docs/git-reset>`_
 
 Launch Merge Tool
 ~~~~~~~~~~~~~~~~~
-Resolve conflicts using `git mergetool <http://git-scm.com/docs/git-mergetool>`_.
+Resolve conflicts using `git mergetool <https://git-scm.com/docs/git-mergetool>`_.
 
 Delete File(s)
 ~~~~~~~~~~~~~~
@@ -377,12 +377,12 @@ The `Sign Off` button adds a standard::
 line to the bottom of the commit message.
 
 Invoking this action is equivalent to passing the ``-s`` option
-to `git commit <http://git-scm.com/docs/git-commit>`_.
+to `git commit <https://git-scm.com/docs/git-commit>`_.
 
 Commit
 ------
 The commit button runs
-`git commit <http://git-scm.com/docs/git-commit>`_.
+`git commit <https://git-scm.com/docs/git-commit>`_.
 The contents of the commit message editor is provided as the commit message.
 
 Only staged files are included in the commit -- this is the same behavior
@@ -405,7 +405,7 @@ Red indicates that the line is running up against the standard
 80-column limit for commit messages.
 
 Keeping commit messages less than 76-characters wide is encouraged.
-`git log <http://git-scm.com/docs/git-log>`_
+`git log <https://git-scm.com/docs/git-log>`_
 is a great tool but long lines mess up its formatting for everyone else,
 so please be mindful when writing commit messages.
 
@@ -422,8 +422,8 @@ Create Signed Commit
 Tell `git commit` and `git merge` to sign commits using GPG.
 
 Using this option is equivalent to passing the ``--gpg-sign`` option to
-`git commit <http://git-scm.com/docs/git-commit>`_ and
-`git merge <http://git-scm.com/docs/git-merge>`_.
+`git commit <https://git-scm.com/docs/git-commit>`_ and
+`git merge <https://git-scm.com/docs/git-merge>`_.
 
 This option's default value can be configured using the `cola.signcommits`
 configuration variable.
@@ -513,7 +513,7 @@ Use the ``File -> Apply Patches`` menu item to begin applying patches.
 
 Dragging and dropping patches onto the `git cola` interface
 adds the patches to the list of patches to apply using
-`git am <http://git-scm.com/docs/git-am>`_.
+`git am <https://git-scm.com/docs/git-am>`_.
 
 You can drag either a set of patches or a directory containing patches.
 Patches can be sorted using in the interface and are applied in the
@@ -1206,7 +1206,7 @@ guitool.<name>.shortcut
 Specifies a keyboard shortcut for the custom tool.
 
 The value must be a valid string understood by the `QAction::setShortcut()` API.
-See http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2
+See https://doc.qt.io/qt-6/qkeysequence.html#toString
 for more details about the supported values.
 
 Avoid creating shortcuts that conflict with existing built-in `git cola`
@@ -1332,7 +1332,7 @@ https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
 FIPS SECURITY MODE
 ==================
 
-`FIPS Security Mode <https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/FIPS_Mode_-_an_explanation>`_
+`FIPS Security Mode <https://github.com/python/cpython/issues/53462>`_
 is available in newer versions of Python. These include Python 3.9+ and the
 patched Python 3.6 used by CentOS8/RHEL8 (and possibly others).
 

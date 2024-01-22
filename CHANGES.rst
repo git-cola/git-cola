@@ -552,7 +552,7 @@ Fixes
   (`#1234 <https://github.com/git-cola/git-cola/issues/1234>`_)
 
 * The preferences dialog has been fixed to properly handle booleans.
-  (`#1235 <https://github.com/git-cola/git-cola/issues/1235>`_)
+  (`#1235 <https://github.com/git-cola/git-cola/pull/1235>`_)
 
 * The `docs/` directory was restructured to avoid missing `setup.py` errors.
   `share/doc/git-cola` is now a symlink pointing to `docs/`.
@@ -2493,10 +2493,9 @@ Usability, bells and whistles
   (`#358 <https://github.com/git-cola/git-cola/issues/358>`_)
 
 * Custom GUI actions can now define their own keyboard shortcuts by
-  setting `guitool.$name.shortcut` to a string understood by Qt's
-  `QAction::setShortcut()` API, e.g. `Alt+X`.
-  See the
-  `Qt docs <http://qt-project.org/doc/qt-4.8/qkeysequence.html#QKeySequence-2>`_
+  setting `guitool.$name.shortcut` to a string understood by the Qt
+  `QKeySequence` API, e.g. `Alt+X`.
+  See the `Qt docs <https://doc.qt.io/qt-6/qkeysequence.html#toString>`_
   for more details about the supported values.
 
 * `git cola` learned to rename branches.
@@ -2784,7 +2783,7 @@ Usability, bells and whistles
 Packaging
 ---------
 * Building the documentation no longer requires `asciidoc`.
-  We now use `Sphinx <http://sphinx-doc.org/>`_ for building
+  We now use `Sphinx <https://www.sphinx-doc.org>`_ for building
   html documentation and man pages.
 
 Fixes
@@ -2801,7 +2800,7 @@ Fixes
 Packaging
 ---------
 * git-cola no longer depends on Asciidoc for building its documentation
-  and man-pages.  We now depend on [Sphinx](http://sphinx-doc.org/) only.
+  and man-pages.  We now depend on [Sphinx](https://www.sphinx-doc.org) only.
 
 
 .. _v2.0.1:
@@ -2898,7 +2897,7 @@ Fixes
 
 * Fix "known incorrect sRGB profile" in `staged-item.png`.
   (`gentoo-devel message #85066
-  <http://comments.gmane.org/gmane.linux.gentoo.devel/85066>`_)
+  <https://web.archive.org/web/20141012075946/http://comments.gmane.org:80/gmane.linux.gentoo.devel/85066>`_)
 
 
 .. _v1.9.2:
@@ -3191,7 +3190,7 @@ Usability, bells and whistles
 * `git cola` now wraps commit messages at 72 columns automatically.
   This is configurable using the `cola.linebreak` variable to enable/disable
   the feature, and `cola.textwidth` to configure the limit.
-  (`#133 <https://github.com/git-cola/git-cola/issues/133>`_)
+  (`#133 <https://github.com/git-cola/git-cola/pull/133>`_)
 
 * A new "Open Recent" sub-menu was added to the "File" menu.
   This makes it easy to open a recently-edited repository.
@@ -3717,7 +3716,6 @@ Packaging
 * git-cola.app is now a tiny download because it no longer
   contains Qt and PyQt.  These libraries are provided as a
   separate download.
-  (`Link <http://code.google.com/p/git-cola/downloads/list>`_)
 
 
 .. _v1.4.2.5:
@@ -4270,7 +4268,7 @@ Packaging
 * All resources are now installed into `$prefix/share/git-cola`.
   Closed Debian bug #519972
 
-  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972
+  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972
 
 
 .. _v1.3.6:
