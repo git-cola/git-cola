@@ -219,6 +219,8 @@ trees:
       remote.origin.pushurl:
         - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
         - "git@github.com:git-cola/git-cola.github.io.git"
+    commands:
+      build: ${JEKYLL} build --destination build "$@"
     links:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
@@ -265,6 +267,7 @@ variables:
   GIT: git
   GREP: grep
   INSTALL: install
+  JEKYLL: jekyll
   MKDIR_P: mkdir -p
   MSGMERGE: msgmerge
   PIP: pip
