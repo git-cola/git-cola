@@ -257,8 +257,8 @@ class Editor(QtWidgets.QWidget):
     def poll_touched_paths_main(self):
         for item in self.tree.items():
             if not self.working:
-                # TODO: This does not work if user kills the window using a
-                #       cross (X) button on the window title.
+                # FIXME: This does not work if user kills the window using a
+                #        cross (X) button on the window title.
                 return
             self.paths_touched_by_oid(item.oid)
 
