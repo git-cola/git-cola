@@ -32,4 +32,4 @@ function-definition-extra-indent = false
 line-length = 88
 
 [tool.setuptools_scm]
-fallback_version = "4.4.1"
+fallback_version = "4.5.0"
