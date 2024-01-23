@@ -1,16 +1,15 @@
 #!/bin/sh
 ./todo/update-qtpy ~/src/python/qtpy
-make check
+garden check
 ./todo/set-version vA.B.C
 ./todo/commit-version
 # remove any (BETA) markers from the release notes
 ./todo/tag [vA.B.C (optional)]
-vx env3 make develop
+garden dev
 git cola push
 
 # vx env3 pypi-secure-upload
 rm -rf build dist
-vx env3 python setup.py build
 vx env3 python -m build -n .
 for filename in dist/*.whl dist/*.gz
 do
