@@ -4207,6 +4207,15 @@ msgstr ""
 msgid "yyyy-MM-dd"
 msgstr ""
 
+msgid "Remarks"
+msgstr "Пометки"
+
+msgid "Toggle remark"
+msgstr "Переключить пометку"
+
+msgid "Toggle remark of touching commits"
+msgstr "Переключить пометку затрагивающих коммитов"
+
 #~ msgid ""
 #~ "\n"
 #~ "\n"
