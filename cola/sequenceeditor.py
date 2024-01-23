@@ -211,9 +211,11 @@ class Editor(QtWidgets.QWidget):
         # for a first time, the GUI freezes for a while on a big enough
         # sequence.
         # So, a cache is used (commit ID to paths tuple).
+        self.oid_to_paths = {}
         # A thread fills this cache in background to reduce the first
         # run freezing.
-        self.oid_to_paths = {}
+        # This flag stops it.
+        self.working = True
 
         qtutils.connect_button(self.rebase_button, self.rebase)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
@@ -328,7 +330,6 @@ class Editor(QtWidgets.QWidget):
         self.tree.refit()
         self.tree.select_first()
 
-        self.working = True
         Thread(target=self.poll_touched_paths_main).start()
 
     # actions
