@@ -329,7 +329,7 @@ class Editor(QtWidgets.QWidget):
         self.tree.select_first()
 
         self.working = True
-        Thread(target = self.poll_touched_paths_main).start()
+        Thread(target=self.poll_touched_paths_main).start()
 
     # actions
     def cancel(self):
@@ -446,9 +446,10 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             qtutils.add_action(
                 self,
                 r,
-                lambda remark = r: self.toggle_remark(remark),
-                hotkeys.hotkey(Qt.CTRL | getattr(Qt, "Key_" + r))
-            ) for r in map(str, range(10))
+                lambda remark=r: self.toggle_remark(remark),
+                hotkeys.hotkey(Qt.CTRL | getattr(Qt, 'Key_' + r)),
+            )
+            for r in map(str, range(10))
         )
 
         # pylint: disable=no-member
@@ -571,11 +572,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.toggle_remark_of_items(remark, items)
 
     def toggle_remark_of_items(self, remark, items):
-        logic_or = reduce(
-            lambda res, item: res or remark in item.remarks,
-            items,
-            False
-        )
+        logic_or = reduce(lambda res, item: res or remark in item.remarks, items, False)
         if logic_or:
             for item in items:
                 item.remove_remark(remark)
@@ -774,7 +771,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def set_remarks(self, remarks):
         self.remarks = remarks
-        self.setText(4, "".join(remarks))
+        self.setText(4, ''.join(remarks))
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""

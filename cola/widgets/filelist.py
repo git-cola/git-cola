@@ -46,9 +46,10 @@ class FileWidget(TreeWidget):
                 qtutils.add_action(
                     self,
                     r,
-                    lambda remark = r: self.toggle_remark(remark),
-                    hotkeys.hotkey(Qt.CTRL | getattr(Qt, "Key_" + r))
-                ) for r in map(str, range(10))
+                    lambda remark=r: self.toggle_remark(remark),
+                    hotkeys.hotkey(Qt.CTRL | getattr(Qt, 'Key_' + r)),
+                )
+                for r in map(str, range(10))
             )
         else:
             self.toggle_remark_actions = tuple()
@@ -124,9 +125,7 @@ class FileWidget(TreeWidget):
         menu.addAction(self.launch_difftool_action)
         menu.addAction(self.launch_editor_action)
         if self.toggle_remark_actions:
-            menu_toggle_remark = menu.addMenu(
-                N_('Toggle remark of touching commits')
-            )
+            menu_toggle_remark = menu.addMenu(N_('Toggle remark of touching commits'))
             tuple(map(menu_toggle_remark.addAction, self.toggle_remark_actions))
         menu.exec_(self.mapToGlobal(event.pos()))
 
