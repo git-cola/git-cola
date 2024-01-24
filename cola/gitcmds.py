@@ -69,7 +69,6 @@ def diff_index_filenames(context, ref):
 
 def diff_filenames(context, *args):
     """Return a list of filenames that have been modified"""
-    git = context.git
     out = diff_tree(context, *args)[STDOUT]
     return _parse_diff_filenames(out)
 
