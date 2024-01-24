@@ -70,10 +70,33 @@ def diff_index_filenames(context, ref):
 def diff_filenames(context, *args):
     """Return a list of filenames that have been modified"""
     git = context.git
-    out = git.diff_tree(
-        name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
-    )[STDOUT]
+    out = diff_tree(context, *args)[STDOUT]
     return _parse_diff_filenames(out)
+
+
+def changed_files(context, oid):
+    """Return the list of filenames that changed in a given commit oid"""
+    status, out, _ = diff_tree(context, oid + '~', oid)
+    if status != 0:
+        # git init
+        status, out, _ = diff_tree(context, EMPTY_TREE_OID, oid)
+    if status == 0:
+        result = _parse_diff_filenames(out)
+    else:
+        result = []
+    return result
+
+
+def diff_tree(context, *args):
+    """Return a list of filenames that have been modified"""
+    git = context.git
+    return git_diff_tree(git, *args)
+
+
+def git_diff_tree(git, *args):
+    return git.diff_tree(
+        name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
+    )
 
 
 def listdir(context, dirname, ref='HEAD'):

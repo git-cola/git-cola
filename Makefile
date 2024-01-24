@@ -48,6 +48,8 @@ ifdef DESTDIR
 endif
 install_args += --prefix="$(prefix)"
 install_args += --disable-pip-version-check
+install_args += --ignore-installed
+install_args += --no-deps
 export prefix
 
 PYTHON_DIRS = cola

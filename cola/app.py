@@ -584,8 +584,13 @@ class NullArgs:
 
     def __init__(self):
         self.icon_themes = []
-        self.theme = None
+        self.perf = False
+        self.prompt = False
+        self.repo = core.getcwd()
+        self.session = None
         self.settings = None
+        self.theme = None
+        self.version = False
 
 
 def null_args():
