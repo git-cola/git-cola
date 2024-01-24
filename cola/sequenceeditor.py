@@ -241,12 +241,6 @@ class Editor(QtWidgets.QWidget):
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
 
-    def poll_touched_paths_main(self):
-        for item in self.tree.items():
-            if not self.working:
-                return
-            self.paths_touched_by_oid(item.oid)
-
     def remark_toggled_for_files(self, remark, filenames):
         filenames = set(filenames)
 
@@ -277,6 +271,12 @@ class Editor(QtWidgets.QWidget):
         self.oid_to_paths[oid] = paths
 
         return paths
+
+    def poll_touched_paths_main(self):
+        for item in self.tree.items():
+            if not self.working:
+                return
+            self.paths_touched_by_oid(item.oid)
 
     def parse_sequencer_instructions(self, insns):
         idx = 1
