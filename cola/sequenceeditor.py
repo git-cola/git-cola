@@ -135,6 +135,10 @@ class MainWindow(standard.MainWindow):
         self.status = status
         self.close()
 
+    def closeEvent(self, event):
+        self.editor.stopped()
+        standard.MainWindow.closeEvent(self, event)
+
 
 class Editor(QtWidgets.QWidget):
     exit = Signal(int)
@@ -230,6 +234,9 @@ class Editor(QtWidgets.QWidget):
         # Assume that the tree is filled at this point.
         Thread(target=self.poll_touched_paths_main).start()
 
+    def stopped(self):
+        self.working = False
+
     # signal callbacks
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
@@ -248,8 +255,6 @@ class Editor(QtWidgets.QWidget):
     def poll_touched_paths_main(self):
         for item in self.tree.items():
             if not self.working:
-                # FIXME: This does not work if user kills the window using a
-                #        cross (X) button on the window title.
                 return
             self.paths_touched_by_oid(item.oid)
 
@@ -329,7 +334,6 @@ class Editor(QtWidgets.QWidget):
             status = 1
 
         self.status = status
-        self.working = False
         self.exit.emit(status)
 
     def rebase(self):
@@ -337,7 +341,6 @@ class Editor(QtWidgets.QWidget):
         sequencer_instructions = '\n'.join(lines) + '\n'
         status = self.save(sequencer_instructions)
         self.status = status
-        self.working = False
         self.exit.emit(status)
 
     def save(self, string):
