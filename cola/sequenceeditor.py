@@ -227,6 +227,9 @@ class Editor(QtWidgets.QWidget):
         insns = core.read(self.filename)
         self.parse_sequencer_instructions(insns)
 
+        # Assume that the tree is filled at this point.
+        Thread(target=self.poll_touched_paths_main).start()
+
     # signal callbacks
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
@@ -317,8 +320,6 @@ class Editor(QtWidgets.QWidget):
         self.tree.decorate(self.tree.items())
         self.tree.refit()
         self.tree.select_first()
-
-        Thread(target=self.poll_touched_paths_main).start()
 
     # actions
     def cancel(self):
