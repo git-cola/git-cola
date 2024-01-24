@@ -259,6 +259,13 @@ class Editor(QtWidgets.QWidget):
 
         self.tree.toggle_remark_of_items(remark, touching_items)
 
+    def external_diff(self):
+        items = self.tree.selected_items()
+        if not items:
+            return
+        item = items[0]
+        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
+
     # helpers
 
     def paths_touched_by_oid(self, oid):
@@ -354,13 +361,6 @@ class Editor(QtWidgets.QWidget):
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
         return status
-
-    def external_diff(self):
-        items = self.tree.selected_items()
-        if not items:
-            return
-        item = items[0]
-        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
 
 
 # pylint: disable=too-many-ancestors
