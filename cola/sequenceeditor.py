@@ -334,8 +334,14 @@ class Editor(QtWidgets.QWidget):
         self.tree.refit()
         self.tree.select_first()
 
-    def save(self, string):
+    def save(self, string=None):
         """Save the instruction sheet"""
+
+        if string is None:
+            lines = [item.value() for item in self.tree.items()]
+            # sequencer instructions
+            string = '\n'.join(lines) + '\n'
+
         try:
             core.write(self.filename, string)
             status = 0
@@ -356,9 +362,7 @@ class Editor(QtWidgets.QWidget):
         self.exit.emit(status)
 
     def rebase(self):
-        lines = [item.value() for item in self.tree.items()]
-        sequencer_instructions = '\n'.join(lines) + '\n'
-        status = self.save(sequencer_instructions)
+        status = self.save()
         self.status = status
         self.exit.emit(status)
 
