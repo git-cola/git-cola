@@ -209,9 +209,9 @@ class Editor(QtWidgets.QWidget):
 
         # `git` calls are too expensive.
         # When user toggles a remark of all commits touching selected paths
-        # for a first time, the GUI freezes for a while on a big enough
-        # sequence.
-        # So, a cache is used (commit ID to paths tuple).
+        # the GUI freezes for a while on a big enough sequence.
+        # So, a cache is used (commit ID to paths tuple) to avoid freezing
+        # during consequent work.
         self.oid_to_paths = {}
         # A thread fills this cache in background to reduce the first
         # run freezing.
