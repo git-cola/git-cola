@@ -97,6 +97,11 @@ class MainWindow(standard.MainWindow):
         super().__init__(parent)
         self.context = context
         self.status = 1
+
+        # Final user decision at the window close moment.
+        # If user just closed the window, it's considered to be canceled.
+        self.cancelled = True
+
         self.editor = None
         default_title = '%s - git cola sequence editor' % core.getcwd()
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
@@ -125,33 +130,50 @@ class MainWindow(standard.MainWindow):
     def set_editor(self, editor):
         self.editor = editor
         self.setCentralWidget(editor)
-        editor.exit.connect(self.exit)
+        editor.cancel.connect(self.cancel)
+        editor.rebase.connect(self.rebase)
         editor.setFocus()
 
     def start(self, _context, _view):
         self.editor.start()
 
-    def exit(self, status):
-        self.status = status
+    def cancel(self):
+        self.cancelled = True
+        self.close()
+
+    def rebase(self):
+        self.cancelled = False
         self.close()
 
     def closeEvent(self, event):
         self.editor.stopped()
-        standard.MainWindow.closeEvent(self, event)
+
+        if self.cancelled:
+            cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
+
+            if cancel_action == 'save':
+                status = self.editor.save('')
+            else:
+                status = 1
+        else:
+            status = self.editor.save()
+
+        self.status = status
+
+        super(MainWindow, self).closeEvent(event)
 
 
 class Editor(QtWidgets.QWidget):
-    exit = Signal(int)
+    cancel = Signal()
+    rebase = Signal()
 
     def __init__(self, context, filename, parent=None):
         super().__init__(parent)
 
         self.widget_version = 1
-        self.status = 1
         self.context = context
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char(context)
-        self.cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
         self.diff = diff.DiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
@@ -200,7 +222,11 @@ class Editor(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
-            self, N_('Rebase'), self.rebase, hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER
+            self,
+            N_('Rebase'),
+            self.rebase.emit,
+            hotkeys.CTRL_RETURN,
+            hotkeys.CTRL_ENTER,
         )
 
         self.tree.commits_selected.connect(self.commits_selected)
@@ -222,10 +248,10 @@ class Editor(QtWidgets.QWidget):
         # This flag stops it.
         self.working = True
 
-        qtutils.connect_button(self.rebase_button, self.rebase)
+        qtutils.connect_button(self.rebase_button, self.rebase.emit)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
         qtutils.connect_button(self.help_button, partial(show_help, context))
-        qtutils.connect_button(self.cancel_button, self.cancel)
+        qtutils.connect_button(self.cancel_button, self.cancel.emit)
 
     def start(self):
         insns = core.read(self.filename)
@@ -350,21 +376,6 @@ class Editor(QtWidgets.QWidget):
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
         return status
-
-    # actions
-    def cancel(self):
-        if self.cancel_action == 'save':
-            status = self.save('')
-        else:
-            status = 1
-
-        self.status = status
-        self.exit.emit(status)
-
-    def rebase(self):
-        status = self.save()
-        self.status = status
-        self.exit.emit(status)
 
 
 # pylint: disable=too-many-ancestors
