@@ -160,7 +160,7 @@ class MainWindow(standard.MainWindow):
 
         self.status = status
 
-        super(MainWindow, self).closeEvent(event)
+        super().closeEvent(event)
 
 
 class Editor(QtWidgets.QWidget):
