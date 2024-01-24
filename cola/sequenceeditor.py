@@ -18,6 +18,7 @@ from cola import hotkeys
 from cola import icons
 from cola import qtutils
 from cola import utils
+from cola.gitcmds import changed_files
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
@@ -206,7 +207,7 @@ class Editor(QtWidgets.QWidget):
         self.filewidget.files_selected.connect(self.diff.files_selected)
         self.filewidget.remark_toggled.connect(self.remark_toggled_for_files)
 
-        # `git.show` is too expensive.
+        # `git` calls are too expensive.
         # When user toggles a remark of all commits touching selected paths
         # for a first time, the GUI freezes for a while on a big enough
         # sequence.
@@ -236,20 +237,7 @@ class Editor(QtWidgets.QWidget):
         except KeyError:
             pass
 
-        status, out, _ = self.context.git.show(
-            oid, z=True, numstat=True, oneline=True, no_renames=True
-        )
-
-        if status != 0:
-            return ()
-
-        paths = [f for f in out.rstrip('\0').split('\0') if f]
-        if paths:
-            # Skip over the summary on the first line.
-            paths = paths[1:]
-
-        # Drop numbers. Only path is needed.
-        paths = tuple(f.split()[-1] for f in paths)
+        paths = changed_files(self.context, oid)
         self.oid_to_paths[oid] = paths
 
         return paths
