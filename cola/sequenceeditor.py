@@ -334,6 +334,17 @@ class Editor(QtWidgets.QWidget):
         self.tree.refit()
         self.tree.select_first()
 
+    def save(self, string):
+        """Save the instruction sheet"""
+        try:
+            core.write(self.filename, string)
+            status = 0
+        except (OSError, ValueError) as exc:
+            msg, details = utils.format_exception(exc)
+            sys.stderr.write(msg + '\n\n' + details)
+            status = 128
+        return status
+
     # actions
     def cancel(self):
         if self.cancel_action == 'save':
@@ -350,17 +361,6 @@ class Editor(QtWidgets.QWidget):
         status = self.save(sequencer_instructions)
         self.status = status
         self.exit.emit(status)
-
-    def save(self, string):
-        """Save the instruction sheet"""
-        try:
-            core.write(self.filename, string)
-            status = 0
-        except (OSError, ValueError) as exc:
-            msg, details = utils.format_exception(exc)
-            sys.stderr.write(msg + '\n\n' + details)
-            status = 128
-        return status
 
 
 # pylint: disable=too-many-ancestors
