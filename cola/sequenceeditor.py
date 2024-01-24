@@ -241,17 +241,6 @@ class Editor(QtWidgets.QWidget):
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
 
-    def paths_touched_by_oid(self, oid):
-        try:
-            return self.oid_to_paths[oid]
-        except KeyError:
-            pass
-
-        paths = changed_files(self.context, oid)
-        self.oid_to_paths[oid] = paths
-
-        return paths
-
     def poll_touched_paths_main(self):
         for item in self.tree.items():
             if not self.working:
@@ -277,6 +266,18 @@ class Editor(QtWidgets.QWidget):
         self.tree.toggle_remark_of_items(remark, touching_items)
 
     # helpers
+
+    def paths_touched_by_oid(self, oid):
+        try:
+            return self.oid_to_paths[oid]
+        except KeyError:
+            pass
+
+        paths = changed_files(self.context, oid)
+        self.oid_to_paths[oid] = paths
+
+        return paths
+
     def parse_sequencer_instructions(self, insns):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
