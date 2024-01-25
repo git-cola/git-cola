@@ -1,3 +1,14 @@
+.. _v4.5.1:
+
+v4.5.1
+======
+
+Fixes
+-----
+* The file system monitor was corrected to catch `PermissionError` exceptions.
+  (`bz #2260155 <https://bugzilla.redhat.com/show_bug.cgi?id=2260155>`_)
+
+
 .. _v4.5.0:
 
 v4.5.0
