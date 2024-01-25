@@ -303,6 +303,8 @@ if AVAILABLE == 'inotify':
                     wd = inotify.add_watch(
                         self._inotify_fd, core.encode(path), self._ADD_MASK
                     )
+                except PermissionError:
+                    continue
                 except OSError as e:
                     if e.errno in (errno.ENOENT, errno.ENOTDIR):
                         # These two errors should only occur as a result of
