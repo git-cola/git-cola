@@ -13,7 +13,6 @@ def main():
     args = parser.parse_args()
     version = args.version
 
-    # Old workflow: move relnotes/unreleased.rst to relnotes/vX.Y.rst
     PyVersion(version).update()
     PyNsistVersion(version).update()
     GitColaAppDataVersion(version).update()
@@ -50,13 +49,12 @@ def tag_version(version):
 
 def is_section_end(txt):
     """Is this the end of an RST section?"""
-    return (txt.startswith('=') and
-            txt.endswith('=') and
-            txt == ('=' * len(txt)))
+    return (
+        txt.startswith('=') and txt.endswith('=') and txt == ('=' * len(txt))
+    )
 
 
 class Version(object):
-
     path = ''
 
     def __init__(self, version):
@@ -111,7 +109,6 @@ class Version(object):
 
 
 class PyVersion(Version):
-
     path = 'cola/_version.py'
 
     def match(self, txt):
@@ -129,11 +126,15 @@ class AppDataVersion(Version):
         return txt.startswith('  <releases>')
 
     def replacement(self, txt):
-        """Append a <release version=... /> xml tag to appinfo.xml """
+        """Append a <release version=... /> xml tag to appinfo.xml"""
         version = self.num_version
         now = datetime.datetime.now()
         date = now.strftime('%Y-%m-%d')
-        return '%s\n    <release version="%s" date="%s" />' % (txt, version, date)
+        return '%s\n    <release version="%s" date="%s" />' % (
+            txt,
+            version,
+            date,
+        )
 
 
 class GitColaAppDataVersion(AppDataVersion):
@@ -168,7 +169,6 @@ class PyNsistVersion(Version):
 
 
 class RelnotesStableVersion(Version):
-
     path = 'docs/relnotes.rst'
 
     def __init__(self, version):
@@ -181,19 +181,19 @@ class RelnotesStableVersion(Version):
             self.section = self.last
             return False
 
-        result = (self.section == 'Latest Release' and
-                    txt.startswith(':ref:`v'))
+        result = self.section == 'Latest Release' and txt.startswith(':ref:`v')
         self.last = txt
         return result
 
     def replacement(self, txt):
         version = self.tag_version
-        return (r':ref:`%s <%s>` is the latest stable release.'
-                % (version, version))
+        return r':ref:`%s <%s>` is the latest stable release.' % (
+            version,
+            version,
+        )
 
 
 class PyProjectTomlFallbackVersion(Version):
-
     path = 'pyproject.toml'
 
     def __init__(self, version):
