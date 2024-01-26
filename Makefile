@@ -180,3 +180,7 @@ test::
 		echo 'warning: "make test" requires "garden" https://gitlab.com/garden-rs/garden'; \
 		echo 'tip: run "cargo install garden-tools" to install "garden".'; \
 	fi
+
+.PHONY: pkg
+pkg::
+	git make-pkg --py 3 --global --name git-cola
