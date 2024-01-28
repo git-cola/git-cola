@@ -465,7 +465,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def refit(self):
         """Resize columns to fit content"""
-        for i in range(RebaseTreeWidgetItem.COLUMN_COUNT):
+        for i in range(RebaseTreeWidgetItem.COLUMN_COUNT - 1):
             self.resizeColumnToContents(i)
 
     def item_changed(self, item, column):
