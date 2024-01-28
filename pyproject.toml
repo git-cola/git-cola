@@ -4,13 +4,13 @@ authors = [
     {name = "David Aguilar", email = "davvid@gmail.com"}
 ]
 classifiers = [
-	"Development Status :: 6 - Mature",
-	"Intended Audience :: Developers",
-	"Intended Audience :: End Users/Desktop",
-	"License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
-	"Programming Language :: Python :: 3",
-	"Topic :: Software Development :: Libraries :: Python Modules",
-	"Topic :: Software Development :: Version Control :: Git",
+    "Development Status :: 6 - Mature",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Version Control :: Git",
 ]
 description = "A sleek and powerful Git GUI"
 dynamic = ["dependencies", "optional-dependencies", "version"]
