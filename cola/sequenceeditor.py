@@ -743,21 +743,27 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return f'{comment}{self.command} {self.oid} {self.summary}'
 
     def is_enabled(self):
+        """Is the item enabled?"""
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
 
     def set_enabled(self, enabled):
+        """Enable the item by checking its enabled checkbox"""
         self.setCheckState(self.ENABLED_COLUMN, enabled and Qt.Checked or Qt.Unchecked)
 
     def toggle_enabled(self):
+        """Toggle the enabled state of the item"""
         self.set_enabled(not self.is_enabled())
 
     def add_remark(self, remark):
+        """Add a remark to the item"""
         self.set_remarks(tuple(sorted(set(self.remarks + (remark,)))))
 
     def remove_remark(self, remark):
+        """Remove a remark from the item"""
         self.set_remarks(tuple(r for r in self.remarks if r != remark))
 
     def set_remarks(self, remarks):
+        """Set the remarks and update the remark text display"""
         self.remarks = remarks
         self.setText(self.REMARKS_COLUMN, ''.join(remarks))
 
@@ -779,6 +785,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.refresh()
 
     def set_command_and_validate(self, combo):
+        """Set the command and validate the command order"""
         command = COMMANDS[combo.currentIndex()]
         self.set_command(command)
         self.combo.validate.emit()
