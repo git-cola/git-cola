@@ -1,10 +1,9 @@
 import sys
 import re
 from argparse import ArgumentParser
-from functools import partial, reduce
+from functools import partial
 
 from cola import app  # prints a message if Qt cannot be found
-from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -13,6 +12,7 @@ from qtpy.QtCore import Signal
 # pylint: disable=ungrouped-imports
 from cola import core
 from cola import difftool
+from cola import gitcmds
 from cola import hotkeys
 from cola import icons
 from cola import qtutils
@@ -62,9 +62,10 @@ def main():
     return view.status
 
 
-def stop(_context, _view):
+def stop(context, _view):
     """All done, cleanup"""
-    QtCore.QThreadPool.globalInstance().waitForDone()
+    context.view.stop()
+    context.runtask.wait()
 
 
 def parse_args():
@@ -95,15 +96,15 @@ class MainWindow(standard.MainWindow):
         super().__init__(parent)
         self.context = context
         self.status = 1
+        # If the user closes the window without confirmation it's considered cancelled.
+        self.cancelled = True
         self.editor = None
         default_title = '%s - git cola sequence editor' % core.getcwd()
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
-
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
         )
-
         self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
         self.help_menu.addAction(self.show_help_action)
@@ -123,33 +124,39 @@ class MainWindow(standard.MainWindow):
     def set_editor(self, editor):
         self.editor = editor
         self.setCentralWidget(editor)
-        editor.exit.connect(self.exit)
+        editor.cancel.connect(self.close)
+        editor.rebase.connect(self.rebase)
         editor.setFocus()
 
     def start(self, _context, _view):
+        """Start background tasks"""
         self.editor.start()
 
-    def exit(self, status):
-        self.status = status
+    def stop(self):
+        """Stop background tasks"""
+        self.editor.stop()
+
+    def rebase(self):
+        """Exit the editor and initiate a rebase"""
+        self.status = self.editor.save()
         self.close()
 
 
 class Editor(QtWidgets.QWidget):
-    exit = Signal(int)
+    cancel = Signal()
+    rebase = Signal()
 
     def __init__(self, context, filename, parent=None):
         super().__init__(parent)
 
         self.widget_version = 1
-        self.status = 1
         self.context = context
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char(context)
-        self.cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
         self.diff = diff.DiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
-        self.filewidget = filelist.FileWidget(context, self)
+        self.filewidget = filelist.FileWidget(context, self, remarks=True)
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
@@ -194,7 +201,11 @@ class Editor(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.action_rebase = qtutils.add_action(
-            self, N_('Rebase'), self.rebase, hotkeys.CTRL_RETURN, hotkeys.CTRL_ENTER
+            self,
+            N_('Rebase'),
+            self.rebase.emit,
+            hotkeys.CTRL_RETURN,
+            hotkeys.CTRL_ENTER,
         )
 
         self.tree.commits_selected.connect(self.commits_selected)
@@ -203,21 +214,79 @@ class Editor(QtWidgets.QWidget):
         self.tree.external_diff.connect(self.external_diff)
 
         self.filewidget.files_selected.connect(self.diff.files_selected)
+        self.filewidget.remark_toggled.connect(self.remark_toggled_for_files)
 
-        qtutils.connect_button(self.rebase_button, self.rebase)
+        # `git` calls are expensive. When user toggles a remark of all commits touching
+        # selected paths the GUI freezes for a while on a big enough sequence. This
+        # cache is used (commit ID to paths tuple) to minimize calls to git.
+        self.oid_to_paths = {}
+        self.task = None  # A task fills the cache in the background.
+        self.running = False  # This flag stops it.
+
+        qtutils.connect_button(self.rebase_button, self.rebase.emit)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
         qtutils.connect_button(self.help_button, partial(show_help, context))
-        qtutils.connect_button(self.cancel_button, self.cancel)
+        qtutils.connect_button(self.cancel_button, self.cancel.emit)
 
     def start(self):
         insns = core.read(self.filename)
         self.parse_sequencer_instructions(insns)
 
+        # Assume that the tree is filled at this point.
+        self.running = True
+        self.task = qtutils.SimpleTask(self.calculate_oid_to_paths)
+        self.context.runtask.start(self.task)
+
+    def stop(self):
+        self.running = False
+
     # signal callbacks
     def commits_selected(self, commits):
         self.extdiff_button.setEnabled(bool(commits))
 
+    def remark_toggled_for_files(self, remark, filenames):
+        filenames = set(filenames)
+
+        items = self.tree.items()
+        touching_items = []
+
+        for item in items:
+            if not item.is_commit():
+                continue
+            oid = item.oid
+            paths = self.paths_touched_by_oid(oid)
+            if filenames.intersection(paths):
+                touching_items.append(item)
+
+        self.tree.toggle_remark_of_items(remark, touching_items)
+
+    def external_diff(self):
+        items = self.tree.selected_items()
+        if not items:
+            return
+        item = items[0]
+        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
+
     # helpers
+
+    def paths_touched_by_oid(self, oid):
+        try:
+            return self.oid_to_paths[oid]
+        except KeyError:
+            pass
+
+        paths = gitcmds.changed_files(self.context, oid)
+        self.oid_to_paths[oid] = paths
+
+        return paths
+
+    def calculate_oid_to_paths(self):
+        """Fills the oid_to_paths cache in the background"""
+        for item in self.tree.items():
+            if not self.running:
+                return
+            self.paths_touched_by_oid(item.oid)
+
     def parse_sequencer_instructions(self, insns):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
@@ -267,25 +336,14 @@ class Editor(QtWidgets.QWidget):
         self.tree.refit()
         self.tree.select_first()
 
-    # actions
-    def cancel(self):
-        if self.cancel_action == 'save':
-            status = self.save('')
-        else:
-            status = 1
-
-        self.status = status
-        self.exit.emit(status)
-
-    def rebase(self):
-        lines = [item.value() for item in self.tree.items()]
-        sequencer_instructions = '\n'.join(lines) + '\n'
-        status = self.save(sequencer_instructions)
-        self.status = status
-        self.exit.emit(status)
-
-    def save(self, string):
+    def save(self, string=None):
         """Save the instruction sheet"""
+
+        if string is None:
+            lines = [item.value() for item in self.tree.items()]
+            # sequencer instructions
+            string = '\n'.join(lines) + '\n'
+
         try:
             core.write(self.filename, string)
             status = 0
@@ -294,13 +352,6 @@ class Editor(QtWidgets.QWidget):
             sys.stderr.write(msg + '\n\n' + details)
             status = 128
         return status
-
-    def external_diff(self):
-        items = self.tree.selected_items()
-        if not items:
-            return
-        item = items[0]
-        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
 
 
 # pylint: disable=too-many-ancestors
@@ -319,10 +370,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             N_('Enabled'),
             N_('Command'),
             N_('SHA-1'),
+            N_('Remarks'),
             N_('Summary'),
         ])
         self.header().setStretchLastSection(True)
-        self.setColumnCount(5)
+        self.setColumnCount(6)
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         # actions
@@ -375,6 +427,16 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self, N_('Shift Up'), self.shift_up, hotkeys.MOVE_UP_TERTIARY
         )
 
+        self.toggle_remark_actions = tuple(
+            qtutils.add_action(
+                self,
+                r,
+                lambda remark=r: self.toggle_remark(remark),
+                hotkeys.hotkey(Qt.CTRL | getattr(Qt, 'Key_' + r)),
+            )
+            for r in map(str, range(10))
+        )
+
         # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.selection_changed)
@@ -402,14 +464,12 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             item.decorate(self)
 
     def refit(self):
-        self.resizeColumnToContents(0)
-        self.resizeColumnToContents(1)
-        self.resizeColumnToContents(2)
-        self.resizeColumnToContents(3)
-        self.resizeColumnToContents(4)
+        """Resize columns to fit content"""
+        for i in range(RebaseTreeWidgetItem.COLUMN_COUNT - 1):
+            self.resizeColumnToContents(i)
 
-    # actions
     def item_changed(self, item, column):
+        """Validate item ordering when toggling their enabled state"""
         if column == item.ENABLED_COLUMN:
             self.validate()
 
@@ -453,10 +513,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.commits_selected.emit(commits)
 
     def toggle_enabled(self):
-        items = self.selected_items()
-        logic_or = reduce(lambda res, item: res or item.is_enabled(), items, False)
-        for item in items:
-            item.set_enabled(not logic_or)
+        """Toggle the enabled state of each selected item"""
+        for item in self.selected_items():
+            item.toggle_enabled()
 
     def select_first(self):
         items = self.items()
@@ -488,6 +547,19 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         idx = sel_idx[0] - 1
         if idx >= 0:
             self.move_rows.emit(sel_idx, idx)
+
+    def toggle_remark(self, remark):
+        """Toggle remarks for all selected items"""
+        items = self.selected_items()
+        self.toggle_remark_of_items(remark, items)
+
+    def toggle_remark_of_items(self, remark, items):
+        """Toggle remarks for the specified items"""
+        for item in items:
+            if remark in item.remarks:
+                item.remove_remark(remark)
+            else:
+                item.add_remark(remark)
 
     def move(self, src_idxs, dst_idx):
         moved_items = []
@@ -531,11 +603,13 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
         menu.addAction(self.copy_oid_action)
-        if len(items) > 1:
-            self.copy_oid_action.setDisabled(True)
+        self.copy_oid_action.setDisabled(len(items) > 1)
         menu.addAction(self.external_diff_action)
-        if len(items) > 1:
-            self.external_diff_action.setDisabled(True)
+        self.external_diff_action.setDisabled(len(items) > 1)
+        menu.addSeparator()
+        menu_toggle_remark = menu.addMenu(N_('Toggle remark'))
+        for action in self.toggle_remark_actions:
+            menu_toggle_remark.addAction(action)
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
@@ -544,8 +618,14 @@ class ComboBox(QtWidgets.QComboBox):
 
 
 class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+    """A single data row in the rebase tree widget"""
+    NUMBER_COLUMN = 0
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
+    COMMIT_COLUMN = 3
+    REMARKS_COLUMN = 4
+    SUMMARY_COLUMN = 5
+    COLUMN_COUNT = 6
     OID_LENGTH = 7
 
     def __init__(
@@ -558,6 +638,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         cmdexec='',
         branch='',
         comment_char='#',
+        remarks=tuple(),
         parent=None,
     ):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
@@ -572,22 +653,24 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
         # if core.abbrev is set to a higher value then we will notice by
         # simply tracking the longest oid we've seen
-        oid_len = self.__class__.OID_LENGTH
+        oid_len = self.OID_LENGTH
         self.__class__.OID_LENGTH = max(len(oid), oid_len)
 
-        self.setText(0, '%02d' % idx)
+        self.setText(self.NUMBER_COLUMN, '%02d' % idx)
         self.set_enabled(enabled)
         # checkbox on 1
         # combo box on 2
         if self.is_exec():
-            self.setText(3, '')
-            self.setText(4, cmdexec)
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, cmdexec)
         elif self.is_update_ref():
-            self.setText(3, '')
-            self.setText(4, branch)
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, branch)
         else:
-            self.setText(3, oid)
-            self.setText(4, summary)
+            self.setText(self.COMMIT_COLUMN, oid)
+            self.setText(self.SUMMARY_COLUMN, summary)
+
+        self.set_remarks(remarks)
 
         flags = self.flags() | Qt.ItemIsUserCheckable
         flags = flags | Qt.ItemIsDragEnabled
@@ -610,6 +693,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             cmdexec=self.cmdexec,
             branch=self.branch,
             comment_char=self.comment_char,
+            remarks=self.remarks,
         )
 
     def decorate(self, parent):
@@ -659,13 +743,29 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return f'{comment}{self.command} {self.oid} {self.summary}'
 
     def is_enabled(self):
+        """Is the item enabled?"""
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
 
     def set_enabled(self, enabled):
+        """Enable the item by checking its enabled checkbox"""
         self.setCheckState(self.ENABLED_COLUMN, enabled and Qt.Checked or Qt.Unchecked)
 
     def toggle_enabled(self):
+        """Toggle the enabled state of the item"""
         self.set_enabled(not self.is_enabled())
+
+    def add_remark(self, remark):
+        """Add a remark to the item"""
+        self.set_remarks(tuple(sorted(set(self.remarks + (remark,)))))
+
+    def remove_remark(self, remark):
+        """Remove a remark from the item"""
+        self.set_remarks(tuple(r for r in self.remarks if r != remark))
+
+    def set_remarks(self, remarks):
+        """Set the remarks and update the remark text display"""
+        self.remarks = remarks
+        self.setText(self.REMARKS_COLUMN, ''.join(remarks))
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""
@@ -685,6 +785,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.refresh()
 
     def set_command_and_validate(self, combo):
+        """Set the command and validate the command order"""
         command = COMMANDS[combo.currentIndex()]
         self.set_command(command)
         self.combo.validate.emit()

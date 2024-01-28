@@ -1986,7 +1986,6 @@ class SequenceEditorEnvironment:
         self.env = {
             'GIT_EDITOR': prefs.editor(context),
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
-            'GIT_COLA_SEQ_EDITOR_CANCEL_ACTION': 'save',
         }
         self.env.update(kwargs)
 
