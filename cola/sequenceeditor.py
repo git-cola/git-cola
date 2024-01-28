@@ -619,6 +619,7 @@ class ComboBox(QtWidgets.QComboBox):
 
 class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     """A single data row in the rebase tree widget"""
+
     NUMBER_COLUMN = 0
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
