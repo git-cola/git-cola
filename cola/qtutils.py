@@ -1131,6 +1131,10 @@ class RunTask(QtCore.QObject):
         if finish is not None:
             finish(task)
 
+    def wait(self):
+        """Wait until all tasks have finished processing"""
+        self.threadpool.waitForDone()
+
 
 # Syntax highlighting
 
