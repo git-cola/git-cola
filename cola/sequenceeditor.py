@@ -565,16 +565,16 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             self.move_rows.emit(sel_idx, idx)
 
     def toggle_remark(self, remark):
+        """Toggle remarks for all selected items"""
         items = self.selected_items()
         self.toggle_remark_of_items(remark, items)
 
     def toggle_remark_of_items(self, remark, items):
-        logic_or = reduce(lambda res, item: res or remark in item.remarks, items, False)
-        if logic_or:
-            for item in items:
+        """Toggle remarks for the specified items"""
+        for item in items:
+            if remark in item.remarks:
                 item.remove_remark(remark)
-        else:
-            for item in items:
+            else:
                 item.add_remark(remark)
 
     def move(self, src_idxs, dst_idx):
