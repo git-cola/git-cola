@@ -1547,14 +1547,15 @@ class DiffWidget(QtWidgets.QWidget):
 
     def files_selected(self, filenames):
         """Update the view when a filename is selected"""
-        if not filenames:
-            return
         oid_start = self.oid_start
         oid_end = self.oid_end
+        extra_args = {}
+        if filenames:
+            extra_args['filename'] = filenames[0]
         if oid_start and oid_end:
-            self.set_diff_range(oid_start.oid, oid_end.oid, filename=filenames[0])
+            self.set_diff_range(oid_start.oid, oid_end.oid, **extra_args)
         else:
-            self.set_diff_oid(self.oid, filename=filenames[0])
+            self.set_diff_oid(self.oid, **extra_args)
 
 
 class DiffPanel(QtWidgets.QWidget):
