@@ -14,11 +14,11 @@ from qtpy.QtCore import Signal
 # pylint: disable=ungrouped-imports
 from cola import core
 from cola import difftool
+from cola import gitcmds
 from cola import hotkeys
 from cola import icons
 from cola import qtutils
 from cola import utils
-from cola.gitcmds import changed_files
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
@@ -277,9 +277,7 @@ class Editor(QtWidgets.QWidget):
             if not item.is_commit():
                 continue
             oid = item.oid
-
             paths = self.paths_touched_by_oid(oid)
-
             if filenames.intersection(paths):
                 touching_items.append(item)
 
@@ -300,7 +298,7 @@ class Editor(QtWidgets.QWidget):
         except KeyError:
             pass
 
-        paths = changed_files(self.context, oid)
+        paths = gitcmds.changed_files(self.context, oid)
         self.oid_to_paths[oid] = paths
 
         return paths
