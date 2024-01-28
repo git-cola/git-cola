@@ -464,15 +464,12 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             item.decorate(self)
 
     def refit(self):
-        self.resizeColumnToContents(0)
-        self.resizeColumnToContents(1)
-        self.resizeColumnToContents(2)
-        self.resizeColumnToContents(3)
-        self.resizeColumnToContents(4)
-        self.resizeColumnToContents(5)
+        """Resize columns to fit content"""
+        for i in range(RebaseTreeWidgetItem.COLUMN_COUNT):
+            self.resizeColumnToContents(i)
 
-    # actions
     def item_changed(self, item, column):
+        """Validate item ordering when toggling their enabled state"""
         if column == item.ENABLED_COLUMN:
             self.validate()
 
@@ -621,8 +618,14 @@ class ComboBox(QtWidgets.QComboBox):
 
 
 class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
+    """A single data row in the rebase tree widget"""
+    NUMBER_COLUMN = 0
     ENABLED_COLUMN = 1
     COMMAND_COLUMN = 2
+    COMMIT_COLUMN = 3
+    REMARKS_COLUMN = 4
+    SUMMARY_COLUMN = 5
+    COLUMN_COUNT = 6
     OID_LENGTH = 7
 
     def __init__(
@@ -650,22 +653,22 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
         # if core.abbrev is set to a higher value then we will notice by
         # simply tracking the longest oid we've seen
-        oid_len = self.__class__.OID_LENGTH
+        oid_len = self.OID_LENGTH
         self.__class__.OID_LENGTH = max(len(oid), oid_len)
 
-        self.setText(0, '%02d' % idx)
+        self.setText(self.NUMBER_COLUMN, '%02d' % idx)
         self.set_enabled(enabled)
         # checkbox on 1
         # combo box on 2
         if self.is_exec():
-            self.setText(3, '')
-            self.setText(5, cmdexec)
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, cmdexec)
         elif self.is_update_ref():
-            self.setText(3, '')
-            self.setText(5, branch)
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, branch)
         else:
-            self.setText(3, oid)
-            self.setText(5, summary)
+            self.setText(self.COMMIT_COLUMN, oid)
+            self.setText(self.SUMMARY_COLUMN, summary)
 
         self.set_remarks(remarks)
 
@@ -756,7 +759,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def set_remarks(self, remarks):
         self.remarks = remarks
-        self.setText(4, ''.join(remarks))
+        self.setText(self.REMARKS_COLUMN, ''.join(remarks))
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""
