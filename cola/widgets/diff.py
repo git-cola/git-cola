@@ -1754,7 +1754,7 @@ class ApplyPatches(standard.Dialog):
         qtutils.connect_button(self.apply_button, self.apply_patches)
         qtutils.connect_button(self.close_button, self.close)
 
-        self.init_state(None, self.resize, 666, 420)
+        self.init_state(None, self.resize, 720, 480)
 
     def apply_patches(self):
         items = self.tree.items()
