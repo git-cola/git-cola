@@ -1,11 +1,9 @@
 import sys
 import re
 from argparse import ArgumentParser
-from functools import partial, reduce
-from threading import Thread
+from functools import partial
 
 from cola import app  # prints a message if Qt cannot be found
-from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -64,9 +62,9 @@ def main():
     return view.status
 
 
-def stop(_context, _view):
+def stop(context, _view):
     """All done, cleanup"""
-    QtCore.QThreadPool.globalInstance().waitForDone()
+    context.runtask.wait()
 
 
 def parse_args():
@@ -97,20 +95,15 @@ class MainWindow(standard.MainWindow):
         super().__init__(parent)
         self.context = context
         self.status = 1
-
-        # Final user decision at the window close moment.
-        # If user just closed the window, it's considered to be canceled.
-        self.cancelled = True
-
+        # If user closed the window without confirmation it's considered cancelled.
+        self.cancelled = False
         self.editor = None
         default_title = '%s - git cola sequence editor' % core.getcwd()
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
-
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
         )
-
         self.menubar = QtWidgets.QMenuBar(self)
         self.help_menu = self.menubar.addMenu(N_('Help'))
         self.help_menu.addAction(self.show_help_action)
@@ -146,8 +139,7 @@ class MainWindow(standard.MainWindow):
         self.close()
 
     def closeEvent(self, event):
-        self.editor.stopped()
-
+        self.editor.stop()
         if self.cancelled:
             cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
 
@@ -157,8 +149,8 @@ class MainWindow(standard.MainWindow):
                 status = 1
         else:
             status = self.editor.save()
-
         self.status = status
+        stop(self.context, self)
 
         super().closeEvent(event)
 
@@ -237,16 +229,12 @@ class Editor(QtWidgets.QWidget):
         self.filewidget.files_selected.connect(self.diff.files_selected)
         self.filewidget.remark_toggled.connect(self.remark_toggled_for_files)
 
-        # `git` calls are too expensive.
-        # When user toggles a remark of all commits touching selected paths
-        # the GUI freezes for a while on a big enough sequence.
-        # So, a cache is used (commit ID to paths tuple) to avoid freezing
-        # during consequent work.
+        # `git` calls are expensive. When user toggles a remark of all commits touching
+        # selected paths the GUI freezes for a while on a big enough sequence. This
+        # cache is used (commit ID to paths tuple) to minimize calls to git.
         self.oid_to_paths = {}
-        # A thread fills this cache in background to reduce the first
-        # run freezing.
-        # This flag stops it.
-        self.working = True
+        self.task = None  # A task fills the cache in the background.
+        self.running = False  # This flag stops it.
 
         qtutils.connect_button(self.rebase_button, self.rebase.emit)
         qtutils.connect_button(self.extdiff_button, self.external_diff)
@@ -258,10 +246,12 @@ class Editor(QtWidgets.QWidget):
         self.parse_sequencer_instructions(insns)
 
         # Assume that the tree is filled at this point.
-        Thread(target=self.poll_touched_paths_main).start()
+        self.running = True
+        self.task = qtutils.SimpleTask(self.calculate_oid_to_paths)
+        self.context.runtask.start(self.task)
 
-    def stopped(self):
-        self.working = False
+    def stop(self):
+        self.running = False
 
     # signal callbacks
     def commits_selected(self, commits):
@@ -303,9 +293,10 @@ class Editor(QtWidgets.QWidget):
 
         return paths
 
-    def poll_touched_paths_main(self):
+    def calculate_oid_to_paths(self):
+        """Fills the oid_to_paths cache in the background"""
         for item in self.tree.items():
-            if not self.working:
+            if not self.running:
                 return
             self.paths_touched_by_oid(item.oid)
 
