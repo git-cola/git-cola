@@ -64,6 +64,7 @@ def main():
 
 def stop(context, _view):
     """All done, cleanup"""
+    context.view.stop()
     context.runtask.wait()
 
 
@@ -95,8 +96,8 @@ class MainWindow(standard.MainWindow):
         super().__init__(parent)
         self.context = context
         self.status = 1
-        # If user closed the window without confirmation it's considered cancelled.
-        self.cancelled = False
+        # If the user closes the window without confirmation it's considered cancelled.
+        self.cancelled = True
         self.editor = None
         default_title = '%s - git cola sequence editor' % core.getcwd()
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
@@ -123,36 +124,22 @@ class MainWindow(standard.MainWindow):
     def set_editor(self, editor):
         self.editor = editor
         self.setCentralWidget(editor)
-        editor.cancel.connect(self.cancel)
+        editor.cancel.connect(self.close)
         editor.rebase.connect(self.rebase)
         editor.setFocus()
 
     def start(self, _context, _view):
+        """Start background tasks"""
         self.editor.start()
 
-    def cancel(self):
-        self.cancelled = True
-        self.close()
+    def stop(self):
+        """Stop background tasks"""
+        self.editor.stop()
 
     def rebase(self):
-        self.cancelled = False
+        """Exit the editor and initiate a rebase"""
+        self.status = self.editor.save()
         self.close()
-
-    def closeEvent(self, event):
-        self.editor.stop()
-        if self.cancelled:
-            cancel_action = core.getenv('GIT_COLA_SEQ_EDITOR_CANCEL_ACTION', 'abort')
-
-            if cancel_action == 'save':
-                status = self.editor.save('')
-            else:
-                status = 1
-        else:
-            status = self.editor.save()
-        self.status = status
-        stop(self.context, self)
-
-        super().closeEvent(event)
 
 
 class Editor(QtWidgets.QWidget):
