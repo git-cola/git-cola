@@ -529,10 +529,9 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.commits_selected.emit(commits)
 
     def toggle_enabled(self):
-        items = self.selected_items()
-        logic_or = reduce(lambda res, item: res or item.is_enabled(), items, False)
-        for item in items:
-            item.set_enabled(not logic_or)
+        """Toggle the enabled state of each selected item"""
+        for item in self.selected_items():
+            item.toggle_enabled()
 
     def select_first(self):
         items = self.items()
