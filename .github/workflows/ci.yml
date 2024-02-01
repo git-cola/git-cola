@@ -79,7 +79,7 @@ jobs:
           python-version: '3.x'
           architecture: x64
       - name: Pip Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/AppData/Local/pip/Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
