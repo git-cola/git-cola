@@ -456,6 +456,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             cmdexec=cmdexec,
             branch=branch,
             comment_char=comment_char,
+            parent=self,
         )
         self.invisibleRootItem().addChild(item)
 
@@ -629,6 +630,19 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     COLUMN_COUNT = 6
     OID_LENGTH = 7
 
+    COLORS = {
+        '0': ('white', 'darkred'),
+        '1': ('black', 'salmon'),
+        '2': ('black', 'sandybrown'),
+        '3': ('black', 'yellow'),
+        '4': ('black', 'yellowgreen'),
+        '5': ('white', 'forestgreen'),
+        '6': ('white', 'dodgerblue'),
+        '7': ('white', 'royalblue'),
+        '8': ('white', 'slateblue'),
+        '9': ('black', 'rosybrown'),
+    }
+
     def __init__(
         self,
         idx,
@@ -651,6 +665,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.cmdexec = cmdexec
         self.branch = branch
         self.comment_char = comment_char
+        self._parent = parent
 
         # if core.abbrev is set to a higher value then we will notice by
         # simply tracking the longest oid we've seen
@@ -764,9 +779,21 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.set_remarks(tuple(r for r in self.remarks if r != remark))
 
     def set_remarks(self, remarks):
-        """Set the remarks and update the remark text display"""
+        """Set the remarks and update the remark display"""
         self.remarks = remarks
-        self.setText(self.REMARKS_COLUMN, ''.join(remarks))
+        label = QtWidgets.QLabel()
+        text = ''
+        for remark in remarks:
+            fg_color, bg_color = self.COLORS[remark]
+            text += f"""
+                <span style="
+                    color: {fg_color};
+                    background-color: {bg_color};
+                ">&nbsp;{remark} </span>
+            """
+        label.setText(text)
+        self._parent.setItemWidget(self, self.REMARKS_COLUMN, label)
+        self._parent.resizeColumnToContents(self.REMARKS_COLUMN)
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""
