@@ -18,6 +18,10 @@ Fixes
 * The file system monitor was corrected to catch `PermissionError` exceptions.
   (`bz #2260155 <https://bugzilla.redhat.com/show_bug.cgi?id=2260155>`_)
 
+Development
+-----------
+* The "actions/cache" and "styfle/cancel-workflow-action" github actions were upgraded.
+
 
 .. _v4.5.0:
 
