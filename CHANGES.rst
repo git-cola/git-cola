@@ -5,7 +5,6 @@ v4.6.0
 
 Usability, bells and whistles
 -----------------------------
-
 * The Rebase editor (`git-cola-sequence-editor`) can now add "remarks" to commits.
   Remarks are simple numbered flags (0-9) that allow you to mark commits. This lets
   you visually highlight commits to aid you when rebasing and grouping related commits
