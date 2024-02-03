@@ -607,7 +607,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addAction(self.external_diff_action)
         self.external_diff_action.setDisabled(len(items) > 1)
         menu.addSeparator()
-        menu_toggle_remark = menu.addMenu(N_('Toggle remark'))
+        menu_toggle_remark = menu.addMenu(N_('Toggle Remark'))
         for action in self.toggle_remark_actions:
             menu_toggle_remark.addAction(action)
         menu.exec_(self.mapToGlobal(event.pos()))

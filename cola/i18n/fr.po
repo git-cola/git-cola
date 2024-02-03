@@ -3853,7 +3853,7 @@ msgid "Toggle image diff"
 msgstr "Dés/activer le différence des images"
 
 #: cola/sequenceeditor.py:610
-msgid "Toggle remark"
+msgid "Toggle Remark"
 msgstr ""
 
 #: cola/widgets/filelist.py:128
