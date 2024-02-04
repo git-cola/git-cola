@@ -808,16 +808,16 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             return
         self.remarks = remarks
         label = QtWidgets.QLabel()
-        text = ''
+        label_text = ''
         for remark in remarks:
             fg_color, bg_color = self.COLORS[remark]
-            text += f"""
+            label_text += f"""
                 <span style="
                     color: {fg_color};
                     background-color: {bg_color};
                 ">&nbsp;{remark} </span>
             """
-        label.setText(text)
+        label.setText(label_text)
         self._parent.setItemWidget(self, self.REMARKS_COLUMN, label)
         self._parent.resizeColumnToContents(self.REMARKS_COLUMN)
 
