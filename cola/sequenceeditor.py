@@ -515,8 +515,15 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def toggle_enabled(self):
         """Toggle the enabled state of each selected item"""
-        for item in self.selected_items():
-            item.toggle_enabled()
+        items = self.selected_items()
+        enable = should_enable(items, lambda item: item.is_enabled())
+        for item in items:
+            if enable:
+                needs_update = not item.is_enabled()
+            else:
+                needs_update = item.is_enabled()
+            if needs_update:
+                item.set_enabled(enable)
 
     def select_first(self):
         items = self.items()
@@ -555,12 +562,15 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.toggle_remark_of_items(remark, items)
 
     def toggle_remark_of_items(self, remark, items):
-        """Toggle remarks for the specified items"""
+        """Toggle remarks for the selected items"""
+        enable = should_enable(items, lambda item: remark in item.remarks)
         for item in items:
-            if remark in item.remarks:
-                item.remove_remark(remark)
-            else:
-                item.add_remark(remark)
+            needs_update = enable ^ (remark in item.remarks)
+            if needs_update:
+                if enable:
+                    item.add_remark(remark)
+                else:
+                    item.remove_remark(remark)
 
     def move(self, src_idxs, dst_idx):
         moved_items = []
@@ -614,6 +624,20 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
+def should_enable(items, predicate):
+    """Calculate whether items should be toggled on or off.
+
+    If all items are enabled then return False.
+    If all items are disabled then return True.
+    If more items are enabled then return True, otherwise return False.
+    """
+    count = len(items)
+    enabled = sum(predicate(item) for item in items)
+    disabled = len(items) - enabled
+    enable = enabled < count and enabled >= disabled or disabled == count
+    return enable
+
+
 class ComboBox(QtWidgets.QComboBox):
     validate = Signal()
 
@@ -629,7 +653,6 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     SUMMARY_COLUMN = 5
     COLUMN_COUNT = 6
     OID_LENGTH = 7
-
     COLORS = {
         '0': ('white', 'darkred'),
         '1': ('black', 'salmon'),
@@ -653,7 +676,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         cmdexec='',
         branch='',
         comment_char='#',
-        remarks=tuple(),
+        remarks=(),
         parent=None,
     ):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
@@ -665,6 +688,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.cmdexec = cmdexec
         self.branch = branch
         self.comment_char = comment_char
+        self.remarks = remarks
         self._parent = parent
 
         # if core.abbrev is set to a higher value then we will notice by
@@ -780,6 +804,8 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
     def set_remarks(self, remarks):
         """Set the remarks and update the remark display"""
+        if remarks == self.remarks:
+            return
         self.remarks = remarks
         label = QtWidgets.QLabel()
         text = ''
