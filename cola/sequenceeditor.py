@@ -634,7 +634,7 @@ def should_enable(items, predicate):
     count = len(items)
     enabled = sum(predicate(item) for item in items)
     disabled = len(items) - enabled
-    enable = enabled < count and enabled >= disabled or disabled == count
+    enable = count > enabled >= disabled or disabled == count
     return enable
 
 
