@@ -689,6 +689,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.branch = branch
         self.comment_char = comment_char
         self.remarks = remarks
+        self.remarks_label = None
         self._parent = parent
 
         # if core.abbrev is set to a higher value then we will notice by
@@ -759,6 +760,11 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
         parent.setItemWidget(self, self.COMMAND_COLUMN, combo)
 
+        self.remarks_label = remarks_label = QtWidgets.QLabel()
+        parent.setItemWidget(self, self.REMARKS_COLUMN, remarks_label)
+        parent.resizeColumnToContents(self.REMARKS_COLUMN)
+        self.update_remarks()
+
     def is_exec(self):
         return self.command == EXEC
 
@@ -807,9 +813,15 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         if remarks == self.remarks:
             return
         self.remarks = remarks
-        label = QtWidgets.QLabel()
+        self.update_remarks()
+
+    def update_remarks(self):
+        label = self.remarks_label
+        if label is None:
+            return
+
         label_text = ''
-        for remark in remarks:
+        for remark in self.remarks:
             fg_color, bg_color = self.COLORS[remark]
             label_text += f"""
                 <span style="
@@ -818,8 +830,6 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
                 ">&nbsp;{remark} </span>
             """
         label.setText(label_text)
-        self._parent.setItemWidget(self, self.REMARKS_COLUMN, label)
-        self._parent.resizeColumnToContents(self.REMARKS_COLUMN)
 
     def set_command(self, command):
         """Set the item to a different command, no-op for exec items"""
