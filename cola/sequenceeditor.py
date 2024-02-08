@@ -762,7 +762,6 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
         self.remarks_label = remarks_label = QtWidgets.QLabel()
         parent.setItemWidget(self, self.REMARKS_COLUMN, remarks_label)
-        parent.resizeColumnToContents(self.REMARKS_COLUMN)
         self.update_remarks()
 
     def is_exec(self):
@@ -814,12 +813,13 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             return
         self.remarks = remarks
         self.update_remarks()
+        self._parent.resizeColumnToContents(self.REMARKS_COLUMN)
 
     def update_remarks(self):
+        """Update the remarks label display to match the current remarks"""
         label = self.remarks_label
         if label is None:
             return
-
         label_text = ''
         for remark in self.remarks:
             fg_color, bg_color = self.COLORS[remark]
