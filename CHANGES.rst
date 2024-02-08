@@ -11,6 +11,7 @@ Usability, bells and whistles
   across a large patch series. Remarks can be added to a single commit or to all
   commits that touch a file.
   (`#1375 <https://github.com/git-cola/git-cola/pull/1375>`_)
+  (`#1380 <https://github.com/git-cola/git-cola/pull/1380>`_)
 
 Fixes
 -----
