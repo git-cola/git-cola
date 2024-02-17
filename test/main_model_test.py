@@ -1,4 +1,3 @@
-# pylint: disable=redefined-outer-name
 import os
 
 import pytest
@@ -12,7 +11,7 @@ from .helper import app_context
 from .helper import Mock
 
 
-# These assertions make pylint happy. It considers them unused imports otherwise.
+# prevent unused imports lint errors.
 assert app_context is not None
 
 REMOTE = 'server'

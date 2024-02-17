@@ -213,7 +213,6 @@ class CreateBranchDialog(standard.Dialog):
         qtutils.connect_toggle(self.tag_radio, self.display_model)
 
         branches = self.branch_list
-        # pylint: disable=no-member
         branches.itemSelectionChanged.connect(self.branch_item_changed)
 
         thread = self.thread
@@ -322,7 +321,6 @@ class CreateBranchDialog(standard.Dialog):
 
         self.accept()
 
-    # pylint: disable=unused-argument
     def branch_item_changed(self, *rest):
         """This callback is called when the branch selection changes"""
         # When the branch selection changes then we should update

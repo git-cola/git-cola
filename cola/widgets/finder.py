@@ -167,7 +167,6 @@ class Finder(standard.Dialog):
         thread = self.worker_thread = FindFilesThread(context, self)
         thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
-        # pylint: disable=no-member
         self.input_txt.textChanged.connect(lambda s: self.search())
         self.input_txt.activated.connect(self.focus_tree)
         self.input_txt.down.connect(self.focus_tree)

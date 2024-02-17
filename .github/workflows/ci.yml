@@ -50,8 +50,6 @@ jobs:
               python3-send2trash
           # Development dependencies
           sudo apt-get install \
-              pylint \
-              python-is-python3 \
               python3-pytest \
               python3-setuptools-scm \
               python3-sphinx

@@ -1,5 +1,4 @@
 """Test the cola.gitcmds module"""
-# pylint: disable=redefined-outer-name
 import os
 
 from cola import core
@@ -10,7 +9,7 @@ from . import helper
 from .helper import app_context
 
 
-# These assertions make pylint happy. It considers them unused imports otherwise.
+# Prevent unused imports lint errors.
 assert app_context is not None
 
 

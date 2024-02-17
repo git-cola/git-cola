@@ -61,7 +61,6 @@ class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
 
     def __init__(self, context, parent=None):
-        # pylint: disable=too-many-statements,too-many-locals
         standard.MainWindow.__init__(self, parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
@@ -857,7 +856,6 @@ class MainView(standard.MainWindow):
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
-        # pylint: disable=no-member
         self.view_menu.aboutToShow.connect(lambda: self.build_view_menu(self.view_menu))
         self.setup_dockwidget_view_menu()
         if utils.is_darwin():

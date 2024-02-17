@@ -97,7 +97,6 @@ def get_filename_for_locale(name):
 
 
 def install(lang):
-    # pylint: disable=global-statement
     if sys.platform == 'win32' and not lang:
         lang = _get_win32_default_locale()
     lang = _install_custom_language(lang)
@@ -105,7 +104,6 @@ def install(lang):
 
 
 def uninstall():
-    # pylint: disable=global-statement
     State.reset()
 
 
@@ -128,7 +126,7 @@ def _get_win32_default_locale():
         if lang:
             return lang
     try:
-        import ctypes  # pylint: disable=all
+        import ctypes
     except ImportError:
         # use only user's default locale
         return locale.getdefaultlocale()[0]

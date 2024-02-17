@@ -1,6 +1,4 @@
 """Test the cola.git module"""
-# pylint: disable=redefined-outer-name
-
 import os
 import pathlib
 

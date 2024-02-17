@@ -91,7 +91,6 @@ class GitCommandWidget(standard.Dialog):
         )
 
         # Connect the signals to the process
-        # pylint: disable=no-member
         self.proc.readyReadStandardOutput.connect(self.read_stdout)
         self.proc.readyReadStandardError.connect(self.read_stderr)
         self.proc.finished.connect(self.proc_finished)
@@ -261,7 +260,6 @@ class ActionDialog(standard.Dialog):
         )
         self.setLayout(self.layt)
 
-        # pylint: disable=no-member
         self.argstxt.textChanged.connect(self._argstxt_changed)
         qtutils.connect_button(self.closebtn, self.reject)
         qtutils.connect_button(self.runbtn, self.accept)
@@ -321,8 +319,6 @@ class RevisionSelector(QtWidgets.QWidget):
             self._rev_list,
         )
         self.setLayout(self._layt)
-
-        # pylint: disable=no-member
         self._rev_list.itemSelectionChanged.connect(self.selection_changed)
 
     def revision(self):

@@ -1,6 +1,4 @@
 """Test the textwrap module"""
-# pylint: disable=redefined-outer-name
-
 import pytest
 
 from cola import textwrap

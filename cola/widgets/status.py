@@ -125,7 +125,6 @@ class StatusWidget(QtWidgets.QFrame):
         self.tree.select_header()
 
 
-# pylint: disable=too-many-ancestors
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Read-only access to the mode state
     mode = property(lambda self: self._model.mode)
@@ -326,7 +325,6 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self._model.diff_text_changed.connect(
             self._make_current_item_visible, type=Qt.QueuedConnection
         )
-        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.show_selection)
         self.itemDoubleClicked.connect(cmds.run(cmds.StageOrUnstage, self.context))
         self.itemCollapsed.connect(lambda x: self._update_column_widths())
@@ -1340,7 +1338,6 @@ class StatusFilterWidget(QtWidgets.QWidget):
         self.setLayout(self.main_layout)
 
         widget = self.text
-        # pylint: disable=no-member
         widget.changed.connect(self.apply_filter)
         widget.cleared.connect(self.apply_filter)
         widget.enter.connect(self.apply_filter)
@@ -1407,7 +1404,6 @@ class CustomizeCopyActions(standard.Dialog):
         qtutils.connect_button(self.close_button, self.reject)
         qtutils.connect_button(self.save_button, self.save)
         qtutils.add_close_action(self)
-        # pylint: disable=no-member
         self.table.itemSelectionChanged.connect(self.table_selection_changed)
 
         self.init_size(parent=parent)

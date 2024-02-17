@@ -27,6 +27,10 @@ Development
 -----------
 * The "actions/cache" and "styfle/cancel-workflow-action" github actions were upgraded.
 
+* The test suite now uses ``ruff`` to validate python code. ``pylint`` is no longer used.
+  (`#1353 <https://github.com/git-cola/git-cola/issues/1353>`_)
+  (`#1383 <https://github.com/git-cola/git-cola/pull/1383>`_)
+
 
 .. _v4.5.0:
 

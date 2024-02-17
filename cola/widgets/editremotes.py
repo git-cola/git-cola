@@ -132,7 +132,6 @@ class RemoteEditor(standard.Dialog):
         thread = self.info_thread
         thread.result.connect(self.set_info, type=Qt.QueuedConnection)
 
-        # pylint: disable=no-member
         self.editor.remote_name.returnPressed.connect(self.save)
         self.editor.remote_url.returnPressed.connect(self.save)
         self.editor.valid.connect(self.editor_valid)
@@ -451,7 +450,6 @@ class RemoteWidget(QtWidgets.QWidget):
         self._layout = qtutils.vbox(defs.margin, defs.spacing, self._form)
         self.setLayout(self._layout)
 
-        # pylint: disable=no-member
         self.remote_name.textChanged.connect(self.validate)
         self.remote_url.textChanged.connect(self.validate)
         qtutils.connect_button(self.open_button, self.open_repo)

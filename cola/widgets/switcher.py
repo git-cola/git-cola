@@ -230,7 +230,6 @@ class SwitcherSortFilterProxyModel(QtCore.QSortFilterProxyModel):
         return self.entries.itemFromIndex(self.mapToSource(index))
 
 
-# pylint: disable=too-many-ancestors
 class SwitcherTreeView(standard.TreeView):
     """Tree view class for showing proxy items in SwitcherSortFilterProxyModel"""
 

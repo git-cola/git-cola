@@ -735,7 +735,7 @@ def apply_platform_theme(theme):
     if utils.is_darwin():
         if AppKit is None:
             return
-        app = AppKit.NSApplication.sharedApplication()  # pylint: disable=no-member
+        app = AppKit.NSApplication.sharedApplication()
         macos_themes = get_macos_themes()
         try:
             macos_appearance = macos_themes[theme].macos_appearance
@@ -743,7 +743,6 @@ def apply_platform_theme(theme):
             return
         if macos_appearance is None:
             return
-        # pylint: disable=no-member
         appearance = AppKit.NSAppearance.appearanceNamed_(macos_appearance)
         app.setAppearance_(appearance)
 

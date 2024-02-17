@@ -1,6 +1,4 @@
 """Test Quick Switcher"""
-# pylint: disable=redefined-outer-name
-
 from cola import icons
 from cola.widgets import switcher
 

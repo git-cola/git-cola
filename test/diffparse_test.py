@@ -1,6 +1,4 @@
 """Tests for the diffparse module"""
-# pylint: disable=redefined-outer-name
-
 import pytest
 
 from cola import core

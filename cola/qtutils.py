@@ -345,7 +345,6 @@ def prompt_n(msg, inputs):
     for name, value in inputs:
         lineedit = QtWidgets.QLineEdit()
         # Enable the OK button only when all fields have been populated
-        # pylint: disable=no-member
         lineedit.textChanged.connect(
             lambda x: ok_b.setEnabled(all(get_values())), type=Qt.QueuedConnection
         )
@@ -545,7 +544,6 @@ def set_clipboard(text):
     persist_clipboard()
 
 
-# pylint: disable=line-too-long
 def persist_clipboard():
     """Persist the clipboard
 
@@ -972,7 +970,6 @@ def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
     return toolbutton
 
 
-# pylint: disable=line-too-long
 def mimedata_from_paths(context, paths, include_urls=True):
     """Return mime data with a list of absolute path URLs
 

@@ -112,7 +112,6 @@ class CompletionLineEdit(HintedLineEdit):
         self._delegate = HighlightDelegate(self)
         completer.popup().setItemDelegate(self._delegate)
 
-        # pylint: disable=no-member
         self.textChanged.connect(self._text_changed)
         self._completer.activated.connect(self.choose_completion)
         self._completion_model.updated.connect(
@@ -123,7 +122,6 @@ class CompletionLineEdit(HintedLineEdit):
     def __del__(self):
         self.dispose()
 
-    # pylint: disable=unused-argument
     def dispose(self, *args):
         self._completer.dispose()
 
@@ -459,7 +457,6 @@ class CompletionModel(QtGui.QStandardItemModel):
         if not self.update_thread.isRunning():
             self.update_thread.start()
 
-    # pylint: disable=unused-argument
     def gather_matches(self, case_sensitive):
         return ((), (), set())
 

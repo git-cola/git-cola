@@ -1,5 +1,4 @@
 """Text widgets"""
-# pylint: disable=unexpected-keyword-arg
 from functools import partial
 import math
 
@@ -261,12 +260,10 @@ class BaseTextEditExtension(QtCore.QObject):
         """Called during init for class-specific settings"""
         return
 
-    # pylint: disable=unused-argument
     def set_textwidth(self, width):
         """Set the text width"""
         return
 
-    # pylint: disable=unused-argument
     def set_linebreak(self, brk):
         """Enable word wrapping"""
         return
@@ -811,7 +808,6 @@ class HintedPlainTextEdit(PlainTextEdit):
         self.setFont(qtutils.diff_font(context))
         self.set_tabwidth(prefs.tabwidth(context))
         # Refresh palettes when text changes
-        # pylint: disable=no-member
         self.textChanged.connect(self.hint.refresh)
         self.set_mouse_zoom(context.cfg.get(prefs.MOUSE_ZOOM, default=True))
 
@@ -834,7 +830,6 @@ class HintedTextEdit(TextEdit):
         self.hint = HintWidget(self, hint)
         self.hint.init()
         # Refresh palettes when text changes
-        # pylint: disable=no-member
         self.textChanged.connect(self.hint.refresh)
         self.setFont(qtutils.diff_font(context))
 
@@ -980,7 +975,6 @@ class VimMixin:
         return self.Base.keyPressEvent(widget, event)
 
 
-# pylint: disable=too-many-ancestors
 class VimHintedPlainTextEdit(HintedPlainTextEdit):
     """HintedPlainTextEdit with vim hotkeys
 
@@ -1010,7 +1004,6 @@ class VimHintedPlainTextEdit(HintedPlainTextEdit):
         return self._mixin.keyPressEvent(event)
 
 
-# pylint: disable=too-many-ancestors
 class VimTextEdit(MonoTextEdit):
     """Text viewer with vim-like hotkeys
 
@@ -1050,7 +1043,6 @@ class HintedDefaultLineEdit(LineEdit):
             self.setToolTip(tooltip)
         self.hint = HintWidget(self, hint)
         self.hint.init()
-        # pylint: disable=no-member
         self.textChanged.connect(lambda text: self.hint.refresh())
 
 

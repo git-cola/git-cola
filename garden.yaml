@@ -38,14 +38,15 @@ trees:
         - dev/development
         - dev/build
       dev/build: ${activate} ${PIP} install --editable '.[build]'
-      dev/development: ${activate} ${PIP} install --editable '.[docs,dev]'
+      dev/development: ${activate} ${PIP} install --editable '.[docs,dev,testing]'
       dev/extras: ${activate} ${PIP} install --editable '.[extras]'
       dev/pyqt6: ${activate} ${PIP} install --editable '.[pyqt6]'
       dev/env: ${activate} "$@"
       check>:
         - test
+        - check/fmt
         - doc
-        - pylint
+      check/fmt: garden fmt -- --check
       fmt: |
         ${activate}
         ${CERCIS} --version
@@ -106,9 +107,6 @@ trees:
             cola/*/*.py
       pages<: doc
       pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs "$@"
-      pylint: |
-        ${PYLINT} --version
-        ${PYLINT} ${PYLINT_OPTIONS} --rcfile=.pylintrc "$@" cola test
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
       test: ${activate} ${PYTEST_CMD} cola test "$@"
@@ -271,9 +269,6 @@ variables:
   MKDIR_P: mkdir -p
   MSGMERGE: msgmerge
   PIP: pip
-  PYLINT: ${activate} ${PYTHON} -B -m pylint
-  PYLINT_OPTIONS: |
-    $ ${activate} ${PYLINT} --score=no --help >/dev/null 2>&1 && printf '%s' --score=no
   PYTEST: ${activate} ${PYTHON} -B -m pytest
   PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
   PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS} -p no:cacheprovider

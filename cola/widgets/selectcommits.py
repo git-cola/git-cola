@@ -66,8 +66,6 @@ class SelectCommits(Dialog):
         self.search_label.setText(N_('Search:'))
         self.search = QtWidgets.QLineEdit()
         self.search.setReadOnly(False)
-
-        # pylint: disable=no-member
         self.search.textChanged.connect(self.search_list)
 
         self.select_button = qtutils.ok_button(N_('Select'), enabled=False)
@@ -92,7 +90,6 @@ class SelectCommits(Dialog):
         )
         self.setLayout(self.main_layout)
 
-        # pylint: disable=no-member
         commits.itemSelectionChanged.connect(self.commit_oid_selected)
         commits.itemDoubleClicked.connect(self.commit_oid_double_clicked)
 

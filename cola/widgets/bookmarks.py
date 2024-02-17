@@ -188,7 +188,6 @@ def disable_rename(_path, _name, _new_name):
     return False
 
 
-# pylint: disable=too-many-ancestors
 class BookmarksTreeView(standard.TreeView):
     default_changed = Signal()
     toggle_switcher = Signal(bool)

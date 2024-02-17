@@ -1,11 +1,10 @@
-# pylint: disable=redefined-outer-name
 from cola.models.stash import StashModel
 
 from . import helper
 from .helper import app_context
 
 
-# These assertions make pylint happy. It considers them unused imports otherwise.
+# Prevent unused imports lint errors.
 assert app_context is not None
 
 

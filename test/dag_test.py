@@ -1,6 +1,4 @@
 """Tests DAG functionality"""
-# pylint: disable=redefined-outer-name
-
 import pytest
 
 from cola.models import dag
@@ -9,6 +7,7 @@ from .helper import app_context
 from .helper import patch
 
 
+# Prevent unused imports lint errors.
 assert app_context is not None
 
 

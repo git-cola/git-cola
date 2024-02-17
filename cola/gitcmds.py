@@ -433,7 +433,6 @@ def diff_range(context, start, end, filename=None):
     return decoded + oid_diff_range(context, start, end, filename=filename)
 
 
-# pylint: disable=too-many-arguments
 def diff_helper(
     context,
     commit=None,
@@ -822,7 +821,6 @@ def parse_rev_list(raw_revs):
     return revs
 
 
-# pylint: disable=redefined-builtin
 def log_helper(context, all=False, extra_args=None):
     """Return parallel arrays containing oids and summaries."""
     revs = []

@@ -5,7 +5,6 @@ from .. import icons
 from . import standard
 
 
-# pylint: disable=too-many-ancestors
 class FileTree(standard.TreeWidget):
     def __init__(self, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)

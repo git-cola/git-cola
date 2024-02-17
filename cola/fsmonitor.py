@@ -205,7 +205,6 @@ if AVAILABLE == 'inotify':
                         return
                     self._pipe_r, self._pipe_w = os.pipe()
 
-                # pylint: disable=no-member
                 poll_obj = select.poll()
                 poll_obj.register(self._inotify_fd, select.POLLIN)
                 poll_obj.register(self._pipe_r, select.POLLIN)
@@ -226,7 +225,6 @@ if AVAILABLE == 'inotify':
                     timeout = None
                 try:
                     events = poll_obj.poll(timeout)
-                # pylint: disable=duplicate-except
                 except OSError:
                     continue
                 else:
@@ -383,7 +381,7 @@ if AVAILABLE == 'pywin32':
                 self.overlapped = pywintypes.OVERLAPPED()
                 self.overlapped.hEvent = self.event
                 self._start()
-            except Exception:  # pylint: disable=broad-exception-caught,broad-except
+            except Exception:
                 self.close()
 
         def append(self, events):
