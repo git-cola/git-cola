@@ -400,7 +400,7 @@ The following commands should be run during development:
     # Run the unit tests
     $ garden test
 
-    # Run tests and longer-running pylint checks
+    # Run tests and doc checks
     $ garden check
 
     # Run tests against multiple python interpreters using tox
