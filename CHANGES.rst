@@ -18,6 +18,11 @@ Fixes
 * The file system monitor was corrected to catch `PermissionError` exceptions.
   (`bz #2260155 <https://bugzilla.redhat.com/show_bug.cgi?id=2260155>`_)
 
+Packaging
+---------
+* The flatpak metainfo now contains the required developer name field.
+  (`#1382 <https://github.com/git-cola/git-cola/pull/1382>`_)
+
 Development
 -----------
 * The "actions/cache" and "styfle/cancel-workflow-action" github actions were upgraded.
