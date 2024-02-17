@@ -44,7 +44,9 @@ trees:
       dev/env: ${activate} "$@"
       check>:
         - test
+        - check/fmt
         - doc
+      check/fmt: garden fmt -- --check
       fmt: |
         ${activate}
         ${CERCIS} --version
