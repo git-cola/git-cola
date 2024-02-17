@@ -1,7 +1,6 @@
 #
 # License: MIT (see extras/polib/LICENSE file provided)
 # vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
-# pylint: disable=consider-using-with,no-else-return
 
 """
 **polib** allows you to manipulate, create, modify gettext files (pot, po and
@@ -108,7 +107,6 @@ def _is_file(filename_or_contents):
 # function pofile() {{{
 
 
-# pylint: disable=redefined-outer-name
 def pofile(pofile, **kwargs):
     """
     Convenience function that parses the po or pot file ``pofile`` and returns
@@ -143,7 +141,6 @@ def pofile(pofile, **kwargs):
 # function mofile() {{{
 
 
-# pylint: disable=redefined-outer-name
 def mofile(mofile, **kwargs):
     """
     Convenience function that parses the mo file ``mofile`` and returns a
@@ -333,7 +330,7 @@ class _BaseFile(list):
         """
         list.__init__(self)
         # the opened file handle
-        pofile = kwargs.get('pofile', None)  # pylint: disable=redefined-outer-name
+        pofile = kwargs.get('pofile', None)
         if pofile and _is_file(pofile):
             self.fpath = pofile
         else:
@@ -358,7 +355,7 @@ class _BaseFile(list):
         entries = [self.metadata_as_entry()] + [e for e in self if not e.obsolete]
         for entry in entries:
             ret.append(entry.__unicode__(self.wrapwidth))
-        for entry in self.obsolete_entries():  # pylint: disable=no-member
+        for entry in self.obsolete_entries():
             ret.append(entry.__unicode__(self.wrapwidth))
         ret = u('\n').join(ret)
         return ret
@@ -567,10 +564,10 @@ class _BaseFile(list):
         Return the binary representation of the file.
         """
         offsets = []
-        entries = self.translated_entries()  # pylint: disable=no-member
+        entries = self.translated_entries()
 
         # the keys are sorted in the .mo file
-        def cmp(_self, other):  # pylint: disable=unused-variable
+        def cmp(_self, other):
             # msgfmt compares entries with msgctxt if it exists
             self_msgid = _self.msgctxt or _self.msgid
             other_msgid = other.msgctxt or other.msgid
@@ -637,10 +634,10 @@ class _BaseFile(list):
             0,
             keystart,
         )
-        if PY3 and sys.version_info.minor > 1:  # python 3.2 or superior
+        if PY3 and sys.version_info.minor > 1:  # python 3.2 or newer
             output += array.array('i', offsets).tobytes()
         else:
-            output += array.array('i', offsets).tostring()  # pylint: disable=no-member
+            output += array.array('i', offsets).tostring()
         output += ids
         output += strs
         return output
@@ -798,7 +795,6 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath)
 
-    # pylint: disable=arguments-differ
     def save(self, fpath=None):
         """
         Saves the mofile to ``fpath``.
@@ -1103,7 +1099,6 @@ class POEntry(_BaseEntry):
         ret = u('\n').join(ret)
         return ret
 
-    # pylint: disable=too-many-return-statements
     def __cmp__(self, other):
         """
         Called by comparison operations if rich comparison is not defined.
@@ -1276,7 +1271,6 @@ class _POFileParser:
     file format.
     """
 
-    # pylint: disable=redefined-outer-name
     def __init__(self, pofile, *_args, **kwargs):
         """
         Constructor.
@@ -1337,7 +1331,6 @@ class _POFileParser:
         #     * MS: a msgstr
         #     * MX: a msgstr plural
         #     * MC: a msgid or msgstr continuation line
-        # pylint: disable=redefined-builtin
         all = [
             'st',
             'he',
@@ -1382,7 +1375,6 @@ class _POFileParser:
         self.add('mx', ['mi', 'mx', 'mp', 'tc'], 'mx')
         self.add('mc', ['ct', 'mi', 'mp', 'ms', 'mx', 'pm', 'pp', 'pc'], 'mc')
 
-    # pylint: disable=too-many-branches
     def parse(self):
         """
         Run the state machine, parse the file line by line and call process()
@@ -1739,7 +1731,6 @@ class _MOFileParser:
     A class to parse binary mo files.
     """
 
-    # pylint: disable=unused-argument,redefined-outer-name
     def __init__(self, mofile, *_args, **kwargs):
         """
         Constructor.

@@ -311,7 +311,7 @@ def launch_default_app(paths):
     if is_win32():
         for path in paths:
             if hasattr(os, 'startfile'):
-                os.startfile(path)  # pylint: disable=no-member
+                os.startfile(path)
         return
 
     if is_darwin():

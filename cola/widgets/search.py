@@ -255,7 +255,6 @@ class Search(SearchWidget):
         connect_button(self.button_cherrypick, self.cherry_pick)
         connect_button(self.button_close, self.accept)
 
-        # pylint: disable=no-member
         self.mode_combo.currentIndexChanged.connect(self.mode_changed)
         self.commit_list.itemSelectionChanged.connect(self.display)
 
@@ -298,7 +297,6 @@ class Search(SearchWidget):
     def mode(self):
         return self.mode_combo.currentText()
 
-    # pylint: disable=unused-argument
     def search_callback(self, *args):
         engineclass = self.engines[self.mode()]
         self.model.query = get(self.query)
@@ -341,7 +339,6 @@ class Search(SearchWidget):
         result = qtutils.selected_item(self.commit_list, self.results)
         return result[0] if result else None
 
-    # pylint: disable=unused-argument
     def display(self, *args):
         context = self.context
         revision = self.selected_revision()

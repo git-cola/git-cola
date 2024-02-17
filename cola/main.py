@@ -459,7 +459,7 @@ def add_version_command(subparser):
 
 # entry points
 def cmd_cola(args):
-    from .widgets.main import MainView  # pylint: disable=all
+    from .widgets.main import MainView
 
     status_filter = args.status_filter
     if status_filter:
@@ -488,7 +488,7 @@ def start_cola(context, view):
 
 
 def cmd_about(args):
-    from .widgets import about  # pylint: disable=all
+    from .widgets import about
 
     context = app.application_init(args)
     view = about.about_dialog(context)
@@ -496,7 +496,7 @@ def cmd_about(args):
 
 
 def cmd_am(args):
-    from .widgets.patch import new_apply_patches  # pylint: disable=all
+    from .widgets.patch import new_apply_patches
 
     context = app.application_init(args)
     view = new_apply_patches(context, patches=args.patches)
@@ -504,7 +504,7 @@ def cmd_am(args):
 
 
 def cmd_archive(args):
-    from .widgets import archive  # pylint: disable=all
+    from .widgets import archive
 
     context = app.application_init(args, update=True)
     if args.ref is None:
@@ -514,7 +514,7 @@ def cmd_archive(args):
 
 
 def cmd_branch(args):
-    from .widgets.createbranch import create_new_branch  # pylint: disable=all
+    from .widgets.createbranch import create_new_branch
 
     context = app.application_init(args, update=True)
     view = create_new_branch(context)
@@ -522,7 +522,7 @@ def cmd_branch(args):
 
 
 def cmd_browse(args):
-    from .widgets.browse import worktree_browser  # pylint: disable=all
+    from .widgets.browse import worktree_browser
 
     context = app.application_init(args)
     view = worktree_browser(context, show=False, update=False)
@@ -530,7 +530,7 @@ def cmd_browse(args):
 
 
 def cmd_clone(args):
-    from .widgets import clone  # pylint: disable=all
+    from .widgets import clone
 
     context = app.application_init(args)
     view = clone.clone(context)
@@ -541,7 +541,7 @@ def cmd_clone(args):
 
 
 def cmd_config(args):
-    from .widgets.prefs import preferences  # pylint: disable=all
+    from .widgets.prefs import preferences
 
     context = app.application_init(args)
     view = preferences(context)
@@ -549,7 +549,7 @@ def cmd_config(args):
 
 
 def cmd_dag(args):
-    from .widgets import dag  # pylint: disable=all
+    from .widgets import dag
 
     context = app.application_init(args)
     # cola.main() uses parse_args(), unlike dag.main() which uses
@@ -563,7 +563,7 @@ def cmd_dag(args):
 
 
 def cmd_diff(args):
-    from .difftool import diff_expression  # pylint: disable=all
+    from .difftool import diff_expression
 
     context = app.application_init(args)
     expr = core.list2cmdline(args.args)
@@ -574,7 +574,7 @@ def cmd_diff(args):
 def cmd_fetch(args):
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
-    from .widgets import remote  # pylint: disable=all
+    from .widgets import remote
 
     context = app.application_init(args)
     context.model.update_status()
@@ -583,7 +583,7 @@ def cmd_fetch(args):
 
 
 def cmd_find(args):
-    from .widgets import finder  # pylint: disable=all
+    from .widgets import finder
 
     context = app.application_init(args)
     paths = core.list2cmdline(args.paths)
@@ -592,7 +592,7 @@ def cmd_find(args):
 
 
 def cmd_grep(args):
-    from .widgets import grep  # pylint: disable=all
+    from .widgets import grep
 
     context = app.application_init(args)
     text = core.list2cmdline(args.args)
@@ -601,7 +601,7 @@ def cmd_grep(args):
 
 
 def cmd_merge(args):
-    from .widgets.merge import Merge  # pylint: disable=all
+    from .widgets.merge import Merge
 
     context = app.application_init(args, update=True)
     view = Merge(context, parent=None, ref=args.ref)
@@ -609,14 +609,14 @@ def cmd_merge(args):
 
 
 def cmd_version(args):
-    from . import version  # pylint: disable=all
+    from . import version
 
     version.print_version(builtin=args.builtin, brief=args.brief)
     return 0
 
 
 def cmd_pull(args):
-    from .widgets import remote  # pylint: disable=all
+    from .widgets import remote
 
     context = app.application_init(args, update=True)
     view = remote.pull(context)
@@ -626,7 +626,7 @@ def cmd_pull(args):
 
 
 def cmd_push(args):
-    from .widgets import remote  # pylint: disable=all
+    from .widgets import remote
 
     context = app.application_init(args, update=True)
     view = remote.push(context)
@@ -673,7 +673,7 @@ def cmd_rebase(args):
 
 
 def cmd_recent(args):
-    from .widgets import recent  # pylint: disable=all
+    from .widgets import recent
 
     context = app.application_init(args)
     view = recent.browse_recent_files(context)
@@ -681,7 +681,7 @@ def cmd_recent(args):
 
 
 def cmd_remote(args):
-    from .widgets import editremotes  # pylint: disable=all
+    from .widgets import editremotes
 
     context = app.application_init(args)
     view = editremotes.editor(context, run=False)
@@ -689,7 +689,7 @@ def cmd_remote(args):
 
 
 def cmd_search(args):
-    from .widgets.search import search  # pylint: disable=all
+    from .widgets.search import search
 
     context = app.application_init(args)
     view = search(context)
@@ -697,7 +697,7 @@ def cmd_search(args):
 
 
 def cmd_stash(args):
-    from .widgets import stash  # pylint: disable=all
+    from .widgets import stash
 
     context = app.application_init(args)
     view = stash.view(context, show=False)
@@ -705,7 +705,7 @@ def cmd_stash(args):
 
 
 def cmd_tag(args):
-    from .widgets.createtag import new_create_tag  # pylint: disable=all
+    from .widgets.createtag import new_create_tag
 
     context = app.application_init(args)
     context.model.update_status()

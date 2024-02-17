@@ -10,7 +10,6 @@ from ..i18n import N_
 from .standard import TreeWidget
 
 
-# pylint: disable=too-many-ancestors
 class FileWidget(TreeWidget):
     files_selected = Signal(object)
     difftool_selected = Signal(object)
@@ -54,7 +53,6 @@ class FileWidget(TreeWidget):
         else:
             self.toggle_remark_actions = tuple()
 
-        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
 
     def selection_changed(self):

@@ -398,7 +398,6 @@ def xopen(path, mode='r', encoding=None):
 
     The path is decoded into Unicode on Windows and encoded into bytes on Unix.
     """
-    # pylint: disable=unspecified-encoding
     return open(mkpath(path, encoding=encoding), mode)
 
 
@@ -447,7 +446,6 @@ exists = wrap(mkpath, os.path.exists)
 expanduser = wrap(encode, os.path.expanduser, decorator=decode)
 if PY2:
     if hasattr(os, 'getcwdu'):
-        # pylint: disable=no-member
         getcwd = os.getcwdu
     else:
         getcwd = decorate(decode, os.getcwd)

@@ -1,5 +1,4 @@
 """Provides the main() routine and ColaApplication"""
-# pylint: disable=unused-import
 from functools import partial
 import argparse
 import os

@@ -1,11 +1,9 @@
 """Test Startup Dialog (git cola --prompt) Context Menu and related classes"""
-# pylint: disable=redefined-outer-name
-
 from cola.widgets import startup
 
 from .helper import app_context
 
-# These assertions make pylint happy. It considers them unused imports otherwise.
+# Prevent unused imports lint errors.
 assert app_context is not None
 
 

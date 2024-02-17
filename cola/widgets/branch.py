@@ -117,7 +117,6 @@ class BranchesWidget(QtWidgets.QFrame):
         self.sort_order_button.setIcon(icon)
 
 
-# pylint: disable=too-many-ancestors
 class BranchesTreeWidget(standard.TreeWidget):
     """A tree widget for displaying branches"""
 
@@ -147,7 +146,6 @@ class BranchesTreeWidget(standard.TreeWidget):
         context.model.updated.connect(self.updated)
 
         # Expand items when they are clicked
-        # pylint: disable=no-member
         self.clicked.connect(self._toggle_expanded)
 
         # Checkout branch when double clicked
@@ -843,7 +841,6 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
 
-        # pylint: disable=no-member
         self.text.textChanged.connect(self.apply_filter)
         self.tree.updated.connect(self.apply_filter, type=Qt.QueuedConnection)
 

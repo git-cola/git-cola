@@ -467,7 +467,7 @@ def translators_text():
 def show_shortcuts():
     hotkeys_html = resources.doc(N_('hotkeys.html'))
     try:
-        from qtpy import QtWebEngineWidgets  # pylint: disable=all
+        from qtpy import QtWebEngineWidgets
     except (ImportError, qtpy.PythonQtError):
         # Redhat disabled QtWebKit in their Qt build but don't punish the users
         webbrowser.open_new_tab('file://' + hotkeys_html)

@@ -1,6 +1,4 @@
 """Test interfaces used by the browser (git cola browse)"""
-# pylint: disable=redefined-outer-name
-
 from cola import core
 from cola import gitcmds
 
@@ -8,7 +6,7 @@ from . import helper
 from .helper import app_context
 
 
-# These assertions make pylint happy. It considers them unused imports otherwise.
+# Prevent unused imports lint errors.
 assert app_context is not None
 
 

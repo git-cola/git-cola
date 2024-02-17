@@ -1,5 +1,4 @@
 """Editor commands"""
-# pylint: disable=too-many-lines
 import os
 import re
 import sys
@@ -3116,7 +3115,7 @@ def do(cls, *args, **opts):
     try:
         cmd = cls(*args, **opts)
         return cmd.do()
-    except Exception as e:  # pylint: disable=broad-except
+    except Exception as e:
         msg, details = utils.format_exception(e)
         if hasattr(cls, '__name__'):
             msg = f'{cls.__name__} exception:\n{msg}'

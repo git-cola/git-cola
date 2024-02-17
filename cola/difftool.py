@@ -121,7 +121,6 @@ class Difftool(standard.Dialog):
         )
         self.setLayout(self.main_layout)
 
-        # pylint: disable=no-member
         self.tree.itemSelectionChanged.connect(self.tree_selection_changed)
         self.tree.itemDoubleClicked.connect(self.tree_double_clicked)
         self.tree.up.connect(self.focus_input)

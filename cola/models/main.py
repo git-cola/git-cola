@@ -17,7 +17,6 @@ def create(context):
     return MainModel(context)
 
 
-# pylint: disable=too-many-public-methods
 class MainModel(QtCore.QObject):
     """Repository status model"""
 
@@ -507,8 +506,6 @@ class Types:
     TEXT = 'text'
 
 
-# Helpers
-# pylint: disable=too-many-arguments
 def remote_args(
     context,
     remote,
@@ -542,7 +539,6 @@ def remote_args(
         elif no_ff:
             kwargs['no_ff'] = True
     elif force:
-        # pylint: disable=simplifiable-if-statement
         if push and version.check_git(context, 'force-with-lease'):
             kwargs['force_with_lease'] = True
         else:

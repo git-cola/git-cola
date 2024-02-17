@@ -1,5 +1,4 @@
 """Test the cola.settings module"""
-# pylint: disable=redefined-outer-name
 import os
 
 import pytest

@@ -283,7 +283,7 @@ class Git:
         # Start the process
         # Guard against thread-unsafe .git/index.lock files
         if not _readonly:
-            _index_lock.acquire()  # pylint: disable=consider-using-with
+            _index_lock.acquire()
         try:
             status, out, err = core.run_command(
                 command,

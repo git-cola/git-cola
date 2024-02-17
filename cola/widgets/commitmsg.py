@@ -196,8 +196,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             # description starts at line 2
             lambda row, col: self.cursor_changed.emit(row + 2, col)
         )
-
-        # pylint: disable=no-member
         self.summary.textChanged.connect(self.commit_summary_changed)
         self.description.textChanged.connect(self._commit_message_changed)
         self.description.leave.connect(self.focus_summary)
@@ -575,7 +573,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.description.highlighter.enable(enabled)
 
 
-# pylint: disable=too-many-ancestors
 class CommitSummaryLineEdit(SpellCheckLineEdit):
     """Text input field for the commit summary"""
 
@@ -626,7 +623,6 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
         SpellCheckLineEdit.keyPressEvent(self, event)
 
 
-# pylint: disable=too-many-ancestors
 class CommitMessageTextEdit(SpellCheckTextEdit):
     leave = Signal()
 

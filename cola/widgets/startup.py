@@ -131,8 +131,6 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.clone_button, self.clone_repo)
         qtutils.connect_button(self.new_button, self.new_repo)
         qtutils.connect_button(self.close_button, self.reject)
-
-        # pylint: disable=no-member
         self.tab_bar.currentChanged.connect(self.tab_changed)
 
         self.init_state(settings, self.resize_widget)
@@ -378,7 +376,6 @@ class BookmarksListView(QtWidgets.QListView):
             N_('Remove stale entries for repositories that no longer exist')
         )
 
-        # pylint: disable=no-member
         self.model().itemChanged.connect(self.item_changed)
 
         self.action_group = utils.Group(

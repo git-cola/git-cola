@@ -2,8 +2,7 @@ import os
 import shutil
 import stat
 import tempfile
-
-from unittest.mock import Mock, patch  # noqa pylint: disable=unused-import
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -12,6 +11,10 @@ from cola import git
 from cola import gitcfg
 from cola import gitcmds
 from cola.models import main
+
+
+# prevent unused imports lint errors.
+assert patch is not None
 
 
 def tmp_path(*paths):

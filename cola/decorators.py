@@ -15,7 +15,6 @@ def decorator(caller, func=None):
     """
     if func is None:
         # return a decorator
-        # pylint: disable=unused-argument
         @functools.wraps(caller)
         def _decorator(func, *dummy_args, **dummy_opts):
             @functools.wraps(func)

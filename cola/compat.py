@@ -1,4 +1,3 @@
-# pylint: disable=unused-import,redefined-builtin,undefined-variable
 import os
 import sys
 

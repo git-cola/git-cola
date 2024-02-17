@@ -118,21 +118,17 @@ class StashView(standard.Dialog):
             self, N_('Pop'), self.stash_drop, hotkeys.DELETE_FILE
         )
 
-        # pylint: disable=no-member
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
-
         qtutils.connect_button(self.button_save, self.stash_save)
         qtutils.connect_button(self.button_rename, self.stash_rename)
         qtutils.connect_button(self.button_apply, self.stash_apply)
         qtutils.connect_button(self.button_pop, self.stash_pop)
         qtutils.connect_button(self.button_drop, self.stash_drop)
         qtutils.connect_button(self.button_close, self.close_and_rescan)
-
         qtutils.connect_checkbox(self.stash_index, self.stash_index_clicked)
         qtutils.connect_checkbox(self.keep_index, self.keep_index_clicked)
 
         self.init_size(parent=parent)
-
         self.update_from_model()
         self.update_actions()
 

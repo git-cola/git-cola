@@ -185,7 +185,6 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         return state, formats
 
 
-# pylint: disable=too-many-ancestors
 class DiffTextEdit(VimHintedPlainTextEdit):
     """A textedit for interacting with diff text"""
 
@@ -213,8 +212,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.copy_diff_action.setIcon(icons.copy())
         self.copy_diff_action.setEnabled(False)
         self.menu_actions.append(self.copy_diff_action)
-
-        # pylint: disable=no-member
         self.cursorPositionChanged.connect(self._cursor_changed)
         self.selectionChanged.connect(self._selection_changed)
 
@@ -903,7 +900,6 @@ class Options(QtWidgets.QWidget):
         self.function_context.setVisible(False)
 
 
-# pylint: disable=too-many-ancestors
 class DiffEditor(DiffTextEdit):
     up = Signal()
     down = Signal()
@@ -1689,7 +1685,6 @@ class ApplyPatches(standard.Dialog):
 
         self.tree = PatchTreeWidget(parent=self)
         self.tree.setHeaderHidden(True)
-        # pylint: disable=no-member
         self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
 
         self.diffwidget = DiffWidget(context, self, is_commit=True)
@@ -1824,7 +1819,6 @@ class ApplyPatches(standard.Dialog):
         return result
 
 
-# pylint: disable=too-many-ancestors
 class PatchTreeWidget(standard.DraggableTreeWidget):
     def add_paths(self, paths):
         patches = get_patches_from_paths(paths)

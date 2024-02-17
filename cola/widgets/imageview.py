@@ -431,7 +431,7 @@ class ImageViewerWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         key = event.key()
-        global main_loop_type  # pylint: disable=global-statement
+        global main_loop_type
         if key == Qt.Key_Escape:
             if main_loop_type == 'qt':
                 QtWidgets.QApplication.quit()
@@ -441,7 +441,6 @@ class ImageViewerWindow(QtWidgets.QMainWindow):
                 # IPython.get_ipython().ask_exit()
 
 
-# pylint: disable=unused-argument
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
     sys.stderr.write('\r')
@@ -459,7 +458,7 @@ def main():
 
     app = QtWidgets.QApplication(sys.argv)
     try:
-        import signal  # pylint: disable=all
+        import signal
 
         signal.signal(signal.SIGINT, sigint_handler)
     except ImportError:

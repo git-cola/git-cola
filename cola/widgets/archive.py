@@ -172,7 +172,6 @@ class Archive(Dialog):
         self.update_format(idx)
 
         # connections
-        # pylint: disable=no-member
         self.filetext.textChanged.connect(self.filetext_changed)
         self.prefix_text.textChanged.connect(self.prefix_text_changed)
         self.format_combo.currentIndexChanged.connect(self.update_format)

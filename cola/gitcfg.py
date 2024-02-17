@@ -440,10 +440,8 @@ class GitConfig(QtCore.QObject):
         value = self.get('cola.color.%s' % key, default=default)
         struct_layout = core.encode('BBB')
         try:
-            # pylint: disable=no-member
             red, green, blue = struct.unpack(struct_layout, unhex(value))
         except (struct.error, TypeError):
-            # pylint: disable=no-member
             red, green, blue = struct.unpack(struct_layout, unhex(default))
         return (red, green, blue)
 
@@ -485,7 +483,6 @@ def _read_config_with_scope(context, cache_paths, renamed_keys):
     for line in config_output.splitlines():
         if not line:
             continue
-        # pylint: disable=too-many-boolean-expressions
         if (
             line.startswith(system_key)
             or line.startswith(global_key)

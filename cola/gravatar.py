@@ -44,7 +44,6 @@ def md5_hexdigest(value):
     try:
         # This could raise ValueError in theory but we always use encoded bytes
         # so that does not happen in practice.
-        # pylint: disable=unexpected-keyword-arg
         result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
     except TypeError:
         # Fallback to trying hashlib.md5 directly.
@@ -65,7 +64,6 @@ class GravatarLabel(QtWidgets.QLabel):
         self._default_pixmap_bytes = None
 
         self.network = QtNetwork.QNetworkAccessManager()
-        # pylint: disable=no-member
         self.network.finished.connect(self.network_finished)
 
     def set_email(self, email):
@@ -114,9 +112,7 @@ class GravatarLabel(QtWidgets.QLabel):
             relocated = location != request_location
         else:
             relocated = False
-        no_error = qtutils.enum_value(
-            QtNetwork.QNetworkReply.NetworkError.NoError  # pylint: disable=no-member
-        )
+        no_error = qtutils.enum_value(QtNetwork.QNetworkReply.NetworkError.NoError)
         reply_error = qtutils.enum_value(reply.error())
         if reply_error == no_error:
             if relocated:

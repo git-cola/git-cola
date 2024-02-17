@@ -99,7 +99,6 @@ class Browser(standard.Widget):
         self.setWindowTitle(title)
 
 
-# pylint: disable=too-many-ancestors
 class RepoTreeView(standard.TreeView):
     """Provides a filesystem-like view of a git repository."""
 
@@ -662,7 +661,6 @@ class BrowseBranch(standard.Dialog):
         self.save.setEnabled(bool(filenames))
 
 
-# pylint: disable=too-many-ancestors
 class GitTreeWidget(standard.TreeView):
     selection_changed = Signal()
     path_chosen = Signal(object)
@@ -670,7 +668,6 @@ class GitTreeWidget(standard.TreeView):
     def __init__(self, parent=None):
         standard.TreeView.__init__(self, parent)
         self.setHeaderHidden(True)
-        # pylint: disable=no-member
         self.doubleClicked.connect(self.double_clicked)
 
     def double_clicked(self, index):

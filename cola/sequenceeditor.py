@@ -9,7 +9,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-# pylint: disable=ungrouped-imports
 from cola import core
 from cola import difftool
 from cola import gitcmds
@@ -354,7 +353,6 @@ class Editor(QtWidgets.QWidget):
         return status
 
 
-# pylint: disable=too-many-ancestors
 class RebaseTreeWidget(standard.DraggableTreeWidget):
     commits_selected = Signal(object)
     external_diff = Signal()
@@ -437,7 +435,6 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             for r in map(str, range(10))
         )
 
-        # pylint: disable=no-member
         self.itemChanged.connect(self.item_changed)
         self.itemSelectionChanged.connect(self.selection_changed)
         self.move_rows.connect(self.move)
@@ -754,7 +751,6 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         combo.setEnabled(self.is_commit())
 
         signal = combo.currentIndexChanged
-        # pylint: disable=no-member
         signal.connect(lambda x: self.set_command_and_validate(combo))
         combo.validate.connect(parent.validate)
 

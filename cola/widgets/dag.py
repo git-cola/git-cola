@@ -556,7 +556,6 @@ class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setText(2, commit.authdate)
 
 
-# pylint: disable=too-many-ancestors
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
     """Display commits using a flat treewidget in "list" mode"""
 
@@ -590,7 +589,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT
         )
 
-        # pylint: disable=no-member
         self.itemSelectionChanged.connect(self.selection_changed)
 
     def export_state(self):
@@ -890,15 +888,11 @@ class GitDAG(standard.MainWindow):
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
-
-        # pylint: disable=no-member
         self.maxresults.editingFinished.connect(self.display)
-
         self.revtext.textChanged.connect(self.text_changed)
         self.revtext.activated.connect(self.display)
         self.revtext.enter.connect(self.display)
         self.revtext.down.connect(self.focus_tree)
-
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
@@ -1580,7 +1574,6 @@ class Label(QtWidgets.QGraphicsItem):
             current_width += text_rect.width() + spacing
 
 
-# pylint: disable=too-many-ancestors
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     commits_selected = Signal(object)
     diff_commits = Signal(object, object)
@@ -1626,10 +1619,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         scene = QtWidgets.QGraphicsScene(self)
         scene.setItemIndexMethod(QtWidgets.QGraphicsScene.BspTreeIndex)
-        self.setScene(scene)
-
-        # pylint: disable=no-member
         scene.selectionChanged.connect(self.selection_changed)
+        self.setScene(scene)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setViewportUpdateMode(self.SmartViewportUpdate)
