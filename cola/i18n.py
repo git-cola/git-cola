@@ -1,10 +1,14 @@
 """i18n and l10n support for git-cola"""
 import locale
 import os
+
+try:
+    import polib
+except ImportError:
+    from . import polib
 import sys
 
 from . import core
-from . import polib
 from . import resources
 
 
