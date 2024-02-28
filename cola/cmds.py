@@ -1656,10 +1656,9 @@ class LoadCommitMessageFromFile(ContextCommand):
     def do(self):
         path = os.path.expanduser(self.path)
         if not path or not core.isfile(path):
-            raise UsageError(
-                N_('Error: Cannot find commit template'),
-                N_('%s: No such file or directory.') % path,
-            )
+            Interaction.log(N_('Error: Cannot find commit template'))
+            Interaction.log(N_('%s: No such file or directory.') % path)
+            return
         self.model.set_directory(os.path.dirname(path))
         self.model.set_commitmsg(core.read(path))
 
@@ -1678,14 +1677,15 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
 
     def do(self):
         if self.path is None:
-            raise UsageError(
-                N_('Error: Unconfigured commit template'),
+            Interaction.log(N_('Error: Unconfigured commit template'))
+            Interaction.log(
                 N_(
                     'A commit template has not been configured.\n'
                     'Use "git config" to define "commit.template"\n'
                     'so that it points to a commit template.'
-                ),
+                )
             )
+            return
         return LoadCommitMessageFromFile.do(self)
 
 

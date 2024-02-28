@@ -13,6 +13,10 @@ Usability, bells and whistles
   (`#1375 <https://github.com/git-cola/git-cola/pull/1375>`_)
   (`#1380 <https://github.com/git-cola/git-cola/pull/1380>`_)
 
+* Invalid `commit.template` configuration is now reported in the `Console` tool
+  instead of presenting an error traceback dialog via a `UsageError` exception.
+  (`#1384 <https://github.com/git-cola/git-cola/issues/1384>`_)
+
 Fixes
 -----
 * The file system monitor was corrected to catch `PermissionError` exceptions.
