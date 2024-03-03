@@ -25,6 +25,7 @@
 #   garden grow pages           # Clone the Git Cola homepage
 #   garden grow fedora          # Clone the Fedora packaging
 #   garden grow deb             # Clone the Debian packaging
+#   garden grow flatpak         # Clone the Flatpak packaging
 trees:
   git-cola:
     description: The highly-caffeinated Git GUI
@@ -206,6 +207,9 @@ trees:
     remotes:
       git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
       davvid: "git@github.com:davvid/git-cola-fedora.git"
+  flatpak:
+    description: Flatpak packaging
+    url: "git@github.com:flathub/com.github.git_cola.git-cola.git"
   pages:
     description: "Git Cola's homepage"
     url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"

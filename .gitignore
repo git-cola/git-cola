@@ -8,6 +8,7 @@
 /.eggs
 /env*
 /fedora
+/flatpak
 /git-cola.app
 /htmlcov
 /local
