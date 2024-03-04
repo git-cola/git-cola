@@ -12,6 +12,7 @@
   </description>
   <url type="homepage">https://git-cola.github.io/</url>
   <releases>
+    <release version="4.6.0" date="2024-03-03" />
     <release version="4.5.0" date="2024-01-23" />
     <release version="4.4.1" date="2023-11-19" />
     <release version="4.4.0" date="2023-11-02" />

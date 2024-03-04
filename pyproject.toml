@@ -35,4 +35,4 @@ line-length = 88
 addopts = "--ruff"
 
 [tool.setuptools_scm]
-fallback_version = "4.5.0"
+fallback_version = "4.6.0"
