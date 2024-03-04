@@ -10,6 +10,7 @@
       git-dag is an advanced git DAG visualizer
     </p>
   </description>
+  <launchable type="desktop-id">git-dag.desktop</launchable>
   <url type="homepage">https://git-cola.github.io/</url>
   <releases>
     <release version="4.6.0" date="2024-03-03" />

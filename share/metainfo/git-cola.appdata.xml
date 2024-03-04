@@ -11,9 +11,11 @@
       git-cola is a simple, powerful, and feature-rich GUI for git that provides an easy way to interact with Git repositories.
     </p>
   </description>
+  <launchable type="desktop-id">git-cola.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://git-cola.github.io/images/screenshot-main-linux.png</image>
+      <caption>Git Cola running on Linux</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://git-cola.github.io/</url>

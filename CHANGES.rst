@@ -1,3 +1,13 @@
+.. _v4.6.1:
+
+v4.6.1
+======
+
+Packaging
+---------
+* `launchable` tags were added to the flatpak app metainfo files.
+
+
 .. _v4.6.0:
 
 v4.6.0
