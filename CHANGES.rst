@@ -27,6 +27,7 @@ Packaging
 * If the `polib` module (e.g. `sudo apt install python3-polib`) is installed then it
   will be used instead of the vendored `cola.polib` module. This makes it easier for
   distributions to remove the vendored module from the `cola` namespace.
+  `polib` is now listed as an install requirement in `pyproject.toml`.
   (`bz #2264526 <https://bugzilla.redhat.com/show_bug.cgi?id=2264526>`_)
 
 * The flatpak metainfo now contains the required developer name field.
