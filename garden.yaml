@@ -214,12 +214,14 @@ trees:
       app-id: com.github.git_cola.git-cola
     commands:
       build: flatpak-builder "$@" --user "${prefix}" ${app-id}.yml
+      check: flatpak run --command=flatpak-builder-lint org.flatpak.Builder "$@" --exceptions builddir "${prefix}"
       install: flatpak-builder "$@" --install --user "${prefix}" ${app-id}.yml
       run: flatpak run ${app-id}
-      setup:
+      setup: |
         flatpak remote-add --user --if-not-exists \
           flathub https://flathub.org/repo/flathub.flatpakrepo
         flatpak install --user \
+          org.flatpak.Builder/x86_64 \
           org.kde.Sdk/x86_64/5.15-23.08 \
           org.kde.Platform/x86_64/5.15-23.08 \
           com.riverbankcomputing.PyQt.BaseApp/x86_64/5.15-23.08
