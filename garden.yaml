@@ -210,6 +210,19 @@ trees:
   flatpak:
     description: Flatpak packaging
     url: "git@github.com:flathub/com.github.git_cola.git-cola.git"
+    variables:
+      app-id: com.github.git_cola.git-cola
+    commands:
+      build: flatpak-builder "$@" --user "${prefix}" ${app-id}.yml
+      install: flatpak-builder "$@" --install --user "${prefix}" ${app-id}.yml
+      run: flatpak run ${app-id}
+      setup:
+        flatpak remote-add --user --if-not-exists \
+          flathub https://flathub.org/repo/flathub.flatpakrepo
+        flatpak install --user \
+          org.kde.Sdk/x86_64/5.15-23.08 \
+          org.kde.Platform/x86_64/5.15-23.08 \
+          com.riverbankcomputing.PyQt.BaseApp/x86_64/5.15-23.08
   pages:
     description: "Git Cola's homepage"
     url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
