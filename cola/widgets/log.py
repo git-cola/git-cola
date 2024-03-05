@@ -18,7 +18,7 @@ class LogWidget(QtWidgets.QFrame):
 
     channel = Signal(object)
 
-    def __init__(self, context, parent=None, output=None):
+    def __init__(self, context, parent=None, output=None, display_usage=True):
         QtWidgets.QFrame.__init__(self, parent)
 
         self.output_text = text.VimTextEdit(context, parent=self)
@@ -29,6 +29,11 @@ class LogWidget(QtWidgets.QFrame):
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.output_text)
         self.channel.connect(self.append, type=Qt.QueuedConnection)
+        if display_usage:
+            self._display_usage()
+
+    def _display_usage(self):
+        """Show the default usage message"""
         self.log(N_('Right-click links to open:'))
         self.log('  Documentation: https://git-cola.readthedocs.io/en/latest/')
         self.log(
