@@ -164,6 +164,19 @@ scissors
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
 
+        self.refresh_on_focus = qtutils.checkbox(checked=False)
+        tooltip = N_(
+            'Refresh repository state whenever the window is focused or un-minimized'
+        )
+        self.refresh_on_focus.setToolTip(tooltip)
+
+        tooltip = N_(
+            'Enable file system change monitoring using '
+            'inotify on Linux and win32event on Windows'
+        )
+        self.inotify = qtutils.checkbox(checked=True)
+        self.inotify.setToolTip(tooltip)
+
         self.logdate = qtutils.combo(prefs.date_formats())
         tooltip = N_(
             'The date-time format used when displaying dates in Git DAG.\n'
@@ -188,11 +201,13 @@ scissors
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
+        self.add_row(N_('Patches Directory'), self.patches_directory)
         self.add_row(N_('Log Date Format'), self.logdate)
         self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
-        self.add_row(N_('Patches Directory'), self.patches_directory)
+        self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
+        self.add_row(N_('Enable File System Change Monitoring'), self.inotify)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
@@ -226,6 +241,7 @@ scissors
                 Defaults.display_untracked,
             ),
             prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
+            prefs.INOTIFY: (self.inotify, Defaults.inotify),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
             prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
@@ -234,6 +250,7 @@ scissors
                 self.patches_directory,
                 Defaults.patches_directory,
             ),
+            prefs.REFRESH_ON_FOCUS: (self.refresh_on_focus, Defaults.refresh_on_focus),
             prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
             prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
             prefs.USER_NAME: (self.name, ''),

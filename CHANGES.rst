@@ -1,3 +1,14 @@
+.. _v4.6.2:
+
+v4.6.2
+======
+
+Usability, bells and whistles
+-----------------------------
+* The `cola.refreshonfocus` and `cola.inotify` configuration settings are now accessible
+  from the `git cola config` settings dialog.
+
+
 .. _v4.6.1:
 
 v4.6.1
