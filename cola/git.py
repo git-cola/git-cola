@@ -108,45 +108,15 @@ class Paths:
         self.common_dir = common_dir
 
     def get(self, path):
-        ceiling_dirs = set()
-        ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
-        if ceiling:
-            ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
-
-        if path:
-            path = core.abspath(path)
-
+        """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
-            # Search for a .git directory
-            while path:
-                if path in ceiling_dirs:
-                    break
-                if is_git_dir(path):
-                    if not self.git_dir:
-                        self.git_dir = path
-                    basename = os.path.basename(path)
-                    if not self.worktree and basename == '.git':
-                        self.worktree = os.path.dirname(path)
-                # We are either in a bare repository, or someone set GIT_DIR
-                # but did not set GIT_WORK_TREE.
-                if self.git_dir:
-                    if not self.worktree:
-                        basename = os.path.basename(self.git_dir)
-                        if basename == '.git':
-                            self.worktree = os.path.dirname(self.git_dir)
-                        elif path and not is_git_dir(path):
-                            self.worktree = path
-                    break
-                gitpath = join(path, '.git')
-                if is_git_dir(gitpath):
-                    if not self.git_dir:
-                        self.git_dir = gitpath
-                    if not self.worktree:
-                        self.worktree = path
-                    break
-                path, dummy = os.path.split(path)
-                if not dummy:
-                    break
+            ceiling_dirs = set()
+            ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
+            if ceiling:
+                ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
+            if path:
+                path = core.abspath(path)
+            self._search_for_git(path, ceiling_dirs)
 
         if self.git_dir:
             git_dir_path = read_git_file(self.git_dir)
@@ -166,6 +136,38 @@ class Paths:
                         self.common_dir = common_dir
         # usage: Paths().get()
         return self
+
+    def _search_for_git(self, path, ceiling_dirs):
+        """Search for git repositories located at path or above"""
+        while path:
+            if path in ceiling_dirs:
+                break
+            if is_git_dir(path):
+                if not self.git_dir:
+                    self.git_dir = path
+                basename = os.path.basename(path)
+                if not self.worktree and basename == '.git':
+                    self.worktree = os.path.dirname(path)
+            # We are either in a bare repository, or someone set GIT_DIR
+            # but did not set GIT_WORK_TREE.
+            if self.git_dir:
+                if not self.worktree:
+                    basename = os.path.basename(self.git_dir)
+                    if basename == '.git':
+                        self.worktree = os.path.dirname(self.git_dir)
+                    elif path and not is_git_dir(path):
+                        self.worktree = path
+                break
+            gitpath = join(path, '.git')
+            if is_git_dir(gitpath):
+                if not self.git_dir:
+                    self.git_dir = gitpath
+                if not self.worktree:
+                    self.worktree = path
+                break
+            path, dummy = os.path.split(path)
+            if not dummy:
+                break
 
 
 def find_git_directory(path):
