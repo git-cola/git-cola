@@ -564,7 +564,9 @@ def refspec(src, dst, push=False):
 
 def refspec_arg(local_branch, remote_branch, pull, push):
     """Return the refspec for a fetch or pull command"""
-    if not pull and local_branch and remote_branch:
+    if push and local_branch and remote_branch:  # Push with local and remote.
+        what = refspec(local_branch, remote_branch, push=True)
+    elif not pull and local_branch and remote_branch:  # Fetch with local and remote.
         what = refspec(remote_branch, local_branch, push=push)
     else:
         what = local_branch or remote_branch or None
