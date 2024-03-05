@@ -5,6 +5,9 @@ v4.6.2
 
 Usability, bells and whistles
 -----------------------------
+* The Fetch, Push and Pull dialogs now remember the selected remotes.
+  (`#729 <https://github.com/git-cola/git-cola/issues/729>`_)
+
 * The Fetch, Push and Pull dialogs now display the git commands that will be run.
   The Pull dialog now selects the remote branch automatically.
   (`#729 <https://github.com/git-cola/git-cola/issues/729>`_)

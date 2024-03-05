@@ -1,5 +1,7 @@
 """Widgets for Fetch, Push, and Pull"""
 import fnmatch
+import time
+import os
 
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -133,6 +135,8 @@ class RemoteActionDialog(standard.Dialog):
         self.action = action
         self.filtered_remote_branches = []
         self.selected_remotes = []
+        self.selected_remotes_by_worktree = {}
+        self.last_updated = 0.0
 
         self.runtask = qtutils.RunTask(parent=self)
         self.local_label = QtWidgets.QLabel()
@@ -436,7 +440,7 @@ class RemoteActionDialog(standard.Dialog):
                 remote,
                 push=self.action == PUSH,
                 pull=self.action == PULL,
-                **kwargs
+                **kwargs,
             )
             cmd.extend(git.transform_kwargs(**kwargs))
             cmd.extend(args)
@@ -470,24 +474,25 @@ class RemoteActionDialog(standard.Dialog):
         """Select the first remote in the list view"""
         return self.select_remote(0)
 
-    def select_remote(self, idx):
+    def select_remote(self, idx, make_current=True):
         """Select a remote by index"""
         item = self.remotes.item(idx)
         if item:
             item.setSelected(True)
-            self.remotes.setCurrentItem(item)
-            self.set_remote_name(item.text())
+            if make_current:
+                self.remotes.setCurrentItem(item)
+                self.set_remote_name(item.text())
             result = True
         else:
             result = False
         return result
 
-    def select_remote_by_name(self, remote):
+    def select_remote_by_name(self, remote, make_current=True):
         """Select a remote by name"""
         remotes = self.model.remotes
         if remote in remotes:
             idx = remotes.index(remote)
-            result = self.select_remote(idx)
+            result = self.select_remote(idx, make_current=make_current)
         else:
             result = False
         return result
@@ -558,6 +563,8 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_name(selection)
         self.selected_remotes = qtutils.selected_items(self.remotes, self.model.remotes)
         self.set_remote_to(selection, self.selected_remotes)
+        worktree = self.context.git.worktree()
+        self.selected_remotes_by_worktree[worktree] = self.selected_remotes
         if update_command_display:
             self.update_command_display()
 
@@ -759,11 +766,11 @@ class RemoteActionDialog(standard.Dialog):
 
     def update_selected_remotes(self, remote):
         """Update the selected remotes when an ad-hoc remote is typed in"""
-        self.selected_remotes = qtutils.selected_items(
-            self.remotes, self.model.remotes
-        )
+        self.selected_remotes = qtutils.selected_items(self.remotes, self.model.remotes)
         if remote not in self.selected_remotes:
             self.selected_remotes = [remote]
+        worktree = self.context.git.worktree()
+        self.selected_remotes_by_worktree[worktree] = self.selected_remotes
 
     def action_completed(self, task):
         """Grab the results of the action and finish up"""
@@ -797,6 +804,8 @@ class RemoteActionDialog(standard.Dialog):
         state = standard.Dialog.export_state(self)
         state['close_on_completion'] = get(self.close_on_completion_checkbox)
         state['remote_messages'] = get(self.remote_messages_checkbox)
+        state['selected_remotes'] = self.selected_remotes_by_worktree
+        state['last_updated'] = self.last_updated
         return state
 
     def apply_state(self, state):
@@ -808,7 +817,39 @@ class RemoteActionDialog(standard.Dialog):
         # Restore the "show remote messages" checkbox
         remote_messages = bool(state.get('remote_messages', False))
         self.remote_messages_checkbox.setChecked(remote_messages)
+        # Restore the selected remotes.
+        self.selected_remotes_by_worktree = state.get('selected_remotes', {})
+        self.last_updated = state.get('last_updated', 0.0)
+        current_time = time.time()
+        one_month = 60.0 * 60.0 * 24.0 * 31.0  # one month is ~31 days.
+        if (current_time - self.last_updated) > one_month:
+            self._prune_selected_remotes()
+            self.last_updated = current_time
+        # Selected remotes are stored per-worktree.
+        worktree = self.context.git.worktree()
+        selected_remotes = self.selected_remotes_by_worktree.get(worktree, [])
+        if selected_remotes:
+            # Restore the stored selection. We stash away the current selection so that
+            # we can restore it in case we are unable to apply the stored selection.
+            current_selection = self.remotes.selectedItems()
+            self.remotes.clearSelection()
+            selected = False
+            for idx, remote in enumerate(selected_remotes):
+                make_current = idx == 0 or not selected
+                if self.select_remote_by_name(remote, make_current=make_current):
+                    selected = True
+            # Restore the original selection if nothing was selected.
+            if not selected:
+                for item in current_selection:
+                    item.setSelected(True)
         return result
+
+    def _prune_selected_remotes(self):
+        """Prune stale worktrees from the persistent selected_remotes_by_worktree"""
+        worktrees = list(self.selected_remotes_by_worktree.keys())
+        for worktree in worktrees:
+            if not os.path.exists(worktree):
+                self.selected_remotes_by_worktree.pop(worktree, None)
 
 
 # Use distinct classes so that each saves its own set of preferences
