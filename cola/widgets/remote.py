@@ -595,7 +595,7 @@ class RemoteActionDialog(standard.Dialog):
         elif self.action == PULL:
             branch = ''
             current_branch = self.context.model.currentbranch
-            remote_branch = '%s/%s' % (remote, current_branch)
+            remote_branch = '{}/{}'.format(remote, current_branch)
             if branches and remote_branch in branches:
                 branch = current_branch
                 try:
