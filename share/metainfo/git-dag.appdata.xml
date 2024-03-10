@@ -5,6 +5,7 @@
   <project_license>GPL-2.0</project_license>
   <name>Git DAG</name>
   <developer_name>David Aguilar</developer_name>
+  <summary>Git history GUI</summary>
   <description>
     <p>
       git-dag is an advanced git DAG visualizer
