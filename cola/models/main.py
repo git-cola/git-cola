@@ -570,6 +570,14 @@ def refspec_arg(local_branch, remote_branch, remote, action):
     elif action == FETCH:
         if local_branch and remote_branch:  # Fetch with local and remote.
             ref = refspec(remote_branch, local_branch, action)
+        elif remote_branch:
+            # If we are fetching and only a remote branch was specified then setup
+            # a refspec that will fetch into the remote tracking branch only.
+            ref = refspec(
+                remote_branch,
+                f'refs/remotes/{remote}/{remote_branch}',
+                action,
+            )
     if not ref:
         ref = local_branch or remote_branch or None
     return ref
