@@ -291,7 +291,7 @@ variables:
   PIP: pip
   PYTEST: ${activate} ${PYTHON} -B -m pytest
   PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
-  PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS} -p no:cacheprovider
+  PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS}
   PYTHON: python3
   RSYNC: rsync
   RSYNC_CMD: ${RSYNC} -r --delete --exclude=.buildinfo

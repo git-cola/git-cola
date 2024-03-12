@@ -10,6 +10,7 @@ from qtpy.QtCore import Qt
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
+from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import core
@@ -21,11 +22,6 @@ from .. import utils
 from . import defs
 from . import log
 from . import standard
-
-
-FETCH = 'FETCH'
-PUSH = 'PUSH'
-PULL = 'PULL'
 
 
 def fetch(context):
@@ -143,11 +139,12 @@ class RemoteActionDialog(standard.Dialog):
         self.local_label.setText(N_('Local Branch'))
 
         self.local_branch = QtWidgets.QLineEdit()
-        qtutils.add_completer(self.local_branch, model.local_branches)
         self.local_branch.textChanged.connect(lambda x: self.update_command_display())
+        local_branches = self.get_local_branches()
+        qtutils.add_completer(self.local_branch, local_branches)
 
         self.local_branches = QtWidgets.QListWidget()
-        self.local_branches.addItems(model.local_branches)
+        self.local_branches.addItems(local_branches)
 
         self.remote_label = QtWidgets.QLabel()
         self.remote_label.setText(N_('Remote'))
@@ -156,7 +153,7 @@ class RemoteActionDialog(standard.Dialog):
         qtutils.add_completer(self.remote_name, model.remotes)
 
         self.remote_name.editingFinished.connect(self.remote_name_edited)
-        self.remote_name.textEdited.connect(lambda x: self.remote_name_edited())
+        self.remote_name.textEdited.connect(lambda _: self.remote_name_edited())
 
         self.remotes = QtWidgets.QListWidget()
         if action == PUSH:
@@ -168,6 +165,7 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_branch_label.setText(N_('Remote Branch'))
 
         self.remote_branch = QtWidgets.QLineEdit()
+        self.remote_branch.textChanged.connect(lambda _: self.update_command_display())
         remote_branches = strip_remotes(model.remote_branches)
         qtutils.add_completer(self.remote_branch, remote_branches)
 
@@ -425,7 +423,7 @@ class RemoteActionDialog(standard.Dialog):
             except ValueError:
                 return
             self.select_local_branch(idx)
-            self.set_remote_branch('')
+            self.set_remote_branch(branch)
 
         self.update_command_display()
 
@@ -433,15 +431,9 @@ class RemoteActionDialog(standard.Dialog):
         """Display the git commands that will be run"""
         commands = ['']
         for remote in self.selected_remotes:
-            cmd = ['git', self.action.lower()]
+            cmd = ['git', self.action]
             _, kwargs = self.common_args()
-            args, kwargs = main.remote_args(
-                self.context,
-                remote,
-                push=self.action == PUSH,
-                pull=self.action == PULL,
-                **kwargs,
-            )
+            args, kwargs = main.remote_args(self.context, remote, self.action, **kwargs)
             cmd.extend(git.transform_kwargs(**kwargs))
             cmd.extend(args)
             commands.append(core.list2cmdline(cmd))
@@ -590,12 +582,10 @@ class RemoteActionDialog(standard.Dialog):
 
         if self.action == FETCH:
             self.set_remote_branch('')
-        elif self.action == PUSH:
-            self.set_remote_branch('')
-        elif self.action == PULL:
+        elif self.action in (PUSH, PULL):
             branch = ''
             current_branch = self.context.model.currentbranch
-            remote_branch = '{}/{}'.format(remote, current_branch)
+            remote_branch = f'{remote}/{current_branch}'
             if branches and remote_branch in branches:
                 branch = current_branch
                 try:
@@ -613,15 +603,23 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_to(remote, self.selected_remotes)
         self.update_command_display()
 
+    def get_local_branches(self):
+        """Calculate the list of local branches"""
+        if self.action == FETCH:
+            branches = self.model.local_branches + [FETCH_HEAD]
+        else:
+            branches = self.model.local_branches
+        return branches
+
     def update_local_branches(self):
         """Update the local/remote branch names when a branch is selected"""
-        branches = self.model.local_branches
+        branches = self.get_local_branches()
         widget = self.local_branches
         selection = qtutils.selected_item(widget, branches)
         if not selection:
             return
         self.set_local_branch(selection)
-        if self.action == FETCH:
+        if self.action == FETCH and selection != FETCH_HEAD:
             self.set_remote_branch(selection)
         self.update_command_display()
 
@@ -778,7 +776,7 @@ class RemoteActionDialog(standard.Dialog):
             return
 
         status, out, err = task.result
-        command = 'git %s' % self.action.lower()
+        command = 'git %s' % self.action
         message = Interaction.format_command_status(command, status)
         details = Interaction.format_out_err(out, err)
 
