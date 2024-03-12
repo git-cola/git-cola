@@ -5,7 +5,7 @@ import pytest
 from cola import core
 from cola import git
 from cola.models import main
-from cola.models.main import FETCH, PULL, PUSH
+from cola.models.main import FETCH, FETCH_HEAD, PULL, PUSH
 
 from . import helper
 from .helper import app_context
@@ -115,6 +115,19 @@ def test_remote_args_fetch(mock_context):
     assert kwargs['verbose']
     assert 'tags' not in kwargs
     assert 'rebase' not in kwargs
+
+
+def test_remote_args_fetch_head(mock_context):
+    """Fetch handles the implicit FETCH_HEAD ref"""
+    # When FETCH_HEAD is used then we should not specify a tracking branch target.
+    (args, kwargs) = main.remote_args(
+        mock_context,
+        REMOTE,
+        FETCH,
+        local_branch=FETCH_HEAD,
+        remote_branch=REMOTE_BRANCH,
+    )
+    assert args == [REMOTE, 'remote']
 
 
 def test_remote_args_fetch_tags(mock_context):

@@ -9,6 +9,8 @@ Usability, bells and whistles
   Previously, fetching just a remote branch would fetch it into `FETCH_HEAD`,
   which is not very intuitive. If only a remote branch is selected then it makes
   more sense to fetch into that branch's remote tracking branch directly.
+  Use `FETCH_HEAD` in the local branch field to fetch into `FETCH_HEAD` instead.
+  (`#1387 <https://github.com/git-cola/git-cola/pull/1387>`_)
 
 * The Fetch, Push and Pull dialogs now remember the selected remotes.
   (`#729 <https://github.com/git-cola/git-cola/issues/729>`_)

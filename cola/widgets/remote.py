@@ -10,7 +10,7 @@ from qtpy.QtCore import Qt
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
-from ..models.main import FETCH, PULL, PUSH
+from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import core
@@ -140,10 +140,11 @@ class RemoteActionDialog(standard.Dialog):
 
         self.local_branch = QtWidgets.QLineEdit()
         self.local_branch.textChanged.connect(lambda x: self.update_command_display())
-        qtutils.add_completer(self.local_branch, model.local_branches)
+        local_branches = self.get_local_branches()
+        qtutils.add_completer(self.local_branch, local_branches)
 
         self.local_branches = QtWidgets.QListWidget()
-        self.local_branches.addItems(model.local_branches)
+        self.local_branches.addItems(local_branches)
 
         self.remote_label = QtWidgets.QLabel()
         self.remote_label.setText(N_('Remote'))
@@ -584,7 +585,7 @@ class RemoteActionDialog(standard.Dialog):
         elif self.action in (PUSH, PULL):
             branch = ''
             current_branch = self.context.model.currentbranch
-            remote_branch = '{}/{}'.format(remote, current_branch)
+            remote_branch = f'{remote}/{current_branch}'
             if branches and remote_branch in branches:
                 branch = current_branch
                 try:
@@ -602,15 +603,23 @@ class RemoteActionDialog(standard.Dialog):
         self.set_remote_to(remote, self.selected_remotes)
         self.update_command_display()
 
+    def get_local_branches(self):
+        """Calculate the list of local branches"""
+        if self.action == FETCH:
+            branches = self.model.local_branches + [FETCH_HEAD]
+        else:
+            branches = self.model.local_branches
+        return branches
+
     def update_local_branches(self):
         """Update the local/remote branch names when a branch is selected"""
-        branches = self.model.local_branches
+        branches = self.get_local_branches()
         widget = self.local_branches
         selection = qtutils.selected_item(widget, branches)
         if not selection:
             return
         self.set_local_branch(selection)
-        if self.action == FETCH:
+        if self.action == FETCH and selection != FETCH_HEAD:
             self.set_remote_branch(selection)
         self.update_command_display()
 
