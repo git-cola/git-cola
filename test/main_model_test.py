@@ -46,7 +46,6 @@ def test_remote_branches(app_context):
     """Test the 'remote_branches' attribute."""
     app_context.model.update_status()
     assert app_context.model.remote_branches == []
-
     helper.commit_files()
     helper.run_git('remote', 'add', 'origin', '.')
     helper.run_git('fetch', 'origin')
@@ -112,7 +111,6 @@ def test_remote_args_fetch(mock_context):
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'remote:local']
     assert kwargs['verbose']
     assert 'tags' not in kwargs
@@ -129,7 +127,6 @@ def test_remote_args_fetch_tags(mock_context):
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'remote:local']
     assert kwargs['verbose']
     assert kwargs['tags']
@@ -145,7 +142,6 @@ def test_remote_args_pull(mock_context):
         local_branch='',
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'remote']
     assert kwargs['verbose']
     assert 'rebase' not in kwargs
@@ -162,7 +158,6 @@ def test_remote_args_pull_rebase(mock_context):
         local_branch='',
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'remote']
     assert kwargs['verbose']
     assert kwargs['rebase']
@@ -178,7 +173,6 @@ def test_remote_args_push(mock_context):
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'local:remote']
     assert kwargs['verbose']
     assert 'tags' not in kwargs
@@ -195,7 +189,6 @@ def test_remote_args_push_tags(mock_context):
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == [REMOTE, 'local:remote']
     assert kwargs['verbose']
     assert kwargs['tags']
@@ -211,7 +204,6 @@ def test_remote_args_push_same_remote_and_local(mock_context):
         local_branch=LOCAL_BRANCH,
         remote_branch=LOCAL_BRANCH,
     )
-
     assert args == [REMOTE, 'local']
     assert kwargs['verbose']
     assert kwargs['tags']
@@ -228,7 +220,6 @@ def test_remote_args_push_set_upstream(mock_context):
         remote_branch=LOCAL_BRANCH,
         set_upstream=True,
     )
-
     assert args == [REMOTE, 'local']
     assert kwargs['verbose']
     assert kwargs['tags']
@@ -245,18 +236,15 @@ def test_remote_args_rebase_only(mock_context):
 
 
 def test_run_remote_action(mock_context):
-    def passthrough(*args, **kwargs):
-        return (args, kwargs)
-
+    """Test running a remote action"""
     (args, kwargs) = main.run_remote_action(
         mock_context,
-        passthrough,
+        lambda *args, **kwargs: (args, kwargs),
         REMOTE,
         FETCH,
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
-
     assert args == (REMOTE, 'remote:local')
     assert kwargs['verbose']
     assert 'tags' not in kwargs
