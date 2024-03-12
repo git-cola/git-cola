@@ -5,6 +5,7 @@ import pytest
 from cola import core
 from cola import git
 from cola.models import main
+from cola.models.main import FETCH, PULL, PUSH
 
 from . import helper
 from .helper import app_context
@@ -103,10 +104,11 @@ def test_tags(app_context):
 
 
 def test_remote_args_fetch(mock_context):
-    # Fetch
+    """FETCH swaps arguments vs. PUSH and PULL"""
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
+        FETCH,
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )
@@ -122,6 +124,7 @@ def test_remote_args_fetch_tags(mock_context):
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
+        FETCH,
         tags=True,
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
@@ -138,7 +141,7 @@ def test_remote_args_pull(mock_context):
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
-        pull=True,
+        PULL,
         local_branch='',
         remote_branch=REMOTE_BRANCH,
     )
@@ -154,7 +157,7 @@ def test_remote_args_pull_rebase(mock_context):
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
-        pull=True,
+        PULL,
         rebase=True,
         local_branch='',
         remote_branch=REMOTE_BRANCH,
@@ -167,12 +170,13 @@ def test_remote_args_pull_rebase(mock_context):
 
 
 def test_remote_args_push(mock_context):
-    # Push, swap local and remote
+    """PUSH swaps local and remote branches"""
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
-        local_branch=REMOTE_BRANCH,
-        remote_branch=LOCAL_BRANCH,
+        PUSH,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=REMOTE_BRANCH,
     )
 
     assert args == [REMOTE, 'local:remote']
@@ -182,13 +186,14 @@ def test_remote_args_push(mock_context):
 
 
 def test_remote_args_push_tags(mock_context):
-    # Push, swap local and remote
+    """Pushing tags uses --tags"""
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
+        PUSH,
         tags=True,
-        local_branch=REMOTE_BRANCH,
-        remote_branch=LOCAL_BRANCH,
+        local_branch=LOCAL_BRANCH,
+        remote_branch=REMOTE_BRANCH,
     )
 
     assert args == [REMOTE, 'local:remote']
@@ -201,10 +206,10 @@ def test_remote_args_push_same_remote_and_local(mock_context):
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
+        PUSH,
         tags=True,
         local_branch=LOCAL_BRANCH,
         remote_branch=LOCAL_BRANCH,
-        push=True,
     )
 
     assert args == [REMOTE, 'local']
@@ -217,10 +222,10 @@ def test_remote_args_push_set_upstream(mock_context):
     (args, kwargs) = main.remote_args(
         mock_context,
         REMOTE,
+        PUSH,
         tags=True,
         local_branch=LOCAL_BRANCH,
         remote_branch=LOCAL_BRANCH,
-        push=True,
         set_upstream=True,
     )
 
@@ -233,7 +238,7 @@ def test_remote_args_push_set_upstream(mock_context):
 
 def test_remote_args_rebase_only(mock_context):
     (_, kwargs) = main.remote_args(
-        mock_context, REMOTE, pull=True, rebase=True, ff_only=True
+        mock_context, REMOTE, PULL, rebase=True, ff_only=True
     )
     assert kwargs['rebase']
     assert 'ff_only' not in kwargs
@@ -247,6 +252,7 @@ def test_run_remote_action(mock_context):
         mock_context,
         passthrough,
         REMOTE,
+        FETCH,
         local_branch=LOCAL_BRANCH,
         remote_branch=REMOTE_BRANCH,
     )

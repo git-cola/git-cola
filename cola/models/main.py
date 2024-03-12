@@ -12,6 +12,11 @@ from ..git import STDOUT
 from . import prefs
 
 
+FETCH = 'fetch'
+PUSH = 'push'
+PULL = 'pull'
+
+
 def create(context):
     """Create the repository status model"""
     return MainModel(context)
@@ -439,7 +444,7 @@ class MainModel(QtCore.QObject):
         return gitcmds.remote_url(self.context, name, push=push)
 
     def fetch(self, remote, **opts):
-        result = run_remote_action(self.context, self.git.fetch, remote, **opts)
+        result = run_remote_action(self.context, self.git.fetch, remote, FETCH, **opts)
         self.update_refs()
         return result
 
@@ -449,16 +454,12 @@ class MainModel(QtCore.QObject):
             'local_branch': remote_branch,
             'remote_branch': local_branch,
         })
-        result = run_remote_action(
-            self.context, self.git.push, remote, push=True, **opts
-        )
+        result = run_remote_action(self.context, self.git.push, remote, PUSH, **opts)
         self.update_refs()
         return result
 
     def pull(self, remote, **opts):
-        result = run_remote_action(
-            self.context, self.git.pull, remote, pull=True, **opts
-        )
+        result = run_remote_action(self.context, self.git.pull, remote, PULL, **opts)
         # Pull can result in merge conflicts
         self.update_refs()
         self.update_files(update_index=False, emit=True)
@@ -509,6 +510,7 @@ class Types:
 def remote_args(
     context,
     remote,
+    action,
     local_branch='',
     remote_branch='',
     ff_only=False,
@@ -516,22 +518,20 @@ def remote_args(
     no_ff=False,
     tags=False,
     rebase=False,
-    pull=False,
-    push=False,
     set_upstream=False,
     prune=False,
 ):
     """Return arguments for git fetch/push/pull"""
 
     args = [remote]
-    what = refspec_arg(local_branch, remote_branch, pull, push)
+    what = refspec_arg(local_branch, remote_branch, remote, action)
     if what:
         args.append(what)
 
     kwargs = {
         'verbose': True,
     }
-    if pull:
+    if action == PULL:
         if rebase:
             kwargs['rebase'] = True
         elif ff_only:
@@ -539,12 +539,12 @@ def remote_args(
         elif no_ff:
             kwargs['no_ff'] = True
     elif force:
-        if push and version.check_git(context, 'force-with-lease'):
+        if action == PUSH and version.check_git(context, 'force-with-lease'):
             kwargs['force_with_lease'] = True
         else:
             kwargs['force'] = True
 
-    if push and set_upstream:
+    if action == PUSH and set_upstream:
         kwargs['set_upstream'] = True
     if tags:
         kwargs['tags'] = True
@@ -554,25 +554,28 @@ def remote_args(
     return (args, kwargs)
 
 
-def refspec(src, dst, push=False):
-    if push and src == dst:
+def refspec(src, dst, action):
+    if action == PUSH and src == dst:
         spec = src
     else:
         spec = f'{src}:{dst}'
     return spec
 
 
-def refspec_arg(local_branch, remote_branch, pull, push):
+def refspec_arg(local_branch, remote_branch, remote, action):
     """Return the refspec for a fetch or pull command"""
-    if push and local_branch and remote_branch:  # Push with local and remote.
-        what = refspec(local_branch, remote_branch, push=True)
-    elif not pull and local_branch and remote_branch:  # Fetch with local and remote.
-        what = refspec(remote_branch, local_branch, push=push)
-    else:
-        what = local_branch or remote_branch or None
-    return what
+    ref = None
+    if action == PUSH and local_branch and remote_branch:  # Push with local and remote.
+        ref = refspec(local_branch, remote_branch, action)
+    elif action == FETCH:
+        if local_branch and remote_branch:  # Fetch with local and remote.
+            ref = refspec(remote_branch, local_branch, action)
+    if not ref:
+        ref = local_branch or remote_branch or None
+    return ref
 
 
-def run_remote_action(context, action, remote, **kwargs):
-    args, kwargs = remote_args(context, remote, **kwargs)
-    return action(*args, **kwargs)
+def run_remote_action(context, fn, remote, action, **kwargs):
+    """Run fetch, push or pull"""
+    args, kwargs = remote_args(context, remote, action, **kwargs)
+    return fn(*args, **kwargs)
