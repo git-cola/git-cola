@@ -1,6 +1,5 @@
 """Functions for finding cola resources"""
 import os
-from os.path import dirname
 import webbrowser
 
 from . import core
@@ -17,15 +16,17 @@ if _package.endswith(os.path.join('site-packages', 'cola')):
     # Unix release tree
     # __file__ = '$prefix/lib/pythonX.Y/site-packages/cola/__file__.py'
     # _package = '$prefix/lib/pythonX.Y/site-packages/cola'
-    _prefix = dirname(dirname(dirname(dirname(_package))))
+    _prefix = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(_package)))
+    )
 elif _package.endswith(os.path.join('pkgs', 'cola')):
     # Windows release tree
     # __file__ = $installdir/pkgs/cola
-    _prefix = dirname(dirname(_package))
+    _prefix = os.path.dirname(os.path.dirname(_package))
 else:
     # this is the source tree
     # __file__ = '$prefix/cola/__file__.py'
-    _prefix = dirname(_package)
+    _prefix = os.path.dirname(_package)
 
 
 def get_prefix():
