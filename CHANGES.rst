@@ -27,6 +27,7 @@ Fixes
 * The `git-cola-sequence-editor` Rebase Editor will now be found correctly
   in more situatios on Windows.
   (`#1385 <https://github.com/git-cola/git-cola/issues/1385>`_)
+  (`#1388 <https://github.com/git-cola/git-cola/pull/1388>`_)
 
 
 .. _v4.6.1:
