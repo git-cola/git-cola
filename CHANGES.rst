@@ -22,6 +22,12 @@ Usability, bells and whistles
 * The `cola.refreshonfocus` and `cola.inotify` configuration settings are now accessible
   from the `git cola config` settings dialog.
 
+Fixes
+-----
+* The `git-cola-sequence-editor` Rebase Editor will now be found correctly
+  in more situatios on Windows.
+  (`#1385 <https://github.com/git-cola/git-cola/issues/1385>`_)
+
 
 .. _v4.6.1:
 

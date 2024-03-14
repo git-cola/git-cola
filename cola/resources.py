@@ -1,5 +1,6 @@
 """Functions for finding cola resources"""
 import os
+import sys
 import webbrowser
 
 from . import core
@@ -39,25 +40,43 @@ def prefix(*args):
     return os.path.join(get_prefix(), *args)
 
 
+def sibling_bindir(*args):
+    """Return a command sibling to sys.argv[0]"""
+    relative_bindir = os.path.dirname(sys.argv[0])
+    return os.path.join(relative_bindir, *args)
+
+
 def command(name):
     """Return a command from the bin/ directory"""
     if compat.WIN32:
+        # On Windows we have to support being installed via the pynsist installation
+        # layout and the pip-installed layout. We also have check for .exe launchers
+        # and prefer them when present.
+        sibling = sibling_bindir(name)
+        scripts = prefix('Scripts', name)
+        bindir = prefix('bin', name)
         # Check for "${name}.exe" on Windows.
-        exe_path = prefix('bin', '%s.exe' % name)
-        scripts_exe_path = prefix('Scripts', '%s.exe' % name)
-        scripts_path = prefix('Scripts', name)
-        path = prefix('bin', name)
-
-        if core.exists(exe_path):
-            result = exe_path
-        elif core.exists(scripts_exe_path):
-            result = scripts_exe_path
-        elif core.exists(scripts_path):
-            result = scripts_path
+        exe = f'{name}.exe'
+        sibling_exe = sibling_bindir(exe)
+        scripts_exe = prefix('Scripts', exe)
+        bindir_exe = prefix('bin', exe)
+        if core.exists(sibling_exe):
+            result = sibling
+        elif core.exists(sibling):
+            result = sibling
+        elif core.exists(bindir_exe):
+            result = bindir_exe
+        elif core.exists(scripts_exe):
+            result = scripts_exe
+        elif core.exists(scripts):
+            result = scripts
         else:
-            result = path
+            result = bindir
     else:
-        result = prefix('bin', name)
+        result = sibling_bindir(name)
+        if not core.exists(result):
+            result = prefix('bin', name)
+
     return result
 
 
