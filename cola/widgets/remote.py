@@ -591,7 +591,9 @@ class RemoteActionDialog(standard.Dialog):
             self.set_remote_branch('')
         elif self.action in (PUSH, PULL):
             branch = ''
-            current_branch = self.context.model.currentbranch
+            current_branch = (
+                self.local_branch.text() or self.context.model.currentbranch
+            )
             remote_branch = f'{remote}/{current_branch}'
             if branches and remote_branch in branches:
                 branch = current_branch
