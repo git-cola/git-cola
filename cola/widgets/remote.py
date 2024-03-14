@@ -139,7 +139,7 @@ class RemoteActionDialog(standard.Dialog):
         self.local_label.setText(N_('Local Branch'))
 
         self.local_branch = QtWidgets.QLineEdit()
-        self.local_branch.textChanged.connect(lambda x: self.update_command_display())
+        self.local_branch.textChanged.connect(self.local_branch_text_changed)
         local_branches = self.get_local_branches()
         qtutils.add_completer(self.local_branch, local_branches)
 
@@ -438,6 +438,13 @@ class RemoteActionDialog(standard.Dialog):
             cmd.extend(args)
             commands.append(core.list2cmdline(cmd))
         self.command_display.set_output('\n'.join(commands))
+
+    def local_branch_text_changed(self, value):
+        """Update the remote branch field in response to local branch text edits"""
+        if self.action == PUSH:
+            self.remote_branches.clearSelection()
+            self.set_remote_branch(value)
+        self.update_command_display()
 
     def set_remote_name(self, remote_name):
         """Set the remote name"""
