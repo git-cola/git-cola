@@ -56,6 +56,7 @@ if sys.platform == 'darwin':
     AMEND = (AMEND_MACOS,)
 else:
     AMEND = (AMEND_DEFAULT, AMEND_MACOS)
+MACOS_MINIMIZE = hotkey(Qt.CTRL | Qt.Key_M)
 MERGE = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_M)
 PUSH = hotkey(Qt.CTRL | Qt.Key_P)
 PULL = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_P)

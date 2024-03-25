@@ -198,6 +198,11 @@ class MainView(standard.MainWindow):
         self.commit_amend_action.setShortcuts(hotkeys.AMEND)
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
+        # Make Cmd-M minimize the window on macOS.
+        if utils.is_darwin():
+            self.minimize_action = add_action(
+                self, N_('Minimize Window'), self.showMinimized, hotkeys.MACOS_MINIMIZE
+            )
         self.unstage_all_action = add_action(
             self, N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
         )
@@ -981,6 +986,8 @@ class MainView(standard.MainWindow):
 
     def build_view_menu(self, menu):
         menu.clear()
+        if utils.is_darwin():
+            menu.addAction(self.minimize_action)
         menu.addAction(self.browse_action)
         menu.addAction(self.dag_action)
         menu.addSeparator()
