@@ -61,7 +61,7 @@ def command(name):
         scripts_exe = prefix('Scripts', exe)
         bindir_exe = prefix('bin', exe)
         if core.exists(sibling_exe):
-            result = sibling
+            result = sibling_exe
         elif core.exists(sibling):
             result = sibling
         elif core.exists(bindir_exe):
