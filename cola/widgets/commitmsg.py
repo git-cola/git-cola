@@ -116,7 +116,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
         self.amend_action.setIcon(icons.edit())
         self.amend_action.setCheckable(True)
-        self.amend_action.setShortcut(hotkeys.AMEND)
+        self.amend_action.setShortcuts(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
 
         # Bypass hooks

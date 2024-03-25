@@ -24,6 +24,11 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The `Cmd-m` hotkey on macOS will now minimize the application. The "Amend" action
+  can now be accessed using `Alt-m`.
+  (`#1390 <https://github.com/git-cola/git-cola/issues/1390>`_)
+  (`#1391 <https://github.com/git-cola/git-cola/pull/1391>`_)
+
 * The `git-cola-sequence-editor` Rebase Editor will now be found correctly
   in more situatios on Windows.
   (`#1385 <https://github.com/git-cola/git-cola/issues/1385>`_)
