@@ -195,7 +195,7 @@ class MainView(standard.MainWindow):
             False,
         )
         self.commit_amend_action.setIcon(icons.edit())
-        self.commit_amend_action.setShortcut(hotkeys.AMEND)
+        self.commit_amend_action.setShortcuts(hotkeys.AMEND)
         self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
 
         self.unstage_all_action = add_action(

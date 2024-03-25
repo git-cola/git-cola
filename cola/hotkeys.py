@@ -1,3 +1,5 @@
+import sys
+
 from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 
@@ -48,7 +50,12 @@ FOCUS_DIFF = hotkey(Qt.CTRL | Qt.Key_J)
 FOCUS_INPUT = hotkey(Qt.CTRL | Qt.Key_L)
 FOCUS_STATUS = hotkey(Qt.CTRL | Qt.Key_K)
 FOCUS_TREE = hotkey(Qt.CTRL | Qt.Key_K)
-AMEND = hotkey(Qt.CTRL | Qt.Key_M)
+AMEND_DEFAULT = hotkey(Qt.CTRL | Qt.Key_M)
+AMEND_MACOS = hotkey(Qt.ALT | Qt.Key_M)
+if sys.platform == 'darwin':
+    AMEND = (AMEND_MACOS,)
+else:
+    AMEND = (AMEND_DEFAULT, AMEND_MACOS)
 MERGE = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_M)
 PUSH = hotkey(Qt.CTRL | Qt.Key_P)
 PULL = hotkey(Qt.CTRL | Qt.SHIFT | Qt.Key_P)
