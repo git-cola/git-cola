@@ -27,277 +27,285 @@
 #   garden grow deb             # Clone the Debian packaging
 #   garden grow flatpak         # Clone the Flatpak packaging
 trees:
-  git-cola:
-    description: The highly-caffeinated Git GUI
-    path: "${GARDEN_CONFIG_DIR}"
-    url: "git@gitlab.com:git-cola/git-cola.git"
-    commands:
-      clean: rm -rf build dist git-cola-*.windows.zip
-      doc: ${GARDEN} -vv cmd docs html man -- "$@"
-      dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
-      dev>:
-        - dev/extras
-        - dev/development
-        - dev/build
-      dev/build: ${activate} ${PIP} install --editable '.[build]'
-      dev/development: ${activate} ${PIP} install --editable '.[docs,dev,testing]'
-      dev/extras: ${activate} ${PIP} install --editable '.[extras]'
-      dev/pyqt6: ${activate} ${PIP} install --editable '.[pyqt6]'
-      dev/env: ${activate} "$@"
-      check>:
-        - test
-        - check/fmt
-        - doc
-      check/fmt: garden fmt -- --check
-      fmt: |
-        ${activate}
-        ${CERCIS} --version
-        ${GIT} ls-files -- '*.py' |
-        ${GREP} -v ^qtpy |
-        ${XARGS} ${CERCIS} "$@"
-      html: ${GARDEN} -vv html docs
-      install: |
-        if test -n "${DESTDIR}"
-        then
-            pip_root="--root=${DESTDIR}"
-            export DESTDIR="${DESTDIR}"
-        fi
-        ${PIP} install --disable-pip-version-check $pip_root --prefix=${prefix} "$@" .
-      i18n>:
-        - pot
-        - po
-      macos/app: |
-        ${MKDIR_P} ${cola_app}/Contents/MacOS
-        ${MKDIR_P} ${cola_app_resources}
-        ${PYTHON} -m venv ${cola_app_resources}
-        source ${cola_app_resources}/bin/activate
-        ${PIP} install '.[docs,extras,pyqt6]'
-        ${CP} contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
-        if test -n "${cola_full_version}"
-        then
-            ${SED} -i -e s/0.0.0.0/${cola_full_version}/ ${cola_app}/Contents/Info.plist
-        fi
-        ${SED} -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
-        ${CP} contrib/darwin/git-cola ${cola_app}/Contents/MacOS
-        ${CP} contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
-        ${GARDEN} -vv -D prefix=${cola_app_resources} install
-        ${GARDEN} -vv doc
-        ${GARDEN} -vv -D prefix=${cola_app_resources} install docs
-      man: ${GARDEN} -vv man docs
-      po: |
-        for po in cola/i18n/*.po
-        do
-            ${MSGMERGE} \
-                --no-wrap \
-                --no-fuzzy-matching \
-                --sort-output \
-                --output-file $$po.new \
-                $$po \
-                cola/i18n/git-cola.pot
-            mv $$po.new $$po
-        done
-      pot: |
-        ${XGETTEXT} \
-            --language=Python \
-            --keyword=N_ \
-            --no-wrap \
-            --omit-header \
-            --sort-output \
-            --output-dir cola/i18n \
-            --output git-cola.pot \
-            cola/*.py \
-            cola/*/*.py
-      pages<: doc
-      pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs "$@"
-      run: ${activate} ./bin/git-cola "$@"
-      run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
-      test: ${activate} ${PYTEST_CMD} cola test "$@"
-      tox: ${TOX} run "$@"
-      tox/check: ${TOX} run -e check "$@"
-    gitconfig:
-      remote.publish.pushurl:
-        - "git@gitlab.com:git-cola/git-cola.git"
-        - "git@github.com:git-cola/git-cola.git"
-    remotes:
-      BaumiCoder: "https://github.com/BaumiCoder/git-cola.git"
-      DasaniT: "https://github.com/DasaniT/git-cola.git"
-      Mailaender: "https://github.com/Mailaender/git-cola.git"
-      Mithil467: "https://github.com/Mithil467/git-cola.git"
-      NielBuys: "https://github.com/NielBuys/git-cola.git"
-      WNguyen14: "https://github.com/WNguyen14/git-cola.git"
-      abid1998: "https://github.com/abid1998/git-cola.git"
-      achernet: "https://github.com/achernet/git-cola.git"
-      axel-h: "https://github.com/axel-h/git-cola.git"
-      bearsh: "https://github.com/bearsh/git-cola.git"
-      bensmrs: "https://github.com/bensmrs/git-cola.git"
-      bobvanderlinden: "https://github.com/bobvanderlinden/git-cola.git"
-      brccabral: "https://github.com/brccabral/git-cola.git"
-      davvid: "git@github.com:davvid/git-cola.git"
-      dschwoerer: "https://github.com/dschwoerer/git-cola.git"
-      florisla: "https://github.com/florisla/git-cola.git"
-      fu7mu4: "https://github.com/fu7mu4/git-cola.git"
-      gdebure: "https://github.com/gdebure/git-cola.git"
-      github: "git@github.com:git-cola/git-cola.git"
-      guoyunhe: "https://github.com/guoyunhe/git-cola.git"
-      gyuris: "https://github.com/gyuris/git-cola.git"
-      haffmans: "https://github.com/haffmans/git-cola.git"
-      harmathy: "https://github.com/harmathy/git-cola.git"
-      hsoft: "https://github.com/hsoft/git-cola.git"
-      jamie-pate: "https://github.com/jamie-pate/git-cola.git"
-      kenyuy: "https://github.com/kenyuy/git-cola.git"
-      kisaragi-hiu: "https://github.com/kisaragi-hiu/git-cola.git"
-      kneirinck: "https://github.com/kneirinck/git-cola.git"
-      kurtmckee: "https://github.com/kurtmckee/git-cola.git"
-      laerreal: "https://github.com/laerreal/git-cola.git"
-      lah7: "https://github.com/lah7/git-cola.git"
-      living180: "https://github.com/living180/git-cola.git"
-      ljhcage: "https://github.com/ljhcage/git-cola.git"
-      malpas: "https://github.com/malpas/git-cola.git"
-      melkecelioglu: "https://github.com/melkecelioglu/git-cola.git"
-      milestone12: "https://github.com/milestone12/git-cola.git"
-      mmargoliono: "https://github.com/mmargoliono/git-cola"
-      mp-chet: "https://github.com/mp-chet/git-cola.git"
-      nakanoi: "https://github.com/nakanoi/git-cola.git"
-      nandalopes: "https://github.com/nandalopes/git-cola.git"
-      OriShalhon: "https://github.com/OriShalhon/git-cola.git"
-      pilarmolinalopez: "https://github.com/pilarmolinalopez/git-cola.git"
-      quintusfelix: "https://github.com/quintusfelix/git-cola.git"
-      rafaelreuber: "https://github.com/rafaelreuber/git-cola.git"
-      scop: "https://github.com/scop/git-cola.git"
-      sergei-dyshel: "https://github.com/sergei-dyshel/git-cola.git"
-      sthalik: "https://github.com/sthalik/git-cola.git"
-      skunkwerks: "https://github.com/skunkwerks/git-cola.git"
-      takluyver: "https://github.com/takluyver/git-cola.git"
-      thk123: "https://github.com/thk123/git-cola.git"
-      timgates42: "https://github.com/timgates42/git-cola.git"
-      vdragon: "https://github.com/Vdragon/git-cola.git"
-      victorhck: "https://github.com/victorhck/git-cola.git"
-      virtualstaticvoid: "https://github.com/virtualstaticvoid/git-cola.git"
-      wm4: "https://github.com/wm4/git-cola.git"
-      wojnilowicz: "https://github.com/wojnilowicz/git-cola.git"
-      yaellevy: "https://github.com/yaellevy/git-cola.git"
-  deb:
-    description: Debian packaging
-    url: "git@gitlab.com:git-cola/git-cola-debian.git"
-    remotes:
-      davvid: "git@github.com:davvid/git-cola-debian.git"
-  docs:
-    description: Sphinx documentation
-    variables:
-      env_dir: ../env3
-    commands:
-      clean: rm -fr _build
-      doctest: ${activate} ${SPHINX_CMD} -b doctest . _build/doctest "$@"
-      html: ${activate} ${SPHINX_CMD} -b html . _build/html "$@"
-      man: ${activate} ${SPHINX_CMD} -b man . _build/man "$@"
-      linkcheck: ${activate} ${SPHINX_CMD} -b linkcheck . _build/linkcheck "$@"
-      install: |
-        ${MKDIR_P} ${DESTDIR}${docdir}
-        ${INSTALL} -m 644 *.html ${DESTDIR}${docdir}
-        ${INSTALL} -m 644 *.rst ${DESTDIR}${docdir}
-        # HTML documentation
-        ${MKDIR_P} ${DESTDIR}${htmldir}
-        ${RSYNC_CMD} _build/html/ ${DESTDIR}${htmldir}/
-        # Manual pages
-        ${MKDIR_P} ${DESTDIR}${mandir}
-        ${INSTALL} -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
-        ${INSTALL} -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
-  fedora:
-    description: Fedora packaging
-    url: "https://src.fedoraproject.org/rpms/git-cola.git"
-    remotes:
-      git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
-      davvid: "git@github.com:davvid/git-cola-fedora.git"
-  flatpak:
-    description: Flatpak packaging
-    url: "git@github.com:flathub/com.github.git_cola.git-cola.git"
-    variables:
-      app-id: com.github.git_cola.git-cola
-    commands:
-      build: flatpak-builder "$@" --user "${prefix}" ${app-id}.yml
-      check: flatpak run --command=flatpak-builder-lint org.flatpak.Builder "$@" --exceptions builddir "${prefix}"
-      install: flatpak-builder "$@" --install --user "${prefix}" ${app-id}.yml
-      run: flatpak run ${app-id}
-      setup: |
-        flatpak remote-add --user --if-not-exists \
-          flathub https://flathub.org/repo/flathub.flatpakrepo
-        flatpak install --user \
-          org.flatpak.Builder/x86_64 \
-          org.kde.Sdk/x86_64/5.15-23.08 \
-          org.kde.Platform/x86_64/5.15-23.08 \
-          com.riverbankcomputing.PyQt.BaseApp/x86_64/5.15-23.08
-  pages:
-    description: "Git Cola's homepage"
-    url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
-    remotes:
-      github: "git@github.com:git-cola/git-cola.github.io.git"
-      ls-jad-elkik: "git://github.com/ls-jad-elkik/git-cola.github.io.git"
-      lz-coder: "https://github.com/lz-coder/git-cola.github.io.git"
-    gitconfig:
-      remote.origin.pushurl:
-        - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
-        - "git@github.com:git-cola/git-cola.github.io.git"
-    commands:
-      build: ${JEKYLL} build --destination build "$@"
-    links:
-      - "https://git-cola.gitlab.io"
-      - "https://git-cola.github.io"
+    git-cola:
+        description: The highly-caffeinated Git GUI
+        path: "${GARDEN_CONFIG_DIR}"
+        url: "git@gitlab.com:git-cola/git-cola.git"
+        commands:
+            clean: rm -rf build dist git-cola-*.windows.zip
+            doc: ${GARDEN} -vv cmd docs html man -- "$@"
+            dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
+            dev>:
+                - dev/extras
+                - dev/development
+                - dev/build
+            dev/build: ${activate} ${PIP} install --editable '.[build]'
+            dev/development: ${activate} ${PIP} install --editable '.[docs,dev,testing]'
+            dev/extras: ${activate} ${PIP} install --editable '.[extras]'
+            dev/pyqt6: ${activate} ${PIP} install --editable '.[pyqt6]'
+            dev/env: ${activate} "$@"
+            check>:
+                - test
+                - check/fmt
+                - doc
+            check/fmt: garden fmt -- --check
+            fmt: |
+                ${activate}
+                ${CERCIS} --version
+                ${GIT} ls-files -- '*.py' |
+                ${GREP} -v ^qtpy |
+                ${XARGS} ${CERCIS} "$@"
+            html: ${GARDEN} -vv html docs
+            install: |
+                if test -n "${DESTDIR}"
+                then
+                    pip_root="--root=${DESTDIR}"
+                    export DESTDIR="${DESTDIR}"
+                fi
+                ${PIP} install --disable-pip-version-check \
+                    $pip_root --prefix=${prefix} "$@" .
+            i18n>:
+                - pot
+                - po
+            macos/app: |
+                ${MKDIR_P} ${cola_app}/Contents/MacOS
+                ${MKDIR_P} ${cola_app_resources}
+                ${PYTHON} -m venv ${cola_app_resources}
+                source ${cola_app_resources}/bin/activate
+                ${PIP} install '.[docs,extras,pyqt6]'
+                ${CP} contrib/darwin/Info.plist \
+                    contrib/darwin/PkgInfo ${cola_app}/Contents
+                if test -n "${cola_full_version}"
+                then
+                    ${SED} -i -e s/0.0.0.0/${cola_full_version}/ \
+                        ${cola_app}/Contents/Info.plist
+                fi
+                ${SED} -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
+                ${CP} contrib/darwin/git-cola ${cola_app}/Contents/MacOS
+                ${CP} contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
+                ${GARDEN} -vv -D prefix=${cola_app_resources} install
+                ${GARDEN} -vv doc
+                ${GARDEN} -vv -D prefix=${cola_app_resources} install docs
+            man: ${GARDEN} -vv man docs
+            po: |
+                for po in cola/i18n/*.po
+                do
+                    ${MSGMERGE} \
+                        --no-wrap \
+                        --no-fuzzy-matching \
+                        --sort-output \
+                        --output-file $$po.new \
+                        $$po \
+                        cola/i18n/git-cola.pot
+                    mv $$po.new $$po
+                done
+            pot: |
+                ${XGETTEXT} \
+                    --language=Python \
+                    --keyword=N_ \
+                    --no-wrap \
+                    --omit-header \
+                    --sort-output \
+                    --output-dir cola/i18n \
+                    --output git-cola.pot \
+                    cola/*.py \
+                    cola/*/*.py
+            pages<: doc
+            pages: ${GARDEN} -vv -D prefix=${TREE_PATH}/pages install docs "$@"
+            run: ${activate} ./bin/git-cola "$@"
+            run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
+            test: ${activate} ${PYTEST_CMD} cola test "$@"
+            tox: ${TOX} run "$@"
+            tox/check: ${TOX} run -e check "$@"
+        gitconfig:
+            remote.publish.pushurl:
+                - "git@gitlab.com:git-cola/git-cola.git"
+                - "git@github.com:git-cola/git-cola.git"
+        remotes:
+            BaumiCoder: "https://github.com/BaumiCoder/git-cola.git"
+            DasaniT: "https://github.com/DasaniT/git-cola.git"
+            Mailaender: "https://github.com/Mailaender/git-cola.git"
+            Mithil467: "https://github.com/Mithil467/git-cola.git"
+            NielBuys: "https://github.com/NielBuys/git-cola.git"
+            WNguyen14: "https://github.com/WNguyen14/git-cola.git"
+            abid1998: "https://github.com/abid1998/git-cola.git"
+            achernet: "https://github.com/achernet/git-cola.git"
+            axel-h: "https://github.com/axel-h/git-cola.git"
+            bearsh: "https://github.com/bearsh/git-cola.git"
+            bensmrs: "https://github.com/bensmrs/git-cola.git"
+            bobvanderlinden: "https://github.com/bobvanderlinden/git-cola.git"
+            brccabral: "https://github.com/brccabral/git-cola.git"
+            davvid: "git@github.com:davvid/git-cola.git"
+            dschwoerer: "https://github.com/dschwoerer/git-cola.git"
+            florisla: "https://github.com/florisla/git-cola.git"
+            fu7mu4: "https://github.com/fu7mu4/git-cola.git"
+            gdebure: "https://github.com/gdebure/git-cola.git"
+            github: "git@github.com:git-cola/git-cola.git"
+            guoyunhe: "https://github.com/guoyunhe/git-cola.git"
+            gyuris: "https://github.com/gyuris/git-cola.git"
+            haffmans: "https://github.com/haffmans/git-cola.git"
+            harmathy: "https://github.com/harmathy/git-cola.git"
+            hsoft: "https://github.com/hsoft/git-cola.git"
+            jamie-pate: "https://github.com/jamie-pate/git-cola.git"
+            kenyuy: "https://github.com/kenyuy/git-cola.git"
+            kisaragi-hiu: "https://github.com/kisaragi-hiu/git-cola.git"
+            kneirinck: "https://github.com/kneirinck/git-cola.git"
+            kurtmckee: "https://github.com/kurtmckee/git-cola.git"
+            laerreal: "https://github.com/laerreal/git-cola.git"
+            lah7: "https://github.com/lah7/git-cola.git"
+            living180: "https://github.com/living180/git-cola.git"
+            ljhcage: "https://github.com/ljhcage/git-cola.git"
+            malpas: "https://github.com/malpas/git-cola.git"
+            melkecelioglu: "https://github.com/melkecelioglu/git-cola.git"
+            milestone12: "https://github.com/milestone12/git-cola.git"
+            mmargoliono: "https://github.com/mmargoliono/git-cola"
+            mp-chet: "https://github.com/mp-chet/git-cola.git"
+            nakanoi: "https://github.com/nakanoi/git-cola.git"
+            nandalopes: "https://github.com/nandalopes/git-cola.git"
+            OriShalhon: "https://github.com/OriShalhon/git-cola.git"
+            pilarmolinalopez: "https://github.com/pilarmolinalopez/git-cola.git"
+            quintusfelix: "https://github.com/quintusfelix/git-cola.git"
+            rafaelreuber: "https://github.com/rafaelreuber/git-cola.git"
+            scop: "https://github.com/scop/git-cola.git"
+            sergei-dyshel: "https://github.com/sergei-dyshel/git-cola.git"
+            sthalik: "https://github.com/sthalik/git-cola.git"
+            skunkwerks: "https://github.com/skunkwerks/git-cola.git"
+            takluyver: "https://github.com/takluyver/git-cola.git"
+            thk123: "https://github.com/thk123/git-cola.git"
+            timgates42: "https://github.com/timgates42/git-cola.git"
+            vdragon: "https://github.com/Vdragon/git-cola.git"
+            victorhck: "https://github.com/victorhck/git-cola.git"
+            virtualstaticvoid: "https://github.com/virtualstaticvoid/git-cola.git"
+            wm4: "https://github.com/wm4/git-cola.git"
+            wojnilowicz: "https://github.com/wojnilowicz/git-cola.git"
+            yaellevy: "https://github.com/yaellevy/git-cola.git"
+    deb:
+        description: Debian packaging
+        url: "git@gitlab.com:git-cola/git-cola-debian.git"
+        remotes:
+            davvid: "git@github.com:davvid/git-cola-debian.git"
+    docs:
+        description: Sphinx documentation
+        variables:
+        env_dir: ../env3
+        commands:
+        clean: rm -fr _build
+        doctest: ${activate} ${SPHINX_CMD} -b doctest . _build/doctest "$@"
+        html: ${activate} ${SPHINX_CMD} -b html . _build/html "$@"
+        man: ${activate} ${SPHINX_CMD} -b man . _build/man "$@"
+        linkcheck: ${activate} ${SPHINX_CMD} -b linkcheck . _build/linkcheck "$@"
+        install: |
+            ${MKDIR_P} ${DESTDIR}${docdir}
+            ${INSTALL} -m 644 *.html ${DESTDIR}${docdir}
+            ${INSTALL} -m 644 *.rst ${DESTDIR}${docdir}
+            # HTML documentation
+            ${MKDIR_P} ${DESTDIR}${htmldir}
+            ${RSYNC_CMD} _build/html/ ${DESTDIR}${htmldir}/
+            # Manual pages
+            ${MKDIR_P} ${DESTDIR}${mandir}
+            ${INSTALL} -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
+            ${INSTALL} -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
+    fedora:
+        description: Fedora packaging
+        url: "https://src.fedoraproject.org/rpms/git-cola.git"
+        remotes:
+            git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
+            davvid: "git@github.com:davvid/git-cola-fedora.git"
+    flatpak:
+        description: Flatpak packaging
+        url: "git@github.com:flathub/com.github.git_cola.git-cola.git"
+        variables:
+            app-id: com.github.git_cola.git-cola
+        commands:
+            build: flatpak-builder "$@" --user "${prefix}" ${app-id}.yml
+            check: |
+                flatpak run --command=flatpak-builder-lint \
+                    org.flatpak.Builder "$@" --exceptions builddir "${prefix}"
+            install: flatpak-builder "$@" --install --user "${prefix}" ${app-id}.yml
+            run: flatpak run ${app-id}
+            setup: |
+                flatpak remote-add --user --if-not-exists \
+                flathub https://flathub.org/repo/flathub.flatpakrepo
+                flatpak install --user \
+                org.flatpak.Builder/x86_64 \
+                org.kde.Sdk/x86_64/5.15-23.08 \
+                org.kde.Platform/x86_64/5.15-23.08 \
+                com.riverbankcomputing.PyQt.BaseApp/x86_64/5.15-23.08
+    pages:
+        description: "Git Cola's homepage"
+        url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
+        remotes:
+            github: "git@github.com:git-cola/git-cola.github.io.git"
+            ls-jad-elkik: "git://github.com/ls-jad-elkik/git-cola.github.io.git"
+            lz-coder: "https://github.com/lz-coder/git-cola.github.io.git"
+        gitconfig:
+            remote.origin.pushurl:
+                - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
+                - "git@github.com:git-cola/git-cola.github.io.git"
+        commands:
+            build: ${JEKYLL} build --destination build "$@"
+        links:
+            - "https://git-cola.gitlab.io"
+            - "https://git-cola.github.io"
 
 commands:
-  commit: git commit "$@"
-  diff: git diff "$@"
-  diffs: git diff --staged "$@"
-  fetch: git fetch "$@"
-  stat: git status --short "$@"
-  status: git status "$@"
-  stage: git add -u "$@"
-  push: git push "$@"
-  pull: git pull --ff-only "$@"
+    commit: git commit "$@"
+    diff: git diff "$@"
+    diffs: git diff --staged "$@"
+    fetch: git fetch "$@"
+    stat: git status --short "$@"
+    status: git status "$@"
+    stage: git add -u "$@"
+    push: git push "$@"
+    pull: git pull --ff-only "$@"
 
 # Variables can be overridden externally using "garden -D name=value ...".
 variables:
-  # Traditional DESTDIR + prefix variables
-  DESTDIR: ""
-  prefix: ${GARDEN_CONFIG_DIR}/dist
-  docdir: ${prefix}/share/doc/git-cola
-  htmldir: ${docdir}/html
-  mandir: ${prefix}/share/man/man1
-  cola_app: ${TREE_PATH}/git-cola.app
-  cola_app_resources: ${cola_app}/Contents/Resources
-  cola_full_version: $ ./bin/git-cola version --brief
-  cola_version: $ ${SED} -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
-  is_virtualenv: |
-    $ ${PYTHON} -c '
-    import os, sys
-    if sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV"):
-        print("true")
-    '
-  env_dir: env3
-  activate: |
-    if test -z "${is_virtualenv}" && test -f "${env_dir}/bin/activate"
-    then
-        source "${env_dir}/bin/activate"
-    fi
-  # External commands and options
-  CERCIS: cercis
-  CP: cp
-  GARDEN: garden
-  GIT: git
-  GREP: grep
-  INSTALL: install
-  JEKYLL: jekyll
-  MKDIR_P: mkdir -p
-  MSGMERGE: msgmerge
-  PIP: pip
-  PYTEST: ${activate} ${PYTHON} -B -m pytest
-  PYTEST_OPTIONS: $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
-  PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS}
-  PYTHON: python3
-  RSYNC: rsync
-  RSYNC_CMD: ${RSYNC} -r --delete --exclude=.buildinfo
-  SED: sed
-  SPHINX: ${PYTHON} -m sphinx
-  SPHINX_CMD: ${SPHINX} -d _build/doctrees -a
-  TOX: tox
-  XARGS: xargs
-  XGETTEXT: xgettext
+    # Traditional DESTDIR + prefix variables
+    DESTDIR: ""
+    prefix: ${GARDEN_CONFIG_DIR}/dist
+    docdir: ${prefix}/share/doc/git-cola
+    htmldir: ${docdir}/html
+    mandir: ${prefix}/share/man/man1
+    cola_app: ${TREE_PATH}/git-cola.app
+    cola_app_resources: ${cola_app}/Contents/Resources
+    cola_full_version: $ ./bin/git-cola version --brief
+    cola_version: $ ${SED} -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
+    is_virtualenv: |
+        $ ${PYTHON} -c '
+        import os, sys
+        if sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV"):
+            print("true")
+        '
+    env_dir: env3
+    activate: |
+        if test -z "${is_virtualenv}" && test -f "${env_dir}/bin/activate"
+        then
+            source "${env_dir}/bin/activate"
+        fi
+    # External commands and options
+    CERCIS: cercis
+    CP: cp
+    GARDEN: garden
+    GIT: git
+    GREP: grep
+    INSTALL: install
+    JEKYLL: jekyll
+    MKDIR_P: mkdir -p
+    MSGMERGE: msgmerge
+    PIP: pip
+    PYTEST: ${activate} ${PYTHON} -B -m pytest
+    PYTEST_OPTIONS: |
+        $ test "$(uname -s)" != "Linux" && printf '%s' --ignore=cola/inotify.py
+    PYTEST_CMD: ${PYTEST} ${PYTEST_OPTIONS}
+    PYTHON: python3
+    RSYNC: rsync
+    RSYNC_CMD: ${RSYNC} -r --delete --exclude=.buildinfo
+    SED: sed
+    SPHINX: ${PYTHON} -m sphinx
+    SPHINX_CMD: ${SPHINX} -d _build/doctrees -a
+    TOX: tox
+    XARGS: xargs
+    XGETTEXT: xgettext
+
+# vim: tabstop=4 softtabstop=4 shiftwidth=4 expandtab
