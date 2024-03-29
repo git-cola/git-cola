@@ -855,6 +855,12 @@ cola.statusshowtotals
 Set to `true` to display files counts in the Status widget's category titles.
 Defaults to `false`.
 
+cola.sync
+---------
+Set to `false` to disable calling `os.sync()` when saving settings.
+Defaults to `true`, which means that `os.sync()` is called when windows are closed
+and their settings are saved.
+
 cola.tabwidth
 -------------
 The number of columns occupied by a tab character.  Defaults to 8.

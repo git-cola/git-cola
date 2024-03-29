@@ -63,14 +63,16 @@ class WidgetMixin:
 
     def save_state(self, settings=None):
         save = True
+        sync = True
         context = getattr(self, 'context', None)
         if context:
             cfg = context.cfg
             save = cfg.get('cola.savewindowsettings', default=True)
+            sync = cfg.get('cola.sync', default=True)
         if save:
             if settings is None:
                 settings = Settings.read()
-            settings.save_gui_state(self)
+            settings.save_gui_state(self, sync=sync)
 
     def restore_state(self, settings=None):
         if settings is None:

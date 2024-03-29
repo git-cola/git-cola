@@ -34,6 +34,11 @@ Fixes
   (`#1385 <https://github.com/git-cola/git-cola/issues/1385>`_)
   (`#1388 <https://github.com/git-cola/git-cola/pull/1388>`_)
 
+* Git Cola syncs the OS-level filesystem when windows are closed, which can
+  cause performance issues. The `cola.sync` configuration variable can
+  be configured to `false` to avoid this behavior.
+  (`#1305 <https://github.com/git-cola/git-cola/issues/1305>`_)
+
 
 .. _v4.6.1:
 
