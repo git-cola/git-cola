@@ -191,7 +191,7 @@ class Settings:
             return
         # Flush the data to disk.
         if sync:
-            core.sync()
+            core.sync(path)
         # Delete the .bak file.
         if core.exists(path_bak):
             remove_path(path_bak)

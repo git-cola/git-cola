@@ -3,6 +3,7 @@
 The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 """
+import ctypes
 import functools
 import itertools
 import mimetypes
@@ -481,9 +482,28 @@ def _find_executable(executable, path=None):
     return executable
 
 
-def sync():
-    """Force writing of everything to disk. No-op on systems without os.sync()"""
-    if hasattr(os, 'sync'):
+def sync(path):
+    """Flush contents to disk. No-op on systems without os.sync() or libc.so.6"""
+    try:
+        libc = ctypes.CDLL('libc.so.6')
+    except OSError:
+        libc = None
+    synced = False
+    has_fdatasync = libc and hasattr(libc, 'fdatasync')
+    has_fsync = libc and hasattr(libc, 'fsync')
+    if has_fdatasync:
+        try:
+            with open(path, 'a', encoding='utf-8') as fd:
+                synced = libc.fdatasync(fd.fileno()) == 0
+        except (OSError, IOError):
+            pass
+    elif has_fsync:
+        try:
+            with open(path, 'a', encoding='utf-8') as fd:
+                synced = libc.fsync(fd.fileno()) == 0
+        except (OSError, IOError):
+            pass
+    if not synced and hasattr(os, 'sync'):
         os.sync()
 
 

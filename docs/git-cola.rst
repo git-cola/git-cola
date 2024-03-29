@@ -857,9 +857,9 @@ Defaults to `false`.
 
 cola.sync
 ---------
-Set to `false` to disable calling `os.sync()` when saving settings.
-Defaults to `true`, which means that `os.sync()` is called when windows are closed
-and their settings are saved.
+Set to `false` to disable calling `os.sync()`  / `fdatasync(2)` / `fsync(2)` when saving
+settings. Defaults to `true`, which means that these functions are called when windows
+are closed and their settings are saved.
 
 cola.tabwidth
 -------------
