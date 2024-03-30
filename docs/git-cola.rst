@@ -857,7 +857,7 @@ Defaults to `false`.
 
 cola.sync
 ---------
-Set to `false` to disable calling `os.sync()`  / `fdatasync(2)` / `fsync(2)` when saving
+Set to `false` to disable calling `os.fdatasync()`  / `os.fdata()` when saving
 settings. Defaults to `true`, which means that these functions are called when windows
 are closed and their settings are saved.
 

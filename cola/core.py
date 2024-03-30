@@ -482,29 +482,43 @@ def _find_executable(executable, path=None):
     return executable
 
 
-def sync(path):
-    """Flush contents to disk. No-op on systems without os.sync() or libc.so.6"""
+def _fdatasync(fd):
+    """fdatasync the file descriptor. Returns True on success"""
     try:
-        libc = ctypes.CDLL('libc.so.6')
-    except OSError:
-        libc = None
-    synced = False
-    has_fdatasync = libc and hasattr(libc, 'fdatasync')
-    has_fsync = libc and hasattr(libc, 'fsync')
-    if has_fdatasync:
+        os.fdatasync(fd)
+    except (IOError, OSError):
+        pass
+
+
+def _fsync(fd):
+    """fsync the file descriptor. Returns True on success"""
+    try:
+        os.fsync(fd)
+    except (IOError, OSError):
+        pass
+
+
+def fsync(fd):
+    """Flush contents to disk using fdatasync() / fsync()"""
+    has_libc_fdatasync = False
+    has_libc_fsync = False
+    has_os_fdatasync = hasattr(os, 'fdatasync')
+    has_os_fsync = hasattr(os, 'fsync')
+    if not has_os_fdatasync and not has_os_fsync:
         try:
-            with open(path, 'a', encoding='utf-8') as fd:
-                synced = libc.fdatasync(fd.fileno()) == 0
-        except (OSError, IOError):
-            pass
-    elif has_fsync:
-        try:
-            with open(path, 'a', encoding='utf-8') as fd:
-                synced = libc.fsync(fd.fileno()) == 0
-        except (OSError, IOError):
-            pass
-    if not synced and hasattr(os, 'sync'):
-        os.sync()
+            libc = ctypes.CDLL('libc.so.6')
+        except OSError:
+            libc = None
+        has_libc_fdatasync = libc and hasattr(libc, 'fdatasync')
+        has_libc_fsync = libc and hasattr(libc, 'fsync')
+    if has_os_fdatasync:
+        _fdatasync(fd)
+    elif has_os_fsync:
+        _fsync(fd)
+    elif has_libc_fdatasync:
+        libc.fdatasync(fd)
+    elif has_libc_fsync:
+        libc.fsync(fd)
 
 
 def rename(old, new):
