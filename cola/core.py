@@ -486,7 +486,7 @@ def _fdatasync(fd):
     """fdatasync the file descriptor. Returns True on success"""
     try:
         os.fdatasync(fd)
-    except (IOError, OSError):
+    except OSError:
         pass
 
 
@@ -494,7 +494,7 @@ def _fsync(fd):
     """fsync the file descriptor. Returns True on success"""
     try:
         os.fsync(fd)
-    except (IOError, OSError):
+    except OSError:
         pass
 
 
