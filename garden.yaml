@@ -33,7 +33,7 @@ trees:
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
       clean: rm -rf build dist git-cola-*.windows.zip
-      doc: garden -vv cmd docs html man -- "$@"
+      doc: garden ${GARDEN_CMD_VERBOSE} cmd docs html man -- "$@"
       dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
       dev>:
         - dev/extras
@@ -83,7 +83,7 @@ trees:
         garden ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} install
         garden ${GARDEN_CMD_VERBOSE} doc
         garden ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} install docs
-      man: garden -vv man docs
+      man: garden ${GARDEN_CMD_VERBOSE} man docs
       po: |
         for po in cola/i18n/*.po
         do
@@ -108,7 +108,7 @@ trees:
             cola/*.py \
             cola/*/*.py
       pages<: doc
-      pages: garden -vv -D prefix=${TREE_PATH}/pages install docs "$@"
+      pages: garden ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages install docs "$@"
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
       test: ${activate} ${PYTEST} cola test "$@"
