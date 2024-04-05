@@ -262,34 +262,18 @@ You will need to periodically rebuild the app wrapper whenever Python is upgrade
 
 Updating macOS can often break Homebrew-managed software.
 
-If you upgrade your macOS version and Git Cola no longer runs then then it is
-recommended that you re-install Git Cola's dependencies after upgrading.
+If you update macOS and Git Cola stops working then then you probably need to re-install
+Git Cola's dependencies.
 
-A quick fix when upgrading to newer versions of XCode or macOS is to
-reinstall PyQt6.
+Re-installing from scratch using the instructions below can get things back in shape.
 
-    brew reinstall pyqt@6
-
-You may also need to relink your pyqt installation:
-
-    brew link pyqt@6
-
-This is required when upgrading to a modern (post-10.11 El Capitan) Mac OS X.
-Homebrew now bundles its own Python3 installation instead of using the
-system-provided default Python.
-
-If the "brew reinstall" command above does not work then re-installing from
-scratch using the instructions below should get things back in shape.
-
-    # update homebrew
     brew update
 
-    # uninstall git-cola and its dependencies
     brew uninstall git-cola
-    brew uninstall pyqt5
-    brew uninstall sip
+    brew uninstall pyqt
+    brew uninstall pyqt@5
+    brew autoremove
 
-    # re-install git-cola and its dependencies
     brew install git-cola
 
 
