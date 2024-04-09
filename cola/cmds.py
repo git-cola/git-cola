@@ -2173,6 +2173,7 @@ class Refresh(ContextCommand):
         self.model.update_status(update_index=True)
         self.cfg.update()
         self.fsmonitor.refresh()
+        self.selection.selection_changed.emit()
 
 
 class RefreshConfig(ContextCommand):
