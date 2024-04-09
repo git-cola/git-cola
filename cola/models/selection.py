@@ -111,6 +111,7 @@ class SelectionModel(QtCore.QObject):
         return State(staged, unmerged, modified, untracked)
 
     def filename(self):
+        """Return the currently selected filename"""
         paths = [path for path in self.single_selection() if path is not None]
         if paths:
             filename = paths[0]
