@@ -869,7 +869,7 @@ class Ignore(ContextCommand):
         new_additions = '\n'.join(self.filenames) + '\n'
         for_status = new_additions
         if self.local:
-            filename = os.path.join('.git', 'info', 'exclude')
+            filename = self.git.git_path('info', 'exclude')
         else:
             filename = '.gitignore'
         if core.exists(filename):

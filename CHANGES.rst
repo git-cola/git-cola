@@ -24,6 +24,10 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The "Ignore" action in the Status context menu now supports adding to the local
+  `.git/info/exclude` when using linked repositories created using `git worktree`.
+  (`#1394 <https://github.com/git-cola/git-cola/issues/1394>`_)
+
 * The `Cmd-m` hotkey on macOS will now minimize the application. The "Amend" action
   can now be accessed using `Alt-m`.
   (`#1390 <https://github.com/git-cola/git-cola/issues/1390>`_)
