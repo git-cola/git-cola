@@ -693,6 +693,7 @@ def cmd_rebase(args):
         'branch': args.branch,
     }
     context = app.application_init(args)
+    context.model.update_refs()
     status, _, _ = cmds.do(cmds.Rebase, context, **kwargs)
     return status
 
