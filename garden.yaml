@@ -109,11 +109,17 @@ trees:
             cola/*/*.py
       pages<: doc
       pages: garden ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages install docs "$@"
+      publish: |
+        ${activate}
+        twine upload --sign dist/*.whl dist/*.tar.gz
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
       test: ${activate} ${PYTEST} cola test "$@"
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
+      wheel: |
+        ${activate}
+        python3 -m build -n .
     gitconfig:
       remote.publish.pushurl:
         - "git@gitlab.com:git-cola/git-cola.git"
