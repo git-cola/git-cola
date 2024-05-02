@@ -32,7 +32,7 @@ trees:
     path: "${GARDEN_CONFIG_DIR}"
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
-      clean: rm -rf build dist git-cola-*.windows.zip
+      clean: rm -rf build dist git_cola.egg-info git-cola-*.windows.zip
       doc: garden ${GARDEN_CMD_VERBOSE} cmd docs html man -- "$@"
       dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
       dev>:
