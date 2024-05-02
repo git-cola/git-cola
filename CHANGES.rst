@@ -1,4 +1,17 @@
-.. _v4.6.2:
+.. _v4.7.1:
+
+v4.7.1
+======
+
+Packaging
+---------
+* The `importlib_metadata` dependency which was restored for Python 3.8 and earlier
+  to retain Python 3.7 support. The use of `setuptools_scm` 8.0 and newer to generate
+  the `cola/_scm_version.py` version file has been deferred to prevent the need to
+  upgrade Python.
+
+
+.. _v4.7.0:
 
 v4.7.0
 ======
