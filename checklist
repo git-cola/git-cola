@@ -5,7 +5,6 @@ garden check
 ./todo/commit-version
 # remove any (BETA) markers from the release notes
 ./todo/tag [vA.B.C (optional)]
-garden dev
 git cola push
 
 garden wheel
