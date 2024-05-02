@@ -43,6 +43,11 @@ Fixes
   be configured to `false` to avoid this behavior.
   (`#1305 <https://github.com/git-cola/git-cola/issues/1305>`_)
 
+Packaging
+---------
+* The `importlib_metadata` dependency, which was previously required for Python 3.8 and earlier,
+  has been eliminated.
+
 
 .. _v4.6.1:
 

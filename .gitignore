@@ -2,7 +2,7 @@
 /.coverage
 /build
 /config.mak
-/cola/_build_version.py
+/cola/_scm_version.py
 /deb
 /dist
 /.eggs

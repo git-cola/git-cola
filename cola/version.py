@@ -1,23 +1,12 @@
 """Provide git-cola's version number"""
-import os
-import sys
-
 from .git import STDOUT
 from .decorators import memoize
 from ._version import VERSION
 
 try:
-    if sys.version_info < (3, 8):
-        import importlib_metadata as metadata
-    else:
-        from importlib import metadata
-except (ImportError, OSError):
-    metadata = None
-
-
-if __name__ == '__main__':
-    srcdir = os.path.dirname(os.path.dirname(__file__))
-    sys.path.insert(1, srcdir)
+    from ._scm_version import __version__ as SCM_VERSION
+except ImportError:
+    SCM_VERSION = None
 
 
 # minimum version requirements
@@ -63,12 +52,10 @@ def get(key):
 
 def version():
     """Returns the current version"""
-    pkg_version = VERSION
-    if metadata is not None:
-        try:
-            pkg_version = metadata.version('git-cola')
-        except (ImportError, OSError):
-            pass
+    if SCM_VERSION:
+        pkg_version = SCM_VERSION
+    else:
+        pkg_version = VERSION
     return pkg_version
 
 
@@ -140,4 +127,4 @@ def print_version(builtin=False, brief=False):
         msg = version()
     else:
         msg = cola_version()
-    sys.stdout.write('%s\n' % msg)
+    print(msg)
