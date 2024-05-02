@@ -8,16 +8,11 @@ garden check
 garden dev
 git cola push
 
-# vx env3 pypi-secure-upload
-rm -rf build dist
-vx env3 python -m build -n .
-for filename in dist/*.whl dist/*.gz
-do
-    vx env3 python -m twine upload --sign "$filename"
-done
+garden wheel
+garden publish
 
 # Create installers and upload.
-rm -rf build dist
+garden clean
 vx env3 ./todo/release --all
 
 # Update git-cola.github.io
