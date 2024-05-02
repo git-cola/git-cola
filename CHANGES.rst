@@ -1,6 +1,6 @@
 .. _v4.6.2:
 
-v4.6.2
+v4.7.0
 ======
 
 Usability, bells and whistles
