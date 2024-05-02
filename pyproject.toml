@@ -36,4 +36,3 @@ addopts = "--ruff"
 
 [tool.setuptools_scm]
 fallback_version = "4.7.0"
-version_file = "cola/_scm_version.py"

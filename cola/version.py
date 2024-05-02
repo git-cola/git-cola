@@ -1,4 +1,14 @@
 """Provide git-cola's version number"""
+import sys
+
+try:
+    if sys.version_info < (3, 8):
+        import importlib_metadata as metadata
+    else:
+        from importlib import metadata
+except (ImportError, OSError):
+    metadata = None
+
 from .git import STDOUT
 from .decorators import memoize
 from ._version import VERSION
@@ -56,6 +66,11 @@ def version():
         pkg_version = SCM_VERSION
     else:
         pkg_version = VERSION
+        if metadata is not None:
+            try:
+                pkg_version = metadata.version('git-cola')
+            except (ImportError, OSError):
+                pass
     return pkg_version
 
 
