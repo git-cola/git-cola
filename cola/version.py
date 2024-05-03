@@ -63,14 +63,21 @@ def get(key):
 def version():
     """Returns the current version"""
     if SCM_VERSION:
-        pkg_version = SCM_VERSION
-    else:
-        pkg_version = VERSION
-        if metadata is not None:
-            try:
-                pkg_version = metadata.version('git-cola')
-            except (ImportError, OSError):
-                pass
+        return SCM_VERSION
+
+    pkg_version = VERSION
+    if metadata is None:
+        return pkg_version
+
+    try:
+        metadata_version = metadata.version('git-cola')
+    except (ImportError, OSError):
+        return pkg_version
+
+    # Building from a tarball can end up reporting "0.0.0" or "0.1.dev*".
+    # Use the fallback version in these scenarios.
+    if not metadata_version.startswith('0.'):
+        return metadata_version
     return pkg_version
 
 
