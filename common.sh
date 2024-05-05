@@ -12,7 +12,7 @@ RELEASES="$DOCUMENT_ROOT/releases"
 # _the_ cola version
 if test -e bin/git-cola && test -z "$VERSION"
 then
-	VERSION=$(bin/git-cola version --brief)
+	VERSION=$(bin/git-cola version --brief --builtin)
 	vVERSION="v$VERSION"
 fi
 
