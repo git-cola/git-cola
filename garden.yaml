@@ -43,6 +43,7 @@ trees:
       dev/development: ${activate} pip install --editable '.[docs,dev,testing]'
       dev/extras: ${activate} pip install --editable '.[extras]'
       dev/pyqt6: ${activate} pip install --editable '.[pyqt6]'
+      dev/install: ${activate} pip install --editable .
       dev/env: ${activate} "$@"
       check>:
         - test
