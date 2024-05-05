@@ -62,7 +62,7 @@ trees:
             pip_root="--root=${DESTDIR}"
             export DESTDIR="${DESTDIR}"
         fi
-        pip install --disable-pip-version-check $pip_root --prefix=${prefix} "$@" .
+        pip install --disable-pip-version-check $pip_root --prefix="${prefix}" "$@" .
       i18n>:
         - pot
         - po
@@ -117,9 +117,7 @@ trees:
       test: ${activate} ${PYTEST} cola test "$@"
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
-      wheel: |
-        ${activate}
-        python3 -m build -n .
+      wheel: ${activate} python3 -m build -n .
     gitconfig:
       remote.publish.pushurl:
         - "git@gitlab.com:git-cola/git-cola.git"
@@ -198,16 +196,16 @@ trees:
     man: ${activate} ${SPHINX} -b man . _build/man "$@"
     linkcheck: ${activate} ${SPHINX} -b linkcheck . _build/linkcheck "$@"
     install: |
-      mkdir -p ${DESTDIR}${docdir}
-      install -m 644 *.html ${DESTDIR}${docdir}
-      install -m 644 *.rst ${DESTDIR}${docdir}
+      mkdir -p "${DESTDIR}${docdir}"
+      install -m 644 *.html "${DESTDIR}${docdir}"
+      install -m 644 *.rst "${DESTDIR}${docdir}"
       # HTML documentation
-      mkdir -p ${DESTDIR}${htmldir}
-      rsync -r --delete --exclude=.buildinfo _build/html/ ${DESTDIR}${htmldir}/
+      mkdir -p "${DESTDIR}${htmldir}"
+      rsync -r --delete --exclude=.buildinfo _build/html/ "${DESTDIR}${htmldir}/"
       # Manual pages
-      mkdir -p ${DESTDIR}${mandir}
-      install -m 644 _build/man/git-cola.1 ${DESTDIR}${mandir}
-      install -m 644 _build/man/git-dag.1 ${DESTDIR}${mandir}
+      mkdir -p "${DESTDIR}${mandir}"
+      install -m 644 _build/man/git-cola.1 "${DESTDIR}${mandir}"
+      install -m 644 _build/man/git-dag.1 "${DESTDIR}${mandir}"
   fedora:
     description: Fedora packaging
     url: "https://src.fedoraproject.org/rpms/git-cola.git"
@@ -220,11 +218,11 @@ trees:
     variables:
       app-id: com.github.git_cola.git-cola
     commands:
-      build: flatpak-builder "$@" --user "${prefix}" ${app-id}.yml
+      build: flatpak-builder "$@" --user "${prefix}" "${app-id}.yml"
       check: |
         flatpak run --command=flatpak-builder-lint \
             org.flatpak.Builder "$@" --exceptions builddir "${prefix}"
-      install: flatpak-builder "$@" --install --user "${prefix}" ${app-id}.yml
+      install: flatpak-builder "$@" --install --user "${prefix}" "${app-id}.yml"
       run: flatpak run ${app-id}
       setup: |
         flatpak remote-add --user --if-not-exists \
