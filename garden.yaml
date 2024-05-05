@@ -271,7 +271,7 @@ variables:
   mandir: ${prefix}/share/man/man1
   cola_app: ${TREE_PATH}/git-cola.app
   cola_app_resources: ${cola_app}/Contents/Resources
-  cola_full_version: $ ./bin/git-cola version --brief
+  cola_full_version: $ ./bin/git-cola version --brief --builtin
   cola_version: $ sed -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
   is_virtualenv: |
     $ ${PYTHON} -c '
