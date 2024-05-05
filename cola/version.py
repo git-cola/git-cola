@@ -132,7 +132,7 @@ def git_version(context):
         result = parts[2]
     else:
         # minimum supported version
-        result = '1.6.3'
+        result = get('git')
     return result
 
 
