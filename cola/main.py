@@ -471,7 +471,7 @@ def add_version_command(subparser):
         '--builtin',
         action='store_true',
         default=False,
-        help=argparse.SUPPRESS,
+        help='print the builtin fallback version',
     )
     parser.add_argument(
         '--brief',
