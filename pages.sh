@@ -4,7 +4,7 @@ set -x
 
 . "$(dirname "$0")/common.sh"
 
-version="v$(./bin/git-cola version --builtin)"
+version="v$(./bin/git-cola version --builtin --brief)"
 cd "${DOCUMENT_ROOT}"
 
 git add -u
