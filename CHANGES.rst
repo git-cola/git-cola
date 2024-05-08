@@ -1,3 +1,14 @@
+.. _v4.7.2:
+
+v4.7.2
+======
+
+Development
+-----------
+* Pre-commits hooks were updated.
+  (`#1396 <https://github.com/git-cola/git-cola/pull/1396>`_)
+
+
 .. _v4.7.1:
 
 v4.7.1
