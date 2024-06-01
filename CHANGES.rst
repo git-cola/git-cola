@@ -3,6 +3,11 @@
 v4.7.2
 ======
 
+Usability, bells and whistles
+-----------------------------
+* The `Unstage Selected` action was added to the context menu for unmerged files.
+  (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
+
 Development
 -----------
 * Pre-commits hooks were updated.
