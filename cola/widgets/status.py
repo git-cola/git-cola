@@ -872,6 +872,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         )
         action.setShortcut(hotkeys.STAGE_SELECTION)
 
+        menu.addAction(
+            icons.remove(),
+            N_('Unstage Selected'),
+            cmds.run(cmds.Unstage, context, self.unstaged()),
+        )
         menu.addAction(self.launch_editor_action)
         menu.addAction(self.view_history_action)
         menu.addAction(self.view_blame_action)
