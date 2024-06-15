@@ -1833,7 +1833,7 @@ msgstr "文件保存为 \"%s\""
 
 #: cola/fsmonitor.py:530
 msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
-msgstr "监视文件系统更改：已禁用，因为 cola.notify 选项设置为 false。\n"
+msgstr "监视文件系统更改：已禁用，因为 cola.inotify 选项设置为 false。\n"
 
 #: cola/fsmonitor.py:547
 msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
