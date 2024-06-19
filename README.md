@@ -64,6 +64,10 @@ Python modules are installed.
 enables cross-platform "Send to Trash" functionality.
 ([source](https://github.com/hsoft/send2trash))
 
+[notify_py](https://pypi.org/project/notify_py/)
+enables delivery of desktop notifications.
+([source](https://github.com/ms7m/notify-py))
+
 [pyobjc](https://pypi.org/project/pyobjc/)
 enables macOS-specific application themes on macOS.
 ([source](https://github.com/ronaldoussoren/pyobjc))

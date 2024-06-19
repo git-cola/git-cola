@@ -177,6 +177,10 @@ scissors
         self.inotify = qtutils.checkbox(checked=True)
         self.inotify.setToolTip(tooltip)
 
+        tooltip = N_('Emit a desktop notification when commits are pushed.')
+        self.notifyonpush = qtutils.checkbox(checked=False)
+        self.notifyonpush.setToolTip(tooltip)
+
         self.logdate = qtutils.combo(prefs.date_formats())
         tooltip = N_(
             'The date-time format used when displaying dates in Git DAG.\n'
@@ -208,6 +212,7 @@ scissors
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
         self.add_row(N_('Enable File System Change Monitoring'), self.inotify)
+        self.add_row(N_('Notify on Push'), self.notifyonpush)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
@@ -242,6 +247,7 @@ scissors
             ),
             prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
             prefs.INOTIFY: (self.inotify, Defaults.inotify),
+            prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
             prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),

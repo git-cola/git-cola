@@ -30,6 +30,7 @@ HIDPI = 'cola.hidpi'
 HISTORY_BROWSER = 'gui.historybrowser'
 ICON_THEME = 'cola.icontheme'
 INOTIFY = 'cola.inotify'
+NOTIFY_ON_PUSH = 'cola.notifyonpush'
 LINEBREAK = 'cola.linebreak'
 LOGDATE = 'cola.logdate'
 MAXRECENT = 'cola.maxrecent'
@@ -117,6 +118,7 @@ class Defaults:
     history_browser = 'gitk'
     icon_theme = 'default'
     inotify = True
+    notifyonpush = False
     linebreak = True
     maxrecent = 8
     mergetool = difftool
@@ -255,6 +257,12 @@ def history_browser(context):
     """Return the configured history browser"""
     default = default_history_browser()
     return context.cfg.get(HISTORY_BROWSER, default=default)
+
+
+def notify_on_push(context):
+    """Return whether to notify upon push or not"""
+    default = Defaults.notifyonpush
+    return context.cfg.get(NOTIFY_ON_PUSH, default=default)
 
 
 def linebreak(context):
