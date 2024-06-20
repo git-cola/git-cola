@@ -118,6 +118,11 @@ def package_data(*args):
     return os.path.join(_package, *args)
 
 
+def icon_path(*args):
+    """Return a path relative to cola's icons directory"""
+    return package_data('icons', *args)
+
+
 def package_command(*args):
     """Return a path relative to cola's private bin/ directory"""
     return package_data('bin', *args)
