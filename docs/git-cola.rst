@@ -787,6 +787,12 @@ Controls whether zooming text using Ctrl + MouseWheel scroll is enabled.
 Set to ``false`` to disable scrolling with the mouse wheel.
 Defaults to ``true``.
 
+cola.notifyonpush
+-----------------
+Enable desktop notifications when commits are pushed using the "Push" dialog.
+Set to ``true`` to enable desktop notifications.
+Defaults to ``false``.
+
 cola.dragencoding
 -----------------
 `git cola` encodes paths dragged from its widgets into `utf-16` when adding
