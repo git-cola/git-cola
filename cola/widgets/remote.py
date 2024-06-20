@@ -3,6 +3,11 @@ import fnmatch
 import time
 import os
 
+try:
+    import notifypy
+except (ImportError, ModuleNotFoundError):
+    notifypy = None
+
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -10,6 +15,7 @@ from qtpy.QtCore import Qt
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
+from ..models import prefs
 from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
 from ..qtutils import connect_button
 from ..qtutils import get
@@ -17,6 +23,7 @@ from .. import core
 from .. import git
 from .. import gitcmds
 from .. import icons
+from .. import resources
 from .. import qtutils
 from .. import utils
 from . import defs
@@ -114,6 +121,41 @@ class ActionTask(qtutils.Task):
     def task(self):
         """Runs the model action and captures the result"""
         return self.model_action(self.remote, **self.kwargs)
+
+
+def _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes):
+    """Emit desktop notification when pushing remotes"""
+    if notifypy is None:
+        return
+
+    notification = notifypy.Notify()
+
+    total = len(selected_remotes)
+    count = len(pushed_remotes)
+    scope = {
+        'total': total,
+        'count': count,
+    }
+    notification.title = N_('Pushed %(count)s / %(total)s remotes - Git Cola') % scope
+
+    pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
+    unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)
+    success_icon = resources.package_data('icons', 'git-cola.svg')
+    error_icon = resources.package_data('icons', 'git-cola-error.svg')
+
+    if unpushed_remotes:
+        notification.icon = error_icon
+    else:
+        notification.icon = success_icon
+
+    if pushed_remotes and unpushed_remotes:
+        notification.message = unpushed_message + '\t\t' + pushed_message
+    elif pushed_remotes:
+        notification.message = pushed_message
+    else:
+        notification.message = unpushed_message
+
+    notification.send()
 
 
 class RemoteActionDialog(standard.Dialog):
@@ -680,9 +722,23 @@ class RemoteActionDialog(standard.Dialog):
         """Push to all selected remotes"""
         selected_remotes = self.selected_remotes
         all_results = None
+
+        pushed_remotes = []
+        unpushed_remotes = []
+
         for remote in selected_remotes:
             result = self.model.push(remote, *args, **kwargs)
+
+            if result[0] == 0:
+                pushed_remotes.append(remote)
+            else:
+                unpushed_remotes.append(remote)
+
             all_results = combine(result, all_results)
+
+        if prefs.notify_on_push(self.context):
+            _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes)
+
         return all_results
 
     def action_callback(self):
