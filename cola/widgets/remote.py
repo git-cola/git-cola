@@ -140,7 +140,7 @@ def _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes):
 
     pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
     unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)
-    success_icon = resources.package_data('icons', 'git-cola.svg')
+    success_icon = resources.package_data('icons', 'git-cola-ok.svg')
     error_icon = resources.package_data('icons', 'git-cola-error.svg')
 
     if unpushed_remotes:
