@@ -5,6 +5,11 @@ v4.7.2
 
 Usability, bells and whistles
 -----------------------------
+* Desktop notifications can now be enabled when pushing remotes by enabling the
+  "Notify on Push" option in the preferences.
+  (`#1404 <https://github.com/git-cola/git-cola/pull/1404>`_)
+  (`#350 <https://github.com/git-cola/git-cola/issues/350>`_)
+
 * The `Unstage Selected` action was added to the context menu for unmerged files.
   (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
 

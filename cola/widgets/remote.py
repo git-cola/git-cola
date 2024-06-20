@@ -123,38 +123,37 @@ class ActionTask(qtutils.Task):
         return self.model_action(self.remote, **self.kwargs)
 
 
-def _emit_push_notification(selected_remotes, pushed_remotes):
+def _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes):
+    """Emit desktop notification when pushing remotes"""
     if notifypy is None:
         return
 
     notification = notifypy.Notify()
 
-    total_count = len(selected_remotes)
-    success_count = len(pushed_remotes)
+    total = len(selected_remotes)
+    count = len(pushed_remotes)
+    scope = {
+        'total': total,
+        'count': count,
+    }
+    notification.title = N_('Pushed %(count)s / %(total)s remotes - Git Cola') % scope
 
-    if success_count == total_count:
-        notification.title = N_('Push Successful')
-        notification.icon = resources.package_data('icons', 'git-cola.svg')
+    pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
+    unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)
+    success_icon = resources.package_data('icons', 'git-cola.svg')
+    error_icon = resources.package_data('icons', 'git-cola-error.svg')
 
-        notification.message = N_(
-            f'All commits pushed to remotes: {", ".join(pushed_remotes)}'
-        )
-    elif success_count != 0:
-        notification.title = N_('Push Partially Successful')
-        notification.icon = resources.package_data('icons', 'git-cola-error.svg')
-
-        notification.message = N_(
-            f'Commits pushed to {success_count} remotes {", ".join(pushed_remotes)}\n'
-            f'Failed to push commits to {total_count - success_count} remotes '
-            f'{", ".join(list(set(selected_remotes) - set(pushed_remotes)))}'
-        )
+    if unpushed_remotes:
+        notification.icon = error_icon
     else:
-        notification.title = N_('Push Failed')
-        notification.icon = resources.package_data('icons', 'git-cola-error.svg')
+        notification.icon = success_icon
 
-        notification.message = N_(
-            f'No commits pushed to remotes: {", ".join(selected_remotes)}'
-        )
+    if pushed_remotes and unpushed_remotes:
+        notification.message = unpushed_message + '\t\t' + pushed_message
+    elif pushed_remotes:
+        notification.message = pushed_message
+    else:
+        notification.message = unpushed_message
 
     notification.send()
 
@@ -724,18 +723,21 @@ class RemoteActionDialog(standard.Dialog):
         selected_remotes = self.selected_remotes
         all_results = None
 
-        pushed_remotes = list()
+        pushed_remotes = []
+        unpushed_remotes = []
 
         for remote in selected_remotes:
             result = self.model.push(remote, *args, **kwargs)
 
             if result[0] == 0:
                 pushed_remotes.append(remote)
+            else:
+                unpushed_remotes.append(remote)
 
             all_results = combine(result, all_results)
 
         if prefs.notify_on_push(self.context):
-            _emit_push_notification(selected_remotes, pushed_remotes)
+            _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes)
 
         return all_results
 
