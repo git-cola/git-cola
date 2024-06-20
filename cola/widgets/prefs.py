@@ -164,22 +164,12 @@ scissors
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
 
-        self.refresh_on_focus = qtutils.checkbox(checked=False)
-        tooltip = N_(
-            'Refresh repository state whenever the window is focused or un-minimized'
-        )
-        self.refresh_on_focus.setToolTip(tooltip)
-
         tooltip = N_(
             'Enable file system change monitoring using '
             'inotify on Linux and win32event on Windows'
         )
         self.inotify = qtutils.checkbox(checked=True)
         self.inotify.setToolTip(tooltip)
-
-        tooltip = N_('Emit a desktop notification when commits are pushed.')
-        self.notifyonpush = qtutils.checkbox(checked=False)
-        self.notifyonpush.setToolTip(tooltip)
 
         self.logdate = qtutils.combo(prefs.date_formats())
         tooltip = N_(
@@ -188,20 +178,11 @@ scissors
         )
         self.logdate.setToolTip(tooltip)
 
-        tooltip = N_('Detect conflict markers in unmerged files')
-        self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
-
         tooltip = N_('Use gravatar.com to lookup icons for author emails')
         self.enable_gravatar = qtutils.checkbox(checked=True, tooltip=tooltip)
 
-        tooltip = N_('Prevent "Stage" from staging all files when nothing is selected')
-        self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
-
         tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(checked=True, tooltip=tooltip)
-
-        tooltip = N_('Check whether a commit has been published when amending')
-        self.check_published_commits = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
@@ -210,9 +191,6 @@ scissors
         self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
-        self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
-        self.add_row(N_('Enable File System Change Monitoring'), self.inotify)
-        self.add_row(N_('Notify on Push'), self.notifyonpush)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
@@ -220,24 +198,14 @@ scissors
         self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
-        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
-        self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
-        self.add_row(
-            N_('Check Published Commits when Amending'), self.check_published_commits
-        )
 
         self.set_config({
             prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
             prefs.AUTOCOMPLETE_PATHS: (
                 self.autocomplete_paths,
                 Defaults.autocomplete_paths,
-            ),
-            prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
-            prefs.CHECK_PUBLISHED_COMMITS: (
-                self.check_published_commits,
-                Defaults.check_published_commits,
             ),
             prefs.COMMIT_CLEANUP: (self.commit_cleanup, Defaults.commit_cleanup),
             prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
@@ -247,7 +215,6 @@ scissors
             ),
             prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
             prefs.INOTIFY: (self.inotify, Defaults.inotify),
-            prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
             prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
@@ -256,8 +223,6 @@ scissors
                 self.patches_directory,
                 Defaults.patches_directory,
             ),
-            prefs.REFRESH_ON_FOCUS: (self.refresh_on_focus, Defaults.refresh_on_focus),
-            prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
             prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
             prefs.USER_NAME: (self.name, ''),
             prefs.USER_EMAIL: (self.email, ''),
@@ -270,7 +235,6 @@ class SettingsFormWidget(FormWidget):
 
         self.fixed_font = QtWidgets.QFontComboBox()
         self.font_size = standard.SpinBox(value=12, mini=6, maxi=192)
-
         self.maxrecent = standard.SpinBox(maxi=99)
         self.tabwidth = standard.SpinBox(maxi=42)
         self.textwidth = standard.SpinBox(maxi=150)
@@ -287,8 +251,20 @@ class SettingsFormWidget(FormWidget):
         self.sort_bookmarks = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
         self.check_spelling = qtutils.checkbox()
-        self.expandtab = qtutils.checkbox()
+        tooltip = N_('Detect conflict markers in unmerged files')
+        self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
+        self.expandtab = qtutils.checkbox(tooltip=N_('Insert tabs instead of spaces'))
+        tooltip = N_('Prevent "Stage" from staging all files when nothing is selected')
+        self.safe_mode = qtutils.checkbox(checked=False, tooltip=tooltip)
+        tooltip = N_('Check whether a commit has been published when amending')
+        self.check_published_commits = qtutils.checkbox(checked=True, tooltip=tooltip)
+        tooltip = N_(
+            'Refresh repository state whenever the window is focused or un-minimized'
+        )
+        self.refresh_on_focus = qtutils.checkbox(checked=False, tooltip=tooltip)
         self.resize_browser_columns = qtutils.checkbox(checked=False)
+        tooltip = N_('Emit notifications when commits are pushed.')
+        self.notifyonpush = qtutils.checkbox(checked=False, tooltip=tooltip)
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.font_size)
@@ -302,12 +278,19 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Recent repository count'), self.maxrecent)
         self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
         self.add_row(N_('Insert spaces instead of tabs'), self.expandtab)
+        self.add_row(
+            N_('Check Published Commits when Amending'), self.check_published_commits
+        )
         self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
+        self.add_row(N_('Safe Mode'), self.safe_mode)
+        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
+        self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
         self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
         self.add_row(N_('Check spelling'), self.check_spelling)
         self.add_row(N_('Ctrl+MouseWheel to Zoom'), self.mouse_zoom)
+        self.add_row(N_('Notify on Push'), self.notifyonpush)
 
         self.set_config({
             prefs.SAVEWINDOWSETTINGS: (
@@ -327,17 +310,25 @@ class SettingsFormWidget(FormWidget):
                 prefs.default_history_browser(),
             ),
             prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
+            prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
+            prefs.CHECK_PUBLISHED_COMMITS: (
+                self.check_published_commits,
+                Defaults.check_published_commits,
+            ),
             prefs.MERGE_KEEPBACKUP: (
                 self.keep_merge_backups,
                 Defaults.merge_keep_backup,
             ),
             prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+            prefs.REFRESH_ON_FOCUS: (self.refresh_on_focus, Defaults.refresh_on_focus),
             prefs.RESIZE_BROWSER_COLUMNS: (
                 self.resize_browser_columns,
                 Defaults.resize_browser_columns,
             ),
+            prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
             prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
+            prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
