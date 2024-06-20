@@ -1,6 +1,6 @@
-.. _v4.7.2:
+.. _v4.8.0:
 
-v4.7.2
+v4.8.0
 ======
 
 Usability, bells and whistles
