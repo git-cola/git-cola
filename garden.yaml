@@ -191,24 +191,24 @@ trees:
   docs:
     description: Sphinx documentation
     variables:
-    env_dir: ../env3
+      env_dir: ../env3
     commands:
-    clean: rm -fr _build
-    doctest: ${activate} ${SPHINX} -b doctest . _build/doctest "$@"
-    html: ${activate} ${SPHINX} -b html . _build/html "$@"
-    man: ${activate} ${SPHINX} -b man . _build/man "$@"
-    linkcheck: ${activate} ${SPHINX} -b linkcheck . _build/linkcheck "$@"
-    install: |
-      mkdir -p "${DESTDIR}${docdir}"
-      install -m 644 *.html "${DESTDIR}${docdir}"
-      install -m 644 *.rst "${DESTDIR}${docdir}"
-      # HTML documentation
-      mkdir -p "${DESTDIR}${htmldir}"
-      rsync -r --delete --exclude=.buildinfo _build/html/ "${DESTDIR}${htmldir}/"
-      # Manual pages
-      mkdir -p "${DESTDIR}${mandir}"
-      install -m 644 _build/man/git-cola.1 "${DESTDIR}${mandir}"
-      install -m 644 _build/man/git-dag.1 "${DESTDIR}${mandir}"
+      clean: rm -fr _build
+      doctest: ${activate} ${SPHINX} -b doctest . _build/doctest "$@"
+      html: ${activate} ${SPHINX} -b html . _build/html "$@"
+      man: ${activate} ${SPHINX} -b man . _build/man "$@"
+      linkcheck: ${activate} ${SPHINX} -b linkcheck . _build/linkcheck "$@"
+      install: |
+        mkdir -p "${DESTDIR}${docdir}"
+        install -m 644 *.html "${DESTDIR}${docdir}"
+        install -m 644 *.rst "${DESTDIR}${docdir}"
+        # HTML documentation
+        mkdir -p "${DESTDIR}${htmldir}"
+        rsync -r --delete --exclude=.buildinfo _build/html/ "${DESTDIR}${htmldir}/"
+        # Manual pages
+        mkdir -p "${DESTDIR}${mandir}"
+        install -m 644 _build/man/git-cola.1 "${DESTDIR}${mandir}"
+        install -m 644 _build/man/git-dag.1 "${DESTDIR}${mandir}"
   fedora:
     description: Fedora packaging
     url: "https://src.fedoraproject.org/rpms/git-cola.git"
