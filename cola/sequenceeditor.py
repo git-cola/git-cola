@@ -26,29 +26,37 @@ from cola.widgets import standard
 from cola.widgets import text
 
 
-PICK = 'pick'
-REWORD = 'reword'
+BREAK = 'break'
+DROP = 'drop'
 EDIT = 'edit'
+EXEC = 'exec'
 FIXUP = 'fixup'
+LABEL = 'label'
+MERGE = 'merge'
+PICK = 'pick'
+RESET = 'reset'
+REWORD = 'reword'
 SQUASH = 'squash'
 UPDATE_REF = 'update-ref'
-EXEC = 'exec'
 COMMANDS = (
+    EDIT,
+    DROP,
+    FIXUP,
     PICK,
     REWORD,
-    EDIT,
-    FIXUP,
     SQUASH,
 )
 COMMAND_IDX = {cmd_: idx_ for idx_, cmd_ in enumerate(COMMANDS)}
 ABBREV = {
-    'p': PICK,
-    'r': REWORD,
+    'b': BREAK,
+    'd': DROP,
     'e': EDIT,
     'f': FIXUP,
+    'p': PICK,
+    'r': REWORD,
     's': SQUASH,
-    'x': EXEC,
     'u': UPDATE_REF,
+    'x': EXEC,
 }
 
 
@@ -289,6 +297,7 @@ class Editor(QtWidgets.QWidget):
     def parse_sequencer_instructions(self, insns):
         idx = 1
         re_comment_char = re.escape(self.comment_char)
+        break_rgx = re.compile(r'^\s*(%s)?\s*(b|break)$' % re_comment_char)
         exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$' % re_comment_char)
         update_ref_rgx = re.compile(
             r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
@@ -298,11 +307,14 @@ class Editor(QtWidgets.QWidget):
         pick_rgx = re.compile(
             (
                 r'^\s*(%s)?\s*'
-                + r'(p|pick|r|reword|e|edit|f|fixup|s|squash)'
+                + r'(d|drop|e|edit|f|fixup|p|pick|r|reword|s|squash)'
                 + r'\s+([0-9a-f]{7,40})'
                 + r'\s+(.+)$'
             )
             % re_comment_char
+        )
+        label_rgx = re.compile(
+            r'^\s*(%s)?\s*(l|label|m|merge|t|reset)\s+(.+)$' % re_comment_char
         )
         for line in insns.splitlines():
             match = pick_rgx.match(line)
@@ -328,6 +340,22 @@ class Editor(QtWidgets.QWidget):
                 command = unabbrev(match.group(2))
                 branch = match.group(3)
                 self.tree.add_item(idx, enabled, command, branch=branch)
+                idx += 1
+                continue
+            match = label_rgx.match(line)
+            if match:
+                enabled = match.group(1) is None
+                command = unabbrev(match.group(2))
+                label = match.group(3)
+                self.tree.add_item(idx, enabled, command, label=label)
+                idx += 1
+                continue
+            match = break_rgx.match(line)
+            if match:
+                enabled = match.group(1) is None
+                command = unabbrev(match.group(2))
+                cmdexec = match.group(3)
+                self.tree.add_item(idx, enabled, command)
                 idx += 1
                 continue
 
@@ -417,6 +445,13 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             *hotkeys.REBASE_SQUASH,
         )
 
+        self.action_drop = qtutils.add_action(
+            self,
+            N_('Drop'),
+            lambda: self.set_selected_to(DROP),
+            *hotkeys.REBASE_DROP,
+        )
+
         self.action_shift_down = qtutils.add_action(
             self, N_('Shift Down'), self.shift_down, hotkeys.MOVE_DOWN_TERTIARY
         )
@@ -441,7 +476,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.items_moved.connect(self.decorate)
 
     def add_item(
-        self, idx, enabled, command, oid='', summary='', cmdexec='', branch=''
+        self, idx, enabled, command, oid='', summary='', cmdexec='', branch='', label=''
     ):
         comment_char = self.comment_char
         item = RebaseTreeWidgetItem(
@@ -453,6 +488,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             cmdexec=cmdexec,
             branch=branch,
             comment_char=comment_char,
+            label=label,
             parent=self,
         )
         self.invisibleRootItem().addChild(item)
@@ -607,6 +643,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         menu.addAction(self.action_edit)
         menu.addAction(self.action_fixup)
         menu.addAction(self.action_squash)
+        menu.addAction(self.action_drop)
         menu.addSeparator()
         menu.addAction(self.toggle_enabled_action)
         menu.addSeparator()
@@ -672,6 +709,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         summary='',
         cmdexec='',
         branch='',
+        label='',
         comment_char='#',
         remarks=(),
         parent=None,
@@ -684,6 +722,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.summary = summary
         self.cmdexec = cmdexec
         self.branch = branch
+        self.label = label
         self.comment_char = comment_char
         self.remarks = remarks
         self.remarks_label = None
@@ -704,6 +743,12 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         elif self.is_update_ref():
             self.setText(self.COMMIT_COLUMN, '')
             self.setText(self.SUMMARY_COLUMN, branch)
+        elif self.is_label() or self.is_reset() or self.is_merge():
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, label)
+        elif self.is_break():
+            self.setText(self.COMMIT_COLUMN, '')
+            self.setText(self.SUMMARY_COLUMN, '')
         else:
             self.setText(self.COMMIT_COLUMN, oid)
             self.setText(self.SUMMARY_COLUMN, summary)
@@ -741,6 +786,18 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         elif self.is_update_ref():
             items = [UPDATE_REF]
             idx = 0
+        elif self.is_label():
+            items = [LABEL]
+            idx = 0
+        elif self.is_merge():
+            items = [MERGE]
+            idx = 0
+        elif self.is_reset():
+            items = [RESET]
+            idx = 0
+        elif self.is_break():
+            items = [BREAK]
+            idx = 0
         else:
             items = COMMANDS
             idx = COMMAND_IDX[self.command]
@@ -760,11 +817,23 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         parent.setItemWidget(self, self.REMARKS_COLUMN, remarks_label)
         self.update_remarks()
 
+    def is_break(self):
+        return self.command == BREAK
+
     def is_exec(self):
         return self.command == EXEC
 
     def is_update_ref(self):
         return self.command == UPDATE_REF
+
+    def is_label(self):
+        return self.command == LABEL
+
+    def is_reset(self):
+        return self.command == RESET
+
+    def is_merge(self):
+        return self.command == MERGE
 
     def is_commit(self):
         return bool(
@@ -781,6 +850,10 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             return f'{comment}{self.command} {self.cmdexec}'
         if self.is_update_ref():
             return f'{comment}{self.command} {self.branch}'
+        if self.is_label() or self.is_merge() or self.is_reset():
+            return f'{comment}{self.command} {self.label}'
+        if self.is_break():
+            return f'{comment}{self.command}'
         return f'{comment}{self.command} {self.oid} {self.summary}'
 
     def is_enabled(self):

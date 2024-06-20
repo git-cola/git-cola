@@ -122,6 +122,7 @@ REBASE_REWORD = (hotkey(Qt.Key_2), hotkey(Qt.Key_R))
 REBASE_EDIT = (hotkey(Qt.Key_3), hotkey(Qt.Key_E))
 REBASE_FIXUP = (hotkey(Qt.Key_4), hotkey(Qt.Key_F))
 REBASE_SQUASH = (hotkey(Qt.Key_5), hotkey(Qt.Key_S))
+REBASE_DROP = (hotkey(Qt.Key_6), hotkey(Qt.Key_D))
 
 UNDO = hotkey(Qt.CTRL | Qt.Key_Z)
 REDO = hotkey(Qt.SHIFT | Qt.CTRL | Qt.Key_Z)
