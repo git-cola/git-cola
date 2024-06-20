@@ -935,6 +935,11 @@ edit = use commit, but stop for amending
 squash = use commit, but meld into previous commit
 fixup = like "squash", but discard this commit's log message
 exec = run command (the rest of the line) using shell
+break = stop here (continue rebase later)
+drop = remove commit
+label = label current HEAD with a name
+reset = reset HEAD to a label
+merge = create a merge commit
 update-ref = update branches that point to commits
 
 These lines can be re-ordered; they are executed from top to bottom.
@@ -956,6 +961,7 @@ K = shift row up
 3, e = edit
 4, f = fixup
 5, s = squash
+6, d = drop
 spacebar = toggle enabled
 
 ctrl+enter = accept changes and rebase
