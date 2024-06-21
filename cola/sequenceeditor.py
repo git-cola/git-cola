@@ -354,7 +354,6 @@ class Editor(QtWidgets.QWidget):
             if match:
                 enabled = match.group(1) is None
                 command = unabbrev(match.group(2))
-                cmdexec = match.group(3)
                 self.tree.add_item(idx, enabled, command)
                 idx += 1
                 continue
