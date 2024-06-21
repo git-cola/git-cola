@@ -13,6 +13,10 @@ Usability, bells and whistles
   (`#1404 <https://github.com/git-cola/git-cola/pull/1404>`_)
   (`#350 <https://github.com/git-cola/git-cola/issues/350>`_)
 
+* Faster and easier commit hash copying in DAG. Left-clicking on the Commit ID will
+  now copy it directly into the clipboard without any further action.
+  (`#1401 <https://github.com/git-cola/git-cola/issues/1401>`_)
+
 * The `Unstage Selected` action was added to the context menu for unmerged files.
   (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
 

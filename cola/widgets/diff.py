@@ -203,13 +203,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             self.numbers = None
         self.scrollvalue = None
 
-        self.copy_diff_action = qtutils.add_action(
+        self.copy_diff_action = qtutils.add_action_with_icon(
             self,
+            icons.copy(),
             N_('Copy Diff'),
             self.copy_diff,
             hotkeys.COPY_DIFF,
         )
-        self.copy_diff_action.setIcon(icons.copy())
         self.copy_diff_action.setEnabled(False)
         self.menu_actions.append(self.copy_diff_action)
         self.cursorPositionChanged.connect(self._cursor_changed)
@@ -1400,6 +1400,80 @@ def _write_patch_to_file(diff_editor, patch, filename, append=False):
     Interaction.log('Patch written to "%s"' % filename)
 
 
+class ObjectIdLabel(PlainTextLabel):
+    """Interactive object IDs"""
+    def __init__(self, context, oid='', parent=None):
+        super().__init__(parent=parent)
+        self.context = context
+        self.oid = oid
+        self.setCursor(Qt.PointingHandCursor)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self._context_menu)
+        self._copy_short_action = qtutils.add_action_with_icon(
+            self, icons.copy(), N_('Copy Commit ID (Short)'), self._copy_short, hotkeys.COPY
+        )
+        self._copy_long_action = qtutils.add_action_with_icon(
+            self, icons.copy(), N_('Copy Commit ID (Long)'), self._copy_long
+        )
+        self._select_all_action = qtutils.add_action(
+            self, N_('Select All'), self._select_all, hotkeys.SELECT_ALL
+        )
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(200)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self._timeout)
+
+    def _timeout(self):
+        """Clear the selection"""
+        self.setSelection(0, 0)
+
+    def set_text(self, oid):
+        """Override set_text() to record the full and abbreviated object IDs"""
+        self.oid = oid
+        default_abbrev = 12
+        try:
+            abbrev = int(self.context.cfg.get('core.abbrev', default_abbrev))
+        except ValueError:
+            abbrev = default_abbrev
+        abbrev = max(7, abbrev)
+        super().set_text(oid[:abbrev])
+
+    def _copy_short(self, clicked=False):
+        """Copy the abbreviated commit ID"""
+        qtutils.set_clipboard(self.text())
+        self._select_all()
+        if not self.timer.isActive():
+            self.timer.start()
+
+    def _copy_long(self):
+        """Copy the full commit ID"""
+        qtutils.set_clipboard(self.oid)
+        self._select_all()
+        if not self.timer.isActive():
+            self.timer.start()
+
+    def _select_all(self):
+        """Select the text"""
+        length = len(self.get())
+        self.setSelection(0, length)
+
+    def mousePressEvent(self, event):
+        """Copy the commit ID when clicked"""
+        if event.button() == Qt.LeftButton:
+            # This behavior makes it impossible to select text by clicking and dragging,
+            # but it's okay because this also makes copying text a single-click affair.
+            self._copy_short(clicked=True)
+        return super().mousePressEvent(event)
+
+    def _context_menu(self, pos):
+        """Display a custom context menu"""
+        menu = QtWidgets.QMenu(self)
+        menu.addAction(self._copy_short_action)
+        menu.addAction(self._copy_long_action)
+        menu.addAction(self._select_all_action)
+        menu.exec_(self.mapToGlobal(pos))
+
+
 class DiffWidget(QtWidgets.QWidget):
     """Display commit metadata and text diffs"""
 
@@ -1420,11 +1494,11 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.gravatar_label = gravatar.GravatarLabel(self.context, parent=self)
 
-        self.oid_label = PlainTextLabel(parent=self)
+        self.oid_label = ObjectIdLabel(context, parent=self)
         self.oid_label.setAlignment(Qt.AlignBottom)
         self.oid_label.elide()
 
-        self.author_label = RichTextLabel(parent=self)
+        self.author_label = RichTextLabel(selectable=False, parent=self)
         self.author_label.setFont(author_font)
         self.author_label.setAlignment(Qt.AlignTop)
         self.author_label.elide()

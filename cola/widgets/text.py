@@ -1195,7 +1195,7 @@ class LineNumbers(TextDecorator):
 class TextLabel(QtWidgets.QLabel):
     """A text label that elides its display"""
 
-    def __init__(self, parent=None, open_external_links=True):
+    def __init__(self, parent=None, open_external_links=True, selectable=True):
         QtWidgets.QLabel.__init__(self, parent)
         self._display = ''
         self._template = ''
@@ -1206,9 +1206,11 @@ class TextLabel(QtWidgets.QLabel):
             QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
         )
         self.setSizePolicy(policy)
-        self.setTextInteractionFlags(
-            Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
-        )
+        if selectable:
+            interaction_flags = Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
+        else:
+            interaction_flags = Qt.LinksAccessibleByMouse
+        self.setTextInteractionFlags(interaction_flags)
         self.setOpenExternalLinks(open_external_links)
 
     def elide(self):
@@ -1232,6 +1234,10 @@ class TextLabel(QtWidgets.QLabel):
         if text != self._template:
             self._display = text
 
+    def get(self):
+        """Return the label's inner text value"""
+        return self._text
+
     # Qt overrides
     def setFont(self, font):
         self._metrics = QtGui.QFontMetrics(font)
@@ -1248,14 +1254,14 @@ class TextLabel(QtWidgets.QLabel):
 class PlainTextLabel(TextLabel):
     """A plaintext label that elides its display"""
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent, open_external_links=False)
+    def __init__(self, selectable=True, parent=None):
+        super().__init__(selectable=selectable, parent=parent, open_external_links=False)
         self.setTextFormat(Qt.PlainText)
 
 
 class RichTextLabel(TextLabel):
     """A richtext label that elides its display"""
 
-    def __init__(self, parent=None):
-        super().__init__(parent=parent, open_external_links=True)
+    def __init__(self, selectable=True, parent=None):
+        super().__init__(selectable=selectable, open_external_links=True, parent=parent)
         self.setTextFormat(Qt.RichText)
