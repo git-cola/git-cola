@@ -1402,6 +1402,7 @@ def _write_patch_to_file(diff_editor, patch, filename, append=False):
 
 class ObjectIdLabel(PlainTextLabel):
     """Interactive object IDs"""
+
     def __init__(self, context, oid='', parent=None):
         super().__init__(parent=parent)
         self.context = context
@@ -1411,7 +1412,11 @@ class ObjectIdLabel(PlainTextLabel):
         self.setFocusPolicy(Qt.NoFocus)
         self.customContextMenuRequested.connect(self._context_menu)
         self._copy_short_action = qtutils.add_action_with_icon(
-            self, icons.copy(), N_('Copy Commit ID (Short)'), self._copy_short, hotkeys.COPY
+            self,
+            icons.copy(),
+            N_('Copy Commit ID (Short)'),
+            self._copy_short,
+            hotkeys.COPY,
         )
         self._copy_long_action = qtutils.add_action_with_icon(
             self, icons.copy(), N_('Copy Commit ID (Long)'), self._copy_long

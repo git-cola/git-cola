@@ -1255,7 +1255,9 @@ class PlainTextLabel(TextLabel):
     """A plaintext label that elides its display"""
 
     def __init__(self, selectable=True, parent=None):
-        super().__init__(selectable=selectable, parent=parent, open_external_links=False)
+        super().__init__(
+            selectable=selectable, parent=parent, open_external_links=False
+        )
         self.setTextFormat(Qt.PlainText)
 
 
