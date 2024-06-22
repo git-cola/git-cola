@@ -31,6 +31,7 @@ MISSING_BLOB_OID = '0000000000000000000000000000000000000000'
 # When that happens we'll have to detect and update this at runtime in
 # order to support both old and new git.
 OID_LENGTH = 40
+OID_LENGTH_SHA256 = 64
 
 _index_lock = threading.Lock()
 

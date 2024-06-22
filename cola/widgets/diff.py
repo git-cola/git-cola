@@ -1437,12 +1437,7 @@ class ObjectIdLabel(PlainTextLabel):
     def set_text(self, oid):
         """Override set_text() to record the full and abbreviated object IDs"""
         self.oid = oid
-        default_abbrev = 12
-        try:
-            abbrev = int(self.context.cfg.get('core.abbrev', default_abbrev))
-        except ValueError:
-            abbrev = default_abbrev
-        abbrev = max(7, abbrev)
+        abbrev = prefs.abbrev(self.context)
         super().set_text(oid[:abbrev])
 
     def _copy_short(self, clicked=False):
