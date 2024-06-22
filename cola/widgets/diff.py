@@ -1408,6 +1408,7 @@ class ObjectIdLabel(PlainTextLabel):
         self.oid = oid
         self.setCursor(Qt.PointingHandCursor)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.setFocusPolicy(Qt.NoFocus)
         self.customContextMenuRequested.connect(self._context_menu)
         self._copy_short_action = qtutils.add_action_with_icon(
             self, icons.copy(), N_('Copy Commit ID (Short)'), self._copy_short, hotkeys.COPY
