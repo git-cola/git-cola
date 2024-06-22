@@ -1170,8 +1170,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "相対パスをクリップボードにコピー"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "SHA-1をコピー"
+msgid "Copy Commit"
+msgstr "Commit をコピー"
 
 #: cola/widgets/status.py:736
 msgid "Copy..."
@@ -3211,8 +3211,8 @@ msgid "Russian translation"
 msgstr "ロシア語翻訳"
 
 #: cola/sequenceeditor.py:398
-msgid "SHA-1"
-msgstr "SHA-1"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3513,8 +3513,8 @@ msgid "Spanish translation"
 msgstr "スペイン語翻訳"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "タグにSHA-1を指定する"
+msgid "Specifies the commit to tag"
+msgstr "タグにcommitを指定する"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

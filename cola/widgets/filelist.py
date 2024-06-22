@@ -15,6 +15,7 @@ class FileWidget(TreeWidget):
     difftool_selected = Signal(object)
     histories_selected = Signal(object)
     grab_file = Signal(object)
+    grab_file_from_parent = Signal(object)
     remark_toggled = Signal(object, object)
 
     def __init__(self, context, parent, remarks=False):
@@ -27,17 +28,17 @@ class FileWidget(TreeWidget):
         self.show_history_action = qtutils.add_action(
             self, N_('Show History'), self.show_history, hotkeys.HISTORY
         )
-
         self.launch_difftool_action = qtutils.add_action(
             self, N_('Launch Diff Tool'), self.show_diff
         )
-
         self.launch_editor_action = qtutils.add_action(
             self, N_('Launch Editor'), self.edit_paths, hotkeys.EDIT
         )
-
         self.grab_file_action = qtutils.add_action(
             self, N_('Grab File...'), self._grab_file
+        )
+        self.grab_file_from_parent_action = qtutils.add_action(
+            self, N_('Grab File from Parent Commit...'), self._grab_file_from_parent
         )
 
         if remarks:
@@ -119,6 +120,7 @@ class FileWidget(TreeWidget):
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.grab_file_action)
+        menu.addAction(self.grab_file_from_parent_action)
         menu.addAction(self.show_history_action)
         menu.addAction(self.launch_difftool_action)
         menu.addAction(self.launch_editor_action)
@@ -133,6 +135,10 @@ class FileWidget(TreeWidget):
     def _grab_file(self):
         for path in self.selected_paths():
             self.grab_file.emit(path)
+
+    def _grab_file_from_parent(self):
+        for path in self.selected_paths():
+            self.grab_file_from_parent.emit(path)
 
     def selected_paths(self):
         return [i.path for i in self.selected_items()]

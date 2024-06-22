@@ -1170,8 +1170,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "Скопіювати відносний шлях в буфер обміну"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "Скопіювати SHA-1"
+msgid "Copy Commit"
+msgstr "Скопіювати Commit"
 
 #: cola/widgets/status.py:736
 #, fuzzy
@@ -3225,8 +3225,8 @@ msgstr "Російський переклад"
 
 #: cola/sequenceeditor.py:398
 #, fuzzy
-msgid "SHA-1"
-msgstr "Скопіювати SHA-1"
+msgid "Commit@@nount"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 #, fuzzy
@@ -3532,8 +3532,8 @@ msgid "Spanish translation"
 msgstr "Іспанський переклад"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "Визначає SHA-1 теґу"
+msgid "Specifies the commit to tag"
+msgstr "Визначає commit теґу"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

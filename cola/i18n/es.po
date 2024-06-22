@@ -1116,7 +1116,7 @@ msgstr "Hacer un commit del merge sin no hay conflictos. Desmarcar para dejar el
 #: cola/widgets/commitmsg.py:59 cola/widgets/commitmsg.py:96
 #: cola/widgets/main.py:796 cola/widgets/main.py:797
 msgid "Commit@@verb"
-msgstr "Commit@@verb"
+msgstr "Commit"
 
 #: cola/widgets/dag.py:487
 msgid "Commits authored by me"
@@ -1176,8 +1176,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "Copiar la ruta relativa al portapapeles"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "Copiar SHA-1"
+msgid "Copy Commit"
+msgstr "Copiar Commit"
 
 #: cola/widgets/status.py:736
 msgid "Copy..."
@@ -3214,8 +3214,8 @@ msgid "Russian translation"
 msgstr "Traducción al Ruso"
 
 #: cola/sequenceeditor.py:398
-msgid "SHA-1"
-msgstr "SHA-1"
+msgid "Commit@@noun"
+msgstr "Commit"
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3516,8 +3516,8 @@ msgid "Spanish translation"
 msgstr "Traducción al Español"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "Especifica la firma SHA-1 a la etiqueta"
+msgid "Specifies the commit to tag"
+msgstr "Especifica la firma commit a la etiqueta"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

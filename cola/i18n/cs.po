@@ -1155,8 +1155,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "Zkopírovat relativní popis umístění do schránky"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "Kopírovat SHA-1"
+msgid "Copy Commit"
+msgstr "Kopírovat Commit"
 
 #: cola/widgets/status.py:736
 msgid "Copy..."
@@ -3183,8 +3183,8 @@ msgid "Russian translation"
 msgstr "Ruský překlad"
 
 #: cola/sequenceeditor.py:398
-msgid "SHA-1"
-msgstr "SHA-1"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3483,8 +3483,8 @@ msgid "Spanish translation"
 msgstr "Španělský překlad"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "Určuje SHA-1 štítku"
+msgid "Specifies the commit to tag"
+msgstr "Určuje commit štítku"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

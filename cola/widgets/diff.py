@@ -1415,12 +1415,16 @@ class ObjectIdLabel(PlainTextLabel):
         self._copy_short_action = qtutils.add_action_with_icon(
             self,
             icons.copy(),
-            N_('Copy Commit ID (Short)'),
+            N_('Copy Commit (Short)'),
             self._copy_short,
             hotkeys.COPY,
         )
         self._copy_long_action = qtutils.add_action_with_icon(
-            self, icons.copy(), N_('Copy Commit ID (Long)'), self._copy_long
+            self,
+            icons.copy(),
+            N_('Copy Commit'),
+            self._copy_long,
+            hotkeys.COPY_COMMIT_ID,
         )
         self._select_all_action = qtutils.add_action(
             self, N_('Select All'), self._select_all, hotkeys.SELECT_ALL
@@ -1434,20 +1438,15 @@ class ObjectIdLabel(PlainTextLabel):
         """Clear the selection"""
         self.setSelection(0, 0)
 
-    def set_text(self, oid):
-        """Override set_text() to record the full and abbreviated object IDs"""
+    def set_oid(self, oid):
+        """Record the object ID and update the display"""
         self.oid = oid
-        default_abbrev = 12
-        try:
-            abbrev = int(self.context.cfg.get('core.abbrev', default_abbrev))
-        except ValueError:
-            abbrev = default_abbrev
-        abbrev = max(7, abbrev)
-        super().set_text(oid[:abbrev])
+        self.set_text(oid)
 
     def _copy_short(self, clicked=False):
         """Copy the abbreviated commit ID"""
-        qtutils.set_clipboard(self.text())
+        abbrev = prefs.abbrev(self.context)
+        qtutils.set_clipboard(self.oid[:abbrev])
         self._select_all()
         if not self.timer.isActive():
             self.timer.start()
@@ -1609,14 +1608,14 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.date_label.set_text(date)
         self.date_label.setVisible(bool(date))
-        self.oid_label.set_text(oid)
+        self.oid_label.set_oid(oid)
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
         self.gravatar_label.set_email(email)
 
     def clear(self):
         self.date_label.set_text('')
-        self.oid_label.set_text('')
+        self.oid_label.set_oid('')
         self.author_label.set_text('')
         self.summary_label.set_text('')
         self.gravatar_label.clear()

@@ -4,11 +4,13 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .. import core
+from .. import git
 from .. import hidpi
 from .. import utils
 from ..cmd import Command
 
 
+ABBREV = 'core.abbrev'
 AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
 AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
@@ -101,6 +103,7 @@ class Defaults:
     """Read-only class for holding defaults that get overridden"""
 
     # These should match Git's defaults for git-defined values.
+    abbrev = 12
     autotemplate = False
     blame_viewer = 'git gui blame'
     block_cursor = True
@@ -143,6 +146,20 @@ class Defaults:
     status_indent = False
     status_show_totals = False
     logdate = DateFormat.DEFAULT
+
+
+def abbrev(context):
+    """Return the configured length for shortening commit IDs"""
+    default = Defaults.abbrev
+    value = context.cfg.get(ABBREV, default=default)
+    if value == 'no':
+        result = git.OID_LENGTH_SHA256
+    else:
+        try:
+            result = max(4, int(value))
+        except ValueError:
+            result = default
+    return result
 
 
 def blame_viewer(context):

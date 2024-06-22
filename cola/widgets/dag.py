@@ -13,6 +13,7 @@ from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
 from ..models import main
+from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -122,6 +123,16 @@ class ViewerMixin:
             result = None
         return result
 
+    def with_oid_short(self, func):
+        """Run an operation with a short commit object ID"""
+        oid = self.clicked_oid()
+        if oid:
+            abbrev = prefs.abbrev(self.context)
+            result = func(oid[:abbrev])
+        else:
+            result = None
+        return result
+
     def with_selected_oid(self, func):
         """Run an operation with a commit object ID"""
         oid = self.selected_oid()
@@ -156,6 +167,10 @@ class ViewerMixin:
     def copy_to_clipboard(self):
         """Copy the current commit object ID to the clipboard"""
         self.with_oid(qtutils.set_clipboard)
+
+    def copy_to_clipboard_short(self):
+        """Copy the current commit object ID to the clipboard"""
+        self.with_oid_short(qtutils.set_clipboard)
 
     def checkout_branch(self):
         """Checkout the clicked/selected branch"""
@@ -249,6 +264,11 @@ class ViewerMixin:
         context = self.context
         self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid))
 
+    def save_blob_from_parent_dialog(self):
+        """Save a file blob from the parent of the selected commit"""
+        context = self.context
+        self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid + '^'))
+
     def update_menu_actions(self, event):
         """Update menu actions to reflect the selection state"""
         selected_items = self.selected_items()
@@ -290,6 +310,7 @@ class ViewerMixin:
         )
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['copy'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['copy_short'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_branch'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection_or_clicked)
@@ -307,6 +328,9 @@ class ViewerMixin:
         )
         self.menu_actions['revert'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['save_blob'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['save_blob_from_parent'].setEnabled(
+            has_single_selection_or_clicked
+        )
 
     def context_menu_event(self, event):
         """Build a context menu and execute it"""
@@ -338,6 +362,8 @@ class ViewerMixin:
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
+        menu.addAction(self.menu_actions['save_blob_from_parent'])
+        menu.addAction(self.menu_actions['copy_short'])
         menu.addAction(self.menu_actions['copy'])
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -466,13 +492,30 @@ def viewer_actions(widget):
                 widget, N_('Grab File...'), widget.proxy.save_blob_dialog
             ),
         ),
+        'save_blob_from_parent': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget,
+                N_('Grab File from Parent Commit...'),
+                widget.proxy.save_blob_from_parent_dialog,
+            ),
+        ),
         'copy': set_icon(
             icons.copy(),
             qtutils.add_action(
                 widget,
-                N_('Copy SHA-1'),
+                N_('Copy Commit'),
                 widget.proxy.copy_to_clipboard,
-                hotkeys.COPY_SHA1,
+                hotkeys.COPY_COMMIT_ID,
+            ),
+        ),
+        'copy_short': set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                widget,
+                N_('Copy Commit (Short)'),
+                widget.proxy.copy_to_clipboard_short,
+                hotkeys.COPY,
             ),
         ),
     }
@@ -576,7 +619,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.selecting = False
         self.commits = []
         self._adjust_columns = False
-
         self.action_up = qtutils.add_action(
             self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP
         )
@@ -888,6 +930,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
+        self.filewidget.grab_file_from_parent.connect(self.grab_file_from_parent)
         self.maxresults.editingFinished.connect(self.display)
         self.revtext.textChanged.connect(self.text_changed)
         self.revtext.activated.connect(self.display)
@@ -1108,6 +1151,12 @@ class GitDAG(standard.MainWindow):
     def grab_file(self, filename):
         """Save the selected file from the file list widget"""
         oid = self.treewidget.selected_oid()
+        model = browse.BrowseModel(oid, filename=filename)
+        browse.save_path(self.context, filename, model)
+
+    def grab_file_from_parent(self, filename):
+        """Save the selected file from parent commit in the file list widget"""
+        oid = self.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
 

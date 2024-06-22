@@ -83,7 +83,7 @@ class CreateTag(standard.Dialog):
 
         self.revision = completion.GitRefLineEdit(context)
         self.revision.setText(self.opts.ref)
-        self.revision.setToolTip(N_('Specifies the SHA-1 to tag'))
+        self.revision.setToolTip(N_('Specifies the commit to tag'))
         # Buttons
         self.create_button = qtutils.create_button(
             text=N_('Create Tag'), icon=icons.tag(), default=True
