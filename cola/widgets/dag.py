@@ -264,6 +264,11 @@ class ViewerMixin:
         context = self.context
         self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid))
 
+    def save_blob_from_parent_dialog(self):
+        """Save a file blob from the parent of the selected commit"""
+        context = self.context
+        self.with_oid(lambda oid: browse.BrowseBranch.browse(context, oid + '^'))
+
     def update_menu_actions(self, event):
         """Update menu actions to reflect the selection state"""
         selected_items = self.selected_items()
@@ -323,6 +328,9 @@ class ViewerMixin:
         )
         self.menu_actions['revert'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['save_blob'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['save_blob_from_parent'].setEnabled(
+            has_single_selection_or_clicked
+        )
 
     def context_menu_event(self, event):
         """Build a context menu and execute it"""
@@ -354,6 +362,7 @@ class ViewerMixin:
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
+        menu.addAction(self.menu_actions['save_blob_from_parent'])
         menu.addAction(self.menu_actions['copy_short'])
         menu.addAction(self.menu_actions['copy'])
         menu.exec_(self.mapToGlobal(event.pos()))
@@ -481,6 +490,14 @@ def viewer_actions(widget):
             icons.save(),
             qtutils.add_action(
                 widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+            ),
+        ),
+        'save_blob_from_parent': set_icon(
+            icons.save(),
+            qtutils.add_action(
+                widget,
+                N_('Grab File from Parent Commit...'),
+                widget.proxy.save_blob_from_parent_dialog,
             ),
         ),
         'copy': set_icon(
@@ -913,6 +930,7 @@ class GitDAG(standard.MainWindow):
         self.treewidget.diff_commits.connect(self.diff_commits)
         self.graphview.diff_commits.connect(self.diff_commits)
         self.filewidget.grab_file.connect(self.grab_file)
+        self.filewidget.grab_file_from_parent.connect(self.grab_file_from_parent)
         self.maxresults.editingFinished.connect(self.display)
         self.revtext.textChanged.connect(self.text_changed)
         self.revtext.activated.connect(self.display)
@@ -1133,6 +1151,12 @@ class GitDAG(standard.MainWindow):
     def grab_file(self, filename):
         """Save the selected file from the file list widget"""
         oid = self.treewidget.selected_oid()
+        model = browse.BrowseModel(oid, filename=filename)
+        browse.save_path(self.context, filename, model)
+
+    def grab_file_from_parent(self, filename):
+        """Save the selected file from parent commit in the file list widget"""
+        oid = self.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
 

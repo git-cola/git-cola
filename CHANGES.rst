@@ -17,6 +17,9 @@ Usability, bells and whistles
   now copy it directly into the clipboard without any further action.
   (`#1401 <https://github.com/git-cola/git-cola/issues/1401>`_)
 
+* "Grab File from Parent Commit" actions have been added to the DAG.
+  (`#1401 <https://github.com/git-cola/git-cola/issues/1401>`_)
+
 * The `Unstage Selected` action was added to the context menu for unmerged files.
   (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
 
