@@ -1438,11 +1438,10 @@ class ObjectIdLabel(PlainTextLabel):
         """Clear the selection"""
         self.setSelection(0, 0)
 
-    def set_text(self, oid):
-        """Override set_text() to record the full and abbreviated object IDs"""
+    def set_oid(self, oid):
+        """Record the object ID and update the display"""
         self.oid = oid
-        abbrev = prefs.abbrev(self.context)
-        super().set_text(oid[:abbrev])
+        self.set_text(oid)
 
     def _copy_short(self, clicked=False):
         """Copy the abbreviated commit ID"""
@@ -1609,14 +1608,14 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.date_label.set_text(date)
         self.date_label.setVisible(bool(date))
-        self.oid_label.set_text(oid)
+        self.oid_label.set_oid(oid)
         self.author_label.set_template(author_text, author_template)
         self.summary_label.set_text(summary)
         self.gravatar_label.set_email(email)
 
     def clear(self):
         self.date_label.set_text('')
-        self.oid_label.set_text('')
+        self.oid_label.set_oid('')
         self.author_label.set_text('')
         self.summary_label.set_text('')
         self.gravatar_label.clear()
