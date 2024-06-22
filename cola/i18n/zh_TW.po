@@ -1177,8 +1177,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "將相對路徑複製到剪貼簿"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "複製 SHA-1 雜湊"
+msgid "Copy Commit"
+msgstr "複製 Commit 雜湊"
 
 #: cola/widgets/status.py:736
 msgid "Copy..."
@@ -3218,8 +3218,8 @@ msgid "Russian translation"
 msgstr "俄羅斯語翻譯"
 
 #: cola/sequenceeditor.py:398
-msgid "SHA-1"
-msgstr "SHA-1 雜湊"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3518,8 +3518,8 @@ msgid "Spanish translation"
 msgstr "西班牙語翻譯"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "指定 SHA-1 雜湊給標籤"
+msgid "Specifies the commit to tag"
+msgstr "指定 commit 雜湊給標籤"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

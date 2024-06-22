@@ -1130,7 +1130,7 @@ msgstr ""
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
 #, fuzzy
-msgid "Copy SHA-1"
+msgid "Copy Commit"
 msgstr "Kopiera alla"
 
 #: cola/widgets/status.py:736
@@ -3296,8 +3296,8 @@ msgstr ""
 
 #: cola/sequenceeditor.py:398
 #, fuzzy
-msgid "SHA-1"
-msgstr "Kopiera alla"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3617,7 +3617,7 @@ msgid "Spanish translation"
 msgstr ""
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
+msgid "Specifies the commit to tag"
 msgstr ""
 
 #: cola/widgets/createtag.py:79

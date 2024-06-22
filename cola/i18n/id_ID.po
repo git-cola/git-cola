@@ -1125,8 +1125,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "Salin Lokasi ke Papan klip"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "Salin SHA-1"
+msgid "Copy Commit"
+msgstr "Salin Commit"
 
 #: cola/widgets/status.py:736
 #, fuzzy
@@ -3210,8 +3210,8 @@ msgstr ""
 
 #: cola/sequenceeditor.py:398
 #, fuzzy
-msgid "SHA-1"
-msgstr "Salin SHA-1"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 #, fuzzy
@@ -3518,8 +3518,8 @@ msgid "Spanish translation"
 msgstr ""
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "Tentukan SHA-1 untuk di-tag"
+msgid "Specifies the commit to tag"
+msgstr "Tentukan commit untuk di-tag"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

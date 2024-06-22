@@ -20,13 +20,14 @@ STATUS = 0
 STDOUT = 1
 STDERR = 2
 
-# Object ID / SHA-1-related constants
+# Object ID / SHA-1 / SHA-256-related constants
 # Git's empty tree is a built-in constant object name.
 EMPTY_TREE_OID = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 # Git's diff machinery returns zeroes for modified files whose content exists
 # in the worktree only.
 MISSING_BLOB_OID = '0000000000000000000000000000000000000000'
-# Git's SHA-1 object IDs are 40 characters  long.
+# Git's SHA-1 object IDs are 40 characters long (20 bytes).
+# Git's SHA-256 object IDs are 64 characters long (32 bytes).
 # This will need to change when Git moves away from SHA-1.
 # When that happens we'll have to detect and update this at runtime in
 # order to support both old and new git.

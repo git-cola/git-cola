@@ -1172,8 +1172,8 @@ msgid "Copy Relative Path to Clipboard"
 msgstr "Relatív útvonal másolása a vágólapra"
 
 #: cola/sequenceeditor.py:408 cola/widgets/dag.py:473
-msgid "Copy SHA-1"
-msgstr "SHA-1 másolása"
+msgid "Copy Commit"
+msgstr "Commit másolása"
 
 #: cola/widgets/status.py:736
 msgid "Copy..."
@@ -3210,8 +3210,8 @@ msgid "Russian translation"
 msgstr "Orosz fordítás"
 
 #: cola/sequenceeditor.py:398
-msgid "SHA-1"
-msgstr "SHA-1"
+msgid "Commit@@noun"
+msgstr ""
 
 #: cola/widgets/prefs.py:285
 msgid "Safe Mode"
@@ -3512,8 +3512,8 @@ msgid "Spanish translation"
 msgstr "Spanyol fordítás"
 
 #: cola/widgets/createtag.py:86
-msgid "Specifies the SHA-1 to tag"
-msgstr "Megadja a címke SHA-1 értékét"
+msgid "Specifies the commit to tag"
+msgstr "Megadja a címke commit értékét"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"

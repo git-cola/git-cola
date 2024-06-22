@@ -487,7 +487,7 @@ def viewer_actions(widget):
             icons.copy(),
             qtutils.add_action(
                 widget,
-                N_('Copy SHA-1'),
+                N_('Copy Commit'),
                 widget.proxy.copy_to_clipboard,
                 hotkeys.COPY_COMMIT_ID,
             ),

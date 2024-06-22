@@ -1422,7 +1422,7 @@ class ObjectIdLabel(PlainTextLabel):
         self._copy_long_action = qtutils.add_action_with_icon(
             self,
             icons.copy(),
-            N_('Copy SHA-1'),
+            N_('Copy Commit'),
             self._copy_long,
             hotkeys.COPY_COMMIT_ID,
         )

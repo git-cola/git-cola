@@ -394,7 +394,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             N_('#'),
             N_('Enabled'),
             N_('Command'),
-            N_('SHA-1'),
+            N_('Commit@@noun'),
             N_('Remarks'),
             N_('Summary'),
         ])
@@ -404,7 +404,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
         # actions
         self.copy_oid_action = qtutils.add_action(
-            self, N_('Copy SHA-1'), self.copy_oid, QtGui.QKeySequence.Copy
+            self, N_('Copy Commit'), self.copy_oid, QtGui.QKeySequence.Copy
         )
 
         self.external_diff_action = qtutils.add_action(
