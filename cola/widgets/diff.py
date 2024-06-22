@@ -1415,12 +1415,16 @@ class ObjectIdLabel(PlainTextLabel):
         self._copy_short_action = qtutils.add_action_with_icon(
             self,
             icons.copy(),
-            N_('Copy Commit ID (Short)'),
+            N_('Copy Commit (Short)'),
             self._copy_short,
             hotkeys.COPY,
         )
         self._copy_long_action = qtutils.add_action_with_icon(
-            self, icons.copy(), N_('Copy Commit ID (Long)'), self._copy_long
+            self,
+            icons.copy(),
+            N_('Copy SHA-1'),
+            self._copy_long,
+            hotkeys.COPY_COMMIT_ID,
         )
         self._select_all_action = qtutils.add_action(
             self, N_('Select All'), self._select_all, hotkeys.SELECT_ALL

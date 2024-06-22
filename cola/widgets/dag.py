@@ -13,6 +13,7 @@ from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
 from ..models import main
+from ..models import prefs
 from ..qtutils import get
 from .. import core
 from .. import cmds
@@ -122,6 +123,16 @@ class ViewerMixin:
             result = None
         return result
 
+    def with_oid_short(self, func):
+        """Run an operation with a short commit object ID"""
+        oid = self.clicked_oid()
+        if oid:
+            abbrev = prefs.abbrev(self.context)
+            result = func(oid[:abbrev])
+        else:
+            result = None
+        return result
+
     def with_selected_oid(self, func):
         """Run an operation with a commit object ID"""
         oid = self.selected_oid()
@@ -156,6 +167,10 @@ class ViewerMixin:
     def copy_to_clipboard(self):
         """Copy the current commit object ID to the clipboard"""
         self.with_oid(qtutils.set_clipboard)
+
+    def copy_to_clipboard_short(self):
+        """Copy the current commit object ID to the clipboard"""
+        self.with_oid_short(qtutils.set_clipboard)
 
     def checkout_branch(self):
         """Checkout the clicked/selected branch"""
@@ -290,6 +305,7 @@ class ViewerMixin:
         )
         self.menu_actions['cherry_pick'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['copy'].setEnabled(has_single_selection_or_clicked)
+        self.menu_actions['copy_short'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_branch'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['create_patch'].setEnabled(has_selection)
         self.menu_actions['create_tag'].setEnabled(has_single_selection_or_clicked)
@@ -338,6 +354,7 @@ class ViewerMixin:
         menu.addAction(self.menu_actions['checkout_detached'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['save_blob'])
+        menu.addAction(self.menu_actions['copy_short'])
         menu.addAction(self.menu_actions['copy'])
         menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -472,7 +489,16 @@ def viewer_actions(widget):
                 widget,
                 N_('Copy SHA-1'),
                 widget.proxy.copy_to_clipboard,
-                hotkeys.COPY_SHA1,
+                hotkeys.COPY_COMMIT_ID,
+            ),
+        ),
+        'copy_short': set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                widget,
+                N_('Copy Commit (Short)'),
+                widget.proxy.copy_to_clipboard_short,
+                hotkeys.COPY,
             ),
         ),
     }
@@ -576,7 +602,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.selecting = False
         self.commits = []
         self._adjust_columns = False
-
         self.action_up = qtutils.add_action(
             self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP
         )
