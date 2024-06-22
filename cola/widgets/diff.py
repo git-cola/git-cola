@@ -1446,7 +1446,8 @@ class ObjectIdLabel(PlainTextLabel):
 
     def _copy_short(self, clicked=False):
         """Copy the abbreviated commit ID"""
-        qtutils.set_clipboard(self.text())
+        abbrev = prefs.abbrev(self.context)
+        qtutils.set_clipboard(self.oid[:abbrev])
         self._select_all()
         if not self.timer.isActive():
             self.timer.start()
