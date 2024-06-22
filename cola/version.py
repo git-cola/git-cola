@@ -48,10 +48,12 @@ _versions = {
     'version-sort': '2.7.0',
     # Qt support for QT_AUTO_SCREEN_SCALE_FACTOR and QT_SCALE_FACTOR
     'qt-hidpi-scale': '5.6.0',
-    # git rev-parse --show-superproject-working-tree was added in 2.13.0
-    'show-superproject-working-tree': '2.13.0',
+    # git rebase --rebase-merges was added in 2.18.0
+    'rebase-merges': '2.18.0',
     # git rebase --update-refs was added in 2.38.0
     'rebase-update-refs': '2.38.0',
+    # git rev-parse --show-superproject-working-tree was added in 2.13.0
+    'show-superproject-working-tree': '2.13.0',
 }
 
 

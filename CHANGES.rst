@@ -23,6 +23,9 @@ Usability, bells and whistles
 * The `Unstage Selected` action was added to the context menu for unmerged files.
   (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
 
+* ``git cola rebase`` now provides  a ``--rebase-merges`` option and passes the
+  same option to ``git rebase`` when `Git v1.18.0` or newer is detected.
+
 Development
 -----------
 * Pre-commits hooks were updated.

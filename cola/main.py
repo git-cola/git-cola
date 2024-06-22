@@ -6,6 +6,7 @@ from . import app
 from . import cmds
 from . import compat
 from . import core
+from . import version
 
 
 def main(argv=None):
@@ -249,7 +250,13 @@ def add_rebase_command(subparser):
         '--preserve-merges',
         default=False,
         action='store_true',
-        help='try to recreate merges instead of ignoring them',
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        '--rebase-merges',
+        default=False,
+        action='store_true',
+        help='preserve branching structure when rebasing',
     )
     parser.add_argument(
         '-s',
@@ -659,13 +666,14 @@ def cmd_push(args):
 
 
 def cmd_rebase(args):
+    context = app.application_init(args)
+    context.model.update_refs()
     kwargs = {
         'verbose': args.verbose,
         'quiet': args.quiet,
         'autostash': args.autostash,
         'fork_point': args.fork_point,
         'onto': args.onto,
-        'preserve_merges': args.preserve_merges,
         'strategy': args.strategy,
         'no_ff': args.no_ff,
         'merge': args.merge,
@@ -692,8 +700,12 @@ def cmd_rebase(args):
         'upstream': args.upstream,
         'branch': args.branch,
     }
-    context = app.application_init(args)
-    context.model.update_refs()
+    # Backwards compatibility: --preserve-merges was replaced by --rebase-merges.
+    rebase_merges = args.rebase_merges or args.preserve_merges
+    if version.check_git(context, 'rebase-merges'):
+        kwargs['rebase_merges'] = rebase_merges
+    else:
+        kwargs['preserve_merges'] = rebase_merges
     status, _, _ = cmds.do(cmds.Rebase, context, **kwargs)
     return status
 
