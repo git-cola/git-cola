@@ -2358,5 +2358,5 @@ def sort_by_generation(commits):
 
 # Glossary
 # ========
-# oid -- Git objects IDs (i.e. SHA-1 IDs)
+# oid -- Git objects IDs (i.e. SHA-1 / SHA-256 IDs)
 # ref -- Git references that resolve to a commit-ish (HEAD, branches, tags)
