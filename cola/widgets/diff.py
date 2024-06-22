@@ -1410,6 +1410,7 @@ class ObjectIdLabel(PlainTextLabel):
         self.setCursor(Qt.PointingHandCursor)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.setFocusPolicy(Qt.NoFocus)
+        self.setToolTip(N_('Click to Copy'))
         self.customContextMenuRequested.connect(self._context_menu)
         self._copy_short_action = qtutils.add_action_with_icon(
             self,
