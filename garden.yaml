@@ -16,7 +16,8 @@
 #   garden man                  # Generate documentation: manual pages only
 #   garden pot                  # Regenerate git-cola.pot with new translations
 #   garden po                   # Update .po files with new translations from git-cola.pot
-#   garden pages                # Install the pages/ website documentation.
+#   garden pages                # Install docs into the pages/ website sources.
+#   garden build pages          # Generate the pages/ website from the html templates.
 #
 #   # macOS
 #   garden macos/app            # Build a git-cola.app bundle
@@ -246,8 +247,32 @@ trees:
       remote.origin.pushurl:
         - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
         - "git@github.com:git-cola/git-cola.github.io.git"
+    variables:
+      prefix: build
+      container-image: "jekyll/minimal:latest"
     commands:
-      build: jekyll build --destination build "$@"
+      build: jekyll build --destination "${prefix}" "$@"
+      watch: |
+        while true
+        do
+          garden build ${GARDEN_CMD_VERBOSE} "$@"
+          inotifywait --event=close_write --recursive "${TREE_PATH}"
+        done
+      build/podman: |
+        uid=$${UID:-$(id -u)}
+        gid=$${GID:-$(id -g)}
+        podman \
+          run \
+          --interactive \
+          --rm \
+          --user="$uid:$gid" \
+          --userns keep-id:uid=$uid,gid=$gid \
+          --volume="${TREE_PATH}:/srv/jekyll" \
+          --workdir "${TREE_PATH}" \
+          "${container-image}" \
+          jekyll build --destination "${prefix}" "$@"
+      sanitize: dos2unix share/doc/git-cola/*.html share/doc/git-cola/html/*.html
+      setup: sudo apt install inotify-tools jekyll
     links:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
