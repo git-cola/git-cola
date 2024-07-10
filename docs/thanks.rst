@@ -289,6 +289,7 @@ Thanks
 * Victorhck
 * Ville Skyttä
 * Virgil Dupras
+* Vishnu Sanal
 * Vitor Lobo
 * v.paritskiy
 * waterzch
