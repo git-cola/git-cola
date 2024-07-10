@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Usability, bells and whistles
+-----------------------------
+* The clone dialog now defaults to cloning into the parent directory by default.
+  (`#1402 <https://github.com/git-cola/git-cola/issues/1402>`_)
+
+
 .. _v4.8.0:
 
 v4.8.0

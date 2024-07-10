@@ -192,7 +192,7 @@ class Clone(standard.Dialog):
 
         # Prompt the user for a directory to use as the parent directory
         msg = N_('Select a parent directory for the new clone')
-        dirname = qtutils.opendir_dialog(msg, self.model.getcwd())
+        dirname = qtutils.opendir_dialog(msg, os.path.dirname(self.model.getcwd()))
         if not dirname:
             return
         count = 1
