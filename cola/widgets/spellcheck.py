@@ -23,9 +23,13 @@ class SpellCheckTextEdit(HintedTextEdit):
         if event.button() == Qt.RightButton:
             # Rewrite the mouse event to a left button event so the cursor is
             # moved to the location of the pointer.
+            if hasattr(event, 'position'):  # Qt6
+                position = event.position()
+            else:
+                position = event.pos()
             event = QtGui.QMouseEvent(
                 QtCore.QEvent.MouseButtonPress,
-                event.pos(),
+                position,
                 Qt.LeftButton,
                 Qt.LeftButton,
                 Qt.NoModifier,

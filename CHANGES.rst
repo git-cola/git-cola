@@ -6,6 +6,12 @@ Usability, bells and whistles
 * The clone dialog now defaults to cloning into the parent directory by default.
   (`#1402 <https://github.com/git-cola/git-cola/issues/1402>`_)
 
+Fixes
+-----
+* Qt6 support was improved for the right-click context menus.
+  (`#1409 <https://github.com/git-cola/git-cola/issues/1409>`_)
+  (`#1410 <https://github.com/git-cola/git-cola/pull/1410>`_)
+
 
 .. _v4.8.0:
 
