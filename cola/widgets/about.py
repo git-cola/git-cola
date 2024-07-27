@@ -384,7 +384,7 @@ def translators_text():
 
     translators = (
         # See the `generate-about` script in the "todo" branch.
-        # vim :read! ./Meta/generate-about --translators
+        # vim :read! ./todo/generate-about --translators
         dict(
             name='Ｖ字龍(Vdragon)',
             title=N_('Traditional Chinese (Taiwan) translation'),
