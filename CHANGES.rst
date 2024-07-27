@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Translations
+------------
+* Updated Japanese translation.
+  (`#1411 <https://github.com/git-cola/git-cola/pull/1411>`_)
+
+
 .. _v4.8.1:
 
 v4.8.1
