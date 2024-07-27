@@ -75,6 +75,11 @@ def main():
         }
         pathspecs = get_pathspecs(git, exclude=set(['.po', '.pot']))
 
+    skip.add('dependabot[bot]')
+    skip.add('OriShalhon')  # Covered by commits under a different name.
+    skip.add('pre-commit-ci[bot]')
+    skip.add('real')
+
     indent = ' ' * 8
     if args.count:
         suffix = "\t# %(count)s"
