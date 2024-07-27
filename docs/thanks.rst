@@ -94,7 +94,6 @@ Thanks
 * Filip Danilović
 * Floris Lambrechts
 * Frank Weber
-* fu7mu4
 * Garoe Dorta
 * Geoffrey van Wyk
 * Georg Limbach
@@ -272,6 +271,7 @@ Thanks
 * Thomas Kluyver
 * Thomas Thorne
 * Tom Dobbelaere
+* Tomo Dote
 * Tim Brown
 * Tim Gates
 * Tim Schumacher
