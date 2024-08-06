@@ -6,6 +6,11 @@ Translations
 * Updated Japanese translation.
   (`#1411 <https://github.com/git-cola/git-cola/pull/1411>`_)
 
+Fixes
+-----
+* The ``Ctrl+C`` "Copy Diff" hotkey was restored in the DAG diff viewer.
+  (`#1412 <https://github.com/git-cola/git-cola/issues/1412>`_)
+
 
 .. _v4.8.1:
 

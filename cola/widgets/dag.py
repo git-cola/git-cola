@@ -374,50 +374,50 @@ def set_icon(icon, action):
     return action
 
 
-def viewer_actions(widget):
+def viewer_actions(widget, proxy):
     """Return common actions across the tree and graph widgets"""
     return {
         'diff_this_selected': set_icon(
             icons.compare(),
             qtutils.add_action(
-                widget, N_('Diff this -> selected'), widget.proxy.diff_this_selected
+                widget, N_('Diff this -> selected'), proxy.diff_this_selected
             ),
         ),
         'diff_selected_this': set_icon(
             icons.compare(),
             qtutils.add_action(
-                widget, N_('Diff selected -> this'), widget.proxy.diff_selected_this
+                widget, N_('Diff selected -> this'), proxy.diff_selected_this
             ),
         ),
         'create_branch': set_icon(
             icons.branch(),
-            qtutils.add_action(widget, N_('Create Branch'), widget.proxy.create_branch),
+            qtutils.add_action(widget, N_('Create Branch'), proxy.create_branch),
         ),
         'create_patch': set_icon(
             icons.save(),
-            qtutils.add_action(widget, N_('Create Patch'), widget.proxy.create_patch),
+            qtutils.add_action(widget, N_('Create Patch'), proxy.create_patch),
         ),
         'create_tag': set_icon(
             icons.tag(),
-            qtutils.add_action(widget, N_('Create Tag'), widget.proxy.create_tag),
+            qtutils.add_action(widget, N_('Create Tag'), proxy.create_tag),
         ),
         'create_tarball': set_icon(
             icons.file_zip(),
             qtutils.add_action(
-                widget, N_('Save As Tarball/Zip...'), widget.proxy.create_tarball
+                widget, N_('Save As Tarball/Zip...'), proxy.create_tarball
             ),
         ),
         'cherry_pick': set_icon(
             icons.cherry_pick(),
-            qtutils.add_action(widget, N_('Cherry Pick'), widget.proxy.cherry_pick),
+            qtutils.add_action(widget, N_('Cherry Pick'), proxy.cherry_pick),
         ),
         'revert': set_icon(
-            icons.undo(), qtutils.add_action(widget, N_('Revert'), widget.proxy.revert)
+            icons.undo(), qtutils.add_action(widget, N_('Revert'), proxy.revert)
         ),
         'diff_commit': set_icon(
             icons.diff(),
             qtutils.add_action(
-                widget, N_('Launch Diff Tool'), widget.proxy.show_diff, hotkeys.DIFF
+                widget, N_('Launch Diff Tool'), proxy.show_diff, hotkeys.DIFF
             ),
         ),
         'diff_commit_all': set_icon(
@@ -425,35 +425,35 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Launch Directory Diff Tool'),
-                widget.proxy.show_dir_diff,
+                proxy.show_dir_diff,
                 hotkeys.DIFF_SECONDARY,
             ),
         ),
         'checkout_branch': set_icon(
             icons.branch(),
             qtutils.add_action(
-                widget, N_('Checkout Branch'), widget.proxy.checkout_branch
+                widget, N_('Checkout Branch'), proxy.checkout_branch
             ),
         ),
         'checkout_detached': qtutils.add_action(
-            widget, N_('Checkout Detached HEAD'), widget.proxy.checkout_detached
+            widget, N_('Checkout Detached HEAD'), proxy.checkout_detached
         ),
         'rebase_to_commit': set_icon(
             icons.play(),
             qtutils.add_action(
-                widget, N_('Rebase to this commit'), widget.proxy.rebase_to_commit
+                widget, N_('Rebase to this commit'), proxy.rebase_to_commit
             ),
         ),
         'reset_soft': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Reset Branch (Soft)'), widget.proxy.reset_soft
+                widget, N_('Reset Branch (Soft)'), proxy.reset_soft
             ),
         ),
         'reset_mixed': set_icon(
             icons.style_dialog_reset(),
             qtutils.add_action(
-                widget, N_('Reset Branch and Stage (Mixed)'), widget.proxy.reset_mixed
+                widget, N_('Reset Branch and Stage (Mixed)'), proxy.reset_mixed
             ),
         ),
         'reset_keep': set_icon(
@@ -461,7 +461,7 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Restore Worktree and Reset All (Keep Unstaged Edits)'),
-                widget.proxy.reset_keep,
+                proxy.reset_keep,
             ),
         ),
         'reset_merge': set_icon(
@@ -469,7 +469,7 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Restore Worktree and Reset All (Merge)'),
-                widget.proxy.reset_merge,
+                proxy.reset_merge,
             ),
         ),
         'reset_hard': set_icon(
@@ -477,19 +477,19 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Restore Worktree and Reset All (Hard)'),
-                widget.proxy.reset_hard,
+                proxy.reset_hard,
             ),
         ),
         'restore_worktree': set_icon(
             icons.edit(),
             qtutils.add_action(
-                widget, N_('Restore Worktree'), widget.proxy.restore_worktree
+                widget, N_('Restore Worktree'), proxy.restore_worktree
             ),
         ),
         'save_blob': set_icon(
             icons.save(),
             qtutils.add_action(
-                widget, N_('Grab File...'), widget.proxy.save_blob_dialog
+                widget, N_('Grab File...'), proxy.save_blob_dialog
             ),
         ),
         'save_blob_from_parent': set_icon(
@@ -497,7 +497,7 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Grab File from Parent Commit...'),
-                widget.proxy.save_blob_from_parent_dialog,
+                proxy.save_blob_from_parent_dialog,
             ),
         ),
         'copy': set_icon(
@@ -505,7 +505,7 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Copy Commit'),
-                widget.proxy.copy_to_clipboard,
+                proxy.copy_to_clipboard,
                 hotkeys.COPY_COMMIT_ID,
             ),
         ),
@@ -514,7 +514,7 @@ def viewer_actions(widget):
             qtutils.add_action(
                 widget,
                 N_('Copy Commit (Short)'),
-                widget.proxy.copy_to_clipboard_short,
+                proxy.copy_to_clipboard_short,
                 hotkeys.COPY,
             ),
         ),
@@ -842,9 +842,8 @@ class GitDAG(standard.MainWindow):
             self.treewidget, self.graphview, self.filewidget
         )
 
-        self.viewer_actions = actions = viewer_actions(self)
-        self.treewidget.menu_actions = actions
-        self.graphview.menu_actions = actions
+        self.treewidget.menu_actions = viewer_actions(self.treewidget, self.proxy)
+        self.graphview.menu_actions = viewer_actions(self.graphview, self.proxy)
 
         self.controls_layout = qtutils.hbox(
             defs.no_margin, defs.spacing, self.revtext, self.maxresults
