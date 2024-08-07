@@ -431,9 +431,7 @@ def viewer_actions(widget, proxy):
         ),
         'checkout_branch': set_icon(
             icons.branch(),
-            qtutils.add_action(
-                widget, N_('Checkout Branch'), proxy.checkout_branch
-            ),
+            qtutils.add_action(widget, N_('Checkout Branch'), proxy.checkout_branch),
         ),
         'checkout_detached': qtutils.add_action(
             widget, N_('Checkout Detached HEAD'), proxy.checkout_detached
@@ -446,9 +444,7 @@ def viewer_actions(widget, proxy):
         ),
         'reset_soft': set_icon(
             icons.style_dialog_reset(),
-            qtutils.add_action(
-                widget, N_('Reset Branch (Soft)'), proxy.reset_soft
-            ),
+            qtutils.add_action(widget, N_('Reset Branch (Soft)'), proxy.reset_soft),
         ),
         'reset_mixed': set_icon(
             icons.style_dialog_reset(),
@@ -482,15 +478,11 @@ def viewer_actions(widget, proxy):
         ),
         'restore_worktree': set_icon(
             icons.edit(),
-            qtutils.add_action(
-                widget, N_('Restore Worktree'), proxy.restore_worktree
-            ),
+            qtutils.add_action(widget, N_('Restore Worktree'), proxy.restore_worktree),
         ),
         'save_blob': set_icon(
             icons.save(),
-            qtutils.add_action(
-                widget, N_('Grab File...'), proxy.save_blob_dialog
-            ),
+            qtutils.add_action(widget, N_('Grab File...'), proxy.save_blob_dialog),
         ),
         'save_blob_from_parent': set_icon(
             icons.save(),
