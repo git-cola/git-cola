@@ -2,6 +2,7 @@
 from functools import partial
 import argparse
 import os
+import random
 import signal
 import sys
 import time
@@ -69,6 +70,7 @@ from . import version
 def setup_environment():
     """Set environment variables to control git's behavior"""
     # Allow Ctrl-C to exit
+    random.seed(hash(time.time()))
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     # Session management wants an absolute path when restarting

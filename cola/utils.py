@@ -1,7 +1,6 @@
 """Miscellaneous utility functions"""
 import copy
 import os
-import random
 import re
 import shlex
 import sys
@@ -11,8 +10,6 @@ import traceback
 
 from . import core
 from . import compat
-
-random.seed(hash(time.time()))
 
 
 def asint(obj, default=0):
