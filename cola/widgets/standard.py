@@ -62,6 +62,7 @@ class WidgetMixin:
         return self.__class__.__name__.lower()
 
     def save_state(self, settings=None):
+        """Save tool settings to the ~/.config/git-cola/settings file"""
         save = True
         sync = True
         context = getattr(self, 'context', None)
@@ -75,6 +76,7 @@ class WidgetMixin:
             settings.save_gui_state(self, sync=sync)
 
     def restore_state(self, settings=None):
+        """Read and apply saved tool settings"""
         if settings is None:
             settings = Settings.read()
         state = settings.get_gui_state(self)
@@ -85,8 +87,7 @@ class WidgetMixin:
         return result
 
     def apply_state(self, state):
-        """Imports data for view save/restore"""
-
+        """Import data for view save/restore"""
         width = utils.asint(state.get('width'))
         height = utils.asint(state.get('height'))
         x = utils.asint(state.get('x'))
@@ -119,14 +120,17 @@ class WidgetMixin:
         return state
 
     def save_settings(self, settings=None):
+        """Save tool state using the specified settings backend"""
         return self.save_state(settings=settings)
 
     def closeEvent(self, event):
+        """Save settings when the top-level widget is closed"""
         self.save_settings()
         self.closed.emit(self)
         self.Base.closeEvent(self, event)
 
     def init_size(self, parent=None, settings=None, width=0, height=0):
+        """Set a tool's initial size"""
         if not width:
             width = defs.dialog_w
         if not height:
