@@ -1,6 +1,11 @@
 Upcoming
 ========
 
+Usability, bells and whistles
+-----------------------------
+* The Reset actions now remember the last value used.
+  (`#1406 <https://github.com/git-cola/git-cola/issues/1406>`_)
+
 Translations
 ------------
 * Updated Japanese translation.

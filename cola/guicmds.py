@@ -339,26 +339,32 @@ def reset_soft(context):
     """Run "git reset --soft" to reset the branch HEAD"""
     title = N_('Reset Branch (Soft)')
     ok_text = N_('Reset Branch')
-    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    default = context.settings.get_value('reset::soft', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, ok_text, default=default)
     if ref:
         cmds.do(cmds.ResetSoft, context, ref)
+        context.settings.set_value('reset::soft', 'ref', ref)
 
 
 def reset_mixed(context):
     """Run "git reset --mixed" to reset the branch HEAD and staging area"""
     title = N_('Reset Branch and Stage (Mixed)')
     ok_text = N_('Reset')
-    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    default = context.settings.get_value('reset::mixed', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, ok_text, default=default)
     if ref:
         cmds.do(cmds.ResetMixed, context, ref)
+        context.settings.set_value('reset::mixed', 'ref', ref)
 
 
 def reset_keep(context):
     """Run "git reset --keep" safe reset to avoid clobbering local changes"""
     title = N_('Reset All (Keep Unstaged Changes)')
-    ref = choose_ref(context, title, N_('Reset and Restore'))
+    default = context.settings.get_value('reset::keep', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, N_('Reset and Restore'), default=deafult)
     if ref:
         cmds.do(cmds.ResetKeep, context, ref)
+        context.settings.set_value('reset::keep', 'ref', ref)
 
 
 def reset_merge(context):
@@ -370,27 +376,33 @@ def reset_merge(context):
     """
     title = N_('Restore Worktree and Reset All (Merge)')
     ok_text = N_('Reset and Restore')
-    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    default = context.settings.get_value('reset::merge', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, ok_text, default=default)
     if ref:
         cmds.do(cmds.ResetMerge, context, ref)
+        context.settings.set_value('reset::merge', 'ref', ref)
 
 
 def reset_hard(context):
     """Run "git reset --hard" to fully reset the working tree and staging area"""
     title = N_('Restore Worktree and Reset All (Hard)')
     ok_text = N_('Reset and Restore')
-    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    default = context.settings.get_value('reset::hard', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, ok_text, default=default)
     if ref:
         cmds.do(cmds.ResetHard, context, ref)
+        context.settings.set_value('reset::hard', 'ref', ref)
 
 
 def restore_worktree(context):
     """Restore the worktree to the content from the specified commit"""
     title = N_('Restore Worktree')
     ok_text = N_('Restore Worktree')
-    ref = choose_ref(context, title, ok_text, default='HEAD^')
+    default = context.settings.get_value('restore::worktree', 'ref', default='HEAD^')
+    ref = choose_ref(context, title, ok_text, default=default)
     if ref:
         cmds.do(cmds.RestoreWorktree, context, ref)
+        context.settings.set_value('restore::worktree', 'ref', ref)
 
 
 def install():
