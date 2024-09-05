@@ -292,9 +292,11 @@ class GitConfig(QtCore.QObject):
     def set_repo(self, key, value):
         if value in (None, ''):
             self.git.config(key, unset=True, _readonly=True)
+            self._local.pop(key, None)
         else:
             self.git.config(key, python_to_git(value), _readonly=True)
-        self.update()
+            self._local[key] = value
+        self.updated.emit()
         self.repo_config_changed.emit(key, value)
 
     def find(self, pat):
