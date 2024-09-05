@@ -277,22 +277,33 @@ class Settings:
         return values
 
     def save_gui_state(self, gui, sync=True):
-        """Saves settings for a cola view"""
+        """Saves settings for a widget"""
         name = gui.name()
         self.gui_state[name] = mkdict(gui.export_state())
         self.save(sync=sync)
 
     def get_gui_state(self, gui):
-        """Returns the saved state for a gui"""
-        return self.get_gui_state_by_name(gui.name())
+        """Returns the saved state for a tool"""
+        return self.get(gui.name())
 
-    def get_gui_state_by_name(self, gui_name):
-        """Returns the saved state for a gui by name"""
+    def get(self, gui_name):
+        """Returns the saved state for a tool by name"""
         try:
             state = mkdict(self.gui_state[gui_name])
         except KeyError:
             state = self.gui_state[gui_name] = {}
         return state
+
+    def get_value(self, name, key, default=None):
+        """Return a specific setting value for the specified tool and setting key"""
+        return self.get(name).get(key, default)
+
+    def set_value(self, name, key, value, save=True, sync=True):
+        """Store a specific setting value for the specified tool and setting key value"""
+        values = self.get(name)
+        values[key] = value
+        if save:
+            self.save(sync=sync)
 
 
 def rename_entry(entries, path, name, new_name):

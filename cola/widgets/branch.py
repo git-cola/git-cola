@@ -455,7 +455,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         branch = self.selected_refname()
         remote_branch = gitcmds.tracked_branch(context, branch)
         context.settings.load()
-        push_settings = context.settings.get_gui_state_by_name('push')
+        push_settings = context.settings.get('push')
         remote_messages = push_settings.get('remote_messages', False)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
@@ -486,7 +486,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             return
         remote_branch = gitcmds.tracked_branch(context, branch)
         context.settings.load()
-        pull_settings = context.settings.get_gui_state_by_name('pull')
+        pull_settings = context.settings.get('pull')
         remote_messages = pull_settings.get('remote_messages', False)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
