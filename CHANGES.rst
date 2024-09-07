@@ -1,3 +1,13 @@
+Upcoming
+========
+
+Fixes
+-----
+
+* "Open Using Default Application" now handles paths inside a subdirectory correctly.
+  (`#1419 <https://github.com/git-cola/git-cola/issues/1419>`_)
+
+
 .. _v4.8.2:
 
 v4.8.2

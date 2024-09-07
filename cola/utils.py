@@ -308,7 +308,7 @@ def launch_default_app(paths):
     if is_win32():
         for path in paths:
             if hasattr(os, 'startfile'):
-                os.startfile(path)
+                os.startfile(os.path.abspath(path))
         return
 
     if is_darwin():
