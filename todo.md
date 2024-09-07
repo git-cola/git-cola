@@ -127,8 +127,6 @@ Reporter was able to use the `GIT_COLA_GIT` environment variable instead.
 
 - [startup window issues on Linux Mint](https://github.com/git-cola/git-cola/issues/1186)
 
-- [minimum widget height?](https://github.com/git-cola/git-cola/issues/988)
-
 
 # Notes
 
