@@ -163,6 +163,7 @@ scissors
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
+        self.http_proxy = QtWidgets.QLineEdit()
 
         tooltip = N_(
             'Enable file system change monitoring using '
@@ -184,6 +185,10 @@ scissors
         tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(checked=True, tooltip=tooltip)
 
+        self.proxy_spacer = QtWidgets.QLabel()
+        tooltip = N_('Enable detection and configuration of HTTP proxy settings')
+        self.autodetect_proxy = qtutils.checkbox(checked=True, tooltip=tooltip)
+
         self.add_row(N_('User Name'), self.name)
         self.add_row(N_('Email Address'), self.email)
         self.add_row(N_('Patches Directory'), self.patches_directory)
@@ -201,11 +206,22 @@ scissors
         self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
 
+        self.add_row('', self.proxy_spacer)
+        self.add_row(
+            N_('Automatically Detect and Configure Proxy Settings'),
+            self.autodetect_proxy,
+        )
+        self.add_row(N_('HTTP Proxy URL'), self.http_proxy)
+
         self.set_config({
             prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
             prefs.AUTOCOMPLETE_PATHS: (
                 self.autocomplete_paths,
                 Defaults.autocomplete_paths,
+            ),
+            prefs.AUTODETECT_PROXY: (
+                self.autodetect_proxy,
+                Defaults.autodetect_proxy,
             ),
             prefs.COMMIT_CLEANUP: (self.commit_cleanup, Defaults.commit_cleanup),
             prefs.DIFFCONTEXT: (self.diff_context, Defaults.diff_context),
@@ -214,6 +230,7 @@ scissors
                 Defaults.display_untracked,
             ),
             prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
+            prefs.HTTP_PROXY: (self.http_proxy, Defaults.http_proxy),
             prefs.INOTIFY: (self.inotify, Defaults.inotify),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),

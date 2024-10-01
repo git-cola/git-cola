@@ -590,4 +590,88 @@ def refspec_arg(local_branch, remote_branch, remote, action):
 def run_remote_action(context, fn, remote, action, **kwargs):
     """Run fetch, push or pull"""
     args, kwargs = remote_args(context, remote, action, **kwargs)
+    autodetect_proxy(context, kwargs)
     return fn(*args, **kwargs)
+
+
+def autodetect_proxy(context, kwargs):
+    """Detect proxy settings when running on Gnome and KDE"""
+    # If "git config http.proxy" is configured then there's nothing to do.
+    enabled = prefs.autodetect_proxy(context)
+    if not enabled:
+        return
+    http_proxy = prefs.http_proxy(context)
+    if http_proxy:
+        return
+    xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
+    if not xdg_current_desktop:
+        return
+
+    add_env = {}
+    http_proxy = None
+    https_proxy = None
+
+    if xdg_current_desktop == 'GNOME':
+        gsettings = core.find_executable('gsettings')
+        if gsettings and autodetect_proxy_gnome_is_enabled(gsettings):
+            http_proxy = autodetect_proxy_gnome(gsettings, 'http')
+            https_proxy = autodetect_proxy_gnome(gsettings, 'https')
+    elif xdg_current_desktop == 'KDE':
+        kreadconfig = core.find_executable('kreadconfig5')
+        if kreadconfig:
+            http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
+            https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
+
+    if http_proxy:
+        add_env['http_proxy'] = http_proxy
+    if https_proxy:
+        add_env['https_proxy'] = https_proxy
+    # This function has the side-effect of updating the kwargs dict.
+    # The "_add_env" parameter gets forwarded to the __getattr__ git function's
+    # _add_env option which forwards to subprocess.Popen's s add_env option.
+    if add_env:
+        kwargs['_add_env'] = add_env
+
+
+def autodetect_proxy_gnome_is_enabled(gsettings):
+    """Is the proxy manually configured on Gnome?"""
+    status, out, _ = core.run_command(
+        [gsettings, 'get', 'org.gnome.system.proxy', 'mode']
+    )
+    return status == 0 and out.strip().strip("'") == 'manual'
+
+
+def autodetect_proxy_gnome(gsettings, scheme):
+    """Return the configured HTTP proxy for Gnome"""
+    status, out, _ = core.run_command(
+        [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'host']
+    )
+    if status != 0:
+        return None
+    host = out.strip().strip("'")
+    port = ''
+    status, out, err = core.run_command(
+        [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'port']
+    )
+    if status == 0:
+        port = ':' + out.strip()
+    proxy = host + port
+    return proxy
+
+
+def autodetect_proxy_kde(kreadconfig, scheme):
+    """Return the configured HTTP proxy for KDE"""
+    cmd = [
+        kreadconfig,
+        '--file',
+        'kioslaverc',
+        '--group',
+        'Proxy Settings',
+        '--key',
+        f'{scheme}Proxy',
+    ]
+    status, out, err = core.run_command(cmd)
+    if status == 0:
+        proxy = out.strip()
+        return proxy
+    return None

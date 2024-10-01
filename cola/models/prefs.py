@@ -12,6 +12,7 @@ from ..cmd import Command
 
 ABBREV = 'core.abbrev'
 AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
+AUTODETECT_PROXY = 'cola.autodetectproxy'
 AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
@@ -30,6 +31,7 @@ EXPANDTAB = 'cola.expandtab'
 FONTDIFF = 'cola.fontdiff'
 HIDPI = 'cola.hidpi'
 HISTORY_BROWSER = 'gui.historybrowser'
+HTTP_PROXY = 'http.proxy'
 ICON_THEME = 'cola.icontheme'
 INOTIFY = 'cola.inotify'
 NOTIFY_ON_PUSH = 'cola.notifyonpush'
@@ -105,6 +107,7 @@ class Defaults:
     # These should match Git's defaults for git-defined values.
     abbrev = 12
     autotemplate = False
+    autodetect_proxy = True
     blame_viewer = 'git gui blame'
     block_cursor = True
     bold_headers = False
@@ -119,6 +122,7 @@ class Defaults:
     enable_gravatar = True
     expandtab = False
     history_browser = 'gitk'
+    http_proxy = ''
     icon_theme = 'default'
     inotify = True
     notifyonpush = False
@@ -160,6 +164,11 @@ def abbrev(context):
         except ValueError:
             result = default
     return result
+
+
+def autodetect_proxy(context):
+    """Return True when proxy settings should be automatically configured"""
+    return context.cfg.get(AUTODETECT_PROXY, default=Defaults.autodetect_proxy)
 
 
 def blame_viewer(context):
@@ -274,6 +283,11 @@ def history_browser(context):
     """Return the configured history browser"""
     default = default_history_browser()
     return context.cfg.get(HISTORY_BROWSER, default=default)
+
+
+def http_proxy(context):
+    """Return the configured http proxy"""
+    return context.cfg.get(HTTP_PROXY, default=Defaults.http_proxy)
 
 
 def notify_on_push(context):

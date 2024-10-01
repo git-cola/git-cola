@@ -621,6 +621,13 @@ CONFIGURATION VARIABLES
 =======================
 These variables can be set using `git config` or from the settings.
 
+cola.autodetectproxy
+--------------------
+Set to `false` to disable auto-configuration of HTTP proxy settings based on
+the configured Gnome and KDE Desktop Environment proxy settings.
+The core Git `http.proxy` configuration overrides this value.
+Defaults to `true`.
+
 cola.autocompletepaths
 ----------------------
 Set to `false` to disable auto-completion of filenames in completion widgets.

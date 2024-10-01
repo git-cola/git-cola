@@ -246,6 +246,7 @@ class Git:
     @staticmethod
     def execute(
         command,
+        _add_env=None,
         _cwd=None,
         _decode=True,
         _encoding=None,
@@ -291,6 +292,7 @@ class Git:
         try:
             status, out, err = core.run_command(
                 command,
+                add_env=_add_env,
                 cwd=_cwd,
                 encoding=_encoding,
                 stdin=_stdin,
@@ -335,6 +337,7 @@ class Git:
         # otherwise they'll end up in args, which is bad.
         _kwargs = {'_cwd': self.getcwd()}
         execute_kwargs = (
+            '_add_env',
             '_cwd',
             '_decode',
             '_encoding',
