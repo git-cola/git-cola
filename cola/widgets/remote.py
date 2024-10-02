@@ -16,7 +16,7 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..models import prefs
-from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
+from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH, autodetect_proxy
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import core
@@ -722,6 +722,7 @@ class RemoteActionDialog(standard.Dialog):
         """Push to all selected remotes"""
         selected_remotes = self.selected_remotes
         all_results = None
+        autodetect_proxy(self.context, kwargs)
 
         pushed_remotes = []
         unpushed_remotes = []

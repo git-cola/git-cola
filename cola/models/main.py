@@ -631,7 +631,7 @@ def autodetect_proxy(context, kwargs):
         add_env['https_proxy'] = https_proxy
     # This function has the side-effect of updating the kwargs dict.
     # The "_add_env" parameter gets forwarded to the __getattr__ git function's
-    # _add_env option which forwards to subprocess.Popen's s add_env option.
+    # _add_env option which forwards to core.run_command()'s add_env option.
     if add_env:
         kwargs['_add_env'] = add_env
 
