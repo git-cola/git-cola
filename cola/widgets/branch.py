@@ -431,7 +431,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             N_('Executing action %s') % action, N_('Updating'), self
         )
         if remote_messages:
-            result_handler = log.show_remote_messages(self.context, self)
+            result_handler = log.show_remote_messages(self, self.context)
         else:
             result_handler = None
 
