@@ -16,7 +16,6 @@ from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
-from .. import models
 from .. import icons
 from .. import qtutils
 from . import log
