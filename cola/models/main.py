@@ -596,6 +596,9 @@ def run_remote_action(context, fn, remote, action, **kwargs):
 
 def autodetect_proxy(context, kwargs):
     """Detect proxy settings when running on Gnome and KDE"""
+    # kwargs can refer to persistant global state so we purge it.
+    # Callers should not expect their _add_env to persist.
+    kwargs.pop('_add_env', None)
     # If "git config http.proxy" is configured then there's nothing to do.
     enabled = prefs.autodetect_proxy(context)
     if not enabled:
