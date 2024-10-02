@@ -28,7 +28,6 @@ class SubmodulesWidget(QtWidgets.QFrame):
     def __init__(self, context, parent):
         super().__init__(parent)
         self.context = context
-        self.setToolTip(N_('Submodules'))
 
         self.tree = SubmodulesTreeWidget(context, parent=self)
         self.setFocusProxy(self.tree)
@@ -76,6 +75,7 @@ class AddSubmodule(standard.Dialog):
 
     def __init__(self, parent):
         super().__init__(parent=parent)
+        self.setWindowTitle(N_('Submodules'))
 
         hint = N_('git://git.example.com/repo.git')
         tooltip = N_('Submodule URL (can be relative, ex: ../repo.git)')
