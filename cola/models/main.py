@@ -589,6 +589,7 @@ def refspec_arg(local_branch, remote_branch, remote, action):
 
 def run_remote_action(context, fn, remote, action, **kwargs):
     """Run fetch, push or pull"""
+    kwargs.pop('_add_env', None)
     args, kwargs = remote_args(context, remote, action, **kwargs)
     autodetect_proxy(context, kwargs)
     return fn(*args, **kwargs)
@@ -625,9 +626,9 @@ def autodetect_proxy(context, kwargs):
             http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
             https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
 
-    if http_proxy:
+    if http_proxy and not os.environ.get('http_proxy', None):
         add_env['http_proxy'] = http_proxy
-    if https_proxy:
+    if https_proxy and not os.environ.get('https_proxy', None):
         add_env['https_proxy'] = https_proxy
     # This function has the side-effect of updating the kwargs dict.
     # The "_add_env" parameter gets forwarded to the __getattr__ git function's

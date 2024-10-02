@@ -722,7 +722,6 @@ class RemoteActionDialog(standard.Dialog):
         """Push to all selected remotes"""
         selected_remotes = self.selected_remotes
         all_results = None
-        autodetect_proxy(self.context, kwargs)
 
         pushed_remotes = []
         unpushed_remotes = []
