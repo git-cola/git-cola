@@ -361,7 +361,7 @@ def reset_keep(context):
     """Run "git reset --keep" safe reset to avoid clobbering local changes"""
     title = N_('Reset All (Keep Unstaged Changes)')
     default = context.settings.get_value('reset::keep', 'ref', default='HEAD^')
-    ref = choose_ref(context, title, N_('Reset and Restore'), default=deafult)
+    ref = choose_ref(context, title, N_('Reset and Restore'), default=default)
     if ref:
         cmds.do(cmds.ResetKeep, context, ref)
         context.settings.set_value('reset::keep', 'ref', ref)
