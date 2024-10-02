@@ -9,12 +9,14 @@ from ..compat import uchr
 from ..git import STDOUT
 from ..i18n import N_
 from ..interaction import Interaction
+from ..models import main as main_mod
 from ..widgets import defs
 from ..widgets import standard
 from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
+from .. import models
 from .. import icons
 from .. import qtutils
 from . import log
@@ -459,6 +461,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         remote_messages = push_settings.get('remote_messages', False)
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
+            kwarg = {}
+            main_mod.autodetect_proxy(context, kwarg)
             if remote and branch_name:
                 # we assume that user wants to "Push" the selected local
                 # branch to a remote with same name
@@ -467,6 +471,7 @@ class BranchesTreeWidget(standard.TreeWidget):
                     [remote, branch_name],
                     update_refs=True,
                     remote_messages=remote_messages,
+                    kwarg=kwarg,
                 )
 
     def rename_action(self):
@@ -491,11 +496,14 @@ class BranchesTreeWidget(standard.TreeWidget):
         if remote_branch:
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             if remote and branch_name:
+                kwarg = {}
+                main_mod.autodetect_proxy(context, kwarg)
                 self.git_action_async(
                     'pull',
                     [remote, branch_name],
                     update_refs=True,
                     remote_messages=remote_messages,
+                    kwarg=kwarg,
                 )
 
     def delete_action(self):
@@ -805,11 +813,11 @@ class GitHelper:
     def log(self, origin):
         return self.git.log(origin, abbrev=7, pretty='format:%h', _readonly=True)
 
-    def push(self, remote, branch):
-        return self.git.push(remote, branch, verbose=True)
+    def push(self, remote, branch, **kwarg):
+        return self.git.push(remote, branch, verbose=True, **kwarg)
 
-    def pull(self, remote, branch):
-        return self.git.pull(remote, branch, no_ff=True, verbose=True)
+    def pull(self, remote, branch, **kwarg):
+        return self.git.pull(remote, branch, no_ff=True, verbose=True, **kwarg)
 
     def merge(self, branch):
         return self.git.merge(branch, no_commit=True)
