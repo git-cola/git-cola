@@ -9,6 +9,8 @@ from .. import gitcmds
 from .. import gitcfg
 from .. import version
 from ..git import STDOUT
+from ..interaction import Interaction
+from ..i18n import N_
 from . import prefs
 
 
@@ -606,6 +608,10 @@ def autodetect_proxy(context, kwargs):
         return
     http_proxy = prefs.http_proxy(context)
     if http_proxy:
+        Interaction.log(
+            N_('http proxy configured by "git config http.proxy %(url)s"')
+            % dict(url=http_proxy)
+        )
         return
     xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
     if not xdg_current_desktop:
@@ -626,10 +632,28 @@ def autodetect_proxy(context, kwargs):
             http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
             https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
 
-    if http_proxy and not os.environ.get('http_proxy', None):
+    if os.environ.get('http_proxy'):
+        Interaction.log(
+            N_('http proxy configured by the "http_proxy" environment variable')
+        )
+    elif http_proxy:
+        Interaction.log(
+            N_('%(scheme)s proxy configured from %(desktop)s settings: %(url)s')
+            % dict(scheme='http', desktop=xdg_current_desktop, url=http_proxy)
+        )
         add_env['http_proxy'] = http_proxy
-    if https_proxy and not os.environ.get('https_proxy', None):
+
+    if os.environ.get('https_proxy', None):
+        Interaction.log(
+            N_('https proxy configured by the "https_proxy" environment variable')
+        )
+    elif http_proxy:
+        Interaction.log(
+            N_('%(scheme)s proxy configured from %(desktop)s settings: %(url)s')
+            % dict(scheme='https', desktop=xdg_current_desktop, url=http_proxy)
+        )
         add_env['https_proxy'] = https_proxy
+
     # This function has the side-effect of updating the kwargs dict.
     # The "_add_env" parameter gets forwarded to the __getattr__ git function's
     # _add_env option which forwards to core.run_command()'s add_env option.
@@ -654,7 +678,7 @@ def autodetect_proxy_gnome(gsettings, scheme):
         return None
     host = out.strip().strip("'")
     port = ''
-    status, out, err = core.run_command(
+    status, out, _ = core.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'port']
     )
     if status == 0:
