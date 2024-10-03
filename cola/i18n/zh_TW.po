@@ -502,23 +502,23 @@ msgstr "中止操作"
 
 #: cola/cmds.py:130
 msgid "Abort Applying Patch"
-msgstr ""
+msgstr "中止套用修正檔"
 
 #: cola/cmds.py:124
 msgid "Abort Applying Patch..."
-msgstr ""
+msgstr "中止套用修正檔操作……"
 
 #: cola/widgets/main.py:249
 msgid "Abort Applying Patches..."
-msgstr ""
+msgstr "中止套用修正檔操作……"
 
 #: cola/cmds.py:160
 msgid "Abort Cherry-Pick"
-msgstr ""
+msgstr "中止揀選(cherry-pick)操作"
 
 #: cola/cmds.py:154 cola/widgets/main.py:334
 msgid "Abort Cherry-Pick..."
-msgstr ""
+msgstr "中止揀選(cherry-pick)操作……"
 
 #: cola/cmds.py:191
 msgid "Abort Merge"
@@ -534,7 +534,7 @@ msgstr "要中止操作嗎？"
 
 #: cola/widgets/main.py:250
 msgid "Abort the current \"git am\" patch session"
-msgstr ""
+msgstr "中止當前的「git am」修正檔套用作業階段"
 
 #: cola/cmds.py:157
 msgid ""
@@ -1027,15 +1027,15 @@ msgstr "取出……"
 
 #: cola/widgets/dag.py:386 cola/widgets/search.py:78
 msgid "Cherry Pick"
-msgstr "挑取(cherry-pick)"
+msgstr "揀選(cherry-pick)"
 
 #: cola/guicmds.py:72
 msgid "Cherry-Pick Commit"
-msgstr "挑取(cherry-pick)修訂版提交並合併至當前分支"
+msgstr "揀選(cherry-pick)修訂版提交並合併至當前分支"
 
 #: cola/widgets/main.py:328
 msgid "Cherry-Pick..."
-msgstr "挑取(cherry-pick)……"
+msgstr "揀選(cherry-pick)……"
 
 #: cola/cmds.py:583
 msgid "Cherry-pick failed"
@@ -1101,7 +1101,7 @@ msgstr ""
 
 #: cola/widgets/remote.py:276
 msgid "Close on completion"
-msgstr ""
+msgstr "在推送完成後關閉對話框"
 
 #: cola/widgets/text.py:394
 msgid "Close the find bar"
@@ -1343,6 +1343,9 @@ msgid ""
 "Relative paths are relative to the current repository.\n"
 "Absolute path are used as-is."
 msgstr ""
+"匯出修正檔的預設目錄。\n"
+"相對路徑為自當前版控庫的路徑擴展。\n"
+"絕對路徑則以原樣進行使用。"
 
 #: cola/cmds.py:921 cola/guicmds.py:25 cola/guicmds.py:34
 #: cola/widgets/bookmarks.py:74 cola/widgets/bookmarks.py:249
@@ -1399,7 +1402,7 @@ msgstr "刪除工具列"
 #: cola/cmds.py:1114
 #, python-format
 msgid "Delete branch \"%s\"?"
-msgstr ""
+msgstr "要刪除「%s」分支嗎？"
 
 #: cola/widgets/editremotes.py:85
 msgid "Delete remote"
@@ -1429,7 +1432,7 @@ msgstr "移除行數"
 
 #: cola/widgets/submodules.py:119
 msgid "Depth"
-msgstr ""
+msgstr "撈取(fetch)深度"
 
 #: cola/qtutils.py:839 cola/qtutils.py:886
 msgid "Detach"
@@ -1833,11 +1836,11 @@ msgstr ""
 
 #: cola/widgets/main.py:546
 msgid "Exit Diff Mode"
-msgstr ""
+msgstr "離開內容差異檢視模式"
 
 #: cola/widgets/action.py:81
 msgid "Exit Diff mode"
-msgstr ""
+msgstr "離開內容差異檢視模式"
 
 #: cola/widgets/recent.py:65
 msgid "Expand all"
@@ -1845,7 +1848,7 @@ msgstr "全部展開"
 
 #: cola/widgets/diff.py:1293
 msgid "Export Patch"
-msgstr ""
+msgstr "匯出修正檔"
 
 #: cola/guicmds.py:167 cola/widgets/search.py:74
 msgid "Export Patches"
@@ -1853,7 +1856,7 @@ msgstr "匯出修正檔"
 
 #: cola/widgets/main.py:273
 msgid "Export Patches..."
-msgstr "匯出修正……"
+msgstr "匯出修正檔……"
 
 #: cola/widgets/main.py:551
 msgid "Expression..."
@@ -1869,11 +1872,11 @@ msgstr "延伸描述……"
 
 #: cola/cmds.py:387
 msgid "Failed to commit and continue applying patches"
-msgstr ""
+msgstr "提交並繼續套用修正檔失敗"
 
 #: cola/cmds.py:403
 msgid "Failed to continue applying patches after skipping the current patch"
-msgstr ""
+msgstr "在跳過當前修正檔後無法繼續套用修正檔"
 
 #: cola/widgets/createbranch.py:122
 msgid "Fast Forward Only"
@@ -1972,7 +1975,7 @@ msgstr "尋找檔案"
 
 #: cola/widgets/text.py:380
 msgid "Find in diff"
-msgstr ""
+msgstr "在內容差異中搜尋"
 
 #: cola/widgets/text.py:417
 msgid "Find next item"
@@ -1984,11 +1987,11 @@ msgstr ""
 
 #: cola/widgets/text.py:387
 msgid "Find the next occurrence of the phrase"
-msgstr ""
+msgstr "尋找搜尋式樣的下一個吻合項目"
 
 #: cola/widgets/text.py:383
 msgid "Find the previous occurrence of the phrase"
-msgstr ""
+msgstr "尋找搜尋式樣的上一個吻合項目"
 
 #: cola/widgets/grep.py:115
 msgid "Fixed String"
@@ -2044,7 +2047,7 @@ msgstr ""
 
 #: cola/widgets/toolbar.py:181
 msgid "Follow System Style"
-msgstr ""
+msgstr "跟隨系統樣式"
 
 #: cola/widgets/prefs.py:270
 msgid "Font Size"
@@ -2153,7 +2156,7 @@ msgstr "尋求幫助 - git-cola-sequence-editor"
 
 #: cola/widgets/prefs.py:379
 msgid "High DPI"
-msgstr ""
+msgstr "高 DPI"
 
 #: cola/gitcmds.py:905
 msgid "Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel the current cherry-pick."
@@ -2169,11 +2172,11 @@ msgstr "匈牙利語翻譯"
 
 #: cola/widgets/toolbar.py:182
 msgid "Icon Only"
-msgstr ""
+msgstr "僅有圖示"
 
 #: cola/widgets/prefs.py:378
 msgid "Icon theme"
-msgstr ""
+msgstr "圖示主題"
 
 #: cola/widgets/diff.py:784
 msgid "Ignore all whitespace"
@@ -2205,7 +2208,7 @@ msgstr ""
 
 #: cola/widgets/status.py:936
 msgid "Ignore..."
-msgstr ""
+msgstr "忽略(ignore)……"
 
 #: cola/widgets/remote.py:258
 msgid "Include tags "
@@ -2387,7 +2390,7 @@ msgstr "（自從 2007 年開始）維護者與開發者"
 
 #: cola/widgets/text.py:390
 msgid "Match Case"
-msgstr ""
+msgstr "區分大小寫"
 
 #: cola/widgets/merge.py:86
 msgid "Merge"
@@ -2615,7 +2618,7 @@ msgstr "以系統預設的軟體開啟"
 
 #: cola/cmds.py:1839
 msgid "Open Worktree"
-msgstr ""
+msgstr "開啟作業目錄樹(worktree)"
 
 #: cola/widgets/bookmarks.py:219 cola/widgets/startup.py:341
 msgid "Open in New Window"
@@ -2664,7 +2667,7 @@ msgstr "粘貼"
 
 #: cola/cmds.py:363
 msgid "Patch failed to apply"
-msgstr ""
+msgstr "修正檔套用失敗"
 
 #: cola/cmds.py:375
 msgid "Patch(es) Applied"
@@ -2672,11 +2675,11 @@ msgstr "已套用所有修正"
 
 #: cola/widgets/diff.py:1289 cola/widgets/main.py:713
 msgid "Patches"
-msgstr ""
+msgstr "修正檔"
 
 #: cola/widgets/prefs.py:189
 msgid "Patches Directory"
-msgstr ""
+msgstr "修正檔保存目錄"
 
 #: cola/widgets/bookmarks.py:466 cola/widgets/submodules.py:117
 msgid "Path"
@@ -2813,11 +2816,11 @@ msgstr ""
 
 #: cola/guicmds.py:251
 msgid "Quick Open Repository"
-msgstr ""
+msgstr "快速開啟版控庫"
 
 #: cola/widgets/main.py:678
 msgid "Quick Open..."
-msgstr ""
+msgstr "快速開啟……"
 
 #: cola/widgets/main.py:355
 msgid "Quit"
@@ -3509,7 +3512,7 @@ msgstr "顯示行號"
 
 #: cola/widgets/remote.py:223
 msgid "Show remote messages"
-msgstr ""
+msgstr "顯示遠端版控庫傳回的訊息"
 
 #: cola/widgets/diff.py:786
 msgid "Show whole surrounding functions of changes"
@@ -3590,11 +3593,11 @@ msgstr "移動到新修訂版準備區域"
 
 #: cola/cmds.py:2697
 msgid "Stage / Unstage"
-msgstr "移入／移出新修訂版準備區域"
+msgstr "移入／移出至新修訂版準備區域"
 
 #: cola/cmds.py:2679
 msgid "Stage / Unstage All"
-msgstr ""
+msgstr "將所有項目移入／移出至新修訂版準備區域"
 
 #: cola/widgets/diff.py:1051
 msgid "Stage Diff Hunk"
@@ -3635,7 +3638,7 @@ msgstr "要移入新修訂版準備區域並提交出去嗎？"
 
 #: cola/widgets/action.py:58
 msgid "Stage changes using \"git add\""
-msgstr ""
+msgstr "使用「git add」命令將內容變更移動至新修訂版準備區域"
 
 #: cola/cmds.py:2526
 msgid "Stage conflicts"
@@ -3709,7 +3712,7 @@ msgstr ""
 
 #: cola/widgets/main.py:140 cola/widgets/submodules.py:31
 msgid "Submodules"
-msgstr ""
+msgstr "子模組"
 
 #: cola/widgets/prefs.py:194
 msgid "Summarize Merge Commits"
@@ -3750,15 +3753,15 @@ msgstr ""
 
 #: cola/widgets/toolbar.py:184
 msgid "Text Beside Icon"
-msgstr ""
+msgstr "文字在圖示旁邊"
 
 #: cola/widgets/toolbar.py:183
 msgid "Text Only"
-msgstr ""
+msgstr "僅文字"
 
 #: cola/widgets/toolbar.py:185
 msgid "Text Under Icon"
-msgstr ""
+msgstr "文字在圖示底下"
 
 #: cola/widgets/prefs.py:271
 msgid "Text Width"
@@ -3963,7 +3966,7 @@ msgstr "切換路徑過濾器開關"
 
 #: cola/widgets/toolbar.py:322
 msgid "Toolbar Style:"
-msgstr ""
+msgstr "工具列樣式："
 
 #: cola/widgets/cfgactions.py:225 cola/widgets/merge.py:45
 msgid "Tracking Branch"
@@ -4183,7 +4186,7 @@ msgstr "是否簽名此標籤 (git tag -s)"
 
 #: cola/widgets/text.py:391
 msgid "Whole Words"
-msgstr ""
+msgstr "吻合項目須為完整詞彙"
 
 #: cola/widgets/commitmsg.py:437
 msgid "Would you like to stage and commit all modified files?"
