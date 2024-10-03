@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Git DAG
 Comment=Git DAG visualizer
+Comment[zh_TW]=Git 有向無環圖(DAG)視覺化檢視器
 Exec=git-dag --prompt
 Icon=git-cola
 StartupNotify=true
