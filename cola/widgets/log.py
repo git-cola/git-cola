@@ -29,6 +29,8 @@ class LogWidget(QtWidgets.QFrame):
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.output_text)
         self.channel.connect(self.append, type=Qt.QueuedConnection)
+        clear_action = qtutils.add_action(self, N_('Clear'), self.output_text.clear)
+        self.output_text.menu_actions.append(clear_action)
         if display_usage:
             self._display_usage()
 
