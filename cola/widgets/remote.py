@@ -16,7 +16,7 @@ from ..i18n import N_
 from ..interaction import Interaction
 from ..models import main
 from ..models import prefs
-from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH, autodetect_proxy
+from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import core
