@@ -602,10 +602,10 @@ def autodetect_proxy(context, kwargs):
     # kwargs can refer to persistant global state so we purge it.
     # Callers should not expect their _add_env to persist.
     kwargs.pop('_add_env', None)
-    # If "git config http.proxy" is configured then there's nothing to do.
     enabled = prefs.autodetect_proxy(context)
     if not enabled:
         return
+    # If "git config http.proxy" is configured then there's nothing to do.
     http_proxy = prefs.http_proxy(context)
     if http_proxy:
         Interaction.log(
