@@ -1298,7 +1298,7 @@ msgstr "建立了一個名為「%s」的新標籤"
 
 #: cola/widgets/prefs.py:292
 msgid "Ctrl+MouseWheel to Zoom"
-msgstr ""
+msgstr "Ctrl+滾動滑鼠滾輪以縮放文字大小"
 
 #: cola/widgets/prefs.py:455
 msgid "Current Repository"
@@ -1326,7 +1326,7 @@ msgstr "有向無環圖(DAG)……"
 
 #: cola/icons.py:54
 msgid "Dark Theme"
-msgstr ""
+msgstr "暗黑主題"
 
 #: cola/widgets/dag.py:571
 msgid "Date, Time"
@@ -3492,11 +3492,11 @@ msgstr "檢視變更紀錄"
 
 #: cola/widgets/prefs.py:381
 msgid "Show file counts in Status titles"
-msgstr ""
+msgstr "於狀態面板中的項目分類標題中顯示檔案計數"
 
 #: cola/widgets/diff.py:791
 msgid "Show filenames"
-msgstr ""
+msgstr "顯示檔案名稱"
 
 #: cola/sequenceeditor.py:183 cola/widgets/finder.py:137
 msgid ""
@@ -3552,7 +3552,7 @@ msgstr "跳過目前的修正"
 
 #: cola/widgets/main.py:266
 msgid "Skip applying the current patch and continue applying patches"
-msgstr ""
+msgstr "跳過套用當前的修正檔並繼續套用其他修正"
 
 #: cola/widgets/prefs.py:284
 msgid "Sort bookmarks alphabetically"
@@ -3565,7 +3565,7 @@ msgstr "西班牙語翻譯"
 
 #: cola/widgets/createtag.py:86
 msgid "Specifies the commit to tag"
-msgstr "指定 commit 雜湊給標籤"
+msgstr "指定要新增標籤的修訂版提交"
 
 #: cola/widgets/createtag.py:79
 msgid "Specifies the tag message"
@@ -3609,7 +3609,7 @@ msgstr "將已變更的項目移入新修訂版準備區域"
 
 #: cola/cmds.py:2668
 msgid "Stage Modified and Untracked"
-msgstr ""
+msgstr "將已變更與未追蹤的項目移入新修訂版準備區域"
 
 #: cola/widgets/status.py:870 cola/widgets/status.py:897
 #: cola/widgets/status.py:965
@@ -3700,15 +3700,15 @@ msgstr "停止追蹤路徑"
 
 #: cola/widgets/submodules.py:81
 msgid "Submodule URL (can be relative, ex: ../repo.git)"
-msgstr ""
+msgstr "子模組的 URL（可以是相對路徑，如：../repo.git）"
 
 #: cola/widgets/submodules.py:89
 msgid "Submodule branch to track (optional)"
-msgstr ""
+msgstr "要追蹤的子模組分支（選填）"
 
 #: cola/widgets/submodules.py:85
 msgid "Submodule path within the current repository (optional)"
-msgstr ""
+msgstr "當前版控庫中要建立的子模組路徑（選填）"
 
 #: cola/widgets/main.py:140 cola/widgets/submodules.py:31
 msgid "Submodules"
