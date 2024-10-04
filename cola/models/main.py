@@ -648,10 +648,10 @@ def autodetect_proxy(context, kwargs):
         Interaction.log(
             N_('https proxy configured by the "https_proxy" environment variable')
         )
-    elif http_proxy:
+    elif https_proxy:
         Interaction.log(
             N_('%(scheme)s proxy configured from %(desktop)s settings: %(url)s')
-            % dict(scheme='https', desktop=xdg_current_desktop, url=http_proxy)
+            % dict(scheme='https', desktop=xdg_current_desktop, url=https_proxy)
         )
         add_env['https_proxy'] = https_proxy
 
