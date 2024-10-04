@@ -9,6 +9,11 @@ Usability, bells and whistles
 * The Git `http.proxy` configuration can now be edited on the settings page.
   (`#1420 <https://github.com/git-cola/git-cola/issues/1420>`_)
 
+Translations
+------------
+* Updated Chinese (Taiwan) translations.
+  (`#1424 <https://github.com/git-cola/git-cola/pull/1424>`_)
+
 Fixes
 -----
 * The repository selection startup dialog was updated to work on Qt6/PyQt6.
@@ -2047,6 +2052,8 @@ Usability, bells and whistles
   launch difftool with the standard `Ctrl+D` hotkey.  The `Ctrl+E` hotkey was
   also added for launching an editor.
 
+Translations
+------------
 * Traditional Chinese (Taiwan) translation updates.
 
 Fixes
@@ -2555,10 +2562,12 @@ Usability, bells and whistles
 * The commit message editor's context menu now has a "Clear..." action for
   clearing the message across both the summary and description fields.
 
-* Traditional Chinese (Taiwan) translation updates.
-
 * The system theme's icons are now used wherever possible.
   (`#458 <https://github.com/git-cola/git-cola/pull/458>`_)
+
+Translations
+------------
+* Traditional Chinese (Taiwan) translation updates.
 
 Fixes
 -----
