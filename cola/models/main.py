@@ -621,16 +621,17 @@ def autodetect_proxy(context, kwargs):
     http_proxy = None
     https_proxy = None
 
-    if xdg_current_desktop == 'GNOME':
-        gsettings = core.find_executable('gsettings')
-        if gsettings and autodetect_proxy_gnome_is_enabled(gsettings):
-            http_proxy = autodetect_proxy_gnome(gsettings, 'http')
-            https_proxy = autodetect_proxy_gnome(gsettings, 'https')
-    elif xdg_current_desktop == 'KDE':
+    if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
         kreadconfig = core.find_executable('kreadconfig5')
         if kreadconfig:
             http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
             https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
+    elif xdg_current_desktop:
+        # If we're not on KDE then we'll fallback to GNOME / gsettings.
+        gsettings = core.find_executable('gsettings')
+        if gsettings and autodetect_proxy_gnome_is_enabled(gsettings):
+            http_proxy = autodetect_proxy_gnome(gsettings, 'http')
+            https_proxy = autodetect_proxy_gnome(gsettings, 'https')
 
     if os.environ.get('http_proxy'):
         Interaction.log(
