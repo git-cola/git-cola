@@ -11,6 +11,8 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The repository selection startup dialog was updated to work on Qt6/PyQt6.
+  (`#1422 <https://github.com/git-cola/git-cola/issues/1422>`_)
 
 * "Open Using Default Application" now handles paths inside a subdirectory correctly.
   (`#1419 <https://github.com/git-cola/git-cola/issues/1419>`_)

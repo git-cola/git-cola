@@ -500,7 +500,7 @@ class BookmarksListView(QtWidgets.QListView):
         self.apply_func(self.accept_item)
 
     def accept_item(self, _item):
-        if self.state() & self.EditingState:
+        if qtutils.enum_value(self.state()) & qtutils.enum_value(self.EditingState):
             current_index = self.currentIndex()
             widget = self.indexWidget(current_index)
             if widget:
