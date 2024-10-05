@@ -184,11 +184,11 @@ class Git:
     The Git class manages communication with the Git binary
     """
 
-    def __init__(self):
+    def __init__(self, worktree=None):
         self.paths = Paths()
 
         self._valid = {}  #: Store the result of is_git_dir() for performance
-        self.set_worktree(core.getcwd())
+        self.set_worktree(worktree or core.getcwd())
 
     def is_git_repository(self, path):
         return is_git_repository(path)
