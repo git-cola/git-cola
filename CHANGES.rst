@@ -22,6 +22,12 @@ Fixes
 * "Open Using Default Application" now handles paths inside a subdirectory correctly.
   (`#1419 <https://github.com/git-cola/git-cola/issues/1419>`_)
 
+Development
+-----------
+* The version number reported by ``git cola version`` and the "About" dialog was made
+  more accurate when Git Cola is run directly from a Git worktree.
+  (`#1425 <https://github.com/git-cola/git-cola/issues/1425>`_)
+
 
 .. _v4.8.2:
 
