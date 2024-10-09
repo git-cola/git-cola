@@ -134,7 +134,7 @@ def _emit_push_notification(
         'total': total,
         'count': count,
     }
-    title = N_('Pushed %(count)s / %(total)s remotes - Git Cola') % scope
+    title = N_('Pushed %(count)s / %(total)s remotes') % scope
 
     pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
     unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)

@@ -2725,7 +2725,7 @@ msgstr "Odeslat (push)…"
 
 #: cola/widgets/remote.py:139
 #, python-format
-msgid "Pushed %(count)s / %(total)s remotes - Git Cola"
+msgid "Pushed %(count)s / %(total)s remotes"
 msgstr ""
 
 #: cola/widgets/remote.py:141
