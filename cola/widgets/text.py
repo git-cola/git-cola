@@ -103,7 +103,7 @@ class BaseTextEditExtension(QtCore.QObject):
         widget = self.widget
         widget.setMinimumSize(QtCore.QSize(10, 10))
         widget.setWordWrapMode(QtGui.QTextOption.WordWrap)
-        widget.setLineWrapMode(widget.NoWrap)
+        widget.setLineWrapMode(widget.__class__.NoWrap)
         if self._readonly:
             widget.setReadOnly(True)
             widget.setAcceptDrops(False)

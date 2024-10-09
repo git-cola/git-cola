@@ -205,7 +205,7 @@ class BookmarksTreeView(standard.TreeView):
 
         # We make the items editable, but we don't want the double-click
         # behavior to trigger editing.  Make it behave like Mac OS X's Finder.
-        self.setEditTriggers(self.SelectedClicked)
+        self.setEditTriggers(self.__class__.SelectedClicked)
 
         self.open_action = qtutils.add_action(
             self, N_('Open'), self.open_repo, hotkeys.OPEN

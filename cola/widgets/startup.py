@@ -315,7 +315,7 @@ class BookmarksListView(QtWidgets.QListView):
         self.open_selected_repo = open_selected_repo
         self.set_model = set_model
 
-        self.setEditTriggers(self.SelectedClicked)
+        self.setEditTriggers(self.__class__.SelectedClicked)
 
         self.activated.connect(self.open_selected_repo)
 

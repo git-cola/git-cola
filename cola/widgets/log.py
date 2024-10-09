@@ -65,13 +65,13 @@ class LogWidget(QtWidgets.QFrame):
             return
         msg = core.decode(msg)
         cursor = self.output_text.textCursor()
-        cursor.movePosition(cursor.End)
+        cursor.movePosition(QtGui.QTextCursor.End)
         text_widget = self.output_text
         # NOTE: the ':  ' colon-SP-SP suffix is for the syntax highlighter
         prefix = core.decode(time.strftime('%Y-%m-%d %H:%M:%S:  '))  # ISO-8601
         for line in msg.split('\n'):
             cursor.insertText(prefix + line + '\n')
-        cursor.movePosition(cursor.End)
+        cursor.movePosition(QtGui.QTextCursor.End)
         text_widget.setTextCursor(cursor)
 
     def log(self, msg):

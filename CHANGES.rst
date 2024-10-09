@@ -24,6 +24,8 @@ Packaging
   kept around for now but if a breaking change is ever introduced then support for
   ``notify-py`` will be dropped in favor of supporting ``notify2`` exclusively.
 
+* Improved support for PySide6. PySide2 has some breaking divergences from PyQt6.
+
 Fixes
 -----
 * The repository selection startup dialog was updated to work on Qt6/PyQt6.
