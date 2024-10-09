@@ -10,6 +10,8 @@ try:
 except ImportError:
     notifypy = None
 
+from . import interaction
+
 
 def shorten_paths(source_paths):
     """Shorten a sequence of paths into unique strings for display"""
@@ -75,3 +77,5 @@ def notify(app_name, title, message, icon):
         notification.message = message
         notification.icon = icon
         notification.send()
+    else:
+        interaction.Interaction.log('%s: %s' % (title, message))
