@@ -589,8 +589,8 @@ class RemoteActionDialog(standard.Dialog):
         displayed = []
         for remote_name in self.model.remotes:
             url = self.model.remote_url(remote_name, self.action)
-            display = '{}\t({})'.format(remote_name, N_('URL: %s') % url)
-            displayed.append(display)
+            display_text = '{}\t({})'.format(remote_name, N_('URL: %s') % url)
+            displayed.append(display_text)
         qtutils.set_items(widget, displayed)
 
     def update_remotes(self, update_command_display=True):
