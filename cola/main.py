@@ -583,7 +583,7 @@ def cmd_config(args):
 def cmd_dag(args):
     from .widgets import dag
 
-    context = app.application_init(args)
+    context = app.application_init(args, app_name='Git DAG')
     # cola.main() uses parse_args(), unlike dag.main() which uses
     # parse_known_args(), thus we aren't able to automatically forward
     # all unknown arguments.  Special-case support for "--all" since it's

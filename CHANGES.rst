@@ -14,6 +14,16 @@ Translations
 * Updated Chinese (Taiwan) translations.
   (`#1424 <https://github.com/git-cola/git-cola/pull/1424>`_)
 
+Packaging
+---------
+* `notify2 <https://pypi.org/project/notify2>` (``sudo apt install python3-notify2``)
+  is now supported and preferred over ``notify-py`` for sending desktop notifications.
+  This is an optional dependency that enables additional features when installed.
+  ``notify-py`` will continue to be used if only it is installed, but only `notify2` will
+  be used when both are available. Support for the current ``notifypy`` API will be
+  kept around for now but if a breaking change is ever introduced then support for
+  ``notify-py`` will be dropped in favor of supporting ``notify2`` exclusively.
+
 Fixes
 -----
 * The repository selection startup dialog was updated to work on Qt6/PyQt6.

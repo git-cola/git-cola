@@ -20,6 +20,7 @@ from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
 from ..qtutils import connect_button
 from ..qtutils import get
 from .. import core
+from .. import display
 from .. import git
 from .. import gitcmds
 from .. import icons
@@ -123,20 +124,17 @@ class ActionTask(qtutils.Task):
         return self.model_action(self.remote, **self.kwargs)
 
 
-def _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes):
+def _emit_push_notification(
+    context, selected_remotes, pushed_remotes, unpushed_remotes
+):
     """Emit desktop notification when pushing remotes"""
-    if notifypy is None:
-        return
-
-    notification = notifypy.Notify()
-
     total = len(selected_remotes)
     count = len(pushed_remotes)
     scope = {
         'total': total,
         'count': count,
     }
-    notification.title = N_('Pushed %(count)s / %(total)s remotes - Git Cola') % scope
+    title = N_('Pushed %(count)s / %(total)s remotes - Git Cola') % scope
 
     pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
     unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)
@@ -144,18 +142,18 @@ def _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes):
     error_icon = resources.icon_path('git-cola-error.svg')
 
     if unpushed_remotes:
-        notification.icon = error_icon
+        icon = error_icon
     else:
-        notification.icon = success_icon
+        icon = success_icon
 
     if pushed_remotes and unpushed_remotes:
-        notification.message = unpushed_message + '\t\t' + pushed_message
+        message = unpushed_message + '\t\t' + pushed_message
     elif pushed_remotes:
-        notification.message = pushed_message
+        message = pushed_message
     else:
-        notification.message = unpushed_message
+        message = unpushed_message
 
-    notification.send()
+    display.notify(context.app_name, title, message, icon)
 
 
 class RemoteActionDialog(standard.Dialog):
@@ -737,7 +735,9 @@ class RemoteActionDialog(standard.Dialog):
             all_results = combine(result, all_results)
 
         if prefs.notify_on_push(self.context):
-            _emit_push_notification(selected_remotes, pushed_remotes, unpushed_remotes)
+            _emit_push_notification(
+                self.context, selected_remotes, pushed_remotes, unpushed_remotes
+            )
 
         return all_results
 

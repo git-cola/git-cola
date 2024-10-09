@@ -319,19 +319,18 @@ def restore_session(args):
         args.repo = session.repo
 
 
-def application_init(args, update=False):
+def application_init(args, update=False, app_name='Git Cola'):
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
     process_args(args)
 
-    context = new_context(args)
+    context = new_context(args, app_name)
     timer = context.timer
     timer.start('init')
 
     new_worktree(context, args.repo, args.prompt)
-
     if update:
         context.model.update_status()
 
@@ -341,7 +340,7 @@ def application_init(args, update=False):
     return context
 
 
-def new_context(args):
+def new_context(args, app_name):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.settings = args.settings or Settings.read()
@@ -350,6 +349,7 @@ def new_context(args):
     context.fsmonitor = fsmonitor.create(context)
     context.selection = selection.create()
     context.model = main.create(context)
+    context.app_name = app_name
     context.app = new_application(context, args)
     context.timer = Timer()
 
