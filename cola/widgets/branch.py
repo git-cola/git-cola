@@ -462,6 +462,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             remote, branch_name = gitcmds.parse_remote_branch(remote_branch)
             kwarg = {}
             main_mod.autodetect_proxy(context, kwarg)
+            main_mod.no_color(kwarg)
             if remote and branch_name:
                 # we assume that user wants to "Push" the selected local
                 # branch to a remote with same name
@@ -497,6 +498,7 @@ class BranchesTreeWidget(standard.TreeWidget):
             if remote and branch_name:
                 kwarg = {}
                 main_mod.autodetect_proxy(context, kwarg)
+                main_mod.no_color(kwarg)
                 self.git_action_async(
                     'pull',
                     [remote, branch_name],

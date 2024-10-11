@@ -9,6 +9,12 @@ Usability, bells and whistles
 * The Git ``http.proxy`` configuration can now be edited on the settings page.
   (`#1420 <https://github.com/git-cola/git-cola/issues/1420>`_)
 
+* `The NO_COLOR environment variable <http://no-color.org>`_ is now set to ``1`` when
+  running the ``git commit``, ``git fetch``, ``git push`` and ``git pull`` commands.
+  This is done to disable ANSI color output in third-party tools that can be integrated
+  into these commands via git hooks.
+  (`#1426 <https://github.com/git-cola/git-cola/issues/1426>`_)
+
 Translations
 ------------
 * Updated Chinese (Taiwan) translations.

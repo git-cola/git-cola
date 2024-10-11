@@ -594,7 +594,20 @@ def run_remote_action(context, fn, remote, action, **kwargs):
     kwargs.pop('_add_env', None)
     args, kwargs = remote_args(context, remote, action, **kwargs)
     autodetect_proxy(context, kwargs)
+    no_color(kwargs)
     return fn(*args, **kwargs)
+
+
+def no_color(kwargs):
+    """Augment kwargs with an _add_env environment dict that disables colors"""
+    try:
+        env = kwargs['_add_env']
+    except KeyError:
+        env = kwargs['_add_env'] = {}
+    else:
+        if env is None:
+            env = kwargs['_add_env'] = {}
+    env['NO_COLOR'] = '1'
 
 
 def autodetect_proxy(context, kwargs):

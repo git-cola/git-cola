@@ -817,6 +817,7 @@ class Commit(ResetMode):
             core.write(tmp_file, msg)
             # Run 'git commit'
             status, out, err = self.git.commit(
+                _add_env={'NO_COLOR': '1'},
                 F=tmp_file,
                 v=True,
                 gpg_sign=self.sign,
