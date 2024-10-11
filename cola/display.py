@@ -78,4 +78,4 @@ def notify(app_name, title, message, icon):
         notification.icon = icon
         notification.send()
     else:
-        interaction.Interaction.log('%s: %s' % (title, message))
+        interaction.Interaction.log(f'{title}: {message}')

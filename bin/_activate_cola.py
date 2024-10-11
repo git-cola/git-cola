@@ -57,13 +57,13 @@ def get_version():
     # Increment the last number.
     if numbers:
         try:
-            last_number = '{}'.format(int(numbers[-1]) + 1)
+            last_number = f'{int(numbers[-1]) + 1}'
         except ValueError:
             last_number = '1'
         numbers[-1] = last_number
         parts[0] = '.'.join(numbers)
 
-    version = '%s.dev%s+%s' % (parts[0], parts[1], parts[2])
+    version = f'{parts[0]}.dev{parts[1]}+{parts[2]}'
     # Worktree is dirty. Append the current date.
     if num_parts == 4:
         now = datetime.datetime.now()
@@ -90,7 +90,7 @@ def update_pkginfo_version(scm_version):
     new_lines = []
     replaced = False
     token = 'Version: '
-    new_version = 'Version: {}'.format(scm_version)
+    new_version = f'Version: {scm_version}'
     for line in content.splitlines():
         if not replaced and line.startswith(token):
             new_lines.append(new_version)
@@ -102,7 +102,7 @@ def update_pkginfo_version(scm_version):
     try:
         with open(pkginfo, 'w', encoding='utf-8') as pkginfo_file:
             pkginfo_file.write('\n'.join(new_lines))
-    except IOError:
+    except OSError:
         pass
 
 
@@ -111,9 +111,9 @@ def get_pkginfo_version(pkginfo):
     version = None
     content = None
     try:
-        with open(pkginfo, 'r', encoding='utf-8') as pkginfo_file:
+        with open(pkginfo, encoding='utf-8') as pkginfo_file:
             content = pkginfo_file.read()
-    except IOError:
+    except OSError:
         return (content, version)
 
     token = 'Version: '
