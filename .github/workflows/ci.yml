@@ -50,18 +50,17 @@ jobs:
               python3-send2trash
           # Development dependencies
           sudo apt-get install \
-              python3-pytest \
               python3-setuptools-scm \
               python3-sphinx
-          pip install cercis
+          garden dev -vv
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
       - name: Run tests and checks
-        run: garden -vv check
+        run: garden check -vv
       - name: Code formatting
-        run: garden -vv fmt -- --check
+        run: garden fmt -vv -- --check
 
   windows:
     name: Windows
