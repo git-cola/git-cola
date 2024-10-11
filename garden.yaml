@@ -49,8 +49,15 @@ trees:
       check>:
         - test
         - check/fmt
+        - check/pyupgrade
         - doc
       check/fmt: garden fmt -- --check
+      check/pyupgrade: |
+        ${activate}
+        if type pyupgrade >/dev/null 2>&1
+        then
+            pyupgrade --py36-plus bin/git-* bin/*.py cola/*.py cola/*/*.py
+        fi
       fmt: |
         ${activate}
         cercis --version
