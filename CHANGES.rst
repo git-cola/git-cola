@@ -12,7 +12,8 @@ Usability, bells and whistles
 * `The NO_COLOR environment variable <http://no-color.org>`_ is now set to ``1`` when
   running the ``git commit``, ``git fetch``, ``git push`` and ``git pull`` commands.
   This is done to disable ANSI color output in third-party tools that can be integrated
-  into these commands via git hooks.
+  into these commands via git hooks. `TERM` is also set to `dumb` for tools that do not
+  honor this variable.
   (`#1426 <https://github.com/git-cola/git-cola/issues/1426>`_)
 
 Translations

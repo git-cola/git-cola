@@ -813,11 +813,15 @@ class Commit(ResetMode):
         context = self.context
         msg = self.msg
         tmp_file = utils.tmp_filename('commit-message')
+        add_env = {
+            'NO_COLOR': '1',
+            'TERM': 'dumb',
+        }
         try:
             core.write(tmp_file, msg)
             # Run 'git commit'
             status, out, err = self.git.commit(
-                _add_env={'NO_COLOR': '1'},
+                _add_env=add_env,
                 F=tmp_file,
                 v=True,
                 gpg_sign=self.sign,

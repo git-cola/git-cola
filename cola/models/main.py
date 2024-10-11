@@ -608,6 +608,7 @@ def no_color(kwargs):
         if env is None:
             env = kwargs['_add_env'] = {}
     env['NO_COLOR'] = '1'
+    env['TERM'] = 'dumb'
 
 
 def autodetect_proxy(context, kwargs):
