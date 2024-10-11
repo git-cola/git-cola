@@ -1192,7 +1192,10 @@ class DeleteRemoteBranch(DeleteBranch):
         self.remote = remote
 
     def action(self):
-        return self.git.push(self.remote, self.branch, delete=True)
+        kwargs = {}
+        main.autodetect_proxy(self.context, kwargs)
+        main.no_color(kwargs)
+        return self.git.push(self.remote, self.branch, delete=True, **kwargs)
 
     def success(self):
         self.model.update_status()
