@@ -236,7 +236,6 @@ class RepoReader:
             'log.showSignature=false',
             'log',
             '--topo-order',
-            '--reverse',
             '--decorate=full',
             '--pretty=' + logfmt,
         ]
@@ -255,7 +254,6 @@ class RepoReader:
         CommitFactory.reset()
         if self._proc:
             self._proc.kill()
-        self._proc = None
         self._cached = False
         self._topo_list = []
 
@@ -279,15 +277,9 @@ class RepoReader:
             + ['--date=%s' % prefs.logdate(self.context)]
             + ref_args
         )
-        self._proc = core.start_command(cmd)
-
-        while True:
-            log_entry = core.readline(self._proc.stdout).rstrip()
+        status, out, _ = core.run_command(cmd)
+        for log_entry in reversed(out.splitlines()):
             if not log_entry:
-                self._cached = True
-                self._proc.wait()
-                self.returncode = self._proc.returncode
-                self._proc = None
                 break
             oid = log_entry[:40]
             try:
@@ -297,7 +289,9 @@ class RepoReader:
                 self._objects[commit.oid] = commit
                 self._topo_list.append(commit)
                 yield commit
-        return
+
+        self._cached = True
+        self.returncode = status
 
     def __getitem__(self, oid):
         return self._objects[oid]

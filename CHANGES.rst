@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* ``git dag --follow <filename>`` is now supported for viewing the history of files
+  that have been renamed.
+  (`#1327 <https://github.com/git-cola/git-cola/issues/1327>`_)
+
 * HTTP proxies are now automatically configured on Gnome and KDE Desktop Environments.
   (`#1420 <https://github.com/git-cola/git-cola/issues/1420>`_)
 
