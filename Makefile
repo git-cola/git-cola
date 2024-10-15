@@ -16,6 +16,7 @@ all::
 #
 # The external commands used by this Makefile are...
 CP = cp
+INSTALL = install
 FIND = find
 MKDIR_P = mkdir -p
 PIP = pip
@@ -28,6 +29,12 @@ XARGS = xargs
 # These values can be overridden on the command-line or via config.mak
 # DESTDIR =
 prefix = $(HOME)
+datadir ?= $(prefix)/share
+appdir ?= $(datadir)/applications
+docdir ?= $(datadir)/doc/git-cola
+iconsdir ?= $(datadir)/icons
+icons_scalabledir ?= $(iconsdir)/hicolor/scalable/apps
+metainfodir ?= $(datadir)/metainfo
 python_version := $(shell $(PYTHON) -c 'import sys; print("%s.%s" % sys.version_info[:2])')
 python_lib = python$(python_version)/site-packages
 pythondir = $(prefix)/lib/$(python_lib)
@@ -44,13 +51,11 @@ cola_version := $(subst ',,$(VERSION))
 install_args =
 ifdef DESTDIR
 	install_args += --root="$(DESTDIR)"
-	export DESTDIR
 endif
 install_args += --prefix="$(prefix)"
 install_args += --disable-pip-version-check
 install_args += --ignore-installed
 install_args += --no-deps
-export prefix
 
 PYTHON_DIRS = cola
 PYTHON_DIRS += test
@@ -60,11 +65,32 @@ ALL_PYTHON_DIRS = $(PYTHON_DIRS)
 # User customizations
 -include config.mak
 
+export prefix
+ifdef DESTDIR
+	export DESTDIR
+endif
+
 all::
 
 .PHONY: install
-install:: all
+install:: all install-desktop-files install-icons install-htmldocs install-metainfo
 	$(PIP) install $(install_args) .
+
+install-desktop-files::
+	$(MKDIR_P) "$(DESTDIR)$(appdir)"
+	$(INSTALL) -m 664 share/applications/*.desktop "$(DESTDIR)$(appdir)"
+
+install-icons::
+	$(MKDIR_P) "$(DESTDIR)$(icons_scalabledir)"
+	$(INSTALL) -m 664 cola/icons/git-cola.svg "$(DESTDIR)$(icons_scalabledir)"
+
+install-htmldocs::
+	$(MKDIR_P) "$(DESTDIR)$(docdir)"
+	$(INSTALL) -m 664 docs/*.html "$(DESTDIR)$(docdir)"
+
+install-metainfo::
+	$(MKDIR_P) "$(DESTDIR)$(metainfodir)"
+	$(INSTALL) -m 664 share/metainfo/*.xml "$(DESTDIR)$(metainfodir)"
 
 .PHONY: doc
 doc::

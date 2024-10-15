@@ -1,18 +1,20 @@
 import platform
 import webbrowser
+import os
 import sys
 
 import qtpy
+from qtpy import QtCore
 from qtpy.QtCore import Qt
 from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
-from .. import core
 from .. import resources
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import utils
 from .. import version
 from . import defs
 
@@ -499,15 +501,19 @@ def translators_text():
 
 
 def show_shortcuts():
-    hotkeys_html = resources.doc(N_('hotkeys.html'))
+    hotkeys_html = resources.data_path(N_('hotkeys.html'))
+    if utils.is_win32():
+        hotkeys_url = 'file:///' + hotkeys_html.replace('\\', '/')
+    else:
+        hotkeys_url = 'file://' + hotkeys_html
+    if not os.path.isfile(hotkeys_html):
+        hotkeys_url = 'https://git-cola.gitlab.io/share/doc/git-cola/hotkeys.html'
     try:
         from qtpy import QtWebEngineWidgets
     except (ImportError, qtpy.PythonQtError):
         # Redhat disabled QtWebKit in their Qt build but don't punish the users
-        webbrowser.open_new_tab('file://' + hotkeys_html)
+        webbrowser.open_new_tab(hotkeys_url)
         return
-
-    html = core.read(hotkeys_html)
 
     parent = qtutils.active_window()
     widget = QtWidgets.QDialog(parent)
@@ -515,7 +521,7 @@ def show_shortcuts():
     widget.setWindowTitle(N_('Shortcuts'))
 
     web = QtWebEngineWidgets.QWebEngineView()
-    web.setHtml(html)
+    web.setUrl(QtCore.QUrl(hotkeys_url))
 
     layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
     widget.setLayout(layout)

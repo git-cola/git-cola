@@ -84,7 +84,7 @@ install: install-files install-html install-man
 
 install-files:
 	$(MKDIR_P) $(DESTDIR)$(docdir)
-	$(INSTALL) -m 644 *.html $(DESTDIR)$(docdir)
+	$(INSTALL) -m 644 ../cola/data/*.html $(DESTDIR)$(docdir)
 	$(INSTALL) -m 644 *.rst $(DESTDIR)$(docdir)
 
 install-html: install-files html
