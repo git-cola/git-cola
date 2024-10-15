@@ -10,11 +10,11 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 
 from ..i18n import N_
-from .. import core
 from .. import resources
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import utils
 from .. import version
 from . import defs
 
@@ -501,9 +501,9 @@ def translators_text():
 
 
 def show_shortcuts():
-    hotkeys_html = resources.doc(N_('hotkeys.html'))
+    hotkeys_html = resources.data_path(N_('hotkeys.html'))
     if utils.is_win32():
-        hotkeys_url = 'file:///' + hotkeys_html.replace(r'\', '/')
+        hotkeys_url = 'file:///' + hotkeys_html.replace('\\', '/')
     else:
         hotkeys_url = 'file://' + hotkeys_html
     if not os.path.isfile(hotkeys_html):

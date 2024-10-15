@@ -117,7 +117,7 @@ jobs:
           brew install git-cola
       - name: Build Bundle
         run: |
-          garden -vv macos/app
+          garden macos/app -vv
           mv git-cola.app build/
       - name: Zip Artifact
         run: zip -r git-cola.app.zip build/*

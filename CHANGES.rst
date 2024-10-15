@@ -27,6 +27,12 @@ Translations
 
 Packaging
 ---------
+* The ``setup.cfg`` file has been removed and ``pyproject.toml`` has been updated to
+  handle all of the packaging configuration. ``pip`` will no longer install data files
+  such as ``share/applications``, ``share/metainfo``, and the hotkey html files, so
+  the ``garden.yaml`` and ``Makefile`` commands have been updated to provide this
+  functionality instead. The html files installed in the ``cola/data/`` python package
+  area are necessary for Git Cola's ``?`` hotkey window and should not be relocated.
 * `notify2 <https://pypi.org/project/notify2>` (``sudo apt install python3-notify2``)
   is now supported and preferred over ``notify-py`` for sending desktop notifications.
   This is an optional dependency that enables additional features when installed.

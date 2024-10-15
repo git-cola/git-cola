@@ -66,12 +66,22 @@ trees:
         xargs cercis "$@"
       html: garden ${GARDEN_CMD_VERBOSE} html docs
       install: |
+        ${activate}
         if test -n "${DESTDIR}"
         then
             pip_root="--root=${DESTDIR}"
-            export DESTDIR="${DESTDIR}"
         fi
-        pip install --disable-pip-version-check $pip_root --prefix="${prefix}" "$@" .
+        pip install --disable-pip-version-check $pip_root --prefix="${prefix}" .
+        # "garden install" provides the '?' hotkeys html files.
+        # Sphinx docs are handled by the separate "html", "man" and "install" commands in the "docs" tree.
+        mkdir -p "${DESTDIR}${appsdir}"
+        mkdir -p "${DESTDIR}${docdir}"
+        mkdir -p "${DESTDIR}${iconsdir}"
+        mkdir -p "${DESTDIR}${metainfodir}"
+        install -m 664 cola/data/*.html "${DESTDIR}${docdir}"
+        install -m 664 cola/icons/git-cola.svg "${DESTDIR}${iconsdir}"
+        install -m 644 share/applications/*.desktop "${DESTDIR}${appsdir}"
+        install -m 664 share/metainfo/*.xml "${DESTDIR}${metainfodir}"
       i18n>:
         - pot
         - po
@@ -123,7 +133,7 @@ trees:
         twine upload --sign dist/*.whl dist/*.tar.gz
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
-      test: ${activate} ${PYTEST} cola test "$@"
+      test: ${activate} ${PYTEST} "$@" cola test
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
       wheel: ${activate} python3 -m build -n .
@@ -207,9 +217,13 @@ trees:
       html: ${activate} ${SPHINX} -b html . _build/html "$@"
       man: ${activate} ${SPHINX} -b man . _build/man "$@"
       linkcheck: ${activate} ${SPHINX} -b linkcheck . _build/linkcheck "$@"
+      install<:
+        - html
+        - man
       install: |
+        ${activate}
         mkdir -p "${DESTDIR}${docdir}"
-        install -m 644 *.html "${DESTDIR}${docdir}"
+        install -m 644 ../cola/data/*.html "${DESTDIR}${docdir}"
         install -m 644 *.rst "${DESTDIR}${docdir}"
         # HTML documentation
         mkdir -p "${DESTDIR}${htmldir}"
@@ -307,13 +321,19 @@ variables:
   # DESTDIR + prefix variables: https://www.gnu.org/software/make/manual/html_node/DESTDIR.html
   DESTDIR: ""
   prefix: ${GARDEN_CONFIG_DIR}/dist
+  appsdir: ${datadir}/applications
+  datadir: ${prefix}/share
   docdir: ${prefix}/share/doc/git-cola
   htmldir: ${docdir}/html
+  iconsdir: ${datadir}/icons/hicolor/scalable/apps
   mandir: ${prefix}/share/man/man1
+  metainfodir: ${datadir}/metainfo
   cola_app: ${TREE_PATH}/git-cola.app
   cola_app_resources: ${cola_app}/Contents/Resources
-  cola_full_version: $ ./bin/git-cola version --brief --builtin
-  cola_version: $ sed -e "s/VERSION = '\(.*\)'/\1/"  cola/_version.py
+  cola_full_version: $ ./bin/git-cola version --brief
+  cola_version: |
+    $ eval "$(sed -e 's/ //g' cola/_version.py)"
+    printf '%s' "$VERSION"
   is_virtualenv: |
     $ ${PYTHON} -c '
     import os, sys

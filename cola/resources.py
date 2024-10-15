@@ -81,8 +81,14 @@ def command(name):
 
 
 def doc(*args):
-    """Return a path relative to cola's /usr/share/doc/ directory"""
-    return share('doc', 'git-cola', *args)
+    """Return a path relative to cola's /usr/share/doc/ directory or the docs/ directory"""
+    # pyproject.toml does not support data_files in pyproject.toml so we install the
+    # hotkey files as cola/data/ package data. This is a fallback location for when
+    # users did not use the garden.yaml or Makefile to install cola.
+    path = share('doc', 'git-cola', *args)
+    if not os.path.exists(path):
+        path = prefix('docs', *args)
+    return path
 
 
 def i18n(*args):
@@ -116,6 +122,11 @@ def share(*args):
 def package_data(*args):
     """Return a path relative to cola's Python modules"""
     return os.path.join(_package, *args)
+
+
+def data_path(*args):
+    """Return a path relative to cola's data directory"""
+    return package_data('data', *args)
 
 
 def icon_path(*args):

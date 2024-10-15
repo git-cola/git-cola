@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4.1"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "git-cola"
 authors = [
@@ -12,10 +16,66 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Version Control :: Git",
 ]
-description = "A sleek and powerful Git GUI"
-dynamic = ["dependencies", "optional-dependencies", "version"]
+description = "Git Cola is a powerful Git GUI with a slick and intuitive user interface."
+dependencies = [
+    "importlib_metadata; python_version<'3.8'",
+    "polib >= 1.0.0",
+    "qtpy >= 1.1.0",
+]
+dynamic = ["version"]
 license = {file = "COPYING"}
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
+
+[project.optional-dependencies]
+cov = [
+    "pytest-cov",
+]
+testing = [
+    "pytest >= 6",
+    "pytest-checkdocs >= 2.4",
+    "pytest-enabler >= 2.2",
+    "pytest-ruff >= 0.2.1",
+]
+docs = [
+    "furo",
+    "sphinx",
+    "rst.linker >= 1.9",
+]
+# "extras" are optional packages that enable additional features when present.
+extras = [
+    # Enables the "Send to Trash" feature.
+    "send2trash",
+    # Enables macOS-specific appearance themes.
+    "pyobjc; sys_platform == 'darwin'",
+    # Enables desktop notifications.
+    "notify2",
+]
+# Developer tools.
+dev = [
+    "cercis",
+    "pyupgrade",
+]
+# Build and packaging tools.
+build = [
+    "build",
+    "pynsist",
+    "setuptools_scm[toml] >= 3.4.1",
+    "twine",
+    "wheel",
+]
+# Extra packages when installing for specific platforms or Qt versions.
+pyqt5 = [
+    "PyQt5",
+]
+pyqt6 = [
+    "PyQt6",
+]
+pyside2 = [
+    "PySide2",
+]
+pyside6 = [
+    "PySide6",
+]
 
 [project.scripts]
 cola = "cola.main:main"
@@ -23,16 +83,34 @@ git-cola = "cola.main:main"
 git-dag = "cola.dag:main"
 git-cola-sequence-editor = "cola.sequenceeditor:main"
 
-[build-system]
-requires = ["setuptools>=42", "setuptools_scm[toml]>=3.4.1"]
-build-backend = "setuptools.build_meta"
-
 [tool.cercis]
 function-definition-extra-indent = false
 line-length = 88
 
 [tool.pytest-enabler.ruff]
 addopts = "--ruff"
+
+[tool.setuptools]
+packages = [
+    "cola",
+    "cola.bin",
+    "cola.i18n",
+    "cola.i18n.glossary",
+    "cola.icons",
+    "cola.icons.dark",
+    "cola.models",
+    "cola.widgets",
+]
+include-package-data = true
+
+[tool.setuptools.package-data]
+cola = [
+    "bin/*",
+    "data/*",
+    "i18n/*",
+    "icons/*.svg",
+    "icons/dark/*.svg",
+]
 
 [tool.setuptools_scm]
 fallback_version = "4.8.2"
