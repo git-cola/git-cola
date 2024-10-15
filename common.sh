@@ -24,7 +24,8 @@ then
 fi
 
 do_or_die () {
-	if ! "$@"; then
+	if ! "$@"
+	then
 		status=$?
 		echo "error running: $@"
 		echo "exit status: $status"
