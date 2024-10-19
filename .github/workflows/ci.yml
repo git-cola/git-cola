@@ -51,7 +51,7 @@ jobs:
           sudo apt-get install \
               python3-setuptools-scm \
               python3-sphinx
-          garden dev -vv
+          garden dev -vv -D pip_editable=
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"

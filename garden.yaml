@@ -40,11 +40,11 @@ trees:
         - dev/extras
         - dev/development
         - dev/build
-      dev/build: ${activate} pip install --editable '.[build]'
-      dev/development: ${activate} pip install --editable '.[docs,dev,testing]'
-      dev/extras: ${activate} pip install --editable '.[extras]'
-      dev/pyqt6: ${activate} pip install --editable '.[pyqt6]'
-      dev/install: ${activate} pip install --editable .
+      dev/build: ${activate} pip install ${pip_editable} '.[build]'
+      dev/development: ${activate} pip install ${pip_editable} '.[docs,dev,testing]'
+      dev/extras: ${activate} pip install ${pip_editable} '.[extras]'
+      dev/pyqt6: ${activate} pip install ${pip_editable} '.[pyqt6]'
+      dev/install: ${activate} pip install ${pip_editable} .
       dev/env: ${activate} "$@"
       check>:
         - test
@@ -346,6 +346,7 @@ variables:
     then
         source "${env_dir}/bin/activate"
     fi
+  pip_editable: "--editable"
   # External commands and options
   PYTEST: ${PYTHON} -B -m pytest ${PYTEST_OPTIONS}
   PYTEST_OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
