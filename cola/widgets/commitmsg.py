@@ -634,6 +634,13 @@ class CommitDateDialog(QtWidgets.QDialog):
         slider.setTickPosition(QtWidgets.QSlider.TicksBothSides)
         slider.setRange(-slider_range, slider_range)  # Mapped to +/- 24hrs from now.
 
+        tick_backward = qtutils.create_toolbutton_with_callback(
+            partial(self._adjust_slider, -1), None, icons.move_down(), N_('Decrement')
+        )
+        tick_forward = qtutils.create_toolbutton_with_callback(
+            partial(self._adjust_slider, 1), None, icons.move_up(), N_('Increment')
+        )
+
         cancel_button = QtWidgets.QPushButton(N_('Cancel'))
         cancel_button.setIcon(icons.close())
 
@@ -651,6 +658,8 @@ class CommitDateDialog(QtWidgets.QDialog):
         slider_layout = qtutils.hbox(
             defs.no_margin,
             defs.no_spacing,
+            tick_backward,
+            tick_forward,
             slider,
             datetime_widget,
         )
@@ -703,6 +712,11 @@ class CommitDateDialog(QtWidgets.QDialog):
         time_value = self._datetime_widget.time()
         self._datetime_widget.setDate(date_value)
         self._datetime_widget.setTime(time_value)
+
+    def _adjust_slider(self, amount):
+        """Adjust the slider forward or backwards"""
+        new_value = self._slider.value() + int(amount * self._slider.singleStep())
+        self._slider.setValue(new_value)
 
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):
