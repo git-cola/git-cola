@@ -86,7 +86,7 @@ install-icons::
 
 install-htmldocs::
 	$(MKDIR_P) "$(DESTDIR)$(docdir)"
-	$(INSTALL) -m 664 docs/*.html "$(DESTDIR)$(docdir)"
+	$(INSTALL) -m 664 cola/data/*.html "$(DESTDIR)$(docdir)"
 
 install-metainfo::
 	$(MKDIR_P) "$(DESTDIR)$(metainfodir)"
