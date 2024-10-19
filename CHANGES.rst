@@ -20,6 +20,10 @@ Usability, bells and whistles
   honor this variable.
   (`#1426 <https://github.com/git-cola/git-cola/issues/1426>`_)
 
+* The commit message editor now has a "Set Commit Date" option that allows you
+  to override the recorded date and time when authoring commits.
+  (`#1429 <https://github.com/git-cola/git-cola/pull/1429>`_)
+
 Translations
 ------------
 * Updated Chinese (Taiwan) translations.

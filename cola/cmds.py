@@ -799,7 +799,7 @@ class UndoLastCommit(ResetCommand):
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
-    def __init__(self, context, amend, msg, sign, no_verify=False):
+    def __init__(self, context, amend, msg, sign, no_verify=False, date=None):
         super().__init__(context)
         self.amend = amend
         self.msg = msg
@@ -807,6 +807,7 @@ class Commit(ResetMode):
         self.no_verify = no_verify
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
+        self.date = date
 
     def do(self):
         # Create the commit message file
@@ -817,6 +818,11 @@ class Commit(ResetMode):
             'NO_COLOR': '1',
             'TERM': 'dumb',
         }
+        kwargs = {}
+        if self.date:
+            add_env['GIT_AUTHOR_DATE'] = self.date
+            add_env['GIT_COMMITTER_DATE'] = self.date
+            kwargs['date'] = self.date
         try:
             core.write(tmp_file, msg)
             # Run 'git commit'
@@ -827,6 +833,7 @@ class Commit(ResetMode):
                 gpg_sign=self.sign,
                 amend=self.amend,
                 no_verify=self.no_verify,
+                **kwargs,
             )
         finally:
             core.unlink(tmp_file)
