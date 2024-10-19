@@ -20,6 +20,10 @@ Usability, bells and whistles
   honor this variable.
   (`#1426 <https://github.com/git-cola/git-cola/issues/1426>`_)
 
+* The commit message editor now has a "Set Commit Date" option that allows you
+  to override the recorded date and time when authoring commits.
+  (`#1429 <https://github.com/git-cola/git-cola/pull/1429>`_)
+
 Translations
 ------------
 * Updated Chinese (Taiwan) translations.
@@ -33,6 +37,7 @@ Packaging
   the ``garden.yaml`` and ``Makefile`` commands have been updated to provide this
   functionality instead. The html files installed in the ``cola/data/`` python package
   area are necessary for Git Cola's ``?`` hotkey window and should not be relocated.
+
 * `notify2 <https://pypi.org/project/notify2>` (``sudo apt install python3-notify2``)
   is now supported and preferred over ``notify-py`` for sending desktop notifications.
   This is an optional dependency that enables additional features when installed.

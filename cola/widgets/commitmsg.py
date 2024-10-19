@@ -1,3 +1,4 @@
+import datetime
 from functools import partial
 
 from qtpy import QtCore
@@ -47,6 +48,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self._linebreak = None
         self._textwidth = None
         self._tabwidth = None
+        self._last_commit_datetime = None  # The most recently selected commit date.
+        self._git_commit_date = None  # Overrides the commit date when committing.
 
         # Actions
         self.signoff_action = qtutils.add_action(
@@ -118,6 +121,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.amend_action.setCheckable(True)
         self.amend_action.setShortcuts(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
+
+        # Commit Date
+        self.commit_date_action = self.actions_menu.addAction(N_('Set Commit Date'))
+        self.commit_date_action.setCheckable(True)
+        self.commit_date_action.setChecked(False)
+        qtutils.connect_action_bool(self.commit_date_action, self.set_commit_date)
 
         # Bypass hooks
         self.bypass_commit_hooks_action = self.actions_menu.addAction(
@@ -471,12 +480,26 @@ class CommitMessageEditor(QtWidgets.QFrame):
             )
         ):
             return
-        no_verify = get(self.bypass_commit_hooks_action)
+
         sign = get(self.sign_action)
+        no_verify = get(self.bypass_commit_hooks_action)
         self.bypass_commit_hooks_action.setChecked(False)
+        if self.commit_date_action.isChecked():
+            self.commit_date_action.setChecked(False)
+            date = self._git_commit_date
+        else:
+            date = None
 
         task = qtutils.SimpleTask(
-            cmds.run(cmds.Commit, context, amend, msg, sign, no_verify=no_verify)
+            cmds.run(
+                cmds.Commit,
+                context,
+                amend,
+                msg,
+                sign,
+                no_verify=no_verify,
+                date=date,
+            )
         )
         self.context.runtask.start(
             task,
@@ -571,6 +594,134 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         self.summary.highlighter.enable(enabled)
         self.description.highlighter.enable(enabled)
+
+    def set_commit_date(self, enabled):
+        """Choose the date and time that is used when authoring commits"""
+        if not enabled:
+            self._git_commit_date = None
+            return
+        widget = CommitDateDialog(self, commit_datetime=self._last_commit_datetime)
+        if widget.exec_() == QtWidgets.QDialog.Accepted:
+            commit_date = widget.commit_date()
+            Interaction.log(N_('Setting commit date to %s') % commit_date)
+            self._git_commit_date = commit_date
+            self._last_commit_datetime = widget.datetime()
+        else:
+            self.commit_date_action.setChecked(False)
+            self._git_commit_date = None
+
+
+class CommitDateDialog(QtWidgets.QDialog):
+    """Choose the date and time used when authoring commits"""
+
+    def __init__(self, parent, commit_datetime=None):
+        QtWidgets.QDialog.__init__(self, parent)
+        self._slider_range = slider_range = 500
+        self._calendar_widget = calendar_widget = QtWidgets.QCalendarWidget()
+        self._datetime_widget = datetime_widget = QtWidgets.QDateTimeEdit()
+        datetime_widget.setDisplayFormat('hh:mm:ss AP')
+
+        if commit_datetime is not None:
+            datetime_widget.setDateTime(commit_datetime)
+            calendar_widget.setSelectedDate(commit_datetime.date())
+        else:
+            current_datetime = QtCore.QDateTime.currentDateTime()
+            datetime_widget.setDateTime(current_datetime)
+            calendar_widget.setSelectedDate(current_datetime.date())
+
+        # Horizontal slider moves the date and time backwards and forwards.
+        self._slider = slider = QtWidgets.QSlider(Qt.Horizontal)
+        slider.setTickPosition(QtWidgets.QSlider.TicksBothSides)
+        slider.setRange(-slider_range, slider_range)  # Mapped to +/- 24hrs from now.
+
+        tick_backward = qtutils.create_toolbutton_with_callback(
+            partial(self._adjust_slider, -1), None, icons.move_down(), N_('Decrement')
+        )
+        tick_forward = qtutils.create_toolbutton_with_callback(
+            partial(self._adjust_slider, 1), None, icons.move_up(), N_('Increment')
+        )
+
+        cancel_button = QtWidgets.QPushButton(N_('Cancel'))
+        cancel_button.setIcon(icons.close())
+
+        set_commit_time_button = QtWidgets.QPushButton(N_('Set Date and Time'))
+        set_commit_time_button.setDefault(True)
+        set_commit_time_button.setIcon(icons.ok())
+
+        button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            cancel_button,
+            qtutils.STRETCH,
+            set_commit_time_button,
+        )
+        slider_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.no_spacing,
+            tick_backward,
+            tick_forward,
+            slider,
+            datetime_widget,
+        )
+        layout = qtutils.vbox(
+            defs.small_margin,
+            defs.spacing,
+            calendar_widget,
+            slider_layout,
+            defs.button_spacing,
+            button_layout,
+        )
+        self.setLayout(layout)
+        self.setWindowTitle(N_('Set Commit Date'))
+        self.setWindowModality(Qt.ApplicationModal)
+
+        slider.valueChanged.connect(self._update_time_from_slider)
+        calendar_widget.selectionChanged.connect(self._update_date_from_calendar)
+        calendar_widget.activated.connect(lambda _: self.accept())
+
+        cancel_button.clicked.connect(self.reject)
+        set_commit_time_button.clicked.connect(self.accept)
+
+        # If we previously set a value and we're re-opening the dialog then
+        # tick time forward by one step.
+        if commit_datetime is not None:
+            self._adjust_slider(1)
+
+    def datetime(self):
+        """Return the selected datetime"""
+        return self._datetime_widget.dateTime().toPyDateTime().astimezone()
+
+    def commit_date(self):
+        """Return the selected datetime as a string for use by Git"""
+        return self.datetime().strftime('%a %b %d %H:%M:%S %Y %z')
+
+    def _update_time_from_slider(self, value):
+        """Map the slider value to a time relative to now, +/- 24 hours
+
+        The passed-in value will be between -range and +range.
+        """
+        hours_per_day = 24
+        minutes_per_hour = 60
+        seconds_per_minute = 60
+        seconds_per_day = seconds_per_minute * minutes_per_hour * hours_per_day
+        ratio = value / self._slider_range
+        delta = datetime.timedelta(seconds=int(ratio * seconds_per_day))
+        new_time = datetime.datetime.now() + delta
+
+        self._datetime_widget.setDateTime(new_time)
+        self._calendar_widget.setSelectedDate(new_time.date())
+
+    def _update_date_from_calendar(self):
+        """Set the date on the datetime widget when the calendar date changes"""
+        date_value = self._calendar_widget.selectedDate()
+        time_value = self._datetime_widget.time()
+        self._datetime_widget.setDate(date_value)
+        self._datetime_widget.setTime(time_value)
+
+    def _adjust_slider(self, amount):
+        """Adjust the slider forward or backwards"""
+        new_value = self._slider.value() + int(amount * self._slider.singleStep())
+        self._slider.setValue(new_value)
 
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):
