@@ -55,6 +55,9 @@ jobs:
               python3-sphinx \
               python3-virtualenv
           garden dev -vv -D pip_editable=
+          # The pyproject.toml setup does not seem to be installing test/dev
+          # dependencies so we manually install cercis to work around it for now.
+          pip install cercis
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
