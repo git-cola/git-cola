@@ -59,6 +59,7 @@ dev = [
 build = [
     "build",
     "pynsist",
+    "setuptools >= 64.0",
     "setuptools_scm[toml] >= 3.4.1",
     "twine",
     "wheel",
