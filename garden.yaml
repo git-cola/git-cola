@@ -61,9 +61,7 @@ trees:
       fmt: |
         ${activate}
         cercis --version
-        git ls-files -- '*.py' |
-        grep -v ^qtpy |
-        xargs cercis "$@"
+        cercis "$@" bin bin/git-* cola test
       html: garden ${GARDEN_CMD_VERBOSE} html docs
       install: |
         ${activate}
