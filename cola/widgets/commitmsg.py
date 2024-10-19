@@ -631,7 +631,6 @@ class CommitDateDialog(QtWidgets.QDialog):
 
         # Horizontal slider moves the date and time backwards and forwards.
         self._slider = slider = QtWidgets.QSlider(Qt.Horizontal)
-        slider.setTickPosition(QtWidgets.QSlider.TicksBothSides)
         slider.setRange(-slider_range, slider_range)  # Mapped to +/- 24hrs from now.
 
         self._tick_backward = tick_backward = qtutils.create_toolbutton_with_callback(
