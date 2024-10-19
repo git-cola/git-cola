@@ -49,8 +49,11 @@ jobs:
               python3-send2trash
           # Development dependencies
           sudo apt-get install \
+              python3-pytest \
+              python3-setuptools \
               python3-setuptools-scm \
-              python3-sphinx
+              python3-sphinx \
+              python3-virtualenv
           garden dev -vv -D pip_editable=
       - name: Configure tests
         run: |
