@@ -84,7 +84,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/AppData/Local/pip/Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
       - name: Install Dependencies
         run: |
           pip install '.[build,docs,dev,extras]'
