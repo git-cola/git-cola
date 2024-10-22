@@ -43,12 +43,12 @@ docs = [
 ]
 # "extras" are optional packages that enable additional features when present.
 extras = [
-    # Enables the "Send to Trash" feature.
-    "send2trash",
-    # Enables macOS-specific appearance themes.
-    "pyobjc; sys_platform == 'darwin'",
     # Enables desktop notifications.
     "notify2",
+    # Enables macOS-specific appearance themes.
+    "pyobjc; sys_platform == 'darwin'",
+    # Enables the "Send to Trash" feature.
+    "send2trash",
 ]
 # Developer tools.
 dev = [

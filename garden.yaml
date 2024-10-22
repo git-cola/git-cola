@@ -40,14 +40,13 @@ trees:
         - dev/pkgs
       dev/virtualenv: ${PYTHON} -m venv --system-site-packages ${env_dir}
       dev/pkgs>:
-        - dev/extras
         - dev/development
+        - dev/extras
         - dev/build
-      dev/build: ${activate} pip install ${pip_editable} '.[build]'
-      dev/development: ${activate} pip install ${pip_editable} '.[docs,dev,testing]'
-      dev/extras: ${activate} pip install ${pip_editable} '.[extras]'
-      dev/pyqt6: ${activate} pip install ${pip_editable} '.[pyqt6]'
-      dev/install: ${activate} pip install ${pip_editable} .
+      dev/build: ${activate} pip install '.[build]'
+      dev/development: ${activate} pip install '.[docs,dev,testing]'
+      dev/extras: ${activate} pip install '.[extras]'
+      dev/pyqt6: ${activate} pip install '.[pyqt6]'
       dev/env: ${activate} "$@"
       check>:
         - test

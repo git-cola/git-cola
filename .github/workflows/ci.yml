@@ -3,27 +3,6 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Rust
-        run: rustup toolchain install stable --profile minimal --no-self-update
-      - name: Install Garden
-        run: cargo install garden-tools
-      - uses: Swatinem/rust-cache@v2
-      - name: Install build dependencies
-        run: |
-          set -x
-          sudo apt-get update
-          sudo apt-get install python3-sphinx python3-qtpy python3-pyqt5
-      - name: Install Git Cola
-        run: garden -vv -D prefix=dist install
-
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -32,32 +11,37 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Rust
-        run: rustup toolchain install stable --profile minimal --no-self-update
-      - name: Install Garden
-        run: cargo install garden-tools
-      - name: Install Dependencies
+      - name: Get current date for caching
+        id: get-date
+        shell: bash
+        run: |
+          echo date=$(date -u +%Y-%m-%d) >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-${{ steps.get-date.outputs.date }}
+      - name: Install Rust and Garden
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          cargo install garden-tools
+      - name: Install system-provided test dependencies
+        run: |
+          sudo apt-get install \
+              python3-pyqt5 \
+              python3-pyqt5.qtopengl \
+              python3-pyqt5.qtsvg \
+              python3-pyqt5.qtwebengine \
+              python3-qtpy
+      - name: Install pip-provided test dependencies
         run: |
           set -x
-          sudo apt-get update
-          # Runtime dependencies (required)
-          sudo apt-get install \
-              python3-qtpy \
-              python3-pyqt5
-          # Runtime dependencies (optional)
-          sudo apt-get install \
-              python3-send2trash
-          # Development dependencies
-          sudo apt-get install \
-              python3-pytest \
-              python3-setuptools \
-              python3-setuptools-scm \
-              python3-sphinx \
-              python3-virtualenv
-          garden dev -vv -D pip_editable=
-          # The pyproject.toml setup does not seem to be installing test/dev
-          # dependencies so we manually install cercis to work around it for now.
-          pip install cercis
+          sudo pip install -v --upgrade pip
+          sudo pip install -v --upgrade setuptools packaging
+          garden dev -vv
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
@@ -66,6 +50,8 @@ jobs:
         run: garden check -vv
       - name: Code formatting
         run: garden fmt -vv -- --check
+      - name: Test the garden installation method
+        run: garden install -vv -D prefix=dist
 
   windows:
     name: Windows
@@ -113,11 +99,23 @@ jobs:
         uses: styfle/cancel-workflow-action@0.12.1
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install Rust
-        run: rustup toolchain install stable --profile minimal --no-self-update
-      - name: Install Garden
-        run: cargo install garden-tools
-      - uses: Swatinem/rust-cache@v2
+      - name: Get current date for caching
+        id: get-date
+        shell: bash
+        run: |
+          echo date=$(date -u +%Y-%m-%d) >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-${{ steps.get-date.outputs.date }}
+      - name: Install Rust and Garden
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          cargo install garden-tools
       - name: Install Dependencies
         run: |
           brew install git-cola
