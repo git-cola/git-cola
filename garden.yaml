@@ -101,6 +101,7 @@ trees:
         garden ${GARDEN_CMD_VERBOSE} doc
         garden ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} install docs
       man: garden ${GARDEN_CMD_VERBOSE} man docs
+      pkg: git make-pkg --global --name git-cola
       po: |
         for po in cola/i18n/*.po
         do
