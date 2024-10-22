@@ -35,8 +35,11 @@ trees:
     commands:
       clean: rm -rf build dist git_cola.egg-info git-cola-*.windows.zip
       doc: garden ${GARDEN_CMD_VERBOSE} cmd docs html man -- "$@"
-      dev: ${PYTHON} -m venv --system-site-packages ${env_dir}
       dev>:
+        - dev/virtualenv
+        - dev/pkgs
+      dev/virtualenv: ${PYTHON} -m venv --system-site-packages ${env_dir}
+      dev/pkgs>:
         - dev/extras
         - dev/development
         - dev/build
