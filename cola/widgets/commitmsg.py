@@ -612,6 +612,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
 class CommitDateDialog(QtWidgets.QDialog):
     """Choose the date and time used when authoring commits"""
+
     slider_range = 500
 
     def __init__(self, parent, commit_datetime=None):
@@ -683,7 +684,8 @@ class CommitDateDialog(QtWidgets.QDialog):
     def tick_time(cls, commit_datetime):
         """Tick time forward"""
         seconds_per_day = 86400
-        one_tick = seconds_per_day // cls.slider_range  # 172 seconds (2m52s)
+        seconds_range = seconds_per_day - 1
+        one_tick = seconds_range // cls.slider_range  # 172 seconds (2m52s)
         return commit_datetime + datetime.timedelta(seconds=one_tick)
 
     def datetime(self):
@@ -714,10 +716,11 @@ class CommitDateDialog(QtWidgets.QDialog):
         seconds_range = seconds_per_day - 1
         ratio = value / self.slider_range
         delta = datetime.timedelta(seconds=int(ratio * seconds_range))
-        now = datetime.datetime.now()
         midnight = datetime.datetime(1999, 12, 31)
         new_time = (midnight + delta).time()
-        self._time_widget.setTime(new_time)
+        time_widget = self._time_widget
+        with qtutils.BlockSignals(time_widget):
+            time_widget.setTime(new_time)
 
     def _adjust_slider(self, amount):
         """Adjust the slider forward or backwards"""
@@ -736,9 +739,7 @@ class CommitDateDialog(QtWidgets.QDialog):
     def _update_slider_from_time(self, commit_time):
         """Update the slider to match the specified time."""
         seconds_since_midnight = (
-            60 * 60 * commit_time.hour +
-            60 * commit_time.minute +
-            commit_time.second
+            60 * 60 * commit_time.hour + 60 * commit_time.minute + commit_time.second
         )
         seconds_per_day = 86400
         seconds_range = seconds_per_day - 1
