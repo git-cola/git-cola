@@ -1143,10 +1143,9 @@ class MainView(standard.MainWindow):
 
         self.refresh_window_title()
 
-        if self.mode == self.model.mode_amend:
-            self.commit_amend_action.setChecked(True)
-        else:
-            self.commit_amend_action.setChecked(False)
+        checked = self.mode == self.model.mode_amend
+        with qtutils.BlockSignals(self.commit_amend_action):
+            self.commit_amend_action.setChecked(checked)
 
         self.commitdock.setToolTip(msg)
 

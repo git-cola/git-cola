@@ -49,6 +49,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self._textwidth = None
         self._tabwidth = None
         self._last_commit_datetime = None  # The most recently selected commit date.
+        self._last_commit_datetime_backup = None  # Used when amending.
         self._git_commit_date = None  # Overrides the commit date when committing.
 
         # Actions
@@ -414,6 +415,13 @@ class CommitMessageEditor(QtWidgets.QFrame):
         with qtutils.BlockSignals(self.amend_action):
             self.amend_action.setEnabled(can_amend)
             self.amend_action.setChecked(checked)
+        # Store/restore the last commit date when amending.
+        if checked:
+            self._last_commit_datetime_backup = self._last_commit_datetime
+            self._last_commit_datetime = _get_latest_commit_datetime(self.context)
+        else:
+            self._last_commit_datetime = self._last_commit_datetime_backup
+            self._last_commit_datetime_backup = None
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
@@ -600,7 +608,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         if not enabled:
             self._git_commit_date = None
             return
-        widget = CommitDateDialog(self, commit_datetime=self._last_commit_datetime)
+        widget = CommitDateDialog(
+            self, self.context, commit_datetime=self._last_commit_datetime
+        )
         if widget.exec_() == QtWidgets.QDialog.Accepted:
             commit_date = widget.commit_date()
             Interaction.log(N_('Setting commit date to %s') % commit_date)
@@ -610,12 +620,25 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.commit_date_action.setChecked(False)
 
 
+def _get_latest_commit_datetime(context):
+    """Query the commit time from Git or fallback to the current time when unavailable"""
+    commit_datetime = datetime.datetime.now()
+    status, out, _ = context.git.log('-1', '--format=%aI', 'HEAD')
+    if status != 0 or not out:
+        return commit_datetime
+    try:
+        commit_datetime = datetime.datetime.fromisoformat(out)
+    except ValueError:
+        pass
+    return commit_datetime
+
+
 class CommitDateDialog(QtWidgets.QDialog):
     """Choose the date and time used when authoring commits"""
 
     slider_range = 500
 
-    def __init__(self, parent, commit_datetime=None):
+    def __init__(self, parent, context, commit_datetime=None):
         QtWidgets.QDialog.__init__(self, parent)
         slider_range = self.slider_range
         self._calendar_widget = calendar_widget = QtWidgets.QCalendarWidget()
@@ -668,7 +691,7 @@ class CommitDateDialog(QtWidgets.QDialog):
         self.setWindowModality(Qt.ApplicationModal)
 
         if commit_datetime is None:
-            commit_datetime = datetime.datetime.now()
+            commit_datetime = self.tick_time(_get_latest_commit_datetime(context))
         time_widget.setTime(commit_datetime.time())
         calendar_widget.setSelectedDate(commit_datetime.date())
         self._update_slider_from_datetime(commit_datetime)
