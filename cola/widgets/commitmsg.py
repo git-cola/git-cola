@@ -605,37 +605,25 @@ class CommitMessageEditor(QtWidgets.QFrame):
             commit_date = widget.commit_date()
             Interaction.log(N_('Setting commit date to %s') % commit_date)
             self._git_commit_date = commit_date
-            self._last_commit_datetime = widget.datetime()
+            self._last_commit_datetime = CommitDateDialog.tick_time(widget.datetime())
         else:
             self.commit_date_action.setChecked(False)
 
 
 class CommitDateDialog(QtWidgets.QDialog):
     """Choose the date and time used when authoring commits"""
+    slider_range = 500
 
     def __init__(self, parent, commit_datetime=None):
         QtWidgets.QDialog.__init__(self, parent)
-        self._slider_range = slider_range = 500
+        slider_range = self.slider_range
         self._calendar_widget = calendar_widget = QtWidgets.QCalendarWidget()
-        self._datetime_widget = datetime_widget = QtWidgets.QDateTimeEdit()
-        datetime_widget.setDisplayFormat('hh:mm:ss AP')
-
-        if commit_datetime is not None:
-            # If we previously set a value and we're re-opening the dialog then tick
-            # time forward by one step.
-            seconds_per_day = 86400
-            one_tick = seconds_per_day // self._slider_range  # 172 seconds (2m52s)
-            commit_datetime = commit_datetime + datetime.timedelta(seconds=one_tick)
-            datetime_widget.setDateTime(commit_datetime)
-            calendar_widget.setSelectedDate(commit_datetime.date())
-        else:
-            current_datetime = QtCore.QDateTime.currentDateTime()
-            datetime_widget.setDateTime(current_datetime)
-            calendar_widget.setSelectedDate(current_datetime.date())
+        self._time_widget = time_widget = QtWidgets.QTimeEdit()
+        time_widget.setDisplayFormat('hh:mm:ss AP')
 
         # Horizontal slider moves the date and time backwards and forwards.
         self._slider = slider = QtWidgets.QSlider(Qt.Horizontal)
-        slider.setRange(-slider_range, slider_range)  # Mapped to +/- 24hrs from now.
+        slider.setRange(0, slider_range)  # Mapped from 00:00:00 to 23:59:59
 
         self._tick_backward = tick_backward = qtutils.create_toolbutton_with_callback(
             partial(self._adjust_slider, -1), '-', None, N_('Decrement')
@@ -664,7 +652,7 @@ class CommitDateDialog(QtWidgets.QDialog):
             tick_backward,
             tick_forward,
             slider,
-            datetime_widget,
+            time_widget,
         )
         layout = qtutils.vbox(
             defs.small_margin,
@@ -678,45 +666,86 @@ class CommitDateDialog(QtWidgets.QDialog):
         self.setWindowTitle(N_('Set Commit Date'))
         self.setWindowModality(Qt.ApplicationModal)
 
+        if commit_datetime is None:
+            commit_datetime = datetime.datetime.now()
+        time_widget.setTime(commit_datetime.time())
+        calendar_widget.setSelectedDate(commit_datetime.date())
+        self._update_slider_from_datetime(commit_datetime)
+
+        time_widget.timeChanged.connect(self._update_slider_from_time_signal)
         slider.valueChanged.connect(self._update_time_from_slider)
-        calendar_widget.selectionChanged.connect(self._update_date_from_calendar)
         calendar_widget.activated.connect(lambda _: self.accept())
 
         cancel_button.clicked.connect(self.reject)
         set_commit_time_button.clicked.connect(self.accept)
 
+    @classmethod
+    def tick_time(cls, commit_datetime):
+        """Tick time forward"""
+        seconds_per_day = 86400
+        one_tick = seconds_per_day // cls.slider_range  # 172 seconds (2m52s)
+        return commit_datetime + datetime.timedelta(seconds=one_tick)
+
     def datetime(self):
-        """Return the selected datetime"""
-        return self._datetime_widget.dateTime().toPyDateTime().astimezone()
+        """Return the calculated datetime value"""
+        # We take the date from the calendar widget and the time from the datetime widget.
+        time_value = self._time_widget.time().toPyTime()
+        date_value = self._calendar_widget.selectedDate().toPyDate()
+        date_time = datetime.datetime(
+            date_value.year,
+            date_value.month,
+            date_value.day,
+            time_value.hour,
+            time_value.minute,
+            time_value.second,
+        )
+        return date_time.astimezone()
 
     def commit_date(self):
         """Return the selected datetime as a string for use by Git"""
         return self.datetime().strftime('%a %b %d %H:%M:%S %Y %z')
 
     def _update_time_from_slider(self, value):
-        """Map the slider value to a time relative to now, +/- 24 hours
+        """Map the slider value to an offset corresponding to the current time.
 
-        The passed-in value will be between -range and +range.
+        The passed-in value will be between 0 and range.
         """
         seconds_per_day = 86400
-        ratio = value / self._slider_range
-        delta = datetime.timedelta(seconds=int(ratio * seconds_per_day))
-        new_time = datetime.datetime.now() + delta
-
-        self._datetime_widget.setDateTime(new_time)
-        self._calendar_widget.setSelectedDate(new_time.date())
-
-    def _update_date_from_calendar(self):
-        """Set the date on the datetime widget when the calendar date changes"""
-        date_value = self._calendar_widget.selectedDate()
-        time_value = self._datetime_widget.time()
-        self._datetime_widget.setDate(date_value)
-        self._datetime_widget.setTime(time_value)
+        seconds_range = seconds_per_day - 1
+        ratio = value / self.slider_range
+        delta = datetime.timedelta(seconds=int(ratio * seconds_range))
+        now = datetime.datetime.now()
+        midnight = datetime.datetime(1999, 12, 31)
+        new_time = (midnight + delta).time()
+        self._time_widget.setTime(new_time)
 
     def _adjust_slider(self, amount):
         """Adjust the slider forward or backwards"""
-        new_value = self._slider.value() + int(amount * self._slider.singleStep())
+        new_value = self._slider.value() + amount
         self._slider.setValue(new_value)
+
+    def _update_slider_from_time_signal(self, new_time):
+        """Update the time slider to match the new time"""
+        self._update_slider_from_time(new_time.toPyTime())
+
+    def _update_slider_from_datetime(self, commit_datetime):
+        """Update the time slider to match the specified datetime"""
+        commit_time = commit_datetime.time()
+        self._update_slider_from_time(commit_time)
+
+    def _update_slider_from_time(self, commit_time):
+        """Update the slider to match the specified time."""
+        seconds_since_midnight = (
+            60 * 60 * commit_time.hour +
+            60 * commit_time.minute +
+            commit_time.second
+        )
+        seconds_per_day = 86400
+        seconds_range = seconds_per_day - 1
+        ratio = seconds_since_midnight / seconds_range
+        value = int(self.slider_range * ratio)
+        with qtutils.BlockSignals(self._slider):
+            self._slider.setValue(value)
 
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):
