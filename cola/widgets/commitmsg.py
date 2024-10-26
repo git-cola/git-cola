@@ -690,7 +690,7 @@ class CommitDateDialog(QtWidgets.QDialog):
 
     def datetime(self):
         """Return the calculated datetime value"""
-        # We take the date from the calendar widget and the time from the datetime widget.
+        # Combine the calendar widget's date with the time widget's time.
         time_value = self._time_widget.time().toPyTime()
         date_value = self._calendar_widget.selectedDate().toPyDate()
         date_time = datetime.datetime(
