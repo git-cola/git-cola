@@ -608,7 +608,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self._last_commit_datetime = widget.datetime()
         else:
             self.commit_date_action.setChecked(False)
-            self._git_commit_date = None
 
 
 class CommitDateDialog(QtWidgets.QDialog):
@@ -622,6 +621,11 @@ class CommitDateDialog(QtWidgets.QDialog):
         datetime_widget.setDisplayFormat('hh:mm:ss AP')
 
         if commit_datetime is not None:
+            # If we previously set a value and we're re-opening the dialog then tick
+            # time forward by one step.
+            seconds_per_day = 86400
+            one_tick = seconds_per_day // self._slider_range  # 172 seconds (2m52s)
+            commit_datetime = commit_datetime + datetime.timedelta(seconds=one_tick)
             datetime_widget.setDateTime(commit_datetime)
             calendar_widget.setSelectedDate(commit_datetime.date())
         else:
@@ -681,11 +685,6 @@ class CommitDateDialog(QtWidgets.QDialog):
         cancel_button.clicked.connect(self.reject)
         set_commit_time_button.clicked.connect(self.accept)
 
-        # If we previously set a value and we're re-opening the dialog then
-        # tick time forward by one step.
-        if commit_datetime is not None:
-            self._adjust_slider(1)
-
     def datetime(self):
         """Return the selected datetime"""
         return self._datetime_widget.dateTime().toPyDateTime().astimezone()
@@ -699,10 +698,7 @@ class CommitDateDialog(QtWidgets.QDialog):
 
         The passed-in value will be between -range and +range.
         """
-        hours_per_day = 24
-        minutes_per_hour = 60
-        seconds_per_minute = 60
-        seconds_per_day = seconds_per_minute * minutes_per_hour * hours_per_day
+        seconds_per_day = 86400
         ratio = value / self._slider_range
         delta = datetime.timedelta(seconds=int(ratio * seconds_per_day))
         new_time = datetime.datetime.now() + delta
