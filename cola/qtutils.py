@@ -948,7 +948,7 @@ def add_menu(title, parent):
     return menu
 
 
-def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
+def create_toolbutton(text=None, layout=None, tooltip=None, icon=None, repeat=False):
     button = tool_button()
     if icon is not None:
         button.setIcon(icon)
@@ -958,14 +958,20 @@ def create_toolbutton(text=None, layout=None, tooltip=None, icon=None):
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
     if tooltip is not None:
         button.setToolTip(tooltip)
+    if repeat:
+        button.setAutoRepeat(True)
     if layout is not None:
         layout.addWidget(button)
     return button
 
 
-def create_toolbutton_with_callback(callback, text, icon, tooltip, layout=None):
+def create_toolbutton_with_callback(
+    callback, text, icon, tooltip, layout=None, repeat=False
+):
     """Create a tool button that runs the specified callback"""
-    toolbutton = create_toolbutton(text=text, layout=layout, tooltip=tooltip, icon=icon)
+    toolbutton = create_toolbutton(
+        text=text, layout=layout, tooltip=tooltip, icon=icon, repeat=repeat
+    )
     connect_button(toolbutton, callback)
     return toolbutton
 
