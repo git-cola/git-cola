@@ -650,10 +650,18 @@ class CommitDateDialog(QtWidgets.QDialog):
         slider.setRange(0, slider_range)  # Mapped from 00:00:00 to 23:59:59
 
         self._tick_backward = tick_backward = qtutils.create_toolbutton_with_callback(
-            partial(self._adjust_slider, -1), '-', None, N_('Decrement')
+            partial(self._adjust_slider, -1),
+            '-',
+            None,
+            N_('Decrement'),
+            repeat=True,
         )
         self._tick_forward = tick_forward = qtutils.create_toolbutton_with_callback(
-            partial(self._adjust_slider, 1), '+', None, N_('Increment')
+            partial(self._adjust_slider, 1),
+            '+',
+            None,
+            N_('Increment'),
+            repeat=True,
         )
 
         cancel_button = QtWidgets.QPushButton(N_('Cancel'))
