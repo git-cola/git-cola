@@ -1,6 +1,5 @@
 from qtpy import QtWidgets
 from qtpy.QtCore import Signal
-from qtpy.QtCore import QSize
 from qtpy.QtCore import Qt
 
 from .. import cmds
