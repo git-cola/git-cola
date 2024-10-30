@@ -304,7 +304,7 @@ class ViewerMixin:
         self.menu_actions['diff_commit'].setEnabled(has_single_selection_or_clicked)
         self.menu_actions['diff_commit_all'].setEnabled(has_single_selection_or_clicked)
 
-        self.menu_actions['checkout_branch'].setEnabled(has_branches)
+        self.menu_actions['checkout_branch'].setEnabled(bool(has_branches))
         self.menu_actions['checkout_detached'].setEnabled(
             has_single_selection_or_clicked
         )
