@@ -627,14 +627,23 @@ def autodetect_proxy(context, kwargs):
             % dict(url=http_proxy)
         )
         return
+    # This function has the side-effect of updating the kwargs dict.
+    # The "_add_env" parameter gets forwarded to the __getattr__ git function's
+    # _add_env option which forwards to core.run_command()'s add_env option.
+    add_env = autodetect_proxy_environ()
+    if add_env:
+        kwargs['_add_env'] = add_env
+
+
+def autodetect_proxy_environ():
+    """Return the environment variables used for configuring proxies"""
+    add_env = {}
     xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
     if not xdg_current_desktop:
-        return
+        return add_env
 
-    add_env = {}
     http_proxy = None
     https_proxy = None
-
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
         kreadconfig = core.find_executable('kreadconfig5')
         if kreadconfig:
@@ -669,11 +678,7 @@ def autodetect_proxy(context, kwargs):
         )
         add_env['https_proxy'] = https_proxy
 
-    # This function has the side-effect of updating the kwargs dict.
-    # The "_add_env" parameter gets forwarded to the __getattr__ git function's
-    # _add_env option which forwards to core.run_command()'s add_env option.
-    if add_env:
-        kwargs['_add_env'] = add_env
+    return add_env
 
 
 def autodetect_proxy_gnome_is_enabled(gsettings):

@@ -9,6 +9,7 @@ Usability, bells and whistles
 
 * HTTP proxies are now automatically configured on Gnome and KDE Desktop Environments.
   (`#1420 <https://github.com/git-cola/git-cola/issues/1420>`_)
+  (`#1431 <https://github.com/git-cola/git-cola/issues/1431>`_)
 
 * The Git ``http.proxy`` configuration can now be edited on the settings page.
   (`#1420 <https://github.com/git-cola/git-cola/issues/1420>`_)

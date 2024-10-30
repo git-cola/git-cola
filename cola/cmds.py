@@ -818,6 +818,7 @@ class Commit(ResetMode):
             'NO_COLOR': '1',
             'TERM': 'dumb',
         }
+        add_env.update(main.autodetect_proxy_environ())
         kwargs = {}
         if self.date:
             add_env['GIT_AUTHOR_DATE'] = self.date
