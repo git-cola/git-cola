@@ -24,6 +24,9 @@ Usability, bells and whistles
   to override the recorded date and time when authoring commits.
   (`#1429 <https://github.com/git-cola/git-cola/pull/1429>`_)
 
+* The DAG's automatic column resizing behavior has been improved.
+  (`#1432 <https://github.com/git-cola/git-cola/issues/1432>`_)
+
 Translations
 ------------
 * Updated Chinese (Taiwan) translations.
