@@ -604,13 +604,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setMouseTracking(True)
 
         self.context = context
         self.oidmap = {}
         self.menu_actions = None
         self.selecting = False
         self.commits = []
-        self._adjust_columns = False
+        self._columns_initialized = False
         self.action_up = qtutils.add_action(
             self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP
         )
@@ -641,28 +643,37 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             column_widths = None
         if column_widths:
             self.set_column_widths(column_widths)
-        else:
-            # Defer showing the columns until we are shown, and our true width
-            # is known.  Calling adjust_columns() here ends up with the wrong
-            # answer because we have not yet been parented to the layout.
-            # We set this flag that we process once during our initial
-            # showEvent().
-            self._adjust_columns = True
+            self._columns_initialized = True
         return True
 
     # Qt overrides
     def showEvent(self, event):
         """Override QWidget::showEvent() to size columns when we are shown"""
-        if self._adjust_columns:
-            self._adjust_columns = False
+        standard.TreeWidget.showEvent(self, event)
+        # Defer resizing columns until the widget has been shown so that width() returns
+        # the correct value.
+        if not self._columns_initialized:
+            self._columns_initialized = True
             width = self.width()
             two_thirds = (width * 2) // 3
             one_sixth = width // 6
-
             self.setColumnWidth(0, two_thirds)
             self.setColumnWidth(1, one_sixth)
             self.setColumnWidth(2, one_sixth)
-        return standard.TreeWidget.showEvent(self, event)
+
+    def mouseMoveEvent(self, event):
+        """Hide the horizontal scrollbar unless we are hovering near the bottom"""
+        scrollbar = self.horizontalScrollBar()
+        bottom = self.height() - self.header().height() - 4
+        scrollbar_zone = bottom - scrollbar.height()
+        policy = self.horizontalScrollBarPolicy()
+        if event.y() >= scrollbar_zone:
+            new_policy = Qt.ScrollBarAsNeeded
+        else:
+            new_policy = Qt.ScrollBarAlwaysOff
+        if policy != new_policy:
+            self.setHorizontalScrollBarPolicy(new_policy)
+        super().mouseMoveEvent(event)
 
     # ViewerMixin
     def go_up(self):
