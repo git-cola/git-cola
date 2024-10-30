@@ -704,6 +704,13 @@ class CommitDateDialog(QtWidgets.QDialog):
         calendar_widget.setSelectedDate(commit_datetime.date())
         self._update_slider_from_datetime(commit_datetime)
 
+        self._right_action = qtutils.add_action(
+            self, N_('Increment'), partial(self._adjust_slider, 1), hotkeys.CTRL_RIGHT
+        )
+        self._left_action = qtutils.add_action(
+            self, N_('Decrement'), partial(self._adjust_slider, -1), hotkeys.CTRL_LEFT
+        )
+
         time_widget.timeChanged.connect(self._update_slider_from_time_signal)
         slider.valueChanged.connect(self._update_time_from_slider)
         calendar_widget.activated.connect(lambda _: self.accept())

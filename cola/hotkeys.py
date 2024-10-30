@@ -114,6 +114,8 @@ UP = hotkey(Qt.Key_Up)
 
 CTRL_RETURN = hotkey(Qt.CTRL | Qt.Key_Return)
 CTRL_ENTER = hotkey(Qt.CTRL | Qt.Key_Enter)
+CTRL_LEFT = hotkey(Qt.CTRL | Qt.Key_Left)
+CTRL_RIGHT = hotkey(Qt.CTRL | Qt.Key_Right)
 
 # Rebase
 REBASE_START_AND_CONTINUE = hotkey(Qt.ALT | Qt.Key_R)
