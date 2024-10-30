@@ -654,7 +654,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         # the correct value.
         if not self._columns_initialized:
             self._columns_initialized = True
-            width = self.width()
+            width = self.header().width()
             two_thirds = (width * 2) // 3
             one_sixth = width // 6
             self.setColumnWidth(0, two_thirds)
