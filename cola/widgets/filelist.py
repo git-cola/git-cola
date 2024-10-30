@@ -26,6 +26,7 @@ class FileWidget(TreeWidget):
         self.setHeaderLabels(labels)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setMouseTracking(True)
+        self._columns_initialized = False
 
         self.show_history_action = qtutils.add_action(
             self, N_('Show History'), self.show_history, hotkeys.HISTORY
@@ -101,23 +102,20 @@ class FileWidget(TreeWidget):
             files.append(item)
         self.insertTopLevelItems(0, files)
 
-    def adjust_columns(self, size, old_size):
-        if size.isValid() and old_size.isValid():
-            width = self.columnWidth(0) + size.width() - old_size.width()
-            self.setColumnWidth(0, width)
-        else:
-            width = self.width()
-            two_thirds = (width * 2) // 3
-            one_sixth = width // 6
-            self.setColumnWidth(0, two_thirds)
-            self.setColumnWidth(1, one_sixth)
-            self.setColumnWidth(2, one_sixth)
+    def adjust_columns(self):
+        width = self.header().width()
+        two_thirds = (width * 2) // 3
+        one_sixth = width // 6
+        self.setColumnWidth(0, two_thirds)
+        self.setColumnWidth(1, one_sixth)
+        self.setColumnWidth(2, one_sixth)
 
-    def show(self):
-        self.adjust_columns(QSize(), QSize())
-
-    def resizeEvent(self, event):
-        self.adjust_columns(event.size(), event.oldSize())
+    def showEvent(self, event):
+        """Defer initializaztion of column widths"""
+        super().showEvent(event)
+        if not self._columns_initialized:
+            self._columns_initialized = True
+            self.adjust_columns()
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
