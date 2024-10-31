@@ -604,7 +604,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
-        self.header().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.header().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
 
         self.context = context
         self.oidmap = {}
