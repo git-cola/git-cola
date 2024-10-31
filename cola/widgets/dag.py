@@ -833,6 +833,16 @@ class GitDAG(standard.MainWindow):
 
         self.treewidget.menu_actions = viewer_actions(self.treewidget, self.proxy)
         self.graphview.menu_actions = viewer_actions(self.graphview, self.proxy)
+        self.diffwidget_copy_commit = set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                self.diffwidget.diff,
+                N_('Copy Commit'),
+                self.treewidget.copy_to_clipboard,
+                hotkeys.COPY_COMMIT_ID,
+            )
+        )
+        self.diffwidget.diff.menu_actions.append(self.diffwidget_copy_commit)
 
         self.controls_layout = qtutils.hbox(
             defs.no_margin, defs.spacing, self.revtext, self.maxresults
@@ -1063,6 +1073,8 @@ class GitDAG(standard.MainWindow):
 
     def select_commits(self, commits):
         self.selection = commits
+        enabled = bool(commits)
+        self.diffwidget_copy_commit.setEnabled(enabled)
 
     def clear(self):
         self.commits.clear()
