@@ -840,7 +840,7 @@ class GitDAG(standard.MainWindow):
                 N_('Copy Commit'),
                 self.treewidget.copy_to_clipboard,
                 hotkeys.COPY_COMMIT_ID,
-            )
+            ),
         )
         self.diffwidget.diff.menu_actions.append(self.diffwidget_copy_commit)
 

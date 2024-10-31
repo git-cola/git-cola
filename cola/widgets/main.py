@@ -759,6 +759,14 @@ class MainView(standard.MainWindow):
         cut.setIcon(icons.cut())
         copy = add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
         copy.setIcon(icons.copy())
+        copy_commit_id = add_action(
+            edit_menu,
+            N_('Copy Commit'),
+            lambda: guicmds.copy_commit_id_to_clipboard(context),
+            hotkeys.COPY_COMMIT_ID,
+        )
+        copy_commit_id.setIcon(icons.copy())
+        self.addAction(copy_commit_id)
         paste = add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
         paste.setIcon(icons.paste())
         delete = add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)

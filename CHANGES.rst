@@ -28,6 +28,10 @@ Usability, bells and whistles
 * The DAG's automatic column resizing behavior has been improved.
   (`#1432 <https://github.com/git-cola/git-cola/issues/1432>`_)
 
+* The "Copy Commit" ``Alt + Ctrl + C`` action was added tot he main menu.
+  (`#1430 <https://github.com/git-cola/git-cola/issues/1430>`_)
+
+
 Translations
 ------------
 * Updated Chinese (Taiwan) translations.

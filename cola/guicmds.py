@@ -19,6 +19,13 @@ from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output
 
 
+def copy_commit_id_to_clipboard(context):
+    """Copy the current commit ID to the clipboard"""
+    status, commit_id, _ = context.git.rev_parse('HEAD')
+    if status == 0 and commit_id:
+        qtutils.set_clipboard(commit_id)
+
+
 def delete_branch(context):
     """Launch the 'Delete Branch' dialog."""
     icon = icons.discard()
