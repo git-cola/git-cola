@@ -23,8 +23,6 @@ class FileWidget(TreeWidget):
 
         labels = [N_('Filename'), N_('Additions'), N_('Deletions')]
         self.setHeaderLabels(labels)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setMouseTracking(True)
         self._columns_initialized = False
 
         self.show_history_action = qtutils.add_action(
@@ -116,6 +114,11 @@ class FileWidget(TreeWidget):
             self._columns_initialized = True
             self.adjust_columns()
 
+    def resizeEvent(self, event):
+        """Adjust column sizes when resized"""
+        super().resizeEvent(event)
+        self.adjust_columns()
+
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.grab_file_action)
@@ -154,20 +157,6 @@ class FileWidget(TreeWidget):
         items = self.selected_items()
         paths = tuple(i.path for i in items)
         self.remark_toggled.emit(remark, paths)
-
-    def mouseMoveEvent(self, event):
-        """Display the horizontal scrollbar when the mouse hovers near the bottom"""
-        scrollbar = self.horizontalScrollBar()
-        bottom = self.height() - self.header().height() - 4
-        scrollbar_zone = bottom - scrollbar.height()
-        policy = self.horizontalScrollBarPolicy()
-        if event.y() >= scrollbar_zone:
-            new_policy = Qt.ScrollBarAsNeeded
-        else:
-            new_policy = Qt.ScrollBarAlwaysOff
-        if policy != new_policy:
-            self.setHorizontalScrollBarPolicy(new_policy)
-        super().mouseMoveEvent(event)
 
 
 class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):

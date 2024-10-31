@@ -604,8 +604,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
         self.setSelectionMode(self.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setMouseTracking(True)
+        self.header().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         self.context = context
         self.oidmap = {}
@@ -642,7 +641,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         except (KeyError, ValueError):
             column_widths = None
         if column_widths:
-            self.set_column_widths(column_widths)
+            # We only care about the first two columns. This allows the final
+            # column to stretch and shrink.
+            self.set_column_widths(column_widths[:2])
             self._columns_initialized = True
         return True
 
@@ -655,25 +656,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not self._columns_initialized:
             self._columns_initialized = True
             width = self.header().width()
-            two_thirds = (width * 2) // 3
-            one_sixth = width // 6
-            self.setColumnWidth(0, two_thirds)
-            self.setColumnWidth(1, one_sixth)
-            self.setColumnWidth(2, one_sixth)
-
-    def mouseMoveEvent(self, event):
-        """Hide the horizontal scrollbar unless we are hovering near the bottom"""
-        scrollbar = self.horizontalScrollBar()
-        bottom = self.height() - self.header().height() - 4
-        scrollbar_zone = bottom - scrollbar.height()
-        policy = self.horizontalScrollBarPolicy()
-        if event.y() >= scrollbar_zone:
-            new_policy = Qt.ScrollBarAsNeeded
-        else:
-            new_policy = Qt.ScrollBarAlwaysOff
-        if policy != new_policy:
-            self.setHorizontalScrollBarPolicy(new_policy)
-        super().mouseMoveEvent(event)
+            one_half = width // 2
+            one_quarter = width // 4
+            self.setColumnWidth(0, one_half)
+            self.setColumnWidth(1, one_quarter)
 
     # ViewerMixin
     def go_up(self):
