@@ -792,6 +792,7 @@ class GitDAG(standard.MainWindow):
         self.old_oids = None
         self.old_count = 0
         self.force_refresh = False
+        self._widgets_initialized = False
 
         self.thread = None
         self.revtext = GitDagLineEdit(context)
@@ -847,6 +848,7 @@ class GitDAG(standard.MainWindow):
         self.controls_layout = qtutils.hbox(
             defs.no_margin, defs.spacing, self.revtext, self.maxresults
         )
+        self.controls_layout.setAlignment(self.maxresults, Qt.AlignTop)
 
         self.controls_widget = QtWidgets.QWidget()
         self.controls_widget.setLayout(self.controls_layout)
@@ -1127,12 +1129,6 @@ class GitDAG(standard.MainWindow):
         else:
             difftool.diff_commits(self.context, self, left, right)
 
-    # Qt overrides
-    def closeEvent(self, event):
-        self.revtext.close_popup()
-        self.thread.stop()
-        standard.MainWindow.closeEvent(self, event)
-
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
@@ -1159,6 +1155,20 @@ class GitDAG(standard.MainWindow):
         oid = self.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
+
+    # Qt overrides
+    def closeEvent(self, event):
+        """Ensure the revtext popup is closed"""
+        self.revtext.close_popup()
+        self.thread.stop()
+        standard.MainWindow.closeEvent(self, event)
+
+    def showEvent(self, event):
+        """Resize widgets once their sizes are known"""
+        standard.MainWindow.showEvent(self, event)
+        if not self._widgets_initialized:
+            self._widgets_initialized = True
+            self.maxresults.setMinimumHeight(self.revtext.height())
 
 
 class ReaderThread(QtCore.QThread):
