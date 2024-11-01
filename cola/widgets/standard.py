@@ -199,7 +199,7 @@ class MainWindowMixin(WidgetMixin):
 
         self.lock_layout = state.get('lock_layout', self.lock_layout)
         self.update_dockwidget_lock_state()
-        self.update_dockwidget_tooltips()
+        self.update_dockwidget_floating_state()
 
         return result
 
@@ -220,12 +220,13 @@ class MainWindowMixin(WidgetMixin):
                 | QDockWidget.DockWidgetMovable
             )
         for widget in self.dockwidgets:
-            widget.titleBarWidget().update_tooltips()
             widget.setFeatures(features)
+            widget.titleBarWidget().update_floating()
 
-    def update_dockwidget_tooltips(self):
+    def update_dockwidget_floating_state(self):
+        """Update the floating state for all dock widgets"""
         for widget in self.dockwidgets:
-            widget.titleBarWidget().update_tooltips()
+            widget.titleBarWidget().update_floating()
 
 
 class ListWidget(QtWidgets.QListWidget):

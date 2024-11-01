@@ -822,6 +822,8 @@ def _checkbox(cls, text, tooltip, checked):
 
 
 class DockTitleBarWidget(QtWidgets.QFrame):
+    """Provides a dockwidget titlebar that can be extended with custom widgets"""
+
     def __init__(self, parent, title, stretch=True, hide_title=False):
         QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
@@ -840,6 +842,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         self.toggle_button = create_action_button(
             tooltip=N_('Detach'), icon=icons.external()
         )
+        self.toggle_button.hide()
 
         self.corner_layout = hbox(defs.no_margin, defs.spacing)
         self.title_layout = hbox(defs.no_margin, defs.button_spacing, self.label)
@@ -866,13 +869,15 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         connect_button(self.close_button, self.toggle_visibility)
 
     def toggle_floating(self):
+        """Toggle between floating and embedded modes"""
         self.parent().setFloating(not self.parent().isFloating())
-        self.update_tooltips()
 
     def toggle_visibility(self):
+        """Toggle visibility of the dock widget"""
         self.parent().toggleViewAction().trigger()
 
     def set_title(self, title):
+        """Set the title text"""
         self.label.setText(title)
 
     def add_title_widget(self, widget):
@@ -883,12 +888,18 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         """Add widgets to the corner area"""
         self.corner_layout.addWidget(widget)
 
-    def update_tooltips(self):
-        if self.parent().isFloating():
+    def update_floating(self):
+        """Refresh the floating state"""
+        self.set_floating(self.parent().isFloating())
+
+    def set_floating(self, floating):
+        """Update state in response to floating state changes"""
+        if floating:
             tooltip = N_('Attach')
         else:
             tooltip = N_('Detach')
         self.toggle_button.setToolTip(tooltip)
+        self.toggle_button.setVisible(floating)
 
 
 def create_dock(
@@ -901,6 +912,7 @@ def create_dock(
     titlebar = DockTitleBarWidget(dock, title, stretch=stretch, hide_title=hide_title)
     dock.setTitleBarWidget(titlebar)
     dock.setAutoFillBackground(True)
+    dock.topLevelChanged.connect(titlebar.set_floating)
     if hasattr(parent, 'dockwidgets'):
         parent.dockwidgets.append(dock)
     if func:
