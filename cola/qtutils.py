@@ -822,10 +822,12 @@ def _checkbox(cls, text, tooltip, checked):
 
 
 class DockTitleBarWidget(QtWidgets.QFrame):
-    def __init__(self, parent, title, stretch=True):
+    def __init__(self, parent, title, stretch=True, hide_title=False):
         QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
         self.label = qlabel = QtWidgets.QLabel(title, self)
+        if hide_title:
+            self.label.hide()
         qfont = qlabel.font()
         qfont.setBold(True)
         qlabel.setFont(qfont)
@@ -887,12 +889,14 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         self.toggle_button.setToolTip(tooltip)
 
 
-def create_dock(name, title, parent, stretch=True, widget=None, func=None):
+def create_dock(
+    name, title, parent, stretch=True, widget=None, func=None, hide_title=False
+):
     """Create a dock widget and set it up accordingly."""
     dock = QtWidgets.QDockWidget(parent)
     dock.setWindowTitle(title)
     dock.setObjectName(name)
-    titlebar = DockTitleBarWidget(dock, title, stretch=stretch)
+    titlebar = DockTitleBarWidget(dock, title, stretch=stretch, hide_title=hide_title)
     dock.setTitleBarWidget(titlebar)
     dock.setAutoFillBackground(True)
     if hasattr(parent, 'dockwidgets'):
