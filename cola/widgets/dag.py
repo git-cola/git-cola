@@ -860,7 +860,9 @@ class GitDAG(standard.MainWindow):
         log_dock_titlebar = self.log_dock.titleBarWidget()
         log_dock_titlebar.add_corner_widget(self.controls_widget)
 
-        self.file_dock = qtutils.create_dock('Files', N_('Files'), self, hide_title=True)
+        self.file_dock = qtutils.create_dock(
+            'Files', N_('Files'), self, hide_title=True
+        )
         self.file_dock.setWidget(self.filewidget)
 
         self.diff_panel = diff.DiffPanel(self.diffwidget, self.diffwidget.diff, self)
@@ -887,7 +889,9 @@ class GitDAG(standard.MainWindow):
         self.graph_controls_widget = QtWidgets.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
 
-        self.graphview_dock = qtutils.create_dock('Graph', N_('Graph'), self, hide_title=True)
+        self.graphview_dock = qtutils.create_dock(
+            'Graph', N_('Graph'), self, hide_title=True
+        )
         self.graphview_dock.setWidget(self.graphview)
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)

@@ -188,9 +188,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.topwidget = QtWidgets.QWidget()
         self.topwidget.setLayout(self.toplayout)
 
-        self.mainlayout = qtutils.vbox(
-            defs.no_margin, defs.spacing, self.description
-        )
+        self.mainlayout = qtutils.vbox(defs.no_margin, defs.spacing, self.description)
         self.setLayout(self.mainlayout)
 
         qtutils.connect_button(self.commit_button, self.commit)
@@ -714,7 +712,9 @@ class CommitDateDialog(QtWidgets.QDialog):
             N_('Increment'),
             repeat=True,
         )
-        self._reset_to_commit = reset_to_commit = qtutils.create_toolbutton_with_callback(
+        self._reset_to_commit = (
+            reset_to_commit
+        ) = qtutils.create_toolbutton_with_callback(
             self._reset_commit_time,
             None,
             icons.sync(),
