@@ -691,6 +691,7 @@ class CommitDateDialog(QtWidgets.QDialog):
     def __init__(self, parent, context, commit_datetime=None):
         QtWidgets.QDialog.__init__(self, parent)
         slider_range = self.slider_range
+        self.context = context
         self._calendar_widget = calendar_widget = QtWidgets.QCalendarWidget()
         self._time_widget = time_widget = QtWidgets.QTimeEdit()
         time_widget.setDisplayFormat('hh:mm:ss AP')
@@ -713,6 +714,12 @@ class CommitDateDialog(QtWidgets.QDialog):
             N_('Increment'),
             repeat=True,
         )
+        self._reset_to_commit = reset_to_commit = qtutils.create_toolbutton_with_callback(
+            self._reset_commit_time,
+            None,
+            icons.sync(),
+            N_('Reset time to latest commit'),
+        )
 
         cancel_button = QtWidgets.QPushButton(N_('Cancel'))
         cancel_button.setIcon(icons.close())
@@ -730,10 +737,11 @@ class CommitDateDialog(QtWidgets.QDialog):
         )
         slider_layout = qtutils.hbox(
             defs.no_margin,
-            defs.no_spacing,
+            defs.spacing,
             tick_backward,
-            tick_forward,
             slider,
+            tick_forward,
+            reset_to_commit,
             time_widget,
         )
         layout = qtutils.vbox(
@@ -835,6 +843,15 @@ class CommitDateDialog(QtWidgets.QDialog):
         value = int(self.slider_range * ratio)
         with qtutils.BlockSignals(self._slider):
             self._slider.setValue(value)
+
+    def _reset_commit_time(self):
+        """Reset the commit time to match the most recent commit"""
+        commit_datetime = _get_latest_commit_datetime(self.context)
+        with qtutils.BlockSignals(self._time_widget):
+            self._time_widget.setTime(commit_datetime.time())
+        with qtutils.BlockSignals(self._calendar_widget):
+            self._calendar_widget.setSelectedDate(commit_datetime.date())
+        self._update_slider_from_datetime(commit_datetime)
 
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):
