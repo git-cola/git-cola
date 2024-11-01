@@ -40,7 +40,6 @@ from . import compare
 from . import createbranch
 from . import createtag
 from . import dag
-from . import defs
 from . import diff
 from . import finder
 from . import editremotes
