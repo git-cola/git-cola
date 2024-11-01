@@ -858,6 +858,8 @@ class DockTitleBarWidget(QtWidgets.QFrame):
             self.toggle_button,
             self.close_button,
         )
+        self.main_layout.setAlignment(self.toggle_button, Qt.AlignTop)
+        self.main_layout.setAlignment(self.close_button, Qt.AlignTop)
         self.setLayout(self.main_layout)
 
         connect_button(self.toggle_button, self.toggle_floating)
