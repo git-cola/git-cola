@@ -1,3 +1,4 @@
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Signal
 from qtpy.QtCore import Qt
@@ -20,10 +21,8 @@ class FileWidget(TreeWidget):
     def __init__(self, context, parent, remarks=False):
         TreeWidget.__init__(self, parent)
         self.context = context
-
-        labels = [N_('Filename'), N_('Additions'), N_('Deletions')]
-        self.setHeaderLabels(labels)
         self._columns_initialized = False
+        self.setHeaderLabels([N_('Filename'), '+', '-'])
 
         self.show_history_action = qtutils.add_action(
             self, N_('Show History'), self.show_history, hotkeys.HISTORY
@@ -40,7 +39,6 @@ class FileWidget(TreeWidget):
         self.grab_file_from_parent_action = qtutils.add_action(
             self, N_('Grab File from Parent Commit...'), self._grab_file_from_parent
         )
-
         if remarks:
             self.toggle_remark_actions = tuple(
                 qtutils.add_action(
@@ -99,25 +97,28 @@ class FileWidget(TreeWidget):
             files.append(item)
         self.insertTopLevelItems(0, files)
 
-    def adjust_columns(self):
-        width = self.header().width()
-        two_thirds = (width * 2) // 3
-        one_sixth = width // 6
-        self.setColumnWidth(0, two_thirds)
-        self.setColumnWidth(1, one_sixth)
-        self.setColumnWidth(2, one_sixth)
+    def _resize_columns(self):
+        """Set columns to their initial size"""
+        header_width = self.header().width() - 1
+        metrics = QtGui.QFontMetrics(self.font())
+        numbers_max = metrics.horizontalAdvance('12345678')  # Linux had 28,000,000+ LOC of code in 2020.
+        numbers_width = min(numbers_max, header_width // 8 - 1)
+        files_width = header_width - numbers_width * 2
+        self.setColumnWidth(0, files_width)
+        self.setColumnWidth(1, numbers_width)
+        self.setColumnWidth(2, numbers_width)
 
     def showEvent(self, event):
         """Defer initializaztion of column widths"""
         super().showEvent(event)
         if not self._columns_initialized:
             self._columns_initialized = True
-            self.adjust_columns()
+            self._resize_columns()
 
     def resizeEvent(self, event):
-        """Adjust column sizes when resized"""
+        """Defer initializaztion of column widths"""
         super().resizeEvent(event)
-        self.adjust_columns()
+        self._resize_columns()
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)

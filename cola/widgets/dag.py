@@ -792,6 +792,7 @@ class GitDAG(standard.MainWindow):
         self.old_oids = None
         self.old_count = 0
         self.force_refresh = False
+        self._widgets_initialized = False
 
         self.thread = None
         self.revtext = GitDagLineEdit(context)
@@ -847,16 +848,19 @@ class GitDAG(standard.MainWindow):
         self.controls_layout = qtutils.hbox(
             defs.no_margin, defs.spacing, self.revtext, self.maxresults
         )
+        self.controls_layout.setAlignment(self.maxresults, Qt.AlignTop)
 
         self.controls_widget = QtWidgets.QWidget()
         self.controls_widget.setLayout(self.controls_layout)
 
-        self.log_dock = qtutils.create_dock('Log', N_('Log'), self, stretch=False)
+        self.log_dock = qtutils.create_dock(
+            'Log', N_('Log'), self, stretch=False, hide_title=True
+        )
         self.log_dock.setWidget(self.treewidget)
         log_dock_titlebar = self.log_dock.titleBarWidget()
         log_dock_titlebar.add_corner_widget(self.controls_widget)
 
-        self.file_dock = qtutils.create_dock('Files', N_('Files'), self)
+        self.file_dock = qtutils.create_dock('Files', N_('Files'), self, hide_title=True)
         self.file_dock.setWidget(self.filewidget)
 
         self.diff_panel = diff.DiffPanel(self.diffwidget, self.diffwidget.diff, self)
@@ -865,11 +869,11 @@ class GitDAG(standard.MainWindow):
         self.diff_options.hide_advanced_options()
         self.diff_options.set_diff_type(main.Types.TEXT)
 
-        self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self)
+        self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self, hide_title=True)
         self.diff_dock.setWidget(self.diff_panel)
 
         diff_titlebar = self.diff_dock.titleBarWidget()
-        diff_titlebar.add_corner_widget(self.diff_options)
+        diff_titlebar.add_title_widget(self.diff_options)
 
         self.graph_controls_layout = qtutils.hbox(
             defs.no_margin,
@@ -883,7 +887,7 @@ class GitDAG(standard.MainWindow):
         self.graph_controls_widget = QtWidgets.QWidget()
         self.graph_controls_widget.setLayout(self.graph_controls_layout)
 
-        self.graphview_dock = qtutils.create_dock('Graph', N_('Graph'), self)
+        self.graphview_dock = qtutils.create_dock('Graph', N_('Graph'), self, hide_title=True)
         self.graphview_dock.setWidget(self.graphview)
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
@@ -1127,12 +1131,6 @@ class GitDAG(standard.MainWindow):
         else:
             difftool.diff_commits(self.context, self, left, right)
 
-    # Qt overrides
-    def closeEvent(self, event):
-        self.revtext.close_popup()
-        self.thread.stop()
-        standard.MainWindow.closeEvent(self, event)
-
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
@@ -1159,6 +1157,20 @@ class GitDAG(standard.MainWindow):
         oid = self.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
+
+    # Qt overrides
+    def closeEvent(self, event):
+        """Ensure the revtext popup is closed"""
+        self.revtext.close_popup()
+        self.thread.stop()
+        standard.MainWindow.closeEvent(self, event)
+
+    def showEvent(self, event):
+        """Resize widgets once their sizes are known"""
+        standard.MainWindow.showEvent(self, event)
+        if not self._widgets_initialized:
+            self._widgets_initialized = True
+            self.maxresults.setMinimumHeight(self.revtext.height())
 
 
 class ReaderThread(QtCore.QThread):

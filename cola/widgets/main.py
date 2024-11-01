@@ -144,28 +144,18 @@ class MainView(standard.MainWindow):
         self.submoduleswidget = self.submodulesdock.widget()
 
         # "Commit Message Editor" widget
-        self.position_label = QtWidgets.QLabel()
-        self.position_label.setAlignment(Qt.AlignCenter)
-        font = qtutils.default_monospace_font()
-        font.setPointSize(int(font.pointSize() * 0.8))
-        self.position_label.setFont(font)
-
-        # make the position label fixed size to avoid layout issues
-        text_width = qtutils.text_width(font, '99:999')
-        width = text_width + defs.spacing
-        self.position_label.setMinimumWidth(width)
-
         editor = commitmsg.CommitMessageEditor(context, self)
         self.commiteditor = editor
-        self.commitdock = create_dock('Commit', N_('Commit'), self, widget=editor)
+        self.commitdock = create_dock(
+            'Commit', N_('Commit'), self, widget=editor, hide_title=True, stretch=False
+        )
         titlebar = self.commitdock.titleBarWidget()
-        titlebar.add_title_widget(self.commiteditor.commit_progress_bar)
-        titlebar.add_corner_widget(self.position_label)
+        titlebar.add_title_widget(self.commiteditor.topwidget)
 
         # "Console" widget
         self.logwidget = log.LogWidget(context)
         self.logdock = create_dock(
-            'Console', N_('Console'), self, widget=self.logwidget
+            'Console', N_('Console'), self, widget=self.logwidget, hide_title=True
         )
         qtutils.hide_dock(self.logdock)
 
@@ -175,14 +165,15 @@ class MainView(standard.MainWindow):
             N_('Diff'),
             self,
             func=lambda dock: diff.Viewer(context, parent=dock),
+            hide_title=True,
         )
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
         self.diffviewer.enable_filename_tracking()
         self.diffeditor = self.diffviewer.text
         titlebar = self.diffdock.titleBarWidget()
+        titlebar.add_title_widget(self.diffviewer.options)
         titlebar.add_title_widget(self.diffviewer.filename)
-        titlebar.add_corner_widget(self.diffviewer.options)
 
         # All Actions
         add_action = qtutils.add_action
@@ -913,13 +904,8 @@ class MainView(standard.MainWindow):
         )
 
         prefs_model.config_updated.connect(self._config_updated)
-
-        # Set a default value
-        self.show_cursor_position(1, 0)
-
         self.commit_menu.aboutToShow.connect(self.update_menu_actions)
         self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
-        self.commiteditor.cursor_changed.connect(self.show_cursor_position)
 
         self.diffeditor.options_changed.connect(self.statuswidget.refresh)
         self.diffeditor.up.connect(self.statuswidget.move_up)
@@ -1324,38 +1310,6 @@ class MainView(standard.MainWindow):
 
     def git_dag(self):
         self.dag = dag.git_dag(self.context, existing_view=self.dag)
-
-    def show_cursor_position(self, rows, cols):
-        display_content = '%02d:%02d' % (rows, cols)
-        css = """
-            <style>
-            .good {
-            }
-            .first-warning {
-                color: black;
-                background-color: yellow;
-            }
-            .second-warning {
-                color: black;
-                background-color: #f83;
-            }
-            .error {
-                color: white;
-                background-color: red;
-            }
-            </style>
-        """
-
-        if cols > 78:
-            cls = 'error'
-        elif cols > 72:
-            cls = 'second-warning'
-        elif cols > 64:
-            cls = 'first-warning'
-        else:
-            cls = 'good'
-        div = f'<div class="{cls}">{display_content}</div>'
-        self.position_label.setText(css + div)
 
 
 class FocusProxy:

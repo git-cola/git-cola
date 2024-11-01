@@ -31,6 +31,8 @@ Usability, bells and whistles
 * The "Copy Commit" ``Alt + Ctrl + C`` action was added to the main menu.
   (`#1430 <https://github.com/git-cola/git-cola/issues/1430>`_)
 
+* The DAG and main interfaces have been streamlined to reduce visual clutter.
+
 
 Translations
 ------------

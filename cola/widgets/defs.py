@@ -28,6 +28,7 @@ tool_button_height = scale(28)
 
 default_icon = scale(16)
 small_icon = scale(12)
+action_icon = scale(14)
 medium_icon = scale(48)
 large_icon = scale(96)
 huge_icon = scale(192)
@@ -38,6 +39,7 @@ border = max(1, scale(0.5))
 checkbox = scale(12)
 radio = scale(22)
 
+action_text = scale(10)
 logo_text = 24
 
 radio_border = max(1, scale(1.0 - (1.0 / math.pi)))
