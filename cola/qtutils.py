@@ -825,13 +825,13 @@ class DockTitleBarWidget(QtWidgets.QFrame):
     def __init__(self, parent, title, stretch=True, hide_title=False):
         QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
-        self.label = qlabel = QtWidgets.QLabel(title, self)
+        self.label = QtWidgets.QLabel(title, self)
+        self.label.setCursor(Qt.OpenHandCursor)
+        font = self.label.font()
+        font.setPointSize(defs.action_text)
+        self.label.setFont(font)
         if hide_title:
             self.label.hide()
-        qfont = qlabel.font()
-        qfont.setBold(True)
-        qlabel.setFont(qfont)
-        qlabel.setCursor(Qt.OpenHandCursor)
 
         self.close_button = create_action_button(
             tooltip=N_('Close'), icon=icons.close()
@@ -842,7 +842,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         )
 
         self.corner_layout = hbox(defs.no_margin, defs.spacing)
-        self.title_layout = hbox(defs.no_margin, defs.button_spacing, qlabel)
+        self.title_layout = hbox(defs.no_margin, defs.button_spacing, self.label)
 
         if stretch:
             separator = STRETCH

@@ -793,7 +793,7 @@ class Options(QtWidgets.QWidget):
             self, N_('Enable word wrapping'), self.set_word_wrapping, True
         )
 
-        self.options = qtutils.create_action_button(
+        self.options = qtutils.create_toolbutton(
             tooltip=N_('Diff Options'), icon=icons.configure()
         )
 

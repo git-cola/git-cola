@@ -51,6 +51,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self._last_commit_datetime = None  # The most recently selected commit date.
         self._last_commit_datetime_backup = None  # Used when amending.
         self._git_commit_date = None  # Overrides the commit date when committing.
+        self._widgets_initialized = False  # Defers initialization of the cursor position label height.
 
         # Actions
         self.signoff_action = qtutils.add_action(
@@ -87,8 +88,11 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         # Widgets
         self.summary = CommitSummaryLineEdit(context, check=self.spellcheck)
-        self.summary.setMinimumHeight(defs.tool_button_height)
         self.summary.menu_actions.extend(menu_actions)
+        self.summary.addAction(self.commit_action)
+        self.summary.addAction(self.move_up)
+        self.summary.addAction(self.move_down)
+        self.summary.addAction(self.signoff_action)
 
         self.description = CommitMessageTextEdit(
             context, check=self.spellcheck, parent=self
@@ -104,7 +108,15 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self,
             disable=(self.commit_button, self.summary, self.description),
         )
-        self.commit_progress_bar.setMaximumHeight(defs.small_icon)
+
+        # make the position label fixed size to avoid layout issues
+        font = qtutils.default_monospace_font()
+        font.setPixelSize(defs.action_text)
+        text_width = qtutils.text_width(font, '999:999')
+        cursor_position_label = self.cursor_position_label = QtWidgets.QLabel(self)
+        cursor_position_label.setFont(font)
+        cursor_position_label.setMinimumWidth(text_width)
+        cursor_position_label.setAlignment(Qt.AlignCenter)
 
         self.actions_menu = qtutils.create_menu(N_('Actions'), self)
         self.actions_button = qtutils.create_toolbutton(
@@ -169,14 +181,15 @@ class CommitMessageEditor(QtWidgets.QFrame):
             defs.spacing,
             self.actions_button,
             self.summary,
+            self.commit_progress_bar,
             self.commit_button,
+            self.cursor_position_label,
         )
-        self.toplayout.setContentsMargins(
-            defs.margin, defs.no_margin, defs.no_margin, defs.no_margin
-        )
+        self.topwidget = QtWidgets.QWidget()
+        self.topwidget.setLayout(self.toplayout)
 
         self.mainlayout = qtutils.vbox(
-            defs.no_margin, defs.spacing, self.toplayout, self.description
+            defs.no_margin, defs.spacing, self.description
         )
         self.setLayout(self.mainlayout)
 
@@ -209,6 +222,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.textChanged.connect(self.commit_summary_changed)
         self.description.textChanged.connect(self._commit_message_changed)
         self.description.leave.connect(self.focus_summary)
+        self.cursor_changed.connect(self.show_cursor_position)
+        # Set initial position.
+        self.show_cursor_position(1, 0)
 
         self.commit_group.setEnabled(False)
 
@@ -225,7 +241,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         model.set_commitmsg(commit_msg)
 
         # Allow tab to jump from the summary to the description
-        self.setTabOrder(self.summary, self.description)
         self.setFont(qtutils.diff_font(context))
         self.setFocusProxy(self.summary)
 
@@ -603,6 +618,29 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.highlighter.enable(enabled)
         self.description.highlighter.enable(enabled)
 
+    def show_cursor_position(self, rows, cols):
+        """Display the cursor position with warnings and error colors for long lines"""
+        display_content = '%02d:%02d' % (rows, cols)
+        if cols > 78:
+            color = 'red'
+        elif cols > 72:
+            color = '#ff8833'
+        elif cols > 64:
+            color = 'yellow'
+        else:
+            color = ''
+        if color:
+            radius = defs.small_icon // 2
+            stylesheet = f"""
+                color: black;
+                background-color: {color};
+                border-radius: {radius}px;
+            """
+        else:
+            stylesheet = ''
+        self.cursor_position_label.setStyleSheet(stylesheet)
+        self.cursor_position_label.setText(display_content)
+
     def set_commit_date(self, enabled):
         """Choose the date and time that is used when authoring commits"""
         if not enabled:
@@ -618,6 +656,18 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self._last_commit_datetime = CommitDateDialog.tick_time(widget.datetime())
         else:
             self.commit_date_action.setChecked(False)
+
+    # Qt overrides
+    def showEvent(self, event):
+        """Resize the position label once the sizes are known"""
+        super().showEvent(event)
+        if not self._widgets_initialized:
+            self._widgets_initialized = True
+            height = self.summary.height()
+            self.commit_button.setMinimumHeight(height)
+            self.cursor_position_label.setMaximumHeight(defs.small_icon + defs.spacing)
+            self.commit_progress_bar.setMaximumHeight(height - 2)
+            self.commit_progress_bar.setMaximumWidth(self.commit_button.width())
 
 
 def _get_latest_commit_datetime(context):

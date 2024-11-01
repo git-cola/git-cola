@@ -873,7 +873,7 @@ class GitDAG(standard.MainWindow):
         self.diff_dock.setWidget(self.diff_panel)
 
         diff_titlebar = self.diff_dock.titleBarWidget()
-        diff_titlebar.add_corner_widget(self.diff_options)
+        diff_titlebar.add_title_widget(self.diff_options)
 
         self.graph_controls_layout = qtutils.hbox(
             defs.no_margin,
