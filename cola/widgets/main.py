@@ -165,7 +165,7 @@ class MainView(standard.MainWindow):
         # "Console" widget
         self.logwidget = log.LogWidget(context)
         self.logdock = create_dock(
-            'Console', N_('Console'), self, widget=self.logwidget
+            'Console', N_('Console'), self, widget=self.logwidget, hide_title=True
         )
         qtutils.hide_dock(self.logdock)
 
@@ -175,6 +175,7 @@ class MainView(standard.MainWindow):
             N_('Diff'),
             self,
             func=lambda dock: diff.Viewer(context, parent=dock),
+            hide_title=True,
         )
         self.diffviewer = self.diffdock.widget()
         self.diffviewer.set_diff_type(self.model.diff_type)
