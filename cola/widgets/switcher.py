@@ -81,6 +81,7 @@ class Switcher(standard.Dialog):
         self.filter_input.textChanged.connect(self.filter_input_changed)
 
     def filter_input_changed(self):
+        """Update the proxy model filter when the input text changes"""
         input_text = self.filter_input.text()
         pattern = '.*'.join(re.escape(c) for c in input_text)
         self.proxy_model.setFilterRegExp(pattern)
@@ -165,13 +166,12 @@ class SwitcherOuterView(Switcher):
             parent=parent,
         )
         self.filter_input.hide()
-
         self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.filter_input)
         self.setLayout(self.main_layout)
+        self.filter_input.editingFinished.connect(self.filter_input_edited)
 
-    def filter_input_changed(self):
-        super().filter_input_changed()
-        # Hide the input when it becomes empty.
+    def filter_input_edited(self):
+        """Hide the filter input when editing is complete and the text is empty"""
         input_text = self.filter_input.text()
         if not input_text:
             self.filter_input.hide()
