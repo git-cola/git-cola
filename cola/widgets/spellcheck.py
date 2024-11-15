@@ -187,7 +187,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
             QtGui.QFontMetricsF(self.font()).lineSpacing()
             + block_fmt.topMargin()
             + block_fmt.bottomMargin()
-            + 2 * self.document().documentMargin()
+            + self.document().documentMargin()
             + 2 * self.frameWidth()
         )
         return height
