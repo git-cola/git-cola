@@ -161,16 +161,8 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
 
     def minimumSizeHint(self):
         """Match QLineEdit's size behavior"""
-        block_fmt = self.document().firstBlock().blockFormat()
         width = super().minimumSizeHint().width()
-        height = int(
-            QtGui.QFontMetricsF(self.font()).lineSpacing()
-            + block_fmt.topMargin()
-            + block_fmt.bottomMargin()
-            + self.document().documentMargin()
-            + 2 * self.frameWidth()
-        )
-
+        height = self._get_preferred_height()
         style_opts = QtWidgets.QStyleOptionFrame()
         style_opts.initFrom(self)
         style_opts.lineWidth = self.frameWidth()
@@ -182,6 +174,23 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
     def sizeHint(self):
         """Use the minimum size as the sizeHint()"""
         return self.minimumSizeHint()
+
+    def setFont(self, font):
+        """Set the current font"""
+        super().setFont(font)
+        self.setMinimumHeight(self._get_preferred_height())
+
+    def _get_preferred_height(self):
+        """Calculate the preferred height for this widget"""
+        block_fmt = self.document().firstBlock().blockFormat()
+        height = int(
+            QtGui.QFontMetricsF(self.font()).lineSpacing()
+            + block_fmt.topMargin()
+            + block_fmt.bottomMargin()
+            + 2 * self.document().documentMargin()
+            + 2 * self.frameWidth()
+        )
+        return height
 
     def _trim_changed_text_lines(self):
         """Trim the document to a single line to enforce a maximum of one line"""

@@ -1,6 +1,14 @@
 Upcoming
 ========
 
+Usability, bells and whistles
+-----------------------------
+* The commit message's Summary field now resizes itself to match the size of the
+  configured font.
+  (`#1301 <https://github.com/git-cola/git-cola/issues/1301>`_)
+  (`#1435 <https://github.com/git-cola/git-cola/issues/1435>`_)
+
+
 Fixes
 -----
 * Qt6 support was improved for the Recent and Favorites filters.
