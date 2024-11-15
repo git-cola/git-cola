@@ -120,8 +120,6 @@ Add an example plugin and documentation.
 
 # Historical / Unresolved Issues
 
-- [commit message cursor jumps on fedora after 30 chars](https://github.com/git-cola/git-cola/issues/1301)
-
 - [git-bindir does not work on Windows](https://github.com/git-cola/git-cola/issues/1258)
 Reporter was able to use the `GIT_COLA_GIT` environment variable instead.
 
