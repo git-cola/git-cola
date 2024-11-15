@@ -1,3 +1,11 @@
+Upcoming
+========
+
+Fixes
+-----
+* Qt6 support was improved for the Recent and Favorites filters.
+
+
 .. _v4.9.0:
 
 v4.9.0

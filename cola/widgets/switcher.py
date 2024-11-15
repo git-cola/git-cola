@@ -1,6 +1,4 @@
 """Provides quick switcher"""
-import re
-
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy.QtCore import Qt
@@ -83,8 +81,12 @@ class Switcher(standard.Dialog):
     def filter_input_changed(self):
         """Update the proxy model filter when the input text changes"""
         input_text = self.filter_input.text()
-        pattern = '.*'.join(re.escape(c) for c in input_text)
-        self.proxy_model.setFilterRegExp(pattern)
+        # Use a case-sensitive search when the input text is ALL_CAPS or mixedCaps.
+        if input_text.upper() == input_text or input_text.lower() != input_text:
+            self.proxy_model.setFilterCaseSensitivity(Qt.CaseSensitive)
+        else:
+            self.proxy_model.setFilterCaseSensitivity(Qt.CaseInsensitive)
+        self.proxy_model.setFilterWildcard(input_text)
 
 
 class SwitcherInnerView(Switcher):
