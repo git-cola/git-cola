@@ -34,7 +34,7 @@ trees:
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
       clean: rm -rf build dist git_cola.egg-info git-cola-*.windows.zip
-      doc: garden ${GARDEN_CMD_VERBOSE} cmd docs html man -- "$@"
+      doc: garden cmd ${GARDEN_CMD_VERBOSE} docs html man -- "$@"
       dev>:
         - dev/virtualenv
         - dev/pkgs
@@ -64,7 +64,7 @@ trees:
         ${activate}
         cercis --version
         cercis "$@" bin bin/git-* cola test
-      html: garden ${GARDEN_CMD_VERBOSE} html docs
+      html: garden html ${GARDEN_CMD_VERBOSE} docs
       install: |
         ${activate}
         if test -n "${DESTDIR}"
@@ -99,10 +99,10 @@ trees:
         sed -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
         cp contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         cp contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
-        garden ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} install
-        garden ${GARDEN_CMD_VERBOSE} doc
-        garden ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} install docs
-      man: garden ${GARDEN_CMD_VERBOSE} man docs
+        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources}
+        garden doc ${GARDEN_CMD_VERBOSE}
+        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} docs
+      man: garden man ${GARDEN_CMD_VERBOSE} docs
       pkg: git make-pkg --global --name git-cola
       po: |
         for po in cola/i18n/*.po
@@ -128,7 +128,7 @@ trees:
             cola/*.py \
             cola/*/*.py
       pages<: doc
-      pages: garden ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages install docs "$@"
+      pages: garden install ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages docs "$@"
       publish: |
         ${activate}
         twine upload --sign dist/*.whl dist/*.tar.gz
