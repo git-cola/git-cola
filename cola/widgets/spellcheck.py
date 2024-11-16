@@ -177,14 +177,16 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
 
     def setFont(self, font):
         """Set the current font"""
+        self.setMinimumHeight(self._get_preferred_height(font=font))
         super().setFont(font)
-        self.setMinimumHeight(self._get_preferred_height())
 
-    def _get_preferred_height(self):
+    def _get_preferred_height(self, font=None):
         """Calculate the preferred height for this widget"""
+        if font is None:
+            font = self.font()
         block_fmt = self.document().firstBlock().blockFormat()
         height = int(
-            QtGui.QFontMetricsF(self.font()).lineSpacing()
+            QtGui.QFontMetricsF(font).lineSpacing()
             + block_fmt.topMargin()
             + block_fmt.bottomMargin()
             + self.document().documentMargin()
