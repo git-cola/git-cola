@@ -19,6 +19,7 @@ from . import defs
 
 
 def get_stripped(widget):
+    """Return a text value without any leading or trailing whitespace"""
     return widget.get().strip()
 
 
@@ -26,15 +27,11 @@ class LineEdit(QtWidgets.QLineEdit):
     cursor_changed = Signal(int, int)
     esc_pressed = Signal()
 
-    def __init__(self, parent=None, row=1, get_value=None, clear_button=False):
+    def __init__(self, parent=None, row=1, clear_button=False):
         QtWidgets.QLineEdit.__init__(self, parent)
         self._row = row
-        if get_value is None:
-            get_value = get_stripped
-        self._get_value = get_value
         self.cursor_position = LineEditCursorPosition(self, row)
         self.menu_actions = []
-
         if clear_button and hasattr(self, 'setClearButtonEnabled'):
             self.setClearButtonEnabled(True)
 
@@ -44,7 +41,7 @@ class LineEdit(QtWidgets.QLineEdit):
 
     def value(self):
         """Return the processed value, e.g. stripped"""
-        return self._get_value(self)
+        return get_stripped(self)
 
     def set_value(self, value, block=False):
         """Update the widget to the specified value"""
@@ -87,13 +84,10 @@ class LineEditCursorPosition:
 
 
 class BaseTextEditExtension(QtCore.QObject):
-    def __init__(self, widget, get_value, readonly):
+    def __init__(self, widget, readonly):
         QtCore.QObject.__init__(self, widget)
         self.widget = widget
         self.cursor_position = TextEditCursorPosition(widget, self)
-        if get_value is None:
-            get_value = get_stripped
-        self._get_value = get_value
         self._tabwidth = 8
         self._readonly = readonly
         self._init_flags()
@@ -119,7 +113,7 @@ class BaseTextEditExtension(QtCore.QObject):
 
     def value(self):
         """Return a safe value, e.g. a stripped value"""
-        return self._get_value(self.widget)
+        return get_stripped(self.widget)
 
     def set_value(self, value, block=False):
         """Update the widget to the specified value"""
@@ -282,9 +276,9 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
     cursor_changed = Signal(int, int)
     leave = Signal()
 
-    def __init__(self, parent=None, get_value=None, readonly=False, options=None):
+    def __init__(self, parent=None, readonly=False, options=None):
         QtWidgets.QPlainTextEdit.__init__(self, parent)
-        self.ext = PlainTextEditExtension(self, get_value, readonly)
+        self.ext = PlainTextEditExtension(self, readonly)
         self.cursor_position = self.ext.cursor_position
         self.mouse_zoom = True
         self.options = options
@@ -499,8 +493,7 @@ def text_matches(case_sensitive, a, b):
 
 class TextEditExtension(BaseTextEditExtension):
     def init(self):
-        widget = self.widget
-        widget.setAcceptRichText(False)
+        self.widget.setAcceptRichText(False)
 
     def set_linebreak(self, brk):
         if brk:
@@ -517,9 +510,9 @@ class TextEdit(QtWidgets.QTextEdit):
     cursor_changed = Signal(int, int)
     leave = Signal()
 
-    def __init__(self, parent=None, get_value=None, readonly=False):
+    def __init__(self, parent=None, readonly=False):
         QtWidgets.QTextEdit.__init__(self, parent)
-        self.ext = TextEditExtension(self, get_value, readonly)
+        self.ext = TextEditExtension(self, readonly)
         self.cursor_position = self.ext.cursor_position
         self.expandtab_enabled = False
         self.menu_actions = []
@@ -637,62 +630,26 @@ class MonoTextEdit(PlainTextEdit):
         self.setFont(qtutils.diff_font(context))
 
 
-def get_value_hinted(widget):
-    text = get_stripped(widget)
-    hint = get(widget.hint)
-    if text == hint:
-        return ''
-    return text
-
-
 class HintWidget(QtCore.QObject):
-    """Extend a widget to provide hint messages
-
-    This primarily exists because setPlaceholderText() is only available
-    in Qt5, so this class provides consistent behavior across versions.
-
-    """
+    """Set placeholder text and apply palettes to convey errors"""
 
     def __init__(self, widget, hint):
         QtCore.QObject.__init__(self, widget)
         self._widget = widget
         self._hint = hint
         self._is_error = False
-
-        self.modern = modern = hasattr(widget, 'setPlaceholderText')
-        if modern:
-            widget.setPlaceholderText(hint)
-
-        # Palette for normal text
-        QPalette = QtGui.QPalette
-        palette = widget.palette()
-
-        hint_color = palette.color(QPalette.Disabled, QPalette.Text)
+        self._error_seen = False
+        self._default_style = ''
+        widget.setPlaceholderText(hint)
         error_bg_color = QtGui.QColor(Qt.red).darker()
         error_fg_color = QtGui.QColor(Qt.white)
-
-        hint_rgb = qtutils.rgb_css(hint_color)
         error_bg_rgb = qtutils.rgb_css(error_bg_color)
         error_fg_rgb = qtutils.rgb_css(error_fg_color)
-
         env = {
             'name': widget.__class__.__name__,
             'error_fg_rgb': error_fg_rgb,
             'error_bg_rgb': error_bg_rgb,
-            'hint_rgb': hint_rgb,
         }
-
-        self._default_style = ''
-
-        self._hint_style = (
-            """
-            %(name)s {
-                color: %(hint_rgb)s;
-            }
-        """
-            % env
-        )
-
         self._error_style = (
             """
             %(name)s {
@@ -703,21 +660,9 @@ class HintWidget(QtCore.QObject):
             % env
         )
 
-    def init(self):
-        """Deferred initialization"""
-        if self.modern:
-            self.widget().setPlaceholderText(self.value())
-        else:
-            self.widget().installEventFilter(self)
-            self.enable(True)
-
     def widget(self):
         """Return the parent text widget"""
         return self._widget
-
-    def active(self):
-        """Return True when hint-mode is active"""
-        return self.value() == get_stripped(self._widget)
 
     def value(self):
         """Return the current hint text"""
@@ -726,119 +671,53 @@ class HintWidget(QtCore.QObject):
     def set_error(self, is_error):
         """Enable/disable error mode"""
         self._is_error = is_error
-        self.refresh()
+        self.refresh_palette()
 
     def set_value(self, hint):
         """Change the hint text"""
-        if self.modern:
-            self._hint = hint
-            self._widget.setPlaceholderText(hint)
-        else:
-            # If hint-mode is currently active, re-activate it
-            active = self.active()
-            self._hint = hint
-            if active or self.active():
-                self.enable(True)
+        self._hint = hint
+        self._widget.setPlaceholderText(hint)
 
-    def enable(self, enable):
-        """Enable/disable hint-mode"""
-        if not self.modern:
-            if enable and self._hint:
-                self._widget.set_value(self._hint, block=True)
-                self._widget.cursor_position.reset()
-            else:
-                self._widget.clear()
-        self._update_palette(enable)
-
-    def refresh(self):
-        """Update the palette to match the current mode"""
-        self._update_palette(self.active())
-
-    def _update_palette(self, hint):
-        """Update to palette for normal/error/hint mode"""
+    def refresh_palette(self):
+        """Update to palette for normal/error mode"""
         if self._is_error:
-            style = self._error_style
-        elif not self.modern and hint:
-            style = self._hint_style
+            if self._error_seen:
+                style = None
+            else:
+                style = self._error_style
+                self._error_seen = True
         else:
-            style = self._default_style
-        QtCore.QTimer.singleShot(
-            0, lambda: utils.catch_runtime_error(self._widget.setStyleSheet, style)
-        )
-
-    def eventFilter(self, _obj, event):
-        """Enable/disable hint-mode when focus changes"""
-        etype = event.type()
-        if etype == QtCore.QEvent.FocusIn:
-            self.focus_in()
-        elif etype == QtCore.QEvent.FocusOut:
-            self.focus_out()
-        return False
-
-    def focus_in(self):
-        """Disable hint-mode when focused"""
-        widget = self.widget()
-        if self.active():
-            self.enable(False)
-        widget.cursor_position.emit()
-
-    def focus_out(self):
-        """Re-enable hint-mode when losing focus"""
-        widget = self.widget()
-        valid, value = utils.catch_runtime_error(get, widget)
-        if not valid:
-            # The widget may have just been destroyed during application shutdown.
-            # We're receiving a focusOut event but the widget can no longer be used.
-            # This can be safely ignored.
-            return
-        if not value:
-            self.enable(True)
+            if self._error_seen:
+                self._error_seen = False
+                style = self._default_style
+            else:
+                style = None
+        if style is not None:
+            utils.catch_runtime_error(self._widget.setStyleSheet, style)
 
 
 class HintedPlainTextEdit(PlainTextEdit):
     """A hinted plain text edit"""
 
     def __init__(self, context, hint, parent=None, readonly=False):
-        PlainTextEdit.__init__(
-            self, parent=parent, get_value=get_value_hinted, readonly=readonly
-        )
+        PlainTextEdit.__init__(self, parent=parent, readonly=readonly)
         self.hint = HintWidget(self, hint)
-        self.hint.init()
         self.context = context
         self.setFont(qtutils.diff_font(context))
         self.set_tabwidth(prefs.tabwidth(context))
         # Refresh palettes when text changes
-        self.textChanged.connect(self.hint.refresh)
         self.set_mouse_zoom(context.cfg.get(prefs.MOUSE_ZOOM, default=True))
-
-    def set_value(self, value, block=False):
-        """Set the widget text or enable hint mode when empty"""
-        if value or self.hint.modern:
-            PlainTextEdit.set_value(self, value, block=block)
-        else:
-            self.hint.enable(True)
 
 
 class HintedTextEdit(TextEdit):
     """A hinted text edit"""
 
     def __init__(self, context, hint, parent=None, readonly=False):
-        TextEdit.__init__(
-            self, parent=parent, get_value=get_value_hinted, readonly=readonly
-        )
+        TextEdit.__init__(self, parent=parent, readonly=readonly)
         self.context = context
         self.hint = HintWidget(self, hint)
-        self.hint.init()
         # Refresh palettes when text changes
-        self.textChanged.connect(self.hint.refresh)
         self.setFont(qtutils.diff_font(context))
-
-    def set_value(self, value, block=False):
-        """Set the widget text or enable hint mode when empty"""
-        if value or self.hint.modern:
-            TextEdit.set_value(self, value, block=block)
-        else:
-            self.hint.enable(True)
 
 
 def anchor_mode(select):
@@ -1038,12 +917,10 @@ class HintedDefaultLineEdit(LineEdit):
     """A line edit with hint text"""
 
     def __init__(self, hint, tooltip=None, parent=None):
-        LineEdit.__init__(self, parent=parent, get_value=get_value_hinted)
+        LineEdit.__init__(self, parent=parent)
         if tooltip:
             self.setToolTip(tooltip)
         self.hint = HintWidget(self, hint)
-        self.hint.init()
-        self.textChanged.connect(lambda text: self.hint.refresh())
 
 
 class HintedLineEdit(HintedDefaultLineEdit):
@@ -1150,11 +1027,10 @@ class LineNumbers(TextDecorator):
 
     def paintEvent(self, event):
         """Paint the line number"""
-        QPalette = QtGui.QPalette
         painter = QtGui.QPainter(self)
         editor = self.editor
         palette = editor.palette()
-
+        QPalette = QtGui.QPalette
         painter.fillRect(event.rect(), palette.color(QPalette.Base))
 
         content_offset = editor.contentOffset()

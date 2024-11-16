@@ -322,7 +322,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         """Update the model when values change"""
         message = self.commit_message()
         self.model.set_commitmsg(message, notify=False)
-        self.refresh_palettes()
         self.update_actions()
 
     def clear(self):
@@ -341,33 +340,23 @@ class CommitMessageEditor(QtWidgets.QFrame):
         commit_enabled = bool(get(self.summary))
         self.commit_group.setEnabled(commit_enabled)
 
-    def refresh_palettes(self):
-        """Update the color palette for the hint text"""
-        self.summary.hint.refresh()
-        self.description.hint.refresh()
-
     def set_commit_message(self, message):
         """Set the commit message to match the observed model"""
         # Parse the "summary" and "description" fields
         lines = message.splitlines()
-
         num_lines = len(lines)
-
         if num_lines == 0:
             # Message is empty
             summary = ''
             description = ''
-
         elif num_lines == 1:
             # Message has a summary only
             summary = lines[0]
             description = ''
-
         elif num_lines == 2:
             # Message has two lines; this is not a common case
             summary = lines[0]
             description = lines[1]
-
         else:
             # Summary and several description lines
             summary = lines[0]
@@ -380,16 +369,10 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         focus_summary = not summary
         focus_description = not description
-
         # Update summary
         self.summary.set_value(summary, block=True)
-
         # Update description
         self.description.set_value(description, block=True)
-
-        # Update text color
-        self.refresh_palettes()
-
         # Focus the empty summary or description
         if focus_summary:
             self.summary.setFocus()
@@ -397,7 +380,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.description.setFocus()
         else:
             self.summary.cursor_position.emit()
-
         self.update_actions()
 
     def set_expandtab(self, value):
