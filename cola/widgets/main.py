@@ -150,6 +150,9 @@ class MainView(standard.MainWindow):
         )
         titlebar = self.commitdock.titleBarWidget()
         titlebar.add_title_widget(self.commiteditor.topwidget)
+        self.commitdock.setTabOrder(
+            self.commiteditor.summary, self.commiteditor.description
+        )
 
         # "Console" widget
         self.logwidget = log.LogWidget(context)
