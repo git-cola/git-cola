@@ -12,6 +12,10 @@ Fixes
 -----
 * Qt6 support was improved for the Recent and Favorites filters.
 
+* A regression in the tab order when tabbing from the Summary field
+  into the Extended Description field has been fixed.
+  (`#1436 <https://github.com/git-cola/git-cola/issues/1436>`_)
+
 
 .. _v4.9.0:
 
