@@ -8,7 +8,6 @@ Usability, bells and whistles
   (`#1301 <https://github.com/git-cola/git-cola/issues/1301>`_)
   (`#1435 <https://github.com/git-cola/git-cola/issues/1435>`_)
 
-
 Fixes
 -----
 * Qt6 support was improved for the Recent and Favorites filters.
