@@ -956,7 +956,6 @@ class GitDAG(standard.MainWindow):
     def set_params(self, params):
         context = self.context
         self.params = params
-
         # Update fields affected by model
         self.revtext.setText(params.ref)
         self.maxresults.setValue(params.count)
@@ -964,10 +963,7 @@ class GitDAG(standard.MainWindow):
 
         if self.thread is not None:
             self.thread.stop()
-
-        self.thread = ReaderThread(context, params, self)
-
-        thread = self.thread
+        self.thread = thread = ReaderThread(context, params, self)
         thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
         thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
         thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
@@ -1185,12 +1181,10 @@ class ReaderThread(QtCore.QThread):
 
     def __init__(self, context, params, parent):
         QtCore.QThread.__init__(self, parent)
+        self.setTerminationEnabled(True)
         self.context = context
         self.params = params
-        self._abort = False
         self._stop = False
-        self._mutex = QtCore.QMutex()
-        self._condition = QtCore.QWaitCondition()
 
     def run(self):
         context = self.context
@@ -1199,11 +1193,7 @@ class ReaderThread(QtCore.QThread):
         self.begin.emit()
         commits = []
         for commit in repo.get():
-            self._mutex.lock()
             if self._stop:
-                self._condition.wait(self._mutex)
-            self._mutex.unlock()
-            if self._abort:
                 repo.reset()
                 return
             commits.append(commit)
@@ -1217,24 +1207,12 @@ class ReaderThread(QtCore.QThread):
         self.end.emit()
 
     def start(self):
-        self._abort = False
         self._stop = False
         QtCore.QThread.start(self)
 
-    def pause(self):
-        self._mutex.lock()
-        self._stop = True
-        self._mutex.unlock()
-
-    def resume(self):
-        self._mutex.lock()
-        self._stop = False
-        self._mutex.unlock()
-        self._condition.wakeOne()
-
     def stop(self):
-        self._abort = True
-        self.wait()
+        self._stop = True
+        self.terminate()
 
 
 class Cache:

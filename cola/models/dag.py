@@ -144,18 +144,14 @@ class Commit:
 
     def add_label(self, tag):
         """Add tag/branch labels from `git log --decorate ....`"""
-
         if tag.startswith('tag: '):
             tag = tag[5:]  # strip off "tag: " leaving refs/tags/
-
         if tag.startswith('refs/heads/'):
             branch = tag[11:]
             self.branches.append(branch)
-
         if tag.startswith('refs/'):
             # strip off refs/ leaving just tags/XXX remotes/XXX heads/XXX
             tag = tag[5:]
-
         if tag.endswith('/HEAD'):
             return
 
@@ -187,7 +183,6 @@ class Commit:
         #      ...
         #
         # C.f. http://thread.gmane.org/gmane.linux.kernel/1931234
-
         head_arrow = 'HEAD -> '
         if tag.startswith(head_arrow):
             self.tags.append('HEAD')
