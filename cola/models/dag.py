@@ -226,7 +226,6 @@ class RepoReader:
         self.params = params
         self.git = context.git
         self.returncode = 0
-        self._proc = None
         self._objects = {}
         self._cmd = [
             'git',
@@ -252,8 +251,6 @@ class RepoReader:
 
     def reset(self):
         CommitFactory.reset()
-        if self._proc:
-            self._proc.kill()
         self._cached = False
         self._topo_list = []
 
