@@ -186,15 +186,15 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
             font = self.font()
         block_fmt = self.document().firstBlock().blockFormat()
         # QFontMetrics is used instead of QFontMetricsF to avoid rounding down one
-        # pixel. The "+ 2" at the end accounts for the 1px border set by our theme
-        # stylesheets.
+        # pixel. The "+ 3" at the end accounts for the 1px border set by our theme
+        # stylesheets and an extra pixel for rounding.
         height = int(
             QtGui.QFontMetrics(font).lineSpacing()
             + block_fmt.topMargin()
             + block_fmt.bottomMargin()
             + self.document().documentMargin()
             + 2 * self.frameWidth()
-            + 2
+            + 3
         )
         return height
 
