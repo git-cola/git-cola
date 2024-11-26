@@ -5,6 +5,7 @@ import re
 from io import StringIO
 
 from . import core
+from . import textwrap
 from . import utils
 from . import version
 from .git import STDOUT
@@ -12,6 +13,7 @@ from .git import EMPTY_TREE_OID
 from .git import OID_LENGTH
 from .i18n import N_
 from .interaction import Interaction
+from .models import dag
 from .models import prefs
 
 
@@ -404,7 +406,18 @@ def oid_diff(context, oid, filename=None):
 
 def oid_diff_range(context, start, end, filename=None):
     """Return the diff for a commit range"""
-    args = [start, end]
+    if end == dag.STAGE:
+        if start == dag.STAGE + '~':
+            args = ['--cached']
+        else:
+            args = ['--cached', start]
+    elif end == dag.WORKTREE:
+        if start == dag.WORKTREE + '~' or start == dag.STAGE + '~':
+            args = []
+        else:
+            args = [start]
+    else:
+        args = [start, end]
     git = context.git
     opts = common_diff_opts(context)
     _add_filename(args, filename)
@@ -427,10 +440,21 @@ def diff_info(context, oid, filename=None):
 def diff_range(context, start, end, filename=None):
     """Return the diff for the specified commit range"""
     git = context.git
-    decoded = log(git, '-1', end, '--', pretty='format:%b').strip()
-    if decoded:
-        decoded += '\n\n'
-    return decoded + oid_diff_range(context, start, end, filename=filename)
+    if end == dag.WORKTREE or end == dag.STAGE:
+        commitmsg = context.model.commitmsg
+        if commitmsg:
+            raw_description = '\n'.join(commitmsg.split('\n')[2:])
+            tabwidth = prefs.tabwidth(context)
+            textwidth = prefs.textwidth(context)
+            description = textwrap.word_wrap(raw_description, tabwidth, textwidth)
+        else:
+            description = ''
+    else:
+        description = log(git, '-1', end, '--', pretty='format:%b').strip()
+    if description:
+        description += '\n\n'
+
+    return description + oid_diff_range(context, start, end, filename=filename)
 
 
 def diff_helper(
