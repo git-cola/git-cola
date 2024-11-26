@@ -23,7 +23,7 @@ dependencies = [
     "qtpy >= 1.1.0",
 ]
 dynamic = ["version"]
-license = {file = "COPYING"}
+license = {file = "LICENSE"}
 readme = {file = "README.md", content-type = "text/markdown"}
 
 [project.optional-dependencies]
