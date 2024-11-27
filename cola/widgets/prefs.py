@@ -163,6 +163,7 @@ scissors
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
         self.show_path = qtutils.checkbox(checked=True)
+        self.update_index = qtutils.checkbox(checked=True)
         self.http_proxy = QtWidgets.QLineEdit()
 
         tooltip = N_(
@@ -205,6 +206,7 @@ scissors
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
+        self.add_row(N_('Update Index on Startup'), self.update_index)
 
         self.add_row('', self.proxy_spacer)
         self.add_row(
@@ -243,6 +245,7 @@ scissors
             prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
             prefs.USER_NAME: (self.name, ''),
             prefs.USER_EMAIL: (self.email, ''),
+            prefs.UPDATE_INDEX: (self.update_index, Defaults.update_index),
         })
 
 

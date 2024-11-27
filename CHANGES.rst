@@ -12,6 +12,10 @@ Usability, bells and whistles
   (`#1301 <https://github.com/git-cola/git-cola/issues/1301>`_)
   (`#1435 <https://github.com/git-cola/git-cola/issues/1435>`_)
 
+* Git Cola refreshes Git's "index" (``.git/index``) automatically on startup by default.
+  This can now be disabled by configuring ``cola.updateindex`` to ``false``.
+  (`#1438 <https://github.com/git-cola/git-cola/issues/1438>`_)
+
 Fixes
 -----
 * Qt6 support was improved for the Recent and Favorites filters.

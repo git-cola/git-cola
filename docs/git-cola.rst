@@ -984,6 +984,14 @@ Defaults to "#bbbbbb"::
 
     git config cola.color.header '#bbbbbb'
 
+cola.updateindex
+----------------
+Git's index is refreshed during application startup. You can disable this behavior by
+configuring ``cola.updateindex`` to ``false``. This is useful in some scenarios such as
+when accessing Git repositories over a Samba share. If you have this enabled then you
+can use the ``ctrl-r`` "Refresh" action to force the index to be refreshed instead.
+Defaults to ``true``.
+
 commit.cleanup
 --------------
 Configure whether commit messages should be stripped of whitespace and comments.

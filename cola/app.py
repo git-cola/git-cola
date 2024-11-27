@@ -509,7 +509,8 @@ def async_update(context):
 
     git-cola should startup as quickly as possible.
     """
-    update_status = partial(context.model.update_status, update_index=True)
+    update_index = context.cfg.get('cola.updateindex', True)
+    update_status = partial(context.model.update_status, update_index=update_index)
     task = qtutils.SimpleTask(update_status)
     context.runtask.start(task)
 

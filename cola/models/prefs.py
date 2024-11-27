@@ -59,6 +59,7 @@ TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
+UPDATE_INDEX = 'cola.updateindex'
 
 
 class DateFormat:
@@ -150,6 +151,7 @@ class Defaults:
     status_indent = False
     status_show_totals = False
     logdate = DateFormat.DEFAULT
+    update_index = True
 
 
 def abbrev(context):
