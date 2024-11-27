@@ -7,6 +7,7 @@ from .. import cmds
 from .. import hotkeys
 from .. import qtutils
 from ..i18n import N_
+from ..models import dag
 from .standard import TreeWidget
 
 
@@ -68,22 +69,56 @@ class FileWidget(TreeWidget):
 
         if len(commits) > 1:
             # Get a list of changed files for a commit range.
-            start = commits[0].oid + '~'
+            start_oid = commits[0].oid
             end = commits[-1].oid
-            status, out, _ = git.diff(start, end, z=True, numstat=True, no_renames=True)
+            start = start_oid + '~'
+            if end == dag.STAGE:
+                status, out, _ = git.diff(
+                    start, cached=True, z=True, numstat=True, no_renames=True
+                )
+            elif end == dag.WORKTREE:
+                if start_oid == dag.STAGE:
+                    status, out, _ = git.diff(z=True, numstat=True, no_renames=True)
+                else:
+                    status, out, _ = git.diff(
+                        start, z=True, numstat=True, no_renames=True
+                    )
+            else:
+                status, out, _ = git.diff(
+                    start, end, z=True, numstat=True, no_renames=True
+                )
             if status == 0:
                 paths = [f for f in out.rstrip('\0').split('\0') if f]
         else:
             # Get the list of changed files in a single commit.
             commit = commits[0]
             oid = commit.oid
-            status, out, _ = git.show(
-                oid, z=True, numstat=True, oneline=True, no_renames=True
-            )
-            if status == 0:
-                paths = [f for f in out.rstrip('\0').split('\0') if f]
-                if paths:
-                    paths = paths[1:]  # Skip over the summary on the first line.
+            # NOTE: The output from "git diff-files --numstat -z" is not equivalent
+            # to the output of "git show --numstat -z". "git diff-files" does not
+            # emit a NULL separator between each entry. That's why we use the
+            # default output (without "-z") and split on newline instead.
+            # This is also true for "git diff-index" as well.
+            if oid == dag.STAGE:
+                status, out, _ = git.diff_index(
+                    'HEAD', cached=True, numstat=True, _readonly=True
+                )
+                if status == 0:
+                    paths = [f for f in out.split('\n') if f]
+            elif oid == dag.WORKTREE:
+                status, out, _ = git.diff_files(numstat=True, _readonly=True)
+                if status == 0:
+                    paths = [f for f in out.split('\n') if f]
+            else:
+                status, out, _ = git.show(
+                    oid,
+                    format='',
+                    numstat=True,
+                    no_renames=True,
+                    z=True,
+                    _readonly=True,
+                )
+                if status == 0:
+                    paths = [f for f in out.rstrip('\0').split('\0') if f]
 
         self.list_files(paths)
 

@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The DAG viewer now displays staged and modified changes alongside other commits.
+  (`#1428 <https://github.com/git-cola/git-cola/issues/1428>`_)
+  (`#1428 <https://github.com/git-cola/git-cola/pull/1439>`_)
+
 * The commit message's Summary field now resizes itself to match the size of the
   configured font.
   (`#1301 <https://github.com/git-cola/git-cola/issues/1301>`_)

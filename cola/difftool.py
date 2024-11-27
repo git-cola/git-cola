@@ -13,6 +13,7 @@ from . import utils
 from .git import EMPTY_TREE_OID
 from .i18n import N_
 from .interaction import Interaction
+from .models import dag
 from .widgets import completion
 from .widgets import defs
 from .widgets import filetree
@@ -176,7 +177,22 @@ class Difftool(standard.Dialog):
         elif self.b is None:
             self.diff_arg = [self.a]
         else:
-            self.diff_arg = [self.a, self.b]
+            if self.b == dag.WORKTREE:
+                if self.a == dag.STAGE:
+                    self.diff_arg = []
+                else:
+                    self.diff_arg = [self.a]
+            elif self.b == dag.STAGE:
+                if self.a == dag.WORKTREE:
+                    self.diff_arg = ['--cached']
+                else:
+                    self.diff_arg = ['--cached', self.a]
+            elif self.a == dag.WORKTREE:
+                self.diff_arg = [self.b]
+            elif self.a == dag.STAGE:
+                self.diff_arg = ['--cached', self.b]
+            else:
+                self.diff_arg = [self.a, self.b]
         self.refresh_filenames()
 
     def refresh_filenames(self):
@@ -283,7 +299,6 @@ def difftool_launch(
     :param left_take_parent: whether to append the first-parent ~ for diffing
 
     """
-
     difftool_args = ['git', 'difftool', '--no-prompt']
     if staged:
         difftool_args.append('--cached')
@@ -291,27 +306,37 @@ def difftool_launch(
         difftool_args.append('--dir-diff')
 
     if left:
+        original_left = left
         if left_take_parent or left_take_magic:
             suffix = '^!' if left_take_magic else '~'
             # Check root commit (no parents and thus cannot execute '~')
             git = context.git
-            status, out, err = git.rev_list(left, parents=True, n=1, _readonly=True)
+            if left in (dag.STAGE, dag.WORKTREE):
+                check_ref = 'HEAD'
+            else:
+                check_ref = left
+            status, out, err = git.rev_list(
+                check_ref, parents=True, n=1, _readonly=True
+            )
             Interaction.log_status(status, out, err)
             if status:
-                raise OSError('git rev-list command failed')
+                raise OSError(f'git rev-list {left} command failed')
 
             if len(out.split()) >= 2:
                 # Commit has a parent, so we can take its child as requested
-                left += suffix
+                if left not in (dag.STAGE, dag.WORKTREE):
+                    left += suffix
             else:
                 # No parent, assume it's the root commit, so we have to diff
                 # against the empty tree.
                 left = EMPTY_TREE_OID
                 if not right and left_take_magic:
                     right = left
-        difftool_args.append(left)
+        # Commit has a parent, so we can take its child as requested
+        if original_left not in (dag.STAGE, dag.WORKTREE):
+            difftool_args.append(left)
 
-    if right:
+    if right and right not in (dag.STAGE, dag.WORKTREE):
         difftool_args.append(right)
 
     if paths:
