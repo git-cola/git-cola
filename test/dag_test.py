@@ -4,6 +4,7 @@ import pytest
 from cola.models import dag
 
 from .helper import app_context
+from .helper import commit_files
 from .helper import patch
 
 
@@ -42,6 +43,8 @@ def dag_context(app_context):
 
 @patch('cola.models.dag.core')
 def test_repo_reader(core, dag_context):
+    commit_files()
+    dag_context.context.model.update_status()
     expect = len(LOG_LINES)
     actual = 0
     core.run_command.return_value = (0, LOG_TEXT, '')
@@ -85,6 +88,8 @@ def test_repo_reader_parents(core, dag_context):
 
 @patch('cola.models.dag.core')
 def test_repo_reader_contract(core, dag_context):
+    commit_files()
+    dag_context.context.model.update_status()
     core.exists.return_value = True
     core.run_command.return_value = (0, LOG_TEXT, '')
 
