@@ -198,6 +198,7 @@ scissors
         self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
+        self.add_row(N_('Enable Filesystem Monitoring'), self.inotify)
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
         )
