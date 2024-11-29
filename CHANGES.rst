@@ -16,6 +16,11 @@ Usability, bells and whistles
   This can now be disabled by configuring ``cola.updateindex`` to ``false``.
   (`#1438 <https://github.com/git-cola/git-cola/issues/1438>`_)
 
+* The "Set Upstream Branch" menu in the "Branches" tool can grow too large to fit on
+  screen when repositories contain many remote branches. A new dialog with autcomplete
+  and scrollable entry fields was added for selecting a new upstream branch.
+  (`#1440 <https://github.com/git-cola/git-cola/issues/1440>`_)
+
 Fixes
 -----
 * Qt6 support was improved for the Recent and Favorites filters.
