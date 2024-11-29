@@ -845,7 +845,7 @@ msgid "Blame..."
 msgstr "Przejrzyj autorów..."
 
 #: cola/widgets/prefs.py:380
-msgid "Bold on dark headers instead of italic"
+msgid "Bold on Dark Headers Instead of Italic"
 msgstr "Wytłuść czcionkę zamiast ją pochylać na ciemnych nagłówkach"
 
 #: cola/widgets/main.py:824 cola/widgets/submodules.py:118
@@ -978,7 +978,7 @@ msgid "Check Spelling"
 msgstr "Sprawdź pisownię"
 
 #: cola/widgets/prefs.py:291
-msgid "Check spelling"
+msgid "Check Spelling"
 msgstr "Sprawdź pisownię"
 
 #: cola/widgets/prefs.py:259
@@ -1299,8 +1299,8 @@ msgid "Created a new tag named \"%s\""
 msgstr "Utworzono nowy znacznik o nazwie \"%s\""
 
 #: cola/widgets/prefs.py:292
-msgid "Ctrl+MouseWheel to Zoom"
-msgstr "Ctrl+rolka myszy, aby powiększać"
+msgid "Ctrl + MouseWheel to Zoom"
+msgstr "Ctrl + rolka myszy, aby powiększać"
 
 #: cola/widgets/prefs.py:455
 msgid "Current Repository"
@@ -1663,8 +1663,8 @@ msgid "Editor returned %s exit code.  Not applying patch."
 msgstr "Edytor zwrócił %s jako kod wyjścia. Nie nałożono łaty."
 
 #: cola/widgets/prefs.py:188
-msgid "Email Address"
-msgstr "Adres email"
+msgid "Email"
+msgstr "Email"
 
 #: cola/widgets/about.py:240 cola/widgets/about.py:383
 msgid "Email contributor"
@@ -2235,7 +2235,7 @@ msgid "Inititalize submodules"
 msgstr "Przygotuj podmoduły"
 
 #: cola/widgets/prefs.py:280
-msgid "Insert spaces instead of tabs"
+msgid "Insert Spaces Instead of Tabs"
 msgstr "Wstaw odstępy zamiast tabulatorów"
 
 #: cola/widgets/prefs.py:256
@@ -2859,7 +2859,7 @@ msgid "Recent repositories"
 msgstr "Ostatnie repozytoria"
 
 #: cola/widgets/prefs.py:278
-msgid "Recent repository count"
+msgid "Recent Repository Count"
 msgstr "Liczba ostatnich repozytoriów"
 
 #: cola/widgets/recent.py:44
@@ -3490,7 +3490,7 @@ msgid "Show History"
 msgstr "Pokaż historię"
 
 #: cola/widgets/prefs.py:381
-msgid "Show file counts in Status titles"
+msgid "Show File Counts in Status Titles"
 msgstr "Pokaż liczbę plików w oknie stanu"
 
 #: cola/widgets/diff.py:791
@@ -3554,7 +3554,7 @@ msgid "Skip applying the current patch and continue applying patches"
 msgstr "Pomiń nałożenie bieżącej łaty i kontynuuj stosowanie pozostałych łat"
 
 #: cola/widgets/prefs.py:284
-msgid "Sort bookmarks alphabetically"
+msgid "Sort Bookmarks Alphabetically"
 msgstr "Uszereguj zakładki alfabetycznie"
 
 #: cola/widgets/about.py:395 cola/widgets/about.py:418
@@ -4151,7 +4151,7 @@ msgid "Updating"
 msgstr "Uaktualnianie"
 
 #: cola/widgets/prefs.py:383
-msgid "Use a block cursor in diff editors"
+msgid "Use a Block Cursor in Diff Editors"
 msgstr "Użyj bloku jako kursora w edytorach różnicy"
 
 #: cola/widgets/prefs.py:181
@@ -4159,8 +4159,8 @@ msgid "Use gravatar.com to lookup icons for author emails"
 msgstr "Użyj gravatar.com do poszukiwania ikon autorów na podstawie ich adresów"
 
 #: cola/widgets/prefs.py:187
-msgid "User Name"
-msgstr "Nazwa użytkownika"
+msgid "Name"
+msgstr "Nazwa"
 
 #: cola/widgets/about.py:89
 msgid "Version"

@@ -801,7 +801,7 @@ msgid "Blame..."
 msgstr "Verantwortlichkeit..."
 
 #: cola/widgets/prefs.py:380
-msgid "Bold on dark headers instead of italic"
+msgid "Bold on Dark Headers Instead of Italic"
 msgstr "Fettschrift mit dunklem Hintergrund verwenden anstelle von schräg geschriebenen Überschriften"
 
 #: cola/widgets/main.py:824 cola/widgets/submodules.py:118
@@ -934,7 +934,7 @@ msgid "Check Spelling"
 msgstr "Rechtschreibung prüfen"
 
 #: cola/widgets/prefs.py:291
-msgid "Check spelling"
+msgid "Check Spelling"
 msgstr "Rechtschreibung prüfen"
 
 #: cola/widgets/prefs.py:259
@@ -1255,7 +1255,7 @@ msgid "Created a new tag named \"%s\""
 msgstr "Tag erstellt als \"%s\""
 
 #: cola/widgets/prefs.py:292
-msgid "Ctrl+MouseWheel to Zoom"
+msgid "Ctrl + MouseWheel to Zoom"
 msgstr ""
 
 #: cola/widgets/prefs.py:455
@@ -1616,8 +1616,8 @@ msgid "Editor returned %s exit code.  Not applying patch."
 msgstr ""
 
 #: cola/widgets/prefs.py:188
-msgid "Email Address"
-msgstr "E-Mail-Adresse"
+msgid "Email"
+msgstr "E-Mail"
 
 #: cola/widgets/about.py:240 cola/widgets/about.py:383
 msgid "Email contributor"
@@ -2189,7 +2189,7 @@ msgid "Inititalize submodules"
 msgstr "Submodule initialisieren"
 
 #: cola/widgets/prefs.py:280
-msgid "Insert spaces instead of tabs"
+msgid "Insert Spaces Instead of Tabs"
 msgstr "Leerzeichen statt Tabs einfügen"
 
 #: cola/widgets/prefs.py:256
@@ -2813,7 +2813,7 @@ msgid "Recent repositories"
 msgstr "Kürzlich verwendete Repositories"
 
 #: cola/widgets/prefs.py:278
-msgid "Recent repository count"
+msgid "Recent Repository Count"
 msgstr "Anzahl zuletzt verwendeter Repositories"
 
 #: cola/widgets/recent.py:44
@@ -3442,7 +3442,7 @@ msgid "Show History"
 msgstr "Verlauf anzeigen"
 
 #: cola/widgets/prefs.py:381
-msgid "Show file counts in Status titles"
+msgid "Show File Counts in Status Titles"
 msgstr ""
 
 #: cola/widgets/diff.py:791
@@ -3506,8 +3506,8 @@ msgid "Skip applying the current patch and continue applying patches"
 msgstr ""
 
 #: cola/widgets/prefs.py:284
-msgid "Sort bookmarks alphabetically"
-msgstr "Lesezeichen alphabetisch sortieren"
+msgid "Sort Bookmarks Alphabetically"
+msgstr "Lesezeichen Alphabetisch Sortieren"
 
 #: cola/widgets/about.py:395 cola/widgets/about.py:418
 #: cola/widgets/about.py:422
@@ -4087,7 +4087,7 @@ msgid "Updating"
 msgstr "Aktualisierung"
 
 #: cola/widgets/prefs.py:383
-msgid "Use a block cursor in diff editors"
+msgid "Use a Block Cursor in Diff Editors"
 msgstr ""
 
 #: cola/widgets/prefs.py:181
@@ -4095,8 +4095,8 @@ msgid "Use gravatar.com to lookup icons for author emails"
 msgstr ""
 
 #: cola/widgets/prefs.py:187
-msgid "User Name"
-msgstr "Benutzername"
+msgid "Name"
+msgstr "Name"
 
 #: cola/widgets/about.py:89
 msgid "Version"

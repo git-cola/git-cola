@@ -778,7 +778,7 @@ msgid "Blame..."
 msgstr "Blame…"
 
 #: cola/widgets/prefs.py:380
-msgid "Bold on dark headers instead of italic"
+msgid "Bold on Dark Headers Instead of Italic"
 msgstr "Hlavičky tučným písmem na tmavém pozadí místo kurzívy"
 
 #: cola/widgets/main.py:824 cola/widgets/submodules.py:118
@@ -2162,7 +2162,7 @@ msgid "Inititalize submodules"
 msgstr "Inicializovat dílčí moduly"
 
 #: cola/widgets/prefs.py:280
-msgid "Insert spaces instead of tabs"
+msgid "Insert Spaces Instead of Tabs"
 msgstr "Vkládat mezery místo tabelátorů"
 
 #: cola/widgets/prefs.py:256
@@ -2781,7 +2781,7 @@ msgid "Recent repositories"
 msgstr "Nedávné repozitáře"
 
 #: cola/widgets/prefs.py:278
-msgid "Recent repository count"
+msgid "Recent Repository Count"
 msgstr "Počet nedávných repozitářů"
 
 #: cola/widgets/recent.py:44
@@ -3474,8 +3474,8 @@ msgid "Skip applying the current patch and continue applying patches"
 msgstr ""
 
 #: cola/widgets/prefs.py:284
-msgid "Sort bookmarks alphabetically"
-msgstr "Záložky řadit abecedně"
+msgid "Sort Bookmarks Alphabetically"
+msgstr "Záložky Řadit Abecedně"
 
 #: cola/widgets/about.py:395 cola/widgets/about.py:418
 #: cola/widgets/about.py:422
@@ -4050,7 +4050,7 @@ msgid "Updating"
 msgstr "Aktualizuje se"
 
 #: cola/widgets/prefs.py:383
-msgid "Use a block cursor in diff editors"
+msgid "Use a Block Cursor in Diff Editors"
 msgstr ""
 
 #: cola/widgets/prefs.py:181
@@ -4058,8 +4058,8 @@ msgid "Use gravatar.com to lookup icons for author emails"
 msgstr ""
 
 #: cola/widgets/prefs.py:187
-msgid "User Name"
-msgstr "Uživatelské jméno"
+msgid "Name"
+msgstr "Jméno"
 
 #: cola/widgets/about.py:89
 msgid "Version"

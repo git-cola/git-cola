@@ -732,7 +732,7 @@ msgid "Blame..."
 msgstr "Tutup..."
 
 #: cola/widgets/prefs.py:380
-msgid "Bold on dark headers instead of italic"
+msgid "Bold on Dark Headers Instead of Italic"
 msgstr ""
 
 #: cola/widgets/main.py:824 cola/widgets/submodules.py:118
@@ -868,7 +868,7 @@ msgstr "Periksa Ejaan"
 
 #: cola/widgets/prefs.py:291
 #, fuzzy
-msgid "Check spelling"
+msgid "Check Spelling"
 msgstr "Periksa Ejaan"
 
 #: cola/widgets/prefs.py:259
@@ -1204,7 +1204,7 @@ msgid "Created a new tag named \"%s\""
 msgstr "Buat tag baru bernama \"%s\""
 
 #: cola/widgets/prefs.py:292
-msgid "Ctrl+MouseWheel to Zoom"
+msgid "Ctrl + MouseWheel to Zoom"
 msgstr ""
 
 #: cola/widgets/prefs.py:455
@@ -1571,8 +1571,8 @@ msgid "Editor returned %s exit code.  Not applying patch."
 msgstr ""
 
 #: cola/widgets/prefs.py:188
-msgid "Email Address"
-msgstr "Alamat Email"
+msgid "Email"
+msgstr "Email"
 
 #: cola/widgets/about.py:240 cola/widgets/about.py:383
 msgid "Email contributor"
@@ -2156,7 +2156,7 @@ msgid "Inititalize submodules"
 msgstr ""
 
 #: cola/widgets/prefs.py:280
-msgid "Insert spaces instead of tabs"
+msgid "Insert Spaces Instead of Tabs"
 msgstr ""
 
 #: cola/widgets/prefs.py:256
@@ -2797,7 +2797,7 @@ msgstr "Semua Repositori"
 
 #: cola/widgets/prefs.py:278
 #, fuzzy
-msgid "Recent repository count"
+msgid "Recent Repository Count"
 msgstr "Semua Repositori"
 
 #: cola/widgets/recent.py:44
@@ -3447,7 +3447,7 @@ msgid "Show History"
 msgstr "Tunjukan sejarah"
 
 #: cola/widgets/prefs.py:381
-msgid "Show file counts in Status titles"
+msgid "Show File Counts in Status Titles"
 msgstr ""
 
 #: cola/widgets/diff.py:791
@@ -3509,7 +3509,7 @@ msgid "Skip applying the current patch and continue applying patches"
 msgstr ""
 
 #: cola/widgets/prefs.py:284
-msgid "Sort bookmarks alphabetically"
+msgid "Sort Bookmarks Alphabetically"
 msgstr ""
 
 #: cola/widgets/about.py:395 cola/widgets/about.py:418
@@ -4100,7 +4100,7 @@ msgid "Updating"
 msgstr "Sedang memperbarui"
 
 #: cola/widgets/prefs.py:383
-msgid "Use a block cursor in diff editors"
+msgid "Use a Block Cursor in Diff Editors"
 msgstr ""
 
 #: cola/widgets/prefs.py:181
@@ -4108,8 +4108,8 @@ msgid "Use gravatar.com to lookup icons for author emails"
 msgstr ""
 
 #: cola/widgets/prefs.py:187
-msgid "User Name"
-msgstr "Nama Pengguna"
+msgid "Name"
+msgstr "Nama"
 
 #: cola/widgets/about.py:89
 #, fuzzy

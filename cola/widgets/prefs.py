@@ -190,8 +190,8 @@ scissors
         tooltip = N_('Enable detection and configuration of HTTP proxy settings')
         self.autodetect_proxy = qtutils.checkbox(checked=True, tooltip=tooltip)
 
-        self.add_row(N_('User Name'), self.name)
-        self.add_row(N_('Email Address'), self.email)
+        self.add_row(N_('Name'), self.name)
+        self.add_row(N_('Email'), self.email)
         self.add_row(N_('Patches Directory'), self.patches_directory)
         self.add_row(N_('Log Date Format'), self.logdate)
         self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
@@ -296,21 +296,21 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Blame Viewer'), self.blameviewer)
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
-        self.add_row(N_('Recent repository count'), self.maxrecent)
+        self.add_row(N_('Recent Repository Count'), self.maxrecent)
         self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
-        self.add_row(N_('Insert spaces instead of tabs'), self.expandtab)
+        self.add_row(N_('Insert Spaces Instead of Tabs'), self.expandtab)
         self.add_row(
             N_('Check Published Commits when Amending'), self.check_published_commits
         )
-        self.add_row(N_('Sort bookmarks alphabetically'), self.sort_bookmarks)
+        self.add_row(N_('Sort Bookmarks Alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
         self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
         self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
-        self.add_row(N_('Check spelling'), self.check_spelling)
-        self.add_row(N_('Ctrl+MouseWheel to Zoom'), self.mouse_zoom)
+        self.add_row(N_('Check Spelling'), self.check_spelling)
+        self.add_row(N_('Ctrl + MouseWheel to Zoom'), self.mouse_zoom)
         self.add_row(N_('Notify on Push'), self.notifyonpush)
 
         self.set_config({
@@ -398,10 +398,10 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('Icon theme'), self.icon_theme)
         self.add_row(N_('High DPI'), self.high_dpi)
-        self.add_row(N_('Bold on dark headers instead of italic'), self.bold_headers)
-        self.add_row(N_('Show file counts in Status titles'), self.status_show_totals)
+        self.add_row(N_('Bold on Dark Headers Instead of Italic'), self.bold_headers)
+        self.add_row(N_('Show File Counts in Status Titles'), self.status_show_totals)
         self.add_row(N_('Indent Status paths'), self.status_indent)
-        self.add_row(N_('Use a block cursor in diff editors'), self.block_cursor)
+        self.add_row(N_('Use a Block Cursor in Diff Editors'), self.block_cursor)
 
         self.set_config({
             prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),

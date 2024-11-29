@@ -867,7 +867,7 @@ msgid "Blame..."
 msgstr "責任者..."
 
 #: cola/widgets/prefs.py:380
-msgid "Bold on dark headers instead of italic"
+msgid "Bold on Dark Headers Instead of Italic"
 msgstr "イタリックフォントからボールドフォントとダークヘッダに"
 
 #: cola/widgets/main.py:824 cola/widgets/submodules.py:118
@@ -1000,7 +1000,7 @@ msgid "Check Spelling"
 msgstr "スペルチェック"
 
 #: cola/widgets/prefs.py:291
-msgid "Check spelling"
+msgid "Check Spelling"
 msgstr "スペルチェック"
 
 #: cola/widgets/prefs.py:259
@@ -1321,8 +1321,8 @@ msgid "Created a new tag named \"%s\""
 msgstr "新しく作成したタグ \"%s\" "
 
 #: cola/widgets/prefs.py:292
-msgid "Ctrl+MouseWheel to Zoom"
-msgstr "Ctrl+MouseWheel で拡大縮小"
+msgid "Ctrl + MouseWheel to Zoom"
+msgstr "Ctrl + MouseWheel で拡大縮小"
 
 #: cola/widgets/prefs.py:455
 msgid "Current Repository"
@@ -1683,7 +1683,7 @@ msgid "Editor returned %s exit code.  Not applying patch."
 msgstr ""
 
 #: cola/widgets/prefs.py:188
-msgid "Email Address"
+msgid "Email"
 msgstr "メールアドレス"
 
 #: cola/widgets/about.py:240 cola/widgets/about.py:383
@@ -2256,7 +2256,7 @@ msgid "Inititalize submodules"
 msgstr "サブモジュールを初期化する"
 
 #: cola/widgets/prefs.py:280
-msgid "Insert spaces instead of tabs"
+msgid "Insert Spaces Instead of Tabs"
 msgstr "タブではなく空白スペースを挿入する"
 
 #: cola/widgets/prefs.py:256
@@ -2883,7 +2883,7 @@ msgid "Recent repositories"
 msgstr "最近のリポジトリ"
 
 #: cola/widgets/prefs.py:278
-msgid "Recent repository count"
+msgid "Recent Repository Count"
 msgstr "最近のリポジトリ数"
 
 #: cola/widgets/recent.py:44
@@ -3514,7 +3514,7 @@ msgid "Show History"
 msgstr "履歴の表示"
 
 #: cola/widgets/prefs.py:381
-msgid "Show file counts in Status titles"
+msgid "Show File Counts in Status Titles"
 msgstr "ステータスタイトリにファイル数を表示"
 
 #: cola/widgets/diff.py:791
@@ -3578,7 +3578,7 @@ msgid "Skip applying the current patch and continue applying patches"
 msgstr "現在のパッチの適用をスキップしてパッチの適用を継続"
 
 #: cola/widgets/prefs.py:284
-msgid "Sort bookmarks alphabetically"
+msgid "Sort Bookmarks Alphabetically"
 msgstr "ブックマークをアルファベット順にソート"
 
 #: cola/widgets/about.py:395 cola/widgets/about.py:418
@@ -4178,7 +4178,7 @@ msgid "Updating"
 msgstr "更新"
 
 #: cola/widgets/prefs.py:383
-msgid "Use a block cursor in diff editors"
+msgid "Use a Block Cursor in Diff Editors"
 msgstr "差分編集でブロックカーソルを使う"
 
 #: cola/widgets/prefs.py:181
@@ -4186,8 +4186,8 @@ msgid "Use gravatar.com to lookup icons for author emails"
 msgstr "著者のメールで gravatar.com からアイコンを探す"
 
 #: cola/widgets/prefs.py:187
-msgid "User Name"
-msgstr "ユーザ名"
+msgid "Name"
+msgstr "名前"
 
 #: cola/widgets/about.py:89
 msgid "Version"
