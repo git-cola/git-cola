@@ -359,6 +359,8 @@ class Git:
             '-c',
             'diff.suppressBlankEmpty=false',
             '-c',
+            'diff.autoRefreshIndex=false',
+            '-c',
             'log.showSignature=false',
             dashify(cmd),
         ]
