@@ -464,7 +464,12 @@ if AVAILABLE == 'pywin32':
                         timeout = self._NOTIFICATION_DELAY
                     else:
                         timeout = win32event.INFINITE
-                    status = win32event.WaitForMultipleObjects(events, False, timeout)
+                    try:
+                        status = win32event.WaitForMultipleObjects(
+                            events, False, timeout
+                        )
+                    except pywintypes.error:
+                        self._running = False
                     if not self._running:
                         break
                     if status == win32event.WAIT_TIMEOUT:
@@ -474,7 +479,10 @@ if AVAILABLE == 'pywin32':
             finally:
                 with self._stop_event_lock:
                     if self._stop_event is not None:
-                        win32file.CloseHandle(self._stop_event)
+                        try:
+                            win32file.CloseHandle(self._stop_event)
+                        except pywintypes.error:
+                            pass
                         self._stop_event = None
                 if self._worktree_watch is not None:
                     self._worktree_watch.close()
@@ -516,7 +524,10 @@ if AVAILABLE == 'pywin32':
             self._running = False
             with self._stop_event_lock:
                 if self._stop_event is not None:
-                    win32event.SetEvent(self._stop_event)
+                    try:
+                        win32event.SetEvent(self._stop_event)
+                    except pywintypes.error:
+                        pass
             self.wait()
 
 

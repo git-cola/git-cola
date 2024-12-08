@@ -29,6 +29,10 @@ Fixes
   into the Extended Description field has been fixed.
   (`#1436 <https://github.com/git-cola/git-cola/issues/1436>`_)
 
+* The file system monitoring was made more resilient on Windows
+  when using WSL.
+  (`#1441 <https://github.com/git-cola/git-cola/issues/1441>`_)
+
 
 .. _v4.9.0:
 
