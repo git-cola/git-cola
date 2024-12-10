@@ -20,6 +20,7 @@
   </screenshots>
   <url type="homepage">https://git-cola.github.io/</url>
   <releases>
+    <release version="4.10.0" date="2024-12-10" />
     <release version="4.9.0" date="2024-11-05" />
     <release version="4.8.2" date="2024-09-04" />
     <release version="4.8.1" date="2024-07-26" />

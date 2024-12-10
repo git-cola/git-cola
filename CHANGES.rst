@@ -1,5 +1,7 @@
-Upcoming
-========
+.. _v4.10.0:
+
+v4.10.0
+=======
 
 Usability, bells and whistles
 -----------------------------
