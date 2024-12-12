@@ -392,9 +392,12 @@ if AVAILABLE == 'pywin32':
         def _start(self):
             if self.handle is None:
                 return
-            win32file.ReadDirectoryChangesW(
-                self.handle, self.buffer, True, self.flags, self.overlapped
-            )
+            try:
+                win32file.ReadDirectoryChangesW(
+                    self.handle, self.buffer, True, self.flags, self.overlapped
+                )
+            except pywintypes.error:
+                pass
 
         def read(self):
             if self.handle is None or self.event is None:
@@ -411,10 +414,19 @@ if AVAILABLE == 'pywin32':
 
         def close(self):
             if self.handle is not None:
-                win32file.CancelIo(self.handle)
-                win32file.CloseHandle(self.handle)
+                try:
+                    win32file.CancelIo(self.handle)
+                except pywintypes.error:
+                    pass
+                try:
+                    win32file.CloseHandle(self.handle)
+                except pywintypes.error:
+                    pass
             if self.event is not None:
-                win32file.CloseHandle(self.event)
+                try:
+                    win32file.CloseHandle(self.event)
+                except pywintypes.error:
+                    pass
 
     class _Win32Thread(_BaseThread):
         _FLAGS = (

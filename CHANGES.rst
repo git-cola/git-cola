@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Fixes
+-----
+* File system monitoring on Windows when using WSL was further improved.
+  (`#1441 <https://github.com/git-cola/git-cola/issues/1441>`_)
+
+
 .. _v4.10.0:
 
 v4.10.0
