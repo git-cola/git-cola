@@ -30,6 +30,7 @@ jobs:
           cargo install garden-tools
       - name: Install system-provided test dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install \
               python3-pyqt5 \
               python3-pyqt5.qtopengl \
