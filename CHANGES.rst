@@ -3,6 +3,9 @@ Upcoming
 
 Fixes
 -----
+* A regression in the rebase editor which prevented the display of commits was fixed.
+  (`#1442 <https://github.com/git-cola/git-cola/issues/1442>`_)
+
 * File system monitoring on Windows when using WSL was further improved.
   (`#1441 <https://github.com/git-cola/git-cola/issues/1441>`_)
 

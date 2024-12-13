@@ -63,7 +63,7 @@ ABBREV = {
 def main():
     """Start a git-cola-sequence-editor session"""
     args = parse_args()
-    context = app.application_init(args)
+    context = app.application_init(args, update=True)
     view = new_window(context, args.filename)
     app.application_run(context, view, start=view.start, stop=stop)
     return view.status
