@@ -40,8 +40,6 @@ jobs:
       - name: Install pip-provided test dependencies
         run: |
           set -x
-          sudo pip install -v --upgrade pip
-          sudo pip install -v --upgrade setuptools packaging
           garden dev -vv
       - name: Configure tests
         run: |
