@@ -63,7 +63,7 @@ ABBREV = {
 def main():
     """Start a git-cola-sequence-editor session"""
     args = parse_args()
-    context = app.application_init(args, update=True)
+    context = app.application_init(args)
     view = new_window(context, args.filename)
     app.application_run(context, view, start=view.start, stop=stop)
     return view.status
@@ -537,7 +537,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         context = self.context
         oid = item.oid
         params = dag.DAG(oid, 2)
-        repo = dag.RepoReader(context, params)
+        repo = dag.RepoReader(context, params, allow_git_init=False)
         commits = []
         for commit in repo.get():
             commits.append(commit)

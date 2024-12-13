@@ -220,11 +220,12 @@ class Commit:
 
 
 class RepoReader:
-    def __init__(self, context, params):
+    def __init__(self, context, params, allow_git_init=True):
         self.context = context
         self.params = params
         self.git = context.git
         self.returncode = 0
+        self._allow_git_init = allow_git_init
         self._objects = {}
         self._cmd = [
             'git',
@@ -275,7 +276,9 @@ class RepoReader:
         )
         commit = None
 
-        if self.context.model.local_branches:
+        # When _allow_git_init is True then we detect the "git init" state
+        # by checking whether any local branches currently exist.
+        if not self._allow_git_init or self.context.model.local_branches:
             status, out, _ = core.run_command(cmd)
             for log_entry in reversed(out.splitlines()):
                 if not log_entry:
