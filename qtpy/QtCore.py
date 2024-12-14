@@ -86,6 +86,7 @@ elif PYQT6:
 
     # Alias for MiddleButton removed in PyQt6 but available in PyQt5, PySide2 and PySide6
     Qt.MidButton = Qt.MiddleButton
+    Qt.MouseButton.MidButton = Qt.MiddleButton
 
     # Add removed definition for `Qt.ItemFlags` as an alias of `Qt.ItemFlag`
     # passing as default value 0 in the same way PySide6 6.5+ does.
@@ -141,6 +142,7 @@ elif PYSIDE6:
     ) = Qt.BackgroundRole
     Qt.TextColorRole = Qt.ItemDataRole.TextColorRole = Qt.ForegroundRole
     Qt.MidButton = Qt.MiddleButton
+    Qt.MouseButton.MidButton = Qt.MiddleButton
 
     # Map DeprecationWarning methods
     QCoreApplication.exec_ = lambda *args, **kwargs: possibly_static_exec(

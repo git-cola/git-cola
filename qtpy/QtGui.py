@@ -8,8 +8,17 @@
 
 """Provides QtGui classes and functions."""
 
-from . import PYQT5, PYQT6, PYSIDE2, PYSIDE6, QtModuleNotInstalledError
-from ._utils import getattr_missing_optional_dep, possibly_static_exec
+from functools import partialmethod
+
+from . import PYQT5, PYQT6, PYSIDE2, PYSIDE6
+from . import QT_VERSION as _qt_version
+from . import parse
+from ._utils import (
+    getattr_missing_optional_dep,
+    possibly_static_exec,
+    set_shortcut,
+    set_shortcuts,
+)
 
 _missing_optional_names = {}
 
@@ -252,3 +261,42 @@ if PYQT6 or PYSIDE6:
     # Follow similar approach for `QDropEvent` and child classes
     QDropEvent.pos = lambda self: self.position().toPoint()
     QDropEvent.posF = lambda self: self.position()
+
+
+# Make `QAction.setShortcut` and `QAction.setShortcuts` compatible with Qt>=6.4
+if PYQT5 or PYSIDE2 or parse(_qt_version) < parse("6.4"):
+
+    class _QAction(QAction):
+        old_set_shortcut = QAction.setShortcut
+        old_set_shortcuts = QAction.setShortcuts
+
+        def setShortcut(self, shortcut):
+            return set_shortcut(
+                self,
+                shortcut,
+                old_set_shortcut=_QAction.old_set_shortcut,
+            )
+
+        def setShortcuts(self, shortcuts):
+            return set_shortcuts(
+                self,
+                shortcuts,
+                old_set_shortcuts=_QAction.old_set_shortcuts,
+            )
+
+    _action_set_shortcut = partialmethod(
+        set_shortcut,
+        old_set_shortcut=QAction.setShortcut,
+    )
+    _action_set_shortcuts = partialmethod(
+        set_shortcuts,
+        old_set_shortcuts=QAction.setShortcuts,
+    )
+    QAction.setShortcut = _action_set_shortcut
+    QAction.setShortcuts = _action_set_shortcuts
+    # Despite the two previous lines!
+    if (
+        QAction.setShortcut is not _action_set_shortcut
+        or QAction.setShortcuts is not _action_set_shortcuts
+    ):
+        QAction = _QAction

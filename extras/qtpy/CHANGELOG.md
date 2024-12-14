@@ -1,5 +1,33 @@
 # History of changes
 
+## Version 2.4.2 (2024-11-04)
+
+### Issues Closed
+
+* [Issue 498](https://github.com/spyder-ide/qtpy/issues/498) - Release 2.4.2
+* [Issue 485](https://github.com/spyder-ide/qtpy/issues/485) - Update tests to be compatible with pytest 8.2 ([PR 486](https://github.com/spyder-ide/qtpy/pull/486) by [@dalthviz](https://github.com/dalthviz))
+* [Issue 426](https://github.com/spyder-ide/qtpy/issues/426) - Coveralls config needs to be updated ([PR 428](https://github.com/spyder-ide/qtpy/pull/428) by [@dalthviz](https://github.com/dalthviz))
+
+In this release 3 issues were closed.
+
+### Pull Requests Merged
+
+* [PR 497](https://github.com/spyder-ide/qtpy/pull/497) - Replace Quansight logo by CZI one in Readme, by [@ccordoba12](https://github.com/ccordoba12)
+* [PR 495](https://github.com/spyder-ide/qtpy/pull/495) - PR: Help users understand why PySide 6.8.0 gives a segfault, by [@hmaarrfk](https://github.com/hmaarrfk)
+* [PR 486](https://github.com/spyder-ide/qtpy/pull/486) - PR: Update `pytest.importorskip` usage (CI), by [@dalthviz](https://github.com/dalthviz) ([485](https://github.com/spyder-ide/qtpy/issues/485))
+* [PR 483](https://github.com/spyder-ide/qtpy/pull/483) - PR: Fix coverage errors and macOS jobs, by [@dalthviz](https://github.com/dalthviz)
+* [PR 475](https://github.com/spyder-ide/qtpy/pull/475) - PR: Add `QtCore.Qt.MouseButton.MidButton` alias for Qt6, by [@PierreRaybaut](https://github.com/PierreRaybaut)
+* [PR 471](https://github.com/spyder-ide/qtpy/pull/471) - [pre-commit.ci] pre-commit autoupdate, by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [PR 468](https://github.com/spyder-ide/qtpy/pull/468) - [pre-commit.ci] pre-commit autoupdate, by [@pre-commit-ci[bot]](https://github.com/apps/pre-commit-ci)
+* [PR 461](https://github.com/spyder-ide/qtpy/pull/461) - PR: Make `QAction.setShortcut` and `setShortcuts` accept many types, by [@StSav012](https://github.com/StSav012)
+* [PR 428](https://github.com/spyder-ide/qtpy/pull/428) - PR: Update coveralls config (CI), by [@dalthviz](https://github.com/dalthviz) ([426](https://github.com/spyder-ide/qtpy/issues/426))
+
+In this release 9 pull requests were closed.
+
+
+----
+
+
 ## Version 2.4.1 (2023-10-23)
 
 ### Issues Closed

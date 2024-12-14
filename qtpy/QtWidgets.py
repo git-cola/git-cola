@@ -36,13 +36,14 @@ if PYQT5:
 elif PYQT6:
     from PyQt6 import QtWidgets
     from PyQt6.QtGui import (
-        QAction,
         QActionGroup,
         QFileSystemModel,
         QShortcut,
         QUndoCommand,
     )
     from PyQt6.QtWidgets import *
+
+    from qtpy.QtGui import QAction  # See spyder-ide/qtpy#461
 
     # Attempt to import QOpenGLWidget, but if that fails,
     # don't raise an exception until the name is explicitly accessed.
@@ -109,8 +110,10 @@ elif PYQT6:
 elif PYSIDE2:
     from PySide2.QtWidgets import *
 elif PYSIDE6:
-    from PySide6.QtGui import QAction, QActionGroup, QShortcut, QUndoCommand
+    from PySide6.QtGui import QActionGroup, QShortcut, QUndoCommand
     from PySide6.QtWidgets import *
+
+    from qtpy.QtGui import QAction  # See spyder-ide/qtpy#461
 
     # Attempt to import QOpenGLWidget, but if that fails,
     # don't raise an exception until the name is explicitly accessed.
@@ -207,10 +210,43 @@ else:
         "directory",
     )
 
-# Make `addAction` compatible with Qt6 >= 6.3
-if PYQT5 or PYSIDE2 or parse(_qt_version) < parse("6.3"):
-    QMenu.addAction = partialmethod(add_action, old_add_action=QMenu.addAction)
-    QToolBar.addAction = partialmethod(
+# Make `addAction` compatible with Qt6 >= 6.4
+if PYQT5 or PYSIDE2 or parse(_qt_version) < parse("6.4"):
+
+    class _QMenu(QMenu):
+        old_add_action = QMenu.addAction
+
+        def addAction(self, *args):
+            return add_action(
+                self,
+                *args,
+                old_add_action=_QMenu.old_add_action,
+            )
+
+    _menu_add_action = partialmethod(
+        add_action,
+        old_add_action=QMenu.addAction,
+    )
+    QMenu.addAction = _menu_add_action
+    # Despite the previous line!
+    if QMenu.addAction is not _menu_add_action:
+        QMenu = _QMenu
+
+    class _QToolBar(QToolBar):
+        old_add_action = QToolBar.addAction
+
+        def addAction(self, *args):
+            return add_action(
+                self,
+                *args,
+                old_add_action=_QToolBar.old_add_action,
+            )
+
+    _toolbar_add_action = partialmethod(
         add_action,
         old_add_action=QToolBar.addAction,
     )
+    QToolBar.addAction = _toolbar_add_action
+    # Despite the previous line!
+    if QToolBar.addAction is not _toolbar_add_action:
+        QToolBar = _QToolBar

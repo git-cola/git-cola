@@ -70,24 +70,57 @@ def possibly_static_exec_(cls, *args, **kwargs):
     return cls.exec_(*args, **kwargs)
 
 
+def set_shortcut(self, shortcut, old_set_shortcut):
+    """Ensure that the type of `shortcut` is compatible to `QAction.setShortcut`."""
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QKeySequence
+
+    if isinstance(shortcut, (QKeySequence.StandardKey, Qt.Key, int)):
+        shortcut = QKeySequence(shortcut)
+    old_set_shortcut(self, shortcut)
+
+
+def set_shortcuts(self, shortcuts, old_set_shortcuts):
+    """Ensure that the type of `shortcuts` is compatible to `QAction.setShortcuts`."""
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QKeySequence
+
+    if isinstance(
+        shortcuts,
+        (QKeySequence, QKeySequence.StandardKey, Qt.Key, int, str),
+    ):
+        shortcuts = (shortcuts,)
+
+    shortcuts = tuple(
+        (
+            QKeySequence(shortcut)
+            if isinstance(shortcut, (QKeySequence.StandardKey, Qt.Key, int))
+            else shortcut
+        )
+        for shortcut in shortcuts
+    )
+    old_set_shortcuts(self, shortcuts)
+
+
 def add_action(self, *args, old_add_action):
     """Re-order arguments of `addAction` to backport compatibility with Qt>=6.3."""
-    from qtpy.QtCore import QObject
+    from qtpy.QtCore import QObject, Qt
     from qtpy.QtGui import QIcon, QKeySequence
 
     action: QAction
     icon: QIcon
     text: str
-    shortcut: QKeySequence | QKeySequence.StandardKey | str | int
+    shortcut: QKeySequence | QKeySequence.StandardKey | Qt.Key | str | int
     receiver: QObject
     member: bytes
+
     if all(
         isinstance(arg, t)
         for arg, t in zip(
             args,
             [
                 str,
-                (QKeySequence, QKeySequence.StandardKey, str, int),
+                (QKeySequence, QKeySequence.StandardKey, Qt.Key, str, int),
                 QObject,
                 bytes,
             ],
@@ -105,16 +138,15 @@ def add_action(self, *args, old_add_action):
             text, shortcut, receiver, member = args
             action = old_add_action(self, text, receiver, member, shortcut)
         else:
-            return old_add_action(self, *args)
-        return action
-    if all(
+            action = old_add_action(self, *args)
+    elif all(
         isinstance(arg, t)
         for arg, t in zip(
             args,
             [
                 QIcon,
                 str,
-                (QKeySequence, QKeySequence.StandardKey, str, int),
+                (QKeySequence, QKeySequence.StandardKey, Qt.Key, str, int),
                 QObject,
                 bytes,
             ],
@@ -123,11 +155,11 @@ def add_action(self, *args, old_add_action):
         if len(args) == 3:
             icon, text, shortcut = args
             action = old_add_action(self, icon, text)
-            action.setShortcut(QKeySequence(shortcut))
+            action.setShortcut(shortcut)
         elif len(args) == 4:
             icon, text, shortcut, receiver = args
             action = old_add_action(self, icon, text, receiver)
-            action.setShortcut(QKeySequence(shortcut))
+            action.setShortcut(shortcut)
         elif len(args) == 5:
             icon, text, shortcut, receiver, member = args
             action = old_add_action(
@@ -136,12 +168,14 @@ def add_action(self, *args, old_add_action):
                 text,
                 receiver,
                 member,
-                QKeySequence(shortcut),
+                shortcut,
             )
         else:
-            return old_add_action(self, *args)
-        return action
-    return old_add_action(self, *args)
+            action = old_add_action(self, *args)
+    else:
+        action = old_add_action(self, *args)
+
+    return action
 
 
 def static_method_kwargs_wrapper(func, from_kwarg_name, to_kwarg_name):
