@@ -40,6 +40,7 @@ jobs:
       - name: Install pip-provided test dependencies
         run: |
           set -x
+          garden dev/virtualenv -vv -D pip_upgrade=true
           garden dev -vv
       - name: Configure tests
         run: |

@@ -38,7 +38,14 @@ trees:
       dev>:
         - dev/virtualenv
         - dev/pkgs
-      dev/virtualenv: ${PYTHON} -m venv --system-site-packages ${env_dir}
+      dev/virtualenv: |
+        test -e ${env_dir} || ${PYTHON} -m venv --system-site-packages ${env_dir}
+        if test -n "${pip_upgrade}"
+        then
+            ${activate}
+            pip install --upgrade pip
+            pip install --upgrade setuptools packaging
+        fi
       dev/pkgs>:
         - dev/development
         - dev/extras
@@ -348,6 +355,7 @@ variables:
         source "${env_dir}/bin/activate"
     fi
   pip_editable: "--editable"
+  pip_upgrade: ""
   # External commands and options
   PYTEST: ${PYTHON} -B -m pytest ${PYTEST_OPTIONS}
   PYTEST_OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
