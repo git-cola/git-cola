@@ -848,6 +848,7 @@ class GitDAG(standard.MainWindow):
         self.old_refs = set()
         self.old_oids = None
         self.old_count = 0
+        self.old_display_status = None
         self.force_refresh = False
         self._widgets_initialized = False
 
@@ -953,6 +954,9 @@ class GitDAG(standard.MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
+        self.display_status_action = qtutils.add_action_bool(
+            self, N_('Display Worktree Status'), self._enable_worktree_status, False
+        )
         self.lock_layout_action = qtutils.add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False
         )
@@ -968,6 +972,8 @@ class GitDAG(standard.MainWindow):
         # View Menu
         self.view_menu = qtutils.add_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.refresh_action)
+        self.view_menu.addAction(self.display_status_action)
+        self.view_menu.addSeparator()
         self.view_menu.addAction(self.log_dock.toggleViewAction())
         self.view_menu.addAction(self.graphview_dock.toggleViewAction())
         self.view_menu.addAction(self.diff_dock.toggleViewAction())
@@ -1026,6 +1032,10 @@ class GitDAG(standard.MainWindow):
         thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
         thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
+    def _enable_worktree_status(self, enabled):
+        self.params.display_status = enabled
+        self.display()
+
     def focus_input(self):
         """Focus the revision input field"""
         self.revtext.setFocus()
@@ -1058,6 +1068,7 @@ class GitDAG(standard.MainWindow):
     def export_state(self):
         state = standard.MainWindow.export_state(self)
         state['count'] = self.params.count
+        state['display_status'] = self.params.display_status
         state['log'] = self.treewidget.export_state()
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
         return state
@@ -1072,6 +1083,12 @@ class GitDAG(standard.MainWindow):
             count = self.params.count
             result = False
         self.params.set_count(count)
+
+        display_status = state.get('display_status', True)
+        self.params.set_display_status(display_status)
+        with qtutils.BlockSignals(self.display_status_action):
+            self.display_status_action.setChecked(display_status)
+
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
         self.diffwidget.set_word_wrapping(state.get('word_wrap', False), update=True)
 
@@ -1085,6 +1102,7 @@ class GitDAG(standard.MainWindow):
         return result
 
     def model_updated(self):
+        """Refresh the view when the model is updated"""
         self.display()
         self.update_window_title()
 
@@ -1100,6 +1118,7 @@ class GitDAG(standard.MainWindow):
         count = get(self.maxresults)
         context = self.context
         model = self.model
+        display_status = get(self.display_status_action)
         # The DAG tries to avoid updating when the object IDs have not
         # changed.  Without doing this the DAG constantly redraws itself
         # whenever inotify sends update events, which hurts usability.
@@ -1120,16 +1139,19 @@ class GitDAG(standard.MainWindow):
             or count != self.old_count
             or oids != self.old_oids
             or refs != self.old_refs
+            or display_status != self.old_display_status
         )
         if update:
             self.thread.stop()
             self.params.set_ref(ref)
             self.params.set_count(count)
+            self.params.set_display_status(display_status)
             self.thread.start()
 
         self.old_oids = oids
         self.old_count = count
         self.old_refs = refs
+        self.old_display_status = self.params.display_status
         self.force_refresh = False
 
     def select_commits(self, commits):

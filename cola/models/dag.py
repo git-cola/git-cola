@@ -45,6 +45,7 @@ class DAG:
     def __init__(self, ref, count):
         self.ref = ref
         self.count = count
+        self.display_status = True
         self.overrides = {}
 
     def set_ref(self, ref):
@@ -69,6 +70,10 @@ class DAG:
             ref = core.list2cmdline(args.args)
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
+
+    def set_display_status(self, enabled):
+        """Should we display the worktree status?"""
+        self.display_status = enabled
 
     def overridden(self, opt):
         return opt in self.overrides
@@ -300,7 +305,7 @@ class RepoReader:
 
     def get_worktree_commits(self):
         """A Commit object that represents unstaged modified changes in a worktree"""
-        if self.returncode != 0:
+        if self.returncode != 0 or not self.params.display_status:
             return None, None
         context = self.context
         model = context.model

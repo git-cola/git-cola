@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Usability, bells and whistles
+-----------------------------
+* The DAG viewer now has an option to disable the display of staged and modified
+  changes.
+
+
 .. _v4.10.1:
 
 V4.10.1
