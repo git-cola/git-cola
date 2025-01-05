@@ -97,7 +97,7 @@ _git-cola-rebase () {
 		'--strategy=-[use the given merge strategy]:strategy:(recursive resolve octopus ort ours subtree)' \
 		'--verify[allow pre-rebase hook to run]' \
 		'--continue[continue]' \
-		'--abort[abort adn check out the original branch]' \
+		'--abort[abort and check out the original branch]' \
 		'--skip[skip current patch and continue]' \
 		'--edit-todo[edit the todo list]' \
 		':ref:_git-cola_refs' \

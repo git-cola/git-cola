@@ -2231,7 +2231,7 @@ msgid "Initialize Git LFS"
 msgstr "初始化 Git LFS"
 
 #: cola/widgets/clone.py:114
-msgid "Inititalize submodules"
+msgid "Initialize submodules"
 msgstr "初始化子模組"
 
 #: cola/widgets/prefs.py:280
@@ -4005,7 +4005,7 @@ msgid "URL: %s"
 msgstr "URL: %s"
 
 #: cola/widgets/about.py:397
-msgid "Ukranian translation"
+msgid "Ukrainian translation"
 msgstr "烏克蘭語翻譯"
 
 #: cola/cmds.py:2070

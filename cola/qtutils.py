@@ -1214,7 +1214,7 @@ def css_color(value):
 
 
 def hsl(hue, saturation, lightness):
-    """Return a QColor from an hue, saturation and lightness"""
+    """Return a QColor from hue, saturation and lightness"""
     return QtGui.QColor.fromHslF(
         utils.clamp(hue, 0.0, 1.0),
         utils.clamp(saturation, 0.0, 1.0),

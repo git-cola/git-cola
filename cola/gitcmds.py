@@ -1017,7 +1017,7 @@ def cat_file_blob(context, filename, oid):
 
 
 def cat_file_to_path(context, filename, oid):
-    """Extract a file from an commit ref and a write it to the specified filename"""
+    """Extract a file from a commit ref and a write it to the specified filename"""
     return cat_file(context, filename, oid, path=filename, filters=True)
 
 
