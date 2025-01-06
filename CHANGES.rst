@@ -6,6 +6,16 @@ Usability, bells and whistles
 * The DAG viewer now has an option to disable the display of staged and modified
   changes.
 
+Fixes
+-----
+* Various widgets were made more resilient to errors when the Git worktree is externally
+  deleted while Git Cola has it open.
+  (`#1445 <https://github.com/git-cola/git-cola/pull/1445>`_)
+
+* Cosmetic typos were fixed in the documentation, translations, docstrings and
+  command-line help messages.
+  (`#1446 <https://github.com/git-cola/git-cola/pull/1446>`_)
+
 
 .. _v4.10.1:
 
