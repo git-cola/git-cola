@@ -180,7 +180,12 @@ class MainWindowMixin(WidgetMixin):
             else:
                 settings = context.settings
                 settings.load()
-            settings.add_recent(core.getcwd(), prefs.maxrecent(context))
+            try:
+                cwd = core.getcwd()
+            except FileNotFoundError:
+                pass
+            else:
+                settings.add_recent(cwd, prefs.maxrecent(context))
         return WidgetMixin.save_settings(self, settings=settings)
 
     def apply_state(self, state):

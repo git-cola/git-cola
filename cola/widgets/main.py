@@ -1106,7 +1106,10 @@ class MainView(standard.MainWindow):
         is_applying_patch = self.model.is_applying_patch
         is_cherry_picking = self.model.is_rebasing
 
-        curdir = core.getcwd()
+        try:
+            curdir = core.getcwd()
+        except FileNotFoundError:
+            return
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % curbranch
