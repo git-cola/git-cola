@@ -2178,7 +2178,7 @@ msgid "Initialize Git LFS"
 msgstr "Git LFS előkészítése"
 
 #: cola/widgets/clone.py:114
-msgid "Inititalize submodules"
+msgid "Initialize submodules"
 msgstr "Almodulok előkészítése"
 
 #: cola/widgets/prefs.py:280
@@ -3957,7 +3957,7 @@ msgid "URL: %s"
 msgstr "URL: %s"
 
 #: cola/widgets/about.py:397
-msgid "Ukranian translation"
+msgid "Ukrainian translation"
 msgstr "Ukrán fordítás"
 
 #: cola/cmds.py:2070

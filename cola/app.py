@@ -440,7 +440,7 @@ def add_common_arguments(parser):
 
     # Specify the GUI theme
     parser.add_argument(
-        '--theme', metavar='<name>', default=None, help='specify an GUI theme name'
+        '--theme', metavar='<name>', default=None, help='specify a GUI theme name'
     )
 
 

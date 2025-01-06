@@ -429,7 +429,7 @@ def translators_text():
         dict(name='Vitor Lobo', title=N_('Brazilian translation')),
         dict(name='Zhang Han', title=N_('Simplified Chinese translation')),
         dict(name='Łukasz Wojniłowicz', title=N_('Polish translation')),
-        dict(name='Igor Kopach', title=N_('Ukranian translation')),
+        dict(name='Igor Kopach', title=N_('Ukrainian translation')),
         dict(name='Gyuris Gellért', title=N_('Hungarian translation')),
         dict(name='fu7mu4', title=N_('Japanese translation')),
         dict(name='Barış ÇELİK', title=N_('Turkish translation')),

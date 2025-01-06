@@ -2058,7 +2058,7 @@ msgid "Initialize Git LFS"
 msgstr ""
 
 #: cola/widgets/clone.py:114
-msgid "Inititalize submodules"
+msgid "Initialize submodules"
 msgstr ""
 
 #: cola/widgets/prefs.py:280

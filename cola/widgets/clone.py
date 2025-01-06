@@ -111,7 +111,7 @@ class Clone(standard.Dialog):
 
         # Initialize submodules
         self.submodules = qtutils.checkbox(
-            text=N_('Inititalize submodules'), checked=False
+            text=N_('Initialize submodules'), checked=False
         )
 
         # Reduce commit history

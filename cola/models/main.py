@@ -29,7 +29,7 @@ class MainModel(QtCore.QObject):
     """Repository status model"""
 
     # Refactor: split this class apart into separate DiffModel, CommitMessageModel,
-    # StatusModel, and an DiffEditorState.
+    # StatusModel, and a DiffEditorState.
 
     # Signals
     about_to_update = Signal()
@@ -613,7 +613,7 @@ def no_color(kwargs):
 
 def autodetect_proxy(context, kwargs):
     """Detect proxy settings when running on Gnome and KDE"""
-    # kwargs can refer to persistant global state so we purge it.
+    # kwargs can refer to persistent global state so we purge it.
     # Callers should not expect their _add_env to persist.
     kwargs.pop('_add_env', None)
     enabled = prefs.autodetect_proxy(context)
