@@ -601,11 +601,17 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def show_cursor_position(self, rows, cols):
         """Display the cursor position with warnings and error colors for long lines"""
         display_content = '%02d:%02d' % (rows, cols)
-        if cols > 78:
+        try:
+            max_width = max(
+                len(line) for line in self.commit_message(raw=False).splitlines()
+            )
+        except ValueError:
+            max_width = 0
+        if max_width > 78:
             color = 'red'
-        elif cols > 72:
+        elif max_width > 72:
             color = '#ff8833'
-        elif cols > 64:
+        elif max_width > 64:
             color = 'yellow'
         else:
             color = ''

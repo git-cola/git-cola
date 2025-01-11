@@ -6,6 +6,10 @@ Usability, bells and whistles
 * The DAG viewer now has an option to disable the display of staged and modified
   changes.
 
+* The commit message line length warning is no longer dependent on the cursor position.
+  The longest line in the commit message is now used to enable the warning.
+  (`#1448 <https://github.com/git-cola/git-cola/issues/1448>`_)
+
 Fixes
 -----
 * Various widgets were made more resilient to errors when the Git worktree is externally
