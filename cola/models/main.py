@@ -720,6 +720,6 @@ def autodetect_proxy_kde(kreadconfig, scheme):
     ]
     status, out, err = core.run_command(cmd)
     if status == 0:
-        proxy = out.strip()
+        proxy = out.strip().replace(' ', ':')
         return proxy
     return None
