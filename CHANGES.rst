@@ -12,6 +12,11 @@ Usability, bells and whistles
 
 Fixes
 -----
+* Proxy autodetection on KDE was improved to correctly handle the host and port output
+  from `kreadconfig*`.
+  (`#1450 <https://github.com/git-cola/git-cola/issues/1450>`_)
+  (`#1451 <https://github.com/git-cola/git-cola/pull/1451>`_)
+
 * Various widgets were made more resilient to errors when the Git worktree is externally
   deleted while Git Cola has it open.
   (`#1445 <https://github.com/git-cola/git-cola/pull/1445>`_)
