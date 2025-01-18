@@ -16,6 +16,8 @@ Fixes
   from `kreadconfig*`.
   (`#1450 <https://github.com/git-cola/git-cola/issues/1450>`_)
   (`#1451 <https://github.com/git-cola/git-cola/pull/1451>`_)
+  (`#1452 <https://github.com/git-cola/git-cola/issues/1452>`_)
+  (`#1453 <https://github.com/git-cola/git-cola/pull/1453>`_)
 
 * Various widgets were made more resilient to errors when the Git worktree is externally
   deleted while Git Cola has it open.
