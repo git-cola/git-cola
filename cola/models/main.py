@@ -716,7 +716,7 @@ def autodetect_proxy_kde(kreadconfig, scheme):
         '--group',
         'Proxy Settings',
         '--key',
-        f'ProxyType',
+        'ProxyType',
     ]
     status, out, err = core.run_command(cmd)
     if status == 0 and out.strip() == '1':
