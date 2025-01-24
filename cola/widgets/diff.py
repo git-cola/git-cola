@@ -1455,6 +1455,7 @@ class ObjectIdLabel(PlainTextLabel):
 
 class AuthorLabel(PlainTextLabel):
     """Custom actions for the author label"""
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._author = ''
@@ -1471,7 +1472,7 @@ class AuthorLabel(PlainTextLabel):
             N_('Copy Email'),
             self._copy_email,
         )
-        self._send_email_action  = qtutils.add_action(
+        self._send_email_action = qtutils.add_action(
             self,
             N_('Send Email'),
             self._send_email,
