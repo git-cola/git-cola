@@ -1485,14 +1485,17 @@ class AuthorLabel(PlainTextLabel):
     def _copy_email(self):
         """Copy the author's email address"""
         qtutils.set_clipboard(self._email)
+        self.start_selection_timer()
 
     def _copy_name(self):
         """Copy the author's name"""
         qtutils.set_clipboard(self._author)
+        self.start_selection_timer()
 
     def _send_email(self):
         url = QtCore.QUrl(f'mailto:{self._author} <{self._email}>')
         QtGui.QDesktopServices.openUrl(url)
+        self.start_selection_timer()
 
     def context_menu_actions(self, menu):
         menu.addAction(self._send_email_action)
