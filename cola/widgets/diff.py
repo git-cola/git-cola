@@ -27,8 +27,8 @@ from .. import qtutils
 from .text import TextDecorator
 from .text import VimHintedPlainTextEdit
 from .text import PlainTextLabel
-from .text import RichTextLabel
 from .text import TextSearchWidget
+from .text import label_selection_timer
 from . import defs
 from . import standard
 from . import imageview
@@ -1404,14 +1404,10 @@ class ObjectIdLabel(PlainTextLabel):
     """Interactive object IDs"""
 
     def __init__(self, context, oid='', parent=None):
-        super().__init__(parent=parent)
+        super().__init__(copy_on_click=True, parent=parent)
         self.context = context
         self.oid = oid
-        self.setCursor(Qt.PointingHandCursor)
-        self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.setFocusPolicy(Qt.NoFocus)
         self.setToolTip(N_('Click to Copy'))
-        self.customContextMenuRequested.connect(self._context_menu)
         self._copy_short_action = qtutils.add_action_with_icon(
             self,
             icons.copy(),
@@ -1426,17 +1422,7 @@ class ObjectIdLabel(PlainTextLabel):
             self._copy_long,
             hotkeys.COPY_COMMIT_ID,
         )
-        self._select_all_action = qtutils.add_action(
-            self, N_('Select All'), self._select_all, hotkeys.SELECT_ALL
-        )
-        self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(200)
-        self.timer.setSingleShot(True)
-        self.timer.timeout.connect(self._timeout)
-
-    def _timeout(self):
-        """Clear the selection"""
-        self.setSelection(0, 0)
+        self.timer = label_selection_timer(self)
 
     def set_oid(self, oid):
         """Record the object ID and update the display"""
@@ -1447,37 +1433,74 @@ class ObjectIdLabel(PlainTextLabel):
         """Copy the abbreviated commit ID"""
         abbrev = prefs.abbrev(self.context)
         qtutils.set_clipboard(self.oid[:abbrev])
-        self._select_all()
-        if not self.timer.isActive():
-            self.timer.start()
+        self.start_selection_timer()
 
     def _copy_long(self):
         """Copy the full commit ID"""
         qtutils.set_clipboard(self.oid)
-        self._select_all()
-        if not self.timer.isActive():
-            self.timer.start()
+        self.start_selection_timer()
 
-    def _select_all(self):
-        """Select the text"""
-        length = len(self.get())
-        self.setSelection(0, length)
+    def copy_all_callback(self):
+        self._copy_short(clicked=True)
 
-    def mousePressEvent(self, event):
-        """Copy the commit ID when clicked"""
-        if event.button() == Qt.LeftButton:
-            # This behavior makes it impossible to select text by clicking and dragging,
-            # but it's okay because this also makes copying text a single-click affair.
-            self._copy_short(clicked=True)
-        return super().mousePressEvent(event)
-
-    def _context_menu(self, pos):
+    def context_menu_actions(self, menu):
         """Display a custom context menu"""
-        menu = QtWidgets.QMenu(self)
-        menu.addAction(self._copy_short_action)
+        self.copy_selection_action.setEnabled(bool(self.selectedText()))
         menu.addAction(self._copy_long_action)
-        menu.addAction(self._select_all_action)
-        menu.exec_(self.mapToGlobal(pos))
+        menu.addAction(self._copy_short_action)
+        menu.addAction(self.copy_selection_action)
+        menu.addSeparator()
+        menu.addAction(self.select_all_action)
+
+
+class AuthorLabel(PlainTextLabel):
+    """Custom actions for the author label"""
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self._author = ''
+        self._email = ''
+        self._copy_name_action = qtutils.add_action_with_icon(
+            self,
+            icons.copy(),
+            N_('Copy Name'),
+            self._copy_name,
+        )
+        self._copy_email_action = qtutils.add_action_with_icon(
+            self,
+            icons.copy(),
+            N_('Copy Email'),
+            self._copy_email,
+        )
+        self._send_email_action  = qtutils.add_action(
+            self,
+            N_('Send Email'),
+            self._send_email,
+        )
+
+    def set_author(self, author, email):
+        """Set the author and email for the label"""
+        self._author = author
+        self._email = email
+
+    def _copy_email(self):
+        """Copy the author's email address"""
+        qtutils.set_clipboard(self._email)
+
+    def _copy_name(self):
+        """Copy the author's name"""
+        qtutils.set_clipboard(self._author)
+
+    def _send_email(self):
+        url = QtCore.QUrl(f'mailto:{self._author} <{self._email}>')
+        QtGui.QDesktopServices.openUrl(url)
+
+    def context_menu_actions(self, menu):
+        menu.addAction(self._send_email_action)
+        menu.addSeparator()
+        menu.addAction(self._copy_name_action)
+        menu.addAction(self._copy_email_action)
+        menu.addSeparator()
+        super().context_menu_actions(menu)
 
 
 class DiffWidget(QtWidgets.QWidget):
@@ -1500,23 +1523,14 @@ class DiffWidget(QtWidgets.QWidget):
 
         self.gravatar_label = gravatar.GravatarLabel(self.context, parent=self)
 
-        self.oid_label = ObjectIdLabel(context, parent=self)
-        self.oid_label.setAlignment(Qt.AlignBottom)
-        self.oid_label.elide()
-
-        self.author_label = RichTextLabel(selectable=False, parent=self)
-        self.author_label.setFont(author_font)
-        self.author_label.setAlignment(Qt.AlignTop)
-        self.author_label.elide()
-
-        self.date_label = PlainTextLabel(parent=self)
-        self.date_label.setAlignment(Qt.AlignTop)
-        self.date_label.elide()
-
-        self.summary_label = PlainTextLabel(parent=self)
-        self.summary_label.setFont(summary_font)
-        self.summary_label.setAlignment(Qt.AlignTop)
-        self.summary_label.elide()
+        self.oid_label = ObjectIdLabel(context, parent=self).align_bottom().elide()
+        self.author_label = (
+            AuthorLabel(parent=self).set_font(author_font).align_top().elide()
+        )
+        self.date_label = PlainTextLabel(parent=self).align_top().elide()
+        self.summary_label = (
+            PlainTextLabel(parent=self).set_font(summary_font).align_top().elide()
+        )
 
         self.diff = DiffTextEdit(context, self, is_commit=is_commit, whitespace=False)
         self.setFocusProxy(self.diff)
@@ -1598,18 +1612,13 @@ class DiffWidget(QtWidgets.QWidget):
         self.diff.set_diff(diff)
 
     def set_details(self, oid, author, email, date, summary):
-        template_args = {'author': author, 'email': email, 'summary': summary}
-        author_text = (
-            """%(author)s &lt;"""
-            """<a href="mailto:%(email)s">"""
-            """%(email)s</a>&gt;""" % template_args
-        )
-        author_template = '%(author)s <%(email)s>' % template_args
-
+        template_args = {'author': author, 'email': email}
+        author_text = '%(author)s <%(email)s>' % template_args
         self.date_label.set_text(date)
         self.date_label.setVisible(bool(date))
         self.oid_label.set_oid(oid)
-        self.author_label.set_template(author_text, author_template)
+        self.author_label.set_author(author, email)
+        self.author_label.set_text(author_text)
         self.summary_label.set_text(summary)
         self.gravatar_label.set_email(email)
 

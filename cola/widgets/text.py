@@ -1068,29 +1068,105 @@ class LineNumbers(TextDecorator):
             block = block.next()
 
 
+def label_selection_timer(widget):
+    """Create a timer for handling the copy-on-click action"""
+    timer = QtCore.QTimer(widget)
+    timer.setInterval(200)
+    timer.setSingleShot(True)
+    timer.timeout.connect(lambda widget=widget: widget.setSelection(0, 0))
+    return timer
+
+
 class TextLabel(QtWidgets.QLabel):
     """A text label that elides its display"""
 
-    def __init__(self, parent=None, open_external_links=True, selectable=True):
+    def __init__(
+        self,
+        parent=None,
+        copy_on_click=False,
+        open_external_links=True,
+        selectable=True,
+        text_format=Qt.PlainText,
+    ):
         QtWidgets.QLabel.__init__(self, parent)
-        self._display = ''
-        self._template = ''
-        self._text = ''
+        self._copy_on_click = copy_on_click
+        self._display = ''  # The final displayed text.
+        self._template = ''  # The plaintext version of the richtext html template.
+        self._text = ''  # The text value or the rich text html.
+        self._text_format = text_format  # The QTextFormat usef for this label.
         self._elide = False
         self._metrics = QtGui.QFontMetrics(self.font())
-        policy = QtWidgets.QSizePolicy(
+
+        self.setTextFormat(text_format)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.setFocusPolicy(Qt.NoFocus)
+        size_policy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum
         )
-        self.setSizePolicy(policy)
+        self.setSizePolicy(size_policy)
         if selectable:
             interaction_flags = Qt.TextSelectableByMouse | Qt.LinksAccessibleByMouse
         else:
             interaction_flags = Qt.LinksAccessibleByMouse
         self.setTextInteractionFlags(interaction_flags)
         self.setOpenExternalLinks(open_external_links)
+        self.copy_all_action = qtutils.add_action_with_icon(
+            self,
+            icons.copy(),
+            N_('Copy All'),
+            self.copy_all,
+        )
+        self.copy_selection_action = qtutils.add_action_with_icon(
+            self,
+            icons.copy(),
+            N_('Copy Selection'),
+            self.copy_selection,
+        )
+        self.select_all_action = qtutils.add_action(
+            self, N_('Select All'), self.select_all
+        )
+        self.timer = label_selection_timer(self)
+        self.customContextMenuRequested.connect(self._context_menu)
+
+    def copy_all_callback(self):
+        """Specialized by subclasses to customize the copy-on-click behavior"""
+        self.copy_all()
+
+    def copy_all(self):
+        """Copy the text label to the clipboard"""
+        qtutils.set_clipboard(self._template)
+        self.start_selection_timer()
+
+    def copy_selection(self):
+        """Handle elided text when copying to the clipboard"""
+        text = self.selectedText()
+        if text == self._display and self._display != self._text:
+            text = self._text
+        qtutils.set_clipboard(text)
+
+    def select_all(self):
+        """Select the entire text label"""
+        if self.textFormat() == Qt.RichText:
+            self.setSelection(0, min(len(self._display), len(self._template)))
+        else:
+            self.setSelection(0, len(self._display))
 
     def elide(self):
         self._elide = True
+        return self
+
+    def align_bottom(self):
+        self.setAlignment(Qt.AlignBottom)
+        return self
+
+    def align_top(self):
+        self.setAlignment(Qt.AlignTop)
+        return self
+
+    def set_font(self, font):
+        self.setFont(font)
+        return self
 
     def set_text(self, text):
         self.set_template(text, text)
@@ -1099,6 +1175,7 @@ class TextLabel(QtWidgets.QLabel):
         self._display = text
         self._text = text
         self._template = template
+        self._saved_selection = None
         self.update_text(self.width())
         self.setText(self._display)
 
@@ -1107,12 +1184,21 @@ class TextLabel(QtWidgets.QLabel):
         if not self._elide:
             return
         text = self._metrics.elidedText(self._template, Qt.ElideRight, width - 2)
-        if text != self._template:
+        if text == self._template:
+            self.setTextFormat(self._text_format)
+        else:
             self._display = text
+            self.setTextFormat(Qt.PlainText)
 
     def get(self):
         """Return the label's inner text value"""
         return self._text
+
+    def start_selection_timer(self):
+        """Start the copy-on-click text selection timer"""
+        if not self.selectedText() and not self.timer.isActive():
+            self.select_all()
+            self.timer.start()
 
     # Qt overrides
     def setFont(self, font):
@@ -1126,20 +1212,47 @@ class TextLabel(QtWidgets.QLabel):
                 self.setText(self._display)
         QtWidgets.QLabel.resizeEvent(self, event)
 
+    def context_menu_actions(self, menu):
+        """Add context menu actions to a QMenu or widget"""
+        self.copy_selection_action.setEnabled(bool(self.selectedText()))
+        menu.addAction(self.copy_all_action)
+        menu.addAction(self.copy_selection_action)
+        menu.addSeparator()
+        menu.addAction(self.select_all_action)
+
+    def _context_menu(self, pos):
+        """Display the custom context menu"""
+        menu = qtutils.create_menu(N_('Actions'), self)
+        self.context_menu_actions(menu)
+        menu.exec_(self.mapToGlobal(pos))
+
+    def mousePressEvent(self, event):
+        self._saved_selection = self.selectedText()
+        super().mouseReleaseEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        """Copy the text label when clicked"""
+        """Copy text when clicked"""
+        # This makes it impossible to select text by clicking and dragging while still
+        # allowing copy-on-click to be a one-click affair.
+        if (
+            self._copy_on_click
+            and event.button() == Qt.LeftButton
+            and not self.selectedText()
+            and not self._saved_selection
+        ):
+            self.copy_all_callback()
+        return super().mouseReleaseEvent(event)
+
 
 class PlainTextLabel(TextLabel):
     """A plaintext label that elides its display"""
 
-    def __init__(self, selectable=True, parent=None):
+    def __init__(self, copy_on_click=True, selectable=True, parent=None):
         super().__init__(
-            selectable=selectable, parent=parent, open_external_links=False
+            copy_on_click=copy_on_click,
+            selectable=selectable,
+            parent=parent,
+            open_external_links=False,
+            text_format=Qt.PlainText,
         )
-        self.setTextFormat(Qt.PlainText)
-
-
-class RichTextLabel(TextLabel):
-    """A richtext label that elides its display"""
-
-    def __init__(self, selectable=True, parent=None):
-        super().__init__(selectable=selectable, open_external_links=True, parent=parent)
-        self.setTextFormat(Qt.RichText)

@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The DAG viewer will now copy text into the your clipboard when any of the commit ID,
+  author, date or summary fields are clicked in the commit diff view.
+  (`#1448 <https://github.com/git-cola/git-cola/issues/1446>`_)
+
 * The DAG viewer now has an option to disable the display of staged and modified
   changes.
 
