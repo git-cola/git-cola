@@ -1358,6 +1358,14 @@ Please see the following links for more details.
 
 https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
 
+Samba
+-----
+Core Git has issues when operating over a Samba file share. This can lead
+to ``.git/index.lock`` lingering around and preventing ``git`` commands from
+working correctly.
+
+To avoid these issues, operate on repositories from a local filesystem.
+
 
 FIPS SECURITY MODE
 ==================
