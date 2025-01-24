@@ -12,6 +12,9 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The DAG view now updates itself when merging branches using the "Branches" tool.
+  (`#1454 <https://github.com/git-cola/git-cola/issues/1454>`_)
+
 * Proxy autodetection on KDE was improved to correctly handle the host and port output
   from `kreadconfig*`.
   (`#1450 <https://github.com/git-cola/git-cola/issues/1450>`_)

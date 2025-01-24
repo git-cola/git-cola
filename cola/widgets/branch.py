@@ -43,13 +43,14 @@ def add_branch_to_menu(menu, branch, remote_branch, remote, upstream, func):
 class AsyncGitActionTask(qtutils.Task):
     """Run git action asynchronously"""
 
-    def __init__(self, git_helper, action, args, kwarg, update_refs):
+    def __init__(self, git_helper, action, args, kwarg, update_refs, update_status):
         qtutils.Task.__init__(self)
         self.git_helper = git_helper
         self.action = action
         self.args = args
         self.kwarg = kwarg
         self.update_refs = update_refs
+        self.update_status = update_status
 
     def task(self):
         """Runs action and captures the result"""
@@ -362,12 +363,20 @@ class BranchesTreeWidget(standard.TreeWidget):
                 item.setText(0, f'{item.text(0)}\t{status_str}')
 
     def git_action_async(
-        self, action, args, kwarg=None, update_refs=False, remote_messages=False
+        self,
+        action,
+        args,
+        kwarg=None,
+        update_refs=False,
+        update_status=False,
+        remote_messages=False,
     ):
         """Execute a git action in a background task"""
         if kwarg is None:
             kwarg = {}
-        task = AsyncGitActionTask(self.git_helper, action, args, kwarg, update_refs)
+        task = AsyncGitActionTask(
+            self.git_helper, action, args, kwarg, update_refs, update_status
+        )
         progress = standard.progress(
             N_('Executing action %s') % action, N_('Updating'), self
         )
@@ -389,6 +398,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         self.git_helper.show_result(task.action, status, out, err)
         if task.update_refs:
             self.context.model.update_refs()
+        if task.update_status:
+            self.context.model.update_status()
 
     def push_action(self):
         """Push the selected branch to its upstream remote"""
@@ -471,7 +482,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         """Merge the selected branch into the current branch"""
         branch = self.selected_refname()
         if branch and branch != self.current_branch:
-            self.git_action_async('merge', [branch])
+            self.git_action_async('merge', [branch], update_status=True)
 
     def checkout_action(self):
         """Checkout the selected branch"""
