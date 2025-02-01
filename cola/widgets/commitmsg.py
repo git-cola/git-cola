@@ -51,7 +51,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self._last_commit_datetime = None  # The most recently selected commit date.
         self._last_commit_datetime_backup = None  # Used when amending.
         self._git_commit_date = None  # Overrides the commit date when committing.
-        self._widgets_initialized = False  # Defers initialization of the cursor position label height.
+        self._widgets_initialized = False  # Defer setting the cursor position height.
 
         # Actions
         self.signoff_action = qtutils.add_action(
