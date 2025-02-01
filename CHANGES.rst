@@ -1,6 +1,16 @@
 Upcoming
 ========
 
+Usability, bells and whistles
+-----------------------------
+* The rebase tool now honors the `rebase.updateRefs` git configuration.
+  The tool will only prompt you whether or not to update stacked branches / refs
+  when this configuration is unset.
+  (`#1458 <https://github.com/git-cola/git-cola/issues/1458>`_)
+
+* The `rebase.updateRefs` configuration can now be configured through the
+  "Update stacked branches/refs when rebasing" checkbox in the settings.
+
 Fixes
 -----
 * The commit message length warning was not being updated in some scenarios.

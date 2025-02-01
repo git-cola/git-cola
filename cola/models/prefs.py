@@ -45,6 +45,7 @@ MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
 MOUSE_ZOOM = 'cola.mousezoom'
 PATCHES_DIRECTORY = 'cola.patchesdirectory'
+REBASE_UPDATE_REFS = 'rebase.updaterefs'
 REFRESH_ON_FOCUS = 'cola.refreshonfocus'
 RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
 SAFE_MODE = 'cola.safemode'
@@ -135,6 +136,7 @@ class Defaults:
     merge_summary = True
     merge_verbosity = 2
     mouse_zoom = True
+    rebase_update_refs = False
     refresh_on_focus = False
     resize_browser_columns = False
     save_window_settings = True

@@ -162,6 +162,7 @@ scissors
         self.autotemplate = qtutils.checkbox(checked=False)
         self.merge_diffstat = qtutils.checkbox(checked=True)
         self.display_untracked = qtutils.checkbox(checked=True)
+        self.rebase_update_refs = qtutils.checkbox(checked=False)
         self.show_path = qtutils.checkbox(checked=True)
         self.update_index = qtutils.checkbox(checked=True)
         self.http_proxy = QtWidgets.QLineEdit()
@@ -199,6 +200,10 @@ scissors
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
         self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
         self.add_row(N_('Enable Filesystem Monitoring'), self.inotify)
+        self.add_row(
+            N_('Update stacked branches/refs when rebasing'),
+            self.rebase_update_refs,
+        )
         self.add_row(
             N_('Automatically Load Commit Message Template'), self.autotemplate
         )
@@ -242,6 +247,10 @@ scissors
             prefs.PATCHES_DIRECTORY: (
                 self.patches_directory,
                 Defaults.patches_directory,
+            ),
+            prefs.REBASE_UPDATE_REFS: (
+                self.rebase_update_refs,
+                Defaults.rebase_update_refs,
             ),
             prefs.SHOW_PATH: (self.show_path, Defaults.show_path),
             prefs.USER_NAME: (self.name, ''),

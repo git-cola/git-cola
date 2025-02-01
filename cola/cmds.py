@@ -2044,8 +2044,13 @@ class Rebase(ContextCommand):
         kwargs.update(self.kwargs)
 
         # Prompt to determine whether or not to use "git rebase --update-refs".
+        update_refs = self.context.cfg.get(prefs.REBASE_UPDATE_REFS)
         has_update_refs = version.check_git(self.context, 'rebase-update-refs')
-        if has_update_refs and not kwargs.get('update_refs', False):
+        if (
+            has_update_refs
+            and update_refs is None
+            and not kwargs.get('update_refs', False)
+        ):
             title = N_('Update stacked branches when rebasing?')
             text = N_(
                 '"git rebase --update-refs" automatically force-updates any\n'
