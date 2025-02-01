@@ -8,7 +8,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..compat import uchr
 from ..compat import WIN32
 from ..i18n import N_
 from ..interaction import Interaction
@@ -1044,7 +1043,7 @@ class MainView(standard.MainWindow):
                 # Omit the current worktree from the "Open Recent" menu.
                 continue
             name = entry['name']
-            text = f'{name} {uchr(0x2192)} {directory}'
+            text = f'{name} {chr(0x2192)} {directory}'
             menu.addAction(text, cmds.run(cmd, context, directory))
 
     # Accessors
@@ -1167,8 +1166,8 @@ class MainView(standard.MainWindow):
         is_diff_mode = self.model.is_diff_mode()
         is_amend_mode = self.mode == self.model.mode_amend
 
-        prefix = uchr(0xAB)
-        suffix = uchr(0xBB)
+        prefix = chr(0xAB)
+        suffix = chr(0xBB)
 
         if is_amend_mode:
             alerts.append(N_('Amending'))

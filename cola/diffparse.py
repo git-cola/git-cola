@@ -3,8 +3,6 @@ import re
 from collections import Counter
 from itertools import groupby
 
-from . import compat
-
 
 DIFF_CONTEXT = ' '
 DIFF_ADDITION = '+'
@@ -175,7 +173,7 @@ class FormatDigits:
         self.fmt = ''
         self.empty = ''
         self.dash = ''
-        self._dash = dash or compat.uchr(0xB7)
+        self._dash = dash or chr(0xB7)
         self._empty = empty or ' '
 
     def set_digits(self, value):

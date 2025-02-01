@@ -5,7 +5,6 @@ import pytest
 
 from cola import i18n
 from cola.i18n import N_
-from cola.compat import uchr
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +17,7 @@ def i18n_context():
 def test_translates_noun():
     """Test that strings with @@noun are translated"""
     i18n.install('ja_JP')
-    expect = uchr(0x30B3) + uchr(0x30DF) + uchr(0x30C3) + uchr(0x30C8)
+    expect = chr(0x30B3) + chr(0x30DF) + chr(0x30C3) + chr(0x30C8)
     actual = N_('Commit@@verb')
     assert expect == actual
 

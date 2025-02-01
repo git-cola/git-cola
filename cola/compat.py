@@ -37,12 +37,10 @@ if PY3:
     int_types = (int,)
     maxsize = sys.maxsize
     ustr = str
-    uchr = chr
 else:
     bchr = chr
     maxsize = 2**31
     ustr = unicode  # noqa
-    uchr = unichr  # noqa
     int_types = (int, long)  # noqa
 
 # The max 32-bit signed integer range for Qt is (-2147483648 to 2147483647)

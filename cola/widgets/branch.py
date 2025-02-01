@@ -5,7 +5,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..compat import uchr
 from ..git import STDOUT
 from ..i18n import N_
 from ..interaction import Interaction
@@ -354,10 +353,10 @@ class BranchesTreeWidget(standard.TreeWidget):
         if current_branch and tracked_branch and item is not None:
             status_str = ''
             if ahead > 0:
-                status_str += f'{uchr(0x2191)}{ahead}'
+                status_str += f'{chr(0x2191)}{ahead}'
 
             if behind > 0:
-                status_str += f'  {uchr(0x2193)}{behind}'
+                status_str += f'  {chr(0x2193)}{behind}'
 
             if status_str:
                 item.setText(0, f'{item.text(0)}\t{status_str}')
