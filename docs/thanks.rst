@@ -209,6 +209,7 @@ Thanks
 * Nikos Roussos
 * Noel Grandin
 * NotSqrt
+* novebeta
 * nyanpasu64
 * ochristi
 * Oliver Haessler
