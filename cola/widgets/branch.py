@@ -142,6 +142,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         self._visible = False
         self._needs_refresh = False
+        self._branch_details_in_progress = False
         self._tree_states = None
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
@@ -337,7 +338,9 @@ class BranchesTreeWidget(standard.TreeWidget):
         if item is not None:
             expand_item_parents(item)
             item.setIcon(0, icons.star())
-
+            if self._branch_details_in_progress:
+                return
+            self._branch_details_in_progress = True
             branch_details_task = BranchDetailsTask(
                 context, current_branch, self.git_helper
             )
@@ -360,6 +363,7 @@ class BranchesTreeWidget(standard.TreeWidget):
 
             if status_str:
                 item.setText(0, f'{item.text(0)}\t{status_str}')
+        self._branch_details_in_progress = False
 
     def git_action_async(
         self,
