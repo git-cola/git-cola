@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Fixes
+-----
+* The commit message length warning was not being updated in some scenarios.
+  (`#1459 <https://github.com/git-cola/git-cola/issues/1459>`_)
+
+
 .. _v4.11.0:
 
 v4.11.0

@@ -317,6 +317,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self.summary.set_value(summary, block=True)
             self.description.set_value(description)
         self._commit_message_changed()
+        self.summary.cursor_position.emit()
 
     def _commit_message_changed(self, _value=None):
         """Update the model when values change"""
