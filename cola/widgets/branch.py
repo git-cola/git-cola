@@ -144,6 +144,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         self._needs_refresh = False
         self._branch_details_in_progress = False
         self._tree_states = None
+        self._name_filter = ''
 
         self.updated.connect(self.refresh, type=Qt.QueuedConnection)
         context.model.updated.connect(self.updated)
@@ -153,6 +154,11 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         # Checkout branch when double clicked
         self.doubleClicked.connect(self.checkout_action)
+
+    def set_name_filter(self, value):
+        """Update the name filter and rebuild the tree to include only matching refs"""
+        self._name_filter = value
+        self.refresh()
 
     def refresh(self):
         """Refresh the UI widgets to match the current state"""
@@ -170,17 +176,17 @@ class BranchesTreeWidget(standard.TreeWidget):
         self._tree_states = self._save_tree_state()
         ellipsis = icons.ellipsis()
 
-        local_tree = create_tree_entries(model.local_branches)
+        local_tree = create_tree_entries(model.local_branches, self._name_filter)
         local_tree.basename = N_('Local')
         local = create_toplevel_item(local_tree, icon=icons.branch(), ellipsis=ellipsis)
 
-        remote_tree = create_tree_entries(model.remote_branches)
+        remote_tree = create_tree_entries(model.remote_branches, self._name_filter)
         remote_tree.basename = N_('Remote')
         remote = create_toplevel_item(
             remote_tree, icon=icons.branch(), ellipsis=ellipsis
         )
 
-        tags_tree = create_tree_entries(model.tags)
+        tags_tree = create_tree_entries(model.tags, self._name_filter)
         tags_tree.basename = N_('Tags')
         tags = create_toplevel_item(tags_tree, icon=icons.tag(), ellipsis=ellipsis)
 
@@ -571,7 +577,7 @@ class TreeEntry:
         self.children = children
 
 
-def create_tree_entries(names):
+def create_tree_entries(names, name_filter):
     """Create a nested tree structure with a single root TreeEntry.
 
     When names == ['xxx/abc', 'xxx/def'] the result will be::
@@ -602,12 +608,13 @@ def create_tree_entries(names):
     """
     # Phase 1: build a nested dictionary representing the intermediate
     # names in the branches, e.g. {'xxx': {'abc': {}, 'def': {}}}
-    tree_names = create_name_dict(names)
+    filtered_names = [name for name in names if name_filter in name]
+    tree_names = create_name_dict(filtered_names)
 
     # Loop over the names again, this time we'll create tree entries
     entries = {}
     root = TreeEntry(None, None, [])
-    for item in names:
+    for item in filtered_names:
         cur_names = tree_names
         cur_entries = entries
         tree = root
@@ -799,7 +806,7 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         self.text = text.LineEdit(parent=self, clear_button=True)
         self.text.setToolTip(hint)
         self.setFocusProxy(self.text)
-        self._filter = None
+        self._filter = ''
 
         self.main_layout = qtutils.hbox(defs.no_margin, defs.spacing, self.text)
         self.setLayout(self.main_layout)
@@ -811,20 +818,8 @@ class BranchesFilterWidget(QtWidgets.QWidget):
         value = get(self.text)
         if value == self._filter:
             return
-        self._apply_bold(self._filter, False)
         self._filter = value
-        if value:
-            self._apply_bold(value, True)
-
-    def _apply_bold(self, value, is_bold):
-        match = Qt.MatchContains | Qt.MatchRecursive
-        children = self.tree.findItems(value, match)
-
-        for child in children:
-            if child.childCount() == 0:
-                font = child.font(0)
-                font.setBold(is_bold)
-                child.setFont(0, font)
+        self.tree.set_name_filter(value)
 
 
 def _set_upstream_branch(context, branch, upstream_branch, parent):

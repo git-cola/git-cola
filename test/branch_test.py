@@ -12,7 +12,7 @@ def test_create_tree_entries():
         'cat/def',
         'xyz/xyz',
     ]
-    root = branch.create_tree_entries(names)
+    root = branch.create_tree_entries(names, '')
     expect = 3
     actual = len(root.children)
     assert expect == actual
@@ -88,6 +88,62 @@ def test_create_tree_entries():
     assert expect == actual
 
 
+def test_create_tree_entries_with_filter():
+    """Test the filtering of branches by name"""
+    names = [
+        'qqq/ttt',
+        'abc',
+        'cat/abc',
+        'cat/def',
+        'xyz/xyz',
+    ]
+    root = branch.create_tree_entries(names, 'abc')
+    expect = 2  # abc and cat/abc
+    actual = len(root.children)
+    assert expect == actual
+
+    # 'cat'
+    cat = root.children[1]
+    expect = 'cat'
+    actual = 'cat'
+    assert expect == actual
+    assert cat.refname is None
+    expect = 1  # cat/abc
+    actual = len(cat.children)
+    assert expect == actual
+    # 'cat/abc'
+    cat_abc = cat.children[0]
+    expect = 'abc'
+    actual = cat_abc.basename
+    assert expect == actual
+    expect = 'cat/abc'
+    actual = cat_abc.refname
+    assert expect == actual
+
+    # 'cat/def' is the only match.
+    root = branch.create_tree_entries(names, 'def')
+    expect = 1
+    actual = len(root.children)
+    assert expect == actual
+    # 'cat' is the parent
+    cat = root.children[0]
+    assert cat.refname is None
+    expect = 'cat'
+    actual = cat.basename
+    assert expect == actual
+    # 'cat/def' is the only child.
+    expect = 1
+    actual = len(cat.children)
+    assert expect == actual
+    cat_def = cat.children[0]
+    expect = 'cat/def'
+    actual = cat_def.refname
+    assert expect == actual
+    expect = 'def'
+    actual = cat_def.basename
+    assert expect == actual
+
+
 def test_create_name_dict():
     """Test transforming unix path-like names into a nested dict"""
     branches = [
@@ -113,7 +169,7 @@ def test_create_toplevel_item():
         'child_2/child_2_1',
         'child_2/child_2_2',
     ]
-    tree = branch.create_tree_entries(names)
+    tree = branch.create_tree_entries(names, '')
     tree.basename = 'top'
     top = branch.create_toplevel_item(tree)
 

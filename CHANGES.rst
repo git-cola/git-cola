@@ -11,6 +11,11 @@ Usability, bells and whistles
 * The `rebase.updateRefs` configuration can now be configured through the
   "Update stacked branches/refs when rebasing" checkbox in the settings.
 
+* The branches tool would previously make its branches and tags bold when text was input
+  into its filter field. This behavior has been changed so that the branches and tags
+  are now filtered so that only the matching branches and tags are displayed.
+  (`#1457 <https://github.com/git-cola/git-cola/issues/1457>`_)
+
 Fixes
 -----
 * The commit message length warning was not being updated in some scenarios.
