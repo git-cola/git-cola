@@ -58,6 +58,7 @@ Thanks
 * Christopher Meng
 * Clément Pit--Claudel
 * Constantine Grantcharov
+* Daniel Dunn
 * Daniel Fahlke
 * Daniel Jay Haskin
 * Daniel Harding
