@@ -481,8 +481,8 @@ class PreferencesView(standard.Dialog):
 
         self.tab_bar = QtWidgets.QTabBar()
         self.tab_bar.setDrawBase(False)
-        self.tab_bar.addTab(N_('All Repositories'))
         self.tab_bar.addTab(N_('Current Repository'))
+        self.tab_bar.addTab(N_('All Repositories'))
         self.tab_bar.addTab(N_('Settings'))
         self.tab_bar.addTab(N_('Appearance'))
 
@@ -493,8 +493,8 @@ class PreferencesView(standard.Dialog):
         self.appearance = AppearanceWidget(self.appearance_form, self)
 
         self.stack_widget = QtWidgets.QStackedWidget()
-        self.stack_widget.addWidget(self.user_form)
         self.stack_widget.addWidget(self.repo_form)
+        self.stack_widget.addWidget(self.user_form)
         self.stack_widget.addWidget(self.options_form)
         self.stack_widget.addWidget(self.appearance)
 
@@ -506,9 +506,9 @@ class PreferencesView(standard.Dialog):
         # If the user already has the user.email and user.name configured then default
         # to editing the current repo's config instead of the user-wide settings.
         if self.context.cfg.get('user.name') and self.context.cfg.get('user.email'):
-            index = 1
-        else:
             index = 0
+        else:
+            index = 1
         self.stack_widget.setCurrentIndex(index)
         self.tab_bar.setCurrentIndex(index)
 
