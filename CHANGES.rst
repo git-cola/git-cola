@@ -3,6 +3,12 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* Most users will now default to editing the per-repo config by default when opening the
+  settings dialog. New users that do not have the ``user.name`` and ``user.email`` settings
+  configured will continue default to editing the global user settings by default, which
+  was previously the default behavior for all users.
+  (`#1460 <https://github.com/git-cola/git-cola/issues/1460>`_)
+
 * The rebase tool now honors the `rebase.updateRefs` git configuration.
   The tool will only prompt you whether or not to update stacked branches / refs
   when this configuration is unset.

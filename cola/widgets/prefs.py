@@ -503,6 +503,14 @@ class PreferencesView(standard.Dialog):
         self.button_layout = qtutils.hbox(
             defs.no_margin, defs.spacing, qtutils.STRETCH, self.close_button
         )
+        # If the user already has the user.email and user.name configured then default
+        # to editing the current repo's config instead of the user-wide settings.
+        if self.context.cfg.get('user.name') and self.context.cfg.get('user.email'):
+            index = 1
+        else:
+            index = 0
+        self.stack_widget.setCurrentIndex(index)
+        self.tab_bar.setCurrentIndex(index)
 
         self.main_layout = qtutils.vbox(
             defs.margin,
@@ -519,7 +527,7 @@ class PreferencesView(standard.Dialog):
         qtutils.connect_button(self.close_button, self.accept)
         qtutils.add_close_action(self)
 
-        self.update_widget(0)
+        self.update_widget(index)
 
     def update_widget(self, idx):
         widget = self.stack_widget.widget(idx)
