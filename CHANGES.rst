@@ -22,6 +22,10 @@ Usability, bells and whistles
   are now filtered so that only the matching branches and tags are displayed.
   (`#1457 <https://github.com/git-cola/git-cola/issues/1457>`_)
 
+* The value of the `Force` checkbox, which causes ``git push --force`` to be used in the `Push` tool,
+  now persists across sessions.
+  (`#1461 <https://github.com/git-cola/git-cola/issues/1461>`_)
+
 Fixes
 -----
 * The commit message length warning was not being updated in some scenarios.

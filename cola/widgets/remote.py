@@ -948,6 +948,7 @@ class Push(RemoteActionDialog):
     def export_state(self):
         """Export persistent settings"""
         state = RemoteActionDialog.export_state(self)
+        state['force'] = get(self.force_checkbox)
         state['prompt'] = get(self.prompt_checkbox)
         state['tags'] = get(self.tags_checkbox)
         return state
@@ -955,6 +956,9 @@ class Push(RemoteActionDialog):
     def apply_state(self, state):
         """Apply persistent settings"""
         result = RemoteActionDialog.apply_state(self, state)
+        # Restore the "force" checkbox
+        force = bool(state.get('force', False))
+        self.force_checkbox.setChecked(force)
         # Restore the "prompt on creation" checkbox
         prompt = bool(state.get('prompt', True))
         self.prompt_checkbox.setChecked(prompt)
