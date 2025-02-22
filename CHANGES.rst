@@ -26,6 +26,9 @@ Usability, bells and whistles
   now persists across sessions.
   (`#1461 <https://github.com/git-cola/git-cola/issues/1461>`_)
 
+* The push dialog will now prompt when creating new remote branches when the
+  local branch name does not match the new remote branch name.
+
 Fixes
 -----
 * The commit message length warning was not being updated in some scenarios.

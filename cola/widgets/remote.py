@@ -764,8 +764,11 @@ class RemoteActionDialog(standard.Dialog):
         remote_branch = self.remote_branch.text()
         local_branch = self.local_branch.text()
 
-        if action == PUSH and not remote_branch:
-            branch = local_branch
+        if action == PUSH:
+            if remote_branch:
+                branch = remote_branch
+            else:
+                branch = local_branch
             candidate = f'{remote}/{branch}'
             prompt = get(self.prompt_checkbox)
 
