@@ -451,12 +451,7 @@ class MainModel(QtCore.QObject):
         self.update_refs()
         return result
 
-    def push(self, remote, remote_branch='', local_branch='', **opts):
-        # Swap the branches in push mode (reverse of fetch)
-        opts.update({
-            'local_branch': remote_branch,
-            'remote_branch': local_branch,
-        })
+    def push(self, remote, **opts):
         result = run_remote_action(self.context, self.git.push, remote, PUSH, **opts)
         self.update_refs()
         return result

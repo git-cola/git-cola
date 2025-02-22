@@ -31,6 +31,10 @@ Usability, bells and whistles
 
 Fixes
 -----
+* The push dialog was fixed to use the correct refspec arguments when pushing a local
+  branch into a differently-named remote branch.
+  (`#1462 <https://github.com/git-cola/git-cola/issues/1462>`_)
+
 * The commit message length warning was not being updated in some scenarios.
   (`#1459 <https://github.com/git-cola/git-cola/issues/1459>`_)
 
