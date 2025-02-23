@@ -679,64 +679,62 @@ class CommitDateDialog(QtWidgets.QDialog):
         QtWidgets.QDialog.__init__(self, parent)
         slider_range = self.slider_range
         self.context = context
-        self._calendar_widget = calendar_widget = QtWidgets.QCalendarWidget()
-        self._time_widget = time_widget = QtWidgets.QTimeEdit()
-        time_widget.setDisplayFormat('hh:mm:ss AP')
+        self._calendar_widget = QtWidgets.QCalendarWidget()
+        self._time_widget = QtWidgets.QTimeEdit()
+        self._time_widget.setDisplayFormat('hh:mm:ss AP')
 
         # Horizontal slider moves the date and time backwards and forwards.
-        self._slider = slider = QtWidgets.QSlider(Qt.Horizontal)
-        slider.setRange(0, slider_range)  # Mapped from 00:00:00 to 23:59:59
+        self._slider = QtWidgets.QSlider(Qt.Horizontal)
+        self._slider.setRange(0, slider_range)  # Mapped from 00:00:00 to 23:59:59
 
-        self._tick_backward = tick_backward = qtutils.create_toolbutton_with_callback(
+        self._tick_backward = qtutils.create_toolbutton_with_callback(
             partial(self._adjust_slider, -1),
             '-',
             None,
             N_('Decrement'),
             repeat=True,
         )
-        self._tick_forward = tick_forward = qtutils.create_toolbutton_with_callback(
+        self._tick_forward = qtutils.create_toolbutton_with_callback(
             partial(self._adjust_slider, 1),
             '+',
             None,
             N_('Increment'),
             repeat=True,
         )
-        self._reset_to_commit = (
-            reset_to_commit
-        ) = qtutils.create_toolbutton_with_callback(
-            self._reset_commit_time,
+        self._reset_to_commit_time = qtutils.create_toolbutton_with_callback(
+            self._reset_time_to_latest_commit,
             None,
             icons.sync(),
             N_('Reset time to latest commit'),
         )
 
-        cancel_button = QtWidgets.QPushButton(N_('Cancel'))
-        cancel_button.setIcon(icons.close())
+        self._cancel_button = QtWidgets.QPushButton(N_('Cancel'))
+        self._cancel_button.setIcon(icons.close())
 
-        set_commit_time_button = QtWidgets.QPushButton(N_('Set Date and Time'))
-        set_commit_time_button.setDefault(True)
-        set_commit_time_button.setIcon(icons.ok())
+        self._set_commit_time_button = QtWidgets.QPushButton(N_('Set Date and Time'))
+        self._set_commit_time_button.setDefault(True)
+        self._set_commit_time_button.setIcon(icons.ok())
 
         button_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            cancel_button,
+            self._cancel_button,
             qtutils.STRETCH,
-            set_commit_time_button,
+            self._set_commit_time_button,
         )
         slider_layout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
-            tick_backward,
-            slider,
-            tick_forward,
-            reset_to_commit,
-            time_widget,
+            self._tick_backward,
+            self._slider,
+            self._tick_forward,
+            self._reset_to_commit_time,
+            self._time_widget,
         )
         layout = qtutils.vbox(
             defs.small_margin,
             defs.spacing,
-            calendar_widget,
+            self._calendar_widget,
             slider_layout,
             defs.button_spacing,
             button_layout,
@@ -747,8 +745,8 @@ class CommitDateDialog(QtWidgets.QDialog):
 
         if commit_datetime is None:
             commit_datetime = self.tick_time(_get_latest_commit_datetime(context))
-        time_widget.setTime(commit_datetime.time())
-        calendar_widget.setSelectedDate(commit_datetime.date())
+        self._time_widget.setTime(commit_datetime.time())
+        self._calendar_widget.setSelectedDate(commit_datetime.date())
         self._update_slider_from_datetime(commit_datetime)
 
         self._right_action = qtutils.add_action(
@@ -758,12 +756,12 @@ class CommitDateDialog(QtWidgets.QDialog):
             self, N_('Decrement'), partial(self._adjust_slider, -1), hotkeys.CTRL_LEFT
         )
 
-        time_widget.timeChanged.connect(self._update_slider_from_time_signal)
-        slider.valueChanged.connect(self._update_time_from_slider)
-        calendar_widget.activated.connect(lambda _: self.accept())
+        self._time_widget.timeChanged.connect(self._update_slider_from_time_signal)
+        self._slider.valueChanged.connect(self._update_time_from_slider)
+        self._calendar_widget.activated.connect(lambda _: self.accept())
 
-        cancel_button.clicked.connect(self.reject)
-        set_commit_time_button.clicked.connect(self.accept)
+        self._cancel_button.clicked.connect(self.reject)
+        self._set_commit_time_button.clicked.connect(self.accept)
 
     @classmethod
     def tick_time(cls, commit_datetime):
@@ -803,9 +801,8 @@ class CommitDateDialog(QtWidgets.QDialog):
         delta = datetime.timedelta(seconds=int(ratio * seconds_range))
         midnight = datetime.datetime(1999, 12, 31)
         new_time = (midnight + delta).time()
-        time_widget = self._time_widget
-        with qtutils.BlockSignals(time_widget):
-            time_widget.setTime(new_time)
+        with qtutils.BlockSignals(self._time_widget):
+            self._time_widget.setTime(new_time)
 
     def _adjust_slider(self, amount):
         """Adjust the slider forward or backwards"""
@@ -833,7 +830,7 @@ class CommitDateDialog(QtWidgets.QDialog):
         with qtutils.BlockSignals(self._slider):
             self._slider.setValue(value)
 
-    def _reset_commit_time(self):
+    def _reset_time_to_latest_commit(self):
         """Reset the commit time to match the most recent commit"""
         commit_datetime = _get_latest_commit_datetime(self.context)
         with qtutils.BlockSignals(self._time_widget):
