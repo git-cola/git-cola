@@ -707,6 +707,12 @@ class CommitDateDialog(QtWidgets.QDialog):
             icons.sync(),
             N_('Reset time to latest commit'),
         )
+        self._reset_to_current_time = qtutils.create_toolbutton_with_callback(
+            lambda: self._reset_time_to_datetime(datetime.datetime.now()),
+            None,
+            icons.style_dialog_reset(),
+            N_('Reset time to current time'),
+        )
 
         self._cancel_button = QtWidgets.QPushButton(N_('Cancel'))
         self._cancel_button.setIcon(icons.close())
@@ -729,6 +735,7 @@ class CommitDateDialog(QtWidgets.QDialog):
             self._slider,
             self._tick_forward,
             self._reset_to_commit_time,
+            self._reset_to_current_time,
             self._time_widget,
         )
         layout = qtutils.vbox(
@@ -833,6 +840,10 @@ class CommitDateDialog(QtWidgets.QDialog):
     def _reset_time_to_latest_commit(self):
         """Reset the commit time to match the most recent commit"""
         commit_datetime = _get_latest_commit_datetime(self.context)
+        self._reset_time_to_datetime(commit_datetime)
+
+    def _reset_time_to_datetime(self, commit_datetime):
+        """Reset the commit time to match the specified datetime"""
         with qtutils.BlockSignals(self._time_widget):
             self._time_widget.setTime(commit_datetime.time())
         with qtutils.BlockSignals(self._calendar_widget):

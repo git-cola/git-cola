@@ -1,3 +1,8 @@
+Upcoming
+========
+* The commit date widget now has a button to reset the time and date to the current time
+  and date.
+
 .. _v4.12.0:
 
 v4.12.0
