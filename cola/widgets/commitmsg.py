@@ -129,11 +129,17 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.actions_menu.addSeparator()
 
         # Amend checkbox
-        self.amend_action = self.actions_menu.addAction(N_('Amend Last Commit'))
+        self.amend_action = qtutils.add_action_bool(
+            self,
+            N_('Amend Last Commit'),
+            cmds.run(cmds.AmendMode, context),
+            False,
+            *hotkeys.AMEND,
+        )
         self.amend_action.setIcon(icons.edit())
         self.amend_action.setCheckable(True)
-        self.amend_action.setShortcuts(hotkeys.AMEND)
         self.amend_action.setShortcutContext(Qt.ApplicationShortcut)
+        self.actions_menu.addAction(self.amend_action)
 
         # Commit Date
         self.commit_date_action = self.actions_menu.addAction(N_('Set Commit Date'))
@@ -192,15 +198,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setLayout(self.mainlayout)
 
         qtutils.connect_button(self.commit_button, self.commit)
-
-        # Broadcast the amend mode
-        qtutils.connect_action_bool(
-            self.amend_action, partial(cmds.run(cmds.AmendMode), context)
-        )
         qtutils.connect_action_bool(
             self.check_spelling_action, self.toggle_check_spelling
         )
-
         # Handle the one-off auto-wrapping
         qtutils.connect_action_bool(self.autowrap_action, self.set_linebreak)
 

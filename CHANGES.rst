@@ -1,7 +1,17 @@
 Upcoming
 ========
+
+Usability, bells and whistles
+-----------------------------
 * The commit date widget now has a button to reset the time and date to the current time
   and date.
+
+Fixes
+-----
+
+* The "Ambiguous shortcut warning" that could be triggered in rare scenarios when using
+  the Amend hotkey has been eliminated.
+
 
 .. _v4.12.0:
 

@@ -177,19 +177,6 @@ class MainView(standard.MainWindow):
         titlebar.add_title_widget(self.diffviewer.filename)
 
         # All Actions
-        add_action = qtutils.add_action
-        add_action_bool = qtutils.add_action_bool
-
-        self.commit_amend_action = add_action_bool(
-            self,
-            N_('Amend Last Commit'),
-            partial(cmds.do, cmds.AmendMode, context),
-            False,
-        )
-        self.commit_amend_action.setIcon(icons.edit())
-        self.commit_amend_action.setShortcuts(hotkeys.AMEND)
-        self.commit_amend_action.setShortcutContext(Qt.WidgetShortcut)
-
         # Make Cmd-M minimize the window on macOS.
         if utils.is_darwin():
             self.minimize_action = qtutils.add_action(
@@ -796,7 +783,7 @@ class MainView(standard.MainWindow):
         self.commit_menu = add_menu(N_('Commit@@verb'), self.menubar)
         self.commit_menu.setTitle(N_('Commit@@verb'))
         self.commit_menu.addAction(self.commiteditor.commit_action)
-        self.commit_menu.addAction(self.commit_amend_action)
+        self.commit_menu.addAction(self.commiteditor.amend_action)
         self.commit_menu.addAction(self.undo_commit_action)
         self.commit_menu.addSeparator()
         self.commit_menu.addAction(self.statuswidget.tree.process_selection_action)
@@ -1140,11 +1127,6 @@ class MainView(standard.MainWindow):
             )
 
         self.refresh_window_title()
-
-        checked = self.mode == self.model.mode_amend
-        with qtutils.BlockSignals(self.commit_amend_action):
-            self.commit_amend_action.setChecked(checked)
-
         self.commitdock.setToolTip(msg)
 
         self.actionswidget.set_mode(self.mode)
