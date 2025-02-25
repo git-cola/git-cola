@@ -331,7 +331,9 @@ class MainView(standard.MainWindow):
         )
         self.save_tarball_action.setIcon(icons.file_zip())
 
-        self.quit_action = qtutils.add_action(self, N_('Quit'), self.close, hotkeys.QUIT)
+        self.quit_action = qtutils.add_action(
+            self, N_('Quit'), self.close, hotkeys.QUIT
+        )
 
         self.grep_action = qtutils.add_action(
             self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP
@@ -746,9 +748,13 @@ class MainView(standard.MainWindow):
         )
         copy_commit_id.setIcon(icons.copy())
         self.addAction(copy_commit_id)
-        paste = qtutils.add_action(edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE)
+        paste = qtutils.add_action(
+            edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE
+        )
         paste.setIcon(icons.paste())
-        delete = qtutils.add_action(edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE)
+        delete = qtutils.add_action(
+            edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE
+        )
         delete.setIcon(icons.delete())
         edit_menu.addSeparator()
         select_all = qtutils.add_action(
