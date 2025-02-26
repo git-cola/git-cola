@@ -3,6 +3,9 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The status tool has been updated to launch editors with multiple files when invoking
+  its "Edit" action.
+
 * The commit date widget now has a button to reset the time and date to the current time
   and date.
 
