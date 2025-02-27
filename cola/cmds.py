@@ -1542,9 +1542,17 @@ class Edit(ContextCommand):
     def name():
         return N_('Launch Editor')
 
-    def __init__(self, context, filenames, line_number=None, background_editor=False):
+    def __init__(
+        self,
+        context,
+        filenames,
+        selected_filename=None,
+        line_number=None,
+        background_editor=False,
+    ):
         super().__init__(context)
         self.filenames = filenames
+        self.selected_filename = selected_filename
         self.line_number = line_number
         self.background_editor = background_editor
 
@@ -1552,38 +1560,43 @@ class Edit(ContextCommand):
         context = self.context
         if not self.filenames:
             return
-        filename = self.filenames[0]
-        if not core.exists(filename):
-            return
+
         if self.background_editor:
             editor = prefs.background_editor(context)
         else:
             editor = prefs.editor(context)
-        opts = []
-
-        if self.line_number is None:
-            opts = self.filenames
+        if self.line_number is None or self.selected_filename is None:
+            args = self.filenames
         else:
-            # Single-file w/ line-numbers (likely from grep)
+            args = []
+            # grep and diff are able to open files at specific line numbers.
+            # We only know the line number for the first file.
+            # Some editors can only apply the '+<line-number>' argument to one file.
+            filename = self.selected_filename
             editor_opts = {
-                '*vim*': [filename, '+%s' % self.line_number],
+                '*vim*': ['+%s' % self.line_number, filename],
                 '*emacs*': ['+%s' % self.line_number, filename],
                 '*textpad*': [f'{filename}({self.line_number},0)'],
                 '*notepad++*': ['-n%s' % self.line_number, filename],
                 '*subl*': [f'{filename}:{self.line_number}'],
             }
 
-            opts = self.filenames
-            for pattern, opt in editor_opts.items():
+            use_line_numbers = False
+            for pattern, opts in editor_opts.items():
                 if fnmatch(editor, pattern):
-                    opts = opt
+                    args.extend(opts)
+                    use_line_numbers = True
                     break
+            if use_line_numbers:
+                args.extend(fname for fname in self.filenames if fname != filename)
+            else:
+                args = self.filenames
 
         try:
-            core.fork(utils.shell_split(editor) + opts)
-        except (OSError, ValueError) as e:
+            core.fork(utils.shell_split(editor) + args)
+        except (OSError, ValueError) as err:
             message = N_('Cannot exec "%s": please configure your editor') % editor
-            _, details = utils.format_exception(e)
+            _, details = utils.format_exception(err)
             Interaction.critical(N_('Error Editing File'), message, details)
 
 
@@ -1656,6 +1669,13 @@ class LaunchEditorAtLine(LaunchEditor):
     def __init__(self, context):
         super().__init__(context)
         self.line_number = context.selection.line_number
+        # Ensure that the model's filename is present in self.filenames otherwise we
+        # will open a file that the user never requested. This constraint also ensures
+        # that the line number corresponds to the selected filename.
+        if context.model.filename in self.filenames:
+            self.selected_filename = context.model.filename
+        elif self.filenames:
+            self.selected_filename = self.filenames[0]
 
 
 class LoadCommitMessageFromFile(ContextCommand):
