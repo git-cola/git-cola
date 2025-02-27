@@ -132,7 +132,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.amend_action = qtutils.add_action_bool(
             self,
             N_('Amend Last Commit'),
-            cmds.run(cmds.AmendMode, context),
+            partial(cmds.run(cmds.AmendMode), context),
             False,
             *hotkeys.AMEND,
         )
