@@ -270,6 +270,11 @@ class SettingsFormWidget(FormWidget):
         self.textwidth = standard.SpinBox(maxi=150)
 
         self.editor = QtWidgets.QLineEdit()
+        self.editor.setToolTip(N_('The main GUI editor that must block until it exits'))
+        self.background_editor = QtWidgets.QLineEdit()
+        self.background_editor.setToolTip(
+            N_('A non-blocking GUI editor that is launched in the background')
+        )
         self.historybrowser = QtWidgets.QLineEdit()
         self.blameviewer = QtWidgets.QLineEdit()
         self.difftool = QtWidgets.QLineEdit()
@@ -301,6 +306,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Editor'), self.editor)
+        self.add_row(N_('Background Editor'), self.background_editor)
         self.add_row(N_('History Browser'), self.historybrowser)
         self.add_row(N_('Blame Viewer'), self.blameviewer)
         self.add_row(N_('Diff Tool'), self.difftool)
@@ -335,6 +341,10 @@ class SettingsFormWidget(FormWidget):
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
             prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
             prefs.EDITOR: (self.editor, fallback_editor()),
+            prefs.BACKGROUND_EDITOR: (
+                self.background_editor,
+                Defaults.background_editor,
+            ),
             prefs.HISTORY_BROWSER: (
                 self.historybrowser,
                 prefs.default_history_browser(),

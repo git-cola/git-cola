@@ -110,6 +110,7 @@ class Defaults:
     abbrev = 12
     autotemplate = False
     autodetect_proxy = True
+    background_editor = ''
     blame_viewer = 'git gui blame'
     block_cursor = True
     bold_headers = False
