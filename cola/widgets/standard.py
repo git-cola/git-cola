@@ -135,7 +135,14 @@ class WidgetMixin:
             width = defs.dialog_w
         if not height:
             height = defs.dialog_h
-        self.init_state(settings, self.resize_to_parent, parent, width, height)
+        self.init_state(
+            settings,
+            self.resize_to_parent,
+            parent,
+            width,
+            height,
+            use_parent_height=True,
+        )
 
     def init_state(self, settings, callback, *args, **kwargs):
         """Restore saved settings or set the initial location"""
@@ -143,9 +150,11 @@ class WidgetMixin:
             callback(*args, **kwargs)
             self.center()
 
-    def resize_to_parent(self, parent, w, h):
+    def resize_to_parent(self, parent, w, h, use_parent_height=True):
         """Set the initial size of the widget"""
-        width, height = qtutils.default_size(parent, w, h)
+        width, height = qtutils.default_size(
+            parent, w, h, use_parent_height=use_parent_height
+        )
         self.resize(width, height)
 
 
