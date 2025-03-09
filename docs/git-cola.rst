@@ -56,95 +56,120 @@ Show available sub-commands.
 SUB-COMMANDS
 ============
 
+Run ``git cola --help-commands`` to list all sub-commands.
+
+The following sub-commands can be launched directly from the command-line.
+For example, ``git cola diff`` will launch the ``diff`` sub-command.
+
 am
 --
 
-Apply patches.
+Apply patches. This sub-command is named after the ``git am`` command.
+``git cola am`` is an entry point for the ``File > Patches > Apply Patches...``
+main menu action.
 
 archive
 -------
 
-Export tarballs from Git.
+Export tarballs from Git. ``git cola archive`` is an entry point for the
+``File > Save As Tarball/Zip...`` main menu action.
 
 branch
 ------
 
-Create branches.
+Create branches. ``git cola branch`` is an entry point for the ``Branch > Create...``
+main menu action.
 
 browse
 ------
 
-Browse tracked files.
+Browse tracked files. ``git cola browse`` is an entry point for the
+``View > File Browser...`` main menu action.
 
 config
 ------
 
-Configure settings.
+Configure settings. ``git cola config`` is an entry point for the
+``File > Preferences`` main menu action.
 
 dag
 ---
 
-Start the `git dag` Git history browser.
+Start the ``git dag`` Git history browser. ``git cola dag`` is an entry point for the
+``View > DAG...`` main menu action and can also be launched as ``git dag`` command.
 
 diff
 ----
 
-Diff changed files.
+Diff changed files. ``git cola diff`` is an entry point for the ``Diff > Expression...``
+main menu action.
 
 fetch
 -----
 
-Fetch history from remote repositories.
+Fetch history from remote repositories. ``git cola fetch`` is an entry point for the
+``Actions > Fetch...`` main menu action.
 
 grep
 ----
 
-Use `git grep` to search for content.
+Use `git grep` to search for content. ``git cola grep`` is an entry point for the
+``Actions > Grep`` main menu action.
 
 merge
 -----
 
-Merge branches.
+Merge branches. ``git cola merge`` is an entry point for the ``Actions > Merge...``
+main menu action.
 
 pull
 ----
 
-Fetch and merge remote branches.
+Fetch and merge remote branches. ``git cola pull`` is an entry point for the
+``Actions > Pull...`` main menu action.
 
 push
 ----
 
-Push branches to remotes.
+Push branches to remotes. ``git cola push`` is an entry point for the
+``Actions > Push...`` main menu action.
 
 rebase
 ------
 
-Start an interactive rebase.
+Start an interactive rebase. ``git cola rebase`` is an entry point for the
+``Rebase > Start Interactive Rebase...`` main menu action.
 
 remote
 ------
 
-Create and edit remotes.
+Create and edit remotes. ``git cola remote`` is an entry point for the
+``File > Edit Remotes...`` main menu action.
 
 search
 ------
 
-Search for commits.
+Search for commits. ``git cola search`` is an entry point for the
+``Actions > Search...`` main menu action.
 
 stash
 -----
 
-Stash uncommitted modifications.
+Stash uncommitted modifications. ``git cola stash`` is an entry point for the
+``Actions > Stash...`` main menu action.
 
 tag
 ---
 
-Create tags.
+Create tags. ``git cola tag`` is an entry point for the ``Actions > Create Tag...``
+main menu action.
 
 version
 -------
 
-Print the `git cola` version.
+Print the Git Cola version. ``git cola version`` displays has options for printing
+the current version in different formats. Version details about Git Cola and its
+dependencies can also be found in the ``Help > About`` dialog's ``Version`` tab.
 
 
 CONFIGURE YOUR EDITOR
