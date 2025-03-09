@@ -1551,6 +1551,8 @@ class Edit(ContextCommand):
         background_editor=False,
     ):
         super().__init__(context)
+        if filenames and not selected_filename:
+            selected_filename = filenames[0]
         self.filenames = filenames
         self.selected_filename = selected_filename
         self.line_number = line_number
@@ -1674,8 +1676,6 @@ class LaunchEditorAtLine(LaunchEditor):
         # that the line number corresponds to the selected filename.
         if context.model.filename in self.filenames:
             self.selected_filename = context.model.filename
-        elif self.filenames:
-            self.selected_filename = self.filenames[0]
 
 
 class LoadCommitMessageFromFile(ContextCommand):
