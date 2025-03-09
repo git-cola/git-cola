@@ -4,122 +4,152 @@ git-cola
 
 SYNOPSIS
 ========
+
 ``git cola [options] [sub-command]``
 
 
 DESCRIPTION
 ===========
+
 Git Cola is a sleek and powerful Git GUI.
 
 
 OPTIONS
 =======
+
 ``--amend``
 -----------
+
 Start `git cola` in amend mode.
 
 ``--prompt``
 ------------
+
 Prompt for a Git repository.  Defaults to the current directory.
 
 ``-r, --repo <path>``
 ---------------------
+
 Open the Git repository at `<path>`.  Defaults to the current directory.
 
 ``-s, --status-filter <filter>``
 --------------------------------
+
 Apply the path filter to the status widget.
 
 ``--version``
 -------------
+
 Print the `git cola` version and exit.
 
 ``-h, --help``
 --------------
+
 Show usage and optional arguments.
 
 ``--help-commands``
 -------------------
+
 Show available sub-commands.
 
 
 SUB-COMMANDS
 ============
+
 am
 --
+
 Apply patches.
 
 archive
 -------
+
 Export tarballs from Git.
 
 branch
 ------
+
 Create branches.
 
 browse
 ------
+
 Browse tracked files.
 
 config
 ------
+
 Configure settings.
 
 dag
 ---
+
 Start the `git dag` Git history browser.
 
 diff
 ----
+
 Diff changed files.
 
 fetch
 -----
+
 Fetch history from remote repositories.
 
 grep
 ----
+
 Use `git grep` to search for content.
 
 merge
 -----
+
 Merge branches.
 
 pull
 ----
+
 Fetch and merge remote branches.
 
 push
 ----
+
 Push branches to remotes.
 
 rebase
 ------
+
 Start an interactive rebase.
 
 remote
 ------
+
 Create and edit remotes.
 
 search
 ------
+
 Search for commits.
 
 stash
 -----
+
 Stash uncommitted modifications.
 
 tag
 ---
+
 Create tags.
 
 version
 -------
+
 Print the `git cola` version.
 
 
 CONFIGURE YOUR EDITOR
 =====================
+
 The editor used by `Ctrl-e` is configured from the Preferences screen.
 
 The following environment variables are consulted when no editor is configured.
@@ -168,6 +198,7 @@ The following are some recommend editor configurations.
 
 KEYBOARD SHORTCUTS
 ==================
+
 `git cola` has many useful keyboard shortcuts.
 
 Many of `git cola`'s editors understand vim-style hotkeys, e.g. `{h,j,k,l}`
@@ -198,6 +229,7 @@ or by consulting the `git cola keyboard shortcuts reference <https://git-cola.gi
 
 TOOLS
 =====
+
 The `git cola` interface is composed of various cooperating tools.
 Double-clicking a tool opens it in its own subwindow.
 Dragging it around moves and places it within the main window.
@@ -219,6 +251,7 @@ The Commit tool can be focused with `Ctrl-l`.
 
 STATUS
 ======
+
 The `Status` tool provides a visual analog to the
 `git status <https://git-scm.com/docs/git-status>`_ command.
 
@@ -245,6 +278,7 @@ Additional actions can be performed using the right-click context menu.
 
 Drag and Drop
 -------------
+
 Files can be dragged from the `Status` tool onto other applications.
 
 Some terminals will treat a drag with multiple files by separating them with newlines,
@@ -259,6 +293,7 @@ need to ``export QT_QPA_PLATFORM=wayland`` in your environment.
 
 Actions
 -------
+
 Clicking the `Staged` folder shows a diffstat for the index.
 
 Clicking the `Modified` folder shows a diffstat for the worktree.
@@ -272,41 +307,50 @@ Different actions are available depending a file's status.
 
 Stage Selected
 ~~~~~~~~~~~~~~
+
 Add to the staging area using `git add <https://git-scm.com/docs/git-add>`_
 Marks unmerged files as resolved.
 
 Launch Editor
 ~~~~~~~~~~~~~
+
 Launches the configured visual text editor
 
 Launch Difftool
 ~~~~~~~~~~~~~~~
+
 Visualize changes using `git difftool`.
 
 Revert Unstaged Edits
 ~~~~~~~~~~~~~~~~~~~~~
+
 Reverts unstaged content by checking out selected paths
 from the index/staging area
 
 Revert Uncommitted Edits
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
 Throws away uncommitted edits
 
 Unstage Selected
 ~~~~~~~~~~~~~~~~
+
 Remove from the index/staging area with
 `git reset <https://git-scm.com/docs/git-reset>`_
 
 Launch Merge Tool
 ~~~~~~~~~~~~~~~~~
+
 Resolve conflicts using `git mergetool <https://git-scm.com/docs/git-mergetool>`_.
 
 Delete File(s)
 ~~~~~~~~~~~~~~
+
 Delete untracked files from the filesystem.
 
 Add to .gitignore
 ~~~~~~~~~~~~~~~~~
+
 Adds untracked files to to the .gitignore file.
 
 
@@ -314,6 +358,7 @@ Adds untracked files to to the .gitignore file.
 
 DIFF
 ====
+
 The diff viewer/editor displays diffs for selected files.
 Additions are shown in green and removals are displayed in light red.
 Extraneous whitespace is shown with a pure-red background.
@@ -327,6 +372,7 @@ when copying diffs using the "Copy Diff" action.
 
 Staging content for commit
 --------------------------
+
 The ``@@`` patterns denote a new diff hunk.  Selecting lines of diff
 and using the `Stage Selected Lines` command will stage just the selected
 lines.  Clicking within a diff hunk and selecting `Stage Diff Hunk` stages the
@@ -338,6 +384,7 @@ viewing diffs for staged content.
 
 Diff Against Commit (Diff Mode)
 -------------------------------
+
 *Diff Mode* allows you to selectively unstage and revert edits from arbitrary commits
 so that you can bring these edits back into your worktree.
 
@@ -351,6 +398,7 @@ an empty area in the `Status` tool.
 
 COMMIT MESSAGE EDITOR
 =====================
+
 The commit message editor is a simple text widget
 for entering commit messages.
 
@@ -369,6 +417,7 @@ staged content.
 
 Sign Off
 --------
+
 The `Sign Off` button adds a sign-off to the bottom of the commit message::
 
     Signed-off-by: A. U. Thor <a.u.thor@example.com>
@@ -382,6 +431,7 @@ attestations in their contribution process.
 
 Commit
 ------
+
 The commit button runs
 `git commit <https://git-scm.com/docs/git-commit>`_.
 The contents of the commit message editor is provided as the commit message.
@@ -391,6 +441,7 @@ as running ``git commit`` on the command-line.
 
 Line and Column Display
 -----------------------
+
 The current line and column number is displayed by the editor.
 E.g. a ``5,0`` display means that the cursor is located at
 line five, column zero.
@@ -412,6 +463,7 @@ so please be mindful when writing commit messages.
 
 Amend Last Commit
 -----------------
+
 Clicking on `Amend Last Commit` makes `git cola` amend the previous commit
 instead of creating a new one.  `git cola` loads the previous commit message
 into the commit message editor when this option is selected.
@@ -420,6 +472,7 @@ The `Status` tool will display all of the changes for the amended commit.
 
 Create Signed Commit
 --------------------
+
 Tell `git commit` and `git merge` to sign commits using GPG.
 
 Using this option is equivalent to passing the ``--gpg-sign`` option to
@@ -431,6 +484,7 @@ configuration variable.
 
 Prepare Commit Message
 ----------------------
+
 The ``Commit -> Prepare Commit Message`` action or `Ctrl-Shift-Return` keyboard shortcut
 runs the `cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
 This is a `git cola`-specific hook that takes the same parameters
@@ -448,6 +502,7 @@ across all repositories.
 
 BRANCHES
 ========
+
 The `Branches` tool provides a visual tree to navigate branches.
 The tree has three main sections: `Local Branches`, `Remote Branches` and `Tags`.
 Branches are grouped by their name divided by the character ``/``.
@@ -471,47 +526,56 @@ arrow will be displayed alongside a number showing the number of commits.
 
 Actions
 -------
+
 Various actions are available through the right-click context menu.
 Different actions are available depending on the selected branch's status.
 
 Checkout
 ~~~~~~~~
+
 The checkout action runs
 `git checkout [<branchname>] <https://git-scm.com/docs/git-checkout>`_.
 
 Merge into current branch
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
 The merge action runs
 `git merge --no-commit [<branchname>] <https://git-scm.com/docs/git-merge>`_.
 
 Pull
 ~~~~
+
 The pull action runs
 `git pull --no-ff [<remote>] [<branchname>] <https://git-scm.com/docs/git-pull>`_.
 
 Push
 ~~~~
+
 The push action runs
 `git push [<remote>] [<branchname>] <https://git-scm.com/docs/git-push>`_.
 
 Rename Branch
 ~~~~~~~~~~~~~
+
 The rename branch action runs
 `git branch -M [<branchname>] <https://git-scm.com/docs/git-push>`_.
 
 Delete Branch
 ~~~~~~~~~~~~~
+
 The delete branch branch action runs
 `git branch -D [<branchname>] <https://git-scm.com/docs/git-branch>`_.
 
 Delete Remote Branch
 ~~~~~~~~~~~~~~~~~~~~
+
 The remote branch action runs
 `git push --delete [<remote>] [<branchname>] <https://git-scm.com/docs/git-push>`_.
 
 
 APPLY PATCHES
 =============
+
 Use the ``File -> Apply Patches`` menu item to begin applying patches.
 
 Dragging and dropping patches onto the `git cola` interface
@@ -531,6 +595,7 @@ patch sets into alphanumerically-sorted directories.
 
 CUSTOM WINDOW SETTINGS
 ======================
+
 `git cola` remembers modifications to the layout and arrangement
 of tools within the `git cola` interface.  Changes are saved
 and restored at application shutdown/startup.
@@ -541,6 +606,7 @@ the `Save Window Settings` option in the `git cola` preferences.
 
 DARK MODE AND WINDOW MANAGER THEMES
 ===================================
+
 Git Cola contains a ``default`` theme which follows the current Qt style and a
 handful of built-in color themes.  See :ref:`cola_theme` for more details.
 
@@ -610,6 +676,7 @@ Please see `#760 <https://github.com/git-cola/git-cola/issues/760>`_ for more de
 
 Custom Themes
 -------------
+
 To create your own custom theme for Git Cola just create a QSS file and put it in
 ``~/.config/themes/``. You can add as many files as you want. Each file will become
 an option in ``Menu -> File -> Preferences -> Appearance -> GUI theme``.
@@ -619,10 +686,12 @@ Some examples can be found here `Qt Style Sheets Examples <https://doc.qt.io/qt-
 
 CONFIGURATION VARIABLES
 =======================
+
 These variables can be set using `git config` or from the settings.
 
 cola.autodetectproxy
 --------------------
+
 Set to `false` to disable auto-configuration of HTTP proxy settings based on
 the configured Gnome and KDE Desktop Environment proxy settings.
 The core Git `http.proxy` configuration overrides this value.
@@ -630,12 +699,14 @@ Defaults to `true`.
 
 cola.autocompletepaths
 ----------------------
+
 Set to `false` to disable auto-completion of filenames in completion widgets.
 This can speed up operations when working in large repositories.
 Defaults to `true`.
 
 cola.autoloadCommitTemplate
 ---------------------------
+
 Set to `true` to automatically load the commit template in the commit message
 editor If the commit.template variable has not been configured, raise the
 corresponding error.
@@ -643,27 +714,32 @@ Defaults to `false`.
 
 cola.blameviewer
 ----------------
+
 The command used to blame files.  Defaults to `git gui blame`.
 
 cola.blockcursor
 ----------------
+
 Whether to use a "block" cursor in diff editors. The block cursor is easier to
 see compared to a line cursor. Set to `false` to use a thin "line" cursor.
 Defaults to `true`.
 
 cola.browserdockable
 --------------------
+
 Whether to create a dock widget with the `Browser` tool.
 Defaults to `false` to speedup startup time.
 
 cola.checkconflicts
 -------------------
+
 Inspect unmerged files for conflict markers before staging them.
 This feature helps prevent accidental staging of unresolved merge conflicts.
 Defaults to `true`.
 
 cola.defaultrepo
 ----------------
+
 `git cola`, when run outside of a Git repository, prompts the user for a
 repository.  Set `cola.defaultrepo` to the path of a Git repository to make
 `git cola` attempt to use that repository before falling back to prompting
@@ -671,6 +747,7 @@ the user for a repository.
 
 cola.dictionary
 ---------------
+
 Specifies an additional dictionary for `git cola` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
 
@@ -684,6 +761,7 @@ Dictionary files are newline-separated and contain one word per line.
 
 cola.expandtab
 --------------
+
 Expand tabs into spaces in the commit message editor.  When set to `true`,
 `git cola` will insert a configurable number of spaces when tab is pressed.
 The number of spaces is determined by `cola.tabwidth`.
@@ -691,6 +769,7 @@ Defaults to `false`.
 
 cola.gravatar
 -------------
+
 Use the `gravatar.com` service to lookup icons for author emails.
 Gravatar icons work by sending an MD5 hash of an author's email to `gravatar.com`
 when requesting an icon. Warning: this feature can leak information.
@@ -699,6 +778,7 @@ Defaults to `true`.
 
 cola.fileattributes
 -------------------
+
 Enables per-file gitattributes encoding and binary file support.
 This tells `git cola` to honor the configured encoding when displaying
 and applying diffs.
@@ -714,10 +794,12 @@ Binary files are displayed using a hex-dump display.
 
 cola.fontdiff
 -------------
+
 Specifies the font to use for `git cola`'s diff display.
 
 cola.hidpi
 ----------
+
 Specifies the High DPI displays scale factor. Set `0` to automatically scaled.
 Setting value between 0 and 1 is undefined.
 This option requires at least Qt 5.6 to work.
@@ -728,6 +810,7 @@ for more information.
 
 cola.icontheme
 --------------
+
 Specifies the icon themes to use throughout `git cola`. The theme specified
 must be the name of the subdirectory containing the icons, which in turn must
 be placed in the inside the main "icons" directory in `git cola`'s
@@ -751,6 +834,7 @@ to the built-in icons for the remainder.
 
 cola.imagediff.[extension]
 --------------------------
+
 Enable image diffs for the specified file extension.  For example, configuring
 `git config --global cola.imagediff.svg false` will disable use of the visual
 image diff for `.svg` files in all repos until is is explicitly toggled on.
@@ -758,18 +842,21 @@ Defaults to `true`.
 
 cola.inotify
 ------------
+
 Set to `false` to disable file system change monitoring.  Defaults to `true`,
 but also requires either Linux with inotify support or Windows with `pywin32`
 installed for file system change monitoring to actually function.
 
 cola.refreshonfocus
 -------------------
+
 Set to `true` to automatically refresh when `git cola` gains focus.  Defaults
 to `false` because this can cause a pause whenever switching to `git cola` from
 another application.
 
 cola.linebreak
 --------------
+
 Whether to automatically break long lines while editing commit messages.
 Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
@@ -777,6 +864,7 @@ editor's options sub-menu.
 
 cola.logdate
 ------------
+
 Set the default date-time mode for the DAG display. This value is
 passed to `git log --date=<format>`.
 See `git log(1) <https://git-scm.com/docs/git-log#Documentation/git-log.txt---dateltformatgt>`_
@@ -784,24 +872,28 @@ for more details.
 
 cola.maxrecent
 --------------
+
 `git cola` caps the number of recent repositories to avoid cluttering
 the start and recent repositories menu.  The maximum number of repositories to
 remember is controlled by `cola.maxrecent` and defaults to `8`.
 
 cola.mousezoom
 --------------
+
 Controls whether zooming text using Ctrl + MouseWheel scroll is enabled.
 Set to ``false`` to disable scrolling with the mouse wheel.
 Defaults to ``true``.
 
 cola.notifyonpush
 -----------------
+
 Enable desktop notifications when commits are pushed using the "Push" dialog.
 Set to ``true`` to enable desktop notifications.
 Defaults to ``false``.
 
 cola.dragencoding
 -----------------
+
 `git cola` encodes paths dragged from its widgets into `utf-16` when adding
 them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
 `utf-16` is used to make `gnome-terminal` see the right paths, but other
@@ -810,23 +902,27 @@ expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
 
 cola.readsize
 -------------
+
 `git cola` avoids reading large binary untracked files.
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
 
 cola.resizebrowsercolumns
 -------------------------
+
 `git cola` will automatically resize the file browser columns as folders are
 expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
 
 cola.patchesdirectory
 ---------------------
+
 The default directory to use when exporting patches. Relative paths are treated
 as being relative to the current repository. Absolute paths are used as-is.
 Defaults to `patches`.
 
 cola.safemode
 -------------
+
 The "Stage" button in the `git cola` Actions panel stages all files when it is
 activated and no files are selected.  This can be problematic if it is
 accidentally triggered after carefully preparing the index with staged
@@ -836,22 +932,26 @@ selection.  Defaults to `false`.
 
 cola.savewindowsettings
 -----------------------
+
 `git cola` will remember its window settings when set to `true`.
 Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
 
 cola.showpath
 -------------
+
 `git cola` displays the absolute path of the repository in the window title.
 This can be disabled by setting `cola.showpath` to `false`.
 Defaults to `true`.
 
 cola.signcommits
 ----------------
+
 `git cola` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
 cola.startupmode
 ----------------
+
 Control how the list of repositories is displayed in the startup dialog.
 Set to `list` to view the list of repositories as a list, or `folder` to view
 the list of repositories as a collection of folder icons.
@@ -859,27 +959,32 @@ Defaults to `list`.
 
 cola.statusindent
 -----------------
+
 Set to `true` to indent files in the Status widget.  Files in the `Staged`,
 `Modified`, etc. categories will be grouped in a tree-like structure.
 Defaults to `false`.
 
 cola.statusshowtotals
 ---------------------
+
 Set to `true` to display files counts in the Status widget's category titles.
 Defaults to `false`.
 
 cola.sync
 ---------
+
 Set to `false` to disable calling `os.fdatasync()`  / `os.fdata()` when saving
 settings. Defaults to `true`, which means that these functions are called when windows
 are closed and their settings are saved.
 
 cola.tabwidth
 -------------
+
 The number of columns occupied by a tab character.  Defaults to 8.
 
 cola.terminal
 -------------
+
 The command to use when launching commands within a graphical terminal.
 
 `cola.terminal` defaults to `xterm -e` when unset.
@@ -895,6 +1000,7 @@ accordingly.
 
 cola.terminalshellquote
 -----------------------
+
 Some terminal require that the command string get passed as a string.
 For example, ``xfce4-terminal -e "git difftool"`` requires shell quoting,
 whereas ``gnome-terminal -- git difftool`` does not.
@@ -919,6 +1025,7 @@ The table below shows the builtin configuration.
 
 cola.textwidth
 --------------
+
 The number of columns used for line wrapping.
 Tabs are counted according to `cola.tabwidth`.
 
@@ -926,6 +1033,7 @@ Tabs are counted according to `cola.tabwidth`.
 
 cola.theme
 ----------
+
 Specifies the GUI theme to use throughout `git cola`. The theme specified
 must be one of the following values:
 
@@ -950,6 +1058,7 @@ command line.
 
 cola.turbo
 ----------
+
 Set to `true` to enable "turbo" mode.  "Turbo" mode disables some
 features that can slow things down when operating on huge repositories.
 "Turbo" mode will skip loading Git commit messages, author details, status
@@ -958,6 +1067,7 @@ Defaults to `false`.
 
 cola.color.text
 ---------------
+
 The default diff text color, in hexadecimal #RRGGBB notation.
 Defaults to "#030303"::
 
@@ -965,6 +1075,7 @@ Defaults to "#030303"::
 
 cola.color.add
 --------------
+
 The default diff "add" background color, in hexadecimal #RRGGBB notation.
 Defaults to "#d2ffe4"::
 
@@ -972,6 +1083,7 @@ Defaults to "#d2ffe4"::
 
 cola.color.remove
 -----------------
+
 The default diff "remove" background color, in hexadecimal #RRGGBB notation.
 Defaults to "#fee0e4"::
 
@@ -979,6 +1091,7 @@ Defaults to "#fee0e4"::
 
 cola.color.header
 -----------------
+
 The default diff header text color, in hexadecimal #RRGGBB notation.
 Defaults to "#bbbbbb"::
 
@@ -986,6 +1099,7 @@ Defaults to "#bbbbbb"::
 
 cola.updateindex
 ----------------
+
 Git's index is refreshed during application startup. You can disable this behavior by
 configuring ``cola.updateindex`` to ``false``. This is useful in some scenarios such as
 when accessing Git repositories over a Samba share. If you have this enabled then you
@@ -994,6 +1108,7 @@ Defaults to ``true``.
 
 commit.cleanup
 --------------
+
 Configure whether commit messages should be stripped of whitespace and comments.
 
 Valid values are ``strip``, ``whitespace``, ``verbatim``, ``scissors`` or ``default``.
@@ -1029,6 +1144,7 @@ for more details.
 
 core.commentChar
 ----------------
+
 Commit messages can contain comments that start with this character.
 Defaults to ``#``.
 
@@ -1038,6 +1154,7 @@ for more details.
 
 core.hooksPath
 --------------
+
 Hooks are programs you can place in a hooks directory to trigger actions at
 certain points in git’s execution. Hooks that don’t have the executable bit
 set are ignored.
@@ -1053,39 +1170,47 @@ for more details.
 
 gui.diffcontext
 ---------------
+
 The number of diff context lines to display.
 
 gui.displayuntracked
 --------------------
+
 `git cola` avoids showing untracked files when set to `false`.
 
 gui.editor
 ----------
+
 The default text editor to use is defined in `gui.editor`.
 The config variable overrides the VISUAL environment variable.
 Defaults to `gvim -f -p`.
 
 gui.historybrowser
 ------------------
+
 The history browser to use when visualizing history.
 Defaults to `gitk`.
 
 diff.tool
 ---------
+
 The default diff tool to use.
 
 merge.tool
 ----------
+
 The default merge tool to use.
 
 user.email
 ----------
+
 Your email address to be recorded in any newly created commits.
 Can be overridden by the 'GIT_AUTHOR_EMAIL', 'GIT_COMMITTER_EMAIL', and
 'EMAIL' environment variables.
 
 user.name
 ---------
+
 Your full name to be recorded in any newly created commits.
 Can be overridden by the 'GIT_AUTHOR_NAME' and 'GIT_COMMITTER_NAME'
 environment variables.
@@ -1096,12 +1221,14 @@ ENVIRONMENT VARIABLES
 
 GIT_COLA_ICON_THEME
 -------------------
+
 When set in the environment, `GIT_COLA_ICON_THEME` overrides the
 theme specified in the `cola.icontheme` configuration.
 Read :ref:`cola_icontheme` for more details.
 
 GIT_COLA_SCALE
 --------------
+
 .. Important:: `GIT_COLA_SCALE` should not be used with newer versions of Qt.
 
     Set `QT_AUTO_SCREEN_SCALE_FACTOR` to `1` and Qt will automatically
@@ -1120,17 +1247,20 @@ Fonts are not scaled, as their size can already be set in the settings.
 
 GIT_COLA_TRACE
 --------------
+
 When defined, `git cola` logs `git` commands to stdout.
 When set to `full`, `git cola` also logs the exit status and output.
 When set to `trace`, `git cola` logs to the `Console` widget.
 
 VISUAL
 ------
+
 Specifies the default editor to use.
 This is ignored when the `gui.editor` configuration variable is defined.
 
 LANGUAGE SETTINGS
 =================
+
 `git cola` automatically detects your language and presents some
 translations when available.  This may not be desired, or you
 may want `git cola` to use a specific language.
@@ -1156,11 +1286,13 @@ fallback.::
 
 CUSTOM GUI ACTIONS
 ==================
+
 `git cola` allows you to define custom GUI actions by setting `git config`
 variables.  The "name" of the command appears in the "Actions" menu.
 
 guitool.<name>.cmd
 ------------------
+
 Specifies the shell command line to execute when the corresponding item of the
 Tools menu is invoked. This option is mandatory for every tool. The command is
 executed from the root of the working directory, and in the environment it
@@ -1179,30 +1311,36 @@ sub-menu.
 
 guitool.<name>.background
 -------------------------
+
 Run the command in the background (similar to editing and difftool actions).
 This avoids blocking the GUI.  Setting `background` to `true` implies
 `noconsole` and `norescan`.
 
 guitool.<name>.needsfile
 ------------------------
+
 Run the tool only if a diff is selected in the GUI. It guarantees that
 FILENAME is not empty.
 
 guitool.<name>.noconsole
 ------------------------
+
 Run the command silently, without creating a window to display its output.
 
 guitool.<name>.norescan
 -----------------------
+
 Don’t rescan the working directory for changes after the tool finishes
 execution.
 
 guitool.<name>.confirm
 ----------------------
+
 Show a confirmation dialog before actually running the tool.
 
 guitool.<name>.argprompt
 ------------------------
+
 Request a string argument from the user, and pass it to the tool through the
 ARGS environment variable. Since requesting an argument implies confirmation,
 the confirm option has no effect if this is enabled. If the option is set to
@@ -1211,28 +1349,33 @@ exact value of the variable is used.
 
 guitool.<name>.revprompt
 ------------------------
+
 Request a single valid revision from the user, and set the REVISION
 environment variable. In other aspects this option is similar to argprompt,
 and can be used together with it.
 
 guitool.<name>.revunmerged
 --------------------------
+
 Show only unmerged branches in the revprompt sub-dialog. This is useful for
 tools similar to merge or rebase, but not for things like checkout or reset.
 
 guitool.<name>.title
 --------------------
+
 Specifies the title to use for the prompt dialog.
 Defaults to the tool name.
 
 guitool.<name>.prompt
 ---------------------
+
 Specifies the general prompt string to display at the top of the dialog,
 before subsections for argprompt and revprompt.
 The default value includes the actual command.
 
 guitool.<name>.shortcut
 -----------------------
+
 Specifies a keyboard shortcut for the custom tool.
 
 The value must be a valid string understood by the `QAction::setShortcut()` API.
@@ -1246,6 +1389,7 @@ is used.
 
 SETTING UP CREDENTIAL HELPERS
 =============================
+
 Git has robust support for automatically handling credentials.
 
 The recommended approach is to use SSH keys and an SSH agent, but any of the core Git
@@ -1256,6 +1400,7 @@ See https://git-scm.com/doc/credential-helpers for more details.
 
 SETTING UP GPG FOR SIGNED COMMITS
 =================================
+
 When creating signed commits, `gpg` will attempt to read your password from the
 terminal from which `git cola` was launched.
 The way to make this work smoothly is to use a GPG agent so that you can avoid
@@ -1266,6 +1411,7 @@ for your password in the terminal.
 
 Install gpg-agent and friends
 -----------------------------
+
 On Mac OS X, you may need to `brew install gpg-agent` and install the
 `Mac GPG Suite <https://gpgtools.org/macgpg2/>`_.
 
@@ -1282,6 +1428,7 @@ Set Git's `gpg.program` to `gpg2`::
 
 Configure gpg-agent and a pin-entry program
 -------------------------------------------
+
 On Mac OS X, edit `~/.gnupg/gpg.conf` to include the line,::
 
     use-agent
@@ -1340,6 +1487,7 @@ WINDOWS NOTES
 
 Git Installation
 ----------------
+
 If Git is installed in a custom location, e.g. not installed in `C:/Git` or
 Program Files, then the path to Git must be configured by creating a file in
 your home directory `~/.config/git-cola/git-bindir` that points to your git
@@ -1349,6 +1497,7 @@ installation, e.g.::
 
 SSH Agents for Key-based Authentication
 ---------------------------------------
+
 You may need to setup ssh-agent in order to use SSH key-based authentication
 on Windows. It has been reported that starting OpenSSH agent in
 Windows Services and adding the key using Powershell are necessary in order
@@ -1360,6 +1509,7 @@ https://stackoverflow.com/questions/18683092/how-to-run-ssh-add-on-windows
 
 Samba
 -----
+
 Core Git has issues when operating over a Samba file share. This can lead
 to ``.git/index.lock`` lingering around and preventing ``git`` commands from
 working correctly.
@@ -1391,4 +1541,5 @@ Git Cola's Git Repository
 
 Git Cola Homepage
 -----------------
+
 https://git-cola.gitlab.io/
