@@ -389,7 +389,7 @@ class RemoteInfoThread(QtCore.QThread):
         if remote is None:
             return
         git = self.context.git
-        _, out, err = git.remote('show', '-n', remote)
+        _, out, err = git.remote('show', '-n', remote, _readonly=True)
         self.result.emit(out + err)
 
 
