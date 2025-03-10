@@ -326,7 +326,7 @@ def application_init(args, update=False, app_name='Git Cola'):
     setup_environment()
     process_args(args)
 
-    context = new_context(args, app_name)
+    context = new_context(args, app_name=app_name)
     timer = context.timer
     timer.start('init')
 
@@ -340,7 +340,7 @@ def application_init(args, update=False, app_name='Git Cola'):
     return context
 
 
-def new_context(args, app_name):
+def new_context(args, app_name='Git Cola'):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.settings = args.settings or Settings.read()
@@ -354,6 +354,12 @@ def new_context(args, app_name):
     context.timer = Timer()
 
     return context
+
+
+def create_context():
+    """Create a one-off context from the current directory"""
+    args = null_args()
+    return new_context(args)
 
 
 def application_run(context, view, start=None, stop=None):
