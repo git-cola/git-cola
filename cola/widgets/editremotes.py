@@ -281,10 +281,15 @@ class RemoteEditor(standard.Dialog):
                         item.setSelected(True)
 
     def add(self):
-        if add_remote(self.context, self):
+        """Add a new remote"""
+        ok, name = add_remote(self.context, self)
+        if ok:
             self.refresh(select=False)
-            # Newly added remote will be last; select it
-            self.select_remote(len(self.remote_list) - 1)
+            try:
+                idx = self.remote_list.index(name)
+            except ValueError:
+                return
+            self.select_remote(idx)
 
     def delete(self):
         """Delete the current remote"""
@@ -358,7 +363,7 @@ def add_remote(context, parent, name='', url='', readonly_url=False):
         result = True
     else:
         result = False
-    return result
+    return (result, widget.name)
 
 
 def restore_focus(focus):
