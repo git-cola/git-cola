@@ -27,9 +27,6 @@ license = {file = "LICENSE"}
 readme = {file = "README.md", content-type = "text/markdown"}
 
 [project.optional-dependencies]
-cov = [
-    "pytest-cov",
-]
 testing = [
     "pytest >= 6",
     "pytest-checkdocs >= 2.4",
