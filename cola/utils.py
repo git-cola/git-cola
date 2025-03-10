@@ -345,6 +345,38 @@ class Group:
         return relay
 
 
+def strip_prefixes_and_suffixes(values, prefix, suffix):
+    """Strip prefixes and suffixes from a sequence of values
+
+    Values are assumed to begin and end with the specified prefix and suffix.
+    """
+    prefix_len = len(prefix)
+    suffix_len = len(suffix)
+    if suffix_len == 0:
+        return sorted(name[prefix_len:] for name in values)
+    return sorted(name[prefix_len:-suffix_len] for name in values)
+
+
+def strip_prefixes_and_suffixes_from_keys(values, prefix, suffix):
+    """Transform dictionary keys to remove prefixes and suffixes
+
+    Values are assumed to begin and end with the specified prefix and suffix.
+    """
+    prefix_len = len(prefix)
+    suffix_len = len(suffix)
+    if suffix_len == 0:
+        return {key[prefix_len:]: value for (key, value) in values.items()}
+    return {key[prefix_len:-suffix_len]: value for (key, value) in values.items()}
+
+
+def strip_prefixes_from_keys(values, prefix):
+    """Transform dictionary keys to remove prefixes
+
+    Values are assumed to begin with the specified prefix.
+    """
+    return strip_prefixes_and_suffixes_from_keys(values, prefix, '')
+
+
 class Proxy:
     """Wrap an object and override attributes"""
 

@@ -384,15 +384,13 @@ class GitConfig(QtCore.QObject):
         as `opts[cmd]`.
 
         """
-        prefix = len('guitool.%s.' % name)
-        guitools = self.find('guitool.%s.*' % name)
-        return {key[prefix:]: value for (key, value) in guitools.items()}
+        guitools = self.find(f'guitool.{name}.*')
+        return utils.strip_prefixes_from_keys(guitools, f'guitool.{name}.')
 
     def get_guitool_names(self):
+        """Return guitool names"""
         guitools = self.find('guitool.*.cmd')
-        prefix = len('guitool.')
-        suffix = len('.cmd')
-        return sorted([name[prefix:-suffix] for (name, _) in guitools.items()])
+        return utils.strip_prefixes_and_suffixes(guitools, 'guitool.', '.cmd')
 
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
@@ -659,6 +657,5 @@ def python_to_git(value):
 def get_remotes(cfg):
     """Get all of the configured git remotes"""
     # Gather all of the remote.*.url entries.
-    prefix = len('remote.')
-    suffix = len('.url')
-    return sorted(key[prefix:-suffix] for key in cfg.find('remote.*.url'))
+    values = cfg.find('remote.*.url')
+    return utils.strip_prefixes_and_suffixes_from_keys(values, 'remote.', '.url')

@@ -364,7 +364,7 @@ class MainModel(QtCore.QObject):
         return not self.local_branches
 
     def _update_remotes(self):
-        self.remotes = gitcfg.get_remotes(self.cfg)
+        self.remotes = sorted(gitcfg.get_remotes(self.cfg))
 
     def _update_branches_and_tags(self):
         context = self.context
