@@ -297,7 +297,8 @@ class RemoteEditor(standard.Dialog):
         if not remote:
             return
         cmds.do(cmds.RemoteRemove, self.context, remote)
-        self.refresh(select=False)
+        self.update_editor(name='', url='', enable=False)
+        self.refresh(select=True)
 
     def remote_item_renamed(self, item):
         """Update the editor when the remote name is edited from the remotes list"""
@@ -332,15 +333,23 @@ class RemoteEditor(standard.Dialog):
     def activate_remote(self, name, gather_info=True):
         """Activate the specified remote"""
         url = gitcmds.remote_url(self.context, name)
-        self.current_name = name
-        self.current_url = url
-
-        self.editor.setEnabled(True)
-        self.editor.name = name
-        self.editor.url = url
-
+        self.update_editor(name=name, url=url)
         if gather_info:
             self.gather_info()
+
+    def update_editor(self, name=None, url=None, enable=True):
+        """Update the editor and enable it for editing"""
+        # These fields must be updated in this exact order otherwise
+        # the editor will be seen as edited, which causes the Reset button
+        # to re-enable itself via the valid() -> editor_validated() signal chain.
+        if name is not None:
+            self.current_name = name
+            self.editor.name = name
+        if url is not None:
+            self.current_url = url
+            self.editor.url = url
+
+        self.editor.setEnabled(enable)
 
     def gather_info(self):
         """Display details about the remote"""
