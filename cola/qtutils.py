@@ -245,7 +245,8 @@ class ComboBox(QtWidgets.QComboBox):
         self.addItem(text)
         self.item_data.append(data)
 
-    def current_data(self):
+    def value(self):
+        """Return the current data"""
         return self.item_data[self.currentIndex()]
 
     def values(self):
@@ -253,6 +254,7 @@ class ComboBox(QtWidgets.QComboBox):
         return self.item_data
 
     def set_value(self, value):
+        """Set the value to one of the known values"""
         if self.transform:
             value = self.transform(value)
         try:

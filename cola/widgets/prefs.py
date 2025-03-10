@@ -83,7 +83,7 @@ class FormWidget(QtWidgets.QWidget):
 
     def _item_config_changed(self, config, widget):
         def runner():
-            value = widget.current_data()
+            value = widget.value()
             cmds.do(prefs.SetConfig, self.model, self.source, config, value)
 
         return runner
@@ -444,7 +444,7 @@ class AppearanceFormWidget(FormWidget):
             theme = self.themes[theme_idx]
         except IndexError:
             return
-        icon_theme = self.icon_theme.current_data()
+        icon_theme = self.icon_theme.value()
         if theme.name == 'default':
             if icon_theme in ('light', 'dark'):
                 self.icon_theme.set_value('default')
