@@ -397,7 +397,7 @@ class GitConfig(QtCore.QObject):
     def get_guitool_names_and_shortcuts(self):
         """Return guitool names and their configured shortcut"""
         names = self.get_guitool_names()
-        return [(name, self.get('guitool.%s.shortcut' % name)) for name in names]
+        return [(name, self.get(f'guitool.{name}.shortcut')) for name in names]
 
     def terminal(self):
         """Return a suitable terminal command for running a shell"""
