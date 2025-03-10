@@ -212,6 +212,10 @@ class RemoteEditor(standard.Dialog):
             self.select_remote(idx)
             gather = False  # already done by select_remote()
 
+        if name_changed or url_changed:
+            valid = self.editor.validate()
+            self.editor_validated(valid)
+
         restore_focus(focus)
         if gather:
             self.gather_info()
