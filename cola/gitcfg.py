@@ -20,8 +20,6 @@ from . import core
 from . import utils
 from . import version
 from . import resources
-from .compat import int_types
-from .compat import ustr
 
 
 def create(context):
@@ -60,7 +58,7 @@ def _config_to_python(value):
 
 def unhex(value):
     """Convert a value (int or hex string) into bytes"""
-    if isinstance(value, int_types):
+    if isinstance(value, int):
         # If the value is an integer then it's a value that was converted
         # by the config reader.  Zero-pad it into a 6-digit hex number.
         value = '%06d' % value
@@ -653,8 +651,8 @@ def _read_config_from_null_list(config_output):
 def python_to_git(value):
     if isinstance(value, bool):
         return 'true' if value else 'false'
-    if isinstance(value, int_types):
-        return ustr(value)
+    if isinstance(value, int):
+        return str(value)
     return value
 
 
