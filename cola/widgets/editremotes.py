@@ -21,6 +21,7 @@ from . import text
 
 
 def editor(context, run=True):
+    """Launch a RemoteEditor instance"""
     view = RemoteEditor(context, parent=qtutils.active_window())
     if run:
         view.show()
@@ -29,6 +30,8 @@ def editor(context, run=True):
 
 
 class RemoteEditor(standard.Dialog):
+    """Edit remotes associated with the current repository"""
+
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.setWindowTitle(N_('Edit Remotes'))
@@ -115,7 +118,6 @@ class RemoteEditor(standard.Dialog):
             qtutils.STRETCH,
             self.close_button,
         )
-
         self._layout = qtutils.vbox(
             defs.margin, defs.spacing, self._top_layout, self._button_layout
         )
@@ -134,7 +136,7 @@ class RemoteEditor(standard.Dialog):
 
         self.editor.remote_name.returnPressed.connect(self.save)
         self.editor.remote_url.returnPressed.connect(self.save)
-        self.editor.valid.connect(self.editor_valid)
+        self.editor.valid.connect(self.editor_validated)
 
         self.remotes.itemChanged.connect(self.remote_item_renamed)
         self.remotes.itemSelectionChanged.connect(self.selection_changed)
@@ -145,6 +147,7 @@ class RemoteEditor(standard.Dialog):
         self.refresh()
 
     def reset(self):
+        """Reset the editor back to the last-saved configuration"""
         focus = self.focusWidget()
         if self.current_name:
             self.activate_remote(self.current_name, gather_info=False)
@@ -152,11 +155,13 @@ class RemoteEditor(standard.Dialog):
 
     @property
     def changed(self):
+        """Has the editor changed any values?"""
         url = self.editor.url
         name = self.editor.name
         return url != self.current_url or name != self.current_name
 
     def save(self):
+        """Save edited settings to Git's configuration"""
         if not self.changed:
             return
         context = self.context
@@ -171,7 +176,7 @@ class RemoteEditor(standard.Dialog):
 
         name_ok = url_ok = False
 
-        # Run the corresponding command
+        # Run the corresponding commands
         if name_changed and url_changed:
             name_ok, url_ok = cmds.do(cmds.RemoteEdit, context, old_name, name, url)
         elif name_changed:
@@ -181,7 +186,7 @@ class RemoteEditor(standard.Dialog):
             result = cmds.do(cmds.RemoteSetURL, context, name, url)
             url_ok = result[0]
 
-        # Update state if the change succeeded
+        # Update state if the URL change succeeded
         gather = False
         if url_changed and url_ok:
             self.current_url = url
@@ -201,12 +206,14 @@ class RemoteEditor(standard.Dialog):
         if gather:
             self.gather_info()
 
-    def editor_valid(self, valid):
+    def editor_validated(self, valid):
+        """Update widgets when fields are edited and validated"""
         changed = self.changed
         self.reset_button.setEnabled(changed)
         self.save_button.setEnabled(changed and valid)
 
     def disable_editor(self):
+        """Disable the editor"""
         self.save_button.setEnabled(False)
         self.reset_button.setEnabled(False)
         self.editor.setEnabled(False)
@@ -221,16 +228,19 @@ class RemoteEditor(standard.Dialog):
         self.resize(width, height)
 
     def set_info(self, info):
+        """Update the info display widget with remote details"""
         self.info.hint.set_value(self.default_hint)
         self.info.set_value(info)
 
     def select_remote(self, index):
+        """Select a remote by index"""
         if index >= 0:
             item = self.remotes.item(index)
             if item:
                 item.setSelected(True)
 
     def refresh(self, select=True):
+        """Refresh the list of remotes to match the Git configuration"""
         git = self.context.git
         remotes = git.remote()[STDOUT].splitlines()
         # Ignore notifications from self.remotes while mutating.
@@ -263,6 +273,7 @@ class RemoteEditor(standard.Dialog):
             self.select_remote(len(self.remote_list) - 1)
 
     def delete(self):
+        """Delete the current remote"""
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if not remote:
             return
@@ -270,6 +281,7 @@ class RemoteEditor(standard.Dialog):
         self.refresh(select=False)
 
     def remote_item_renamed(self, item):
+        """Update the editor when the remote name is edited from the remotes list"""
         idx = self.remotes.row(item)
         if idx < 0:
             return
@@ -291,6 +303,7 @@ class RemoteEditor(standard.Dialog):
             item.setText(old_name)
 
     def selection_changed(self):
+        """Edit remotes when the remote list selection is changed"""
         remote = qtutils.selected_item(self.remotes, self.remote_list)
         if not remote:
             self.disable_editor()
@@ -298,6 +311,7 @@ class RemoteEditor(standard.Dialog):
         self.activate_remote(remote)
 
     def activate_remote(self, name, gather_info=True):
+        """Activate the specified remote"""
         url = gitcmds.remote_url(self.context, name)
         self.current_name = name
         self.current_url = url
@@ -310,10 +324,10 @@ class RemoteEditor(standard.Dialog):
             self.gather_info()
 
     def gather_info(self):
+        """Display details about the remote"""
         name = self.current_name
         self.info.hint.set_value(N_('Gathering info for "%s"...') % name)
         self.info.set_value('')
-
         self.info_thread.remote = name
         self.info_thread.start()
 
@@ -341,6 +355,8 @@ def restore_focus(focus):
 
 
 class RemoteInfoThread(QtCore.QThread):
+    """Gathers information about a remote for display in the info widget"""
+
     result = Signal(object)
 
     def __init__(self, context, parent):
@@ -349,6 +365,7 @@ class RemoteInfoThread(QtCore.QThread):
         self.remote = None
 
     def run(self):
+        """Run the thread to gather information"""
         remote = self.remote
         if remote is None:
             return
@@ -358,6 +375,8 @@ class RemoteInfoThread(QtCore.QThread):
 
 
 class AddRemoteDialog(QtWidgets.QDialog):
+    """A simple dialog for adding remotes"""
+
     def __init__(self, context, parent, readonly_url=False):
         super().__init__(parent)
         self.context = context
@@ -446,7 +465,6 @@ class RemoteWidget(QtWidgets.QWidget):
             (N_('Name'), self.remote_name),
             (N_('URL'), self.url_layout),
         )
-
         self._layout = qtutils.vbox(defs.margin, defs.spacing, self._form)
         self.setLayout(self._layout)
 
@@ -458,12 +476,14 @@ class RemoteWidget(QtWidgets.QWidget):
             self.remote_url.setReadOnly(True)
             self.open_button.setEnabled(False)
 
-    def validate(self, _text):
+    def validate(self, _text_or_index=''):
+        """Validate the current inputs"""
         name = self.name
         url = self.url
         self.valid.emit(bool(name) and bool(url))
 
     def open_repo(self):
+        """Set the URL from a repository on disk"""
         git = self.context.git
         repo = qtutils.opendir_dialog(N_('Open Git Repository'), core.getcwd())
         if repo and git.is_git_repository(repo):
