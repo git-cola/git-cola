@@ -48,15 +48,15 @@ def upstream_remote(context, branch=None):
     """Return the remote associated with the specified branch"""
     config = context.cfg
     branch = get_branch(context, branch)
-    return config.get('branch.%s.remote' % branch)
+    return config.get(f'branch.{branch}.remote')
 
 
 def remote_url(context, remote, push=False):
     """Return the URL for the specified remote"""
     config = context.cfg
-    url = config.get('remote.%s.url' % remote, '')
+    url = config.get(f'remote.{remote}.url', '')
     if push:
-        url = config.get('remote.%s.pushurl' % remote, url)
+        url = config.get(f'remote.{remote}.pushurl', url)
     return url
 
 
