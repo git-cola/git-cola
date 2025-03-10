@@ -214,13 +214,25 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.menu_actions.append(self.copy_diff_action)
         self.cursorPositionChanged.connect(self._cursor_changed)
         self.selectionChanged.connect(self._selection_changed)
+        self.mouse_zoomed.connect(self.update_block_cursor)
 
     def setFont(self, font):
         """Override setFont() so that we can use a custom "block" cursor"""
         super().setFont(font)
-        if prefs.block_cursor(self.context):
-            width = qtutils.text_width(font, 'M')
-            self.setCursorWidth(width)
+        self.update_block_cursor(font=font)
+
+    def update_block_cursor(self, font=None):
+        """Update the block cusor width"""
+        self._update_block_cursor(self.context, font=font)
+
+    def _update_block_cursor(self, context, font=None):
+        """Update the block cusor width"""
+        if not prefs.block_cursor(context):
+            return
+        if font is None:
+            font = self.font()
+        width = qtutils.text_width(font, 'M')
+        self.setCursorWidth(width)
 
     def _cursor_changed(self):
         """Update the line number display when the cursor changes"""

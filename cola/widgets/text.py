@@ -275,6 +275,7 @@ class PlainTextEditExtension(BaseTextEditExtension):
 class PlainTextEdit(QtWidgets.QPlainTextEdit):
     cursor_changed = Signal(int, int)
     leave = Signal()
+    mouse_zoomed = Signal()
 
     def __init__(self, parent=None, readonly=False, options=None):
         QtWidgets.QPlainTextEdit.__init__(self, parent)
@@ -352,6 +353,7 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
             event.ignore()
             return
         super().wheelEvent(event)
+        self.mouse_zoomed.emit()
 
     def create_context_menu(self, event_pos):
         """Create a custom context menu"""
@@ -705,7 +707,6 @@ class HintedPlainTextEdit(PlainTextEdit):
         self.context = context
         self.setFont(qtutils.diff_font(context))
         self.set_tabwidth(prefs.tabwidth(context))
-        # Refresh palettes when text changes
         self.set_mouse_zoom(context.cfg.get(prefs.MOUSE_ZOOM, default=True))
 
 
