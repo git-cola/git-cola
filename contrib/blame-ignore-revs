@@ -1,0 +1,68 @@
+# This file contains a list of commits that are not likely what you
+# are looking for in a blame, such as mass reformatting or renaming.
+# You can set this file as a default ignore file for blame by running
+# the following command.
+#
+# $ git config blame.ignoreRevsFile contrib/blame-ignore-revs
+#
+# Use "git blame --ignore-revs-file=" to temporarily disable this file.
+#
+# blame.ignoreRevsFile can't be set globally because blame will fail
+# if the file does not exist.
+
+# main: code formatting
+1e19d1d5dc11d01b3720a98d626f31aaeb0498fc
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+a75611aff449ff69f0b67d8e5c4b9e655c9d1615
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+32514160d388b7dbeecefa508c6c753046d53c2e
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+295bbc8a40510b3a871bf6999301054ddf5b4f46
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+896f1f4e216a70fd12101dcd17f816d520b6b9f8
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+5d213bdecfc2f7e9801239ced80ca20ab3f6afea
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+5387061cf0fab53c8db363eebf5180ab6618f240
+# dev: code formatting
+1d4f888da84e0b59c6e5f3c7ecca390afe209a99
+# dev: code formatting
+dcf8d545125005967abb44a03bf64b0fdca27707
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+8e5cd0b0a93e419cb94db8c8763ac32d19ff6d07
+# [pre-commit.ci] auto fixes from pre-commit.com hooks
+3fcde53c4e88343b32ffc046983fa3f6298bd7da
+# dev: format code using "garden fmt" (black)
+214fa86b354bf873d7c7fcf0fd37018055152212
+# tree-wide: format code using "make format"
+64280a6f45f8b64c2463bb4ccad30b31bdbf84bd
+# maint: code formatting
+345f60e0b2d29941e90671da9a9f2c83ea8cda3d
+# tree-wide: format code using "make format"
+f50c81749c5c7876cd6cd7fc449da02cbc9019c5
+# maint: code formatting
+f2ee4500fc246bce030000384bc5779210ae7321
+# maint: code style
+87db8e41d5ff5b8f0be9c923664cf1701e433089
+# maint: code formatting
+9eb4d95cd99016c0514bc6a5f1289398591cb132
+# maint: code formatting
+458b9464ff572d27da73483656496778afb3e99e
+# maint: format code using black
+3fb7c743fce3f4d11e31d903c3c7a2fecae7aa30
+# maint: reformat code using black
+a9b3a0bb6698c5094c0e6d991a97c7a99760eae6
+# style: make format
+a5c68561b10f50a259bf9fe666b9a96600f0dc13
+# maint: format python code using black
+81320f528baf2172d7a640af68169791f5600890
+# logo: Reformat SVG markup using HTML Tidy
+e927d600341e1037097219f5531d5a7ef7914006
+# i18n: update git-cola.pot to the simpler format
+097b079fe8e095e73c8cec258245c8a9ba5e8b85
+# extras: simplify git-cola.pot format
+f6f68c12b3ebd1d324e9d5d90e74553edf8efac4
+# widgets.browse: reformat for readability
+fda6774fa1a0952b34668e9f6f94365d4b138039
+# controllers/merge: reformatted code to stay within 80 columns
+1dc8343d49030212bd2257e84e432858ddf3c459
