@@ -42,9 +42,6 @@ class RemoteEditor(standard.Dialog):
         self.current_name = ''
         self.current_url = ''
 
-        hint = N_('Edit remotes by selecting them from the list')
-        self.default_hint = hint
-
         self.remote_list = []
         self.remotes = QtWidgets.QListWidget()
         self.remotes.setToolTip(N_('Remote git repositories - double-click to rename'))
@@ -66,7 +63,8 @@ class RemoteEditor(standard.Dialog):
             'Remotes can be renamed by selecting one from the list\n'
             'and pressing "enter", or by double-clicking.'
         )
-        hint = self.default_hint
+        hint = N_('Edit remotes by selecting them from the list')
+        self.default_hint = hint
         self.info = text.VimHintedPlainTextEdit(context, hint, parent=self)
         self.info.setToolTip(tooltip)
 
@@ -103,8 +101,22 @@ class RemoteEditor(standard.Dialog):
         self._display_widget = QtWidgets.QWidget(self)
         self._display_widget.setLayout(self._display_layout)
 
+        self._left_buttons_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.add_button,
+            self.refresh_button,
+            self.delete_button,
+            qtutils.STRETCH,
+        )
+        self._left_layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self._left_buttons_layout, self.remotes
+        )
+        self._left_widget = QtWidgets.QWidget(self)
+        self._left_widget.setLayout(self._left_layout)
+
         self._top_layout = qtutils.splitter(
-            Qt.Horizontal, self.remotes, self._display_widget
+            Qt.Horizontal, self._left_widget, self._display_widget
         )
         width = self._top_layout.width()
         self._top_layout.setSizes([width // 4, width * 3 // 4])
@@ -112,9 +124,6 @@ class RemoteEditor(standard.Dialog):
         self._button_layout = qtutils.hbox(
             defs.margin,
             defs.spacing,
-            self.add_button,
-            self.delete_button,
-            self.refresh_button,
             qtutils.STRETCH,
             self.close_button,
         )
@@ -172,9 +181,10 @@ class RemoteEditor(standard.Dialog):
 
         name_changed = name and name != old_name
         url_changed = url and url != old_url
-        focus = self.focusWidget()
 
-        name_ok = url_ok = False
+        focus = self.focusWidget()
+        name_ok = False
+        url_ok = False
 
         # Run the corresponding commands
         if name_changed and url_changed:
