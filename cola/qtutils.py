@@ -239,12 +239,18 @@ class ComboBox(QtWidgets.QComboBox):
         idx = utils.clamp(idx, 0, self.count() - 1)
         self.setCurrentIndex(idx)
 
-    def add_item(self, text, data):
+    def add_item(self, text, data=None):
+        if data is None:
+            data = text
         self.addItem(text)
         self.item_data.append(data)
 
     def current_data(self):
         return self.item_data[self.currentIndex()]
+
+    def values(self):
+        """Return all of the valid values"""
+        return self.item_data
 
     def set_value(self, value):
         if self.transform:
@@ -268,7 +274,7 @@ def combo_mapped(data, editable=False, transform=None, parent=None):
     """Create a readonly (by default) combo box from a list of items"""
     widget = ComboBox(editable=editable, transform=transform, parent=parent)
     for k, v in data:
-        widget.add_item(k, v)
+        widget.add_item(k, data=v)
     return widget
 
 
