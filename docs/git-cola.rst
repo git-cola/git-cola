@@ -248,7 +248,7 @@ This same hotkey reverts the entire file when used from the status tool.
 `Ctrl-s` in the diff editor and status tools stages/unstages the entire file.
 
 You can see the available shortcuts by pressing pressing the ``?`` key,
-choosing ``Help -> Keyboard shortcuts`` from the main menu,
+choosing ``Help > Keyboard shortcuts`` from the main menu,
 or by consulting the `git cola keyboard shortcuts reference <https://git-cola.github.io/share/doc/git-cola/hotkeys.html>`_.
 
 
@@ -510,7 +510,7 @@ configuration variable.
 Prepare Commit Message
 ----------------------
 
-The ``Commit -> Prepare Commit Message`` action or `Ctrl-Shift-Return` keyboard shortcut
+The ``Commit > Prepare Commit Message`` action or `Ctrl-Shift-Return` keyboard shortcut
 runs the `cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
 This is a `git cola`-specific hook that takes the same parameters
 as Git's `prepare-commit-msg hook <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks>`_
@@ -601,7 +601,7 @@ The remote branch action runs
 APPLY PATCHES
 =============
 
-Use the ``File -> Apply Patches`` menu item to begin applying patches.
+Use the ``File > Apply Patches`` menu item to begin applying patches.
 
 Dragging and dropping patches onto the `git cola` interface
 adds the patches to the list of patches to apply using
@@ -704,7 +704,7 @@ Custom Themes
 
 To create your own custom theme for Git Cola just create a QSS file and put it in
 ``~/.config/themes/``. You can add as many files as you want. Each file will become
-an option in ``Menu -> File -> Preferences -> Appearance -> GUI theme``.
+an option in ``Menu > File > Preferences > Appearance > GUI theme``.
 
 Some examples can be found here `Qt Style Sheets Examples <https://doc.qt.io/qt-5/stylesheet-examples.html>`_.
 
