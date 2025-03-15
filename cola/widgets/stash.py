@@ -136,7 +136,7 @@ class StashView(standard.Dialog):
         cmds.do(cmds.Rescan, self.context)
         self.reject()
 
-    # "stash" and "keep" index are mutually disable, but we don't
+    # "stash" and "keep" index are mutually exclusive but we don't
     # want a radio button because we'd have to add a 3rd "default" option.
     def stash_index_clicked(self, clicked):
         if clicked:

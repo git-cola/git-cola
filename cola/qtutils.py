@@ -53,7 +53,7 @@ def connect_button(button, func):
 def connect_checkbox(widget, func):
     """Connect a checkbox to a function taking bool"""
     widget.clicked.connect(
-        lambda *args, **kwargs: func(get(checkbox)), type=Qt.QueuedConnection
+        lambda value: func(value), type=Qt.QueuedConnection
     )
 
 
