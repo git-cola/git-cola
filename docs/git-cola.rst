@@ -618,6 +618,77 @@ to control the order in which patches are applied by placing
 patch sets into alphanumerically-sorted directories.
 
 
+STASH
+=====
+
+Use the ``git cola stash`` sub-command or the ``Actions > Stash...`` menu action
+to open the `Stash` tool.
+
+Stashing is a quick way of removing changes from your worktree so that you
+can restore the changes later. You can learn about the use cases for stashes in the
+`git stash documentation <https://git-scm.com/docs/git-stash#_description>`_.
+
+The list on the left displays all of your saved stashes.
+
+Selecting a stash from the list allows you to `Rename`, `Apply`, `Pop`, or
+`Drop` the content from the selected stash.
+
+The `Save` button saves uncommitted content from your worktree to a new stash.
+
+The content to stash is controlled by the `Keep Index` and `Save Index` options.
+By default, all uncommitted changes, including staged content, will be saved to
+the stash and removed from your working copy.
+
+Options
+-------
+
+* `Keep Index`: Stash everything that has not been staged.
+  Only content in the *Modified* state will be saved to the stash.
+  Staged content will not be stashed.
+
+* `Save Index`: Only stash the content that has been staged.
+  Only content in the *Staged* state will be saved to the stash.
+  Modified content will not be stashed.
+
+
+WORKFLOW FAQ
+============
+
+* How do I stash some but not all modified files / lines?
+
+  There are two ways of stashing a subset of changes.
+
+  You can either *Stage* the content you want to keep un-stashed,
+  or you can *Stage* the content that you want to stash away.
+
+  * **Method 1: Stage the content that you want to keep.**
+
+    This method is analogous to the ``git stash --keep-index`` option.
+
+    1) Stage the content that you want to keep using the `Diff` and `Status` tools.
+
+    2) Launch the `Stash` tool.
+
+    3) Enable the `Keep Index` option and `Save` the stash.
+
+    Modified changes will be stashed away.
+    Staged changes will remain in your worktree.
+
+  * **Method 2: Stage the content that you want to stash.**
+
+    This workflow is unique to Git Cola. There is currently no equivalent
+    Git builtin command for stashing the staging area.
+
+    1) Stage the content that you want to stash using the `Diff` and `Status` tools.
+
+    2) Launch the `Stash` tool.
+
+    3) Enable the `Stash Index`` option and `Save` the stash.
+
+    Staged changes will be stashed away.
+    Modified changes will remain in your worktree.
+
+
 CUSTOM WINDOW SETTINGS
 ======================
 
