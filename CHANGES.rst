@@ -9,6 +9,10 @@ Usability, bells and whistles
 * The commit date widget now has a button to reset the time and date to the current time
   and date.
 
+* The commit message editor now moves up and down visually when word-wrapping is
+  enabled. The cursor previously jumped to the beginning and end of a word-wrapped line
+  when Up and Down were pressed.
+
 Fixes
 -----
 

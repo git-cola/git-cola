@@ -730,6 +730,9 @@ def anchor_mode(select):
     return mode
 
 
+def is_shift_pressed(event):
+    """Return true if the Shift modifier is currently held"""
+    return event.modifiers() & Qt.ShiftModifier
 
 
 class VimMixin:

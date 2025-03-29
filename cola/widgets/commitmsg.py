@@ -27,7 +27,7 @@ from . import defs
 from . import standard
 from .selectcommits import select_commits
 from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
-from .text import anchor_mode
+from .text import anchor_mode, is_shift_pressed
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
@@ -919,10 +919,11 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
             position = cursor.position()
             if position == 0:
                 # The cursor is at the beginning of the line.
-                # If we have selection then simply reset the cursor.
-                # Otherwise, emit a signal so that the parent can
-                # change focus.
-                if cursor.hasSelection():
+                # If we have a selection and shift is not held then reset the
+                # cursor to clear the selection. Otherwise, emit a signal so
+                # that the parent can change focus.
+                shifted = is_shift_pressed(event)
+                if cursor.hasSelection() and not shifted:
                     self.set_cursor_position(0)
                 else:
                     self.leave.emit()
@@ -934,11 +935,12 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
                 # If we're on the first line, but not at the
                 # beginning, then move the cursor to the beginning
                 # of the line.
-                if event.modifiers() & Qt.ShiftModifier:
-                    mode = QtGui.QTextCursor.KeepAnchor
-                else:
-                    mode = QtGui.QTextCursor.MoveAnchor
-                cursor.setPosition(0, mode)
+                shifted = is_shift_pressed(event)
+                mode = anchor_mode(shifted)
+                cursor.movePosition(QtGui.QTextCursor.Up, mode)
+                new_position = cursor.position()
+                if position == new_position:
+                    cursor.setPosition(0, mode)
                 self.setTextCursor(cursor)
                 event.accept()
                 return
@@ -949,9 +951,12 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
             text_after = all_text[position:]
             lines_after = text_after.count('\n')
             if lines_after == 0:
-                select = event.modifiers() & Qt.ShiftModifier
-                mode = anchor_mode(select)
-                cursor.setPosition(len(all_text), mode)
+                shifted = is_shift_pressed(event)
+                mode = anchor_mode(shifted)
+                cursor.movePosition(QtGui.QTextCursor.Down, mode)
+                new_position = cursor.position()
+                if position == new_position:
+                    cursor.setPosition(len(all_text), mode)
                 self.setTextCursor(cursor)
                 event.accept()
                 return
