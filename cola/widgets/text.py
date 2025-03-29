@@ -730,10 +730,11 @@ def anchor_mode(select):
     return mode
 
 
-# The vim-like read-only text view
 
 
 class VimMixin:
+    """Vim-like read-only text view"""
+
     def __init__(self, widget):
         self.widget = widget
         self.Base = widget.Base

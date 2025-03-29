@@ -913,6 +913,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
         )
 
     def keyPressEvent(self, event):
+        """Update the cursor display and move the cursor to the end and beginning"""
         if event.key() == Qt.Key_Up:
             cursor = self.textCursor()
             position = cursor.position()
