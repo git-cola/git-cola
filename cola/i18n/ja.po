@@ -1289,7 +1289,7 @@ msgstr "タグの作成"
 
 #: cola/widgets/main.py:562
 msgid "Create Tag..."
-msgstr "タグの作成中..."
+msgstr "タグの作成..."
 
 #: cola/cmds.py:2751
 msgid "Create Unsigned Tag"
@@ -1346,7 +1346,7 @@ msgstr "チェコ語翻訳"
 
 #: cola/widgets/main.py:610
 msgid "DAG..."
-msgstr "DAG中..."
+msgstr "DAG..."
 
 #: cola/icons.py:54
 msgid "Dark Theme"
@@ -1398,7 +1398,7 @@ msgstr "ファイルの削除"
 
 #: cola/widgets/status.py:311
 msgid "Delete Files..."
-msgstr "ファイルを削除中..."
+msgstr "ファイルを削除..."
 
 #: cola/cmds.py:1084
 msgid "Delete Files?"
@@ -1414,7 +1414,7 @@ msgstr "リモートブランチの削除"
 
 #: cola/widgets/main.py:582
 msgid "Delete Remote Branch..."
-msgstr "リモートブランチの削除中..."
+msgstr "リモートブランチの削除..."
 
 #: cola/widgets/toolbar.py:276
 msgid "Delete Toolbar"
@@ -1440,7 +1440,7 @@ msgstr "リモートを削除しますか？"
 
 #: cola/widgets/main.py:576
 msgid "Delete..."
-msgstr "削除中…"
+msgstr "削除…"
 
 #: cola/cmds.py:1066
 #, python-format
@@ -1635,7 +1635,7 @@ msgstr "リモートを編集"
 
 #: cola/widgets/main.py:298
 msgid "Edit Remotes..."
-msgstr "リモートを編集中..."
+msgstr "リモートを編集..."
 
 #: cola/widgets/diff.py:1049
 msgid "Edit Selected Lines to Revert..."
@@ -1671,7 +1671,7 @@ msgstr ""
 
 #: cola/widgets/main.py:622
 msgid "Edit..."
-msgstr "編集中..."
+msgstr "編集..."
 
 #: cola/widgets/prefs.py:273
 msgid "Editor"
@@ -1877,7 +1877,7 @@ msgstr "パッチのエクスポート"
 
 #: cola/widgets/main.py:273
 msgid "Export Patches..."
-msgstr "パッチのエクスポート中..."
+msgstr "パッチのエクスポート..."
 
 #: cola/widgets/main.py:551
 msgid "Expression..."
@@ -1917,7 +1917,7 @@ msgstr "よく使う"
 
 #: cola/widgets/remote.py:923
 msgid "Fetch"
-msgstr "取得"
+msgstr "取得(fetch)"
 
 #: cola/widgets/createbranch.py:125
 msgid "Fetch Tracking Branch"
@@ -1929,7 +1929,7 @@ msgstr "\"git fetch\"をつかって一つまたは複数のリモートから�
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:388
 msgid "Fetch..."
-msgstr "取得中..."
+msgstr "取得(fetch)..."
 
 #: cola/widgets/main.py:606
 msgid "File Browser..."
@@ -2352,7 +2352,7 @@ msgstr "コミットメッセージをロード"
 
 #: cola/widgets/main.py:339
 msgid "Load Commit Message..."
-msgstr "コミットメッセージをロード中"
+msgstr "コミットメッセージをロード"
 
 #: cola/widgets/commitmsg.py:150
 msgid "Load Previous Commit Message"
@@ -2445,11 +2445,11 @@ msgstr "現在のブランチへマージ"
 
 #: cola/widgets/main.py:363
 msgid "Merge..."
-msgstr "マージ中..."
+msgstr "マージ..."
 
 #: cola/widgets/main.py:1182
 msgid "Merging"
-msgstr "マージ中"
+msgstr "マージ"
 
 #: cola/models/browse.py:32 cola/widgets/createtag.py:76
 msgid "Message"
@@ -2647,7 +2647,7 @@ msgstr "新しいウィンドウで開く"
 
 #: cola/widgets/main.py:420
 msgid "Open in New Window..."
-msgstr "新しいウィンドウで開いています..."
+msgstr "新しいウィンドウで開く..."
 
 #: cola/widgets/main.py:414
 msgid "Open..."
@@ -2872,7 +2872,7 @@ msgstr ""
 
 #: cola/widgets/main.py:1184
 msgid "Rebasing"
-msgstr "rebase中"
+msgstr "rebase"
 
 #: cola/widgets/main.py:117
 msgid "Recent"
@@ -3009,7 +3009,7 @@ msgstr "ブランチの名前変更"
 
 #: cola/widgets/main.py:588
 msgid "Rename Branch..."
-msgstr "ブランチの名前変更中..."
+msgstr "ブランチの名前変更..."
 
 #: cola/guicmds.py:329
 msgid "Rename Existing Branch"
@@ -3382,7 +3382,7 @@ msgstr "POSIX拡張正規表現検索"
 
 #: cola/widgets/main.py:511
 msgid "Search..."
-msgstr "検索中..."
+msgstr "検索..."
 
 #: cola/widgets/selectcommits.py:66
 msgid "Search:"
@@ -3711,7 +3711,7 @@ msgstr "ステージされていない変更のみをスタッシュ、ステー
 
 #: cola/widgets/action.py:76 cola/widgets/main.py:427
 msgid "Stash..."
-msgstr "スタッシュ中..."
+msgstr "スタッシュ..."
 
 #: cola/models/browse.py:32 cola/widgets/main.py:99
 msgid "Status"
