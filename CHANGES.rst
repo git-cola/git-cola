@@ -19,6 +19,11 @@ Fixes
 * The "Ambiguous shortcut warning" that could be triggered in rare scenarios when using
   the Amend hotkey has been eliminated.
 
+Translations
+------------
+* Updated Japanese translation.
+  (`#1424 <https://github.com/git-cola/git-cola/pull/1472>`_)
+
 
 .. _v4.12.0:
 
