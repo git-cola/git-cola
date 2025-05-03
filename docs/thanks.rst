@@ -157,6 +157,7 @@ Thanks
 * Kirit Sælensminde
 * Kisaragi Hiu
 * Klaas Neirinck
+* K.T.dev
 * Kurt McKee
 * Kyle Slane
 * László Böszörményi
