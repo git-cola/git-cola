@@ -654,6 +654,13 @@ class MainView(standard.MainWindow):
             self, N_('Reset Layout'), self.reset_layout
         )
 
+        self.save_layout_action = qtutils.add_action(
+            self, N_('Save Layout'), lambda: guicmds.save_layout(self)
+        )
+        self.load_layout_action = qtutils.add_action(
+            self, N_('Load Layout'), lambda: guicmds.load_layout(self)
+        )
+
         self.quick_repository_search = qtutils.add_action(
             self,
             N_('Quick Open...'),
@@ -1013,7 +1020,12 @@ class MainView(standard.MainWindow):
 
         menu.addSeparator()
         menu.addAction(self.lock_layout_action)
-        menu.addAction(self.reset_layout_action)
+
+        layout_menu = menu.addMenu(N_('Layouts'))
+        layout_menu.addAction(self.save_layout_action)
+        layout_menu.addAction(self.load_layout_action)
+        layout_menu.addAction(self.reset_layout_action)
+        guicmds.build_layout_menu(self, layout_menu)
 
         return menu
 

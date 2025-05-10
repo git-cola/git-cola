@@ -3,6 +3,11 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* Widget layouts can now be saved and loaded to ``*.layout`` files.
+  Layouts are saved to ``~/.config/git-cola/layouts`` by default and can be
+  saved and loaded using the `View -> Layouts` menu actions.
+  (`#1467 <https://github.com/git-cola/git-cola/issues/1467>`_)
+
 * The status tool has been updated to launch editors with multiple files when invoking
   its "Edit" action.
 

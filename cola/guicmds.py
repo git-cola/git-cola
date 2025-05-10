@@ -9,6 +9,7 @@ from . import display
 from . import gitcmds
 from . import icons
 from . import qtutils
+from . import resources
 from .i18n import N_
 from .interaction import Interaction
 from .widgets import completion
@@ -410,6 +411,62 @@ def restore_worktree(context):
     if ref:
         cmds.do(cmds.RestoreWorktree, context, ref)
         context.settings.set_value('restore::worktree', 'ref', ref)
+
+
+def build_layout_menu(widget, menu):
+    """Add layouts from ~/.config/git-cola/layouts to the specified menu"""
+    directory = resources.xdg_config_home('git-cola', 'layouts')
+    layouts = sorted(os.listdir(directory))
+    suffix = '.layout'
+    if layouts:
+        menu.addSeparator()
+    for layout in layouts:
+        if layout.endswith(suffix):
+            layout_name = layout[: -len(suffix)]
+        else:
+            layout_name = layout
+        layout_filename = os.path.join(directory, layout)
+        load_layout_action = qtutils.add_action(
+            widget,
+            layout_name,
+            lambda filename=layout_filename: load_layout_file(widget, filename),
+        )
+        menu.addAction(load_layout_action)
+
+
+def save_layout(widget):
+    """Save the current widget layout to a file"""
+    default_filename = resources.xdg_config_home(
+        'git-cola', 'layouts', 'default.layout'
+    )
+    parent_dir = os.path.dirname(default_filename)
+    if not os.path.isdir(parent_dir):
+        os.makedirs(parent_dir)
+    filename = qtutils.save_as(default_filename)
+    if not filename:
+        return
+    state = widget.layout_state()
+    with open(filename, 'wb') as output:
+        output.write(state)
+
+
+def load_layout(widget):
+    """Choose a Qt layout file and apply it to the current widget"""
+    directory = resources.xdg_config_home('git-cola', 'layouts')
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+    filename = qtutils.existing_file(directory, title=N_('Load Layout'))
+    load_layout_file(widget, filename)
+
+
+def load_layout_file(widget, filename):
+    """Load a Qt layout file into the specified widget"""
+    if not filename or not os.path.isfile(filename):
+        return
+    with open(filename, 'rb') as handle:
+        state = handle.read()
+    if state:
+        widget.apply_layout(state)
 
 
 def install():

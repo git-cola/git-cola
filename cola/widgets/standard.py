@@ -173,6 +173,14 @@ class MainWindowMixin(WidgetMixin):
         self.default_state = self.saveState(self.widget_version)
         super().init_state(settings, callback, *args, **kwargs)
 
+    def layout_state(self):
+        """Return the Qt layout state"""
+        return self.saveState(self.widget_version)
+
+    def apply_layout(self, value):
+        """Apply binary Qt layout state"""
+        self.restoreState(value, self.widget_version)
+
     def export_state(self):
         """Exports data for save/restore"""
         state = WidgetMixin.export_state(self)
