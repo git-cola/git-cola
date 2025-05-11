@@ -37,7 +37,7 @@ Fixes
 Translations
 ------------
 * Updated Japanese translation.
-  (`#1424 <https://github.com/git-cola/git-cola/pull/1472>`_)
+  (`#1472 <https://github.com/git-cola/git-cola/pull/1472>`_)
 
 
 .. _v4.12.0:
