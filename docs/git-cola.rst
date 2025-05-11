@@ -344,7 +344,7 @@ Launches the configured visual text editor
 Launch Difftool
 ~~~~~~~~~~~~~~~
 
-Visualize changes using `git difftool`.
+Visualize changes using ``git difftool``.
 
 Revert Unstaged Edits
 ~~~~~~~~~~~~~~~~~~~~~
@@ -376,7 +376,7 @@ Delete untracked files from the filesystem.
 Add to .gitignore
 ~~~~~~~~~~~~~~~~~
 
-Adds untracked files to to the .gitignore file.
+Adds untracked files to to the ``.gitignore`` file.
 
 
 .. _diff:
@@ -524,6 +524,14 @@ To override the default path to this hook set the
 hook script.  This is useful if you would like to use a common hook
 across all repositories.
 
+Set Commit Date
+---------------
+
+The tool menu's "Set Commit Date" action displays a dialog that lets you set the
+commit time for the next commit. Once enabled, the checkbox next to the menu action will
+be checked.
+
+The commit date option is disabled once a commit is performed.
 
 BRANCHES
 ========
@@ -533,9 +541,9 @@ The tree has three main sections: `Local Branches`, `Remote Branches` and `Tags`
 Branches are grouped by their name divided by the character ``/``.
 For example, in a repo with the following list of branches::
 
+    branch/doe
     branch/feature/foo
     branch/feature/bar
-    branch/doe
 
 The branches widget will display the following hierarchy::
 
