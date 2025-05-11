@@ -416,7 +416,10 @@ def restore_worktree(context):
 def build_layout_menu(widget, menu):
     """Add layouts from ~/.config/git-cola/layouts to the specified menu"""
     directory = resources.xdg_config_home('git-cola', 'layouts')
-    layouts = sorted(os.listdir(directory))
+    if os.path.isdir(directory):
+        layouts = sorted(os.listdir(directory))
+    else:
+        layouts = []
     suffix = '.layout'
     if layouts:
         menu.addSeparator()
