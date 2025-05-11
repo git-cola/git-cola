@@ -718,13 +718,13 @@ and restored at application shutdown/startup.
 the `Save Window Settings` option in the `git cola` preferences.
 
 You can save your current layout configuration to ``*.layout`` files
-using the ``View -> Layouts -> Save Layout`` menu action.
+using the ``View > Layouts > Save Layout`` menu action.
 
-You can load arbitrary layout files using the ``View -> Layouts -> Load Layout``
+You can load arbitrary layout files using the ``View > Layouts > Load Layout``
 menu action.
 
 By default, layouts are saved to the ``~/.config/git-cola/layouts`` directory.
-Layouts saved to this directory will appear in the ``View -> Layouts`` menu
+Layouts saved to this directory will appear in the ``View > Layouts`` menu
 for quick loading and switching of layouts.
 
 

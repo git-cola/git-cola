@@ -14,7 +14,7 @@ Usability, bells and whistles
 
 * Widget layouts can now be saved and loaded to ``*.layout`` files.
   Layouts are saved to ``~/.config/git-cola/layouts`` by default and can be
-  saved and loaded using the `View -> Layouts` menu actions.
+  saved and loaded using the `View > Layouts` menu actions.
   (`#1467 <https://github.com/git-cola/git-cola/issues/1467>`_)
 
 * The status tool has been updated to launch editors with multiple files when invoking
@@ -2031,7 +2031,7 @@ Usability, bells and whistles
 * The "name" field in the "Create Tag" dialog now includes autocompletion,
   which makes it easy to see which tags currently exist.
 
-* `git cola` now has configurable toolbars.  Use the `View -> Add toolbar`
+* `git cola` now has configurable toolbars.  Use the `View > Add toolbar`
   menu item to add a toolbar.
 
 * Setting `cola.expandtab` to `true` will now expand tabs into spaces
@@ -3313,7 +3313,7 @@ Usability, bells and whistles
 * The new `Bookmarks` tool makes it really easy to switch between repositories.
 
 * There is now a dedicated dialog for applying patches.
-  See the ``File -> Apply Patches`` menu item.
+  See the ``File > Apply Patches`` menu item.
   (`#215 <https://github.com/git-cola/git-cola/issues/215>`_)
 
 * A new `git cola am` sub-command was added for applying patches.
@@ -3483,7 +3483,7 @@ Usability, bells and whistles
   appropriate is the most intuitive and muscle-memory-friendly thing to do.
 
 * You can now right-click on folders in your standard file browser
-  and choose "Open With -> Git Cola"  (Linux-only).
+  and choose ``Open With > Git Cola``  (Linux-only).
 
 Fixes
 -----
