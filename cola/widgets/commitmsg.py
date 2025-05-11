@@ -51,6 +51,11 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self._last_commit_datetime = None  # The most recently selected commit date.
         self._last_commit_datetime_backup = None  # Used when amending.
         self._git_commit_date = None  # Overrides the commit date when committing.
+        self._commit_authors = []  # Recently used author override values.
+        self._last_git_commit_author = None  # The most recently selected author.
+        self._git_commit_author = None  # Overrides the commit author when comitting.
+        self._git_commit_author_backup = None  # Used when amending.
+
         self._widgets_initialized = False  # Defer setting the cursor position height.
 
         # Actions
@@ -146,6 +151,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.commit_date_action.setCheckable(True)
         self.commit_date_action.setChecked(False)
         qtutils.connect_action_bool(self.commit_date_action, self.set_commit_date)
+
+        # Commit Author
+        self.commit_author_action = self.actions_menu.addAction(N_('Set Commit Author'))
+        self.commit_author_action.setCheckable(True)
+        self.commit_author_action.setChecked(False)
+        qtutils.connect_action_bool(self.commit_author_action, self.set_commit_author)
 
         # Bypass hooks
         self.bypass_commit_hooks_action = self.actions_menu.addAction(
@@ -255,6 +266,18 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def set_initial_size(self):
         self.setMaximumHeight(133)
         QtCore.QTimer.singleShot(1, self.restore_size)
+
+    def export_state(self, state):
+        """Save persistent UI state on shutdown"""
+        # Set a limit on the number of recent author values.
+        max_recent = prefs.maxrecent(self.context)
+        state['authors'] = self._commit_authors[:max_recent]
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent UI state on startup"""
+        self._commit_authors = state.get('authors', [])
+        return True
 
     def restore_size(self):
         self.setMaximumHeight(2**13)
@@ -411,13 +434,20 @@ class CommitMessageEditor(QtWidgets.QFrame):
         with qtutils.BlockSignals(self.amend_action):
             self.amend_action.setEnabled(can_amend)
             self.amend_action.setChecked(checked)
-        # Store/restore the last commit date when amending.
+        # Store/restore the commit date and author when amending.
         if checked:
             self._last_commit_datetime_backup = self._last_commit_datetime
             self._last_commit_datetime = _get_latest_commit_datetime(self.context)
+            self._git_commit_author_backup = self._git_commit_author
+            self._git_commit_author = None
         else:
             self._last_commit_datetime = self._last_commit_datetime_backup
             self._last_commit_datetime_backup = None
+            if self._git_commit_author_backup:
+                self._git_commit_author = self._git_commit_author_backup
+                self._git_commit_author_backup = None
+                with qtutils.BlockSignals(self.commit_author_action):
+                    self.commit_author_action.setChecked(True)
 
     def commit(self):
         """Attempt to create a commit from the index and commit message."""
@@ -494,6 +524,11 @@ class CommitMessageEditor(QtWidgets.QFrame):
         else:
             date = None
 
+        if self.commit_author_action.isChecked():
+            author = self._git_commit_author
+        else:
+            author = None
+
         task = qtutils.SimpleTask(
             cmds.run(
                 cmds.Commit,
@@ -502,6 +537,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
                 msg,
                 sign,
                 no_verify=no_verify,
+                author=author,
                 date=date,
             )
         )
@@ -643,6 +679,34 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self._last_commit_datetime = CommitDateDialog.tick_time(widget.datetime())
         else:
             self.commit_date_action.setChecked(False)
+
+    def set_commit_author(self, enabled):
+        """Choose a commit author to override the author value when authoring commits"""
+        if not enabled:
+            if self._git_commit_author:
+                self._last_git_commit_author = self._git_commit_author
+            self._git_commit_author = None
+            return
+        widget = CommitAuthorDialog(
+            self,
+            self.context,
+            commit_author=self._git_commit_author or self._last_git_commit_author,
+            commit_authors=self._commit_authors,
+        )
+        if widget.exec_() == QtWidgets.QDialog.Accepted:
+            commit_author = widget.commit_author()
+            default_author = _get_default_author(self.context)
+            Interaction.log(N_('Setting commit author to %s') % commit_author)
+            self._git_commit_author = commit_author
+            if (
+                commit_author
+                and commit_author != default_author
+                and commit_author not in self._commit_authors
+            ):
+                self._commit_authors.insert(0, commit_author)
+        else:
+            self._git_commit_author = None
+            self.commit_author_action.setChecked(False)
 
     # Qt overrides
     def showEvent(self, event):
@@ -849,6 +913,143 @@ class CommitDateDialog(QtWidgets.QDialog):
         with qtutils.BlockSignals(self._calendar_widget):
             self._calendar_widget.setSelectedDate(commit_datetime.date())
         self._update_slider_from_datetime(commit_datetime)
+
+
+def _get_default_author(context):
+    """Get the default author value"""
+    name, email = context.cfg.get_author()
+    return f'{name} <{email}>'
+
+
+def _get_latest_commit_author(context):
+    """Query the commit author from Git"""
+    status, out, _ = context.git.log('-1', '--format=%aN <%aE>', 'HEAD')
+    if status != 0 or not out:
+        return None
+    return out
+
+
+class CommitAuthorDialog(QtWidgets.QDialog):
+    """Override the commit author when authoring commits"""
+
+    def __init__(self, parent, context, commit_author=None, commit_authors=None):
+        QtWidgets.QDialog.__init__(self, parent)
+        main_tooltip = """Override the commit author.
+
+Specify an explicit author using the standard "A U Thor <author@example.com>" format.
+
+Otherwise <author> is assumed to be a pattern and is used to search for an
+existing commit by that author (i.e. rev-list --all -i --author=<author>);"""
+        self.context = context
+        self._current_author = commit_author or _get_default_author(context)
+
+        authors = self._get_authors(commit_author, commit_authors)
+        tooltip = N_('Override the commit author when authoring commits')
+        self._author_combobox = qtutils.combo(authors, editable=True, tooltip=tooltip)
+        self._author_combobox.setToolTip(main_tooltip)
+        if authors:
+            self._author_combobox.set_value(authors[0])
+
+        self._reset_to_commit_author_button = qtutils.create_toolbutton_with_callback(
+            self._reset_to_commit_author,
+            None,
+            icons.sync(),
+            N_('Set author to match the latest commit'),
+        )
+        self._reset_to_current_author_button = qtutils.create_toolbutton_with_callback(
+            self._reset_to_current_author,
+            None,
+            icons.undo(),
+            N_('Reset author to the current author'),
+        )
+        self._reset_to_default_author_button = qtutils.create_toolbutton_with_callback(
+            self._reset_to_default_author,
+            None,
+            icons.style_dialog_reset(),
+            N_('Reset to default author'),
+        )
+
+        self._cancel_button = QtWidgets.QPushButton(N_('Cancel'))
+        self._cancel_button.setIcon(icons.close())
+
+        self._apply_button = QtWidgets.QPushButton(N_('Set Author'))
+        self._apply_button.setToolTip(main_tooltip)
+        self._apply_button.setDefault(True)
+        self._apply_button.setIcon(icons.ok())
+
+        button_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self._cancel_button,
+            qtutils.STRETCH,
+            self._apply_button,
+        )
+        input_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self._author_combobox,
+            self._reset_to_commit_author_button,
+            self._reset_to_default_author_button,
+            self._reset_to_current_author_button,
+        )
+        layout = qtutils.vbox(
+            defs.small_margin,
+            defs.spacing,
+            input_layout,
+            qtutils.STRETCH,
+            defs.button_spacing,
+            button_layout,
+        )
+        self.setLayout(layout)
+        self.setWindowTitle(N_('Set Commit Author'))
+        self.setWindowModality(Qt.ApplicationModal)
+
+        self._apply_button.clicked.connect(self.accept)
+        self._cancel_button.clicked.connect(self.reject)
+        self._author_combobox.currentTextChanged.connect(lambda _: self._validate())
+        self._validate()
+
+    def commit_author(self):
+        """Return the selected author value"""
+        return self._author_combobox.current_value().strip()
+
+    def _validate(self):
+        """Validate the author value and disable the apply button when invalid"""
+        author = self.commit_author()
+        self._apply_button.setEnabled(bool(author))
+
+    def _get_authors(self, commit_author, commit_authors):
+        """Build a list of authors for the combo box"""
+        seen = set()
+        all_authors = [commit_author]
+        if commit_authors:
+            all_authors.extend(commit_authors)
+        all_authors.append(_get_default_author(self.context))
+        # Create a final unique list of authors.
+        authors = []
+        for author in all_authors:
+            if author and author not in seen:
+                seen.add(author)
+                authors.append(author)
+        return authors
+
+    def _reset_to_commit_author(self):
+        """Reset the author value to the author of the most recent commit"""
+        commit_author = _get_latest_commit_author(self.context)
+        if commit_author:
+            self._author_combobox.set_current_value(commit_author)
+        else:
+            self._reset_to_default_author()  # Fallback to the current author.
+
+    def _reset_to_current_author(self):
+        """Reset the author value to the current author"""
+        current_author = self._current_author
+        if current_author:
+            self._author_combobox.set_current_value(current_author)
+
+    def _reset_to_default_author(self):
+        """Reset the author value to the default author"""
+        self._author_combobox.set_current_value(_get_default_author(self.context))
 
 
 class CommitSummaryLineEdit(SpellCheckLineEdit):

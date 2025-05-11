@@ -3,6 +3,11 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The commit tool has a new "Set Commit Author" tool menu action that temporarily
+  switches between author identities independent of your ``git config`` settings.
+  The value specified in the dialog is passed directly to ``git commit --author=...``.
+  (`#1469 <https://github.com/git-cola/git-cola/issues/1469>`_)
+
 * Widget layouts can now be saved and loaded to ``*.layout`` files.
   Layouts are saved to ``~/.config/git-cola/layouts`` by default and can be
   saved and loaded using the `View -> Layouts` menu actions.

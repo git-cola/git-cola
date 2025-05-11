@@ -261,6 +261,14 @@ class ComboBox(QtWidgets.QComboBox):
             index = 0
         self.setCurrentIndex(index)
 
+    def set_current_value(self, value):
+        """Set the current value irrespective of the preset values"""
+        self.setCurrentText(value)
+
+    def current_value(self):
+        """Return the current value irrespective of the preset values"""
+        return self.currentText()
+
 
 def combo(items, editable=False, tooltip='', parent=None):
     """Create a readonly (by default) combo box from a list of items"""

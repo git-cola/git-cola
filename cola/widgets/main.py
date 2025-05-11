@@ -1221,17 +1221,19 @@ class MainView(standard.MainWindow):
         self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
     def export_state(self):
+        """Save persistent UI state on shutdown"""
         state = standard.MainWindow.export_state(self)
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
         state['toolbars'] = self.toolbar_state.export_state()
         state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
+        self.commiteditor.export_state(state)
 
         return state
 
     def apply_state(self, state):
-        """Imports data for save/restore"""
+        """Apply persistent UI state on startup"""
         base_ok = standard.MainWindow.apply_state(self, state)
         lock_layout = state.get('lock_layout', False)
         self.lock_layout_action.setChecked(lock_layout)
@@ -1246,7 +1248,8 @@ class MainView(standard.MainWindow):
         self.model.set_ref_sort(sort_key)
 
         diff_ok = self.diffviewer.apply_state(state)
-        return base_ok and diff_ok
+        commitmsg_ok = self.commiteditor.apply_state(state)
+        return base_ok and diff_ok and commitmsg_ok
 
     def setup_dockwidget_view_menu(self):
         # Hotkeys for toggling the dock widgets

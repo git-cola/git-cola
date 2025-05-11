@@ -799,7 +799,9 @@ class UndoLastCommit(ResetCommand):
 class Commit(ResetMode):
     """Attempt to create a new commit."""
 
-    def __init__(self, context, amend, msg, sign, no_verify=False, date=None):
+    def __init__(
+        self, context, amend, msg, sign, no_verify=False, author=None, date=None
+    ):
         super().__init__(context)
         self.amend = amend
         self.msg = msg
@@ -807,6 +809,7 @@ class Commit(ResetMode):
         self.no_verify = no_verify
         self.old_commitmsg = self.model.commitmsg
         self.new_commitmsg = ''
+        self.author = author
         self.date = date
 
     def do(self):
@@ -820,10 +823,14 @@ class Commit(ResetMode):
         }
         add_env.update(main.autodetect_proxy_environ())
         kwargs = {}
+        # Override the commit date.
         if self.date:
             add_env['GIT_AUTHOR_DATE'] = self.date
             add_env['GIT_COMMITTER_DATE'] = self.date
             kwargs['date'] = self.date
+        # Override the commit author.
+        if self.author:
+            kwargs['author'] = self.author
         try:
             core.write(tmp_file, msg)
             # Run 'git commit'

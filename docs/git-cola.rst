@@ -533,6 +533,16 @@ be checked.
 
 The commit date option is disabled once a commit is performed.
 
+Set Commit Author
+-----------------
+
+The tool menu's "Set Commit Author" action displays a dialog that lets you set the
+commit author for the next commit. Once enabled, the checkbox next to the menu action
+will be checked.
+
+This setting persists across commits. Clear the tool menu's checkbox to disable the action.
+
+
 BRANCHES
 ========
 
