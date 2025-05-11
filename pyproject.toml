@@ -7,11 +7,11 @@ name = "git-cola"
 authors = [
     {name = "David Aguilar", email = "davvid@gmail.com"}
 ]
+license = { text = "GPL-2.0" }
 classifiers = [
     "Development Status :: 6 - Mature",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Version Control :: Git",
@@ -23,7 +23,6 @@ dependencies = [
     "qtpy >= 1.1.0",
 ]
 dynamic = ["version"]
-license = {file = "LICENSE"}
 readme = {file = "README.md", content-type = "text/markdown"}
 
 [project.optional-dependencies]
