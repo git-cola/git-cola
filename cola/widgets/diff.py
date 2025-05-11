@@ -196,8 +196,9 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.highlighter = DiffSyntaxHighlighter(
             context, self.document(), is_commit=is_commit, whitespace=whitespace
         )
+        self.diff_lines = diffparse.DiffLines()
         if numbers:
-            self.numbers = DiffLineNumbers(context, self)
+            self.numbers = DiffLineNumbers(context, self, diff_lines=self.diff_lines)
             self.numbers.hide()
         else:
             self.numbers = None
@@ -278,11 +279,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         diff = diff.rstrip('\n')  # diffs include two empty newlines
         self.save_scrollbar()
 
-        self.hint.set_value('')
+        lines = self.diff_lines.parse(diff)
         if self.numbers:
-            self.numbers.set_diff(diff)
-        self.set_value(diff)
+            # The diff_lines parser is shared with self.numbers and updated above.
+            self.numbers.set_diff(diff, lines=lines)
 
+        self.hint.set_value('')
+        self.set_value(diff)
         self.restore_scrollbar()
 
     def selected_diff_stripped(self):
@@ -352,11 +355,13 @@ def _strip_diff(value):
 
 
 class DiffLineNumbers(TextDecorator):
-    def __init__(self, context, parent):
+    """The diff viewer's line number display"""
+
+    def __init__(self, context, parent, diff_lines=None):
         TextDecorator.__init__(self, parent)
         self.highlight_line = -1
         self.lines = None
-        self.parser = diffparse.DiffLines()
+        self.parser = diff_lines or diffparse.DiffLines()
         self.formatter = diffparse.FormatDigits()
 
         font = qtutils.diff_font(context)
@@ -372,8 +377,11 @@ class DiffLineNumbers(TextDecorator):
         self._window = palette.color(QPalette.Window)
         self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
 
-    def set_diff(self, diff):
-        self.lines = self.parser.parse(diff)
+    def set_diff(self, diff, lines=None):
+        """Update to a new diff display"""
+        if lines is None:
+            lines = self.parser.parse(diff)
+        self.lines = lines
         self.formatter.set_digits(self.parser.digits())
 
     def width_hint(self):
@@ -489,15 +497,24 @@ class Viewer(QtWidgets.QFrame):
         self.images = []
         self.pixmaps = []
         self.options = options = Options(self)
+        italic_font = self.font()
+        italic_font.setItalic(True)
+
         self.filename = PlainTextLabel(parent=self)
         self.filename.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
-        font = self.font()
-        font.setItalic(True)
-        self.filename.setFont(font)
+        self.filename.setFont(italic_font)
         self.filename.elide()
+
+        diffstat_font = self.font()
+        diffstat_font.setPointSize(diffstat_font.pointSize() - 1)
+        self.diffstat = PlainTextLabel(parent=self)
+        self.diffstat.setAlignment(Qt.AlignVCenter | Qt.AlignRight)
+        self.diffstat.setFont(diffstat_font)
+
         self.text = DiffEditor(context, options, self)
         self.image = imageview.ImageView(parent=self)
         self.image.setFocusPolicy(Qt.NoFocus)
+
         self.search_widget = TextSearchWidget(self.text, self)
         self.search_widget.hide()
         self._drag_has_patches = False
@@ -525,6 +542,9 @@ class Viewer(QtWidgets.QFrame):
 
         # Observe the file type
         model.file_type_changed.connect(self.set_file_type, type=Qt.QueuedConnection)
+
+        # Observe the diff text
+        model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
         # Observe the image mode combo box
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
@@ -603,6 +623,17 @@ class Viewer(QtWidgets.QFrame):
         self.set_word_wrapping(word_wrap, update=True)
         return True
 
+    def set_diff(self, diff):
+        """Update the diffstat display in reponse to the new diff"""
+        filename = self.context.selection.filename()
+        if filename:
+            removals = self.text.diff_lines.removals.count
+            additions = self.text.diff_lines.additions.count
+            diffstat = f'-{removals}  +{additions}'
+        else:
+            diffstat = ''
+        self.diffstat.set_text(diffstat)
+
     def set_diff_type(self, diff_type):
         """Manage the image and text diff views when selection changes"""
         # The "diff type" is whether the diff viewer is displaying an image.
@@ -639,6 +670,7 @@ class Viewer(QtWidgets.QFrame):
     def set_show_filenames(self, enabled, update=False):
         """Enable/disable displaying the selected filename"""
         self.filename.setVisible(enabled)
+        self.diffstat.setVisible(enabled)
         if update:
             with qtutils.BlockSignals(self.options.show_filenames):
                 self.options.show_filenames.setChecked(enabled)

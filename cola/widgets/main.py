@@ -175,6 +175,7 @@ class MainView(standard.MainWindow):
         titlebar = self.diffdock.titleBarWidget()
         titlebar.add_title_widget(self.diffviewer.options)
         titlebar.add_title_widget(self.diffviewer.filename)
+        titlebar.add_corner_widget(self.diffviewer.diffstat)
 
         # All Actions
         # Make Cmd-M minimize the window on macOS.

@@ -44,12 +44,14 @@ class LineCounter:
     """Keep track of a diff range's values"""
 
     def __init__(self, value=0, max_value=-1):
-        self.value = value
+        self.count = 0  # Absolute count of additions/removals/...
+        self.value = value  # Current line number counter.
         self.max_value = max_value
         self._initial_max_value = max_value
 
     def reset(self):
         """Reset the max counter and return self for convenience"""
+        self.count = 0
         self.max_value = self._initial_max_value
         return self
 
@@ -63,6 +65,7 @@ class LineCounter:
         """Return the current value and increment to the next"""
         value = self.value
         self.value += amount
+        self.count += amount
         return value
 
 
@@ -81,6 +84,8 @@ class DiffLines:
         self.new = LineCounter()
         self.ours = LineCounter()
         self.theirs = LineCounter()
+        self.additions = LineCounter()
+        self.removals = LineCounter()
 
     def digits(self):
         return digits(
@@ -103,6 +108,8 @@ class DiffLines:
         new = self.new.reset()
         ours = self.ours.reset()
         theirs = self.theirs.reset()
+        additions = self.additions.reset()
+        removals = self.removals.reset()
 
         for text in diff_text.split('\n'):
             if text.startswith('@@ -'):
@@ -129,20 +136,28 @@ class DiffLines:
                 else:
                     lines.append((self.EMPTY, self.EMPTY))
             elif not merge and text.startswith('-'):
+                removals.tick()
                 lines.append((old.tick(), self.EMPTY))
             elif merge and text.startswith('- '):
+                removals.tick()
                 lines.append((ours.tick(), self.EMPTY, self.EMPTY))
             elif merge and text.startswith(' -'):
+                removals.tick()
                 lines.append((self.EMPTY, theirs.tick(), self.EMPTY))
             elif merge and text.startswith('--'):
+                removals.tick()
                 lines.append((ours.tick(), theirs.tick(), self.EMPTY))
             elif not merge and text.startswith('+'):
+                additions.tick()
                 lines.append((self.EMPTY, new.tick()))
             elif merge and text.startswith('++'):
+                additions.tick()
                 lines.append((self.EMPTY, self.EMPTY, new.tick()))
             elif merge and text.startswith('+ '):
+                additions.tick()
                 lines.append((self.EMPTY, theirs.tick(), new.tick()))
             elif merge and text.startswith(' +'):
+                additions.tick()
                 lines.append((ours.tick(), self.EMPTY, new.tick()))
             elif not merge and text.startswith(' '):
                 lines.append((old.tick(), new.tick()))

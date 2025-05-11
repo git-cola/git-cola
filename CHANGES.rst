@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The diff viewer now displays the number of removed (``-``) and added (``+``)
+  lines when the "Show filenames" tool menu option is enabled.
+  (`#1471 <https://github.com/git-cola/git-cola/issues/1471>`_)
+
 * The commit tool has a new "Set Commit Author" tool menu action that temporarily
   switches between author identities independent of your ``git config`` settings.
   The value specified in the dialog is passed directly to ``git commit --author=...``.
