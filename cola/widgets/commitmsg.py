@@ -16,13 +16,13 @@ from .. import icons
 from .. import textwrap
 from .. import qtutils
 from .. import spellcheck
+from .. import utils
 from ..interaction import Interaction
 from ..gitcmds import commit_message_path
 from ..i18n import N_
 from ..models import dag
 from ..models import prefs
 from ..qtutils import get
-from ..utils import Group
 from . import defs
 from . import standard
 from .selectcommits import select_commits
@@ -108,7 +108,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.commit_button = qtutils.create_button(
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip, icon=icons.commit()
         )
-        self.commit_group = Group(self.commit_action, self.commit_button)
+        self.commit_group = utils.Group(self.commit_action, self.commit_button)
         self.commit_progress_bar = standard.progress_bar(
             self,
             disable=(self.commit_button, self.summary, self.description),
