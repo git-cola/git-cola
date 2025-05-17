@@ -27,7 +27,7 @@ from . import defs
 from . import standard
 from .selectcommits import select_commits
 from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
-from .text import anchor_mode, is_shift_pressed
+from .text import event_anchor_mode, is_shift_pressed
 
 
 class CommitMessageEditor(QtWidgets.QFrame):
@@ -1136,8 +1136,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
                 # If we're on the first line, but not at the
                 # beginning, then move the cursor to the beginning
                 # of the line.
-                shifted = is_shift_pressed(event)
-                mode = anchor_mode(shifted)
+                mode = event_anchor_mode(event)
                 cursor.movePosition(QtGui.QTextCursor.Up, mode)
                 new_position = cursor.position()
                 if position == new_position:
@@ -1152,8 +1151,7 @@ class CommitMessageTextEdit(SpellCheckTextEdit):
             text_after = all_text[position:]
             lines_after = text_after.count('\n')
             if lines_after == 0:
-                shifted = is_shift_pressed(event)
-                mode = anchor_mode(shifted)
+                mode = event_anchor_mode(event)
                 cursor.movePosition(QtGui.QTextCursor.Down, mode)
                 new_position = cursor.position()
                 if position == new_position:

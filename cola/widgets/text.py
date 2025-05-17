@@ -730,6 +730,12 @@ def anchor_mode(select):
     return mode
 
 
+def event_anchor_mode(event):
+    """Return the QTextCursor mode to keep/discard the selection based on the event"""
+    select = is_shift_pressed(event)
+    return anchor_mode(select)
+
+
 def is_shift_pressed(event):
     """Return true if the Shift modifier is currently held"""
     return event.modifiers() & Qt.ShiftModifier

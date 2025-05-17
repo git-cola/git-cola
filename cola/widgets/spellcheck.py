@@ -8,7 +8,7 @@ from qtpy.QtCore import Qt
 from .. import qtutils
 from .. import spellcheck
 from ..i18n import N_
-from .text import HintedTextEdit
+from .text import event_anchor_mode, HintedTextEdit
 
 
 class SpellCheckTextEdit(HintedTextEdit):
@@ -133,10 +133,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
             if cursor.position() == 0:
                 cursor.clearSelection()
             else:
-                if event.modifiers() & Qt.ShiftModifier:
-                    mode = QtGui.QTextCursor.KeepAnchor
-                else:
-                    mode = QtGui.QTextCursor.MoveAnchor
+                mode = event_anchor_mode(event)
                 cursor.setPosition(0, mode)
             self.setTextCursor(cursor)
             return
@@ -150,10 +147,7 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
                 self.setTextCursor(cursor)
                 self.down_pressed.emit()
             else:
-                if event.modifiers() & Qt.ShiftModifier:
-                    mode = QtGui.QTextCursor.KeepAnchor
-                else:
-                    mode = QtGui.QTextCursor.MoveAnchor
+                mode = event_anchor_mode(event)
                 cursor.setPosition(end_position, mode)
                 self.setTextCursor(cursor)
             return
