@@ -149,12 +149,9 @@ class BaseTextEditExtension(QtCore.QObject):
             self.widget.setTextCursor(cursor)
         else:
             # If none of the above applied then restore the cursor position.
-            position = max(0, min(offset, len(value) - 1))
+            position = utils.clamp_zero(offset, len(value))
             cursor = self.widget.textCursor()
             cursor.setPosition(position)
-            self.widget.setTextCursor(cursor)
-            cursor = self.widget.textCursor()
-            cursor.movePosition(QtGui.QTextCursor.StartOfLine)
             self.widget.setTextCursor(cursor)
 
     def set_cursor_position(self, new_position):
