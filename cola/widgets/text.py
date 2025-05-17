@@ -53,7 +53,7 @@ class LineEdit(QtWidgets.QLineEdit):
 
     def _set_value(self, value):
         """Implementation helper to update the widget to the specified value"""
-        pos = self.cursorPosition()
+        pos = utils.clamp_zero(self.cursorPosition(), len(value))
         self.setText(value)
         self.setCursorPosition(pos)
 

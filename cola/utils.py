@@ -26,6 +26,11 @@ def clamp(value, low, high):
     return min(high, max(low, value))
 
 
+def clamp_zero(value, maximum):
+    """Clamp a value between 0 and the maximum value"""
+    return clamp(value, 0, maximum)
+
+
 def epoch_millis():
     return int(time.time() * 1000)
 

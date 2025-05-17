@@ -1086,7 +1086,7 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
 
             value = self.value()
             if position > 1:
-                position = max(0, min(position - 1, len(value) - 1))
+                position = utils.clamp_zero(position - 1, len(value))
                 cursor.setPosition(position)
                 self.setTextCursor(cursor)
 
