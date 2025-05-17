@@ -1073,8 +1073,8 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
 
     def _update_summary_text(self):
         """Prevent commit messages from starting with comment characters"""
-        value = self.value()
-        if self._comment_char and value.startswith(self._comment_char):
+        value = self.get()
+        if self._comment_char and value.lstrip().startswith(self._comment_char):
             cursor = self.textCursor()
             position = cursor.position()
 
@@ -1083,8 +1083,8 @@ class CommitSummaryLineEdit(SpellCheckLineEdit):
                 value = value.lstrip(self._comment_char).lstrip()
 
             self.set_value(value, block=True)
+            value = self.get()
 
-            value = self.value()
             if position > 1:
                 position = utils.clamp_zero(position - 1, len(value))
                 cursor.setPosition(position)
