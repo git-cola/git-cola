@@ -91,6 +91,7 @@ addopts = "--ruff"
 packages = [
     "cola",
     "cola.bin",
+    "cola.data",
     "cola.i18n",
     "cola.i18n.glossary",
     "cola.icons",
@@ -103,8 +104,9 @@ include-package-data = true
 [tool.setuptools.package-data]
 cola = [
     "bin/*",
-    "data/*",
-    "i18n/*",
+    "data/*.html",
+    "i18n/*.po",
+    "i18n/glossary/*.po",
     "icons/*.svg",
     "icons/dark/*.svg",
 ]
