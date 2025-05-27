@@ -1032,6 +1032,8 @@ Changes have been made build infrastructure and the resulting filesystem artifac
   supported and may stop working in a future release without notice.
   (`#1201 <https://github.com/git-cola/git-cola/issues/1201>`_)
 
+* ``Qt4`` / ``PyQt4`` is no longer supported.
+
 * The `#!/usr/bin/env python` shebang lines in the `git-cola` and `git-dag` wrapper
   scripts have been updated to use `python3`.
   (`#1204 <https://github.com/git-cola/git-cola/pull/1204>`_)
