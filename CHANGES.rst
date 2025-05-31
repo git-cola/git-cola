@@ -1,3 +1,12 @@
+Upcoming
+========
+
+Translations
+------------
+* Added Tamil translation.
+  (`#1478 <https://github.com/git-cola/git-cola/pull/1478>`_)
+
+
 .. _v4.13.0:
 
 v4.13.0
