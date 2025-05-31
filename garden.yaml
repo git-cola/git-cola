@@ -270,6 +270,7 @@ trees:
     remotes:
       Mailaender: "git@github.com:Mailaender/com.github.git_cola.git-cola.git"
       Erick555: "git@github.com:Erick555/com.github.git_cola.git-cola.git"
+      PunkPangolin: "git@github.com:PunkPangolin/com.github.git_cola.git-cola.git"
   pages:
     description: "Git Cola's homepage"
     url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
