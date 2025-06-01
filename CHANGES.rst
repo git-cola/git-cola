@@ -3,7 +3,7 @@ Upcoming
 
 Translations
 ------------
-* Added Tamil translation.
+* New Tamil translation.
   (`#1478 <https://github.com/git-cola/git-cola/pull/1478>`_)
 
 
