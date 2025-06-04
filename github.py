@@ -3,7 +3,7 @@ import mimetypes
 import requests
 
 
-class GithubAPI(object):
+class GithubAPI:
 
     BASE_URL = 'https://api.github.com'
     CONFIG = os.path.join(os.path.dirname(__file__), 'config')
@@ -11,7 +11,7 @@ class GithubAPI(object):
     def __init__(self):
         self.session = session = requests.Session()
         headers = session.headers
-        with open(self.CONFIG, 'r') as f:
+        with open(self.CONFIG) as f:
             for line in f:
                 if line.startswith('GITHUB_TOKEN='):
                     key, value = line.split('=', 1)
@@ -35,6 +35,6 @@ class GithubAPI(object):
 
     def upload_headers(self, filename):
         mimetype = mimetypes.guess_type(filename)[0]
-        headers = ['%s: %s' % (k, v) for k, v in self.session.headers.items()]
+        headers = ['{}: {}'.format(k, v) for k, v in self.session.headers.items()]
         headers.append('Content-Type: %s' % mimetype)
         return headers
