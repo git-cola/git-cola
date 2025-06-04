@@ -258,17 +258,18 @@ class Settings:
         if not path:
             path = self.path()
         if core.exists(path):
-            return read_json(path)
-        # We couldn't find ~/.config/git-cola, try ~/.cola
-        values = {}
-        path = os.path.join(core.expanduser('~'), '.cola')
-        if core.exists(path):
-            json_values = read_json(path)
-            for key in self.values:
-                try:
-                    values[key] = json_values[key]
-                except KeyError:
-                    pass
+            values = read_json(path)
+        else:
+            # We couldn't find ~/.config/git-cola, try ~/.cola
+            values = {}
+            path = os.path.join(core.expanduser('~'), '.cola')
+            if core.exists(path):
+                json_values = read_json(path)
+                for key in self.values:
+                    try:
+                        values[key] = json_values[key]
+                    except KeyError:
+                        pass
         # Ensure that all stored bookmarks use normalized paths ("/" only).
         normalize = display.normalize_path
         for entry in values.get('bookmarks', []):
