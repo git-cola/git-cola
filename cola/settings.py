@@ -207,7 +207,8 @@ class Settings:
         final last-ditch attempt to recover settings.
 
         """
-        path = self.path()
+        if path is None:
+            path = self.path()
         path_bak = path + '.bak'
         path_tmp = path + '.tmp'
 
