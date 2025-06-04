@@ -546,6 +546,7 @@ class BookmarksListView(QtWidgets.QListView):
         settings = self.context.settings
         settings.remove_missing_bookmarks()
         settings.remove_missing_recent()
+        settings.save()
         self.refresh()
 
 
