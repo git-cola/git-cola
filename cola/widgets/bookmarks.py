@@ -503,6 +503,7 @@ class BookmarksTreeView(standard.TreeView):
             settings.remove_missing_bookmarks()
         elif self.style == RECENT_REPOS:
             settings.remove_missing_recent()
+        settings.save()
         self.refresh()
 
 
