@@ -4,7 +4,6 @@
 # Options
 do_docs=false
 do_website=false
-do_tarball=false
 do_win32=false
 win32_installer=innosetup
 do_upload=false
@@ -84,15 +83,9 @@ do
 		shift
 		;;
 	--all)
-		# we no longer release the Mac OS X app.tar.gz
-		# do_tarball=true
 		do_win32=true
 		do_docs=true
 		do_upload=true
-		shift
-		;;
-	--tarball)
-		do_tarball=true
 		shift
 		;;
 	--doc)
@@ -132,16 +125,11 @@ do
 	esac
 done
 
-if test "${do_tarball}" = true || test "${do_upload}" = true
+if test "${do_upload}" = true
 then
 	init_release
 fi
 
-
-if test "${do_tarball}" = true
-then
-	build_tarball
-fi
 
 if test "${do_win32}" = true
 then
