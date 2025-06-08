@@ -15,7 +15,6 @@
 /pages
 /patches
 /pip-wheel-metadata
-/pynsist_pkgs
 /.pytest_cache
 /README.html
 /share/locale

@@ -74,7 +74,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install '.[build,docs,dev,extras]'
-      # Based on: contrib/win32/run-pynsist.sh
       - name: Build Installer
         run: |
           make doc

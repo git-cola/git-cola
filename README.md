@@ -468,7 +468,7 @@ Windows installers are built using
 
 To build the installer using Pynsist run:
 
-    ./contrib/win32/run-pynsist.sh
+    garden pynsist -vv
 
 This will generate an installer in `build/nsis/`.
 

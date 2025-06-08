@@ -111,6 +111,13 @@ trees:
         garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} docs
       man: garden man ${GARDEN_CMD_VERBOSE} docs
       pkg: git make-pkg --global --name git-cola
+      pynsist: |
+        ${activate}
+        rm -fr build/nsis
+        garden html ${GARDEN_CMD_VERBOSE} docs
+        garden install ${GARDEN_CMD_VERBOSE} -D htmldir="${TREE_PATH}/docs/html" docs
+        pynsist pynsist.cfg
+        rm -rf docs/html
       po: |
         for po in cola/i18n/*.po
         do
