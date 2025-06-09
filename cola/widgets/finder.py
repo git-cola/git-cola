@@ -108,6 +108,7 @@ class FindFilesThread(QtCore.QThread):
 
 
 class FindFilesFromRefThread(FindFilesThread):
+    """Gather the filenames that are present in the specified ref"""
 
     def __init__(self, context, ref, parent):
         super().__init__(context, parent)
@@ -130,7 +131,7 @@ class Finder(standard.Dialog):
             self.setWindowModality(Qt.WindowModal)
         if ref is None:
             ref = 'HEAD'
-
+        self.ref = ref
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
         self.input_txt = completion.GitPathsFromRefLineEdit(
@@ -138,6 +139,7 @@ class Finder(standard.Dialog):
         )
 
         self.tree = filetree.FileTree(parent=self)
+        self.browser = text.VimTextBrowser(context, parent=self)
 
         self.edit_button = qtutils.edit_button(default=True)
         self.edit_button.setShortcut(hotkeys.EDIT)
@@ -173,12 +175,12 @@ class Finder(standard.Dialog):
             self.open_default_button,
             self.edit_button,
         )
-
+        self.splitter = qtutils.splitter(Qt.Horizontal, self.tree, self.browser)
         self.main_layout = qtutils.vbox(
             defs.margin,
             defs.no_spacing,
             self.input_layout,
-            self.tree,
+            self.splitter,
             self.bottom_layout,
         )
         self.setLayout(self.main_layout)
@@ -250,5 +252,13 @@ class Finder(standard.Dialog):
         cmds.do(cmds.OpenDefaultApp, context, paths)
 
     def tree_item_selection_changed(self):
-        enabled = bool(self.tree.selected_item())
+        item = self.tree.selected_item()
+        enabled = bool(item)
         self.button_group.setEnabled(enabled)
+
+        content = ''
+        if item is not None:
+            filename = filetree.filename_from_item(item)
+            if filename:
+                content = gitcmds.cat_file_from_ref(self.context, self.ref, filename)
+        self.browser.set_value(content)
