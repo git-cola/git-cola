@@ -736,13 +736,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         """Select the item below the current item"""
         self.goto(self.itemBelow)
 
-    def goto(self, finder):
+    def goto(self, finder_fn):
         """Move the selection using a finder strategy"""
         items = self.selected_items()
         item = items[0] if items else None
         if item is None:
             return
-        found = finder(item)
+        found = finder_fn(item)
         if found:
             self.select([found.commit.oid])
 
