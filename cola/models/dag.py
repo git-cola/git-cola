@@ -287,7 +287,10 @@ class RepoReader:
                 try:
                     commit = self._objects[oid]
                 except KeyError:
-                    commit = CommitFactory.new(log_entry=log_entry)
+                    try:
+                        commit = CommitFactory.new(log_entry=log_entry)
+                    except (KeyError, ValueError):
+                        continue
                     self._objects[commit.oid] = commit
                     self._topo_list.append(commit)
                 yield commit
