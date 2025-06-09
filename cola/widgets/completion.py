@@ -709,6 +709,18 @@ class GitTrackedCompletionModel(GitPathCompletionModel):
         return (refs, paths, dirs)
 
 
+class GitPathsFromRefCompletionModel(GitTrackedCompletionModel):
+    """Completer for tracked files and folders"""
+
+    def __init__(self, context, ref, parent):
+        super().__init__(context, parent)
+        self.ref = ref
+
+    def gather_paths(self):
+        context = self.context
+        self._paths = gitcmds.ls_tree_paths(context, self.ref)
+
+
 class GitLogCompletionModel(GitRefCompletionModel):
     """Completer for arguments suitable for git-log like commands"""
 
@@ -828,6 +840,20 @@ GitRemoteBranchLineEdit = bind_lineedit(
 )
 GitStatusFilterLineEdit = bind_lineedit(GitStatusFilterCompletionModel, hint='<path>')
 GitTrackedLineEdit = bind_lineedit(GitTrackedCompletionModel, hint='<path>')
+
+
+class GitPathsFromRefLineEdit(CompletionLineEdit):
+    """Filename completion for paths from a specific ref"""
+
+    def __init__(
+        self, context, ref, hint='<path>', show_all_completions=False, parent=None
+    ):
+        super().__init__(
+            context,
+            lambda ctx, parent: GitPathsFromRefCompletionModel(ctx, ref, parent),
+            hint=hint,
+            parent=parent,
+        )
 
 
 class GitDialog(QtWidgets.QDialog):
