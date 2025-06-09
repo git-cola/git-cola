@@ -140,6 +140,7 @@ class Finder(standard.Dialog):
 
         self.tree = filetree.FileTree(parent=self)
         self.browser = text.VimTextBrowser(context, parent=self)
+        self.filename = None
 
         self.edit_button = qtutils.edit_button(default=True)
         self.edit_button.setShortcut(hotkeys.EDIT)
@@ -202,6 +203,7 @@ class Finder(standard.Dialog):
         self.input_txt.activated.connect(self.focus_tree)
         self.input_txt.down.connect(self.focus_tree)
         self.input_txt.enter.connect(self.focus_tree)
+        self.browser.selectionChanged.connect(self.browser_selection_changed)
 
         item_selection_changed = self.tree_item_selection_changed
         self.tree.itemSelectionChanged.connect(item_selection_changed)
@@ -211,6 +213,11 @@ class Finder(standard.Dialog):
         qtutils.add_action(
             self, 'Focus Input', self.focus_input, hotkeys.FOCUS, hotkeys.FINDER
         )
+        self.select_range_action = qtutils.add_action(
+            self, 'Select Line Range', self.accept
+        )
+        if ok_text:
+            self.browser.menu_actions.append(self.select_range_action)
 
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
@@ -262,9 +269,21 @@ class Finder(standard.Dialog):
         enabled = bool(item)
         self.button_group.setEnabled(enabled)
 
+        filename = None
         content = ''
         if item is not None:
             filename = filetree.filename_from_item(item)
             if filename:
                 content = gitcmds.cat_file_from_ref(self.context, self.ref, filename)
+        self.filename = filename
         self.browser.set_value(content)
+
+    def browser_selection_changed(self):
+        _, selection = self.browser.offset_and_selection()
+        enabled = bool(selection)
+        self.ok_button.setEnabled(enabled)
+        self.select_range_action.setEnabled(enabled)
+
+    def selected_line_range(self):
+        """Return the selected line range for the text browser"""
+        return self.browser.selected_line_range()

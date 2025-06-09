@@ -9,6 +9,10 @@ Usability, bells and whistles
 
 * The DAG viewer now accepts ``-L`` arguments just like ``git log``.
 
+* The DAG viewer can generate ``-L`` search expressions using its new
+  "Trace Evolution of Line Range..." context menu action.
+  (`#1483 <https://github.com/git-cola/git-cola/issues/1483>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it

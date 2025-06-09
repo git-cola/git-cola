@@ -34,6 +34,7 @@ from . import defs
 from . import diff
 from . import filelist
 from . import standard
+from . import finder
 
 
 def git_dag(context, args=None, existing_view=None, show=True):
@@ -278,6 +279,10 @@ class ViewerMixin:
             lambda oid: _save_blob_from_parent(self.context, oid), filtered=False
         )
 
+    def search_line_range(self):
+        """Open a dialog to select a range of lines from a file"""
+        self.with_oid(lambda oid: self.search_line_range_in_oid.emit(oid))
+
     def update_menu_actions(self, event):
         """Update menu actions to reflect the selection state"""
         selected_items = self.selected_items()
@@ -366,6 +371,9 @@ class ViewerMixin:
         self.menu_actions['save_blob_from_parent'].setEnabled(
             has_single_selection_or_clicked
         )
+        self.menu_actions['search_line_range'].setEnabled(
+            has_single_selection_or_clicked and has_oid
+        )
 
     def context_menu_event(self, event):
         """Build a context menu and execute it"""
@@ -375,6 +383,8 @@ class ViewerMixin:
         menu.addAction(self.menu_actions['diff_selected_this'])
         menu.addAction(self.menu_actions['diff_commit'])
         menu.addAction(self.menu_actions['diff_commit_all'])
+        menu.addSeparator()
+        menu.addAction(self.menu_actions['search_line_range'])
         menu.addSeparator()
         menu.addAction(self.menu_actions['checkout_branch'])
         menu.addAction(self.menu_actions['create_branch'])
@@ -549,6 +559,14 @@ def viewer_actions(widget, proxy):
                 proxy.save_blob_from_parent_dialog,
             ),
         ),
+        'search_line_range': set_icon(
+            icons.search(),
+            qtutils.add_action(
+                widget,
+                N_('Trace Evolution of Line Range...'),
+                proxy.search_line_range,
+            ),
+        ),
         'copy': set_icon(
             icons.copy(),
             qtutils.add_action(
@@ -662,6 +680,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
     commits_selected = Signal(object)
     diff_commits = Signal(object, object)
+    search_line_range_in_oid = Signal(object)
     zoom_to_fit = Signal()
 
     def __init__(self, context, parent):
@@ -1006,7 +1025,9 @@ class GitDAG(standard.MainWindow):
 
         self.treewidget.zoom_to_fit.connect(self.graphview.zoom_to_fit)
         self.treewidget.diff_commits.connect(self.diff_commits)
+        self.treewidget.search_line_range_in_oid.connect(self.search_line_range_in_oid)
         self.graphview.diff_commits.connect(self.diff_commits)
+        self.graphview.search_line_range_in_oid.connect(self.search_line_range_in_oid)
         self.filewidget.grab_file.connect(self.grab_file)
         self.filewidget.grab_file_from_parent.connect(self.grab_file_from_parent)
         self.maxresults.editingFinished.connect(self.display)
@@ -1213,11 +1234,39 @@ class GitDAG(standard.MainWindow):
         self.graphview.set_initial_view()
 
     def diff_commits(self, left, right):
+        """React to diff_commits signals by displaying a difftool interface"""
         paths = self.params.paths()
         if paths:
             difftool.difftool_launch(self.context, left=left, right=right, paths=paths)
         else:
             difftool.diff_commits(self.context, self, left, right, detect_renames=True)
+
+    def search_line_range_in_oid(self, oid):
+        """Open a dialog that makes it easy to create "git log -L" line range expressions"""
+        all_paths = self.filewidget.selected_paths()
+        if all_paths:
+            paths = all_paths[0]
+        else:
+            paths = None
+        widget = finder.new_finder(
+            self.context,
+            paths=paths,
+            ref=oid,
+            title=N_('Trace Evolution of Line Range'),
+            ok_text=N_('Select Line Range'),
+            parent=self,
+        )
+        widget.search()
+        result = widget.exec_()
+        if result != QtWidgets.QDialog.Accepted:
+            return
+        start, span = widget.selected_line_range()
+        filename = widget.filename
+        if not filename:
+            return
+        range_expression = f'-L{start},+{span}:{filename}'
+        self.revtext.insert(range_expression)
+        self.display()
 
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']
@@ -1714,6 +1763,7 @@ class Label(QtWidgets.QGraphicsItem):
 class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     commits_selected = Signal(object)
     diff_commits = Signal(object, object)
+    search_line_range_in_oid = Signal(object)
 
     x_adjust = int(Commit.commit_radius * 4 / 3)
     y_adjust = int(Commit.commit_radius * 4 / 3)
