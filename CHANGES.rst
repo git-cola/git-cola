@@ -1,10 +1,21 @@
 Upcoming
 ========
 
+Fixes
+-----
+* The "Prune Missing Entries" action in the startup dialog and the Bookmarks and Recent
+  tools now save the settings after pruning.
+  (`#1479 <https://github.com/git-cola/git-cola/issues/1479>`_)
+
+
 Translations
 ------------
 * New Tamil translation.
   (`#1478 <https://github.com/git-cola/git-cola/pull/1478>`_)
+
+Packaging and Dependencies
+--------------------------
+* The Windows installer now uses Python 3.12 and PyQt 6.9.
 
 
 .. _v4.13.0:
