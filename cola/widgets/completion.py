@@ -809,7 +809,6 @@ def bind_lineedit(model, hint='', show_all_completions=False):
                 show_all_completions=show_all_completions,
                 parent=parent,
             )
-            self.context = context
 
     return BoundLineEdit
 
