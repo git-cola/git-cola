@@ -262,13 +262,8 @@ class RepoReader:
     def get(self):
         """Generator function returns Commit objects found by the params"""
         if self._cached:
-            idx = 0
-            while True:
-                try:
-                    yield self._topo_list[idx]
-                except IndexError:
-                    break
-                idx += 1
+            for commit in self._topo_list:
+                yield commit
             return
 
         self.reset()
