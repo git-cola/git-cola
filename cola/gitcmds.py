@@ -826,6 +826,19 @@ def ls_tree(context, path, ref='HEAD'):
     return result
 
 
+def ls_tree_paths(context, ref, *args):
+    """Gather a list of file paths as they existed at the specified ref"""
+    status, out, _ = context.git.ls_tree(
+        ref, *args, r=True, name_only=True, z=True, _readonly=True
+    )
+    out = out.rstrip('\0')
+    if status == 0 and out:
+        paths = out.split('\0')
+    else:
+        paths = []
+    return paths
+
+
 # A regex for matching the output of git(log|rev-list) --pretty=oneline
 REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
 
