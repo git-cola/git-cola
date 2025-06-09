@@ -7,6 +7,8 @@ Usability, bells and whistles
   "Diff selected to this..." and "Diff this to selected..." actions.
   (`#1476 <https://github.com/git-cola/git-cola/issues/1476>`_)
 
+* The DAG viewer now accepts ``-L`` arguments just like ``git log``.
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it

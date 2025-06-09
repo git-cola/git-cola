@@ -272,6 +272,7 @@ class RepoReader:
             self._cmd
             + ['-%d' % self.params.count]
             + ['--date=%s' % prefs.logdate(self.context)]
+            + ['--no-patch']
             + ref_args
         )
         commit = None
