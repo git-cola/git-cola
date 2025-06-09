@@ -33,9 +33,9 @@ def finder(context, paths=None):
     return widget
 
 
-def new_finder(context, paths=None, ref=None, parent=None):
+def new_finder(context, paths=None, ref=None, title=None, ok_text='', parent=None):
     """Create a finder widget"""
-    widget = Finder(context, ref=ref, parent=parent)
+    widget = Finder(context, ref=ref, title=title, ok_text=ok_text, parent=parent)
     widget.search_for(paths or '')
     return widget
 
@@ -123,10 +123,10 @@ class FindFilesFromRefThread(FindFilesThread):
 class Finder(standard.Dialog):
     """File Finder dialog"""
 
-    def __init__(self, context, ref=None, parent=None):
+    def __init__(self, context, ref=None, title=None, ok_text='', parent=None):
         standard.Dialog.__init__(self, parent)
         self.context = context
-        self.setWindowTitle(N_('Find Files'))
+        self.setWindowTitle(title or N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
         if ref is None:
@@ -160,6 +160,10 @@ class Finder(standard.Dialog):
         )
 
         self.close_button = qtutils.close_button()
+        self.ok_button = qtutils.ok_button(ok_text, default=False)
+        self.ok_button.setEnabled(False)
+        if not ok_text:
+            self.ok_button.hide()
 
         self.input_layout = qtutils.hbox(
             defs.no_margin, defs.button_spacing, self.input_label, self.input_txt
@@ -168,12 +172,13 @@ class Finder(standard.Dialog):
         self.bottom_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
+            self.close_button,
+            qtutils.STRETCH,
             self.help_button,
             self.refresh_button,
-            qtutils.STRETCH,
-            self.close_button,
             self.open_default_button,
             self.edit_button,
+            self.ok_button,
         )
         self.splitter = qtutils.splitter(Qt.Horizontal, self.tree, self.browser)
         self.main_layout = qtutils.vbox(
@@ -216,6 +221,7 @@ class Finder(standard.Dialog):
         qtutils.connect_button(self.refresh_button, self.search)
         qtutils.connect_button(self.help_button, partial(show_help, context))
         qtutils.connect_button(self.close_button, self.close)
+        qtutils.connect_button(self.ok_button, self.accept)
         qtutils.add_close_action(self)
 
         self.init_size(parent=parent)
