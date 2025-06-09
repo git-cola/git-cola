@@ -319,7 +319,7 @@ def restore_session(args):
         args.repo = session.repo
 
 
-def application_init(args, update=False, app_name='Git Cola'):
+def application_init(args, update=False, app_name='Git Cola', setup_worktree=True):
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
@@ -330,9 +330,10 @@ def application_init(args, update=False, app_name='Git Cola'):
     timer = context.timer
     timer.start('init')
 
-    new_worktree(context, args.repo, args.prompt)
-    if update:
-        context.model.update_status()
+    if setup_worktree:
+        new_worktree(context, args.repo, args.prompt)
+        if update:
+            context.model.update_status()
 
     timer.stop('init')
     if args.perf:

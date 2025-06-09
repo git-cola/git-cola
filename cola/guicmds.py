@@ -224,7 +224,7 @@ def open_repo_in_new_window(context):
     cmds.do(cmds.OpenNewRepo, context, dirname)
 
 
-def open_quick_repo_search(context, parent=None):
+def open_quick_repo_search(context, open_repo=True, parent=None):
     """Open a Quick Repository Search dialog"""
     if parent is None:
         parent = qtutils.active_window()
@@ -258,14 +258,20 @@ def open_quick_repo_search(context, parent=None):
 
         title = N_('Quick Open Repository')
         place_holder = N_('Search repositories by name...')
-        switcher.switcher_inner_view(
+        if open_repo:
+            open_cmd = cmds.OpenRepo
+        else:
+            open_cmd = cmds.NoOp
+
+        return switcher.switcher_inner_view(
             context,
             entries,
             title,
             place_holder=place_holder,
-            enter_action=lambda entry: cmds.do(cmds.OpenRepo, context, entry.key),
+            enter_action=lambda entry: cmds.do(open_cmd, context, entry.key),
             parent=parent,
         )
+    return None
 
 
 def load_commitmsg(context):

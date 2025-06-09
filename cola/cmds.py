@@ -1999,6 +1999,16 @@ class NewBareRepo(ContextCommand):
         return status == 0
 
 
+class NoOp(ContextCommand):
+    """A command that does nothing"""
+
+    def __init__(self, context, *args, **kwargs):
+        super().__init__(context)
+
+    def do(self):
+        pass
+
+
 def unix_path(path, is_win32=utils.is_win32):
     """Git for Windows requires Unix paths, so force them here"""
     if is_win32():

@@ -1,6 +1,7 @@
 """Provides quick switcher"""
 from qtpy import QtCore
 from qtpy import QtGui
+from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
@@ -107,6 +108,7 @@ class SwitcherInnerView(Switcher):
             parent=parent,
         )
         self.setWindowTitle(title)
+        self.path = None
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
@@ -139,6 +141,7 @@ class SwitcherInnerView(Switcher):
     def accept_selected_item(self):
         item = self.switcher_list.selected_item()
         if item:
+            self.path = item.key
             self.enter_action(item)
             self.accept()
 
@@ -154,8 +157,16 @@ class SwitcherInnerView(Switcher):
     def enter_selected_item(self, index):
         item = self.switcher_list.model().itemFromIndex(index)
         if item:
+            self.path = item.key
             self.enter_action(item)
             self.accept()
+
+    def worktree(self):
+        """Return the selected worktree"""
+        result = self.exec_()
+        if result == QtWidgets.QDialog.Accepted:
+            return self.path
+        return None
 
 
 class SwitcherOuterView(Switcher):

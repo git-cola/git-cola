@@ -13,6 +13,10 @@ Usability, bells and whistles
   "Trace Evolution of Line Range..." context menu action.
   (`#1483 <https://github.com/git-cola/git-cola/issues/1483>`_)
 
+* A new ``git cola open`` sub-command can be used to launch the "Quick Open"
+  dialog for opening bookmarked and recently-opened repositories.
+  (`#1482 <https://github.com/git-cola/git-cola/issues/1482>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it

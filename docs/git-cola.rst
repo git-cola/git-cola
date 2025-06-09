@@ -122,6 +122,11 @@ merge
 Merge branches. ``git cola merge`` is an entry point for the ``Actions > Merge...``
 main menu action.
 
+open
+----
+
+Launch the "Quick Open" dialog to open bookmarked and recently-opened repositories.
+
 pull
 ----
 

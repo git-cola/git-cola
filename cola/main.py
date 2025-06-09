@@ -51,6 +51,7 @@ def parse_args(argv):
     add_find_command(subparser)
     add_grep_command(subparser)
     add_merge_command(subparser)
+    add_open_command(subparser)
     add_pull_command(subparser)
     add_push_command(subparser)
     add_rebase_command(subparser)
@@ -85,6 +86,11 @@ def add_command(parent, name, description, func):
 def add_cola_command(subparser):
     """Add the main "git cola" command. "git cola cola" is valid"""
     parser = add_command(subparser, 'cola', 'launch git-cola', cmd_cola)
+    _add_cola_options(parser)
+
+
+def _add_cola_options(parser):
+    """Options that are common to the "git cola" and "git cola open" commands"""
     parser.add_argument(
         '--amend', default=False, action='store_true', help='start in amend mode'
     )
@@ -189,6 +195,12 @@ def add_merge_command(subparser):
     parser.add_argument(
         'ref', nargs='?', metavar='<ref>', help='branch, tag, or commit to merge'
     )
+
+
+def add_open_command(subparser):
+    """Add the "git cola open" quick open command"""
+    parser = add_command(subparser, 'open', 'quick open', cmd_open)
+    _add_cola_options(parser)
 
 
 def add_pull_command(subparser):
@@ -489,7 +501,7 @@ def add_version_command(subparser):
 
 
 # entry points
-def cmd_cola(args):
+def cmd_cola(args, context=None):
     """The "git cola" entry point"""
     from .widgets.main import MainView
 
@@ -497,7 +509,8 @@ def cmd_cola(args):
     if status_filter:
         status_filter = core.abspath(status_filter)
 
-    context = app.application_init(args)
+    if context is None:
+        context = app.application_init(args)
 
     context.timer.start('view')
     view = MainView(context)
@@ -638,6 +651,20 @@ def cmd_merge(args):
     context = app.application_init(args, update=True)
     view = Merge(context, parent=None, ref=args.ref)
     return app.application_start(context, view)
+
+
+def cmd_open(args):
+    from . import guicmds
+
+    context = app.application_init(args, setup_worktree=False)
+    quick_open = guicmds.open_quick_repo_search(context, open_repo=False, parent=None)
+    worktree = quick_open.worktree()
+    if worktree:
+        args.repo = worktree
+        app.new_worktree(context, args.repo, args.prompt)
+        return cmd_cola(args, context=context)
+
+    return 0
 
 
 def cmd_version(args):
