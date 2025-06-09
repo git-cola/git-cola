@@ -233,6 +233,21 @@ class Finder(standard.Dialog):
 
         self.init_size(parent=parent)
 
+    def export_state(self):
+        """Export persistent settings"""
+        state = super().export_state()
+        state['sizes'] = get(self.splitter)
+        return state
+
+    def apply_state(self, state):
+        """Apply persistent settings"""
+        result = super().apply_state(state)
+        try:
+            self.splitter.setSizes(state['sizes'])
+        except (AttributeError, KeyError, ValueError, TypeError):
+            result = False
+        return result
+
     def focus_tree(self):
         self.tree.setFocus()
 
