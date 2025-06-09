@@ -194,6 +194,7 @@ Thanks
 * Michael Geddes
 * Michael Homer
 * Michael Schwarz
+* Michele Nalli
 * Mickael Albertus
 * Miguel Boekhold
 * Mike Hanson
