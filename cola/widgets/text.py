@@ -298,6 +298,14 @@ class PlainTextEdit(QtWidgets.QPlainTextEdit):
         """Return the cursor offset and selected text"""
         return self.ext.offset_and_selection()
 
+    def selected_line_range(self):
+        """Return the start and end lines corresponding to the current selection"""
+        offset, selection = self.offset_and_selection()
+        content = self.get()
+        start_line = content[:offset].count('\n')
+        span = max(1, selection.count('\n'))
+        return start_line + 1, span
+
     def set_value(self, value, block=False):
         self.ext.set_value(value, block=block)
 
