@@ -20,12 +20,13 @@ class FileTree(standard.TreeWidget):
             return
         items = []
         from_filename = icons.from_filename
+        role = QtCore.Qt.UserRole
         for filename in filenames:
             icon = from_filename(filename)
             item = QtWidgets.QTreeWidgetItem()
             item.setIcon(0, icon)
             item.setText(0, filename)
-            item.setData(0, QtCore.Qt.UserRole, filename)
+            item.setData(0, role, filename)
             items.append(item)
         self.addTopLevelItems(items)
         if select and items:
