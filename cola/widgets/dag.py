@@ -589,6 +589,9 @@ class GitDagLineEdit(completion.GitLogLineEdit):
         self._action_no_merges = qtutils.add_action(
             self, N_('Ignore merge commits'), self._no_merges
         )
+        self._action_filter_lines = qtutils.add_action(
+            self, N_('Filter commits by line range'), self._filter_to_line_range
+        )
 
     def contextMenuEvent(self, event):
         """Adds custom actions to the default context menu"""
@@ -598,6 +601,7 @@ class GitDagLineEdit(completion.GitLogLineEdit):
         actions = menu.actions()
         first_action = actions[0]
         menu.insertAction(first_action, self._action_pickaxe_search)
+        menu.insertAction(first_action, self._action_filter_lines)
         menu.insertAction(first_action, self._action_filter_to_current_author)
         menu.insertAction(first_action, self._action_grep_search)
         menu.insertAction(first_action, self._action_no_merges)
@@ -617,6 +621,11 @@ class GitDagLineEdit(completion.GitLogLineEdit):
         _, email = self.context.cfg.get_author()
         author_filter = '--author=' + email
         self.insert(author_filter)
+
+    def _filter_to_line_range(self):
+        """Filter to commits by line range expressions"""
+        range_filter = '-L:funcname:filename'
+        self.insert(range_filter)
 
     def _pickaxe_search(self):
         """Pickaxe search for changes containing text"""
