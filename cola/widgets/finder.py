@@ -33,9 +33,9 @@ def finder(context, paths=None):
     return widget
 
 
-def new_finder(context, paths=None, parent=None):
+def new_finder(context, paths=None, ref=None, parent=None):
     """Create a finder widget"""
-    widget = Finder(context, parent=parent)
+    widget = Finder(context, ref=ref, parent=parent)
     widget.search_for(paths or '')
     return widget
 
@@ -90,32 +90,52 @@ class FindFilesThread(QtCore.QThread):
         self.query = None
 
     def run(self):
-        context = self.context
         query = self.query
-        if query is None:
-            args = []
-        else:
-            args = [add_wildcards(arg) for arg in utils.shell_split(query)]
-        filenames = gitcmds.tracked_files(context, *args)
+        filenames = self.get_filenames()
         if query == self.query:
             self.result.emit(filenames)
         else:
             self.run()
 
+    def get_filenames(self):
+        """Query filenames from git"""
+        query = self.query
+        if query is None:
+            args = []
+        else:
+            args = [add_wildcards(arg) for arg in utils.shell_split(query)]
+        return gitcmds.tracked_files(self.context, *args)
+
+
+class FindFilesFromRefThread(FindFilesThread):
+
+    def __init__(self, context, ref, parent):
+        super().__init__(context, parent)
+        self.ref = ref
+
+    def get_filenames(self):
+        """Query the filenames present in the specified ref"""
+        args = utils.shell_split(self.query)
+        return gitcmds.ls_tree_paths(self.context, self.ref, *args)
+
 
 class Finder(standard.Dialog):
     """File Finder dialog"""
 
-    def __init__(self, context, parent=None):
+    def __init__(self, context, ref=None, parent=None):
         standard.Dialog.__init__(self, parent)
         self.context = context
         self.setWindowTitle(N_('Find Files'))
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
+        if ref is None:
+            ref = 'HEAD'
 
         label = os.path.basename(core.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
-        self.input_txt = completion.GitTrackedLineEdit(context, hint=N_('<path> ...'))
+        self.input_txt = completion.GitPathsFromRefLineEdit(
+            context, ref, hint=N_('<path> ...')
+        )
 
         self.tree = filetree.FileTree(parent=self)
 
@@ -164,10 +184,14 @@ class Finder(standard.Dialog):
         self.setLayout(self.main_layout)
         self.setFocusProxy(self.input_txt)
 
-        thread = self.worker_thread = FindFilesThread(context, self)
+        if ref == 'HEAD':
+            thread = FindFilesThread(context, self)
+        else:
+            thread = FindFilesFromRefThread(context, ref, self)
+        self.worker_thread = thread
         thread.result.connect(self.process_result, type=Qt.QueuedConnection)
 
-        self.input_txt.textChanged.connect(lambda s: self.search())
+        self.input_txt.textChanged.connect(lambda _: self.search())
         self.input_txt.activated.connect(self.focus_tree)
         self.input_txt.down.connect(self.focus_tree)
         self.input_txt.enter.connect(self.focus_tree)
