@@ -17,6 +17,7 @@ class FileWidget(TreeWidget):
     histories_selected = Signal(object)
     grab_file = Signal(object)
     grab_file_from_parent = Signal(object)
+    select_line_range_for_file = Signal(object)
     remark_toggled = Signal(object, object)
 
     def __init__(self, context, parent, remarks=False):
@@ -39,6 +40,9 @@ class FileWidget(TreeWidget):
         )
         self.grab_file_from_parent_action = qtutils.add_action(
             self, N_('Grab File from Parent Commit...'), self._grab_file_from_parent
+        )
+        self.select_line_range_action = qtutils.add_action(
+            self, N_('Trace Evolution of Line Range...'), self._select_line_range
         )
         if remarks:
             self.toggle_remark_actions = tuple(
@@ -157,6 +161,8 @@ class FileWidget(TreeWidget):
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
+        menu.addAction(self.select_line_range_action)
+        menu.addSeparator()
         menu.addAction(self.grab_file_action)
         menu.addAction(self.grab_file_from_parent_action)
         menu.addAction(self.show_history_action)
@@ -177,6 +183,12 @@ class FileWidget(TreeWidget):
     def _grab_file_from_parent(self):
         for path in self.selected_paths():
             self.grab_file_from_parent.emit(path)
+
+    def _select_line_range(self):
+        """Emit a signal so that we can select the line range for the selected file"""
+        paths = self.selected_paths()
+        if paths:
+            self.select_line_range_for_file.emit(paths[0])
 
     def selected_paths(self):
         return [i.path for i in self.selected_items()]

@@ -1030,6 +1030,9 @@ class GitDAG(standard.MainWindow):
         self.graphview.search_line_range_in_oid.connect(self.search_line_range_in_oid)
         self.filewidget.grab_file.connect(self.grab_file)
         self.filewidget.grab_file_from_parent.connect(self.grab_file_from_parent)
+        self.filewidget.select_line_range_for_file.connect(
+            self.search_line_range_for_file
+        )
         self.maxresults.editingFinished.connect(self.display)
         self.revtext.textChanged.connect(self.text_changed)
         self.revtext.activated.connect(self.display)
@@ -1294,6 +1297,13 @@ class GitDAG(standard.MainWindow):
         oid = self.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
+
+    def search_line_range_for_file(self, filename):
+        """Generate a line range expression for the specified filename"""
+        oid = self.treewidget.selected_oid()
+        if not oid or not filename:
+            return
+        self.search_line_range_in_oid(oid)
 
     # Qt overrides
     def closeEvent(self, event):
