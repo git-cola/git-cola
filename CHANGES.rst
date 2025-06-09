@@ -3,10 +3,13 @@ Upcoming
 
 Fixes
 -----
+* The "Set Upstream Branch" action in the Branches tool was fixed so that it
+  is robust to scenarios where the upstream branch is renamed.
+  (`#1475 <https://github.com/git-cola/git-cola/issues/1475>`_)
+
 * The "Prune Missing Entries" action in the startup dialog and the Bookmarks and Recent
   tools now save the settings after pruning.
   (`#1479 <https://github.com/git-cola/git-cola/issues/1479>`_)
-
 
 Translations
 ------------
