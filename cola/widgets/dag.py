@@ -1208,7 +1208,7 @@ class GitDAG(standard.MainWindow):
         if paths:
             difftool.difftool_launch(self.context, left=left, right=right, paths=paths)
         else:
-            difftool.diff_commits(self.context, self, left, right)
+            difftool.diff_commits(self.context, self, left, right, detect_renames=True)
 
     def histories_selected(self, histories):
         argv = [self.model.currentbranch, '--']

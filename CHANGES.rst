@@ -1,6 +1,12 @@
 Upcoming
 ========
 
+Usability, bells and whistles
+-----------------------------
+* Renamed files are now detected when diffing commits using the DAG viewer's
+  "Diff selected to this..." and "Diff this to selected..." actions.
+  (`#1476 <https://github.com/git-cola/git-cola/issues/1476>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it

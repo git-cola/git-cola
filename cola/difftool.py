@@ -69,6 +69,7 @@ class Difftool(standard.Dialog):
         title=None,
         hide_expr=False,
         focus_tree=False,
+        detect_renames=False,
     ):
         """Show files with differences and launch difftool"""
 
@@ -78,6 +79,7 @@ class Difftool(standard.Dialog):
         self.a = a
         self.b = b
         self.diff_expr = expr
+        self.detect_renames = detect_renames
 
         if title is None:
             title = N_('git-cola diff')
@@ -211,13 +213,24 @@ class Difftool(standard.Dialog):
     def tree_double_clicked(self, item, _column):
         path = filetree.filename_from_item(item)
         left, right = self._left_right_args()
-        difftool_launch(self.context, left=left, right=right, paths=[path])
+        difftool_launch(
+            self.context,
+            left=left,
+            right=right,
+            paths=[path],
+            detect_renames=self.detect_renames,
+        )
 
     def diff(self, dir_diff=False):
         paths = self.tree.selected_filenames()
         left, right = self._left_right_args()
         difftool_launch(
-            self.context, left=left, right=right, paths=paths, dir_diff=dir_diff
+            self.context,
+            left=left,
+            right=right,
+            paths=paths,
+            dir_diff=dir_diff,
+            detect_renames=self.detect_renames,
         )
 
     def _left_right_args(self):
@@ -236,9 +249,9 @@ class Difftool(standard.Dialog):
         cmds.do(cmds.Edit, self.context, paths)
 
 
-def diff_commits(context, parent, a, b):
+def diff_commits(context, parent, a, b, detect_renames=False):
     """Show a dialog for diffing two commits"""
-    dlg = Difftool(context, parent, a=a, b=b)
+    dlg = Difftool(context, parent, a=a, b=b, detect_renames=detect_renames)
     dlg.show()
     dlg.raise_()
     return dlg.exec_() == QtWidgets.QDialog.Accepted
@@ -287,6 +300,7 @@ def difftool_launch(
     dir_diff=False,
     left_take_magic=False,
     left_take_parent=False,
+    detect_renames=False,
 ):
     """Launches 'git difftool' with given parameters
 
@@ -339,6 +353,10 @@ def difftool_launch(
     if right and right not in (dag.STAGE, dag.WORKTREE):
         difftool_args.append(right)
 
+    all_names = _get_renamed_paths(context, left, right, paths, detect_renames)
+    if all_names:
+        paths.extend(all_names)
+
     if paths:
         difftool_args.append('--')
         difftool_args.extend(paths)
@@ -348,3 +366,53 @@ def difftool_launch(
         Interaction.async_command(N_('Difftool'), difftool_args, runtask)
     else:
         core.fork(difftool_args)
+
+
+def _get_renamed_paths(context, left, right, paths, detect_renames):
+    """Get filenames as they existed beyond a rename
+
+    Use ``git log --follow --format= --name-only -- <path>`` to to discover the
+    filenames as they existed in older commits. This is a slow operation when the
+    commit range is large.
+    """
+    all_names = set()
+    if (
+        detect_renames
+        and len(paths) == 1
+        and left
+        and left not in (dag.STAGE, dag.WORKTREE)
+        and right
+        and right not in (dag.STAGE, dag.WORKTREE)
+    ):
+        current_name = paths[0]
+
+        # We have to check in both left->right and right->left directions because we
+        # may be performing either "Diff selected to this..." or
+        # "Diff this to selected...", and left/right flips directions depending on which
+        # is chosen. We have to log starting from the parent commit of the start range
+        # in order to include the starting commit. The starting commit may be the only
+        # commit that contains the original filename.
+        for rev_arg in (
+            f'{left}^..{right}',
+            f'{right}^..{left}',
+        ):
+            status, out, _ = context.git.log(
+                rev_arg,
+                '--',
+                current_name,
+                follow=True,
+                format='',
+                name_only=True,
+                z=True,
+                _readonly=True,
+            )
+            if status == 0:
+                out = out[:-1]  # Strip the final NULL terminator.
+                if out:
+                    all_names.update(out.split('\0'))
+        try:
+            all_names.remove(current_name)
+        except KeyError:
+            pass
+
+    return all_names
