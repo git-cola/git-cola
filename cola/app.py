@@ -29,7 +29,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
     sys.exit(1)
 
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt
+from qtpy.QtCore import Qt, Signal
 
 try:
     # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
@@ -49,6 +49,7 @@ from .widgets import standard
 from .widgets import startup
 from .settings import Session
 from .settings import Settings
+from . import cmd
 from . import cmds
 from . import core
 from . import compat
@@ -613,9 +614,11 @@ class ApplicationContext:
     def __init__(self, args):
         self.args = args
         self.app = None  # ColaApplication
+        self.command_bus = None  # cmd.CommandBus
         self.git = None  # git.Git
         self.cfg = None  # gitcfg.GitConfig
         self.model = None  # main.MainModel
+        self.notifier = Notifier(self)
         self.timer = None  # Timer
         self.runtask = None  # qtutils.RunTask
         self.settings = None  # settings.Settings
@@ -627,7 +630,33 @@ class ApplicationContext:
     def set_view(self, view):
         """Initialize view-specific members"""
         self.view = view
+        self.notifier.setParent(view)
+        self.command_bus = cmd.CommandBus(parent=view)
         self.runtask = qtutils.RunTask(parent=view)
+
+
+class Notifier(QtCore.QObject):
+    """Message bus for generic one-off notifications"""
+
+    message = Signal(object)
+
+    def __init__(self, context, parent=None):
+        super().__init__(parent)
+        self.context = context
+
+    def notify(self, message):
+        """Send messages to listeners"""
+        self.message.emit(message)
+
+    def listen(self, message, callback):
+        """Subscribe a callback specific messages"""
+
+        def listener(current_message, message=message, callback=callback):
+            """Fire a callback when specific messages are seen"""
+            if current_message is message:
+                callback()
+
+        self.message.connect(listener, type=Qt.QueuedConnection)
 
 
 def find_git():
