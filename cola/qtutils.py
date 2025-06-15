@@ -1170,6 +1170,11 @@ class RunTask(QtCore.QObject):
         """Wait until all tasks have finished processing"""
         self.threadpool.waitForDone()
 
+    def run(self, fn, *args, **kwargs):
+        """Run a task in the background"""
+        task = SimpleTask(fn, *args, **kwargs)
+        self.start(task)
+
 
 # Syntax highlighting
 
