@@ -269,13 +269,8 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             scrollbar.setValue(scrollvalue)
         self.scrollvalue = None
 
-    def set_loading_message(self):
-        """Add a pending loading message in the diff view"""
-        self.hint.set_value('+++ ' + N_('Loading...'))
-        self.set_value('')
-
     def set_diff(self, diff):
-        """Set the diff text, but save the scrollbar"""
+        """Set the diff text and restore the scrollbar position post-update"""
         diff = diff.rstrip('\n')  # diffs include two empty newlines
         self.save_scrollbar()
 
@@ -284,7 +279,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             # The diff_lines parser is shared with self.numbers and updated above.
             self.numbers.set_diff(diff, lines=lines)
 
-        self.hint.set_value('')
         self.set_value(diff)
         self.restore_scrollbar()
 
@@ -545,6 +539,10 @@ class Viewer(QtWidgets.QFrame):
 
         # Observe the diff text
         model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
+        # Observe the diff loading state
+        self.context.notifier.listen(
+            cmds.Messages.DIFF_LOADING, self.set_loading_message
+        )
 
         # Observe the image mode combo box
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
@@ -556,6 +554,11 @@ class Viewer(QtWidgets.QFrame):
             self.show_search_diff,
             hotkeys.SEARCH,
         )
+
+    def set_loading_message(self):
+        """Display an indicator that a diff is loading in the background"""
+        # The diffstat will be replaced with the real diffstat on load.
+        self.diffstat.set_text(N_('Loading...'))
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
@@ -1619,7 +1622,7 @@ class CommitDiffWidget(QtWidgets.QWidget):
     def start_diff_task(self, task):
         """Clear the display and start a diff-gathering task"""
         self.diff.save_scrollbar()
-        self.diff.set_loading_message()
+        cmds.do(cmds.DiffLoading, self.context)
         self.context.runtask.start(task, result=self.set_diff)
 
     def set_diff_oid(self, oid, filename=None):

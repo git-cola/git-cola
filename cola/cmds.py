@@ -36,6 +36,12 @@ class UsageError(Exception):
         self.msg = message
 
 
+class Messages:
+    """Notification messages emitted by these commands"""
+
+    DIFF_LOADING = object()
+
+
 class EditModel(ContextCommand):
     """Commands that mutate the main model diff data"""
 
@@ -1508,10 +1514,18 @@ class DiffImage(EditModel):
         return images
 
 
+class DiffLoading(ContextCommand):
+    """Notify the diff viewer the a diff is loading"""
+
+    def do(self):
+        self.context.notifier.notify(Messages.DIFF_LOADING)
+
+
 class Diff(EditModel):
     """Perform a diff and set the model's current text."""
 
     def __init__(self, context, filename, cached=False, deleted=False, finalizer=None):
+        DiffLoading(context).do()
         super().__init__(context, finalizer=finalizer)
         opts = {}
         if cached and gitcmds.is_valid_ref(context, self.model.head):
@@ -1527,6 +1541,7 @@ class Diffstat(EditModel):
     """Perform a diffstat and set the model's diff text."""
 
     def __init__(self, context):
+        DiffLoading(context).do()
         super().__init__(context)
         cfg = self.cfg
         diff_context = cfg.get('diff.context', 3)
@@ -1556,6 +1571,7 @@ class DiffStaged(Diff):
 
 class DiffStagedSummary(EditModel):
     def __init__(self, context):
+        DiffLoading(context).do()
         super().__init__(context)
         diff = self.git.diff(
             self.model.head,
