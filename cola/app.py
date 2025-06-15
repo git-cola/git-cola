@@ -345,6 +345,7 @@ def application_init(args, update=False, app_name='Git Cola', setup_worktree=Tru
 def new_context(args, app_name='Git Cola'):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
+    context.timestamp = time.time()
     context.settings = args.settings or Settings.read()
     context.git = git.create()
     context.cfg = gitcfg.create(context)

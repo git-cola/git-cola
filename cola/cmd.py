@@ -1,4 +1,6 @@
 """Base Command class"""
+import time
+
 from qtpy import QtCore
 from qtpy.QtCore import Qt, Signal
 
@@ -36,12 +38,31 @@ class ContextCommand(Command):
     """Base class for commands that operate on a context"""
 
     def __init__(self, context):
+        super().__init__()
+        self.timestamp = time.time()
         self.context = context
         self.model = context.model
         self.cfg = context.cfg
         self.git = context.git
         self.selection = context.selection
         self.fsmonitor = context.fsmonitor
+        self.old_timestamp = context.timestamp
+
+    def do(self):
+        """Update the context"""
+        # Commands can get executed in the background, and completion of one command may
+        # happen *after* another Diff and similar commands have been fired. We prevent
+        # the delayed background lookup from overwriting a newer command by checking the
+        # context's timestamp.
+        if self.context.timestamp > self.timestamp:
+            return False
+        super().do()
+        self.context.timestamp = self.timestamp
+        return True
+
+    def undo(self):
+        super().undo()
+        self.context.timestamp = self.old_timestamp
 
 
 class CommandBus(QtCore.QObject):
