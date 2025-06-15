@@ -1270,13 +1270,29 @@ class DiffAgainstCommitMode(ContextCommand):
         self.model.update_file_status()
 
 
-class DiffText(EditModel):
+class DiffText(ContextCommand):
     """Set the diff type to text"""
 
     def __init__(self, context):
         super().__init__(context)
         self.new_file_type = main.Types.TEXT
         self.new_diff_type = main.Types.TEXT
+        self.old_file_type = self.model.file_type
+        self.old_diff_type = self.model.diff_type
+
+    def do(self):
+        """Update the diff and file type"""
+        if not super().do():
+            return
+        self.model.set_diff_type(self.new_diff_type)
+        self.model.set_file_type(self.new_file_type)
+
+    def undo(self):
+        """Revert the updating of diff and file types"""
+        if not super().undo():
+            return
+        self.model.set_diff_type(self.old_diff_type)
+        self.model.set_file_type(self.old_file_type)
 
 
 class ToggleDiffType(ContextCommand):
