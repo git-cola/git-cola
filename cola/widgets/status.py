@@ -1100,6 +1100,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def show_selection(self):
         """Show the selected item."""
         context = self.context
+        runtask = self.context.runtask
         qtutils.scroll_to_item(self, self.currentItem())
         # Sync the selection model
         selected = self.selection()
@@ -1125,7 +1126,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 UNMERGED_IDX: cmds.UnmergedSummary,
                 UNTRACKED_IDX: cmds.UntrackedSummary,
             }.get(idx, cmds.Diffstat)
-            cmds.do(cls, context)
+            runtask.run(cmds.run(cls, context))
             return
 
         staged = category == STAGED_IDX
@@ -1147,24 +1148,12 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         path = item.path
         deleted = item.deleted
-        image = self.image_formats.ok(path)
-
-        # Update the diff text
-        if staged:
-            cmds.do(cmds.DiffStaged, context, path, deleted=deleted)
-        elif modified:
-            cmds.do(cmds.Diff, context, path, deleted=deleted)
-        elif unmerged:
-            cmds.do(cmds.Diff, context, path)
-        elif untracked:
-            cmds.do(cmds.ShowUntracked, context, path)
-
         # Images are diffed differently.
         # DiffImage transitions the diff mode to image.
         # DiffText transitions the diff mode to text.
+        image = self.image_formats.ok(path)
         if image:
-            cmds.do(
-                cmds.DiffImage,
+            finalizer = cmds.DiffImage(
                 context,
                 path,
                 deleted,
@@ -1174,7 +1163,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 untracked,
             )
         else:
-            cmds.do(cmds.DiffText, context)
+            finalizer = cmds.DiffText(context)
+
+        # Update the diff text
+        if staged:
+            runtask.run(
+                cmds.run(
+                    cmds.DiffStaged, context, path, deleted=deleted, finalizer=finalizer
+                )
+            )
+        elif modified:
+            runtask.run(
+                cmds.run(cmds.Diff, context, path, deleted=deleted, finalizer=finalizer)
+            )
+        elif unmerged:
+            runtask.run(cmds.run(cmds.Diff, context, path, finalizer=finalizer))
+        elif untracked:
+            runtask.run(
+                cmds.run(cmds.ShowUntracked, context, path, finalizer=finalizer)
+            )
 
     def select_header(self):
         """Select an active header, which triggers a diffstat"""
