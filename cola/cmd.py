@@ -8,6 +8,10 @@ class Command:
 
     UNDOABLE = False
 
+    def __init__(self):
+        """Initialize the base command"""
+        self.can_undo = False
+
     @staticmethod
     def name():
         """Return the command's name"""
@@ -20,11 +24,12 @@ class Command:
 
     def do(self):
         """Execute the command"""
-        return
+        self.can_undo = True
+        return True
 
     def undo(self):
         """Undo the command"""
-        return
+        return self.can_undo
 
 
 class ContextCommand(Command):
