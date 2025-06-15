@@ -161,7 +161,7 @@ class Editor(QtWidgets.QWidget):
         self.filename = filename
         self.comment_char = comment_char = prefs.comment_char(context)
 
-        self.diff = diff.DiffWidget(context, self)
+        self.diff = diff.CommitDiffWidget(context, self)
         self.tree = RebaseTreeWidget(context, comment_char, self)
         self.filewidget = filelist.FileWidget(context, self, remarks=True)
         self.setFocusProxy(self.tree)

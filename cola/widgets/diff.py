@@ -935,7 +935,7 @@ class Options(QtWidgets.QWidget):
         self.widget.set_word_wrapping(value, update=False)
 
     def hide_advanced_options(self):
-        """Hide advanced options that are not applicable to the DiffWidget"""
+        """Hide advanced options that are not applicable to the CommitDiffWidget"""
         self.show_filenames.setVisible(False)
         self.show_line_numbers.setVisible(False)
         self.ignore_space_at_eol.setVisible(False)
@@ -1551,7 +1551,7 @@ class AuthorLabel(PlainTextLabel):
         super().context_menu_actions(menu)
 
 
-class DiffWidget(QtWidgets.QWidget):
+class CommitDiffWidget(QtWidgets.QWidget):
     """Display commit metadata and text diffs"""
 
     def __init__(self, context, parent, is_commit=False, options=None):
@@ -1824,7 +1824,7 @@ class ApplyPatches(standard.Dialog):
         self.tree.setHeaderHidden(True)
         self.tree.itemSelectionChanged.connect(self._tree_selection_changed)
 
-        self.diffwidget = DiffWidget(context, self, is_commit=True)
+        self.diffwidget = CommitDiffWidget(context, self, is_commit=True)
 
         self.add_button = qtutils.create_toolbutton(
             text=N_('Add'), icon=icons.add(), tooltip=N_('Add patches (+)')
