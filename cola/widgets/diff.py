@@ -193,6 +193,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     ):
         super().__init__(context, '', parent=parent)
         # Diff/patch syntax highlighter
+        self.max_diff_size = 0
         self.highlighter = DiffSyntaxHighlighter(
             context, self.document(), is_commit=is_commit, whitespace=whitespace
         )
@@ -272,6 +273,8 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     def set_diff(self, diff):
         """Set the diff text and restore the scrollbar position post-update"""
         diff = diff.rstrip('\n')  # diffs include two empty newlines
+        diff = _truncate_diff(diff, self.max_diff_size)
+
         self.save_scrollbar()
 
         lines = self.diff_lines.parse(diff)
@@ -346,6 +349,26 @@ def _strip_diff(value):
     if value.startswith(('+', '-', ' ')):
         return value[1:]
     return value
+
+
+def _truncate_diff(value, size):
+    """Truncate the diff to the specified number of megabytes"""
+    if size == 0:  # Unlimited
+        return value
+
+    # Technically size represents the number of unicode tokens not bytes, but it's good
+    # enough given that usually we're dealing with utf-8 text.
+    count = size * 1024 * 1024
+    if len(value) <= count:
+        return value
+
+    # Find the last newline starting from size so that the last line is a full, complete
+    # line rather than an invalid truncated invalid diff value.
+    newline = value.rfind('\n', 0, count)
+    if newline == -1:
+        return value[:count]
+
+    return value[: newline + 1]
 
 
 class DiffLineNumbers(TextDecorator):
@@ -607,6 +630,7 @@ class Viewer(QtWidgets.QFrame):
         state['image_diff_mode'] = self.options.image_mode.currentIndex()
         state['image_zoom_mode'] = self.options.zoom_mode.currentIndex()
         state['word_wrap'] = self.options.enable_word_wrapping.isChecked()
+        state['max_diff_size'] = self.options.max_diff_spinbox.value()
         return state
 
     def apply_state(self, state):
@@ -624,6 +648,10 @@ class Viewer(QtWidgets.QFrame):
 
         word_wrap = bool(state.get('word_wrap', True))
         self.set_word_wrapping(word_wrap, update=True)
+
+        max_diff_size = state.get('max_diff_size', 1)
+        self.text.max_diff_size = max_diff_size
+        self.options.max_diff_spinbox.set_value(max_diff_size)
         return True
 
     def set_diff(self, diff):
@@ -839,6 +867,29 @@ class Options(QtWidgets.QWidget):
         self.enable_word_wrapping = qtutils.add_action_bool(
             self, N_('Enable word wrapping'), self.set_word_wrapping, True
         )
+        self.max_diff_label = QtWidgets.QLabel(
+            N_('Maximum diff size in megabytes (MB)'), self
+        )
+        self.max_diff_spinbox = standard.SpinBox(
+            value=1,
+            mini=0,
+            maxi=9999,
+            suffix='\tMB',
+            tooltip=N_('The maximum diff size in megabytes (MB)'),
+            parent=self,
+        )
+        self.max_diff_spinbox.setSpecialValueText(N_('Unlimited'))
+        self.max_diff_widget = QtWidgets.QWidget(self)
+        self.max_diff_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.max_diff_label,
+            qtutils.STRETCH,
+            self.max_diff_spinbox,
+        )
+        self.max_diff_widget.setLayout(self.max_diff_layout)
+        self.max_diff_action = QtWidgets.QWidgetAction(self)
+        self.max_diff_action.setDefaultWidget(self.max_diff_widget)
 
         self.options = qtutils.create_toolbutton(
             tooltip=N_('Diff Options'), icon=icons.configure()
@@ -867,6 +918,8 @@ class Options(QtWidgets.QWidget):
 
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), self.options)
         self.options.setMenu(menu)
+        menu.addAction(self.max_diff_action)
+        menu.addSeparator()
         menu.addAction(self.ignore_space_at_eol)
         menu.addAction(self.ignore_space_change)
         menu.addAction(self.ignore_all_space)
@@ -1007,6 +1060,11 @@ class DiffEditor(DiffTextEdit):
         self.cursorPositionChanged.connect(self._update_line_number)
 
         qtutils.connect_button(options.toggle_image_diff, self.toggle_diff_type)
+        self.options.max_diff_spinbox.valueChanged.connect(self.set_max_diff_size)
+
+    def set_max_diff_size(self, value):
+        """Set the max diff state on the diff widget"""
+        self.max_diff_size = value
 
     def toggle_diff_type(self):
         cmds.do(cmds.ToggleDiffType, self.context)

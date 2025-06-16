@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* Large diffs are now truncated to one megabyte by default for performance.
+  The diff size limit can be changed in the diff editor's options menu.
+  (`#1484 <https://github.com/git-cola/git-cola/issues/1484>`_)
+
 * Renamed files are now detected when diffing commits using the DAG viewer's
   "Diff selected to this..." and "Diff this to selected..." actions.
   (`#1476 <https://github.com/git-cola/git-cola/issues/1476>`_)
