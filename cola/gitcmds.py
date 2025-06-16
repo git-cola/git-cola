@@ -28,13 +28,13 @@ def add(context, items, u=False):
 def apply_diff(context, filename):
     """Use "git apply" to apply the patch in `filename` to the staging area"""
     git = context.git
-    return git.apply(filename, index=True, cached=True)
+    return git.apply(filename, index=True, cached=True, recount=True)
 
 
 def apply_diff_to_worktree(context, filename):
     """Use "git apply" to apply the patch in `filename` to the worktree"""
     git = context.git
-    return git.apply(filename)
+    return git.apply(filename, recount=True)
 
 
 def get_branch(context, branch):
