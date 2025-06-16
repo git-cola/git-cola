@@ -191,7 +191,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     def __init__(
         self, context, parent, is_commit=False, whitespace=True, numbers=False
     ):
-        VimHintedPlainTextEdit.__init__(self, context, '', parent=parent)
+        super().__init__(context, '', parent=parent)
         # Diff/patch syntax highlighter
         self.highlighter = DiffSyntaxHighlighter(
             context, self.document(), is_commit=is_commit, whitespace=whitespace

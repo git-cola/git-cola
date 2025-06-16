@@ -732,8 +732,7 @@ class HintedPlainTextEdit(PlainTextEdit):
         line_wrap_mode=None,
         word_wrap_mode=None,
     ):
-        PlainTextEdit.__init__(
-            self,
+        super().__init__(
             readonly=readonly,
             line_wrap_mode=line_wrap_mode,
             word_wrap_mode=word_wrap_mode,
