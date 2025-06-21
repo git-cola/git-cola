@@ -1588,6 +1588,8 @@ class Edit(ContextCommand):
                 '*textpad*': [f'{filename}({self.line_number},0)'],
                 '*notepad++*': ['-n%s' % self.line_number, filename],
                 '*subl*': [f'{filename}:{self.line_number}'],
+                '*code*': [f'--goto {filename}:{self.line_number}'],
+                '*cursor*': [f'--goto {filename}:{self.line_number}'],
             }
 
             use_line_numbers = False
