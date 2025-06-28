@@ -1,4 +1,5 @@
 """Test the cmds module"""
+import time
 
 from cola import cmds
 
@@ -44,6 +45,7 @@ def test_unix_path_is_a_noop_on_sane_platforms():
 
 def test_context_edit_command():
     context = Mock()
+    context.timestamp = time.time()
     model = context.model
 
     cmd = cmds.EditModel(context)
