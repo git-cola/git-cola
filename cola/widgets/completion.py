@@ -766,6 +766,7 @@ class GitLogCompletionModel(GitRefCompletionModel):
             '-E',
             '-F',
             '-G',
+            '-L',
             '-P',
             '-S',
             '@{upstream}',
