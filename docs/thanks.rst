@@ -28,6 +28,7 @@ Thanks
 * Andy O'Neill
 * armandg
 * Arthur Coelho
+* Arnaud Henry
 * Audrey Yeena Toskin
 * Audrius Karabanovas
 * Axel Heider
