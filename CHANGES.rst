@@ -21,6 +21,9 @@ Usability, bells and whistles
   dialog for opening bookmarked and recently-opened repositories.
   (`#1482 <https://github.com/git-cola/git-cola/issues/1482>`_)
 
+* `code` (VSCode) and `cursor` are now supported for opening files at specific lines.
+  (`#1487 <https://github.com/git-cola/git-cola/pull/1487>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it
