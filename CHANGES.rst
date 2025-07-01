@@ -24,6 +24,10 @@ Usability, bells and whistles
 * `code` (VSCode) and `cursor` are now supported for opening files at specific lines.
   (`#1487 <https://github.com/git-cola/git-cola/pull/1487>`_)
 
+* The Stash tool now ensures that other stashes are displayed when
+  dropping stashes.
+  (`#1491 <https://github.com/git-cola/git-cola/issues/1491>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it

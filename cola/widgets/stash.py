@@ -190,6 +190,7 @@ class StashView(standard.Dialog):
         self.revids = revids
         self.names = names
 
+        displayed = False
         self.stash_list.clear()
         self.stash_list.addItems(self.stashes)
         if self.stash_list.count() > 0:
@@ -197,12 +198,15 @@ class StashView(standard.Dialog):
                 self.stash_list.item(i).setToolTip(author_dates[i])
             item = self.stash_list.item(0)
             self.stash_list.setCurrentItem(item)
+            displayed = True
 
         # "Stash Index" depends on staged changes, so disable this option
         # if there are no staged changes.
         is_staged = self.model.is_staged()
         if get(self.stash_index) and not is_staged:
             self.stash_index.setChecked(False)
+
+        return displayed
 
     def stash_rename(self):
         """Renames the currently selected stash"""
@@ -275,8 +279,8 @@ class StashView(standard.Dialog):
         ):
             return
         cmds.do(stash.DropStash, self.context, selection)
-        self.update_from_model()
-        self.stash_text.setPlainText('')
+        if not self.update_from_model():
+            self.stash_text.setPlainText('')
 
     def export_state(self):
         """Export persistent settings"""
