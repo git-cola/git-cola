@@ -159,6 +159,7 @@ trees:
     remotes:
       abid1998: "git@github.com:abid1998/git-cola.git"
       achernet: "git@github.com:achernet/git-cola.git"
+      arnaudh: "git@github.com:arnaudh/git-cola.git"
       axel-h: "git@github.com:axel-h/git-cola.git"
       BaumiCoder: "git@github.com:BaumiCoder/git-cola.git"
       bearsh: "git@github.com:bearsh/git-cola.git"
