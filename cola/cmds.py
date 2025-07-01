@@ -1633,13 +1633,15 @@ class Edit(ContextCommand):
                 '*textpad*': [f'{filename}({self.line_number},0)'],
                 '*notepad++*': ['-n%s' % self.line_number, filename],
                 '*subl*': [f'{filename}:{self.line_number}'],
-                '*code*': [f'--goto {filename}:{self.line_number}'],
-                '*cursor*': [f'--goto {filename}:{self.line_number}'],
+                'code': [f'--goto {filename}:{self.line_number}'],
+                'cursor': [f'--goto {filename}:{self.line_number}'],
             }
 
             use_line_numbers = False
             for pattern, opts in editor_opts.items():
-                if fnmatch(editor, pattern):
+                if fnmatch(editor, pattern) or fnmatch(
+                    os.path.basename(editor), pattern
+                ):
                     args.extend(opts)
                     use_line_numbers = True
                     break
