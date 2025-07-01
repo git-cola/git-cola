@@ -525,6 +525,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             date = None
 
         if self.commit_author_action.isChecked():
+            self.commit_author_action.setChecked(False)
             author = self._git_commit_author
         else:
             author = None
