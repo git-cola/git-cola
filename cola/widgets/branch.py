@@ -118,6 +118,12 @@ class BranchesWidget(QtWidgets.QFrame):
         icon = self.order_icon(self.model.ref_sort)
         self.sort_order_button.setIcon(icon)
 
+    # Qt overrides
+    def setFont(self, font):
+        """Forward setFont() to child widgets"""
+        super().setFont(font)
+        self.tree.setFont(font)
+
 
 class BranchesTreeWidget(standard.TreeWidget):
     """A tree widget for displaying branches"""

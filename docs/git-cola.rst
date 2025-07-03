@@ -926,6 +926,12 @@ cola.fontdiff
 
 Specifies the font to use for `git cola`'s diff display.
 
+cola.fontsize
+-------------
+
+Specifies the font size that is used for the Status, Submodules, Branches, Recent, and
+Favorites widgets.
+
 cola.hidpi
 ----------
 

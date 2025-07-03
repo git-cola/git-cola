@@ -262,9 +262,14 @@ scissors
 class SettingsFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
-
+        font = self.font()
+        font_size = context.cfg.get(prefs.FONTSIZE, font.pointSize())
+        self.default_font_size = font_size
         self.fixed_font = QtWidgets.QFontComboBox()
-        self.font_size = standard.SpinBox(value=12, mini=6, maxi=192)
+        self.fixed_font_size = standard.SpinBox(value=12, mini=6, maxi=192)
+        self.fixed_font_size.setToolTip(N_('The font size for the fixed-width diff font'))
+        self.font_size = standard.SpinBox(value=font_size, mini=6, maxi=192)
+        self.font_size.setToolTip(N_('The font size for the main UI elements'))
         self.maxrecent = standard.SpinBox(maxi=99)
         self.tabwidth = standard.SpinBox(maxi=42)
         self.textwidth = standard.SpinBox(maxi=150)
@@ -302,7 +307,8 @@ class SettingsFormWidget(FormWidget):
         self.notifyonpush = qtutils.checkbox(checked=False, tooltip=tooltip)
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
-        self.add_row(N_('Font Size'), self.font_size)
+        self.add_row(N_('Font Size'), self.fixed_font_size)
+        self.add_row(N_('Font Size (UI)'), self.font_size)
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Editor'), self.editor)
@@ -355,6 +361,10 @@ class SettingsFormWidget(FormWidget):
                 self.check_published_commits,
                 Defaults.check_published_commits,
             ),
+            prefs.FONTSIZE: (
+                self.font_size,
+                self.default_font_size,
+            ),
             prefs.MERGE_KEEPBACKUP: (
                 self.keep_merge_backups,
                 Defaults.merge_keep_backup,
@@ -372,6 +382,7 @@ class SettingsFormWidget(FormWidget):
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
+        self.fixed_font_size.valueChanged.connect(self.diff_font_size_changed)
         self.font_size.valueChanged.connect(self.font_size_changed)
 
     def update_from_config(self):
@@ -383,14 +394,19 @@ class SettingsFormWidget(FormWidget):
             font = qtutils.diff_font(context)
             self.fixed_font.setCurrentFont(font)
 
-        with qtutils.BlockSignals(self.font_size):
+        with qtutils.BlockSignals(self.fixed_font_size):
             font_size = font.pointSize()
-            self.font_size.setValue(font_size)
+            self.fixed_font_size.setValue(font_size)
 
-    def font_size_changed(self, size):
+    def diff_font_size_changed(self, size):
+        """The diff font size was changed"""
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
         cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
+
+    def font_size_changed(self, size):
+        """The UI font size was changed"""
+        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTSIZE, size)
 
     def current_font_changed(self, font):
         cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())

@@ -124,6 +124,12 @@ class StatusWidget(QtWidgets.QFrame):
     def select_header(self):
         self.tree.select_header()
 
+    # Qt overrides
+    def setFont(self, font):
+        """Forward setFont() to child widgets"""
+        super().setFont(font)
+        self.tree.setFont(font)
+
 
 class StatusTreeWidget(QtWidgets.QTreeWidget):
     # Read-only access to the mode state

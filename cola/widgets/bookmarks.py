@@ -183,6 +183,12 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.quick_switcher.filter_input.keyPressEvent(event)
 
+    # Qt overrides
+    def setFont(self, font):
+        """Forward setFont() to child widgets"""
+        super().setFont(font)
+        self.tree.setFont(font)
+
 
 def disable_rename(_path, _name, _new_name):
     return False

@@ -107,7 +107,7 @@ class MainView(standard.MainWindow):
             self,
             func=lambda dock: bookmarks.bookmark(context, dock),
         )
-        bookmarkswidget = self.bookmarksdock.widget()
+        self.bookmarkswidget = self.bookmarksdock.widget()
         qtutils.hide_dock(self.bookmarksdock)
 
         self.recentdock = create_dock(
@@ -116,9 +116,9 @@ class MainView(standard.MainWindow):
             self,
             func=lambda dock: bookmarks.recent(context, dock),
         )
-        recentwidget = self.recentdock.widget()
+        self.recentwidget = self.recentdock.widget()
         qtutils.hide_dock(self.recentdock)
-        bookmarkswidget.connect_to(recentwidget)
+        self.bookmarkswidget.connect_to(self.recentwidget)
 
         # "Branch" widgets
         self.branchdock = create_dock(
@@ -731,8 +731,8 @@ class MainView(standard.MainWindow):
             editor.summary,
             editor.description,
             self.diffeditor,
-            bookmarkswidget.tree,
-            recentwidget.tree,
+            self.bookmarkswidget.tree,
+            self.recentwidget.tree,
         )
         select_widgets = copy_widgets + (self.statuswidget.tree,)
         edit_proxy.override('copy', copy_widgets)
@@ -926,6 +926,13 @@ class MainView(standard.MainWindow):
         )
         self.init_state(context.settings, self.set_initial_size)
 
+        # Set the UI font size.
+        font = self.font()
+        font_size = self.context.cfg.get(prefs.FONTSIZE, font.pointSize())
+        if font.pointSize() != font_size:
+            font.setPointSize(font_size)
+            self.setFont(font)
+
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
@@ -1064,6 +1071,11 @@ class MainView(standard.MainWindow):
             self.logwidget.setFont(font)
             self.diffeditor.setFont(font)
             self.commiteditor.setFont(font)
+
+        elif config == prefs.FONTSIZE:
+            font = self.font()
+            font.setPointSize(value)
+            self.setFont(font)
 
         elif config == prefs.TABWIDTH:
             # This can be set locally or globally, so we have to use the
@@ -1318,6 +1330,16 @@ class MainView(standard.MainWindow):
 
     def git_dag(self):
         self.dag = dag.git_dag(self.context, existing_view=self.dag)
+
+    # Qt overrides
+    def setFont(self, font):
+        """Forward setFont() to child widgets"""
+        super().setFont(font)
+        self.statuswidget.setFont(font)
+        self.branchwidget.setFont(font)
+        self.submoduleswidget.setFont(font)
+        self.recentwidget.setFont(font)
+        self.bookmarkswidget.setFont(font)
 
 
 class FocusProxy:

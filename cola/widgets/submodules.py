@@ -69,6 +69,12 @@ class SubmodulesWidget(QtWidgets.QFrame):
     def add_submodule(self):
         add_submodule(self.context, self)
 
+    # Qt overrides
+    def setFont(self, font):
+        """Forward setFont() to child widgets"""
+        super().setFont(font)
+        self.tree.setFont(font)
+
 
 class AddSubmodule(standard.Dialog):
     """Add a new submodule"""

@@ -32,6 +32,11 @@ Usability, bells and whistles
   ``git merge`` options as configured in the "Merge" dialog.
   (`#1473 <https://github.com/git-cola/git-cola/issues/1473>`_)
 
+* The font size for the main UI elements can now be configured
+  in the Preferences.
+  (`#1474 <https://github.com/git-cola/git-cola/issues/1474>`_)
+
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it
