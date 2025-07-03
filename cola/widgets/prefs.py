@@ -376,7 +376,9 @@ class AppearanceFormWidget(FormWidget):
         self.default_font_size = font_size
         self.fixed_font = QtWidgets.QFontComboBox()
         self.fixed_font_size = standard.SpinBox(value=12, mini=6, maxi=192)
-        self.fixed_font_size.setToolTip(N_('The font size for the fixed-width diff font'))
+        self.fixed_font_size.setToolTip(
+            N_('The font size for the fixed-width diff font')
+        )
         self.font_size = standard.SpinBox(value=font_size, mini=6, maxi=192)
         self.font_size.setToolTip(N_('The font size for the main UI elements'))
         # Theme selectors
