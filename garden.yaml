@@ -106,6 +106,10 @@ trees:
         sed -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
         cp contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         cp contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
+        # A stub binary makes macOS launch Python natively instead of via Rosetta.
+        # https://github.com/git-cola/git-cola/issues/1485
+        echo 'int main() { return 0; }' |
+          cc -x c -o ${cola_app}/Contents/MacOS/git-cola-macos -
         garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources}
         garden doc ${GARDEN_CMD_VERBOSE}
         garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} docs

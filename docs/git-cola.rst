@@ -1611,6 +1611,31 @@ The completion scripts and instructions are included in Git Cola's
 * `Setup instructions <https://gitlab.com/git-cola/git-cola/-/blob/main/contrib/README.md>`_
 
 
+MACOS NOTES
+===========
+
+A ``git-cola.app`` bundle can be built using ``garden macos/app``.
+See the ``garden.yaml`` file for more details.
+
+Older versions of the ``git-cola.app`` may have caused macOS to launch Git Cola using
+Rosetta even though Python is arm64 native. This is a macOS / Apple bug.
+
+A stub ``git-cola-macos`` binary is now provided in ``git-cola.app/Contents/MacOS``
+as a workaround to prevent this behavior.
+
+If you launched an older version of the ``git-cola.app`` bundle you may have encountered
+this macOS bug:
+
+https://apple.stackexchange.com/questions/457171/shell-script-application-bundle-prompts-for-rosetta-installation
+
+Per the discussion above, you can clear the buggy cache using this command::
+
+    /usr/libexec/PlistBuddy -c 'Delete :"Architectures for arm64":com.justroots.git-cola' \
+    ~/Library/Preferences/com.apple.LaunchServices/com.apple.LaunchServices.plist
+
+Reboot after running this command and Git Cola should launch natively without Rosetta.
+
+
 WINDOWS NOTES
 =============
 
