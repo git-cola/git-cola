@@ -828,6 +828,7 @@ class SpinBox(QtWidgets.QSpinBox):
         prefix='',
         suffix='',
         tooltip='',
+        wrap=False,
     ):
         QtWidgets.QSpinBox.__init__(self, parent)
         self.setAlignment(Qt.AlignRight)
@@ -837,6 +838,7 @@ class SpinBox(QtWidgets.QSpinBox):
         self.setWrapping(True)
         self.setMinimum(mini)
         self.setMaximum(maxi)
+        self.setWrapping(wrap)
         if step:
             self.setSingleStep(step)
         if value is not None:
