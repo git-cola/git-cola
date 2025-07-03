@@ -368,7 +368,7 @@ def _truncate_diff(value, size):
     if newline == -1:
         return value[:count]
 
-    return value[: newline + 1]
+    return value[:newline]
 
 
 class DiffLineNumbers(TextDecorator):
