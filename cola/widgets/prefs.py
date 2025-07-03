@@ -262,14 +262,6 @@ scissors
 class SettingsFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
-        font = self.font()
-        font_size = context.cfg.get(prefs.FONTSIZE, font.pointSize())
-        self.default_font_size = font_size
-        self.fixed_font = QtWidgets.QFontComboBox()
-        self.fixed_font_size = standard.SpinBox(value=12, mini=6, maxi=192)
-        self.fixed_font_size.setToolTip(N_('The font size for the fixed-width diff font'))
-        self.font_size = standard.SpinBox(value=font_size, mini=6, maxi=192)
-        self.font_size.setToolTip(N_('The font size for the main UI elements'))
         self.maxrecent = standard.SpinBox(maxi=99)
         self.tabwidth = standard.SpinBox(maxi=42)
         self.textwidth = standard.SpinBox(maxi=150)
@@ -306,9 +298,6 @@ class SettingsFormWidget(FormWidget):
         tooltip = N_('Emit notifications when commits are pushed.')
         self.notifyonpush = qtutils.checkbox(checked=False, tooltip=tooltip)
 
-        self.add_row(N_('Fixed-Width Font'), self.fixed_font)
-        self.add_row(N_('Font Size'), self.fixed_font_size)
-        self.add_row(N_('Font Size (UI)'), self.font_size)
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Editor'), self.editor)
@@ -361,10 +350,6 @@ class SettingsFormWidget(FormWidget):
                 self.check_published_commits,
                 Defaults.check_published_commits,
             ),
-            prefs.FONTSIZE: (
-                self.font_size,
-                self.default_font_size,
-            ),
             prefs.MERGE_KEEPBACKUP: (
                 self.keep_merge_backups,
                 Defaults.merge_keep_backup,
@@ -381,9 +366,84 @@ class SettingsFormWidget(FormWidget):
             prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
         })
 
+
+class AppearanceFormWidget(FormWidget):
+    def __init__(self, context, model, parent):
+        FormWidget.__init__(self, context, model, parent)
+        # Fonts
+        font = self.font()
+        font_size = context.cfg.get(prefs.FONTSIZE, font.pointSize())
+        self.default_font_size = font_size
+        self.fixed_font = QtWidgets.QFontComboBox()
+        self.fixed_font_size = standard.SpinBox(value=12, mini=6, maxi=192)
+        self.fixed_font_size.setToolTip(N_('The font size for the fixed-width diff font'))
+        self.font_size = standard.SpinBox(value=font_size, mini=6, maxi=192)
+        self.font_size.setToolTip(N_('The font size for the main UI elements'))
+        # Theme selectors
+        self.themes = themes.get_all_themes()
+        self.theme = qtutils.combo_mapped(themes.options(themes=self.themes))
+        self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
+
+        # The transform to ustr is needed because the config reader will convert
+        # "0", "1", and "2" into integers.  The "1.5" value, though, is
+        # parsed as a string, so the transform is effectively a no-op.
+        self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
+        self.high_dpi.setEnabled(hidpi.is_supported())
+        self.bold_headers = qtutils.checkbox()
+        self.status_show_totals = qtutils.checkbox()
+        self.status_indent = qtutils.checkbox()
+        self.block_cursor = qtutils.checkbox(checked=True)
+
+        self.add_row(N_('Fixed-Width Font'), self.fixed_font)
+        self.add_row(N_('Font Size'), self.fixed_font_size)
+        self.add_row(N_('Font Size (UI)'), self.font_size)
+        self.add_row(N_('GUI theme'), self.theme)
+        self.add_row(N_('Icon theme'), self.icon_theme)
+        self.add_row(N_('High DPI'), self.high_dpi)
+        self.add_row(N_('Bold on Dark Headers Instead of Italic'), self.bold_headers)
+        self.add_row(N_('Show File Counts in Status Titles'), self.status_show_totals)
+        self.add_row(N_('Indent Status paths'), self.status_indent)
+        self.add_row(N_('Use a Block Cursor in Diff Editors'), self.block_cursor)
+
+        self.set_config({
+            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
+            prefs.FONTSIZE: (
+                self.font_size,
+                self.default_font_size,
+            ),
+            prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
+            prefs.STATUS_SHOW_TOTALS: (
+                self.status_show_totals,
+                Defaults.status_show_totals,
+            ),
+            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
+            prefs.THEME: (self.theme, Defaults.theme),
+            prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
+            prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
+        })
+
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
         self.fixed_font_size.valueChanged.connect(self.diff_font_size_changed)
         self.font_size.valueChanged.connect(self.font_size_changed)
+        self.theme.currentIndexChanged.connect(self._theme_changed)
+
+    def _theme_changed(self, theme_idx):
+        """Set the icon theme to dark/light when the main theme changes"""
+        # Set the icon theme to a theme that corresponds to the main settings.
+        try:
+            theme = self.themes[theme_idx]
+        except IndexError:
+            return
+        icon_theme = self.icon_theme.value()
+        if theme.name == 'default':
+            if icon_theme in ('light', 'dark'):
+                self.icon_theme.set_value('default')
+        elif theme.is_dark:
+            if icon_theme in ('default', 'light'):
+                self.icon_theme.set_value('dark')
+        elif not theme.is_dark:
+            if icon_theme in ('default', 'dark'):
+                self.icon_theme.set_value('light')
 
     def update_from_config(self):
         """Update widgets to the current config values"""
@@ -410,66 +470,6 @@ class SettingsFormWidget(FormWidget):
 
     def current_font_changed(self, font):
         cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
-
-
-class AppearanceFormWidget(FormWidget):
-    def __init__(self, context, model, parent):
-        FormWidget.__init__(self, context, model, parent)
-        # Theme selectors
-        self.themes = themes.get_all_themes()
-        self.theme = qtutils.combo_mapped(themes.options(themes=self.themes))
-        self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
-
-        # The transform to ustr is needed because the config reader will convert
-        # "0", "1", and "2" into integers.  The "1.5" value, though, is
-        # parsed as a string, so the transform is effectively a no-op.
-        self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
-        self.high_dpi.setEnabled(hidpi.is_supported())
-        self.bold_headers = qtutils.checkbox()
-        self.status_show_totals = qtutils.checkbox()
-        self.status_indent = qtutils.checkbox()
-        self.block_cursor = qtutils.checkbox(checked=True)
-
-        self.add_row(N_('GUI theme'), self.theme)
-        self.add_row(N_('Icon theme'), self.icon_theme)
-        self.add_row(N_('High DPI'), self.high_dpi)
-        self.add_row(N_('Bold on Dark Headers Instead of Italic'), self.bold_headers)
-        self.add_row(N_('Show File Counts in Status Titles'), self.status_show_totals)
-        self.add_row(N_('Indent Status paths'), self.status_indent)
-        self.add_row(N_('Use a Block Cursor in Diff Editors'), self.block_cursor)
-
-        self.set_config({
-            prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
-            prefs.HIDPI: (self.high_dpi, Defaults.hidpi),
-            prefs.STATUS_SHOW_TOTALS: (
-                self.status_show_totals,
-                Defaults.status_show_totals,
-            ),
-            prefs.STATUS_INDENT: (self.status_indent, Defaults.status_indent),
-            prefs.THEME: (self.theme, Defaults.theme),
-            prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
-            prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
-        })
-
-        self.theme.currentIndexChanged.connect(self._theme_changed)
-
-    def _theme_changed(self, theme_idx):
-        """Set the icon theme to dark/light when the main theme changes"""
-        # Set the icon theme to a theme that corresponds to the main settings.
-        try:
-            theme = self.themes[theme_idx]
-        except IndexError:
-            return
-        icon_theme = self.icon_theme.value()
-        if theme.name == 'default':
-            if icon_theme in ('light', 'dark'):
-                self.icon_theme.set_value('default')
-        elif theme.is_dark:
-            if icon_theme in ('default', 'light'):
-                self.icon_theme.set_value('dark')
-        elif not theme.is_dark:
-            if icon_theme in ('default', 'dark'):
-                self.icon_theme.set_value('light')
 
 
 class AppearanceWidget(QtWidgets.QWidget):
