@@ -491,7 +491,7 @@ class BranchesTreeWidget(standard.TreeWidget):
         """Merge the selected branch into the current branch"""
         branch = self.selected_refname()
         if branch and branch != self.current_branch:
-            self.git_action_async('merge', [branch], update_status=True)
+            self.context.runtask.run(cmds.run(cmds.MergeBranch, self.context, branch))
 
     def checkout_action(self):
         """Checkout the selected branch"""

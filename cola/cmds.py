@@ -1873,6 +1873,18 @@ class Merge(ContextCommand):
         return status, out, err
 
 
+class MergeBranch(Merge):
+    """Merge a branch with default settings applied"""
+
+    def __init__(self, context, branch):
+        values = context.settings.get('merge')
+        no_commit = not values.get('commit', True)
+        squash = values.get('squash', False)
+        no_ff = values.get('no-ff', False)
+        sign = values.get('sign', False)
+        super().__init__(context, branch, no_commit, squash, no_ff, sign)
+
+
 class OpenDefaultApp(ContextCommand):
     """Open a file using the OS default."""
 

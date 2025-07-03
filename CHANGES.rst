@@ -28,6 +28,10 @@ Usability, bells and whistles
   dropping stashes.
   (`#1491 <https://github.com/git-cola/git-cola/issues/1491>`_)
 
+* The "Merge into current branch" action in the Branches tool now uses
+  ``git merge`` options as configured in the "Merge" dialog.
+  (`#1473 <https://github.com/git-cola/git-cola/issues/1473>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it
