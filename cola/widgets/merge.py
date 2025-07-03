@@ -239,6 +239,7 @@ class Merge(standard.Dialog):
         state['no-ff'] = get(self.checkbox_noff)
         state['sign'] = get(self.checkbox_sign)
         state['commit'] = get(self.checkbox_commit)
+        state['squash'] = get(self.checkbox_squash)
         return state
 
     def apply_state(self, state):
@@ -247,4 +248,5 @@ class Merge(standard.Dialog):
         self.checkbox_noff.setChecked(state.get('no-ff', False))
         self.checkbox_sign.setChecked(state.get('sign', False))
         self.checkbox_commit.setChecked(state.get('commit', True))
+        self.checkbox_squash.setChecked(state.get('squash', False))
         return result
