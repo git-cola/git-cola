@@ -49,6 +49,7 @@ Thanks
 * Björn Ketelaars
 * Bob van der Linden
 * Boerje Sewing
+* Brad Bell
 * Bruno Cabral
 * 林博仁 (Buo-ren Lin)
 * cclaus
