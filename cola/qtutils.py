@@ -206,9 +206,9 @@ def splitter(orientation, *widgets):
     return layout
 
 
-def label(text=None, align=None, fmt=None, selectable=True):
+def label(text=None, align=None, fmt=None, selectable=True, parent=None):
     """Create a QLabel with the specified properties"""
-    widget = QtWidgets.QLabel()
+    widget = QtWidgets.QLabel(parent)
     if align is not None:
         widget.setAlignment(align)
     if fmt is not None:
