@@ -177,6 +177,11 @@ def circle_slash_red():
     return icon('circle-slash-red.svg')
 
 
+def clock():
+    """A clock icon"""
+    return icon('clock-fill.svg')
+
+
 def close():
     """Close icon"""
     return icon('x.svg')
@@ -302,6 +307,11 @@ def fold():
     return icon('fold.svg')
 
 
+def gear_solid():
+    """Configure icon"""
+    return icon('gear-solid.svg')
+
+
 def merge():
     """Merge icon"""
     return icon('git-merge.svg')
@@ -355,6 +365,11 @@ def down():
 def partial_name():
     """Partial icon name"""
     return name_from_basename('partial.svg')
+
+
+def person():
+    """Person icon"""
+    return icon('person-fill.svg')
 
 
 def pull():

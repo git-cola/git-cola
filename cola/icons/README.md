@@ -57,6 +57,7 @@ The following files are from Github's
 
 - check.svg
 - circle-slash.svg
+- clock-fill.svg
 - desktop-download.svg
 - diff.svg
 - ellipsis.svg
@@ -74,6 +75,7 @@ The following files are from Github's
 - git-merge.svg
 - link-external.svg
 - pencil.svg
+- person-fill.svg
 - play.svg
 - plus.svg
 - primitive-dot.svg
