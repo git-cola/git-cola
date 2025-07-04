@@ -36,6 +36,9 @@ Usability, bells and whistles
   in the Preferences.
   (`#1474 <https://github.com/git-cola/git-cola/issues/1474>`_)
 
+* The commit message editor now displays a visual indicator when
+  amending a commit or when the Author and/or Commit Date has been overridden.
+  (`#1490 <https://github.com/git-cola/git-cola/issues/1490>`_)
 
 Fixes
 -----

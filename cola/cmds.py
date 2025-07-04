@@ -239,15 +239,19 @@ class AmendMode(EditModel):
         super().__init__(context)
         self.skip = False
         self.amending = amend
+        self.old_commit_author = self.model.commit_author
         self.old_commitmsg = self.model.commitmsg
         self.old_mode = self.model.mode
 
         if self.amending:
+            author, commitmsg = gitcmds.prev_author_and_commitmsg(context)
+            self.new_author = author
+            self.new_commitmsg = commitmsg
             self.new_mode = self.model.mode_amend
-            self.new_commitmsg = gitcmds.prev_commitmsg(context)
             AmendMode.LAST_MESSAGE = self.model.commitmsg
             return
         # else, amend unchecked, regular commit
+        self.new_author = ''
         self.new_mode = self.model.mode_none
         self.new_diff_text = ''
         self.new_commitmsg = self.model.commitmsg
@@ -275,6 +279,7 @@ class AmendMode(EditModel):
                 return
         self.skip = False
         super().do()
+        self.model.set_commit_author(self.new_author)
         self.model.set_commitmsg(self.new_commitmsg)
         self.model.update_file_status()
         self.context.selection.reset(emit=True)
@@ -282,6 +287,7 @@ class AmendMode(EditModel):
     def undo(self):
         if self.skip:
             return
+        self.model.set_commit_author(self.old_commit_author)
         self.model.set_commitmsg(self.old_commitmsg)
         super().undo()
         self.model.update_file_status()

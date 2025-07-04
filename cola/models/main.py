@@ -98,6 +98,7 @@ class MainModel(QtCore.QObject):
         self.is_merging = False
         self.is_rebasing = False
         self.is_applying_patch = False
+        self.commit_author = ''
         self.currentbranch = ''
         self.directory = ''
         self.project = ''
@@ -207,6 +208,10 @@ class MainModel(QtCore.QObject):
         self.commitmsg = msg
         if notify:
             self.commit_message_changed.emit(msg)
+
+    def set_commit_author(self, author):
+        """Set the author that will be used when creating commits"""
+        self.commit_author = author
 
     def save_commitmsg(self, msg=None):
         if msg is None:

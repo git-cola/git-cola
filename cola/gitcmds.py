@@ -1001,6 +1001,25 @@ def prev_commitmsg(context, *args):
     )[STDOUT]
 
 
+def prev_author_and_commitmsg(context, *args):
+    """Queries git for the latest commit message."""
+    git = context.git
+    output = git.log(
+        '-1',
+        no_color=True,
+        pretty='format:%an <%ae>####%s%n%n%b',
+        _readonly=True,
+        *args,
+    )[STDOUT]
+    try:
+        author, commitmsg = output.split('####', 1)
+    except ValueError:
+        author = ''
+        commitmsg = ''
+
+    return author, commitmsg
+
+
 def rev_parse(context, name):
     """Call git rev-parse and return the output"""
     git = context.git
