@@ -10,6 +10,7 @@ from qtpy.QtCore import Signal
 from .. import actions
 from .. import cmds
 from .. import core
+from .. import display
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -859,7 +860,7 @@ class CommitDateDialog(QtWidgets.QDialog):
 
     def commit_date(self):
         """Return the selected datetime as a string for use by Git"""
-        return self.datetime().strftime('%a %b %d %H:%M:%S %Y %z')
+        return display.git_commit_date(self.datetime())
 
     def _update_time_from_slider(self, value):
         """Map the slider value to an offset corresponding to the current time.

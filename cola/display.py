@@ -79,3 +79,8 @@ def notify(app_name, title, message, icon):
         notification.send()
     else:
         interaction.Interaction.log(f'{title}: {message}')
+
+
+def git_commit_date(datetime):
+    """Return the datetime as a string for use by Git"""
+    return datetime.strftime('%a %b %d %H:%M:%S %Y %z')
