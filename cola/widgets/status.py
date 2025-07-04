@@ -1654,15 +1654,10 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
     def __init__(self, title, context, parent):
         QtWidgets.QWidget.__init__(self, parent)
         self.context = context
-        self.icon = QtWidgets.QLabel(self)
-        self.label = QtWidgets.QLabel(self)
+        self.icon = qtutils.pixmap_label(icons.copy(), defs.default_icon, parent=self)
+        self.label = qtutils.label(text=title, selectable=False)
         self.spinbox = standard.SpinBox(value=1, mini=1, maxi=99, parent=self)
         self.spinbox.setToolTip(N_('The number of leading paths to strip'))
-
-        icon = icons.copy()
-        pixmap = icon.pixmap(defs.default_icon, defs.default_icon)
-        self.icon.setPixmap(pixmap)
-        self.label.setText(title)
 
         layout = qtutils.hbox(
             defs.small_margin,

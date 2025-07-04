@@ -34,10 +34,7 @@ class StartupDialog(standard.Dialog):
         self.setWindowTitle(N_('git-cola'))
 
         # Top-most large icon
-        logo_pixmap = icons.cola().pixmap(defs.huge_icon, defs.huge_icon)
-
-        self.logo_label = QtWidgets.QLabel()
-        self.logo_label.setPixmap(logo_pixmap)
+        self.logo_label = qtutils.pixmap_label(icons.cola(), defs.huge_icon)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
         self.logo_text_label = qtutils.label(text=version.cola_version())

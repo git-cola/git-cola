@@ -221,6 +221,23 @@ def label(text=None, align=None, fmt=None, selectable=True, parent=None):
     return widget
 
 
+def plain_text_label(text=None, align=None, selectable=True, parent=None):
+    """Create a QLabel that display plain text"""
+    return label(
+        text=text, align=align, fmt=Qt.PlainText, selectable=selectable, parent=parent
+    )
+
+
+def pixmap_label(icon, width, height=None, parent=None):
+    """Create a QLabel that displays a pixmap"""
+    if height is None:
+        height = width
+    widget = QtWidgets.QLabel(parent)
+    pixmap = icon.pixmap(width, height)
+    widget.setPixmap(pixmap)
+    return widget
+
+
 class ComboBox(QtWidgets.QComboBox):
     """Custom read-only combo box with a convenient API"""
 

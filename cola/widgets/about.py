@@ -67,14 +67,10 @@ class AboutView(QtWidgets.QDialog):
         self.setWindowModality(Qt.WindowModal)
 
         # Top-most large icon
-        logo_pixmap = icons.cola().pixmap(defs.huge_icon, defs.large_icon)
-
-        self.logo_label = QtWidgets.QLabel()
-        self.logo_label.setPixmap(logo_pixmap)
+        self.logo_label = qtutils.pixmap_label(icons.cola(), defs.huge_icon)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
-        self.logo_text_label = QtWidgets.QLabel()
-        self.logo_text_label.setText('Git Cola')
+        self.logo_text_label = qtutils.label(text='Git Cola')
         self.logo_text_label.setAlignment(Qt.AlignLeft | Qt.AlignCenter)
 
         font = self.logo_text_label.font()

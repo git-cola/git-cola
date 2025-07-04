@@ -294,7 +294,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
         If the cursor is at the end of the line then focus the description.
         Otherwise, move the cursor to the end of the line so that a
         subsequence "down" press moves to the end of the line.
-
         """
         self.focus_description()
 
