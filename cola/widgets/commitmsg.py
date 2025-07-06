@@ -195,14 +195,16 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.fixup_commit_menu.aboutToShow.connect(self.build_fixup_menu)
 
         # Author and Date display.
+        tooltip = N_('A commit will be recorded with this author')
         self._author_image = qtutils.pixmap_label(
-            icons.person(), defs.default_icon, parent=self
+            icons.person(), defs.default_icon, tooltip=tooltip, parent=self
         )
-        self._author_label = qtutils.plain_text_label(parent=self)
+        self._author_label = qtutils.plain_text_label(tooltip=tooltip, parent=self)
+        tooltip = N_('A commit will be recorded with this date and time')
         self._date_image = qtutils.pixmap_label(
-            icons.clock(), defs.default_icon, parent=self
+            icons.clock(), defs.default_icon, tooltip=tooltip, parent=self
         )
-        self._date_label = qtutils.plain_text_label(parent=self)
+        self._date_label = qtutils.plain_text_label(tooltip=tooltip, parent=self)
 
         self.bottomlayout = qtutils.hbox(
             defs.no_margin,
