@@ -194,13 +194,23 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.fixup_commit_menu = self.actions_menu.addMenu(N_('Fixup Previous Commit'))
         self.fixup_commit_menu.aboutToShow.connect(self.build_fixup_menu)
 
-        # Author and Date display.
+        # Display commit author overrides.
+        self._author_close = qtutils.create_action_button(
+            icon=icons.close(),
+            tooltip=N_('Cancel the commit author override.'),
+        )
         tooltip = N_('A commit will be recorded with this author')
         self._author_image = qtutils.pixmap_label(
             icons.person(), defs.default_icon, tooltip=tooltip, parent=self
         )
         self._author_label = qtutils.plain_text_label(tooltip=tooltip, parent=self)
         tooltip = N_('A commit will be recorded with this date and time')
+
+        # Display commit date overrides.
+        self._date_close = qtutils.create_action_button(
+            icon=icons.close(),
+            tooltip=N_('Cancel the commit date override.'),
+        )
         self._date_image = qtutils.pixmap_label(
             icons.clock(), defs.default_icon, tooltip=tooltip, parent=self
         )
@@ -209,9 +219,11 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.bottomlayout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
+            self._author_close,
             self._author_image,
             self._author_label,
             qtutils.STRETCH,
+            self._date_close,
             self._date_image,
             self._date_label,
         )
@@ -233,6 +245,10 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setLayout(self.mainlayout)
 
         qtutils.connect_button(self.commit_button, self.commit)
+        qtutils.connect_button(
+            self._author_close, lambda: self.set_commit_author(False)
+        )
+        qtutils.connect_button(self._date_close, lambda: self.set_commit_date(False))
         qtutils.connect_action_bool(
             self.check_spelling_action, self.toggle_check_spelling
         )
@@ -487,6 +503,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
         author_visible = bool(author)
         if author:
             self._author_label.setText(author)
+        author_checked = self.commit_author_action.isChecked()
+        self._author_close.setVisible(author_visible and author_checked)
         self._author_image.setVisible(author_visible)
         self._author_label.setVisible(author_visible)
 
@@ -500,6 +518,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         date_visible = bool(date)
         if date:
             self._date_label.setText(date)
+        self._date_close.setVisible(bool(self._git_commit_date))
         self._date_image.setVisible(date_visible)
         self._date_label.setVisible(date_visible)
 
@@ -728,6 +747,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         """Choose the date and time that is used when authoring commits"""
         if not enabled:
             self._git_commit_date = None
+            if self.commit_date_action.isChecked():
+                with qtutils.BlockSignals(self.commit_date_action):
+                    self.commit_date_action.setChecked(False)
             self.update_author_and_date()
             return
         widget = CommitDateDialog(
@@ -748,6 +770,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
             if self._git_commit_author:
                 self._last_git_commit_author = self._git_commit_author
             self._git_commit_author = None
+            if self.commit_author_action.isChecked():
+                with qtutils.BlockSignals(self.commit_author_action):
+                    self.commit_author_action.setChecked(False)
             self.update_author_and_date()
             return
         widget = CommitAuthorDialog(
