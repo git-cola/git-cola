@@ -1006,11 +1006,18 @@ def add_menu(title, parent):
     return menu
 
 
-def create_toolbutton(text=None, layout=None, tooltip=None, icon=None, repeat=False):
+def create_toolbutton(
+    text=None,
+    layout=None,
+    tooltip=None,
+    icon=None,
+    icon_size=defs.default_icon,
+    repeat=False,
+):
     button = tool_button()
     if icon is not None:
         button.setIcon(icon)
-        button.setIconSize(QtCore.QSize(defs.default_icon, defs.default_icon))
+        button.setIconSize(QtCore.QSize(icon_size, icon_size))
     if text is not None:
         button.setText(' ' + text)
         button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
