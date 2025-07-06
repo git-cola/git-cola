@@ -206,7 +206,7 @@ def splitter(orientation, *widgets):
     return layout
 
 
-def label(text=None, align=None, fmt=None, selectable=True, parent=None):
+def label(text=None, align=None, fmt=None, selectable=True, tooltip=None, parent=None):
     """Create a QLabel with the specified properties"""
     widget = QtWidgets.QLabel(parent)
     if align is not None:
@@ -218,23 +218,32 @@ def label(text=None, align=None, fmt=None, selectable=True, parent=None):
         widget.setOpenExternalLinks(True)
     if text:
         widget.setText(text)
+    if tooltip:
+        widget.setToolTip(tooltip)
     return widget
 
 
-def plain_text_label(text=None, align=None, selectable=True, parent=None):
+def plain_text_label(text=None, align=None, selectable=True, tooltip=None, parent=None):
     """Create a QLabel that display plain text"""
     return label(
-        text=text, align=align, fmt=Qt.PlainText, selectable=selectable, parent=parent
+        text=text,
+        align=align,
+        fmt=Qt.PlainText,
+        selectable=selectable,
+        tooltip=tooltip,
+        parent=parent,
     )
 
 
-def pixmap_label(icon, width, height=None, parent=None):
+def pixmap_label(icon, width, height=None, tooltip=None, parent=None):
     """Create a QLabel that displays a pixmap"""
     if height is None:
         height = width
     widget = QtWidgets.QLabel(parent)
     pixmap = icon.pixmap(width, height)
     widget.setPixmap(pixmap)
+    if tooltip:
+        widget.setToolTip(tooltip)
     return widget
 
 
