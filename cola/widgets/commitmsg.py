@@ -595,15 +595,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         sign = get(self.sign_action)
         no_verify = get(self.bypass_commit_hooks_action)
-        self.bypass_commit_hooks_action.setChecked(False)
         if self.commit_date_action.isChecked():
-            self.commit_date_action.setChecked(False)
             date = self._git_commit_date
         else:
             date = None
 
         if self.commit_author_action.isChecked():
-            self.commit_author_action.setChecked(False)
             author = self._git_commit_author
         else:
             author = None
@@ -631,6 +628,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
         title = N_('Commit failed')
         status, out, err = task.result
         Interaction.command(title, 'git commit', status, out, err)
+        self.bypass_commit_hooks_action.setChecked(False)
+        # Author and date settings are not cleared unless the commit operation succeeds.
+        # These settings are consumed when a commit is produced with their values.
+        if status == 0:
+            self.set_commit_author(False, update=False)
+            self.set_commit_date(False, update=True)
         self.setFocus()
 
     def build_fixup_menu(self):
@@ -743,14 +746,15 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.cursor_position_label.setStyleSheet(stylesheet)
         self.cursor_position_label.setText(display_content)
 
-    def set_commit_date(self, enabled):
+    def set_commit_date(self, enabled, update=True):
         """Choose the date and time that is used when authoring commits"""
         if not enabled:
             self._git_commit_date = None
             if self.commit_date_action.isChecked():
                 with qtutils.BlockSignals(self.commit_date_action):
                     self.commit_date_action.setChecked(False)
-            self.update_author_and_date()
+            if update:
+                self.update_author_and_date()
             return
         widget = CommitDateDialog(
             self, self.context, commit_datetime=self._last_commit_datetime
@@ -762,9 +766,10 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self._last_commit_datetime = CommitDateDialog.tick_time(widget.datetime())
         else:
             self.commit_date_action.setChecked(False)
-        self.update_author_and_date()
+        if update:
+            self.update_author_and_date()
 
-    def set_commit_author(self, enabled):
+    def set_commit_author(self, enabled, update=True):
         """Choose a commit author to override the author value when authoring commits"""
         if not enabled:
             if self._git_commit_author:
@@ -773,7 +778,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
             if self.commit_author_action.isChecked():
                 with qtutils.BlockSignals(self.commit_author_action):
                     self.commit_author_action.setChecked(False)
-            self.update_author_and_date()
+            if update:
+                self.update_author_and_date()
             return
         widget = CommitAuthorDialog(
             self,
@@ -795,7 +801,8 @@ class CommitMessageEditor(QtWidgets.QFrame):
         else:
             self._git_commit_author = None
             self.commit_author_action.setChecked(False)
-        self.update_author_and_date()
+        if update:
+            self.update_author_and_date()
 
     # Qt overrides
     def showEvent(self, event):
