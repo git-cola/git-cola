@@ -98,7 +98,7 @@ class MainModel(QtCore.QObject):
         self.is_merging = False
         self.is_rebasing = False
         self.is_applying_patch = False
-        self.commit_author = ''
+        self.commit_author = None
         self.currentbranch = ''
         self.directory = ''
         self.project = ''

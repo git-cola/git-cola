@@ -499,7 +499,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         elif amending:
             author = self.model.commit_author
         else:
-            author = ''
+            author = None
         author_visible = bool(author)
         if author:
             self._author_label.setText(author)
