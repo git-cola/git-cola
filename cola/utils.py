@@ -336,6 +336,42 @@ def expandpath(path):
     return path
 
 
+def get_hostname_from_url(url_str):
+    """Extract the hostname component from a URL
+
+    >>> get_hostname_from_url('user@example.org:namespace/project')
+    'example.org'
+
+    >>> get_hostname_from_url('user@example.org:namespace/project.git/')
+    'example.org'
+
+    >>> get_hostname_from_url('https://example.org/namespace/project.git')
+    'example.org'
+
+    >>> get_hostname_from_url('ssh://user@example.org/namespace/project.git')
+    'example.org'
+
+    """
+    if not url_str:
+        return None
+    url = urllib.parse.urlparse(url_str)
+    if not url or url.scheme == '' or url.netloc == '':
+        # Handle <user>@<host>:path.git URLs
+        match = _SSH_REGEX.match(url_str)
+        if match is None:
+            return None
+        hostname = match.group('hostname')
+        if not hostname:
+            return None
+    else:
+        hostname = url.netloc
+
+    if '@' in hostname:
+        _, hostname = hostname.split('@', 1)
+
+    return hostname
+
+
 def get_path_from_url(url_str):
     """Extract the path component from a URL
 
