@@ -3,7 +3,6 @@ import os
 
 from cola import core
 from cola import gitcmds
-from cola.widgets.remote import get_default_remote
 
 from . import helper
 from .helper import app_context
@@ -57,21 +56,21 @@ def test_upstream_remote(app_context):
 def test_default_push(app_context):
     """Test getting what default branch to push to"""
     # no default push, no remote branch configured
-    assert get_default_remote(app_context) == 'origin'
+    assert gitcmds.get_default_remote(app_context) == 'origin'
 
     # default push set, no remote branch configured
     helper.run_git('config', 'remote.pushDefault', 'test')
     app_context.cfg.reset()
-    assert get_default_remote(app_context) == 'test'
+    assert gitcmds.get_default_remote(app_context) == 'test'
 
     # default push set, default remote branch configured
     helper.run_git('config', 'branch.main.remote', 'test2')
     app_context.cfg.reset()
-    assert get_default_remote(app_context) == 'test2'
+    assert gitcmds.get_default_remote(app_context) == 'test2'
 
     # default push set, default remote branch configured, on different branch
     helper.run_git('checkout', '-b', 'other-branch')
-    assert get_default_remote(app_context) == 'test'
+    assert gitcmds.get_default_remote(app_context) == 'test'
 
 
 def test_tracked_branch(app_context):

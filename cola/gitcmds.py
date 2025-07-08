@@ -44,6 +44,16 @@ def get_branch(context, branch):
     return branch
 
 
+def get_default_remote(context):
+    """Get the name of the default remote to use for pushing.
+
+    This will be the remote the branch is set to track, if it is set. If it
+    is not, remote.pushDefault will be used (or origin if not set)
+    """
+    upstream = upstream_remote(context)
+    return upstream or context.cfg.get('remote.pushDefault', default='origin')
+
+
 def upstream_remote(context, branch=None):
     """Return the remote associated with the specified branch"""
     config = context.cfg
