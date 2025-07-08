@@ -7,9 +7,13 @@ import sys
 import tempfile
 import time
 import traceback
+import urllib.parse
 
 from . import core
 from . import compat
+
+
+_SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
 
 
 def asint(obj, default=0):
@@ -329,6 +333,43 @@ def expandpath(path):
     path = os.path.expandvars(path)
     if path.startswith('~'):
         path = os.path.expanduser(path)
+    return path
+
+
+def get_path_from_url(url_str):
+    """Extract the path component from a URL
+
+    >>> get_path_from_url('user@example.org:namespace/project')
+    'namespace/project'
+
+    >>> get_path_from_url('user@example.org:namespace/project.git/')
+    'namespace/project'
+
+    >>> get_path_from_url('https://example.org/namespace/project.git')
+    'namespace/project'
+
+    >>> get_path_from_url('ssh://user@example.org/namespace/project.git')
+    'namespace/project'
+
+    """
+    if not url_str:
+        return None
+    url = urllib.parse.urlparse(url_str)
+    if not url or url.scheme == '' or url.path == '':
+        # Handle <user>@<host>:path.git URLs
+        match = _SSH_REGEX.match(url_str)
+        if match is None:
+            return None
+        path = match.group('path')
+        if not path:
+            return None
+    else:
+        path = url.path
+
+    path = path.strip('/')  # Strip leading and trailing slashes.
+    if path.endswith('.git'):
+        path = path[: -len('.git')]
+
     return path
 
 
