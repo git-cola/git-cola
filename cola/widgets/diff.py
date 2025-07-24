@@ -1031,6 +1031,14 @@ class DiffEditor(DiffTextEdit):
             hotkeys.REVERT_ALT,
         )
 
+        self.action_revert_unstaged_edits = qtutils.add_action_with_icon(
+            self,
+            icons.undo(),
+            cmds.RevertUnstagedEdits.name(),
+            cmds.run(cmds.RevertUnstagedEdits, self.context),
+            hotkeys.REVERT_UNSTAGED_EDITS,
+        )
+
         self.action_edit_and_apply_selection = qtutils.add_action(
             self,
             N_('Edit and Apply'),
@@ -1171,6 +1179,7 @@ class DiffEditor(DiffTextEdit):
                 stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
+                add_action(self.action_revert_unstaged_edits)
                 # Do not show the "edit" action when the file does not exist.
                 add_action(qtutils.menu_separator(menu))
                 if filename and core.exists(filename):

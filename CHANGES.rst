@@ -40,6 +40,9 @@ Usability, bells and whistles
   amending a commit or when the Author and/or Commit Date has been overridden.
   (`#1490 <https://github.com/git-cola/git-cola/issues/1490>`_)
 
+* A menu action to revert all changes was added to the diff context menu.
+  (`#1492 <https://github.com/git-cola/git-cola/issues/1492>`_)
+
 Fixes
 -----
 * The "Set Upstream Branch" action in the Branches tool was fixed so that it
