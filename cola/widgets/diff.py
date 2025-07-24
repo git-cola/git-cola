@@ -1016,27 +1016,31 @@ class DiffEditor(DiffTextEdit):
 
         self.action_apply_selection = qtutils.add_action(
             self,
-            'Apply',
+            N_('Apply'),
             self.apply_selection,
             hotkeys.STAGE_DIFF,
             hotkeys.STAGE_DIFF_ALT,
         )
 
-        self.action_revert_selection = qtutils.add_action(
-            self, 'Revert', self.revert_selection, hotkeys.REVERT, hotkeys.REVERT_ALT
+        self.action_revert_selection = qtutils.add_action_with_icon(
+            self,
+            icons.undo(),
+            N_('Revert Selected Lines'),
+            self.revert_selection,
+            hotkeys.REVERT,
+            hotkeys.REVERT_ALT,
         )
-        self.action_revert_selection.setIcon(icons.undo())
 
         self.action_edit_and_apply_selection = qtutils.add_action(
             self,
-            'Edit and Apply',
+            N_('Edit and Apply'),
             partial(self.apply_selection, edit=True),
             hotkeys.EDIT_AND_STAGE_DIFF,
         )
 
         self.action_edit_and_revert_selection = qtutils.add_action(
             self,
-            'Edit and Revert',
+            N_('Edit and Revert'),
             partial(self.revert_selection, edit=True),
             hotkeys.EDIT_AND_REVERT,
         )
@@ -1164,7 +1168,6 @@ class DiffEditor(DiffTextEdit):
 
                 self.action_revert_selection.setText(revert_text)
                 add_action(self.action_revert_selection)
-
                 stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
                 )
