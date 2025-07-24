@@ -128,7 +128,6 @@ trees:
             msgmerge \
                 --no-wrap \
                 --no-fuzzy-matching \
-                --sort-output \
                 --output-file $$po.new \
                 $$po \
                 cola/i18n/git-cola.pot
@@ -140,7 +139,6 @@ trees:
             --keyword=N_ \
             --no-wrap \
             --omit-header \
-            --sort-output \
             --output-dir cola/i18n \
             --output git-cola.pot \
             cola/*.py \
