@@ -1345,7 +1345,7 @@ class DiffEditor(DiffTextEdit):
                     'This operation drops uncommitted changes.\n'
                     'These changes cannot be recovered.'
                 ),
-                N_('Revert the uncommitted changes?'),
+                N_('Revert uncommitted changes from the selected lines?'),
                 ok_text,
                 default=True,
                 icon=icons.undo(),
