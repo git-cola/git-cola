@@ -275,9 +275,7 @@ def default_history_browser():
         # because we don't have to guess paths.
         git_cola = sys.argv[0].replace('\\', '/')
         python = sys.executable.replace('\\', '/')
-        cwd = core.getcwd().replace('\\', '/')
-        argv = [python, git_cola, 'dag', '--repo', cwd]
-        argv = core.prep_for_subprocess(argv)
+        argv = core.prep_for_subprocess([python, git_cola, 'dag'])
         default = core.list2cmdline(argv)
     else:
         # The `gitk` script can be launched as-is on unix

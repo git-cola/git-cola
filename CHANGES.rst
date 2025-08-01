@@ -53,6 +53,11 @@ Fixes
   tools now save the settings after pruning.
   (`#1479 <https://github.com/git-cola/git-cola/issues/1479>`_)
 
+* The default history viewer on Windows, used by the "Visualize Current Branch..."
+  and "Visualize All Branches..." actions, was updated to avoid issues when settings
+  are edited.
+  (`#1496 <https://github.com/git-cola/git-cola/issues/1496>`_)
+
 Translations
 ------------
 * New Tamil translation.
