@@ -415,7 +415,7 @@ When submitting patches, consult the
 ## Packaging Notes
 
 Git Cola installs its modules into the default Python site-packages directory
-(e.g. `lib/python3.7/site-packages`) using setuptools.
+(e.g. `lib/pythonX.Y/site-packages`) using setuptools.
 
 While end-users can use `pip install git-cola` to install Git Cola, distribution
 packagers should use the `garden -D prefix=/usr install` process. Git Cola's Garden
