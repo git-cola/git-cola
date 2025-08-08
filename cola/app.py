@@ -281,7 +281,7 @@ class ColaQApplication(QtWidgets.QApplication):
         view.save_state(settings=session)
 
 
-def process_args(args):
+def process_args(args, setup_repo=False):
     """Process and verify command-line arguments"""
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
@@ -290,6 +290,15 @@ def process_args(args):
 
     # Handle session management
     restore_session(args)
+
+    # Initialize args.repo. If a repository was specified as a
+    # positional argument then we will use that value.
+    # If unspecified, the current directory is used.
+    if setup_repo and not args.repo:
+        if args.args and git.is_git_repository(args.args[0]):
+            args.repo = args.args.pop(0)
+    if not args.repo:
+        args.repo = core.getcwd()
 
     # Bail out if --repo is not a directory
     repo = core.decode(args.repo)
@@ -320,12 +329,18 @@ def restore_session(args):
         args.repo = session.repo
 
 
-def application_init(args, update=False, app_name='Git Cola', setup_worktree=True):
+def application_init(
+    args,
+    update=False,
+    app_name='Git Cola',
+    setup_worktree=True,
+    setup_repo=False,
+):
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
-    process_args(args)
+    process_args(args, setup_repo=setup_repo)
 
     context = new_context(args, app_name=app_name)
     timer = context.timer
@@ -418,7 +433,6 @@ def add_common_arguments(parser):
         '-r',
         '--repo',
         metavar='<repo>',
-        default=core.getcwd(),
         help='open the specified git repository',
     )
 

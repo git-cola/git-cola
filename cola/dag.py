@@ -47,6 +47,6 @@ def parse_args(argv=None):
 
 def cmd_dag(args):
     """Run git-dag via the `git cola dag` sub-command"""
-    context = app.application_init(args, app_name='Git DAG')
+    context = app.application_init(args, app_name='Git DAG', setup_repo=True)
     view = git_dag(context, args=args, show=False)
     return app.application_start(context, view)

@@ -1,3 +1,13 @@
+Upcoming
+========
+
+Usability, bells and whistles
+-----------------------------
+* `git dag` will now open a repository when it is specified on the command-line.
+  Previously, the `--repo` option was required in order to specify a repository.
+  The `git dag` positional arguments will now used when `--repo` is unspecified.
+
+
 .. _v4.14.0:
 
 v4.14.0
