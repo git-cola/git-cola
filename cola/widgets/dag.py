@@ -234,11 +234,15 @@ class ViewerMixin:
     def show_dir_diff(self):
         """Show a full directory diff for the selected commit"""
         context = self.context
+        commit = self.clicked_commit()
+        if not commit:
+            return
+        is_root_commit = not commit.parents
         self.with_oid(
             lambda oid: difftool.difftool_launch(
                 context,
-                left=oid,
-                left_take_magic=True,
+                oid=oid,
+                is_root_commit=is_root_commit,
                 dir_diff=True,
                 staged=oid == dag.STAGE,
             ),

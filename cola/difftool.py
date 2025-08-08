@@ -295,7 +295,9 @@ def difftool_launch(
     context,
     left=None,
     right=None,
+    oid=None,
     paths=None,
+    is_root_commit=False,
     staged=False,
     dir_diff=False,
     left_take_magic=False,
@@ -306,6 +308,8 @@ def difftool_launch(
 
     :param left: first argument to difftool
     :param right: second argument to difftool_args
+    :param oid: commit to display
+    :param is_root_commit: is the commit a root commit?
     :param paths: paths to diff
     :param staged: activate `git difftool --staged`
     :param dir_diff: activate `git difftool --dir-diff`
@@ -318,7 +322,16 @@ def difftool_launch(
         difftool_args.append('--cached')
     if dir_diff:
         difftool_args.append('--dir-diff')
-
+    # If we are showing a specific commit then we will only use the ^!
+    # syntax for the root commit. "oid" gets wired into the "left"
+    # and "right" arguments.
+    if oid:
+        if is_root_commit:
+            left = oid
+            left_take_magic = True
+        else:
+            left = f'{oid}~'
+            right = oid
     if left:
         original_left = left
         if left_take_parent or left_take_magic:
