@@ -119,6 +119,20 @@ class ViewerMixin:
             oid = None
         return oid
 
+    def clicked_commit(self, filtered=True):
+        """Return the clicked or selected commit object"""
+        if self.clicked:
+            item = self.clicked
+        else:
+            item = self.selected_item()
+        if item and hasattr(item, 'commit'):
+            commit = item.commit
+        else:
+            commit = item
+        if filtered and commit and commit.oid in (dag.STAGE, dag.WORKTREE):
+            commit = None
+        return commit
+
     def with_oid(self, func, filtered=True):
         """Run an operation with a commit object ID"""
         oid = self.clicked_oid(filtered=filtered)
