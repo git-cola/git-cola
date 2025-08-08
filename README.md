@@ -46,8 +46,6 @@ These files are updated to mention the new version:
 
 * `garden dev` to update the egg-info to use the tagged version
 
-* `git cola push` to push the changes
-
 ```bash
 git push origin main
 git push --tags origin
@@ -60,6 +58,8 @@ git push --tags git-cola
 * `garden publish` to publish to [pypi](https://pypi.org/project/git-cola/).
 
 * `garden clean` to clean out older files.
+
+* `git cola push` to push the changes
 
 * `git -C pages pull` to make sure that the `pages` worktree is up to date.
 
