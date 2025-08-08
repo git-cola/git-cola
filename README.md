@@ -27,8 +27,11 @@ The following steps should be taken when creating a new release.
 
 * `garden check` and make sure all tests and checks are passing.
 
-* `./todo/set-version vX.Y.Z` to update the version number recorded in the source.
-This script is equivalent to updating the following files to mention the new version.
+* `garden set-version` to update the version number recorded in the source.
+Use `./todo/set-version vX.Y.Z` directly to set major or patch versions.
+By default, the next minor version is used.
+
+These files are updated to mention the new version:
 
   * `cola/_version.py`
   * `share/metainfo/*.appdata.xml`
