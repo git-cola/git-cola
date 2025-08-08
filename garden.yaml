@@ -150,6 +150,17 @@ trees:
         twine upload --sign dist/*.whl dist/*.tar.gz
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
+      set-version: |
+        current_version=$(git describe --first-parent --abbrev=0)
+        next_version=$(python3 -c "
+        import sys
+        version = sys.argv[1]
+        parts = version.split('.')
+        parts[1] = f'{int(parts[1]) + 1}'
+        print('.'.join(parts))
+        " "$current_version"
+        )
+        ./todo/set-version "$next_version"
       test: ${activate} ${PYTEST} "$@" cola test
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
