@@ -99,11 +99,11 @@ trees:
         source ${cola_app_resources}/bin/activate
         pip install '.[docs,extras,pyqt6]'
         cp contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
-        if test -n "${cola_full_version}"
+        if test -n "${version_full}"
         then
-            sed -i -e s/0.0.0.0/${cola_full_version}/ ${cola_app}/Contents/Info.plist
+            sed -i -e s/0.0.0.0/${version_full}/ ${cola_app}/Contents/Info.plist
         fi
-        sed -i -e s/0.0.0/${cola_version}/ ${cola_app}/Contents/Info.plist
+        sed -i -e s/0.0.0/${version_digits}/ ${cola_app}/Contents/Info.plist
         cp contrib/darwin/git-cola ${cola_app}/Contents/MacOS
         cp contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
         # A stub binary makes macOS launch Python natively instead of via Rosetta.
@@ -145,25 +145,16 @@ trees:
             cola/*/*.py
       pages<: doc
       pages: garden install ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages docs "$@"
-      publish: |
-        ${activate}
-        twine upload --sign dist/*.whl dist/*.tar.gz
+      publish: ${activate} twine upload --sign dist/*.whl dist/*.tar.gz
+      release: ${activate} ./todo/release --all
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
-      set-version: |
-        current_version=$(git describe --first-parent --abbrev=0)
-        next_version=$(python3 -c "
-        import sys
-        version = sys.argv[1]
-        parts = version.split('.')
-        parts[1] = f'{int(parts[1]) + 1}'
-        print('.'.join(parts))
-        " "$current_version"
-        )
-        ./todo/set-version "$next_version"
       test: ${activate} ${PYTEST} "$@" cola test
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
+      version/bump: ./todo/set-version "${version_next}"
+      version/commit: git commit --all --signoff --message "git-cola v${version_digits}"
+      version/tag: git tag --sign --message "git-cola ${version_builtin}" "${version_builtin}"
       wheel: ${activate} python3 -m build -n .
     gitconfig:
       remote.publish.pushurl:
@@ -330,6 +321,11 @@ trees:
           jekyll build --destination "${prefix}" "$@"
       sanitize: dos2unix share/doc/git-cola/*.html share/doc/git-cola/html/*.html
       setup: sudo apt install inotify-tools jekyll
+      publish: |
+        git add -u
+        git add share
+        git commit --signoff --message "git-cola v${version_builtin}"
+        git push
     links:
       - "https://git-cola.gitlab.io"
       - "https://git-cola.github.io"
@@ -363,10 +359,6 @@ variables:
   metainfodir: ${datadir}/metainfo
   cola_app: ${TREE_PATH}/git-cola.app
   cola_app_resources: ${cola_app}/Contents/Resources
-  cola_full_version: $ ./bin/git-cola version --brief
-  cola_version: |
-    $ eval "$(sed -e 's/ //g' cola/_version.py)"
-    printf '%s' "$VERSION"
   is_virtualenv: |
     $ ${PYTHON} -c '
     import os, sys
@@ -381,6 +373,20 @@ variables:
     fi
   pip_editable: "--editable"
   pip_upgrade: ""
+  version_digits: |
+    $ eval "$(sed -e 's/ //g' "${GARDEN_CONFIG_DIR}/cola/_version.py")"
+    printf '%s' "$VERSION"
+  version_builtin: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief --builtin
+  version_full: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief
+  version_git: $ git -C "${GARDEN_CONFIG_DIR}" describe --first-parent --abbrev=0
+  version_next: |
+    $ ${PYTHON} -c "
+    import sys
+    version = sys.argv[1]
+    parts = version.split('.')
+    parts[1] = f'{int(parts[1]) + 1}'
+    print('.'.join(parts))
+    " "${version_git}"
   # External commands and options
   PYTEST: ${PYTHON} -B -m pytest ${PYTEST_OPTIONS}
   PYTEST_OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
