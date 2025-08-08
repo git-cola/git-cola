@@ -27,8 +27,8 @@ The following steps should be taken when creating a new release.
 
 * `garden check` and make sure all tests and checks are passing.
 
-* `garden set-version` to update the version number recorded in the source.
-Use `./todo/set-version vX.Y.Z` directly to set major or patch versions.
+* `garden version/bump` to update the version number recorded in the source.
+Use `garden version/bump -D version_next=vX.Y.Z` to use a major or patch version.
 By default, the next minor version is used.
 
 These files are updated to mention the new version:
@@ -40,9 +40,9 @@ These files are updated to mention the new version:
   * `pyproject.toml`
 
 
-* `./todo/commit-version` to commit the above changes (`git commit -asm'git-cola vX.Y.Z'`)
+* `garden version/commit` to commit the above changes (`git commit -asm'git-cola vX.Y.Z'`)
 
-* `./todo/tag` to add the new tag (`git tag -sm'git-cola X.Y'`)
+* `garden version/tag` to add the new tag (`git tag -sm'git-cola X.Y'`)
 
 * `garden dev` to update the egg-info to use the tagged version
 
@@ -61,13 +61,13 @@ git push --tags git-cola
 
 * `git cola push` to push the changes
 
-* `git -C pages pull` to make sure that the `pages` worktree is up to date.
+* `garden pull pages` to make sure that the `pages` worktree is up to date.
 
-* `vx env3 ./todo/release --all` to build installers and update the `pages` repo.
+* `garden release` to build installers and update the `pages` repo.
 
 * `vim pages/_config.yml` to update the release date and version.
 
-* `./todo/pages.sh` to commit update to "pages".
+* `garden publish pages` to commit and push updates to "pages".
 
 * `./todo/update-qtpy ~/src/python/qtpy` to upgrade the vendored qtpy library after
 creating the release so that the new dev cycle is done against the latest qtpy.
