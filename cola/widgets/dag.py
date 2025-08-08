@@ -222,8 +222,13 @@ class ViewerMixin:
 
     def show_diff(self):
         """Show the diff for the selected commit"""
+        commit = self.clicked_commit()
+        if not commit:
+            return
+        is_root_commit = not commit.parents
         self.with_oid(
-            lambda oid: _diff_expression(self.context, self, oid), filtered=False
+            lambda oid: _diff_expression(self.context, self, oid, is_root_commit),
+            filtered=False,
         )
 
     def show_dir_diff(self):
@@ -427,14 +432,16 @@ class ViewerMixin:
         menu.exec_(self.mapToGlobal(event.pos()))
 
 
-def _diff_expression(context, widget, oid):
+def _diff_expression(context, widget, oid, is_root_commit):
     """Launch difftool using the specified object ID"""
     if oid == dag.WORKTREE:
         ref = ''
     elif oid == dag.STAGE:
         ref = '--cached'
-    else:
+    elif is_root_commit:
         ref = f'{oid}^!'
+    else:
+        ref = f'{oid}~..{oid}'
     return difftool.diff_expression(
         context, widget, ref, hide_expr=False, focus_tree=True
     )
