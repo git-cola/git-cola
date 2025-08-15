@@ -5,12 +5,11 @@ import re
 from io import StringIO
 
 from . import core
+from . import git
 from . import textwrap
 from . import utils
 from . import version
 from .git import STDOUT
-from .git import EMPTY_TREE_OID
-from .git import OID_LENGTH
 from .i18n import N_
 from .interaction import Interaction
 from .models import dag
@@ -27,14 +26,12 @@ def add(context, items, u=False):
 
 def apply_diff(context, filename):
     """Use "git apply" to apply the patch in `filename` to the staging area"""
-    git = context.git
-    return git.apply(filename, index=True, cached=True, recount=True)
+    return context.git.apply(filename, index=True, cached=True, recount=True)
 
 
 def apply_diff_to_worktree(context, filename):
     """Use "git apply" to apply the patch in `filename` to the worktree"""
-    git = context.git
-    return git.apply(filename, recount=True)
+    return context.git.apply(filename, recount=True)
 
 
 def get_branch(context, branch):
@@ -74,8 +71,7 @@ def diff_index_filenames(context, ref):
     """
     Return a diff of filenames that have been modified relative to the index
     """
-    git = context.git
-    out = git.diff_index(ref, name_only=True, z=True, _readonly=True)[STDOUT]
+    out = context.git.diff_index(ref, name_only=True, z=True, _readonly=True)[STDOUT]
     return _parse_diff_filenames(out)
 
 
@@ -90,7 +86,7 @@ def changed_files(context, oid):
     status, out, _ = diff_tree(context, oid + '~', oid)
     if status != 0:
         # git init
-        status, out, _ = diff_tree(context, EMPTY_TREE_OID, oid)
+        status, out, _ = diff_tree(context, git.EMPTY_TREE_OID, oid)
     if status == 0:
         result = _parse_diff_filenames(out)
     else:
@@ -100,12 +96,11 @@ def changed_files(context, oid):
 
 def diff_tree(context, *args):
     """Return a list of filenames that have been modified"""
-    git = context.git
-    return git_diff_tree(git, *args)
+    return git_diff_tree(context.git, *args)
 
 
-def git_diff_tree(git, *args):
-    return git.diff_tree(
+def git_diff_tree(git_repo, *args):
+    return git_repo.diff_tree(
         name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
     )
 
@@ -149,8 +144,7 @@ def diff(context, args):
     :param args: list of arguments to pass to "git diff --name-only"
 
     """
-    git = context.git
-    out = git.diff(name_only=True, z=True, _readonly=True, *args)[STDOUT]
+    out = context.git.diff(name_only=True, z=True, _readonly=True, *args)[STDOUT]
     return _parse_diff_filenames(out)
 
 
@@ -162,8 +156,7 @@ def _parse_diff_filenames(out):
 
 def tracked_files(context, *args):
     """Return the names of all files in the repository"""
-    git = context.git
-    out = git.ls_files('--', *args, z=True, _readonly=True)[STDOUT]
+    out = context.git.ls_files('--', *args, z=True, _readonly=True)[STDOUT]
     if out:
         return sorted(out[:-1].split('\0'))
     return []
@@ -171,8 +164,7 @@ def tracked_files(context, *args):
 
 def all_files(context, *args):
     """Returns a sorted list of all files, including untracked files."""
-    git = context.git
-    ls_files = git.ls_files(
+    ls_files = context.git.ls_files(
         '--',
         *args,
         z=True,
@@ -198,8 +190,7 @@ def reset():
 
 def current_branch(context):
     """Return the current branch"""
-    git = context.git
-    head = git.git_path('HEAD')
+    head = context.git.git_path('HEAD')
     try:
         key = core.stat(head).st_mtime
         if CurrentBranchCache.key == key:
@@ -208,7 +199,9 @@ def current_branch(context):
         # OSError means we can't use the stat cache
         key = 0
 
-    status, data, _ = git.rev_parse('HEAD', symbolic_full_name=True, _readonly=True)
+    status, data, _ = context.git.rev_parse(
+        'HEAD', symbolic_full_name=True, _readonly=True
+    )
     if status != 0:
         # git init -- read .git/HEAD.  We could do this unconditionally...
         data = _read_git_head(context, head)
@@ -226,7 +219,6 @@ def current_branch(context):
 def _read_git_head(context, head, default='main'):
     """Pure-python .git/HEAD reader"""
     # Common .git/HEAD "ref: refs/heads/main" files
-    git = context.git
     islink = core.islink(head)
     if core.isfile(head) and not islink:
         data = core.read(head).rstrip()
@@ -237,7 +229,7 @@ def _read_git_head(context, head, default='main'):
         return data
     # Legacy .git/HEAD symlinks
     if islink:
-        refs_heads = core.realpath(git.git_path('refs', 'heads'))
+        refs_heads = core.realpath(context.git.git_path('refs', 'heads'))
         path = core.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
             return path[len(refs_heads) + 1 :]
@@ -267,9 +259,10 @@ def _version_sort(context, key='version:refname'):
 
 def for_each_ref_basename(context, refs):
     """Return refs starting with 'refs'."""
-    git = context.git
     sort = _version_sort(context)
-    _, out, _ = git.for_each_ref(refs, format='%(refname)', sort=sort, _readonly=True)
+    _, out, _ = context.git.for_each_ref(
+        refs, format='%(refname)', sort=sort, _readonly=True
+    )
     output = out.splitlines()
     non_heads = [x for x in output if not x.endswith('/HEAD')]
     offset = len(refs) + 1
@@ -283,7 +276,6 @@ def _prefix_and_size(prefix, values):
 
 def all_refs(context, split=False, sort_key='version:refname'):
     """Return a tuple of (local branches, remote branches, tags)."""
-    git = context.git
     local_branches = []
     remote_branches = []
     tags = []
@@ -293,7 +285,7 @@ def all_refs(context, split=False, sort_key='version:refname'):
         _prefix_and_size('refs/remotes', remote_branches),
     )
     sort = _version_sort(context, key=sort_key)
-    _, out, _ = git.for_each_ref(format='%(refname)', sort=sort, _readonly=True)
+    _, out, _ = context.git.for_each_ref(format='%(refname)', sort=sort, _readonly=True)
     for ref in out.splitlines():
         for prefix, prefix_len, dst in query:
             if ref.startswith(prefix) and not ref.endswith('/HEAD'):
@@ -338,11 +330,10 @@ def parse_remote_branch(branch):
 
 def untracked_files(context, paths=None, **kwargs):
     """Returns a sorted list of untracked files."""
-    git = context.git
     if paths is None:
         paths = []
     args = ['--'] + paths
-    out = git.ls_files(
+    out = context.git.ls_files(
         z=True, others=True, exclude_standard=True, _readonly=True, *args, **kwargs
     )[STDOUT]
     if out:
@@ -357,8 +348,8 @@ def tag_list(context):
     return result
 
 
-def log(git, *args, **kwargs):
-    return git.log(
+def log(context, *args, **kwargs):
+    return context.git.log(
         no_color=True,
         no_abbrev_commit=True,
         no_ext_diff=True,
@@ -369,8 +360,7 @@ def log(git, *args, **kwargs):
 
 
 def commit_diff(context, oid):
-    git = context.git
-    return log(git, '-1', oid, '--') + '\n\n' + oid_diff(context, oid)
+    return log(context, '-1', oid, '--') + '\n\n' + oid_diff(context, oid)
 
 
 _diff_overrides = {}
@@ -408,9 +398,6 @@ def _add_filename(args, filename):
 
 def oid_diff(context, oid, filename=None):
     """Return the diff for an oid"""
-    # Naively "$oid^!" is what we'd like to use but that doesn't
-    # give the correct result for merges--the diff is reversed.
-    # Be explicit and compare oid against its first parent.
     return oid_diff_range(context, oid + '~', oid, filename=filename)
 
 
@@ -428,16 +415,15 @@ def oid_diff_range(context, start, end, filename=None):
             args = [start]
     else:
         args = [start, end]
-    git = context.git
     opts = common_diff_opts(context)
     _add_filename(args, filename)
-    status, out, _ = git.diff(*args, **opts)
+    status, out, _ = context.git.diff(*args, **opts)
     if status != 0:
         # We probably don't have "$oid~" because this is the root commit.
-        # "git show" is clever enough to handle the root commit.
-        args = [end + '^!']
+        # Diff against the empty tree.
+        args = [f'{git.EMPTY_TREE_OID}..{end}']
         _add_filename(args, filename)
-        _, out, _ = git.show(pretty='format:', *args, **opts)
+        _, out, _ = context.git.diff(*args, **opts)
         out = out.lstrip()
     return out
 
@@ -449,7 +435,6 @@ def diff_info(context, oid, filename=None):
 
 def diff_range(context, start, end, filename=None):
     """Return the diff for the specified commit range"""
-    git = context.git
     if end == dag.WORKTREE or end == dag.STAGE:
         commitmsg = context.model.commitmsg
         if commitmsg:
@@ -460,7 +445,7 @@ def diff_range(context, start, end, filename=None):
         else:
             description = ''
     else:
-        description = log(git, '-1', end, '--', pretty='format:%b').strip()
+        description = log(context, '-1', end, '--', pretty='format:%b').strip()
     if description:
         description += '\n\n'
 
@@ -483,7 +468,6 @@ def diff_helper(
     untracked=False,
 ):
     """Invoke git diff on a path"""
-    git = context.git
     cfg = context.cfg
     if commit:
         ref, endref = commit + '^', commit
@@ -508,7 +492,7 @@ def diff_helper(
             argv.append(filename)
             encoding = cfg.file_encoding(filename)
 
-    status, out, _ = git.diff(
+    status, out, _ = context.git.diff(
         R=reverse,
         M=True,
         cached=cached,
@@ -632,8 +616,7 @@ def format_patchsets(context, to_export, revs, output='patches'):
 
 def export_patchset(context, start, end, output='patches', **kwargs):
     """Export patches from start^ to end."""
-    git = context.git
-    return git.format_patch('-o', output, start + '^..' + end, **kwargs)
+    return context.git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
 
 def reset_paths(context, head, items):
@@ -657,8 +640,7 @@ def unstage_paths(context, args, head='HEAD'):
 def untrack_paths(context, args):
     if not args:
         return (-1, N_('Nothing to do'), '')
-    git = context.git
-    return git.update_index('--', force_remove=True, *set(args))
+    return context.git.update_index('--', force_remove=True, *set(args))
 
 
 def worktree_state(
@@ -669,9 +651,8 @@ def worktree_state(
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
             changed_upstream, and submodule.
     """
-    git = context.git
     if update_index:
-        git.update_index(refresh=True)
+        context.git.update_index(refresh=True)
 
     staged, unmerged, staged_deleted, staged_submods = diff_index(
         context, head, paths=paths
@@ -718,7 +699,6 @@ def _parse_raw_diff(out):
 
 
 def diff_index(context, head, cached=True, paths=None):
-    git = context.git
     staged = []
     unmerged = []
     deleted = set()
@@ -727,12 +707,15 @@ def diff_index(context, head, cached=True, paths=None):
     if paths is None:
         paths = []
     args = [head, '--'] + paths
-    status, out, _ = git.diff_index(cached=cached, z=True, _readonly=True, *args)
+    status, out, _ = context.git.diff_index(
+        cached=cached, z=True, _readonly=True, *args
+    )
     if status != 0:
         # handle git init
-        args[0] = EMPTY_TREE_OID
-        status, out, _ = git.diff_index(cached=cached, z=True, _readonly=True, *args)
-
+        args[0] = git.EMPTY_TREE_OID
+        status, out, _ = context.git.diff_index(
+            cached=cached, z=True, _readonly=True, *args
+        )
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
@@ -747,7 +730,6 @@ def diff_index(context, head, cached=True, paths=None):
 
 
 def diff_worktree(context, paths=None):
-    git = context.git
     ignore_submodules_value = context.cfg.get('diff.ignoresubmodules', 'none')
     ignore_submodules = ignore_submodules_value in {'all', 'dirty', 'untracked'}
     modified = []
@@ -757,7 +739,7 @@ def diff_worktree(context, paths=None):
     if paths is None:
         paths = []
     args = ['--'] + paths
-    status, out, _ = git.diff_files(z=True, _readonly=True, *args)
+    status, out, _ = context.git.diff_files(z=True, _readonly=True, *args)
     for path, status, is_submodule in _parse_raw_diff(out):
         if is_submodule:
             submodules.add(path)
@@ -782,28 +764,26 @@ def diff_upstream(context, head):
 
 def list_submodule(context):
     """Return submodules in the format(state, sha_1, path, describe)"""
-    git = context.git
-    status, data, _ = git.submodule('status')
+    status, data, _ = context.git.submodule('status')
     ret = []
     if status == 0 and data:
         data = data.splitlines()
         # see git submodule status
         for line in data:
             state = line[0].strip()
-            sha1 = line[1 : OID_LENGTH + 1]
-            left_bracket = line.find('(', OID_LENGTH + 3)
+            oid = line[1 : git.OID_LENGTH + 1]
+            left_bracket = line.find('(', git.OID_LENGTH + 3)
             if left_bracket == -1:
                 left_bracket = len(line) + 1
-            path = line[OID_LENGTH + 2 : left_bracket - 1]
+            path = line[git.OID_LENGTH + 2 : left_bracket - 1]
             describe = line[left_bracket + 1 : -1]
-            ret.append((state, sha1, path, describe))
+            ret.append((state, oid, path, describe))
     return ret
 
 
 def merge_base(context, head, ref):
     """Return the merge-base of head and ref"""
-    git = context.git
-    return git.merge_base(head, ref, _readonly=True)[STDOUT]
+    return context.git.merge_base(head, ref, _readonly=True)[STDOUT]
 
 
 def merge_base_parent(context, branch):
@@ -815,20 +795,19 @@ def merge_base_parent(context, branch):
 
 def ls_tree(context, path, ref='HEAD'):
     """Return a parsed git ls-tree result for a single directory"""
-    git = context.git
     result = []
-    status, out, _ = git.ls_tree(
+    status, out, _ = context.git.ls_tree(
         ref, '--', path, z=True, full_tree=True, _readonly=True
     )
     if status == 0 and out:
-        path_offset = 6 + 1 + 4 + 1 + OID_LENGTH + 1
+        path_offset = 6 + 1 + 4 + 1 + git.OID_LENGTH + 1
         for line in out[:-1].split('\0'):
             #       1    1                                        1
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
             # 0..... 7... 12......................................	53
-            # path_offset = 6 + 1 + 4 + 1 + OID_LENGTH(40) + 1
+            # path_offset = 6 + 1 + 4 + 1 + 40 (git.OID_LENGTH) + 1
             objtype = line[7:11]
             relpath = line[path_offset:]
             result.append((objtype, relpath))
@@ -875,8 +854,7 @@ def log_helper(context, all=False, extra_args=None):
     args = []
     if extra_args:
         args = extra_args
-    git = context.git
-    output = log(git, pretty='oneline', all=all, *args)
+    output = log(context, pretty='oneline', all=all, *args)
     for line in output.splitlines():
         match = REV_LIST_REGEX.match(line)
         if match:
@@ -887,16 +865,14 @@ def log_helper(context, all=False, extra_args=None):
 
 def rev_list_range(context, start, end):
     """Return (oid, summary) pairs between start and end."""
-    git = context.git
     revrange = f'{start}..{end}'
-    out = git.rev_list(revrange, pretty='oneline', _readonly=True)[STDOUT]
+    out = context.git.rev_list(revrange, pretty='oneline', _readonly=True)[STDOUT]
     return parse_rev_list(out)
 
 
 def commit_message_path(context):
     """Return the path to .git/GIT_COLA_MSG"""
-    git = context.git
-    path = git.git_path('GIT_COLA_MSG')
+    path = context.git.git_path('GIT_COLA_MSG')
     if core.exists(path):
         return path
     return None
@@ -904,9 +880,8 @@ def commit_message_path(context):
 
 def merge_message_path(context):
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
-    git = context.git
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
-        path = git.git_path(basename)
+        path = context.git.git_path(basename)
         if core.exists(path):
             return path
     return None
@@ -962,24 +937,21 @@ def cherry_pick(context, revs):
 def abort_apply_patch(context):
     """Abort a "git am" session."""
     # Reset the worktree
-    git = context.git
-    status, out, err = git.am(abort=True)
+    status, out, err = context.git.am(abort=True)
     return status, out, err
 
 
 def abort_cherry_pick(context):
     """Abort a cherry-pick."""
     # Reset the worktree
-    git = context.git
-    status, out, err = git.cherry_pick(abort=True)
+    status, out, err = context.git.cherry_pick(abort=True)
     return status, out, err
 
 
 def abort_merge(context):
     """Abort a merge"""
     # Reset the worktree
-    git = context.git
-    status, out, err = git.merge(abort=True)
+    status, out, err = context.git.merge(abort=True)
     return status, out, err
 
 
@@ -994,8 +966,7 @@ def strip_remote(remotes, remote_branch):
 
 def parse_refs(context, argv):
     """Parse command-line arguments into object IDs"""
-    git = context.git
-    status, out, _ = git.rev_parse(_readonly=True, *argv)
+    status, out, _ = context.git.rev_parse(_readonly=True, *argv)
     if status == 0:
         oids = [oid for oid in out.splitlines() if oid]
     else:
@@ -1005,16 +976,14 @@ def parse_refs(context, argv):
 
 def prev_commitmsg(context, *args):
     """Queries git for the latest commit message."""
-    git = context.git
-    return git.log(
+    return context.git.log(
         '-1', no_color=True, pretty='format:%s%n%n%b', _readonly=True, *args
     )[STDOUT]
 
 
 def prev_author_and_commitmsg(context, *args):
     """Queries git for the latest commit message."""
-    git = context.git
-    output = git.log(
+    output = context.git.log(
         '-1',
         no_color=True,
         pretty='format:%an <%ae>####%s%n%n%b',
@@ -1032,8 +1001,7 @@ def prev_author_and_commitmsg(context, *args):
 
 def rev_parse(context, name):
     """Call git rev-parse and return the output"""
-    git = context.git
-    status, out, _ = git.rev_parse(name, _readonly=True)
+    status, out, _ = context.git.rev_parse(name, _readonly=True)
     if status == 0:
         result = out.strip()
     else:
@@ -1066,14 +1034,13 @@ def cat_file_to_path(context, filename, oid):
 def cat_file(context, filename, *args, **kwargs):
     """Redirect git cat-file output to a path"""
     result = None
-    git = context.git
     # Use the original filename in the suffix so that the generated filename
     # has the correct extension, and so that it resembles the original name.
     basename = os.path.basename(filename)
     suffix = '-' + basename  # ensures the correct filename extension
     path = utils.tmp_filename('blob', suffix=suffix)
     with open(path, 'wb') as tmp_file:
-        status, out, err = git.cat_file(
+        status, out, err = context.git.cat_file(
             _raw=True, _readonly=True, _stdout=tmp_file, *args, **kwargs
         )
         Interaction.command(N_('Error'), 'git cat-file', status, out, err)
@@ -1101,13 +1068,10 @@ def write_blob_path(context, head, oid, filename):
 
 def annex_path(context, head, filename):
     """Return the git-annex path for a filename at the specified commit"""
-    git = context.git
     path = None
     annex_info = {}
-
-    # unfortunately there's no way to filter this down to a single path
-    # so we just have to scan all reported paths
-    status, out, _ = git.annex('findref', '--json', head, _readonly=True)
+    # There's no way to filter this down to a single path so we have to scan all paths.
+    status, out, _ = context.git.annex('findref', '--json', head, _readonly=True)
     if status == 0:
         for line in out.splitlines():
             info = json.loads(line)
@@ -1121,7 +1085,7 @@ def annex_path(context, head, filename):
                 break
     key = annex_info.get('key', '')
     if key:
-        status, out, _ = git.annex('contentlocation', key, _readonly=True)
+        status, out, _ = context.git.annex('contentlocation', key, _readonly=True)
         if status == 0 and os.path.exists(out):
             path = out
 

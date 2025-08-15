@@ -1,16 +1,17 @@
 import os
+from functools import partial
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from . import cmds
 from . import core
+from . import git
 from . import gitcmds
 from . import hotkeys
 from . import icons
 from . import qtutils
 from . import utils
-from .git import EMPTY_TREE_OID
 from .i18n import N_
 from .interaction import Interaction
 from .models import dag
@@ -82,7 +83,7 @@ class Difftool(standard.Dialog):
         self.detect_renames = detect_renames
 
         if title is None:
-            title = N_('git-cola diff')
+            title = N_('git cola diff')
 
         self.setWindowTitle(title)
         self.setWindowModality(Qt.WindowModal)
@@ -300,49 +301,48 @@ def difftool_launch(
     is_root_commit=False,
     staged=False,
     dir_diff=False,
-    left_take_magic=False,
     left_take_parent=False,
     detect_renames=False,
 ):
-    """Launches 'git difftool' with given parameters
+    """Interact with 'git difftool'.
 
-    :param left: first argument to difftool
-    :param right: second argument to difftool_args
-    :param oid: commit to display
-    :param is_root_commit: is the commit a root commit?
-    :param paths: paths to diff
-    :param staged: activate `git difftool --staged`
-    :param dir_diff: activate `git difftool --dir-diff`
-    :param left_take_magic: whether to append the magic "^!" diff expression
-    :param left_take_parent: whether to append the first-parent ~ for diffing
-
+    :param left: The first argument to difftool.
+    :param right: The second argument to difftool.
+    :param oid: The commit to display. Can be used instead of left + right.
+    :param is_root_commit: Is the commit a root commit?
+    :param paths: The paths to diff.
+    :param staged: Activate `git difftool --staged`.
+    :param dir_diff: Activate `git difftool --dir-diff`.
+    :param left_take_parent: Append the first-parent ``~`` syntax to the left argument.
     """
-    difftool_args = ['git', 'difftool', '--no-prompt']
+    args = []
+    kwargs = {
+        'no_prompt': True,
+        '_readonly': True,
+    }
     if staged:
-        difftool_args.append('--cached')
+        kwargs['cached'] = True
     if dir_diff:
-        difftool_args.append('--dir-diff')
-    # If we are showing a specific commit then we will only use the ^!
-    # syntax for the root commit. "oid" gets wired into the "left"
-    # and "right" arguments.
+        kwargs['dir_diff'] = True
+
     if oid:
         if is_root_commit:
-            left = EMPTY_TREE_OID
+            left = git.EMPTY_TREE_OID
             right = oid
         else:
             left = f'{oid}~'
             right = oid
+
     if left:
         original_left = left
-        if left_take_parent or left_take_magic:
-            suffix = '^!' if left_take_magic else '~'
+        if left_take_parent:
+            suffix = '~'
             # Check root commit (no parents and thus cannot execute '~')
-            git = context.git
             if left in (dag.STAGE, dag.WORKTREE):
                 check_ref = 'HEAD'
             else:
                 check_ref = left
-            status, out, err = git.rev_list(
+            status, out, err = context.git.rev_list(
                 check_ref, parents=True, n=1, _readonly=True
             )
             Interaction.log_status(status, out, err)
@@ -354,51 +354,55 @@ def difftool_launch(
                 if left not in (dag.STAGE, dag.WORKTREE):
                     left += suffix
             else:
-                # No parent, assume it's the root commit, so we have to diff
-                # against the empty tree.
-                left = EMPTY_TREE_OID
-                if not right and left_take_magic:
+                # No parent, assume it's the root commit. Diff against the empty tree.
+                if not right:
                     right = left
+                left = git.EMPTY_TREE_OID
         # Commit has a parent, so we can take its child as requested
         if original_left not in (dag.STAGE, dag.WORKTREE):
-            difftool_args.append(left)
+            args.append(left)
 
     if right and right not in (dag.STAGE, dag.WORKTREE):
-        difftool_args.append(right)
+        args.append(right)
 
-    all_names = _get_renamed_paths(context, left, right, paths, detect_renames)
-    if all_names:
-        paths.extend(all_names)
+    if len(paths) == 1:
+        all_names = _get_renamed_paths(context, left, right, paths[0], detect_renames)
+        if all_names:
+            paths.extend(all_names)
 
     if paths:
-        difftool_args.append('--')
-        difftool_args.extend(paths)
+        args.append('--')
+        args.extend(paths)
 
     runtask = context.runtask
     if runtask:
-        Interaction.async_command(N_('Difftool'), difftool_args, runtask)
+        argv = ['git', 'difftool']
+        argv.extend(git.transform_kwargs(**kwargs))
+        argv.extend(args)
+        # "cmd" is for display purposes only and only displayed when an error occurs.
+        cmd = core.list2cmdline(argv)
+        Interaction.async_task(
+            N_('Difftool'), cmd, runtask, partial(context.git.difftool, *args, **kwargs)
+        )
     else:
-        core.fork(difftool_args)
+        context.git.difftool(*args, **kwargs)
 
 
-def _get_renamed_paths(context, left, right, paths, detect_renames):
+def _get_renamed_paths(context, left, right, path, detect_renames):
     """Get filenames as they existed beyond a rename
 
-    Use ``git log --follow --format= --name-only -- <path>`` to to discover the
+    Use ``git log --follow --format= --name-only -- <path>`` to discover the
     filenames as they existed in older commits. This is a slow operation when the
     commit range is large.
     """
     all_names = set()
     if (
         detect_renames
-        and len(paths) == 1
         and left
-        and left not in (dag.STAGE, dag.WORKTREE)
         and right
+        and left not in (dag.STAGE, dag.WORKTREE)
         and right not in (dag.STAGE, dag.WORKTREE)
     ):
-        current_name = paths[0]
-
         # We have to check in both left->right and right->left directions because we
         # may be performing either "Diff selected to this..." or
         # "Diff this to selected...", and left/right flips directions depending on which
@@ -412,7 +416,7 @@ def _get_renamed_paths(context, left, right, paths, detect_renames):
             status, out, _ = context.git.log(
                 rev_arg,
                 '--',
-                current_name,
+                path,
                 follow=True,
                 format='',
                 name_only=True,
@@ -424,7 +428,7 @@ def _get_renamed_paths(context, left, right, paths, detect_renames):
                 if out:
                     all_names.update(out.split('\0'))
         try:
-            all_names.remove(current_name)
+            all_names.remove(path)
         except KeyError:
             pass
 

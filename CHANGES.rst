@@ -8,12 +8,8 @@ Usability, bells and whistles
   The `git dag` positional arguments will now used when `--repo` is unspecified.
 
 * `git dag` now special-cases the root commit when interacting with difftool
-  so that the ``git diff {commit}^!`` syntax is only used for the root commit.
-  Other commits are diffed using ``git diff {commit}~..{commit}``
-  This ensures that the files displayed by difftool for merges is consistent
-  with the file displayed by the files widget. This also improves the diffs that
-  are displayed for merges by avoiding inconsitent behavior around the use of
-  ``git diff {commit}^!`` on merge commits.
+  so that diffs are performed against git's builtin empty tree.
+  Other commits are diffed using ``git diff {commit}~..{commit}``.
   (`#1493 <https://github.com/git-cola/git-cola/issues/1493>`_)
 
 

@@ -12,6 +12,7 @@ except ImportError:
 
 from . import compat
 from . import core
+from . import git
 from . import gitcmds
 from . import icons
 from . import resources
@@ -20,7 +21,6 @@ from . import utils
 from . import version
 from .cmd import ContextCommand
 from .git import STDOUT
-from .git import MISSING_BLOB_OID
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
@@ -1191,7 +1191,6 @@ class Rename(ContextCommand):
         self.model.update_status()
 
     def rename(self, path):
-        git = self.git
         title = N_('Rename "%s"') % path
 
         if os.path.isdir(path):
@@ -1202,7 +1201,7 @@ class Rename(ContextCommand):
         if not new_path:
             return False
 
-        status, out, err = git.mv(path, new_path, force=True, verbose=True)
+        status, out, err = self.git.mv(path, new_path, force=True, verbose=True)
         Interaction.command(N_('Error'), 'git mv', status, out, err)
         return status == 0
 
@@ -1384,13 +1383,12 @@ class DiffImage(EditModel):
 
     def staged_images(self):
         context = self.context
-        git = self.git
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
 
         images = []
-        index = git.diff_index(head, '--', filename, cached=True)[STDOUT]
+        index = self.git.diff_index(head, '--', filename, cached=True)[STDOUT]
         if index:
             # Example:
             #  :100644 100644 fabadb8... 4866510... M      describe.c
@@ -1399,7 +1397,7 @@ class DiffImage(EditModel):
                 old_oid = parts[2]
                 new_oid = parts[3]
 
-            if old_oid != MISSING_BLOB_OID:
+            if old_oid != git.MISSING_BLOB_OID:
                 # First, check if we can get a pre-image from git-annex
                 annex_image = None
                 if annex:
@@ -1411,10 +1409,10 @@ class DiffImage(EditModel):
                     if image:
                         images.append((image, True))
 
-            if new_oid != MISSING_BLOB_OID:
+            if new_oid != git.MISSING_BLOB_OID:
                 found_in_annex = False
                 if annex and core.islink(filename):
-                    status, out, _ = git.annex('status', '--', filename)
+                    status, out, _ = self.git.annex('status', '--', filename)
                     if status == 0:
                         details = out.split(' ')
                         if details and details[0] == 'A':  # newly added file
@@ -1430,7 +1428,6 @@ class DiffImage(EditModel):
 
     def unmerged_images(self):
         context = self.context
-        git = self.git
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
@@ -1439,7 +1436,7 @@ class DiffImage(EditModel):
         merge_heads = [
             merge_head
             for merge_head in candidate_merge_heads
-            if core.exists(git.git_path(merge_head))
+            if core.exists(self.git.git_path(merge_head))
         ]
 
         if annex:  # Attempt to find files in git-annex
@@ -1467,7 +1464,7 @@ class DiffImage(EditModel):
         #  ::100644 100644 100644 fabadb8... cc95eb0... 4866510... \
         #  MM      describe.c
         images = []
-        index = git.diff_index(head, '--', filename, cached=True, cc=True)[STDOUT]
+        index = self.git.diff_index(head, '--', filename, cached=True, cc=True)[STDOUT]
         if index:
             parts = index.split(' ')
             if len(parts) > 3:
@@ -1483,7 +1480,7 @@ class DiffImage(EditModel):
                         merge_head = merge_heads[i]
                     except IndexError:
                         merge_head = 'HEAD'
-                    if oid != MISSING_BLOB_OID:
+                    if oid != git.MISSING_BLOB_OID:
                         image = gitcmds.write_blob_path(
                             context, merge_head, oid, filename
                         )
@@ -1495,7 +1492,6 @@ class DiffImage(EditModel):
 
     def modified_images(self):
         context = self.context
-        git = self.git
         head = self.model.head
         filename = self.new_filename
         annex = self.annex
@@ -1507,11 +1503,11 @@ class DiffImage(EditModel):
         if annex_image:
             images.append((annex_image, False))  # git annex HEAD
         else:
-            worktree = git.diff_files('--', filename)[STDOUT]
+            worktree = self.git.diff_files('--', filename)[STDOUT]
             parts = worktree.split(' ')
             if len(parts) > 3:
                 oid = parts[2]
-                if oid != MISSING_BLOB_OID:
+                if oid != git.MISSING_BLOB_OID:
                     image = gitcmds.write_blob_path(context, head, oid, filename)
                     if image:
                         images.append((image, True))  # HEAD

@@ -1230,16 +1230,17 @@ def save_as(filename, title):
     return qtutils.save_as(filename, title=title)
 
 
-def async_command(title, cmd, runtask):
-    task = qtutils.SimpleTask(partial(core.run_command, cmd))
-    task.connect(partial(async_command_result, title, cmd))
+def async_task(title, cmd, runtask, func):
+    """Run a function in the background"""
+    task = qtutils.SimpleTask(func)
+    task.connect(partial(_async_task_result, title, cmd))
     runtask.start(task)
 
 
-def async_command_result(title, cmd, result):
+def _async_task_result(title, cmd, result):
+    """Display the result of an asynchronous task"""
     status, out, err = result
-    cmd_string = core.list2cmdline(cmd)
-    Interaction.command(title, cmd_string, status, out, err)
+    Interaction.command(title, cmd, status, out, err)
 
 
 def install():
@@ -1250,4 +1251,4 @@ def install():
     Interaction.information = staticmethod(information)
     Interaction.command_error = staticmethod(command_error)
     Interaction.save_as = staticmethod(save_as)
-    Interaction.async_command = staticmethod(async_command)
+    Interaction.async_task = staticmethod(async_task)

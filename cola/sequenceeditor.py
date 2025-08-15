@@ -272,9 +272,9 @@ class Editor(QtWidgets.QWidget):
         if not items:
             return
         item = items[0]
-        difftool.diff_expression(self.context, self, item.oid + '^!', hide_expr=True)
-
-    # helpers
+        difftool.diff_expression(
+            self.context, self, f'{item.oid}~..{item.oid}', hide_expr=True
+        )
 
     def paths_touched_by_oid(self, oid):
         try:

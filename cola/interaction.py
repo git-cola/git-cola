@@ -139,7 +139,7 @@ class Interaction:
         return None
 
     @staticmethod
-    def async_command(title, command, runtask):
+    def async_task(title, cmd, runtask, func):
         pass
 
     @classmethod
