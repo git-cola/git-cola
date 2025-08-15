@@ -327,8 +327,8 @@ def difftool_launch(
     # and "right" arguments.
     if oid:
         if is_root_commit:
-            left = oid
-            left_take_magic = True
+            left = EMPTY_TREE_OID
+            right = oid
         else:
             left = f'{oid}~'
             right = oid
