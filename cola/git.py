@@ -20,28 +20,21 @@ STATUS = 0
 STDOUT = 1
 STDERR = 2
 
-# The values below should never be imported directly.  Always access these fields
-# through the "git.{EMPTY_TREE_OID,MISSING_BLOB_OID,OID_LENGTH}" names.
-# These values are mutated at runtime after the sha256 configuration is checked
-# in the GitConfig update() method.
-
 # Git's empty tree is a built-in constant object name.
 # These two constants correspond to `git hash-object -t tree /dev/null`
 # for sha256 and sha1 repositories.
 EMPTY_TREE_SHA1 = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
 EMPTY_TREE_SHA256 = '6ef19b41225c5369f1c104d45d8d85efa9b057b53b14b4b9b939dd74decc5321'
-EMPTY_TREE_OID = EMPTY_TREE_SHA1
 
 # Git's diff machinery returns zeroes for modified files whose content exists
 # in the worktree only.
 MISSING_BLOB_SHA1 = '0000000000000000000000000000000000000000'
 MISSING_BLOB_SHA256 = '0000000000000000000000000000000000000000000000000000000000000000'
-MISSING_BLOB_OID = MISSING_BLOB_SHA1
+
 # Git's SHA-1 object IDs are 40 characters long (20 bytes).
 # Git's SHA-256 object IDs are 64 characters long (32 bytes).
 OID_LENGTH_SHA1 = 40
 OID_LENGTH_SHA256 = 64
-OID_LENGTH = OID_LENGTH_SHA1
 
 _index_lock = threading.Lock()
 

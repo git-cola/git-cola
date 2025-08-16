@@ -16,7 +16,6 @@ from ..interaction import Interaction
 from .. import cmds
 from .. import core
 from .. import difftool
-from .. import git
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -826,12 +825,13 @@ class GitTreeModel(GitFileTreeModel):
         if not out:
             return
 
+        oid_len = self.context.model.oid_len
         for line in out[:-1].split('\0'):
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
             objtype = line[7]
-            relpath = line[6 + 1 + 4 + 1 + git.OID_LENGTH + 1 :]
+            relpath = line[6 + 1 + 4 + 1 + oid_len + 1 :]
             if objtype == 't':
                 parent = self.dir_entries[utils.dirname(relpath)]
                 self.add_directory(parent, relpath)

@@ -12,7 +12,6 @@ except ImportError:
 
 from . import compat
 from . import core
-from . import git
 from . import gitcmds
 from . import icons
 from . import resources
@@ -1384,6 +1383,7 @@ class DiffImage(EditModel):
     def staged_images(self):
         context = self.context
         head = self.model.head
+        missing_blob_oid = self.model.missing_blob_oid
         filename = self.new_filename
         annex = self.annex
 
@@ -1397,7 +1397,7 @@ class DiffImage(EditModel):
                 old_oid = parts[2]
                 new_oid = parts[3]
 
-            if old_oid != git.MISSING_BLOB_OID:
+            if old_oid != missing_blob_oid:
                 # First, check if we can get a pre-image from git-annex
                 annex_image = None
                 if annex:
@@ -1409,7 +1409,7 @@ class DiffImage(EditModel):
                     if image:
                         images.append((image, True))
 
-            if new_oid != git.MISSING_BLOB_OID:
+            if new_oid != missing_blob_oid:
                 found_in_annex = False
                 if annex and core.islink(filename):
                     status, out, _ = self.git.annex('status', '--', filename)
@@ -1429,6 +1429,7 @@ class DiffImage(EditModel):
     def unmerged_images(self):
         context = self.context
         head = self.model.head
+        missing_blob_oid = self.model.missing_blob_oid
         filename = self.new_filename
         annex = self.annex
 
@@ -1480,7 +1481,7 @@ class DiffImage(EditModel):
                         merge_head = merge_heads[i]
                     except IndexError:
                         merge_head = 'HEAD'
-                    if oid != git.MISSING_BLOB_OID:
+                    if oid != missing_blob_oid:
                         image = gitcmds.write_blob_path(
                             context, merge_head, oid, filename
                         )
@@ -1493,6 +1494,7 @@ class DiffImage(EditModel):
     def modified_images(self):
         context = self.context
         head = self.model.head
+        missing_blob_oid = self.model.missing_blob_oid
         filename = self.new_filename
         annex = self.annex
 
@@ -1507,7 +1509,7 @@ class DiffImage(EditModel):
             parts = worktree.split(' ')
             if len(parts) > 3:
                 oid = parts[2]
-                if oid != git.MISSING_BLOB_OID:
+                if oid != missing_blob_oid:
                     image = gitcmds.write_blob_path(context, head, oid, filename)
                     if image:
                         images.append((image, True))  # HEAD
@@ -2846,7 +2848,6 @@ class Tag(ContextCommand):
 
     def do(self):
         result = False
-        git = self.git
         revision = self._revision
         tag_name = self._name
         tag_message = self._message
@@ -2892,7 +2893,7 @@ class Tag(ContextCommand):
                 opts['sign'] = True
             if tag_message:
                 opts['annotate'] = True
-            status, out, err = git.tag(tag_name, revision, **opts)
+            status, out, err = self.git.tag(tag_name, revision, **opts)
         finally:
             if tmp_file:
                 core.unlink(tmp_file)
@@ -2949,9 +2950,8 @@ class UnstageAll(ContextCommand):
 def unstage_all(context):
     """Unstage all files, even while amending"""
     model = context.model
-    git = context.git
     head = model.head
-    status, out, err = git.reset(head, '--', '.')
+    status, out, err = context.git.reset(head, '--', '.')
     Interaction.command(N_('Error'), 'git reset', status, out, err)
     model.update_file_status()
     return (status, out, err)
@@ -3096,9 +3096,8 @@ class SubmoduleAdd(ConfirmAction):
         return Interaction.confirm(title, question, info, ok_txt, icon=icons.ok())
 
     def action(self):
-        context = self.context
         args = self.get_args()
-        return context.git.submodule('add', *args)
+        return self.git.submodule('add', *args)
 
     def success(self):
         self.model.update_file_status()
@@ -3143,9 +3142,8 @@ class SubmoduleUpdate(ConfirmAction):
         )
 
     def action(self):
-        context = self.context
         args = self.get_args()
-        return context.git.submodule(*args)
+        return self.git.submodule(*args)
 
     def success(self):
         self.model.update_file_status()
@@ -3179,9 +3177,8 @@ class SubmodulesUpdate(ConfirmAction):
         )
 
     def action(self):
-        context = self.context
         args = self.get_args()
-        return context.git.submodule(*args)
+        return self.git.submodule(*args)
 
     def success(self):
         self.model.update_file_status()

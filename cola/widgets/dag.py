@@ -18,7 +18,6 @@ from ..qtutils import get
 from .. import core
 from .. import cmds
 from .. import difftool
-from .. import git
 from .. import gitcmds
 from .. import guicmds
 from .. import hotkeys
@@ -444,7 +443,7 @@ def _diff_expression(context, widget, oid, is_root_commit):
     elif oid == dag.STAGE:
         ref = '--cached'
     elif is_root_commit:
-        ref = f'{git.EMPTY_TREE_OID}..{oid}'
+        ref = f'{context.model.empty_tree_oid}..{oid}'
     else:
         ref = f'{oid}~..{oid}'
     return difftool.diff_expression(

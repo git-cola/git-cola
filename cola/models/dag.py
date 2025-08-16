@@ -2,7 +2,6 @@ import datetime
 import json
 
 from .. import core
-from .. import git
 from .. import utils
 from ..i18n import N_
 from ..models import prefs
@@ -25,16 +24,16 @@ class CommitFactory:
         cls.root_generation = 0
 
     @classmethod
-    def new(cls, oid=None, log_entry=None):
+    def new(cls, context, oid=None, log_entry=None):
         if not oid and log_entry:
-            oid = log_entry[: git.OID_LENGTH]
+            oid = log_entry[: context.model.oid_len]
         try:
             commit = cls.commits[oid]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
             cls.root_generation = max(commit.generation, cls.root_generation)
         except KeyError:
-            commit = Commit(oid=oid, log_entry=log_entry)
+            commit = Commit(context, oid=oid, log_entry=log_entry)
             if not log_entry:
                 cls.root_generation += 1
                 commit.generation = max(commit.generation, cls.root_generation)
@@ -91,6 +90,7 @@ class Commit:
     root_generation = 0
 
     __slots__ = (
+        'context',
         'oid',
         'summary',
         'parents',
@@ -106,7 +106,8 @@ class Commit:
         'parsed',
     )
 
-    def __init__(self, oid=None, log_entry=None):
+    def __init__(self, context, oid=None, log_entry=None):
+        self.context = context
         self.oid = oid
         self.summary = None
         self.parents = []
@@ -124,8 +125,9 @@ class Commit:
             self.parse(log_entry)
 
     def parse(self, log_entry, sep=LOGSEP):
-        self.oid = log_entry[: git.OID_LENGTH]
-        after_oid = log_entry[git.OID_LENGTH + 1 :]
+        oid_len = self.context.model.oid_len
+        self.oid = log_entry[:oid_len]
+        after_oid = log_entry[oid_len + 1 :]
         details = after_oid.split(sep, 5)
         (parents, tags, author, authdate, email, summary) = details
 
@@ -137,7 +139,7 @@ class Commit:
         if parents:
             generation = None
             for parent_oid in parents.split(' '):
-                parent = CommitFactory.new(oid=parent_oid)
+                parent = CommitFactory.new(self.context, oid=parent_oid)
                 parent.children.append(self)
                 if generation is None:
                     generation = parent.generation + 1
@@ -282,15 +284,16 @@ class RepoReader:
         # by checking whether any local branches currently exist.
         if not self._allow_git_init or self.context.model.local_branches:
             status, out, _ = core.run_command(cmd)
+            oid_len = self.context.model.oid_len
             for log_entry in reversed(out.splitlines()):
                 if not log_entry:
                     break
-                oid = log_entry[: git.OID_LENGTH]
+                oid = log_entry[:oid_len]
                 try:
                     commit = self._objects[oid]
                 except KeyError:
                     try:
-                        commit = CommitFactory.new(log_entry=log_entry)
+                        commit = CommitFactory.new(self.context, log_entry=log_entry)
                     except (KeyError, ValueError):
                         continue
                     self._objects[commit.oid] = commit
@@ -344,7 +347,7 @@ class RepoReader:
         worktree_commit = None
 
         if model.staged:
-            stage_commit = Commit(oid=STAGE)
+            stage_commit = Commit(context, oid=STAGE)
             stage_commit.add_label(STAGE)
             stage_commit.parents = parents
             stage_commit.summary = stage_summary
@@ -360,7 +363,7 @@ class RepoReader:
             parent_commit = stage_commit
 
         if model.modified or model.unmerged:
-            worktree_commit = Commit(oid=WORKTREE)
+            worktree_commit = Commit(context, oid=WORKTREE)
             worktree_commit.add_label(WORKTREE)
             worktree_commit.parents = parents
             worktree_commit.summary = worktree_summary

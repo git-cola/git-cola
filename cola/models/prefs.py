@@ -4,7 +4,6 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .. import core
-from .. import git
 from .. import hidpi
 from .. import utils
 from ..cmd import Command
@@ -163,7 +162,7 @@ def abbrev(context):
     default = Defaults.abbrev
     value = context.cfg.get(ABBREV, default=default)
     if value == 'no':
-        result = git.OID_LENGTH_SHA256
+        result = context.model.oid_len
     else:
         try:
             result = max(4, int(value))

@@ -302,13 +302,12 @@ class Editor(QtWidgets.QWidget):
         update_ref_rgx = re.compile(
             r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
         )
-        # The upper bound of 40 below must match git.OID_LENGTH.
-        # We'll have to update this to the new hash length when that happens.
+        # The upper bound of 64 below must be >= all git.OID_LENGTH_XXX values.
         pick_rgx = re.compile(
             (
                 r'^\s*(%s)?\s*'
                 + r'(d|drop|e|edit|f|fixup|p|pick|r|reword|s|squash)'
-                + r'\s+([0-9a-f]{7,40})'
+                + r'\s+([0-9a-f]{7,64})'
                 + r'\s+(.+)$'
             )
             % re_comment_char

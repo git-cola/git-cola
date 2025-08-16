@@ -325,7 +325,7 @@ def difftool_launch(
     if dir_diff:
         kwargs['dir_diff'] = True
     if oid:
-        left, right = _get_left_right_for_oid(oid, is_root_commit)
+        left, right = _get_left_right_for_oid(context, oid, is_root_commit)
 
     _add_difftool_args(context, args, left, right, left_take_parent)
 
@@ -351,10 +351,10 @@ def difftool_launch(
         context.git.difftool(*args, **kwargs)
 
 
-def _get_left_right_for_oid(oid, is_root_commit):
+def _get_left_right_for_oid(context, oid, is_root_commit):
     """Specify diff parameters for diffing a commit"""
     if is_root_commit:
-        left = git.EMPTY_TREE_OID
+        left = context.model.empty_tree_oid
         right = oid
     else:
         left = f'{oid}~'
@@ -388,7 +388,7 @@ def _add_difftool_args(context, args, left, right, left_take_parent):
                 # No parent, assume it's the root commit. Diff against the empty tree.
                 if not right:
                     right = left
-                left = git.EMPTY_TREE_OID
+                left = context.model.empty_tree_oid
         # Commit has a parent, so we can take its child as requested
         if original_left not in (dag.STAGE, dag.WORKTREE):
             args.append(left)

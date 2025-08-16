@@ -5,7 +5,6 @@ import re
 from io import StringIO
 
 from . import core
-from . import git
 from . import textwrap
 from . import utils
 from . import version
@@ -86,7 +85,7 @@ def changed_files(context, oid):
     status, out, _ = diff_tree(context, oid + '~', oid)
     if status != 0:
         # git init
-        status, out, _ = diff_tree(context, git.EMPTY_TREE_OID, oid)
+        status, out, _ = diff_tree(context, context.model.empty_tree_oid, oid)
     if status == 0:
         result = _parse_diff_filenames(out)
     else:
@@ -421,7 +420,7 @@ def oid_diff_range(context, start, end, filename=None):
     if status != 0:
         # We probably don't have "$oid~" because this is the root commit.
         # Diff against the empty tree.
-        args = [f'{git.EMPTY_TREE_OID}..{end}']
+        args = [f'{context.model.empty_tree_oid}..{end}']
         _add_filename(args, filename)
         _, out, _ = context.git.diff(*args, **opts)
         out = out.lstrip()
@@ -712,7 +711,7 @@ def diff_index(context, head, cached=True, paths=None):
     )
     if status != 0:
         # handle git init
-        args[0] = git.EMPTY_TREE_OID
+        args[0] = context.model.empty_tree_oid
         status, out, _ = context.git.diff_index(
             cached=cached, z=True, _readonly=True, *args
         )
@@ -767,15 +766,16 @@ def list_submodule(context):
     status, data, _ = context.git.submodule('status')
     ret = []
     if status == 0 and data:
+        oid_len = context.model.oid_len
         data = data.splitlines()
         # see git submodule status
         for line in data:
             state = line[0].strip()
-            oid = line[1 : git.OID_LENGTH + 1]
-            left_bracket = line.find('(', git.OID_LENGTH + 3)
+            oid = line[1 : oid_len + 1]
+            left_bracket = line.find('(', oid_len + 3)
             if left_bracket == -1:
                 left_bracket = len(line) + 1
-            path = line[git.OID_LENGTH + 2 : left_bracket - 1]
+            path = line[oid_len + 2 : left_bracket - 1]
             describe = line[left_bracket + 1 : -1]
             ret.append((state, oid, path, describe))
     return ret
@@ -800,14 +800,14 @@ def ls_tree(context, path, ref='HEAD'):
         ref, '--', path, z=True, full_tree=True, _readonly=True
     )
     if status == 0 and out:
-        path_offset = 6 + 1 + 4 + 1 + git.OID_LENGTH + 1
+        path_offset = 6 + 1 + 4 + 1 + context.model.oid_len + 1
         for line in out[:-1].split('\0'):
             #       1    1                                        1
             # .....6 ...4 ......................................40
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
             # 0..... 7... 12......................................	53
-            # path_offset = 6 + 1 + 4 + 1 + 40 (git.OID_LENGTH) + 1
+            # path_offset = 6 + 1 + 4 + 1 + 40 (OID_LENGTH) + 1
             objtype = line[7:11]
             relpath = line[path_offset:]
             result.append((objtype, relpath))
