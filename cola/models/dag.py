@@ -2,6 +2,7 @@ import datetime
 import json
 
 from .. import core
+from .. import git
 from .. import utils
 from ..i18n import N_
 from ..models import prefs
@@ -26,7 +27,7 @@ class CommitFactory:
     @classmethod
     def new(cls, oid=None, log_entry=None):
         if not oid and log_entry:
-            oid = log_entry[:40]
+            oid = log_entry[: git.OID_LENGTH]
         try:
             commit = cls.commits[oid]
             if log_entry and not commit.parsed:
@@ -123,8 +124,8 @@ class Commit:
             self.parse(log_entry)
 
     def parse(self, log_entry, sep=LOGSEP):
-        self.oid = log_entry[:40]
-        after_oid = log_entry[41:]
+        self.oid = log_entry[: git.OID_LENGTH]
+        after_oid = log_entry[git.OID_LENGTH + 1 :]
         details = after_oid.split(sep, 5)
         (parents, tags, author, authdate, email, summary) = details
 
@@ -284,7 +285,7 @@ class RepoReader:
             for log_entry in reversed(out.splitlines()):
                 if not log_entry:
                     break
-                oid = log_entry[:40]
+                oid = log_entry[: git.OID_LENGTH]
                 try:
                     commit = self._objects[oid]
                 except KeyError:

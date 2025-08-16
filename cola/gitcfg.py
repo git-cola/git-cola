@@ -17,6 +17,7 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from . import core
+from . import git
 from . import utils
 from . import version
 from . import resources
@@ -194,6 +195,21 @@ class GitConfig(QtCore.QObject):
         # Update the cache
         self._cache_paths = sorted(cache_paths)
         self._cache_key = _cache_key_from_paths(self._cache_paths)
+
+        # Update sha256 / sha1 repository state.
+        # This must be done after the config cache has been populated.
+        try:
+            object_format = self._get_value(self._all, 'extensions.objectformat')
+        except KeyError:
+            object_format = 'sha1'
+        if object_format == 'sha256':
+            git.EMPTY_TREE_OID = git.EMPTY_TREE_SHA256
+            git.MISSING_BLOB_OID = git.MISSING_BLOB_SHA256
+            git.OID_LENGTH = git.OID_LENGTH_SHA256
+        else:
+            git.EMPTY_TREE_OID = git.EMPTY_TREE_SHA1
+            git.MISSING_BLOB_OID = git.MISSING_BLOB_SHA1
+            git.OID_LENGTH = git.OID_LENGTH_SHA1
 
         # Send a notification that the configuration has been updated.
         self.updated.emit()

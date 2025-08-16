@@ -16,6 +16,7 @@ from ..interaction import Interaction
 from .. import cmds
 from .. import core
 from .. import difftool
+from .. import git
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -554,7 +555,6 @@ class SaveBlob(cmds.ContextCommand):
         self.browse_model = model
 
     def do(self):
-        git = self.context.git
         model = self.browse_model
         if model.ref == dag.WORKTREE:
             try:
@@ -579,7 +579,7 @@ class SaveBlob(cmds.ContextCommand):
                 model_ref = model.ref
             ref = f'{model_ref}:{model.relpath}'
             with core.xopen(model.filename, 'wb') as fp:
-                status, output, err = git.cat_file('blob', ref, _stdout=fp)
+                status, output, err = self.context.git.cat_file('blob', ref, _stdout=fp)
 
             out = '# git cat-file blob {} >{}\n{}'.format(
                 shlex.quote(ref),
@@ -816,8 +816,9 @@ class GitTreeModel(GitFileTreeModel):
 
     def _initialize(self):
         """Iterate over git-ls-tree and create GitTreeItems."""
-        git = self.context.git
-        status, out, err = git.ls_tree('--full-tree', '-r', '-t', '-z', self.ref)
+        status, out, err = self.context.git.ls_tree(
+            '--full-tree', '-r', '-t', '-z', self.ref
+        )
         if status != 0:
             Interaction.log_status(status, out, err)
             return
@@ -830,7 +831,7 @@ class GitTreeModel(GitFileTreeModel):
             # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
             # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
             objtype = line[7]
-            relpath = line[6 + 1 + 4 + 1 + 40 + 1 :]
+            relpath = line[6 + 1 + 4 + 1 + git.OID_LENGTH + 1 :]
             if objtype == 't':
                 parent = self.dir_entries[utils.dirname(relpath)]
                 self.add_directory(parent, relpath)

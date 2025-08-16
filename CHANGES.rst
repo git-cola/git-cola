@@ -3,6 +3,9 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* Git Cola now supports Git repositories that were created using the SHA-256
+  hash algorithm, e.g. using ``git init --object-format=sha256``.
+
 * `git dag` will now open a repository when it is specified on the command-line.
   Previously, the `--repo` option was required in order to specify a repository.
   The `git dag` positional arguments will now used when `--repo` is unspecified.
