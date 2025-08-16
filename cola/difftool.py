@@ -365,7 +365,7 @@ def difftool_launch(
     if right and right not in (dag.STAGE, dag.WORKTREE):
         args.append(right)
 
-    if len(paths) == 1:
+    if paths and len(paths) == 1:
         all_names = _get_renamed_paths(context, left, right, paths[0], detect_renames)
         if all_names:
             paths.extend(all_names)
