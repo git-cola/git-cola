@@ -324,15 +324,46 @@ def difftool_launch(
         kwargs['cached'] = True
     if dir_diff:
         kwargs['dir_diff'] = True
-
     if oid:
-        if is_root_commit:
-            left = git.EMPTY_TREE_OID
-            right = oid
-        else:
-            left = f'{oid}~'
-            right = oid
+        left, right = _get_left_right_for_oid(oid, is_root_commit)
 
+    _add_difftool_args(context, args, left, right, left_take_parent)
+
+    if paths and len(paths) == 1:
+        all_names = _get_renamed_paths(context, left, right, paths[0], detect_renames)
+        if all_names:
+            paths.extend(all_names)
+    if paths:
+        args.append('--')
+        args.extend(paths)
+
+    runtask = context.runtask
+    if runtask:
+        argv = ['git', 'difftool']
+        argv.extend(git.transform_kwargs(**kwargs))
+        argv.extend(args)
+        # "cmd" is for display purposes only and only displayed when an error occurs.
+        cmd = core.list2cmdline(argv)
+        Interaction.async_task(
+            N_('Difftool'), cmd, runtask, partial(context.git.difftool, *args, **kwargs)
+        )
+    else:
+        context.git.difftool(*args, **kwargs)
+
+
+def _get_left_right_for_oid(oid, is_root_commit):
+    """Specify diff parameters for diffing a commit"""
+    if is_root_commit:
+        left = git.EMPTY_TREE_OID
+        right = oid
+    else:
+        left = f'{oid}~'
+        right = oid
+    return left, right
+
+
+def _add_difftool_args(context, args, left, right, left_take_parent):
+    """Setup the first argument to difftool"""
     if left:
         original_left = left
         if left_take_parent:
@@ -364,28 +395,6 @@ def difftool_launch(
 
     if right and right not in (dag.STAGE, dag.WORKTREE):
         args.append(right)
-
-    if paths and len(paths) == 1:
-        all_names = _get_renamed_paths(context, left, right, paths[0], detect_renames)
-        if all_names:
-            paths.extend(all_names)
-
-    if paths:
-        args.append('--')
-        args.extend(paths)
-
-    runtask = context.runtask
-    if runtask:
-        argv = ['git', 'difftool']
-        argv.extend(git.transform_kwargs(**kwargs))
-        argv.extend(args)
-        # "cmd" is for display purposes only and only displayed when an error occurs.
-        cmd = core.list2cmdline(argv)
-        Interaction.async_task(
-            N_('Difftool'), cmd, runtask, partial(context.git.difftool, *args, **kwargs)
-        )
-    else:
-        context.git.difftool(*args, **kwargs)
 
 
 def _get_renamed_paths(context, left, right, path, detect_renames):
