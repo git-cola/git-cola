@@ -850,6 +850,7 @@ class Options(QtWidgets.QWidget):
         super().__init__(parent)
         # Create widgets
         self.widget = parent
+        self.filename = filename  # The filename plain text display.
         self.ignore_space_at_eol = self.add_option(
             N_('Ignore changes in whitespace at EOL')
         )
@@ -936,7 +937,7 @@ class Options(QtWidgets.QWidget):
             defs.button_spacing,
             self.options,
             self.toggle_image_diff,
-            filename,
+            self.filename,
             self.image_mode,
             self.zoom_mode,
             qtutils.STRETCH,
