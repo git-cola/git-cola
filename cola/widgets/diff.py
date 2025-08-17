@@ -958,7 +958,6 @@ class Options(QtWidgets.QWidget):
 
     def set_diff_type(self, diff_type):
         """Toggle between image and text diffs"""
-        is_text = diff_type == main.Types.TEXT
         is_image = diff_type == main.Types.IMAGE
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
