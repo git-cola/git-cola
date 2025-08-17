@@ -16,6 +16,14 @@ Usability, bells and whistles
   (`#1493 <https://github.com/git-cola/git-cola/issues/1493>`_)
 
 
+Fixes
+-----
+* Viewing images in plain text mode (e.g. SVG files) was not displaying the
+  diff text due to the deferred loading that was added to better support
+  large diffs. This has been corrected.
+  (`#1498 <https://github.com/git-cola/git-cola/issues/1498>`_)
+
+
 .. _v4.14.0:
 
 v4.14.0

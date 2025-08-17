@@ -1159,7 +1159,8 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         # DiffText transitions the diff mode to text.
         image = self.image_formats.ok(path)
         if image:
-            finalizer = cmds.DiffImage(
+            finalizer = partial(
+                cmds.DiffImage,
                 context,
                 path,
                 deleted,
@@ -1169,7 +1170,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
                 untracked,
             )
         else:
-            finalizer = cmds.DiffText(context)
+            finalizer = partial(cmds.DiffText, context)
 
         # Update the diff text
         if staged:

@@ -62,6 +62,7 @@ class EditModel(ContextCommand):
         self.new_diff_type = self.old_diff_type
         self.new_file_type = self.old_file_type
         self.finalizer = finalizer
+        self.continuation = None  # A constructed finalizer.
 
     def do(self):
         """Perform the operation."""
@@ -72,10 +73,11 @@ class EditModel(ContextCommand):
         self.model.set_diff_text(self.new_diff_text)
         self.model.set_diff_type(self.new_diff_type)
         self.model.set_file_type(self.new_file_type)
+        # Finalizers must be constructed after the command is triggered so that the
+        # timestamp field and the model state fields are updated.
         if self.finalizer is not None:
-            # Finalizers inherit our timestamp so that they fire when we fire.
-            self.finalizer.timestamp = self.timestamp
-            self.context.command_bus.do(self.finalizer)
+            self.continuation = self.finalizer()
+            self.context.command_bus.do(self.continuation)
 
     def undo(self):
         """Undo the operation."""
@@ -86,8 +88,8 @@ class EditModel(ContextCommand):
         self.model.set_diff_text(self.old_diff_text)
         self.model.set_diff_type(self.old_diff_type)
         self.model.set_file_type(self.old_file_type)
-        if self.finalizer is not None:
-            self.context.command_bus.undo(self.finalizer)
+        if self.continuation is not None:
+            self.context.command_bus.undo(self.continuation)
 
 
 class ConfirmAction(ContextCommand):
