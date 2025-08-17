@@ -174,7 +174,6 @@ class MainView(standard.MainWindow):
         self.diffeditor = self.diffviewer.text
         titlebar = self.diffdock.titleBarWidget()
         titlebar.add_title_widget(self.diffviewer.options)
-        titlebar.add_title_widget(self.diffviewer.filename)
         titlebar.add_corner_widget(self.diffviewer.diffstat)
 
         # All Actions

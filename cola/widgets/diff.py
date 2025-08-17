@@ -513,7 +513,6 @@ class Viewer(QtWidgets.QFrame):
         self.model = model = context.model
         self.images = []
         self.pixmaps = []
-        self.options = options = Options(self)
         italic_font = self.font()
         italic_font.setItalic(True)
 
@@ -521,6 +520,7 @@ class Viewer(QtWidgets.QFrame):
         self.filename.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         self.filename.setFont(italic_font)
         self.filename.elide()
+        self.options = options = Options(self, self.filename)
 
         diffstat_font = self.font()
         diffstat_font.setPointSize(diffstat_font.pointSize() - 1)
@@ -846,7 +846,7 @@ class Options(QtWidgets.QWidget):
     XOR = 2
     PIXEL_XOR = 3
 
-    def __init__(self, parent):
+    def __init__(self, parent, filename):
         super().__init__(parent)
         # Create widgets
         self.widget = parent
@@ -934,10 +934,12 @@ class Options(QtWidgets.QWidget):
         layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.image_mode,
-            self.zoom_mode,
             self.options,
             self.toggle_image_diff,
+            filename,
+            self.image_mode,
+            self.zoom_mode,
+            qtutils.STRETCH,
         )
         self.setLayout(layout)
 
@@ -957,7 +959,6 @@ class Options(QtWidgets.QWidget):
         """Toggle between image and text diffs"""
         is_text = diff_type == main.Types.TEXT
         is_image = diff_type == main.Types.IMAGE
-        self.options.setVisible(is_text)
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
         if is_image:
