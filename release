@@ -61,7 +61,7 @@ build_win32 () {
 	do_or_die garden pynsist -vv
 	do_or_die cp "build/nsis/git-cola_${VERSION}.exe" "git-cola-${VERSION}.exe"
 	do_or_die chmod 644 "git-cola-${VERSION}.exe"
-	do_or_die zip -9 -m "git-cola-${VERSION}.windows.zip" -xi "git-cola-${VERSION}.exe"
+	do_or_die zip -9 -m "git-cola-${VERSION}.windows.zip" "git-cola-${VERSION}.exe"
 	if test "${do_upload}" = true
 	then
 		upload_file "git-cola-${VERSION}.windows.zip"
