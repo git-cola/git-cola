@@ -44,7 +44,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.model = model = context.model
         self.spellcheck_initialized = False
         self.spellcheck = spellcheck.NorvigSpellCheck()
-        self.spellcheck.set_dictionary(cfg.get('cola.dictionary', None))
+        self.spellcheck.add_dictionaries(cfg.get_all('cola.dictionary'))
 
         self._linebreak = None
         self._textwidth = None

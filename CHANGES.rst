@@ -15,6 +15,12 @@ Usability, bells and whistles
   Other commits are diffed using ``git diff {commit}~..{commit}``.
   (`#1493 <https://github.com/git-cola/git-cola/issues/1493>`_)
 
+* The spellcheck system now supports configuring multiple dictionaries
+  using ``git config --global --add cola.dictionary <path>`` with the
+  path to a newline-separated dictionary file. Dictionary files must follow
+  the same format as ``/usr/share/dict/words``.
+  (`#1499 <https://github.com/git-cola/git-cola/issues/1499>`_)
+
 
 Fixes
 -----

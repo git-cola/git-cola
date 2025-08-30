@@ -61,11 +61,12 @@ class NorvigSpellCheck:
         self.propernames = resources.find_first(propernames, data_dirs)
         self.words = collections.defaultdict(lambda: 1)
         self.extra_words = set()
-        self.dictionary = None
+        self.extra_dictionaries = set()
         self.initialized = False
 
-    def set_dictionary(self, dictionary):
-        self.dictionary = dictionary
+    def add_dictionaries(self, dictionaries):
+        """Add additional dictionaries to the spellcheck engine"""
+        self.extra_dictionaries.update(dictionaries)
 
     def init(self):
         if self.initialized:
@@ -88,10 +89,8 @@ class NorvigSpellCheck:
     def read(self):
         """Read dictionary words"""
         paths = []
-
         words = self.dictwords
         propernames = self.propernames
-        cfg_dictionary = self.dictionary
 
         if words and os.path.exists(words):
             paths.append((words, True))
@@ -99,8 +98,8 @@ class NorvigSpellCheck:
         if propernames and os.path.exists(propernames):
             paths.append((propernames, False))
 
-        if cfg_dictionary and os.path.exists(cfg_dictionary):
-            paths.append((cfg_dictionary, False))
+        for path in self.extra_dictionaries:
+            paths.append((path, True))
 
         for path, title in paths:
             try:
