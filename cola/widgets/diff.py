@@ -520,7 +520,7 @@ class Viewer(QtWidgets.QFrame):
         self.filename.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         self.filename.setFont(italic_font)
         self.filename.elide()
-        self.options = options = Options(self, self.filename)
+        self.options = options = Options(self, filename=self.filename)
 
         diffstat_font = self.font()
         diffstat_font.setPointSize(diffstat_font.pointSize() - 1)
@@ -846,7 +846,7 @@ class Options(QtWidgets.QWidget):
     XOR = 2
     PIXEL_XOR = 3
 
-    def __init__(self, parent, filename):
+    def __init__(self, parent, filename=None):
         super().__init__(parent)
         # Create widgets
         self.widget = parent

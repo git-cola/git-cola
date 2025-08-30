@@ -1270,7 +1270,7 @@ class GitDAG(standard.MainWindow):
             difftool.diff_commits(self.context, self, left, right, detect_renames=True)
 
     def search_line_range_in_oid(self, oid):
-        """Open a dialog that makes it easy to create "git log -L" line range expressions"""
+        """Open a dialog for generating "git log -L" line range expressions"""
         all_paths = self.filewidget.selected_paths()
         if all_paths:
             paths = all_paths[0]
