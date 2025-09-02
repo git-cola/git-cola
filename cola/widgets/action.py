@@ -73,7 +73,9 @@ class ActionButtons(QFlowLayoutWidget):
             N_('Pull...'), layout, tooltip=N_('Integrate changes using "git pull"')
         )
         self.sync_button = tooltip_button(
-            N_('Sync'), layout, tooltip=N_('Integrate changes from tracking branch using "git pull"')
+            N_('Sync'),
+            layout,
+            tooltip=N_('Integrate changes from tracking branch using "git pull"'),
         )
         self.stash_button = tooltip_button(
             N_('Stash...'),

@@ -1028,14 +1028,10 @@ class PullTracking(ContextCommand):
         self.model.update_status()
         if status != 0:
             title = N_('Pull failed')
-            return Interaction.critical(
-                title, err
-            )
+            return Interaction.critical(title, err)
         else:
             title = N_('Pull success')
-            return Interaction.information(
-                title, out
-            )
+            return Interaction.information(title, out)
         return status, out, err
 
 
