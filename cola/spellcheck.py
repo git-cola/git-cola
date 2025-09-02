@@ -2,6 +2,7 @@ import codecs
 import collections
 import os
 
+from . import core
 from . import resources
 
 __copyright__ = """
@@ -12,9 +13,11 @@ __copyright__ = """
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 
-def train(features, model):
+def train(features, model, all_train_words):
     for f in features:
-        model[f] += 1
+        if f not in all_train_words:
+            all_train_words.add(f)
+            model[f] += 1
     return model
 
 
@@ -63,6 +66,10 @@ class NorvigSpellCheck:
         self.extra_words = set()
         self.extra_dictionaries = set()
         self.initialized = False
+        self.all_words = set()
+        self.aspell_enabled = False
+        self.aspell_langs = set()
+        self.aspell_ok = False
 
     def add_dictionaries(self, dictionaries):
         """Add additional dictionaries to the spellcheck engine"""
@@ -72,8 +79,21 @@ class NorvigSpellCheck:
         if self.initialized:
             return
         self.initialized = True
-        train(self.read(), self.words)
-        train(self.extra_words, self.words)
+        all_train_words = set()
+        if self.aspell_enabled:
+            train(self.read_aspell_words(), self.words, all_train_words)
+        if not self.aspell_ok:
+            train(self.read(), self.words, all_train_words)
+
+        train(self.extra_words, self.words, all_train_words)
+
+    def set_aspell_enabled(self, enabled):
+        """Enable aspell support"""
+        self.aspell_enabled = enabled
+
+    def set_aspell_langs(self, langs):
+        """Set the aspell languages to query"""
+        self.aspell_langs = set(langs)
 
     def add_word(self, word):
         self.extra_words.add(word)
@@ -86,21 +106,22 @@ class NorvigSpellCheck:
         self.init()
         return word.replace('.', '') in self.words
 
-    def read(self):
+    def read(self, use_common_files=True):
         """Read dictionary words"""
         paths = []
         words = self.dictwords
         propernames = self.propernames
 
-        if words and os.path.exists(words):
+        if use_common_files and words and os.path.exists(words):
             paths.append((words, True))
 
-        if propernames and os.path.exists(propernames):
+        if use_common_files and propernames and os.path.exists(propernames):
             paths.append((propernames, False))
 
         for path in self.extra_dictionaries:
             paths.append((path, True))
 
+        all_words = self.all_words
         for path, title in paths:
             try:
                 with codecs.open(
@@ -108,8 +129,53 @@ class NorvigSpellCheck:
                 ) as words_file:
                     for line in words_file:
                         word = line.rstrip()
-                        yield word
+                        if word not in all_words:
+                            all_words.add(word)
+                            yield word
                         if title:
-                            yield word.title()
+                            title_word = word.title()
+                            if title_word not in all_words:
+                                all_words.add(title)
+                                yield word.title()
             except OSError:
                 pass
+
+    def read_aspell_words(self):
+        """Read words from aspell"""
+        # First, determine the languages to query.
+        # Use "aspell dicts" and filter out any strings that are longer than 2
+        # characters. This should leave *just* the main language names.
+        if self.aspell_langs:
+            aspell_langs = self.aspell_langs
+        else:
+            aspell_langs = _get_default_aspell_langs()
+
+        ok = False
+        all_words = self.all_words
+        for lang in aspell_langs:
+            cmd = ['aspell', 'dump', 'master', f'--lang={lang}']
+            status, out, _ = core.run_command(cmd)
+            if status == 0:
+                for line in out.splitlines():
+                    # Strip "/A" "/LR", "/H" and other suffixes from the
+                    # output produced by "aspell dump master --lang=ru".
+                    line = line.strip().split('/', 1)[-1]
+                    if not line:
+                        continue
+                    ok = True
+                    if line not in all_words:
+                        all_words.add(line)
+                        yield line
+
+        # Read extra dictionaries configured using `cola.dictionary`.
+        self.aspell_ok = ok
+        if ok:
+            yield from self.read(use_common_files=False)
+
+
+def _get_default_aspell_langs():
+    cmd = ['aspell', 'dicts']
+    status, out, _ = core.run_command(cmd)
+    if status != 0:
+        return []
+    return [line for line in out.splitlines() if len(line) == 2]

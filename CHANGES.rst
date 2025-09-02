@@ -19,6 +19,10 @@ Usability, bells and whistles
   using ``git config --global --add cola.dictionary <path>`` with the
   path to a newline-separated dictionary file. Dictionary files must follow
   the same format as ``/usr/share/dict/words``.
+
+* Git Cola can now read spelling dictionaries from the `aspell` system.
+  Configure ``git config --global cola.aspell.enabled true`` and
+  install ``aspell-*`` language packages to add additional dictionaries.
   (`#1499 <https://github.com/git-cola/git-cola/issues/1499>`_)
 
 

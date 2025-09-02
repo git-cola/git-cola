@@ -10,6 +10,7 @@ from ..cmd import Command
 
 
 ABBREV = 'core.abbrev'
+ASPELL_ENABLED = 'cola.aspell.enabled'
 AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
 AUTODETECT_PROXY = 'cola.autodetectproxy'
 AUTOTEMPLATE = 'cola.autoloadcommittemplate'
@@ -108,6 +109,7 @@ class Defaults:
 
     # These should match Git's defaults for git-defined values.
     abbrev = 12
+    aspell_enabled = False
     autotemplate = False
     autodetect_proxy = True
     background_editor = ''
@@ -169,6 +171,11 @@ def abbrev(context):
         except ValueError:
             result = default
     return result
+
+
+def aspell_enabled(context):
+    """Return True when aspell should be used as the spelling dictionary source"""
+    return context.cfg.get(ASPELL_ENABLED, default=Defaults.aspell_enabled)
 
 
 def autodetect_proxy(context):

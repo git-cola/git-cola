@@ -268,6 +268,8 @@ class SettingsFormWidget(FormWidget):
 
         self.editor = QtWidgets.QLineEdit()
         self.editor.setToolTip(N_('The main GUI editor that must block until it exits'))
+        tooltip = N_('Use "aspell" as the spelling dictionary source')
+        self.aspell_enabled = qtutils.checkbox(tooltip=tooltip)
         self.background_editor = QtWidgets.QLineEdit()
         self.background_editor.setToolTip(
             N_('A non-blocking GUI editor that is launched in the background')
@@ -320,10 +322,12 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
         self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
         self.add_row(N_('Check Spelling'), self.check_spelling)
+        self.add_row(N_('Enable "aspell" Spelling Dictionaries'), self.aspell_enabled)
         self.add_row(N_('Ctrl + MouseWheel to Zoom'), self.mouse_zoom)
         self.add_row(N_('Notify on Push'), self.notifyonpush)
 
         self.set_config({
+            prefs.ASPELL_ENABLED: (self.aspell_enabled, Defaults.aspell_enabled),
             prefs.SAVEWINDOWSETTINGS: (
                 self.save_window_settings,
                 Defaults.save_window_settings,
