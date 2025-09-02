@@ -1021,6 +1021,24 @@ class RemoteSetURL(RemoteCommand):
         return f'git remote set-url "{self.remote}" "{self.url}"'
 
 
+class PullTracking(ContextCommand):
+    def do(self):
+        status, out, err = self.git.pull()
+        Interaction.log_status(status, out, err)
+        self.model.update_status()
+        if status != 0:
+            title = N_('Pull failed')
+            return Interaction.critical(
+                title, err
+            )
+        else:
+            title = N_('Pull success')
+            return Interaction.information(
+                title, out
+            )
+        return status, out, err
+
+
 class RemoteEdit(ContextCommand):
     """Combine RemoteRename and RemoteSetURL"""
 
