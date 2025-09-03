@@ -159,7 +159,7 @@ class NorvigSpellCheck:
                 for line in out.splitlines():
                     # Strip "/A" "/LR", "/H" and other suffixes from the
                     # output produced by "aspell dump master --lang=ru".
-                    line = line.strip().split('/', 1)[-1]
+                    line = line.strip().split('/', 1)[0]
                     if not line:
                         continue
                     ok = True
