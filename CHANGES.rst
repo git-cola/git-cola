@@ -25,6 +25,9 @@ Usability, bells and whistles
   install ``aspell-*`` language packages to add additional dictionaries.
   (`#1499 <https://github.com/git-cola/git-cola/issues/1499>`_)
 
+* Git Cola now has non-interactive **sync** action which directly pulls
+  changes from the tracking branch by ``git pull``.
+
 
 Fixes
 -----
