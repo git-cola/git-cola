@@ -537,7 +537,7 @@ class PreferencesView(standard.Dialog):
         )
         # If the user already has the user.email and user.name configured then default
         # to editing the current repo's config instead of the user-wide settings.
-        if self.context.cfg.get('user.name') and self.context.cfg.get('user.email'):
+        if context.cfg.get(prefs.USER_NAME) and context.cfg.get(prefs.USER_EMAIL):
             index = 0
         else:
             index = 1
