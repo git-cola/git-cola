@@ -29,4 +29,6 @@ __pycache__
 *.py[cod]
 *.swp
 *.zip
+*.user
+*.qtcreator
 *~
