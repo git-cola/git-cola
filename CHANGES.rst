@@ -1,5 +1,5 @@
-Upcoming
-========
+v4.15.0
+=======
 
 Usability, bells and whistles
 -----------------------------
@@ -28,9 +28,7 @@ Usability, bells and whistles
 
 Fixes
 -----
-* Viewing images in plain text mode (e.g. SVG files) was not displaying the
-  diff text due to the deferred loading that was added to better support
-  large diffs. This has been corrected.
+* Diffing image files (e.g. ``*.svg``) in plain text mode has been fixed.
   (`#1498 <https://github.com/git-cola/git-cola/issues/1498>`_)
 
 
