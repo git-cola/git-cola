@@ -154,7 +154,7 @@ trees:
       tox/check: tox run -e check "$@"
       version/bump: ./todo/set-version "${version_next}"
       version/commit: git commit --all --signoff --message "git-cola v${version_digits}"
-      version/tag: git tag --sign --message "git-cola ${version_builtin}" "${version_builtin}"
+      version/tag: git tag --sign --message "git-cola ${version_builtin}" "v${version_builtin}"
       wheel: ${activate} python3 -m build -n .
     gitconfig:
       remote.publish.pushurl:
