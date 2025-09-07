@@ -135,7 +135,7 @@ class NorvigSpellCheck:
                         if title:
                             title_word = word.title()
                             if title_word not in all_words:
-                                all_words.add(title_world)
+                                all_words.add(title_word)
                                 yield title_word
             except OSError:
                 pass
