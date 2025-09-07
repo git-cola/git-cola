@@ -145,7 +145,7 @@ trees:
             cola/*/*.py
       pages<: doc
       pages: garden install ${GARDEN_CMD_VERBOSE} -D prefix=${TREE_PATH}/pages docs "$@"
-      publish: ${activate} twine upload --sign dist/*.whl dist/*.tar.gz
+      publish: ${activate} twine upload dist/*.whl dist/*.tar.gz
       release: ${activate} ./todo/release --all
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
