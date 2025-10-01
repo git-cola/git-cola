@@ -123,9 +123,9 @@ jobs:
           garden macos/app -vv
           mv git-cola.app build/
       - name: Zip Artifact
-        run: zip -r git-cola.app.zip build/*
+        run: zip -9 -r git-cola.app.zip build/*
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: git-cola-latest-${{github.run_number}}-${{runner.os}}
+          name: git-cola-macos-${{github.run_number}}-${{runner.os}}
           path: git-cola.app.zip
