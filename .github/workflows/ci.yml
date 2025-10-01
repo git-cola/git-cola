@@ -32,6 +32,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install \
+              nsis \
               python3-pyqt5 \
               python3-pyqt5.qtopengl \
               python3-pyqt5.qtsvg \
@@ -48,47 +49,21 @@ jobs:
           git config --global user.email git-cola@localhost
       - name: Run tests and checks
         run: garden check -vv
+      - name: Build Windows Installer
+        run: |
+          set -x
+          rm -fr build
+          garden pynsist -vv
+          mv build/nsis/git-cola*.exe git-cola.exe
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: git-cola.win
+          path: git-cola.exe
       - name: Code formatting
         run: garden fmt -vv -- --check
       - name: Test the garden installation method
         run: garden install -vv -D prefix=dist
-
-  windows:
-    name: Windows
-    runs-on: windows-latest
-    steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-          architecture: x64
-      - name: Pip Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/AppData/Local/pip/Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
-      - name: Install Dependencies
-        run: |
-          pip install '.[build,docs,dev,extras]'
-      - name: Build Installer
-        run: |
-          make doc
-          make htmldir="$PWD/share/doc/git-cola/html" install-doc
-          pynsist pynsist.cfg
-          rm -r share/doc/git-cola/html
-
-          # Rename executable output
-          cd build/nsis
-          mv git-cola*.exe git-cola-latest-${{github.run_number}}.exe
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: git-cola-latest-${{github.run_number}}-${{runner.os}}
-          path: build/nsis/git-cola*.exe
 
   macos:
     name: macOS
@@ -116,16 +91,11 @@ jobs:
           rustup toolchain install stable --profile minimal --no-self-update
           cargo install garden-tools
       - name: Install Dependencies
-        run: |
-          brew install git-cola
+        run: brew install git-cola
       - name: Build Bundle
-        run: |
-          garden macos/app -vv
-          mv git-cola.app build/
-      - name: Zip Artifact
-        run: zip -9 -r git-cola.app.zip build/*
+        run: garden macos/app -vv -D cola_app='${TREE_PATH}/local/git-cola.app'
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: git-cola-macos-${{github.run_number}}-${{runner.os}}
-          path: git-cola.app.zip
+          name: git-cola.app
+          path: local
