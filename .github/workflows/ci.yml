@@ -7,10 +7,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: styfle/cancel-workflow-action@0.12.1
+      - uses: actions/checkout@v5
       - name: Get current date for caching
         id: get-date
         shell: bash
@@ -49,13 +47,13 @@ jobs:
           git config --global user.email git-cola@localhost
       - name: Run tests and checks
         run: garden check -vv
-      - name: Build Windows Installer
+      - name: Build Windows git-cola.exe installer
         run: |
           set -x
           rm -fr build
           garden pynsist -vv
           mv build/nsis/git-cola*.exe git-cola.exe
-      - name: Upload Windows Installer
+      - name: Upload git-cola.win.zip
         uses: actions/upload-artifact@v4
         with:
           name: git-cola.win
@@ -69,10 +67,8 @@ jobs:
     name: macOS
     runs-on: macos-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: styfle/cancel-workflow-action@0.12.1
+      - uses: actions/checkout@v5
       - name: Get current date for caching
         id: get-date
         shell: bash
@@ -90,11 +86,11 @@ jobs:
         run: |
           rustup toolchain install stable --profile minimal --no-self-update
           cargo install garden-tools
-      - name: Install Dependencies
+      - name: Install dependencies
         run: brew install git-cola
-      - name: Build Bundle
+      - name: Build macOS git-cola.app bundle
         run: garden macos/app -vv -D cola_app='${TREE_PATH}/local/git-cola.app'
-      - name: Upload Artifact
+      - name: Upload git-cola.app.zip
         uses: actions/upload-artifact@v4
         with:
           name: git-cola.app
