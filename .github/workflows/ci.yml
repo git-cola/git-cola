@@ -29,15 +29,15 @@ jobs:
           rustup toolchain install stable --profile minimal --no-self-update
           cargo install garden-tools
       - name: Install system-provided test dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install \
-              nsis \
-              python3-pyqt5 \
-              python3-pyqt5.qtopengl \
-              python3-pyqt5.qtsvg \
-              python3-pyqt5.qtwebengine \
-              python3-qtpy
+        run: sudo apt-get update
+      - run: |
+          sudo apt-get install -y \
+            nsis \
+            python3-qtpy \
+            python3-pyqt6 \
+            python3-pyqt6.qtsvg \
+            python3-pyqt6.qtwebengine \
+            python3-send2trash
       - name: Install pip-provided test dependencies
         run: |
           set -x
