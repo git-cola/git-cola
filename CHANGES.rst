@@ -18,6 +18,10 @@ Usability, bells and whistles
   when using the built-in Dark themes.
   (`#1504 <https://github.com/git-cola/git-cola/issues/1504>`_)
 
+* Git Cola now has non-interactive `Sync` action that directly pulls
+  changes from the configured tracking branch using ``git pull``.
+  (`#1503 <https://github.com/git-cola/git-cola/issues/1503>`_)
+
 
 .. _v4.15.0:
 
@@ -47,10 +51,6 @@ Usability, bells and whistles
   Configure ``git config --global cola.aspell.enabled true`` and
   install ``aspell-*`` language packages to add additional dictionaries.
   (`#1499 <https://github.com/git-cola/git-cola/issues/1499>`_)
-
-* Git Cola now has non-interactive **sync** action which directly pulls
-  changes from the tracking branch by ``git pull``.
-
 
 Fixes
 -----
