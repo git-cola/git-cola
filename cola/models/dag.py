@@ -391,8 +391,8 @@ def get_date_for_current_time(context):
     now = datetime.datetime.now().astimezone()
     if logdate == DateFormat.DEFAULT:
         authdate = now.strftime('%c %z')
-    elif logdate == DateFormat.RELATIVE:
-        authdate = '0 seconds ago'
+    elif logdate == DateFormat.HUMAN:
+        authdate = now.strftime('%a %b %d %H:%M')
     elif logdate == DateFormat.LOCAL:
         authdate = now.strftime('%c')
     elif logdate == DateFormat.ISO:
@@ -401,8 +401,12 @@ def get_date_for_current_time(context):
         authdate = now.strftime('%Y-%m-%dT%H:%M:%S%z')
     elif logdate == DateFormat.RAW:
         authdate = now.strftime('%s %z')
-    elif logdate == DateFormat.HUMAN:
-        authdate = now.strftime('%a %b %d %H:%M')
+    elif logdate == DateFormat.RELATIVE:
+        authdate = '0 seconds ago'
+    elif logdate == DateFormat.RFC:
+        authdate = now.strftime('%a, %e %b %Y %H:%M:%S %z')
+    elif logdate == DateFormat.SHORT:
+        authdate = now.strftime('%Y-%m-%d')
     elif logdate == DateFormat.UNIX:
         authdate = now.strftime('%s')
     else:

@@ -9,6 +9,11 @@ Usability, bells and whistles
   Save stashes using ``Ctrl + s``.
   (`#1506 <https://github.com/git-cola/git-cola/issues/1506>`_)
 
+* `git dag` now displays the date for ``WORKTREE`` and ``STAGED``
+  entries using the same format as configured in the ``cola.logdate`` setting.
+  Previously, the ``short`` and ``rfc2822`` modes were not implemented.
+  (`#1505 <https://github.com/git-cola/git-cola/issues/1505>`_)
+
 
 .. _v4.15.0:
 
