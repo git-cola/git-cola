@@ -73,11 +73,16 @@ class StashView(standard.Dialog):
         )
         self.close_button = qtutils.close_button()
 
+        # A list of tuples [(display_text, tooltip), ...] containing the save modes.
         save_modes = stash.SaveModes.get()
         self.save_modes = qtutils.combo([mode[0] for mode in save_modes])
+        # Change the combobox's tooltip when the selection changes.
         self.save_modes.currentIndexChanged.connect(
             lambda idx: self.save_modes.setToolTip(save_modes[idx][1])
         )
+        # Set tooltips for the individual items in the tooltip.
+        for idx, mode in enumerate(save_modes):
+            self.save_modes.setItemData(idx, mode[1], Qt.ToolTipRole)
 
         self.recreate_index = qtutils.checkbox(
             text=N_('Recreate Index'),
