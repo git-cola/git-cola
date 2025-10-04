@@ -30,6 +30,7 @@ KNOWN_FILE_EXTENSIONS = {
     '.html': 'file-code.svg',
     '.java': 'file-code.svg',
     '.js': 'file-code.svg',
+    '.json': 'file-code.svg',
     '.ksh': 'file-code.svg',
     '.lisp': 'file-code.svg',
     '.perl': 'file-code.svg',
@@ -38,6 +39,9 @@ KNOWN_FILE_EXTENSIONS = {
     '.rb': 'file-code.svg',
     '.rs': 'file-code.svg',
     '.sh': 'file-code.svg',
+    '.toml': 'file-code.svg',
+    '.ts': 'file-code.svg',
+    '.yaml': 'file-code.svg',
     '.zsh': 'file-code.svg',
 }
 
