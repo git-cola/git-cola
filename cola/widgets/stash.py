@@ -153,7 +153,7 @@ class StashView(standard.Dialog):
         self.choose_unstaged_only_action = qtutils.add_action(
             self,
             N_('Unstaged only'),
-            lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.KEEP_INDEX),
+            lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.UNSTAGED),
             hotkeys.CTRL_3,
         )
         self.show_help_action = qtutils.add_action(
@@ -199,10 +199,10 @@ class StashView(standard.Dialog):
 
     def update_actions(self):
         is_staged = self.model.is_staged()
-        self.save_modes.set_item_enabled(stash.SaveModes.STAGED, is_staged)
-
         is_changed = self.model.is_changed()
-        self.save_modes.set_item_enabled(stash.SaveModes.KEEP_INDEX, is_changed)
+        self.save_modes.set_item_enabled(stash.SaveModes.STAGED, is_staged)
+        self.save_modes.set_item_enabled(stash.SaveModes.UNSTAGED, is_staged)
+        self.save_modes.setEnabled(is_changed)
         self.save_button.setEnabled(is_changed)
 
         is_selected = bool(self.selected_stash())
@@ -337,7 +337,7 @@ class StashView(standard.Dialog):
         if stash_index:
             self.save_modes.set_index(stash.SaveModes.STAGED)
         elif keep_index:
-            self.save_modes.set_index(stash.SaveModes.KEEP_INDEX)
+            self.save_modes.set_index(stash.SaveModes.UNSTAGED)
         else:
             self.save_modes.set_index(stash.SaveModes.ALL)
 

@@ -237,7 +237,7 @@ def stash_error(cmd, status, out, err):
 class SaveModes:
     ALL = 0
     STAGED = 1
-    KEEP_INDEX = 2
+    UNSTAGED = 2
 
     @staticmethod
     def get():
@@ -254,7 +254,7 @@ class SaveModes:
 
 def should_keep_index(idx):
     """Does the specified index imply "git stash save --keep-index"?"""
-    return idx == SaveModes.KEEP_INDEX
+    return idx == SaveModes.UNSTAGED
 
 
 def should_stash_staged(idx):
