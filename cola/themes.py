@@ -278,7 +278,7 @@ class Theme:
                 border: 0;
             }}
             QScrollBar::handle {{
-                 background: {background}
+                 background: {lighter}
             }}
             QScrollBar::handle:hover {{
                  background: {button}

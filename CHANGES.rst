@@ -14,6 +14,10 @@ Usability, bells and whistles
   Previously, the ``short`` and ``rfc2822`` modes were not implemented.
   (`#1505 <https://github.com/git-cola/git-cola/issues/1505>`_)
 
+* The scrollbar handles colors have been adjusted to be more visible
+  when using the built-in Dark themes.
+  (`#1504 <https://github.com/git-cola/git-cola/issues/1504>`_)
+
 
 .. _v4.15.0:
 
