@@ -11,6 +11,7 @@ except ImportError:
     notifypy = None
 
 from . import interaction
+from . import resources
 
 
 def shorten_paths(source_paths):
@@ -79,6 +80,15 @@ def notify(app_name, title, message, icon):
         notification.send()
     else:
         interaction.Interaction.log(f'{title}: {message}')
+
+
+def push_notification(context, title, message, error=False):
+    """Emit a push notification"""
+    if error:
+        icon = resources.icon_path('git-cola-error.svg')
+    else:
+        icon = resources.icon_path('git-cola-ok.svg')
+    notify(context.app_name, title, message, icon)
 
 
 def git_commit_date(datetime):

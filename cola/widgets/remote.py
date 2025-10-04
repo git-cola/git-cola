@@ -3,11 +3,6 @@ import fnmatch
 import time
 import os
 
-try:
-    import notifypy
-except (ImportError, ModuleNotFoundError):
-    notifypy = None
-
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -24,7 +19,6 @@ from .. import display
 from .. import git
 from .. import gitcmds
 from .. import icons
-from .. import resources
 from .. import qtutils
 from .. import utils
 from . import defs
@@ -127,13 +121,7 @@ def _emit_push_notification(
 
     pushed_message = N_('Pushed: %s') % ', '.join(pushed_remotes)
     unpushed_message = N_('Not pushed: %s') % ', '.join(unpushed_remotes)
-    success_icon = resources.icon_path('git-cola-ok.svg')
-    error_icon = resources.icon_path('git-cola-error.svg')
-
-    if unpushed_remotes:
-        icon = error_icon
-    else:
-        icon = success_icon
+    error = bool(unpushed_remotes)
 
     if pushed_remotes and unpushed_remotes:
         message = unpushed_message + '\t\t' + pushed_message
@@ -142,7 +130,7 @@ def _emit_push_notification(
     else:
         message = unpushed_message
 
-    display.notify(context.app_name, title, message, icon)
+    display.push_notification(context, title, message, error=error)
 
 
 class RemoteActionDialog(standard.Dialog):
