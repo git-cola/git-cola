@@ -232,3 +232,31 @@ class StashIndex(cmds.ContextCommand):
 def stash_error(cmd, status, out, err):
     title = N_('Error creating stash')
     Interaction.command_error(title, cmd, status, out, err)
+
+
+class SaveModes:
+    ALL = 0
+    STAGED = 1
+    KEEP_INDEX = 2
+
+    @staticmethod
+    def get():
+        """Returns a tuple of (display-name, tooltip) stash modes for saving stashes"""
+        return (
+            (N_('All changes'), N_('Stash all changes')),
+            (N_('Staged only'), N_('Stash staged changes only')),
+            (
+                N_('Unstaged only'),
+                N_('Stash unstaged changes only, keeping staged changes'),
+            ),
+        )
+
+
+def should_keep_index(idx):
+    """Does the specified index imply "git stash save --keep-index"?"""
+    return idx == SaveModes.KEEP_INDEX
+
+
+def should_stash_staged(idx):
+    """Does the specified index imply "git stash save --staged"?"""
+    return idx == SaveModes.STAGED

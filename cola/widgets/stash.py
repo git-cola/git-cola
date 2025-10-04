@@ -12,6 +12,7 @@ from .. import qtutils
 from . import defs
 from . import diff
 from . import standard
+from . import text
 
 
 def view(context, show=True):
@@ -40,43 +41,47 @@ class StashView(standard.Dialog):
         self.stash_list = standard.ListWidget(parent=self)
         self.stash_text = diff.DiffTextEdit(context, self)
 
-        self.button_rename = qtutils.create_button(
+        self.rename_button = qtutils.create_button(
             text=N_('Rename'),
             tooltip=N_('Rename the selected stash'),
             icon=icons.edit(),
         )
 
-        self.button_apply = qtutils.create_button(
+        self.apply_button = qtutils.create_button(
             text=N_('Apply'), tooltip=N_('Apply the selected stash'), icon=icons.ok()
         )
 
-        self.button_save = qtutils.create_button(
+        self.save_button = qtutils.create_button(
             text=N_('Save'),
             tooltip=N_('Save modified state to new stash'),
             icon=icons.save(),
             default=True,
         )
 
-        self.button_drop = qtutils.create_button(
+        self.drop_button = qtutils.create_button(
             text=N_('Drop'), tooltip=N_('Drop the selected stash'), icon=icons.discard()
         )
 
-        self.button_pop = qtutils.create_button(
+        self.pop_button = qtutils.create_button(
             text=N_('Pop'),
             tooltip=N_('Apply and drop the selected stash (git stash pop)'),
             icon=icons.discard(),
         )
 
-        self.button_close = qtutils.close_button()
+        self.help_button = qtutils.create_button(
+            text=N_('Help'), tooltip=N_('Show help\nShortcut: ?'), icon=icons.question()
+        )
+        self.close_button = qtutils.close_button()
 
-        self.keep_index = qtutils.checkbox(
-            text=N_('Keep Index'),
-            checked=True,
-            tooltip=N_('Stash unstaged changes only, keeping staged changes'),
+        save_modes = stash.SaveModes.get()
+        self.save_modes = qtutils.combo([mode[0] for mode in save_modes])
+        self.save_modes.currentIndexChanged.connect(
+            lambda idx: self.save_modes.setToolTip(save_modes[idx][1])
         )
 
-        self.stash_index = qtutils.checkbox(
-            text=N_('Stash Index'), tooltip=N_('Stash staged changes only')
+        self.recreate_index = qtutils.checkbox(
+            text=N_('Recreate Index'),
+            tooltip=N_('Recreate the index when restoring stashes'),
         )
 
         # Arrange layouts
@@ -85,26 +90,41 @@ class StashView(standard.Dialog):
         )
         self.splitter.setChildrenCollapsible(False)
 
-        self.btn_layt = qtutils.hbox(
+        self.action_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
-            self.stash_index,
-            self.keep_index,
+            self.rename_button,
+            self.pop_button,
+            self.drop_button,
+            self.apply_button,
             qtutils.STRETCH,
-            self.button_close,
-            self.button_save,
-            self.button_rename,
-            self.button_apply,
-            self.button_pop,
-            self.button_drop,
+            self.save_modes,
+            self.save_button,
+        )
+
+        self.bottom_layout = qtutils.hbox(
+            defs.margin,
+            defs.button_spacing,
+            self.help_button,
+            self.recreate_index,
+            qtutils.STRETCH,
+            self.close_button,
         )
 
         self.main_layt = qtutils.vbox(
-            defs.margin, defs.spacing, self.splitter, self.btn_layt
+            defs.margin,
+            defs.spacing,
+            self.splitter,
+            self.action_layout,
+            self.bottom_layout,
         )
         self.setLayout(self.main_layt)
         self.splitter.setSizes([self.width() // 3, self.width() * 2 // 3])
 
+        # Save stash  with Ctrl+S
+        self.save_action = qtutils.add_action(
+            self, N_('Save'), self.stash_save, hotkeys.SAVE
+        )
         # Apply stash with Ctrl+Enter
         self.apply_action = qtutils.add_action(
             self, N_('Apply'), self.stash_apply, hotkeys.APPLY
@@ -115,18 +135,39 @@ class StashView(standard.Dialog):
         )
         # Drop stash with Ctrl+Shift+Backspace
         self.drop_action = qtutils.add_action(
-            self, N_('Pop'), self.stash_drop, hotkeys.DELETE_FILE
+            self, N_('Delete'), self.stash_drop, hotkeys.DELETE_FILE
+        )
+
+        self.choose_all_changes_action = qtutils.add_action(
+            self,
+            N_('All changes'),
+            lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.ALL),
+            hotkeys.CTRL_1,
+        )
+        self.choose_staged_only_action = qtutils.add_action(
+            self,
+            N_('Staged only'),
+            lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.STAGED),
+            hotkeys.CTRL_2,
+        )
+        self.choose_unstaged_only_action = qtutils.add_action(
+            self,
+            N_('Unstaged only'),
+            lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.KEEP_INDEX),
+            hotkeys.CTRL_3,
+        )
+        self.show_help_action = qtutils.add_action(
+            self, N_('Show Help'), lambda: show_help(context), hotkeys.QUESTION
         )
 
         self.stash_list.itemSelectionChanged.connect(self.item_selected)
-        qtutils.connect_button(self.button_save, self.stash_save)
-        qtutils.connect_button(self.button_rename, self.stash_rename)
-        qtutils.connect_button(self.button_apply, self.stash_apply)
-        qtutils.connect_button(self.button_pop, self.stash_pop)
-        qtutils.connect_button(self.button_drop, self.stash_drop)
-        qtutils.connect_button(self.button_close, self.close_and_rescan)
-        qtutils.connect_checkbox(self.stash_index, self.stash_index_clicked)
-        qtutils.connect_checkbox(self.keep_index, self.keep_index_clicked)
+        qtutils.connect_button(self.save_button, self.stash_save)
+        qtutils.connect_button(self.rename_button, self.stash_rename)
+        qtutils.connect_button(self.apply_button, self.stash_apply)
+        qtutils.connect_button(self.pop_button, self.stash_pop)
+        qtutils.connect_button(self.drop_button, self.stash_drop)
+        qtutils.connect_button(self.close_button, self.close_and_rescan)
+        qtutils.connect_button(self.help_button, lambda: show_help(context))
 
         self.init_size(parent=parent)
         self.update_from_model()
@@ -135,16 +176,6 @@ class StashView(standard.Dialog):
     def close_and_rescan(self):
         cmds.do(cmds.Rescan, self.context)
         self.reject()
-
-    # "stash" and "keep" index are mutually exclusive but we don't
-    # want a radio button because we'd have to add a 3rd "default" option.
-    def stash_index_clicked(self, clicked):
-        if clicked:
-            self.keep_index.setChecked(False)
-
-    def keep_index_clicked(self, clicked):
-        if clicked:
-            self.stash_index.setChecked(False)
 
     def selected_stash(self):
         """Returns the stash name of the currently selected stash"""
@@ -168,20 +199,21 @@ class StashView(standard.Dialog):
 
     def update_actions(self):
         is_staged = self.model.is_staged()
-        self.stash_index.setEnabled(is_staged)
+        self.save_modes.set_item_enabled(stash.SaveModes.STAGED, is_staged)
 
         is_changed = self.model.is_changed()
-        self.keep_index.setEnabled(is_changed)
-        self.button_save.setEnabled(is_changed)
+        self.save_modes.set_item_enabled(stash.SaveModes.KEEP_INDEX, is_changed)
+        self.save_button.setEnabled(is_changed)
 
         is_selected = bool(self.selected_stash())
         self.apply_action.setEnabled(is_selected)
         self.drop_action.setEnabled(is_selected)
         self.pop_action.setEnabled(is_selected)
-        self.button_rename.setEnabled(is_selected)
-        self.button_apply.setEnabled(is_selected)
-        self.button_drop.setEnabled(is_selected)
-        self.button_pop.setEnabled(is_selected)
+        self.recreate_index.setEnabled(is_selected)
+        self.rename_button.setEnabled(is_selected)
+        self.apply_button.setEnabled(is_selected)
+        self.drop_button.setEnabled(is_selected)
+        self.pop_button.setEnabled(is_selected)
 
     def update_from_model(self):
         """Initiates git queries on the model and updates the view"""
@@ -203,8 +235,8 @@ class StashView(standard.Dialog):
         # "Stash Index" depends on staged changes, so disable this option
         # if there are no staged changes.
         is_staged = self.model.is_staged()
-        if get(self.stash_index) and not is_staged:
-            self.stash_index.setChecked(False)
+        if stash.should_stash_staged(self.save_modes.current_index()) and not is_staged:
+            self.save_modes.set_index(stash.SaveModes.ALL)
 
         return displayed
 
@@ -238,7 +270,7 @@ class StashView(standard.Dialog):
         if not selection:
             return
         context = self.context
-        index = get(self.keep_index)
+        index = get(self.recreate_index)
         cmds.do(stash.ApplyStash, context, selection, index, pop)
         self.update_from_model()
 
@@ -255,8 +287,8 @@ class StashView(standard.Dialog):
         if not ok or not stash_name:
             return
         context = self.context
-        keep_index = get(self.keep_index)
-        stash_index = get(self.stash_index)
+        keep_index = stash.should_keep_index(self.save_modes.current_index())
+        stash_index = stash.should_stash_staged(self.save_modes.current_index())
         if stash_index:
             cmds.do(stash.StashIndex, context, stash_name)
         else:
@@ -285,8 +317,10 @@ class StashView(standard.Dialog):
     def export_state(self):
         """Export persistent settings"""
         state = super().export_state()
-        state['keep_index'] = get(self.keep_index)
-        state['stash_index'] = get(self.stash_index)
+        current_index = self.save_modes.current_index()
+        state['keep_index'] = stash.should_keep_index(current_index)
+        state['stash_index'] = stash.should_stash_staged(current_index)
+        state['recreate_index'] = get(self.recreate_index)
         state['sizes'] = get(self.splitter)
         return state
 
@@ -294,11 +328,39 @@ class StashView(standard.Dialog):
         """Apply persistent settings"""
         result = super().apply_state(state)
         keep_index = bool(state.get('keep_index', True))
+        recreate_index = bool(state.get('recreate_index', True))
         stash_index = bool(state.get('stash_index', False))
-        self.keep_index.setChecked(keep_index)
-        self.stash_index.setChecked(stash_index)
+
+        # It would be simpler to have a "save_mode" instead of individual booleans.
+        # This is done for compatibility with older versions.
+        self.recreate_index.setChecked(recreate_index)
+        if stash_index:
+            self.save_modes.set_index(stash.SaveModes.STAGED)
+        elif keep_index:
+            self.save_modes.set_index(stash.SaveModes.KEEP_INDEX)
+        else:
+            self.save_modes.set_index(stash.SaveModes.ALL)
+
         try:
             self.splitter.setSizes(state['sizes'])
         except (KeyError, ValueError, AttributeError):
             pass
         return result
+
+
+def show_help(context):
+    help_text = N_(
+        """
+Keyboard Shortcut   Action
+-----------------   --------------------------------
+?                   show help
+esc                 close and exit
+ctrl + 1            set save mode to "All changes"
+ctrl + 2            set save mode to "Staged only"
+ctrl + 3            set save mode to "Unstaged only"
+ctrl + enter        apply stash
+ctrl + s            save stash
+"""
+    )
+    title = N_('Help')
+    return text.text_dialog(context, help_text, title)

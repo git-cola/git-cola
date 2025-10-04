@@ -263,6 +263,39 @@ class ComboBox(QtWidgets.QComboBox):
         idx = utils.clamp(idx, 0, self.count() - 1)
         self.setCurrentIndex(idx)
 
+    def set_index_if_enabled(self, idx):
+        """Set the current index while ignoring disabled items"""
+        idx = utils.clamp(idx, 0, self.count() - 1)
+        model = self.model()
+        if model is None:
+            return
+        item = model.item(idx)
+        if item is None:
+            return
+        if item.isEnabled():
+            self.setCurrentIndex(idx)
+
+    def current_index(self):
+        """Return the index of the currently selected item"""
+        return self.currentIndex()
+
+    def set_item_enabled(self, idx, enabled):
+        """Enable an item on this combobox"""
+        model = self.model()
+        if model is None:
+            return
+        item = model.item(idx)
+        if item is None:
+            return
+        item.setEnabled(enabled)
+        # If the current item became disabled then select the first non-disabled item.
+        if not enabled and idx == self.currentIndex():
+            for item_idx in range(len(self.item_data)):
+                item = model.item(item_idx)
+                if item is not None and item.isEnabled():
+                    self.setCurrentIndex(item_idx)
+                    break
+
     def add_item(self, text, data=None):
         if data is None:
             data = text

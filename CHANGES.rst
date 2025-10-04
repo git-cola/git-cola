@@ -1,3 +1,15 @@
+.. _v4.16.0:
+
+Upcoming
+========
+
+Usability, bells and whistles
+-----------------------------
+* The stash can now switch modes using ``Ctrl + {1,2,3}`` and
+  Save stashes using ``Ctrl + s``.
+  (`#1506 <https://github.com/git-cola/git-cola/issues/1506>`_)
+
+
 .. _v4.15.0:
 
 v4.15.0
