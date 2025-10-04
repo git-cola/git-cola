@@ -143,18 +143,21 @@ class StashView(standard.Dialog):
             N_('All changes'),
             lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.ALL),
             hotkeys.CTRL_1,
+            hotkeys.STASH_ALL,
         )
         self.choose_staged_only_action = qtutils.add_action(
             self,
             N_('Staged only'),
             lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.STAGED),
             hotkeys.CTRL_2,
+            hotkeys.STASH_STAGED,
         )
         self.choose_unstaged_only_action = qtutils.add_action(
             self,
             N_('Unstaged only'),
             lambda: self.save_modes.set_index_if_enabled(stash.SaveModes.UNSTAGED),
             hotkeys.CTRL_3,
+            hotkeys.STASH_UNSTAGED,
         )
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), lambda: show_help(context), hotkeys.QUESTION
@@ -351,13 +354,13 @@ class StashView(standard.Dialog):
 def show_help(context):
     help_text = N_(
         """
-Keyboard Shortcut   Action
------------------   --------------------------------
+Keyboard Shortcuts  Actions
+------------------  --------------------------------
 ?                   show help
 esc                 close and exit
-ctrl + 1            set save mode to "All changes"
-ctrl + 2            set save mode to "Staged only"
-ctrl + 3            set save mode to "Unstaged only"
+ctrl + 1, alt + a   set save mode to "All changes"
+ctrl + 2, alt + s   set save mode to "Staged only"
+ctrl + 3, alt + u   set save mode to "Unstaged only"
 ctrl + enter        apply stash
 ctrl + s            save stash
 """
