@@ -73,7 +73,9 @@ class ActionButtons(QFlowLayoutWidget):
             N_('Pull...'), layout, tooltip=N_('Integrate changes using "git pull"')
         )
         self.sync_button = tooltip_button(
-            N_('Sync'), layout, tooltip=N_('Integrate changes from tracking branch using "git pull"')
+            N_('Sync'),
+            layout,
+            tooltip=N_('Integrate changes from tracking branches using "git pull"'),
         )
         self.stash_button = tooltip_button(
             N_('Stash...'),
@@ -93,7 +95,7 @@ class ActionButtons(QFlowLayoutWidget):
         connect_button(self.fetch_button, partial(remote.fetch, context))
         connect_button(self.push_button, partial(remote.push, context))
         connect_button(self.pull_button, partial(remote.pull, context))
-        connect_button(self.sync_button, cmds.run(cmds.PullTracking, context))
+        connect_button(self.sync_button, cmds.run(cmds.Sync, context))
         connect_button(self.stash_button, partial(stash.view, context))
         connect_button(self.stage_button, cmds.run(cmds.StageSelected, context))
         connect_button(self.exit_diff_mode_button, cmds.run(cmds.ResetMode, context))

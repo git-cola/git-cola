@@ -12,6 +12,7 @@ except ImportError:
 
 from . import compat
 from . import core
+from . import display
 from . import gitcmds
 from . import icons
 from . import resources
@@ -1021,21 +1022,47 @@ class RemoteSetURL(RemoteCommand):
         return f'git remote set-url "{self.remote}" "{self.url}"'
 
 
-class PullTracking(ContextCommand):
+class Sync(ContextCommand):
+    """Sync upstream changes into the current branch"""
+
     def do(self):
-        status, out, err = self.git.pull()
+        branch_rebase = False
+        pull_rebase = False
+        current_branch = gitcmds.current_branch(self.context)
+        pull_rebase = self.context.cfg.get(prefs.PULL_REBASE, False)
+        if current_branch:
+            branch_rebase = self.context.cfg.get(
+                f'branch.{current_branch}.rebase', default=False
+            )
+
+        kwargs = {}
+        if pull_rebase or branch_rebase:
+            if pull_rebase == 'merges':
+                display_command = 'git pull --autostash --rebase=merges'
+                rebase = 'merges'
+            else:
+                rebase = True
+                display_command = 'git pull --autostash --rebase'
+            kwargs['rebase'] = rebase
+            kwargs['autostash'] = True
+        else:
+            display_command = 'git pull --ff-only'
+            kwargs['ff_only'] = True
+
+        status, out, err = self.git.pull(**kwargs)
+
         Interaction.log_status(status, out, err)
         self.model.update_status()
+
+        details = f'{out}\n{err}'.rstrip()
+        message = Interaction.format_command_status(display_command, status)
         if status != 0:
-            title = N_('Pull failed')
-            return Interaction.critical(
-                title, err
-            )
+            title = N_('Sync failed')
+            Interaction.critical(title, message=message, details=details)
         else:
-            title = N_('Pull success')
-            return Interaction.information(
-                title, out
-            )
+            title = N_('Sync complete')
+            display.push_notification(self.context, title, message)
+
         return status, out, err
 
 
