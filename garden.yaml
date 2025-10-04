@@ -34,7 +34,6 @@ trees:
     url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
       clean: rm -rf build dist git_cola.egg-info git-cola-*.windows.zip
-      doc: garden cmd ${GARDEN_CMD_VERBOSE} docs html man -- "$@"
       dev>:
         - dev/virtualenv
         - dev/pkgs
@@ -55,11 +54,15 @@ trees:
       dev/extras: ${activate} pip install '.[extras]'
       dev/pyqt6: ${activate} pip install '.[pyqt6]'
       dev/env: ${activate} "$@"
+      doc>:
+        - doc/html
+        - doc/man
+      doc/html: garden html ${GARDEN_CMD_VERBOSE} docs -- "$@"
+      doc/man: garden man ${GARDEN_CMD_VERBOSE} docs -- "$@"
       check>:
         - test
         - check/fmt
         - check/pyupgrade
-        - doc
       check/fmt: garden fmt -- --check
       check/pyupgrade: |
         ${activate}

@@ -47,6 +47,8 @@ jobs:
           git config --global user.email git-cola@localhost
       - name: Run tests and checks
         run: garden check -vv
+      - name: Run doc build
+        run: garden doc/html -vv
       - name: Build Windows git-cola.exe installer
         run: |
           set -x
