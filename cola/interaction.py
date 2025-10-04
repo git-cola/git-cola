@@ -123,7 +123,12 @@ class Interaction:
 
     @classmethod
     def log_status(cls, status, out, err=None):
-        msg = ((out + '\n') if out else '') + ((err + '\n') if err else '')
+        """Emit status, out, and err into the log"""
+        msg = ''
+        if out:
+            msg += out + '\n'
+        if err:
+            msg += err + '\n'
         cls.log(msg)
         cls.log('exit status %s' % status)
 
