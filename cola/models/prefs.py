@@ -76,6 +76,17 @@ class DateFormat:
     RAW = 'raw'
     HUMAN = 'human'
     UNIX = 'unix'
+    FORMAT = 'format:'
+
+    @classmethod
+    def is_custom(cls, value):
+        """Is the log format a custom log format?"""
+        return value.startswith(cls.FORMAT)
+
+    @classmethod
+    def get_custom_format(cls, value):
+        """Return the custom format in a format:<...> string"""
+        return value[len(cls.FORMAT):]
 
 
 def date_formats():

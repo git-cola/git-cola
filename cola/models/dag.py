@@ -409,6 +409,9 @@ def get_date_for_current_time(context):
         authdate = now.strftime('%Y-%m-%d')
     elif logdate == DateFormat.UNIX:
         authdate = now.strftime('%s')
+    elif DateFormat.is_custom(logdate):
+        fmt = DateFormat.get_custom_format(logdate)
+        authdate = now.strftime(fmt)
     else:
         authdate = now.strftime('%c %z')
     return authdate
