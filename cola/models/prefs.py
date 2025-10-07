@@ -86,7 +86,7 @@ class DateFormat:
     @classmethod
     def get_custom_format(cls, value):
         """Return the custom format in a format:<...> string"""
-        return value[len(cls.FORMAT):]
+        return value[len(cls.FORMAT) :]
 
 
 def date_formats():
