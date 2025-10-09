@@ -1092,7 +1092,6 @@ class SyncOut(ContextCommand):
         display_command = f'git push {remote} {current_branch}'
         status, out, err = self.git.push(remote, current_branch)
         Interaction.log_status(status, out, err)
-        self.model.update_status()
 
         details = f'{out}\n{err}'.rstrip()
         message = Interaction.format_command_status(display_command, status)
