@@ -18,9 +18,13 @@ Usability, bells and whistles
   when using the built-in Dark themes.
   (`#1504 <https://github.com/git-cola/git-cola/issues/1504>`_)
 
-* Git Cola now has non-interactive `Sync` action that directly pulls
+* Git Cola now has a non-interactive `Sync` action that directly pulls
   changes from the configured tracking branch using ``git pull``.
   (`#1503 <https://github.com/git-cola/git-cola/issues/1503>`_)
+
+* Git Cola now has a non-interactive `Sync Out` action that directly pushes
+  changes to the configured tracking branch using ``git push``.
+  (`#1508 <https://github.com/git-cola/git-cola/issues/1508>`_)
 
 
 .. _v4.15.0:
