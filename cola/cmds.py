@@ -1066,6 +1066,46 @@ class Sync(ContextCommand):
         return status, out, err
 
 
+class SyncOut(ContextCommand):
+    """Push local changes to the tracking branch"""
+
+    def do(self):
+        current_branch = gitcmds.current_branch(self.context)
+        if not current_branch:
+            title = N_('Sync out failed')
+            message = N_('No current branch')
+            Interaction.critical(title, message=message)
+            return -1, '', message
+        tracked = gitcmds.tracked_branch(self.context, current_branch)
+        if not tracked:
+            title = N_('Sync out failed')
+            message = N_('No tracking branch configured for %s') % current_branch
+            Interaction.critical(title, message=message)
+            return -1, '', message
+        remote, remote_branch = gitcmds.parse_remote_branch(tracked)
+        if not remote or not remote_branch:
+            title = N_('Sync out failed')
+            message = N_('Invalid tracking branch: %s') % tracked
+            Interaction.critical(title, message=message)
+            return -1, '', message
+
+        display_command = f'git push {remote} {current_branch}'
+        status, out, err = self.git.push(remote, current_branch)
+        Interaction.log_status(status, out, err)
+        self.model.update_status()
+
+        details = f'{out}\n{err}'.rstrip()
+        message = Interaction.format_command_status(display_command, status)
+        if status != 0:
+            title = N_('Sync out failed')
+            Interaction.critical(title, message=message, details=details)
+        else:
+            title = N_('Sync out complete')
+            display.push_notification(self.context, title, message)
+
+        return status, out, err
+
+
 class RemoteEdit(ContextCommand):
     """Combine RemoteRename and RemoteSetURL"""
 
