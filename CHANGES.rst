@@ -1,7 +1,7 @@
 .. _v4.16.0:
 
-Upcoming
-========
+v4.16.0
+=======
 
 Usability, bells and whistles
 -----------------------------
