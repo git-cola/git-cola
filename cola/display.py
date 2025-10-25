@@ -91,9 +91,9 @@ def push_notification(context, title, message, error=False):
     """Emit a push notification"""
     if prefs.enable_popups(context):
         if error:
-            Interaction.critical(title, message=message)
+            interaction.Interaction.critical(title, message=message)
         else:
-            Interaction.information(title, message)
+            interaction.Interaction.information(title, message)
     else:
         if error:
             icon = resources.icon_path('git-cola-error.svg')
