@@ -140,7 +140,7 @@ class FileWidget(TreeWidget):
         """Set columns to their initial size"""
         header_width = self.header().width() - 1
         metrics = QtGui.QFontMetrics(self.font())
-        numbers_max = metrics.horizontalAdvance('12345678')  # Linux had 28,000,000+ LOC of code in 2020.
+        numbers_max = qtutils.fontmetrics_width(metrics, '12345678')  # Linux had 28,000,000+ LOC of code in 2020.
         numbers_width = min(numbers_max, header_width // 8 - 1)
         files_width = header_width - numbers_width * 2
         self.setColumnWidth(0, files_width)

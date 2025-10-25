@@ -26,6 +26,11 @@ Usability, bells and whistles
   changes to the configured tracking branch using ``git push``.
   (`#1508 <https://github.com/git-cola/git-cola/issues/1508>`_)
 
+Fixes
+-----
+* The DAG's filelist widget improved its backwards-compatibility with Qt5.
+  (`#1509 <https://github.com/git-cola/git-cola/issues/1509>`_)
+
 
 .. _v4.15.0:
 
