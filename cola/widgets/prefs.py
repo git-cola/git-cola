@@ -184,6 +184,9 @@ scissors
         tooltip = N_('Use gravatar.com to lookup icons for author emails')
         self.enable_gravatar = qtutils.checkbox(checked=True, tooltip=tooltip)
 
+        tooltip = N_('Display desktop notifications using popup dialogs')
+        self.enable_popups = qtutils.checkbox(checked=False, tooltip=tooltip)
+
         tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(checked=True, tooltip=tooltip)
 
@@ -210,6 +213,9 @@ scissors
         self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
+        self.add_row(
+            N_('Display desktop notifications using popup dialogs'), self.enable_popups
+        )
         self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
         self.add_row(N_('Update Index on Startup'), self.update_index)
@@ -238,6 +244,7 @@ scissors
                 Defaults.display_untracked,
             ),
             prefs.ENABLE_GRAVATAR: (self.enable_gravatar, Defaults.enable_gravatar),
+            prefs.ENABLE_POPUPS: (self.enable_popups, Defaults.enable_popups),
             prefs.HTTP_PROXY: (self.http_proxy, Defaults.http_proxy),
             prefs.INOTIFY: (self.inotify, Defaults.inotify),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),

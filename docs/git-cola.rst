@@ -921,6 +921,16 @@ you can specify multiple dictionaries using ``git config --global --add``.
    git config --global --add cola.dictionary /path/to/dictionary1
    git config --global --add cola.dictionary /path/to/dictionary2
 
+cola.enablepopups
+-----------------
+
+Actions such as "Fetch", "Push", "Pull", "Sync" and "Sync Out" display desktop
+notifications on Linux when either the `notify2` or `notifypy` modules are installed.
+The message are logged to the Console otherwise.
+
+Messages are displayed using popup dialogs when ``cola.enablepopups`` is set to ``true``.
+Defaults to `false`.
+
 cola.expandtab
 --------------
 
