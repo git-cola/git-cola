@@ -97,6 +97,7 @@ Thanks
 * Filip Danilović
 * Floris Lambrechts
 * Frank Weber
+* Francesco Gallo
 * Garoe Dorta
 * Geoffrey van Wyk
 * Georg Limbach
