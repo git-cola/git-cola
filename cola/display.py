@@ -12,6 +12,11 @@ except ImportError:
 
 from . import interaction
 from . import resources
+from . import utils
+from .models import prefs
+
+
+NOTIFICATIONS_AVAILABLE = bool(notify2 or notifypy)
 
 
 def shorten_paths(source_paths):
@@ -84,11 +89,17 @@ def notify(app_name, title, message, icon):
 
 def push_notification(context, title, message, error=False):
     """Emit a push notification"""
-    if error:
-        icon = resources.icon_path('git-cola-error.svg')
+    if prefs.enable_popups(context):
+        if error:
+            Interaction.critical(title, message=message)
+        else:
+            Interaction.information(title, message)
     else:
-        icon = resources.icon_path('git-cola-ok.svg')
-    notify(context.app_name, title, message, icon)
+        if error:
+            icon = resources.icon_path('git-cola-error.svg')
+        else:
+            icon = resources.icon_path('git-cola-ok.svg')
+        notify(context.app_name, title, message, icon)
 
 
 def git_commit_date(datetime):

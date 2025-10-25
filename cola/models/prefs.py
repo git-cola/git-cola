@@ -137,6 +137,7 @@ class Defaults:
     difftool = 'xxdiff'
     editor = 'gvim'
     enable_gravatar = True
+    enable_popups = False
     expandtab = False
     history_browser = 'gitk'
     http_proxy = ''
@@ -238,6 +239,11 @@ def background_editor(context):
     """Return the configured non-blocking background editor"""
     app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
+
+
+def enable_popups(context):
+    """Should popups be used instead of notifications/logs?"""
+    return context.cfg.get(ENABLE_POPUPS, default=Defaults.enable_popups)
 
 
 def fallback_editor():
