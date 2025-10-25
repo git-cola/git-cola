@@ -31,6 +31,10 @@ Fixes
 * The DAG's filelist widget improved its backwards-compatibility with Qt5.
   (`#1509 <https://github.com/git-cola/git-cola/issues/1509>`_)
 
+Packaging
+---------
+* ``pyproject.toml`` was updated to use a string value for ``project.license``.
+
 
 .. _v4.15.0:
 
