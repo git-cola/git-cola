@@ -108,7 +108,7 @@ class ActionTask(qtutils.Task):
 
 
 def _emit_push_notification(
-    context, selected_remotes, pushed_remotes, unpushed_remotes
+    context, allow_popups, selected_remotes, pushed_remotes, unpushed_remotes
 ):
     """Emit desktop notification when pushing remotes"""
     total = len(selected_remotes)
@@ -130,7 +130,9 @@ def _emit_push_notification(
     else:
         message = unpushed_message
 
-    display.push_notification(context, title, message, error=error)
+    display.push_notification(
+        context, title, message, error=error, allow_popups=allow_popups
+    )
 
 
 class RemoteActionDialog(standard.Dialog):
@@ -710,9 +712,17 @@ class RemoteActionDialog(standard.Dialog):
 
             all_results = combine(result, all_results)
 
+        # Popups interfere with the remote messages dialog.
+        close_on_completion = get(self.close_on_completion_checkbox)
+        remote_messages = get(self.remote_messages_checkbox)
+        allow_popups = not close_on_completion and not remote_messages
         if prefs.notify_on_push(self.context):
             _emit_push_notification(
-                self.context, selected_remotes, pushed_remotes, unpushed_remotes
+                self.context,
+                allow_popups,
+                selected_remotes,
+                pushed_remotes,
+                unpushed_remotes,
             )
 
         return all_results

@@ -10,9 +10,7 @@ try:
 except ImportError:
     notifypy = None
 
-from . import interaction
 from . import resources
-from . import utils
 from .models import prefs
 
 
@@ -70,8 +68,9 @@ def normalize_path(path):
     return path.replace('\\', '/')
 
 
-def notify(app_name, title, message, icon):
+def notify(context, title, message, icon):
     """Send a notification using notify2 xor notifypy"""
+    app_name = context.app_name
     if notify2:
         notify2.init(app_name)
         notification = notify2.Notification(title, message, icon)
@@ -84,22 +83,22 @@ def notify(app_name, title, message, icon):
         notification.icon = icon
         notification.send()
     else:
-        interaction.Interaction.log(f'{title}: {message}')
+        context.notifier.log.emit(f'{title}: {message}')
 
 
-def push_notification(context, title, message, error=False):
+def push_notification(context, title, message, error=False, allow_popups=True):
     """Emit a push notification"""
-    if prefs.enable_popups(context):
+    if prefs.enable_popups(context) and allow_popups:
         if error:
-            interaction.Interaction.critical(title, message=message)
+            context.notifier.critical.emit(title, dict(message=message))
         else:
-            interaction.Interaction.information(title, message)
+            context.notifier.information.emit(title, dict(message=message))
     else:
         if error:
             icon = resources.icon_path('git-cola-error.svg')
         else:
             icon = resources.icon_path('git-cola-ok.svg')
-        notify(context.app_name, title, message, icon)
+        notify(context, title, message, icon)
 
 
 def git_commit_date(datetime):
