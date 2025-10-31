@@ -1353,10 +1353,11 @@ class ReaderThread(QtCore.QThread):
 
     def __init__(self, context, params, parent):
         QtCore.QThread.__init__(self, parent)
-        self.setTerminationEnabled(True)
         self.context = context
         self.params = params
         self._stop = False
+        self._mutex = QtCore.QMutex()
+        self._condition = QtCore.QWaitCondition()
 
     def run(self):
         context = self.context
@@ -1365,8 +1366,14 @@ class ReaderThread(QtCore.QThread):
         self.begin.emit()
         commits = []
         for commit in repo.get():
+            stopped = False
+            self._mutex.lock()
             if self._stop:
+                self._condition.wait(self._mutex)
                 repo.reset()
+                stopped = True
+            self._mutex.unlock()
+            if stopped:
                 return
             commits.append(commit)
             if len(commits) >= 512:
@@ -1390,7 +1397,7 @@ class ReaderThread(QtCore.QThread):
 
     def stop(self):
         self._stop = True
-        self.terminate()
+        self.wait()
 
 
 class Cache:

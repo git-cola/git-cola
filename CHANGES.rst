@@ -9,6 +9,9 @@ Fixes
   when they should have been enabled.
   (`#1515 <https://github.com/git-cola/git-cola/issues/1515>`_)
 
+* Backwards-compatibility with PyQt5 and QThread's termination behavior was improved.
+  (`#1510 <https://github.com/git-cola/git-cola/issues/1510>`_)
+
 
 .. _v4.16.0:
 
