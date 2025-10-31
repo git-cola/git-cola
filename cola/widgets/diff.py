@@ -1067,7 +1067,7 @@ class DiffEditor(DiffTextEdit):
         model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
 
         selection_model.selection_changed.connect(
-            self.refresh, type=Qt.QueuedConnection
+            self.update_actions, type=Qt.QueuedConnection
         )
         # Update the selection model when the cursor changes
         self.cursorPositionChanged.connect(self._update_line_number)
@@ -1082,7 +1082,7 @@ class DiffEditor(DiffTextEdit):
     def toggle_diff_type(self):
         cmds.do(cmds.ToggleDiffType, self.context)
 
-    def refresh(self):
+    def update_actions(self):
         enabled = False
         s = self.selection_model.selection()
         model = self.model
