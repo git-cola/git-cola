@@ -1065,6 +1065,7 @@ class DiffEditor(DiffTextEdit):
         self.move_down = actions.move_down(self)
 
         model.diff_text_updated.connect(self.set_diff, type=Qt.QueuedConnection)
+        model.mode_changed.connect(self.update_actions, type=Qt.QueuedConnection)
 
         selection_model.selection_changed.connect(
             self.update_actions, type=Qt.QueuedConnection

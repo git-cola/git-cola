@@ -1,3 +1,15 @@
+.. _v4.16.1:
+
+v4.16.1
+=======
+
+Fixes
+-----
+* The "Revert Diff Selection" and "Revert Diff Hunk" actions were not always enabled
+  when they should have been.
+  (`#1515 <https://github.com/git-cola/git-cola/issues/1515>`_)
+
+
 .. _v4.16.0:
 
 v4.16.0
