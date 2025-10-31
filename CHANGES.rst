@@ -5,8 +5,8 @@ v4.16.1
 
 Fixes
 -----
-* The "Revert Diff Selection" and "Revert Diff Hunk" actions were not always enabled
-  when they should have been.
+* The "Revert Selected Lines" and "Revert Diff Hunk" actions were sometimes disabled
+  when they should have been enabled.
   (`#1515 <https://github.com/git-cola/git-cola/issues/1515>`_)
 
 
