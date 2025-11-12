@@ -44,13 +44,13 @@ These files are updated to mention the new version:
 
 * `garden version/tag` to add the new tag (`git tag -sm'git-cola X.Y'`)
 
+* `garden clean` to clean out older files.
+
 * `garden dev` to update the egg-info to use the tagged version
 
 * `garden wheel` to build wheels.
 
 * `garden publish` to publish to [pypi](https://pypi.org/project/git-cola/).
-
-* `garden clean` to clean out older files.
 
 * `git cola push` to push the changes
 
