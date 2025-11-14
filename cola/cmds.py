@@ -1910,14 +1910,17 @@ class PrepareCommitMessageHook(ContextCommand):
                 # Git hooks are not executed as native Windows executables.
                 # Instead, the hook script must be invoked through bash.exe so that
                 # it behaves consistently with *nix environments.
+                bash = utils.find_bash_exe()
+                if not bash:
+                    return self.old_commitmsg
+
+                # Normalize path separators
                 hook_rep = hook.replace('\\', '/')
                 filename_rep = filename.replace('\\', '/')
-                cmd = [
-                    # Hard-coded path
-                    r'C:\Program Files\Git\usr\bin\bash.exe',
-                    hook_rep,
-                    filename_rep,
-                ]
+
+                # Run the hook through bash.exe
+                cmd = [bash, hook_rep, filename_rep]
+
                 status, out, err = core.run_command(cmd)
             else:
                 # On *nix:
