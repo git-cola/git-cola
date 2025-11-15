@@ -1903,8 +1903,32 @@ class PrepareCommitMessageHook(ContextCommand):
         hook = gitcmds.prepare_commit_message_hook(self.context)
 
         if os.path.exists(hook):
+            Interaction.log('hook cola-prepare-commit-msg exists: "%s"' % hook)
             filename = self.model.save_commitmsg()
-            status, out, err = core.run_command([hook, filename])
+
+            if utils.is_win32():
+                # On Windows:
+                # Git hooks are not executed as native Windows executables.
+                # Instead, the hook script must be invoked through bash.exe so that
+                # it behaves consistently with *nix environments.
+                bash = utils.find_bash_exe()
+                if not bash:
+                    return self.old_commitmsg
+
+                Interaction.log('bash found: "%s"' % bash)
+                # Normalize path separators
+                hook_rep = hook.replace('\\', '/')
+                filename_rep = filename.replace('\\', '/')
+
+                # Run the hook through bash.exe
+                cmd = [bash, hook_rep, filename_rep]
+
+                Interaction.log("running 'prepare-commit-msg': %s" % str(cmd))
+                status, out, err = core.run_command(cmd)
+            else:
+                # On *nix:
+                # The hook script is executed directly using the given path.
+                status, out, err = core.run_command([hook, filename])
 
             if status == 0:
                 result = core.read(filename)

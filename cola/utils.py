@@ -3,6 +3,7 @@ import copy
 import os
 import re
 import shlex
+import shutil
 import sys
 import tempfile
 import time
@@ -290,6 +291,35 @@ def tmp_filename(label, suffix=''):
         prefix=label + '-', suffix=suffix, delete=False
     ) as handle:
         return handle.name
+
+
+def find_bash_exe():
+    """
+    Locate bash.exe bundled with Git for Windows.
+
+    Git for Windows ships its own bash.exe, but it is not added to PATH.
+    This function finds git.exe via PATH, derives the Git installation root,
+    and searches typical subdirectories for bash.exe.
+    """
+    # Find git.exe in PATH
+    git_path = shutil.which('git.exe') or shutil.which('git')
+    if not git_path:
+        return None
+
+    # Estimate Git root directory (e.g., C:\Program Files\Git)
+    cmd_dir = os.path.dirname(os.path.abspath(git_path))
+    git_root = os.path.dirname(cmd_dir)
+
+    # Typical relative locations for bash.exe under Git for Windows
+    candidates = ['bin', 'mingw64/bin', 'usr/bin']
+
+    # Search and return the first match
+    for rel in candidates:
+        bash = os.path.join(git_root, rel, 'bash.exe')
+        if os.path.exists(bash):
+            return bash.replace('\\', '/')
+
+    return None
 
 
 def is_linux():
