@@ -1,3 +1,16 @@
+.. _v4.17.0:
+
+v4.17.0
+=======
+
+Fixes
+-----
+* Custom "Prepare Commit Message" hooks, typically installed by providing a script at
+  `.git/hooks/cola-prepare-commit-msg`, can now be used on Windows.
+  (`#1523 <https://github.com/git-cola/git-cola/issues/1523>`_)
+  (`#1524 <https://github.com/git-cola/git-cola/pull/1524>`_)
+
+
 .. _v4.16.1:
 
 v4.16.1
