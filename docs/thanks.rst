@@ -138,6 +138,7 @@ Thanks
 * Jason Newton
 * Javier Rodriguez Cuevas
 * Jeff Dagenais
+* jdalbey
 * Jérôme Carretero
 * jfessard
 * JiCiT
