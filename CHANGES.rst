@@ -10,6 +10,10 @@ Usability, bells and whistles
   (`#1523 <https://github.com/git-cola/git-cola/issues/1523>`_)
   (`#1524 <https://github.com/git-cola/git-cola/pull/1524>`_)
 
+* The File Browser tool will now retain its column widths when files are added,
+  removed or modified.
+  (`#1525 <https://github.com/git-cola/git-cola/issues/1525>`_)
+
 
 .. _v4.16.1:
 

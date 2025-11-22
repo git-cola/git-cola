@@ -113,6 +113,7 @@ class RepoTreeView(standard.TreeView):
         self.saved_current_path = None
         self.saved_open_folders = set()
         self.restoring_selection = False
+        self._column_widths = []
         self._columns_sized = False
 
         self.setDragEnabled(True)
@@ -122,7 +123,7 @@ class RepoTreeView(standard.TreeView):
 
         # Observe model updates
         model = context.model
-        model.about_to_update.connect(self.save_selection, type=Qt.QueuedConnection)
+        model.about_to_update.connect(self.save_state, type=Qt.QueuedConnection)
         model.updated.connect(self.update_actions, type=Qt.QueuedConnection)
         self.expanded.connect(self.index_expanded)
 
@@ -286,7 +287,7 @@ class RepoTreeView(standard.TreeView):
             size = super().sizeHintForColumn(column)
         return size
 
-    def save_selection(self):
+    def save_state(self):
         selection = self.selected_paths()
         if selection:
             self.saved_selection = selection
@@ -295,7 +296,11 @@ class RepoTreeView(standard.TreeView):
         if current:
             self.saved_current_path = current.path
 
-    def restore(self):
+        self._column_widths = [
+            self.columnWidth(x) for x in range(self.header().count())
+        ]
+
+    def restore_state(self):
         selection = self.selectionModel()
         flags = selection.Select | selection.Rows
 
@@ -335,10 +340,20 @@ class RepoTreeView(standard.TreeView):
 
         self.restoring_selection = False
 
-        # Resize the columns once when cola.resizebrowsercolumns is False.
-        # This provides a good initial size since we will not be resizing
-        # the columns during expand/collapse.
-        if not self._columns_sized:
+        # After the initial resize then _columns_sized will be True.
+        if self._columns_sized:
+            # The widths have to be restored when new files are added. The model
+            # responds to model updates and detects when the list of files has changed.
+            # When the file list changes, clear() is called on the model, and clear()
+            # has a side-effect of losing column widths that may have been set
+            # interactively by the user.
+            for idx, value in enumerate(self._column_widths):
+                self.setColumnWidth(idx, value)
+            self._column_widths = []
+        else:
+            # Resize the columns once when cola.resizebrowsercolumns is False.
+            # This provides a good initial size since we will not be resizing
+            # the columns during expand/collapse.
             self._columns_sized = True
             self.size_columns(force=True)
 
@@ -449,7 +464,7 @@ class RepoTreeView(standard.TreeView):
     def set_model(self, model):
         """Set the concrete QAbstractItemModel instance."""
         self.setModel(model)
-        model.restore.connect(self.restore, type=Qt.QueuedConnection)
+        model.restore.connect(self.restore_state, type=Qt.QueuedConnection)
 
     def name_item_from_index(self, model_index):
         """Return the name item corresponding to the model index."""
