@@ -102,6 +102,7 @@ Thanks
 * Geoffrey van Wyk
 * Georg Limbach
 * geotavros
+* ghmon
 * Gianni Lerro
 * Giovanni Martins
 * `Git Hackers <https://git-scm.com/about>`_
