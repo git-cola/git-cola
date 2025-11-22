@@ -402,6 +402,7 @@ class AppearanceFormWidget(FormWidget):
         # parsed as a string, so the transform is effectively a no-op.
         self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
         self.high_dpi.setEnabled(hidpi.is_supported())
+        self.bold_fonts = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()
         self.status_show_totals = qtutils.checkbox()
         self.status_indent = qtutils.checkbox()
@@ -413,12 +414,14 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('Icon theme'), self.icon_theme)
         self.add_row(N_('High DPI'), self.high_dpi)
+        self.add_row(N_('Bold all fonts'), self.bold_fonts)
         self.add_row(N_('Bold on Dark Headers Instead of Italic'), self.bold_headers)
         self.add_row(N_('Show File Counts in Status Titles'), self.status_show_totals)
         self.add_row(N_('Indent Status paths'), self.status_indent)
         self.add_row(N_('Use a Block Cursor in Diff Editors'), self.block_cursor)
 
         self.set_config({
+            prefs.BOLD_FONTS: (self.bold_fonts, Defaults.bold_fonts),
             prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
             prefs.FONTSIZE: (
                 self.font_size,

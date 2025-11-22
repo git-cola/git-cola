@@ -46,14 +46,14 @@ class Theme:
         self.background_color = None
         self.palette = None
 
-    def build_style_sheet(self, app_palette):
+    def build_style_sheet(self, app_palette, bold_fonts):
         if self.style_sheet == EStylesheet.CUSTOM:
-            return self.style_sheet_custom(app_palette)
+            return self.style_sheet_custom(app_palette, bold_fonts)
         if self.style_sheet == EStylesheet.FLAT:
-            return self.style_sheet_flat()
+            return self.style_sheet_flat(bold_fonts)
         window = app_palette.color(QtGui.QPalette.Window)
         self.is_palette_dark = window.lightnessF() < 0.5
-        return style_sheet_default(app_palette)
+        return style_sheet_default(app_palette, bold_fonts)
 
     def build_palette(self, app_palette):
         QPalette = QtGui.QPalette
@@ -81,7 +81,7 @@ class Theme:
         self.palette = palette
         return palette
 
-    def style_sheet_flat(self):
+    def style_sheet_flat(self, bold_fonts):
         main_color = self.main_color
         color = qtutils.css_color(main_color)
         color_rgb = qtutils.rgb_css(color)
@@ -118,10 +118,15 @@ class Theme:
         self.text_color = field_text
         self.highlight_color = lighter
         self.background_color = background
+        if bold_fonts:
+            font_weight = 'font-weight: bold;'
+        else:
+            font_weight = ''
 
         return """
             /* regular widgets */
             * {{
+                {font_weight}
                 background-color: {background};
                 color: {field_text};
                 selection-background-color: {lighter};
@@ -477,6 +482,7 @@ class Theme:
             """.format(
             background=background,
             field=field,
+            font_weight=font_weight,
             button=color_rgb,
             darker=darker,
             lighter=lighter,
@@ -487,7 +493,7 @@ class Theme:
             focus=focus,
         )
 
-    def style_sheet_custom(self, app_palette):
+    def style_sheet_custom(self, app_palette, bold_fonts):
         """Get custom style sheet.
         File name is saved in variable self.name.
         If user has deleted file, use default style"""
@@ -495,12 +501,12 @@ class Theme:
         # check if path exists
         filename = resources.config_home('themes', self.name + '.qss')
         if not core.exists(filename):
-            return style_sheet_default(app_palette)
+            return style_sheet_default(app_palette, bold_fonts)
         try:
             return core.read(filename)
         except OSError as err:
             core.print_stderr(f'warning: unable to read custom theme {filename}: {err}')
-            return style_sheet_default(app_palette)
+            return style_sheet_default(app_palette, bold_fonts)
 
     def get_palette(self):
         """Get a QPalette for the current theme"""
@@ -568,7 +574,7 @@ class Theme:
         return background_color
 
 
-def style_sheet_default(palette):
+def style_sheet_default(palette, bold_fonts):
     highlight = palette.color(QtGui.QPalette.Highlight)
     shadow = palette.color(QtGui.QPalette.Shadow)
     base = palette.color(QtGui.QPalette.Base)
@@ -576,8 +582,15 @@ def style_sheet_default(palette):
     highlight_rgb = qtutils.rgb_css(highlight)
     shadow_rgb = qtutils.rgb_css(shadow)
     base_rgb = qtutils.rgb_css(base)
+    if bold_fonts:
+        font_weight = 'font-weight: bold;'
+    else:
+        font_weight = ''
 
     return """
+        * {{
+            {font_weight}
+        }}
         QCheckBox::indicator {{
             width: {checkbox_size}px;
             height: {checkbox_size}px;
@@ -622,6 +635,7 @@ def style_sheet_default(palette):
         }}
 
         """.format(
+        font_weight=font_weight,
         separator=defs.separator,
         highlight_rgb=highlight_rgb,
         shadow_rgb=shadow_rgb,

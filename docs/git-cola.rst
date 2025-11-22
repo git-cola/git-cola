@@ -876,6 +876,12 @@ Whether to use a "block" cursor in diff editors. The block cursor is easier to
 see compared to a line cursor. Set to `false` to use a thin "line" cursor.
 Defaults to `true`.
 
+cola.boldfonts
+--------------
+
+Use bold fonts throughout the entire interface to increase usability on small screens.
+Defaults to `false`.
+
 cola.boldheaders
 ----------------
 

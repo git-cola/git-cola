@@ -14,6 +14,11 @@ Usability, bells and whistles
   removed or modified.
   (`#1525 <https://github.com/git-cola/git-cola/issues/1525>`_)
 
+* Bold fonts can now be enabled throughout the entire interface by setting the
+  "Bold all fonts" option in the "Appearance" settings. This setting corresponds to the
+  ``cola.boldfonts`` git configuration variable.
+  (`#1516 <https://github.com/git-cola/git-cola/issues/1516>`_)
+
 
 .. _v4.16.1:
 

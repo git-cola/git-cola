@@ -17,6 +17,7 @@ AUTOTEMPLATE = 'cola.autoloadcommittemplate'
 BACKGROUND_EDITOR = 'cola.backgroundeditor'
 BLAME_VIEWER = 'cola.blameviewer'
 BLOCK_CURSOR = 'cola.blockcursor'
+BOLD_FONTS = 'cola.boldfonts'
 BOLD_HEADERS = 'cola.boldheaders'
 CHECK_CONFLICTS = 'cola.checkconflicts'
 CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
@@ -128,6 +129,7 @@ class Defaults:
     background_editor = ''
     blame_viewer = 'git gui blame'
     block_cursor = True
+    bold_fonts = False
     bold_headers = False
     check_conflicts = True
     check_published_commits = True
@@ -206,6 +208,11 @@ def blame_viewer(context):
 def block_cursor(context):
     """Should we display a block cursor in diff editors?"""
     return context.cfg.get(BLOCK_CURSOR, default=Defaults.block_cursor)
+
+
+def bold_fonts(context):
+    """Should we bold all fonts?"""
+    return context.cfg.get(BOLD_FONTS, default=Defaults.bold_fonts)
 
 
 def bold_headers(context):
