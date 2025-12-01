@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: styfle/cancel-workflow-action@0.12.1
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get current date for caching
         id: get-date
         shell: bash
@@ -70,7 +70,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: styfle/cancel-workflow-action@0.12.1
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get current date for caching
         id: get-date
         shell: bash
