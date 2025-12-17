@@ -190,37 +190,44 @@ scissors
         tooltip = N_('Enable path autocompletion in tools')
         self.autocomplete_paths = qtutils.checkbox(checked=True, tooltip=tooltip)
 
-        self.proxy_spacer = QtWidgets.QLabel()
         tooltip = N_('Enable detection and configuration of HTTP proxy settings')
         self.autodetect_proxy = qtutils.checkbox(checked=True, tooltip=tooltip)
 
         self.add_row(N_('Name'), self.name)
         self.add_row(N_('Email'), self.email)
+
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Patches Directory'), self.patches_directory)
-        self.add_row(N_('Log Date Format'), self.logdate)
-        self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
-        self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
         self.add_row(N_('Number of Diff Context Lines'), self.diff_context)
-        self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
-        self.add_row(N_('Enable Filesystem Monitoring'), self.inotify)
+        self.add_row(N_('Log Date Format'), self.logdate)
+
+        self.add_row('', QtWidgets.QLabel())
+        self.add_row(
+            N_('Automatically Load Commit Message Template'), self.autotemplate
+        )
+        self.add_row(N_('Commit Message Cleanup'), self.commit_cleanup)
+
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(
             N_('Update stacked branches/refs when rebasing'),
             self.rebase_update_refs,
         )
-        self.add_row(
-            N_('Automatically Load Commit Message Template'), self.autotemplate
-        )
-        self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(N_('Show Diffstat After Merge'), self.merge_diffstat)
+        self.add_row(N_('Summarize Merge Commits'), self.merge_summary)
+        self.add_row(N_('Merge Verbosity'), self.merge_verbosity)
+
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
+        self.add_row(N_('Enable Filesystem Monitoring'), self.inotify)
+        self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
+        self.add_row(N_('Update Index on Startup'), self.update_index)
+        self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
+        self.add_row(N_('Show Full Paths in the Window Title'), self.show_path)
         self.add_row(
             N_('Display desktop notifications using popup dialogs'), self.enable_popups
         )
-        self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
-        self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
-        self.add_row(N_('Update Index on Startup'), self.update_index)
 
-        self.add_row('', self.proxy_spacer)
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(
             N_('Automatically Detect and Configure Proxy Settings'),
             self.autodetect_proxy,
@@ -275,8 +282,7 @@ class SettingsFormWidget(FormWidget):
 
         self.editor = QtWidgets.QLineEdit()
         self.editor.setToolTip(N_('The main GUI editor that must block until it exits'))
-        tooltip = N_('Use "aspell" as the spelling dictionary source')
-        self.aspell_enabled = qtutils.checkbox(tooltip=tooltip)
+
         self.background_editor = QtWidgets.QLineEdit()
         self.background_editor.setToolTip(
             N_('A non-blocking GUI editor that is launched in the background')
@@ -291,7 +297,6 @@ class SettingsFormWidget(FormWidget):
         self.keep_merge_backups = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
-        self.check_spelling = qtutils.checkbox()
         tooltip = N_('Detect conflict markers in unmerged files')
         self.check_conflicts = qtutils.checkbox(checked=True, tooltip=tooltip)
         self.expandtab = qtutils.checkbox(tooltip=N_('Insert tabs instead of spaces'))
@@ -307,8 +312,16 @@ class SettingsFormWidget(FormWidget):
         tooltip = N_('Emit notifications when commits are pushed.')
         self.notifyonpush = qtutils.checkbox(checked=False, tooltip=tooltip)
 
+        tooltip = N_('Use "aspell" as the spelling dictionary source')
+        self.aspell_enabled = qtutils.checkbox(tooltip=tooltip)
+        self.check_spelling = qtutils.checkbox()
+
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
+        self.add_row(N_('Insert Spaces Instead of Tabs'), self.expandtab)
+        self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
+
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Editor'), self.editor)
         self.add_row(N_('Background Editor'), self.background_editor)
         self.add_row(N_('History Browser'), self.historybrowser)
@@ -316,22 +329,28 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Recent Repository Count'), self.maxrecent)
-        self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
-        self.add_row(N_('Insert Spaces Instead of Tabs'), self.expandtab)
+
+        self.add_row('', QtWidgets.QLabel())
+        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
+        self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
+
+        self.add_row('', QtWidgets.QLabel())
+        self.add_row(N_('Save GUI Settings'), self.save_window_settings)
+        self.add_row(N_('Ctrl + MouseWheel to Zoom'), self.mouse_zoom)
+        self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
+        self.add_row(N_('Sort Bookmarks Alphabetically'), self.sort_bookmarks)
+        self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
+
+        self.add_row('', QtWidgets.QLabel())
+        self.add_row(N_('Safe Mode'), self.safe_mode)
         self.add_row(
             N_('Check Published Commits when Amending'), self.check_published_commits
         )
-        self.add_row(N_('Sort Bookmarks Alphabetically'), self.sort_bookmarks)
-        self.add_row(N_('Safe Mode'), self.safe_mode)
-        self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
-        self.add_row(N_('Keep *.orig Merge Backups'), self.keep_merge_backups)
-        self.add_row(N_('Save GUI Settings'), self.save_window_settings)
-        self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
-        self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
+        self.add_row(N_('Notify on Push'), self.notifyonpush)
+
+        self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Check Spelling'), self.check_spelling)
         self.add_row(N_('Enable "aspell" Spelling Dictionaries'), self.aspell_enabled)
-        self.add_row(N_('Ctrl + MouseWheel to Zoom'), self.mouse_zoom)
-        self.add_row(N_('Notify on Push'), self.notifyonpush)
 
         self.set_config({
             prefs.ASPELL_ENABLED: (self.aspell_enabled, Defaults.aspell_enabled),
