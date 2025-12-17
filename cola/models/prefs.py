@@ -11,6 +11,7 @@ from ..cmd import Command
 
 ABBREV = 'core.abbrev'
 ASPELL_ENABLED = 'cola.aspell.enabled'
+ASPELL_LANG = 'cola.aspell.lang'
 AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
 AUTODETECT_PROXY = 'cola.autodetectproxy'
 AUTOTEMPLATE = 'cola.autoloadcommittemplate'
@@ -23,6 +24,7 @@ CHECK_CONFLICTS = 'cola.checkconflicts'
 CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
 COMMENT_CHAR = 'core.commentchar'
 COMMIT_CLEANUP = 'commit.cleanup'
+DICTIONARY = 'cola.dictionary'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
@@ -189,9 +191,19 @@ def abbrev(context):
     return result
 
 
+def spelling_dictionaries(context):
+    """Return the list of additional spelling dictionaries"""
+    return context.cfg.get_all(DICTIONARY)
+
+
 def aspell_enabled(context):
     """Return True when aspell should be used as the spelling dictionary source"""
     return context.cfg.get(ASPELL_ENABLED, default=Defaults.aspell_enabled)
+
+
+def aspell_languages(context):
+    """Return the currently configured list of aspell languages"""
+    return context.cfg.get_all(ASPELL_LANG)
 
 
 def autodetect_proxy(context):
@@ -444,3 +456,53 @@ class SetConfig(Command):
         if self.old_value is None:
             return
         self.model.set_config(self.source, self.config, self.old_value)
+
+
+class RemoveDictionary(Command):
+    """Remove spelling dictionary entries"""
+
+    UNDOABLE = True
+
+    def __init__(self, context, values):
+        self.context = context
+        self.values = values
+
+    def do(self):
+        """Remove spelling dictionary entries"""
+        for value in self.values:
+            self.context.git.config(
+                'unset',
+                '--global',
+                '--all',
+                '--fixed-value',
+                '--value',
+                value,
+                DICTIONARY,
+            )
+        self.context.cfg.reset()
+
+    def undo(self):
+        """Undo removal of spelling dictionary entries"""
+        add_command = AddDictionary(self.context, self.values)
+        add_command.do()
+
+
+class AddDictionary(Command):
+    """Add spelling dictionary entries"""
+
+    UNDOABLE = True
+
+    def __init__(self, context, values):
+        self.context = context
+        self.values = values
+
+    def do(self):
+        """Add spelling dictionary entries"""
+        for value in self.values:
+            self.context.git.config('--global', '--add', DICTIONARY, value)
+        self.context.cfg.reset()
+
+    def undo(self):
+        """Remove spelling dictionary entries"""
+        remove_command = RemoveDictionary(self.context, self.values)
+        remove_command.do()

@@ -589,8 +589,8 @@ def save_as(filename, title='Save As...'):
     return result[0]
 
 
-def existing_file(directory, title='Append...'):
-    """Creates a Save File dialog and returns a filename."""
+def existing_file(directory, title='Open File...'):
+    """Creates an OpenSave File dialog and returns a filename."""
     result = compat.getopenfilename(
         parent=active_window(), caption=title, basedir=directory
     )

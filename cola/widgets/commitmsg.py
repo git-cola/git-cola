@@ -44,9 +44,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.model = model = context.model
         self.spellcheck_initialized = False
         self.spellcheck = spellcheck.NorvigSpellCheck()
-        self.spellcheck.add_dictionaries(cfg.get_all('cola.dictionary'))
+        self.spellcheck.add_dictionaries(prefs.spelling_dictionaries(context))
         self.spellcheck.set_aspell_enabled(prefs.aspell_enabled(context))
-        self.spellcheck.set_aspell_langs(cfg.get_all('cola.aspell.lang'))
+        self.spellcheck.set_aspell_langs(prefs.aspell_languages(context))
 
         self._linebreak = None
         self._textwidth = None
@@ -296,6 +296,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFocusProxy(self.summary)
 
         cfg.user_config_changed.connect(self.config_changed)
+        QtCore.QTimer.singleShot(1, lambda: self.spellcheck.init())
 
     def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:

@@ -1,5 +1,6 @@
 import codecs
 import collections
+import glob
 import os
 
 from . import core
@@ -10,7 +11,7 @@ __copyright__ = """
 2013-2018 David Aguilar <davvid@gmail.com>
 """
 
-ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+ALPHABET = 'abcdefghijklmnopqrstuvwxyzáéíóúñаьедчнроищ'
 
 
 def train(features, model, all_train_words):
@@ -104,7 +105,8 @@ class NorvigSpellCheck:
 
     def check(self, word):
         self.init()
-        return word.replace('.', '') in self.words
+        word = word.replace('.', '')
+        return word in self.words or word.lower() in self.words
 
     def read(self, use_common_files=True):
         """Read dictionary words"""
@@ -113,30 +115,29 @@ class NorvigSpellCheck:
         propernames = self.propernames
 
         if use_common_files and words and os.path.exists(words):
-            paths.append((words, True))
+            paths.append(words)
 
         if use_common_files and propernames and os.path.exists(propernames):
-            paths.append((propernames, False))
+            paths.append(propernames)
 
         for path in self.extra_dictionaries:
-            paths.append((path, True))
+            paths.append(path)
 
         all_words = self.all_words
-        for path, title in paths:
+        for path in paths:
+            is_dic_file = path.endswith('.dic')
             try:
                 with codecs.open(
                     path, 'r', encoding='utf-8', errors='ignore'
                 ) as words_file:
+                    # Ignore the first word count line in *.dic files.
+                    if is_dic_file:
+                        words_file.readline()
                     for line in words_file:
-                        word = line.rstrip()
+                        word = line.strip().split('/', 1)[0]
                         if word not in all_words:
                             all_words.add(word)
                             yield word
-                        if title:
-                            title_word = word.title()
-                            if title_word not in all_words:
-                                all_words.add(title_word)
-                                yield title_word
             except OSError:
                 pass
 
@@ -179,3 +180,18 @@ def _get_default_aspell_langs():
     if status != 0:
         return []
     return [line for line in out.splitlines() if len(line) == 2]
+
+
+def get_available_dictionaries():
+    """Query available dictionary files from hunspell"""
+    dictionaries = []
+    hunspell_cmd = core.find_executable('hunspell')
+    if hunspell_cmd:
+        # Transform "/usr/bin/hunspell" into "/usr".
+        hunspell_prefix = os.path.dirname(os.path.dirname(hunspell_cmd))
+        # Create a "/usr/share/hunspell/*.dic" glob pattern.
+        hunspell_pattern = os.path.join(hunspell_prefix, 'share', 'hunspell', '*.dic')
+        dictionaries.extend(
+            path for path in glob.glob(hunspell_pattern) if not os.path.islink(path)
+        )
+    return dictionaries

@@ -19,6 +19,11 @@ Usability, bells and whistles
   ``cola.boldfonts`` git configuration variable.
   (`#1516 <https://github.com/git-cola/git-cola/issues/1516>`_)
 
+* Git Cola can now read ``hunspell`` spelling dictionaries. For example, you can
+  install the Spanish hunspell dictionary using ``sudo apt install hunspell-es``
+  and then edit the `Additional spellcheck dictionary files` value in the
+  Settings to enable the dictionary.
+
 
 .. _v4.16.1:
 

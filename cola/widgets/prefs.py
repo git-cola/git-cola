@@ -7,6 +7,7 @@ from .. import cmds
 from .. import hidpi
 from .. import icons
 from .. import qtutils
+from .. import spellcheck
 from .. import themes
 from ..compat import ustr
 from ..i18n import N_
@@ -315,6 +316,9 @@ class SettingsFormWidget(FormWidget):
         tooltip = N_('Use "aspell" as the spelling dictionary source')
         self.aspell_enabled = qtutils.checkbox(tooltip=tooltip)
         self.check_spelling = qtutils.checkbox()
+        tooltip = N_('Additional spellcheck dictionary files (requires restart)')
+        self.spelling_dictionaries = DictionaryList(context)
+        self.spelling_dictionaries.setToolTip(tooltip)
 
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
@@ -351,6 +355,7 @@ class SettingsFormWidget(FormWidget):
         self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Check Spelling'), self.check_spelling)
         self.add_row(N_('Enable "aspell" Spelling Dictionaries'), self.aspell_enabled)
+        self.add_row(N_('Additional Spelling Dictionaries'), self.spelling_dictionaries)
 
         self.set_config({
             prefs.ASPELL_ENABLED: (self.aspell_enabled, Defaults.aspell_enabled),
@@ -528,6 +533,110 @@ class AppearanceWidget(QtWidgets.QWidget):
 
     def update_from_config(self):
         self.form.update_from_config()
+
+
+class DictionaryList(QtWidgets.QWidget):
+    """A widget for editing a list of spelling dictionaries"""
+
+    def __init__(self, context):
+        QtWidgets.QWidget.__init__(self)
+        self.context = context
+        self.add_button = qtutils.create_toolbutton(
+            text=N_('Add'), icon=icons.add(), tooltip=N_('Add Dictionary')
+        )
+        self.add_menu = qtutils.create_menu(N_('Add Dictionary'), self.add_button)
+        self.add_button.setMenu(self.add_menu)
+
+        self.remove_button = qtutils.create_toolbutton(
+            text=N_('Remove'),
+            icon=icons.remove(),
+            tooltip=N_('Remove selected (Delete)'),
+        )
+        self.remove_button.setEnabled(False)
+
+        self.dict_list = standard.ListWidget()
+
+        self.top_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.add_button,
+            self.remove_button,
+            qtutils.STRETCH,
+        )
+        layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, self.top_layout, self.dict_list
+        )
+        self.setLayout(layout)
+
+        self.add_menu.aboutToShow.connect(self._build_menu)
+        self.dict_list.itemSelectionChanged.connect(self._selection_changed)
+        qtutils.connect_button(self.remove_button, self._remove_selected)
+
+        self.refresh()
+
+    def refresh(self):
+        """Refresh the list of configured dictionaries"""
+        self.dict_list.clear()
+        current_dicts = prefs.spelling_dictionaries(self.context)
+        if current_dicts:
+            self.dict_list.addItems(current_dicts)
+
+    def _selection_changed(self):
+        """Update the widget state when the dictionary selection changes"""
+        items = self.dict_list.selected_items()
+        self.remove_button.setEnabled(bool(items))
+
+    def _build_menu(self):
+        """Populate the "Add" menu with dictionary files"""
+        current_dicts = set(prefs.spelling_dictionaries(self.context))
+        dictionaries = spellcheck.get_available_dictionaries()
+        paths = []
+        for path in dictionaries:
+            if path in current_dicts:
+                continue
+            paths.append(path)
+
+        # If all of the paths were already added, or if the quick list of
+        # dictionaries is empty, then launch the file dialog immediately.
+        self.add_menu.clear()
+        if not paths:
+            self._select_dictionaries()
+            return
+
+        select_action = self.add_menu.addAction(N_('Select dictionary file(s)...'))
+        select_action.triggered.connect(lambda _: self._select_dictionaries())
+        self.add_menu.addSeparator()
+
+        for path in paths:
+            action = self.add_menu.addAction(path)
+            action.triggered.connect(
+                lambda _, path=path: self._add_dictionaries([path])
+            )
+
+    def _remove_selected(self):
+        """Remove selected dictionary files"""
+        values = [item.text() for item in self.dict_list.selected_items()]
+        if not values:
+            return
+        remove_cmd = prefs.RemoveDictionary(self.context, values)
+        remove_cmd.do()
+        self.refresh()
+
+    def _add_dictionaries(self, values):
+        """Add dictionary files"""
+        if not values:
+            return
+        add_command = prefs.AddDictionary(self.context, values)
+        add_command.do()
+        self.refresh()
+
+    def _select_dictionaries(self):
+        """Select and add dictionary files from disk"""
+        values = qtutils.open_files(
+            N_('Select dictionary file(s)...'),
+            filters='Spelling Dictionaries (*.dic);;All Files (*)',
+        )
+        self._add_dictionaries(values)
 
 
 class PreferencesView(standard.Dialog):

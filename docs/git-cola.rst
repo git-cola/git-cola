@@ -912,8 +912,9 @@ the user for a repository.
 cola.dictionary
 ---------------
 
-Specifies an additional dictionary for `git cola` to use in its spell checker.
+Specifies additional dictionaries for `git cola` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
+``*.dic`` dictionary files used by ``hunspell`` are also supported.
 
 By default, `git cola` searches for `dict/words` and `dict/propernames` dictionary
 files in `~/.local/share` and `$XDG_DATA_DIRS`.
@@ -932,6 +933,14 @@ you can specify multiple dictionaries using ``git config --global --add``.
 
    git config --global --add cola.dictionary /path/to/dictionary1
    git config --global --add cola.dictionary /path/to/dictionary2
+
+Users on Debian-based systems can install additional ``hunspell`` dictionary
+files to make them available in ``/usr/share/hunspell/*.dic``. For example,
+to install the Spanish dictionary, run:
+
+.. sourcecode:: sh
+
+   sudo apt install hunspell-es
 
 cola.enablepopups
 -----------------
