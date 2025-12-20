@@ -31,7 +31,6 @@ trees:
   git-cola:
     description: The highly-caffeinated Git GUI
     path: "${GARDEN_CONFIG_DIR}"
-    url: "git@gitlab.com:git-cola/git-cola.git"
     commands:
       clean: rm -rf build dist git_cola.egg-info git-cola-*.windows.zip
       dev>:
@@ -159,80 +158,85 @@ trees:
       version/commit: git commit --all --signoff --message "git-cola v${version_digits}"
       version/tag: git tag --sign --message "git-cola ${version_builtin}" "v${version_builtin}"
       wheel: ${activate} python3 -m build -n .
-    gitconfig:
-      remote.publish.pushurl:
-        - "git@gitlab.com:git-cola/git-cola.git"
-        - "git@github.com:git-cola/git-cola.git"
+    url: "${gl-https}/git-cola/git-cola.git"
     remotes:
-      abid1998: "git@github.com:abid1998/git-cola.git"
-      achernet: "git@github.com:achernet/git-cola.git"
-      arnaudh: "git@github.com:arnaudh/git-cola.git"
-      axel-h: "git@github.com:axel-h/git-cola.git"
-      BaumiCoder: "git@github.com:BaumiCoder/git-cola.git"
-      bearsh: "git@github.com:bearsh/git-cola.git"
-      bensmrs: "git@github.com:bensmrs/git-cola.git"
-      bobvanderlinden: "git@github.com:bobvanderlinden/git-cola.git"
-      brccabral: "git@github.com:brccabral/git-cola.git"
-      brlin-tw: "git@github.com:brlin-tw/git-cola.git"
-      DasaniT: "git@github.com:DasaniT/git-cola.git"
-      davvid: "git@github.com:davvid/git-cola.git"
-      dschwoerer: "git@github.com:dschwoerer/git-cola.git"
-      florisla: "git@github.com:florisla/git-cola.git"
-      fu7mu4: "git@github.com:fu7mu4/git-cola.git"
-      gdebure: "git@github.com:gdebure/git-cola.git"
-      github: "git@github.com:git-cola/git-cola.git"
-      guoyunhe: "git@github.com:guoyunhe/git-cola.git"
-      gyuris: "git@github.com:gyuris/git-cola.git"
-      haffmans: "git@github.com:haffmans/git-cola.git"
-      harmathy: "git@github.com:harmathy/git-cola.git"
-      hsoft: "git@github.com:hsoft/git-cola.git"
-      jamie-pate: "git@github.com:jamie-pate/git-cola.git"
-      jm4R: "git@github.com:jm4R/git-cola.git"
-      kenyuy: "git@github.com:kenyuy/git-cola.git"
-      kisaragi-hiu: "git@github.com:kisaragi-hiu/git-cola.git"
-      kneirinck: "git@github.com:kneirinck/git-cola.git"
-      kt-devoss: "git@github.com:kt-devoss/_oss_contrib_git-cola.git"
-      kurtmckee: "git@github.com:kurtmckee/git-cola.git"
-      laerreal: "git@github.com:laerreal/git-cola.git"
-      lah7: "git@github.com:lah7/git-cola.git"
-      lefairy: "git@github.com:lefairy/git-cola.git"
-      living180: "git@github.com:living180/git-cola.git"
-      ljhcage: "git@github.com:ljhcage/git-cola.git"
-      Mailaender: "git@github.com:Mailaender/git-cola.git"
-      malpas: "git@github.com:malpas/git-cola.git"
-      melkecelioglu: "git@github.com:melkecelioglu/git-cola.git"
-      milestone12: "git@github.com:milestone12/git-cola.git"
-      Mithil467: "git@github.com:Mithil467/git-cola.git"
-      mmargoliono: "git@github.com:mmargoliono/git-cola"
-      mp-chet: "git@github.com:mp-chet/git-cola.git"
-      nakanoi: "git@github.com:nakanoi/git-cola.git"
-      nandalopes: "git@github.com:nandalopes/git-cola.git"
-      NielBuys: "git@github.com:NielBuys/git-cola.git"
-      Nizhal: "git@github.com:Nizhal/git-cola.git"
-      OriShalhon: "git@github.com:OriShalhon/git-cola.git"
-      pilarmolinalopez: "git@github.com:pilarmolinalopez/git-cola.git"
-      quintusfelix: "git@github.com:quintusfelix/git-cola.git"
-      rafaelreuber: "git@github.com:rafaelreuber/git-cola.git"
-      scop: "git@github.com:scop/git-cola.git"
-      sergei-dyshel: "git@github.com:sergei-dyshel/git-cola.git"
-      skunkwerks: "git@github.com:skunkwerks/git-cola.git"
-      sthalik: "git@github.com:sthalik/git-cola.git"
-      takluyver: "git@github.com:takluyver/git-cola.git"
-      thk123: "git@github.com:thk123/git-cola.git"
-      timgates42: "git@github.com:timgates42/git-cola.git"
-      vdragon: "git@github.com:Vdragon/git-cola.git"
-      victorhck: "git@github.com:victorhck/git-cola.git"
-      virtualstaticvoid: "git@github.com:virtualstaticvoid/git-cola.git"
-      VishnuSanal: "git@github.com:VishnuSanal/git-cola.git"
-      wm4: "git@github.com:wm4/git-cola.git"
-      WNguyen14: "git@github.com:WNguyen14/git-cola.git"
-      wojnilowicz: "git@github.com:wojnilowicz/git-cola.git"
-      yaellevy: "git@github.com:yaellevy/git-cola.git"
+      abid1998: "${gh-https}/abid1998/git-cola.git"
+      achernet: "${gh-https}/achernet/git-cola.git"
+      arnaudh: "${gh-https}/arnaudh/git-cola.git"
+      axel-h: "${gh-https}/axel-h/git-cola.git"
+      BaumiCoder: "${gh-https}/BaumiCoder/git-cola.git"
+      bearsh: "${gh-https}/bearsh/git-cola.git"
+      bensmrs: "${gh-https}/bensmrs/git-cola.git"
+      bobvanderlinden: "${gh-https}/bobvanderlinden/git-cola.git"
+      brccabral: "${gh-https}/brccabral/git-cola.git"
+      brlin-tw: "${gh-https}/brlin-tw/git-cola.git"
+      DasaniT: "${gh-https}/DasaniT/git-cola.git"
+      davvid: "${gh-ssh}:davvid/git-cola.git"
+      dschwoerer: "${gh-https}/dschwoerer/git-cola.git"
+      florisla: "${gh-https}/florisla/git-cola.git"
+      fu7mu4: "${gh-https}/fu7mu4/git-cola.git"
+      gdebure: "${gh-https}/gdebure/git-cola.git"
+      github: "${gh-ssh}:git-cola/git-cola.git"
+      guoyunhe: "${gh-https}/guoyunhe/git-cola.git"
+      gyuris: "${gh-https}/gyuris/git-cola.git"
+      haffmans: "${gh-https}/haffmans/git-cola.git"
+      harmathy: "${gh-https}/harmathy/git-cola.git"
+      hsoft: "${gh-https}/hsoft/git-cola.git"
+      jamie-pate: "${gh-https}/jamie-pate/git-cola.git"
+      jm4R: "${gh-https}/jm4R/git-cola.git"
+      kenyuy: "${gh-https}/kenyuy/git-cola.git"
+      kisaragi-hiu: "${gh-https}/kisaragi-hiu/git-cola.git"
+      kneirinck: "${gh-https}/kneirinck/git-cola.git"
+      kt-devoss: "${gh-https}/kt-devoss/_oss_contrib_git-cola.git"
+      kurtmckee: "${gh-https}/kurtmckee/git-cola.git"
+      laerreal: "${gh-https}/laerreal/git-cola.git"
+      lah7: "${gh-https}/lah7/git-cola.git"
+      lefairy: "${gh-https}/lefairy/git-cola.git"
+      living180: "${gh-https}/living180/git-cola.git"
+      ljhcage: "${gh-https}/ljhcage/git-cola.git"
+      Mailaender: "${gh-https}/Mailaender/git-cola.git"
+      malpas: "${gh-https}/malpas/git-cola.git"
+      melkecelioglu: "${gh-https}/melkecelioglu/git-cola.git"
+      milestone12: "${gh-https}/milestone12/git-cola.git"
+      Mithil467: "${gh-https}/Mithil467/git-cola.git"
+      mmargoliono: "${gh-https}/mmargoliono/git-cola"
+      mp-chet: "${gh-https}/mp-chet/git-cola.git"
+      nandalopes: "${gh-https}/nandalopes/git-cola.git"
+      NielBuys: "${gh-https}/NielBuys/git-cola.git"
+      Nizhal: "${gh-https}/Nizhal/git-cola.git"
+      OriShalhon: "${gh-https}/OriShalhon/git-cola.git"
+      pilarmolinalopez: "${gh-https}/pilarmolinalopez/git-cola.git"
+      quintusfelix: "${gh-https}/quintusfelix/git-cola.git"
+      rafaelreuber: "${gh-https}/rafaelreuber/git-cola.git"
+      scop: "${gh-https}/scop/git-cola.git"
+      sergei-dyshel: "${gh-https}/sergei-dyshel/git-cola.git"
+      skunkwerks: "${gh-https}/skunkwerks/git-cola.git"
+      sthalik: "${gh-https}/sthalik/git-cola.git"
+      takluyver: "${gh-https}/takluyver/git-cola.git"
+      thk123: "${gh-https}/thk123/git-cola.git"
+      timgates42: "${gh-https}/timgates42/git-cola.git"
+      vdragon: "${gh-https}/Vdragon/git-cola.git"
+      victorhck: "${gh-https}/victorhck/git-cola.git"
+      virtualstaticvoid: "${gh-https}/virtualstaticvoid/git-cola.git"
+      VishnuSanal: "${gh-https}/VishnuSanal/git-cola.git"
+      wm4: "${gh-https}/wm4/git-cola.git"
+      WNguyen14: "${gh-https}/WNguyen14/git-cola.git"
+      wojnilowicz: "${gh-https}/wojnilowicz/git-cola.git"
+      yaellevy: "${gh-https}/yaellevy/git-cola.git"
+    gitconfig:
+      remote.origin.pushurl:
+        - "${gl-ssh}:git-cola/git-cola.git"
+      remote.publish.pushurl:
+        - "${gh-ssh}:git-cola/git-cola.git"
+        - "${gl-ssh}:git-cola/git-cola.git"
   deb:
     description: Debian packaging
-    url: "git@gitlab.com:git-cola/git-cola-debian.git"
+    url: "${gl-https}/git-cola/git-cola-debian.git"
     remotes:
-      davvid: "git@github.com:davvid/git-cola-debian.git"
+      davvid: "${gh-ssh}:davvid/git-cola-debian.git"
+    gitconfig:
+      remote.origin.pushurl:
+        - "${gl-ssh}:git-cola/git-cola-debian.git"
   docs:
     description: Sphinx documentation
     variables:
@@ -262,11 +266,18 @@ trees:
     description: Fedora packaging
     url: "https://src.fedoraproject.org/rpms/git-cola.git"
     remotes:
-      git-cola: "git@gitlab.com:git-cola/git-cola-fedora.git"
-      davvid: "git@github.com:davvid/git-cola-fedora.git"
+      davvid: "${gh-https}/davvid/git-cola-fedora.git"
+      git-cola: "${gl-https}/git-cola/git-cola-fedora.git"
+    gitconfig:
+      remote.davvid.pushurl:
+        - "${gh-ssh}:davvid/git-cola-fedora.git"
+      remote.git-cola.pushurl:
+        - "${gl-ssh}:git-cola/git-cola-fedora.git"
+      remote.publish.pushurl:
+        - "${gh-ssh}:davvid/git-cola-fedora.git"
+        - "${gl-ssh}:git-cola/git-cola-fedora.git"
   flatpak:
     description: Flatpak packaging
-    url: "git@github.com:flathub/com.github.git_cola.git-cola.git"
     variables:
       app-id: com.github.git_cola.git-cola
     commands:
@@ -284,21 +295,25 @@ trees:
         org.kde.Sdk/x86_64/6.9 \
         org.kde.Platform/x86_64/6.9 \
         com.riverbankcomputing.PyQt.BaseApp/x86_64/6.9
+    url: "${gh-https}/flathub/com.github.git_cola.git-cola.git"
     remotes:
-      Mailaender: "git@github.com:Mailaender/com.github.git_cola.git-cola.git"
-      Erick555: "git@github.com:Erick555/com.github.git_cola.git-cola.git"
-      PunkPangolin: "git@github.com:PunkPangolin/com.github.git_cola.git-cola.git"
-  pages:
-    description: "Git Cola's homepage"
-    url: "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
-    remotes:
-      github: "git@github.com:git-cola/git-cola.github.io.git"
-      ls-jad-elkik: "git://github.com/ls-jad-elkik/git-cola.github.io.git"
-      lz-coder: "https://github.com/lz-coder/git-cola.github.io.git"
+      Erick555: "${gh-https}/Erick555/com.github.git_cola.git-cola.git"
+      Mailaender: "${gh-https}/Mailaender/com.github.git_cola.git-cola.git"
+      PunkPangolin: "${gh-https}/PunkPangolin/com.github.git_cola.git-cola.git"
     gitconfig:
       remote.origin.pushurl:
-        - "git@gitlab.com:git-cola/git-cola.gitlab.io.git"
-        - "git@github.com:git-cola/git-cola.github.io.git"
+        - "${gh-ssh}:flathub/com.github.git_cola.git-cola.git"
+  pages:
+    description: "Git Cola's homepage"
+    url: "${gl-https}/git-cola/git-cola.gitlab.io.git"
+    remotes:
+      github: "${gh-https}/git-cola/git-cola.github.io.git"
+      ls-jad-elkik: "${gh-https}/ls-jad-elkik/git-cola.github.io.git"
+      lz-coder: "${gh-https}/lz-coder/git-cola.github.io.git"
+    gitconfig:
+      remote.origin.pushurl:
+        - "${gl-ssh}:git-cola/git-cola.gitlab.io.git"
+        - "${gh-ssh}:git-cola/git-cola.github.io.git"
     variables:
       prefix: build
       container-image: "jekyll/minimal:latest"
@@ -391,6 +406,10 @@ variables:
     parts[1] = f'{int(parts[1]) + 1}'
     print('.'.join(parts))
     " "${version_git}"
+  gh-https: "https://github.com"
+  gh-ssh: "git@github.com"
+  gl-https: "https://gitlab.com"
+  gl-ssh: "git@gitlab.com"
   # External commands and options
   PYTEST: ${PYTHON} -B -m pytest ${PYTEST_OPTIONS}
   PYTEST_OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
