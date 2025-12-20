@@ -37,7 +37,7 @@ trees:
         - dev/virtualenv
         - dev/pkgs
       dev/virtualenv: |
-        test -e ${env-dir} || ${PYTHON} -m venv --system-site-packages ${env_dir}
+        test -e ${env-dir} || ${PYTHON} -m venv --system-site-packages ${env-dir}
         if test -n "${pip-upgrade}"
         then
             ${activate}
