@@ -37,8 +37,8 @@ trees:
         - dev/virtualenv
         - dev/pkgs
       dev/virtualenv: |
-        test -e ${env_dir} || ${PYTHON} -m venv --system-site-packages ${env_dir}
-        if test -n "${pip_upgrade}"
+        test -e ${env-dir} || ${PYTHON} -m venv --system-site-packages ${env_dir}
+        if test -n "${pip-upgrade}"
         then
             ${activate}
             pip install --upgrade pip
@@ -95,26 +95,26 @@ trees:
         - pot
         - po
       macos/app: |
-        mkdir -p ${cola_app}/Contents/MacOS
-        mkdir -p ${cola_app_resources}
-        ${PYTHON} -m venv ${cola_app_resources}
-        source ${cola_app_resources}/bin/activate
+        mkdir -p ${cola-app}/Contents/MacOS
+        mkdir -p ${cola-app-resources}
+        ${PYTHON} -m venv ${cola-app-resources}
+        source ${cola-app-resources}/bin/activate
         pip install '.[docs,extras,pyqt6]'
-        cp contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola_app}/Contents
-        if test -n "${version_full}"
+        cp contrib/darwin/Info.plist contrib/darwin/PkgInfo ${cola-app}/Contents
+        if test -n "${version-full}"
         then
-            sed -i -e s/0.0.0.0/${version_full}/ ${cola_app}/Contents/Info.plist
+            sed -i -e s/0.0.0.0/${version-full}/ ${cola-app}/Contents/Info.plist
         fi
-        sed -i -e s/0.0.0/${version_digits}/ ${cola_app}/Contents/Info.plist
-        cp contrib/darwin/git-cola ${cola_app}/Contents/MacOS
-        cp contrib/darwin/git-cola.icns ${cola_app}/Contents/Resources
+        sed -i -e s/0.0.0/${version-digits}/ ${cola-app}/Contents/Info.plist
+        cp contrib/darwin/git-cola ${cola-app}/Contents/MacOS
+        cp contrib/darwin/git-cola.icns ${cola-app}/Contents/Resources
         # A stub binary makes macOS launch Python natively instead of via Rosetta.
         # https://github.com/git-cola/git-cola/issues/1485
         echo 'int main() { return 0; }' |
-          cc -x c -o ${cola_app}/Contents/MacOS/git-cola-macos -
-        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources}
+          cc -x c -o ${cola-app}/Contents/MacOS/git-cola-macos -
+        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola-app-resources}
         garden doc ${GARDEN_CMD_VERBOSE}
-        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola_app_resources} docs
+        garden install ${GARDEN_CMD_VERBOSE} -D prefix=${cola-app-resources} docs
       man: garden man ${GARDEN_CMD_VERBOSE} docs
       pkg: git make-pkg --global --name git-cola
       pynsist: |
@@ -154,9 +154,9 @@ trees:
       test: ${activate} ${PYTEST} "$@" cola test
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
-      version/bump: ./todo/set-version "${version_next}"
-      version/commit: git commit --all --signoff --message "git-cola v${version_digits}"
-      version/tag: git tag --sign --message "git-cola ${version_builtin}" "v${version_builtin}"
+      version/bump: ./todo/set-version "${version-next}"
+      version/commit: git commit --all --signoff --message "git-cola v${version-digits}"
+      version/tag: git tag --sign --message "git-cola ${version-builtin}" "v${version-builtin}"
       wheel: ${activate} python3 -m build -n .
     url: "${gl-https}/git-cola/git-cola.git"
     remotes:
@@ -240,7 +240,7 @@ trees:
   docs:
     description: Sphinx documentation
     variables:
-      env_dir: ../env3
+      env-dir: ../env3
     commands:
       clean: rm -fr _build
       doctest: ${activate} ${SPHINX} -b doctest . _build/doctest "$@"
@@ -343,7 +343,7 @@ trees:
       publish: |
         git add -u
         git add share
-        git commit --signoff --message "git-cola v${version_builtin}"
+        git commit --signoff --message "git-cola v${version-builtin}"
         git push
     links:
       - "https://git-cola.gitlab.io"
@@ -376,42 +376,42 @@ variables:
   iconsdir: ${datadir}/icons/hicolor/scalable/apps
   mandir: ${prefix}/share/man/man1
   metainfodir: ${datadir}/metainfo
-  cola_app: ${TREE_PATH}/git-cola.app
-  cola_app_resources: ${cola_app}/Contents/Resources
-  is_virtualenv: |
+  cola-app: ${TREE_PATH}/git-cola.app
+  cola-app-resources: ${cola_app}/Contents/Resources
+  is-virtualenv: |
     $ ${PYTHON} -c '
     import os, sys
     if sys.prefix != sys.base_prefix or os.environ.get("VIRTUAL_ENV"):
         print("true")
     '
-  env_dir: env3
+  env-dir: env3
   activate: |
-    if test -z "${is_virtualenv}" && test -f "${env_dir}/bin/activate"
+    if test -z "${is-virtualenv}" && test -f "${env-dir}/bin/activate"
     then
-        source "${env_dir}/bin/activate"
+        source "${env-dir}/bin/activate"
     fi
-  pip_editable: "--editable"
-  pip_upgrade: ""
-  version_digits: |
+  pip-editable: "--editable"
+  pip-upgrade: ""
+  version-digits: |
     $ eval "$(sed -e 's/ //g' "${GARDEN_CONFIG_DIR}/cola/_version.py")"
     printf '%s' "$VERSION"
-  version_builtin: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief --builtin
-  version_full: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief
-  version_git: $ git -C "${GARDEN_CONFIG_DIR}" describe --first-parent --abbrev=0
-  version_next: |
+  version-builtin: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief --builtin
+  version-full: $ ${GARDEN_CONFIG_DIR}/bin/git-cola version --brief
+  version-git: $ git -C "${GARDEN_CONFIG_DIR}" describe --first-parent --abbrev=0
+  version-next: |
     $ ${PYTHON} -c "
     import sys
     version = sys.argv[1]
     parts = version.split('.')
     parts[1] = f'{int(parts[1]) + 1}'
     print('.'.join(parts))
-    " "${version_git}"
+    " "${version-git}"
   gh-https: "https://github.com"
   gh-ssh: "git@github.com"
   gl-https: "https://gitlab.com"
   gl-ssh: "git@gitlab.com"
   # External commands and options
-  PYTEST: ${PYTHON} -B -m pytest ${PYTEST_OPTIONS}
-  PYTEST_OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
+  PYTEST: ${PYTHON} -B -m pytest ${PYTEST-OPTIONS}
+  PYTEST-OPTIONS: $ test "$(uname -s)" != Linux && printf '%s' --ignore=cola/inotify.py
   PYTHON: python3
   SPHINX: ${PYTHON} -m sphinx -d _build/doctrees -a
