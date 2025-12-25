@@ -162,6 +162,7 @@ Thanks
 * Kirit Sælensminde
 * Kisaragi Hiu
 * Klaas Neirinck
+* krisuf
 * K.T.dev
 * Kurt McKee
 * Kyle Slane
