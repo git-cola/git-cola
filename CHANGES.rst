@@ -29,6 +29,11 @@ Usability, bells and whistles
   This setting corresponds to the `cola.inotifydelay` configuration value.
   (`#1518 <https://github.com/git-cola/git-cola/issues/1518>`_)
 
+* ``ksshaskpass`` and the ``gnome-ssh-askpass`` programs are now detected
+  and used by default when prompting for credentials. Usage of the ``GIT_ASKPASS``
+  environment variable was documented.
+  (`#1532 <https://github.com/git-cola/git-cola/issues/1532>`_)
+
 
 .. _v4.16.1:
 
