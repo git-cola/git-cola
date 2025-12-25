@@ -1046,6 +1046,12 @@ Set to `false` to disable file system change monitoring.  Defaults to `true`,
 but also requires either Linux with inotify support or Windows with `pywin32`
 installed for file system change monitoring to actually function.
 
+cola.inotifydelay
+-----------------
+
+How long to wait, in milliseconds, between file system change notifications.
+Defaults to `888`.
+
 cola.refreshonfocus
 -------------------
 

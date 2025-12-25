@@ -39,6 +39,7 @@ HISTORY_BROWSER = 'gui.historybrowser'
 HTTP_PROXY = 'http.proxy'
 ICON_THEME = 'cola.icontheme'
 INOTIFY = 'cola.inotify'
+INOTIFY_DELAY = 'cola.inotifydelay'
 NOTIFY_ON_PUSH = 'cola.notifyonpush'
 LINEBREAK = 'cola.linebreak'
 LOGDATE = 'cola.logdate'
@@ -148,6 +149,7 @@ class Defaults:
     http_proxy = ''
     icon_theme = 'default'
     inotify = True
+    inotify_delay = 888
     notifyonpush = False
     linebreak = True
     maxrecent = 8
@@ -365,6 +367,11 @@ def maxrecent(context):
 def mouse_zoom(context):
     """Should we zoom text when using Ctrl + MouseWheel scroll"""
     return context.cfg.get(MOUSE_ZOOM, default=Defaults.mouse_zoom)
+
+
+def inotify_delay(context):
+    """How long to wait, in milliseconds, between inotify events"""
+    return context.cfg.get(INOTIFY_DELAY, default=Defaults.inotify_delay)
 
 
 def spellcheck(context):

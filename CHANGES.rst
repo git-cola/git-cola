@@ -24,6 +24,11 @@ Usability, bells and whistles
   and then edit the `Additional spellcheck dictionary files` value in the
   Preferences to enable the dictionary.
 
+* The amount of time to wait when coalescing filesystem change notifications is now
+  configurable through the `Filesystem Monitoring Event Delay` value in the Preferences.
+  This setting corresponds to the `cola.inotifydelay` configuration value.
+  (`#1518 <https://github.com/git-cola/git-cola/issues/1518>`_)
+
 
 .. _v4.16.1:
 

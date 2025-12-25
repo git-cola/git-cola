@@ -22,6 +22,7 @@ from . import version
 from .compat import bchr
 from .i18n import N_
 from .interaction import Interaction
+from .models import prefs
 
 AVAILABLE = None
 
@@ -78,20 +79,26 @@ class _Monitor(QtCore.QObject):
 
 
 class _BaseThread(QtCore.QThread):
-    #: The delay, in milliseconds, between detecting file system modification
-    #: and triggering the 'files_changed' signal, to coalesce multiple
-    #: modifications into a single signal.
-    _NOTIFICATION_DELAY = 888
-
     def __init__(self, context, monitor):
         QtCore.QThread.__init__(self)
         self.context = context
+        #: The delay, in milliseconds, between detecting file system modification
+        #: and triggering the 'files_changed' signal, to coalesce multiple
+        #: modifications into a single signal.
+        self.inotify_delay = prefs.inotify_delay(context)
         self._monitor = monitor
         self._running = True
         self._use_check_ignore = version.check_git(context, 'check-ignore')
         self._force_notify = False
         self._force_config = False
         self._file_paths = set()
+
+        self.context.cfg.repo_config_changed.connect(
+            self._config_changed, QtCore.Qt.QueuedConnection
+        )
+        self.context.cfg.user_config_changed.connect(
+            self._config_changed, QtCore.Qt.QueuedConnection
+        )
 
     @property
     def _pending(self):
@@ -144,6 +151,11 @@ class _BaseThread(QtCore.QThread):
     def _log_enabled_message():
         msg = N_('File system change monitoring: enabled.\n')
         Interaction.log(msg)
+
+    def _config_changed(self, key, value):
+        """Update cached configuation values"""
+        if key == prefs.INOTIFY_DELAY:
+            self.inotify_delay = prefs.inotify_delay(self.context)
 
 
 if AVAILABLE == 'inotify':
@@ -220,7 +232,7 @@ if AVAILABLE == 'inotify':
         def _process_events(self, poll_obj):
             while self._running:
                 if self._pending:
-                    timeout = self._NOTIFICATION_DELAY
+                    timeout = self.inotify_delay
                 else:
                     timeout = None
                 try:
@@ -473,7 +485,7 @@ if AVAILABLE == 'pywin32':
 
                 while self._running:
                     if self._pending:
-                        timeout = self._NOTIFICATION_DELAY
+                        timeout = self.inotify_delay
                     else:
                         timeout = win32event.INFINITE
                     try:

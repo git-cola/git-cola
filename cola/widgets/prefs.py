@@ -175,6 +175,13 @@ scissors
         self.inotify = qtutils.checkbox(checked=True)
         self.inotify.setToolTip(tooltip)
 
+        tooltip = N_(
+            'Milliseconds to wait between filesystem change events.\n'
+            'Hint: 5000 ms is 5 seconds. 60000 ms is one minute. 360000 ms is 1 hour.'
+        )
+        # 360000 milliseconds is 1 hour (60mins * 60secs * 1000ms)
+        self.inotify_delay = standard.SpinBox(mini=100, maxi=3600000, tooltip=tooltip)
+
         self.logdate = qtutils.combo(prefs.date_formats())
         tooltip = N_(
             'The date-time format used when displaying dates in Git DAG.\n'
@@ -220,6 +227,7 @@ scissors
         self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Display Untracked Files'), self.display_untracked)
         self.add_row(N_('Enable Filesystem Monitoring'), self.inotify)
+        self.add_row(N_('Filesystem Monitoring Event Delay'), self.inotify_delay)
         self.add_row(N_('Enable Gravatar Icons'), self.enable_gravatar)
         self.add_row(N_('Update Index on Startup'), self.update_index)
         self.add_row(N_('Autocomplete Paths'), self.autocomplete_paths)
@@ -255,6 +263,7 @@ scissors
             prefs.ENABLE_POPUPS: (self.enable_popups, Defaults.enable_popups),
             prefs.HTTP_PROXY: (self.http_proxy, Defaults.http_proxy),
             prefs.INOTIFY: (self.inotify, Defaults.inotify),
+            prefs.INOTIFY_DELAY: (self.inotify_delay, Defaults.inotify_delay),
             prefs.LOGDATE: (self.logdate, Defaults.logdate),
             prefs.MERGE_DIFFSTAT: (self.merge_diffstat, Defaults.merge_diffstat),
             prefs.MERGE_SUMMARY: (self.merge_summary, Defaults.merge_summary),
