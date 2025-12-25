@@ -182,6 +182,7 @@ Thanks
 * Maaaks
 * Maciej Filipiak
 * Mahmoud Hossam
+* Manuel Alejandro García Pineño
 * Mateusz Kedzior
 * Matias N. Goldberg
 * Maicon D. Filippsen
