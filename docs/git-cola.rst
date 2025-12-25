@@ -1424,6 +1424,26 @@ environment variables.
 ENVIRONMENT VARIABLES
 =====================
 
+GIT_ASKPASS
+-----------
+
+Specify the OpenSSH `askpass` program to use when prompting for credentials.
+This environment variable has the highest priority when specifying an `askpass` program.
+
+The ``SSH_ASKPASS`` environment variable is considered alongside ``GIT_ASKPASS``
+nd  has the 2nd-highest priority.
+
+See `Git's askpass documentation <https://git-scm.com/docs/gitcredentials.html#_requesting_credentials>`_
+for more details.
+
+Debian users can either ``sudo apt install ssh-askpass-gnome`` or
+``sudo apt install ksshaskpass`` to install a suitable askpass credential helper.
+When installed, these programs will be used by default when the environment variables
+have not been set.
+
+If no `askpass` program can be found then cola's builtin `ssh-askpass`
+program will by used, but using an external program is highly encouraged.
+
 GIT_COLA_ICON_THEME
 -------------------
 

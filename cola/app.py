@@ -96,18 +96,8 @@ def setup_environment():
     # We don't ever want a pager
     compat.setenv('GIT_PAGER', '')
 
-    # Setup *SSH_ASKPASS
-    git_askpass = core.getenv('GIT_ASKPASS')
-    ssh_askpass = core.getenv('SSH_ASKPASS')
-    if git_askpass:
-        askpass = git_askpass
-    elif ssh_askpass:
-        askpass = ssh_askpass
-    elif sys.platform == 'darwin':
-        askpass = resources.package_command('ssh-askpass-darwin')
-    else:
-        askpass = resources.package_command('ssh-askpass')
-
+    # Setup the openssh askpass credentials helper.
+    askpass = _get_askpass()
     compat.setenv('GIT_ASKPASS', askpass)
     compat.setenv('SSH_ASKPASS', askpass)
 
@@ -142,6 +132,35 @@ def setup_environment():
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
+
+
+def _get_askpass():
+    """Get a default askpass program appropriate for the current environment"""
+    git_askpass = core.getenv('GIT_ASKPASS')
+    ssh_askpass = core.getenv('SSH_ASKPASS')
+    if git_askpass:
+        return git_askpass
+    if ssh_askpass:
+        return ssh_askpass
+    if sys.platform == 'darwin':
+        return resources.package_command('ssh-askpass-darwin')
+
+    kde_askpass = core.find_executable('ksshaskpass')
+    gnome_askpass = core.find_executable('gnome-ssh-askpass')
+    if gnome_askpass is None:
+        gnome_askpass = '/usr/lib/openssh/gnome-ssh-askpass'
+
+    desktop_session = os.environ.get('DESKTOP_SESSION', 'unknown')
+    if desktop_session == 'gnome':
+        order = (gnome_askpass, kde_askpass)
+    else:
+        order = (kde_askpass, gnome_askpass)
+
+    for askpass in order:
+        if askpass and os.path.exists(askpass):
+            return askpass
+
+    return resources.package_command('ssh-askpass')
 
 
 def get_icon_themes(context):
