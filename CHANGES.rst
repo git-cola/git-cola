@@ -37,6 +37,9 @@ Usability, bells and whistles
 * The commit message is now properly cleared when aborting merges.
   (`#1519 <https://github.com/git-cola/git-cola/issues/1519>`_)
 
+* The keyboard shortcuts panel now displays macOS hotkeys correctly.
+  (`#1512 <https://github.com/git-cola/git-cola/issues/1512>`_)
+
 
 .. _v4.16.1:
 

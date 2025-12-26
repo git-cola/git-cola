@@ -504,6 +504,7 @@ def show_shortcuts():
         hotkeys_url = 'file://' + hotkeys_html
     if not os.path.isfile(hotkeys_html):
         hotkeys_url = 'https://git-cola.gitlab.io/share/doc/git-cola/hotkeys.html'
+        hotkeys_html = None
     try:
         from qtpy import QtWebEngineWidgets
     except (ImportError, qtpy.PythonQtError):
@@ -517,7 +518,14 @@ def show_shortcuts():
     widget.setWindowTitle(N_('Shortcuts'))
 
     web = QtWebEngineWidgets.QWebEngineView()
-    web.setUrl(QtCore.QUrl(hotkeys_url))
+    if hotkeys_html:
+        with open(hotkeys_html, 'r', encoding='utf-8') as hotkeys_file:
+            html = hotkeys_file.read()
+        if utils.is_darwin():
+            html = html.replace('Ctrl', 'Cmd')
+        web.setHtml(html)
+    else:
+        web.setUrl(QtCore.QUrl(hotkeys_url))
 
     layout = qtutils.hbox(defs.no_margin, defs.spacing, web)
     widget.setLayout(layout)
