@@ -29,6 +29,7 @@ Thanks
 * armandg
 * Arthur Coelho
 * Arnaud Henry
+* Attila Houtkooper
 * Audrey Yeena Toskin
 * Audrius Karabanovas
 * Axel Heider
