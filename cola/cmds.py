@@ -1982,7 +1982,7 @@ class Merge(ContextCommand):
         )
         self.model.update_status()
         title = N_('Merge failed.  Conflict resolution is required.')
-        Interaction.command(title, 'git merge', status, out, err)
+        self.context.notifier.command.emit(title, 'git merge', status, out, err)
 
         return status, out, err
 

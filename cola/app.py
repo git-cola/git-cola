@@ -670,9 +670,13 @@ class ApplicationContext:
         self.notifier.setParent(view)
         self.command_bus = cmd.CommandBus(parent=view)
         self.runtask = qtutils.RunTask(parent=view)
+        self.notifier.command.connect(self._command, Qt.QueuedConnection)
         self.notifier.critical.connect(self._critical, Qt.QueuedConnection)
         self.notifier.information.connect(self._information, Qt.QueuedConnection)
         self.notifier.log.connect(self._log, Qt.QueuedConnection)
+
+    def _command(self, title, cmd, status, out, err):
+        Interaction.command(title, cmd, status, out, err)
 
     def _critical(self, title, kwargs):
         Interaction.critical(title, **kwargs)
@@ -687,6 +691,7 @@ class ApplicationContext:
 class Notifier(QtCore.QObject):
     """Message bus for generic one-off notifications"""
 
+    command = Signal(str, str, int, str, str)
     critical = Signal(object, object)
     information = Signal(object, object)
     log = Signal(object)
