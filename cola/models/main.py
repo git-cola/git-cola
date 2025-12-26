@@ -211,6 +211,7 @@ class MainModel(QtCore.QObject):
 
     def set_commitmsg(self, msg, notify=True):
         self.commitmsg = msg
+        self._auto_commitmsg = ''
         if notify:
             self.commit_message_changed.emit(msg)
 

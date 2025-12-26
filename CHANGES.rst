@@ -34,6 +34,9 @@ Usability, bells and whistles
   environment variable was documented.
   (`#1532 <https://github.com/git-cola/git-cola/issues/1532>`_)
 
+* The commit message is now properly cleared when aborting merges.
+  (`#1519 <https://github.com/git-cola/git-cola/issues/1519>`_)
+
 
 .. _v4.16.1:
 
