@@ -43,6 +43,10 @@ Usability, bells and whistles
 * The Git DAG performance was improved when viewing large repositories.
   (`#1526 <https://github.com/git-cola/git-cola/issues/1526>`_)
 
+* Multiple instances of Git Cola and Git DAG can now be prevented from running
+  in the same repository using the ``-S | --single-instance`` option.
+  (`#1521 <https://github.com/git-cola/git-cola/issues/1521>`_)
+
 
 .. _v4.16.1:
 

@@ -1,5 +1,6 @@
 """Miscellaneous utility functions"""
 import copy
+import hashlib
 import os
 import re
 import shlex
@@ -583,3 +584,10 @@ def catch_runtime_error(func, *args, **kwargs):
         valid = False
         result = None
     return (valid, result)
+
+
+def sha256hex(value):
+    """Return a hexdigest of the SHA-256 hash of the specified value"""
+    hash = hashlib.new('sha256')
+    hash.update(value.encode('utf-8', 'replace'))
+    return hash.hexdigest()

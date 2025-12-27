@@ -365,6 +365,8 @@ def application_init(
     process_args(args, setup_repo=setup_repo)
 
     context = new_context(args, app_name=app_name)
+    enforce_single_instance(context)
+
     timer = context.timer
     timer.start('init')
 
@@ -400,6 +402,57 @@ def create_context():
     """Create a one-off context from the current directory"""
     args = null_args()
     return new_context(args)
+
+
+def enforce_single_instance(context):
+    """Ensure that only a single instance of the application is running"""
+    if not context.args.single_instance:
+        return
+    window_id = context.app_name.replace(' ', '-')
+    semaphore = QtCore.QSystemSemaphore(window_id, 1)
+    semaphore.acquire()  # Prevent other instances from interacting with shared memory.
+
+    # We want to prevent the same instance from launching from the same directory.
+    # This is not foolproof, as users can still change repositories while the app
+    # is running, but this at least provides a workflow where users can launch
+    # the app from within their repository and we will prevent multiple instances
+    # from being launched from within that same repository.
+    shared_mem_id = window_id + '-'
+    current_dir_hash = utils.sha256hex(os.getcwd())
+    # Shared memory IDs can be max 30 characters on macOS.
+    remaining_bytes = 30 - len(shared_mem_id)
+    shared_mem_id += current_dir_hash[:-remaining_bytes]
+
+    # Shared memory may is not freed when the application terminates abnormally on
+    # Linux/UNIX so we workaround that by detaching here.
+    if not utils.is_win32():
+        fix_shared_mem = QtCore.QSharedMemory(shared_mem_id)
+        if fix_shared_mem.attach():
+            fix_shared_mem.detach()
+
+    # If the shared memory segment can be attached then we are already running.
+    context.shared_memory = QtCore.QSharedMemory(shared_mem_id)
+    if context.shared_memory.attach():
+        is_running = True
+    else:
+        # Create a one-byte shared memory segment.
+        context.shared_memory.create(1)
+        is_running = False
+
+    semaphore.release()
+
+    if is_running:
+        format_vars = {
+            'app_name': context.app_name,
+            'dirname': os.getcwd(),
+        }
+        QtWidgets.QMessageBox.warning(
+            None,
+            N_('%(app_name)s is already running') % format_vars,
+            N_('%(app_name)s is already running in %(dirname)s (--single-instance).')
+            % format_vars,
+        )
+        sys.exit(1)
 
 
 def application_run(context, view, start=None, stop=None):
@@ -486,6 +539,14 @@ def add_common_arguments(parser):
     # Specify the GUI theme
     parser.add_argument(
         '--theme', metavar='<name>', default=None, help='specify a GUI theme name'
+    )
+
+    # Allow only a single instance
+    parser.add_argument(
+        '-S',
+        '--single-instance',
+        action='store_true',
+        help='only allow a single instance to be running',
     )
 
 
@@ -651,6 +712,7 @@ class ApplicationContext:
     def __init__(self, args):
         self.args = args
         self.app = None  # ColaApplication
+        self.shared_memory = None  # QSharedMemory
         self.command_bus = None  # cmd.CommandBus
         self.git = None  # git.Git
         self.cfg = None  # gitcfg.GitConfig
