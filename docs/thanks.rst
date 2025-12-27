@@ -157,6 +157,7 @@ Thanks
 * Kai Krakow
 * Karl Bielefeldt
 * Karthik Manamcheri
+* Katsuhiko Takahashi
 * Kelvie Wong
 * Kerrick Staley
 * Kevin Kofler
