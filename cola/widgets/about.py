@@ -519,7 +519,7 @@ def show_shortcuts():
 
     web = QtWebEngineWidgets.QWebEngineView()
     if hotkeys_html:
-        with open(hotkeys_html, 'r', encoding='utf-8') as hotkeys_file:
+        with open(hotkeys_html, encoding='utf-8') as hotkeys_file:
             html = hotkeys_file.read()
         if utils.is_darwin():
             html = html.replace('Ctrl', 'Cmd')
