@@ -104,6 +104,7 @@ def test_submodule_add(confirm):
 
     # Run the command and assert that "git submodule" was called.
     confirm.return_value = True
+    context.cfg.get = Mock(return_value=1)
     context.git.submodule.return_value = (0, '', '')
     cmd.do()
     context.git.submodule.assert_called_once_with('add', *expect)
@@ -139,6 +140,7 @@ def test_submodule_update(confirm, check_git):
     assert expect == actual
 
     context.model.update_file_status = Mock()
+    context.cfg.get = Mock(return_value=1)
     context.git.submodule = Mock(return_value=(0, '', ''))
     update_path_cmd.do()
     context.git.submodule.assert_called_once_with(*expect)

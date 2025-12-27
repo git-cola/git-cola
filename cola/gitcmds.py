@@ -18,6 +18,9 @@ from .models import prefs
 def add(context, items, u=False):
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
+    if prefs.verbose_simple_commands(context):
+        log_paths = core.list2cmdline(items)
+        context.notifier.git_cmd(f'git add -- {log_paths}')
     return utils.slice_func(
         items, lambda paths: git_add('--', force=True, verbose=True, u=u, *paths)
     )
@@ -622,6 +625,9 @@ def reset_paths(context, head, items):
     """Run "git reset" while preventing argument overflow"""
     items = list(set(items))
     func = context.git.reset
+    if prefs.verbose_simple_commands(context):
+        log_paths = core.list2cmdline(items)
+        context.notifier.git_cmd(f'git reset -- {log_paths}')
     status, out, err = utils.slice_func(items, lambda paths: func(head, '--', *paths))
     return (status, out, err)
 
@@ -639,6 +645,9 @@ def unstage_paths(context, args, head='HEAD'):
 def untrack_paths(context, args):
     if not args:
         return (-1, N_('Nothing to do'), '')
+    if prefs.verbose_simple_commands(context):
+        log_paths = core.list2cmdline(args)
+        context.notifier.git_cmd(f'git update-index --force-remove -- {log_paths}')
     return context.git.update_index('--', force_remove=True, *set(args))
 
 
@@ -920,7 +929,10 @@ def cherry_pick(context, revs):
     outs = []
     errs = []
     status = 0
+    verbose_simple_commands = prefs.verbose_simple_commands(context)
     for rev in revs:
+        if verbose_simple_commands:
+            context.notifier.git_cmd(f'git cherry-pick {rev}')
         status, out, err = context.git.cherry_pick(rev)
         if status != 0:
             details = N_(
@@ -937,6 +949,8 @@ def cherry_pick(context, revs):
 def abort_apply_patch(context):
     """Abort a "git am" session."""
     # Reset the worktree
+    if prefs.verbose_simple_commands(context):
+        context.notifier.git_cmd('git am --abort')
     status, out, err = context.git.am(abort=True)
     return status, out, err
 
@@ -951,6 +965,8 @@ def abort_cherry_pick(context):
 def abort_merge(context):
     """Abort a merge"""
     # Reset the worktree
+    if prefs.verbose_simple_commands(context):
+        context.notifier.git_cmd('git merge --abort')
     status, out, err = context.git.merge(abort=True)
     return status, out, err
 

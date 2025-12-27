@@ -20,7 +20,7 @@ from . import textwrap
 from . import utils
 from . import version
 from .cmd import ContextCommand
-from .git import STDOUT
+from .git import STDOUT, transform_kwargs
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
@@ -476,6 +476,9 @@ class Checkout(EditModel):
 
     def do(self):
         super().do()
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(self.argv)
+            self.context.notifier.git_cmd(f'git checkout {cmd_args}')
         status, out, err = self.git.checkout(*self.argv)
         if self.checkout_branch:
             self.model.update_status()
@@ -576,6 +579,9 @@ class BlamePaths(ContextCommand):
         self.argv = viewer + list(paths)
 
     def do(self):
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(self.argv)
+            self.context.notifier.git_cmd(cmd_args)
         try:
             core.fork(self.argv)
         except OSError as e:
@@ -681,6 +687,8 @@ class ResetMixed(ResetCommand):
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.notifier.git_cmd(f'git reset --mixed {self.ref} --')
         return self.git.reset(self.ref, '--', mixed=True)
 
 
@@ -698,6 +706,8 @@ class ResetKeep(ResetCommand):
         return Interaction.confirm(title, question, info, ok_text)
 
     def reset(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.notifier.git_cmd(f'git reset --keep {self.ref} --')
         return self.git.reset(self.ref, '--', keep=True)
 
 
@@ -1977,6 +1987,19 @@ class Merge(ContextCommand):
         no_commit = self.no_commit
         sign = self.sign
 
+        if prefs.verbose_simple_commands(self.context):
+            merge_cmd = 'git merge '
+            if sign:
+                merge_cmd += '--gpg-sign '
+            if no_ff:
+                merge_cmd += '--no-ff '
+            if no_commit:
+                merge_cmd += '--no-commit '
+            if squash:
+                merge_cmd += '--squash '
+            merge_cmd += revision
+            self.context.notifier.git_cmd(merge_cmd)
+
         status, out, err = self.git.merge(
             revision, gpg_sign=sign, no_ff=no_ff, no_commit=no_commit, squash=squash
         )
@@ -2141,6 +2164,17 @@ class Clone(ContextCommand):
         recurse_submodules = self.submodules
         shallow_submodules = self.submodules and self.shallow
 
+        if prefs.verbose_simple_commands(self.context):
+            clone_cmd = 'git clone '
+            if self.shallow:
+                clone_cmd += '--depth=1 '
+            if recurse_submodules:
+                clone_cmd += '--recurse-submodules '
+            if shallow_submodules:
+                clone_cmd += '--shallow-submodules '
+            clone_cmd += f'{self.url} {self.new_directory}'
+            self.context.notifier.git_cmd(clone_cmd)
+
         status, out, err = self.git.clone(
             self.url,
             self.new_directory,
@@ -2167,6 +2201,9 @@ class NewBareRepo(ContextCommand):
 
     def do(self):
         path = self.path
+        if prefs.verbose_simple_commands(self.context):
+            self.context.notifier.git_cmd(f'git init --bare --shared {path}')
+
         status, out, err = self.git.init(path, bare=True, shared=True)
         Interaction.command(
             N_('Error'), 'git init --bare --shared "%s"' % path, status, out, err
@@ -2319,6 +2356,13 @@ class Rebase(ContextCommand):
 
         args, kwargs = self.prepare_arguments(upstream)
         upstream_title = upstream or '@{upstream}'
+
+        if prefs.verbose_simple_commands(self.context):
+            rebase_cmd = ['git', 'rebase']
+            rebase_cmd.extend(transform_kwargs(kwargs))
+            rebase_cmd.extend(args)
+            self.context.git_cmd(core.list2cmdline(rebase_cmd))
+
         with SequenceEditorEnvironment(
             self.context,
             GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
@@ -2341,6 +2385,9 @@ class Rebase(ContextCommand):
 
 class RebaseEditTodo(ContextCommand):
     def do(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.git_cmd('git rebase --edit-todo')
+
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
@@ -2355,6 +2402,9 @@ class RebaseEditTodo(ContextCommand):
 
 class RebaseContinue(ContextCommand):
     def do(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.git_cmd('git rebase --continue')
+
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
@@ -2369,6 +2419,9 @@ class RebaseContinue(ContextCommand):
 
 class RebaseSkip(ContextCommand):
     def do(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.git_cmd('git rebase --skip')
+
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
@@ -2383,6 +2436,8 @@ class RebaseSkip(ContextCommand):
 
 class RebaseAbort(ContextCommand):
     def do(self):
+        if prefs.verbose_simple_commands(self.context):
+            self.context.git_cmd('git rebase --abort')
         status, out, err = self.git.rebase(abort=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
@@ -2444,6 +2499,9 @@ class RevertEditsCommand(ConfirmAction):
 
     def action(self):
         checkout_args = self.checkout_args()
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(checkout_args)
+            self.context.notifier.git_cmd(f'git checkout {cmd_args}')
         return self.git.checkout(*checkout_args)
 
     def success(self):
@@ -2820,6 +2878,8 @@ class Stage(ContextCommand):
 
     def stage_all(self):
         """Stage all files"""
+        if prefs.verbose_simple_commands(self.context):
+            self.context.notifier.git_cmd('git add -u -v')
         status, out, err = self.git.add(v=True, u=True)
         Interaction.command(N_('Error'), 'git add -u', status, out, err)
         self.model.update_file_status()
@@ -3003,6 +3063,13 @@ class Tag(ContextCommand):
                 opts['sign'] = True
             if tag_message:
                 opts['annotate'] = True
+            if prefs.verbose_simple_commands(self.context):
+                cmd_args = 'git tag '
+                cmd_opts = core.list2cmdline(transform_kwargs(opts))
+                if cmd_opts:
+                    cmd_args += f'{cmd_opts} '
+                cmd_args += f'{tag_name} {revision}'
+                self.context.notifier.git_cmd(cmd_args)
             status, out, err = self.git.tag(tag_name, revision, **opts)
         finally:
             if tmp_file:
@@ -3061,6 +3128,8 @@ def unstage_all(context):
     """Unstage all files, even while amending"""
     model = context.model
     head = model.head
+    if prefs.verbose_simple_commands(context):
+        context.notifier.git_cmd('git reset -- .')
     status, out, err = context.git.reset(head, '--', '.')
     Interaction.command(N_('Error'), 'git reset', status, out, err)
     model.update_file_status()
@@ -3207,6 +3276,9 @@ class SubmoduleAdd(ConfirmAction):
 
     def action(self):
         args = self.get_args()
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(args)
+            self.context.notifier.git_cmd(f'git submodule add {cmd_args}')
         return self.git.submodule('add', *args)
 
     def success(self):
@@ -3253,6 +3325,9 @@ class SubmoduleUpdate(ConfirmAction):
 
     def action(self):
         args = self.get_args()
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(args)
+            self.context.notifier.git_cmd(f'git submodule {cmd_args}')
         return self.git.submodule(*args)
 
     def success(self):
@@ -3288,6 +3363,9 @@ class SubmodulesUpdate(ConfirmAction):
 
     def action(self):
         args = self.get_args()
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = core.list2cmdline(args)
+            self.context.notifier.git_cmd(f'git submodule {cmd_args}')
         return self.git.submodule(*args)
 
     def success(self):

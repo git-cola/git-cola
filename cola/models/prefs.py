@@ -68,6 +68,7 @@ TEXTWIDTH = 'cola.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 UPDATE_INDEX = 'cola.updateindex'
+VERBOSITY = 'cola.verbosity'
 
 
 class DateFormat:
@@ -108,6 +109,13 @@ def date_formats():
         DateFormat.HUMAN,
         DateFormat.UNIX,
     ]
+
+
+class Verbosity:
+    """Verbosity levels"""
+
+    SILENT = 0
+    SIMPLE_COMMANDS = 1
 
 
 def commit_cleanup_modes():
@@ -177,6 +185,7 @@ class Defaults:
     status_show_totals = False
     logdate = DateFormat.DEFAULT
     update_index = True
+    verbosity = 0
 
 
 def abbrev(context):
@@ -412,6 +421,16 @@ def status_indent(context):
 def status_show_totals(context):
     """Should we display count totals in the status widget headers?"""
     return context.cfg.get(STATUS_SHOW_TOTALS, default=Defaults.status_show_totals)
+
+
+def verbosity(context):
+    """Return the console verbosity level"""
+    return context.cfg.get(VERBOSITY, default=Defaults.verbosity)
+
+
+def verbose_simple_commands(context):
+    """Is the verbosity level set to log commands?"""
+    return verbosity(context) >= Verbosity.SIMPLE_COMMANDS
 
 
 class PreferencesModel(QtCore.QObject):

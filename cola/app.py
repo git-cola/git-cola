@@ -777,6 +777,14 @@ class Notifier(QtCore.QObject):
 
         self.message.connect(listener, type=Qt.QueuedConnection)
 
+    def emit_log(self, message):
+        """Emit a log message"""
+        self.log.emit(message)
+
+    def git_cmd(self, message):
+        """Emit a log message"""
+        self.emit_log(f'[git] {message}')
+
 
 def find_git():
     """Return the path of git.exe, or None if we can't find it."""

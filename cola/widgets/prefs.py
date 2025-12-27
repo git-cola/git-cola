@@ -329,6 +329,9 @@ class SettingsFormWidget(FormWidget):
         self.spelling_dictionaries = DictionaryList(context)
         self.spelling_dictionaries.setToolTip(tooltip)
 
+        tooltip = N_('Set the verbosity level to 1 or higher to log Git commands')
+        self.verbosity = standard.SpinBox(value=0, mini=0, maxi=2)
+
         self.add_row(N_('Text Width'), self.textwidth)
         self.add_row(N_('Tab Width'), self.tabwidth)
         self.add_row(N_('Insert Spaces Instead of Tabs'), self.expandtab)
@@ -360,6 +363,7 @@ class SettingsFormWidget(FormWidget):
             N_('Check Published Commits when Amending'), self.check_published_commits
         )
         self.add_row(N_('Notify on Push'), self.notifyonpush)
+        self.add_row(N_('Verbosity Level'), self.verbosity)
 
         self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Check Spelling'), self.check_spelling)
@@ -408,6 +412,7 @@ class SettingsFormWidget(FormWidget):
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
             prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
             prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
+            prefs.VERBOSITY: (self.verbosity, Defaults.verbosity),
         })
 
 

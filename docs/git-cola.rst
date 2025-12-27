@@ -1311,6 +1311,14 @@ when accessing Git repositories over a Samba share. If you have this enabled the
 can use the ``ctrl-r`` "Refresh" action to force the index to be refreshed instead.
 Defaults to ``true``.
 
+cola.verbosity
+--------------
+
+Increase the verbosity of the Console tool by logging ``git`` commands with a ``[git]``
+prefix when set to a value of ``1`` or higher. This setting allows users to more easily
+discover which ``git`` commands are being run under the hood.
+Defaults to ``0``.
+
 commit.cleanup
 --------------
 
