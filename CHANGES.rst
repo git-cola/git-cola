@@ -40,6 +40,9 @@ Usability, bells and whistles
 * The keyboard shortcuts panel now displays macOS hotkeys correctly.
   (`#1512 <https://github.com/git-cola/git-cola/issues/1512>`_)
 
+* The Git DAG performance was improved when viewing large repositories.
+  (`#1526 <https://github.com/git-cola/git-cola/issues/1526>`_)
+
 
 .. _v4.16.1:
 

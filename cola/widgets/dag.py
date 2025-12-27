@@ -1230,13 +1230,16 @@ class GitDAG(standard.MainWindow):
             self.commits[commit_obj.oid] = commit_obj
             for tag in commit_obj.tags:
                 self.commits[tag] = commit_obj
-        self.graphview.add_commits(commits)
+        # The treewidget is quick to update.  The graphview is slower when updating
+        # incrementally so it is updated just once at thread_end() once all commits have
+        # been gathered.
         self.treewidget.add_commits(commits)
 
     def thread_begin(self):
         self.clear()
 
     def thread_end(self):
+        self.graphview.add_commits(self.commit_list)
         self.restore_selection()
 
     def thread_status(self, successful):
@@ -1356,27 +1359,20 @@ class ReaderThread(QtCore.QThread):
         self.context = context
         self.params = params
         self._stop = False
-        self._mutex = QtCore.QMutex()
-        self._condition = QtCore.QWaitCondition()
 
     def run(self):
         context = self.context
         repo = dag.RepoReader(context, self.params)
         repo.reset()
         self.begin.emit()
+
         commits = []
         for commit in repo.get():
-            stopped = False
-            self._mutex.lock()
             if self._stop:
-                self._condition.wait(self._mutex)
                 repo.reset()
-                stopped = True
-            self._mutex.unlock()
-            if stopped:
                 return
             commits.append(commit)
-            if len(commits) >= 512:
+            if len(commits) >= 1024:
                 self.add.emit(commits)
                 commits = []
 
@@ -1894,6 +1890,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
     def clear(self):
         EdgeColor.reset()
         self.scene().clear()
+        self.scene().invalidate()
         self.items.clear()
         self.x_offsets.clear()
         self.x_min = 24
@@ -2326,7 +2323,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             # Align new column frontier by frontier of nearest column. If all
             # columns were left then select maximum frontier value.
             if not self.columns:
-                self.frontier[column] = max(list(self.frontier.values()))
+                self.frontier[column] = max(self.frontier.values())
                 return
             # This is heuristic that mostly affects roots. Note that the
             # frontier values for fork children will be overridden in course of
@@ -2406,9 +2403,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         # Avoid overlapping with tags of commits at cell_row.
         if self.x_off > 0:
-            can_overlap = list(range(self.min_column, column))
+            can_overlap = range(self.min_column, column)
         else:
-            can_overlap = list(range(self.max_column, column, -1))
+            can_overlap = range(self.max_column, column, -1)
         for cell_row in itertools.count(cell_row):
             for value in can_overlap:
                 if (value, cell_row) in self.tagged_cells:
