@@ -1112,13 +1112,19 @@ class GitDAG(standard.MainWindow):
         self.maxresults.setValue(params.count)
         self.update_window_title()
 
-        if self.thread is not None and self.thread.isRunning():
-            self.thread.stop()
-        self.thread = ReaderThread(context, params, self)
+        self._stop_reader_thread()
+        self.thread = ReaderThread(context, params)
         self.thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
         self.thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
         self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
         self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
+
+    def _stop_reader_thread(self):
+        """Stop the reader thread if it is currently running"""
+        if self.thread is not None and self.thread.isRunning():
+            self.thread.requestInterruption()
+            QtCore.QThread.currentThread().yieldCurrentThread()
+            self.thread.wait(100)
 
     def _enable_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
@@ -1235,8 +1241,7 @@ class GitDAG(standard.MainWindow):
             or display_status != self.old_display_status
         )
         if update:
-            if self.thread.isRunning():
-                self.thread.stop()
+            self._stop_reader_thread()
             self.params.set_ref(ref)
             self.params.set_count(count)
             self.params.set_display_status(display_status)
@@ -1385,7 +1390,7 @@ class GitDAG(standard.MainWindow):
     def closeEvent(self, event):
         """Ensure the revision text popup is closed"""
         self.revtext.close_popup()
-        self.thread.stop()
+        self._stop_reader_thread()
         standard.MainWindow.closeEvent(self, event)
 
     def showEvent(self, event):
@@ -1402,11 +1407,10 @@ class ReaderThread(QtCore.QThread):
     end = Signal()
     status = Signal(object)
 
-    def __init__(self, context, params, parent):
-        QtCore.QThread.__init__(self, parent)
+    def __init__(self, context, params):
+        super().__init__()
         self.context = context
         self.params = params
-        self._stop = False
 
     def run(self):
         """Gather commits and emit them to the main thread"""
@@ -1417,11 +1421,11 @@ class ReaderThread(QtCore.QThread):
 
         commits = []
         for commit in repo.get():
-            if self._stop:
+            if self.isInterruptionRequested():
                 repo.reset()
                 return
             commits.append(commit)
-            if len(commits) >= 1024:
+            if len(commits) >= 2048:
                 self.add.emit(commits)
                 commits = []
 
@@ -1435,14 +1439,6 @@ class ReaderThread(QtCore.QThread):
 
         self.status.emit(repo.returncode == 0)
         self.end.emit()
-
-    def start(self):
-        self._stop = False
-        QtCore.QThread.start(self)
-
-    def stop(self):
-        self._stop = True
-        self.wait()
 
 
 class Cache:
