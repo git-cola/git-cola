@@ -900,6 +900,7 @@ class GitDAG(standard.MainWindow):
         self.commits = {}
         self.commit_list = []
         self.selection = []
+        self.old_selection = []
         self.old_refs = set()
         self.old_oids = None
         self.old_count = 0
@@ -1275,6 +1276,8 @@ class GitDAG(standard.MainWindow):
 
     def thread_begin(self):
         """The reader thread has begun"""
+        if self.selection:
+            self.old_selection = self.selection
         self.clear()
 
     def thread_end(self):
@@ -1287,7 +1290,9 @@ class GitDAG(standard.MainWindow):
         self.revtext.hint.set_error(not successful)
 
     def restore_selection(self):
-        selection = self.selection
+        """Restore the selection before the display was refreshed"""
+        # The selection can become empty when the widgets are cleared.
+        selection = self.selection or self.old_selection
         try:
             commit_obj = self.commit_list[-1]
         except IndexError:
