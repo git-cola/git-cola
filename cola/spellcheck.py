@@ -8,26 +8,37 @@ from . import resources
 
 __copyright__ = """
 2012 Peter Norvig (http://norvig.com/spell-correct.html)
-2013-2018 David Aguilar <davvid@gmail.com>
+2013-2026 David Aguilar <davvid@gmail.com>
 """
 
-ALPHABET = 'abcdefghijklmnopqrstuvwxyzáéíóúñаьедчнроищ'
 
+class GlobalState:
+    ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+    LETTERS = set(ALPHABET)
 
-def train(features, model, all_train_words):
-    for f in features:
-        if f not in all_train_words:
-            all_train_words.add(f)
-            model[f] += 1
-    return model
+    @classmethod
+    def train(cls, features, model, all_train_words):
+        """Add words to the model"""
+        for word in features:
+            if word not in all_train_words:
+                all_train_words.add(word)
+                model[word] += 1
+                for letter in word:
+                    cls.LETTERS.add(letter)
+        return model
+
+    @classmethod
+    def update(cls):
+        """Update the alphabet after all dictionaries have been loaded"""
+        cls.ALPHABET = ''.join(sorted(cls.LETTERS))
 
 
 def edits1(word):
     splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
     deletes = [a + b[1:] for a, b in splits if b]
     transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b) > 1]
-    replaces = [a + c + b[1:] for a, b in splits for c in ALPHABET if b]
-    inserts = [a + c + b for a, b in splits for c in ALPHABET]
+    replaces = [a + c + b[1:] for a, b in splits for c in GlobalState.ALPHABET if b]
+    inserts = [a + c + b for a, b in splits for c in GlobalState.ALPHABET]
     return set(deletes + transposes + replaces + inserts)
 
 
@@ -80,13 +91,15 @@ class NorvigSpellCheck:
         if self.initialized:
             return
         self.initialized = True
+
         all_train_words = set()
         if self.aspell_enabled:
-            train(self.read_aspell_words(), self.words, all_train_words)
+            GlobalState.train(self.read_aspell_words(), self.words, all_train_words)
         if not self.aspell_ok:
-            train(self.read(), self.words, all_train_words)
+            GlobalState.train(self.read(), self.words, all_train_words)
+        GlobalState.train(self.extra_words, self.words, all_train_words)
 
-        train(self.extra_words, self.words, all_train_words)
+        GlobalState.update()
 
     def set_aspell_enabled(self, enabled):
         """Enable aspell support"""
