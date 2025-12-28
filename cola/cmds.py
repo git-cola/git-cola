@@ -2372,7 +2372,7 @@ class Rebase(ContextCommand):
 
         if prefs.verbose_simple_commands(self.context):
             rebase_cmd = ['git', 'rebase']
-            rebase_cmd.extend(transform_kwargs(kwargs))
+            rebase_cmd.extend(transform_kwargs(**kwargs))
             rebase_cmd.extend(args)
             self.context.git_cmd(core.list2cmdline(rebase_cmd))
 
@@ -3077,12 +3077,10 @@ class Tag(ContextCommand):
             if tag_message:
                 opts['annotate'] = True
             if prefs.verbose_simple_commands(self.context):
-                cmd_args = 'git tag '
-                cmd_opts = core.list2cmdline(transform_kwargs(opts))
-                if cmd_opts:
-                    cmd_args += f'{cmd_opts} '
-                cmd_args += f'{tag_name} {revision}'
-                self.context.notifier.git_cmd(cmd_args)
+                cmd_args = ['git', 'tag']
+                cmd_args.extend(transform_kwargs(**opts))
+                cmd_args.extend((tag_name, revision))
+                self.context.notifier.git_cmd(core.list2cmdline(cmd_args))
             status, out, err = self.git.tag(tag_name, revision, **opts)
         finally:
             if tmp_file:
