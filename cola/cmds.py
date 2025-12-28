@@ -866,6 +866,19 @@ class Commit(ResetMode):
         # Override the commit author.
         if self.author:
             kwargs['author'] = self.author
+
+        if prefs.verbose_simple_commands(self.context):
+            cmd_args = ['git', 'commit']
+            cmd_args.extend(
+                transform_kwargs(
+                    gpg_sign=self.sign,
+                    amend=self.amend,
+                    no_verify=self.no_verify,
+                    **kwargs,
+                )
+            )
+            self.context.notifier.git_cmd(core.list2cmdline(cmd_args))
+
         try:
             core.write(tmp_file, msg)
             # Run 'git commit'
