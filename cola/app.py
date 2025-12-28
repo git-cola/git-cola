@@ -736,6 +736,7 @@ class ApplicationContext:
         self.notifier.critical.connect(self._critical, Qt.QueuedConnection)
         self.notifier.information.connect(self._information, Qt.QueuedConnection)
         self.notifier.log.connect(self._log, Qt.QueuedConnection)
+        self.notifier.ready.emit()
 
     def _command(self, title, cmd, status, out, err):
         Interaction.command(title, cmd, status, out, err)
@@ -758,6 +759,7 @@ class Notifier(QtCore.QObject):
     information = Signal(object, object)
     log = Signal(object)
     message = Signal(object)
+    ready = Signal()
 
     def __init__(self, context, parent=None):
         super().__init__(parent)

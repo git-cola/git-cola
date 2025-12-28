@@ -296,7 +296,11 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFocusProxy(self.summary)
 
         cfg.user_config_changed.connect(self.config_changed)
-        QtCore.QTimer.singleShot(1, lambda: self.spellcheck.init())
+        self.context.notifier.ready.connect(self._ready, type=Qt.QueuedConnection)
+
+    def _ready(self):
+        """Called when the app is ready for events"""
+        self.context.runtask.run(self.spellcheck.init)
 
     def config_changed(self, key, value):
         if key != prefs.SPELL_CHECK:
