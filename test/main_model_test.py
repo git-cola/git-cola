@@ -260,6 +260,7 @@ def test_remote_args_rebase_only(mock_context):
 
 def test_run_remote_action(mock_context):
     """Test running a remote action"""
+    mock_context.cfg.get = Mock(return_value=True)
     (args, kwargs) = main.run_remote_action(
         mock_context,
         lambda *args, **kwargs: (args, kwargs),

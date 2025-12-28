@@ -9,7 +9,7 @@ from .. import git
 from .. import gitcmds
 from .. import gitcfg
 from .. import version
-from ..git import STDOUT
+from ..git import STDOUT, transform_kwargs
 from ..interaction import Interaction
 from ..i18n import N_
 from . import prefs
@@ -609,6 +609,19 @@ def run_remote_action(context, fn, remote, action, **kwargs):
     """Run fetch, push or pull"""
     kwargs.pop('_add_env', None)
     args, kwargs = remote_args(context, remote, action, **kwargs)
+
+    if prefs.verbose_simple_commands(context):
+        cmd_args = ['git']
+        if action == FETCH:
+            cmd_args.append('fetch')
+        elif action == PUSH:
+            cmd_args.append('push')
+        elif action == PULL:
+            cmd_args.append('pull')
+        cmd_args.extend(transform_kwargs(**kwargs))
+        cmd_args.extend(args)
+        context.notifier.git_cmd(core.list2cmdline(cmd_args))
+
     autodetect_proxy(context, kwargs)
     no_color(kwargs)
     return fn(*args, **kwargs)
