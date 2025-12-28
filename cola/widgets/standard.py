@@ -825,6 +825,7 @@ class SpinBox(QtWidgets.QSpinBox):
         mini=1,
         maxi=99999,
         step=0,
+        digits=6,
         prefix='',
         suffix='',
         tooltip='',
@@ -843,9 +844,10 @@ class SpinBox(QtWidgets.QSpinBox):
             self.setSingleStep(step)
         if value is not None:
             self.set_value(value)
-        text_width = qtutils.text_width(self.font(), 'MMMMMM')
-        width = max(self.minimumWidth(), text_width)
-        self.setMinimumWidth(width)
+        if digits is not None:
+            text_width = qtutils.text_width(self.font(), 'M' * digits)
+            width = max(self.minimumWidth(), text_width)
+            self.setMinimumWidth(width)
         if tooltip:
             self.setToolTip(tooltip)
 

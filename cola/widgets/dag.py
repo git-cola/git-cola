@@ -907,7 +907,7 @@ class GitDAG(standard.MainWindow):
 
         self.thread = None
         self.revtext = GitDagLineEdit(context)
-        self.maxresults = standard.SpinBox()
+        self.maxresults = standard.SpinBox(digits=None, maxi=9999999, wrap=True)
 
         self.zoom_out = qtutils.create_action_button(
             tooltip=N_('Zoom Out'), icon=icons.zoom_out()
