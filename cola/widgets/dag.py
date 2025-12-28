@@ -1091,6 +1091,7 @@ class GitDAG(standard.MainWindow):
         thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
     def _enable_worktree_status(self, enabled):
+        """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
         self.params.display_status = enabled
         self.display()
 
@@ -1107,10 +1108,12 @@ class GitDAG(standard.MainWindow):
         self.diffwidget.setFocus()
 
     def text_changed(self, txt):
+        """Respond to changes to the revision input text"""
         self.params.ref = txt
         self.update_window_title()
 
     def update_window_title(self):
+        """Update the window title to reflect the displayed ref"""
         project = self.model.project
         if self.params.ref:
             self.setWindowTitle(
@@ -1124,6 +1127,7 @@ class GitDAG(standard.MainWindow):
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
+        """Store persistent GUI state"""
         state = standard.MainWindow.export_state(self)
         state['count'] = self.params.count
         state['display_status'] = self.params.display_status
@@ -1132,6 +1136,7 @@ class GitDAG(standard.MainWindow):
         return state
 
     def apply_state(self, state):
+        """Apply persistent GUI state"""
         result = standard.MainWindow.apply_state(self, state)
         try:
             count = state['count']
@@ -1213,17 +1218,20 @@ class GitDAG(standard.MainWindow):
         self.force_refresh = False
 
     def select_commits(self, commits):
+        """Commits were selected"""
         self.selection = commits
         enabled = bool(commits)
         self.diffwidget_copy_commit.setEnabled(enabled)
 
     def clear(self):
+        """Clear the view and the list of known commits"""
         self.commits.clear()
         self.commit_list = []
         self.graphview.clear()
         self.treewidget.clear()
 
     def add_commits(self, commits):
+        """Add new commits from the reader thread"""
         self.commit_list.extend(commits)
         # Keep track of commits
         for commit_obj in commits:
@@ -1236,13 +1244,16 @@ class GitDAG(standard.MainWindow):
         self.treewidget.add_commits(commits)
 
     def thread_begin(self):
+        """The reader thread has begun"""
         self.clear()
 
     def thread_end(self):
+        """The reader thread has completed"""
         self.graphview.add_commits(self.commit_list)
         self.restore_selection()
 
     def thread_status(self, successful):
+        """Indicate an error when the revision input contains an invalid ref"""
         self.revtext.hint.set_error(not successful)
 
     def restore_selection(self):
@@ -1300,6 +1311,7 @@ class GitDAG(standard.MainWindow):
         self.display()
 
     def histories_selected(self, histories):
+        """Respond to file-based history selection from the files widget"""
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
         rev_text = core.list2cmdline(argv)
@@ -1307,6 +1319,7 @@ class GitDAG(standard.MainWindow):
         self.display()
 
     def difftool_selected(self, files):
+        """Launch difftool across a commit range"""
         bottom, top = self.treewidget.selected_commit_range()
         if not top:
             return
@@ -1335,7 +1348,7 @@ class GitDAG(standard.MainWindow):
 
     # Qt overrides
     def closeEvent(self, event):
-        """Ensure the revtext popup is closed"""
+        """Ensure the revision text popup is closed"""
         self.revtext.close_popup()
         self.thread.stop()
         standard.MainWindow.closeEvent(self, event)
@@ -1361,6 +1374,7 @@ class ReaderThread(QtCore.QThread):
         self._stop = False
 
     def run(self):
+        """Gather commits and emit them to the main thread"""
         context = self.context
         repo = dag.RepoReader(context, self.params)
         repo.reset()
