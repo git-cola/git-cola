@@ -51,10 +51,10 @@ def git_dag(context, args=None, existing_view=None, show=True):
     else:
         view = existing_view
         view.set_params(params)
-    if params.ref:
-        view.display()
     if show:
         view.show()
+    if params.ref:
+        view.display()
     return view
 
 
@@ -734,7 +734,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT
         )
 
-        self.itemSelectionChanged.connect(self.selection_changed)
+        self.itemSelectionChanged.connect(
+            self.selection_changed, type=Qt.QueuedConnection
+        )
 
     def export_state(self):
         """Export the widget's state"""
@@ -926,18 +928,35 @@ class GitDAG(standard.MainWindow):
         self.filewidget = filelist.FileWidget(context, self)
         self.graphview = GraphView(context, self)
 
-        self.treewidget.commits_selected.connect(self.commits_selected)
-        self.graphview.commits_selected.connect(self.commits_selected)
+        self.treewidget.commits_selected.connect(
+            self.commits_selected, type=Qt.QueuedConnection
+        )
+        self.graphview.commits_selected.connect(
+            self.commits_selected, type=Qt.QueuedConnection
+        )
 
-        self.commits_selected.connect(self.select_commits)
-        self.commits_selected.connect(self.diffwidget.commits_selected)
-        self.commits_selected.connect(self.filewidget.commits_selected)
-        self.commits_selected.connect(self.graphview.select_commits)
-        self.commits_selected.connect(self.treewidget.select_commits)
-
-        self.filewidget.files_selected.connect(self.diffwidget.files_selected)
-        self.filewidget.difftool_selected.connect(self.difftool_selected)
-        self.filewidget.histories_selected.connect(self.histories_selected)
+        self.commits_selected.connect(self.select_commits, type=Qt.QueuedConnection)
+        self.commits_selected.connect(
+            self.diffwidget.commits_selected, type=Qt.QueuedConnection
+        )
+        self.commits_selected.connect(
+            self.filewidget.commits_selected, type=Qt.QueuedConnection
+        )
+        self.commits_selected.connect(
+            self.graphview.select_commits, type=Qt.QueuedConnection
+        )
+        self.commits_selected.connect(
+            self.treewidget.select_commits, type=Qt.QueuedConnection
+        )
+        self.filewidget.files_selected.connect(
+            self.diffwidget.files_selected, type=Qt.QueuedConnection
+        )
+        self.filewidget.difftool_selected.connect(
+            self.difftool_selected, type=Qt.QueuedConnection
+        )
+        self.filewidget.histories_selected.connect(
+            self.histories_selected, type=Qt.QueuedConnection
+        )
 
         self.proxy = FocusRedirectProxy(
             self.treewidget, self.graphview, self.filewidget
@@ -1048,21 +1067,31 @@ class GitDAG(standard.MainWindow):
         qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
         qtutils.connect_button(self.zoom_to_fit, self.graphview.zoom_to_fit)
 
-        self.treewidget.zoom_to_fit.connect(self.graphview.zoom_to_fit)
-        self.treewidget.diff_commits.connect(self.diff_commits)
-        self.treewidget.search_line_range_in_oid.connect(self.search_line_range_in_oid)
-        self.graphview.diff_commits.connect(self.diff_commits)
-        self.graphview.search_line_range_in_oid.connect(self.search_line_range_in_oid)
-        self.filewidget.grab_file.connect(self.grab_file)
-        self.filewidget.grab_file_from_parent.connect(self.grab_file_from_parent)
-        self.filewidget.select_line_range_for_file.connect(
-            self.search_line_range_for_file
+        self.treewidget.zoom_to_fit.connect(
+            self.graphview.zoom_to_fit, type=Qt.QueuedConnection
         )
-        self.maxresults.editingFinished.connect(self.display)
-        self.revtext.textChanged.connect(self.text_changed)
-        self.revtext.activated.connect(self.display)
-        self.revtext.enter.connect(self.display)
-        self.revtext.down.connect(self.focus_tree)
+        self.treewidget.diff_commits.connect(
+            self.diff_commits, type=Qt.QueuedConnection
+        )
+        self.treewidget.search_line_range_in_oid.connect(
+            self.search_line_range_in_oid, type=Qt.QueuedConnection
+        )
+        self.graphview.diff_commits.connect(self.diff_commits, type=Qt.QueuedConnection)
+        self.graphview.search_line_range_in_oid.connect(
+            self.search_line_range_in_oid, type=Qt.QueuedConnection
+        )
+        self.filewidget.grab_file.connect(self.grab_file, type=Qt.QueuedConnection)
+        self.filewidget.grab_file_from_parent.connect(
+            self.grab_file_from_parent, type=Qt.QueuedConnection
+        )
+        self.filewidget.select_line_range_for_file.connect(
+            self.search_line_range_for_file, type=Qt.QueuedConnection
+        )
+        self.maxresults.editingFinished.connect(self.display, type=Qt.QueuedConnection)
+        self.revtext.textChanged.connect(self.text_changed, type=Qt.QueuedConnection)
+        self.revtext.activated.connect(self.display, type=Qt.QueuedConnection)
+        self.revtext.enter.connect(self.display, type=Qt.QueuedConnection)
+        self.revtext.down.connect(self.focus_tree, type=Qt.QueuedConnection)
         # The model is updated in another thread so use
         # signals/slots to bring control back to the main GUI thread
         self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
@@ -1082,13 +1111,13 @@ class GitDAG(standard.MainWindow):
         self.maxresults.setValue(params.count)
         self.update_window_title()
 
-        if self.thread is not None:
+        if self.thread is not None and self.thread.isRunning():
             self.thread.stop()
-        self.thread = thread = ReaderThread(context, params, self)
-        thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
-        thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
-        thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
-        thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
+        self.thread = ReaderThread(context, params, self)
+        self.thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
+        self.thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
+        self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
+        self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
     def _enable_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
@@ -1205,7 +1234,8 @@ class GitDAG(standard.MainWindow):
             or display_status != self.old_display_status
         )
         if update:
-            self.thread.stop()
+            if self.thread.isRunning():
+                self.thread.stop()
             self.params.set_ref(ref)
             self.params.set_count(count)
             self.params.set_display_status(display_status)
@@ -1858,7 +1888,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
 
         scene = QtWidgets.QGraphicsScene(self)
         scene.setItemIndexMethod(QtWidgets.QGraphicsScene.BspTreeIndex)
-        scene.selectionChanged.connect(self.selection_changed)
+        scene.selectionChanged.connect(self.selection_changed, type=Qt.QueuedConnection)
         self.setScene(scene)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
