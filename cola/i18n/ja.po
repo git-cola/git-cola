@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the git-cola package.
 # しらいし ななこ <nanako3@bluebottle.com>, 2007.
 # Shun Sakai <sorairolake@protonmail.ch>, 2019.
-# fu7mu4 <fu7mu4@gmail.com>, 2020, 2024.
+# fu7mu4 <fu7mu4@gmail.com>, 2020, 2024, 2025
 #
 msgid ""
 msgstr ""
