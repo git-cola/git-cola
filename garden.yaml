@@ -404,6 +404,7 @@ variables:
     version = sys.argv[1]
     parts = version.split('.')
     parts[1] = f'{int(parts[1]) + 1}'
+    parts[2] = '0'
     print('.'.join(parts))
     " "${version-git}"
   gh-https: "https://github.com"
