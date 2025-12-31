@@ -47,6 +47,11 @@ Usability, bells and whistles
   in the same repository using the ``-S | --single-instance`` option.
   (`#1521 <https://github.com/git-cola/git-cola/issues/1521>`_)
 
+Translations
+------------
+* Updated Japanese translation.
+  (`#1533 <https://github.com/git-cola/git-cola/pull/1533>`_)
+
 
 .. _v4.16.1:
 
