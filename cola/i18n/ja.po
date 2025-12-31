@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the git-cola package.
 # しらいし ななこ <nanako3@bluebottle.com>, 2007.
 # Shun Sakai <sorairolake@protonmail.ch>, 2019.
-# fu7mu4 <fu7mu4@gmail.com>, 2020, 2024.
+# fu7mu4 <fu7mu4@gmail.com>, 2020, 2024, 2025
 #
 msgid ""
 msgstr ""
@@ -17,6 +17,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Language: ja_JP\n"
+"X-Source-Language: C\n"
 
 #: cola/actions.py:56
 msgid "Next File"
@@ -28,7 +31,8 @@ msgstr "以前のファイル"
 
 #: cola/app.py:314
 #, python-format
-msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
+msgid ""
+"fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "致命的: \"%s\" はディレクトリではありません。正しいパスを--repo <path>で指定してください。"
 
 #: cola/app.py:515
@@ -86,10 +90,10 @@ msgstr "パッチの適用を中止"
 #: cola/cmds.py:520 cola/cmds.py:558 cola/cmds.py:658 cola/cmds.py:776
 #: cola/cmds.py:1194 cola/cmds.py:1290 cola/cmds.py:2172 cola/cmds.py:2576
 #: cola/cmds.py:2810 cola/cmds.py:2816 cola/cmds.py:2824 cola/cmds.py:3048
-#: cola/cmds.py:3065 cola/cmds.py:3351 cola/gitcmds.py:1046 cola/guicmds.py:164
-#: cola/models/stash.py:70 cola/models/stash.py:90 cola/models/stash.py:112
-#: cola/models/stash.py:138 cola/widgets/bookmarks.py:486
-#: cola/widgets/branch.py:803
+#: cola/cmds.py:3065 cola/cmds.py:3351 cola/gitcmds.py:1046
+#: cola/guicmds.py:164 cola/models/stash.py:70 cola/models/stash.py:90
+#: cola/models/stash.py:112 cola/models/stash.py:138
+#: cola/widgets/bookmarks.py:486 cola/widgets/branch.py:803
 msgid "Error"
 msgstr "エラー"
 
@@ -164,11 +168,11 @@ msgstr "%d パッチを適用しました。"
 
 #: cola/cmds.py:412
 msgid "Failed to commit and continue applying patches"
-msgstr "コミットとパッチ適用の継続に失敗しました。"
+msgstr "コミットとパッチ適用の継続に失敗しました"
 
 #: cola/cmds.py:428
 msgid "Failed to continue applying patches after skipping the current patch"
-msgstr "現在のパッチ適用をスキップしたあとでパッチ適用の継続に失敗しました。"
+msgstr "現在のパッチ適用をスキップしたあとでパッチ適用の継続に失敗しました"
 
 #: cola/cmds.py:493
 msgid "Checkout files from their branch (MERGE_HEAD)"
@@ -180,11 +184,13 @@ msgstr "これらのブランチからファイルをチェックアウトしま
 
 #: cola/cmds.py:499
 msgid ""
-"This operation will replace the selected unmerged files with content from the branch being merged using \"git checkout --theirs\".\n"
+"This operation will replace the selected unmerged files with content from "
+"the branch being merged using \"git checkout --theirs\".\n"
 "*ALL* uncommitted changes will be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"この操作は、\"git checkout --theirs\" を使って、選択されたマージされていないファイルの内容を現在のブランチのもので置き換えます。.\n"
+"この操作は、\"git checkout --theirs\" "
+"を使って、選択されたマージされていないファイルの内容を現在のブランチのもので置き換えます。.\n"
 "*すべての* コミットされていない変更は失われます。\n"
 "コミットされていない変更は回復できません。"
 
@@ -198,15 +204,17 @@ msgstr "私たちのブランチ (HEAD)からファイルをチェックアウ�
 
 #: cola/cmds.py:535
 msgid "Checkout files from our branch?"
-msgstr "私たちのブランチからファイルをチェックアウト"
+msgstr "私たちのブランチからファイルをチェックアウト?"
 
 #: cola/cmds.py:537
 msgid ""
-"This operation will replace the selected unmerged files with content from your current branch using \"git checkout --ours\".\n"
+"This operation will replace the selected unmerged files with content from "
+"your current branch using \"git checkout --ours\".\n"
 "*ALL* uncommitted changes will be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
-"この操作は、\"git checkout --ours\" を使って、選択されたマージされていないファイルの内容を現在のブランチのもので置き換えます。.\n"
+"この操作は、\"git checkout --ours\" "
+"を使って、選択されたマージされていないファイルの内容を現在のブランチのもので置き換えます。.\n"
 "*すべての* コミットされていない変更は失われます。\n"
 "コミットされていない変更は回復できません。"
 
@@ -221,7 +229,7 @@ msgstr "責任者ビューア起動エラー"
 #: cola/cmds.py:584
 #, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
-msgstr "\"%s\"を実行できません。責任者ビューアーを設定してください。"
+msgstr "\"%s\"を実行できません。責任者ビューアーを設定してください"
 
 #: cola/cmds.py:608
 msgid "Cherry-pick failed"
@@ -234,7 +242,7 @@ msgstr "リバートに失敗"
 #: cola/cmds.py:673
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
-msgstr "このブランチは\"git reset --mixed %s\"でリセットする。"
+msgstr "このブランチは\"git reset --mixed %s\"でリセットする"
 
 #: cola/cmds.py:677 cola/guicmds.py:365 cola/widgets/dag.py:544
 #: cola/widgets/main.py:425
@@ -253,15 +261,15 @@ msgstr "ブランチのリセット"
 #: cola/cmds.py:690
 #, python-format
 msgid "The repository will be reset using \"git reset --keep %s\""
-msgstr "このリポジトリは、\"git reset --keep %s\"を使ってリセットします。"
+msgstr "このリポジトリは、\"git reset --keep %s\"を使ってリセットします"
 
 #: cola/cmds.py:694 cola/widgets/main.py:433
 msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
-msgstr ""
+msgstr "ワークツリーを元に戻して全てをリセットする(ステージされていない変更を維持)"
 
 #: cola/cmds.py:695
 msgid "Restore worktree, reset, and preserve unstaged edits?"
-msgstr ""
+msgstr "ワークツリーを元に戻して、リセットしてステージされてない編集を維持しますか?"
 
 #: cola/cmds.py:697 cola/cmds.py:714 cola/cmds.py:748 cola/guicmds.py:378
 #: cola/guicmds.py:392 cola/guicmds.py:403
@@ -271,21 +279,21 @@ msgstr "リセットと回復"
 #: cola/cmds.py:707
 #, python-format
 msgid "The repository will be reset using \"git reset --merge %s\""
-msgstr "このリポジトリは、\"git reset --merge %s\"を使ってリセットします。"
+msgstr "このリポジトリは、\"git reset --merge %s\"を使ってリセットします"
 
 #: cola/cmds.py:711 cola/guicmds.py:391 cola/widgets/dag.py:559
 #: cola/widgets/main.py:441
 msgid "Restore Worktree and Reset All (Merge)"
-msgstr ""
+msgstr "ワークツリーを元に戻して、全てをリセット(マージ)"
 
 #: cola/cmds.py:712
 msgid "Reset Worktree and Reset All?"
-msgstr ""
+msgstr "ワークツリーを元に戻して全てをリセットしますか?"
 
 #: cola/cmds.py:724 cola/cmds.py:815
 #, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
-msgstr "このブランチは\"git reset --soft %s\"でリセットする。"
+msgstr "このブランチは\"git reset --soft %s\"でリセットする"
 
 #: cola/cmds.py:728 cola/guicmds.py:354 cola/widgets/dag.py:539
 #: cola/widgets/main.py:417
@@ -299,31 +307,31 @@ msgstr "ブランチをリセットしますか?"
 #: cola/cmds.py:741
 #, python-format
 msgid "The repository will be reset using \"git reset --hard %s\""
-msgstr "このリポジトリは、\"git reset --hard %s\"を使ってリセットします。"
+msgstr "このリポジトリは、\"git reset --hard %s\"を使ってリセットします"
 
 #: cola/cmds.py:745 cola/guicmds.py:402 cola/widgets/dag.py:567
 #: cola/widgets/main.py:449
 msgid "Restore Worktree and Reset All (Hard)"
-msgstr ""
+msgstr "ワークツリーを元に戻して、全てをリセットしますか(ハード)"
 
 #: cola/cmds.py:746
 msgid "Restore Worktree and Reset All?"
-msgstr ""
+msgstr "ワークツリーを元に戻して全てをリセットしますか?"
 
 #: cola/cmds.py:761
 #, python-format
 msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
-msgstr "このワークツリーは、\"git read-tree --reset -u %s\" を使って回復します。"
+msgstr "このワークツリーは、\"git read-tree --reset -u %s\" を使って回復します"
 
 #: cola/cmds.py:782 cola/cmds.py:785 cola/guicmds.py:413 cola/guicmds.py:414
 #: cola/widgets/dag.py:573 cola/widgets/main.py:457
 msgid "Restore Worktree"
-msgstr ""
+msgstr "ワークツリーを元に戻す"
 
 #: cola/cmds.py:783
 #, python-format
 msgid "Restore Worktree to %s?"
-msgstr ""
+msgstr "ワークツリーを %s に戻しますか?"
 
 #: cola/cmds.py:801 cola/widgets/commitmsg.py:585
 msgid "Rewrite Published Commit?"
@@ -398,15 +406,15 @@ msgstr "\"%(name)s\" から \"%(new_name)s\" の名前変更エラー"
 #: cola/cmds.py:1016
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
-msgstr "URLの\"%(name)s\" を \"%(url)s\" に設定できません。"
+msgstr "URLの\"%(name)s\" を \"%(url)s\" に設定できません"
 
 #: cola/cmds.py:1060
 msgid "Sync failed"
-msgstr ""
+msgstr "同期に失敗"
 
 #: cola/cmds.py:1063
 msgid "Sync complete"
-msgstr ""
+msgstr "同期を完了しました"
 
 #: cola/cmds.py:1075 cola/cmds.py:1081 cola/cmds.py:1087 cola/cmds.py:1099
 msgid "Sync out failed"
@@ -414,17 +422,17 @@ msgstr ""
 
 #: cola/cmds.py:1076
 msgid "No current branch"
-msgstr ""
+msgstr "現在のブランチがありません"
 
 #: cola/cmds.py:1082
 #, python-format
 msgid "No tracking branch configured for %s"
-msgstr ""
+msgstr "%s で設定されたトラッキングブランチはありません"
 
 #: cola/cmds.py:1088
 #, python-format
 msgid "Invalid tracking branch: %s"
-msgstr ""
+msgstr "不正なトラッキングブランチ: %s"
 
 #: cola/cmds.py:1102
 msgid "Sync out complete"
@@ -462,7 +470,7 @@ msgstr "削除"
 #: cola/cmds.py:1194
 #, python-format
 msgid "Deleting \"%s\" failed"
-msgstr "\"%s\"の削除に失敗しました。"
+msgstr "\"%s\"の削除に失敗しました"
 
 #: cola/cmds.py:1212
 msgid "Delete Files?"
@@ -530,7 +538,7 @@ msgstr "エディタを起動"
 #: cola/cmds.py:1746
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
-msgstr "\"%s\"を実行できません。エディタを設定してください。"
+msgstr "\"%s\"を実行できません。エディタを設定してください"
 
 #: cola/cmds.py:1748
 msgid "Error Editing File"
@@ -542,7 +550,7 @@ msgstr "ターミナルを起動"
 
 #: cola/cmds.py:1841
 msgid "Error: Cannot find commit template"
-msgstr "エラー:コミットテンプレートが見つかりません。"
+msgstr "エラー:コミットテンプレートが見つかりません"
 
 #: cola/cmds.py:1842
 #, python-format
@@ -570,7 +578,7 @@ msgstr "コミットメッセージ前フック実行エラー"
 #: cola/cmds.py:1939
 #, python-format
 msgid "A hook must be provided at \"%s\""
-msgstr "フックが\"%s\"で提供されなければなりません。"
+msgstr "フックが\"%s\"で提供されなければなりません"
 
 #: cola/cmds.py:1984
 msgid "Merge failed.  Conflict resolution is required."
@@ -582,7 +590,7 @@ msgstr "デフォルトのアプリケーションで開く"
 
 #: cola/cmds.py:2024
 msgid "Open Directory"
-msgstr ""
+msgstr "ディレクトリを開く"
 
 #: cola/cmds.py:2044
 msgid "Open Parent Directory"
@@ -590,7 +598,7 @@ msgstr "親ディレクトリを開く"
 
 #: cola/cmds.py:2057
 msgid "Open Worktree"
-msgstr ""
+msgstr "ワークツリーを開く"
 
 #: cola/cmds.py:2266 cola/cmds.py:2273
 msgid "Update stacked branches when rebasing?"
@@ -741,7 +749,7 @@ msgstr "このリビジョン表記を空にできません。"
 #: cola/cmds.py:2562
 #, python-format
 msgid "Running command: %s"
-msgstr "コマンド %s を実行中..."
+msgstr "コマンド %s を実行中"
 
 #: cola/cmds.py:2694
 msgid "Sign Off"
@@ -779,7 +787,7 @@ msgstr "ステージ"
 #: cola/cmds.py:2778
 #, python-format
 msgid "Staging: %s"
-msgstr "%s をステージしています…"
+msgstr "%s をステージしています"
 
 #: cola/cmds.py:2864
 msgid "Stage Modified"
@@ -853,7 +861,7 @@ msgstr "作成されたタグ"
 #: cola/cmds.py:3019
 #, python-format
 msgid "Created a new tag named \"%s\""
-msgstr "新しく作成したタグ \"%s\" "
+msgstr "新しく作成したタグ \"%s\""
 
 #: cola/cmds.py:3031 cola/widgets/action.py:61 cola/widgets/diff.py:1280
 #: cola/widgets/main.py:196
@@ -888,9 +896,9 @@ msgid "Add Submodule"
 msgstr "サブモジュールの追加"
 
 #: cola/cmds.py:3217 cola/cmds.py:3262
-#, fuzzy, python-format
+#, python-format
 msgid "Error updating submodule %s"
-msgstr "リモート \"%s\"作成エラー"
+msgstr "サブモジュール %s の更新エラー"
 
 #: cola/cmds.py:3246
 msgid "Update Submodule..."
@@ -910,36 +918,31 @@ msgstr ""
 "更新"
 
 #: cola/cmds.py:3249
-#, fuzzy
 msgid "Update Submodule"
-msgstr "更新しました"
+msgstr "サブモジュールを更新しました"
 
 #: cola/cmds.py:3281
-#, fuzzy
 msgid "Update submodules..."
-msgstr "サブモジュールを初期化する..."
+msgstr "サブモジュールを更新する..."
 
 #: cola/cmds.py:3282
-#, fuzzy
 msgid "Update all submodules?"
-msgstr "サブモジュールを初期化しますか?"
+msgstr "サブモジュールを更新しますか?"
 
 #: cola/cmds.py:3283
 #, python-format
 msgid ""
 "All submodules will be updated using\n"
 "\"%s\""
-msgstr "\"%s\"を使ってすべてのサブモジュールを更新\n"
+msgstr "\"%s\"を使ってすべてのサブモジュールを更新"
 
 #: cola/cmds.py:3284
-#, fuzzy
 msgid "Update Submodules"
-msgstr "サブモジュールを初期化する"
+msgstr "サブモジュールを更新"
 
 #: cola/cmds.py:3297
-#, fuzzy
 msgid "Error updating submodules"
-msgstr "ファイル編集エラー"
+msgstr "サブモジュール更新エラー"
 
 #: cola/cmds.py:3317
 msgid "Error Launching History Browser"
@@ -948,7 +951,7 @@ msgstr "履歴ブラウザ起動エラー"
 #: cola/cmds.py:3318
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
-msgstr "\"%s\"を実行できません。履歴ビューアーを設定してください。"
+msgstr "\"%s\"を実行できません。履歴ビューアーを設定してください"
 
 #: cola/difftool.py:29 cola/sequenceeditor.py:177 cola/sequenceeditor.py:410
 #: cola/widgets/dag.py:512 cola/widgets/filelist.py:33
@@ -957,7 +960,7 @@ msgstr "差分ツールを起動"
 
 #: cola/difftool.py:86
 msgid "git cola diff"
-msgstr ""
+msgstr "git cola diff"
 
 #: cola/difftool.py:101 cola/widgets/compare.py:69
 msgid "Compare"
@@ -972,19 +975,26 @@ msgid "Difftool"
 msgstr "差分ツール"
 
 #: cola/editpatch.py:34
-msgid "Edit the following patch, which will then be applied to the worktree to revert the changes:"
+msgid ""
+"Edit the following patch, which will then be applied to the worktree to "
+"revert the changes:"
 msgstr ""
 
 #: cola/editpatch.py:40
-msgid "Edit the following patch, which will then be applied to the staging area to unstage the changes:"
+msgid ""
+"Edit the following patch, which will then be applied to the staging area to "
+"unstage the changes:"
 msgstr ""
 
 #: cola/editpatch.py:45
-msgid "Edit the following patch, which will then be applied to the staging area to stage the changes:"
+msgid ""
+"Edit the following patch, which will then be applied to the staging area to "
+"stage the changes:"
 msgstr ""
 
 #: cola/editpatch.py:55
-msgid "To avoid applying removal lines ('-'), change them to context lines (' ')."
+msgid ""
+"To avoid applying removal lines ('-'), change them to context lines (' ')."
 msgstr "削除行('-')への適用を回避するには、それコンテキスト行(' ')に変更してください。"
 
 #: cola/editpatch.py:57
@@ -993,7 +1003,7 @@ msgstr "追加行('+')への適用を回避するには、それを削除して�
 
 #: cola/editpatch.py:58
 msgid "To abort applying this patch, remove all lines."
-msgstr "このパッチの適用を中止するためは、全ての行を削除してづあさい"
+msgstr "このパッチの適用を中止するためは、全ての行を削除してください。"
 
 #: cola/editpatch.py:59
 #, python-format
@@ -1001,13 +1011,15 @@ msgid "Lines starting with '%s' will be ignored."
 msgstr "'%s' から始まる行は無視されます。"
 
 #: cola/editpatch.py:61
-msgid "It is not necessary to update the hunk header lines as they will be regenerated automatically."
-msgstr ""
+msgid ""
+"It is not necessary to update the hunk header lines as they will be "
+"regenerated automatically."
+msgstr "塊のヘッダー行を自動的に生成されたかのゆおうに更新する必要はありません。"
 
 #: cola/editpatch.py:88
 #, python-format
 msgid "Editor returned %s exit code.  Not applying patch."
-msgstr ""
+msgstr "エディタは終了コード %sを返しました。パッチは適用されません。"
 
 #: cola/fsmonitor.py:152
 msgid "File system change monitoring: enabled.\n"
@@ -1015,24 +1027,33 @@ msgstr "ファイルシステム変更監視: 有効です。\n"
 
 #: cola/fsmonitor.py:196
 msgid ""
-"File system change monitoring: disabled because the limit on the total number of inotify watches was reached.  You may be able to increase the limit on the number of watches by running:\n"
+"File system change monitoring: disabled because the limit on the total "
+"number of inotify watches was reached.  You may be able to increase the "
+"limit on the number of watches by running:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
+"&& sudo sysctl -p\n"
 msgstr ""
-"ファイルシステム変更監視: inotify 監視の総数が上限に到達したため無効です。inotifyの監視の総数の上限を増加させるには以下のように実行します。:\n"
+"ファイルシステム変更監視: inotify "
+"監視の総数が上限に到達したため無効です。inotifyの監視の総数の上限を増加させるには以下のように実行します。:\n"
 "\n"
-"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p\n"
+"    echo fs.inotify.max_user_watches=100000 | sudo tee -a /etc/sysctl.conf "
+"&& sudo sysctl -p\n"
 
 #: cola/fsmonitor.py:563
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgid ""
+"File system change monitoring: disabled because \"cola.inotify\" is false.\n"
 msgstr "ファイルシステム変更監視: \"cola.inotify\"がfalseであるため、無効です。\n"
 
 #: cola/fsmonitor.py:574
-msgid "File system change monitoring: disabled because pywin32 is not installed.\n"
+msgid ""
+"File system change monitoring: disabled because pywin32 is not installed.\n"
 msgstr "ファイルシステム変更監視: pywin32がインストールされていないため、無効です。\n"
 
 #: cola/fsmonitor.py:580
-msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
+msgid ""
+"File system change monitoring: disabled because libc does not support the "
+"inotify system calls.\n"
 msgstr "ファイルシステム変更監視: libcがinotifyシステムコールをサポートしていないため、無効です。\n"
 
 #: cola/gitcmds.py:641
@@ -1040,8 +1061,10 @@ msgid "Nothing to do"
 msgstr "すべきことはありません"
 
 #: cola/gitcmds.py:927
-msgid "Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel the current cherry-pick."
-msgstr ""
+msgid ""
+"Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel "
+"the current cherry-pick."
+msgstr "ヒント: \"アクション > チェリーピックの中止\" メニューアクションはこのチェリーピックをキャンセルするために使用します。"
 
 #: cola/guicmds.py:42 cola/widgets/branch.py:292
 msgid "Delete Remote Branch"
@@ -1086,7 +1109,7 @@ msgstr "新しい Bare リポジトリ..."
 #: cola/guicmds.py:164
 #, python-format
 msgid "\"%s\" already exists"
-msgstr "\"%s\" ブランチは既に存在します。"
+msgstr "\"%s\" ブランチは既に存在します"
 
 #: cola/guicmds.py:175 cola/widgets/search.py:74
 msgid "Export Patches"
@@ -1094,7 +1117,7 @@ msgstr "パッチのエクスポート"
 
 #: cola/guicmds.py:192
 msgid "Diff Against Commit"
-msgstr ""
+msgstr "コミットに対する差分"
 
 #: cola/guicmds.py:192 cola/widgets/dag.py:985 cola/widgets/diff.py:905
 #: cola/widgets/main.py:166 cola/widgets/main.py:815
@@ -1142,8 +1165,9 @@ msgstr "新しいブランチ名を入力する"
 msgid "Rename"
 msgstr "名前変更"
 
-#: cola/guicmds.py:366 cola/widgets/createbranch.py:123 cola/widgets/dag.py:422
-#: cola/widgets/editremotes.py:56 cola/widgets/main.py:850
+#: cola/guicmds.py:366 cola/widgets/createbranch.py:123
+#: cola/widgets/dag.py:422 cola/widgets/editremotes.py:56
+#: cola/widgets/main.py:850
 msgid "Reset"
 msgstr "リセット"
 
@@ -1153,7 +1177,7 @@ msgstr "すべてのリセット(未ステージングの変更は維持)"
 
 #: cola/guicmds.py:467 cola/widgets/main.py:661
 msgid "Load Layout"
-msgstr ""
+msgstr "レイアウトのロード"
 
 #: cola/hidpi.py:41
 msgid "Auto"
@@ -1180,9 +1204,8 @@ msgid "x 2"
 msgstr "x 2"
 
 #: cola/icons.py:57 cola/themes.py:657
-#, fuzzy
 msgid "Default"
-msgstr "既定値に戻す"
+msgstr "既定値"
 
 #: cola/icons.py:58
 msgid "Dark Theme"
@@ -1195,7 +1218,7 @@ msgstr "ライトテーマ"
 #: cola/interaction.py:34
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" は終了ステータスとして %(status)d を返しました。"
+msgstr "\"%(command)s\" は終了ステータスとして %(status) を返しました"
 
 #: cola/interaction.py:105 cola/widgets/main.py:609
 msgid "Continue"
@@ -1242,8 +1265,8 @@ msgid "Show Help"
 msgstr "ヘルプの表示"
 
 #: cola/sequenceeditor.py:116 cola/sequenceeditor.py:183
-#: cola/widgets/finder.py:160 cola/widgets/main.py:871 cola/widgets/stash.py:72
-#: cola/widgets/stash.py:373
+#: cola/widgets/finder.py:160 cola/widgets/main.py:871
+#: cola/widgets/stash.py:72 cola/widgets/stash.py:373
 msgid "Help"
 msgstr "ヘルプ"
 
@@ -1303,7 +1326,7 @@ msgstr "コミット"
 
 #: cola/sequenceeditor.py:397
 msgid "Remarks"
-msgstr ""
+msgstr "再マーク"
 
 #: cola/sequenceeditor.py:398 cola/widgets/dag.py:716
 msgid "Summary"
@@ -1316,7 +1339,7 @@ msgstr "Commit をコピー"
 
 #: cola/sequenceeditor.py:414
 msgid "Toggle Enabled"
-msgstr "有効に切り替えます。"
+msgstr "有効に切り替えます"
 
 #: cola/sequenceeditor.py:418
 msgid "Pick"
@@ -1357,7 +1380,7 @@ msgstr "アクション"
 
 #: cola/sequenceeditor.py:653
 msgid "Toggle Remark"
-msgstr ""
+msgstr "再マークの切り替え"
 
 #: cola/sequenceeditor.py:927
 msgid ""
@@ -1483,19 +1506,19 @@ msgstr "フラットダークグリーン"
 
 #: cola/themes.py:778
 msgid "MacOS Aqua light"
-msgstr ""
+msgstr "macOS Aqua ライト"
 
 #: cola/themes.py:782
 msgid "MacOS Aqua dark"
-msgstr ""
+msgstr "macOS Aqua ダーク"
 
 #: cola/themes.py:788
 msgid "MacOS Vibrant light"
-msgstr ""
+msgstr "macOS vibrant ライト"
 
 #: cola/themes.py:794
 msgid "MacOS Vibrant dark"
-msgstr ""
+msgstr "macOS Vibrant ダーク"
 
 #: cola/models/browse.py:32 cola/widgets/bookmarks.py:471
 #: cola/widgets/createtag.py:59 cola/widgets/editremotes.py:493
@@ -1560,33 +1583,33 @@ msgstr "変更したアップストリーム"
 
 #: cola/models/dag.py:342
 msgid "STAGE: changes ready to commit"
-msgstr ""
+msgstr "ステージ: コミット準備済みの変更"
 
 #: cola/models/dag.py:343
 msgid "WORKTREE: unstaged changes"
-msgstr ""
+msgstr "ワークツリー: ステージングされていない変更"
 
 #: cola/models/main.py:641
 #, python-format
 msgid "http proxy configured by \"git config http.proxy %(url)s\""
-msgstr ""
+msgstr "\"git config http.proxy %(url)s\"によってHTTP PROXYが設定されています"
 
 #: cola/models/main.py:676
 msgid "http proxy configured by the \"http_proxy\" environment variable"
-msgstr ""
+msgstr "\"http_proxy\"環境変数でHTTP PROXY が設定されています"
 
 #: cola/models/main.py:680 cola/models/main.py:691
 #, python-format
 msgid "%(scheme)s proxy configured from %(desktop)s settings: %(url)s"
-msgstr ""
+msgstr "%(desktop)の設定から%(scheme)のプロキシが設定されています: %(url)"
 
 #: cola/models/main.py:687
 msgid "https proxy configured by the \"https_proxy\" environment variable"
-msgstr ""
+msgstr "\"https_proxy\"環境変数でHTTPS PROXYが設定されています"
 
 #: cola/models/stash.py:144
 msgid "Error Renaming Stash"
-msgstr ""
+msgstr "スタッシュの名前変更にエラー"
 
 #: cola/models/stash.py:145
 msgid "\"git stash drop\" did not return a ref to rename."
@@ -1598,15 +1621,15 @@ msgstr "スタッシュ作成エラー"
 
 #: cola/models/stash.py:246 cola/widgets/stash.py:148
 msgid "All changes"
-msgstr ""
+msgstr "全ての変更"
 
 #: cola/models/stash.py:246
 msgid "Stash all changes"
-msgstr ""
+msgstr "全ての変更をスタッシュ"
 
 #: cola/models/stash.py:247 cola/widgets/stash.py:155
 msgid "Staged only"
-msgstr ""
+msgstr "ステージ済のみ"
 
 #: cola/models/stash.py:247
 msgid "Stash staged changes only"
@@ -1614,7 +1637,7 @@ msgstr "ステージされた変更のみをスタッシュ"
 
 #: cola/models/stash.py:249 cola/widgets/stash.py:162
 msgid "Unstaged only"
-msgstr ""
+msgstr "非ステージのみ"
 
 #: cola/models/stash.py:250
 msgid "Stash unstaged changes only, keeping staged changes"
@@ -1850,7 +1873,8 @@ msgid ""
 "\n"
 "        <br>\n"
 "        <p>\n"
-"            We invite you to participate in translation by adding or updating\n"
+"            We invite you to participate in translation by adding or "
+"updating\n"
 "            a translation and opening a pull request.\n"
 "        </p>\n"
 "\n"
@@ -1921,15 +1945,15 @@ msgstr "プル..."
 
 #: cola/widgets/action.py:73 cola/widgets/main.py:388
 msgid "Integrate changes using \"git pull\""
-msgstr ""
+msgstr "\"git pull\"を使って変更を統合"
 
 #: cola/widgets/action.py:76
 msgid "Sync"
-msgstr ""
+msgstr "同期"
 
 #: cola/widgets/action.py:78
 msgid "Integrate changes from tracking branches using \"git pull\""
-msgstr ""
+msgstr "\"git pull\"を使って追跡しているプランチから変更を統合"
 
 #: cola/widgets/action.py:81
 msgid "Sync out"
@@ -1937,7 +1961,7 @@ msgstr ""
 
 #: cola/widgets/action.py:83
 msgid "Push changes to tracking branch using \"git push\""
-msgstr ""
+msgstr "\"git push\"を使って追跡しているブランチに変更をプッシュ"
 
 #: cola/widgets/action.py:86 cola/widgets/main.py:408
 msgid "Stash..."
@@ -1949,11 +1973,11 @@ msgstr "\"git stash\"を使ってコミットしていない変更を一時的�
 
 #: cola/widgets/action.py:91
 msgid "Exit Diff"
-msgstr ""
+msgstr "差分を終了"
 
 #: cola/widgets/action.py:91
 msgid "Exit Diff mode"
-msgstr ""
+msgstr "差分モードを終了"
 
 #: cola/widgets/archive.py:111
 msgid "Save Archive"
@@ -2210,9 +2234,8 @@ msgid "Edit selected paths"
 msgstr "選択したパスを編集する"
 
 #: cola/widgets/browse.py:208
-#, fuzzy
 msgid "Blame selected paths"
-msgstr "選択したパスの名前を変更"
+msgstr "選択したパスのコミット時情報を表示"
 
 #: cola/widgets/browse.py:542
 msgid "Select Previous Version"
@@ -2220,7 +2243,7 @@ msgstr "以前のバージョンを選択"
 
 #: cola/widgets/browse.py:587 cola/widgets/browse.py:604
 msgid "Error Saving File"
-msgstr ""
+msgstr "ファイル保存中のエラー"
 
 #: cola/widgets/browse.py:609
 #, python-format
@@ -2316,7 +2339,7 @@ msgstr "クローン中のエラー"
 #: cola/widgets/clone.py:188 cola/widgets/clone.py:190
 #, python-format
 msgid "Could not parse Git URL: \"%s\""
-msgstr "Git URL \"%s\"がパースできません。"
+msgstr "Git URL \"%s\"がパースできません"
 
 #: cola/widgets/clone.py:194
 msgid "Select a parent directory for the new clone"
@@ -2325,7 +2348,7 @@ msgstr "新しいクローン用に親ディレクトリを選択"
 #: cola/widgets/clone.py:203
 #, python-format
 msgid "\"%s\" already exists, cola will create a new directory"
-msgstr "\"%s\" は既に存在しています。git colaは新しいディレクトリを作成してします。"
+msgstr "\"%s\" は既に存在しています。git colaは新しいディレクトリを作成してします"
 
 #: cola/widgets/clone.py:204
 msgid "Directory Exists"
@@ -2366,11 +2389,11 @@ msgstr "最新コミットを訂正"
 
 #: cola/widgets/commitmsg.py:153 cola/widgets/commitmsg.py:913
 msgid "Set Commit Date"
-msgstr ""
+msgstr "コミット日時を設定"
 
 #: cola/widgets/commitmsg.py:159 cola/widgets/commitmsg.py:1103
 msgid "Set Commit Author"
-msgstr ""
+msgstr "コミットの著者を設定"
 
 #: cola/widgets/commitmsg.py:166
 msgid "Bypass Commit Hooks"
@@ -2398,19 +2421,19 @@ msgstr "以前のコミットを修正"
 
 #: cola/widgets/commitmsg.py:202
 msgid "Cancel the commit author override."
-msgstr ""
+msgstr "コミットの著者の上書きをキャンセルします。"
 
 #: cola/widgets/commitmsg.py:204
 msgid "A commit will be recorded with this author"
-msgstr ""
+msgstr "コミットはこの著者として記録されます"
 
 #: cola/widgets/commitmsg.py:209
 msgid "A commit will be recorded with this date and time"
-msgstr ""
+msgstr "コミットはこの著者と時間として記録されます"
 
 #: cola/widgets/commitmsg.py:214
 msgid "Cancel the commit date override."
-msgstr ""
+msgstr "コミット日時の上書きをキャンセルします。"
 
 #: cola/widgets/commitmsg.py:395
 msgid "Clear commit message?"
@@ -2474,7 +2497,7 @@ msgstr "ステージングとコミット"
 
 #: cola/widgets/commitmsg.py:573
 msgid "Nothing to commit"
-msgstr "コミットするものはありません。"
+msgstr "コミットするものはありません"
 
 #: cola/widgets/commitmsg.py:591
 msgid "Amend the published commit?"
@@ -2499,52 +2522,52 @@ msgstr "コミットを選択"
 #: cola/widgets/commitmsg.py:767
 #, python-format
 msgid "Setting commit date to %s"
-msgstr ""
+msgstr "コミット日時を %s に設定"
 
 #: cola/widgets/commitmsg.py:796
 #, python-format
 msgid "Setting commit author to %s"
-msgstr ""
+msgstr "コミットの著者を %s に設定"
 
 #: cola/widgets/commitmsg.py:857 cola/widgets/commitmsg.py:926
 msgid "Decrement"
-msgstr ""
+msgstr "デクレメント"
 
 #: cola/widgets/commitmsg.py:864 cola/widgets/commitmsg.py:923
 msgid "Increment"
-msgstr ""
+msgstr "インクリメント"
 
 #: cola/widgets/commitmsg.py:871
 msgid "Reset time to latest commit"
-msgstr ""
+msgstr "最新のコミットの時間をリセット"
 
 #: cola/widgets/commitmsg.py:877
 msgid "Reset time to current time"
-msgstr ""
+msgstr "時間を現在の時間にリセット"
 
 #: cola/widgets/commitmsg.py:883
 msgid "Set Date and Time"
-msgstr ""
+msgstr "日時を設定"
 
 #: cola/widgets/commitmsg.py:1046
 msgid "Override the commit author when authoring commits"
-msgstr ""
+msgstr "コミットを編集するときにコミットの著者を上書き"
 
 #: cola/widgets/commitmsg.py:1056
 msgid "Set author to match the latest commit"
-msgstr ""
+msgstr "最近のマッチするコミットの著者を設定"
 
 #: cola/widgets/commitmsg.py:1062
 msgid "Reset author to the current author"
-msgstr ""
+msgstr "著者を現在の著者に設定"
 
 #: cola/widgets/commitmsg.py:1068
 msgid "Reset to default author"
-msgstr ""
+msgstr "デフォルトの著者に設定"
 
 #: cola/widgets/commitmsg.py:1074
 msgid "Set Author"
-msgstr ""
+msgstr "著者の設定"
 
 #: cola/widgets/commitmsg.py:1161
 msgid "Commit summary"
@@ -2636,7 +2659,7 @@ msgstr "\"%(branch)s\" ブランチを \"%(revision)s\" リビジョンにリセ
 #: cola/widgets/createbranch.py:278
 #, python-format
 msgid "%d skipped"
-msgstr "%d スキップしました。"
+msgstr "%d件スキップしました"
 
 #: cola/widgets/createbranch.py:280
 msgid "Recovering lost commits may not be easy."
@@ -2658,7 +2681,7 @@ msgstr "ブランチ作成エラー"
 #: cola/widgets/createbranch.py:313
 #, python-format
 msgid "\"%(command)s\" returned exit status \"%(status)d\""
-msgstr "\"%(command)s\" は終了ステータスとして \"%(status)d\" を返しました。"
+msgstr "\"%(command)s\" は終了ステータスとして \"%(status)\" を返しました"
 
 #: cola/widgets/createtag.py:53 cola/widgets/createtag.py:89
 #: cola/widgets/dag.py:494
@@ -2707,7 +2730,7 @@ msgstr "パッチを作成"
 
 #: cola/widgets/dag.py:499 cola/widgets/main.py:330
 msgid "Save As Tarball/Zip..."
-msgstr "Tarball/Zip形式で保存する"
+msgstr "Tarball/Zip形式で保存..."
 
 #: cola/widgets/dag.py:504 cola/widgets/search.py:78
 msgid "Cherry Pick"
@@ -2727,11 +2750,11 @@ msgstr "デタッチしたHEADをチェックアウト"
 
 #: cola/widgets/dag.py:534
 msgid "Rebase to this commit"
-msgstr ""
+msgstr "このコミットをリベース"
 
 #: cola/widgets/dag.py:551
 msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
-msgstr ""
+msgstr "ワークツリーを元に戻して全てをリセットする(未ステージの変更を維持)"
 
 #: cola/widgets/dag.py:577 cola/widgets/filelist.py:39
 msgid "Grab File..."
@@ -2739,7 +2762,7 @@ msgstr "ファイルのGrab..."
 
 #: cola/widgets/dag.py:583 cola/widgets/filelist.py:42
 msgid "Grab File from Parent Commit..."
-msgstr ""
+msgstr "現在のコミットからファイルをGrab..."
 
 #: cola/widgets/dag.py:591 cola/widgets/filelist.py:45
 msgid "Trace Evolution of Line Range..."
@@ -2747,7 +2770,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:608 cola/widgets/diff.py:1533
 msgid "Copy Commit (Short)"
-msgstr ""
+msgstr "コミットのコピー(短)"
 
 #: cola/widgets/dag.py:622
 msgid "Commits authored by me"
@@ -2767,7 +2790,7 @@ msgstr "マージコミットを無視"
 
 #: cola/widgets/dag.py:636
 msgid "Filter commits by line range"
-msgstr ""
+msgstr "行の範囲でコミットをフィルタ"
 
 #: cola/widgets/dag.py:716
 msgid "Date, Time"
@@ -2808,7 +2831,7 @@ msgstr "グラフ"
 
 #: cola/widgets/dag.py:1011
 msgid "Display Worktree Status"
-msgstr ""
+msgstr "ワークツリーの状態を表示"
 
 #: cola/widgets/dag.py:1014 cola/widgets/main.py:650
 msgid "Lock Layout"
@@ -2833,7 +2856,7 @@ msgstr ""
 
 #: cola/widgets/dag.py:1284
 msgid "Select Line Range"
-msgstr ""
+msgstr "行の範囲を選択"
 
 #: cola/widgets/dag.py:1876
 msgid "Select Parent"
@@ -2853,7 +2876,7 @@ msgstr "最新の子を選択"
 
 #: cola/widgets/diff.py:211
 msgid "Copy Diff"
-msgstr ""
+msgstr "差分をコピー"
 
 #: cola/widgets/diff.py:576 cola/widgets/diff.py:1785
 msgid "Search in Diff"
@@ -2889,19 +2912,19 @@ msgstr "ファイル名の表示"
 
 #: cola/widgets/diff.py:869
 msgid "Enable word wrapping"
-msgstr ""
+msgstr "ワードラッピングを有効にする"
 
 #: cola/widgets/diff.py:872
 msgid "Maximum diff size in megabytes (MB)"
-msgstr ""
+msgstr "最大差分サイズ(MB)"
 
 #: cola/widgets/diff.py:879
 msgid "The maximum diff size in megabytes (MB)"
-msgstr ""
+msgstr "最大差分サイズ(MB)"
 
 #: cola/widgets/diff.py:882
 msgid "Unlimited"
-msgstr ""
+msgstr "無制限"
 
 #: cola/widgets/diff.py:896 cola/widgets/diff.py:920
 msgid "Diff Options"
@@ -2947,8 +2970,9 @@ msgstr "400%"
 msgid "800%"
 msgstr "800%"
 
-#: cola/widgets/diff.py:1020 cola/widgets/diff.py:1914 cola/widgets/stash.py:51
-#: cola/widgets/stash.py:135 cola/widgets/toolbar.py:328
+#: cola/widgets/diff.py:1020 cola/widgets/diff.py:1914
+#: cola/widgets/stash.py:51 cola/widgets/stash.py:135
+#: cola/widgets/toolbar.py:328
 msgid "Apply"
 msgstr "適用"
 
@@ -2958,11 +2982,11 @@ msgstr "選択行のリバート"
 
 #: cola/widgets/diff.py:1045
 msgid "Edit and Apply"
-msgstr ""
+msgstr "編集して適用"
 
 #: cola/widgets/diff.py:1052
 msgid "Edit and Revert"
-msgstr ""
+msgstr "編集とリバート"
 
 #: cola/widgets/diff.py:1130
 msgid "Unstage Selected Lines"
@@ -2983,7 +3007,7 @@ msgstr "選択行のステージング"
 
 #: cola/widgets/diff.py:1166
 msgid "Edit Selected Lines to Stage..."
-msgstr ""
+msgstr "選択行を編集してステージング..."
 
 #: cola/widgets/diff.py:1167
 msgid "Revert Selected Lines..."
@@ -2991,7 +3015,7 @@ msgstr "選択行のリバート…"
 
 #: cola/widgets/diff.py:1168
 msgid "Edit Selected Lines to Revert..."
-msgstr ""
+msgstr "選択行を編集してリバート..."
 
 #: cola/widgets/diff.py:1170
 msgid "Stage Diff Hunk"
@@ -2999,7 +3023,7 @@ msgstr "差分のステージング"
 
 #: cola/widgets/diff.py:1171
 msgid "Edit Diff Hunk to Stage..."
-msgstr ""
+msgstr "差分の塊を編集してステージング..."
 
 #: cola/widgets/diff.py:1172
 msgid "Revert Diff Hunk..."
@@ -3007,15 +3031,15 @@ msgstr "差分のリバート…"
 
 #: cola/widgets/diff.py:1173
 msgid "Edit Diff Hunk to Revert..."
-msgstr ""
+msgstr "差分の塊を編集してリバート..."
 
 #: cola/widgets/diff.py:1237
 msgid "Edit Selected Lines to Unstage..."
-msgstr ""
+msgstr "選択行を編集してステージング解除..."
 
 #: cola/widgets/diff.py:1239
 msgid "Edit Diff Hunk to Unstage..."
-msgstr ""
+msgstr "差分の塊を編集してステージング解除..."
 
 #: cola/widgets/diff.py:1338
 msgid "Revert Selected Lines?"
@@ -3043,11 +3067,11 @@ msgstr "パッチ"
 
 #: cola/widgets/diff.py:1412
 msgid "Export Patch"
-msgstr ""
+msgstr "パッチのエクスポート"
 
 #: cola/widgets/diff.py:1419
 msgid "Append Patch"
-msgstr ""
+msgstr "パッチの追加"
 
 #: cola/widgets/diff.py:1436
 msgid "Choose Patch..."
@@ -3055,7 +3079,7 @@ msgstr "パッチの選択..."
 
 #: cola/widgets/diff.py:1488
 msgid "Append Patch..."
-msgstr ""
+msgstr "パッチの追加..."
 
 #: cola/widgets/diff.py:1515
 msgid "Error writing patch"
@@ -3064,23 +3088,23 @@ msgstr ""
 #: cola/widgets/diff.py:1516
 #, python-format
 msgid "Unable to write patch to \"%s\". Check permissions?"
-msgstr "\"%s\" のパッチの作成ができませんでした。ファイル/フォルダの権限を確認してくださ。"
+msgstr "\"%s\" のパッチの作成ができませんでした。ファイル/フォルダの権限を確認してください?"
 
 #: cola/widgets/diff.py:1529
 msgid "Click to Copy"
-msgstr ""
+msgstr "クリックしてコピー"
 
 #: cola/widgets/diff.py:1585
 msgid "Copy Name"
-msgstr ""
+msgstr "名前をコピー"
 
 #: cola/widgets/diff.py:1591
 msgid "Copy Email"
-msgstr ""
+msgstr "メールアドレスをコピー"
 
 #: cola/widgets/diff.py:1596
 msgid "Send Email"
-msgstr ""
+msgstr "メールを送信"
 
 #: cola/widgets/diff.py:1878
 msgid "Apply Patches"
@@ -3142,7 +3166,7 @@ msgstr "リストから選択してリモートを編集する"
 
 #: cola/widgets/editremotes.py:79
 msgid "Add new remote git repository"
-msgstr "新しいgitのリモートリポジトリを追加します。"
+msgstr "新しいgitのリモートリポジトリを追加します"
 
 #: cola/widgets/editremotes.py:86
 msgid "Delete remote"
@@ -3299,7 +3323,7 @@ msgstr ""
 
 #: cola/widgets/log.py:32
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 #: cola/widgets/log.py:39 cola/widgets/log.py:141
 msgid "Right-click links to open:"
@@ -3400,7 +3424,7 @@ msgstr "チェリーピック..."
 
 #: cola/widgets/main.py:318
 msgid "Load Commit Message..."
-msgstr "コミットメッセージをロード"
+msgstr "コミットメッセージをロード..."
 
 #: cola/widgets/main.py:324
 msgid "Prepare Commit Message"
@@ -3444,11 +3468,11 @@ msgstr "キーボードショートカット"
 
 #: cola/widgets/main.py:481
 msgid "Visualize Current Branch..."
-msgstr "現在ブランチを可視化"
+msgstr "現在ブランチを可視化..."
 
 #: cola/widgets/main.py:487
 msgid "Visualize All Branches..."
-msgstr "全てのブランチを可視化"
+msgstr "全てのブランチを可視化..."
 
 #: cola/widgets/main.py:492
 msgid "Search..."
@@ -3472,7 +3496,7 @@ msgstr ""
 
 #: cola/widgets/main.py:527
 msgid "Exit Diff Mode"
-msgstr ""
+msgstr "差分モードを終了"
 
 #: cola/widgets/main.py:532
 msgid "Expression..."
@@ -3540,7 +3564,7 @@ msgstr "レイアウトのリセット"
 
 #: cola/widgets/main.py:658
 msgid "Save Layout"
-msgstr ""
+msgstr "レイアウトの保存"
 
 #: cola/widgets/main.py:666
 msgid "Quick Open..."
@@ -3597,7 +3621,7 @@ msgstr "ツールバーの追加"
 
 #: cola/widgets/main.py:1031
 msgid "Layouts"
-msgstr ""
+msgstr "レイアウト"
 
 #: cola/widgets/main.py:1136
 msgid ""
@@ -3639,7 +3663,7 @@ msgstr "訂正中"
 
 #: cola/widgets/main.py:1187
 msgid "Diff Mode"
-msgstr ""
+msgstr "差分モード"
 
 #: cola/widgets/main.py:1189
 msgid "Cherry-picking"
@@ -3666,16 +3690,20 @@ msgid "Squash the merged commits into a single commit"
 msgstr "複数のマージコミットを一つのコミットにまとめる(スカッシュ)"
 
 #: cola/widgets/merge.py:59
-msgid "Always create a merge commit when enabled, even when the merge is a fast-forward update"
-msgstr "可能な場合には常にマージコミットを作成するする、たとえそのマージがファーストフォワードアップデートだった場合でもでも作成する。"
+msgid ""
+"Always create a merge commit when enabled, even when the merge is a "
+"fast-forward update"
+msgstr "可能な場合には常にマージコミットを作成するする、たとえそのマージがファーストフォワードアップデートだった場合でもでも作成する"
 
 #: cola/widgets/merge.py:63
 msgid "No fast forward"
 msgstr "ファーストフォワードがありません"
 
 #: cola/widgets/merge.py:68
-msgid "Commit the merge if there are no conflicts.  Uncheck to leave the merge uncommitted"
-msgstr "衝突のない場合のみこのマージをコミットチェックなしで、コミットされていないマージを残す。"
+msgid ""
+"Commit the merge if there are no conflicts.  Uncheck to leave the merge "
+"uncommitted"
+msgstr "衝突のない場合のみこのマージをコミットチェックなしで、コミットされていないマージを残す"
 
 #: cola/widgets/merge.py:78
 msgid "GPG-sign the merge commit"
@@ -3713,6 +3741,9 @@ msgid ""
 "Relative paths are relative to the current repository.\n"
 "Absolute path are used as-is."
 msgstr ""
+"パッチをエクスポートしたときのデフォルトディレクトリ。\n"
+"相対パスは現在のリポジトリからの相対パス。\n"
+"絶対パスはそのまま使用されます。"
 
 #: cola/widgets/prefs.py:134
 msgid ""
@@ -3763,8 +3794,10 @@ msgstr ""
 "    # ------------------------ >8 ------------------------"
 
 #: cola/widgets/prefs.py:172
-msgid "Enable file system change monitoring using inotify on Linux and win32event on Windows"
-msgstr ""
+msgid ""
+"Enable file system change monitoring using inotify on Linux and win32event "
+"on Windows"
+msgstr "Linuxの場合はinotify、Windowsの場合はwin32eventを使用して、ファイルシステムの変更監視を有効にします"
 
 #: cola/widgets/prefs.py:179
 msgid ""
@@ -3784,7 +3817,7 @@ msgstr "著者のメールで gravatar.com からアイコンを探す"
 
 #: cola/widgets/prefs.py:195 cola/widgets/prefs.py:236
 msgid "Display desktop notifications using popup dialogs"
-msgstr ""
+msgstr "ポップアップダイアログを使用してデスクトップ通知を表示"
 
 #: cola/widgets/prefs.py:198
 msgid "Enable path autocompletion in tools"
@@ -3792,7 +3825,7 @@ msgstr "ツールのパス自動補完を有効にする"
 
 #: cola/widgets/prefs.py:201
 msgid "Enable detection and configuration of HTTP proxy settings"
-msgstr ""
+msgstr "HTTPプロキシ設定の検出を有効にして、設定する"
 
 #: cola/widgets/prefs.py:205
 msgid "Email"
@@ -3800,7 +3833,7 @@ msgstr "メールアドレス"
 
 #: cola/widgets/prefs.py:208
 msgid "Patches Directory"
-msgstr ""
+msgstr "パッチディレクトリ"
 
 #: cola/widgets/prefs.py:209
 msgid "Number of Diff Context Lines"
@@ -3808,7 +3841,7 @@ msgstr "diff の文脈行数"
 
 #: cola/widgets/prefs.py:210
 msgid "Log Date Format"
-msgstr ""
+msgstr "ログの日時フォーマット"
 
 #: cola/widgets/prefs.py:214
 msgid "Automatically Load Commit Message Template"
@@ -3820,7 +3853,7 @@ msgstr "コミットメッセージのクリーンアップ"
 
 #: cola/widgets/prefs.py:220
 msgid "Update stacked branches/refs when rebasing"
-msgstr ""
+msgstr "リベース時のスタックしたブランチやrefを更新する"
 
 #: cola/widgets/prefs.py:223
 msgid "Show Diffstat After Merge"
@@ -3840,11 +3873,11 @@ msgstr "未追跡ファイルの表示"
 
 #: cola/widgets/prefs.py:229
 msgid "Enable Filesystem Monitoring"
-msgstr ""
+msgstr "ファイルシステムの監視を有効にする"
 
 #: cola/widgets/prefs.py:230
 msgid "Filesystem Monitoring Event Delay"
-msgstr ""
+msgstr "ファイスルシステムの監視イベント遅延"
 
 #: cola/widgets/prefs.py:231
 msgid "Enable Gravatar Icons"
@@ -3852,7 +3885,7 @@ msgstr "グラバターのアイコンを有効にする"
 
 #: cola/widgets/prefs.py:232
 msgid "Update Index on Startup"
-msgstr ""
+msgstr "スタートアップ時にインデックスを更新"
 
 #: cola/widgets/prefs.py:233
 msgid "Autocomplete Paths"
@@ -3864,11 +3897,11 @@ msgstr "ウィンドウタイトルにフルパスを表示"
 
 #: cola/widgets/prefs.py:241
 msgid "Automatically Detect and Configure Proxy Settings"
-msgstr ""
+msgstr "プロキシ設定を自動的に検出して設定する"
 
 #: cola/widgets/prefs.py:244
 msgid "HTTP Proxy URL"
-msgstr ""
+msgstr "HTTPプロキシURL"
 
 #: cola/widgets/prefs.py:294
 msgid "The main GUI editor that must block until it exits"
@@ -3896,19 +3929,19 @@ msgstr "アメンド時にコミットを発行したかどうかを確認"
 
 #: cola/widgets/prefs.py:318
 msgid "Refresh repository state whenever the window is focused or un-minimized"
-msgstr ""
+msgstr "ウィンドウがフォーカスされているか最小化されていない場合はいつでもリポジトリの状態をリフレッシュする"
 
 #: cola/widgets/prefs.py:322
 msgid "Emit notifications when commits are pushed."
-msgstr ""
+msgstr "コミットがプッシュされたときにメールで通知する。"
 
 #: cola/widgets/prefs.py:325
 msgid "Use \"aspell\" as the spelling dictionary source"
-msgstr ""
+msgstr "\"aspell\" をスペル辞書ソースとして使用する"
 
 #: cola/widgets/prefs.py:328
 msgid "Additional spellcheck dictionary files (requires restart)"
-msgstr ""
+msgstr "追加のスペルチェック辞書ファイル(再起動が必要)"
 
 #: cola/widgets/prefs.py:332
 msgid "Text Width"
@@ -3928,7 +3961,7 @@ msgstr "エディタ"
 
 #: cola/widgets/prefs.py:339
 msgid "Background Editor"
-msgstr ""
+msgstr "バックグラウンドエディタ"
 
 #: cola/widgets/prefs.py:340
 msgid "History Browser"
@@ -3968,7 +4001,7 @@ msgstr "Ctrl + MouseWheel で拡大縮小"
 
 #: cola/widgets/prefs.py:353
 msgid "Refresh on Focus"
-msgstr ""
+msgstr "フォーカス時に再読み込み"
 
 #: cola/widgets/prefs.py:354
 msgid "Sort Bookmarks Alphabetically"
@@ -3988,23 +4021,23 @@ msgstr "アメンド時の発行したコミットを確認"
 
 #: cola/widgets/prefs.py:362
 msgid "Notify on Push"
-msgstr ""
+msgstr "プッシュ時に通知"
 
 #: cola/widgets/prefs.py:366
 msgid "Enable \"aspell\" Spelling Dictionaries"
-msgstr ""
+msgstr "\"aspell\"のスペル辞書を有効化"
 
 #: cola/widgets/prefs.py:367
 msgid "Additional Spelling Dictionaries"
-msgstr ""
+msgstr "追加のスペル辞書"
 
 #: cola/widgets/prefs.py:424
 msgid "The font size for the fixed-width diff font"
-msgstr ""
+msgstr "固定幅の差分フォントのフォントサイズ"
 
 #: cola/widgets/prefs.py:427
 msgid "The font size for the main UI elements"
-msgstr ""
+msgstr "メインUI要素のフォントサイズ"
 
 #: cola/widgets/prefs.py:444
 msgid "Fixed-Width Font"
@@ -4016,7 +4049,7 @@ msgstr "フォントサイズ"
 
 #: cola/widgets/prefs.py:446
 msgid "Font Size (UI)"
-msgstr ""
+msgstr "フォントサイズ (UI)"
 
 #: cola/widgets/prefs.py:447
 msgid "GUI theme"
@@ -4032,7 +4065,7 @@ msgstr "高DPI"
 
 #: cola/widgets/prefs.py:450
 msgid "Bold all fonts"
-msgstr ""
+msgstr "すべてのフォントをボールド"
 
 #: cola/widgets/prefs.py:451
 msgid "Bold on Dark Headers Instead of Italic"
@@ -4044,7 +4077,7 @@ msgstr "ステータスタイトリにファイル数を表示"
 
 #: cola/widgets/prefs.py:453
 msgid "Indent Status paths"
-msgstr ""
+msgstr "インデント状態パス"
 
 #: cola/widgets/prefs.py:454
 msgid "Use a Block Cursor in Diff Editors"
@@ -4056,11 +4089,11 @@ msgstr "外観の設定を変更後にこのアプリケーションを再起動
 
 #: cola/widgets/prefs.py:554 cola/widgets/prefs.py:556
 msgid "Add Dictionary"
-msgstr ""
+msgstr "辞書の追加"
 
 #: cola/widgets/prefs.py:615 cola/widgets/prefs.py:645
 msgid "Select dictionary file(s)..."
-msgstr ""
+msgstr "辞書ファイルの選択..."
 
 #: cola/widgets/prefs.py:663
 msgid "Current Repository"
@@ -4111,7 +4144,7 @@ msgstr ""
 #: cola/widgets/remote.py:123
 #, python-format
 msgid "Not pushed: %s"
-msgstr ""
+msgstr "プッシュせず: %s"
 
 #: cola/widgets/remote.py:194
 msgid "Prompt on creation"
@@ -4134,7 +4167,9 @@ msgid "Fast-forward only"
 msgstr "ファーストフードのみ"
 
 #: cola/widgets/remote.py:208
-msgid "Refuse to merge unless the current HEAD is already up-to-date or the merge can be resolved as a fast-forward"
+msgid ""
+"Refuse to merge unless the current HEAD is already up-to-date or the merge "
+"can be resolved as a fast-forward"
 msgstr "現在のHEADが既に最新ではないまたはマージがファーストフォワードとして解決されない限りマージを拒否する。"
 
 #: cola/widgets/remote.py:216
@@ -4150,8 +4185,11 @@ msgid "Force"
 msgstr "強制"
 
 #: cola/widgets/remote.py:226
-msgid "Allow non-fast-forward updates.  Using \"force\" can cause the remote repository to lose commits; use it with care"
-msgstr "ファストフォワードではない更新を許可します。\"force\" はリモートリポジトリでコミットを失う可能性があります。使用には注意してください。"
+msgid ""
+"Allow non-fast-forward updates.  Using \"force\" can cause the remote "
+"repository to lose commits; use it with care"
+msgstr ""
+"ファストフォワードではない更新を許可します。\"force\" はリモートリポジトリでコミットを失う可能性があります。使用には注意してください。"
 
 #: cola/widgets/remote.py:235
 msgid "Include tags "
@@ -4179,11 +4217,11 @@ msgstr "新しいアップストリームとしてリモートブランチを設
 
 #: cola/widgets/remote.py:253
 msgid "Close on completion"
-msgstr ""
+msgstr "完了時にクローズ"
 
 #: cola/widgets/remote.py:254
 msgid "Close dialog when completed"
-msgstr ""
+msgstr "完了時のダイアログをクローズ"
 
 #: cola/widgets/remote.py:568
 #, python-format
@@ -4372,7 +4410,7 @@ msgstr "修正した状態を新しいスタッシュで保存する"
 
 #: cola/widgets/stash.py:62
 msgid "Drop the selected stash"
-msgstr "選択したスタッシュをドロップします。"
+msgstr "選択したスタッシュをドロップします"
 
 #: cola/widgets/stash.py:66 cola/widgets/stash.py:139
 msgid "Pop"
@@ -4384,11 +4422,11 @@ msgstr "選択したスタッシュを適用する(git stash pop)"
 
 #: cola/widgets/stash.py:88
 msgid "Recreate Index"
-msgstr ""
+msgstr "インデックス再作成"
 
 #: cola/widgets/stash.py:89
 msgid "Recreate the index when restoring stashes"
-msgstr ""
+msgstr "スタッシュの回復時にインデックスを再作成"
 
 #: cola/widgets/stash.py:256
 msgid "Enter a new name for the stash"
@@ -4444,6 +4482,16 @@ msgid ""
 "ctrl + enter        apply stash\n"
 "ctrl + s            save stash\n"
 msgstr ""
+"\n"
+"キーボードショートカット  アクション\n"
+"------------------  --------------------------------\n"
+"?                   ヘルプの表示\n"
+"esc                 クローズして終了\n"
+"ctrl + 1, alt + a   保存モードを\"すべての変更\"に\n"
+"ctrl + 2, alt + s   保存モードを\"ステージ済みのみ\"に\n"
+"ctrl + 3, alt + u   保存モードを\"未ステージのみ\"に\n"
+"ctrl + enter        スタッシュの適用\n"
+"ctrl + s            スタッシュの保存\n"
 
 #: cola/widgets/status.py:58
 msgid "Toggle the paths filter"
@@ -4451,7 +4499,7 @@ msgstr "パスフィルタを切り替えます"
 
 #: cola/widgets/status.py:66
 msgid "Exit \"Diff\" mode"
-msgstr ""
+msgstr "\"差分\"モードを終了"
 
 #: cola/widgets/status.py:164 cola/widgets/status.py:651
 msgid "Untracked"
@@ -4512,9 +4560,8 @@ msgid "Ignore..."
 msgstr "無視..."
 
 #: cola/widgets/status.py:962
-#, fuzzy
 msgid "Update this submodule"
-msgstr "サブモジュールを初期化する"
+msgstr "サブモジュールを更新する"
 
 #: cola/widgets/status.py:1327
 #, python-format
@@ -4566,9 +4613,8 @@ msgid "The number of leading paths to strip"
 msgstr "パスの先頭を切り取る数"
 
 #: cola/widgets/submodules.py:47
-#, fuzzy
 msgid "Open Parent"
-msgstr "最近のものを開く"
+msgstr "親を開く"
 
 #: cola/widgets/submodules.py:86
 msgid "git://git.example.com/repo.git"
@@ -4595,7 +4641,9 @@ msgid "Submodule branch to track (optional)"
 msgstr "追跡するサブモジュールのブランチ(任意)"
 
 #: cola/widgets/submodules.py:105
-msgid "Create a shallow clone with history truncated to the specified number of revisions.  0 performs a full clone."
+msgid ""
+"Create a shallow clone with history truncated to the specified number of "
+"revisions.  0 performs a full clone."
 msgstr "指定した数まで履歴を切り詰めた浅いクローンを作成します。0 は完全なクローンになります。"
 
 #: cola/widgets/submodules.py:110
@@ -4608,7 +4656,7 @@ msgstr "clone時に使用する参照リポジトリ(任意)"
 
 #: cola/widgets/submodules.py:125
 msgid "Depth"
-msgstr ""
+msgstr "深さ"
 
 #: cola/widgets/submodules.py:126
 msgid "Reference Repository"
@@ -4617,11 +4665,11 @@ msgstr "参照リポジトリ"
 #: cola/widgets/text.py:218
 #, python-format
 msgid "Open \"%s\""
-msgstr ""
+msgstr "\"%s\"を開く"
 
 #: cola/widgets/text.py:398
 msgid "Find in diff"
-msgstr ""
+msgstr "差分で検索"
 
 #: cola/widgets/text.py:401
 msgid "Find the previous occurrence of the phrase"
@@ -4641,19 +4689,19 @@ msgstr "単語全体"
 
 #: cola/widgets/text.py:412
 msgid "Close the find bar"
-msgstr ""
+msgstr "検索バーを閉じる"
 
 #: cola/widgets/text.py:435
 msgid "Find next item"
-msgstr ""
+msgstr "次のアイテムを検索"
 
 #: cola/widgets/text.py:441
 msgid "Find previous item"
-msgstr ""
+msgstr "前のアイテムを検索"
 
 #: cola/widgets/text.py:1173
 msgid "Copy All"
-msgstr ""
+msgstr "すべてをコピー"
 
 #: cola/widgets/text.py:1179
 msgid "Copy Selection"
@@ -4665,7 +4713,7 @@ msgstr "システムのスタイルに従う"
 
 #: cola/widgets/toolbar.py:182
 msgid "Icon Only"
-msgstr ""
+msgstr "アイコンのみ"
 
 #: cola/widgets/toolbar.py:183
 msgid "Text Only"
@@ -4810,6 +4858,7 @@ msgstr "ツールバーのスタイル"
 #~ "これは Cygwin で配布されている Tcl バイナリに\n"
 #~ "関しての既知の問題によります"
 
+#, qt-format
 #~ msgid "%s ... %*i of %*i %s (%3i%%)"
 #~ msgstr "%1$s ... %4$*i %6$s 中の %2$*i (%7$3i%%)"
 
@@ -4909,7 +4958,9 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Cannot amend while merging.\n"
 #~ "\n"
-#~ "You are currently in the middle of a merge that has not been fully completed.  You cannot amend the prior commit unless you first abort the current merge activity.\n"
+#~ "You are currently in the middle of a merge that has not been fully "
+#~ "completed.  You cannot amend the prior commit unless you first abort the "
+#~ "current merge activity.\n"
 #~ msgstr ""
 #~ "マージ中にコミットの訂正はできません。\n"
 #~ "\n"
@@ -5084,7 +5135,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Failed to set current branch.\n"
 #~ "\n"
-#~ "This working directory is only partially switched.  We successfully updated your files, but failed to update an internal Git file.\n"
+#~ "This working directory is only partially switched.  We successfully "
+#~ "updated your files, but failed to update an internal Git file.\n"
 #~ "\n"
 #~ "This should not have occurred.  %s will now close and give up."
 #~ msgstr ""
@@ -5194,7 +5246,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Last scanned state does not match repository state.\n"
 #~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before a merge can be performed.\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before a merge can be performed.\n"
 #~ "\n"
 #~ "The rescan will be automatically started now.\n"
 #~ msgstr ""
@@ -5207,7 +5260,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Last scanned state does not match repository state.\n"
 #~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before another commit can be created.\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before another commit can be created.\n"
 #~ "\n"
 #~ "The rescan will be automatically started now.\n"
 #~ msgstr ""
@@ -5220,7 +5274,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Last scanned state does not match repository state.\n"
 #~ "\n"
-#~ "Another Git program has modified this repository since the last scan.  A rescan must be performed before the current branch can be changed.\n"
+#~ "Another Git program has modified this repository since the last scan.  A "
+#~ "rescan must be performed before the current branch can be changed.\n"
 #~ "\n"
 #~ "The rescan will be automatically started now.\n"
 #~ msgstr ""
@@ -5305,9 +5360,11 @@ msgstr "ツールバーのスタイル"
 #~ "\n"
 #~ "%s has no changes.\n"
 #~ "\n"
-#~ "The modification date of this file was updated by another application, but the content within the file was not changed.\n"
+#~ "The modification date of this file was updated by another application, "
+#~ "but the content within the file was not changed.\n"
 #~ "\n"
-#~ "A rescan will be automatically started to find other files which may have the same state."
+#~ "A rescan will be automatically started to find other files which may have "
+#~ "the same state."
 #~ msgstr ""
 #~ "変更がありません。\n"
 #~ "\n"
@@ -5332,7 +5389,9 @@ msgstr "ツールバーのスタイル"
 #~ msgid "Number of packs"
 #~ msgstr "パックの数"
 
-#~ msgid "One or more of the merge tests failed because you have not fetched the necessary commits.  Try fetching from %s first."
+#~ msgid ""
+#~ "One or more of the merge tests failed because you have not fetched the "
+#~ "necessary commits.  Try fetching from %s first."
 #~ msgstr "必要なコミットが不足しているために、マージ検査が失敗しました。まず %s からフェッチして下さい。"
 
 #~ msgid "Options"
@@ -5601,7 +5660,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "There is nothing to amend.\n"
 #~ "\n"
-#~ "You are about to create the initial commit.  There is no commit before this to amend.\n"
+#~ "You are about to create the initial commit.  There is no commit before "
+#~ "this to amend.\n"
 #~ msgstr ""
 #~ "訂正するコミットがそもそもありません。\n"
 #~ "\n"
@@ -5620,7 +5680,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "This repository currently has approximately %i loose objects.\n"
 #~ "\n"
-#~ "To maintain optimal performance it is strongly recommended that you compress the database when more than %i loose objects exist.\n"
+#~ "To maintain optimal performance it is strongly recommended that you "
+#~ "compress the database when more than %i loose objects exist.\n"
 #~ "\n"
 #~ "Compress the database now?"
 #~ msgstr ""
@@ -5681,7 +5742,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "Unmerged files cannot be committed.\n"
 #~ "\n"
-#~ "File %s has merge conflicts.  You must resolve them and stage the file before committing.\n"
+#~ "File %s has merge conflicts.  You must resolve them and stage the file "
+#~ "before committing.\n"
 #~ msgstr ""
 #~ "マージしていないファイルはコミットできません。\n"
 #~ "\n"
@@ -5696,7 +5758,9 @@ msgstr "ツールバーのスタイル"
 #~ msgid "Unsupported spell checker"
 #~ msgstr "サポートされていないスペルチェッカーです"
 
-#~ msgid "Updating the Git index failed.  A rescan will be automatically started to resynchronize git-gui."
+#~ msgid ""
+#~ "Updating the Git index failed.  A rescan will be automatically started to "
+#~ "resynchronize git-gui."
 #~ msgstr "GIT インデックスの更新が失敗しました。git-gui と同期をとるために再スキャンします。"
 
 #~ msgid "Updating working directory to '%s'..."
@@ -5725,7 +5789,8 @@ msgstr "ツールバーのスタイル"
 #~ "\n"
 #~ "File %s is modified.\n"
 #~ "\n"
-#~ "You should complete the current commit before starting a merge.  Doing so will help you abort a failed merge, should the need arise.\n"
+#~ "You should complete the current commit before starting a merge.  Doing so "
+#~ "will help you abort a failed merge, should the need arise.\n"
 #~ msgstr ""
 #~ "変更の途中です。\n"
 #~ "\n"
@@ -5738,7 +5803,8 @@ msgstr "ツールバーのスタイル"
 #~ "\n"
 #~ "File %s has merge conflicts.\n"
 #~ "\n"
-#~ "You must resolve them, stage the file, and commit to complete the current merge.  Only then can you begin another merge.\n"
+#~ "You must resolve them, stage the file, and commit to complete the current "
+#~ "merge.  Only then can you begin another merge.\n"
 #~ msgstr ""
 #~ "衝突のあったマージの途中です。\n"
 #~ "\n"
@@ -5749,7 +5815,8 @@ msgstr "ツールバーのスタイル"
 #~ msgid ""
 #~ "You are no longer on a local branch.\n"
 #~ "\n"
-#~ "If you wanted to be on a branch, create one now starting from 'This Detached Checkout'."
+#~ "If you wanted to be on a branch, create one now starting from 'This "
+#~ "Detached Checkout'."
 #~ msgstr ""
 #~ "ローカル・ブランチから離れます。\n"
 #~ "\n"
