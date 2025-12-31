@@ -13,38 +13,48 @@ msgstr "அடுத்த கோப்பு"
 msgid "Previous File"
 msgstr "முந்தைய கோப்பு"
 
-#: cola/app.py:314
+#: cola/app.py:333
 #, python-format
 msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
 msgstr "அபாயகரமானது: \"%s\" ஒரு அடைவு அல்ல. சரியான -ரீபோ <Athe> ஐக் குறிப்பிடவும்."
 
-#: cola/app.py:515
+#: cola/app.py:451
+#, python-format
+msgid "%(app_name)s is already running"
+msgstr ""
+
+#: cola/app.py:452
+#, python-format
+msgid "%(app_name)s is already running in %(dirname)s (--single-instance)."
+msgstr ""
+
+#: cola/app.py:595
 msgid "Error Opening Repository"
 msgstr "களஞ்சியத்தைத் திறப்பதில் பிழை"
 
-#: cola/app.py:516
+#: cola/app.py:596
 #, python-format
 msgid "Could not open %s."
 msgstr "%s திறக்க முடியவில்லை."
 
-#: cola/app.py:523 cola/widgets/startup.py:256
+#: cola/app.py:603 cola/widgets/startup.py:256
 msgid "Repository Not Found"
 msgstr "களஞ்சியம் காணப்படவில்லை"
 
-#: cola/app.py:524 cola/widgets/bookmarks.py:486
+#: cola/app.py:604 cola/widgets/bookmarks.py:486
 #, python-format
 msgid "%s is not a Git repository."
 msgstr "%s ஒரு அறிவிலி களஞ்சியம் அல்ல."
 
-#: cola/app.py:525
+#: cola/app.py:605
 msgid "Create a new repository at that location?"
 msgstr "அந்த இடத்தில் புதிய களஞ்சியத்தை உருவாக்கவா?"
 
-#: cola/app.py:526
+#: cola/app.py:606
 msgid "Create"
 msgstr "உருவாக்கு"
 
-#: cola/app.py:528 cola/guicmds.py:108
+#: cola/app.py:608 cola/guicmds.py:108
 msgid "Error Creating Repository"
 msgstr "களஞ்சியத்தை உருவாக்கும் பிழை"
 
@@ -69,11 +79,11 @@ msgid "Abort Applying Patch"
 msgstr "பேட்சைப் பயன்படுத்துவதை நிறுத்துங்கள்"
 
 #: cola/cmds.py:163 cola/cmds.py:193 cola/cmds.py:224 cola/cmds.py:308
-#: cola/cmds.py:317 cola/cmds.py:332 cola/cmds.py:342 cola/cmds.py:484
-#: cola/cmds.py:520 cola/cmds.py:558 cola/cmds.py:658 cola/cmds.py:776
-#: cola/cmds.py:1194 cola/cmds.py:1290 cola/cmds.py:2172 cola/cmds.py:2576
-#: cola/cmds.py:2810 cola/cmds.py:2816 cola/cmds.py:2824 cola/cmds.py:3048
-#: cola/cmds.py:3065 cola/cmds.py:3351 cola/gitcmds.py:1046 cola/guicmds.py:164
+#: cola/cmds.py:317 cola/cmds.py:332 cola/cmds.py:342 cola/cmds.py:487
+#: cola/cmds.py:523 cola/cmds.py:561 cola/cmds.py:664 cola/cmds.py:786
+#: cola/cmds.py:1217 cola/cmds.py:1313 cola/cmds.py:2222 cola/cmds.py:2647
+#: cola/cmds.py:2881 cola/cmds.py:2887 cola/cmds.py:2897 cola/cmds.py:3126
+#: cola/cmds.py:3145 cola/cmds.py:3440 cola/gitcmds.py:1062 cola/guicmds.py:164
 #: cola/models/stash.py:70 cola/models/stash.py:90 cola/models/stash.py:112
 #: cola/models/stash.py:138 cola/widgets/bookmarks.py:486
 #: cola/widgets/branch.py:803
@@ -157,15 +167,15 @@ msgstr "திட்டுகளைப் பயன்படுத்துவ�
 msgid "Failed to continue applying patches after skipping the current patch"
 msgstr "தற்போதைய பேட்சைத் தவிர்த்த பிறகு தொடர்ந்து திட்டுகளைப் பயன்படுத்துவதில் தோல்வி"
 
-#: cola/cmds.py:493
+#: cola/cmds.py:496
 msgid "Checkout files from their branch (MERGE_HEAD)"
 msgstr "அவற்றின் கிளையிலிருந்து புதுப்பித்து கோப்புகள் (merge_het)"
 
-#: cola/cmds.py:497
+#: cola/cmds.py:500
 msgid "Checkout files from their branch?"
 msgstr "அவற்றின் கிளையிலிருந்து கோப்புகள்?"
 
-#: cola/cmds.py:499
+#: cola/cmds.py:502
 msgid ""
 "This operation will replace the selected unmerged files with content from the branch being merged using \"git checkout --theirs\".\n"
 "*ALL* uncommitted changes will be lost.\n"
@@ -175,19 +185,19 @@ msgstr ""
 "* அனைத்து* அனுமதிக்கப்படாத மாற்றங்கள் இழக்கப்படும். \n"
 "அனுமதிக்கப்படாத மாற்றங்களை மீட்டெடுப்பது சாத்தியமில்லை."
 
-#: cola/cmds.py:504 cola/cmds.py:542
+#: cola/cmds.py:507 cola/cmds.py:545
 msgid "Checkout Files"
 msgstr "புதுப்பித்து கோப்புகள்"
 
-#: cola/cmds.py:531
+#: cola/cmds.py:534
 msgid "Checkout files from our branch (HEAD)"
 msgstr "எங்கள் கிளையிலிருந்து (தலை) புதுப்பித்து கோப்புகள்"
 
-#: cola/cmds.py:535
+#: cola/cmds.py:538
 msgid "Checkout files from our branch?"
 msgstr "எங்கள் கிளையிலிருந்து புதுப்பிப்பு கோப்புகள்?"
 
-#: cola/cmds.py:537
+#: cola/cmds.py:540
 msgid ""
 "This operation will replace the selected unmerged files with content from your current branch using \"git checkout --ours\".\n"
 "*ALL* uncommitted changes will be lost.\n"
@@ -197,126 +207,126 @@ msgstr ""
 "* அனைத்து* அனுமதிக்கப்படாத மாற்றங்கள் இழக்கப்படும். \n"
 "அனுமதிக்கப்படாத மாற்றங்களை மீட்டெடுப்பது சாத்தியமில்லை."
 
-#: cola/cmds.py:569 cola/widgets/status.py:288
+#: cola/cmds.py:572 cola/widgets/status.py:288
 msgid "Blame..."
 msgstr "பழி ..."
 
-#: cola/cmds.py:583
+#: cola/cmds.py:589
 msgid "Error Launching Blame Viewer"
 msgstr "பழி பார்வையாளரைத் தொடங்குவதில் பிழை"
 
-#: cola/cmds.py:584
+#: cola/cmds.py:590
 #, python-format
 msgid "Cannot exec \"%s\": please configure a blame viewer"
 msgstr "\"%s\" ஐ செயல்படுத்த முடியாது: தயவுசெய்து ஒரு பழி பார்வையாளரை உள்ளமைக்கவும்"
 
-#: cola/cmds.py:608
+#: cola/cmds.py:614
 msgid "Cherry-pick failed"
 msgstr "செர்ரி-பிக் தோல்வியுற்றது"
 
-#: cola/cmds.py:622
+#: cola/cmds.py:628
 msgid "Revert failed"
 msgstr "மாற்றியமைத்தது தோல்வியடைந்தது"
 
-#: cola/cmds.py:673
+#: cola/cmds.py:679
 #, python-format
 msgid "The branch will be reset using \"git reset --mixed %s\""
 msgstr "கிளை \"அறிவிலி மீட்டமைப்பு -கலப்பு %s\" ஐப் பயன்படுத்தி மீட்டமைக்கப்படும்"
 
-#: cola/cmds.py:677 cola/guicmds.py:365 cola/widgets/dag.py:544
+#: cola/cmds.py:683 cola/guicmds.py:365 cola/widgets/dag.py:544
 #: cola/widgets/main.py:425
 msgid "Reset Branch and Stage (Mixed)"
 msgstr "கிளை மற்றும் மேடை மீட்டமை (கலப்பு)"
 
-#: cola/cmds.py:678
+#: cola/cmds.py:684
 msgid "Point the current branch head to a new commit?"
 msgstr "தற்போதைய கிளை தலையை ஒரு புதிய உறுதிப்பாட்டிற்கு சுட்டிக்காட்டவா?"
 
-#: cola/cmds.py:680 cola/cmds.py:731 cola/guicmds.py:355
+#: cola/cmds.py:686 cola/cmds.py:741 cola/guicmds.py:355
 #: cola/widgets/createbranch.py:292
 msgid "Reset Branch"
 msgstr "கிளையை மீட்டமை"
 
-#: cola/cmds.py:690
+#: cola/cmds.py:698
 #, python-format
 msgid "The repository will be reset using \"git reset --keep %s\""
 msgstr "களஞ்சியம் \"அறிவிலி மீட்டமைப்பு -கீப் %s\" ஐப் பயன்படுத்தி மீட்டமைக்கப்படும்"
 
-#: cola/cmds.py:694 cola/widgets/main.py:433
+#: cola/cmds.py:702 cola/widgets/main.py:433
 msgid "Restore Worktree and Reset All (Keep Unstaged Changes)"
 msgstr "பணியிடத்தை மீட்டெடுத்து அனைத்தையும் மீட்டமைக்கவும் (நிலைநிறுத்தப்படாத மாற்றங்களை வைத்திருங்கள்)"
 
-#: cola/cmds.py:695
+#: cola/cmds.py:703
 msgid "Restore worktree, reset, and preserve unstaged edits?"
 msgstr "பணியிடத்தை மீட்டெடுக்கவும், மீட்டமைக்கவும், நிலைநிறுத்தப்படாத திருத்தங்களை பாதுகாக்கவும்?"
 
-#: cola/cmds.py:697 cola/cmds.py:714 cola/cmds.py:748 cola/guicmds.py:378
+#: cola/cmds.py:705 cola/cmds.py:724 cola/cmds.py:758 cola/guicmds.py:378
 #: cola/guicmds.py:392 cola/guicmds.py:403
 msgid "Reset and Restore"
 msgstr "மீட்டமை மற்றும் மீட்டமை"
 
-#: cola/cmds.py:707
+#: cola/cmds.py:717
 #, python-format
 msgid "The repository will be reset using \"git reset --merge %s\""
 msgstr "களஞ்சியம் \"அறிவிலி மீட்டமைப்பு - -மெர்ச் %s\" ஐப் பயன்படுத்தி மீட்டமைக்கப்படும்."
 
-#: cola/cmds.py:711 cola/guicmds.py:391 cola/widgets/dag.py:559
+#: cola/cmds.py:721 cola/guicmds.py:391 cola/widgets/dag.py:559
 #: cola/widgets/main.py:441
 msgid "Restore Worktree and Reset All (Merge)"
 msgstr "பணியிடத்தை மீட்டெடுத்து அனைத்தையும் மீட்டமைக்கவும் (ஒன்றிணைக்கவும்)"
 
-#: cola/cmds.py:712
+#: cola/cmds.py:722
 msgid "Reset Worktree and Reset All?"
 msgstr "பணியிடத்தை மீட்டமைத்து அனைத்தையும் மீட்டமைக்கவா?"
 
-#: cola/cmds.py:724 cola/cmds.py:815
+#: cola/cmds.py:734 cola/cmds.py:825
 #, python-format
 msgid "The branch will be reset using \"git reset --soft %s\""
 msgstr "கிளை \"அறிவிலி மீட்டமைப்பு - -மென்மையான %s\" ஐப் பயன்படுத்தி மீட்டமைக்கப்படும்"
 
-#: cola/cmds.py:728 cola/guicmds.py:354 cola/widgets/dag.py:539
+#: cola/cmds.py:738 cola/guicmds.py:354 cola/widgets/dag.py:539
 #: cola/widgets/main.py:417
 msgid "Reset Branch (Soft)"
 msgstr "கிளையை மீட்டமை (மென்மையானது)"
 
-#: cola/cmds.py:729
+#: cola/cmds.py:739
 msgid "Reset branch?"
 msgstr "கிளையை மீட்டமைக்கவா?"
 
-#: cola/cmds.py:741
+#: cola/cmds.py:751
 #, python-format
 msgid "The repository will be reset using \"git reset --hard %s\""
 msgstr "களஞ்சியம் \"அறிவிலி மீட்டமைப்பு - -ஆர்ட் %s\" ஐப் பயன்படுத்தி மீட்டமைக்கப்படும்"
 
-#: cola/cmds.py:745 cola/guicmds.py:402 cola/widgets/dag.py:567
+#: cola/cmds.py:755 cola/guicmds.py:402 cola/widgets/dag.py:567
 #: cola/widgets/main.py:449
 msgid "Restore Worktree and Reset All (Hard)"
 msgstr "பணியிடத்தை மீட்டெடுத்து அனைத்தையும் மீட்டமைக்கவும் (கடினமானது)"
 
-#: cola/cmds.py:746
+#: cola/cmds.py:756
 msgid "Restore Worktree and Reset All?"
 msgstr "பணியிடத்தை மீட்டெடுத்து அனைத்தையும் மீட்டமைக்கவா?"
 
-#: cola/cmds.py:761
+#: cola/cmds.py:771
 #, python-format
 msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
 msgstr "\"Git read -tree - -reset -u %s\" ஐப் பயன்படுத்தி பணியிடங்கள் மீட்டமைக்கப்படும்."
 
-#: cola/cmds.py:782 cola/cmds.py:785 cola/guicmds.py:413 cola/guicmds.py:414
+#: cola/cmds.py:792 cola/cmds.py:795 cola/guicmds.py:413 cola/guicmds.py:414
 #: cola/widgets/dag.py:573 cola/widgets/main.py:457
 msgid "Restore Worktree"
 msgstr "பணியிடத்தை மீட்டெடுங்கள்"
 
-#: cola/cmds.py:783
+#: cola/cmds.py:793
 #, python-format
 msgid "Restore Worktree to %s?"
 msgstr "%s க்கு பணியிடத்தை மீட்டெடுக்கவா?"
 
-#: cola/cmds.py:801 cola/widgets/commitmsg.py:585
+#: cola/cmds.py:811 cola/widgets/commitmsg.py:589
 msgid "Rewrite Published Commit?"
 msgstr "வெளியிடப்பட்ட உறுதிப்பாட்டை மீண்டும் எழுதவா?"
 
-#: cola/cmds.py:803 cola/widgets/commitmsg.py:587
+#: cola/cmds.py:813 cola/widgets/commitmsg.py:591
 msgid ""
 "This commit has already been published.\n"
 "This operation will rewrite published history.\n"
@@ -326,221 +336,221 @@ msgstr ""
 "இந்த செயல்பாடு வெளியிடப்பட்ட வரலாற்றை மீண்டும் எழுதும். \n"
 "இதை நீங்கள் செய்ய விரும்பவில்லை."
 
-#: cola/cmds.py:807
+#: cola/cmds.py:817
 msgid "Undo the published commit?"
 msgstr "வெளியிடப்பட்ட உறுதிப்பாட்டை செயல்தவிர்க்கவா?"
 
-#: cola/cmds.py:808 cola/cmds.py:813 cola/cmds.py:816 cola/widgets/main.py:191
+#: cola/cmds.py:818 cola/cmds.py:823 cola/cmds.py:826 cola/widgets/main.py:191
 msgid "Undo Last Commit"
 msgstr "கடைசியாக உறுதிப்பாட்டை செயல்தவிர்க்கவும்"
 
-#: cola/cmds.py:814
+#: cola/cmds.py:824
 msgid "Undo last commit?"
 msgstr "கடைசியாக கமிட்டியை செயல்தவிர்க்கவா?"
 
-#: cola/cmds.py:955
+#: cola/cmds.py:978
 #, python-format
 msgid "Error creating remote \"%s\""
 msgstr "தொலைதூர \"%s\" ஐ உருவாக்கும் பிழை"
 
-#: cola/cmds.py:963
+#: cola/cmds.py:986
 msgid "Delete Remote"
 msgstr "தொலைதூரத்தை நீக்கு"
 
-#: cola/cmds.py:964
+#: cola/cmds.py:987
 msgid "Delete remote?"
 msgstr "தொலைதூரத்தை நீக்கவா?"
 
-#: cola/cmds.py:965
+#: cola/cmds.py:988
 #, python-format
 msgid "Delete remote \"%s\""
 msgstr "தொலைதூர \"%s\" ஐ நீக்கு"
 
-#: cola/cmds.py:966 cola/guicmds.py:33 cola/guicmds.py:42
+#: cola/cmds.py:989 cola/guicmds.py:33 cola/guicmds.py:42
 #: cola/widgets/bookmarks.py:74 cola/widgets/bookmarks.py:255
 #: cola/widgets/main.py:763 cola/widgets/startup.py:367
 #: cola/widgets/stash.py:143
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: cola/cmds.py:973
+#: cola/cmds.py:996
 #, python-format
 msgid "Error deleting remote \"%s\""
 msgstr "தொலைதூர \"%s\" ஐ நீக்குவதில் பிழை"
 
-#: cola/cmds.py:985
+#: cola/cmds.py:1008
 msgid "Rename Remote"
 msgstr "ரிமோட் என மறுபெயரிடுங்கள்"
 
-#: cola/cmds.py:986
+#: cola/cmds.py:1009
 #, python-format
 msgid "Rename remote \"%(current)s\" to \"%(new)s\"?"
 msgstr "தொலை \"%(current)s\" ஐ \"%(new)s\" என்று மறுபெயரிடுங்கள்?"
 
-#: cola/cmds.py:998
+#: cola/cmds.py:1021
 #, python-format
 msgid "Error renaming \"%(name)s\" to \"%(new_name)s\""
 msgstr "\"%(name)s\" ஐ \"%(new_name)s\" என மறுபெயரிடுவது பிழை"
 
-#: cola/cmds.py:1016
+#: cola/cmds.py:1039
 #, python-format
 msgid "Unable to set URL for \"%(name)s\" to \"%(url)s\""
 msgstr "\"%(name)s\" க்கு \"%(url)s\" க்கு முகவரி ஐ அமைக்க முடியவில்லை"
 
-#: cola/cmds.py:1060
+#: cola/cmds.py:1083
 msgid "Sync failed"
 msgstr ""
 
-#: cola/cmds.py:1063
+#: cola/cmds.py:1086
 msgid "Sync complete"
 msgstr ""
 
-#: cola/cmds.py:1075 cola/cmds.py:1081 cola/cmds.py:1087 cola/cmds.py:1099
+#: cola/cmds.py:1098 cola/cmds.py:1104 cola/cmds.py:1110 cola/cmds.py:1122
 msgid "Sync out failed"
 msgstr ""
 
-#: cola/cmds.py:1076
+#: cola/cmds.py:1099
 msgid "No current branch"
 msgstr ""
 
-#: cola/cmds.py:1082
+#: cola/cmds.py:1105
 #, python-format
 msgid "No tracking branch configured for %s"
 msgstr ""
 
-#: cola/cmds.py:1088
+#: cola/cmds.py:1111
 #, python-format
 msgid "Invalid tracking branch: %s"
 msgstr ""
 
-#: cola/cmds.py:1102
+#: cola/cmds.py:1125
 msgid "Sync out complete"
 msgstr ""
 
-#: cola/cmds.py:1141
+#: cola/cmds.py:1164
 msgid "Delete Bookmark?"
 msgstr "புத்தகக்குறியை நீக்கவா?"
 
-#: cola/cmds.py:1142
+#: cola/cmds.py:1165
 #, python-format
 msgid "%s will be removed from your bookmarks."
 msgstr "உங்கள் புக்மார்க்குகளிலிருந்து %s அகற்றப்படும்."
 
-#: cola/cmds.py:1143
+#: cola/cmds.py:1166
 msgid "Delete Bookmark"
 msgstr "புத்தகக்குறியை நீக்கு"
 
-#: cola/cmds.py:1154
+#: cola/cmds.py:1177
 #, python-format
 msgid "Remove %s from the recent list?"
 msgstr "அண்மைக் கால பட்டியலிலிருந்து %s ஐ அகற்றவா?"
 
-#: cola/cmds.py:1155
+#: cola/cmds.py:1178
 #, python-format
 msgid "%s will be removed from your recent repositories."
 msgstr "உங்கள் அண்மைக் கால களஞ்சியங்களிலிருந்து %s அகற்றப்படும்."
 
-#: cola/cmds.py:1156 cola/widgets/diff.py:1909 cola/widgets/diff.py:1924
-#: cola/widgets/prefs.py:560 cola/widgets/startup.py:259
+#: cola/cmds.py:1179 cola/widgets/diff.py:1909 cola/widgets/diff.py:1924
+#: cola/widgets/prefs.py:565 cola/widgets/startup.py:259
 #: cola/widgets/status.py:1398
 msgid "Remove"
 msgstr "அகற்று"
 
-#: cola/cmds.py:1194
+#: cola/cmds.py:1217
 #, python-format
 msgid "Deleting \"%s\" failed"
 msgstr "\"%s\" ஐ நீக்குவது தோல்வியடைந்தது"
 
-#: cola/cmds.py:1212
+#: cola/cmds.py:1235
 msgid "Delete Files?"
 msgstr "கோப்புகளை நீக்கவா?"
 
-#: cola/cmds.py:1213
+#: cola/cmds.py:1236
 msgid "The following files will be deleted:"
 msgstr "பின்வரும் கோப்புகள் நீக்கப்படும்:"
 
-#: cola/cmds.py:1215
+#: cola/cmds.py:1238
 #, python-format
 msgid "Delete %d file(s)?"
 msgstr "%d கோப்பு (களை) நீக்கவா?"
 
-#: cola/cmds.py:1216
+#: cola/cmds.py:1239
 msgid "Delete Files"
 msgstr "கோப்புகளை நீக்கு"
 
-#: cola/cmds.py:1241 cola/cmds.py:1244 cola/guicmds.py:33
+#: cola/cmds.py:1264 cola/cmds.py:1267 cola/guicmds.py:33
 #: cola/widgets/branch.py:290
 msgid "Delete Branch"
 msgstr "கிளையை நீக்கு"
 
-#: cola/cmds.py:1242
+#: cola/cmds.py:1265
 #, python-format
 msgid "Delete branch \"%s\"?"
 msgstr "கிளை \"%s\" ஐ நீக்கவா?"
 
-#: cola/cmds.py:1243
+#: cola/cmds.py:1266
 msgid "The branch will be no longer available."
 msgstr "கிளை இனி கிடைக்காது."
 
-#: cola/cmds.py:1253
+#: cola/cmds.py:1276
 #, python-format
 msgid "Error deleting branch \"%s\""
 msgstr "\"%s\" என்ற கிளையை நீக்குவதில் பிழை"
 
-#: cola/cmds.py:1268 cola/cmds.py:3098
+#: cola/cmds.py:1291 cola/cmds.py:3178
 #, python-format
 msgid "Untracking: %s"
 msgstr "கட்டுப்படுத்தாதது: %s"
 
-#: cola/cmds.py:1279
+#: cola/cmds.py:1302
 #, python-format
 msgid "Rename \"%s\""
 msgstr "\"%s\" என மறுபெயரிடுங்கள்"
 
-#: cola/cmds.py:1325
+#: cola/cmds.py:1348
 msgid "Remote Branch Deleted"
 msgstr "தொலை கிளை நீக்கப்பட்டது"
 
-#: cola/cmds.py:1326
+#: cola/cmds.py:1349
 #, python-format
 msgid "\"%(branch)s\" has been deleted from \"%(remote)s\"."
 msgstr "\"%(branch)s\" \"%(ரிமோட்)\" இலிருந்து நீக்கப்பட்டது."
 
-#: cola/cmds.py:1334
+#: cola/cmds.py:1357
 msgid "Error Deleting Remote Branch"
 msgstr "தொலை கிளையை நீக்குவதில் பிழை"
 
-#: cola/cmds.py:1685 cola/cmds.py:1806 cola/widgets/filelist.py:36
+#: cola/cmds.py:1708 cola/cmds.py:1829 cola/widgets/filelist.py:36
 msgid "Launch Editor"
 msgstr "துவக்க ஆசிரியர்"
 
-#: cola/cmds.py:1746
+#: cola/cmds.py:1769
 #, python-format
 msgid "Cannot exec \"%s\": please configure your editor"
 msgstr "\"%s\" ஐ செயல்படுத்த முடியாது: தயவுசெய்து உங்கள் எடிட்டரை உள்ளமைக்கவும்"
 
-#: cola/cmds.py:1748
+#: cola/cmds.py:1771
 msgid "Error Editing File"
 msgstr "பிழை திருத்துதல் கோப்பு"
 
-#: cola/cmds.py:1771
+#: cola/cmds.py:1794
 msgid "Launch Terminal"
 msgstr "ஏவுகணை முனையம்"
 
-#: cola/cmds.py:1841
+#: cola/cmds.py:1864
 msgid "Error: Cannot find commit template"
 msgstr "பிழை: வார்ப்புருவைக் கண்டுபிடிக்க முடியவில்லை"
 
-#: cola/cmds.py:1842
+#: cola/cmds.py:1865
 #, python-format
 msgid "%s: No such file or directory."
 msgstr "%s: அத்தகைய கோப்பு அல்லது அடைவு இல்லை."
 
-#: cola/cmds.py:1862
+#: cola/cmds.py:1885
 msgid "Error: Unconfigured commit template"
 msgstr "பிழை: கட்டமைக்கப்படாத கமிட் வார்ப்புரு"
 
-#: cola/cmds.py:1865
+#: cola/cmds.py:1888
 msgid ""
 "A commit template has not been configured.\n"
 "Use \"git config\" to define \"commit.template\"\n"
@@ -550,40 +560,40 @@ msgstr ""
 "\"Command.template\" \n"
 "எனவே இது ஒரு கமிட் வார்ப்புருவை சுட்டிக்காட்டுகிறது."
 
-#: cola/cmds.py:1902
+#: cola/cmds.py:1925
 msgid "Error running prepare-commitmsg hook"
 msgstr "பிழை இயங்கும் தயாரிப்பு-commitmsg கொக்கி"
 
-#: cola/cmds.py:1939
+#: cola/cmds.py:1962
 #, python-format
 msgid "A hook must be provided at \"%s\""
 msgstr "\"%s\" இல் ஒரு கொக்கி வழங்கப்பட வேண்டும்"
 
-#: cola/cmds.py:1984
+#: cola/cmds.py:2020
 msgid "Merge failed.  Conflict resolution is required."
 msgstr "ஒன்றிணைந்தது தோல்வியுற்றது. மோதல் தீர்வு தேவை."
 
-#: cola/cmds.py:2007
+#: cola/cmds.py:2043
 msgid "Open Using Default Application"
 msgstr "இயல்புநிலை பயன்பாட்டைப் பயன்படுத்தி திறக்கவும்"
 
-#: cola/cmds.py:2024
+#: cola/cmds.py:2060
 msgid "Open Directory"
 msgstr "அடைவு திற"
 
-#: cola/cmds.py:2044
+#: cola/cmds.py:2080
 msgid "Open Parent Directory"
 msgstr "திறந்த பெற்றோர் அடைவு"
 
-#: cola/cmds.py:2057
+#: cola/cmds.py:2093
 msgid "Open Worktree"
 msgstr "திறந்த பணியிடங்கள்"
 
-#: cola/cmds.py:2266 cola/cmds.py:2273
+#: cola/cmds.py:2316 cola/cmds.py:2323
 msgid "Update stacked branches when rebasing?"
 msgstr "மறுதொடக்கம் செய்யும் போது அடுக்கப்பட்ட கிளைகளைப் புதுப்பிக்கவா?"
 
-#: cola/cmds.py:2268
+#: cola/cmds.py:2318
 msgid ""
 "\"git rebase --update-refs\" automatically force-updates any\n"
 "branches that point to commits that are being rebased.\n"
@@ -599,71 +609,71 @@ msgstr ""
 "\n"
 "இந்த அம்சத்தைப் பயன்படுத்துவது \"அடுக்கப்பட்ட\" கிளை பணிப்பாய்வுகளுக்கு உதவியாக இருக்கும்."
 
-#: cola/cmds.py:2274
+#: cola/cmds.py:2324
 msgid "Update stacked branches"
 msgstr "அடுக்கப்பட்ட கிளைகளைப் புதுப்பிக்கவும்"
 
-#: cola/cmds.py:2275
+#: cola/cmds.py:2325
 msgid "Do not update stacked branches"
 msgstr "அடுக்கப்பட்ட கிளைகளைப் புதுப்பிக்க வேண்டாம்"
 
-#: cola/cmds.py:2303
+#: cola/cmds.py:2353
 msgid "Unable to rebase"
 msgstr "திரும்பப் பெற முடியவில்லை"
 
-#: cola/cmds.py:2304
+#: cola/cmds.py:2354
 msgid "You cannot rebase with uncommitted changes."
 msgstr "மாற்றப்படாத மாற்றங்களுடன் நீங்கள் திரும்பப் பெற முடியாது."
 
-#: cola/cmds.py:2310
+#: cola/cmds.py:2360
 msgid "Select New Upstream"
 msgstr "புதிய அப்ச்ட்ரீமைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/cmds.py:2311
+#: cola/cmds.py:2361
 msgid "Interactive Rebase"
 msgstr "ஊடாடும் மறுசீரமைப்பு"
 
-#: cola/cmds.py:2324
+#: cola/cmds.py:2381
 #, python-format
 msgid "Rebase onto %s"
 msgstr "%s மீது மீளவும்"
 
-#: cola/cmds.py:2325 cola/cmds.py:2361 cola/cmds.py:2362 cola/cmds.py:2375
-#: cola/cmds.py:2376 cola/sequenceeditor.py:170 cola/sequenceeditor.py:212
+#: cola/cmds.py:2382 cola/cmds.py:2424 cola/cmds.py:2425 cola/cmds.py:2441
+#: cola/cmds.py:2442 cola/sequenceeditor.py:170 cola/sequenceeditor.py:212
 #: cola/widgets/main.py:840 cola/widgets/remote.py:245
 msgid "Rebase"
 msgstr "நரி"
 
-#: cola/cmds.py:2337
+#: cola/cmds.py:2394
 msgid "Rebase stopped"
 msgstr "மறுசீரமைப்பு நிறுத்தப்பட்டது"
 
-#: cola/cmds.py:2347
+#: cola/cmds.py:2407
 msgid "Edit Rebase"
 msgstr "திருத்த திருத்து"
 
-#: cola/cmds.py:2348 cola/widgets/archive.py:124 cola/widgets/browse.py:648
+#: cola/cmds.py:2408 cola/widgets/archive.py:124 cola/widgets/browse.py:648
 #: cola/widgets/editremotes.py:52 cola/widgets/stash.py:55
 #: cola/widgets/stash.py:131 cola/widgets/status.py:1404
 msgid "Save"
 msgstr "சேமி"
 
-#: cola/cmds.py:2403 cola/qtutils.py:871 cola/widgets/action.py:63
-#: cola/widgets/dag.py:1018 cola/widgets/editremotes.py:83
+#: cola/cmds.py:2471 cola/qtutils.py:871 cola/widgets/action.py:63
+#: cola/widgets/dag.py:1038 cola/widgets/editremotes.py:83
 #: cola/widgets/grep.py:103 cola/widgets/recent.py:113
 #: cola/widgets/submodules.py:43
 msgid "Refresh"
 msgstr "புதுப்பிப்பு"
 
-#: cola/cmds.py:2457
+#: cola/cmds.py:2528
 msgid "Revert Unstaged Edits..."
 msgstr "நிலைநிறுத்தப்படாத திருத்தங்களை மாற்றவும் ..."
 
-#: cola/cmds.py:2465
+#: cola/cmds.py:2536
 msgid "Revert Unstaged Changes?"
 msgstr "நிலைநிறுத்தப்படாத மாற்றங்களை மாற்றுமா?"
 
-#: cola/cmds.py:2467
+#: cola/cmds.py:2538
 msgid ""
 "This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
@@ -671,23 +681,23 @@ msgstr ""
 "இந்த செயல்பாடு தேர்ந்தெடுக்கப்பட்ட கோப்புகளிலிருந்து நிலைநிறுத்தப்படாத திருத்தங்களை நீக்குகிறது. \n"
 "இந்த மாற்றங்களை மீட்டெடுக்க முடியாது."
 
-#: cola/cmds.py:2470
+#: cola/cmds.py:2541
 msgid "Revert the unstaged changes?"
 msgstr "நிலைநிறுத்தப்படாத மாற்றங்களை மாற்றவா?"
 
-#: cola/cmds.py:2471
+#: cola/cmds.py:2542
 msgid "Revert Unstaged Changes"
 msgstr "நிலைநிறுத்தப்படாத மாற்றங்களை மாற்றவும்"
 
-#: cola/cmds.py:2480
+#: cola/cmds.py:2551
 msgid "Revert Uncommitted Edits..."
 msgstr "அனுமதிக்கப்படாத திருத்தங்களை மாற்றவும் ..."
 
-#: cola/cmds.py:2487
+#: cola/cmds.py:2558
 msgid "Revert Uncommitted Changes?"
 msgstr "அனுமதிக்கப்படாத மாற்றங்களை மாற்றவா?"
 
-#: cola/cmds.py:2489
+#: cola/cmds.py:2560
 msgid ""
 "This operation removes uncommitted edits from selected files.\n"
 "These changes cannot be recovered."
@@ -695,50 +705,50 @@ msgstr ""
 "இந்த செயல்பாடு தேர்ந்தெடுக்கப்பட்ட கோப்புகளிலிருந்து மாற்றப்படாத திருத்தங்களை நீக்குகிறது. \n"
 "இந்த மாற்றங்களை மீட்டெடுக்க முடியாது."
 
-#: cola/cmds.py:2492 cola/widgets/diff.py:1350
+#: cola/cmds.py:2563 cola/widgets/diff.py:1350
 msgid "Revert the uncommitted changes?"
 msgstr "அனுமதிக்கப்படாத மாற்றங்களை மாற்றவா?"
 
-#: cola/cmds.py:2493
+#: cola/cmds.py:2564
 msgid "Revert Uncommitted Changes"
 msgstr "அனுமதிக்கப்படாத மாற்றங்களை மாற்றவும்"
 
-#: cola/cmds.py:2523
+#: cola/cmds.py:2594
 #, python-format
 msgid "Run \"%s\"?"
 msgstr "\"%s\" ஐ இயக்கவா?"
 
-#: cola/cmds.py:2530
+#: cola/cmds.py:2601
 msgid "Please select a file"
 msgstr "ஒரு கோப்பைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/cmds.py:2531
+#: cola/cmds.py:2602
 #, python-format
 msgid "\"%s\" requires a selected file."
 msgstr "\"%s\" க்கு தேர்ந்தெடுக்கப்பட்ட கோப்பு தேவை."
 
-#: cola/cmds.py:2546
+#: cola/cmds.py:2617
 msgid "Invalid Revision"
 msgstr "தவறான திருத்தம்"
 
-#: cola/cmds.py:2547
+#: cola/cmds.py:2618
 msgid "The revision expression cannot be empty."
 msgstr "திருத்த வெளிப்பாடு காலியாக இருக்க முடியாது."
 
-#: cola/cmds.py:2562
+#: cola/cmds.py:2633
 #, python-format
 msgid "Running command: %s"
 msgstr "இயங்கும் கட்டளை: %s"
 
-#: cola/cmds.py:2694
+#: cola/cmds.py:2765
 msgid "Sign Off"
 msgstr "பதிவு செய்க"
 
-#: cola/cmds.py:2750
+#: cola/cmds.py:2821
 msgid "Stage conflicts?"
 msgstr "மேடை மோதல்கள்?"
 
-#: cola/cmds.py:2753
+#: cola/cmds.py:2824
 #, python-format
 msgid ""
 "%s appears to contain merge conflicts.\n"
@@ -751,72 +761,72 @@ msgstr ""
 "இந்த கோப்பை நீங்கள் தவிர்க்க வேண்டும். \n"
 "எப்படியும் அதை அரங்கேற்றலாமா?"
 
-#: cola/cmds.py:2759
+#: cola/cmds.py:2830
 msgid "Stage conflicts"
 msgstr "மேடை மோதல்கள்"
 
-#: cola/cmds.py:2760
+#: cola/cmds.py:2831
 msgid "Skip"
 msgstr "தவிர்"
 
-#: cola/cmds.py:2771 cola/widgets/action.py:58 cola/widgets/diff.py:1283
+#: cola/cmds.py:2842 cola/widgets/action.py:58 cola/widgets/diff.py:1283
 msgid "Stage"
 msgstr "மேடை"
 
-#: cola/cmds.py:2778
+#: cola/cmds.py:2849
 #, python-format
 msgid "Staging: %s"
 msgstr "நிலை: %s"
 
-#: cola/cmds.py:2864
+#: cola/cmds.py:2937
 msgid "Stage Modified"
 msgstr "மேடை மாற்றியமைக்கப்பட்டது"
 
-#: cola/cmds.py:2875
+#: cola/cmds.py:2948
 msgid "Stage Unmerged"
 msgstr "மேடை அவிழ்க்கப்படுகிறது"
 
-#: cola/cmds.py:2886
+#: cola/cmds.py:2959
 msgid "Stage Untracked"
 msgstr "மேடை தடையின்றி"
 
-#: cola/cmds.py:2901
+#: cola/cmds.py:2974
 msgid "Stage Modified and Untracked"
 msgstr "மேடை மாற்றியமைக்கப்பட்ட மற்றும் கட்டுப்படுத்தப்படாதது"
 
-#: cola/cmds.py:2912
+#: cola/cmds.py:2985
 msgid "Stage / Unstage All"
 msgstr "மேடை / கட்டம் அனைத்தும்"
 
-#: cola/cmds.py:2930
+#: cola/cmds.py:3003
 msgid "Stage / Unstage"
 msgstr "மேடை / கட்டம்"
 
-#: cola/cmds.py:2967
+#: cola/cmds.py:3040
 msgid "Missing Revision"
 msgstr "காணவில்லை"
 
-#: cola/cmds.py:2967
+#: cola/cmds.py:3040
 msgid "Please specify a revision to tag."
 msgstr "குறிச்சொல்லுக்கு ஒரு திருத்தத்தைக் குறிப்பிடவும்."
 
-#: cola/cmds.py:2973
+#: cola/cmds.py:3046
 msgid "Missing Name"
 msgstr "பெயர் இல்லை"
 
-#: cola/cmds.py:2973
+#: cola/cmds.py:3046
 msgid "Please specify a name for the new tag."
 msgstr "புதிய குறிச்சொல்லுக்கான பெயரைக் குறிப்பிடவும்."
 
-#: cola/cmds.py:2977
+#: cola/cmds.py:3050
 msgid "Missing Tag Message"
 msgstr "குறிச்சொல் செய்தி இல்லை"
 
-#: cola/cmds.py:2978
+#: cola/cmds.py:3051
 msgid "Tag-signing was requested but the tag message is empty."
 msgstr "குறிச்சொல் கையொப்பம் கோரப்பட்டது, ஆனால் குறிச்சொல் செய்தி காலியாக உள்ளது."
 
-#: cola/cmds.py:2980
+#: cola/cmds.py:3053
 msgid ""
 "An unsigned, lightweight tag will be created instead.\n"
 "Create an unsigned tag?"
@@ -824,43 +834,43 @@ msgstr ""
 "கையொப்பமிடப்படாத, இலகுரக குறிச்சொல் அதற்கு பதிலாக உருவாக்கப்படும். \n"
 "கையொப்பமிடாத குறிச்சொல்லை உருவாக்கவா?"
 
-#: cola/cmds.py:2983
+#: cola/cmds.py:3056
 msgid "Create Unsigned Tag"
 msgstr "கையொப்பமிடாத குறிச்சொல்லை உருவாக்கவும்"
 
-#: cola/cmds.py:3011
+#: cola/cmds.py:3089
 #, python-format
 msgid "Error: could not create tag \"%s\""
 msgstr "பிழை: \"%s\" என்ற குறிச்சொல்லை உருவாக்க முடியவில்லை"
 
-#: cola/cmds.py:3018
+#: cola/cmds.py:3096
 msgid "Tag Created"
 msgstr "குறிச்சொல் உருவாக்கப்பட்டது"
 
-#: cola/cmds.py:3019
+#: cola/cmds.py:3097
 #, python-format
 msgid "Created a new tag named \"%s\""
 msgstr "\"%s\" என்ற புதிய குறிச்சொல்லை உருவாக்கியது"
 
-#: cola/cmds.py:3031 cola/widgets/action.py:61 cola/widgets/diff.py:1280
+#: cola/cmds.py:3109 cola/widgets/action.py:61 cola/widgets/diff.py:1280
 #: cola/widgets/main.py:196
 msgid "Unstage"
 msgstr "மேடையில்"
 
-#: cola/cmds.py:3043
+#: cola/cmds.py:3121
 #, python-format
 msgid "Unstaging: %s"
 msgstr "அன்ச்டேசிங்: %s"
 
-#: cola/cmds.py:3202 cola/widgets/main.py:362
+#: cola/cmds.py:3282 cola/widgets/main.py:362
 msgid "Add Submodule..."
 msgstr "சப்மோடூலைச் சேர்க்கவும் ..."
 
-#: cola/cmds.py:3203
+#: cola/cmds.py:3283
 msgid "Add this submodule?"
 msgstr "இந்த சப்மோடூலைச் சேர்க்கவா?"
 
-#: cola/cmds.py:3204
+#: cola/cmds.py:3284
 #, python-format
 msgid ""
 "The submodule will be added using\n"
@@ -869,25 +879,25 @@ msgstr ""
 "சப்மோடூல் பயன்படுத்தி சேர்க்கப்படும் \n"
 "\"%s\""
 
-#: cola/cmds.py:3205 cola/widgets/submodules.py:40
+#: cola/cmds.py:3285 cola/widgets/submodules.py:40
 #: cola/widgets/submodules.py:116
 msgid "Add Submodule"
 msgstr "சப்மோடூலைச் சேர்க்கவும்"
 
-#: cola/cmds.py:3217 cola/cmds.py:3262
+#: cola/cmds.py:3300 cola/cmds.py:3348
 #, python-format
 msgid "Error updating submodule %s"
 msgstr "சப்மோடூல் %s புதுப்பிப்பதில் பிழை"
 
-#: cola/cmds.py:3246
+#: cola/cmds.py:3329
 msgid "Update Submodule..."
 msgstr "சப்மோடூலைப் புதுப்பிக்கவும் ..."
 
-#: cola/cmds.py:3247
+#: cola/cmds.py:3330
 msgid "Update this submodule?"
 msgstr "இந்த சப்மோடூலைப் புதுப்பிக்கவா?"
 
-#: cola/cmds.py:3248
+#: cola/cmds.py:3331
 #, python-format
 msgid ""
 "The submodule will be updated using\n"
@@ -896,19 +906,19 @@ msgstr ""
 "சப்மோடூல் பயன்படுத்தி புதுப்பிக்கப்படும் \n"
 "\"%s\""
 
-#: cola/cmds.py:3249
+#: cola/cmds.py:3332
 msgid "Update Submodule"
 msgstr "சப்மோடூலைப் புதுப்பிக்கவும்"
 
-#: cola/cmds.py:3281
+#: cola/cmds.py:3367
 msgid "Update submodules..."
 msgstr "சப்மோடூல்களைப் புதுப்பிக்கவும் ..."
 
-#: cola/cmds.py:3282
+#: cola/cmds.py:3368
 msgid "Update all submodules?"
 msgstr "அனைத்து சப்மோடூல்களையும் புதுப்பிக்கவா?"
 
-#: cola/cmds.py:3283
+#: cola/cmds.py:3369
 #, python-format
 msgid ""
 "All submodules will be updated using\n"
@@ -917,19 +927,19 @@ msgstr ""
 "அனைத்து சப்மோடூல்களும் பயன்படுத்தி புதுப்பிக்கப்படும் \n"
 "\"%s\""
 
-#: cola/cmds.py:3284
+#: cola/cmds.py:3370
 msgid "Update Submodules"
 msgstr "சப்மோடூல்களைப் புதுப்பிக்கவும்"
 
-#: cola/cmds.py:3297
+#: cola/cmds.py:3386
 msgid "Error updating submodules"
 msgstr "சப்மோடூல்களைப் புதுப்பிப்பதில் பிழை"
 
-#: cola/cmds.py:3317
+#: cola/cmds.py:3406
 msgid "Error Launching History Browser"
 msgstr "வரலாறு உலாவியைத் தொடங்குவதில் பிழை"
 
-#: cola/cmds.py:3318
+#: cola/cmds.py:3407
 #, python-format
 msgid "Cannot exec \"%s\": please configure a history browser"
 msgstr "\"%s\" ஐ செயல்படுத்த முடியாது: தயவுசெய்து வரலாற்று உலாவியை உள்ளமைக்கவும்"
@@ -1019,11 +1029,11 @@ msgstr "கோப்பு முறைமை கண்காணிப்பு:
 msgid "File system change monitoring: disabled because libc does not support the inotify system calls.\n"
 msgstr "கோப்பு முறைமை கண்காணிப்பு: முடக்கப்பட்டுள்ளது, ஏனெனில் லிபிசி கணினி அழைப்புகளை நான் ஆதரிக்காது.\n"
 
-#: cola/gitcmds.py:641
+#: cola/gitcmds.py:647
 msgid "Nothing to do"
 msgstr "செய்ய எதுவும் இல்லை"
 
-#: cola/gitcmds.py:927
+#: cola/gitcmds.py:939
 msgid "Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel the current cherry-pick."
 msgstr "குறிப்பு: தற்போதைய செர்ரி-பிக் ரத்து செய்ய \"செயல்கள்> ராப் டாப் செர்ரி-பிக்\" பட்டியல் நடவடிக்கை பயன்படுத்தப்படலாம்."
 
@@ -1080,7 +1090,7 @@ msgstr "ஏற்றுமதி திட்டுகள்"
 msgid "Diff Against Commit"
 msgstr "உறுதிப்பாட்டிற்கு எதிராக வேறுபடுகிறது"
 
-#: cola/guicmds.py:192 cola/widgets/dag.py:985 cola/widgets/diff.py:905
+#: cola/guicmds.py:192 cola/widgets/dag.py:1005 cola/widgets/diff.py:905
 #: cola/widgets/main.py:166 cola/widgets/main.py:815
 msgid "Diff"
 msgstr "வேறுபாடு"
@@ -1202,7 +1212,7 @@ msgstr "ஓடு"
 msgid "Close..."
 msgstr "மூடு ..."
 
-#: cola/qtutils.py:858 cola/qtutils.py:912 cola/widgets/about.py:526
+#: cola/qtutils.py:858 cola/qtutils.py:912 cola/widgets/about.py:534
 #: cola/widgets/remote.py:397 cola/widgets/text.py:1012
 msgid "Close"
 msgstr "மூடு"
@@ -1255,8 +1265,8 @@ msgstr ""
 "உதவியைக் காட்டு \n"
 "குறுக்குவழி:?"
 
-#: cola/sequenceeditor.py:187 cola/widgets/commitmsg.py:880
-#: cola/widgets/commitmsg.py:1071 cola/widgets/standard.py:1099
+#: cola/sequenceeditor.py:187 cola/widgets/commitmsg.py:884
+#: cola/widgets/commitmsg.py:1075 cola/widgets/standard.py:1101
 msgid "Cancel"
 msgstr "ரத்துசெய்"
 
@@ -1292,7 +1302,7 @@ msgstr "கருத்துக்கள்"
 msgid "Summary"
 msgstr "சுருக்கம்"
 
-#: cola/sequenceeditor.py:406 cola/widgets/dag.py:599 cola/widgets/dag.py:952
+#: cola/sequenceeditor.py:406 cola/widgets/dag.py:599 cola/widgets/dag.py:972
 #: cola/widgets/diff.py:1540 cola/widgets/main.py:752
 msgid "Copy Commit"
 msgstr "நகல் கமிட்"
@@ -1549,21 +1559,21 @@ msgstr ""
 msgid "WORKTREE: unstaged changes"
 msgstr ""
 
-#: cola/models/main.py:641
+#: cola/models/main.py:655
 #, python-format
 msgid "http proxy configured by \"git config http.proxy %(url)s\""
 msgstr ""
 
-#: cola/models/main.py:676
+#: cola/models/main.py:690
 msgid "http proxy configured by the \"http_proxy\" environment variable"
 msgstr ""
 
-#: cola/models/main.py:680 cola/models/main.py:691
+#: cola/models/main.py:694 cola/models/main.py:705
 #, python-format
 msgid "%(scheme)s proxy configured from %(desktop)s settings: %(url)s"
 msgstr ""
 
-#: cola/models/main.py:687
+#: cola/models/main.py:701
 msgid "https proxy configured by the \"https_proxy\" environment variable"
 msgstr ""
 
@@ -1866,7 +1876,7 @@ msgstr ""
 msgid "hotkeys.html"
 msgstr "hotkeys.html"
 
-#: cola/widgets/about.py:517
+#: cola/widgets/about.py:518
 msgid "Shortcuts"
 msgstr "குறுக்குவழிகள்"
 
@@ -1975,7 +1985,7 @@ msgstr "மேலெழுதும்"
 
 #: cola/widgets/bookmarks.py:70 cola/widgets/diff.py:1905
 #: cola/widgets/diff.py:1919 cola/widgets/gitignore.py:63
-#: cola/widgets/prefs.py:554 cola/widgets/status.py:1397
+#: cola/widgets/prefs.py:559 cola/widgets/status.py:1397
 msgid "Add"
 msgstr "கூட்டு"
 
@@ -2342,11 +2352,11 @@ msgstr "செயல்கள் ..."
 msgid "Amend Last Commit"
 msgstr "கடைசி உறுதிப்பாட்டை திருத்துங்கள்"
 
-#: cola/widgets/commitmsg.py:153 cola/widgets/commitmsg.py:913
+#: cola/widgets/commitmsg.py:153 cola/widgets/commitmsg.py:917
 msgid "Set Commit Date"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:159 cola/widgets/commitmsg.py:1103
+#: cola/widgets/commitmsg.py:159 cola/widgets/commitmsg.py:1107
 msgid "Set Commit Author"
 msgstr ""
 
@@ -2358,11 +2368,11 @@ msgstr "பைபாச் கொக்கிகள்"
 msgid "Create Signed Commit"
 msgstr "கையொப்பமிடப்பட்ட உறுதிப்பாட்டை உருவாக்கு"
 
-#: cola/widgets/commitmsg.py:178 cola/widgets/prefs.py:365
+#: cola/widgets/commitmsg.py:178 cola/widgets/prefs.py:369
 msgid "Check Spelling"
 msgstr "எழுத்துப்பிழை சரிபார்க்கவும்"
 
-#: cola/widgets/commitmsg.py:185 cola/widgets/prefs.py:335
+#: cola/widgets/commitmsg.py:185 cola/widgets/prefs.py:338
 msgid "Auto-Wrap Lines"
 msgstr "ஆட்டோ-மடக்கு கோடுகள்"
 
@@ -2390,23 +2400,23 @@ msgstr ""
 msgid "Cancel the commit date override."
 msgstr ""
 
-#: cola/widgets/commitmsg.py:395
+#: cola/widgets/commitmsg.py:399
 msgid "Clear commit message?"
 msgstr "தெளிவான செய்தியை அழிக்கவா?"
 
-#: cola/widgets/commitmsg.py:396
+#: cola/widgets/commitmsg.py:400
 msgid "The commit message will be cleared."
 msgstr "கமிட் செய்தி அழிக்கப்படும்."
 
-#: cola/widgets/commitmsg.py:397
+#: cola/widgets/commitmsg.py:401
 msgid "This cannot be undone.  Clear commit message?"
 msgstr "இதை செயல்தவிர்க்க முடியாது. தெளிவான செய்தியை அழிக்கவா?"
 
-#: cola/widgets/commitmsg.py:398
+#: cola/widgets/commitmsg.py:402
 msgid "Clear commit message"
 msgstr "தெளிவான செய்தியை அழிக்கவும்"
 
-#: cola/widgets/commitmsg.py:539
+#: cola/widgets/commitmsg.py:543
 msgid ""
 "Please supply a commit message.\n"
 "\n"
@@ -2424,11 +2434,11 @@ msgstr ""
 "- இரண்டாவது வரி: வெற்று \n"
 "- மீதமுள்ள கோடுகள்: இந்த மாற்றம் ஏன் நல்லது என்பதை விவரிக்கவும்.\n"
 
-#: cola/widgets/commitmsg.py:546
+#: cola/widgets/commitmsg.py:550
 msgid "Missing Commit Message"
 msgstr "இல்லை செய்தியை காணவில்லை"
 
-#: cola/widgets/commitmsg.py:556
+#: cola/widgets/commitmsg.py:560
 msgid ""
 "No changes to commit.\n"
 "\n"
@@ -2438,97 +2448,97 @@ msgstr ""
 "\n"
 "நீங்கள் ஈடுபடுவதற்கு முன்பு நீங்கள் குறைந்தது 1 கோப்பை அரங்கேற்ற வேண்டும்."
 
-#: cola/widgets/commitmsg.py:561
+#: cola/widgets/commitmsg.py:565
 msgid "Would you like to stage and commit all modified files?"
 msgstr "மாற்றியமைக்கப்பட்ட அனைத்து கோப்புகளையும் அரங்கேற்ற விரும்புகிறீர்களா?"
 
-#: cola/widgets/commitmsg.py:564
+#: cola/widgets/commitmsg.py:568
 msgid "Stage and commit?"
 msgstr "மேடை மற்றும் உறுதிப்பாடா?"
 
-#: cola/widgets/commitmsg.py:567
+#: cola/widgets/commitmsg.py:571
 msgid "Stage and Commit"
 msgstr "மேடை மற்றும் கமிட்"
 
-#: cola/widgets/commitmsg.py:573
+#: cola/widgets/commitmsg.py:577
 msgid "Nothing to commit"
 msgstr "செய்ய எதுவும் இல்லை"
 
-#: cola/widgets/commitmsg.py:591
+#: cola/widgets/commitmsg.py:595
 msgid "Amend the published commit?"
 msgstr "வெளியிடப்பட்ட உறுதிப்பாட்டை திருத்த?"
 
-#: cola/widgets/commitmsg.py:592
+#: cola/widgets/commitmsg.py:596
 msgid "Amend Commit"
 msgstr "திருத்தம்"
 
-#: cola/widgets/commitmsg.py:631
+#: cola/widgets/commitmsg.py:635
 msgid "Commit failed"
 msgstr "கமிட் தோல்வியுற்றது"
 
-#: cola/widgets/commitmsg.py:674
+#: cola/widgets/commitmsg.py:678
 msgid "More..."
 msgstr "மேலும் ..."
 
-#: cola/widgets/commitmsg.py:680
+#: cola/widgets/commitmsg.py:684
 msgid "Select Commit"
 msgstr "கமிட் என்பதைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/widgets/commitmsg.py:767
+#: cola/widgets/commitmsg.py:771
 #, python-format
 msgid "Setting commit date to %s"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:796
+#: cola/widgets/commitmsg.py:800
 #, python-format
 msgid "Setting commit author to %s"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:857 cola/widgets/commitmsg.py:926
+#: cola/widgets/commitmsg.py:861 cola/widgets/commitmsg.py:930
 msgid "Decrement"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:864 cola/widgets/commitmsg.py:923
+#: cola/widgets/commitmsg.py:868 cola/widgets/commitmsg.py:927
 msgid "Increment"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:871
+#: cola/widgets/commitmsg.py:875
 msgid "Reset time to latest commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:877
+#: cola/widgets/commitmsg.py:881
 msgid "Reset time to current time"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:883
+#: cola/widgets/commitmsg.py:887
 msgid "Set Date and Time"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1046
+#: cola/widgets/commitmsg.py:1050
 msgid "Override the commit author when authoring commits"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1056
+#: cola/widgets/commitmsg.py:1060
 msgid "Set author to match the latest commit"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1062
+#: cola/widgets/commitmsg.py:1066
 msgid "Reset author to the current author"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1068
+#: cola/widgets/commitmsg.py:1072
 msgid "Reset to default author"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1074
+#: cola/widgets/commitmsg.py:1078
 msgid "Set Author"
 msgstr ""
 
-#: cola/widgets/commitmsg.py:1161
+#: cola/widgets/commitmsg.py:1165
 msgid "Commit summary"
 msgstr "சுருக்கம்"
 
-#: cola/widgets/commitmsg.py:1208
+#: cola/widgets/commitmsg.py:1212
 msgid "Extended description..."
 msgstr "நீட்டிக்கப்பட்ட விளக்கம் ..."
 
@@ -2573,7 +2583,7 @@ msgstr "கண்காணிப்பு கிளை"
 msgid "Update Existing Branch:"
 msgstr "தற்போதுள்ள கிளைப் புதுப்பிக்கவும்:"
 
-#: cola/widgets/createbranch.py:121 cola/widgets/standard.py:1224
+#: cola/widgets/createbranch.py:121 cola/widgets/standard.py:1226
 msgid "No"
 msgstr "இல்லை"
 
@@ -2759,73 +2769,73 @@ msgstr "மேலே செல்லுங்கள்"
 msgid "Go Down"
 msgstr "கீழே செல்லுங்கள்"
 
-#: cola/widgets/dag.py:734 cola/widgets/dag.py:921 cola/widgets/dag.py:1873
+#: cola/widgets/dag.py:734 cola/widgets/dag.py:924 cola/widgets/dag.py:1914
 #: cola/widgets/diff.py:909
 msgid "Zoom to Fit"
 msgstr "பொருத்த பெரிதாக்க"
 
-#: cola/widgets/dag.py:913 cola/widgets/dag.py:1871
+#: cola/widgets/dag.py:916 cola/widgets/dag.py:1912
 msgid "Zoom Out"
 msgstr "சிறிதாக்கு"
 
-#: cola/widgets/dag.py:917 cola/widgets/dag.py:1865
+#: cola/widgets/dag.py:920 cola/widgets/dag.py:1906
 msgid "Zoom In"
 msgstr "பெரிதாக்கு"
 
-#: cola/widgets/dag.py:968
+#: cola/widgets/dag.py:988
 msgid "Log"
 msgstr "பதிவு"
 
-#: cola/widgets/dag.py:975
+#: cola/widgets/dag.py:995
 msgid "Files"
 msgstr "கோப்புகள்"
 
-#: cola/widgets/dag.py:1004
+#: cola/widgets/dag.py:1024
 msgid "Graph"
 msgstr "வரைபடம்"
 
-#: cola/widgets/dag.py:1011
+#: cola/widgets/dag.py:1031
 msgid "Display Worktree Status"
 msgstr ""
 
-#: cola/widgets/dag.py:1014 cola/widgets/main.py:650
+#: cola/widgets/dag.py:1034 cola/widgets/main.py:650
 msgid "Lock Layout"
 msgstr "பூட்டு தளவமைப்பு"
 
-#: cola/widgets/dag.py:1026 cola/widgets/main.py:863 cola/widgets/main.py:985
+#: cola/widgets/dag.py:1046 cola/widgets/main.py:863 cola/widgets/main.py:985
 msgid "View"
 msgstr "பார்வை"
 
-#: cola/widgets/dag.py:1117
+#: cola/widgets/dag.py:1156
 #, python-format
 msgid "%(project)s: %(ref)s - DAG"
 msgstr "%(project)s: %(ref)s - DAG"
 
-#: cola/widgets/dag.py:1124
+#: cola/widgets/dag.py:1163
 msgid " - DAG"
 msgstr "- நாள்"
 
-#: cola/widgets/dag.py:1283
+#: cola/widgets/dag.py:1337
 msgid "Trace Evolution of Line Range"
 msgstr ""
 
-#: cola/widgets/dag.py:1284
+#: cola/widgets/dag.py:1338
 msgid "Select Line Range"
 msgstr ""
 
-#: cola/widgets/dag.py:1876
+#: cola/widgets/dag.py:1917
 msgid "Select Parent"
 msgstr "பெற்றோரைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/widgets/dag.py:1881
+#: cola/widgets/dag.py:1922
 msgid "Select Oldest Parent"
 msgstr "பழமையான பெற்றோரைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/widgets/dag.py:1887
+#: cola/widgets/dag.py:1928
 msgid "Select Child"
 msgstr "குழந்தையைத் தேர்ந்தெடுக்கவும்"
 
-#: cola/widgets/dag.py:1891
+#: cola/widgets/dag.py:1932
 msgid "Select Newest Child"
 msgstr "புதிய குழந்தையைத் தேர்ந்தெடுக்கவும்"
 
@@ -3083,7 +3093,7 @@ msgstr ""
 msgid "Add patches (+)"
 msgstr "திட்டுகளைச் சேர்க்கவும் (+)"
 
-#: cola/widgets/diff.py:1911 cola/widgets/prefs.py:562
+#: cola/widgets/diff.py:1911 cola/widgets/prefs.py:567
 msgid "Remove selected (Delete)"
 msgstr "தேர்ந்தெடுக்கப்பட்டதை அகற்று (நீக்கு)"
 
@@ -3360,7 +3370,7 @@ msgstr "தற்போதைய பேட்சைப் பயன்படு�
 msgid "Export Patches..."
 msgstr "ஏற்றுமதி திட்டுகள் ..."
 
-#: cola/widgets/main.py:272 cola/widgets/prefs.py:655
+#: cola/widgets/main.py:272 cola/widgets/prefs.py:660
 msgid "Preferences"
 msgstr "விருப்பத்தேர்வுகள்"
 
@@ -3894,170 +3904,178 @@ msgid "Additional spellcheck dictionary files (requires restart)"
 msgstr ""
 
 #: cola/widgets/prefs.py:332
+msgid "Set the verbosity level to 1 or higher to log Git commands"
+msgstr ""
+
+#: cola/widgets/prefs.py:335
 msgid "Text Width"
 msgstr "உரை அகலம்"
 
-#: cola/widgets/prefs.py:333
+#: cola/widgets/prefs.py:336
 msgid "Tab Width"
 msgstr "தாவல் அகலம்"
 
-#: cola/widgets/prefs.py:334
+#: cola/widgets/prefs.py:337
 msgid "Insert Spaces Instead of Tabs"
 msgstr "தாவல்களுக்கு பதிலாக இடைவெளிகளைச் செருகவும்"
 
-#: cola/widgets/prefs.py:338
+#: cola/widgets/prefs.py:341
 msgid "Editor"
 msgstr "திருத்தி"
 
-#: cola/widgets/prefs.py:339
+#: cola/widgets/prefs.py:342
 msgid "Background Editor"
 msgstr ""
 
-#: cola/widgets/prefs.py:340
+#: cola/widgets/prefs.py:343
 msgid "History Browser"
 msgstr "வரலாற்று உலாவி"
 
-#: cola/widgets/prefs.py:341
+#: cola/widgets/prefs.py:344
 msgid "Blame Viewer"
 msgstr "பார்வையாளர்"
 
-#: cola/widgets/prefs.py:342
+#: cola/widgets/prefs.py:345
 msgid "Diff Tool"
 msgstr "டிஃப் கருவி"
 
-#: cola/widgets/prefs.py:343
+#: cola/widgets/prefs.py:346
 msgid "Merge Tool"
 msgstr "கருவியை ஒன்றிணைக்கவும்"
 
-#: cola/widgets/prefs.py:344
+#: cola/widgets/prefs.py:347
 msgid "Recent Repository Count"
 msgstr "அண்மைக் கால களஞ்சிய எண்ணிக்கை"
 
-#: cola/widgets/prefs.py:347
+#: cola/widgets/prefs.py:350
 msgid "Detect Conflict Markers"
 msgstr "மோதல் குறிப்பான்களைக் கண்டறியவும்"
 
-#: cola/widgets/prefs.py:348
+#: cola/widgets/prefs.py:351
 msgid "Keep *.orig Merge Backups"
 msgstr "*.Orig காப்புப்பிரதிகளை ஒன்றிணைக்கவும்"
 
-#: cola/widgets/prefs.py:351
+#: cola/widgets/prefs.py:354
 msgid "Save GUI Settings"
 msgstr "GUI அமைப்புகளை சேமிக்கவும்"
 
-#: cola/widgets/prefs.py:352
+#: cola/widgets/prefs.py:355
 msgid "Ctrl + MouseWheel to Zoom"
 msgstr "பெரிதாக்க கட்டுப்பாடு + Mouseveel"
 
-#: cola/widgets/prefs.py:353
+#: cola/widgets/prefs.py:356
 msgid "Refresh on Focus"
 msgstr "கவனத்தை புதுப்பிக்கவும்"
 
-#: cola/widgets/prefs.py:354
+#: cola/widgets/prefs.py:357
 msgid "Sort Bookmarks Alphabetically"
 msgstr "புக்மார்க்குகளை அகர வரிசைப்படி வரிசைப்படுத்தவும்"
 
-#: cola/widgets/prefs.py:355
+#: cola/widgets/prefs.py:358
 msgid "Resize File Browser columns"
 msgstr "கோப்பு உலாவி நெடுவரிசைகளை மறுஅளவிடுங்கள்"
 
-#: cola/widgets/prefs.py:358
+#: cola/widgets/prefs.py:361
 msgid "Safe Mode"
 msgstr "பாதுகாப்பான பயன்முறை"
 
-#: cola/widgets/prefs.py:360
+#: cola/widgets/prefs.py:363
 msgid "Check Published Commits when Amending"
 msgstr "திருத்தும்போது வெளியிடப்பட்ட கமிட்டுகளை சரிபார்க்கவும்"
 
-#: cola/widgets/prefs.py:362
+#: cola/widgets/prefs.py:365
 msgid "Notify on Push"
 msgstr "உந்துதலில் அறிவிக்கவும்"
 
 #: cola/widgets/prefs.py:366
+msgid "Verbosity Level"
+msgstr ""
+
+#: cola/widgets/prefs.py:370
 msgid "Enable \"aspell\" Spelling Dictionaries"
 msgstr ""
 
-#: cola/widgets/prefs.py:367
+#: cola/widgets/prefs.py:371
 msgid "Additional Spelling Dictionaries"
 msgstr ""
 
-#: cola/widgets/prefs.py:424
+#: cola/widgets/prefs.py:429
 msgid "The font size for the fixed-width diff font"
 msgstr ""
 
-#: cola/widgets/prefs.py:427
+#: cola/widgets/prefs.py:432
 msgid "The font size for the main UI elements"
 msgstr ""
 
-#: cola/widgets/prefs.py:444
+#: cola/widgets/prefs.py:449
 msgid "Fixed-Width Font"
 msgstr "நிலையான அகல எழுத்துரு"
 
-#: cola/widgets/prefs.py:445
+#: cola/widgets/prefs.py:450
 msgid "Font Size"
 msgstr "எழுத்துரு அளவு"
 
-#: cola/widgets/prefs.py:446
+#: cola/widgets/prefs.py:451
 msgid "Font Size (UI)"
 msgstr ""
 
-#: cola/widgets/prefs.py:447
+#: cola/widgets/prefs.py:452
 msgid "GUI theme"
 msgstr "GUI கருப்பொருள்"
 
-#: cola/widgets/prefs.py:448
+#: cola/widgets/prefs.py:453
 msgid "Icon theme"
 msgstr "படவுரு கருப்பொருள்"
 
-#: cola/widgets/prefs.py:449
+#: cola/widgets/prefs.py:454
 msgid "High DPI"
 msgstr "உயர் டிபிஐ"
 
-#: cola/widgets/prefs.py:450
+#: cola/widgets/prefs.py:455
 msgid "Bold all fonts"
 msgstr ""
 
-#: cola/widgets/prefs.py:451
+#: cola/widgets/prefs.py:456
 msgid "Bold on Dark Headers Instead of Italic"
 msgstr "சாய்வுக்கு பதிலாக இருண்ட தலைப்புகளில் துணிவு"
 
-#: cola/widgets/prefs.py:452
+#: cola/widgets/prefs.py:457
 msgid "Show File Counts in Status Titles"
 msgstr "நிலை தலைப்புகளில் கோப்பு எண்ணிக்கையைக் காட்டு"
 
-#: cola/widgets/prefs.py:453
+#: cola/widgets/prefs.py:458
 msgid "Indent Status paths"
 msgstr "உள்தள்ளல் நிலை பாதைகள்"
 
-#: cola/widgets/prefs.py:454
+#: cola/widgets/prefs.py:459
 msgid "Use a Block Cursor in Diff Editors"
 msgstr "டிஃப் எடிட்டர்களில் ஒரு தொகுதி கர்சரைப் பயன்படுத்தவும்"
 
-#: cola/widgets/prefs.py:530
+#: cola/widgets/prefs.py:535
 msgid "Restart the application after changing appearance settings."
 msgstr "தோற்ற அமைப்புகளை மாற்றிய பின் விண்ணப்பத்தை மறுதொடக்கம் செய்யுங்கள்."
 
-#: cola/widgets/prefs.py:554 cola/widgets/prefs.py:556
+#: cola/widgets/prefs.py:559 cola/widgets/prefs.py:561
 msgid "Add Dictionary"
 msgstr ""
 
-#: cola/widgets/prefs.py:615 cola/widgets/prefs.py:645
+#: cola/widgets/prefs.py:620 cola/widgets/prefs.py:650
 msgid "Select dictionary file(s)..."
 msgstr ""
 
-#: cola/widgets/prefs.py:663
+#: cola/widgets/prefs.py:668
 msgid "Current Repository"
 msgstr "தற்போதைய களஞ்சியம்"
 
-#: cola/widgets/prefs.py:664
+#: cola/widgets/prefs.py:669
 msgid "All Repositories"
 msgstr "அனைத்து களஞ்சியங்களும்"
 
-#: cola/widgets/prefs.py:665
+#: cola/widgets/prefs.py:670
 msgid "Settings"
 msgstr "அமைப்புகள்"
 
-#: cola/widgets/prefs.py:666
+#: cola/widgets/prefs.py:671
 msgid "Appearance"
 msgstr "தோற்றம்"
 
@@ -4308,11 +4326,11 @@ msgstr "மேலே செல்லுங்கள்"
 msgid "Move Down"
 msgstr "கீழே செல்லுங்கள்"
 
-#: cola/widgets/standard.py:867 cola/widgets/standard.py:889
+#: cola/widgets/standard.py:869 cola/widgets/standard.py:891
 msgid "Select directory"
 msgstr "கோப்பகத்தைத் தேர்ந்தெடு"
 
-#: cola/widgets/standard.py:1223
+#: cola/widgets/standard.py:1225
 msgid "Yes"
 msgstr "ஆம்"
 
