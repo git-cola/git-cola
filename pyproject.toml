@@ -112,4 +112,4 @@ cola = [
 ]
 
 [tool.setuptools_scm]
-fallback_version = "4.16.1"
+fallback_version = "4.17.0"
