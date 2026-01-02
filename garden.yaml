@@ -223,6 +223,7 @@ trees:
       WNguyen14: "${gh-https}/WNguyen14/git-cola.git"
       wojnilowicz: "${gh-https}/wojnilowicz/git-cola.git"
       yaellevy: "${gh-https}/yaellevy/git-cola.git"
+      yakushabb: "${gh-https}/yakushabb/git-cola.git"
     gitconfig:
       remote.origin.pushurl:
         - "${gl-ssh}:git-cola/git-cola.git"
