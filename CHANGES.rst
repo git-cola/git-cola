@@ -1,3 +1,17 @@
+.. _v4.18.0:
+
+v4.17.1
+=======
+
+Packaging
+---------
+* ``git-cola.appdata.xml`` and `git-dag.appdata.xml` were updated to add vcs-browser links.
+
+Development
+-----------
+* The "actions/cache" and "actions/upload-artifact" github actions were upgraded.
+
+
 .. _v4.17.0:
 
 v4.17.0
