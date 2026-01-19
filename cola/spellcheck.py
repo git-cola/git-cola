@@ -1,4 +1,3 @@
-import codecs
 import collections
 import glob
 import os
@@ -140,9 +139,7 @@ class NorvigSpellCheck:
         for path in paths:
             is_dic_file = path.endswith('.dic')
             try:
-                with codecs.open(
-                    path, 'r', encoding='utf-8', errors='ignore'
-                ) as words_file:
+                with open(path, encoding='utf-8', errors='ignore') as words_file:
                     # Ignore the first word count line in *.dic files.
                     if is_dic_file:
                         words_file.readline()

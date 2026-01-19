@@ -6,7 +6,6 @@ from optparse import OptionParser
 import os
 import sys
 import shutil
-import codecs
 
 
 def stdout(msg):
@@ -285,7 +284,7 @@ def sphinx_extension(app, exception):
     dir_helper = DirHelper(os.path.isdir, os.listdir, os.walk, shutil.rmtree)
 
     file_helper = FileSystemHelper(
-        lambda f, mode: codecs.open(f, mode, app.config.sphinx_to_github_encoding),
+        lambda f, mode: open(f, mode, app.config.sphinx_to_github_encoding),
         os.path.join,
         shutil.move,
         os.path.exists,
@@ -350,7 +349,7 @@ def main(args):
     dir_helper = DirHelper(os.path.isdir, os.listdir, os.walk, shutil.rmtree)
 
     file_helper = FileSystemHelper(
-        lambda f, mode: codecs.open(f, mode, opts.encoding),
+        lambda f, mode: open(f, mode, opts.encoding),
         os.path.join,
         shutil.move,
         os.path.exists,

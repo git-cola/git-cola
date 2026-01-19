@@ -1,4 +1,4 @@
-.. _v4.18.0:
+.. _v4.17.1:
 
 v4.17.1
 =======
@@ -10,6 +10,8 @@ Packaging
 Development
 -----------
 * The "actions/cache" and "actions/upload-artifact" github actions were upgraded.
+
+* Code was updated to avoid using the deprecated `codecs.open(...)`.
 
 
 .. _v4.17.0:
