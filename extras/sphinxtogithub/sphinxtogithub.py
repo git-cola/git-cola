@@ -1,8 +1,5 @@
-#! /usr/bin/env python
-
-
-from optparse import OptionParser
-
+#! /usr/bin/env python3
+import argparse
 import os
 import sys
 import shutil
@@ -318,38 +315,34 @@ def setup(app):
 
 
 def main(args):
-    usage = 'usage: %prog [options] <html directory>'
-    parser = OptionParser(usage=usage)
-    parser.add_option(
+    parser = argparse.ArgumentParser(
+        description='Process Sphinx HTML directory for GitHub Pages compatibility.'
+    )
+    parser.add_argument(
         '-v',
         '--verbose',
         action='store_true',
-        dest='verbose',
         default=False,
         help='Provides verbose output',
     )
-    parser.add_option(
+    parser.add_argument(
         '-e',
         '--encoding',
         action='store',
-        dest='encoding',
         default='utf-8',
         help='Encoding for reading and writing files',
     )
-    opts, args = parser.parse_args(args)
-
-    try:
-        path = args[0]
-    except IndexError:
-        sys.stderr.write(
-            'Error - Expecting path to html directory:' 'sphinx-to-github <path>\n'
-        )
-        return
+    parser.add_argument(
+        'path',
+        help='Path to the HTML directory'
+    )
+    args = parser.parse_args()
+    path = args.path
 
     dir_helper = DirHelper(os.path.isdir, os.listdir, os.walk, shutil.rmtree)
 
     file_helper = FileSystemHelper(
-        lambda f, mode: open(f, mode, opts.encoding),
+        lambda f, mode: open(f, mode, args.encoding),
         os.path.join,
         shutil.move,
         os.path.exists,
@@ -363,14 +356,13 @@ def main(args):
         handler_factory,
         file_helper,
         dir_helper,
-        opts.verbose,
+        args.verbose,
         sys.stdout,
         force=False,
     )
 
     layout = layout_factory.create_layout(path)
     layout.process()
-
 
 if __name__ == '__main__':
     main(sys.argv[1:])

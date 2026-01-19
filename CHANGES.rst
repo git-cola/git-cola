@@ -13,6 +13,8 @@ Development
 
 * Code was updated to avoid using the deprecated `codecs.open(...)`.
 
+* The sphinxtogithub documentation infrastructure no longer uses the `optparse` module.
+
 
 .. _v4.17.0:
 
