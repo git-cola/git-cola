@@ -281,7 +281,7 @@ def sphinx_extension(app, exception):
     dir_helper = DirHelper(os.path.isdir, os.listdir, os.walk, shutil.rmtree)
 
     file_helper = FileSystemHelper(
-        lambda f, mode: open(f, mode, app.config.sphinx_to_github_encoding),
+        lambda f, mode: open(f, mode, encoding=app.config.sphinx_to_github_encoding),
         os.path.join,
         shutil.move,
         os.path.exists,
@@ -342,7 +342,7 @@ def main(args):
     dir_helper = DirHelper(os.path.isdir, os.listdir, os.walk, shutil.rmtree)
 
     file_helper = FileSystemHelper(
-        lambda f, mode: open(f, mode, args.encoding),
+        lambda f, mode: open(f, mode, encoding=args.encoding),
         os.path.join,
         shutil.move,
         os.path.exists,
