@@ -296,9 +296,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFocusProxy(self.summary)
 
         cfg.user_config_changed.connect(self.config_changed)
-        self.context.notifier.ready.connect(self._ready, type=Qt.QueuedConnection)
+        QtCore.QTimer.singleShot(1000, self._background_init)
 
-    def _ready(self):
+    def _background_init(self):
         """Called when the app is ready for events"""
         self.context.runtask.run(self.spellcheck.init)
 
