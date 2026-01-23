@@ -273,7 +273,10 @@ def run_command(cmd, *args, **kwargs):
 
     """
     encoding = kwargs.pop('encoding', None)
-    process = start_command(cmd, *args, **kwargs)
+    try:
+        process = start_command(cmd, *args, **kwargs)
+    except FileNotFoundError as err:
+        return (EXIT_UNAVAILABLE, UStr('', ENCODING), UStr(f'{err}', ENCODING))
     (output, errors) = communicate(process)
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
