@@ -17,6 +17,7 @@ from ..qtutils import get
 from .. import actions
 from .. import cmds
 from .. import core
+from .. import diffinline
 from .. import diffparse
 from .. import gitcmds
 from .. import gravatar
@@ -32,6 +33,10 @@ from .text import label_selection_timer
 from . import defs
 from . import standard
 from . import imageview
+
+# Configure inline (intra-line) diff highlighting
+ENABLE_INLINE_DIFF = True
+INLINE_DIFF_STRICT = False  # If True, let internal exceptions propagate (fail fast).
 
 
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
@@ -56,6 +61,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.whitespace = whitespace
         self.enabled = True
         self.is_commit = is_commit
+        self.inline_spans = {}
 
         QPalette = QtGui.QPalette
         cfg = context.cfg
@@ -85,8 +91,32 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.diff_remove_fmt = qtutils.make_format(
             foreground=self.color_text, background=self.color_remove
         )
+
+        # Define text attributes for inline (intra-line) highlights.
+        # Make changes more visible by using stronger text attributes.
+        self.diff_add_inline_fmt = QtGui.QTextCharFormat()
+        # self.diff_add_inline_fmt.setFontWeight(QtGui.QFont.Bold)
+        # self.diff_add_inline_fmt.setFontUnderline(True)
+        self.diff_add_inline_fmt.setForeground(QtGui.QColor('#0b3d0b'))  # dark green text
+        self.diff_add_inline_fmt.setBackground(QtGui.QColor('#a6f3a6'))  # stronger green bg
+
+        self.diff_remove_inline_fmt = QtGui.QTextCharFormat()
+        # self.diff_remove_inline_fmt.setFontWeight(QtGui.QFont.Bold)
+        # self.diff_remove_inline_fmt.setFontUnderline(True)
+        self.diff_remove_inline_fmt.setForeground(QtGui.QColor('#5a0000'))  # dark red text
+        self.diff_remove_inline_fmt.setBackground(QtGui.QColor('#ffb3b3'))  # stronger red bg
+
+        self.diff_rep_inline_fmt = QtGui.QTextCharFormat()
+        self.diff_rep_inline_fmt.setForeground(QtGui.QColor('#3b2a1a'))  # dark yellow
+        self.diff_rep_inline_fmt.setBackground(QtGui.QColor('#f3d9b1'))  # light yellow
+
         self.bad_whitespace_fmt = qtutils.make_format(background=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
+
+    def set_inline_spans(self, spans):
+        """Set the per-line inline spans used for intra-line diff highlighting"""
+        self.inline_spans = spans or {}
+        self.rehighlight()
 
     def set_enabled(self, enabled):
         self.enabled = enabled
@@ -181,6 +211,25 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
                 if match is not None:
                     start = match.start()
                     formats.append((start, len(text) - start, self.bad_whitespace_fmt))
+
+        # Apply intra-line highlights after the base add/remove backgrounds.
+        block = self.currentBlock()
+        spans = self.inline_spans.get(block.blockNumber())
+        if spans:
+            for start, length, kind in spans:
+                if not length:
+                    continue
+                if kind == 'rep':
+                    fmt = self.diff_rep_inline_fmt
+                else:
+                    if text.startswith('+'):
+                        fmt = self.diff_add_inline_fmt
+                    elif text.startswith('-') and text != '-- ':
+                        fmt = self.diff_remove_inline_fmt
+                    else:
+                        fmt = None
+                if fmt is not None:
+                    formats.append((start, length, fmt))
 
         return state, formats
 
@@ -283,6 +332,26 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             self.numbers.set_diff(diff, lines=lines)
 
         self.set_value(diff)
+
+        # Enable inline (intra-line) diff highlighting
+        # when ENABLE_INLINE_DIFF is True
+        inline_spans = {}
+        if ENABLE_INLINE_DIFF:
+            try:
+                inline_spans = diffinline.compute_inline_diff_spans(diff)
+                self.highlighter.set_inline_spans(inline_spans)
+            except Exception as exc:
+                line_count = diff.count('\n') + 1 if diff else 0
+                core.print_stderr(
+                    'inline diff disabled: %s (lines=%d)' % (exc, line_count)
+                )
+                if INLINE_DIFF_STRICT:
+                    raise
+                # fail-safe
+                inline_spans = {}
+        else:
+            self.highlighter.set_inline_spans({})
+
         self.restore_scrollbar()
 
     def selected_diff_stripped(self):
