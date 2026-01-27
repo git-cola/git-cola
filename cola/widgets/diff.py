@@ -190,27 +190,31 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     def get_formats_for_diff_text(self, state, text):
         """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
         formats = []
+        qt_len = _qt_index_from_cp(text, len(text))
 
         if self.DIFF_FILE_HEADER_START_RGX.match(text):
             state = self.DIFF_FILE_HEADER_STATE
-            formats.append((0, len(text), self.diff_header_fmt))
+            formats.append((0, qt_len, self.diff_header_fmt))
 
         elif self.DIFF_HUNK_HEADER_RGX.match(text):
-            formats.append((0, len(text), self.bold_diff_header_fmt))
+            formats.append((0, qt_len, self.bold_diff_header_fmt))
 
         elif text.startswith('-'):
             if text == '-- ':
                 state = self.END_STATE
             else:
-                formats.append((0, len(text), self.diff_remove_fmt))
+                formats.append((0, qt_len, self.diff_remove_fmt))
 
         elif text.startswith('+'):
-            formats.append((0, len(text), self.diff_add_fmt))
+            formats.append((0, qt_len, self.diff_add_fmt))
             if self.whitespace:
                 match = self.BAD_WHITESPACE_RGX.search(text)
                 if match is not None:
                     start = match.start()
-                    formats.append((start, len(text) - start, self.bad_whitespace_fmt))
+                    start_qt = _qt_index_from_cp(text, start)
+                    formats.append(
+                        (start_qt, qt_len - start_qt, self.bad_whitespace_fmt)
+                    )
 
         # Apply intra-line highlights after the base add/remove backgrounds.
         block = self.currentBlock()
@@ -229,7 +233,8 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
                     else:
                         fmt = None
                 if fmt is not None:
-                    formats.append((start, length, fmt))
+                    qt_start, qt_len = _qt_span_from_cp(text, start, length)
+                    formats.append((qt_start, qt_len, fmt))
 
         return state, formats
 
@@ -2177,3 +2182,31 @@ def parse(content, commit):
             commit.summary = match.group('summary')
             commit.diff = '\n'.join(lines[idx + 1 :])
             break
+
+
+# Helper functions for converting Python codepoint indices to UTF-16 code-unit offsets.
+# Qt use UTF-16 offsets. This avoids misaligned spans
+# when the text contains surrogate pairs (e.g., emoji).
+#  see:
+#   https://doc.qt.io/qt-6/qanystringview.html#sizes-and-sub-strings
+#   https://doc.qt.io/qt-6/qsyntaxhighlighter.html#setFormat
+def _qt_index_from_cp(s: str, cp_index: int) -> int:
+    if cp_index <= 0:
+        return 0
+    if cp_index >= len(s):
+        cp_index = len(s)
+    u = 0
+    for ch in s[:cp_index]:
+        u += 2 if ord(ch) > 0xFFFF else 1
+    return u
+
+
+def _qt_span_from_cp(s: str, start_cp: int, length_cp: int) -> tuple[int, int]:
+    if length_cp <= 0:
+        return (0, 0)
+    if start_cp < 0:
+        start_cp = 0
+    end_cp = min(len(s), start_cp + length_cp)
+    start_qt = _qt_index_from_cp(s, start_cp)
+    end_qt = _qt_index_from_cp(s, end_cp)
+    return (start_qt, max(0, end_qt - start_qt))
