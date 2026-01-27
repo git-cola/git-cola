@@ -36,7 +36,7 @@ from . import imageview
 
 # Configure inline (intra-line) diff highlighting
 ENABLE_INLINE_DIFF = True
-INLINE_DIFF_STRICT = False  # If True, let internal exceptions propagate (fail fast).
+INLINE_DIFF_STRICT = True  # If True, let internal exceptions propagate (fail fast).
 
 
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
