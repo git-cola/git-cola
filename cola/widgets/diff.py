@@ -350,10 +350,12 @@ class DiffTextEdit(VimHintedPlainTextEdit):
                 core.print_stderr(
                     'inline diff disabled: %s (lines=%d)' % (exc, line_count)
                 )
+                inline_spans = {}
+                self.highlighter.set_inline_spans({})
                 if INLINE_DIFF_STRICT:
                     raise
                 # fail-safe
-                inline_spans = {}
+
         else:
             self.highlighter.set_inline_spans({})
 
