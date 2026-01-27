@@ -72,7 +72,7 @@ trees:
       fmt: |
         ${activate}
         cercis --version
-        cercis "$@" bin bin/git-* cola test
+        cercis "$@" bin bin/git-* cola test extras/sphinxtogithub
       html: garden html ${GARDEN_CMD_VERBOSE} docs
       install: |
         ${activate}
