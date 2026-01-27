@@ -1,6 +1,8 @@
+from contextlib import contextmanager
 from functools import partial
 import os
 import re
+import time
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -37,6 +39,7 @@ from . import imageview
 # Configure inline (intra-line) diff highlighting
 ENABLE_INLINE_DIFF = True
 INLINE_DIFF_STRICT = True  # If True, let internal exceptions propagate (fail fast).
+ENABLE_INLINE_MEASURE_TIME = True
 
 
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
@@ -343,8 +346,21 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         inline_spans = {}
         if ENABLE_INLINE_DIFF:
             try:
-                inline_spans = diffinline.compute_inline_diff_spans(diff)
+                perf = {}
+                diff_len = len(diff)
+                with measure_ms(perf, 'compute_ms', enabled=ENABLE_INLINE_MEASURE_TIME):
+                    # call inline (intra-line) diff core
+                    inline_spans = diffinline.compute_inline_diff_spans(diff)
+
+                if ENABLE_INLINE_MEASURE_TIME:
+                    diff_lines = diff.count('\n') + 1 if diff else 0
+                    Interaction.log(
+                        '[inline-diff] perf compute=%.3f (diff_len=%d lines=%d)'
+                        % (perf.get('compute_ms', 0.0), diff_len, diff_lines)
+                    )
+
                 self.highlighter.set_inline_spans(inline_spans)
+
             except Exception as exc:
                 line_count = diff.count('\n') + 1 if diff else 0
                 core.print_stderr(
@@ -2212,3 +2228,19 @@ def _qt_span_from_cp(s: str, start_cp: int, length_cp: int) -> tuple[int, int]:
     start_qt = _qt_index_from_cp(s, start_cp)
     end_qt = _qt_index_from_cp(s, end_cp)
     return (start_qt, max(0, end_qt - start_qt))
+
+
+@contextmanager
+def measure_ms(store: dict, key: str, *, enabled: bool = True, clock=time.perf_counter):
+    """
+    Store the elapsed time (ms) in store[key].
+    If enabled=False, do nothing.
+    """
+    if not enabled:
+        yield
+        return
+    t0 = clock()
+    try:
+        yield
+    finally:
+        store[key] = (clock() - t0) * 1000
