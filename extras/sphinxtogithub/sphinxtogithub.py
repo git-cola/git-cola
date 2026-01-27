@@ -332,10 +332,7 @@ def main(args):
         default='utf-8',
         help='Encoding for reading and writing files',
     )
-    parser.add_argument(
-        'path',
-        help='Path to the HTML directory'
-    )
+    parser.add_argument('path', help='Path to the HTML directory')
     args = parser.parse_args()
     path = args.path
 
@@ -363,6 +360,7 @@ def main(args):
 
     layout = layout_factory.create_layout(path)
     layout.process()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
