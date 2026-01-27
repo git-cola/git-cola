@@ -24,7 +24,7 @@ _INLINE_DIFF_SQ_RATIO_THRESHOLD = 0.50
 
 # Return type
 Kind: TypeAlias = Literal['rep', 'del', 'ins']  # replaced | deleted(-) | inserted(+)
-Span: TypeAlias = tuple[int, int, Kind]  # (start_u16, length_u16, kind)  # UTF-16 code units
+Span: TypeAlias = tuple[int, int, Kind]  # (start_cp, length_cp, kind)  # codepoint
 SpansByLine: TypeAlias = dict[int, list[Span]]  # line_index(0-based in diff_text.splitlines()) -> spans
 
 # === Main API  ===
@@ -127,7 +127,7 @@ def _compute_inline_diff_spans_impl(lines) -> SpansByLine:
         # [STEP] Compute: pair lines by order (zip) within the (-block,+block),
         # then skip low-similarity pairs(ratio < _INLINE_DIFF_SQ_RATIO_THRESHOLD)
         # to avoid noisy inline highlights.
-        # Otherwise compute UTF-16 spans (_inline_spans_for_pair, prefix_shift=1) and store by diff row.
+        # Otherwise compute codepoint-based spans (_inline_spans_for_pair, prefix_shift=1) and store by diff row.
         for old_row, new_row, old_body, new_body in zip(
             minus_rows, plus_rows, minus_bodies, plus_bodies
         ):
@@ -168,16 +168,16 @@ def _inline_spans_for_pair(
         # Old-side spans: replaced or deleted ranges in old_body
         if tag in ('replace', 'delete') and old_end > old_begin:
             kind = 'rep' if tag == 'replace' else 'del'
-            start_u16 = _utf16_index(old_body, old_begin) + prefix_shift
-            len_u16 = _utf16_len(old_body, old_begin, old_end)
-            old_spans.append((start_u16, len_u16, kind))
+            start_cp = old_begin + prefix_shift
+            length_cp = old_end - old_begin
+            old_spans.append((start_cp, length_cp, kind))
 
         # New-side spans: replaced or inserted ranges in new_body
         if tag in ('replace', 'insert') and new_end > new_begin:
             kind = 'rep' if tag == 'replace' else 'ins'
-            start_u16 = _utf16_index(new_body, new_begin) + prefix_shift
-            len_u16 = _utf16_len(new_body, new_begin, new_end)
-            new_spans.append((start_u16, len_u16, kind))
+            start_cp = new_begin + prefix_shift
+            length_cp = new_end - new_begin
+            new_spans.append((start_cp, length_cp, kind))
 
     return old_spans, new_spans
 
@@ -205,19 +205,3 @@ def _is_plus_file_header(line: str) -> bool:
         or line.startswith('+++ b/')
         or line.startswith('+++ /dev/null')
     )
-
-
-# Helper functions for converting Python codepoint indices to UTF-16 code-unit offsets.
-#  Some UI text formatting APIs (e.g., Qt) use UTF-16 offsets. This avoids misaligned spans
-#  when the text contains surrogate pairs (e.g., emoji).
-def _utf16_index(s: str, codepoint_index: int) -> int:
-    """Convert a Python codepoint index to a UTF-16 code-unit index (Qt text offsets)."""
-    u16 = 0
-    for ch in s[:codepoint_index]:
-        u16 += 2 if ord(ch) > 0xFFFF else 1
-    return u16
-
-
-def _utf16_len(s: str, i1: int, i2: int) -> int:
-    """Return the UTF-16 code-unit length of s[i1:i2] (for Qt setFormat-style APIs)."""
-    return _utf16_index(s, i2) - _utf16_index(s, i1)
