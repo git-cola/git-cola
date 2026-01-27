@@ -97,21 +97,41 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
         # Define text attributes for inline (intra-line) highlights.
         # Make changes more visible by using stronger text attributes.
+        # make inline-diff emphasis color from line-diff color
+        k_light = 0.80
+        k_sat = 0.0
+        add_inline_bg = make_emphasis_color(
+            rgb_to_qcolor(self.color_add),
+            dark=False,
+            k_light=k_light,
+            k_sat=k_sat,
+        )
+        remove_inline_bg = make_emphasis_color(
+            rgb_to_qcolor(self.color_remove),
+            dark=False,
+            k_light=k_light,
+            k_sat=k_sat,
+        )
+
         self.diff_add_inline_fmt = QtGui.QTextCharFormat()
         # self.diff_add_inline_fmt.setFontWeight(QtGui.QFont.Bold)
         # self.diff_add_inline_fmt.setFontUnderline(True)
-        self.diff_add_inline_fmt.setForeground(QtGui.QColor('#0b3d0b'))  # dark green text
-        self.diff_add_inline_fmt.setBackground(QtGui.QColor('#a6f3a6'))  # stronger green bg
+        # self.diff_add_inline_fmt.setForeground(QtGui.QColor('#0b3d0b'))  # dark green text
+        # self.diff_add_inline_fmt.setBackground(QtGui.QColor('#a6f3a6'))  # stronger green bg
+        self.diff_add_inline_fmt.setBackground(add_inline_bg)  # stronger green bg
 
         self.diff_remove_inline_fmt = QtGui.QTextCharFormat()
         # self.diff_remove_inline_fmt.setFontWeight(QtGui.QFont.Bold)
         # self.diff_remove_inline_fmt.setFontUnderline(True)
-        self.diff_remove_inline_fmt.setForeground(QtGui.QColor('#5a0000'))  # dark red text
-        self.diff_remove_inline_fmt.setBackground(QtGui.QColor('#ffb3b3'))  # stronger red bg
+        # self.diff_remove_inline_fmt.setForeground(QtGui.QColor('#5a0000'))  # dark red text
+        # self.diff_remove_inline_fmt.setBackground(QtGui.QColor('#ffb3b3'))  # stronger red bg
+        self.diff_remove_inline_fmt.setBackground(remove_inline_bg)  # stronger red bg
 
         self.diff_rep_inline_fmt = QtGui.QTextCharFormat()
-        self.diff_rep_inline_fmt.setForeground(QtGui.QColor('#3b2a1a'))  # dark yellow
-        self.diff_rep_inline_fmt.setBackground(QtGui.QColor('#f3d9b1'))  # light yellow
+        # self.diff_rep_inline_fmt.setForeground(QtGui.QColor('#3b2a1a'))  # dark yellow
+        self.diff_rep_inline_fmt.setBackground(
+            QtGui.QColor('#fff47b' if not dark else '#504029')
+        )  # light/dark yellow
 
         self.bad_whitespace_fmt = qtutils.make_format(background=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
@@ -2244,3 +2264,59 @@ def measure_ms(store: dict, key: str, *, enabled: bool = True, clock=time.perf_c
         yield
     finally:
         store[key] = (clock() - t0) * 1000
+
+
+# color helpers
+def make_emphasis_color(
+    base,
+    *,
+    dark: bool,
+    k_light: float = 0.5,
+    k_sat: float = 0.0,
+):
+    """Create an emphasis color in HSL space.
+
+    Keeps Hue and adjusts Lightness as:
+      - light theme: L' = k_light * L
+      - dark theme : L' = (1 - k_light) + k_light * L
+
+    Optionally boosts Saturation towards 1.0:
+      S' = S + (1 - S) * k_sat
+
+    All parameters are clamped to [0, 1]. Alpha is preserved.
+    """
+    if not isinstance(base, QtGui.QColor):
+        base = QtGui.QColor(base)
+
+    k_light = _clamp01(float(k_light))
+    k_sat = _clamp01(float(k_sat))
+
+    h, s, lit, a = base.getHslF()
+    if h < 0.0:
+        h = 0.0
+
+    if dark:
+        lit = (1.0 - k_light) + (k_light * lit)
+    else:
+        lit = k_light * lit
+    lit = _clamp01(lit)
+
+    if k_sat:
+        s = s + ((1.0 - s) * k_sat)
+        s = _clamp01(s)
+
+    out = QtGui.QColor()
+    out.setHslF(h, s, lit, a)
+    return out
+
+
+def rgb_to_qcolor(rgb):
+    """Convert an (r, g, b) tuple into a QColor."""
+    if isinstance(rgb, QtGui.QColor):
+        return QtGui.QColor(rgb)
+    r, g, b = rgb
+    return QtGui.QColor(int(r), int(g), int(b))
+
+
+def _clamp01(x: float) -> float:
+    return 0.0 if x < 0.0 else 1.0 if x > 1.0 else x
