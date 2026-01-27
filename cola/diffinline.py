@@ -11,9 +11,9 @@ from typing import Literal, TypeAlias
 # much work on huge diffs.  When a limit is exceeded, inline spans are disabled
 # and the viewer falls back to line-level highlighting only.
 #  NOTE: If a limit is negative, that guardrail is disabled (unlimited).
-_INLINE_DIFF_MAX_LINES = 5000
-_INLINE_DIFF_MAX_BLOCK_LINES = 2000
-_INLINE_DIFF_MAX_LINE_LENGTH = 1000
+_INLINE_DIFF_MAX_LINES = -1
+_INLINE_DIFF_MAX_BLOCK_LINES = -1
+_INLINE_DIFF_MAX_LINE_LENGTH = -1
 
 # Minimum similarity (0.0–1.0) for enabling inline highlighting:
 #   - Increase -> inline highlights appear less often (only for more-similar line pairs),
@@ -115,7 +115,9 @@ def _compute_inline_diff_spans_impl(lines) -> SpansByLine:
         if not minus_rows or not plus_rows:
             continue
 
-        if len(minus_rows) + len(plus_rows) > _INLINE_DIFF_MAX_BLOCK_LINES:
+        if (_INLINE_DIFF_MAX_BLOCK_LINES >= 0) and (
+            len(minus_rows) + len(plus_rows) > _INLINE_DIFF_MAX_BLOCK_LINES
+        ):
             continue
 
         # [STEP] Validate: only handle 1:1 line blocks to avoid misleading pairing
