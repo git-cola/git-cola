@@ -29,7 +29,7 @@ def clone_repo(context, show, progress, finish, spawn):
     """Clone a repository asynchronously with progress animation"""
     func = partial(start_clone_task, context, progress, finish, spawn)
     prompt = prompt_for_clone(context, show=show)
-    prompt.result.connect(func)
+    prompt.clone_result.connect(func)
     return prompt
 
 
@@ -92,7 +92,7 @@ class CloneTask(qtutils.Task):
 
 class Clone(standard.Dialog):
     # Signal binding for returning the input data
-    result = QtCore.Signal(object, object, bool, bool)
+    clone_result = QtCore.Signal(object, object, bool, bool)
 
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent=parent)
@@ -209,5 +209,5 @@ class Clone(standard.Dialog):
             count += 1
 
         # Return the input data and close the dialog
-        self.result.emit(url, destdir, submodules, shallow)
+        self.clone_result.emit(url, destdir, submodules, shallow)
         self.close()
