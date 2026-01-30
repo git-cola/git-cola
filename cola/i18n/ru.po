@@ -4513,7 +4513,7 @@ msgstr "Открыть Родителя"
 
 #: cola/widgets/submodules.py:86
 msgid "git://git.example.com/repo.git"
-msgstr "https://github.com/UserName/RepoName"
+msgstr ""
 
 #: cola/widgets/submodules.py:87
 msgid "Submodule URL (can be relative, ex: ../repo.git)"
