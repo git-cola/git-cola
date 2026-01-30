@@ -83,7 +83,7 @@ class AddSubmodule(standard.Dialog):
         super().__init__(parent=parent)
         self.setWindowTitle(N_('Submodules'))
 
-        hint = N_('git://git.example.com/repo.git')
+        hint = N_('https://git.example.com/user/repo.git')
         tooltip = N_('Submodule URL (can be relative, ex: ../repo.git)')
         self.url_text = text.HintedDefaultLineEdit(hint, tooltip=tooltip, parent=self)
 

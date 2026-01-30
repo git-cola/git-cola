@@ -475,7 +475,7 @@ class RemoteWidget(QtWidgets.QWidget):
         self.context = context
         self.setWindowTitle(N_('Add remote'))
         self.remote_name = lineedit(context, N_('Name for the new remote'))
-        self.remote_url = lineedit(context, 'git://git.example.com/repo.git')
+        self.remote_url = lineedit(context, N_('https://git.example.com/user/repo.git'))
         self.open_button = qtutils.create_button(
             text=N_('Browse...'), icon=icons.folder(), tooltip=N_('Select repository')
         )

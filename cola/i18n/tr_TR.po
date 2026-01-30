@@ -4370,8 +4370,8 @@ msgid "Open Parent"
 msgstr ""
 
 #: cola/widgets/submodules.py:86
-msgid "git://git.example.com/repo.git"
-msgstr ""
+msgid "https://git.example.com/user/repo.git"
+msgstr "https://git.example.com/user/repo.git"
 
 #: cola/widgets/submodules.py:87
 msgid "Submodule URL (can be relative, ex: ../repo.git)"
