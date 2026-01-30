@@ -15,6 +15,11 @@ Development
 
 * The sphinxtogithub documentation infrastructure no longer uses the `optparse` module.
 
+Translations
+------------
+* Updated Russin translation.
+  (`#1545 <https://github.com/git-cola/git-cola/pull/1545>`_)
+
 
 .. _v4.17.0:
 
