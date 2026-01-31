@@ -28,7 +28,7 @@ The following steps should be taken when creating a new release.
 * `garden check` and make sure all tests and checks are passing.
 
 * `garden version/bump` to update the version number recorded in the source.
-Use `garden version/bump -D version_next=vX.Y.Z` to use a major or patch version.
+Use `garden version/bump -D version-next=vX.Y.Z` to use a major or patch version.
 By default, the next minor version is used.
 
 These files are updated to mention the new version:
