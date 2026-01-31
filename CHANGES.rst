@@ -17,7 +17,7 @@ Development
 
 Translations
 ------------
-* Updated Russin translation.
+* Updated Russian translation.
   (`#1545 <https://github.com/git-cola/git-cola/pull/1545>`_)
 
 
