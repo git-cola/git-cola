@@ -1,6 +1,8 @@
+from contextlib import contextmanager
 from functools import partial
 import os
 import re
+import time
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -17,6 +19,7 @@ from ..qtutils import get
 from .. import actions
 from .. import cmds
 from .. import core
+from .. import diffinline
 from .. import diffparse
 from .. import gitcmds
 from .. import gravatar
@@ -32,6 +35,11 @@ from .text import label_selection_timer
 from . import defs
 from . import standard
 from . import imageview
+
+# Configure inline (intra-line) diff highlighting
+ENABLE_INLINE_DIFF = True
+INLINE_DIFF_STRICT = True  # If True, let internal exceptions propagate (fail fast).
+ENABLE_INLINE_MEASURE_TIME = True
 
 
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
@@ -56,6 +64,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.whitespace = whitespace
         self.enabled = True
         self.is_commit = is_commit
+        self.inline_spans = {}
 
         QPalette = QtGui.QPalette
         cfg = context.cfg
@@ -85,8 +94,52 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.diff_remove_fmt = qtutils.make_format(
             foreground=self.color_text, background=self.color_remove
         )
+
+        # Define text attributes for inline (intra-line) highlights.
+        # Make changes more visible by using stronger text attributes.
+        # make inline-diff emphasis color from line-diff color
+        k_light = 0.80
+        k_sat = 0.0
+        add_inline_bg = make_emphasis_color(
+            rgb_to_qcolor(self.color_add),
+            dark=False,
+            k_light=k_light,
+            k_sat=k_sat,
+        )
+        remove_inline_bg = make_emphasis_color(
+            rgb_to_qcolor(self.color_remove),
+            dark=False,
+            k_light=k_light,
+            k_sat=k_sat,
+        )
+
+        self.diff_add_inline_fmt = QtGui.QTextCharFormat()
+        # self.diff_add_inline_fmt.setFontWeight(QtGui.QFont.Bold)
+        # self.diff_add_inline_fmt.setFontUnderline(True)
+        # self.diff_add_inline_fmt.setForeground(QtGui.QColor('#0b3d0b'))  # dark green text
+        # self.diff_add_inline_fmt.setBackground(QtGui.QColor('#a6f3a6'))  # stronger green bg
+        self.diff_add_inline_fmt.setBackground(add_inline_bg)  # stronger green bg
+
+        self.diff_remove_inline_fmt = QtGui.QTextCharFormat()
+        # self.diff_remove_inline_fmt.setFontWeight(QtGui.QFont.Bold)
+        # self.diff_remove_inline_fmt.setFontUnderline(True)
+        # self.diff_remove_inline_fmt.setForeground(QtGui.QColor('#5a0000'))  # dark red text
+        # self.diff_remove_inline_fmt.setBackground(QtGui.QColor('#ffb3b3'))  # stronger red bg
+        self.diff_remove_inline_fmt.setBackground(remove_inline_bg)  # stronger red bg
+
+        self.diff_rep_inline_fmt = QtGui.QTextCharFormat()
+        # self.diff_rep_inline_fmt.setForeground(QtGui.QColor('#3b2a1a'))  # dark yellow
+        self.diff_rep_inline_fmt.setBackground(
+            QtGui.QColor('#fff47b' if not dark else '#504029')
+        )  # light/dark yellow
+
         self.bad_whitespace_fmt = qtutils.make_format(background=Qt.red)
         self.setCurrentBlockState(self.INITIAL_STATE)
+
+    def set_inline_spans(self, spans):
+        """Set the per-line inline spans used for intra-line diff highlighting"""
+        self.inline_spans = spans or {}
+        self.rehighlight()
 
     def set_enabled(self, enabled):
         self.enabled = enabled
@@ -160,27 +213,51 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     def get_formats_for_diff_text(self, state, text):
         """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
         formats = []
+        qt_len = _qt_index_from_cp(text, len(text))
 
         if self.DIFF_FILE_HEADER_START_RGX.match(text):
             state = self.DIFF_FILE_HEADER_STATE
-            formats.append((0, len(text), self.diff_header_fmt))
+            formats.append((0, qt_len, self.diff_header_fmt))
 
         elif self.DIFF_HUNK_HEADER_RGX.match(text):
-            formats.append((0, len(text), self.bold_diff_header_fmt))
+            formats.append((0, qt_len, self.bold_diff_header_fmt))
 
         elif text.startswith('-'):
             if text == '-- ':
                 state = self.END_STATE
             else:
-                formats.append((0, len(text), self.diff_remove_fmt))
+                formats.append((0, qt_len, self.diff_remove_fmt))
 
         elif text.startswith('+'):
-            formats.append((0, len(text), self.diff_add_fmt))
+            formats.append((0, qt_len, self.diff_add_fmt))
             if self.whitespace:
                 match = self.BAD_WHITESPACE_RGX.search(text)
                 if match is not None:
                     start = match.start()
-                    formats.append((start, len(text) - start, self.bad_whitespace_fmt))
+                    start_qt = _qt_index_from_cp(text, start)
+                    formats.append(
+                        (start_qt, qt_len - start_qt, self.bad_whitespace_fmt)
+                    )
+
+        # Apply intra-line highlights after the base add/remove backgrounds.
+        block = self.currentBlock()
+        spans = self.inline_spans.get(block.blockNumber())
+        if spans:
+            for start, length, kind in spans:
+                if not length:
+                    continue
+                if kind == 'rep':
+                    fmt = self.diff_rep_inline_fmt
+                else:
+                    if text.startswith('+'):
+                        fmt = self.diff_add_inline_fmt
+                    elif text.startswith('-') and text != '-- ':
+                        fmt = self.diff_remove_inline_fmt
+                    else:
+                        fmt = None
+                if fmt is not None:
+                    qt_start, qt_len = _qt_span_from_cp(text, start, length)
+                    formats.append((qt_start, qt_len, fmt))
 
         return state, formats
 
@@ -283,6 +360,41 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             self.numbers.set_diff(diff, lines=lines)
 
         self.set_value(diff)
+
+        # Enable inline (intra-line) diff highlighting
+        # when ENABLE_INLINE_DIFF is True
+        inline_spans = {}
+        if ENABLE_INLINE_DIFF:
+            try:
+                perf = {}
+                diff_len = len(diff)
+                with measure_ms(perf, 'compute_ms', enabled=ENABLE_INLINE_MEASURE_TIME):
+                    # call inline (intra-line) diff core
+                    inline_spans = diffinline.compute_inline_diff_spans(diff)
+
+                if ENABLE_INLINE_MEASURE_TIME:
+                    diff_lines = diff.count('\n') + 1 if diff else 0
+                    Interaction.log(
+                        '[inline-diff] perf compute=%.3f (diff_len=%d lines=%d)'
+                        % (perf.get('compute_ms', 0.0), diff_len, diff_lines)
+                    )
+
+                self.highlighter.set_inline_spans(inline_spans)
+
+            except Exception as exc:
+                line_count = diff.count('\n') + 1 if diff else 0
+                core.print_stderr(
+                    'inline diff disabled: %s (lines=%d)' % (exc, line_count)
+                )
+                inline_spans = {}
+                self.highlighter.set_inline_spans({})
+                if INLINE_DIFF_STRICT:
+                    raise
+                # fail-safe
+
+        else:
+            self.highlighter.set_inline_spans({})
+
         self.restore_scrollbar()
 
     def selected_diff_stripped(self):
@@ -2108,3 +2220,103 @@ def parse(content, commit):
             commit.summary = match.group('summary')
             commit.diff = '\n'.join(lines[idx + 1 :])
             break
+
+
+# Helper functions for converting Python codepoint indices to UTF-16 code-unit offsets.
+# Qt use UTF-16 offsets. This avoids misaligned spans
+# when the text contains surrogate pairs (e.g., emoji).
+#  see:
+#   https://doc.qt.io/qt-6/qanystringview.html#sizes-and-sub-strings
+#   https://doc.qt.io/qt-6/qsyntaxhighlighter.html#setFormat
+def _qt_index_from_cp(s: str, cp_index: int) -> int:
+    if cp_index <= 0:
+        return 0
+    if cp_index >= len(s):
+        cp_index = len(s)
+    u = 0
+    for ch in s[:cp_index]:
+        u += 2 if ord(ch) > 0xFFFF else 1
+    return u
+
+
+def _qt_span_from_cp(s: str, start_cp: int, length_cp: int) -> tuple[int, int]:
+    if length_cp <= 0:
+        return (0, 0)
+    if start_cp < 0:
+        start_cp = 0
+    end_cp = min(len(s), start_cp + length_cp)
+    start_qt = _qt_index_from_cp(s, start_cp)
+    end_qt = _qt_index_from_cp(s, end_cp)
+    return (start_qt, max(0, end_qt - start_qt))
+
+
+@contextmanager
+def measure_ms(store: dict, key: str, *, enabled: bool = True, clock=time.perf_counter):
+    """
+    Store the elapsed time (ms) in store[key].
+    If enabled=False, do nothing.
+    """
+    if not enabled:
+        yield
+        return
+    t0 = clock()
+    try:
+        yield
+    finally:
+        store[key] = (clock() - t0) * 1000
+
+
+# color helpers
+def make_emphasis_color(
+    base,
+    *,
+    dark: bool,
+    k_light: float = 0.5,
+    k_sat: float = 0.0,
+):
+    """Create an emphasis color in HSL space.
+
+    Keeps Hue and adjusts Lightness as:
+      - light theme: L' = k_light * L
+      - dark theme : L' = (1 - k_light) + k_light * L
+
+    Optionally boosts Saturation towards 1.0:
+      S' = S + (1 - S) * k_sat
+
+    All parameters are clamped to [0, 1]. Alpha is preserved.
+    """
+    if not isinstance(base, QtGui.QColor):
+        base = QtGui.QColor(base)
+
+    k_light = _clamp01(float(k_light))
+    k_sat = _clamp01(float(k_sat))
+
+    h, s, lit, a = base.getHslF()
+    if h < 0.0:
+        h = 0.0
+
+    if dark:
+        lit = (1.0 - k_light) + (k_light * lit)
+    else:
+        lit = k_light * lit
+    lit = _clamp01(lit)
+
+    if k_sat:
+        s = s + ((1.0 - s) * k_sat)
+        s = _clamp01(s)
+
+    out = QtGui.QColor()
+    out.setHslF(h, s, lit, a)
+    return out
+
+
+def rgb_to_qcolor(rgb):
+    """Convert an (r, g, b) tuple into a QColor."""
+    if isinstance(rgb, QtGui.QColor):
+        return QtGui.QColor(rgb)
+    r, g, b = rgb
+    return QtGui.QColor(int(r), int(g), int(b))
+
+
+def _clamp01(x: float) -> float:
+    return 0.0 if x < 0.0 else 1.0 if x > 1.0 else x
