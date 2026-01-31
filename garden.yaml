@@ -67,7 +67,7 @@ trees:
         ${activate}
         if type pyupgrade >/dev/null 2>&1
         then
-            pyupgrade --py36-plus bin/git-* bin/*.py cola/*.py cola/*/*.py
+            pyupgrade --py39-plus bin/git-* bin/*.py cola/*.py cola/*/*.py
         fi
       fmt: |
         ${activate}

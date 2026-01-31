@@ -14,9 +14,9 @@ repos:
     rev: v3.21.2
     hooks:
       - id: pyupgrade
-        name: Enforce Python 3.6 idioms
+        name: Enforce Python 3.9 idioms
         args:
-          - --py36-plus
+          - --py39-plus
 
   - repo: https://github.com/jsh9/cercis
     rev: 0.2.5

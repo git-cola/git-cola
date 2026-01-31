@@ -1,11 +1,6 @@
 """Provide git-cola's version number"""
-import sys
-
 try:
-    if sys.version_info < (3, 8):
-        import importlib_metadata as metadata
-    else:
-        from importlib import metadata
+    from importlib import metadata
 except (ImportError, OSError):
     metadata = None
 

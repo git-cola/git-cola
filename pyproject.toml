@@ -18,7 +18,6 @@ classifiers = [
 ]
 description = "Git Cola is a powerful Git GUI with a slick and intuitive user interface."
 dependencies = [
-    "importlib_metadata; python_version<'3.8'",
     "polib >= 1.0.0",
     "qtpy >= 1.1.0",
 ]

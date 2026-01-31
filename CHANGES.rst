@@ -1,3 +1,15 @@
+.. _v4.18.0:
+
+v4.18.0
+=======
+
+Breaking Changes
+----------------
+* Python 3.9 is now the minimum supported Python version.
+  Python 3.6, 3.7 and 3.8 are no longer supported. The code still works but there will
+  be no effort to keep things working when using older Python versions.
+
+
 .. _v4.17.1:
 
 v4.17.1
