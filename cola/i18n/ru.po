@@ -29,7 +29,7 @@ msgstr "Предыдущий файл"
 #: cola/app.py:333
 #, python-format
 msgid "fatal: \"%s\" is not a directory.  Please specify a correct --repo <path>."
-msgstr "fatal: \"%s\" не является каталогом.  Пожалуйста, укажите корректный --repo <path>."
+msgstr "Фатальная ошибка: \"%s\" не является каталогом.  Пожалуйста, укажите корректный --repo <path>."
 
 #: cola/app.py:451
 #, python-format
@@ -301,7 +301,7 @@ msgstr "Сбросить ветвь?"
 #: cola/cmds.py:751
 #, python-format
 msgid "The repository will be reset using \"git reset --hard %s\""
-msgstr ""
+msgstr "Репозиторий будет сброшен командой \"git reset --hard %s\""
 
 #: cola/cmds.py:755 cola/guicmds.py:402 cola/widgets/dag.py:567
 #: cola/widgets/main.py:449
@@ -310,22 +310,22 @@ msgstr ""
 
 #: cola/cmds.py:756
 msgid "Restore Worktree and Reset All?"
-msgstr ""
+msgstr "Восстановить Рабочее древо (Worktree) и сбросить всё?"
 
 #: cola/cmds.py:771
 #, python-format
 msgid "The worktree will be restored using \"git read-tree --reset -u %s\""
-msgstr ""
+msgstr "Рабочее древо (Worktree) будет восстановлено командой \"git read-tree --reset -u %s\""
 
 #: cola/cmds.py:792 cola/cmds.py:795 cola/guicmds.py:413 cola/guicmds.py:414
 #: cola/widgets/dag.py:573 cola/widgets/main.py:457
 msgid "Restore Worktree"
-msgstr ""
+msgstr "Восстановить Рабочее древо (Worktree)"
 
 #: cola/cmds.py:793
 #, python-format
 msgid "Restore Worktree to %s?"
-msgstr ""
+msgstr "Восстановить Рабочее древо (Worktree) в %s?"
 
 #: cola/cmds.py:811 cola/widgets/commitmsg.py:589
 msgid "Rewrite Published Commit?"
@@ -339,7 +339,7 @@ msgid ""
 msgstr ""
 "Этот коммит уже опубликован.\n"
 "Данная операция перепишет историю на сервере.\n"
-"Возможно, лучше этого не делать."
+"Возможно, Вы не хотите этого делать."
 
 #: cola/cmds.py:817
 msgid "Undo the published commit?"
@@ -680,7 +680,7 @@ msgid ""
 "This operation removes unstaged edits from selected files.\n"
 "These changes cannot be recovered."
 msgstr ""
-"Эта операция отменит незакомиченные изменения.\n"
+"Это действие удалит неспрятанное редактирование выбранных файлов.\n"
 "Эти изменения нельзя будет восстановить."
 
 #: cola/cmds.py:2541
@@ -1072,17 +1072,17 @@ msgstr "Выбрать репозиторий..."
 #: cola/guicmds.py:154
 #, fuzzy
 msgid "Enter a name for the new bare repo"
-msgstr "Введите имя для заначки (stash)"
+msgstr "Введите имя для нового чистого репозитория"
 
 #: cola/guicmds.py:155 cola/widgets/main.py:264
 #, fuzzy
 msgid "New Bare Repository..."
-msgstr "Новый репозиторий..."
+msgstr "Новый чистый репозиторий..."
 
 #: cola/guicmds.py:164
 #, fuzzy, python-format
 msgid "\"%s\" already exists"
-msgstr "\"%s\" уже существует."
+msgstr "\"%s\" уже существует"
 
 #: cola/guicmds.py:175 cola/widgets/search.py:74
 msgid "Export Patches"
@@ -1104,11 +1104,11 @@ msgstr "Открыть Git репозиторий"
 
 #: cola/guicmds.py:259
 msgid "Quick Open Repository"
-msgstr ""
+msgstr "Быстро открыть Репозиторий"
 
 #: cola/guicmds.py:260 cola/widgets/bookmarks.py:61
 msgid "Search repositories by name..."
-msgstr ""
+msgstr "Поиск репозитория по имени..."
 
 #: cola/guicmds.py:280
 msgid "Load Commit Message"
@@ -1133,7 +1133,7 @@ msgstr "Выбрать"
 #: cola/guicmds.py:346 cola/widgets/branch.py:447
 #, fuzzy
 msgid "Enter New Branch Name"
-msgstr "Введите новое имя ветви"
+msgstr "Введите имя новой ветви"
 
 #: cola/guicmds.py:346 cola/widgets/browse.py:161 cola/widgets/stash.py:45
 msgid "Rename"
@@ -1154,7 +1154,7 @@ msgstr ""
 
 #: cola/hidpi.py:41
 msgid "Auto"
-msgstr ""
+msgstr "Авто"
 
 #: cola/hidpi.py:42
 msgid "Disable"
@@ -1183,16 +1183,16 @@ msgstr "Восстановить настройки по умолчанию"
 
 #: cola/icons.py:58
 msgid "Dark Theme"
-msgstr ""
+msgstr "Тёмная тема"
 
 #: cola/icons.py:59
 msgid "Light Theme"
-msgstr ""
+msgstr "Светлая тема"
 
 #: cola/interaction.py:34
 #, python-format
 msgid "\"%(command)s\" returned exit status %(status)d"
-msgstr "\"%(command)s\" завершилась с кодом %(status)d"
+msgstr "\"%(command)s\" вернула код %(status)d"
 
 #: cola/interaction.py:105 cola/widgets/main.py:609
 msgid "Continue"
@@ -1206,7 +1206,7 @@ msgstr "Запустить %s?"
 #: cola/interaction.py:119
 #, python-format
 msgid "Run the \"%s\" command?"
-msgstr "Выполнить комманду \"%s\"?"
+msgstr "Запустить команду \"%s\"?"
 
 #: cola/interaction.py:121 cola/widgets/cfgactions.py:242
 msgid "Run"
@@ -1251,8 +1251,8 @@ msgid ""
 "Accept changes and rebase\n"
 "Shortcut: Ctrl+Enter"
 msgstr ""
-"Закоммитить подготовленные изменения\n"
-"Ctrl+Enter"
+"Принять изменения и сделать Rebase\n"
+"Горячие клавиши: Ctrl+Enter"
 
 #: cola/sequenceeditor.py:178
 msgid ""
@@ -3494,7 +3494,7 @@ msgstr ""
 
 #: cola/widgets/main.py:666
 msgid "Quick Open..."
-msgstr ""
+msgstr "Быстро открыть..."
 
 #: cola/widgets/main.py:682
 msgid "&File"
@@ -3535,7 +3535,7 @@ msgstr "Ветвь"
 #: cola/widgets/main.py:947
 #, python-format
 msgid "git cola version %s"
-msgstr ""
+msgstr "git cola версия %s"
 
 #: cola/widgets/main.py:951 cola/widgets/main.py:957
 msgid "error: unable to execute git"
@@ -3547,7 +3547,7 @@ msgstr ""
 
 #: cola/widgets/main.py:1031
 msgid "Layouts"
-msgstr ""
+msgstr "Слои"
 
 #: cola/widgets/main.py:1136
 msgid ""
@@ -3555,8 +3555,8 @@ msgid ""
 "Resolve conflicts, commit changes, and run:\n"
 "    Rebase > Continue"
 msgstr ""
-"Этот репозиторий сейчас будет перемещен (rebase).\n"
-"Исправьте конфликты, закоммитьте изменения, и запустите:\n"
+"Этот репозиторий сейчас будет перемещён (rebase).\n"
+"Исправьте конфликты, сделайте коммит для изменений и запустите:\n"
 "    Переместить (rebase) > Продолжить"
 
 #: cola/widgets/main.py:1143
