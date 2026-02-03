@@ -34,21 +34,21 @@ msgstr "fatal: \"%s\" не является каталогом.  Пожалуй�
 #: cola/app.py:451
 #, python-format
 msgid "%(app_name)s is already running"
-msgstr ""
+msgstr "%(app_name)s уже запущен"
 
 #: cola/app.py:452
 #, python-format
 msgid "%(app_name)s is already running in %(dirname)s (--single-instance)."
-msgstr ""
+msgstr "%(app_name)s уже запущен в %(dirname)s (--single-instance)."
 
 #: cola/app.py:595
 msgid "Error Opening Repository"
-msgstr ""
+msgstr "Ошибка открытия репозитория"
 
 #: cola/app.py:596
 #, python-format
 msgid "Could not open %s."
-msgstr ""
+msgstr "Невозможно открыть %s."
 
 #: cola/app.py:603 cola/widgets/startup.py:256
 msgid "Repository Not Found"
@@ -57,7 +57,7 @@ msgstr "Репозиторий не найден"
 #: cola/app.py:604 cola/widgets/bookmarks.py:486
 #, python-format
 msgid "%s is not a Git repository."
-msgstr "%s не является git репозиторием."
+msgstr "%s не является Git репозиторием."
 
 #: cola/app.py:605
 msgid "Create a new repository at that location?"
@@ -73,11 +73,11 @@ msgstr "Ошибка создания репозитория"
 
 #: cola/cmds.py:143
 msgid "Abort Applying Patch..."
-msgstr ""
+msgstr "Отмена применения Заплатки (Patch)..."
 
 #: cola/cmds.py:144
 msgid "Aborting applying the current patch?"
-msgstr ""
+msgstr "Отменить применение данной заплатки (patch)?"
 
 #: cola/cmds.py:146
 msgid ""
@@ -87,7 +87,7 @@ msgstr ""
 
 #: cola/cmds.py:149
 msgid "Abort Applying Patch"
-msgstr ""
+msgstr "Отмена применения Заплатки (Patch)"
 
 #: cola/cmds.py:163 cola/cmds.py:193 cola/cmds.py:224 cola/cmds.py:308
 #: cola/cmds.py:317 cola/cmds.py:332 cola/cmds.py:342 cola/cmds.py:487
@@ -157,11 +157,11 @@ msgstr ""
 
 #: cola/cmds.py:388
 msgid "Patch failed to apply"
-msgstr ""
+msgstr "Сбой применения Заплатки (Patch)"
 
 #: cola/cmds.py:400
 msgid "Patch(es) Applied"
-msgstr "Патчи применены"
+msgstr "Патч(и) применен(ы)"
 
 #: cola/cmds.py:401
 #, python-format
@@ -268,7 +268,7 @@ msgstr ""
 #: cola/cmds.py:705 cola/cmds.py:724 cola/cmds.py:758 cola/guicmds.py:378
 #: cola/guicmds.py:392 cola/guicmds.py:403
 msgid "Reset and Restore"
-msgstr ""
+msgstr "Сбросить и Восстановить"
 
 #: cola/cmds.py:717
 #, python-format
@@ -296,7 +296,7 @@ msgstr ""
 
 #: cola/cmds.py:739
 msgid "Reset branch?"
-msgstr ""
+msgstr "Сбросить ветвь?"
 
 #: cola/cmds.py:751
 #, python-format
