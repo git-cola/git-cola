@@ -9,6 +9,11 @@ Breaking Changes
   Python 3.6, 3.7 and 3.8 are no longer supported. The code still works but there will
   be no effort to keep things working when using older Python versions.
 
+Translations
+------------
+* Updated Russian translation.
+  (`#1547 <https://github.com/git-cola/git-cola/pull/1547>`_)
+
 
 .. _v4.17.1:
 
