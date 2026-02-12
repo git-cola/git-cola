@@ -48,6 +48,7 @@ extras = [
 # Developer tools.
 dev = [
     "cercis",
+    "mypy == 1.19.1",
     "pyupgrade",
 ]
 # Build and packaging tools.
