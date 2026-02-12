@@ -112,3 +112,52 @@ cola = [
 
 [tool.setuptools_scm]
 fallback_version = "4.17.1"
+
+[tool.mypy]
+python_version = "3.9"
+# TODO: enable more and more checks as typing across project is improved
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_calls = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+no_implicit_optional = false
+strict_optional = false
+warn_return_any = false
+warn_no_return = false
+warn_unreachable = false
+ignore_missing_imports = true
+disable_error_code = [
+    "import-untyped",
+    "var-annotated",
+    "no-redef",
+    "attr-defined",
+]
+exclude = [
+    "^qtpy/",
+    "^contrib/",
+    "^docs/",
+    "^extras/",
+    "^share/",
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "qtpy",
+    "qtpy.*",
+]
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = [
+    "polib",
+    "notify2",
+    "AppKit",
+    "send2trash",
+    "pywintypes",
+    "win32con",
+    "win32event",
+    "win32file",
+]
+ignore_missing_imports = true
