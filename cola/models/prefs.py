@@ -32,6 +32,7 @@ EDITOR = 'gui.editor'
 ENABLE_GRAVATAR = 'cola.gravatar'
 ENABLE_POPUPS = 'cola.enablepopups'
 EXPANDTAB = 'cola.expandtab'
+FIXUP_COMMIT_COUNT = 'cola.fixupcommitcount'
 FONTDIFF = 'cola.fontdiff'
 FONTSIZE = 'cola.fontsize'
 HIDPI = 'cola.hidpi'
@@ -42,6 +43,7 @@ INOTIFY = 'cola.inotify'
 INOTIFY_DELAY = 'cola.inotifydelay'
 NOTIFY_ON_PUSH = 'cola.notifyonpush'
 LINEBREAK = 'cola.linebreak'
+LOAD_COMMITMSG_COUNT = 'cola.loadcommitmsgcount'
 LOGDATE = 'cola.logdate'
 MAXRECENT = 'cola.maxrecent'
 MERGE_DIFFSTAT = 'merge.diffstat'
@@ -153,11 +155,13 @@ class Defaults:
     enable_gravatar = True
     enable_popups = False
     expandtab = False
+    fixup_commit_count = 6
     history_browser = 'gitk'
     http_proxy = ''
     icon_theme = 'default'
     inotify = True
     inotify_delay = 888
+    load_commitmsg_count = 6
     notifyonpush = False
     linebreak = True
     maxrecent = 8
@@ -370,6 +374,22 @@ def maxrecent(context):
     value = Defaults.maxrecent
     if context:
         value = context.cfg.get(MAXRECENT, default=value)
+    return value
+
+
+def fixup_commit_count(context):
+    """The number of commits for the Fixup Previous Commit menu"""
+    value = Defaults.fixup_commit_count
+    if context:
+        value = context.cfg.get(FIXUP_COMMIT_COUNT, default=value)
+    return value
+
+
+def load_commitmsg_count(context):
+    """The number of commits for the Load Previous Commit Message menu"""
+    value = Defaults.load_commitmsg_count
+    if context:
+        value = context.cfg.get(LOAD_COMMITMSG_COUNT, default=value)
     return value
 
 

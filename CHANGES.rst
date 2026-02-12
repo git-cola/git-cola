@@ -3,6 +3,14 @@
 v4.18.0
 =======
 
+Usability, bells and whistles
+-----------------------------
+* The number of commits shown in the "Load Previous Commit Message" and
+  "Fixup Previous Commit" menus is now configurable through the Preferences
+  window.  The ``cola.loadcommitmsgcount`` and ``cola.fixupcommitcount``
+  configuration variables control the number of commits displayed in each
+  menu and default to ``6``.
+
 Breaking Changes
 ----------------
 * Python 3.9 is now the minimum supported Python version.
