@@ -1082,6 +1082,18 @@ cola.maxrecent
 the start and recent repositories menu.  The maximum number of repositories to
 remember is controlled by `cola.maxrecent` and defaults to `8`.
 
+cola.loadcommitmsgcount
+-----------------------
+
+The number of commits to display in the "Load Previous Commit Message" menu
+in the commit message editor.  Defaults to `6`.
+
+cola.fixupcommitcount
+---------------------
+
+The number of commits to display in the "Fixup Previous Commit" menu
+in the commit message editor.  Defaults to `6`.
+
 cola.mousezoom
 --------------
 

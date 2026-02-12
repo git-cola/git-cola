@@ -287,6 +287,8 @@ class SettingsFormWidget(FormWidget):
     def __init__(self, context, model, parent):
         FormWidget.__init__(self, context, model, parent)
         self.maxrecent = standard.SpinBox(maxi=99)
+        self.load_commitmsg_count = standard.SpinBox(maxi=99)
+        self.fixup_commit_count = standard.SpinBox(maxi=99)
         self.tabwidth = standard.SpinBox(maxi=42)
         self.textwidth = standard.SpinBox(maxi=150)
 
@@ -345,6 +347,10 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Diff Tool'), self.difftool)
         self.add_row(N_('Merge Tool'), self.mergetool)
         self.add_row(N_('Recent Repository Count'), self.maxrecent)
+        self.add_row(
+            N_('Load Previous Commit Message Count'), self.load_commitmsg_count
+        )
+        self.add_row(N_('Fixup Previous Commit Count'), self.fixup_commit_count)
 
         self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Detect Conflict Markers'), self.check_conflicts)
@@ -381,6 +387,14 @@ class SettingsFormWidget(FormWidget):
             prefs.TEXTWIDTH: (self.textwidth, Defaults.textwidth),
             prefs.LINEBREAK: (self.linebreak, Defaults.linebreak),
             prefs.MAXRECENT: (self.maxrecent, Defaults.maxrecent),
+            prefs.LOAD_COMMITMSG_COUNT: (
+                self.load_commitmsg_count,
+                Defaults.load_commitmsg_count,
+            ),
+            prefs.FIXUP_COMMIT_COUNT: (
+                self.fixup_commit_count,
+                Defaults.fixup_commit_count,
+            ),
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
             prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
             prefs.EDITOR: (self.editor, fallback_editor()),

@@ -644,36 +644,40 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.setFocus()
 
     def build_fixup_menu(self):
+        count = prefs.fixup_commit_count(self.context)
         self.build_commits_menu(
             cmds.LoadFixupMessage,
             self.fixup_commit_menu,
             self.choose_fixup_commit,
+            count=count,
             prefix='fixup! ',
         )
 
     def build_commitmsg_menu(self):
+        count = prefs.load_commitmsg_count(self.context)
         self.build_commits_menu(
             cmds.LoadCommitMessageFromOID,
             self.load_commitmsg_menu,
             self.choose_commit_message,
+            count=count,
         )
 
-    def build_commits_menu(self, cmd, menu, chooser, prefix=''):
+    def build_commits_menu(self, cmd, menu, chooser, count=6, prefix=''):
         context = self.context
-        params = dag.DAG('HEAD', 6)
+        params = dag.DAG('HEAD', count)
         commits = dag.RepoReader(context, params)
 
         menu_commits = []
         for idx, commit in enumerate(commits.get()):
             menu_commits.insert(0, commit)
-            if idx > 5:
+            if idx > count - 1:
                 continue
 
         menu.clear()
         for commit in menu_commits:
             menu.addAction(prefix + commit.summary, cmds.run(cmd, context, commit.oid))
 
-        if len(commits) == 6:
+        if len(commits) == count:
             menu.addSeparator()
             menu.addAction(N_('More...'), chooser)
 
