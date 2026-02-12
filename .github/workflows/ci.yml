@@ -60,6 +60,8 @@ jobs:
         with:
           name: git-cola.win
           path: git-cola.exe
+      - name: Type checking
+        run: garden dev/env -vv -- python -m mypy .
       - name: Code formatting
         run: garden fmt -vv -- --check
       - name: Test the garden installation method
