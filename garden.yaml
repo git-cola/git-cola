@@ -62,6 +62,7 @@ trees:
         - test
         - check/fmt
         - check/pyupgrade
+        - check/mypy
       check/fmt: garden fmt -- --check
       check/pyupgrade: |
         ${activate}
@@ -69,6 +70,9 @@ trees:
         then
             pyupgrade --py39-plus bin/git-* bin/*.py cola/*.py cola/*/*.py
         fi
+      check/mypy: |
+        ${activate}
+        python3 -m mypy --config-file pyproject.toml bin cola
       fmt: |
         ${activate}
         cercis --version

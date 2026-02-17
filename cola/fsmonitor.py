@@ -32,10 +32,10 @@ win32con = None
 win32event = None
 if utils.is_win32():
     try:
-        import pywintypes
-        import win32con
-        import win32event
-        import win32file
+        import pywintypes  # type: ignore
+        import win32con  # type: ignore
+        import win32event  # type: ignore
+        import win32file  # type: ignore
 
         AVAILABLE = 'pywin32'
     except ImportError:
