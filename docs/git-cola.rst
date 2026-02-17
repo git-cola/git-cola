@@ -985,6 +985,12 @@ Binary files are displayed using a hex-dump display.
    # Treat *.exr files as binary files.
    *.exr binary
 
+cola.fixupcommitcount
+---------------------
+
+The number of commits to display in the "Fixup Previous Commit" menu
+in the commit message editor.  Defaults to `10`.
+
 cola.fontdiff
 -------------
 
@@ -1066,6 +1072,12 @@ Whether to automatically break long lines while editing commit messages.
 Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
+
+cola.loadcommitmsgcount
+-----------------------
+
+The number of commits to display in the "Load Previous Commit Message" menu
+in the commit message editor.  Defaults to `10`.
 
 cola.logdate
 ------------

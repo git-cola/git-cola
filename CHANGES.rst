@@ -9,6 +9,15 @@ Breaking Changes
   Python 3.6, 3.7 and 3.8 are no longer supported. The code still works but there will
   be no effort to keep things working when using older Python versions.
 
+Usability, bells and whistles
+-----------------------------
+* The number of commits shown in the "Load Previous Commit Message" and
+  "Fixup Previous Commit" menus is now configurable through the Preferences
+  window.  The ``cola.loadcommitmsgcount`` and ``cola.fixupcommitcount``
+  configuration variables control the number of commits displayed in each
+  menu and default to ``10``.
+  (`#1554 <https://github.com/git-cola/git-cola/pull/1554>`_)
+
 Translations
 ------------
 * Updated Russian translation.
