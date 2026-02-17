@@ -205,6 +205,7 @@ trees:
       NielBuys: "${gh-https}/NielBuys/git-cola.git"
       Nizhal: "${gh-https}/Nizhal/git-cola.git"
       OriShalhon: "${gh-https}/OriShalhon/git-cola.git"
+      p12tic: "${gh-https}/p12tic/git-cola.git"
       pilarmolinalopez: "${gh-https}/pilarmolinalopez/git-cola.git"
       PushKK: "${gh-https}/PushKK/git-cola.git"
       quintusfelix: "${gh-https}/quintusfelix/git-cola.git"
