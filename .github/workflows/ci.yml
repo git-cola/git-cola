@@ -39,14 +39,14 @@ jobs:
       - name: Install pip-provided test dependencies
         run: |
           set -x
-          garden dev/virtualenv -vv -D pip_upgrade=true
+          garden dev/virtualenv -vv -D pip-upgrade=true
           garden dev -vv
       - name: Configure tests
         run: |
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
-      - name: Run tests and checks
-        run: garden check -vv
+      - name: Run tests
+        run: garden test -vv
       - name: Run doc build
         run: garden doc/html -vv
       - name: Build Windows git-cola.exe installer
@@ -60,10 +60,12 @@ jobs:
         with:
           name: git-cola.win
           path: git-cola.exe
-      - name: Type checking
-        run: garden dev/env -vv -- python -m mypy .
       - name: Code formatting
-        run: garden fmt -vv -- --check
+        run: garden check/fmt -vv
+      - name: Pyupgrade checks
+        run: garden check/pyupgrade -vv
+      - name: Type checks
+        run: garden check/mypy -vv
       - name: Test the garden installation method
         run: garden install -vv -D prefix=dist
 
