@@ -379,18 +379,12 @@ def maxrecent(context):
 
 def fixup_commit_count(context):
     """The number of commits for the Fixup Previous Commit menu"""
-    value = Defaults.fixup_commit_count
-    if context:
-        value = context.cfg.get(FIXUP_COMMIT_COUNT, default=value)
-    return value
+    return context.cfg.get(FIXUP_COMMIT_COUNT, default=Defaults.fixup_commit_count)
 
 
 def load_commitmsg_count(context):
     """The number of commits for the Load Previous Commit Message menu"""
-    value = Defaults.load_commitmsg_count
-    if context:
-        value = context.cfg.get(LOAD_COMMITMSG_COUNT, default=value)
-    return value
+    return context.cfg.get(LOAD_COMMITMSG_COUNT, default=Defaults.load_commitmsg_count)
 
 
 def mouse_zoom(context):

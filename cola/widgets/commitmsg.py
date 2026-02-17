@@ -649,7 +649,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             cmds.LoadFixupMessage,
             self.fixup_commit_menu,
             self.choose_fixup_commit,
-            count=count,
+            count,
             prefix='fixup! ',
         )
 
@@ -659,10 +659,10 @@ class CommitMessageEditor(QtWidgets.QFrame):
             cmds.LoadCommitMessageFromOID,
             self.load_commitmsg_menu,
             self.choose_commit_message,
-            count=count,
+            count,
         )
 
-    def build_commits_menu(self, cmd, menu, chooser, count=6, prefix=''):
+    def build_commits_menu(self, cmd, menu, chooser, count, prefix=''):
         context = self.context
         params = dag.DAG('HEAD', count)
         commits = dag.RepoReader(context, params)
