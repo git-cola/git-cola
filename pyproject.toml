@@ -130,10 +130,11 @@ warn_no_return = false
 warn_unreachable = false
 ignore_missing_imports = true
 disable_error_code = [
-    "import-untyped",
-    "var-annotated",
-    "no-redef",
     "attr-defined",
+    "import-untyped",
+    "no-redef",
+    "unused-ignore",
+    "var-annotated",
 ]
 exclude = [
     "^qtpy/",
