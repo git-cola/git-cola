@@ -14,6 +14,11 @@ Translations
 * Updated Russian translation.
   (`#1547 <https://github.com/git-cola/git-cola/pull/1547>`_)
 
+Development
+-----------
+* Type checking using ``mypy`` has been enabled.
+  (`#1553 <https://github.com/git-cola/git-cola/pull/1553>`_)
+
 
 .. _v4.17.1:
 
