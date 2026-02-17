@@ -247,6 +247,7 @@ Thanks
 * Philip Stark
 * Pilar Molina Lopez
 * Pius Raeder
+* Povilas Kanapickas
 * Radek Novacek
 * Radek Postołowicz
 * Rafael Nascimento
