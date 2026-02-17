@@ -15,7 +15,7 @@ Usability, bells and whistles
   "Fixup Previous Commit" menus is now configurable through the Preferences
   window.  The ``cola.loadcommitmsgcount`` and ``cola.fixupcommitcount``
   configuration variables control the number of commits displayed in each
-  menu and default to ``6``.
+  menu and default to ``10``.
   (`#1554 <https://github.com/git-cola/git-cola/pull/1554>`_)
 
 Translations

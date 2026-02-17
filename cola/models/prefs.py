@@ -155,13 +155,13 @@ class Defaults:
     enable_gravatar = True
     enable_popups = False
     expandtab = False
-    fixup_commit_count = 6
+    fixup_commit_count = 10
     history_browser = 'gitk'
     http_proxy = ''
     icon_theme = 'default'
     inotify = True
     inotify_delay = 888
-    load_commitmsg_count = 6
+    load_commitmsg_count = 10
     notifyonpush = False
     linebreak = True
     maxrecent = 8
