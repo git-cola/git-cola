@@ -35,7 +35,7 @@ def union(selection):
     return list(sorted(values))
 
 
-def _filter(values, remove):
+def _filter(values, remove) -> None:
     """Filter a list in-place by removing items"""
     remove_set = set(remove)
     values_copy = list(values)
@@ -54,7 +54,7 @@ class SelectionModel(QtCore.QObject):
     # to provide higher-level pseudo-selections.
     unstaged = property(lambda self: self.unmerged + self.modified + self.untracked)
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.staged = []
         self.unmerged = []
@@ -62,7 +62,7 @@ class SelectionModel(QtCore.QObject):
         self.untracked = []
         self.line_number = None
 
-    def reset(self, emit=False):
+    def reset(self, emit=False) -> None:
         self.staged = []
         self.unmerged = []
         self.modified = []
@@ -71,12 +71,12 @@ class SelectionModel(QtCore.QObject):
         if emit:
             self.selection_changed.emit()
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return not (
             bool(self.staged or self.unmerged or self.modified or self.untracked)
         )
 
-    def set_selection(self, s):
+    def set_selection(self, s) -> None:
         """Set the new selection."""
         self.staged = s.staged
         self.unmerged = s.unmerged
@@ -84,7 +84,7 @@ class SelectionModel(QtCore.QObject):
         self.untracked = s.untracked
         self.selection_changed.emit()
 
-    def update(self, other):
+    def update(self, other) -> None:
         _filter(self.staged, other.staged)
         _filter(self.unmerged, other.unmerged)
         _filter(self.modified, other.modified)

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import time
 
 from qtpy import QtGui
@@ -27,7 +28,7 @@ class Columns:
     TEXT = []
 
     @classmethod
-    def init(cls):
+    def init(cls) -> None:
         cls.TEXT.extend(
             [N_('Name'), N_('Status'), N_('Message'), N_('Author'), N_('Age')]
         )
@@ -59,7 +60,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     restore = Signal()
 
-    def __init__(self, context, parent):
+    def __init__(self, context, parent) -> None:
         QtGui.QStandardItemModel.__init__(self, parent)
         self.setColumnCount(len(Columns.ALL))
 
@@ -87,11 +88,11 @@ class GitRepoModel(QtGui.QStandardItemModel):
     def mimeTypes(self):
         return qtutils.path_mimetypes()
 
-    def clear(self):
+    def clear(self) -> None:
         self.entries.clear()
         super().clear()
 
-    def hasChildren(self, index):
+    def hasChildren(self, index) -> bool:
         if index.isValid():
             item = self.itemFromIndex(index)
             result = item.hasChildren()
@@ -119,7 +120,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
                 row = None
         return row
 
-    def populate(self, item):
+    def populate(self, item) -> None:
         self.populate_dir(item, item.path + '/')
 
     def add_directory(self, parent, path):
@@ -158,7 +159,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
         return name_item
 
-    def populate_dir(self, parent, path):
+    def populate_dir(self, parent, path) -> None:
         """Populate a subtree"""
         context = self.context
         dirs, paths = gitcmds.listdir(context, path)
@@ -186,7 +187,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
             sub_parent = self.add_directory(sub_parent, path)
         return sub_parent
 
-    def path_is_interesting(self, path):
+    def path_is_interesting(self, path) -> bool:
         """Return True if path has a status."""
         return path in self._interesting_paths
 
@@ -200,7 +201,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         model = self.model
         return set(model.staged + model.unstaged)
 
-    def refresh(self):
+    def refresh(self) -> None:
         old_files = self._interesting_files
         old_paths = self._interesting_paths
         new_files = self.get_files()
@@ -218,7 +219,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self._interesting_files = new_files
         self._interesting_paths = new_paths
 
-    def _initialize(self):
+    def _initialize(self) -> None:
         self.setHorizontalHeaderLabels(Columns.text_values())
         self.entries = {}
         self._interesting_files = files = self.get_files()
@@ -227,7 +228,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         root = self.invisibleRootItem()
         self.populate_dir(root, './')
 
-    def update_entry(self, path):
+    def update_entry(self, path) -> None:
         if self.turbo or path not in self.entries:
             return  # entry doesn't currently exist
         context = self.context
@@ -235,7 +236,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         task.connect(self.apply_data)
         self._runtask.start(task)
 
-    def apply_data(self, data):
+    def apply_data(self, data) -> None:
         entry = self.get(data[0])
         if entry:
             entry[1].set_status(data[1])
@@ -244,7 +245,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
             entry[4].setText(data[4])
 
 
-def create_column(col, path, is_dir):
+def create_column(col, path, is_dir: bool) -> GitRepoNameItem | GitRepoItem:
     """Creates a StandardItem for use in a treeview cell."""
     # GitRepoNameItem is the only one that returns a custom type()
     # and is used to infer selections.
@@ -258,7 +259,7 @@ def create_column(col, path, is_dir):
 class GitRepoInfoTask(qtutils.Task):
     """Handles expensive git lookups for a path."""
 
-    def __init__(self, context, path, default_author):
+    def __init__(self, context, path, default_author) -> None:
         qtutils.Task.__init__(self)
         self.context = context
         self.path = path
@@ -360,14 +361,14 @@ class GitRepoItem(QtGui.QStandardItem):
 
     """
 
-    def __init__(self, path):
+    def __init__(self, path) -> None:
         QtGui.QStandardItem.__init__(self)
         self.path = path
         self.cached = False
         self.setDragEnabled(False)
         self.setEditable(False)
 
-    def set_status(self, data):
+    def set_status(self, data) -> None:
         icon, txt = data
         if icon:
             self.setIcon(QtGui.QIcon(icon))
@@ -381,9 +382,9 @@ class GitRepoNameItem(GitRepoItem):
 
     TYPE = qtutils.standard_item_type_value(1)
 
-    def __init__(self, path, is_dir):
+    def __init__(self, path, is_dir: bool) -> None:
         GitRepoItem.__init__(self, path)
-        self.is_dir = is_dir
+        self.is_dir: bool = is_dir
         self.setDragEnabled(True)
         self.setText(utils.basename(path))
 
@@ -398,5 +399,5 @@ class GitRepoNameItem(GitRepoItem):
         """
         return self.TYPE
 
-    def hasChildren(self):
+    def hasChildren(self) -> bool:
         return self.is_dir

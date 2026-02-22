@@ -77,7 +77,7 @@ class MainModel(QtCore.QObject):
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    def __init__(self, context, cwd=None):
+    def __init__(self, context, cwd=None) -> None:
         """Interface to the main repository status"""
         super().__init__()
 
@@ -133,34 +133,34 @@ class MainModel(QtCore.QObject):
         if cwd:
             self.set_worktree(cwd)
 
-    def is_diff_mode(self):
+    def is_diff_mode(self) -> bool:
         """Are we in diff mode?"""
         return self.mode == self.mode_diff
 
-    def is_unstageable(self):
+    def is_unstageable(self) -> bool:
         """Are we in a mode that supports "unstage" actions?"""
         return self.mode in self.modes_unstageable
 
-    def is_amend_mode(self):
+    def is_amend_mode(self) -> bool:
         """Are we amending a commit?"""
         return self.mode == self.mode_amend
 
-    def is_undoable(self):
+    def is_undoable(self) -> bool:
         """Can we checkout from the current branch or head ref?"""
         return self.mode in self.modes_undoable
 
-    def is_partially_stageable(self):
+    def is_partially_stageable(self) -> bool:
         """Whether partial staging should be allowed."""
         return self.mode in self.modes_partially_stageable
 
-    def is_stageable(self):
+    def is_stageable(self) -> bool:
         """Whether staging should be allowed."""
         return self.is_partially_stageable() or self.mode == self.mode_untracked
 
     def all_branches(self):
         return self.local_branches + self.remote_branches
 
-    def set_worktree(self, worktree):
+    def set_worktree(self, worktree) -> bool:
         last_worktree = self.git.paths.worktree
         self.git.set_worktree(worktree)
 
@@ -190,7 +190,7 @@ class MainModel(QtCore.QObject):
 
         return is_valid
 
-    def is_git_lfs_enabled(self):
+    def is_git_lfs_enabled(self) -> bool:
         """Return True if `git lfs install` has been run
 
         We check for the existence of the "lfs" object-storea, and one of the
@@ -209,13 +209,13 @@ class MainModel(QtCore.QObject):
             and core.exists(lfs_hook)
         )
 
-    def set_commitmsg(self, msg, notify=True):
+    def set_commitmsg(self, msg, notify=True) -> None:
         self.commitmsg = msg
         self._auto_commitmsg = ''
         if notify:
             self.commit_message_changed.emit(msg)
 
-    def set_commit_author(self, author):
+    def set_commit_author(self, author) -> None:
         """Set the author that will be used when creating commits"""
         self.commit_author = author
 
@@ -231,7 +231,7 @@ class MainModel(QtCore.QObject):
             pass
         return path
 
-    def set_diff_text(self, txt):
+    def set_diff_text(self, txt) -> None:
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
@@ -239,29 +239,29 @@ class MainModel(QtCore.QObject):
         if changed:
             self.diff_text_changed.emit()
 
-    def set_diff_type(self, diff_type):  # text, image
+    def set_diff_type(self, diff_type) -> None:  # text, image
         """Set the diff type to either text or image"""
         changed = diff_type != self.diff_type
         self.diff_type = diff_type
         if changed:
             self.diff_type_changed.emit(diff_type)
 
-    def set_file_type(self, file_type):  # text, image
+    def set_file_type(self, file_type) -> None:  # text, image
         """Set the file type to either text or image"""
         changed = file_type != self.file_type
         self.file_type = file_type
         if changed:
             self.file_type_changed.emit(file_type)
 
-    def set_images(self, images):
+    def set_images(self, images) -> None:
         """Update the images shown in the preview pane"""
         self.images = images
         self.images_changed.emit(images)
 
-    def set_directory(self, path):
+    def set_directory(self, path) -> None:
         self.directory = path
 
-    def set_mode(self, mode, head=None):
+    def set_mode(self, mode, head=None) -> None:
         """Set the current editing mode (worktree, index, amending, ...)"""
         # Do not allow going into index or worktree mode when amending.
         if self.is_amend_mode() and mode != self.mode_none:
@@ -288,31 +288,31 @@ class MainModel(QtCore.QObject):
         self.mode = mode
         self.mode_changed.emit(mode)
 
-    def update_path_filter(self, filter_paths):
+    def update_path_filter(self, filter_paths) -> None:
         self.filter_paths = filter_paths
         self.update_file_status()
 
-    def emit_about_to_update(self):
+    def emit_about_to_update(self) -> None:
         self.previous_contents.emit(
             self.staged, self.unmerged, self.modified, self.untracked
         )
         self.about_to_update.emit()
 
-    def emit_updated(self):
+    def emit_updated(self) -> None:
         self.updated.emit()
 
-    def update_file_status(self, update_index=False):
+    def update_file_status(self, update_index=False) -> None:
         """Update modified/staged files status"""
         self.emit_about_to_update()
         self.update_files(update_index=update_index, emit=True)
 
-    def update_file_merge_status(self):
+    def update_file_merge_status(self) -> None:
         """Update modified/staged files and Merge/Rebase/Cherry-pick status"""
         self.emit_about_to_update()
         self._update_merge_rebase_status()
         self.update_file_status()
 
-    def update_status(self, update_index=False, reset=False):
+    def update_status(self, update_index=False, reset=False) -> None:
         # Give observers a chance to respond
         self.emit_about_to_update()
         self.initialized = True
@@ -326,7 +326,7 @@ class MainModel(QtCore.QObject):
             self.update_submodules_list()
         self.emit_updated()
 
-    def update_config(self, emit=False, reset=False):
+    def update_config(self, emit=False, reset=False) -> None:
         if reset:
             self.cfg.reset()
         self.annex = self.cfg.is_annex()
@@ -344,12 +344,12 @@ class MainModel(QtCore.QObject):
         if emit:
             self.emit_updated()
 
-    def update_files(self, update_index=False, emit=False):
+    def update_files(self, update_index=False, emit=False) -> None:
         self._update_files(update_index=update_index)
         if emit:
             self.emit_updated()
 
-    def _update_files(self, update_index=False):
+    def _update_files(self, update_index=False) -> None:
         context = self.context
         display_untracked = prefs.display_untracked(context)
         state = gitcmds.worktree_state(
@@ -376,18 +376,18 @@ class MainModel(QtCore.QObject):
         if selection.is_empty():
             self.set_diff_text('')
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return not (
             bool(self.staged or self.modified or self.unmerged or self.untracked)
         )
 
-    def is_empty_repository(self):
+    def is_empty_repository(self) -> bool:
         return not self.local_branches
 
-    def _update_remotes(self):
+    def _update_remotes(self) -> None:
         self.remotes = sorted(gitcfg.get_remotes(self.cfg))
 
-    def _update_branches_and_tags(self):
+    def _update_branches_and_tags(self) -> None:
         context = self.context
         sort_types = (
             'version:refname',
@@ -404,7 +404,7 @@ class MainModel(QtCore.QObject):
         self.currentbranch = gitcmds.current_branch(self.context)
         self.refs_updated.emit()
 
-    def _update_merge_rebase_status(self):
+    def _update_merge_rebase_status(self) -> None:
         cherry_pick_head = self.git.git_path('CHERRY_PICK_HEAD')
         merge_head = self.git.git_path('MERGE_HEAD')
         rebase_merge = self.git.git_path('rebase-merge')
@@ -418,7 +418,7 @@ class MainModel(QtCore.QObject):
         ):
             self.set_mode(self.mode_none)
 
-    def _update_commitmsg(self):
+    def _update_commitmsg(self) -> None:
         """Check for merge message files and update the commit message
 
         The message is cleared when the merge completes.
@@ -439,15 +439,15 @@ class MainModel(QtCore.QObject):
             self._auto_commitmsg = ''
             self.set_commitmsg(self._prev_commitmsg)
 
-    def update_submodules_list(self):
+    def update_submodules_list(self) -> None:
         self.submodules_list = gitcmds.list_submodule(self.context)
         self.submodules_changed.emit()
 
-    def update_remotes(self):
+    def update_remotes(self) -> None:
         self._update_remotes()
         self.update_refs()
 
-    def update_refs(self):
+    def update_refs(self) -> None:
         """Update tag and branch names"""
         self.emit_about_to_update()
         self._update_branches_and_tags()
@@ -491,7 +491,7 @@ class MainModel(QtCore.QObject):
         """
         return self.git.branch(name, base, track=track, force=force)
 
-    def is_commit_published(self):
+    def is_commit_published(self) -> bool:
         """Return True if the latest commit exists in any remote branch"""
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
 
@@ -501,17 +501,17 @@ class MainModel(QtCore.QObject):
         self.update_file_status()
         return status, out, err
 
-    def getcwd(self):
+    def getcwd(self) -> str:
         """If we've chosen a directory then use it, otherwise use current"""
         if self.directory:
             return self.directory
         return core.getcwd()
 
-    def cycle_ref_sort(self):
+    def cycle_ref_sort(self) -> None:
         """Choose the next ref sort type (version, reverse-chronological)"""
         self.set_ref_sort(self.ref_sort + 1)
 
-    def set_ref_sort(self, raw_value):
+    def set_ref_sort(self, raw_value) -> None:
         value = raw_value % 2  # Currently two sort types
         if value == self.ref_sort:
             return
@@ -627,7 +627,7 @@ def run_remote_action(context, fn, remote, action, **kwargs):
     return fn(*args, **kwargs)
 
 
-def no_color(kwargs):
+def no_color(kwargs) -> None:
     """Augment kwargs with an _add_env environment dict that disables colors"""
     try:
         env = kwargs['_add_env']
@@ -640,7 +640,7 @@ def no_color(kwargs):
     env['TERM'] = 'dumb'
 
 
-def autodetect_proxy(context, kwargs):
+def autodetect_proxy(context, kwargs) -> None:
     """Detect proxy settings when running on Gnome and KDE"""
     # kwargs can refer to persistent global state so we purge it.
     # Callers should not expect their _add_env to persist.
@@ -710,7 +710,7 @@ def autodetect_proxy_environ():
     return add_env
 
 
-def autodetect_proxy_gnome_is_enabled(gsettings):
+def autodetect_proxy_gnome_is_enabled(gsettings) -> bool:
     """Is the proxy manually configured on Gnome?"""
     status, out, _ = core.run_command(
         [gsettings, 'get', 'org.gnome.system.proxy', 'mode']

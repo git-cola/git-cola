@@ -19,7 +19,7 @@ class CommitFactory:
     commits = {}
 
     @classmethod
-    def reset(cls):
+    def reset(cls) -> None:
         cls.commits.clear()
         cls.root_generation = 0
 
@@ -42,25 +42,25 @@ class CommitFactory:
 
 
 class DAG:
-    def __init__(self, ref, count):
+    def __init__(self, ref, count) -> None:
         self.ref = ref
         self.count = count
         self.display_status = True
         self.overrides = {}
 
-    def set_ref(self, ref):
+    def set_ref(self, ref) -> bool:
         changed = ref != self.ref
         if changed:
             self.ref = ref
         return changed
 
-    def set_count(self, count):
+    def set_count(self, count) -> bool:
         changed = count != self.count
         if changed:
             self.count = count
         return changed
 
-    def set_arguments(self, args):
+    def set_arguments(self, args) -> None:
         if args is None:
             return
         if self.set_count(args.count):
@@ -71,11 +71,11 @@ class DAG:
             if self.set_ref(ref):
                 self.overrides['ref'] = ref
 
-    def set_display_status(self, enabled):
+    def set_display_status(self, enabled) -> None:
         """Should we display the worktree status?"""
         self.display_status = enabled
 
-    def overridden(self, opt):
+    def overridden(self, opt) -> bool:
         return opt in self.overrides
 
     def paths(self):
@@ -106,7 +106,7 @@ class Commit:
         'parsed',
     )
 
-    def __init__(self, context, oid=None, log_entry=None):
+    def __init__(self, context, oid=None, log_entry=None) -> None:
         self.context = context
         self.oid = oid
         self.summary = None
@@ -154,7 +154,7 @@ class Commit:
         self.parsed = True
         return self
 
-    def add_label(self, tag):
+    def add_label(self, tag) -> None:
         """Add tag/branch labels from `git log --decorate ....`"""
         if tag.startswith('tag: '):
             tag = tag[5:]  # strip off "tag: " leaving refs/tags/
@@ -215,20 +215,20 @@ class Commit:
             'tags': self.tags,
         }
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return json.dumps(self.data(), sort_keys=True, indent=4, default=list)
 
-    def is_fork(self):
+    def is_fork(self) -> bool:
         """Returns True if the node is a fork"""
         return len(self.children) > 1
 
-    def is_merge(self):
+    def is_merge(self) -> bool:
         """Returns True if the node is a fork"""
         return len(self.parents) > 1
 
 
 class RepoReader:
-    def __init__(self, context, params, allow_git_init=True):
+    def __init__(self, context, params, allow_git_init=True) -> None:
         self.context = context
         self.params = params
         self.git = context.git
@@ -254,10 +254,10 @@ class RepoReader:
     cached = property(lambda self: self._cached)
     """Return True when no commits remain to be read"""
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._topo_list)
 
-    def reset(self):
+    def reset(self) -> None:
         CommitFactory.reset()
         self._cached = False
         self._topo_list = []
@@ -384,7 +384,7 @@ class RepoReader:
         return list(self._objects.items())
 
 
-def get_date_for_current_time(context):
+def get_date_for_current_time(context) -> str:
     """Return the current time formatted according to the cola.logdate configuration"""
     DateFormat = prefs.DateFormat
     logdate = prefs.logdate(context)
