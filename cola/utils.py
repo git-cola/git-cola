@@ -1,4 +1,5 @@
 """Miscellaneous utility functions"""
+from __future__ import annotations
 import copy
 import hashlib
 import os
@@ -18,7 +19,7 @@ from . import compat
 _SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
 
 
-def asint(obj, default=0):
+def asint(obj, default: int = 0) -> int:
     """Make any value into an int, even if the cast fails"""
     try:
         value = int(obj)
@@ -37,7 +38,7 @@ def clamp_zero(value, maximum):
     return clamp(value, 0, maximum)
 
 
-def epoch_millis():
+def epoch_millis() -> int:
     return int(time.time() * 1000)
 
 
@@ -81,7 +82,7 @@ def sublist(values, remove):
 __grep_cache = {}
 
 
-def grep(pattern, items, squash=True):
+def grep(pattern, items, squash: bool = True):
     """Greps a list for items that match a pattern
 
     :param squash: If only one item matches, return just that item
@@ -117,12 +118,12 @@ def grep(pattern, items, squash=True):
     elif squash and len(matched) == 1:
         result = matched[0]
     else:
-        result = matched
+        result: dict = matched
 
     return result
 
 
-def basename(path):
+def basename(path) -> str:
     """
     An os.path.basename() implementation that always uses '/'
 
@@ -133,12 +134,12 @@ def basename(path):
     return path.rsplit('/', 1)[-1]
 
 
-def strip_one(path):
+def strip_one(path) -> str:
     """Strip one level of directory"""
     return path.strip('/').split('/', 1)[-1]
 
 
-def dirname(path, current_dir=''):
+def dirname(path, current_dir: str = '') -> str:
     """
     An os.path.dirname() implementation that always uses '/'
 
@@ -154,7 +155,7 @@ def dirname(path, current_dir=''):
     return path.rsplit('/', 1)[0]
 
 
-def splitpath(path):
+def splitpath(path) -> str:
     """Split paths using '/' regardless of platform"""
     return path.split('/')
 
@@ -175,7 +176,7 @@ def split(name):
     return (dirname(name), basename(name))
 
 
-def join(*paths):
+def join(*paths) -> str:
     """Join paths using '/' regardless of platform
 
     >>> join('a', 'b', 'c')
@@ -185,7 +186,7 @@ def join(*paths):
     return '/'.join(paths)
 
 
-def normalize_slash(value):
+def normalize_slash(value: str) -> str:
     """Strip and normalize slashes in a string
 
     >>> normalize_slash('///Meow///Cat///')
@@ -286,7 +287,7 @@ def shell_split(value):
     return values
 
 
-def tmp_filename(label, suffix=''):
+def tmp_filename(label, suffix: str = ''):
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
     with tempfile.NamedTemporaryFile(
         prefix=label + '-', suffix=suffix, delete=False
@@ -323,27 +324,27 @@ def find_bash_exe():
     return None
 
 
-def is_linux():
+def is_linux() -> bool:
     """Is this a Linux machine?"""
     return sys.platform.startswith('linux')
 
 
-def is_debian():
+def is_debian() -> bool:
     """Is this a Debian/Linux machine?"""
     return os.path.exists('/usr/bin/apt-get')
 
 
-def is_darwin():
+def is_darwin() -> bool:
     """Is this a macOS machine?"""
     return sys.platform == 'darwin'
 
 
-def is_win32():
+def is_win32() -> bool:
     """Return True on win32"""
     return sys.platform in {'win32', 'cygwin'}
 
 
-def launch_default_app(paths):
+def launch_default_app(paths) -> None:
     """Execute the default application on the specified paths"""
     if is_win32():
         for path in paths:
@@ -403,7 +404,7 @@ def get_hostname_from_url(url_str):
     return hostname
 
 
-def get_path_from_url(url_str):
+def get_path_from_url(url_str: str) -> str | None:
     """Extract the path component from a URL
 
     >>> get_path_from_url('user@example.org:namespace/project')
@@ -443,13 +444,13 @@ def get_path_from_url(url_str):
 class Group:
     """Operate on a collection of objects as a single unit"""
 
-    def __init__(self, *members):
+    def __init__(self, *members) -> None:
         self._members = members
 
     def __getattr__(self, name):
         """Return a function that relays calls to the group"""
 
-        def relay(*args, **kwargs):
+        def relay(*args, **kwargs) -> None:
             for member in self._members:
                 method = getattr(member, name)
                 method(*args, **kwargs)
@@ -493,7 +494,7 @@ def strip_prefixes_from_keys(values, prefix):
 class Proxy:
     """Wrap an object and override attributes"""
 
-    def __init__(self, obj, **overrides):
+    def __init__(self, obj, **overrides) -> None:
         self._obj = obj
         for k, v in overrides.items():
             setattr(self, k, v)
@@ -554,7 +555,7 @@ def slice_func(input_items, map_func):
 
 
 class Sequence:
-    def __init__(self, sequence):
+    def __init__(self, sequence) -> None:
         self.sequence = sequence
 
     def index(self, item, default=-1):
@@ -586,7 +587,7 @@ def catch_runtime_error(func, *args, **kwargs):
     return (valid, result)
 
 
-def sha256hex(value):
+def sha256hex(value) -> str:
     """Return a hexdigest of the SHA-256 hash of the specified value"""
     hash = hashlib.new('sha256')
     hash.update(value.encode('utf-8', 'replace'))
