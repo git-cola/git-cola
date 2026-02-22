@@ -46,7 +46,7 @@ KNOWN_FILE_EXTENSIONS = {
 }
 
 
-def install(themes):
+def install(themes) -> None:
     for theme in themes:
         icon_dir = resources.icon_dir(theme)
         qtcompat.add_search_path('icons', icon_dir)
@@ -130,7 +130,7 @@ def from_style(key):
     return style.standardIcon(key)
 
 
-def status(filename, deleted, is_staged, untracked):
+def status(filename, deleted, is_staged, untracked) -> str:
     """Status icon for a file"""
     if deleted:
         icon_name = 'circle-slash-red.svg'
