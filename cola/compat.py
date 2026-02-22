@@ -47,7 +47,7 @@ else:
 maxint = (2**31) - 1
 
 
-def setenv(key, value):
+def setenv(key, value) -> None:
     """Compatibility wrapper for setting environment variables
 
     Windows requires putenv(). Unix only requires os.environ.
@@ -58,7 +58,7 @@ def setenv(key, value):
     os.putenv(key, value)
 
 
-def unsetenv(key):
+def unsetenv(key) -> None:
     """Compatibility wrapper for clearing environment variables"""
     os.environ.pop(key, None)
     if hasattr(os, 'unsetenv'):
