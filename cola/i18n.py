@@ -1,4 +1,5 @@
 """i18n and l10n support for git-cola"""
+from __future__ import annotations
 import locale
 import os
 
@@ -22,14 +23,14 @@ class NullTranslation:
 class State:
     """The application-wide current translation state"""
 
-    translation = NullTranslation()
+    translation: NullTranslation | Translation = NullTranslation()
 
     @classmethod
-    def reset(cls):
+    def reset(cls) -> None:
         cls.translation = NullTranslation()
 
     @classmethod
-    def update(cls, lang):
+    def update(cls, lang) -> None:
         cls.translation = Translation(lang)
 
     @classmethod
@@ -39,14 +40,14 @@ class State:
 
 
 class Translation:
-    def __init__(self, lang):
+    def __init__(self, lang) -> None:
         self.lang = lang
         self.messages = {}
         self.filename = get_filename_for_locale(lang)
         if self.filename:
             self.load()
 
-    def load(self):
+    def load(self) -> None:
         """Read the .po file content into memory"""
         po = polib.pofile(self.filename, encoding='utf-8')
         messages = self.messages
@@ -57,7 +58,7 @@ class Translation:
         return self.messages.get(value, value)
 
 
-def gettext(value):
+def gettext(value) -> str:
     """Translate a string"""
     txt = State.gettext(value)
     # handle @@verb / @@noun
@@ -100,14 +101,14 @@ def get_filename_for_locale(name):
     return None
 
 
-def install(lang):
+def install(lang) -> None:
     if sys.platform == 'win32' and not lang:
         lang = _get_win32_default_locale()
     lang = _install_custom_language(lang)
     State.update(lang)
 
 
-def uninstall():
+def uninstall() -> None:
     State.reset()
 
 
