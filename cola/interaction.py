@@ -11,14 +11,14 @@ class Interaction:
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
     @classmethod
-    def command(cls, title, cmd, status, out, err):
+    def command(cls, title, cmd, status, out, err) -> None:
         """Log a command and display error messages on failure"""
         cls.log_status(status, out, err)
         if status != 0:
             cls.command_error(title, cmd, status, out, err)
 
     @classmethod
-    def command_error(cls, title, cmd, status, out, err):
+    def command_error(cls, title, cmd, status, out, err) -> None:
         """Display an error message for a failed command"""
         core.print_stderr(title)
         core.print_stderr('-' * len(title))
@@ -47,7 +47,7 @@ class Interaction:
         return details
 
     @staticmethod
-    def information(title, message=None, details=None, informative_text=None):
+    def information(title, message=None, details=None, informative_text=None) -> None:
         if message is None:
             message = title
         scope = {}
@@ -68,7 +68,7 @@ class Interaction:
         sys.stdout.flush()
 
     @classmethod
-    def critical(cls, title, message=None, details=None):
+    def critical(cls, title, message=None, details=None) -> None:
         """Show a warning with the provided title and message."""
         cls.information(title, message=message, details=details)
 
@@ -80,7 +80,7 @@ class Interaction:
         informative_text,
         ok_text,
         icon=None,
-        default=True,
+        default: bool = True,
         cancel_text=None,
     ):
         cancel_text = cancel_text or 'Cancel'
@@ -101,7 +101,7 @@ class Interaction:
         return result
 
     @classmethod
-    def question(cls, title, message, default=True):
+    def question(cls, title, message, default: bool = True):
         return cls.confirm(title, message, '', ok_text=N_('Continue'), default=default)
 
     @classmethod
@@ -122,7 +122,7 @@ class Interaction:
         )
 
     @classmethod
-    def log_status(cls, status, out, err=None):
+    def log_status(cls, status, out, err=None) -> None:
         """Emit status, out, and err into the log"""
         msg = ''
         if out:
@@ -133,7 +133,7 @@ class Interaction:
         cls.log('exit status %s' % status)
 
     @classmethod
-    def log(cls, message):
+    def log(cls, message) -> None:
         if cls.VERBOSE:
             core.print_stdout(message)
 
@@ -144,7 +144,7 @@ class Interaction:
         return None
 
     @staticmethod
-    def async_task(title, cmd, runtask, func):
+    def async_task(title, cmd, runtask, func) -> None:
         pass
 
     @classmethod
