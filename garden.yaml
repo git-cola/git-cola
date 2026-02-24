@@ -166,6 +166,7 @@ trees:
     remotes:
       abid1998: "${gh-https}/abid1998/git-cola.git"
       achernet: "${gh-https}/achernet/git-cola.git"
+      Ahrirg: "${gh-https}/Ahrirg/git-cola.git"
       arnaudh: "${gh-https}/arnaudh/git-cola.git"
       axel-h: "${gh-https}/axel-h/git-cola.git"
       BaumiCoder: "${gh-https}/BaumiCoder/git-cola.git"
