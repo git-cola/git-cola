@@ -28,6 +28,9 @@ Development
 * Type checking using ``mypy`` has been enabled.
   (`#1553 <https://github.com/git-cola/git-cola/pull/1553>`_)
 
+* Type hints were added to various modules.
+  (`#1555 <https://github.com/git-cola/git-cola/pull/1555>`_)
+
 
 .. _v4.17.1:
 
