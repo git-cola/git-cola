@@ -10,7 +10,7 @@ from ..interaction import Interaction
 
 
 class StashModel:
-    def __init__(self, context):
+    def __init__(self, context) -> None:
         self.context = context
         self.git = context.git
         self.model = model = context.model
@@ -20,10 +20,10 @@ class StashModel:
     def stash_list(self, *args):
         return self.git.stash('list', *args)[STDOUT].splitlines()
 
-    def is_staged(self):
+    def is_staged(self) -> bool:
         return bool(self.model.staged)
 
-    def is_changed(self):
+    def is_changed(self) -> bool:
         model = self.model
         return bool(model.modified or model.staged)
 
@@ -46,13 +46,13 @@ class StashModel:
 
 
 class ApplyStash(cmds.ContextCommand):
-    def __init__(self, context, stash_index, index, pop):
+    def __init__(self, context, stash_index, index, pop) -> None:
         super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
         self.index = index
         self.pop = pop
 
-    def do(self):
+    def do(self) -> None:
         ref = self.stash_ref
         pop = self.pop
         if pop:
@@ -74,7 +74,7 @@ class ApplyStash(cmds.ContextCommand):
 
 
 class DropStash(cmds.ContextCommand):
-    def __init__(self, context, stash_index):
+    def __init__(self, context, stash_index) -> None:
         super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
 
@@ -95,12 +95,12 @@ class DropStash(cmds.ContextCommand):
 
 
 class SaveStash(cmds.ContextCommand):
-    def __init__(self, context, stash_name, keep_index):
+    def __init__(self, context, stash_name, keep_index) -> None:
         super().__init__(context)
         self.stash_name = stash_name
         self.keep_index = keep_index
 
-    def do(self):
+    def do(self) -> None:
         if self.keep_index:
             args = ['push', '--keep-index', '-m', self.stash_name]
         else:
@@ -119,13 +119,13 @@ class SaveStash(cmds.ContextCommand):
 class RenameStash(cmds.ContextCommand):
     """Rename the stash"""
 
-    def __init__(self, context, stash_index, stash_name):
+    def __init__(self, context, stash_index, stash_name) -> None:
         super().__init__(context)
         self.context = context
         self.stash_index = stash_index
         self.stash_name = stash_name
 
-    def do(self):
+    def do(self) -> None:
         # Drop the stash first and get the returned ref
         ref = DropStash(self.context, self.stash_index).do()
         # Store the stash with a new name
@@ -151,11 +151,11 @@ class RenameStash(cmds.ContextCommand):
 class StashIndex(cmds.ContextCommand):
     """Stash the index away"""
 
-    def __init__(self, context, stash_name):
+    def __init__(self, context, stash_name) -> None:
         super().__init__(context)
         self.stash_name = stash_name
 
-    def do(self):
+    def do(self) -> None:
         # Manually create a stash representing the index state
         context = self.context
         git = self.git
@@ -229,7 +229,7 @@ class StashIndex(cmds.ContextCommand):
         self.model.update_status()
 
 
-def stash_error(cmd, status, out, err):
+def stash_error(cmd, status, out, err) -> None:
     title = N_('Error creating stash')
     Interaction.command_error(title, cmd, status, out, err)
 
@@ -252,11 +252,11 @@ class SaveModes:
         )
 
 
-def should_keep_index(idx):
+def should_keep_index(idx) -> bool:
     """Does the specified index imply "git stash save --keep-index"?"""
     return idx == SaveModes.UNSTAGED
 
 
-def should_stash_staged(idx):
+def should_stash_staged(idx) -> bool:
     """Does the specified index imply "git stash save --staged"?"""
     return idx == SaveModes.STAGED
