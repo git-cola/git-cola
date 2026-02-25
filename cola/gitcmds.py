@@ -192,9 +192,15 @@ def reset():
 
 def current_branch(context):
     """Return the current branch"""
-    head = context.git.git_path('HEAD')
+    # The "files" backend updates .git/HEAD when changing branches.
+    # The "reftables" backend updates .git/reftable/tables.list when changing branches.
+    reftable = context.cfg.is_reftable_extension_enabled()
+    if reftable:
+        stat_file = context.git.git_path('reftable', 'tables.list')
+    else:
+        stat_file = context.git.git_path('HEAD')
     try:
-        key = core.stat(head).st_mtime
+        key = core.stat(stat_file).st_mtime
         if CurrentBranchCache.key == key:
             return CurrentBranchCache.value
     except OSError:
@@ -205,8 +211,12 @@ def current_branch(context):
         'HEAD', symbolic_full_name=True, _readonly=True
     )
     if status != 0:
-        # git init -- read .git/HEAD.  We could do this unconditionally...
-        data = _read_git_head(context, head)
+        if reftable:
+            data = context.git.symbolic_ref('HEAD', _readonly=True)[STDOUT]
+        else:
+            # git init -- read .git/HEAD.
+            head = context.git.git_path('HEAD')
+            data = _read_git_head(context, head)
 
     for refs_prefix in ('refs/heads/', 'refs/remotes/', 'refs/tags/'):
         if data.startswith(refs_prefix):
@@ -214,6 +224,7 @@ def current_branch(context):
             CurrentBranchCache.key = key
             CurrentBranchCache.value = value
             return value
+
     # Detached head
     return data
 

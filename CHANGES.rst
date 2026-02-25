@@ -18,6 +18,10 @@ Usability, bells and whistles
   menu and default to ``10``.
   (`#1554 <https://github.com/git-cola/git-cola/pull/1554>`_)
 
+* The Git ``reftable`` ref storage extension is now supported.
+  (`#1551 <https://github.com/git-cola/git-cola/issues/1551>`_)
+
+
 Translations
 ------------
 * Updated Russian translation.

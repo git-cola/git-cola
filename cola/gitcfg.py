@@ -345,6 +345,10 @@ class GitConfig(QtCore.QObject):
         value = self.check_attr('binary', path)
         return value == 'set'
 
+    def is_reftable_extension_enabled(self):
+        """Return True if the reftable storage backend is enabled"""
+        return self.get_repo('extensions.refstorage', default='') == 'reftable'
+
     def file_encoding(self, path):
         if not self.is_per_file_attrs_enabled():
             return self.gui_encoding()

@@ -175,13 +175,18 @@ class MainModel(QtCore.QObject):
 
             # Detect the "git init" scenario by checking for branches.
             # If no branches exist then we cannot use "git rev-parse" yet.
-            err = None
-            refs = self.git.git_path('refs', 'heads')
-            if core.exists(refs) and core.listdir(refs):
-                # "git rev-parse" exits with a non-zero exit status when the
-                # safe.directory protection is active.
+            if self.cfg.is_reftable_extension_enabled():
+                has_branches = bool(gitcmds.branch_list(self.context))
+            else:
+                refs = self.git.git_path('refs', 'heads')
+                has_branches = core.exists(refs) and bool(core.listdir(refs))
+            # "git rev-parse" exits with a non-zero exit status when the
+            # safe.directory protection is active.
+            if has_branches:
                 status, _, err = self.git.rev_parse('HEAD')
                 is_valid = status == 0
+            else:
+                err = None
             if is_valid:
                 self.error = None
                 self.worktree_changed.emit()
