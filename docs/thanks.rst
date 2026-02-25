@@ -243,6 +243,7 @@ Thanks
 * Peter Jensen
 * Peter Justin
 * Peter Júnoš
+* Peter Ped Helcmanovsky
 * Petr Gladkikh
 * Philip Stark
 * Pilar Molina Lopez
