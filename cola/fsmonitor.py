@@ -6,6 +6,7 @@ Linux monitoring uses using inotify.
 Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
+from __future__ import annotations
 import errno
 import os
 import os.path
@@ -54,32 +55,32 @@ class _Monitor(QtCore.QObject):
     files_changed = Signal()
     config_changed = Signal()
 
-    def __init__(self, context, thread_class):
+    def __init__(self, context, thread_class) -> None:
         QtCore.QObject.__init__(self)
         self.context = context
         self._thread_class = thread_class
         self._thread = None
 
-    def start(self):
+    def start(self) -> None:
         if self._thread_class is not None:
             assert self._thread is None
             self._thread = self._thread_class(self.context, self)
             self._thread.start()
 
-    def stop(self):
+    def stop(self) -> None:
         if self._thread_class is not None:
             assert self._thread is not None
             self._thread.stop()
             self._thread.wait()
             self._thread = None
 
-    def refresh(self):
+    def refresh(self) -> None:
         if self._thread is not None:
             self._thread.refresh()
 
 
 class _BaseThread(QtCore.QThread):
-    def __init__(self, context, monitor):
+    def __init__(self, context, monitor) -> None:
         QtCore.QThread.__init__(self)
         self.context = context
         #: The delay, in milliseconds, between detecting file system modification
@@ -104,11 +105,11 @@ class _BaseThread(QtCore.QThread):
     def _pending(self):
         return self._force_notify or self._file_paths or self._force_config
 
-    def refresh(self):
+    def refresh(self) -> None:
         """Do any housekeeping necessary in response to repository changes."""
         return
 
-    def notify(self):
+    def notify(self) -> None:
         """Notifies all observers"""
         do_notify = False
         do_config = False
@@ -148,11 +149,11 @@ class _BaseThread(QtCore.QThread):
             self._monitor.config_changed.emit()
 
     @staticmethod
-    def _log_enabled_message():
+    def _log_enabled_message() -> None:
         msg = N_('File system change monitoring: enabled.\n')
         Interaction.log(msg)
 
-    def _config_changed(self, key, value):
+    def _config_changed(self, key, value) -> None:
         """Update cached configuation values"""
         if key == prefs.INOTIFY_DELAY:
             self.inotify_delay = prefs.inotify_delay(self.context)
@@ -172,7 +173,7 @@ if AVAILABLE == 'inotify':
         )
         _ADD_MASK = _TRIGGER_MASK | inotify.IN_EXCL_UNLINK | inotify.IN_ONLYDIR
 
-        def __init__(self, context, monitor):
+        def __init__(self, context, monitor) -> None:
             _BaseThread.__init__(self, context, monitor)
             git = context.git
             worktree = git.worktree()
@@ -182,8 +183,8 @@ if AVAILABLE == 'inotify':
             self._git_dir = git.git_path()
             self._lock = Lock()
             self._inotify_fd = None
-            self._pipe_r = None
-            self._pipe_w = None
+            self._pipe_r: int | None = None
+            self._pipe_w: int | None = None
             self._worktree_wd_to_path_map = {}
             self._worktree_path_to_wd_map = {}
             self._git_dir_wd_to_path_map = {}
@@ -191,7 +192,7 @@ if AVAILABLE == 'inotify':
             self._git_dir_wd = None
 
         @staticmethod
-        def _log_out_of_wds_message():
+        def _log_out_of_wds_message() -> None:
             msg = N_(
                 'File system change monitoring: disabled because the'
                 ' limit on the total number of inotify watches was'
@@ -204,7 +205,7 @@ if AVAILABLE == 'inotify':
             )
             Interaction.log(msg)
 
-        def run(self):
+        def run(self) -> None:
             try:
                 with self._lock:
                     try:
@@ -229,7 +230,7 @@ if AVAILABLE == 'inotify':
             finally:
                 self._close_fds()
 
-        def _process_events(self, poll_obj):
+        def _process_events(self, poll_obj) -> None:
             while self._running:
                 if self._pending:
                     timeout = self.inotify_delay
@@ -249,7 +250,7 @@ if AVAILABLE == 'inotify':
                             if fd == self._inotify_fd:
                                 self._handle_events()
 
-        def _close_fds(self):
+        def _close_fds(self) -> None:
             with self._lock:
                 if self._inotify_fd is not None:
                     os.close(self._inotify_fd)
@@ -260,7 +261,7 @@ if AVAILABLE == 'inotify':
                     os.close(self._pipe_w)
                     self._pipe_w = None
 
-        def refresh(self):
+        def refresh(self) -> None:
             with self._lock:
                 self._refresh()
 
@@ -329,7 +330,7 @@ if AVAILABLE == 'inotify':
                 wd_to_path_map[wd] = path
                 path_to_wd_map[path] = wd
 
-        def _check_event(self, wd, mask, name):
+        def _check_event(self, wd, mask, name) -> None:
             if mask & inotify.IN_Q_OVERFLOW:
                 self._force_notify = True
             elif not mask & self._TRIGGER_MASK:
@@ -355,12 +356,12 @@ if AVAILABLE == 'inotify':
             ):
                 self._force_notify = True
 
-        def _handle_events(self):
+        def _handle_events(self) -> None:
             for wd, mask, _, name in inotify.read_events(self._inotify_fd):
                 if not self._force_notify:
                     self._check_event(wd, mask, name)
 
-        def stop(self):
+        def stop(self) -> None:
             self._running = False
             with self._lock:
                 if self._pipe_w is not None:
@@ -371,7 +372,7 @@ if AVAILABLE == 'inotify':
 if AVAILABLE == 'pywin32':
 
     class _Win32Watch:
-        def __init__(self, path, flags):
+        def __init__(self, path, flags) -> None:
             self.flags = flags
 
             self.handle = None
@@ -396,12 +397,12 @@ if AVAILABLE == 'pywin32':
             except Exception:
                 self.close()
 
-        def append(self, events):
+        def append(self, events) -> None:
             """Append our event to the events list when valid"""
             if self.event is not None:
                 events.append(self.event)
 
-        def _start(self):
+        def _start(self) -> None:
             if self.handle is None:
                 return
             try:
@@ -424,7 +425,7 @@ if AVAILABLE == 'pywin32':
                 self._start()
             return result
 
-        def close(self):
+        def close(self) -> None:
             if self.handle is not None:
                 try:
                     win32file.CancelIo(self.handle)
@@ -450,24 +451,24 @@ if AVAILABLE == 'pywin32':
             | win32con.FILE_NOTIFY_CHANGE_SECURITY
         )
 
-        def __init__(self, context, monitor):
+        def __init__(self, context, monitor) -> None:
             _BaseThread.__init__(self, context, monitor)
             git = context.git
             worktree = git.worktree()
             if worktree is not None:
                 worktree = self._transform_path(core.abspath(worktree))
             self._worktree = worktree
-            self._worktree_watch = None
+            self._worktree_watch: _Win32Watch | None = None
             self._git_dir = self._transform_path(core.abspath(git.git_path()))
-            self._git_dir_watch = None
+            self._git_dir_watch: _Win32Watch | None = None
             self._stop_event_lock = Lock()
             self._stop_event = None
 
         @staticmethod
-        def _transform_path(path):
+        def _transform_path(path: str) -> str:
             return path.replace('\\', '/').lower()
 
-        def run(self):
+        def run(self) -> None:
             try:
                 with self._stop_event_lock:
                     self._stop_event = win32event.CreateEvent(None, True, False, None)
@@ -513,7 +514,7 @@ if AVAILABLE == 'pywin32':
                 if self._git_dir_watch is not None:
                     self._git_dir_watch.close()
 
-        def _handle_results(self):
+        def _handle_results(self) -> None:
             if self._worktree_watch is not None:
                 for _, path in self._worktree_watch.read():
                     if not self._running:
@@ -544,7 +545,7 @@ if AVAILABLE == 'pywin32':
                 if path == 'head' or path == 'index' or path.startswith('refs/'):
                     self._force_notify = True
 
-        def stop(self):
+        def stop(self) -> None:
             self._running = False
             with self._stop_event_lock:
                 if self._stop_event is not None:

@@ -27,7 +27,7 @@ class GlobalState:
         return model
 
     @classmethod
-    def update(cls):
+    def update(cls) -> None:
         """Update the alphabet after all dictionaries have been loaded"""
         cls.ALPHABET = ''.join(sorted(cls.LETTERS))
 
@@ -67,9 +67,9 @@ def correct(word, words):
 class NorvigSpellCheck:
     def __init__(
         self,
-        words='dict/words',
-        propernames='dict/propernames',
-    ):
+        words: str = 'dict/words',
+        propernames: str = 'dict/propernames',
+    ) -> None:
         data_dirs = resources.xdg_data_dirs()
         self.dictwords = resources.find_first(words, data_dirs)
         self.propernames = resources.find_first(propernames, data_dirs)
@@ -82,11 +82,11 @@ class NorvigSpellCheck:
         self.aspell_langs = set()
         self.aspell_ok = False
 
-    def add_dictionaries(self, dictionaries):
+    def add_dictionaries(self, dictionaries) -> None:
         """Add additional dictionaries to the spellcheck engine"""
         self.extra_dictionaries.update(dictionaries)
 
-    def init(self):
+    def init(self) -> None:
         if self.initialized:
             return
         self.initialized = True
@@ -100,27 +100,27 @@ class NorvigSpellCheck:
 
         GlobalState.update()
 
-    def set_aspell_enabled(self, enabled):
+    def set_aspell_enabled(self, enabled) -> None:
         """Enable aspell support"""
         self.aspell_enabled = enabled
 
-    def set_aspell_langs(self, langs):
+    def set_aspell_langs(self, langs) -> None:
         """Set the aspell languages to query"""
         self.aspell_langs = set(langs)
 
-    def add_word(self, word):
+    def add_word(self, word) -> None:
         self.extra_words.add(word)
 
     def suggest(self, word):
         self.init()
         return suggest(word, self.words)
 
-    def check(self, word):
+    def check(self, word) -> bool:
         self.init()
         word = word.replace('.', '')
         return word in self.words or word.lower() in self.words
 
-    def read(self, use_common_files=True):
+    def read(self, use_common_files: bool = True):
         """Read dictionary words"""
         paths = []
         words = self.dictwords

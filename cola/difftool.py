@@ -28,7 +28,7 @@ class LaunchDifftool(cmds.ContextCommand):
     def name():
         return N_('Launch Diff Tool')
 
-    def do(self):
+    def do(self) -> None:
         s = self.selection.selection()
         if s.unmerged:
             paths = s.unmerged
@@ -68,10 +68,10 @@ class Difftool(standard.Dialog):
         b=None,
         expr=None,
         title=None,
-        hide_expr=False,
-        focus_tree=False,
-        detect_renames=False,
-    ):
+        hide_expr: bool = False,
+        focus_tree: bool = False,
+        detect_renames: bool = False,
+    ) -> None:
         """Show files with differences and launch difftool"""
 
         standard.Dialog.__init__(self, parent=parent)
@@ -156,24 +156,24 @@ class Difftool(standard.Dialog):
         if focus_tree:
             self.focus_tree()
 
-    def resize_widget(self, parent):
+    def resize_widget(self, parent) -> None:
         """Set the initial size of the widget"""
         width, height = qtutils.default_size(parent, 720, 420)
         self.resize(width, height)
 
-    def focus_tree(self):
+    def focus_tree(self) -> None:
         """Focus the files tree"""
         self.tree.setFocus()
 
-    def focus_input(self):
+    def focus_input(self) -> None:
         """Focus the expression input"""
         self.expr.setFocus()
 
-    def text_changed(self, txt):
+    def text_changed(self, txt) -> None:
         self.diff_expr = txt
         self.refresh()
 
-    def refresh(self):
+    def refresh(self) -> None:
         """Redo the diff when the expression changes"""
         if self.diff_expr is not None:
             self.diff_arg = utils.shell_split(self.diff_expr)
@@ -198,7 +198,7 @@ class Difftool(standard.Dialog):
                 self.diff_arg = [self.a, self.b]
         self.refresh_filenames()
 
-    def refresh_filenames(self):
+    def refresh_filenames(self) -> None:
         context = self.context
         if self.a and self.b is None:
             filenames = gitcmds.diff_index_filenames(context, self.a)
@@ -206,12 +206,12 @@ class Difftool(standard.Dialog):
             filenames = gitcmds.diff(context, self.diff_arg)
         self.tree.set_filenames(filenames, select=True)
 
-    def tree_selection_changed(self):
+    def tree_selection_changed(self) -> None:
         has_selection = self.tree.has_selection()
         self.diff_button.setEnabled(has_selection)
         self.diff_all_button.setEnabled(has_selection)
 
-    def tree_double_clicked(self, item, _column):
+    def tree_double_clicked(self, item, _column) -> None:
         path = filetree.filename_from_item(item)
         left, right = self._left_right_args()
         difftool_launch(
@@ -222,7 +222,7 @@ class Difftool(standard.Dialog):
             detect_renames=self.detect_renames,
         )
 
-    def diff(self, dir_diff=False):
+    def diff(self, dir_diff: bool = False) -> None:
         paths = self.tree.selected_filenames()
         left, right = self._left_right_args()
         difftool_launch(
@@ -245,12 +245,12 @@ class Difftool(standard.Dialog):
             right = None
         return (left, right)
 
-    def edit(self):
+    def edit(self) -> None:
         paths = self.tree.selected_filenames()
         cmds.do(cmds.Edit, self.context, paths)
 
 
-def diff_commits(context, parent, a, b, detect_renames=False):
+def diff_commits(context, parent, a, b, detect_renames: bool = False) -> bool:
     """Show a dialog for diffing two commits"""
     dlg = Difftool(context, parent, a=a, b=b, detect_renames=detect_renames)
     dlg.show()
@@ -259,7 +259,12 @@ def diff_commits(context, parent, a, b, detect_renames=False):
 
 
 def diff_expression(
-    context, parent, expr, create_widget=False, hide_expr=False, focus_tree=False
+    context,
+    parent,
+    expr,
+    create_widget: bool = False,
+    hide_expr: bool = False,
+    focus_tree: bool = False,
 ):
     """Show a diff dialog for diff expressions"""
     dlg = Difftool(
@@ -272,7 +277,7 @@ def diff_expression(
     return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
-def difftool_run(context):
+def difftool_run(context) -> None:
     """Start a default difftool session"""
     selection = context.selection
     files = selection.group()
@@ -283,7 +288,7 @@ def difftool_run(context):
     difftool_launch_with_head(context, files, bool(s.staged), head)
 
 
-def difftool_launch_with_head(context, filenames, staged, head):
+def difftool_launch_with_head(context, filenames, staged, head) -> None:
     """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
@@ -298,12 +303,12 @@ def difftool_launch(
     right=None,
     oid=None,
     paths=None,
-    is_root_commit=False,
-    staged=False,
-    dir_diff=False,
-    left_take_parent=False,
-    detect_renames=False,
-):
+    is_root_commit: bool = False,
+    staged: bool = False,
+    dir_diff: bool = False,
+    left_take_parent: bool = False,
+    detect_renames: bool = False,
+) -> None:
     """Interact with 'git difftool'.
 
     :param left: The first argument to difftool.

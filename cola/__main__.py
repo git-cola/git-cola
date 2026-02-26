@@ -6,7 +6,7 @@ Usage: python -m cola
 from cola import main
 
 
-def run():
+def run() -> None:
     """Start the command-line interface."""
     main.main()
 

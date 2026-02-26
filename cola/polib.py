@@ -10,6 +10,7 @@ modify entries, comments or metadata, etc. or create new po files from scratch.
 **polib** provides a simple and pythonic API via the :func:`~polib.pofile` and
 :func:`~polib.mofile` convenience functions.
 """
+from __future__ import annotations
 import array
 import codecs
 import os
@@ -18,6 +19,7 @@ import struct
 import sys
 import textwrap
 import io
+from io import BufferedReader, TextIOWrapper, BufferedWriter
 
 from . import compat
 
@@ -177,7 +179,7 @@ def mofile(mofile, **kwargs):
 # function detect_encoding() {{{
 
 
-def detect_encoding(file, binary_mode=False):
+def detect_encoding(file, binary_mode: bool = False):
     """
     Try to detect the encoding used by the ``file``. The ``file`` argument can
     be a PO or MO file path or a string containing the contents of the file.
@@ -196,7 +198,7 @@ def detect_encoding(file, binary_mode=False):
     rxt = re.compile(u(PATTERN))
     rxb = re.compile(b(PATTERN))
 
-    def charset_exists(charset):
+    def charset_exists(charset) -> bool:
         """Check whether ``charset`` is valid or not."""
         try:
             codecs.lookup(charset)
@@ -309,7 +311,7 @@ class _BaseFile(list):
     classes. This class should **not** be instantiated directly.
     """
 
-    def __init__(self, *_args, **kwargs):
+    def __init__(self, *_args, **kwargs) -> None:
         """
         Constructor, accepts the following keyword arguments:
 
@@ -362,18 +364,18 @@ class _BaseFile(list):
 
     if PY3:
 
-        def __str__(self):
+        def __str__(self) -> str:
             return self.__unicode__()
 
     else:
 
-        def __str__(self):
+        def __str__(self) -> str:
             """
             Returns the string representation of the file.
             """
             return compat.ustr(self).encode(self.encoding)
 
-    def __contains__(self, entry):
+    def __contains__(self, entry) -> bool:
         """
         Overridden ``list`` method to implement the membership test (in and
         not in).
@@ -445,7 +447,9 @@ class _BaseFile(list):
             e.flags.append('fuzzy')
         return e
 
-    def save(self, fpath=None, repr_method='__unicode__', newline=None):
+    def save(
+        self, fpath: str | None = None, repr_method: str = '__unicode__', newline=None
+    ) -> None:
         """
         Saves the po file to ``fpath``.
         If it is an existing file and no ``fpath`` is provided, then the
@@ -468,9 +472,11 @@ class _BaseFile(list):
         if fpath is None:
             fpath = self.fpath
         if repr_method == 'to_binary':
-            fhandle = open(fpath, 'wb')
+            fhandle: BufferedWriter | TextIOWrapper = open(fpath, 'wb')
         else:
-            fhandle = open(fpath, 'w', encoding=self.encoding, newline=newline)
+            fhandle: BufferedWriter | TextIOWrapper = open(
+                fpath, 'w', encoding=self.encoding, newline=newline
+            )
             if not isinstance(contents, text_type):
                 contents = contents.decode(self.encoding)
         fhandle.write(contents)
@@ -479,7 +485,13 @@ class _BaseFile(list):
         if self.fpath is None and fpath:
             self.fpath = fpath
 
-    def find(self, st, by='msgid', include_obsolete_entries=False, msgctxt=False):
+    def find(
+        self,
+        st,
+        by: str = 'msgid',
+        include_obsolete_entries: bool = False,
+        msgctxt: bool = False,
+    ):
         """
         Find the entry which msgid (or property identified by the ``by``
         argument) matches the string ``st``.
@@ -681,7 +693,7 @@ class POFile(_BaseFile):
 
         return ret + _BaseFile.__unicode__(self)
 
-    def save_as_mofile(self, fpath):
+    def save_as_mofile(self, fpath) -> None:
         """
         Saves the binary representation of the file to given ``fpath``.
 
@@ -729,7 +741,7 @@ class POFile(_BaseFile):
         """
         return [e for e in self if e.obsolete]
 
-    def merge(self, refpot):
+    def merge(self, refpot) -> None:
         """
         Convenience method that merges the current pofile with the pot file
         provided. It behaves exactly as the gettext msgmerge utility:
@@ -775,7 +787,7 @@ class MOFile(_BaseFile):
     MAGIC = 0x950412DE
     MAGIC_SWAPPED = 0xDE120495
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Constructor, accepts all keywords arguments accepted by
         :class:`~polib._BaseFile` class.
@@ -784,7 +796,7 @@ class MOFile(_BaseFile):
         self.magic_number = None
         self.version = 0
 
-    def save_as_pofile(self, fpath):
+    def save_as_pofile(self, fpath) -> None:
         """
         Saves the mofile as a pofile to ``fpath``.
 
@@ -795,7 +807,7 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath)
 
-    def save(self, fpath=None):
+    def save(self, fpath: str | None = None) -> None:  # type: ignore[override]
         """
         Saves the mofile to ``fpath``.
 
@@ -806,7 +818,7 @@ class MOFile(_BaseFile):
         """
         _BaseFile.save(self, fpath, 'to_binary')
 
-    def percent_translated(self):
+    def percent_translated(self) -> int:
         """
         Convenience method to keep the same interface with POFile instances.
         """
@@ -847,7 +859,7 @@ class _BaseEntry:
     This class should **not** be instantiated directly.
     """
 
-    def __init__(self, *_args, **kwargs):
+    def __init__(self, *_args, **kwargs) -> None:
         """
         Constructor, accepts the following keyword arguments:
 
@@ -881,7 +893,7 @@ class _BaseEntry:
         self.obsolete = kwargs.get('obsolete', False)
         self.encoding = kwargs.get('encoding', default_encoding)
 
-    def __unicode__(self, wrapwidth=78):
+    def __unicode__(self, wrapwidth: int = 78):
         """
         Returns the unicode representation of the entry.
         """
@@ -920,12 +932,12 @@ class _BaseEntry:
 
     if PY3:
 
-        def __str__(self):
+        def __str__(self) -> str:
             return self.__unicode__()
 
     else:
 
-        def __str__(self):
+        def __str__(self) -> str:
             """
             Returns the string representation of the entry.
             """
@@ -937,7 +949,7 @@ class _BaseEntry:
     def __hash__(self):
         return hash(str(self))
 
-    def _str_field(self, fieldname, delflag, plural_index, field, wrapwidth=78):
+    def _str_field(self, fieldname, delflag, plural_index, field, wrapwidth: int = 78):
         lines = field.splitlines(True)
         if len(lines) > 1:
             lines = [''] + lines  # start with initial empty line
@@ -990,7 +1002,7 @@ class POEntry(_BaseEntry):
     Represents a po file entry.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Constructor, accepts the following keyword arguments:
 
@@ -1028,7 +1040,7 @@ class POEntry(_BaseEntry):
         self.previous_msgid_plural = kwargs.get('previous_msgid_plural', None)
         self.linenum = kwargs.get('linenum', None)
 
-    def __unicode__(self, wrapwidth=78):
+    def __unicode__(self, wrapwidth: int = 78):
         """
         Returns the unicode representation of the entry.
         """
@@ -1173,7 +1185,7 @@ class POEntry(_BaseEntry):
     def __ne__(self, other):
         return self.__cmp__(other) != 0
 
-    def translated(self):
+    def translated(self) -> bool:
         """
         Returns ``True`` if the entry has been translated or ``False``
         otherwise.
@@ -1189,7 +1201,7 @@ class POEntry(_BaseEntry):
             return True
         return False
 
-    def merge(self, other):
+    def merge(self, other) -> None:
         """
         Merge the current entry with the given pot entry.
         """
@@ -1215,7 +1227,7 @@ class POEntry(_BaseEntry):
                     self.msgstr_plural[pos] = ''
 
     @property
-    def fuzzy(self):
+    def fuzzy(self) -> bool:
         return 'fuzzy' in self.flags
 
     def __hash__(self):
@@ -1231,7 +1243,7 @@ class MOEntry(_BaseEntry):
     Represents a mo file entry.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         """
         Constructor, accepts the following keyword arguments,
         for consistency with :class:`~polib.POEntry`:
@@ -1271,7 +1283,7 @@ class _POFileParser:
     file format.
     """
 
-    def __init__(self, pofile, *_args, **kwargs):
+    def __init__(self, pofile, *_args, **kwargs) -> None:
         """
         Constructor.
 
@@ -1310,7 +1322,7 @@ class _POFileParser:
         self.current_line = 0
         self.current_entry = POEntry(linenum=self.current_line)
         self.current_state = 'st'
-        self.current_token = None
+        self.current_token: str | None = None
         # two memo flags used in handlers
         self.msgstr_index = 0
         self.entry_obsolete = 0
@@ -1538,7 +1550,7 @@ class _POFileParser:
             self.fhandle.close()
         return self.instance
 
-    def add(self, symbol, states, next_state):
+    def add(self, symbol, states, next_state) -> None:
         """
         Add a transition to the state machine.
 
@@ -1582,14 +1594,14 @@ class _POFileParser:
 
     # state handlers
 
-    def handle_he(self):
+    def handle_he(self) -> int:
         """Handle a header comment."""
         if self.instance.header != '':
             self.instance.header += '\n'
         self.instance.header += self.current_token[2:]
         return 1
 
-    def handle_tc(self):
+    def handle_tc(self) -> bool:
         """Handle a translator comment."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1602,7 +1614,7 @@ class _POFileParser:
         self.current_entry.tcomment += tcomment
         return True
 
-    def handle_gc(self):
+    def handle_gc(self) -> bool:
         """Handle a generated comment."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1612,7 +1624,7 @@ class _POFileParser:
         self.current_entry.comment += self.current_token[3:]
         return True
 
-    def handle_oc(self):
+    def handle_oc(self) -> bool:
         """Handle a file:num occurrence."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1630,7 +1642,7 @@ class _POFileParser:
                     self.current_entry.occurrences.append((occurrence, ''))
         return True
 
-    def handle_fl(self):
+    def handle_fl(self) -> bool:
         """Handle a flags line."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1640,7 +1652,7 @@ class _POFileParser:
         ]
         return True
 
-    def handle_pp(self):
+    def handle_pp(self) -> bool:
         """Handle a previous msgid_plural line."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1648,7 +1660,7 @@ class _POFileParser:
         self.current_entry.previous_msgid_plural = unescape(self.current_token[1:-1])
         return True
 
-    def handle_pm(self):
+    def handle_pm(self) -> bool:
         """Handle a previous msgid line."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1656,7 +1668,7 @@ class _POFileParser:
         self.current_entry.previous_msgid = unescape(self.current_token[1:-1])
         return True
 
-    def handle_pc(self):
+    def handle_pc(self) -> bool:
         """Handle a previous msgctxt line."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1664,7 +1676,7 @@ class _POFileParser:
         self.current_entry.previous_msgctxt = unescape(self.current_token[1:-1])
         return True
 
-    def handle_ct(self):
+    def handle_ct(self) -> bool:
         """Handle a msgctxt."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1672,7 +1684,7 @@ class _POFileParser:
         self.current_entry.msgctxt = unescape(self.current_token[1:-1])
         return True
 
-    def handle_mi(self):
+    def handle_mi(self) -> bool:
         """Handle a msgid."""
         if self.current_state in ['mc', 'ms', 'mx']:
             self.instance.append(self.current_entry)
@@ -1681,17 +1693,17 @@ class _POFileParser:
         self.current_entry.msgid = unescape(self.current_token[1:-1])
         return True
 
-    def handle_mp(self):
+    def handle_mp(self) -> bool:
         """Handle a msgid plural."""
         self.current_entry.msgid_plural = unescape(self.current_token[1:-1])
         return True
 
-    def handle_ms(self):
+    def handle_ms(self) -> bool:
         """Handle a msgstr."""
         self.current_entry.msgstr = unescape(self.current_token[1:-1])
         return True
 
-    def handle_mx(self):
+    def handle_mx(self) -> bool:
         """Handle a msgstr plural."""
         index = self.current_token[7]
         value = self.current_token[self.current_token.find('"') + 1 : -1]
@@ -1699,7 +1711,7 @@ class _POFileParser:
         self.msgstr_index = int(index)
         return True
 
-    def handle_mc(self):
+    def handle_mc(self) -> bool:
         """Handle a msgid or msgstr continuation line."""
         token = unescape(self.current_token[1:-1])
         if self.current_state == 'ct':
@@ -1731,7 +1743,7 @@ class _MOFileParser:
     A class to parse binary mo files.
     """
 
-    def __init__(self, mofile, *_args, **kwargs):
+    def __init__(self, mofile, *_args, **kwargs) -> None:
         """
         Constructor.
 
@@ -1749,9 +1761,9 @@ class _MOFileParser:
             file (optional, default: ``False``).
         """
         if _is_file(mofile):
-            self.fhandle = open(mofile, 'rb')
+            self.fhandle: io.BytesIO | BufferedReader = open(mofile, 'rb')
         else:
-            self.fhandle = io.BytesIO(mofile)
+            self.fhandle: io.BytesIO | BufferedReader = io.BytesIO(mofile)
 
         klass = kwargs.get('klass')
         if klass is None:
@@ -1762,7 +1774,7 @@ class _MOFileParser:
             check_for_duplicates=kwargs.get('check_for_duplicates', False),
         )
 
-    def __del__(self):
+    def __del__(self) -> None:
         """
         Make sure the file is closed, this prevents warnings on unclosed file
         when running tests with python >= 3.2.

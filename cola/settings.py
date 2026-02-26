@@ -37,7 +37,7 @@ def read_json(path):
         return {}
 
 
-def write_json(values, path, sync=True):
+def write_json(values, path, sync: bool = True) -> bool:
     """Write the specified values dict to a JSON file at the specified path"""
     try:
         parent = os.path.dirname(path)
@@ -53,7 +53,7 @@ def write_json(values, path, sync=True):
     return True
 
 
-def rename_path(old, new):
+def rename_path(old, new) -> bool:
     """Rename a filename. Catch exceptions and return False on error."""
     try:
         core.rename(old, new)
@@ -63,7 +63,7 @@ def rename_path(old, new):
     return True
 
 
-def remove_path(path):
+def remove_path(path) -> None:
     """Remove a filename. Report errors to stderr."""
     try:
         core.remove(path)
@@ -78,7 +78,7 @@ class Settings:
     recent = property(lambda self: mklist(self.values['recent']))
     copy_formats = property(lambda self: mklist(self.values['copy_formats']))
 
-    def __init__(self, verify=git.is_git_worktree):
+    def __init__(self, verify=git.is_git_worktree) -> None:
         """Load existing settings if they exist"""
         self.values = {
             'bookmarks': [],
@@ -88,7 +88,7 @@ class Settings:
         }
         self.verify = verify
 
-    def remove_missing_bookmarks(self):
+    def remove_missing_bookmarks(self) -> None:
         """Remove "favorites" bookmarks that no longer exist"""
         missing_bookmarks = []
         for bookmark in self.bookmarks:
@@ -101,7 +101,7 @@ class Settings:
             except ValueError:
                 pass
 
-    def remove_missing_recent(self):
+    def remove_missing_recent(self) -> None:
         """Remove "recent" repositories that no longer exist"""
         missing_recent = []
         for recent in self.recent:
@@ -114,13 +114,13 @@ class Settings:
             except ValueError:
                 pass
 
-    def add_bookmark(self, path, name):
+    def add_bookmark(self, path, name) -> None:
         """Adds a bookmark to the saved settings"""
         bookmark = {'path': display.normalize_path(path), 'name': name}
         if bookmark not in self.bookmarks:
             self.bookmarks.append(bookmark)
 
-    def remove_bookmark(self, path, name):
+    def remove_bookmark(self, path, name) -> None:
         """Remove a bookmark"""
         bookmark = {'path': display.normalize_path(path), 'name': name}
         try:
@@ -131,7 +131,7 @@ class Settings:
     def rename_bookmark(self, path, name, new_name):
         return rename_entry(self.bookmarks, path, name, new_name)
 
-    def add_recent(self, path, max_recent):
+    def add_recent(self, path, max_recent) -> None:
         normalize = display.normalize_path
         path = normalize(path)
         try:
@@ -146,7 +146,7 @@ class Settings:
         if len(self.recent) > max_recent:
             self.recent.pop()
 
-    def remove_recent(self, path):
+    def remove_recent(self, path) -> None:
         """Removes an item from the recent items list"""
         normalize = display.normalize_path
         path = normalize(path)
@@ -167,7 +167,7 @@ class Settings:
     def path(self):
         return self.config_path
 
-    def save(self, sync=True):
+    def save(self, sync: bool = True) -> None:
         """Write settings robustly to avoid losing data during a forced shutdown.
 
         To save robustly we take these steps:
@@ -195,7 +195,7 @@ class Settings:
         if core.exists(path_bak):
             remove_path(path_bak)
 
-    def load(self, path=None):
+    def load(self, path=None) -> bool:
         """Load settings robustly.
 
         Attempt to load settings from the .bak file if it exists since it indicates
@@ -236,7 +236,7 @@ class Settings:
         settings.load()
         return settings
 
-    def upgrade_settings(self):
+    def upgrade_settings(self) -> None:
         """Upgrade git-cola settings"""
         # Upgrade bookmarks to the new dict-based bookmarks format.
         normalize = display.normalize_path
@@ -278,7 +278,7 @@ class Settings:
             entry['path'] = normalize(entry['path'])
         return values
 
-    def save_gui_state(self, gui, sync=True):
+    def save_gui_state(self, gui, sync: bool = True) -> None:
         """Saves settings for a widget"""
         name = gui.name()
         self.gui_state[name] = mkdict(gui.export_state())
@@ -300,7 +300,7 @@ class Settings:
         """Return a specific setting value for the specified tool and setting key"""
         return self.get(name).get(key, default)
 
-    def set_value(self, name, key, value, save=True, sync=True):
+    def set_value(self, name, key, value, save: bool = True, sync: bool = True) -> None:
         """Store a specific setting value for the specified tool and setting key value"""
         values = self.get(name)
         values[key] = value
@@ -343,7 +343,7 @@ class Session(Settings):
 
     repo = property(lambda self: self.values['local'])
 
-    def __init__(self, session_id, repo=None):
+    def __init__(self, session_id, repo=None) -> None:
         Settings.__init__(self)
         self.session_id = session_id
         self.values.update({'local': repo})

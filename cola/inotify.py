@@ -66,7 +66,7 @@ rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
 rm_watch.errcheck = _errcheck
 
 
-def read_events(inotify_fd, count=64):
+def read_events(inotify_fd, count: int = 64):
     buf = ctypes.create_string_buffer(MAX_EVENT_SIZE * count)
     num = _read(inotify_fd, buf, ctypes.sizeof(buf))
 
