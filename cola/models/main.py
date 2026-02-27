@@ -1,4 +1,5 @@
 """The central cola model"""
+from __future__ import annotations
 import os
 
 from qtpy import QtCore
@@ -13,6 +14,8 @@ from ..git import STDOUT, transform_kwargs
 from ..interaction import Interaction
 from ..i18n import N_
 from . import prefs
+from cola.core import UStr
+from typing import Any, Callable
 
 
 FETCH = 'fetch'
@@ -21,7 +24,7 @@ PUSH = 'push'
 PULL = 'pull'
 
 
-def create(context):
+def create(context) -> MainModel:
     """Create the repository status model"""
     return MainModel(context)
 
@@ -77,7 +80,7 @@ class MainModel(QtCore.QObject):
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
 
-    def __init__(self, context, cwd=None) -> None:
+    def __init__(self, context, cwd: str | None = None) -> None:
         """Interface to the main repository status"""
         super().__init__()
 
@@ -99,12 +102,12 @@ class MainModel(QtCore.QObject):
         self.is_merging = False
         self.is_rebasing = False
         self.is_applying_patch = False
-        self.commit_author = None
+        self.commit_author: str | None = None
         self.currentbranch = ''
         self.directory = ''
         self.project = ''
         self.remotes = []
-        self.filter_paths = None
+        self.filter_paths: list[UStr | str] | None = None
         self.images = []
 
         self.commitmsg = ''  # current commit message
@@ -157,10 +160,10 @@ class MainModel(QtCore.QObject):
         """Whether staging should be allowed."""
         return self.is_partially_stageable() or self.mode == self.mode_untracked
 
-    def all_branches(self):
+    def all_branches(self) -> list[str]:
         return self.local_branches + self.remote_branches
 
-    def set_worktree(self, worktree) -> bool:
+    def set_worktree(self, worktree: str) -> bool:
         last_worktree = self.git.paths.worktree
         self.git.set_worktree(worktree)
 
@@ -214,17 +217,17 @@ class MainModel(QtCore.QObject):
             and core.exists(lfs_hook)
         )
 
-    def set_commitmsg(self, msg, notify=True) -> None:
+    def set_commitmsg(self, msg: UStr | str, notify: bool = True) -> None:
         self.commitmsg = msg
         self._auto_commitmsg = ''
         if notify:
             self.commit_message_changed.emit(msg)
 
-    def set_commit_author(self, author) -> None:
+    def set_commit_author(self, author: str) -> None:
         """Set the author that will be used when creating commits"""
         self.commit_author = author
 
-    def save_commitmsg(self, msg=None):
+    def save_commitmsg(self, msg: str | None = None) -> str:
         if msg is None:
             msg = self.commitmsg
         path = self.git.git_path('GIT_COLA_MSG')
@@ -236,7 +239,7 @@ class MainModel(QtCore.QObject):
             pass
         return path
 
-    def set_diff_text(self, txt) -> None:
+    def set_diff_text(self, txt: UStr | str) -> None:
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
@@ -244,29 +247,29 @@ class MainModel(QtCore.QObject):
         if changed:
             self.diff_text_changed.emit()
 
-    def set_diff_type(self, diff_type) -> None:  # text, image
+    def set_diff_type(self, diff_type: str) -> None:  # text, image
         """Set the diff type to either text or image"""
         changed = diff_type != self.diff_type
         self.diff_type = diff_type
         if changed:
             self.diff_type_changed.emit(diff_type)
 
-    def set_file_type(self, file_type) -> None:  # text, image
+    def set_file_type(self, file_type: str) -> None:  # text, image
         """Set the file type to either text or image"""
         changed = file_type != self.file_type
         self.file_type = file_type
         if changed:
             self.file_type_changed.emit(file_type)
 
-    def set_images(self, images) -> None:
+    def set_images(self, images: list[tuple[str, bool] | Any]) -> None:
         """Update the images shown in the preview pane"""
         self.images = images
         self.images_changed.emit(images)
 
-    def set_directory(self, path) -> None:
+    def set_directory(self, path: str | UStr) -> None:
         self.directory = path
 
-    def set_mode(self, mode, head=None) -> None:
+    def set_mode(self, mode: str, head: str | None = None) -> None:
         """Set the current editing mode (worktree, index, amending, ...)"""
         # Do not allow going into index or worktree mode when amending.
         if self.is_amend_mode() and mode != self.mode_none:
@@ -293,7 +296,7 @@ class MainModel(QtCore.QObject):
         self.mode = mode
         self.mode_changed.emit(mode)
 
-    def update_path_filter(self, filter_paths) -> None:
+    def update_path_filter(self, filter_paths: list[UStr | str]) -> None:
         self.filter_paths = filter_paths
         self.update_file_status()
 
@@ -306,7 +309,7 @@ class MainModel(QtCore.QObject):
     def emit_updated(self) -> None:
         self.updated.emit()
 
-    def update_file_status(self, update_index=False) -> None:
+    def update_file_status(self, update_index: bool = False) -> None:
         """Update modified/staged files status"""
         self.emit_about_to_update()
         self.update_files(update_index=update_index, emit=True)
@@ -317,7 +320,7 @@ class MainModel(QtCore.QObject):
         self._update_merge_rebase_status()
         self.update_file_status()
 
-    def update_status(self, update_index=False, reset=False) -> None:
+    def update_status(self, update_index: bool = False, reset: bool = False) -> None:
         # Give observers a chance to respond
         self.emit_about_to_update()
         self.initialized = True
@@ -331,7 +334,7 @@ class MainModel(QtCore.QObject):
             self.update_submodules_list()
         self.emit_updated()
 
-    def update_config(self, emit=False, reset=False) -> None:
+    def update_config(self, emit: bool = False, reset: bool = False) -> None:
         if reset:
             self.cfg.reset()
         self.annex = self.cfg.is_annex()
@@ -349,12 +352,12 @@ class MainModel(QtCore.QObject):
         if emit:
             self.emit_updated()
 
-    def update_files(self, update_index=False, emit=False) -> None:
+    def update_files(self, update_index: bool = False, emit: bool = False) -> None:
         self._update_files(update_index=update_index)
         if emit:
             self.emit_updated()
 
-    def _update_files(self, update_index=False) -> None:
+    def _update_files(self, update_index: bool = False) -> None:
         context = self.context
         display_untracked = prefs.display_untracked(context)
         state = gitcmds.worktree_state(
@@ -458,38 +461,40 @@ class MainModel(QtCore.QObject):
         self._update_branches_and_tags()
         self.emit_updated()
 
-    def delete_branch(self, branch):
+    def delete_branch(self, branch: str) -> tuple[int, str, str]:
         status, out, err = self.git.branch(branch, D=True)
         self.update_refs()
         return status, out, err
 
-    def rename_branch(self, branch, new_branch):
+    def rename_branch(self, branch: str, new_branch: str) -> tuple[int, str, str]:
         status, out, err = self.git.branch(branch, new_branch, M=True)
         self.update_refs()
         return status, out, err
 
-    def remote_url(self, name, action):
+    def remote_url(self, name: str, action: str) -> str:
         push = action == 'PUSH'
         return gitcmds.remote_url(self.context, name, push=push)
 
-    def fetch(self, remote, **opts):
+    def fetch(self, remote: str, **opts: dict[str, Any]) -> tuple[int, str, str]:
         result = run_remote_action(self.context, self.git.fetch, remote, FETCH, **opts)
         self.update_refs()
         return result
 
-    def push(self, remote, **opts):
+    def push(self, remote: str, **opts: dict[str, Any]) -> tuple[int, str, str]:
         result = run_remote_action(self.context, self.git.push, remote, PUSH, **opts)
         self.update_refs()
         return result
 
-    def pull(self, remote, **opts):
+    def pull(self, remote: str, **opts: dict[str, Any]) -> tuple[int, str, str]:
         result = run_remote_action(self.context, self.git.pull, remote, PULL, **opts)
         # Pull can result in merge conflicts
         self.update_refs()
         self.update_files(update_index=False, emit=True)
         return result
 
-    def create_branch(self, name, base, track=False, force=False):
+    def create_branch(
+        self, name: str, base: str, track=False, force=False
+    ) -> tuple[int, str, str]:
         """Create a branch named 'name' from revision 'base'
 
         Pass track=True to create a local tracking branch.
@@ -500,7 +505,7 @@ class MainModel(QtCore.QObject):
         """Return True if the latest commit exists in any remote branch"""
         return bool(self.git.branch(r=True, contains='HEAD')[STDOUT])
 
-    def untrack_paths(self, paths):
+    def untrack_paths(self, paths) -> tuple[int, str, str]:
         context = self.context
         status, out, err = gitcmds.untrack_paths(context, paths)
         self.update_file_status()
@@ -516,7 +521,7 @@ class MainModel(QtCore.QObject):
         """Choose the next ref sort type (version, reverse-chronological)"""
         self.set_ref_sort(self.ref_sort + 1)
 
-    def set_ref_sort(self, raw_value) -> None:
+    def set_ref_sort(self, raw_value: int) -> None:
         value = raw_value % 2  # Currently two sort types
         if value == self.ref_sort:
             return
@@ -544,7 +549,7 @@ def remote_args(
     rebase=False,
     set_upstream=False,
     prune=False,
-):
+) -> tuple[list[Any], dict[str, bool]]:
     """Return arguments for git fetch/push/pull"""
 
     args = [remote]
@@ -578,7 +583,7 @@ def remote_args(
     return (args, kwargs)
 
 
-def refspec(src, dst, action):
+def refspec(src: str, dst: str, action: str) -> str:
     if action == PUSH and src == dst:
         spec = src
     else:
@@ -586,7 +591,9 @@ def refspec(src, dst, action):
     return spec
 
 
-def refspec_arg(local_branch, remote_branch, remote, action):
+def refspec_arg(
+    local_branch: str, remote_branch: str, remote: str, action: str
+) -> str | None:
     """Return the refspec for a fetch or pull command"""
     ref = None
     if action == PUSH and local_branch and remote_branch:  # Push with local and remote.
@@ -610,7 +617,13 @@ def refspec_arg(local_branch, remote_branch, remote, action):
     return ref
 
 
-def run_remote_action(context, fn, remote, action, **kwargs):
+def run_remote_action(
+    context,
+    fn: Callable[..., Any],
+    remote: str,
+    action: str,
+    **kwargs,
+) -> Any:
     """Run fetch, push or pull"""
     kwargs.pop('_add_env', None)
     args, kwargs = remote_args(context, remote, action, **kwargs)
@@ -632,7 +645,7 @@ def run_remote_action(context, fn, remote, action, **kwargs):
     return fn(*args, **kwargs)
 
 
-def no_color(kwargs) -> None:
+def no_color(kwargs: dict[Any, Any]) -> None:
     """Augment kwargs with an _add_env environment dict that disables colors"""
     try:
         env = kwargs['_add_env']
@@ -645,7 +658,7 @@ def no_color(kwargs) -> None:
     env['TERM'] = 'dumb'
 
 
-def autodetect_proxy(context, kwargs) -> None:
+def autodetect_proxy(context, kwargs: dict[Any, Any]) -> None:
     """Detect proxy settings when running on Gnome and KDE"""
     # kwargs can refer to persistent global state so we purge it.
     # Callers should not expect their _add_env to persist.
@@ -669,7 +682,7 @@ def autodetect_proxy(context, kwargs) -> None:
         kwargs['_add_env'] = add_env
 
 
-def autodetect_proxy_environ():
+def autodetect_proxy_environ() -> dict[Any, Any]:
     """Return the environment variables used for configuring proxies"""
     add_env = {}
     xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
@@ -715,7 +728,7 @@ def autodetect_proxy_environ():
     return add_env
 
 
-def autodetect_proxy_gnome_is_enabled(gsettings) -> bool:
+def autodetect_proxy_gnome_is_enabled(gsettings: UStr | str) -> bool:
     """Is the proxy manually configured on Gnome?"""
     status, out, _ = core.run_command(
         [gsettings, 'get', 'org.gnome.system.proxy', 'mode']
@@ -723,7 +736,7 @@ def autodetect_proxy_gnome_is_enabled(gsettings) -> bool:
     return status == 0 and out.strip().strip("'") == 'manual'
 
 
-def autodetect_proxy_gnome(gsettings, scheme):
+def autodetect_proxy_gnome(gsettings: UStr | str, scheme: UStr | str) -> UStr | None:
     """Return the configured HTTP proxy for Gnome"""
     status, out, _ = core.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'host']
@@ -741,7 +754,7 @@ def autodetect_proxy_gnome(gsettings, scheme):
     return proxy
 
 
-def autodetect_proxy_kde(kreadconfig, scheme):
+def autodetect_proxy_kde(kreadconfig: UStr | str, scheme: UStr | str) -> UStr | None:
     """Return the configured HTTP proxy for KDE"""
     cmd = [
         kreadconfig,
