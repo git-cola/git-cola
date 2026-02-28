@@ -725,7 +725,7 @@ class ApplicationContext:
         self.timer: Timer | None = None  # Timer
         self.runtask: qtutils.RunTask | None = None  # qtutils.RunTask
         self.settings = None  # settings.Settings
-        self.selection = None  # selection.SelectionModel
+        self.selection: selection.SelectionModel | None = None
         self.fsmonitor = None  # fsmonitor
         self.view = None  # QWidget
         self.browser_windows = []  # list of browse.Browser
