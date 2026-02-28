@@ -3,6 +3,7 @@ import time
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt, Signal
+from typing import Any
 
 
 class Command:
@@ -24,7 +25,7 @@ class Command:
         """Can this be undone?"""
         return cls.UNDOABLE
 
-    def do(self) -> bool:
+    def do(self) -> Any:
         """Execute the command"""
         self.can_undo = True
         return True
@@ -48,7 +49,7 @@ class ContextCommand(Command):
         self.fsmonitor = context.fsmonitor
         self.old_timestamp = context.timestamp
 
-    def do(self) -> bool:
+    def do(self) -> Any:
         """Update the context"""
         # Commands can get executed in the background, and completion of one command may
         # happen *after* another Diff and similar commands have been fired. We prevent
