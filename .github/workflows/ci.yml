@@ -56,7 +56,7 @@ jobs:
           garden pynsist -vv
           mv build/nsis/git-cola*.exe git-cola.exe
       - name: Upload git-cola.win.zip
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: git-cola.win
           path: git-cola.exe
@@ -97,7 +97,7 @@ jobs:
       - name: Build macOS git-cola.app bundle
         run: garden macos/app -vv -D cola_app='${TREE_PATH}/local/git-cola.app'
       - name: Upload git-cola.app.zip
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: git-cola.app
           path: local
