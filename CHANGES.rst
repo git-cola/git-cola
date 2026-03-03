@@ -34,6 +34,7 @@ Development
 
 * Type hints were added to various modules.
   (`#1555 <https://github.com/git-cola/git-cola/pull/1555>`_)
+  (`#1556 <https://github.com/git-cola/git-cola/pull/1556>`_)
 
 
 .. _v4.17.1:
