@@ -25,7 +25,7 @@ class LaunchDifftool(cmds.ContextCommand):
     """Launch "git difftool" with the currently selected files"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Launch Diff Tool')
 
     def do(self) -> None:

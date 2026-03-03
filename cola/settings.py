@@ -1,4 +1,5 @@
 """Save settings, bookmarks, etc."""
+from __future__ import annotations
 import json
 import os
 import sys
@@ -7,9 +8,10 @@ from . import core
 from . import display
 from . import git
 from . import resources
+from typing import Any, Callable, Dict, List, Optional, Union
 
 
-def mkdict(obj):
+def mkdict(obj: Dict[str, Any]) -> Dict[str, Any]:
     """Transform None and non-dicts into dicts"""
     if isinstance(obj, dict):
         value = obj
@@ -18,7 +20,7 @@ def mkdict(obj):
     return value
 
 
-def mklist(obj):
+def mklist(obj: List[Union[Dict[str, str], Any]]) -> List[Union[Dict[str, str], Any]]:
     """Transform None and non-lists into lists"""
     if isinstance(obj, list):
         value = obj
@@ -29,7 +31,27 @@ def mklist(obj):
     return value
 
 
-def read_json(path):
+def read_json(
+    path: str,
+) -> (
+    Dict[
+        str,
+        Union[
+            Dict[str, Union[Dict[str, Union[str, int, bool]], Dict[str, int]]],
+            List[Dict[str, str]],
+            Dict[
+                str,
+                Union[
+                    Dict[str, Union[str, int, bool]],
+                    Dict[str, int],
+                    Dict[str, Union[str, int]],
+                    Dict[str, Union[str, int, bool, Dict[str, List[str]], float]],
+                ],
+            ],
+        ],
+    ]
+    | dict[str, Any]
+):
     try:
         with core.open_read(path) as f:
             return mkdict(json.load(f))
@@ -37,7 +59,27 @@ def read_json(path):
         return {}
 
 
-def write_json(values, path, sync: bool = True) -> bool:
+def write_json(
+    values: Dict[
+        str,
+        Union[
+            Dict[str, Union[Dict[str, Union[str, int, bool]], Dict[str, int]]],
+            List[Dict[str, str]],
+            Dict[
+                str,
+                Union[
+                    Dict[str, Union[str, int, bool]],
+                    Dict[str, int],
+                    Dict[str, Union[str, int]],
+                    Dict[str, Union[str, int, bool, Dict[str, List[str]], float]],
+                ],
+            ],
+        ],
+    ]
+    | dict[str, Any],
+    path: str,
+    sync: bool = True,
+) -> bool:
     """Write the specified values dict to a JSON file at the specified path"""
     try:
         parent = os.path.dirname(path)
@@ -53,7 +95,7 @@ def write_json(values, path, sync: bool = True) -> bool:
     return True
 
 
-def rename_path(old, new) -> bool:
+def rename_path(old: str, new: str) -> bool:
     """Rename a filename. Catch exceptions and return False on error."""
     try:
         core.rename(old, new)
@@ -63,7 +105,7 @@ def rename_path(old, new) -> bool:
     return True
 
 
-def remove_path(path) -> None:
+def remove_path(path: str) -> None:
     """Remove a filename. Report errors to stderr."""
     try:
         core.remove(path)
@@ -78,9 +120,9 @@ class Settings:
     recent = property(lambda self: mklist(self.values['recent']))
     copy_formats = property(lambda self: mklist(self.values['copy_formats']))
 
-    def __init__(self, verify=git.is_git_worktree) -> None:
+    def __init__(self, verify: Callable = git.is_git_worktree) -> None:
         """Load existing settings if they exist"""
-        self.values = {
+        self.values: dict[str, Any] = {
             'bookmarks': [],
             'gui_state': {},
             'recent': [],
@@ -131,7 +173,7 @@ class Settings:
     def rename_bookmark(self, path, name, new_name):
         return rename_entry(self.bookmarks, path, name, new_name)
 
-    def add_recent(self, path, max_recent) -> None:
+    def add_recent(self, path: str, max_recent: int) -> None:
         normalize = display.normalize_path
         path = normalize(path)
         try:
@@ -161,10 +203,10 @@ class Settings:
         except IndexError:
             return
 
-    def rename_recent(self, path, name, new_name):
+    def rename_recent(self, path, name, new_name) -> bool:
         return rename_entry(self.recent, path, name, new_name)
 
-    def path(self):
+    def path(self) -> str:
         return self.config_path
 
     def save(self, sync: bool = True) -> None:
@@ -195,7 +237,7 @@ class Settings:
         if core.exists(path_bak):
             remove_path(path_bak)
 
-    def load(self, path=None) -> bool:
+    def load(self, path: str | None = None) -> bool:
         """Load settings robustly.
 
         Attempt to load settings from the .bak file if it exists since it indicates
@@ -230,7 +272,7 @@ class Settings:
         return True
 
     @staticmethod
-    def read(verify=git.is_git_worktree):
+    def read(verify: Callable = git.is_git_worktree) -> 'Settings':
         """Load settings from disk"""
         settings = Settings(verify=verify)
         settings.load()
@@ -254,11 +296,28 @@ class Settings:
             ]
             self.values['recent'] = recent
 
-    def asdict(self, path=None):
+    def asdict(
+        self, path: Optional[str] = None
+    ) -> Dict[
+        str,
+        Union[
+            Dict[str, Union[Dict[str, Union[str, int, bool]], Dict[str, int]]],
+            List[Dict[str, str]],
+            Dict[
+                str,
+                Union[
+                    Dict[str, Union[str, int, bool]],
+                    Dict[str, int],
+                    Dict[str, Union[str, int]],
+                    Dict[str, Union[str, int, bool, Dict[str, List[str]], float]],
+                ],
+            ],
+        ],
+    ]:
         if not path:
             path = self.path()
         if core.exists(path):
-            values = read_json(path)
+            values: dict[str, Any] = read_json(path)
         else:
             # We couldn't find ~/.config/git-cola, try ~/.cola
             values = {}
@@ -284,11 +343,11 @@ class Settings:
         self.gui_state[name] = mkdict(gui.export_state())
         self.save(sync=sync)
 
-    def get_gui_state(self, gui):
+    def get_gui_state(self, gui) -> Dict[str, Union[str, int, bool]]:
         """Returns the saved state for a tool"""
         return self.get(gui.name())
 
-    def get(self, gui_name):
+    def get(self, gui_name: str) -> Dict[str, Union[str, int, bool]]:
         """Returns the saved state for a tool by name"""
         try:
             state = mkdict(self.gui_state[gui_name])

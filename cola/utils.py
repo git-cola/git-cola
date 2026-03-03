@@ -14,12 +14,14 @@ import urllib.parse
 
 from . import core
 from . import compat
+from PyQt5.QtWidgets import QAction
+from typing import Any, Callable, Dict, List, Tuple, Union
 
 
 _SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
 
 
-def asint(obj, default: int = 0) -> int:
+def asint(obj: int, default: int = 0) -> int:
     """Make any value into an int, even if the cast fails"""
     try:
         value = int(obj)
@@ -28,12 +30,12 @@ def asint(obj, default: int = 0) -> int:
     return value
 
 
-def clamp(value, low, high):
+def clamp(value: int, low: int, high: int) -> int:
     """Clamp a value to the specified range"""
     return min(high, max(low, value))
 
 
-def clamp_zero(value, maximum):
+def clamp_zero(value: int, maximum: int) -> int:
     """Clamp a value between 0 and the maximum value"""
     return clamp(value, 0, maximum)
 
@@ -267,7 +269,7 @@ def _shell_split_py2(value):
     return [core.decode(arg) for arg in result]
 
 
-def _shell_split_py3(value):
+def _shell_split_py3(value: str) -> List[Union[Any, str]]:
     """Python3 requires Unicode inputs to shlex.split().  Convert to Unicode"""
     try:
         result = shlex.split(value)
@@ -277,7 +279,7 @@ def _shell_split_py3(value):
     return result
 
 
-def shell_split(value):
+def shell_split(value: str) -> List[Union[Any, str]]:
     if compat.PY2:
         # Encode before calling split()
         values = _shell_split_py2(value)
@@ -287,7 +289,7 @@ def shell_split(value):
     return values
 
 
-def tmp_filename(label, suffix: str = ''):
+def tmp_filename(label: str, suffix: str = '') -> str:
     label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
     with tempfile.NamedTemporaryFile(
         prefix=label + '-', suffix=suffix, delete=False
@@ -447,7 +449,7 @@ class Group:
     def __init__(self, *members) -> None:
         self._members = members
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Callable:
         """Return a function that relays calls to the group"""
 
         def relay(*args, **kwargs) -> None:
@@ -471,7 +473,9 @@ def strip_prefixes_and_suffixes(values, prefix, suffix):
     return sorted(name[prefix_len:-suffix_len] for name in values)
 
 
-def strip_prefixes_and_suffixes_from_keys(values, prefix, suffix):
+def strip_prefixes_and_suffixes_from_keys(
+    values: Dict[str, str], prefix: str, suffix: str
+) -> Dict[str, str]:
     """Transform dictionary keys to remove prefixes and suffixes
 
     Values are assumed to begin and end with the specified prefix and suffix.
@@ -494,7 +498,7 @@ def strip_prefixes_from_keys(values, prefix):
 class Proxy:
     """Wrap an object and override attributes"""
 
-    def __init__(self, obj, **overrides) -> None:
+    def __init__(self, obj: QAction, **overrides) -> None:
         self._obj = obj
         for k, v in overrides.items():
             setattr(self, k, v)
@@ -503,7 +507,7 @@ class Proxy:
         return getattr(self._obj, name)
 
 
-def slice_func(input_items, map_func):
+def slice_func(input_items: List[str], map_func: Callable) -> Tuple[int, str, str]:
     """Slice input_items and call `map_func` over every slice
 
     This exists because of "errno: Argument list too long"
@@ -569,7 +573,9 @@ class Sequence:
         return self.sequence[idx]
 
 
-def catch_runtime_error(func, *args, **kwargs):
+def catch_runtime_error(
+    func: Callable, *args, **kwargs
+) -> Union[Tuple[bool, None], Tuple[bool, bool]]:
     """Run the function safely.
 
     Catch RuntimeError to avoid tracebacks during application shutdown.

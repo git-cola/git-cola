@@ -1,5 +1,6 @@
 """Display models and utility functions"""
 import collections
+from datetime import datetime
 
 try:
     import notify2
@@ -63,7 +64,7 @@ def path_suffix(path, count) -> str:
     return '/'.join(components)
 
 
-def normalize_path(path) -> str:
+def normalize_path(path: str) -> str:
     """Normalize a path so that only "/" is used as a separator"""
     return path.replace('\\', '/')
 
@@ -103,6 +104,6 @@ def push_notification(
         notify(context, title, message, icon)
 
 
-def git_commit_date(datetime):
+def git_commit_date(datetime: datetime) -> str:
     """Return the datetime as a string for use by Git"""
     return datetime.strftime('%a %b %d %H:%M:%S %Y %z')

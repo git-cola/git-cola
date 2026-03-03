@@ -4,7 +4,7 @@ from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 
 
-def hotkey(*seq):
+def hotkey(*seq) -> QKeySequence:
     return QKeySequence(*seq)
 
 

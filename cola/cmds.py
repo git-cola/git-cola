@@ -1,9 +1,12 @@
 """Editor commands"""
+from __future__ import annotations
 import os
 import re
 import sys
 from fnmatch import fnmatch
 from io import StringIO
+from cola.core import UStr
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 try:
     from send2trash import send2trash
@@ -47,7 +50,7 @@ class EditModel(ContextCommand):
 
     UNDOABLE = True
 
-    def __init__(self, context, finalizer=None) -> None:
+    def __init__(self, context, finalizer: None = None) -> None:
         """Common edit operations on the main model"""
         super().__init__(context)
 
@@ -120,7 +123,7 @@ class ConfirmAction(ContextCommand):
         """Command error message"""
         return ''
 
-    def do(self):
+    def do(self) -> Tuple[bool, int, str | UStr, str | UStr]:
         """Prompt for confirmation before running a command"""
         status = -1
         out = err = ''
@@ -492,7 +495,7 @@ class CheckoutTheirs(ConfirmAction):
     """Checkout "their" version of a file when performing a merge"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Checkout files from their branch (MERGE_HEAD)')
 
     def confirm(self):
@@ -530,7 +533,7 @@ class CheckoutOurs(ConfirmAction):
     """Checkout "our" version of a file when performing a merge"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Checkout files from our branch (HEAD)')
 
     def confirm(self):
@@ -650,17 +653,17 @@ class ResetMode(EditModel):
 class ResetCommand(ConfirmAction):
     """Reset state using the "git reset" command"""
 
-    def __init__(self, context, ref) -> None:
+    def __init__(self, context, ref: str) -> None:
         super().__init__(context)
         self.ref = ref
 
-    def action(self):
+    def action(self) -> Tuple[int, UStr, UStr]:
         return self.reset()
 
     def command(self) -> str:
         return 'git reset'
 
-    def error_message(self):
+    def error_message(self) -> str:
         return N_('Error')
 
     def success(self) -> None:
@@ -675,7 +678,7 @@ class ResetCommand(ConfirmAction):
 
 class ResetMixed(ResetCommand):
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_('The branch will be reset using "git reset --mixed %s"')
         return tooltip % ref
 
@@ -694,7 +697,7 @@ class ResetMixed(ResetCommand):
 
 class ResetKeep(ResetCommand):
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_('The repository will be reset using "git reset --keep %s"')
         return tooltip % ref
 
@@ -713,7 +716,7 @@ class ResetKeep(ResetCommand):
 
 class ResetMerge(ResetCommand):
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_('The repository will be reset using "git reset --merge %s"')
         return tooltip % ref
 
@@ -730,7 +733,7 @@ class ResetMerge(ResetCommand):
 
 class ResetSoft(ResetCommand):
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_('The branch will be reset using "git reset --soft %s"')
         return tooltip % ref
 
@@ -747,7 +750,7 @@ class ResetSoft(ResetCommand):
 
 class ResetHard(ResetCommand):
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_('The repository will be reset using "git reset --hard %s"')
         return tooltip % ref
 
@@ -766,7 +769,7 @@ class RestoreWorktree(ConfirmAction):
     """Reset the worktree using the "git read-tree" command"""
 
     @staticmethod
-    def tooltip(ref):
+    def tooltip(ref: str) -> str:
         tooltip = N_(
             'The worktree will be restored using "git read-tree --reset -u %s"'
         )
@@ -804,7 +807,7 @@ class UndoLastCommit(ResetCommand):
     def __init__(self, context) -> None:
         super().__init__(context, 'HEAD^')
 
-    def confirm(self):
+    def confirm(self) -> bool:
         check_published = prefs.check_published_commits(self.context)
         if check_published and self.model.is_commit_published():
             return Interaction.confirm(
@@ -827,7 +830,7 @@ class UndoLastCommit(ResetCommand):
         info_text = info % self.ref
         return Interaction.confirm(title, question, info_text, ok_text)
 
-    def reset(self):
+    def reset(self) -> Tuple[int, UStr, UStr]:
         return self.git.reset('HEAD^', '--', soft=True)
 
 
@@ -1489,7 +1492,7 @@ class DiffImage(EditModel):
         self.model.set_images(images)
         super().do()
 
-    def staged_images(self):
+    def staged_images(self) -> List[Union[Any, Tuple[str, bool]]]:
         context = self.context
         head = self.model.head
         missing_blob_oid = self.model.missing_blob_oid
@@ -1711,7 +1714,7 @@ class Edit(ContextCommand):
     """Edit a file using the configured gui.editor."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Launch Editor')
 
     def __init__(
@@ -1799,7 +1802,7 @@ class FormatPatch(ContextCommand):
 
 class LaunchTerminal(ContextCommand):
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Launch Terminal')
 
     @staticmethod
@@ -1834,7 +1837,7 @@ class LaunchTerminal(ContextCommand):
 
 class LaunchEditor(Edit):
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Launch Editor')
 
     def __init__(self, context) -> None:
@@ -2048,7 +2051,7 @@ class OpenDefaultApp(ContextCommand):
     """Open a file using the OS default."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Open Using Default Application')
 
     def __init__(self, context, filenames) -> None:
@@ -2085,7 +2088,7 @@ class OpenParentDir(OpenDir):
     """Open parent directories using the OS default."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Open Parent Directory')
 
     @property
@@ -2098,7 +2101,7 @@ class OpenWorktree(OpenDir):
     """Open worktree directory using the OS default."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Open Worktree')
 
     # The _unused parameter is needed by worktree_dir_action() -> common.cmd_action().
@@ -2120,7 +2123,7 @@ class OpenNewRepo(ContextCommand):
 
 
 class OpenRepo(EditModel):
-    def __init__(self, context, repo_path) -> None:
+    def __init__(self, context, repo_path: str) -> None:
         super().__init__(context)
         self.repo_path = repo_path
         self.new_mode = self.model.mode_none
@@ -2249,7 +2252,7 @@ class NoOp(ContextCommand):
         pass
 
 
-def unix_path(path, is_win32=utils.is_win32):
+def unix_path(path: str, is_win32: Callable = utils.is_win32) -> str:
     """Git for Windows requires Unix paths, so force them here"""
     if is_win32():
         path = path.replace('\\', '/')
@@ -2261,7 +2264,7 @@ def unix_path(path, is_win32=utils.is_win32):
     return path
 
 
-def sequence_editor():
+def sequence_editor() -> str:
     """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
     xbase = unix_path(resources.command('git-cola-sequence-editor'))
     if utils.is_win32():
@@ -2281,23 +2284,29 @@ class SequenceEditorEnvironment:
         }
         self.env.update(kwargs)
 
-    def __enter__(self):
+    def __enter__(self) -> 'SequenceEditorEnvironment':
         for var, value in self.env.items():
             compat.setenv(var, value)
         return self
 
     def __exit__(
         self,
-        exc_type,
-        exc_val,
-        exc_tb,
+        exc_type: None,
+        exc_val: None,
+        exc_tb: None,
     ) -> None:
         for var in self.env:
             compat.unsetenv(var)
 
 
 class Rebase(ContextCommand):
-    def __init__(self, context, upstream=None, branch=None, **kwargs) -> None:
+    def __init__(
+        self,
+        context,
+        upstream: None = None,
+        branch: None = None,
+        **kwargs,
+    ) -> None:
         """Start an interactive rebase session
 
         :param upstream: upstream branch
@@ -2311,7 +2320,7 @@ class Rebase(ContextCommand):
         self.branch = branch
         self.kwargs = kwargs
 
-    def prepare_arguments(self, upstream):
+    def prepare_arguments(self, upstream: str) -> Tuple[List[str], Dict[str, bool]]:
         args = []
         kwargs = {}
 
@@ -2361,7 +2370,7 @@ class Rebase(ContextCommand):
 
         return args, kwargs
 
-    def do(self):
+    def do(self) -> Tuple[int, str | UStr, str | UStr]:
         (status, out, err) = (1, '', '')
         context = self.context
         cfg = self.cfg
@@ -2487,7 +2496,7 @@ class Refresh(ContextCommand):
     """Update refs, refresh the index, and update config"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Refresh')
 
     def do(self) -> None:
@@ -2544,7 +2553,7 @@ class RevertEditsCommand(ConfirmAction):
 
 class RevertUnstagedEdits(RevertEditsCommand):
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Revert Unstaged Edits...')
 
     def checkout_from_head(self) -> bool:
@@ -2686,7 +2695,7 @@ class SetDiffText(EditModel):
 
     UNDOABLE = True
 
-    def __init__(self, context, text) -> None:
+    def __init__(self, context, text: str) -> None:
         super().__init__(context)
         self.new_diff_text = text
         self.new_diff_type = main.Types.TEXT
@@ -2781,7 +2790,7 @@ class SignOff(ContextCommand):
     UNDOABLE = True
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Sign Off')
 
     def __init__(self, context) -> None:
@@ -2806,7 +2815,7 @@ class SignOff(ContextCommand):
         return f'\nSigned-off-by: {name} <{email}>'
 
 
-def check_conflicts(context, unmerged):
+def check_conflicts(context, unmerged: List[Any]) -> List[Any]:
     """Check paths for conflicts
 
     Conflicting files can be filtered out one-by-one.
@@ -2861,16 +2870,16 @@ class Stage(ContextCommand):
     def name():
         return N_('Stage')
 
-    def __init__(self, context, paths) -> None:
+    def __init__(self, context, paths: List[str]) -> None:
         super().__init__(context)
         self.paths = paths
 
-    def do(self):
+    def do(self) -> Tuple[int, str, str]:
         msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         return self.stage_paths()
 
-    def stage_paths(self):
+    def stage_paths(self) -> Tuple[int, str, str]:
         """Stages add/removals to git."""
         context = self.context
         paths = self.paths
@@ -2953,7 +2962,7 @@ class StageModified(StageCarefully):
     """Stage all modified files."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Stage Modified')
 
     def init_paths(self) -> None:
@@ -2975,7 +2984,7 @@ class StageUntracked(StageCarefully):
     """Stage all untracked files."""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Stage Untracked')
 
     def init_paths(self) -> None:
@@ -3001,7 +3010,7 @@ class StageOrUnstageAll(ContextCommand):
     """If the selection is staged, unstage it, otherwise stage"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Stage / Unstage All')
 
     def do(self) -> None:
@@ -3019,7 +3028,7 @@ class StageOrUnstage(ContextCommand):
     """If the selection is staged, unstage it, otherwise stage"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Stage / Unstage')
 
     def do(self) -> None:
@@ -3086,7 +3095,7 @@ class Tag(ContextCommand):
                 return result
             sign = False
 
-        opts = {}
+        opts: dict[str, str | bool] = {}
         tmp_file = None
         try:
             if tag_message:
@@ -3130,11 +3139,11 @@ class Unstage(ContextCommand):
     def name():
         return N_('Unstage')
 
-    def __init__(self, context, paths) -> None:
+    def __init__(self, context, paths: List[str]) -> None:
         super().__init__(context)
         self.paths = paths
 
-    def do(self):
+    def do(self) -> Tuple[int, str, str]:
         """Unstage paths"""
         context = self.context
         head = self.model.head
@@ -3153,11 +3162,11 @@ class Unstage(ContextCommand):
 class UnstageAll(ContextCommand):
     """Unstage all files; resets the index."""
 
-    def do(self):
+    def do(self) -> Tuple[int, UStr, UStr]:
         return unstage_all(self.context)
 
 
-def unstage_all(context):
+def unstage_all(context) -> Tuple[int, UStr, UStr]:
     """Unstage all files, even while amending"""
     model = context.model
     head = model.head
@@ -3273,7 +3282,7 @@ class VisualizePaths(ContextCommand):
 class VisualizeRevision(ContextCommand):
     """Visualize a specific revision."""
 
-    def __init__(self, context, revision, paths=None) -> None:
+    def __init__(self, context, revision: str, paths: None = None) -> None:
         super().__init__(context)
         self.revision = revision
         self.paths = paths
@@ -3385,7 +3394,7 @@ class SubmoduleUpdate(ConfirmAction):
 class SubmodulesUpdate(ConfirmAction):
     """Update all submodules"""
 
-    def confirm(self):
+    def confirm(self) -> bool:
         title = N_('Update submodules...')
         question = N_('Update all submodules?')
         info = N_('All submodules will be updated using\n' '"%s"' % self.command())
@@ -3394,7 +3403,7 @@ class SubmodulesUpdate(ConfirmAction):
             title, question, info, ok_txt, default=False, icon=icons.pull()
         )
 
-    def action(self):
+    def action(self) -> Tuple[int, UStr, UStr]:
         args = self.get_args()
         if prefs.verbose_simple_commands(self.context):
             cmd_args = core.list2cmdline(args)
@@ -3404,22 +3413,22 @@ class SubmodulesUpdate(ConfirmAction):
     def success(self) -> None:
         self.model.update_file_status()
 
-    def error_message(self):
+    def error_message(self) -> str:
         return N_('Error updating submodules')
 
-    def command(self):
+    def command(self) -> str:
         cmd = ['git', 'submodule']
         cmd.extend(self.get_args())
         return core.list2cmdline(cmd)
 
-    def get_args(self):
+    def get_args(self) -> List[str]:
         cmd = ['update']
         if version.check_git(self.context, 'submodule-update-recursive'):
             cmd.append('--recursive')
         return cmd
 
 
-def launch_history_browser(argv) -> None:
+def launch_history_browser(argv: List[str]) -> None:
     """Launch the configured history browser"""
     try:
         core.fork(argv)
@@ -3432,7 +3441,7 @@ def launch_history_browser(argv) -> None:
         Interaction.critical(title, message=msg, details=details)
 
 
-def run(cls, *args, **opts):
+def run(cls: Any, *args, **opts) -> Callable:
     """
     Returns a callback that runs a command
 
@@ -3450,7 +3459,11 @@ def run(cls, *args, **opts):
     return runner
 
 
-def do(cls, *args, **opts):
+def do(
+    cls: Any, *args, **opts
+) -> Optional[
+    Union[Tuple[bool, int, UStr, UStr], Tuple[int, str, str], Tuple[int, UStr, UStr]]
+]:
     """Run a command in-place"""
     try:
         cmd = cls(*args, **opts)

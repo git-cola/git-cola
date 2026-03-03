@@ -4,6 +4,7 @@ import os
 
 from . import core
 from . import resources
+from typing import Any, List
 
 __copyright__ = """
 2012 Peter Norvig (http://norvig.com/spell-correct.html)
@@ -82,7 +83,7 @@ class NorvigSpellCheck:
         self.aspell_langs = set()
         self.aspell_ok = False
 
-    def add_dictionaries(self, dictionaries) -> None:
+    def add_dictionaries(self, dictionaries: List[Any]) -> None:
         """Add additional dictionaries to the spellcheck engine"""
         self.extra_dictionaries.update(dictionaries)
 
@@ -100,11 +101,11 @@ class NorvigSpellCheck:
 
         GlobalState.update()
 
-    def set_aspell_enabled(self, enabled) -> None:
+    def set_aspell_enabled(self, enabled: bool) -> None:
         """Enable aspell support"""
         self.aspell_enabled = enabled
 
-    def set_aspell_langs(self, langs) -> None:
+    def set_aspell_langs(self, langs: List[Any]) -> None:
         """Set the aspell languages to query"""
         self.aspell_langs = set(langs)
 

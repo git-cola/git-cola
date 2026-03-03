@@ -1,6 +1,8 @@
 from __future__ import annotations
 import os
 
+from qtpy.QtGui import QIcon
+
 from qtpy import QtGui
 
 from . import cmds
@@ -19,6 +21,8 @@ from .widgets import switcher
 from .widgets.browse import BrowseBranch
 from .widgets.selectcommits import select_commits
 from .widgets.selectcommits import select_commits_and_output
+from PyQt5.QtWidgets import QMenu
+from typing import Callable, Optional
 
 
 def copy_commit_id_to_clipboard(context) -> None:
@@ -283,13 +287,26 @@ def load_commitmsg(context) -> None:
         cmds.do(cmds.LoadCommitMessageFromFile, context, filename)
 
 
-def choose_from_dialog(get, context, title, button_text, default, icon=None):
+def choose_from_dialog(
+    get: Callable,
+    context,
+    title: str,
+    button_text: str,
+    default: Optional[str],
+    icon: None = None,
+) -> Optional[str]:
     """Choose a value from a dialog using the `get` method"""
     parent = qtutils.active_window()
     return get(context, title, button_text, parent, default=default, icon=icon)
 
 
-def choose_ref(context, title, button_text, default=None, icon=None):
+def choose_ref(
+    context,
+    title: str,
+    button_text: str,
+    default: Optional[str] = None,
+    icon: QIcon | None = None,
+) -> Optional[str]:
     """Choose a Git ref and return it"""
     return choose_from_dialog(
         completion.GitRefDialog.get, context, title, button_text, default, icon=icon
@@ -420,7 +437,7 @@ def restore_worktree(context) -> None:
         context.settings.set_value('restore::worktree', 'ref', ref)
 
 
-def build_layout_menu(widget, menu) -> None:
+def build_layout_menu(widget, menu: QMenu) -> None:
     """Add layouts from ~/.config/git-cola/layouts to the specified menu"""
     directory = resources.xdg_config_home('git-cola', 'layouts')
     if os.path.isdir(directory):

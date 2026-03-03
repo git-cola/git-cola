@@ -14,9 +14,12 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import dag
 from .models import prefs
+from cola.core import UStr
+from cola.git import Git
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 
-def add(context, items, u: bool = False):
+def add(context, items: List[str], u: bool = False) -> Tuple[int, str, str]:
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
     if prefs.verbose_simple_commands(context):
@@ -78,10 +81,10 @@ def diff_index_filenames(context, ref):
     return _parse_diff_filenames(out)
 
 
-def diff_filenames(context, *args):
+def diff_filenames(context, *args) -> List[Union[Any, str]]:
     """Return a list of filenames that have been modified"""
     out = diff_tree(context, *args)[STDOUT]
-    return _parse_diff_filenames(out)
+    return _parse_diff_filenames(out)  # type: ignore[arg-type]
 
 
 def changed_files(context, oid):
@@ -97,18 +100,18 @@ def changed_files(context, oid):
     return result
 
 
-def diff_tree(context, *args):
+def diff_tree(context, *args) -> Tuple[int, UStr, UStr]:
     """Return a list of filenames that have been modified"""
     return git_diff_tree(context.git, *args)
 
 
-def git_diff_tree(git_repo, *args):
+def git_diff_tree(git_repo: Git, *args) -> Tuple[int, UStr, UStr]:
     return git_repo.diff_tree(
         name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
     )
 
 
-def listdir(context, dirname, ref: str = 'HEAD'):
+def listdir(context, dirname: str, ref: str = 'HEAD'):
     """Get the contents of a directory according to Git
 
     Query Git for the content of a directory, taking ignored
@@ -151,13 +154,13 @@ def diff(context, args):
     return _parse_diff_filenames(out)
 
 
-def _parse_diff_filenames(out):
+def _parse_diff_filenames(out: UStr) -> List[Union[Any, str]]:
     if out:
         return out[:-1].split('\0')
     return []
 
 
-def tracked_files(context, *args):
+def tracked_files(context, *args) -> List[str]:
     """Return the names of all files in the repository"""
     out = context.git.ls_files('--', *args, z=True, _readonly=True)[STDOUT]
     if out:
@@ -191,7 +194,7 @@ def reset() -> None:
     CurrentBranchCache.key = None
 
 
-def current_branch(context):
+def current_branch(context) -> Union[str, UStr]:
     """Return the current branch"""
     # The "files" backend updates .git/HEAD when changing branches.
     # The "reftables" backend updates .git/reftable/tables.list when changing branches.
@@ -263,7 +266,7 @@ def branch_list(context, remote: bool = False):
     return for_each_ref_basename(context, 'refs/heads')
 
 
-def _version_sort(context, key: str = 'version:refname'):
+def _version_sort(context, key: str = 'version:refname') -> bool | str:
     if version.check_git(context, 'version-sort'):
         sort: bool | str = key
     else:
@@ -283,12 +286,17 @@ def for_each_ref_basename(context, refs):
     return [x[offset:] for x in non_heads]
 
 
-def _prefix_and_size(prefix, values):
+def _prefix_and_size(prefix: str, values: List[Any]) -> Tuple[str, int, List[Any]]:
     """Return a tuple of (prefix, len(prefix) + 1, y) for <prefix>/ stripping"""
     return (prefix, len(prefix) + 1, values)
 
 
-def all_refs(context, split: bool = False, sort_key: str = 'version:refname'):
+def all_refs(
+    context, split: bool = False, sort_key: str = 'version:refname'
+) -> Union[
+    Tuple[List[str], List[str], List[str]],
+    Tuple[List[str], List[str], List[Any]] | list[Any],
+]:
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
@@ -311,7 +319,7 @@ def all_refs(context, split: bool = False, sort_key: str = 'version:refname'):
     return local_branches + remote_branches + tags
 
 
-def tracked_branch(context, branch=None):
+def tracked_branch(context, branch: Optional[str] = None) -> Optional[str]:
     """Return the remote branch associated with 'branch'."""
     if branch is None:
         branch = current_branch(context)
@@ -330,7 +338,7 @@ def tracked_branch(context, branch=None):
     return None
 
 
-def parse_remote_branch(branch):
+def parse_remote_branch(branch: str) -> Tuple[str, str]:
     """Split a remote branch apart into (remote, name) components"""
     rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
     match = rgx.match(branch)
@@ -342,7 +350,9 @@ def parse_remote_branch(branch):
     return (remote, branch)
 
 
-def untracked_files(context, paths=None, **kwargs):
+def untracked_files(
+    context, paths: list[str] | None = None, **kwargs
+) -> List[Union[Any, str]]:
     """Returns a sorted list of untracked files."""
     if paths is None:
         paths = []
@@ -635,7 +645,7 @@ def export_patchset(context, start, end, output: str = 'patches', **kwargs):
     return context.git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
 
-def reset_paths(context, head, items):
+def reset_paths(context, head: str, items: List[str]) -> Tuple[int, str, str]:
     """Run "git reset" while preventing argument overflow"""
     items = list(set(items))
     func = context.git.reset
@@ -646,7 +656,7 @@ def reset_paths(context, head, items):
     return (status, out, err)
 
 
-def unstage_paths(context, args, head: str = 'HEAD'):
+def unstage_paths(context, args: List[str], head: str = 'HEAD') -> Tuple[int, str, str]:
     """Unstage paths while accounting for git init"""
     status, out, err = reset_paths(context, head, args)
     if status == 128:
@@ -670,8 +680,8 @@ def worktree_state(
     head: str = 'HEAD',
     update_index: bool = False,
     display_untracked: bool = True,
-    paths=None,
-):
+    paths: list[str] | None = None,
+) -> Dict[str, Union[List[str], List[Any], Set[str], Set[Any]]]:
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -716,7 +726,7 @@ def worktree_state(
     }
 
 
-def _parse_raw_diff(out):
+def _parse_raw_diff(out: UStr | str) -> Iterator[Tuple[str, str, bool]]:
     while out:
         info, path, out = out.split('\0', 2)
         status = info[-1]
@@ -724,7 +734,13 @@ def _parse_raw_diff(out):
         yield (path, status, is_submodule)
 
 
-def diff_index(context, head, cached: bool = True, paths=None):
+def diff_index(
+    context, head: str, cached: bool = True, paths: list[Any] | None = None
+) -> Union[
+    Tuple[List[str], List[Any], Set[Any], Set[Any]],
+    Tuple[List[str], List[Any], Set[str], Set[Any]],
+    Tuple[List[Any], List[Any], Set[Any], Set[Any]],
+]:
     staged = []
     unmerged = []
     deleted = set()
@@ -755,7 +771,13 @@ def diff_index(context, head, cached: bool = True, paths=None):
     return staged, unmerged, deleted, submodules
 
 
-def diff_worktree(context, paths=None):
+def diff_worktree(
+    context, paths: list[Any] | None = None
+) -> Union[
+    Tuple[List[str], Set[str], Set[Any]],
+    Tuple[List[str], Set[Any], Set[Any]],
+    Tuple[List[Any], Set[Any], Set[Any]],
+]:
     ignore_submodules_value = context.cfg.get('diff.ignoresubmodules', 'none')
     ignore_submodules = ignore_submodules_value in {'all', 'dirty', 'untracked'}
     modified = []
@@ -779,7 +801,7 @@ def diff_worktree(context, paths=None):
     return modified, deleted, submodules
 
 
-def diff_upstream(context, head):
+def diff_upstream(context, head: str) -> List[Union[Any, str]]:
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
     tracked = tracked_branch(context)
     if not tracked:
@@ -788,7 +810,7 @@ def diff_upstream(context, head):
     return diff_filenames(context, base, tracked)
 
 
-def list_submodule(context):
+def list_submodule(context) -> List[Any]:
     """Return submodules in the format(state, sha_1, path, describe)"""
     status, data, _ = context.git.submodule('status')
     ret = []
@@ -808,7 +830,7 @@ def list_submodule(context):
     return ret
 
 
-def merge_base(context, head, ref):
+def merge_base(context, head: str, ref: str) -> UStr:
     """Return the merge-base of head and ref"""
     return context.git.merge_base(head, ref, _readonly=True)[STDOUT]
 
@@ -897,7 +919,7 @@ def rev_list_range(context, start, end):
     return parse_rev_list(out)
 
 
-def commit_message_path(context):
+def commit_message_path(context) -> str:
     """Return the path to .git/GIT_COLA_MSG"""
     path = context.git.git_path('GIT_COLA_MSG')
     if core.exists(path):
@@ -905,7 +927,7 @@ def commit_message_path(context):
     return None
 
 
-def merge_message_path(context):
+def merge_message_path(context) -> str | None:
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
         path = context.git.git_path(basename)
@@ -926,7 +948,7 @@ def read_merge_commit_message(context, path):
     )
 
 
-def prepare_commit_message_hook(context):
+def prepare_commit_message_hook(context) -> str:
     """Run the cola.preparecommitmessagehook to prepare the commit message"""
     config = context.cfg
     default_hook = config.hooks_path('cola-prepare-commit-msg')
@@ -1015,7 +1037,7 @@ def prev_commitmsg(context, *args):
     )[STDOUT]
 
 
-def prev_author_and_commitmsg(context, *args):
+def prev_author_and_commitmsg(context, *args) -> Tuple[str, str]:
     """Queries git for the latest commit message."""
     output = context.git.log(
         '-1',
@@ -1043,7 +1065,7 @@ def rev_parse(context, name):
     return result
 
 
-def write_blob(context, oid, filename):
+def write_blob(context, oid: str, filename: str) -> str:
     """Write a blob to a temporary file and return the path
 
     Modern versions of Git allow invoking filters.  Older versions
@@ -1060,12 +1082,12 @@ def cat_file_blob(context, filename, oid):
     return cat_file(context, filename, 'blob', oid)
 
 
-def cat_file_to_path(context, filename, oid):
+def cat_file_to_path(context, filename: str, oid: str) -> str:
     """Extract a file from a commit ref and a write it to the specified filename"""
     return cat_file(context, filename, oid, path=filename, filters=True)
 
 
-def cat_file(context, filename, *args, **kwargs):
+def cat_file(context, filename: str, *args, **kwargs) -> str:
     """Redirect git cat-file output to a path"""
     result = None
     # Use the original filename in the suffix so that the generated filename

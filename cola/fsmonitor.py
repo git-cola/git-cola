@@ -24,6 +24,7 @@ from .compat import bchr
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
+from typing import Dict, Set, Type
 
 AVAILABLE = None
 
@@ -55,11 +56,11 @@ class _Monitor(QtCore.QObject):
     files_changed = Signal()
     config_changed = Signal()
 
-    def __init__(self, context, thread_class) -> None:
+    def __init__(self, context, thread_class: Type[_InotifyThread]) -> None:
         QtCore.QObject.__init__(self)
         self.context = context
         self._thread_class = thread_class
-        self._thread = None
+        self._thread: _InotifyThread | None = None
 
     def start(self) -> None:
         if self._thread_class is not None:
@@ -80,7 +81,7 @@ class _Monitor(QtCore.QObject):
 
 
 class _BaseThread(QtCore.QThread):
-    def __init__(self, context, monitor) -> None:
+    def __init__(self, context, monitor: _Monitor) -> None:
         QtCore.QThread.__init__(self)
         self.context = context
         #: The delay, in milliseconds, between detecting file system modification
@@ -173,7 +174,7 @@ if AVAILABLE == 'inotify':
         )
         _ADD_MASK = _TRIGGER_MASK | inotify.IN_EXCL_UNLINK | inotify.IN_ONLYDIR
 
-        def __init__(self, context, monitor) -> None:
+        def __init__(self, context, monitor: _Monitor) -> None:
             _BaseThread.__init__(self, context, monitor)
             git = context.git
             worktree = git.worktree()
@@ -265,7 +266,7 @@ if AVAILABLE == 'inotify':
             with self._lock:
                 self._refresh()
 
-        def _refresh(self):
+        def _refresh(self) -> None:
             if self._inotify_fd is None:
                 return
             context = self.context
@@ -295,7 +296,12 @@ if AVAILABLE == 'inotify':
                 else:
                     raise
 
-        def _refresh_watches(self, paths_to_watch, wd_to_path_map, path_to_wd_map):
+        def _refresh_watches(
+            self,
+            paths_to_watch: Set[str],
+            wd_to_path_map: Dict[int, str],
+            path_to_wd_map: Dict[str, int],
+        ) -> None:
             watched_paths = set(path_to_wd_map)
             for path in watched_paths - paths_to_watch:
                 wd = path_to_wd_map.pop(path)
@@ -556,7 +562,7 @@ if AVAILABLE == 'pywin32':
             self.wait()
 
 
-def create(context):
+def create(context) -> _Monitor:
     thread_class = None
     cfg = context.cfg
     if not cfg.get('cola.inotify', default=True):

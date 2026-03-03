@@ -1,7 +1,11 @@
+from qtpy.QtWidgets import QGraphicsItem
+
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
+from typing import Callable, Type, Union
 
 try:
     from qtpy import PYQT4
@@ -11,7 +15,11 @@ except ImportError:
 from . import hotkeys
 
 
-def patch(obj, attr, value) -> None:
+def patch(
+    obj: Union[Type[QGraphicsItem], Type[QKeySequence]],
+    attr: str,
+    value: Union[Callable, QKeySequence],
+) -> None:
     if not hasattr(obj, attr):
         setattr(obj, attr, value)
 
@@ -21,7 +29,7 @@ def install() -> None:
     patch(QtGui.QKeySequence, 'Preferences', hotkeys.PREFERENCES)
 
 
-def add_search_path(prefix, path) -> None:
+def add_search_path(prefix: str, path: str) -> None:
     if hasattr(QtCore.QDir, 'addSearchPath'):
         QtCore.QDir.addSearchPath(prefix, path)
 

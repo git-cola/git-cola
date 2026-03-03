@@ -1,6 +1,8 @@
 """Themes generators"""
 from __future__ import annotations
 import os
+from PyQt5.QtGui import QPalette
+from typing import List, Optional
 
 try:
     import AppKit
@@ -27,17 +29,17 @@ class EStylesheet:
 class Theme:
     def __init__(
         self,
-        name,
-        title,
-        is_dark,
-        style_sheet=EStylesheet.DEFAULT,
-        main_color=None,
-        macos_appearance=None,
+        name: str,
+        title: str,
+        is_dark: bool,
+        style_sheet: int = EStylesheet.DEFAULT,
+        main_color: Optional[str] = None,
+        macos_appearance: None = None,
     ) -> None:
         self.name = name
         self.title = title
         self.is_dark = is_dark
-        self.is_palette_dark = None
+        self.is_palette_dark: bool | None = None
         self.style_sheet = style_sheet
         self.main_color = main_color
         self.macos_appearance = macos_appearance
@@ -47,7 +49,7 @@ class Theme:
         self.background_color: str | None = None
         self.palette = None
 
-    def build_style_sheet(self, app_palette, bold_fonts):
+    def build_style_sheet(self, app_palette: QPalette, bold_fonts: bool) -> str:
         if self.style_sheet == EStylesheet.CUSTOM:
             return self.style_sheet_custom(app_palette, bold_fonts)
         if self.style_sheet == EStylesheet.FLAT:
@@ -509,7 +511,7 @@ class Theme:
             core.print_stderr(f'warning: unable to read custom theme {filename}: {err}')
             return style_sheet_default(app_palette, bold_fonts)
 
-    def get_palette(self):
+    def get_palette(self) -> QPalette:
         """Get a QPalette for the current theme"""
         if self.palette is None:
             palette = qtutils.current_palette()
@@ -575,7 +577,7 @@ class Theme:
         return background_color
 
 
-def style_sheet_default(palette, bold_fonts) -> str:
+def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
     highlight = palette.color(QtGui.QPalette.Highlight)
     shadow = palette.color(QtGui.QPalette.Shadow)
     base = palette.color(QtGui.QPalette.Base)
@@ -651,7 +653,7 @@ def style_sheet_default(palette, bold_fonts) -> str:
     )
 
 
-def get_all_themes():
+def get_all_themes() -> List[Theme]:
     themes = [
         Theme(
             'default',
@@ -806,7 +808,7 @@ def options(themes=None):
     return [(theme.title, theme.name) for theme in themes]
 
 
-def find_theme(name):
+def find_theme(name: str) -> Theme:
     themes = get_all_themes()
     for item in themes:
         if item.name == name:

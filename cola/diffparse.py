@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 import re
 from collections import Counter
@@ -33,7 +34,7 @@ def _format_hunk_header(
     )
 
 
-def digits(number) -> int:
+def digits(number: int) -> int:
     """Return the number of digits needed to display a number"""
     if number >= 0:
         result = int(math.log10(number)) + 1
@@ -45,13 +46,13 @@ def digits(number) -> int:
 class LineCounter:
     """Keep track of a diff range's values"""
 
-    def __init__(self, value: int = 0, max_value=-1) -> None:
+    def __init__(self, value: int = 0, max_value: int = -1) -> None:
         self.count = 0  # Absolute count of additions/removals/...
         self.value = value  # Current line number counter.
         self.max_value = max_value
         self._initial_max_value = max_value
 
-    def reset(self):
+    def reset(self) -> 'LineCounter':
         """Reset the max counter and return self for convenience"""
         self.count = 0
         self.max_value = self._initial_max_value
@@ -89,7 +90,7 @@ class DiffLines:
         self.additions = LineCounter()
         self.removals = LineCounter()
 
-    def digits(self):
+    def digits(self) -> int:
         return digits(
             max(
                 self.old.max_value,
@@ -99,8 +100,8 @@ class DiffLines:
             )
         )
 
-    def parse(self, diff_text):
-        lines = []
+    def parse(self, diff_text: str) -> list[tuple[int, int] | tuple[int, int, int]]:
+        lines: list[tuple[int, int] | tuple[int, int, int]] = []
         diff_state = 1
         state = initial_state = 0
         merge = self.merge = False
@@ -193,12 +194,12 @@ class FormatDigits:
         self._dash = dash or chr(0xB7)
         self._empty = empty or ' '
 
-    def set_digits(self, value) -> None:
+    def set_digits(self, value: int) -> None:
         self.fmt = '%%0%dd' % value
         self.empty = self._empty * value
         self.dash = self._dash * value
 
-    def value(self, old, new) -> str:
+    def value(self, old: int, new: int) -> str:
         old_str = self._format(old)
         new_str = self._format(new)
         return f'{old_str} {new_str}'
@@ -209,10 +210,10 @@ class FormatDigits:
         new_str = self._format(new)
         return f'{old_str} {base_str} {new_str}'
 
-    def number(self, value):
+    def number(self, value: int) -> str:
         return self.fmt % value
 
-    def _format(self, value):
+    def _format(self, value: int) -> str:
         if value == self.DASH:
             result = self.dash
         elif value == self.EMPTY:

@@ -3,6 +3,8 @@ import sys
 
 from . import core
 from .i18n import N_
+from cola.core import UStr
+from typing import Union
 
 
 class Interaction:
@@ -11,7 +13,14 @@ class Interaction:
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
     @classmethod
-    def command(cls, title, cmd, status, out, err) -> None:
+    def command(
+        cls,
+        title: str,
+        cmd: str,
+        status: int,
+        out: Union[str, UStr],
+        err: Union[str, UStr],
+    ) -> None:
         """Log a command and display error messages on failure"""
         cls.log_status(status, out, err)
         if status != 0:
@@ -30,14 +39,14 @@ class Interaction:
             core.print_stderr(err)
 
     @staticmethod
-    def format_command_status(cmd, status):
+    def format_command_status(cmd: str, status: int) -> str:
         return N_('"%(command)s" returned exit status %(status)d') % {
             'command': cmd,
             'status': status,
         }
 
     @staticmethod
-    def format_out_err(out, err):
+    def format_out_err(out: UStr, err: UStr) -> str:
         """Format stdout and stderr into a single string"""
         details = out or ''
         if err:
